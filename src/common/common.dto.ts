@@ -12,18 +12,20 @@ const transformIntValue = (value) => {
 
 export const TransformInt = () => Transform(transformIntValue);
 
-export class SearchableQueryDto {
+export class PageableQueryDto {
   @IsOptional()
   @TransformInt()
-  @Expose({ name: 'p' })
+  @Expose({ name: 'page' })
   page: number;
 
   @IsOptional()
   @TransformInt()
-  @Expose({ name: 's' })
+  @Expose({ name: 'page_size' })
   pageSize: number;
+}
 
+export class SearchableQueryDto extends PageableQueryDto {
   @IsOptional()
-  @Expose({ name: 'q' })
+  @Expose({ name: 'search' })
   searchQuery: string;
 };

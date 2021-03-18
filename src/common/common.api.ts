@@ -1,4 +1,5 @@
 import { FindManyOptions, Like } from "typeorm";
+import { PageableQueryDto } from "./common.dto";
 
 type PageableQuery = {
   skip?: number;
@@ -37,6 +38,10 @@ export class Pageable {
     pageable.size = pageSize;
 
     return pageable;
+  }
+
+  static from(query: PageableQueryDto): Pageable {
+    return Pageable.of(query.page, query.pageSize);
   }
 };
 
