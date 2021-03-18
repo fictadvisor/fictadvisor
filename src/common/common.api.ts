@@ -1,7 +1,4 @@
-import { ClassSerializerInterceptor, UseInterceptors } from "@nestjs/common";
-import { Like } from "typeorm";
-
-export const Common = () => UseInterceptors(ClassSerializerInterceptor);
+import { FindManyOptions, Like } from "typeorm";
 
 type PageableQuery = {
   skip?: number;
@@ -33,11 +30,11 @@ export class Pageable {
     };
   }
 
-  static of(page: number, size: number) {
+  static of(page: number, pageSize: number): Pageable {
     const pageable = new Pageable();
 
     pageable.page = page;
-    pageable.size = size;
+    pageable.size = pageSize;
 
     return pageable;
   }
@@ -47,7 +44,7 @@ export class Searchable<T> {
   value: string;
   field: keyof T;
 
-  toQuery() {
+  toQuery(): Partial<FindManyOptions<T>> {
     if (this.value == null) { return {}; }
     
     return {
@@ -55,7 +52,7 @@ export class Searchable<T> {
     };
   }
 
-  static of<T = any>(field: keyof T, value: string) {
+  static of<T = any>(field: keyof T, value: string): Searchable<T> {
     const searchable = new Searchable<T>();
 
     searchable.value = value;
@@ -65,7 +62,16 @@ export class Searchable<T> {
   }
 };
 
-export interface Page<T> {
+export class Page<T> {
   count: number;
   data: T[];
+
+  static of<T>(count: number, data: T[]): Page<T> {
+    const page = new Page<T>();
+
+    page.count = count;
+    page.data = data;
+
+    return page;
+  }
 };
