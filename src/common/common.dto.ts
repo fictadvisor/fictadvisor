@@ -15,7 +15,6 @@ export const TransformInt = () => Transform(transformIntValue);
 export class PageableQueryDto {
   @IsOptional()
   @TransformInt()
-  @Expose({ name: 'page' })
   page: number;
 
   @IsOptional()
