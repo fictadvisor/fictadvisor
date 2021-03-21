@@ -10,6 +10,8 @@ import ArrowIcon from '../components/ui/icons/ArrowIcon';
 import StarIcon from '../components/ui/icons/StarIcon';
 import Tag from '../components/ui/Tag';
 import { Collapsible } from '../components/ui/Collapsible';
+import { StatisticsBlock } from '../components/Statistics';
+import { ContactBlock } from '../components/Contact';
 
 const tabs = [
   {
@@ -25,12 +27,12 @@ const tabs = [
   {
     name: 'Контакти',
     link: 'contacts',
-    block: SubjectBlock
+    block: ContactBlock
   },
   {
     name: 'Статистика',
     link: 'stats',
-    block: SubjectBlock
+    block: StatisticsBlock
   },
 ];
 
