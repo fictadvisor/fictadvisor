@@ -1,3 +1,4 @@
+import Disclaimer from "./ui/Disclaimer";
 import { Loader } from "./ui/Loader";
 
 function Contact({ name, value }) {
@@ -11,10 +12,15 @@ function Contact({ name, value }) {
 
 export function ContactBlock() {
   return (
-    <div className="contact-group">
-      <Contact name="Телефон" value="+380 50 507 29 43" />
-      <Contact name="Telegram" value="@lisovychenko" />
-      <Contact name="Email" value="timur.shemsedinov@gmail.com" />
-    </div>
+    <>
+      <Disclaimer>
+        Натисніть на контакт, щоб скопіювати його до буфера обміну
+      </Disclaimer>
+      <div className="contact-group">
+        <Contact name="Телефон" value="+380 50 507 29 43" />
+        <Contact name="Telegram" value="@lisovychenko" />
+        <Contact name="Email" value="timur.shemsedinov@gmail.com" />
+      </div>
+    </>
   );
 }

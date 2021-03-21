@@ -19,7 +19,7 @@ export function StatisticsBlock() {
       <Disclaimer>
         Використовується статистика, яка була зібрана командою <a className="font-bold">ФИВТ им. Веры Петровны</a> у 2020 році
       </Disclaimer>
-      <div className="statistics-field-group block" style={{ marginTop: '10px', borderRadius: '8px 8px 0 0' }}>
+      <div className="statistics-field-group block" style={{ borderRadius: '8px 8px 0 0' }}>
         <StatisticsField name="Ввічливість" rating={2.5} />
         <StatisticsField name="Пунктуальність" rating={4} />
         <StatisticsField name="Об'єктивність" rating={5} />
