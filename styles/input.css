@@ -101,3 +101,8 @@ button.dropdown .arrow {
 button:hover, button:active, button.active {
   background-color: #323D4D;
 }
+
+button.attached {
+  border-radius: 0 0 8px 8px;
+  width: 100%;
+}

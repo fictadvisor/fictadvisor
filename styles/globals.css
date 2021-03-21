@@ -3,6 +3,7 @@
   --background-color: #0B0E11;
   --primary-text-color: #DFE3E9;
   --secondary-text-color: #5D7290;
+  --accent-text-color: #FD4D4D;
 }
 
 html,
@@ -29,7 +30,7 @@ input, button, textarea, select {
 	appearance: none;
 }
 
-.content {
+.page > .main > .content, .page > .header > .content {
   width: var(--content-width);
   padding: 0 20px;
   margin: auto;
@@ -41,10 +42,10 @@ input, button, textarea, select {
   padding: 24px;
 }
 
-.main {
-  width: var(--content-width);
+.page > .main {
   display: flex;
   width: 100%;
+  margin-bottom: 20px;
 }
 
 .button-group {
@@ -59,9 +60,69 @@ input, button, textarea, select {
   margin-right: 0px;
 }
 
+.tag-group > .tag {
+  margin: 0 10px 10px 0px;
+}
+
 .title {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: bold;
   padding: 0;
   margin: 5px 0 25px;
+}
+
+.title.inner {
+  font-size: 20px;
+  font-weight: 500;
+  margin: 10px 0;
+}
+
+.divider {
+  background-color: #323D4D;
+  width: calc(100% + 10px);
+  margin: 10px -5px;
+  height: 1px;
+}
+
+.avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+}
+
+a.read-more {
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.collapsible {
+  transition: max-height 0.35s;
+  overflow: hidden;
+}
+
+.collapsible.collapsed {
+  max-height: 0 !important;
+}
+
+.rating {
+  font-size: 12px;
+  margin: auto 0;
+}
+
+.rating > svg {
+  width: 12px;
+  height: 12px;
+  margin: auto 0 -1px 3px;
+}
+
+.tag {
+  font-size: 12px;
+  border-radius: 5px;
+  background-color: #242C37;
+  padding: 3px 10px;
+  cursor: default;
+}
+
+a > .tag {
+  cursor: pointer;
 }

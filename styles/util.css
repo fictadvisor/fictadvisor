@@ -14,6 +14,10 @@
   color: #5D7290;
 }
 
+.secondary svg {
+  fill: #5D7290;
+}
+
 .golden {
   color: #f5ec98d7;
 }
@@ -24,4 +28,12 @@
 
 .full-width {
   width: 100%;
+}
+
+.v-flipped {
+  transform: scaleY(-1);
+}
+
+.v-flipped svg {
+  transform: scaleY(-1);
 }

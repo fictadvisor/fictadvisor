@@ -1,16 +1,16 @@
-.header {
+.page > .header {
   width: 100%;
   height: 80px;
   display: flex;
 }
 
-.header > .left, .header > .right {
+.page > .header > .left, .header > .right {
   flex: 1;
   margin: auto;
   height: 100%;
   background-color: red;
 }
 
-.header > .left {
+.page > .header > .left {
   text-align: center;
 }

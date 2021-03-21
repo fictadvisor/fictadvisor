@@ -1,0 +1,18 @@
+.teacher-info {
+  display: flex;
+}
+
+.teacher-description > .description {
+  margin: 0;
+}
+
+.block.teacher {
+  border-radius: 8px 8px 0 0;
+  padding-bottom: 12px;
+}
+
+.teacher-info .name {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+}

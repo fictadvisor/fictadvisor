@@ -8,19 +8,20 @@ type DropdownOption = {
 };
 
 type DropdownProperties = {
+  text: string;
   active: number;
   onChange?: (index: number, option: DropdownOption) => void;
   options: DropdownOption[];
 };
 
-export default function Dropdown({ active, onChange, options, ...props }: DropdownProperties) {
+export default function Dropdown({ text, active, onChange, options, ...props }: DropdownProperties) {
   const { ref, isComponentVisible: open, setIsComponentVisible: setOpen } = useComponentVisible(false);
 
   return (
     <div ref={ref} className={`dropdown ${open ? 'active' : ''}`} {...props}>
       <button className="dropdown" onClick={() => setOpen(!open)}>
         <div className="flex">
-          <span><span className="font-medium">Сортування по:</span> {options[active].text.toLowerCase()}</span>
+          <span><span className="font-medium">{text}</span> {options[active].text.toLowerCase()}</span>
           <span className="arrow"><ArrowIcon /></span>
         </div>
       </button>
