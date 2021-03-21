@@ -1,0 +1,27 @@
+.font-medium {
+  font-weight: 500;
+}
+
+.font-black {
+  font-weight: 700;
+}
+
+.flex {
+  display: flex;
+}
+
+.secondary {
+  color: #5D7290;
+}
+
+.golden {
+  color: #f5ec98d7;
+}
+
+.secondary .primary {
+  color: var(--primary-text-color);
+}
+
+.full-width {
+  width: 100%;
+}
