@@ -3,6 +3,10 @@
 }
 
 .font-black {
+  font-weight: 800;
+}
+
+.font-bold {
   font-weight: 700;
 }
 

@@ -7,8 +7,6 @@
 .page > .header > .left, .header > .right {
   flex: 1;
   margin: auto;
-  height: 100%;
-  background-color: red;
 }
 
 .page > .header > .left {

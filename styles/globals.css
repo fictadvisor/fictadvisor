@@ -122,3 +122,11 @@ a.read-more {
 a > .tag {
   cursor: pointer;
 }
+
+.disclaimer {
+  background-color: #151A21;
+  border-radius: 8px;
+  padding: 12px 24px;
+  border: 1px dashed #5D7290;
+  text-align: center;
+}

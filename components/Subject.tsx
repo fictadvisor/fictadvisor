@@ -11,7 +11,7 @@ function Subject({ title, rating, reviewCount, recommended }) {
         <p className="secondary">
           {
             noReviews 
-              ? <><span className="secondary">На жаль, відгуки про цей курс відсутні</span></>
+              ? <><span className="secondary">На жаль, відгуки на цей курс відсутні</span></>
               : <>
                   Написано <span className="primary">{reviewCount}</span> {pluralize(reviewCount, 'відгук', 'відгуки', 'відгуків')} на цей курс, 
                   має середню оцінку <span className="primary">{rating}</span>

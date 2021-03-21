@@ -1,0 +1,20 @@
+.statistics-field > .statistics-progress {
+  overflow: visible;
+  height: 2px;
+  background-color: #5D7290;
+}
+
+.statistics-field > .statistics-label {
+  margin: 0 0 1px;
+}
+
+.statistics-field > .statistics-progress > div {
+  overflow: visible;
+  position: relative;
+  height: 2px;
+  background-color: #DFE3E9;
+}
+
+.statistics-field-group > .statistics-field:not(:last-child) {
+  margin-bottom: 10px;
+}
