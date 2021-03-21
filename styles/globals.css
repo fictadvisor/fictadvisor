@@ -100,10 +100,6 @@ a.read-more {
   overflow: hidden;
 }
 
-.collapsible.collapsed {
-  max-height: 0 !important;
-}
-
 .rating {
   font-size: 12px;
   margin: auto 0;

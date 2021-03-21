@@ -77,7 +77,7 @@ export default function HomePage() {
       meta={{ title: 'Лісовиченко Олег Іванович' }}
       title="Сторінка викладача"
     >
-      <div className="block teacher">
+      <div className={`block teacher ${collapsed ? 'collapsed' : ''}`}>
         <div className="teacher-info">
           <img className="avatar teacher" src="https://i.imgur.com/MFtw4PC.jpg"/>
           <div style={{ marginLeft: '24px' }}>
@@ -90,7 +90,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-        <Collapsible collapsed={collapsed}>
+        <Collapsible minHeight={110} collapsed={collapsed}>
           <Divider />
           <div className="teacher-description">
             <p className="title inner">Загальний опис</p>
