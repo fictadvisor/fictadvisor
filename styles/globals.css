@@ -61,7 +61,7 @@ input, button, textarea, select {
 }
 
 .tag-group > .tag {
-  margin: 0 10px 10px 0px;
+  margin: 0 5px 5px 0px;
 }
 
 .title {
@@ -130,4 +130,14 @@ a > .tag {
   border: 1px dashed #5D7290;
   text-align: center;
   margin-bottom: 10px;
+}
+
+a:visited, a:link {
+  color: var(--primary-text-color);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+a:hover {
+  color: white;
 }

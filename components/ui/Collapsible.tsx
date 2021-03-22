@@ -3,11 +3,13 @@ import { useEffect, useRef, useState } from "react";
 type CollapsibleProperties = {
   collapsed?: boolean;
   minHeight?: number;
+  onActiveChange?: (active: boolean) => void;
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
 
-export function Collapsible({ collapsed, minHeight = 0, className, ...props }: CollapsibleProperties) {
+export function Collapsible({ onActiveChange, collapsed, minHeight = 0, className, ...props }: CollapsibleProperties) {
   const [height, setHeight] = useState(400);
+  const [active, setActive] = useState(true);
   const ref = useRef(null);
 
   useEffect(() => {
@@ -15,10 +17,18 @@ export function Collapsible({ collapsed, minHeight = 0, className, ...props }: C
       return;
     }
 
-    setHeight(ref.current.clientHeight);
+    const fullHeight = ref.current.clientHeight;
+    const collapsible = fullHeight > (minHeight + 50);
+
+    setHeight(fullHeight);
+    setActive(collapsible);
+
+    if (onActiveChange) {
+      onActiveChange(collapsible);
+    }
   }, []);
 
-  const maxHeight = collapsed ? minHeight : (height ?? minHeight);
+  const maxHeight = (collapsed && active) ? minHeight : (height ?? minHeight);
 
   return (
     <div ref={ref} className={`collapsible ${className ?? ''}`} style={{ maxHeight: `${maxHeight}px` }} {...props} >

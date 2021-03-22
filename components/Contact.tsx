@@ -1,5 +1,4 @@
 import Disclaimer from "./ui/Disclaimer";
-import { Loader } from "./ui/Loader";
 
 function Contact({ name, value }) {
   return (
