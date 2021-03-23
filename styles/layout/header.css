@@ -21,7 +21,7 @@
   max-width: 100%;
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1280px) {
   .page > .header > .left, .header > .right {
     visibility: hidden;
     display: none;

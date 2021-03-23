@@ -1,5 +1,5 @@
 :root {
-  --content-width: 740px;
+  --content-width: 840px;
   --side-block-width: calc((100vw - var(--content-width)) / 2);
   --background-color: #0B0E11;
   --primary-text-color: #DFE3E9;
