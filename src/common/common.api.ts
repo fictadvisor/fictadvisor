@@ -69,13 +69,13 @@ export class Searchable<T> {
 
 export class Page<T> {
   count: number;
-  data: T[];
+  items: T[];
 
   static of<T>(count: number, data: T[]): Page<T> {
     const page = new Page<T>();
 
     page.count = count;
-    page.data = data;
+    page.items = data;
 
     return page;
   }
