@@ -19,7 +19,7 @@ const SORT_BY = [
   },
   {
     text: 'Ім\'ям',
-    data: 'name'
+    data: 'lastName'
   }
 ];
 
@@ -38,7 +38,7 @@ const TeachersPage = () => {
 
   const { data, isLoading, isFetching, error } = useQuery(
     ['teachers-search', page, searchText, sortType], 
-    () => api.fetchTeachers({ page: 0, page_size: PAGE_SIZE * (page + 1), search: searchText }), 
+    () => api.fetchTeachers({ page: 0, page_size: PAGE_SIZE * (page + 1), search: searchText, sort: SORT_BY[sortType].data }), 
     { keepPreviousData: true, enabled: queryReady }
   );
 

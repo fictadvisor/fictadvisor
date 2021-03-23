@@ -6,7 +6,7 @@ const getStars = (rating: number) => {
   for (let i = 1; i < 6; i++) {
     let type = 'empty' as any;
 
-    if (rating == null || rating >= i) {
+    if (rating == null || rating === 0 || rating >= i) {
       type = 'full';
     } else if (rating >= i - 0.5) {
       type = 'half';
