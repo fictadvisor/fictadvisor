@@ -1,11 +1,14 @@
 import { Expose } from "class-transformer";
 import { assign } from "src/common/common.object";
-import { TeacherView } from "src/database/entities/teacher-view.entity";
+import { TeacherSearchIndex } from "src/database/entities/teacher-search-index.entity";
 
-export class TeacherDto {
+export class TeacherItemDto {
     id: string;
 
     link: string;
+
+    @Expose({ name: 'full_name' })
+    fullName: string;
 
     @Expose({ name: 'first_name' })
     firstName: string;
@@ -16,35 +19,18 @@ export class TeacherDto {
     @Expose({ name: 'last_name' })
     lastName?: string;
 
-    description: string;
-    
-    image: string;
-
-    tags: string[];
-
     rating: number;
 
-    @Expose({ name: 'created_at' })
-    createdAt: Date;
-
-    @Expose({ name: 'updated_at' })
-    updatedAt: Date;
-
-    public static from(e: TeacherView) {
+    public static from(e: TeacherSearchIndex) {
         return assign(
-            new TeacherDto(),
+            new TeacherItemDto(),
             {
                 id: e.id,
                 link: e.link,
                 firstName: e.firstName,
                 middleName: e.middleName,
                 lastName: e.lastName,
-                description: e.description,
-                image: e.image,
-                tags: e.tags,
-                rating: e.rating,
-                createdAt: e.createdAt,
-                updatedAt: e.updatedAt
+                rating: e.rating
             }
         );
     }

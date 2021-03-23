@@ -1,4 +1,4 @@
-import { FindManyOptions, Like } from "typeorm";
+import { FindManyOptions, ILike, Like } from "typeorm";
 import { PageableQueryDto } from "./common.dto";
 
 type PageableQuery = {
@@ -50,10 +50,10 @@ export class Searchable<T> {
   field: keyof T;
 
   toQuery(): Partial<FindManyOptions<T>> {
-    if (this.value == null) { return {}; }
+    if (this.value == null || this.value == '') { return {}; }
     
     return {
-      [this.field]: Like(`%${this.value}%`),
+      [this.field]: ILike(`%${this.value.replace('%', '')}%`),
     };
   }
 

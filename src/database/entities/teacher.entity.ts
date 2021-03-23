@@ -1,5 +1,6 @@
 import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
+// TeacherView is dependant on this entity (see teacher-view.entity.ts)
 @Entity('teachers')
 export class Teacher extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
@@ -17,8 +18,11 @@ export class Teacher extends BaseEntity {
     @Column({ name: 'last_name', type: 'varchar' })
     lastName?: string;
 
-    @Column({ type: 'text' })
+    @Column({ type: 'text', nullable: true })
     description: string;
+
+    @Column({ type: 'varchar', nullable: true })
+    image: string;
 
     @Column({ type: 'varchar', array: true, default: '{}' })
     tags: string[];

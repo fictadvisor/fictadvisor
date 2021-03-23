@@ -1,4 +1,5 @@
 import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { FLOAT_TRANSFORMER } from "../database.util";
 import { Course } from "./course.entity";
 
 @Entity('reviews')
@@ -10,7 +11,7 @@ export class Review extends BaseEntity {
     @JoinColumn({ name: 'course_id' })
     course: Course;
 
-    @Column({ type: 'numeric', precision: 4, scale: 2 })
+    @Column({ type: 'numeric', precision: 4, scale: 2, transformer: FLOAT_TRANSFORMER })
     rating: number;
 
     @Column({ type: 'text' })
