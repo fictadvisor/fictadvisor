@@ -1,33 +1,15 @@
 import { useState } from "react";
 import { toDateTimeString } from "../lib/date";
+import { Rating } from "./Rating";
 import Button from "./ui/Button";
 import Dropdown from "./ui/Dropdown";
-import StarIcon from "./ui/icons/StarIcon";
 import { SearchInput } from "./ui/SearchInput";
-
-const getStars = (rating: number) => {
-  const stars = [];
-
-  for (let i = 1; i < 6; i++) {
-    let type = 'empty' as any;
-
-    if (rating >= i) {
-      type = 'full';
-    } else if (rating >= i - 0.5) {
-      type = 'half';
-    }
-
-    stars.push(<StarIcon key={i} type={type} />);
-  }
-
-  return stars;
-};
 
 function Review({ subject = null, date = null, rating, content }) {
   return (
     <div className="block review">
       <div className="top">
-        <div>{getStars(rating)}</div>
+        <Rating rating={rating} />
         <div className="subject">
           <span className="font-medium">
             {

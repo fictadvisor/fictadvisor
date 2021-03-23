@@ -4,8 +4,16 @@ type ButtonProperties = {
   loading?: boolean;
 } & React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>;
 
-export default function Button({ className, active, ...props }: ButtonProperties) {
+const ButtonLoader = () => <div className="ld ld-ring ld-spin"></div>;
+
+export default function Button({ className, disabled, active, loading, children, ...props }: ButtonProperties) {
   return (
-    <button className={`${className ?? ''} ${active ? 'active' : null}`} {...props} />
+    <button disabled={disabled || loading} className={`${className ?? ''} ${active ? 'active' : ''}`} {...props} >
+      {
+        loading 
+          ? <ButtonLoader />
+          : children
+      }
+    </button>
   );
 };

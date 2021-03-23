@@ -41,3 +41,15 @@
 .v-flipped svg {
   transform: scaleY(-1);
 }
+
+.flex-grow {
+  flex: 1;
+}
+
+.align-right {
+  text-align: right;
+}
+
+.margin-auto {
+  margin: auto;
+}

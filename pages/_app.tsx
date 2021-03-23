@@ -10,6 +10,14 @@ import '../styles/components/loader.css';
 import '../styles/components/statistics.css';
 import '../styles/components/contact.css';
 
+import { QueryClient, QueryClientProvider } from 'react-query';
+
+const queryClient = new QueryClient();
+
 export default function Application({ Component, pageProps }) {
-  return <Component {...pageProps} />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Component {...pageProps} />
+    </QueryClientProvider>
+  );
 };

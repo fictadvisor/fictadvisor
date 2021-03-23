@@ -12,7 +12,8 @@
     "next": "10.0.9",
     "normalize.css": "^8.0.1",
     "react": "17.0.1",
-    "react-dom": "17.0.1"
+    "react-dom": "17.0.1",
+    "react-query": "^3.13.0"
   },
   "devDependencies": {
     "@types/node": "^14.14.35",

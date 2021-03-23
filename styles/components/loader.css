@@ -70,3 +70,45 @@
     transform: translate(24px, 0);
   }
 }
+
+.ld-ring {
+  width: 1em;
+  height: 1em;
+  position: relative;
+  color: inherit;
+  display: inline-block;
+  box-sizing: content-box;
+  color: var(--secondary-text-color);
+}
+
+.ld-ring:after {
+  content: " ";
+  display: block;
+  width: 2em;
+  height: 2em;
+  box-sizing: border-box;
+  transform-origin: 0 0;
+  transform: translateZ(0) scale(0.5);
+  backface-visibility: hidden;
+}
+
+.ld-ring:after {
+  border-radius: 50%;
+  border: .3em solid currentColor;
+  border-left-color: transparent;
+}
+
+@keyframes ld-spin {
+  0% {
+      animation-timing-function: cubic-bezier(0.5856,0.0703,0.4143,0.9297);
+      transform: rotate(0);
+  }
+
+  100% {
+      transform: rotate(360deg);
+  }
+}
+
+.ld.ld-spin {
+  animation: ld-spin 1s infinite linear;
+}

@@ -132,12 +132,17 @@ a > .tag {
   margin-bottom: 10px;
 }
 
-a:visited, a:link {
+a:visited:not(.simple), a:link:not(.simple) {
   color: var(--primary-text-color);
   font-weight: 500;
   text-decoration: none;
 }
 
-a:hover {
+a:hover:not(.simple) {
   color: white;
+}
+
+a.simple {
+  color: inherit;
+  text-decoration: inherit;
 }

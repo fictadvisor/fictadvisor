@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 
-import api from '../../lib/server/api';
-
 import { getFullName } from '../../lib/text';
 import { AxiosError } from 'axios';
 
@@ -19,6 +17,7 @@ import { Divider } from '../../components/ui/Divider';
 import { Collapsible } from '../../components/ui/Collapsible';
 import { StatisticsBlock } from '../../components/Statistics';
 import { ContactBlock } from '../../components/Contact';
+import api from '../../lib/api';
 
 
 const PAGE_TABS = [
@@ -141,7 +140,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { link } = context.query;
 
   try {
-    const { data } = await api.get(`/teachers/${link}`);
+    const data = await api.fetchTeacher(typeof(link) === 'object' ? link[0] : link);
 
     return {
       props: {
