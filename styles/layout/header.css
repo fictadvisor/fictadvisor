@@ -14,8 +14,12 @@
 }
 
 .page > .header .logo {
-  width: 100%;
   max-width: 284px;
-  padding-right: 24px;
-  margin: auto 0 auto auto;
+  padding: 0 24px 0 24px;
+  margin: 0 auto;
+}
+
+.page > .header .logo img {
+  min-width: 100%;
+  max-width: 100%;
 }

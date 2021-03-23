@@ -9,11 +9,13 @@ export default function PageHeader() {
   return (
     <div className="header">
       <div className="left">
-        <Link href="/">
-          <a className="simple">
-          <img className="logo" src="/assets/logo.png" />
-          </a>
-        </Link>
+        <div className="logo">
+          <Link href="/">
+            <a className="simple">
+            <img src="/assets/logo.png" />
+            </a>
+          </Link>
+        </div>
       </div>
 
       <div className="content">
