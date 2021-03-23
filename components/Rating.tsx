@@ -23,5 +23,5 @@ type RatingProperties = {
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
 
 export const Rating = ({ className, rating, ...props }: RatingProperties) => {
-  return <div className={`${rating == null ? 'secondary' : ''} ${className ?? ''}`} {...props}>{getStars(rating)}</div>
+  return <div className={`${rating == null || rating === 0 ? 'secondary' : ''} ${className ?? ''}`} {...props}>{getStars(rating)}</div>
 };
