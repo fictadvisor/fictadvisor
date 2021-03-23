@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
-import { Page, Pageable } from 'src/common/common.api';
-import { PageableQueryDto } from 'src/common/common.dto';
+import { Page } from 'src/common/common.api';
+import { SearchableQueryDto } from 'src/common/common.dto';
 import { TeacherItemDto } from './dto/teacher-item.dto';
 import { TeacherDto } from './dto/teacher.dto';
 import { TeacherService } from './teacher.service';
@@ -17,10 +17,7 @@ export class TeacherController {
     }
 
     @Get()
-    getTeachers(
-        @Query() query: PageableQueryDto,
-        @Query('search') search?: string,
-    ): Promise<Page<TeacherItemDto>> {
-        return this.teacherService.getTeachers(Pageable.from(query), search);
+    getTeachers(@Query() query: SearchableQueryDto): Promise<Page<TeacherItemDto>> {
+        return this.teacherService.getTeachers(query);
     }
 }

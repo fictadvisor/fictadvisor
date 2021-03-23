@@ -5,7 +5,8 @@ export interface Mapped<Entity, DtoClass> {
   toDto(entity: Entity): DtoClass;
 };
 
-const transformIntValue = (value) => {
+const transformIntValue = (field) => {
+  const { value } = field;
   const num = parseInt(value, 10);
   return Number.isSafeInteger(num) ? num : null;
 };
@@ -15,16 +16,16 @@ export const TransformInt = () => Transform(transformIntValue);
 export class PageableQueryDto {
   @IsOptional()
   @TransformInt()
-  page: number;
+  page?: number;
 
   @IsOptional()
   @TransformInt()
   @Expose({ name: 'page_size' })
-  pageSize: number;
+  pageSize?: number;
 }
 
 export class SearchableQueryDto extends PageableQueryDto {
   @IsOptional()
   @Expose({ name: 'search' })
-  searchQuery: string;
+  searchQuery?: string;
 };
