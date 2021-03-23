@@ -1,5 +1,6 @@
 :root {
   --content-width: 740px;
+  --side-block-width: calc((100vw - var(--content-width)) / 2);
   --background-color: #0B0E11;
   --primary-text-color: #DFE3E9;
   --secondary-text-color: #5D7290;
@@ -28,6 +29,15 @@ input, button, textarea, select {
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	appearance: none;
+}
+
+.page > .main {
+  width: 100%;
+  display: flex;
+}
+
+.page > .main > .left, .page > .main > .right {
+  width: calc(var(--side-block-width) - 40px);
 }
 
 .page > .main > .content, .page > .header > .content {

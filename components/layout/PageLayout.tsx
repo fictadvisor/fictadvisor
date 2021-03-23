@@ -1,4 +1,6 @@
 import Head from 'next/head';
+import Link from 'next/link';
+import HomeIcon from '../ui/icons/SettingsIcon';
 import PageHeader from './PageHeader';
 
 type PageLayoutProperties = {

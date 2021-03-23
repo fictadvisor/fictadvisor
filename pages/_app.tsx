@@ -9,6 +9,7 @@ import '../styles/components/review.css';
 import '../styles/components/loader.css';
 import '../styles/components/statistics.css';
 import '../styles/components/contact.css';
+import '../styles/components/navigation.css';
 
 import { QueryClient, QueryClientProvider } from 'react-query';
 

@@ -1,0 +1,33 @@
+.navigation-menu {
+  position: absolute;
+  margin-top: 10px;
+  width: calc(var(--content-width));
+}
+
+.navigation-menu .item:not(:last-child) {
+  margin-right: 10px;
+}
+
+.navigation-menu > div {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.navigation-menu-blackout {
+  opacity: 0;
+  visibility: hidden;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  width: 100vw;
+  height: 100vh;
+  backdrop-filter: blur(2px);
+  background-color: rgba(0, 0, 0, 0.5);
+  transition: opacity 0.5s;
+}
+
+.navigation-menu-blackout.active {
+  opacity: 1;
+  visibility: visible;
+}
