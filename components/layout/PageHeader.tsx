@@ -78,6 +78,13 @@ export default function PageHeader() {
       <div className={`navigation-menu-blackout ${menuActive ? 'active' : ''}`} />
 
       <div className="content">
+        <div className="logo-md">
+          <Link href="/">
+            <a className="simple">
+              <img src="/assets/logo.png" />
+            </a>
+          </Link>
+        </div>
         <div className="flex full-width">
           <SearchInput 
             active={searchActive} 

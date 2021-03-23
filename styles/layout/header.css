@@ -9,6 +9,33 @@
   margin: auto;
 }
 
+.page > .header .logo-md {
+  display: none;
+  max-width: 284px;
+  padding: 0 24px 0 24px;
+  margin: 10px auto 30px;
+}
+
+.page > .header .logo-md img {
+  min-width: 100%;
+  max-width: 100%;
+}
+
+@media (max-width: 1200px) {
+  .page > .header > .left, .header > .right {
+    visibility: hidden;
+    display: none;
+  }
+
+  .page > .header .logo-md {
+    display: block;
+  }
+
+  .page > .header {
+    height: 160px;
+  }
+}
+
 .page > .header > .left {
   text-align: center;
 }
