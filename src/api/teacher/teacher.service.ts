@@ -31,7 +31,7 @@ export class TeacherService {
     async getTeachers(pageable: Pageable, search?: string): Promise<Page<TeacherItemDto>> {
         const [items, count] = await this.teacherSearchIndexRepository.findAndCount({ 
             ...pageable.toQuery(),
-            ...Searchable.of<TeacherSearchIndex>('fullName', search).toQuery(),
+            where: { ...Searchable.of<TeacherSearchIndex>('fullName', search).toQuery() },
         });
 
         return Page.of(
