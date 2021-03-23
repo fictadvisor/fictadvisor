@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { useState } from "react";
+import useComponentVisible from "../../lib/component";
 import Button from "../ui/Button";
 import { Divider } from "../ui/Divider";
 import SettingsIcon from "../ui/icons/SettingsIcon";
@@ -58,7 +59,7 @@ const MenuItem = ({ item, setMenuActive }) => {
 
 export default function PageHeader() {
   const [searchText, setSearchText] = useState('');
-  const [menuActive, setMenuActive] = useState(false);
+  const { ref: menuRef, isComponentVisible: menuActive, setIsComponentVisible: setMenuActive } = useComponentVisible(false);
 
   const searchActive = searchText.length > 0;
 
@@ -89,7 +90,7 @@ export default function PageHeader() {
         </div>
         {
           menuActive &&
-          <div className="navigation-menu">
+          <div ref={menuRef} className="navigation-menu">
             <div>
               {
                 MENU.navigation.map(t => <MenuItem key={t.text} item={t} setMenuActive={setMenuActive} />)
