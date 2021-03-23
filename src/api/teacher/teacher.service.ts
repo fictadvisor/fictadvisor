@@ -1,6 +1,6 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Page, Pageable, Searchable } from 'src/common/common.api';
+import { Page, Pageable, Searchable, SortableProcessor } from 'src/common/common.api';
 import { SearchableQueryDto } from 'src/common/common.dto';
 import { ServiceException } from 'src/common/common.exception';
 import { TeacherSearchIndex } from 'src/database/entities/teacher-search-index.entity';
@@ -28,10 +28,13 @@ export class TeacherService {
         return TeacherDto.from(teacher);
     }
 
+    private teacherSortableProcessor = SortableProcessor.of({ rating: ['DESC'], lastName: ['ASC'] }, 'rating');
+
     async getTeachers(query: SearchableQueryDto): Promise<Page<TeacherItemDto>> {
         const [items, count] = await this.teacherSearchIndexRepository.findAndCount({ 
             ...Pageable.of(query.page, query.pageSize).toQuery(),
-            where: { ...Searchable.of<TeacherSearchIndex>('fullName', query.searchQuery).toQuery() }
+            where: { ...Searchable.of<TeacherSearchIndex>('lastName', query.searchQuery).toQuery() },
+            order: { ...this.teacherSortableProcessor.toQuery(query.sort) }
         });
 
         return Page.of(

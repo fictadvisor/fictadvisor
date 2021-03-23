@@ -28,4 +28,8 @@ export class SearchableQueryDto extends PageableQueryDto {
   @IsOptional()
   @Expose({ name: 'search' })
   searchQuery?: string;
+
+  @IsOptional()
+  @Expose({ name: 'sort' })
+  sort: string;
 };

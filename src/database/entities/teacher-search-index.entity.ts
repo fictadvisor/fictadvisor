@@ -11,7 +11,7 @@ import { Teacher } from "./teacher.entity";
         .addSelect('t.middle_name', 'middle_name')
         .addSelect('t.last_name', 'last_name')
         .addSelect('concat(t.last_name, \' \', t.first_name, \' \', t.middle_name)', 'full_name')
-        .addSelect('avg(r.rating)::real', 'rating')
+        .addSelect('coalesce(avg(r.rating)::real, 0)', 'rating')
         .from(Teacher, 't')
         .leftJoin(Course, 'c', 'c.teacher_id = t.id')
         .leftJoin(Review, 'r', 'r.course_id = c.id')

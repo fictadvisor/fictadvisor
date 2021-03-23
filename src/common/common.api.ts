@@ -18,6 +18,44 @@ export class ResponseEntity<T> {
   }
 };
 
+export type SortDirection = 'ASC' | 'DESC';
+
+export type SortableMapEntry = [direction: 'ASC' | 'DESC', mapTo?: string];
+
+export type SortableMap = {
+  [value: string]: SortableMapEntry;
+}
+
+export class SortableProcessor<T extends SortableMap> {
+  map: SortableMap;
+  defaultKey?: keyof T;
+
+  toQuery(value: string) {
+    if (value == null || this.map[value] == null) {
+      if (!this.defaultKey) {
+        return {};
+      }
+
+      value = this.defaultKey as string;
+    }
+
+    const entry = this.map[value];
+
+    return {
+      [entry[1] ?? value]: entry[0],
+    };
+  }
+
+  static of <T extends SortableMap>(map: T, defaultKey?: keyof T) {
+    const sortable = new SortableProcessor<T>();
+
+    sortable.map = map;
+    sortable.defaultKey = defaultKey;
+
+    return sortable;
+  }
+};
+
 export class Pageable {
   page: number;
   size: number;

@@ -9,7 +9,7 @@ import { Teacher } from "./teacher.entity";
 @ViewEntity({
     expression: (connection: Connection) => connection.createQueryBuilder()
         .select('t.*')
-        .addSelect('avg(r.rating)::real', 'rating')
+        .addSelect('coalesce(avg(r.rating)::real, 0)', 'rating')
         .from(Teacher, 't')
         .leftJoin(Course, 'c', 'c.teacher_id = t.id')
         .leftJoin(Review, 'r', 'r.course_id = c.id')
