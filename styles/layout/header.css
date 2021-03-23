@@ -12,3 +12,10 @@
 .page > .header > .left {
   text-align: center;
 }
+
+.page > .header .logo {
+  width: 100%;
+  max-width: 284px;
+  padding-right: 24px;
+  margin: auto 0 auto auto;
+}
