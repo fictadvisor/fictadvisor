@@ -59,7 +59,7 @@ const MenuItem = ({ item, setMenuActive }) => {
 
 export default function PageHeader() {
   const [searchText, setSearchText] = useState('');
-  const { ref: menuRef, isComponentVisible: menuActive, setIsComponentVisible: setMenuActive } = useComponentVisible(false);
+  const { ref: menuRef, ignoreRef: menuBtnRef, isComponentVisible: menuActive, setIsComponentVisible: setMenuActive } = useComponentVisible(false);
 
   const searchActive = searchText.length > 0;
 
@@ -86,7 +86,7 @@ export default function PageHeader() {
             placeholder="Пошук викладачів, предметів та іншої інформації" 
             style={{ flex: 1, marginRight: '10px' }}
           />
-          <Button onClick={() => setMenuActive(!menuActive)}>M</Button>
+          <Button innerRef={menuBtnRef} className="accent" onClick={() => setMenuActive(!menuActive)}>M</Button>
         </div>
         {
           menuActive &&

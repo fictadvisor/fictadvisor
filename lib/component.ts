@@ -4,9 +4,10 @@ import { useState, useEffect, useRef } from 'react';
 export default function useComponentVisible(initialIsVisible) {
     const [isComponentVisible, setIsComponentVisible] = useState(initialIsVisible);
     const ref = useRef(null);
+    const ignoreRef = useRef(null);
 
     const handleClickOutside = (event) => {
-      if (ref.current && !ref.current.contains(event.target)) {
+      if (ref.current && !ref.current.contains(event.target) && (!ignoreRef.current || !ignoreRef.current.contains(event.target))) {
         setIsComponentVisible(false);
       }
     };
@@ -18,5 +19,5 @@ export default function useComponentVisible(initialIsVisible) {
       };
     }, [ref]);
 
-    return { ref, isComponentVisible, setIsComponentVisible };
+    return { ref, ignoreRef, isComponentVisible, setIsComponentVisible };
 };
