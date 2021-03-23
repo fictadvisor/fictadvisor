@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { GetServerSideProps } from 'next';
-import { useRouter } from 'next/router';
 
 import { getFullName } from '../../lib/text';
 import { AxiosError } from 'axios';
@@ -18,6 +17,8 @@ import { Collapsible } from '../../components/ui/Collapsible';
 import { StatisticsBlock } from '../../components/Statistics';
 import { ContactBlock } from '../../components/Contact';
 import api from '../../lib/api';
+import { useQueryParams } from '../../lib/query';
+import { toInteger } from '../../lib/number';
 
 
 const PAGE_TABS = [
@@ -45,36 +46,21 @@ const PAGE_TABS = [
 
 const Rating = (props) => (<div className="rating secondary">4.5<StarIcon /></div>);
 
-const findTabByLink = (link) => {
-  const index = PAGE_TABS.findIndex(t => t.link === link);
-  return index === -1 ? 0 : index;
-};
-
 const TeacherPage = ({ teacher }) => {
   const fullName = getFullName(teacher.last_name, teacher.first_name, teacher.middle_name);
-
-  const router = useRouter();
 
   const [blockReady, setBlockReady] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [canCollapse, setCanCollapse] = useState(true);
-  const [tab, setTab] = useState(0);
+  const [tab, _setTab] = useState(0);
+  const { withQueryParam } = useQueryParams((query) => {
+    _setTab(toInteger(query.t, tab));
+    setBlockReady(true);
+  });
+  
+  const setTab = withQueryParam('t', _setTab);
 
   const TabBlock = PAGE_TABS[tab].block;
-
-  useEffect(() => {
-    if (!router.isReady) { return; }
-
-    const activeTab = findTabByLink(router.query.t);
-
-    setTab(activeTab);
-    setBlockReady(true);
-  }, [router.isReady]);
-
-  const changeTab = (index) => {
-    setTab(index);
-    router.push({ pathname: router.pathname, query: { ...router.query, t: PAGE_TABS[index].link } }, null, { shallow: true });
-  };
 
   return (
     <PageLayout
@@ -120,7 +106,7 @@ const TeacherPage = ({ teacher }) => {
               PAGE_TABS.map(
                 (t, index) => 
                   <Button 
-                    onClick={() => changeTab(index)} 
+                    onClick={() => setTab(index)} 
                     active={tab === index}
                     key={t.link}
                   >
