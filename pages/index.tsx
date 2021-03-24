@@ -15,7 +15,7 @@ const SR_PAGE_SIZE = 6;
 const IndexPage = ({ popularTeachers, studentResources: serverResources }) => {
   const [page, setPage] = useState(INITIAL_SR_PAGE);
 
-  const { data, isLoading, isFetching, error } = useQuery(
+  const { data, isLoading, isFetching } = useQuery(
     ['student-resources', page, SR_PAGE_SIZE], 
     () => api.fetchStudentResources({ page: 0, page_size: INITIAL_SR_PAGE_SIZE + SR_PAGE_SIZE * page }), 
     { keepPreviousData: true, enabled: page > INITIAL_SR_PAGE }
@@ -27,8 +27,23 @@ const IndexPage = ({ popularTeachers, studentResources: serverResources }) => {
   return (
     <PageLayout
       meta={{ title: 'Головна' }}
-      title="Студентські ресурси"
+      title="Головна сторінка"
     >
+      <div className="information-block">
+        <p>
+          <span className="font-bold">Вітаємо тебе на ресурсі для студентів та абітурієнтів ФІОТ</span>, на якому можна знайти інформацію та відгуки про викладачів і предмети.
+          Зміст сайту модерується та керується командою студентів із студради, яка незалежить від адміністрації.
+        </p>
+        <p>
+          Зараз ми знаходимося у стадії нашого першого робочого релізу, працюємо над покращенням існуючого функціоналу та розробкою нового.
+          У нас дуже великі амбіції, але досить обмежені ресурси на реалізацію їх, тому може доведеться трохи почекати.
+          За нашими новинами можна слідкувати на каналі студради: <a href="https://t.me/fict_time" target="_blank">@fict_time</a>.
+        </p>
+        <p>
+          Якщо ти хочеш надати відгук або доповнити якусь інформацію, звертайся до нас через бота зворотного зв'язку: <a href="https://t.me/fict_robot" target="_blank">@fict_robot</a>.
+        </p>
+      </div>
+      <p className="title">Студентські ресурси</p>
       <div className="student-resource-list">
         {
           studentResources.items.map(r => 

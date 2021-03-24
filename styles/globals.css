@@ -156,3 +156,8 @@ a.simple {
   color: inherit;
   text-decoration: inherit;
 }
+
+.information-block {
+  line-height: 20px;
+  margin-bottom: 20px;
+}
