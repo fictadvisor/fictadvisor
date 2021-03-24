@@ -18,8 +18,11 @@ export interface SortQuery {
 const fetchTeacher = async (link: string) => (await api.get(`/teachers/${link}`)).data;
 const fetchTeachers = async (params: PageQuery & SearchQuery & SortQuery) => (await api.get('/teachers', { params })).data;
 
+const fetchStudentResources = async (params: PageQuery & SearchQuery) => (await api.get('/student-resources', { params })).data;
+
 export default {
   fetchTeacher,
-  fetchTeachers
+  fetchTeachers,
+  fetchStudentResources,
 };
 

@@ -1,14 +1,101 @@
 import PageLayout from "../components/layout/PageLayout";
-import Link from 'next/link';
+import api from "../lib/api";
+import { GetServerSideProps } from "next";
+import { TeacherItem } from "../components/TeacherItem";
+import Button from "../components/ui/Button";
+import Link from "next/link";
+import { useState } from "react";
+import { useQuery } from "react-query";
+import StudentResourceItem from "../components/StudentResourceItem";
 
-const IndexPage = () => {
+const INITIAL_SR_PAGE = 0;
+const INITIAL_SR_PAGE_SIZE = 7;
+const SR_PAGE_SIZE = 6;
+
+const IndexPage = ({ popularTeachers, studentResources: serverResources }) => {
+  const [page, setPage] = useState(INITIAL_SR_PAGE);
+
+  const { data, isLoading, isFetching, error } = useQuery(
+    ['student-resources', page, SR_PAGE_SIZE], 
+    () => api.fetchStudentResources({ page: 0, page_size: INITIAL_SR_PAGE_SIZE + SR_PAGE_SIZE * page }), 
+    { keepPreviousData: true, enabled: page > INITIAL_SR_PAGE }
+  );
+
+  const studentResources = data || serverResources;
+  const moreCount = studentResources.count - studentResources.items.length;
+
   return (
-    <PageLayout>
-      <p><Link href="/teachers"><a>teachers page</a></Link>
-      </p>
-      <p><Link href="/teachers/lisovichenko-oleg-ivanovich"><a>lisovichenko-oleg-ivanovich</a></Link></p>
+    <PageLayout
+      meta={{ title: 'Головна' }}
+      title="Студентські ресурси"
+    >
+      <div className="student-resource-list">
+        {
+          studentResources.items.map(r => 
+            <StudentResourceItem
+              key={r.url}
+              href={r.url}
+              name={r.name}
+              image={r.image}
+            />
+          )
+        }
+        {
+          moreCount > 0 &&
+          <div className="student-resource-item more">
+            <Button disabled={isLoading || isFetching} onClick={() => setPage(page + 1)}>
+              <img />
+              <span>+{moreCount}</span>
+            </Button>
+          </div>
+        }
+      </div>
+      <p className="title">Популярні викладачі</p>
+      <div className="teacher-list">
+        {
+          popularTeachers.items.map(t => 
+            <TeacherItem 
+              key={t.id}
+              link={t.link} 
+              firstName={t.first_name} 
+              lastName={t.last_name} 
+              middleName={t.middle_name}
+              rating={t.rating} 
+            />
+          )
+        }
+      </div>
+      <Link href="/teachers">
+        <a>
+          <Button className="full-width">Завантажити ще</Button>
+        </a>
+      </Link>
     </PageLayout>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  try {
+    const [popularTeachers, studentResources] = await Promise.all(
+      [
+        api.fetchTeachers({ page: 0, page_size: 5, sort: 'rating' }),
+        api.fetchStudentResources({ page: INITIAL_SR_PAGE, page_size: INITIAL_SR_PAGE_SIZE }),
+      ]
+    );
+
+    return {
+      props: {
+        popularTeachers,
+        studentResources,
+      },
+    };
+  } catch (e) {
+    return {
+      props: {
+        error: true,
+      },
+    }
+  }
 };
 
 export default IndexPage;

@@ -1,0 +1,40 @@
+.student-resource-item {
+  display: inline-flex;
+}
+
+.student-resource-item button > img {
+  width: 32px;
+  height: 32px;
+  margin-right: 14px;
+  border-radius: 50%;
+}
+
+.student-resource-item.more button > img {
+  width: 0;
+  margin: 0;
+}
+
+.student-resource-item.more button {
+  font-size: 18px;
+}
+
+.student-resource-item button > span {
+  margin: auto;
+}
+
+.student-resource-more button > span {
+  height: 32px;
+}
+
+.student-resource-item button {
+  height: 60px;
+  display: inline-flex;
+}
+
+.student-resource-list {
+  margin-bottom: 10px;
+}
+
+.student-resource-list > .student-resource-item {
+  margin: 0 10px 10px 0;
+} 
