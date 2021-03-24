@@ -93,7 +93,7 @@ export default function PageHeader() {
             placeholder="Пошук викладачів, предметів та іншої інформації" 
             style={{ flex: 1, marginRight: '10px' }}
           />
-          <Button innerRef={menuBtnRef} className="accent" onClick={() => setMenuActive(!menuActive)}>M</Button>
+          <Button innerRef={menuBtnRef} className="accent" onClick={() => setMenuActive(!menuActive)}>Меню</Button>
         </div>
         {
           menuActive &&
