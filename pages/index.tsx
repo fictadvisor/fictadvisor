@@ -8,17 +8,21 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import StudentResourceItem from "../components/StudentResourceItem";
 
-const INITIAL_SR_PAGE = 0;
-const INITIAL_SR_PAGE_SIZE = 7;
-const SR_PAGE_SIZE = 6;
+const PROPERTIES = {
+  studentResources: {
+    initialPage: 0,
+    initialPageSize: 7,
+    pageSize: 6,
+  },
+};
 
 const IndexPage = ({ popularTeachers, studentResources: serverResources }) => {
-  const [page, setPage] = useState(INITIAL_SR_PAGE);
+  const [page, setPage] = useState(PROPERTIES.studentResources.initialPage);
 
   const { data, isLoading, isFetching } = useQuery(
-    ['student-resources', page, SR_PAGE_SIZE], 
-    () => api.fetchStudentResources({ page: 0, page_size: INITIAL_SR_PAGE_SIZE + SR_PAGE_SIZE * page }), 
-    { keepPreviousData: true, enabled: page > INITIAL_SR_PAGE }
+    ['student-resources', page], 
+    () => api.fetchStudentResources({ page: 0, page_size: PROPERTIES.studentResources.initialPageSize + PROPERTIES.studentResources.pageSize * page }), 
+    { keepPreviousData: true, enabled: page > PROPERTIES.studentResources.initialPage }
   );
 
   const studentResources = data || serverResources;
@@ -32,11 +36,11 @@ const IndexPage = ({ popularTeachers, studentResources: serverResources }) => {
       <div className="information-block">
         <p>
           <span className="font-bold">Вітаємо тебе на ресурсі для студентів та абітурієнтів ФІОТ</span>, на якому можна знайти інформацію та відгуки про викладачів і предмети.
-          Зміст сайту модерується та керується командою студентів із студради, яка незалежить від адміністрації.
+          Зміст сайту модерується та керується командою студентів із студради, яка не залежить від адміністрації.
         </p>
         <p>
           Зараз ми знаходимося у стадії нашого першого робочого релізу, працюємо над покращенням існуючого функціоналу та розробкою нового.
-          У нас дуже великі амбіції, але досить обмежені ресурси на реалізацію їх, тому може доведеться трохи почекати.
+          У нас дуже великі амбіції, але досить обмежені ресурси на їх реалізацію, тому може доведеться трохи зачекати.
           За нашими новинами можна слідкувати на каналі студради: <a href="https://t.me/fict_time" target="_blank">@fict_time</a>.
         </p>
         <p>
@@ -94,7 +98,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     const [popularTeachers, studentResources] = await Promise.all(
       [
         api.fetchTeachers({ page: 0, page_size: 5, sort: 'rating' }),
-        api.fetchStudentResources({ page: INITIAL_SR_PAGE, page_size: INITIAL_SR_PAGE_SIZE }),
+        api.fetchStudentResources({ page: PROPERTIES.studentResources.initialPage, page_size: PROPERTIES.studentResources.initialPageSize }),
       ]
     );
 

@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { useState } from "react";
-import useComponentVisible from "../../lib/component";
+import { useComponentVisible } from "../../lib/component";
 import Button from "../ui/Button";
-import { Divider } from "../ui/Divider";
+import Divider from "../ui/Divider";
 import SettingsIcon from "../ui/icons/SettingsIcon";
-import { SearchInput } from "../ui/SearchInput";
+import SearchInput from "../ui/SearchInput";
 
 const MENU = {
   navigation: [
@@ -57,7 +57,7 @@ const MenuItem = ({ item, setMenuActive }) => {
   );
 };
 
-export default function PageHeader() {
+const PageHeader = () => {
   const [searchText, setSearchText] = useState('');
   const { ref: menuRef, ignoreRef: menuBtnRef, isComponentVisible: menuActive, setIsComponentVisible: setMenuActive } = useComponentVisible(false);
 
@@ -119,3 +119,5 @@ export default function PageHeader() {
     </div>
   );
 };
+
+export default PageHeader;

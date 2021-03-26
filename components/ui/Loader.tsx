@@ -1,14 +1,15 @@
 // Source: https://loading.io/css/
 
+import { mergeClassName } from "../../lib/component";
 import ErrorMessage from "./ErrorMessage";
 
 type LoaderProperties = {
   secondary?: boolean;
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
-const Loader = (props: LoaderProperties) => {
+const Loader = ({ secondary, className, ...props }: LoaderProperties) => {
   return (
-    <div className={`loader ${props.secondary ? 'secondary' : ''}`}>
+    <div className={mergeClassName(`loader ${secondary ? 'secondary' : ''}`, className)} {...props}>
       <div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
     </div>
   );

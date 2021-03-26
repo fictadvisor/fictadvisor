@@ -1,6 +1,9 @@
+import api from '../../lib/api';
+
 import { useState } from 'react';
 import { GetServerSideProps } from 'next';
-
+import { useQueryParams } from '../../lib/query';
+import { toInteger } from '../../lib/number';
 import { getFullName } from '../../lib/text';
 import { AxiosError } from 'axios';
 
@@ -10,37 +13,64 @@ import ArrowIcon from '../../components/ui/icons/ArrowIcon';
 import StarIcon from '../../components/ui/icons/StarIcon';
 import Tag from '../../components/ui/Tag';
 
-import { SubjectBlock } from '../../components/Subject';
-import { ReviewBlock } from '../../components/Review';
-import { Divider } from '../../components/ui/Divider';
-import { Collapsible } from '../../components/ui/Collapsible';
-import { StatisticsBlock } from '../../components/Statistics';
-import { ContactBlock } from '../../components/Contact';
-import api from '../../lib/api';
-import { useQueryParams } from '../../lib/query';
-import { toInteger } from '../../lib/number';
+import Divider from '../../components/ui/Divider';
+import Collapsible from '../../components/ui/Collapsible';
 
+import StatisticsBlock from '../../components/blocks/StatisticsBlock';
+import ReviewBlock from '../../components/blocks/ReviewBlock';
+import ContactBlock from '../../components/blocks/ContactBlock';
+import CourseBlock from '../../components/blocks/CourseBlock';
+
+type TabProperties = { link: string };
 
 const PAGE_TABS = [
   {
     name: 'Предмети',
-    link: 'subjects',
-    block: SubjectBlock
+    block: ({ link }: TabProperties) => {
+      const courses = [
+        { title: 'Системне програмування', rating: 4.8, reviewCount: 12, recommended: true },
+        { title: 'Системне програмування - 2', rating: 4.3, reviewCount: 4, recommended: false },
+        { title: 'Інтеграція ІТ-систем', rating: 0, reviewCount: 0, recommended: false },
+      ];
+
+      return <CourseBlock courses={courses} />;
+    }
   },
   {
     name: 'Відгуки',
-    link: 'reviews',
-    block: ReviewBlock
+    block: ({ link }: TabProperties) => {
+      const reviews = [
+        { rating: 3.5, date: new Date(), subject: 'Системне програмування', content: 'Так само як немає нікого, хто полюбивши, вважав за краще і зажадав би саме страждання тільки за те, що це страждання, а не тому, що інший раз виникають такі обставини, коли страждання і біль приносять якесь і чималу насолоду. Якщо скористатися найпростішим прикладом, то хто з нас став би займатися якими б то не було тяжкими фізичними вправами, якщо б це не приносило з собою якоїсь користі? І хто міг би по справедливості дорікнути прагнення до насолоди, яке не несло б з собою ніяких неприємностей, або того, хто уникав би такого страждання, яке не приносило б з собою ніякої насолоди?' },
+        { rating: 4, date: new Date(), subject: 'Системне програмування - 2', content: 'І хто міг би по справедливості дорікнути прагнення до насолоди, яке не несло б з собою ніяких неприємностей, або того, хто уникав би такого страждання, яке не приносило б з собою ніякої насолоди?' }
+      ];
+
+      return <ReviewBlock reviews={reviews} />;
+    }
   },
   {
     name: 'Контакти',
-    link: 'contacts',
-    block: ContactBlock
+    block: ({ link }: TabProperties) => {
+      const contacts = [
+        { name: 'Телефон', value: '+380 50 507 29 43' },
+        { name: 'Telegram', value: '@lisovychenko' },
+        { name: 'Телефон', value: '+380 50 507 29 43' }
+      ];
+
+      return <ContactBlock contacts={contacts} />;
+    }
   },
   {
     name: 'Статистика',
-    link: 'stats',
-    block: StatisticsBlock
+    block: ({ link }: TabProperties) => {
+      const entries = [
+        { name: 'Ввічливість', rating: 2.5 },
+        { name: 'Пунктуальність', rating: 4 },
+        { name: 'Об\'єктивність', rating: 5 },
+        { name: 'Загалом', rating: 3.8 }
+      ];
+
+      return <StatisticsBlock entries={entries} />;
+    }
   },
 ];
 
@@ -108,14 +138,14 @@ const TeacherPage = ({ teacher }) => {
                   <Button 
                     onClick={() => setTab(index)} 
                     active={tab === index}
-                    key={t.link}
+                    key={index}
                   >
                     {t.name}
                   </Button>
               )
             }
           </div>
-          <TabBlock />
+          <TabBlock link={teacher.link} />
         </>
       }
     </PageLayout>

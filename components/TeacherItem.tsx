@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Rating } from "./Rating";
+import Rating from "./Rating";
 
 type TeacherItemProperties = {
   link: string;
@@ -9,7 +9,7 @@ type TeacherItemProperties = {
   rating?: number;
 };
 
-export const TeacherItem = ({ link, lastName, firstName, middleName, rating }: TeacherItemProperties) => {
+const TeacherItem = ({ link, lastName, firstName, middleName, rating }: TeacherItemProperties) => {
   return (
     <Link href={`/teachers/${link}`}>
       <a className="simple">
@@ -26,3 +26,6 @@ export const TeacherItem = ({ link, lastName, firstName, middleName, rating }: T
     </Link>
   );
 };
+
+export default TeacherItem;
+

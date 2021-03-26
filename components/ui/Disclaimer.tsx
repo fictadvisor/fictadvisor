@@ -1,7 +1,11 @@
-type DisclaimerProperties = {} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
+import { mergeClassName } from "../../lib/component";
 
-export default function Disclaimer({ className, ...props }: DisclaimerProperties) {
+export type DisclaimerProperties = {} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
+
+const Disclaimer = ({ className, ...props }: DisclaimerProperties) => {
   return (
-    <div className={`disclaimer ${className ?? ''}`} {...props}/>
+    <div className={mergeClassName('disclaimer', className)} {...props}/>
   );
 };
+
+export default Disclaimer;

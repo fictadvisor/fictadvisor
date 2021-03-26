@@ -1,6 +1,4 @@
 import Head from 'next/head';
-import Link from 'next/link';
-import HomeIcon from '../ui/icons/SettingsIcon';
 import PageHeader from './PageHeader';
 
 type PageLayoutProperties = {
@@ -12,8 +10,8 @@ type PageLayoutProperties = {
   children?: any;
 };
 
-export default function PageLayout({ meta, title, children }: PageLayoutProperties) {
-  const metaTitle = `${meta?.title ?? 'FICT Advisor'} - fictadvisor.com`;
+const PageLayout = ({ meta, title, children }: PageLayoutProperties) => {
+  const metaTitle = meta?.title ? `${meta.title} - FICTAdvisor` : 'FICTAdvisor';
 
   return (
     <div className="page">
@@ -36,3 +34,5 @@ export default function PageLayout({ meta, title, children }: PageLayoutProperti
     </div>
   );
 };
+
+export default PageLayout;

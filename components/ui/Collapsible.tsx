@@ -1,13 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 
-type CollapsibleProperties = {
+export type CollapsibleProperties = {
   collapsed?: boolean;
   minHeight?: number;
   onActiveChange?: (active: boolean) => void;
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
-
-export function Collapsible({ onActiveChange, collapsed, minHeight = 0, className, ...props }: CollapsibleProperties) {
+const Collapsible = ({ onActiveChange, collapsed, minHeight = 0, className, ...props }: CollapsibleProperties) => {
   const [height, setHeight] = useState(400);
   const [active, setActive] = useState(true);
   const ref = useRef(null);
@@ -36,3 +35,5 @@ export function Collapsible({ onActiveChange, collapsed, minHeight = 0, classNam
     </div>
   );
 };
+
+export default Collapsible;

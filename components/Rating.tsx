@@ -1,3 +1,5 @@
+import { mergeClassName } from "../lib/component";
+
 import StarIcon from "./ui/icons/StarIcon";
 
 const getStars = (rating: number) => {
@@ -18,10 +20,19 @@ const getStars = (rating: number) => {
   return stars;
 };
 
-type RatingProperties = {
+export type RatingProperties = {
   rating: number;
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
 
-export const Rating = ({ className, rating, ...props }: RatingProperties) => {
-  return <div className={`${rating == null || rating === 0 ? 'secondary' : ''} ${className ?? ''}`} {...props}>{getStars(rating)}</div>
+const Rating = ({ className, rating, children, ...props }: RatingProperties) => {
+  return (
+    <div 
+      className={mergeClassName(rating == null || rating === 0 ? 'secondary' : '', className)} 
+      {...props}
+    >
+      {getStars(rating)}
+    </div>
+  );
 };
+
+export default Rating;

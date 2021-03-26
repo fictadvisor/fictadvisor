@@ -1,25 +1,22 @@
-import Disclaimer from "./ui/Disclaimer";
+import { mergeClassName } from "../lib/component";
 
-function Contact({ name, value }) {
+export type ContactProperties = {
+  name: string;
+  value: string;
+} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
+
+const Contact = ({ name, value, className, ...props }: ContactProperties) => {
   return (
-    <div title="Натисни, щоб копіювати" className="contact" onClick={() => navigator.clipboard.writeText(value)}>
+    <div 
+      title="Натисни, щоб копіювати" 
+      className={mergeClassName('contact', className)} 
+      onClick={() => navigator.clipboard.writeText(value)} 
+      {...props}
+    >
       <div className="contact-name">{name}</div>
       <div>{value}</div>
     </div>
   );
 };
 
-export function ContactBlock() {
-  return (
-    <>
-      <Disclaimer>
-        Натисніть на контакт, щоб скопіювати його до буфера обміну
-      </Disclaimer>
-      <div className="contact-group">
-        <Contact name="Телефон" value="+380 50 507 29 43" />
-        <Contact name="Telegram" value="@lisovychenko" />
-        <Contact name="Email" value="timur.shemsedinov@gmail.com" />
-      </div>
-    </>
-  );
-}
+export default Contact;

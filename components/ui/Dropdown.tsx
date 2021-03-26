@@ -1,24 +1,23 @@
-import { useState } from "react";
-import useComponentVisible from "../../lib/component";
+import { mergeClassName, useComponentVisible } from "../../lib/component";
 import ArrowIcon from "./icons/ArrowIcon";
 
-type DropdownOption = {
+export type DropdownOption = {
   text: string;
   data?: any;
 };
 
-type DropdownProperties = {
+export type DropdownProperties = {
   text: string;
   active: number;
   onChange?: (index: number, option: DropdownOption) => void;
   options: DropdownOption[];
-};
+} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
-export default function Dropdown({ text, active, onChange, options, ...props }: DropdownProperties) {
+const Dropdown = ({ text, active, onChange, options, className, ...props }: DropdownProperties) => {
   const { ref, isComponentVisible: open, setIsComponentVisible: setOpen } = useComponentVisible(false);
 
   return (
-    <div ref={ref} className={`dropdown ${open ? 'active' : ''}`} {...props}>
+    <div ref={ref} className={mergeClassName(`dropdown ${open ? 'active' : ''}`, className)} {...props}>
       <button className="dropdown" onClick={() => setOpen(!open)}>
         <div className="flex">
           <span><span className="font-medium">{text}</span> {options[active].text.toLowerCase()}</span>
@@ -51,3 +50,5 @@ export default function Dropdown({ text, active, onChange, options, ...props }: 
     </div>
   );
 };
+
+export default Dropdown;

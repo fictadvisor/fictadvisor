@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 
 // Source: https://stackoverflow.com/a/45323523
-export default function useComponentVisible(initialIsVisible) {
+export const useComponentVisible = (initialIsVisible) => {
     const [isComponentVisible, setIsComponentVisible] = useState(initialIsVisible);
     const ref = useRef(null);
     const ignoreRef = useRef(null);
@@ -20,4 +20,12 @@ export default function useComponentVisible(initialIsVisible) {
     }, [ref]);
 
     return { ref, ignoreRef, isComponentVisible, setIsComponentVisible };
+};
+
+export const mergeClassName = (defaultValue: string, className: string) => {
+  if (!className) {
+    return defaultValue;
+  }
+
+  return `${defaultValue} ${className}`;
 };

@@ -1,7 +1,12 @@
-type TagProperties = {} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
+import { mergeClassName } from "../../lib/component";
 
-export default function Tag({ className, ...props }: TagProperties) {
+export type TagProperties = {} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
+
+const Tag = ({ className, ...props }: TagProperties) => {
   return (
-    <span className={`tag ${className ?? ''}`} {...props} />
+    <span className={mergeClassName('tag', className)} {...props} />
   );
 };
+
+export default Tag;
+

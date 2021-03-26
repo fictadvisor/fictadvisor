@@ -1,16 +1,21 @@
+import api from "../../lib/api";
+
 import { useState } from "react";
 import { useQuery } from "react-query";
-import PageLayout from "../../components/layout/PageLayout";
-import { TeacherItem } from "../../components/TeacherItem";
-import Button from "../../components/ui/Button";
-import Dropdown from "../../components/ui/Dropdown";
-import Loader from "../../components/ui/Loader";
-import { SearchInput } from "../../components/ui/SearchInput";
-import api from "../../lib/api";
 import { toInteger } from "../../lib/number";
 import { useQueryParams } from "../../lib/query";
 
-const PAGE_SIZE = 1;
+import PageLayout from "../../components/layout/PageLayout";
+import Button from "../../components/ui/Button";
+import Dropdown from "../../components/ui/Dropdown";
+import Loader from "../../components/ui/Loader";
+
+import TeacherItem from "../../components/TeacherItem";
+import SearchInput from "../../components/ui/SearchInput";
+
+const PROPERTIES = {
+  pageSize: 1,
+};
 
 const SORT_BY = [
   {
@@ -38,7 +43,7 @@ const TeachersPage = () => {
 
   const { data, isLoading, isFetching, error } = useQuery(
     ['teachers-search', page, searchText, sortType], 
-    () => api.fetchTeachers({ page: 0, page_size: PAGE_SIZE * (page + 1), search: searchText, sort: SORT_BY[sortType].data }), 
+    () => api.fetchTeachers({ page: 0, page_size: PROPERTIES.pageSize * (page + 1), search: searchText, sort: SORT_BY[sortType].data }), 
     { keepPreviousData: true, enabled: queryReady }
   );
 
@@ -70,7 +75,7 @@ const TeachersPage = () => {
         }
       </div>
       {
-        (data && !error && data.count - 1 > page * PAGE_SIZE) &&
+        (data && !error && data.count - 1 > page * PROPERTIES.pageSize) &&
         <Button loading={isLoading || isFetching} className="full-width" onClick={() => setPage(page + 1)}>Завантажити ще</Button>
       }
     </PageLayout>

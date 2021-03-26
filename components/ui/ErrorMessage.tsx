@@ -1,8 +1,8 @@
-type ErrorMessage = {
+export type ErrorMessageProperties = {
   error: any;
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
-const ErrorMessage = ({ error, ...props }) => {
+const ErrorMessage = ({ error, ...props }: ErrorMessageProperties) => {
   return <div {...props}>Ooopsie... something happened: {error.toString()}</div>
 };
 
