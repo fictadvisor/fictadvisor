@@ -6,7 +6,8 @@ export enum TeacherContactType {
     Email = 'email',
     Telegram = 'telegram',
     Viber = 'viber',
-    Website = 'website'
+    Website = 'website',
+    Other = 'other'
 };
 
 @Entity('teacher_contacts')
@@ -14,7 +15,7 @@ export class TeacherContact extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column({ type: 'varchar' })
+    @Column({ type: 'varchar', default: TeacherContactType.Other })
     type: TeacherContactType;
 
     @Column({ type: 'varchar' })

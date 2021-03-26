@@ -7,6 +7,9 @@ export class Course extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
+    @Column({ type: 'varchar', unique: true })
+    link: string;
+
     @ManyToOne(teacher => Teacher)
     @JoinColumn({ name: 'teacher_id' })
     teacher: Teacher;
@@ -14,6 +17,9 @@ export class Course extends BaseEntity {
     @ManyToOne(subject => Subject)
     @JoinColumn({ name: 'subject_id' })
     subject: Subject;
+
+    @Column()
+    recommended: boolean;
 
     @Column({ type: 'text' })
     description: string;
