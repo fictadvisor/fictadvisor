@@ -1,11 +1,13 @@
-import PageLayout from "../components/layout/PageLayout";
 import api from "../lib/api";
-import { GetServerSideProps } from "next";
-import { TeacherItem } from "../components/TeacherItem";
-import Button from "../components/ui/Button";
-import Link from "next/link";
+
 import { useState } from "react";
 import { useQuery } from "react-query";
+import { GetServerSideProps } from "next";
+
+import PageLayout from "../components/layout/PageLayout";
+import Link from "next/link";
+import TeacherItem from "../components/TeacherItem";
+import Button from "../components/ui/Button";
 import StudentResourceItem from "../components/StudentResourceItem";
 
 const PROPERTIES = {
