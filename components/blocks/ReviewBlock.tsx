@@ -10,6 +10,13 @@ export type ReviewBlockProperties = {
   reviews: ReviewProperties[];
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
+const PROPERTIES = {
+  sortBy: [
+    { text: 'Рейтингом', data: 'rating' }, 
+    { text: 'Датою', data: 'date' }
+  ]
+};
+
 const ReviewBlock = ({ reviews, className, ...props }: ReviewBlockProperties) => {
   const [sortType, setSortType] = useState(0);
 
@@ -20,7 +27,7 @@ const ReviewBlock = ({ reviews, className, ...props }: ReviewBlockProperties) =>
         <Dropdown 
           text="Сортування за:" 
           active={sortType} 
-          onChange={i => setSortType(i)} options={[{ text: 'Рейтингом' }, { text: 'Датою' }, { text: 'Змістом' }]} 
+          onChange={i => setSortType(i)} options={PROPERTIES.sortBy} 
         />
       </div>
       <div className="review-group">
