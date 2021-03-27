@@ -18,10 +18,10 @@ export class Course extends BaseEntity {
     @JoinColumn({ name: 'subject_id' })
     subject: Subject;
 
-    @Column()
+    @Column({ default: false })
     recommended: boolean;
 
-    @Column({ type: 'text' })
+    @Column({ type: 'text', nullable: true })
     description: string;
 
     @CreateDateColumn({ name: 'created_at' })

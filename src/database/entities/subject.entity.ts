@@ -11,7 +11,7 @@ export class Subject extends BaseEntity {
     @Column({ type: 'varchar' })
     name: string;
 
-    @Column({ type: 'text' })
+    @Column({ type: 'text', nullable: true })
     description: string;
 
     @CreateDateColumn({ name: 'created_at' })
