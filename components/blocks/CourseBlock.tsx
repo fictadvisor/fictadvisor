@@ -8,7 +8,7 @@ export type CourseBlockProperties = {
 const CourseBlock = ({ courses, ...props }: CourseBlockProperties) => {
   return (
     <div {...props}>
-      <div className="subject-group">
+      <div className="course-group">
         {
           courses.map((c, i) => <CourseItem key={i} {...c} />)
         }

@@ -50,6 +50,10 @@
   text-align: right;
 }
 
+.align-center {
+  text-align: center;
+}
+
 .margin-auto {
   margin: auto;
 }

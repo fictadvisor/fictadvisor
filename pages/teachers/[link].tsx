@@ -28,9 +28,9 @@ const PAGE_TABS = [
     name: 'Предмети',
     block: ({ link }: TabProperties) => {
       const courses = [
-        { title: 'Системне програмування', rating: 4.8, reviewCount: 12, recommended: true },
-        { title: 'Системне програмування - 2', rating: 4.3, reviewCount: 4, recommended: false },
-        { title: 'Інтеграція ІТ-систем', rating: 0, reviewCount: 0, recommended: false },
+        { title: 'Системне програмування', rating: 4.8, reviewCount: 12, link: '0', recommended: true },
+        { title: 'Системне програмування - 2', rating: 4.3, reviewCount: 4, link: '0', recommended: false },
+        { title: 'Інтеграція ІТ-систем', rating: 0, reviewCount: 0, link: '0', recommended: false },
       ];
 
       return <CourseBlock courses={courses} />;

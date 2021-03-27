@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { mergeClassName } from "../lib/component";
 import pluralize from "../lib/pluralize";
 
@@ -8,13 +9,14 @@ export type CourseItemProperties = {
   rating: number;
   reviewCount: number;
   recommended: boolean;
+  link: string;
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
-const CourseItem = ({ title, rating, reviewCount, recommended, className, ...props }: CourseItemProperties) => {
+const CourseItem = ({ link, title, rating, reviewCount, recommended, className, ...props }: CourseItemProperties) => {
   const noReviews = !rating || !reviewCount;
 
   return (
-    <div className={mergeClassName("block subject", className)} {...props}>
+    <div className={mergeClassName("block course", className)} {...props}>
       <div className="info">
         <span className="font-medium">{title}</span>
         <p className="secondary">
@@ -33,7 +35,11 @@ const CourseItem = ({ title, rating, reviewCount, recommended, className, ...pro
         }
       </div>
       <div className="action">
-        <Button>Дізнатись більше</Button>
+        <Link href={`/courses/${link}`}>
+          <a>
+            <Button>Дізнатись більше</Button>
+          </a>
+        </Link>
       </div>
     </div>
   );

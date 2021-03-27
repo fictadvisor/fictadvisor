@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Rating from "./Rating";
 
-type TeacherItemProperties = {
+export type TeacherItemProperties = {
   link: string;
   firstName: string;
   lastName: string;

@@ -18,11 +18,11 @@ const MENU = {
     },
     {
       text: 'Предмети',
-      href: '/',
+      href: '/subjects',
     },
     {
       text: 'Допомога',
-      href: '/',
+      href: '/help',
     }
   ],
   actions: [

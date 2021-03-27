@@ -9,6 +9,7 @@ import Link from "next/link";
 import TeacherItem from "../components/TeacherItem";
 import Button from "../components/ui/Button";
 import StudentResourceItem from "../components/StudentResourceItem";
+import SubjectItem from "../components/SubjectItem";
 
 const PROPERTIES = {
   studentResources: {
@@ -18,7 +19,7 @@ const PROPERTIES = {
   },
 };
 
-const IndexPage = ({ popularTeachers, studentResources: serverResources }) => {
+const IndexPage = ({ popularTeachers, popularSubjects, studentResources: serverResources }) => {
   const [page, setPage] = useState(PROPERTIES.studentResources.initialPage);
 
   const { data, isLoading, isFetching } = useQuery(
@@ -86,6 +87,19 @@ const IndexPage = ({ popularTeachers, studentResources: serverResources }) => {
           )
         }
       </div>
+      <p className="title">Популярні предмети</p>
+      <div className="teacher-list">
+        {
+          popularSubjects.items.map(s => 
+            <SubjectItem 
+              key={s.id}
+              link={s.link} 
+              name={s.name}
+              teacherCount={s.teacher_count}
+            />
+          )
+        }
+      </div>
       <Link href="/teachers">
         <a>
           <Button className="full-width">Завантажити ще</Button>
@@ -97,9 +111,10 @@ const IndexPage = ({ popularTeachers, studentResources: serverResources }) => {
 
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
-    const [popularTeachers, studentResources] = await Promise.all(
+    const [popularTeachers, popularSubjects, studentResources] = await Promise.all(
       [
-        api.fetchTeachers({ page: 0, page_size: 5, sort: 'rating' }),
+        api.fetchTeachers({ page: 0, page_size: 3, sort: 'rating' }),
+        api.fetchSubjects({ page: 0, page_size: 3, sort: 'rating' }),
         api.fetchStudentResources({ page: PROPERTIES.studentResources.initialPage, page_size: PROPERTIES.studentResources.initialPageSize }),
       ]
     );
@@ -107,6 +122,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     return {
       props: {
         popularTeachers,
+        popularSubjects,
         studentResources,
       },
     };
