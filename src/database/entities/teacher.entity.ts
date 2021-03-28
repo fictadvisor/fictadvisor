@@ -16,13 +16,13 @@ export class Teacher extends BaseEntity {
     middleName?: string;
 
     @Column({ name: 'last_name', type: 'varchar' })
-    lastName?: string;
+    lastName: string;
 
     @Column({ type: 'text', nullable: true })
-    description: string;
+    description?: string;
 
     @Column({ type: 'varchar', nullable: true })
-    image: string;
+    image?: string;
 
     @Column({ type: 'varchar', array: true, default: '{}' })
     tags: string[];
