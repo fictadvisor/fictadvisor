@@ -19,11 +19,11 @@ const PROPERTIES = {
   sortBy: [
     {
       text: 'Рейтингом',
-      data: 'rating'
+      data: 'rating' as const
     },
     {
       text: 'Назвою',
-      data: 'lastName'
+      data: 'lastName' as const
     }
   ],
 };
@@ -43,7 +43,7 @@ const SubjectPage = ({ subject }) => {
 
   const { data, isLoading, isFetching, error } = useQuery(
     ['subject-courses-search', page, searchText, sortType], 
-    () => api.fetchCoursesBySubject(subject.link, { page: 0, page_size: PROPERTIES.pageSize * (page + 1), search: searchText, sort: PROPERTIES.sortBy[sortType].data }), 
+    () => api.subjects.getCourses(subject.link, { page: 0, page_size: PROPERTIES.pageSize * (page + 1), search: searchText, sort: PROPERTIES.sortBy[sortType].data }), 
     { keepPreviousData: true, enabled: queryReady }
   );
 
@@ -89,7 +89,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { link } = context.query;
 
   try {
-    const data = await api.fetchSubject(typeof(link) === 'object' ? link[0] : link);
+    const data = await api.subjects.get(typeof(link) === 'object' ? link[0] : link);
 
     return {
       props: {

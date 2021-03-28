@@ -18,11 +18,11 @@ const PROPERTIES = {
   sortBy: [
     {
       text: 'Популярністю',
-      data: 'rating'
+      data: 'rating' as const
     },
     {
       text: 'Назвою',
-      data: 'name'
+      data: 'name' as const
     }
   ],
 };
@@ -42,7 +42,7 @@ const SubjectsPage = () => {
 
   const { data, isLoading, isFetching, error } = useQuery(
     ['subjects-search', page, searchText, sortType], 
-    () => api.fetchSubjects({ page: 0, page_size: PROPERTIES.pageSize * (page + 1), search: searchText, sort: PROPERTIES.sortBy[sortType].data }), 
+    () => api.subjects.getAll({ page: 0, page_size: PROPERTIES.pageSize * (page + 1), search: searchText, sort: PROPERTIES.sortBy[sortType].data }), 
     { keepPreviousData: true, enabled: queryReady }
   );
 

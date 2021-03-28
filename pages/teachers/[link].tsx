@@ -33,7 +33,7 @@ const PAGE_TABS = [
         { title: 'Інтеграція ІТ-систем', rating: 0, reviewCount: 0, link: '0', recommended: false },
       ];
 
-      return <CourseBlock courses={courses} />;
+      return <CourseBlock link={link} courses={courses} />;
     }
   },
   {
@@ -156,7 +156,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { link } = context.query;
 
   try {
-    const data = await api.fetchTeacher(typeof(link) === 'object' ? link[0] : link);
+    const data = await api.teachers.get(typeof(link) === 'object' ? link[0] : link);
 
     return {
       props: {

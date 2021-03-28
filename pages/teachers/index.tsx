@@ -18,11 +18,11 @@ const PROPERTIES = {
   sortBy: [
     {
       text: 'Рейтингом',
-      data: 'rating'
+      data: 'rating' as const
     },
     {
       text: 'Ім\'ям',
-      data: 'lastName'
+      data: 'lastName' as const
     }
   ],
 };
@@ -42,7 +42,7 @@ const TeachersPage = () => {
 
   const { data, isLoading, isFetching, error } = useQuery(
     ['teachers-search', page, searchText, sortType], 
-    () => api.fetchTeachers({ page: 0, page_size: PROPERTIES.pageSize * (page + 1), search: searchText, sort: PROPERTIES.sortBy[sortType].data }), 
+    () => api.teachers.getAll({ page: 0, page_size: PROPERTIES.pageSize * (page + 1), search: searchText, sort: PROPERTIES.sortBy[sortType].data }), 
     { keepPreviousData: true, enabled: queryReady }
   );
 

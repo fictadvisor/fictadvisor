@@ -1,26 +1,7 @@
-import axios from 'axios';
+import { AxiosInstance } from "axios";
+import { PageQuery, SearchQuery, SortQuery } from "./core";
 
-const api = axios.create({ baseURL: 'http://dev.fictadvisor.com:4545' });
-
-export interface PageQuery {
-  page?: number;
-  page_size?: number;
-};
-
-export interface SearchQuery {
-  search?: string;
-};
-
-export interface SortQuery {
-  sort?: string;
-}
-
-const fetchTeacher = async (link: string) => (await api.get(`/teachers/${link}`)).data;
-const fetchTeachers = async (params: PageQuery & SearchQuery & SortQuery) => (await api.get('/teachers', { params })).data;
-
-const fetchStudentResources = async (params: PageQuery & SearchQuery) => (await api.get('/student-resources', { params })).data;
-
-const fetchSubjects = async (params: PageQuery & SearchQuery & SortQuery) => {
+const getAll = async (params: PageQuery & SearchQuery & SortQuery<'rating' | 'name' | 'teacherCount'>) => {
   const items = [];
 
   for (let i = 0; i < params.page_size; i++) {
@@ -38,7 +19,7 @@ const fetchSubjects = async (params: PageQuery & SearchQuery & SortQuery) => {
   };
 };
 
-const fetchSubject = async (link: string) => {
+const get = async (link: string) => {
   return {
     id: link,
     link: link,
@@ -49,7 +30,7 @@ const fetchSubject = async (link: string) => {
   };
 };
 
-const fetchCoursesBySubject = async (link: string, params: PageQuery & SearchQuery & SortQuery) => {
+const getCourses = async (link: string, params: PageQuery & SearchQuery & SortQuery<'rating' | 'lastName'>) => {
   const items = [];
 
   for (let i = 0; i < params.page_size; i++) {
@@ -78,12 +59,10 @@ const fetchCoursesBySubject = async (link: string, params: PageQuery & SearchQue
   };
 };
 
-export default {
-  fetchTeacher,
-  fetchTeachers,
-  fetchStudentResources,
-  fetchSubject,
-  fetchSubjects,
-  fetchCoursesBySubject,
+export default (client: AxiosInstance) => {
+  return {
+    get,
+    getAll,
+    getCourses,
+  };
 };
-

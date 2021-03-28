@@ -24,7 +24,7 @@ const IndexPage = ({ popularTeachers, popularSubjects, studentResources: serverR
 
   const { data, isLoading, isFetching } = useQuery(
     ['student-resources', page], 
-    () => api.fetchStudentResources({ page: 0, page_size: PROPERTIES.studentResources.initialPageSize + PROPERTIES.studentResources.pageSize * page }), 
+    () => api.studentResources.getAll({ page: 0, page_size: PROPERTIES.studentResources.initialPageSize + PROPERTIES.studentResources.pageSize * page }), 
     { keepPreviousData: true, enabled: page > PROPERTIES.studentResources.initialPage }
   );
 
@@ -113,9 +113,9 @@ export const getServerSideProps: GetServerSideProps = async () => {
   try {
     const [popularTeachers, popularSubjects, studentResources] = await Promise.all(
       [
-        api.fetchTeachers({ page: 0, page_size: 3, sort: 'rating' }),
-        api.fetchSubjects({ page: 0, page_size: 3, sort: 'rating' }),
-        api.fetchStudentResources({ page: PROPERTIES.studentResources.initialPage, page_size: PROPERTIES.studentResources.initialPageSize }),
+        api.teachers.getAll({ page: 0, page_size: 3, sort: 'rating' }),
+        api.subjects.getAll({ page: 0, page_size: 3, sort: 'rating' }),
+        api.studentResources.getAll({ page: PROPERTIES.studentResources.initialPage, page_size: PROPERTIES.studentResources.initialPageSize }),
       ]
     );
 
