@@ -1,6 +1,6 @@
-import {Expose} from "class-transformer";
-import {SubjectSearchIndex} from "../../../database/entities/subject-search-index";
-import {assign} from "../../../common/common.object";
+import { Expose } from "class-transformer";
+import { SubjectSearchIndex } from "../../../database/entities/subject-search-index";
+import { assign } from "../../../common/common.object";
 
 export class SubjectItemDto {
     id: string;

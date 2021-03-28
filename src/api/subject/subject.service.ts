@@ -1,13 +1,13 @@
-import {HttpStatus, Injectable} from "@nestjs/common";
-import {InjectRepository} from "@nestjs/typeorm";
-import {SubjectSearchIndex} from "../../database/entities/subject-search-index";
-import {Repository} from "typeorm";
-import {SubjectView} from "../../database/entities/subject-view.entity";
-import {SearchableQueryDto} from "../../common/common.dto";
-import {SubjectItemDto} from "./dto/subject-item.dto";
-import {Page, Pageable, Searchable, SortableProcessor} from "../../common/common.api";
-import {SubjectDto} from "./dto/subject.dto";
-import {ServiceException} from "../../common/common.exception";
+import { HttpStatus, Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { SubjectSearchIndex } from "../../database/entities/subject-search-index";
+import { Repository } from "typeorm";
+import { SubjectView } from "../../database/entities/subject-view.entity";
+import { SearchableQueryDto } from "../../common/common.dto";
+import { SubjectItemDto } from "./dto/subject-item.dto";
+import { Page, Pageable, Searchable, SortableProcessor } from "../../common/common.api";
+import { SubjectDto } from "./dto/subject.dto";
+import { ServiceException } from "../../common/common.exception";
 
 @Injectable()
 export class SubjectService {

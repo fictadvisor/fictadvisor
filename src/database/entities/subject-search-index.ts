@@ -1,7 +1,7 @@
-import {Connection, ViewColumn, ViewEntity} from "typeorm";
-import {Course} from "./course.entity";
-import {Review} from "./review.entity";
-import {Subject} from "./subject.entity";
+import { Connection, ViewColumn, ViewEntity } from "typeorm";
+import { Course } from "./course.entity";
+import { Review } from "./review.entity";
+import { Subject } from "./subject.entity";
 
 @ViewEntity({
     expression: (connection: Connection) => connection.createQueryBuilder()

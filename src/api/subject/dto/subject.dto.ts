@@ -1,6 +1,6 @@
 import { Expose } from "class-transformer";
-import {SubjectView} from "../../../database/entities/subject-view.entity";
-import {assign} from "../../../common/common.object";
+import { SubjectView } from "../../../database/entities/subject-view.entity";
+import { assign } from "../../../common/common.object";
 
 export class SubjectDto {
     id: string;
