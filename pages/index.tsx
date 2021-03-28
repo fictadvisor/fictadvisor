@@ -72,7 +72,7 @@ const IndexPage = ({ popularTeachers, popularSubjects, studentResources: serverR
           </div>
         }
       </div>
-      <p className="title">Популярні викладачі</p>
+      <p className="title" style={{ marginTop: '15px' }}>Популярні викладачі</p>
       <div className="teacher-list">
         {
           popularTeachers.items.map(t => 
@@ -87,7 +87,12 @@ const IndexPage = ({ popularTeachers, popularSubjects, studentResources: serverR
           )
         }
       </div>
-      <p className="title">Популярні предмети</p>
+      <Link href="/teachers">
+        <a>
+          <Button className="full-width">Завантажити ще</Button>
+        </a>
+      </Link>
+      <p className="title" style={{ marginTop: '25px' }}>Популярні предмети</p>
       <div className="teacher-list">
         {
           popularSubjects.items.map(s => 
@@ -100,7 +105,7 @@ const IndexPage = ({ popularTeachers, popularSubjects, studentResources: serverR
           )
         }
       </div>
-      <Link href="/teachers">
+      <Link href="/subjects">
         <a>
           <Button className="full-width">Завантажити ще</Button>
         </a>
