@@ -10,7 +10,7 @@ export const Context = createParamDecorator(
     const req = ctx.switchToHttp().getRequest();
     const context = new SecurityContext();
 
-    context.user = req.user.user ?? null;
+    context.user = req.user ?? null;
 
     return context;
   },

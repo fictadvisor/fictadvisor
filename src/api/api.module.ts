@@ -18,6 +18,7 @@ import { OAuthService } from './oauth/oauth.service';
 import { User } from 'src/database/entities/user.entity';
 import { RefreshToken } from 'src/database/entities/refresh-token.entity';
 import { JwtModule } from 'src/jwt/jwt.module';
+import { JwtStrategy } from 'src/jwt/jwt.strategy';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { JwtModule } from 'src/jwt/jwt.module';
     StudentResourceService,
     SubjectService,
     OAuthService,
+    JwtStrategy,
   ],
 })
 export class ApiModule {}

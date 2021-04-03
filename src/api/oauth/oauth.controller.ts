@@ -1,5 +1,7 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { Authorize } from 'src/security/security.authorization';
+import { Context, SecurityContext } from 'src/security/security.context';
+import { UserDto } from '../user/dto/user.dto';
 import { OAuthTelegramDto } from './dto/oauth-telegram.dto';
 import { OAuthTokenDto } from './dto/oauth-token.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
@@ -10,6 +12,13 @@ export class OAuthController {
     constructor(
         private oauthService: OAuthService
     ) {}
+
+    @Authorize()
+    @Get()
+    getMe(@Context() ctx: SecurityContext): UserDto {
+        console.log(ctx);
+        return UserDto.from(ctx.user);
+    }
 
     @Authorize({ telegram: true })
     @Post('/telegram')
