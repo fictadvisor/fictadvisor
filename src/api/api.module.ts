@@ -13,26 +13,40 @@ import { SubjectSearchIndex } from "../database/entities/subject-search-index";
 import { SubjectView } from "../database/entities/subject-view.entity";
 import { SubjectController } from "./subject/subject.controller";
 import { SubjectService } from "./subject/subject.service";
+import { OAuthController } from './oauth/oauth.controller';
+import { OAuthService } from './oauth/oauth.service';
+import { User } from 'src/database/entities/user.entity';
+import { RefreshToken } from 'src/database/entities/refresh-token.entity';
+import { JwtModule } from 'src/jwt/jwt.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([
-    Teacher,
-    TeacherSearchIndex,
-    TeacherView,
-    StudentResource,
-    Subject,
-    SubjectSearchIndex,
-    SubjectView,
-  ])],
+  imports: [
+    JwtModule,
+    TypeOrmModule.forFeature(
+      [
+        Teacher,
+        TeacherSearchIndex,
+        TeacherView,
+        StudentResource,
+        Subject,
+        SubjectSearchIndex,
+        SubjectView,
+        User,
+        RefreshToken,
+      ]
+    )
+],
   controllers: [
     TeacherController,
     StudentResourceController,
     SubjectController,
+    OAuthController,
   ],
   providers: [
     TeacherService,
     StudentResourceService,
     SubjectService,
+    OAuthService,
   ],
 })
 export class ApiModule {}

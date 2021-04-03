@@ -18,4 +18,7 @@ export default () => ({
     schema: process.env.DB_SCHEMA ?? 'public',
     logging: process.env.DB_LOGGING == 'true'
   },
+  telegram: {
+    botToken: process.env.TELEGRAM_BOT_TOKEN,
+  },
 });
