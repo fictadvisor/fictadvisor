@@ -1,15 +1,15 @@
-.search-input {
+.input {
   background-color: #242C37;
   border-radius: 8px;
   display: flex;
   padding: 11px 17px;
 }
   
-.search-input.active > svg {
+.input.active > svg {
   fill: var(--primary-text-color);
 }
 
-.search-input > svg {
+.input > svg {
   padding: 0 11px 0 0;
   fill: var(--secondary-text-color);
 }
@@ -58,6 +58,11 @@ button.dropdown .arrow {
   margin: -1px 0 0;
   flex: 1;
   text-align: right;
+}
+
+button:disabled {
+  background-color: #323d4d;
+  color: #5d7290;
 }
 
 .dropdown.active .arrow {

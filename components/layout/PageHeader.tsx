@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useComponentVisible } from "../../lib/component";
+import { useAuthentication } from "../../lib/context/AuthenticationContext";
 import Button from "../ui/Button";
 import Divider from "../ui/Divider";
 import SettingsIcon from "../ui/icons/SettingsIcon";
@@ -8,22 +9,10 @@ import SearchInput from "../ui/SearchInput";
 
 const MENU = {
   navigation: [
-    {
-      text: 'Головна',
-      href: '/',
-    },
-    {
-      text: 'Викладачі',
-      href: '/teachers',
-    },
-    {
-      text: 'Предмети',
-      href: '/subjects',
-    },
-    {
-      text: 'Допомога',
-      href: '/help',
-    }
+    { text: 'Головна', href: '/' },
+    { text: 'Викладачі', href: '/teachers' },
+    { text: 'Предмети', href: '/subjects' },
+    { text: 'Допомога', href: '/help' }
   ],
   actions: [
     {
@@ -37,31 +26,60 @@ const MENU = {
   ]
 };
 
-const MenuItem = ({ item, setMenuActive }) => {
+const MenuItem = ({ item, action = null, setMenuActive }) => {
   const Icon = item.icon;
+
+  if (action) {
+    return (
+      <Button 
+        onClick={() => { 
+          action(); 
+          setMenuActive(false); 
+        }}
+      >
+        {Icon ? <Icon /> : item.text}
+      </Button>
+    );
+  }
 
   return (
     <div className="item">
       <Link href={item.href}>
-        <a>
-          <Button onClick={() => setMenuActive(false)}>
-            {
-              Icon 
-                ? <Icon />
-                : item.text
-            }
-          </Button>
-        </a>
+        <a><Button onClick={() => setMenuActive(false)}>{Icon ? <Icon /> : item.text}</Button></a>
       </Link>
     </div>
   );
 };
 
+const getUnauthorizedActions = (authentication) => {
+  return [
+    {
+      text: 'Авторизуватись',
+      href: authentication.loginUrl,
+    }
+  ];
+};
+
+const getAuthorizedActions = (authentication) => {
+  return [
+    {
+      icon: () => <span style={{ margin: '0 -8px' }}><SettingsIcon style={{ marginTop: '-2px' }} /></span>,
+      href: ''
+    },
+    {
+      text: 'Вийти',
+      action: () => authentication.logout(),
+    }
+  ];
+};
+
 const PageHeader = () => {
+  const authentication = useAuthentication();
   const [searchText, setSearchText] = useState('');
   const { ref: menuRef, ignoreRef: menuBtnRef, isComponentVisible: menuActive, setIsComponentVisible: setMenuActive } = useComponentVisible(false);
 
   const searchActive = searchText.length > 0;
+  const actions = authentication.user ? getAuthorizedActions(authentication) : getUnauthorizedActions(authentication);
 
   return (
     <div className="header">
@@ -103,12 +121,17 @@ const PageHeader = () => {
                 MENU.navigation.map(t => <MenuItem key={t.text} item={t} setMenuActive={setMenuActive} />)
               }
             </div>
-            <Divider />
-            <div>
-              {
-                MENU.actions.map((t, index) => <MenuItem key={index} item={t} setMenuActive={setMenuActive} />)
-              }
-            </div>
+            {
+              actions.length > 0 &&
+              <>
+                <Divider />
+                <div>
+                  {
+                    actions.map((t, index) => <MenuItem key={index} item={t} setMenuActive={setMenuActive} action={t.action} />)
+                  }
+                </div>
+              </>
+            }
           </div>
         }
       </div>

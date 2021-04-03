@@ -139,7 +139,19 @@ a > .tag {
   padding: 12px 24px;
   border: 1px dashed #5D7290;
   text-align: center;
+}
+
+.space-b {
   margin-bottom: 10px;
+}
+
+.space-t {
+  margin-top: 10px;
+}
+
+.disclaimer.alert {
+  border-color: #fd4444;
+  color: #fd4444;
 }
 
 a:visited:not(.simple), a:link:not(.simple) {

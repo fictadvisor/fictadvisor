@@ -13,13 +13,16 @@ import '../styles/components/navigation.css';
 import '../styles/components/studentResource.css';
 
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { AuthenticationProvider } from '../lib/context/AuthenticationContext';
 
 const queryClient = new QueryClient();
 
 export default function Application({ Component, pageProps }) {
   return (
     <QueryClientProvider client={queryClient}>
-      <Component {...pageProps} />
+      <AuthenticationProvider>
+        <Component {...pageProps} />
+      </AuthenticationProvider>
     </QueryClientProvider>
   );
 };

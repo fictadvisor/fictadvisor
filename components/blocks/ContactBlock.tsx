@@ -8,7 +8,7 @@ export type ContactBlockProperties = {
 const ContactBlock = ({ contacts }: ContactBlockProperties) => {
   return (
     <div>
-      <Disclaimer>
+      <Disclaimer className="space-b">
         Натисніть на контакт, щоб скопіювати його до буфера обміну
       </Disclaimer>
       <div className="contact-group">

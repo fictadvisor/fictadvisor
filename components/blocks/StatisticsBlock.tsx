@@ -9,7 +9,7 @@ export type StatisticsBlockProperties = {
 const StatisticsBlock = ({ entries, ...props }: StatisticsBlockProperties) => {
   return (
     <div {...props}>
-      <Disclaimer>
+      <Disclaimer className="space-b">
         Використовується статистика, яка була зібрана командою <a className="font-bold">ФИВТ им. Веры Петровны</a> у 2020 році
       </Disclaimer>
       <div className="statistics-field-group block" style={{ borderRadius: '8px 8px 0 0' }}>
