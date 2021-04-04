@@ -62,7 +62,7 @@ export class SubjectService {
         const [items, count] = await this.courseRepository.findAndCount({
             ...Pageable.of(query.page, query.pageSize).toQuery(),
             where: {
-                ...Searchable.of<CourseSearchIndex>('subjectLink', link).toQuery(),
+                subjectLink: link,
                 ...Searchable.of<CourseSearchIndex>('teacherFullName', query.searchQuery).toQuery()
             },
             order: { ...this.courseSortableProcessor.toQuery(query.sort) },
