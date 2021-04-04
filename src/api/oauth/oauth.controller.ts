@@ -16,7 +16,6 @@ export class OAuthController {
     @Authorize()
     @Get()
     getMe(@Context() ctx: SecurityContext): UserDto {
-        console.log(ctx);
         return UserDto.from(ctx.user);
     }
 

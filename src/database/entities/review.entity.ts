@@ -27,7 +27,7 @@ export class Review extends BaseEntity {
     @JoinColumn({ name: 'user_id' })
     user: User;
 
-    @Column()
+    @Column({ type: 'varchar', default: ReviewState.PENDING })
     state: ReviewState;
 
     @CreateDateColumn({ name: 'created_at' })

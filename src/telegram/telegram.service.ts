@@ -2,8 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Review } from 'src/database/entities/review.entity';
 import { Context, Telegraf } from 'telegraf';
-import escape from 'escape-html';
 import { Course } from 'src/database/entities/course.entity';
+import { User } from 'src/database/entities/user.entity';
+import { escape } from 'html-escaper';
+import { Teacher } from 'src/database/entities/teacher.entity';
 
 @Injectable()
 export class TelegramService {
@@ -15,10 +17,47 @@ export class TelegramService {
         this.bot = new Telegraf(configService.get<string>('telegram.botToken'));
     }
 
-    async broadcastPendingReview(course: Course, review: Review) {
-        this.bot.telegram.sendMessage(
+    async broadcastPendingReview(user: User, course: Course, review: Review) {
+        await this.bot.telegram.sendMessage(
             this.configService.get<string>('telegram.chatId'),
-            `<b>Відгук на ${course}</b>`
+            `<b>Відгук на <a href="${this.configService.get<string>('frontBaseUrl')}/courses/${course.link}">${course.link}</a>\n` +
+            `Автор: ${user.firstName} (${user.id})\nОцінка: ${review.rating}</b>\n\n` +
+            `<pre>${escape(review.content)}</pre>`,
+            {
+                parse_mode: 'HTML',
+                reply_markup: {
+                    inline_keyboard: [
+                        [{ text: 'Схвалити', callback_data: `approve_review:${review.id}:${user.telegramId}` }],
+                        [{ text: 'Відмовити', callback_data: `deny_review:${review.id}:${user.telegramId}` }],
+                    ],
+                },
+            } 
+        );
+    }
+
+    private getTeacherName(teacher: Teacher) {
+        return `<a href="${this.configService.get<string>('frontBaseUrl')}/teachers/${teacher.link}">${teacher.getFullName()}</a>`;
+    }
+
+    async broadcastDeniedReview(user: User, teacher: Teacher) {
+        await this.bot.telegram.sendMessage(
+            user.telegramId,
+            `<b>На жаль, твій відгук на ${this.getTeacherName(teacher)} було відхилено.</b>\n\n` +
+            `Якщо в тебе є питання, звертайся до нас через бота зворотнього зв'язку: @fict_robot`,
+            {
+                parse_mode: 'HTML',
+            }
+        );
+    }
+
+    async broadcastApprovedReview(user: User, teacher: Teacher) {
+        await this.bot.telegram.sendMessage(
+            user.telegramId,
+            `<b>Твій відгук на ${this.getTeacherName(teacher)} вже на сайті.</b>\n\n` +
+            `Дякуємо за небайдужість!`,
+            {
+                parse_mode: 'HTML',
+            }
         );
     }
 }

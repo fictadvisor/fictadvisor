@@ -25,6 +25,9 @@ import { CourseService } from './course/course.service';
 import { Review } from 'src/database/entities/review.entity';
 import { Course } from 'src/database/entities/course.entity';
 import { TeacherCourseSearchIndex } from "../database/entities/teacher-course-search-index";
+import { ReviewController } from './course/review/review.controller';
+import { ReviewService } from './course/review/review.service';
+import { TelegramService } from 'src/telegram/telegram.service';
 
 @Module({
   imports: [
@@ -53,6 +56,7 @@ import { TeacherCourseSearchIndex } from "../database/entities/teacher-course-se
     SubjectController,
     OAuthController,
     CourseController,
+    ReviewController,
   ],
   providers: [
     TeacherService,
@@ -61,6 +65,8 @@ import { TeacherCourseSearchIndex } from "../database/entities/teacher-course-se
     OAuthService,
     JwtStrategy,
     CourseService,
+    ReviewService,
+    TelegramService,
   ],
 })
 export class ApiModule {}
