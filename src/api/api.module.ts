@@ -24,6 +24,7 @@ import { CourseController } from './course/course.controller';
 import { CourseService } from './course/course.service';
 import { Review } from 'src/database/entities/review.entity';
 import { Course } from 'src/database/entities/course.entity';
+import { TeacherCourseSearchIndex } from "../database/entities/teacher-course-search-index";
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { Course } from 'src/database/entities/course.entity';
         Teacher,
         TeacherSearchIndex,
         TeacherView,
+        TeacherCourseSearchIndex,
         StudentResource,
         Subject,
         SubjectSearchIndex,
