@@ -8,6 +8,8 @@ import { TeacherView } from 'src/database/entities/teacher-view.entity';
 import { Repository } from 'typeorm';
 import { TeacherItemDto } from './dto/teacher-item.dto';
 import { TeacherDto } from './dto/teacher.dto';
+import { TeacherCourseSearchIndex } from "../../database/entities/teacher-course-search-index";
+import { TeacherCourseItemDto } from "./dto/teacher-course-item.dto";
 
 @Injectable()
 export class TeacherService {
@@ -15,7 +17,9 @@ export class TeacherService {
         @InjectRepository(TeacherSearchIndex)
         private teacherSearchIndexRepository: Repository<TeacherSearchIndex>,
         @InjectRepository(TeacherView)
-        private teacherViewRepository: Repository<TeacherView>
+        private teacherViewRepository: Repository<TeacherView>,
+        @InjectRepository(TeacherCourseSearchIndex)
+        private teacherCoursesRepository: Repository<TeacherCourseSearchIndex>,
     ) {}
 
     async getTeacherByLink(link: string): Promise<TeacherDto> {
@@ -40,6 +44,30 @@ export class TeacherService {
         return Page.of(
             count,
             items.map(t => TeacherItemDto.from(t))
+        );
+    }
+
+    private courseSortableProcessor = SortableProcessor.of({
+        rating: ['DESC'],
+        name: ['ASC']
+    }, 'rating');
+
+    async getTeacherCourses(
+        link: string,
+        query: SearchableQueryDto
+    ): Promise<Page<TeacherCourseItemDto>> {
+        const [items, count] = await this.teacherCoursesRepository.findAndCount({
+            ...Pageable.of(query.page, query.pageSize).toQuery(),
+            where: {
+                teacherLink: link,
+                ...Searchable.of<TeacherCourseSearchIndex>('name', query.searchQuery).toQuery()
+            },
+            order: { ...this.courseSortableProcessor.toQuery(query.sort) }
+        });
+
+        return Page.of(
+            count,
+            items.map(c => TeacherCourseItemDto.from(c))
         );
     }
 }
