@@ -13,6 +13,7 @@ import { SubjectSearchIndex } from "../database/entities/subject-search-index";
 import { SubjectView } from "../database/entities/subject-view.entity";
 import { SubjectController } from "./subject/subject.controller";
 import { SubjectService } from "./subject/subject.service";
+import { CourseSearchIndex } from "../database/entities/course-search-index";
 import { OAuthController } from './oauth/oauth.controller';
 import { OAuthService } from './oauth/oauth.service';
 import { User } from 'src/database/entities/user.entity';
@@ -36,6 +37,7 @@ import { Course } from 'src/database/entities/course.entity';
         Subject,
         SubjectSearchIndex,
         SubjectView,
+        CourseSearchIndex,
         User,
         RefreshToken,
         Review,
