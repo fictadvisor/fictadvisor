@@ -52,25 +52,41 @@ const MenuItem = ({ item, action = null, setMenuActive }) => {
 };
 
 const getUnauthorizedActions = (authentication) => {
-  return [
-    {
-      text: 'Авторизуватись',
-      href: authentication.loginUrl,
-    }
-  ];
+  return (
+    <>
+      <a href={authentication.loginUrl}><Button>Авторизуватись</Button></a>
+    </>
+  );
+};
+
+const getName = ({ username, first_name, last_name }) => {
+  if (username) {
+    return username;
+  }
+
+  return last_name ? `${first_name} ${last_name}` : first_name;
 };
 
 const getAuthorizedActions = (authentication) => {
-  return [
-    {
-      icon: () => <span style={{ margin: '0 -8px' }}><SettingsIcon style={{ marginTop: '-2px' }} /></span>,
-      href: ''
-    },
-    {
-      text: 'Вийти',
-      action: () => authentication.logout(),
-    }
-  ];
+  const name = getName(authentication.user);
+
+  return (
+    <>
+      <Button disabled style={{ borderRadius: '8px 0 0 8px', borderRight: '1px solid #323D4D' }}>
+        <span style={{ margin: '0 -8px' }}><SettingsIcon style={{ marginTop: '-2px' }} /></span>
+      </Button>
+      <Button style={{ borderRadius: '0', borderRight: '1px solid #323D4D' }}>
+        {name}
+      </Button>
+      <Link href="/oauth?logout=true">
+        <a>
+          <Button style={{ borderRadius: '0 8px 8px 0' }}>
+            Вийти
+          </Button>
+        </a>
+      </Link>
+    </>
+  );
 };
 
 const PageHeader = () => {
@@ -121,17 +137,10 @@ const PageHeader = () => {
                 MENU.navigation.map(t => <MenuItem key={t.text} item={t} setMenuActive={setMenuActive} />)
               }
             </div>
-            {
-              actions.length > 0 &&
-              <>
-                <Divider />
-                <div>
-                  {
-                    actions.map((t, index) => <MenuItem key={index} item={t} setMenuActive={setMenuActive} action={t.action} />)
-                  }
-                </div>
-              </>
-            }
+            <Divider />
+            <div>
+              {actions}
+            </div>
           </div>
         }
       </div>
