@@ -1,8 +1,6 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
-import { Page } from 'src/common/common.api';
-import { SearchableQueryDto } from 'src/common/common.dto';
+import { Controller, Get, Param } from '@nestjs/common';
 import { CourseService } from './course.service';
-import { ReviewItemDto } from './dto/review-item.dto';
+import { CourseDto } from './dto/course.dto';
 
 @Controller('courses')
 export class CourseController {
@@ -10,11 +8,8 @@ export class CourseController {
         private courseService: CourseService
     ) {}
 
-    @Get('/:link/reviews')
-    getReviews(
-        @Param('link') link: string,
-        @Query() query: SearchableQueryDto
-    ): Promise<Page<ReviewItemDto>> {
-        return this.courseService.getReviews(link, query);
+    @Get('/:link')
+    getCourse(@Param('link') link: string): Promise<CourseDto> {
+        return this.courseService.getCourseByLink(link);
     }
 }

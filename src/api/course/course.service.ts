@@ -1,53 +1,46 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Page, Pageable, Searchable, SortableProcessor } from 'src/common/common.api';
-import { SearchableQueryDto } from 'src/common/common.dto';
 import { ServiceException } from 'src/common/common.exception';
 import { Course } from 'src/database/entities/course.entity';
-import { Review, ReviewState } from 'src/database/entities/review.entity';
-import { Repository } from 'typeorm';
-import { ReviewItemDto } from './dto/review-item.dto';
+import { Review } from 'src/database/entities/review.entity';
+import { Connection, Repository } from 'typeorm';
+import { CourseItemDto } from '../subject/dto/course-item.dto';
+import { CourseDto } from './dto/course.dto';
 
 @Injectable()
 export class CourseService {
     constructor(
-        @InjectRepository(Review)
-        private reviewRepository: Repository<Review>,
         @InjectRepository(Course)
         private courseRepository: Repository<Course>,
+        private connection: Connection
     ) {}
 
-    private reviewSortableProcessor = SortableProcessor.of({
-        rating: ['DESC'],
-        date: ['DESC', 'createdAt'],
-    }, 'date');
+    async getCourse(link: string, relations?: string[]): Promise<Course> {
+        const course = await this.courseRepository.findOne({ link }, { relations });
 
-    private async getCourse(link: string): Promise<Course> {
-        const course = await this.courseRepository.findOne({ link });
-
-        if (!course) {
+        if (course == null) {
             throw ServiceException.create(HttpStatus.NOT_FOUND, { message: 'Course with given link not found' });
         }
 
         return course;
     }
 
-    async getReviews(link: string, query: SearchableQueryDto): Promise<Page<ReviewItemDto>> {
-        const course = await this.getCourse(link);
+    async getCourseRating(id: string) {
+        const { rating } = await this.connection.createQueryBuilder()
+            .select('coalesce(avg(r.rating)::real, 0)', 'rating')
+            .from(Review, 'r')
+            .where('r.course_id = :id', { id })
+            .getRawOne();
+    
+        return rating;
+    }
 
-        const [items, count] = await this.reviewRepository.findAndCount({
-            ...Pageable.of(query.page, query.pageSize).toQuery(),
-            where: { 
-                course,
-                state: ReviewState.APPROVED,
-                ...Searchable.of<Review>('content', query.searchQuery).toQuery(),
-            },
-            order: { ...this.reviewSortableProcessor.toQuery(query.sort) },
-        });
+    async getCourseByLink(link: string): Promise<CourseDto> {
+        const course = await this.getCourse(link, ['teacher', 'subject']);
+        const dto = CourseDto.from(course);
 
-        return Page.of(
-            count,
-            items.map(r => ReviewItemDto.from(r))
-        );
+        dto.rating = await this.getCourseRating(course.id);
+        
+        return dto;
     }
 }

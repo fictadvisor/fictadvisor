@@ -8,7 +8,7 @@ import { SubjectItemDto } from "./dto/subject-item.dto";
 import { Page, Pageable, Searchable, SortableProcessor } from "../../common/common.api";
 import { SubjectDto } from "./dto/subject.dto";
 import { ServiceException } from "../../common/common.exception";
-import { CourseDto } from "./dto/course.dto";
+import { CourseItemDto } from "./dto/course-item.dto";
 import { CourseSearchIndex } from "../../database/entities/course-search-index";
 
 @Injectable()
@@ -58,7 +58,7 @@ export class SubjectService {
         lastName: ['ASC', 'teacherLastName'],
     }, 'rating');
 
-    async getCoursesByLink(link: string, query: SearchableQueryDto): Promise<Page<CourseDto>> {
+    async getCoursesByLink(link: string, query: SearchableQueryDto): Promise<Page<CourseItemDto>> {
         const [items, count] = await this.courseRepository.findAndCount({
             ...Pageable.of(query.page, query.pageSize).toQuery(),
             where: {
@@ -70,7 +70,7 @@ export class SubjectService {
 
         return Page.of(
             count,
-            items.map(c => CourseDto.from(c))
+            items.map(c => CourseItemDto.from(c))
         )
     }
 }

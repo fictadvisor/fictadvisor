@@ -32,4 +32,12 @@ export class Teacher extends BaseEntity {
 
     @UpdateDateColumn({ name: 'updated_at' })
     updatedAt: Date;
+
+    public getFullName() {
+        if (this.middleName) {
+            return `${this.lastName} ${this.firstName} ${this.middleName}`;
+        }
+
+        return `${this.lastName} ${this.firstName}`; 
+    }
 };

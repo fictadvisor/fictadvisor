@@ -3,7 +3,7 @@ import { CourseSearchIndex } from "../../../database/entities/course-search-inde
 import { assign } from "../../../common/common.object";
 import { CourseTeacherItemDto } from "./course-teacher-item.dto";
 
-export class CourseDto {
+export class CourseItemDto {
     id: string;
 
     link: string;
@@ -17,7 +17,7 @@ export class CourseDto {
 
     recommended: boolean;
 
-    public static from(v: CourseSearchIndex): CourseDto {
+    public static from(v: CourseSearchIndex): CourseItemDto {
         const teacher = assign(
             new CourseTeacherItemDto(),
             {
@@ -30,7 +30,7 @@ export class CourseDto {
         )
 
         return assign(
-            new CourseDto(),
+            new CourseItemDto(),
             {
                 id: v.id,
                 link: v.link,
