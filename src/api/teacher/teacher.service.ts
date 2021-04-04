@@ -10,6 +10,7 @@ import { Repository } from 'typeorm';
 import { TeacherItemDto } from './dto/teacher-item.dto';
 import { TeacherDto } from './dto/teacher.dto';
 import { TeacherContactDto } from './dto/teacher-contact.dto';
+import { ResponseEntity } from '../../common/common.api';
 
 @Injectable()
 export class TeacherService {
@@ -47,11 +48,11 @@ export class TeacherService {
         );
     }
 
-    async getTeacherContacts(link: string): Promise<{'items': Array<TeacherContactDto>}> {
+    async getTeacherContacts(link: string): Promise<ResponseEntity<Object>>{
         const items = await this.teacherContactViewRepository.find({ link });
 
-        return ({
+        return (ResponseEntity.of({
             'items': items.map(tcv => TeacherContactDto.from(tcv))
-        });
+        }));
     }
 }
