@@ -21,17 +21,20 @@ export const AuthenticationProvider = ({ children }) => {
   );
 };
 
+const loginUrl = 'https://t.me/fictadvisor_bot?start=login';
+const logoutUrl = '/oauth?logout=true'
+
 export const useAuthentication = () => {
   const router = useRouter();
 
-  const loginUrl = 'https://t.me/fictadvisor_bot?start=login';
   const login = () => window.location.href = loginUrl;
-  const logout = () => router.push('/oauth?logout=true');
+  const logout = () => router.push(logoutUrl);
   const user = useContext(AuthenticationContext);
 
   return {
     user,
     loginUrl,
+    logoutUrl,
     login,
     logout,
   };

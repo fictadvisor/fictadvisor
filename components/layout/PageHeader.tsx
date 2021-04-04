@@ -14,16 +14,6 @@ const MENU = {
     { text: 'Предмети', href: '/subjects' },
     { text: 'Допомога', href: '/help' }
   ],
-  actions: [
-    {
-      icon: () => <span style={{ margin: '0 -8px' }}><SettingsIcon style={{ marginTop: '-2px' }} /></span>,
-      href: ''
-    },
-    {
-      text: 'Вийти',
-      href: ''
-    }
-  ]
 };
 
 const MenuItem = ({ item, action = null, setMenuActive }) => {
@@ -78,7 +68,7 @@ const getAuthorizedActions = (authentication) => {
       <Button style={{ borderRadius: '0', borderRight: '1px solid #323D4D' }}>
         {name}
       </Button>
-      <Link href="/oauth?logout=true">
+      <Link href={authentication.logoutUrl}>
         <a>
           <Button style={{ borderRadius: '0 8px 8px 0' }}>
             Вийти
