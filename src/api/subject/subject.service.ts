@@ -8,14 +8,20 @@ import { SubjectItemDto } from "./dto/subject-item.dto";
 import { Page, Pageable, Searchable, SortableProcessor } from "../../common/common.api";
 import { SubjectDto } from "./dto/subject.dto";
 import { ServiceException } from "../../common/common.exception";
+import { CourseDto } from "./dto/course.dto";
+import { CourseSearchIndex } from "../../database/entities/course-search-index";
 
 @Injectable()
 export class SubjectService {
     constructor(
         @InjectRepository(SubjectSearchIndex)
         private subjectSearchIndexRepository: Repository<SubjectSearchIndex>,
+
         @InjectRepository(SubjectView)
-        private subjectViewRepository: Repository<SubjectView>
+        private subjectViewRepository: Repository<SubjectView>,
+
+        @InjectRepository(CourseSearchIndex)
+        private courseRepository: Repository<CourseSearchIndex>,
     ) {}
 
     private subjectSortableProcessor = SortableProcessor.of({
@@ -45,5 +51,26 @@ export class SubjectService {
         }
 
         return SubjectDto.from(subject)
+    }
+
+    private courseSortableProcessor = SortableProcessor.of({
+        rating: ['DESC'],
+        lastName: ['ASC', 'teacherLastName'],
+    }, 'rating');
+
+    async getCoursesByLink(link: string, query: SearchableQueryDto): Promise<Page<CourseDto>> {
+        const [items, count] = await this.courseRepository.findAndCount({
+            ...Pageable.of(query.page, query.pageSize).toQuery(),
+            where: {
+                subjectLink: link,
+                ...Searchable.of<CourseSearchIndex>('teacherFullName', query.searchQuery).toQuery()
+            },
+            order: { ...this.courseSortableProcessor.toQuery(query.sort) },
+        })
+
+        return Page.of(
+            count,
+            items.map(c => CourseDto.from(c))
+        )
     }
 }

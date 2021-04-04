@@ -2,6 +2,8 @@ export default () => ({
   logLevel: process.env.LOG_LEVEL ?? 'info',
   production: process.env.NODE_ENV === 'production',
   port: process.env.PORT ? parseInt(process.env.PORT) : 3000,
+  baseUrl: process.env.BASE_URL,
+  frontBaseUrl: process.env.FRONT_BASE_URL,
   security: {
     secret: process.env.SECRET ?? '42',
     jwt: {
@@ -17,5 +19,9 @@ export default () => ({
     database: process.env.DB_NAME ?? 'postgres',
     schema: process.env.DB_SCHEMA ?? 'public',
     logging: process.env.DB_LOGGING == 'true'
+  },
+  telegram: {
+    botToken: process.env.TELEGRAM_BOT_TOKEN,
+    chatId: process.env.TELEGRAM_CHAT_ID,
   },
 });

@@ -14,27 +14,53 @@ import { SubjectSearchIndex } from "../database/entities/subject-search-index";
 import { SubjectView } from "../database/entities/subject-view.entity";
 import { SubjectController } from "./subject/subject.controller";
 import { SubjectService } from "./subject/subject.service";
+import { CourseSearchIndex } from "../database/entities/course-search-index";
+import { OAuthController } from './oauth/oauth.controller';
+import { OAuthService } from './oauth/oauth.service';
+import { User } from 'src/database/entities/user.entity';
+import { RefreshToken } from 'src/database/entities/refresh-token.entity';
+import { JwtModule } from 'src/jwt/jwt.module';
+import { JwtStrategy } from 'src/jwt/jwt.strategy';
+import { CourseController } from './course/course.controller';
+import { CourseService } from './course/course.service';
+import { Review } from 'src/database/entities/review.entity';
+import { Course } from 'src/database/entities/course.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([
-    Teacher,
-    TeacherSearchIndex,
-    TeacherView,
-    TeacherContact,
-    StudentResource,
-    Subject,
-    SubjectSearchIndex,
-    SubjectView,
-  ])],
+  imports: [
+    JwtModule,
+    TypeOrmModule.forFeature(
+      [
+        Teacher,
+        TeacherSearchIndex,
+        TeacherView,
+        TeacherContact,
+        StudentResource,
+        Subject,
+        SubjectSearchIndex,
+        SubjectView,
+        CourseSearchIndex,
+        User,
+        RefreshToken,
+        Review,
+        Course,
+      ]
+    )
+],
   controllers: [
     TeacherController,
     StudentResourceController,
     SubjectController,
+    OAuthController,
+    CourseController,
   ],
   providers: [
     TeacherService,
     StudentResourceService,
     SubjectService,
+    OAuthService,
+    JwtStrategy,
+    CourseService,
   ],
 })
 export class ApiModule {}
