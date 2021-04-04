@@ -4,7 +4,7 @@ import { SearchableQueryDto } from "../../common/common.dto";
 import { SubjectItemDto } from "./dto/subject-item.dto";
 import { Page } from "../../common/common.api";
 import { SubjectDto } from "./dto/subject.dto";
-import { CourseDto } from "./dto/course.dto";
+import { CourseItemDto } from "./dto/course-item.dto";
 
 @Controller('subjects')
 export class SubjectController {
@@ -26,7 +26,7 @@ export class SubjectController {
     getCourses(
         @Param('link') link: string,
         @Query() query: SearchableQueryDto
-    ): Promise<Page<CourseDto>> {
+    ): Promise<Page<CourseItemDto>> {
         return this.subjectService.getCoursesByLink(link, query)
     }
 }

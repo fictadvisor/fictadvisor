@@ -2,22 +2,45 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ServiceException } from 'src/common/common.exception';
 import { Course } from 'src/database/entities/course.entity';
-import { Repository } from 'typeorm';
+import { Review } from 'src/database/entities/review.entity';
+import { Connection, Repository } from 'typeorm';
+import { CourseItemDto } from '../subject/dto/course-item.dto';
+import { CourseDto } from './dto/course.dto';
 
 @Injectable()
 export class CourseService {
     constructor(
         @InjectRepository(Course)
         private courseRepository: Repository<Course>,
+        private connection: Connection
     ) {}
 
-    async getCourse(link: string): Promise<Course> {
-        const course = await this.courseRepository.findOne({ link });
+    async getCourse(link: string, relations?: string[]): Promise<Course> {
+        const course = await this.courseRepository.findOne({ link }, { relations });
 
         if (course == null) {
             throw ServiceException.create(HttpStatus.NOT_FOUND, { message: 'Course with given link not found' });
         }
 
         return course;
+    }
+
+    async getCourseRating(id: string) {
+        const { rating } = await this.connection.createQueryBuilder()
+            .select('coalesce(avg(r.rating)::real, 0)', 'rating')
+            .from(Review, 'r')
+            .where('r.course_id = :id', { id })
+            .getRawOne();
+    
+        return rating;
+    }
+
+    async getCourseByLink(link: string): Promise<CourseDto> {
+        const course = await this.getCourse(link, ['teacher', 'subject']);
+        const dto = CourseDto.from(course);
+
+        dto.rating = await this.getCourseRating(course.id);
+        
+        return dto;
     }
 }
