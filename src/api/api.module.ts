@@ -5,6 +5,9 @@ import { TeacherView } from 'src/database/entities/teacher-view.entity';
 import { Teacher } from 'src/database/entities/teacher.entity';
 import { TeacherController } from './teacher/teacher.controller';
 import { TeacherService } from './teacher/teacher.service';
+import { TeacherContact } from 'src/database/entities/teacher-contact.entity';
+import { TeacherContactController } from './teacher-contact/teacher-contact.controller';
+import { TeacherContactService } from './teacher-contact/teacher-contact.service';
 import { StudentResourceService } from './student-resource/student-resource.service';
 import { StudentResourceController } from './student-resource/student-resource.controller';
 import { StudentResource } from 'src/database/entities/student-resource.entity';
@@ -19,6 +22,7 @@ import { SubjectService } from "./subject/subject.service";
     Teacher,
     TeacherSearchIndex,
     TeacherView,
+    TeacherContact,
     StudentResource,
     Subject,
     SubjectSearchIndex,
@@ -26,11 +30,13 @@ import { SubjectService } from "./subject/subject.service";
   ])],
   controllers: [
     TeacherController,
+    TeacherContactController,
     StudentResourceController,
     SubjectController,
   ],
   providers: [
     TeacherService,
+    TeacherContactService,
     StudentResourceService,
     SubjectService,
   ],

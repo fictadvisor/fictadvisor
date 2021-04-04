@@ -1,6 +1,5 @@
-import { Expose } from "class-transformer";
 import { assign } from "src/common/common.object";
-import { TeacherContact } from "src/database/entities/teacher-contact.entity";
+import { TeacherContactView } from "src/database/entities/teacher-contact-view.entity";
 
 export class TeacherContactDto {
 	name: string;
@@ -9,7 +8,7 @@ export class TeacherContactDto {
 
 	type: string;
 
-	public static from(e: TeacherContact) {
+	public static from(e: TeacherContactView) {
         return assign(
             new TeacherContactDto(),
             {
