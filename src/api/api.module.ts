@@ -19,6 +19,10 @@ import { User } from 'src/database/entities/user.entity';
 import { RefreshToken } from 'src/database/entities/refresh-token.entity';
 import { JwtModule } from 'src/jwt/jwt.module';
 import { JwtStrategy } from 'src/jwt/jwt.strategy';
+import { CourseController } from './course/course.controller';
+import { CourseService } from './course/course.service';
+import { Review } from 'src/database/entities/review.entity';
+import { Course } from 'src/database/entities/course.entity';
 
 @Module({
   imports: [
@@ -34,6 +38,8 @@ import { JwtStrategy } from 'src/jwt/jwt.strategy';
         SubjectView,
         User,
         RefreshToken,
+        Review,
+        Course,
       ]
     )
 ],
@@ -42,6 +48,7 @@ import { JwtStrategy } from 'src/jwt/jwt.strategy';
     StudentResourceController,
     SubjectController,
     OAuthController,
+    CourseController,
   ],
   providers: [
     TeacherService,
@@ -49,6 +56,7 @@ import { JwtStrategy } from 'src/jwt/jwt.strategy';
     SubjectService,
     OAuthService,
     JwtStrategy,
+    CourseService,
   ],
 })
 export class ApiModule {}
