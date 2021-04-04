@@ -3,6 +3,7 @@ import { Page } from 'src/common/common.api';
 import { SearchableQueryDto } from 'src/common/common.dto';
 import { TeacherItemDto } from './dto/teacher-item.dto';
 import { TeacherDto } from './dto/teacher.dto';
+import { TeacherContactDto } from './dto/teacher-contact.dto';
 import { TeacherService } from './teacher.service';
 
 @Controller('teachers')
@@ -19,5 +20,10 @@ export class TeacherController {
     @Get()
     getTeachers(@Query() query: SearchableQueryDto): Promise<Page<TeacherItemDto>> {
         return this.teacherService.getTeachers(query);
+    }
+
+    @Get('/:link/contacts')
+    getTeacherContacts(@Param('link') link: string): Promise<{'items': Array<TeacherContactDto>}> {
+        return this.teacherService.getTeacherContacts(link);
     }
 }

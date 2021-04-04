@@ -5,9 +5,11 @@ import { SearchableQueryDto } from 'src/common/common.dto';
 import { ServiceException } from 'src/common/common.exception';
 import { TeacherSearchIndex } from 'src/database/entities/teacher-search-index.entity';
 import { TeacherView } from 'src/database/entities/teacher-view.entity';
+import { TeacherContactView } from 'src/database/entities/teacher-contact-view.entity';
 import { Repository } from 'typeorm';
 import { TeacherItemDto } from './dto/teacher-item.dto';
 import { TeacherDto } from './dto/teacher.dto';
+import { TeacherContactDto } from './dto/teacher-contact.dto';
 
 @Injectable()
 export class TeacherService {
@@ -15,7 +17,9 @@ export class TeacherService {
         @InjectRepository(TeacherSearchIndex)
         private teacherSearchIndexRepository: Repository<TeacherSearchIndex>,
         @InjectRepository(TeacherView)
-        private teacherViewRepository: Repository<TeacherView>
+        private teacherViewRepository: Repository<TeacherView>,
+        @InjectRepository(TeacherContactView)
+        private teacherContactViewRepository: Repository<TeacherContactView>
     ) {}
 
     async getTeacherByLink(link: string): Promise<TeacherDto> {
@@ -41,5 +45,13 @@ export class TeacherService {
             count,
             items.map(t => TeacherItemDto.from(t))
         );
+    }
+
+    async getTeacherContacts(link: string): Promise<{'items': Array<TeacherContactDto>}> {
+        const items = await this.teacherContactViewRepository.find({ link });
+
+        return ({
+            'items': items.map(tcv => TeacherContactDto.from(tcv))
+        });
     }
 }
