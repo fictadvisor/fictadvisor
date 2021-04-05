@@ -52,12 +52,13 @@ export class TeacherService {
         );
     }
 
-    async getTeacherContacts(link: string): Promise<ResponseEntity<Object>>{
+    async getTeacherContacts(link: string): Promise<ResponseEntity<Object>> {
         const items = await this.teacherContactViewRepository.find({ link });
 
         return (ResponseEntity.of({
             'items': items.map(tcv => TeacherContactDto.from(tcv))
         }));
+    }
 
     private courseSortableProcessor = SortableProcessor.of({
         rating: ['DESC'],
