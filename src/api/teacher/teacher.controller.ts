@@ -7,6 +7,7 @@ import { TeacherContactDto } from './dto/teacher-contact.dto';
 import { TeacherService } from './teacher.service';
 import { ResponseEntity } from '../../common/common.api';
 import { TeacherCourseItemDto } from "./dto/teacher-course-item.dto";
+import { ReviewDto } from "./dto/review.dto";
 
 @Controller('teachers')
 export class TeacherController {
@@ -34,6 +35,14 @@ export class TeacherController {
         @Param('link') link: string,
         @Query() query: SearchableQueryDto
     ): Promise<Page<TeacherCourseItemDto>> {
-        return this.teacherService.getTeacherCourses(link, query)
+        return this.teacherService.getTeacherCourses(link, query);
+    }
+
+    @Get('/:link/reviews')
+    getTeacherReviews(
+        @Param('link') link: string, 
+        @Query() query: SearchableQueryDto
+    ): Promise<Page<ReviewDto>> {
+        return this.teacherService.getTeacherReviews(link, query);
     }
 }

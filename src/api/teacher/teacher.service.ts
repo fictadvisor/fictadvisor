@@ -6,6 +6,7 @@ import { ServiceException } from 'src/common/common.exception';
 import { TeacherSearchIndex } from 'src/database/entities/teacher-search-index.entity';
 import { TeacherView } from 'src/database/entities/teacher-view.entity';
 import { TeacherContactView } from 'src/database/entities/teacher-contact-view.entity';
+import { ReviewView } from 'src/database/entities/review-view.entity';
 import { Repository } from 'typeorm';
 import { TeacherItemDto } from './dto/teacher-item.dto';
 import { TeacherDto } from './dto/teacher.dto';
@@ -13,6 +14,7 @@ import { TeacherContactDto } from './dto/teacher-contact.dto';
 import { ResponseEntity } from '../../common/common.api';
 import { TeacherCourseSearchIndex } from "../../database/entities/teacher-course-search-index";
 import { TeacherCourseItemDto } from "./dto/teacher-course-item.dto";
+import { ReviewDto } from "./dto/review.dto";
 
 @Injectable()
 export class TeacherService {
@@ -22,9 +24,11 @@ export class TeacherService {
         @InjectRepository(TeacherView)
         private teacherViewRepository: Repository<TeacherView>,
         @InjectRepository(TeacherContactView)
-        private teacherContactViewRepository: Repository<TeacherContactView>
+        private teacherContactViewRepository: Repository<TeacherContactView>,
         @InjectRepository(TeacherCourseSearchIndex)
         private teacherCoursesRepository: Repository<TeacherCourseSearchIndex>,
+        @InjectRepository(ReviewView)
+        private reviewRepository: Repository<ReviewView>,
     ) {}
 
     async getTeacherByLink(link: string): Promise<TeacherDto> {
@@ -81,6 +85,27 @@ export class TeacherService {
         return Page.of(
             count,
             items.map(c => TeacherCourseItemDto.from(c))
+        );
+    }
+
+    private reviewSortableProcessor = SortableProcessor.of({
+        rating: ['DESC'],
+        date: ['DESC']
+    }, 'date');
+
+    async getTeacherReviews(link: string, query: SearchableQueryDto): Promise<Page<ReviewDto>> {
+        const [items, count] = await this.reviewRepository.findAndCount({
+            ...Pageable.of(query.page, query.pageSize).toQuery(),
+            where: {
+                courseLink: link,
+                ...Searchable.of<ReviewView>('courseName', query.searchQuery).toQuery()
+            },
+            order: { ...this.reviewSortableProcessor.toQuery(query.sort) }
+        });
+
+        return Page.of(
+            count,
+            items.map(c => ReviewDto.from(c))
         );
     }
 }
