@@ -5,9 +5,12 @@ import { SearchableQueryDto } from 'src/common/common.dto';
 import { ServiceException } from 'src/common/common.exception';
 import { TeacherSearchIndex } from 'src/database/entities/teacher-search-index.entity';
 import { TeacherView } from 'src/database/entities/teacher-view.entity';
+import { TeacherContactView } from 'src/database/entities/teacher-contact-view.entity';
 import { Repository } from 'typeorm';
 import { TeacherItemDto } from './dto/teacher-item.dto';
 import { TeacherDto } from './dto/teacher.dto';
+import { TeacherContactDto } from './dto/teacher-contact.dto';
+import { ResponseEntity } from '../../common/common.api';
 import { TeacherCourseSearchIndex } from "../../database/entities/teacher-course-search-index";
 import { TeacherCourseItemDto } from "./dto/teacher-course-item.dto";
 
@@ -18,6 +21,8 @@ export class TeacherService {
         private teacherSearchIndexRepository: Repository<TeacherSearchIndex>,
         @InjectRepository(TeacherView)
         private teacherViewRepository: Repository<TeacherView>,
+        @InjectRepository(TeacherContactView)
+        private teacherContactViewRepository: Repository<TeacherContactView>
         @InjectRepository(TeacherCourseSearchIndex)
         private teacherCoursesRepository: Repository<TeacherCourseSearchIndex>,
     ) {}
@@ -46,6 +51,13 @@ export class TeacherService {
             items.map(t => TeacherItemDto.from(t))
         );
     }
+
+    async getTeacherContacts(link: string): Promise<ResponseEntity<Object>>{
+        const items = await this.teacherContactViewRepository.find({ link });
+
+        return (ResponseEntity.of({
+            'items': items.map(tcv => TeacherContactDto.from(tcv))
+        }));
 
     private courseSortableProcessor = SortableProcessor.of({
         rating: ['DESC'],
