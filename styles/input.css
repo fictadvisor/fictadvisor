@@ -25,6 +25,25 @@ input[type="text"]::placeholder {
   color: var(--secondary-text-color);
 }
 
+textarea {
+  resize: none;
+  background-color: #242C37;
+  border-radius: 8px;
+  color: var(--primary-text-color);
+  padding: 17px 17px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+textarea, input, select {
+  margin: 0;
+  vertical-align: bottom;
+}
+
+textarea::placeholder {
+  color: var(--secondary-text-color);
+}
+
 button {
   background-color: #242C37;
   border-radius: 8px;
@@ -114,4 +133,27 @@ button.attached {
 
 button:disabled {
   cursor: default;
+}
+
+.slider {
+  width: 100%;
+}
+
+.slider-range {
+  width: 100%;
+  height: 10px;
+  background-color: #242c37;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+
+.slider-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 10px;
+  height: 10px;
+  background: #dfe3e9;
+  border-radius: 8px;
+  cursor: ew-resize;
+  box-shadow: -100% 0 0 80px #dfe3e9;
 }

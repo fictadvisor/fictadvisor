@@ -9,6 +9,7 @@
 .block.course > .action {
   flex: 1;
   text-align: right;
+  margin: auto 0;
 }
 
 .block.course > .info p {

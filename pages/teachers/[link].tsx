@@ -26,15 +26,7 @@ type TabProperties = { link: string };
 const PAGE_TABS = [
   {
     name: 'Предмети',
-    block: ({ link }: TabProperties) => {
-      const courses = [
-        { title: 'Системне програмування', rating: 4.8, reviewCount: 12, link: '0', recommended: true },
-        { title: 'Системне програмування - 2', rating: 4.3, reviewCount: 4, link: '0', recommended: false },
-        { title: 'Інтеграція ІТ-систем', rating: 0, reviewCount: 0, link: '0', recommended: false },
-      ];
-
-      return <CourseBlock link={link} courses={courses} />;
-    }
+    block: ({ link }: TabProperties) => <CourseBlock link={link} />
   },
   {
     name: 'Відгуки',
@@ -49,15 +41,7 @@ const PAGE_TABS = [
   },
   {
     name: 'Контакти',
-    block: ({ link }: TabProperties) => {
-      const contacts = [
-        { name: 'Телефон', value: '+380 50 507 29 43' },
-        { name: 'Telegram', value: '@lisovychenko' },
-        { name: 'Телефон', value: '+380 50 507 29 43' }
-      ];
-
-      return <ContactBlock contacts={contacts} />;
-    }
+    block: ({ link }: TabProperties) => <ContactBlock link={link} />
   },
   {
     name: 'Статистика',
@@ -74,14 +58,21 @@ const PAGE_TABS = [
   },
 ];
 
-const Rating = (props) => (<div className="rating secondary">4.5<StarIcon /></div>);
+const Rating = ({ rating }) => {
+  return (
+    rating && rating > 0 
+      ? (<div className="rating secondary" style={{ marginLeft: '5px' }}>{rating}<StarIcon /></div>)
+      : null
+  );
+};
 
 const TeacherPage = ({ teacher }) => {
   const fullName = getFullName(teacher.last_name, teacher.first_name, teacher.middle_name);
+  const hasDescription = teacher.description != null;
 
   const [blockReady, setBlockReady] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
-  const [canCollapse, setCanCollapse] = useState(true);
+  const [canCollapse, setCanCollapse] = useState(hasDescription);
   const [tab, _setTab] = useState(0);
   const { withQueryParam } = useQueryParams((query) => {
     _setTab(toInteger(query.t, tab));
@@ -100,27 +91,32 @@ const TeacherPage = ({ teacher }) => {
       <div className={`block teacher ${collapsed ? 'collapsed' : ''} ${canCollapse ? 'collapsible' : ''}`}>
         <div className="teacher-info">
           <img className="avatar teacher" src="https://i.imgur.com/MFtw4PC.jpg"/>
-          <div style={{ marginLeft: '24px' }}>
-            <p className="name">{fullName}</p>
-            <div className="flex" style={{ marginTop: '5px' }}>
-              {
-                teacher.tags.length > 0 &&
-                <div className="tag-group">
-                  {teacher.tags.map(tag => <Tag key={tag}>#{tag}</Tag>)}
-                </div>
-              }
-              <Rating />
+          <div style={{ marginLeft: '24px', display: 'flex' }}>
+            <div style={{ display: 'block', margin: 'auto 0' }}>
+              <p className="name">{fullName}</p>
+              <div className="flex space-t">
+                {
+                  teacher.tags.length > 0 &&
+                  <div className="tag-group">
+                    {teacher.tags.map(tag => <Tag key={tag}>#{tag}</Tag>)}
+                  </div>
+                }
+                <Rating rating={teacher.rating} />
+              </div>
             </div>
           </div>
         </div>
-        <Collapsible minHeight={110} collapsed={collapsed} onActiveChange={(active) => setCanCollapse(active)}>
-          <Divider />
-          <div className="teacher-description">
-            <p className="title inner">Загальний опис</p>
-            <div className="description" dangerouslySetInnerHTML={{ __html: teacher.description }}>
+        {
+         hasDescription &&
+          <Collapsible minHeight={110} collapsed={collapsed} onActiveChange={(active) => setCanCollapse(active)}>
+            <Divider />
+            <div className="teacher-description">
+              <p className="title inner">Загальний опис</p>
+              <div className="description" dangerouslySetInnerHTML={{ __html: teacher.description }}>
+              </div>
             </div>
-          </div>
-        </Collapsible>
+          </Collapsible>
+        }
       </div>
       {
         canCollapse &&

@@ -53,7 +53,7 @@ const SubjectsPage = () => {
       meta={{ title: 'Предмети' }}
       title="Предмети"
     >
-      <div className="flex" style={{ marginBottom: '10px' }}>
+      <div className="flex space-b">
         <SearchInput active={searchActive} style={{ flex: 1, marginRight: '10px' }} placeholder="Пошук предметів" onChange={e => setSearchText(e.target.value)} />
         <Dropdown text="Сортування за:" active={sortType} onChange={i => setSortType(i)} options={PROPERTIES.sortBy} />
       </div>

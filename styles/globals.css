@@ -90,14 +90,19 @@ input, button, textarea, select {
 .divider {
   background-color: #323D4D;
   width: calc(100% + 10px);
-  margin: 10px -5px;
+  margin: 24px -5px;
   height: 1px;
 }
 
 .avatar {
-  width: 96px;
-  height: 96px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
+}
+
+.avatar.small {
+  width: 32px;
+  height: 32px;
 }
 
 a.read-more {
@@ -172,4 +177,40 @@ a.simple {
 .information-block {
   line-height: 20px;
   margin-bottom: 20px;
+}
+
+.rating-small > svg {
+  width: 14px;
+  height: 14px;
+}
+
+.rating-select {
+  display: flex;
+}
+
+.rating-select > div {
+  height: 10px;
+  flex-grow: 1;
+  background-color: #242c37;
+  cursor: pointer;
+}
+
+.rating-select > div:hover {
+  background-color: #2e3846;
+}
+
+.rating-select > div.active {
+  background-color: #5d7290;
+}
+
+.rating-select > div:first-child {
+  border-radius: 8px 0 0 8px;
+}
+
+.rating-select > div:last-child {
+  border-radius: 0 8px 8px 0;
+}
+
+.rating-select > div:nth-child(even):not(:last-child) {
+  margin-right: 5px;
 }
