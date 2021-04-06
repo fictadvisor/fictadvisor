@@ -5,7 +5,7 @@ import { SearchableQueryDto } from 'src/common/common.dto';
 import { ServiceException } from 'src/common/common.exception';
 import { TeacherSearchIndex } from 'src/database/entities/teacher-search-index.entity';
 import { TeacherView } from 'src/database/entities/teacher-view.entity';
-import { TeacherContactView } from 'src/database/entities/teacher-contact-view.entity';
+import { TeacherContact } from 'src/database/entities/teacher-contact.entity';
 import { Repository } from 'typeorm';
 import { TeacherItemDto } from './dto/teacher-item.dto';
 import { TeacherDto } from './dto/teacher.dto';
@@ -13,19 +13,32 @@ import { TeacherContactDto } from './dto/teacher-contact.dto';
 import { ResponseEntity } from '../../common/common.api';
 import { TeacherCourseSearchIndex } from "../../database/entities/teacher-course-search-index";
 import { TeacherCourseItemDto } from "./dto/teacher-course-item.dto";
+import { Teacher } from 'src/database/entities/teacher.entity';
 
 @Injectable()
 export class TeacherService {
     constructor(
         @InjectRepository(TeacherSearchIndex)
         private teacherSearchIndexRepository: Repository<TeacherSearchIndex>,
+        @InjectRepository(Teacher)
+        private teacherRepository: Repository<Teacher>,
         @InjectRepository(TeacherView)
         private teacherViewRepository: Repository<TeacherView>,
-        @InjectRepository(TeacherContactView)
-        private teacherContactViewRepository: Repository<TeacherContactView>
+        @InjectRepository(TeacherContact)
+        private teacherContactRepository: Repository<TeacherContact>,
         @InjectRepository(TeacherCourseSearchIndex)
-        private teacherCoursesRepository: Repository<TeacherCourseSearchIndex>,
+        private teacherCoursesRepository: Repository<TeacherCourseSearchIndex>
     ) {}
+
+    private async getTeacher(link: string): Promise<Teacher> {
+        const teacher = this.teacherRepository.findOne({ link });
+        
+        if (teacher == null) {
+            throw ServiceException.create(HttpStatus.NOT_FOUND, 'Teacher with given link was not found');
+        }
+
+        return teacher;
+    }
 
     async getTeacherByLink(link: string): Promise<TeacherDto> {
         const teacher = await this.teacherViewRepository.findOne({ link });
@@ -52,12 +65,16 @@ export class TeacherService {
         );
     }
 
-    async getTeacherContacts(link: string): Promise<ResponseEntity<Object>>{
-        const items = await this.teacherContactViewRepository.find({ link });
+    async getTeacherContacts(link: string): Promise<ResponseEntity<any>>{
+        const teacher = await this.getTeacher(link);
+        const items = await this.teacherContactRepository.find({ teacher });
 
-        return (ResponseEntity.of({
-            'items': items.map(tcv => TeacherContactDto.from(tcv))
-        }));
+        return ResponseEntity.of(
+            {
+                items: items.map(tcv => TeacherContactDto.from(tcv))
+            }
+        );
+    }
 
     private courseSortableProcessor = SortableProcessor.of({
         rating: ['DESC'],

@@ -1,20 +1,20 @@
 import { assign } from "src/common/common.object";
-import { TeacherContactView } from "src/database/entities/teacher-contact-view.entity";
+import { TeacherContact, TeacherContactType } from "src/database/entities/teacher-contact.entity";
 
 export class TeacherContactDto {
 	name: string;
 
 	value: string;
 
-	type: string;
+	type: TeacherContactType;
 
-	public static from(e: TeacherContactView) {
+	public static from(t: TeacherContact) {
         return assign(
             new TeacherContactDto(),
             {
-                name: e.name,
-                value: e.value,
-                type: e.type
+                name: t.name,
+                value: t.value,
+                type: t.type
             }
         );
     }

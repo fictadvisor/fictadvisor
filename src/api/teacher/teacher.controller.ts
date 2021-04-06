@@ -25,8 +25,9 @@ export class TeacherController {
     }
 
     @Get('/:link/contacts')
-    getTeacherContacts(@Param('link') link: string): Promise<ResponseEntity<Object>> {
+    getTeacherContacts(@Param('link') link: string): Promise<ResponseEntity<any>> {
         return this.teacherService.getTeacherContacts(link);
+    }
 
     @Get('/:link/courses')
     getTeacherCourses(
