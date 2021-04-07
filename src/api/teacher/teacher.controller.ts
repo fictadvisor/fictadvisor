@@ -3,10 +3,10 @@ import { Page } from 'src/common/common.api';
 import { SearchableQueryDto } from 'src/common/common.dto';
 import { TeacherItemDto } from './dto/teacher-item.dto';
 import { TeacherDto } from './dto/teacher.dto';
-import { TeacherContactDto } from './dto/teacher-contact.dto';
 import { TeacherService } from './teacher.service';
 import { ResponseEntity } from '../../common/common.api';
 import { TeacherCourseItemDto } from "./dto/teacher-course-item.dto";
+import { TeacherStatsItemDto } from './dto/teacher-stats.dto';
 
 @Controller('teachers')
 export class TeacherController {
@@ -35,5 +35,10 @@ export class TeacherController {
         @Query() query: SearchableQueryDto
     ): Promise<Page<TeacherCourseItemDto>> {
         return this.teacherService.getTeacherCourses(link, query)
+    }
+
+    @Get('/:link/stats')
+    getTeacherStats(@Param('link') link: string): Promise<ResponseEntity<any>> {
+        return this.teacherService.getTeacherStats(link);
     }
 }

@@ -14,6 +14,8 @@ import { ResponseEntity } from '../../common/common.api';
 import { TeacherCourseSearchIndex } from "../../database/entities/teacher-course-search-index";
 import { TeacherCourseItemDto } from "./dto/teacher-course-item.dto";
 import { Teacher } from 'src/database/entities/teacher.entity';
+import { StatEntry } from '../../database/entities/stat-entry.entity';
+import { TeacherStatsItemDto } from './dto/teacher-stats.dto';
 
 @Injectable()
 export class TeacherService {
@@ -24,6 +26,8 @@ export class TeacherService {
         private teacherRepository: Repository<Teacher>,
         @InjectRepository(TeacherView)
         private teacherViewRepository: Repository<TeacherView>,
+        @InjectRepository(StatEntry)
+        private teacherStatsRepository: Repository<StatEntry>,
         @InjectRepository(TeacherContact)
         private teacherContactRepository: Repository<TeacherContact>,
         @InjectRepository(TeacherCourseSearchIndex)
@@ -31,8 +35,8 @@ export class TeacherService {
     ) {}
 
     private async getTeacher(link: string): Promise<Teacher> {
-        const teacher = this.teacherRepository.findOne({ link });
-        
+        const teacher = await this.teacherRepository.findOne({ link });
+
         if (teacher == null) {
             throw ServiceException.create(HttpStatus.NOT_FOUND, 'Teacher with given link was not found');
         }
@@ -98,5 +102,14 @@ export class TeacherService {
             count,
             items.map(c => TeacherCourseItemDto.from(c))
         );
+    }
+
+    async getTeacherStats(link: string): Promise<ResponseEntity<any>> {
+        const teacher = await this.getTeacher(link)
+        const stats = await this.teacherStatsRepository.find({ teacher });
+
+        return ResponseEntity.of({
+            items: stats.map(s => TeacherStatsItemDto.from(s))
+        });
     }
 }
