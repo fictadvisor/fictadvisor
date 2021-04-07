@@ -6,7 +6,6 @@ import { TeacherDto } from './dto/teacher.dto';
 import { TeacherService } from './teacher.service';
 import { ResponseEntity } from '../../common/common.api';
 import { TeacherCourseItemDto } from "./dto/teacher-course-item.dto";
-import { TeacherStatsItemDto } from './dto/teacher-stats.dto';
 
 @Controller('teachers')
 export class TeacherController {
