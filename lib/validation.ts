@@ -20,10 +20,16 @@ const username = (name: string) => {
   if (!isValid) { return 'Юзернейм може містити лише літери латинського алфавіту, цифри, крапку та нижнє підкреслення'; }
 };
 
+const reviewContent = (content: string) => {
+  if (!content || content.length < 0) { return 'Текст відгуку має містити хоча би 100 символів'; }
+  if (content.length > 4096) { return 'Текст відгуку має містити не більше 4096 символів'; }
+}
+
 const validationMap = {
   firstName,
   lastName,
   username,
+  reviewContent,
 };
 
 type ValidationType = keyof typeof validationMap;

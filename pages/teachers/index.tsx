@@ -28,17 +28,19 @@ const PROPERTIES = {
 };
 
 const TeachersPage = () => {
-  const [searchText, setSearchText] = useState('');
+  const [searchText, _setSearchText] = useState('');
   const [sortType, _setSortType] = useState(0);
   const [page, _setPage] = useState(0);
 
   const { queryReady, withQueryParam } = useQueryParams((query) => {
     _setSortType(toInteger(query.sb, sortType));
     _setPage(toInteger(query.p, page));
+    _setSearchText(query.s ?? '');
   });
 
   const setSortType = withQueryParam('sb', _setSortType);
   const setPage =  withQueryParam('p', _setPage);
+  const setSearchText = withQueryParam('s', _setSearchText);
 
   const { data, isLoading, isFetching, error } = useQuery(
     ['teachers-search', page, searchText, sortType], 
@@ -54,7 +56,7 @@ const TeachersPage = () => {
       title="Викладачі"
     >
       <div className="flex" style={{ marginBottom: '10px' }}>
-        <SearchInput active={searchActive} style={{ flex: 1, marginRight: '10px' }} placeholder="Пошук викладачів" onChange={e => setSearchText(e.target.value)} />
+        <SearchInput active={searchActive} style={{ flex: 1, marginRight: '10px' }} placeholder="Пошук викладачів" value={searchText} onChange={e => setSearchText(e.target.value)} />
         <Dropdown text="Сортування за:" active={sortType} onChange={i => setSortType(i)} options={PROPERTIES.sortBy} />
       </div>
       <div className="teacher-list">

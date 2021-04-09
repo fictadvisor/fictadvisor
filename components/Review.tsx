@@ -20,7 +20,7 @@ const Review = ({ subject, date, rating, content, className, ...props }: ReviewP
             {
               subject 
                ? <>{subject}</>
-               : <>{toDateTimeString(date)}</>
+               : <>{toDateTimeString(new Date(date))}</>
             }
           </span>
         </div>

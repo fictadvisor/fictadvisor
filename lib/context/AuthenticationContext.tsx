@@ -29,10 +29,12 @@ export const useAuthentication = () => {
 
   const login = () => window.location.href = loginUrl;
   const logout = () => router.push(logoutUrl);
+  const getToken = () => oauth.getToken()?.accessToken;
   const user = useContext(AuthenticationContext);
 
   return {
     user,
+    getToken,
     loginUrl,
     logoutUrl,
     login,

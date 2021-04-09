@@ -16,8 +16,9 @@ export const useQueryParams = (onInitialize?) => {
   };
 
   const setQueryParam = (key, value) => {
-    if (value == null) {
+    if (value == null || value == '') {
       delete params[key];
+      delete router.query[key];
     } else {
       params[key] = value;
     }
