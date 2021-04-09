@@ -47,7 +47,7 @@ const IndexPage = ({ popularTeachers, popularSubjects, studentResources: serverR
           За нашими новинами можна слідкувати на каналі студради: <a href="https://t.me/fict_time" target="_blank">@fict_time</a>.
         </p>
         <p>
-          Якщо ти хочеш надати відгук або доповнити якусь інформацію, звертайся до нас через бота зворотного зв'язку: <a href="https://t.me/fict_robot" target="_blank">@fict_robot</a>.
+          Якщо ти хочеш надати відгук або доповнити якусь інформацію, звертайся до нас через бота зворотнього зв'язку: <a href="https://t.me/fict_robot" target="_blank">@fict_robot</a>.
         </p>
       </div>
       <p className="title">Студентські ресурси</p>
