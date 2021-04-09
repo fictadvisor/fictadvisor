@@ -4,7 +4,7 @@ import { Page, Pageable, Searchable, SortableProcessor } from 'src/common/common
 import { SearchableQueryDto } from 'src/common/common.dto';
 import { ServiceException } from 'src/common/common.exception';
 import { Course } from 'src/database/entities/course.entity';
-import { Review } from 'src/database/entities/review.entity';
+import { Review, ReviewState } from 'src/database/entities/review.entity';
 import { Connection, Repository } from 'typeorm';
 import { CourseItemDto } from '../subject/dto/course-item.dto';
 import { CourseReviewDto } from './dto/course-review.dto';
@@ -58,6 +58,7 @@ export class CourseService {
             ...Pageable.of(query.page, query.pageSize).toQuery(),
             where: { 
                 course,
+                state: ReviewState.APPROVED,
                 ...Searchable.of<Review>('content', query.searchQuery).toQuery() 
             },
             order: { ...this.courseReviewSortableProcessor.toQuery(query.sort) }
