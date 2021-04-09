@@ -21,7 +21,7 @@ const username = (name: string) => {
 };
 
 const reviewContent = (content: string) => {
-  if (!content || content.length < 0) { return 'Текст відгуку має містити хоча би 100 символів'; }
+  if (!content || content.length < 100) { return 'Текст відгуку має містити хоча би 100 символів'; }
   if (content.length > 4096) { return 'Текст відгуку має містити не більше 4096 символів'; }
 }
 
