@@ -11,7 +11,7 @@ import { TelegramService } from 'src/telegram/telegram.service';
 import { Repository } from 'typeorm';
 import { CourseService } from '../course.service';
 import { CreateReviewDto } from './dto/create-review.dto';
-import { ReviewItemDto } from './dto/review-item.dto';
+import { CourseReviewDto } from './dto/review-item.dto';
 import { ReviewDto } from './dto/review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
 
@@ -33,7 +33,7 @@ export class ReviewService {
     }, 'date');
 
     async getReview(id: string, relations?: string[]): Promise<Review> {
-        const review = this.reviewRepository.findOne({ id }, { relations });
+        const review = await this.reviewRepository.findOne({ id }, { relations });
 
         if (review == null) {
             throw ServiceException.create(HttpStatus.NOT_FOUND, { message: 'Review with given id not found' });
@@ -42,7 +42,7 @@ export class ReviewService {
         return review;
     }
 
-    async getReviews(link: string, query: SearchableQueryDto): Promise<Page<ReviewItemDto>> {
+    async getReviews(link: string, query: SearchableQueryDto): Promise<Page<CourseReviewDto>> {
         const course = await this.courseService.getCourse(link);
 
         const [items, count] = await this.reviewRepository.findAndCount({
@@ -57,7 +57,7 @@ export class ReviewService {
 
         return Page.of(
             count,
-            items.map(r => ReviewItemDto.from(r))
+            items.map(r => CourseReviewDto.from(r))
         );
     }
 

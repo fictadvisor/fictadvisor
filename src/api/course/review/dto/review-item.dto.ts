@@ -1,7 +1,7 @@
 import { assign } from "src/common/common.object";
 import { Review } from "src/database/entities/review.entity";
 
-export class ReviewItemDto {
+export class CourseReviewDto {
     id: string;
 
     content: string;
@@ -12,7 +12,7 @@ export class ReviewItemDto {
 
     public static from(r: Review) {
         return assign(
-            new ReviewItemDto(),
+            new CourseReviewDto(),
             {
                 id: r.id,
                 content: r.content,

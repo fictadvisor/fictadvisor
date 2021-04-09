@@ -1,13 +1,9 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Page, Pageable, Searchable, SortableProcessor } from 'src/common/common.api';
-import { SearchableQueryDto } from 'src/common/common.dto';
 import { ServiceException } from 'src/common/common.exception';
 import { Course } from 'src/database/entities/course.entity';
-import { Review, ReviewState } from 'src/database/entities/review.entity';
+import { Review } from 'src/database/entities/review.entity';
 import { Connection, Repository } from 'typeorm';
-import { CourseItemDto } from '../subject/dto/course-item.dto';
-import { CourseReviewDto } from './dto/course-review.dto';
 import { CourseDto } from './dto/course.dto';
 
 @Injectable()
@@ -47,26 +43,5 @@ export class CourseService {
         dto.rating = await this.getCourseRating(course.id);
         
         return dto;
-    }
-
-    private courseReviewSortableProcessor = SortableProcessor.of({ rating: ['DESC'], date: ['DESC', 'createdAt'] }, 'date');
-
-    async getCourseReviews(link: string, query: SearchableQueryDto): Promise<Page<CourseReviewDto>> {
-        const course = await this.getCourse(link);
-
-        const [items, count] = await this.reviewRepository.findAndCount({ 
-            ...Pageable.of(query.page, query.pageSize).toQuery(),
-            where: { 
-                course,
-                state: ReviewState.APPROVED,
-                ...Searchable.of<Review>('content', query.searchQuery).toQuery() 
-            },
-            order: { ...this.courseReviewSortableProcessor.toQuery(query.sort) }
-        });
-
-        return Page.of(
-            count,
-            items.map(r => CourseReviewDto.from(r))
-        );
     }
 }

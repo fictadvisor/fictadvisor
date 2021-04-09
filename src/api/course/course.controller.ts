@@ -15,12 +15,4 @@ export class CourseController {
     getCourse(@Param('link') link: string): Promise<CourseDto> {
         return this.courseService.getCourseByLink(link);
     }
-
-    @Get('/:link/reviews')
-    getCourseReviews(
-        @Param('link') link: string,
-        @Query() query: SearchableQueryDto
-    ): Promise<Page<CourseReviewDto>> {
-        return this.courseService.getCourseReviews(link, query);
-    }
 }
