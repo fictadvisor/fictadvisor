@@ -14,7 +14,7 @@ import TeacherItem from "../../components/TeacherItem";
 import SearchInput from "../../components/ui/SearchInput";
 
 const PROPERTIES = {
-  pageSize: 1,
+  pageSize: 10,
   sortBy: [
     {
       text: 'Рейтингом',

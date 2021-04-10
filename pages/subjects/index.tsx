@@ -14,7 +14,7 @@ import SearchInput from "../../components/ui/SearchInput";
 import SubjectItem from "../../components/SubjectItem";
 
 const PROPERTIES = {
-  pageSize: 6,
+  pageSize: 10,
   sortBy: [
     {
       text: 'Популярністю',
