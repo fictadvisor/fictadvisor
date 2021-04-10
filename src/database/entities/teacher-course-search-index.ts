@@ -1,7 +1,7 @@
 import { Connection, ViewColumn, ViewEntity } from "typeorm";
 import { Course } from "./course.entity";
 import { Subject } from "./subject.entity";
-import { Review } from "./review.entity";
+import { Review, ReviewState } from "./review.entity";
 import { Teacher } from "./teacher.entity";
 
 @ViewEntity({
@@ -15,7 +15,7 @@ import { Teacher } from "./teacher.entity";
         .addSelect('t.link', 'teacher_link')
         .from(Course, 'c')
         .innerJoin(Subject, 's', 's.id = c.subject_id')
-        .leftJoin(Review, 'r', 'c.id = r.course_id')
+        .leftJoin(Review, 'r', `c.id = r.course_id and r.state = '${ReviewState.APPROVED}'`)
         .innerJoin(Teacher, 't', 't.id = c.teacher_id')
         .groupBy('c.id, s.name, t.link')
 })

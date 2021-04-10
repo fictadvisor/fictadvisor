@@ -1,6 +1,6 @@
 import { Connection, ViewColumn, ViewEntity } from "typeorm";
 import { Course } from "./course.entity";
-import { Review } from "./review.entity";
+import { Review, ReviewState } from "./review.entity";
 import { Teacher } from "./teacher.entity";
 
 @ViewEntity({
@@ -10,11 +10,11 @@ import { Teacher } from "./teacher.entity";
         .addSelect('t.first_name', 'first_name')
         .addSelect('t.middle_name', 'middle_name')
         .addSelect('t.last_name', 'last_name')
-        .addSelect('concat(t.last_name, \' \', t.first_name, \' \', t.middle_name)', 'full_name')
+        .addSelect(`concat(t.last_name, ' ', t.first_name, ' ', t.middle_name)`, 'full_name')
         .addSelect('coalesce(avg(r.rating)::real, 0)', 'rating')
         .from(Teacher, 't')
         .leftJoin(Course, 'c', 'c.teacher_id = t.id')
-        .leftJoin(Review, 'r', 'r.course_id = c.id')
+        .leftJoin(Review, 'r', `r.course_id = c.id and r.state = '${ReviewState.APPROVED}'`)
         .groupBy('t.id')
 })
 export class TeacherSearchIndex {

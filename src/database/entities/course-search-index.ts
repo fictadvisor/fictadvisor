@@ -1,7 +1,7 @@
 import {Connection, ViewColumn, ViewEntity} from 'typeorm';
 import { Course } from './course.entity';
 import { Teacher } from './teacher.entity';
-import { Review } from './review.entity';
+import { Review, ReviewState } from './review.entity';
 import { Subject } from "./subject.entity";
 
 @ViewEntity({
@@ -18,11 +18,11 @@ import { Subject } from "./subject.entity";
         .addSelect('coalesce(count(r)::real, 0)', 'review_count')
         .addSelect('s.link', 'subject_link')
         .addSelect(
-            'concat(t.last_name, \' \', t.first_name, \' \', t.middle_name)',
+            `concat(t.last_name, ' ', t.first_name, ' ', t.middle_name)`,
             'teacher_full_name'
         ).from(Course, 'c')
         .leftJoin(Teacher, 't', 'c.teacher_id = t.id')
-        .leftJoin(Review, 'r', 'c.id = r.course_id')
+        .leftJoin(Review, 'r', `c.id = r.course_id and r.state = '${ReviewState.APPROVED}'`)
         .leftJoin(Subject, 's', 's.id = c.subject_id')
         .groupBy('c.id, t.id, s.id')
 })

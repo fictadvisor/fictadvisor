@@ -1,8 +1,6 @@
-import { Expose } from "class-transformer";
 import { assign } from "src/common/common.object";
-import { ReviewView } from "src/database/entities/review-view.entity";
+import { TeacherReviewView } from "src/database/entities/review-view.entity";
 import { ReviewCourseDto } from "./review-course.dto";
-
 
 export class ReviewDto {
 	id: string;
@@ -15,7 +13,7 @@ export class ReviewDto {
 
 	date: Date;
 
-	public static from(e: ReviewView) {
+	public static from(e: TeacherReviewView) {
 		return assign(
             new ReviewDto(),
             {

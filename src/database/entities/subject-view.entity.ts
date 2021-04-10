@@ -1,7 +1,7 @@
 import { Connection, ViewColumn, ViewEntity } from "typeorm";
 import { Subject } from "./subject.entity";
 import { Course } from "./course.entity";
-import { Review } from "./review.entity";
+import { Review, ReviewState } from "./review.entity";
 
 @ViewEntity({
     expression: (connection: Connection) => connection.createQueryBuilder()
@@ -10,7 +10,7 @@ import { Review } from "./review.entity";
         .addSelect('coalesce(avg(r.rating)::real, 0)', 'rating')
         .from(Subject, 's')
         .leftJoin(Course, 'c', 'c.subject_id = s.id')
-        .leftJoin(Review, 'r', 'r.course_id = c.id')
+        .leftJoin(Review, 'r', `r.course_id = c.id and r.state = '${ReviewState.APPROVED}'`)
         .groupBy('s.id')
 })
 export class SubjectView {

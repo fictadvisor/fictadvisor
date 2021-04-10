@@ -30,6 +30,7 @@ import { ReviewController } from './course/review/review.controller';
 import { ReviewService } from './course/review/review.service';
 import { TelegramService } from 'src/telegram/telegram.service';
 import { StatEntry } from '../database/entities/stat-entry.entity';
+import { TeacherReviewView } from 'src/database/entities/review-view.entity';
 
 @Module({
   imports: [
@@ -50,7 +51,8 @@ import { StatEntry } from '../database/entities/stat-entry.entity';
         RefreshToken,
         Review,
         Course,
-        StatEntry
+        StatEntry,
+        TeacherReviewView,
       ]
     )
 ],

@@ -2,7 +2,7 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ServiceException } from 'src/common/common.exception';
 import { Course } from 'src/database/entities/course.entity';
-import { Review } from 'src/database/entities/review.entity';
+import { Review, ReviewState } from 'src/database/entities/review.entity';
 import { Connection, Repository } from 'typeorm';
 import { CourseDto } from './dto/course.dto';
 
@@ -30,7 +30,7 @@ export class CourseService {
         const { rating } = await this.connection.createQueryBuilder()
             .select('coalesce(avg(r.rating)::real, 0)', 'rating')
             .from(Review, 'r')
-            .where('r.course_id = :id', { id })
+            .where('r.course_id = :id and r.state = :state', { id, state: ReviewState.APPROVED })
             .getRawOne();
     
         return rating;

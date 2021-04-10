@@ -1,6 +1,6 @@
 import { Connection, ViewColumn, ViewEntity } from "typeorm";
 import { Course } from "./course.entity";
-import { Review } from "./review.entity";
+import { Review, ReviewState } from "./review.entity";
 import { Teacher } from "./teacher.entity";
 
 // average of rating is cast to 'real' type because typeorm doesn't consider 'numeric' type as something JavaScript can store as a number,
@@ -12,7 +12,7 @@ import { Teacher } from "./teacher.entity";
         .addSelect('coalesce(avg(r.rating)::real, 0)', 'rating')
         .from(Teacher, 't')
         .leftJoin(Course, 'c', 'c.teacher_id = t.id')
-        .leftJoin(Review, 'r', 'r.course_id = c.id')
+        .leftJoin(Review, 'r', `r.course_id = c.id and r.state = '${ReviewState.APPROVED}'`)
         .groupBy('t.id')
 })
 export class TeacherView {
