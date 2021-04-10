@@ -55,7 +55,7 @@ const CoursesList = ({ data, isFetching, setPage, page }) => {
         }
       </div>
       {
-        data.count - 1 > page * PROPERTIES.pageSize &&
+        data.count > (page + 1) * PROPERTIES.pageSize &&
         <Button 
           loading={isFetching}
           className="full-width"

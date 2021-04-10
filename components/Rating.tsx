@@ -24,10 +24,12 @@ export type RatingProperties = {
   rating: number;
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
 
-const Rating = ({ className, rating, children, ...props }: RatingProperties) => {
+const Rating = ({ rating, children, style, ...props }: RatingProperties) => {
+  const hasRating = rating == null || rating === 0;
+
   return (
     <div 
-      className={mergeClassName(rating == null || rating === 0 ? 'secondary' : '', className)} 
+      style={{ ...style, visibility: !hasRating ? 'visible' : 'hidden' }}
       {...props}
     >
       {getStars(rating)}

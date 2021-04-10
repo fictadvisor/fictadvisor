@@ -2,17 +2,19 @@ import { mergeClassName } from "../lib/component";
 
 export type StatisticsEntryProperties = {
   name: string;
-  rating: number;
+  value: number | string;
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
-const StatisticsEntry = ({ name, rating, className, ...props }: StatisticsEntryProperties) => {
+const StatisticsEntry = ({ name, value, className, ...props }: StatisticsEntryProperties) => {
+  const numericValue = typeof(value) === 'string' ? parseFloat(value) : value;
+
   return (
     <div className={mergeClassName('statistics-field', className)} {...props}>
       <div className="statistics-label">
         <span className="font-medium">{name}</span>
-        <span style={{ float: 'right' }}>{rating}</span>
+        <span style={{ float: 'right' }}>{value}</span>
       </div>
-      <div className="statistics-progress"><div style={{ width: `${Math.round(rating / 5 * 100)}%` }}></div></div>
+      <div className="statistics-progress"><div style={{ width: `${Math.round(numericValue / 5 * 100)}%` }}></div></div>
     </div>
   );
 };

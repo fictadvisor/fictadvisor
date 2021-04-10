@@ -76,7 +76,7 @@ const TeachersPage = () => {
         }
       </div>
       {
-        (data && !error && data.count - 1 > page * PROPERTIES.pageSize) &&
+        (data && !error && data.count > (page + 1) * PROPERTIES.pageSize) &&
         <Button loading={isLoading || isFetching} className="full-width" onClick={() => setPage(page + 1)}>Завантажити ще</Button>
       }
     </PageLayout>

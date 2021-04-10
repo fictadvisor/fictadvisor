@@ -30,14 +30,7 @@ const PAGE_TABS = [
   },
   {
     name: 'Відгуки',
-    block: ({ link }: TabProperties) => {
-      const reviews = [
-        { rating: 3.5, date: new Date(), subject: 'Системне програмування', content: 'Так само як немає нікого, хто полюбивши, вважав за краще і зажадав би саме страждання тільки за те, що це страждання, а не тому, що інший раз виникають такі обставини, коли страждання і біль приносять якесь і чималу насолоду. Якщо скористатися найпростішим прикладом, то хто з нас став би займатися якими б то не було тяжкими фізичними вправами, якщо б це не приносило з собою якоїсь користі? І хто міг би по справедливості дорікнути прагнення до насолоди, яке не несло б з собою ніяких неприємностей, або того, хто уникав би такого страждання, яке не приносило б з собою ніякої насолоди?' },
-        { rating: 4, date: new Date(), subject: 'Системне програмування - 2', content: 'І хто міг би по справедливості дорікнути прагнення до насолоди, яке не несло б з собою ніяких неприємностей, або того, хто уникав би такого страждання, яке не приносило б з собою ніякої насолоди?' }
-      ];
-
-      return <ReviewBlock reviews={reviews} />;
-    }
+    block: ({ link }: TabProperties) => <ReviewBlock link={link} />,
   },
   {
     name: 'Контакти',
@@ -45,16 +38,7 @@ const PAGE_TABS = [
   },
   {
     name: 'Статистика',
-    block: ({ link }: TabProperties) => {
-      const entries = [
-        { name: 'Ввічливість', rating: 2.5 },
-        { name: 'Пунктуальність', rating: 4 },
-        { name: 'Об\'єктивність', rating: 5 },
-        { name: 'Загалом', rating: 3.8 }
-      ];
-
-      return <StatisticsBlock entries={entries} />;
-    }
+    block: ({ link }: TabProperties) => <StatisticsBlock link={link} />,
   },
 ];
 
@@ -90,7 +74,7 @@ const TeacherPage = ({ teacher }) => {
     >
       <div className={`block teacher ${collapsed ? 'collapsed' : ''} ${canCollapse ? 'collapsible' : ''}`}>
         <div className="teacher-info">
-          <img className="avatar teacher" src="https://i.imgur.com/MFtw4PC.jpg"/>
+          <img className="avatar teacher" src={teacher.image}/>
           <div style={{ marginLeft: '24px', display: 'flex' }}>
             <div style={{ display: 'block', margin: 'auto 0' }}>
               <p className="name">{fullName}</p>

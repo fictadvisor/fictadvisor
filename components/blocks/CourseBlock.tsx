@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 import api from '../../lib/api';
-import CourseItem, { CourseItemProperties } from '../CourseItem';
+import CourseItem from '../CourseItem';
 import Button from '../ui/Button';
 import Disclaimer from '../ui/Disclaimer';
 import Dropdown from '../ui/Dropdown';
@@ -9,7 +9,7 @@ import Loader from '../ui/Loader';
 import SearchInput from '../ui/SearchInput';
 
 const PROPERTIES = {
-  pageSize: 5,
+  pageSize: 6,
   sortBy: [
     { text: 'Рейтингом', data: 'rating' as const }, 
     { text: 'Назвою', data: 'name' as const }
@@ -46,7 +46,7 @@ const CourseList = ({ data, isLoading, isFetching, page, setPage }) => {
         }
       </div>
       {
-        (data && data.count - 1 > page * PROPERTIES.pageSize) &&
+        data.count > (page + 1) * PROPERTIES.pageSize &&
         <Button 
           loading={isLoading || isFetching} 
           className="full-width"
@@ -72,7 +72,7 @@ const CourseBlock = ({ link, ...props }: CourseBlockProperties) => {
   return (
     <div {...props}>
       <div className="flex space-b">
-        <SearchInput style={{ flex: 1, marginRight: '10px' }} placeholder="Пошук предметів" onChange={(e) => setSearchText(e.target.value)} />
+        <SearchInput style={{ flex: 1, marginRight: '10px' }} placeholder="Пошук предметів" value={searchText} onChange={(e) => setSearchText(e.target.value)} />
         <Dropdown 
           text="Сортування за:" 
           active={sortType} 

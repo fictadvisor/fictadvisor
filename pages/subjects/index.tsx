@@ -54,7 +54,7 @@ const SubjectsPage = () => {
       title="Предмети"
     >
       <div className="flex space-b">
-        <SearchInput active={searchActive} style={{ flex: 1, marginRight: '10px' }} placeholder="Пошук предметів" onChange={e => setSearchText(e.target.value)} />
+        <SearchInput active={searchActive} style={{ flex: 1, marginRight: '10px' }} placeholder="Пошук предметів" value={searchText} onChange={e => setSearchText(e.target.value)} />
         <Dropdown text="Сортування за:" active={sortType} onChange={i => setSortType(i)} options={PROPERTIES.sortBy} />
       </div>
       <div className="teacher-list">
@@ -72,7 +72,7 @@ const SubjectsPage = () => {
         }
       </div>
       {
-        (data && !error && data.count - 1 > page * PROPERTIES.pageSize) &&
+        (data && !error && data.count > (page + 1) * PROPERTIES.pageSize) &&
         <Button loading={isLoading || isFetching} className="full-width" onClick={() => setPage(page + 1)}>Завантажити ще</Button>
       }
     </PageLayout>

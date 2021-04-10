@@ -33,7 +33,7 @@ const PROPERTIES = {
   ]
 };
 
-const ReviewsList = ({ data, isFetching, setPage, page }) => {
+const ReviewList = ({ data, isFetching, setPage, page }) => {
   if (data.count === 0) {
     return (
       <Disclaimer>
@@ -50,7 +50,7 @@ const ReviewsList = ({ data, isFetching, setPage, page }) => {
           }
         </div>
         {
-         data.count - 1 > page * PROPERTIES.pageSize &&
+          data.count > (page + 1) * PROPERTIES.pageSize &&
           <Button 
             loading={isFetching}
             className="full-width"
@@ -130,7 +130,7 @@ const CoursePage = ({ course }) => {
       {
         isLoading || error || !data
           ? <Loader.Catchable error={error} />
-          : <ReviewsList data={data} isFetching={isFetching} page={page} setPage={setPage} />
+          : <ReviewList data={data} isFetching={isFetching} page={page} setPage={setPage} />
       }
     </PageLayout>
   );

@@ -9,7 +9,12 @@
 }
 
 .block.review > .main p {
-  margin: 10px 0 0;
+  margin: 14px 0 0 0;
+  line-height: 1.25;
+}
+
+.block.review > .main p:first-child {
+  margin: 10px 0 0 0;
 }
 
 .block.review > .top > div {

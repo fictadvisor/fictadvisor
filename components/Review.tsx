@@ -1,16 +1,17 @@
+import Link from "next/link";
 import { mergeClassName } from "../lib/component";
 import { toDateTimeString } from "../lib/date";
 
 import Rating from "./Rating";
 
 export type ReviewProperties = {
-  subject?: string;
+  course?: { name: string; link: string; };
   date?: Date;
   rating: number;
   content: string;
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
-const Review = ({ subject, date, rating, content, className, ...props }: ReviewProperties) => {
+const Review = ({ course, date, rating, content, className, ...props }: ReviewProperties) => {
   return (
     <div className={mergeClassName('block review', className)} {...props}>
       <div className="top">
@@ -18,15 +19,19 @@ const Review = ({ subject, date, rating, content, className, ...props }: ReviewP
         <div className="subject">
           <span className="font-medium">
             {
-              subject 
-               ? <>{subject}</>
-               : <>{toDateTimeString(new Date(date))}</>
+              course 
+               ? <><Link href={`/courses/${course.link}`}><a className="simple">{course.name}</a></Link></>
+               : 
+                date &&
+                <>{toDateTimeString(new Date(date))}</>
             }
           </span>
         </div>
       </div>
       <div className="main">
-        <p>{content}</p>
+        {
+          content.split('\n').map((text, i) => <p key={i}>{text}</p>)
+        }
       </div>
     </div>
   );

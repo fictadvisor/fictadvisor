@@ -1,25 +1,57 @@
 import Button from "../ui/Button";
 import Disclaimer from "../ui/Disclaimer";
-import StatisticsEntry, { StatisticsEntryProperties } from '../StatisticsEntry';
+import StatisticsEntry from '../StatisticsEntry';
+import { useQuery } from "react-query";
+import api from "../../lib/api";
+import Loader from "../ui/Loader";
 
 export type StatisticsBlockProperties = {
-  entries: StatisticsEntryProperties[];
+  link: string;
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
-const StatisticsBlock = ({ entries, ...props }: StatisticsBlockProperties) => {
+const EntryList = ({ data }) => {
+  if (data.items.length === 0) {
+    return (
+      <Disclaimer>
+        На жаль, у нас немає статистики цього викладача
+      </Disclaimer>
+    );
+  }
+
+  const average = (data.items.reduce((p, c) => p + c.value, 0) / data.items.length).toFixed(2);
+
   return (
-    <div {...props}>
+    <>
       <Disclaimer className="space-b">
         Використовується статистика, яка була зібрана командою <a className="font-bold">ФИВТ им. Веры Петровны</a> у 2020 році
       </Disclaimer>
       <div className="statistics-field-group block" style={{ borderRadius: '8px 8px 0 0' }}>
         {
-          entries.map((e, i) => <StatisticsEntry key={i} {...e} />)
+          data.items.map((e, i) => <StatisticsEntry key={i} name={e.name} value={e.value} />)
         }
+        <StatisticsEntry key="average" name="Загалом" value={average} />
       </div>
       <a href="https://t.me/analyticsFICT" target="_blank">
         <Button className="accent attached">Хочу дізнатись більше</Button>
       </a>
+    </>
+  );
+};
+
+const StatisticsBlock = ({ link, ...props }: StatisticsBlockProperties) => {
+  const { data, isLoading, isFetching, error } = useQuery(
+    ['teacher-stats', link], 
+    () => api.teachers.getStats(link), 
+    { keepPreviousData: true }
+  );
+
+  return (
+    <div {...props}>
+      {
+        isLoading || error
+          ? <Loader.Catchable error={error} />
+          : <EntryList data={data} />
+      }
     </div>
   );
 };
