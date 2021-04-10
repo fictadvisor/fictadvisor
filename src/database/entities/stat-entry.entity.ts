@@ -11,7 +11,7 @@ import {
 import { Teacher } from './teacher.entity';
 import { FLOAT_TRANSFORMER } from '../database.util';
 
-@Entity('stats')
+@Entity('teacher_stats')
 export class StatEntry extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
