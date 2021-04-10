@@ -1,4 +1,6 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { AfterLoad, BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+
+const AVATAR_IMAGE_PLACEHOLDER = '/assets/avatar.png';
 
 // TeacherView is dependant on this entity (see teacher-view.entity.ts)
 @Entity('teachers')
@@ -32,6 +34,13 @@ export class Teacher extends BaseEntity {
 
     @UpdateDateColumn({ name: 'updated_at' })
     updatedAt: Date;
+
+    @AfterLoad()
+    private defaultImage() {
+        if (this.image == null) {
+            this.image = AVATAR_IMAGE_PLACEHOLDER;
+        }
+    }
 
     public getFullName() {
         if (this.middleName) {
