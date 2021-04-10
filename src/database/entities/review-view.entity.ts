@@ -2,20 +2,23 @@ import { Connection, ViewColumn, ViewEntity, ManyToOne, JoinColumn } from "typeo
 import { Course } from './course.entity';
 import { Subject } from './subject.entity';
 import { Review, ReviewState } from './review.entity';
+import { Teacher } from "./teacher.entity";
 
 @ViewEntity({
     expression: (connection: Connection) => connection.createQueryBuilder()
     .select('r.id', 'id')
     .addSelect('r.content', 'content')
-    .addSelect('r.rating', 'rating')
+    .addSelect('r.rating::real', 'rating')
     .addSelect('r.state', 'state')
     .addSelect('r.createdAt', 'date')
     .addSelect('c.id', 'course_id')
     .addSelect('s.name', 'course_name')
     .addSelect('c.link', 'course_link')
+    .addSelect('t.link', 'teacher_link')
     .from(Review, 'r')
-    .leftJoin(Course, 'c', 'r.course_id = c.id')
-    .leftJoin(Subject, 's', 'c.subject_id = s.id')
+    .leftJoin(Course, 'c', 'c.id = r.course_id')
+    .leftJoin(Teacher, 't', 't.id = c.teacher_id')
+    .leftJoin(Subject, 's', 's.id = c.subject_id')
 })
 export class TeacherReviewView {
     @ViewColumn()
@@ -27,15 +30,14 @@ export class TeacherReviewView {
     @ViewColumn()
     state: ReviewState;
 
-    @ManyToOne(course => Course)
-    @JoinColumn({ name: 'course_id' })
-    course: Course;
-
-    @ViewColumn({ name: 'course_link' })
-    courseLink: string;
+    @ViewColumn({ name: 'teacher_link' })
+    teacherLink: string;
 
     @ViewColumn({ name: 'course_name' })
     courseName: string;
+
+    @ViewColumn({ name: 'course_link' })
+    courseLink: string;
 
     @ViewColumn()
     rating: number;

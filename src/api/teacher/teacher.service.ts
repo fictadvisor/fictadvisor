@@ -14,7 +14,7 @@ import { TeacherContactDto } from './dto/teacher-contact.dto';
 import { ResponseEntity } from '../../common/common.api';
 import { TeacherCourseSearchIndex } from "../../database/entities/teacher-course-search-index";
 import { TeacherCourseItemDto } from "./dto/teacher-course-item.dto";
-import { ReviewDto } from "./dto/review.dto";
+import { TeacherReviewDto } from "./dto/review.dto";
 import { Teacher } from 'src/database/entities/teacher.entity';
 import { StatEntry } from '../../database/entities/stat-entry.entity';
 import { TeacherStatsItemDto } from './dto/teacher-stats.dto';
@@ -114,11 +114,11 @@ export class TeacherService {
         date: ['DESC']
     }, 'date');
 
-    async getTeacherReviews(link: string, query: SearchableQueryDto): Promise<Page<ReviewDto>> {
+    async getTeacherReviews(link: string, query: SearchableQueryDto): Promise<Page<TeacherReviewDto>> {
         const [items, count] = await this.reviewRepository.findAndCount({
             ...Pageable.of(query.page, query.pageSize).toQuery(),
             where: {
-                courseLink: link,
+                teacherLink: link,
                 state: ReviewState.APPROVED,
                 ...Searchable.of<TeacherReviewView>('courseName', query.searchQuery).toQuery()
             },
@@ -127,7 +127,7 @@ export class TeacherService {
 
         return Page.of(
             count,
-            items.map(c => ReviewDto.from(c))
+            items.map(c => TeacherReviewDto.from(c))
         );
     }
 

@@ -2,7 +2,7 @@ import { assign } from "src/common/common.object";
 import { TeacherReviewView } from "src/database/entities/review-view.entity";
 import { ReviewCourseDto } from "./review-course.dto";
 
-export class ReviewDto {
+export class TeacherReviewDto {
 	id: string;
 
 	content: string;
@@ -15,11 +15,11 @@ export class ReviewDto {
 
 	public static from(e: TeacherReviewView) {
 		return assign(
-            new ReviewDto(),
+            new TeacherReviewDto(),
             {
             	id: e.id,
             	content: e.content,
-            	course: ReviewCourseDto.from(e.course),
+            	course: ReviewCourseDto.from(e),
             	rating: e.rating,
             	date: e.date
             }

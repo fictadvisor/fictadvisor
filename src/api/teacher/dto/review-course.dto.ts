@@ -1,6 +1,5 @@
-import { Expose } from "class-transformer";
 import { assign } from "src/common/common.object";
-import { Course } from "src/database/entities/course.entity";
+import { TeacherReviewView } from "src/database/entities/review-view.entity";
 
 export class ReviewCourseDto {
 	id: string;
@@ -9,13 +8,13 @@ export class ReviewCourseDto {
 
 	link: string;
 
-	public static from(c: Course) {
+	public static from(c: TeacherReviewView) {
 		return assign(
 			new ReviewCourseDto,
 			{
 				id: c.id,
-				name: c.subject.name,
-				link: c.link,
+				name: c.courseName,
+				link: c.courseLink,
 			}
 		);
 	}
