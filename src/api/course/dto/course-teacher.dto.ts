@@ -1,6 +1,6 @@
 import { Expose } from "class-transformer";
 import { assign } from "src/common/common.object";
-import { Teacher } from "src/database/entities/teacher.entity";
+import { Teacher, TEACHER_IMAGE_PLACEHOLDER } from "src/database/entities/teacher.entity";
 
 export class CourseTeacherDto {
     id: string;
@@ -27,7 +27,7 @@ export class CourseTeacherDto {
                 firstName: t.firstName,
                 middleName: t.middleName,
                 lastName: t.lastName,
-                image: t.image,
+                image: t.image ?? TEACHER_IMAGE_PLACEHOLDER,
             }
         );
     }
