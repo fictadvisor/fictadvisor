@@ -70,6 +70,8 @@ export class ReviewService {
         if (update.state != null) { review.state = update.state; }
 
         if (review.state === ReviewState.APPROVED && previousState != review.state) {
+            await this.reviewRepository.update({ user: review.user, course: review.course }, { state: ReviewState.OUTDATED });
+
             this.telegramService.broadcastApprovedReview(review.user, review.course.teacher)
                 .catch(e => this.logger.error('Failed to broadcast an approved review', { review: review.id, user: review.user.id, error: e.toString() }));
         }
@@ -81,8 +83,6 @@ export class ReviewService {
 
     async createReview(link: string, user: User, dto: CreateReviewDto): Promise<ReviewDto> {
         const course = await this.courseService.getCourse(link);
-
-        await this.reviewRepository.delete({ user });
 
         const review = await this.reviewRepository.save(
             assign(

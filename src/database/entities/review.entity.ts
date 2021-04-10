@@ -5,7 +5,9 @@ import { User } from "./user.entity";
 
 export enum ReviewState {
     PENDING = 'pending',
-    APPROVED = 'approved'
+    APPROVED = 'approved',
+    DECLINED = 'declined',
+    OUTDATED = 'outdated',
 };
 
 @Entity('reviews')
