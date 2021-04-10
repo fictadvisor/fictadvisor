@@ -70,7 +70,14 @@ export class ReviewService {
         if (update.state != null) { review.state = update.state; }
 
         if (review.state === ReviewState.APPROVED && previousState != review.state) {
-            await this.reviewRepository.update({ user: review.user, course: review.course }, { state: ReviewState.OUTDATED });
+            await this.reviewRepository.update(
+                { 
+                    user: review.user, 
+                    course: review.course, 
+                    state: ReviewState.APPROVED 
+                }, 
+                {  state: ReviewState.OUTDATED }
+            );
 
             this.telegramService.broadcastApprovedReview(review.user, review.course.teacher)
                 .catch(e => this.logger.error('Failed to broadcast an approved review', { review: review.id, user: review.user.id, error: e.toString() }));
