@@ -1,4 +1,4 @@
-import { Connection, ViewColumn, ViewEntity } from "typeorm";
+import { Connection, ViewColumn, ViewEntity, ManyToOne, JoinColumn } from "typeorm";
 import { Course } from './course.entity';
 import { Subject } from './subject.entity';
 import { Review } from './review.entity';
@@ -24,11 +24,9 @@ export class ReviewView {
     @ViewColumn()
     content: string;
 
-    @ViewColumn({ name: 'course_id' })
-    courseId: string;
-
-    @ViewColumn({ name: 'course_name' })
-    courseName: string;
+    @ManyToOne(course => Course)
+    @JoinColumn({ name: 'course_id' })
+    course: Course;
 
     @ViewColumn({ name: 'course_link' })
     courseLink: string;
