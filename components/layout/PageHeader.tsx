@@ -106,7 +106,7 @@ const PageHeader = () => {
       <div className="right">
         {
           authentication.user &&
-          <LogoutButton style={{ width: 'fit-content', margin: '0 20px 0 auto' }} authentication={authentication} />
+          <LogoutButton compact={true} style={{ width: 'fit-content', margin: '0 auto' }} authentication={authentication} />
         }
       </div>
     </div>
