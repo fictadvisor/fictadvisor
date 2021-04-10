@@ -62,25 +62,30 @@ export class ReviewService {
     }
 
     async updateReview(id: string, update: UpdateReviewDto): Promise<ReviewDto> {
-        const review = await this.getReview(id, ['user', 'course', 'course.teacher']);
+        const review = await this.getReview(id, ['user', 'course', 'course.teacher', 'course.subject']);
         const previousState = review.state;
 
         if (update.content != null) { review.content = update.content; }
         if (update.rating != null) { review.rating = update.rating; }
         if (update.state != null) { review.state = update.state; }
 
-        if (review.state === ReviewState.APPROVED && previousState != review.state) {
-            await this.reviewRepository.update(
-                { 
-                    user: review.user, 
-                    course: review.course, 
-                    state: ReviewState.APPROVED 
-                }, 
-                {  state: ReviewState.OUTDATED }
-            );
+        if (review.state != previousState && previousState == ReviewState.PENDING) {
+            if (review.state == ReviewState.APPROVED) {
+                await this.reviewRepository.update(
+                    { 
+                        user: review.user, 
+                        course: review.course, 
+                        state: ReviewState.APPROVED 
+                    }, 
+                    {  state: ReviewState.OUTDATED }
+                );
 
-            this.telegramService.broadcastApprovedReview(review.user, review.course.teacher)
-                .catch(e => this.logger.error('Failed to broadcast an approved review', { review: review.id, user: review.user.id, error: e.toString() }));
+                this.telegramService.broadcastApprovedReview(review)
+                    .catch(e => this.logger.error('Failed to broadcast an approved review', { review: review.id, user: review.user.id, error: e.toString() }));
+            } else if (review.state == ReviewState.DECLINED) {
+                this.telegramService.broadcastDeclinedReview(review)
+                    .catch(e => this.logger.error('Failed to broadcast a denied review', { user: review.user.id, error: e.toString() }));
+            }
         }
 
         return ReviewDto.from(
@@ -110,11 +115,8 @@ export class ReviewService {
     }
 
     async deleteReview(id: string): Promise<void> {
-        const review = await this.getReview(id, ['user', 'course', 'course.teacher']);
+        const review = await this.getReview(id);
 
         await review.remove();
-        
-        this.telegramService.broadcastDeniedReview(review.user, review.course.teacher)
-            .catch(e => this.logger.error('Failed to broadcast a denied review', { user: review.user.id, error: e.toString() }));
     }
 }

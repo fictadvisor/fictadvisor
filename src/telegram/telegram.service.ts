@@ -69,14 +69,22 @@ export class TelegramService {
         }
     }
 
-    private getTeacherName(teacher: Teacher) {
-        return `<a href="${this.configService.get<string>('frontBaseUrl')}/teachers/${teacher.link}">${teacher.getFullName()}</a>`;
+    private getCourseTag(course: Course) {
+        const teacher = `<a href="${this.configService.get<string>('frontBaseUrl')}/teachers/${course.teacher.link}">(${escape(course.teacher.getFullName())})</a>`;
+        const subject = `<a href="${this.configService.get<string>('frontBaseUrl')}/courses/${course.link}">${escape(course.subject.name)}</a>`;
+
+        return `${subject} ${teacher}`;
     }
 
-    async broadcastDeniedReview(user: User, teacher: Teacher) {
+    /**
+     * @param review required relations: user, course, course.teacher, course.subject
+     */
+    async broadcastDeclinedReview(review: Review) {
+        const { user, course } = review;
+
         await this.bot.telegram.sendMessage(
             user.telegramId,
-            `<b>На жаль, твій відгук на ${this.getTeacherName(teacher)} було відхилено.</b>\n\n` +
+            `<b>На жаль, твій відгук на (${this.getCourseTag(course)}) було відхилено.</b>\n\n` +
             `Якщо в тебе є питання, звертайся до нас через бота зворотнього зв'язку: @fict_robot`,
             {
                 parse_mode: 'HTML',
@@ -84,10 +92,13 @@ export class TelegramService {
         );
     }
 
-    async broadcastApprovedReview(user: User, teacher: Teacher) {
+    /**
+     * @param review required relations: user, course, course.teacher, course.subject
+     */
+    async broadcastApprovedReview(review: Review) {
         await this.bot.telegram.sendMessage(
-            user.telegramId,
-            `<b>Твій відгук на ${this.getTeacherName(teacher)} вже на сайті.</b>\n\n` +
+            review.user.telegramId,
+            `<b>Твій відгук на ${this.getCourseTag(review.course)} вже на сайті.</b>\n\n` +
             `Дякуємо за небайдужість!`,
             {
                 parse_mode: 'HTML',
