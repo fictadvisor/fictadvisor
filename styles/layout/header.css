@@ -21,10 +21,20 @@
   max-width: 100%;
 }
 
+.only-compact {
+  visibility: none !important;
+  display: none !important;
+}
+
 @media (max-width: 1480px) {
   .page > .header > .left, .header > .right {
     visibility: hidden;
     display: none;
+  }
+
+  .only-compact {
+    visibility: initial !important;
+    display: inherit !important;
   }
 
   .page > .header .logo-md {

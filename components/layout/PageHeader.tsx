@@ -2,8 +2,12 @@ import Link from "next/link";
 import { useState } from "react";
 import { useComponentVisible } from "../../lib/component";
 import { useAuthentication } from "../../lib/context/AuthenticationContext";
+import LoginButton from "../LoginButton";
+import LogoutButton from "../LogoutButton";
 import Button from "../ui/Button";
 import Divider from "../ui/Divider";
+import LoginIcon from "../ui/icons/LoginIcon";
+import LogoutIcon from "../ui/icons/LogoutIcon";
 import SettingsIcon from "../ui/icons/SettingsIcon";
 import SearchInput from "../ui/SearchInput";
 
@@ -41,51 +45,14 @@ const MenuItem = ({ item, action = null, setMenuActive }) => {
   );
 };
 
-const getUnauthorizedActions = (authentication) => {
-  return (
-    <>
-      <a href={authentication.loginUrl}><Button>Авторизуватись</Button></a>
-    </>
-  );
-};
-
-const getName = ({ username, first_name, last_name }) => {
-  if (username) {
-    return username;
-  }
-
-  return last_name ? `${first_name} ${last_name}` : first_name;
-};
-
-const getAuthorizedActions = (authentication) => {
-  const name = getName(authentication.user);
-
-  return (
-    <>
-      <Button disabled style={{ borderRadius: '8px 0 0 8px', borderRight: '1px solid #323D4D' }}>
-        <span style={{ margin: '0 -8px' }}><SettingsIcon style={{ marginTop: '-2px' }} /></span>
-      </Button>
-      <Button style={{ borderRadius: '0', borderRight: '1px solid #323D4D' }}>
-        {name}
-      </Button>
-      <Link href={authentication.logoutUrl}>
-        <a>
-          <Button style={{ borderRadius: '0 8px 8px 0' }}>
-            Вийти
-          </Button>
-        </a>
-      </Link>
-    </>
-  );
-};
-
 const PageHeader = () => {
   const authentication = useAuthentication();
   const [searchText, setSearchText] = useState('');
   const { ref: menuRef, ignoreRef: menuBtnRef, isComponentVisible: menuActive, setIsComponentVisible: setMenuActive } = useComponentVisible(false);
 
   const searchActive = searchText.length > 0;
-  const actions = authentication.user ? getAuthorizedActions(authentication) : getUnauthorizedActions(authentication);
+
+  const UserActionButton = authentication.user ? LogoutButton : LoginButton;
 
   return (
     <div className="header">
@@ -117,7 +84,12 @@ const PageHeader = () => {
             placeholder="Пошук викладачів, предметів та іншої інформації" 
             style={{ flex: 1, marginRight: '10px' }}
           />
-          <Button innerRef={menuBtnRef} className="accent" onClick={() => setMenuActive(!menuActive)}>Меню</Button>
+          <Button innerRef={menuBtnRef} onClick={() => setMenuActive(!menuActive)}>Меню</Button>
+          {
+            authentication.user 
+              ? <LogoutButton className="only-compact" compact={true} style={{ display: 'flex', marginLeft: '10px' }} authentication={authentication} />
+              : <LoginButton style={{ marginLeft: '10px' }} authentication={authentication} />
+          }
         </div>
         {
           menuActive &&
@@ -127,16 +99,15 @@ const PageHeader = () => {
                 MENU.navigation.map(t => <MenuItem key={t.text} item={t} setMenuActive={setMenuActive} />)
               }
             </div>
-            <Divider />
-            <div>
-              {actions}
-            </div>
           </div>
         }
       </div>
 
       <div className="right">
-
+        {
+          authentication.user &&
+          <LogoutButton style={{ width: 'fit-content', margin: '0 20px 0 auto' }} authentication={authentication} />
+        }
       </div>
     </div>
   );

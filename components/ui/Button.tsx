@@ -1,6 +1,6 @@
 import React from "react";
 
-type ButtonProperties = {
+export type ButtonProperties = {
   active?: boolean;
   loading?: boolean;
   innerRef?: any;

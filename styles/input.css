@@ -122,7 +122,7 @@ button:disabled {
   background-color: #323D4D;
 }
 
-button:hover:not(:disabled), button:active, button.active {
+button:hover:not(:disabled):not(.no-hover), button:active:not(.no-hover), button.active {
   background-color: #323D4D;
 }
 
