@@ -23,5 +23,6 @@ export default () => ({
   telegram: {
     botToken: process.env.TELEGRAM_BOT_TOKEN,
     chatId: process.env.TELEGRAM_CHAT_ID,
+    proxyBaseUrl: process.env.TELEGRAM_PROXY_URL,
   },
 });

@@ -38,21 +38,20 @@ export class OAuthService {
     async login(oauth: OAuthTelegramDto): Promise<OAuthTokenDto> {
         let user: User = await this.userRepository.findOne({ telegramId: oauth.telegramId });
 
-        if (user == null) {
-            user = assign(
-                new User(), 
-                {
-                    telegramId: oauth.telegramId,
-                    username: oauth.username,
-                    firstName: oauth.firstName,
-                    lastName: oauth.lastName,
-                    image: oauth.image,
-                }
-            );
-            user = await this.userRepository.save(user);
-        }
+        user = assign(
+            user == null ? new User() : user, 
+            {
+                telegramId: oauth.telegramId,
+                username: oauth.username,
+                firstName: oauth.firstName,
+                lastName: oauth.lastName,
+                image: oauth.image,
+            }
+        );
 
-        return await this.getToken(user);
+        return await this.getToken(
+            await this.userRepository.save(user)
+        );
     }
 
     async refresh(refreshToken: string): Promise<OAuthTokenDto> {
