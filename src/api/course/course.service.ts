@@ -4,7 +4,6 @@ import { ServiceException } from 'src/common/common.exception';
 import { Course } from 'src/database/entities/course.entity';
 import { Review } from 'src/database/entities/review.entity';
 import { Connection, Repository } from 'typeorm';
-import { CourseItemDto } from '../subject/dto/course-item.dto';
 import { CourseDto } from './dto/course.dto';
 
 @Injectable()
@@ -12,6 +11,8 @@ export class CourseService {
     constructor(
         @InjectRepository(Course)
         private courseRepository: Repository<Course>,
+        @InjectRepository(Review)
+        private reviewRepository: Repository<Review>,
         private connection: Connection
     ) {}
 

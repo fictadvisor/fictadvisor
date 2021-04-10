@@ -4,7 +4,7 @@ import { SearchableQueryDto } from 'src/common/common.dto';
 import { Authorize } from 'src/security/security.authorization';
 import { Context, SecurityContext } from 'src/security/security.context';
 import { CreateReviewDto } from './dto/create-review.dto';
-import { ReviewItemDto } from './dto/review-item.dto';
+import { CourseReviewDto } from './dto/review-item.dto';
 import { ReviewDto } from './dto/review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
 import { ReviewService } from './review.service';
@@ -19,7 +19,7 @@ export class ReviewController {
     getReviews(
         @Param('link') link: string,
         @Query() query: SearchableQueryDto
-    ): Promise<Page<ReviewItemDto>> {
+    ): Promise<Page<CourseReviewDto>> {
         return this.reviewService.getReviews(link, query);
     }
 

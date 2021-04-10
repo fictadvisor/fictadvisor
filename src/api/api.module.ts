@@ -29,6 +29,7 @@ import { TeacherCourseSearchIndex } from "../database/entities/teacher-course-se
 import { ReviewController } from './course/review/review.controller';
 import { ReviewService } from './course/review/review.service';
 import { TelegramService } from 'src/telegram/telegram.service';
+import { StatEntry } from '../database/entities/stat-entry.entity';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { TelegramService } from 'src/telegram/telegram.service';
         RefreshToken,
         Review,
         Course,
+        StatEntry
       ]
     )
 ],

@@ -3,9 +3,9 @@ import { Review } from "src/database/entities/review.entity";
 
 export class CourseReviewDto {
     id: string;
-
+    
     content: string;
-
+    
     rating: number;
 
     date: Date;

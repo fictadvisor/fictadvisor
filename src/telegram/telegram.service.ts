@@ -17,12 +17,33 @@ export class TelegramService {
         this.bot = new Telegraf(configService.get<string>('telegram.botToken'));
     }
 
+    private splitMessage(text: string, chunkSize: number = 2048): string[] {
+        if (text.length <= chunkSize) {
+            return [text];
+        }
+    
+        const chunks = [];
+        const chunksSize = Math.ceil(text.length / chunkSize)
+    
+        for (let i = 0; i < chunksSize; i++) {
+            const start = i * chunkSize;
+            const length = Math.min(chunkSize, text.length - start);
+    
+            chunks.push(text.substr(start, length));
+        }
+    
+        return chunks;
+    }
+
     async broadcastPendingReview(user: User, course: Course, review: Review) {
-        await this.bot.telegram.sendMessage(
-            this.configService.get<string>('telegram.chatId'),
+        const messageChunks = this.splitMessage(review.content);
+        const chatId = this.configService.get<string>('telegram.chatId');
+
+        let message = await this.bot.telegram.sendMessage(
+            chatId,
             `<b>Відгук на <a href="${this.configService.get<string>('frontBaseUrl')}/courses/${course.link}">${course.link}</a>\n` +
             `Автор: ${user.firstName} (${user.id})\nОцінка: ${review.rating}</b>\n\n` +
-            `<pre>${escape(review.content)}</pre>`,
+            `<pre>${escape(messageChunks[0])}</pre>`,
             {
                 parse_mode: 'HTML',
                 reply_markup: {
@@ -33,6 +54,19 @@ export class TelegramService {
                 },
             } 
         );
+
+        if (messageChunks.length > 1) {
+            for (let i = 1; i < messageChunks.length; i++) {
+                message = await this.bot.telegram.sendMessage(
+                    chatId,
+                    `<pre>${escape(messageChunks[i])}</pre>`,
+                    {
+                        parse_mode: 'HTML',
+                        reply_to_message_id: message.message_id,
+                    }
+                );
+            }
+        }
     }
 
     private getTeacherName(teacher: Teacher) {
