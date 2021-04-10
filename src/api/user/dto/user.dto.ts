@@ -17,6 +17,8 @@ export class UserDto {
     @Expose({ name: 'telegram_id' })
     telegramId: number;
 
+    image?: string;
+
     role: UserRole;
 
     @Expose({ name: 'created_at' })
@@ -35,6 +37,7 @@ export class UserDto {
                 username: u.username,
                 telegramId: u.telegramId,
                 role: u.role,
+                image: u.image ?? '/assets/avatar.png',
                 createdAt: u.createdAt,
                 updatedAt: u.updatedAt,
             }

@@ -46,6 +46,7 @@ export class OAuthService {
                     username: oauth.username,
                     firstName: oauth.firstName,
                     lastName: oauth.lastName,
+                    image: oauth.image,
                 }
             );
             user = await this.userRepository.save(user);

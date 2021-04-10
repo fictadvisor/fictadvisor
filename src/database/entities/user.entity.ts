@@ -16,8 +16,11 @@ export class User extends BaseEntity {
     @Column({ name: 'last_name', type: 'varchar', nullable: true })
     lastName?: string;
 
-    @Column({ name: 'username', type: 'varchar', nullable: true })
+    @Column({ type: 'varchar', nullable: true })
     username?: string;
+
+    @Column({ type: 'varchar', nullable: true })
+    image?: string;
 
     @Column({ name: 'telegram_id', unique: true })
     telegramId: number;

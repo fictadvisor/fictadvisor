@@ -16,4 +16,7 @@ export class OAuthTelegramDto {
     @IsOptional()
     @Expose({ name: 'username' })
     username?: string;
+
+    @IsOptional()
+    image?: string;
 };
