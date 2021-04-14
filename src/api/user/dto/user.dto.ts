@@ -37,7 +37,7 @@ export class UserDto {
                 username: u.username,
                 telegramId: u.telegramId,
                 role: u.role,
-                image: u.image ? `${process.env.TELEGRAM_PROXY_URL}/proxy?url=${u.image}` : '/assets/avatar.png',
+                image: '/assets/avatar.png',
                 createdAt: u.createdAt,
                 updatedAt: u.updatedAt,
             }
