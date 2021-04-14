@@ -20,6 +20,7 @@ const PageLayout = ({ meta, title, children }: PageLayoutProperties) => {
           <meta name="viewport" content="width=840, initial-scale=1" />
 
           <meta property="og:title" content={metaTitle} />
+          <meta property="og:site_name" content="FICT Advisor" />
           <meta property="og:image" content="/assets/preview.jpg" />
           <meta property="og:type" content="website" />
 
