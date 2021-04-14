@@ -25,7 +25,7 @@ const PageLayout = ({ meta, title, children }: PageLayoutProperties) => {
           <meta property="og:type" content="website" />
 
           {
-            meta.description &&
+            meta?.description &&
             <meta property="og:description" content={meta.description} />
           }
 

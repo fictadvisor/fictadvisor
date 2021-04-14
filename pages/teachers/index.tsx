@@ -52,7 +52,7 @@ const TeachersPage = () => {
 
   return (
     <PageLayout
-      meta={{ title: 'Викладачі', description: 'Пошук викладачів, які викладають на факультеті' }}
+      meta={{ title: 'Викладачі' }}
       title="Викладачі"
     >
       <div className="flex" style={{ marginBottom: '10px' }}>

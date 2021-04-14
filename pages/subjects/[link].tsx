@@ -93,7 +93,7 @@ const SubjectPage = ({ subject }) => {
 
   return (
     <PageLayout
-      meta={{ title: subject.name, description: 'Інформація про предмет' }}
+      meta={{ title: subject.name }}
       title="Сторінка предмету"
     >
       <SubjectInformation name={subject.name} description={subject.description} />

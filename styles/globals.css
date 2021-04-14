@@ -214,3 +214,15 @@ a.simple {
 .rating-select > div:nth-child(even):not(:last-child) {
   margin-right: 5px;
 }
+
+.faq {
+  display: block;
+}
+
+.faq > div:not(:last-child) {
+  margin-bottom: 10px;
+}
+
+.faq > div, .faq > div > button {
+  width: 100%;
+}

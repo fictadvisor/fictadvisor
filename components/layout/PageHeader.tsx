@@ -5,10 +5,6 @@ import { useAuthentication } from "../../lib/context/AuthenticationContext";
 import LoginButton from "../LoginButton";
 import LogoutButton from "../LogoutButton";
 import Button from "../ui/Button";
-import Divider from "../ui/Divider";
-import LoginIcon from "../ui/icons/LoginIcon";
-import LogoutIcon from "../ui/icons/LogoutIcon";
-import SettingsIcon from "../ui/icons/SettingsIcon";
 import SearchInput from "../ui/SearchInput";
 
 const MENU = {
