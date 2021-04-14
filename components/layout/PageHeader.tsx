@@ -52,8 +52,6 @@ const PageHeader = () => {
 
   const searchActive = searchText.length > 0;
 
-  const UserActionButton = authentication.user ? LogoutButton : LoginButton;
-
   return (
     <div className="header">
       <div className="left">

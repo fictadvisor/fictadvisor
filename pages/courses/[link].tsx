@@ -92,7 +92,7 @@ const CoursePage = ({ course }) => {
 
   return (
     <PageLayout
-      meta={{ title: `${course.name} - ${fullName}` }}
+      meta={{ title: `${course.name} - ${fullName}`, description: 'Інформація про предмет, який викладається на факультеті' }}
       title="Сторінка курсу"
     >
       <Link href={`/teachers/${course.teacher.link}`}>

@@ -50,7 +50,7 @@ const SubjectsPage = () => {
 
   return (
     <PageLayout
-      meta={{ title: 'Предмети' }}
+      meta={{ title: 'Предмети', description: 'Пошук предметів, що викладаються на факультеті' }}
       title="Предмети"
     >
       <div className="flex space-b">

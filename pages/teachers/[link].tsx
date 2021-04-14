@@ -69,7 +69,7 @@ const TeacherPage = ({ teacher }) => {
 
   return (
     <PageLayout
-      meta={{ title: fullName }}
+      meta={{ title: fullName, description: 'Інформація про викладача' }}
       title="Сторінка викладача"
     >
       <div className={`block teacher ${collapsed ? 'collapsed' : ''} ${canCollapse ? 'collapsible' : ''}`}>
