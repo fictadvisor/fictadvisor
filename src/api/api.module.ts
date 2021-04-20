@@ -31,6 +31,8 @@ import { ReviewService } from './course/review/review.service';
 import { TelegramService } from 'src/telegram/telegram.service';
 import { StatEntry } from '../database/entities/stat-entry.entity';
 import { TeacherReviewView } from 'src/database/entities/review-view.entity';
+import { SearchController } from './search/search.controller';
+import { SearchService } from './search/search.service';
 
 @Module({
   imports: [
@@ -63,6 +65,7 @@ import { TeacherReviewView } from 'src/database/entities/review-view.entity';
     OAuthController,
     CourseController,
     ReviewController,
+    SearchController,
   ],
   providers: [
     TeacherService,
@@ -73,6 +76,7 @@ import { TeacherReviewView } from 'src/database/entities/review-view.entity';
     CourseService,
     ReviewService,
     TelegramService,
+    SearchService,
   ],
 })
 export class ApiModule {}
