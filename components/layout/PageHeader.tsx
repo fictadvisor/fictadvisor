@@ -2,12 +2,12 @@ import Link from "next/link";
 import { useState } from "react";
 import { useComponentVisible } from "../../lib/component";
 import { useAuthentication } from "../../lib/context/AuthenticationContext";
+import GlobalSearch from "../GlobalSearch";
 import LoginButton from "../LoginButton";
 import LogoutButton from "../LogoutButton";
 import Button from "../ui/Button";
-import SearchInput from "../ui/SearchInput";
 
-const MENU = {
+export const MENU = {
   navigation: [
     { text: 'Головна', href: '/' },
     { text: 'Викладачі', href: '/teachers' },
@@ -43,10 +43,7 @@ const MenuItem = ({ item, action = null, setMenuActive }) => {
 
 const PageHeader = () => {
   const authentication = useAuthentication();
-  const [searchText, setSearchText] = useState('');
   const { ref: menuRef, ignoreRef: menuBtnRef, isComponentVisible: menuActive, setIsComponentVisible: setMenuActive } = useComponentVisible(false);
-
-  const searchActive = searchText.length > 0;
 
   return (
     <div className="header">
@@ -71,13 +68,7 @@ const PageHeader = () => {
           </Link>
         </div>
         <div className="flex full-width">
-          <SearchInput 
-            active={searchActive} 
-            value={searchText}
-            onChange={e => setSearchText(e.target.value)}
-            placeholder="Пошук викладачів, предметів та іншої інформації" 
-            style={{ flex: 1, marginRight: '10px' }}
-          />
+          <GlobalSearch />
           <Button innerRef={menuBtnRef} onClick={() => setMenuActive(!menuActive)}>Меню</Button>
           {
             authentication.user 

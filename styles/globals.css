@@ -226,3 +226,52 @@ a.simple {
 .faq > div, .faq > div > button {
   width: 100%;
 }
+
+.global-search {
+  position: relative;
+  flex: 1;
+  margin-right: 10px;
+  display: flex;
+}
+
+.global-search > .global-search-container {
+  display: inline-block;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.global-search > .global-search-container .input {
+  box-sizing: border-box;
+}
+
+.global-search-content {
+  position: absolute;
+  display: block;
+  width: 100%;
+  background-color: #242C37;
+  padding: 10px 0px;
+  border-radius: 0 0 8px 8px;
+  box-shadow: -2px 4px 4px rgba(0,0,0,0.5);
+}
+
+.global-search-content a.search-item {
+  width: 100%;
+  padding: 5px 24px;
+  display: block;
+  box-sizing: border-box;
+  font-weight: normal;
+}
+
+.global-search-content .divider {
+  width: 100%;
+  margin: 10px 0;
+}
+
+.global-search-content svg {
+  fill: var(--primary-text-color);
+}
+
+.global-search-content a.search-item:hover {
+  background-color: #2d3642;
+}
+

@@ -4,6 +4,11 @@
   display: flex;
   padding: 11px 17px;
 }
+
+.input.collapsed {
+  border-bottom: 1px solid #323D4D;
+  border-radius: 8px 8px 0 0;
+}
   
 .input.active > svg {
   fill: var(--primary-text-color);
@@ -102,6 +107,15 @@ button:disabled {
   width: 100%;
   padding: 10px 0px;
   border-radius: 0 0 8px 8px;
+}
+
+.dropdown-content.collapsible-panel {
+  position: relative;
+  padding: 14px 0px;
+}
+
+.dropdown-content.collapsible-panel > div {
+  padding: 0 20px;
 }
 
 .dropdown.active .dropdown-content {

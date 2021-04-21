@@ -6,7 +6,7 @@ export type CollapsePanelProperties = {
   title: string;
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
-const CollapsePanel = ({ title, className, ...props }: CollapsePanelProperties) => {
+const CollapsePanel = ({ title, children, className, ...props }: CollapsePanelProperties) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -17,6 +17,11 @@ const CollapsePanel = ({ title, className, ...props }: CollapsePanelProperties) 
           <span className="arrow"><ArrowIcon /></span>
         </div>
       </button>
+      <div className="dropdown-content collapsible-panel">
+        <div>
+          {children}
+        </div>
+      </div>
     </div>
   );
 };
