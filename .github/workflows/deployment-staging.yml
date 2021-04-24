@@ -1,8 +1,8 @@
-name: Production - Deployment
+name: Deployment - Staging
 
 on:
   push:
-    branches: [ master ]
+    branches: [ staging ]
 
 jobs:
   build-deploy:
