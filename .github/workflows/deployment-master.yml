@@ -33,7 +33,7 @@ jobs:
 
       # Deploy the application on the virtual machine
       - name: Deploy
-      uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.PRODUCTION_DO_HOST }}
           username: ${{ secrets.PRODUCTION_DO_USERNAME }}
