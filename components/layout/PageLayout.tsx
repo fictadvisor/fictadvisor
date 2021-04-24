@@ -24,6 +24,8 @@ const PageLayout = ({ meta, title, children }: PageLayoutProperties) => {
           <meta property="og:image" content="/assets/preview.jpg" />
           <meta property="og:type" content="website" />
 
+          <meta name="google-site-verification" content="M93dY9EuPcQ5AzSYwxc6_el0GwZp_XlDHBhphP6z-7g" />
+
           {
             meta?.description &&
             <meta property="og:description" content={meta.description} />
