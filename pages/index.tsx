@@ -33,7 +33,7 @@ const IndexPage = ({ popularTeachers, popularSubjects, studentResources: serverR
 
   return (
     <PageLayout
-      meta={{ title: 'FICT Advisor', description: 'Ресурс для студентів та абітурієнтів ФІО, на якому можна знайти інформацію та відгуки про викладачів і предмети.' }}
+      meta={{ title: 'FICT Advisor', description: 'Ресурс для студентів та абітурієнтів ФІОТ, на якому можна знайти інформацію та відгуки про викладачів і предмети.' }}
       title="Головна сторінка"
     >
       <div className="information-block">
