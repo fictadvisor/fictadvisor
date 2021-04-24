@@ -30,3 +30,15 @@ jobs:
         env:
           IMAGE_NAME: $GITHUB_REPOSITORY
         run: docker push "docker.pkg.github.com/$GITHUB_REPOSITORY/${{ steps.env.outputs.IMAGE_NAME }}"
+
+      # Deploy the application on the virtual machine
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.PRODUCTION_DO_HOST }}
+          username: ${{ secrets.PRODUCTION_DO_USERNAME }}
+          password: ${{ secrets.PRODUCTION_DO_PASSWORD }}
+          port: ${{ secrets.PRODUCTION_DO_PORT }}
+          script: |
+            cd ~/deployment/production
+            ./${{ steps.env.outputs.IMAGE_NAME }}.sh
