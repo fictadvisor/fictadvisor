@@ -8,7 +8,7 @@ import oauth from './oauth';
 import search from './search';
 
 
-const client = axios.create({ baseURL: 'http://dev.fictadvisor.com:4545' });
+const client = axios.create({ baseURL: process.env.API_BASE_URL ?? process.env.NEXT_PUBLIC_API_BASE_URL });
 
 const api = {
   teachers: teachers(client),
