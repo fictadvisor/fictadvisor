@@ -41,5 +41,5 @@ jobs:
           port: ${{ secrets.PRODUCTION_DO_PORT }}
           script: |
             cd ~/deployment/production
-            ./fictadvisor-api.sh
+            ./${{ steps.env.outputs.IMAGE_NAME }}.sh
 
