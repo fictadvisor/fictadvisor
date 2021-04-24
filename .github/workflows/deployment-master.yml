@@ -34,12 +34,12 @@ jobs:
       # Deploy the application on the virtual machine
       - name: Deploy
       uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.PRODUCTION_DO_HOST }}
-        username: ${{ secrets.PRODUCTION_DO_USERNAME }}
-        password: ${{ secrets.PRODUCTION_DO_PASSWORD }}
-        port: ${{ secrets.PRODUCTION_DO_PORT }}
-        script: |
-         cd ~/deployment/production
-         ./fictadvisor-api.sh
+        with:
+          host: ${{ secrets.PRODUCTION_DO_HOST }}
+          username: ${{ secrets.PRODUCTION_DO_USERNAME }}
+          password: ${{ secrets.PRODUCTION_DO_PASSWORD }}
+          port: ${{ secrets.PRODUCTION_DO_PORT }}
+          script: |
+          cd ~/deployment/production
+          ./fictadvisor-api.sh
 
