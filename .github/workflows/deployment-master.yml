@@ -40,6 +40,6 @@ jobs:
           password: ${{ secrets.PRODUCTION_DO_PASSWORD }}
           port: ${{ secrets.PRODUCTION_DO_PORT }}
           script: |
-          cd ~/deployment/production
-          ./fictadvisor-api.sh
+            cd ~/deployment/production
+            ./fictadvisor-api.sh
 
