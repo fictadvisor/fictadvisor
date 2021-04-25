@@ -26,6 +26,19 @@ const PageLayout = ({ meta, title, children }: PageLayoutProperties) => {
           <meta property="og:type" content="website" />
 
           <meta name="google-site-verification" content="M93dY9EuPcQ5AzSYwxc6_el0GwZp_XlDHBhphP6z-7g" />
+          <script async src="https://www.googletagmanager.com/gtag/js?id=G-GXYG7SJKYT" />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: 
+                `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+
+                  gtag('config', 'G-GXYG7SJKYT');
+                `
+            }}
+          />
 
           {
             meta?.description &&
