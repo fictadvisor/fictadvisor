@@ -1,11 +1,11 @@
-FROM node:14.16.0
+FROM node:14.16.0-alpine3.13
 
 WORKDIR /app
 
 COPY . /app
 
-RUN npm i
+RUN yarn install
 
-RUN npm run build
+RUN yarn build
 
-ENTRYPOINT npm run start
+ENTRYPOINT yarn start
