@@ -6,12 +6,8 @@ import subjects from './subjects';
 import courses from './courses';
 import oauth from './oauth';
 import search from './search';
-import config from '../../config';
 
-const baseURL = process.browser ? config.env('NEXT_PUBLIC_API_BASE_URL') : config.env('API_BASE_URL');
-
-console.log('API:', baseURL);
-
+const baseURL = process.browser ? process.env.NEXT_PUBLIC_API_BASE_URL : process.env.API_BASE_URL;
 const client = axios.create({ baseURL });
 
 const api = {
