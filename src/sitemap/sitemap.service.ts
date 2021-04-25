@@ -6,7 +6,9 @@ import { Subject } from 'src/database/entities/subject.entity';
 import { Teacher } from 'src/database/entities/teacher.entity';
 import { Repository } from 'typeorm';
 import { create } from 'xmlbuilder2';
-import { writeFile } from 'fs';
+import { writeFile, mkdir as _mkdir } from 'fs';
+
+const mkdir = (dir: string) => new Promise<void>((resolve, reject) => _mkdir(dir, (err) => err ? reject(err) : resolve()));
 
 @Injectable()
 export class SitemapService {
@@ -53,6 +55,9 @@ export class SitemapService {
         });
 
         const xml = root.end({ prettyPrint: true });
+        const staticDir = this.configService.get<string>('static.dir');
+
+        await mkdir(staticDir);
 
         return new Promise<void>((resolve, reject) => 
             writeFile(
