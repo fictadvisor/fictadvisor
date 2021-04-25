@@ -8,7 +8,7 @@ import oauth from './oauth';
 import search from './search';
 import config from '../../config';
 
-const baseURL = config.env('API_BASE_URL', config.env('NEXT_PUBLIC_API_BASE_URL'));
+const baseURL = process.browser ? config.env('NEXT_PUBLIC_API_BASE_URL') : config.env('API_BASE_URL');
 
 const client = axios.create({ baseURL });
 
