@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useState } from "react";
+import config from "../../config";
 import { useComponentVisible } from "../../lib/component";
 import { useAuthentication } from "../../lib/context/AuthenticationContext";
 import GlobalSearch from "../GlobalSearch";
@@ -8,12 +8,7 @@ import LogoutButton from "../LogoutButton";
 import Button from "../ui/Button";
 
 export const MENU = {
-  navigation: [
-    { text: 'Головна', href: '/' },
-    { text: 'Викладачі', href: '/teachers' },
-    { text: 'Предмети', href: '/subjects' },
-    { text: 'Допомога', href: '/help' }
-  ],
+  navigation: config.menu,
 };
 
 const MenuItem = ({ item, action = null, setMenuActive }) => {
@@ -51,7 +46,7 @@ const PageHeader = () => {
         <div className="logo">
           <Link href="/">
             <a className="simple">
-              <img src="/assets/logo.png" />
+              <img src={config.logo} />
             </a>
           </Link>
         </div>
@@ -63,7 +58,7 @@ const PageHeader = () => {
         <div className="logo-md">
           <Link href="/">
             <a className="simple">
-              <img src="/assets/logo.png" />
+              <img src={config.logo} />
             </a>
           </Link>
         </div>

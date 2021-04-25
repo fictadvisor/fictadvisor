@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import React, { useContext } from "react";
 import { useQuery } from "react-query";
+import config from "../../config";
 import api from "../api";
 import oauth from "../oauth";
 
@@ -21,7 +22,7 @@ export const AuthenticationProvider = ({ children }) => {
   );
 };
 
-const loginUrl = 'https://t.me/fictadvisor_bot?start=login';
+const loginUrl = `https://t.me/${config.contacts.bot}?start=login`;
 const logoutUrl = '/oauth?logout=true'
 
 export const useAuthentication = () => {

@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import config from '../../config';
 import PageHeader from './PageHeader';
 
 type PageLayoutProperties = {
@@ -11,7 +12,7 @@ type PageLayoutProperties = {
 };
 
 const PageLayout = ({ meta, title, children }: PageLayoutProperties) => {
-  const metaTitle = meta?.title ? meta.title : 'FICT Advisor';
+  const metaTitle = meta?.title ? meta.title : config.service;
 
   return (
     <div className="page">
@@ -20,7 +21,7 @@ const PageLayout = ({ meta, title, children }: PageLayoutProperties) => {
           <meta name="viewport" content="width=840, initial-scale=1" />
 
           <meta property="og:title" content={metaTitle} />
-          <meta property="og:site_name" content="FICT Advisor" />
+          <meta property="og:site_name" content={config.service} />
           <meta property="og:image" content="/assets/preview.jpg" />
           <meta property="og:type" content="website" />
 

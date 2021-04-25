@@ -1,5 +1,6 @@
 import PageLayout from "../components/layout/PageLayout";
 import CollapsePanel from "../components/ui/CollapsePanel";
+import config from "../config";
 
 const HelpPage = () => {
   return (
@@ -8,13 +9,13 @@ const HelpPage = () => {
     >
       <p>
         Відповіді на поширені запитання можна знайти нижче. 
-        У разі, якщо тебе цікавить щось інше або виникли проблеми при роботі з сайтом, звертайся до нас через бота зворотнього зв'язку: <a href="https://t.me/fict_robot" target="_blank">@fict_robot</a>. 
+        У разі, якщо тебе цікавить щось інше або виникли проблеми при роботі з сайтом, звертайся до нас через бота зворотнього зв'язку: <a href={`https://t.me/${config.contacts.feedbackBot}`} target="_blank">@{config.contacts.feedbackBot}</a>. 
       </p>
       <p className="title">Поширені запитання</p>
       <div className="faq">
         <CollapsePanel title="Як виправити або додати інформацію до сайту?">
           <p style={{ margin: '0' }}>
-            Якщо ти бачиш помилку в інформації, що розміщена на сайті або хочеш щось додати, напиши нам через бота зворотнього зв'язку: <a href="https://t.me/fict_robot" target="_blank">@fict_robot</a>.
+            Якщо ти бачиш помилку в інформації, що розміщена на сайті або хочеш щось додати, напиши нам через бота зворотнього зв'язку: <a href={`https://t.me/${config.contacts.feedbackBot}`} target="_blank">@{config.contacts.feedbackBot}</a>.
           </p>
         </CollapsePanel>
         <CollapsePanel title="Як залишити відгук?">
@@ -32,25 +33,25 @@ const HelpPage = () => {
           <p style={{ margin: '0' }}>
             Твоя особиста інформація використовується лише в межах авторизації та ідентифікації нашої системи. Усі відгуки залишаються анонімно.
             <br/><br/>
-            Наш проект знаходиться у <a href="https://github.com/fictadvisor">вільному</a> доступі, тому ти можеш перевірити власноруч те, як твої дані зберігаються та відображаються.
+            Наш проект знаходиться у <a href={config.source}>вільному</a> доступі, тому ти можеш перевірити власноруч те, як твої дані зберігаються та відображаються.
           </p>
         </CollapsePanel>
         <CollapsePanel title="Що робити, якщо викладач порушує мої права?">
           <p style={{ margin: '0' }}>
-            Якщо твої права порушують, обов'язково звертайся до студради ФІОТ. 
+            Якщо твої права порушують, обов'язково звертайся до студради {config.faculty}. 
             <br/><br/>
-            Бот зворотнього зв'язку: <a href="https://t.me/fict_robot" target="_blank">@fict_robot</a>
+            Бот зворотнього зв'язку: <a href={`https://t.me/${config.contacts.feedbackBot}`} target="_blank">@{config.contacts.feedbackBot}</a>
             <br/> 
-            Голова студради ФІОТ: <a href="https://t.me/irina_kolbun" target="_blank">@irina_kolbun</a> 
+            Голова студради {config.faculty}: <a href={`https://t.me/${config.contacts.scHead}`} target="_blank">@{config.contacts.scHead}</a> 
           </p>
         </CollapsePanel>
         <CollapsePanel title="Як вступити до студради?">
           <p style={{ margin: '0' }}>
-            Інформація про вступ до студради ФІОТ та КПІ публікується на студентських каналах Telegram приблизно на початку навчального року. 
+            Інформація про вступ до студради {config.faculty} та КПІ публікується на студентських каналах Telegram приблизно на початку навчального року. 
             <br/><br/>
-            Якщо у тебе є якісь ідеї та мотивація, то чекати набору не обов'язково. Просто зв'яжись із студрадою ФІОТ та розкажи про свій задум. 
+            Якщо у тебе є якісь ідеї та мотивація, то чекати набору не обов'язково. Просто зв'яжись із студрадою {config.faculty} та розкажи про свій задум. 
             <br/><br/>
-            Бот зворотнього зв'язку: <a href="https://t.me/fict_robot" target="_blank">@fict_robot</a>
+            Бот зворотнього зв'язку: <a href={`https://t.me/${config.contacts.feedbackBot}`} target="_blank">@{config.contacts.feedbackBot}</a>
           </p>
         </CollapsePanel>
       </div>

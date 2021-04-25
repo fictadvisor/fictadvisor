@@ -10,6 +10,7 @@ import TeacherItem from "../components/TeacherItem";
 import Button from "../components/ui/Button";
 import StudentResourceItem from "../components/StudentResourceItem";
 import SubjectItem from "../components/SubjectItem";
+import config from "../config";
 
 const PROPERTIES = {
   studentResources: {
@@ -33,21 +34,21 @@ const IndexPage = ({ popularTeachers, popularSubjects, studentResources: serverR
 
   return (
     <PageLayout
-      meta={{ title: 'FICT Advisor', description: 'Ресурс для студентів та абітурієнтів ФІОТ, на якому можна знайти інформацію та відгуки про викладачів і предмети.' }}
+      meta={{ title: config.service, description: `Ресурс для студентів та абітурієнтів ${config.faculty}, на якому можна знайти інформацію та відгуки про викладачів і предмети.` }}
       title="Головна сторінка"
     >
       <div className="information-block">
         <p>
-          <span className="font-bold">Вітаємо тебе на ресурсі для студентів та абітурієнтів ФІОТ</span>, на якому можна знайти інформацію та відгуки про викладачів і предмети.
+          <span className="font-bold">Вітаємо тебе на ресурсі для студентів та абітурієнтів {config.faculty}</span>, на якому можна знайти інформацію та відгуки про викладачів і предмети.
           Зміст сайту модерується та керується командою студентів із студради, яка не залежить від адміністрації.
         </p>
         <p>
           Зараз ми знаходимося у стадії нашого першого робочого релізу, працюємо над покращенням існуючого функціоналу та розробкою нового.
           У нас дуже великі амбіції, але досить обмежені ресурси на їх реалізацію, тому може доведеться трохи зачекати.
-          За нашими новинами можна слідкувати на каналі студради: <a href="https://t.me/fict_time" target="_blank">@fict_time</a>.
+          За нашими новинами можна слідкувати на каналі студради: <a href={`https://t.me/${config.contacts.scChannel}`} target="_blank">@{config.contacts.scChannel}</a>.
         </p>
         <p>
-          Якщо ти хочеш надати відгук або доповнити якусь інформацію, звертайся до нас через бота зворотнього зв'язку: <a href="https://t.me/fict_robot" target="_blank">@fict_robot</a>.
+          Якщо ти хочеш надати відгук або доповнити якусь інформацію, звертайся до нас через бота зворотнього зв'язку: <a href={`https://t.me/${config.contacts.feedbackBot}`} target="_blank">@{config.contacts.feedbackBot}</a>.
         </p>
       </div>
       <p className="title">Студентські ресурси</p>

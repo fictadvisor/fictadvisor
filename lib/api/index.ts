@@ -6,9 +6,11 @@ import subjects from './subjects';
 import courses from './courses';
 import oauth from './oauth';
 import search from './search';
+import config from '../../config';
 
+const baseURL = config.env('API_BASE_URL', config.env('NEXT_PUBLIC_API_BASE_URL'));
 
-const client = axios.create({ baseURL: process.env.API_BASE_URL ?? process.env.NEXT_PUBLIC_API_BASE_URL });
+const client = axios.create({ baseURL });
 
 const api = {
   teachers: teachers(client),

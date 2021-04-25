@@ -4,6 +4,7 @@ import StatisticsEntry from '../StatisticsEntry';
 import { useQuery } from "react-query";
 import api from "../../lib/api";
 import Loader from "../ui/Loader";
+import config from "../../config";
 
 export type StatisticsBlockProperties = {
   link: string;
@@ -31,7 +32,7 @@ const EntryList = ({ data }) => {
         }
         <StatisticsEntry key="average" name="Загалом" value={average} />
       </div>
-      <a href="https://t.me/analyticsFICT" target="_blank">
+      <a href={`https://t.me/${config.contacts.sovaChannel}`} target="_blank">
         <Button className="accent attached">Хочу дізнатись більше</Button>
       </a>
     </>
