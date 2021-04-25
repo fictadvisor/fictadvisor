@@ -10,6 +10,8 @@ import config from '../../config';
 
 const baseURL = process.browser ? config.env('NEXT_PUBLIC_API_BASE_URL') : config.env('API_BASE_URL');
 
+console.log('API:', baseURL);
+
 const client = axios.create({ baseURL });
 
 const api = {
