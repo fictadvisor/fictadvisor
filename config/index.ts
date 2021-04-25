@@ -9,6 +9,7 @@ const config = {
     scHead: 'irina_kolbun',
     scChannel: 'fict_time',
     sovaChannel: 'analyticsFICT',
+    sovaChannelName: 'ФІОТ СОВА ім. Віри Петрівни',
   },
   roles: {
     user: 'Користувач',
