@@ -57,7 +57,7 @@ import { SearchService } from './search/search.service';
         TeacherReviewView,
       ]
     )
-],
+  ],
   controllers: [
     TeacherController,
     StudentResourceController,

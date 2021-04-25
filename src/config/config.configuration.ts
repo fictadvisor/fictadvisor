@@ -4,6 +4,10 @@ export default () => ({
   port: process.env.PORT ? parseInt(process.env.PORT) : 3000,
   baseUrl: process.env.BASE_URL,
   frontBaseUrl: process.env.FRONT_BASE_URL,
+  static: {
+    servePath: '/static',
+    dir: process.env.STATIC_DIR,
+  },
   security: {
     secret: process.env.SECRET ?? '42',
     jwt: {

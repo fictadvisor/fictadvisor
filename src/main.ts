@@ -4,11 +4,15 @@ import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter, validationExceptionFactory } from './common/common.exception';
 import { systemLogger } from './logger/logger.core';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { applyStaticMiddleware } from './static/static.util';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get<ConfigService>(ConfigService);
   const port = configService.get<number>('port');
+
+  applyStaticMiddleware(app);
 
   app.enableCors();
 
