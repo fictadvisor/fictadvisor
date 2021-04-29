@@ -37,7 +37,7 @@ export class UserDto {
                 username: u.username,
                 telegramId: u.telegramId,
                 role: u.role,
-                image: '/assets/avatar.png',
+                image: u.image ?? '/assets/avatar.png',
                 createdAt: u.createdAt,
                 updatedAt: u.updatedAt,
             }
