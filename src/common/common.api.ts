@@ -47,8 +47,8 @@ export class SortableProcessor<E, T extends SortableMap> {
     const entry = this.map[value];
 
     return {
-      ...this.getFallbackQuery(),
       [entry[1] ?? value]: entry[0],
+      ...this.getFallbackQuery(),
     };
   }
 
