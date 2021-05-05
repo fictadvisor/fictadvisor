@@ -6,6 +6,7 @@ import { Course } from 'src/database/entities/course.entity';
 import { User } from 'src/database/entities/user.entity';
 import { escape } from 'html-escaper';
 import { Teacher } from 'src/database/entities/teacher.entity';
+import { Superhero } from 'src/database/entities/superhero.entity';
 
 @Injectable()
 export class TelegramService {
@@ -33,6 +34,60 @@ export class TelegramService {
         }
     
         return chunks;
+    }
+
+    /**
+     * @param superhero required relations: user
+     */
+    async broadcastPendingSuperhero(superhero: Superhero) {
+        const chatId = this.configService.get<string>('telegram.chatId');
+        const { user } = superhero;
+
+        await this.bot.telegram.sendMessage(
+            chatId,
+            `<b>Заявка на супергероя</b>\n\n` +
+            `<b>Від:</b> ${user.firstName} (${user.username ? `@${user.username}, ` : ''}${user.id})\n\n` +
+            `<b>Ім'я:</b> ${escape(superhero.name)}\n` +
+            `<b>Юзернейм:</b> @${escape(superhero.username)}\n` +
+            `<b>Курс:</b> ${superhero.year}\n` +
+            `<b>Гуртожиток:</b> ${superhero.dorm ? 'так' : 'ні'}`,
+            {
+                parse_mode: 'HTML',
+                reply_markup: {
+                    inline_keyboard: [
+                        [{ text: 'Схвалити', callback_data: `approve_superhero:${user.id}:${user.telegramId}` }],
+                        [{ text: 'Відмовити', callback_data: `deny_superhero:${user.id}:${user.telegramId}` }],
+                    ],
+                },
+            }
+        );
+    }
+
+    /**
+     * @param superhero required relations: user
+     */
+    async broadcastApprovedSuperhero(superhero: Superhero) {
+        await this.bot.telegram.sendMessage(
+            superhero.user.telegramId,
+            `<b>Вітаємо тебе, ти — супергерой!</b>`,
+            {
+                parse_mode: 'HTML',
+            }
+        );
+    }
+
+    /**
+     * @param superhero required relations: user
+     */
+     async broadcastDeclinedSuperhero(superhero: Superhero) {
+        await this.bot.telegram.sendMessage(
+            superhero.user.telegramId,
+            `<b>На жаль, твій запит на супергероя було відхилено.</b>\n\n` +
+            `Якщо в тебе є питання, звертайся до нас через бота зворотнього зв'язку: @fict_robot`,
+            {
+                parse_mode: 'HTML',
+            }
+        );
     }
 
     async broadcastPendingReview(user: User, course: Course, review: Review) {

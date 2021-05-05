@@ -18,7 +18,7 @@ export class SitemapService {
         private configService: ConfigService,
     ) {}
 
-    private NAVIGATION = ['/', '/teachers', '/subjects', '/help'];
+    private NAVIGATION = ['/', '/teachers', '/subjects', '/help', '/superheroes'];
 
     public async build() {
         const baseUrl = this.configService.get<string>('frontBaseUrl');
