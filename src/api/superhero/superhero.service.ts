@@ -49,6 +49,7 @@ export class SuperheroService {
                 ...Searchable.of<Superhero>('name', query.searchQuery).toQuery(),
             },
             order: { ...this.superheroSortableProcessor.toQuery(query.sort) },
+            relations: ['user'],
         });
 
         return Page.of(
@@ -58,7 +59,7 @@ export class SuperheroService {
     }
 
     public async getSuperhero(user: User): Promise<SuperheroDto> {
-        return SuperheroDto.from(await this.findSuperhero(user));
+        return SuperheroDto.from(await this.findSuperhero(user, ['user']));
     }
 
     public async createSuperhero(user: User, dto: CreateSuperheroDto): Promise<SuperheroDto> {

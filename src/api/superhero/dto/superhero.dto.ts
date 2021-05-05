@@ -12,6 +12,8 @@ export class SuperheroDto {
 
     state: SuperheroState;
 
+    image: string;
+
     public static from(h: Superhero) {
         return assign(
             new SuperheroDto(),
@@ -21,6 +23,7 @@ export class SuperheroDto {
                 year: h.year,
                 dorm: h.dorm,
                 state: h.state,
+                image: h.user?.image ?? '/assets/avatar.png',
             }
         );
     }
