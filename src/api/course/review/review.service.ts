@@ -27,10 +27,7 @@ export class ReviewService {
         private telegramService: TelegramService
     ) {}
 
-    private reviewSortableProcessor = SortableProcessor.of({
-        rating: ['DESC'],
-        date: ['DESC', 'createdAt'],
-    }, 'date');
+    private reviewSortableProcessor = SortableProcessor.of<Review>({ rating: ['DESC'], date: ['DESC', 'createdAt'] }, 'date').fallback('id', 'ASC');
 
     async getReview(id: string, relations?: string[]): Promise<Review> {
         const review = await this.reviewRepository.findOne({ id }, { relations });

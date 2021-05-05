@@ -20,20 +20,25 @@ export class ResponseEntity<T> {
 
 export type SortDirection = 'ASC' | 'DESC';
 
-export type SortableMapEntry = [direction: 'ASC' | 'DESC', mapTo?: string];
+export type SortableMapEntry = [direction: SortDirection, mapTo?: string];
 
 export type SortableMap = {
   [value: string]: SortableMapEntry;
-}
+};
 
-export class SortableProcessor<T extends SortableMap> {
+export class SortableProcessor<E, T extends SortableMap> {
   map: SortableMap;
   defaultKey?: keyof T;
+  fallbackSort?: [string, SortDirection];
+
+  private getFallbackQuery() {
+    return this.fallbackSort ? { [this.fallbackSort[0]]: this.fallbackSort[1] } : {};
+  }
 
   toQuery(value: string) {
     if (value == null || this.map[value] == null) {
       if (!this.defaultKey) {
-        return {};
+        return this.getFallbackQuery();
       }
 
       value = this.defaultKey as string;
@@ -43,11 +48,18 @@ export class SortableProcessor<T extends SortableMap> {
 
     return {
       [entry[1] ?? value]: entry[0],
+      ...this.getFallbackQuery(),
     };
   }
 
-  static of <T extends SortableMap>(map: T, defaultKey?: keyof T) {
-    const sortable = new SortableProcessor<T>();
+  public fallback(key: keyof E, direction: SortDirection) {
+    this.fallbackSort = [key as string, direction];
+
+    return this;
+  }
+
+  static of <E, T extends SortableMap = SortableMap>(map: T, defaultKey?: keyof T) {
+    const sortable = new SortableProcessor<E, T>();
 
     sortable.map = map;
     sortable.defaultKey = defaultKey;

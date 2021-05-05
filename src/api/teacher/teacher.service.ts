@@ -59,7 +59,7 @@ export class TeacherService {
         return TeacherDto.from(teacher);
     }
 
-    private teacherSortableProcessor = SortableProcessor.of({ rating: ['DESC'], lastName: ['ASC'] }, 'rating');
+    private teacherSortableProcessor = SortableProcessor.of<TeacherSearchIndex>({ rating: ['DESC'], lastName: ['ASC'] }, 'lastName').fallback('id', 'ASC');
 
     async getTeachers(query: SearchableQueryDto): Promise<Page<TeacherItemDto>> {
         const [items, count] = await this.teacherSearchIndexRepository.findAndCount({ 
@@ -85,10 +85,7 @@ export class TeacherService {
         );
     }
 
-    private courseSortableProcessor = SortableProcessor.of({
-        rating: ['DESC'],
-        name: ['ASC']
-    }, 'rating');
+    private courseSortableProcessor = SortableProcessor.of<TeacherCourseSearchIndex>({ rating: ['DESC'], name: ['ASC']}, 'rating').fallback('id', 'ASC');
 
     async getTeacherCourses(
         link: string,
@@ -109,10 +106,7 @@ export class TeacherService {
         );
     }
 
-    private reviewSortableProcessor = SortableProcessor.of({
-        rating: ['DESC'],
-        date: ['DESC']
-    }, 'date');
+    private reviewSortableProcessor = SortableProcessor.of<TeacherReviewView>({ rating: ['DESC'], date: ['DESC'] }, 'date').fallback('id', 'ASC');
 
     async getTeacherReviews(link: string, query: SearchableQueryDto): Promise<Page<TeacherReviewDto>> {
         const [items, count] = await this.reviewRepository.findAndCount({
