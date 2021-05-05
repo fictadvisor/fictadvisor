@@ -14,7 +14,7 @@ import { SubjectSearchIndex } from "../database/entities/subject-search-index";
 import { SubjectView } from "../database/entities/subject-view.entity";
 import { SubjectController } from "./subject/subject.controller";
 import { SubjectService } from "./subject/subject.service";
-import { CourseSearchIndex } from "../database/entities/course-search-index";
+import { CourseSearchIndex } from "../database/entities/course-search-index.entity";
 import { OAuthController } from './oauth/oauth.controller';
 import { OAuthService } from './oauth/oauth.service';
 import { User } from 'src/database/entities/user.entity';
@@ -33,6 +33,9 @@ import { StatEntry } from '../database/entities/stat-entry.entity';
 import { TeacherReviewView } from 'src/database/entities/review-view.entity';
 import { SearchController } from './search/search.controller';
 import { SearchService } from './search/search.service';
+import { SuperheroController } from './superhero/superhero.controller';
+import { SuperheroService } from './superhero/superhero.service';
+import { Superhero } from 'src/database/entities/superhero.entity';
 
 @Module({
   imports: [
@@ -55,6 +58,7 @@ import { SearchService } from './search/search.service';
         Course,
         StatEntry,
         TeacherReviewView,
+        Superhero,
       ]
     )
   ],
@@ -66,6 +70,7 @@ import { SearchService } from './search/search.service';
     CourseController,
     ReviewController,
     SearchController,
+    SuperheroController,
   ],
   providers: [
     TeacherService,
@@ -77,6 +82,7 @@ import { SearchService } from './search/search.service';
     ReviewService,
     TelegramService,
     SearchService,
+    SuperheroService,
   ],
 })
 export class ApiModule {}

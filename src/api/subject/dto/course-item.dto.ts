@@ -1,5 +1,5 @@
 import { Expose } from "class-transformer";
-import { CourseSearchIndex } from "../../../database/entities/course-search-index";
+import { CourseSearchIndex } from "../../../database/entities/course-search-index.entity";
 import { assign } from "../../../common/common.object";
 import { CourseTeacherItemDto } from "./course-teacher-item.dto";
 
