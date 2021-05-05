@@ -75,7 +75,7 @@ const SuperheroesPage = () => {
         Якщо ти потребуєш допомоги, не соромься їм писати.
       </p>
       <p>
-        У випадку некоректної поведінки супергероя, напишіть нам, будь ласка, до бота зворотнього зв'язку: <a href={`https://t.me/${config.contacts.feedbackBot}`} target="_blank">@{config.contacts.feedbackBot}</a>
+        У разі некоректної поведінки супергероя, будь ласка, напишіть нам до бота зворотнього зв'язку: <a href={`https://t.me/${config.contacts.feedbackBot}`} target="_blank">@{config.contacts.feedbackBot}</a>
       </p>
       {
         superheroData 
