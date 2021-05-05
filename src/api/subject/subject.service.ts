@@ -9,7 +9,7 @@ import { Page, Pageable, Searchable, SortableProcessor } from "../../common/comm
 import { SubjectDto } from "./dto/subject.dto";
 import { ServiceException } from "../../common/common.exception";
 import { CourseItemDto } from "./dto/course-item.dto";
-import { CourseSearchIndex } from "../../database/entities/course-search-index";
+import { CourseSearchIndex } from "../../database/entities/course-search-index.entity";
 
 @Injectable()
 export class SubjectService {
