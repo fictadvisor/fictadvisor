@@ -29,6 +29,7 @@ const IndexPage = ({ popularTeachers, popularSubjects, studentResources: serverR
     { keepPreviousData: true, enabled: page > PROPERTIES.studentResources.initialPage }
   );
 
+  
   const studentResources = data || serverResources;
   const moreCount = studentResources.count - studentResources.items.length;
 

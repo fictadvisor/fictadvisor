@@ -19,6 +19,7 @@ const config = {
     { text: 'Головна', href: '/' },
     { text: 'Викладачі', href: '/teachers' },
     { text: 'Предмети', href: '/subjects' },
+    { text: 'Супергерої', href: '/superheroes' },
     { text: 'Допомога', href: '/help' },
   ],
   env: (key, defaultValue: string = null) => process.env[key] ?? defaultValue,

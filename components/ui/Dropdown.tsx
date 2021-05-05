@@ -7,7 +7,7 @@ export type DropdownOption = {
 };
 
 export type DropdownProperties = {
-  text: string;
+  text?: string;
   active: number;
   onChange?: (index: number, option: DropdownOption) => void;
   options: DropdownOption[];
@@ -20,7 +20,17 @@ const Dropdown = ({ text, active, onChange, options, className, ...props }: Drop
     <div ref={ref} className={mergeClassName(`dropdown ${open ? 'active' : ''}`, className)} {...props}>
       <button className="dropdown" onClick={() => setOpen(!open)}>
         <div className="flex">
-          <span><span className="font-medium">{text}</span> {options[active].text.toLowerCase()}</span>
+          <span>
+            {
+              text 
+                ? 
+                  <>
+                    <span className="font-medium">{text} </span>
+                    {options[active].text.toLowerCase()}
+                  </>
+                : <span className="font-medium">{options[active].text}</span>
+            }
+          </span>
           <span className="arrow"><ArrowIcon /></span>
         </div>
       </button>

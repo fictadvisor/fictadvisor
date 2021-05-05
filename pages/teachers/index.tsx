@@ -55,7 +55,7 @@ const TeachersPage = () => {
       meta={{ title: 'Викладачі' }}
       title="Викладачі"
     >
-      <div className="flex" style={{ marginBottom: '10px' }}>
+      <div className="flex space-b">
         <SearchInput active={searchActive} style={{ flex: 1, marginRight: '10px' }} placeholder="Пошук викладачів" value={searchText} onChange={e => setSearchText(e.target.value)} />
         <Dropdown text="Сортування за:" active={sortType} onChange={i => setSortType(i)} options={PROPERTIES.sortBy} />
       </div>

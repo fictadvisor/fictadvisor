@@ -275,3 +275,30 @@ a.simple {
   background-color: #2d3642;
 }
 
+.superhero {
+  display: flex;
+}
+
+.superhero .superhero-info {
+  margin: auto 0;
+  flex-grow: 1;
+}
+
+.superhero .superhero-info .secondary {
+  float: right;
+}
+
+.superhero .superhero-info .tag {
+  margin-left: 10px;
+}
+
+.superhero img {
+  width: 24px;
+  height: 24px;
+  margin: -6px 10px -6px 0;
+  border-radius: 50%;
+}
+
+.block-container > div:not(:last-child), .block-container > a:not(:last-child) > div {
+  margin-bottom: 10px;
+}

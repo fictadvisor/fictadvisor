@@ -65,6 +65,7 @@ button.dropdown {
   min-width: 270px;
   padding: 14px 20px;
   font-weight: normal;
+  width: 100%;
 }
 
 .dropdown.active > button.dropdown {
@@ -107,6 +108,7 @@ button:disabled {
   width: 100%;
   padding: 10px 0px;
   border-radius: 0 0 8px 8px;
+  box-shadow: -1px 2px 10px rgba(0,0,0,0.5);
 }
 
 .dropdown-content.collapsible-panel {
