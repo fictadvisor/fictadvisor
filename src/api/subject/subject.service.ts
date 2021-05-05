@@ -24,11 +24,7 @@ export class SubjectService {
         private courseRepository: Repository<CourseSearchIndex>,
     ) {}
 
-    private subjectSortableProcessor = SortableProcessor.of({
-        rating: ['DESC'],
-        name: ['ASC'],
-        teacherCount: ['DESC'],
-    }, 'rating');
+    private subjectSortableProcessor = SortableProcessor.of<SubjectSearchIndex>({ rating: ['DESC'], name: ['ASC'], teacherCount: ['DESC'] }, 'rating').fallback('id', 'ASC');
 
     async getSubjects(query: SearchableQueryDto): Promise<Page<SubjectItemDto>> {
         const [items, count] = await this.subjectSearchIndexRepository.findAndCount({
@@ -53,10 +49,7 @@ export class SubjectService {
         return SubjectDto.from(subject)
     }
 
-    private courseSortableProcessor = SortableProcessor.of({
-        rating: ['DESC'],
-        lastName: ['ASC', 'teacherLastName'],
-    }, 'rating');
+    private courseSortableProcessor = SortableProcessor.of<CourseSearchIndex>({ rating: ['DESC'], lastName: ['ASC', 'teacherLastName'] }, 'rating').fallback('id', 'ASC');
 
     async getCoursesByLink(link: string, query: SearchableQueryDto): Promise<Page<CourseItemDto>> {
         const [items, count] = await this.courseRepository.findAndCount({

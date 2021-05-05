@@ -36,10 +36,7 @@ export class SuperheroService {
         return superhero;
     }
 
-    private superheroSortableProcessor = SortableProcessor.of({
-        year: ['ASC'],
-        dorm: ['DESC'],
-    }, 'year');
+    private superheroSortableProcessor = SortableProcessor.of<Superhero>({ year: ['ASC'], dorm: ['DESC'] }, 'year').fallback('name', 'ASC');
 
     public async getSuperheroes(query: SearchableQueryDto): Promise<Page<SuperheroDto>> {
         const [items, count] = await this.superheroRepository.findAndCount({
