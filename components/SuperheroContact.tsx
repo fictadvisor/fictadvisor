@@ -14,8 +14,10 @@ const SuperheroContact = (props: SuperheroContactProperties) => {
       <div className="superhero block">
         <img src={props.image} />
         <div className="superhero-info">
-          <span>{props.name}</span>
-          <Tag>{props.username}</Tag>
+          <span>
+            <span>{props.name}</span>
+            <Tag>{props.username}</Tag>
+          </span>
           <span className="secondary">
             {
               `${props.dorm ? 'живе в гуртожитку, ' : ''}${props.year} курс`

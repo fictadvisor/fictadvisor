@@ -140,12 +140,24 @@ a.read-more {
   overflow: hidden;
 }
 
-.rating {
+@media (max-width: 600px) {
+  .rating {
+    font-size: 12px;
+  }
+
+  .rating > svg {
+    width: 12px;
+    height: 12px;
+    margin: auto 0 -1px 3px;
+  }
+}
+
+.teacher-info .rating {
   font-size: 12px;
   margin: auto 0;
 }
 
-.rating > svg {
+.teacher-info .rating > svg {
   width: 12px;
   height: 12px;
   margin: auto 0 -1px 3px;
@@ -240,6 +252,19 @@ a.simple {
   margin-right: 5px;
 }
 
+.faq button.dropdown {
+  height: fit-content;
+}
+
+.faq button.dropdown > div > span {
+  margin: auto 0;
+}
+
+.faq button.dropdown .arrow {
+  display: none;
+  visibility: hidden;
+}
+
 .faq {
   display: block;
 }
@@ -313,6 +338,24 @@ a.simple {
   float: right;
 }
 
+@media (max-width: 600px) {
+  .superhero .superhero-info > span:first-child {
+    display: block;
+  }
+
+  .superhero .superhero-info > span.secondary {
+    float: none;
+    margin-top: 5px;
+  }
+
+  .superhero img {
+    vertical-align: middle;
+    width: 32px !important;
+    height: 32px !important;
+    margin: 1px 10px 0 0 !important;
+  }
+}
+
 .superhero .superhero-info .tag {
   margin-left: 10px;
 }
@@ -320,7 +363,7 @@ a.simple {
 .superhero img {
   width: 24px;
   height: 24px;
-  margin: -6px 10px -6px 0;
+  margin: -4px 10px -6px 0;
   border-radius: 50%;
 }
 
