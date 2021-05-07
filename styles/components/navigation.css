@@ -1,16 +1,16 @@
 .navigation-menu {
-  position: absolute;
   margin-top: 10px;
-  width: calc(var(--content-width));
+  width: 100%;
 }
 
 .navigation-menu .item:not(:last-child) {
-  margin-right: 10px;
+  margin: 0 10px 10px 0;
 }
 
 .navigation-menu > div {
   display: flex;
   margin-bottom: 10px;
+  flex-wrap: wrap;
 }
 
 .navigation-menu-blackout {

@@ -97,8 +97,8 @@ const SuperheroesPage = () => {
                   Я хочу бути супергероєм
                 </Button>
       }
-      <div className="flex space-b space-t">
-        <SearchInput active={searchActive} style={{ flex: 1, marginRight: '10px' }} placeholder="Пошук супергероїв" value={searchText} onChange={e => setSearchText(e.target.value)} />
+      <div className="adaptive-input-container flex space-b space-t">
+        <SearchInput active={searchActive} style={{ flex: 1 }} placeholder="Пошук супергероїв" value={searchText} onChange={e => setSearchText(e.target.value)} />
         <Dropdown text="Сортування за:" active={sortType} onChange={i => setSortType(i)} options={PROPERTIES.sortBy} />
       </div>
       <div className="block-container">

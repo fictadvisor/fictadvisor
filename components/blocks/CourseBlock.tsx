@@ -31,7 +31,7 @@ const CourseList = ({ data, isLoading, isFetching, page, setPage }) => {
 
   return (
     <>
-      <div className="course-group">
+      <div className="block-container">
         {
           data.items.map((c, i) => 
             <CourseItem 
@@ -71,8 +71,8 @@ const CourseBlock = ({ link, ...props }: CourseBlockProperties) => {
 
   return (
     <div {...props}>
-      <div className="flex space-b">
-        <SearchInput style={{ flex: 1, marginRight: '10px' }} placeholder="Пошук предметів" value={searchText} onChange={(e) => setSearchText(e.target.value)} />
+      <div className="adaptive-input-container flex space-b">
+        <SearchInput style={{ flex: 1 }} placeholder="Пошук предметів" value={searchText} onChange={(e) => setSearchText(e.target.value)} />
         <Dropdown 
           text="Сортування за:" 
           active={sortType} 

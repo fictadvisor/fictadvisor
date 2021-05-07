@@ -3,25 +3,18 @@ import { GetServerSideProps } from "next";
 import Link from "next/link";
 import { useState } from "react";
 import { useQuery } from "react-query";
-import CourseItem from "../../components/CourseItem";
 import PageLayout from "../../components/layout/PageLayout";
-import RatingSelect from "../../components/RatingSelect";
 import Review from "../../components/Review";
 import ReviewEditor from "../../components/ReviewEditor";
 import SubjectInformation from "../../components/SubjectInformation";
 import Button from "../../components/ui/Button";
 import Disclaimer from "../../components/ui/Disclaimer";
-import Divider from "../../components/ui/Divider";
 import Dropdown from "../../components/ui/Dropdown";
-import Input from "../../components/ui/Input";
 import Loader from "../../components/ui/Loader";
 import SearchInput from "../../components/ui/SearchInput";
-import Slider from "../../components/ui/Slider";
-import TextArea from "../../components/ui/TextArea";
 import api from "../../lib/api";
 import { useAuthentication } from "../../lib/context/AuthenticationContext";
 import { toInteger } from "../../lib/number";
-import pluralize from "../../lib/pluralize";
 import { useQueryParams } from "../../lib/query";
 import { getFullName } from "../../lib/text";
 
@@ -123,8 +116,8 @@ const CoursePage = ({ course }) => {
               Додати відгук
             </Button>
       }
-      <div className="flex" style={{ margin: '10px 0' }}>
-        <SearchInput active={searchActive} style={{ flex: 1, marginRight: '10px' }} placeholder="Пошук відгуку за змістом" value={searchText} onChange={e => setSearchText(e.target.value)} />
+      <div className="adaptive-input-container flex space-t space-b">
+        <SearchInput active={searchActive} style={{ flex: 1 }} placeholder="Пошук відгуку за змістом" value={searchText} onChange={e => setSearchText(e.target.value)} />
         <Dropdown text="Сортування за:" active={sortType} onChange={i => setSortType(i)} options={PROPERTIES.sortBy} />
       </div>
       {

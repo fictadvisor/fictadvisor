@@ -40,7 +40,7 @@ const CoursesList = ({ data, isFetching, setPage, page }) => {
 
   return (
     <>
-      <div className="course-group">
+      <div className="block-container">
         {
           data.items.map(c => 
             <CourseItem 
@@ -97,8 +97,8 @@ const SubjectPage = ({ subject }) => {
       title="Сторінка предмету"
     >
       <SubjectInformation name={subject.name} description={subject.description} />
-      <div className="flex" style={{ margin: '10px 0' }}>
-        <SearchInput active={searchActive} style={{ flex: 1, marginRight: '10px' }} placeholder="Пошук викладачів" value={searchText} onChange={e => setSearchText(e.target.value)} />
+      <div className="adaptive-input-container flex space-b space-t">
+        <SearchInput active={searchActive} style={{ flex: 1 }} placeholder="Пошук викладачів" value={searchText} onChange={e => setSearchText(e.target.value)} />
         <Dropdown text="Сортування за:" active={sortType} onChange={i => setSortType(i)} options={PROPERTIES.sortBy} />
       </div>
       {

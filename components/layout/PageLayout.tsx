@@ -18,7 +18,7 @@ const PageLayout = ({ meta, title, children }: PageLayoutProperties) => {
     <div className="page">
         <Head>
           <title>{metaTitle}</title>
-          <meta name="viewport" content="width=840, initial-scale=1" />
+          <meta name="viewport" content="width=device-width, target-densityDpi=device-dpi" />
 
           <meta property="og:title" content={metaTitle} />
           <meta property="og:site_name" content={config.service} />

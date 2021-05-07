@@ -53,8 +53,8 @@ const SubjectsPage = () => {
       meta={{ title: 'Предмети' }}
       title="Предмети"
     >
-      <div className="flex space-b">
-        <SearchInput active={searchActive} style={{ flex: 1, marginRight: '10px' }} placeholder="Пошук предметів" value={searchText} onChange={e => setSearchText(e.target.value)} />
+      <div className="adaptive-input-container flex space-b">
+        <SearchInput active={searchActive} style={{ flex: 1 }} placeholder="Пошук предметів" value={searchText} onChange={e => setSearchText(e.target.value)} />
         <Dropdown text="Сортування за:" active={sortType} onChange={i => setSortType(i)} options={PROPERTIES.sortBy} />
       </div>
       <div className="teacher-list">

@@ -1,3 +1,7 @@
+input {
+  margin-top: 1px !important;
+}
+
 .input {
   background-color: #242C37;
   border-radius: 8px;
@@ -66,6 +70,10 @@ button.dropdown {
   padding: 14px 20px;
   font-weight: normal;
   width: 100%;
+}
+
+.dropdown > div > span {
+  margin-top: -1px;
 }
 
 .dropdown.active > button.dropdown {

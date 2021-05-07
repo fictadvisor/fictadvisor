@@ -46,6 +46,31 @@ input, button, textarea, select {
   margin: auto;
 }
 
+a > .block:hover {
+  background-color: #1B2129;
+}
+
+@media (max-width: 600px) {
+  .adaptive-input-container {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .adaptive-input-container > * {
+    width: 100%;
+  }
+
+  .adaptive-input-container > *:not(:last-child) {
+    margin-bottom: 10px;
+  }
+}
+
+@media (min-width: 600px) {
+  .adaptive-input-container > *:not(:last-child) {
+    margin-right: 10px;
+  }
+}
+
 .block {
   background-color: #151A21;
   border-radius: 8px;

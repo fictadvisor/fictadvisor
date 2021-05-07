@@ -64,8 +64,8 @@ const ReviewBlock = ({ link, className, ...props }: ReviewBlockProperties) => {
 
   return (
     <div>
-      <div className={mergeClassName('flex', className)} style={{ marginBottom: '10px' }} {...props}>
-        <SearchInput style={{ flex: 1, marginRight: '10px' }} placeholder="Пошук відгуків за предметом" value={searchText} onChange={(e) => setSearchText(e.target.value)} />
+      <div className={mergeClassName('flex adaptive-input-container', className)} style={{ marginBottom: '10px' }} {...props}>
+        <SearchInput style={{ flex: 1 }} placeholder="Пошук відгуків за предметом" value={searchText} onChange={(e) => setSearchText(e.target.value)} />
         <Dropdown 
           text="Сортування за:" 
           active={sortType} 

@@ -62,14 +62,16 @@ const PageHeader = () => {
             </a>
           </Link>
         </div>
-        <div className="flex full-width">
+        <div className="navigation flex full-width">
           <GlobalSearch />
-          <Button innerRef={menuBtnRef} onClick={() => setMenuActive(!menuActive)}>Меню</Button>
-          {
-            authentication.user 
-              ? <LogoutButton className="only-compact" compact={true} style={{ display: 'flex', marginLeft: '10px' }} authentication={authentication} />
-              : <LoginButton style={{ marginLeft: '10px' }} authentication={authentication} />
-          }
+          <div className="flex">
+            <Button innerRef={menuBtnRef} onClick={() => setMenuActive(!menuActive)}>Меню</Button>
+            {
+              authentication.user 
+                ? <LogoutButton className="only-compact" compact={true} style={{ display: 'flex', marginLeft: '10px' }} authentication={authentication} />
+                : <LoginButton style={{ marginLeft: '10px' }} authentication={authentication} />
+            }
+          </div>
         </div>
         {
           menuActive &&
