@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { Page } from 'src/common/common.api';
 import { SearchableQueryDto } from 'src/common/common.dto';
 import { TeacherItemDto } from './dto/teacher-item.dto';
@@ -7,6 +7,7 @@ import { TeacherService } from './teacher.service';
 import { ResponseEntity } from '../../common/common.api';
 import { TeacherCourseItemDto } from "./dto/teacher-course-item.dto";
 import { TeacherReviewDto } from "./dto/review.dto";
+import { TeacherAddDto } from './dto/teacher-add-dto';
 
 @Controller('teachers')
 export class TeacherController {
@@ -48,5 +49,10 @@ export class TeacherController {
     @Get('/:link/stats')
     getTeacherStats(@Param('link') link: string): Promise<ResponseEntity<any>> {
         return this.teacherService.getTeacherStats(link);
+    }
+
+    @Post()
+    addTeacher(@Body() teacher: TeacherAddDto): Promise<TeacherDto> {
+        return this.teacherService.saveTeacher(teacher)
     }
 }

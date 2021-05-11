@@ -12,13 +12,14 @@ import { TeacherItemDto } from './dto/teacher-item.dto';
 import { TeacherDto } from './dto/teacher.dto';
 import { TeacherContactDto } from './dto/teacher-contact.dto';
 import { ResponseEntity } from '../../common/common.api';
-import { TeacherCourseSearchIndex } from "../../database/entities/teacher-course-search-index";
-import { TeacherCourseItemDto } from "./dto/teacher-course-item.dto";
-import { TeacherReviewDto } from "./dto/review.dto";
+import { TeacherCourseSearchIndex } from '../../database/entities/teacher-course-search-index';
+import { TeacherCourseItemDto } from './dto/teacher-course-item.dto';
+import { TeacherReviewDto } from './dto/review.dto';
 import { Teacher } from 'src/database/entities/teacher.entity';
 import { StatEntry } from '../../database/entities/stat-entry.entity';
 import { TeacherStatsItemDto } from './dto/teacher-stats.dto';
 import { ReviewState } from 'src/database/entities/review.entity';
+import { TeacherAddDto } from './dto/teacher-add-dto';
 
 @Injectable()
 export class TeacherService {
@@ -132,5 +133,31 @@ export class TeacherService {
         return ResponseEntity.of({
             items: stats.map(s => TeacherStatsItemDto.from(s))
         });
+    }
+
+    async saveTeacher(teacher: TeacherAddDto): Promise<TeacherDto> {
+        const existing = await this.teacherRepository.findOne({
+            link: teacher.link()
+        });
+
+        if (existing) {
+            throw ServiceException.create(
+                HttpStatus.CONFLICT,
+                'Teacher with given information already exists'
+            );
+        }
+
+        try {
+            const entity = teacher.toEntity();
+            await this.teacherRepository.insert(entity);
+
+            const inserted = await this.teacherViewRepository.findOne({ link: entity.link });
+            return TeacherDto.from(inserted)
+        } catch (e) {
+            throw ServiceException.create(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                'Error saving teacher to database'
+            )
+        }
     }
 }
