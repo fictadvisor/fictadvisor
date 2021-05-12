@@ -1,5 +1,3 @@
-import { Teacher } from '../../../database/entities/teacher.entity';
-import { assign } from '../../../common/common.object';
 import { slug } from '../../../utils/slug';
 import { Expose } from 'class-transformer';
 
@@ -19,17 +17,5 @@ export class TeacherAddDto {
         if (this.middleName) fullName += ' ' + this.middleName
 
         return slug(fullName)
-    }
-
-    public toEntity(): Teacher {
-        return assign(
-            new Teacher(),
-            {
-                link: this.link(),
-                firstName: this.firstName,
-                middleName: this.middleName,
-                lastName: this.lastName
-            }
-        )
     }
 }

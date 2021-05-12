@@ -15,14 +15,24 @@ import { ResponseEntity } from '../../common/common.api';
 import { TeacherCourseSearchIndex } from '../../database/entities/teacher-course-search-index';
 import { TeacherCourseItemDto } from './dto/teacher-course-item.dto';
 import { TeacherReviewDto } from './dto/review.dto';
-import { Teacher } from 'src/database/entities/teacher.entity';
+import { Teacher, TEACHER_IMAGE_PLACEHOLDER, TeacherState } from 'src/database/entities/teacher.entity';
 import { StatEntry } from '../../database/entities/stat-entry.entity';
 import { TeacherStatsItemDto } from './dto/teacher-stats.dto';
 import { ReviewState } from 'src/database/entities/review.entity';
 import { TeacherAddDto } from './dto/teacher-add-dto';
+import { TelegramService } from '../../telegram/telegram.service';
+import { User } from '../../database/entities/user.entity';
+import { Logger, SystemLogger } from '../../logger/logger.core';
+import { assign } from '../../common/common.object';
+import { UpdateReviewDto } from '../course/review/dto/update-review.dto';
+import { TeacherUpdateDto } from './dto/teacher-update.dto';
+import { ReviewDto } from '../course/review/dto/review.dto';
 
 @Injectable()
 export class TeacherService {
+    @Logger()
+    private logger: SystemLogger;
+
     constructor(
         @InjectRepository(TeacherSearchIndex)
         private teacherSearchIndexRepository: Repository<TeacherSearchIndex>,
@@ -37,7 +47,8 @@ export class TeacherService {
         @InjectRepository(TeacherContact)
         private teacherContactRepository: Repository<TeacherContact>,
         @InjectRepository(TeacherCourseSearchIndex)
-        private teacherCoursesRepository: Repository<TeacherCourseSearchIndex>
+        private teacherCoursesRepository: Repository<TeacherCourseSearchIndex>,
+        private telegramService: TelegramService,
     ) {}
 
     private async getTeacher(link: string): Promise<Teacher> {
@@ -63,7 +74,7 @@ export class TeacherService {
     private teacherSortableProcessor = SortableProcessor.of<TeacherSearchIndex>({ rating: ['DESC'], lastName: ['ASC'] }, 'lastName').fallback('id', 'ASC');
 
     async getTeachers(query: SearchableQueryDto): Promise<Page<TeacherItemDto>> {
-        const [items, count] = await this.teacherSearchIndexRepository.findAndCount({ 
+        const [items, count] = await this.teacherSearchIndexRepository.findAndCount({
             ...Pageable.of(query.page, query.pageSize).toQuery(),
             where: { ...Searchable.of<TeacherSearchIndex>('lastName', query.searchQuery).toQuery() },
             order: { ...this.teacherSortableProcessor.toQuery(query.sort) }
@@ -135,7 +146,7 @@ export class TeacherService {
         });
     }
 
-    async saveTeacher(teacher: TeacherAddDto): Promise<TeacherDto> {
+    async saveTeacher(teacher: TeacherAddDto, user: User): Promise<TeacherDto> {
         const existing = await this.teacherRepository.findOne({
             link: teacher.link()
         });
@@ -148,16 +159,64 @@ export class TeacherService {
         }
 
         try {
-            const entity = teacher.toEntity();
-            await this.teacherRepository.insert(entity);
+            const inserted = await this.teacherRepository.save(
+                assign(
+                    new Teacher(),
+                    {
+                        link: teacher.link(),
+                        firstName: teacher.firstName,
+                        middleName: teacher.middleName,
+                        lastName: teacher.lastName,
+                    }
+                )
+            );
 
-            const inserted = await this.teacherViewRepository.findOne({ link: entity.link });
-            return TeacherDto.from(inserted)
+            this.telegramService.broadcastPendingTeacher(user, inserted)
+                .catch(e => this.logger.error('Failed to broadcast a pending review', {
+                    teacher: inserted.id,
+                    error: e.toString()
+                }));
+
+            return assign(
+                new TeacherDto(),
+                {
+                    id: inserted.id,
+                    link: inserted.link,
+                    firstName: inserted.firstName,
+                    middleName: inserted.middleName,
+                    lastName: inserted.lastName,
+                    description: inserted.description,
+                    image: inserted.image ?? TEACHER_IMAGE_PLACEHOLDER,
+                    tags: inserted.tags,
+                    rating: 0,
+                    createdAt: inserted.createdAt,
+                    updatedAt: inserted.updatedAt,
+                }
+            );
         } catch (e) {
             throw ServiceException.create(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 'Error saving teacher to database'
-            )
+            );
         }
+    }
+
+    async updateTeacher(link: string, update: TeacherUpdateDto): Promise<TeacherDto> {
+        const teacher = await this.getTeacher(link);
+
+        if (update.firstName != null) { teacher.firstName = update.firstName; }
+        if (update.middleName != null) { teacher.middleName = update.middleName; }
+        if (update.lastName != null) { teacher.lastName = update.lastName; }
+        if (update.description != null) { teacher.description = update.description; }
+        if (update.state != null) { teacher.state = update.state; }
+
+        await this.teacherRepository.save(teacher)
+        return this.getTeacherByLink(link);
+    }
+
+    async deleteTeacher(link: string): Promise<void> {
+        const review = await this.getTeacher(link);
+
+        await review.remove();
     }
 }

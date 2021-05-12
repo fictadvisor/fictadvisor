@@ -160,4 +160,24 @@ export class TelegramService {
             }
         );
     }
+
+    async broadcastPendingTeacher(user: User, teacher: Teacher) {
+        const chatId = this.configService.get<string>('telegram.chatId');
+
+        await this.bot.telegram.sendMessage(
+            chatId,
+            `<b>Заявка на додавання викладача</b>\n\n` +
+            `<b><a href="${this.configService.get<string>('frontBaseUrl')}/teachers/${teacher.link}">${teacher.getFullName()}</a></b> (${teacher.id})\n` +
+            `<b>Автор</b>: ${user.firstName}`,
+            {
+                parse_mode: 'HTML',
+                reply_markup: {
+                    inline_keyboard: [
+                        [{ text: 'Схвалити', callback_data: `approve_teacher:${teacher.id}:${user.telegramId}` }],
+                        [{ text: 'Відмовити', callback_data: `deny_teacher:${teacher.id}:${user.telegramId}` }],
+                    ],
+                },
+            }
+        );
+    }
 }

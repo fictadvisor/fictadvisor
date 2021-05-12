@@ -1,7 +1,7 @@
 import { Expose } from "class-transformer";
 import { assign } from "src/common/common.object";
 import { TeacherView } from "src/database/entities/teacher-view.entity";
-import { TEACHER_IMAGE_PLACEHOLDER } from "src/database/entities/teacher.entity";
+import { Teacher, TEACHER_IMAGE_PLACEHOLDER } from 'src/database/entities/teacher.entity';
 
 export class TeacherDto {
     id: string;
