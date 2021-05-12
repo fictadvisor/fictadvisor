@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import PageLayout from "../components/layout/PageLayout";
 import SuperheroContact from "../components/SuperheroContact";
-import SuperheroForm from "../components/SuperheroForm";
+import SuperheroForm from "../components/forms/SuperheroForm";
 import Button from "../components/ui/Button";
 import Disclaimer from "../components/ui/Disclaimer";
 import Dropdown from "../components/ui/Dropdown";

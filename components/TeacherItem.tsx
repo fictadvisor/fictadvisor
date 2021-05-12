@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { mergeClassName } from "../lib/component";
 import Rating from "./Rating";
 
 export type TeacherItemProperties = {
@@ -7,13 +8,13 @@ export type TeacherItemProperties = {
   lastName: string;
   middleName?: string;
   rating?: number;
-};
+} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
-const TeacherItem = ({ link, lastName, firstName, middleName, rating }: TeacherItemProperties) => {
+const TeacherItem = ({ className, link, lastName, firstName, middleName, rating, ...props }: TeacherItemProperties) => {
   return (
     <Link href={`/teachers/${link}`}>
       <a className="simple">
-        <div className="block flex">
+        <div className={mergeClassName('block flex', className)} {...props}>
           <div className="margin-auto">
             <span className="font-medium">{lastName} </span>
             {firstName} {middleName}

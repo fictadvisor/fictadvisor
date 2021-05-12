@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { useMutation } from "react-query";
-import api from "../lib/api";
-import { CreateReviewBody } from "../lib/api/courses";
-import pluralize from "../lib/pluralize";
-import { validate } from "../lib/validation";
-import RatingSelect from "./RatingSelect";
-import Button from "./ui/Button";
-import Disclaimer from "./ui/Disclaimer";
-import ErrorMessage from "./ui/ErrorMessage";
-import TextArea from "./ui/TextArea";
+import api from "../../lib/api";
+import { CreateReviewBody } from "../../lib/api/courses";
+import { mergeClassName } from "../../lib/component";
+import pluralize from "../../lib/pluralize";
+import { validate } from "../../lib/validation";
+import RatingSelect from "../RatingSelect";
+import Button from "../ui/Button";
+import Disclaimer from "../ui/Disclaimer";
+import ErrorMessage from "../ui/ErrorMessage";
+import TextArea from "../ui/TextArea";
 
 export type ReviewEditorProperties = {
   link: string;
@@ -16,7 +17,7 @@ export type ReviewEditorProperties = {
   onBack?: () => any;
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
-const ReviewEditor = ({ link, token, onBack, ...props }: ReviewEditorProperties) => {
+const ReviewForm = ({ link, token, onBack, className, ...props }: ReviewEditorProperties) => {
   const [rating, setRating] = useState(2.5);
   const [review, setReview] = useState('');
   const { error, isLoading, mutate, isSuccess } = useMutation((data: CreateReviewBody) => api.courses.createReview(link, token, data));
@@ -48,7 +49,7 @@ const ReviewEditor = ({ link, token, onBack, ...props }: ReviewEditorProperties)
   }
 
   return (
-    <div {...props}>
+    <div className={mergeClassName('form-block', className)} {...props}>
       <Disclaimer>Будь ласка, утримайся від образ та ненормативної лексики</Disclaimer>
       <div className="block space-t">
         <RatingSelect value={rating} onChange={(value) => setRating(value)}/>
@@ -96,4 +97,4 @@ const ReviewEditor = ({ link, token, onBack, ...props }: ReviewEditorProperties)
   );
 };
 
-export default ReviewEditor;
+export default ReviewForm;

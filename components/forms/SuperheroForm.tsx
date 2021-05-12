@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { useMutation } from "react-query";
-import api from "../lib/api";
-import { CreateSuperheroBody } from "../lib/api/superheroes";
-import { useAuthentication } from "../lib/context/AuthenticationContext";
-import { validateGroup } from "../lib/validation";
-import Button from "./ui/Button";
-import Disclaimer from "./ui/Disclaimer";
-import Dropdown from "./ui/Dropdown";
-import ErrorMessage from "./ui/ErrorMessage";
-import Input from "./ui/Input";
+import api from "../../lib/api";
+import { CreateSuperheroBody } from "../../lib/api/superheroes";
+import { useAuthentication } from "../../lib/context/AuthenticationContext";
+import { validateGroup } from "../../lib/validation";
+import Button from "../ui/Button";
+import Disclaimer from "../ui/Disclaimer";
+import Dropdown from "../ui/Dropdown";
+import ErrorMessage from "../ui/ErrorMessage";
+import Input from "../ui/Input";
 
 export type SuperheroFormProperties = {
   authentication: ReturnType<typeof useAuthentication>;
@@ -72,7 +72,7 @@ const SuperheroForm = ({ authentication, onBack }: SuperheroFormProperties) => {
   }
 
   return (
-    <div>
+    <div className="form-block">
       <Disclaimer><span className="font-medium">Важливо:</span> твоя інформація буде у вільному доступі на сторінці супергероїв</Disclaimer>
       <div className="block space-b space-t">
         <div style={{ display: 'flex' }}>

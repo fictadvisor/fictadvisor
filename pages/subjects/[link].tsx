@@ -2,6 +2,7 @@ import { AxiosError } from "axios";
 import { GetServerSideProps } from "next";
 import { useState } from "react";
 import { useQuery } from "react-query";
+import AddCourseForm from "../../components/forms/AddCourseForm";
 import CourseItem from "../../components/CourseItem";
 import PageLayout from "../../components/layout/PageLayout";
 import SubjectInformation from "../../components/SubjectInformation";
@@ -11,6 +12,7 @@ import Dropdown from "../../components/ui/Dropdown";
 import Loader from "../../components/ui/Loader";
 import SearchInput from "../../components/ui/SearchInput";
 import api from "../../lib/api";
+import { useAuthentication } from "../../lib/context/AuthenticationContext";
 import { toInteger } from "../../lib/number";
 import { useQueryParams } from "../../lib/query";
 import { getFullName } from "../../lib/text";
@@ -72,6 +74,8 @@ const SubjectPage = ({ subject }) => {
   const [searchText, _setSearchText] = useState('');
   const [sortType, _setSortType] = useState(0);
   const [page, _setPage] = useState(0);
+  const [formMode, setFormMode] = useState(false);
+  const authentication = useAuthentication();
 
   const { queryReady, withQueryParam } = useQueryParams((query) => {
     _setSortType(toInteger(query.sb, sortType));
@@ -96,7 +100,24 @@ const SubjectPage = ({ subject }) => {
       meta={{ title: subject.name }}
       title="Сторінка предмету"
     >
-      <SubjectInformation name={subject.name} description={subject.description} />
+      <SubjectInformation name={subject.name} description={subject.description} className="space-b" />
+      {
+        formMode 
+          ? <AddCourseForm authentication={authentication} subject={subject.id} onBack={() => setFormMode(false)} />
+          : <Button 
+              className="full-width" 
+              onClick={() => {
+                if (!authentication.user) {
+                  window.location.href = authentication.loginUrl;
+                  return;
+                }
+
+                setFormMode(true);
+              }}
+            >
+              Додати викладача
+            </Button>
+      }
       <div className="adaptive-input-container flex space-b space-t">
         <SearchInput active={searchActive} style={{ flex: 1 }} placeholder="Пошук викладачів" value={searchText} onChange={e => setSearchText(e.target.value)} />
         <Dropdown text="Сортування за:" active={sortType} onChange={i => setSortType(i)} options={PROPERTIES.sortBy} />

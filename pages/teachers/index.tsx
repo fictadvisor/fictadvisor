@@ -12,6 +12,8 @@ import Loader from "../../components/ui/Loader";
 
 import TeacherItem from "../../components/TeacherItem";
 import SearchInput from "../../components/ui/SearchInput";
+import AddTeacherForm from "../../components/forms/AddTeacherForm";
+import { useAuthentication } from "../../lib/context/AuthenticationContext";
 
 const PROPERTIES = {
   pageSize: 10,
@@ -31,6 +33,8 @@ const TeachersPage = () => {
   const [searchText, _setSearchText] = useState('');
   const [sortType, _setSortType] = useState(0);
   const [page, _setPage] = useState(0);
+  const [formMode, setFormMode] = useState(false);
+  const authentication = useAuthentication();
 
   const { queryReady, withQueryParam } = useQueryParams((query) => {
     _setSortType(toInteger(query.sb, sortType));
@@ -55,7 +59,24 @@ const TeachersPage = () => {
       meta={{ title: 'Викладачі' }}
       title="Викладачі"
     >
-      <div className="adaptive-input-container flex space-b">
+      {
+        formMode 
+          ? <AddTeacherForm authentication={authentication} onBack={() => setFormMode(false)} />
+          : <Button 
+              className="full-width" 
+              onClick={() => {
+                if (!authentication.user) {
+                  window.location.href = authentication.loginUrl;
+                  return;
+                }
+
+                setFormMode(true);
+              }}
+            >
+              Додати викладача
+            </Button>
+      }
+      <div className="adaptive-input-container flex space-b space-t">
         <SearchInput active={searchActive} style={{ flex: 1 }} placeholder="Пошук викладачів" value={searchText} onChange={e => setSearchText(e.target.value)} />
         <Dropdown text="Сортування за:" active={sortType} onChange={i => setSortType(i)} options={PROPERTIES.sortBy} />
       </div>

@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import PageLayout from "../../components/layout/PageLayout";
 import Review from "../../components/Review";
-import ReviewEditor from "../../components/ReviewEditor";
+import ReviewEditor from "../../components/forms/ReviewForm";
 import SubjectInformation from "../../components/SubjectInformation";
 import Button from "../../components/ui/Button";
 import Disclaimer from "../../components/ui/Disclaimer";

@@ -183,12 +183,24 @@ a > .tag {
   text-align: center;
 }
 
+.form-block .disclaimer {
+  border: 1px solid #5d729048;
+}
+
 .space-b {
   margin-bottom: 10px;
 }
 
 .space-t {
   margin-top: 10px;
+}
+
+.space-l {
+  margin-left: 10px;
+}
+
+.space-r {
+  margin-right: 10px;
 }
 
 .disclaimer.alert {
@@ -280,7 +292,6 @@ a.simple {
 .global-search {
   position: relative;
   flex: 1;
-  margin-right: 10px;
   display: flex;
 }
 
@@ -295,6 +306,7 @@ a.simple {
 }
 
 .global-search-content {
+  z-index: 10;
   position: absolute;
   display: block;
   width: 100%;
@@ -369,4 +381,36 @@ a.simple {
 
 .block-container > div:not(:last-child), .block-container > a:not(:last-child) > div {
   margin-bottom: 10px;
+}
+
+.modal {
+  z-index: 100;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: -1px 2px 10px rgba(0,0,0,0.5);
+}
+
+.modal > .modal-actions {
+  display: flex;
+  margin-top: 10px;
+}
+
+.modal > .modal-title {
+  margin-bottom: 20px;
+}
+
+.modal-actions > button:not(:last-child) {
+  margin-right: 10px;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.form-block {
+  padding: 10px;
+  border: 1px dashed #5D7290;
+  border-radius: 8px;
 }

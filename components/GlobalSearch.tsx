@@ -127,11 +127,10 @@ const GlobalSearch = () => {
   }
 
   return (
-    <div className="global-search">
+    <div className="global-search" style={{ marginRight: '10px' }}>
       <div className="global-search-container">
         <SearchInput 
           onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(true)}
           active={searchActive} 
           value={searchText}
           onChange={e => setSearchText(e.target.value)}
