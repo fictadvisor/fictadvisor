@@ -1,7 +1,7 @@
 import { Connection, ViewColumn, ViewEntity } from "typeorm";
 import { Course } from "./course.entity";
 import { Review, ReviewState } from "./review.entity";
-import { Teacher } from "./teacher.entity";
+import { Teacher, TeacherState } from './teacher.entity';
 
 @ViewEntity({
     expression: (connection: Connection) => connection.createQueryBuilder()
@@ -10,6 +10,7 @@ import { Teacher } from "./teacher.entity";
         .addSelect('t.first_name', 'first_name')
         .addSelect('t.middle_name', 'middle_name')
         .addSelect('t.last_name', 'last_name')
+        .addSelect('t.state', 'state')
         .addSelect(`concat(t.last_name, ' ', t.first_name, ' ', t.middle_name)`, 'full_name')
         .addSelect('coalesce(avg(r.rating)::real, 0)', 'rating')
         .from(Teacher, 't')
@@ -35,6 +36,9 @@ export class TeacherSearchIndex {
 
     @ViewColumn({ name: 'last_name' })
     lastName?: string;
+
+    @ViewColumn()
+    state: TeacherState;
 
     @ViewColumn()
     rating: number;
