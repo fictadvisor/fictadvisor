@@ -15,7 +15,7 @@ const SubjectItem = ({ link, name, teacherCount }: SubjectItemProperties) => {
           <div className="m-auto f-medium">
             {name}
           </div>
-          <div className="d-flex-grow a-r secondary">
+          <div className="d-flex-grow a-r c-secondary">
             {
               teacherCount > 0 &&
               `${teacherCount} ${pluralize(teacherCount, 'викладач', 'викладача', 'викладачів')}`
