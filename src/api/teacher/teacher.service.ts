@@ -15,7 +15,7 @@ import { ResponseEntity } from '../../common/common.api';
 import { TeacherCourseSearchIndex } from '../../database/entities/teacher-course-search-index';
 import { TeacherCourseItemDto } from './dto/teacher-course-item.dto';
 import { TeacherReviewDto } from './dto/review.dto';
-import { Teacher, TEACHER_IMAGE_PLACEHOLDER, TeacherState } from 'src/database/entities/teacher.entity';
+import { Teacher, TEACHER_IMAGE_PLACEHOLDER } from 'src/database/entities/teacher.entity';
 import { StatEntry } from '../../database/entities/stat-entry.entity';
 import { TeacherStatsItemDto } from './dto/teacher-stats.dto';
 import { ReviewState } from 'src/database/entities/review.entity';
@@ -24,9 +24,7 @@ import { TelegramService } from '../../telegram/telegram.service';
 import { User } from '../../database/entities/user.entity';
 import { Logger, SystemLogger } from '../../logger/logger.core';
 import { assign } from '../../common/common.object';
-import { UpdateReviewDto } from '../course/review/dto/update-review.dto';
 import { TeacherUpdateDto } from './dto/teacher-update.dto';
-import { ReviewDto } from '../course/review/dto/review.dto';
 
 @Injectable()
 export class TeacherService {

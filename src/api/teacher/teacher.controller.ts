@@ -60,12 +60,12 @@ export class TeacherController {
         @Context() ctx: SecurityContext,
         @Body() teacher: TeacherAddDto,
     ): Promise<TeacherDto> {
-        return this.teacherService.saveTeacher(teacher, ctx.user)
+        return this.teacherService.saveTeacher(teacher, ctx.user);
     }
 
     @Authorize({ telegram: true })
     @Put('/:link')
-    updateReview(
+    updateTeacher(
         @Param('link') link: string,
         @Body() body: TeacherUpdateDto,
     ): Promise<TeacherDto> {
@@ -74,7 +74,7 @@ export class TeacherController {
 
     @Authorize({ telegram: true })
     @Delete('/:link')
-    deleteReview(
+    deleteTeacher(
         @Param('link') link: string
     ): Promise<void> {
         return this.teacherService.deleteTeacher(link);

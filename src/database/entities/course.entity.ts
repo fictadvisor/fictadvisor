@@ -1,6 +1,12 @@
 import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Subject } from "./subject.entity";
-import { Teacher } from "./teacher.entity";
+import { Teacher } from './teacher.entity';
+
+export enum CourseState {
+    PENDING = 'pending',
+    APPROVED = 'approved',
+    DECLINED = 'declined',
+};
 
 @Entity('courses')
 export class Course extends BaseEntity {
@@ -23,6 +29,9 @@ export class Course extends BaseEntity {
 
     @Column({ type: 'text', nullable: true })
     description: string;
+
+    @Column({ type: 'varchar', default: CourseState.PENDING })
+    state: CourseState;
 
     @CreateDateColumn({ name: 'created_at' })
     createdAt: Date;

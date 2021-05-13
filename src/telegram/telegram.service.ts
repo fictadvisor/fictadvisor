@@ -180,4 +180,24 @@ export class TelegramService {
             }
         );
     }
+
+    async broadcastPendingCourse(user: User, course: Course) {
+        const chatId = this.configService.get<string>('telegram.chatId');
+
+        await this.bot.telegram.sendMessage(
+            chatId,
+            `<b>Заявка на додавання курсу</b>\n\n` +
+            `<b><a href="${this.configService.get<string>('frontBaseUrl')}/courses/${course.link}">${course.subject.name}</a></b> (${course.teacher.getFullName()})\n` +
+            `<b>Автор</b>: ${user?.firstName}`,
+            {
+                parse_mode: 'HTML',
+                reply_markup: {
+                    inline_keyboard: [
+                        [{ text: 'Схвалити', callback_data: `approve_course:${course.id}:${user?.telegramId}` }],
+                        [{ text: 'Відмовити', callback_data: `deny_course:${course.id}:${user?.telegramId}` }],
+                    ],
+                },
+            }
+        );
+    }
 }
