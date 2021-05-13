@@ -47,7 +47,15 @@ input, button, textarea, select {
 }
 
 a > .block:hover {
-  background-color: #1B2129;
+  background-color: #1a2028;
+}
+
+.block .block {
+  background-color: #1c222c;
+}
+
+.block a > .block:hover {
+  background-color: #202732;
 }
 
 @media (max-width: 600px) {
@@ -72,7 +80,7 @@ a > .block:hover {
 }
 
 .block {
-  background-color: #151A21;
+  background-color: #161b22;
   border-radius: 8px;
   padding: 24px;
 }
