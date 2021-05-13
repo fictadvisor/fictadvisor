@@ -19,16 +19,16 @@ const Dropdown = ({ text, active, onChange, options, className, ...props }: Drop
   return (
     <div ref={ref} className={mergeClassName(`dropdown ${open ? 'active' : ''}`, className)} {...props}>
       <button className="dropdown" onClick={() => setOpen(!open)}>
-        <div className="flex">
+        <div className="d-flex">
           <span>
             {
               text 
                 ? 
                   <>
-                    <span className="font-medium">{text} </span>
+                    <span className="f-medium">{text} </span>
                     {options[active].text.toLowerCase()}
                   </>
-                : <span className="font-medium">{options[active].text}</span>
+                : <span className="f-medium">{options[active].text}</span>
             }
           </span>
           <span className="arrow"><ArrowIcon /></span>
@@ -49,7 +49,7 @@ const Dropdown = ({ text, active, onChange, options, className, ...props }: Drop
                 >
                   {
                     index == active 
-                    ? <span className="font-medium">{o.text}</span>
+                    ? <span className="f-medium">{o.text}</span>
                     : <>{o.text}</>
                   }
                 </a>

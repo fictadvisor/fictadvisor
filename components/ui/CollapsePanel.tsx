@@ -12,8 +12,8 @@ const CollapsePanel = ({ title, children, className, ...props }: CollapsePanelPr
   return (
     <div className={mergeClassName(`dropdown ${open ? 'active' : ''}`, className)} {...props}>
       <button className="dropdown" onClick={() => setOpen(!open)}>
-        <div className="flex">
-          <span className="font-medium">{title}</span>
+        <div className="d-flex">
+          <span className="f-medium">{title}</span>
           <span className="arrow"><ArrowIcon /></span>
         </div>
       </button>

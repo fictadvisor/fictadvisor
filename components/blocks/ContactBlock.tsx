@@ -11,7 +11,7 @@ export type ContactBlockProperties = {
 const ContactList = ({ data }) => {
   if (data.items.length === 0) {
     return (
-      <Disclaimer className="space-b">
+      <Disclaimer className="m-b">
         На жаль, у нас немає інформації про контакти цього викладача
       </Disclaimer>
     );
@@ -19,7 +19,7 @@ const ContactList = ({ data }) => {
 
   return (
     <>
-      <Disclaimer className="space-b">
+      <Disclaimer className="m-b">
         Натисніть на контакт, щоб скопіювати його до буфера обміну
       </Disclaimer>
       <div className="contact-group">

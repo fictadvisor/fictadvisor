@@ -42,7 +42,7 @@ const ReviewForm = ({ link, token, onBack, className, ...props }: ReviewEditorPr
         <Disclaimer>Дякуємо за відгук!</Disclaimer>
          {
             onBack &&
-            <Button className="full-width space-t" onClick={() => onBack()}>Назад</Button>
+            <Button className="w-full m-t" onClick={() => onBack()}>Назад</Button>
           }
       </div>
     );
@@ -51,11 +51,11 @@ const ReviewForm = ({ link, token, onBack, className, ...props }: ReviewEditorPr
   return (
     <div className={mergeClassName('form-block', className)} {...props}>
       <Disclaimer>Будь ласка, утримайся від образ та ненормативної лексики</Disclaimer>
-      <div className="block space-t">
+      <div className="block m-t">
         <RatingSelect value={rating} onChange={(value) => setRating(value)}/>
         <div style={{ position: 'relative' }}>
           <TextArea 
-            className="space-b space-t"
+            className="m-b m-t"
             style={{ paddingBottom: review.length > 0 ? '24px' : '14px' }}
             value={review}
             onChange={(e) => setReview(e.target.value)}
@@ -69,30 +69,30 @@ const ReviewForm = ({ link, token, onBack, className, ...props }: ReviewEditorPr
           { 
             review.length > 0 &&
             <>
-              <div className="secondary" style={{ position: 'absolute', bottom: '15px', right: '15px' }}>
+              <div className="c-secondary" style={{ position: 'absolute', bottom: '15px', right: '15px' }}>
                 {review.length} {pluralize(review.length, 'символ', 'символа', 'символів')}, оцінка: {rating}
               </div>
             </>
           }
         </div>
-        <div style={{ display: 'flex' }}>
+        <div className="d-flex">
           {
             onBack &&
             <Button loading={isLoading} onClick={() => onBack()}>Назад</Button>
           }
-          <Button loading={isLoading} className="flex-grow" style={{ marginLeft: '10px' }} onClick={() => onSubmit()}>Відправити</Button>
+          <Button loading={isLoading} className="d-flex-grow" style={{ marginLeft: '10px' }} onClick={() => onSubmit()}>Відправити</Button>
         </div>
-        {
-          validationError 
-            ?
-              <Disclaimer className="alert space-t">
-                {validationError}
-              </Disclaimer>
-            :
-              (error && !isLoading) &&
-              <ErrorMessage className="space-t" error={error} />
-        }
       </div>
+      {
+        validationError 
+          ?
+            <Disclaimer className="alert m-t">
+              {validationError}
+            </Disclaimer>
+          :
+            (error && !isLoading) &&
+            <ErrorMessage className="m-t" error={error} />
+      }
     </div>
   );
 };

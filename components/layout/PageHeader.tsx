@@ -62,13 +62,13 @@ const PageHeader = () => {
             </a>
           </Link>
         </div>
-        <div className="navigation flex full-width">
+        <div className="navigation d-flex w-full">
           <GlobalSearch />
-          <div className="flex">
+          <div className="d-flex">
             <Button innerRef={menuBtnRef} onClick={() => setMenuActive(!menuActive)}>Меню</Button>
             {
               authentication.user 
-                ? <LogoutButton className="only-compact" compact={true} style={{ display: 'flex', marginLeft: '10px' }} authentication={authentication} />
+                ? <LogoutButton className="only-compact d-flex m-l" compact={true} authentication={authentication} />
                 : <LoginButton style={{ marginLeft: '10px' }} authentication={authentication} />
             }
           </div>

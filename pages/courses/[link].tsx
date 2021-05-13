@@ -46,7 +46,7 @@ const ReviewList = ({ data, isFetching, setPage, page }) => {
           data.count > (page + 1) * PROPERTIES.pageSize &&
           <Button 
             loading={isFetching}
-            className="full-width"
+            className="w-full"
             onClick={() => setPage(page + 1)}
           >
             Завантажити ще
@@ -90,20 +90,20 @@ const CoursePage = ({ course }) => {
     >
       <Link href={`/teachers/${course.teacher.link}`}>
         <a className="simple">
-          <div className="block space-b" style={{ display: 'flex' }}>
-            <div className="flex-grow font-bold" style={{ marginTop: '2px' }}>{fullName}</div>
+          <div className="block m-b d-flex">
+            <div className="d-flex-grow f-bold" style={{ marginTop: '2px' }}>{fullName}</div>
             <div style={{ margin: '-6px 0 -12px' }}>
               <img className="avatar teacher small" src={course.teacher.image} />
             </div>
           </div>
         </a>
       </Link>
-      <SubjectInformation className="space-b" name={course.name} description={course.description} rating={course.rating} />
+      <SubjectInformation className="m-b" name={course.name} description={course.description} rating={course.rating} />
       {
         reviewMode 
           ? <ReviewEditor token={getToken()} onBack={() => setReviewMode(false)} link={course.link} />
           : <Button 
-              className="full-width" 
+              className="w-full" 
               onClick={() => {
                 if (!user) {
                   window.location.href = loginUrl;
@@ -116,8 +116,8 @@ const CoursePage = ({ course }) => {
               Додати відгук
             </Button>
       }
-      <div className="adaptive-input-container flex space-t space-b">
-        <SearchInput active={searchActive} style={{ flex: 1 }} placeholder="Пошук відгуку за змістом" value={searchText} onChange={e => setSearchText(e.target.value)} />
+      <div className="adaptive-input-container d-flex m-t m-b">
+        <SearchInput active={searchActive} className="d-flex-grow" placeholder="Пошук відгуку за змістом" value={searchText} onChange={e => setSearchText(e.target.value)} />
         <Dropdown text="Сортування за:" active={sortType} onChange={i => setSortType(i)} options={PROPERTIES.sortBy} />
       </div>
       {

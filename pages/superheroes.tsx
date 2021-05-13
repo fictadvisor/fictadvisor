@@ -84,7 +84,7 @@ const SuperheroesPage = () => {
             formMode 
               ? <SuperheroForm authentication={authentication} onBack={() => setFormMode(false)} />
               : <Button 
-                  className="full-width" 
+                  className="w-full" 
                   onClick={() => {
                     if (!authentication.user) {
                       window.location.href = authentication.loginUrl;
@@ -97,8 +97,8 @@ const SuperheroesPage = () => {
                   Я хочу бути супергероєм
                 </Button>
       }
-      <div className="adaptive-input-container flex space-b space-t">
-        <SearchInput active={searchActive} style={{ flex: 1 }} placeholder="Пошук супергероїв" value={searchText} onChange={e => setSearchText(e.target.value)} />
+      <div className="adaptive-input-container d-flex m-b m-t">
+        <SearchInput active={searchActive} className="d-flex-grow" placeholder="Пошук супергероїв" value={searchText} onChange={e => setSearchText(e.target.value)} />
         <Dropdown text="Сортування за:" active={sortType} onChange={i => setSortType(i)} options={PROPERTIES.sortBy} />
       </div>
       <div className="block-container">
@@ -118,7 +118,7 @@ const SuperheroesPage = () => {
       </div>
       {
         (data && !error && data.count > (page + 1) * PROPERTIES.pageSize) &&
-        <Button loading={isLoading || isFetching} className="full-width" onClick={() => setPage(page + 1)}>Завантажити ще</Button>
+        <Button loading={isLoading || isFetching} className="w-full" onClick={() => setPage(page + 1)}>Завантажити ще</Button>
       }
     </PageLayout>
   )

@@ -12,6 +12,8 @@ import Loader from "../../components/ui/Loader";
 
 import SearchInput from "../../components/ui/SearchInput";
 import SubjectItem from "../../components/SubjectItem";
+import { useAuthentication } from "../../lib/context/AuthenticationContext";
+import AddSubjectForm from "../../components/forms/AddSubjectForm";
 
 const PROPERTIES = {
   pageSize: 10,
@@ -31,6 +33,8 @@ const SubjectsPage = () => {
   const [searchText, setSearchText] = useState('');
   const [sortType, _setSortType] = useState(0);
   const [page, _setPage] = useState(0);
+  const [formMode, setFormMode] = useState(false);
+  const authentication = useAuthentication();
 
   const { queryReady, withQueryParam } = useQueryParams((query) => {
     _setSortType(toInteger(query.sb, sortType));
@@ -53,8 +57,25 @@ const SubjectsPage = () => {
       meta={{ title: 'Предмети' }}
       title="Предмети"
     >
-      <div className="adaptive-input-container flex space-b">
-        <SearchInput active={searchActive} style={{ flex: 1 }} placeholder="Пошук предметів" value={searchText} onChange={e => setSearchText(e.target.value)} />
+      {
+        formMode 
+          ? <AddSubjectForm authentication={authentication} onBack={() => setFormMode(false)} />
+          : <Button 
+              className="w-full" 
+              onClick={() => {
+                if (!authentication.user) {
+                  window.location.href = authentication.loginUrl;
+                  return;
+                }
+
+                setFormMode(true);
+              }}
+            >
+              Додати предмет
+            </Button>
+      }
+      <div className="adaptive-input-container d-flex m-b m-t">
+        <SearchInput active={searchActive} className="d-flex-grow" placeholder="Пошук предметів" value={searchText} onChange={e => setSearchText(e.target.value)} />
         <Dropdown text="Сортування за:" active={sortType} onChange={i => setSortType(i)} options={PROPERTIES.sortBy} />
       </div>
       <div className="teacher-list">
@@ -73,7 +94,7 @@ const SubjectsPage = () => {
       </div>
       {
         (data && !error && data.count > (page + 1) * PROPERTIES.pageSize) &&
-        <Button loading={isLoading || isFetching} className="full-width" onClick={() => setPage(page + 1)}>Завантажити ще</Button>
+        <Button loading={isLoading || isFetching} className="w-full" onClick={() => setPage(page + 1)}>Завантажити ще</Button>
       }
     </PageLayout>
   );

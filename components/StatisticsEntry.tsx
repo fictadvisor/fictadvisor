@@ -11,7 +11,7 @@ const StatisticsEntry = ({ name, value, className, ...props }: StatisticsEntryPr
   return (
     <div className={mergeClassName('statistics-field', className)} {...props}>
       <div className="statistics-label">
-        <span className="font-medium">{name}</span>
+        <span className="f-medium">{name}</span>
         <span style={{ float: 'right' }}>{value}</span>
       </div>
       <div className="statistics-progress"><div style={{ width: `${Math.round(numericValue / 5 * 100)}%` }}></div></div>

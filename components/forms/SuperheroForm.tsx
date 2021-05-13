@@ -65,7 +65,7 @@ const SuperheroForm = ({ authentication, onBack }: SuperheroFormProperties) => {
         <Disclaimer>Дякуємо, твоя заявка була відправлена на перевірку</Disclaimer>
          {
             onBack &&
-            <Button className="full-width space-t" onClick={() => onBack()}>Назад</Button>
+            <Button className="w-full m-t" onClick={() => onBack()}>Назад</Button>
           }
       </div>
     );
@@ -73,11 +73,11 @@ const SuperheroForm = ({ authentication, onBack }: SuperheroFormProperties) => {
 
   return (
     <div className="form-block">
-      <Disclaimer><span className="font-medium">Важливо:</span> твоя інформація буде у вільному доступі на сторінці супергероїв</Disclaimer>
-      <div className="block space-b space-t">
-        <div style={{ display: 'flex' }}>
+      <Disclaimer><span className="f-medium">Важливо:</span> твоя інформація буде у вільному доступі на сторінці супергероїв</Disclaimer>
+      <div className="m-b m-t">
+        <div className="d-flex">
           <Dropdown 
-            className="flex-grow"
+            className="d-flex-grow"
             style={{ marginRight: '5px' }}
             text="Я навчаюсь на "
             options={PROPERTIES.years}
@@ -85,7 +85,7 @@ const SuperheroForm = ({ authentication, onBack }: SuperheroFormProperties) => {
             active={year}
           />
            <Dropdown 
-            className="flex-grow"
+            className="d-flex-grow"
             style={{ marginLeft: '5px' }}
             options={PROPERTIES.dorm}
             onChange={(i) => setDorm(i)}
@@ -93,31 +93,31 @@ const SuperheroForm = ({ authentication, onBack }: SuperheroFormProperties) => {
           />
         </div>
         <Input 
-          className="space-t"
+          className="m-t"
           placeholder="Юзернейм у Telegram"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
         <Input 
-          className="space-t"
+          className="m-t"
           placeholder="Ім'я"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
       </div>
-      <div style={{ display: 'flex' }}>
+      <div className="d-flex">
         {
           onBack &&
           <Button loading={isLoading} onClick={() => onBack()}>Назад</Button>
         }
-        <Button loading={isLoading} className="flex-grow" style={{ marginLeft: '10px' }} onClick={() => onSubmit()}>Відправити</Button>
+        <Button loading={isLoading} className="d-flex-grow" style={{ marginLeft: '10px' }} onClick={() => onSubmit()}>Відправити</Button>
       </div>
       {
           validationErrors && validationErrors.length > 0 
-            ? validationErrors.map((e, i) => <Disclaimer key={i} className="alert space-t">{e}</Disclaimer>)
+            ? validationErrors.map((e, i) => <Disclaimer key={i} className="alert m-t">{e}</Disclaimer>)
             :
               (error && !isLoading) &&
-              <ErrorMessage className="space-t" error={error} />
+              <ErrorMessage className="m-t" error={error} />
         }
     </div>
   )

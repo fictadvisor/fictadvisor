@@ -40,7 +40,7 @@ const IndexPage = ({ popularTeachers, popularSubjects, studentResources: serverR
     >
       <div className="information-block">
         <p>
-          <span className="font-bold">Вітаємо тебе на ресурсі для студентів та абітурієнтів {config.faculty}</span>, на якому можна знайти інформацію та відгуки про викладачів і предмети.
+          <span className="f-bold">Вітаємо тебе на ресурсі для студентів та абітурієнтів {config.faculty}</span>, на якому можна знайти інформацію та відгуки про викладачів і предмети.
           Зміст сайту модерується та керується командою студентів із студради, яка не залежить від адміністрації.
         </p>
         <p>
@@ -91,7 +91,7 @@ const IndexPage = ({ popularTeachers, popularSubjects, studentResources: serverR
       </div>
       <Link href="/teachers">
         <a>
-          <Button className="full-width">Завантажити ще</Button>
+          <Button className="w-full">Завантажити ще</Button>
         </a>
       </Link>
       <p className="title" style={{ marginTop: '25px' }}>Популярні предмети</p>
@@ -109,7 +109,7 @@ const IndexPage = ({ popularTeachers, popularSubjects, studentResources: serverR
       </div>
       <Link href="/subjects">
         <a>
-          <Button className="full-width">Завантажити ще</Button>
+          <Button className="w-full">Завантажити ще</Button>
         </a>
       </Link>
     </PageLayout>

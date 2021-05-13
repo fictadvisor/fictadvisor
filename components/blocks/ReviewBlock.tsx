@@ -42,7 +42,7 @@ const ReviewList = ({ data, isLoading, isFetching, page, setPage }) => {
         data.count > (page + 1) * PROPERTIES.pageSize &&
         <Button 
           loading={isLoading || isFetching} 
-          className="full-width"
+          className="w-full"
           onClick={() => setPage(page + 1)}
         >
           Завантажити ще
@@ -64,8 +64,8 @@ const ReviewBlock = ({ link, className, ...props }: ReviewBlockProperties) => {
 
   return (
     <div>
-      <div className={mergeClassName('flex adaptive-input-container', className)} style={{ marginBottom: '10px' }} {...props}>
-        <SearchInput style={{ flex: 1 }} placeholder="Пошук відгуків за предметом" value={searchText} onChange={(e) => setSearchText(e.target.value)} />
+      <div className={mergeClassName('d-flex adaptive-input-container', className)} style={{ marginBottom: '10px' }} {...props}>
+        <SearchInput className="d-flex-grow" placeholder="Пошук відгуків за предметом" value={searchText} onChange={(e) => setSearchText(e.target.value)} />
         <Dropdown 
           text="Сортування за:" 
           active={sortType} 

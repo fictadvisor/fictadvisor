@@ -20,20 +20,20 @@ const CourseItem = ({ link, title, rating, reviewCount, recommended, className, 
       <a className="simple">
         <div className={mergeClassName("block course", className)} {...props}>
           <div className="info">
-            <span className="font-medium">{title}</span>
-            <p className="secondary">
+            <span className="f-medium">{title}</span>
+            <p className="c-secondary">
               {
                 noReviews 
-                  ? <><span className="secondary">На жаль, відгуки про цей курс відсутні</span></>
+                  ? <><span className="c-secondary">На жаль, відгуки про цей курс відсутні</span></>
                   : <>
-                      Написано <span className="primary">{reviewCount}</span> {pluralize(reviewCount, 'відгук', 'відгуки', 'відгуків')} про цей курс, 
-                      має середню оцінку <span className="primary">{rating}</span>
+                      Написано <span className="c-primary">{reviewCount}</span> {pluralize(reviewCount, 'відгук', 'відгуки', 'відгуків')} про цей курс, 
+                      має середню оцінку <span className="c-primary">{rating}</span>
                     </>
               }
             </p>
             {
               recommended &&
-              <p className="golden">Рекомендовано редакцією</p>
+              <p className="c-recommended">Рекомендовано редакцією</p>
             }
           </div>
         </div>

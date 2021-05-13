@@ -49,7 +49,7 @@ const CourseList = ({ data, isLoading, isFetching, page, setPage }) => {
         data.count > (page + 1) * PROPERTIES.pageSize &&
         <Button 
           loading={isLoading || isFetching} 
-          className="full-width"
+          className="w-full"
           onClick={() => setPage(page + 1)}
         >
           Завантажити ще
@@ -71,8 +71,8 @@ const CourseBlock = ({ link, ...props }: CourseBlockProperties) => {
 
   return (
     <div {...props}>
-      <div className="adaptive-input-container flex space-b">
-        <SearchInput style={{ flex: 1 }} placeholder="Пошук предметів" value={searchText} onChange={(e) => setSearchText(e.target.value)} />
+      <div className="adaptive-input-container d-flex m-b">
+        <SearchInput className="d-flex-grow" placeholder="Пошук предметів" value={searchText} onChange={(e) => setSearchText(e.target.value)} />
         <Dropdown 
           text="Сортування за:" 
           active={sortType} 

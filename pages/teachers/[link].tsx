@@ -45,7 +45,7 @@ const PAGE_TABS = [
 const Rating = ({ rating }) => {
   return (
     rating && rating > 0 
-      ? (<div className="rating secondary" style={{ marginLeft: '5px' }}>{rating}<StarIcon /></div>)
+      ? (<div className="rating c-secondary" style={{ marginLeft: '5px' }}>{rating}<StarIcon /></div>)
       : null
   );
 };
@@ -75,10 +75,10 @@ const TeacherPage = ({ teacher }) => {
       <div className={`block teacher ${collapsed ? 'collapsed' : ''} ${canCollapse ? 'collapsible' : ''}`}>
         <div className="teacher-info">
           <img className="avatar teacher" src={teacher.image}/>
-          <div style={{ marginLeft: '24px', display: 'flex' }}>
+          <div className="d-flex" style={{ marginLeft: '24px' }}>
             <div style={{ display: 'block', margin: 'auto 0' }}>
               <p className="name">{fullName}</p>
-              <div className="flex space-t">
+              <div className="d-flex m-t">
                 {
                   teacher.tags.length > 0 &&
                   <div className="tag-group">
@@ -105,7 +105,7 @@ const TeacherPage = ({ teacher }) => {
       {
         canCollapse &&
         <Button className="attached" onClick={() => setCollapsed(!collapsed)}>
-          <span className={collapsed ? null : 'v-flipped'}><ArrowIcon /></span>
+          <span className={collapsed ? null : 't-v-flipped'}><ArrowIcon /></span>
         </Button>
       }
       {

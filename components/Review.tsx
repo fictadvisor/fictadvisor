@@ -17,7 +17,7 @@ const Review = ({ course, date, rating, content, className, ...props }: ReviewPr
       <div className="top">
         <Rating rating={rating} />
         <div className="subject">
-          <span className="font-medium">
+          <span className="f-medium">
             {
               course 
                ? <><Link href={`/courses/${course.link}`}><a className="simple">{course.name}</a></Link></>

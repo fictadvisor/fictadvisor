@@ -18,7 +18,7 @@ const SuperheroContact = (props: SuperheroContactProperties) => {
             <span>{props.name}</span>
             <Tag>{props.username}</Tag>
           </span>
-          <span className="secondary">
+          <span className="c-secondary">
             {
               `${props.dorm ? 'живе в гуртожитку, ' : ''}${props.year} курс`
             }

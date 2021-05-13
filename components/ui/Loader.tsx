@@ -9,7 +9,7 @@ type LoaderProperties = {
 
 const Loader = ({ secondary, className, ...props }: LoaderProperties) => {
   return (
-    <div className={mergeClassName(`loader ${secondary ? 'secondary' : ''}`, className)} {...props}>
+    <div className={mergeClassName(`loader ${secondary ? 'c-secondary' : ''}`, className)} {...props}>
       <div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
     </div>
   );

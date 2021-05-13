@@ -6,7 +6,7 @@ const AuthenticationModal = () => {
       <div className="modal-title">Для цієї дії необхідно авторизуватись на сайті</div>
       <div className="modal-actions">
         <Button>Назад</Button>
-        <Button className="flex-grow">Авторизуватись</Button>
+        <Button className="d-flex-grow">Авторизуватись</Button>
       </div>
     </div>
   );

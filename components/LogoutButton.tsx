@@ -20,7 +20,7 @@ const getName = ({ username, first_name, last_name }) => {
 const LogoutButton = ({ authentication, compact, ...props }: LogoutButtonProperties) => {
   const name = getName(authentication.user);
   return (
-    <div className="flex" {...props}>
+    <div className="d-flex" {...props}>
       <Button 
         disabled 
         title="У розробці"

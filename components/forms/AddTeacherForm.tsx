@@ -40,10 +40,10 @@ const AddTeacherForm = ({ authentication, onBack }: AddTeacherFormProperties) =>
     return (
       <div>
         <Disclaimer>Дякуємо, твоя заявка була відправлена на перевірку</Disclaimer>
-        <div className="space-t flex">
+        <div className="m-t d-flex">
           <Button onClick={() => onBack()}>Назад</Button>
           <Button 
-            className="flex-grow space-l" 
+            className="d-flex-grow m-l" 
             onClick={() => router.push({ pathname: `/teachers/[link]`, query: { link: data.link } })}
           >
             Перейти на сторінку викладача
@@ -55,39 +55,41 @@ const AddTeacherForm = ({ authentication, onBack }: AddTeacherFormProperties) =>
 
   return (
     <div className="form-block">
-      <div className="block space-b space">
-        <Input 
-          className="space-t"
-          placeholder="Прізвище"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-        />
-        <Input 
-          className="space-t"
-          placeholder="Ім'я"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-        />
-        <Input 
-          className="space-t"
-          placeholder="Ім'я по батькові"
-          value={middleName}
-          onChange={(e) => setMiddleName(e.target.value)}
-        />
-      </div>
-      <div style={{ display: 'flex' }}>
-        {
-          onBack &&
-          <Button loading={isLoading} onClick={() => onBack()}>Назад</Button>
-        }
-        <Button loading={isLoading} className="flex-grow" style={{ marginLeft: '10px' }} onClick={() => onSubmit()}>Відправити</Button>
+      <div className="block">
+        <div className="m-b space">
+          <Input 
+            className=""
+            placeholder="Прізвище"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+          />
+          <Input 
+            className="m-t"
+            placeholder="Ім'я"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+          />
+          <Input 
+            className="m-t"
+            placeholder="Ім'я по батькові"
+            value={middleName}
+            onChange={(e) => setMiddleName(e.target.value)}
+          />
+        </div>
+        <div className="d-flex">
+          {
+            onBack &&
+            <Button loading={isLoading} onClick={() => onBack()}>Назад</Button>
+          }
+          <Button loading={isLoading} className="d-flex-grow" style={{ marginLeft: '10px' }} onClick={() => onSubmit()}>Відправити</Button>
+        </div>
       </div>
       {
           validationErrors && validationErrors.length > 0 
-            ? validationErrors.map((e, i) => <Disclaimer key={i} className="alert space-t">{e}</Disclaimer>)
+            ? validationErrors.map((e, i) => <Disclaimer key={i} className="alert m-t">{e}</Disclaimer>)
             :
               (error && !isLoading) &&
-              <ErrorMessage className="space-t" error={error} />
+              <ErrorMessage className="m-t" error={error} />
         }
     </div>
   )

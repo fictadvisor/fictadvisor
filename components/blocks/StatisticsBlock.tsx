@@ -23,8 +23,8 @@ const EntryList = ({ data }) => {
 
   return (
     <>
-      <Disclaimer className="space-b">
-        Використовується статистика, яка була зібрана командою <a className="font-bold">{config.contacts.sovaChannelName}</a> у 2020 році
+      <Disclaimer className="m-b">
+        Використовується статистика, яка була зібрана командою <a className="f-bold">{config.contacts.sovaChannelName}</a> у 2020 році
       </Disclaimer>
       <div className="statistics-field-group block" style={{ borderRadius: '8px 8px 0 0' }}>
         {

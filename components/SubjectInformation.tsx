@@ -14,8 +14,8 @@ const SubjectInformation = ({ name, link, description, rating, className, ...pro
 
   return (
     <div className={mergeClassName('block', className)} {...props}>
-      <div className={`font-bold full-width ${!hasRating ? 'align-center' : ''}`} style={{ fontSize: hasRating ? '14px' : '18px', display: 'inline-flex' }}>
-        <div className="flex-grow" style={{ margin: 'auto' }}>
+      <div className={`f-bold w-full ${!hasRating ? 'a-c' : ''}`} style={{ fontSize: hasRating ? '14px' : '18px', display: 'inline-flex' }}>
+        <div className="d-flex-grow" style={{ margin: 'auto' }}>
           {name}
         </div>
         {

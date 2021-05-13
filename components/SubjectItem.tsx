@@ -11,11 +11,11 @@ const SubjectItem = ({ link, name, teacherCount }: SubjectItemProperties) => {
   return (
     <Link href={`/subjects/${link}`}>
       <a className="simple">
-        <div className="block flex">
-          <div className="margin-auto font-medium">
+        <div className="block d-flex">
+          <div className="m-auto f-medium">
             {name}
           </div>
-          <div className="flex-grow align-right secondary">
+          <div className="d-flex-grow a-r secondary">
             {
               teacherCount > 0 &&
               `${teacherCount} ${pluralize(teacherCount, 'викладач', 'викладача', 'викладачів')}`

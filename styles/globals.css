@@ -187,22 +187,6 @@ a > .tag {
   border: 1px solid #5d729048;
 }
 
-.space-b {
-  margin-bottom: 10px;
-}
-
-.space-t {
-  margin-top: 10px;
-}
-
-.space-l {
-  margin-left: 10px;
-}
-
-.space-r {
-  margin-right: 10px;
-}
-
 .disclaimer.alert {
   border-color: #fd4444;
   color: #fd4444;
@@ -413,4 +397,5 @@ a.simple {
   padding: 10px;
   border: 1px dashed #5D7290;
   border-radius: 8px;
+  background-color: #ffffff03;
 }
