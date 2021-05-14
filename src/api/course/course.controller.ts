@@ -27,19 +27,19 @@ export class CourseController {
     }
 
     @Authorize({ telegram: true })
-    @Put('/:link')
+    @Put('/:id')
     updateCourse(
-        @Param('link') link: string,
+        @Param('id') id: string,
         @Body() body: CourseUpdateDto,
     ): Promise<CourseDto> {
-        return this.courseService.updateCourse(link, body);
+        return this.courseService.updateCourse(id, body);
     }
 
     @Authorize({ telegram: true })
-    @Delete('/:link')
+    @Delete('/:id')
     deleteCourse(
-        @Param('link') link: string
+        @Param('id') id: string
     ): Promise<void> {
-        return this.courseService.deleteCourse(link);
+        return this.courseService.deleteCourse(id);
     }
 }

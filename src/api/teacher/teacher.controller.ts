@@ -64,19 +64,19 @@ export class TeacherController {
     }
 
     @Authorize({ telegram: true })
-    @Put('/:link')
+    @Put('/:id')
     updateTeacher(
-        @Param('link') link: string,
+        @Param('id') id: string,
         @Body() body: TeacherUpdateDto,
     ): Promise<TeacherDto> {
-        return this.teacherService.updateTeacher(link, body);
+        return this.teacherService.updateTeacher(id, body);
     }
 
     @Authorize({ telegram: true })
-    @Delete('/:link')
+    @Delete('/:id')
     deleteTeacher(
-        @Param('link') link: string
+        @Param('id') id: string
     ): Promise<void> {
-        return this.teacherService.deleteTeacher(link);
+        return this.teacherService.deleteTeacher(id);
     }
 }

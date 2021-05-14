@@ -59,6 +59,16 @@ export class TeacherService {
         return teacher;
     }
 
+    private async getTeacherById(id: string): Promise<Teacher> {
+        const teacher = await this.teacherRepository.findOne({ id });
+
+        if (teacher == null) {
+            throw ServiceException.create(HttpStatus.NOT_FOUND, 'Teacher with given link was not found');
+        }
+
+        return teacher;
+    }
+
     async getTeacherByLink(link: string): Promise<TeacherDto> {
         const teacher = await this.teacherViewRepository.findOne({ link });
 
@@ -199,8 +209,8 @@ export class TeacherService {
         }
     }
 
-    async updateTeacher(link: string, update: TeacherUpdateDto): Promise<TeacherDto> {
-        const teacher = await this.getTeacher(link);
+    async updateTeacher(id: string, update: TeacherUpdateDto): Promise<TeacherDto> {
+        const teacher = await this.getTeacherById(id);
 
         if (update.firstName != null) { teacher.firstName = update.firstName; }
         if (update.middleName != null) { teacher.middleName = update.middleName; }
@@ -208,12 +218,12 @@ export class TeacherService {
         if (update.description != null) { teacher.description = update.description; }
         if (update.state != null) { teacher.state = update.state; }
 
-        await this.teacherRepository.save(teacher)
-        return this.getTeacherByLink(link);
+        const saved = await this.teacherRepository.save(teacher)
+        return this.getTeacherByLink(saved.link);
     }
 
-    async deleteTeacher(link: string): Promise<void> {
-        const review = await this.getTeacher(link);
+    async deleteTeacher(id: string): Promise<void> {
+        const review = await this.getTeacherById(id);
 
         await review.remove();
     }

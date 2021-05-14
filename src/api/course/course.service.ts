@@ -42,6 +42,16 @@ export class CourseService {
         return course;
     }
 
+    async getCourseById(id: string, relations?: string[]): Promise<Course> {
+        const course = await this.courseRepository.findOne({ id }, { relations });
+
+        if (course == null) {
+            throw ServiceException.create(HttpStatus.NOT_FOUND, {message: 'Course with given id not found'});
+        }
+
+        return course;
+    }
+
     async getCourseRating(id: string) {
         const { rating } = await this.connection.createQueryBuilder()
             .select('coalesce(avg(r.rating)::real, 0)', 'rating')
@@ -92,18 +102,18 @@ export class CourseService {
         return CourseDto.from(entity);
     }
 
-    async updateCourse(link: string, update: CourseUpdateDto): Promise<CourseDto> {
-        const course = await this.getCourse(link);
+    async updateCourse(id: string, update: CourseUpdateDto): Promise<CourseDto> {
+        const course = await this.getCourseById(id, [ 'teacher', 'subject' ]);
 
         if (update.state != null) { course.state = update.state; }
         if (update.description != null) { course.description = update.description; }
 
-        await this.courseRepository.save(course);
-        return this.getCourseByLink(link);
+        const saved = await this.courseRepository.save(course);
+        return CourseDto.from(saved);
     }
 
-    async deleteCourse(link: string): Promise<void> {
-        const course = await this.getCourse(link);
+    async deleteCourse(id: string): Promise<void> {
+        const course = await this.getCourseById(id);
 
         await course.remove();
     }
