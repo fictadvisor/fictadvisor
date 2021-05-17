@@ -1,6 +1,6 @@
 import { Expose } from "class-transformer";
 import { assign } from "src/common/common.object";
-import { Course } from "src/database/entities/course.entity";
+import { Course, CourseState } from "src/database/entities/course.entity";
 import { CourseTeacherDto } from "./course-teacher.dto";
 
 export class CourseDto {
@@ -15,6 +15,8 @@ export class CourseDto {
     rating: number;
 
     description: string;
+
+    state: CourseState;
 
     @Expose({ name: 'created_at' })
     createdAt: Date;
@@ -31,6 +33,7 @@ export class CourseDto {
                 teacher: CourseTeacherDto.from(c.teacher),
                 name: c.subject.name,
                 rating: null,
+                state: c.state,
                 description: c.description,
                 createdAt: c.createdAt,
                 updatedAt: c.updatedAt,

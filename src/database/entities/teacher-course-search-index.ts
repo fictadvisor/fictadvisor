@@ -1,5 +1,5 @@
 import { Connection, ViewColumn, ViewEntity } from "typeorm";
-import { Course } from "./course.entity";
+import { Course, CourseState } from "./course.entity";
 import { Subject } from "./subject.entity";
 import { Review, ReviewState } from "./review.entity";
 import { Teacher } from "./teacher.entity";
@@ -9,6 +9,7 @@ import { Teacher } from "./teacher.entity";
         .select('c.id', 'id')
         .addSelect('c.link', 'link')
         .addSelect('s.name', 'name')
+        .addSelect('c.state', 'state')
         .addSelect('coalesce(count(r)::real, 0)', 'review_count')
         .addSelect('coalesce(avg(r.rating)::real, 0)', 'rating')
         .addSelect('c.recommended', 'recommended')
@@ -34,6 +35,9 @@ export class TeacherCourseSearchIndex {
 
     @ViewColumn()
     rating: number;
+
+    @ViewColumn()
+    state: CourseState;
 
     @ViewColumn()
     recommended: boolean;

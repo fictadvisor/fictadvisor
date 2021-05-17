@@ -1,7 +1,7 @@
 import { Connection, ViewColumn, ViewEntity } from "typeorm";
 import { Course } from "./course.entity";
 import { Review, ReviewState } from "./review.entity";
-import { Teacher } from "./teacher.entity";
+import { Teacher, TeacherState } from "./teacher.entity";
 
 // average of rating is cast to 'real' type because typeorm doesn't consider 'numeric' type as something JavaScript can store as a number,
 // even though precision and scale can be within the range
@@ -39,6 +39,9 @@ export class TeacherView {
 
     @ViewColumn()    
     tags: string[];
+
+    @ViewColumn()
+    state: TeacherState;
 
     @ViewColumn({ name: 'created_at' })
     createdAt: Date;

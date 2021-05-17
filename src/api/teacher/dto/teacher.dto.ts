@@ -1,7 +1,7 @@
 import { Expose } from "class-transformer";
 import { assign } from "src/common/common.object";
 import { TeacherView } from "src/database/entities/teacher-view.entity";
-import { Teacher, TEACHER_IMAGE_PLACEHOLDER } from 'src/database/entities/teacher.entity';
+import { Teacher, TeacherState, TEACHER_IMAGE_PLACEHOLDER } from 'src/database/entities/teacher.entity';
 
 export class TeacherDto {
     id: string;
@@ -25,6 +25,8 @@ export class TeacherDto {
 
     rating: number;
 
+    state: TeacherState;
+
     @Expose({ name: 'created_at' })
     createdAt: Date;
 
@@ -44,6 +46,7 @@ export class TeacherDto {
                 image: e.image ?? TEACHER_IMAGE_PLACEHOLDER,
                 tags: e.tags,
                 rating: e.rating,
+                state: e.state,
                 createdAt: e.createdAt,
                 updatedAt: e.updatedAt
             }

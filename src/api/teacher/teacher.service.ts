@@ -7,7 +7,7 @@ import { TeacherSearchIndex } from 'src/database/entities/teacher-search-index.e
 import { TeacherView } from 'src/database/entities/teacher-view.entity';
 import { TeacherReviewView } from 'src/database/entities/review-view.entity';
 import { TeacherContact } from 'src/database/entities/teacher-contact.entity';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { TeacherItemDto } from './dto/teacher-item.dto';
 import { TeacherDto } from './dto/teacher.dto';
 import { TeacherContactDto } from './dto/teacher-contact.dto';
@@ -15,7 +15,7 @@ import { ResponseEntity } from '../../common/common.api';
 import { TeacherCourseSearchIndex } from '../../database/entities/teacher-course-search-index';
 import { TeacherCourseItemDto } from './dto/teacher-course-item.dto';
 import { TeacherReviewDto } from './dto/review.dto';
-import { Teacher, TEACHER_IMAGE_PLACEHOLDER } from 'src/database/entities/teacher.entity';
+import { Teacher, TeacherState, TEACHER_IMAGE_PLACEHOLDER } from 'src/database/entities/teacher.entity';
 import { StatEntry } from '../../database/entities/stat-entry.entity';
 import { TeacherStatsItemDto } from './dto/teacher-stats.dto';
 import { ReviewState } from 'src/database/entities/review.entity';
@@ -25,6 +25,7 @@ import { User } from '../../database/entities/user.entity';
 import { Logger, SystemLogger } from '../../logger/logger.core';
 import { assign } from '../../common/common.object';
 import { TeacherUpdateDto } from './dto/teacher-update.dto';
+import { CourseState } from 'src/database/entities/course.entity';
 
 @Injectable()
 export class TeacherService {
@@ -84,7 +85,10 @@ export class TeacherService {
     async getTeachers(query: SearchableQueryDto): Promise<Page<TeacherItemDto>> {
         const [items, count] = await this.teacherSearchIndexRepository.findAndCount({
             ...Pageable.of(query.page, query.pageSize).toQuery(),
-            where: { ...Searchable.of<TeacherSearchIndex>('lastName', query.searchQuery).toQuery() },
+            where: { 
+                state: !query.all ? TeacherState.APPROVED : Not(TeacherState.DECLINED),
+                ...Searchable.of<TeacherSearchIndex>('lastName', query.searchQuery).toQuery() 
+            },
             order: { ...this.teacherSortableProcessor.toQuery(query.sort) }
         });
 
@@ -115,6 +119,7 @@ export class TeacherService {
             ...Pageable.of(query.page, query.pageSize).toQuery(),
             where: {
                 teacherLink: link,
+                state: !query.all ? CourseState.APPROVED : Not(CourseState.DECLINED),
                 ...Searchable.of<TeacherCourseSearchIndex>('name', query.searchQuery).toQuery()
             },
             order: { ...this.courseSortableProcessor.toQuery(query.sort) }

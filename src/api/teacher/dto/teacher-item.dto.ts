@@ -1,6 +1,7 @@
 import { Expose } from "class-transformer";
 import { assign } from "src/common/common.object";
 import { TeacherSearchIndex } from "src/database/entities/teacher-search-index.entity";
+import { TeacherState } from "src/database/entities/teacher.entity";
 
 export class TeacherItemDto {
     id: string;
@@ -19,6 +20,8 @@ export class TeacherItemDto {
     @Expose({ name: 'last_name' })
     lastName?: string;
 
+    state: TeacherState;
+
     rating: number;
 
     public static from(e: TeacherSearchIndex) {
@@ -30,6 +33,7 @@ export class TeacherItemDto {
                 firstName: e.firstName,
                 middleName: e.middleName,
                 lastName: e.lastName,
+                state: e.state,
                 rating: e.rating
             }
         );

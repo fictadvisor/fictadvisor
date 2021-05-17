@@ -1,5 +1,5 @@
 import { Expose, Transform } from "class-transformer";
-import { IsOptional } from "class-validator";
+import { IsBoolean, IsOptional } from "class-validator";
 
 export interface Mapped<Entity, DtoClass> {
   toDto(entity: Entity): DtoClass;
@@ -32,4 +32,8 @@ export class SearchableQueryDto extends PageableQueryDto {
   @IsOptional()
   @Expose({ name: 'sort' })
   sort: string;
+
+  @IsOptional()
+  @IsBoolean()
+  all: boolean;
 };
