@@ -1,7 +1,7 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { SubjectSearchIndex } from "../../database/entities/subject-search-index";
-import { Repository } from "typeorm";
+import { Not, Repository } from "typeorm";
 import { SubjectView } from "../../database/entities/subject-view.entity";
 import { SearchableQueryDto } from "../../common/common.dto";
 import { SubjectItemDto } from "./dto/subject-item.dto";
@@ -10,6 +10,7 @@ import { SubjectDto } from "./dto/subject.dto";
 import { ServiceException } from "../../common/common.exception";
 import { CourseItemDto } from "./dto/course-item.dto";
 import { CourseSearchIndex } from "../../database/entities/course-search-index.entity";
+import { CourseState } from "src/database/entities/course.entity";
 
 @Injectable()
 export class SubjectService {
@@ -56,6 +57,7 @@ export class SubjectService {
             ...Pageable.of(query.page, query.pageSize).toQuery(),
             where: {
                 subjectLink: link,
+                state: !query.all ? CourseState.APPROVED : Not(CourseState.DECLINED),
                 ...Searchable.of<CourseSearchIndex>('teacherFullName', query.searchQuery).toQuery()
             },
             order: { ...this.courseSortableProcessor.toQuery(query.sort) },

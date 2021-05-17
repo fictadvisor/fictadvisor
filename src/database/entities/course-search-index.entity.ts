@@ -1,5 +1,5 @@
 import {Connection, ViewColumn, ViewEntity} from 'typeorm';
-import { Course } from './course.entity';
+import { Course, CourseState } from './course.entity';
 import { Teacher } from './teacher.entity';
 import { Review, ReviewState } from './review.entity';
 import { Subject } from "./subject.entity";
@@ -9,6 +9,7 @@ import { Subject } from "./subject.entity";
         .select('c.id', 'id')
         .addSelect('c.link', 'link')
         .addSelect('c.recommended', 'recommended')
+        .addSelect('c.state', 'state')
         .addSelect('t.id', 'teacher_id')
         .addSelect('t.first_name', 'teacher_first_name')
         .addSelect('t.last_name', 'teacher_last_name')
@@ -32,6 +33,9 @@ export class CourseSearchIndex {
 
     @ViewColumn()
     link: string;
+
+    @ViewColumn()
+    state: CourseState;
 
     @ViewColumn({ name: 'teacher_id' })
     teacherId: string;

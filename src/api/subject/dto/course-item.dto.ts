@@ -2,6 +2,7 @@ import { Expose } from "class-transformer";
 import { CourseSearchIndex } from "../../../database/entities/course-search-index.entity";
 import { assign } from "../../../common/common.object";
 import { CourseTeacherItemDto } from "./course-teacher-item.dto";
+import { CourseState } from "src/database/entities/course.entity";
 
 export class CourseItemDto {
     id: string;
@@ -14,6 +15,8 @@ export class CourseItemDto {
     reviewCount: number;
 
     rating: number;
+
+    state: CourseState;
 
     recommended: boolean;
 
@@ -34,6 +37,7 @@ export class CourseItemDto {
             {
                 id: v.id,
                 link: v.link,
+                state: v.state,
                 teacher,
                 reviewCount: v.reviewCount,
                 rating: v.rating,
