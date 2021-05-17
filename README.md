@@ -13,9 +13,9 @@
     <br />
     <a href="https://fictadvisor.com">View the Website</a>
     ·
-    <a href="https://github.com/fictadvisor/fictadvisor-web/issues">Report a Bug</a>
+    <a href="https://github.com/fictadvisor/fictadvisor-api/issues">Report a Bug</a>
     ·
-    <a href="https://github.com/fictadvisor/fictadvisor-web/issues">Request a Feature</a>
+    <a href="https://github.com/fictadvisor/fictadvisor-api/issues">Request a Feature</a>
   </p>
 </p>
 
