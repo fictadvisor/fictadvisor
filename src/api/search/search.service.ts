@@ -8,6 +8,7 @@ import { SearchResultDto } from './dto/search-result.dto';
 import { Searchable } from '../../common/common.api';
 import { SearchSubjectItemDto } from './dto/search-subject-item.dto';
 import { SearchTeacherItemDto } from './dto/search-teacher-item.dto';
+import { TeacherState } from '../../database/entities/teacher.entity';
 
 /** Number of teacher items to return from search */
 const TEACHER_ITEMS_COUNT = 5;
@@ -28,7 +29,10 @@ export class SearchService {
     async searchResult(query: SearchableQueryDto): Promise<SearchResultDto> {
         const teachers = await this.teacherSearchIndexRepository.find({
             take: TEACHER_ITEMS_COUNT,
-            where: { ...Searchable.of<TeacherSearchIndex>('fullName', query.searchQuery).toQuery() },
+            where: {
+                ...Searchable.of<TeacherSearchIndex>('fullName', query.searchQuery).toQuery(),
+                state: TeacherState.APPROVED,
+            },
             order: {
                 fullName: 'ASC',
                 rating: 'DESC',

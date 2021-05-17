@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { Page } from 'src/common/common.api';
 import { SearchableQueryDto } from 'src/common/common.dto';
 import { TeacherItemDto } from './dto/teacher-item.dto';
@@ -7,6 +7,10 @@ import { TeacherService } from './teacher.service';
 import { ResponseEntity } from '../../common/common.api';
 import { TeacherCourseItemDto } from "./dto/teacher-course-item.dto";
 import { TeacherReviewDto } from "./dto/review.dto";
+import { TeacherAddDto } from './dto/teacher-add-dto';
+import { Context, SecurityContext } from '../../security/security.context';
+import { Authorize } from '../../security/security.authorization';
+import { TeacherUpdateDto } from './dto/teacher-update.dto';
 
 @Controller('teachers')
 export class TeacherController {
@@ -48,5 +52,31 @@ export class TeacherController {
     @Get('/:link/stats')
     getTeacherStats(@Param('link') link: string): Promise<ResponseEntity<any>> {
         return this.teacherService.getTeacherStats(link);
+    }
+
+    @Authorize()
+    @Post()
+    addTeacher(
+        @Context() ctx: SecurityContext,
+        @Body() teacher: TeacherAddDto,
+    ): Promise<TeacherDto> {
+        return this.teacherService.saveTeacher(teacher, ctx.user);
+    }
+
+    @Authorize({ telegram: true })
+    @Put('/:id')
+    updateTeacher(
+        @Param('id') id: string,
+        @Body() body: TeacherUpdateDto,
+    ): Promise<TeacherDto> {
+        return this.teacherService.updateTeacher(id, body);
+    }
+
+    @Authorize({ telegram: true })
+    @Delete('/:id')
+    deleteTeacher(
+        @Param('id') id: string
+    ): Promise<void> {
+        return this.teacherService.deleteTeacher(id);
     }
 }

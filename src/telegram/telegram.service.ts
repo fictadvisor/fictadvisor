@@ -160,4 +160,44 @@ export class TelegramService {
             }
         );
     }
+
+    async broadcastPendingTeacher(user: User, teacher: Teacher) {
+        const chatId = this.configService.get<string>('telegram.chatId');
+
+        await this.bot.telegram.sendMessage(
+            chatId,
+            `<b>Заявка на додавання викладача</b>\n\n` +
+            `<b><a href="${this.configService.get<string>('frontBaseUrl')}/teachers/${teacher.link}">${teacher.getFullName()}</a></b> (${teacher.id})\n` +
+            `<b>Автор</b>: ${user.firstName}`,
+            {
+                parse_mode: 'HTML',
+                reply_markup: {
+                    inline_keyboard: [
+                        [{ text: 'Схвалити', callback_data: `approve_teacher:${teacher.id}:${user.telegramId}` }],
+                        [{ text: 'Відмовити', callback_data: `deny_teacher:${teacher.id}:${user.telegramId}` }],
+                    ],
+                },
+            }
+        );
+    }
+
+    async broadcastPendingCourse(user: User, course: Course) {
+        const chatId = this.configService.get<string>('telegram.chatId');
+
+        await this.bot.telegram.sendMessage(
+            chatId,
+            `<b>Заявка на додавання курсу</b>\n\n` +
+            `<b><a href="${this.configService.get<string>('frontBaseUrl')}/courses/${course.link}">${course.subject.name}</a></b> (${course.teacher.getFullName()})\n` +
+            `<b>Автор</b>: ${user?.firstName}`,
+            {
+                parse_mode: 'HTML',
+                reply_markup: {
+                    inline_keyboard: [
+                        [{ text: 'Схвалити', callback_data: `approve_course:${course.id}:${user?.telegramId}` }],
+                        [{ text: 'Відмовити', callback_data: `deny_course:${course.id}:${user?.telegramId}` }],
+                    ],
+                },
+            }
+        );
+    }
 }

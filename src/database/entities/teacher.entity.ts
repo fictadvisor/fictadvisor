@@ -2,6 +2,12 @@ import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, U
 
 export const TEACHER_IMAGE_PLACEHOLDER = '/assets/avatar.png';
 
+export enum TeacherState {
+    PENDING = 'pending',
+    APPROVED = 'approved',
+    DECLINED = 'declined',
+};
+
 // TeacherView is dependant on this entity (see teacher-view.entity.ts)
 @Entity('teachers')
 export class Teacher extends BaseEntity {
@@ -28,6 +34,9 @@ export class Teacher extends BaseEntity {
 
     @Column({ type: 'varchar', array: true, default: '{}' })
     tags: string[];
+
+    @Column({ type: 'varchar', default: TeacherState.PENDING })
+    state: TeacherState;
 
     @CreateDateColumn({ name: 'created_at' })
     createdAt: Date;
