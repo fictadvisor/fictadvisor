@@ -8,6 +8,9 @@ export class CourseDto {
 
     link: string;
 
+    @Expose({ name: 'subject_link' })
+    subjectLink: string;
+
     teacher: CourseTeacherDto;
 
     name: string;
@@ -30,6 +33,7 @@ export class CourseDto {
             {
                 id: c.id,
                 link: c.link,
+                subjectLink: c.subject?.link,
                 teacher: CourseTeacherDto.from(c.teacher),
                 name: c.subject.name,
                 rating: null,
