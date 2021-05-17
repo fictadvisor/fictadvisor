@@ -3,9 +3,10 @@ import Disclaimer from "./Disclaimer";
 
 export type ErrorMessageProperties = {
   error: any;
+  text?: string;
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
-const ErrorMessage = ({ error, ...props }: ErrorMessageProperties) => {
+const ErrorMessage = ({ error, text, ...props }: ErrorMessageProperties) => {
   const axiosError = error as AxiosError;
 
   if (axiosError.isAxiosError) {
@@ -19,7 +20,7 @@ const ErrorMessage = ({ error, ...props }: ErrorMessageProperties) => {
   return (
     <div {...props}>
       <Disclaimer className='alert'>
-        Під час запиту виникла помилка, спробуй ще раз через декілька хвилин
+        {text ?? 'Під час запиту виникла помилка, спробуй ще раз через декілька хвилин'}
       </Disclaimer>
     </div>
   );

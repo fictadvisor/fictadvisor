@@ -5,6 +5,7 @@ export interface PageQuery {
 
 export interface SearchQuery {
   search?: string;
+  all?: boolean;
 };
 
 export interface SortQuery<T = string> {

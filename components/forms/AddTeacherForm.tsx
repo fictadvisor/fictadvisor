@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useMutation } from "react-query";
@@ -17,7 +18,6 @@ export type AddTeacherFormProperties = {
 
 const AddTeacherForm = ({ authentication, onBack }: AddTeacherFormProperties) => {
   const { data, error, isLoading, mutate, isSuccess } = useMutation((data: CreateTeacherBody) => api.teachers.create(authentication.getToken(), data));
-  const router = useRouter();
   const [validationErrors, setValidationErrors] = useState(null);
   const [lastName, setLastName] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -42,12 +42,13 @@ const AddTeacherForm = ({ authentication, onBack }: AddTeacherFormProperties) =>
         <Disclaimer>Дякуємо, твоя заявка була відправлена на перевірку</Disclaimer>
         <div className="m-t d-flex">
           <Button onClick={() => onBack()}>Назад</Button>
-          <Button 
-            className="d-flex-grow m-l" 
-            onClick={() => router.push({ pathname: `/teachers/[link]`, query: { link: data.link } })}
-          >
-            Перейти на сторінку викладача
-          </Button>
+          <Link href={`/teachers/${data.link}`}>
+            <a className="w-full m-l">
+              <Button className="w-full">
+                Перейти на сторінку викладача
+              </Button>
+            </a>
+          </Link>
         </div>
       </div>
     );
@@ -77,11 +78,8 @@ const AddTeacherForm = ({ authentication, onBack }: AddTeacherFormProperties) =>
           />
         </div>
         <div className="d-flex">
-          {
-            onBack &&
-            <Button loading={isLoading} onClick={() => onBack()}>Назад</Button>
-          }
-          <Button loading={isLoading} className="d-flex-grow" style={{ marginLeft: '10px' }} onClick={() => onSubmit()}>Відправити</Button>
+          <Button loading={isLoading} onClick={() => onBack()}>Назад</Button>
+          <Button loading={isLoading} className="d-flex-grow w-full m-l" onClick={() => onSubmit()}>Відправити</Button>
         </div>
       </div>
       {
@@ -89,7 +87,7 @@ const AddTeacherForm = ({ authentication, onBack }: AddTeacherFormProperties) =>
             ? validationErrors.map((e, i) => <Disclaimer key={i} className="alert m-t">{e}</Disclaimer>)
             :
               (error && !isLoading) &&
-              <ErrorMessage className="m-t" error={error} />
+              <ErrorMessage className="m-t" text={(error as any)?.response?.status === 409 ? 'Викладач вже наявний у списку' : null} error={error} />
         }
     </div>
   )

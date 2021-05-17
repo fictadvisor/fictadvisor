@@ -70,6 +70,11 @@ const CoursesList = ({ data, isFetching, setPage, page }) => {
   );
 };
 
+const STATE_MESSAGES = {
+  pending: () => <Disclaimer className="warning m-b">Інформація перевіряється редакцією</Disclaimer>,
+  declined: () => <Disclaimer className="alert m-b">Інформація не є дійсною та була відхилена редакцією</Disclaimer>,
+};
+
 const SubjectPage = ({ subject }) => {
   const [searchText, _setSearchText] = useState('');
   const [sortType, _setSortType] = useState(0);
@@ -95,11 +100,17 @@ const SubjectPage = ({ subject }) => {
 
   const searchActive = searchText.length > 0;
 
+  const StateMessage = STATE_MESSAGES[subject.state];
+
   return (
     <PageLayout
       meta={{ title: subject.name }}
       title="Сторінка предмету"
     >
+      {
+        StateMessage &&
+        <StateMessage />
+      }
       <SubjectInformation name={subject.name} description={subject.description} className="m-b" />
       {
         formMode 

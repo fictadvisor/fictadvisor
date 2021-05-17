@@ -26,6 +26,11 @@ const PROPERTIES = {
   ]
 };
 
+const STATE_MESSAGES = {
+  pending: () => <Disclaimer className="warning m-b">Інформація перевіряється редакцією</Disclaimer>,
+  declined: () => <Disclaimer className="alert m-b">Інформація не є дійсною та була відхилена редакцією</Disclaimer>,
+};
+
 const ReviewList = ({ data, isFetching, setPage, page }) => {
   if (data.count === 0) {
     return (
@@ -77,6 +82,8 @@ const CoursePage = ({ course }) => {
   const searchActive = searchText.length > 0;
   const fullName = getFullName(course.teacher.last_name, course.teacher.first_name, course.teacher.middle_name);
 
+  const StateMessage = STATE_MESSAGES[course.state];
+
   const { data, isLoading, isFetching, error } = useQuery(
     ['course-reviews-search', course.link, page, searchText, sortType], 
     () => api.courses.getReviews(course.link, { page: 0, page_size: PROPERTIES.pageSize * (page + 1), search: searchText, sort: PROPERTIES.sortBy[sortType].data }), 
@@ -88,6 +95,10 @@ const CoursePage = ({ course }) => {
       meta={{ title: `${course.name} - ${fullName}` }}
       title="Сторінка курсу"
     >
+      {
+        StateMessage &&
+        <StateMessage />
+      }
       <Link href={`/teachers/${course.teacher.link}`}>
         <a className="simple">
           <div className="block m-b d-flex">
@@ -98,7 +109,11 @@ const CoursePage = ({ course }) => {
           </div>
         </a>
       </Link>
-      <SubjectInformation className="m-b" name={course.name} description={course.description} rating={course.rating} />
+      <Link href={`/subjects/${course.subject_link}`}>
+        <a className="simple">
+          <SubjectInformation className="m-b" name={course.name} description={course.description} rating={course.rating} />
+        </a>
+      </Link>
       {
         reviewMode 
           ? <ReviewEditor token={getToken()} onBack={() => setReviewMode(false)} link={course.link} />

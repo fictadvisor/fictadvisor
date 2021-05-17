@@ -30,7 +30,7 @@ const TeacherSelect = ({ onSelect: _onSelect }: TeacherSearchProperties) => {
 
   const { data, error } = useQuery(
     ['teacher-search', searchText], 
-    () => api.teachers.getAll({ search: searchText, sort: 'lastName', page: 0, page_size: 15 }), 
+    () => api.teachers.getAll({ search: searchText, sort: 'lastName', page: 0, page_size: 15, all: true }), 
     { keepPreviousData: true, enabled: searchActive },
   );
 

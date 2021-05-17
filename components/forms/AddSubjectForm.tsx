@@ -13,7 +13,7 @@ import Input from "../ui/Input";
 
 export type AddCourseFormProperties = {
   authentication: ReturnType<typeof useAuthentication>;
-  onBack?: () => any;
+  onBack: () => any;
 };
 
 const AddSubjectForm = ({ authentication, onBack }: AddCourseFormProperties) => {
@@ -76,10 +76,7 @@ const AddSubjectForm = ({ authentication, onBack }: AddCourseFormProperties) => 
           }
         </div>
         <div className="d-flex">
-          {
-            onBack &&
-            <Button loading={isLoading} onClick={() => onBack()}>Назад</Button>
-          }
+          <Button loading={isLoading} onClick={() => onBack()}>Назад</Button>
           <Button loading={isLoading} className="d-flex-grow" style={{ marginLeft: '10px' }} onClick={() => onSubmit()}>Відправити</Button>
         </div>
       </div>

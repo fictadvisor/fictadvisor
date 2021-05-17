@@ -200,6 +200,11 @@ a > .tag {
   color: #fd4444;
 }
 
+.disclaimer.warning {
+  border-color: #fda744;
+  color: #fda744;
+}
+
 a:visited:not(.simple), a:link:not(.simple) {
   color: var(--primary-text-color);
   font-weight: 500;
@@ -338,18 +343,18 @@ a.simple {
   flex-grow: 1;
 }
 
-.superhero .superhero-info .secondary {
+.superhero .superhero-info .c-secondary {
   float: right;
 }
 
 @media (max-width: 600px) {
   .superhero .superhero-info > span:first-child {
     display: block;
+    margin-bottom: 5px;
   }
 
-  .superhero .superhero-info > span.secondary {
+  .superhero .superhero-info > span.c-secondary {
     float: none;
-    margin-top: 5px;
   }
 
   .superhero img {

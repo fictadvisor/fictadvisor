@@ -20,6 +20,7 @@ import StatisticsBlock from '../../components/blocks/StatisticsBlock';
 import ReviewBlock from '../../components/blocks/ReviewBlock';
 import ContactBlock from '../../components/blocks/ContactBlock';
 import CourseBlock from '../../components/blocks/CourseBlock';
+import Disclaimer from '../../components/ui/Disclaimer';
 
 type TabProperties = { link: string };
 
@@ -41,6 +42,11 @@ const PAGE_TABS = [
     block: ({ link }: TabProperties) => <StatisticsBlock link={link} />,
   },
 ];
+
+const STATE_MESSAGES = {
+  pending: () => <Disclaimer className="warning m-b">Інформація перевіряється редакцією</Disclaimer>,
+  declined: () => <Disclaimer className="alert m-b">Інформація не є дійсною та була відхилена редакцією</Disclaimer>,
+};
 
 const Rating = ({ rating }) => {
   return (
@@ -66,12 +72,17 @@ const TeacherPage = ({ teacher }) => {
   const setTab = withQueryParam('t', _setTab);
 
   const TabBlock = PAGE_TABS[tab].block;
+  const StateMessage = STATE_MESSAGES[teacher.state];
 
   return (
     <PageLayout
       meta={{ title: fullName }}
       title="Сторінка викладача"
     >
+      {
+        StateMessage &&
+        <StateMessage />
+      }
       <div className={`block teacher ${collapsed ? 'collapsed' : ''} ${canCollapse ? 'collapsible' : ''}`}>
         <div className="teacher-info">
           <img className="avatar teacher" src={teacher.image}/>
