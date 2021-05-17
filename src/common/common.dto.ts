@@ -41,7 +41,6 @@ export class SearchableQueryDto extends PageableQueryDto {
   sort: string;
 
   @IsOptional()
-  @IsBooleanString()
   @TransformBoolean()
   all: boolean;
 };
