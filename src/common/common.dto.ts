@@ -1,5 +1,5 @@
 import { Expose, Transform } from "class-transformer";
-import { IsBoolean, IsOptional } from "class-validator";
+import { IsBooleanString, IsOptional } from "class-validator";
 
 export interface Mapped<Entity, DtoClass> {
   toDto(entity: Entity): DtoClass;
@@ -11,7 +11,14 @@ const transformIntValue = (field) => {
   return Number.isSafeInteger(num) ? num : null;
 };
 
+const transformBooleanValue = (field) => {
+  const { value } = field;
+  return new Boolean(value);
+};
+
 export const TransformInt = () => Transform(transformIntValue);
+
+export const TransformBoolean = () => Transform(transformBooleanValue);
 
 export class PageableQueryDto {
   @IsOptional()
@@ -34,6 +41,7 @@ export class SearchableQueryDto extends PageableQueryDto {
   sort: string;
 
   @IsOptional()
-  @IsBoolean()
+  @IsBooleanString()
+  @TransformBoolean()
   all: boolean;
 };
