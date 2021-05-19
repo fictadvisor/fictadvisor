@@ -1,6 +1,7 @@
 import { Expose } from "class-transformer";
 import { SubjectView } from "../../../database/entities/subject-view.entity";
 import { assign } from "../../../common/common.object";
+import { SubjectState } from '../../../database/entities/subject.entity';
 
 export class SubjectDto {
     id: string;
@@ -15,6 +16,8 @@ export class SubjectDto {
     teacherCount: number
 
     rating: number
+
+    state: SubjectState
 
     @Expose({ name: 'created_at' })
     createdAt: Date

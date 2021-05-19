@@ -1,5 +1,11 @@
 import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
+export enum SubjectState {
+    PENDING = 'pending',
+    APPROVED = 'approved',
+    DECLINED = 'declined',
+};
+
 @Entity('subjects')
 export class Subject extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
@@ -13,6 +19,9 @@ export class Subject extends BaseEntity {
 
     @Column({ type: 'text', nullable: true })
     description?: string;
+
+    @Column({ type: 'varchar', default: SubjectState.PENDING })
+    state: SubjectState;
 
     @CreateDateColumn({ name: 'created_at' })
     createdAt: Date;

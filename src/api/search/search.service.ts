@@ -9,6 +9,7 @@ import { Searchable } from '../../common/common.api';
 import { SearchSubjectItemDto } from './dto/search-subject-item.dto';
 import { SearchTeacherItemDto } from './dto/search-teacher-item.dto';
 import { TeacherState } from '../../database/entities/teacher.entity';
+import { SubjectState } from '../../database/entities/subject.entity';
 
 /** Number of teacher items to return from search */
 const TEACHER_ITEMS_COUNT = 5;
@@ -41,7 +42,10 @@ export class SearchService {
 
         const subjects = await this.subjectSearchIndexRepository.find({
             take: SUBJECT_ITEMS_COUNT,
-            where: { ...Searchable.of<SubjectSearchIndex>('name', query.searchQuery).toQuery() },
+            where: {
+                ...Searchable.of<SubjectSearchIndex>('name', query.searchQuery).toQuery(),
+                state: SubjectState.APPROVED,
+            },
             order: {
                 name: 'ASC',
                 rating: 'DESC',
