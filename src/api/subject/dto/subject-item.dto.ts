@@ -1,6 +1,7 @@
 import { Expose } from "class-transformer";
 import { SubjectSearchIndex } from "../../../database/entities/subject-search-index";
 import { assign } from "../../../common/common.object";
+import { SubjectState } from '../../../database/entities/subject.entity';
 
 export class SubjectItemDto {
     id: string;
@@ -15,6 +16,8 @@ export class SubjectItemDto {
     teacherCount: number
 
     rating: number
+
+    state: SubjectState
 
     public static from(i: SubjectSearchIndex): SubjectItemDto {
         return assign(

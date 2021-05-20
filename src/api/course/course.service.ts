@@ -12,8 +12,6 @@ import { Subject } from '../../database/entities/subject.entity';
 import { assign } from '../../common/common.object';
 import { TelegramService } from '../../telegram/telegram.service';
 import { Logger, SystemLogger } from '../../logger/logger.core';
-import { TeacherUpdateDto } from '../teacher/dto/teacher-update.dto';
-import { TeacherDto } from '../teacher/dto/teacher.dto';
 import { CourseUpdateDto } from './dto/course-update.dto';
 
 @Injectable()
@@ -95,7 +93,7 @@ export class CourseService {
         ));
 
         this.telegramService.broadcastPendingCourse(user, entity)
-            .catch(e => this.logger.error('Failed to broadcast a pending review', {
+            .catch(e => this.logger.error('Failed to broadcast a pending course', {
                 course: entity.id, error: e.toString()
             }));
 

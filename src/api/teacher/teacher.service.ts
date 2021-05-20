@@ -185,7 +185,7 @@ export class TeacherService {
             );
 
             this.telegramService.broadcastPendingTeacher(user, inserted)
-                .catch(e => this.logger.error('Failed to broadcast a pending review', {
+                .catch(e => this.logger.error('Failed to broadcast a pending teacher', {
                     teacher: inserted.id,
                     error: e.toString()
                 }));

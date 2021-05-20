@@ -7,6 +7,7 @@ import { User } from 'src/database/entities/user.entity';
 import { escape } from 'html-escaper';
 import { Teacher } from 'src/database/entities/teacher.entity';
 import { Superhero } from 'src/database/entities/superhero.entity';
+import { Subject } from '../database/entities/subject.entity';
 
 @Injectable()
 export class TelegramService {
@@ -195,6 +196,26 @@ export class TelegramService {
                     inline_keyboard: [
                         [{ text: 'Схвалити', callback_data: `approve_course:${course.id}:${user?.telegramId}` }],
                         [{ text: 'Відмовити', callback_data: `deny_course:${course.id}:${user?.telegramId}` }],
+                    ],
+                },
+            }
+        );
+    }
+
+    async broadcastPendingSubject(user: User, subject: Subject) {
+        const chatId = this.configService.get<string>('telegram.chatId');
+
+        await this.bot.telegram.sendMessage(
+            chatId,
+            `<b>Заявка на додавання предмету</b>\n\n` +
+            `<b><a href="${this.configService.get<string>('frontBaseUrl')}/courses/${subject.link}">${subject.name}</a></b>\n\n` +
+            `<b>Автор</b>: ${user?.firstName}`,
+            {
+                parse_mode: 'HTML',
+                reply_markup: {
+                    inline_keyboard: [
+                        [{ text: 'Схвалити', callback_data: `approve_subject:${subject.id}:${user?.telegramId}` }],
+                        [{ text: 'Відмовити', callback_data: `deny_subject:${subject.id}:${user?.telegramId}` }],
                     ],
                 },
             }
