@@ -11,6 +11,9 @@ import { TeacherAddDto } from './dto/teacher-add-dto';
 import { Context, SecurityContext } from '../../security/security.context';
 import { Authorize } from '../../security/security.authorization';
 import { TeacherUpdateDto } from './dto/teacher-update.dto';
+import { TeacherContactCreateDto } from './dto/teacher-contact-create.dto';
+import { TeacherContactDto } from './dto/teacher-contact.dto';
+import { TeacherContactUpdateDto } from './dto/teacher-contact-update.dto';
 
 @Controller('teachers')
 export class TeacherController {
@@ -26,6 +29,32 @@ export class TeacherController {
     @Get()
     getTeachers(@Query() query: SearchableQueryDto): Promise<Page<TeacherItemDto>> {
         return this.teacherService.getTeachers(query);
+    }
+
+    @Authorize()
+    @Post()
+    addTeacher(
+        @Context() ctx: SecurityContext,
+        @Body() teacher: TeacherAddDto,
+    ): Promise<TeacherDto> {
+        return this.teacherService.saveTeacher(teacher, ctx.user);
+    }
+
+    @Authorize({ telegram: true })
+    @Put('/:id')
+    updateTeacher(
+        @Param('id') id: string,
+        @Body() body: TeacherUpdateDto,
+    ): Promise<TeacherDto> {
+        return this.teacherService.updateTeacher(id, body);
+    }
+
+    @Authorize({ telegram: true })
+    @Delete('/:id')
+    deleteTeacher(
+        @Param('id') id: string
+    ): Promise<void> {
+        return this.teacherService.deleteTeacher(id);
     }
 
     @Get('/:link/contacts')
@@ -55,28 +84,29 @@ export class TeacherController {
     }
 
     @Authorize()
-    @Post()
-    addTeacher(
+    @Post('/:link/contacts')
+    addContact(
         @Context() ctx: SecurityContext,
-        @Body() teacher: TeacherAddDto,
-    ): Promise<TeacherDto> {
-        return this.teacherService.saveTeacher(teacher, ctx.user);
+        @Param('link') link: string,
+        @Body() contact: TeacherContactCreateDto,
+    ): Promise<TeacherContactDto> {
+        return this.teacherService.addContact(link, contact, ctx.user);
     }
 
     @Authorize({ telegram: true })
-    @Put('/:id')
-    updateTeacher(
+    @Put('/contacts/:id')
+    updateContact(
         @Param('id') id: string,
-        @Body() body: TeacherUpdateDto,
-    ): Promise<TeacherDto> {
-        return this.teacherService.updateTeacher(id, body);
+        @Body() body: TeacherContactUpdateDto,
+    ): Promise<TeacherContactDto> {
+        return this.teacherService.updateContact(id, body);
     }
 
     @Authorize({ telegram: true })
-    @Delete('/:id')
-    deleteTeacher(
+    @Delete('/contacts/:id')
+    deleteContact(
         @Param('id') id: string
     ): Promise<void> {
-        return this.teacherService.deleteTeacher(id);
+        return this.teacherService.deleteContact(id);
     }
 }

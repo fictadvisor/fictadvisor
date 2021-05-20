@@ -6,7 +6,7 @@ import { ServiceException } from 'src/common/common.exception';
 import { TeacherSearchIndex } from 'src/database/entities/teacher-search-index.entity';
 import { TeacherView } from 'src/database/entities/teacher-view.entity';
 import { TeacherReviewView } from 'src/database/entities/review-view.entity';
-import { TeacherContact } from 'src/database/entities/teacher-contact.entity';
+import { TeacherContact, TeacherContactState } from 'src/database/entities/teacher-contact.entity';
 import { Not, Repository } from 'typeorm';
 import { TeacherItemDto } from './dto/teacher-item.dto';
 import { TeacherDto } from './dto/teacher.dto';
@@ -15,7 +15,7 @@ import { ResponseEntity } from '../../common/common.api';
 import { TeacherCourseSearchIndex } from '../../database/entities/teacher-course-search-index';
 import { TeacherCourseItemDto } from './dto/teacher-course-item.dto';
 import { TeacherReviewDto } from './dto/review.dto';
-import { Teacher, TeacherState, TEACHER_IMAGE_PLACEHOLDER } from 'src/database/entities/teacher.entity';
+import { Teacher, TEACHER_IMAGE_PLACEHOLDER, TeacherState } from 'src/database/entities/teacher.entity';
 import { StatEntry } from '../../database/entities/stat-entry.entity';
 import { TeacherStatsItemDto } from './dto/teacher-stats.dto';
 import { ReviewState } from 'src/database/entities/review.entity';
@@ -26,6 +26,8 @@ import { Logger, SystemLogger } from '../../logger/logger.core';
 import { assign } from '../../common/common.object';
 import { TeacherUpdateDto } from './dto/teacher-update.dto';
 import { CourseState } from 'src/database/entities/course.entity';
+import { TeacherContactCreateDto } from './dto/teacher-contact-create.dto';
+import { TeacherContactUpdateDto } from './dto/teacher-contact-update.dto';
 
 @Injectable()
 export class TeacherService {
@@ -98,9 +100,23 @@ export class TeacherService {
         );
     }
 
+
+    private async getContactById(id: string): Promise<TeacherContact> {
+        const contact = await this.teacherContactRepository.findOne({ id });
+
+        if (contact == null) {
+            throw ServiceException.create(HttpStatus.NOT_FOUND, 'Contact with given id was not found');
+        }
+
+        return contact;
+    }
+
     async getTeacherContacts(link: string): Promise<ResponseEntity<any>>{
         const teacher = await this.getTeacher(link);
-        const items = await this.teacherContactRepository.find({ teacher });
+        const items = await this.teacherContactRepository.find({
+            teacher,
+            state: TeacherContactState.APPROVED,
+        });
 
         return ResponseEntity.of(
             {
@@ -231,5 +247,51 @@ export class TeacherService {
         const review = await this.getTeacherById(id);
 
         await review.remove();
+    }
+
+    async addContact(
+        teacherLink: string,
+        contact: TeacherContactCreateDto,
+        user: User
+    ): Promise<TeacherContactDto> {
+        const teacher = await this.getTeacher(teacherLink);
+
+        const inserted = await this.teacherContactRepository.save(
+            assign(
+                new TeacherContact(),
+                {
+                    name: contact.name,
+                    value: contact.value,
+                    teacher,
+                    state: TeacherContactState.PENDING,
+                }
+            )
+        );
+
+        this.telegramService.broadcastPendingTeacherContact(user, teacher, inserted)
+            .catch(e => this.logger.error('Failed to broadcast a pending teacher contact', {
+                contact: inserted.id,
+                user: user.telegramId,
+                error: e.toString()
+            }));
+
+        return TeacherContactDto.from(inserted);
+    }
+
+    async updateContact(id: string, update: TeacherContactUpdateDto): Promise<TeacherContactDto> {
+        const contact = await this.getContactById(id);
+
+        if (update.name != null) { contact.name = update.name; }
+        if (update.value != null) { contact.value = update.value; }
+        if (update.state != null) { contact.state = update.state; }
+
+        const saved = await this.teacherContactRepository.save(contact);
+        return TeacherContactDto.from(saved);
+    }
+
+    async deleteContact(id: string): Promise<void> {
+        const contact = await this.getContactById(id);
+
+        await contact.remove();
     }
 }
