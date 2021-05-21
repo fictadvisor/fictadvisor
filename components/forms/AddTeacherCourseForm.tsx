@@ -4,30 +4,30 @@ import { useMutation } from "react-query";
 import api from "../../lib/api";
 import { CreateCourseBody } from "../../lib/api/courses";
 import { useAuthentication } from "../../lib/context/AuthenticationContext";
-import TeacherItem from "../TeacherItem";
-import TeacherSelect from "../TeacherSelect";
+import SubjectSelect from "../SubjectSelect";
 import Button from "../ui/Button";
 import Disclaimer from "../ui/Disclaimer";
 import ErrorMessage from "../ui/ErrorMessage";
+import SubjectItem from "../SubjectItem";
 
-export type AddCourseFormProperties = {
+export type AddTeacherCourseFormProperties = {
   authentication: ReturnType<typeof useAuthentication>;
-  subject: string;
+  teacher: string;
   onBack: () => any;
 };
 
-const AddCourseForm = ({ authentication, subject, onBack }: AddCourseFormProperties) => {
+const AddTeacherCourseForm = ({ authentication, teacher, onBack }: AddTeacherCourseFormProperties) => {
   const { data, error, isLoading, mutate, isSuccess } = useMutation((data: CreateCourseBody) => api.courses.create(authentication.getToken(), data));
   const [validationErrors, setValidationErrors] = useState(null);
-  const [selectedTeacher, setSelectedTeacher] = useState(null);
+  const [selectedSubject, setSeletectedSubject] = useState(null);
 
   const onSubmit = () => {
-    if (selectedTeacher == null) {
-      setValidationErrors(['Необхідно обрати викладача, що веде цей предмет']);
+    if (selectedSubject == null) {
+      setValidationErrors(['Необхідно обрати предмет, що веде цей викладач']);
       return;
     }
 
-    mutate({ teacher_id: selectedTeacher.id, subject_id: subject });
+    mutate({ subject_id: selectedSubject.id, teacher_id: teacher });
   };
 
   if (isSuccess) {
@@ -38,7 +38,7 @@ const AddCourseForm = ({ authentication, subject, onBack }: AddCourseFormPropert
           <Button onClick={() => onBack()}>Назад</Button>
           <Link href={`/courses/${data.link}`}>
               <a className="w-full m-l">
-                <Button className="w-full">Перейти на сторінку викладача</Button>
+                <Button className="w-full">Перейти на сторінку предмета</Button>
               </a>
           </Link>
         </div>
@@ -50,17 +50,15 @@ const AddCourseForm = ({ authentication, subject, onBack }: AddCourseFormPropert
     <div className="form-block">
       <div className="block">
         <div className="m-b">
-          <TeacherSelect onSelect={({ data }) => setSelectedTeacher(data)} />
+          <SubjectSelect onSelect={({ data }) => setSeletectedSubject(data)} />
           {
-            selectedTeacher &&
-            <TeacherItem 
+            selectedSubject &&
+            <SubjectItem 
               className="m-t"
-              key={selectedTeacher.id}
-              link={selectedTeacher.link} 
-              firstName={selectedTeacher.first_name} 
-              lastName={selectedTeacher.last_name} 
-              middleName={selectedTeacher.middle_name}
-              rating={0} 
+              key={selectedSubject.id}
+              name={selectedSubject.name}
+              link={selectedSubject.link}
+              teacherCount={0}
             />
           }
         </div>
@@ -74,10 +72,10 @@ const AddCourseForm = ({ authentication, subject, onBack }: AddCourseFormPropert
             ? validationErrors.map((e, i) => <Disclaimer key={i} className="alert m-t">{e}</Disclaimer>)
             :
               (error && !isLoading) &&
-              <ErrorMessage className="m-t" text={(error as any)?.response?.status === 409 ? 'Викладач вже наявний у списку' : null} error={error} />
+              <ErrorMessage className="m-t" text={(error as any)?.response?.status === 409 ? 'Предмет вже наявний у списку' : null} error={error} />
         }
     </div>
   )
 };
 
-export default AddCourseForm;
+export default AddTeacherCourseForm;

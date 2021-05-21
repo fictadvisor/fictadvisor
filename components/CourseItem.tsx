@@ -27,7 +27,7 @@ const CourseItem = ({ link, title, rating, reviewCount, recommended, className, 
                   ? <><span className="c-secondary">На жаль, відгуки про цей курс відсутні</span></>
                   : <>
                       Написано <span className="c-primary">{reviewCount}</span> {pluralize(reviewCount, 'відгук', 'відгуки', 'відгуків')} про цей курс, 
-                      має середню оцінку <span className="c-primary">{rating}</span>
+                      має середню оцінку <span className="c-primary">{+rating.toFixed(2)}</span>
                     </>
               }
             </p>

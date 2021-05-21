@@ -16,18 +16,17 @@ import Tag from '../../components/ui/Tag';
 import Divider from '../../components/ui/Divider';
 import Collapsible from '../../components/ui/Collapsible';
 
-import StatisticsBlock from '../../components/blocks/StatisticsBlock';
 import ReviewBlock from '../../components/blocks/ReviewBlock';
 import ContactBlock from '../../components/blocks/ContactBlock';
 import CourseBlock from '../../components/blocks/CourseBlock';
 import Disclaimer from '../../components/ui/Disclaimer';
 
-type TabProperties = { link: string };
+type TabProperties = { link: string, id: string };
 
 const PAGE_TABS = [
   {
     name: 'Предмети',
-    block: ({ link }: TabProperties) => <CourseBlock link={link} />
+    block: ({ id, link }: TabProperties) => <CourseBlock id={id} link={link} />
   },
   {
     name: 'Відгуки',
@@ -51,7 +50,7 @@ const STATE_MESSAGES = {
 const Rating = ({ rating }) => {
   return (
     rating && rating > 0 
-      ? (<div className="rating c-secondary" style={{ marginLeft: '5px' }}>{rating}<StarIcon /></div>)
+      ? (<div className="rating c-secondary" style={{ marginLeft: '5px' }}>{+rating.toFixed(2)}<StarIcon /></div>)
       : null
   );
 };
@@ -136,7 +135,7 @@ const TeacherPage = ({ teacher }) => {
               )
             }
           </div>
-          <TabBlock link={teacher.link} />
+          <TabBlock id={teacher.id} link={teacher.link} />
         </>
       }
     </PageLayout>

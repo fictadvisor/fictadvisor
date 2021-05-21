@@ -21,7 +21,7 @@ const SearchItem = ({ onSelect, ...props }: SearchItemProperties) => {
   );
 };
 
-const TeacherSelect = ({ onSelect: _onSelect }: SubjectSearchProperties) => {
+const SubjectSelect = ({ onSelect: _onSelect }: SubjectSearchProperties) => {
   const [searchText, setSearchText] = useState('');
   const [focused, setFocused] = useState(false);
 
@@ -76,4 +76,4 @@ const TeacherSelect = ({ onSelect: _onSelect }: SubjectSearchProperties) => {
   )
 };
 
-export default TeacherSelect;
+export default SubjectSelect;

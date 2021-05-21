@@ -1,17 +1,18 @@
 import Link from "next/link";
+import { mergeClassName } from "../lib/component";
 import pluralize from "../lib/pluralize";
 
 export type SubjectItemProperties = {
   link: string;
   name: string;
   teacherCount: number;
-};
+} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;;
 
-const SubjectItem = ({ link, name, teacherCount }: SubjectItemProperties) => {
+const SubjectItem = ({ link, name, teacherCount, className, ...props }: SubjectItemProperties) => {
   return (
     <Link href={`/subjects/${link}`}>
       <a className="simple">
-        <div className="block d-flex">
+        <div className={mergeClassName('block d-flex', className)} {...props}>
           <div className="m-auto f-medium">
             {name}
           </div>

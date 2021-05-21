@@ -60,7 +60,7 @@ const CoursesList = ({ data, isFetching, setPage, page }) => {
         data.count > (page + 1) * PROPERTIES.pageSize &&
         <Button 
           loading={isFetching}
-          className="w-full"
+          className="w-full m-t"
           onClick={() => setPage(page + 1)}
         >
           Завантажити ще

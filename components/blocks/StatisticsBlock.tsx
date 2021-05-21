@@ -19,7 +19,7 @@ const EntryList = ({ data }) => {
     );
   }
 
-  const average = (data.items.reduce((p, c) => p + c.value, 0) / data.items.length).toFixed(2);
+  const average = +(data.items.reduce((p, c) => p + c.value, 0) / data.items.length).toFixed(2);
 
   return (
     <>

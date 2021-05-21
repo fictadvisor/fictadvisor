@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 import api from '../../lib/api';
+import { useAuthentication } from '../../lib/context/AuthenticationContext';
 import CourseItem from '../CourseItem';
+import AddTeacherCourseForm from '../forms/AddTeacherCourseForm';
 import Button from '../ui/Button';
 import Disclaimer from '../ui/Disclaimer';
 import Dropdown from '../ui/Dropdown';
@@ -17,6 +19,7 @@ const PROPERTIES = {
 };
 
 export type CourseBlockProperties = {
+  id: string;
   link: string;
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
@@ -59,7 +62,7 @@ const CourseList = ({ data, isLoading, isFetching, page, setPage }) => {
   );
 };
 
-const CourseBlock = ({ link, ...props }: CourseBlockProperties) => {
+const CourseBlock = ({ id, link, ...props }: CourseBlockProperties) => {
   const [page, setPage] = useState(0);
   const [searchText, setSearchText] = useState('');
   const [sortType, setSortType] = useState(0);
@@ -69,9 +72,30 @@ const CourseBlock = ({ link, ...props }: CourseBlockProperties) => {
     { keepPreviousData: true }
   );
 
+  const authentication = useAuthentication();
+  const [formMode, setFormMode] = useState(false);
+
+
   return (
     <div {...props}>
-      <div className="adaptive-input-container d-flex m-b">
+      {
+        formMode 
+          ? <AddTeacherCourseForm teacher={id} authentication={authentication} onBack={() => setFormMode(false)} />
+          : <Button 
+              className="w-full" 
+              onClick={() => {
+                if (!authentication.user) {
+                  window.location.href = authentication.loginUrl;
+                  return;
+                }
+
+                setFormMode(true);
+              }}
+            >
+              Додати предмет
+            </Button>
+      }
+      <div className="adaptive-input-container d-flex m-b m-t">
         <SearchInput className="d-flex-grow" placeholder="Пошук предметів" value={searchText} onChange={(e) => setSearchText(e.target.value)} />
         <Dropdown 
           text="Сортування за:" 
