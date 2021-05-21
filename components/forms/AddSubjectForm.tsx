@@ -70,7 +70,7 @@ const AddSubjectForm = ({ authentication, onBack }: AddCourseFormProperties) => 
             ? validationErrors.map((e, i) => <Disclaimer key={i} className="alert m-t">{e}</Disclaimer>)
             :
               (error && !isLoading) &&
-              <ErrorMessage className="m-t" error={error} />
+              <ErrorMessage className="m-t" text={(error as any)?.response?.status === 409 ? 'Предмет вже наявний у списку' : null} error={error} />
         }
     </div>
   )

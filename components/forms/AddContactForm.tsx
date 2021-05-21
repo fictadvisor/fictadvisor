@@ -70,7 +70,7 @@ const AddContactForm = ({ authentication, link, onBack }: AddContactFormProperti
             ? validationErrors.map((e, i) => <Disclaimer key={i} className="alert m-t">{e}</Disclaimer>)
             :
               (error && !isLoading) &&
-              <ErrorMessage className="m-t" text={(error as any)?.response?.status === 409 ? 'Викладач вже наявний у списку' : null} error={error} />
+              <ErrorMessage className="m-t" text={(error as any)?.response?.status === 409 ? 'Контакт вже наявний у списку' : null} error={error} />
         }
     </div>
   )
