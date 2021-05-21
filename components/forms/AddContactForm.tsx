@@ -1,8 +1,7 @@
-import Link from "next/link";
 import { useState } from "react";
 import { useMutation } from "react-query";
 import api from "../../lib/api";
-import { CreateSubjectBody } from "../../lib/api/subjects";
+import { CreateContactBody } from "../../lib/api/teachers";
 import { useAuthentication } from "../../lib/context/AuthenticationContext";
 import { validateGroup } from "../../lib/validation";
 import Button from "../ui/Button";
@@ -10,18 +9,20 @@ import Disclaimer from "../ui/Disclaimer";
 import ErrorMessage from "../ui/ErrorMessage";
 import Input from "../ui/Input";
 
-export type AddCourseFormProperties = {
+export type AddContactFormProperties = {
+  link: string;
   authentication: ReturnType<typeof useAuthentication>;
   onBack: () => any;
 };
 
-const AddSubjectForm = ({ authentication, onBack }: AddCourseFormProperties) => {
-  const { data, error, isLoading, mutate, isSuccess } = useMutation((data: CreateSubjectBody) => api.subjects.create(authentication.getToken(), data));
+const AddContactForm = ({ authentication, link, onBack }: AddContactFormProperties) => {
+  const { error, isLoading, mutate, isSuccess } = useMutation((data: CreateContactBody) => api.teachers.createContact(authentication.getToken(), link, data));
   const [validationErrors, setValidationErrors] = useState(null);
-  const [subjectName, setSubjectName] = useState('');
+  const [name, setName] = useState('');
+  const [value, setValue] = useState('');
 
   const onSubmit = () => {
-    const errors = validateGroup(['subjectName', subjectName]);
+    const errors = validateGroup(['contactName', name], ['contactValue', value]);
 
     if (errors.length > 0) {
       setValidationErrors(errors);
@@ -30,21 +31,14 @@ const AddSubjectForm = ({ authentication, onBack }: AddCourseFormProperties) => 
       setValidationErrors(null);
     }
 
-    mutate({ name: subjectName });
+    mutate({ name, value });
   };
 
   if (isSuccess) {
     return (
       <div>
         <Disclaimer>Дякуємо, твоя заявка була відправлена на перевірку</Disclaimer>
-        <div className="d-flex m-t">
-          <Button onClick={() => onBack()}>Назад</Button>
-          <Link href={`/subjects/${data.link}`}>
-              <a className="w-full m-l">
-                <Button className="w-full">Перейти на сторінку предмета</Button>
-              </a>
-          </Link>
-        </div>
+        <Button className="w-full m-t" onClick={() => onBack()}>Назад</Button>
       </div>
     );
   }
@@ -52,17 +46,23 @@ const AddSubjectForm = ({ authentication, onBack }: AddCourseFormProperties) => 
   return (
     <div className="form-block">
       <div className="block">
-        <div className="m-b">
-          <Input
-            placeholder="Назва предмету"
-            className="m-b"
-            value={subjectName}
-            onChange={(e) => setSubjectName(e.target.value)}
+        <div className="m-b space">
+          <Input 
+            className=""
+            placeholder="Назва контакту"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <Input 
+            className="m-t"
+            placeholder="Контакт"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
           />
         </div>
         <div className="d-flex">
           <Button loading={isLoading} onClick={() => onBack()}>Назад</Button>
-          <Button loading={isLoading} className="d-flex-grow" style={{ marginLeft: '10px' }} onClick={() => onSubmit()}>Відправити</Button>
+          <Button loading={isLoading} className="d-flex-grow w-full m-l" onClick={() => onSubmit()}>Відправити</Button>
         </div>
       </div>
       {
@@ -70,10 +70,10 @@ const AddSubjectForm = ({ authentication, onBack }: AddCourseFormProperties) => 
             ? validationErrors.map((e, i) => <Disclaimer key={i} className="alert m-t">{e}</Disclaimer>)
             :
               (error && !isLoading) &&
-              <ErrorMessage className="m-t" error={error} />
+              <ErrorMessage className="m-t" text={(error as any)?.response?.status === 409 ? 'Викладач вже наявний у списку' : null} error={error} />
         }
     </div>
   )
 };
 
-export default AddSubjectForm;
+export default AddContactForm;

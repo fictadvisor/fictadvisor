@@ -45,6 +45,18 @@ const subjectName = (name: string) => {
   if (name.length > 32) { return 'Назва предмету має містити не більше 32 символів'; }
 };
 
+const contactName = (name: string) => {
+  if (name.length < 3) { return 'Назва контакту має містити хоча би 3 символи'; }
+
+  if (name.length > 12) { return 'Назва контакту має містити не більше 12 символів'; }
+};
+
+const contactValue = (value: string) => {
+  if (value.length < 3) { return 'Назва контакту має містити хоча би 3 символи'; }
+  
+  if (value.length > 24) { return 'Назва контакту має містити не більше 24 символів'; }
+};
+
 const validationMap = {
   name,
   username,
@@ -53,6 +65,8 @@ const validationMap = {
   middleName,
   firstName,
   subjectName,
+  contactName,
+  contactValue,
 };
 
 type ValidationType = keyof typeof validationMap;

@@ -37,10 +37,10 @@ const PAGE_TABS = [
     name: 'Контакти',
     block: ({ link }: TabProperties) => <ContactBlock link={link} />
   },
-  {
+  /*{
     name: 'Статистика',
     block: ({ link }: TabProperties) => <StatisticsBlock link={link} />,
-  },
+  },*/
 ];
 
 const STATE_MESSAGES = {
