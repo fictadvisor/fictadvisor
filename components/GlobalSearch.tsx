@@ -39,6 +39,7 @@ type SearchItemProperties = {
   text: string;
   href: string;
   type?: SearchItemType;
+  onSelect?: () => void;
 };
 
 const SearchItem = (props: SearchItemProperties) => {
@@ -47,7 +48,7 @@ const SearchItem = (props: SearchItemProperties) => {
 
   return (
     <Link href={props.href}>
-      <a className="search-item">
+      <a className="search-item" onClick={props.onSelect}>
         {Icon && <Icon />}
         {props.text}
       </a>
@@ -59,12 +60,13 @@ type SearchCategoryProperties = {
   last: boolean;
   type: SearchItemType;
   items: SearchItemProperties[];
+  onSelect?: () => void;
 };
 
-const SearchCategory = ({ items, type, last }: SearchCategoryProperties) => {
+const SearchCategory = ({ items, type, last, onSelect }: SearchCategoryProperties) => {
   return (
     <>
-      {items.map(i => <SearchItem type={type} {...i} />)}
+      {items.map(i => <SearchItem type={type} onSelect={onSelect} {...i} />)}
       {
         !last &&
         <Divider />
@@ -142,7 +144,7 @@ const GlobalSearch = () => {
           collapsed &&
           <div className="global-search-content">
             {
-              categories.map(c => <SearchCategory {...c} />)
+              categories.map(c => <SearchCategory onSelect={() => setFocused(false)} {...c} />)
             }
           </div>
         }
