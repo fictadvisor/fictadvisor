@@ -1,33 +1,28 @@
 .navigation-menu {
   margin-top: 10px;
   width: 100%;
+  border: 1px dashed #242c37;
+  background-color: #0b0e11;
+  border-radius: 8px;
+  padding: 10px 10px 0 10px;
+  box-sizing: border-box;
 }
 
 .navigation-menu .item:not(:last-child) {
-  margin: 0 10px 10px 0;
+  margin-right: 10px;
+}
+
+.navigation-menu .item {
+  margin-bottom: 10px;
+  flex: 1 1;
+}
+
+.navigation-menu .item button {
+  width: 100%;
 }
 
 .navigation-menu > div {
   display: flex;
-  margin-bottom: 10px;
   flex-wrap: wrap;
-}
-
-.navigation-menu-blackout {
-  opacity: 0;
-  visibility: hidden;
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  top: 0;
-  z-index: 2;
-  backdrop-filter: blur(2px);
-  background-color: #0b0e11;
-  transition: opacity 0.5s;
-}
-
-.navigation-menu-blackout.active {
-  opacity: 1;
-  visibility: visible;
+  justify-content: center;
 }

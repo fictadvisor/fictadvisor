@@ -44,15 +44,15 @@ const PageHeader = () => {
     <div className="header">
       <div className="left">
         <div className="logo">
-          <Link href="/">
-            <a className="simple">
-              <img src={config.logo} />
-            </a>
-          </Link>
+          <div>
+            <Link href="/">
+              <a className="simple">
+                <img src={config.logo} />
+              </a>
+            </Link>
+          </div>
         </div>
       </div>
-
-      <div className={`navigation-menu-blackout ${menuActive ? 'active' : ''}`} />
 
       <div className="content">
         <div className="logo-md">
@@ -75,11 +75,13 @@ const PageHeader = () => {
         </div>
         {
           menuActive &&
-          <div ref={menuRef} className="navigation-menu">
-            <div>
-              {
-                MENU.navigation.map(t => <MenuItem key={t.text} item={t} setMenuActive={setMenuActive} />)
-              }
+          <div style={{ position: 'relative' }}>
+            <div ref={menuRef} className="navigation-menu">
+              <div>
+                {
+                  MENU.navigation.map(t => <MenuItem key={t.text} item={t} setMenuActive={setMenuActive} />)
+                }
+              </div>
             </div>
           </div>
         }

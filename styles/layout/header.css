@@ -7,7 +7,11 @@
 
 .page > .header > .left, .header > .right {
   flex: 1;
-  margin: auto;
+  margin: 0;
+}
+
+.page > .header > .left {
+  height: 40px;
 }
 
 .page > .header .logo-md {
@@ -62,8 +66,12 @@
 
 .page > .header .logo {
   max-width: 284px;
-  padding: 0 24px 0 24px;
-  margin: 0 auto;
+  display: inline-flex;
+  height: 100%;
+}
+
+.page > .header .logo > div {
+  margin: auto;
 }
 
 .page > .header .logo img {
