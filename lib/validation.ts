@@ -54,7 +54,7 @@ const contactName = (name: string) => {
 const contactValue = (value: string) => {
   if (value.length < 3) { return 'Назва контакту має містити хоча би 3 символи'; }
   
-  if (value.length > 24) { return 'Назва контакту має містити не більше 24 символів'; }
+  if (value.length > 48) { return 'Назва контакту має містити не більше 48 символів'; }
 };
 
 const validationMap = {
