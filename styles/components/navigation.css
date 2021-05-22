@@ -4,16 +4,15 @@
   border: 1px dashed #242c37;
   background-color: #0b0e11;
   border-radius: 8px;
-  padding: 10px 10px 0 10px;
+  padding: 5px;
   box-sizing: border-box;
 }
 
 .navigation-menu .item:not(:last-child) {
-  margin-right: 10px;
 }
 
 .navigation-menu .item {
-  margin-bottom: 10px;
+  margin: 5px;
   flex: 1 1;
 }
 
