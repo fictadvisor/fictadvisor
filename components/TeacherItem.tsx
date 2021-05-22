@@ -15,12 +15,14 @@ const TeacherItem = ({ className, link, lastName, firstName, middleName, rating,
     <Link href={`/teachers/${link}`}>
       <a className="simple">
         <div className={mergeClassName('block d-flex', className)} {...props}>
-          <div className="m-auto">
+          <div className="m-auto d-flex-grow">
             <span className="f-medium">{lastName} </span>
             {firstName} {middleName}
           </div>
-          <div className="d-flex-grow a-r">
-            <Rating rating={rating} />
+          <div className="a-r a-r-label">
+            <span>
+              <Rating rating={rating} />
+            </span>
           </div>
         </div>
       </a>

@@ -75,18 +75,16 @@ const SuperheroForm = ({ authentication, onBack }: SuperheroFormProperties) => {
     <div className="form-block">
       <Disclaimer><span className="f-medium">Важливо:</span> твоя інформація буде у вільному доступі на сторінці супергероїв</Disclaimer>
       <div className="m-b m-t">
-        <div className="d-flex">
+        <div className="d-flex adaptive-input-container">
           <Dropdown 
             className="d-flex-grow"
-            style={{ marginRight: '5px' }}
             text="Я навчаюсь на "
             options={PROPERTIES.years}
             onChange={(i) => setYear(i)}
             active={year}
           />
-           <Dropdown 
+          <Dropdown 
             className="d-flex-grow"
-            style={{ marginLeft: '5px' }}
             options={PROPERTIES.dorm}
             onChange={(i) => setDorm(i)}
             active={dorm}

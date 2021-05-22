@@ -8,9 +8,6 @@
   box-sizing: border-box;
 }
 
-.navigation-menu .item:not(:last-child) {
-}
-
 .navigation-menu .item {
   margin: 5px;
   flex: 1 1;

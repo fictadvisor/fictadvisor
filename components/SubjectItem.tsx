@@ -13,14 +13,16 @@ const SubjectItem = ({ link, name, teacherCount, className, ...props }: SubjectI
     <Link href={`/subjects/${link}`}>
       <a className="simple">
         <div className={mergeClassName('block d-flex', className)} {...props}>
-          <div className="m-auto f-medium">
+          <div className="m-auto f-medium d-flex-grow">
             {name}
           </div>
-          <div className="d-flex-grow a-r c-secondary">
-            {
-              teacherCount > 0 &&
-              `${teacherCount} ${pluralize(teacherCount, 'викладач', 'викладача', 'викладачів')}`
-            }
+          <div className="a-r c-secondary a-r-label">
+            <span>
+              {
+                teacherCount > 0 &&
+                `${teacherCount} ${pluralize(teacherCount, 'викладач', 'викладача', 'викладачів')}`
+              }
+            </span>
           </div>
         </div>
       </a>
