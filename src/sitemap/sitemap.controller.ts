@@ -1,4 +1,4 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Post } from '@nestjs/common';
 import { UserRole } from 'src/database/entities/user.entity';
 import { Authorize } from 'src/security/security.authorization';
 import { SitemapService } from './sitemap.service';

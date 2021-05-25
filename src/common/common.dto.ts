@@ -1,5 +1,5 @@
 import { Expose, Transform } from "class-transformer";
-import { IsBooleanString, IsOptional } from "class-validator";
+import { IsOptional } from "class-validator";
 
 export interface Mapped<Entity, DtoClass> {
   toDto(entity: Entity): DtoClass;

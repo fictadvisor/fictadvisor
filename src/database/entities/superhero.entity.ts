@@ -9,7 +9,7 @@ export enum SuperheroState {
 
 @Entity('superheroes')
 export class Superhero extends BaseEntity {
-    @OneToOne(user => User, { primary: true })
+    @OneToOne(type => User, { primary: true })
     @JoinColumn({ name: 'user_id' })
     user: User;
 

@@ -6,7 +6,7 @@ export class RefreshToken extends BaseEntity {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @ManyToOne(user => User, { nullable: false })
+  @ManyToOne(type => User, { nullable: false })
   @JoinColumn({ name: 'user_id' })
   user: User;
 

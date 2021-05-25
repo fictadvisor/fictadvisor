@@ -15,7 +15,7 @@ export class Review extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @ManyToOne(course => Course)
+    @ManyToOne(type => Course)
     @JoinColumn({ name: 'course_id' })
     course: Course;
 
@@ -25,7 +25,7 @@ export class Review extends BaseEntity {
     @Column({ type: 'text' })
     content: string;
 
-    @ManyToOne(user => User)
+    @ManyToOne(type => User)
     @JoinColumn({ name: 'user_id' })
     user: User;
 

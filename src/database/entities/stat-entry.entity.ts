@@ -22,7 +22,7 @@ export class StatEntry extends BaseEntity {
     @Column({ type: 'numeric', precision: 4, scale: 2, transformer: FLOAT_TRANSFORMER })
     value: number;
 
-    @ManyToOne(teacher => Teacher)
+    @ManyToOne(type => Teacher)
     @JoinColumn({ name: 'teacher_id' })
     teacher: Teacher;
 

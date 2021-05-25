@@ -16,11 +16,11 @@ export class Course extends BaseEntity {
     @Column({ type: 'varchar', unique: true })
     link: string;
 
-    @ManyToOne(teacher => Teacher)
+    @ManyToOne(type => Teacher)
     @JoinColumn({ name: 'teacher_id' })
     teacher: Teacher;
 
-    @ManyToOne(subject => Subject)
+    @ManyToOne(type => Subject)
     @JoinColumn({ name: 'subject_id' })
     subject: Subject;
 

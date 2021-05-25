@@ -20,7 +20,7 @@ export class TelegramService {
         this.bot = new Telegraf(configService.get<string>('telegram.botToken'));
     }
 
-    private splitMessage(text: string, chunkSize: number = 2048): string[] {
+    private splitMessage(text: string, chunkSize = 2048): string[] {
         if (text.length <= chunkSize) {
             return [text];
         }

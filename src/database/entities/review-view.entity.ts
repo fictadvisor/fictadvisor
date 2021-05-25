@@ -1,4 +1,4 @@
-import { Connection, ViewColumn, ViewEntity, ManyToOne, JoinColumn } from "typeorm";
+import { Connection, ViewColumn, ViewEntity } from "typeorm";
 import { Course } from './course.entity';
 import { Subject } from './subject.entity';
 import { Review, ReviewState } from './review.entity';

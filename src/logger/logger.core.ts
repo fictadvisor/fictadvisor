@@ -7,7 +7,7 @@ const loggerFormat = format.combine(
 
 const loggers = {};
 
-export const getLogger = (source: string = 'system'): SystemLogger => {
+export const getLogger = (source = 'system'): SystemLogger => {
   if (loggers[source]) {
     return loggers[source];
   }
@@ -30,7 +30,7 @@ export { SystemLogger };
 
 export function Logger(source?: string): any {
   return (
-    target: Object,
+    target: unknown,
     propertyKey: string | symbol
   ): any => {
     target[propertyKey] = getLogger(source ?? target.constructor.name);

@@ -1,6 +1,6 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, Inject, Injectable, LoggerService, ValidationError } from "@nestjs/common";
+import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, ValidationError } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { Response, Request } from "express";
+import { Response } from "express";
 import { iterate } from 'iterare';
 import { Logger, SystemLogger } from "src/logger/logger.core";
 
@@ -28,7 +28,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
   catch(exception: Error, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
-    const req = ctx.getRequest<Request>();
     const res = ctx.getResponse<Response>();
 
     let status, message;
