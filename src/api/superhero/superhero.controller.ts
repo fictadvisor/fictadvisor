@@ -10,40 +10,36 @@ import { SuperheroService } from './superhero.service';
 
 @Controller('superheroes')
 export class SuperheroController {
-    constructor(
-        private superheroService: SuperheroService
-    ) {}
+  constructor(private superheroService: SuperheroService) {}
 
-    @Get('/me')
-    @Authorize()
-    getMe(
-        @Context() ctx: SecurityContext
-    ): Promise<SuperheroDto> {
-        return this.superheroService.getSuperhero(ctx.user);
-    }
+  @Get('/me')
+  @Authorize()
+  getMe(@Context() ctx: SecurityContext): Promise<SuperheroDto> {
+    return this.superheroService.getSuperhero(ctx.user);
+  }
 
-    @Get()
-    getSuperheroes(
-        @Query() query: SearchableQueryDto
-    ): Promise<Page<SuperheroDto>> {
-        return this.superheroService.getSuperheroes(query);
-    }
+  @Get()
+  getSuperheroes(
+    @Query() query: SearchableQueryDto
+  ): Promise<Page<SuperheroDto>> {
+    return this.superheroService.getSuperheroes(query);
+  }
 
-    @Post()
-    @Authorize()
-    public createSuperhero(
-        @Context() ctx: SecurityContext,
-        @Body() body: CreateSuperheroDto
-    ) {
-        return this.superheroService.createSuperhero(ctx.user, body);
-    }
+  @Post()
+  @Authorize()
+  public createSuperhero(
+    @Context() ctx: SecurityContext,
+    @Body() body: CreateSuperheroDto
+  ) {
+    return this.superheroService.createSuperhero(ctx.user, body);
+  }
 
-    @Authorize({ telegram: true })
-    @Put('/:id')
-    updateSuperhero(
-        @Param('id') id: string,
-        @Body() body: UpdateSuperheroDto
-    ): Promise<SuperheroDto> {
-        return this.superheroService.updateSuperhero(id, body);
-    }
+  @Authorize({ telegram: true })
+  @Put('/:id')
+  updateSuperhero(
+    @Param('id') id: string,
+    @Body() body: UpdateSuperheroDto
+  ): Promise<SuperheroDto> {
+    return this.superheroService.updateSuperhero(id, body);
+  }
 }

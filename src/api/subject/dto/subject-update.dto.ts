@@ -2,11 +2,11 @@ import { SubjectState } from '../../../database/entities/subject.entity';
 import { IsEnum, IsOptional } from 'class-validator';
 
 export class SubjectUpdateDto {
-    name?: string;
+  name?: string;
 
-    description?: string
+  description?: string;
 
-    @IsOptional()
-    @IsEnum(SubjectState)
-    state?: SubjectState
-};
+  @IsOptional()
+  @IsEnum(SubjectState)
+  state?: SubjectState;
+}

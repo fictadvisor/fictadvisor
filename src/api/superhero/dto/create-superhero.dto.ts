@@ -1,17 +1,17 @@
-import { IsBoolean, IsInt, IsNotEmpty, Max, Min } from "class-validator";
+import { IsBoolean, IsInt, IsNotEmpty, Max, Min } from 'class-validator';
 
 export class CreateSuperheroDto {
-    @IsInt()
-    @Min(1)
-    @Max(5)
-    year: number;
+  @IsInt()
+  @Min(1)
+  @Max(5)
+  year: number;
 
-    @IsBoolean()
-    dorm: boolean;
+  @IsBoolean()
+  dorm: boolean;
 
-    @IsNotEmpty()
-    username: string;
+  @IsNotEmpty()
+  username: string;
 
-    @IsNotEmpty()
-    name: string;
-};
+  @IsNotEmpty()
+  name: string;
+}

@@ -13,56 +13,60 @@ import { ServiceException } from 'src/common/common.exception';
 
 @Injectable()
 export class OAuthService {
-    constructor(
-        @InjectRepository(User)
-        private userRepository: Repository<User>,
-        @InjectRepository(RefreshToken)
-        private refreshTokenRepository: Repository<RefreshToken>,
-        private jwtService: JwtService
-      ) {}
+  constructor(
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+    @InjectRepository(RefreshToken)
+    private refreshTokenRepository: Repository<RefreshToken>,
+    private jwtService: JwtService
+  ) {}
 
-    private async getToken(user: User): Promise<OAuthTokenDto> {
-        const refreshToken = uuid();
+  private async getToken(user: User): Promise<OAuthTokenDto> {
+    const refreshToken = uuid();
 
-        const payload: JwtPayload = {
-            sub: user.id,
-            username: user.username,
-            role: user.role,
-        };
+    const payload: JwtPayload = {
+      sub: user.id,
+      username: user.username,
+      role: user.role,
+    };
 
-        await this.refreshTokenRepository.create({ user, token: refreshToken }).save();
+    await this.refreshTokenRepository
+      .create({ user, token: refreshToken })
+      .save();
 
-        return OAuthTokenDto.of(this.jwtService.sign(payload), refreshToken);
+    return OAuthTokenDto.of(this.jwtService.sign(payload), refreshToken);
+  }
+
+  async login(oauth: OAuthTelegramDto): Promise<OAuthTokenDto> {
+    let user: User = await this.userRepository.findOne({
+      telegramId: oauth.telegramId,
+    });
+
+    user = assign(user == null ? new User() : user, {
+      telegramId: oauth.telegramId,
+      username: oauth.username,
+      firstName: oauth.firstName,
+      lastName: oauth.lastName,
+      image: oauth.image,
+    });
+
+    return await this.getToken(await this.userRepository.save(user));
+  }
+
+  async refresh(refreshToken: string): Promise<OAuthTokenDto> {
+    const token = await this.refreshTokenRepository.findOne(
+      { token: refreshToken, createdAt: LessThanOrEqual(Date.now()) },
+      { relations: ['user'] }
+    );
+
+    if (!token) {
+      throw ServiceException.create(HttpStatus.UNAUTHORIZED, {
+        message: 'Invalid refresh token',
+      });
     }
 
-    async login(oauth: OAuthTelegramDto): Promise<OAuthTokenDto> {
-        let user: User = await this.userRepository.findOne({ telegramId: oauth.telegramId });
+    await this.refreshTokenRepository.remove(token);
 
-        user = assign(
-            user == null ? new User() : user, 
-            {
-                telegramId: oauth.telegramId,
-                username: oauth.username,
-                firstName: oauth.firstName,
-                lastName: oauth.lastName,
-                image: oauth.image,
-            }
-        );
-
-        return await this.getToken(
-            await this.userRepository.save(user)
-        );
-    }
-
-    async refresh(refreshToken: string): Promise<OAuthTokenDto> {
-        const token = await this.refreshTokenRepository.findOne({ token: refreshToken, createdAt: LessThanOrEqual(Date.now()) }, { relations: ['user'] });
-
-        if (!token) { 
-            throw ServiceException.create(HttpStatus.UNAUTHORIZED, { message: 'Invalid refresh token' }); 
-        }
-
-        await this.refreshTokenRepository.remove(token);
-
-        return await this.getToken(token.user);
-    }
+    return await this.getToken(token.user);
+  }
 }

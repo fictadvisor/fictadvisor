@@ -5,13 +5,11 @@ import { SitemapService } from './sitemap.service';
 
 @Controller('sitemap')
 export class SitemapController {
-    constructor(
-        private sitemapService: SitemapService,
-    ) {}
+  constructor(private sitemapService: SitemapService) {}
 
-    @Post('/build')
-    @Authorize({ roles: [UserRole.Admin] })
-    public async build() {
-        await this.sitemapService.build();
-    }
+  @Post('/build')
+  @Authorize({ roles: [UserRole.Admin] })
+  public async build() {
+    await this.sitemapService.build();
+  }
 }

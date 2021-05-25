@@ -1,47 +1,44 @@
-import { Expose } from "class-transformer";
-import { assign } from "src/common/common.object";
-import { Course, CourseState } from "src/database/entities/course.entity";
-import { CourseTeacherDto } from "./course-teacher.dto";
+import { Expose } from 'class-transformer';
+import { assign } from 'src/common/common.object';
+import { Course, CourseState } from 'src/database/entities/course.entity';
+import { CourseTeacherDto } from './course-teacher.dto';
 
 export class CourseDto {
-    id: string;
+  id: string;
 
-    link: string;
+  link: string;
 
-    @Expose({ name: 'subject_link' })
-    subjectLink: string;
+  @Expose({ name: 'subject_link' })
+  subjectLink: string;
 
-    teacher: CourseTeacherDto;
+  teacher: CourseTeacherDto;
 
-    name: string;
+  name: string;
 
-    rating: number;
+  rating: number;
 
-    description: string;
+  description: string;
 
-    state: CourseState;
+  state: CourseState;
 
-    @Expose({ name: 'created_at' })
-    createdAt: Date;
+  @Expose({ name: 'created_at' })
+  createdAt: Date;
 
-    @Expose({ name: 'updated_at' })
-    updatedAt: Date;
+  @Expose({ name: 'updated_at' })
+  updatedAt: Date;
 
-    public static from(c: Course) {
-        return assign(
-            new CourseDto(),
-            {
-                id: c.id,
-                link: c.link,
-                subjectLink: c.subject?.link,
-                teacher: CourseTeacherDto.from(c.teacher),
-                name: c.subject.name,
-                rating: null,
-                state: c.state,
-                description: c.description,
-                createdAt: c.createdAt,
-                updatedAt: c.updatedAt,
-            }
-        );
-    }
-};
+  public static from(c: Course) {
+    return assign(new CourseDto(), {
+      id: c.id,
+      link: c.link,
+      subjectLink: c.subject?.link,
+      teacher: CourseTeacherDto.from(c.teacher),
+      name: c.subject.name,
+      rating: null,
+      state: c.state,
+      description: c.description,
+      createdAt: c.createdAt,
+      updatedAt: c.updatedAt,
+    });
+  }
+}

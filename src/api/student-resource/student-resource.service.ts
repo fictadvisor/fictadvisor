@@ -8,21 +8,30 @@ import { StudentResourceDto } from './dto/student-resource.dto';
 
 @Injectable()
 export class StudentResourceService {
-    constructor(
-        @InjectRepository(StudentResource)
-        private teacherSearchIndexRepository: Repository<StudentResource>
-    ) {}
+  constructor(
+    @InjectRepository(StudentResource)
+    private teacherSearchIndexRepository: Repository<StudentResource>
+  ) {}
 
-    async getResources(query: SearchableQueryDto): Promise<Page<StudentResourceDto>> {
-        const [items, count] = await this.teacherSearchIndexRepository.findAndCount({ 
-            ...Pageable.of(query.page, query.pageSize).toQuery(),
-            where: { ...Searchable.of<StudentResource>('name', query.searchQuery).toQuery() },
-            order: { priority: 'DESC' },
-        });
+  async getResources(
+    query: SearchableQueryDto
+  ): Promise<Page<StudentResourceDto>> {
+    const [items, count] = await this.teacherSearchIndexRepository.findAndCount(
+      {
+        ...Pageable.of(query.page, query.pageSize).toQuery(),
+        where: {
+          ...Searchable.of<StudentResource>(
+            'name',
+            query.searchQuery
+          ).toQuery(),
+        },
+        order: { priority: 'DESC' },
+      }
+    );
 
-        return Page.of(
-            count,
-            items.map(t => StudentResourceDto.from(t))
-        );
-    }
+    return Page.of(
+      count,
+      items.map(t => StudentResourceDto.from(t))
+    );
+  }
 }

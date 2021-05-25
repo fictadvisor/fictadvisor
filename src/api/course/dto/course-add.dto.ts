@@ -1,11 +1,11 @@
-import { Expose } from "class-transformer";
+import { Expose } from 'class-transformer';
 
 export class CourseAddDto {
-    @Expose({ name: 'teacher_id' })
-    teacherId: string;
+  @Expose({ name: 'teacher_id' })
+  teacherId: string;
 
-    @Expose({ name: 'subject_id' })
-    subjectId: string;
+  @Expose({ name: 'subject_id' })
+  subjectId: string;
 
-    description?: string;
-};
+  description?: string;
+}

@@ -1,8 +1,15 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, ValidationError } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
-import { Response } from "express";
+import {
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  HttpException,
+  HttpStatus,
+  ValidationError,
+} from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { Response } from 'express';
 import { iterate } from 'iterare';
-import { Logger, SystemLogger } from "src/logger/logger.core";
+import { Logger, SystemLogger } from 'src/logger/logger.core';
 
 export type ServiceExceptionPayload = {
   message: string;
@@ -17,7 +24,7 @@ export class ServiceException extends HttpException {
 
     return new ServiceException({ status, ...payload }, status);
   }
-};
+}
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -34,12 +41,15 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     if (exception instanceof HttpException) {
       const errorResponse = exception.getResponse();
-      
+
       status = exception.getStatus() ?? HttpStatus.INTERNAL_SERVER_ERROR;
-      
-      message = exception instanceof ServiceException 
-        ? errorResponse 
-        : (typeof(errorResponse) === 'string' ? errorResponse : (errorResponse as any).message);
+
+      message =
+        exception instanceof ServiceException
+          ? errorResponse
+          : typeof errorResponse === 'string'
+          ? errorResponse
+          : (errorResponse as any).message;
     } else {
       status = HttpStatus.INTERNAL_SERVER_ERROR;
       message = 'Internal Server Error';
@@ -48,24 +58,32 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const requestResponse = {
       status,
       timestamp: new Date().toISOString(),
-      ...(typeof(message) === 'object' ? message : { message }),
+      ...(typeof message === 'object' ? message : { message }),
     };
 
-    res
-      .status(status)
-      .json(requestResponse);
+    res.status(status).json(requestResponse);
 
-      if (this.configService.get<string>('logLevel') == 'debug') {
-        this.logger.debug('Resolved an exception', { status, response: JSON.stringify(requestResponse) });
-      }
+    if (this.configService.get<string>('logLevel') == 'debug') {
+      this.logger.debug('Resolved an exception', {
+        status,
+        response: JSON.stringify(requestResponse),
+      });
+    }
 
     if (status === HttpStatus.INTERNAL_SERVER_ERROR) {
-      this.logger.error('Resolved an internal server error', { error: exception.toString(), response: JSON.stringify(requestResponse), stack: exception.stack });
+      this.logger.error('Resolved an internal server error', {
+        error: exception.toString(),
+        response: JSON.stringify(requestResponse),
+        stack: exception.stack,
+      });
     }
   }
 }
 
-const prependConstraintsWithParentProp = (parentError: ValidationError, error: ValidationError) => {
+const prependConstraintsWithParentProp = (
+  parentError: ValidationError,
+  error: ValidationError
+) => {
   const constraints = {};
 
   for (const key in error.constraints) {
@@ -94,7 +112,7 @@ const mapChildrenToValidationErrors = (error: ValidationError) => {
   }
 
   return validationErrors;
-}
+};
 
 const flattenValidationErrors = (errors: ValidationError[]): string[] => {
   return iterate(errors)
@@ -104,8 +122,11 @@ const flattenValidationErrors = (errors: ValidationError[]): string[] => {
     .map(item => Object.values(item.constraints))
     .flatten()
     .toArray() as string[];
-}
+};
 
 export const validationExceptionFactory = () => (errors: ValidationError[]) => {
-  return ServiceException.create(HttpStatus.BAD_REQUEST, { message: 'Invalid request', details: flattenValidationErrors(errors) });
+  return ServiceException.create(HttpStatus.BAD_REQUEST, {
+    message: 'Invalid request',
+    details: flattenValidationErrors(errors),
+  });
 };

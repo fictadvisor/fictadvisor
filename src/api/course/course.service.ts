@@ -16,103 +16,126 @@ import { CourseUpdateDto } from './dto/course-update.dto';
 
 @Injectable()
 export class CourseService {
-    @Logger()
-    private logger: SystemLogger;
+  @Logger()
+  private logger: SystemLogger;
 
-    constructor(
-        @InjectRepository(Course)
-        private courseRepository: Repository<Course>,
-        @InjectRepository(Teacher)
-        private teacherRepository: Repository<Teacher>,
-        @InjectRepository(Subject)
-        private subjectRepository: Repository<Subject>,
-        private telegramService: TelegramService,
+  constructor(
+    @InjectRepository(Course)
+    private courseRepository: Repository<Course>,
+    @InjectRepository(Teacher)
+    private teacherRepository: Repository<Teacher>,
+    @InjectRepository(Subject)
+    private subjectRepository: Repository<Subject>,
+    private telegramService: TelegramService,
     private connection: Connection
-    ) {}
+  ) {}
 
-    async getCourse(link: string, relations?: string[]): Promise<Course> {
-        const course = await this.courseRepository.findOne({ link }, { relations });
+  async getCourse(link: string, relations?: string[]): Promise<Course> {
+    const course = await this.courseRepository.findOne({ link }, { relations });
 
-        if (course == null) {
-            throw ServiceException.create(HttpStatus.NOT_FOUND, { message: 'Course with given link not found' });
-        }
-
-        return course;
+    if (course == null) {
+      throw ServiceException.create(HttpStatus.NOT_FOUND, {
+        message: 'Course with given link not found',
+      });
     }
 
-    async getCourseById(id: string, relations?: string[]): Promise<Course> {
-        const course = await this.courseRepository.findOne({ id }, { relations });
+    return course;
+  }
 
-        if (course == null) {
-            throw ServiceException.create(HttpStatus.NOT_FOUND, {message: 'Course with given id not found'});
-        }
+  async getCourseById(id: string, relations?: string[]): Promise<Course> {
+    const course = await this.courseRepository.findOne({ id }, { relations });
 
-        return course;
+    if (course == null) {
+      throw ServiceException.create(HttpStatus.NOT_FOUND, {
+        message: 'Course with given id not found',
+      });
     }
 
-    async getCourseRating(id: string) {
-        const { rating } = await this.connection.createQueryBuilder()
-            .select('coalesce(avg(r.rating)::real, 0)', 'rating')
-            .from(Review, 'r')
-            .where('r.course_id = :id and r.state = :state', { id, state: ReviewState.APPROVED })
-            .getRawOne();
-    
-        return rating;
+    return course;
+  }
+
+  async getCourseRating(id: string) {
+    const { rating } = await this.connection
+      .createQueryBuilder()
+      .select('coalesce(avg(r.rating)::real, 0)', 'rating')
+      .from(Review, 'r')
+      .where('r.course_id = :id and r.state = :state', {
+        id,
+        state: ReviewState.APPROVED,
+      })
+      .getRawOne();
+
+    return rating;
+  }
+
+  async getCourseByLink(link: string): Promise<CourseDto> {
+    const course = await this.getCourse(link, ['teacher', 'subject']);
+    const dto = CourseDto.from(course);
+
+    dto.rating = await this.getCourseRating(course.id);
+
+    return dto;
+  }
+
+  async addCourse(course: CourseAddDto, user: User): Promise<CourseDto> {
+    const subject = await this.subjectRepository.findOne({
+      id: course.subjectId,
+    });
+    const teacher = await this.teacherRepository.findOne({
+      id: course.teacherId,
+    });
+
+    if (!subject || !teacher) {
+      throw ServiceException.create(
+        HttpStatus.NOT_FOUND,
+        'Subject or teacher not found'
+      );
     }
 
-    async getCourseByLink(link: string): Promise<CourseDto> {
-        const course = await this.getCourse(link, ['teacher', 'subject']);
-        const dto = CourseDto.from(course);
+    const existing = await this.courseRepository.findOne({ teacher, subject });
 
-        dto.rating = await this.getCourseRating(course.id);
-        
-        return dto;
+    if (existing) {
+      throw ServiceException.create(
+        HttpStatus.CONFLICT,
+        'Course already exists'
+      );
     }
 
-    async addCourse(course: CourseAddDto, user: User): Promise<CourseDto> {
-        const subject = await this.subjectRepository.findOne({ id: course.subjectId });
-        const teacher = await this.teacherRepository.findOne({ id: course.teacherId });
+    const entity = await this.courseRepository.save(
+      assign(new Course(), {
+        link: subject.link + '-' + teacher.link,
+        teacher,
+        subject,
+      })
+    );
 
-        if (!subject || !teacher) {
-            throw ServiceException.create(HttpStatus.NOT_FOUND, "Subject or teacher not found");
-        }
+    this.telegramService.broadcastPendingCourse(user, entity).catch(e =>
+      this.logger.error('Failed to broadcast a pending course', {
+        course: entity.id,
+        error: e.toString(),
+      })
+    );
 
-        const existing = await this.courseRepository.findOne({ teacher, subject });
+    return CourseDto.from(entity);
+  }
 
-        if (existing) {
-            throw ServiceException.create(HttpStatus.CONFLICT, "Course already exists");
-        }
+  async updateCourse(id: string, update: CourseUpdateDto): Promise<CourseDto> {
+    const course = await this.getCourseById(id, ['teacher', 'subject']);
 
-        const entity = await this.courseRepository.save(assign(
-            new Course(),
-            {
-                link: subject.link + '-' + teacher.link,
-                teacher,
-                subject,
-            }
-        ));
-
-        this.telegramService.broadcastPendingCourse(user, entity)
-            .catch(e => this.logger.error('Failed to broadcast a pending course', {
-                course: entity.id, error: e.toString()
-            }));
-
-        return CourseDto.from(entity);
+    if (update.state != null) {
+      course.state = update.state;
+    }
+    if (update.description != null) {
+      course.description = update.description;
     }
 
-    async updateCourse(id: string, update: CourseUpdateDto): Promise<CourseDto> {
-        const course = await this.getCourseById(id, [ 'teacher', 'subject' ]);
+    const saved = await this.courseRepository.save(course);
+    return CourseDto.from(saved);
+  }
 
-        if (update.state != null) { course.state = update.state; }
-        if (update.description != null) { course.description = update.description; }
+  async deleteCourse(id: string): Promise<void> {
+    const course = await this.getCourseById(id);
 
-        const saved = await this.courseRepository.save(course);
-        return CourseDto.from(saved);
-    }
-
-    async deleteCourse(id: string): Promise<void> {
-        const course = await this.getCourseById(id);
-
-        await course.remove();
-    }
+    await course.remove();
+  }
 }

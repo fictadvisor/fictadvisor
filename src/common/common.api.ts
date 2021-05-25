@@ -1,10 +1,10 @@
-import { FindConditions, ILike, ObjectLiteral } from "typeorm";
-import { PageableQueryDto } from "./common.dto";
+import { FindConditions, ILike, ObjectLiteral } from 'typeorm';
+import { PageableQueryDto } from './common.dto';
 
 type PageableQuery = {
   skip?: number;
   take?: number;
-}
+};
 
 export class ResponseEntity<T> {
   static of<T>(obj: T) {
@@ -16,7 +16,7 @@ export class ResponseEntity<T> {
   static async ofAsync<T>(obj: Promise<T>) {
     return ResponseEntity.of<T>(await obj);
   }
-};
+}
 
 export type SortDirection = 'ASC' | 'DESC';
 
@@ -32,7 +32,9 @@ export class SortableProcessor<E, T extends SortableMap> {
   fallbackSort?: [string, SortDirection];
 
   private getFallbackQuery() {
-    return this.fallbackSort ? { [this.fallbackSort[0]]: this.fallbackSort[1] } : {};
+    return this.fallbackSort
+      ? { [this.fallbackSort[0]]: this.fallbackSort[1] }
+      : {};
   }
 
   toQuery(value: string) {
@@ -58,7 +60,10 @@ export class SortableProcessor<E, T extends SortableMap> {
     return this;
   }
 
-  static of <E, T extends SortableMap = SortableMap>(map: T, defaultKey?: keyof T) {
+  static of<E, T extends SortableMap = SortableMap>(
+    map: T,
+    defaultKey?: keyof T
+  ) {
     const sortable = new SortableProcessor<E, T>();
 
     sortable.map = map;
@@ -66,14 +71,16 @@ export class SortableProcessor<E, T extends SortableMap> {
 
     return sortable;
   }
-};
+}
 
 export class Pageable {
   page: number;
   size: number;
 
   toQuery(): PageableQuery {
-    if (this.page == null || this.size == null) { return {}; }
+    if (this.page == null || this.size == null) {
+      return {};
+    }
 
     return {
       skip: this.page * this.size,
@@ -93,15 +100,17 @@ export class Pageable {
   static from(query: PageableQueryDto): Pageable {
     return Pageable.of(query.page, query.pageSize);
   }
-};
+}
 
 export class Searchable<T> {
   value: string;
   field: keyof T;
 
   toQuery(): FindConditions<T> | ObjectLiteral {
-    if (this.value == null || this.value == '') { return {}; }
-    
+    if (this.value == null || this.value == '') {
+      return {};
+    }
+
     return {
       [this.field]: ILike(`%${this.value.replace('%', '')}%`),
     };
@@ -115,7 +124,7 @@ export class Searchable<T> {
 
     return searchable;
   }
-};
+}
 
 export class Page<T> {
   count: number;
@@ -129,4 +138,4 @@ export class Page<T> {
 
     return page;
   }
-};
+}

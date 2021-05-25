@@ -1,9 +1,9 @@
-import { createParamDecorator, ExecutionContext } from "@nestjs/common";
-import { User } from "src/database/entities/user.entity";
+import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import { User } from 'src/database/entities/user.entity';
 
 export class SecurityContext {
   user?: User;
-};
+}
 
 export const Context = createParamDecorator(
   (data: unknown, ctx: ExecutionContext): SecurityContext => {
@@ -13,5 +13,5 @@ export const Context = createParamDecorator(
     context.user = req.user ?? null;
 
     return context;
-  },
+  }
 );

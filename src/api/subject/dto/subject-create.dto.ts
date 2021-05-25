@@ -1,10 +1,10 @@
 import { slug } from '../../../utils/slug';
 
 export class SubjectCreateDto {
-    name: string;
-    description?: string
+  name: string;
+  description?: string;
 
-    link(): string {
-        return slug(this.name);
-    }
-};
+  link(): string {
+    return slug(this.name);
+  }
+}

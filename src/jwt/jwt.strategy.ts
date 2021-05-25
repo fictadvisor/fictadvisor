@@ -1,11 +1,11 @@
-import { Injectable } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
-import { PassportStrategy } from "@nestjs/passport";
-import { InjectRepository } from "@nestjs/typeorm";
-import { ExtractJwt, Strategy } from "passport-jwt";
-import { User } from "src/database/entities/user.entity";
-import { Repository } from "typeorm";
-import { JwtPayload } from "./jwt.payload";
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { PassportStrategy } from '@nestjs/passport';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ExtractJwt, Strategy } from 'passport-jwt';
+import { User } from 'src/database/entities/user.entity';
+import { Repository } from 'typeorm';
+import { JwtPayload } from './jwt.payload';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -24,4 +24,4 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   async validate(payload: JwtPayload) {
     return await this.userRepository.findOne({ id: payload.sub });
   }
-};
+}

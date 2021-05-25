@@ -19,42 +19,48 @@ const SUBJECT_ITEMS_COUNT = 5;
 
 @Injectable()
 export class SearchService {
-    constructor(
-        @InjectRepository(SubjectSearchIndex)
-        private subjectSearchIndexRepository: Repository<SubjectSearchIndex>,
+  constructor(
+    @InjectRepository(SubjectSearchIndex)
+    private subjectSearchIndexRepository: Repository<SubjectSearchIndex>,
 
-        @InjectRepository(TeacherSearchIndex)
-        private teacherSearchIndexRepository: Repository<TeacherSearchIndex>,
-    ) {}
+    @InjectRepository(TeacherSearchIndex)
+    private teacherSearchIndexRepository: Repository<TeacherSearchIndex>
+  ) {}
 
-    async searchResult(query: SearchableQueryDto): Promise<SearchResultDto> {
-        const teachers = await this.teacherSearchIndexRepository.find({
-            take: TEACHER_ITEMS_COUNT,
-            where: {
-                ...Searchable.of<TeacherSearchIndex>('fullName', query.searchQuery).toQuery(),
-                state: TeacherState.APPROVED,
-            },
-            order: {
-                fullName: 'ASC',
-                rating: 'DESC',
-            }
-        });
+  async searchResult(query: SearchableQueryDto): Promise<SearchResultDto> {
+    const teachers = await this.teacherSearchIndexRepository.find({
+      take: TEACHER_ITEMS_COUNT,
+      where: {
+        ...Searchable.of<TeacherSearchIndex>(
+          'fullName',
+          query.searchQuery
+        ).toQuery(),
+        state: TeacherState.APPROVED,
+      },
+      order: {
+        fullName: 'ASC',
+        rating: 'DESC',
+      },
+    });
 
-        const subjects = await this.subjectSearchIndexRepository.find({
-            take: SUBJECT_ITEMS_COUNT,
-            where: {
-                ...Searchable.of<SubjectSearchIndex>('name', query.searchQuery).toQuery(),
-                state: SubjectState.APPROVED,
-            },
-            order: {
-                name: 'ASC',
-                rating: 'DESC',
-            }
-        });
+    const subjects = await this.subjectSearchIndexRepository.find({
+      take: SUBJECT_ITEMS_COUNT,
+      where: {
+        ...Searchable.of<SubjectSearchIndex>(
+          'name',
+          query.searchQuery
+        ).toQuery(),
+        state: SubjectState.APPROVED,
+      },
+      order: {
+        name: 'ASC',
+        rating: 'DESC',
+      },
+    });
 
-        return SearchResultDto.from(
-            subjects.map(s => SearchSubjectItemDto.from(s)),
-            teachers.map(t => SearchTeacherItemDto.from(t))
-        );
-    }
+    return SearchResultDto.from(
+      subjects.map(s => SearchSubjectItemDto.from(s)),
+      teachers.map(t => SearchTeacherItemDto.from(t))
+    );
+  }
 }

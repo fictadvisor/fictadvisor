@@ -3,27 +3,24 @@ import { SubjectSearchIndex } from '../../../database/entities/subject-search-in
 import { assign } from '../../../common/common.object';
 
 export class SearchSubjectItemDto {
-    id: string;
+  id: string;
 
-    link: string;
+  link: string;
 
-    name: string;
+  name: string;
 
-    @Expose({ name: 'teacher_count' })
-    teacherCount: number;
+  @Expose({ name: 'teacher_count' })
+  teacherCount: number;
 
-    rating: number;
+  rating: number;
 
-    public static from(i: SubjectSearchIndex): SearchSubjectItemDto {
-        return assign(
-            new SearchSubjectItemDto(),
-            {
-                id: i.id,
-                link: i.link,
-                name: i.name,
-                teacherCount: i.teacherCount,
-                rating: i.rating
-            }
-        )
-    }
+  public static from(i: SubjectSearchIndex): SearchSubjectItemDto {
+    return assign(new SearchSubjectItemDto(), {
+      id: i.id,
+      link: i.link,
+      name: i.name,
+      teacherCount: i.teacherCount,
+      rating: i.rating,
+    });
+  }
 }

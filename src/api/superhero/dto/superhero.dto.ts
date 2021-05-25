@@ -1,30 +1,30 @@
-import { assign } from "src/common/common.object";
-import { Superhero, SuperheroState } from "src/database/entities/superhero.entity";
+import { assign } from 'src/common/common.object';
+import {
+  Superhero,
+  SuperheroState,
+} from 'src/database/entities/superhero.entity';
 
 export class SuperheroDto {
-    name: string;
+  name: string;
 
-    username: string;
+  username: string;
 
-    year: number;
+  year: number;
 
-    dorm: boolean;
+  dorm: boolean;
 
-    state: SuperheroState;
+  state: SuperheroState;
 
-    image: string;
+  image: string;
 
-    public static from(h: Superhero) {
-        return assign(
-            new SuperheroDto(),
-            {
-                name: h.name,
-                username: h.username,
-                year: h.year,
-                dorm: h.dorm,
-                state: h.state,
-                image: h.user?.image ?? '/assets/avatar.png',
-            }
-        );
-    }
-};
+  public static from(h: Superhero) {
+    return assign(new SuperheroDto(), {
+      name: h.name,
+      username: h.username,
+      year: h.year,
+      dorm: h.dorm,
+      state: h.state,
+      image: h.user?.image ?? '/assets/avatar.png',
+    });
+  }
+}

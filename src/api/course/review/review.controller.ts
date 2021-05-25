@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { Page } from 'src/common/common.api';
 import { SearchableQueryDto } from 'src/common/common.dto';
 import { Authorize } from 'src/security/security.authorization';
@@ -11,42 +20,38 @@ import { ReviewService } from './review.service';
 
 @Controller()
 export class ReviewController {
-    constructor(
-        private reviewService: ReviewService
-    ) {}
+  constructor(private reviewService: ReviewService) {}
 
-    @Get('/courses/:link/reviews')
-    getReviews(
-        @Param('link') link: string,
-        @Query() query: SearchableQueryDto
-    ): Promise<Page<CourseReviewDto>> {
-        return this.reviewService.getReviews(link, query);
-    }
+  @Get('/courses/:link/reviews')
+  getReviews(
+    @Param('link') link: string,
+    @Query() query: SearchableQueryDto
+  ): Promise<Page<CourseReviewDto>> {
+    return this.reviewService.getReviews(link, query);
+  }
 
-    @Authorize()
-    @Post('/courses/:link/reviews')
-    createReview(
-        @Param('link') link: string,
-        @Context() ctx: SecurityContext,
-        @Body() body: CreateReviewDto
-    ): Promise<ReviewDto> {
-        return this.reviewService.createReview(link, ctx.user, body);
-    }
+  @Authorize()
+  @Post('/courses/:link/reviews')
+  createReview(
+    @Param('link') link: string,
+    @Context() ctx: SecurityContext,
+    @Body() body: CreateReviewDto
+  ): Promise<ReviewDto> {
+    return this.reviewService.createReview(link, ctx.user, body);
+  }
 
-    @Authorize({ telegram: true })
-    @Put('/reviews/:id')
-    updateReview(
-        @Param('id') id: string,
-        @Body() body: UpdateReviewDto
-    ): Promise<ReviewDto> {
-        return this.reviewService.updateReview(id, body);
-    }
+  @Authorize({ telegram: true })
+  @Put('/reviews/:id')
+  updateReview(
+    @Param('id') id: string,
+    @Body() body: UpdateReviewDto
+  ): Promise<ReviewDto> {
+    return this.reviewService.updateReview(id, body);
+  }
 
-    @Authorize({ telegram: true })
-    @Delete('/reviews/:id')
-    deleteReview(
-        @Param('id') id: string
-    ): Promise<void> {
-        return this.reviewService.deleteReview(id);
-    }
+  @Authorize({ telegram: true })
+  @Delete('/reviews/:id')
+  deleteReview(@Param('id') id: string): Promise<void> {
+    return this.reviewService.deleteReview(id);
+  }
 }

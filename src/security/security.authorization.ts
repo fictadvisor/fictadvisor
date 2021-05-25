@@ -1,76 +1,97 @@
-import { applyDecorators, CanActivate, ExecutionContext, HttpStatus, Injectable, SetMetadata, UseGuards } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
-import { Reflector } from "@nestjs/core";
-import { AuthGuard } from "@nestjs/passport";
-import { Request } from "express";
-import { ServiceException } from "src/common/common.exception";
-import { User, UserRole } from "src/database/entities/user.entity";
+import {
+  applyDecorators,
+  CanActivate,
+  ExecutionContext,
+  HttpStatus,
+  Injectable,
+  SetMetadata,
+  UseGuards,
+} from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { Reflector } from '@nestjs/core';
+import { AuthGuard } from '@nestjs/passport';
+import { Request } from 'express';
+import { ServiceException } from 'src/common/common.exception';
+import { User, UserRole } from 'src/database/entities/user.entity';
 
 type TelegramAuthenticationParams = {
-    telegram: true;
+  telegram: true;
 };
 
 type OAuthAuthenticationParams = {
-    telegram?: false;
-    roles?: UserRole[];
+  telegram?: false;
+  roles?: UserRole[];
 };
 
-export type AuthorizeParams = TelegramAuthenticationParams | OAuthAuthenticationParams;
+export type AuthorizeParams =
+  | TelegramAuthenticationParams
+  | OAuthAuthenticationParams;
 
-export const Authorize = (params: AuthorizeParams = {}) => { 
-    if (params.telegram == true) {
-        return applyDecorators(UseGuards(TelegramAuthorizationGuard));
-    }
+export const Authorize = (params: AuthorizeParams = {}) => {
+  if (params.telegram == true) {
+    return applyDecorators(UseGuards(TelegramAuthorizationGuard));
+  }
 
-    return applyDecorators(
-        SetMetadata('oauth.roles', params.roles ?? Object.values(UserRole)),
-        UseGuards(OAuthAuthorizationGuard)
-    );
+  return applyDecorators(
+    SetMetadata('oauth.roles', params.roles ?? Object.values(UserRole)),
+    UseGuards(OAuthAuthorizationGuard)
+  );
 };
 
 @Injectable()
 export class TelegramAuthorizationGuard implements CanActivate {
-    constructor(
-        private configService: ConfigService
-    ) {}
+  constructor(private configService: ConfigService) {}
 
-    canActivate(context: ExecutionContext) {
-        const request = context.switchToHttp().getRequest<Request>();
-        const [realm, token] = (request.headers.authorization ?? '').split(' ');
+  canActivate(context: ExecutionContext) {
+    const request = context.switchToHttp().getRequest<Request>();
+    const [realm, token] = (request.headers.authorization ?? '').split(' ');
 
-        if (realm != 'Telegram' || token != this.configService.get<string>('telegram.botToken')) {
-            throw ServiceException.create(HttpStatus.UNAUTHORIZED, { message: 'You need authorization for this action' }); 
-        }
-
-        return true;
+    if (
+      realm != 'Telegram' ||
+      token != this.configService.get<string>('telegram.botToken')
+    ) {
+      throw ServiceException.create(HttpStatus.UNAUTHORIZED, {
+        message: 'You need authorization for this action',
+      });
     }
-};
- 
+
+    return true;
+  }
+}
+
 @Injectable()
 export class OAuthAuthorizationGuard extends AuthGuard('jwt') {
-    constructor (
-        private readonly reflector: Reflector
-    ) { super(); }
+  constructor(private readonly reflector: Reflector) {
+    super();
+  }
 
-    handleRequest(error: any, user: any) {
-        if (error || !user) { 
-            throw error ?? ServiceException.create(HttpStatus.UNAUTHORIZED, { message: 'You need authorization for this action' }); 
-        }
-
-        return user;
+  handleRequest(error: any, user: any) {
+    if (error || !user) {
+      throw error ??
+        ServiceException.create(HttpStatus.UNAUTHORIZED, {
+          message: 'You need authorization for this action',
+        });
     }
 
-    async canActivate(context: ExecutionContext) {
-        if (!(await super.canActivate(context))) { return false; }
+    return user;
+  }
 
-        const request = context.switchToHttp().getRequest();
-        const user: User = request.user;
-        const roles = this.reflector.get<UserRole[]>('oauth.roles', context.getHandler()) ?? [];
-
-        if (!roles.some(role => user.role === role)) {
-            throw ServiceException.create(HttpStatus.FORBIDDEN, { message: 'You do not have permissions for this action' });
-        }
-
-        return true;
+  async canActivate(context: ExecutionContext) {
+    if (!(await super.canActivate(context))) {
+      return false;
     }
-};
+
+    const request = context.switchToHttp().getRequest();
+    const user: User = request.user;
+    const roles =
+      this.reflector.get<UserRole[]>('oauth.roles', context.getHandler()) ?? [];
+
+    if (!roles.some(role => user.role === role)) {
+      throw ServiceException.create(HttpStatus.FORBIDDEN, {
+        message: 'You do not have permissions for this action',
+      });
+    }
+
+    return true;
+  }
+}

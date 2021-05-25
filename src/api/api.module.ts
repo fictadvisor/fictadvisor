@@ -9,12 +9,12 @@ import { TeacherContact } from 'src/database/entities/teacher-contact.entity';
 import { StudentResourceService } from './student-resource/student-resource.service';
 import { StudentResourceController } from './student-resource/student-resource.controller';
 import { StudentResource } from 'src/database/entities/student-resource.entity';
-import { Subject } from "../database/entities/subject.entity";
-import { SubjectSearchIndex } from "../database/entities/subject-search-index";
-import { SubjectView } from "../database/entities/subject-view.entity";
-import { SubjectController } from "./subject/subject.controller";
-import { SubjectService } from "./subject/subject.service";
-import { CourseSearchIndex } from "../database/entities/course-search-index.entity";
+import { Subject } from '../database/entities/subject.entity';
+import { SubjectSearchIndex } from '../database/entities/subject-search-index';
+import { SubjectView } from '../database/entities/subject-view.entity';
+import { SubjectController } from './subject/subject.controller';
+import { SubjectService } from './subject/subject.service';
+import { CourseSearchIndex } from '../database/entities/course-search-index.entity';
 import { OAuthController } from './oauth/oauth.controller';
 import { OAuthService } from './oauth/oauth.service';
 import { User } from 'src/database/entities/user.entity';
@@ -25,7 +25,7 @@ import { CourseController } from './course/course.controller';
 import { CourseService } from './course/course.service';
 import { Review } from 'src/database/entities/review.entity';
 import { Course } from 'src/database/entities/course.entity';
-import { TeacherCourseSearchIndex } from "../database/entities/teacher-course-search-index";
+import { TeacherCourseSearchIndex } from '../database/entities/teacher-course-search-index';
 import { ReviewController } from './course/review/review.controller';
 import { ReviewService } from './course/review/review.service';
 import { TelegramService } from 'src/telegram/telegram.service';
@@ -40,27 +40,25 @@ import { Superhero } from 'src/database/entities/superhero.entity';
 @Module({
   imports: [
     JwtModule,
-    TypeOrmModule.forFeature(
-      [
-        Teacher,
-        TeacherSearchIndex,
-        TeacherView,
-        TeacherContact,
-        TeacherCourseSearchIndex,
-        StudentResource,
-        Subject,
-        SubjectSearchIndex,
-        SubjectView,
-        CourseSearchIndex,
-        User,
-        RefreshToken,
-        Review,
-        Course,
-        StatEntry,
-        TeacherReviewView,
-        Superhero,
-      ]
-    )
+    TypeOrmModule.forFeature([
+      Teacher,
+      TeacherSearchIndex,
+      TeacherView,
+      TeacherContact,
+      TeacherCourseSearchIndex,
+      StudentResource,
+      Subject,
+      SubjectSearchIndex,
+      SubjectView,
+      CourseSearchIndex,
+      User,
+      RefreshToken,
+      Review,
+      Course,
+      StatEntry,
+      TeacherReviewView,
+      Superhero,
+    ]),
   ],
   controllers: [
     TeacherController,

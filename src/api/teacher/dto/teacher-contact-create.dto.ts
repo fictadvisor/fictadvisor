@@ -1,4 +1,4 @@
 export class TeacherContactCreateDto {
-	name: string;
-	value: string;
+  name: string;
+  value: string;
 }

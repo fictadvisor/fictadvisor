@@ -9,7 +9,9 @@ describe('StudentResourceController', () => {
       controllers: [StudentResourceController],
     }).compile();
 
-    controller = module.get<StudentResourceController>(StudentResourceController);
+    controller = module.get<StudentResourceController>(
+      StudentResourceController
+    );
   });
 
   it('should be defined', () => {

@@ -1,6 +1,6 @@
-import { Expose } from "class-transformer";
+import { Expose } from 'class-transformer';
 
 export class RefreshTokenDto {
-    @Expose({ name: 'refresh_token' })
-    refreshToken: string;
-};
+  @Expose({ name: 'refresh_token' })
+  refreshToken: string;
+}
