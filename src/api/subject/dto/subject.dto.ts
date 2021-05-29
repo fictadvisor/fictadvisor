@@ -32,6 +32,7 @@ export class SubjectDto {
       name: v.name,
       description: v.description,
       teacherCount: v.teacherCount,
+      state: v.state,
       rating: v.rating,
       createdAt: v.createdAt,
       updatedAt: v.updatedAt,
