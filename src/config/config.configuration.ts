@@ -11,8 +11,8 @@ export default () => ({
   security: {
     secret: process.env.SECRET ?? '42',
     jwt: {
-      ttl: process.env.JWT_TTL ?? '604800s',
-      refreshTtl: process.env.JWT_REFRESH_TTL ?? '604800s',
+      ttl: process.env.JWT_TTL ?? '3600s',
+      refreshTtl: process.env.JWT_REFRESH_TTL ?? '1209600s',
     },
   },
   database: {

@@ -3,13 +3,15 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RefreshToken } from 'src/database/entities/refresh-token.entity';
 import { User } from 'src/database/entities/user.entity';
-import { LessThanOrEqual, Repository } from 'typeorm';
+import { MoreThanOrEqual, Repository } from 'typeorm';
 import { OAuthTelegramDto } from './dto/oauth-telegram.dto';
 import { OAuthTokenDto } from './dto/oauth-token.dto';
 import { v4 as uuid } from 'uuid';
 import { assign } from 'src/common/common.object';
 import { JwtPayload } from 'src/jwt/jwt.payload';
 import { ServiceException } from 'src/common/common.exception';
+import ms from 'ms';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class OAuthService {
@@ -18,7 +20,8 @@ export class OAuthService {
     private userRepository: Repository<User>,
     @InjectRepository(RefreshToken)
     private refreshTokenRepository: Repository<RefreshToken>,
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    private configService: ConfigService
   ) {}
 
   private async getToken(user: User): Promise<OAuthTokenDto> {
@@ -54,8 +57,9 @@ export class OAuthService {
   }
 
   async refresh(refreshToken: string): Promise<OAuthTokenDto> {
+    const ttl = ms(this.configService.get<string>('security.jwt.refreshTtl'));
     const token = await this.refreshTokenRepository.findOne(
-      { token: refreshToken, createdAt: LessThanOrEqual(Date.now()) },
+      { token: refreshToken, createdAt: MoreThanOrEqual(new Date(Date.now() - ttl)) },
       { relations: ['user'] }
     );
 
