@@ -29,7 +29,7 @@ const Rating = ({ rating, children, style, className, ...props }: RatingProperti
 
   return (
     <div 
-      className={mergeClassName('rating', className)}
+      className={mergeClassName('rating c-secondary', className)}
       style={{ ...style, visibility: !hasRating ? 'visible' : 'hidden' }}
       {...props}
     >

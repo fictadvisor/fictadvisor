@@ -20,7 +20,7 @@ const SuperheroContact = (props: SuperheroContactProperties) => {
           </span>
           <span className="c-secondary">
             {
-              `${props.dorm ? 'живе в гуртожитку, ' : ''}${props.year} курс`
+              `${props.dorm ? 'живе в гуртожитку, ' : ''}${props.year > 4 ? 'магістратура' : `${props.year} курс`}`
             }
           </span>
         </div>

@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import { useRouter } from "next/router";
 import React, { useContext } from "react";
 import { useQuery } from "react-query";
@@ -9,11 +10,28 @@ export const AuthenticationContext = React.createContext(null);
 
 export const AuthenticationProvider = ({ children }) => {
   const jwt = oauth.getToken();
-  const { data } = useQuery(
+
+  const { error, isFetching, data } = useQuery(
     ['oauth', jwt?.accessToken, jwt?.refreshToken], 
     () => api.oauth.getMe(jwt?.accessToken), 
-    { keepPreviousData: false, enabled: jwt != null }
+    { keepPreviousData: false, enabled: jwt != null, retry: false }
   );
+
+  if (error && !isFetching) {
+    const status = (error as AxiosError).response?.status;
+
+    if (jwt && status === 401 || status === 403) {
+      api.oauth.refresh(jwt.refreshToken)
+        .then((t) => oauth.saveToken(t.access_token, t.refresh_token))
+        .catch((e) => {
+          if (e.response?.status != 500) {
+            oauth.logout();
+          }
+        });
+    } else {
+      oauth.logout();
+    }
+  }
 
   return (
     <AuthenticationContext.Provider value={data}>
