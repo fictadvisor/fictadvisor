@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as dateformat from 'dateformat';
-import { Subject } from 'src/database/entities/subject.entity';
-import { Teacher } from 'src/database/entities/teacher.entity';
+import { Subject, SubjectState } from 'src/database/entities/subject.entity';
+import { Teacher, TeacherState } from 'src/database/entities/teacher.entity';
 import { Repository } from 'typeorm';
 import { create } from 'xmlbuilder2';
 import { writeFile } from 'fs';
@@ -28,11 +28,11 @@ export class SitemapService {
     });
 
     const teachers = await this.teacherRepository.find({
-      where: {},
+      where: { state: TeacherState.APPROVED },
       select: ['link', 'updatedAt'],
     });
     const subjects = await this.subjectRepository.find({
-      where: {},
+      where: { state: SubjectState.APPROVED },
       select: ['link', 'updatedAt'],
     });
 
