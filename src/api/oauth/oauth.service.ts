@@ -10,7 +10,7 @@ import { v4 as uuid } from 'uuid';
 import { assign } from 'src/common/common.object';
 import { JwtPayload } from 'src/jwt/jwt.payload';
 import { ServiceException } from 'src/common/common.exception';
-import ms from 'ms';
+import * as ms from 'ms';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
