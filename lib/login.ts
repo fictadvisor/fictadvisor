@@ -1,3 +1,4 @@
+import { NextRouter } from 'next/router';
 import config from '../config';
 import api from './api';
 import { useAuthentication } from './context/AuthenticationContext';
@@ -17,16 +18,26 @@ const openAuthenticationDialog = () => new Promise<any>((resolve, reject) => {
   }
 });
 
-export const tryTelegramLogin = async (authentication: ReturnType<typeof useAuthentication>) => {
+type UpdateFunction = ReturnType<typeof useAuthentication>['update'];
+
+const tryTelegramLogin = async (update: UpdateFunction) => {
   try {
     const data = await openAuthenticationDialog();
     const token = await api.oauth.exchange(data);
 
     oauth.saveToken(token.access_token, token.refresh_token);
-    authentication.update();
+    update();
 
     return true;
   } catch (e) {
     return false;
+  }
+};
+
+export const loginTelegram = async (router: NextRouter, loginUrl: string, update: UpdateFunction) => {
+  const logged = await tryTelegramLogin(update);
+
+  if (!logged && router != null && router.isReady) {
+    router.push(loginUrl);
   }
 };

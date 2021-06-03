@@ -66,7 +66,7 @@ const TeachersPage = () => {
               className="w-full" 
               onClick={() => {
                 if (!authentication.user) {
-                  window.location.href = authentication.loginUrl;
+                  authentication.login();
                   return;
                 }
 

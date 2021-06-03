@@ -85,7 +85,7 @@ const CourseBlock = ({ id, link, ...props }: CourseBlockProperties) => {
               className="w-full" 
               onClick={() => {
                 if (!authentication.user) {
-                  window.location.href = authentication.loginUrl;
+                  authentication.login();
                   return;
                 }
 

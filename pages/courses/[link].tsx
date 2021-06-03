@@ -67,7 +67,8 @@ const CoursePage = ({ course }) => {
   const [sortType, _setSortType] = useState(0);
   const [page, _setPage] = useState(0);
 
-  const { user, getToken, loginUrl } = useAuthentication();
+  const authentication = useAuthentication();
+  const { user, getToken, loginUrl } = authentication;
 
   const { queryReady, withQueryParam } = useQueryParams((query) => {
     _setSortType(toInteger(query.sb, sortType));
@@ -121,7 +122,7 @@ const CoursePage = ({ course }) => {
               className="w-full" 
               onClick={() => {
                 if (!user) {
-                  window.location.href = loginUrl;
+                  authentication.login();
                   return;
                 }
 

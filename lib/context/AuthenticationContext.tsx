@@ -4,6 +4,7 @@ import React, { useContext, useState } from "react";
 import { useQuery } from "react-query";
 import config from "../../config";
 import api from "../api";
+import { loginTelegram } from '../login';
 import oauth from "../oauth";
 
 export const AuthenticationContext = React.createContext(null);
@@ -51,11 +52,11 @@ const logoutUrl = '/oauth?logout=true'
 export const useAuthentication = () => {
   const router = useRouter();
 
-  const login = () => window.location.href = loginUrl;
   const logout = () => router.push(logoutUrl);
   const getToken = () => oauth.getToken()?.accessToken;
   const { user, update: _update } = useContext(AuthenticationContext);
   const update = () => _update(oauth.getToken());
+  const login = () => loginTelegram(router, loginUrl, update);
 
   return {
     user,
