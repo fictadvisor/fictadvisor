@@ -14,10 +14,12 @@ import * as ms from 'ms';
 import { ConfigService } from '@nestjs/config';
 import { ExchangeTokenDto } from './dto/exchange-token.dto';
 import { TelegramService } from 'src/telegram/telegram.service';
-import { createHmac } from 'crypto';
+import { createHmac, createHash } from 'crypto';
 
 @Injectable()
 export class OAuthService {
+  private tokenSignature: Buffer;
+
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
@@ -26,7 +28,11 @@ export class OAuthService {
     private jwtService: JwtService,
     private configService: ConfigService,
     private telegramService: TelegramService,
-  ) {}
+  ) {
+    this.tokenSignature = createHash('sha256')
+      .update(this.configService.get<string>('telegram.botToken'))
+      .digest();
+  }
 
   private async getToken(user: User): Promise<OAuthTokenDto> {
     const refreshToken = uuid();
@@ -44,19 +50,20 @@ export class OAuthService {
     return OAuthTokenDto.of(this.jwtService.sign(payload), refreshToken);
   }
 
-  private isValidExchange(token: ExchangeTokenDto) {
+  private isValidExchange({ hash, ...token }: ExchangeTokenDto) {
     try {
       if (typeof(token) !== 'object') {
         return false;
       }
 
-      const keys = Object.keys(token).filter(k => k != 'hash').sort();
-      const data = keys.map(key => `${key}=${token[key]}`).join('\n');
-      const signature = createHmac('sha256', this.configService.get<string>('telegram.botToken'))
-        .update(data)
-        .digest('hex');
+      const signature = createHmac('sha256', this.tokenSignature)
+        .update(
+          Object.keys(token)
+            .sort()
+            .map(key => `${key}=${token[key]}`).join('\n')
+        ).digest('hex');
 
-      return signature === token.hash;
+      return signature === hash;
     } catch (e) {
       return false;
     }
