@@ -12,6 +12,9 @@ import { JwtPayload } from 'src/jwt/jwt.payload';
 import { ServiceException } from 'src/common/common.exception';
 import * as ms from 'ms';
 import { ConfigService } from '@nestjs/config';
+import { ExchangeTokenDto } from './dto/exchange-token.dto';
+import { TelegramService } from 'src/telegram/telegram.service';
+import { createHmac } from 'crypto';
 
 @Injectable()
 export class OAuthService {
@@ -21,7 +24,8 @@ export class OAuthService {
     @InjectRepository(RefreshToken)
     private refreshTokenRepository: Repository<RefreshToken>,
     private jwtService: JwtService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private telegramService: TelegramService,
   ) {}
 
   private async getToken(user: User): Promise<OAuthTokenDto> {
@@ -38,6 +42,45 @@ export class OAuthService {
       .save();
 
     return OAuthTokenDto.of(this.jwtService.sign(payload), refreshToken);
+  }
+
+  private isValidExchange(token: ExchangeTokenDto) {
+    try {
+      if (typeof(token) !== 'object') {
+        return false;
+      }
+
+      const keys = Object.keys(token).filter(k => k != 'hash').sort();
+      const data = keys.map(key => `${key}=${token[key]}`).join('\n');
+      const signature = createHmac('sha256', this.configService.get<string>('telegram.botToken'))
+        .update(data)
+        .digest('hex');
+
+      return signature === token.hash;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async exchange(token: ExchangeTokenDto): Promise<OAuthTokenDto> {
+    if (!this.isValidExchange(token)) {
+      throw ServiceException.create(HttpStatus.FORBIDDEN, 'Invalid Telegram credentials');
+    }
+
+    const image = await this.telegramService.saveUserPhoto(token.id, token.photo_url);
+
+    const dto = assign(
+      new OAuthTelegramDto(),
+      {
+        telegramId: token.id,
+        username: token.username,
+        firstName: token.first_name,
+        lastName: token.last_name,
+        image,
+      }
+    );
+
+    return await this.login(dto);
   }
 
   async login(oauth: OAuthTelegramDto): Promise<OAuthTokenDto> {

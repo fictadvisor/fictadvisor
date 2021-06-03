@@ -9,6 +9,12 @@ import { Teacher } from 'src/database/entities/teacher.entity';
 import { Superhero } from 'src/database/entities/superhero.entity';
 import { Subject } from '../database/entities/subject.entity';
 import { TeacherContact } from '../database/entities/teacher-contact.entity';
+import { createHmac } from 'crypto';
+import { writeFile as _writeFile } from 'fs';
+
+import axios from 'axios';
+
+const writeFile = (path: string, data: any) => new Promise<void>((resolve, reject) => _writeFile(path, data, {}, (err) => err ? reject(err) : resolve()));
 
 @Injectable()
 export class TelegramService {
@@ -34,6 +40,26 @@ export class TelegramService {
     }
 
     return chunks;
+  }
+
+  private getImageKey(id: number) {
+    return createHmac('sha256', this.configService.get<string>('security.secret'))
+        .update(id.toString())
+        .digest('hex');
+  }
+
+  public async saveUserPhoto(id: number, url: string) {
+    try {
+      const file = `images/${this.getImageKey(id)}.jpg`;
+      const imagePath = `${this.configService.get<string>('static.dir')}/${file}`;
+      const { data } = await axios.get(url.toString(), { responseType: 'arraybuffer' });
+
+      await writeFile(imagePath, data);
+
+      return `/cdn/${file}`;
+    } catch (e) {
+      return null;
+    }
   }
 
   /**
