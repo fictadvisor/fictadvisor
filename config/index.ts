@@ -3,6 +3,7 @@ const config = {
   logo: '/assets/logo.png',
   faculty: 'ФІОТ',
   source: 'https://github.com/fictadvisor',
+  botId: '1699479241',
   contacts: {
     bot: 'fictadvisor_bot',
     feedbackBot: 'fict_robot',
@@ -22,7 +23,6 @@ const config = {
     { text: 'Супергерої', href: '/superheroes' },
     { text: 'Допомога', href: '/help' },
   ],
-  env: (key, defaultValue: string = null) => process.env[key] ?? defaultValue,
 };
 
 export default config;

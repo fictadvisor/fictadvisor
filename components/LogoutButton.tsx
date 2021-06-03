@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { useAuthentication } from "../lib/context/AuthenticationContext";
+import oauth from '../lib/oauth';
 import Button from "./ui/Button";
 import LogoutIcon from "./ui/icons/LogoutIcon";
 import SettingsIcon from "./ui/icons/SettingsIcon";
@@ -44,16 +45,16 @@ const LogoutButton = ({ authentication, compact, ...props }: LogoutButtonPropert
           {name}
         </Button>
       }
-      <Link href={authentication.logoutUrl}>
-        <a className="simple">
-          <Button 
-            title="Вийти"
-            style={{ borderRadius: '0 8px 8px 0' }}
-          >
-              <LogoutIcon style={{ width: '18px', height: '18px', margin: '-2px -8px 0' }} />
-          </Button>
-        </a>
-      </Link>
+      <Button 
+        title="Вийти"
+        style={{ borderRadius: '0 8px 8px 0' }}
+        onClick={() => {
+          oauth.logout();
+          authentication.update();
+        }}
+      >
+          <LogoutIcon style={{ width: '18px', height: '18px', margin: '-2px -8px 0' }} />
+      </Button>
     </div>
   );
 };

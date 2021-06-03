@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { useRouter } from "next/router";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useQuery } from "react-query";
 import config from "../../config";
 import api from "../api";
@@ -9,7 +9,7 @@ import oauth from "../oauth";
 export const AuthenticationContext = React.createContext(null);
 
 export const AuthenticationProvider = ({ children }) => {
-  const jwt = oauth.getToken();
+  const [jwt, setJwt] = useState(oauth.getToken());
 
   const { error, isFetching, data } = useQuery(
     ['oauth', jwt?.accessToken, jwt?.refreshToken], 
@@ -33,8 +33,13 @@ export const AuthenticationProvider = ({ children }) => {
     }
   }
 
+  const context = {
+    user: data,
+    update: (token) => setJwt(token),
+  };
+
   return (
-    <AuthenticationContext.Provider value={data}>
+    <AuthenticationContext.Provider value={context}>
       {children}
     </AuthenticationContext.Provider>
   );
@@ -49,10 +54,12 @@ export const useAuthentication = () => {
   const login = () => window.location.href = loginUrl;
   const logout = () => router.push(logoutUrl);
   const getToken = () => oauth.getToken()?.accessToken;
-  const user = useContext(AuthenticationContext);
+  const { user, update: _update } = useContext(AuthenticationContext);
+  const update = () => _update(oauth.getToken());
 
   return {
     user,
+    update,
     getToken,
     loginUrl,
     logoutUrl,
