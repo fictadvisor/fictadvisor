@@ -50,7 +50,7 @@ const STATE_MESSAGES = {
 const Rating = ({ rating }) => {
   return (
     rating && rating > 0 
-      ? (<div className="rating c-secondary" style={{ marginLeft: '5px' }}>{+rating.toFixed(2)}<StarIcon /></div>)
+      ? (<div className="rating c-secondary" style={{ paddingTop: '1px' }}>{+rating.toFixed(2)}<StarIcon /></div>)
       : null
   );
 };

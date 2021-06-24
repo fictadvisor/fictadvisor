@@ -56,8 +56,8 @@ textarea::placeholder {
 button {
   background-color: #242C37;
   border-radius: 8px;
+  padding: 13px 24px 15px;
   height: 40px;
-  padding: 14px 24px;
   color: #DEE3EA;
   font-size: 14px;
   font-weight: 500;

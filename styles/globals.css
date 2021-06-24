@@ -107,6 +107,10 @@ a > .block:hover {
   margin: 0 5px 5px 0px;
 }
 
+.tag-group > .tag:last-of-type {
+  margin-right: 10px;
+}
+
 .title {
   font-size: 20px;
   font-weight: bold;
@@ -156,7 +160,6 @@ a.read-more {
   .rating > svg {
     width: 12px;
     height: 12px;
-    margin: auto 0 -1px 3px;
   }
 }
 
