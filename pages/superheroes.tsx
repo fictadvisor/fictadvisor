@@ -118,7 +118,7 @@ const SuperheroesPage = () => {
       </div>
       {
         (data && !error && data.count > (page + 1) * PROPERTIES.pageSize) &&
-        <Button loading={isLoading || isFetching} className="w-full" onClick={() => setPage(page + 1)}>Завантажити ще</Button>
+        <Button loading={isLoading || isFetching} className="w-full m-t" onClick={() => setPage(page + 1)}>Завантажити ще</Button>
       }
     </PageLayout>
   )
