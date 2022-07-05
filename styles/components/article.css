@@ -1,0 +1,26 @@
+
+.article {
+    max-width: 100%;
+    overflow: clip;
+    font-size: 18px;
+}
+
+.article a:visited:not(.simple), a:link:not(.simple) {
+    color: #f56b6b;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.article a:hover:not(.simple) {
+    color: var(--accent-text-color);
+}
+
+.article a.simple {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+.article pre, code {
+    background-color: #151A21;
+    color: var(--secondary-text-color);
+}
