@@ -72,10 +72,10 @@ const SuperheroesPage = () => {
       <p>
         Супергерой — це студент, який допомогає абітурієнтам та молодшим курсам з їх питаннями та проблемами. 
         <br />
-        Якщо ти потребуєш допомоги, не соромься їм писати.
+        Якщо ти потребуєш допомоги, не соромся їм писати.
       </p>
       <p>
-        У разі некоректної поведінки супергероя, будь ласка, напишіть нам до бота зворотнього зв'язку: <a href={`https://t.me/${config.contacts.feedbackBot}`} target="_blank">@{config.contacts.feedbackBot}</a>
+        У разі некоректної поведінки супергероя, будь ласка, напишіть нам до бота зворотного зв'язку: <a href={`https://t.me/${config.contacts.feedbackBot}`} target="_blank">@{config.contacts.feedbackBot}</a>
       </p>
       {
         superheroData 
