@@ -9,13 +9,13 @@ const HelpPage = () => {
     >
       <p>
         Відповіді на поширені запитання можна знайти нижче. 
-        У разі, якщо тебе цікавить щось інше або виникли проблеми при роботі з сайтом, звертайся до нас через бота зворотнього зв'язку: <a href={`https://t.me/${config.contacts.feedbackBot}`} target="_blank">@{config.contacts.feedbackBot}</a>. 
+        У разі, якщо тебе цікавить щось інше або виникли проблеми при роботі з сайтом, звертайся до нас через бота зворотного зв'язку: <a href={`https://t.me/${config.contacts.feedbackBot}`} target="_blank">@{config.contacts.feedbackBot}</a>.
       </p>
       <p className="title">Поширені запитання</p>
       <div className="faq">
         <CollapsePanel title="Як виправити або додати інформацію до сайту?">
           <p style={{ margin: '0' }}>
-            Якщо ти бачиш помилку в інформації, що розміщена на сайті або хочеш щось додати, напиши нам через бота зворотнього зв'язку: <a href={`https://t.me/${config.contacts.feedbackBot}`} target="_blank">@{config.contacts.feedbackBot}</a>.
+            Якщо ти бачиш помилку в інформації, що розміщена на сайті, або хочеш щось додати, напиши нам через бота зворотного зв'язку: <a href={`https://t.me/${config.contacts.feedbackBot}`} target="_blank">@{config.contacts.feedbackBot}</a>.
           </p>
         </CollapsePanel>
         <CollapsePanel title="Як залишити відгук?">
@@ -40,7 +40,7 @@ const HelpPage = () => {
           <p style={{ margin: '0' }}>
             Якщо твої права порушують, обов'язково звертайся до студради {config.faculty}. 
             <br/><br/>
-            Бот зворотнього зв'язку: <a href={`https://t.me/${config.contacts.feedbackBot}`} target="_blank">@{config.contacts.feedbackBot}</a>
+            Бот зворотного зв'язку: <a href={`https://t.me/${config.contacts.feedbackBot}`} target="_blank">@{config.contacts.feedbackBot}</a>
             <br/> 
             Голова студради {config.faculty}: <a href={`https://t.me/${config.contacts.scHead}`} target="_blank">@{config.contacts.scHead}</a> 
           </p>
@@ -49,9 +49,9 @@ const HelpPage = () => {
           <p style={{ margin: '0' }}>
             Інформація про вступ до студради {config.faculty} та КПІ публікується на студентських каналах Telegram приблизно на початку навчального року. 
             <br/><br/>
-            Якщо у тебе є якісь ідеї та мотивація, то чекати набору не обов'язково. Просто зв'яжись із студрадою {config.faculty} та розкажи про свій задум. 
+            Якщо у тебе є певні ідеї та мотивація, то чекати набору не обов'язково. Просто зв'яжись зі студрадою {config.faculty} та розкажи про свій задум.
             <br/><br/>
-            Бот зворотнього зв'язку: <a href={`https://t.me/${config.contacts.feedbackBot}`} target="_blank">@{config.contacts.feedbackBot}</a>
+            Бот зворотного зв'язку: <a href={`https://t.me/${config.contacts.feedbackBot}`} target="_blank">@{config.contacts.feedbackBot}</a>
           </p>
         </CollapsePanel>
       </div>

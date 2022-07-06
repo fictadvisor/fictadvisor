@@ -7,7 +7,7 @@ const config = {
   contacts: {
     bot: 'fictadvisor_bot',
     feedbackBot: 'fict_robot',
-    scHead: 'irina_kolbun',
+    scHead: 'gazinaft',
     scChannel: 'fict_time',
     sovaChannel: 'analyticsFICT',
     sovaChannelName: 'ФІОТ СОВА ім. Віри Петрівни',
