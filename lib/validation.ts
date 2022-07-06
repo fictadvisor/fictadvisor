@@ -1,32 +1,64 @@
 const name = (name: string) => {
-  if (!name || name.length < 2) { return 'Ім\'я має містити хоча би 2 символи'; }
+  const MIN_LENGTH = 2;
+  const MAX_LENGTH = 100;
 
-  if (name.length > 100) { return 'Ім\'я має містити не більше 100 символів'; }
+  if (!name || name.length < MIN_LENGTH) {
+    return `Ім\'я має містити хоча би ${MIN_LENGTH} символи`;
+  }
+  if (name.length > MAX_LENGTH) {
+    return `Ім\'я має містити не більше ${MAX_LENGTH} символів`;
+  }
 };
 
 const username = (name: string) => {
-  if (!name || name.length < 5) { return 'Юзернейм має містити хоча би 5 символів'; }
+  const MIN_LENGTH = 5;
+  const VALIDATING_REGEX = /^[@a-zA-Z0-9_]+$/;
 
-  const isValid = /^[@a-zA-Z0-9_]+$/.test(name);
+  if (!name || name.length < MIN_LENGTH) {
+    return `Юзернейм має містити хоча би ${MIN_LENGTH} символів`;
+  }
 
-  if (!isValid) { return 'Юзернейм може містити лише літери латинського алфавіту, цифри або нижнє підкреслення'; }
+  const isValid = VALIDATING_REGEX.test(name);
+
+  if (!isValid) {
+    return 'Юзернейм може містити лише літери латинського алфавіту, цифри або нижнє підкреслення';
+  }
 };
 
 const reviewContent = (content: string) => {
-  if (!content || content.length < 100) { return 'Текст відгуку має містити хоча би 100 символів'; }
-  if (content.length > 4096) { return 'Текст відгуку має містити не більше 4096 символів'; }
+  const MIN_LENGTH = 100;
+  const MAX_LENGTH = 4096;
+
+  if (!content || content.length < MIN_LENGTH) {
+    return `Текст відгуку має містити хоча би ${MIN_LENGTH} символів`;
+  }
+  if (content.length > MAX_LENGTH) {
+    return `Текст відгуку має містити не більше ${MAX_LENGTH} символів`;
+  }
 };
 
 const firstName = (name: string) => {
-  if (!name || name.length < 2) { return 'Ім\'я має містити хоча би 2 символи'; }
+  const MIN_LENGTH = 2;
+  const MAX_LENGTH = 32;
 
-  if (name.length > 32) { return 'Ім\'я має містити не більше 32 символів'; }
+  if (!name || name.length < MIN_LENGTH) {
+    return `Ім\'я має містити хоча би ${MIN_LENGTH} символи`;
+  }
+  if (name.length > MAX_LENGTH) {
+    return `Ім\'я має містити не більше ${MAX_LENGTH} символів`;
+  }
 };
 
 const lastName = (name: string) => {
-  if (!name || name.length < 2) { return 'Прізвище має містити хоча би 2 символи'; }
+  const MIN_LENGTH = 2;
+  const MAX_LENGTH = 32;
 
-  if (name.length > 32) { return 'Прізвище має містити не більше 32 символів'; }
+  if (!name || name.length < MIN_LENGTH) {
+    return `Прізвище має містити хоча би ${MIN_LENGTH} символи`;
+  }
+  if (name.length > MAX_LENGTH) {
+    return `Прізвище має містити не більше ${MAX_LENGTH} символів`;
+  }
 };
 
 const middleName = (name: string) => {
@@ -34,27 +66,51 @@ const middleName = (name: string) => {
     return;
   }
 
-  if (name.length < 2) { return 'Ім\'я по батькові має містити хоча би 2 символи'; }
+  const MIN_LENGTH = 2;
+  const MAX_LENGTH = 32;
 
-  if (name.length > 32) { return 'Ім\'я по батькові має містити не більше 32 символів'; }
+  if (name.length < MIN_LENGTH) {
+    return `Ім\'я по батькові має містити хоча би ${MIN_LENGTH} символи`;
+  }
+  if (name.length > MAX_LENGTH) {
+    return `Ім\'я по батькові має містити не більше ${MAX_LENGTH} символів`;
+  }
 };
 
 const subjectName = (name: string) => {
-  if (name.length < 3) { return 'Назва предмету має містити хоча би 3 символи'; }
+  const MIN_LENGTH = 3;
+  const MAX_LENGTH = 64;
 
-  if (name.length > 32) { return 'Назва предмету має містити не більше 32 символів'; }
+  if (name.length < MIN_LENGTH) {
+    return `Назва предмету має містити хоча би ${MIN_LENGTH} символи`;
+  }
+  if (name.length > MAX_LENGTH) {
+    return `Назва предмету має містити не більше ${MAX_LENGTH} символів`;
+  }
 };
 
 const contactName = (name: string) => {
-  if (name.length < 3) { return 'Назва контакту має містити хоча би 3 символи'; }
+  const MIN_LENGTH = 3;
+  const MAX_LENGTH = 12;
 
-  if (name.length > 12) { return 'Назва контакту має містити не більше 12 символів'; }
+  if (name.length < MIN_LENGTH) {
+    return `Назва контакту має містити хоча би ${MIN_LENGTH} символи`;
+  }
+  if (name.length > MAX_LENGTH) {
+    return `Назва контакту має містити не більше ${MAX_LENGTH} символів`;
+  }
 };
 
 const contactValue = (value: string) => {
-  if (value.length < 3) { return 'Назва контакту має містити хоча би 3 символи'; }
-  
-  if (value.length > 48) { return 'Назва контакту має містити не більше 48 символів'; }
+  const MIN_LENGTH = 3;
+  const MAX_LENGTH = 48;
+
+  if (value.length < MIN_LENGTH) {
+    return `Назва контакту має містити хоча би ${MIN_LENGTH} символи`;
+  }
+  if (value.length > MAX_LENGTH) {
+    return `Назва контакту має містити не більше ${MAX_LENGTH} символів`;
+  }
 };
 
 const validationMap = {
