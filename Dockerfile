@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY . /app
 
-RUN mkdir "./articles"
+RUN mkdir "/app/articles"
 
 ENV ARTICLES_PATH=/app/articles
 

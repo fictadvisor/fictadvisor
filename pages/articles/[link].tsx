@@ -2,7 +2,7 @@ import articles from "../../lib/articles";
 import Article from "../../components/Article";
 
 export default function Post({ article }) {
-  return <Article title={article.title} content={article.content}/>;
+  return <Article article={article}/>;
 }
 
 export async function getStaticProps({ params }) {
@@ -10,16 +10,14 @@ export async function getStaticProps({ params }) {
 
   return {
     props: {
-      article: {
-        title: params.link,
-        content: article,
-      }
+      article,
     },
+    revalidate: 10,
   };
 }
 
 export async function getStaticPaths() {
-  const articleList = await articles.getAll();
+  const articleList = articles.getAllLinks();
 
   return {
     paths: articleList.map((link) => {
@@ -27,6 +25,6 @@ export async function getStaticPaths() {
         params: { link },
       }
     }),
-    fallback: false,
+    fallback: 'blocking',
   }
 }

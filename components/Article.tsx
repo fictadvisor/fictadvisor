@@ -1,22 +1,21 @@
 import PageLayout from "./layout/PageLayout";
 import { mergeClassName } from "../lib/component";
+import { Article } from "../lib/articles";
 
 export type ArticleProperties = {
-  title: string;
-  content: string;
+  article: Article
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
-const Article = ({ title, content, className, ...props } : ArticleProperties) => {
-  return <PageLayout
-    meta={{ title }}
-    title={title}>
-
+const ArticleLayout = ({ article, className, ...props } : ArticleProperties) => {
+  return <PageLayout meta={{ title: article.metadata.title }}>
+    <h1 className={mergeClassName('articleTitle', className)}>{ article.metadata.title }</h1>
+    { article.metadata.author && <p className={mergeClassName('articleAuthors', className)}>{ article.metadata.author }</p> }
     <div
       className={mergeClassName('article', className)}
-      dangerouslySetInnerHTML={{ __html: content }}
+      dangerouslySetInnerHTML={{ __html: article.content }}
       {...props}/>
 
   </PageLayout>;
 }
 
-export default Article;
+export default ArticleLayout;
