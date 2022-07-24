@@ -1,6 +1,6 @@
 import api from "../lib/api";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { GetServerSideProps } from "next";
 
@@ -11,6 +11,9 @@ import Button from "../components/ui/Button";
 import StudentResourceItem from "../components/StudentResourceItem";
 import SubjectItem from "../components/SubjectItem";
 import config from "../config";
+import articles from "../lib/articles";
+import ArticleItem from "../components/ArticleItem";
+import { mergeClassName } from "../lib/component";
 
 const PROPERTIES = {
   studentResources: {
@@ -18,20 +21,38 @@ const PROPERTIES = {
     initialPageSize: 7,
     pageSize: 6,
   },
+  articles: {
+    initialPage: 0,
+    pageSize: 6,
+  },
 };
 
-const IndexPage = ({ popularTeachers, popularSubjects, studentResources: serverResources }) => {
-  const [page, setPage] = useState(PROPERTIES.studentResources.initialPage);
+const IndexPage = ({ popularTeachers, popularSubjects, studentResources: serverResources, chosenArticles }) => {
+  const [studentResourcesPage, setStudentResourcesPage] = useState(PROPERTIES.studentResources.initialPage);
+  const [articlesPage, setArticlesPage] = useState(PROPERTIES.articles.initialPage);
+  const [articles, setArticles] = useState([]);
 
   const { data, isLoading, isFetching } = useQuery(
-    ['student-resources', page], 
-    () => api.studentResources.getAll({ page: 0, page_size: PROPERTIES.studentResources.initialPageSize + PROPERTIES.studentResources.pageSize * page }), 
-    { keepPreviousData: true, enabled: page > PROPERTIES.studentResources.initialPage }
+    ['student-resources', studentResourcesPage],
+    () => api.studentResources.getAll({ page: 0, page_size: PROPERTIES.studentResources.initialPageSize + PROPERTIES.studentResources.pageSize * studentResourcesPage }),
+    { keepPreviousData: true, enabled: studentResourcesPage > PROPERTIES.studentResources.initialPage }
   );
 
-  
+
   const studentResources = data || serverResources;
-  const moreCount = studentResources.count - studentResources.items.length;
+  const studentResourcesMoreCount = studentResources.count - studentResources.items.length;
+
+  const loadMoreArticles = () => {
+    const articlesStart = articlesPage * PROPERTIES.articles.pageSize;
+    const articlesEnd = articlesStart + PROPERTIES.articles.pageSize;
+    setArticles(articles.concat(...chosenArticles.slice(articlesStart, articlesEnd)));
+  };
+
+  useEffect(() => {
+    loadMoreArticles();
+  }, [articlesPage]);
+
+  const articlesMoreCount = chosenArticles.length - articles.length;
 
   return (
     <PageLayout
@@ -65,14 +86,44 @@ const IndexPage = ({ popularTeachers, popularSubjects, studentResources: serverR
           )
         }
         {
-          moreCount > 0 &&
+          studentResourcesMoreCount > 0 &&
           <div className="student-resource-item more">
-            <Button disabled={isLoading || isFetching} onClick={() => setPage(page + 1)}>
+            <Button disabled={isLoading || isFetching} onClick={() => setStudentResourcesPage(studentResourcesPage + 1)}>
               <img />
-              <span>+{moreCount}</span>
+              <span>+{studentResourcesMoreCount}</span>
             </Button>
           </div>
         }
+      </div>
+      <p className="title">Обрані статті</p>
+      <div className="article-group">
+        {
+          articles.map(article =>
+            <ArticleItem
+              key={article.link}
+              href={article.link}
+              name={article.metadata.title}
+            />
+          )
+        }
+        {
+          articlesMoreCount > 0 &&
+          <div className="article-item more">
+            <Button onClick={() => {
+              console.log(articlesPage);
+              setArticlesPage(articlesPage + 1)
+            }}>
+              <span>+{articlesMoreCount}</span>
+            </Button>
+          </div>
+        }
+        <div className="article-item more">
+          <Link href='/articles'>
+            <Button>
+              <span>Усі статті</span>
+            </Button>
+          </Link>
+        </div>
       </div>
       <p className="title" style={{ marginTop: '15px' }}>Популярні викладачі</p>
       <div className="teacher-list">
@@ -118,11 +169,17 @@ const IndexPage = ({ popularTeachers, popularSubjects, studentResources: serverR
 
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
-    const [popularTeachers, popularSubjects, studentResources] = await Promise.all(
+    const [
+      popularTeachers,
+      popularSubjects,
+      studentResources,
+      chosenArticles,
+    ] = await Promise.all(
       [
         api.teachers.getAll({ page: 0, page_size: 3, sort: 'rating' }),
         api.subjects.getAll({ page: 0, page_size: 3, sort: 'rating' }),
         api.studentResources.getAll({ page: PROPERTIES.studentResources.initialPage, page_size: PROPERTIES.studentResources.initialPageSize }),
+        articles.getChosen(),
       ]
     );
 
@@ -131,9 +188,12 @@ export const getServerSideProps: GetServerSideProps = async () => {
         popularTeachers,
         popularSubjects,
         studentResources,
+        chosenArticles,
       },
     };
   } catch (e) {
+    console.error(e);
+
     return {
       props: {
         error: true,
