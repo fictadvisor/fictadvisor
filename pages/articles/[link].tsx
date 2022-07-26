@@ -17,7 +17,7 @@ export async function getStaticProps({ params }) {
 }
 
 export async function getStaticPaths() {
-  const articleList = articles.getAllLinks();
+  const articleList = await articles.getAllLinks();
 
   return {
     paths: articleList.map((link) => {

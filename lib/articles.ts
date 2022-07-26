@@ -1,4 +1,4 @@
-import * as fs from "fs";
+import * as fs from "fs/promises";
 import { parse } from 'node-html-parser';
 
 export type ArticleMetadata = {
@@ -19,7 +19,7 @@ export type ArticlePreview = {
 const path = (link: string): string => `${process.env.ARTICLES_PATH}/${link}.html`;
 
 const get = async (link: string): Promise<Article> => {
-  const text = fs.readFileSync(path(link)).toString();
+  const text = (await fs.readFile(path(link))).toString();
   const html = parse(text);
 
   const head = html.querySelector('head');
@@ -33,12 +33,15 @@ const get = async (link: string): Promise<Article> => {
   };
 }
 
-const getAllLinks = (): string[] => fs.readdirSync(process.env.ARTICLES_PATH)
-  .filter(filename => filename.endsWith('.html'))
-  .map(filename => filename.substring(0, filename.length - '.html'.length))
+const getAllLinks = async (): Promise<string[]> => {
+  const dirs = await fs.readdir(process.env.ARTICLES_PATH)
+
+  return dirs.filter(filename => filename.endsWith('.html'))
+    .map(filename => filename.substring(0, filename.length - '.html'.length))
+}
 
 const getAll = async (links: string[] = []): Promise<ArticlePreview[]> => {
-  if (links?.length == 0) links = getAllLinks();
+  if (links?.length == 0) links = await getAllLinks();
 
   const articles: ArticlePreview[] = [];
 
@@ -50,29 +53,28 @@ const getAll = async (links: string[] = []): Promise<ArticlePreview[]> => {
     });
   }
 
-  const hidden = getHiddenLinks();
-  console.log({ hidden, articles });
+  const hidden = await getHiddenLinks();
   return articles.filter(a => !hidden.includes(a.link));
 };
 
-const getChosen = async (): Promise<ArticlePreview[]> => getAll(getChosenLinks())
+const getChosen = async (): Promise<ArticlePreview[]> => getAll(await getChosenLinks())
 
-const getChosenLinks = (): string[] => {
+const getChosenLinks = async (): Promise<string[]> => {
   try {
-    return fs.readFileSync(`${process.env.ARTICLES_PATH}/__CHOSEN__`)
+    return (await fs.readFile(`${process.env.ARTICLES_PATH}/__CHOSEN__`))
       .toString()
       .split('\n')
       .map(path => path.trim())
-      .filter(path => path.length > 0)
+      .filter(path => path.length > 0);
   } catch (e) {
     console.error(e);
     return [];
   }
 }
 
-const getHiddenLinks = (): string[] => {
+const getHiddenLinks = async (): Promise<string[]> => {
   try {
-    return fs.readFileSync(`${process.env.ARTICLES_PATH}/__HIDDEN__`)
+    return (await fs.readFile(`${process.env.ARTICLES_PATH}/__HIDDEN__`))
       .toString()
       .split('\n')
       .map(path => `/articles/${path.trim()}`)
