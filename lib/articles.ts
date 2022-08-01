@@ -57,7 +57,10 @@ const getAll = async (links: string[] = []): Promise<ArticlePreview[]> => {
   return articles.filter(a => !hidden.includes(a.link));
 };
 
-const getChosen = async (): Promise<ArticlePreview[]> => getAll(await getChosenLinks())
+const getChosen = async (): Promise<ArticlePreview[]> => {
+  const links = await getChosenLinks();
+  return links.length ? getAll(links) : [];
+}
 
 const getChosenLinks = async (): Promise<string[]> => {
   try {
