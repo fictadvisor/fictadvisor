@@ -4,6 +4,10 @@ WORKDIR /app
 
 COPY . /app
 
+RUN mkdir "/app/articles"
+
+ENV ARTICLES_PATH=/app/articles
+
 RUN yarn install
 
 RUN yarn build

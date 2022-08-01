@@ -10,6 +10,7 @@ import '../styles/components/statistics.css';
 import '../styles/components/contact.css';
 import '../styles/components/navigation.css';
 import '../styles/components/studentResource.css';
+import '../styles/components/article.css';
 import '../styles/sass/index.sass';
 
 import { QueryClient, QueryClientProvider } from 'react-query';

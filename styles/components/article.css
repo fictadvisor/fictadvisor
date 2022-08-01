@@ -1,0 +1,76 @@
+.article {
+    max-width: 100%;
+    overflow: clip;
+    font-size: 18px;
+}
+
+.articleAuthors {
+    color: var(--secondary-text-color);
+    font-style: italic;
+}
+
+.articleTitle {
+    font-size: 2.2em;
+}
+
+.article a:visited:not(.simple), .article a:link:not(.simple) {
+    color: #f56b6b;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.article a:hover:not(.simple) {
+    color: var(--accent-text-color);
+}
+
+.article a.simple {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+.article pre, .article code {
+    background-color: #151A21;
+    color: var(--secondary-text-color);
+}
+
+.article image, .article img {
+    width: 100%;
+}
+
+.article-item {
+    display: inline-flex;
+}
+
+.article-item button > img {
+    width: 32px;
+    height: 32px;
+    margin-right: 14px;
+    border-radius: 50%;
+}
+
+.article-item.more button > img {
+    width: 0;
+    margin: 0;
+}
+
+.article-item.more button {
+    font-size: 18px;
+}
+
+.article-item button > span {
+    margin: auto;
+}
+
+.article-item button {
+    height: 60px;
+    padding: 14px 24px;
+    display: inline-flex;
+}
+
+.article-group > .article-item-long {
+    margin: 0 0 10px;
+}
+
+.article-group > .article-item {
+    margin: 0 10px 10px 0;
+}
