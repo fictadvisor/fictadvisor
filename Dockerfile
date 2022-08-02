@@ -4,9 +4,9 @@ WORKDIR /app
 
 COPY . /app
 
-RUN mkdir "/app/articles"
+RUN mkdir -p "/app/static/articles"
 
-ENV ARTICLES_PATH=/app/articles
+ENV ARTICLES_PATH=/app/static/articles
 
 RUN yarn install
 
