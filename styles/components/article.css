@@ -37,6 +37,18 @@
     width: 100%;
 }
 
+.article blockquote {
+    text-align: start;
+    font-style: italic;
+    margin: 0;
+    padding: 2px 2px 2px 15px;
+    border-left: 3px solid var(--secondary-text-color);
+}
+
+.article li {
+    padding: 5px 0;
+}
+
 .article-item {
     display: inline-flex;
 }
