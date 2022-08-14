@@ -1,5 +1,6 @@
 import * as fs from "fs/promises";
 import { parse } from 'node-html-parser';
+import {assign} from "next/dist/next-server/lib/router/utils/querystring";
 
 export type ArticleMetadata = {
   author: string;
@@ -14,6 +15,11 @@ export type Article = {
 export type ArticlePreview = {
   link: string;
   metadata: ArticleMetadata;
+}
+
+export type ArticleList = {
+  chosen: ArticlePreview[];
+  general: ArticlePreview[];
 }
 
 const path = (link: string): string => `${process.env.ARTICLES_PATH}/${link}.html`;
@@ -54,7 +60,9 @@ const getAll = async (links: string[] = []): Promise<ArticlePreview[]> => {
   }
 
   const hidden = await getHiddenLinks();
-  return articles.filter(a => !hidden.includes(a.link));
+  return articles
+      .filter(a => !hidden.includes(a.link))
+      .sort((a, b) => a.metadata.title.localeCompare(b.metadata.title));
 };
 
 const getChosen = async (): Promise<ArticlePreview[]> => {
@@ -87,9 +95,21 @@ const getHiddenLinks = async (): Promise<string[]> => {
   }
 }
 
+const getArticlesList = async (): Promise<ArticleList> => {
+  const all = await getAllLinks();
+  const chosen = await getChosenLinks();
+  const general = all.filter(link => !chosen.includes(link));
+
+  return {
+    chosen: chosen.length != 0 ? await getAll(chosen) : [],
+    general: general.length != 0 ? await getAll(general) : [],
+  };
+};
+
 export default {
   get,
   getAll,
   getAllLinks,
+  getArticlesList,
   getChosen,
 };
