@@ -26,12 +26,11 @@ yarn-error.log*
 
 # local env files
 .env.local
-.env.development
-.env.production
 .env.test.local
 
 # local config
-/config
+/config/
+config/index.ts
 
 # vercel
 .vercel
