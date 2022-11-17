@@ -3,9 +3,9 @@ const config = {
   logo: '/assets/logo.png',
   faculty: 'ФІОТ',
   source: 'https://github.com/fictadvisor',
-  botId: '5665898174',
+  botId: process.env.NEXT_PUBLIC_BOT_ID ?? '1699479241',
   contacts: {
-    bot: 'sOleksandrTestBot',
+    bot: process.env.NEXT_PUBLIC_BOT_NAME ?? 'fictadvisor_bot',
     feedbackBot: 'fict_robot',
     scHead: 'gazinaft',
     scChannel: 'fict_time',
