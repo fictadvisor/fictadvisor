@@ -13,7 +13,7 @@ import { Review, ReviewState } from 'src/v1/database/entities/review.entity';
 import { User } from 'src/v1/database/entities/user.entity';
 import { Logger, SystemLogger } from 'src/v1/logger/logger.core';
 import { TelegramService } from 'src/v1/telegram/telegram.service';
-import { Repository } from 'typeorm';
+import { Equal, Repository } from 'typeorm';
 import { CourseService } from '../course.service';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { CourseReviewDto } from './dto/review-item.dto';
@@ -38,7 +38,10 @@ export class ReviewService {
   ).fallback('id', 'ASC');
 
   async getReview(id: string, relations?: string[]): Promise<Review> {
-    const review = await this.reviewRepository.findOne({ id }, { relations });
+    const review = await this.reviewRepository.findOne({
+      where: { id },
+      relations
+    });
 
     if (review == null) {
       throw ServiceException.create(HttpStatus.NOT_FOUND, {
@@ -58,7 +61,7 @@ export class ReviewService {
     const [items, count] = await this.reviewRepository.findAndCount({
       ...Pageable.of(query.page, query.pageSize).toQuery(),
       where: {
-        course,
+        course: Equal(course),
         state: ReviewState.APPROVED,
         ...Searchable.of<Review>('content', query.searchQuery).toQuery(),
       },
@@ -94,8 +97,8 @@ export class ReviewService {
       if (review.state == ReviewState.APPROVED) {
         await this.reviewRepository.update(
           {
-            user: review.user,
-            course: review.course,
+            user: Equal(review.user),
+            course: Equal(review.course),
             state: ReviewState.APPROVED,
           },
           { state: ReviewState.OUTDATED }

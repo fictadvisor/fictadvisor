@@ -16,7 +16,7 @@ import {
 import { User } from 'src/v1/database/entities/user.entity';
 import { Logger, SystemLogger } from 'src/v1/logger/logger.core';
 import { TelegramService } from 'src/v1/telegram/telegram.service';
-import { Repository } from 'typeorm';
+import { Equal, Repository } from 'typeorm';
 import { CreateSuperheroDto } from './dto/create-superhero.dto';
 import { SuperheroDto } from './dto/superhero.dto';
 import { UpdateSuperheroDto } from './dto/update-superhero.dto';
@@ -35,10 +35,10 @@ export class SuperheroService {
   ) {}
 
   private async findSuperhero(user: User, relations?: string[]) {
-    const superhero = await this.superheroRepository.findOne(
-      { user },
-      { relations }
-    );
+    const superhero = await this.superheroRepository.findOne({
+      where: { user: Equal(user) },
+      relations
+    });
 
     if (superhero == null) {
       throw ServiceException.create(
@@ -82,7 +82,7 @@ export class SuperheroService {
     user: User,
     dto: CreateSuperheroDto
   ): Promise<SuperheroDto> {
-    if (await this.superheroRepository.findOne({ user })) {
+    if (await this.superheroRepository.findOneBy({ user: Equal(user) })) {
       throw ServiceException.create(
         HttpStatus.CONFLICT,
         'You are already a superhero'
@@ -114,7 +114,7 @@ export class SuperheroService {
     update: UpdateSuperheroDto
   ): Promise<SuperheroDto> {
     const superhero = await this.findSuperhero(
-      await this.userRepository.findOne({ id }),
+      await this.userRepository.findOneBy({ id }),
       ['user']
     );
 

@@ -2,7 +2,7 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 export default {
   type: 'postgres',
-  synchronize: false,
+  synchronize: true,
   entities: [`${__dirname}/entities/*.js`],
   migrations: [`${__dirname}/migrations/*.js`],
   cli: {

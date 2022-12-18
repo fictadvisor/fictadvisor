@@ -91,7 +91,7 @@ export class OAuthService {
   }
 
   async login(oauth: OAuthTelegramDto): Promise<OAuthTokenDto> {
-    let user: User = await this.userRepository.findOne({
+    let user: User = await this.userRepository.findOneBy({
       telegramId: oauth.telegramId,
     });
 
@@ -108,10 +108,10 @@ export class OAuthService {
 
   async refresh(refreshToken: string): Promise<OAuthTokenDto> {
     const ttl = ms(this.configService.get<string>('security.jwt.refreshTtl'));
-    const token = await this.refreshTokenRepository.findOne(
-      { token: refreshToken, createdAt: MoreThanOrEqual(new Date(Date.now() - ttl)) },
-      { relations: ['user'] }
-    );
+    const token = await this.refreshTokenRepository.findOne({
+      where: { token: refreshToken, createdAt: MoreThanOrEqual(new Date(Date.now() - ttl)) },
+      relations: ['user']
+    });
 
     if (!token) {
       throw ServiceException.create(HttpStatus.UNAUTHORIZED, {

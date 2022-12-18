@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ServiceException } from 'src/v1/common/common.exception';
 import { Course } from 'src/v1/database/entities/course.entity';
 import { Review, ReviewState } from 'src/v1/database/entities/review.entity';
-import { Connection, Repository } from 'typeorm';
+import { Connection, Equal, Repository } from 'typeorm';
 import { CourseDto } from './dto/course.dto';
 import { CourseAddDto } from './dto/course-add.dto';
 import { User } from '../../database/entities/user.entity';
@@ -31,7 +31,10 @@ export class CourseService {
   ) {}
 
   async getCourse(link: string, relations?: string[]): Promise<Course> {
-    const course = await this.courseRepository.findOne({ link }, { relations });
+    const course = await this.courseRepository.findOne({
+      where: { link },
+      relations
+    });
 
     if (course == null) {
       throw ServiceException.create(HttpStatus.NOT_FOUND, {
@@ -43,7 +46,10 @@ export class CourseService {
   }
 
   async getCourseById(id: string, relations?: string[]): Promise<Course> {
-    const course = await this.courseRepository.findOne({ id }, { relations });
+    const course = await this.courseRepository.findOne({
+      where: { id },
+      relations
+    });
 
     if (course == null) {
       throw ServiceException.create(HttpStatus.NOT_FOUND, {
@@ -78,10 +84,10 @@ export class CourseService {
   }
 
   async addCourse(course: CourseAddDto, user: User): Promise<CourseDto> {
-    const subject = await this.subjectRepository.findOne({
+    const subject = await this.subjectRepository.findOneBy({
       id: course.subjectId,
     });
-    const teacher = await this.teacherRepository.findOne({
+    const teacher = await this.teacherRepository.findOneBy({
       id: course.teacherId,
     });
 
@@ -92,7 +98,10 @@ export class CourseService {
       );
     }
 
-    const existing = await this.courseRepository.findOne({ teacher, subject });
+    const existing = await this.courseRepository.findOneBy({
+      teacher: Equal(teacher),
+      subject: Equal(subject)}
+    );
 
     if (existing) {
       throw ServiceException.create(

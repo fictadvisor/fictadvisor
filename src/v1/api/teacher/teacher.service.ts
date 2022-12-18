@@ -15,7 +15,7 @@ import {
   TeacherContact,
   TeacherContactState,
 } from 'src/v1/database/entities/teacher-contact.entity';
-import { Not, Repository } from 'typeorm';
+import { Equal, Not, Repository } from 'typeorm';
 import { TeacherItemDto } from './dto/teacher-item.dto';
 import { TeacherDto } from './dto/teacher.dto';
 import { TeacherContactDto } from './dto/teacher-contact.dto';
@@ -65,7 +65,7 @@ export class TeacherService {
   ) {}
 
   private async getTeacher(link: string): Promise<Teacher> {
-    const teacher = await this.teacherRepository.findOne({ link });
+    const teacher = await this.teacherRepository.findOneBy({ link });
 
     if (teacher == null) {
       throw ServiceException.create(
@@ -78,7 +78,7 @@ export class TeacherService {
   }
 
   private async getTeacherById(id: string): Promise<Teacher> {
-    const teacher = await this.teacherRepository.findOne({ id });
+    const teacher = await this.teacherRepository.findOneBy({ id });
 
     if (teacher == null) {
       throw ServiceException.create(
@@ -91,7 +91,7 @@ export class TeacherService {
   }
 
   async getTeacherByLink(link: string): Promise<TeacherDto> {
-    const teacher = await this.teacherViewRepository.findOne({ link });
+    const teacher = await this.teacherViewRepository.findOneBy({ link });
 
     if (teacher == null) {
       throw ServiceException.create(
@@ -132,7 +132,7 @@ export class TeacherService {
   }
 
   private async getContactById(id: string): Promise<TeacherContact> {
-    const contact = await this.teacherContactRepository.findOne({ id });
+    const contact = await this.teacherContactRepository.findOneBy({ id });
 
     if (contact == null) {
       throw ServiceException.create(
@@ -146,8 +146,8 @@ export class TeacherService {
 
   async getTeacherContacts(link: string): Promise<ResponseEntity<any>> {
     const teacher = await this.getTeacher(link);
-    const items = await this.teacherContactRepository.find({
-      teacher,
+    const items = await this.teacherContactRepository.findBy({
+      teacher: Equal(teacher),
       state: TeacherContactState.APPROVED,
     });
 
@@ -213,7 +213,7 @@ export class TeacherService {
 
   async getTeacherStats(link: string): Promise<ResponseEntity<any>> {
     const teacher = await this.getTeacher(link);
-    const stats = await this.teacherStatsRepository.find({ teacher });
+    const stats = await this.teacherStatsRepository.findBy({ teacher: Equal(teacher) });
 
     return ResponseEntity.of({
       items: stats.map(s => TeacherStatsItemDto.from(s)),
@@ -221,7 +221,7 @@ export class TeacherService {
   }
 
   async saveTeacher(teacher: TeacherAddDto, user: User): Promise<TeacherDto> {
-    const existing = await this.teacherRepository.findOne({
+    const existing = await this.teacherRepository.findOneBy({
       link: teacher.link(),
     });
 

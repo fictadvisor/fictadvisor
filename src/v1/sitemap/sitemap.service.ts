@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import * as dateformat from 'dateformat';
+import dateFormat from 'dateformat';
 import { Subject, SubjectState } from 'src/v1/database/entities/subject.entity';
 import { Teacher, TeacherState } from 'src/v1/database/entities/teacher.entity';
 import { Repository } from 'typeorm';
 import { create } from 'xmlbuilder2';
 import { writeFile } from 'fs';
+
 
 @Injectable()
 export class SitemapService {
@@ -46,7 +47,7 @@ export class SitemapService {
     teachers.forEach(t => {
       const url = root.ele('url');
       url.ele('loc').txt(`${baseUrl}/teachers/${t.link}`);
-      url.ele('lastmod').txt(dateformat(t.updatedAt, 'yyyy-mm-dd'));
+      url.ele('lastmod').txt(dateFormat(t.updatedAt, 'yyyy-mm-dd'));
       url.ele('changefreq').txt('daily');
       url.ele('priority').txt('0.5');
     });
@@ -54,7 +55,7 @@ export class SitemapService {
     subjects.forEach(s => {
       const url = root.ele('url');
       url.ele('loc').txt(`${baseUrl}/subjects/${s.link}`);
-      url.ele('lastmod').txt(dateformat(s.updatedAt, 'yyyy-mm-dd'));
+      url.ele('lastmod').txt(dateFormat(s.updatedAt, 'yyyy-mm-dd'));
       url.ele('changefreq').txt('daily');
       url.ele('priority').txt('0.5');
     });

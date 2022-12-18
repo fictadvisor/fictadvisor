@@ -4,7 +4,7 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
-  OneToOne,
+  OneToOne, PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from './user.entity';
@@ -17,7 +17,11 @@ export enum SuperheroState {
 
 @Entity('superheroes')
 export class Superhero extends BaseEntity {
-  @OneToOne(type => User, { primary: true })
+
+  @PrimaryColumn()
+  user_id: string;
+
+  @OneToOne(() => User, { cascade: true })
   @JoinColumn({ name: 'user_id' })
   user: User;
 

@@ -1,4 +1,4 @@
-import { FindConditions, ILike, ObjectLiteral } from 'typeorm';
+import { FindManyOptions, FindOptionsWhere, ILike, ObjectLiteral } from 'typeorm';
 import { PageableQueryDto } from './common.dto';
 
 type PageableQuery = {
@@ -106,7 +106,7 @@ export class Searchable<T> {
   value: string;
   field: keyof T;
 
-  toQuery(): FindConditions<T> | ObjectLiteral {
+  toQuery(): FindOptionsWhere<T> | ObjectLiteral {
     if (this.value == null || this.value == '') {
       return {};
     }

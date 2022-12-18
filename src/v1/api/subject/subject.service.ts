@@ -74,7 +74,7 @@ export class SubjectService {
   }
 
   async getSubjectByLink(link: string): Promise<SubjectDto> {
-    const subject = await this.subjectViewRepository.findOne({ link });
+    const subject = await this.subjectViewRepository.findOneBy({ link });
 
     if (subject == null) {
       throw ServiceException.create(
@@ -115,7 +115,7 @@ export class SubjectService {
   }
 
   private async getSubjectById(id: string): Promise<Subject> {
-    const subject = await this.subjectRepository.findOne({ id });
+    const subject = await this.subjectRepository.findOneBy({ id });
 
     if (subject == null) {
       throw ServiceException.create(
@@ -128,7 +128,7 @@ export class SubjectService {
   }
 
   async addSubject(subject: SubjectCreateDto, user: User): Promise<SubjectDto> {
-    const existing = await this.subjectRepository.findOne({
+    const existing = await this.subjectRepository.findOneBy({
       link: subject.link(),
     });
 
