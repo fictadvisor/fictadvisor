@@ -47,10 +47,12 @@ export class AuthService {
   }
 
   verifyStudent() {
+    // TODO add url to Telegram Bot API
     return;
   }
 
   verifyCaptain() {
+    // TODO add url to Telegram Bot API
     return;
   }
 
