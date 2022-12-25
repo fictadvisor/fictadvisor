@@ -94,13 +94,12 @@ export class AuthService {
     return this.getTokens(user);
   }
 
-  async refresh(refreshToken: string): Promise<object | null> {
-    try {
-      const payload: JwtPayload = await this.jwtService.verify(refreshToken);
-      return this.getAccessToken(payload);
-    } catch (err) {
-      return null;
+  async refresh(user: User): Promise<object | null> {
+    const payload: JwtPayload = {
+      sub: user.id,
+      username: user.username
     }
+    return this.getAccessToken(payload);
   }
 
   getTokens(user: User): TokensDTO {
