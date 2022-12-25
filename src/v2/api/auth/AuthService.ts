@@ -5,14 +5,18 @@ import { JwtPayload } from '../../security/JwtPayload';
 import { SecurityConfigService } from '../../config/SecurityConfigService';
 import { User } from '@prisma/client'
 import { TokensDTO } from './dto/TokensDTO';
-import { RegistrationDTO } from './dto/RegistrationDTO';
+import { RegistrationDTO, TelegramDTO } from './dto/RegistrationDTO';
+import { createHash, createHmac } from 'crypto';
+import { TelegramConfigService } from '../../config/TelegramConfigService';
+import { InvalidTelegramCredentialsException } from '../../utils/exceptions/InvalidTelegramCredentialsException';
 
 @Injectable()
 export class AuthService {
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
-    private securityConfig: SecurityConfigService
+    private securityConfig: SecurityConfigService,
+    private telegramConfig: TelegramConfigService
   ) {}
 
   async validateUser(username: string, password: string) {
@@ -27,15 +31,45 @@ export class AuthService {
     });
   }
 
-  async register(user: RegistrationDTO): Promise<TokensDTO> {
-    const { email, password, username, isCaptain, ...student} = user;
+  isExchangeValid({hash, ...data}: TelegramDTO): boolean {
+    if (!data) return false;
+
+    const str = Object.keys(data)
+      .sort()
+      .map(key => `${key}=${data[key]}`)
+      .join('\n');
+
+    try {
+      const secretKey = createHash('sha256')
+        .update(this.telegramConfig.botToken).digest();
+      const signature = createHmac('sha256', secretKey)
+        .update(str).digest('hex');
+
+      return hash === signature;
+    } catch (e){
+      return false;
+    }
+  }
+
+  async register(registrationDTO: RegistrationDTO): Promise<TokensDTO> {
+    const { telegram, student: {isCaptain, ...createStudent}, user} = registrationDTO;
+
+    if (telegram) {
+      if (this.isExchangeValid(telegram)) {
+        Object.assign(user, {
+          telegramId: telegram.id,
+          avatar: telegram.photo_url
+        });
+      } else {
+        throw new InvalidTelegramCredentialsException();
+      }
+    }
+
     const dbUser = await this.prisma.user.create({
       data: {
-        username,
-        email,
-        password,
+        ...user,
         student: {
-          create: student
+          create: createStudent
         }
       }
     })
@@ -60,13 +94,12 @@ export class AuthService {
     return this.getTokens(user);
   }
 
-  async refresh(refreshToken: string): Promise<object | null> {
-    try {
-      const payload: JwtPayload = await this.jwtService.verify(refreshToken);
-      return this.getAccessToken(payload);
-    } catch (err) {
-      return null;
+  async refresh(user: User): Promise<object | null> {
+    const payload: JwtPayload = {
+      sub: user.id,
+      username: user.username
     }
+    return this.getAccessToken(payload);
   }
 
   getTokens(user: User): TokensDTO {
@@ -87,5 +120,19 @@ export class AuthService {
     return {
       accessToken: this.jwtService.sign(payload)
     }
+  }
+
+  async loginTelegram(telegram: TelegramDTO): Promise<TokensDTO> {
+    if (!this.isExchangeValid(telegram)) {
+      throw new InvalidTelegramCredentialsException();
+    }
+
+    const user = await this.prisma.user.findUnique({
+      where: {
+        telegramId: String(telegram.id),
+      }
+    });
+
+    return this.getTokens(user);
   }
 }

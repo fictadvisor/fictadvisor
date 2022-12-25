@@ -1,8 +1,8 @@
 import { Controller, Request, Post, UseGuards, Body } from '@nestjs/common';
 import { LocalAuthGuard } from '../../security/LocalGuard';
 import { AuthService } from './AuthService';
-import { RegistrationDTO } from './dto/RegistrationDTO';
-
+import { RegistrationDTO, TelegramDTO } from './dto/RegistrationDTO';
+import { JwtGuard } from '../../security/JwtGuard';
 
 @Controller({
   version: '2',
@@ -20,6 +20,17 @@ export class AuthController {
   @Post('/register')
   async register(@Body() body: RegistrationDTO) {
     return this.authService.register(body);
+  }
+
+  @Post('/loginTelegram')
+  async loginTelegram(@Body() body: TelegramDTO) {
+    return this.authService.loginTelegram(body);
+  }
+
+  @UseGuards(JwtGuard)
+  @Post('/refresh')
+  async refresh(@Request() req) {
+    return this.authService.refresh(req.user);
   }
 
 }
