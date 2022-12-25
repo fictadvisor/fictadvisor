@@ -17,38 +17,50 @@ enum State {
 }
 
 model User {
-  id             String           @id @default(uuid())
-  email          String           @unique
-  username       String           @unique
-  avatar         String?
-  password       String?
-  telegramId     String?          @unique @map("telegram_id")
-  Student        Student?
-  Superhero      Superhero?
-  QuestionAnswer QuestionAnswer[]
+  id              String           @id @default(uuid())
+  email           String           @unique
+  username        String           @unique
+  avatar          String?
+  password        String
+  telegramId      String?          @unique @map("telegram_id")
+  student         Student?
+  superhero       Superhero?
+  questionAnswers QuestionAnswer[]
 
   @@map("users")
 }
 
 model Group {
-  id         String       @id @default(uuid())
-  code       String
-  Student    Student[]
-  Discipline Discipline[]
+  id          String       @id @default(uuid())
+  code        String
+  students    Student[]
+  disciplines Discipline[]
+  groupRole   GroupRole[]
 
   @@map("groups")
 }
 
+model GroupRole {
+  group   Group     @relation(fields: [groupId], references: [id])
+  groupId String
+  role    UserRole  @relation(fields: [roleId], references: [id])
+  roleId  String    @unique
+
+  @@id([groupId, roleId])
+  @@map("group_roles")
+}
+
 model Student {
-  user                User                  @relation(fields: [userId], references: [id])
-  userId              String                @unique @map("user_id")
-  firstName           String                @map("first_name")
-  middleName          String?               @map("middle_name")
-  lastName            String                @map("last_name")
-  groupId             String                @map("group_id")
-  group               Group                 @relation(fields: [groupId], references: [id])
-  SelectiveDiscipline SelectiveDiscipline[]
-  StudentRole         StudentRole[]
+  user                 User                   @relation(fields: [userId], references: [id])
+  userId               String                 @unique @map("user_id")
+  firstName            String                 @map("first_name")
+  middleName           String?                @map("middle_name")
+  lastName             String                 @map("last_name")
+  groupId              String                 @map("group_id")
+  group                Group                  @relation(fields: [groupId], references: [id])
+  selectiveDisciplines SelectiveDiscipline[]
+  studentRole          StudentRole[]
+  state                State                  @default(PENDING)
 
   @@map("students")
 }
@@ -63,25 +75,25 @@ model Superhero {
 }
 
 model Subject {
-  id         String       @id @default(uuid())
-  name       String
-  Discipline Discipline[]
+  id          String       @id @default(uuid())
+  name        String
+  disciplines Discipline[]
 
   @@map("subjects")
 }
 
 model Discipline {
-  id                  String                @id @default(uuid())
-  subject             Subject               @relation(fields: [subjectId], references: [id])
-  subjectId           String                @map("subject_id")
-  group               Group                 @relation(fields: [groupId], references: [id])
-  groupId             String                @map("group_id")
-  semester            String
-  isSelective         Boolean               @default(false) @map("is_selective")
-  evaluatingSystem    String?               @map("evaluating_system")
-  resource            String?
-  SelectiveDiscipline SelectiveDiscipline[]
-  DisciplineType      DisciplineType[]
+  id                   String                @id @default(uuid())
+  subject              Subject               @relation(fields: [subjectId], references: [id])
+  subjectId            String                @map("subject_id")
+  group                Group                 @relation(fields: [groupId], references: [id])
+  groupId              String                @map("group_id")
+  semester             String
+  isSelective          Boolean               @default(false) @map("is_selective")
+  evaluatingSystem     String?               @map("evaluating_system")
+  resource             String?
+  selectiveDisciplines SelectiveDiscipline[]
+  disciplineTypes      DisciplineType[]
 
   @@map("disciplines")
 }
@@ -106,12 +118,12 @@ enum DisciplineTypeEnum {
 }
 
 model DisciplineType {
-  id                String              @id @default(uuid())
-  discipline        Discipline          @relation(fields: [disciplineId], references: [id])
-  disciplineId      String              @map("discipline_id")
-  name              DisciplineTypeEnum
-  Lesson            Lesson[]
-  DisciplineTeacher DisciplineTeacher[]
+  id                 String              @id @default(uuid())
+  discipline         Discipline          @relation(fields: [disciplineId], references: [id])
+  disciplineId       String              @map("discipline_id")
+  name               DisciplineTypeEnum
+  lessons            Lesson[]
+  disciplineTeachers DisciplineTeacher[]
 
   @@map("discipline_types")
 }
@@ -123,7 +135,7 @@ model Lesson {
   url               String
   disciplineType    DisciplineType      @relation(fields: [disciplineTypeId], references: [id])
   disciplineTypeId  String              @map("discipline_type_id")
-  DynamicLessonInfo DynamicLessonInfo[]
+  dynamicLessonInfo DynamicLessonInfo[]
 
   @@map("lessons")
 }
@@ -152,13 +164,13 @@ enum TeacherRole {
 }
 
 model Teacher {
-  id                String              @id @default(uuid())
-  firstName         String              @map("first_name")
-  middleName        String              @map("middle_name")
-  lastName          String              @map("last_name")
-  description       String?
-  avatar            String?
-  DisciplineTeacher DisciplineTeacher[]
+  id                 String              @id @default(uuid())
+  firstName          String              @map("first_name")
+  middleName         String              @map("middle_name")
+  lastName           String              @map("last_name")
+  description        String?
+  avatar             String?
+  disciplineTeachers DisciplineTeacher[]
 
   @@map("teachers")
 }
@@ -170,7 +182,7 @@ model DisciplineTeacher {
   role             TeacherRole
   disciplineType   DisciplineType   @relation(fields: [disciplineTypeId], references: [id])
   disciplineTypeId String           @map("discipline_type_id")
-  QuestionAnswer   QuestionAnswer[]
+  questionAnswers  QuestionAnswer[]
 
   @@map("discipline_teachers")
 }
@@ -182,13 +194,13 @@ enum QuestionType {
 }
 
 model Question {
-  id             String           @id @default(uuid())
-  name           String
-  text           String
-  criteria       String?
-  type           QuestionType
-  QuestionRole   QuestionRole[]
-  QuestionAnswer QuestionAnswer[]
+  id              String           @id @default(uuid())
+  name            String
+  text            String
+  criteria        String?
+  type            QuestionType
+  questionRoles   QuestionRole[]
+  questionAnswers QuestionAnswer[]
 
   @@map("questions")
 }
@@ -226,11 +238,12 @@ enum UserRoleName {
 }
 
 model UserRole {
-  id          String        @id @default(uuid())
-  name        UserRoleName
-  priority    Int
-  StudentRole StudentRole[]
-  Grant       Grant[]
+  id           String        @id @default(uuid())
+  name         UserRoleName
+  priority     Int
+  studentRoles StudentRole[]
+  grants       Grant[]
+  groupRole    GroupRole?
 
   @@map("user_roles")
 }
@@ -246,9 +259,9 @@ model StudentRole {
 }
 
 model Permission {
-  id    String  @id @default(uuid())
-  name  String
-  Grant Grant[]
+  id     String  @id @default(uuid())
+  name   String
+  grants Grant[]
 
   @@map("permissions")
 }
