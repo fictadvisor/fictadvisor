@@ -8,4 +8,12 @@ export class SecurityConfigService {
   get secret(): string {
     return this.configService.get<string>("security.secret")
   }
+
+  get jwtTtl(): string {
+    return this.configService.get<string>('security.jwt.ttl');
+  }
+
+  get jwtRefreshTtl(): string {
+    return this.configService.get<string>('security.jwt.refreshTtl')
+  }
 }
