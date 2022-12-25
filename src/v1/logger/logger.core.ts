@@ -5,8 +5,6 @@ import {
   Logger as SystemLogger,
 } from 'winston';
 
-const loggerFormat = format.combine(format.timestamp(), format.simple());
-
 const loggers = {};
 
 export const getLogger = (source = 'system'): SystemLogger => {
@@ -16,9 +14,11 @@ export const getLogger = (source = 'system'): SystemLogger => {
 
   const logger = createLogger({
     level: process.env.LOG_LEVEL ?? 'info',
-    format: format.json(),
+    format: format.combine(
+      format.simple(),
+    ),
     defaultMeta: { source },
-    transports: [new transports.Console({ format: loggerFormat })],
+    transports: [new transports.Console()],
   });
 
   loggers[source] = logger;
