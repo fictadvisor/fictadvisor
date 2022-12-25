@@ -71,11 +71,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
     }
 
     if (status === HttpStatus.INTERNAL_SERVER_ERROR) {
-      this.logger.error('Resolved an internal server error', {
-        error: exception.toString(),
-        response: JSON.stringify(requestResponse),
-        stack: exception.stack,
-      });
+
+      this.logger.error(exception.stack);
     }
   }
 }
