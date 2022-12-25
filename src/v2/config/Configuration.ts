@@ -12,6 +12,7 @@ export default () => ({
   },
   telegram: {
     apiUrl: process.env.TELEGRAM_API_URL,
+    botToken: process.env.TELEGRAM_BOT_TOKEN,
   },
   static: {
     servePath: '/static',
