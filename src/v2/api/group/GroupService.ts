@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
 import { Group } from '@prisma/client'
+import { GetDTO } from '../teacher/dto/GetDTO';
+import { DatabaseUtils } from '../utils/DatabaseUtils';
+import { GroupFieldsDTO } from './dto/GroupFieldsDTO';
 
 @Injectable()
 export class GroupService {
@@ -14,5 +17,19 @@ export class GroupService {
         code
       }
     });
+  }
+
+  async getAll({ fields }: GetDTO) {
+    const select = DatabaseUtils.getSelectObject<GroupFieldsDTO>(fields);
+
+    return await this.prisma.group.findMany(select);
+  }
+
+  async get(id: string) {
+    return await this.prisma.group.findUnique({
+      where: {
+        id
+      }
+    })
   }
 }
