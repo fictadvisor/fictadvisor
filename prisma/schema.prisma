@@ -89,7 +89,8 @@ model Discipline {
   subjectId            String                @map("subject_id")
   group                Group                 @relation(fields: [groupId], references: [id])
   groupId              String                @map("group_id")
-  semester             String
+  semester             Int
+  year                 Int
   isSelective          Boolean               @default(false) @map("is_selective")
   evaluatingSystem     String?               @map("evaluating_system")
   resource             String?
