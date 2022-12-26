@@ -9,6 +9,7 @@ import { RegistrationDTO, TelegramDTO } from './dto/RegistrationDTO';
 import { createHash, createHmac } from 'crypto';
 import { TelegramConfigService } from '../../config/TelegramConfigService';
 import { InvalidTelegramCredentialsException } from '../../utils/exceptions/InvalidTelegramCredentialsException';
+import { UpdatePasswordDTO } from './dto/UpdatePasswordDTO';
 
 @Injectable()
 export class AuthService {
@@ -95,18 +96,12 @@ export class AuthService {
   }
 
   async refresh(user: User): Promise<object | null> {
-    const payload: JwtPayload = {
-      sub: user.id,
-      username: user.username
-    }
+    const payload = this.createPayload(user);
     return this.getAccessToken(payload);
   }
 
   getTokens(user: User): TokensDTO {
-    const payload: JwtPayload = {
-      sub: user.id,
-      username: user.username
-    }
+    const payload = this.createPayload(user);
 
     return {
       refreshToken: this.jwtService.sign(payload, {
@@ -130,6 +125,34 @@ export class AuthService {
     const user = await this.prisma.user.findUnique({
       where: {
         telegramId: String(telegram.id),
+      }
+    });
+
+    return this.getTokens(user);
+  }
+
+  createPayload(user: User): JwtPayload {
+    return {
+      sub: user.id,
+      username: user.username,
+      createdAt: Date.now(),
+    }
+  }
+
+  async updatePassword({ oldPassword, newPassword }: UpdatePasswordDTO, user: User): Promise<TokensDTO> {
+    const dbUser: User = await this.validateUser(user.username, oldPassword);
+
+    if (!dbUser) {
+      return null
+    }
+
+    await this.prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        password: newPassword,
+        lastPasswordChanged: new Date(Date.now()),
       }
     });
 

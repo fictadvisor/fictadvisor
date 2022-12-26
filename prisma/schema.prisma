@@ -17,15 +17,16 @@ enum State {
 }
 
 model User {
-  id              String           @id @default(uuid())
-  email           String           @unique
-  username        String           @unique
-  avatar          String?
-  password        String
-  telegramId      String?          @unique @map("telegram_id")
-  student         Student?
-  superhero       Superhero?
-  questionAnswers QuestionAnswer[]
+  id                  String           @id @default(uuid())
+  email               String           @unique
+  username            String           @unique
+  avatar              String?
+  password            String
+  telegramId          String?          @unique @map("telegram_id")
+  student             Student?
+  superhero           Superhero?
+  questionAnswers     QuestionAnswer[]
+  lastPasswordChanged DateTime         @default(now())
 
   @@map("users")
 }
