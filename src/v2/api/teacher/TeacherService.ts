@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
 import { GetDTO, TeacherFieldsDTO } from './dto/GetDTO';
 import { CreateTeacherDTO } from './dto/CreateTeacherDTO';
+import { DatabaseUtils } from '../utils/DatabaseUtils';
 
 
 @Injectable()
@@ -11,15 +12,10 @@ export class TeacherService {
   ) {}
 
 
-  async getAll({ fields = [] }: GetDTO) {
-    const teacher: TeacherFieldsDTO = {};
-    if (fields.length !== 0) teacher.select = {};
+  async getAll({ fields }: GetDTO) {
+    const select = DatabaseUtils.getSelectObject<TeacherFieldsDTO>(fields);
 
-    for (const field of fields) {
-      teacher.select[field] = true;
-    }
-
-    return await this.prisma.teacher.findMany(teacher);
+    return await this.prisma.teacher.findMany(select);
   }
 
   async create(body: CreateTeacherDTO) {
