@@ -42,26 +42,26 @@ model Group {
 }
 
 model GroupRole {
-  group   Group     @relation(fields: [groupId], references: [id])
+  group   Group    @relation(fields: [groupId], references: [id])
   groupId String
-  role    UserRole  @relation(fields: [roleId], references: [id])
-  roleId  String    @unique
+  role    UserRole @relation(fields: [roleId], references: [id])
+  roleId  String   @unique
 
   @@id([groupId, roleId])
   @@map("group_roles")
 }
 
 model Student {
-  user                 User                   @relation(fields: [userId], references: [id])
-  userId               String                 @unique @map("user_id")
-  firstName            String                 @map("first_name")
-  middleName           String?                @map("middle_name")
-  lastName             String                 @map("last_name")
-  groupId              String                 @map("group_id")
-  group                Group                  @relation(fields: [groupId], references: [id])
+  user                 User                  @relation(fields: [userId], references: [id])
+  userId               String                @unique @map("user_id")
+  firstName            String                @map("first_name")
+  middleName           String?               @map("middle_name")
+  lastName             String                @map("last_name")
+  groupId              String                @map("group_id")
+  group                Group                 @relation(fields: [groupId], references: [id])
   selectiveDisciplines SelectiveDiscipline[]
   studentRole          StudentRole[]
-  state                State                  @default(PENDING)
+  state                State                 @default(PENDING)
 
   @@map("students")
 }
@@ -124,39 +124,67 @@ model DisciplineType {
   discipline         Discipline          @relation(fields: [disciplineId], references: [id])
   disciplineId       String              @map("discipline_id")
   name               DisciplineTypeEnum
-  lessons            Lesson[]
+  lessons            SemesterLesson[]
   disciplineTeachers DisciplineTeacher[]
+  temporaryLessons   TemporaryLesson[]
 
   @@map("discipline_types")
 }
 
-model Lesson {
-  id                String              @id @default(uuid())
-  startTime         DateTime            @map("start_time")
-  endTime           DateTime?           @map("end_time")
-  url               String
-  disciplineType    DisciplineType      @relation(fields: [disciplineTypeId], references: [id])
-  disciplineTypeId  String              @map("discipline_type_id")
-  dynamicLessonInfo DynamicLessonInfo[]
+model SemesterLesson {
+  id               String             @id @default(uuid())
+  startDate        DateTime           @map("start_date")
+  endDate          DateTime           @map("end_date")
+  url              String?
+  disciplineType   DisciplineType     @relation(fields: [disciplineTypeId], references: [id])
+  disciplineTypeId String             @map("discipline_type_id")
+  fortnightLessons FortnightLesson[]
 
-  @@map("lessons")
+  @@map("semester_lessons")
 }
 
-enum DynamicLessonInfoType {
-  TAG
+model FortnightLesson {
+  id             String                 @id @default(uuid())
+  lesson         SemesterLesson         @relation(fields: [lessonId], references: [id])
+  lessonId       String                 @map("lesson_id")
+  fortnight      Int
+  info           FortnightLessonInfo[]
+
+  @@map("fortnight_lessons")
+}
+
+model FortnightLessonInfo {
+  lesson       FortnightLesson            @relation(fields: [lessonId], references: [id])
+  lessonId     String                     @map("week_lesson_id")
+  type         FortnightLessonInfoType
+  value        String
+
+  @@id([lessonId, type])
+  @@map("fortnight_lessons_info")
+}
+
+enum FortnightLessonInfoType {
   HOMEWORK
   URL
-  TEACHER
+  START_DATE
+  END_DATE
+  COMMENT
+  IS_TEST
 }
 
-model DynamicLessonInfo {
-  lesson   Lesson                @relation(fields: [lessonId], references: [id])
-  lessonId String                @id @map("lesson_id")
-  type     DynamicLessonInfoType
-  value    String
-  date     DateTime
+model TemporaryLesson {
+  id               String         @id @default(uuid())
+  startDate        DateTime       @map("start_date")
+  endDate          DateTime       @map("end_date")
+  url              String?
+  fortnight        Int
+  teacher          Teacher        @relation(fields: [teacherId], references: [id])
+  teacherId        String         @map("teacher_id")
+  disciplineType   DisciplineType @relation(fields: [disciplineTypeId], references: [id])
+  disciplineTypeId String         @map("discipline_type_id")
+  comment          String
 
-  @@map("dynamic_lesson_info")
+  @@map("temporary_lessons")
 }
 
 enum TeacherRole {
@@ -173,6 +201,7 @@ model Teacher {
   description        String?
   avatar             String?
   disciplineTeachers DisciplineTeacher[]
+  temporaryLessons   TemporaryLesson[]
 
   @@map("teachers")
 }
@@ -196,9 +225,10 @@ enum QuestionType {
 }
 
 model Question {
-  id              String           @id @default(uuid())
+  id              String            @id @default(uuid())
   name            String
   text            String
+  isRequired      Boolean           @default(true) @map("is_required")
   criteria        String?
   type            QuestionType
   questionRoles   QuestionRole[]
@@ -225,7 +255,6 @@ model QuestionAnswer {
   questionId          String            @map("question_id")
   user                User              @relation(fields: [userId], references: [id])
   userId              String            @map("user_id")
-  state               State
   value               String
 
   @@id([disciplineTeacherId, questionId, userId])
@@ -293,4 +322,13 @@ model Contact {
   entityId   String     @map("entity_id")
 
   @@map("contacts")
+}
+
+model StartDate {
+  year      Int
+  semester  Int
+  startDate DateTime    @map("start_date")
+
+  @@id([year, semester])
+  @@map("start_dates")
 }
