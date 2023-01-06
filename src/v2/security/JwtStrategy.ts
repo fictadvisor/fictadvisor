@@ -26,6 +26,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       }
     });
 
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
     if (user.lastPasswordChanged.getTime() > payload.createdAt) {
       throw new UnauthorizedException('Token is expired');
     }
