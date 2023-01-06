@@ -9,5 +9,4 @@ export interface TeacherFieldsDTO {
   lastName?: boolean,
   description?: boolean,
   avatar?: boolean,
-  disciplineTeachers?: boolean
 }
