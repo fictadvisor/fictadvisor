@@ -2,6 +2,8 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { SubjectService } from './SubjectService';
 import { GetDTO } from '../teacher/dto/GetDTO';
 import { CreateSubjectDTO } from './dto/CreateSubjectDTO';
+import { SubjectByIdPipe } from './SubjectByIdPipe';
+import { Subject } from '@prisma/client';
 
 @Controller({
   version: '2',
@@ -18,8 +20,8 @@ export class SubjectController {
   }
 
   @Get('/:id')
-  get(@Param('id') id: string) {
-    return this.subjectService.get(id);
+  get(@Param('id', SubjectByIdPipe) subject: Subject) {
+    return subject;
   }
 
   @Post()

@@ -1,7 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { Request } from 'express';
-import { ConfigService } from '@nestjs/config';
 import { TelegramConfigService } from '../config/TelegramConfigService';
 
 @Injectable()
