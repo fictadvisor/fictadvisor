@@ -31,4 +31,21 @@ export class TeacherService {
       }
     })
   }
+
+  async getByType(id: string) {
+    const disciplineType = await this.prisma.disciplineType.findUnique({
+      where: {
+        id
+      },
+      include: {
+        disciplineTeachers: {
+          include: {
+            teacher: true,
+          }
+        }
+      }
+    });
+
+    return disciplineType.disciplineTeachers.map(dt => dt.teacher);
+  }
 }
