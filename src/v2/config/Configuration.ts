@@ -18,4 +18,8 @@ export default () => ({
     servePath: '/static',
     dir: process.env.STATIC_DIR,
   },
+  dates: {
+    currentYear: process.env.CURRENT_YEAR ?? 2022,
+    currentSemester: process.env.CURRENT_SEMESTER ?? 1
+  }
 })
