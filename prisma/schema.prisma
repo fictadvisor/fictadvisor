@@ -182,7 +182,7 @@ model TemporaryLesson {
   teacherId        String         @map("teacher_id")
   disciplineType   DisciplineType @relation(fields: [disciplineTypeId], references: [id])
   disciplineTypeId String         @map("discipline_type_id")
-  comment          String
+  comment          String?
 
   @@map("temporary_lessons")
 }

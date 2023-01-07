@@ -13,6 +13,10 @@ import { TeacherService } from '../teacher/TeacherService';
 import { UpdateDynamicInfoDTO } from './dto/UpdateDynamicInfoDTO';
 import { ScheduleRepository } from './ScheduleRepository';
 import { FortnightInfoAdaptor } from './dto/FortnightInfoAdaptor';
+import { UpdateStaticInfoDTO } from './dto/UpdateStaticInfoDTO';
+import { TeacherRoleAdapter } from '../teacher/dto/TeacherRoleAdapter';
+import { CreateLessonDTO } from './dto/CreateLessonDTO';
+import { CreateDateDTO } from './dto/CreateDateDTO';
 
 @Injectable()
 export class ScheduleService {
@@ -197,5 +201,52 @@ export class ScheduleService {
     for (const key in data) {
       await this.scheduleRepository.updateOrCreateFortnightLessonInfo(fortnightLesson.id, FortnightInfoAdaptor[key], data[key]);
     }
+  }
+
+  async updateSemesterInfo(id: string, body: UpdateStaticInfoDTO) {
+    const semesterLesson = await this.scheduleRepository.getSemesterLesson(id);
+    const discipline = await this.disciplineService.getByType(semesterLesson.disciplineTypeId);
+
+    for (const key in body) {
+      if (['endDate', 'startDate', 'url'].includes(key)) {
+        await this.scheduleRepository.updateSemesterLessonInfo(
+          id, {[key]: body[key]}
+        );
+      } else if (['resource', 'evaluatingSystem', 'isSelective'].includes(key)) {
+        await this.disciplineService.update(
+          discipline.id, {[key]: body[key]}
+        );
+      } else {
+        await this.teacherService.deleteByType(semesterLesson.disciplineTypeId);
+        const role = TeacherRoleAdapter[semesterLesson.disciplineType.name];
+        for (const teacherId of body.teachersId) {
+          await this.teacherService.createDisciplineTeacher(teacherId, semesterLesson.disciplineTypeId, role);
+        }
+      }
+    }
+  }
+
+  async createLesson({fortnight, disciplineId, type, ...data}: CreateLessonDTO) {
+    if (!disciplineId || !type) return null;
+
+    const disciplineType = await this.disciplineService.getOrCreateType(disciplineId, type);
+
+    if (!fortnight) {
+      return await this.createSemesterLesson(disciplineType.id, data);
+    } else {
+      return await this.createTemporaryLesson(fortnight, disciplineType.id, data);
+    }
+  }
+
+  async createTemporaryLesson(fortnight, disciplineTypeId, data) {
+    return await this.scheduleRepository.getOrCreateTemporaryLesson({fortnight, disciplineTypeId, ...data});
+  }
+
+  async createSemesterLesson(disciplineTypeId: string, { teacherId, ...data }: {teacherId: string} & CreateDateDTO) {
+    const type = await this.disciplineService.getType(disciplineTypeId);
+    const role = TeacherRoleAdapter[type.name];
+
+    await this.teacherService.getOrCreateDisciplineTeacher({ teacherId, disciplineTypeId, role });
+    return await this.scheduleRepository.getOrCreateSemesterLesson({disciplineTypeId, ...data});
   }
 }

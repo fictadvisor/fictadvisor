@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
 import { FortnightLessonInfoType } from '@prisma/client';
+import { CreateTemporaryLessonData } from './dto/CreateTemporaryLessonData';
+import { CreateSemesterLessonData } from './dto/CreateSemesterLessonData';
 
 @Injectable()
 export class ScheduleRepository {
@@ -102,6 +104,39 @@ export class ScheduleRepository {
         }
       });
     }
+  }
+
+  async updateSemesterLessonInfo(id: string, data) {
+    return await this.prisma.semesterLesson.update({
+      where: {
+        id
+      },
+      data
+    })
+  }
+
+  async getOrCreateSemesterLesson(data: CreateSemesterLessonData) {
+    let lesson = await this.prisma.semesterLesson.findFirst({
+      where: data
+    });
+    if (!lesson) {
+      lesson = await this.prisma.semesterLesson.create({
+        data
+      });
+    }
+    return lesson;
+  }
+
+  async getOrCreateTemporaryLesson(data: CreateTemporaryLessonData) {
+    let lesson = await this.prisma.temporaryLesson.findFirst({
+      where: data,
+    });
+    if (!lesson) {
+      lesson = await this.prisma.temporaryLesson.create({
+        data,
+      });
+    }
+    return lesson;
   }
 
 }

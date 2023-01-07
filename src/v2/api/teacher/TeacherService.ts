@@ -3,6 +3,8 @@ import { PrismaService } from '../../database/PrismaService';
 import { GetDTO, TeacherFieldsDTO } from './dto/GetDTO';
 import { CreateTeacherDTO } from './dto/CreateTeacherDTO';
 import { DatabaseUtils } from '../utils/DatabaseUtils';
+import { TeacherRole } from '@prisma/client';
+import { CreateDisciplineTeacherData } from './dto/CreateDisciplineTeacherData';
 
 
 @Injectable()
@@ -47,5 +49,35 @@ export class TeacherService {
     });
 
     return disciplineType.disciplineTeachers.map(dt => dt.teacher);
+  }
+
+  async deleteByType(disciplineTypeId: string) {
+    return await this.prisma.disciplineTeacher.deleteMany({
+      where: {
+        disciplineTypeId
+      }
+    });
+  }
+
+  async createDisciplineTeacher(teacherId: string, disciplineTypeId: string, role: TeacherRole) {
+    return await this.prisma.disciplineTeacher.create({
+      data: {
+        teacherId,
+        disciplineTypeId,
+        role
+      }
+    });
+  }
+
+  async getOrCreateDisciplineTeacher(data: CreateDisciplineTeacherData) {
+    let teacher = await this.prisma.disciplineTeacher.findFirst({
+      where: data,
+    });
+    if (!teacher) {
+      teacher = await this.prisma.disciplineTeacher.create({
+        data,
+      });
+    }
+    return teacher;
   }
 }
