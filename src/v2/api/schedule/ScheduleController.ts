@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -6,7 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  Query,
+  Query, Request,
   UseGuards,
 } from '@nestjs/common';
 import { ScheduleService } from './ScheduleService';
@@ -18,6 +19,8 @@ import { UpdateDynamicInfoDTO } from './dto/UpdateDynamicInfoDTO';
 import { GroupBySemesterLessonGuard } from '../../security/group-guard/GroupBySemesterLessonGuard';
 import { GroupByParamsGuard } from '../../security/group-guard/GroupByParamsGuard';
 import { GroupByTemporaryLessonGuard } from '../../security/group-guard/GroupByTemporaryLessonGuard';
+import { UpdateStaticInfoDTO } from './dto/UpdateStaticInfoDTO';
+import { CreateLessonDTO } from './dto/CreateLessonDTO';
 
 @Controller({
   version: '2',
@@ -99,4 +102,31 @@ export class ScheduleController {
   ) {
     return this.scheduleService.updateFortnightInfo(id, fortnight, body);
   }
+
+  @UseGuards(JwtGuard, GroupBySemesterLessonGuard)
+  @Patch('/lessons/static/:lessonId')
+  async updateSemesterLesson(
+    @Param('lessonId') id: string,
+    @Body() body: UpdateStaticInfoDTO,
+  ) {
+    return this.scheduleService.updateSemesterInfo(id, body);
+  }
+
+  @UseGuards(JwtGuard)
+  @Post('')
+  async createLesson(
+    @Request() req,
+    @Body() body: CreateLessonDTO,
+  ) {
+    const lesson = await this.scheduleService.createLesson(body);
+    if (!lesson) {
+      throw new BadRequestException('Invalid create lesson DTO');
+    }
+    if (!body.fortnight) {
+      return this.scheduleService.getFullStaticLesson(lesson.id, body.fortnight);
+    } else {
+      return this.scheduleService.getFullTemporaryLesson(lesson.id);
+    }
+  }
+
 }
