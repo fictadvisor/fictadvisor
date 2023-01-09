@@ -50,7 +50,7 @@ This application provides a REST API for FICT Advisor.
 ### Built with
 
 * [Nest](https://github.com/nestjs/nest)
-* [TypeORM](https://github.com/typeorm/typeorm)
+* [Prisma](https://www.prisma.io)
 
 ## Getting started
 
