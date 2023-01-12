@@ -13,4 +13,11 @@ export class TextUtil {
     }
     return `${lastName} ${firstName}`;
   }
+
+  static mergeClassName(defaultValue: string, className: string) {
+    if (!className) {
+      return defaultValue;
+    }
+    return `${defaultValue} ${className}`;
+  }
 }
