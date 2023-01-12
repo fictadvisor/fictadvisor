@@ -5,11 +5,7 @@ import {
   SortQuery,
 } from "../index";
 import { client, QueryParams } from "../index";
-
-export type CreateCourseBody = {
-  teacher_id: string;
-  subject_id: string;
-};
+import { CreateCourseBody } from "../../../v1/api/courses";
 
 export class DisciplineAPI {
   static async getDisciplines(
@@ -31,4 +27,3 @@ export class DisciplineAPI {
     );
   }
 }
-

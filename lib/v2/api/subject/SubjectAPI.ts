@@ -1,10 +1,6 @@
 import { client, getAuthorizationHeader, QueryParams } from "../index";
 import { GetSubjectDTO } from "./dto/GetSubjectDTO";
-
-export type CreateSubjectBody = {
-  name: string;
-  description?: string;
-};
+import { CreateSubjectBodyDTO } from "./dto/CreateSubjectBodyDTO";
 
 export class SubjectsAPI {
   static async get(subjectId: string): Promise<GetSubjectDTO> {
@@ -17,7 +13,7 @@ export class SubjectsAPI {
     return (await client.get("/subjects", { params })).data;
   }
 
-  static async create(accessToken: string, body: CreateSubjectBody) {
+  static async create(accessToken: string, body: CreateSubjectBodyDTO) {
     return await client.post(
       `/subjects`,
       body,
