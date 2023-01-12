@@ -2,10 +2,10 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useMutation } from "react-query";
-import api from "../../lib/api";
-import { CreateTeacherBody } from "../../lib/api/teachers";
-import { useAuthentication } from "../../lib/context/AuthenticationContext";
-import { validateGroup } from "../../lib/validation";
+import api from "../../lib/v1/api";
+import { CreateTeacherBody } from "../../lib/v1/api/teachers";
+import { useAuthentication } from "../../lib/v1/context/AuthenticationContext";
+import { validateGroup } from "../../lib/v1/validation";
 import Button from "../ui/Button";
 import Disclaimer from "../ui/Disclaimer";
 import ErrorMessage from "../ui/ErrorMessage";
@@ -16,15 +16,25 @@ export type AddTeacherFormProperties = {
   onBack: () => any;
 };
 
-const AddTeacherForm = ({ authentication, onBack }: AddTeacherFormProperties) => {
-  const { data, error, isLoading, mutate, isSuccess } = useMutation((data: CreateTeacherBody) => api.teachers.create(authentication.getToken(), data));
+const AddTeacherForm = ({
+  authentication,
+  onBack,
+}: AddTeacherFormProperties) => {
+  const { data, error, isLoading, mutate, isSuccess } = useMutation(
+    (data: CreateTeacherBody) =>
+      api.teachers.create(authentication.getToken(), data)
+  );
   const [validationErrors, setValidationErrors] = useState(null);
-  const [lastName, setLastName] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [middleName, setMiddleName] = useState('');
+  const [lastName, setLastName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [middleName, setMiddleName] = useState("");
 
   const onSubmit = () => {
-    const errors = validateGroup(['lastName', lastName], ['firstName', firstName], ['middleName', middleName]);
+    const errors = validateGroup(
+      ["lastName", lastName],
+      ["firstName", firstName],
+      ["middleName", middleName]
+    );
 
     if (errors.length > 0) {
       setValidationErrors(errors);
@@ -33,20 +43,24 @@ const AddTeacherForm = ({ authentication, onBack }: AddTeacherFormProperties) =>
       setValidationErrors(null);
     }
 
-    mutate({ first_name: firstName, middle_name: middleName, last_name: lastName });
+    mutate({
+      first_name: firstName,
+      middle_name: middleName,
+      last_name: lastName,
+    });
   };
 
   if (isSuccess) {
     return (
       <div>
-        <Disclaimer>Дякуємо, твоя заявка була відправлена на перевірку</Disclaimer>
+        <Disclaimer>
+          Дякуємо, твоя заявка була відправлена на перевірку
+        </Disclaimer>
         <div className="m-t d-flex">
           <Button onClick={() => onBack()}>Назад</Button>
           <Link href={`/teachers/${data.link}`}>
             <a className="w-full m-l">
-              <Button className="w-full">
-                Перейти на сторінку викладача
-              </Button>
+              <Button className="w-full">Перейти на сторінку викладача</Button>
             </a>
           </Link>
         </div>
@@ -58,19 +72,19 @@ const AddTeacherForm = ({ authentication, onBack }: AddTeacherFormProperties) =>
     <div className="form-block">
       <div className="block">
         <div className="m-b space">
-          <Input 
+          <Input
             className=""
             placeholder="Прізвище"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
           />
-          <Input 
+          <Input
             className="m-t"
             placeholder="Ім'я"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
           />
-          <Input 
+          <Input
             className="m-t"
             placeholder="Ім'я по батькові"
             value={middleName}
@@ -78,19 +92,38 @@ const AddTeacherForm = ({ authentication, onBack }: AddTeacherFormProperties) =>
           />
         </div>
         <div className="d-flex">
-          <Button loading={isLoading} onClick={() => onBack()}>Назад</Button>
-          <Button loading={isLoading} className="d-flex-grow w-full m-l" onClick={() => onSubmit()}>Відправити</Button>
+          <Button loading={isLoading} onClick={() => onBack()}>
+            Назад
+          </Button>
+          <Button
+            loading={isLoading}
+            className="d-flex-grow w-full m-l"
+            onClick={() => onSubmit()}
+          >
+            Відправити
+          </Button>
         </div>
       </div>
-      {
-          validationErrors && validationErrors.length > 0 
-            ? validationErrors.map((e, i) => <Disclaimer key={i} className="alert m-t">{e}</Disclaimer>)
-            :
-              (error && !isLoading) &&
-              <ErrorMessage className="m-t" text={(error as any)?.response?.status === 409 ? 'Викладач вже наявний у списку' : null} error={error} />
-        }
+      {validationErrors && validationErrors.length > 0
+        ? validationErrors.map((e, i) => (
+            <Disclaimer key={i} className="alert m-t">
+              {e}
+            </Disclaimer>
+          ))
+        : error &&
+          !isLoading && (
+            <ErrorMessage
+              className="m-t"
+              text={
+                (error as any)?.response?.status === 409
+                  ? "Викладач вже наявний у списку"
+                  : null
+              }
+              error={error}
+            />
+          )}
     </div>
-  )
+  );
 };
 
 export default AddTeacherForm;

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useAuthentication } from "../../lib/context/AuthenticationContext";
+import { useAuthentication } from "../../lib/v1/context/AuthenticationContext";
 import AuthenticationModal from "../AuthenticationModal";
 
 export type ButtonProperties = {
@@ -7,11 +7,24 @@ export type ButtonProperties = {
   active?: boolean;
   loading?: boolean;
   innerRef?: any;
-} & React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>;
+} & React.DetailedHTMLProps<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  HTMLButtonElement
+>;
 
 const ButtonLoader = () => <div className="ld ld-ring ld-spin"></div>;
 
-const Button = ({ authenticated, className, disabled, active, loading, children, innerRef, onClick: _onClick, ...props }: ButtonProperties) => {
+const Button = ({
+  authenticated,
+  className,
+  disabled,
+  active,
+  loading,
+  children,
+  innerRef,
+  onClick: _onClick,
+  ...props
+}: ButtonProperties) => {
   const [modalOpen, setModalOpen] = useState(false);
 
   let onClick = _onClick;
@@ -26,22 +39,21 @@ const Button = ({ authenticated, className, disabled, active, loading, children,
 
       setModalOpen(true);
 
-      console.log('no-no');
+      console.log("no-no");
     };
   }
 
   return (
     <>
-      {
-        authenticated && modalOpen &&
-        <AuthenticationModal />
-      }
-      <button ref={innerRef} onClick={onClick} disabled={disabled || loading} className={`${className ?? ''} ${active ? 'active' : ''}`} {...props} >
-        {
-          loading 
-            ? <ButtonLoader />
-            : children
-        }
+      {authenticated && modalOpen && <AuthenticationModal />}
+      <button
+        ref={innerRef}
+        onClick={onClick}
+        disabled={disabled || loading}
+        className={`${className ?? ""} ${active ? "active" : ""}`}
+        {...props}
+      >
+        {loading ? <ButtonLoader /> : children}
       </button>
     </>
   );

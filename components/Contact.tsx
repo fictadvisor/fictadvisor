@@ -1,16 +1,19 @@
-import { mergeClassName } from "../lib/component";
+import { mergeClassName } from "../lib/v1/component";
 
 export type ContactProperties = {
   name: string;
   value: string;
-} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
+} & React.DetailedHTMLProps<
+  React.HTMLAttributes<HTMLDivElement>,
+  HTMLDivElement
+>;
 
 const Contact = ({ name, value, className, ...props }: ContactProperties) => {
   return (
-    <div 
-      title="Натисни, щоб копіювати" 
-      className={mergeClassName('contact', className)} 
-      onClick={() => navigator.clipboard.writeText(value)} 
+    <div
+      title="Натисни, щоб копіювати"
+      className={mergeClassName("contact", className)}
+      onClick={() => navigator.clipboard.writeText(value)}
       {...props}
     >
       <div className="contact-name">{name}</div>

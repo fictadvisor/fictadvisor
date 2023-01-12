@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "react-query";
-import api from "../../lib/api";
-import { useAuthentication } from "../../lib/context/AuthenticationContext";
+import api from "../../lib/v1/api";
+import { useAuthentication } from "../../lib/v1/context/AuthenticationContext";
 import Contact from "../Contact";
 import AddContactForm from "../forms/AddContactForm";
 import Button from "../ui/Button";
@@ -10,7 +10,10 @@ import Loader from "../ui/Loader";
 
 export type ContactBlockProperties = {
   link: string;
-} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
+} & React.DetailedHTMLProps<
+  React.HTMLAttributes<HTMLDivElement>,
+  HTMLDivElement
+>;
 
 const ContactList = ({ data }) => {
   if (data.items.length === 0) {
@@ -24,9 +27,9 @@ const ContactList = ({ data }) => {
   return (
     <>
       <div className="contact-group m-t">
-        {
-          data.items.map((c, i) => <Contact key={i} {...c} />)
-        }
+        {data.items.map((c, i) => (
+          <Contact key={i} {...c} />
+        ))}
       </div>
     </>
   );
@@ -34,8 +37,8 @@ const ContactList = ({ data }) => {
 
 const ContactBlock = ({ link }: ContactBlockProperties) => {
   const { data, isLoading, error } = useQuery(
-    ['teacher-contacts', link], 
-    () => api.teachers.getContacts(link), 
+    ["teacher-contacts", link],
+    () => api.teachers.getContacts(link),
     { keepPreviousData: true }
   );
 
@@ -44,28 +47,32 @@ const ContactBlock = ({ link }: ContactBlockProperties) => {
 
   return (
     <div>
-      {
-        formMode 
-          ? <AddContactForm link={link} authentication={authentication} onBack={() => setFormMode(false)} />
-          : <Button 
-              className="w-full" 
-              onClick={() => {
-                if (!authentication.user) {
-                  authentication.login();
-                  return;
-                }
+      {formMode ? (
+        <AddContactForm
+          link={link}
+          authentication={authentication}
+          onBack={() => setFormMode(false)}
+        />
+      ) : (
+        <Button
+          className="w-full"
+          onClick={() => {
+            if (!authentication.user) {
+              authentication.login();
+              return;
+            }
 
-                setFormMode(true);
-              }}
-            >
-              Додати контакт
-            </Button>
-      }
-      {
-        isLoading || error
-          ? <Loader.Catchable error={error} />
-          : <ContactList data={data} />
-      }
+            setFormMode(true);
+          }}
+        >
+          Додати контакт
+        </Button>
+      )}
+      {isLoading || error ? (
+        <Loader.Catchable error={error} />
+      ) : (
+        <ContactList data={data} />
+      )}
     </div>
   );
 };

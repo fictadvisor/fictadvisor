@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { mergeClassName } from "../lib/component";
-import pluralize from "../lib/pluralize";
+import { mergeClassName } from "../lib/v1/component";
+import pluralize from "../lib/v1/pluralize";
 
 import Button from "./ui/Button";
 
@@ -10,9 +10,20 @@ export type CourseItemProperties = {
   reviewCount: number;
   recommended: boolean;
   link: string;
-} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
+} & React.DetailedHTMLProps<
+  React.HTMLAttributes<HTMLDivElement>,
+  HTMLDivElement
+>;
 
-const CourseItem = ({ link, title, rating, reviewCount, recommended, className, ...props }: CourseItemProperties) => {
+const CourseItem = ({
+  link,
+  title,
+  rating,
+  reviewCount,
+  recommended,
+  className,
+  ...props
+}: CourseItemProperties) => {
   const noReviews = !rating || !reviewCount;
 
   return (
@@ -22,19 +33,24 @@ const CourseItem = ({ link, title, rating, reviewCount, recommended, className, 
           <div className="info">
             <span className="f-medium">{title}</span>
             <p className="c-secondary">
-              {
-                noReviews 
-                  ? <><span className="c-secondary">На жаль, відгуки про цей курс відсутні</span></>
-                  : <>
-                      Написано <span className="c-primary">{reviewCount}</span> {pluralize(reviewCount, 'відгук', 'відгуки', 'відгуків')} про цей курс, 
-                      має середню оцінку <span className="c-primary">{+rating.toFixed(2)}</span>
-                    </>
-              }
+              {noReviews ? (
+                <>
+                  <span className="c-secondary">
+                    На жаль, відгуки про цей курс відсутні
+                  </span>
+                </>
+              ) : (
+                <>
+                  Написано <span className="c-primary">{reviewCount}</span>{" "}
+                  {pluralize(reviewCount, "відгук", "відгуки", "відгуків")} про
+                  цей курс, має середню оцінку{" "}
+                  <span className="c-primary">{+rating.toFixed(2)}</span>
+                </>
+              )}
             </p>
-            {
-              recommended &&
+            {recommended && (
               <p className="c-recommended">Рекомендовано редакцією</p>
-            }
+            )}
           </div>
         </div>
       </a>

@@ -22,7 +22,9 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "lib/component"  ],
+,
+    "lib/v1/component"
+  ],
   "exclude": [
     "node_modules"
   ]

@@ -1,6 +1,5 @@
 import * as fs from "fs/promises";
 import { parse } from 'node-html-parser';
-import {assign} from "next/dist/next-server/lib/router/utils/querystring";
 
 export type ArticleMetadata = {
   author: string;

@@ -1,4 +1,4 @@
-import { mergeClassName } from "../lib/component";
+import { mergeClassName } from "../lib/v1/component";
 
 import StarIcon from "./ui/icons/StarIcon";
 
@@ -6,12 +6,12 @@ const getStars = (rating: number) => {
   const stars = [];
 
   for (let i = 1; i < 6; i++) {
-    let type = 'empty' as any;
+    let type = "empty" as any;
 
     if (rating == null || rating === 0 || rating >= i) {
-      type = 'full';
+      type = "full";
     } else if (rating >= i - 0.5) {
-      type = 'half';
+      type = "half";
     }
 
     stars.push(<StarIcon key={i} type={type} />);
@@ -22,15 +22,24 @@ const getStars = (rating: number) => {
 
 export type RatingProperties = {
   rating: number;
-} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+} & React.DetailedHTMLProps<
+  React.HTMLAttributes<HTMLDivElement>,
+  HTMLDivElement
+>;
 
-const Rating = ({ rating, children, style, className, ...props }: RatingProperties) => {
+const Rating = ({
+  rating,
+  children,
+  style,
+  className,
+  ...props
+}: RatingProperties) => {
   const hasRating = rating == null || rating === 0;
 
   return (
-    <div 
-      className={mergeClassName('rating c-secondary', className)}
-      style={{ ...style, visibility: !hasRating ? 'visible' : 'hidden' }}
+    <div
+      className={mergeClassName("rating c-secondary", className)}
+      style={{ ...style, visibility: !hasRating ? "visible" : "hidden" }}
       {...props}
     >
       {getStars(rating)}

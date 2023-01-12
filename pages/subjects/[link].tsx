@@ -11,23 +11,23 @@ import Disclaimer from "../../components/ui/Disclaimer";
 import Dropdown from "../../components/ui/Dropdown";
 import Loader from "../../components/ui/Loader";
 import SearchInput from "../../components/ui/SearchInput";
-import api from "../../lib/api";
-import { useAuthentication } from "../../lib/context/AuthenticationContext";
-import { toInteger } from "../../lib/number";
-import { useQueryParams } from "../../lib/query";
-import { getFullName } from "../../lib/text";
+import api from "../../lib/v1/api";
+import { useAuthentication } from "../../lib/v1/context/AuthenticationContext";
+import { toInteger } from "../../lib/v1/number";
+import { useQueryParams } from "../../lib/v1/query";
+import { getFullName } from "../../lib/v1/text";
 
 const PROPERTIES = {
   pageSize: 6,
   sortBy: [
     {
-      text: 'Рейтингом',
-      data: 'rating' as const
+      text: "Рейтингом",
+      data: "rating" as const,
     },
     {
-      text: 'Назвою',
-      data: 'name' as const
-    }
+      text: "Назвою",
+      data: "name" as const,
+    },
   ],
 };
 
@@ -43,40 +43,49 @@ const CoursesList = ({ data, isFetching, setPage, page }) => {
   return (
     <>
       <div className="block-container">
-        {
-          data.items.map(c => 
-            <CourseItem 
-              key={c.id}
-              link={c.link} 
-              title={getFullName(c.teacher.last_name, c.teacher.first_name, c.teacher.middle_name)}
-              rating={c.rating}
-              reviewCount={c.review_count}
-              recommended={c.recommended}
-            />
-          )
-        }
+        {data.items.map((c) => (
+          <CourseItem
+            key={c.id}
+            link={c.link}
+            title={getFullName(
+              c.teacher.last_name,
+              c.teacher.first_name,
+              c.teacher.middle_name
+            )}
+            rating={c.rating}
+            reviewCount={c.review_count}
+            recommended={c.recommended}
+          />
+        ))}
       </div>
-      {
-        data.count > (page + 1) * PROPERTIES.pageSize &&
-        <Button 
+      {data.count > (page + 1) * PROPERTIES.pageSize && (
+        <Button
           loading={isFetching}
           className="w-full m-t"
           onClick={() => setPage(page + 1)}
         >
           Завантажити ще
         </Button>
-      }
+      )}
     </>
   );
 };
 
 const STATE_MESSAGES = {
-  pending: () => <Disclaimer className="warning m-b">Інформація перевіряється редакцією</Disclaimer>,
-  declined: () => <Disclaimer className="alert m-b">Інформація не є дійсною та була відхилена редакцією</Disclaimer>,
+  pending: () => (
+    <Disclaimer className="warning m-b">
+      Інформація перевіряється редакцією
+    </Disclaimer>
+  ),
+  declined: () => (
+    <Disclaimer className="alert m-b">
+      Інформація не є дійсною та була відхилена редакцією
+    </Disclaimer>
+  ),
 };
 
 const SubjectPage = ({ subject }) => {
-  const [searchText, _setSearchText] = useState('');
+  const [searchText, _setSearchText] = useState("");
   const [sortType, _setSortType] = useState(0);
   const [page, _setPage] = useState(0);
   const [formMode, setFormMode] = useState(false);
@@ -85,16 +94,22 @@ const SubjectPage = ({ subject }) => {
   const { queryReady, withQueryParam } = useQueryParams((query) => {
     _setSortType(toInteger(query.sb, sortType));
     _setPage(toInteger(query.p, page));
-    _setSearchText(query.s ?? '');
+    _setSearchText(query.s ?? "");
   });
 
-  const setSortType = withQueryParam('sb', _setSortType);
-  const setPage =  withQueryParam('p', _setPage);
-  const setSearchText = withQueryParam('s', _setSearchText);
+  const setSortType = withQueryParam("sb", _setSortType);
+  const setPage = withQueryParam("p", _setPage);
+  const setSearchText = withQueryParam("s", _setSearchText);
 
   const { data, isLoading, isFetching, error } = useQuery(
-    ['subject-courses-search', subject.link, page, searchText, sortType], 
-    () => api.subjects.getCourses(subject.link, { page: 0, page_size: PROPERTIES.pageSize * (page + 1), search: searchText, sort: PROPERTIES.sortBy[sortType].data }), 
+    ["subject-courses-search", subject.link, page, searchText, sortType],
+    () =>
+      api.subjects.getCourses(subject.link, {
+        page: 0,
+        page_size: PROPERTIES.pageSize * (page + 1),
+        search: searchText,
+        sort: PROPERTIES.sortBy[sortType].data,
+      }),
     { keepPreviousData: true, enabled: queryReady }
   );
 
@@ -103,41 +118,59 @@ const SubjectPage = ({ subject }) => {
   const StateMessage = STATE_MESSAGES[subject.state];
 
   return (
-    <PageLayout
-      meta={{ title: subject.name }}
-      title="Сторінка предмету"
-    >
-      {
-        StateMessage &&
-        <StateMessage />
-      }
-      <SubjectInformation name={subject.name} description={subject.description} className="m-b" />
-      {
-        formMode 
-          ? <AddCourseForm authentication={authentication} subject={subject.id} onBack={() => setFormMode(false)} />
-          : <Button 
-              className="w-full" 
-              onClick={() => {
-                if (!authentication.user) {
-                  authentication.login();
-                  return;
-                }
+    <PageLayout meta={{ title: subject.name }} title="Сторінка предмету">
+      {StateMessage && <StateMessage />}
+      <SubjectInformation
+        name={subject.name}
+        description={subject.description}
+        className="m-b"
+      />
+      {formMode ? (
+        <AddCourseForm
+          authentication={authentication}
+          subject={subject.id}
+          onBack={() => setFormMode(false)}
+        />
+      ) : (
+        <Button
+          className="w-full"
+          onClick={() => {
+            if (!authentication.user) {
+              authentication.login();
+              return;
+            }
 
-                setFormMode(true);
-              }}
-            >
-              Додати викладача
-            </Button>
-      }
+            setFormMode(true);
+          }}
+        >
+          Додати викладача
+        </Button>
+      )}
       <div className="adaptive-input-container d-flex m-b m-t">
-        <SearchInput active={searchActive} className="d-flex-grow" placeholder="Пошук викладачів" value={searchText} onChange={e => setSearchText(e.target.value)} />
-        <Dropdown text="Сортування за:" active={sortType} onChange={i => setSortType(i)} options={PROPERTIES.sortBy} />
+        <SearchInput
+          active={searchActive}
+          className="d-flex-grow"
+          placeholder="Пошук викладачів"
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+        />
+        <Dropdown
+          text="Сортування за:"
+          active={sortType}
+          onChange={(i) => setSortType(i)}
+          options={PROPERTIES.sortBy}
+        />
       </div>
-      {
-        isLoading || error || !data
-          ? <Loader.Catchable error={error} />
-          : <CoursesList data={data} isFetching={isFetching} page={page} setPage={setPage} />
-      }
+      {isLoading || error || !data ? (
+        <Loader.Catchable error={error} />
+      ) : (
+        <CoursesList
+          data={data}
+          isFetching={isFetching}
+          page={page}
+          setPage={setPage}
+        />
+      )}
     </PageLayout>
   );
 };
@@ -146,7 +179,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { link } = context.query;
 
   try {
-    const data = await api.subjects.get(typeof(link) === 'object' ? link[0] : link);
+    const data = await api.subjects.get(
+      typeof link === "object" ? link[0] : link
+    );
 
     return {
       props: {
@@ -165,4 +200,3 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 export default SubjectPage;
-

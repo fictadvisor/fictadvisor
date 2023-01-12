@@ -1,8 +1,8 @@
-import articles from "../../lib/articles";
+import articles from "../../lib/v1/articles";
 import Article from "../../components/Article";
 
 export default function Post({ article }) {
-  return <Article article={article}/>;
+  return <Article article={article} />;
 }
 
 export async function getStaticProps({ params }) {
@@ -23,8 +23,8 @@ export async function getStaticPaths() {
     paths: articleList.map((link) => {
       return {
         params: { link },
-      }
+      };
     }),
-    fallback: 'blocking',
-  }
+    fallback: "blocking",
+  };
 }

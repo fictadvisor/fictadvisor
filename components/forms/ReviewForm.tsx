@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useMutation } from "react-query";
-import api from "../../lib/api";
-import { CreateReviewBody } from "../../lib/api/courses";
-import { mergeClassName } from "../../lib/component";
-import pluralize from "../../lib/pluralize";
-import { validate } from "../../lib/validation";
+import api from "../../lib/v1/api";
+import { CreateReviewBody } from "../../lib/v1/api/courses";
+import { mergeClassName } from "../../lib/v1/component";
+import pluralize from "../../lib/v1/pluralize";
+import { validate } from "../../lib/v1/validation";
 import RatingSelect from "../RatingSelect";
 import Button from "../ui/Button";
 import Disclaimer from "../ui/Disclaimer";
@@ -15,16 +15,27 @@ export type ReviewEditorProperties = {
   link: string;
   token: string;
   onBack?: () => any;
-} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
+} & React.DetailedHTMLProps<
+  React.HTMLAttributes<HTMLDivElement>,
+  HTMLDivElement
+>;
 
-const ReviewForm = ({ link, token, onBack, className, ...props }: ReviewEditorProperties) => {
+const ReviewForm = ({
+  link,
+  token,
+  onBack,
+  className,
+  ...props
+}: ReviewEditorProperties) => {
   const [rating, setRating] = useState(2.5);
-  const [review, setReview] = useState('');
-  const { error, isLoading, mutate, isSuccess } = useMutation((data: CreateReviewBody) => api.courses.createReview(link, token, data));
+  const [review, setReview] = useState("");
+  const { error, isLoading, mutate, isSuccess } = useMutation(
+    (data: CreateReviewBody) => api.courses.createReview(link, token, data)
+  );
   const [validationError, setValidationError] = useState(null);
 
   const onSubmit = () => {
-    const error = validate('reviewContent', review);
+    const error = validate("reviewContent", review);
 
     if (error) {
       setValidationError(error);
@@ -40,23 +51,26 @@ const ReviewForm = ({ link, token, onBack, className, ...props }: ReviewEditorPr
     return (
       <div {...props}>
         <Disclaimer>Дякуємо за відгук!</Disclaimer>
-         {
-            onBack &&
-            <Button className="w-full m-t" onClick={() => onBack()}>Назад</Button>
-          }
+        {onBack && (
+          <Button className="w-full m-t" onClick={() => onBack()}>
+            Назад
+          </Button>
+        )}
       </div>
     );
   }
 
   return (
-    <div className={mergeClassName('form-block', className)} {...props}>
-      <Disclaimer>Будь ласка, утримайся від образ та ненормативної лексики</Disclaimer>
+    <div className={mergeClassName("form-block", className)} {...props}>
+      <Disclaimer>
+        Будь ласка, утримайся від образ та ненормативної лексики
+      </Disclaimer>
       <div className="block m-t">
-        <RatingSelect value={rating} onChange={(value) => setRating(value)}/>
-        <div style={{ position: 'relative' }}>
-          <TextArea 
+        <RatingSelect value={rating} onChange={(value) => setRating(value)} />
+        <div style={{ position: "relative" }}>
+          <TextArea
             className="m-b m-t"
-            style={{ paddingBottom: review.length > 0 ? '24px' : '14px' }}
+            style={{ paddingBottom: review.length > 0 ? "24px" : "14px" }}
             value={review}
             onChange={(e) => setReview(e.target.value)}
             placeholder={
@@ -66,33 +80,40 @@ const ReviewForm = ({ link, token, onBack, className, ...props }: ReviewEditorPr
               `Мінімальна довжина відгуку - 100 символів, а максимальна - 4096 символів.`
             }
           />
-          { 
-            review.length > 0 &&
+          {review.length > 0 && (
             <>
-              <div className="c-secondary" style={{ position: 'absolute', bottom: '15px', right: '15px' }}>
-                {review.length} {pluralize(review.length, 'символ', 'символа', 'символів')}, оцінка: {rating}
+              <div
+                className="c-secondary"
+                style={{ position: "absolute", bottom: "15px", right: "15px" }}
+              >
+                {review.length}{" "}
+                {pluralize(review.length, "символ", "символа", "символів")},
+                оцінка: {rating}
               </div>
             </>
-          }
+          )}
         </div>
         <div className="d-flex">
-          {
-            onBack &&
-            <Button loading={isLoading} onClick={() => onBack()}>Назад</Button>
-          }
-          <Button loading={isLoading} className="d-flex-grow" style={{ marginLeft: '10px' }} onClick={() => onSubmit()}>Відправити</Button>
+          {onBack && (
+            <Button loading={isLoading} onClick={() => onBack()}>
+              Назад
+            </Button>
+          )}
+          <Button
+            loading={isLoading}
+            className="d-flex-grow"
+            style={{ marginLeft: "10px" }}
+            onClick={() => onSubmit()}
+          >
+            Відправити
+          </Button>
         </div>
       </div>
-      {
-        validationError 
-          ?
-            <Disclaimer className="alert m-t">
-              {validationError}
-            </Disclaimer>
-          :
-            (error && !isLoading) &&
-            <ErrorMessage className="m-t" error={error} />
-      }
+      {validationError ? (
+        <Disclaimer className="alert m-t">{validationError}</Disclaimer>
+      ) : (
+        error && !isLoading && <ErrorMessage className="m-t" error={error} />
+      )}
     </div>
   );
 };
