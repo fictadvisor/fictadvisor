@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { GroupService } from './GroupService';
 import { CreateDTO } from './dto/CreateDTO';
 import { GetDTO } from '../teacher/dto/GetDTO';
@@ -20,12 +20,12 @@ export class GroupController {
   }
 
   @Get()
-  getAll(@Body() body: GetDTO) {
+  getAll(@Query() body: GetDTO<Group>) {
     return this.groupService.getAll(body);
   }
 
-  @Get('/:id')
-  get(@Param('id', GroupByIdPipe) group: Group) {
+  @Get('/:groupId')
+  get(@Param('groupId', GroupByIdPipe) group: Group) {
     return group;
   }
 

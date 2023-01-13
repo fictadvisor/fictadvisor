@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { TeacherService } from './TeacherService';
 import { GetDTO } from './dto/GetDTO';
 import { CreateTeacherDTO } from './dto/CreateTeacherDTO';
+import { Teacher } from '@prisma/client'
 
 @Controller({
   version: '2',
@@ -13,7 +14,7 @@ export class TeacherController {
   ) {}
 
   @Get()
-  async getAll(@Body() body: GetDTO) {
+  async getAll(@Query() body: GetDTO<Teacher>) {
     return this.teacherService.getAll(body);
   }
 

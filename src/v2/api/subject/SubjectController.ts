@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { SubjectService } from './SubjectService';
 import { GetDTO } from '../teacher/dto/GetDTO';
 import { CreateSubjectDTO } from './dto/CreateSubjectDTO';
@@ -15,7 +15,7 @@ export class SubjectController {
   ) {}
 
   @Get()
-  getAll(@Body() body: GetDTO) {
+  getAll(@Query() body: GetDTO<Subject>) {
     return this.subjectService.getAll(body);
   }
 
