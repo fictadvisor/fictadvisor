@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import { State } from '@prisma/client'
+import { User } from '@prisma/client';
+import { ApproveDTO } from './dto/ApproveDTO';
+import { GroupService } from '../group/GroupService';
+import { DisciplineService } from '../discipline/DisciplineService';
 
 @Injectable()
 export class UserService {
@@ -8,13 +11,33 @@ export class UserService {
     private prisma: PrismaService,
   ) {}
 
-  async verify(userId: string) {
+  async verify(userId: string, body: ApproveDTO) {
     await this.prisma.student.update({
       where: {
-        userId
+        userId,
       },
       data: {
-        state: State.APPROVED
+        ...body,
+      }
+    })
+  }
+
+  async createSuperhero(id, body) {
+    await this.prisma.superhero.create({
+      data: {
+        userId: id,
+        ...body,
+      }
+    })
+  }
+
+  async verifySuperhero(userId: string, body: ApproveDTO) {
+    await this.prisma.superhero.update({
+      where: {
+        userId,
+      },
+      data: {
+        ...body,
       }
     })
   }
