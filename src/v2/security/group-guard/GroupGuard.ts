@@ -36,6 +36,8 @@ export abstract class GroupGuard implements CanActivate {
       throw new ActionGroupForbiddenException();
     }
 
+    context.switchToHttp().getRequest().group = group;
+
     return true;
   }
 
