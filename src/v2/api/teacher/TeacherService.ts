@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import { GetDTO, TeacherFieldsDTO } from './dto/GetDTO';
+import { GetDTO } from './dto/GetDTO';
 import { CreateTeacherDTO } from './dto/CreateTeacherDTO';
 import { DatabaseUtils } from '../utils/DatabaseUtils';
-import { TeacherRole } from '@prisma/client';
+import { Teacher, TeacherRole } from '@prisma/client';
 import { CreateDisciplineTeacherData } from './dto/CreateDisciplineTeacherData';
 import {DisciplineService} from "../discipline/DisciplineService";
 
@@ -16,10 +16,18 @@ export class TeacherService {
   ) {}
 
 
-  async getAll({ fields }: GetDTO) {
-    const select = DatabaseUtils.getSelectObject<TeacherFieldsDTO>(fields);
+  async getAll(body: GetDTO<Teacher>) {
+    const search = DatabaseUtils.getSearch<Teacher>(body, 'firstName', 'lastName', 'middleName');
+    const page = DatabaseUtils.getPage(body);
+    const sort = DatabaseUtils.getSort(body);
 
-    return await this.prisma.teacher.findMany(select);
+    return await this.prisma.teacher.findMany({
+      ...page,
+      ...sort,
+      where: {
+        ...search,
+      },
+    });
   }
 
   async create(body: CreateTeacherDTO) {

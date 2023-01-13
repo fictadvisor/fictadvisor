@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
 import { GetDTO } from '../teacher/dto/GetDTO';
 import { CreateSubjectDTO } from './dto/CreateSubjectDTO';
+import { Subject } from '@prisma/client';
 import { DatabaseUtils } from '../utils/DatabaseUtils';
-import { SubjectFieldsDTO } from './dto/SubjectFieldsDTO';
 
 @Injectable()
 export class SubjectService {
@@ -11,10 +11,18 @@ export class SubjectService {
     private prisma: PrismaService
   ) {}
 
-  async getAll({ fields }: GetDTO) {
-    const subject = DatabaseUtils.getSelectObject<SubjectFieldsDTO>(fields);
+  async getAll(body: GetDTO<Subject>) {
+    const search = DatabaseUtils.getSearch<Subject>(body, 'name');
+    const page = DatabaseUtils.getPage(body);
+    const sort = DatabaseUtils.getSort(body);
 
-    return await this.prisma.subject.findMany(subject);
+    return await this.prisma.subject.findMany({
+      ...page,
+      ...sort,
+      where: {
+        ...search,
+      },
+    });
   }
 
   async get(id: string) {
