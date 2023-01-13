@@ -1,14 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
 import { CreateDisciplineDTO } from './dto/CreateDisciplineDTO';
-import { DisciplineTypeEnum } from '@prisma/client';
+import { DisciplineTypeEnum, User } from '@prisma/client';
 
 @Injectable()
 export class DisciplineService {
   constructor(
     private prisma: PrismaService,
   ) {}
-
 
   async create(body: CreateDisciplineDTO) {
     return await this.prisma.discipline.create({
@@ -85,6 +84,28 @@ export class DisciplineService {
       where: {
         id
       }
-    })
+    });
+  }
+
+  async makeSelective(user: User, disciplineId: string) {
+    return await this.prisma.selectiveDiscipline.create({
+      data: {
+        studentId: user.id,
+        disciplineId,
+      }
+    });
+  }
+
+  async getSelective(studentId: string) {
+    const selectiveDisciplines = await this.prisma.selectiveDiscipline.findMany({
+      where: {
+        studentId,
+      },
+      include: {
+        discipline: true,
+      }
+    });
+
+    return selectiveDisciplines.map(sd => sd.discipline);
   }
 }
