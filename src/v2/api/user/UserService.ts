@@ -8,6 +8,8 @@ import { DisciplineService } from '../discipline/DisciplineService';
 @Injectable()
 export class UserService {
   constructor(
+    private disciplineService: DisciplineService,
+    private groupService: GroupService,
     private prisma: PrismaService,
   ) {}
 
@@ -40,5 +42,9 @@ export class UserService {
         ...body,
       }
     })
+  }
+
+  async getSelective(studentId: string) {
+    return this.disciplineService.getSelective(studentId);
   }
 }
