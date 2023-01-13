@@ -5,12 +5,14 @@ import { CreateTeacherDTO } from './dto/CreateTeacherDTO';
 import { DatabaseUtils } from '../utils/DatabaseUtils';
 import { TeacherRole } from '@prisma/client';
 import { CreateDisciplineTeacherData } from './dto/CreateDisciplineTeacherData';
+import {DisciplineService} from "../discipline/DisciplineService";
 
 
 @Injectable()
 export class TeacherService {
   constructor(
-    private prisma: PrismaService
+    private prisma: PrismaService,
+    private disciplineService: DisciplineService,
   ) {}
 
 
@@ -48,7 +50,22 @@ export class TeacherService {
       }
     });
 
-    return disciplineType.disciplineTeachers.map(dt => dt.teacher);
+    return disciplineType.disciplineTeachers.map(dt => ({
+      ...dt.teacher,
+      role: dt.role,
+      disciplineTeacherId: dt.id,
+    }));
+
+  }
+
+  async getAllByDiscipline(disciplineId: string) {
+    const disciplineTypes = await this.disciplineService.getTypes(disciplineId);
+
+    const teacherList = [];
+    for (const disciplineType of disciplineTypes) {
+      teacherList.push(...await this.getByType(disciplineType.id))
+    }
+    return teacherList;
   }
 
   async deleteByType(disciplineTypeId: string) {
