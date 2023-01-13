@@ -40,4 +40,12 @@ export class UserController {
     return this.userService.createSuperhero(req.user.id, body);
   }
 
+  @UseGuards()
+  @Get('/selective')
+  async getSelective(
+    @Request() req,
+  ) {
+    const dbDisciplines = await this.userService.getSelective(req.user.id);
+    return { disciplines: dbDisciplines.map(d => d.id) };
+  }
 }
