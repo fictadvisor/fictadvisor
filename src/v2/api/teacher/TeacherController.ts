@@ -26,4 +26,9 @@ export class TeacherController {
   async get(@Param('id') id: string) {
     return this.teacherService.get(id);
   }
+
+  @Get('/disciplines/:disciplineId')
+  async getAllByDiscipline(@Param('disciplineId') disciplineId: string) {
+    return this.teacherService.getAllByDiscipline(disciplineId);
+  }
 }
