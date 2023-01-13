@@ -3,7 +3,6 @@ import { PrismaService } from '../../database/PrismaService';
 import { Group } from '@prisma/client'
 import { GetDTO } from '../teacher/dto/GetDTO';
 import { DatabaseUtils } from '../utils/DatabaseUtils';
-import { GroupFieldsDTO } from './dto/GroupFieldsDTO';
 
 @Injectable()
 export class GroupService {
@@ -19,10 +18,18 @@ export class GroupService {
     });
   }
 
-  async getAll({ fields }: GetDTO) {
-    const select = DatabaseUtils.getSelectObject<GroupFieldsDTO>(fields);
+  async getAll(body: GetDTO<Group>) {
+    const search = DatabaseUtils.getSearch<Group>(body, 'code');
+    const page = DatabaseUtils.getPage(body);
+    const sort = DatabaseUtils.getSort(body);
 
-    return await this.prisma.group.findMany(select);
+    return await this.prisma.group.findMany({
+      ...page,
+      ...sort,
+      where: {
+        ...search,
+      },
+    });
   }
 
   async get(id: string) {
