@@ -39,4 +39,17 @@ export class GroupService {
       }
     })
   }
+
+  async getByDiscipline(id: string) {
+    const discipline = await this.prisma.discipline.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        group: true,
+      }
+    });
+
+    return discipline.group;
+  }
 }
