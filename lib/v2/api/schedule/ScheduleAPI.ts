@@ -1,9 +1,9 @@
-import { client, getAuthorizationHeader, QueryParams } from "../index";
+import { client, getAuthorizationHeader } from "../index";
 import { CreateLessonBodyDTO } from "./dto/CreateLessonBodyDTO";
 import { GetLessonDTO } from "./dto/GetLessonDTO";
 import { GetTeacherScheduleDTO } from "./dto/GetTeacherScheduleDTO";
-import { UpdateStaticLesson } from "./dto/UpdateStaticLesson";
-import { UpdateDynamicLesson } from "./dto/UpdateDynamicLesson";
+import { UpdateStaticLessonBodyDTO } from "./dto/UpdateStaticLessonBodyDTO";
+import { UpdateDynamicLessonBodyDTO } from "./dto/UpdateDynamicLessonBodyDTO";
 
 export class ScheduleAPI {
     static async createLesson(accessToken: string, body: CreateLessonBodyDTO) {
@@ -14,7 +14,7 @@ export class ScheduleAPI {
         ));
     }
 
-    static async updateStaticLesson(accessToken: string, lessonId: string, body: UpdateStaticLesson) {
+    static async updateStaticLesson(accessToken: string, lessonId: string, body: UpdateStaticLessonBodyDTO) {
         return (await client.patch(
             `/schedule/lessons/static/${lessonId}`,
             body,
@@ -22,7 +22,7 @@ export class ScheduleAPI {
         ));
     }
 
-    static async updateDynamicLesson(accessToken: string, id: string, fortnight: string, body: UpdateDynamicLesson) {
+    static async updateDynamicLesson(accessToken: string, id: string, fortnight: string, body: UpdateDynamicLessonBodyDTO) {
         return (await client.patch(
             `/schedule/lessons/static/${id}/${fortnight}}`,
             body,
@@ -41,7 +41,7 @@ export class ScheduleAPI {
     };
 
     static async getTeacherSchedule(accessToken: string, teacherId: string, fortnight: string): Promise<GetTeacherScheduleDTO> {
-        return (await client.get(`/schedule/teachers/${teacherId}/static/:?${fortnight}`
+        return (await client.get(`/schedule/teachers/${teacherId}/static/?${fortnight}`
             , getAuthorizationHeader(accessToken))).data;
     }
 }

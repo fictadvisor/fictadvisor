@@ -1,4 +1,4 @@
-export type UpdateDynamicLesson = {
+export type UpdateDynamicLessonBodyDTO = {
     isTest?: boolean,
     homework?: string,
     url?: string,

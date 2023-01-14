@@ -1,4 +1,4 @@
-export type UpdateStaticLesson = {
+export type UpdateStaticLessonBodyDTO = {
     startDate?: Date,
     endDate?: Date,
     teachersId?: string[],
