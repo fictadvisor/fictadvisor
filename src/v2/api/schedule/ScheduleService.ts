@@ -17,6 +17,11 @@ import { UpdateStaticInfoDTO } from './dto/UpdateStaticInfoDTO';
 import { TeacherRoleAdapter } from '../teacher/dto/TeacherRoleAdapter';
 import { CreateLessonDTO } from './dto/CreateLessonDTO';
 import { CreateDateDTO } from './dto/CreateDateDTO';
+import { DisciplineTypeService } from '../discipline/DisciplineTypeService';
+import { DisciplineRepository } from '../discipline/DisciplineRepository';
+import { DisciplineTypeRepository } from '../discipline/DisciplineTypeRepository';
+import { GroupRepository } from '../group/GroupRepository';
+import { DisciplineTeacherRepository } from '../teacher/DisciplineTeacherRepository';
 
 @Injectable()
 export class ScheduleService {
@@ -26,7 +31,12 @@ export class ScheduleService {
     private dateService: DateService,
     private config: ConfigService,
     private subjectService: SubjectService,
+    private disciplineTypeService: DisciplineTypeService,
     private disciplineService: DisciplineService,
+    private groupRepository: GroupRepository,
+    private disciplineRepository: DisciplineRepository,
+    private disciplineTypeRepository: DisciplineTypeRepository,
+    private disciplineTeacherRepository: DisciplineTeacherRepository,
     private teacherService: TeacherService,
     private scheduleRepository: ScheduleRepository,
   ) {}
@@ -44,16 +54,16 @@ export class ScheduleService {
   async getSchedule(group: Group, fortnight: number, callback: 'static' | 'temporary'): Promise<StaticLessonInfo[] | TemporaryLessonInfo[]> {
     const results = [];
 
-    const disciplines = await this.disciplineService.getByGroup(group.id);
+    const disciplines = await this.groupRepository.getDisciplines(group.id);
 
     for (const discipline of disciplines) {
-      const disciplineTypes = await this.disciplineService.getTypes(discipline.id);
-      const subject = await this.subjectService.get(discipline.subjectId);
+      const disciplineTypes = await this.disciplineRepository.getTypes(discipline.id);
+      const subject = await this.disciplineRepository.getSubject(discipline.id);
 
       for (const type of disciplineTypes) {
         switch (callback) {
           case 'static':
-            results.push(...await this.getStaticLessons(fortnight, discipline, subject, type))
+            results.push(...await this.getStaticLessons(fortnight, discipline, subject, type));
             break;
           case 'temporary':
             results.push(...await this.getTemporaryLessons(fortnight, discipline, subject, type));
@@ -89,7 +99,7 @@ export class ScheduleService {
         subjectName: subject.name,
         isSelective: discipline.isSelective,
         isTest: Boolean(isTest),
-      })
+      });
     }
 
     return results;
@@ -121,7 +131,7 @@ export class ScheduleService {
         endDate: lesson.endDate,
         type: type.name,
         subjectName: subject.name,
-      })
+      });
     }
 
     return results;
@@ -129,11 +139,11 @@ export class ScheduleService {
 
   async getFullStaticLesson(id: string, fortnight: number): Promise<FullLessonDTO> {
     const lesson = await this.scheduleRepository.getSemesterLesson(id);
-    const dbTeachers = await this.teacherService.getByType(lesson.disciplineTypeId);
-    const discipline = await this.disciplineService.getByType(lesson.disciplineTypeId);
-    const teachers = dbTeachers.map(t => ({
+    const dbTeachers = await this.disciplineTypeService.getTeachers(lesson.disciplineTypeId);
+    const discipline = await this.disciplineTypeRepository.getDiscipline(lesson.disciplineTypeId);
+    const teachers = dbTeachers.map((t) => ({
       id: t.id,
-      name: `${t.lastName} ${t.firstName} ${t.middleName}`
+      name: `${t.lastName} ${t.firstName} ${t.middleName}`,
     }));
     const subject = await this.subjectService.get(discipline.subjectId);
     const [
@@ -167,13 +177,13 @@ export class ScheduleService {
       startDate: new Date(startDate),
       endDate: new Date(endDate),
       isTest: Boolean(isTest),
-    }
+    };
   }
 
   async getFullTemporaryLesson(id: string): Promise<FullLessonDTO> {
     const lesson = await this.scheduleRepository.getTemporaryLesson(id);
     const teacher = lesson.teacher;
-    const discipline = await this.disciplineService.getByType(lesson.disciplineTypeId);
+    const discipline = await this.disciplineTypeRepository.getDiscipline(lesson.disciplineTypeId);
     const subject = await this.subjectService.get(discipline.id);
     const teacherFullName = `${teacher.lastName} ${teacher.firstName} ${teacher.middleName}`;
 
@@ -182,7 +192,7 @@ export class ScheduleService {
       subject,
       teachers: [{
         id: teacher.id,
-        name: teacherFullName
+        name: teacherFullName,
       }],
       type: lesson.disciplineType.name,
       url: lesson.url,
@@ -191,7 +201,7 @@ export class ScheduleService {
       isSelective: discipline.isSelective,
       startDate: lesson.startDate,
       endDate: lesson.endDate,
-    }
+    };
   }
 
   async updateFortnightInfo(id, fortnight, data: UpdateDynamicInfoDTO) {
@@ -205,7 +215,7 @@ export class ScheduleService {
 
   async updateSemesterInfo(id: string, body: UpdateStaticInfoDTO) {
     const semesterLesson = await this.scheduleRepository.getSemesterLesson(id);
-    const discipline = await this.disciplineService.getByType(semesterLesson.disciplineTypeId);
+    const discipline = await this.disciplineTypeRepository.getDiscipline(semesterLesson.disciplineTypeId);
 
     for (const key in body) {
       if (['endDate', 'startDate', 'url'].includes(key)) {
@@ -213,14 +223,14 @@ export class ScheduleService {
           id, {[key]: body[key]}
         );
       } else if (['resource', 'evaluatingSystem', 'isSelective'].includes(key)) {
-        await this.disciplineService.update(
+        await this.disciplineRepository.update(
           discipline.id, {[key]: body[key]}
         );
       } else {
-        await this.teacherService.deleteByType(semesterLesson.disciplineTypeId);
+        await this.disciplineTypeRepository.deleteDisciplineTeachers(semesterLesson.disciplineTypeId);
         const role = TeacherRoleAdapter[semesterLesson.disciplineType.name];
         for (const teacherId of body.teachersId) {
-          await this.teacherService.createDisciplineTeacher(teacherId, semesterLesson.disciplineTypeId, role);
+          await this.disciplineTeacherRepository.create({ teacherId, disciplineTypeId: semesterLesson.disciplineTypeId, role });
         }
       }
     }
@@ -229,7 +239,7 @@ export class ScheduleService {
   async createLesson({fortnight, disciplineId, type, ...data}: CreateLessonDTO) {
     if (!disciplineId || !type) return null;
 
-    const disciplineType = await this.disciplineService.getOrCreateType(disciplineId, type);
+    const disciplineType = await this.disciplineTypeRepository.getOrCreate({ disciplineId, name: type });
 
     if (!fortnight) {
       return await this.createSemesterLesson(disciplineType.id, data);
@@ -243,10 +253,10 @@ export class ScheduleService {
   }
 
   async createSemesterLesson(disciplineTypeId: string, { teacherId, ...data }: {teacherId: string} & CreateDateDTO) {
-    const type = await this.disciplineService.getType(disciplineTypeId);
+    const type = await this.disciplineTypeRepository.getType(disciplineTypeId);
     const role = TeacherRoleAdapter[type.name];
 
-    await this.teacherService.getOrCreateDisciplineTeacher({ teacherId, disciplineTypeId, role });
+    await this.disciplineTeacherRepository.create({ teacherId, disciplineTypeId, role });
     return await this.scheduleRepository.getOrCreateSemesterLesson({disciplineTypeId, ...data});
   }
 }

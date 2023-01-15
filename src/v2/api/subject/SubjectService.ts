@@ -28,16 +28,16 @@ export class SubjectService {
   async get(id: string) {
     return await this.prisma.subject.findUnique({
       where: {
-        id
-      }
+        id,
+      },
     });
   }
 
   async create({ name }: CreateSubjectDTO) {
     return await this.prisma.subject.create({
       data:  {
-        name
-      }
+        name,
+      },
     });
   }
 }

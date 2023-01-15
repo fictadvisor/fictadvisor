@@ -60,7 +60,7 @@ export class OAuthService {
         .update(
           Object.keys(token)
             .sort()
-            .map(key => `${key}=${token[key]}`).join('\n')
+            .map((key) => `${key}=${token[key]}`).join('\n')
         ).digest('hex');
 
       return signature === hash;
@@ -110,7 +110,7 @@ export class OAuthService {
     const ttl = ms(this.configService.get<string>('security.jwt.refreshTtl'));
     const token = await this.refreshTokenRepository.findOne({
       where: { token: refreshToken, createdAt: MoreThanOrEqual(new Date(Date.now() - ttl)) },
-      relations: ['user']
+      relations: ['user'],
     });
 
     if (!token) {

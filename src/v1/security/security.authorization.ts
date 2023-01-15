@@ -86,7 +86,7 @@ export class OAuthAuthorizationGuard extends AuthGuard('jwt') {
     const roles =
       this.reflector.get<UserRole[]>('oauth.roles', context.getHandler()) ?? [];
 
-    if (!roles.some(role => user.role === role)) {
+    if (!roles.some((role) => user.role === role)) {
       throw ServiceException.create(HttpStatus.FORBIDDEN, {
         message: 'You do not have permissions for this action',
       });

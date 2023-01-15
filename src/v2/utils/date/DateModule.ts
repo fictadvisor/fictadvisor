@@ -4,6 +4,6 @@ import { PrismaService } from '../../database/PrismaService';
 
 @Module({
   providers: [DateService, PrismaService],
-  exports: [DateService]
+  exports: [DateService],
 })
 export class DateModule {}

@@ -4,4 +4,4 @@ export const TeacherRoleAdapter: {[key in keyof typeof DisciplineTypeEnum]?: Tea
   [DisciplineTypeEnum.LECTURE]: TeacherRole.LECTURER,
   [DisciplineTypeEnum.PRACTICE]: TeacherRole.PRACTICIAN,
   [DisciplineTypeEnum.LABORATORY]: TeacherRole.LABORANT,
-}
+};

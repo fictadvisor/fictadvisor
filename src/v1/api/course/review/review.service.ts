@@ -40,7 +40,7 @@ export class ReviewService {
   async getReview(id: string, relations?: string[]): Promise<Review> {
     const review = await this.reviewRepository.findOne({
       where: { id },
-      relations
+      relations,
     });
 
     if (review == null) {
@@ -70,7 +70,7 @@ export class ReviewService {
 
     return Page.of(
       count,
-      items.map(r => CourseReviewDto.from(r))
+      items.map((r) => CourseReviewDto.from(r))
     );
   }
 
@@ -104,7 +104,7 @@ export class ReviewService {
           { state: ReviewState.OUTDATED }
         );
 
-        this.telegramService.broadcastApprovedReview(review).catch(e =>
+        this.telegramService.broadcastApprovedReview(review).catch((e) =>
           this.logger.error('Failed to broadcast an approved review', {
             review: review.id,
             user: review.user.id,
@@ -112,7 +112,7 @@ export class ReviewService {
           })
         );
       } else if (review.state == ReviewState.DECLINED) {
-        this.telegramService.broadcastDeclinedReview(review).catch(e =>
+        this.telegramService.broadcastDeclinedReview(review).catch((e) =>
           this.logger.error('Failed to broadcast a denied review', {
             user: review.user.id,
             error: e.toString(),
@@ -140,7 +140,7 @@ export class ReviewService {
       })
     );
 
-    this.telegramService.broadcastPendingReview(user, course, review).catch(e =>
+    this.telegramService.broadcastPendingReview(user, course, review).catch((e) =>
       this.logger.error('Failed to broadcast a pending review', {
         review: review.id,
         error: e.toString(),

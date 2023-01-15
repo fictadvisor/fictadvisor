@@ -12,19 +12,19 @@ export const DAY_NUMBER = {
   'Пт': 5,
   'Сб': 6,
   'Нд': 7,
-}
+};
 
 export const DISCIPLINE_TYPE = {
   'lec': DisciplineTypeEnum.LECTURE,
   'prac': DisciplineTypeEnum.PRACTICE,
   'lab': DisciplineTypeEnum.LABORATORY,
-}
+};
 
 export const TEACHER_TYPE = {
   'lec': TeacherRole.LECTURER,
   'prac': TeacherRole.PRACTICIAN,
   'lab': TeacherRole.LABORANT,
-}
+};
 
 @Injectable()
 export class ScheduleParser implements Parser {
@@ -34,18 +34,18 @@ export class ScheduleParser implements Parser {
 
   async parse() {
     const groups = await axios.get('https://schedule.kpi.ua/api/schedule/groups');
-    const filtered = groups.data.data.filter(group => group.faculty === 'ФІОТ').map(group => ({id: group.id, name: group.name}))
+    const filtered = groups.data.data.filter((group) => group.faculty === 'ФІОТ').map((group) => ({id: group.id, name: group.name}));
 
     for (const group of filtered) {
-      await this.parseGroupSchedule(group)
+      await this.parseGroupSchedule(group);
     }
   }
 
   async parseGroupSchedule(group) {
     const schedule = (await axios.get('https://schedule.kpi.ua/api/schedule/lessons?groupId=' + group.id)).data.data;
     const groupId: string = await this.parseGroup(group.name);
-    await this.parseWeek(schedule.scheduleFirstWeek, groupId, 0)
-    await this.parseWeek(schedule.scheduleSecondWeek, groupId, 1)
+    await this.parseWeek(schedule.scheduleFirstWeek, groupId, 0);
+    await this.parseWeek(schedule.scheduleSecondWeek, groupId, 1);
   }
 
   async parseWeek(week, groupId, weekNumber) {
@@ -56,14 +56,14 @@ export class ScheduleParser implements Parser {
 
   async parseDay({day, pairs}, groupId, weekNumber) {
     for (const pair of pairs) {
-      await this.parsePair(pair, groupId, weekNumber, DAY_NUMBER[day])
+      await this.parsePair(pair, groupId, weekNumber, DAY_NUMBER[day]);
     }
   }
 
   async parsePair(pair, groupId, week, day) {
     const teacherId: string = await this.parseTeacher(pair.teacherName ?? '');
     const subjectId: string = await this.parseSubject(pair.name ?? '');
-    const [startHours, startMinutes] = pair.time.split('.').map(s => +s);
+    const [startHours, startMinutes] = pair.time.split('.').map((s) => +s);
     const endHours = startHours + 1;
     const endMinutes = startMinutes + 35;
     const disciplineType = DISCIPLINE_TYPE[pair.tag] ?? DISCIPLINE_TYPE.lec;
@@ -84,17 +84,17 @@ export class ScheduleParser implements Parser {
       where: {
         firstName,
         middleName,
-        lastName
-      }
-    })
+        lastName,
+      },
+    });
 
     if (!teacher) {
       teacher = await this.prisma.teacher.create({
         data: {
           firstName,
           middleName,
-          lastName
-        }
+          lastName,
+        },
       });
     }
 
@@ -104,15 +104,15 @@ export class ScheduleParser implements Parser {
   async parseSubject(name: string): Promise<string> {
     let subject = await this.prisma.subject.findFirst({
       where: {
-        name
-      }
-    })
+        name,
+      },
+    });
 
     if (!subject) {
       subject = await this.prisma.subject.create({
         data: {
-          name
-        }
+          name,
+        },
       });
     }
 
@@ -122,15 +122,15 @@ export class ScheduleParser implements Parser {
   async parseGroup(code: string): Promise<string> {
     let group = await this.prisma.group.findFirst({
       where: {
-        code
-      }
-    })
+        code,
+      },
+    });
 
     if (!group) {
       group = await this.prisma.group.create({
         data: {
-          code
-        }
+          code,
+        },
       });
     }
 
@@ -142,7 +142,7 @@ export class ScheduleParser implements Parser {
       where: {
         subjectId,
         groupId,
-      }
+      },
     });
 
     if (!discipline) {
@@ -151,8 +151,8 @@ export class ScheduleParser implements Parser {
           subjectId,
           groupId,
           year: 2022,
-          semester: 1
-        }
+          semester: 1,
+        },
       });
     }
 
@@ -164,7 +164,7 @@ export class ScheduleParser implements Parser {
       where: {
         disciplineId,
         name,
-      }
+      },
     });
 
     if (!disciplineType) {
@@ -172,7 +172,7 @@ export class ScheduleParser implements Parser {
         data: {
           disciplineId,
           name,
-        }
+        },
       });
     }
 
@@ -185,7 +185,7 @@ export class ScheduleParser implements Parser {
         teacherId,
         role,
         disciplineTypeId,
-      }
+      },
     });
 
     if (!disciplineTeacher) {
@@ -193,8 +193,8 @@ export class ScheduleParser implements Parser {
         data: {
           teacherId,
           role,
-          disciplineTypeId
-        }
+          disciplineTypeId,
+        },
       });
     }
   }
@@ -208,8 +208,8 @@ export class ScheduleParser implements Parser {
       where: {
         disciplineTypeId,
         startDate,
-        endDate
-      }
+        endDate,
+      },
     });
 
     if (!lesson) {
@@ -217,8 +217,8 @@ export class ScheduleParser implements Parser {
         data: {
           disciplineTypeId,
           startDate,
-          endDate
-        }
+          endDate,
+        },
       });
     }
   }

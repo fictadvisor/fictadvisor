@@ -7,13 +7,13 @@ export class DatabaseUtils {
   static getSearch<T>({ search }: SearchDTO, ...fields: (keyof T)[]): Search<T> | object {
     if (!search) return {};
     return {
-      OR: fields.map(field => ({
+      OR: fields.map((field) => ({
         [field]: {
           contains: search,
           mode: 'insensitive',
-        }
+        },
       })),
-    }
+    };
   }
 
   static getPage({ page = 0, pageSize }: PageDTO): Page | object {
@@ -23,13 +23,13 @@ export class DatabaseUtils {
     return {
       skip: page * pageSize,
       take: pageSize,
-    }
+    };
   }
 
   static getSort<T>({ sort }: SortDTO<T>): Sort<T> | object {
     if (!sort) return {};
     return {
       orderBy: sort,
-    }
+    };
   }
 }

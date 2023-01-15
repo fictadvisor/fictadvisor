@@ -37,7 +37,7 @@ export class SuperheroService {
   private async findSuperhero(user: User, relations?: string[]) {
     const superhero = await this.superheroRepository.findOne({
       where: { user: Equal(user) },
-      relations
+      relations,
     });
 
     if (superhero == null) {
@@ -70,7 +70,7 @@ export class SuperheroService {
 
     return Page.of(
       count,
-      items.map(r => SuperheroDto.from(r))
+      items.map((r) => SuperheroDto.from(r))
     );
   }
 
@@ -99,7 +99,7 @@ export class SuperheroService {
       })
     );
 
-    this.telegramService.broadcastPendingSuperhero(superhero).catch(e =>
+    this.telegramService.broadcastPendingSuperhero(superhero).catch((e) =>
       this.logger.error('Failed to broadcast a pending superhero', {
         superhero: superhero.user.id,
         error: e.toString(),
@@ -129,14 +129,14 @@ export class SuperheroService {
       previousState == SuperheroState.PENDING
     ) {
       if (superhero.state == SuperheroState.APPROVED) {
-        this.telegramService.broadcastApprovedSuperhero(superhero).catch(e =>
+        this.telegramService.broadcastApprovedSuperhero(superhero).catch((e) =>
           this.logger.error('Failed to broadcast an approved superhero', {
             user: superhero.user.id,
             error: e.toString(),
           })
         );
       } else if (superhero.state == SuperheroState.HIDDEN) {
-        this.telegramService.broadcastDeclinedSuperhero(superhero).catch(e =>
+        this.telegramService.broadcastDeclinedSuperhero(superhero).catch((e) =>
           this.logger.error('Failed to broadcast a denied superhero', {
             user: superhero.user.id,
             error: e.toString(),

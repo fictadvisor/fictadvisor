@@ -113,10 +113,10 @@ const mapChildrenToValidationErrors = (error: ValidationError) => {
 
 const flattenValidationErrors = (errors: ValidationError[]): string[] => {
   return iterate(errors)
-    .map(error => mapChildrenToValidationErrors(error))
+    .map((error) => mapChildrenToValidationErrors(error))
     .flatten()
-    .filter(item => !!item.constraints)
-    .map(item => Object.values(item.constraints))
+    .filter((item) => !!item.constraints)
+    .map((item) => Object.values(item.constraints))
     .flatten()
     .toArray() as string[];
 };

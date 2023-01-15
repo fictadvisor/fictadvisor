@@ -7,7 +7,7 @@ import { InvalidGroupIdException } from '../../utils/exceptions/InvalidGroupIdEx
 
 export abstract class GroupGuard implements CanActivate {
 
-  protected prisma: PrismaService
+  protected prisma: PrismaService;
   context: ExecutionContext;
 
   protected constructor(
@@ -23,7 +23,7 @@ export abstract class GroupGuard implements CanActivate {
     const student = await this.prisma.student.findUnique({
       where: {
         userId: user.id,
-      }
+      },
     });
 
     const group = await this.getGroup();

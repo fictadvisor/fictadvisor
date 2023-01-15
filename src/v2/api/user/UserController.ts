@@ -6,7 +6,7 @@ import { ApproveDTO } from './dto/ApproveDTO';
 
 @Controller({
   version: '2',
-  path: '/users'
+  path: '/users',
 })
 export class UserController {
   constructor(
@@ -46,6 +46,14 @@ export class UserController {
     @Request() req,
   ) {
     const dbDisciplines = await this.userService.getSelective(req.user.id);
-    return { disciplines: dbDisciplines.map(d => d.id) };
+    return { disciplines: dbDisciplines.map((d) => d.id) };
+  }
+
+  @UseGuards(TelegramGuard)
+  @Post('/roles')
+  createRole(
+    @Body() body,
+  ) {
+    return this.userService.createRole(body);
   }
 }

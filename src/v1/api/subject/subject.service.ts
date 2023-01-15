@@ -69,7 +69,7 @@ export class SubjectService {
 
     return Page.of(
       count,
-      items.map(s => SubjectItemDto.from(s))
+      items.map((s) => SubjectItemDto.from(s))
     );
   }
 
@@ -110,7 +110,7 @@ export class SubjectService {
 
     return Page.of(
       count,
-      items.map(c => CourseItemDto.from(c))
+      items.map((c) => CourseItemDto.from(c))
     );
   }
 
@@ -149,7 +149,7 @@ export class SubjectService {
         })
       );
 
-      this.telegramService.broadcastPendingSubject(user, inserted).catch(e =>
+      this.telegramService.broadcastPendingSubject(user, inserted).catch((e) =>
         this.logger.error('Failed to broadcast a pending subject', {
           subject: inserted.id,
           error: e.toString(),

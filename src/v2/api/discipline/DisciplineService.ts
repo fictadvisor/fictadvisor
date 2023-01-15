@@ -1,90 +1,32 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
 import { CreateDisciplineDTO } from './dto/CreateDisciplineDTO';
-import { DisciplineTypeEnum, User } from '@prisma/client';
+import { User } from '@prisma/client';
+import { TeacherService } from '../teacher/TeacherService';
+import { DisciplineRepository } from './DisciplineRepository';
+import { DisciplineTypeRepository } from './DisciplineTypeRepository';
+import { DisciplineTeacherRepository } from '../teacher/DisciplineTeacherRepository';
+import { DisciplineTypeService } from './DisciplineTypeService';
 
 @Injectable()
 export class DisciplineService {
   constructor(
+    private disciplineRepository: DisciplineRepository,
+    private disciplineTypeRepository: DisciplineTypeRepository,
+    private disciplineTeacherRepository: DisciplineTeacherRepository,
+    @Inject(forwardRef(() => TeacherService))
+    private teacherService: TeacherService,
+    @Inject(forwardRef(() => DisciplineTypeService))
+    private disciplineTypeService: DisciplineTypeService,
     private prisma: PrismaService,
   ) {}
 
   async create(body: CreateDisciplineDTO) {
-    return await this.prisma.discipline.create({
-      data: body
-    })
+    return this.disciplineRepository.create(body);
   }
 
   async get(id: string) {
-    return await this.prisma.discipline.findUnique({
-      where: {
-        id,
-      }
-    })
-  }
-
-  async getByGroup(groupId: string) {
-    return await this.prisma.discipline.findMany({
-      where: {
-        groupId,
-      }
-    })
-  }
-
-  async getTypes(disciplineId: string) {
-    return await this.prisma.disciplineType.findMany({
-      where: {
-        disciplineId,
-      }
-    })
-  }
-
-  async getByType(id: string) {
-    const disciplineType = await this.prisma.disciplineType.findUnique({
-      where: {
-        id
-      },
-      include: {
-        discipline: true,
-      }
-    });
-
-    return disciplineType.discipline;
-  }
-
-  async update(id: string, data) {
-    return await this.prisma.discipline.update({
-      where: {
-        id
-      },
-      data
-    })
-  }
-
-  async getOrCreateType(disciplineId: string, name: DisciplineTypeEnum) {
-    let disciplineType = await this.prisma.disciplineType.findFirst({
-      where: {
-        disciplineId,
-        name,
-      }
-    });
-    if (!disciplineType) {
-      disciplineType = await this.prisma.disciplineType.create({
-        data: {
-          disciplineId,
-          name,
-        }
-      });
-    }
-    return disciplineType;
-  }
-
-  async getType(id: string) {
-    return await this.prisma.disciplineType.findUnique({
-      where: {
-        id
-      }
-    });
+    return this.disciplineRepository.getDiscipline(id);
   }
 
   async makeSelective(user: User, disciplineId: string) {
@@ -92,7 +34,7 @@ export class DisciplineService {
       data: {
         studentId: user.id,
         disciplineId,
-      }
+      },
     });
   }
 
@@ -103,9 +45,29 @@ export class DisciplineService {
       },
       include: {
         discipline: true,
-      }
+      },
     });
 
-    return selectiveDisciplines.map(sd => sd.discipline);
+    return selectiveDisciplines.map((sd) => sd.discipline);
+  }
+
+  async getTeachers(disciplineId: string) {
+    const disciplineTypes = await this.disciplineRepository.getTypes(disciplineId);
+
+    const teacherList = [];
+    for (const disciplineType of disciplineTypes) {
+      const teachers = await this.disciplineTypeService.getTeachers(disciplineType.id);
+      for (const teacher of teachers) {
+        const teacherComparison = (t) => (t.id === teacher.id);
+
+        if (teacherList.some(teacherComparison)) {
+          teacherList.find(teacherComparison).roles.push(...teacher.roles);
+        } else {
+          teacherList.push(teacher);
+        }
+      }
+    }
+
+    return teacherList;
   }
 }

@@ -33,7 +33,7 @@ export class CourseService {
   async getCourse(link: string, relations?: string[]): Promise<Course> {
     const course = await this.courseRepository.findOne({
       where: { link },
-      relations
+      relations,
     });
 
     if (course == null) {
@@ -48,7 +48,7 @@ export class CourseService {
   async getCourseById(id: string, relations?: string[]): Promise<Course> {
     const course = await this.courseRepository.findOne({
       where: { id },
-      relations
+      relations,
     });
 
     if (course == null) {
@@ -118,7 +118,7 @@ export class CourseService {
       })
     );
 
-    this.telegramService.broadcastPendingCourse(user, entity).catch(e =>
+    this.telegramService.broadcastPendingCourse(user, entity).catch((e) =>
       this.logger.error('Failed to broadcast a pending course', {
         course: entity.id,
         error: e.toString(),

@@ -1,4 +1,4 @@
-import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
+import { Injectable, PipeTransform } from '@nestjs/common';
 import { Group } from '@prisma/client';
 import { InvalidGroupIdException } from '../../utils/exceptions/InvalidGroupIdException';
 import { GroupService } from './GroupService';
@@ -9,7 +9,7 @@ export class GroupByIdPipe implements PipeTransform<string, Promise<Group>> {
     private groupService: GroupService
   ) {}
 
-  async transform(value: string, metadata: ArgumentMetadata) {
+  async transform(value: string) {
     const group: Group = await this.groupService.get(value);
     if(!group) {
       throw new InvalidGroupIdException();

@@ -9,10 +9,10 @@ import { ApiModule } from './api/ApiModule';
   imports: [
     ConfigurationModule.forRoot({
       isGlobal: true,
-      load: [Configuration]
+      load: [Configuration],
     }),
-    ApiModule
+    ApiModule,
   ],
-  providers: [PrismaService, SecurityConfigService]
+  providers: [PrismaService, SecurityConfigService],
 })
 export class AppModule {}

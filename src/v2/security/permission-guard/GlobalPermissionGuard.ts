@@ -1,4 +1,4 @@
-import { ExecutionContext, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PermissionGuard } from './PermissionGuard';
 import { Reflector } from '@nestjs/core';
 import { UserService } from '../../api/user/UserService';
@@ -13,7 +13,7 @@ export class GlobalPermissionGuard extends PermissionGuard {
     super(userService, reflector);
   }
 
-  getScope(context: ExecutionContext): string {
+  getScope(): string {
     return 'global';
   }
 

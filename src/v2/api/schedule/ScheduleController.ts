@@ -24,7 +24,7 @@ import { CreateLessonDTO } from './dto/CreateLessonDTO';
 
 @Controller({
   version: '2',
-  path: '/schedule'
+  path: '/schedule',
 })
 export class ScheduleController {
   constructor(
@@ -82,7 +82,7 @@ export class ScheduleController {
     @Param('lessonId') id: string,
     @Param('fortnight', ParseIntPipe) fortnight: number,
   ) {
-    return this.scheduleService.getFullStaticLesson(id, fortnight)
+    return this.scheduleService.getFullStaticLesson(id, fortnight);
   }
 
   @UseGuards(JwtGuard, GroupByTemporaryLessonGuard)
@@ -90,7 +90,7 @@ export class ScheduleController {
   async getTemporaryLesson(
     @Param('lessonId') id: string,
   ) {
-    return this.scheduleService.getFullTemporaryLesson(id)
+    return this.scheduleService.getFullTemporaryLesson(id);
   }
 
   @UseGuards(JwtGuard, GroupBySemesterLessonGuard)

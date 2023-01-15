@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
 import { ConfigService } from '@nestjs/config';
 
-export const DAY = 1000 * 60 * 60 * 24
+export const DAY = 1000 * 60 * 60 * 24;
 export const WEEK = DAY * 7;
 export const FORTNITE = WEEK * 2;
 export interface CurrentDate {
@@ -22,12 +22,12 @@ export class DateService {
     const { currentYear, currentSemester } = this.config.get('dates');
     const { startDate } = await this.prisma.startDate.findFirst({
       select: {
-        startDate: true
+        startDate: true,
       },
       where: {
         year: currentYear,
-        semester: currentSemester
-      }
+        semester: currentSemester,
+      },
     });
 
     const difference = new Date().getTime() - startDate.getTime();

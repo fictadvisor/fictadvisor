@@ -26,7 +26,7 @@ async function bootstrap() {
   );
   app.enableVersioning({
     type: VersioningType.URI,
-    defaultVersion: VERSION_NEUTRAL
+    defaultVersion: VERSION_NEUTRAL,
   });
 
   await app.listen(port);

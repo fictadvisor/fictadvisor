@@ -20,6 +20,6 @@ export default () => ({
   },
   dates: {
     currentYear: process.env.CURRENT_YEAR ?? 2022,
-    currentSemester: process.env.CURRENT_SEMESTER ?? 1
-  }
-})
+    currentSemester: process.env.CURRENT_SEMESTER ?? 1,
+  },
+});
