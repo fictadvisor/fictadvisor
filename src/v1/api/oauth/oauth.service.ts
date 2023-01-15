@@ -60,7 +60,7 @@ export class OAuthService {
         .update(
           Object.keys(token)
             .sort()
-            .map(key => `${key}=${token[key]}`).join('\n')
+            .map((key) => `${key}=${token[key]}`).join('\n')
         ).digest('hex');
 
       return signature === hash;

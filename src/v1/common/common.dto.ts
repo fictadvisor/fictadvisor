@@ -5,13 +5,13 @@ export interface Mapped<Entity, DtoClass> {
   toDto(entity: Entity): DtoClass;
 }
 
-const transformIntValue = field => {
+const transformIntValue = (field) => {
   const { value } = field;
   const num = parseInt(value, 10);
   return Number.isSafeInteger(num) ? num : null;
 };
 
-const transformBooleanValue = field => {
+const transformBooleanValue = (field) => {
   const { value } = field;
   return new Boolean(value);
 };

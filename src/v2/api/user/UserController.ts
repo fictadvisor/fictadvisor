@@ -46,7 +46,7 @@ export class UserController {
     @Request() req,
   ) {
     const dbDisciplines = await this.userService.getSelective(req.user.id);
-    return { disciplines: dbDisciplines.map(d => d.id) };
+    return { disciplines: dbDisciplines.map((d) => d.id) };
   }
 
   @UseGuards(TelegramGuard)

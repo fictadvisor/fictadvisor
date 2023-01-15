@@ -27,7 +27,7 @@ export class TeacherContact extends BaseEntity {
   @Column({ type: 'varchar' })
   value: string;
 
-  @ManyToOne(type => Teacher)
+  @ManyToOne((type) => Teacher)
   @JoinColumn({ name: 'teacher_id' })
   teacher: Teacher;
 

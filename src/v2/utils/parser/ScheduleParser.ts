@@ -34,7 +34,7 @@ export class ScheduleParser implements Parser {
 
   async parse() {
     const groups = await axios.get('https://schedule.kpi.ua/api/schedule/groups');
-    const filtered = groups.data.data.filter(group => group.faculty === 'ФІОТ').map(group => ({id: group.id, name: group.name}));
+    const filtered = groups.data.data.filter((group) => group.faculty === 'ФІОТ').map((group) => ({id: group.id, name: group.name}));
 
     for (const group of filtered) {
       await this.parseGroupSchedule(group);
@@ -63,7 +63,7 @@ export class ScheduleParser implements Parser {
   async parsePair(pair, groupId, week, day) {
     const teacherId: string = await this.parseTeacher(pair.teacherName ?? '');
     const subjectId: string = await this.parseSubject(pair.name ?? '');
-    const [startHours, startMinutes] = pair.time.split('.').map(s => +s);
+    const [startHours, startMinutes] = pair.time.split('.').map((s) => +s);
     const endHours = startHours + 1;
     const endMinutes = startMinutes + 35;
     const disciplineType = DISCIPLINE_TYPE[pair.tag] ?? DISCIPLINE_TYPE.lec;

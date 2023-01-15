@@ -6,6 +6,7 @@ module.exports = {
   },
   plugins: ['@typescript-eslint'],
   extends: [
+    'eslint:recommended',
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
     'prettier',
@@ -21,8 +22,15 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
-    "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^type$" }],
+    '@typescript-eslint/no-unused-vars': ['warn', { 'argsIgnorePattern': '^type$' }],
     'semi': ['error', 'always'],
-    'comma-dangle': ['error', 'always-multiline']
+    'comma-dangle': ['error', 'always-multiline'],
+    'arrow-parens': ['error', 'always'],
+    'arrow-spacing': 'error',
+    'block-spacing': 'error',
+    'brace-style': 'error',
+    'comma-spacing': 'error',
+    'func-call-spacing': 'error',
+    'rest-spread-spacing': 'error'
   },
 };

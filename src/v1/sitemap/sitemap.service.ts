@@ -37,14 +37,14 @@ export class SitemapService {
       select: ['link', 'updatedAt'],
     });
 
-    this.NAVIGATION.forEach(n => {
+    this.NAVIGATION.forEach((n) => {
       const url = root.ele('url');
       url.ele('loc').txt(`${baseUrl}${n}`);
       url.ele('changefreq').txt('weekly');
       url.ele('priority').txt('1');
     });
 
-    teachers.forEach(t => {
+    teachers.forEach((t) => {
       const url = root.ele('url');
       url.ele('loc').txt(`${baseUrl}/teachers/${t.link}`);
       url.ele('lastmod').txt(dateFormat(t.updatedAt, 'yyyy-mm-dd'));
@@ -52,7 +52,7 @@ export class SitemapService {
       url.ele('priority').txt('0.5');
     });
 
-    subjects.forEach(s => {
+    subjects.forEach((s) => {
       const url = root.ele('url');
       url.ele('loc').txt(`${baseUrl}/subjects/${s.link}`);
       url.ele('lastmod').txt(dateFormat(s.updatedAt, 'yyyy-mm-dd'));
@@ -67,7 +67,7 @@ export class SitemapService {
         `${this.configService.get<string>('static.dir')}/sitemap.xml`,
         xml,
         { encoding: 'utf-8' },
-        err => (err ? reject(err) : resolve())
+        (err) => (err ? reject(err) : resolve())
       )
     );
   }

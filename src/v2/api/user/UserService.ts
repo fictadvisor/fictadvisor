@@ -75,7 +75,7 @@ export class UserService {
       },
     });
 
-    return roles.map(role => role.role);
+    return roles.map((role) => role.role);
   }
 
   async getGrant(name, scope, roleId) {

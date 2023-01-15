@@ -118,7 +118,7 @@ export class CourseService {
       })
     );
 
-    this.telegramService.broadcastPendingCourse(user, entity).catch(e =>
+    this.telegramService.broadcastPendingCourse(user, entity).catch((e) =>
       this.logger.error('Failed to broadcast a pending course', {
         course: entity.id,
         error: e.toString(),

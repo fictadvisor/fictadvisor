@@ -37,7 +37,7 @@ export class AuthService {
 
     const str = Object.keys(data)
       .sort()
-      .map(key => `${key}=${data[key]}`)
+      .map((key) => `${key}=${data[key]}`)
       .join('\n');
 
     try {

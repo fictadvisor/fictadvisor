@@ -59,8 +59,8 @@ export class SearchService {
     });
 
     return SearchResultDto.from(
-      subjects.map(s => SearchSubjectItemDto.from(s)),
-      teachers.map(t => SearchTeacherItemDto.from(t))
+      subjects.map((s) => SearchSubjectItemDto.from(s)),
+      teachers.map((t) => SearchTeacherItemDto.from(t))
     );
   }
 }

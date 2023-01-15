@@ -48,7 +48,7 @@ export class DisciplineService {
       },
     });
 
-    return selectiveDisciplines.map(sd => sd.discipline);
+    return selectiveDisciplines.map((sd) => sd.discipline);
   }
 
   async getTeachers(disciplineId: string) {

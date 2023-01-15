@@ -141,7 +141,7 @@ export class ScheduleService {
     const lesson = await this.scheduleRepository.getSemesterLesson(id);
     const dbTeachers = await this.disciplineTypeService.getTeachers(lesson.disciplineTypeId);
     const discipline = await this.disciplineTypeRepository.getDiscipline(lesson.disciplineTypeId);
-    const teachers = dbTeachers.map(t => ({
+    const teachers = dbTeachers.map((t) => ({
       id: t.id,
       name: `${t.lastName} ${t.firstName} ${t.middleName}`,
     }));

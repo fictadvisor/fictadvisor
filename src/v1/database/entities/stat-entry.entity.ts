@@ -27,7 +27,7 @@ export class StatEntry extends BaseEntity {
   })
   value: number;
 
-  @ManyToOne(type => Teacher)
+  @ManyToOne((type) => Teacher)
   @JoinColumn({ name: 'teacher_id' })
   teacher: Teacher;
 

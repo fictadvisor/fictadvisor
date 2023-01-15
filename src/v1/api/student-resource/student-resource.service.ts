@@ -31,7 +31,7 @@ export class StudentResourceService {
 
     return Page.of(
       count,
-      items.map(t => StudentResourceDto.from(t))
+      items.map((t) => StudentResourceDto.from(t))
     );
   }
 }

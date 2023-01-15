@@ -127,7 +127,7 @@ export class TeacherService {
 
     return Page.of(
       count,
-      items.map(t => TeacherItemDto.from(t))
+      items.map((t) => TeacherItemDto.from(t))
     );
   }
 
@@ -152,7 +152,7 @@ export class TeacherService {
     });
 
     return ResponseEntity.of({
-      items: items.map(tcv => TeacherContactDto.from(tcv)),
+      items: items.map((tcv) => TeacherContactDto.from(tcv)),
     });
   }
 
@@ -179,7 +179,7 @@ export class TeacherService {
 
     return Page.of(
       count,
-      items.map(c => TeacherCourseItemDto.from(c))
+      items.map((c) => TeacherCourseItemDto.from(c))
     );
   }
 
@@ -207,7 +207,7 @@ export class TeacherService {
 
     return Page.of(
       count,
-      items.map(c => TeacherReviewDto.from(c))
+      items.map((c) => TeacherReviewDto.from(c))
     );
   }
 
@@ -216,7 +216,7 @@ export class TeacherService {
     const stats = await this.teacherStatsRepository.findBy({ teacher: Equal(teacher) });
 
     return ResponseEntity.of({
-      items: stats.map(s => TeacherStatsItemDto.from(s)),
+      items: stats.map((s) => TeacherStatsItemDto.from(s)),
     });
   }
 
@@ -242,7 +242,7 @@ export class TeacherService {
         })
       );
 
-      this.telegramService.broadcastPendingTeacher(user, inserted).catch(e =>
+      this.telegramService.broadcastPendingTeacher(user, inserted).catch((e) =>
         this.logger.error('Failed to broadcast a pending teacher', {
           teacher: inserted.id,
           error: e.toString(),
@@ -320,7 +320,7 @@ export class TeacherService {
 
     this.telegramService
       .broadcastPendingTeacherContact(user, teacher, inserted)
-      .catch(e =>
+      .catch((e) =>
         this.logger.error('Failed to broadcast a pending teacher contact', {
           contact: inserted.id,
           user: user.telegramId,

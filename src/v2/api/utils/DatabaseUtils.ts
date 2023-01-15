@@ -7,7 +7,7 @@ export class DatabaseUtils {
   static getSearch<T>({ search }: SearchDTO, ...fields: (keyof T)[]): Search<T> | object {
     if (!search) return {};
     return {
-      OR: fields.map(field => ({
+      OR: fields.map((field) => ({
         [field]: {
           contains: search,
           mode: 'insensitive',
