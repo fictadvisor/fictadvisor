@@ -21,11 +21,11 @@ import { JwtStrategy } from '../../security/JwtStrategy';
         secret: configService.secret,
         signOptions: {
           expiresIn: configService.jwtTtl,
-        }
-      })
+        },
+      }),
     }),
     PassportModule,
-    ConfigurationModule
-  ]
+    ConfigurationModule,
+  ],
 })
 export class AuthModule {}

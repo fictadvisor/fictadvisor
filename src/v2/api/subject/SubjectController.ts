@@ -7,7 +7,7 @@ import { Subject } from '@prisma/client';
 
 @Controller({
   version: '2',
-  path: '/subjects'
+  path: '/subjects',
 })
 export class SubjectController {
   constructor(

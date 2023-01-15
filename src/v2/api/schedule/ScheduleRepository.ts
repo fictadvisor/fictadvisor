@@ -15,7 +15,7 @@ export class ScheduleRepository {
       data: {
         lessonId,
         fortnight,
-      }
+      },
     });
   }
 
@@ -24,7 +24,7 @@ export class ScheduleRepository {
       where: {
         lessonId,
         fortnight,
-      }
+      },
     });
   }
 
@@ -37,23 +37,23 @@ export class ScheduleRepository {
   async getSemesterLesson(id: string) {
     return await this.prisma.semesterLesson.findUnique({
       where: {
-        id
+        id,
       },
       include: {
         disciplineType: true,
-      }
+      },
     });
   }
 
   async getTemporaryLesson(id: string) {
     return await this.prisma.temporaryLesson.findUnique({
       where: {
-        id
+        id,
       },
       include: {
         disciplineType: true,
         teacher: true,
-      }
+      },
     });
   }
 
@@ -62,7 +62,7 @@ export class ScheduleRepository {
       where: {
         disciplineTypeId,
         fortnight,
-      }
+      },
     });
   }
 
@@ -70,7 +70,7 @@ export class ScheduleRepository {
     return await this.prisma.semesterLesson.findMany({
       where: {
         disciplineTypeId,
-      }
+      },
     });
   }
 
@@ -79,7 +79,7 @@ export class ScheduleRepository {
       where: {
         lessonId,
         type,
-      }
+      },
     });
   }
 
@@ -90,18 +90,18 @@ export class ScheduleRepository {
         data: {
           lessonId,
           type,
-          value
-        }
+          value,
+        },
       });
     } else {
       return await this.prisma.fortnightLessonInfo.updateMany({
         where: {
           lessonId,
-          type
+          type,
         },
         data: {
-          value
-        }
+          value,
+        },
       });
     }
   }
@@ -109,19 +109,19 @@ export class ScheduleRepository {
   async updateSemesterLessonInfo(id: string, data) {
     return await this.prisma.semesterLesson.update({
       where: {
-        id
+        id,
       },
-      data
-    })
+      data,
+    });
   }
 
   async getOrCreateSemesterLesson(data: CreateSemesterLessonData) {
     let lesson = await this.prisma.semesterLesson.findFirst({
-      where: data
+      where: data,
     });
     if (!lesson) {
       lesson = await this.prisma.semesterLesson.create({
-        data
+        data,
       });
     }
     return lesson;

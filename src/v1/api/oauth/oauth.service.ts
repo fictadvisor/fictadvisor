@@ -110,7 +110,7 @@ export class OAuthService {
     const ttl = ms(this.configService.get<string>('security.jwt.refreshTtl'));
     const token = await this.refreshTokenRepository.findOne({
       where: { token: refreshToken, createdAt: MoreThanOrEqual(new Date(Date.now() - ttl)) },
-      relations: ['user']
+      relations: ['user'],
     });
 
     if (!token) {

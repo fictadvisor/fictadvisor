@@ -5,6 +5,6 @@ import { TelegramConfigService } from './TelegramConfigService';
 
 @Module({
   providers: [SecurityConfigService, TelegramConfigService],
-  exports: [SecurityConfigService, TelegramConfigService]
+  exports: [SecurityConfigService, TelegramConfigService],
 })
 export class ConfigurationModule extends ConfigModule {}

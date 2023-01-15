@@ -15,16 +15,18 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: securityConfig.secret,
-      ignoreExpiration: false
+      ignoreExpiration: false,
     });
   }
 
   async validate(payload: JwtPayload) {
-    const { password, ...user }: User = await this.prisma.user.findUnique({
+    const user: User = await this.prisma.user.findUnique({
       where: {
         id: payload.sub,
-      }
+      },
     });
+
+    delete user.password;
 
     if (!user) {
       throw new UnauthorizedException();

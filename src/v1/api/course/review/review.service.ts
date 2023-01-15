@@ -40,7 +40,7 @@ export class ReviewService {
   async getReview(id: string, relations?: string[]): Promise<Review> {
     const review = await this.reviewRepository.findOne({
       where: { id },
-      relations
+      relations,
     });
 
     if (review == null) {

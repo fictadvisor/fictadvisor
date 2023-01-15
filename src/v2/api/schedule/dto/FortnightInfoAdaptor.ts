@@ -7,4 +7,4 @@ export const FortnightInfoAdaptor = {
   'homework': FortnightLessonInfoType.HOMEWORK,
   'comment': FortnightLessonInfoType.COMMENT,
   'isTest': FortnightLessonInfoType.IS_TEST,
-}
+};

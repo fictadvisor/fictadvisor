@@ -33,7 +33,7 @@ export class CourseService {
   async getCourse(link: string, relations?: string[]): Promise<Course> {
     const course = await this.courseRepository.findOne({
       where: { link },
-      relations
+      relations,
     });
 
     if (course == null) {
@@ -48,7 +48,7 @@ export class CourseService {
   async getCourseById(id: string, relations?: string[]): Promise<Course> {
     const course = await this.courseRepository.findOne({
       where: { id },
-      relations
+      relations,
     });
 
     if (course == null) {

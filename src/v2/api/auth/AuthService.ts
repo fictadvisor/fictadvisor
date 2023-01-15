@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../../database/PrismaService';
 import { JwtPayload } from '../../security/JwtPayload';
 import { SecurityConfigService } from '../../config/SecurityConfigService';
-import { User } from '@prisma/client'
+import { User } from '@prisma/client';
 import { TokensDTO } from './dto/TokensDTO';
 import { RegistrationDTO, TelegramDTO } from './dto/RegistrationDTO';
 import { createHash, createHmac } from 'crypto';
@@ -25,10 +25,10 @@ export class AuthService {
       where: {
         OR: [
           { username: username },
-          { email: username }
+          { email: username },
         ],
-        password: password
-      }
+        password: password,
+      },
     });
   }
 
@@ -59,7 +59,7 @@ export class AuthService {
       if (this.isExchangeValid(telegram)) {
         Object.assign(user, {
           telegramId: telegram.id,
-          avatar: telegram.photo_url
+          avatar: telegram.photo_url,
         });
       } else {
         throw new InvalidTelegramCredentialsException();
@@ -70,10 +70,10 @@ export class AuthService {
       data: {
         ...user,
         student: {
-          create: createStudent
-        }
-      }
-    })
+          create: createStudent,
+        },
+      },
+    });
 
     if (isCaptain) this.verifyCaptain();
     else this.verifyStudent();
@@ -107,14 +107,14 @@ export class AuthService {
       refreshToken: this.jwtService.sign(payload, {
         expiresIn: this.securityConfig.jwtRefreshTtl,
       }),
-      accessToken: this.jwtService.sign(payload)
-    }
+      accessToken: this.jwtService.sign(payload),
+    };
   }
 
   getAccessToken(payload: JwtPayload) {
     return {
-      accessToken: this.jwtService.sign(payload)
-    }
+      accessToken: this.jwtService.sign(payload),
+    };
   }
 
   async loginTelegram(telegram: TelegramDTO): Promise<TokensDTO> {
@@ -125,7 +125,7 @@ export class AuthService {
     const user = await this.prisma.user.findUnique({
       where: {
         telegramId: String(telegram.id),
-      }
+      },
     });
 
     return this.getTokens(user);
@@ -136,14 +136,14 @@ export class AuthService {
       sub: user.id,
       username: user.username,
       createdAt: Date.now(),
-    }
+    };
   }
 
   async updatePassword({ oldPassword, newPassword }: UpdatePasswordDTO, user: User): Promise<TokensDTO> {
     const dbUser: User = await this.validateUser(user.username, oldPassword);
 
     if (!dbUser) {
-      return null
+      return null;
     }
 
     await this.prisma.user.update({
@@ -153,7 +153,7 @@ export class AuthService {
       data: {
         password: newPassword,
         lastPasswordChanged: new Date(Date.now()),
-      }
+      },
     });
 
     return this.getTokens(user);

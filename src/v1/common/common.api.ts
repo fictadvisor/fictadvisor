@@ -1,4 +1,4 @@
-import { FindManyOptions, FindOptionsWhere, ILike, ObjectLiteral } from 'typeorm';
+import { FindOptionsWhere, ILike, ObjectLiteral } from 'typeorm';
 import { PageableQueryDto } from './common.dto';
 
 type PageableQuery = {

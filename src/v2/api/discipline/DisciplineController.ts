@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Request, UseGuards } from '@nestjs/common';
 import { DisciplineService } from './DisciplineService';
 import { CreateDisciplineDTO } from './dto/CreateDisciplineDTO';
 import { JwtGuard } from '../../security/JwtGuard';
@@ -6,7 +6,7 @@ import { GroupByDisciplineGuard } from '../../security/group-guard/GroupByDiscip
 
 @Controller({
   version: '2',
-  path: '/disciplines'
+  path: '/disciplines',
 })
 export class DisciplineController {
   constructor(
@@ -25,6 +25,14 @@ export class DisciplineController {
     @Request() req,
   ) {
     return this.disciplineService.makeSelective(req.user, disciplineId);
+  }
+
+  @UseGuards(JwtGuard, GroupByDisciplineGuard)
+  @Get('/:disciplineId/teachers')
+  async getAllByDiscipline(
+    @Param('disciplineId') disciplineId: string
+  ) {
+    return this.disciplineService.getTeachers(disciplineId);
   }
 
 }

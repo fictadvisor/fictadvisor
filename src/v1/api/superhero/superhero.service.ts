@@ -37,7 +37,7 @@ export class SuperheroService {
   private async findSuperhero(user: User, relations?: string[]) {
     const superhero = await this.superheroRepository.findOne({
       where: { user: Equal(user) },
-      relations
+      relations,
     });
 
     if (superhero == null) {

@@ -6,7 +6,7 @@ import { JwtGuard } from '../../security/JwtGuard';
 
 @Controller({
   version: '2',
-  path: '/auth'
+  path: '/auth',
 })
 export class AuthController {
   constructor(private authService: AuthService) {}

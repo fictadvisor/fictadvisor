@@ -18,7 +18,7 @@ import { ScheduleModule } from './schedule/ScheduleModule';
     SubjectModule,
     DisciplineModule,
     PollModule,
-    ScheduleModule
-  ]
+    ScheduleModule,
+  ],
 })
 export class ApiModule {}

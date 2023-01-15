@@ -1,14 +1,15 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { DisciplineController } from './DisciplineController';
 import { DisciplineService } from './DisciplineService';
-import { PrismaService } from '../../database/PrismaService';
 import { GroupByDisciplineGuard } from '../../security/group-guard/GroupByDisciplineGuard';
-import { GroupModule } from '../group/GroupModule';
+import { TeacherModule } from '../teacher/TeacherModule';
+import { DisciplineTypeService } from './DisciplineTypeService';
+import { PrismaModule } from '../../database/PrismaModule';
 
 @Module({
   controllers: [DisciplineController],
-  providers: [DisciplineService, PrismaService, GroupByDisciplineGuard],
-  exports: [DisciplineService],
-  imports: [GroupModule]
+  providers: [DisciplineService, GroupByDisciplineGuard, DisciplineTypeService],
+  exports: [DisciplineService, DisciplineTypeService],
+  imports: [forwardRef(() => TeacherModule), PrismaModule],
 })
 export class DisciplineModule {}

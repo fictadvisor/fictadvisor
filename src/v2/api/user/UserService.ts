@@ -20,8 +20,8 @@ export class UserService {
       },
       data: {
         ...body,
-      }
-    })
+      },
+    });
   }
 
   async createSuperhero(id, body) {
@@ -29,8 +29,8 @@ export class UserService {
       data: {
         userId: id,
         ...body,
-      }
-    })
+      },
+    });
   }
 
   async verifySuperhero(userId: string, body: ApproveDTO) {
@@ -40,8 +40,8 @@ export class UserService {
       },
       data: {
         ...body,
-      }
-    })
+      },
+    });
   }
 
   async getSelective(studentId: string) {
@@ -71,8 +71,8 @@ export class UserService {
       orderBy: {
         role: {
           priority: 'desc',
-        }
-      }
+        },
+      },
     });
 
     return roles.map(role => role.role);
@@ -84,16 +84,16 @@ export class UserService {
         roleId,
         scope,
         permission: {
-          name
-        }
-      }
-    })
+          name,
+        },
+      },
+    });
   }
 
   async createRole(body) {
     return this.prisma.userRole.create({
-      data: body
-    })
+      data: body,
+    });
   }
 
 }

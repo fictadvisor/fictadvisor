@@ -1,4 +1,4 @@
-import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
+import { Injectable, PipeTransform } from '@nestjs/common';
 import { Subject } from '@prisma/client';
 import { SubjectService } from './SubjectService';
 import { InvalidSubjectIdException } from '../../utils/exceptions/InvalidSubjectIdException';
@@ -9,7 +9,7 @@ export class SubjectByIdPipe implements PipeTransform<string, Promise<Subject>> 
     private subjectService: SubjectService
   ) {}
 
-  async transform(value: string, metadata: ArgumentMetadata): Promise<Subject> {
+  async transform(value: string): Promise<Subject> {
     const subject: Subject = await this.subjectService.get(value);
     if (!subject) {
       throw new InvalidSubjectIdException();
