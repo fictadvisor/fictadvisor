@@ -35,4 +35,12 @@ export class TeacherRepository {
     const group = await this.get(id);
     return group.temporaryLessons;
   }
+
+  async delete(id: string) {
+    return this.prisma.teacher.delete({
+      where: {
+        id,
+      },
+    });
+  }
 }

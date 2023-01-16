@@ -42,4 +42,8 @@ export class TeacherService {
   async get(id: string) {
     return this.teacherRepository.getTeacher(id);
   }
+
+  async delete(teacherId: string) {
+    return this.teacherRepository.delete(teacherId);
+  }
 }
