@@ -42,4 +42,13 @@ export class GroupController {
     return this.groupService.getDisciplineTeachers(groupId);
   }
 
+  @UseGuards(JwtGuard, GroupByParamsGuard)
+  @Get('/:groupId/disciplines')
+  async getDiscipline(
+    @Param('groupId') groupId: string,
+  ) {
+    const disciplines = await this.groupService.getDisciplines(groupId);
+    return { disciplines };
+  }
+
 }
