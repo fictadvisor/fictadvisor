@@ -1,4 +1,4 @@
-export type GetScheduleDTO = {
+export type GetSessionScheduleDTO = {
     week: number,
     lessons: [{
         type: string,
