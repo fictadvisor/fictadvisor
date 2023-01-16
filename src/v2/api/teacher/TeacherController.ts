@@ -26,7 +26,7 @@ export class TeacherController {
 
   @Get('/:teacherId')
   async get(
-    @Param('teacherId') teacherId: string
+    @Param('teacherId') teacherId: string,
   ) {
     return this.teacherService.get(teacherId);
   }

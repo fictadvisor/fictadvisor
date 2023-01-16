@@ -27,7 +27,9 @@ export class GroupController {
   }
 
   @Get('/:groupId')
-  get(@Param('groupId', GroupByIdPipe) group: Group) {
+  get(
+    @Param('groupId', GroupByIdPipe) group: Group
+  ) {
     return group;
   }
 

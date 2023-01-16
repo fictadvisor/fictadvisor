@@ -51,7 +51,11 @@ export class ScheduleService {
     }
   }
 
-  async getSchedule(group: Group, fortnight: number, callback: 'static' | 'temporary'): Promise<StaticLessonInfo[] | TemporaryLessonInfo[]> {
+  async getSchedule(
+    group: Group,
+    fortnight: number,
+    callback: 'static' | 'temporary'
+  ): Promise<StaticLessonInfo[] | TemporaryLessonInfo[]> {
     const results = [];
 
     const disciplines = await this.groupRepository.getDisciplines(group.id);
@@ -61,13 +65,10 @@ export class ScheduleService {
       const subject = await this.disciplineRepository.getSubject(discipline.id);
 
       for (const type of disciplineTypes) {
-        switch (callback) {
-          case 'static':
-            results.push(...await this.getStaticLessons(fortnight, discipline, subject, type));
-            break;
-          case 'temporary':
-            results.push(...await this.getTemporaryLessons(fortnight, discipline, subject, type));
-            break;
+        if (callback === 'static') {
+          results.push(...await this.getStaticLessons(fortnight, discipline, subject, type));
+        } else if (callback === 'temporary') {
+          results.push(...await this.getTemporaryLessons(fortnight, discipline, subject, type));
         }
       }
     }
@@ -75,7 +76,12 @@ export class ScheduleService {
     return results;
   }
 
-  async getStaticLessons(fortnight: number, discipline: Discipline, subject: Subject, type: DisciplineType): Promise<StaticLessonInfo[]> {
+  async getStaticLessons(
+    fortnight: number,
+    discipline: Discipline,
+    subject: Subject,
+    type: DisciplineType
+  ): Promise<StaticLessonInfo[]> {
     const lessons = await this.scheduleRepository.getSemesterLessonsByType(type.id);
     const results: StaticLessonInfo[] = [];
 
@@ -105,7 +111,11 @@ export class ScheduleService {
     return results;
   }
 
-  async getWeekLessonInfos(lessonId: string, fortnight: number, ...types: FortnightLessonInfoType[]): Promise<string[]> {
+  async getWeekLessonInfos(
+    lessonId: string,
+    fortnight: number,
+    ...types: FortnightLessonInfoType[]
+  ): Promise<string[]> {
     const weekLesson = await this.scheduleRepository.getFortnightLesson(lessonId, fortnight);
     const values = [];
 
@@ -119,7 +129,12 @@ export class ScheduleService {
     return values;
   }
 
-  async getTemporaryLessons(fortnight: number, discipline: Discipline, subject: Subject, type: DisciplineType): Promise<TemporaryLessonInfo[]> {
+  async getTemporaryLessons(
+    fortnight: number,
+    discipline: Discipline,
+    subject: Subject,
+    type: DisciplineType
+  ): Promise<TemporaryLessonInfo[]> {
     const lessons = await this.scheduleRepository.getTemporaryLessonsByType(type.id, fortnight);
 
     const results: TemporaryLessonInfo[] = [];
