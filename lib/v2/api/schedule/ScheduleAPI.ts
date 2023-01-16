@@ -14,8 +14,8 @@ export class ScheduleAPI {
 
     static async getSchedule(accessToken: string,
                              id: string,
-                             fortnight: string): Promise<GetScheduleDTO> {
-        return (await client.get(`/groups/${id}/static/?${fortnight}`,
+                             fortnight?: string): Promise<GetScheduleDTO> {
+        return (await client.get(`/groups/${id}/static/${fortnight}`,
             getAuthorizationHeader(accessToken))).data;
     }
 
