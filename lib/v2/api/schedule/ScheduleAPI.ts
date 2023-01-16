@@ -21,8 +21,8 @@ export class ScheduleAPI {
 
     static async getDynamicLessons(accessToken: string,
                                    id: string,
-                                   fortnight: string): Promise<GetDynamicLessonsDTO>{
-        return (await client.get(`schedule/groups/${id}/temporary/?${fortnight}`,
+                                   fortnight?: string): Promise<GetDynamicLessonsDTO>{
+        return (await client.get(`schedule/groups/${id}/temporary/${fortnight}`,
             getAuthorizationHeader(accessToken))).data;
     }
 }
