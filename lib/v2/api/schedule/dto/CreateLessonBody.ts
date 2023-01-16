@@ -1,4 +1,4 @@
-export type CreateLessonBodyDTO = {
+export type CreateLessonBody = {
     fortnight?: number,
     startTime: Date,
     endTime: Date,
