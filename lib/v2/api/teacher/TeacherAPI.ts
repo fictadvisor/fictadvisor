@@ -1,5 +1,5 @@
 import { client, getAuthorizationHeader, QueryParams } from "../index";
-import { GetTeacherDTO } from "./dto/GetTeacherDTO";
+import { GetTeacher } from "./dto/GetTeacher";
 import { RequestObject } from "./dto/RequestObject";
 import { CreateTeacherBodyDTO } from "./dto/CreateTeacherBodyDTO";
 import { AddContactsBodyDTO } from './dto/AddContactsBodyDTO';
@@ -7,12 +7,12 @@ import { UpdateTeacherBodyDTO } from './dto/UpdateTeacherBodyDTO';
 
 
 export class TeacherAPI {
-    static async get(accessToken: string, teacherId: string): Promise<GetTeacherDTO> {
+    static async get(accessToken: string, teacherId: string): Promise<GetTeacher> {
         return (await (client.get(`/teachers/${teacherId}`
             , getAuthorizationHeader(accessToken)))).data;
     }
 
-    static async getAll(accessToken: string, RequestObject: RequestObject): Promise<GetTeacherDTO[]> {
+    static async getAll(accessToken: string, RequestObject: RequestObject): Promise<GetTeacher[]> {
         return (await (client.get(
             `/teachers`,
             {

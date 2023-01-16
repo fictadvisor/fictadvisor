@@ -1,4 +1,4 @@
-export type GetTeacherDTO = {
+export type GetTeacher = {
     id?: boolean,
     firstName?: boolean,
     middleName?: boolean,
