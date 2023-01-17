@@ -1,4 +1,7 @@
 import { client, getAuthorizationHeader } from "../index";
+import { GetSessionScheduleDTO } from "./dto/GetSessionScheduleDTO";
+import { GetScheduleDTO } from "./dto/GetScheduleDTO";
+import { GetDynamicLessonsDTO } from "./dto/GetDynamicLessonsDTO";
 import { CreateLessonBody } from "./dto/CreateLessonBody";
 import { GetLessonDTO } from "./dto/GetLessonDTO";
 import { GetTeacherScheduleDTO } from "./dto/GetTeacherScheduleDTO";
@@ -6,7 +9,28 @@ import { UpdateStaticLessonBody } from "./dto/UpdateStaticLessonBody";
 import { UpdateDynamicLessonBody } from "./dto/UpdateDynamicLessonBody";
 
 export class ScheduleAPI {
-    static async createLesson(accessToken: string, body: CreateLessonBody) {
+
+    static async getSession(accessToken: string,
+                            groupId: string): Promise<GetSessionScheduleDTO> {
+        return (await client.get(`/group/${groupId}/session`,
+            getAuthorizationHeader(accessToken))).data;
+    }
+
+    static async getSchedule(accessToken: string,
+                             id: string,
+                             fortnight?: string): Promise<GetScheduleDTO> {
+        return (await client.get(`/groups/${id}/static/${fortnight}`,
+            getAuthorizationHeader(accessToken))).data;
+    }
+
+    static async getDynamicLessons(accessToken: string,
+                                   id: string,
+                                   fortnight?: string): Promise<GetDynamicLessonsDTO>{
+        return (await client.get(`schedule/groups/${id}/temporary/${fortnight}`,
+            getAuthorizationHeader(accessToken))).data;
+    }
+    
+     static async createLesson(accessToken: string, body: CreateLessonBody) {
         return (await client.post(
             `/schedule`,
             body,
@@ -45,4 +69,3 @@ export class ScheduleAPI {
             , getAuthorizationHeader(accessToken))).data;
     }
 }
-
