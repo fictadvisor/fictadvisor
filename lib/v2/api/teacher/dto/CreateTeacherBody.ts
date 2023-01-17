@@ -1,4 +1,4 @@
-export type CreateTeacherBodyDTO = {
+export type CreateTeacherBody = {
     firstName: string,
     middleName: string,
     lastName: string,

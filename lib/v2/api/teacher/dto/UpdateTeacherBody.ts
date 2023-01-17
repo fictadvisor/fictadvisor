@@ -1,4 +1,4 @@
-export type UpdateTeacherBodyDTO={
+export type UpdateTeacherBody={
     firstName: string,
     middleName: string,
     lastName: string,
