@@ -4,17 +4,17 @@ import { SendSuperheroRequestBody } from "./dto/SendSuperheroRequestBody";
 
 export class SuperheroAPI {
 
-    static async superheroVerification(accessToken: string, userId: string, state: string, body: SuperheroVerificationBody) {
+    static async superheroVerification(accessToken: string, body: SuperheroVerificationBody) {
         return (await client.patch(
-            `/user/superhero/verify/`,
+            `/user/superhero/verify`,
             body,
             getAuthorizationHeader(accessToken)
         ));
     }
 
-    static async sendSuperheroRequest(accessToken: string, dorm: boolean, body: SendSuperheroRequestBody) {
+    static async sendSuperheroRequest(accessToken: string, body: SendSuperheroRequestBody) {
         return (await client.post(
-            `/user/superhero/`,
+            `/user/superhero`,
             body,
             getAuthorizationHeader(accessToken)
         ));
