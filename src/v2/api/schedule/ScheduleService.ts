@@ -22,6 +22,7 @@ import { DisciplineRepository } from '../discipline/DisciplineRepository';
 import { DisciplineTypeRepository } from '../discipline/DisciplineTypeRepository';
 import { GroupRepository } from '../group/GroupRepository';
 import { DisciplineTeacherRepository } from '../teacher/DisciplineTeacherRepository';
+import { DisciplineTeacherRoleRepository } from '../teacher/DisciplineTeacherRoleRepository';
 
 @Injectable()
 export class ScheduleService {
@@ -37,6 +38,7 @@ export class ScheduleService {
     private disciplineRepository: DisciplineRepository,
     private disciplineTypeRepository: DisciplineTypeRepository,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
+    private disciplineTeacherRoleRepository: DisciplineTeacherRoleRepository,
     private teacherService: TeacherService,
     private scheduleRepository: ScheduleRepository,
   ) {}
@@ -242,10 +244,15 @@ export class ScheduleService {
           discipline.id, {[key]: body[key]}
         );
       } else {
-        await this.disciplineTypeRepository.deleteDisciplineTeachers(semesterLesson.disciplineTypeId);
+        await this.disciplineTypeService.deleteDisciplineTeachers(semesterLesson.disciplineTypeId);
         const role = TeacherRoleAdapter[semesterLesson.disciplineType.name];
         for (const teacherId of body.teachersId) {
-          await this.disciplineTeacherRepository.create({ teacherId, disciplineTypeId: semesterLesson.disciplineTypeId, role });
+          const disciplineTeacher = await this.disciplineTeacherRepository.getOrCreate({ teacherId, disciplineId: discipline.id });
+          await this.disciplineTeacherRoleRepository.create({
+            disciplineTeacherId: disciplineTeacher.id,
+            disciplineTypeId: semesterLesson.disciplineTypeId,
+            role,
+          });
         }
       }
     }
@@ -271,7 +278,12 @@ export class ScheduleService {
     const type = await this.disciplineTypeRepository.getType(disciplineTypeId);
     const role = TeacherRoleAdapter[type.name];
 
-    await this.disciplineTeacherRepository.create({ teacherId, disciplineTypeId, role });
+    const disciplineTeacher = await this.disciplineTeacherRepository.getOrCreate({ teacherId, disciplineId: type.disciplineId });
+    await this.disciplineTeacherRoleRepository.create({
+      disciplineTeacherId: disciplineTeacher.id,
+      disciplineTypeId,
+      role,
+    });
     return await this.scheduleRepository.getOrCreateSemesterLesson({disciplineTypeId, ...data});
   }
 }

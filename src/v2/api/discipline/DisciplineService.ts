@@ -7,6 +7,7 @@ import { DisciplineRepository } from './DisciplineRepository';
 import { DisciplineTypeRepository } from './DisciplineTypeRepository';
 import { DisciplineTeacherRepository } from '../teacher/DisciplineTeacherRepository';
 import { DisciplineTypeService } from './DisciplineTypeService';
+import { DisciplineTeacherService } from '../teacher/DisciplineTeacherService';
 
 @Injectable()
 export class DisciplineService {
@@ -16,6 +17,8 @@ export class DisciplineService {
     private disciplineTeacherRepository: DisciplineTeacherRepository,
     @Inject(forwardRef(() => TeacherService))
     private teacherService: TeacherService,
+    @Inject(forwardRef(() => DisciplineTeacherService))
+    private disciplineTeacherService: DisciplineTeacherService,
     @Inject(forwardRef(() => DisciplineTypeService))
     private disciplineTypeService: DisciplineTypeService,
     private prisma: PrismaService,
@@ -51,23 +54,14 @@ export class DisciplineService {
     return selectiveDisciplines.map((sd) => sd.discipline);
   }
 
-  async getTeachers(disciplineId: string) {
-    const disciplineTypes = await this.disciplineRepository.getTypes(disciplineId);
+  async getTeachers(id: string) {
+    const results = [];
 
-    const teacherList = [];
-    for (const disciplineType of disciplineTypes) {
-      const teachers = await this.disciplineTypeService.getTeachers(disciplineType.id);
-      for (const teacher of teachers) {
-        const teacherComparison = (t) => (t.id === teacher.id);
-
-        if (teacherList.some(teacherComparison)) {
-          teacherList.find(teacherComparison).roles.push(...teacher.roles);
-        } else {
-          teacherList.push(teacher);
-        }
-      }
+    const disciplineTeachers = await this.disciplineRepository.getDisciplineTeachers(id);
+    for (const disciplineTeacher of disciplineTeachers) {
+      results.push(await this.disciplineTeacherService.getDisciplineTeacher(disciplineTeacher.id));
     }
 
-    return teacherList;
+    return results;
   }
 }
