@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { TeacherService } from './TeacherService';
 import { GetDTO } from './dto/GetDTO';
 import { CreateTeacherDTO } from './dto/CreateTeacherDTO';
 import { Teacher } from '@prisma/client';
+import { JwtGuard } from '../../security/JwtGuard';
 
 @Controller({
   version: '2',
@@ -25,9 +26,17 @@ export class TeacherController {
 
   @Get('/:teacherId')
   async get(
-    @Param('teacherId') teacherId: string
+    @Param('teacherId') teacherId: string,
   ) {
     return this.teacherService.get(teacherId);
+  }
+
+  @UseGuards(JwtGuard)
+  @Delete('/:teacherId')
+  async delete(
+    @Param('teacherId') teacherId: string,
+  ) {
+    return this.teacherService.delete(teacherId);
   }
 
 }

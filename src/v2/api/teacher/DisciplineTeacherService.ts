@@ -15,24 +15,20 @@ export class DisciplineTeacherService {
     private disciplineTypeService: DisciplineTypeService,
   ) {}
 
-  async getTeacher(id: string) {
-    const disciplineTeacher = await this.disciplineTeacherRepository.get(id);
+  async getGroup(id: string) {
+    const roles = await this.disciplineTeacherRepository.getRoles(id);
+    return this.disciplineTypeService.getGroup(roles[0].disciplineTypeId);
+  }
+
+  async getDisciplineTeacher(disciplineTeacherId: string) {
+    const teacher = await this.disciplineTeacherRepository.getTeacher(disciplineTeacherId);
+    const roles = await this.disciplineTeacherRepository.getRoles(disciplineTeacherId);
 
     return {
-      disciplineTeacherId: disciplineTeacher.id,
-      roles: [disciplineTeacher.role],
-      ...disciplineTeacher.teacher,
+      ...teacher,
+      disciplineTeacherId,
+      roles: roles.map((role) => (role.role)),
     };
-  }
-
-  async getDiscipline(id: string) {
-    const disciplineType = await this.disciplineTeacherRepository.getDisciplineType(id);
-    return this.disciplineTypeRepository.getDiscipline(disciplineType.id);
-  }
-
-  async getGroup(id: string) {
-    const disciplineType = await this.disciplineTeacherRepository.getDisciplineType(id);
-    return this.disciplineTypeService.getGroup(disciplineType.id);
   }
 
 }

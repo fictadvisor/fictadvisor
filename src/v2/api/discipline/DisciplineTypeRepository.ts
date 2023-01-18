@@ -17,7 +17,7 @@ export class DisciplineTypeRepository {
         lessons: true,
         temporaryLessons: true,
         discipline: true,
-        disciplineTeachers: true,
+        disciplineTeacherRoles: true,
       },
     });
   }
@@ -25,7 +25,7 @@ export class DisciplineTypeRepository {
   async getType(id: string) {
     const type = await this.get(id);
     delete type.discipline;
-    delete type.disciplineTeachers;
+    delete type.disciplineTeacherRoles;
     delete type.lessons;
     delete type.temporaryLessons;
     return type;
@@ -36,9 +36,9 @@ export class DisciplineTypeRepository {
     return type.discipline;
   }
 
-  async getDisciplineTeachers(id: string) {
+  async getDisciplineTeacherRoles(id: string) {
     const type = await this.get(id);
-    return type.disciplineTeachers;
+    return type.disciplineTeacherRoles;
   }
 
   async getLessons(id: string) {
@@ -74,8 +74,8 @@ export class DisciplineTypeRepository {
     return type;
   }
 
-  async deleteDisciplineTeachers(disciplineTypeId: string) {
-    return this.prisma.disciplineTeacher.deleteMany({
+  async deleteDisciplineTeacherRoles(disciplineTypeId: string) {
+    return this.prisma.disciplineTeacherRole.deleteMany({
       where: {
         disciplineTypeId,
       },

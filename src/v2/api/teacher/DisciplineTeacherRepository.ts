@@ -15,8 +15,9 @@ export class DisciplineTeacherRepository {
       },
       include: {
         teacher: true,
-        disciplineType: true,
+        roles: true,
         questionAnswers: true,
+        discipline: true,
       },
     });
   }
@@ -24,7 +25,8 @@ export class DisciplineTeacherRepository {
   async getDisciplineTeacher(id: string) {
     const disciplineTeacher = await this.get(id);
     delete disciplineTeacher.teacher;
-    delete disciplineTeacher.disciplineType;
+    delete disciplineTeacher.roles;
+    delete disciplineTeacher.discipline;
     return disciplineTeacher;
   }
 
@@ -33,14 +35,19 @@ export class DisciplineTeacherRepository {
     return disciplineTeacher.teacher;
   }
 
-  async getDisciplineType(id: string) {
+  async getRoles(id: string) {
     const disciplineTeacher = await this.get(id);
-    return disciplineTeacher.disciplineType;
+    return disciplineTeacher.roles;
   }
 
   async getAnswers(id: string) {
     const disciplineTeacher = await this.get(id);
     return disciplineTeacher.questionAnswers;
+  }
+
+  async getDiscipline(id: string) {
+    const disciplineTeacher = await this.get(id);
+    return disciplineTeacher.discipline;
   }
 
   async create(data: CreateDisciplineTeacherData) {
@@ -61,5 +68,13 @@ export class DisciplineTeacherRepository {
       disciplineTeacher = await this.create(data);
     }
     return disciplineTeacher;
+  }
+
+  async delete(id: string) {
+    return this.prisma.disciplineTeacher.delete({
+      where: {
+        id,
+      },
+    });
   }
 }

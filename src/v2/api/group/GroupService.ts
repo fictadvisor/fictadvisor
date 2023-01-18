@@ -49,14 +49,23 @@ export class GroupService {
   }
 
   async getDisciplineTeachers(groupId: string) {
+    const disciplines = await this.getDisciplines(groupId);
+
+    for (const discipline of disciplines) {
+      discipline.teachers = await this.disciplineService.getTeachers(discipline.id);
+    }
+
+    return disciplines;
+  }
+
+  async getDisciplines(groupId: string) {
     const disciplines = await this.groupRepository.getDisciplines(groupId);
     const results = [];
     for (const discipline of disciplines) {
       const subject = await this.disciplineRepository.getSubject(discipline.id);
-      const teachers = await this.disciplineService.getTeachers(discipline.id);
       results.push({
-        name: subject.name,
-        teachers,
+        id: discipline.id,
+        subjectName: subject.name,
       });
     }
 

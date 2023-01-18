@@ -27,7 +27,9 @@ export class GroupController {
   }
 
   @Get('/:groupId')
-  get(@Param('groupId', GroupByIdPipe) group: Group) {
+  get(
+    @Param('groupId', GroupByIdPipe) group: Group
+  ) {
     return group;
   }
 
@@ -38,6 +40,15 @@ export class GroupController {
     @Param('groupId') groupId: string,
   ) {
     return this.groupService.getDisciplineTeachers(groupId);
+  }
+
+  @UseGuards(JwtGuard, GroupByParamsGuard)
+  @Get('/:groupId/disciplines')
+  async getDiscipline(
+    @Param('groupId') groupId: string,
+  ) {
+    const disciplines = await this.groupService.getDisciplines(groupId);
+    return { disciplines };
   }
 
 }

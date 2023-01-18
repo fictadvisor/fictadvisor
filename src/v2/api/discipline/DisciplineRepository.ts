@@ -19,6 +19,7 @@ export class DisciplineRepository {
         disciplineTypes: true,
         selectiveDisciplines: true,
         subject: true,
+        disciplineTeachers: true,
       },
     });
   }
@@ -29,6 +30,7 @@ export class DisciplineRepository {
     delete discipline.subject;
     delete discipline.disciplineTypes;
     delete discipline.selectiveDisciplines;
+    delete discipline.disciplineTeachers;
     return discipline;
   }
 
@@ -52,10 +54,29 @@ export class DisciplineRepository {
     return discipline.selectiveDisciplines;
   }
 
+  async getDisciplineTeachers(id: string) {
+    const discipline = await this.get(id);
+    return discipline.disciplineTeachers;
+  }
+
+  async find(where: CreateDisciplineDTO) {
+    return this.prisma.discipline.findFirst({
+      where,
+    });
+  }
+
   async create(data: CreateDisciplineDTO) {
     return this.prisma.discipline.create({
       data,
     });
+  }
+
+  async getOrCreate(data: CreateDisciplineDTO) {
+    let discipline = await this.find(data);
+    if (!discipline) {
+      discipline = await this.create(data);
+    }
+    return discipline;
   }
 
   async update(id: string, data: UpdateDisciplineDTO) {

@@ -22,6 +22,7 @@ import { DisciplineRepository } from '../discipline/DisciplineRepository';
 import { DisciplineTypeRepository } from '../discipline/DisciplineTypeRepository';
 import { GroupRepository } from '../group/GroupRepository';
 import { DisciplineTeacherRepository } from '../teacher/DisciplineTeacherRepository';
+import { DisciplineTeacherRoleRepository } from '../teacher/DisciplineTeacherRoleRepository';
 
 @Injectable()
 export class ScheduleService {
@@ -37,6 +38,7 @@ export class ScheduleService {
     private disciplineRepository: DisciplineRepository,
     private disciplineTypeRepository: DisciplineTypeRepository,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
+    private disciplineTeacherRoleRepository: DisciplineTeacherRoleRepository,
     private teacherService: TeacherService,
     private scheduleRepository: ScheduleRepository,
   ) {}
@@ -51,7 +53,11 @@ export class ScheduleService {
     }
   }
 
-  async getSchedule(group: Group, fortnight: number, callback: 'static' | 'temporary'): Promise<StaticLessonInfo[] | TemporaryLessonInfo[]> {
+  async getSchedule(
+    group: Group,
+    fortnight: number,
+    callback: 'static' | 'temporary'
+  ): Promise<StaticLessonInfo[] | TemporaryLessonInfo[]> {
     const results = [];
 
     const disciplines = await this.groupRepository.getDisciplines(group.id);
@@ -61,13 +67,10 @@ export class ScheduleService {
       const subject = await this.disciplineRepository.getSubject(discipline.id);
 
       for (const type of disciplineTypes) {
-        switch (callback) {
-          case 'static':
-            results.push(...await this.getStaticLessons(fortnight, discipline, subject, type));
-            break;
-          case 'temporary':
-            results.push(...await this.getTemporaryLessons(fortnight, discipline, subject, type));
-            break;
+        if (callback === 'static') {
+          results.push(...await this.getStaticLessons(fortnight, discipline, subject, type));
+        } else if (callback === 'temporary') {
+          results.push(...await this.getTemporaryLessons(fortnight, discipline, subject, type));
         }
       }
     }
@@ -75,7 +78,12 @@ export class ScheduleService {
     return results;
   }
 
-  async getStaticLessons(fortnight: number, discipline: Discipline, subject: Subject, type: DisciplineType): Promise<StaticLessonInfo[]> {
+  async getStaticLessons(
+    fortnight: number,
+    discipline: Discipline,
+    subject: Subject,
+    type: DisciplineType
+  ): Promise<StaticLessonInfo[]> {
     const lessons = await this.scheduleRepository.getSemesterLessonsByType(type.id);
     const results: StaticLessonInfo[] = [];
 
@@ -105,7 +113,11 @@ export class ScheduleService {
     return results;
   }
 
-  async getWeekLessonInfos(lessonId: string, fortnight: number, ...types: FortnightLessonInfoType[]): Promise<string[]> {
+  async getWeekLessonInfos(
+    lessonId: string,
+    fortnight: number,
+    ...types: FortnightLessonInfoType[]
+  ): Promise<string[]> {
     const weekLesson = await this.scheduleRepository.getFortnightLesson(lessonId, fortnight);
     const values = [];
 
@@ -119,7 +131,12 @@ export class ScheduleService {
     return values;
   }
 
-  async getTemporaryLessons(fortnight: number, discipline: Discipline, subject: Subject, type: DisciplineType): Promise<TemporaryLessonInfo[]> {
+  async getTemporaryLessons(
+    fortnight: number,
+    discipline: Discipline,
+    subject: Subject,
+    type: DisciplineType
+  ): Promise<TemporaryLessonInfo[]> {
     const lessons = await this.scheduleRepository.getTemporaryLessonsByType(type.id, fortnight);
 
     const results: TemporaryLessonInfo[] = [];
@@ -227,10 +244,15 @@ export class ScheduleService {
           discipline.id, {[key]: body[key]}
         );
       } else {
-        await this.disciplineTypeRepository.deleteDisciplineTeachers(semesterLesson.disciplineTypeId);
+        await this.disciplineTypeService.deleteDisciplineTeachers(semesterLesson.disciplineTypeId);
         const role = TeacherRoleAdapter[semesterLesson.disciplineType.name];
         for (const teacherId of body.teachersId) {
-          await this.disciplineTeacherRepository.create({ teacherId, disciplineTypeId: semesterLesson.disciplineTypeId, role });
+          const disciplineTeacher = await this.disciplineTeacherRepository.getOrCreate({ teacherId, disciplineId: discipline.id });
+          await this.disciplineTeacherRoleRepository.create({
+            disciplineTeacherId: disciplineTeacher.id,
+            disciplineTypeId: semesterLesson.disciplineTypeId,
+            role,
+          });
         }
       }
     }
@@ -256,7 +278,12 @@ export class ScheduleService {
     const type = await this.disciplineTypeRepository.getType(disciplineTypeId);
     const role = TeacherRoleAdapter[type.name];
 
-    await this.disciplineTeacherRepository.create({ teacherId, disciplineTypeId, role });
+    const disciplineTeacher = await this.disciplineTeacherRepository.getOrCreate({ teacherId, disciplineId: type.disciplineId });
+    await this.disciplineTeacherRoleRepository.create({
+      disciplineTeacherId: disciplineTeacher.id,
+      disciplineTypeId,
+      role,
+    });
     return await this.scheduleRepository.getOrCreateSemesterLesson({disciplineTypeId, ...data});
   }
 }

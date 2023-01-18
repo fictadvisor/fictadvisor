@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ScheduleParser } from './ScheduleParser';
-import { PrismaService } from '../../database/PrismaService';
+import { PrismaModule } from '../../database/PrismaModule';
 
 @Module({
-  providers: [ScheduleParser, PrismaService],
+  providers: [ScheduleParser],
   exports: [ScheduleParser],
+  imports: [PrismaModule],
 })
 export class ParserModule {}

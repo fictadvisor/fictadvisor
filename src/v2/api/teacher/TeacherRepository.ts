@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
+import { CreateTeacherDTO } from './dto/CreateTeacherDTO';
 
 @Injectable()
 export class TeacherRepository {
@@ -34,5 +35,33 @@ export class TeacherRepository {
   async getTemporaryLessons(id: string) {
     const group = await this.get(id);
     return group.temporaryLessons;
+  }
+
+  async delete(id: string) {
+    return this.prisma.teacher.delete({
+      where: {
+        id,
+      },
+    });
+  }
+
+  async find(where: CreateTeacherDTO) {
+    return this.prisma.teacher.findFirst({
+      where,
+    });
+  }
+
+  async create(data: CreateTeacherDTO) {
+    return this.prisma.teacher.create({
+      data,
+    });
+  }
+
+  async getOrCreate(data: CreateTeacherDTO) {
+    let teacher = await this.find(data);
+    if (!teacher) {
+      teacher = await this.create(data);
+    }
+    return teacher;
   }
 }

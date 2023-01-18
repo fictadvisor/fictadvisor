@@ -4,6 +4,6 @@ export interface CreateDisciplineDTO {
   semester: number,
   year: number,
   isSelective?: boolean,
-  evaluatingSystem: string,
-  resource: string,
+  evaluatingSystem?: string,
+  resource?: string,
 }

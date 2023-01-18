@@ -42,4 +42,28 @@ export class GroupRepository {
     const group = await this.get(id);
     return group.groupRole;
   }
+
+  async find(code: string) {
+    return this.prisma.group.findFirst({
+      where: {
+        code,
+      },
+    });
+  }
+
+  async create(code: string) {
+    return this.prisma.group.create({
+      data: {
+        code,
+      },
+    });
+  }
+
+  async getOrCreate(code: string) {
+    let group = await this.find(code);
+    if (!group) {
+      group = await this.create(code);
+    }
+    return group;
+  }
 }
