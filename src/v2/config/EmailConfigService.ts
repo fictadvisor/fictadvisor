@@ -9,8 +9,8 @@ export class EmailConfigService {
     return this.configService.get<string>('email.host');
   }
 
-  get port(): string {
-    return this.configService.get<string>('email.port');
+  get port(): number {
+    return this.configService.get<number>('email.port');
   }
 
   get username(): string {

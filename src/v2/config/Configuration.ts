@@ -12,7 +12,7 @@ export default () => ({
   },
   email: {
     host: process.env.SMTP_HOST,
-    port: process.env.SMTP_PORT,
+    port: parseInt(process.env.SMTP_PORT),
     username: process.env.SMTP_USERNAME,
     password: process.env.SMTP_PASSWORD,
   },
