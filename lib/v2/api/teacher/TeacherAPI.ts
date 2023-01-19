@@ -3,6 +3,7 @@ import { GetTeacherDTO } from "./dto/GetTeacherDTO";
 import { CreateTeacherBody } from "./dto/CreateTeacherBody";
 import { AddContactsBody } from './dto/AddContactsBody';
 import { UpdateTeacherBody } from './dto/UpdateTeacherBody';
+import { GetTeacherStatsDTO } from './dto/GetTeacherStatsDTO';
 
 
 export class TeacherAPI {
@@ -11,11 +12,19 @@ export class TeacherAPI {
             , getAuthorizationHeader(accessToken)))).data;
     }
 
-    static async getAll(accessToken: string, search?:string ): Promise<GetTeacherDTO[]> {
+    static async getAll(accessToken: string, search?: string): Promise<GetTeacherDTO[]> {
         return (await (client.get(
-            `/teachers?search=${search?search:''}`,
+            `/teachers?search=${search ? search : ''}`,
             getAuthorizationHeader(accessToken),
         ))).data;
+    }
+
+    static async getTeachetStats(teacherId: string, semester: number | string, subject: string, year: number)
+    :Promise<GetTeacherStatsDTO> {
+        return (await client.get(`/teachers/${teacherId}/stats?
+        semester=${semester}
+        &subject=${subject}
+        &year=${year}`)).data
     }
 
     static async create(accessToken: string, body: CreateTeacherBody) {
@@ -37,9 +46,9 @@ export class TeacherAPI {
             getAuthorizationHeader(accessToken))).data
     }
 
-    static async delete(accessToken:string,teacherId:string){
+    static async delete(accessToken: string, teacherId: string) {
         return (await client.delete(`/teachers/${teacherId}`,
-        getAuthorizationHeader(accessToken))).data
+            getAuthorizationHeader(accessToken))).data
     }
 
 }
