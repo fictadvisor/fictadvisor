@@ -12,6 +12,7 @@ import "../styles/v1/components/navigation.css";
 import "../styles/v1/components/studentResource.css";
 import "../styles/v1/components/article.css";
 import "../styles/v1/sass/index.sass";
+import "../styles/v2/sass/index.scss";
 
 import { QueryClient, QueryClientProvider } from "react-query";
 import { AuthenticationProvider } from "../lib/context/AuthenticationContext";
