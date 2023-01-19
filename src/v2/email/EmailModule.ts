@@ -4,17 +4,15 @@ import { Module } from '@nestjs/common';
 import { EmailService } from './EmailService';
 import { join } from 'path';
 
-console.log(__dirname, join(__dirname, 'src/v2/email/templates'));
-
 @Module({
   imports: [
     MailerModule.forRoot({
       transport: {
-        host: 'smtp.gmail.com',
+        host: process.env.SMTP_HOST,
         secure: false,
         auth: {
-          user: 'fictadvisor@gmail.com',
-          pass: 'vmmennbumbzodlzt',
+          user: process.env.SMTP_USERNAME,
+          pass: process.env.SMTP_PASSWORD,
         },
       },
       defaults: {
@@ -30,6 +28,6 @@ console.log(__dirname, join(__dirname, 'src/v2/email/templates'));
     }),
   ],
   providers: [EmailService],
-  exports: [EmailService], // export for DI
+  exports: [EmailService],
 })
 export class EmailModule {}
