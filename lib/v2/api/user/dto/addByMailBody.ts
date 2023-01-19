@@ -1,4 +1,4 @@
-export type addByMail = {
+export type addByMailBody = {
 
     email: string,
 	groupId: string,

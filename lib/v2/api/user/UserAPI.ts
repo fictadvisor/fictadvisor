@@ -1,13 +1,13 @@
-import { client, getAuthorizationHeader, QueryParams } from "../index"
-import {addByMail} from "./dto/addByMail"
-import {addContact} from "./dto/addContact"
+import {client, getAuthorizationHeader} from "../index"
+import {addByMailBody} from "./dto/addByMailBody"
+import {addContactBody} from "./dto/addContactBody"
 export class UserAPI {
 
-    static async addByMail(accessToken: string, body: addByMail){
+    static async addByMailBody(accessToken: string, body: addByMailBody){
         return (await (client.post('/users', body, getAuthorizationHeader(accessToken)))).data;
     }
 
-    static async addContact(accessToken: string, body: addContact){
+    static async addContactBody(accessToken: string, body: addContactBody){
         return (await (client.post('/users/contacts', body, getAuthorizationHeader(accessToken)))).data;
     }   
 }

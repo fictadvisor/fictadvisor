@@ -1,4 +1,4 @@
-export type addContact = {
+export type addContactBody = {
     name: string,
 	value: string,
 }
