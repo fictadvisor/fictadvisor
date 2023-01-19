@@ -1,18 +1,17 @@
-import { client, getAuthorizationHeader, QueryParams } from "../index";
+import { client, getAuthorizationHeader } from "../index";
 import { GetSubjectDTO } from "./dto/GetSubjectDTO";
 import { CreateSubjectBodyDTO } from "./dto/CreateSubjectBodyDTO";
 import { GetListOfSubjectsDTO } from "./dto/GetListOfSubjectsDTO";
+import { GetTeachersBySubjectDTO } from "./dto/GetTeachersBySubjectDTO";
+import { UpdateDisciplineBody } from "./dto/UpdateDisciplineBody";
 
 export class SubjectsAPI {
-  static async get(subjectId: string): Promise<GetSubjectDTO> {
-    return (await client.get(`/subjects/${subjectId}`)).data;
-  }
 
-  static async getAll(
-    params: QueryParams<"rating" | "name" | "teacherCount">
-  ): Promise<GetSubjectDTO[]> {
-    return (await client.get("/subjects", { params })).data;
-  }
+    static async getTeachersBySubject(accessToken: string,
+                                      disciplineId: string): Promise<GetTeachersBySubjectDTO> {
+        return (await client.get(`disciplines/${disciplineId}/teachers`,
+            getAuthorizationHeader(accessToken))).data;
+    }
 
   static async getListOfSubjects(accessToken: string): Promise<GetListOfSubjectsDTO[]> {
     return (await client.get(`/subjects`, getAuthorizationHeader(accessToken))).data;
@@ -29,5 +28,13 @@ export class SubjectsAPI {
       getAuthorizationHeader(accessToken)
     );
   }
+
+  static async updateDiscipline(accessToken: string,
+                                  disciplineId: string,
+                                  body: UpdateDisciplineBody) {
+        await client.patch(`disciplines/${disciplineId}`,
+            body,
+            getAuthorizationHeader(accessToken));
+    }
 }
 
