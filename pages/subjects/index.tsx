@@ -5,15 +5,15 @@ import { useQuery } from "react-query";
 import { toInteger } from "../../lib/number";
 import { useQueryParams } from "../../lib/query";
 
-import PageLayout from "../../components/layout/PageLayout";
-import Button from "../../components/ui/Button";
-import Dropdown from "../../components/ui/Dropdown";
-import Loader from "../../components/ui/Loader";
+import PageLayout from "../../components/v1/layout/PageLayout";
+import Button from "../../components/v1/ui/Button";
+import Dropdown from "../../components/v1/ui/Dropdown";
+import Loader from "../../components/v1/ui/Loader";
 
-import SearchInput from "../../components/ui/SearchInput";
-import SubjectItem from "../../components/SubjectItem";
+import SearchInput from "../../components/v1/ui/SearchInput";
+import SubjectItem from "../../components/v1/SubjectItem";
 import { useAuthentication } from "../../lib/context/AuthenticationContext";
-import AddSubjectForm from "../../components/forms/AddSubjectForm";
+import AddSubjectForm from "../../components/v1/forms/AddSubjectForm";
 
 const PROPERTIES = {
   pageSize: 10,

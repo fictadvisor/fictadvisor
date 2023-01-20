@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import { GetServerSideProps } from "next";
 
-import PageLayout from "../components/layout/PageLayout";
+import PageLayout from "../components/v1/layout/PageLayout";
 import Link from "next/link";
 
 const NotFoundPage = () => {

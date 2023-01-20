@@ -1,5 +1,5 @@
 import articles from "../../lib/articles";
-import Article from "../../components/Article";
+import Article from "../../components/v1/Article";
 
 export default function Post({ article }) {
   return <Article article={article}/>;

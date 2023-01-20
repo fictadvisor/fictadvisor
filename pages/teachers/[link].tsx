@@ -7,19 +7,19 @@ import { toInteger } from '../../lib/number';
 import { getFullName } from '../../lib/text';
 import { AxiosError } from 'axios';
 
-import PageLayout from '../../components/layout/PageLayout';
-import Button from '../../components/ui/Button';
-import ArrowIcon from '../../components/ui/icons/ArrowIcon';
-import StarIcon from '../../components/ui/icons/StarIcon';
-import Tag from '../../components/ui/Tag';
+import PageLayout from '../../components/v1/layout/PageLayout';
+import Button from '../../components/v1/ui/Button';
+import ArrowIcon from '../../components/v1/ui/icons/ArrowIcon';
+import StarIcon from '../../components/v1/ui/icons/StarIcon';
+import Tag from '../../components/v1/ui/Tag';
 
-import Divider from '../../components/ui/Divider';
-import Collapsible from '../../components/ui/Collapsible';
+import Divider from '../../components/v1/ui/Divider';
+import Collapsible from '../../components/v1/ui/Collapsible';
 
-import ReviewBlock from '../../components/blocks/ReviewBlock';
-import ContactBlock from '../../components/blocks/ContactBlock';
-import CourseBlock from '../../components/blocks/CourseBlock';
-import Disclaimer from '../../components/ui/Disclaimer';
+import ReviewBlock from '../../components/v1/blocks/ReviewBlock';
+import ContactBlock from '../../components/v1/blocks/ContactBlock';
+import CourseBlock from '../../components/v1/blocks/CourseBlock';
+import Disclaimer from '../../components/v1/ui/Disclaimer';
 
 type TabProperties = { link: string, id: string };
 
