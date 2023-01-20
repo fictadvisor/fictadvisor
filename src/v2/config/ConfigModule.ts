@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { SecurityConfigService } from './SecurityConfigService';
 import { ConfigModule } from '@nestjs/config';
+import { SecurityConfigService } from './SecurityConfigService';
+import { EmailConfigService } from './EmailConfigService';
 import { TelegramConfigService } from './TelegramConfigService';
 
 @Module({
-  providers: [SecurityConfigService, TelegramConfigService],
-  exports: [SecurityConfigService, TelegramConfigService],
+  providers: [SecurityConfigService, TelegramConfigService, EmailConfigService],
+  exports: [SecurityConfigService, TelegramConfigService, EmailConfigService],
 })
 export class ConfigurationModule extends ConfigModule {}

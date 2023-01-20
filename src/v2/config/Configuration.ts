@@ -10,6 +10,12 @@ export default () => ({
       refreshTtl: process.env.JWT_REFRESH_TTL ?? '1209600s',
     },
   },
+  email: {
+    host: process.env.SMTP_HOST,
+    port: parseInt(process.env.SMTP_PORT),
+    username: process.env.SMTP_USERNAME,
+    password: process.env.SMTP_PASSWORD,
+  },
   telegram: {
     apiUrl: process.env.TELEGRAM_API_URL,
     botToken: process.env.TELEGRAM_BOT_TOKEN,
