@@ -4,15 +4,15 @@ import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { GetServerSideProps } from "next";
 
-import PageLayout from "../components/layout/PageLayout";
+import PageLayout from "../components/v1/layout/PageLayout";
 import Link from "next/link";
-import TeacherItem from "../components/TeacherItem";
-import Button from "../components/ui/Button";
-import StudentResourceItem from "../components/StudentResourceItem";
-import SubjectItem from "../components/SubjectItem";
+import TeacherItem from "../components/v1/TeacherItem";
+import Button from "../components/v1/ui/Button";
+import StudentResourceItem from "../components/v1/StudentResourceItem";
+import SubjectItem from "../components/v1/SubjectItem";
 import config from "../config";
 import articles from "../lib/articles";
-import ArticleItem from "../components/ArticleItem";
+import ArticleItem from "../components/v1/ArticleItem";
 import { mergeClassName } from "../lib/component";
 
 const PROPERTIES = {

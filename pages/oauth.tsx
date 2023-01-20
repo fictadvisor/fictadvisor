@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import PageLayout from "../components/layout/PageLayout";
-import Loader from "../components/ui/Loader";
+import PageLayout from "../components/v1/layout/PageLayout";
+import Loader from "../components/v1/ui/Loader";
 import { useAuthentication } from '../lib/context/AuthenticationContext';
 import oauth from "../lib/oauth";
 

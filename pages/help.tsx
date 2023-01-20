@@ -1,5 +1,5 @@
-import PageLayout from "../components/layout/PageLayout";
-import CollapsePanel from "../components/ui/CollapsePanel";
+import PageLayout from "../components/v1/layout/PageLayout";
+import CollapsePanel from "../components/v1/ui/CollapsePanel";
 import config from "../config";
 
 const HelpPage = () => {

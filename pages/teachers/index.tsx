@@ -5,14 +5,14 @@ import { useQuery } from "react-query";
 import { toInteger } from "../../lib/number";
 import { useQueryParams } from "../../lib/query";
 
-import PageLayout from "../../components/layout/PageLayout";
-import Button from "../../components/ui/Button";
-import Dropdown from "../../components/ui/Dropdown";
-import Loader from "../../components/ui/Loader";
+import PageLayout from "../../components/v1/layout/PageLayout";
+import Button from "../../components/v1/ui/Button";
+import Dropdown from "../../components/v1/ui/Dropdown";
+import Loader from "../../components/v1/ui/Loader";
 
-import TeacherItem from "../../components/TeacherItem";
-import SearchInput from "../../components/ui/SearchInput";
-import AddTeacherForm from "../../components/forms/AddTeacherForm";
+import TeacherItem from "../../components/v1/TeacherItem";
+import SearchInput from "../../components/v1/ui/SearchInput";
+import AddTeacherForm from "../../components/v1/forms/AddTeacherForm";
 import { useAuthentication } from "../../lib/context/AuthenticationContext";
 
 const PROPERTIES = {
