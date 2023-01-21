@@ -173,9 +173,13 @@ export class AuthService {
 
   async forgotPassword(email: string) {
     const uuid = crypto.randomUUID();
-    for (const value of this.resetPasswordTokens.values()) {
-      if (value.email === email && Date.now() - value.date.getTime() < ONE_MINUTE) {
-        throw new TooManyActionsException();
+    for (const [token, value] of this.resetPasswordTokens.entries()) {
+      if (value.email === email) {
+        if (Date.now() - value.date.getTime() < ONE_MINUTE) {
+          throw new TooManyActionsException();
+        } else {
+          this.resetPasswordTokens.delete(token);
+        }
       }
     }
 
