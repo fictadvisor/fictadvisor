@@ -24,4 +24,22 @@ export class StudentRepository {
 
     return roles.map((role) => role.role);
   }
+
+  async addRole(studentId: string, roleId: string) {
+    return this.prisma.userRole.create({
+      data: {
+        studentId,
+        roleId,
+      },
+    });
+  }
+
+  async removeRole(studentId: string, roleId: string) {
+    return this.prisma.userRole.deleteMany({
+      where: {
+        studentId,
+        roleId,
+      },
+    });
+  }
 }

@@ -4,7 +4,6 @@ import { Group } from '@prisma/client';
 import { GetDTO } from '../teacher/dto/GetDTO';
 import { DatabaseUtils } from '../utils/DatabaseUtils';
 import { DisciplineService } from '../discipline/DisciplineService';
-import { SubjectService } from '../subject/SubjectService';
 import { DisciplineRepository } from '../discipline/DisciplineRepository';
 import { GroupRepository } from './GroupRepository';
 
@@ -15,7 +14,6 @@ export class GroupService {
     private disciplineRepository: DisciplineRepository,
     private groupRepository: GroupRepository,
     private prisma: PrismaService,
-    private subjectService: SubjectService,
   ) {}
 
   async create(code: string): Promise<Group>  {
