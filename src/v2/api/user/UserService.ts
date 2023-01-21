@@ -66,8 +66,11 @@ export class UserService {
     return false;
   }
 
+  async giveRole(id: string, { roleId }: GiveRoleDTO) {
+    await this.studentRepository.addRole(id, roleId);
+  }
 
-  giveRole({ roleId }: GiveRoleDTO) {
-    return;
+  async removeRole(id: string, roleId: string) {
+    await this.studentRepository.removeRole(id, roleId);
   }
 }
