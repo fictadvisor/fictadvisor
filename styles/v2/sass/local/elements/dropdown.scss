@@ -6,10 +6,14 @@ $dropdown-menu-height:160px;
 $dropdown-header-height:52px;
 
 
-@mixin roundcorners($radius:10px){
+@mixin roundcorners($radius:10px,$color:$light-primary){
     border-radius: $radius;
-    border: 2px solid $light-primary;
+    border: 2px solid $color;
 
+}
+
+@mixin small-vertical-scrollbar{
+        
 }
 
 .dropdown{
@@ -53,17 +57,22 @@ $dropdown-header-height:52px;
     width: 24px;
 }
 
+.dropdown-toggle-icon-container{
+    cursor: pointer;
+}
+
+
+
 .dropdown-menu{
    @include roundcorners;
+   
     position: absolute;
     z-index: 999;
     width: inherit;
     height: $dropdown-menu-height;
     overflow-y: scroll;
     padding: 8px 12px 8px 26px;
-
     background-color: $dark-primary;
-
     &::-webkit-scrollbar{
         width: 12px;
     }
@@ -72,7 +81,6 @@ $dropdown-header-height:52px;
         border: 5px solid transparent;
         background-clip: content-box;
     }
-
     & .dropdown-menu-option,& .dropdown-menu-mistake{
         
         display: flex;
@@ -89,12 +97,6 @@ $dropdown-header-height:52px;
         }
     }
 }
-
-.dropdown-menu-hidden{
-    opacity: 0;
-    z-index: -999;
-}
-
 .dropdown-success{
     border: $success-color 2px solid;
     & span{
@@ -107,6 +109,13 @@ $dropdown-header-height:52px;
         color: $error-color;
     }
 }
+.dropdown-disabled{
+    border: $disabled-button-color 2px solid;
+    & span{
+        color: $disabled-button-text-color;
+    }
+}
+
 
 .large-dropdown{
         width: $large-dropdown-width;

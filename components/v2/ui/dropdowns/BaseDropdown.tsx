@@ -12,13 +12,13 @@ export interface DropDownProps{
     options: DropdownOption[];
     size?: string;
     label:string;
-    className?:'success'|'error';
+    className?:'success'|'error'|'disabled';
     icon?:React.FC; 
 }
 
 export const BaseDropdown: React.FC<DropDownProps> = ({ options, size,label,icon,className }) => {
     
-    const isOptionChosen=useRef<boolean>(false)
+    const [option,setOption]=useState<DropdownOption|null>(null);
     const [isOpen,setIsOpen]=useState<boolean>(false);
     const [sortedOptions,setSortedOptions]=useState<DropdownOption[]>(options);
     const [inputValue,setInputValue]=useState<string>('');
@@ -42,8 +42,14 @@ export const BaseDropdown: React.FC<DropDownProps> = ({ options, size,label,icon
     }
 
     const chooseOptionHadler=(option)=>{
-        console.log(option)
-        setInputValue(option?.name);
+        setIsOpen(false);
+        setInputValue(option.name);
+        setOption(option);
+    }
+
+    const focusHandler=()=>{
+        setIsOpen(true);
+        setInputValue('');
     }
 
     return (
@@ -54,25 +60,26 @@ export const BaseDropdown: React.FC<DropDownProps> = ({ options, size,label,icon
                    {icon({})}
                 </div>}
 
+                <input type="hidden" name="id" required value={option?.id}/>
+
                 <input
                     value={inputValue}
-                    placeholder='Виберіть...'
+                    placeholder='Тиць...'
                     type="text"
                     onChange={inputChangeHandler}
-                    onFocus={()=>setIsOpen(true)}
-                    onBlur={()=>setTimeout(()=>setIsOpen(false),200)}
+                    onFocus={focusHandler}
                     />
                 <span>{label}</span>
 
                 <div 
-                className='dropdown-toggle-icon-container'
+                className={`dropdown-toggle-icon-container ${isOpen?'rotated':''}`}
                 onClick={()=>setIsOpen(prev=>!prev)}
                 >
                     {isOpen&&<ChevronUpIcon/>}
                     {!isOpen&&<ChevronDownIcon/>}
                 </div>
             </div>
-
+            
             <div className="dropdown-menu" hidden={isOpen?false:true}>
                 {sortedOptions.length>0&&sortedOptions.map((option) =>
                     <div
@@ -82,13 +89,10 @@ export const BaseDropdown: React.FC<DropDownProps> = ({ options, size,label,icon
                     >
                         {option?.name}
                     </div>)}
-
-                
                 {
                     !sortedOptions.length&&<div className='dropdown-menu-mistake'>Інформація відсутня</div>
                 }
             </div>
-           
         </div>
     )
 }

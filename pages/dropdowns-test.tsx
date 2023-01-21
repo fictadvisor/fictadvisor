@@ -30,6 +30,9 @@ function dropdownsTest() {
             <SmallDropdown options={test} label={'Test Small'} className='error'/>
             <MediumDropdown options={test} label={'Test Medium'} className='error'/>
             <LargeDropdown options={test} label={'Test Large'} className='error'/>
+            <SmallDropdown options={test} label={'Test Small'} className='disabled'/>
+            <MediumDropdown options={test} label={'Test Medium'} className='disabled'/>
+            <LargeDropdown options={test} label={'Test Large'} className='disabled'/>
         </div>
     );
 }
