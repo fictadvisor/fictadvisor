@@ -8,6 +8,9 @@ import { GroupRepository } from '../api/group/GroupRepository';
 import { DisciplineTeacherRoleRepository } from '../api/teacher/DisciplineTeacherRoleRepository';
 import { SubjectRepository } from '../api/subject/SubjectRepository';
 import { ScheduleRepository } from '../api/schedule/ScheduleRepository';
+import { RoleRepository } from '../api/user/role/RoleRepository';
+import { GrantRepository } from '../api/user/grant/GrantRepository';
+import { StudentRepository } from '../api/user/StudentRepository';
 
 @Module({
   providers: [
@@ -20,6 +23,9 @@ import { ScheduleRepository } from '../api/schedule/ScheduleRepository';
     GroupRepository,
     SubjectRepository,
     ScheduleRepository,
+    RoleRepository,
+    GrantRepository,
+    StudentRepository,
   ],
   exports: [
     PrismaService,
@@ -31,6 +37,9 @@ import { ScheduleRepository } from '../api/schedule/ScheduleRepository';
     GroupRepository,
     SubjectRepository,
     ScheduleRepository,
+    RoleRepository,
+    GrantRepository,
+    StudentRepository,
   ],
 })
 export class PrismaModule {}
