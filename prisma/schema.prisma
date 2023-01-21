@@ -27,6 +27,7 @@ model User {
   superhero           Superhero?
   questionAnswers     QuestionAnswer[]
   lastPasswordChanged DateTime         @default(now())
+  state               State            @default(PENDING)
 
   @@map("users")
 }
@@ -42,10 +43,10 @@ model Group {
 }
 
 model GroupRole {
-  group   Group    @relation(fields: [groupId], references: [id])
+  group   Group  @relation(fields: [groupId], references: [id])
   groupId String
-  role    UserRole @relation(fields: [roleId], references: [id])
-  roleId  String   @unique
+  role    Role   @relation(fields: [roleId], references: [id])
+  roleId  String @unique
 
   @@id([groupId, roleId])
   @@map("group_roles")
@@ -60,7 +61,7 @@ model Student {
   groupId              String                @map("group_id")
   group                Group                 @relation(fields: [groupId], references: [id])
   selectiveDisciplines SelectiveDiscipline[]
-  studentRole          StudentRole[]
+  roles                UserRole[]
   state                State                 @default(PENDING)
 
   @@map("students")
@@ -262,50 +263,40 @@ model QuestionAnswer {
   @@map("question_answers")
 }
 
-enum UserRoleName {
+enum RoleName {
   STUDENT
   MODERATOR
   CAPTAIN
   ADMIN
 }
 
-model UserRole {
-  id           String        @id @default(uuid())
-  name         UserRoleName
-  priority     Int
-  studentRoles StudentRole[]
-  grants       Grant[]
-  groupRole    GroupRole?
+model Role {
+  id        String      @id @default(uuid())
+  name      RoleName
+  weight    Int
+  userRoles UserRole[]
+  grants    Grant[]
+  groupRole GroupRole[]
 
+  @@map("roles")
+}
+
+model UserRole {
+  student   Student @relation(fields: [studentId], references: [userId])
+  studentId String  @map("student_id")
+  role      Role    @relation(fields: [roleId], references: [id])
+  roleId    String  @map("role_id")
+
+  @@id([studentId, roleId])
   @@map("user_roles")
 }
 
-model StudentRole {
-  student   Student  @relation(fields: [studentId], references: [userId])
-  studentId String   @map("student_id")
-  role      UserRole @relation(fields: [roleId], references: [id])
-  roleId    String   @map("role_id")
-
-  @@id([studentId, roleId])
-  @@map("student_roles")
-}
-
-model Permission {
-  id     String  @id @default(uuid())
-  name   String
-  grants Grant[]
-
-  @@map("permissions")
-}
-
 model Grant {
-  id           String     @id @default(uuid())
-  role         UserRole   @relation(fields: [roleId], references: [id])
-  roleId       String     @map("role_id")
-  permission   Permission @relation(fields: [permissionId], references: [id])
-  permissionId String     @map("permission_id")
-  set          Boolean    @default(true)
-  scope        String
+  id         String  @id @default(uuid())
+  role       Role    @relation(fields: [roleId], references: [id])
+  roleId     String  @map("role_id")
+  permission String
+  set        Boolean @default(true)
 
   @@map("grants")
 }
