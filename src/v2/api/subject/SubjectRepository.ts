@@ -52,4 +52,12 @@ export class SubjectRepository {
     delete subject.disciplines;
     return subject;
   }
+
+  async delete(id: string) {
+    return this.prisma.subject.delete({
+      where: {
+        id,
+      },
+    });
+  }
 }
