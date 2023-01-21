@@ -1,3 +1,4 @@
-import { DropdownOption, BaseDropdown } from './BaseDropdown';
+import { DropdownOption, BaseDropdown,DropDownProps } from './BaseDropdown';
 
-export const MediumDropdown: React.FC<{ options: DropdownOption[]}> = ({ options }) => <BaseDropdown options={options} size={'medium'} />;
+export const MediumDropdown: React.FC<DropDownProps> = (props) => <BaseDropdown {...props} size='medium'/>;
+
