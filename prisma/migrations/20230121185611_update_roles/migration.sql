@@ -34,11 +34,11 @@ ALTER TABLE "student_roles" DROP CONSTRAINT "student_roles_student_id_fkey";
 
 -- AlterTable
 ALTER TABLE "grants" RENAME permission_id TO permission,
-DROP COLUMN "scope";
+ALTER TABLE "grants" DROP COLUMN "scope";
 
 ALTER TABLE user_roles RENAME TO roles;
 ALTER TABLE roles RENAME priority TO weight;
-ALTER TABLE roles ALTER COLUMN name TYPE RoleName USING name::RoleName;
+ALTER TABLE roles ALTER COLUMN name TYPE RoleName USING name::text::RoleName;
 
 ALTER TABLE student_roles RENAME TO user_roles;
 
