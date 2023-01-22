@@ -1,12 +1,15 @@
+import {LargeButton, MediumButton, SmallButton} from "../components/v2/Button";
+import {Input, InputState} from "../components/v2/Input";
 
 interface OwnProps {}
 
 type Props = OwnProps;
 
 function test(){
-
   return(
     <div id="container">
+
+        <hr/>
         <h1> This is header 1</h1>
         <hr/>
         <h2> This is header 2</h2>
@@ -25,41 +28,27 @@ function test(){
         <hr/>
         <p className="overline-text">Overline</p>
         <hr/>
-        <div className="button-container">
-              <button className="large-button"> Default </button>
-              <button className="large-button" disabled={true}> Disabled </button>
-        </div>
+
+        <LargeButton text="Default" onClick={() => {}} isDisabled={false}/>
         <hr/>
-        <div className="button-container">
-            <button className="medium-button"> Default </button>
-            <button className="medium-button" disabled={true}> Disabled </button>
-        </div>
+        <MediumButton text="Icon Button" onClick={() => {}} isDisabled={false}/>
         <hr/>
-        <div className="button-container">
-            <button className="small-button">
-                Default
-            </button>
-            <button className="small-button" disabled={true}> Disabled </button>
-        </div>
+        <SmallButton text="Small" onClick={() => {}} isDisabled={false}/>
         <hr/>
-        <form>
-            <div className="field">
-                <label> Label </label>
-                <input placeholder="Placeholder"/>
-            </div>
-            <div className="disabled-field">
-                <label> Label </label>
-                <input placeholder="Placeholder"/>
-            </div>
-            <div className="success-field">
-                <label> Label </label>
-                <input placeholder="Placeholder"/>
-            </div>
-            <div className="error-field">
-                <label> Label </label>
-                <input placeholder="Placeholder"/>
-            </div>
-        </form>
+        <LargeButton text="Disabled" onClick={() => {}} isDisabled={true}/>
+        <hr/>
+        <MediumButton text="Button" onClick={() => {}} isDisabled={true}/>
+        <hr/>
+        <SmallButton text="Button" onClick={() => {}} isDisabled={true}/>
+        <hr/>
+
+        <Input label="Прізвище" placeholder={"Шевченко"}
+               isHiddable={true} state={InputState.DEFAULT}/>
+        <hr/>
+        <Input label="Прізвище" placeholder={"Шевченко"}
+               isHiddable={true} state={InputState.DISABLED}/>
+        <hr/>
+
     </div>
   );
 }

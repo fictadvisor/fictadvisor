@@ -1,69 +1,102 @@
-form{
-  display: flex;
-  flex-direction: column;
-}
+$large-input-width: 480px;
+$normal-input-width: 308px;
 
-.field{
+
+.field {
   background: $dark-primary;
   transition: all 0.2s ease-in-out;
 
-  &:hover{
-    opacity: 0.7;
-  }
-
-  &:active{
-    opacity: 1;
-  }
-  label{
-    padding: 2px 5px;
+  label {
+    color: $default-input-color;
+    padding: 2px 8px;
     isolation: isolate;
-    width: 51px;
-    height: 22px;
+    width: fit-content;
+    block-size: fit-content;
     background: inherit;
     position: relative;
     top: 10px;
-    left: 10px;
+    left: 8px;
     @include flex-center;
   }
-  input{
-    background: inherit;
-    padding: 16px 24px;
-    width: 480px;
-    height: 52px;
-    border: 2px solid #FFFFFF;
-    border-radius: 8px;
-    color: white;
+
+  input {
     &::placeholder {
-      color: white;
-      opacity: 1;
+      color: $default-input-placeholder-color;
     }
 
     &:-ms-input-placeholder {
-      color: white;
+      color: $default-input-placeholder-color;
     }
 
     &::-ms-input-placeholder {
-      color: white;
+      color: $default-input-placeholder-color;
+    }
+
+    //background: url("/assets/icons/search-white-18dp.svg") no-repeat 440px;
+    //background-size: 20px;
+
+    background: inherit;
+    padding: 16px 50px 16px 24px;
+    width: $large-input-width;
+
+    border: 2px solid $default-input-color;
+    border-radius: 8px;
+    color: $default-input-color;
+
+    &:focus {
+      &::placeholder {
+        color: $focus-input-placeholder-color;
+      }
+
+      &:-ms-input-placeholder {
+        color: $focus-input-placeholder-color;
+      }
+
+      &::-ms-input-placeholder {
+        color: $focus-input-placeholder-color;
+      }
+
+      border-color: $focus-input-color;
+      color: $focus-input-color;
+
+      > label{
+        color: $hover-input-color; //TODO bug, hovering label when focused
+      }
+    }
+
+  }
+
+  &:hover {
+    label {
+      color: $hover-input-color;
+    }
+
+    input {
+      border-color: $hover-input-color;
+      color: $hover-input-color;
     }
   }
 }
 
-.disabled-field{
+
+.disabled-field {
   @extend .field;
   opacity: 0.2;
   pointer-events: none;
 }
 
-.error-field{
+.error-field {
   @extend .field;
-  label, input{
+
+  label, input {
     border-color: $error-color;
   }
 }
 
-.success-field{
+.success-field {
   @extend .field;
-  label, input{
+
+  label, input {
     border-color: $success-color;
   }
 }
