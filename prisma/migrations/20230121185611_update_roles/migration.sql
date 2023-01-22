@@ -33,7 +33,7 @@ ALTER TABLE "student_roles" DROP CONSTRAINT "student_roles_role_id_fkey";
 ALTER TABLE "student_roles" DROP CONSTRAINT "student_roles_student_id_fkey";
 
 -- AlterTable
-ALTER TABLE "grants" RENAME permission_id TO permission,
+ALTER TABLE "grants" RENAME permission_id TO permission;
 ALTER TABLE "grants" DROP COLUMN "scope";
 
 ALTER TABLE user_roles RENAME TO roles;
