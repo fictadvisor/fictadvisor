@@ -5,35 +5,40 @@ const leftInputPadding=26; //in px
 const hoveredOption='#404040';
 const themeColor='#1E1E1E';
 
-interface BaseDropdownProps {
-    options: {
-        value: string,
-        label: string
-    }[],
+export type DropDownOption={
+    value: string,
+    label: string
+}
+
+export interface BaseDropdownProps {
+    options: DropDownOption[],
     label:string,
-    size: 'small' | 'medium' | 'large',
+    className?: 'error' | 'success' | 'disabled',
     icon?:React.FC,
     placeholder?: string,
+    noOptionsText?:string
+    size?: 'small' | 'medium' | 'large',
 }
 
 
-export const BaseDropdown: React.FC<BaseDropdownProps> = ({ options, size,label,icon,placeholder = 'тиць...' }) => {
+export const BaseDropdown: React.FC<BaseDropdownProps> = ({ options, size,label, className,icon,placeholder = 'Тиць...',noOptionsText='Опції відсутні',}) => {
  
 
     const [selectedOption, setSelectedOption] = useState(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    return (<div className='_dropdown'>
+    return (<div className='dropdown'>
 
-        <span>{label}</span>
+        <span className={`${className?`dropdown-${className}-label`:''}`}>{label}</span>
         {icon&&<div className='dropdown-icon-container'>
             {icon({})}
         </div>}
         <Select
+            noOptionsMessage={({inputValue}) => noOptionsText}
             defaultValue={selectedOption}
             onChange={setSelectedOption}
             options={options}
-            className={`_dropdown-container-${size}`}
+            className={` dropdown-container-${size} ${className?`dropdown-${className}`:''}`}
             styles={
                 {
                     dropdownIndicator(baseStyles, _) {
@@ -47,7 +52,7 @@ export const BaseDropdown: React.FC<BaseDropdownProps> = ({ options, size,label,
                     control(baseStyles, _) {
                         return{
                             ...baseStyles,
-                            paddingLeft:icon?`${leftInputPadding+20}px`:`${leftInputPadding}px`
+                            paddingLeft:icon?`${leftInputPadding+15}px`:`${leftInputPadding}px`
                         }
                         
                     },
@@ -63,15 +68,14 @@ export const BaseDropdown: React.FC<BaseDropdownProps> = ({ options, size,label,
             }
             onMenuOpen={() => setIsMenuOpen(true)}
             onMenuClose={() => setIsMenuOpen(false)}
-            classNamePrefix={`_dropdown`}
+            classNamePrefix={`dropdown`}
             isSearchable={true}
             isClearable={false}
             placeholder={placeholder}
             maxMenuHeight={150}
             minMenuHeight={150}
             unstyled={true}
-            
-            
+  
         />
     </div>
 
