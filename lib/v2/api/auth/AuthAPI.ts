@@ -8,8 +8,18 @@ import { registerBody } from "./dto/registerBody";
 import { resetPasswordDTO } from "./dto/resetPasswordDTO";
 import { confirmPasswordResetBody } from "./dto/confirmPasswordResetBody";
 import { resetPasswordBody } from "./dto/resetPasswordBody";
+import { resetPasswordBody } from "./dto/resetPasswordBody";
 
 export class AuthAPI {
+
+static async resetPassword(accessToken: string, password: string, body: resetPasswordBody) {
+        return (await client.post(
+            `user/resetPassword`,
+            body,
+            getAuthorizationHeader(accessToken)
+        ));
+    }
+    
     static async refreshAccessToken(refreshToken: string): Promise<refreshAccessTokenDTO> {
         return (await client.patch('/auth/refresh', null, getAuthorizationHeader(refreshToken))).data
 
