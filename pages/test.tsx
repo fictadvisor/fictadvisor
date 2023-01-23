@@ -29,7 +29,7 @@ function test(){
         <p className="overline-text">Overline</p>
         <hr/>
 
-        <LargeButton text="Default" onClick={() => {}} isDisabled={false}/>
+        <LargeButton text="← Default" onClick={() => {}} isDisabled={false}/>
         <hr/>
         <MediumButton text="Icon Button" onClick={() => {}} isDisabled={false}/>
         <hr/>
@@ -48,7 +48,12 @@ function test(){
         <Input label="Прізвище" placeholder={"Шевченко"}
                isHiddable={true} state={InputState.DISABLED}/>
         <hr/>
-
+        <Input label="Прізвище" placeholder={"Шевченко"}
+               isHiddable={true} state={InputState.SUCCESS}/>
+        <hr/>
+        <Input label="Прізвище" placeholder={"Шевченко"}
+               isHiddable={true} state={InputState.ERROR}/>
+        <hr/>
     </div>
   );
 }
