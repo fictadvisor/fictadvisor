@@ -6,6 +6,7 @@ import {
 } from "../index";
 import { client, QueryParams } from "../index";
 import { CreateCourseBody } from "../../../v1/api/courses";
+import {GetSelectiveStudentDTO} from "./dto/GetSelectiveStudentDTO";
 
 export class DisciplineAPI {
   static async getDisciplines(
@@ -25,5 +26,19 @@ export class DisciplineAPI {
       body,
       getAuthorizationHeader(accessToken)
     );
+  }
+
+  static async getSelectiveStudent(accessToken: string, userId?: string): Promise<GetSelectiveStudentDTO> {
+    return (await (client.get(
+      `/disciplines/selective/${userId}`,
+      getAuthorizationHeader(accessToken)
+    )));
+  }
+
+  static async createSelectiveDiscipline(accessToken: string, disciplineId: string) {
+    return (await (client.post(
+      `/disciplines/${disciplineId}/selective`,
+      getAuthorizationHeader(accessToken)
+    )));
   }
 }
