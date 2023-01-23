@@ -1,20 +1,78 @@
 
-#container{
+#tooltip{
   display: flex;
   flex-direction: column;
+  gap: 20px;
   align-items: center;
   align-content: space-between;
   justify-content: center;
 }
 
-hr{
-  width: 100%;
+.tooltip-body {
+  position: relative;
+  width: fit-content;
+  padding: 4px 12px;
+  text-align: center;
+  border-radius: 4px;
 }
 
-.button-container{
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: center;
-  justify-content: space-evenly;
+#tooltip-default {
+  background-color: $tooltip-default-color;
+  color: $tooltip-default-text-color;
+}
+
+#tooltip-info {
+  background-color: $tooltip-info-color;
+  color: $tooltip-info-text-color;
+}
+
+.tooltip-text::after {
+  content: " ";
+  position: absolute;
+  border-width: 5px;
+  border-style: solid;
+}
+
+#tooltip-text-top::after {
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-color: transparent transparent $tooltip-default-color transparent;
+}
+
+#tooltip-text-bottom::after {
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-color: $tooltip-default-color transparent transparent transparent;
+}
+
+#tooltip-text-left::after {
+  top: 50%;
+  right: 100%;
+  margin-top: -5px;
+  border-color: transparent $tooltip-default-color transparent transparent;
+}
+
+#tooltip-text-right::after {
+  top: 50%;
+  left: 100%;
+  margin-top: -5px;
+  border-color: transparent transparent transparent $tooltip-default-color;
+}
+
+#tooltip-info #tooltip-text-top::after {
+  border-color: transparent transparent $tooltip-info-color transparent;
+}
+
+#tooltip-info #tooltip-text-bottom::after {
+  border-color: $tooltip-info-color transparent transparent transparent;
+}
+
+#tooltip-info #tooltip-text-left::after {
+  border-color: transparent $tooltip-info-color transparent transparent;
+}
+
+#tooltip-info #tooltip-text-right::after {
+  border-color: transparent transparent transparent $tooltip-info-color;
 }
