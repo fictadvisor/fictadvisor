@@ -16,7 +16,7 @@ const InternalErrorPage = () => {
           <p>
             Під час обробки твого запиту виникла помилка.
             <br />
-            Пропонуємо повернутись на <Link href="/"><a>головну сторінку</a></Link>.
+            Пропонуємо повернутись на <Link href="/">головну сторінку</Link>.
           </p>
         </div>
         <div style={{ margin: '30px auto 0 auto', opacity: '0.5', textAlign: 'center' }}>

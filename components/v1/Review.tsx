@@ -20,7 +20,7 @@ const Review = ({ course, date, rating, content, className, ...props }: ReviewPr
           <span className="f-medium">
             {
               course 
-               ? <><Link href={`/courses/${course.link}`}><a className="simple">{course.name}</a></Link></>
+               ? <><Link href={`/courses/${course.link}`} className="simple">{course.name}</Link></>
                : 
                 date &&
                 <>{toDateTimeString(new Date(date))}</>

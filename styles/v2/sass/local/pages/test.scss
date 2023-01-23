@@ -1,6 +1,13 @@
 @import "/styles/v2/sass/_utils";
+
 #links {
-=======
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: space-between;
+  justify-content: center;
+  gap: 15px;
+}
 
 #tooltip{
   display: flex;
@@ -68,16 +75,20 @@
 
 .arrow-blue-link {
   @include link-style($blue-link-color, none);
-  @extend .arrow-links;}
+  @extend .arrow-links;
+}
 
 .arrow-white-link-underlined {
   @include link-style($white-link-color, 1);
-  @extend .arrow-links;}
+  @extend .arrow-links;
+}
 
 .arrow-blue-link-underlined {
   @include link-style($blue-link-color, 1);
-  @extend .arrow-links;}
-=======
+  @extend .arrow-links;
+}
+
+
 .tooltip-body {
   position: relative;
   width: fit-content;

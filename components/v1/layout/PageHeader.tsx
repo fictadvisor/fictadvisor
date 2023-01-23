@@ -30,7 +30,7 @@ const MenuItem = ({ item, action = null, setMenuActive }) => {
   return (
     <div className="item">
       <Link href={item.href}>
-        <a><Button onClick={() => setMenuActive(false)}>{Icon ? <Icon /> : item.text}</Button></a>
+        <Button onClick={() => setMenuActive(false)}>{Icon ? <Icon /> : item.text}</Button>
       </Link>
     </div>
   );
@@ -45,10 +45,10 @@ const PageHeader = () => {
       <div className="left">
         <div className="logo">
           <div>
-            <Link href="/">
-              <a className="simple">
-                <img src={config.logo} />
-              </a>
+            <Link href="/" className="simple">
+
+              <img src={config.logo} />
+
             </Link>
           </div>
         </div>
@@ -56,10 +56,10 @@ const PageHeader = () => {
 
       <div className="content">
         <div className="logo-md">
-          <Link href="/">
-            <a className="simple">
-              <img src={config.logo} />
-            </a>
+          <Link href="/" className="simple">
+
+            <img src={config.logo} />
+
           </Link>
         </div>
         <div className="navigation d-flex w-full">

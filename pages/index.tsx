@@ -118,7 +118,7 @@ const IndexPage = ({ popularTeachers, popularSubjects, studentResources: serverR
           </div>
         }
         <div className="article-item more">
-          <Link href='/articles'>
+          <Link href='/articles' legacyBehavior>
             <Button>
               <span>Усі статті</span>
             </Button>
@@ -141,9 +141,9 @@ const IndexPage = ({ popularTeachers, popularSubjects, studentResources: serverR
         }
       </div>
       <Link href="/teachers">
-        <a>
-          <Button className="w-full">Завантажити ще</Button>
-        </a>
+
+        <Button className="w-full">Завантажити ще</Button>
+
       </Link>
       <p className="title" style={{ marginTop: '25px' }}>Популярні предмети</p>
       <div className="teacher-list">
@@ -159,9 +159,9 @@ const IndexPage = ({ popularTeachers, popularSubjects, studentResources: serverR
         }
       </div>
       <Link href="/subjects">
-        <a>
-          <Button className="w-full">Завантажити ще</Button>
-        </a>
+
+        <Button className="w-full">Завантажити ще</Button>
+
       </Link>
     </PageLayout>
   );

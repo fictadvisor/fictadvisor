@@ -1,22 +1,13 @@
 import { AxiosError } from "axios";
 import { GetServerSideProps } from "next";
 import Link from "next/link";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useQuery } from "react-query";
 import PageLayout from "../../components/v1/layout/PageLayout";
-import Review from "../../components/v1/Review";
-import ReviewEditor from "../../components/v1/forms/ReviewForm";
-import SubjectInformation from "../../components/v1/SubjectInformation";
-import Button from "../../components/v1/ui/Button";
 import Disclaimer from "../../components/v1/ui/Disclaimer";
-import Dropdown from "../../components/v1/ui/Dropdown";
-import Loader from "../../components/v1/ui/Loader";
-import SearchInput from "../../components/v1/ui/SearchInput";
-import api from "../../lib/api";
-import { useAuthentication } from "../../lib/context/AuthenticationContext";
-import { toInteger } from "../../lib/number";
-import { useQueryParams } from "../../lib/query";
-import { getFullName } from "../../lib/text";
+import Review from "../../components/v1/Review";
+import Button from "../../components/v1/ui/Button";
+
 
 const PROPERTIES = {
   pageSize: 6,
@@ -100,20 +91,20 @@ const CoursePage = ({ course }) => {
         StateMessage &&
         <StateMessage />
       }
-      <Link href={`/teachers/${course.teacher.link}`}>
-        <a className="simple">
-          <div className="block m-b d-flex">
-            <div className="d-flex-grow f-bold" style={{ marginTop: '2px' }}>{fullName}</div>
-            <div style={{ margin: '-6px 0 -12px' }}>
-              <img className="avatar teacher small" src={course.teacher.image} />
-            </div>
+      <Link href={`/teachers/${course.teacher.link}`} className="simple">
+
+        <div className="block m-b d-flex">
+          <div className="d-flex-grow f-bold" style={{ marginTop: '2px' }}>{fullName}</div>
+          <div style={{ margin: '-6px 0 -12px' }}>
+            <img className="avatar teacher small" src={course.teacher.image} />
           </div>
-        </a>
+        </div>
+
       </Link>
-      <Link href={`/subjects/${course.subject_link}`}>
-        <a className="simple">
-          <SubjectInformation className="m-b" name={course.name} description={course.description} rating={course.rating} />
-        </a>
+      <Link href={`/subjects/${course.subject_link}`} className="simple">
+
+        <SubjectInformation className="m-b" name={course.name} description={course.description} rating={course.rating} />
+
       </Link>
       {
         reviewMode 

@@ -10,15 +10,15 @@ const ArticlesPage = ({ articles }) => <PageLayout meta={{ title: 'Статті'
     {
       articles.chosen.map(article =>
           <div className='article-item-long' key={article.link}>
-            <Link href={article.link}>
-              <a className='simple'>
-                <div className={'block d-flex'}>
-                  <div className='m-auto d-flex-grow'>
-                    <span className='f-medium'>{article.metadata.title}</span>
-                    <p className='c-secondary'>{article.metadata.author}</p>
-                  </div>
+            <Link href={article.link} className='simple'>
+
+              <div className={'block d-flex'}>
+                <div className='m-auto d-flex-grow'>
+                  <span className='f-medium'>{article.metadata.title}</span>
+                  <p className='c-secondary'>{article.metadata.author}</p>
                 </div>
-              </a>
+              </div>
+
             </Link>
           </div>
       )
@@ -30,15 +30,15 @@ const ArticlesPage = ({ articles }) => <PageLayout meta={{ title: 'Статті'
     {
       articles.general.map(article =>
         <div className='article-item-long' key={article.link}>
-          <Link href={article.link}>
-            <a className='simple'>
-              <div className={'block d-flex'}>
-                <div className='m-auto d-flex-grow'>
-                  <span className='f-medium'>{article.metadata.title}</span>
-                  <p className='c-secondary'>{article.metadata.author}</p>
-                </div>
+          <Link href={article.link} className='simple'>
+
+            <div className={'block d-flex'}>
+              <div className='m-auto d-flex-grow'>
+                <span className='f-medium'>{article.metadata.title}</span>
+                <p className='c-secondary'>{article.metadata.author}</p>
               </div>
-            </a>
+            </div>
+
           </Link>
         </div>
       )

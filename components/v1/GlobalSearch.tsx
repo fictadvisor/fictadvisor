@@ -47,13 +47,13 @@ const SearchItem = (props: SearchItemProperties) => {
   const Icon = type.icon;
 
   return (
-    <Link href={props.href}>
-      <a className="search-item" onClick={props.onSelect}>
-        {Icon && <Icon />}
-        {props.text}
-      </a>
-    </Link>
-  )
+    (<Link href={props.href} className="search-item" onClick={props.onSelect}>
+
+      {Icon && <Icon />}
+      {props.text}
+
+    </Link>)
+  );
 };
 
 type SearchCategoryProperties = {

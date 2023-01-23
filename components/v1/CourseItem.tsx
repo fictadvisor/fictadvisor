@@ -16,29 +16,29 @@ const CourseItem = ({ link, title, rating, reviewCount, recommended, className, 
   const noReviews = !rating || !reviewCount;
 
   return (
-    <Link href={`/courses/${link}`}>
-      <a className="simple">
-        <div className={mergeClassName("block course", className)} {...props}>
-          <div className="info">
-            <span className="f-medium">{title}</span>
-            <p className="c-secondary">
-              {
-                noReviews 
-                  ? <><span className="c-secondary">На жаль, відгуки про цей курс відсутні</span></>
-                  : <>
-                      Написано <span className="c-primary">{reviewCount}</span> {pluralize(reviewCount, 'відгук', 'відгуки', 'відгуків')} про цей курс, 
-                      має середню оцінку <span className="c-primary">{+rating.toFixed(2)}</span>
-                    </>
-              }
-            </p>
+    (<Link href={`/courses/${link}`} className="simple">
+
+      <div className={mergeClassName("block course", className)} {...props}>
+        <div className="info">
+          <span className="f-medium">{title}</span>
+          <p className="c-secondary">
             {
-              recommended &&
-              <p className="c-recommended">Рекомендовано редакцією</p>
+              noReviews 
+                ? <><span className="c-secondary">На жаль, відгуки про цей курс відсутні</span></>
+                : <>
+                    Написано <span className="c-primary">{reviewCount}</span> {pluralize(reviewCount, 'відгук', 'відгуки', 'відгуків')} про цей курс, 
+                    має середню оцінку <span className="c-primary">{+rating.toFixed(2)}</span>
+                  </>
             }
-          </div>
+          </p>
+          {
+            recommended &&
+            <p className="c-recommended">Рекомендовано редакцією</p>
+          }
         </div>
-      </a>
-    </Link>
+      </div>
+
+    </Link>)
   );
 };
 

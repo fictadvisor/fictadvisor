@@ -42,12 +42,12 @@ const AddTeacherForm = ({ authentication, onBack }: AddTeacherFormProperties) =>
         <Disclaimer>Дякуємо, твоя заявка була відправлена на перевірку</Disclaimer>
         <div className="m-t d-flex">
           <Button onClick={() => onBack()}>Назад</Button>
-          <Link href={`/teachers/${data.link}`}>
-            <a className="w-full m-l">
-              <Button className="w-full">
-                Перейти на сторінку викладача
-              </Button>
-            </a>
+          <Link href={`/teachers/${data.link}`} className="w-full m-l">
+
+            <Button className="w-full">
+              Перейти на сторінку викладача
+            </Button>
+
           </Link>
         </div>
       </div>

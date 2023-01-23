@@ -39,10 +39,10 @@ const AddSubjectForm = ({ authentication, onBack }: AddCourseFormProperties) => 
         <Disclaimer>Дякуємо, твоя заявка була відправлена на перевірку</Disclaimer>
         <div className="d-flex m-t">
           <Button onClick={() => onBack()}>Назад</Button>
-          <Link href={`/subjects/${data.link}`}>
-              <a className="w-full m-l">
-                <Button className="w-full">Перейти на сторінку предмета</Button>
-              </a>
+          <Link href={`/subjects/${data.link}`} className="w-full m-l">
+
+            <Button className="w-full">Перейти на сторінку предмета</Button>
+
           </Link>
         </div>
       </div>

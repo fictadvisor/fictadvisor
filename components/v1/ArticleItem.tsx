@@ -10,7 +10,7 @@ export type ArticleItemProperties = {
 const ArticleItem = ({ href, name, className, ...props }: ArticleItemProperties) => {
   return (
     <div className={mergeClassName('article-item', className)} {...props}>
-      <Link href={href}>
+      <Link href={href} legacyBehavior>
           <Button>
             <span>{name}</span>
           </Button>

@@ -36,10 +36,10 @@ const AddCourseForm = ({ authentication, subject, onBack }: AddCourseFormPropert
         <Disclaimer>Дякуємо, твоя заявка була відправлена на перевірку</Disclaimer>
         <div className="d-flex m-t">
           <Button onClick={() => onBack()}>Назад</Button>
-          <Link href={`/courses/${data.link}`}>
-              <a className="w-full m-l">
-                <Button className="w-full">Перейти на сторінку викладача</Button>
-              </a>
+          <Link href={`/courses/${data.link}`} className="w-full m-l">
+
+            <Button className="w-full">Перейти на сторінку викладача</Button>
+
           </Link>
         </div>
       </div>
