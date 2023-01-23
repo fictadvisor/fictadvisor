@@ -5,7 +5,7 @@ interface OwnProps {}
 
 type Props = OwnProps;
 
-function test(){
+function test2(){
   return(
     <div id="container">
 
@@ -58,4 +58,4 @@ function test(){
   );
 }
 
-export default test;
+export default test2;
