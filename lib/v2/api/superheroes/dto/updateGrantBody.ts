@@ -1,4 +1,4 @@
-export type updateGrantBody{
+export type updateGrantBody = {
 	permission?: string,
 	set?: boolean,
 }
