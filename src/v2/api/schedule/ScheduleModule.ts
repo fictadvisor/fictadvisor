@@ -23,6 +23,14 @@ import { PrismaModule } from '../../database/PrismaModule';
     ScheduleRepository,
   ],
   exports: [ScheduleService],
-  imports: [ParserModule, GroupModule, DateModule, SubjectModule, DisciplineModule, TeacherModule, PrismaModule],
+  imports: [
+    ParserModule,
+    GroupModule,
+    DateModule,
+    SubjectModule,
+    DisciplineModule,
+    TeacherModule,
+    PrismaModule,
+  ],
 })
 export class ScheduleModule {}

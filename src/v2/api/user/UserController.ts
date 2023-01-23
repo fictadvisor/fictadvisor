@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Param, Patch, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Request, UseGuards } from '@nestjs/common';
 import { UserService } from './UserService';
 import { TelegramGuard } from '../../security/TelegramGuard';
 import { JwtGuard } from '../../security/JwtGuard';
 import { ApproveDTO } from './dto/ApproveDTO';
+import { GiveRoleDTO } from './dto/GiveRoleDTO';
 
 @Controller({
   version: '2',
@@ -49,11 +50,21 @@ export class UserController {
     return { disciplines: dbDisciplines.map((d) => d.id) };
   }
 
-  @UseGuards(TelegramGuard)
-  @Post('/roles')
-  createRole(
-    @Body() body,
+  @UseGuards()
+  @Post('/:userId/roles')
+  giveRole(
+    @Param('userId') userId: string,
+    @Body() body: GiveRoleDTO,
   ) {
-    return this.userService.createRole(body);
+    return this.userService.giveRole(userId, body);
   }
+
+  @Delete('/:userId/roles/roleId')
+  removeRole(
+    @Param('userId') userId: string,
+    @Param('roleId') roleId: string,
+  ) {
+    return this.userService.removeRole(userId, roleId);
+  }
+
 }

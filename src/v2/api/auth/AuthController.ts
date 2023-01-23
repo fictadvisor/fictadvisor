@@ -1,8 +1,10 @@
-import { Controller, Request, Post, UseGuards, Body, Put, UnauthorizedException } from '@nestjs/common';
+import { Controller, Request, Post, UseGuards, Body, Put, UnauthorizedException, Param } from '@nestjs/common';
 import { LocalAuthGuard } from '../../security/LocalGuard';
 import { AuthService } from './AuthService';
 import { RegistrationDTO, TelegramDTO } from './dto/RegistrationDTO';
 import { JwtGuard } from '../../security/JwtGuard';
+import { ForgotPasswordDTO } from './dto/ForgotPasswordDTO';
+import { ResetPasswordDTO } from './dto/ResetPasswordDTO';
 
 @Controller({
   version: '2',
@@ -45,4 +47,18 @@ export class AuthController {
     return tokens;
   }
 
+  @Post('/forgotPassword')
+  async forgotPassword(
+    @Body() body: ForgotPasswordDTO,
+  ) {
+    return this.authService.forgotPassword(body.email);
+  }
+
+  @Post('/resetPassword/:token')
+  async resetPassword(
+    @Param('token') token: string,
+    @Body() body: ResetPasswordDTO,
+  ) {
+    return this.authService.resetPassword(token, body);
+  }
 }

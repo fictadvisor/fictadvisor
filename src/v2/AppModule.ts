@@ -4,6 +4,7 @@ import Configuration from './config/Configuration';
 import { SecurityConfigService } from './config/SecurityConfigService';
 import { ConfigurationModule } from './config/ConfigModule';
 import { ApiModule } from './api/ApiModule';
+import { EmailModule } from './email/EmailModule';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { ApiModule } from './api/ApiModule';
       load: [Configuration],
     }),
     ApiModule,
+    EmailModule,
   ],
   providers: [PrismaService, SecurityConfigService],
 })

@@ -8,6 +8,7 @@ import { LocalStrategy } from '../../security/LocalStrategy';
 import { PassportModule } from '@nestjs/passport';
 import { PrismaService } from '../../database/PrismaService';
 import { JwtStrategy } from '../../security/JwtStrategy';
+import { EmailModule } from '../../email/EmailModule';
 
 
 @Module({
@@ -26,6 +27,7 @@ import { JwtStrategy } from '../../security/JwtStrategy';
     }),
     PassportModule,
     ConfigurationModule,
+    EmailModule,
   ],
 })
 export class AuthModule {}
