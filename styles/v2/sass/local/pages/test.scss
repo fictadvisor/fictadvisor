@@ -1,14 +1,11 @@
-
+@import "/styles/v2/sass/_utils";
 #links {
   display: flex;
   flex-direction: column;
   align-items: center;
   align-content: space-between;
   justify-content: center;
-}
-
-hr {
-  width: 100%;
+  gap: 15px;
 }
 
 .links {
@@ -19,6 +16,14 @@ hr {
 .arrow-links {
   width: 251px;
   height: 24px;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.link-container {
+  display: flex;
+  column-gap: 8px;
+  @include flex-center;
 }
 
 @mixin link-style($color, $border-bottom) {
