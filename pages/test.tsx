@@ -44,6 +44,28 @@ function test(){
           <path d="M1 5H19M5 9L1 5L5 9ZM1 5L5 1L1 5Z" stroke="#0EA5E9" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>Click here to open documentation</a>
       </div>
+=======
+    <div id="tooltip">
+        
+        <div className="tooltip-body">
+            <span>Tooltip Example</span>
+        </div>
+
+        <div className="tooltip-body">
+            <span className="tooltip-text" id="tooltip-text-top">Tooltip Example</span>
+        </div>
+
+        <div className="tooltip-body">
+            <span className="tooltip-text" id="tooltip-text-bottom">Tooltip Example</span>
+        </div>
+
+        <div className="tooltip-body">
+            <span className="tooltip-text" id="tooltip-text-left">Tooltip Example</span>
+        </div>
+
+        <div className="tooltip-body">
+            <span className="tooltip-text" id="tooltip-text-right">Tooltip Example</span>
+        </div>
     </div>
 );
 }
