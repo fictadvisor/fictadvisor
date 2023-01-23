@@ -6,11 +6,15 @@ $dropdown-menu-height:160px;
 $dropdown-header-height:52px;
 
 
+
+
 @mixin roundcorners($radius:10px,$color:$light-primary){
     border-radius: $radius;
     border: 2px solid $color;
 
 }
+
+
 
 @mixin small-vertical-scrollbar{
         

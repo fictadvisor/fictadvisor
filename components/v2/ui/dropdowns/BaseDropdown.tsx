@@ -1,98 +1,80 @@
-import ChevronUpIcon from '../icons/ChevronUpIcon';
-import ChevronDownIcon from '../icons/ChevronDownIcon';
+import Select, { components, DropdownIndicatorProps } from 'react-select';
+import React, { useState, useRef } from 'react';
 
-import React, { useEffect, useRef,useState } from 'react';
+const leftInputPadding=26; //in px
+const hoveredOption='#404040';
+const themeColor='#1E1E1E';
 
-export interface DropdownOption {
-    id: string;
-    [prop: string]: string;
+interface BaseDropdownProps {
+    options: {
+        value: string,
+        label: string
+    }[],
+    label:string,
+    size: 'small' | 'medium' | 'large',
+    icon?:React.FC,
+    placeholder?: string,
 }
 
-export interface DropDownProps{
-    options: DropdownOption[];
-    size?: string;
-    label:string;
-    className?:'success'|'error'|'disabled';
-    icon?:React.FC; 
-}
 
-export const BaseDropdown: React.FC<DropDownProps> = ({ options, size,label,icon,className }) => {
-    
-    const [option,setOption]=useState<DropdownOption|null>(null);
-    const [isOpen,setIsOpen]=useState<boolean>(false);
-    const [sortedOptions,setSortedOptions]=useState<DropdownOption[]>(options);
-    const [inputValue,setInputValue]=useState<string>('');
+export const BaseDropdown: React.FC<BaseDropdownProps> = ({ options, size,label,icon,placeholder = 'тиць...' }) => {
+ 
 
+    const [selectedOption, setSelectedOption] = useState(null);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    useEffect(()=>{
-        if(inputValue.trim().length!=0){
-        setSortedOptions((_)=>{
-            const filtered=options.filter((option)=>{    
-                return option.name.includes(inputValue)
-            });
-            return filtered;
-            })
-        }else{
-            setSortedOptions(options);
-        }
-    },[inputValue]);
+    return (<div className='_dropdown'>
 
-    const inputChangeHandler=(event)=>{
-        setInputValue(event.target.value);
-    }
-
-    const chooseOptionHadler=(option)=>{
-        setIsOpen(false);
-        setInputValue(option.name);
-        setOption(option);
-    }
-
-    const focusHandler=()=>{
-        setIsOpen(true);
-        setInputValue('');
-    }
-
-    return (
-        <div className={`dropdown ${size}-dropdown`}>
-            <div className={`dropdown-header dropdown-${className}`}>
-
-                {icon&&<div className='dropdown-icon-container'>
-                   {icon({})}
-                </div>}
-
-                <input type="hidden" name="id" required value={option?.id}/>
-
-                <input
-                    value={inputValue}
-                    placeholder='Тиць...'
-                    type="text"
-                    onChange={inputChangeHandler}
-                    onFocus={focusHandler}
-                    />
-                <span>{label}</span>
-
-                <div 
-                className={`dropdown-toggle-icon-container ${isOpen?'rotated':''}`}
-                onClick={()=>setIsOpen(prev=>!prev)}
-                >
-                    {isOpen&&<ChevronUpIcon/>}
-                    {!isOpen&&<ChevronDownIcon/>}
-                </div>
-            </div>
-            
-            <div className="dropdown-menu" hidden={isOpen?false:true}>
-                {sortedOptions.length>0&&sortedOptions.map((option) =>
-                    <div
-                     key={option.id}
-                     onClick={chooseOptionHadler.bind(null,option)}
-                     className='dropdown-menu-option'
-                    >
-                        {option?.name}
-                    </div>)}
+        <span>{label}</span>
+        {icon&&<div className='dropdown-icon-container'>
+            {icon({})}
+        </div>}
+        <Select
+            defaultValue={selectedOption}
+            onChange={setSelectedOption}
+            options={options}
+            className={`_dropdown-container-${size}`}
+            styles={
                 {
-                    !sortedOptions.length&&<div className='dropdown-menu-mistake'>Інформація відсутня</div>
+                    dropdownIndicator(baseStyles, _) {
+                        return {
+                            ...baseStyles,
+                            transform: isMenuOpen?'rotate(180deg)':'rotate(0deg)',
+                            transition: 'transform .2s linear',
+                            cursor:'pointer',
+                        }
+                    },
+                    control(baseStyles, _) {
+                        return{
+                            ...baseStyles,
+                            paddingLeft:icon?`${leftInputPadding+20}px`:`${leftInputPadding}px`
+                        }
+                        
+                    },
+                    option(baseStyles, state) {
+                        return{
+                            ...baseStyles,
+                            backgroundColor:state.isSelected?hoveredOption:themeColor
+                        }
+                    },
+                    
+                    
                 }
-            </div>
-        </div>
+            }
+            onMenuOpen={() => setIsMenuOpen(true)}
+            onMenuClose={() => setIsMenuOpen(false)}
+            classNamePrefix={`_dropdown`}
+            isSearchable={true}
+            isClearable={false}
+            placeholder={placeholder}
+            maxMenuHeight={150}
+            minMenuHeight={150}
+            unstyled={true}
+            
+            
+        />
+    </div>
+
     )
+
 }
