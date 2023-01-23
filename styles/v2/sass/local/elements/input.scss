@@ -1,70 +1,170 @@
-form{
-  display: flex;
-  flex-direction: column;
+$large-input-width: 480px;
+$normal-input-width: 308px;
+
+@mixin field-label($color){
+  color: $color;
+  padding: 2px 8px;
+  isolation: isolate;
+  width: fit-content;
+  block-size: fit-content;
+  background: inherit;
+  position: relative;
+  top: 10px;
+  left: 8px;
+  @include flex-center;
 }
 
-.field{
+@mixin field-input($main-color, $placeholder-color){
+  &::placeholder {
+    transition: all 0.2s ease-in-out;
+    color: $placeholder-color;
+  }
+
+  &:-ms-input-placeholder {
+    transition: all 0.2s ease-in-out;
+    color: $placeholder-color;
+  }
+
+  &::-ms-input-placeholder {
+    transition: all 0.2s ease-in-out;
+    color: $placeholder-color;
+  }
+
+  //background: url("/assets/icons/search-white-18dp.svg") no-repeat 440px;
+  //background-size: 20px;
+
+  background: inherit;
+  padding: 16px 50px 16px 24px;
+  width: $large-input-width;
+
+  border: 2px solid $main-color;
+  border-radius: 8px;
+  color: $main-color;
+}
+
+.field {
   background: $dark-primary;
   transition: all 0.2s ease-in-out;
 
-  &:hover{
-    opacity: 0.7;
+  label {
+    @include field-label($hover-input-color);
   }
 
-  &:active{
-    opacity: 1;
-  }
-  label{
-    padding: 2px 5px;
-    isolation: isolate;
-    width: 51px;
-    height: 22px;
-    background: inherit;
-    position: relative;
-    top: 10px;
-    left: 10px;
-    @include flex-center;
-  }
-  input{
-    background: inherit;
-    padding: 16px 24px;
-    width: 480px;
-    height: 52px;
-    border: 2px solid #FFFFFF;
-    border-radius: 8px;
-    color: white;
-    &::placeholder {
-      color: white;
-      opacity: 1;
+  input {
+    @include field-input($default-input-color, $default-input-placeholder-color);
+
+
+    &:focus {
+      @include field-input($focus-input-color, $focus-input-placeholder-color);
+
+      //> label{
+      //  color: $hover-input-color; //TODO bug, hovering label when focused
+      //}
     }
 
-    &:-ms-input-placeholder {
-      color: white;
+  }
+
+  &:hover {
+    label {
+      color: $hover-input-color;
     }
 
-    &::-ms-input-placeholder {
-      color: white;
+    input {
+      border-color: $hover-input-color;
+      color: $hover-input-color;
     }
   }
 }
 
-.disabled-field{
+
+.disabled-field {
   @extend .field;
   opacity: 0.2;
   pointer-events: none;
 }
 
+
 .error-field{
-  @extend .field;
-  label, input{
-    border-color: $error-color;
+  background: $dark-primary;
+  transition: all 0.2s ease-in-out;
+
+  label {
+    color: $hover-input-color;
+    padding: 2px 8px;
+    isolation: isolate;
+    width: fit-content;
+    block-size: fit-content;
+    background: inherit;
+    position: relative;
+    top: 10px;
+    left: 8px;
+    @include flex-center;
+  }
+
+  input {
+    &::placeholder {
+      color: $default-input-placeholder-color;
+    }
+
+    &:-ms-input-placeholder {
+      color: $default-input-placeholder-color;
+    }
+
+    &::-ms-input-placeholder {
+      color: $default-input-placeholder-color;
+    }
+
+    background: url("/assets/icons/search-white-18dp.svg") no-repeat 440px;
+    background-size: 20px;
+
+    padding: 16px 50px 16px 24px;
+    width: $large-input-width;
+
+    border: 2px solid $error-color;
+    border-radius: 8px;
+    color: $default-input-color;
   }
 }
 
 .success-field{
-  @extend .field;
-  label, input{
-    border-color: $success-color;
+  background: $dark-primary;
+  transition: all 0.2s ease-in-out;
+
+  label {
+    color: $hover-input-color;
+    padding: 2px 8px;
+    isolation: isolate;
+    width: fit-content;
+    block-size: fit-content;
+    background: inherit;
+    position: relative;
+    top: 10px;
+    left: 8px;
+    @include flex-center;
+  }
+
+  input {
+    &::placeholder {
+      color: $default-input-placeholder-color;
+    }
+
+    &:-ms-input-placeholder {
+      color: $default-input-placeholder-color;
+    }
+
+    &::-ms-input-placeholder {
+      color: $default-input-placeholder-color;
+    }
+
+    background: url("/assets/icons/search-white-18dp.svg") no-repeat 440px;
+    background-size: 20px;
+
+    padding: 16px 50px 16px 24px;
+    width: $large-input-width;
+
+    border: 2px solid $success-color;
+    border-radius: 8px;
+    color: $default-input-color;
   }
 }
 
