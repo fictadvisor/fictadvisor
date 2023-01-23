@@ -1,6 +1,10 @@
-import { client, getAuthorizationHeader } from "../index";
+import {client, getAuthorizationHeader} from "../index";
+import { updateRoleBody } from "./dto/updateRoleBody";
+import { updateGrantBody } from "./dto/updateGrantBody";
 import { SuperheroVerificationBody } from "./dto/SuperheroVerificationBody";
 import { SendSuperheroRequestBody } from "./dto/SendSuperheroRequestBody";
+
+
 
 export class SuperheroAPI {
 
@@ -18,6 +22,14 @@ export class SuperheroAPI {
             body,
             getAuthorizationHeader(accessToken)
         ));
+    }
+
+    static async updateRoleBody(accessToken: string, body: updateRoleBody, roleId: string){
+        return (await(client.patch(`/role/${roleId}`, body, getAuthorizationHeader(accessToken)))).data;
+    }
+
+    static async updateGrantBody(accessToken: string, body: updateGrantBody, grantId: string){
+        return (await(client.patch(`/grants/${grantId}`, body, getAuthorizationHeader(accessToken)))).data;
     }
 
 }
