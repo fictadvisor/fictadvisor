@@ -6,62 +6,52 @@ type Props = OwnProps;
 function test(){
 
   return(
-    <div id="container">
-        <h1> This is header 1</h1>
-        <hr/>
-        <h2> This is header 2</h2>
-        <hr/>
-        <h3> This is header 3</h3>
-        <hr/>
-        <h4> This is header 4</h4>
-        <hr/>
-        <h5> This is header 5</h5>
-        <hr/>
-        <h6> This is header 6</h6>
-        <hr/>
-        <p className="body-secondary">Body Secondary</p>
-        <hr/>
-        <p className="body-primary">Body Primary</p>
-        <hr/>
-        <p className="overline-text">Overline</p>
-        <hr/>
-        <div className="button-container">
-              <button className="large-button"> Default </button>
-              <button className="large-button" disabled={true}> Disabled </button>
-        </div>
-        <hr/>
-        <div className="button-container">
-            <button className="medium-button"> Default </button>
-            <button className="medium-button" disabled={true}> Disabled </button>
-        </div>
-        <hr/>
-        <div className="button-container">
-            <button className="small-button">
-                Default
-            </button>
-            <button className="small-button" disabled={true}> Disabled </button>
-        </div>
-        <hr/>
-        <form>
-            <div className="field">
-                <label> Label </label>
-                <input placeholder="Placeholder"/>
-            </div>
-            <div className="disabled-field">
-                <label> Label </label>
-                <input placeholder="Placeholder"/>
-            </div>
-            <div className="success-field">
-                <label> Label </label>
-                <input placeholder="Placeholder"/>
-            </div>
-            <div className="error-field">
-                <label> Label </label>
-                <input placeholder="Placeholder"/>
-            </div>
-        </form>
+    <div id="links">
+      <div className="white-link">
+        <a href="">Click here to open documentation</a>
+      </div>
+      <hr/>
+      <div className="blue-link">
+        <a href="">Click here to open documentation</a>
+      </div>
+      <hr/>
+      <div className="white-link-underlined">
+        <a href="">Click here to open documentation</a>
+      </div>
+      <hr/>
+      <div className="blue-link-underlined">
+        <a href="">Click here to open documentation</a>
+      </div>
+      <hr/>
+      <div className="arrow-white-link">
+        <a href="">
+          <svg width="20" height="10" viewBox="0 0 20 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1 5H19M5 9L1 5L5 9ZM1 5L5 1L1 5Z" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg> Click here to open documentation</a>
+      </div>
+      <hr/>
+      <div className="arrow-blue-link">
+        <a href="">
+          <svg width="20" height="10" viewBox="0 0 20 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1 5H19M5 9L1 5L5 9ZM1 5L5 1L1 5Z" stroke="#0EA5E9" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg> Click here to open documentation</a>
+      </div>
+      <hr/>
+      <div className="arrow-white-link-underlined">
+        <a href="">
+          <svg width="20" height="10" viewBox="0 0 20 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1 5H19M5 9L1 5L5 9ZM1 5L5 1L1 5Z" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg> Click here to open documentation</a>
+      </div>
+      <hr/>
+      <div className="arrow-blue-link-underlined">
+        <a href="">
+          <svg width="20" height="10" viewBox="0 0 20 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1 5H19M5 9L1 5L5 9ZM1 5L5 1L1 5Z" stroke="#0EA5E9" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg> Click here to open documentation</a>
+      </div>
     </div>
-  );
+);
 }
 
 export default test;
