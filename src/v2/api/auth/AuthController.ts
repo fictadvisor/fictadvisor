@@ -5,6 +5,7 @@ import { RegistrationDTO, TelegramDTO } from './dto/RegistrationDTO';
 import { JwtGuard } from '../../security/JwtGuard';
 import { ForgotPasswordDTO } from './dto/ForgotPasswordDTO';
 import { ResetPasswordDTO } from './dto/ResetPasswordDTO';
+import { UpdatePasswordDTO } from "./dto/UpdatePasswordDTO";
 
 @Controller({
   version: '2',
@@ -37,7 +38,10 @@ export class AuthController {
 
   @UseGuards(JwtGuard)
   @Put('/updatePassword')
-  async updatePassword(@Body() body, @Request() req) {
+  async updatePassword(
+      @Body() body: UpdatePasswordDTO,
+      @Request() req,
+    ) {
     const tokens = await this.authService.updatePassword(body, req.user);
 
     if (!tokens) {
