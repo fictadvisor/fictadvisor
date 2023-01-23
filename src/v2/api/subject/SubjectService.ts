@@ -4,10 +4,12 @@ import { GetDTO } from '../teacher/dto/GetDTO';
 import { CreateSubjectDTO } from './dto/CreateSubjectDTO';
 import { Subject } from '@prisma/client';
 import { DatabaseUtils } from '../utils/DatabaseUtils';
+import { SubjectRepository } from './SubjectRepository';
 
 @Injectable()
 export class SubjectService {
   constructor(
+    private subjectRepository: SubjectRepository,
     private prisma: PrismaService
   ) {}
 
@@ -39,5 +41,9 @@ export class SubjectService {
         name,
       },
     });
+  }
+
+  async deleteSubject(id: string) {
+    await this.subjectRepository.delete(id);
   }
 }

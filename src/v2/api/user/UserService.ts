@@ -1,16 +1,23 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import { User } from '@prisma/client';
 import { ApproveDTO } from './dto/ApproveDTO';
 import { GroupService } from '../group/GroupService';
 import { DisciplineService } from '../discipline/DisciplineService';
+import { GiveRoleDTO } from './dto/GiveRoleDTO';
+import { GrantRepository } from './grant/GrantRepository';
+import { StudentRepository } from './StudentRepository';
+import { RoleService } from './role/RoleService';
 
 @Injectable()
 export class UserService {
   constructor(
     private disciplineService: DisciplineService,
+    @Inject(forwardRef(() => GroupService))
     private groupService: GroupService,
     private prisma: PrismaService,
+    private grantRepository: GrantRepository,
+    private studentRepository: StudentRepository,
+    private roleService: RoleService,
   ) {}
 
   async verify(userId: string, body: ApproveDTO) {
@@ -49,51 +56,21 @@ export class UserService {
   }
 
 
-  async hasPermission(user: User, permission: string, scope: string) {
-    const roles = await this.getRoles(user.id);
+  async hasPermission(userId: string, permission: string) {
+    const roles = await this.studentRepository.getRoles(userId);
     for (const role of roles) {
-      const grant = await this.getGrant(permission, scope, role.id);
-      if (!grant) continue;
-      return grant.set;
+      const hasRight = this.roleService.hasPermission(role.id, permission);
+      if (hasRight) return true;
     }
 
     return false;
   }
 
-  async getRoles(studentId: string) {
-    const roles = await this.prisma.studentRole.findMany({
-      where: {
-        studentId,
-      },
-      include: {
-        role: true,
-      },
-      orderBy: {
-        role: {
-          priority: 'desc',
-        },
-      },
-    });
-
-    return roles.map((role) => role.role);
+  async giveRole(id: string, { roleId }: GiveRoleDTO) {
+    await this.studentRepository.addRole(id, roleId);
   }
 
-  async getGrant(name, scope, roleId) {
-    return this.prisma.grant.findFirst({
-      where: {
-        roleId,
-        scope,
-        permission: {
-          name,
-        },
-      },
-    });
+  async removeRole(id: string, roleId: string) {
+    await this.studentRepository.removeRole(id, roleId);
   }
-
-  async createRole(body) {
-    return this.prisma.userRole.create({
-      data: body,
-    });
-  }
-
 }

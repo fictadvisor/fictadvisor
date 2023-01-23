@@ -1,28 +1,30 @@
-import { CanActivate, ExecutionContext } from '@nestjs/common';
+import { CanActivate, ExecutionContext, forwardRef, Inject, Injectable } from '@nestjs/common';
 import { UserService } from '../../api/user/UserService';
 import { Request } from 'express';
 import { Reflector } from '@nestjs/core';
 import { User } from '@prisma/client';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
+import { RequestUtils } from '../../utils/RequestUtils';
 
-export abstract class PermissionGuard implements CanActivate {
+@Injectable()
+export class PermissionGuard implements CanActivate {
 
-  protected userService: UserService;
-  protected reflector: Reflector;
+  private request: Request;
 
   protected constructor(
-    userService: UserService,
-    reflector: Reflector,
+    @Inject(forwardRef(() => UserService))
+    private userService: UserService,
+    private reflector: Reflector,
   ) {
     this.userService = userService;
     this.reflector = reflector;
   }
 
   async canActivate(context: ExecutionContext) {
-    const user: User = context.switchToHttp().getRequest<Request>().user as User;
-    const permission = this.reflector.get('permission', context.getHandler);
-    const dbScope = this.getScope(context);
-    const hasPermission = await this.userService.hasPermission(user, permission, dbScope);
+    this.request = context.switchToHttp().getRequest<Request>();
+    const user: User = this.request.user as User;
+    const permission = this.getPermission(context);
+    const hasPermission = await this.userService.hasPermission(user.id, permission);
 
     if (!hasPermission) {
       throw new NoPermissionException();
@@ -31,6 +33,24 @@ export abstract class PermissionGuard implements CanActivate {
     return true;
   }
 
-  abstract getScope(context: ExecutionContext): string;
+  getPermission(context: ExecutionContext): string {
+    const permission: string = this.reflector.get('permission', context.getHandler());
+    return permission
+      .split('.')
+      .map((part) => this.getPart(part))
+      .join('.');
+  }
+
+  getPart(part: string): string {
+    if (part.startsWith('$')) {
+      const newPart = RequestUtils.get(this.request, part.slice(1));
+      if (!newPart) {
+        throw new NoPermissionException();
+      }
+      return newPart;
+    }
+
+    return part;
+  }
 
 }

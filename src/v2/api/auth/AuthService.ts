@@ -10,14 +10,26 @@ import { createHash, createHmac } from 'crypto';
 import { TelegramConfigService } from '../../config/TelegramConfigService';
 import { InvalidTelegramCredentialsException } from '../../utils/exceptions/InvalidTelegramCredentialsException';
 import { UpdatePasswordDTO } from './dto/UpdatePasswordDTO';
+import * as crypto from 'crypto';
+import { EmailService } from '../../email/EmailService';
+import { ResetPasswordDTO } from './dto/ResetPasswordDTO';
+import { InvalidResetTokenException } from '../../utils/exceptions/InvalidResetTokenException';
+import { TooManyActionsException } from '../../utils/exceptions/TooManyActionsException';
+
+export const ONE_MINUTE = 1000 * 60;
+export const HOUR = ONE_MINUTE * 60;
 
 @Injectable()
 export class AuthService {
+
+  private resetPasswordTokens: Map<string, {email: string, date: Date}> = new Map();
+
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
     private securityConfig: SecurityConfigService,
-    private telegramConfig: TelegramConfigService
+    private telegramConfig: TelegramConfigService,
+    private emailService: EmailService,
   ) {}
 
   async validateUser(username: string, password: string) {
@@ -157,5 +169,51 @@ export class AuthService {
     });
 
     return this.getTokens(user);
+  }
+
+  async forgotPassword(email: string) {
+    const uuid = crypto.randomUUID();
+    for (const [token, value] of this.resetPasswordTokens.entries()) {
+      if (value.email === email) {
+        if (Date.now() - value.date.getTime() < ONE_MINUTE) {
+          throw new TooManyActionsException();
+        } else {
+          this.resetPasswordTokens.delete(token);
+        }
+      }
+    }
+
+    this.resetPasswordTokens.set(uuid, {
+      email,
+      date: new Date(),
+    });
+    await this.emailService.sendEmail({
+      to: email,
+      subject: 'Відновлення паролю на fictadvisor.com',
+      message: 'Для відновлення паролю перейдіть за посиланням нижче. Посилання діє годину.',
+      link: `https://fictadvisor.com/resetPassword/${uuid}`,
+    });
+
+    setTimeout(() => {
+      this.resetPasswordTokens.delete(uuid);
+    }, HOUR);
+  }
+
+  async resetPassword(token: string, { password }: ResetPasswordDTO) {
+    if (!this.resetPasswordTokens.has(token)) {
+      throw new InvalidResetTokenException();
+    }
+
+    await this.prisma.user.update({
+      where: {
+        email: this.resetPasswordTokens.get(token).email,
+      },
+      data: {
+        password,
+        lastPasswordChanged: new Date(),
+      },
+    });
+
+    this.resetPasswordTokens.delete(token);
   }
 }
