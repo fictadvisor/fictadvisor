@@ -1,4 +1,5 @@
-@import "/styles/v2/sass/_utils";
+@import "../../utils/mixins";
+
 
 #links {
   display: flex;
@@ -9,15 +10,6 @@
   gap: 15px;
 }
 
-#tooltip{
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  align-items: center;
-  align-content: space-between;
-  justify-content: center;
-  gap: 15px;
-}
 
 .links {
   width: 220px;
@@ -86,50 +78,4 @@
 .arrow-blue-link-underlined {
   @include link-style($blue-link-color, 1);
   @extend .arrow-links;
-}
-
-
-.tooltip-body {
-  position: relative;
-  width: fit-content;
-  padding: 4px 12px;
-  text-align: center;
-  border-radius: 4px;
-  background-color: $tooltip-color;
-  color: $tooltip-text-color;
-}
-
-.tooltip-text::after {
-  content: " ";
-  position: absolute;
-  border-width: 5px;
-  border-style: solid;
-}
-
-#tooltip-text-top::after {
-  bottom: 100%;
-  left: 50%;
-  margin-left: -5px;
-  border-color: transparent transparent $tooltip-color transparent;
-}
-
-#tooltip-text-bottom::after {
-  top: 100%;
-  left: 50%;
-  margin-left: -5px;
-  border-color: $tooltip-color transparent transparent transparent;
-}
-
-#tooltip-text-left::after {
-  top: 50%;
-  right: 100%;
-  margin-top: -5px;
-  border-color: transparent $tooltip-color transparent transparent;
-}
-
-#tooltip-text-right::after {
-  top: 50%;
-  left: 100%;
-  margin-top: -5px;
-  border-color: transparent transparent transparent $tooltip-color;
 }

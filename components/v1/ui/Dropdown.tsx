@@ -17,7 +17,7 @@ const Dropdown = ({ text, active, onChange, options, className, ...props }: Drop
   const { ref, isComponentVisible: open, setIsComponentVisible: setOpen } = useComponentVisible(false);
 
   return (
-    <div ref={ref} className={mergeClassName(`dropdown ${open ? 'active' : ''}`, className)} {...props}>
+    <div ref={ref} className={mergeClassName(`dropdowns ${open ? 'active' : ''}`, className)} {...props}>
       <button className="dropdown" onClick={() => setOpen(!open)}>
         <div className="d-flex">
           <span>

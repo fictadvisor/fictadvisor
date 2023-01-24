@@ -38,7 +38,7 @@ export const BaseDropdown: React.FC<BaseDropdownProps> = ({ options, size,label,
             defaultValue={selectedOption}
             onChange={setSelectedOption}
             options={options}
-            className={` dropdown-container-${size} ${className?`dropdown-${className}`:''}`}
+            className={` dropdowns-container-${size} ${className?`dropdown-${className}`:''}`}
             styles={
                 {
                     dropdownIndicator(baseStyles, _) {
@@ -75,7 +75,7 @@ export const BaseDropdown: React.FC<BaseDropdownProps> = ({ options, size,label,
             maxMenuHeight={150}
             minMenuHeight={150}
             unstyled={true}
-  
+
         />
     </div>
 

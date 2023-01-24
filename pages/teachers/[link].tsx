@@ -38,7 +38,7 @@ const PAGE_TABS = [
   },
   /*{
     name: 'Статистика',
-    block: ({ link }: TabProperties) => <StatisticsBlock link={link} />,
+    block: ({ links }: TabProperties) => <StatisticsBlock links={links} />,
   },*/
 ];
 

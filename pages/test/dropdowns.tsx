@@ -1,17 +1,15 @@
 
-
-import GroupIcon from "../components/v2/ui/icons/GroupIcon";
-import { BaseDropdown } from "../components/v2/ui/dropdowns/BaseDropdown";
-import { SmallDropdown } from "../components/v2/ui/dropdowns/SmallDropdown";
-import { MediumDropdown } from "../components/v2/ui/dropdowns/MediumDropdown";
-import { LargeDropdown } from "../components/v2/ui/dropdowns/LargeDropdown";
+import GroupIcon from "../../components/v2/ui/icons/GroupIcon";
+import { SmallDropdown } from "../../components/v2/ui/dropdowns/SmallDropdown";
+import { MediumDropdown } from "../../components/v2/ui/dropdowns/MediumDropdown";
+import { LargeDropdown } from "../../components/v2/ui/dropdowns/LargeDropdown";
 
 
 interface OwnProps { }
 
 type Props = OwnProps;
 
-function dropdownsTest() {
+function dropdowns() {
 
     const options = [
         { value: 'chocolate', label: 'Сидоренко' },
@@ -31,8 +29,8 @@ function dropdownsTest() {
 
 
     return (
-        <div id="container">
-            <form action="">
+        <div className="test-page-wrap">
+            <form action="pages">
                 <div className="App">
                     <SmallDropdown options={options} label="Вчителі"/>
                     <MediumDropdown options={options}  label="medium" />
@@ -55,4 +53,4 @@ function dropdownsTest() {
     );
 }
 
-export default dropdownsTest;
+export default dropdowns;
