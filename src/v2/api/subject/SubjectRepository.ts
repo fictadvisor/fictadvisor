@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import { Subject } from '@prisma/client';
+import { QueryAllDTO } from 'src/v2/utils/QueryAllDTO';
 import { PrismaService } from '../../database/PrismaService';
+import { DatabaseUtils } from '../utils/DatabaseUtils';
+import { UpdateSubjectDTO } from './dto/UpdateSubjectDTO';
 
 @Injectable()
 export class SubjectRepository {
@@ -42,6 +46,20 @@ export class SubjectRepository {
     });
   }
 
+  async getAll(body: QueryAllDTO) {
+    const search = DatabaseUtils.getSearch<Subject>(body, 'name');
+    const page = DatabaseUtils.getPage(body);
+    const sort = DatabaseUtils.getSort(body);
+
+    return await this.prisma.subject.findMany({
+      ...page,
+      ...sort,
+      where: {
+        ...search,
+      },
+    });
+  }
+
   async getDisciplines(id: string) {
     const subject = await this.get(id);
     return subject.disciplines;
@@ -51,6 +69,15 @@ export class SubjectRepository {
     const subject = await this.get(id);
     delete subject.disciplines;
     return subject;
+  }
+
+  async update(id: string, data: UpdateSubjectDTO) {
+    return await this.prisma.subject.update({
+      where: {
+        id,
+      },
+      data,
+    });
   }
 
   async delete(id: string) {
