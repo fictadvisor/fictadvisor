@@ -7,16 +7,18 @@ export const useQueryParams = (onInitialize?) => {
   const [ready, setReady] = useState(false);
 
   const updateQuery = (params) => {
-    router.push({ 
-      pathname: router.pathname, 
-      query: { ...router.query, ...params } }, 
-      null, 
+    router.push(
+      {
+        pathname: router.pathname,
+        query: { ...router.query, ...params },
+      },
+      null,
       { shallow: true }
     );
   };
 
   const setQueryParam = (key, value) => {
-    if (value == null || value == '') {
+    if (value == null || value == "") {
       delete params[key];
       delete router.query[key];
     } else {
@@ -35,11 +37,13 @@ export const useQueryParams = (onInitialize?) => {
   };
 
   useEffect(() => {
-    if (!router.isReady) { return; }
+    if (!router.isReady) {
+      return;
+    }
 
-    const params = router.query
+    const params = router.query;
     updateParams(params);
-    
+
     if (onInitialize) {
       onInitialize(params);
     }
