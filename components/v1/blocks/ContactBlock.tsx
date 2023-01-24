@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useQuery } from "react-query";
-import api from "../../../lib/api";
-import { useAuthentication } from "../../../lib/context/AuthenticationContext";
 import Contact from "../Contact";
 import AddContactForm from "../forms/AddContactForm";
 import Button from "../ui/Button";
 import Disclaimer from "../ui/Disclaimer";
 import Loader from "../ui/Loader";
+import {useAuthentication} from "../../../lib/v1/context/AuthenticationContext";
+import api from "../../../lib/v1/api";
 
 export type ContactBlockProperties = {
   link: string;

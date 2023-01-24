@@ -2,7 +2,7 @@ import Button from "../ui/Button";
 import Disclaimer from "../ui/Disclaimer";
 import StatisticsEntry from '../StatisticsEntry';
 import { useQuery } from "react-query";
-import api from "../../../lib/api";
+import api from "../../../lib/v1/api";
 import Loader from "../ui/Loader";
 import config from "../../../config";
 

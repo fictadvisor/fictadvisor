@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { mergeClassName } from "../../lib/component";
-import { toDateTimeString } from "../../lib/date";
 
 import Rating from "./Rating";
+import {mergeClassName} from "../../lib/v1/component";
+import {toDateTimeString} from "../../lib/v1/date";
 
 export type ReviewProperties = {
   course?: { name: string; link: string; };

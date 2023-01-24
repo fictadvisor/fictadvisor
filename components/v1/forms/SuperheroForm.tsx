@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useMutation } from "react-query";
-import api from "../../../lib/api";
-import { CreateSuperheroBody } from "../../../lib/api/superheroes";
-import { useAuthentication } from "../../../lib/context/AuthenticationContext";
-import { validateGroup } from "../../../lib/validation";
+import api from "../../../lib/v1/api";
+import { CreateSuperheroBody } from "../../../lib/v1/api/superheroes";
+import { useAuthentication } from "../../../lib/v1/context/AuthenticationContext";
+import { validateGroup } from "../../../lib/v1/validation";
 import Button from "../ui/Button";
 import Disclaimer from "../ui/Disclaimer";
 import Dropdown from "../ui/Dropdown";

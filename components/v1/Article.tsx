@@ -1,6 +1,6 @@
 import PageLayout from "./layout/PageLayout";
-import { mergeClassName } from "../../lib/component";
-import { Article } from "../../lib/articles";
+import {mergeClassName} from "../../lib/v1/component";
+import {Article} from "../../lib/v1/articles";
 
 export type ArticleProperties = {
   article: Article

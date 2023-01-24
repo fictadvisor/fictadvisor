@@ -1,8 +1,8 @@
 import { NextRouter } from "next/router";
 import config from "../../config";
-import { useAuthentication } from "./context/AuthenticationContext";
 import oauth from "./oauth";
 import api from "../v1/api";
+import {useAuthentication} from "../v1/context/AuthenticationContext";
 
 const openAuthenticationDialog = () =>
   new Promise<any>((resolve, reject) => {

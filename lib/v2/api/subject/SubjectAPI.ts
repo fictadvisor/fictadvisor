@@ -1,6 +1,4 @@
 import { client, getAuthorizationHeader } from "../index";
-import { GetSubjectDTO } from "./dto/GetSubjectDTO";
-import { CreateSubjectBodyDTO } from "./dto/CreateSubjectBodyDTO";
 import { GetListOfSubjectsDTO } from "./dto/GetListOfSubjectsDTO";
 import { GetTeachersBySubjectDTO } from "./dto/GetTeachersBySubjectDTO";
 import { UpdateDisciplineBody } from "./dto/UpdateDisciplineBody";
@@ -21,13 +19,6 @@ export class SubjectsAPI {
     return (await client.delete(`/subjects/${subjectId}`, getAuthorizationHeader(accessToken)));
   }
 
-  static async create(accessToken: string, body: CreateSubjectBodyDTO) {
-    return await client.post(
-      `/subjects`,
-      body,
-      getAuthorizationHeader(accessToken)
-    );
-  }
 
   static async updateDiscipline(accessToken: string,
                                   disciplineId: string,

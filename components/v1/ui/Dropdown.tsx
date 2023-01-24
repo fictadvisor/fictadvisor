@@ -1,4 +1,4 @@
-import { mergeClassName, useComponentVisible } from "../../../lib/component";
+import { mergeClassName, useComponentVisible } from "../../../lib/v1/component";
 import ArrowIcon from "./icons/ArrowIcon";
 
 export type DropdownOption = {

@@ -1,6 +1,6 @@
-import { mergeClassName } from "../../lib/component";
 import Button from "./ui/Button";
 import Link from "next/link";
+import {mergeClassName} from "../../lib/v1/component";
 
 export type ArticleItemProperties = {
   href: string;

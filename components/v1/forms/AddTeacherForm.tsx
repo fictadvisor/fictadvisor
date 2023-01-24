@@ -1,14 +1,14 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useMutation } from "react-query";
-import api from "../../../lib/api";
-import { CreateTeacherBody } from "../../../lib/api/teachers";
-import { useAuthentication } from "../../../lib/context/AuthenticationContext";
-import { validateGroup } from "../../../lib/validation";
 import Button from "../ui/Button";
 import Disclaimer from "../ui/Disclaimer";
 import ErrorMessage from "../ui/ErrorMessage";
 import Input from "../ui/Input";
+import {useAuthentication} from "../../../lib/v1/context/AuthenticationContext";
+import {validateGroup} from "../../../lib/v1/validation";
+import api from "../../../lib/v1/api";
+import {CreateTeacherBody} from "../../../lib/v1/api/teachers";
 
 export type AddTeacherFormProperties = {
   authentication: ReturnType<typeof useAuthentication>;

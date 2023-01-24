@@ -1,4 +1,4 @@
-import { mergeClassName } from "../../../lib/component";
+import { mergeClassName } from "../../../lib/v1/component";
 
 export type DisclaimerProperties = {} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 

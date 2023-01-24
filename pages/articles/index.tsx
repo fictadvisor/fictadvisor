@@ -1,4 +1,4 @@
-import articles from "../../lib/articles";
+import articles from "../../lib/v1/articles";
 import PageLayout from "../../components/v1/layout/PageLayout";
 import Link from "next/link";
 

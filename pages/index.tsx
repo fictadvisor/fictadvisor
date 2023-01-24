@@ -1,4 +1,4 @@
-import api from "../lib/api";
+import api from "../lib/v1/api";
 
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
@@ -11,7 +11,7 @@ import Button from "../components/v1/ui/Button";
 import StudentResourceItem from "../components/v1/StudentResourceItem";
 import SubjectItem from "../components/v1/SubjectItem";
 import config from "../config";
-import articles from "../lib/articles";
+import articles from "../lib/v1/articles";
 import ArticleItem from "../components/v1/ArticleItem";
 
 const PROPERTIES = {

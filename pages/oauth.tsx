@@ -2,8 +2,8 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import PageLayout from "../components/v1/layout/PageLayout";
 import Loader from "../components/v1/ui/Loader";
-import { useAuthentication } from '../lib/context/AuthenticationContext';
-import oauth from "../lib/oauth";
+import { useAuthentication } from '../lib/v1/context/AuthenticationContext';
+import oauth from "../lib/v1/oauth";
 
 const OAuthPage = () => {
   const router = useRouter();

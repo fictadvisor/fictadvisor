@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { mergeClassName } from "../../../lib/component";
 import ArrowIcon from "./icons/ArrowIcon";
+import {mergeClassName} from "../../../lib/v1/component";
 
 export type CollapsePanelProperties = {
   title: string;

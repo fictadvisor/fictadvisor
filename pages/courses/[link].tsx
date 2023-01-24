@@ -8,15 +8,15 @@ import Disclaimer from "../../components/v1/ui/Disclaimer";
 import Review from "../../components/v1/Review";
 import Button from "../../components/v1/ui/Button";
 import SubjectInformation from "../../components/v1/SubjectInformation";
-import {useAuthentication} from "../../lib/context/AuthenticationContext";
-import api from "../../lib/api";
-import {useQueryParams} from "../../lib/query";
-import {toInteger} from "../../lib/number";
-import {getFullName} from "../../lib/text";
 import SearchInput from "../../components/v1/ui/SearchInput";
 import Dropdown from "../../components/v1/ui/Dropdown";
 import Loader from "../../components/v1/ui/Loader";
 import ReviewForm from "../../components/v1/forms/ReviewForm";
+import {useAuthentication} from "../../lib/v1/context/AuthenticationContext";
+import {toInteger} from "../../lib/v1/number";
+import api from "../../lib/v1/api";
+import {useQueryParams} from "../../lib/v1/query";
+import {getFullName} from "../../lib/v1/text";
 
 
 const PROPERTIES = {

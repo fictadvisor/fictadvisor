@@ -1,9 +1,9 @@
-import api from "../../lib/api";
+import api from "../../lib/v1/api";
 
 import { useState } from "react";
 import { useQuery } from "react-query";
-import { toInteger } from "../../lib/number";
-import { useQueryParams } from "../../lib/query";
+import { toInteger } from "../../lib/v1/number";
+import { useQueryParams } from "../../lib/v1/query";
 
 import PageLayout from "../../components/v1/layout/PageLayout";
 import Button from "../../components/v1/ui/Button";
@@ -13,7 +13,7 @@ import Loader from "../../components/v1/ui/Loader";
 import TeacherItem from "../../components/v1/TeacherItem";
 import SearchInput from "../../components/v1/ui/SearchInput";
 import AddTeacherForm from "../../components/v1/forms/AddTeacherForm";
-import { useAuthentication } from "../../lib/context/AuthenticationContext";
+import { useAuthentication } from "../../lib/v1/context/AuthenticationContext";
 
 const PROPERTIES = {
   pageSize: 10,

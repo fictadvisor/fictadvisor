@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { mergeClassName } from "../../lib/component";
 import Rating from "./Rating";
+import {mergeClassName} from "../../lib/v1/component";
 
 export type TeacherItemProperties = {
   link: string;

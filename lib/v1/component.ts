@@ -26,3 +26,11 @@ export const useComponentVisible = (initialIsVisible) => {
 
   return { ref, ignoreRef, isComponentVisible, setIsComponentVisible };
 };
+
+export const mergeClassName = (defaultValue: string, className: string) => {
+    if (!className) {
+        return defaultValue;
+    }
+
+    return `${defaultValue} ${className}`;
+};

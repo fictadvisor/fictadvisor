@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { mergeClassName } from "../../lib/component";
-import pluralize from "../../lib/pluralize";
+import {mergeClassName} from "../../lib/v1/component";
+import pluralize from "../../lib/v1/pluralize";
 
 export type CourseItemProperties = {
   title: string;

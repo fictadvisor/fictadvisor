@@ -1,11 +1,11 @@
 import Link from "next/link";
 import config from "../../../config";
-import { useComponentVisible } from "../../../lib/component";
-import { useAuthentication } from "../../../lib/context/AuthenticationContext";
 import GlobalSearch from "../GlobalSearch";
 import LoginButton from "../LoginButton";
 import LogoutButton from "../LogoutButton";
 import Button from "../ui/Button";
+import {useAuthentication} from "../../../lib/v1/context/AuthenticationContext";
+import {useComponentVisible} from "../../../lib/v1/component";
 
 export const MENU = {
   navigation: config.menu,

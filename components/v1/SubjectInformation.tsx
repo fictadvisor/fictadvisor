@@ -1,6 +1,6 @@
-import { mergeClassName } from "../../lib/component";
 import Rating from "./Rating";
 import Divider from "./ui/Divider";
+import {mergeClassName} from "../../lib/v1/component";
 
 export type SubjectInformationProperties = {
   name: string;

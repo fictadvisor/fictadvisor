@@ -1,4 +1,4 @@
-import { mergeClassName } from "../../../lib/component";
+import { mergeClassName } from "../../../lib/v1/component";
 import SearchIcon from "./icons/SearchIcon";
 
 export type SearchInputProperties = {

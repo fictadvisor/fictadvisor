@@ -1,6 +1,6 @@
 // Source: https://loading.io/css/
 
-import { mergeClassName } from "../../../lib/component";
+import { mergeClassName } from "../../../lib/v1/component";
 import ErrorMessage from "./ErrorMessage";
 
 type LoaderProperties = {

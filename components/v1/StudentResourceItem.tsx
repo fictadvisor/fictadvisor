@@ -1,5 +1,5 @@
-import { mergeClassName } from "../../lib/component";
 import Button from "./ui/Button";
+import {mergeClassName} from "../../lib/v1/component";
 
 export type StudentResourceItemProperties = {
   href: string;
@@ -12,7 +12,7 @@ const StudentResourceItem = ({ href, image, name, className, ...props }: Student
     <div className={mergeClassName('student-resource-item', className)} {...props}>
       <a href={href} target="_blank" className="simple">
         <Button>
-          <img src={image} />
+          <img src={image}  alt="image"/>
           <span>{name}</span>
         </Button>
       </a>

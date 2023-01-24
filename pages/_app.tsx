@@ -15,7 +15,7 @@
 import "../styles/v2/sass/index.scss";
 
 import { QueryClient, QueryClientProvider } from "react-query";
-import { AuthenticationProvider } from "../lib/context/AuthenticationContext";
+import { AuthenticationProvider } from "../lib/v1/context/AuthenticationContext";
 
 const queryClient = new QueryClient();
 
