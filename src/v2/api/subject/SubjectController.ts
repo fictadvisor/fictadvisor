@@ -19,14 +19,14 @@ export class SubjectController {
 
   @Get()
   getAll(
-    @Query() body: QueryAllDTO
+    @Query() body: QueryAllDTO,
   ) {
     return this.subjectService.getAll(body);
   }
 
   @Get('/:subjectId')
   get(
-    @Param('subjectId', SubjectByIdPipe) subjectId: string
+    @Param('subjectId', SubjectByIdPipe) subjectId: string,
   ) {
     return this.subjectService.get(subjectId);
   }
@@ -35,7 +35,7 @@ export class SubjectController {
   @UseGuards(JwtGuard, PermissionGuard)
   @Post()
   create(
-    @Body() body: CreateSubjectDTO
+    @Body() body: CreateSubjectDTO,
   ) {
     return this.subjectService.create(body);
   }
@@ -54,7 +54,7 @@ export class SubjectController {
   @UseGuards(JwtGuard, PermissionGuard)
   @Delete('/:subjectId')
   delete(
-    @Param('subjectId', SubjectByIdPipe) subjectId: string
+    @Param('subjectId', SubjectByIdPipe) subjectId: string,
   ) {
     return this.subjectService.deleteSubject(subjectId);
   }
