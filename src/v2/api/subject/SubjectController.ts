@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { SubjectService } from './SubjectService';
 import { GetDTO } from '../teacher/dto/GetDTO';
 import { CreateSubjectDTO } from './dto/CreateSubjectDTO';
+import { UpdateSubjectDTO } from './dto/UpdateSubjectDTO';
 import { SubjectByIdPipe } from './SubjectByIdPipe';
 import { Subject } from '@prisma/client';
 import { Permission } from '../../security/permission-guard/Permission';
@@ -23,9 +24,9 @@ export class SubjectController {
 
   @Get('/:subjectId')
   get(
-    @Param('subjectId', SubjectByIdPipe) subject: Subject
+    @Param('subjectId', SubjectByIdPipe) subjectId: string
   ) {
-    return subject;
+    return this.subjectService.get(subjectId);
   }
 
   @Post()
@@ -34,10 +35,19 @@ export class SubjectController {
   }
 
   @UseGuards(JwtGuard)
+  @Patch('/:subjectId')
+  async update(
+    @Param('subjectId') subjectId: string,
+    @Body() body: UpdateSubjectDTO,
+  ) {
+    return this.subjectService.update(subjectId, body);
+  }
+
+  @UseGuards(JwtGuard)
   @Delete('/:subjectId')
   delete(
-    @Param('subjectId', SubjectByIdPipe) subject: Subject
+    @Param('subjectId', SubjectByIdPipe) subjectId: string
   ) {
-    return this.subjectService.deleteSubject(subject.id);
+    return this.subjectService.deleteSubject(subjectId);
   }
 }

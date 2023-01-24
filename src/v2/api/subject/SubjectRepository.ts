@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
+import { UpdateSubjectDTO } from './dto/UpdateSubjectDTO';
 
 @Injectable()
 export class SubjectRepository {
@@ -51,6 +52,15 @@ export class SubjectRepository {
     const subject = await this.get(id);
     delete subject.disciplines;
     return subject;
+  }
+
+  async update(id: string, data: UpdateSubjectDTO) {
+    return await this.prisma.subject.update({
+      where: {
+        id,
+      },
+      data,
+    });
   }
 
   async delete(id: string) {
