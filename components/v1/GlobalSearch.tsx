@@ -10,7 +10,6 @@ import ExploreIcon from "./ui/icons/ExploreIcon";
 import SchoolIcon from "./ui/icons/SchoolIcon";
 import SearchInput from "./ui/SearchInput";
 import { MENU } from './layout/PageHeader';
-import pluralize from "../../lib/pluralize";
 
 type SearchItemType = 'teacher' | 'subject' | 'navigation' | 'other';
 
@@ -47,12 +46,16 @@ const SearchItem = (props: SearchItemProperties) => {
   const Icon = type.icon;
 
   return (
-    (<Link href={props.href} className="search-item" onClick={props.onSelect}>
+    <Link
+      href={props.href}
+      className="search-item"
+      onClick={props.onSelect}
+      legacyBehavior>
 
-      {Icon && <Icon />}
-      {props.text}
+        {Icon && <Icon />}
+        {props.text}
 
-    </Link>)
+      </Link>
   );
 };
 

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { useState } from "react";
 import { useMutation } from "react-query";
 import api from "../../../lib/api";
@@ -42,7 +41,7 @@ const AddTeacherForm = ({ authentication, onBack }: AddTeacherFormProperties) =>
         <Disclaimer>Дякуємо, твоя заявка була відправлена на перевірку</Disclaimer>
         <div className="m-t d-flex">
           <Button onClick={() => onBack()}>Назад</Button>
-          <Link href={`/teachers/${data.link}`} className="w-full m-l">
+          <Link href={`/teachers/${data.link}`} className="w-full m-l" legacyBehavior>
 
             <Button className="w-full">
               Перейти на сторінку викладача

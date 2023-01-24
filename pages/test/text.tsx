@@ -1,11 +1,5 @@
-import {LargeButton, MediumButton, SmallButton} from "../../components/v2/Button";
-import {Input, InputState} from "../../components/v2/Input";
 
-interface OwnProps {}
-
-type Props = OwnProps;
-
-function headers(){
+function text(){
     return(
         <div className="test-page-wrap">
             <hr className="test-hr"/>
@@ -31,4 +25,4 @@ function headers(){
     );
 }
 
-export default headers;
+export default text;

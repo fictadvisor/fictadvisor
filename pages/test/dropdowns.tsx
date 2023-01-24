@@ -1,13 +1,8 @@
+import GroupIcon from "../../components/v2/icons/GroupIcon";
+import { SmallDropdown } from "../../components/v2/dropdowns/SmallDropdown";
+import { MediumDropdown } from "../../components/v2/dropdowns/MediumDropdown";
+import { LargeDropdown } from "../../components/v2/dropdowns/LargeDropdown";
 
-import GroupIcon from "../../components/v2/ui/icons/GroupIcon";
-import { SmallDropdown } from "../../components/v2/ui/dropdowns/SmallDropdown";
-import { MediumDropdown } from "../../components/v2/ui/dropdowns/MediumDropdown";
-import { LargeDropdown } from "../../components/v2/ui/dropdowns/LargeDropdown";
-
-
-interface OwnProps { }
-
-type Props = OwnProps;
 
 function dropdowns() {
 

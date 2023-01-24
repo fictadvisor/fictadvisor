@@ -13,7 +13,6 @@ import SubjectItem from "../components/v1/SubjectItem";
 import config from "../config";
 import articles from "../lib/articles";
 import ArticleItem from "../components/v1/ArticleItem";
-import { mergeClassName } from "../lib/component";
 
 const PROPERTIES = {
   studentResources: {
@@ -89,7 +88,7 @@ const IndexPage = ({ popularTeachers, popularSubjects, studentResources: serverR
           studentResourcesMoreCount > 0 &&
           <div className="student-resource-item more">
             <Button disabled={isLoading || isFetching} onClick={() => setStudentResourcesPage(studentResourcesPage + 1)}>
-              <img />
+              <img alt="blank"/>
               <span>+{studentResourcesMoreCount}</span>
             </Button>
           </div>
@@ -140,7 +139,7 @@ const IndexPage = ({ popularTeachers, popularSubjects, studentResources: serverR
           )
         }
       </div>
-      <Link href="/teachers">
+      <Link href="/teachers" legacyBehavior>
 
         <Button className="w-full">Завантажити ще</Button>
 
@@ -158,7 +157,7 @@ const IndexPage = ({ popularTeachers, popularSubjects, studentResources: serverR
           )
         }
       </div>
-      <Link href="/subjects">
+      <Link href="/subjects" legacyBehavior>
 
         <Button className="w-full">Завантажити ще</Button>
 

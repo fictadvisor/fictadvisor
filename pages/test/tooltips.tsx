@@ -1,10 +1,5 @@
 
-interface OwnProps {}
-
-type Props = OwnProps;
-
 function links(){
-
     return(
         <div className="test-page-wrap">
 

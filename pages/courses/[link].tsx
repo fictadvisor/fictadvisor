@@ -7,6 +7,16 @@ import PageLayout from "../../components/v1/layout/PageLayout";
 import Disclaimer from "../../components/v1/ui/Disclaimer";
 import Review from "../../components/v1/Review";
 import Button from "../../components/v1/ui/Button";
+import SubjectInformation from "../../components/v1/SubjectInformation";
+import {useAuthentication} from "../../lib/context/AuthenticationContext";
+import api from "../../lib/api";
+import {useQueryParams} from "../../lib/query";
+import {toInteger} from "../../lib/number";
+import {getFullName} from "../../lib/text";
+import SearchInput from "../../components/v1/ui/SearchInput";
+import Dropdown from "../../components/v1/ui/Dropdown";
+import Loader from "../../components/v1/ui/Loader";
+import ReviewForm from "../../components/v1/forms/ReviewForm";
 
 
 const PROPERTIES = {
@@ -59,7 +69,7 @@ const CoursePage = ({ course }) => {
   const [page, _setPage] = useState(0);
 
   const authentication = useAuthentication();
-  const { user, getToken, loginUrl } = authentication;
+  const { user, getToken } = authentication;
 
   const { queryReady, withQueryParam } = useQueryParams((query) => {
     _setSortType(toInteger(query.sb, sortType));
@@ -91,24 +101,30 @@ const CoursePage = ({ course }) => {
         StateMessage &&
         <StateMessage />
       }
-      <Link href={`/teachers/${course.teacher.link}`} className="simple">
+      <Link
+        href={`/teachers/${course.teacher.link}`}
+        className="simple"
+        legacyBehavior>
 
         <div className="block m-b d-flex">
           <div className="d-flex-grow f-bold" style={{ marginTop: '2px' }}>{fullName}</div>
           <div style={{ margin: '-6px 0 -12px' }}>
-            <img className="avatar teacher small" src={course.teacher.image} />
+            <img className="avatar teacher small" alt="avatar teacher small" src={course.teacher.image} />
           </div>
         </div>
 
       </Link>
-      <Link href={`/subjects/${course.subject_link}`} className="simple">
+      <Link
+        href={`/subjects/${course.subject_link}`}
+        className="simple"
+        legacyBehavior>
 
         <SubjectInformation className="m-b" name={course.name} description={course.description} rating={course.rating} />
 
       </Link>
       {
         reviewMode 
-          ? <ReviewEditor token={getToken()} onBack={() => setReviewMode(false)} link={course.link} />
+          ? <ReviewForm token={getToken()} onBack={() => setReviewMode(false)} link={course.link} />
           : <Button 
               className="w-full" 
               onClick={() => {

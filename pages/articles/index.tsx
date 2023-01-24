@@ -10,7 +10,7 @@ const ArticlesPage = ({ articles }) => <PageLayout meta={{ title: 'Статті'
     {
       articles.chosen.map(article =>
           <div className='article-item-long' key={article.link}>
-            <Link href={article.link} className='simple'>
+            <Link href={article.link} className='simple' legacyBehavior>
 
               <div className={'block d-flex'}>
                 <div className='m-auto d-flex-grow'>
@@ -30,7 +30,7 @@ const ArticlesPage = ({ articles }) => <PageLayout meta={{ title: 'Статті'
     {
       articles.general.map(article =>
         <div className='article-item-long' key={article.link}>
-          <Link href={article.link} className='simple'>
+          <Link href={article.link} className='simple' legacyBehavior>
 
             <div className={'block d-flex'}>
               <div className='m-auto d-flex-grow'>

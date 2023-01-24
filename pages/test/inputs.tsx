@@ -1,9 +1,4 @@
-import {LargeButton, MediumButton, SmallButton} from "../../components/v2/Button";
 import {Input, InputState} from "../../components/v2/Input";
-
-interface OwnProps {}
-
-type Props = OwnProps;
 
 function inputs(){
   return(

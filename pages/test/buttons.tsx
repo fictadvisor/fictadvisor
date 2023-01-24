@@ -1,6 +1,4 @@
 import {LargeButton, MediumButton, SmallButton} from "../../components/v2/Button";
-import {Input, InputState} from "../../components/v2/Input";
-import {SmallDropdown} from "../../components/v2/ui/dropdowns/SmallDropdown";
 
 function buttons(){
     return(

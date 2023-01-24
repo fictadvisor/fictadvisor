@@ -1,7 +1,3 @@
-interface OwnProps {
-}
-
-type Props = OwnProps;
 
 function links() {
 

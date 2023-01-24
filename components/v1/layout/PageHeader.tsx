@@ -29,7 +29,7 @@ const MenuItem = ({ item, action = null, setMenuActive }) => {
 
   return (
     <div className="item">
-      <Link href={item.href}>
+      <Link href={item.href} legacyBehavior>
         <Button onClick={() => setMenuActive(false)}>{Icon ? <Icon /> : item.text}</Button>
       </Link>
     </div>
@@ -45,9 +45,9 @@ const PageHeader = () => {
       <div className="left">
         <div className="logo">
           <div>
-            <Link href="/" className="simple">
+            <Link href="/" className="simple" legacyBehavior>
 
-              <img src={config.logo} />
+              <img src={config.logo}  alt="logo"/>
 
             </Link>
           </div>
@@ -56,9 +56,9 @@ const PageHeader = () => {
 
       <div className="content">
         <div className="logo-md">
-          <Link href="/" className="simple">
+          <Link href="/" className="simple" legacyBehavior>
 
-            <img src={config.logo} />
+            <img src={config.logo}  alt="logo"/>
 
           </Link>
         </div>

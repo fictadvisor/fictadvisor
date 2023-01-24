@@ -12,21 +12,21 @@ export type TeacherItemProperties = {
 
 const TeacherItem = ({ className, link, lastName, firstName, middleName, rating, ...props }: TeacherItemProperties) => {
   return (
-    (<Link href={`/teachers/${link}`} className="simple">
+    <Link href={`/teachers/${link}`} className="simple" legacyBehavior>
 
-      <div className={mergeClassName('block d-flex', className)} {...props}>
-        <div className="m-auto d-flex-grow">
-          <span className="f-medium">{lastName} </span>
-          {firstName} {middleName}
+        <div className={mergeClassName('block d-flex', className)} {...props}>
+          <div className="m-auto d-flex-grow">
+            <span className="f-medium">{lastName} </span>
+            {firstName} {middleName}
+          </div>
+          <div className="a-r a-r-label">
+            <span>
+              <Rating rating={rating} />
+            </span>
+          </div>
         </div>
-        <div className="a-r a-r-label">
-          <span>
-            <Rating rating={rating} />
-          </span>
-        </div>
-      </div>
 
-    </Link>)
+      </Link>
   );
 };
 
