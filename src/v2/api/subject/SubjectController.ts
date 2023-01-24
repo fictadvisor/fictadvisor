@@ -1,12 +1,12 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { SubjectService } from './SubjectService';
-import { GetDTO } from '../teacher/dto/GetDTO';
 import { CreateSubjectDTO } from './dto/CreateSubjectDTO';
 import { UpdateSubjectDTO } from './dto/UpdateSubjectDTO';
 import { SubjectByIdPipe } from './SubjectByIdPipe';
-import { Subject } from '@prisma/client';
-import { Permission } from '../../security/permission-guard/Permission';
 import { JwtGuard } from '../../security/JwtGuard';
+import { QueryAllDTO } from 'src/v2/utils/QueryAllDTO';
+import { Permission } from 'src/v2/security/permission-guard/Permission';
+import { PermissionGuard } from 'src/v2/security/permission-guard/PermissionGuard';
 
 @Controller({
   version: '2',
@@ -18,7 +18,9 @@ export class SubjectController {
   ) {}
 
   @Get()
-  getAll(@Query() body: GetDTO<Subject>) {
+  getAll(
+    @Query() body: QueryAllDTO
+  ) {
     return this.subjectService.getAll(body);
   }
 
@@ -29,21 +31,27 @@ export class SubjectController {
     return this.subjectService.get(subjectId);
   }
 
+  @Permission('subjects.create')
+  @UseGuards(JwtGuard, PermissionGuard)
   @Post()
-  create(@Body() body: CreateSubjectDTO) {
+  create(
+    @Body() body: CreateSubjectDTO
+  ) {
     return this.subjectService.create(body);
   }
 
-  @UseGuards(JwtGuard)
+  @Permission('subjects.update')
+  @UseGuards(JwtGuard, PermissionGuard)
   @Patch('/:subjectId')
   async update(
-    @Param('subjectId') subjectId: string,
+    @Param('subjectId', SubjectByIdPipe) subjectId: string,
     @Body() body: UpdateSubjectDTO,
   ) {
     return this.subjectService.update(subjectId, body);
   }
 
-  @UseGuards(JwtGuard)
+  @Permission('subjects.delete')
+  @UseGuards(JwtGuard, PermissionGuard)
   @Delete('/:subjectId')
   delete(
     @Param('subjectId', SubjectByIdPipe) subjectId: string
