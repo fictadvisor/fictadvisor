@@ -1,6 +1,4 @@
-import { Page, PageDTO } from './dto/PageDTO';
-import { Search, SearchDTO } from './dto/SearchDTO';
-import { Sort, SortDTO } from './dto/SortDTO';
+import { Page, PageDTO, Search, SearchDTO, Sort, SortDTO } from '../../utils/QueryAllDTO';
 
 export class DatabaseUtils {
 
@@ -26,10 +24,12 @@ export class DatabaseUtils {
     };
   }
 
-  static getSort<T>({ sort }: SortDTO<T>): Sort<T> | object {
+  static getSort({ sort, order = 'asc' }: SortDTO): Sort | object {
     if (!sort) return {};
     return {
-      orderBy: sort,
+      orderBy: {
+        [sort]: order,
+      },
     };
   }
 }
