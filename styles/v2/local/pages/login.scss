@@ -2,31 +2,100 @@
 //  border: 0.3px dashed white;
 //}
 
-#login-page-wrapper{
+$left-block-width: 606px;
+$right-block-width: 834px;
+
+.login-page{
+  width: 100%;
+  min-height: calc(100vh);
+  @include flex-center;
+  padding-bottom: 20px;
+}
+
+
+.login-page__content{
   display: flex;
   flex-direction: row;
-  margin-bottom: 100px;
+  width: 1440px;
+  gap: 150px;
 }
 
-#left-block{
-  width: 606px;
-  //padding-top: 100px;
-  padding-top: 6.94vw;
-  //padding-left: 80px;
-  padding-left: 5.55vw;
+.left-block{
+  padding-left: 80px;
+  padding-top: 33px;
 }
 
-#left-block__content{
+.right-block{
+  padding-top: 100px;
+  padding-right: 210px;
+}
+
+.left-block__content{
+  @include flex-center;
+  flex-direction: column;
+  position: relative;
+  bottom: 98px;
+}
+
+.right-block__content{
   @include flex-center;
   flex-direction: column;
 }
 
-#login-circle{
+@media (max-width: 1440px) {
+
+  .login-page__content{
+    width: 100vw;
+    justify-content: space-evenly;
+    gap: 0;
+  }
+
+  .left-block{
+    padding-left: 0;
+  }
+
+  .right-block{
+    padding-right: 0;
+  }
+}
+
+@media (max-width: 1150px) {
+  .left-block{
+    display: none;
+  }
+  .login-page{
+    align-items: start;
+  }
+  .right-block{
+    padding-top: 10%;
+  }
+}
+
+@media (max-width: 650px) {
+  .login-page__content{
+    padding: 0 10px;
+  }
+
+  .right-block__content{
+    width: 100%;
+  }
+
+  .right-block__content > * {
+    width: 90% !important;
+  }
+
+}
+
+
+.login-circle{
   position: relative;
   top: 98px;
 }
 
-#blur-block{
+
+
+
+.blur-block{
   background: url("/assets/login-page/blur-square.png") no-repeat;
   background-size: 520px;
   width: 520px;
@@ -37,39 +106,25 @@
   padding-top: 76px;
 }
 
-#login-logo{
+.login-logo{
   height: 32px;
 }
 
-#register-text{
+.register-text{
   text-align: center;
   margin-top: 50px;
   margin-bottom: 50px;
 }
 
-#right-block{
-  width: 834px;
-  //padding-top: 265px;
-  padding-top: 18.4vw;
-  //padding-right: 210px;
-  padding-right: 14.58vw;
-  //padding-left: 144px;
-  padding-left: 10vw;
-  flex-direction: column;
-  gap: 20px;
-}
 
-#right-block__content{
-  @include flex-center;
-  flex-direction: column;
-}
 
-#register-header{
+
+.register-header{
   text-align: center;
   margin-bottom: 32px
 }
 
-#splitter{
+.splitter{
   width: 100%;
   margin-top: 32px;
   hr{
@@ -87,7 +142,7 @@
   }
 }
 
-#one-line{
+.one-line{
   margin-top: 16px;
   margin-bottom: 24px;
   width: 100%;
@@ -95,11 +150,11 @@
   justify-content: space-between;
 }
 
-#register-checkbox{
+.register-checkbox{
   width: 30px;
 }
 
-#checkbox-container{
+.checkbox-container{
   display: flex;
   gap: 12px;
 }
