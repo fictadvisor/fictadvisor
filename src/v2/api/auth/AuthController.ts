@@ -58,7 +58,7 @@ export class AuthController {
     return this.authService.forgotPassword(body.email);
   }
 
-  @Post('/resetPassword/:token')
+  @Post('/password-recovery/:token')
   async resetPassword(
     @Param('token') token: string,
     @Body() body: ResetPasswordDTO,
