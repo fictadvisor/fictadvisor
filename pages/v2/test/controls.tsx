@@ -1,12 +1,12 @@
-import { Check, CheckState } from "../components/v2/Check";
-import { GroupRadio, RadioState } from "../components/v2/GroupRadio";
-import Switch, { SwitchType, SwitchTextPosition } from "../components/v2/Switch";
+import { Check, CheckState } from "../../../components/v2/Check";
+import { GroupRadio, RadioState } from "../../../components/v2/GroupRadio";
+import Switch, { SwitchType, SwitchTextPosition } from "../../../components/v2/Switch";
 
 interface OwnProps { }
 
 type Props = OwnProps;
 
-function test() {
+function Controls() {
 
     let radios = [
         {
@@ -32,7 +32,7 @@ function test() {
     ];
 
     return (
-        <div id="container">
+        <div className="test-page-wrap">
             <Switch type={SwitchType.WEB} text="Hello" textPosition={SwitchTextPosition.LEFT}></Switch>
             <Switch type={SwitchType.MOBILE} text="Biden" textPosition={SwitchTextPosition.RIGHT}></Switch>
 
@@ -47,4 +47,4 @@ function test() {
     );
 }
 
-export default test;
+export default Controls;

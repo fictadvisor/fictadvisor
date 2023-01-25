@@ -1,10 +1,7 @@
-import { GroupIcon } from "../../components/v2/svg-icons/GroupIcon";
+import {GroupIcon} from "../../../components/v2/svg-icons/GroupIcon";
+import {Dropdown, DropDownClass, DropDownSize} from "../../../components/v2/Dropdown";
+import React from "react";
 
-import {
-  DropDownClass,
-  DropDownSize,
-  Dropdown,
-} from "../../components/v2/Dropdown";
 
 function dropdowns() {
   const options = [
@@ -69,21 +66,21 @@ function dropdowns() {
             options={options}
             label="large"
             icon={GroupIcon}
-            className={DropDownClass.SUCCES}
+            className={DropDownClass.SUCCESS}
             size={DropDownSize.LARGE}
           />
         <Dropdown
             options={options}
             label="medium"
             icon={GroupIcon}
-            className={DropDownClass.SUCCES}
+            className={DropDownClass.SUCCESS}
             size={DropDownSize.MEDIUM}
           />
         <Dropdown
             options={options}
             label="small"
             icon={GroupIcon}
-            className={DropDownClass.SUCCES}
+            className={DropDownClass.SUCCESS}
             size={DropDownSize.SMALL}
         />
                      <Dropdown
