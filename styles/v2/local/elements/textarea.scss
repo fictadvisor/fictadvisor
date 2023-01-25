@@ -4,6 +4,7 @@
 .textarea-test{
   padding:10px 0;
   background: $dark-primary;
+  overflow-y: scroll;
   p{
     @extend .overline-text;
     color:inherit;
