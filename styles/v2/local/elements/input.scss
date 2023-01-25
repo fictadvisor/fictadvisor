@@ -58,7 +58,7 @@ $normal-input-width: 308px;
       @include field-input($focus-input-color, $focus-input-placeholder-color);
 
       //> label{
-      //  color: $hover-input-color; //TODO bug, hovering label when focused
+      //  color: $hover-input-color;
       //}
     }
 
