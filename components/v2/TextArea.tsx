@@ -1,6 +1,9 @@
 import React, {useState, useRef} from "react";
 
 // props
+export enum TextAreaSpecs{
+    BIG = "large", SMALL = "small"
+}
 export enum TextAreaState{
     SUCCESS = "success-area", ERROR = "error-area"
 }
@@ -9,7 +12,7 @@ interface TextAreaProps {
     placeholder?: string // placeholder
     label?: string
     isDisabled?: boolean,
-    sizing?: string
+    sizing?: TextAreaSpecs
     areaCurrState?: TextAreaState
 }
 
