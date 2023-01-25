@@ -1,0 +1,104 @@
+.tag{
+    border-radius: 6px;
+    display: flex;
+    gap: 4px;
+ }
+ 
+ .small-tag{
+     padding: 2px 6px;
+ }
+ 
+ .big-tag{
+     padding: 4px 8px;
+ }
+ 
+ .done-svg{
+     fill: $svg-tag-color;
+     width: 20px;
+     height: 20px;
+ }
+ 
+ .primary-fisrt-bgc{
+     background-color: $primary-tag-first-bgc;
+ }
+ 
+ .primary-second-bgc{
+     background-color: $primary-tag-second-bgc;
+ }
+ 
+ .primary-third-bgc{
+     background-color: $third-tags-bgc;
+     border: 1px solid $primary-tag-border-color;
+     border-radius: 6px;
+ 
+ }
+ 
+ .success-first-bgc{
+     background-color: $success-tag-first-bgc;
+ }
+ 
+ .success-second-bgc{
+     background-color: $success-tag-second-bgc;
+ }
+ 
+ .success-third-bgc{
+     background-color: $third-tags-bgc;
+     border: 1px solid $success-tag-border-color;
+     border-radius: 6px;
+ }
+ 
+ .error-first-bgc{
+     background-color: $error-tag-first-bgc;
+ }
+ 
+ .error-second-bgc{
+     background-color: $error-tag-second-bgc;
+ }
+ 
+ .error-third-bgc{
+     background-color: $third-tags-bgc;
+     border: 1px solid $error-tag-border-color;
+     border-radius: 6px;
+ }
+ 
+ .warning-first-bgc{
+     background-color: $warning-tag-first-bgc;
+ }
+ 
+ .warning-second-bgc{
+     background-color: $warning-tag-second-bgc;
+ }
+ 
+ .warning-third-bgc{
+     background-color: $third-tags-bgc;
+     border: 1px solid $warning-tag-border-color;
+     border-radius: 6px;
+ }
+ 
+ .info-first-bgc{
+     background-color: $info-tag-first-bgc;
+ }
+ 
+ .info-second-bgc{
+     background-color: $info-tag-second-bgc;
+ }
+ 
+ .info-third-bgc{
+     background-color: $third-tags-bgc;
+     border: 1px solid $info-tag-border-color;
+     border-radius: 6px;
+ }
+ 
+ .gray-first-bgc{
+     background-color: $gray-tag-first-bgc;
+ }
+ 
+ .gray-second-bgc{
+     background-color: $gray-tag-second-bgc;
+ }
+ 
+ .gray-third-bgc{
+     background-color: $third-tags-bgc;
+     border: 1px solid $gray-tag-border-color;
+     border-radius: 6px;
+ }
