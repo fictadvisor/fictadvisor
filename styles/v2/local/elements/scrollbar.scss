@@ -1,3 +1,11 @@
+*{
+  scrollbar-color: #FFFFFF #C2D2E4;
+  scrollbar-width: thin;
+  &:hover, &:focus{
+    scrollbar-color: black #C2D2E4;
+  }
+}
+
 ::-webkit-scrollbar{
   width: 1.11vw;
 }
@@ -15,3 +23,4 @@
   }
 
 }
+
