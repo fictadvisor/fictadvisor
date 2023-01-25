@@ -1,11 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../database/PrismaService';
+import {Injectable} from '@nestjs/common';
+import {PrismaService} from '../../database/PrismaService';
+import {UpdateStudentData} from "./dto/UpdateStudentData";
 
 @Injectable()
 export class StudentRepository {
   constructor(
     private prisma: PrismaService,
-  ) {}
+  ) {
+  }
 
   async getRoles(studentId: string) {
     const roles = await this.prisma.userRole.findMany({
@@ -40,6 +42,15 @@ export class StudentRepository {
         studentId,
         roleId,
       },
+    });
+  }
+
+  async updateStudent(userId: string, data: UpdateStudentData) {
+    await this.prisma.student.update({
+      where: {
+        userId,
+      },
+      data,
     });
   }
 }

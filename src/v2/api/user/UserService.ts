@@ -1,12 +1,14 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { PrismaService } from '../../database/PrismaService';
-import { ApproveDTO } from './dto/ApproveDTO';
-import { GroupService } from '../group/GroupService';
-import { DisciplineService } from '../discipline/DisciplineService';
-import { GiveRoleDTO } from './dto/GiveRoleDTO';
-import { GrantRepository } from './grant/GrantRepository';
-import { StudentRepository } from './StudentRepository';
-import { RoleService } from './role/RoleService';
+import {forwardRef, Inject, Injectable} from '@nestjs/common';
+import {PrismaService} from '../../database/PrismaService';
+import {GroupService} from '../group/GroupService';
+import {DisciplineService} from '../discipline/DisciplineService';
+import {GiveRoleDTO} from './dto/GiveRoleDTO';
+import {GrantRepository} from './grant/GrantRepository';
+import {StudentRepository} from './StudentRepository';
+import {RoleService} from './role/RoleService';
+import {UpdateStudentData} from "./dto/UpdateStudentData";
+import {UpdateSuperheroData} from "./dto/UpdateSuperheroData";
+import {SuperheroRepository} from "./SuperheroRepository";
 
 @Injectable()
 export class UserService {
@@ -18,37 +20,12 @@ export class UserService {
     private grantRepository: GrantRepository,
     private studentRepository: StudentRepository,
     private roleService: RoleService,
-  ) {}
-
-  async verify(userId: string, body: ApproveDTO) {
-    await this.prisma.student.update({
-      where: {
-        userId,
-      },
-      data: {
-        ...body,
-      },
-    });
+    private superheroRepository: SuperheroRepository,
+  ) {
   }
 
   async createSuperhero(id, body) {
-    await this.prisma.superhero.create({
-      data: {
-        userId: id,
-        ...body,
-      },
-    });
-  }
-
-  async verifySuperhero(userId: string, body: ApproveDTO) {
-    await this.prisma.superhero.update({
-      where: {
-        userId,
-      },
-      data: {
-        ...body,
-      },
-    });
+    return this.superheroRepository.createSuperhero(id, body);
   }
 
   async getSelective(studentId: string) {
@@ -66,11 +43,19 @@ export class UserService {
     return false;
   }
 
-  async giveRole(id: string, { roleId }: GiveRoleDTO) {
+  async giveRole(id: string, {roleId}: GiveRoleDTO) {
     await this.studentRepository.addRole(id, roleId);
   }
 
   async removeRole(id: string, roleId: string) {
     await this.studentRepository.removeRole(id, roleId);
+  }
+
+  async updateStudent(userId: string, data: UpdateStudentData) {
+    await this.studentRepository.updateStudent(userId, data);
+  }
+
+  async updateSuperhero(userId: string, data: UpdateSuperheroData) {
+    await this.superheroRepository.updateSuperhero(userId, data);
   }
 }
