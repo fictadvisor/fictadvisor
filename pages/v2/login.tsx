@@ -1,10 +1,11 @@
 import {GetServerSideProps} from "next";
-import {LargeButton, MediumButton} from "../components/v2/Button";
-import {Input, InputState} from "../components/v2/Input";
+import {LargeButton, MediumButton} from "../../components/v2/Button";
+import {Input, InputState} from "../../components/v2/Input";
 
 function IndexPage() {
 
     return (
+
         <div id="login-page-wrapper">
             <div id="left-block" >
                 <div id="left-block__content">
@@ -39,7 +40,7 @@ function IndexPage() {
                             </p>
                         </div>
                         <div className="white-link-underlined">
-                            <a className="link-container" href="pages">Забув пароль?</a>
+                            <a className="link-container" href="pages/v1">Забув пароль?</a>
                         </div>
                     </div>
                     <LargeButton text="Увійти" onClick={() => {}} isDisabled={true}/>

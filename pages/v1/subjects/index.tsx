@@ -1,16 +1,16 @@
 import React, {useState} from "react";
-import {toInteger} from "../../lib/v1/number";
+import {toInteger} from "../../../lib/v1/number";
 import {useQuery} from "react-query";
-import api from "../../lib/v1/api";
-import {useAuthentication} from "../../lib/v1/context/AuthenticationContext";
-import {useQueryParams} from "../../lib/v1/query";
-import AddSubjectForm from "../../components/v1/forms/AddSubjectForm";
-import PageLayout from "../../components/v1/layout/PageLayout";
-import Button from "../../components/v1/ui/Button";
-import SearchInput from "../../components/v1/ui/SearchInput";
-import Dropdown from "../../components/v1/ui/Dropdown";
-import Loader from "../../components/v1/ui/Loader";
-import SubjectItem from "../../components/v1/SubjectItem";
+import api from "../../../lib/v1/api";
+import {useAuthentication} from "../../../lib/v1/context/AuthenticationContext";
+import {useQueryParams} from "../../../lib/v1/query";
+import AddSubjectForm from "../../../components/v1/forms/AddSubjectForm";
+import PageLayout from "../../../components/v1/layout/PageLayout";
+import Button from "../../../components/v1/ui/Button";
+import SearchInput from "../../../components/v1/ui/SearchInput";
+import Dropdown from "../../../components/v1/ui/Dropdown";
+import Loader from "../../../components/v1/ui/Loader";
+import SubjectItem from "../../../components/v1/SubjectItem";
 
 const PROPERTIES = {
   pageSize: 10,

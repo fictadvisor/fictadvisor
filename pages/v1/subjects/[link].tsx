@@ -2,20 +2,20 @@ import {AxiosError} from "axios";
 import {GetServerSideProps} from "next";
 import {useState} from "react";
 import {useQuery} from "react-query";
-import AddCourseForm from "../../components/v1/forms/AddCourseForm";
-import CourseItem from "../../components/v1/CourseItem";
-import PageLayout from "../../components/v1/layout/PageLayout";
-import SubjectInformation from "../../components/v1/SubjectInformation";
-import Button from "../../components/v1/ui/Button";
-import Disclaimer from "../../components/v1/ui/Disclaimer";
-import Dropdown from "../../components/v1/ui/Dropdown";
-import Loader from "../../components/v1/ui/Loader";
-import SearchInput from "../../components/v1/ui/SearchInput";
-import {getFullName} from "../../lib/v1/text";
-import {toInteger} from "../../lib/v1/number";
-import api from "../../lib/v1/api";
-import {useQueryParams} from "../../lib/v1/query";
-import {useAuthentication} from "../../lib/v1/context/AuthenticationContext";
+import AddCourseForm from "../../../components/v1/forms/AddCourseForm";
+import CourseItem from "../../../components/v1/CourseItem";
+import PageLayout from "../../../components/v1/layout/PageLayout";
+import SubjectInformation from "../../../components/v1/SubjectInformation";
+import Button from "../../../components/v1/ui/Button";
+import Disclaimer from "../../../components/v1/ui/Disclaimer";
+import Dropdown from "../../../components/v1/ui/Dropdown";
+import Loader from "../../../components/v1/ui/Loader";
+import SearchInput from "../../../components/v1/ui/SearchInput";
+import {getFullName} from "../../../lib/v1/text";
+import {toInteger} from "../../../lib/v1/number";
+import api from "../../../lib/v1/api";
+import {useQueryParams} from "../../../lib/v1/query";
+import {useAuthentication} from "../../../lib/v1/context/AuthenticationContext";
 
 const PROPERTIES = {
     pageSize: 6,

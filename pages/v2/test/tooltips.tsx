@@ -1,4 +1,4 @@
-import { Tooltip,TooltipDirection } from "../../components/v2/Tooltip";
+import { Tooltip,TooltipDirection } from "../../../components/v2/Tooltip";
 
 function Tooltips(){
     return(

@@ -5,11 +5,11 @@ const leftInputPadding = 26; //in px
 const hoveredOption = '#404040';
 const themeColor = '#1E1E1E';
 const dropDownOptionHeight = 36; //px
-const padding=8; //]px 
+const padding=8; // px
 
 export enum DropDownClasses{
     ERROR='error',
-    SUCCES='success',
+    SUCCESS='success',
     DISABLED='disabled'
 }
 

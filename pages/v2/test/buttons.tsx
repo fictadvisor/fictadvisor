@@ -1,4 +1,4 @@
-import {LargeButton, MediumButton, SmallButton} from "../../components/v2/Button";
+import {LargeButton, MediumButton, SmallButton} from "../../../components/v2/Button";
 
 function buttons(){
     return(

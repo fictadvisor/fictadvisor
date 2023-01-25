@@ -1,8 +1,8 @@
-import { GroupIcon } from "../../components/v2/icons/GroupIcon";
-import { SmallDropdown } from "../../components/v2/dropdowns/SmallDropdown";
-import { MediumDropdown } from "../../components/v2/dropdowns/MediumDropdown";
-import { LargeDropdown } from "../../components/v2/dropdowns/LargeDropdown";
-import { DropDownClasses } from "../../components/v2/dropdowns/BaseDropdown";
+import { GroupIcon } from "../../../components/v2/icons/GroupIcon";
+import { SmallDropdown } from "../../../components/v2/dropdowns/SmallDropdown";
+import { MediumDropdown } from "../../../components/v2/dropdowns/MediumDropdown";
+import { LargeDropdown } from "../../../components/v2/dropdowns/LargeDropdown";
+import { DropDownClasses } from "../../../components/v2/dropdowns/BaseDropdown";
 
 function dropdowns() {
   const options = [
@@ -22,7 +22,7 @@ function dropdowns() {
 
   return (
     <div className="test-page-wrap">
-      <form action="pages">
+      <form action="pages/v1">
         <div className="App">
           <SmallDropdown
             options={options}
@@ -48,17 +48,17 @@ function dropdowns() {
           <SmallDropdown
             options={options}
             label="Вчителі"
-            className={DropDownClasses.SUCCES}
+            className={DropDownClasses.SUCCESS}
           />
           <MediumDropdown
             options={options}
             label="medium"
-            className={DropDownClasses.SUCCES}
+            className={DropDownClasses.SUCCESS}
           />
           <LargeDropdown
             options={options}
             label="large"
-            className={DropDownClasses.SUCCES}
+            className={DropDownClasses.SUCCESS}
           />
           <SmallDropdown
             options={options}

@@ -3,20 +3,20 @@ import { GetServerSideProps } from "next";
 import Link from "next/link";
 import React, { useState } from "react";
 import { useQuery } from "react-query";
-import PageLayout from "../../components/v1/layout/PageLayout";
-import Disclaimer from "../../components/v1/ui/Disclaimer";
-import Review from "../../components/v1/Review";
-import Button from "../../components/v1/ui/Button";
-import SubjectInformation from "../../components/v1/SubjectInformation";
-import SearchInput from "../../components/v1/ui/SearchInput";
-import Dropdown from "../../components/v1/ui/Dropdown";
-import Loader from "../../components/v1/ui/Loader";
-import ReviewForm from "../../components/v1/forms/ReviewForm";
-import {useAuthentication} from "../../lib/v1/context/AuthenticationContext";
-import {toInteger} from "../../lib/v1/number";
-import api from "../../lib/v1/api";
-import {useQueryParams} from "../../lib/v1/query";
-import {getFullName} from "../../lib/v1/text";
+import PageLayout from "../../../components/v1/layout/PageLayout";
+import Disclaimer from "../../../components/v1/ui/Disclaimer";
+import Review from "../../../components/v1/Review";
+import Button from "../../../components/v1/ui/Button";
+import SubjectInformation from "../../../components/v1/SubjectInformation";
+import SearchInput from "../../../components/v1/ui/SearchInput";
+import Dropdown from "../../../components/v1/ui/Dropdown";
+import Loader from "../../../components/v1/ui/Loader";
+import ReviewForm from "../../../components/v1/forms/ReviewForm";
+import {useAuthentication} from "../../../lib/v1/context/AuthenticationContext";
+import {toInteger} from "../../../lib/v1/number";
+import api from "../../../lib/v1/api";
+import {useQueryParams} from "../../../lib/v1/query";
+import {getFullName} from "../../../lib/v1/text";
 
 
 const PROPERTIES = {

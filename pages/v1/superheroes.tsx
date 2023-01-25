@@ -1,18 +1,18 @@
 import { useState } from "react";
 import { useQuery } from "react-query";
-import PageLayout from "../components/v1/layout/PageLayout";
-import SuperheroContact from "../components/v1/SuperheroContact";
-import SuperheroForm from "../components/v1/forms/SuperheroForm";
-import Button from "../components/v1/ui/Button";
-import Disclaimer from "../components/v1/ui/Disclaimer";
-import Dropdown from "../components/v1/ui/Dropdown";
-import Loader from "../components/v1/ui/Loader";
-import SearchInput from "../components/v1/ui/SearchInput";
-import config from "../config";
-import api from "../lib/v1/api";
-import { useAuthentication } from "../lib/v1/context/AuthenticationContext";
-import { toInteger } from "../lib/v1/number";
-import { useQueryParams } from "../lib/v1/query";
+import PageLayout from "../../components/v1/layout/PageLayout";
+import SuperheroContact from "../../components/v1/SuperheroContact";
+import SuperheroForm from "../../components/v1/forms/SuperheroForm";
+import Button from "../../components/v1/ui/Button";
+import Disclaimer from "../../components/v1/ui/Disclaimer";
+import Dropdown from "../../components/v1/ui/Dropdown";
+import Loader from "../../components/v1/ui/Loader";
+import SearchInput from "../../components/v1/ui/SearchInput";
+import config from "../../config";
+import api from "../../lib/v1/api";
+import { useAuthentication } from "../../lib/v1/context/AuthenticationContext";
+import { toInteger } from "../../lib/v1/number";
+import { useQueryParams } from "../../lib/v1/query";
 
 const PROPERTIES = {
   pageSize: 10,

@@ -2,23 +2,23 @@ import {useState} from 'react';
 import {GetServerSideProps} from 'next';
 import {AxiosError} from 'axios';
 
-import PageLayout from '../../components/v1/layout/PageLayout';
-import Button from '../../components/v1/ui/Button';
-import ArrowIcon from '../../components/v1/ui/icons/ArrowIcon';
-import StarIcon from '../../components/v1/ui/icons/StarIcon';
-import Tag from '../../components/v1/ui/Tag';
+import PageLayout from '../../../components/v1/layout/PageLayout';
+import Button from '../../../components/v1/ui/Button';
+import ArrowIcon from '../../../components/v1/ui/icons/ArrowIcon';
+import StarIcon from '../../../components/v1/ui/icons/StarIcon';
+import Tag from '../../../components/v1/ui/Tag';
 
-import Divider from '../../components/v1/ui/Divider';
-import Collapsible from '../../components/v1/ui/Collapsible';
+import Divider from '../../../components/v1/ui/Divider';
+import Collapsible from '../../../components/v1/ui/Collapsible';
 
-import ReviewBlock from '../../components/v1/blocks/ReviewBlock';
-import ContactBlock from '../../components/v1/blocks/ContactBlock';
-import CourseBlock from '../../components/v1/blocks/CourseBlock';
-import Disclaimer from '../../components/v1/ui/Disclaimer';
-import {toInteger} from "../../lib/v1/number";
-import api from "../../lib/v1/api";
-import {useQueryParams} from "../../lib/v1/query";
-import {getFullName} from "../../lib/v1/text";
+import ReviewBlock from '../../../components/v1/blocks/ReviewBlock';
+import ContactBlock from '../../../components/v1/blocks/ContactBlock';
+import CourseBlock from '../../../components/v1/blocks/CourseBlock';
+import Disclaimer from '../../../components/v1/ui/Disclaimer';
+import {toInteger} from "../../../lib/v1/number";
+import api from "../../../lib/v1/api";
+import {useQueryParams} from "../../../lib/v1/query";
+import {getFullName} from "../../../lib/v1/text";
 
 type TabProperties = { link: string, id: string };
 

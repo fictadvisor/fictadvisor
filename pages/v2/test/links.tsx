@@ -1,4 +1,4 @@
-import { CustomLink, LinkColor } from "../../components/v2/Link";
+import { CustomLink, LinkColor } from "../../../components/v2/Link";
 
 function links() {
   return (

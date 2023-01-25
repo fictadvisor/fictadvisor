@@ -1,4 +1,4 @@
-import {Input, InputState} from "../../components/v2/Input";
+import {Input, InputState} from "../../../components/v2/Input";
 
 function inputs(){
   return(

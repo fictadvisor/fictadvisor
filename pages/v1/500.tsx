@@ -1,4 +1,4 @@
-import PageLayout from "../components/v1/layout/PageLayout";
+import PageLayout from "../../components/v1/layout/PageLayout";
 import Link from "next/link";
 
 const InternalErrorPage = () => {

@@ -1,5 +1,5 @@
-import articles from "../../lib/v1/articles";
-import PageLayout from "../../components/v1/layout/PageLayout";
+import articles from "../../../lib/v1/articles";
+import PageLayout from "../../../components/v1/layout/PageLayout";
 import Link from "next/link";
 
 const ArticlesPage = ({ articles }) => <PageLayout meta={{ title: 'Статті' }}>

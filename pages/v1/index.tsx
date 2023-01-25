@@ -1,18 +1,18 @@
-import api from "../lib/v1/api";
+import api from "../../lib/v1/api";
 
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { GetServerSideProps } from "next";
 
-import PageLayout from "../components/v1/layout/PageLayout";
+import PageLayout from "../../components/v1/layout/PageLayout";
 import Link from "next/link";
-import TeacherItem from "../components/v1/TeacherItem";
-import Button from "../components/v1/ui/Button";
-import StudentResourceItem from "../components/v1/StudentResourceItem";
-import SubjectItem from "../components/v1/SubjectItem";
-import config from "../config";
-import articles from "../lib/v1/articles";
-import ArticleItem from "../components/v1/ArticleItem";
+import TeacherItem from "../../components/v1/TeacherItem";
+import Button from "../../components/v1/ui/Button";
+import StudentResourceItem from "../../components/v1/StudentResourceItem";
+import SubjectItem from "../../components/v1/SubjectItem";
+import config from "../../config";
+import articles from "../../lib/v1/articles";
+import ArticleItem from "../../components/v1/ArticleItem";
 
 const PROPERTIES = {
   studentResources: {
@@ -117,7 +117,7 @@ const IndexPage = ({ popularTeachers, popularSubjects, studentResources: serverR
           </div>
         }
         <div className="article-item more">
-          <Link href='/articles' legacyBehavior>
+          <Link href='/v1/articles' legacyBehavior>
             <Button>
               <span>Усі статті</span>
             </Button>
@@ -139,7 +139,7 @@ const IndexPage = ({ popularTeachers, popularSubjects, studentResources: serverR
           )
         }
       </div>
-      <Link href="/teachers" legacyBehavior>
+      <Link href="/v1/teachers" legacyBehavior>
 
         <Button className="w-full">Завантажити ще</Button>
 
@@ -157,7 +157,7 @@ const IndexPage = ({ popularTeachers, popularSubjects, studentResources: serverR
           )
         }
       </div>
-      <Link href="/subjects" legacyBehavior>
+      <Link href="/v1/subjects" legacyBehavior>
 
         <Button className="w-full">Завантажити ще</Button>
 
