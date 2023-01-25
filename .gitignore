@@ -1,11 +1,17 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# Generated css files
+*.css
+*.css.map
+
 # npm/yarn files
 package.json
 yarn.lock
 package-lock.json
 
 # dependencies
+package.json
+yarn.lock
 /node_modules
 /.pnp
 .pnp.js

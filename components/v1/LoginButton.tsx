@@ -1,6 +1,6 @@
-import { useAuthentication } from "../../lib/context/AuthenticationContext";
 import Button, { ButtonProperties } from "./ui/Button";
 import LoginIcon from "./ui/icons/LoginIcon";
+import {useAuthentication} from "../../lib/v1/context/AuthenticationContext";
 
 export type LoginButtonProperties = {
   authentication: ReturnType<typeof useAuthentication>;

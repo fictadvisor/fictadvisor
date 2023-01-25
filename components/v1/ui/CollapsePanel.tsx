@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { mergeClassName } from "../../../lib/component";
 import ArrowIcon from "./icons/ArrowIcon";
+import {mergeClassName} from "../../../lib/v1/component";
 
 export type CollapsePanelProperties = {
   title: string;
@@ -10,7 +10,7 @@ const CollapsePanel = ({ title, children, className, ...props }: CollapsePanelPr
   const [open, setOpen] = useState(false);
 
   return (
-    <div className={mergeClassName(`dropdown ${open ? 'active' : ''}`, className)} {...props}>
+    <div className={mergeClassName(`dropdowns ${open ? 'active' : ''}`, className)} {...props}>
       <button className="dropdown" onClick={() => setOpen(!open)}>
         <div className="d-flex">
           <span className="f-medium">{title}</span>

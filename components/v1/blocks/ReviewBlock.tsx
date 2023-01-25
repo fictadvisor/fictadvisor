@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "react-query";
-import api from "../../../lib/api";
-import { mergeClassName } from "../../../lib/component";
+import api from "../../../lib/v1/api";
+import { mergeClassName } from "../../../lib/v1/component";
 
 import Review from "../Review";
 import Button from "../ui/Button";

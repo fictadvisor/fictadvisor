@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useAuthentication } from "../../../lib/context/AuthenticationContext";
 import AuthenticationModal from "../AuthenticationModal";
+import {useAuthentication} from "../../../lib/v1/context/AuthenticationContext";
 
 export type ButtonProperties = {
   authenticated?: boolean;

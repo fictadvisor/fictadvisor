@@ -12,10 +12,10 @@
 // import "../styles/v1/components/studentResource.css";
 // import "../styles/v1/components/article.css";
 // import "../styles/v1/sass/index.sass";
-import "../styles/v2/sass/index.scss";
+import "../styles/v2/index.scss";
 
 import { QueryClient, QueryClientProvider } from "react-query";
-import { AuthenticationProvider } from "../lib/context/AuthenticationContext";
+import { AuthenticationProvider } from "../lib/v1/context/AuthenticationContext";
 
 const queryClient = new QueryClient();
 

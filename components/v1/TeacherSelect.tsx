@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useQuery } from "react-query";
-import api from "../../lib/api";
-import { getFullName } from "../../lib/text";
 import SearchInput from "./ui/SearchInput";
+import api from "../../lib/v1/api";
+import {getFullName} from "../../lib/v1/text";
 
 export type TeacherSearchProperties = {
   onSelect: (props: Omit<SearchItemProperties, 'onSelect'>) => any;

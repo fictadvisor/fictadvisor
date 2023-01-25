@@ -1,14 +1,14 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useMutation } from "react-query";
-import api from "../../../lib/api";
-import { CreateCourseBody } from "../../../lib/api/courses";
-import { useAuthentication } from "../../../lib/context/AuthenticationContext";
 import SubjectSelect from "../SubjectSelect";
 import Button from "../ui/Button";
 import Disclaimer from "../ui/Disclaimer";
 import ErrorMessage from "../ui/ErrorMessage";
 import SubjectItem from "../SubjectItem";
+import {CreateCourseBody} from "../../../lib/v1/api/courses";
+import api from "../../../lib/v1/api";
+import {useAuthentication} from "../../../lib/v1/context/AuthenticationContext";
 
 export type AddTeacherCourseFormProperties = {
   authentication: ReturnType<typeof useAuthentication>;
@@ -36,10 +36,10 @@ const AddTeacherCourseForm = ({ authentication, teacher, onBack }: AddTeacherCou
         <Disclaimer>Дякуємо, твоя заявка була відправлена на перевірку</Disclaimer>
         <div className="d-flex m-t">
           <Button onClick={() => onBack()}>Назад</Button>
-          <Link href={`/courses/${data.link}`}>
-              <a className="w-full m-l">
-                <Button className="w-full">Перейти на сторінку предмета</Button>
-              </a>
+          <Link href={`/courses/${data.link}`} className="w-full m-l" legacyBehavior>
+
+            <Button className="w-full">Перейти на сторінку предмета</Button>
+
           </Link>
         </div>
       </div>

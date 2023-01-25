@@ -1,8 +1,6 @@
 import Link from "next/link";
-import { mergeClassName } from "../../lib/component";
-import pluralize from "../../lib/pluralize";
-
-import Button from "./ui/Button";
+import {mergeClassName} from "../../lib/v1/component";
+import pluralize from "../../lib/v1/pluralize";
 
 export type CourseItemProperties = {
   title: string;
@@ -16,8 +14,8 @@ const CourseItem = ({ link, title, rating, reviewCount, recommended, className, 
   const noReviews = !rating || !reviewCount;
 
   return (
-    <Link href={`/courses/${link}`}>
-      <a className="simple">
+    <Link href={`/courses/${link}`} className="simple" legacyBehavior>
+
         <div className={mergeClassName("block course", className)} {...props}>
           <div className="info">
             <span className="f-medium">{title}</span>
@@ -37,8 +35,8 @@ const CourseItem = ({ link, title, rating, reviewCount, recommended, className, 
             }
           </div>
         </div>
-      </a>
-    </Link>
+
+      </Link>
   );
 };
 

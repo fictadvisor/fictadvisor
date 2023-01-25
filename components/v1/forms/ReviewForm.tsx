@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useMutation } from "react-query";
-import api from "../../../lib/api";
-import { CreateReviewBody } from "../../../lib/api/courses";
-import { mergeClassName } from "../../../lib/component";
-import pluralize from "../../../lib/pluralize";
-import { validate } from "../../../lib/validation";
+import api from "../../../lib/v1/api";
+import { CreateReviewBody } from "../../../lib/v1/api/courses";
+import { mergeClassName } from "../../../lib/v1/component";
+import pluralize from "../../../lib/v1/pluralize";
+import { validate } from "../../../lib/v1/validation";
 import RatingSelect from "../RatingSelect";
 import Button from "../ui/Button";
 import Disclaimer from "../ui/Disclaimer";

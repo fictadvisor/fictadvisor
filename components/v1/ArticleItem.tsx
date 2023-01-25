@@ -1,6 +1,6 @@
-import { mergeClassName } from "../../lib/component";
 import Button from "./ui/Button";
 import Link from "next/link";
+import {mergeClassName} from "../../lib/v1/component";
 
 export type ArticleItemProperties = {
   href: string;
@@ -10,7 +10,7 @@ export type ArticleItemProperties = {
 const ArticleItem = ({ href, name, className, ...props }: ArticleItemProperties) => {
   return (
     <div className={mergeClassName('article-item', className)} {...props}>
-      <Link href={href}>
+      <Link href={href} legacyBehavior>
           <Button>
             <span>{name}</span>
           </Button>

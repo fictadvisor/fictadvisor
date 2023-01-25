@@ -1,0 +1,36 @@
+button{
+  font-size: 18px;
+  line-height: 25.2px;
+  font-weight: $font-weight-bold;
+}
+
+.small-button-text{
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: $font-weight-regular;
+}
+
+.small-button-text--bold{
+  @extend button;
+  font-weight: $font-weight-bold;
+}
+
+.medium-button-text{
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: $font-weight-regular;
+}
+
+.medium-button-text--bold{
+  font-weight: $font-weight-bold;
+}
+
+.large-button-text{
+  font-size: 24px;
+  line-height: 28px;
+  font-weight: $font-weight-regular;
+}
+
+.large-button-text--bold{
+  font-weight: $font-weight-bold;
+}

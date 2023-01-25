@@ -1,17 +1,17 @@
 import Link from "next/link";
-import { mergeClassName } from "../../lib/component";
-import pluralize from "../../lib/pluralize";
+import pluralize from "../../lib/v1/pluralize";
+import {mergeClassName} from "../../lib/v1/component";
 
 export type SubjectItemProperties = {
   link: string;
   name: string;
   teacherCount: number;
-} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;;
+} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
 const SubjectItem = ({ link, name, teacherCount, className, ...props }: SubjectItemProperties) => {
   return (
-    <Link href={`/subjects/${link}`}>
-      <a className="simple">
+    <Link href={`/subjects/${link}`} className="simple" legacyBehavior>
+
         <div className={mergeClassName('block d-flex', className)} {...props}>
           <div className="m-auto f-medium d-flex-grow">
             {name}
@@ -25,8 +25,8 @@ const SubjectItem = ({ link, name, teacherCount, className, ...props }: SubjectI
             </span>
           </div>
         </div>
-      </a>
-    </Link>
+
+      </Link>
   );
 };
 

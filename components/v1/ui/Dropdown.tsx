@@ -1,4 +1,4 @@
-import { mergeClassName, useComponentVisible } from "../../../lib/component";
+import { mergeClassName, useComponentVisible } from "../../../lib/v1/component";
 import ArrowIcon from "./icons/ArrowIcon";
 
 export type DropdownOption = {
@@ -17,7 +17,7 @@ const Dropdown = ({ text, active, onChange, options, className, ...props }: Drop
   const { ref, isComponentVisible: open, setIsComponentVisible: setOpen } = useComponentVisible(false);
 
   return (
-    <div ref={ref} className={mergeClassName(`dropdown ${open ? 'active' : ''}`, className)} {...props}>
+    <div ref={ref} className={mergeClassName(`dropdowns ${open ? 'active' : ''}`, className)} {...props}>
       <button className="dropdown" onClick={() => setOpen(!open)}>
         <div className="d-flex">
           <span>

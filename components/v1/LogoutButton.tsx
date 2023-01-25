@@ -1,9 +1,8 @@
-import Link from "next/link";
-import { useAuthentication } from "../../lib/context/AuthenticationContext";
-import oauth from '../../lib/oauth';
 import Button from "./ui/Button";
 import LogoutIcon from "./ui/icons/LogoutIcon";
 import SettingsIcon from "./ui/icons/SettingsIcon";
+import {useAuthentication} from "../../lib/v1/context/AuthenticationContext";
+import oauth from "../../lib/v1/oauth";
 
 export type LogoutButtonProperties = {
   authentication: ReturnType<typeof useAuthentication>;

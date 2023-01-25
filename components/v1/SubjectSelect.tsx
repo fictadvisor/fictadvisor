@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "react-query";
-import api from "../../lib/api";
 import SearchInput from "./ui/SearchInput";
+import api from "../../lib/v1/api";
 
 export type SubjectSearchProperties = {
   onSelect: (props: Omit<SearchItemProperties, 'onSelect'>) => any;

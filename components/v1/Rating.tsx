@@ -1,6 +1,6 @@
-import { mergeClassName } from "../../lib/component";
 
 import StarIcon from "./ui/icons/StarIcon";
+import {mergeClassName} from "../../lib/v1/component";
 
 const getStars = (rating: number) => {
   const stars = [];

@@ -10,9 +10,11 @@ const ErrorMessage = ({ error, text, ...props }: ErrorMessageProperties) => {
   const axiosError = error as AxiosError;
 
   if (axiosError.isAxiosError) {
-    const data = axiosError.response?.data;
-    const text = data?.message ?? axiosError.message;
-    const status = data?.status ?? axiosError.response?.status;
+    // const data = axiosError.response?.data;
+    // const text = data?.message ?? axiosError.message; //Shows error
+    // const status = data?.status ?? axiosError.response?.status;
+    const text = axiosError.message;
+    const status = axiosError.response?.status;
 
     props.title = `(${status}): ${text}`;
   }

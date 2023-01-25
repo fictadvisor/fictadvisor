@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { mergeClassName } from "../../lib/component";
-import { toDateTimeString } from "../../lib/date";
 
 import Rating from "./Rating";
+import {mergeClassName} from "../../lib/v1/component";
+import {toDateTimeString} from "../../lib/v1/date";
 
 export type ReviewProperties = {
   course?: { name: string; link: string; };
@@ -20,7 +20,7 @@ const Review = ({ course, date, rating, content, className, ...props }: ReviewPr
           <span className="f-medium">
             {
               course 
-               ? <><Link href={`/courses/${course.link}`}><a className="simple">{course.name}</a></Link></>
+               ? <><Link href={`/courses/${course.link}`} className="simple" legacyBehavior>{course.name}</Link></>
                : 
                 date &&
                 <>{toDateTimeString(new Date(date))}</>

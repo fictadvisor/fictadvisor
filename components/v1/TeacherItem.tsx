@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { mergeClassName } from "../../lib/component";
 import Rating from "./Rating";
+import {mergeClassName} from "../../lib/v1/component";
 
 export type TeacherItemProperties = {
   link: string;
@@ -12,8 +12,8 @@ export type TeacherItemProperties = {
 
 const TeacherItem = ({ className, link, lastName, firstName, middleName, rating, ...props }: TeacherItemProperties) => {
   return (
-    <Link href={`/teachers/${link}`}>
-      <a className="simple">
+    <Link href={`/teachers/${link}`} className="simple" legacyBehavior>
+
         <div className={mergeClassName('block d-flex', className)} {...props}>
           <div className="m-auto d-flex-grow">
             <span className="f-medium">{lastName} </span>
@@ -25,8 +25,8 @@ const TeacherItem = ({ className, link, lastName, firstName, middleName, rating,
             </span>
           </div>
         </div>
-      </a>
-    </Link>
+
+      </Link>
   );
 };
 

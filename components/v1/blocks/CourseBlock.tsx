@@ -1,7 +1,5 @@
 import { useState } from 'react';
 import { useQuery } from 'react-query';
-import api from '../../../lib/api';
-import { useAuthentication } from '../../../lib/context/AuthenticationContext';
 import CourseItem from '../CourseItem';
 import AddTeacherCourseForm from '../forms/AddTeacherCourseForm';
 import Button from '../ui/Button';
@@ -9,6 +7,8 @@ import Disclaimer from '../ui/Disclaimer';
 import Dropdown from '../ui/Dropdown';
 import Loader from '../ui/Loader';
 import SearchInput from '../ui/SearchInput';
+import api from "../../../lib/v1/api";
+import {useAuthentication} from "../../../lib/v1/context/AuthenticationContext";
 
 const PROPERTIES = {
   pageSize: 6,

@@ -1,11 +1,11 @@
 import Link from "next/link";
 import config from "../../../config";
-import { useComponentVisible } from "../../../lib/component";
-import { useAuthentication } from "../../../lib/context/AuthenticationContext";
 import GlobalSearch from "../GlobalSearch";
 import LoginButton from "../LoginButton";
 import LogoutButton from "../LogoutButton";
 import Button from "../ui/Button";
+import {useAuthentication} from "../../../lib/v1/context/AuthenticationContext";
+import {useComponentVisible} from "../../../lib/v1/component";
 
 export const MENU = {
   navigation: config.menu,
@@ -29,8 +29,8 @@ const MenuItem = ({ item, action = null, setMenuActive }) => {
 
   return (
     <div className="item">
-      <Link href={item.href}>
-        <a><Button onClick={() => setMenuActive(false)}>{Icon ? <Icon /> : item.text}</Button></a>
+      <Link href={item.href} legacyBehavior>
+        <Button onClick={() => setMenuActive(false)}>{Icon ? <Icon /> : item.text}</Button>
       </Link>
     </div>
   );
@@ -45,10 +45,10 @@ const PageHeader = () => {
       <div className="left">
         <div className="logo">
           <div>
-            <Link href="/">
-              <a className="simple">
-                <img src={config.logo} />
-              </a>
+            <Link href="/" className="simple" legacyBehavior>
+
+              <img src={config.logo}  alt="logo"/>
+
             </Link>
           </div>
         </div>
@@ -56,10 +56,10 @@ const PageHeader = () => {
 
       <div className="content">
         <div className="logo-md">
-          <Link href="/">
-            <a className="simple">
-              <img src={config.logo} />
-            </a>
+          <Link href="/" className="simple" legacyBehavior>
+
+            <img src={config.logo}  alt="logo"/>
+
           </Link>
         </div>
         <div className="navigation d-flex w-full">

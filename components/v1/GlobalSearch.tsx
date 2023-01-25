@@ -1,8 +1,6 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useQuery } from "react-query";
-import api from "../../lib/api";
-import { getFullName } from "../../lib/text";
 import Divider from "./ui/Divider";
 import AssignmentIcon from "./ui/icons/AssignmentIcon";
 import BookmarkIcon from "./ui/icons/BookmarkIcon";
@@ -10,7 +8,8 @@ import ExploreIcon from "./ui/icons/ExploreIcon";
 import SchoolIcon from "./ui/icons/SchoolIcon";
 import SearchInput from "./ui/SearchInput";
 import { MENU } from './layout/PageHeader';
-import pluralize from "../../lib/pluralize";
+import api from "../../lib/v1/api";
+import {getFullName} from "../../lib/v1/text";
 
 type SearchItemType = 'teacher' | 'subject' | 'navigation' | 'other';
 
@@ -47,13 +46,17 @@ const SearchItem = (props: SearchItemProperties) => {
   const Icon = type.icon;
 
   return (
-    <Link href={props.href}>
-      <a className="search-item" onClick={props.onSelect}>
+    <Link
+      href={props.href}
+      className="search-item"
+      onClick={props.onSelect}
+      legacyBehavior>
+
         {Icon && <Icon />}
         {props.text}
-      </a>
-    </Link>
-  )
+
+      </Link>
+  );
 };
 
 type SearchCategoryProperties = {
