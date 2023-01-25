@@ -39,7 +39,6 @@ interface InputProps{
     successRemark?: string,
     isHiddable: boolean,
     state: InputState,
-    // className: string,
     children?: ReactNode
 }
 

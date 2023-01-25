@@ -1,0 +1,21 @@
+@import "../../utils/mixins";
+
+@mixin link-style($color, $className) {
+  .#{$className}-link {
+    column-gap: 8px;
+    color: $color;
+    font-size: 14px;
+    border-bottom: transparent 1px solid;
+    cursor: pointer;
+    &:hover {
+      border-bottom: 1px solid $color;
+    }
+    svg {
+      margin-right: 8px;
+    }
+  }
+}
+
+@include link-style($white-link-color, "white");
+@include link-style($blue-link-color, "blue");
+
