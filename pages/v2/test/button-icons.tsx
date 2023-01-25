@@ -1,4 +1,4 @@
-import { SortButton,SortButtonOrder,ButtonIconSize,TrashBucketButton } from "../../components/v2/ButtonIcon";
+import {ButtonIconSize, SortButton, SortButtonOrder, TrashBucketButton} from "../../../components/v2/ButtonIcon";
 
 function ButtonIcons(){
     return(
@@ -12,12 +12,10 @@ function ButtonIcons(){
             <SortButton size={ButtonIconSize.NORMAL} order={SortButtonOrder.ASCENDING} disabled={true}/>
             <SortButton size={ButtonIconSize.NORMAL} order={SortButtonOrder.DESCENDING} disabled={true}/>
 
-
             <TrashBucketButton size={ButtonIconSize.LARGE}/>
             <TrashBucketButton size={ButtonIconSize.NORMAL}/>
             <TrashBucketButton size={ButtonIconSize.LARGE} disabled={true}/>
             <TrashBucketButton size={ButtonIconSize.NORMAL} disabled={true}/>
-       
         </div>
     );
 }
