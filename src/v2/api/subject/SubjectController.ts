@@ -18,10 +18,14 @@ export class SubjectController {
   ) {}
 
   @Get()
-  getAll(
+  async getAll(
     @Query() body: QueryAllDTO,
   ) {
-    return this.subjectService.getAll(body);
+    const subjects = await this.subjectService.getAll(body);
+    return {
+      subjects,
+    };
+
   }
 
   @Get('/:subjectId')
