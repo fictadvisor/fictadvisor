@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../../database/PrismaService';
 import { JwtPayload } from '../../security/JwtPayload';
 import { SecurityConfigService } from '../../config/SecurityConfigService';
-import { User } from '@prisma/client';
+import { State, User } from '@prisma/client';
 import { TokensDTO } from './dto/TokensDTO';
 import { RegistrationDTO, TelegramDTO } from './dto/RegistrationDTO';
 import { createHash, createHmac } from 'crypto';
@@ -15,6 +15,7 @@ import { EmailService } from '../../email/EmailService';
 import { ResetPasswordDTO } from './dto/ResetPasswordDTO';
 import { InvalidResetTokenException } from '../../utils/exceptions/InvalidResetTokenException';
 import { TooManyActionsException } from '../../utils/exceptions/TooManyActionsException';
+import { InvalidVerificationTokenException } from 'src/v2/utils/exceptions/InvalidVerificationTokenException';
 
 export const ONE_MINUTE = 1000 * 60;
 export const HOUR = ONE_MINUTE * 60;
@@ -23,6 +24,7 @@ export const HOUR = ONE_MINUTE * 60;
 export class AuthService {
 
   private resetPasswordTokens: Map<string, {email: string, date: Date}> = new Map();
+  private verificateEmailTokens: Map<string, {email: string, date: Date}> = new Map();
 
   constructor(
     private prisma: PrismaService,
@@ -215,5 +217,55 @@ export class AuthService {
     });
 
     this.resetPasswordTokens.delete(token);
+  }
+
+  async verificateEmail (email: string) {
+    const uuid = crypto.randomUUID();
+    for (const [token, value] of this.verificateEmailTokens.entries()) {
+      if (value.email === email) {
+        if (Date.now() - value.date.getTime() < ONE_MINUTE) {
+          throw new TooManyActionsException();
+        } else {
+          this.verificateEmailTokens.delete(token);
+        }
+      }
+    }
+
+    this.verificateEmailTokens.set(uuid, {
+      email,
+      date: new Date(),
+    });
+    await this.emailService.sendEmail({
+      to: email,
+      subject: 'Верифікація пошти на fictadvisor.com',
+      message: 'Для верифікації пошти перейдіть за посиланням нижче. Посилання діє годину.',
+      link: `https://fictadvisor.com/register/email-verification/${uuid}`,
+    });
+
+    setTimeout(() => {
+      this.verificateEmailTokens.delete(uuid);
+      this.prisma.user.delete({
+        where: {
+          email: email,
+        },
+      });
+    }, HOUR);
+  }
+  
+  async emailVerification(token: string) {
+    if (!this.verificateEmailTokens.has(token)) {
+      throw new InvalidVerificationTokenException();
+    }
+
+    await this.prisma.user.update({
+      where: {
+        email: this.verificateEmailTokens.get(token).email,
+      },
+      data: {
+        state: State.APPROVED,
+      },
+    });
+
+    this.verificateEmailTokens.delete(token);
   }
 }
