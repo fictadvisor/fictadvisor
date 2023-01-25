@@ -1,82 +1,21 @@
 @import "../../utils/mixins";
 
-
-#links {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  align-content: space-between;
-  justify-content: center;
-  gap: 15px;
-}
-
-
-.links {
-  //width: 220px;
-  width: fit-content;
-  height: 22px;
-}
-
-.arrow-links {
-  width: 251px;
-  height: 24px;
-  display: inline-block;
-  margin-right: 8px;
-}
-
-.link-container {
-  display: flex;
-  column-gap: 8px;
-  @include flex-center;
-}
-
-@mixin link-style($color, $border-bottom) {
-  @if($border-bottom == none) {
+@mixin link-style($color, $className) {
+  .#{$className}-link {
+    column-gap: 8px;
     color: $color;
-  } @else {
-    color: $color;
-    border-bottom: 1px solid $color;
+    font-size: 14px;
+    border-bottom: transparent 1px solid;
+    cursor: pointer;
+    &:hover {
+      border-bottom: 1px solid $color;
+    }
+    svg {
+      margin-right: 8px;
+    }
   }
-  font-size: 14px;
 }
 
+@include link-style($white-link-color, "white");
+@include link-style($blue-link-color, "blue");
 
-.white-link {
-  @include link-style($white-link-color, none);
-  @extend .links;
-}
-
-.blue-link {
-  @include link-style($blue-link-color, none);
-  @extend .links;
-}
-
-.white-link-underlined {
-  @include link-style($white-link-color, 1);
-  @extend .links;
-}
-
-.blue-link-underlined {
-  @include link-style($blue-link-color, 1);
-  @extend .links;
-}
-
-.arrow-white-link {
-  @include link-style($white-link-color, none);
-  @extend .arrow-links;
-}
-
-.arrow-blue-link {
-  @include link-style($blue-link-color, none);
-  @extend .arrow-links;
-}
-
-.arrow-white-link-underlined {
-  @include link-style($white-link-color, 1);
-  @extend .arrow-links;
-}
-
-.arrow-blue-link-underlined {
-  @include link-style($blue-link-color, 1);
-  @extend .arrow-links;
-}
