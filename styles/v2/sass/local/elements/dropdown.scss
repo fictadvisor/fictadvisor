@@ -5,7 +5,7 @@ $small-dropdown-width:200px;
 $medium-dropdown-width:308px;
 $large-dropdown-width:480px;
 $dropdown-option-height:36px;
-$dropdown-menu-height:160px;
+$dropdown-menu-height:240px;
 $dropdown-header-height:52px;
 $dropdown-option-left-padding:26px;
 $menu-and-input-distance:8px;
@@ -87,7 +87,8 @@ $menu-and-input-distance:8px;
   }
   &__menu{
     z-index: 2 !important;
-    height: $dropdown-menu-height;
+   
+    // height: $dropdown-menu-height;
     width: 100%;
     background-color: $theme-color;
     @include roundcorners;
@@ -95,11 +96,10 @@ $menu-and-input-distance:8px;
     overflow: hidden;
   }
   &__menu-list{
-
     overflow-y: scroll;
     width: 100%;
     padding-top: 8px;
-
+    padding-bottom: 8px;
     &::-webkit-scrollbar{
       width: 12px;
     }
@@ -110,6 +110,9 @@ $menu-and-input-distance:8px;
     }
   }
   &__option{
+    padding-top: 5px;
+    padding-bottom: 5px;
+
     display: flex !important;
     align-items: center !important;
     height: $dropdown-option-height;
