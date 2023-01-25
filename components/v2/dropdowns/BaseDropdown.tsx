@@ -5,7 +5,7 @@ const leftInputPadding = 26; //in px
 const hoveredOption = '#404040';
 const themeColor = '#1E1E1E';
 const dropDownOptionHeight = 36; //px
-const maxMenuHeight = 36 * 6 + 8; //8 - padding 
+const padding=8; //]px 
 
 export enum DropDownClasses{
     ERROR='error',
@@ -27,6 +27,7 @@ export interface BaseDropdownProps {
     noOptionsText?: string,
     disabledPlaceholder?: string,
     size?: 'small' | 'medium' | 'large',
+    numberOfOptions?:number
 }
 
 export const BaseDropdown: React.FC<BaseDropdownProps> = (
@@ -37,6 +38,7 @@ export const BaseDropdown: React.FC<BaseDropdownProps> = (
         icon,
         placeholder = className===DropDownClasses.DISABLED?'Недоступно...':'Тиць...',
         noOptionsText = 'Опції відсутні',
+        numberOfOptions=4
     }) => {
 
     const [selectedOption, setSelectedOption] = useState(null);
@@ -88,7 +90,7 @@ export const BaseDropdown: React.FC<BaseDropdownProps> = (
             isSearchable={true}
             isClearable={false}
             placeholder={placeholder}
-            maxMenuHeight={maxMenuHeight}
+            maxMenuHeight={dropDownOptionHeight*numberOfOptions+padding*2}
             minMenuHeight={dropDownOptionHeight}
             unstyled={true}
             openMenuOnClick={true}
