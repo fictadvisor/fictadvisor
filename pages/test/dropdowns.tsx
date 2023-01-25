@@ -1,4 +1,4 @@
-import { GroupIcon } from "../../components/v2/icons/GroupIcon";
+import { GroupIcon } from "../../components/v2/svg-icons/GroupIcon";
 
 import {
   DropDownClass,
@@ -26,6 +26,24 @@ function dropdowns() {
     <div className="test-page-wrap">
       <form action="pages">
         <div className="App">
+        <Dropdown
+            options={options}
+            label="large"
+            icon={GroupIcon}
+            size={DropDownSize.LARGE}
+          />
+        <Dropdown
+            options={options}
+            label="medium"
+            icon={GroupIcon}
+            size={DropDownSize.MEDIUM}
+          />
+        <Dropdown
+            options={options}
+            label="small"
+            icon={GroupIcon}
+            size={DropDownSize.SMALL}
+        />
         <Dropdown
             options={options}
             label="large"
