@@ -4,6 +4,9 @@ import { CreateSubjectBodyDTO } from "./dto/CreateSubjectBodyDTO";
 import { GetListOfSubjectsDTO } from "./dto/GetListOfSubjectsDTO";
 import { GetTeachersBySubjectDTO } from "./dto/GetTeachersBySubjectDTO";
 import { UpdateDisciplineBody } from "./dto/UpdateDisciplineBody";
+import { CreateSubjectBody } from "./dto/CreateSubjectBody";
+import { CreateSubjectDTO } from "./dto/CreateSubjectDTO";
+import { UpdateSubjectBody } from "./dto/UpdateSubjectBody";
 
 export class SubjectsAPI {
 
@@ -36,5 +39,13 @@ export class SubjectsAPI {
             body,
             getAuthorizationHeader(accessToken));
     }
+
+  static async createSubject(accessToken: string, body: CreateSubjectBody): Promise<CreateSubjectDTO> {
+    return (await client.post('/v2/subjects', body)).data;
+  }
+
+  static async updateSubject(accessToken: string, subjectId: string, body: UpdateSubjectBody) {
+    return (await client.patch(`/v2/subjects/${subjectId}`, body)).data;
+  }
 }
 
