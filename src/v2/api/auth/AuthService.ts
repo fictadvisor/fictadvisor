@@ -191,7 +191,7 @@ export class AuthService {
       to: email,
       subject: 'Відновлення паролю на fictadvisor.com',
       message: 'Для відновлення паролю перейдіть за посиланням нижче. Посилання діє годину.',
-      link: `https://fictadvisor.com/resetPassword/${uuid}`,
+      link: `https://fictadvisor.com/password-recovery/${uuid}`,
     });
 
     setTimeout(() => {
