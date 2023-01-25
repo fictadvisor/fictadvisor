@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import { GetDTO } from '../teacher/dto/GetDTO';
 import { CreateSubjectDTO } from './dto/CreateSubjectDTO';
-import { Subject } from '@prisma/client';
-import { DatabaseUtils } from '../utils/DatabaseUtils';
+import { UpdateSubjectDTO } from './dto/UpdateSubjectDTO';
 import { SubjectRepository } from './SubjectRepository';
+import { QueryAllDTO } from 'src/v2/utils/QueryAllDTO';
 
 @Injectable()
 export class SubjectService {
@@ -13,34 +12,20 @@ export class SubjectService {
     private prisma: PrismaService
   ) {}
 
-  async getAll(body: GetDTO<Subject>) {
-    const search = DatabaseUtils.getSearch<Subject>(body, 'name');
-    const page = DatabaseUtils.getPage(body);
-    const sort = DatabaseUtils.getSort(body);
-
-    return await this.prisma.subject.findMany({
-      ...page,
-      ...sort,
-      where: {
-        ...search,
-      },
-    });
+  async getAll(body: QueryAllDTO) {
+    return this.subjectRepository.getAll(body);
   }
 
   async get(id: string) {
-    return await this.prisma.subject.findUnique({
-      where: {
-        id,
-      },
-    });
+    return this.subjectRepository.getSubject(id);
   }
 
   async create({ name }: CreateSubjectDTO) {
-    return await this.prisma.subject.create({
-      data:  {
-        name,
-      },
-    });
+    return this.subjectRepository.create(name);
+  }
+
+  async update(id: string, body: UpdateSubjectDTO) {
+    await this.subjectRepository.update(id, body);
   }
 
   async deleteSubject(id: string) {
