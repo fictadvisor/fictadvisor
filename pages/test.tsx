@@ -1,67 +1,50 @@
+import { Check, CheckState } from "../components/v2/Check";
+import { GroupRadio, RadioState } from "../components/v2/GroupRadio";
+import Switch, { SwitchType, SwitchTextPosition } from "../components/v2/Switch";
 
-interface OwnProps {}
+interface OwnProps { }
 
 type Props = OwnProps;
 
-function test(){
+function test() {
 
-  return(
-    <div id="container">
-        <h1> This is header 1</h1>
-        <hr/>
-        <h2> This is header 2</h2>
-        <hr/>
-        <h3> This is header 3</h3>
-        <hr/>
-        <h4> This is header 4</h4>
-        <hr/>
-        <h5> This is header 5</h5>
-        <hr/>
-        <h6> This is header 6</h6>
-        <hr/>
-        <p className="body-secondary">Body Secondary</p>
-        <hr/>
-        <p className="body-primary">Body Primary</p>
-        <hr/>
-        <p className="overline-text">Overline</p>
-        <hr/>
-        <div className="button-container">
-              <button className="large-button"> Default </button>
-              <button className="large-button" disabled={true}> Disabled </button>
+    let radios = [
+        {
+            state: RadioState.DEFAULT,
+            text: "Default text ",
+        },
+        {
+            state: RadioState.DISABLED,
+            text: "Disabled",
+            isDisabled: true,
+        },
+        {
+            state: RadioState.DISABLED,
+            text: "Disabled",
+            isChecked: true,
+            isDisabled: true,
+
+        },
+        {
+            state: RadioState.ERROR,
+            text: "Error",
+        },
+    ];
+
+    return (
+        <div id="container">
+            <Switch type={SwitchType.WEB} text="Hello" textPosition={SwitchTextPosition.LEFT}></Switch>
+            <Switch type={SwitchType.MOBILE} text="Biden" textPosition={SwitchTextPosition.RIGHT}></Switch>
+
+            <Check state={CheckState.DEFAULT} text="Default"></Check>
+            <Check state={CheckState.ERROR} text="Error"></Check>
+            <Check state={CheckState.DISABLED} text="Disabled" isDisabled={true}></Check>
+            <Check state={CheckState.DISABLED} text="Disabled" isDisabled={true} isChecked={true}></Check>
+        
+            <GroupRadio options={radios}></GroupRadio>
+
         </div>
-        <hr/>
-        <div className="button-container">
-            <button className="medium-button"> Default </button>
-            <button className="medium-button" disabled={true}> Disabled </button>
-        </div>
-        <hr/>
-        <div className="button-container">
-            <button className="small-button">
-                Default
-            </button>
-            <button className="small-button" disabled={true}> Disabled </button>
-        </div>
-        <hr/>
-        <form>
-            <div className="field">
-                <label> Label </label>
-                <input placeholder="Placeholder"/>
-            </div>
-            <div className="disabled-field">
-                <label> Label </label>
-                <input placeholder="Placeholder"/>
-            </div>
-            <div className="success-field">
-                <label> Label </label>
-                <input placeholder="Placeholder"/>
-            </div>
-            <div className="error-field">
-                <label> Label </label>
-                <input placeholder="Placeholder"/>
-            </div>
-        </form>
-    </div>
-  );
+    );
 }
 
 export default test;
