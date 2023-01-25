@@ -1,4 +1,4 @@
-import GroupIcon from "../../components/v2/icons/GroupIcon";
+import { GroupIcon } from "../../components/v2/icons/GroupIcon";
 import { SmallDropdown } from "../../components/v2/dropdowns/SmallDropdown";
 import { MediumDropdown } from "../../components/v2/dropdowns/MediumDropdown";
 import { LargeDropdown } from "../../components/v2/dropdowns/LargeDropdown";
@@ -27,20 +27,20 @@ function dropdowns() {
         <div className="test-page-wrap">
             <form action="pages">
                 <div className="App">
-                    <SmallDropdown options={options} label="Вчителі"/>
-                    <MediumDropdown options={options}  label="medium" />
+                    <SmallDropdown options={options} label="Вчителі" />
+                    <MediumDropdown options={options} label="medium" />
                     <LargeDropdown options={options} label="large" />
                     <SmallDropdown options={options} label="small" icon={GroupIcon} />
-                    <MediumDropdown options={options}  label="medium" icon={GroupIcon} />
+                    <MediumDropdown options={options} label="medium" icon={GroupIcon} />
                     <LargeDropdown options={options} label="large" icon={GroupIcon} />
                     <SmallDropdown options={options} label="Вчителі" className={DropDownClasses.SUCCES} />
-                    <MediumDropdown options={options}  label="medium" className={DropDownClasses.SUCCES} />
+                    <MediumDropdown options={options} label="medium" className={DropDownClasses.SUCCES} />
                     <LargeDropdown options={options} label="large" className={DropDownClasses.SUCCES} />
                     <SmallDropdown options={options} label="small" icon={GroupIcon} className={DropDownClasses.ERROR} />
-                    <MediumDropdown options={options}  label="medium" icon={GroupIcon} className={DropDownClasses.ERROR} />
+                    <MediumDropdown options={options} label="medium" icon={GroupIcon} className={DropDownClasses.ERROR} />
                     <LargeDropdown options={options} label="large" icon={GroupIcon} className={DropDownClasses.ERROR} />
                     <SmallDropdown options={options} label="small" icon={GroupIcon} className={DropDownClasses.DISABLED} />
-                    <MediumDropdown options={options}  label="medium" icon={GroupIcon} className={DropDownClasses.DISABLED}/>
+                    <MediumDropdown options={options} label="medium" icon={GroupIcon} className={DropDownClasses.DISABLED} />
                     <LargeDropdown options={options} label="large" icon={GroupIcon} className={DropDownClasses.DISABLED} />
                 </div>
             </form>
