@@ -1,8 +1,10 @@
-import { GroupIcon } from "../../../components/v2/icons/GroupIcon";
-import { SmallDropdown } from "../../../components/v2/dropdowns/SmallDropdown";
-import { MediumDropdown } from "../../../components/v2/dropdowns/MediumDropdown";
-import { LargeDropdown } from "../../../components/v2/dropdowns/LargeDropdown";
-import { DropDownClasses } from "../../../components/v2/dropdowns/BaseDropdown";
+import { GroupIcon } from "../../components/v2/svg-icons/GroupIcon";
+
+import {
+  DropDownClass,
+  DropDownSize,
+  Dropdown,
+} from "../../components/v2/Dropdown";
 
 function dropdowns() {
   const options = [
@@ -22,80 +24,89 @@ function dropdowns() {
 
   return (
     <div className="test-page-wrap">
-      <form action="pages/v1">
+      <form action="pages">
         <div className="App">
-          <SmallDropdown
-            options={options}
-            label="Вчителі"
-            numberOfOptions={6}
-          />
-          <MediumDropdown
-            options={options}
-            label="Вчителі"
-            numberOfOptions={6}
-          />
-          <LargeDropdown
-            options={options}
-            label="Вчителі"
-            numberOfOptions={6}
-          />
-          <SmallDropdown options={options} label="Вчителі" />
-          <MediumDropdown options={options} label="Вчителі" />
-          <LargeDropdown options={options} label="Вчителі" />
-          <SmallDropdown options={options} label="small" icon={GroupIcon} />
-          <MediumDropdown options={options} label="medium" icon={GroupIcon} />
-          <LargeDropdown options={options} label="large" icon={GroupIcon} />
-          <SmallDropdown
-            options={options}
-            label="Вчителі"
-            className={DropDownClasses.SUCCESS}
-          />
-          <MediumDropdown
-            options={options}
-            label="medium"
-            className={DropDownClasses.SUCCESS}
-          />
-          <LargeDropdown
+        <Dropdown
             options={options}
             label="large"
-            className={DropDownClasses.SUCCESS}
+            icon={GroupIcon}
+            size={DropDownSize.LARGE}
           />
-          <SmallDropdown
+        <Dropdown
+            options={options}
+            label="medium"
+            icon={GroupIcon}
+            size={DropDownSize.MEDIUM}
+          />
+        <Dropdown
             options={options}
             label="small"
             icon={GroupIcon}
-            className={DropDownClasses.ERROR}
-          />
-          <MediumDropdown
-            options={options}
-            label="medium"
-            icon={GroupIcon}
-            className={DropDownClasses.ERROR}
-          />
-          <LargeDropdown
+            size={DropDownSize.SMALL}
+        />
+        <Dropdown
             options={options}
             label="large"
             icon={GroupIcon}
-            className={DropDownClasses.ERROR}
+            className={DropDownClass.DISABLED}
+            size={DropDownSize.LARGE}
           />
-          <SmallDropdown
+        <Dropdown
+            options={options}
+            label="medium"
+            icon={GroupIcon}
+            className={DropDownClass.DISABLED}
+            size={DropDownSize.MEDIUM}
+          />
+        <Dropdown
             options={options}
             label="small"
             icon={GroupIcon}
-            className={DropDownClasses.DISABLED}
-          />
-          <MediumDropdown
-            options={options}
-            label="medium"
-            icon={GroupIcon}
-            className={DropDownClasses.DISABLED}
-          />
-          <LargeDropdown
+            className={DropDownClass.DISABLED}
+            size={DropDownSize.SMALL}
+        />
+               <Dropdown
             options={options}
             label="large"
             icon={GroupIcon}
-            className={DropDownClasses.DISABLED}
+            className={DropDownClass.SUCCES}
+            size={DropDownSize.LARGE}
           />
+        <Dropdown
+            options={options}
+            label="medium"
+            icon={GroupIcon}
+            className={DropDownClass.SUCCES}
+            size={DropDownSize.MEDIUM}
+          />
+        <Dropdown
+            options={options}
+            label="small"
+            icon={GroupIcon}
+            className={DropDownClass.SUCCES}
+            size={DropDownSize.SMALL}
+        />
+                     <Dropdown
+            options={options}
+            label="large"
+            icon={GroupIcon}
+            className={DropDownClass.ERROR}
+            size={DropDownSize.LARGE}
+          />
+        <Dropdown
+            options={options}
+            label="medium"
+            icon={GroupIcon}
+            className={DropDownClass.ERROR}
+            size={DropDownSize.MEDIUM}
+          />
+        <Dropdown
+            options={options}
+            label="small"
+            icon={GroupIcon}
+            className={DropDownClass.ERROR}
+            size={DropDownSize.SMALL}
+        />
         </div>
       </form>
     </div>
