@@ -55,9 +55,9 @@ model GroupRole {
 model Student {
   user                 User                  @relation(fields: [userId], references: [id])
   userId               String                @unique @map("user_id")
-  firstName            String                @map("first_name")
+  firstName            String?               @map("first_name")
   middleName           String?               @map("middle_name")
-  lastName             String                @map("last_name")
+  lastName             String?               @map("last_name")
   groupId              String                @map("group_id")
   group                Group                 @relation(fields: [groupId], references: [id])
   selectiveDisciplines SelectiveDiscipline[]
