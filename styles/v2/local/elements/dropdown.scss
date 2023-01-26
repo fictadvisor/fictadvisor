@@ -1,137 +1,127 @@
-$theme-color:$dark-primary;
+$theme-color: $dark-primary;
 
 //dropdown-sizings
-$small-dropdown-width:200px;
-$medium-dropdown-width:308px;
-$large-dropdown-width:480px;
-$dropdown-option-height:36px;
-$dropdown-menu-height:240px;
-$dropdown-header-height:52px;
-$dropdown-option-left-padding:26px;
-$menu-and-input-distance:8px;
+$small-dropdown-width: 200px;
+$medium-dropdown-width: 308px;
+$large-dropdown-width: 480px;
+$dropdown-option-height: 36px;
+$dropdown-menu-height: 240px;
+$dropdown-header-height: 52px;
+$dropdown-option-left-padding: 26px;
+$default-dropdown-padding: 8px;
 
-@mixin roundcorners($radius:10px,$color:$light-primary){
+@mixin roundcorners($radius: 10px, $color: $light-primary) {
   border-radius: $radius;
   border: 2px solid $color;
 }
 
-.dropdown{
+.dropdown {
+  margin: 1rem;
+  display: flex;
+  flex-direction: column;
   position: relative;
-  margin-bottom: 16px;
-  & span{
+
+  & span {
     position: absolute;
-    display: block;
     left: 8px;
     z-index: 1;
     top: 0;
     background-color: $theme-color;
     transform: translateY(-50%);
     padding: 0 8px;
-
-    &.dropdown-success-label{
-      color: $success-color;
-    }
-    &.dropdown-error-label{
-      color: $error-color;
-    }
-    &.dropdown-disabled-label{
-      color: $disabled-button-color;
+  }
+}
+.dropdown- {
+  &control {
+    padding: 0 $dropdown-option-left-padding;
+    &-iconed {
+      padding-left: $dropdown-option-left-padding + 15px;
     }
   }
-
-
-  &-container-small{
-    width: $small-dropdown-width;
-  }
-
-  &-container-medium{
-    width: $medium-dropdown-width;
-  }
-
-  &-container-large{
-    width: $large-dropdown-width;
-  }
-
-  &-container-large,&-container-medium,&-container-small{
+  &container {
+    background-color: $theme-color;
     @include roundcorners;
-
-    &.dropdown-success{
+    &-success{
       border-color: $success-color;
     }
-    &.dropdown-error{
+    &-error{
       border-color: $error-color;
     }
-    &.dropdown-disabled{
+    &-disabled{
       border-color: $disabled-button-color;
     }
 
-    height: $dropdown-header-height;
-    display: flex;
-    justify-content: space-around;
-
   }
 
-
-  &__control{
-    background-color: transparent;
-    @include flex-center;
-    width: 100%;
-    padding: 0 $dropdown-option-left-padding;
-    justify-content: space-between;
-  }
-  &__value-container{
+  &menu {
+    margin-top: $default-dropdown-padding;
+    padding: $default-dropdown-padding 0;
     background-color: $theme-color;
-  }
-  &__single-value{
-    width: 70% !important;
-  }
-  &__menu{
     z-index: 2 !important;
-   
-    // height: $dropdown-menu-height;
-    width: 100%;
-    background-color: $theme-color;
     @include roundcorners;
-    margin-top: $menu-and-input-distance !important;
-    overflow: hidden;
   }
-  &__menu-list{
-    overflow-y: scroll;
-    width: 100%;
-    padding-top: 8px;
-    padding-bottom: 8px;
-    &::-webkit-scrollbar{
+  &menu-list {
+    overflow-x: hidden;
+    &::-webkit-scrollbar {
       width: 12px;
     }
-    &::-webkit-scrollbar-thumb{
+    &::-webkit-scrollbar-thumb {
       background-color: #d6dee1;
       border: 5px solid transparent;
       background-clip: content-box;
     }
   }
-  &__option{
-    padding-top: 5px;
-    padding-bottom: 5px;
-
-    display: flex !important;
-    align-items: center !important;
+  &option {
+    padding: 5px 0 5px $dropdown-option-left-padding;
     height: $dropdown-option-height;
-    padding-left:$dropdown-option-left-padding;
     &:hover{
-      background-color: $grey-dropdown;
-      transition: background-color .2s linear;
+      background-color: #404040;
       cursor: pointer;
+    };
+    &-selected {
+      background-color: #404040;
     }
   }
-
+  &indicator {
+    transition: transform .2s linear;
+    &-rotated {
+      transition: transform .2s linear;
+      transform: rotate(180deg);
+    }
+  }
+  &placeholder {
+    &-disabled{
+      color: $disabled-button-color;
+    }
+  }
+  &success-label{
+    color: $success-color;
+  }
+  &error-label{
+    color: $error-color;
+  }
+  &disabled-label{
+    color: $disabled-button-color;
+  }
 }
-
-
-.dropdown-icon-container{
+.dropdown-icon-container {
   position: absolute;
   bottom: 0;
   left: 0;
-  transform: translateY(-60%)translateX(60%);
+  transform: translateY(-40%) translateX(50%);
   height: 24px;
   width: 24px;
+  z-index: 1;
+}
+
+
+.test-wrap-50{
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+}
+.test-wrap-25{
+  display: flex;
+  flex-direction: column;
+  width: 25%;
 }
