@@ -11,6 +11,7 @@ import { ScheduleRepository } from '../api/schedule/ScheduleRepository';
 import { RoleRepository } from '../api/user/role/RoleRepository';
 import { GrantRepository } from '../api/user/grant/GrantRepository';
 import { StudentRepository } from '../api/user/StudentRepository';
+import {QuestionRepository} from "../api/poll/QuestionRepository";
 
 @Module({
   providers: [
@@ -26,6 +27,7 @@ import { StudentRepository } from '../api/user/StudentRepository';
     RoleRepository,
     GrantRepository,
     StudentRepository,
+    QuestionRepository,
   ],
   exports: [
     PrismaService,
@@ -40,6 +42,7 @@ import { StudentRepository } from '../api/user/StudentRepository';
     RoleRepository,
     GrantRepository,
     StudentRepository,
+    QuestionRepository,
   ],
 })
 export class PrismaModule {}
