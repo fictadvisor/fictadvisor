@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../../database/PrismaService';
 import { JwtPayload } from '../../security/JwtPayload';
 import { SecurityConfigService } from '../../config/SecurityConfigService';
-import { State, User } from '@prisma/client';
+import { User } from '@prisma/client';
 import { TokensDTO } from './dto/TokensDTO';
 import { RegistrationDTO, TelegramDTO } from './dto/RegistrationDTO';
 import { createHash, createHmac } from 'crypto';
@@ -243,7 +243,7 @@ export class AuthService {
       message: 'Для верифікації пошти перейдіть за посиланням нижче. Посилання діє годину.',
       link: `https://fictadvisor.com/register/email-verification/${uuid}`,
     });
-    
+
     setTimeout(() => {
       this.verificateEmailTokens.delete(uuid);
       this.userRepository.deleteByEmail(email);
