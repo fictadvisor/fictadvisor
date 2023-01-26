@@ -1,9 +1,15 @@
-import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards, Patch } from '@nestjs/common';
 import { TeacherService } from './TeacherService';
-import { GetDTO } from './dto/GetDTO';
+import { QueryAllDTO } from '../../utils/QueryAllDTO';
 import { CreateTeacherDTO } from './dto/CreateTeacherDTO';
-import { Teacher } from '@prisma/client';
+import { UpdateTeacherDTO } from './dto/UpdateTeacherDTO';
+import { CreateContactDTO } from './dto/CreateContactDTO';
+import { UpdateContactDTO } from './dto/UpdateContactDTO';
 import { JwtGuard } from '../../security/JwtGuard';
+import { Permission } from 'src/v2/security/permission-guard/Permission';
+import { PermissionGuard } from 'src/v2/security/permission-guard/PermissionGuard';
+import { TeacherByIdPipe } from './dto/TeacherByIdPipe';
+import { ContactByNamePipe } from './dto/ContactByNamePipe';
 
 @Controller({
   version: '2',
@@ -14,29 +20,93 @@ export class TeacherController {
     private teacherService: TeacherService,
   ) {}
 
+
+  @UseGuards(JwtGuard)
   @Get()
-  async getAll(@Query() body: GetDTO<Teacher>) {
-    return this.teacherService.getAll(body);
+  getAll(
+    @Query() query: QueryAllDTO,
+  ) {
+    return this.teacherService.getAll(query);
+  }
+  
+  @UseGuards(JwtGuard)
+  @Get('/:teacherId')
+  getTeacher(
+    @Param('teacherId', TeacherByIdPipe) teacherId: string,
+  ) {
+    return this.teacherService.getTeacher(teacherId);
   }
 
+  @Permission('teachers.$teacherId.create')
+  @UseGuards(JwtGuard, PermissionGuard)
   @Post()
-  async create(@Body() body: CreateTeacherDTO) {
+  create(
+    @Body() body: CreateTeacherDTO,
+  ) {
     return this.teacherService.create(body);
   }
 
-  @Get('/:teacherId')
-  async get(
-    @Param('teacherId') teacherId: string,
+  @Permission('teachers.$teacherId.update')
+  @UseGuards(JwtGuard, PermissionGuard)
+  @Patch('/:teacherId')
+  async update(
+    @Param('teacherId', TeacherByIdPipe) teacherId: string,
+    @Body() body: UpdateTeacherDTO,
   ) {
-    return this.teacherService.get(teacherId);
+    return this.teacherService.update(teacherId, body);
   }
 
-  @UseGuards(JwtGuard)
+  @Permission('teachers.$teacherId.delete')
+  @UseGuards(JwtGuard, PermissionGuard)
   @Delete('/:teacherId')
   async delete(
-    @Param('teacherId') teacherId: string,
+    @Param('teacherId', TeacherByIdPipe) teacherId: string,
   ) {
     return this.teacherService.delete(teacherId);
   }
 
+  @UseGuards(JwtGuard)
+  @Get('/:teacherId/contacts')
+  getAllContacts(
+    @Param('teacherId', TeacherByIdPipe) teacherId: string,
+  ) {
+    return this.teacherService.getAllContacts(teacherId);
+  }
+
+  @UseGuards(JwtGuard)
+  @Get('/:teacherId/contacts/:name')
+  getContact(
+    @Param(ContactByNamePipe) [teacherId, name]: string[],
+  ) {
+    return this.teacherService.getContact(teacherId, name);
+  }
+
+  @Permission('teachers.$teacherId.contacts.create')
+  @UseGuards(JwtGuard, PermissionGuard)
+  @Post('/:teacherId/contacts')
+  createContact(
+    @Param('teacherId', TeacherByIdPipe) teacherId: string,
+    @Body() body: CreateContactDTO,
+  ){
+    return this.teacherService.createContact(teacherId, body);
+  }
+
+  @Permission('teachers.$teacherId.contacts.update')
+  @UseGuards(JwtGuard, PermissionGuard)
+  @Patch('/:teacherId/contacts/:name')
+  async updateContact(
+    @Param(ContactByNamePipe) [teacherId, name]: string[],
+    @Body() body: UpdateContactDTO,
+  ){
+    return this.teacherService.updateContact(teacherId, name, body);
+  }
+
+  @Permission('teachers.$teacherId.contacts.delete')
+  @UseGuards(JwtGuard, PermissionGuard)
+  @Delete('/:teacherId/contacts/:name')
+  async deleteContact(
+    @Param(ContactByNamePipe) [teacherId, name]: string[],
+  ){
+    return this.teacherService.deleteContact(teacherId, name);
+  }
 }
