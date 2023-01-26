@@ -8,6 +8,7 @@ import { TokensDTO } from './dto/TokensDTO';
 import { RegistrationDTO, TelegramDTO } from './dto/RegistrationDTO';
 import { createHash, createHmac } from 'crypto';
 import { TelegramConfigService } from '../../config/TelegramConfigService';
+import {UserRepository } from '../user/UserRepository'; 
 import { InvalidTelegramCredentialsException } from '../../utils/exceptions/InvalidTelegramCredentialsException';
 import { UpdatePasswordDTO } from './dto/UpdatePasswordDTO';
 import * as crypto from 'crypto';
@@ -32,6 +33,7 @@ export class AuthService {
     private securityConfig: SecurityConfigService,
     private telegramConfig: TelegramConfigService,
     private emailService: EmailService,
+    private userRepository: UserRepository,
   ) {}
 
   async validateUser(username: string, password: string) {
@@ -219,7 +221,7 @@ export class AuthService {
     this.resetPasswordTokens.delete(token);
   }
 
-  async verificateEmail (email: string) {
+  async requestEmailVerification (email: string) {
     const uuid = crypto.randomUUID();
     for (const [token, value] of this.verificateEmailTokens.entries()) {
       if (value.email === email) {
@@ -241,30 +243,19 @@ export class AuthService {
       message: 'Для верифікації пошти перейдіть за посиланням нижче. Посилання діє годину.',
       link: `https://fictadvisor.com/register/email-verification/${uuid}`,
     });
-
+    
     setTimeout(() => {
       this.verificateEmailTokens.delete(uuid);
-      this.prisma.user.delete({
-        where: {
-          email: email,
-        },
-      });
+      this.userRepository.deleteByEmail(email);
     }, HOUR);
   }
   
-  async emailVerification(token: string) {
+  async verificateEmail(token: string) {
     if (!this.verificateEmailTokens.has(token)) {
       throw new InvalidVerificationTokenException();
     }
-
-    await this.prisma.user.update({
-      where: {
-        email: this.verificateEmailTokens.get(token).email,
-      },
-      data: {
-        state: State.APPROVED,
-      },
-    });
+    const email = this.verificateEmailTokens.get(token).email;
+    this.userRepository.verificate(email);
 
     this.verificateEmailTokens.delete(token);
   }

@@ -59,7 +59,7 @@ export class AuthController {
     return this.authService.forgotPassword(body.email);
   }
 
-  @Post('/password-recovery/:token')
+  @Post('/resetPassword/:token')
   async resetPassword(
     @Param('token') token: string,
     @Body() body: ResetPasswordDTO,
@@ -68,16 +68,16 @@ export class AuthController {
   }
 
   @Post('/register/verificateEmail')
-  async verificateEmail(
+  async requestEmailVerification(
     @Body() body: VerificateEmailDTO,
   ) {
-    return this.authService.verificateEmail(body.email);
+    return this.authService.requestEmailVerification(body.email);
   }
 
   @Post('/register/email-verification/:token')
-  async emailVerification(
+  async verificateEmail(
     @Param('token') token: string,
   ) {
-    return this.authService.emailVerification(token);
+    return this.authService.verificateEmail(token);
   }
 }
