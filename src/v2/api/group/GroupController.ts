@@ -1,11 +1,11 @@
-import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Post, Query, UseGuards} from '@nestjs/common';
 import { GroupService } from './GroupService';
 import { CreateDTO } from './dto/CreateDTO';
-import { GetDTO } from '../teacher/dto/GetDTO';
 import { GroupByIdPipe } from './GroupByIdPipe';
 import { Group } from '@prisma/client';
 import { JwtGuard } from '../../security/JwtGuard';
 import { GroupByParamsGuard } from '../../security/group-guard/GroupByParamsGuard';
+import {QueryAllDTO} from "../../utils/QueryAllDTO";
 
 @Controller({
   version: '2',
@@ -22,8 +22,11 @@ export class GroupController {
   }
 
   @Get()
-  getAll(@Query() body: GetDTO<Group>) {
-    return this.groupService.getAll(body);
+  async getAll(@Query() body: QueryAllDTO) {
+    const groups = await this.groupService.getAll(body);
+    return {
+      groups,
+    };
   }
 
   @Get('/:groupId')
@@ -51,4 +54,27 @@ export class GroupController {
     return { disciplines };
   }
 
+  @UseGuards(JwtGuard, GroupByParamsGuard)
+  @Get('/:groupId/captain')
+  async getCaptain(
+      @Param('groupId') groupId: string,
+  ){
+    return this.groupService.getCaptain(groupId);
+  }
+
+  @UseGuards(JwtGuard, GroupByParamsGuard)
+  @Delete('/:groupId')
+  async deleteGroup(
+      @Param('groupId') groupId: string,
+  ){
+    return this.groupService.deleteGroup(groupId);
+  }
+
+  @UseGuards(JwtGuard, GroupByParamsGuard)
+  @Get()
+  async getStudents(
+      @Param('groupId') groupId: string,
+  ){
+    return this.groupService.getStudents(groupId);
+  }
 }

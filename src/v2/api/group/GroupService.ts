@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
 import { Group } from '@prisma/client';
-import { GetDTO } from '../teacher/dto/GetDTO';
-import { DatabaseUtils } from '../utils/DatabaseUtils';
 import { DisciplineService } from '../discipline/DisciplineService';
 import { DisciplineRepository } from '../discipline/DisciplineRepository';
 import { GroupRepository } from './GroupRepository';
+import { RoleRepository } from "../user/role/RoleRepository";
+import { StudentRepository } from "../user/StudentRepository";
+import {QueryAllDTO} from "../../utils/QueryAllDTO";
 
 @Injectable()
 export class GroupService {
@@ -14,36 +15,20 @@ export class GroupService {
     private disciplineRepository: DisciplineRepository,
     private groupRepository: GroupRepository,
     private prisma: PrismaService,
+    private roleRepository: RoleRepository,
+    private studentRepository: StudentRepository,
   ) {}
 
   async create(code: string): Promise<Group>  {
-    return await this.prisma.group.create({
-      data: {
-        code,
-      },
-    });
+    return await this.groupRepository.create(code);
   }
 
-  async getAll(body: GetDTO<Group>) {
-    const search = DatabaseUtils.getSearch<Group>(body, 'code');
-    const page = DatabaseUtils.getPage(body);
-    const sort = DatabaseUtils.getSort(body);
-
-    return await this.prisma.group.findMany({
-      ...page,
-      ...sort,
-      where: {
-        ...search,
-      },
-    });
+  async getAll(body: QueryAllDTO) {
+    return this.groupRepository.getAll(body);
   }
 
   async get(id: string) {
-    return await this.prisma.group.findUnique({
-      where: {
-        id,
-      },
-    });
+    return this.groupRepository.getGroup(id);
   }
 
   async getDisciplineTeachers(groupId: string) {
@@ -69,4 +54,26 @@ export class GroupService {
 
     return results;
   }
+
+  async getCaptain(groupId: string) {
+    const students = await this.groupRepository.getStudents(groupId);
+    for (const student of students) {
+      const roles = await this.studentRepository.getRoles(student.userId);
+      for (const role of roles){
+        if (String(role) == "captain"){
+          return student;
+        }
+      }
+    }
+
+  }
+
+  async deleteGroup(groupId: string) {
+    await this.groupRepository.delete(groupId);
+  }
+
+  async getStudents(groupId: string) {
+    await this.groupRepository.getStudents(groupId);
+  }
+
 }

@@ -1,5 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
+import {Group} from "@prisma/client";
+import {QueryAllDTO} from "../../utils/QueryAllDTO";
+import {DatabaseUtils} from "../utils/DatabaseUtils";
 
 @Injectable()
 export class GroupRepository {
@@ -16,6 +19,28 @@ export class GroupRepository {
         disciplines: true,
         students: true,
         groupRole: true,
+      },
+    });
+  }
+
+  async getAll(body: QueryAllDTO) {
+    const search = DatabaseUtils.getSearch(body, 'code');
+    const page = DatabaseUtils.getPage(body);
+    const sort = DatabaseUtils.getSort(body);
+
+    return await this.prisma.group.findMany({
+      ...page,
+      ...sort,
+      where: {
+        ...search,
+      },
+    });
+  }
+
+  async delete(id: string): Promise<Group>  {
+    return await this.prisma.group.delete({
+      where: {
+        id,
       },
     });
   }
