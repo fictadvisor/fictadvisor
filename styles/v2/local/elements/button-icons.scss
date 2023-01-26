@@ -7,12 +7,67 @@
   justify-content: center;
 }
 
-.buttons-style {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 6px;
+@mixin button-set($size) {
+  @if ($size == big) {
+    width: 98px;
+    height: 32px;
 
+    &:hover {
+      background-color: $dark-red-button;
+      border: 1px solid $dark-red-button;
+    }
+
+    &:active {
+      background-color: $red-button;
+      border: 1px solid $red-button;
+    }
+
+    &:focus {
+      background-color: $darkest-red-button;
+      border: 1px solid $red-button-border;
+    }
+
+    &:disabled {
+      background-color: $disabled-grey-button;
+      border: 1px solid $disabled-grey-button;
+      color: $disabled-button-font-color;
+      cursor: default;
+      path {
+        stroke: $disabled-button-font-color;
+      }
+    }
+  } @else {
+    width: 72px;
+    height: 32px;
+
+    &:hover {
+      background-color: $dark-green-button;
+      border: 1px solid $dark-green-button;
+    }
+
+    &:active {
+      background-color: $green-button;
+      border: 1px solid $green-button;
+    }
+
+    &:focus {
+      background-color: $darkest-green-button;
+      border: 1px solid $green-button-border;
+    }
+
+    &:disabled {
+      background-color: $disabled-grey-button;
+      border: 1px solid $disabled-grey-button;
+      color: $disabled-button-font-color;
+      cursor: default;
+      path {
+        stroke: $disabled-button-font-color;
+      }
+    }
+  }
+}
+
+.button-default {
   padding: 4px 8px;
   border-radius: 4px;
 
@@ -21,68 +76,21 @@
   font-weight: 400;
   font-size: 14px;
   line-height: 140%;
+
+  transition: all 0.2s ease-in-out;
+
+  background-color: $grey-button;
+  border: 1px solid $grey-button;
 }
 
-@mixin button-icons($color, $border-color, $size) {
-  @if ($size == big) {
-    width: 98px;
-    height: 32px;
-  } @else {
-    width: 72px;
-    height: 32px;
-  }
-  background-color: $color;
-  border: 1px solid $border-color;
+.big-button button {
+  @include flex-center;
+  @include button-set(big);
+  @extend .button-default;
 }
 
-.grey-button button {
-  @extend .buttons-style;
-  @include button-icons($grey-button, $grey-button, big)
-}
-
-.dark-red-button button {
-  @extend .buttons-style;
-  @include button-icons($dark-red-button, $dark-red-button, big);
-}
-
-.red-button button {
-  @extend .buttons-style;
-  @include button-icons($red-button, $red-button, big);
-}
-
-.darkest-red-button button {
-  @extend .buttons-style;
-  @include button-icons($darkest-red-button, $red-button-border, big);
-}
-
-.disabled-button button {
-  @extend .buttons-style;
-  @include button-icons($disabled-grey-button, $disabled-grey-button, big);
-  color: $disabled-button-font-color;
-}
-
-.grey-small-button button {
-  @extend .buttons-style;
-  @include button-icons($grey-button, $grey-button, small);
-}
-
-.dark-green-button button {
-  @extend .buttons-style;
-  @include button-icons($dark-green-button, $dark-green-button, small);
-}
-
-.green-button button {
-  @extend .buttons-style;
-  @include button-icons($green-button, $green-button, small);
-}
-
-.darkest-green-button button {
-  @extend .buttons-style;
-  @include button-icons($darkest-green-button, $green-button-border, small)
-}
-
-.disabled-small-button button {
-  @extend .buttons-style;
-  @include button-icons($disabled-grey-button, $disabled-grey-button, small);
-  color: $disabled-button-font-color;
+.small-button button {
+  @include flex-center;
+  @include button-set(small);
+  @extend .button-default;
 }
