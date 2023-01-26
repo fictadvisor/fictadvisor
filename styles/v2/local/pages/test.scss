@@ -1,6 +1,6 @@
 @import "../../utils/mixins";
 
-.test-page-wrap{
+.test-page-wrap {
   margin-top: 30px;
   margin-bottom: 70px;
   display: flex;
@@ -8,12 +8,175 @@
   align-items: center;
   justify-content: center;
   gap: 15px;
+  background: #000000;
 }
 
-.test-hr{
+.test-hr {
   width: 100%;
 }
 
+// tabs
+.tab {
+  display: flex;
+  flex-direction: row;
 
+  align-items: center;
+  padding: 8px 16px;
+  gap: 10px;
 
+  left: 20px;
+  top: 20px;
 
+  background: #1E1E1E;
+}
+
+.tab-disabled {
+  display: flex;
+  flex-direction: row;
+
+  align-items: center;
+  padding: 8px 16px;
+  gap: 10px;
+
+  left: 20px;
+  top: 20px;
+
+  background: #1E1E1E;
+}
+
+.normal {
+  width: 200px;
+  height: 48px;
+}
+
+.small {
+  width: 136px;
+  height: 36px;
+}
+
+.centre {
+  justify-content: center;
+}
+
+.left {
+  // по стандарту вже норм
+}
+
+.tab:hover {
+  background: #292929;
+}
+
+.tab:active {
+  background: #343434;
+}
+
+.tab:focus {
+  background: #1E1E1E;
+
+  border: 1px solid #873030;
+}
+
+// text
+.tab-text {
+  font-style: normal;
+
+  text-align: center;
+
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+}
+
+.normal-text {
+  height: 26px;
+
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 142%;
+
+  color: #FAFAFA;
+}
+
+.small-text {
+  height: 21px;
+
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 132%;
+
+  font-feature-settings: 'case' on, 'kern' off;
+
+  color: #FAFAFA;
+}
+
+.disabled-text {
+  color: #404040;
+}
+
+// icon
+.icon {
+  /* academic-cap */
+
+  width: 24px;
+  height: 24px;
+
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+}
+
+.disabled-icon {
+  @extend .icon;
+  color: #404040;
+}
+
+// count
+
+.count {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 1px 8px;
+
+  width: 23px;
+  height: 23px;
+
+  order: 2;
+  background: #292929;
+  border-radius: 24px;
+}
+
+.tab:hover > .count {
+  background: #343434;
+}
+
+.tab:active > .count {
+  background: #404040;
+
+}
+
+.tab:focus > .count {
+  background: #343434;
+}
+
+.disabled-count {
+  @extend .count;
+  background: #1E1E1E;
+}
+
+.count-text {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 132%;
+
+  text-align: center;
+  font-feature-settings: 'case' on, 'kern' off;
+
+  color: #FAFAFA;
+
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+}
