@@ -56,15 +56,22 @@ export class TeacherService {
   async getAllContacts(
     entityId: string,
   ) {
-    const contacts = this.teacherRepository.getAllContacts(entityId)
-    return {contacts};
+    const contacts = (await this.teacherRepository.getAllContacts(entityId))
+      .map(
+        (c) => ({name: c.name, value: c.value})
+      )
+    return { contacts }
   }
 
   async getContact(
     teacherId: string,
     name: string,
   ) {
-    return this.teacherRepository.getContact(teacherId, name);
+    const contact = await this.teacherRepository.getContact(teacherId, name);
+    return {
+      name: contact.name,
+      value: contact.value,
+    };
   }
 
   async createContact(
