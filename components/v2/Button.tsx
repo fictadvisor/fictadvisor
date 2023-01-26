@@ -48,7 +48,7 @@ interface ButtonProps {
 
 function Button(props: ButtonProps){
     return (
-        <button disabled={props.isDisabled} className={props.className} onClick={() => props.onClick()}>
+        <button disabled={props.isDisabled} className={'button '+props.className} onClick={() => props.onClick()}>
             {props.children}
             {props.text}
         </button>

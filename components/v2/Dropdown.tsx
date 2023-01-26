@@ -7,10 +7,16 @@ const themeColor = '#1E1E1E';
 const dropDownOptionHeight = 36; //px
 const padding=8; // px
 
-export enum DropDownClasses{
+export enum DropDownClass{
     ERROR='error',
     SUCCESS='success',
     DISABLED='disabled'
+}
+
+export enum DropDownSize{
+    SMALL='small',
+    MEDIUM='medium',
+    LARGE='large'
 }
 
 export type DropDownOption = {
@@ -18,7 +24,7 @@ export type DropDownOption = {
     label: string
 }
 
-export interface BaseDropdownProps {
+export interface DropdownProps {
     options: DropDownOption[],
     label: string,
     className?: 'error' | 'success' | 'disabled',
@@ -30,13 +36,13 @@ export interface BaseDropdownProps {
     numberOfOptions?:number
 }
 
-export const BaseDropdown: React.FC<BaseDropdownProps> = (
+export const Dropdown: React.FC<DropdownProps> = (
     { options,
         size,
         label,
         className,
         icon,
-        placeholder = className===DropDownClasses.DISABLED?'Недоступно...':'Тиць...',
+        placeholder = className===DropDownClass.DISABLED?'Недоступно...':'Тиць...',
         noOptionsText = 'Опції відсутні',
         numberOfOptions=4
     }) => {

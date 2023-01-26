@@ -1,6 +1,6 @@
 import Link from "next/dist/client/link";
 import { LinkProps } from "next/link";
-import { LeftArrowIcon } from "./icons/LeftArrowIcn";
+import { LeftArrowIcon } from "./svg-icons/LeftArrowIcon";
 
 export enum LinkColor {
   WHITE = "white-link",
