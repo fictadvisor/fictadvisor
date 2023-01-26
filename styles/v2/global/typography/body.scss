@@ -1,5 +1,3 @@
-@import "../variables/font-weight-variables";
-
 .body-primary{
   font-size: 14px;
   line-height: 18px;
@@ -28,8 +26,33 @@
   font-weight: $font-weight-regular;
 }
 
-.tooltip-body {
-  font-size: 11px;
-  line-height: 17px;
+.default-check-text,
+.disabled-check-text,
+.error-check-text {
+    font-size: 14px;
+    line-height: 19.6px;
+    left: 28px;
+    font-weight: $font-weight-regular;
+    color: $check-default-color;
+}
+
+.default-radio-text, .disabled-radio-text, .error-radio-text {
+  font-size: 14px;
+  line-height: 19.6px;
+  left: 28px;
+  font-weight: $font-weight-regular;
+}
+
+.web-switch-text {
+  font-size: 16px;
+  line-height: 21.76px;
+  padding-top: 2px;
+  font-weight: $font-weight-regular;
+}
+
+.mobile-switch-text {
+  @extend .web-switch-text;
+  font-size: 14px;
+  line-height: 19.6px;
   font-weight: $font-weight-regular;
 }
