@@ -10,7 +10,7 @@ export class ContactByNamePipe implements PipeTransform<string[], Promise<string
   ) {}
 
   async transform([teacherId, name]: string[]): Promise<string[]> {
-    const contact: Contact = await this.teacherService.getContact(teacherId, name);
+    const contact = await this.teacherService.getContact(teacherId, name);
     if (!contact) {
       throw new InvalidEntityIdException('contact');
     }
