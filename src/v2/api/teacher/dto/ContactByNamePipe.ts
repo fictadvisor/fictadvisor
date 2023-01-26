@@ -1,7 +1,6 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
-import { Contact } from '@prisma/client';
 import { TeacherService } from '../TeacherService';
-import { InvalidEntityIdException } from 'src/v2/utils/exceptions/InvalidEntityIdException';
+import { InvalidContactNameException } from 'src/v2/utils/exceptions/InvalidContactNameException';
 
 @Injectable()
 export class ContactByNamePipe implements PipeTransform<string[], Promise<string[]>> {
@@ -12,7 +11,7 @@ export class ContactByNamePipe implements PipeTransform<string[], Promise<string
   async transform([teacherId, name]: string[]): Promise<string[]> {
     const contact = await this.teacherService.getContact(teacherId, name);
     if (!contact) {
-      throw new InvalidEntityIdException('contact');
+      throw new InvalidContactNameException();
     }
     return [teacherId, name];
   }
