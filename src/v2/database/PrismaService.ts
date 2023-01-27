@@ -1,10 +1,15 @@
 import { INestApplication, Injectable, OnModuleInit } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, State } from '@prisma/client';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
   async onModuleInit() {
     await this.$connect();
+    await this.user.deleteMany({
+      where: {
+        state: State.PENDING,
+      },
+    });
   }
 
   async enableShutdownHooks(app: INestApplication) {
