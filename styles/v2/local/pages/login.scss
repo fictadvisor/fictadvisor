@@ -1,15 +1,19 @@
-//*{
-//  border: 0.3px dashed white;
-//}
-
 $left-block-width: 606px;
 $right-block-width: 834px;
+
+@mixin small-button{
+  @extend .small-button;
+}
 
 .login-page{
   width: 100%;
   min-height: calc(100vh);
   @include flex-center;
   padding-bottom: 20px;
+}
+
+.login-button-container{
+  width: fit-content;
 }
 
 
@@ -26,8 +30,9 @@ $right-block-width: 834px;
 }
 
 .right-block{
-  padding-top: 100px;
-  padding-right: 210px;
+  width: 480px;
+  margin-top: 100px;
+  margin-right: 210px;
 }
 
 .left-block__content{
@@ -55,7 +60,7 @@ $right-block-width: 834px;
   }
 
   .right-block{
-    padding-right: 0;
+    margin-right: 0;
   }
 }
 
@@ -73,17 +78,35 @@ $right-block-width: 834px;
 
 @media (max-width: 650px) {
   .login-page__content{
-    padding: 0 10px;
+    padding: 0 20px;
   }
 
   .right-block__content{
     width: 100%;
   }
 
-  .right-block__content > * {
-    width: 90% !important;
-  }
+}
 
+// TODO +2 пікселі
+
+@media (max-width: 400px) {
+  .right-block__content{
+    .large-button{
+      padding: 6px 12px;
+
+      font-size: 14px;
+      line-height: 1.4;
+      gap: 4px;
+    }
+
+    .register-header{
+      font-size: 28px;
+      line-height: 32px;
+      font-weight: $font-weight-bold;
+    }
+
+
+  }
 }
 
 
@@ -91,8 +114,6 @@ $right-block-width: 834px;
   position: relative;
   top: 98px;
 }
-
-
 
 
 .blur-block{
@@ -116,30 +137,13 @@ $right-block-width: 834px;
   margin-bottom: 50px;
 }
 
-
-
+.login-divider{
+  margin-top: 15px;
+}
 
 .register-header{
   text-align: center;
   margin-bottom: 32px
-}
-
-.splitter{
-  width: 100%;
-  margin-top: 32px;
-  hr{
-    width: 100%;
-  }
-  div{
-    position: relative;
-    top: -15px;
-    @include flex-center;
-    p{
-      width: fit-content;
-      background: $dark-primary;
-      padding: 0 24px;
-    }
-  }
 }
 
 .one-line{

@@ -1,4 +1,4 @@
-import {ReactNode} from "react";
+import {ReactNode, useEffect, useRef, useState} from "react";
 
 interface SizeInputProps {
     text: string,
@@ -44,15 +44,24 @@ interface InputProps{
 
 
 export function Input(props: InputProps){
-    let className: string;
+    const [isFocused, setIsFocused] = useState(false);
+    const fieldRef = useRef(null);
+
+    useEffect(() =>{
+        console.log(isFocused);
+        if (isFocused) fieldRef.current.style.color = "#FFFFFF"
+        else           fieldRef.current.style.color = "inherit"
+    });
 
     return (
         <div className={props.state}>
-            <label> {props.label} </label>
-            <input placeholder={props.placeholder}/>
+            <label ref={fieldRef}> {props.label} </label>
+            <input placeholder={props.placeholder}
+                   onFocus={() => setIsFocused(true)}
+                   onBlur={() => setIsFocused(false)}/>
         </div>
     );
-};
+}
 
 
 

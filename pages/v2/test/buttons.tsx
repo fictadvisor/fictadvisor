@@ -1,21 +1,19 @@
-import {LargeButton, MediumButton, SmallButton} from "../../../components/v2/Button";
+import Button, {ButtonSize} from "../../../components/v2/Button";
 
 function buttons(){
     return(
         <div className="test-page-wrap">
-            <hr className="test-hr"/>
-            <LargeButton text="← Default" onClick={() => {}} isDisabled={false}/>
-            <hr className="test-hr"/>
-            <MediumButton text="Icon Button" onClick={() => {}} isDisabled={false}/>
-            <hr className="test-hr"/>
-            <SmallButton text="Small" onClick={() => {}} isDisabled={false}/>
-            <hr className="test-hr"/>
-            <LargeButton text="Disabled" onClick={() => {}} isDisabled={true}/>
-            <hr className="test-hr"/>
-            <MediumButton text="Button" onClick={() => {}} isDisabled={true}/>
-            <hr className="test-hr"/>
-            <SmallButton text="Button" onClick={() => {}} isDisabled={true}/>
-            <hr className="test-hr"/>
+            <div className="test-page-content">
+                <Button text="Default" onClick={() => {}} isDisabled={false} size={ButtonSize.LARGE}/>
+                <Button text="Default" onClick={() => {}} isDisabled={false} size={ButtonSize.MEDIUM}/>
+                <Button text="Default" onClick={() => {}} isDisabled={false} size={ButtonSize.SMALL}/>
+                <Button text="Default" iconPath="/assets/icons/heart.svg" onClick={() => {}} isDisabled={false} size={ButtonSize.LARGE}/>
+                <Button text="Default" iconPath="/assets/icons/heart.svg" onClick={() => {}} isDisabled={false} size={ButtonSize.MEDIUM}/>
+                <Button text="Default" iconPath="/assets/icons/heart.svg" onClick={() => {}} isDisabled={false} size={ButtonSize.SMALL}/>
+                <Button text="Default" iconPath="/assets/icons/heart.svg" onClick={() => {}} isDisabled={true} size={ButtonSize.LARGE}/>
+                <Button text="Default" iconPath="/assets/icons/heart.svg" onClick={() => {}} isDisabled={true} size={ButtonSize.MEDIUM}/>
+                <Button text="Default" iconPath="/assets/icons/heart.svg" onClick={() => {}} isDisabled={true} size={ButtonSize.SMALL}/>
+            </div>
         </div>
     );
 }

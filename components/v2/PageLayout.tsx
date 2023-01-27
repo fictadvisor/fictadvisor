@@ -14,7 +14,6 @@ function PageLayout(props: PageLayoutProps) {
         <div>
             <Head>
                 <title>{metaTitle}</title>
-                <meta name="viewport" content="width=device-width, target-densityDpi=device-dpi"/>
                 <meta property="og:title" content={metaTitle}/>
                 <meta property="og:site_name" content={config.service}/>
                 <meta property="og:image" content="/assets/preview.jpg"/>
@@ -43,6 +42,7 @@ function PageLayout(props: PageLayoutProps) {
                 <link rel="icon" href="/favicon.ico"/>
                 <link rel="preconnect" href="https://fonts.gstatic.com"/>
                 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Manrope"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
             </Head>
 
             <div className="page">

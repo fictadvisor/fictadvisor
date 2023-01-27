@@ -1,20 +1,7 @@
 $large-input-width: 480px;
 $normal-input-width: 308px;
 
-@mixin field-label($color){
-  color: $color;
-  padding: 2px 8px;
-  isolation: isolate;
-  width: fit-content;
-  block-size: fit-content;
-  background: inherit;
-  position: relative;
-  top: 10px;
-  left: 8px;
-  @include flex-center;
-}
-
-@mixin field-input($main-color, $placeholder-color){
+@mixin field-input($text-color, $border-color, $placeholder-color){
   &::placeholder {
     transition: all 0.2s ease-in-out;
     color: $placeholder-color;
@@ -30,44 +17,52 @@ $normal-input-width: 308px;
     color: $placeholder-color;
   }
 
-  //background: url("/assets/icons/search-white-18dp.svg") no-repeat 440px;
+  //background: url("/assets/icons/search-white-18dp.svg") no-repeat 440px; //TODO BACKGRODUN GOES HERE
   //background-size: 20px;
+  // EXTRA PADDING NEEDED HERE IS   padding: 16px 24px 50px 24px;
 
+  width: 100%;
   background: inherit;
-  padding: 16px 50px 16px 24px;
-  width: $large-input-width;
-
-  border: 2px solid $main-color;
+  padding: 16px 24px 16px 24px;
+  border: 2px solid $border-color;
   border-radius: 8px;
-  color: $main-color;
+  color: $text-color;
+}
+
+@mixin field-style{
+  width: 100%;
+  min-width: fit-content;
+  background: $dark-primary;
+  transition: all 0.2s ease-in-out;
+  color: $input-color;
+
+  label {
+    color: inherit;
+    padding: 2px 8px;
+    isolation: isolate;
+    width: fit-content;
+    block-size: fit-content;
+    background: inherit;
+    position: relative;
+    top: 10px;
+    left: 8px;
+    @include flex-center;
+  }
 }
 
 .field {
-  background: $dark-primary;
-  transition: all 0.2s ease-in-out;
-
-  label {
-    @include field-label($hover-input-color);
-  }
+  @include field-style;
 
   input {
-    @include field-input($default-input-color, $default-input-placeholder-color);
-
+    @include field-input($input-color, $input-color, $input-placeholder-color);
 
     &:focus {
-      @include field-input($focus-input-color, $focus-input-placeholder-color);
-
-      //> label{
-      //  color: $hover-input-color;
-      //}
+      @include field-input($focus-input-color, $focus-input-color, $focus-input-placeholder-color);
     }
-
   }
 
   &:hover {
-    label {
-      color: $hover-input-color;
-    }
+    color: $hover-input-color;
 
     input {
       border-color: $hover-input-color;
@@ -76,97 +71,25 @@ $normal-input-width: 308px;
   }
 }
 
-
-
-
 .disabled-field {
   @extend .field;
   opacity: 0.2;
   pointer-events: none;
 }
 
-
-.error-field{
-  background: $dark-primary;
-  transition: all 0.2s ease-in-out;
-
-  label {
-    color: $hover-input-color;
-    padding: 2px 8px;
-    isolation: isolate;
-    width: fit-content;
-    block-size: fit-content;
-    background: inherit;
-    position: relative;
-    top: 10px;
-    left: 8px;
-    @include flex-center;
-  }
+.error-field {
+  @include field-style;
 
   input {
-    &::placeholder {
-      color: $default-input-placeholder-color;
-    }
-
-    &:-ms-input-placeholder {
-      color: $default-input-placeholder-color;
-    }
-
-    &::-ms-input-placeholder {
-      color: $default-input-placeholder-color;
-    }
-
-    background: url("/assets/icons/search-white-18dp.svg") no-repeat 440px;
-    background-size: 20px;
-
-    padding: 16px 50px 16px 24px;
-    width: $large-input-width;
-
-    border: 2px solid $error-color;
-    border-radius: 8px;
-    color: $default-input-color;
+    @include field-input($input-color, $error-color, $input-placeholder-color);
   }
 }
 
-.success-field{
-  background: $dark-primary;
-  transition: all 0.2s ease-in-out;
-
-  label {
-    color: $hover-input-color;
-    padding: 2px 8px;
-    isolation: isolate;
-    width: fit-content;
-    block-size: fit-content;
-    background: inherit;
-    position: relative;
-    top: 10px;
-    left: 8px;
-    @include flex-center;
-  }
+.success-field {
+  @include field-style;
 
   input {
-    &::placeholder {
-      color: $default-input-placeholder-color;
-    }
-
-    &:-ms-input-placeholder {
-      color: $default-input-placeholder-color;
-    }
-
-    &::-ms-input-placeholder {
-      color: $default-input-placeholder-color;
-    }
-
-    background: url("/assets/icons/search-white-18dp.svg") no-repeat 440px;
-    background-size: 20px;
-
-    padding: 16px 50px 16px 24px;
-    width: $large-input-width;
-
-    border: 2px solid $success-color;
-    border-radius: 8px;
-    color: $default-input-color;
+    @include field-input($input-color, $success-color, $input-placeholder-color);
   }
 }
 
