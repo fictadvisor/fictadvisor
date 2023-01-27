@@ -243,12 +243,12 @@ export class AuthService {
     }, HOUR);
   }
   
-  async verificateEmail(token: string) {
+  async verifyEmail(token: string) {
     if (!this.verificateEmailTokens.has(token)) {
       throw new InvalidVerificationTokenException();
     }
     const email = this.verificateEmailTokens.get(token).email;
-    this.userRepository.updateByEmail(email, {state: State.APPROVED} );
+    await this.userRepository.updateByEmail(email, { state: State.APPROVED });
 
     this.verificateEmailTokens.delete(token);
   }

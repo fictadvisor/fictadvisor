@@ -24,7 +24,7 @@ export class TeacherService {
   async getAll(
     body: QueryAllDTO,
   ) {
-    const teachers = await this.teacherRepository.getAll(body)
+    const teachers = await this.teacherRepository.getAll(body);
     return { teachers };
   }
 
@@ -59,8 +59,8 @@ export class TeacherService {
     const contacts = (await this.teacherRepository.getAllContacts(entityId))
       .map(
         (c) => ({name: c.name, value: c.value})
-      )
-    return { contacts }
+      );
+    return { contacts };
   }
 
   async getContact(

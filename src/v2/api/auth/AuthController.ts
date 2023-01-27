@@ -78,6 +78,6 @@ export class AuthController {
   async verificateEmail(
     @Param('token') token: string,
   ) {
-    return this.authService.verificateEmail(token);
+    return this.authService.verifyEmail(token);
   }
 }
