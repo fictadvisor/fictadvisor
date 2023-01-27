@@ -1,0 +1,26 @@
+.test-page-wrap {
+    @include flex-center;
+    margin: 40px 0;
+}
+
+.ratings {
+    position: relative;
+}
+
+.full-stars {
+    position: absolute;
+    left: 0;
+    top: 0;
+    white-space: nowrap;
+    overflow: hidden;
+
+    width: 70%;
+}
+
+.empty-stars:before {
+    content: url("/assets/icons/stars-empty.svg");
+}
+
+.full-stars:before {
+    content: url("/assets/icons/stars-full.svg");
+}
