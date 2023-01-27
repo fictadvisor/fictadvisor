@@ -1,6 +1,7 @@
 
 @mixin style-button-icon($radius, $size) {
     @include flex-center;
+    overflow: hidden;
     align-items: center;
     border-radius: $radius;
     color: $light-primary;
