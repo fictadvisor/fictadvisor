@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../../database/PrismaService';
 import { JwtPayload } from '../../security/JwtPayload';
 import { SecurityConfigService } from '../../config/SecurityConfigService';
-import { User } from '@prisma/client';
+import { State, User } from '@prisma/client';
 import { TokensDTO } from './dto/TokensDTO';
 import { RegistrationDTO, TelegramDTO } from './dto/RegistrationDTO';
 import { createHash, createHmac } from 'crypto';
@@ -208,15 +208,8 @@ export class AuthService {
       throw new InvalidResetTokenException();
     }
 
-    await this.prisma.user.update({
-      where: {
-        email: this.resetPasswordTokens.get(token).email,
-      },
-      data: {
-        password,
-        lastPasswordChanged: new Date(),
-      },
-    });
+    const email = this.resetPasswordTokens.get(token).email;
+    this.userRepository.updateByEmail(email, {password, lastPasswordChanged: new Date()});
 
     this.resetPasswordTokens.delete(token);
   }
@@ -255,7 +248,7 @@ export class AuthService {
       throw new InvalidVerificationTokenException();
     }
     const email = this.verificateEmailTokens.get(token).email;
-    this.userRepository.verificate(email);
+    this.userRepository.updateByEmail(email, {state: State.APPROVED} );
 
     this.verificateEmailTokens.delete(token);
   }

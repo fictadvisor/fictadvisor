@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { State } from "@prisma/client";
 import { PrismaService } from "src/v2/database/PrismaService";
+import { UpdateUserDTO } from "./dto/UpdateUserDTO";
 
 @Injectable()
 export class UserRepository {
@@ -8,22 +8,25 @@ export class UserRepository {
     private prisma: PrismaService,
   ) {}
 
-  async verificate(email: string){
-    await this.prisma.user.update({
-        where: {
-          email: email,
-        },
-        data: {
-          state: State.APPROVED,
-        },
-      });
+  async updateByEmail(
+    email: string,
+    data: UpdateUserDTO,
+  ) {
+    return await this.prisma.user.update({
+      where:{
+        email,
+      },
+      data,
+    });
   }
 
-  async deleteByEmail(email: string){
-    this.prisma.user.delete({
+  async deleteByEmail(
+    email: string
+  ) {
+    return this.prisma.user.delete({
         where: {
-          email: email,
+          email,
         },
-      });
+    });
   }
 }
