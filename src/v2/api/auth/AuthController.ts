@@ -67,14 +67,14 @@ export class AuthController {
     return this.authService.resetPassword(token, body);
   }
 
-  @Post('/register/verificateEmail')
+  @Post('/register/verifyEmail')
   async requestEmailVerification(
     @Body() body: VerificateEmailDTO,
   ) {
     return this.authService.requestEmailVerification(body.email);
   }
 
-  @Post('/register/email-verification/:token')
+  @Post('/register/verifyEmail/:token')
   async verificateEmail(
     @Param('token') token: string,
   ) {
