@@ -8,7 +8,7 @@ import { TokensDTO } from './dto/TokensDTO';
 import { RegistrationDTO, TelegramDTO } from './dto/RegistrationDTO';
 import { createHash, createHmac } from 'crypto';
 import { TelegramConfigService } from '../../config/TelegramConfigService';
-import {UserRepository } from '../user/UserRepository'; 
+import { UserRepository } from '../user/UserRepository';
 import { InvalidTelegramCredentialsException } from '../../utils/exceptions/InvalidTelegramCredentialsException';
 import { UpdatePasswordDTO } from './dto/UpdatePasswordDTO';
 import * as crypto from 'crypto';
@@ -209,7 +209,7 @@ export class AuthService {
     }
 
     const email = this.resetPasswordTokens.get(token).email;
-    this.userRepository.updateByEmail(email, {password, lastPasswordChanged: new Date()});
+    await this.userRepository.updateByEmail(email, {password, lastPasswordChanged: new Date()});
 
     this.resetPasswordTokens.delete(token);
   }
@@ -242,7 +242,7 @@ export class AuthService {
       this.userRepository.deleteByEmail(email);
     }, HOUR);
   }
-  
+
   async verifyEmail(token: string) {
     if (!this.verificateEmailTokens.has(token)) {
       throw new InvalidVerificationTokenException();
