@@ -83,13 +83,13 @@
   border: 1px solid $grey-button;
 }
 
-.big-button button {
+.big-alert-button button {
   @include flex-center;
   @include button-set(big);
   @extend .button-default;
 }
 
-.small-button button {
+.small-alert-button button {
   @include flex-center;
   @include button-set(small);
   @extend .button-default;
