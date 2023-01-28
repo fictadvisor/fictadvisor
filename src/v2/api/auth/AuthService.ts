@@ -3,11 +3,12 @@ import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../../database/PrismaService';
 import { JwtPayload } from '../../security/JwtPayload';
 import { SecurityConfigService } from '../../config/SecurityConfigService';
-import { User } from '@prisma/client';
+import { State, User } from '@prisma/client';
 import { TokensDTO } from './dto/TokensDTO';
 import { RegistrationDTO, TelegramDTO } from './dto/RegistrationDTO';
 import { createHash, createHmac } from 'crypto';
 import { TelegramConfigService } from '../../config/TelegramConfigService';
+import { UserRepository } from '../user/UserRepository';
 import { InvalidTelegramCredentialsException } from '../../utils/exceptions/InvalidTelegramCredentialsException';
 import { UpdatePasswordDTO } from './dto/UpdatePasswordDTO';
 import * as crypto from 'crypto';
@@ -15,6 +16,7 @@ import { EmailService } from '../../email/EmailService';
 import { ResetPasswordDTO } from './dto/ResetPasswordDTO';
 import { InvalidResetTokenException } from '../../utils/exceptions/InvalidResetTokenException';
 import { TooManyActionsException } from '../../utils/exceptions/TooManyActionsException';
+import { InvalidVerificationTokenException } from 'src/v2/utils/exceptions/InvalidVerificationTokenException';
 
 export const ONE_MINUTE = 1000 * 60;
 export const HOUR = ONE_MINUTE * 60;
@@ -23,6 +25,7 @@ export const HOUR = ONE_MINUTE * 60;
 export class AuthService {
 
   private resetPasswordTokens: Map<string, {email: string, date: Date}> = new Map();
+  private verificateEmailTokens: Map<string, {email: string, date: Date}> = new Map();
 
   constructor(
     private prisma: PrismaService,
@@ -30,6 +33,7 @@ export class AuthService {
     private securityConfig: SecurityConfigService,
     private telegramConfig: TelegramConfigService,
     private emailService: EmailService,
+    private userRepository: UserRepository,
   ) {}
 
   async validateUser(username: string, password: string) {
@@ -191,7 +195,7 @@ export class AuthService {
       to: email,
       subject: 'Відновлення паролю на fictadvisor.com',
       message: 'Для відновлення паролю перейдіть за посиланням нижче. Посилання діє годину.',
-      link: `https://fictadvisor.com/resetPassword/${uuid}`,
+      link: `https://fictadvisor.com/password-recovery/${uuid}`,
     });
 
     setTimeout(() => {
@@ -204,16 +208,48 @@ export class AuthService {
       throw new InvalidResetTokenException();
     }
 
-    await this.prisma.user.update({
-      where: {
-        email: this.resetPasswordTokens.get(token).email,
-      },
-      data: {
-        password,
-        lastPasswordChanged: new Date(),
-      },
-    });
+    const email = this.resetPasswordTokens.get(token).email;
+    await this.userRepository.updateByEmail(email, {password, lastPasswordChanged: new Date()});
 
     this.resetPasswordTokens.delete(token);
+  }
+
+  async requestEmailVerification (email: string) {
+    const uuid = crypto.randomUUID();
+    for (const [token, value] of this.verificateEmailTokens.entries()) {
+      if (value.email === email) {
+        if (Date.now() - value.date.getTime() < ONE_MINUTE) {
+          throw new TooManyActionsException();
+        } else {
+          this.verificateEmailTokens.delete(token);
+        }
+      }
+    }
+
+    this.verificateEmailTokens.set(uuid, {
+      email,
+      date: new Date(),
+    });
+    await this.emailService.sendEmail({
+      to: email,
+      subject: 'Верифікація пошти на fictadvisor.com',
+      message: 'Для верифікації пошти перейдіть за посиланням нижче. Посилання діє годину.',
+      link: `https://fictadvisor.com/register/email-verification/${uuid}`,
+    });
+
+    setTimeout(() => {
+      this.verificateEmailTokens.delete(uuid);
+      this.userRepository.deleteByEmail(email);
+    }, HOUR);
+  }
+
+  async verifyEmail(token: string) {
+    if (!this.verificateEmailTokens.has(token)) {
+      throw new InvalidVerificationTokenException();
+    }
+    const email = this.verificateEmailTokens.get(token).email;
+    await this.userRepository.updateByEmail(email, { state: State.APPROVED });
+
+    this.verificateEmailTokens.delete(token);
   }
 }
