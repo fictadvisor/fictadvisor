@@ -5,7 +5,7 @@ export class CreateUserData {
     email: string;
     password?: string;
     avatar?: string;
-    telegramId?: string;
+    telegramId?: number;
     lastPasswordChanged?: Date;
     state?: State;
 }
