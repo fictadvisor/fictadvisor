@@ -1,34 +1,41 @@
 import { Check, CheckState } from "../../../components/v2/Check";
 import { GroupRadio, RadioState } from "../../../components/v2/GroupRadio";
 import Switch, { SwitchType, SwitchTextPosition } from "../../../components/v2/Switch";
-
-interface OwnProps { }
-
-type Props = OwnProps;
-
 function Controls() {
 
     let radios = [
         {
             state: RadioState.DEFAULT,
-            text: "Default text ",
+            text: "apple",
+            value: "apple",
+            name: "radio-buttons",
+        },
+        {
+            state: RadioState.DEFAULT,
+            text: "orange",
+            value: "orange",
+            name: "radio-buttons",
+        },
+        {
+            state: RadioState.DEFAULT,
+            text: "lemon",
+            value: "lemon",
+            name: "radio-buttons",
+        },
+        {
+            state: RadioState.DEFAULT,
+            text: "strawberry",
+            value: "strawberry",
+            name: "radio-buttons",
         },
         {
             state: RadioState.DISABLED,
-            text: "Disabled",
+            text: "vegetable",
+            name: "radio-buttons",
+            value: "vegetable",
             isDisabled: true,
         },
-        {
-            state: RadioState.DISABLED,
-            text: "Disabled",
-            isChecked: true,
-            isDisabled: true,
 
-        },
-        {
-            state: RadioState.ERROR,
-            text: "Error",
-        },
     ];
 
     return (

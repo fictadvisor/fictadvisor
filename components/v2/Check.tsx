@@ -18,10 +18,10 @@ export function Check(props: CheckProps) {
         <div>
             <div className="check-container">
                 <label className="check-button">
-                    <input type="checkbox" className={`${props.state}-check-input`} disabled={props.isDisabled} checked={props.isChecked} />
-                    <span className={`${props.state}-check-box`}></span>
+                    <input type="checkbox" className={props.state + "-check-input"} disabled={props.isDisabled} checked={props.isChecked} />
+                    <span className={props.state + "-check-box"}></span>
                 </label>
-                <span className={`${props.state}-check-text`}>{props.text}</span>
+                <span className={props.state + "-check-text"}>{props.text}</span>
             </div>
         </div>
     )
