@@ -1,7 +1,7 @@
-import {Injectable, PipeTransform} from "@nestjs/common";
-import {User} from "@prisma/client";
-import {UserRepository} from "./UserRepository";
-import {InvalidEntityIdException} from "../../utils/exceptions/InvalidEntityIdException";
+import { Injectable, PipeTransform } from "@nestjs/common";
+import { User } from "@prisma/client";
+import { UserRepository } from "./UserRepository";
+import { InvalidEntityIdException } from "../../utils/exceptions/InvalidEntityIdException";
 
 
 @Injectable()

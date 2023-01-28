@@ -100,7 +100,7 @@ export class CourseService {
 
     const existing = await this.courseRepository.findOneBy({
       teacher: Equal(teacher),
-      subject: Equal(subject)}
+      subject: Equal(subject) }
     );
 
     if (existing) {

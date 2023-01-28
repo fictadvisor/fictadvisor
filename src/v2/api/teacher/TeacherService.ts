@@ -1,23 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../database/PrismaService';
 import { QueryAllDTO } from '../../utils/QueryAllDTO';
 import { CreateTeacherDTO } from './dto/CreateTeacherDTO';
 import { UpdateTeacherDTO } from './dto/UpdateTeacherDTO';
 import { CreateContactDTO } from './dto/CreateContactDTO';
 import { EntityType } from '@prisma/client';
 import { TeacherRepository } from './TeacherRepository';
-import { DisciplineTeacherRepository } from './DisciplineTeacherRepository';
-import { DisciplineTypeRepository } from '../discipline/DisciplineTypeRepository';
 import { UpdateContactDTO } from './dto/UpdateContactDTO';
-
 
 @Injectable()
 export class TeacherService {
   constructor(
     private teacherRepository: TeacherRepository,
-    private disciplineTeacherRepository: DisciplineTeacherRepository,
-    private disciplineTypeRepository: DisciplineTypeRepository,
-    private prisma: PrismaService
   ) {}
 
 
@@ -58,7 +51,7 @@ export class TeacherService {
   ) {
     const contacts = (await this.teacherRepository.getAllContacts(entityId))
       .map(
-        (c) => ({name: c.name, value: c.value})
+        (c) => ({ name: c.name, value: c.value })
       );
     return { contacts };
   }

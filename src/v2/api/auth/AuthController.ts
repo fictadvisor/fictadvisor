@@ -1,4 +1,4 @@
-import { Controller, Request, Post, UseGuards, Body, Put, UnauthorizedException, Param } from '@nestjs/common';
+import { Controller, Request, Post, UseGuards, Body, Put, Param } from '@nestjs/common';
 import { LocalAuthGuard } from '../../security/LocalGuard';
 import { AuthService } from './AuthService';
 import { RegistrationDTO, TelegramDTO } from './dto/RegistrationDTO';
@@ -40,16 +40,10 @@ export class AuthController {
   @UseGuards(JwtGuard)
   @Put('/updatePassword')
   async updatePassword(
-      @Body() body: UpdatePasswordDTO,
-      @Request() req,
-    ) {
-    const tokens = await this.authService.updatePassword(body, req.user);
-
-    if (!tokens) {
-      throw new UnauthorizedException('Old password is incorrect');
-    }
-
-    return tokens;
+    @Body() body: UpdatePasswordDTO,
+    @Request() req,
+  ) {
+    return this.authService.updatePassword(body, req.user);
   }
 
   @Post('/forgotPassword')

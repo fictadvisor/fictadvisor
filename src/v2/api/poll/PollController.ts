@@ -2,7 +2,7 @@ import { Body, Controller, Param, Put, Request, UseGuards } from '@nestjs/common
 import { PollService } from './PollService';
 import { JwtGuard } from '../../security/JwtGuard';
 import { GroupByDisciplineTeacherGuard } from '../../security/group-guard/GroupByDisciplineTeacherGuard';
-import {CreateAnswersDTO} from "./dto/CreateAnswersDTO";
+import { CreateAnswersDTO } from "./dto/CreateAnswersDTO";
 
 @Controller({
   version: '2',

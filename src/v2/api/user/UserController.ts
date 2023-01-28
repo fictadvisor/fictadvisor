@@ -1,10 +1,10 @@
-import {Body, Controller, Delete, Get, Param, Patch, Post, Request, UseGuards} from '@nestjs/common';
-import {UserService} from './UserService';
-import {TelegramGuard} from '../../security/TelegramGuard';
-import {JwtGuard} from '../../security/JwtGuard';
-import {ApproveDTO} from './dto/ApproveDTO';
-import {GiveRoleDTO} from './dto/GiveRoleDTO';
-import {CreateSuperheroDTO} from "./dto/CreateSuperheroDTO";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Request, UseGuards } from '@nestjs/common';
+import { UserService } from './UserService';
+import { TelegramGuard } from '../../security/TelegramGuard';
+import { JwtGuard } from '../../security/JwtGuard';
+import { ApproveDTO } from './dto/ApproveDTO';
+import { GiveRoleDTO } from './dto/GiveRoleDTO';
+import { CreateSuperheroDTO } from "./dto/CreateSuperheroDTO";
 
 @Controller({
   version: '2',
@@ -49,7 +49,7 @@ export class UserController {
     @Request() req,
   ) {
     const dbDisciplines = await this.userService.getSelective(req.user.id);
-    return {disciplines: dbDisciplines.map((d) => d.id)};
+    return { disciplines: dbDisciplines.map((d) => d.id) };
   }
 
   @UseGuards()
