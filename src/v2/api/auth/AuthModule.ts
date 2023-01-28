@@ -6,15 +6,15 @@ import { ConfigurationModule } from '../../config/ConfigModule';
 import { SecurityConfigService } from '../../config/SecurityConfigService';
 import { LocalStrategy } from '../../security/LocalStrategy';
 import { PassportModule } from '@nestjs/passport';
-import { PrismaService } from '../../database/PrismaService';
 import { JwtStrategy } from '../../security/JwtStrategy';
 import { EmailModule } from '../../email/EmailModule';
 import { TelegramAPI } from "../../telegram/TelegramAPI";
+import { PrismaModule } from '../../database/PrismaModule';
 
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy, PrismaService, TelegramAPI],
+  providers: [AuthService, LocalStrategy, JwtStrategy, TelegramAPI],
   imports: [
     JwtModule.registerAsync({
       imports: [ConfigurationModule],
@@ -29,6 +29,7 @@ import { TelegramAPI } from "../../telegram/TelegramAPI";
     PassportModule,
     ConfigurationModule,
     EmailModule,
+    PrismaModule,
   ],
 })
 export class AuthModule {}
