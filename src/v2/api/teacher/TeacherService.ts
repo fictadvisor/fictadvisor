@@ -1,15 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../database/PrismaService';
 import { QueryAllDTO } from '../../utils/QueryAllDTO';
 import { CreateTeacherDTO } from './dto/CreateTeacherDTO';
 import { UpdateTeacherDTO } from './dto/UpdateTeacherDTO';
 import { CreateContactDTO } from './dto/CreateContactDTO';
 import { EntityType } from '@prisma/client';
 import { TeacherRepository } from './TeacherRepository';
-import { DisciplineTeacherRepository } from './DisciplineTeacherRepository';
-import { DisciplineTypeRepository } from '../discipline/DisciplineTypeRepository';
 import { UpdateContactDTO } from './dto/UpdateContactDTO';
-
 
 @Injectable()
 export class TeacherService {
@@ -22,7 +18,7 @@ export class TeacherService {
   async getAll(
     body: QueryAllDTO,
   ) {
-    const teachers = await this.teacherRepository.getAll(body)
+    const teachers = await this.teacherRepository.getAll(body);
     return { teachers };
   }
 
@@ -72,9 +68,9 @@ export class TeacherService {
   ) {
     const contacts = (await this.teacherRepository.getAllContacts(entityId))
       .map(
-        (c) => ({name: c.name, value: c.value})
-      )
-    return { contacts }
+        (c) => ({ name: c.name, value: c.value })
+      );
+    return { contacts };
   }
 
   async getContact(

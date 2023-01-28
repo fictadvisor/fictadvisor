@@ -13,12 +13,14 @@ export class QueryAllDTO {
   @IsOptional()
   pageSize?: number;
 
+  @IsOptional()
   search?: string;
 
+  @IsOptional()
   sort?: string;
 
   @IsIn(['asc', 'desc'], {
-    message: 'wrong value for order'
+    message: 'wrong value for order',
   })
   @IsOptional()
   order?: 'asc' | 'desc';

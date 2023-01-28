@@ -237,11 +237,11 @@ export class ScheduleService {
     for (const key in body) {
       if (['endDate', 'startDate', 'url'].includes(key)) {
         await this.scheduleRepository.updateSemesterLessonInfo(
-          id, {[key]: body[key]}
+          id, { [key]: body[key] }
         );
       } else if (['resource', 'evaluatingSystem', 'isSelective'].includes(key)) {
         await this.disciplineRepository.update(
-          discipline.id, {[key]: body[key]}
+          discipline.id, { [key]: body[key] }
         );
       } else {
         await this.disciplineTypeService.deleteDisciplineTeachers(semesterLesson.disciplineTypeId);
@@ -258,7 +258,7 @@ export class ScheduleService {
     }
   }
 
-  async createLesson({fortnight, disciplineId, type, ...data}: CreateLessonDTO) {
+  async createLesson({ fortnight, disciplineId, type, ...data }: CreateLessonDTO) {
     if (!disciplineId || !type) return null;
 
     const disciplineType = await this.disciplineTypeRepository.getOrCreate({ disciplineId, name: type });
@@ -271,7 +271,7 @@ export class ScheduleService {
   }
 
   async createTemporaryLesson(fortnight, disciplineTypeId, data) {
-    return await this.scheduleRepository.getOrCreateTemporaryLesson({fortnight, disciplineTypeId, ...data});
+    return await this.scheduleRepository.getOrCreateTemporaryLesson({ fortnight, disciplineTypeId, ...data });
   }
 
   async createSemesterLesson(disciplineTypeId: string, { teacherId, ...data }: {teacherId: string} & CreateDateDTO) {
@@ -284,6 +284,6 @@ export class ScheduleService {
       disciplineTypeId,
       role,
     });
-    return await this.scheduleRepository.getOrCreateSemesterLesson({disciplineTypeId, ...data});
+    return await this.scheduleRepository.getOrCreateSemesterLesson({ disciplineTypeId, ...data });
   }
 }

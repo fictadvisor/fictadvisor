@@ -4,7 +4,7 @@ import { TelegramGuard } from '../../security/TelegramGuard';
 import { JwtGuard } from '../../security/JwtGuard';
 import { ApproveDTO } from './dto/ApproveDTO';
 import { GiveRoleDTO } from './dto/GiveRoleDTO';
-import {CreateSuperheroDTO} from "./dto/CreateSuperheroDTO";
+import { CreateSuperheroDTO } from "./dto/CreateSuperheroDTO";
 
 @Controller({
   version: '2',
@@ -13,24 +13,25 @@ import {CreateSuperheroDTO} from "./dto/CreateSuperheroDTO";
 export class UserController {
   constructor(
     private userService: UserService,
-  ) {}
-
-  @UseGuards(TelegramGuard)
-  @Patch('/verify/:id')
-  verify(
-    @Param('id') id: string,
-    @Body() body: ApproveDTO,
   ) {
-    return this.userService.verify(id, body);
   }
 
   @UseGuards(TelegramGuard)
-  @Patch('/verify/:userId/superhero')
+  @Patch('/:userId/verifyStudent')
+  verify(
+    @Param('userId') userId: string,
+    @Body() body: ApproveDTO,
+  ) {
+    return this.userService.updateStudent(userId, body);
+  }
+
+  @UseGuards(TelegramGuard)
+  @Patch('/:userId/verifySuperhero')
   verifySuperhero(
     @Param('userId') userId: string,
     @Body() body: ApproveDTO,
   ) {
-    return this.userService.verifySuperhero(userId, body);
+    return this.userService.updateSuperhero(userId, body);
   }
 
   @UseGuards(JwtGuard)
@@ -60,12 +61,11 @@ export class UserController {
     return this.userService.giveRole(userId, body);
   }
 
-  @Delete('/:userId/roles/roleId')
+  @Delete('/:userId/roles/:roleId')
   removeRole(
     @Param('userId') userId: string,
     @Param('roleId') roleId: string,
   ) {
     return this.userService.removeRole(userId, roleId);
   }
-
 }

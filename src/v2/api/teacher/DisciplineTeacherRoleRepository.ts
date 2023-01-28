@@ -19,7 +19,7 @@ export class DisciplineTeacherRoleRepository {
       },
     });
 
-    return roles.map((r) => ({role: r.role, ...r.disciplineTeacher}));
+    return roles.map((r) => ({ role: r.role, ...r.disciplineTeacher }));
   }
 
   async getTypes(disciplineTeacherId: string) {
@@ -32,7 +32,7 @@ export class DisciplineTeacherRoleRepository {
       },
     });
 
-    return roles.map((r) => ({ role: r.role, ...r.disciplineType}));
+    return roles.map((r) => ({ role: r.role, ...r.disciplineType }));
   }
 
   async find(data: CreateDisciplineTeacherRoleData) {

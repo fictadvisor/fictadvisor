@@ -1,13 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../../database/PrismaService';
 import { JwtPayload } from '../../security/JwtPayload';
 import { SecurityConfigService } from '../../config/SecurityConfigService';
-import { User } from '@prisma/client';
+import { State, User } from '@prisma/client';
 import { TokensDTO } from './dto/TokensDTO';
-import { RegistrationDTO, TelegramDTO } from './dto/RegistrationDTO';
+import { RegistrationDTO, StudentDTO, TelegramDTO } from './dto/RegistrationDTO';
 import { createHash, createHmac } from 'crypto';
 import { TelegramConfigService } from '../../config/TelegramConfigService';
+import { UserRepository } from '../user/UserRepository';
 import { InvalidTelegramCredentialsException } from '../../utils/exceptions/InvalidTelegramCredentialsException';
 import { UpdatePasswordDTO } from './dto/UpdatePasswordDTO';
 import * as crypto from 'crypto';
@@ -15,6 +16,13 @@ import { EmailService } from '../../email/EmailService';
 import { ResetPasswordDTO } from './dto/ResetPasswordDTO';
 import { InvalidResetTokenException } from '../../utils/exceptions/InvalidResetTokenException';
 import { TooManyActionsException } from '../../utils/exceptions/TooManyActionsException';
+import { InvalidVerificationTokenException } from 'src/v2/utils/exceptions/InvalidVerificationTokenException';
+import { TelegramAPI } from "../../telegram/TelegramAPI";
+import { StudentRepository } from "../user/StudentRepository";
+import { GroupRepository } from "../group/GroupRepository";
+import bcrypt from 'bcrypt';
+import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
+import { UniqueUserDTO } from '../user/dto/UniqueUserDTO';
 
 export const ONE_MINUTE = 1000 * 60;
 export const HOUR = ONE_MINUTE * 60;
@@ -22,7 +30,8 @@ export const HOUR = ONE_MINUTE * 60;
 @Injectable()
 export class AuthService {
 
-  private resetPasswordTokens: Map<string, {email: string, date: Date}> = new Map();
+  private resetPasswordTokens: Map<string, { email: string, date: Date }> = new Map();
+  private verifyEmailTokens: Map<string, { email: string, date: Date }> = new Map();
 
   constructor(
     private prisma: PrismaService,
@@ -30,21 +39,32 @@ export class AuthService {
     private securityConfig: SecurityConfigService,
     private telegramConfig: TelegramConfigService,
     private emailService: EmailService,
-  ) {}
-
-  async validateUser(username: string, password: string) {
-    return await this.prisma.user.findFirst({
-      where: {
-        OR: [
-          { username: username },
-          { email: username },
-        ],
-        password: password,
-      },
-    });
+    private userRepository: UserRepository,
+    private studentRepository: StudentRepository,
+    private telegramApi: TelegramAPI,
+    private groupRepository: GroupRepository,
+  ) {
   }
 
-  isExchangeValid({hash, ...data}: TelegramDTO): boolean {
+  async validateUser(username: string, password: string) {
+    const user = await this.userRepository.getByUnique({
+      username,
+      email: username,
+    });
+    if (!user) {
+      throw new InvalidEntityIdException('user');
+    }
+
+    const isMatch = await this.checkPassword(password, user.password);
+    if (!isMatch) {
+      throw new UnauthorizedException('The password is incorrect');
+    }
+
+    delete user.password;
+    return user;
+  }
+
+  isExchangeValid({ hash, ...data }: TelegramDTO): boolean {
     if (!data) return false;
 
     const str = Object.keys(data)
@@ -59,13 +79,13 @@ export class AuthService {
         .update(str).digest('hex');
 
       return hash === signature;
-    } catch (e){
+    } catch (e) {
       return false;
     }
   }
 
   async register(registrationDTO: RegistrationDTO): Promise<TokensDTO> {
-    const { telegram, student: {isCaptain, ...createStudent}, user} = registrationDTO;
+    const { telegram, student: { isCaptain, ...createStudent }, user } = registrationDTO;
 
     if (telegram) {
       if (this.isExchangeValid(telegram)) {
@@ -78,29 +98,38 @@ export class AuthService {
       }
     }
 
-    const dbUser = await this.prisma.user.create({
-      data: {
-        ...user,
-        student: {
-          create: createStudent,
-        },
-      },
+    user.password = await this.hashPassword(user.password);
+
+    const dbUser = await this.userRepository.create({
+      ...user,
+      lastPasswordChanged: new Date(),
+    });
+    await this.studentRepository.create({
+      userId: dbUser.id,
+      ...createStudent,
     });
 
-    if (isCaptain) this.verifyCaptain();
-    else this.verifyStudent();
+    await this.verify(dbUser.id, +dbUser.telegramId, {
+      isCaptain,
+      ...createStudent,
+    });
 
     return this.getTokens(dbUser);
   }
 
-  verifyStudent() {
-    // TODO add url to Telegram Bot API
-    return;
-  }
-
-  verifyCaptain() {
-    // TODO add url to Telegram Bot API
-    return;
+  async verify(id: string, telegramId: number, { groupId, isCaptain, ...student }: StudentDTO) {
+    const group = await this.groupRepository.getGroup(groupId);
+    const data = {
+      id,
+      telegramId,
+      ...student,
+      groupCode: group.code,
+    };
+    if (isCaptain) {
+      await this.telegramApi.verifyCaptain(data);
+    } else {
+      await this.telegramApi.verifyStudent(data);
+    }
   }
 
   login(user: User): TokensDTO {
@@ -134,10 +163,8 @@ export class AuthService {
       throw new InvalidTelegramCredentialsException();
     }
 
-    const user = await this.prisma.user.findUnique({
-      where: {
-        telegramId: String(telegram.id),
-      },
+    const user = await this.userRepository.getByUnique({
+      telegramId: telegram.id,
     });
 
     return this.getTokens(user);
@@ -152,21 +179,9 @@ export class AuthService {
   }
 
   async updatePassword({ oldPassword, newPassword }: UpdatePasswordDTO, user: User): Promise<TokensDTO> {
-    const dbUser: User = await this.validateUser(user.username, oldPassword);
+    await this.validateUser(user.username, oldPassword);
 
-    if (!dbUser) {
-      return null;
-    }
-
-    await this.prisma.user.update({
-      where: {
-        id: user.id,
-      },
-      data: {
-        password: newPassword,
-        lastPasswordChanged: new Date(Date.now()),
-      },
-    });
+    await this.setPassword({ email: user.email }, newPassword);
 
     return this.getTokens(user);
   }
@@ -191,7 +206,7 @@ export class AuthService {
       to: email,
       subject: 'Відновлення паролю на fictadvisor.com',
       message: 'Для відновлення паролю перейдіть за посиланням нижче. Посилання діє годину.',
-      link: `https://fictadvisor.com/resetPassword/${uuid}`,
+      link: `https://fictadvisor.com/password-recovery/${uuid}`,
     });
 
     setTimeout(() => {
@@ -204,16 +219,67 @@ export class AuthService {
       throw new InvalidResetTokenException();
     }
 
-    await this.prisma.user.update({
-      where: {
-        email: this.resetPasswordTokens.get(token).email,
-      },
-      data: {
-        password,
-        lastPasswordChanged: new Date(),
-      },
-    });
+    const email = this.resetPasswordTokens.get(token).email;
+    await this.setPassword({ email }, password);
 
     this.resetPasswordTokens.delete(token);
+  }
+
+  async requestEmailVerification(email: string) {
+    const uuid = crypto.randomUUID();
+    for (const [token, value] of this.verifyEmailTokens.entries()) {
+      if (value.email === email) {
+        if (Date.now() - value.date.getTime() < ONE_MINUTE) {
+          throw new TooManyActionsException();
+        } else {
+          this.verifyEmailTokens.delete(token);
+        }
+      }
+    }
+
+    this.verifyEmailTokens.set(uuid, {
+      email,
+      date: new Date(),
+    });
+    await this.emailService.sendEmail({
+      to: email,
+      subject: 'Верифікація пошти на fictadvisor.com',
+      message: 'Для верифікації пошти перейдіть за посиланням нижче. Посилання діє годину.',
+      link: `https://fictadvisor.com/register/email-verification/${uuid}`,
+    });
+
+    setTimeout(() => {
+      this.verifyEmailTokens.delete(uuid);
+      this.userRepository.deleteByEmail(email);
+    }, HOUR);
+  }
+
+  async verifyEmail(token: string) {
+    if (!this.verifyEmailTokens.has(token)) {
+      throw new InvalidVerificationTokenException();
+    }
+    const email = this.verifyEmailTokens.get(token).email;
+    await this.userRepository.updateByEmail(email, { state: State.APPROVED });
+
+    this.verifyEmailTokens.delete(token);
+  }
+
+  async setPassword(search: UniqueUserDTO, password) {
+    const hash = await this.hashPassword(password);
+
+    return this.userRepository.updateByUnique(search, {
+      password: hash,
+      lastPasswordChanged: new Date(),
+    });
+  }
+
+  async hashPassword(password: string) {
+    const saltRounds = 10;
+    const salt = await bcrypt.genSalt(saltRounds);
+    return bcrypt.hash(password, salt);
+  }
+
+  async checkPassword(password: string, hash: string) {
+    return bcrypt.compare(password, hash);
   }
 }
