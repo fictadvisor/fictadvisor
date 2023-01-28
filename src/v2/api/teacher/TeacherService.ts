@@ -16,8 +16,6 @@ export class TeacherService {
   constructor(
     private teacherRepository: TeacherRepository,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
-    private disciplineTypeRepository: DisciplineTypeRepository,
-    private prisma: PrismaService
   ) {}
 
 

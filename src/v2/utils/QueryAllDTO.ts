@@ -1,14 +1,16 @@
-import { IsIn, IsInt } from "class-validator";
+import { IsIn, IsNumberString, IsOptional } from 'class-validator';
 
 export class QueryAllDTO {
-  @IsInt({
-    message: 'page must be a number'
+  @IsNumberString({}, {
+    message: 'page must be a number',
   })
+  @IsOptional()
   page?: number;
 
-  @IsInt({
-    message: 'pageSize must be a number'
+  @IsNumberString({}, {
+    message: 'pageSize must be a number',
   })
+  @IsOptional()
   pageSize?: number;
 
   search?: string;
@@ -18,6 +20,7 @@ export class QueryAllDTO {
   @IsIn(['asc', 'desc'], {
     message: 'wrong value for order'
   })
+  @IsOptional()
   order?: 'asc' | 'desc';
 }
 
