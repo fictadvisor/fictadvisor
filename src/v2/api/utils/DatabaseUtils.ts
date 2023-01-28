@@ -1,5 +1,11 @@
 import { Page, PageDTO, Search, SearchDTO, Sort, SortDTO } from '../../utils/QueryAllDTO';
 
+export class WhereUnique<T> {
+  OR: {
+    [k in keyof T]: any;
+  }[];
+}
+
 export class DatabaseUtils {
 
   static getSearch<T>({ search }: SearchDTO, ...fields: (keyof T)[]): Search<T> | object {
@@ -30,6 +36,17 @@ export class DatabaseUtils {
       orderBy: {
         [sort]: order,
       },
+    };
+  }
+
+  static getWhere<T>(data: T): WhereUnique<T> {
+    const arr = [];
+    for (const [k, v] of Object.entries(data)) {
+      arr.push({ [k]: v });
+    }
+
+    return {
+      OR: arr,
     };
   }
 }

@@ -13,6 +13,6 @@ import { GrantService } from './grant/GrantService';
   controllers: [UserController, RoleController],
   providers: [UserService, RoleService, GrantService],
   exports: [UserService, RoleService, GrantService],
-  imports: [ConfigurationModule, forwardRef(() => GroupModule), DisciplineModule, PrismaModule],
+  imports: [ConfigurationModule, forwardRef(() => GroupModule), forwardRef(() => DisciplineModule), PrismaModule],
 })
 export class UserModule {}

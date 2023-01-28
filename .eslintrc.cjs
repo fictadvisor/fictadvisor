@@ -31,6 +31,7 @@ module.exports = {
     'brace-style': 'error',
     'comma-spacing': 'error',
     'func-call-spacing': 'error',
-    'rest-spread-spacing': 'error'
+    'rest-spread-spacing': 'error',
+    'object-curly-spacing': ['error', 'always'],
   },
 };

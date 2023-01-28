@@ -1,5 +1,5 @@
 import { State } from "@prisma/client";
-import { IsNotEmpty, IsOptional, MaxLength, MinLength} from "class-validator";
+import { IsNotEmpty, IsOptional, MaxLength, MinLength } from "class-validator";
 
 export class UpdateUserDTO {
 
