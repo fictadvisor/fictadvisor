@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { GroupService } from './GroupService';
 import { CreateDTO } from './dto/CreateDTO';
 import { GetDTO } from '../teacher/dto/GetDTO';
@@ -9,9 +9,9 @@ import { GroupByParamsGuard } from '../../security/group-guard/GroupByParamsGuar
 import { Permission } from 'src/v2/security/permission-guard/Permission';
 import { PermissionGuard } from 'src/v2/security/permission-guard/PermissionGuard';
 import { EmailDTO } from './dto/EmailDTO';
-import {ApproveDTO} from "../user/dto/ApproveDTO";
-import {RoleDTO} from "./dto/RoleDTO";
-import {UserByIdPipe} from "../user/UserByIdPipe";
+import { ApproveDTO } from "../user/dto/ApproveDTO";
+import { RoleDTO } from "./dto/RoleDTO";
+import { UserByIdPipe } from "../user/UserByIdPipe";
 
 @Controller({
   version: '2',

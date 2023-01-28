@@ -31,7 +31,7 @@ export const HOUR = ONE_MINUTE * 60;
 export class AuthService {
 
   private resetPasswordTokens: Map<string, { email: string, date: Date }> = new Map();
-  private verificateEmailTokens: Map<string, { email: string, date: Date }> = new Map();
+  private verifyEmailTokens: Map<string, { email: string, date: Date }> = new Map();
 
   constructor(
     private prisma: PrismaService,
@@ -227,17 +227,17 @@ export class AuthService {
 
   async requestEmailVerification(email: string) {
     const uuid = crypto.randomUUID();
-    for (const [token, value] of this.verificateEmailTokens.entries()) {
+    for (const [token, value] of this.verifyEmailTokens.entries()) {
       if (value.email === email) {
         if (Date.now() - value.date.getTime() < ONE_MINUTE) {
           throw new TooManyActionsException();
         } else {
-          this.verificateEmailTokens.delete(token);
+          this.verifyEmailTokens.delete(token);
         }
       }
     }
 
-    this.verificateEmailTokens.set(uuid, {
+    this.verifyEmailTokens.set(uuid, {
       email,
       date: new Date(),
     });
@@ -249,19 +249,19 @@ export class AuthService {
     });
 
     setTimeout(() => {
-      this.verificateEmailTokens.delete(uuid);
+      this.verifyEmailTokens.delete(uuid);
       this.userRepository.deleteByEmail(email);
     }, HOUR);
   }
 
   async verifyEmail(token: string) {
-    if (!this.verificateEmailTokens.has(token)) {
+    if (!this.verifyEmailTokens.has(token)) {
       throw new InvalidVerificationTokenException();
     }
-    const email = this.verificateEmailTokens.get(token).email;
+    const email = this.verifyEmailTokens.get(token).email;
     await this.userRepository.updateByEmail(email, { state: State.APPROVED });
 
-    this.verificateEmailTokens.delete(token);
+    this.verifyEmailTokens.delete(token);
   }
 
   async setPassword(search: UniqueUserDTO, password) {
