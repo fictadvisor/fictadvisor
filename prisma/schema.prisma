@@ -228,7 +228,9 @@ enum QuestionType {
 
 model Question {
   id              String           @id @default(uuid())
+  category        String
   name            String
+  description     String?
   text            String
   isRequired      Boolean          @default(true) @map("is_required")
   criteria        String?
