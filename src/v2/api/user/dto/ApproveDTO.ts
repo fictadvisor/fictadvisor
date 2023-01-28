@@ -1,5 +1,5 @@
 import { State } from '@prisma/client';
-import {IsIn} from "class-validator";
+import { IsIn } from "class-validator";
 
 export class ApproveDTO {
   @IsIn(Object.keys(State), {

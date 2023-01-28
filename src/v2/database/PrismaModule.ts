@@ -11,7 +11,9 @@ import { ScheduleRepository } from '../api/schedule/ScheduleRepository';
 import { RoleRepository } from '../api/user/role/RoleRepository';
 import { GrantRepository } from '../api/user/grant/GrantRepository';
 import { StudentRepository } from '../api/user/StudentRepository';
-import {QuestionRepository} from "../api/poll/QuestionRepository";
+import { UserRepository } from '../api/user/UserRepository';
+import { SuperheroRepository } from '../api/user/SuperheroRepository';
+import { QuestionRepository } from "../api/poll/QuestionRepository";
 
 @Module({
   providers: [
@@ -27,6 +29,8 @@ import {QuestionRepository} from "../api/poll/QuestionRepository";
     RoleRepository,
     GrantRepository,
     StudentRepository,
+    UserRepository,
+    SuperheroRepository,
     QuestionRepository,
   ],
   exports: [
@@ -42,6 +46,8 @@ import {QuestionRepository} from "../api/poll/QuestionRepository";
     RoleRepository,
     GrantRepository,
     StudentRepository,
+    UserRepository,
+    SuperheroRepository,
     QuestionRepository,
   ],
 })

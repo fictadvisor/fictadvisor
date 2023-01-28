@@ -1,7 +1,6 @@
-import {Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { GroupService } from './GroupService';
 import { CreateDTO } from './dto/CreateDTO';
-import { GetDTO } from '../teacher/dto/GetDTO';
 import { GroupByIdPipe } from './GroupByIdPipe';
 import { Group } from '@prisma/client';
 import { JwtGuard } from '../../security/JwtGuard';
@@ -9,9 +8,10 @@ import { GroupByParamsGuard } from '../../security/group-guard/GroupByParamsGuar
 import { Permission } from 'src/v2/security/permission-guard/Permission';
 import { PermissionGuard } from 'src/v2/security/permission-guard/PermissionGuard';
 import { EmailDTO } from './dto/EmailDTO';
-import {ApproveDTO} from "../user/dto/ApproveDTO";
-import {RoleDTO} from "./dto/RoleDTO";
-import {UserByIdPipe} from "../user/UserByIdPipe";
+import { ApproveDTO } from "../user/dto/ApproveDTO";
+import { RoleDTO } from "./dto/RoleDTO";
+import { UserByIdPipe } from "../user/UserByIdPipe";
+import { QueryAllDTO } from '../../utils/QueryAllDTO';
 
 @Controller({
   version: '2',
@@ -28,7 +28,7 @@ export class GroupController {
   }
 
   @Get()
-  getAll(@Query() body: GetDTO<Group>) {
+  getAll(@Query() body: QueryAllDTO) {
     return this.groupService.getAll(body);
   }
 

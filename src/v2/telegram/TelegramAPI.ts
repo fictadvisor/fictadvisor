@@ -1,9 +1,9 @@
-import {TelegramConfigService} from "../config/TelegramConfigService";
-import {Injectable} from "@nestjs/common";
-import axios, {AxiosInstance} from "axios";
-import {VerifyStudentDTO} from "./dto/VerifyStudentDTO";
-import {VerifyCaptainDTO} from "./dto/VerifyCaptainDTO";
-import {VerifySuperheroDTO} from "./dto/VerifySuperheroDTO";
+import { TelegramConfigService } from "../config/TelegramConfigService";
+import { Injectable } from "@nestjs/common";
+import axios, { AxiosInstance } from "axios";
+import { VerifyStudentDTO } from "./dto/VerifyStudentDTO";
+import { VerifyCaptainDTO } from "./dto/VerifyCaptainDTO";
+import { VerifySuperheroDTO } from "./dto/VerifySuperheroDTO";
 
 @Injectable()
 export class TelegramAPI {

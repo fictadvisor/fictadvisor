@@ -1,14 +1,14 @@
-import {forwardRef, Inject, Injectable} from '@nestjs/common';
-import {PrismaService} from '../../database/PrismaService';
-import {GroupService} from '../group/GroupService';
-import {DisciplineService} from '../discipline/DisciplineService';
-import {GiveRoleDTO} from './dto/GiveRoleDTO';
-import {GrantRepository} from './grant/GrantRepository';
-import {StudentRepository} from './StudentRepository';
-import {RoleService} from './role/RoleService';
-import {UpdateStudentData} from "./dto/UpdateStudentData";
-import {UpdateSuperheroData} from "./dto/UpdateSuperheroData";
-import {SuperheroRepository} from "./SuperheroRepository";
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { PrismaService } from '../../database/PrismaService';
+import { GroupService } from '../group/GroupService';
+import { DisciplineService } from '../discipline/DisciplineService';
+import { GiveRoleDTO } from './dto/GiveRoleDTO';
+import { GrantRepository } from './grant/GrantRepository';
+import { StudentRepository } from './StudentRepository';
+import { RoleService } from './role/RoleService';
+import { UpdateStudentData } from "./dto/UpdateStudentData";
+import { UpdateSuperheroData } from "./dto/UpdateSuperheroData";
+import { SuperheroRepository } from "./SuperheroRepository";
 
 @Injectable()
 export class UserService {
@@ -43,7 +43,7 @@ export class UserService {
     return false;
   }
 
-  async giveRole(id: string, {roleId}: GiveRoleDTO) {
+  async giveRole(id: string, { roleId }: GiveRoleDTO) {
     await this.studentRepository.addRole(id, roleId);
   }
 

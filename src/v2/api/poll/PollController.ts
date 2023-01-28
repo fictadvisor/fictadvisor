@@ -2,11 +2,11 @@ import {Body, Controller, Delete, Get, Patch, Param, Put, Post, Request, UseGuar
 import { PollService } from './PollService';
 import { JwtGuard } from '../../security/JwtGuard';
 import { GroupByDisciplineTeacherGuard } from '../../security/group-guard/GroupByDisciplineTeacherGuard';
+import { CreateAnswersDTO } from "./dto/CreateAnswersDTO";
 import { UpdateQuestionDTO } from "./dto/UpdateQuestionDTO";
 import { CreateQuestionsDTO } from "./dto/CreateQuestionDTO";
-import {CreateAnswersDTO} from "./dto/CreateAnswersDTO";
-import {QuestionRoleData} from "./dto/QuestionRoleData";
-import {TeacherRole} from "@prisma/client";
+import { QuestionRoleData } from "./dto/QuestionRoleData";
+import { TeacherRole } from "@prisma/client";
 
 @Controller({
   version: '2',
