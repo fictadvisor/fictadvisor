@@ -11,6 +11,7 @@ import { PermissionGuard } from 'src/v2/security/permission-guard/PermissionGuar
 import { EmailDTO } from './dto/EmailDTO';
 import {ApproveDTO} from "../user/dto/ApproveDTO";
 import {RoleDTO} from "./dto/RoleDTO";
+import {UserByIdPipe} from "../user/UserByIdPipe";
 
 @Controller({
   version: '2',
@@ -58,34 +59,34 @@ export class GroupController {
 
   @Permission('groups.$groupId.students.add')
   @UseGuards(JwtGuard, PermissionGuard)
-  @Post('/:groupId/add-emails')
+  @Post('/:groupId/addEmails')
   async addUnregistered(
     @Param('groupId') groupId: string,
     @Body() body: EmailDTO
   ) {
-    return await this.groupService.addUnregistered(groupId, body);
+    return this.groupService.addUnregistered(groupId, body);
   }
 
   @Permission('groups.$groupId.students.verify')
   @UseGuards(JwtGuard, PermissionGuard)
-  @Patch('/:groupId/verify/:email')
+  @Patch('/:groupId/verify/:userId')
   async verifyStudent(
-      @Param('groupId') groupId: string,
-      @Param('email') email: string,
-      @Body() body : ApproveDTO
+    @Param('groupId') groupId: string,
+    @Param('userId', UserByIdPipe) userId: string,
+    @Body() body : ApproveDTO
   ) {
-    return await this.groupService.verifyStudent(groupId, email, body);
+    return this.groupService.verifyStudent(groupId, userId, body);
   }
 
   @Permission('groups.$groupId.admin.switch')
   @UseGuards(JwtGuard, PermissionGuard)
   @Patch('/:groupId/switch/:userId')
-  async adminSwitch(
+  async moderatorSwitch(
     @Param('groupId') groupId: string,
-    @Param('userId') userId: string,
+    @Param('userId', UserByIdPipe) userId: string,
     @Body() body: RoleDTO
   ) {
-    return await this.groupService.adminSwitch(groupId, userId, body);
+    return this.groupService.moderatorSwitch(groupId, userId, body);
   }
 
   @Permission('groups.$groupId.students.remove')
@@ -93,8 +94,8 @@ export class GroupController {
   @Delete('/:groupId/remove/:userId')
   async removeStudent(
     @Param('groupId') groupId: string,
-    @Param('userId') userId: string,
+    @Param('userId', UserByIdPipe) userId: string,
   ){
-    return await this.groupService.removeStudent(groupId, userId);
+    return this.groupService.removeStudent(groupId, userId);
   }
 }

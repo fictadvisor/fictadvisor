@@ -38,9 +38,16 @@ export class GroupRepository {
     return group.students;
   }
 
-  async getRole(id: string) {
-    const group = await this.get(id);
-    return group.groupRole;
+  async getRoles(groupId: string) {
+    const groupRoles = await this.prisma.groupRole.findMany({
+      where:{
+        groupId,
+      },
+      include:{
+        role: true,
+      },
+    });
+    return groupRoles.map((gr) => (gr.role));
   }
 
   async find(code: string) {

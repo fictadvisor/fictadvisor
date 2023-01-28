@@ -1,7 +1,7 @@
-import {IsBoolean} from "class-validator";
+import {RoleName} from "@prisma/client";
+import {IsEmpty} from "class-validator";
 
 export class RoleDTO {
-  @IsBoolean()
-  status: boolean;
-  roleId: string;
+  @IsEmpty()
+  roleName: RoleName;
 }

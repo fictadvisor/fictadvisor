@@ -1,4 +1,4 @@
-import {Body, Injectable} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
 import {Group, State} from '@prisma/client';
 import { GetDTO } from '../teacher/dto/GetDTO';
@@ -80,29 +80,39 @@ export class GroupService {
   }
 
   async addUnregistered(groupId: string, body: EmailDTO) {
-    await this.userRepository.addUnregistered(groupId, body);
+    for (const email of body.emails) {
+      const user = await this.userRepository.createByEmail(email);
+      await this.studentRepository.create(user.id, groupId);
+      await this.studentRepository.update(user.id, {state: State.APPROVED});
+    }
+
+    return;
   }
 
-  async verifyStudent(groupId: string, email: string, data: ApproveDTO){
-    const user = await this.userRepository.getByEmail(email);
+  async verifyStudent(groupId: string, userId: string, data: ApproveDTO){
+    const user = await this.userRepository.get(userId);
 
     if (user.student.groupId !== groupId) {
       throw new NoPermissionException();
     }
 
-    await this.studentRepository.updateState(user, data);
+    await this.studentRepository.update(user.id, data);
   }
 
-  async adminSwitch(groupId: string, userId: string, body: RoleDTO){
-    const  user = await this.userRepository.get(userId);
+  async moderatorSwitch(groupId: string, userId: string, body: RoleDTO){
+    const user = await this.userRepository.get(userId);
 
     if (user.student.groupId !== groupId) {
       throw new NoPermissionException();
     }
 
-    if (body.status)
-      await this.studentRepository.addRole(userId, body.roleId);
-    else await this.studentRepository.removeRole(userId, body.roleId);
+    const roles = await this.groupRepository.getRoles(groupId);
+
+    for (const role of roles) {
+      if (role.name === body.roleName) {
+        await this.studentRepository.addRole(userId, role.id);
+      }
+    }
   }
 
   async removeStudent(groupId: string, userId: string){
@@ -112,6 +122,6 @@ export class GroupService {
       throw new NoPermissionException();
     }
 
-    await this.studentRepository.updateState(user, {state: State.DECLINED});
+    await this.studentRepository.update(user.id, {state: State.DECLINED});
   }
 }

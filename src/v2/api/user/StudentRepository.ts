@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import { User } from "@prisma/client";
-import {ApproveDTO} from "./dto/ApproveDTO";
 
 @Injectable()
 export class StudentRepository {
@@ -45,12 +43,21 @@ export class StudentRepository {
     });
   }
 
-  async updateState(user: User, data: ApproveDTO){
+  async update(userId: string, data){
     this.prisma.student.update({
       where:{
-        userId: user.id,
+        userId,
       },
       data,
+    });
+  }
+
+  async create(userId: string, groupId: string) {
+    return this.prisma.student.create({
+      data: {
+        userId,
+        groupId,
+      },
     });
   }
 }
