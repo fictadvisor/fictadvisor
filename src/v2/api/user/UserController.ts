@@ -61,7 +61,7 @@ export class UserController {
     return this.userService.giveRole(userId, body);
   }
 
-  @Delete('/:userId/roles/roleId')
+  @Delete('/:userId/roles/:roleId')
   removeRole(
     @Param('userId') userId: string,
     @Param('roleId') roleId: string,
