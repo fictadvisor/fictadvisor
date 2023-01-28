@@ -1,7 +1,7 @@
 import {RoleName} from "@prisma/client";
-import {IsEmpty} from "class-validator";
+import {IsNotEmpty} from "class-validator";
 
 export class RoleDTO {
-  @IsEmpty()
+  @IsNotEmpty()
   roleName: RoleName;
 }

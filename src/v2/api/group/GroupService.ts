@@ -80,13 +80,20 @@ export class GroupService {
   }
 
   async addUnregistered(groupId: string, body: EmailDTO) {
+    const users = [];
     for (const email of body.emails) {
-      const user = await this.userRepository.createByEmail(email);
-      await this.studentRepository.create(user.id, groupId);
-      await this.studentRepository.update(user.id, {state: State.APPROVED});
+      const user = await this.userRepository.create({email});
+      await this.studentRepository.create({
+        userId: user.id,
+        groupId: groupId,
+        state: State.APPROVED,
+      });
+      users.push({
+        id: user.id,
+        email: user.email,
+      });
     }
-
-    return;
+    return {users};
   }
 
   async verifyStudent(groupId: string, userId: string, data: ApproveDTO){

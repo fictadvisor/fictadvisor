@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
+import {CreateStudentData} from "./dto/СreateStudentData";
 
 @Injectable()
 export class StudentRepository {
@@ -52,12 +53,9 @@ export class StudentRepository {
     });
   }
 
-  async create(userId: string, groupId: string) {
+  async create(data: CreateStudentData) {
     return this.prisma.student.create({
-      data: {
-        userId,
-        groupId,
-      },
+      data,
     });
   }
 }
