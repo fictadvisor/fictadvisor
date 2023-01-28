@@ -1,4 +1,4 @@
-import {QuestionType} from '@prisma/client';
+import {QuestionType, QuestionRole, QuestionAnswer} from '@prisma/client';
 export class CreateQuestionsDTO {
     questions: CreateQuestionData[];
 }

@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
 import {CreateQuestionData} from "./dto/CreateQuestionDTO";
 import {UpdateQuestionDTO} from "./dto/UpdateQuestionDTO";
+import {QuestionRoleData} from "./dto/QuestionRoleData";
+import {TeacherRole} from "@prisma/client";
 
 @Injectable()
 export class QuestionRepository {
@@ -16,8 +18,25 @@ export class QuestionRepository {
         });
     }
 
+    async connectRole(questionId: string, data: QuestionRoleData){
+            return await this.prisma.questionRole.create({
+                data: {
+                    questionId,
+                    ...data,
+                },
+            });
+    }
+
+    async deleteRole(questionId: string, role: TeacherRole){
+        return this.prisma.questionRole.deleteMany({
+            where:{
+                questionId,
+                role,
+            },
+        });
+    }
     async delete(id: string) {
-        return this.prisma.question.deleteMany({
+        return this.prisma.question.delete({
             where: {
                 id,
             },
@@ -34,10 +53,15 @@ export class QuestionRepository {
     }
 
     async getQuestion(id: string) {
-         return await this.prisma.question.findUnique({
+        return await this.prisma.question.findUnique({
             where: {
                 id,
             },
         });
     }
+
+    async roleHaveQuestion(questionId: string, questionRole: QuestionRoleData) {
+        return (questionRole.questionId == questionId);
+    }
+
 }

@@ -1,9 +1,12 @@
-import {Body, Controller, Delete, Get, Patch, Param, Put, Request, UseGuards} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Patch, Param, Put, Post, Request, UseGuards} from '@nestjs/common';
 import { PollService } from './PollService';
 import { JwtGuard } from '../../security/JwtGuard';
 import { GroupByDisciplineTeacherGuard } from '../../security/group-guard/GroupByDisciplineTeacherGuard';
 import { UpdateQuestionDTO } from "./dto/UpdateQuestionDTO";
 import { CreateQuestionsDTO } from "./dto/CreateQuestionDTO";
+import {CreateAnswersDTO} from "./dto/CreateAnswersDTO";
+import {QuestionRoleData} from "./dto/QuestionRoleData";
+import {TeacherRole} from "@prisma/client";
 
 @Controller({
   version: '2',
@@ -19,14 +22,13 @@ export class PollController {
   async createAnswers(
     @Param('disciplineTeacherId') disciplineTeacherId: string,
     @Request() req,
-    @Body() body,
+    @Body() body: CreateAnswersDTO,
   ) {
     return this.pollService.createAnswers(req.user.id, disciplineTeacherId, body);
   }
 
   @UseGuards(JwtGuard)
   async createQuestion(
-      @Request() req,
       @Body() body : CreateQuestionsDTO,
       ) {
     return this.pollService.createQuestions(body);
@@ -55,7 +57,22 @@ export class PollController {
     return this.pollService.getQuestion(questionId);
   }
 
+  @UseGuards(JwtGuard)
+  @Post('/questions/:questionId/roles')
+  giveRole(
+      @Param('questionId') questionId: string, body: QuestionRoleData,
+  ){
+    return this.pollService.giveRole(body, questionId);
+  }
 
+  @UseGuards(JwtGuard)
+  @Post('/questions/:questionId/roles/:role')
+  deleteRole(
+      @Param('questionId') questionId: string,
+      @Param() params: TeacherRole,
+  ){
+    return this.pollService.deleteRole(questionId, params);
+  }
 
 
 }
