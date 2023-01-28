@@ -56,15 +56,15 @@ export class TeacherRepository {
   async getDisciplineTeachers(
     id: string,
   ) {
-    const group = await this.get(id);
-    return group.disciplineTeachers;
+    const teacher = await this.get(id);
+    return teacher.disciplineTeachers;
   }
 
   async getTemporaryLessons(
     id: string,
   ) {
-    const group = await this.get(id);
-    return group.temporaryLessons;
+    const teacher = await this.get(id);
+    return teacher.temporaryLessons;
   }
 
   async delete(

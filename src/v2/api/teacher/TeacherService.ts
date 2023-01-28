@@ -21,18 +21,34 @@ export class TeacherService {
     return { teachers };
   }
 
+  async getTeacher(
+    id: string,
+    ) {
+      return this.teacherRepository.getTeacher(id);
+    }
+
+  async getTeacherRoles(
+    teacherId: string,
+    ) {
+      const disciplineTeachers = await this.teacherRepository.getDisciplineTeachers(teacherId);
+      const results = [];
+
+      for (const discipline of disciplineTeachers) {
+        const roles = await this.disciplineTeacherRepository.getRoles(discipline.id);
+        for (const role of roles) {
+          if (results.includes(role.role)) continue
+          results.push(role.role);
+        }
+      }
+      return { roles: results }
+    }
+
   async create(
     body: CreateTeacherDTO,
   ) {
     return this.teacherRepository.create(body);
   }
-
-  async getTeacher(
-    id: string,
-  ) {
-    return this.teacherRepository.getTeacher(id);
-  }
-
+    
   async update(
     id: string,
     body: UpdateTeacherDTO,
