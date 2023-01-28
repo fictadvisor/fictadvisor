@@ -46,6 +46,19 @@ $gray-tag-border-color: #525252;
 $third-tags-bgc: #1E1E1E;
 $svg-tag-color: #FFFFFF;
 
+//Button-icons color
+$grey-button: #343434;
+$dark-red-button: #970C13;
+$red-button: #EC131E;
+$red-button-border: #C11018;
+$darkest-red-button: #6D090E;
+$disabled-grey-button: #1E1E1E;
+$dark-green-button: #106034;
+$green-button: #339B33;
+$green-button-border: #106034;
+$darkest-green-button: #08301A;
+$disabled-button-font-color: #343434;
+
 // Switch colors
 $switch-off-knob-color: #343434;
 $switch-on-knob-color: #FFFFFF;
@@ -59,3 +72,24 @@ $check-disabled-color: #525252;
 // Radio colors
 $radio-default-color: #FFFFFF;
 $radio-disabled-color: #525252;
+
+// Tab colors
+$tab-default-color: #1E1E1E;
+$tab-hover-color: #292929;
+$tab-active-color: #343434;
+$tab-focus-border-color: #873030;
+$tab-disabled-color: #1E1E1E;
+
+// Tab text colors
+$tab-text-default-color: #FAFAFA;
+$tab-text-disabled-color: #404040;
+
+// Count for tab colors
+$tab-count-default-color: #292929;
+$tab-count-hover-color:#343434;
+$tab-count-active-color:#404040;
+$tab-count-disabled-color: #1E1E1E;
+
+// Count text colors
+$tab-count-text-default-color: #E5E5E5;
+$tab-count-text-disabled-color: #404040;

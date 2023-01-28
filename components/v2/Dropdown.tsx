@@ -1,70 +1,90 @@
-import Select from 'react-select';
-import React, { useState } from 'react';
+import Select from "react-select";
+import React, { ReactNode, useState } from "react";
 
-const leftInputPadding = 26; //in px
-const hoveredOption = '#404040';
-const themeColor = '#1E1E1E';
+
 const dropDownOptionHeight = 36; //px
-const padding=8; // px
 
-export enum DropDownClass{
-    ERROR='error',
-    SUCCESS='success',
-    DISABLED='disabled'
-}
-
-export enum DropDownSize{
-    SMALL='small',
-    MEDIUM='medium',
-    LARGE='large'
+export enum DropDownClass {
+  ERROR = "error",
+  SUCCESS = "success",
+  DISABLED = "disabled",
 }
 
 export type DropDownOption = {
-    value: string,
-    label: string
-}
+  value: string;
+  label: string;
+};
 
 export interface DropdownProps {
-    options: DropDownOption[],
-    label: string,
-    className?: 'error' | 'success' | 'disabled',
-    icon?: React.FC,
-    placeholder?: string,
-    noOptionsText?: string,
-    disabledPlaceholder?: string,
-    size?: 'small' | 'medium' | 'large',
-    numberOfOptions?:number
+  options: DropDownOption[];
+  label: string;
+  className?: "error" | "success" | "disabled";
+  icon?: ReactNode;
+  placeholder?: string;
+  noOptionsText?: string;
+  disabledPlaceholder?: string;
+  numberOfOptions?: number;
 }
 
-export const Dropdown: React.FC<DropdownProps> = (
-    { options,
-        size,
-        label,
-        className,
-        icon,
-        placeholder = className===DropDownClass.DISABLED?'Недоступно...':'Тиць...',
-        noOptionsText = 'Опції відсутні',
-        numberOfOptions=4
-    }) => {
+export const Dropdown: React.FC<DropdownProps> = ({
+  options,
+  label,
+  className,
+  icon,
+  placeholder = className === DropDownClass.DISABLED
+    ? "Недоступно..."
+    : "Тиць...",
+  noOptionsText = "Опції відсутні",
+  numberOfOptions = 4,
+}) => {
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const isDisabled = className === "disabled";
 
-    const [selectedOption, setSelectedOption] = useState(null);
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const isDisabled = className === 'disabled';
+  return (
+    <div className="dropdown">
+      <span className={`${className ? `dropdown-${className}-label` : ""}`}>
+        {label}
+      </span>
+      {icon && <div className="dropdown-icon-container">{icon}</div>}
 
-    return (<div className='dropdown'>
-
-        <span className={`${className ? `dropdown-${className}-label` : ''}`}>{label}</span>
-        {icon && <div className='dropdown-icon-container'>
-            {icon({})}
-        </div>}
-        <Select
-            noOptionsMessage={() => noOptionsText}
-            defaultValue={selectedOption}
-            onChange={setSelectedOption}
-            options={options}
-            className={` dropdown-container-${size} ${className ? `dropdown-${className}` : ''}`}
-            styles={
+      <Select
+        placeholder={placeholder}
+        noOptionsMessage={() => noOptionsText}
+        onChange={setSelectedOption}
+        unstyled={true}
+        options={options}
+        openMenuOnClick={true}
+        blurInputOnSelect={true}
+        isDisabled={isDisabled}
+        onMenuOpen={() => setIsMenuOpen(true)}
+        onMenuClose={() => setIsMenuOpen(false)}
+        maxMenuHeight={dropDownOptionHeight * numberOfOptions}
+        classNames={{
+          control: (state) =>
+            icon
+              ? "dropdown-control dropdown-control-iconed"
+              : "dropdown-control",
+          container: (state) =>
+            `dropdown-container dropdown-container-${className}`,
+        //   input: (state) => "dropdown-input",
+          menu: (state) => "dropdown-menu",
+          menuList: (state) => "dropdown-menu-list",
+          option: (state) =>
+            state.isSelected
+              ? "dropdown-option dropdown-option-selected"
+              : "dropdown-option",
+          placeholder: (state) => state.isDisabled? 'dropdown-placeholder-disabled':'dropdown-placeholder',
+          singleValue: (state) => "dropdown-single-value",
+        }}
+        styles={
                 {
+                    control(baseStyles, state){
+                        return {
+                            ...baseStyles,
+                            cursor:state.isDisabled?'not-allowed':'pointer'
+                        }
+                    },
                     dropdownIndicator(baseStyles, _) {
                         return {
                             ...baseStyles,
@@ -73,38 +93,14 @@ export const Dropdown: React.FC<DropdownProps> = (
                             cursor: 'pointer',
                         }
                     },
-                    control(baseStyles, _) {
+                    container(baseStyles, _){
                         return {
-                            ...baseStyles,
-                            paddingLeft: icon ? `${leftInputPadding + 15}px` : `${leftInputPadding}px`
+                            cursor: 'pointer',
                         }
-
-                    },
-                    option(baseStyles, state) {
-                        return {
-                            ...baseStyles,
-                            backgroundColor: state.isSelected ? hoveredOption : themeColor
-                        }
-                    },
-
-
+                    }
                 }
             }
-            onMenuOpen={() => setIsMenuOpen(true)}
-            onMenuClose={() => setIsMenuOpen(false)}
-            classNamePrefix={`dropdown`}
-            isSearchable={true}
-            isClearable={false}
-            placeholder={placeholder}
-            maxMenuHeight={dropDownOptionHeight*numberOfOptions+padding*2}
-            minMenuHeight={dropDownOptionHeight}
-            unstyled={true}
-            openMenuOnClick={true}
-            blurInputOnSelect={true}
-            isDisabled={isDisabled}
         />
     </div>
-
-    )
-
-}
+  );
+};
