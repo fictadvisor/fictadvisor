@@ -1,13 +1,20 @@
-import {Injectable} from '@nestjs/common';
-import {PrismaService} from '../../database/PrismaService';
-import {Group, State} from '@prisma/client';
-import {DisciplineService} from '../discipline/DisciplineService';
-import {DisciplineRepository} from '../discipline/DisciplineRepository';
-import {GroupRepository} from './GroupRepository';
-import {RoleRepository} from "../user/role/RoleRepository";
-import {StudentRepository} from "../user/StudentRepository";
-import {QueryAllDTO} from "../../utils/QueryAllDTO";
-import {UserRepository} from "../user/UserRepository";
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../../database/PrismaService';
+import { Group, State } from '@prisma/client';
+import { GetDTO } from '../teacher/dto/GetDTO';
+import { DatabaseUtils } from '../utils/DatabaseUtils';
+import { DisciplineService } from '../discipline/DisciplineService';
+import { DisciplineRepository } from '../discipline/DisciplineRepository';
+import { GroupRepository } from './GroupRepository';
+import { RoleRepository } from "../user/role/RoleRepository";
+import { StudentRepository } from "../user/StudentRepository";
+import { QueryAllDTO } from "../../utils/QueryAllDTO";
+import { UserRepository } from "../user/UserRepository";
+import { EmailDTO } from "./dto/EmailDTO";
+import { ApproveDTO } from "../user/dto/ApproveDTO";
+import { NoPermissionException } from "../../utils/exceptions/NoPermissionException";
+import { RoleDTO } from "./dto/RoleDTO";
+
 @Injectable()
 export class GroupService {
   constructor(
@@ -56,6 +63,59 @@ export class GroupService {
     return results;
   }
 
+  async addUnregistered(groupId: string, body: EmailDTO) {
+    const users = [];
+    for (const email of body.emails) {
+      const user = await this.userRepository.create({email});
+      await this.studentRepository.create({
+        userId: user.id,
+        groupId: groupId,
+        state: State.APPROVED,
+      });
+      users.push({
+        id: user.id,
+        email: user.email,
+      });
+    }
+    return {users};
+  }
+
+  async verifyStudent(groupId: string, userId: string, data: ApproveDTO){
+    const user = await this.userRepository.get(userId);
+
+    if (user.student.groupId !== groupId) {
+      throw new NoPermissionException();
+    }
+
+    await this.studentRepository.update(user.id, data);
+  }
+
+  async moderatorSwitch(groupId: string, userId: string, body: RoleDTO){
+    const user = await this.userRepository.get(userId);
+
+    if (user.student.groupId !== groupId) {
+      throw new NoPermissionException();
+    }
+
+    const roles = await this.groupRepository.getRoles(groupId);
+
+    for (const role of roles) {
+      if (role.name === body.roleName) {
+        await this.studentRepository.addRole(userId, role.id);
+      }
+    }
+  }
+
+  async removeStudent(groupId: string, userId: string){
+    const user = await this.userRepository.get(userId);
+
+    if (user.student.groupId !== groupId) {
+      throw new NoPermissionException();
+    }
+
+    await this.studentRepository.update(user.id, {state: State.DECLINED});
+  }
+
   async getCaptain(groupId: string) {
     const students = await this.groupRepository.getStudents(groupId);
     for (const student of students) {
@@ -75,10 +135,10 @@ export class GroupService {
 
   async getStudents(groupId: string) {
     let students = await this.groupRepository.getStudents(groupId);
-    students = students.filter(st => st.state === State.APPROVED);
+    students = students.filter((st) => st.state === State.APPROVED);
     const results = [];
     for (const student of students){
-      const user = await this.userRepository.get(student.userId)
+      const user = await this.userRepository.get(student.userId);
       results.push({
         firstName: student.firstName,
         middleName: student.middleName,
@@ -86,7 +146,7 @@ export class GroupService {
         email: user.email,
         userName: user.username,
         avatar: user.avatar,
-      })
+      });
     }
     return results;
   }
@@ -94,5 +154,4 @@ export class GroupService {
   async updateGroup(groupId: string){
     await this.groupRepository.updateGroup(groupId);
   }
-
 }
