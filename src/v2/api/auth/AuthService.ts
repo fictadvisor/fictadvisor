@@ -1,22 +1,26 @@
-import { Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { PrismaService } from '../../database/PrismaService';
-import { JwtPayload } from '../../security/JwtPayload';
-import { SecurityConfigService } from '../../config/SecurityConfigService';
-import { State, User } from '@prisma/client';
-import { TokensDTO } from './dto/TokensDTO';
-import { RegistrationDTO, TelegramDTO } from './dto/RegistrationDTO';
-import { createHash, createHmac } from 'crypto';
-import { TelegramConfigService } from '../../config/TelegramConfigService';
-import { UserRepository } from '../user/UserRepository';
-import { InvalidTelegramCredentialsException } from '../../utils/exceptions/InvalidTelegramCredentialsException';
-import { UpdatePasswordDTO } from './dto/UpdatePasswordDTO';
+import {Injectable} from '@nestjs/common';
+import {JwtService} from '@nestjs/jwt';
+import {PrismaService} from '../../database/PrismaService';
+import {JwtPayload} from '../../security/JwtPayload';
+import {SecurityConfigService} from '../../config/SecurityConfigService';
+import {State, User} from '@prisma/client';
+import {TokensDTO} from './dto/TokensDTO';
+import {RegistrationDTO, StudentDTO, TelegramDTO} from './dto/RegistrationDTO';
+import {createHash, createHmac} from 'crypto';
+import {TelegramConfigService} from '../../config/TelegramConfigService';
+import {UserRepository} from '../user/UserRepository';
+import {InvalidTelegramCredentialsException} from '../../utils/exceptions/InvalidTelegramCredentialsException';
+import {UpdatePasswordDTO} from './dto/UpdatePasswordDTO';
 import * as crypto from 'crypto';
-import { EmailService } from '../../email/EmailService';
-import { ResetPasswordDTO } from './dto/ResetPasswordDTO';
-import { InvalidResetTokenException } from '../../utils/exceptions/InvalidResetTokenException';
-import { TooManyActionsException } from '../../utils/exceptions/TooManyActionsException';
-import { InvalidVerificationTokenException } from 'src/v2/utils/exceptions/InvalidVerificationTokenException';
+import {EmailService} from '../../email/EmailService';
+import {ResetPasswordDTO} from './dto/ResetPasswordDTO';
+import {InvalidResetTokenException} from '../../utils/exceptions/InvalidResetTokenException';
+import {TooManyActionsException} from '../../utils/exceptions/TooManyActionsException';
+import {InvalidVerificationTokenException} from 'src/v2/utils/exceptions/InvalidVerificationTokenException';
+import {TelegramAPI} from "../../telegram/TelegramAPI";
+import {StudentRepository} from "../user/StudentRepository";
+import {CreateStudentData} from "../user/dto/СreateStudentData";
+import {GroupRepository} from "../group/GroupRepository";
 
 export const ONE_MINUTE = 1000 * 60;
 export const HOUR = ONE_MINUTE * 60;
@@ -24,8 +28,8 @@ export const HOUR = ONE_MINUTE * 60;
 @Injectable()
 export class AuthService {
 
-  private resetPasswordTokens: Map<string, {email: string, date: Date}> = new Map();
-  private verificateEmailTokens: Map<string, {email: string, date: Date}> = new Map();
+  private resetPasswordTokens: Map<string, { email: string, date: Date }> = new Map();
+  private verificateEmailTokens: Map<string, { email: string, date: Date }> = new Map();
 
   constructor(
     private prisma: PrismaService,
@@ -34,14 +38,18 @@ export class AuthService {
     private telegramConfig: TelegramConfigService,
     private emailService: EmailService,
     private userRepository: UserRepository,
-  ) {}
+    private studentRepository: StudentRepository,
+    private telegramApi: TelegramAPI,
+    private groupRepository: GroupRepository,
+  ) {
+  }
 
   async validateUser(username: string, password: string) {
     return await this.prisma.user.findFirst({
       where: {
         OR: [
-          { username: username },
-          { email: username },
+          {username: username},
+          {email: username},
         ],
         password: password,
       },
@@ -63,13 +71,13 @@ export class AuthService {
         .update(str).digest('hex');
 
       return hash === signature;
-    } catch (e){
+    } catch (e) {
       return false;
     }
   }
 
   async register(registrationDTO: RegistrationDTO): Promise<TokensDTO> {
-    const { telegram, student: {isCaptain, ...createStudent}, user} = registrationDTO;
+    const {telegram, student: {isCaptain, ...createStudent}, user} = registrationDTO;
 
     if (telegram) {
       if (this.isExchangeValid(telegram)) {
@@ -82,29 +90,33 @@ export class AuthService {
       }
     }
 
-    const dbUser = await this.prisma.user.create({
-      data: {
-        ...user,
-        student: {
-          create: createStudent,
-        },
-      },
+    const dbUser = await this.userRepository.create(user);
+    await this.studentRepository.create({
+      userId: dbUser.id,
+      ...createStudent,
     });
 
-    if (isCaptain) this.verifyCaptain();
-    else this.verifyStudent();
+    await this.verify(dbUser.id, +dbUser.telegramId, {
+      isCaptain,
+      ...createStudent,
+    });
 
     return this.getTokens(dbUser);
   }
 
-  verifyStudent() {
-    // TODO add url to Telegram Bot API
-    return;
-  }
-
-  verifyCaptain() {
-    // TODO add url to Telegram Bot API
-    return;
+  async verify(id: string, telegramId: number, {groupId, isCaptain, ...student}: StudentDTO) {
+    const group = await this.groupRepository.getGroup(groupId);
+    const data = {
+      id,
+      telegramId,
+      ...student,
+      groupCode: group.code,
+    };
+    if (isCaptain) {
+      await this.telegramApi.verifyCaptain(data);
+    } else {
+      await this.telegramApi.verifyStudent(data);
+    }
   }
 
   login(user: User): TokensDTO {
@@ -155,7 +167,7 @@ export class AuthService {
     };
   }
 
-  async updatePassword({ oldPassword, newPassword }: UpdatePasswordDTO, user: User): Promise<TokensDTO> {
+  async updatePassword({oldPassword, newPassword}: UpdatePasswordDTO, user: User): Promise<TokensDTO> {
     const dbUser: User = await this.validateUser(user.username, oldPassword);
 
     if (!dbUser) {
@@ -203,7 +215,7 @@ export class AuthService {
     }, HOUR);
   }
 
-  async resetPassword(token: string, { password }: ResetPasswordDTO) {
+  async resetPassword(token: string, {password}: ResetPasswordDTO) {
     if (!this.resetPasswordTokens.has(token)) {
       throw new InvalidResetTokenException();
     }
@@ -214,7 +226,7 @@ export class AuthService {
     this.resetPasswordTokens.delete(token);
   }
 
-  async requestEmailVerification (email: string) {
+  async requestEmailVerification(email: string) {
     const uuid = crypto.randomUUID();
     for (const [token, value] of this.verificateEmailTokens.entries()) {
       if (value.email === email) {
@@ -248,7 +260,7 @@ export class AuthService {
       throw new InvalidVerificationTokenException();
     }
     const email = this.verificateEmailTokens.get(token).email;
-    await this.userRepository.updateByEmail(email, { state: State.APPROVED });
+    await this.userRepository.updateByEmail(email, {state: State.APPROVED});
 
     this.verificateEmailTokens.delete(token);
   }

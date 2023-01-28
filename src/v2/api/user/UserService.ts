@@ -52,7 +52,7 @@ export class UserService {
   }
 
   async updateStudent(userId: string, data: UpdateStudentData) {
-    await this.studentRepository.updateStudent(userId, data);
+    await this.studentRepository.update(userId, data);
   }
 
   async updateSuperhero(userId: string, data: UpdateSuperheroData) {
