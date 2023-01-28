@@ -9,11 +9,12 @@ import { PassportModule } from '@nestjs/passport';
 import { PrismaService } from '../../database/PrismaService';
 import { JwtStrategy } from '../../security/JwtStrategy';
 import { EmailModule } from '../../email/EmailModule';
+import {TelegramAPI} from "../../telegram/TelegramAPI";
 
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy, PrismaService],
+  providers: [AuthService, LocalStrategy, JwtStrategy, PrismaService, TelegramAPI],
   imports: [
     JwtModule.registerAsync({
       imports: [ConfigurationModule],
