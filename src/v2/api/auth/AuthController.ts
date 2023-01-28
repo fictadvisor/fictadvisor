@@ -6,6 +6,7 @@ import { JwtGuard } from '../../security/JwtGuard';
 import { ForgotPasswordDTO } from './dto/ForgotPasswordDTO';
 import { ResetPasswordDTO } from './dto/ResetPasswordDTO';
 import { UpdatePasswordDTO } from "./dto/UpdatePasswordDTO";
+import { VerificateEmailDTO } from './dto/VerificateEmailDTO';
 
 @Controller({
   version: '2',
@@ -64,5 +65,19 @@ export class AuthController {
     @Body() body: ResetPasswordDTO,
   ) {
     return this.authService.resetPassword(token, body);
+  }
+
+  @Post('/register/verifyEmail')
+  async requestEmailVerification(
+    @Body() body: VerificateEmailDTO,
+  ) {
+    return this.authService.requestEmailVerification(body.email);
+  }
+
+  @Post('/register/verifyEmail/:token')
+  async verificateEmail(
+    @Param('token') token: string,
+  ) {
+    return this.authService.verifyEmail(token);
   }
 }
