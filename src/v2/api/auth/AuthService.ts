@@ -152,7 +152,7 @@ export class AuthService {
 
     const user = await this.prisma.user.findUnique({
       where: {
-        telegramId: String(telegram.id),
+        telegramId: telegram.id,
       },
     });
 

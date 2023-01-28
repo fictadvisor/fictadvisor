@@ -22,7 +22,7 @@ model User {
   username            String?
   avatar              String?
   password            String?
-  telegramId          String?          @unique @map("telegram_id")
+  telegramId          Int?             @unique @map("telegram_id")
   student             Student?
   superhero           Superhero?
   questionAnswers     QuestionAnswer[]
