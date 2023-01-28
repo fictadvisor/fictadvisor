@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, Param, Post, Query, UseGuards} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards} from '@nestjs/common';
 import { GroupService } from './GroupService';
 import { CreateDTO } from './dto/CreateDTO';
 import { GroupByIdPipe } from './GroupByIdPipe';
@@ -76,5 +76,13 @@ export class GroupController {
       @Param('groupId') groupId: string,
   ){
     return this.groupService.getStudents(groupId);
+  }
+
+  @UseGuards(JwtGuard, GroupByParamsGuard)
+  @Patch()
+  async update(
+      @Param('groupId') groupId: string,
+  ){
+    return this.groupService.updateGroup(groupId);
   }
 }

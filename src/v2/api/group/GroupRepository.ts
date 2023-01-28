@@ -3,6 +3,7 @@ import { PrismaService } from '../../database/PrismaService';
 import {Group} from "@prisma/client";
 import {QueryAllDTO} from "../../utils/QueryAllDTO";
 import {DatabaseUtils} from "../utils/DatabaseUtils";
+import {add} from "winston";
 
 @Injectable()
 export class GroupRepository {
@@ -90,5 +91,16 @@ export class GroupRepository {
       group = await this.create(code);
     }
     return group;
+  }
+
+  async updateGroup(id: string){
+    return await this.prisma.group.update({
+      where: {
+        id,
+      },
+      data: {
+
+      }
+    })
   }
 }

@@ -1,13 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../database/PrismaService';
-import { Group } from '@prisma/client';
-import { DisciplineService } from '../discipline/DisciplineService';
-import { DisciplineRepository } from '../discipline/DisciplineRepository';
-import { GroupRepository } from './GroupRepository';
-import { RoleRepository } from "../user/role/RoleRepository";
-import { StudentRepository } from "../user/StudentRepository";
+import {Injectable} from '@nestjs/common';
+import {PrismaService} from '../../database/PrismaService';
+import {Group, State} from '@prisma/client';
+import {DisciplineService} from '../discipline/DisciplineService';
+import {DisciplineRepository} from '../discipline/DisciplineRepository';
+import {GroupRepository} from './GroupRepository';
+import {RoleRepository} from "../user/role/RoleRepository";
+import {StudentRepository} from "../user/StudentRepository";
 import {QueryAllDTO} from "../../utils/QueryAllDTO";
-
+import {UserRepository} from "../user/UserRepository";
 @Injectable()
 export class GroupService {
   constructor(
@@ -17,6 +17,7 @@ export class GroupService {
     private prisma: PrismaService,
     private roleRepository: RoleRepository,
     private studentRepository: StudentRepository,
+    private userRepository: UserRepository,
   ) {}
 
   async create(code: string): Promise<Group>  {
@@ -59,8 +60,8 @@ export class GroupService {
     const students = await this.groupRepository.getStudents(groupId);
     for (const student of students) {
       const roles = await this.studentRepository.getRoles(student.userId);
-      for (const role of roles){
-        if (String(role) == "captain"){
+      for (const ROLE of roles){
+        if ( ROLE ){
           return student;
         }
       }
@@ -73,7 +74,25 @@ export class GroupService {
   }
 
   async getStudents(groupId: string) {
-    await this.groupRepository.getStudents(groupId);
+    let students = await this.groupRepository.getStudents(groupId);
+    students = students.filter(st => st.state === State.APPROVED);
+    const results = [];
+    for (const student of students){
+      const user = await this.userRepository.get(student.userId)
+      results.push({
+        firstName: student.firstName,
+        middleName: student.middleName,
+        lastName: student.lastName,
+        email: user.email,
+        userName: user.username,
+        avatar: user.avatar,
+      })
+    }
+    return results;
+  }
+
+  async updateGroup(groupId: string){
+    await this.groupRepository.updateGroup(groupId);
   }
 
 }
