@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
 import { Group, State } from '@prisma/client';
-import { GetDTO } from '../teacher/dto/GetDTO';
 import { DatabaseUtils } from '../utils/DatabaseUtils';
 import { DisciplineService } from '../discipline/DisciplineService';
 import { DisciplineRepository } from '../discipline/DisciplineRepository';
@@ -12,6 +11,7 @@ import { NoPermissionException } from "../../utils/exceptions/NoPermissionExcept
 import { UserRepository } from "../user/UserRepository";
 import { StudentRepository } from "../user/StudentRepository";
 import { RoleDTO } from "./dto/RoleDTO";
+import { QueryAllDTO } from '../../utils/QueryAllDTO';
 
 
 @Injectable()
@@ -33,8 +33,8 @@ export class GroupService {
     });
   }
 
-  async getAll(body: GetDTO<Group>) {
-    const search = DatabaseUtils.getSearch<Group>(body, 'code');
+  async getAll(body: QueryAllDTO) {
+    const search = DatabaseUtils.getSearch(body, 'code');
     const page = DatabaseUtils.getPage(body);
     const sort = DatabaseUtils.getSort(body);
 
