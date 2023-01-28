@@ -1,95 +1,216 @@
-
 function tabs() {
     return (
         <div className="test-page-wrap">
 
-            <div className="tab normal centre" tabIndex={1}>
-                <p className="tab-text normal-text">Tab</p>
-            </div>
-            <div className="tab-disabled normal centre" tabIndex={1}>
-                <p className="tab-text normal-text disabled-text">disabled tab</p>
-            </div>
-
-            <hr className="test-hr"/>
-
-            <div className="tab normal left" tabIndex={2}>
-                <p className="tab-text normal-text">Tab</p>
-            </div>
-            <div className="tab-disabled normal left" tabIndex={2}>
-                <p className="tab-text normal-text disabled-text">disabled tab</p>
-            </div>
-
-            <hr className="test-hr"/>
-
-            <div className="tab small centre" tabIndex={3}>
-                <p className="tab-text small-text">Tab</p>
-            </div>
-            <div className="tab-disabled small centre" tabIndex={3}>
-                <p className="tab-text small-text disabled-text">disabled tab</p>
-            </div>
-
-            <hr className="test-hr"/>
-
-            <div className="tab small left" tabIndex={4}>
-                <p className="tab-text small-text">Tab</p>
-            </div>
-            <div className="tab-disabled small left" tabIndex={4}>
-                <p className="tab-text small-text disabled-text">disabled tab</p>
-            </div>
-
-            <hr className="test-hr"/>
-
-            <div className="tab normal centre" tabIndex={5}>
-                <img className="icon" src="/assets/icons/academic-cap.svg"></img>
-                <p className="tab-text normal-text">Tab</p>
-            </div>
-            <div className="tab-disabled normal centre" tabIndex={5}>
-                <img className="disabled-icon" src="/assets/icons/academic-cap.svg"></img>
-                <p className="tab-text normal-text disabled-text">Tab</p>
-            </div>
-
-            <hr className="test-hr"/>
-
-            <div className="tab normal left" tabIndex={6}>
-                <img className="icon" src="/assets/icons/academic-cap.svg"></img>
-                <p className="tab-text normal-text">Tab</p>
-            </div>
-            <div className="tab-disabled normal left" tabIndex={6}>
-                <img className="disabled-icon" src="/assets/icons/academic-cap.svg"></img>
-                <p className="tab-text normal-text disabled-text">Tab</p>
-            </div>
-
-            <hr className="test-hr"/>
-
-            <div className="tab normal centre" tabIndex={7}>
-                <p className="tab-text normal-text">icon Tab</p>
-                <div className="count">
-                    <p className="count-text">1</p>
+            <div className={"block"}>
+                <div className="test-page-wrap">
+                    <button className="tab-normal centre">
+                        <text className="text">Tab</text>
+                    </button>
+                    <button className="tab-normal centre" disabled={true}>
+                        <text className="text">disabled</text>
+                    </button>
                 </div>
-            </div>
-            <div className="tab-disabled normal centre" tabIndex={7}>
-                <p className="tab-text normal-text disabled-text">disabled icon tab</p>
-                <div className="disabled-count">
-                    <p className="count-text">1</p>
+                <div className="test-page-wrap">
+                    <button className="tab-normal left">
+                        <text className="text">Tab</text>
+                    </button>
+                    <button className="tab-normal left" disabled={true}>
+                        <text className="text">disabled</text>
+                    </button>
+                </div>
+                <div className="test-page-wrap">
+                    <button className="tab-small centre">
+                        <text className="text">Tab</text>
+                    </button>
+                    <button className="tab-small centre" disabled={true}>
+                        <text className="text">disabled</text>
+                    </button>
+                </div>
+                <div className="test-page-wrap">
+                    <button className="tab-small left">
+                        <text className="text">Tab</text>
+                    </button>
+                    <button className="tab-small left" disabled={true}>
+                        <text className="text">disabled</text>
+                    </button>
                 </div>
             </div>
 
             <hr className="test-hr"/>
 
-            <div className="tab normal left" tabIndex={8}>
-                <p className="tab-text normal-text">icon Tab</p>
-                <div className="count">
-                    <p className="count-text">1</p>
+            <div className={"block"}>
+                <div className="test-page-wrap">
+                    <button className="tab-normal centre">
+                        <img className="icon" src="/assets/icons/academic-cap.svg"></img>
+                        <text className="text">Tab</text>
+                    </button>
+                    <button className="tab-normal centre" disabled={true}>
+                        <img className="icon" src="/assets/icons/academic-cap.svg"></img>
+                        <text className="text">disabled</text>
+                    </button>
                 </div>
-            </div>
-            <div className="tab-disabled normal left" tabIndex={8}>
-                <p className="tab-text normal-text disabled-text">disabled icon tab</p>
-                <div className="disabled-count">
-                    <p className="count-text">1</p>
+                <div className="test-page-wrap">
+                    <button className="tab-normal left">
+                        <img className="icon" src="/assets/icons/academic-cap.svg"></img>
+                        <text className="text">Tab</text>
+                    </button>
+                    <button className="tab-normal left" disabled={true}>
+                        <img className="icon" src="/assets/icons/academic-cap.svg"></img>
+                        <text className="text">disabled</text>
+                    </button>
+                </div>
+                <div className="test-page-wrap">
+                    <button className="tab-small centre">
+                        <img className="icon" src="/assets/icons/academic-cap.svg"></img>
+                        <text className="text">Tab</text>
+                    </button>
+                    <button className="tab-small centre" disabled={true}>
+                        <img className="icon" src="/assets/icons/academic-cap.svg"></img>
+                        <text className="text">disabled</text>
+                    </button>
+                </div>
+                <div className="test-page-wrap">
+                    <button className="tab-small left">
+                        <img className="icon" src="/assets/icons/academic-cap.svg"></img>
+                        <text className="text">Tab</text>
+                    </button>
+                    <button className="tab-small left" disabled={true}>
+                        <img className="icon" src="/assets/icons/academic-cap.svg"></img>
+                        <text className="text">disabled</text>
+                    </button>
                 </div>
             </div>
 
             <hr className="test-hr"/>
+
+            <div className={"block"}>
+                <div className="test-page-wrap">
+                    <button className="tab-normal centre">
+                        <text className="text">Tab</text>
+                        <div className="count">
+                            <text className="count-text">1</text>
+                        </div>
+                    </button>
+                    <button className="tab-normal centre" disabled={true}>
+                        <text className="text">disabled</text>
+                        <div className="count">
+                            <text className="count-text">1</text>
+                        </div>
+                    </button>
+                </div>
+                <div className="test-page-wrap">
+                    <button className="tab-normal left">
+                        <text className="text">Tab</text>
+                        <div className="count">
+                            <text className="count-text">2</text>
+                        </div>
+                    </button>
+                    <button className="tab-normal left" disabled={true}>
+                        <text className="text">disabled</text>
+                        <div className="count">
+                            <text className="count-text">1</text>
+                        </div>
+                    </button>
+                </div>
+                <div className="test-page-wrap">
+                    <button className="tab-small centre">
+                        <text className="text">Tab</text>
+                        <div className="count">
+                            <text className="count-text">10</text>
+                        </div>
+                    </button>
+                    <button className="tab-small centre" disabled={true}>
+                        <text className="text">disabled</text>
+                        <div className="count">
+                            <text className="count-text">1</text>
+                        </div>
+                    </button>
+                </div>
+                <div className="test-page-wrap">
+                    <button className="tab-small left">
+                        <text className="text">Tab</text>
+                        <div className="count">
+                            <text className="count-text">100</text>
+                        </div>
+                    </button>
+                    <button className="tab-small left" disabled={true}>
+                        <text className="text">disabled</text>
+                        <div className="count">
+                            <text className="count-text">1</text>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <hr className="test-hr"/>
+
+            <div className={"block"}>
+                <div className="test-page-wrap">
+                    <button className="tab-normal centre">
+                        <img className="icon" src="/assets/icons/academic-cap.svg"></img>
+                        <text className="text">Tab</text>
+                        <div className="count">
+                            <text className="count-text">1</text>
+                        </div>
+                    </button>
+                    <button className="tab-normal centre" disabled={true}>
+                        <img className="icon" src="/assets/icons/academic-cap.svg"></img>
+                        <text className="text">disabled</text>
+                        <div className="count">
+                            <text className="count-text">1</text>
+                        </div>
+                    </button>
+                </div>
+                <div className="test-page-wrap">
+                    <button className="tab-normal left">
+                        <img className="icon" src="/assets/icons/academic-cap.svg"></img>
+                        <text className="text">Tab</text>
+                        <div className="count">
+                            <text className="count-text">1</text>
+                        </div>
+                    </button>
+                    <button className="tab-normal left" disabled={true}>
+                        <img className="icon" src="/assets/icons/academic-cap.svg"></img>
+                        <text className="text">disabled</text>
+                        <div className="count">
+                            <text className="count-text">1</text>
+                        </div>
+                    </button>
+                </div>
+                <div className="test-page-wrap">
+                    <button className="tab-small centre">
+                        <img className="icon" src="/assets/icons/academic-cap.svg"></img>
+                        <text className="text">Tab</text>
+                        <div className="count">
+                            <text className="count-text">1</text>
+                        </div>
+                    </button>
+                    <button className="tab-small centre" disabled={true}>
+                        <img className="icon" src="/assets/icons/academic-cap.svg"></img>
+                        <text className="text">disabled</text>
+                        <div className="count">
+                            <text className="count-text">1</text>
+                        </div>
+                    </button>
+                </div>
+                <div className="test-page-wrap">
+                    <button className="tab-small left">
+                        <img className="icon" src="/assets/icons/academic-cap.svg"></img>
+                        <text className="text">Tab</text>
+                        <div className="count">
+                            <text className="count-text">1</text>
+                        </div>
+                    </button>
+                    <button className="tab-small left" disabled={true}>
+                        <img className="icon" src="/assets/icons/academic-cap.svg"></img>
+                        <text className="text">disabled</text>
+                        <div className="count">
+                            <text className="count-text">1</text>
+                        </div>
+                    </button>
+                </div>
+            </div>
 
         </div>
     );
