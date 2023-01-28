@@ -23,3 +23,5 @@ export function Tag(props: TagProps) {
     )
 
 }
+
+export default Tag;
