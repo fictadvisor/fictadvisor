@@ -134,6 +134,9 @@ export class AuthService {
   }
 
   login(user: User): TokensDTO {
+    if (user.state === State.PENDING) {
+      throw new UnauthorizedException('The email hasn\'t verified yet');
+    }
     return this.getTokens(user);
   }
 
