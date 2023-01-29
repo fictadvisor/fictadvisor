@@ -18,8 +18,8 @@ export interface GroupRadio {
 
 export function GroupRadio(props: GroupRadio) {
     const [value, setValue] = useState("");
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setValue((e.target as HTMLInputElement).value);
+    const handleChange = (event) => {
+        setValue(event.target.value);
     };
     return (
         <div>
