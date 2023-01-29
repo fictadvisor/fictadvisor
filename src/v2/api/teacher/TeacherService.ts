@@ -38,11 +38,11 @@ export class TeacherService {
       for (const discipline of disciplineTeachers) {
         const roles = await this.disciplineTeacherRepository.getRoles(discipline.id);
         for (const role of roles) {
-          if (results.includes(role.role)) continue
+          if (results.includes(role.role)) continue;
           results.push(role.role);
         }
       }
-      return { roles: results }
+      return { roles: results };
     }
 
   async create(
