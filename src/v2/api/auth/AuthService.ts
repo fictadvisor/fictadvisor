@@ -23,6 +23,7 @@ import { GroupRepository } from "../group/GroupRepository";
 import bcrypt from 'bcrypt';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
 import { UniqueUserDTO } from '../user/dto/UniqueUserDTO';
+import { PasswordRepeatException } from '../../utils/exceptions/PasswordRepeatException';
 
 export const ONE_MINUTE = 1000 * 60;
 export const HOUR = ONE_MINUTE * 60;
@@ -180,6 +181,10 @@ export class AuthService {
 
   async updatePassword({ oldPassword, newPassword }: UpdatePasswordDTO, user: User): Promise<TokensDTO> {
     await this.validateUser(user.username, oldPassword);
+
+    if (oldPassword === newPassword) {
+      throw new PasswordRepeatException();
+    }
 
     await this.setPassword({ email: user.email }, newPassword);
 
