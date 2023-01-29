@@ -1,5 +1,4 @@
 import React, {ReactNode} from "react";
-
 export enum ButtonSize {
     LARGE = "large", MEDIUM = "medium", SMALL = "small"
 }
