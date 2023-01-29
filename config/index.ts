@@ -1,6 +1,6 @@
 const config = {
   service: 'FICT Advisor',
-  logo: '/assets/logo.png',
+  logo: '/assets/new_logo.png',
   faculty: 'ФІОТ',
   source: 'https://github.com/fictadvisor',
   botId: process.env.NEXT_PUBLIC_BOT_ID ?? '1699479241',

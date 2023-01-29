@@ -1,3 +1,5 @@
+import { ChangeEvent, useState } from "react"
+
 export enum RadioState {
     DEFAULT = 'default',
     DISABLED = 'disabled',
@@ -7,13 +9,18 @@ export enum RadioState {
 export interface GroupRadio {
     options: {
         state: RadioState,
-        isChecked?: boolean,
-        isDisabled?: boolean,
+        name: string,
+        value: string,
         text?: string,
+        isDisabled?: boolean,
     }[],
 }
 
 export function GroupRadio(props: GroupRadio) {
+    const [value, setValue] = useState("");
+    const handleChange = (event) => {
+        setValue(event.target.value);
+    };
     return (
         <div>
             {props.options.map(radio => {
@@ -21,10 +28,16 @@ export function GroupRadio(props: GroupRadio) {
                     <div>
                         <div className="radio-container">
                             <label>
-                                <input type="radio" className={`${radio.state}-radio-input`} checked={radio.isChecked} disabled={radio.isDisabled} />
-                                <span className={`${radio.state}-radio-box`}></span>
+                                <input
+                                    className={radio.state + "-radio-input"}
+                                    type="radio"
+                                    name={radio.name}
+                                    value={value}
+                                    disabled={radio.isDisabled}
+                                    onChange={handleChange} />
+                                <span className={radio.state + "-radio-box"}></span>
                             </label>
-                            <span className={`${radio.state}-radio-text`}>{radio.text}</span>
+                            <span className={radio.state + "-radio-text"}>{radio.text}</span>
                         </div>
                     </div>
                 )

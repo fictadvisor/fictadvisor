@@ -1,12 +1,10 @@
 .check-container {
     display: flex;
-    padding: 8px;
-    gap: 8px;
 }
 
 .check-button {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
 }
 
 .default-check-input,
@@ -35,8 +33,8 @@
     display: inline-block;
     position: relative;
     cursor: pointer;
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     border: 2px solid $check-default-color;
     border-radius: 3px;
 

@@ -31,10 +31,6 @@ input, button, textarea, select {
 	appearance: none;
 }
 
-.page > .main {
-  width: 100%;
-  display: flex;
-}
 
 .page > .main > .left, .page > .main > .right {
   width: calc(var(--side-block-width) - 40px);
@@ -74,15 +70,20 @@ a > .block:hover {
 }
 
 @media (min-width: 600px) {
-  .adaptive-input-container > *:not(:last-child) {
-    margin-right: 10px;
-  }
+    .adaptive-input-container > *:not(:last-child) {
+        margin-right: 10px;
+    }
 }
 
 .block {
   background-color: #161b22;
   border-radius: 8px;
   padding: 24px;
+}
+
+.page > .main {
+    width: 100%;
+    display: flex;
 }
 
 .page > .main {
@@ -96,7 +97,7 @@ a > .block:hover {
 }
 
 .button-group > button {
-  margin: 0 10px 10px 0px;
+  margin: 0 10px 10px 0;
 }
 
 .button-group > button:last-child {

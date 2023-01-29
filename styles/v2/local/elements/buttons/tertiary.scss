@@ -1,0 +1,39 @@
+@import "button-style";
+
+.tertiary-button-color{
+  color: #D4D4D4;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:active {
+    color: #FAFAFA;
+  }
+
+  &:focus {
+    outline: 0.5px solid #E5E5E5;
+    color: #FAFAFA;
+  }
+
+  &:disabled {
+    color: #525252;
+  }
+}
+
+
+@include button-style("tertiary-large", 2px, 8px 16px, 8px 16px, 10px);
+@include button-text("tertiary-large", 16px, 1.38, 700);
+
+@include button-style("tertiary-medium", 2px, 6px 12px, 6px 12px, 10px);
+@include button-text("tertiary-medium", 14px, 1.4, 500);
+
+@include button-style("tertiary-small", 2px, 4px 8px, 4px 8px, 8px);
+@include button-text("tertiary-small", 14px, 1.4, 400);
+
+
+
+
+
+
+
