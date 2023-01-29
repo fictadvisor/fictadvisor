@@ -64,6 +64,8 @@ textarea{
 }
 
 
-textarea:focus, input:focus{
-  outline: none;
+textarea, input{
+  &:focus, &:hover, &:active{
+    outline: none;
+  }
 }

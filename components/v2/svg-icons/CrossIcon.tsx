@@ -1,19 +1,6 @@
 export const CrossIcon = (props) => (
-  <svg
-    width="10"
-    height="10"
-    viewBox="0 0 10 10"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    {...props}
-  >
-    <path d="M1 9L9 1L1 9ZM1 1L9 9Z" fill="#737373" />
-    <path
-      d="M1 1L9 9M1 9L9 1L1 9Z"
-      stroke="white"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6 6L18 18M6 18L18 6L6 18Z" stroke="#FAFAFA" stroke-width="1.2" stroke-linecap="round"
+              stroke-linejoin="round"/>
+    </svg>
 );

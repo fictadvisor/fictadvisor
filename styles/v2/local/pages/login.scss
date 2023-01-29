@@ -1,15 +1,90 @@
 $left-block-width: 606px;
 $right-block-width: 834px;
 
-@mixin small-button{
-  @extend .small-button;
-}
 
 .login-page{
   width: 100%;
   min-height: calc(100vh);
   @include flex-center;
-  padding-bottom: 20px;
+  background: url("/assets/login-page/login-background.png") no-repeat;
+  background-size: 100vw 100vh;
+}
+
+
+.login-page__content{
+  display: flex;
+  flex-direction: row;
+  gap: 132px;
+  height: 635px;
+}
+
+.left-block{
+  @include flex-center;
+  flex-direction: column;
+}
+
+.left-block__content{
+  @include flex-center;
+  flex-direction: column;
+  gap: 50px;
+}
+
+.login-logo{
+  height: 56px;
+}
+
+.register-text{
+  text-align: center;
+}
+
+.right-block{
+  width: 480px;
+  @include flex-center;
+  margin-left: 6px;
+}
+
+
+.right-block__content{
+  width: 100%;
+  @include flex-center;
+  flex-direction: column;
+}
+
+
+.register-header{
+  text-align: center;
+  font-size: 36px;
+  line-height: 120%;
+  font-weight: 700;
+  margin-bottom: 32px
+}
+
+.login-divider{
+  margin-top: 32px;
+}
+
+.login-input{
+  margin-top: 15px;
+}
+
+.one-line{
+  margin-bottom: 24px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.register-checkbox{
+  width: 30px;
+}
+
+.checkbox-container{
+  display: flex;
+  gap: 12px;
+}
+
+.placeholder{
+  height: 24px;
 }
 
 .login-button-container{
@@ -17,50 +92,12 @@ $right-block-width: 834px;
 }
 
 
-.login-page__content{
-  display: flex;
-  flex-direction: row;
-  width: 1440px;
-  gap: 150px;
-}
-
-.left-block{
-  padding-left: 80px;
-  padding-top: 33px;
-}
-
-.right-block{
-  width: 480px;
-  margin-top: 100px;
-  margin-right: 210px;
-}
-
-.left-block__content{
-  @include flex-center;
-  flex-direction: column;
-  position: relative;
-  bottom: 98px;
-}
-
-.right-block__content{
-  @include flex-center;
-  flex-direction: column;
-}
-
 @media (max-width: 1440px) {
 
   .login-page__content{
-    width: 100vw;
+    width: 100%;
     justify-content: space-evenly;
     gap: 0;
-  }
-
-  .left-block{
-    padding-left: 0;
-  }
-
-  .right-block{
-    margin-right: 0;
   }
 }
 
@@ -70,6 +107,9 @@ $right-block-width: 834px;
   }
   .login-page{
     align-items: start;
+    //hr{
+    //  display: none;
+    //}
   }
   .right-block{
     padding-top: 10%;
@@ -104,61 +144,5 @@ $right-block-width: 834px;
       line-height: 32px;
       font-weight: $font-weight-bold;
     }
-
-
   }
-}
-
-
-.login-circle{
-  position: relative;
-  top: 98px;
-}
-
-
-.blur-block{
-  background: url("/assets/login-page/blur-square.png") no-repeat;
-  background-size: 520px;
-  width: 520px;
-  height: 400px;
-  z-index: 1;
-  @include flex-center;
-  flex-direction: column;
-  padding-top: 76px;
-}
-
-.login-logo{
-  height: 32px;
-}
-
-.register-text{
-  text-align: center;
-  margin-top: 50px;
-  margin-bottom: 50px;
-}
-
-.login-divider{
-  margin-top: 15px;
-}
-
-.register-header{
-  text-align: center;
-  margin-bottom: 32px
-}
-
-.one-line{
-  margin-top: 16px;
-  margin-bottom: 24px;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-}
-
-.register-checkbox{
-  width: 30px;
-}
-
-.checkbox-container{
-  display: flex;
-  gap: 12px;
 }

@@ -1,7 +1,7 @@
 $large-input-width: 480px;
 $normal-input-width: 308px;
 
-@mixin field-input($text-color, $border-color, $placeholder-color){
+@mixin input-color($text-color, $border-color, $placeholder-color){
   &::placeholder {
     transition: all 0.2s ease-in-out;
     color: $placeholder-color;
@@ -17,12 +17,70 @@ $normal-input-width: 308px;
     color: $placeholder-color;
   }
 
-  //background: url("/assets/icons/search-white-18dp.svg") no-repeat 440px; //TODO BACKGRODUN GOES HERE
-  //background-size: 20px;
-  // EXTRA PADDING NEEDED HERE IS   padding: 16px 24px 50px 24px;
+  background: $dark-primary;
+  border-color: $border-color;
+  color: $text-color;
+}
+
+.default-input-color{
+  color: #FAFAFA;
+
+  label{
+    background: linear-gradient(180deg, rgba(30, 30, 30, 0) 49.48%, #1E1E1E 49.95%);
+    color: inherit;
+  }
+
+  input{
+    @include input-color($input-color, $input-color, $input-placeholder-color);
+    &:focus {
+      @include input-color($focus-input-color, $focus-input-color, $focus-input-placeholder-color);
+    }
+  }
+
+  &:hover {
+    color: $hover-input-color;
+
+    input {
+      border-color: $hover-input-color;
+      color: $hover-input-color;
+    }
+  }
+}
+
+.disabled-input-color{
+  @extend .default-input-color;
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+.error-input-color{
+  color: $input-color;
+
+  label{
+    background: linear-gradient(180deg, rgba(30, 30, 30, 0) 49.48%, #1E1E1E 49.95%);
+    color: inherit;
+  }
+  input {
+    @include input-color($input-color, $error-color, $input-placeholder-color);
+  }
+}
+
+.success-input-color{
+  color: $input-color;
+
+  label{
+    background: linear-gradient(180deg, rgba(30, 30, 30, 0) 49.48%, #1E1E1E 49.95%);
+    color: inherit;
+  }
+  input {
+    @include input-color($input-color, $success-color, $input-placeholder-color);
+  }
+}
+
+@mixin field-input($text-color, $border-color, $placeholder-color){
 
   width: 100%;
-  background: inherit;
+  background: $dark-primary;
   padding: 16px 24px 16px 24px;
   border: 2px solid $border-color;
   border-radius: 8px;
@@ -32,9 +90,10 @@ $normal-input-width: 308px;
 @mixin field-style{
   width: 100%;
   min-width: fit-content;
-  background: $dark-primary;
   transition: all 0.2s ease-in-out;
   color: $input-color;
+  position: relative;
+  top: -15px;
 
   label {
     color: inherit;
@@ -42,11 +101,17 @@ $normal-input-width: 308px;
     isolation: isolate;
     width: fit-content;
     block-size: fit-content;
-    background: inherit;
+    background: linear-gradient(180deg, rgba(30, 30, 30, 0) 49.48%, #1E1E1E 49.95%);
     position: relative;
     top: 10px;
     left: 8px;
     @include flex-center;
+  }
+  p{
+    font-size: 11px;
+    line-height: 1.6;
+    margin-top: 2px;
+    padding: 2px 8px;
   }
 }
 
@@ -71,27 +136,6 @@ $normal-input-width: 308px;
   }
 }
 
-.disabled-field {
-  @extend .field;
-  opacity: 0.2;
-  pointer-events: none;
-}
-
-.error-field {
-  @include field-style;
-
-  input {
-    @include field-input($input-color, $error-color, $input-placeholder-color);
-  }
-}
-
-.success-field {
-  @include field-style;
-
-  input {
-    @include field-input($input-color, $success-color, $input-placeholder-color);
-  }
-}
 
 
 

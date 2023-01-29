@@ -1,5 +1,6 @@
-@import "elements/button";
+@import "elements/_buttons";
 @import "elements/input";
+@import "elements/icon";
 @import "elements/textarea";
 @import "elements/scrollbar";
 @import "elements/dropdown";
@@ -7,7 +8,7 @@
 @import "elements/link";
 @import "elements/tag";
 @import "elements/tab";
-@import "elements/alert-button";
+@import "elements/buttons/old-alert";
 @import "elements/star";
 @import "elements/button-icon";
 @import "elements/switch";

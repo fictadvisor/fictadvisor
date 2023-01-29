@@ -3,7 +3,7 @@ import { SuccessIcon } from "./svg-icons/SuccessIcon";
 import { InfoIcon } from "./svg-icons/InfoIcon";
 import { ExclamationIcon } from "./svg-icons/ExclamationIcon";
 import { CrossIcon } from "./svg-icons/CrossIcon";
-import { useState } from "react";
+import React, { useState } from "react";
 
 
 export interface AlertBlockProps {
