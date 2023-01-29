@@ -1,22 +1,19 @@
 @import "../../utils/mixins";
 
-.test-page-wrap {
+.test-page-wrap{
   margin-top: 30px;
   margin-bottom: 70px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 15px;
-  background: #000000;
 }
 
-.test-hr {
-  width: 100%;
-}
-
-// just for test
-.block {
-  @extend .test-page-wrap;
-  flex-direction: row;
+.test-page-content{
+  width: calc(100% - 200px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
 }

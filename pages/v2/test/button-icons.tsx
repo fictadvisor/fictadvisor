@@ -1,21 +1,23 @@
-import {ButtonIconSize, SortButton, SortButtonOrder, TrashBucketButton} from "../../../components/v2/ButtonIcon";
+import {IconButtonSize, SortButton, SortButtonOrder, TrashBucketButton} from "../../../components/v2/IconButton";
 
 function ButtonIcons(){
     return(
         <div className="test-page-wrap">
-            <SortButton size={ButtonIconSize.LARGE} order={SortButtonOrder.ASCENDING}/>
-            <SortButton size={ButtonIconSize.LARGE} order={SortButtonOrder.DESCENDING}/>
-            <SortButton size={ButtonIconSize.NORMAL} order={SortButtonOrder.ASCENDING}/>
-            <SortButton size={ButtonIconSize.NORMAL} order={SortButtonOrder.DESCENDING}/>
-            <SortButton size={ButtonIconSize.LARGE} order={SortButtonOrder.ASCENDING} disabled={true}/>
-            <SortButton size={ButtonIconSize.LARGE} order={SortButtonOrder.DESCENDING} disabled={true}/>
-            <SortButton size={ButtonIconSize.NORMAL} order={SortButtonOrder.ASCENDING} disabled={true}/>
-            <SortButton size={ButtonIconSize.NORMAL} order={SortButtonOrder.DESCENDING} disabled={true}/>
+            <div className="test-page-content">
+                <SortButton size={IconButtonSize.LARGE} order={SortButtonOrder.ASCENDING}/>
+                <SortButton size={IconButtonSize.LARGE} order={SortButtonOrder.DESCENDING}/>
+                <SortButton size={IconButtonSize.NORMAL} order={SortButtonOrder.ASCENDING}/>
+                <SortButton size={IconButtonSize.NORMAL} order={SortButtonOrder.DESCENDING}/>
+                <SortButton size={IconButtonSize.LARGE} order={SortButtonOrder.ASCENDING} disabled={true}/>
+                <SortButton size={IconButtonSize.LARGE} order={SortButtonOrder.DESCENDING} disabled={true}/>
+                <SortButton size={IconButtonSize.NORMAL} order={SortButtonOrder.ASCENDING} disabled={true}/>
+                <SortButton size={IconButtonSize.NORMAL} order={SortButtonOrder.DESCENDING} disabled={true}/>
 
-            <TrashBucketButton size={ButtonIconSize.LARGE}/>
-            <TrashBucketButton size={ButtonIconSize.NORMAL}/>
-            <TrashBucketButton size={ButtonIconSize.LARGE} disabled={true}/>
-            <TrashBucketButton size={ButtonIconSize.NORMAL} disabled={true}/>
+                <TrashBucketButton size={IconButtonSize.LARGE}/>
+                <TrashBucketButton size={IconButtonSize.NORMAL}/>
+                <TrashBucketButton size={IconButtonSize.LARGE} disabled={true}/>
+                <TrashBucketButton size={IconButtonSize.NORMAL} disabled={true}/>
+            </div>
         </div>
     );
 }

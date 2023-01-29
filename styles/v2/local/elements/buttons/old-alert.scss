@@ -1,12 +1,4 @@
 
-#button-icons {
-  display: flex;
-  flex-direction: column;
-  align-content: center;
-  align-items: center;
-  justify-content: center;
-}
-
 @mixin button-set($size) {
   @if ($size == big) {
     width: 98px;
@@ -71,11 +63,7 @@
   padding: 4px 8px;
   border-radius: 4px;
 
-  font-family: 'Manrope', sans-serif;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 140%;
+  @extend .body-primary;
 
   transition: all 0.2s ease-in-out;
 

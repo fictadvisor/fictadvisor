@@ -1,0 +1,31 @@
+@import "../../../utils/mixins";
+
+@mixin button-style($class-name, $border-radius, $padding, $padding-icon, $gap) {
+  .#{$class-name}-button, .#{$class-name}-icon-button {
+    @include flex-center;
+    border-radius: $border-radius;
+    transition: all 0.2s ease-in-out;
+    min-width: fit-content;
+    //white-space: nowrap;
+    width: 100%;
+    padding: $padding;
+    gap: $gap;
+
+    &:disabled {
+      img {
+        opacity: 0.5;
+      }
+    }
+  }
+  .#{class-name}-icon-button {
+    padding: $padding-icon;
+  }
+}
+
+@mixin button-text($class-name, $font-size, $line-height, $font-weight){
+  .#{$class-name}-button, .#{$class-name}-icon-button {
+    font-size: $font-size;
+    line-height: $line-height;
+    font-weight: $font-weight;
+  }
+}

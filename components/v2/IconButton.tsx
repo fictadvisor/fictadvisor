@@ -1,8 +1,9 @@
 import { TrashBucketIcon } from "./svg-icons/TrashBucketIcon";
 import { SortAscendingIcon } from "./svg-icons/SortAscendingIcon";
 import { SortDescendingIcon } from "./svg-icons/SortDescendingIcon";
+import React from "react";
 
-type ButtonIconProps = {
+type IconButtonProps = {
   size: "normal" | "large";
 } & React.DetailedHTMLProps<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
@@ -12,15 +13,15 @@ type ButtonIconProps = {
 export enum SortButtonOrder {
   ASCENDING = "ascending",
   DESCENDING = "descending",
-};
+}
 
-export enum ButtonIconSize {
+export enum IconButtonSize {
   NORMAL = "normal",
   LARGE = "large",
-};
+}
 
 export const SortButton: React.FC<
-  ButtonIconProps & {
+  IconButtonProps & {
     order: SortButtonOrder.ASCENDING | SortButtonOrder.DESCENDING;
   }
 > = ({ size, order, ...rest }) => {
@@ -33,9 +34,9 @@ export const SortButton: React.FC<
       )}
     </button>
   );
-};
+}
 
-export const TrashBucketButton: React.FC<ButtonIconProps> = ({
+export const TrashBucketButton: React.FC<IconButtonProps> = ({
   size,
   ...rest
 }) => {
@@ -44,4 +45,4 @@ export const TrashBucketButton: React.FC<ButtonIconProps> = ({
       <TrashBucketIcon />
     </button>
   );
-};
+}

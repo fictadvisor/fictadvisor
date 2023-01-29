@@ -1,53 +1,59 @@
 import {GetServerSideProps} from "next";
-import {LargeButton, MediumButton} from "../../components/v2/Button";
 import {Input, InputState} from "../../components/v2/Input";
+import PageLayout from "../../components/v2/PageLayout";
+import Button, {ButtonSize, ButtonType} from "../../components/v2/Button";
+import Divider from "../../components/v2/Divider";
+import {CustomLink} from "../../components/v2/Link";
+import {Check, CheckState} from "../../components/v2/Check";
 
-function IndexPage() {
+function LoginPage() {
 
     return (
+        <PageLayout description={"Сторінка для авторизації"}>
+            <div className="login-page">
+                    <div className="login-page__content">
 
-        <div id="login-page-wrapper">
-            <div id="left-block" >
-                <div id="left-block__content">
-                    <img id="login-circle" src={'assets/login-page/login-circle.svg'} alt="red circle icon"/>
+                        <div className="left-block" >
+                            <div className="left-block__content">
+                                <img className="login-logo" src={"/assets/login-page/new_logo.png"} alt="fict advisor logo"/>
+                                <h3 className="register-text">Ти ще не знами?<br/>Приєднуйся!</h3>
+                                <div className="login-button-container">
+                                    <Button text='Зарeєструватися' onClick={() => {}} isDisabled={false} size={ButtonSize.MEDIUM} type={ButtonType.PRIMARY}/>
+                                </div>
+                            </div>
 
-                    <div id="blur-block">
-                        <img id="login-logo" src={"assets/logo.png"}/>
-                        <h3 id="register-text">Ти ще не знами?<br/>Приєднуйся!</h3>
-                        <MediumButton text='Зарeєструватися' onClick={() => {}} isDisabled={false}/>
-                    </div>
-                </div>
-
-            </div>
-            <div id="right-block">
-                <div id="right-block__content">
-                <h3 className="h3--semi-bold" id ="register-header">З поверненням!</h3>
-                <LargeButton text="Увійти за допомогою Telegram" onClick={() => {}} isDisabled={false}/>
-
-                <div id="splitter">
-                    <hr/>
-                    <div>
-                        <p> або </p>
-                    </div>
-                </div>
-                    <Input label={"Пошта або юзернейм"} placeholder={"placeholder"} isHiddable={false} state={InputState.DEFAULT}/>
-                    <Input label={"Пароль"} placeholder={"placeholder"} isHiddable={true} state={InputState.DEFAULT}/>
-                    <div id="one-line">
-                        <div id="checkbox-container">
-                            <input type="checkbox" id="register-checkbox"/>
-                            <p>
-                                Запам’ятати дані
-                            </p>
                         </div>
-                        <div className="white-link-underlined">
-                            <a className="link-container" href="pages/v1">Забув пароль?</a>
+
+                        <hr/>
+
+                        <div className="right-block">
+                            <div className="right-block__content">
+                                <h3 className="register-header">З поверненням!</h3>
+                                <Button iconPath="/assets/icons/heart.svg" text="Увійти за допомогою Telegram" onClick={() => {}} isDisabled={false} size={ButtonSize.LARGE} type={ButtonType.PRIMARY}/>
+                                <Divider text="або" className="login-divider"/>
+                                <Input className="login-input" label={"Пошта або юзернейм"} placeholder={"placeholder"} isHiddable={false} state={InputState.DEFAULT}/>
+                                <Input label={"Пароль"} placeholder={"placeholder"} isHiddable={true} state={InputState.DEFAULT}
+                                remark="Пароль повинен місити 8 символів та обов’язкові знаки"/>
+                                <div className="one-line">
+                                    <div className="checkbox-container">
+                                        <Check state={CheckState.DEFAULT}/>
+                                        <p className="body-primary">
+                                            Запам’ятати дані
+                                        </p>
+                                    </div>
+                                    <CustomLink text="Забув пароль?" href={"#"}/>
+                                </div>
+                                <Button text="Увійти" onClick={() => {}} isDisabled={true} size={ButtonSize.LARGE} type={ButtonType.PRIMARY}/>
+                                <div className="placeholder"></div>
+                                <Button iconPath="/assets/login-page/arrow-left.svg" text="Повернутись до головної" onClick={() => {}} isDisabled={false} size={ButtonSize.MEDIUM} type={ButtonType.TERTIARY}/>
+                            </div>
                         </div>
-                    </div>
-                    <LargeButton text="Увійти" onClick={() => {}} isDisabled={true}/>
 
                 </div>
             </div>
-        </div>
+
+        </PageLayout>
+
     );
 }
 
@@ -57,4 +63,4 @@ export const getServerSideProps: GetServerSideProps = async () => {
         }};
 };
 
-export default IndexPage;
+export default LoginPage;

@@ -1,6 +1,6 @@
 .body-primary{
   font-size: 14px;
-  line-height: 18px;
+  line-height: 1.4;
   font-weight: $font-weight-regular;
 }
 
@@ -11,22 +11,25 @@
 
 .body-secondary{
   font-size: 16px;
-  line-height: 20px;
+  line-height: 1.22;
   font-weight: $font-weight-regular;
 }
 
 .body-secondary--bold{
   @extend .body-secondary;
+  line-height: 1.38;
   font-weight: $font-weight-bold;
 }
 
 .overline-text{
   font-size: 11px;
-  line-height: 16px;
+  line-height: 1.6;
   font-weight: $font-weight-regular;
 }
 
-.default-check-text,
+
+
+.default-check-text, //TODO shouldn't be here
 .disabled-check-text,
 .error-check-text {
     font-size: 14px;
