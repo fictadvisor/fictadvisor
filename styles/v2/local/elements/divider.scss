@@ -1,4 +1,4 @@
-.divider {
+/*.divider {
   width: 100%;
   hr {
     width: 100%;
@@ -17,4 +17,48 @@
       padding: 0 24px;
     }
   }
+}*/
+
+
+
+.container{
+
+  display: inline-block;
+}
+
+
+ul{
+  display: flex;
+  align-items: center;
+  margin-top: 36px;
+}
+
+
+hr{
+  color: $divide-regular-color;
+  
+}
+.zero-line{
+  width: 100%;
+}
+
+.divider-text{
+  color: $divide-regular-color;
+  padding: 0px 8px;
+}
+
+.first-line{
+  width: 181.5px;
+}
+
+.second-text{
+  padding-left: 0;
+}
+
+.second-line{
+  width: 371px;
+}
+
+.third-text{
+  padding-right: 0;
 }
