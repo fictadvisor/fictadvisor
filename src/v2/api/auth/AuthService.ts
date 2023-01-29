@@ -25,6 +25,7 @@ import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityId
 import { UniqueUserDTO } from '../user/dto/UniqueUserDTO';
 import { IdentityQueryDTO } from "./dto/IdentityQueryDTO";
 import { AlreadyRegisteredException } from "../../utils/exceptions/AlreadyRegisteredException";
+import {NotRegisteredException} from "../../utils/exceptions/NotRegisteredException";
 
 export const ONE_MINUTE = 1000 * 60;
 export const HOUR = ONE_MINUTE * 60;
@@ -86,7 +87,7 @@ export class AuthService {
     }
   }
 
-  async register(registrationDTO: RegistrationDTO): Promise<TokensDTO> {
+  async register(registrationDTO: RegistrationDTO) {
     const { telegram, student: { isCaptain, ...createStudent }, user } = registrationDTO;
 
     if(await this.checkIfUserIsRegistered({ email: user.email, username: user.username })) {
@@ -106,20 +107,13 @@ export class AuthService {
 
     user.password = await this.hashPassword(user.password);
 
-    let dbUser;
-
     if(await this.isPseudoRegistered(user.email)) {
-      dbUser = await this.pseudoRegister(user, isCaptain, createStudent);
+      await this.pseudoRegister(user, isCaptain, createStudent);
     } else {
-      dbUser = await this.trulyRegister(user, isCaptain, createStudent);
+      await this.trulyRegister(user, isCaptain, createStudent);
     }
 
-    await this.verify(dbUser.id, +dbUser.telegramId, {
-      isCaptain,
-      ...createStudent,
-    });
-
-    return this.getTokens(dbUser);
+    await this.requestEmailVerification(user.email);
   }
 
   async verify(id: string, telegramId: number, { groupId, isCaptain, ...student }: StudentDTO) {
@@ -231,6 +225,10 @@ export class AuthService {
   }
 
   async requestEmailVerification(email: string) {
+    if(!await this.checkIfUserIsRegistered({ email })) {
+      throw new NotRegisteredException();
+    }
+
     const uuid = crypto.randomUUID();
     for (const [token, value] of this.verifyEmailTokens.entries()) {
       if (value.email === email) {
@@ -264,9 +262,11 @@ export class AuthService {
       throw new InvalidVerificationTokenException();
     }
     const email = this.verifyEmailTokens.get(token).email;
-    await this.userRepository.updateByEmail(email, { state: State.APPROVED });
+    const user = await this.userRepository.updateByEmail(email, { state: State.APPROVED });
 
     this.verifyEmailTokens.delete(token);
+
+    return this.getTokens(user);
   }
 
   async setPassword(search: UniqueUserDTO, password) {
@@ -308,7 +308,10 @@ export class AuthService {
       ...createStudent,
     });
 
-    return dbUser;
+    await this.verify(dbUser.id, +dbUser.telegramId, {
+      isCaptain,
+      ...createStudent,
+    });
   }
 
   async pseudoRegister(user: UserDTO, isCaptain:boolean, createStudent: Omit<StudentDTO, "isCaptain">) {
@@ -317,7 +320,5 @@ export class AuthService {
       lastPasswordChanged: new Date(),
     });
     await this.studentRepository.update(dbUser.id, createStudent);
-
-    return dbUser;
   }
 }

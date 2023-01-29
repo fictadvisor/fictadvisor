@@ -7,7 +7,7 @@ import { ForgotPasswordDTO } from './dto/ForgotPasswordDTO';
 import { ResetPasswordDTO } from './dto/ResetPasswordDTO';
 import { UpdatePasswordDTO } from "./dto/UpdatePasswordDTO";
 import { VerificateEmailDTO } from './dto/VerificateEmailDTO';
-import {IdentityQueryDTO} from "./dto/IdentityQueryDTO";
+import { IdentityQueryDTO } from "./dto/IdentityQueryDTO";
 
 @Controller({
   version: '2',
@@ -63,14 +63,14 @@ export class AuthController {
   }
 
   @Post('/register/verifyEmail')
-  async requestEmailVerification(
+  requestEmailVerification(
     @Body() body: VerificateEmailDTO,
   ) {
     return this.authService.requestEmailVerification(body.email);
   }
 
   @Post('/register/verifyEmail/:token')
-  async verificateEmail(
+  verifyEmail(
     @Param('token') token: string,
   ) {
     return this.authService.verifyEmail(token);
