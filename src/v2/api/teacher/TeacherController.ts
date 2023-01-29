@@ -28,7 +28,15 @@ export class TeacherController {
   ) {
     return this.teacherService.getAll(query);
   }
-  
+
+  @UseGuards(JwtGuard)
+  @Get('/:teacherId/roles')
+  getTeacherRoles(
+    @Param('teacherId', TeacherByIdPipe) teacherId: string,
+  ) {
+    return this.teacherService.getTeacherRoles(teacherId);
+  }
+
   @UseGuards(JwtGuard)
   @Get('/:teacherId')
   getTeacher(
