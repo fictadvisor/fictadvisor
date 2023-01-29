@@ -5,6 +5,7 @@ import { UpdateTeacherDTO } from './dto/UpdateTeacherDTO';
 import { CreateContactDTO } from './dto/CreateContactDTO';
 import { EntityType } from '@prisma/client';
 import { TeacherRepository } from './TeacherRepository';
+import { DisciplineTeacherRepository } from './DisciplineTeacherRepository';
 import { UpdateContactDTO } from './dto/UpdateContactDTO';
 
 @Injectable()
