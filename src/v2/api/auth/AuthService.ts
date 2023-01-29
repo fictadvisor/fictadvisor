@@ -5,7 +5,7 @@ import { JwtPayload } from '../../security/JwtPayload';
 import { SecurityConfigService } from '../../config/SecurityConfigService';
 import { State, User } from '@prisma/client';
 import { TokensDTO } from './dto/TokensDTO';
-import { RegistrationDTO, StudentDTO, TelegramDTO } from './dto/RegistrationDTO';
+import { RegistrationDTO, StudentDTO, TelegramDTO, UserDTO } from './dto/RegistrationDTO';
 import { createHash, createHmac } from 'crypto';
 import { TelegramConfigService } from '../../config/TelegramConfigService';
 import { UserRepository } from '../user/UserRepository';
@@ -23,6 +23,8 @@ import { GroupRepository } from "../group/GroupRepository";
 import bcrypt from 'bcrypt';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
 import { UniqueUserDTO } from '../user/dto/UniqueUserDTO';
+import { IdentityQueryDTO } from "./dto/IdentityQueryDTO";
+import { AlreadyRegisteredException } from "../../utils/exceptions/AlreadyRegisteredException";
 
 export const ONE_MINUTE = 1000 * 60;
 export const HOUR = ONE_MINUTE * 60;
@@ -87,6 +89,10 @@ export class AuthService {
   async register(registrationDTO: RegistrationDTO): Promise<TokensDTO> {
     const { telegram, student: { isCaptain, ...createStudent }, user } = registrationDTO;
 
+    if(await this.checkIfUserIsRegistered({ email: user.email, username: user.username })) {
+      throw new AlreadyRegisteredException();
+    }
+
     if (telegram) {
       if (this.isExchangeValid(telegram)) {
         Object.assign(user, {
@@ -100,14 +106,13 @@ export class AuthService {
 
     user.password = await this.hashPassword(user.password);
 
-    const dbUser = await this.userRepository.create({
-      ...user,
-      lastPasswordChanged: new Date(),
-    });
-    await this.studentRepository.create({
-      userId: dbUser.id,
-      ...createStudent,
-    });
+    let dbUser;
+
+    if(await this.isPseudoRegistered(user.email)) {
+      dbUser = await this.pseudoRegister(user, isCaptain, createStudent);
+    } else {
+      dbUser = await this.trulyRegister(user, isCaptain, createStudent);
+    }
 
     await this.verify(dbUser.id, +dbUser.telegramId, {
       isCaptain,
@@ -281,5 +286,38 @@ export class AuthService {
 
   async checkPassword(password: string, hash: string) {
     return bcrypt.compare(password, hash);
+  }
+
+  async checkIfUserIsRegistered(query: IdentityQueryDTO) {
+    const user = await this.userRepository.getByUnique(query);
+    return (user != null && user.password != null);
+  }
+
+  async isPseudoRegistered(email: string) {
+    const user = await this.userRepository.getByUnique({ email });
+    return (user != null && user.password == null);
+  }
+
+  async trulyRegister(user: UserDTO, isCaptain:boolean, createStudent: Omit<StudentDTO, "isCaptain">) {
+    const dbUser = await this.userRepository.create({
+      ...user,
+      lastPasswordChanged: new Date(),
+    });
+    await this.studentRepository.create({
+      userId: dbUser.id,
+      ...createStudent,
+    });
+
+    return dbUser;
+  }
+
+  async pseudoRegister(user: UserDTO, isCaptain:boolean, createStudent: Omit<StudentDTO, "isCaptain">) {
+    const dbUser = await this.userRepository.updateByEmail( user.email, {
+      ...user,
+      lastPasswordChanged: new Date(),
+    });
+    await this.studentRepository.update(dbUser.id, createStudent);
+
+    return dbUser;
   }
 }

@@ -1,4 +1,4 @@
-import { Controller, Request, Post, UseGuards, Body, Put, Param } from '@nestjs/common';
+import { Controller, Request, Post, UseGuards, Body, Put, Param, Get, Query } from '@nestjs/common';
 import { LocalAuthGuard } from '../../security/LocalGuard';
 import { AuthService } from './AuthService';
 import { RegistrationDTO, TelegramDTO } from './dto/RegistrationDTO';
@@ -7,6 +7,7 @@ import { ForgotPasswordDTO } from './dto/ForgotPasswordDTO';
 import { ResetPasswordDTO } from './dto/ResetPasswordDTO';
 import { UpdatePasswordDTO } from "./dto/UpdatePasswordDTO";
 import { VerificateEmailDTO } from './dto/VerificateEmailDTO';
+import {IdentityQueryDTO} from "./dto/IdentityQueryDTO";
 
 @Controller({
   version: '2',
@@ -73,5 +74,12 @@ export class AuthController {
     @Param('token') token: string,
   ) {
     return this.authService.verifyEmail(token);
+  }
+
+  @Get('/verifyIsRegistered')
+  verifyExistsByUnique(
+    @Query() query: IdentityQueryDTO,
+  ) {
+    return this.authService.checkIfUserIsRegistered(query);
   }
 }
