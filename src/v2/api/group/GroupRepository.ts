@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import {Group} from "@prisma/client";
 import {QueryAllDTO} from "../../utils/QueryAllDTO";
 import {DatabaseUtils} from "../utils/DatabaseUtils";
-import {UpdateSubjectDTO} from "../subject/dto/UpdateSubjectDTO";
+import {UpdateGroupDTO} from "./dto/UpdateGroupDTO";
 
 @Injectable()
 export class GroupRepository {
@@ -38,8 +37,8 @@ export class GroupRepository {
     });
   }
 
-  async delete(id: string): Promise<Group>  {
-    return await this.prisma.group.delete({
+  async delete(id: string) {
+    return this.prisma.group.delete({
       where: {
         id,
       },
@@ -100,7 +99,7 @@ export class GroupRepository {
     return group;
   }
 
-  async updateGroup(id: string, data: UpdateSubjectDTO){
+  async updateGroup(id: string, data: UpdateGroupDTO){
     return await this.prisma.group.update({
       where: {
         id,

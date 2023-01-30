@@ -12,7 +12,7 @@ import { EmailDTO } from "./dto/EmailDTO";
 import { ApproveDTO } from "../user/dto/ApproveDTO";
 import { NoPermissionException } from "../../utils/exceptions/NoPermissionException";
 import { RoleDTO } from "./dto/RoleDTO";
-import {UpdateDTO} from "./dto/UpdateDTO";
+import {UpdateGroupDTO} from "./dto/UpdateGroupDTO";
 
 @Injectable()
 export class GroupService {
@@ -27,7 +27,7 @@ export class GroupService {
   ) {}
 
   async create(code: string): Promise<Group>  {
-    return await this.groupRepository.create(code);
+    return this.groupRepository.create(code);
   }
 
   async getAll(body: QueryAllDTO) {
@@ -117,15 +117,24 @@ export class GroupService {
 
   async getCaptain(groupId: string) {
     const students = await this.groupRepository.getStudents(groupId);
+    const result = [];
     for (const student of students) {
       const roles = await this.studentRepository.getRoles(student.userId);
       for (const role of roles){
         if ( role.name == RoleName.CAPTAIN ){
-          return student;
+          const user = await this.userRepository.get(student.userId);
+          result.push({
+            firstName: student.firstName,
+            middleName: student.middleName,
+            lastName: student.lastName,
+            email: user.email,
+            userName: user.username,
+            avatar: user.avatar,
+          });
         }
       }
     }
-
+    return result;
   }
 
   async deleteGroup(groupId: string) {
@@ -147,10 +156,10 @@ export class GroupService {
         avatar: user.avatar,
       });
     }
-    return results;
+    return ({students: results});
   }
 
-  async updateGroup(groupId: string, body: UpdateDTO){
+  async updateGroup(groupId: string, body: UpdateGroupDTO){
     await this.groupRepository.updateGroup(groupId, body);
   }
 }

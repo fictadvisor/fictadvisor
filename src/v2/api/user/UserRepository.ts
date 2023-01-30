@@ -48,19 +48,5 @@ export class UserRepository {
             },
         });
     }
-
-    async getUser(id: string) {
-        return this.prisma.user.findUnique({
-            where: {
-                id,
-            },
-            select: {
-                id: true,
-                email: true,
-                avatar: true,
-                username: true,
-            },
-        });
-    }
 }
 
