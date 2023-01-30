@@ -1,10 +1,11 @@
-import { PipeTransform } from "@nestjs/common";
+import { Injectable, PipeTransform } from "@nestjs/common";
 import { ContactRepository } from "./ContactRepository";
 import { InvalidContactNameException } from "../../utils/exceptions/InvalidContactNameException";
 import { User } from "@prisma/client";
 import { InvalidEntityIdException } from "../../utils/exceptions/InvalidEntityIdException";
 import { UserRepository } from "./UserRepository";
 
+@Injectable()
 export class ContactByUserIdPipe implements PipeTransform {
   constructor(
     private contactRepository: ContactRepository,

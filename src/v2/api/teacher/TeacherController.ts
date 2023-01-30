@@ -84,9 +84,9 @@ export class TeacherController {
   @UseGuards(JwtGuard)
   @Get('/:teacherId/contacts/:name')
   getContact(
-    @Param(ContactByNamePipe) [teacherId, name]: string[],
+    @Param(ContactByNamePipe) params: {teacherId: string, name: string},
   ) {
-    return this.teacherService.getContact(teacherId, name);
+    return this.teacherService.getContact(params.teacherId, params.name);
   }
 
   @Permission('teachers.$teacherId.contacts.create')
@@ -103,10 +103,10 @@ export class TeacherController {
   @UseGuards(JwtGuard, PermissionGuard)
   @Patch('/:teacherId/contacts/:name')
   async updateContact(
-    @Param(ContactByNamePipe) [teacherId, name]: string[],
+    @Param(ContactByNamePipe) params: {teacherId: string, name: string},
     @Body() body: UpdateContactDTO,
   ){
-    return this.teacherService.updateContact(teacherId, name, body);
+    return this.teacherService.updateContact(params.teacherId, params.name, body);
   }
 
   @Permission('teachers.$teacherId.contacts.delete')

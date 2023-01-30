@@ -5,12 +5,14 @@ import { InvalidEntityIdException } from 'src/v2/utils/exceptions/InvalidEntityI
 import { InvalidContactNameException } from 'src/v2/utils/exceptions/InvalidContactNameException';
 
 @Injectable()
-export class ContactByNamePipe implements PipeTransform<string[], Promise<string[]>> {
+export class ContactByNamePipe implements PipeTransform {
   constructor(
     private teacherService: TeacherService
   ) {}
 
-  async transform([teacherId, name]: string[]): Promise<string[]> {
+  async transform(params: {teacherId: string, name: string}) {
+
+    const { teacherId, name } = params;
 
     const teacher: Teacher = await this.teacherService.getTeacher(teacherId);
     if (!teacher) {
@@ -21,6 +23,6 @@ export class ContactByNamePipe implements PipeTransform<string[], Promise<string
     if (!contact) {
       throw new InvalidContactNameException();
     }
-    return [teacherId, name];
+    return params;
   }
 }
