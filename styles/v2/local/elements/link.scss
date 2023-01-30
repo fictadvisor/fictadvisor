@@ -1,4 +1,3 @@
-@import "../../utils/mixins";
 
 @mixin link-style($color, $className) {
   .#{$className}-link {

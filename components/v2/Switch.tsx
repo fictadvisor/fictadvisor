@@ -19,13 +19,13 @@ export interface SwitchProps {
 export function Switch(props: SwitchProps) {
   return (
     <div>
-      <div className={`${props.type}-container`}>
-        {props.textPosition === "left" && <span className={`${props.type}-switch-text`}>{props.text}</span>}
+      <div className={props.type + "-container"}>
+        {props.textPosition === "left" && <span className={props.type + "-switch-text"}>{props.text}</span>}
         <label className={`${props.type}-switch`}>
-          <input type="checkbox" className={`${props.type}-switch-input`} />
-          <span className={`${props.type}-switch-slider`}></span>
+          <input type="checkbox" className={props.type + "-switch-input"} />
+          <span className={props.type + "-switch-slider"}></span>
         </label>
-        {props.textPosition === "right" && <span className={`${props.type}-switch-text`}>{props.text}</span>}
+        {props.textPosition === "right" && <span className={props.type + "-switch-text"}>{props.text}</span>}
       </div>
     </div>
   );

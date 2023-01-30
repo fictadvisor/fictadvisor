@@ -1,7 +1,3 @@
-.test-page-wrap {
-    @include flex-center;
-    margin: 40px 0;
-}
 
 .ratings {
     position: relative;
@@ -13,14 +9,14 @@
     top: 0;
     white-space: nowrap;
     overflow: hidden;
-
-    width: 70%;
+    width: 100%;
 }
 
+
 .empty-stars:before {
-    content: url("/assets/icons/stars-empty.svg");
+    content: url("/assets/stars-empty.svg");
 }
 
 .full-stars:before {
-    content: url("/assets/icons/stars-full.svg");
+    content: url("/assets/stars-full.svg");
 }
