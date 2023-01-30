@@ -136,7 +136,7 @@ export class UserController {
     return this.userService.deleteContact(params.userId, params.name);
   }
 
-  @Permission('student.delete')
+  @Permission('students.delete')
   @UseGuards(JwtGuard, PermissionGuard)
   @Delete('/:userId/student')
   deleteStudent(
@@ -145,7 +145,7 @@ export class UserController {
     return this.userService.deleteStudent(userId);
   }
 
-  @Permission('student.update')
+  @Permission('students.$userId.update')
   @UseGuards(JwtGuard, PermissionGuard)
   @Patch('/:userId/student')
   updateStudent(
