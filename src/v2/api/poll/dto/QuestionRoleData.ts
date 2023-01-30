@@ -1,4 +1,4 @@
-import {TeacherRole} from "@prisma/client";
+import { TeacherRole } from "@prisma/client";
 
 export class QuestionRoleData {
     role: TeacherRole;
