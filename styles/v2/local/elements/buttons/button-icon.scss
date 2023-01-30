@@ -11,8 +11,8 @@
     width: $size;
     position: relative;
     &:disabled {
-        background-color: $theme-color !important;
-        color: $grey-dropdown;
+        background-color: $dark-primary !important;
+        color: #404040;
         cursor: not-allowed;
     }
 }

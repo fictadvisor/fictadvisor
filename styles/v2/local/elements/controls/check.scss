@@ -1,3 +1,14 @@
+
+.default-check-text,
+.disabled-check-text,
+.error-check-text {
+  font-size: 14px;
+  line-height: 19.6px;
+  left: 28px;
+  font-weight: 400;
+  color: #FFFFFF;
+}
+
 .check-container {
     display: flex;
 }
@@ -21,7 +32,7 @@
 
 .disabled-check-text {
     @extend .default-check-text;
-    color: $check-disabled-color;
+    color: #525252;
 }
 
 .error-check-text {
@@ -35,7 +46,7 @@
     cursor: pointer;
     width: 20px;
     height: 20px;
-    border: 2px solid $check-default-color;
+    border: 2px solid #FFFFFF;
     border-radius: 3px;
 
     &::before {
@@ -59,7 +70,7 @@
 .disabled-check-box {
     @extend .default-check-box;
     cursor: default;
-    border-color: $check-disabled-color;
+    border-color: #525252;
 
     &:hover {
         background-color: $dark-primary;
@@ -90,12 +101,12 @@
 }
 
 .default-check-input:checked+.default-check-box {
-    background-color: $check-default-color;
+    background-color: #FFFFFF;
 }
 
 .default-check-input:checked:hover+.default-check-box {
     transition: 0.4s;
-    background: rgba($check-default-color, 0.5);
+    background: rgba(#FFFFFF, 0.5);
 }
 
 .default-check-input:checked+.default-check-box::before,
@@ -106,7 +117,7 @@
 }
 
 .disabled-check-input:disabled:checked+.disabled-check-box {
-    background-color: $check-disabled-color;
+    background-color: #525252;
 }
 
 .error-check-input:checked+.error-check-box {

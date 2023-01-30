@@ -8,8 +8,6 @@ $alert-green-primary: #106034;
 $alert-green-secondary: #08301a;
 
 
-
-
     .alert {
         align-items: center;
         width: 300px;
@@ -43,7 +41,7 @@ $alert-green-secondary: #08301a;
     .alert-#{$className}{
         @extend .alert;
         background-color: $primary-color;
-        transition: background-color .2 linear;
+        transition: background-color 0.2s linear;
         &:hover{
             background-color: lighten($color: $primary-color,$amount: 5%)
         }
@@ -58,9 +56,9 @@ $alert-green-secondary: #08301a;
     }
     .alert-#{$className}-outlined{
         border: 1px $primary-color solid;
-        background-color: $theme-color;
+        background-color: $dark-primary;
         &:hover{
-            background-color: lighten($color: $theme-color,$amount: 5%);
+            background-color: lighten($color: $dark-primary,$amount: 5%);
             border-color:lighten($color: $primary-color,$amount: 10%);
         }
     }

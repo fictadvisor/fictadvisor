@@ -15,6 +15,6 @@
   }
 }
 
-@include link-style($white-link-color, "white");
-@include link-style($blue-link-color, "blue");
+@include link-style(#F0F9FF, "white");
+@include link-style(#0EA5E9, "blue");
 
