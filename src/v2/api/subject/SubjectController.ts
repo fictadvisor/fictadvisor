@@ -34,6 +34,13 @@ export class SubjectController {
   ) {
     return this.subjectService.get(subjectId);
   }
+  
+  @Get('/:subjectId/teachers')
+  getTeachers(
+    @Param('subjectId', SubjectByIdPipe) subjectId: string,
+  ) {
+    return this.subjectService.getTeachers(subjectId);
+  }
 
   @Permission('subjects.create')
   @UseGuards(JwtGuard, PermissionGuard)
