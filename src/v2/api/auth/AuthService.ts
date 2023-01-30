@@ -329,4 +329,8 @@ export class AuthService {
     });
     await this.studentRepository.update(dbUser.id, createStudent);
   }
+
+  checkCaptain(groupId: string) {
+    //TODO return captain from group
+  }
 }
