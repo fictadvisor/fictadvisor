@@ -1,6 +1,6 @@
-import { GroupIcon } from "../../../components/v2/svg-icons/GroupIcon";
 import { Dropdown, DropDownClass } from "../../../components/v2/Dropdown";
 import React from "react";
+import {UserGroupIcon} from "@heroicons/react/24/outline";
 
 function dropdowns() {
   const options = [
@@ -25,128 +25,128 @@ function dropdowns() {
         <Dropdown
           options={options}
           label="large"
-          icon={<GroupIcon />}
+          icon={<UserGroupIcon className="icon"/>}
           numberOfOptions={8}
         />
-        <Dropdown options={options} label="medium" icon={<GroupIcon />} />
-        <Dropdown options={options} label="small" icon={<GroupIcon />} />
+        <Dropdown options={options} label="medium" icon={<UserGroupIcon className="icon"/>} />
+        <Dropdown options={options} label="small" icon={<UserGroupIcon className="icon"/>} />
         <Dropdown
           options={options}
           label="large"
-          icon={<GroupIcon />}
+          icon={<UserGroupIcon className="icon"/>}
           className={DropDownClass.DISABLED}
         />
         <Dropdown
           options={options}
           label="medium"
-          icon={<GroupIcon />}
+          icon={<UserGroupIcon className="icon"/>}
           className={DropDownClass.DISABLED}
           numberOfOptions={8}
         />
         <Dropdown
           options={options}
           label="small"
-          icon={<GroupIcon />}
+          icon={<UserGroupIcon className="icon"/>}
           className={DropDownClass.DISABLED}
         />
         <Dropdown
           options={options}
           label="large"
-          icon={<GroupIcon />}
+          icon={<UserGroupIcon className="icon"/>}
           className={DropDownClass.SUCCESS}
         />
         <Dropdown
           options={options}
           label="medium"
-          icon={<GroupIcon />}
+          icon={<UserGroupIcon className="icon"/>}
           className={DropDownClass.SUCCESS}
         />
          <Dropdown
             options={options}
             label="small"
-            icon={<GroupIcon />}
+            icon={<UserGroupIcon className="icon"/>}
             className={DropDownClass.SUCCESS}
           />
           <Dropdown
             options={options}
             label="large"
-            icon={<GroupIcon />}
+            icon={<UserGroupIcon className="icon"/>}
             className={DropDownClass.ERROR}
           />
           <Dropdown
             options={options}
             label="medium"
-            icon={<GroupIcon />}
+            icon={<UserGroupIcon className="icon"/>}
             className={DropDownClass.ERROR}
           />
           <Dropdown
             options={options}
             label="small"
-            icon={<GroupIcon />}
+            icon={<UserGroupIcon className="icon"/>}
             className={DropDownClass.ERROR}
           />
         <div className="test-wrap-50">
         <Dropdown
           options={options}
           label="large"
-          icon={<GroupIcon />}
+          icon={<UserGroupIcon className="icon"/>}
           numberOfOptions={8}
         />
-        <Dropdown options={options} label="medium" icon={<GroupIcon />} />
-        <Dropdown options={options} label="small" icon={<GroupIcon />} />
+        <Dropdown options={options} label="medium" icon={<UserGroupIcon className="icon"/>} />
+        <Dropdown options={options} label="small" icon={<UserGroupIcon className="icon"/>} />
         <Dropdown
           options={options}
           label="large"
-          icon={<GroupIcon />}
+          icon={<UserGroupIcon className="icon"/>}
           className={DropDownClass.DISABLED}
         />
         <Dropdown
           options={options}
           label="medium"
-          icon={<GroupIcon />}
+          icon={<UserGroupIcon className="icon"/>}
           className={DropDownClass.DISABLED}
           numberOfOptions={8}
         />
         <Dropdown
           options={options}
           label="small"
-          icon={<GroupIcon />}
+          icon={<UserGroupIcon className="icon"/>}
           className={DropDownClass.DISABLED}
         />
         <Dropdown
           options={options}
           label="large"
-          icon={<GroupIcon />}
+          icon={<UserGroupIcon className="icon"/>}
           className={DropDownClass.SUCCESS}
         />
         <Dropdown
           options={options}
           label="medium"
-          icon={<GroupIcon />}
+          icon={<UserGroupIcon className="icon"/>}
           className={DropDownClass.SUCCESS}
         />
          <Dropdown
             options={options}
             label="small"
-            icon={<GroupIcon />}
+            icon={<UserGroupIcon className="icon"/>}
             className={DropDownClass.SUCCESS}
           />
           <Dropdown
             options={options}
             label="large"
-            icon={<GroupIcon />}
+            icon={<UserGroupIcon className="icon"/>}
             className={DropDownClass.ERROR}
           />
           <Dropdown
             options={options}
             label="medium"
-            icon={<GroupIcon />}
+            icon={<UserGroupIcon className="icon"/>}
             className={DropDownClass.ERROR}
           />
           <Dropdown
             options={options}
             label="small"
-            icon={<GroupIcon />}
+            icon={<UserGroupIcon className="icon"/>}
             className={DropDownClass.ERROR}
           />
         </div>
@@ -154,64 +154,64 @@ function dropdowns() {
           <Dropdown
           options={options}
           label="large"
-          icon={<GroupIcon />}
+          icon={<UserGroupIcon className="icon"/>}
           numberOfOptions={8}
         />
-        <Dropdown options={options} label="medium" icon={<GroupIcon />} />
-        <Dropdown options={options} label="small" icon={<GroupIcon />} />
+        <Dropdown options={options} label="medium" icon={<UserGroupIcon className="icon"/>} />
+        <Dropdown options={options} label="small" icon={<UserGroupIcon className="icon"/>} />
         <Dropdown
           options={options}
           label="large"
-          icon={<GroupIcon />}
+          icon={<UserGroupIcon className="icon"/>}
           className={DropDownClass.DISABLED}
         />
         <Dropdown
           options={options}
           label="medium"
-          icon={<GroupIcon />}
+          icon={<UserGroupIcon className="icon"/>}
           className={DropDownClass.DISABLED}
           numberOfOptions={8}
         />
         <Dropdown
           options={options}
           label="small"
-          icon={<GroupIcon />}
+          icon={<UserGroupIcon className="icon"/>}
           className={DropDownClass.DISABLED}
         />
         <Dropdown
           options={options}
           label="large"
-          icon={<GroupIcon />}
+          icon={<UserGroupIcon className="icon"/>}
           className={DropDownClass.SUCCESS}
         />
         <Dropdown
           options={options}
           label="medium"
-          icon={<GroupIcon />}
+          icon={<UserGroupIcon className="icon"/>}
           className={DropDownClass.SUCCESS}
         />
          <Dropdown
             options={options}
             label="small"
-            icon={<GroupIcon />}
+            icon={<UserGroupIcon className="icon"/>}
             className={DropDownClass.SUCCESS}
           />
           <Dropdown
             options={options}
             label="large"
-            icon={<GroupIcon />}
+            icon={<UserGroupIcon className="icon"/>}
             className={DropDownClass.ERROR}
           />
           <Dropdown
             options={options}
             label="medium"
-            icon={<GroupIcon />}
+            icon={<UserGroupIcon className="icon"/>}
             className={DropDownClass.ERROR}
           />
           <Dropdown
             options={options}
             label="small"
-            icon={<GroupIcon />}
+            icon={<UserGroupIcon className="icon"/>}
             className={DropDownClass.ERROR}
           />
          </div>

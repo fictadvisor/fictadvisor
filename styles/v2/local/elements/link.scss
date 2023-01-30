@@ -12,6 +12,9 @@
     svg {
       margin-right: 8px;
     }
+    a{
+      @include flex-center;
+    }
   }
 }
 

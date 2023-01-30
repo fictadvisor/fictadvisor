@@ -1,6 +1,6 @@
 import Button, {ButtonIconPosition, ButtonSize, ButtonType} from "../../../components/v2/Button";
-import {AcademicCapIcon} from "../../../components/v2/svg-icons/AcademicCapIcon";
 import React from "react";
+import {AcademicCapIcon} from "@heroicons/react/24/outline";
 
 function buttons(){
     return(

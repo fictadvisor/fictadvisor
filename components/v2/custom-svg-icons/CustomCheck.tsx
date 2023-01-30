@@ -1,4 +1,4 @@
-export const TagMark = (props) => (
+export const CustomCheck = (props) => (
     <svg 
     width="20" 
     height="20" 

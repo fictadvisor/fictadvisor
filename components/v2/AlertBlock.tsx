@@ -1,8 +1,8 @@
-import { WarningIcon } from "./svg-icons/WarningIcon";
-import { SuccessIcon } from "./svg-icons/SuccessIcon";
-import { InfoIcon } from "./svg-icons/InfoIcon";
-import { ExclamationIcon } from "./svg-icons/ExclamationIcon";
-import { CrossIcon } from "./svg-icons/CrossIcon";
+import { WarningIcon } from "./custom-svg-icons/WarningIcon";
+import { SuccessIcon } from "./custom-svg-icons/SuccessIcon";
+import { InfoIcon } from "./custom-svg-icons/InfoIcon";
+import { ExclamationIcon } from "./custom-svg-icons/ExclamationIcon";
+import { CrossIcon } from "./custom-svg-icons/CrossIcon";
 import React, { useState } from "react";
 
 

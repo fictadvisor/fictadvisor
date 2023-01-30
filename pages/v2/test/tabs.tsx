@@ -1,3 +1,4 @@
+import { AcademicCapIcon } from "@heroicons/react/24/outline";
 import {Tab, TabContentPosition} from "../../../components/v2/Tab";
 
 function tabs() {
@@ -18,24 +19,24 @@ function tabs() {
                     <Tab className="tab-small" text="disabled" position={TabContentPosition.LEFT}
                          isDisabled={true}></Tab>
                 </div>
-
+                
                 <div className={"block"}>
                     <Tab className="tab-normal" text="Tab" position={TabContentPosition.CENTRE}
-                         icon="academic-cap.svg"></Tab>
+                         icon={<AcademicCapIcon/>}></Tab>
                     <Tab className="tab-normal" text="disabled" position={TabContentPosition.CENTRE} isDisabled={true}
-                         icon="academic-cap.svg"></Tab>
+                         icon={<AcademicCapIcon/>}></Tab>
                     <Tab className="tab-normal" text="Tab" position={TabContentPosition.LEFT}
-                         icon="academic-cap.svg"></Tab>
+                         icon={<AcademicCapIcon/>}></Tab>
                     <Tab className="tab-normal" text="disabled" position={TabContentPosition.LEFT} isDisabled={true}
-                         icon="academic-cap.svg"></Tab>
+                         icon={<AcademicCapIcon/>}></Tab>
                     <Tab className="tab-small" text="Tab" position={TabContentPosition.CENTRE}
-                         icon="academic-cap.svg"></Tab>
+                         icon={<AcademicCapIcon/>}></Tab>
                     <Tab className="tab-small" text="disabled" position={TabContentPosition.CENTRE} isDisabled={true}
-                         icon="academic-cap.svg"></Tab>
+                         icon={<AcademicCapIcon/>}></Tab>
                     <Tab className="tab-small" text="Tab" position={TabContentPosition.LEFT}
-                         icon="academic-cap.svg"></Tab>
+                         icon={<AcademicCapIcon/>}></Tab>
                     <Tab className="tab-small" text="disabled" position={TabContentPosition.LEFT} isDisabled={true}
-                         icon="academic-cap.svg"></Tab>
+                         icon={<AcademicCapIcon/>}></Tab>
                 </div>
 
                 <div className={"block"}>
@@ -54,22 +55,22 @@ function tabs() {
                 </div>
 
                 <div className={"block"}>
-                    <Tab className="tab-normal" text="Tab" position={TabContentPosition.CENTRE} icon="academic-cap.svg"
+                    <Tab className="tab-normal" text="Tab" position={TabContentPosition.CENTRE} icon={<AcademicCapIcon/>}
                          count={1}></Tab>
                     <Tab className="tab-normal" text="disabled" position={TabContentPosition.CENTRE} isDisabled={true}
-                         icon="academic-cap.svg" count={1}></Tab>
-                    <Tab className="tab-normal" text="Tab" position={TabContentPosition.LEFT} icon="academic-cap.svg"
+                         icon={<AcademicCapIcon/>} count={1}></Tab>
+                    <Tab className="tab-normal" text="Tab" position={TabContentPosition.LEFT} icon={<AcademicCapIcon/>}
                          count={2}></Tab>
                     <Tab className="tab-normal" text="disabled" position={TabContentPosition.LEFT} isDisabled={true}
-                         icon="academic-cap.svg" count={2}></Tab>
-                    <Tab className="tab-small" text="Tab" position={TabContentPosition.CENTRE} icon="academic-cap.svg"
+                         icon={<AcademicCapIcon/>} count={2}></Tab>
+                    <Tab className="tab-small" text="Tab" position={TabContentPosition.CENTRE} icon={<AcademicCapIcon/>}
                          count={10}></Tab>
                     <Tab className="tab-small" text="disabled" position={TabContentPosition.CENTRE} isDisabled={true}
-                         icon="academic-cap.svg" count={10}></Tab>
-                    <Tab className="tab-small" text="Tab" position={TabContentPosition.LEFT} icon="academic-cap.svg"
+                         icon={<AcademicCapIcon/>} count={10}></Tab>
+                    <Tab className="tab-small" text="Tab" position={TabContentPosition.LEFT} icon={<AcademicCapIcon/>}
                          count={100}></Tab>
                     <Tab className="tab-small" text="disabled" position={TabContentPosition.LEFT} isDisabled={true}
-                         icon="academic-cap.svg" count={100}></Tab>
+                         icon={<AcademicCapIcon/>} count={100}></Tab>
                 </div>
             </div>
         </div>

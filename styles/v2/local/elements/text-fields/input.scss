@@ -1,6 +1,15 @@
 $large-input-width: 480px;
 $normal-input-width: 308px;
 
+.input-success-icon{
+  color: $success-color;
+}
+
+.input-error-icon{
+  color: $error-color;
+}
+
+
 @mixin input-color($text-color, $border-color, $placeholder-color){
   &::placeholder {
     transition: all 0.2s ease-in-out;
