@@ -1,3 +1,17 @@
+.web-switch-text {
+  font-size: 16px;
+  line-height: 21.76px;
+  padding-top: 2px;
+  font-weight: 400;
+}
+
+.mobile-switch-text {
+  @extend .web-switch-text;
+  font-size: 14px;
+  line-height: 19.6px;
+  font-weight: 400;
+}
+
 .web-container {
     display: flex;
     padding: 4px 8px 4px 8px;
@@ -19,7 +33,7 @@
         width: 40px;
         height: 20px;
         top: 2px;
-        background-color: $switch-off-color;
+        background-color: #747474;
         border-radius: 100px;
         transition: 0.4s;
     }
@@ -33,7 +47,7 @@
         top: -17px;
         width: 18px;
         height: 18px;
-        background-color: $switch-off-knob-color;
+        background-color: #343434;
         border-radius: 100px;
         transition: 0.4s;
     }
@@ -41,18 +55,18 @@
 
 
 .web-switch-input:checked+.web-switch-slider::before {
-    background-color: $switch-on-color;
+    background-color: #FD4444;
     box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .web-switch-input:checked+.web-switch-slider::after {
-    background-color: $switch-on-knob-color;
+    background-color: #FFFFFF;
     left: 21px;
 }
 
 .mobile-container {
     display: flex;
-    padding: 2px, 4px, 2px, 4px;
+    padding: 2px 4px 2px 4px;
     gap: 8px;
 }
 
@@ -72,11 +86,11 @@
 }
 
 .mobile-switch-input:checked+.mobile-switch-slider::before {
-    background-color: $switch-on-color;
+    background-color: #FD4444;
     box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .mobile-switch-input:checked+.mobile-switch-slider::after {
-    background-color: $switch-on-knob-color;
+    background-color: #FFFFFF;
     left: 19px;
 }

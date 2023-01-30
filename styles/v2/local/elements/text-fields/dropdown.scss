@@ -56,7 +56,7 @@ $default-dropdown-padding: 8px;
   &menu {
     margin-top: $default-dropdown-padding;
     padding: $default-dropdown-padding 0;
-    background-color: $theme-color;
+    background-color: $dark-primary;
     z-index: 2 !important;
     @include roundcorners;
   }
@@ -91,7 +91,7 @@ $default-dropdown-padding: 8px;
   }
   &placeholder {
     &-disabled{
-      color: $disabled-button-color;
+      color: #747474;
     }
   }
   &success-label{
@@ -101,7 +101,7 @@ $default-dropdown-padding: 8px;
     color: $error-color;
   }
   &disabled-label{
-    color: $disabled-button-color;
+    color: #747474;
   }
 }
 .dropdown-icon-container {

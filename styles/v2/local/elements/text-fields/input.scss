@@ -31,18 +31,18 @@ $normal-input-width: 308px;
   }
 
   input{
-    @include input-color($input-color, $input-color, $input-placeholder-color);
+    @include input-color(#737373, #737373, #D4D4D4);
     &:focus {
-      @include input-color($focus-input-color, $focus-input-color, $focus-input-placeholder-color);
+      @include input-color(#FFFFFF, #FFFFFF, #404040);
     }
   }
 
   &:hover {
-    color: $hover-input-color;
+    color: #FFFFFF;
 
     input {
-      border-color: $hover-input-color;
-      color: $hover-input-color;
+      border-color: #FFFFFF;
+      color: #FFFFFF;
     }
   }
 }
@@ -54,26 +54,26 @@ $normal-input-width: 308px;
 }
 
 .error-input-color{
-  color: $input-color;
+  color: #737373;
 
   label{
     background: linear-gradient(180deg, rgba(30, 30, 30, 0) 49.48%, #1E1E1E 49.95%);
     color: inherit;
   }
   input {
-    @include input-color($input-color, $error-color, $input-placeholder-color);
+    @include input-color(#737373, #EC131E, #D4D4D4);
   }
 }
 
 .success-input-color{
-  color: $input-color;
+  color: #737373;
 
   label{
     background: linear-gradient(180deg, rgba(30, 30, 30, 0) 49.48%, #1E1E1E 49.95%);
     color: inherit;
   }
   input {
-    @include input-color($input-color, $success-color, $input-placeholder-color);
+    @include input-color(#737373, #3DA96D, #D4D4D4);
   }
 }
 
@@ -91,7 +91,7 @@ $normal-input-width: 308px;
   width: 100%;
   min-width: fit-content;
   transition: all 0.2s ease-in-out;
-  color: $input-color;
+  color: #737373;
   position: relative;
   top: -15px;
 
@@ -119,19 +119,19 @@ $normal-input-width: 308px;
   @include field-style;
 
   input {
-    @include field-input($input-color, $input-color, $input-placeholder-color);
+    @include field-input(#737373, #737373, #D4D4D4);
 
     &:focus {
-      @include field-input($focus-input-color, $focus-input-color, $focus-input-placeholder-color);
+      @include field-input(#FFFFFF, #FFFFFF, #404040);
     }
   }
 
   &:hover {
-    color: $hover-input-color;
+    color: #FFFFFF;
 
     input {
-      border-color: $hover-input-color;
-      color: $hover-input-color;
+      border-color: #FFFFFF;
+      color: #FFFFFF;
     }
   }
 }

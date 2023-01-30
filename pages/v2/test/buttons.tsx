@@ -1,7 +1,5 @@
 import Button, {ButtonIconPosition, ButtonSize, ButtonType} from "../../../components/v2/Button";
 import {AcademicCapIcon} from "../../../components/v2/svg-icons/AcademicCapIcon";
-import {SuccessIcon} from "../../../components/v2/svg-icons/SuccessIcon";
-import {BeakerIcon, HeartIcon} from "@heroicons/react/24/outline";
 import React from "react";
 
 function buttons(){
@@ -68,10 +66,6 @@ function buttons(){
                 <Button text="Tertiary" icon={<AcademicCapIcon/>} iconPosition={ButtonIconPosition.RIGHT} onClick={() => {}} isDisabled={false} size={ButtonSize.LARGE} type={ButtonType.TERTIARY}/>
                 <Button text="Tertiary" icon={<AcademicCapIcon/>} iconPosition={ButtonIconPosition.RIGHT} onClick={() => {}} isDisabled={false} size={ButtonSize.MEDIUM} type={ButtonType.TERTIARY}/>
                 <Button text="Tertiary" icon={<AcademicCapIcon/>} iconPosition={ButtonIconPosition.RIGHT} onClick={() => {}} isDisabled={false} size={ButtonSize.SMALL} type={ButtonType.TERTIARY}/>
-
-                <BeakerIcon className="icon"/>
-                <AcademicCapIcon className="icon"/>
-                <HeartIcon className="icon"/>
             </div>
         </div>
     );
