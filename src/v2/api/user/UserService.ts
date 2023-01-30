@@ -6,9 +6,15 @@ import { GiveRoleDTO } from './dto/GiveRoleDTO';
 import { GrantRepository } from './grant/GrantRepository';
 import { StudentRepository } from './StudentRepository';
 import { RoleService } from './role/RoleService';
-import { UpdateStudentData } from "./dto/UpdateStudentData";
 import { UpdateSuperheroData } from "./dto/UpdateSuperheroData";
 import { SuperheroRepository } from "./SuperheroRepository";
+import { UserRepository } from "./UserRepository";
+import { ContactRepository } from "./ContactRepository";
+import { UpdateUserDTO } from "./dto/UpdateUserDTO";
+import { CreateContactDTO } from "./dto/CreateContactDTO";
+import { EntityType } from "@prisma/client";
+import { UpdateContactDTO } from "./dto/UpdateContactDTO";
+import { UpdateStudentDTO } from "./dto/UpdateStudentDTO";
 
 @Injectable()
 export class UserService {
@@ -19,8 +25,10 @@ export class UserService {
     private prisma: PrismaService,
     private grantRepository: GrantRepository,
     private studentRepository: StudentRepository,
+    private userRepository: UserRepository,
     private roleService: RoleService,
     private superheroRepository: SuperheroRepository,
+    private contactRepository: ContactRepository,
   ) {
   }
 
@@ -51,11 +59,61 @@ export class UserService {
     await this.studentRepository.removeRole(id, roleId);
   }
 
-  async updateStudent(userId: string, data: UpdateStudentData) {
+  async updateStudent(userId: string, data: UpdateStudentDTO) {
     await this.studentRepository.update(userId, data);
   }
 
   async updateSuperhero(userId: string, data: UpdateSuperheroData) {
     await this.superheroRepository.updateSuperhero(userId, data);
+  }
+
+  async deleteUser(userId: string) {
+    await this.userRepository.delete(userId);
+  }
+
+  async updateUser(userId: string, data: UpdateUserDTO) {
+    await this.userRepository.update(userId, data);
+  }
+
+  async getContacts(userId: string) {
+    await this.contactRepository.getAllContacts(userId);
+  }
+
+  async createContact(userId: string, data: CreateContactDTO) {
+    await this.contactRepository.createContact({
+      entityId: userId,
+      entityType: EntityType.STUDENT,
+      ...data,
+    });
+  }
+
+  async updateContact(userId, name, data: UpdateContactDTO) {
+    await this.contactRepository.updateContact(userId, name, data);
+  }
+
+  async deleteContact(userId, name) {
+    await this.contactRepository.deleteContact(userId, name);
+  }
+
+  async deleteStudent(userId) {
+    await this.studentRepository.delete(userId);
+  }
+
+  async getUserForTelegram(userId: string) {
+    await this.userRepository.get(userId);
+  }
+
+  async getMe(userId: string) {
+    const { username, email, avatar,
+      student: { firstName, lastName, middleName },
+    } = await this.userRepository.get(userId);
+    return {
+      username,
+      email,
+      firstName,
+      lastName,
+      middleName,
+      avatar,
+    };
   }
 }
