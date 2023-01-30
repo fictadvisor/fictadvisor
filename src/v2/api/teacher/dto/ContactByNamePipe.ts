@@ -10,7 +10,7 @@ export class ContactByNamePipe implements PipeTransform {
     private teacherService: TeacherService
   ) {}
 
-  async transform(params: {teacherId: string, name: string}): Promise<object> {
+  async transform(params: {teacherId: string, name: string}) {
 
     const { teacherId, name } = params;
 
