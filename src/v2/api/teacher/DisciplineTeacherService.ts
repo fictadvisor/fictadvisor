@@ -3,6 +3,11 @@ import { TeacherService } from './TeacherService';
 import { DisciplineTeacherRepository } from './DisciplineTeacherRepository';
 import { DisciplineTypeService } from '../discipline/DisciplineTypeService';
 import { DisciplineTypeRepository } from '../discipline/DisciplineTypeRepository';
+import { PollService } from "../poll/PollService";
+import { CreateAnswersDTO } from "./dto/CreateAnswersDTO";
+import { QuestionAnswerRepository } from "../poll/QuestionAnswerRepository";
+import { User } from "@prisma/client";
+import { AlreadyAnsweredException } from "../../utils/exceptions/AlreadyAnsweredException";
 
 @Injectable()
 export class DisciplineTeacherService {
@@ -13,6 +18,8 @@ export class DisciplineTeacherService {
     private disciplineTypeRepository: DisciplineTypeRepository,
     @Inject(forwardRef(() => DisciplineTypeService))
     private disciplineTypeService: DisciplineTypeService,
+    private pollService: PollService,
+    private questionAnswerRepository: QuestionAnswerRepository,
   ) {}
 
   async getGroup(id: string) {
@@ -31,4 +38,29 @@ export class DisciplineTeacherService {
     };
   }
 
+  getQuestions(disciplineTeacherId: string) {
+    return this.pollService.getCategoriesByDisciplineTeacherId(disciplineTeacherId);
+  }
+
+  async sendAnswers(disciplineTeacherId: string, { answers }: CreateAnswersDTO, user: User) {
+    await this.pollService.checkExcessiveQuestions(disciplineTeacherId, answers);
+    await this.pollService.checkRequiredQuestions(disciplineTeacherId, answers);
+    for (const answer of answers) {
+      const dbAnswer = await this.questionAnswerRepository.find({
+        disciplineTeacherId: disciplineTeacherId,
+        userId: user.id,
+        questionId: answer.questionId,
+      });
+      if(dbAnswer) {
+        throw new AlreadyAnsweredException(answer.questionId);
+      }
+    }
+    for (const answer of answers) {
+      this.questionAnswerRepository.create({
+        disciplineTeacherId: disciplineTeacherId,
+        userId: user.id,
+        ...answer,
+      });
+    }
+  }
 }

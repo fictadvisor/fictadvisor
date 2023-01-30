@@ -1,8 +1,8 @@
-import {Body, Controller, Delete, Get, Patch, Param, Put, Post, Request, UseGuards} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch, Param, Put, Post, Request, UseGuards } from '@nestjs/common';
 import { PollService } from './PollService';
 import { JwtGuard } from '../../security/JwtGuard';
 import { GroupByDisciplineTeacherGuard } from '../../security/group-guard/GroupByDisciplineTeacherGuard';
-import { CreateAnswersDTO } from "./dto/CreateAnswersDTO";
+import { CreateAnswersDTO } from "../teacher/dto/CreateAnswersDTO";
 import { UpdateQuestionDTO } from "./dto/UpdateQuestionDTO";
 import { CreateQuestionsDTO } from "./dto/CreateQuestionDTO";
 import { QuestionRoleData } from "./dto/QuestionRoleData";
@@ -73,6 +73,5 @@ export class PollController {
   ){
     return this.pollService.deleteRole(questionId, params);
   }
-
 
 }

@@ -1,5 +1,5 @@
-import {IsIn, IsNotEmpty} from "class-validator";
-import {TeacherRole} from "@prisma/client";
+import { IsIn, IsNotEmpty } from "class-validator";
+import { TeacherRole } from "@prisma/client";
 
 export class UpdateRoleParam {
   @IsNotEmpty()

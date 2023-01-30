@@ -76,7 +76,6 @@
     "eslint-plugin-import": "^2.26.0",
     "jest": "29.3.1",
     "prettier": "^2.8.1",
-    "prisma": "^4.9.0",
     "supertest": "^6.3.3",
     "ts-jest": "29.0.3",
     "ts-loader": "^9.4.2",
