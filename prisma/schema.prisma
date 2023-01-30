@@ -43,9 +43,9 @@ model Group {
 }
 
 model GroupRole {
-  group   Group  @relation(fields: [groupId], references: [id])
+  group   Group  @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId String
-  role    Role   @relation(fields: [roleId], references: [id])
+  role    Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
   roleId  String @unique
 
   @@id([groupId, roleId])
@@ -53,13 +53,13 @@ model GroupRole {
 }
 
 model Student {
-  user                 User                  @relation(fields: [userId], references: [id])
+  user                 User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId               String                @unique @map("user_id")
   firstName            String?               @map("first_name")
   middleName           String?               @map("middle_name")
   lastName             String?               @map("last_name")
   groupId              String                @map("group_id")
-  group                Group                 @relation(fields: [groupId], references: [id])
+  group                Group                 @relation(fields: [groupId], references: [id], onDelete: Cascade)
   selectiveDisciplines SelectiveDiscipline[]
   roles                UserRole[]
   state                State                 @default(PENDING)
@@ -68,7 +68,7 @@ model Student {
 }
 
 model Superhero {
-  user   User    @relation(fields: [userId], references: [id])
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String  @unique @map("user_id")
   dorm   Boolean
   state  State   @default(PENDING)
@@ -86,9 +86,9 @@ model Subject {
 
 model Discipline {
   id                   String                @id @default(uuid())
-  subject              Subject               @relation(fields: [subjectId], references: [id])
+  subject              Subject               @relation(fields: [subjectId], references: [id], onDelete: Cascade)
   subjectId            String                @map("subject_id")
-  group                Group                 @relation(fields: [groupId], references: [id])
+  group                Group                 @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId              String                @map("group_id")
   semester             Int
   year                 Int
@@ -103,9 +103,9 @@ model Discipline {
 }
 
 model SelectiveDiscipline {
-  discipline   Discipline @relation(fields: [disciplineId], references: [id])
+  discipline   Discipline @relation(fields: [disciplineId], references: [id], onDelete: Cascade)
   disciplineId String     @map("discipline_id")
-  student      Student    @relation(fields: [studentId], references: [userId])
+  student      Student    @relation(fields: [studentId], references: [userId], onDelete: Cascade)
   studentId    String     @map("student_id")
 
   @@id([disciplineId, studentId])
@@ -123,7 +123,7 @@ enum DisciplineTypeEnum {
 
 model DisciplineType {
   id                     String                  @id @default(uuid())
-  discipline             Discipline              @relation(fields: [disciplineId], references: [id])
+  discipline             Discipline              @relation(fields: [disciplineId], references: [id], onDelete: Cascade)
   disciplineId           String                  @map("discipline_id")
   name                   DisciplineTypeEnum
   lessons                SemesterLesson[]
@@ -138,7 +138,7 @@ model SemesterLesson {
   startDate        DateTime          @map("start_date")
   endDate          DateTime          @map("end_date")
   url              String?
-  disciplineType   DisciplineType    @relation(fields: [disciplineTypeId], references: [id])
+  disciplineType   DisciplineType    @relation(fields: [disciplineTypeId], references: [id], onDelete: Cascade)
   disciplineTypeId String            @map("discipline_type_id")
   fortnightLessons FortnightLesson[]
 
@@ -147,7 +147,7 @@ model SemesterLesson {
 
 model FortnightLesson {
   id        String                @id @default(uuid())
-  lesson    SemesterLesson        @relation(fields: [lessonId], references: [id])
+  lesson    SemesterLesson        @relation(fields: [lessonId], references: [id], onDelete: Cascade)
   lessonId  String                @map("lesson_id")
   fortnight Int
   info      FortnightLessonInfo[]
@@ -156,7 +156,7 @@ model FortnightLesson {
 }
 
 model FortnightLessonInfo {
-  lesson   FortnightLesson         @relation(fields: [lessonId], references: [id])
+  lesson   FortnightLesson         @relation(fields: [lessonId], references: [id], onDelete: Cascade)
   lessonId String                  @map("week_lesson_id")
   type     FortnightLessonInfoType
   value    String
@@ -180,9 +180,9 @@ model TemporaryLesson {
   endDate          DateTime       @map("end_date")
   url              String?
   fortnight        Int
-  teacher          Teacher        @relation(fields: [teacherId], references: [id])
+  teacher          Teacher        @relation(fields: [teacherId], references: [id], onDelete: Cascade)
   teacherId        String         @map("teacher_id")
-  disciplineType   DisciplineType @relation(fields: [disciplineTypeId], references: [id])
+  disciplineType   DisciplineType @relation(fields: [disciplineTypeId], references: [id], onDelete: Cascade)
   disciplineTypeId String         @map("discipline_type_id")
   comment          String?
 
@@ -210,9 +210,9 @@ model Teacher {
 
 model DisciplineTeacher {
   id              String                  @id @default(uuid())
-  teacher         Teacher                 @relation(fields: [teacherId], references: [id])
+  teacher         Teacher                 @relation(fields: [teacherId], references: [id], onDelete: Cascade)
   teacherId       String                  @map("teacher_id")
-  discipline      Discipline              @relation(fields: [disciplineId], references: [id])
+  discipline      Discipline              @relation(fields: [disciplineId], references: [id], onDelete: Cascade)
   disciplineId    String                  @map("discipline_id")
   roles           DisciplineTeacherRole[]
   questionAnswers QuestionAnswer[]
@@ -243,7 +243,7 @@ model Question {
 
 model QuestionRole {
   role       TeacherRole
-  question   Question    @relation(fields: [questionId], references: [id])
+  question   Question    @relation(fields: [questionId], references: [id], onDelete: Cascade)
   questionId String      @map("question_id")
   isShown    Boolean     @map("is_shown")
   isRequired Boolean     @map("is_required")
@@ -253,11 +253,11 @@ model QuestionRole {
 }
 
 model QuestionAnswer {
-  disciplineTeacher   DisciplineTeacher @relation(fields: [disciplineTeacherId], references: [id])
+  disciplineTeacher   DisciplineTeacher @relation(fields: [disciplineTeacherId], references: [id], onDelete: Cascade)
   disciplineTeacherId String            @map("discipline_teacher_id")
-  question            Question          @relation(fields: [questionId], references: [id])
+  question            Question          @relation(fields: [questionId], references: [id], onDelete: Cascade)
   questionId          String            @map("question_id")
-  user                User              @relation(fields: [userId], references: [id])
+  user                User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId              String            @map("user_id")
   value               String
 
@@ -284,9 +284,9 @@ model Role {
 }
 
 model UserRole {
-  student   Student @relation(fields: [studentId], references: [userId])
+  student   Student @relation(fields: [studentId], references: [userId], onDelete: Cascade)
   studentId String  @map("student_id")
-  role      Role    @relation(fields: [roleId], references: [id])
+  role      Role    @relation(fields: [roleId], references: [id], onDelete: Cascade)
   roleId    String  @map("role_id")
 
   @@id([studentId, roleId])
@@ -295,7 +295,7 @@ model UserRole {
 
 model Grant {
   id         String  @id @default(uuid())
-  role       Role    @relation(fields: [roleId], references: [id])
+  role       Role    @relation(fields: [roleId], references: [id], onDelete: Cascade)
   roleId     String  @map("role_id")
   permission String
   set        Boolean @default(true)
@@ -328,9 +328,9 @@ model StartDate {
 }
 
 model DisciplineTeacherRole {
-  disciplineTeacher   DisciplineTeacher @relation(fields: [disciplineTeacherId], references: [id])
+  disciplineTeacher   DisciplineTeacher @relation(fields: [disciplineTeacherId], references: [id], onDelete: Cascade)
   disciplineTeacherId String            @map("discipline_teacher_id")
-  disciplineType      DisciplineType    @relation(fields: [disciplineTypeId], references: [id])
+  disciplineType      DisciplineType    @relation(fields: [disciplineTypeId], references: [id], onDelete: Cascade)
   disciplineTypeId    String            @map("discipline_type_id")
   role                TeacherRole
 
