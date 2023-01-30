@@ -14,6 +14,7 @@ import { StudentRepository } from '../api/user/StudentRepository';
 import { UserRepository } from '../api/user/UserRepository';
 import { SuperheroRepository } from '../api/user/SuperheroRepository';
 import { QuestionRepository } from "../api/poll/QuestionRepository";
+import { ContactRepository } from "../api/user/ContactRepository";
 
 @Module({
   providers: [
@@ -31,6 +32,7 @@ import { QuestionRepository } from "../api/poll/QuestionRepository";
     StudentRepository,
     UserRepository,
     SuperheroRepository,
+    ContactRepository,
     QuestionRepository,
   ],
   exports: [
@@ -48,6 +50,7 @@ import { QuestionRepository } from "../api/poll/QuestionRepository";
     StudentRepository,
     UserRepository,
     SuperheroRepository,
+    ContactRepository,
     QuestionRepository,
   ],
 })
