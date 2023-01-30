@@ -6,9 +6,8 @@ interface TableProps {
     avatarIcon?: ReactNode,
     tag?: ReactNode,
     checkBox?: ReactNode,
-    button?: ReactNode,
-    editIcon?: ReactNode,
-    editButton?: ReactNode,
+    action?: ReactNode,
+    actionIcon?: ReactNode,
 }
 
 const Table: React.FC<TableProps> = (props) => {
@@ -24,8 +23,9 @@ const Table: React.FC<TableProps> = (props) => {
             </div>
             <div className="email">{props.email}</div>
             {props.checkBox ? props.checkBox : ""}
-            <div style={{width:"fit-content"}}>{props.editButton}</div>
-            {props.editIcon ? props.editIcon : ""}</div>
+            <div style={{width:"fit-content"}}>{props.action}</div>
+            <div style={{width:"fit-content"}}>{props.actionIcon ? props.actionIcon : ""}</div>
+            </div>
     )
 }
 

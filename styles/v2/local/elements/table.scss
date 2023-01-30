@@ -1,6 +1,7 @@
 .table-container {
     @include flex-center;
     position: relative;
+    min-width: fit-content;
     width: 100%;
     height: 72px;
     padding: 12px 16px;
