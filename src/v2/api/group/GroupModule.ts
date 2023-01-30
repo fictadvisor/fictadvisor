@@ -10,6 +10,6 @@ import { UserModule } from '../user/UserModule';
   controllers: [GroupController],
   providers: [GroupService, GroupByIdPipe],
   exports: [GroupService, GroupByIdPipe],
-  imports: [DisciplineModule, PrismaModule, forwardRef(() => UserModule)],
+  imports: [forwardRef(() => DisciplineModule), PrismaModule, forwardRef(() => UserModule)],
 })
 export class GroupModule {}

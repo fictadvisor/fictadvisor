@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
 import { CreateAnswerDTO, CreateAnswersDTO } from '../teacher/dto/CreateAnswersDTO';
 import { CreateQuestionsDTO } from "./dto/CreateQuestionDTO";
@@ -10,6 +10,8 @@ import { DisciplineRepository } from "../discipline/DisciplineRepository";
 import { DisciplineTeacherRepository } from "../teacher/DisciplineTeacherRepository";
 import { NotEnoughAnswersException } from "../../utils/exceptions/NotEnoughAnswersException";
 import { ExcessiveAnswerException } from "../../utils/exceptions/ExcessiveAnswerException";
+import { PollModule } from "./PollModule";
+import { DisciplineService } from "../discipline/DisciplineService";
 
 
 
@@ -18,7 +20,9 @@ export class PollService {
   constructor(
     private prisma: PrismaService,
     private questionRepository: QuestionRepository,
+
     private disciplineRepository: DisciplineRepository,
+    @Inject(forwardRef(() => DisciplineTeacherRepository))
     private disciplineTeacherRepository: DisciplineTeacherRepository,
   ){}
 

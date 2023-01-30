@@ -19,9 +19,10 @@ export class DisciplineTeacherService {
     private disciplineTypeRepository: DisciplineTypeRepository,
     @Inject(forwardRef(() => DisciplineTypeService))
     private disciplineTypeService: DisciplineTypeService,
+    @Inject(forwardRef(() => PollService))
     private pollService: PollService,
     private questionAnswerRepository: QuestionAnswerRepository,
-
+    @Inject(forwardRef(() => DisciplineService))
     private disciplineService: DisciplineService,
   ) {}
 

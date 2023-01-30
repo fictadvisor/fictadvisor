@@ -15,6 +15,7 @@ import { UserRepository } from '../api/user/UserRepository';
 import { SuperheroRepository } from '../api/user/SuperheroRepository';
 import { QuestionRepository } from "../api/poll/QuestionRepository";
 import { ContactRepository } from "../api/user/ContactRepository";
+import { QuestionAnswerRepository } from "../api/poll/QuestionAnswerRepository";
 
 @Module({
   providers: [
@@ -34,6 +35,7 @@ import { ContactRepository } from "../api/user/ContactRepository";
     SuperheroRepository,
     ContactRepository,
     QuestionRepository,
+    QuestionAnswerRepository,
   ],
   exports: [
     PrismaService,
@@ -52,6 +54,7 @@ import { ContactRepository } from "../api/user/ContactRepository";
     SuperheroRepository,
     ContactRepository,
     QuestionRepository,
+    QuestionAnswerRepository,
   ],
 })
 export class PrismaModule {}
