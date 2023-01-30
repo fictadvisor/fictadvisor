@@ -1,0 +1,104 @@
+$slider-color: #343434;
+$thumb-color: #B83838;
+$number-range-width: 100%;
+$slider-desk-height: 16px;
+$slider-mob-height: 8px;
+$slider-border-radius: 500px; 
+
+@mixin thumb-desk-size {
+    width: 28px;
+    height: 28px;
+}
+
+@mixin thumb-mob-size {
+    width: 20px;
+    height: 20px;
+}
+
+@mixin thumb {
+    position: relative;
+    cursor: pointer;
+    background: $thumb-color;
+    border: none;
+    border-radius: 50%;
+    margin-top: -6px;
+}
+
+.test-page-wrap {
+    gap: 30px;
+}
+
+.slider-container {
+    width: 50%; 
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.slider-container:nth-child(2) {
+    width: 375px;
+    gap:3px;
+}
+
+.number-range-desktop {
+    content: url("/assets/icons/number-range-desk.svg");
+    width: $number-range-width;
+    padding: 0 0.4%;
+}
+
+.number-range-mobile {
+    content: url("/assets/icons/number-range-mob.svg");
+    width: $number-range-width;
+    padding: 0 0.2%;
+}
+
+.slider,
+.slider::-webkit-slider-runnable-track,
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    background: transparent;
+}
+
+.slider {
+    &::-webkit-slider-runnable-track {
+        height: $slider-desk-height;
+        background: linear-gradient(to right, $thumb-color, $thumb-color), $slider-color;
+        background-size: var(--background-size, 0%) 100%;
+        background-repeat: no-repeat;
+        border-radius: $slider-border-radius;
+    }
+
+    &::-webkit-slider-thumb {
+        @include thumb-desk-size;
+        @include thumb;
+    }
+
+    &::-moz-range-progress {
+        background-color: $thumb-color;
+        border-radius: $slider-border-radius;
+    }
+
+    &::-moz-range-track {
+        background-color: $slider-color;
+        border-radius: $slider-border-radius;
+    }
+
+    &::-moz-range-thumb {
+        @include thumb-desk-size;
+        @include thumb;
+    }
+}
+
+#slider-mobile {
+    &::-webkit-slider-runnable-track {
+        height: $slider-mob-height;
+    }
+
+    &::-webkit-slider-thumb {
+        @include thumb-mob-size;
+    }
+
+    &::-moz-range-thumb {
+        @include thumb-mob-size;
+    }
+}

@@ -17,7 +17,7 @@ function alertButtons(){
             <AlertButton text="Error primary" onClick={() => {}} isDisabled={false} type={AlertButtonType.ERROR_PRIMARY}/>
 
             <AlertButton text="Error secondary" icon={<CrossIcon/>} iconPosition={AlertButtonIconPosition.LEFT} onClick={() => {}} isDisabled={false} type={AlertButtonType.ERROR_SECONDARY}/>
-            <AlertButton text="Error secondary" icon={<CrossIcon/>} iconPosition={AlertButtonIconPosition.RIGHT} onClick={() => {}} isDisabled={false} type={AlertButtonType.ERROR_SECONDARY}/>
+            <AlertButton icon={<CrossIcon/>} iconPosition={AlertButtonIconPosition.RIGHT} onClick={() => {}} isDisabled={false} type={AlertButtonType.ERROR_SECONDARY}/>
             <AlertButton text="Error secondary" onClick={() => {}} isDisabled={false} type={AlertButtonType.ERROR_SECONDARY}/>
             <AlertButton text="Error secondary" onClick={() => {}} isDisabled={false} type={AlertButtonType.ERROR_SECONDARY}/>
         </div>

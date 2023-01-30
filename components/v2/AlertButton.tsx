@@ -10,7 +10,7 @@ export enum AlertButtonIconPosition{
 
 
 interface AlertButtonProps {
-    text: string,
+    text?: string,
     onClick: Function,
     isDisabled: boolean,
     type: AlertButtonType,
@@ -22,7 +22,7 @@ interface AlertButtonProps {
 const AlertButton: React.FC<AlertButtonProps> = (props) => {
 
     const buttonColor = `${props.type}-alert-button-color `
-    const buttonStyle = `alert${props.icon ? "-icon" : ""}-button`
+    const buttonStyle = props.text ? `alert${props.icon ? "-icon" : ""}-button`: "unlabeled-alert-button";
     const additionalClass = props.className ? " " + props.className : ""
     const className = buttonColor + buttonStyle + additionalClass
 
