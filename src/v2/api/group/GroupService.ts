@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import { Group, State } from '@prisma/client';
-import { GetDTO } from '../teacher/dto/GetDTO';
-import { DatabaseUtils } from '../utils/DatabaseUtils';
+import {Group, RoleName, State} from '@prisma/client';
 import { DisciplineService } from '../discipline/DisciplineService';
 import { DisciplineRepository } from '../discipline/DisciplineRepository';
 import { GroupRepository } from './GroupRepository';
@@ -14,6 +12,7 @@ import { EmailDTO } from "./dto/EmailDTO";
 import { ApproveDTO } from "../user/dto/ApproveDTO";
 import { NoPermissionException } from "../../utils/exceptions/NoPermissionException";
 import { RoleDTO } from "./dto/RoleDTO";
+import {UpdateDTO} from "./dto/UpdateDTO";
 
 @Injectable()
 export class GroupService {
@@ -120,8 +119,8 @@ export class GroupService {
     const students = await this.groupRepository.getStudents(groupId);
     for (const student of students) {
       const roles = await this.studentRepository.getRoles(student.userId);
-      for (const ROLE of roles){
-        if ( ROLE ){
+      for (const role of roles){
+        if ( role.name == RoleName.CAPTAIN ){
           return student;
         }
       }
@@ -151,7 +150,7 @@ export class GroupService {
     return results;
   }
 
-  async updateGroup(groupId: string){
-    await this.groupRepository.updateGroup(groupId);
+  async updateGroup(groupId: string, body: UpdateDTO){
+    await this.groupRepository.updateGroup(groupId, body);
   }
 }

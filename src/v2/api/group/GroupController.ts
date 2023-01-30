@@ -12,6 +12,7 @@ import {ApproveDTO} from "../user/dto/ApproveDTO";
 import {RoleDTO} from "./dto/RoleDTO";
 import {UserByIdPipe} from "../user/UserByIdPipe";
 import {QueryAllDTO} from "../../utils/QueryAllDTO";
+import {UpdateDTO} from "./dto/UpdateDTO";
 
 @Controller({
   version: '2',
@@ -46,8 +47,9 @@ export class GroupController {
   @Patch()
   async update(
     @Param('groupId') groupId: string,
+    @Body() body: UpdateDTO,
   ){
-    return this.groupService.updateGroup(groupId);
+    return this.groupService.updateGroup(groupId, body);
   }
 
   @UseGuards(JwtGuard, GroupByParamsGuard)
@@ -133,4 +135,5 @@ export class GroupController {
   ){
     return this.groupService.removeStudent(groupId, userId);
   }
+
 }
