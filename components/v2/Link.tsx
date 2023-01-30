@@ -1,6 +1,7 @@
 import Link from "next/dist/client/link";
 import { LinkProps } from "next/link";
 import {ArrowLeftIcon} from "@heroicons/react/24/outline";
+import React from "react";
 
 export enum LinkColor {
   WHITE = "white-link",

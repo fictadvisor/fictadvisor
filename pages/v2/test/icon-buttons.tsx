@@ -1,6 +1,6 @@
 import {IconButtonSize, SortButton, SortButtonOrder, TrashBucketButton} from "../../../components/v2/IconButton";
 
-function ButtonIcons(){
+function IconButtons(){
     return(
         <div className="test-page-wrap">
             <div className="test-page-content">
@@ -22,4 +22,4 @@ function ButtonIcons(){
     );
 }
 
-export default ButtonIcons;
+export default IconButtons;

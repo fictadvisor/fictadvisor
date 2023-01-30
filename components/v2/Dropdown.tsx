@@ -18,7 +18,7 @@ export type DropDownOption = {
 export interface DropdownProps {
   options: DropDownOption[];
   label: string;
-  className?: "error" | "success" | "disabled";
+  className?: DropDownClass;
   icon?: ReactNode;
   placeholder?: string;
   noOptionsText?: string;
