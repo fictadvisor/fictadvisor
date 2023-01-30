@@ -1,7 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Post, Request, UseGuards, Patch } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Request, UseGuards } from '@nestjs/common';
 import { DisciplineTeacherService } from "./DisciplineTeacherService";
 import { CreateAnswersDTO } from "./dto/CreateAnswersDTO";
 import { JwtGuard } from "../../security/JwtGuard";
+import { Permission } from "../../security/permission-guard/Permission";
+import { PermissionGuard } from "../../security/permission-guard/PermissionGuard";
 
 @Controller({
   version: '2',
@@ -18,8 +20,8 @@ export class DisciplineTeacherController{
   ) {
     return this.disciplineTeacherService.getQuestions(disciplineTeacherId);
   }
-
-  @UseGuards(JwtGuard)
+  @Permission('groups.$groupId.answers.send')
+  @UseGuards(JwtGuard, PermissionGuard)
   @Post('/:disciplineTeacherId/answers')
   sendAnswers(
     @Param('disciplineTeacherId') disciplineTeacherId: string,

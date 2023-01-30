@@ -26,7 +26,7 @@ export class GroupService {
   ) {}
 
   async create(code: string): Promise<Group>  {
-    return await this.prisma.group.create({
+    return this.prisma.group.create({
       data: {
         code,
       },
@@ -38,7 +38,7 @@ export class GroupService {
     const page = DatabaseUtils.getPage(body);
     const sort = DatabaseUtils.getSort(body);
 
-    return await this.prisma.group.findMany({
+    return this.prisma.group.findMany({
       ...page,
       ...sort,
       where: {
@@ -48,7 +48,7 @@ export class GroupService {
   }
 
   async get(id: string) {
-    return await this.prisma.group.findUnique({
+    return this.prisma.group.findUnique({
       where: {
         id,
       },

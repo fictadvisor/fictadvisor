@@ -19,7 +19,7 @@ export class QuestionRepository {
   }
 
   async connectRole(questionId: string, data: QuestionRoleData) {
-    return await this.prisma.questionRole.create({
+    return this.prisma.questionRole.create({
       data: {
         questionId,
         ...data,
@@ -54,13 +54,22 @@ export class QuestionRepository {
   }
 
   async getQuestion(id: string) {
-    return await this.prisma.question.findUnique({
+    return this.prisma.question.findUnique({
       where: {
         id,
       },
     });
   }
 
+  async getQuestionRole(questionId: string, role: TeacherRole) {
+    return this.prisma.questionRole.findFirst({
+      where: {
+        questionId,
+        role,
+        },
+      },
+    );
+  }
   async getQuestionsByRole(role: TeacherRole) {
     return this.prisma.questionRole.findMany({
       where: {

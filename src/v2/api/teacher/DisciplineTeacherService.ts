@@ -8,6 +8,7 @@ import { CreateAnswersDTO } from "./dto/CreateAnswersDTO";
 import { QuestionAnswerRepository } from "../poll/QuestionAnswerRepository";
 import { User } from "@prisma/client";
 import { AlreadyAnsweredException } from "../../utils/exceptions/AlreadyAnsweredException";
+import { DisciplineService } from "../discipline/DisciplineService";
 
 @Injectable()
 export class DisciplineTeacherService {
@@ -20,11 +21,13 @@ export class DisciplineTeacherService {
     private disciplineTypeService: DisciplineTypeService,
     private pollService: PollService,
     private questionAnswerRepository: QuestionAnswerRepository,
+
+    private disciplineService: DisciplineService,
   ) {}
 
   async getGroup(id: string) {
-    const roles = await this.disciplineTeacherRepository.getRoles(id);
-    return this.disciplineTypeService.getGroup(roles[0].disciplineTypeId);
+    const discipline = await this.disciplineTeacherRepository.getDiscipline(id);
+    return this.disciplineService.getGroup(discipline.id);
   }
 
   async getDisciplineTeacher(disciplineTeacherId: string) {

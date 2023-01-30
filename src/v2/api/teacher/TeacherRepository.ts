@@ -34,7 +34,7 @@ export class TeacherRepository {
     const page = DatabaseUtils.getPage(body);
     const sort = DatabaseUtils.getSort(body);
 
-    return await this.prisma.teacher.findMany({
+    return this.prisma.teacher.findMany({
       ...page,
       ...sort,
       where: {

@@ -33,7 +33,7 @@ export class DisciplineService {
   }
 
   async makeSelective(user: User, disciplineId: string) {
-    return await this.prisma.selectiveDiscipline.create({
+    return this.prisma.selectiveDiscipline.create({
       data: {
         studentId: user.id,
         disciplineId,
@@ -63,5 +63,9 @@ export class DisciplineService {
     }
 
     return results;
+  }
+
+  async getGroup(id: string) {
+    return this.disciplineRepository.getGroup(id);
   }
 }
