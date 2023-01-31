@@ -17,9 +17,9 @@ const Table: React.FC<TableProps> = (props) => {
         <div>
             {props.fields.map(field => {
                 field.avatar = field.avatar ? field.avatar : "default-avatar.jpg";
+                let userGap = (field.firstButton || field.checkBox || field.secondButton) ? "12px" : "26px";
                 let userWidth = field.tag && (field.firstButton || field.checkBox || field.secondButton) ? "180px" : "304px";
                 if (field.tag && !field.firstButton && !field.checkBox && !field.secondButton) userWidth = "288px";
-                let userGap = (field.firstButton || field.checkBox || field.secondButton) ? "12px" : "26px";
                 return (
                     <div className="table-container">
                         <div className="user-container" style={{ gap: userGap }}>
