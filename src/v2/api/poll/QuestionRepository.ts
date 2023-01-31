@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
 import { CreateQuestionData } from "./dto/CreateQuestionDTO";
 import { UpdateQuestionDTO } from "./dto/UpdateQuestionDTO";
-import { QuestionRoleData } from "./dto/QuestionRoleData";
+import { CreateQuestionRoleData } from "./dto/CreateQuestionRoleData";
 import { TeacherRole } from "@prisma/client";
 
 @Injectable()
@@ -18,7 +18,7 @@ export class QuestionRepository {
     });
   }
 
-  async connectRole(questionId: string, data: QuestionRoleData) {
+  async connectRole(questionId: string, data: CreateQuestionRoleData) {
     return this.prisma.questionRole.create({
       data: {
         questionId,

@@ -3,11 +3,11 @@ import { PollService } from './PollService';
 import { JwtGuard } from '../../security/JwtGuard';
 import { UpdateQuestionDTO } from "./dto/UpdateQuestionDTO";
 import { CreateQuestionsDTO } from "./dto/CreateQuestionDTO";
-import { QuestionRoleData } from "./dto/QuestionRoleData";
 import { Permission } from "../../security/permission-guard/Permission";
 import { PermissionGuard } from "../../security/permission-guard/PermissionGuard";
 import { QuestionByIdPipe } from "./dto/QuestionByIdPipe";
 import { QuestionByRoleAndIdPipe } from "./dto/QuestionByRoleAndIdPipe";
+import { CreateQuestionRoleDTO } from './dto/CreateQuestionRoleDTO';
 
 @Controller({
   version: '2',
@@ -57,7 +57,8 @@ export class PollController {
   @UseGuards(JwtGuard, PermissionGuard)
   @Post('/questions/:questionId/roles')
   giveRole(
-    @Param('questionId', QuestionByIdPipe) questionId: string, body: QuestionRoleData,
+    @Param('questionId', QuestionByIdPipe) questionId: string,
+    body: CreateQuestionRoleDTO,
   ){
     return this.pollService.giveRole(body, questionId);
   }

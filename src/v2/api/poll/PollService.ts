@@ -3,10 +3,10 @@ import { PrismaService } from '../../database/PrismaService';
 import { CreateQuestionsDTO } from "./dto/CreateQuestionDTO";
 import { QuestionRepository } from "./QuestionRepository";
 import { UpdateQuestionDTO } from "./dto/UpdateQuestionDTO";
-import { QuestionRoleData } from "./dto/QuestionRoleData";
 import { Question, TeacherRole } from "@prisma/client";
 import { DisciplineRepository } from "../discipline/DisciplineRepository";
 import { DisciplineTeacherRepository } from "../teacher/DisciplineTeacherRepository";
+import { CreateQuestionRoleDTO } from './dto/CreateQuestionRoleDTO';
 
 @Injectable()
 export class PollService {
@@ -41,7 +41,7 @@ export class PollService {
     return await this.questionRepository.getQuestion(id);
   }
 
-  async giveRole(body: QuestionRoleData, questionId: string){
+  async giveRole(body: CreateQuestionRoleDTO, questionId: string){
     return await this.questionRepository.connectRole(questionId, body);
   }
 

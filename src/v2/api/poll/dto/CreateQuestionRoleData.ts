@@ -1,8 +1,7 @@
 import { TeacherRole } from "@prisma/client";
 
-export class QuestionRoleData {
+export class CreateQuestionRoleData {
     role: TeacherRole;
-    questionId?: string;
     isShown: boolean;
     isRequired: boolean;
 }
