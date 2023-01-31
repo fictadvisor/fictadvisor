@@ -1,0 +1,107 @@
+.header-card-container {
+    & img {
+        aspect-ratio: 1/1;
+        width: 36px;
+    }
+    & h4 {
+        font-size: 14px;
+    }
+    transition: all linear 0.1s;
+    background-color: #151515;
+    min-width: fit-content;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 4px;
+    gap: 8px;
+    border: 1px solid transparent;
+    & .header-card-info {
+        font-size: 11px;
+        color: #a3a3a3;
+        display: flex;
+        flex-flow: column;
+        justify-content: center;
+        align-items: flex-end;
+        gap: 4px;
+    }
+    & .header-card-group-name {
+        padding: 1px;
+        margin-left: 10px;
+        border-radius: 5px;
+        border: 0.2px solid #a3a3a3;
+    }
+    &:hover {
+        cursor: pointer;
+        background: $theme-color;
+        & h4,
+        & .header-card-info {
+            color: #e5e5e5;
+        }
+        & .header-card-group-name {
+            border-color: #e5e5e5;
+        }
+    }
+    &:focus {
+        background: #151515;
+        & h4,
+        & .header-card-info {
+            color: #d4d4d4;
+        }
+        & .header-card-group-name,
+        & .header-card-postition {
+            color: #a3a3a3;
+        }
+        & .header-card-group-name {
+            border-color: #a3a3a3;
+        }
+    }
+    &:active {
+        & .header-card-info {
+            & h4 {
+                color: #a3a3a3;
+            }
+            color: #a3a3a3;
+        }
+        & .header-card-group-name {
+            border-color: #a3a3a3;
+        }
+        border-color: #292929;
+    }
+}
+
+.header-lecturer-card-container {
+    padding: 16px;
+    background-color: #292929;
+    min-width: fit-content;
+    width: 100%;
+    @include flex-center;
+    gap: 16px;
+
+    & .header-lecturer-card-info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        height: 60px;
+    }
+    & h4 {
+        font-size: 14px;
+        font-weight: 600;
+    }
+    & p {
+        display: inline-block;
+        font-size: 11px;
+        line-height: 17.6px;
+       
+        display: -webkit-box;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        color: #e5e5e5;
+    }
+    & img {
+        aspect-ratio: 1/1;
+        width: 60px;
+    }
+}

@@ -10,6 +10,10 @@ function tags() {
         <div>
             <div className="test-page-wrap">
                 <div className="test-page-content">
+                    <Tag className="error" text="Error" state={TagState.SMALL} icon={<TagMark />}></Tag>
+                    <Tag className="error" text="Error" state={TagState.SMALL} icon={<TagMark />}></Tag>
+                    <Tag className="error" text="Error" state={TagState.BIG} icon={<TagMark />}></Tag>
+
                     <Tag className="error-first" text="Error" state={TagState.SMALL} icon={<TagMark />}></Tag>
                     <Tag className="error-second" text="Error" state={TagState.SMALL} icon={<TagMark />}></Tag>
                     <Tag className="error-third" text="Error" state={TagState.BIG} icon={<TagMark />}></Tag>

@@ -1,3 +1,5 @@
+import { type } from "os";
+
 export enum TooltipDirection {
   TOP = "top",
   BOTTOM = "bottom",
@@ -5,15 +7,18 @@ export enum TooltipDirection {
   RIGHT = "right",
 }
 
-interface TooltipProps {
+type TooltipProps={
   text: string;
   direction?: "top" | "bottom" | "left" | "right";
-}
+} &  React.DetailedHTMLProps<
+React.ButtonHTMLAttributes<HTMLDivElement>,
+HTMLDivElement
+>;
 
-export const Tooltip: React.FC<TooltipProps> = ({ direction, text }) => {
+export const Tooltip: React.FC<TooltipProps> = ({ direction, text, ...props }) => {
   if (direction) {
     return (
-      <div className="tooltip-body">
+      <div className="tooltip-body" {...props}>
         <span className="tooltip-text" id={`tooltip-text-${direction}`}>
           {text}
         </span>
@@ -22,7 +27,7 @@ export const Tooltip: React.FC<TooltipProps> = ({ direction, text }) => {
   }
 
   return (
-    <div className="tooltip-body">
+    <div className="tooltip-body" {...props}>
       <span>{text}</span>
     </div>
   );
