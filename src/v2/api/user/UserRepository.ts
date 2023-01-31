@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import { UpdateUserDTO } from './dto/UpdateUserDTO';
 import { CreateUserData } from './dto/CreateUserData';
 import { UniqueUserDTO } from './dto/UniqueUserDTO';
 import { DatabaseUtils } from '../utils/DatabaseUtils';
+import { UpdateUserData } from "./dto/UpdateUserData";
 
 @Injectable()
 export class UserRepository {
@@ -26,7 +26,7 @@ export class UserRepository {
     });
   }
 
-  async updateByEmail(email: string, data: UpdateUserDTO) {
+  async updateByEmail(email: string, data: UpdateUserData) {
     return this.prisma.user.update({
       where: {
         email,
@@ -51,11 +51,28 @@ export class UserRepository {
     });
   }
 
-  async updateByUnique(search: UniqueUserDTO, data: UpdateUserDTO) {
+  async updateByUnique(search: UniqueUserDTO, data: UpdateUserData) {
     const where = DatabaseUtils.getWhere(search);
 
     return this.prisma.user.updateMany({
       where,
+      data,
+    });
+  }
+
+  async delete(id: string) {
+    this.prisma.user.delete({
+      where: {
+        id,
+      },
+    });
+  }
+
+  async update(id: string, data: UpdateUserData) {
+    this.prisma.user.update({
+      where: {
+        id,
+      },
       data,
     });
   }

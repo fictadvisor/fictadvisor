@@ -17,7 +17,7 @@ export default () => ({
     password: process.env.SMTP_PASSWORD,
   },
   telegram: {
-    apiUrl: process.env.TELEGRAM_API_URL,
+    apiUrl: process.env.TELEGRAM_BOT_API_URL,
     botToken: process.env.TELEGRAM_BOT_TOKEN,
   },
   static: {

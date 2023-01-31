@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import { Group, State } from '@prisma/client';
-import { DatabaseUtils } from '../utils/DatabaseUtils';
+import { Group, RoleName, State } from '@prisma/client';
 import { DisciplineService } from '../discipline/DisciplineService';
 import { DisciplineRepository } from '../discipline/DisciplineRepository';
 import { GroupRepository } from './GroupRepository';
+import { RoleRepository } from "../user/role/RoleRepository";
+import { StudentRepository } from "../user/StudentRepository";
+import { QueryAllDTO } from "../../utils/QueryAllDTO";
+import { UserRepository } from "../user/UserRepository";
 import { EmailDTO } from "./dto/EmailDTO";
 import { ApproveDTO } from "../user/dto/ApproveDTO";
 import { NoPermissionException } from "../../utils/exceptions/NoPermissionException";
-import { UserRepository } from "../user/UserRepository";
-import { StudentRepository } from "../user/StudentRepository";
 import { RoleDTO } from "./dto/RoleDTO";
-import { QueryAllDTO } from '../../utils/QueryAllDTO';
-
+import { UpdateGroupDTO } from "./dto/UpdateGroupDTO";
 
 @Injectable()
 export class GroupService {
@@ -21,38 +21,21 @@ export class GroupService {
     private disciplineRepository: DisciplineRepository,
     private groupRepository: GroupRepository,
     private prisma: PrismaService,
+    private roleRepository: RoleRepository,
+    private studentRepository: StudentRepository,
     private userRepository: UserRepository,
-    private studentRepository: StudentRepository
   ) {}
 
   async create(code: string): Promise<Group>  {
-    return await this.prisma.group.create({
-      data: {
-        code,
-      },
-    });
+    return this.groupRepository.create(code);
   }
 
   async getAll(body: QueryAllDTO) {
-    const search = DatabaseUtils.getSearch(body, 'code');
-    const page = DatabaseUtils.getPage(body);
-    const sort = DatabaseUtils.getSort(body);
-
-    return await this.prisma.group.findMany({
-      ...page,
-      ...sort,
-      where: {
-        ...search,
-      },
-    });
+    return this.groupRepository.getAll(body);
   }
 
   async get(id: string) {
-    return await this.prisma.group.findUnique({
-      where: {
-        id,
-      },
-    });
+    return this.groupRepository.getGroup(id);
   }
 
   async getDisciplineTeachers(groupId: string) {
@@ -130,5 +113,53 @@ export class GroupService {
     }
 
     await this.studentRepository.update(user.id, { state: State.DECLINED });
+  }
+
+  async getCaptain(groupId: string) {
+    const students = await this.groupRepository.getStudents(groupId);
+    for (const student of students) {
+      const roles = await this.studentRepository.getRoles(student.userId);
+      for (const role of roles){
+        if (role.name == RoleName.CAPTAIN){
+          const user = await this.userRepository.get(student.userId);
+          return {
+            firstName: student.firstName,
+            middleName: student.middleName,
+            lastName: student.lastName,
+            email: user.email,
+            username: user.username,
+            avatar: user.avatar,
+          };
+        }
+      }
+    }
+    return null;
+  }
+
+  async deleteGroup(groupId: string) {
+    await this.groupRepository.delete(groupId);
+  }
+
+  async getStudents(groupId: string) {
+    let students = await this.groupRepository.getStudents(groupId);
+    students = students.filter((st) => st.state === State.APPROVED);
+    const results = [];
+    for (const student of students) {
+      const roles = await this.studentRepository.getRoles(student.userId);
+      const user = await this.userRepository.get(student.userId);
+      results.push({
+        firstName: student.firstName,
+        middleName: student.middleName,
+        lastName: student.lastName,
+        email: user.email,
+        avatar: user.avatar,
+        role: [RoleName.CAPTAIN, RoleName.MODERATOR, RoleName.STUDENT].find((r) => roles.some((r2) => r2.name === r)),
+      });
+    }
+    return { students: results };
+  }
+
+  async updateGroup(groupId: string, body: UpdateGroupDTO){
+    await this.groupRepository.updateGroup(groupId, body);
   }
 }

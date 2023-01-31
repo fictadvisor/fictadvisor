@@ -4,16 +4,16 @@ import { InvalidGroupIdException } from '../../utils/exceptions/InvalidGroupIdEx
 import { GroupService } from './GroupService';
 
 @Injectable()
-export class GroupByIdPipe implements PipeTransform<string, Promise<Group>> {
+export class GroupByIdPipe implements PipeTransform<string, Promise<string>> {
   constructor(
     private groupService: GroupService
   ) {}
 
-  async transform(value: string) {
-    const group: Group = await this.groupService.get(value);
+  async transform(groupId: string): Promise<string> {
+    const group: Group = await this.groupService.get(groupId);
     if(!group) {
       throw new InvalidGroupIdException();
     }
-    return group;
+    return groupId;
   }
 }
