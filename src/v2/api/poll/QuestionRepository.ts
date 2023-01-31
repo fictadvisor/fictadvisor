@@ -66,12 +66,11 @@ export class QuestionRepository {
       where: {
         questionId,
         role,
-        },
       },
-    );
+    });
   }
   async getQuestionsByRole(role: TeacherRole) {
-    return this.prisma.questionRole.findMany({
+    const roles = await this.prisma.questionRole.findMany({
       where: {
         role,
       },
@@ -79,6 +78,8 @@ export class QuestionRepository {
         question: true,
       },
     });
+
+    return roles.map((r) => r.question);
   }
 
 

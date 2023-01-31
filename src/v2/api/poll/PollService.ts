@@ -1,6 +1,5 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import { CreateAnswerDTO, CreateAnswersDTO } from '../teacher/dto/CreateAnswersDTO';
 import { CreateQuestionsDTO } from "./dto/CreateQuestionDTO";
 import { QuestionRepository } from "./QuestionRepository";
 import { UpdateQuestionDTO } from "./dto/UpdateQuestionDTO";
@@ -8,12 +7,6 @@ import { QuestionRoleData } from "./dto/QuestionRoleData";
 import { Question, TeacherRole } from "@prisma/client";
 import { DisciplineRepository } from "../discipline/DisciplineRepository";
 import { DisciplineTeacherRepository } from "../teacher/DisciplineTeacherRepository";
-import { NotEnoughAnswersException } from "../../utils/exceptions/NotEnoughAnswersException";
-import { ExcessiveAnswerException } from "../../utils/exceptions/ExcessiveAnswerException";
-import { PollModule } from "./PollModule";
-import { DisciplineService } from "../discipline/DisciplineService";
-
-
 
 @Injectable()
 export class PollService {
@@ -26,18 +19,6 @@ export class PollService {
     private disciplineTeacherRepository: DisciplineTeacherRepository,
   ){}
 
-
-  async createAnswers(userId: string, disciplineTeacherId: string, body: CreateAnswersDTO) {
-    for (const answer of body.answers) {
-      this.prisma.questionAnswer.create({
-        data: {
-          disciplineTeacherId,
-          userId,
-          ...answer,
-        },
-      });
-    }
-  }
   async createQuestions(body: CreateQuestionsDTO){
     const questions = [];
     for (const question of body.questions){
@@ -81,6 +62,7 @@ export class PollService {
     const questions = await this.getQuestionsByRoles(roles);
     return this.unifyQuestions(questions);
   }
+
   sortByCategories(questions: Question[]) {
     const results = [];
     for(const question of questions){
@@ -109,40 +91,5 @@ export class PollService {
       }
     }
     return results;
-  }
-
-  async getCategoriesByDisciplineTeacherId(id: string) {
-    const { disciplineId, teacher } = await this.disciplineTeacherRepository.get(id);
-    const questions = await this.getUniqueQuestionsByDisciplineTeacherId(id);
-    const subject = await this.disciplineRepository.getSubject(disciplineId);
-    const categories = this.sortByCategories(questions);
-    return {
-      teacher: `${teacher.lastName} ${teacher.firstName} ${teacher.middleName}`,
-      subject : subject.name,
-      categories,
-    };
-  }
-
-  async getUniqueQuestionsByDisciplineTeacherId(id: string) {
-    const roles = await this.disciplineTeacherRepository.getRoles(id);
-    return this.getUnifyQuestionByRoles(roles.map((r) => r.role));
-  }
-
-  async checkRequiredQuestions(disciplineTeacherId: string, questions: CreateAnswerDTO[]) {
-    const dbQuestions = await this.getUniqueQuestionsByDisciplineTeacherId(disciplineTeacherId);
-    for (const question of dbQuestions) {
-      if(question.isRequired && !questions.some((q) => q.questionId === question.id)) {
-        throw new NotEnoughAnswersException();
-      }
-    }
-  }
-
-  async checkExcessiveQuestions(disciplineTeacherId: string, questions: CreateAnswerDTO[]) {
-    const dbQuestions = await this.getUniqueQuestionsByDisciplineTeacherId(disciplineTeacherId);
-    for (const question of questions) {
-      if(!dbQuestions.some((q) => (q.questionId === question.questionId))) {
-        throw new ExcessiveAnswerException();
-      }
-    }
   }
 }
