@@ -10,6 +10,7 @@ import { JwtStrategy } from '../../security/JwtStrategy';
 import { EmailModule } from '../../email/EmailModule';
 import { TelegramAPI } from "../../telegram/TelegramAPI";
 import { PrismaModule } from '../../database/PrismaModule';
+import { GroupModule } from '../group/GroupModule';
 
 
 @Module({
@@ -30,6 +31,7 @@ import { PrismaModule } from '../../database/PrismaModule';
     ConfigurationModule,
     EmailModule,
     PrismaModule,
+    GroupModule,
   ],
 })
 export class AuthModule {}
