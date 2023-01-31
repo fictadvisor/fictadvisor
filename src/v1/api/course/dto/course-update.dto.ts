@@ -3,9 +3,9 @@ import { CourseState } from '../../../database/entities/course.entity';
 
 export class CourseUpdateDto {
   @IsOptional()
-  description?: string;
+    description?: string;
 
   @IsOptional()
   @IsEnum(CourseState)
-  state?: CourseState;
+    state?: CourseState;
 }

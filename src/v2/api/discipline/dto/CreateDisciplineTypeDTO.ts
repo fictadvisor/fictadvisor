@@ -1,6 +1,6 @@
-import { DisciplineTypeEnum } from '@prisma/client';
+import { type DisciplineTypeEnum } from '@prisma/client';
 
 export interface CreateDisciplineTypeDTO {
-  disciplineId: string,
-  name: DisciplineTypeEnum,
+  disciplineId: string
+  name: DisciplineTypeEnum
 }

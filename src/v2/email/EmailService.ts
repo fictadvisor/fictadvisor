@@ -1,13 +1,13 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
 
-import { EmailOptions } from './dto/EmailDTO';
+import { type EmailOptions } from './dto/EmailDTO';
 
 @Injectable()
 export class EmailService {
-  constructor(private mailerService: MailerService) {}
+  constructor (private readonly mailerService: MailerService) {}
 
-  async sendEmail({ to, subject, message, link }: EmailOptions) {
+  async sendEmail ({ to, subject, message, link }: EmailOptions) {
     await this.mailerService.sendMail({
       to,
       subject,

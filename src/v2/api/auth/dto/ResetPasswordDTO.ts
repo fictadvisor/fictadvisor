@@ -1,3 +1,3 @@
 export interface ResetPasswordDTO {
-  password: string,
+  password: string
 }

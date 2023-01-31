@@ -1,6 +1,6 @@
 import { loadPackage } from '@nestjs/common/utils/load-package.util';
 import { ConfigService } from '@nestjs/config';
-import { NestExpressApplication } from '@nestjs/platform-express';
+import { type NestExpressApplication } from '@nestjs/platform-express';
 import { mkdirSync, existsSync } from 'fs';
 
 export const applyStaticMiddleware = (app: NestExpressApplication) => {

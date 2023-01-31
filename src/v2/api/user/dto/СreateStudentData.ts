@@ -1,5 +1,4 @@
-import {State} from "@prisma/client";
-
+import { type State } from '@prisma/client';
 
 export class CreateStudentData {
   userId: string;

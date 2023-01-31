@@ -8,7 +8,6 @@ import { DisciplineModule } from './discipline/DisciplineModule';
 import { PollModule } from './poll/PollModule';
 import { ScheduleModule } from './schedule/ScheduleModule';
 
-
 @Module({
   imports: [
     AuthModule,

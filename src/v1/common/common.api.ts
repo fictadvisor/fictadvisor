@@ -1,10 +1,10 @@
-import { FindOptionsWhere, ILike, ObjectLiteral } from 'typeorm';
-import { PageableQueryDto } from './common.dto';
+import { type FindOptionsWhere, ILike, type ObjectLiteral } from 'typeorm';
+import { type PageableQueryDto } from './common.dto';
 
-type PageableQuery = {
-  skip?: number;
-  take?: number;
-};
+interface PageableQuery {
+  skip?: number
+  take?: number
+}
 
 export class ResponseEntity<T> {
   static of<T>(obj: T) {
@@ -18,26 +18,24 @@ export class ResponseEntity<T> {
   }
 }
 
-export type SortDirection = 'ASC' | 'DESC';
+export type SortDirection = 'ASC' | 'DESC'
 
-export type SortableMapEntry = [direction: SortDirection, mapTo?: string];
+export type SortableMapEntry = [direction: SortDirection, mapTo?: string]
 
-export type SortableMap = {
-  [value: string]: SortableMapEntry;
-};
+export type SortableMap = Record<string, SortableMapEntry>
 
 export class SortableProcessor<E, T extends SortableMap> {
   map: SortableMap;
   defaultKey?: keyof T;
   fallbackSort?: [string, SortDirection];
 
-  private getFallbackQuery() {
+  private getFallbackQuery () {
     return this.fallbackSort
       ? { [this.fallbackSort[0]]: this.fallbackSort[1] }
       : {};
   }
 
-  toQuery(value: string) {
+  toQuery (value: string) {
     if (value == null || this.map[value] == null) {
       if (!this.defaultKey) {
         return this.getFallbackQuery();
@@ -54,7 +52,7 @@ export class SortableProcessor<E, T extends SortableMap> {
     };
   }
 
-  public fallback(key: keyof E, direction: SortDirection) {
+  public fallback (key: keyof E, direction: SortDirection) {
     this.fallbackSort = [key as string, direction];
 
     return this;
@@ -77,7 +75,7 @@ export class Pageable {
   page: number;
   size: number;
 
-  toQuery(): PageableQuery {
+  toQuery (): PageableQuery {
     if (this.page == null || this.size == null) {
       return {};
     }
@@ -88,7 +86,7 @@ export class Pageable {
     };
   }
 
-  static of(page: number, pageSize: number): Pageable {
+  static of (page: number, pageSize: number): Pageable {
     const pageable = new Pageable();
 
     pageable.page = page;
@@ -97,7 +95,7 @@ export class Pageable {
     return pageable;
   }
 
-  static from(query: PageableQueryDto): Pageable {
+  static from (query: PageableQueryDto): Pageable {
     return Pageable.of(query.page, query.pageSize);
   }
 }
@@ -106,7 +104,7 @@ export class Searchable<T> {
   value: string;
   field: keyof T;
 
-  toQuery(): FindOptionsWhere<T> | ObjectLiteral {
+  toQuery (): FindOptionsWhere<T> | ObjectLiteral {
     if (this.value == null || this.value == '') {
       return {};
     }

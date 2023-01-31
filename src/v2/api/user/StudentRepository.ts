@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import {CreateStudentData} from "./dto/СreateStudentData";
-import {UpdateStudentData} from "./dto/UpdateStudentData";
+import { type CreateStudentData } from './dto/СreateStudentData';
+import { type UpdateStudentData } from './dto/UpdateStudentData';
 import { PrismaService } from '../../database/PrismaService';
 
 @Injectable()
 export class StudentRepository {
-  constructor(
-    private prisma: PrismaService,
+  constructor (
+    private readonly prisma: PrismaService
   ) {}
 
-  async getRoles(studentId: string) {
+  async getRoles (studentId: string) {
     const roles = await this.prisma.userRole.findMany({
       where: {
         studentId,
@@ -27,8 +27,8 @@ export class StudentRepository {
     return roles.map((role) => role.role);
   }
 
-  async addRole(studentId: string, roleId: string) {
-    return this.prisma.userRole.create({
+  async addRole (studentId: string, roleId: string) {
+    return await this.prisma.userRole.create({
       data: {
         studentId,
         roleId,
@@ -36,15 +36,16 @@ export class StudentRepository {
     });
   }
 
-  async removeRole(studentId: string, roleId: string) {
-    return this.prisma.userRole.deleteMany({
+  async removeRole (studentId: string, roleId: string) {
+    return await this.prisma.userRole.deleteMany({
       where: {
         studentId,
         roleId,
       },
     });
   }
-  async update(userId: string, data: UpdateStudentData) {
+
+  async update (userId: string, data: UpdateStudentData) {
     await this.prisma.student.update({
       where: {
         userId,
@@ -52,8 +53,9 @@ export class StudentRepository {
       data,
     });
   }
-  async create(data: CreateStudentData) {
-    return this.prisma.student.create({
+
+  async create (data: CreateStudentData) {
+    return await this.prisma.student.create({
       data,
     });
   }

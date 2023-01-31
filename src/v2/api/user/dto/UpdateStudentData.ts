@@ -1,9 +1,9 @@
-import { State } from '@prisma/client';
+import { type State } from '@prisma/client';
 
 export class UpdateStudentData {
-    firstName?: string;
-    middleName?: string;
-    lastName?: string;
-    groupId?: string;
-    state?: State;
+  firstName?: string;
+  middleName?: string;
+  lastName?: string;
+  groupId?: string;
+  state?: State;
 }

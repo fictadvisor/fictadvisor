@@ -7,22 +7,22 @@ import { UpdateGrantDTO } from './dto/UpdateGrantDTO';
   path: '/grants',
 })
 export class GrantController {
-  constructor(
-    private grantService: GrantService,
+  constructor (
+    private readonly grantService: GrantService
   ) {}
 
   @Delete('/:grantId')
-  async delete(
-    @Param('grantId') grantId: string,
+  async delete (
+  @Param('grantId') grantId: string
   ) {
-    return this.grantService.delete(grantId);
+    await this.grantService.delete(grantId);
   }
 
   @Patch('/:grantId')
-  async update(
-    @Param('grantId') grantId: string,
-    @Body() body: UpdateGrantDTO,
+  async update (
+  @Param('grantId') grantId: string,
+    @Body() body: UpdateGrantDTO
   ) {
-    return this.grantService.update(grantId, body);
+    await this.grantService.update(grantId, body);
   }
 }

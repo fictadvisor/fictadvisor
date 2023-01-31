@@ -1,8 +1,8 @@
 import { Expose } from 'class-transformer';
 import { assign } from 'src/v1/common/common.object';
-import { TeacherView } from 'src/v1/database/entities/teacher-view.entity';
+import { type TeacherView } from 'src/v1/database/entities/teacher-view.entity';
 import {
-  TeacherState,
+  type TeacherState,
   TEACHER_IMAGE_PLACEHOLDER,
 } from 'src/v1/database/entities/teacher.entity';
 
@@ -12,13 +12,13 @@ export class TeacherDto {
   link: string;
 
   @Expose({ name: 'first_name' })
-  firstName: string;
+    firstName: string;
 
   @Expose({ name: 'middle_name' })
-  middleName?: string;
+    middleName?: string;
 
   @Expose({ name: 'last_name' })
-  lastName?: string;
+    lastName?: string;
 
   description: string;
 
@@ -31,12 +31,12 @@ export class TeacherDto {
   state: TeacherState;
 
   @Expose({ name: 'created_at' })
-  createdAt: Date;
+    createdAt: Date;
 
   @Expose({ name: 'updated_at' })
-  updatedAt: Date;
+    updatedAt: Date;
 
-  public static from(e: TeacherView) {
+  public static from (e: TeacherView) {
     return assign(new TeacherDto(), {
       id: e.id,
       link: e.link,

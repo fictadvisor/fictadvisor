@@ -15,7 +15,7 @@ export const getLogger = (source = 'system'): SystemLogger => {
   const logger = createLogger({
     level: process.env.LOG_LEVEL ?? 'info',
     format: format.combine(
-      format.simple(),
+      format.simple()
     ),
     defaultMeta: { source },
     transports: [new transports.Console()],
@@ -28,7 +28,7 @@ export const getLogger = (source = 'system'): SystemLogger => {
 
 export { SystemLogger };
 
-export function Logger(source?: string): any {
+export function Logger (source?: string): any {
   return (target: unknown, propertyKey: string | symbol): any => {
     target[propertyKey] = getLogger(source ?? target.constructor.name);
   };

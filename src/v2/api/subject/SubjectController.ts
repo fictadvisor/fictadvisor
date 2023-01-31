@@ -13,53 +13,52 @@ import { PermissionGuard } from 'src/v2/security/permission-guard/PermissionGuar
   path: '/subjects',
 })
 export class SubjectController {
-  constructor(
-    private subjectService: SubjectService,
+  constructor (
+    private readonly subjectService: SubjectService
   ) {}
 
   @Get()
-  async getAll(
-    @Query() body: QueryAllDTO,
+  async getAll (
+  @Query() body: QueryAllDTO
   ) {
     const subjects = await this.subjectService.getAll(body);
     return {
       subjects,
     };
-
   }
 
   @Get('/:subjectId')
-  get(
-    @Param('subjectId', SubjectByIdPipe) subjectId: string,
+  async get (
+  @Param('subjectId', SubjectByIdPipe) subjectId: string
   ) {
-    return this.subjectService.get(subjectId);
+    return await this.subjectService.get(subjectId);
   }
 
   @Permission('subjects.create')
   @UseGuards(JwtGuard, PermissionGuard)
   @Post()
-  create(
-    @Body() body: CreateSubjectDTO,
+  async create (
+  @Body() body: CreateSubjectDTO
   ) {
-    return this.subjectService.create(body);
+    return await this.subjectService.create(body);
   }
 
   @Permission('subjects.update')
   @UseGuards(JwtGuard, PermissionGuard)
   @Patch('/:subjectId')
-  async update(
-    @Param('subjectId', SubjectByIdPipe) subjectId: string,
-    @Body() body: UpdateSubjectDTO,
+  async update (
+  @Param('subjectId', SubjectByIdPipe) subjectId: string,
+    @Body() body: UpdateSubjectDTO
   ) {
-    return this.subjectService.update(subjectId, body);
+    await this.subjectService.update(subjectId, body);
   }
 
   @Permission('subjects.delete')
   @UseGuards(JwtGuard, PermissionGuard)
   @Delete('/:subjectId')
-  delete(
-    @Param('subjectId', SubjectByIdPipe) subjectId: string,
+  async delete (
+  @Param('subjectId', SubjectByIdPipe) subjectId: string
   ) {
-    return this.subjectService.deleteSubject(subjectId);
+    await this.subjectService.deleteSubject(subjectId);
   }
 }

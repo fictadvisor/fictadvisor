@@ -1,7 +1,7 @@
 import { assign } from 'src/v1/common/common.object';
 import {
-  Superhero,
-  SuperheroState,
+  type Superhero,
+  type SuperheroState,
 } from 'src/v1/database/entities/superhero.entity';
 
 export class SuperheroDto {
@@ -17,7 +17,7 @@ export class SuperheroDto {
 
   image: string;
 
-  public static from(h: Superhero) {
+  public static from (h: Superhero) {
     return assign(new SuperheroDto(), {
       name: h.name,
       username: h.username,

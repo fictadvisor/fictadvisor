@@ -1,23 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import { QueryAllDTO } from '../../utils/QueryAllDTO';
+import { type QueryAllDTO } from '../../utils/QueryAllDTO';
 import { DatabaseUtils } from '../utils/DatabaseUtils';
-import { CreateTeacherDTO } from './dto/CreateTeacherDTO';
-import { UpdateTeacherDTO } from './dto/UpdateTeacherDTO';
-import { UpdateContactDTO } from './dto/UpdateContactDTO';
-import { CreateContactData } from './dto/CreateContactData';
-
+import { type CreateTeacherDTO } from './dto/CreateTeacherDTO';
+import { type UpdateTeacherDTO } from './dto/UpdateTeacherDTO';
+import { type UpdateContactDTO } from './dto/UpdateContactDTO';
+import { type CreateContactData } from './dto/CreateContactData';
 
 @Injectable()
 export class TeacherRepository {
-  constructor(
-    private prisma: PrismaService,
+  constructor (
+    private readonly prisma: PrismaService
   ) {}
 
-  async get(
-    id: string,
+  async get (
+    id: string
   ) {
-    return this.prisma.teacher.findUnique({
+    return await this.prisma.teacher.findUnique({
       where: {
         id,
       },
@@ -28,9 +27,9 @@ export class TeacherRepository {
     });
   }
 
-  async getAll(
-    body: QueryAllDTO,
-  ){
+  async getAll (
+    body: QueryAllDTO
+  ) {
     const search = DatabaseUtils.getSearch(body, 'firstName', 'lastName', 'middleName');
     const page = DatabaseUtils.getPage(body);
     const sort = DatabaseUtils.getSort(body);
@@ -44,8 +43,8 @@ export class TeacherRepository {
     });
   }
 
-  async getTeacher(
-    id: string,
+  async getTeacher (
+    id: string
   ) {
     const teacher = await this.get(id);
     delete teacher.disciplineTeachers;
@@ -53,60 +52,60 @@ export class TeacherRepository {
     return teacher;
   }
 
-  async getDisciplineTeachers(
-    id: string,
+  async getDisciplineTeachers (
+    id: string
   ) {
     const group = await this.get(id);
     return group.disciplineTeachers;
   }
 
-  async getTemporaryLessons(
-    id: string,
+  async getTemporaryLessons (
+    id: string
   ) {
     const group = await this.get(id);
     return group.temporaryLessons;
   }
 
-  async delete(
-    id: string,
+  async delete (
+    id: string
   ) {
-    return this.prisma.teacher.delete({
+    return await this.prisma.teacher.delete({
       where: {
         id,
       },
     });
   }
 
-  async find(
-    where: CreateTeacherDTO,
+  async find (
+    where: CreateTeacherDTO
   ) {
-    return this.prisma.teacher.findFirst({
+    return await this.prisma.teacher.findFirst({
       where,
     });
   }
 
-  async create(
-    data: CreateTeacherDTO,
+  async create (
+    data: CreateTeacherDTO
   ) {
-    return this.prisma.teacher.create({
+    return await this.prisma.teacher.create({
       data,
     });
   }
 
-  async update(
+  async update (
     id: string,
-    data: UpdateTeacherDTO,
+    data: UpdateTeacherDTO
   ) {
-    return this.prisma.teacher.update({
-      where:{
+    return await this.prisma.teacher.update({
+      where: {
         id,
       },
       data,
     });
   }
 
-  async getOrCreate(
-    data: CreateTeacherDTO,
+  async getOrCreate (
+    data: CreateTeacherDTO
   ) {
     let teacher = await this.find(data);
 
@@ -116,44 +115,43 @@ export class TeacherRepository {
     return teacher;
   }
 
-  
-  async getAllContacts(
+  async getAllContacts (
     entityId: string
-    ) {
-      return this.prisma.contact.findMany({
-        where:{
-          entityId,
-        },
-      });
-    }
-    
-    async getContact(
-      entityId: string,
-      name: string,
-    ) {
-      return this.prisma.contact.findFirst({
-        where:{
-          entityId,
-          name,
-        },
-      });
-    }
-    
-  async createContact(
+  ) {
+    return await this.prisma.contact.findMany({
+      where: {
+        entityId,
+      },
+    });
+  }
+
+  async getContact (
+    entityId: string,
+    name: string
+  ) {
+    return await this.prisma.contact.findFirst({
+      where: {
+        entityId,
+        name,
+      },
+    });
+  }
+
+  async createContact (
     data: CreateContactData
   ) {
-    return this.prisma.contact.create({
+    return await this.prisma.contact.create({
       data,
     });
   }
 
-  async updateContact(
+  async updateContact (
     entityId: string,
-    name: string, 
-    data: UpdateContactDTO,
+    name: string,
+    data: UpdateContactDTO
   ) {
-    return this.prisma.contact.updateMany({
-      where:{
+    return await this.prisma.contact.updateMany({
+      where: {
         entityId,
         name,
       },
@@ -161,12 +159,12 @@ export class TeacherRepository {
     });
   }
 
-  async deleteContact(
+  async deleteContact (
     entityId: string,
-    name: string,
+    name: string
   ) {
-    return this.prisma.contact.deleteMany({
-      where:{
+    return await this.prisma.contact.deleteMany({
+      where: {
         entityId,
         name,
       },

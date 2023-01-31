@@ -1,6 +1,6 @@
 import { Expose } from 'class-transformer';
 import { assign } from 'src/v1/common/common.object';
-import { Review, ReviewState } from 'src/v1/database/entities/review.entity';
+import { type Review, type ReviewState } from 'src/v1/database/entities/review.entity';
 
 export class ReviewDto {
   id: string;
@@ -12,12 +12,12 @@ export class ReviewDto {
   state: ReviewState;
 
   @Expose({ name: 'created_at' })
-  createdAt: Date;
+    createdAt: Date;
 
   @Expose({ name: 'updated_at' })
-  updatedAt: Date;
+    updatedAt: Date;
 
-  public static from(r: Review) {
+  public static from (r: Review) {
     return assign(new ReviewDto(), {
       id: r.id,
       content: r.content,

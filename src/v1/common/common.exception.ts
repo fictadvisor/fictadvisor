@@ -1,23 +1,23 @@
 import {
-  ArgumentsHost,
+  type ArgumentsHost,
   Catch,
-  ExceptionFilter,
+  type ExceptionFilter,
   HttpException,
   HttpStatus,
-  ValidationError,
+  type ValidationError,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Response } from 'express';
+import { type Response } from 'express';
 import { iterate } from 'iterare';
 import { Logger, SystemLogger } from 'src/v1/logger/logger.core';
 
-export type ServiceExceptionPayload = {
-  message: string;
-  details?: string[];
-};
+export interface ServiceExceptionPayload {
+  message: string
+  details?: string[]
+}
 
 export class ServiceException extends HttpException {
-  static create(status: HttpStatus, payload: ServiceExceptionPayload | string) {
+  static create (status: HttpStatus, payload: ServiceExceptionPayload | string) {
     if (typeof payload === 'string') {
       payload = { message: payload };
     }
@@ -29,11 +29,11 @@ export class ServiceException extends HttpException {
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
   @Logger('system')
-  private logger: SystemLogger;
+  private readonly logger: SystemLogger;
 
-  constructor(private configService: ConfigService) {}
+  constructor (private readonly configService: ConfigService) {}
 
-  catch(exception: Error, host: ArgumentsHost) {
+  catch (exception: Error, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const res = ctx.getResponse<Response>();
 
@@ -48,8 +48,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
         exception instanceof ServiceException
           ? errorResponse
           : typeof errorResponse === 'string'
-          ? errorResponse
-          : (errorResponse as any).message;
+            ? errorResponse
+            : (errorResponse as any).message;
     } else {
       status = HttpStatus.INTERNAL_SERVER_ERROR;
       message = 'Internal Server Error';
@@ -71,7 +71,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
     }
 
     if (status === HttpStatus.INTERNAL_SERVER_ERROR) {
-
       this.logger.error(exception.stack);
     }
   }
@@ -94,14 +93,14 @@ const prependConstraintsWithParentProp = (
 };
 
 const mapChildrenToValidationErrors = (error: ValidationError) => {
-  if (!(error.children && error.children.length)) {
+  if (!(error.children && (error.children.length > 0))) {
     return [error];
   }
 
   const validationErrors = [];
 
   for (const item of error.children) {
-    if (item.children && item.children.length) {
+    if (item.children && (item.children.length > 0)) {
       validationErrors.push(...mapChildrenToValidationErrors(item));
     }
 

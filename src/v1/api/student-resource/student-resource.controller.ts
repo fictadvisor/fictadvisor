@@ -1,17 +1,17 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { Page } from 'src/v1/common/common.api';
+import { type Page } from 'src/v1/common/common.api';
 import { SearchableQueryDto } from 'src/v1/common/common.dto';
-import { StudentResourceDto } from './dto/student-resource.dto';
+import { type StudentResourceDto } from './dto/student-resource.dto';
 import { StudentResourceService } from './student-resource.service';
 
 @Controller('student-resources')
 export class StudentResourceController {
-  constructor(private studentResourceService: StudentResourceService) {}
+  constructor (private readonly studentResourceService: StudentResourceService) {}
 
   @Get()
-  getResources(
+  async getResources (
     @Query() query: SearchableQueryDto
   ): Promise<Page<StudentResourceDto>> {
-    return this.studentResourceService.getResources(query);
+    return await this.studentResourceService.getResources(query);
   }
 }

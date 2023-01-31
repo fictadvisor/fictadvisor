@@ -3,15 +3,15 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class TelegramConfigService {
-  constructor(
-    private configService: ConfigService
+  constructor (
+    private readonly configService: ConfigService
   ) {}
 
-  get botToken() {
+  get botToken () {
     return this.configService.get<string>('telegram.botToken');
   }
 
-  get apiUrl() {
+  get apiUrl () {
     return this.configService.get<string>('telegram.apiUrl');
   }
 }

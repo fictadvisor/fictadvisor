@@ -1,22 +1,21 @@
-import { CanActivate, ExecutionContext } from '@nestjs/common';
-import { PrismaService } from '../../database/PrismaService';
-import { Group, State, User } from '@prisma/client';
-import { Request } from 'express';
+import { type CanActivate, type ExecutionContext } from '@nestjs/common';
+import { type PrismaService } from '../../database/PrismaService';
+import { type Group, State, type User } from '@prisma/client';
+import { type Request } from 'express';
 import { ActionGroupForbiddenException } from '../../utils/exceptions/ActionGroupForbiddenException';
 import { InvalidGroupIdException } from '../../utils/exceptions/InvalidGroupIdException';
 
 export abstract class GroupGuard implements CanActivate {
-
   protected prisma: PrismaService;
   context: ExecutionContext;
 
-  protected constructor(
+  protected constructor (
     prisma: PrismaService
   ) {
     this.prisma = prisma;
   }
 
-  async canActivate(context: ExecutionContext) {
+  async canActivate (context: ExecutionContext) {
     this.context = context;
     const request = context.switchToHttp().getRequest<Request>();
     const user: User = request.user as User;
@@ -41,6 +40,5 @@ export abstract class GroupGuard implements CanActivate {
     return true;
   }
 
-  abstract getGroup(): Promise<Group>;
-
+  abstract getGroup (): Promise<Group>
 }

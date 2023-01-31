@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { SubjectSearchIndex } from '../../database/entities/subject-search-index';
 import { Not, Repository } from 'typeorm';
 import { SubjectView } from '../../database/entities/subject-view.entity';
-import { SearchableQueryDto } from '../../common/common.dto';
+import { type SearchableQueryDto } from '../../common/common.dto';
 import { SubjectItemDto } from './dto/subject-item.dto';
 import {
   Page,
@@ -16,41 +16,41 @@ import { ServiceException } from '../../common/common.exception';
 import { CourseItemDto } from './dto/course-item.dto';
 import { CourseSearchIndex } from '../../database/entities/course-search-index.entity';
 import { CourseState } from 'src/v1/database/entities/course.entity';
-import { SubjectCreateDto } from './dto/subject-create.dto';
-import { User } from '../../database/entities/user.entity';
+import { type SubjectCreateDto } from './dto/subject-create.dto';
+import { type User } from '../../database/entities/user.entity';
 import { Subject, SubjectState } from '../../database/entities/subject.entity';
 import { assign } from '../../common/common.object';
 import { TelegramService } from '../../telegram/telegram.service';
 import { Logger, SystemLogger } from '../../logger/logger.core';
-import { SubjectUpdateDto } from './dto/subject-update.dto';
+import { type SubjectUpdateDto } from './dto/subject-update.dto';
 
 @Injectable()
 export class SubjectService {
   @Logger()
-  private logger: SystemLogger;
+  private readonly logger: SystemLogger;
 
-  constructor(
+  constructor (
     @InjectRepository(SubjectSearchIndex)
-    private subjectSearchIndexRepository: Repository<SubjectSearchIndex>,
+    private readonly subjectSearchIndexRepository: Repository<SubjectSearchIndex>,
 
     @InjectRepository(SubjectView)
-    private subjectViewRepository: Repository<SubjectView>,
+    private readonly subjectViewRepository: Repository<SubjectView>,
 
     @InjectRepository(CourseSearchIndex)
-    private courseRepository: Repository<CourseSearchIndex>,
+    private readonly courseRepository: Repository<CourseSearchIndex>,
 
     @InjectRepository(Subject)
-    private subjectRepository: Repository<Subject>,
+    private readonly subjectRepository: Repository<Subject>,
 
-    private telegramService: TelegramService
+    private readonly telegramService: TelegramService
   ) {}
 
-  private subjectSortableProcessor = SortableProcessor.of<SubjectSearchIndex>(
+  private readonly subjectSortableProcessor = SortableProcessor.of<SubjectSearchIndex>(
     { rating: ['DESC'], name: ['ASC'], teacherCount: ['DESC'] },
     'rating'
   ).fallback('id', 'ASC');
 
-  async getSubjects(query: SearchableQueryDto): Promise<Page<SubjectItemDto>> {
+  async getSubjects (query: SearchableQueryDto): Promise<Page<SubjectItemDto>> {
     const [items, count] = await this.subjectSearchIndexRepository.findAndCount(
       {
         ...Pageable.of(query.page, query.pageSize).toQuery(),
@@ -73,7 +73,7 @@ export class SubjectService {
     );
   }
 
-  async getSubjectByLink(link: string): Promise<SubjectDto> {
+  async getSubjectByLink (link: string): Promise<SubjectDto> {
     const subject = await this.subjectViewRepository.findOneBy({ link });
 
     if (subject == null) {
@@ -86,12 +86,12 @@ export class SubjectService {
     return SubjectDto.from(subject);
   }
 
-  private courseSortableProcessor = SortableProcessor.of<CourseSearchIndex>(
+  private readonly courseSortableProcessor = SortableProcessor.of<CourseSearchIndex>(
     { rating: ['DESC'], lastName: ['ASC', 'teacherLastName'] },
     'rating'
   ).fallback('id', 'ASC');
 
-  async getCoursesByLink(
+  async getCoursesByLink (
     link: string,
     query: SearchableQueryDto
   ): Promise<Page<CourseItemDto>> {
@@ -114,7 +114,7 @@ export class SubjectService {
     );
   }
 
-  private async getSubjectById(id: string): Promise<Subject> {
+  private async getSubjectById (id: string): Promise<Subject> {
     const subject = await this.subjectRepository.findOneBy({ id });
 
     if (subject == null) {
@@ -127,7 +127,7 @@ export class SubjectService {
     return subject;
   }
 
-  async addSubject(subject: SubjectCreateDto, user: User): Promise<SubjectDto> {
+  async addSubject (subject: SubjectCreateDto, user: User): Promise<SubjectDto> {
     const existing = await this.subjectRepository.findOneBy({
       link: subject.link(),
     });
@@ -175,7 +175,7 @@ export class SubjectService {
     }
   }
 
-  async updateSubject(
+  async updateSubject (
     id: string,
     update: SubjectUpdateDto
   ): Promise<SubjectDto> {
@@ -192,10 +192,10 @@ export class SubjectService {
     }
 
     const saved = await this.subjectRepository.save(subject);
-    return this.getSubjectByLink(saved.link);
+    return await this.getSubjectByLink(saved.link);
   }
 
-  async deleteSubject(id: string): Promise<void> {
+  async deleteSubject (id: string): Promise<void> {
     const subject = await this.getSubjectById(id);
 
     await subject.remove();

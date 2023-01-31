@@ -1,6 +1,6 @@
 import { Expose } from 'class-transformer';
 import { assign } from 'src/v1/common/common.object';
-import { Course, CourseState } from 'src/v1/database/entities/course.entity';
+import { type Course, type CourseState } from 'src/v1/database/entities/course.entity';
 import { CourseTeacherDto } from './course-teacher.dto';
 
 export class CourseDto {
@@ -9,7 +9,7 @@ export class CourseDto {
   link: string;
 
   @Expose({ name: 'subject_link' })
-  subjectLink: string;
+    subjectLink: string;
 
   teacher: CourseTeacherDto;
 
@@ -22,12 +22,12 @@ export class CourseDto {
   state: CourseState;
 
   @Expose({ name: 'created_at' })
-  createdAt: Date;
+    createdAt: Date;
 
   @Expose({ name: 'updated_at' })
-  updatedAt: Date;
+    updatedAt: Date;
 
-  public static from(c: Course) {
+  public static from (c: Course) {
     return assign(new CourseDto(), {
       id: c.id,
       link: c.link,

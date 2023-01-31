@@ -6,19 +6,19 @@ export const DAY = 1000 * 60 * 60 * 24;
 export const WEEK = DAY * 7;
 export const FORTNITE = WEEK * 2;
 export interface CurrentDate {
-  fortnight: number,
-  week: number,
-  day: number,
+  fortnight: number
+  week: number
+  day: number
 }
 
 @Injectable()
 export class DateService {
-  constructor(
-    private prisma: PrismaService,
-    private config: ConfigService,
+  constructor (
+    private readonly prisma: PrismaService,
+    private readonly config: ConfigService
   ) {}
 
-  async getCurrent(): Promise<CurrentDate> {
+  async getCurrent (): Promise<CurrentDate> {
     const { currentYear, currentSemester } = this.config.get('dates');
     const { startDate } = await this.prisma.startDate.findFirst({
       select: {
@@ -41,5 +41,4 @@ export class DateService {
 
     return { fortnight, week, day };
   }
-
 }

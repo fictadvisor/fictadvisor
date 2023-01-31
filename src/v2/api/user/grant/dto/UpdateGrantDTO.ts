@@ -1,4 +1,4 @@
 export interface UpdateGrantDTO {
-  permission?: string,
+  permission?: string
   set?: boolean
 }

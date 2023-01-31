@@ -1,7 +1,7 @@
 import {
   applyDecorators,
-  CanActivate,
-  ExecutionContext,
+  type CanActivate,
+  type ExecutionContext,
   HttpStatus,
   Injectable,
   SetMetadata,
@@ -10,25 +10,25 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { Request } from 'express';
+import { type Request } from 'express';
 import { ServiceException } from 'src/v1/common/common.exception';
-import { User, UserRole } from 'src/v1/database/entities/user.entity';
+import { type User, UserRole } from 'src/v1/database/entities/user.entity';
 
-type TelegramAuthenticationParams = {
-  telegram: true;
-};
+interface TelegramAuthenticationParams {
+  telegram: true
+}
 
-type OAuthAuthenticationParams = {
-  telegram?: false;
-  roles?: UserRole[];
-};
+interface OAuthAuthenticationParams {
+  telegram?: false
+  roles?: UserRole[]
+}
 
 export type AuthorizeParams =
   | TelegramAuthenticationParams
-  | OAuthAuthenticationParams;
+  | OAuthAuthenticationParams
 
 export const Authorize = (params: AuthorizeParams = {}) => {
-  if (params.telegram == true) {
+  if (params.telegram) {
     return applyDecorators(UseGuards(TelegramAuthorizationGuard));
   }
 
@@ -40,9 +40,9 @@ export const Authorize = (params: AuthorizeParams = {}) => {
 
 @Injectable()
 export class TelegramAuthorizationGuard implements CanActivate {
-  constructor(private configService: ConfigService) {}
+  constructor (private readonly configService: ConfigService) {}
 
-  canActivate(context: ExecutionContext) {
+  canActivate (context: ExecutionContext) {
     const request = context.switchToHttp().getRequest<Request>();
     const [realm, token] = (request.headers.authorization ?? '').split(' ');
 
@@ -61,11 +61,11 @@ export class TelegramAuthorizationGuard implements CanActivate {
 
 @Injectable()
 export class OAuthAuthorizationGuard extends AuthGuard('jwt') {
-  constructor(private readonly reflector: Reflector) {
+  constructor (private readonly reflector: Reflector) {
     super();
   }
 
-  handleRequest(error: any, user: any) {
+  handleRequest (error: any, user: any) {
     if (error || !user) {
       throw error ??
         ServiceException.create(HttpStatus.UNAUTHORIZED, {
@@ -76,7 +76,7 @@ export class OAuthAuthorizationGuard extends AuthGuard('jwt') {
     return user;
   }
 
-  async canActivate(context: ExecutionContext) {
+  async canActivate (context: ExecutionContext) {
     if (!(await super.canActivate(context))) {
       return false;
     }

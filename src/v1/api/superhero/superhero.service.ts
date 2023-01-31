@@ -6,7 +6,7 @@ import {
   Searchable,
   SortableProcessor,
 } from 'src/v1/common/common.api';
-import { SearchableQueryDto } from 'src/v1/common/common.dto';
+import { type SearchableQueryDto } from 'src/v1/common/common.dto';
 import { ServiceException } from 'src/v1/common/common.exception';
 import { assign } from 'src/v1/common/common.object';
 import {
@@ -17,24 +17,24 @@ import { User } from 'src/v1/database/entities/user.entity';
 import { Logger, SystemLogger } from 'src/v1/logger/logger.core';
 import { TelegramService } from 'src/v1/telegram/telegram.service';
 import { Equal, Repository } from 'typeorm';
-import { CreateSuperheroDto } from './dto/create-superhero.dto';
+import { type CreateSuperheroDto } from './dto/create-superhero.dto';
 import { SuperheroDto } from './dto/superhero.dto';
-import { UpdateSuperheroDto } from './dto/update-superhero.dto';
+import { type UpdateSuperheroDto } from './dto/update-superhero.dto';
 
 @Injectable()
 export class SuperheroService {
   @Logger()
-  private logger: SystemLogger;
+  private readonly logger: SystemLogger;
 
-  constructor(
-    private telegramService: TelegramService,
+  constructor (
+    private readonly telegramService: TelegramService,
     @InjectRepository(Superhero)
-    private superheroRepository: Repository<Superhero>,
+    private readonly superheroRepository: Repository<Superhero>,
     @InjectRepository(User)
-    private userRepository: Repository<User>
+    private readonly userRepository: Repository<User>
   ) {}
 
-  private async findSuperhero(user: User, relations?: string[]) {
+  private async findSuperhero (user: User, relations?: string[]) {
     const superhero = await this.superheroRepository.findOne({
       where: { user: Equal(user) },
       relations,
@@ -50,12 +50,12 @@ export class SuperheroService {
     return superhero;
   }
 
-  private superheroSortableProcessor = SortableProcessor.of<Superhero>(
+  private readonly superheroSortableProcessor = SortableProcessor.of<Superhero>(
     { year: ['ASC'], dorm: ['DESC'] },
     'year'
   ).fallback('name', 'ASC');
 
-  public async getSuperheroes(
+  public async getSuperheroes (
     query: SearchableQueryDto
   ): Promise<Page<SuperheroDto>> {
     const [items, count] = await this.superheroRepository.findAndCount({
@@ -74,11 +74,11 @@ export class SuperheroService {
     );
   }
 
-  public async getSuperhero(user: User): Promise<SuperheroDto> {
+  public async getSuperhero (user: User): Promise<SuperheroDto> {
     return SuperheroDto.from(await this.findSuperhero(user, ['user']));
   }
 
-  public async createSuperhero(
+  public async createSuperhero (
     user: User,
     dto: CreateSuperheroDto
   ): Promise<SuperheroDto> {
@@ -109,7 +109,7 @@ export class SuperheroService {
     return SuperheroDto.from(superhero);
   }
 
-  async updateSuperhero(
+  async updateSuperhero (
     id: string,
     update: UpdateSuperheroDto
   ): Promise<SuperheroDto> {

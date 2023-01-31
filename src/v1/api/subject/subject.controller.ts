@@ -10,10 +10,10 @@ import {
 } from '@nestjs/common';
 import { SubjectService } from './subject.service';
 import { SearchableQueryDto } from '../../common/common.dto';
-import { SubjectItemDto } from './dto/subject-item.dto';
-import { Page } from '../../common/common.api';
-import { SubjectDto } from './dto/subject.dto';
-import { CourseItemDto } from './dto/course-item.dto';
+import { type SubjectItemDto } from './dto/subject-item.dto';
+import { type Page } from '../../common/common.api';
+import { type SubjectDto } from './dto/subject.dto';
+import { type CourseItemDto } from './dto/course-item.dto';
 import { Authorize } from '../../security/security.authorization';
 import { Context, SecurityContext } from '../../security/security.context';
 import { SubjectCreateDto } from './dto/subject-create.dto';
@@ -21,49 +21,49 @@ import { SubjectUpdateDto } from './dto/subject-update.dto';
 
 @Controller('subjects')
 export class SubjectController {
-  constructor(private subjectService: SubjectService) {}
+  constructor (private readonly subjectService: SubjectService) {}
 
   @Get()
-  getSubjects(
+  async getSubjects (
     @Query() query: SearchableQueryDto
   ): Promise<Page<SubjectItemDto>> {
-    return this.subjectService.getSubjects(query);
+    return await this.subjectService.getSubjects(query);
   }
 
   @Get('/:link')
-  getSubject(@Param('link') link: string): Promise<SubjectDto> {
-    return this.subjectService.getSubjectByLink(link);
+  async getSubject (@Param('link') link: string): Promise<SubjectDto> {
+    return await this.subjectService.getSubjectByLink(link);
   }
 
   @Get('/:link/courses')
-  getCourses(
+  async getCourses (
     @Param('link') link: string,
-    @Query() query: SearchableQueryDto
+      @Query() query: SearchableQueryDto
   ): Promise<Page<CourseItemDto>> {
-    return this.subjectService.getCoursesByLink(link, query);
+    return await this.subjectService.getCoursesByLink(link, query);
   }
 
   @Authorize()
   @Post()
-  addCourse(
+  async addCourse (
     @Context() ctx: SecurityContext,
-    @Body() subject: SubjectCreateDto
+      @Body() subject: SubjectCreateDto
   ): Promise<SubjectDto> {
-    return this.subjectService.addSubject(subject, ctx.user);
+    return await this.subjectService.addSubject(subject, ctx.user);
   }
 
   @Authorize({ telegram: true })
   @Put('/:id')
-  updateSubject(
+  async updateSubject (
     @Param('id') id: string,
-    @Body() body: SubjectUpdateDto
+      @Body() body: SubjectUpdateDto
   ): Promise<SubjectDto> {
-    return this.subjectService.updateSubject(id, body);
+    return await this.subjectService.updateSubject(id, body);
   }
 
   @Authorize({ telegram: true })
   @Delete('/:id')
-  deleteSubject(@Param('id') id: string): Promise<void> {
-    return this.subjectService.deleteSubject(id);
+  async deleteSubject (@Param('id') id: string): Promise<void> {
+    await this.subjectService.deleteSubject(id);
   }
 }

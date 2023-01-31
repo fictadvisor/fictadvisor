@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { RoleRepository } from './RoleRepository';
-import { CreateGrantDTO, CreateRoleWithGrantsDTO } from '../dto/CreateRoleDTO';
+import { type CreateGrantDTO, type CreateRoleWithGrantsDTO } from '../dto/CreateRoleDTO';
 import { GrantRepository } from '../grant/GrantRepository';
 import { GrantService } from '../grant/GrantService';
-import { UpdateRoleDTO } from './dto/UpdateRoleDTO';
+import { type UpdateRoleDTO } from './dto/UpdateRoleDTO';
 
 @Injectable()
 export class RoleService {
-  constructor(
-    private roleRepository: RoleRepository,
-    private grantRepository: GrantRepository,
-    private grantService: GrantService,
+  constructor (
+    private readonly roleRepository: RoleRepository,
+    private readonly grantRepository: GrantRepository,
+    private readonly grantService: GrantService
   ) {}
 
-  async createRole({ grants, ...data }: CreateRoleWithGrantsDTO) {
+  async createRole ({ grants, ...data }: CreateRoleWithGrantsDTO) {
     const role = await this.roleRepository.create(data);
     if (grants) {
       return {
@@ -25,7 +25,7 @@ export class RoleService {
     return role;
   }
 
-  async createGrants(roleId: string, grants: CreateGrantDTO[]) {
+  async createGrants (roleId: string, grants: CreateGrantDTO[]) {
     const results = [];
 
     for (const grant of grants) {
@@ -42,7 +42,7 @@ export class RoleService {
     });
   }
 
-  async hasPermission(roleId: string, permission: string) {
+  async hasPermission (roleId: string, permission: string) {
     const grants = await this.roleRepository.getGrants(roleId);
     for (const grant of grants) {
       const hasPermission = this.grantService.hasPermission(permission, grant.permission);
@@ -50,11 +50,11 @@ export class RoleService {
     }
   }
 
-  async delete(id: string) {
+  async delete (id: string) {
     await this.roleRepository.delete(id);
   }
 
-  async update(id: string, body: UpdateRoleDTO) {
+  async update (id: string, body: UpdateRoleDTO) {
     await this.roleRepository.update(id, body);
   }
 }

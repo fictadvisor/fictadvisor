@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { SubjectSearchIndex } from '../../database/entities/subject-search-index';
 import { Repository } from 'typeorm';
 import { TeacherSearchIndex } from '../../database/entities/teacher-search-index.entity';
-import { SearchableQueryDto } from '../../common/common.dto';
+import { type SearchableQueryDto } from '../../common/common.dto';
 import { SearchResultDto } from './dto/search-result.dto';
 import { Searchable } from '../../common/common.api';
 import { SearchSubjectItemDto } from './dto/search-subject-item.dto';
@@ -19,15 +19,15 @@ const SUBJECT_ITEMS_COUNT = 5;
 
 @Injectable()
 export class SearchService {
-  constructor(
+  constructor (
     @InjectRepository(SubjectSearchIndex)
-    private subjectSearchIndexRepository: Repository<SubjectSearchIndex>,
+    private readonly subjectSearchIndexRepository: Repository<SubjectSearchIndex>,
 
     @InjectRepository(TeacherSearchIndex)
-    private teacherSearchIndexRepository: Repository<TeacherSearchIndex>
+    private readonly teacherSearchIndexRepository: Repository<TeacherSearchIndex>
   ) {}
 
-  async searchResult(query: SearchableQueryDto): Promise<SearchResultDto> {
+  async searchResult (query: SearchableQueryDto): Promise<SearchResultDto> {
     const teachers = await this.teacherSearchIndexRepository.find({
       take: TEACHER_ITEMS_COUNT,
       where: {

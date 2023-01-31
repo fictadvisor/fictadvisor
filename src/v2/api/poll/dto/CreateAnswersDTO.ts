@@ -1,6 +1,6 @@
 export interface CreateAnswersDTO {
-  answers: {
-    questionId: string,
-    value: string,
-  }[]
+  answers: Array<{
+    questionId: string
+    value: string
+  }>
 }

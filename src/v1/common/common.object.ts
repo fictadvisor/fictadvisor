@@ -1,12 +1,12 @@
-export type PickDirection<O, T extends keyof O> = {
-  key: T;
-  mapTo?: string;
-  default?: O[T];
-};
+export interface PickDirection<O, T extends keyof O> {
+  key: T
+  mapTo?: string
+  default?: O[T]
+}
 
 export const pick = <O, T extends keyof O>(
   obj: O,
-  ...keys: (T | PickDirection<O, T>)[]
+  ...keys: Array<T | PickDirection<O, T>>
 ) => {
   const subset: Partial<O> = {};
 

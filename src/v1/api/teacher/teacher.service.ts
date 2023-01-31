@@ -6,7 +6,7 @@ import {
   Searchable,
   SortableProcessor,
 } from 'src/v1/common/common.api';
-import { SearchableQueryDto } from 'src/v1/common/common.dto';
+import { type SearchableQueryDto } from 'src/v1/common/common.dto';
 import { ServiceException } from 'src/v1/common/common.exception';
 import { TeacherSearchIndex } from 'src/v1/database/entities/teacher-search-index.entity';
 import { TeacherView } from 'src/v1/database/entities/teacher-view.entity';
@@ -31,40 +31,40 @@ import {
 import { StatEntry } from '../../database/entities/stat-entry.entity';
 import { TeacherStatsItemDto } from './dto/teacher-stats.dto';
 import { ReviewState } from 'src/v1/database/entities/review.entity';
-import { TeacherAddDto } from './dto/teacher-add-dto';
+import { type TeacherAddDto } from './dto/teacher-add-dto';
 import { TelegramService } from '../../telegram/telegram.service';
-import { User } from '../../database/entities/user.entity';
+import { type User } from '../../database/entities/user.entity';
 import { Logger, SystemLogger } from '../../logger/logger.core';
 import { assign } from '../../common/common.object';
-import { TeacherUpdateDto } from './dto/teacher-update.dto';
+import { type TeacherUpdateDto } from './dto/teacher-update.dto';
 import { CourseState } from 'src/v1/database/entities/course.entity';
-import { TeacherContactCreateDto } from './dto/teacher-contact-create.dto';
-import { TeacherContactUpdateDto } from './dto/teacher-contact-update.dto';
+import { type TeacherContactCreateDto } from './dto/teacher-contact-create.dto';
+import { type TeacherContactUpdateDto } from './dto/teacher-contact-update.dto';
 
 @Injectable()
 export class TeacherService {
   @Logger()
-  private logger: SystemLogger;
+  private readonly logger: SystemLogger;
 
-  constructor(
+  constructor (
     @InjectRepository(TeacherSearchIndex)
-    private teacherSearchIndexRepository: Repository<TeacherSearchIndex>,
+    private readonly teacherSearchIndexRepository: Repository<TeacherSearchIndex>,
     @InjectRepository(Teacher)
-    private teacherRepository: Repository<Teacher>,
+    private readonly teacherRepository: Repository<Teacher>,
     @InjectRepository(TeacherView)
-    private teacherViewRepository: Repository<TeacherView>,
+    private readonly teacherViewRepository: Repository<TeacherView>,
     @InjectRepository(TeacherReviewView)
-    private reviewRepository: Repository<TeacherReviewView>,
+    private readonly reviewRepository: Repository<TeacherReviewView>,
     @InjectRepository(StatEntry)
-    private teacherStatsRepository: Repository<StatEntry>,
+    private readonly teacherStatsRepository: Repository<StatEntry>,
     @InjectRepository(TeacherContact)
-    private teacherContactRepository: Repository<TeacherContact>,
+    private readonly teacherContactRepository: Repository<TeacherContact>,
     @InjectRepository(TeacherCourseSearchIndex)
-    private teacherCoursesRepository: Repository<TeacherCourseSearchIndex>,
-    private telegramService: TelegramService
+    private readonly teacherCoursesRepository: Repository<TeacherCourseSearchIndex>,
+    private readonly telegramService: TelegramService
   ) {}
 
-  private async getTeacher(link: string): Promise<Teacher> {
+  private async getTeacher (link: string): Promise<Teacher> {
     const teacher = await this.teacherRepository.findOneBy({ link });
 
     if (teacher == null) {
@@ -77,7 +77,7 @@ export class TeacherService {
     return teacher;
   }
 
-  private async getTeacherById(id: string): Promise<Teacher> {
+  private async getTeacherById (id: string): Promise<Teacher> {
     const teacher = await this.teacherRepository.findOneBy({ id });
 
     if (teacher == null) {
@@ -90,7 +90,7 @@ export class TeacherService {
     return teacher;
   }
 
-  async getTeacherByLink(link: string): Promise<TeacherDto> {
+  async getTeacherByLink (link: string): Promise<TeacherDto> {
     const teacher = await this.teacherViewRepository.findOneBy({ link });
 
     if (teacher == null) {
@@ -103,12 +103,12 @@ export class TeacherService {
     return TeacherDto.from(teacher);
   }
 
-  private teacherSortableProcessor = SortableProcessor.of<TeacherSearchIndex>(
+  private readonly teacherSortableProcessor = SortableProcessor.of<TeacherSearchIndex>(
     { rating: ['DESC'], lastName: ['ASC'] },
     'lastName'
   ).fallback('id', 'ASC');
 
-  async getTeachers(query: SearchableQueryDto): Promise<Page<TeacherItemDto>> {
+  async getTeachers (query: SearchableQueryDto): Promise<Page<TeacherItemDto>> {
     const [items, count] = await this.teacherSearchIndexRepository.findAndCount(
       {
         ...Pageable.of(query.page, query.pageSize).toQuery(),
@@ -131,7 +131,7 @@ export class TeacherService {
     );
   }
 
-  private async getContactById(id: string): Promise<TeacherContact> {
+  private async getContactById (id: string): Promise<TeacherContact> {
     const contact = await this.teacherContactRepository.findOneBy({ id });
 
     if (contact == null) {
@@ -144,7 +144,7 @@ export class TeacherService {
     return contact;
   }
 
-  async getTeacherContacts(link: string): Promise<ResponseEntity<any>> {
+  async getTeacherContacts (link: string): Promise<ResponseEntity<any>> {
     const teacher = await this.getTeacher(link);
     const items = await this.teacherContactRepository.findBy({
       teacher: Equal(teacher),
@@ -156,11 +156,11 @@ export class TeacherService {
     });
   }
 
-  private courseSortableProcessor = SortableProcessor.of<
-    TeacherCourseSearchIndex
+  private readonly courseSortableProcessor = SortableProcessor.of<
+  TeacherCourseSearchIndex
   >({ rating: ['DESC'], name: ['ASC'] }, 'rating').fallback('id', 'ASC');
 
-  async getTeacherCourses(
+  async getTeacherCourses (
     link: string,
     query: SearchableQueryDto
   ): Promise<Page<TeacherCourseItemDto>> {
@@ -183,12 +183,12 @@ export class TeacherService {
     );
   }
 
-  private reviewSortableProcessor = SortableProcessor.of<TeacherReviewView>(
+  private readonly reviewSortableProcessor = SortableProcessor.of<TeacherReviewView>(
     { rating: ['DESC'], date: ['DESC'] },
     'date'
   ).fallback('id', 'ASC');
 
-  async getTeacherReviews(
+  async getTeacherReviews (
     link: string,
     query: SearchableQueryDto
   ): Promise<Page<TeacherReviewDto>> {
@@ -211,7 +211,7 @@ export class TeacherService {
     );
   }
 
-  async getTeacherStats(link: string): Promise<ResponseEntity<any>> {
+  async getTeacherStats (link: string): Promise<ResponseEntity<any>> {
     const teacher = await this.getTeacher(link);
     const stats = await this.teacherStatsRepository.findBy({ teacher: Equal(teacher) });
 
@@ -220,7 +220,7 @@ export class TeacherService {
     });
   }
 
-  async saveTeacher(teacher: TeacherAddDto, user: User): Promise<TeacherDto> {
+  async saveTeacher (teacher: TeacherAddDto, user: User): Promise<TeacherDto> {
     const existing = await this.teacherRepository.findOneBy({
       link: teacher.link(),
     });
@@ -270,7 +270,7 @@ export class TeacherService {
     }
   }
 
-  async updateTeacher(
+  async updateTeacher (
     id: string,
     update: TeacherUpdateDto
   ): Promise<TeacherDto> {
@@ -293,16 +293,16 @@ export class TeacherService {
     }
 
     const saved = await this.teacherRepository.save(teacher);
-    return this.getTeacherByLink(saved.link);
+    return await this.getTeacherByLink(saved.link);
   }
 
-  async deleteTeacher(id: string): Promise<void> {
+  async deleteTeacher (id: string): Promise<void> {
     const review = await this.getTeacherById(id);
 
     await review.remove();
   }
 
-  async addContact(
+  async addContact (
     teacherLink: string,
     contact: TeacherContactCreateDto,
     user: User
@@ -331,7 +331,7 @@ export class TeacherService {
     return TeacherContactDto.from(inserted);
   }
 
-  async updateContact(
+  async updateContact (
     id: string,
     update: TeacherContactUpdateDto
   ): Promise<TeacherContactDto> {
@@ -351,7 +351,7 @@ export class TeacherService {
     return TeacherContactDto.from(saved);
   }
 
-  async deleteContact(id: string): Promise<void> {
+  async deleteContact (id: string): Promise<void> {
     const contact = await this.getContactById(id);
 
     await contact.remove();

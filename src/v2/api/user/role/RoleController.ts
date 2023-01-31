@@ -8,38 +8,37 @@ import { UpdateRoleDTO } from './dto/UpdateRoleDTO';
   path: '/roles',
 })
 export class RoleController {
-  constructor(
-    private roleService: RoleService,
+  constructor (
+    private readonly roleService: RoleService
   ) {}
 
   @Post()
-  create(
-    @Body() body: CreateRoleWithGrantsDTO,
+  async create (
+  @Body() body: CreateRoleWithGrantsDTO
   ) {
-    return this.roleService.createRole(body);
+    return await this.roleService.createRole(body);
   }
 
   @Post('/:roleId/grants')
-  createGrants(
-    @Body() body: CreateGrantsDTO,
-    @Param('roleId') roleId: string,
+  async createGrants (
+  @Body() body: CreateGrantsDTO,
+    @Param('roleId') roleId: string
   ) {
-    return this.roleService.createGrants(roleId, body.grants);
+    return await this.roleService.createGrants(roleId, body.grants);
   }
 
   @Delete('/:roleId')
-  delete(
-    @Param('roleId') roleId: string,
+  async delete (
+  @Param('roleId') roleId: string
   ) {
-    return this.roleService.delete(roleId);
+    await this.roleService.delete(roleId);
   }
 
   @Patch('/:roleId')
-  update(
-    @Param('roleId') roleId: string,
-    @Body() body: UpdateRoleDTO,
+  async update (
+  @Param('roleId') roleId: string,
+    @Body() body: UpdateRoleDTO
   ) {
-    return this.roleService.update(roleId, body);
+    await this.roleService.update(roleId, body);
   }
-
 }

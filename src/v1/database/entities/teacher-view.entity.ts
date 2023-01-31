@@ -1,4 +1,4 @@
-import { Connection, ViewColumn, ViewEntity } from 'typeorm';
+import { type Connection, ViewColumn, ViewEntity } from 'typeorm';
 import { Course } from './course.entity';
 import { Review, ReviewState } from './review.entity';
 import { Teacher, TeacherState } from './teacher.entity';
@@ -23,38 +23,38 @@ import { Teacher, TeacherState } from './teacher.entity';
 })
 export class TeacherView {
   @ViewColumn()
-  id: string;
+    id: string;
 
   @ViewColumn()
-  link: string;
+    link: string;
 
   @ViewColumn({ name: 'first_name' })
-  firstName: string;
+    firstName: string;
 
   @ViewColumn({ name: 'middle_name' })
-  middleName?: string;
+    middleName?: string;
 
   @ViewColumn({ name: 'last_name' })
-  lastName?: string;
+    lastName?: string;
 
   @ViewColumn()
-  description: string;
+    description: string;
 
   @ViewColumn()
-  image: string;
+    image: string;
 
   @ViewColumn()
-  tags: string[];
+    tags: string[];
 
   @ViewColumn()
-  state: TeacherState;
+    state: TeacherState;
 
   @ViewColumn({ name: 'created_at' })
-  createdAt: Date;
+    createdAt: Date;
 
   @ViewColumn({ name: 'updated_at' })
-  updatedAt: Date;
+    updatedAt: Date;
 
   @ViewColumn()
-  rating: number;
+    rating: number;
 }

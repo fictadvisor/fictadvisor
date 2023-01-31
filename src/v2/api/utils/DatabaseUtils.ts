@@ -1,8 +1,7 @@
-import { Page, PageDTO, Search, SearchDTO, Sort, SortDTO } from '../../utils/QueryAllDTO';
+import { type Page, type PageDTO, type Search, type SearchDTO, type Sort, type SortDTO } from '../../utils/QueryAllDTO';
 
 export class DatabaseUtils {
-
-  static getSearch<T>({ search }: SearchDTO, ...fields: (keyof T)[]): Search<T> | object {
+  static getSearch<T>({ search }: SearchDTO, ...fields: Array<keyof T>): Search<T> | object {
     if (!search) return {};
     return {
       OR: fields.map((field) => ({
@@ -14,7 +13,7 @@ export class DatabaseUtils {
     };
   }
 
-  static getPage({ page = 0, pageSize }: PageDTO): Page | object {
+  static getPage ({ page = 0, pageSize }: PageDTO): Page | object {
     page = +page;
     pageSize = +pageSize;
     if (!pageSize) return {};
@@ -24,7 +23,7 @@ export class DatabaseUtils {
     };
   }
 
-  static getSort({ sort, order = 'asc' }: SortDTO): Sort | object {
+  static getSort ({ sort, order = 'asc' }: SortDTO): Sort | object {
     if (!sort) return {};
     return {
       orderBy: {

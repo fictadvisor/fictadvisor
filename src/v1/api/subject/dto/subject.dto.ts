@@ -1,7 +1,7 @@
 import { Expose } from 'class-transformer';
-import { SubjectView } from '../../../database/entities/subject-view.entity';
+import { type SubjectView } from '../../../database/entities/subject-view.entity';
 import { assign } from '../../../common/common.object';
-import { SubjectState } from '../../../database/entities/subject.entity';
+import { type SubjectState } from '../../../database/entities/subject.entity';
 
 export class SubjectDto {
   id: string;
@@ -13,19 +13,19 @@ export class SubjectDto {
   description?: string;
 
   @Expose({ name: 'teacher_count' })
-  teacherCount: number;
+    teacherCount: number;
 
   rating: number;
 
   state: SubjectState;
 
   @Expose({ name: 'created_at' })
-  createdAt: Date;
+    createdAt: Date;
 
   @Expose({ name: 'updated_at' })
-  updatedAt: Date;
+    updatedAt: Date;
 
-  public static from(v: SubjectView) {
+  public static from (v: SubjectView) {
     return assign(new SubjectDto(), {
       id: v.id,
       link: v.link,

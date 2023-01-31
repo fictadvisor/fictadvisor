@@ -9,30 +9,29 @@ import { GroupByDisciplineGuard } from '../../security/group-guard/GroupByDiscip
   path: '/disciplines',
 })
 export class DisciplineController {
-  constructor(
-    private disciplineService: DisciplineService,
+  constructor (
+    private readonly disciplineService: DisciplineService
   ) {}
 
   @Post()
-  create(@Body() body: CreateDisciplineDTO) {
-    return this.disciplineService.create(body);
+  async create (@Body() body: CreateDisciplineDTO) {
+    return await this.disciplineService.create(body);
   }
 
   @UseGuards(JwtGuard, GroupByDisciplineGuard)
   @Post('/:disciplineId/selective')
-  makeSelective(
-    @Param('disciplineId') disciplineId: string,
-    @Request() req,
+  async makeSelective (
+  @Param('disciplineId') disciplineId: string,
+    @Request() req
   ) {
-    return this.disciplineService.makeSelective(req.user, disciplineId);
+    return await this.disciplineService.makeSelective(req.user, disciplineId);
   }
 
   @UseGuards(JwtGuard, GroupByDisciplineGuard)
   @Get('/:disciplineId/teachers')
-  async getAllByDiscipline(
-    @Param('disciplineId') disciplineId: string
+  async getAllByDiscipline (
+  @Param('disciplineId') disciplineId: string
   ) {
-    return this.disciplineService.getTeachers(disciplineId);
+    return await this.disciplineService.getTeachers(disciplineId);
   }
-
 }

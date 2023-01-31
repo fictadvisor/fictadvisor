@@ -1,16 +1,16 @@
-import {TelegramConfigService} from "../config/TelegramConfigService";
-import {Injectable} from "@nestjs/common";
-import axios, {AxiosInstance} from "axios";
-import {VerifyStudentDTO} from "./dto/VerifyStudentDTO";
-import {VerifyCaptainDTO} from "./dto/VerifyCaptainDTO";
-import {VerifySuperheroDTO} from "./dto/VerifySuperheroDTO";
+import { TelegramConfigService } from '../config/TelegramConfigService';
+import { Injectable } from '@nestjs/common';
+import axios, { type AxiosInstance } from 'axios';
+import { type VerifyStudentDTO } from './dto/VerifyStudentDTO';
+import { type VerifyCaptainDTO } from './dto/VerifyCaptainDTO';
+import { type VerifySuperheroDTO } from './dto/VerifySuperheroDTO';
 
 @Injectable()
 export class TelegramAPI {
-  private client:AxiosInstance;
+  private readonly client: AxiosInstance;
 
-  constructor(
-    private telegramConfig: TelegramConfigService,
+  constructor (
+    private readonly telegramConfig: TelegramConfigService
   ) {
     this.client = axios.create({
       baseURL: this.telegramConfig.apiUrl,
@@ -20,15 +20,15 @@ export class TelegramAPI {
     });
   }
 
-  async verifyStudent(data:VerifyStudentDTO) {
+  async verifyStudent (data: VerifyStudentDTO) {
     await this.client.post('/students/broadcastPending', data);
   }
 
-  async verifyCaptain(data:VerifyCaptainDTO) {
+  async verifyCaptain (data: VerifyCaptainDTO) {
     await this.client.post('/captains/broadcastPending', data);
   }
 
-  async verifySuperhero(data:VerifySuperheroDTO) {
+  async verifySuperhero (data: VerifySuperheroDTO) {
     await this.client.post('/superheroes/broadcastPending', data);
   }
 }

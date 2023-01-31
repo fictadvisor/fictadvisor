@@ -8,112 +8,112 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { Page } from 'src/v1/common/common.api';
+import { type Page } from 'src/v1/common/common.api';
 import { SearchableQueryDto } from 'src/v1/common/common.dto';
-import { TeacherItemDto } from './dto/teacher-item.dto';
-import { TeacherDto } from './dto/teacher.dto';
+import { type TeacherItemDto } from './dto/teacher-item.dto';
+import { type TeacherDto } from './dto/teacher.dto';
 import { TeacherService } from './teacher.service';
-import { ResponseEntity } from '../../common/common.api';
-import { TeacherCourseItemDto } from './dto/teacher-course-item.dto';
-import { TeacherReviewDto } from './dto/review.dto.js';
+import { type ResponseEntity } from '../../common/common.api';
+import { type TeacherCourseItemDto } from './dto/teacher-course-item.dto';
+import { type TeacherReviewDto } from './dto/review.dto.js';
 import { TeacherAddDto } from './dto/teacher-add-dto';
 import { Context, SecurityContext } from '../../security/security.context';
 import { Authorize } from '../../security/security.authorization';
 import { TeacherUpdateDto } from './dto/teacher-update.dto';
 import { TeacherContactCreateDto } from './dto/teacher-contact-create.dto';
-import { TeacherContactDto } from './dto/teacher-contact.dto';
+import { type TeacherContactDto } from './dto/teacher-contact.dto';
 import { TeacherContactUpdateDto } from './dto/teacher-contact-update.dto';
 
 @Controller('teachers')
 export class TeacherController {
-  constructor(private teacherService: TeacherService) {}
+  constructor (private readonly teacherService: TeacherService) {}
 
   @Get('/:link')
-  getTeacher(@Param('link') link: string): Promise<TeacherDto> {
-    return this.teacherService.getTeacherByLink(link);
+  async getTeacher (@Param('link') link: string): Promise<TeacherDto> {
+    return await this.teacherService.getTeacherByLink(link);
   }
 
   @Get()
-  getTeachers(
+  async getTeachers (
     @Query() query: SearchableQueryDto
   ): Promise<Page<TeacherItemDto>> {
-    return this.teacherService.getTeachers(query);
+    return await this.teacherService.getTeachers(query);
   }
 
   @Authorize()
   @Post()
-  addTeacher(
+  async addTeacher (
     @Context() ctx: SecurityContext,
-    @Body() teacher: TeacherAddDto
+      @Body() teacher: TeacherAddDto
   ): Promise<TeacherDto> {
-    return this.teacherService.saveTeacher(teacher, ctx.user);
+    return await this.teacherService.saveTeacher(teacher, ctx.user);
   }
 
   @Authorize({ telegram: true })
   @Put('/:id')
-  updateTeacher(
+  async updateTeacher (
     @Param('id') id: string,
-    @Body() body: TeacherUpdateDto
+      @Body() body: TeacherUpdateDto
   ): Promise<TeacherDto> {
-    return this.teacherService.updateTeacher(id, body);
+    return await this.teacherService.updateTeacher(id, body);
   }
 
   @Authorize({ telegram: true })
   @Delete('/:id')
-  deleteTeacher(@Param('id') id: string): Promise<void> {
-    return this.teacherService.deleteTeacher(id);
+  async deleteTeacher (@Param('id') id: string): Promise<void> {
+    await this.teacherService.deleteTeacher(id);
   }
 
   @Get('/:link/contacts')
-  getTeacherContacts(
+  async getTeacherContacts (
     @Param('link') link: string
   ): Promise<ResponseEntity<any>> {
-    return this.teacherService.getTeacherContacts(link);
+    return await this.teacherService.getTeacherContacts(link);
   }
 
   @Get('/:link/courses')
-  getTeacherCourses(
+  async getTeacherCourses (
     @Param('link') link: string,
-    @Query() query: SearchableQueryDto
+      @Query() query: SearchableQueryDto
   ): Promise<Page<TeacherCourseItemDto>> {
-    return this.teacherService.getTeacherCourses(link, query);
+    return await this.teacherService.getTeacherCourses(link, query);
   }
 
   @Get('/:link/reviews')
-  getTeacherReviews(
+  async getTeacherReviews (
     @Param('link') link: string,
-    @Query() query: SearchableQueryDto
+      @Query() query: SearchableQueryDto
   ): Promise<Page<TeacherReviewDto>> {
-    return this.teacherService.getTeacherReviews(link, query);
+    return await this.teacherService.getTeacherReviews(link, query);
   }
 
   @Get('/:link/stats')
-  getTeacherStats(@Param('link') link: string): Promise<ResponseEntity<any>> {
-    return this.teacherService.getTeacherStats(link);
+  async getTeacherStats (@Param('link') link: string): Promise<ResponseEntity<any>> {
+    return await this.teacherService.getTeacherStats(link);
   }
 
   @Authorize()
   @Post('/:link/contacts')
-  addContact(
+  async addContact (
     @Context() ctx: SecurityContext,
-    @Param('link') link: string,
-    @Body() contact: TeacherContactCreateDto
+      @Param('link') link: string,
+      @Body() contact: TeacherContactCreateDto
   ): Promise<TeacherContactDto> {
-    return this.teacherService.addContact(link, contact, ctx.user);
+    return await this.teacherService.addContact(link, contact, ctx.user);
   }
 
   @Authorize({ telegram: true })
   @Put('/contacts/:id')
-  updateContact(
+  async updateContact (
     @Param('id') id: string,
-    @Body() body: TeacherContactUpdateDto
+      @Body() body: TeacherContactUpdateDto
   ): Promise<TeacherContactDto> {
-    return this.teacherService.updateContact(id, body);
+    return await this.teacherService.updateContact(id, body);
   }
 
   @Authorize({ telegram: true })
   @Delete('/contacts/:id')
-  deleteContact(@Param('id') id: string): Promise<void> {
-    return this.teacherService.deleteContact(id);
+  async deleteContact (@Param('id') id: string): Promise<void> {
+    await this.teacherService.deleteContact(id);
   }
 }

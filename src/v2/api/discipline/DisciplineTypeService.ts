@@ -7,17 +7,17 @@ import { DisciplineTeacherRepository } from '../teacher/DisciplineTeacherReposit
 
 @Injectable()
 export class DisciplineTypeService {
-  constructor(
-    private disciplineTypeRepository: DisciplineTypeRepository,
-    private disciplineRepository: DisciplineRepository,
-    private disciplineTeacherRepository: DisciplineTeacherRepository,
+  constructor (
+    private readonly disciplineTypeRepository: DisciplineTypeRepository,
+    private readonly disciplineRepository: DisciplineRepository,
+    private readonly disciplineTeacherRepository: DisciplineTeacherRepository,
     @Inject(forwardRef(() => DisciplineTeacherService))
-    private disciplineTeachersService: DisciplineTeacherService,
+    private readonly disciplineTeachersService: DisciplineTeacherService,
     @Inject(forwardRef(() => TeacherService))
-    private teacherService: TeacherService
+    private readonly teacherService: TeacherService
   ) {}
 
-  async getTeachers(id: string) {
+  async getTeachers (id: string) {
     const roles = await this.disciplineTypeRepository.getDisciplineTeacherRoles(id);
     const results = [];
 
@@ -29,13 +29,12 @@ export class DisciplineTypeService {
     return results;
   }
 
-  async getGroup(id: string) {
+  async getGroup (id: string) {
     const discipline = await this.disciplineTypeRepository.getDiscipline(id);
-    return this.disciplineRepository.getGroup(discipline.id);
+    return await this.disciplineRepository.getGroup(discipline.id);
   }
 
-
-  async deleteDisciplineTeachers(id: string) {
+  async deleteDisciplineTeachers (id: string) {
     const roles = await this.disciplineTypeRepository.getDisciplineTeacherRoles(id);
     for (const role of roles) {
       await this.disciplineTeacherRepository.delete(role.disciplineTeacherId);

@@ -15,29 +15,29 @@ export enum UserRole {
 @Entity('users')
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+    id: string;
 
   @Column({ name: 'first_name', type: 'varchar' })
-  firstName: string;
+    firstName: string;
 
   @Column({ name: 'last_name', type: 'varchar', nullable: true })
-  lastName?: string;
+    lastName?: string;
 
   @Column({ type: 'varchar', nullable: true })
-  username?: string;
+    username?: string;
 
   @Column({ type: 'varchar', nullable: true })
-  image?: string;
+    image?: string;
 
   @Column({ name: 'telegram_id', unique: true })
-  telegramId: number;
+    telegramId: number;
 
   @Column({ type: 'varchar', default: UserRole.User })
-  role: UserRole;
+    role: UserRole;
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
+    createdAt: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
+    updatedAt: Date;
 }

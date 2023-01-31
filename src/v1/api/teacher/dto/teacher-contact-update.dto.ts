@@ -8,5 +8,5 @@ export class TeacherContactUpdateDto {
 
   @IsOptional()
   @IsEnum(TeacherState)
-  state?: TeacherContactState;
+    state?: TeacherContactState;
 }

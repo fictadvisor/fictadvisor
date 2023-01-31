@@ -1,7 +1,7 @@
 export interface CreateTemporaryLessonData {
-  startDate: Date,
-  endDate: Date,
-  disciplineTypeId: string,
-  teacherId: string,
-  fortnight: number,
+  startDate: Date
+  endDate: Date
+  disciplineTypeId: string
+  teacherId: string
+  fortnight: number
 }
