@@ -1,7 +1,5 @@
-import { TrashBucketIcon } from "./svg-icons/TrashBucketIcon";
-import { SortAscendingIcon } from "./svg-icons/SortAscendingIcon";
-import { SortDescendingIcon } from "./svg-icons/SortDescendingIcon";
 import React from "react";
+import {BarsArrowDownIcon, BarsArrowUpIcon, TrashIcon} from "@heroicons/react/24/outline";
 
 type IconButtonProps = {
   size: "normal" | "large";
@@ -28,9 +26,9 @@ export const SortButton: React.FC<
   return (
     <button className={`square-button-icon-${size}`} {...rest}>
       {order === SortButtonOrder.ASCENDING ? (
-        <SortAscendingIcon />
+        <BarsArrowUpIcon className="icon" />
       ) : (
-        <SortDescendingIcon />
+          <BarsArrowDownIcon className="icon" />
       )}
     </button>
   );
@@ -42,7 +40,7 @@ export const TrashBucketButton: React.FC<IconButtonProps> = ({
 }) => {
   return (
     <button className={`round-button-icon-${size}`} {...rest}>
-      <TrashBucketIcon />
+      <TrashIcon className="icon"/>
     </button>
   );
 }
