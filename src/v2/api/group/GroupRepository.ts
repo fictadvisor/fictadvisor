@@ -100,11 +100,11 @@ export class GroupRepository {
   }
 
   async updateGroup(id: string, data: UpdateGroupDTO){
-    return await this.prisma.group.update({
+    return this.prisma.group.update({
       where: {
         id,
       },
       data,
-    })
+    });
   }
 }
