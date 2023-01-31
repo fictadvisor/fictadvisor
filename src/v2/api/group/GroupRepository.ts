@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import {QueryAllDTO} from "../../utils/QueryAllDTO";
-import {DatabaseUtils} from "../utils/DatabaseUtils";
-import {UpdateGroupDTO} from "./dto/UpdateGroupDTO";
+import { QueryAllDTO } from "../../utils/QueryAllDTO";
+import { DatabaseUtils } from "../utils/DatabaseUtils";
+import { UpdateGroupDTO } from "./dto/UpdateGroupDTO";
 
 @Injectable()
 export class GroupRepository {
