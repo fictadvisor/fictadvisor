@@ -1,10 +1,9 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { GroupService } from './GroupService';
-import { CreateDTO } from './dto/CreateDTO';
+import { CreateGroupDTO } from './dto/CreateGroupDTO';
 import { GroupByIdPipe } from './GroupByIdPipe';
 import { Group } from '@prisma/client';
 import { JwtGuard } from '../../security/JwtGuard';
-import { GroupByParamsGuard } from '../../security/group-guard/GroupByParamsGuard';
 import { Permission } from 'src/v2/security/permission-guard/Permission';
 import { PermissionGuard } from 'src/v2/security/permission-guard/PermissionGuard';
 import { EmailDTO } from './dto/EmailDTO';
@@ -12,6 +11,7 @@ import { ApproveDTO } from "../user/dto/ApproveDTO";
 import { RoleDTO } from "./dto/RoleDTO";
 import { UserByIdPipe } from "../user/UserByIdPipe";
 import { QueryAllDTO } from '../../utils/QueryAllDTO';
+import { UpdateGroupDTO } from "./dto/UpdateGroupDTO";
 
 @Controller({
   version: '2',
@@ -22,14 +22,19 @@ export class GroupController {
     private groupService: GroupService
   ) {}
 
+  @Permission('groups.create')
+  @UseGuards(JwtGuard, PermissionGuard)
   @Post()
-  create(@Body() body: CreateDTO) {
+  create(@Body() body: CreateGroupDTO) {
     return this.groupService.create(body.code);
   }
 
   @Get()
-  getAll(@Query() body: QueryAllDTO) {
-    return this.groupService.getAll(body);
+  async getAll(@Query() body: QueryAllDTO) {
+    const groups = await this.groupService.getAll(body);
+    return {
+      groups,
+    };
   }
 
   @Get('/:groupId')
@@ -39,19 +44,56 @@ export class GroupController {
     return group;
   }
 
-  //@Permission('groups.disciplines.teachers.get')
-  @UseGuards(JwtGuard, GroupByParamsGuard)
+  @Permission('groups.update')
+  @UseGuards(JwtGuard, PermissionGuard)
+  @Patch()
+  async update(
+    @Param('groupId', GroupByIdPipe) groupId: string,
+    @Body() body: UpdateGroupDTO,
+  ){
+    return this.groupService.updateGroup(groupId, body);
+  }
+
+  @Permission('groups.delete')
+  @UseGuards(JwtGuard, PermissionGuard)
+  @Delete('/:groupId')
+  async deleteGroup(
+    @Param('groupId', GroupByIdPipe) groupId: string,
+  ){
+    return this.groupService.deleteGroup(groupId);
+  }
+
+  @Permission('groups.$groupId.students.get')
+  @UseGuards(JwtGuard, PermissionGuard)
+  @Get('/:groupId/students')
+  async getStudents(
+    @Param('groupId', GroupByIdPipe) groupId: string,
+  ){
+    return this.groupService.getStudents(groupId);
+  }
+  @Permission('groups.$groupId.captain.get')
+  @UseGuards(JwtGuard, PermissionGuard)
+  @Get('/:groupId/captain')
+  async getCaptain(
+    @Param('groupId', GroupByIdPipe) groupId: string,
+  ){
+    return this.groupService.getCaptain(groupId);
+  }
+
+  @Permission('groups.$groupId.disciplines.teachers.get')
+  @UseGuards(JwtGuard)
   @Get('/:groupId/disciplineTeachers')
   async getDisciplineTeachers(
-    @Param('groupId') groupId: string,
+    @Param('groupId', GroupByIdPipe) groupId: string,
   ) {
     return this.groupService.getDisciplineTeachers(groupId);
   }
 
-  @UseGuards(JwtGuard, GroupByParamsGuard)
+  @Permission('groups.$groupId.disciplines.get')
+  @UseGuards(JwtGuard)
   @Get('/:groupId/disciplines')
   async getDiscipline(
-    @Param('groupId') groupId: string,
+    @Param('groupId', GroupByIdPipe) groupId: string,
   ) {
     const disciplines = await this.groupService.getDisciplines(groupId);
     return { disciplines };
@@ -61,7 +103,7 @@ export class GroupController {
   @UseGuards(JwtGuard, PermissionGuard)
   @Post('/:groupId/addEmails')
   async addUnregistered(
-    @Param('groupId') groupId: string,
+    @Param('groupId', GroupByIdPipe) groupId: string,
     @Body() body: EmailDTO
   ) {
     return this.groupService.addUnregistered(groupId, body);
@@ -71,7 +113,7 @@ export class GroupController {
   @UseGuards(JwtGuard, PermissionGuard)
   @Patch('/:groupId/verify/:userId')
   async verifyStudent(
-    @Param('groupId') groupId: string,
+    @Param('groupId', GroupByIdPipe) groupId: string,
     @Param('userId', UserByIdPipe) userId: string,
     @Body() body : ApproveDTO
   ) {
@@ -82,7 +124,7 @@ export class GroupController {
   @UseGuards(JwtGuard, PermissionGuard)
   @Patch('/:groupId/switch/:userId')
   async moderatorSwitch(
-    @Param('groupId') groupId: string,
+    @Param('groupId', GroupByIdPipe) groupId: string,
     @Param('userId', UserByIdPipe) userId: string,
     @Body() body: RoleDTO
   ) {
@@ -93,9 +135,10 @@ export class GroupController {
   @UseGuards(JwtGuard, PermissionGuard)
   @Delete('/:groupId/remove/:userId')
   async removeStudent(
-    @Param('groupId') groupId: string,
+    @Param('groupId', GroupByIdPipe) groupId: string,
     @Param('userId', UserByIdPipe) userId: string,
   ){
     return this.groupService.removeStudent(groupId, userId);
   }
+
 }
