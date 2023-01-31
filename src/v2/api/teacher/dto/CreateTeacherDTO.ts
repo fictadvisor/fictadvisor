@@ -36,8 +36,8 @@ export class CreateTeacherDTO {
     message: 'description is too long (max: 400)',
   })
   @IsOptional()
-  description: string;
+  description?: string;
 
   @IsOptional()
-  avatar: string;
+  avatar?: string;
 }

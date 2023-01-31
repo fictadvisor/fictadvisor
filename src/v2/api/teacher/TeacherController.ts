@@ -3,8 +3,8 @@ import { TeacherService } from './TeacherService';
 import { QueryAllDTO } from '../../utils/QueryAllDTO';
 import { CreateTeacherDTO } from './dto/CreateTeacherDTO';
 import { UpdateTeacherDTO } from './dto/UpdateTeacherDTO';
-import { CreateContactDTO } from './dto/CreateContactDTO';
-import { UpdateContactDTO } from './dto/UpdateContactDTO';
+import { CreateContactDTO } from '../user/dto/CreateContactDTO';
+import { UpdateContactDTO } from '../user/dto/UpdateContactDTO';
 import { JwtGuard } from '../../security/JwtGuard';
 import { Permission } from 'src/v2/security/permission-guard/Permission';
 import { PermissionGuard } from 'src/v2/security/permission-guard/PermissionGuard';
@@ -28,7 +28,15 @@ export class TeacherController {
   ) {
     return this.teacherService.getAll(query);
   }
-  
+
+  @UseGuards(JwtGuard)
+  @Get('/:teacherId/roles')
+  getTeacherRoles(
+    @Param('teacherId', TeacherByIdPipe) teacherId: string,
+  ) {
+    return this.teacherService.getTeacherRoles(teacherId);
+  }
+
   @UseGuards(JwtGuard)
   @Get('/:teacherId')
   getTeacher(
@@ -76,9 +84,9 @@ export class TeacherController {
   @UseGuards(JwtGuard)
   @Get('/:teacherId/contacts/:name')
   getContact(
-    @Param(ContactByNamePipe) [teacherId, name]: string[],
+    @Param(ContactByNamePipe) params: {teacherId: string, name: string},
   ) {
-    return this.teacherService.getContact(teacherId, name);
+    return this.teacherService.getContact(params.teacherId, params.name);
   }
 
   @Permission('teachers.$teacherId.contacts.create')
@@ -95,10 +103,10 @@ export class TeacherController {
   @UseGuards(JwtGuard, PermissionGuard)
   @Patch('/:teacherId/contacts/:name')
   async updateContact(
-    @Param(ContactByNamePipe) [teacherId, name]: string[],
+    @Param(ContactByNamePipe) params: {teacherId: string, name: string},
     @Body() body: UpdateContactDTO,
   ){
-    return this.teacherService.updateContact(teacherId, name, body);
+    return this.teacherService.updateContact(params.teacherId, params.name, body);
   }
 
   @Permission('teachers.$teacherId.contacts.delete')

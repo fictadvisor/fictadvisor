@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import {Group, RoleName, State} from '@prisma/client';
+import { Group, RoleName, State } from '@prisma/client';
 import { DisciplineService } from '../discipline/DisciplineService';
 import { DisciplineRepository } from '../discipline/DisciplineRepository';
 import { GroupRepository } from './GroupRepository';
@@ -12,7 +12,7 @@ import { EmailDTO } from "./dto/EmailDTO";
 import { ApproveDTO } from "../user/dto/ApproveDTO";
 import { NoPermissionException } from "../../utils/exceptions/NoPermissionException";
 import { RoleDTO } from "./dto/RoleDTO";
-import {UpdateGroupDTO} from "./dto/UpdateGroupDTO";
+import { UpdateGroupDTO } from "./dto/UpdateGroupDTO";
 
 @Injectable()
 export class GroupService {
@@ -65,7 +65,7 @@ export class GroupService {
   async addUnregistered(groupId: string, body: EmailDTO) {
     const users = [];
     for (const email of body.emails) {
-      const user = await this.userRepository.create({email});
+      const user = await this.userRepository.create({ email });
       await this.studentRepository.create({
         userId: user.id,
         groupId: groupId,
@@ -76,7 +76,7 @@ export class GroupService {
         email: user.email,
       });
     }
-    return {users};
+    return { users };
   }
 
   async verifyStudent(groupId: string, userId: string, data: ApproveDTO){
@@ -112,7 +112,7 @@ export class GroupService {
       throw new NoPermissionException();
     }
 
-    await this.studentRepository.update(user.id, {state: State.DECLINED});
+    await this.studentRepository.update(user.id, { state: State.DECLINED });
   }
 
   async getCaptain(groupId: string) {

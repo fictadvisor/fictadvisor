@@ -1,4 +1,4 @@
-import { Controller, Request, Post, UseGuards, Body, Put, UnauthorizedException, Param } from '@nestjs/common';
+import { Controller, Request, Post, UseGuards, Body, Put, Param, Get, Query } from '@nestjs/common';
 import { LocalAuthGuard } from '../../security/LocalGuard';
 import { AuthService } from './AuthService';
 import { RegistrationDTO, TelegramDTO } from './dto/RegistrationDTO';
@@ -7,6 +7,7 @@ import { ForgotPasswordDTO } from './dto/ForgotPasswordDTO';
 import { ResetPasswordDTO } from './dto/ResetPasswordDTO';
 import { UpdatePasswordDTO } from "./dto/UpdatePasswordDTO";
 import { VerificateEmailDTO } from './dto/VerificateEmailDTO';
+import { IdentityQueryDTO } from "./dto/IdentityQueryDTO";
 
 @Controller({
   version: '2',
@@ -40,16 +41,10 @@ export class AuthController {
   @UseGuards(JwtGuard)
   @Put('/updatePassword')
   async updatePassword(
-      @Body() body: UpdatePasswordDTO,
-      @Request() req,
-    ) {
-    const tokens = await this.authService.updatePassword(body, req.user);
-
-    if (!tokens) {
-      throw new UnauthorizedException('Old password is incorrect');
-    }
-
-    return tokens;
+    @Body() body: UpdatePasswordDTO,
+    @Request() req,
+  ) {
+    return this.authService.updatePassword(body, req.user);
   }
 
   @Post('/forgotPassword')
@@ -68,16 +63,23 @@ export class AuthController {
   }
 
   @Post('/register/verifyEmail')
-  async requestEmailVerification(
+  requestEmailVerification(
     @Body() body: VerificateEmailDTO,
   ) {
     return this.authService.requestEmailVerification(body.email);
   }
 
   @Post('/register/verifyEmail/:token')
-  async verificateEmail(
+  verifyEmail(
     @Param('token') token: string,
   ) {
     return this.authService.verifyEmail(token);
+  }
+
+  @Get('/verifyIsRegistered')
+  verifyExistsByUnique(
+    @Query() query: IdentityQueryDTO,
+  ) {
+    return this.authService.checkIfUserIsRegistered(query);
   }
 }

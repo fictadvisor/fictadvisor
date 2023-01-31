@@ -1,23 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../database/PrismaService';
 import { QueryAllDTO } from '../../utils/QueryAllDTO';
 import { CreateTeacherDTO } from './dto/CreateTeacherDTO';
 import { UpdateTeacherDTO } from './dto/UpdateTeacherDTO';
-import { CreateContactDTO } from './dto/CreateContactDTO';
+import { CreateContactDTO } from '../user/dto/CreateContactDTO';
 import { EntityType } from '@prisma/client';
 import { TeacherRepository } from './TeacherRepository';
 import { DisciplineTeacherRepository } from './DisciplineTeacherRepository';
-import { DisciplineTypeRepository } from '../discipline/DisciplineTypeRepository';
-import { UpdateContactDTO } from './dto/UpdateContactDTO';
-
+import { UpdateContactDTO } from '../user/dto/UpdateContactDTO';
+import { ContactRepository } from "../user/ContactRepository";
 
 @Injectable()
 export class TeacherService {
   constructor(
     private teacherRepository: TeacherRepository,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
-    private disciplineTypeRepository: DisciplineTypeRepository,
-    private prisma: PrismaService
+    private contactRepository: ContactRepository,
   ) {}
 
 
@@ -28,18 +25,34 @@ export class TeacherService {
     return { teachers };
   }
 
+  async getTeacher(
+    id: string,
+    ) {
+      return this.teacherRepository.getTeacher(id);
+    }
+
+  async getTeacherRoles(
+    teacherId: string,
+    ) {
+      const disciplineTeachers = await this.teacherRepository.getDisciplineTeachers(teacherId);
+      const results = [];
+
+      for (const discipline of disciplineTeachers) {
+        const roles = await this.disciplineTeacherRepository.getRoles(discipline.id);
+        for (const role of roles) {
+          if (results.includes(role.role)) continue;
+          results.push(role.role);
+        }
+      }
+      return { roles: results };
+    }
+
   async create(
     body: CreateTeacherDTO,
   ) {
     return this.teacherRepository.create(body);
   }
-
-  async getTeacher(
-    id: string,
-  ) {
-    return this.teacherRepository.getTeacher(id);
-  }
-
+    
   async update(
     id: string,
     body: UpdateTeacherDTO,
@@ -56,9 +69,9 @@ export class TeacherService {
   async getAllContacts(
     entityId: string,
   ) {
-    const contacts = (await this.teacherRepository.getAllContacts(entityId))
+    const contacts = (await this.contactRepository.getAllContacts(entityId))
       .map(
-        (c) => ({name: c.name, value: c.value})
+        (c) => ({ name: c.name, value: c.value })
       );
     return { contacts };
   }
@@ -67,7 +80,7 @@ export class TeacherService {
     teacherId: string,
     name: string,
   ) {
-    const contact = await this.teacherRepository.getContact(teacherId, name);
+    const contact = await this.contactRepository.getContact(teacherId, name);
     return {
       name: contact.name,
       value: contact.value,
@@ -78,7 +91,7 @@ export class TeacherService {
     entityId: string,
     body: CreateContactDTO,
   ) {
-    return this.teacherRepository.createContact({
+    return this.contactRepository.createContact({
       entityId,
       entityType: EntityType.TEACHER,
       ...body,
@@ -90,7 +103,7 @@ export class TeacherService {
     name: string,
     body: UpdateContactDTO,
   ) {
-    await this.teacherRepository.updateContact(
+    await this.contactRepository.updateContact(
       entityId, name, body,
     );
   }
@@ -99,7 +112,7 @@ export class TeacherService {
     entityId: string,
     name: string,
   ) {
-    await this.teacherRepository.deleteContact(
+    await this.contactRepository.deleteContact(
       entityId, name,
     );
   }
