@@ -1,10 +1,12 @@
-import { IsIn, IsNotEmpty } from "class-validator";
+import { IsEnum, IsIn, IsNotEmpty } from 'class-validator';
 import { TeacherRole } from "@prisma/client";
 
 export class UpdateRoleParam {
   @IsNotEmpty()
   questionId: string;
 
-  @IsIn(Object.keys(TeacherRole))
+  @IsEnum(TeacherRole, {
+    message: 'the role is not an enum',
+  })
   role: TeacherRole;
 }
