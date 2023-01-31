@@ -2,6 +2,6 @@ import { HttpException, HttpStatus } from "@nestjs/common";
 
 export class ExcessiveAnswerException extends HttpException{
   constructor() {
-    super('', HttpStatus.BAD_REQUEST);
+    super('There are excessive answers in the request', HttpStatus.BAD_REQUEST);
   }
 }
