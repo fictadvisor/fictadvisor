@@ -4,7 +4,6 @@ export enum TagState {
     BIG = 'big',
     SMALL = 'small',
 }
-
 export interface TagProps {
     className?: string,
     text?: string,

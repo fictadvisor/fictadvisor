@@ -1,9 +1,11 @@
-import React, {useEffect, useRef, useState} from "react";
-import {SearchIcon} from "./svg-icons/SearchIcon";
-import {HiddenIcon} from "./svg-icons/HiddenIcon";
-import {UnhiddenIcon} from "./svg-icons/UnhiddenIcon";
-import {GreenSuccessIcon} from "./svg-icons/GreenSuccessIcon";
-import {RedErrorIcon} from "./svg-icons/RedErrorIcon";
+import React, {useRef, useState} from "react";
+import {
+    CheckCircleIcon,
+    ExclamationCircleIcon,
+    EyeIcon,
+    EyeSlashIcon,
+    MagnifyingGlassIcon
+} from "@heroicons/react/24/outline";
 
 export enum InputState{
     DEFAULT = 'default', DISABLED = 'disabled', ERROR = 'error', SUCCESS = 'success'
@@ -74,19 +76,19 @@ const Input: React.FC<InputProps> = (props) => {
         setValue(event.target.value);
     }
 
-    const leftIcon = props.type === InputType.SEARCH ? <SearchIcon/> : null;
+    const leftIcon = props.type === InputType.SEARCH ? <MagnifyingGlassIcon className="icon"/> : null;
 
     let rightIcon = null;
     if (props.type === InputType.HIDDABLE){
-        if (isHidden) rightIcon = <HiddenIcon/>
-        else          rightIcon = <UnhiddenIcon/>
+        if (isHidden) rightIcon = <EyeSlashIcon className="icon"/>
+        else          rightIcon = <EyeIcon className="icon"/>
     }
     else if (props.type === InputType.SEARCH){
-            if (value !== null) rightIcon = <SearchIcon/>
+            if (value !== null) rightIcon = <MagnifyingGlassIcon className="icon"/>
     }
     else{
-        if (props.state === InputState.SUCCESS) rightIcon = <GreenSuccessIcon/>
-        if (props.state === InputState.ERROR) rightIcon = <RedErrorIcon/>
+        if (props.state === InputState.SUCCESS) rightIcon = <CheckCircleIcon className = "icon input-success-icon"/>
+        if (props.state === InputState.ERROR) rightIcon = <ExclamationCircleIcon className = "icon input-error-icon"/>
     }
 
     function handleIconClick(){

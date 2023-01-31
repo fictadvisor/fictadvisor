@@ -1,3 +1,15 @@
+.small-tag-body{
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+.big-tag-body{
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 500;
+}
+
 .tag{
     border-radius: 6px;
     display: flex;
@@ -13,92 +25,92 @@
  }
  
  .done-svg{
-     fill: $svg-tag-color;
+     fill: #FFFFFF;
      width: 20px;
      height: 20px;
  }
  
  .primary-fisrt-bgc{
-     background-color: $primary-tag-first-bgc;
+     background-color: #B83838;
  }
  
  .primary-second-bgc{
-     background-color: $primary-tag-second-bgc;
+     background-color: #873030;
  }
  
  .primary-third-bgc{
-     background-color: $third-tags-bgc;
-     border: 1px solid $primary-tag-border-color;
+     background-color: #1E1E1E;
+     border: 1px solid #747474;
      border-radius: 6px;
  
  }
  
  .success-first-bgc{
-     background-color: $success-tag-first-bgc;
+     background-color: #157F44;
  }
  
  .success-second-bgc{
-     background-color: $success-tag-second-bgc;
+     background-color: #106034;
  }
  
  .success-third-bgc{
-     background-color: $third-tags-bgc;
-     border: 1px solid $success-tag-border-color;
+     background-color: #1E1E1E;
+     border: 1px solid #64B98A;
      border-radius: 6px;
  }
  
  .error-first-bgc{
-     background-color: $error-tag-first-bgc;
+     background-color: #C11018;
  }
  
  .error-second-bgc{
-     background-color: $error-tag-second-bgc;
+     background-color: #970C13;
  }
  
  .error-third-bgc{
-     background-color: $third-tags-bgc;
-     border: 1px solid $error-tag-border-color;
+     background-color: #1E1E1E;
+     border: 1px solid #EC131E;
      border-radius: 6px;
  }
  
  .warning-first-bgc{
-     background-color: $warning-tag-first-bgc;
+     background-color: #EA580C;
  }
  
  .warning-second-bgc{
-     background-color: $warning-tag-second-bgc;
+     background-color: #9A3412;
  }
  
  .warning-third-bgc{
-     background-color: $third-tags-bgc;
-     border: 1px solid $warning-tag-border-color;
+     background-color: #1E1E1E;
+     border: 1px solid #EA580C;
      border-radius: 6px;
  }
  
  .info-first-bgc{
-     background-color: $info-tag-first-bgc;
+     background-color: #0284C7;
  }
  
  .info-second-bgc{
-     background-color: $info-tag-second-bgc;
+     background-color: #0C4A6E;
  }
  
  .info-third-bgc{
-     background-color: $third-tags-bgc;
-     border: 1px solid $info-tag-border-color;
+     background-color: #1E1E1E;
+     border: 1px solid #0284C7;
      border-radius: 6px;
  }
  
  .gray-first-bgc{
-     background-color: $gray-tag-first-bgc;
+     background-color: #404040;
  }
  
  .gray-second-bgc{
-     background-color: $gray-tag-second-bgc;
+     background-color: #292929;
  }
  
  .gray-third-bgc{
-     background-color: $third-tags-bgc;
-     border: 1px solid $gray-tag-border-color;
+     background-color: #1E1E1E;
+     border: 1px solid #525252;
      border-radius: 6px;
  }
