@@ -16,8 +16,10 @@ const Table: React.FC<TableProps> = (props) => {
     return (
         <div>
             {props.fields.map(field => {
-                field.avatar = field.avatar ? field.avatar : "avatar.png";
-                const userGap = (field.firstButton || field.checkBox || field.secondButton) ? "12px" : "26px";
+                field.avatar = field.avatar ? field.avatar : "default-avatar.jpg";
+                let userWidth = field.tag && (field.firstButton || field.checkBox || field.secondButton) ? "180px" : "304px";
+                if (field.tag && !field.firstButton && !field.checkBox && !field.secondButton) userWidth = "288px";
+                let userGap = (field.firstButton || field.checkBox || field.secondButton) ? "12px" : "26px";
                 return (
                     <div className="table-container">
                         <div className="user-container" style={{ gap: userGap }}>
@@ -25,14 +27,14 @@ const Table: React.FC<TableProps> = (props) => {
                                 <img src={`/assets/${field.avatar}`} alt="avatar" />
                             </div>
                             <div className="user-info">
-                                <div className="full-name">{field.fullName}</div>
-                                {field.tag && <div className="tag">{field.tag}</div> }
+                                <div className="full-name" style={{ width: userWidth }}>{field.fullName}</div>
+                                {field.tag && <div className="tag">{field.tag}</div>}
                             </div>
                         </div>
                         <div className="email">{field.email}</div>
                         <div className="editing">{
                             field.tag
-                                ? <div className="checkbox" style={{ width: "fit-content" }}>{field.checkBox}</div>
+                                ? <div className="checkbox">{field.checkBox}</div>
                                 : <div style={{ width: "fit-content" }}>{field.firstButton}</div>
                         }
                             <div style={{ width: "fit-content" }}>{field.secondButton}</div>

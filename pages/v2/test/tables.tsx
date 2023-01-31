@@ -2,7 +2,7 @@ import { XMarkIcon, UserIcon } from "@heroicons/react/24/outline";
 import AlertButton, { AlertButtonIconPosition, AlertButtonType } from "../../../components/v2/AlertButton";
 import { Check, CheckState } from "../../../components/v2/Check";
 import { IconButtonSize, TrashBucketButton } from "../../../components/v2/IconButton";
-import { WhiteCheckMarkIcon } from "../../../components/v2/svg-icons/WhiteCheckMarkIcon";
+import {CustomCheck} from "../../../components/v2/custom-svg/CustomCheck";
 import Table from "../../../components/v2/Table";
 import Tag, { TagState } from "../../../components/v2/Tag";
 function tables() {
@@ -13,7 +13,7 @@ function tables() {
             fullName: "Ярмоленко Єлизавета Миколаївна",
             tag: <Tag state={TagState.SMALL} text="Зам. староста" className="primary-second" />,
             checkBox: <Check state={CheckState.DEFAULT} text="Зам. староста" />,
-            //action={<AlertButton text="Прийняти" icon={<WhiteCheckMarkIcon/>} iconPosition={AlertButtonIconPosition.RIGHT} onClick={() => {}} isDisabled={false} type={AlertButtonType.SUCCESS}/>}
+            //action={<AlertButton text="Прийняти" icon={<CustomCheck/>} iconPosition={AlertButtonIconPosition.RIGHT} onClick={() => {}} isDisabled={false} type={AlertButtonType.SUCCESS}/>}
             secondButton: <TrashBucketButton size={IconButtonSize.NORMAL} />,
         },
         {
@@ -22,8 +22,8 @@ function tables() {
             fullName: "Ярмоленко Єлизавета Миколаївна",
             //tag: <Tag state={TagState.SMALL} text="Зам. староста" className="primary-second" />,
             //checkBox: <Check state={CheckState.DEFAULT} text="Зам. староста" />,
-            firstButton: <AlertButton text="Прийняти" icon={<WhiteCheckMarkIcon />} iconPosition={AlertButtonIconPosition.RIGHT} onClick={() => { }} isDisabled={false} type={AlertButtonType.SUCCESS} />,
-            secondButton: <AlertButton icon={<XMarkIcon />} iconPosition={AlertButtonIconPosition.RIGHT} onClick={() => { }} isDisabled={false} type={AlertButtonType.ERROR_SECONDARY} />,
+            firstButton: <AlertButton text="Прийняти" icon={<CustomCheck />} iconPosition={AlertButtonIconPosition.RIGHT} onClick={() => { }} isDisabled={false} type={AlertButtonType.SUCCESS} />,
+            secondButton: <AlertButton icon={<XMarkIcon className="icon"/>} iconPosition={AlertButtonIconPosition.RIGHT} onClick={() => { }} isDisabled={false} type={AlertButtonType.ERROR_SECONDARY} />,
         },
         {
             avatar: "stars-empty.svg",
@@ -31,7 +31,7 @@ function tables() {
             fullName: "Ярмоленко Єлизавета Миколаївна",
             tag: <Tag state={TagState.SMALL} text="Зам. староста" className="primary-second" />,
             checkBox: <Check state={CheckState.DEFAULT} text="Зам. староста" />,
-            //action={<AlertButton text="Прийняти" icon={<WhiteCheckMarkIcon/>} iconPosition={AlertButtonIconPosition.RIGHT} onClick={() => {}} isDisabled={false} type={AlertButtonType.SUCCESS}/>}
+            //action={<AlertButton text="Прийняти" icon={<CustomCheck/>} iconPosition={AlertButtonIconPosition.RIGHT} onClick={() => {}} isDisabled={false} type={AlertButtonType.SUCCESS}/>}
             secondButton: <TrashBucketButton size={IconButtonSize.NORMAL} />,
         },
 
@@ -40,15 +40,15 @@ function tables() {
             fullName: "Ярмоленко Єлизавета Миколаївна",
             tag: <Tag state={TagState.SMALL} text="Зам. староста" className="primary-second" />,
             checkBox: <Check state={CheckState.DEFAULT} text="Зам. староста" />,
-            firstButton: <AlertButton text="Прийняти" icon={<WhiteCheckMarkIcon />} iconPosition={AlertButtonIconPosition.RIGHT} onClick={() => { }} isDisabled={false} type={AlertButtonType.SUCCESS} />,
+            firstButton: <AlertButton text="Прийняти" icon={<CustomCheck />} iconPosition={AlertButtonIconPosition.RIGHT} onClick={() => { }} isDisabled={false} type={AlertButtonType.SUCCESS} />,
             secondButton: <TrashBucketButton size={IconButtonSize.NORMAL} />,
         },
         {
-            email: "elizabeth.yarmolenkobestdesigner2023@gmail.com",
+            email: "elizabeth.yarmolenko@gmail.com",
             fullName: "Ярмоленко Єлизавета Миколаївна",
             tag: <Tag state={TagState.SMALL} text="Зам. староста" className="primary-second" />,
             checkBox: <Check state={CheckState.DEFAULT} text="Зам. староста" />,
-            firstButton: <AlertButton text="Прийняти" icon={<WhiteCheckMarkIcon />} iconPosition={AlertButtonIconPosition.RIGHT} onClick={() => { }} isDisabled={false} type={AlertButtonType.SUCCESS} />,
+            firstButton: <AlertButton text="Прийняти" icon={<CustomCheck />} iconPosition={AlertButtonIconPosition.RIGHT} onClick={() => { }} isDisabled={false} type={AlertButtonType.SUCCESS} />,
             secondButton: <TrashBucketButton size={IconButtonSize.NORMAL} />,
         },
         {
@@ -56,13 +56,13 @@ function tables() {
             fullName: "Ярмоленко Єлизавета Миколаївна",
             //tag: <Tag state={TagState.SMALL} text="Зам. староста" className="primary-second" />,
             checkBox: <Check state={CheckState.DEFAULT} text="Зам. староста" />,
-            firstButton: <AlertButton text="Прийняти" icon={<WhiteCheckMarkIcon />} iconPosition={AlertButtonIconPosition.RIGHT} onClick={() => { }} isDisabled={false} type={AlertButtonType.SUCCESS} />,
-            secondButton: <AlertButton icon={<XMarkIcon />} iconPosition={AlertButtonIconPosition.RIGHT} onClick={() => { }} isDisabled={false} type={AlertButtonType.ERROR_SECONDARY} />,
+            firstButton: <AlertButton text="Прийняти" icon={<CustomCheck />} iconPosition={AlertButtonIconPosition.RIGHT} onClick={() => { }} isDisabled={false} type={AlertButtonType.SUCCESS} />,
+            secondButton: <AlertButton icon={<XMarkIcon className="icon"/>} iconPosition={AlertButtonIconPosition.RIGHT} onClick={() => { }} isDisabled={false} type={AlertButtonType.ERROR_SECONDARY} />,
         },
         {
             email: "elizabeth.yarmolenko@gmail.com",
             fullName: "Ярмоленко Єлизавета Миколаївна",
-            //tag: <Tag state={TagState.SMALL} text="Зам. староста" className="primary-second" />,
+            tag: <Tag state={TagState.SMALL} text="Зам. староста" className="primary-second" />,
         },
         {
             email: "elizabeth.yarmolenko@gmail.com",
