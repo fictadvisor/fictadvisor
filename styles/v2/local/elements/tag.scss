@@ -25,8 +25,8 @@
 }
 
 .tag{
+    @include flex-center;
     border-radius: 6px;
-    display: flex;
     gap: 4px;
  }
  
