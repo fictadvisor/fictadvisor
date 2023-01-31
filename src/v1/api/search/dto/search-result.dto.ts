@@ -1,12 +1,12 @@
-import { type SearchSubjectItemDto } from './search-subject-item.dto';
-import { type SearchTeacherItemDto } from './search-teacher-item.dto';
+import { SearchSubjectItemDto } from './search-subject-item.dto';
+import { SearchTeacherItemDto } from './search-teacher-item.dto';
 import { assign } from '../../../common/common.object';
 
 export class SearchResultDto {
   subjects: SearchSubjectItemDto[];
   teachers: SearchTeacherItemDto[];
 
-  public static from (
+  public static from(
     subjects: SearchSubjectItemDto[],
     teachers: SearchTeacherItemDto[]
   ): SearchResultDto {

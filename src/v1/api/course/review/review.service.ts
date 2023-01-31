@@ -6,38 +6,38 @@ import {
   Searchable,
   SortableProcessor,
 } from 'src/v1/common/common.api';
-import { type SearchableQueryDto } from 'src/v1/common/common.dto';
+import { SearchableQueryDto } from 'src/v1/common/common.dto';
 import { ServiceException } from 'src/v1/common/common.exception';
 import { assign } from 'src/v1/common/common.object';
 import { Review, ReviewState } from 'src/v1/database/entities/review.entity';
-import { type User } from 'src/v1/database/entities/user.entity';
+import { User } from 'src/v1/database/entities/user.entity';
 import { Logger, SystemLogger } from 'src/v1/logger/logger.core';
 import { TelegramService } from 'src/v1/telegram/telegram.service';
 import { Equal, Repository } from 'typeorm';
 import { CourseService } from '../course.service';
-import { type CreateReviewDto } from './dto/create-review.dto';
+import { CreateReviewDto } from './dto/create-review.dto';
 import { CourseReviewDto } from './dto/review-item.dto';
 import { ReviewDto } from './dto/review.dto';
-import { type UpdateReviewDto } from './dto/update-review.dto';
+import { UpdateReviewDto } from './dto/update-review.dto';
 
 @Injectable()
 export class ReviewService {
   @Logger()
-  private readonly logger: SystemLogger;
+  private logger: SystemLogger;
 
-  constructor (
+  constructor(
     @InjectRepository(Review)
-    private readonly reviewRepository: Repository<Review>,
-    private readonly courseService: CourseService,
-    private readonly telegramService: TelegramService
+    private reviewRepository: Repository<Review>,
+    private courseService: CourseService,
+    private telegramService: TelegramService
   ) {}
 
-  private readonly reviewSortableProcessor = SortableProcessor.of<Review>(
+  private reviewSortableProcessor = SortableProcessor.of<Review>(
     { rating: ['DESC'], date: ['DESC', 'createdAt'] },
     'date'
   ).fallback('id', 'ASC');
 
-  async getReview (id: string, relations?: string[]): Promise<Review> {
+  async getReview(id: string, relations?: string[]): Promise<Review> {
     const review = await this.reviewRepository.findOne({
       where: { id },
       relations,
@@ -52,7 +52,7 @@ export class ReviewService {
     return review;
   }
 
-  async getReviews (
+  async getReviews(
     link: string,
     query: SearchableQueryDto
   ): Promise<Page<CourseReviewDto>> {
@@ -74,7 +74,7 @@ export class ReviewService {
     );
   }
 
-  async updateReview (id: string, update: UpdateReviewDto): Promise<ReviewDto> {
+  async updateReview(id: string, update: UpdateReviewDto): Promise<ReviewDto> {
     const review = await this.getReview(id, [
       'user',
       'course',
@@ -124,7 +124,7 @@ export class ReviewService {
     return ReviewDto.from(await this.reviewRepository.save(review));
   }
 
-  async createReview (
+  async createReview(
     link: string,
     user: User,
     dto: CreateReviewDto
@@ -150,7 +150,7 @@ export class ReviewService {
     return ReviewDto.from(review);
   }
 
-  async deleteReview (id: string): Promise<void> {
+  async deleteReview(id: string): Promise<void> {
     const review = await this.getReview(id);
 
     await review.remove();

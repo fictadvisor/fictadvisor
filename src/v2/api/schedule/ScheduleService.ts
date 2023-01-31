@@ -1,22 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
 import { ScheduleParser } from '../../utils/parser/ScheduleParser';
-import { type Group, type Subject, FortnightLessonInfoType, type Discipline, type DisciplineType } from '@prisma/client';
+import { Group, Subject, FortnightLessonInfoType, Discipline, DisciplineType } from '@prisma/client';
 import { DateService } from '../../utils/date/DateService';
 import { ConfigService } from '@nestjs/config';
 import { SubjectService } from '../subject/SubjectService';
 import { DisciplineService } from '../discipline/DisciplineService';
-import { type TemporaryLessonInfo } from './dto/TemporaryLessonInfo';
-import { type StaticLessonInfo } from './dto/StaticLessonInfo';
-import { type FullLessonDTO } from './dto/FullLessonDTO';
+import { TemporaryLessonInfo } from './dto/TemporaryLessonInfo';
+import { StaticLessonInfo } from './dto/StaticLessonInfo';
+import { FullLessonDTO } from './dto/FullLessonDTO';
 import { TeacherService } from '../teacher/TeacherService';
-import { type UpdateDynamicInfoDTO } from './dto/UpdateDynamicInfoDTO';
+import { UpdateDynamicInfoDTO } from './dto/UpdateDynamicInfoDTO';
 import { ScheduleRepository } from './ScheduleRepository';
 import { FortnightInfoAdaptor } from './dto/FortnightInfoAdaptor';
-import { type UpdateStaticInfoDTO } from './dto/UpdateStaticInfoDTO';
+import { UpdateStaticInfoDTO } from './dto/UpdateStaticInfoDTO';
 import { TeacherRoleAdapter } from '../teacher/dto/TeacherRoleAdapter';
-import { type CreateLessonDTO } from './dto/CreateLessonDTO';
-import { type CreateDateDTO } from './dto/CreateDateDTO';
+import { CreateLessonDTO } from './dto/CreateLessonDTO';
+import { CreateDateDTO } from './dto/CreateDateDTO';
 import { DisciplineTypeService } from '../discipline/DisciplineTypeService';
 import { DisciplineRepository } from '../discipline/DisciplineRepository';
 import { DisciplineTypeRepository } from '../discipline/DisciplineTypeRepository';
@@ -26,24 +26,25 @@ import { DisciplineTeacherRoleRepository } from '../teacher/DisciplineTeacherRol
 
 @Injectable()
 export class ScheduleService {
-  constructor (
-    private readonly scheduleParser: ScheduleParser,
-    private readonly prisma: PrismaService,
-    private readonly dateService: DateService,
-    private readonly config: ConfigService,
-    private readonly subjectService: SubjectService,
-    private readonly disciplineTypeService: DisciplineTypeService,
-    private readonly disciplineService: DisciplineService,
-    private readonly groupRepository: GroupRepository,
-    private readonly disciplineRepository: DisciplineRepository,
-    private readonly disciplineTypeRepository: DisciplineTypeRepository,
-    private readonly disciplineTeacherRepository: DisciplineTeacherRepository,
-    private readonly disciplineTeacherRoleRepository: DisciplineTeacherRoleRepository,
-    private readonly teacherService: TeacherService,
-    private readonly scheduleRepository: ScheduleRepository
+  constructor(
+    private scheduleParser: ScheduleParser,
+    private prisma: PrismaService,
+    private dateService: DateService,
+    private config: ConfigService,
+    private subjectService: SubjectService,
+    private disciplineTypeService: DisciplineTypeService,
+    private disciplineService: DisciplineService,
+    private groupRepository: GroupRepository,
+    private disciplineRepository: DisciplineRepository,
+    private disciplineTypeRepository: DisciplineTypeRepository,
+    private disciplineTeacherRepository: DisciplineTeacherRepository,
+    private disciplineTeacherRoleRepository: DisciplineTeacherRoleRepository,
+    private teacherService: TeacherService,
+    private scheduleRepository: ScheduleRepository,
   ) {}
 
-  async parse (parserType: string) {
+
+  async parse(parserType: string) {
     switch (parserType) {
       case 'rozkpi':
       case 'schedule':
@@ -52,7 +53,7 @@ export class ScheduleService {
     }
   }
 
-  async getSchedule (
+  async getSchedule(
     group: Group,
     fortnight: number,
     callback: 'static' | 'temporary'
@@ -77,7 +78,7 @@ export class ScheduleService {
     return results;
   }
 
-  async getStaticLessons (
+  async getStaticLessons(
     fortnight: number,
     discipline: Discipline,
     subject: Subject,
@@ -95,7 +96,7 @@ export class ScheduleService {
         lesson.id, fortnight,
         FortnightLessonInfoType.START_DATE,
         FortnightLessonInfoType.END_DATE,
-        FortnightLessonInfoType.IS_TEST
+        FortnightLessonInfoType.IS_TEST,
       );
 
       results.push({
@@ -112,7 +113,7 @@ export class ScheduleService {
     return results;
   }
 
-  async getWeekLessonInfos (
+  async getWeekLessonInfos(
     lessonId: string,
     fortnight: number,
     ...types: FortnightLessonInfoType[]
@@ -130,7 +131,7 @@ export class ScheduleService {
     return values;
   }
 
-  async getTemporaryLessons (
+  async getTemporaryLessons(
     fortnight: number,
     discipline: Discipline,
     subject: Subject,
@@ -153,7 +154,7 @@ export class ScheduleService {
     return results;
   }
 
-  async getFullStaticLesson (id: string, fortnight: number): Promise<FullLessonDTO> {
+  async getFullStaticLesson(id: string, fortnight: number): Promise<FullLessonDTO> {
     const lesson = await this.scheduleRepository.getSemesterLesson(id);
     const dbTeachers = await this.disciplineTypeService.getTeachers(lesson.disciplineTypeId);
     const discipline = await this.disciplineTypeRepository.getDiscipline(lesson.disciplineTypeId);
@@ -196,7 +197,7 @@ export class ScheduleService {
     };
   }
 
-  async getFullTemporaryLesson (id: string): Promise<FullLessonDTO> {
+  async getFullTemporaryLesson(id: string): Promise<FullLessonDTO> {
     const lesson = await this.scheduleRepository.getTemporaryLesson(id);
     const teacher = lesson.teacher;
     const discipline = await this.disciplineTypeRepository.getDiscipline(lesson.disciplineTypeId);
@@ -220,7 +221,7 @@ export class ScheduleService {
     };
   }
 
-  async updateFortnightInfo (id, fortnight, data: UpdateDynamicInfoDTO) {
+  async updateFortnightInfo(id, fortnight, data: UpdateDynamicInfoDTO) {
     const fortnightLesson = await this.scheduleRepository.getOrCreateFortnightLesson(id, fortnight);
     if (!fortnightLesson) return null;
 
@@ -229,18 +230,18 @@ export class ScheduleService {
     }
   }
 
-  async updateSemesterInfo (id: string, body: UpdateStaticInfoDTO) {
+  async updateSemesterInfo(id: string, body: UpdateStaticInfoDTO) {
     const semesterLesson = await this.scheduleRepository.getSemesterLesson(id);
     const discipline = await this.disciplineTypeRepository.getDiscipline(semesterLesson.disciplineTypeId);
 
     for (const key in body) {
       if (['endDate', 'startDate', 'url'].includes(key)) {
         await this.scheduleRepository.updateSemesterLessonInfo(
-          id, { [key]: body[key] }
+          id, {[key]: body[key]}
         );
       } else if (['resource', 'evaluatingSystem', 'isSelective'].includes(key)) {
         await this.disciplineRepository.update(
-          discipline.id, { [key]: body[key] }
+          discipline.id, {[key]: body[key]}
         );
       } else {
         await this.disciplineTypeService.deleteDisciplineTeachers(semesterLesson.disciplineTypeId);
@@ -257,7 +258,7 @@ export class ScheduleService {
     }
   }
 
-  async createLesson ({ fortnight, disciplineId, type, ...data }: CreateLessonDTO) {
+  async createLesson({fortnight, disciplineId, type, ...data}: CreateLessonDTO) {
     if (!disciplineId || !type) return null;
 
     const disciplineType = await this.disciplineTypeRepository.getOrCreate({ disciplineId, name: type });
@@ -269,11 +270,11 @@ export class ScheduleService {
     }
   }
 
-  async createTemporaryLesson (fortnight, disciplineTypeId, data) {
-    return await this.scheduleRepository.getOrCreateTemporaryLesson({ fortnight, disciplineTypeId, ...data });
+  async createTemporaryLesson(fortnight, disciplineTypeId, data) {
+    return await this.scheduleRepository.getOrCreateTemporaryLesson({fortnight, disciplineTypeId, ...data});
   }
 
-  async createSemesterLesson (disciplineTypeId: string, { teacherId, ...data }: { teacherId: string } & CreateDateDTO) {
+  async createSemesterLesson(disciplineTypeId: string, { teacherId, ...data }: {teacherId: string} & CreateDateDTO) {
     const type = await this.disciplineTypeRepository.getType(disciplineTypeId);
     const role = TeacherRoleAdapter[type.name];
 
@@ -283,6 +284,6 @@ export class ScheduleService {
       disciplineTypeId,
       role,
     });
-    return await this.scheduleRepository.getOrCreateSemesterLesson({ disciplineTypeId, ...data });
+    return await this.scheduleRepository.getOrCreateSemesterLesson({disciplineTypeId, ...data});
   }
 }

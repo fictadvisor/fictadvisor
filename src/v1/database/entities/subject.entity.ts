@@ -16,23 +16,23 @@ export enum SubjectState {
 @Entity('subjects')
 export class Subject extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-    id: string;
+  id: string;
 
   @Column({ type: 'varchar', unique: true })
-    link: string;
+  link: string;
 
   @Column({ type: 'varchar' })
-    name: string;
+  name: string;
 
   @Column({ type: 'text', nullable: true })
-    description?: string;
+  description?: string;
 
   @Column({ type: 'varchar', default: SubjectState.PENDING })
-    state: SubjectState;
+  state: SubjectState;
 
   @CreateDateColumn({ name: 'created_at' })
-    createdAt: Date;
+  createdAt: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
-    updatedAt: Date;
+  updatedAt: Date;
 }

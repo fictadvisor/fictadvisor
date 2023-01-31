@@ -1,9 +1,9 @@
 export class ColumnFloatTransformer {
-  to (data: any): number {
+  to(data: any): number {
     return typeof data === 'number' ? data : parseFloat(data);
   }
 
-  from (data: any): number {
+  from(data: any): number {
     return parseFloat(data);
   }
 }

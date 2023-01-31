@@ -1,5 +1,5 @@
 import { assign } from 'src/v1/common/common.object';
-import { type StudentResource } from 'src/v1/database/entities/student-resource.entity';
+import { StudentResource } from 'src/v1/database/entities/student-resource.entity';
 
 export class StudentResourceDto {
   id: string;
@@ -10,7 +10,7 @@ export class StudentResourceDto {
 
   image: string;
 
-  public static from (e: StudentResource) {
+  public static from(e: StudentResource) {
     return assign(new StudentResourceDto(), {
       id: e.id,
       name: e.name,

@@ -1,8 +1,8 @@
 import { Expose } from 'class-transformer';
-import { type CourseSearchIndex } from '../../../database/entities/course-search-index.entity';
+import { CourseSearchIndex } from '../../../database/entities/course-search-index.entity';
 import { assign } from '../../../common/common.object';
 import { CourseTeacherItemDto } from './course-teacher-item.dto';
-import { type CourseState } from 'src/v1/database/entities/course.entity';
+import { CourseState } from 'src/v1/database/entities/course.entity';
 
 export class CourseItemDto {
   id: string;
@@ -12,7 +12,7 @@ export class CourseItemDto {
   teacher: CourseTeacherItemDto;
 
   @Expose({ name: 'review_count' })
-    reviewCount: number;
+  reviewCount: number;
 
   rating: number;
 
@@ -20,7 +20,7 @@ export class CourseItemDto {
 
   recommended: boolean;
 
-  public static from (v: CourseSearchIndex): CourseItemDto {
+  public static from(v: CourseSearchIndex): CourseItemDto {
     const teacher = assign(new CourseTeacherItemDto(), {
       id: v.teacherId,
       link: v.link,

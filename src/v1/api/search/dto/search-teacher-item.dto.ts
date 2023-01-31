@@ -1,5 +1,5 @@
 import { Expose } from 'class-transformer';
-import { type TeacherSearchIndex } from '../../../database/entities/teacher-search-index.entity';
+import { TeacherSearchIndex } from '../../../database/entities/teacher-search-index.entity';
 import { assign } from '../../../common/common.object';
 
 export class SearchTeacherItemDto {
@@ -8,17 +8,17 @@ export class SearchTeacherItemDto {
   link: string;
 
   @Expose({ name: 'first_name' })
-    firstName: string;
+  firstName: string;
 
   @Expose({ name: 'middle_name' })
-    middleName?: string;
+  middleName?: string;
 
   @Expose({ name: 'last_name' })
-    lastName: string;
+  lastName: string;
 
   rating: number;
 
-  public static from (i: TeacherSearchIndex): SearchTeacherItemDto {
+  public static from(i: TeacherSearchIndex): SearchTeacherItemDto {
     return assign(new SearchTeacherItemDto(), {
       id: i.id,
       link: i.link,

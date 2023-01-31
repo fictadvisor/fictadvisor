@@ -1,7 +1,7 @@
 import { Expose } from 'class-transformer';
 import { assign } from 'src/v1/common/common.object';
 import {
-  type Teacher,
+  Teacher,
   TEACHER_IMAGE_PLACEHOLDER,
 } from 'src/v1/database/entities/teacher.entity';
 
@@ -11,17 +11,17 @@ export class CourseTeacherDto {
   link: string;
 
   @Expose({ name: 'first_name' })
-    firstName: string;
+  firstName: string;
 
   @Expose({ name: 'middle_name' })
-    middleName?: string;
+  middleName?: string;
 
   @Expose({ name: 'last_name' })
-    lastName?: string;
+  lastName?: string;
 
   image?: string;
 
-  public static from (t: Teacher) {
+  public static from(t: Teacher) {
     return assign(new CourseTeacherDto(), {
       id: t.id,
       link: t.link,

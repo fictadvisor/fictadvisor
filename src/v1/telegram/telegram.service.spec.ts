@@ -1,4 +1,4 @@
-import { Test, type TestingModule } from '@nestjs/testing';
+import { Test, TestingModule } from '@nestjs/testing';
 import { TelegramService } from './telegram.service';
 
 describe('TelegramService', () => {

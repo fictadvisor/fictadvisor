@@ -1,33 +1,33 @@
 import { Expose } from 'class-transformer';
 import { assign } from 'src/v1/common/common.object';
-import { type User, type UserRole } from 'src/v1/database/entities/user.entity';
+import { User, UserRole } from 'src/v1/database/entities/user.entity';
 
 export class UserDto {
   id: string;
 
   @Expose({ name: 'first_name' })
-    firstName: string;
+  firstName: string;
 
   @Expose({ name: 'last_name' })
-    lastName?: string;
+  lastName?: string;
 
   @Expose({ name: 'username' })
-    username?: string;
+  username?: string;
 
   @Expose({ name: 'telegram_id' })
-    telegramId: number;
+  telegramId: number;
 
   image?: string;
 
   role: UserRole;
 
   @Expose({ name: 'created_at' })
-    createdAt: Date;
+  createdAt: Date;
 
   @Expose({ name: 'updated_at' })
-    updatedAt: Date;
+  updatedAt: Date;
 
-  public static from (u: User) {
+  public static from(u: User) {
     return assign(new UserDto(), {
       id: u.id,
       firstName: u.firstName,

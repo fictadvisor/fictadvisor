@@ -1,4 +1,4 @@
 export interface CreateDateDTO {
-  startDate: Date
-  endDate: Date
+  startDate: Date,
+  endDate: Date,
 }

@@ -8,19 +8,20 @@ import { Repository } from 'typeorm';
 import { create } from 'xmlbuilder2';
 import { writeFile } from 'fs';
 
+
 @Injectable()
 export class SitemapService {
-  constructor (
+  constructor(
     @InjectRepository(Teacher)
-    private readonly teacherRepository: Repository<Teacher>,
+    private teacherRepository: Repository<Teacher>,
     @InjectRepository(Subject)
-    private readonly subjectRepository: Repository<Subject>,
-    private readonly configService: ConfigService
+    private subjectRepository: Repository<Subject>,
+    private configService: ConfigService
   ) {}
 
-  private readonly NAVIGATION = ['/', '/teachers', '/subjects', '/help', '/superheroes'];
+  private NAVIGATION = ['/', '/teachers', '/subjects', '/help', '/superheroes'];
 
-  public async build () {
+  public async build() {
     const baseUrl = this.configService.get<string>('frontBaseUrl');
 
     const root = create({ encoding: 'UTF-8' }).ele('urlset', {
@@ -61,16 +62,13 @@ export class SitemapService {
 
     const xml = root.end({ prettyPrint: true });
 
-    await new Promise<void>((resolve, reject) => {
+    return new Promise<void>((resolve, reject) =>
       writeFile(
         `${this.configService.get<string>('static.dir')}/sitemap.xml`,
         xml,
         { encoding: 'utf-8' },
-        (err) => {
- err ? reject(err) : resolve(); 
-}
-      );
-    }
+        (err) => (err ? reject(err) : resolve())
+      )
     );
   }
 }

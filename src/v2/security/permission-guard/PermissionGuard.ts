@@ -1,25 +1,26 @@
-import { type CanActivate, type ExecutionContext, forwardRef, Inject, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, forwardRef, Inject, Injectable } from '@nestjs/common';
 import { UserService } from '../../api/user/UserService';
-import { type Request } from 'express';
+import { Request } from 'express';
 import { Reflector } from '@nestjs/core';
-import { type User } from '@prisma/client';
+import { User } from '@prisma/client';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
 import { RequestUtils } from '../../utils/RequestUtils';
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
+
   private request: Request;
 
-  protected constructor (
+  protected constructor(
     @Inject(forwardRef(() => UserService))
-    private readonly userService: UserService,
-    private readonly reflector: Reflector
+    private userService: UserService,
+    private reflector: Reflector,
   ) {
     this.userService = userService;
     this.reflector = reflector;
   }
 
-  async canActivate (context: ExecutionContext) {
+  async canActivate(context: ExecutionContext) {
     this.request = context.switchToHttp().getRequest<Request>();
     const user: User = this.request.user as User;
     const permission = this.getPermission(context);
@@ -32,7 +33,7 @@ export class PermissionGuard implements CanActivate {
     return true;
   }
 
-  getPermission (context: ExecutionContext): string {
+  getPermission(context: ExecutionContext): string {
     const permission: string = this.reflector.get('permission', context.getHandler());
     return permission
       .split('.')
@@ -40,7 +41,7 @@ export class PermissionGuard implements CanActivate {
       .join('.');
   }
 
-  getPart (part: string): string {
+  getPart(part: string): string {
     if (part.startsWith('$')) {
       const newPart = RequestUtils.get(this.request, part.slice(1));
       if (!newPart) {
@@ -51,4 +52,5 @@ export class PermissionGuard implements CanActivate {
 
     return part;
   }
+
 }

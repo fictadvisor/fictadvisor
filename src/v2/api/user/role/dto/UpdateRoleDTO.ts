@@ -1,6 +1,6 @@
-import { type RoleName } from '@prisma/client';
+import { RoleName } from '@prisma/client';
 
 export interface UpdateRoleDTO {
-  name?: RoleName
-  weight?: number
+  name?: RoleName,
+  weight?: number,
 }

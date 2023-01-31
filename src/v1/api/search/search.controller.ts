@@ -1,16 +1,16 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { SearchService } from './search.service';
 import { SearchableQueryDto } from '../../common/common.dto';
-import { type SearchResultDto } from './dto/search-result.dto';
+import { SearchResultDto } from './dto/search-result.dto';
 
 @Controller('search')
 export class SearchController {
-  constructor (private readonly searchService: SearchService) {}
+  constructor(private searchService: SearchService) {}
 
   @Get()
-  async getSearchResult (
+  getSearchResult(
     @Query() query: SearchableQueryDto
   ): Promise<SearchResultDto> {
-    return await this.searchService.searchResult(query);
+    return this.searchService.searchResult(query);
   }
 }

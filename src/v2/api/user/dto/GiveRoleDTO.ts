@@ -1,3 +1,3 @@
 export interface GiveRoleDTO {
-  roleId: string
+  roleId: string,
 }

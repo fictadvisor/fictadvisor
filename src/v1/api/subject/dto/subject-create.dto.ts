@@ -4,7 +4,7 @@ export class SubjectCreateDto {
   name: string;
   description?: string;
 
-  link (): string {
+  link(): string {
     return slug(this.name);
   }
 }

@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import { type CreateDisciplineTypeDTO } from './dto/CreateDisciplineTypeDTO';
+import { CreateDisciplineTypeDTO } from './dto/CreateDisciplineTypeDTO';
 
 @Injectable()
 export class DisciplineTypeRepository {
-  constructor (
-    private readonly prisma: PrismaService
+  constructor(
+    private prisma: PrismaService,
   ) {}
 
-  async get (id: string) {
-    return await this.prisma.disciplineType.findUnique({
+  async get(id: string) {
+    return this.prisma.disciplineType.findUnique({
       where: {
         id,
       },
@@ -22,7 +22,7 @@ export class DisciplineTypeRepository {
     });
   }
 
-  async getType (id: string) {
+  async getType(id: string) {
     const type = await this.get(id);
     delete type.discipline;
     delete type.disciplineTeacherRoles;
@@ -31,42 +31,42 @@ export class DisciplineTypeRepository {
     return type;
   }
 
-  async getDiscipline (id: string) {
+  async getDiscipline(id: string) {
     const type = await this.get(id);
     return type.discipline;
   }
 
-  async getDisciplineTeacherRoles (id: string) {
+  async getDisciplineTeacherRoles(id: string) {
     const type = await this.get(id);
     return type.disciplineTeacherRoles;
   }
 
-  async getLessons (id: string) {
+  async getLessons(id: string) {
     const type = await this.get(id);
     return type.lessons;
   }
 
-  async create (data: CreateDisciplineTypeDTO) {
-    return await this.prisma.disciplineType.create({
+  async create(data: CreateDisciplineTypeDTO) {
+    return this.prisma.disciplineType.create({
       data,
     });
   }
 
-  async delete (id: string) {
-    return await this.prisma.disciplineType.delete({
+  async delete(id: string) {
+    return this.prisma.disciplineType.delete({
       where: {
         id,
       },
     });
   }
 
-  async findType (data: CreateDisciplineTypeDTO) {
-    return await this.prisma.disciplineType.findFirst({
+  async findType(data: CreateDisciplineTypeDTO) {
+    return this.prisma.disciplineType.findFirst({
       where: data,
     });
   }
 
-  async getOrCreate (body: CreateDisciplineTypeDTO) {
+  async getOrCreate(body: CreateDisciplineTypeDTO) {
     let type = await this.findType(body);
     if (!type) {
       type = await this.create(body);
@@ -74,8 +74,8 @@ export class DisciplineTypeRepository {
     return type;
   }
 
-  async deleteDisciplineTeacherRoles (disciplineTypeId: string) {
-    return await this.prisma.disciplineTeacherRole.deleteMany({
+  async deleteDisciplineTeacherRoles(disciplineTypeId: string) {
+    return this.prisma.disciplineTeacherRole.deleteMany({
       where: {
         disciplineTypeId,
       },

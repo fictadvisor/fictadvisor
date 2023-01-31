@@ -3,21 +3,21 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class EmailConfigService {
-  constructor (private readonly configService: ConfigService) {}
+  constructor(private configService: ConfigService) {}
 
-  get host (): string {
+  get host(): string {
     return this.configService.get<string>('email.host');
   }
 
-  get port (): number {
+  get port(): number {
     return this.configService.get<number>('email.port');
   }
 
-  get username (): string {
+  get username(): string {
     return this.configService.get<string>('email.username');
   }
 
-  get password (): string {
+  get password(): string {
     return this.configService.get<string>('email.password');
   }
 }

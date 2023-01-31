@@ -19,24 +19,24 @@ export enum TeacherContactState {
 @Entity('teacher_contacts')
 export class TeacherContact extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-    id: string;
+  id: string;
 
   @Column({ type: 'varchar' })
-    name: string;
+  name: string;
 
   @Column({ type: 'varchar' })
-    value: string;
+  value: string;
 
   @ManyToOne((type) => Teacher)
   @JoinColumn({ name: 'teacher_id' })
-    teacher: Teacher;
+  teacher: Teacher;
 
   @Column({ type: 'varchar', default: TeacherContactState.PENDING })
-    state: TeacherContactState;
+  state: TeacherContactState;
 
   @CreateDateColumn({ name: 'created_at' })
-    createdAt: Date;
+  createdAt: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
-    updatedAt: Date;
+  updatedAt: Date;
 }

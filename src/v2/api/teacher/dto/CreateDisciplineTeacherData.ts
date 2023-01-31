@@ -1,4 +1,4 @@
 export interface CreateDisciplineTeacherData {
-  teacherId: string
-  disciplineId: string
+  teacherId: string,
+  disciplineId: string,
 }

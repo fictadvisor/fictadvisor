@@ -16,96 +16,97 @@ import { ContactByNamePipe } from './dto/ContactByNamePipe';
   path: '/teachers',
 })
 export class TeacherController {
-  constructor (
-    private readonly teacherService: TeacherService
+  constructor(
+    private teacherService: TeacherService,
   ) {}
+
 
   @UseGuards(JwtGuard)
   @Get()
-  async getAll (
-  @Query() query: QueryAllDTO
+  getAll(
+    @Query() query: QueryAllDTO,
   ) {
-    return await this.teacherService.getAll(query);
+    return this.teacherService.getAll(query);
   }
-
+  
   @UseGuards(JwtGuard)
   @Get('/:teacherId')
-  async getTeacher (
-  @Param('teacherId', TeacherByIdPipe) teacherId: string
+  getTeacher(
+    @Param('teacherId', TeacherByIdPipe) teacherId: string,
   ) {
-    return await this.teacherService.getTeacher(teacherId);
+    return this.teacherService.getTeacher(teacherId);
   }
 
   @Permission('teachers.$teacherId.create')
   @UseGuards(JwtGuard, PermissionGuard)
   @Post()
-  async create (
-  @Body() body: CreateTeacherDTO
+  create(
+    @Body() body: CreateTeacherDTO,
   ) {
-    return await this.teacherService.create(body);
+    return this.teacherService.create(body);
   }
 
   @Permission('teachers.$teacherId.update')
   @UseGuards(JwtGuard, PermissionGuard)
   @Patch('/:teacherId')
-  async update (
-  @Param('teacherId', TeacherByIdPipe) teacherId: string,
-    @Body() body: UpdateTeacherDTO
+  async update(
+    @Param('teacherId', TeacherByIdPipe) teacherId: string,
+    @Body() body: UpdateTeacherDTO,
   ) {
-    await this.teacherService.update(teacherId, body);
+    return this.teacherService.update(teacherId, body);
   }
 
   @Permission('teachers.$teacherId.delete')
   @UseGuards(JwtGuard, PermissionGuard)
   @Delete('/:teacherId')
-  async delete (
-  @Param('teacherId', TeacherByIdPipe) teacherId: string
+  async delete(
+    @Param('teacherId', TeacherByIdPipe) teacherId: string,
   ) {
-    await this.teacherService.delete(teacherId);
+    return this.teacherService.delete(teacherId);
   }
 
   @UseGuards(JwtGuard)
   @Get('/:teacherId/contacts')
-  async getAllContacts (
-  @Param('teacherId', TeacherByIdPipe) teacherId: string
+  getAllContacts(
+    @Param('teacherId', TeacherByIdPipe) teacherId: string,
   ) {
-    return await this.teacherService.getAllContacts(teacherId);
+    return this.teacherService.getAllContacts(teacherId);
   }
 
   @UseGuards(JwtGuard)
   @Get('/:teacherId/contacts/:name')
-  async getContact (
-  @Param(ContactByNamePipe) [teacherId, name]: string[]
+  getContact(
+    @Param(ContactByNamePipe) [teacherId, name]: string[],
   ) {
-    return await this.teacherService.getContact(teacherId, name);
+    return this.teacherService.getContact(teacherId, name);
   }
 
   @Permission('teachers.$teacherId.contacts.create')
   @UseGuards(JwtGuard, PermissionGuard)
   @Post('/:teacherId/contacts')
-  async createContact (
-  @Param('teacherId', TeacherByIdPipe) teacherId: string,
-    @Body() body: CreateContactDTO
-  ) {
-    return await this.teacherService.createContact(teacherId, body);
+  createContact(
+    @Param('teacherId', TeacherByIdPipe) teacherId: string,
+    @Body() body: CreateContactDTO,
+  ){
+    return this.teacherService.createContact(teacherId, body);
   }
 
   @Permission('teachers.$teacherId.contacts.update')
   @UseGuards(JwtGuard, PermissionGuard)
   @Patch('/:teacherId/contacts/:name')
-  async updateContact (
-  @Param(ContactByNamePipe) [teacherId, name]: string[],
-    @Body() body: UpdateContactDTO
-  ) {
-    await this.teacherService.updateContact(teacherId, name, body);
+  async updateContact(
+    @Param(ContactByNamePipe) [teacherId, name]: string[],
+    @Body() body: UpdateContactDTO,
+  ){
+    return this.teacherService.updateContact(teacherId, name, body);
   }
 
   @Permission('teachers.$teacherId.contacts.delete')
   @UseGuards(JwtGuard, PermissionGuard)
   @Delete('/:teacherId/contacts/:name')
-  async deleteContact (
-  @Param(ContactByNamePipe) [teacherId, name]: string[]
-  ) {
-    await this.teacherService.deleteContact(teacherId, name);
+  async deleteContact(
+    @Param(ContactByNamePipe) [teacherId, name]: string[],
+  ){
+    return this.teacherService.deleteContact(teacherId, name);
   }
 }

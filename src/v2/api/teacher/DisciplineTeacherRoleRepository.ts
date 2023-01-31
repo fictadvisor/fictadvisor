@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import { type TeacherRole } from '@prisma/client';
-import { type CreateDisciplineTeacherRoleData } from './dto/CreateDisciplineTeacherRoleData';
+import { TeacherRole } from '@prisma/client';
+import { CreateDisciplineTeacherRoleData } from './dto/CreateDisciplineTeacherRoleData';
 
 @Injectable()
 export class DisciplineTeacherRoleRepository {
-  constructor (
-    private readonly prisma: PrismaService
+  constructor(
+    private prisma: PrismaService,
   ) {}
 
-  async getDisciplineTeachers (disciplineTypeId: string) {
+  async getDisciplineTeachers(disciplineTypeId: string) {
     const roles = await this.prisma.disciplineTeacherRole.findMany({
       where: {
         disciplineTypeId,
@@ -19,10 +19,10 @@ export class DisciplineTeacherRoleRepository {
       },
     });
 
-    return roles.map((r) => ({ role: r.role, ...r.disciplineTeacher }));
+    return roles.map((r) => ({role: r.role, ...r.disciplineTeacher}));
   }
 
-  async getTypes (disciplineTeacherId: string) {
+  async getTypes(disciplineTeacherId: string) {
     const roles = await this.prisma.disciplineTeacherRole.findMany({
       where: {
         disciplineTeacherId,
@@ -32,22 +32,22 @@ export class DisciplineTeacherRoleRepository {
       },
     });
 
-    return roles.map((r) => ({ role: r.role, ...r.disciplineType }));
+    return roles.map((r) => ({ role: r.role, ...r.disciplineType}));
   }
 
-  async find (data: CreateDisciplineTeacherRoleData) {
-    return await this.prisma.disciplineTeacherRole.findFirst({
+  async find(data: CreateDisciplineTeacherRoleData) {
+    return this.prisma.disciplineTeacherRole.findFirst({
       where: data,
     });
   }
 
-  async create (data: { role: TeacherRole, disciplineTeacherId: string, disciplineTypeId: string }) {
-    return await this.prisma.disciplineTeacherRole.create({
+  async create(data: { role: TeacherRole; disciplineTeacherId: string; disciplineTypeId: string }) {
+    return this.prisma.disciplineTeacherRole.create({
       data,
     });
   }
 
-  async getOrCreate (data: CreateDisciplineTeacherRoleData) {
+  async getOrCreate(data: CreateDisciplineTeacherRoleData) {
     let disciplineTeacherRole = await this.find(data);
     if (!disciplineTeacherRole) {
       disciplineTeacherRole = await this.create(data);

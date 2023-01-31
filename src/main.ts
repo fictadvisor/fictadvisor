@@ -4,10 +4,10 @@ import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './v2/AppModule';
 import { HttpExceptionFilter, validationExceptionFactory } from './v1/common/common.exception';
 import { systemLogger } from './v1/logger/logger.core';
-import { type NestExpressApplication } from '@nestjs/platform-express';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { applyStaticMiddleware } from './v1/static/static.util';
 
-async function bootstrap () {
+async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get<ConfigService>(ConfigService);
   const port = configService.get<number>('port');

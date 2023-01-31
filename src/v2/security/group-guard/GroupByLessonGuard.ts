@@ -1,26 +1,27 @@
 import { GroupGuard } from './GroupGuard';
-import { type DisciplineType, type Group } from '@prisma/client';
-import { type Request } from 'express';
-import { type PrismaService } from '../../database/PrismaService';
-import { type DisciplineService } from '../../api/discipline/DisciplineService';
-import { type GroupService } from '../../api/group/GroupService';
+import { DisciplineType, Group } from '@prisma/client';
+import { Request } from 'express';
+import { PrismaService } from '../../database/PrismaService';
+import { DisciplineService } from '../../api/discipline/DisciplineService';
+import { GroupService } from '../../api/group/GroupService';
 
 export abstract class GroupByLessonGuard extends GroupGuard {
+
   protected disciplineService: DisciplineService;
   protected groupService: GroupService;
 
-  protected constructor (
+  protected constructor(
     prisma: PrismaService,
     disciplineService: DisciplineService,
-    groupService: GroupService
+    groupService: GroupService,
   ) {
     super(prisma);
     this.disciplineService = disciplineService;
     this.groupService = groupService;
   }
 
-  async getGroup (): Promise<Group> {
-    const lessonId = this.context.switchToHttp().getRequest<Request>().params.lessonId;
+  async getGroup(): Promise<Group> {
+    const lessonId = this.context.switchToHttp().getRequest<Request>().params['lessonId'];
 
     const disciplineType = await this.getDisciplineType(lessonId);
     if (!disciplineType) return null;
@@ -29,5 +30,5 @@ export abstract class GroupByLessonGuard extends GroupGuard {
     return await this.groupService.get(discipline.groupId);
   }
 
-  abstract getDisciplineType (lessonId: string): Promise<DisciplineType>
+  abstract getDisciplineType(lessonId: string): Promise<DisciplineType>;
 }

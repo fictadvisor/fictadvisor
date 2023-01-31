@@ -5,32 +5,32 @@ import { Course } from 'src/v1/database/entities/course.entity';
 import { Review, ReviewState } from 'src/v1/database/entities/review.entity';
 import { Connection, Equal, Repository } from 'typeorm';
 import { CourseDto } from './dto/course.dto';
-import { type CourseAddDto } from './dto/course-add.dto';
-import { type User } from '../../database/entities/user.entity';
+import { CourseAddDto } from './dto/course-add.dto';
+import { User } from '../../database/entities/user.entity';
 import { Teacher } from '../../database/entities/teacher.entity';
 import { Subject } from '../../database/entities/subject.entity';
 import { assign } from '../../common/common.object';
 import { TelegramService } from '../../telegram/telegram.service';
 import { Logger, SystemLogger } from '../../logger/logger.core';
-import { type CourseUpdateDto } from './dto/course-update.dto';
+import { CourseUpdateDto } from './dto/course-update.dto';
 
 @Injectable()
 export class CourseService {
   @Logger()
-  private readonly logger: SystemLogger;
+  private logger: SystemLogger;
 
-  constructor (
+  constructor(
     @InjectRepository(Course)
-    private readonly courseRepository: Repository<Course>,
+    private courseRepository: Repository<Course>,
     @InjectRepository(Teacher)
-    private readonly teacherRepository: Repository<Teacher>,
+    private teacherRepository: Repository<Teacher>,
     @InjectRepository(Subject)
-    private readonly subjectRepository: Repository<Subject>,
-    private readonly telegramService: TelegramService,
-    private readonly connection: Connection
+    private subjectRepository: Repository<Subject>,
+    private telegramService: TelegramService,
+    private connection: Connection
   ) {}
 
-  async getCourse (link: string, relations?: string[]): Promise<Course> {
+  async getCourse(link: string, relations?: string[]): Promise<Course> {
     const course = await this.courseRepository.findOne({
       where: { link },
       relations,
@@ -45,7 +45,7 @@ export class CourseService {
     return course;
   }
 
-  async getCourseById (id: string, relations?: string[]): Promise<Course> {
+  async getCourseById(id: string, relations?: string[]): Promise<Course> {
     const course = await this.courseRepository.findOne({
       where: { id },
       relations,
@@ -60,7 +60,7 @@ export class CourseService {
     return course;
   }
 
-  async getCourseRating (id: string) {
+  async getCourseRating(id: string) {
     const { rating } = await this.connection
       .createQueryBuilder()
       .select('coalesce(avg(r.rating)::real, 0)', 'rating')
@@ -74,7 +74,7 @@ export class CourseService {
     return rating;
   }
 
-  async getCourseByLink (link: string): Promise<CourseDto> {
+  async getCourseByLink(link: string): Promise<CourseDto> {
     const course = await this.getCourse(link, ['teacher', 'subject']);
     const dto = CourseDto.from(course);
 
@@ -83,7 +83,7 @@ export class CourseService {
     return dto;
   }
 
-  async addCourse (course: CourseAddDto, user: User): Promise<CourseDto> {
+  async addCourse(course: CourseAddDto, user: User): Promise<CourseDto> {
     const subject = await this.subjectRepository.findOneBy({
       id: course.subjectId,
     });
@@ -100,8 +100,7 @@ export class CourseService {
 
     const existing = await this.courseRepository.findOneBy({
       teacher: Equal(teacher),
-      subject: Equal(subject),
-    }
+      subject: Equal(subject)}
     );
 
     if (existing) {
@@ -129,7 +128,7 @@ export class CourseService {
     return CourseDto.from(entity);
   }
 
-  async updateCourse (id: string, update: CourseUpdateDto): Promise<CourseDto> {
+  async updateCourse(id: string, update: CourseUpdateDto): Promise<CourseDto> {
     const course = await this.getCourseById(id, ['teacher', 'subject']);
 
     if (update.state != null) {
@@ -143,7 +142,7 @@ export class CourseService {
     return CourseDto.from(saved);
   }
 
-  async deleteCourse (id: string): Promise<void> {
+  async deleteCourse(id: string): Promise<void> {
     const course = await this.getCourseById(id);
 
     await course.remove();

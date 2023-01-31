@@ -1,12 +1,12 @@
 export interface SearchDTO {
-  search?: string
+  search?: string,
 }
 
 export interface Search<T> {
-  OR: Array<{
+  OR: {
     [k in keyof T]: {
-      contains: string
-      mode: 'default' | 'insensitive'
+      contains: string,
+      mode: 'default' | 'insensitive',
     }
-  }>
+  }[]
 }

@@ -6,21 +6,21 @@ import { DisciplineTypeRepository } from '../discipline/DisciplineTypeRepository
 
 @Injectable()
 export class DisciplineTeacherService {
-  constructor (
+  constructor(
     @Inject(forwardRef(() => TeacherService))
-    private readonly teacherService: TeacherService,
-    private readonly disciplineTeacherRepository: DisciplineTeacherRepository,
-    private readonly disciplineTypeRepository: DisciplineTypeRepository,
+    private teacherService: TeacherService,
+    private disciplineTeacherRepository: DisciplineTeacherRepository,
+    private disciplineTypeRepository: DisciplineTypeRepository,
     @Inject(forwardRef(() => DisciplineTypeService))
-    private readonly disciplineTypeService: DisciplineTypeService
+    private disciplineTypeService: DisciplineTypeService,
   ) {}
 
-  async getGroup (id: string) {
+  async getGroup(id: string) {
     const roles = await this.disciplineTeacherRepository.getRoles(id);
-    return await this.disciplineTypeService.getGroup(roles[0].disciplineTypeId);
+    return this.disciplineTypeService.getGroup(roles[0].disciplineTypeId);
   }
 
-  async getDisciplineTeacher (disciplineTeacherId: string) {
+  async getDisciplineTeacher(disciplineTeacherId: string) {
     const teacher = await this.disciplineTeacherRepository.getTeacher(disciplineTeacherId);
     const roles = await this.disciplineTeacherRepository.getRoles(disciplineTeacherId);
 
@@ -30,4 +30,5 @@ export class DisciplineTeacherService {
       roles: roles.map((role) => (role.role)),
     };
   }
+
 }

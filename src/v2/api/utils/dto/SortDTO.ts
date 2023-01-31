@@ -1,6 +1,6 @@
-export interface SortDTO<T> {
+export interface SortDTO<T>{
   sort?: {
-    [k in keyof T]: 'asc' | 'desc';
+   [k in keyof T]: 'asc' | 'desc';
   }
 }
 

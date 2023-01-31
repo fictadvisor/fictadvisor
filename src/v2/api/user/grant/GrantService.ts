@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { GrantRepository } from './GrantRepository';
-import { type UpdateGrantDTO } from './dto/UpdateGrantDTO';
+import { UpdateGrantDTO } from './dto/UpdateGrantDTO';
 
 @Injectable()
 export class GrantService {
-  constructor (
-    private readonly grantRepository: GrantRepository
+  constructor(
+    private grantRepository: GrantRepository,
   ) {}
 
-  hasPermission (permission: string, grant: string) {
+  hasPermission(permission: string, grant: string) {
     const parts = permission.split('.');
     const grantParts = grant.split('.');
 
@@ -27,11 +27,11 @@ export class GrantService {
     return true;
   }
 
-  async delete (id: string) {
+  async delete(id: string) {
     await this.grantRepository.delete(id);
   }
 
-  async update (grantId: string, body: UpdateGrantDTO) {
+  async update(grantId: string, body: UpdateGrantDTO) {
     await this.grantRepository.update(grantId, body);
   }
 }

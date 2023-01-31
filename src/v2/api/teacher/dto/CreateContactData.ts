@@ -1,8 +1,8 @@
-import { type EntityType } from '@prisma/client';
+import { EntityType } from "@prisma/client";
 
 export class CreateContactData {
-  entityId: string;
-  entityType: EntityType;
-  name: string;
-  value: string;
-}
+    entityId: string;
+    entityType: EntityType;
+    name: string;
+    value: string;
+  }

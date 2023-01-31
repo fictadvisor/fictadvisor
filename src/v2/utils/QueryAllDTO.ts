@@ -4,23 +4,23 @@ export class QueryAllDTO {
   @IsInt({
     message: 'page must be a number',
   })
-    page?: number;
+  page?: number;
 
   @IsInt({
     message: 'pageSize must be a number',
   })
-    pageSize?: number;
+  pageSize?: number;
 
   @IsOptional()
-    search?: string;
+  search?: string;
 
   @IsOptional()
-    sort?: string;
+  sort?: string;
 
   @IsIn(['asc', 'desc'], {
     message: 'wrong value for order',
   })
-    order?: 'asc' | 'desc';
+  order?: 'asc' | 'desc';
 }
 
 export class SortDTO {
@@ -42,15 +42,18 @@ export class Page {
   skip: number;
 }
 
+
 export class Search<T> {
-  OR: Array<{
+  OR: {
     [k in keyof T]: {
-      contains: string
-      mode: 'default' | 'insensitive'
+      contains: string;
+      mode: 'default' | 'insensitive';
     }
-  }>;
+  }[];
 }
 
 export class Sort {
-  orderBy: Record<string, 'asc' | 'desc'>;
+  orderBy: {
+    [k: string]: 'asc' | 'desc';
+  };
 }

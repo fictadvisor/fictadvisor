@@ -1,5 +1,5 @@
-import { createParamDecorator, type ExecutionContext } from '@nestjs/common';
-import { type User } from 'src/v1/database/entities/user.entity';
+import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import { User } from 'src/v1/database/entities/user.entity';
 
 export class SecurityContext {
   user?: User;

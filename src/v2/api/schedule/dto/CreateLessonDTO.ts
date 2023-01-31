@@ -1,10 +1,10 @@
-import { type DisciplineTypeEnum } from '@prisma/client';
+import { DisciplineTypeEnum } from '@prisma/client';
 
 export interface CreateLessonDTO {
-  fortnight?: number
-  startDate: Date
-  endDate: Date
-  disciplineId: string
-  teacherId: string
-  type: DisciplineTypeEnum
+  fortnight?: number,
+  startDate: Date,
+  endDate: Date,
+  disciplineId: string,
+  teacherId: string,
+  type: DisciplineTypeEnum,
 }

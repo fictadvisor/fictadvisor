@@ -1,6 +1,6 @@
-import { type State } from '@prisma/client';
+import { State } from '@prisma/client';
 
 export class UpdateSuperheroData {
-  dorm?: boolean;
-  state?: State;
+    dorm?: boolean;
+    state?: State;
 }

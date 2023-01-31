@@ -2,12 +2,12 @@ import { Expose } from 'class-transformer';
 
 export class OAuthTokenDto {
   @Expose({ name: 'access_token' })
-    accessToken: string;
+  accessToken: string;
 
   @Expose({ name: 'refresh_token' })
-    refreshToken: string;
+  refreshToken: string;
 
-  public static of (accessToken: string, refreshToken: string) {
+  public static of(accessToken: string, refreshToken: string) {
     const token = new OAuthTokenDto();
 
     token.accessToken = accessToken;

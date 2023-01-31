@@ -1,27 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../database/PrismaService';
-import { type CreateGrantData } from '../dto/CreateRoleDTO';
-import { type UpdateGrantDTO } from './dto/UpdateGrantDTO';
+import { CreateGrantData } from '../dto/CreateRoleDTO';
+import { UpdateGrantDTO } from './dto/UpdateGrantDTO';
 
 @Injectable()
 export class GrantRepository {
-  constructor (
-    private readonly prisma: PrismaService
+  constructor(
+    private prisma: PrismaService,
   ) {}
 
-  async create (data: CreateGrantData) {
-    return await this.prisma.grant.create({
+  async create(data: CreateGrantData) {
+    return this.prisma.grant.create({
       data,
     });
   }
 
-  async find (where: CreateGrantData) {
-    return await this.prisma.grant.findFirst({
+  async find(where: CreateGrantData) {
+    return this.prisma.grant.findFirst({
       where,
     });
   }
 
-  delete (id: string) {
+  delete(id: string) {
     return this.prisma.grant.delete({
       where: {
         id,
@@ -29,8 +29,8 @@ export class GrantRepository {
     });
   }
 
-  async update (id: string, data: UpdateGrantDTO) {
-    return await this.prisma.grant.update({
+  async update(id: string, data: UpdateGrantDTO) {
+    return this.prisma.grant.update({
       where: {
         id,
       },

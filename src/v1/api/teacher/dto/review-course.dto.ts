@@ -1,5 +1,5 @@
 import { assign } from 'src/v1/common/common.object';
-import { type TeacherReviewView } from 'src/v1/database/entities/review-view.entity';
+import { TeacherReviewView } from 'src/v1/database/entities/review-view.entity';
 
 export class ReviewCourseDto {
   id: string;
@@ -8,7 +8,7 @@ export class ReviewCourseDto {
 
   link: string;
 
-  public static from (c: TeacherReviewView) {
+  public static from(c: TeacherReviewView) {
     return assign(new ReviewCourseDto(), {
       id: c.id,
       name: c.courseName,

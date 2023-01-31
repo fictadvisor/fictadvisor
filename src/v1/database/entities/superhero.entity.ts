@@ -17,31 +17,32 @@ export enum SuperheroState {
 
 @Entity('superheroes')
 export class Superhero extends BaseEntity {
+
   @PrimaryColumn()
-    user_id: string;
+  user_id: string;
 
   @OneToOne(() => User, { cascade: true })
   @JoinColumn({ name: 'user_id' })
-    user: User;
+  user: User;
 
   @Column()
-    name: string;
+  name: string;
 
   @Column()
-    username: string;
+  username: string;
 
   @Column({ type: 'smallint' })
-    year: number;
+  year: number;
 
   @Column({ default: false })
-    dorm: boolean;
+  dorm: boolean;
 
   @Column({ type: 'varchar', default: SuperheroState.PENDING })
-    state: SuperheroState;
+  state: SuperheroState;
 
   @CreateDateColumn({ name: 'created_at' })
-    createdAt: Date;
+  createdAt: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
-    updatedAt: Date;
+  updatedAt: Date;
 }

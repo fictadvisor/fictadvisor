@@ -1,4 +1,4 @@
-import { Test, type TestingModule } from '@nestjs/testing';
+import { Test, TestingModule } from '@nestjs/testing';
 import { StudentResourceController } from './student-resource.controller';
 
 describe('StudentResourceController', () => {

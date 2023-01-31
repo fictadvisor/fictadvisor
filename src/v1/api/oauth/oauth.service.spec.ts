@@ -1,4 +1,4 @@
-import { Test, type TestingModule } from '@nestjs/testing';
+import { Test, TestingModule } from '@nestjs/testing';
 import { OAuthService } from './oauth.service';
 
 describe('OAuthService', () => {
