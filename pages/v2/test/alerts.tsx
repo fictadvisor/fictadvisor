@@ -1,42 +1,78 @@
-import { AlertBlock } from "../../../components/v2/AlertBlock";
+import {AlertBlock, AlertBlockColor, AlertBlockSize, AlertBlockStyle} from "../../../components/v2/AlertBlock";
 
 function Alert() {
-  return (
-    <div className="test-page-wrap">
-        <div className="test-page-content">
-        {["outlined","secondary","primary","border-left","border-top"].map((style:"outlined" | "secondary" | "primary" | "border-left" | "border-top")=>
-            <>
-                <AlertBlock title="We are going live in July!" style={style} size='small' color="blue"/>
-                <AlertBlock title="We are going live in July!" style={style} size='small' color="blue" description="We are happy to announce that we are going live on July 28th. Get ready!"/>
-                <AlertBlock title="We are going live in July!" style={style} size='middle' color="blue"/>
-                <AlertBlock title="We are going live in July!" style={style} size='middle' color="blue" description="We are happy to announce that we are going live on July 28th. Get ready!"/>
-                <AlertBlock title="We are going live in July!" style={style} size='large' color="blue"/>
-                <AlertBlock title="We are going live in July!" style={style} size='large' color="blue" description="We are happy to announce that we are going live on July 28th. Get ready!"/>
+    return (
+        <div className="test-page-wrap">
+            <div className="test-page-content">
+                {[AlertBlockStyle.OUTLINED, AlertBlockStyle.SECONDARY, AlertBlockStyle.PRIMARY, AlertBlockStyle.BORDER_LEFT, AlertBlockStyle.BORDER_TOP].map((style: AlertBlockStyle) =>
+                    <>
+                        <AlertBlock title="We are going live in July!" style={style} size={AlertBlockSize.SMALL}
+                                    color={AlertBlockColor.BLUE}/>
+                        <AlertBlock title="We are going live in July!" style={style} size={AlertBlockSize.SMALL}
+                                    color={AlertBlockColor.BLUE}
+                                    description="We are happy to announce that we are going live on July 28th. Get ready!"/>
+                        <AlertBlock title="We are going live in July!" style={style} size={AlertBlockSize.MEDIUM}
+                                    color={AlertBlockColor.BLUE}/>
+                        <AlertBlock title="We are going live in July!" style={style} size={AlertBlockSize.MEDIUM}
+                                    color={AlertBlockColor.BLUE}
+                                    description="We are happy to announce that we are going live on July 28th. Get ready!"/>
+                        <AlertBlock title="We are going live in July!" style={style} size={AlertBlockSize.LARGE}
+                                    color={AlertBlockColor.BLUE}/>
+                        <AlertBlock title="We are going live in July!" style={style} size={AlertBlockSize.LARGE}
+                                    color={AlertBlockColor.BLUE}
+                                    description="We are happy to announce that we are going live on July 28th. Get ready!"/>
 
-                <AlertBlock title="We are going live in July!" style={style} size='small' color="red"/>
-                <AlertBlock title="We are going live in July!" style={style} size='small' color="red" description="We are happy to announce that we are going live on July 28th. Get ready!"/>
-                <AlertBlock title="We are going live in July!" style={style} size='middle' color="red"/>
-                <AlertBlock title="We are going live in July!" style={style} size='middle' color="red" description="We are happy to announce that we are going live on July 28th. Get ready!"/>
-                <AlertBlock title="We are going live in July!" style={style} size='large' color="red"/>
-                <AlertBlock title="We are going live in July!" style={style} size='large' color="red" description="We are happy to announce that we are going live on July 28th. Get ready!"/>
+                        <AlertBlock title="We are going live in July!" style={style} size={AlertBlockSize.SMALL}
+                                    color={AlertBlockColor.RED}/>
+                        <AlertBlock title="We are going live in July!" style={style} size={AlertBlockSize.SMALL}
+                                    color={AlertBlockColor.RED}
+                                    description="We are happy to announce that we are going live on July 28th. Get ready!"/>
+                        <AlertBlock title="We are going live in July!" style={style} size={AlertBlockSize.MEDIUM}
+                                    color={AlertBlockColor.RED}/>
+                        <AlertBlock title="We are going live in July!" style={style} size={AlertBlockSize.MEDIUM}
+                                    color={AlertBlockColor.RED}
+                                    description="We are happy to announce that we are going live on July 28th. Get ready!"/>
+                        <AlertBlock title="We are going live in July!" style={style} size={AlertBlockSize.LARGE}
+                                    color={AlertBlockColor.RED}/>
+                        <AlertBlock title="We are going live in July!" style={style} size={AlertBlockSize.LARGE}
+                                    color={AlertBlockColor.RED}
+                                    description="We are happy to announce that we are going live on July 28th. Get ready!"/>
 
-                <AlertBlock title="We are going live in July!" style={style} size='small' color="orange"/>
-                <AlertBlock title="We are going live in July!" style={style} size='small' color="orange" description="We are happy to announce that we are going live on July 28th. Get ready!"/>
-                <AlertBlock title="We are going live in July!" style={style} size='middle' color="orange"/>
-                <AlertBlock title="We are going live in July!" style={style} size='middle' color="orange" description="We are happy to announce that we are going live on July 28th. Get ready!"/>
-                <AlertBlock title="We are going live in July!" style={style} size='large' color="orange"/>
-                <AlertBlock title="We are going live in July!" style={style} size='large' color="orange" description="We are happy to announce that we are going live on July 28th. Get ready!"/>
+                        <AlertBlock title="We are going live in July!" style={style} size={AlertBlockSize.SMALL}
+                                    color={AlertBlockColor.ORANGE}/>
+                        <AlertBlock title="We are going live in July!" style={style} size={AlertBlockSize.SMALL}
+                                    color={AlertBlockColor.ORANGE}
+                                    description="We are happy to announce that we are going live on July 28th. Get ready!"/>
+                        <AlertBlock title="We are going live in July!" style={style} size={AlertBlockSize.MEDIUM}
+                                    color={AlertBlockColor.ORANGE}/>
+                        <AlertBlock title="We are going live in July!" style={style} size={AlertBlockSize.MEDIUM}
+                                    color={AlertBlockColor.ORANGE}
+                                    description="We are happy to announce that we are going live on July 28th. Get ready!"/>
+                        <AlertBlock title="We are going live in July!" style={style} size={AlertBlockSize.LARGE}
+                                    color={AlertBlockColor.ORANGE}/>
+                        <AlertBlock title="We are going live in July!" style={style} size={AlertBlockSize.LARGE}
+                                    color={AlertBlockColor.ORANGE}
+                                    description="We are happy to announce that we are going live on July 28th. Get ready!"/>
 
-                <AlertBlock title="We are going live in July!" style={style} size='small' color="green"/>
-                <AlertBlock title="We are going live in July!" style={style} size='small' color="green" description="We are happy to announce that we are going live on July 28th. Get ready!"/>
-                <AlertBlock title="We are going live in July!" style={style} size='middle' color="green"/>
-                <AlertBlock title="We are going live in July!" style={style} size='middle' color="green" description="We are happy to announce that we are going live on July 28th. Get ready!"/>
-                <AlertBlock title="We are going live in July!" style={style} size='large' color="green"/>
-                <AlertBlock title="We are going live in July!" style={style} size='large' color="green" description="We are happy to announce that we are going live on July 28th. Get ready!"/>
-            </>)}
+                        <AlertBlock title="We are going live in July!" style={style} size={AlertBlockSize.SMALL}
+                                    color={AlertBlockColor.GREEN}/>
+                        <AlertBlock title="We are going live in July!" style={style} size={AlertBlockSize.SMALL}
+                                    color={AlertBlockColor.GREEN}
+                                    description="We are happy to announce that we are going live on July 28th. Get ready!"/>
+                        <AlertBlock title="We are going live in July!" style={style} size={AlertBlockSize.MEDIUM}
+                                    color={AlertBlockColor.GREEN}/>
+                        <AlertBlock title="We are going live in July!" style={style} size={AlertBlockSize.MEDIUM}
+                                    color={AlertBlockColor.GREEN}
+                                    description="We are happy to announce that we are going live on July 28th. Get ready!"/>
+                        <AlertBlock title="We are going live in July!" style={style} size={AlertBlockSize.LARGE}
+                                    color={AlertBlockColor.GREEN}/>
+                        <AlertBlock title="We are going live in July!" style={style} size={AlertBlockSize.LARGE}
+                                    color={AlertBlockColor.GREEN}
+                                    description="We are happy to announce that we are going live on July 28th. Get ready!"/>
+                    </>)}
+            </div>
         </div>
-    </div>
-  );
+    );
 }
 
 export default Alert;

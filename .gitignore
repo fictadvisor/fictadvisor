@@ -10,8 +10,6 @@ yarn.lock
 package-lock.json
 
 # dependencies
-package.json
-yarn.lock
 /node_modules
 /.pnp
 .pnp.js

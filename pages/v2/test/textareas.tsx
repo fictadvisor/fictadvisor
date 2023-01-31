@@ -6,7 +6,7 @@ export default function textareas(){
             <TextArea placeholder="Тиць..." />
             <TextArea placeholder="Не тиць..." label="не тицькай"/>
             <TextArea placeholder="filler text" isDisabled={true} />
-            <TextArea placeholder="huge" sizing={TextAreaSpecs.BIG}/>
+            <TextArea placeholder="huge" sizing={TextAreaSpecs.LARGE}/>
             <TextArea placeholder="smoll" sizing={TextAreaSpecs.SMALL} label="srenck"/>
             <TextArea placeholder="" areaCurrState={TextAreaState.SUCCESS}/>
             <TextArea placeholder="" label="label" areaCurrState={TextAreaState.ERROR}/>

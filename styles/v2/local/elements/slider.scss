@@ -29,7 +29,7 @@ $slider-border-radius: 500px;
 }
 
 .slider-container {
-    width: 50%; 
+    width: 50%;
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -89,7 +89,7 @@ $slider-border-radius: 500px;
     }
 }
 
-#slider-mobile {
+.slider-mobile {
     &::-webkit-slider-runnable-track {
         height: $slider-mob-height;
     }

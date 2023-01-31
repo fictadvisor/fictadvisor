@@ -1,0 +1,19 @@
+// Light background color
+$light-primary: #FFFBFB;
+$light-secondary-1: #FFFFFF;
+$light-secondary-2: #E2E2E2;
+
+// Dark background color
+$dark-primary: #1E1E1E;
+$dark-secondary-1: #121212;
+$dark-secondary-2: #232323;
+
+// Success & error colors
+$error-color: #EC131E;
+$success-color: #3DA96D;
+
+
+html, body {
+  background-color: $dark-primary;
+  color: $light-primary;
+}
