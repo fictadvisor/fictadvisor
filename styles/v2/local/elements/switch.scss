@@ -21,7 +21,7 @@
         top: 2px;
         background-color: $switch-off-color;
         border-radius: 100px;
-        transition: 0.4s;
+        transition: 0.4s ease-in-out;
     }
 
     &::after {
@@ -35,7 +35,7 @@
         height: 18px;
         background-color: $switch-off-knob-color;
         border-radius: 100px;
-        transition: 0.4s;
+        transition: 0.4s ease-in-out;
     }
 }
 

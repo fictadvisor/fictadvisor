@@ -1,31 +1,46 @@
 import React, { ReactNode } from "react";
 
 interface TableProps {
-    fullName: string,
-    email: string,
-    avatarIcon?: ReactNode,
-    tag?: ReactNode,
-    checkBox?: ReactNode,
-    action?: ReactNode,
-    actionIcon?: ReactNode,
+    fields: {
+        fullName: string,
+        email: string,
+        avatar?: string,
+        tag?: ReactNode,
+        checkBox?: ReactNode,
+        firstButton?: ReactNode,
+        secondButton?: ReactNode,
+    }[],
 }
 
 const Table: React.FC<TableProps> = (props) => {
-
     return (
-        <div className="table-container">
-            <div className="user-container">
-                <div className="user-avatar"></div>
-                <div className="user-info">
-                    <div className="full-name">{props.fullName}</div>
-                    <div className="tag">{props.tag ? props.tag : ""}</div>
-                </div>
-            </div>
-            <div className="email">{props.email}</div>
-            {props.checkBox ? props.checkBox : ""}
-            <div style={{width:"fit-content"}}>{props.action}</div>
-            <div style={{width:"fit-content"}}>{props.actionIcon ? props.actionIcon : ""}</div>
-            </div>
+        <div>
+            {props.fields.map(field => {
+                field.avatar = field.avatar ? field.avatar : "avatar.png";
+                const userGap = (field.firstButton || field.checkBox || field.secondButton) ? "12px" : "26px";
+                return (
+                    <div className="table-container">
+                        <div className="user-container" style={{ gap: userGap }}>
+                            <div className="user-avatar">
+                                <img src={`/assets/${field.avatar}`} alt="avatar" />
+                            </div>
+                            <div className="user-info">
+                                <div className="full-name">{field.fullName}</div>
+                                {field.tag && <div className="tag">{field.tag}</div> }
+                            </div>
+                        </div>
+                        <div className="email">{field.email}</div>
+                        <div className="editing">{
+                            field.tag
+                                ? <div className="checkbox" style={{ width: "fit-content" }}>{field.checkBox}</div>
+                                : <div style={{ width: "fit-content" }}>{field.firstButton}</div>
+                        }
+                            <div style={{ width: "fit-content" }}>{field.secondButton}</div>
+                        </div>
+                    </div>
+                )
+            })}
+        </div>
     )
 }
 

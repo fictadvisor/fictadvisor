@@ -1,4 +1,4 @@
-import { TrashBucketIcon } from "./svg-icons/TrashBucketIcon";
+import { TrashIcon } from "@heroicons/react/24/outline";
 import { SortAscendingIcon } from "./svg-icons/SortAscendingIcon";
 import { SortDescendingIcon } from "./svg-icons/SortDescendingIcon";
 import React from "react";
@@ -42,7 +42,7 @@ export const TrashBucketButton: React.FC<IconButtonProps> = ({
 }) => {
   return (
     <button className={`round-button-icon-${size}`} {...rest}>
-      <TrashBucketIcon />
+      <TrashIcon />
     </button>
   );
 }
