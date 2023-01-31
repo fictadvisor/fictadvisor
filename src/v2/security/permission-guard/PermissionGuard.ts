@@ -29,7 +29,6 @@ export class PermissionGuard implements CanActivate {
     if (!hasPermission) {
       throw new NoPermissionException();
     }
-
     return true;
   }
 
