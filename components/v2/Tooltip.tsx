@@ -1,4 +1,3 @@
-import { type } from "os";
 
 export enum TooltipDirection {
   TOP = "top",
@@ -11,7 +10,7 @@ type TooltipProps={
   text: string;
   direction?: "top" | "bottom" | "left" | "right";
 } &  React.DetailedHTMLProps<
-React.ButtonHTMLAttributes<HTMLDivElement>,
+React.HTMLAttributes<HTMLDivElement>,
 HTMLDivElement
 >;
 
