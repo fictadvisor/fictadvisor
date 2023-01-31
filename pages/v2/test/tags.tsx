@@ -29,6 +29,18 @@ function tags() {
                     <Tag className="gray-first" text="gray" state={TagState.SMALL} icon={<CustomCheck />}></Tag>
                     <Tag className="gray-second" text="gray" state={TagState.SMALL} icon={<CustomCheck />}></Tag>
                     <Tag className="gray-third" text="gray" state={TagState.BIG} icon={<CustomCheck />}></Tag>
+
+                    <Tag className="violet-first" text="gray" state={TagState.SMALL} icon={<CustomCheck />}></Tag>
+                    <Tag className="violet-second" text="gray" state={TagState.SMALL} icon={<CustomCheck />}></Tag>
+                    <Tag className="violet-third" text="gray" state={TagState.BIG} icon={<CustomCheck />}></Tag>
+
+                    <Tag className="mint-first" text="gray" state={TagState.SMALL} icon={<CustomCheck />}></Tag>
+                    <Tag className="mint-second" text="gray" state={TagState.SMALL} icon={<CustomCheck />}></Tag>
+                    <Tag className="mint-third" text="gray" state={TagState.BIG} icon={<CustomCheck />}></Tag>
+
+                    <Tag className="orange-first" text="gray" state={TagState.SMALL} icon={<CustomCheck />}></Tag>
+                    <Tag className="orange-second" text="gray" state={TagState.SMALL} icon={<CustomCheck />}></Tag>
+                    <Tag className="orange-third" text="gray" state={TagState.BIG} icon={<CustomCheck />}></Tag>
                 </div>
 
             </div>
