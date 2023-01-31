@@ -10,7 +10,6 @@ function progress(){
             <Progress size={ProgressSize.LARGE}/>
             <Progress size={ProgressSize.LARGEST}/>
         </div>
-
     </div>
   );
 }

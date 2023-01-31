@@ -13,8 +13,8 @@ interface SliderProps {
 const Slider: FunctionComponent<SliderProps> = (props) => {
 
     const sliderRef = useRef(null);
-    function setBackgroundSize(event) {
-        document.documentElement.style.setProperty('--background-size', `${getBackgroundSize()}%`);
+    function setBackgroundSize() {
+        sliderRef.current.style.setProperty('--background-size', `${getBackgroundSize()}%`);
     }
 
     function getBackgroundSize(){
@@ -26,7 +26,7 @@ const Slider: FunctionComponent<SliderProps> = (props) => {
 
     return (
         <div className="slider-container">
-            <input ref={sliderRef} type="range" name="range" min="1" max="10" step="1" value={props.defaultValue.toString()}
+            <input ref={sliderRef} type="range" name="range" min="1" max="10" step="1" defaultValue={props.defaultValue.toString()}
                    className={`slider slider-${props.type}`} onInput={setBackgroundSize}></input>
             <div className={`number-range-${props.type}`}></div>
         </div>

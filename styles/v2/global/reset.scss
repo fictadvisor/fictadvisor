@@ -69,3 +69,10 @@ textarea, input{
     outline: none;
   }
 }
+
+.slider,
+.slider::-webkit-slider-runnable-track,
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  background: transparent;
+}
