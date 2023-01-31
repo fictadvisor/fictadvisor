@@ -1,6 +1,7 @@
 import Link from "next/dist/client/link";
 import { LinkProps } from "next/link";
-import { LeftArrowIcon } from "./svg-icons/LeftArrowIcon";
+import {ArrowLeftIcon} from "@heroicons/react/24/outline";
+import React from "react";
 
 export enum LinkColor {
   WHITE = "white-link",
@@ -23,10 +24,8 @@ export const CustomLink: React.FC<CustomLinkProps> = ({
     return (
       <span className={color}>
         <Link {...rest}>
-          <span>
-            <LeftArrowIcon />
-            {text}
-          </span>
+            <ArrowLeftIcon className="icon"/>
+          <span>{text}</span>
         </Link>
       </span>
     );

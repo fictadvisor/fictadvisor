@@ -8,6 +8,7 @@
     "start": "next start -p 80"
   },
   "dependencies": {
+    "@heroicons/react": "^2.0.14",
     "axios": "^1.2.3",
     "next": "13.1.5",
     "node-html-parser": "^6.1.4",

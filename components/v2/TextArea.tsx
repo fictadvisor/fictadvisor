@@ -2,7 +2,7 @@ import React, {useState, useRef} from "react";
 
 // props
 export enum TextAreaSpecs{
-    BIG = "large", SMALL = "small"
+    LARGE = "large", SMALL = "small"
 }
 export enum TextAreaState{
     SUCCESS = "success-area", ERROR = "error-area"

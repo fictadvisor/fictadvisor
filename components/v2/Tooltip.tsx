@@ -1,3 +1,5 @@
+import React from "react";
+
 export enum TooltipDirection {
   TOP = "top",
   BOTTOM = "bottom",
@@ -7,7 +9,7 @@ export enum TooltipDirection {
 
 interface TooltipProps {
   text: string;
-  direction?: "top" | "bottom" | "left" | "right";
+  direction?: TooltipDirection;
 }
 
 export const Tooltip: React.FC<TooltipProps> = ({ direction, text }) => {

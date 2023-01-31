@@ -7,7 +7,6 @@
 }
 
 *:focus{
-  overflow: auto;
   outline: none;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
@@ -65,6 +64,15 @@ textarea{
 }
 
 
-textarea:focus, input:focus{
-  outline: none;
+textarea, input{
+  &:focus, &:hover, &:active{
+    outline: none;
+  }
+}
+
+.slider,
+.slider::-webkit-slider-runnable-track,
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  background: transparent;
 }
