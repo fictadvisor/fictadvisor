@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { Tooltip } from "./Tooltip";
+import {Tag,TagState} from './Tag';
 
 interface HeaderCardProps {
   name: string;
@@ -94,7 +95,21 @@ export const PollCard:React.FC<PollCardProps>=({
 })=>{
  return(
  <div>
-
+    <Tag 
+    state={TagState.BIG}
+    text='TagText'
+    className='success-first'
+    />
+     <Tag 
+    state={TagState.BIG}
+    text='TagText'
+    className='success-first'
+    />
+     <Tag 
+    state={TagState.BIG}
+    text='TagText'
+    className='warning-first'
+    />
   </div>)
 }
 

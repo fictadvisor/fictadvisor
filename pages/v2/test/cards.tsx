@@ -1,4 +1,4 @@
-import { HeaderCard, LecturerHeaderCard } from "../../../components/v2/Cards";
+import { HeaderCard, LecturerHeaderCard,PollCard } from "../../../components/v2/Cards";
 
 interface OwnProps {}
 
@@ -34,6 +34,11 @@ function Cards() {
         name="Васильченко-Деружко Катерина Анатоліївна"
         description="Вища математика. Частина 1. Лінійна алгебра та аналітична геометрія. Диференціальне та інтегральне числення функцій однієї змінної"
       />
+      <PollCard 
+        name="Васильченко-Деружко Катерина Анатоліївна"
+        description="Вища математика. Частина 1. Лінійна алгебра та аналітична геометрія. Диференціальне та інтегральне числення функцій однієї змінної"
+        roles={['лектор','практик','лаборант']}
+        />
     </div>
   );
 }

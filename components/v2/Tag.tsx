@@ -15,7 +15,7 @@ export function Tag(props: TagProps) {
     return (
         <div className={"tag"
             + (" " + props.state + "-tag")
-            + (props.className ? " " + props.className + "-bgc" : "")}>
+            + (props.className ? " " +props .className + "-bgc" : "")}>
             {props.icon}
             <p className={props.state + "-tag-body"}>{props.text}</p>
         </div>
