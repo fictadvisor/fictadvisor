@@ -32,7 +32,7 @@ export class DisciplineTeacherService {
 
   async getGroup(id: string) {
     const discipline = await this.disciplineTeacherRepository.getDiscipline(id);
-    return this.disciplineService.getGroup(discipline.id);
+    return this.disciplineRepository.getGroup(discipline.id);
   }
 
   async getDisciplineTeacher(disciplineTeacherId: string) {

@@ -64,8 +64,4 @@ export class DisciplineService {
 
     return results;
   }
-
-  async getGroup(id: string) {
-    return this.disciplineRepository.getGroup(id);
-  }
 }
