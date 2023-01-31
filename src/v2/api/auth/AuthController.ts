@@ -82,4 +82,11 @@ export class AuthController {
   ) {
     return this.authService.checkIfUserIsRegistered(query);
   }
+
+  @Get('/checkCaptain/:groupId')
+  checkCaptain(
+    @Param('groupId') groupId: string,
+  ) {
+    return this.authService.checkCaptain(groupId);
+  }
 }

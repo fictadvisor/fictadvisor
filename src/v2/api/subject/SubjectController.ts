@@ -21,11 +21,7 @@ export class SubjectController {
   async getAll(
     @Query() body: QueryAllDTO,
   ) {
-    const subjects = await this.subjectService.getAll(body);
-    return {
-      subjects,
-    };
-
+    return await this.subjectService.getAll(body);
   }
 
   @Get('/:subjectId')
@@ -33,6 +29,13 @@ export class SubjectController {
     @Param('subjectId', SubjectByIdPipe) subjectId: string,
   ) {
     return this.subjectService.get(subjectId);
+  }
+  
+  @Get('/:subjectId/teachers')
+  getTeachers(
+    @Param('subjectId', SubjectByIdPipe) subjectId: string,
+  ) {
+    return this.subjectService.getTeachers(subjectId);
   }
 
   @Permission('subjects.create')
