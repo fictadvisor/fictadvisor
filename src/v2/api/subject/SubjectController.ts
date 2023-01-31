@@ -21,11 +21,7 @@ export class SubjectController {
   async getAll(
     @Query() body: QueryAllDTO,
   ) {
-    const subjects = await this.subjectService.getAll(body);
-    return {
-      subjects,
-    };
-
+    return await this.subjectService.getAll(body);
   }
 
   @Get('/:subjectId')
