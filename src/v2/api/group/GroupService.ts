@@ -117,24 +117,23 @@ export class GroupService {
 
   async getCaptain(groupId: string) {
     const students = await this.groupRepository.getStudents(groupId);
-    const result = [];
     for (const student of students) {
       const roles = await this.studentRepository.getRoles(student.userId);
       for (const role of roles){
-        if ( role.name == RoleName.CAPTAIN ){
+        if (role.name == RoleName.CAPTAIN){
           const user = await this.userRepository.get(student.userId);
-          result.push({
+          return {
             firstName: student.firstName,
             middleName: student.middleName,
             lastName: student.lastName,
             email: user.email,
-            userName: user.username,
+            username: user.username,
             avatar: user.avatar,
-          });
+          };
         }
       }
     }
-    return result;
+    return null;
   }
 
   async deleteGroup(groupId: string) {
@@ -145,18 +144,19 @@ export class GroupService {
     let students = await this.groupRepository.getStudents(groupId);
     students = students.filter((st) => st.state === State.APPROVED);
     const results = [];
-    for (const student of students){
+    for (const student of students) {
+      const roles = await this.studentRepository.getRoles(student.userId);
       const user = await this.userRepository.get(student.userId);
       results.push({
         firstName: student.firstName,
         middleName: student.middleName,
         lastName: student.lastName,
         email: user.email,
-        userName: user.username,
         avatar: user.avatar,
+        role: [RoleName.CAPTAIN, RoleName.MODERATOR, RoleName.STUDENT].find((r) => roles.some((r2) => r2.name === r)),
       });
     }
-    return ({students: results});
+    return { students: results };
   }
 
   async updateGroup(groupId: string, body: UpdateGroupDTO){

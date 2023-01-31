@@ -80,7 +80,7 @@ export class GroupController {
     return this.groupService.getCaptain(groupId);
   }
 
-  //@Permission('groups.disciplines.teachers.get')
+  @Permission('groups.$groupId.disciplines.teachers.get')
   @UseGuards(JwtGuard)
   @Get('/:groupId/disciplineTeachers')
   async getDisciplineTeachers(
@@ -89,6 +89,7 @@ export class GroupController {
     return this.groupService.getDisciplineTeachers(groupId);
   }
 
+  @Permission('groups.$groupId.disciplines.get')
   @UseGuards(JwtGuard)
   @Get('/:groupId/disciplines')
   async getDiscipline(
