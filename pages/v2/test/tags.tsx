@@ -1,4 +1,4 @@
-import { CustomCheck } from "../../../components/v2/custom-svg-icons/CustomCheck";
+import { CustomCheck } from "../../../components/v2/custom-svg/CustomCheck";
 import { Tag, TagState } from "../../../components/v2/Tag";
 
 function tags() {

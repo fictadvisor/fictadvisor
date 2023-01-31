@@ -89,7 +89,7 @@ $slider-border-radius: 500px;
     }
 }
 
-#slider-mobile {
+.slider-mobile {
     &::-webkit-slider-runnable-track {
         height: $slider-mob-height;
     }

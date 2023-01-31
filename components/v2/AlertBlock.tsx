@@ -1,9 +1,9 @@
 import React, {useState} from "react";
-import {ExclamationIcon} from "./custom-svg-icons/alert-icons/ExclamationIcon";
-import {SuccessIcon} from "./custom-svg-icons/alert-icons/SuccessIcon";
-import {WarningIcon} from "./custom-svg-icons/alert-icons/WarningIcon";
-import {InfoIcon} from "./custom-svg-icons/alert-icons/InfoIcon";
-import {CrossIcon} from "./custom-svg-icons/alert-icons/CrossIcon";
+import {ExclamationIcon} from "./custom-svg/alert-icons/ExclamationIcon";
+import {SuccessIcon} from "./custom-svg/alert-icons/SuccessIcon";
+import {WarningIcon} from "./custom-svg/alert-icons/WarningIcon";
+import {InfoIcon} from "./custom-svg/alert-icons/InfoIcon";
+import {CrossIcon} from "./custom-svg/alert-icons/CrossIcon";
 
 export enum AlertBlockSize {
     SMALL = "small", MEDIUM = "middle", LARGE = "large"

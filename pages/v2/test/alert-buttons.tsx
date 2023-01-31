@@ -1,6 +1,6 @@
 import AlertButton, {AlertButtonIconPosition, AlertButtonType} from "../../../components/v2/AlertButton";
 import {XMarkIcon} from "@heroicons/react/24/outline";
-import {CustomCheck} from "../../../components/v2/custom-svg-icons/CustomCheck";
+import {CustomCheck} from "../../../components/v2/custom-svg/CustomCheck";
 
 function alertButtons(){
   return(
