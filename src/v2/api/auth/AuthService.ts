@@ -27,6 +27,7 @@ import { IdentityQueryDTO } from "./dto/IdentityQueryDTO";
 import { AlreadyRegisteredException } from "../../utils/exceptions/AlreadyRegisteredException";
 import { NotRegisteredException } from "../../utils/exceptions/NotRegisteredException";
 import { PasswordRepeatException } from '../../utils/exceptions/PasswordRepeatException';
+import { GroupService } from '../group/GroupService';
 
 export const ONE_MINUTE = 1000 * 60;
 export const HOUR = ONE_MINUTE * 60;
@@ -47,6 +48,7 @@ export class AuthService {
     private studentRepository: StudentRepository,
     private telegramApi: TelegramAPI,
     private groupRepository: GroupRepository,
+    private groupService: GroupService,
   ) {
   }
 
@@ -330,7 +332,8 @@ export class AuthService {
     await this.studentRepository.update(dbUser.id, createStudent);
   }
 
-  checkCaptain(groupId: string) {
-    //TODO return captain from group
+  async checkCaptain(groupId: string) {
+    const captain = await this.groupService.getCaptain(groupId);
+    return !!captain;
   }
 }
