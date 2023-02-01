@@ -2,11 +2,11 @@ import { IsBoolean, IsEmail, IsNotEmpty, IsOptional, Matches, MaxLength, MinLeng
 import { Type } from 'class-transformer';
 
 export class RegistrationDTO {
-  @ValidateNested({ each: true })
+  @ValidateNested()
   @Type(() => StudentDTO)
   student: StudentDTO;
 
-  @ValidateNested({ each: true })
+  @ValidateNested()
   @Type(() => UserDTO)
   user: UserDTO;
 
