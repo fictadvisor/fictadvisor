@@ -20,26 +20,21 @@
 }*/
 
 
-
 .container{
-
   display: inline-block;
+  width: min(408px, 40%);
 }
 
-
-ul{
+.dividers-list{
   display: flex;
   align-items: center;
+  margin: 0;
+  padding: 0;
   margin-top: 36px;
 }
 
-
 hr{
-  color: $divide-regular-color;
-  
-}
-.zero-line{
-  width: 100%;
+  border: 0.01px solid $divide-regular-color;  
 }
 
 .divider-text{
@@ -48,7 +43,7 @@ hr{
 }
 
 .first-line{
-  width: 181.5px;
+  width: min(181.5px, 44.5%);
 }
 
 .second-text{
@@ -56,7 +51,7 @@ hr{
 }
 
 .second-line{
-  width: 371px;
+  width: min(371px, 91%);
 }
 
 .third-text{

@@ -4,28 +4,20 @@ function dividers(){
   return(
     <div className="test-page-wrap">
       <div className = "container">
-        <hr className="zero-line"/>
-        <ul>
-          <li>
+        <hr/>
+        <ul className="dividers-list">
             <hr className="first-line"/>
-          </li>
           <li className="divider-text">Text</li>
-          <li>
             <hr className="first-line"/>
-          </li>
         </ul>
     
-        <ul>
+        <ul className="dividers-list">
           <li className="divider-text second-text">Text</li>
-          <li>
             <hr className="second-line"/>
-          </li>
         </ul>
     
-        <ul>
-          <li>
+        <ul className="dividers-list">
             <hr className="second-line"/>
-          </li>
           <li className="divider-text third-text">Text</li>
         </ul>
       </div> 
