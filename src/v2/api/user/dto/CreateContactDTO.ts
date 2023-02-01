@@ -1,4 +1,4 @@
-import { IsNotEmpty, MaxLength } from "class-validator";
+import { IsAlpha, IsAscii, IsNotEmpty, MaxLength } from "class-validator";
 
 export class CreateContactDTO {
     @MaxLength(20, {
@@ -7,6 +7,10 @@ export class CreateContactDTO {
     @IsNotEmpty({
       message: 'name can not be empty',
     })
+    @IsAlpha('en-US',
+      {
+        message: 'name contains wrong symbols (a-z A-Z only)',
+    })
     name: string;
     
     @MaxLength(100, {
@@ -14,6 +18,9 @@ export class CreateContactDTO {
     })
     @IsNotEmpty({
       message: 'value can not be empty',
+    })
+    @IsAscii({
+      message: 'value contains wrong symbols (ACSII only)',
     })
     value: string;
   }

@@ -1,17 +1,17 @@
-import { IsOptional, Matches, MaxLength, MinLength } from "class-validator";
+import { IsIn, IsOptional, Matches, MaxLength, MinLength } from "class-validator";
 import { State } from "@prisma/client";
 
 export class UpdateStudentDTO {
   @Matches(
     /^[AБВГДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгдеєжзиіїйклмнопрстуфхцчшщьюя\- ]+$/,
     {
-      message: 'Name is not correct',
+      message: 'First name is not correct',
     })
   @MinLength(2, {
-    message: 'Name is too short',
+    message: 'First name is too short',
   })
   @MaxLength(12, {
-    message: 'Name is too long',
+    message: 'First name is too long',
   })
   @IsOptional()
   firstName?: string;
@@ -19,13 +19,13 @@ export class UpdateStudentDTO {
   @Matches(
     /^[AБВГДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгдеєжзиіїйклмнопрстуфхцчшщьюя\- ]+$/,
     {
-    message: 'Name is not correct',
+    message: 'Last name is not correct',
   })
   @MinLength(3, {
-    message: 'Name is too short',
+    message: 'Last name is too short',
   })
   @MaxLength(20, {
-    message: 'Name is too long',
+    message: 'Last name is too long',
   })
   @IsOptional()
   lastName?: string;
@@ -33,18 +33,21 @@ export class UpdateStudentDTO {
   @Matches(
     /^[AБВГДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгдеєжзиіїйклмнопрстуфхцчшщьюя\- ]+$/,
     {
-      message: 'Name is not correct',
+      message: 'Middle name is not correct',
     })
   @MinLength(6, {
-    message: 'Name is too short',
+    message: 'Middle name is too short',
   })
   @MaxLength(16, {
-    message: 'Name is too long',
+    message: 'Middle name is too long',
   })
   @IsOptional()
   middleName?: string;
 
   groupId?: string;
 
+  @IsIn(Object.keys(State), {
+    message: 'invalid state argument passed',
+  })
   state?: State;
 }
