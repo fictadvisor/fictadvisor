@@ -1,8 +1,15 @@
-import { IsEmail, IsNotEmpty, IsOptional, Matches, MaxLength, MinLength } from "class-validator";
+import { IsEmail, IsNotEmpty, IsOptional, Matches, MaxLength, MinLength, ValidateNested } from "class-validator";
+import { Type } from 'class-transformer';
 
 export class RegistrationDTO {
+  @ValidateNested({ each: true })
+  @Type(() => StudentDTO)
   student: StudentDTO;
+
+  @ValidateNested({ each: true })
+  @Type(() => UserDTO)
   user: UserDTO;
+
   telegram: TelegramDTO;
 }
 
