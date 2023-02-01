@@ -1,4 +1,4 @@
-import { client, getAuthorizationHeader, QueryParams } from "../index";
+import { client, getAuthorizationHeader, } from "../index";
 import { GetTeacherDTO } from "./dto/GetTeacherDTO";
 import { CreateTeacherBody } from "./dto/CreateTeacherBody";
 import { AddContactsBody } from './dto/AddContactsBody';
