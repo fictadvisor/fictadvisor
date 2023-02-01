@@ -57,7 +57,7 @@ function tables() {
             //tag: <Tag state={TagState.SMALL} text="Зам. староста" className="primary-second" />,
             checkBox: <Check state={CheckState.DEFAULT} text="Зам. староста" />,
             firstButton: <AlertButton text="Прийняти" icon={<CustomCheck />} iconPosition={AlertButtonIconPosition.RIGHT} onClick={() => { }} isDisabled={false} type={AlertButtonType.SUCCESS} />,
-            secondButton: <AlertButton icon={<XMarkIcon className="icon"/>} iconPosition={AlertButtonIconPosition.RIGHT} onClick={() => { }} isDisabled={false} type={AlertButtonType.ERROR_SECONDARY} />,
+            secondButton: <AlertButton className="custom-x" icon={<XMarkIcon className="icon"/>} iconPosition={AlertButtonIconPosition.RIGHT} onClick={() => { }} isDisabled={false} type={AlertButtonType.ERROR_SECONDARY} />,
         },
         {
             email: "elizabeth.yarmolenko@gmail.com",

@@ -11,7 +11,7 @@
     padding: 12px 16px;
     gap: 26px;
     background-color: #292929;
-    margin-top: 20px;
+    border-top: 1px solid #404040;
 }
 
 .user-avatar img {
@@ -44,8 +44,9 @@
 }
 
 .tag {
-    flex-grow: 2;
-    width: fit-content;
+    display: flex;
+    flex-wrap: nowrap;
+    width: 108px;
 }
 
 .email {
@@ -62,10 +63,19 @@
 }
 
 .checkbox {
-    padding-right: 12px
+    display: flex;
+    flex-wrap: nowrap;
+    padding-right: 12px;
 }
 
 .editing {
     @extend .table-items-style;
     gap: 8px;
+    width: 178px;
+    height: 32px;
+    justify-content: space-between;
+}
+
+.first-button{
+    width: 134px;
 }
