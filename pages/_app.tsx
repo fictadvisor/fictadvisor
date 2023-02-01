@@ -1,4 +1,4 @@
-import "../styles/v2/index.scss";
+import "../styles/v2/global.scss";
 
 import { QueryClient, QueryClientProvider } from "react-query";
 import { AuthenticationProvider } from "../lib/v1/context/AuthenticationContext";

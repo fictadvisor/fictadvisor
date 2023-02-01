@@ -1,6 +1,7 @@
-import {Dropdown, DropDownClass} from "../../../components/v2/Dropdown";
+import {Dropdown, DropDownClass} from "../../../components/v2/ui/Dropdown";
 import React from "react";
 import {UserGroupIcon} from "@heroicons/react/24/outline";
+import styles from "styles/v2/local/pages/test.module.scss";
 
 function dropdowns() {
     const options = [

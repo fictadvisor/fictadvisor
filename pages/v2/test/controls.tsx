@@ -1,6 +1,8 @@
-import { Check, CheckState } from "../../../components/v2/Check";
-import { GroupRadio, RadioState } from "../../../components/v2/GroupRadio";
-import Switch, { SwitchType, SwitchTextPosition } from "../../../components/v2/Switch";
+import { Check, CheckState } from "../../../components/v2/ui/Check";
+import { GroupRadio, RadioState } from "../../../components/v2/ui/GroupRadio";
+import Switch, { SwitchType, SwitchTextPosition } from "../../../components/v2/ui/Switch";
+import styles from "styles/v2/local/pages/test.module.scss";
+
 function Controls() {
 
     let radios = [
@@ -39,7 +41,7 @@ function Controls() {
     ];
 
     return (
-        <div className="test-page-wrap">
+        <div className = {styles["test-page-wrap"]}>
             <Switch type={SwitchType.WEB} text="Hello" textPosition={SwitchTextPosition.LEFT}></Switch>
             <Switch type={SwitchType.MOBILE} text="Biden" textPosition={SwitchTextPosition.RIGHT}></Switch>
 

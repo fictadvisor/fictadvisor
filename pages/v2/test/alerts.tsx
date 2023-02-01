@@ -1,9 +1,10 @@
-import {AlertBlock, AlertBlockColor, AlertBlockSize, AlertBlockStyle} from "../../../components/v2/AlertBlock";
+import {AlertBlock, AlertBlockColor, AlertBlockSize, AlertBlockStyle} from "../../../components/v2/ui/AlertBlock";
+import styles from "styles/v2/local/pages/test.module.scss";
 
 function Alert() {
     return (
-        <div className="test-page-wrap">
-            <div className="test-page-content">
+        <div className = {styles["test-page-wrap"]}>
+            <div className = {styles["test-page-content"]}>
                 {[AlertBlockStyle.OUTLINED, AlertBlockStyle.SECONDARY, AlertBlockStyle.PRIMARY, AlertBlockStyle.BORDER_LEFT, AlertBlockStyle.BORDER_TOP].map((style: AlertBlockStyle) =>
                     <>
                         <AlertBlock title="We are going live in July!" style={style} size={AlertBlockSize.SMALL}

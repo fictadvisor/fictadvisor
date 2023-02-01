@@ -1,0 +1,150 @@
+@import "../../global/partials/utils";
+
+$left-block-width: 606px;
+$right-block-width: 834px;
+
+
+.login-page{
+  width: 100%;
+  min-height: calc(100vh);
+  @include flex-center;
+  background: url("/assets/login-page/login-background.png") no-repeat;
+  background-size: 100vw 100vh;
+}
+
+
+.login-page__content{
+  display: flex;
+  flex-direction: row;
+  gap: 132px;
+  height: 635px;
+}
+
+.left-block{
+  @include flex-center;
+  flex-direction: column;
+}
+
+.left-block__content{
+  @include flex-center;
+  flex-direction: column;
+  gap: 50px;
+}
+
+.login-logo{
+  height: 56px;
+}
+
+.register-text{
+  text-align: center;
+}
+
+.right-block{
+  width: 480px;
+  @include flex-center;
+  margin-left: 6px;
+}
+
+
+.right-block__content{
+  width: 100%;
+  @include flex-center;
+  flex-direction: column;
+}
+
+
+.register-header{
+  text-align: center;
+  font-size: 36px;
+  line-height: 120%;
+  font-weight: 700;
+  margin-bottom: 32px
+}
+
+.login-divider{
+  margin-top: 32px;
+}
+
+.login-input{
+  margin-top: 15px;
+}
+
+.one-line{
+  margin-bottom: 24px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.register-checkbox{
+  width: 30px;
+}
+
+.checkbox-container{
+  display: flex;
+  gap: 12px;
+}
+
+.placeholder{
+  height: 24px;
+}
+
+.login-button-container{
+  width: fit-content;
+}
+
+
+@media (max-width: 1440px) {
+
+  .login-page__content{
+    width: 100%;
+    justify-content: space-evenly;
+    gap: 0;
+  }
+}
+
+@media (max-width: 1150px) {
+  .left-block{
+    display: none;
+  }
+  .login-page{
+    align-items: start;
+    //hr{
+    //  display: none;
+    //}
+  }
+  .right-block{
+    padding-top: 10%;
+  }
+}
+
+@media (max-width: 650px) {
+  .login-page__content{
+    padding: 0 20px;
+  }
+
+  .right-block__content{
+    width: 100%;
+  }
+
+}
+
+// TODO +2 пікселі
+
+@media (max-width: 400px) {
+  .right-block__content{
+    .large-button{
+      padding: 6px 12px;
+
+      font-size: 14px;
+      line-height: 1.4;
+      gap: 4px;
+    }
+
+    .register-header{
+      font-size: 28px;
+      line-height: 32px;
+      font-weight: 700;
+    }
+  }
+}

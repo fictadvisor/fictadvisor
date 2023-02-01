@@ -1,7 +1,8 @@
+import styles from "styles/v2/local/pages/test.module.scss";
 
 function arrows(){
     return(
-        <div className="test-page-wrap">
+        <div className = {styles["test-page-wrap"]}>
             <button className="arrow-desktop arrow-default-color">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M15 19L8 12L15 5" stroke="#FAFAFA" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>

@@ -1,9 +1,10 @@
-import {IconButtonSize, SortButton, SortButtonOrder, TrashBucketButton} from "../../../components/v2/IconButton";
+import {IconButtonSize, SortButton, SortButtonOrder, TrashBucketButton} from "../../../components/v2/ui/IconButton";
+import styles from "styles/v2/local/pages/test.module.scss";
 
 function IconButtons(){
     return(
-        <div className="test-page-wrap">
-            <div className="test-page-content">
+        <div className = {styles["test-page-wrap"]}>
+            <div className = {styles["test-page-content"]}>
                 <SortButton size={IconButtonSize.LARGE} order={SortButtonOrder.ASCENDING}/>
                 <SortButton size={IconButtonSize.LARGE} order={SortButtonOrder.DESCENDING}/>
                 <SortButton size={IconButtonSize.NORMAL} order={SortButtonOrder.ASCENDING}/>

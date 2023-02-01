@@ -1,105 +1,89 @@
-@import url(https://fonts.googleapis.com/css?family=Manrope);
-
-body, html, * {
-  font-family: 'Manrope', sans-serif;
-}
-
-h1 {
+@mixin h1{
   font-size: 96px;
   line-height: 1.16;
   font-weight: 700;
 }
 
-h2 {
+@mixin h2 {
   font-size: 60px;
   line-height: 1.16;
   font-weight: 400;
 }
 
-h3 {
+@mixin h3 {
   font-size: 36px;
   line-height: 1.28;
   font-weight: 400;
 }
 
-.h3--semi-bold {
+@mixin h3--semi-bold {
   @extend h3;
   font-weight: 600;
 }
 
-h4 {
+@mixin h4{
   font-size: 28px;
   line-height: 1.28;
   font-weight: 400;
 }
 
-.h4--semi-bold {
+@mixin h4--semi-bold {
   @extend h4;
   font-weight: 600;
 }
 
-.h4--bold {
+@mixin h4--bold {
   @extend h4;
   font-weight: 700;
 }
 
-h5 {
+@mixin h5 {
   font-size: 24px;
   line-height: 1.28;
   font-weight: 400;
 }
 
-h6 {
+@mixin h6 {
   font-size: 20px;
   line-height: 1.28;
   font-weight: 400;
 }
 
-.h6--medium-bold {
+@mixin h6--medium-bold {
   @extend h6;
   font-weight: 500;
 }
 
-.h6--bold {
+@mixin h6--bold {
   @extend h6;
   font-weight: 700;
 }
 
-.body-primary{
+@mixin body-primary{
   font-size: 14px;
   line-height: 1.4;
   font-weight: 400;
 }
 
-.body-primary--bold{
+@mixin body-primary--bold{
   @extend .body-primary;
   font-weight: 700;
 }
 
-.body-secondary{
+@mixin body-secondary{
   font-size: 16px;
   line-height: 1.22;
   font-weight: 400;
 }
 
-.body-secondary--bold{
+@mixin body-secondary--bold{
   @extend .body-secondary;
   line-height: 1.38;
   font-weight: 700;
 }
 
-.overline-text{
+@mixin overline-text{
   font-size: 11px;
   line-height: 1.6;
   font-weight: 400;
 }
-
-label{
-  @extend .body-primary;
-}
-
-input{
-  @extend .body-secondary;
-}
-
-

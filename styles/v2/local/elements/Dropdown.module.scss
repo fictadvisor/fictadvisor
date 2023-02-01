@@ -1,0 +1,129 @@
+@import "../../global/partials/theme";
+
+$theme-color: $dark-primary;
+
+//dropdown-sizings
+$small-dropdown-width: 200px;
+$medium-dropdown-width: 308px;
+$large-dropdown-width: 480px;
+$dropdown-option-height: 36px;
+$dropdown-menu-height: 240px;
+$dropdown-header-height: 52px;
+$dropdown-option-left-padding: 26px;
+$default-dropdown-padding: 8px;
+
+@mixin roundcorners($radius: 10px, $color: $light-primary) {
+  border-radius: $radius;
+  border: 2px solid $color;
+}
+
+.dropdown {
+  margin: 1rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  & span {
+    position: absolute;
+    left: 8px;
+    z-index: 1;
+    top: 0;
+    background-color: $theme-color;
+    transform: translateY(-50%);
+    padding: 0 8px;
+  }
+}
+.dropdown- {
+  &control {
+    padding: 0 $dropdown-option-left-padding;
+    &-iconed {
+      padding-left: $dropdown-option-left-padding + 15px;
+    }
+  }
+  &container {
+    background-color: $theme-color;
+    @include roundcorners;
+    &-success{
+      border-color: $success-color;
+    }
+    &-error{
+      border-color: $error-color;
+    }
+    &-disabled{
+      border-color: #747474;
+    }
+
+  }
+
+  &menu {
+    margin-top: $default-dropdown-padding;
+    padding: $default-dropdown-padding 0;
+    background-color: $dark-primary;
+    z-index: 2 !important;
+    @include roundcorners;
+  }
+  &menu-list {
+    overflow-x: hidden;
+    &::-webkit-scrollbar {
+      width: 12px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: #d6dee1;
+      border: 5px solid transparent;
+      background-clip: content-box;
+    }
+  }
+  &option {
+    padding: 5px 0 5px $dropdown-option-left-padding;
+    height: $dropdown-option-height;
+    &:hover{
+      background-color: #404040;
+      cursor: pointer;
+    };
+    &-selected {
+      background-color: #404040;
+    }
+  }
+  &indicator {
+    transition: transform .2s linear;
+    &-rotated {
+      transition: transform .2s linear;
+      transform: rotate(180deg);
+    }
+  }
+  &placeholder {
+    &-disabled{
+      color: #747474;
+    }
+  }
+  &success-label{
+    color: $success-color;
+  }
+  &error-label{
+    color: $error-color;
+  }
+  &disabled-label{
+    color: #747474;
+  }
+}
+.dropdown-icon-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  transform: translateY(-40%) translateX(50%);
+  height: 24px;
+  width: 24px;
+  z-index: 1;
+}
+
+
+.test-wrap-50{
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+}
+.test-wrap-25{
+  display: flex;
+  flex-direction: column;
+  width: 25%;
+}

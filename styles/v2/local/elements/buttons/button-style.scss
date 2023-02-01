@@ -1,4 +1,4 @@
-@import "../../../utils/mixins";
+@import "../../../global/partials/utils";
 
 @mixin button-style($class-name, $border-radius, $padding, $padding-icon, $gap) {
   .#{$class-name}-button, .#{$class-name}-icon-button {

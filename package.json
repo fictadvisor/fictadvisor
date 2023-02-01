@@ -10,6 +10,7 @@
   "dependencies": {
     "@heroicons/react": "^2.0.14",
     "axios": "^1.2.3",
+    "merge-class-names": "^1.4.2",
     "next": "13.1.5",
     "node-html-parser": "^6.1.4",
     "normalize.css": "^8.0.1",
@@ -18,7 +19,7 @@
     "react-query": "^3.39.2",
     "react-select": "^5.7.0",
     "react-textarea-autosize": "^8.4.0",
-    "sass": "^1.57.1"
+    "sass": "^1.58.0"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",

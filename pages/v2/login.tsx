@@ -1,11 +1,11 @@
 import {GetServerSideProps} from "next";
-import Button, {ButtonIconPosition, ButtonSize, ButtonType} from "../../components/v2/Button";
-import Divider from "../../components/v2/Divider";
-import {CustomLink} from "../../components/v2/Link";
-import {Check, CheckState} from "../../components/v2/Check";
-import PageLayout from "../../components/v2/layout/PageLayout";
-import Input, {InputSize, InputState, InputType} from "../../components/v2/Input";
 import {ArrowLeftIcon, HeartIcon} from "@heroicons/react/24/outline";
+import Button, {ButtonIconPosition, ButtonSize, ButtonType} from "../../components/v2/ui/Button";
+import Input, {InputSize, InputState, InputType} from "../../components/v2/ui/Input";
+import {Check, CheckState} from "../../components/v2/ui/Check";
+import PageLayout from "../../components/v2/layout/PageLayout";
+import Divider from "../../components/v2/ui/Divider";
+import {CustomLink} from "../../components/v2/ui/Link";
 
 function LoginPage() {
 
