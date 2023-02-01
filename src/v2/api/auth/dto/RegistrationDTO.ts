@@ -1,4 +1,4 @@
-import { IsBoolean, IsEmail, IsNotEmpty, IsOptional, Matches, MaxLength, MinLength, ValidateNested } from "class-validator";
+import { IsBoolean, IsEmail, IsNotEmpty, IsOptional, Matches, ValidateNested } from "class-validator";
 import { Type } from 'class-transformer';
 
 export class RegistrationDTO {
@@ -19,41 +19,23 @@ export class StudentDTO {
   groupId: string;
 
   @Matches(
-    /^[AБВГДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгдеєжзиіїйклмнопрстуфхцчшщьюя\- ]+$/, {
-      message: 'firstName is not correct',
-  })
-  @MinLength(2, {
-    message: 'firstName is too short (min: 2)',
-  })
-  @MaxLength(40, {
-    message: 'firstName is too long (max: 40)',
+    /^[AБВГДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгдеєжзиіїйклмнопрстуфхцчшщьюя\- ]{2,40}$/, {
+      message: 'firstName is not correct or too short (min: 2) or too long (max: 40)',
   })
   @IsNotEmpty()
   firstName: string;
 
   @Matches(
-    /^[AБВГДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгдеєжзиіїйклмнопрстуфхцчшщьюя\- ]+$/, {
-      message: 'middleName is not correct',
-  })
-  @MinLength(2, {
-    message: 'middleName is too short (min: 2)',
-  })
-  @MaxLength(40, {
-    message: 'middleName is too long (max: 40)',
+    /^[AБВГДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгдеєжзиіїйклмнопрстуфхцчшщьюя\- ]{2,40}$/, {
+      message: 'middleName is not correct or too short (min: 2) or too long (max: 40)',
   })
   @IsOptional()
   middleName: string;
 
   @Matches(
-    /^[AБВГДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгдеєжзиіїйклмнопрстуфхцчшщьюя\- ]+$/, {
-      message: 'lastName is not correct',
-  })
-  @MinLength(2, {
-    message: 'lastName is too short (min: 2)',
-  })
-  @MaxLength(40, {
-    message: 'lastName is too long (max: 40)',
-  })
+    /^[AБВГДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгдеєжзиіїйклмнопрстуфхцчшщьюя\- ]{2,40}$/, {
+      message: 'lastName is not correct or too short (min: 2) or too long (max: 40)',
+    })
   @IsNotEmpty()
   lastName: string;
 
@@ -63,15 +45,9 @@ export class StudentDTO {
 }
 
 export class UserDTO {
-  @MinLength(2, {
-    message: 'username is too short (min: 4)',
-  })
-  @MaxLength(40, {
-    message: 'username is too long (max: 40)',
-  })
   @Matches(
-    /^[a-zA-Z0-9_]+$/, {
-      message: 'username is not correct',
+    /^[a-zA-Z0-9_]{2,40}$/, {
+      message: 'username is not correct or too short (min: 2) or too long (max: 40)',
   })
   @IsNotEmpty()
   username: string;
