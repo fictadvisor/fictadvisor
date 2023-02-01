@@ -5,4 +5,5 @@ export class VerifyStudentDTO {
   middleName: string;
   lastName: string;
   groupCode: string;
+  captainTelegramId: number;
 }

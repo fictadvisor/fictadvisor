@@ -130,7 +130,10 @@ export class AuthService {
     if (isCaptain) {
       await this.telegramApi.verifyCaptain(data);
     } else {
-      await this.telegramApi.verifyStudent(data);
+      const cap = await this.groupService.getCaptain(groupId);
+      if (cap.telegramId) {
+        await this.telegramApi.verifyStudent({ captainTelegramId: cap.telegramId, ...data });
+      }
     }
   }
 
