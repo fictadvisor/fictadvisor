@@ -1,6 +1,7 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useCallback } from "react";
 import { Tooltip } from "./Tooltip";
-import {Tag,TagState} from './Tag';
+import { Tag, TagState } from "./Tag";
+import Button, { ButtonType,ButtonSize } from "./Button";
 
 interface HeaderCardProps {
   name: string;
@@ -15,12 +16,37 @@ interface LecturerHeaderCardProps {
   url?: string;
 }
 
-interface PollCardProps{
+interface PollCardProps {
   name: string;
   description: string;
-  roles:string[]
+  roles: string[];
   url?: string;
 }
+
+const useToolTip=(element:HTMLParagraphElement,toolTipWidth:number):any=>{
+    //to find out if the p element is truncated
+    let isTruncated;
+    let offsetX;
+    let offsetY;
+    
+    if(element){
+
+      const props = element.getBoundingClientRect();
+      isTruncated = element.scrollHeight - 1 > props.height;
+      offsetY=window.scrollY+props.top-props.height/2;
+
+      if((props.right+toolTipWidth)>window.innerWidth){
+       //tooltip is over the screen 
+       offsetX=window.innerWidth-toolTipWidth;
+      }
+      else{
+        //tooltip is within the screen
+        offsetX=props.right;
+      } 
+    }
+    return {offsetX,isTruncated,offsetY};
+  }
+
 
 export const HeaderCard: React.FC<HeaderCardProps> = ({
   name,
@@ -47,19 +73,11 @@ export const LecturerHeaderCard: React.FC<LecturerHeaderCardProps> = ({
   description,
   url = "/assets/icons/lecturer60.png",
 }) => {
-  let isTruncated;
-  let right;
+  
   const [showToolTip, setShowToolTip] = useState<boolean>(false);
   const ref = useRef<HTMLParagraphElement>(null);
+  const {offsetX,offsetY,isTruncated}=useToolTip(ref.current,300);
 
-  if(ref.current){
-    const props=ref.current.getBoundingClientRect();
-    console.log(props);
-    right=props.right;
-    isTruncated=ref.current.scrollHeight-1>props.height;
-  }
-  
- 
   return (
     <div
       className="header-lecturer-card-container"
@@ -69,7 +87,7 @@ export const LecturerHeaderCard: React.FC<LecturerHeaderCardProps> = ({
       <img src={url} alt="картинка вмкладача" />
       <div className="header-lecturer-card-info">
         <h4>{name}</h4>
-        <p ref={ref}>{description}</p>
+        <p ref={ref} className="lecturer-description">{description}</p>
       </div>
       {showToolTip && isTruncated && (
         <Tooltip
@@ -77,9 +95,10 @@ export const LecturerHeaderCard: React.FC<LecturerHeaderCardProps> = ({
           direction="left"
           style={{
             position: "absolute",
-            left:right,
-            width: "294px",
+            left: offsetX,
+            width: "300px",
             fontSize: "11px",
+            top:offsetY
           }}
         />
       )}
@@ -87,30 +106,51 @@ export const LecturerHeaderCard: React.FC<LecturerHeaderCardProps> = ({
   );
 };
 
-export const PollCard:React.FC<PollCardProps>=({
+export const PollCard: React.FC<PollCardProps> = ({
   name,
   description,
   roles,
-  url
-})=>{
- return(
- <div>
-    <Tag 
-    state={TagState.BIG}
-    text='TagText'
-    className='success-first'
-    />
-     <Tag 
-    state={TagState.BIG}
-    text='TagText'
-    className='success-first'
-    />
-     <Tag 
-    state={TagState.BIG}
-    text='TagText'
-    className='warning-first'
-    />
-  </div>)
-}
+  url='/assets/icons/lecturer60.png',
+}) => {
+  const [showToolTip, setShowToolTip] = useState<boolean>(false);
+  const ref = useRef<HTMLParagraphElement>(null);
+  const {offsetX,offsetY,isTruncated}=useToolTip(ref.current,300);
 
+  return (
+    <article className="poll-card-container"
+    onMouseEnter={() => setShowToolTip(true)}
+    onMouseLeave={() => setShowToolTip(false)}
+    >
+      <img src={url} alt="викладач" />
+      <div className="roles">
+        <Tag state={TagState.SMALL} text="Лектор" className="violet-first" />
+        <Tag state={TagState.SMALL} text="Практик" className="orange-first" />
+        <Tag state={TagState.SMALL} text="Лаборант" className="mint-first" />
+      </div>
+      <h4>{name}</h4>
+      <p ref={ref} className="lecturer-description">       
+        {description}
+      </p>
+     
+      <Button
+      type={ButtonType.SECONDARY_RED}
+      size={ButtonSize.SMALL}
+      onClick={()=>{}}
+      text={'Пройти опитування'}></Button>
 
+{showToolTip && isTruncated && (
+        <Tooltip
+          text={description}
+          direction="left"
+          style={{
+            position: "absolute",
+            left: offsetX,
+            width: "300px",
+            fontSize: "11px",
+            top:offsetY
+          }}
+        />
+      )}
+    </article>
+  );
+};

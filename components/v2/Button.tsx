@@ -18,7 +18,7 @@ export enum ButtonIconPosition{
 interface ButtonProps {
     text: string,
     onClick: Function,
-    isDisabled: boolean,
+    isDisabled?: boolean,
     icon?: ReactNode,
     size: ButtonSize,
     type: ButtonType,
@@ -26,19 +26,28 @@ interface ButtonProps {
     className?: string;
 }
 
-const Button: React.FC<ButtonProps> = (props) => {
-
-    const buttonColor = `${props.type}-button-color `
-    const buttonStyle = `${props.type.split("-")[0]}-${props.size}${props.icon ? "-icon" : ""}-button`
-    const additionalClass = props.className ? " " + props.className : ""
-    const className = buttonColor + buttonStyle + additionalClass
+const Button: React.FC<ButtonProps> = ({
+    text,
+    onClick,
+    isDisabled,
+    icon,
+    size,
+    type,
+    iconPosition,
+    className,
+}) => {
+    
+    const buttonColor = `${type}-button-color `
+    const buttonStyle = `${type.split("-")[0]}-${size}${icon ? "-icon" : ""}-button`
+    const additionalClass = className ? " " + className : ""
+    className = buttonColor + buttonStyle + additionalClass
 
     return (
-        <button disabled={props.isDisabled} className={className}
-                onClick={() => {props.onClick}}>
-            {props.icon && props.iconPosition == ButtonIconPosition.LEFT && <div className="icon"> {props.icon} </div>}
-            {props.text}
-            {props.icon && props.iconPosition == ButtonIconPosition.RIGHT && <div className="icon"> {props.icon} </div>}
+        <button disabled={isDisabled} className={className}
+                onClick={() => {onClick}}>
+            {icon && iconPosition == ButtonIconPosition.LEFT && <div className="icon"> {icon} </div>}
+            {text}
+            {icon && iconPosition == ButtonIconPosition.RIGHT && <div className="icon"> {icon} </div>}
         </button>
     );
 }
