@@ -1,0 +1,50 @@
+$breadcrumb-text-color: #D4D4D4;
+$last-breadcrumb-text-color: #E5E5E5;
+
+.breadcrumb-text{
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+}
+
+@mixin breadcrumb-style($color, $className) {
+  .#{$className}-breadcrumb {
+    color: $color;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 400;
+    border-bottom: transparent 1px solid;
+    cursor: pointer;
+    a{
+      @include flex-center;
+    }
+  }
+}
+
+div{
+  display: inline;
+}
+
+.icon-home-breadcrumb svg{
+  width: 10.5px;
+  height: 10.5px;
+}
+
+.chevron-right-breadcrumb svg{
+  width: 4px;
+  height: 8px;
+}
+
+.home-breadcrumb{
+  padding-right: 10px;
+  padding-left: 5px;
+}
+
+.h-breadcrumb{
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+.breadcrumb{
+  padding-left: 10px;
+}
