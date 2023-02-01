@@ -54,6 +54,20 @@ export class UserService {
   async giveRole(id: string, { roleId }: GiveRoleDTO) {
     await this.studentRepository.addRole(id, roleId);
   }
+  async getGroupByRole(id: string) {
+    return await this.studentRepository.getGroupByRole(id);
+  }
+
+  async getGroupRole(userId: string) {
+    const roles = await this.studentRepository.getRoles(userId);
+    const groupRole = roles.find((r) => r.name == 'CAPTAIN' || r.name == 'MODERATOR' || r.name == 'STUDENT');
+    const group = await this.getGroupByRole(groupRole.id);
+    const result = {
+      groupRole,
+      groupId: group.id,
+    };
+    return result;
+  }
 
   async removeRole(id: string, roleId: string) {
     await this.studentRepository.removeRole(id, roleId);
