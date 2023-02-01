@@ -65,17 +65,16 @@
 .checkbox {
     display: flex;
     flex-wrap: nowrap;
-    padding-right: 12px;
+    width: 134px;
 }
 
 .editing {
     @extend .table-items-style;
-    gap: 8px;
     width: 178px;
     height: 32px;
     justify-content: space-between;
 }
 
-.first-button{
+.first-button {
     width: 134px;
 }

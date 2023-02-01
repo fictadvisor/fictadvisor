@@ -37,7 +37,7 @@ const Table: React.FC<TableProps> = (props) => {
                                 ? <div className="checkbox">{field.checkBox}</div>
                                 : <div className="first-button" style={{ width: "134px" }}>{field.firstButton}</div>
                         }
-                            <div className="second-button"  style={{ width: "fit-content" }}>{field.secondButton}</div>
+                            <div className="second-button">{field.secondButton}</div>
                         </div>
                     </div>
                 )
