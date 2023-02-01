@@ -129,6 +129,7 @@ export class GroupService {
             email: user.email,
             username: user.username,
             avatar: user.avatar,
+            id: user.id,
           };
         }
       }
@@ -153,6 +154,7 @@ export class GroupService {
         lastName: student.lastName,
         email: user.email,
         avatar: user.avatar,
+        id: user.id,
         role: [RoleName.CAPTAIN, RoleName.MODERATOR, RoleName.STUDENT].find((r) => roles.some((r2) => r2.name === r)),
       });
     }
