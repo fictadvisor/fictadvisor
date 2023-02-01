@@ -79,7 +79,7 @@ export class UserController {
   }
 
   @Permission('users.delete')
-  @UseGuards(PermissionGuard, JwtGuard)
+  @UseGuards(JwtGuard, PermissionGuard)
   @Delete('/:userId')
   deleteUser(
     @Param('userId', UserByIdPipe) userId: string,
