@@ -1,5 +1,5 @@
 import { State } from "@prisma/client";
-import { IsAlphanumeric, IsEmail, IsIn, IsNotEmpty, IsOptional, MaxLength, MinLength } from "class-validator";
+import { IsEmail, IsIn, IsNotEmpty, IsOptional, Matches, MaxLength, MinLength } from "class-validator";
 
 export class UpdateUserDTO {
 
@@ -12,10 +12,11 @@ export class UpdateUserDTO {
     @IsNotEmpty({
         message: 'username can not be empty',
     })
-    @IsAlphanumeric('en-US',
+    @Matches(
+      /^[a-zA-Z0-9_]+$/,
       {
-        message: 'username contains wrong symbols (only a-z A-Z 0-9)',
-    })
+          message: 'username is not correct',
+      })
     @IsOptional()
     username?: string;
 
