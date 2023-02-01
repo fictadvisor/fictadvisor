@@ -1,0 +1,155 @@
+$large-input-width: 480px;
+$normal-input-width: 308px;
+
+.input-success-icon{
+  color: $success-color;
+}
+
+.input-error-icon{
+  color: $error-color;
+}
+
+
+@mixin input-color($text-color, $border-color, $placeholder-color){
+  &::placeholder {
+    transition: all 0.2s ease-in-out;
+    color: $placeholder-color;
+  }
+
+  &:-ms-input-placeholder {
+    transition: all 0.2s ease-in-out;
+    color: $placeholder-color;
+  }
+
+  &::-ms-input-placeholder {
+    transition: all 0.2s ease-in-out;
+    color: $placeholder-color;
+  }
+
+  background: $dark-primary;
+  border-color: $border-color;
+  color: $text-color;
+}
+
+.default-input-color{
+  color: #FAFAFA;
+
+  label{
+    background: linear-gradient(180deg, rgba(30, 30, 30, 0) 49.48%, #1E1E1E 49.95%);
+    color: inherit;
+  }
+
+  input{
+    @include input-color(#737373, #737373, #D4D4D4);
+    &:focus {
+      @include input-color(#FFFFFF, #FFFFFF, #404040);
+    }
+  }
+
+  &:hover {
+    color: #FFFFFF;
+
+    input {
+      border-color: #FFFFFF;
+      color: #FFFFFF;
+    }
+  }
+}
+
+.disabled-input-color{
+  @extend .default-input-color;
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+.error-input-color{
+  color: #737373;
+
+  label{
+    background: linear-gradient(180deg, rgba(30, 30, 30, 0) 49.48%, #1E1E1E 49.95%);
+    color: inherit;
+  }
+  input {
+    @include input-color(#737373, #EC131E, #D4D4D4);
+  }
+}
+
+.success-input-color{
+  color: #737373;
+
+  label{
+    background: linear-gradient(180deg, rgba(30, 30, 30, 0) 49.48%, #1E1E1E 49.95%);
+    color: inherit;
+  }
+  input {
+    @include input-color(#737373, #3DA96D, #D4D4D4);
+  }
+}
+
+@mixin field-input($text-color, $border-color, $placeholder-color){
+
+  width: 100%;
+  background: $dark-primary;
+  padding: 16px 24px 16px 24px;
+  border: 2px solid $border-color;
+  border-radius: 8px;
+  color: $text-color;
+}
+
+@mixin field-style{
+  width: 100%;
+  min-width: fit-content;
+  transition: all 0.2s ease-in-out;
+  color: #737373;
+  position: relative;
+  top: -15px;
+
+  label {
+    color: inherit;
+    padding: 2px 8px;
+    isolation: isolate;
+    width: fit-content;
+    block-size: fit-content;
+    background: linear-gradient(180deg, rgba(30, 30, 30, 0) 49.48%, #1E1E1E 49.95%);
+    position: relative;
+    top: 10px;
+    left: 8px;
+    @include flex-center;
+  }
+  p{
+    font-size: 11px;
+    line-height: 1.6;
+    margin-top: 2px;
+    padding: 2px 8px;
+  }
+}
+
+.field {
+  @include field-style;
+
+  input {
+    @include field-input(#737373, #737373, #D4D4D4);
+
+    &:focus {
+      @include field-input(#FFFFFF, #FFFFFF, #404040);
+    }
+  }
+
+  &:hover {
+    color: #FFFFFF;
+
+    input {
+      border-color: #FFFFFF;
+      color: #FFFFFF;
+    }
+  }
+}
+
+
+
+
+
+
+
+
+

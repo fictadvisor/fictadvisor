@@ -10,7 +10,7 @@ export enum AlertButtonIconPosition{
 
 
 interface AlertButtonProps {
-    text: string,
+    text?: string,
     onClick: Function,
     isDisabled: boolean,
     type: AlertButtonType,
@@ -22,16 +22,16 @@ interface AlertButtonProps {
 const AlertButton: React.FC<AlertButtonProps> = (props) => {
 
     const buttonColor = `${props.type}-alert-button-color `
-    const buttonStyle = `alert${props.icon ? "-icon" : ""}-button`
+    const buttonStyle = props.text ? `alert${props.icon ? "-icon" : ""}-button`: "unlabeled-alert-button";
     const additionalClass = props.className ? " " + props.className : ""
     const className = buttonColor + buttonStyle + additionalClass
 
     return (
         <button disabled={props.isDisabled} className={className}
                 onClick={() => {props.onClick}}>
-            {props.icon && props.iconPosition == AlertButtonIconPosition.LEFT && <div className="icon"> {props.icon} </div>}
+            {props.icon && props.iconPosition == AlertButtonIconPosition.LEFT && <div> {props.icon} </div>}
             {props.text}
-            {props.icon && props.iconPosition == AlertButtonIconPosition.RIGHT && <div className="icon"> {props.icon} </div>}
+            {props.icon && props.iconPosition == AlertButtonIconPosition.RIGHT && <div> {props.icon} </div>}
         </button>
     );
 }
