@@ -130,6 +130,7 @@ export class GroupService {
             username: user.username,
             avatar: user.avatar,
             id: user.id,
+            telegramId: user.telegramId,
           };
         }
       }
