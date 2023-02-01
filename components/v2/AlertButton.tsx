@@ -29,9 +29,9 @@ const AlertButton: React.FC<AlertButtonProps> = (props) => {
     return (
         <button disabled={props.isDisabled} className={className}
                 onClick={() => {props.onClick}}>
-            {props.icon && props.iconPosition == AlertButtonIconPosition.LEFT && <div> {props.icon} </div>}
+            {props.icon && props.iconPosition == AlertButtonIconPosition.LEFT && <div className="icon"> {props.icon} </div>}
             {props.text}
-            {props.icon && props.iconPosition == AlertButtonIconPosition.RIGHT && <div> {props.icon} </div>}
+            {props.icon && props.iconPosition == AlertButtonIconPosition.RIGHT && <div className="icon"> {props.icon} </div>}
         </button>
     );
 }
