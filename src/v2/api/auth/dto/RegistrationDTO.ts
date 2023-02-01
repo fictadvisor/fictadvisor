@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsOptional, Matches, MaxLength, MinLength, ValidateNested } from "class-validator";
+import { IsBoolean, IsEmail, IsNotEmpty, IsOptional, Matches, MaxLength, MinLength, ValidateNested } from "class-validator";
 import { Type } from 'class-transformer';
 
 export class RegistrationDTO {
@@ -10,6 +10,7 @@ export class RegistrationDTO {
   @Type(() => UserDTO)
   user: UserDTO;
 
+  @IsOptional()
   telegram: TelegramDTO;
 }
 
@@ -56,6 +57,7 @@ export class StudentDTO {
   @IsNotEmpty()
   lastName: string;
 
+  @IsBoolean()
   @IsNotEmpty()
   isCaptain: boolean;
 }
