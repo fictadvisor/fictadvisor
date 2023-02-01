@@ -1,7 +1,8 @@
 import { useRef, useState, useCallback } from "react";
 import { Tooltip } from "./Tooltip";
 import { Tag, TagState } from "./Tag";
-import Button, { ButtonType,ButtonSize } from "./Button";
+import Button, { ButtonType, ButtonSize } from "./Button";
+import Rating from "./Rating";
 
 interface HeaderCardProps {
   name: string;
@@ -23,30 +24,37 @@ interface PollCardProps {
   url?: string;
 }
 
-const useToolTip=(element:HTMLParagraphElement,toolTipWidth:number):any=>{
-    //to find out if the p element is truncated
-    let isTruncated;
-    let offsetX;
-    let offsetY;
-    
-    if(element){
+interface RatingCardProps {
+  name: string;
+  rating: number;
+  roles: string[];
+  url?: string;
+}
 
-      const props = element.getBoundingClientRect();
-      isTruncated = element.scrollHeight - 1 > props.height;
-      offsetY=window.scrollY+props.top-props.height/2;
+const useToolTip = (
+  element: HTMLParagraphElement,
+  toolTipWidth: number
+): any => {
+  //to find out if the p element is truncated
+  let isTruncated;
+  let offsetX;
+  let offsetY;
 
-      if((props.right+toolTipWidth)>window.innerWidth){
-       //tooltip is over the screen 
-       offsetX=window.innerWidth-toolTipWidth;
-      }
-      else{
-        //tooltip is within the screen
-        offsetX=props.right;
-      } 
+  if (element) {
+    const props = element.getBoundingClientRect();
+    isTruncated = element.scrollHeight - 1 > props.height;
+    offsetY = window.scrollY + props.top;
+
+    if (props.right + toolTipWidth > window.innerWidth) {
+      //tooltip is over the screen
+      offsetX = window.innerWidth - toolTipWidth;
+    } else {
+      //tooltip is within the screen
+      offsetX = props.right;
     }
-    return {offsetX,isTruncated,offsetY};
   }
-
+  return { offsetX, isTruncated, offsetY };
+};
 
 export const HeaderCard: React.FC<HeaderCardProps> = ({
   name,
@@ -57,7 +65,7 @@ export const HeaderCard: React.FC<HeaderCardProps> = ({
   return (
     <div className="header-card-container">
       <div className="header-card-info">
-        <h4>{name}</h4>
+        <h4 className="card-name">{name}</h4>
         <div>
           <span className="header-card-postition">{position}</span>
           <span className="header-card-group-name">{groupName}</span>
@@ -73,21 +81,22 @@ export const LecturerHeaderCard: React.FC<LecturerHeaderCardProps> = ({
   description,
   url = "/assets/icons/lecturer60.png",
 }) => {
-  
   const [showToolTip, setShowToolTip] = useState<boolean>(false);
   const ref = useRef<HTMLParagraphElement>(null);
-  const {offsetX,offsetY,isTruncated}=useToolTip(ref.current,300);
+  const { offsetX, offsetY, isTruncated } = useToolTip(ref.current, 300);
 
   return (
     <div
-      className="header-lecturer-card-container"
+      className="card header-lecturer-card-container"
       onMouseEnter={() => setShowToolTip(true)}
       onMouseLeave={() => setShowToolTip(false)}
     >
       <img src={url} alt="картинка вмкладача" />
       <div className="header-lecturer-card-info">
-        <h4>{name}</h4>
-        <p ref={ref} className="lecturer-description">{description}</p>
+        <h4 className="card-name">{name}</h4>
+        <p ref={ref} className="lecturer-description">
+          {description}
+        </p>
       </div>
       {showToolTip && isTruncated && (
         <Tooltip
@@ -98,7 +107,7 @@ export const LecturerHeaderCard: React.FC<LecturerHeaderCardProps> = ({
             left: offsetX,
             width: "300px",
             fontSize: "11px",
-            top:offsetY
+            top: offsetY,
           }}
         />
       )}
@@ -110,35 +119,34 @@ export const PollCard: React.FC<PollCardProps> = ({
   name,
   description,
   roles,
-  url='/assets/icons/lecturer60.png',
+  url = "/assets/icons/lecturer60.png",
 }) => {
   const [showToolTip, setShowToolTip] = useState<boolean>(false);
   const ref = useRef<HTMLParagraphElement>(null);
-  const {offsetX,offsetY,isTruncated}=useToolTip(ref.current,300);
+  const { offsetX, offsetY, isTruncated } = useToolTip(ref.current, 300);
 
   return (
-    <article className="poll-card-container"
-    onMouseEnter={() => setShowToolTip(true)}
-    onMouseLeave={() => setShowToolTip(false)}
+    <article
+      className="card poll-card-container"
+      onMouseEnter={() => setShowToolTip(true)}
+      onMouseLeave={() => setShowToolTip(false)}
     >
-      <img src={url} alt="викладач" />
-      <div className="roles">
-        <Tag state={TagState.SMALL} text="Лектор" className="violet-first" />
-        <Tag state={TagState.SMALL} text="Практик" className="orange-first" />
-        <Tag state={TagState.SMALL} text="Лаборант" className="mint-first" />
-      </div>
-      <h4>{name}</h4>
-      <p ref={ref} className="lecturer-description">       
+      <img className="card-avatar" src={url} alt="викладач" />
+      <br />
+      <CardRoles roles={roles} />
+      <h4 className="card-name">{name}</h4>
+      <p ref={ref} className="lecturer-description">
         {description}
       </p>
-     
-      <Button
-      type={ButtonType.SECONDARY_RED}
-      size={ButtonSize.SMALL}
-      onClick={()=>{}}
-      text={'Пройти опитування'}></Button>
 
-{showToolTip && isTruncated && (
+      <Button
+        type={ButtonType.SECONDARY_RED}
+        size={ButtonSize.SMALL}
+        onClick={() => {}}
+        text={"Пройти опитування"}
+      ></Button>
+
+      {showToolTip && isTruncated && (
         <Tooltip
           text={description}
           direction="left"
@@ -147,10 +155,104 @@ export const PollCard: React.FC<PollCardProps> = ({
             left: offsetX,
             width: "300px",
             fontSize: "11px",
-            top:offsetY
+            top: offsetY,
           }}
         />
       )}
     </article>
+  );
+};
+
+export const RatingCard: React.FC<RatingCardProps> = ({
+  rating,
+  name,
+  roles,
+  url = "/assets/icons/lecturer60.png",
+}) => {
+  return (
+    <article className="card rating-card-container">
+      <img className="card-avatar" src={url} alt="викладач" />
+      <div className="rating-conatainer">
+        <Rating rating={rating} />
+        {/* <br /> */}
+        <span>{rating}</span>
+      </div>
+      <CardRoles roles={roles} />
+      <h4 className="card-name">{name}</h4>
+    </article>
+  );
+};
+
+export const SimpleCard: React.FC<{ name: string; details: string }> = ({
+  name,
+  details,
+}) => {
+  const [showToolTip, setShowToolTip] = useState<boolean>(false);
+  const ref = useRef<HTMLParagraphElement>(null);
+  const { offsetX, offsetY, isTruncated } = useToolTip(ref.current, 300);
+
+  return (
+    <article
+      className="card simple-card-container"
+      onMouseEnter={() => setShowToolTip(true)}
+      onMouseLeave={() => setShowToolTip(false)}
+    >
+      <p ref={ref} className="card-name simple-card-name">
+        {name}
+      </p>
+      {showToolTip && isTruncated && (
+        <Tooltip
+          text={name}
+          direction="left"
+          style={{
+            position: "absolute",
+            left: offsetX,
+            width: "300px",
+            fontSize: "11px",
+            top: offsetY,
+            // transform: "translateY(100%)",
+          }}
+        />
+      )}
+      <p>{details}</p>
+    </article>
+  );
+};
+
+const CardRoles: React.FC<{ roles: string[] }> = ({ roles }) => {
+  return (
+    <div className="card-roles">
+      {roles.map((role) => {
+        switch (role) {
+          case "лаборант":
+            return (
+              <Tag
+                state={TagState.SMALL}
+                text="Лаборант"
+                className="mint-first"
+                key={Math.random()}
+              />
+            );
+          case "лектор":
+            return (
+              <Tag
+                state={TagState.SMALL}
+                text="Лектор"
+                className="violet-first"
+                key={Math.random()}
+              />
+            );
+          case "практик":
+            return (
+              <Tag
+                state={TagState.SMALL}
+                text="Практик"
+                className="orange-first"
+                key={Math.random()}
+              />
+            );
+        }
+      })}
+    </div>
   );
 };
