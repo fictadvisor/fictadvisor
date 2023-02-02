@@ -92,27 +92,29 @@ export class GroupService {
   async moderatorSwitch(groupId: string, userId: string, body: RoleDTO){
     const user = await this.userRepository.get(userId);
 
+    if (body.roleName !== RoleName.MODERATOR && body.roleName === RoleName.STUDENT) {
+      throw new NoPermissionException();
+    }
     if (user.student.groupId !== groupId) {
       throw new NoPermissionException();
     }
 
     const roles = await this.groupRepository.getRoles(groupId);
+    const role = roles.find((r) => r.name === body.roleName);
+    const userRole = await this.userService.getGroupRole(userId);
 
-    for (const role of roles) {
-      if (role.name === body.roleName) {
-        await this.studentRepository.addRole(userId, role.id);
-      }
-    }
+    await this.studentRepository.removeRole(userId, userRole.id);
+    await this.studentRepository.addRole(userId, role.id);
   }
 
   async removeStudent(groupId: string, userId: string, reqUser: User) {
-    const userGroupRole = await this.userService.getGroupRole(userId);
-    const reqUserGroupRole = await this.userService.getGroupRole(reqUser.id);
+    const userRole = await this.userService.getGroupRole(userId);
+    const reqUserRole = await this.userService.getGroupRole(reqUser.id);
 
-    if(reqUserGroupRole.groupRole.weight <= userGroupRole.groupRole.weight) {
+    if(reqUserRole.weight <= userRole.weight) {
       throw new NoPermissionException();
     }
-    if (userGroupRole.groupId !== groupId) {
+    if (userRole.groupId !== groupId) {
       throw new NoPermissionException();
     }
 
@@ -123,18 +125,8 @@ export class GroupService {
     const students = await this.groupRepository.getStudents(groupId);
     for (const student of students) {
       const roles = await this.studentRepository.getRoles(student.userId);
-      for (const role of roles){
-        if (role.name == RoleName.CAPTAIN){
-          const user = await this.userRepository.get(student.userId);
-          return {
-            firstName: student.firstName,
-            middleName: student.middleName,
-            lastName: student.lastName,
-            email: user.email,
-            username: user.username,
-            avatar: user.avatar,
-          };
-        }
+      if (roles.some((r) => r.name === RoleName.CAPTAIN)) {
+        return this.userService.getUser(student.userId);
       }
     }
     return null;
@@ -149,15 +141,11 @@ export class GroupService {
     students = students.filter((st) => st.state === State.APPROVED);
     const results = [];
     for (const student of students) {
-      const roles = await this.studentRepository.getRoles(student.userId);
-      const user = await this.userRepository.get(student.userId);
+      const role = await this.userService.getGroupRole(student.userId);
+      const user = await this.userService.getUser(student.userId);
       results.push({
-        firstName: student.firstName,
-        middleName: student.middleName,
-        lastName: student.lastName,
-        email: user.email,
-        avatar: user.avatar,
-        role: [RoleName.CAPTAIN, RoleName.MODERATOR, RoleName.STUDENT].find((r) => roles.some((r2) => r2.name === r)),
+        ...user,
+        role: role.name,
       });
     }
     return { students: results };
