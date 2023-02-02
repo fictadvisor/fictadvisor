@@ -36,7 +36,7 @@
         top: 2px;
         background-color: #747474;
         border-radius: 100px;
-        transition: 0.4s;
+        transition: 0.4s ease-in-out;
     }
 
     &::after {
@@ -50,7 +50,7 @@
         height: 18px;
         background-color: #343434;
         border-radius: 100px;
-        transition: 0.4s;
+        transition: 0.4s ease-in-out;
     }
 }
 
