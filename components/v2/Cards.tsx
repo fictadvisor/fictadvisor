@@ -26,8 +26,8 @@ interface PollCardProps {
 
 interface RatingCardProps {
   name: string;
-  rating: number;
-  roles: string[];
+  rating?: number;
+  roles?: string[];
   url?: string;
 }
 
@@ -37,23 +37,29 @@ const useToolTip = (
 ): any => {
   //to find out if the p element is truncated
   let isTruncated;
-  let offsetX;
-  let offsetY;
+
+  let offsetX, offsetY, toolTipDirection;
 
   if (element) {
     const props = element.getBoundingClientRect();
     isTruncated = element.scrollHeight - 1 > props.height;
     offsetY = window.scrollY + props.top;
 
+    console.log(props);
     if (props.right + toolTipWidth > window.innerWidth) {
       //tooltip is over the screen
-      offsetX = window.innerWidth - toolTipWidth;
+
+      offsetX = { left: props.left - toolTipWidth };
+      toolTipDirection = "right";
     } else {
       //tooltip is within the screen
-      offsetX = props.right;
+
+      console.log("here");
+      offsetX = { left: props.right };
+      toolTipDirection = "left";
     }
   }
-  return { offsetX, isTruncated, offsetY };
+  return { offsetX, isTruncated, offsetY, toolTipDirection };
 };
 
 export const HeaderCard: React.FC<HeaderCardProps> = ({
@@ -83,34 +89,40 @@ export const LecturerHeaderCard: React.FC<LecturerHeaderCardProps> = ({
 }) => {
   const [showToolTip, setShowToolTip] = useState<boolean>(false);
   const ref = useRef<HTMLParagraphElement>(null);
-  const { offsetX, offsetY, isTruncated } = useToolTip(ref.current, 300);
+  const { offsetX, offsetY, isTruncated, toolTipDirection } = useToolTip(
+    ref.current,
+    300
+  );
+
+  console.log(offsetX, offsetY, isTruncated, toolTipDirection);
 
   return (
-    <div
-      className="card header-lecturer-card-container"
-      onMouseEnter={() => setShowToolTip(true)}
-      onMouseLeave={() => setShowToolTip(false)}
-    >
+    <div className="card header-lecturer-card-container">
       <img src={url} alt="картинка вмкладача" />
       <div className="header-lecturer-card-info">
         <h4 className="card-name">{name}</h4>
-        <p ref={ref} className="lecturer-description">
+        <p
+          ref={ref}
+          className="lecturer-description"
+          onMouseEnter={() => setShowToolTip(true)}
+          onMouseLeave={() => setShowToolTip(false)}
+        >
           {description}
+          {showToolTip && isTruncated && (
+            <Tooltip
+              text={description}
+              direction={toolTipDirection}
+              style={{
+                position: "absolute",
+                ...offsetX,
+                width: "300px",
+                fontSize: "11px",
+                top: offsetY,
+              }}
+            />
+          )}
         </p>
       </div>
-      {showToolTip && isTruncated && (
-        <Tooltip
-          text={description}
-          direction="left"
-          style={{
-            position: "absolute",
-            left: offsetX,
-            width: "300px",
-            fontSize: "11px",
-            top: offsetY,
-          }}
-        />
-      )}
     </div>
   );
 };
@@ -123,20 +135,37 @@ export const PollCard: React.FC<PollCardProps> = ({
 }) => {
   const [showToolTip, setShowToolTip] = useState<boolean>(false);
   const ref = useRef<HTMLParagraphElement>(null);
-  const { offsetX, offsetY, isTruncated } = useToolTip(ref.current, 300);
+  const { offsetX, offsetY, isTruncated, toolTipDirection } = useToolTip(
+    ref.current,
+    300
+  );
 
   return (
-    <article
-      className="card poll-card-container"
-      onMouseEnter={() => setShowToolTip(true)}
-      onMouseLeave={() => setShowToolTip(false)}
-    >
+    <article className="card card-effect poll-card-container">
       <img className="card-avatar" src={url} alt="викладач" />
       <br />
       <CardRoles roles={roles} />
       <h4 className="card-name">{name}</h4>
-      <p ref={ref} className="lecturer-description">
+      <p
+        ref={ref}
+        className="lecturer-description"
+        onMouseEnter={() => setShowToolTip(true)}
+        onMouseLeave={() => setShowToolTip(false)}
+      >
         {description}
+        {showToolTip && isTruncated && (
+          <Tooltip
+            text={description}
+            direction={toolTipDirection}
+            style={{
+              position: "absolute",
+              ...offsetX,
+              width: "300px",
+              fontSize: "11px",
+              top: offsetY,
+            }}
+          />
+        )}
       </p>
 
       <Button
@@ -145,20 +174,6 @@ export const PollCard: React.FC<PollCardProps> = ({
         onClick={() => {}}
         text={"Пройти опитування"}
       ></Button>
-
-      {showToolTip && isTruncated && (
-        <Tooltip
-          text={description}
-          direction="left"
-          style={{
-            position: "absolute",
-            left: offsetX,
-            width: "300px",
-            fontSize: "11px",
-            top: offsetY,
-          }}
-        />
-      )}
     </article>
   );
 };
@@ -170,14 +185,17 @@ export const RatingCard: React.FC<RatingCardProps> = ({
   url = "/assets/icons/lecturer60.png",
 }) => {
   return (
-    <article className="card rating-card-container">
+    <article className="card card-effect rating-card-container">
       <img className="card-avatar" src={url} alt="викладач" />
-      <div className="rating-conatainer">
-        <Rating rating={rating} />
-        {/* <br /> */}
-        <span>{rating}</span>
-      </div>
-      <CardRoles roles={roles} />
+
+      {rating && (
+        <div className="rating-conatainer">
+          <Rating rating={rating} />
+          <span>{rating}</span>
+        </div>
+      )}
+      {!rating && <br />}
+      {roles && <CardRoles roles={roles} />}
       <h4 className="card-name">{name}</h4>
     </article>
   );
@@ -189,31 +207,35 @@ export const SimpleCard: React.FC<{ name: string; details: string }> = ({
 }) => {
   const [showToolTip, setShowToolTip] = useState<boolean>(false);
   const ref = useRef<HTMLParagraphElement>(null);
-  const { offsetX, offsetY, isTruncated } = useToolTip(ref.current, 300);
+  const { offsetX, offsetY, isTruncated, toolTipDirection } = useToolTip(
+    ref.current,
+    300
+  );
 
   return (
-    <article
-      className="card simple-card-container"
-      onMouseEnter={() => setShowToolTip(true)}
-      onMouseLeave={() => setShowToolTip(false)}
-    >
-      <p ref={ref} className="card-name simple-card-name">
+    <article className="card card-effect simple-card-container">
+      <p
+        ref={ref}
+        className="card-name simple-card-name"
+        onMouseEnter={() => setShowToolTip(true)}
+        onMouseLeave={() => setShowToolTip(false)}
+      >
         {name}
+        {showToolTip && isTruncated && (
+          <Tooltip
+            text={name}
+            direction={toolTipDirection}
+            style={{
+              position: "absolute",
+              ...offsetX,
+              width: "300px",
+              fontSize: "11px",
+              top: offsetY,
+            }}
+          />
+        )}
       </p>
-      {showToolTip && isTruncated && (
-        <Tooltip
-          text={name}
-          direction="left"
-          style={{
-            position: "absolute",
-            left: offsetX,
-            width: "300px",
-            fontSize: "11px",
-            top: offsetY,
-            // transform: "translateY(100%)",
-          }}
-        />
-      )}
+
       <p>{details}</p>
     </article>
   );

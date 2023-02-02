@@ -14,7 +14,7 @@ const Rating: React.FC<RatingProps> = ({ rating, ...rest }) => {
       <div
         className="full-stars"
         style={{
-          width: `${(rating / 10) * 100}%`,
+          width: `${(rating / 5) * 100}%`,
         }}
         
       ></div>

@@ -35,7 +35,6 @@
     }
     &:hover {
         cursor: pointer;
-        background: $theme-color;
         & h4,
         & .header-card-info {
             color: #e5e5e5;
@@ -45,7 +44,6 @@
         }
     }
     &:focus {
-        background: #151515;
         & h4,
         & .header-card-info {
             color: #d4d4d4;
@@ -73,6 +71,7 @@
 }
 
 .card {
+    // cursor: pointer;
     background-color: #343434;
     padding: 16px;
     border-radius: 6px;
@@ -80,18 +79,23 @@
     min-width: fit-content;
     border: 1px solid transparent;
     transition: all 0.2s ease-in-out;
+}
+
+.card-effect{
+    cursor: pointer;
     &:focus {
         border-color: #b83838;
     }
     &:active {
         border-color: #fd4444;
+        background-color: #404040;
     }
     &:disabled {
         border-color: transparent;
         background-color: #4b4b4b;
     }
     &:hover {
-        box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
     }
 }
 
@@ -130,7 +134,6 @@
 }
 
 .header-lecturer-card-container {
-    padding: 16px;
     background-color: #292929;
     min-width: fit-content;
     min-height: fit-content;
@@ -170,6 +173,7 @@
         display: flex;
         justify-content: flex-end;
         align-items: center;
+        gap: 8px;
     }
 }
 
