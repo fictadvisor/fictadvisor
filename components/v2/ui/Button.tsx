@@ -26,14 +26,23 @@ interface ButtonProps {
     type: ButtonType,
     iconPosition?: ButtonIconPosition,
     className?: string;
-}
+} 
 
-const Button: React.FC<ButtonProps> = (props) => {
+const Button: React.FC<ButtonProps> = ({
+    type,
+    className,
+    isDisabled,
+    onClick,
+    iconPosition,
+    icon,
+    text,
+    size
+}) => {
 
-    const buttonColor = `${props.type}-button-color`
-    const buttonStyle = `${props.type.split("-")[0]}-${props.size}${props.icon ? "-icon" : ""}-button`
-    const additionalClass = props.className ? props.className : ""
-    const className = mergeClassNames(styles[buttonColor], styles[buttonStyle], styles[additionalClass]);
+    const buttonColor = `${type}-button-color`
+    const buttonStyle = `${type.split("-")[0]}-${size}${icon ? "-icon" : ""}-button`
+    const additionalClass = className ? className : ""
+    className = mergeClassNames(styles[buttonColor], styles[buttonStyle], styles[additionalClass]);
 
     return (
         <button disabled={isDisabled} className={className}
