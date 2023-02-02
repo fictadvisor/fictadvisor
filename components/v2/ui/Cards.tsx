@@ -3,6 +3,8 @@ import { Tooltip } from "./Tooltip";
 import { Tag, TagState } from "./Tag";
 import Button, { ButtonType, ButtonSize } from "./Button";
 import Rating from "./Rating";
+import styles from "styles/v2/local/elements/Cards.module.scss";
+
 
 interface HeaderCardProps {
   name: string;
@@ -75,12 +77,12 @@ export const HeaderCard: React.FC<HeaderCardProps> = ({
   url = "/assets/icons/frog36.png",
 }) => {
   return (
-    <div className="header-card-container">
-      <div className="header-card-info">
-        <h4 className="card-name">{name}</h4>
+    <div className={styles[`header-card-container`]}>
+      <div className={styles[`header-card-info`]}>
+        <h4 className={styles[`card-name`]}>{name}</h4>
         <div>
-          <span className="header-card-postition">{position}</span>
-          <span className="header-card-group-name">{groupName}</span>
+          <span className={styles["header-card-postition"]}>{position}</span>
+          <span className={styles["header-card-group-name"]}>{groupName}</span>
         </div>
       </div>
       <img src={url} alt="Картинка профілю" />
@@ -101,13 +103,13 @@ export const LecturerHeaderCard: React.FC<LecturerHeaderCardProps> = ({
   );
 
   return (
-    <div className="card header-lecturer-card-container">
+    <div className={styles["card header-lecturer-card-container"]}>
       <img src={url} alt="картинка вмкладача" />
-      <div className="header-lecturer-card-info">
-        <h4 className="card-name">{name}</h4>
+      <div className={styles["header-lecturer-card-info"]}>
+        <h4 className={styles["card-name"]}>{name}</h4>
         <p
           ref={ref}
-          className="lecturer-description"
+          className={styles["lecturer-description"]}
           onMouseEnter={() => setShowToolTip(true)}
           onMouseLeave={() => setShowToolTip(false)}
         >
@@ -145,14 +147,14 @@ export const PollCard: React.FC<PollCardProps> = ({
   );
 
   return (
-    <article className="card card-effect poll-card-container">
-      <img className="card-avatar" src={url} alt="викладач" />
+    <article className={styles["card card-effect poll-card-container"]}>
+      <img className={styles["card-avatar"]} src={url} alt="викладач" />
       <br />
       <CardRoles roles={roles} />
-      <h4 className="card-name">{name}</h4>
+      <h4 className={styles["card-name"]}>{name}</h4>
       <p
         ref={ref}
-        className="lecturer-description"
+        className={styles["lecturer-description"]}
         onMouseEnter={() => setShowToolTip(true)}
         onMouseLeave={() => setShowToolTip(false)}
       >
@@ -189,15 +191,15 @@ export const RatingCard: React.FC<RatingCardProps> = ({
   url = "/assets/icons/lecturer60.png",
 }) => {
   return (
-    <article className="card card-effect rating-card-container">
-      <img className="card-avatar" src={url} alt="викладач" />
+    <article className={styles["card card-effect rating-card-container"]}>
+      <img className={styles["card-avatar"]} src={url} alt="викладач" />
 
       {rating && (
         <Rating rating={rating}/>
       )}
       {!rating && <br />}
       {roles && <CardRoles roles={roles} />}
-      <h4 className="card-name">{name}</h4>
+      <h4 className={styles["card-name"]}>{name}</h4>
     </article>
   );
 };
@@ -211,10 +213,10 @@ export const SimpleCard: React.FC<SimpleCardProps> = ({ name, details, rating })
   );
 
   return (
-    <article className="card card-effect simple-card-container">
+    <article className={styles["card card-effect simple-card-container"]}>
       <p
         ref={ref}
-        className="card-name simple-card-name"
+        className={styles["card-name simple-card-name"]}
         onMouseEnter={() => setShowToolTip(true)}
         onMouseLeave={() => setShowToolTip(false)}
       >
@@ -242,7 +244,7 @@ export const SimpleCard: React.FC<SimpleCardProps> = ({ name, details, rating })
 
 const CardRoles: React.FC<{ roles: string[] }> = ({ roles }) => {
   return (
-    <div className="card-roles">
+    <div className={styles["card-roles"]}>
       {roles.map((role) => {
         switch (role) {
           case "лаборант":
@@ -250,7 +252,7 @@ const CardRoles: React.FC<{ roles: string[] }> = ({ roles }) => {
               <Tag
                 state={TagState.SMALL}
                 text="Лаборант"
-                className="mint-first"
+                className={styles["mint-first"]}
                 key={Math.random()}
               />
             );
@@ -259,7 +261,7 @@ const CardRoles: React.FC<{ roles: string[] }> = ({ roles }) => {
               <Tag
                 state={TagState.SMALL}
                 text="Лектор"
-                className="violet-first"
+                className={styles["violet-first"]}
                 key={Math.random()}
               />
             );
@@ -268,7 +270,7 @@ const CardRoles: React.FC<{ roles: string[] }> = ({ roles }) => {
               <Tag
                 state={TagState.SMALL}
                 text="Практик"
-                className="orange-first"
+                className={styles["orange-first"]}
                 key={Math.random()}
               />
             );

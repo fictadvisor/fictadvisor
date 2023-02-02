@@ -4,7 +4,7 @@ import {
   PollCard,
   RatingCard,
   SimpleCard,
-} from "../../../components/v2/Cards";
+} from "../../../components/v2/ui/Cards";
 
 interface OwnProps {}
 
