@@ -1,3 +1,5 @@
+@import "../../../global/partials/utils";
+@import "../../../global/partials/theme";
 
 @mixin style-button-icon($radius, $size) {
     @include flex-center;
@@ -5,7 +7,7 @@
     align-items: center;
     border-radius: $radius;
     color: $light-primary;
-    background-color: #292929;
+    background-color: #404040;
     border: 1px solid transparent;
     height: $size;
     width: $size;
