@@ -9,7 +9,7 @@ interface HeaderCardProps {
   groupName: string;
   position: string;
   url?: string;
-}
+} 
 
 interface LecturerHeaderCardProps {
   name: string;
@@ -29,6 +29,12 @@ interface RatingCardProps {
   rating?: number;
   roles?: string[];
   url?: string;
+}
+
+interface SimpleCardProps {
+  name: string;
+  details?: string;
+  rating?:number;
 }
 
 const useToolTip = (
@@ -189,10 +195,7 @@ export const RatingCard: React.FC<RatingCardProps> = ({
       <img className="card-avatar" src={url} alt="викладач" />
 
       {rating && (
-        <div className="rating-conatainer">
-          <Rating rating={rating} />
-          <span>{rating}</span>
-        </div>
+        <Rating rating={rating}/>
       )}
       {!rating && <br />}
       {roles && <CardRoles roles={roles} />}
@@ -201,10 +204,7 @@ export const RatingCard: React.FC<RatingCardProps> = ({
   );
 };
 
-export const SimpleCard: React.FC<{ name: string; details: string }> = ({
-  name,
-  details,
-}) => {
+export const SimpleCard: React.FC<SimpleCardProps> = ({ name, details, rating }) => {
   const [showToolTip, setShowToolTip] = useState<boolean>(false);
   const ref = useRef<HTMLParagraphElement>(null);
   const { offsetX, offsetY, isTruncated, toolTipDirection } = useToolTip(
@@ -236,7 +236,8 @@ export const SimpleCard: React.FC<{ name: string; details: string }> = ({
         )}
       </p>
 
-      <p>{details}</p>
+      {details&&<p>{details}</p>}
+      {rating&&<Rating rating={rating} style={{justifyContent:'flex-start'}}/>}
     </article>
   );
 };
