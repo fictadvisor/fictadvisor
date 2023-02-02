@@ -100,8 +100,6 @@ export const LecturerHeaderCard: React.FC<LecturerHeaderCardProps> = ({
     300
   );
 
-  console.log(offsetX, offsetY, isTruncated, toolTipDirection);
-
   return (
     <div className="card header-lecturer-card-container">
       <img src={url} alt="картинка вмкладача" />
