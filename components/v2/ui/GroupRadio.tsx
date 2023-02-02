@@ -1,4 +1,5 @@
-import { ChangeEvent, useState } from "react"
+import {useState } from "react"
+import styles from "styles/v2/local/elements/GroupRadio.module.scss";
 
 export enum RadioState {
     DEFAULT = 'default',
@@ -26,18 +27,18 @@ export function GroupRadio(props: GroupRadio) {
             {props.options.map(radio => {
                 return (
                     <div>
-                        <div className="radio-container">
+                        <div className={styles["radio-container"]}>
                             <label>
                                 <input
-                                    className={radio.state + "-radio-input"}
+                                    className={styles[radio.state + "-radio-input"]}
                                     type="radio"
                                     name={radio.name}
                                     value={value}
                                     disabled={radio.isDisabled}
                                     onChange={handleChange} />
-                                <span className={radio.state + "-radio-box"}></span>
+                                <span className={styles[radio.state + "-radio-box"]}></span>
                             </label>
-                            <span className={radio.state + "-radio-text"}>{radio.text}</span>
+                            <span className={styles[radio.state + "-radio-text"]}>{radio.text}</span>
                         </div>
                     </div>
                 )

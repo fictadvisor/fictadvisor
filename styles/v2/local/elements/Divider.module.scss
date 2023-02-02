@@ -19,16 +19,13 @@ $divide-regular-color: #FAFAFA;
   margin-top: 36px;
 }
 
-hr{
-  border: 0.01px solid $divide-regular-color;  
-}
-
 .divider-text{
   color: $divide-regular-color;
-  padding: 0px 8px;
+  padding: 0 8px;
 }
 
 .first-line{
+  border: 0.01px solid $divide-regular-color;
   width: min(181.5px, 44.5%);
 }
 
@@ -37,6 +34,7 @@ hr{
 }
 
 .second-line{
+  border: 0.01px solid $divide-regular-color;
   width: min(371px, 91%);
 }
 

@@ -1,4 +1,6 @@
 import React, {ReactNode} from "react";
+import styles from "styles/v2/local/elements/Button.module.scss";
+import mergeClassNames from "merge-class-names";
 export enum ButtonSize {
     LARGE = "large", MEDIUM = "medium", SMALL = "small"
 }
@@ -28,10 +30,10 @@ interface ButtonProps {
 
 const Button: React.FC<ButtonProps> = (props) => {
 
-    const buttonColor = `${props.type}-button-color `
+    const buttonColor = `${props.type}-button-color`
     const buttonStyle = `${props.type.split("-")[0]}-${props.size}${props.icon ? "-icon" : ""}-button`
-    const additionalClass = props.className ? " " + props.className : ""
-    const className = buttonColor + buttonStyle + additionalClass
+    const additionalClass = props.className ? props.className : ""
+    const className = mergeClassNames(styles[buttonColor], styles[buttonStyle], styles[additionalClass]);
 
     return (
         <button disabled={props.isDisabled} className={className}

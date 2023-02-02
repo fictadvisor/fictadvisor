@@ -1,5 +1,5 @@
 import React from "react";
-
+import styles from "styles/v2/local/elements/Divider.module.scss";
 export interface DividerProps {
     text: string,
     className?: string
@@ -7,7 +7,7 @@ export interface DividerProps {
 
 export function Divider(props: DividerProps) {
     return (
-        <div className={"divider" + (props.className ? " " + props.className : "")}>
+        <div className={styles["divider"] + (props.className ? " " + styles[props.className] : "")}>
             <hr/>
             <div>
                 <p> {props.text} </p>

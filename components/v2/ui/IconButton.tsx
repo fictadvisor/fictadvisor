@@ -1,5 +1,6 @@
 import React from "react";
 import {BarsArrowDownIcon, BarsArrowUpIcon, TrashIcon} from "@heroicons/react/24/outline";
+import styles from "styles/v2/local/elements/IconButton.module.scss";
 
 type IconButtonProps = {
   size: "normal" | "large";
@@ -24,7 +25,7 @@ export const SortButton: React.FC<
   }
 > = ({ size, order, ...rest }) => {
   return (
-    <button className={`square-button-icon-${size}`} {...rest}>
+    <button className={styles[`square-button-icon-${size}`]} {...rest}>
       {order === SortButtonOrder.ASCENDING ? (
         <BarsArrowUpIcon className="icon" />
       ) : (
@@ -39,7 +40,7 @@ export const TrashBucketButton: React.FC<IconButtonProps> = ({
   ...rest
 }) => {
   return (
-    <button className={`round-button-icon-${size}`} {...rest}>
+    <button className={styles[`round-button-icon-${size}`]} {...rest}>
       <TrashIcon className="icon"/>
     </button>
   );

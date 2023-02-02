@@ -1,5 +1,6 @@
 import Select from "react-select";
 import React, { ReactNode, useState } from "react";
+import styles from "styles/v2/local/elements/Dropdown.module.scss";
 
 
 const dropDownOptionHeight = 36; //px
@@ -42,11 +43,11 @@ export const Dropdown: React.FC<DropdownProps> = ({
   const isDisabled = className === "disabled";
 
   return (
-    <div className="dropdown">
-      <span className={`${className ? `dropdown-${className}-label` : ""}`}>
+    <div className={styles["dropdown"]}>
+      <span className={className ? styles[`dropdown-${className}-label`] : ""}>
         {label}
       </span>
-      {icon && <div className="dropdown-icon-container">{icon}</div>}
+      {icon && <div className={styles["dropdown-icon-container"]}>{icon}</div>}
 
       <Select
         placeholder={placeholder}
@@ -63,19 +64,19 @@ export const Dropdown: React.FC<DropdownProps> = ({
         classNames={{
           control: (state) =>
             icon
-              ? "dropdown-control dropdown-control-iconed"
-              : "dropdown-control",
+              ? styles["dropdown-control"] + " " + styles["dropdown-control-iconed"]
+              : styles["dropdown-control"],
           container: (state) =>
-            `dropdown-container dropdown-container-${className}`,
+            `${styles["dropdown-container"]} ${styles["dropdown-container-${className}"]}`,
         //   input: (state) => "dropdown-input",
-          menu: (state) => "dropdown-menu",
-          menuList: (state) => "dropdown-menu-list",
+          menu: (state) => styles["dropdown-menu"],
+          menuList: (state) => styles["dropdown-menu-list"],
           option: (state) =>
             state.isSelected
-              ? "dropdown-option dropdown-option-selected"
-              : "dropdown-option",
-          placeholder: (state) => state.isDisabled? 'dropdown-placeholder-disabled':'dropdown-placeholder',
-          singleValue: (state) => "dropdown-single-value",
+              ? styles["dropdown-option"] + " " + styles["dropdown-option-selected"]
+              : styles["dropdown-option"],
+          placeholder: (state) => state.isDisabled? styles['dropdown-placeholder-disabled']: styles['dropdown-placeholder'],
+          singleValue: (state) => styles["dropdown-single-value"],
         }}
         styles={
                 {

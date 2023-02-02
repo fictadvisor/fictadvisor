@@ -4,6 +4,8 @@ import {SuccessIcon} from "../custom-svg/alert-icons/SuccessIcon";
 import {WarningIcon} from "../custom-svg/alert-icons/WarningIcon";
 import {InfoIcon} from "../custom-svg/alert-icons/InfoIcon";
 import {CrossIcon} from "../custom-svg/alert-icons/CrossIcon";
+import styles from "styles/v2/local/elements/AlertBlock.module.scss";
+import mergeClassNames from "merge-class-names";
 
 export enum AlertBlockSize {
     SMALL = "small", MEDIUM = "middle", LARGE = "large"
@@ -40,16 +42,16 @@ export const AlertBlock: React.FC<AlertBlockProps> =
     let className;
     switch (style) {
         case "outlined":
-            className = `alert-${color}-outlined`;
+            className = styles[`alert-${color}-outlined`];
             break;
         case "secondary":
-            className = `alert-${color}-secondary`;
+            className = styles[`alert-${color}-secondary`];
             break;
         case "primary":
-            className = `alert-${color}`;
+            className = styles[`alert-${color}`];
             break;
         default:
-            className = `alert-${color}-secondary ${style}`;
+            className = styles[`alert-${color}-secondary`] + " " + styles[style];
             break;
     }
 
@@ -62,22 +64,22 @@ export const AlertBlock: React.FC<AlertBlockProps> =
         icon = <SuccessIcon/>;
 
 
-    const [isVisible, setIsVisible] = useState<boolean>(true);
+    const [isVisible, setIsVisible] = useState(true);
     return (
-        <div className={`alert ${className} alert-${size}`}
+        <div className={mergeClassNames(styles["alert"], className, styles[`alert-${size}`])}
              style={{display: isVisible ? 'grid' : 'none'}}
         >
-            <div className="alert-icon">
+            <div className={styles["alert-icon"]}>
                 {icon}
             </div>
 
-            <div className="alert-title">{title}</div>
+            <div className={styles["alert-title"]}>{title}</div>
 
-            <div className="alert-icon-x" onClick={() => setIsVisible(false)}>
+            <div className={styles["alert-icon-x"]} onClick={() => setIsVisible(false)}>
                 <CrossIcon/>
             </div>
 
-            {description && <div className="alert-description">{description}</div>}
+            {description && <div className={styles["alert-description"]}>{description}</div>}
         </div>
     );
 };

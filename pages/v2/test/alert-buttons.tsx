@@ -5,8 +5,8 @@ import styles from "styles/v2/local/pages/test.module.scss";
 
 function alertButtons(){
   return(
-    <div className = "test-page-wrap">
-        <div className = "test-page-content">
+    <div className = {styles["test-page-wrap"]}>
+        <div className = {styles["test-page-content"]}>
             <AlertButton text="Success" icon={<CustomCheck/>} iconPosition={AlertButtonIconPosition.LEFT} onClick={() => {}} isDisabled={false} type={AlertButtonType.SUCCESS}/>
             <AlertButton text="Success" icon={<CustomCheck/>} iconPosition={AlertButtonIconPosition.RIGHT} onClick={() => {}} isDisabled={false} type={AlertButtonType.SUCCESS}/>
             <AlertButton text="Success" onClick={() => {}} isDisabled={false} type={AlertButtonType.SUCCESS}/>

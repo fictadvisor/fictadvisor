@@ -1,5 +1,6 @@
 import React, {ReactNode} from "react";
-
+import styles from "styles/v2/local/elements/AlertButton.module.scss";
+import mergeClassNames from "merge-class-names";
 export enum AlertButtonType{
     SUCCESS = "success", ERROR_PRIMARY = "error-primary", ERROR_SECONDARY = "error-secondary"
 }
@@ -21,10 +22,10 @@ interface AlertButtonProps {
 
 const AlertButton: React.FC<AlertButtonProps> = (props) => {
 
-    const buttonColor = `${props.type}-alert-button-color `
+    const buttonColor = `${props.type}-alert-button-color`
     const buttonStyle = props.text ? `alert${props.icon ? "-icon" : ""}-button`: "unlabeled-alert-button";
-    const additionalClass = props.className ? " " + props.className : ""
-    const className = buttonColor + buttonStyle + additionalClass
+    const additionalClass = props.className ? props.className : ""
+    const className = mergeClassNames(styles[buttonColor], styles[buttonStyle], styles[additionalClass]);
 
     return (
         <button disabled={props.isDisabled} className={className}
