@@ -1,6 +1,11 @@
 $breadcrumb-text-color: #D4D4D4;
 $last-breadcrumb-text-color: #E5E5E5;
 
+.breadcrumb-wrap{
+  display: flex;
+  gap: 10px;
+}
+
 .breadcrumb-text{
   font-size: 14px;
   line-height: 20px;
@@ -21,9 +26,6 @@ $last-breadcrumb-text-color: #E5E5E5;
   }
 }
 
-div{
-  display: inline;
-}
 
 .icon-home-breadcrumb svg{
   width: 10.5px;
