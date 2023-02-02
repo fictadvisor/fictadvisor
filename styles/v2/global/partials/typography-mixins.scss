@@ -1,0 +1,89 @@
+@mixin h1{
+  font-size: 96px;
+  line-height: 1.16;
+  font-weight: 700;
+}
+
+@mixin h2 {
+  font-size: 60px;
+  line-height: 1.16;
+  font-weight: 400;
+}
+
+@mixin h3 {
+  font-size: 36px;
+  line-height: 1.28;
+  font-weight: 400;
+}
+
+@mixin h3--semi-bold {
+  @extend h3;
+  font-weight: 600;
+}
+
+@mixin h4{
+  font-size: 28px;
+  line-height: 1.28;
+  font-weight: 400;
+}
+
+@mixin h4--semi-bold {
+  @extend h4;
+  font-weight: 600;
+}
+
+@mixin h4--bold {
+  @extend h4;
+  font-weight: 700;
+}
+
+@mixin h5 {
+  font-size: 24px;
+  line-height: 1.28;
+  font-weight: 400;
+}
+
+@mixin h6 {
+  font-size: 20px;
+  line-height: 1.28;
+  font-weight: 400;
+}
+
+@mixin h6--medium-bold {
+  @extend h6;
+  font-weight: 500;
+}
+
+@mixin h6--bold {
+  @extend h6;
+  font-weight: 700;
+}
+
+@mixin body-primary{
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 400;
+}
+
+@mixin body-primary--bold{
+  @extend .body-primary;
+  font-weight: 700;
+}
+
+@mixin body-secondary{
+  font-size: 16px;
+  line-height: 1.22;
+  font-weight: 400;
+}
+
+@mixin body-secondary--bold{
+  @extend .body-secondary;
+  line-height: 1.38;
+  font-weight: 700;
+}
+
+@mixin overline-text{
+  font-size: 11px;
+  line-height: 1.6;
+  font-weight: 400;
+}

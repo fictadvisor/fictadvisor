@@ -1,11 +1,12 @@
-import Button, {ButtonIconPosition, ButtonSize, ButtonType} from "../../../components/v2/Button";
+import Button, {ButtonIconPosition, ButtonSize, ButtonType} from "../../../components/v2/ui/Button";
 import React from "react";
 import {AcademicCapIcon} from "@heroicons/react/24/outline";
+import styles from "styles/v2/local/pages/test.module.scss";
 
 function buttons(){
     return(
-        <div className="test-page-wrap">
-            <div className="test-page-content">
+        <div className = {styles["test-page-wrap"]}>
+            <div className = {styles["test-page-content"]}>
                 <Button text="Primary Red" onClick={() => {}} isDisabled={false} size={ButtonSize.LARGE} type={ButtonType.PRIMARY_RED}/>
                 <Button text="Primary Red" onClick={() => {}} isDisabled={false} size={ButtonSize.LARGE} type={ButtonType.PRIMARY_RED}/>
                 <Button text="Primary Red" onClick={() => {}} isDisabled={false} size={ButtonSize.MEDIUM} type={ButtonType.PRIMARY_RED}/>

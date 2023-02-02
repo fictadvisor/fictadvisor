@@ -1,10 +1,13 @@
-import { XMarkIcon, UserIcon } from "@heroicons/react/24/outline";
-import AlertButton, { AlertButtonIconPosition, AlertButtonType } from "../../../components/v2/AlertButton";
-import { Check, CheckState } from "../../../components/v2/Check";
-import { IconButtonSize, TrashBucketButton } from "../../../components/v2/IconButton";
+import { XMarkIcon} from "@heroicons/react/24/outline";
+import AlertButton, { AlertButtonIconPosition, AlertButtonType } from "../../../components/v2/ui/AlertButton";
+import { Check, CheckState } from "../../../components/v2/ui/Check";
+import { IconButtonSize, TrashBucketButton } from "../../../components/v2/ui/IconButton";
 import {CustomCheck} from "../../../components/v2/custom-svg/CustomCheck";
 import Table from "../../../components/v2/Table";
-import Tag, { TagState } from "../../../components/v2/Tag";
+import Tag, { TagState } from "../../../components/v2/ui/Tag";
+
+import styles from "styles/v2/local/pages/test.module.scss";
+
 function tables() {
     const fields = [
         {
@@ -71,8 +74,8 @@ function tables() {
         },
     ]
     return (
-        <div className="test-page-wrap">
-            <div className="test-page-content">
+        <div className={styles["test-page-wrap"]}>
+            <div className={styles["test-page-content"]}>
                 <Table fields={fields} />
             </div>
         </div>

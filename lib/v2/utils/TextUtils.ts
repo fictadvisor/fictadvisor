@@ -14,10 +14,11 @@ export class TextUtil {
     return `${lastName} ${firstName}`;
   }
 
-  static mergeClassName(defaultValue: string, className: string) {
-    if (!className) {
-      return defaultValue;
+  static mergeClassNames() {
+        return Array.prototype.slice.call(arguments).reduce(function (classList, arg) {
+            return classList.concat(arg);
+        }, []).filter(function (arg) {
+            return typeof arg === 'string';
+        }).join(' ');
     }
-    return `${defaultValue} ${className}`;
-  }
 }

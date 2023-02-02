@@ -1,9 +1,10 @@
-import Input, {InputSize, InputState, InputType} from "../../../components/v2/Input";
+import Input, {InputSize, InputState, InputType} from "../../../components/v2/ui/Input";
+import styles from "styles/v2/local/pages/test.module.scss";
 
 function inputs(){
   return(
-    <div className="test-page-wrap">
-        <div className="test-page-content">
+    <div className = {styles["test-page-wrap"]}>
+        <div className = {styles["test-page-content"]}>
             <Input placeholder={"placeholder"} label="label" defaultRemark="defaultRemark" state={InputState.DEFAULT} size={InputSize.LARGE} type={InputType.DEFAULT}/>
             <Input placeholder={"placeholder"} label="label" errorRemark="errorRemark" state={InputState.ERROR} size={InputSize.LARGE} type={InputType.DEFAULT}/>
             <Input placeholder={"placeholder"} label="label" successRemark="successRemark"  state={InputState.SUCCESS} size={InputSize.LARGE} type={InputType.DEFAULT}/>

@@ -1,0 +1,19 @@
+@import "../../global/partials/utils";
+
+.test-page-wrap{
+  margin-top: 30px;
+  margin-bottom: 70px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.test-page-content{
+  width: calc(100% - 200px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+}

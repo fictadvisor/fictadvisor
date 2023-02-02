@@ -1,8 +1,9 @@
-import {TextArea, TextAreaState, TextAreaSpecs} from "../../../components/v2/TextArea";
+import {TextArea, TextAreaState, TextAreaSpecs} from "../../../components/v2/ui/TextArea";
+import styles from "styles/v2/local/pages/test.module.scss";
 
 export default function textareas(){
     return(
-        <div className='test-page-wrap'>
+        <div className={styles['test-page-wrap']}>
             <TextArea placeholder="Тиць..." />
             <TextArea placeholder="Не тиць..." label="не тицькай"/>
             <TextArea placeholder="filler text" isDisabled={true} />

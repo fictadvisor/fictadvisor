@@ -93,3 +93,13 @@ h6 {
   line-height: 1.6;
   font-weight: 400;
 }
+
+label{
+  @extend .body-primary;
+}
+
+input{
+  @extend .body-secondary;
+}
+
+

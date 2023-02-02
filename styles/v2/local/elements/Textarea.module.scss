@@ -1,0 +1,102 @@
+@import "../../global/partials/utils";
+@import "../../global/partials/theme";
+@import "../../global/partials/typography-mixins";
+
+.textarea-test{
+  padding:10px 0;
+  background: $dark-primary;
+  overflow-y: scroll;
+  p{
+    @include overline-text;
+    color:inherit;
+    padding: 2px 8px;
+    isolation: isolate;
+    max-width: 100px;
+    height: 20px;
+    position: relative;
+    top: -0px;
+    left: 10px;
+    display:flex;
+    align-items: center;
+  }
+  label{
+    color:inherit;
+    padding: 2px 8px;
+    isolation: isolate;
+    width: fit-content;
+    height: 22px;
+    background: inherit;
+    position: relative;
+    top: 10px;
+    left: 10px;
+    @include flex-center;
+  }
+  textarea{
+    @include body-secondary;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 16px 16px 16px 24px;
+    gap: 8px;
+    background: #1E1E1E;
+    width: 480px;
+    height: 120px;
+    border: 2px solid #E5E5E5;
+    color: #E5E5E5;
+    border-radius: 8px;
+    resize: none;
+    &:hover {
+      color: #FFFFFF;
+      border-color: #FFFFFF;
+    }
+    &:focus{
+      color: #A3A3A3;
+    }
+    &:disabled{
+      color: #737373;
+      border-color: #737373;
+    }
+  }
+  textarea::placeholder{
+    @include body-secondary;
+    opacity: 1;
+    //color: $Prototype-Base_Neutrals-Gray400;
+    &:hover {
+      color: #FFFFFF;
+      border-color: #FFFFFF;
+    }
+    &:focus{
+      color: #A3A3A3;
+    }
+    &:disabled{
+      color: #737373;
+      border-color: #737373;
+    }
+  }
+}
+
+.small-area textarea{
+    width: 308px;
+}
+
+.large-area textarea{
+    width: 740px;
+}
+
+.success-area{
+  textarea ,textarea:hover{
+    border-color:#3DA96D;
+  }
+  label, p{
+    color:#3DA96D;
+  }
+}
+
+.error-area{
+  textarea ,textarea:hover{
+    border-color:#EC131E;
+  }
+  label, p{
+    color:#EC131E;
+  }
+}
