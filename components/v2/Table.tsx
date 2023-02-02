@@ -1,31 +1,48 @@
 import React, { ReactNode } from "react";
 
 interface TableProps {
-    fullName: string,
-    email: string,
-    avatarIcon?: ReactNode,
-    tag?: ReactNode,
-    checkBox?: ReactNode,
-    button?: ReactNode,
-    editIcon?: ReactNode,
-    editButton?: ReactNode,
+    fields: {
+        fullName: string,
+        email: string,
+        avatar?: string,
+        tag?: ReactNode,
+        checkBox?: ReactNode,
+        firstButton?: ReactNode,
+        secondButton?: ReactNode,
+    }[],
 }
 
 const Table: React.FC<TableProps> = (props) => {
-
     return (
-        <div className="table-container">
-            <div className="user-container">
-                <div className="user-avatar"></div>
-                <div className="user-info">
-                    <div className="full-name">{props.fullName}</div>
-                    <div className="tag">{props.tag ? props.tag : ""}</div>
-                </div>
-            </div>
-            <div className="email">{props.email}</div>
-            {props.checkBox ? props.checkBox : ""}
-            <div style={{width:"fit-content"}}>{props.editButton}</div>
-            {props.editIcon ? props.editIcon : ""}</div>
+        <div>
+            {props.fields.map(field => {
+                field.avatar = field.avatar ? field.avatar : "default-avatar.jpg";
+                let userGap = (field.firstButton || field.checkBox || field.secondButton) ? "12px" : "26px";
+                let userWidth = field.tag && (field.firstButton || field.checkBox || field.secondButton) ? "180px" : "304px";
+                if (field.tag && !field.firstButton && !field.checkBox && !field.secondButton) userWidth = "288px";
+                return (
+                    <div className="table-container">
+                        <div className="user-container" style={{ gap: userGap }}>
+                            <div className="user-avatar">
+                                <img src={`/assets/${field.avatar}`} alt="avatar" />
+                            </div>
+                            <div className="user-info">
+                                <div className="full-name" style={{ width: userWidth }}>{field.fullName}</div>
+                                {field.tag && <div className="tag">{field.tag}</div>}
+                            </div>
+                        </div>
+                        <div className="email">{field.email}</div>
+                        <div className="editing">{
+                            field.tag
+                                ? <div className="checkbox">{field.checkBox}</div>
+                                : <div className="first-button" style={{ width: "134px" }}>{field.firstButton}</div>
+                        }
+                            <div className="second-button">{field.secondButton}</div>
+                        </div>
+                    </div>
+                )
+            })}
+        </div>
     )
 }
 

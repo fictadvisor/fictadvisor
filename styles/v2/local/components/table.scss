@@ -1,30 +1,34 @@
+.table-items-style {
+    display: flex;
+    align-items: center;
+}
+
 .table-container {
-    @include flex-center;
+    @extend .table-items-style;
     position: relative;
     width: 100%;
     height: 72px;
     padding: 12px 16px;
     gap: 26px;
     background-color: #292929;
+    border-top: 1px solid #404040;
 }
 
-.user-avatar {
-    @include flex-center;
+.user-avatar img {
+    @extend .table-items-style;
     width: 48px;
     height: 48px;
-    background-image: url("/assets/default-avatar.svg");
+    border-radius: 100%;
 }
 
 .user-container {
-    @include flex-center;
+    @extend .table-items-style;
     gap: 12px;
 }
 
 .full-name {
+    @extend .table-items-style;
     flex-grow: 3;
-    @include flex-center;
-    width: 180px;
-    height: 44px;
     font-weight: 700;
     font-size: 16px;
     line-height: 138%;
@@ -33,23 +37,22 @@
 }
 
 .user-info {
-    @include flex-center;
+    @extend .table-items-style;
     gap: 16px;
     padding: 0px;
     width: fit-content;
 }
 
 .tag {
-    @include flex-center;
-    flex-grow: 2;
-    width: fit-content;
+    display: flex;
+    flex-wrap: nowrap;
+    width: 108px;
 }
 
 .email {
-    @include flex-center;
+    @extend .table-items-style;
     flex-grow: 3;
-    width: 330px;
-    height: 22px;
+    padding-right: 50px;
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
@@ -57,4 +60,21 @@
     font-feature-settings: 'case' on, 'kern' off;
     color: #D4D4D4;
     width: fit-content;
+}
+
+.checkbox {
+    display: flex;
+    flex-wrap: nowrap;
+    width: 134px;
+}
+
+.editing {
+    @extend .table-items-style;
+    width: 178px;
+    height: 32px;
+    justify-content: space-between;
+}
+
+.first-button {
+    width: 134px;
 }
