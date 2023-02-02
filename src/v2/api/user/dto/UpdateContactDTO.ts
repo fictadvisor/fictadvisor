@@ -1,13 +1,14 @@
-import { IsAlpha, IsAscii, IsOptional, MaxLength } from "class-validator";
+import { IsAscii, IsOptional, Matches, MaxLength } from "class-validator";
 
 export class UpdateContactDTO {
 
     @MaxLength(20, {
       message: 'name is too long (max: 100)',
     })
-    @IsAlpha('en-US',
+    @Matches(
+      /^[a-zA-Z0-9AБВГДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгдеєжзиіїйклмнопрстуфхцчшщьюя\- ]+$/,
       {
-        message: 'name contains wrong symbols (a-z A-Z only)',
+        message: 'name is not correct',
       })
     @IsOptional()
     name?: string;
