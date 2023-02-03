@@ -1,8 +1,8 @@
 import { IsAscii, IsNotEmpty, Matches, MaxLength } from "class-validator";
 
 export class CreateContactDTO {
-    @MaxLength(20, {
-      message: 'name is too long (max: 20)',
+    @MaxLength(100, {
+      message: 'name is too long (max: 100)',
     })
     @IsNotEmpty({
       message: 'name can not be empty',
