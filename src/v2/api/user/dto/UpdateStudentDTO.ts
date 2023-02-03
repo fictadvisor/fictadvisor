@@ -11,7 +11,7 @@ export class UpdateStudentDTO {
     message: 'First name is too short (min 2)',
   })
   @MaxLength(25, {
-    message: 'First name is too long (max 50)',
+    message: 'First name is too long (max 25)',
   })
   @IsOptional()
   firstName?: string;

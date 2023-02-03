@@ -14,8 +14,8 @@ export class CreateContactDTO {
       })
     name: string;
     
-    @MaxLength(100, {
-      message: 'value is too long (max: 100)',
+    @MaxLength(200, {
+      message: 'value is too long (max: 200)',
     })
     @IsNotEmpty({
       message: 'value can not be empty',
