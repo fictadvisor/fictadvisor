@@ -1,5 +1,5 @@
 import { State } from "@prisma/client";
-import { IsEmail, IsIn, IsNotEmpty, IsOptional, Matches, MaxLength, MinLength } from "class-validator";
+import { IsEmail, IsEnum, IsOptional, Matches, MaxLength, MinLength } from "class-validator";
 
 export class UpdateUserDTO {
 
@@ -9,9 +9,6 @@ export class UpdateUserDTO {
     @MaxLength(30, {
         message: 'username is too long (max: 30)',
     })
-    @IsNotEmpty({
-        message: 'username can not be empty',
-    })
     @Matches(
       /^[a-zA-Z0-9_]+$/,
       {
@@ -20,7 +17,7 @@ export class UpdateUserDTO {
     @IsOptional()
     username?: string;
 
-    @IsIn(Object.keys(State), {
+    @IsEnum(State, {
         message: 'invalid state argument passed',
     })
     @IsOptional()
@@ -34,7 +31,7 @@ export class UpdateUserDTO {
 
     @IsEmail({},
       {
-          message: 'given email ist not email',
+          message: 'given email is not email',
       })
     @IsOptional()
     email?: string;
