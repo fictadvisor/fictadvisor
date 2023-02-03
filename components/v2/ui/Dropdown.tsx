@@ -67,7 +67,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
               ? styles["dropdown-control"] + " " + styles["dropdown-control-iconed"]
               : styles["dropdown-control"],
           container: (state) =>
-            `${styles["dropdown-container"]} ${styles["dropdown-container-${className}"]}`,
+            `${styles["dropdown-container"]} ${styles[`dropdown-container-${className}`]}`,
         //   input: (state) => "dropdown-input",
           menu: (state) => styles["dropdown-menu"],
           menuList: (state) => styles["dropdown-menu-list"],
