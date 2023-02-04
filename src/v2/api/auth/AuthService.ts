@@ -339,4 +339,8 @@ export class AuthService {
     const captain = await this.groupService.getCaptain(groupId);
     return !!captain;
   }
+
+  checkResetToken(token: string) {
+    return this.resetPasswordTokens.has(token);
+  }
 }
