@@ -340,7 +340,7 @@ export class AuthService {
     return !!captain;
   }
 
-  async checkResetToken(token: string) {
+  checkResetToken(token: string) {
     return this.resetPasswordTokens.has(token);
   }
 }

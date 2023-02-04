@@ -94,6 +94,7 @@ export class AuthController {
   checkResetToken(
     @Param('token') token: string,
   ) {
-    return { isAvailable: this.authService.checkResetToken(token) };
+    const isAvailable = this.authService.checkResetToken(token);
+    return { isAvailable };
   }
 }
