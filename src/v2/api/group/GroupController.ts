@@ -142,4 +142,13 @@ export class GroupController {
     return this.groupService.removeStudent(groupId, userId, req.user);
   }
 
+  @Permission('groups.$groupId.students.unverified.get')
+  @UseGuards(JwtGuard, PermissionGuard)
+  @Get('/:groupId/unverifiedStudents')
+  async getUnverifiedStudents(
+      @Param('groupId', GroupByIdPipe) groupId: string,
+  ){
+    return this.groupService.getUnverifiedStudents(groupId);
+  }
+
 }

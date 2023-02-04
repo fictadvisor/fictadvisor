@@ -337,3 +337,10 @@ model DisciplineTeacherRole {
   @@id([disciplineTeacherId, disciplineTypeId, role])
   @@map("discipline_teacher_roles")
 }
+
+model DateVar {
+  name String   @unique
+  date DateTime
+
+  @@map("date_vars")
+}

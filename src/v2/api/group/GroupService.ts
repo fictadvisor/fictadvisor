@@ -154,4 +154,22 @@ export class GroupService {
   async updateGroup(groupId: string, body: UpdateGroupDTO){
     await this.groupRepository.updateGroup(groupId, body);
   }
+
+  async getUnverifiedStudents(groupId: string) {
+    let students = await this.groupRepository.getStudents(groupId);
+    students = students.filter((st) => st.state === State.PENDING);
+    const results = [];
+    for (const student of students) {
+      const user = await this.userRepository.get(student.userId);
+      results.push({
+        firstName: student.firstName,
+        middleName: student.middleName,
+        lastName: student.lastName,
+        email: user.email,
+        avatar: user.avatar,
+        id: user.id,
+      });
+    }
+    return { students: results };
+  }
 }
