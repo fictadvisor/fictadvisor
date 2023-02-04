@@ -10,7 +10,7 @@ export class StudentResourceDto {
 
   image: string;
 
-  public static from(e: StudentResource) {
+  public static from (e: StudentResource) {
     return assign(new StudentResourceDto(), {
       id: e.id,
       name: e.name,

@@ -26,7 +26,7 @@ export class SuperheroService {
   @Logger()
   private logger: SystemLogger;
 
-  constructor(
+  constructor (
     private telegramService: TelegramService,
     @InjectRepository(Superhero)
     private superheroRepository: Repository<Superhero>,
@@ -34,7 +34,7 @@ export class SuperheroService {
     private userRepository: Repository<User>
   ) {}
 
-  private async findSuperhero(user: User, relations?: string[]) {
+  private async findSuperhero (user: User, relations?: string[]) {
     const superhero = await this.superheroRepository.findOne({
       where: { user: Equal(user) },
       relations,
@@ -55,7 +55,7 @@ export class SuperheroService {
     'year'
   ).fallback('name', 'ASC');
 
-  public async getSuperheroes(
+  public async getSuperheroes (
     query: SearchableQueryDto
   ): Promise<Page<SuperheroDto>> {
     const [items, count] = await this.superheroRepository.findAndCount({
@@ -74,11 +74,11 @@ export class SuperheroService {
     );
   }
 
-  public async getSuperhero(user: User): Promise<SuperheroDto> {
+  public async getSuperhero (user: User): Promise<SuperheroDto> {
     return SuperheroDto.from(await this.findSuperhero(user, ['user']));
   }
 
-  public async createSuperhero(
+  public async createSuperhero (
     user: User,
     dto: CreateSuperheroDto
   ): Promise<SuperheroDto> {
@@ -109,7 +109,7 @@ export class SuperheroService {
     return SuperheroDto.from(superhero);
   }
 
-  async updateSuperhero(
+  async updateSuperhero (
     id: string,
     update: UpdateSuperheroDto
   ): Promise<SuperheroDto> {
@@ -125,17 +125,17 @@ export class SuperheroService {
     }
 
     if (
-      superhero.state != previousState &&
-      previousState == SuperheroState.PENDING
+      superhero.state !== previousState &&
+      previousState === SuperheroState.PENDING
     ) {
-      if (superhero.state == SuperheroState.APPROVED) {
+      if (superhero.state === SuperheroState.APPROVED) {
         this.telegramService.broadcastApprovedSuperhero(superhero).catch((e) =>
           this.logger.error('Failed to broadcast an approved superhero', {
             user: superhero.user.id,
             error: e.toString(),
           })
         );
-      } else if (superhero.state == SuperheroState.HIDDEN) {
+      } else if (superhero.state === SuperheroState.HIDDEN) {
         this.telegramService.broadcastDeclinedSuperhero(superhero).catch((e) =>
           this.logger.error('Failed to broadcast a denied superhero', {
             user: superhero.user.id,

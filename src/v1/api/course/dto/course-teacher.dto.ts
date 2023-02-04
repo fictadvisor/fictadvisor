@@ -11,17 +11,17 @@ export class CourseTeacherDto {
   link: string;
 
   @Expose({ name: 'first_name' })
-  firstName: string;
+    firstName: string;
 
   @Expose({ name: 'middle_name' })
-  middleName?: string;
+    middleName?: string;
 
   @Expose({ name: 'last_name' })
-  lastName?: string;
+    lastName?: string;
 
   image?: string;
 
-  public static from(t: Teacher) {
+  public static from (t: Teacher) {
     return assign(new CourseTeacherDto(), {
       id: t.id,
       link: t.link,

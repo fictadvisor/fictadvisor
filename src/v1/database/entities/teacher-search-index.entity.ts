@@ -14,7 +14,7 @@ import { Teacher, TeacherState } from './teacher.entity';
       .addSelect('t.last_name', 'last_name')
       .addSelect('t.state', 'state')
       .addSelect(
-        `concat(t.last_name, ' ', t.first_name, ' ', t.middle_name)`,
+        'concat(t.last_name, \' \', t.first_name, \' \', t.middle_name)',
         'full_name'
       )
       .addSelect('coalesce(avg(r.rating)::real, 0)', 'rating')
@@ -29,26 +29,26 @@ import { Teacher, TeacherState } from './teacher.entity';
 })
 export class TeacherSearchIndex {
   @ViewColumn()
-  id: string;
+    id: string;
 
   @ViewColumn()
-  link: string;
+    link: string;
 
   @ViewColumn({ name: 'full_name' })
-  fullName: string;
+    fullName: string;
 
   @ViewColumn({ name: 'first_name' })
-  firstName: string;
+    firstName: string;
 
   @ViewColumn({ name: 'middle_name' })
-  middleName?: string;
+    middleName?: string;
 
   @ViewColumn({ name: 'last_name' })
-  lastName?: string;
+    lastName?: string;
 
   @ViewColumn()
-  state: TeacherState;
+    state: TeacherState;
 
   @ViewColumn()
-  rating: number;
+    rating: number;
 }

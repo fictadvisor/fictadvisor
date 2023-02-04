@@ -19,39 +19,39 @@ export enum TeacherState {
 @Entity('teachers')
 export class Teacher extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+    id: string;
 
   @Column({ type: 'varchar', unique: true })
-  link: string;
+    link: string;
 
   @Column({ name: 'first_name', type: 'varchar' })
-  firstName: string;
+    firstName: string;
 
   @Column({ name: 'middle_name', type: 'varchar', nullable: true })
-  middleName?: string;
+    middleName?: string;
 
   @Column({ name: 'last_name', type: 'varchar' })
-  lastName: string;
+    lastName: string;
 
   @Column({ type: 'text', nullable: true })
-  description?: string;
+    description?: string;
 
   @Column({ type: 'varchar', nullable: true })
-  image?: string;
+    image?: string;
 
   @Column({ type: 'varchar', array: true, default: '{}' })
-  tags: string[];
+    tags: string[];
 
   @Column({ type: 'varchar', default: TeacherState.PENDING })
-  state: TeacherState;
+    state: TeacherState;
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
+    createdAt: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
+    updatedAt: Date;
 
-  public getFullName() {
+  public getFullName () {
     if (this.middleName) {
       return `${this.lastName} ${this.firstName} ${this.middleName}`;
     }

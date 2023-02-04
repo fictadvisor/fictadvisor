@@ -6,11 +6,11 @@ import { InvalidContactNameException } from 'src/v2/utils/exceptions/InvalidCont
 
 @Injectable()
 export class ContactByNamePipe implements PipeTransform {
-  constructor(
+  constructor (
     private teacherService: TeacherService
   ) {}
 
-  async transform(params: {teacherId: string, name: string}) {
+  async transform (params: {teacherId: string, name: string}) {
 
     const { teacherId, name } = params;
 

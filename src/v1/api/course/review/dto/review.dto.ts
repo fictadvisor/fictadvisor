@@ -12,12 +12,12 @@ export class ReviewDto {
   state: ReviewState;
 
   @Expose({ name: 'created_at' })
-  createdAt: Date;
+    createdAt: Date;
 
   @Expose({ name: 'updated_at' })
-  updatedAt: Date;
+    updatedAt: Date;
 
-  public static from(r: Review) {
+  public static from (r: Review) {
     return assign(new ReviewDto(), {
       id: r.id,
       content: r.content,

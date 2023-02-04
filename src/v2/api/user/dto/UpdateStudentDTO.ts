@@ -1,5 +1,5 @@
-import { IsEnum, IsOptional, Matches, MaxLength, MinLength } from "class-validator";
-import { State } from "@prisma/client";
+import { IsEnum, IsOptional, Matches, MaxLength, MinLength } from 'class-validator';
+import { State } from '@prisma/client';
 
 export class UpdateStudentDTO {
   @Matches(
@@ -14,13 +14,13 @@ export class UpdateStudentDTO {
     message: 'First name is too long (max 25)',
   })
   @IsOptional()
-  firstName?: string;
+    firstName?: string;
 
   @Matches(
     /^[AБВГДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгдеєжзиіїйклмнопрстуфхцчшщьюя\- ]+$/,
     {
-    message: 'Last name is not correct',
-  })
+      message: 'Last name is not correct',
+    })
   @MinLength(3, {
     message: 'Last name is too short (min 3)',
   })
@@ -28,7 +28,7 @@ export class UpdateStudentDTO {
     message: 'Last name is too long (max 40)',
   })
   @IsOptional()
-  lastName?: string;
+    lastName?: string;
 
   @Matches(
     /^[AБВГДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгдеєжзиіїйклмнопрстуфхцчшщьюя\- ]+$/,
@@ -42,13 +42,13 @@ export class UpdateStudentDTO {
     message: 'Middle name is too long (max 20)',
   })
   @IsOptional()
-  middleName?: string;
+    middleName?: string;
 
   @IsOptional()
-  groupId?: string;
+    groupId?: string;
 
   @IsEnum(State, {
     message: 'invalid state argument passed',
   })
-  state?: State;
+    state?: State;
 }

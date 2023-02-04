@@ -19,7 +19,7 @@ const SUBJECT_ITEMS_COUNT = 5;
 
 @Injectable()
 export class SearchService {
-  constructor(
+  constructor (
     @InjectRepository(SubjectSearchIndex)
     private subjectSearchIndexRepository: Repository<SubjectSearchIndex>,
 
@@ -27,7 +27,7 @@ export class SearchService {
     private teacherSearchIndexRepository: Repository<TeacherSearchIndex>
   ) {}
 
-  async searchResult(query: SearchableQueryDto): Promise<SearchResultDto> {
+  async searchResult (query: SearchableQueryDto): Promise<SearchResultDto> {
     const teachers = await this.teacherSearchIndexRepository.find({
       take: TEACHER_ITEMS_COUNT,
       where: {

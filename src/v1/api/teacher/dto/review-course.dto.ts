@@ -8,7 +8,7 @@ export class ReviewCourseDto {
 
   link: string;
 
-  public static from(c: TeacherReviewView) {
+  public static from (c: TeacherReviewView) {
     return assign(new ReviewCourseDto(), {
       id: c.id,
       name: c.courseName,

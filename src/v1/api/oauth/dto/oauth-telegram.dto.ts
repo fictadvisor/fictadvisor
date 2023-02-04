@@ -4,19 +4,19 @@ import { IsInt, IsOptional } from 'class-validator';
 export class OAuthTelegramDto {
   @IsInt()
   @Expose({ name: 'telegram_id' })
-  telegramId: number;
+    telegramId: number;
 
   @Expose({ name: 'first_name' })
-  firstName: string;
+    firstName: string;
 
   @IsOptional()
   @Expose({ name: 'last_name' })
-  lastName?: string;
+    lastName?: string;
 
   @IsOptional()
   @Expose({ name: 'username' })
-  username?: string;
+    username?: string;
 
   @IsOptional()
-  image?: string;
+    image?: string;
 }

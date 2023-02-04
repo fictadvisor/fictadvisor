@@ -5,17 +5,17 @@ import { UpdateRoleDTO } from './dto/UpdateRoleDTO';
 
 @Injectable()
 export class RoleRepository {
-  constructor(
+  constructor (
     private prisma: PrismaService,
   ) {}
 
-  create(data: CreateRoleDTO) {
+  create (data: CreateRoleDTO) {
     return this.prisma.role.create({
       data,
     });
   }
 
-  async getGrants(id: string) {
+  async getGrants (id: string) {
     const role = await this.prisma.role.findUnique({
       where: {
         id,
@@ -28,7 +28,7 @@ export class RoleRepository {
     return role.grants;
   }
 
-  async delete(id: string) {
+  async delete (id: string) {
     return this.prisma.role.delete({
       where: {
         id,
@@ -36,7 +36,7 @@ export class RoleRepository {
     });
   }
 
-  async update(id: string, data: UpdateRoleDTO) {
+  async update (id: string, data: UpdateRoleDTO) {
     return this.prisma.role.update({
       where: {
         id,

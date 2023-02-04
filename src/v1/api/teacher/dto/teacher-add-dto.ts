@@ -3,15 +3,15 @@ import { Expose } from 'class-transformer';
 
 export class TeacherAddDto {
   @Expose({ name: 'first_name' })
-  firstName: string;
+    firstName: string;
 
   @Expose({ name: 'middle_name' })
-  middleName?: string;
+    middleName?: string;
 
   @Expose({ name: 'last_name' })
-  lastName: string;
+    lastName: string;
 
-  link(): string {
+  link (): string {
     let fullName = this.lastName + ' ' + this.firstName;
 
     if (this.middleName) fullName += ' ' + this.middleName;

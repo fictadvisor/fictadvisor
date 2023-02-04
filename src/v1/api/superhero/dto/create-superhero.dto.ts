@@ -4,14 +4,14 @@ export class CreateSuperheroDto {
   @IsInt()
   @Min(1)
   @Max(5)
-  year: number;
+    year: number;
 
   @IsBoolean()
-  dorm: boolean;
+    dorm: boolean;
 
   @IsNotEmpty()
-  username: string;
+    username: string;
 
   @IsNotEmpty()
-  name: string;
+    name: string;
 }

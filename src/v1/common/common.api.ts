@@ -7,13 +7,13 @@ type PageableQuery = {
 };
 
 export class ResponseEntity<T> {
-  static of<T>(obj: T) {
+  static of<T> (obj: T) {
     const response = new ResponseEntity<T>();
     Object.assign(response, obj);
     return response;
   }
 
-  static async ofAsync<T>(obj: Promise<T>) {
+  static async ofAsync<T> (obj: Promise<T>) {
     return ResponseEntity.of<T>(await obj);
   }
 }
@@ -31,13 +31,13 @@ export class SortableProcessor<E, T extends SortableMap> {
   defaultKey?: keyof T;
   fallbackSort?: [string, SortDirection];
 
-  private getFallbackQuery() {
+  private getFallbackQuery () {
     return this.fallbackSort
       ? { [this.fallbackSort[0]]: this.fallbackSort[1] }
       : {};
   }
 
-  toQuery(value: string) {
+  toQuery (value: string) {
     if (value == null || this.map[value] == null) {
       if (!this.defaultKey) {
         return this.getFallbackQuery();
@@ -54,13 +54,13 @@ export class SortableProcessor<E, T extends SortableMap> {
     };
   }
 
-  public fallback(key: keyof E, direction: SortDirection) {
+  public fallback (key: keyof E, direction: SortDirection) {
     this.fallbackSort = [key as string, direction];
 
     return this;
   }
 
-  static of<E, T extends SortableMap = SortableMap>(
+  static of<E, T extends SortableMap = SortableMap> (
     map: T,
     defaultKey?: keyof T
   ) {
@@ -77,7 +77,7 @@ export class Pageable {
   page: number;
   size: number;
 
-  toQuery(): PageableQuery {
+  toQuery (): PageableQuery {
     if (this.page == null || this.size == null) {
       return {};
     }
@@ -88,7 +88,7 @@ export class Pageable {
     };
   }
 
-  static of(page: number, pageSize: number): Pageable {
+  static of (page: number, pageSize: number): Pageable {
     const pageable = new Pageable();
 
     pageable.page = page;
@@ -97,7 +97,7 @@ export class Pageable {
     return pageable;
   }
 
-  static from(query: PageableQueryDto): Pageable {
+  static from (query: PageableQueryDto): Pageable {
     return Pageable.of(query.page, query.pageSize);
   }
 }
@@ -106,8 +106,8 @@ export class Searchable<T> {
   value: string;
   field: keyof T;
 
-  toQuery(): FindOptionsWhere<T> | ObjectLiteral {
-    if (this.value == null || this.value == '') {
+  toQuery (): FindOptionsWhere<T> | ObjectLiteral {
+    if (this.value == null || this.value === '') {
       return {};
     }
 
@@ -116,7 +116,7 @@ export class Searchable<T> {
     };
   }
 
-  static of<T = any>(field: keyof T, value: string): Searchable<T> {
+  static of<T = any> (field: keyof T, value: string): Searchable<T> {
     const searchable = new Searchable<T>();
 
     searchable.value = value;
@@ -130,7 +130,7 @@ export class Page<T> {
   count: number;
   items: T[];
 
-  static of<T>(count: number, data: T[]): Page<T> {
+  static of<T> (count: number, data: T[]): Page<T> {
     const page = new Page<T>();
 
     page.count = count;

@@ -21,7 +21,7 @@ import { Subject } from './subject.entity';
       .addSelect('coalesce(count(r)::real, 0)', 'review_count')
       .addSelect('s.link', 'subject_link')
       .addSelect(
-        `concat(t.last_name, ' ', t.first_name, ' ', t.middle_name)`,
+        'concat(t.last_name, \' \', t.first_name, \' \', t.middle_name)',
         'teacher_full_name'
       )
       .from(Course, 'c')
@@ -36,41 +36,41 @@ import { Subject } from './subject.entity';
 })
 export class CourseSearchIndex {
   @ViewColumn()
-  id: string;
+    id: string;
 
   @ViewColumn()
-  link: string;
+    link: string;
 
   @ViewColumn()
-  state: CourseState;
+    state: CourseState;
 
   @ViewColumn({ name: 'teacher_id' })
-  teacherId: string;
+    teacherId: string;
 
   @ViewColumn({ name: 'teacher_first_name' })
-  teacherFirstName: string;
+    teacherFirstName: string;
 
   @ViewColumn({ name: 'teacher_last_name' })
-  teacherLastName: string;
+    teacherLastName: string;
 
   @ViewColumn({ name: 'teacher_middle_name' })
-  teacherMiddleName?: string;
+    teacherMiddleName?: string;
 
   @ViewColumn({ name: 'teacher_full_name' })
-  teacherFullName?: string;
+    teacherFullName?: string;
 
   @ViewColumn({ name: 'teacher_link' })
-  teacherLink: string;
+    teacherLink: string;
 
   @ViewColumn({ name: 'review_count' })
-  reviewCount: number;
+    reviewCount: number;
 
   @ViewColumn()
-  rating: number;
+    rating: number;
 
   @ViewColumn()
-  recommended: boolean;
+    recommended: boolean;
 
   @ViewColumn({ name: 'subject_link' })
-  subjectLink: string;
+    subjectLink: string;
 }

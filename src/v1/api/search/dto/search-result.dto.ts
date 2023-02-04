@@ -6,7 +6,7 @@ export class SearchResultDto {
   subjects: SearchSubjectItemDto[];
   teachers: SearchTeacherItemDto[];
 
-  public static from(
+  public static from (
     subjects: SearchSubjectItemDto[],
     teachers: SearchTeacherItemDto[]
   ): SearchResultDto {

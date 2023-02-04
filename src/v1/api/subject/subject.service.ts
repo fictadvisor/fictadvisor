@@ -29,7 +29,7 @@ export class SubjectService {
   @Logger()
   private logger: SystemLogger;
 
-  constructor(
+  constructor (
     @InjectRepository(SubjectSearchIndex)
     private subjectSearchIndexRepository: Repository<SubjectSearchIndex>,
 
@@ -50,7 +50,7 @@ export class SubjectService {
     'rating'
   ).fallback('id', 'ASC');
 
-  async getSubjects(query: SearchableQueryDto): Promise<Page<SubjectItemDto>> {
+  async getSubjects (query: SearchableQueryDto): Promise<Page<SubjectItemDto>> {
     const [items, count] = await this.subjectSearchIndexRepository.findAndCount(
       {
         ...Pageable.of(query.page, query.pageSize).toQuery(),
@@ -73,7 +73,7 @@ export class SubjectService {
     );
   }
 
-  async getSubjectByLink(link: string): Promise<SubjectDto> {
+  async getSubjectByLink (link: string): Promise<SubjectDto> {
     const subject = await this.subjectViewRepository.findOneBy({ link });
 
     if (subject == null) {
@@ -91,7 +91,7 @@ export class SubjectService {
     'rating'
   ).fallback('id', 'ASC');
 
-  async getCoursesByLink(
+  async getCoursesByLink (
     link: string,
     query: SearchableQueryDto
   ): Promise<Page<CourseItemDto>> {
@@ -114,7 +114,7 @@ export class SubjectService {
     );
   }
 
-  private async getSubjectById(id: string): Promise<Subject> {
+  private async getSubjectById (id: string): Promise<Subject> {
     const subject = await this.subjectRepository.findOneBy({ id });
 
     if (subject == null) {
@@ -127,7 +127,7 @@ export class SubjectService {
     return subject;
   }
 
-  async addSubject(subject: SubjectCreateDto, user: User): Promise<SubjectDto> {
+  async addSubject (subject: SubjectCreateDto, user: User): Promise<SubjectDto> {
     const existing = await this.subjectRepository.findOneBy({
       link: subject.link(),
     });
@@ -175,7 +175,7 @@ export class SubjectService {
     }
   }
 
-  async updateSubject(
+  async updateSubject (
     id: string,
     update: SubjectUpdateDto
   ): Promise<SubjectDto> {
@@ -195,7 +195,7 @@ export class SubjectService {
     return this.getSubjectByLink(saved.link);
   }
 
-  async deleteSubject(id: string): Promise<void> {
+  async deleteSubject (id: string): Promise<void> {
     const subject = await this.getSubjectById(id);
 
     await subject.remove();

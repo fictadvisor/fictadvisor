@@ -5,25 +5,25 @@ export class QueryAllDTO {
     message: 'page must be a number',
   })
   @IsOptional()
-  page?: number;
+    page?: number;
 
   @IsNumberString({}, {
     message: 'pageSize must be a number',
   })
   @IsOptional()
-  pageSize?: number;
+    pageSize?: number;
 
   @IsOptional()
-  search?: string;
+    search?: string;
 
   @IsOptional()
-  sort?: string;
+    sort?: string;
 
   @IsIn(['asc', 'desc'], {
     message: 'wrong value for order',
   })
   @IsOptional()
-  order?: 'asc' | 'desc';
+    order?: 'asc' | 'desc';
 }
 
 export class SortDTO {

@@ -1,4 +1,4 @@
-import { IsNotEmpty, MaxLength, MinLength } from "class-validator";
+import { IsNotEmpty, MaxLength, MinLength } from 'class-validator';
 
 export class UpdateSubjectDTO {
   @MinLength(5, {
@@ -10,5 +10,5 @@ export class UpdateSubjectDTO {
   @IsNotEmpty({
     message: 'name can not be empty',
   })
-  name: string;
+    name: string;
 }

@@ -8,19 +8,19 @@ import { UpdateRoleDTO } from './dto/UpdateRoleDTO';
   path: '/roles',
 })
 export class RoleController {
-  constructor(
+  constructor (
     private roleService: RoleService,
   ) {}
 
   @Post()
-  create(
+  create (
     @Body() body: CreateRoleWithGrantsDTO,
   ) {
     return this.roleService.createRole(body);
   }
 
   @Post('/:roleId/grants')
-  createGrants(
+  createGrants (
     @Body() body: CreateGrantsDTO,
     @Param('roleId') roleId: string,
   ) {
@@ -28,14 +28,14 @@ export class RoleController {
   }
 
   @Delete('/:roleId')
-  delete(
+  delete (
     @Param('roleId') roleId: string,
   ) {
     return this.roleService.delete(roleId);
   }
 
   @Patch('/:roleId')
-  update(
+  update (
     @Param('roleId') roleId: string,
     @Body() body: UpdateRoleDTO,
   ) {

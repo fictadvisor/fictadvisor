@@ -28,7 +28,7 @@ export type AuthorizeParams =
   | OAuthAuthenticationParams;
 
 export const Authorize = (params: AuthorizeParams = {}) => {
-  if (params.telegram == true) {
+  if (params.telegram === true) {
     return applyDecorators(UseGuards(TelegramAuthorizationGuard));
   }
 
@@ -40,15 +40,15 @@ export const Authorize = (params: AuthorizeParams = {}) => {
 
 @Injectable()
 export class TelegramAuthorizationGuard implements CanActivate {
-  constructor(private configService: ConfigService) {}
+  constructor (private configService: ConfigService) {}
 
-  canActivate(context: ExecutionContext) {
+  canActivate (context: ExecutionContext) {
     const request = context.switchToHttp().getRequest<Request>();
     const [realm, token] = (request.headers.authorization ?? '').split(' ');
 
     if (
-      realm != 'Telegram' ||
-      token != this.configService.get<string>('telegram.botToken')
+      realm !== 'Telegram' ||
+      token !== this.configService.get<string>('telegram.botToken')
     ) {
       throw ServiceException.create(HttpStatus.UNAUTHORIZED, {
         message: 'You need authorization for this action',
@@ -61,11 +61,11 @@ export class TelegramAuthorizationGuard implements CanActivate {
 
 @Injectable()
 export class OAuthAuthorizationGuard extends AuthGuard('jwt') {
-  constructor(private readonly reflector: Reflector) {
+  constructor (private readonly reflector: Reflector) {
     super();
   }
 
-  handleRequest(error: any, user: any) {
+  handleRequest (error: any, user: any) {
     if (error || !user) {
       throw error ??
         ServiceException.create(HttpStatus.UNAUTHORIZED, {
@@ -76,7 +76,7 @@ export class OAuthAuthorizationGuard extends AuthGuard('jwt') {
     return user;
   }
 
-  async canActivate(context: ExecutionContext) {
+  async canActivate (context: ExecutionContext) {
     if (!(await super.canActivate(context))) {
       return false;
     }

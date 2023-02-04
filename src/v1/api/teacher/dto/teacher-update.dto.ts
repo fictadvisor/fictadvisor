@@ -3,18 +3,18 @@ import { IsEnum, IsOptional } from 'class-validator';
 
 export class TeacherUpdateDto {
   @IsOptional()
-  firstName?: string;
+    firstName?: string;
 
   @IsOptional()
-  lastName?: string;
+    lastName?: string;
 
   @IsOptional()
-  middleName?: string;
+    middleName?: string;
 
   @IsOptional()
-  description?: string;
+    description?: string;
 
   @IsOptional()
   @IsEnum(TeacherState)
-  state?: TeacherState;
+    state?: TeacherState;
 }

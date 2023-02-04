@@ -9,11 +9,11 @@ import { UpdateTeacherDTO } from './dto/UpdateTeacherDTO';
 
 @Injectable()
 export class TeacherRepository {
-  constructor(
+  constructor (
     private prisma: PrismaService,
   ) {}
 
-  async get(
+  async get (
     id: string,
   ) {
     return this.prisma.teacher.findUnique({
@@ -27,9 +27,9 @@ export class TeacherRepository {
     });
   }
 
-  async getAll(
+  async getAll (
     body: QueryAllDTO,
-  ){
+  ) {
     const search = DatabaseUtils.getSearch(body, 'firstName', 'lastName', 'middleName');
     const page = DatabaseUtils.getPage(body);
     const sort = DatabaseUtils.getSort(body);
@@ -43,7 +43,7 @@ export class TeacherRepository {
     });
   }
 
-  async getTeacher(
+  async getTeacher (
     id: string,
   ) {
     const teacher = await this.get(id);
@@ -52,21 +52,21 @@ export class TeacherRepository {
     return teacher;
   }
 
-  async getDisciplineTeachers(
+  async getDisciplineTeachers (
     id: string,
   ) {
     const teacher = await this.get(id);
     return teacher.disciplineTeachers;
   }
 
-  async getTemporaryLessons(
+  async getTemporaryLessons (
     id: string,
   ) {
     const teacher = await this.get(id);
     return teacher.temporaryLessons;
   }
 
-  async delete(
+  async delete (
     id: string,
   ) {
     return this.prisma.teacher.delete({
@@ -76,7 +76,7 @@ export class TeacherRepository {
     });
   }
 
-  async find(
+  async find (
     where: CreateTeacherDTO,
   ) {
     return this.prisma.teacher.findFirst({
@@ -84,7 +84,7 @@ export class TeacherRepository {
     });
   }
 
-  async create(
+  async create (
     data: CreateTeacherDTO,
   ) {
     return this.prisma.teacher.create({
@@ -92,19 +92,19 @@ export class TeacherRepository {
     });
   }
 
-  async update(
+  async update (
     id: string,
     data: UpdateTeacherDTO,
   ) {
     return this.prisma.teacher.update({
-      where:{
+      where: {
         id,
       },
       data,
     });
   }
 
-  async getOrCreate(
+  async getOrCreate (
     data: CreateTeacherDTO,
   ) {
     let teacher = await this.find(data);

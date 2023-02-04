@@ -12,7 +12,7 @@ export class CourseItemDto {
   teacher: CourseTeacherItemDto;
 
   @Expose({ name: 'review_count' })
-  reviewCount: number;
+    reviewCount: number;
 
   rating: number;
 
@@ -20,7 +20,7 @@ export class CourseItemDto {
 
   recommended: boolean;
 
-  public static from(v: CourseSearchIndex): CourseItemDto {
+  public static from (v: CourseSearchIndex): CourseItemDto {
     const teacher = assign(new CourseTeacherItemDto(), {
       id: v.teacherId,
       link: v.link,

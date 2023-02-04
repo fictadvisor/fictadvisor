@@ -5,11 +5,11 @@ import { UpdateDisciplineDTO } from './dto/UpdateDisciplineDTO';
 
 @Injectable()
 export class DisciplineRepository {
-  constructor(
+  constructor (
     private prisma: PrismaService,
   ) {}
 
-  async get(id: string) {
+  async get (id: string) {
     return this.prisma.discipline.findUnique({
       where: {
         id,
@@ -24,7 +24,7 @@ export class DisciplineRepository {
     });
   }
 
-  async getDiscipline(id: string) {
+  async getDiscipline (id: string) {
     const discipline = await this.get(id);
     delete discipline.group;
     delete discipline.subject;
@@ -34,44 +34,44 @@ export class DisciplineRepository {
     return discipline;
   }
 
-  async getSubject(id: string) {
+  async getSubject (id: string) {
     const discipline = await this.get(id);
     return discipline.subject;
   }
 
-  async getGroup(id: string) {
+  async getGroup (id: string) {
     const discipline = await this.get(id);
     return discipline.group;
   }
 
-  async getTypes(id: string) {
+  async getTypes (id: string) {
     const discipline = await this.get(id);
     return discipline.disciplineTypes;
   }
 
-  async getSelective(id: string) {
+  async getSelective (id: string) {
     const discipline = await this.get(id);
     return discipline.selectiveDisciplines;
   }
 
-  async getDisciplineTeachers(id: string) {
+  async getDisciplineTeachers (id: string) {
     const discipline = await this.get(id);
     return discipline.disciplineTeachers;
   }
 
-  async find(where: CreateDisciplineDTO) {
+  async find (where: CreateDisciplineDTO) {
     return this.prisma.discipline.findFirst({
       where,
     });
   }
 
-  async create(data: CreateDisciplineDTO) {
+  async create (data: CreateDisciplineDTO) {
     return this.prisma.discipline.create({
       data,
     });
   }
 
-  async getOrCreate(data: CreateDisciplineDTO) {
+  async getOrCreate (data: CreateDisciplineDTO) {
     let discipline = await this.find(data);
     if (!discipline) {
       discipline = await this.create(data);
@@ -79,7 +79,7 @@ export class DisciplineRepository {
     return discipline;
   }
 
-  async update(id: string, data: UpdateDisciplineDTO) {
+  async update (id: string, data: UpdateDisciplineDTO) {
     return this.prisma.discipline.update({
       where: {
         id,

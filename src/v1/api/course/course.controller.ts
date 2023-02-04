@@ -16,16 +16,16 @@ import { CourseUpdateDto } from './dto/course-update.dto';
 
 @Controller('courses')
 export class CourseController {
-  constructor(private courseService: CourseService) {}
+  constructor (private courseService: CourseService) {}
 
   @Get('/:link')
-  getCourse(@Param('link') link: string): Promise<CourseDto> {
+  getCourse (@Param('link') link: string): Promise<CourseDto> {
     return this.courseService.getCourseByLink(link);
   }
 
   @Authorize()
   @Post()
-  addCourse(
+  addCourse (
     @Context() ctx: SecurityContext,
     @Body() course: CourseAddDto
   ): Promise<CourseDto> {
@@ -34,7 +34,7 @@ export class CourseController {
 
   @Authorize({ telegram: true })
   @Put('/:id')
-  updateCourse(
+  updateCourse (
     @Param('id') id: string,
     @Body() body: CourseUpdateDto
   ): Promise<CourseDto> {
@@ -43,7 +43,7 @@ export class CourseController {
 
   @Authorize({ telegram: true })
   @Delete('/:id')
-  deleteCourse(@Param('id') id: string): Promise<void> {
+  deleteCourse (@Param('id') id: string): Promise<void> {
     return this.courseService.deleteCourse(id);
   }
 }

@@ -21,22 +21,22 @@ import { SubjectUpdateDto } from './dto/subject-update.dto';
 
 @Controller('subjects')
 export class SubjectController {
-  constructor(private subjectService: SubjectService) {}
+  constructor (private subjectService: SubjectService) {}
 
   @Get()
-  getSubjects(
+  getSubjects (
     @Query() query: SearchableQueryDto
   ): Promise<Page<SubjectItemDto>> {
     return this.subjectService.getSubjects(query);
   }
 
   @Get('/:link')
-  getSubject(@Param('link') link: string): Promise<SubjectDto> {
+  getSubject (@Param('link') link: string): Promise<SubjectDto> {
     return this.subjectService.getSubjectByLink(link);
   }
 
   @Get('/:link/courses')
-  getCourses(
+  getCourses (
     @Param('link') link: string,
     @Query() query: SearchableQueryDto
   ): Promise<Page<CourseItemDto>> {
@@ -45,7 +45,7 @@ export class SubjectController {
 
   @Authorize()
   @Post()
-  addCourse(
+  addCourse (
     @Context() ctx: SecurityContext,
     @Body() subject: SubjectCreateDto
   ): Promise<SubjectDto> {
@@ -54,7 +54,7 @@ export class SubjectController {
 
   @Authorize({ telegram: true })
   @Put('/:id')
-  updateSubject(
+  updateSubject (
     @Param('id') id: string,
     @Body() body: SubjectUpdateDto
   ): Promise<SubjectDto> {
@@ -63,7 +63,7 @@ export class SubjectController {
 
   @Authorize({ telegram: true })
   @Delete('/:id')
-  deleteSubject(@Param('id') id: string): Promise<void> {
+  deleteSubject (@Param('id') id: string): Promise<void> {
     return this.subjectService.deleteSubject(id);
   }
 }

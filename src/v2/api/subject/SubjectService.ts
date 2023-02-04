@@ -7,16 +7,16 @@ import { DisciplineService } from '../discipline/DisciplineService';
 
 @Injectable()
 export class SubjectService {
-  constructor(
+  constructor (
     private subjectRepository: SubjectRepository,
     private disciplineService: DisciplineService,
   ) {}
 
-  async getAll(body: QueryAllDTO) {
+  async getAll (body: QueryAllDTO) {
     const subjects = await this.subjectRepository.getAll(body);
     const results = [];
 
-    for(const subject of subjects) {
+    for (const subject of subjects) {
       const teachersAmount = (await this.getSubjectTeachers(subject.id)).length;
       results.push({
         id: subject.id,
@@ -30,11 +30,11 @@ export class SubjectService {
     };
   }
 
-  async get(id: string) {
+  async get (id: string) {
     return this.subjectRepository.getSubject(id);
   }
 
-  async getTeachers(id: string) {
+  async getTeachers (id: string) {
     const subjectName = (await this.subjectRepository.getSubject(id)).name;
     const teachers = this.getSubjectTeachers(id);
     return {
@@ -43,11 +43,11 @@ export class SubjectService {
     };
   }
 
-  async getSubjectTeachers(id: string) {
+  async getSubjectTeachers (id: string) {
     const  results = [];
     const disciplines = await this.subjectRepository.getDisciplines(id);
 
-    for(const discipline of disciplines) {
+    for (const discipline of disciplines) {
       const teachers = await this.disciplineService.getTeachers(discipline.id);
 
       for (const teacher of teachers) {
@@ -67,15 +67,15 @@ export class SubjectService {
     return results;
   }
 
-  async create({ name }: CreateSubjectDTO) {
+  async create ({ name }: CreateSubjectDTO) {
     return this.subjectRepository.create(name);
   }
 
-  async update(id: string, body: UpdateSubjectDTO) {
+  async update (id: string, body: UpdateSubjectDTO) {
     await this.subjectRepository.update(id, body);
   }
 
-  async deleteSubject(id: string) {
+  async deleteSubject (id: string) {
     await this.subjectRepository.delete(id);
   }
 }

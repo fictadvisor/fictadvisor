@@ -27,19 +27,19 @@ import { CreateLessonDTO } from './dto/CreateLessonDTO';
   path: '/schedule',
 })
 export class ScheduleController {
-  constructor(
+  constructor (
     private scheduleService: ScheduleService,
     private dateService: DateService,
   ) {}
 
 
   @Post('/parse')
-  async parse(@Query('parser') parser: string) {
+  async parse (@Query('parser') parser: string) {
     return this.scheduleService.parse(parser);
   }
 
   @Get('/groups/:groupId/static')
-  async getStaticLessons(
+  async getStaticLessons (
     @Param('groupId', GroupByIdPipe) group: Group
   ) {
     const current = await this.dateService.getCurrent();
@@ -48,7 +48,7 @@ export class ScheduleController {
   }
 
   @Get('/groups/:groupId/static/:fortnight')
-  async getStaticLessonsFortnight(
+  async getStaticLessonsFortnight (
     @Param('groupId', GroupByIdPipe) group: Group,
     @Param('fortnight', ParseIntPipe) fortnight: number,
   ) {
@@ -58,7 +58,7 @@ export class ScheduleController {
 
   @UseGuards(JwtGuard, GroupByParamsGuard)
   @Get('/groups/:groupId/temporary')
-  async getTemporaryLessons(
+  async getTemporaryLessons (
     @Param('groupId', GroupByIdPipe) group: Group,
   ) {
     const current = await this.dateService.getCurrent();
@@ -68,7 +68,7 @@ export class ScheduleController {
 
   @UseGuards(JwtGuard, GroupByParamsGuard)
   @Get('/groups/:groupId/temporary/:fortnight')
-  async getTemporaryLessonsFortnight(
+  async getTemporaryLessonsFortnight (
     @Param('groupId', GroupByIdPipe) group: Group,
     @Param('fortnight', ParseIntPipe) fortnight: number,
   ) {
@@ -78,7 +78,7 @@ export class ScheduleController {
 
   @UseGuards(JwtGuard, GroupBySemesterLessonGuard)
   @Get('/lessons/static/:lessonId/:fortnight')
-  async getStaticLesson(
+  async getStaticLesson (
     @Param('lessonId') id: string,
     @Param('fortnight', ParseIntPipe) fortnight: number,
   ) {
@@ -87,7 +87,7 @@ export class ScheduleController {
 
   @UseGuards(JwtGuard, GroupByTemporaryLessonGuard)
   @Get('/lessons/temporary/:lessonId')
-  async getTemporaryLesson(
+  async getTemporaryLesson (
     @Param('lessonId') id: string,
   ) {
     return this.scheduleService.getFullTemporaryLesson(id);
@@ -95,7 +95,7 @@ export class ScheduleController {
 
   @UseGuards(JwtGuard, GroupBySemesterLessonGuard)
   @Patch('/lessons/static/:lessonId/:fortnight')
-  async updateFortnightLesson(
+  async updateFortnightLesson (
     @Param('lessonId') id: string,
     @Param('fortnight', ParseIntPipe) fortnight: number,
     @Body() body: UpdateDynamicInfoDTO,
@@ -105,7 +105,7 @@ export class ScheduleController {
 
   @UseGuards(JwtGuard, GroupBySemesterLessonGuard)
   @Patch('/lessons/static/:lessonId')
-  async updateSemesterLesson(
+  async updateSemesterLesson (
     @Param('lessonId') id: string,
     @Body() body: UpdateStaticInfoDTO,
   ) {
@@ -114,7 +114,7 @@ export class ScheduleController {
 
   @UseGuards(JwtGuard)
   @Post('')
-  async createLesson(
+  async createLesson (
     @Request() req,
     @Body() body: CreateLessonDTO,
   ) {

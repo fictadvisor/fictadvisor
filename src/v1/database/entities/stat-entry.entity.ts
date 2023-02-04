@@ -14,10 +14,10 @@ import { FLOAT_TRANSFORMER } from '../database.util';
 @Entity('teacher_stats')
 export class StatEntry extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+    id: string;
 
   @Column({ type: 'text' })
-  name: string;
+    name: string;
 
   @Column({
     type: 'numeric',
@@ -25,15 +25,15 @@ export class StatEntry extends BaseEntity {
     scale: 2,
     transformer: FLOAT_TRANSFORMER,
   })
-  value: number;
+    value: number;
 
   @ManyToOne((type) => Teacher)
   @JoinColumn({ name: 'teacher_id' })
-  teacher: Teacher;
+    teacher: Teacher;
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
+    createdAt: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
+    updatedAt: Date;
 }

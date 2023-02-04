@@ -5,11 +5,11 @@ import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityId
 
 @Injectable()
 export class SubjectByIdPipe implements PipeTransform<string, Promise<string>> {
-  constructor(
+  constructor (
     private subjectService: SubjectService
   ) {}
 
-  async transform(value: string): Promise<string> {
+  async transform (value: string): Promise<string> {
     const subject: Subject = await this.subjectService.get(value);
     if (!subject) {
       throw new InvalidEntityIdException('subject');

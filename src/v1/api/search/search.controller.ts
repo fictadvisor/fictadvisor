@@ -5,10 +5,10 @@ import { SearchResultDto } from './dto/search-result.dto';
 
 @Controller('search')
 export class SearchController {
-  constructor(private searchService: SearchService) {}
+  constructor (private searchService: SearchService) {}
 
   @Get()
-  getSearchResult(
+  getSearchResult (
     @Query() query: SearchableQueryDto
   ): Promise<SearchResultDto> {
     return this.searchService.searchResult(query);

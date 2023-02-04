@@ -24,26 +24,26 @@ import { Teacher } from './teacher.entity';
 })
 export class TeacherReviewView {
   @ViewColumn()
-  id: string;
+    id: string;
 
   @ViewColumn()
-  content: string;
+    content: string;
 
   @ViewColumn()
-  state: ReviewState;
+    state: ReviewState;
 
   @ViewColumn({ name: 'teacher_link' })
-  teacherLink: string;
+    teacherLink: string;
 
   @ViewColumn({ name: 'course_name' })
-  courseName: string;
+    courseName: string;
 
   @ViewColumn({ name: 'course_link' })
-  courseLink: string;
+    courseLink: string;
 
   @ViewColumn()
-  rating: number;
+    rating: number;
 
   @ViewColumn()
-  date: Date;
+    date: Date;
 }

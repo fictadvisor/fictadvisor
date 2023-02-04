@@ -5,7 +5,7 @@ import { DisciplineTeacherService } from './DisciplineTeacherService';
 import { DisciplineModule } from '../discipline/DisciplineModule';
 import { PrismaModule } from '../../database/PrismaModule';
 import { UserModule } from '../user/UserModule';
-import { PollModule } from "../poll/PollModule";
+import { PollModule } from '../poll/PollModule';
 
 @Module({
   controllers: [TeacherController],

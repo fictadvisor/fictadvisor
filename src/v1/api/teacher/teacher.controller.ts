@@ -26,15 +26,15 @@ import { TeacherContactUpdateDto } from './dto/teacher-contact-update.dto';
 
 @Controller('teachers')
 export class TeacherController {
-  constructor(private teacherService: TeacherService) {}
+  constructor (private teacherService: TeacherService) {}
 
   @Get('/:link')
-  getTeacher(@Param('link') link: string): Promise<TeacherDto> {
+  getTeacher (@Param('link') link: string): Promise<TeacherDto> {
     return this.teacherService.getTeacherByLink(link);
   }
 
   @Get()
-  getTeachers(
+  getTeachers (
     @Query() query: SearchableQueryDto
   ): Promise<Page<TeacherItemDto>> {
     return this.teacherService.getTeachers(query);
@@ -42,7 +42,7 @@ export class TeacherController {
 
   @Authorize()
   @Post()
-  addTeacher(
+  addTeacher (
     @Context() ctx: SecurityContext,
     @Body() teacher: TeacherAddDto
   ): Promise<TeacherDto> {
@@ -51,7 +51,7 @@ export class TeacherController {
 
   @Authorize({ telegram: true })
   @Put('/:id')
-  updateTeacher(
+  updateTeacher (
     @Param('id') id: string,
     @Body() body: TeacherUpdateDto
   ): Promise<TeacherDto> {
@@ -60,19 +60,19 @@ export class TeacherController {
 
   @Authorize({ telegram: true })
   @Delete('/:id')
-  deleteTeacher(@Param('id') id: string): Promise<void> {
+  deleteTeacher (@Param('id') id: string): Promise<void> {
     return this.teacherService.deleteTeacher(id);
   }
 
   @Get('/:link/contacts')
-  getTeacherContacts(
+  getTeacherContacts (
     @Param('link') link: string
   ): Promise<ResponseEntity<any>> {
     return this.teacherService.getTeacherContacts(link);
   }
 
   @Get('/:link/courses')
-  getTeacherCourses(
+  getTeacherCourses (
     @Param('link') link: string,
     @Query() query: SearchableQueryDto
   ): Promise<Page<TeacherCourseItemDto>> {
@@ -80,7 +80,7 @@ export class TeacherController {
   }
 
   @Get('/:link/reviews')
-  getTeacherReviews(
+  getTeacherReviews (
     @Param('link') link: string,
     @Query() query: SearchableQueryDto
   ): Promise<Page<TeacherReviewDto>> {
@@ -88,13 +88,13 @@ export class TeacherController {
   }
 
   @Get('/:link/stats')
-  getTeacherStats(@Param('link') link: string): Promise<ResponseEntity<any>> {
+  getTeacherStats (@Param('link') link: string): Promise<ResponseEntity<any>> {
     return this.teacherService.getTeacherStats(link);
   }
 
   @Authorize()
   @Post('/:link/contacts')
-  addContact(
+  addContact (
     @Context() ctx: SecurityContext,
     @Param('link') link: string,
     @Body() contact: TeacherContactCreateDto
@@ -104,7 +104,7 @@ export class TeacherController {
 
   @Authorize({ telegram: true })
   @Put('/contacts/:id')
-  updateContact(
+  updateContact (
     @Param('id') id: string,
     @Body() body: TeacherContactUpdateDto
   ): Promise<TeacherContactDto> {
@@ -113,7 +113,7 @@ export class TeacherController {
 
   @Authorize({ telegram: true })
   @Delete('/contacts/:id')
-  deleteContact(@Param('id') id: string): Promise<void> {
+  deleteContact (@Param('id') id: string): Promise<void> {
     return this.teacherService.deleteContact(id);
   }
 }

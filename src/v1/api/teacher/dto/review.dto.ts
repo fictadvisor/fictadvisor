@@ -13,7 +13,7 @@ export class TeacherReviewDto {
 
   date: Date;
 
-  public static from(e: TeacherReviewView) {
+  public static from (e: TeacherReviewView) {
     return assign(new TeacherReviewDto(), {
       id: e.id,
       content: e.content,

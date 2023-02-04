@@ -4,7 +4,7 @@ export class CreateReviewDto {
   @IsOptional()
   @Max(5)
   @Min(1)
-  rating?: number;
+    rating?: number;
 
   content?: string;
 }

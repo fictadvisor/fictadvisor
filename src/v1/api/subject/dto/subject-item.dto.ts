@@ -13,13 +13,13 @@ export class SubjectItemDto {
   description?: string;
 
   @Expose({ name: 'teacher_count' })
-  teacherCount: number;
+    teacherCount: number;
 
   rating: number;
 
   state: SubjectState;
 
-  public static from(i: SubjectSearchIndex): SubjectItemDto {
+  public static from (i: SubjectSearchIndex): SubjectItemDto {
     return assign(new SubjectItemDto(), {
       id: i.id,
       link: i.link,

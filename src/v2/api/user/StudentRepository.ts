@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { CreateStudentData } from "./dto/СreateStudentData";
-import { UpdateStudentData } from "./dto/UpdateStudentData";
+import { CreateStudentData } from './dto/СreateStudentData';
+import { UpdateStudentData } from './dto/UpdateStudentData';
 import { PrismaService } from '../../database/PrismaService';
 
 @Injectable()
 export class StudentRepository {
-  constructor(
+  constructor (
     private prisma: PrismaService,
   ) {}
 
-  async getRoles(studentId: string) {
+  async getRoles (studentId: string) {
     const roles = await this.prisma.userRole.findMany({
       where: {
         studentId,
@@ -27,7 +27,7 @@ export class StudentRepository {
     return roles.map((role) => role.role);
   }
 
-  async getGroupByRole(roleId: string) {
+  async getGroupByRole (roleId: string) {
     const groupRole = await this.prisma.groupRole.findFirst({
       where: {
         roleId,
@@ -39,7 +39,7 @@ export class StudentRepository {
     return groupRole.group;
   }
 
-  async addRole(studentId: string, roleId: string) {
+  async addRole (studentId: string, roleId: string) {
     return this.prisma.userRole.create({
       data: {
         studentId,
@@ -48,7 +48,7 @@ export class StudentRepository {
     });
   }
 
-  async removeRole(studentId: string, roleId: string) {
+  async removeRole (studentId: string, roleId: string) {
     return this.prisma.userRole.deleteMany({
       where: {
         studentId,
@@ -57,7 +57,7 @@ export class StudentRepository {
     });
   }
 
-  async update(userId: string, data: UpdateStudentData) {
+  async update (userId: string, data: UpdateStudentData) {
     await this.prisma.student.update({
       where: {
         userId,
@@ -66,13 +66,13 @@ export class StudentRepository {
     });
   }
 
-  async create(data: CreateStudentData) {
+  async create (data: CreateStudentData) {
     return this.prisma.student.create({
       data,
     });
   }
 
-  async delete(userId: string) {
+  async delete (userId: string) {
     await this.prisma.student.delete({
       where: {
         userId,
