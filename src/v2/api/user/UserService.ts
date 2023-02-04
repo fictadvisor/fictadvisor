@@ -117,7 +117,7 @@ export class UserService {
   }
 
   async getUser(userId: string) {
-    const { id, username, email, avatar,
+    const { id, username, email, avatar, telegramId,
       student: { firstName, lastName, middleName },
     } = await this.userRepository.get(userId);
     return {
@@ -128,6 +128,7 @@ export class UserService {
       lastName,
       middleName,
       avatar,
+      telegramId,
     };
   }
 }
