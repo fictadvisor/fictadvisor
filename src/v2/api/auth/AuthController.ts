@@ -89,4 +89,11 @@ export class AuthController {
   ) {
     return this.authService.checkCaptain(groupId);
   }
+
+  @Get('/checkResetToken/:token')
+  checkResetToken(
+    @Param('token') token: string,
+  ) {
+    return { isAvailable: this.authService.checkResetToken(token) };
+  }
 }
