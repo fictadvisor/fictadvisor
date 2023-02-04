@@ -44,20 +44,20 @@ export class UserController {
   }
 
   @UseGuards(JwtGuard)
-  @Post('/superhero')
+  @Post('/:userId/superhero')
   async createSuperhero(
-    @Request() req,
+    @Param('userId', UserByIdPipe) userId: string,
     @Body() body: CreateSuperheroDTO,
   ) {
-    return this.userService.createSuperhero(req.user.id, body);
+    return this.userService.createSuperhero(userId, body);
   }
 
   @UseGuards()
-  @Get('/selective')
+  @Get('/:userId/selective')
   async getSelective(
-    @Request() req,
+    @Param('userId', UserByIdPipe) userId: string,
   ) {
-    const dbDisciplines = await this.userService.getSelective(req.user.id);
+    const dbDisciplines = await this.userService.getSelective(userId);
     return { disciplines: dbDisciplines.map((d) => d.id) };
   }
 

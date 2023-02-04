@@ -1,3 +1,3 @@
-export interface CreateSuperheroDTO {
-  dorm: boolean,
+export class CreateSuperheroDTO {
+  dorm: boolean
 }
