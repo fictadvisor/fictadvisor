@@ -54,6 +54,19 @@ export class UserService {
   async giveRole(id: string, { roleId }: GiveRoleDTO) {
     await this.studentRepository.addRole(id, roleId);
   }
+  async getGroupByRole(id: string) {
+    return await this.studentRepository.getGroupByRole(id);
+  }
+
+  async getGroupRole(userId: string) {
+    const roles = await this.studentRepository.getRoles(userId);
+    const role = roles.find((r) => r.name == 'CAPTAIN' || r.name == 'MODERATOR' || r.name == 'STUDENT');
+    const group = await this.getGroupByRole(role.id);
+    return {
+      ...role,
+      groupId: group.id,
+    };
+  }
 
   async removeRole(id: string, roleId: string) {
     await this.studentRepository.removeRole(id, roleId);
@@ -103,17 +116,19 @@ export class UserService {
     await this.userRepository.get(userId);
   }
 
-  async getMe(userId: string) {
-    const { username, email, avatar,
+  async getUser(userId: string) {
+    const { id, username, email, avatar, telegramId,
       student: { firstName, lastName, middleName },
     } = await this.userRepository.get(userId);
     return {
+      id,
       username,
       email,
       firstName,
       lastName,
       middleName,
       avatar,
+      telegramId,
     };
   }
 }

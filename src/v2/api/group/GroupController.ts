@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request, UseGuards } from '@nestjs/common';
 import { GroupService } from './GroupService';
 import { CreateGroupDTO } from './dto/CreateGroupDTO';
 import { GroupByIdPipe } from './GroupByIdPipe';
@@ -137,8 +137,9 @@ export class GroupController {
   async removeStudent(
     @Param('groupId', GroupByIdPipe) groupId: string,
     @Param('userId', UserByIdPipe) userId: string,
-  ){
-    return this.groupService.removeStudent(groupId, userId);
+    @Request() req,
+  ) {
+    return this.groupService.removeStudent(groupId, userId, req.user);
   }
 
   @Permission('groups.$groupId.students.unverified.get')

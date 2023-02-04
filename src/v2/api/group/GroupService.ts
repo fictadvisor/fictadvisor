@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import { Group, RoleName, State } from '@prisma/client';
+import { Group, RoleName, State, User } from '@prisma/client';
 import { DisciplineService } from '../discipline/DisciplineService';
 import { DisciplineRepository } from '../discipline/DisciplineRepository';
 import { GroupRepository } from './GroupRepository';
-import { RoleRepository } from "../user/role/RoleRepository";
 import { StudentRepository } from "../user/StudentRepository";
 import { QueryAllDTO } from "../../utils/QueryAllDTO";
 import { UserRepository } from "../user/UserRepository";
@@ -13,6 +12,7 @@ import { ApproveDTO } from "../user/dto/ApproveDTO";
 import { NoPermissionException } from "../../utils/exceptions/NoPermissionException";
 import { RoleDTO } from "./dto/RoleDTO";
 import { UpdateGroupDTO } from "./dto/UpdateGroupDTO";
+import { UserService } from '../user/UserService';
 
 @Injectable()
 export class GroupService {
@@ -21,7 +21,7 @@ export class GroupService {
     private disciplineRepository: DisciplineRepository,
     private groupRepository: GroupRepository,
     private prisma: PrismaService,
-    private roleRepository: RoleRepository,
+    private userService: UserService,
     private studentRepository: StudentRepository,
     private userRepository: UserRepository,
   ) {}
@@ -92,47 +92,41 @@ export class GroupService {
   async moderatorSwitch(groupId: string, userId: string, body: RoleDTO){
     const user = await this.userRepository.get(userId);
 
+    if (body.roleName !== RoleName.MODERATOR && body.roleName === RoleName.STUDENT) {
+      throw new NoPermissionException();
+    }
     if (user.student.groupId !== groupId) {
       throw new NoPermissionException();
     }
 
     const roles = await this.groupRepository.getRoles(groupId);
+    const role = roles.find((r) => r.name === body.roleName);
+    const userRole = await this.userService.getGroupRole(userId);
 
-    for (const role of roles) {
-      if (role.name === body.roleName) {
-        await this.studentRepository.addRole(userId, role.id);
-      }
-    }
+    await this.studentRepository.removeRole(userId, userRole.id);
+    await this.studentRepository.addRole(userId, role.id);
   }
 
-  async removeStudent(groupId: string, userId: string){
-    const user = await this.userRepository.get(userId);
+  async removeStudent(groupId: string, userId: string, reqUser: User) {
+    const userRole = await this.userService.getGroupRole(userId);
+    const reqUserRole = await this.userService.getGroupRole(reqUser.id);
 
-    if (user.student.groupId !== groupId) {
+    if(reqUserRole.weight <= userRole.weight) {
+      throw new NoPermissionException();
+    }
+    if (userRole.groupId !== groupId) {
       throw new NoPermissionException();
     }
 
-    await this.studentRepository.update(user.id, { state: State.DECLINED });
+    await this.studentRepository.update(userId, { state: State.DECLINED });
   }
 
   async getCaptain(groupId: string) {
     const students = await this.groupRepository.getStudents(groupId);
     for (const student of students) {
       const roles = await this.studentRepository.getRoles(student.userId);
-      for (const role of roles){
-        if (role.name == RoleName.CAPTAIN){
-          const user = await this.userRepository.get(student.userId);
-          return {
-            firstName: student.firstName,
-            middleName: student.middleName,
-            lastName: student.lastName,
-            email: user.email,
-            username: user.username,
-            avatar: user.avatar,
-            id: user.id,
-            telegramId: user.telegramId,
-          };
-        }
+      if (roles.some((r) => r.name === RoleName.CAPTAIN)) {
+        return this.userService.getUser(student.userId);
       }
     }
     return null;
@@ -147,16 +141,11 @@ export class GroupService {
     students = students.filter((st) => st.state === State.APPROVED);
     const results = [];
     for (const student of students) {
-      const roles = await this.studentRepository.getRoles(student.userId);
-      const user = await this.userRepository.get(student.userId);
+      const role = await this.userService.getGroupRole(student.userId);
+      const user = await this.userService.getUser(student.userId);
       results.push({
-        firstName: student.firstName,
-        middleName: student.middleName,
-        lastName: student.lastName,
-        email: user.email,
-        avatar: user.avatar,
-        id: user.id,
-        role: [RoleName.CAPTAIN, RoleName.MODERATOR, RoleName.STUDENT].find((r) => roles.some((r2) => r2.name === r)),
+        ...user,
+        role: role.name,
       });
     }
     return { students: results };

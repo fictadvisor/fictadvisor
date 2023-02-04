@@ -27,6 +27,18 @@ export class StudentRepository {
     return roles.map((role) => role.role);
   }
 
+  async getGroupByRole(roleId: string) {
+    const groupRole = await this.prisma.groupRole.findFirst({
+      where: {
+        roleId,
+      },
+      include: { 
+        group: true,
+      },
+    });
+    return groupRole.group;
+  }
+
   async addRole(studentId: string, roleId: string) {
     return this.prisma.userRole.create({
       data: {

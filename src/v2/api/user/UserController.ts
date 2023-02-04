@@ -169,7 +169,7 @@ export class UserController {
   getMe(
     @Param('userId', UserByIdPipe) userId: string,
   ){
-    return this.userService.getMe(userId);
+    return this.userService.getUser(userId);
   }
 
 
