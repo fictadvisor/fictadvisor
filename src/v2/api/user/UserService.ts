@@ -13,7 +13,7 @@ import { CreateContactDTO } from "./dto/CreateContactDTO";
 import { EntityType } from "@prisma/client";
 import { UpdateContactDTO } from "./dto/UpdateContactDTO";
 import { UpdateStudentDTO } from "./dto/UpdateStudentDTO";
-import { CreateSuperheroDTO } from 'dist/v2/api/user/dto/CreateSuperheroDTO';
+import { CreateSuperheroDTO } from './dto/CreateSuperheroDTO';
 
 @Injectable()
 export class UserService {
