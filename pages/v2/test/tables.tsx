@@ -3,7 +3,7 @@ import AlertButton, { AlertButtonIconPosition, AlertButtonType } from "../../../
 import { Check, CheckState } from "../../../components/v2/ui/Check";
 import { IconButtonSize, TrashBucketButton } from "../../../components/v2/ui/IconButton";
 import {CustomCheck} from "../../../components/v2/custom-svg/CustomCheck";
-import Table from "../../../components/v2/Table";
+import Table from "../../../components/v2/ui/Table";
 import Tag, { TagState } from "../../../components/v2/ui/Tag";
 
 import styles from "styles/v2/local/pages/test.module.scss";
