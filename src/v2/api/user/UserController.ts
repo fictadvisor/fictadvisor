@@ -43,7 +43,8 @@ export class UserController {
     return this.userService.updateSuperhero(userId, body);
   }
 
-  @UseGuards(JwtGuard)
+  @Permission('users.$userId.superhero.create')
+  @UseGuards(JwtGuard, PermissionGuard)
   @Post('/:userId/superhero')
   async createSuperhero(
     @Param('userId', UserByIdPipe) userId: string,
@@ -52,7 +53,8 @@ export class UserController {
     return this.userService.createSuperhero(userId, body);
   }
 
-  @UseGuards()
+  @Permission('users.$userId.selective.get')
+  @UseGuards(JwtGuard, PermissionGuard)
   @Get('/:userId/selective')
   async getSelective(
     @Param('userId', UserByIdPipe) userId: string,
