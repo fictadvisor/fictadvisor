@@ -18,7 +18,7 @@ export class GroupRepository {
       include: {
         disciplines: true,
         students: true,
-        groupRole: true,
+        groupRoles: true,
       },
     });
   }
@@ -49,7 +49,7 @@ export class GroupRepository {
     const group = await this.get(id);
     delete group.disciplines;
     delete group.students;
-    delete group.groupRole;
+    delete group.groupRoles;
     return group;
   }
 
