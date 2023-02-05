@@ -10,8 +10,8 @@ export class UpdateStudentDTO {
   @MinLength(2, {
     message: 'First name is too short (min 2)',
   })
-  @MaxLength(25, {
-    message: 'First name is too long (max 25)',
+  @MaxLength(40, {
+    message: 'First name is too long (max 40)',
   })
   @IsOptional()
   firstName?: string;
@@ -21,8 +21,8 @@ export class UpdateStudentDTO {
     {
     message: 'Last name is not correct',
   })
-  @MinLength(3, {
-    message: 'Last name is too short (min 3)',
+  @MinLength(2, {
+    message: 'Last name is too short (min 2)',
   })
   @MaxLength(40, {
     message: 'Last name is too long (max 40)',
@@ -38,8 +38,8 @@ export class UpdateStudentDTO {
   @MinLength(2, {
     message: 'Middle name is too short (min 2)',
   })
-  @MaxLength(20, {
-    message: 'Middle name is too long (max 20)',
+  @MaxLength(40, {
+    message: 'Middle name is too long (max 40)',
   })
   @IsOptional()
   middleName?: string;

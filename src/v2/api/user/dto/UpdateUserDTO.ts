@@ -3,11 +3,11 @@ import { IsEmail, IsEnum, IsOptional, Matches, MaxLength, MinLength } from "clas
 
 export class UpdateUserDTO {
 
-    @MinLength(4, {
-        message: 'username is too short (min: 4)',
+    @MinLength(2, {
+        message: 'username is too short (min: 2)',
     })
-    @MaxLength(30, {
-        message: 'username is too long (max: 30)',
+    @MaxLength(40, {
+        message: 'username is too long (max: 40)',
     })
     @Matches(
       createRegex(ENG_REGEX, NUM_REGEX, "_"),
