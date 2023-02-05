@@ -18,6 +18,24 @@ export class DateService {
     private config: ConfigService,
   ) {}
 
+  async getCurrentYearAndSemester() {
+    const { currentYear, currentSemester } = this.config.get<{
+      currentYear: number,
+      currentSemester: number
+    }>('dates');
+    return {
+      year : currentYear,
+      semester : currentSemester,
+    };
+  }
+  async getDateVar(name: string): Promise<Date> {
+    const { date } = await this.prisma.dateVar.findUnique({
+      where: {
+        name,
+      },
+    });
+    return date;
+  }
   async getCurrent(): Promise<CurrentDate> {
     const { currentYear, currentSemester } = this.config.get('dates');
     const { startDate } = await this.prisma.startDate.findFirst({
