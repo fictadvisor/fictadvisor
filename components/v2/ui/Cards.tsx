@@ -4,7 +4,7 @@ import { Tag, TagState } from "./Tag";
 import Button, { ButtonType, ButtonSize } from "./Button";
 import Rating from "./Rating";
 import styles from "styles/v2/local/elements/Cards.module.scss";
-
+import mergeClassNames from 'merge-class-names';
 
 interface HeaderCardProps {
   name: string;
@@ -43,6 +43,7 @@ const useToolTip = (
   element: HTMLParagraphElement,
   toolTipWidth: number
 ): any => {
+  console.dir(element);
   //to find out if the p element is truncated
   let isTruncated;
 
@@ -53,7 +54,6 @@ const useToolTip = (
     isTruncated = element.scrollHeight - 1 > props.height;
     offsetY = window.scrollY + props.top;
 
-    console.log(props);
     if (props.right + toolTipWidth > window.innerWidth) {
       //tooltip is over the screen
 
@@ -62,7 +62,7 @@ const useToolTip = (
     } else {
       //tooltip is within the screen
 
-      console.log("here");
+      // console.log("here");
       offsetX = { left: props.right };
       toolTipDirection = "left";
     }
@@ -77,7 +77,7 @@ export const HeaderCard: React.FC<HeaderCardProps> = ({
   url = "/assets/icons/frog36.png",
 }) => {
   return (
-    <div className={styles[`header-card-container`]}>
+    <div className={mergeClassNames(styles[`header-card-container`])}>
       <div className={styles[`header-card-info`]}>
         <h4 className={styles[`card-name`]}>{name}</h4>
         <div>
@@ -103,8 +103,8 @@ export const LecturerHeaderCard: React.FC<LecturerHeaderCardProps> = ({
   );
 
   return (
-    <div className={styles["card header-lecturer-card-container"]}>
-      <img src={url} alt="картинка вмкладача" />
+    <div className={mergeClassNames(styles["card"],styles["header-lecturer-card-container"])}>
+      <img src={url} alt="картинка викладача" />
       <div className={styles["header-lecturer-card-info"]}>
         <h4 className={styles["card-name"]}>{name}</h4>
         <p
@@ -114,10 +114,10 @@ export const LecturerHeaderCard: React.FC<LecturerHeaderCardProps> = ({
           onMouseLeave={() => setShowToolTip(false)}
         >
           {description}
+         
           {showToolTip && isTruncated && (
             <Tooltip
               text={description}
-              direction={toolTipDirection}
               style={{
                 position: "absolute",
                 ...offsetX,
@@ -125,6 +125,7 @@ export const LecturerHeaderCard: React.FC<LecturerHeaderCardProps> = ({
                 fontSize: "11px",
                 top: offsetY,
               }}
+              direction={toolTipDirection}
             />
           )}
         </p>
@@ -147,7 +148,7 @@ export const PollCard: React.FC<PollCardProps> = ({
   );
 
   return (
-    <article className={styles["card card-effect poll-card-container"]}>
+    <article className={mergeClassNames(styles["card"],styles["card-effect"],styles["poll-card-container"])}>
       <img className={styles["card-avatar"]} src={url} alt="викладач" />
       <br />
       <CardRoles roles={roles} />
@@ -191,7 +192,7 @@ export const RatingCard: React.FC<RatingCardProps> = ({
   url = "/assets/icons/lecturer60.png",
 }) => {
   return (
-    <article className={styles["card card-effect rating-card-container"]}>
+    <article className={mergeClassNames(styles["card"],styles["card-effect"],styles["rating-card-container"])}>
       <img className={styles["card-avatar"]} src={url} alt="викладач" />
 
       {rating && (
@@ -213,10 +214,10 @@ export const SimpleCard: React.FC<SimpleCardProps> = ({ name, details, rating })
   );
 
   return (
-    <article className={styles["card card-effect simple-card-container"]}>
+    <article className={mergeClassNames(styles["card"],styles["card-effect"],styles["simple-card-container"])}>
       <p
         ref={ref}
-        className={styles["card-name simple-card-name"]}
+        className={mergeClassNames(styles["card-name "],styles["simple-card-name"])}
         onMouseEnter={() => setShowToolTip(true)}
         onMouseLeave={() => setShowToolTip(false)}
       >
@@ -252,7 +253,7 @@ const CardRoles: React.FC<{ roles: string[] }> = ({ roles }) => {
               <Tag
                 state={TagState.SMALL}
                 text="Лаборант"
-                className={styles["mint-first"]}
+                className={"mint-first"}
                 key={Math.random()}
               />
             );
@@ -261,7 +262,7 @@ const CardRoles: React.FC<{ roles: string[] }> = ({ roles }) => {
               <Tag
                 state={TagState.SMALL}
                 text="Лектор"
-                className={styles["violet-first"]}
+                className={"violet-first"}
                 key={Math.random()}
               />
             );
@@ -270,7 +271,7 @@ const CardRoles: React.FC<{ roles: string[] }> = ({ roles }) => {
               <Tag
                 state={TagState.SMALL}
                 text="Практик"
-                className={styles["orange-first"]}
+                className={"orange-first"}
                 key={Math.random()}
               />
             );

@@ -1,3 +1,5 @@
+import styles from './../../../styles/v2/local/elements/Star.module.scss';
+
 //rating - number beetween 0 and 5
 type RatingProps = {
   rating: number;
@@ -6,13 +8,13 @@ type RatingProps = {
   HTMLDivElement
 >;
 
-const Rating: React.FC<RatingProps> = ({ rating, className, ...rest }) => {
+const Rating: React.FC<RatingProps> = ({ rating, ...rest }) => {
   return (
-    <div className={`rating-conatainer ${className}`} {...rest}>
-      <div className="ratings">
-        <div className="empty-stars"></div>
+    <div className={styles[`rating-conatainer`]} {...rest}>
+      <div className={styles["ratings"]}>
+        <div className={styles["empty-stars"]}></div>
         <div
-          className="full-stars"
+          className={styles["full-stars"]}
           style={{
             width: `${(rating / 5) * 100}%`,
           }}

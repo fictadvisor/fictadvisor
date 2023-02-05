@@ -29,6 +29,7 @@ function Cards() {
           description="Вища математика. Частина 1. Лінійна алгебра та аналітична геометрія. Диференціальне та інтегральне числення функцій однієї змінної"
         />
       </div>
+      <br />
       <div
         style={{
           display: "grid",
@@ -49,6 +50,7 @@ function Cards() {
           description="Вища математика. Частина 1. Лінійна алгебра та аналітична геометрія. Диференціальне та інтегральне числення функцій однієї змінної"
         />
       </div>
+      <br />
 
       <div
         style={{
@@ -94,6 +96,8 @@ function Cards() {
           roles={["лектор", "практик", "лаборант"]}
         />
       </div>
+      <br />
+
       <div
         style={{
           display: "grid",
@@ -117,6 +121,7 @@ function Cards() {
           roles={["лектор", "практик", "лаборант"]}
         />
       </div>
+      <br />
 
       <div
         style={{
@@ -159,6 +164,8 @@ function Cards() {
         <RatingCard name="Васильченко-Деружко Катерина Анатоліївна" />
         <RatingCard name="Васильченко-Деружко Катерина Анатоліївна" />
       </div>
+      <br />
+
       <div
         style={{
           display: "grid",
@@ -170,6 +177,7 @@ function Cards() {
         <RatingCard name="Васильченко-Деружко Катерина Анатоліївна" />
         <RatingCard name="Васильченко-Деружко Катерина Анатоліївна" />
       </div>
+      <br />
 
       <div
         style={{
@@ -201,6 +209,8 @@ function Cards() {
           roles={["лектор", "практик", "лаборант"]}
         />
       </div>
+      <br />
+      
       <div
         style={{
           display: "grid",
@@ -221,6 +231,7 @@ function Cards() {
           roles={["лектор", "практик", "лаборант"]}
         />
       </div>
+      <br />
 
       <div
         style={{
@@ -266,6 +277,8 @@ function Cards() {
           roles={["лектор", "практик", "лаборант"]}
         />
       </div>
+      <br />
+
       <div
         style={{
           display: "grid",
@@ -289,6 +302,7 @@ function Cards() {
           roles={["лектор", "практик", "лаборант"]}
         />
       </div>
+      <br />
 
       <div
         style={{
@@ -339,6 +353,8 @@ function Cards() {
           position="Зам. староста"
         />
       </div>
+      <br />
+
       <div
         style={{
           display: "grid",
@@ -362,6 +378,7 @@ function Cards() {
           position="Зам. староста"
         />
       </div>
+      <br />
 
       <div
         style={{
@@ -409,6 +426,8 @@ function Cards() {
           details="3 викладачі"
         />
       </div>
+      <br />
+
       <div
         style={{
           display: "grid",
@@ -429,6 +448,7 @@ function Cards() {
           details="3 викладачі"
         />
       </div>
+      <br />
 
       <div
         style={{
@@ -454,6 +474,8 @@ function Cards() {
           details="3 викладачі"
         />
       </div>
+      <br />
+
       <div
         style={{
           display: "grid",
@@ -470,6 +492,8 @@ function Cards() {
           rating={4.1}
         />
       </div>
+      <br />
+
       <div
         style={{
           display: "grid",
@@ -490,6 +514,7 @@ function Cards() {
           rating={4.1}
         />
       </div>
+      <br />
 
       <div
         style={{

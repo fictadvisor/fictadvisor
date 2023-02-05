@@ -20,7 +20,7 @@ HTMLDivElement
 export const Tooltip: React.FC<TooltipProps> = ({ direction, text, ...props }) => {
   if (direction) {
     return (
-      <div className={styles["tooltip-body"]}>
+      <div className={styles["tooltip-body"]} {...props}>
         <span className={mergeClassNames(styles["tooltip-text"], styles[`tooltip-text-${direction}`])}>
           {text}
         </span>

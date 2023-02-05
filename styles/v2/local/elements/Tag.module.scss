@@ -1,3 +1,6 @@
+@import './../../global/partials/theme.scss';
+$theme-color:$dark-primary;
+
 @mixin style-tag($className,$first,$second,$third){
     .#{$className}-first-bgc{
         background: $first;

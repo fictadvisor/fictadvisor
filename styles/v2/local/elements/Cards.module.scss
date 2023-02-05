@@ -1,3 +1,6 @@
+@import "../../global/partials/utils";
+
+
 .header-card-container {
     & img {
         aspect-ratio: 1/1;
@@ -70,7 +73,7 @@
     }
 }
 
-.card {
+.card{
     // cursor: pointer;
     background-color: #343434;
     padding: 16px;
