@@ -1,10 +1,12 @@
 @import "../../global/partials/theme";
 
-.default-radio-text, .disabled-radio-text, .error-radio-text {
-  font-size: 14px;
-  line-height: 19.6px;
-  left: 28px;
-  font-weight: 400;
+.default-radio-text,
+.disabled-radio-text,
+.error-radio-text {
+    font-size: 14px;
+    line-height: 19.6px;
+    left: 28px;
+    font-weight: 400;
 }
 
 .radio-container {
@@ -13,7 +15,8 @@
     gap: 8px;
 }
 
-.default-radio-input, .error-radio-input {
+.default-radio-input,
+.error-radio-input {
     display: none;
 }
 
@@ -40,6 +43,7 @@
     height: 20px;
     border: 2px solid #FFFFFF;
     border-radius: 50%;
+
     &::before {
         content: "";
         cursor: pointer;
@@ -76,19 +80,20 @@
     background-color: #525252;
 }
 
-.disabled-radio-box:hover::before, .error-radio-box:hover::before {
+.disabled-radio-box:hover::before,
+.error-radio-box:hover::before {
     background-color: $dark-primary;
 }
 
-.default-radio-input:checked + .default-radio-box::before {
+.default-radio-input:checked+.default-radio-box::before {
     background-color: #FFFFFF;
 }
 
-.disabled-radio-input:disabled:checked + .disabled-radio-box::before {
+.disabled-radio-input:disabled:checked+.disabled-radio-box::before {
     background-color: #525252;
     border-color: #525252;
 }
 
-.error-radio-input:checked + .error-radio-box::before {
+.error-radio-input:checked+.error-radio-box::before {
     background-color: $error-color;
 }

@@ -1,0 +1,38 @@
+@import "../../global/partials/theme";
+@import "../../global/partials/utils";
+
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+    min-width: fit-content;
+    height: 56px;
+    background: #151515;
+}
+
+.logo {
+    @include flex-center;
+    width: 197px;
+    height: 28px;
+    left: 80px;
+
+    & img {
+        @include flex-center;
+        position: absolute;
+        height: 20px;
+    }
+}
+
+.auth-container {
+    @include flex-center;
+    flex-direction: row;
+    right: 80px;
+    gap: 8px;
+}
+
+.menu {
+    @include flex-center;
+    flex-direction: row;
+    gap: 20px;
+}
