@@ -9,30 +9,39 @@
     min-width: fit-content;
     height: 56px;
     background: #151515;
+    position: relative;
 }
 
 .logo {
     @include flex-center;
     width: 197px;
     height: 28px;
-    left: 80px;
 
     & img {
         @include flex-center;
-        position: absolute;
         height: 20px;
     }
 }
 
-.auth-container {
-    @include flex-center;
+.menu {
+    display: flex;
     flex-direction: row;
-    right: 80px;
-    gap: 8px;
+    align-items: flex-start;
+    gap: 20px;
+    width: 513px;
+    height: 34px;
 }
 
-.menu {
-    @include flex-center;
-    flex-direction: row;
-    gap: 20px;
+.user-container {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    width: 286px;
+    height: 42px;
+}
+
+.auth-container {
+    @extend .user-container;
+    height: 36px;
+    gap: 8px;
 }

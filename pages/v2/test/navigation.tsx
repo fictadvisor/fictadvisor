@@ -16,15 +16,14 @@ function navigation() {
         {
             text: "Предмети",
         },
-        {
-            text: "Розклад(не існує)",
-        },
     ];
 
     return (
         <div className = {styles["test-page-wrap"]}>
 
                 <Header buttons={buttons} isLoggined={false}/>
+                <br />
+                <Header buttons={buttons} isLoggined={true}/>
                 <Footer/>
         </div>
     );
