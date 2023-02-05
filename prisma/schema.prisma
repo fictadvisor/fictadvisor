@@ -37,7 +37,7 @@ model Group {
   code        String
   students    Student[]
   disciplines Discipline[]
-  groupRole   GroupRole[]
+  groupRoles   GroupRole[]
 
   @@map("groups")
 }
@@ -278,7 +278,7 @@ model Role {
   weight    Int
   userRoles UserRole[]
   grants    Grant[]
-  groupRole GroupRole[]
+  groupRole GroupRole?
 
   @@map("roles")
 }
