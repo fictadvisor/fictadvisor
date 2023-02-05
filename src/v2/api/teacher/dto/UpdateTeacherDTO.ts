@@ -1,4 +1,4 @@
-import { IsOptional, MaxLength, MinLength } from "class-validator";
+import { IsOptional, Matches, MaxLength, MinLength } from "class-validator";
 
 export class UpdateTeacherDTO {
     @MinLength(2, {
@@ -7,6 +7,12 @@ export class UpdateTeacherDTO {
     @MaxLength(40, {
       message: 'firstName is too long (max: 40)',
     })
+    @Matches(
+      createRegex(UKR_REGEX, UKRSPEC_REGEX),
+      {
+        message: 'firstName incorrect',
+      }
+    )
     @IsOptional()
     firstName?: string;
 
@@ -16,6 +22,12 @@ export class UpdateTeacherDTO {
     @MaxLength(40, {
       message: 'middleName is too long (max: 40)',
     })
+    @Matches(
+      createRegex(UKR_REGEX, UKRSPEC_REGEX),
+      {
+        message: 'middleName incorrect',
+      }
+    )
     @IsOptional()
     middleName?: string;
 
@@ -25,6 +37,12 @@ export class UpdateTeacherDTO {
     @MaxLength(40, {
       message: 'lastName is too long (max: 40)',
     })
+    @Matches(
+      createRegex(UKR_REGEX, UKRSPEC_REGEX),
+      {
+        message: 'lastName incorrect',
+      }
+    )
     @IsOptional()
     lastName?: string;
 

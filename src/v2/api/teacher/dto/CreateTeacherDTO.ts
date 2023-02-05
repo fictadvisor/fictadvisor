@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, MaxLength, MinLength } from "class-validator";
+import { IsNotEmpty, IsOptional, Matches, MaxLength, MinLength } from "class-validator";
 
 export class CreateTeacherDTO {
   @MinLength(2, {
@@ -10,6 +10,12 @@ export class CreateTeacherDTO {
   @IsNotEmpty({
     message: 'firstName can not be empty',
   })
+  @Matches(
+    createRegex(UKR_REGEX, UKRSPEC_REGEX),
+    {
+      message: 'firstName incorrect',
+    }
+  )
   firstName: string;
 
   @MinLength(2, {
@@ -18,6 +24,12 @@ export class CreateTeacherDTO {
   @MaxLength(40, {
     message: 'middleName is too long (max: 40)',
   })
+  @Matches(
+    createRegex(UKR_REGEX, UKRSPEC_REGEX),
+    {
+      message: 'middleName incorrect',
+    }
+  )
   @IsOptional()
   middleName?: string;
 
@@ -30,6 +42,12 @@ export class CreateTeacherDTO {
   @IsNotEmpty({
     message: 'lastName can not be empty',
   })
+  @Matches(
+    createRegex(UKR_REGEX, UKRSPEC_REGEX),
+    {
+      message: 'lastName incorrect',
+    }
+  )
   lastName: string;
 
   @MaxLength(400, {

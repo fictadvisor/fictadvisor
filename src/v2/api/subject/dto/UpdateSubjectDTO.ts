@@ -1,4 +1,4 @@
-import { IsNotEmpty, MaxLength, MinLength } from "class-validator";
+import { IsNotEmpty, Matches, MaxLength, MinLength } from "class-validator";
 
 export class UpdateSubjectDTO {
   @MinLength(5, {
@@ -10,5 +10,11 @@ export class UpdateSubjectDTO {
   @IsNotEmpty({
     message: 'name can not be empty',
   })
+  @Matches(
+    createRegex(UKR_REGEX, UKRSPEC_REGEX),
+    {
+      message: 'name incorrect',
+    }
+  )
   name: string;
 }
