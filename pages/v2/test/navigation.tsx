@@ -3,10 +3,28 @@ import Header from "../../../components/v2/ui/Header";
 import Footer from "../../../components/v2/ui/Footer";
 
 function navigation() {
+    const buttons = [
+        {
+            text: "Головна",
+        },
+        {
+            text: "Опитування",
+        },
+        {
+            text: "Викладачі",
+        },
+        {
+            text: "Предмети",
+        },
+        {
+            text: "Розклад(не існує)",
+        },
+    ];
+
     return (
         <div className = {styles["test-page-wrap"]}>
-            
-                <Header isLoggined={false}/>
+
+                <Header buttons={buttons} isLoggined={false}/>
                 <Footer/>
         </div>
     );
