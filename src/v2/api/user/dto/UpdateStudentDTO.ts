@@ -3,7 +3,7 @@ import { State } from "@prisma/client";
 
 export class UpdateStudentDTO {
   @Matches(
-    /^[AБВГДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгдеєжзиіїйклмнопрстуфхцчшщьюя\- ]+$/,
+    createRegex(UKR_REGEX, UKRSPEC_REGEX),
     {
       message: 'First name is not correct',
     })
@@ -17,7 +17,7 @@ export class UpdateStudentDTO {
   firstName?: string;
 
   @Matches(
-    /^[AБВГДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгдеєжзиіїйклмнопрстуфхцчшщьюя\- ]+$/,
+    createRegex(UKR_REGEX, UKRSPEC_REGEX),
     {
     message: 'Last name is not correct',
   })
@@ -31,7 +31,7 @@ export class UpdateStudentDTO {
   lastName?: string;
 
   @Matches(
-    /^[AБВГДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгдеєжзиіїйклмнопрстуфхцчшщьюя\- ]+$/,
+    createRegex(UKR_REGEX, UKRSPEC_REGEX),
     {
       message: 'Middle name is not correct',
     })

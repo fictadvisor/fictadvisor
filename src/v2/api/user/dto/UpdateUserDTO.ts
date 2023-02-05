@@ -10,7 +10,7 @@ export class UpdateUserDTO {
         message: 'username is too long (max: 30)',
     })
     @Matches(
-      /^[a-zA-Z0-9_]+$/,
+      createRegex(ENG_REGEX, NUM_REGEX, "_"),
       {
           message: 'username is not correct',
       })

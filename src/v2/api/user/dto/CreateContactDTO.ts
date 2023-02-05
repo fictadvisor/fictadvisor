@@ -8,7 +8,7 @@ export class CreateContactDTO {
       message: 'name can not be empty',
     })
     @Matches(
-      /^[a-zA-Z0-9AБВГДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгдеєжзиіїйклмнопрстуфхцчшщьюя\- ]+$/,
+      createRegex(UKR_REGEX, ENG_REGEX, NUM_REGEX, "\\ "),
       {
         message: 'name is not correct',
       })

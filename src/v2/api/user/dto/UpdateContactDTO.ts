@@ -6,7 +6,7 @@ export class UpdateContactDTO {
       message: 'name is too long (max: 100)',
     })
     @Matches(
-      /^[a-zA-Z0-9AБВГДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгдеєжзиіїйклмнопрстуфхцчшщьюя\- ]+$/,
+      createRegex(UKR_REGEX, ENG_REGEX, NUM_REGEX, "\\ "),
       {
         message: 'name is not correct',
       })
