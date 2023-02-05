@@ -9,15 +9,18 @@ export enum TooltipDirection {
   RIGHT = "right",
 }
 
-interface TooltipProps {
+type TooltipProps={
   text: string;
-  direction?: TooltipDirection;
-}
+  direction?: "top" | "bottom" | "left" | "right";
+} &  React.DetailedHTMLProps<
+React.HTMLAttributes<HTMLDivElement>,
+HTMLDivElement
+>;
 
-export const Tooltip: React.FC<TooltipProps> = ({ direction, text }) => {
+export const Tooltip: React.FC<TooltipProps> = ({ direction, text, ...props }) => {
   if (direction) {
     return (
-      <div className={styles["tooltip-body"]}>
+      <div className={styles["tooltip-body"]} {...props}>
         <span className={mergeClassNames(styles["tooltip-text"], styles[`tooltip-text-${direction}`])}>
           {text}
         </span>
