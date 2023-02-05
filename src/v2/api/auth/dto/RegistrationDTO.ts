@@ -17,7 +17,7 @@ export class StudentDTO {
       message: 'middleName is not correct or too short (min: 2) or too long (max: 40)',
     })
   @IsOptional()
-  middleName: string;
+  middleName?: string;
 
   @Matches(
     /^[AБВГДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгдеєжзиіїйклмнопрстуфхцчшщьюя\- ]{2,40}$/, {
@@ -71,5 +71,5 @@ export class RegistrationDTO {
   user: UserDTO;
 
   @IsOptional()
-  telegram: TelegramDTO;
+  telegram?: TelegramDTO;
 }
