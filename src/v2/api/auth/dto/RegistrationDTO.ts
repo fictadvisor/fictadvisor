@@ -4,58 +4,37 @@ import {
   IsNotEmpty,
   IsOptional,
   Matches,
-  MaxLength,
-  MinLength,
   ValidateNested,
 } from "class-validator";
 import { Type } from 'class-transformer';
-import { createRegex, ENG_REGEX, NUM_REGEX, UKR_REGEX, UKRSPEC_REGEX } from "../../../utils/GLOBALS";
+import { ENG_REGEX, NUM_REGEX, UKR_REGEX, UKRSPEC_REGEX } from "../../../utils/GLOBALS";
 
 export class StudentDTO {
   @IsNotEmpty()
   groupId: string;
 
-  @MinLength(2, {
-    message: "firstName is too short (min: 2)",
-  })
-  @MaxLength(40, {
-    message: "firstName is too long (max: 40)",
-  })
+
   @Matches(
-    createRegex(UKR_REGEX, UKRSPEC_REGEX), {
-      message: 'firstName is not correct',
+    new RegExp("^[" + UKR_REGEX + UKRSPEC_REGEX + "]+{2, 40}$"), {
+      message: 'firstName is not correct, or too short (min: 2), or too long (max: 40)',
     })
   @IsNotEmpty({
     message: 'first name is empty',
   })
   firstName: string;
 
-  @MinLength(2, {
-    message: 'Middle name is too short (min 2)',
-  })
-  @MaxLength(40, {
-    message: 'Middle name is too long (max 40)',
-  })
   @Matches(
-    createRegex(UKR_REGEX, UKRSPEC_REGEX),
-    {
-      message: 'Middle name is not correct',
+    new RegExp("^[" + UKR_REGEX + UKRSPEC_REGEX + "]+{2, 40}$"), {
+      message: 'middleName is not correct, or too short (min: 2), or too long (max: 40)',
     })
   @IsNotEmpty({
-    message: '<Middle name is empty',
+    message: 'Middle name is empty',
   })
   middleName: string;
 
-  @MinLength(2, {
-    message: 'Last name is too short (min 2)',
-  })
-  @MaxLength(40, {
-    message: 'Last name is too long (max 40)',
-  })
   @Matches(
-    createRegex(UKR_REGEX, UKRSPEC_REGEX),
-    {
-      message: 'Last name is not correct',
+    new RegExp("^[" + UKR_REGEX + UKRSPEC_REGEX + "]+{2, 40}$"), {
+      message: 'lastName is not correct, or too short (min: 2), or too long (max: 40)',
     })
   @IsNotEmpty({
     message: 'Last name is empty',
@@ -70,16 +49,9 @@ export class StudentDTO {
 
 export class UserDTO {
 
-  @MinLength(2, {
-    message: 'username is too short (min: 2)',
-  })
-  @MaxLength(40, {
-    message: 'username is too long (max: 40)',
-  })
   @Matches(
-    createRegex(ENG_REGEX, NUM_REGEX, "_"),
-    {
-      message: 'username is not correct',
+    new RegExp("^[" + ENG_REGEX + NUM_REGEX + "_" + "]+{2, 40}$"), {
+      message: 'Username is not correct, or too short (min: 2), or too long (max: 40)',
     })
   @IsNotEmpty({
     message: 'Username is empty',
@@ -95,18 +67,9 @@ export class UserDTO {
   })
   email: string;
 
-  @MinLength(8,
-    {
-    message: 'password is too short (min: 8)',
-  })
-  @MaxLength(50,
-    {
-    message: 'password is too long (max: 50)',
-  })
   @Matches(
-    /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]$/,
-    {
-      message: 'password is not correct',
+    /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]${8,50}/, {
+      message: 'password is not correct or too short (min: 8) or too long (max: 50)',
     })
   @IsNotEmpty({
     message: 'password is empty',
