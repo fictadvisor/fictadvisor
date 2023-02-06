@@ -12,7 +12,7 @@
     position: relative;
 }
 
-.logo {
+.header-logo {
     @include flex-center;
     width: 197px;
     height: 28px;
@@ -44,4 +44,78 @@
     @extend .user-container;
     height: 36px;
     gap: 8px;
+}
+
+//-----------------Footer-----------------//
+
+.footer-container {
+    width: 100%;
+    min-width: fit-content;
+    height: 242px;
+    background: #151515;
+    position: relative;
+}
+
+.footer-logo {
+    @extend .header-logo;
+    left: 80px;
+    top: 40px;
+    position: absolute;
+}
+
+.signature {
+    display: flex;
+    position: absolute;
+    left: 80px;
+    top: 76px;
+
+    & p {
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 24px;
+        color: #FFFFFF;
+    }
+}
+
+
+
+.main-references {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 171px;
+    height: 170px;
+    margin-left: 728px;
+    margin-top: 40px;
+}
+
+.title {
+    display: flex;
+    justify-content: left;
+    padding: 2px 12px;
+    width: 171px;
+    height: 28px;
+
+    & p {
+        font-family: 'Manrope';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 150%;
+        display: flex;
+        align-items: center;
+        color: #A3A3A3;
+
+    }
+}
+
+.support {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    width: 144px;
+    height: 86px;
+    left: 944px;
+    top: 40px;
+
 }

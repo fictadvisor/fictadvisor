@@ -24,6 +24,7 @@ function navigation() {
                 <Header buttons={buttons} isLoggined={false}/>
                 <br />
                 <Header buttons={buttons} isLoggined={true}/>
+                <br />
                 <Footer/>
         </div>
     );
