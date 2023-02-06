@@ -41,8 +41,10 @@ export class StudentDTO {
     {
       message: 'Middle name is not correct',
     })
-  @IsOptional()
-  middleName?: string;
+  @IsNotEmpty({
+    message: '<Middle name is empty',
+  })
+  middleName: string;
 
   @MinLength(2, {
     message: 'Last name is too short (min 2)',
