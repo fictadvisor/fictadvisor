@@ -1,4 +1,5 @@
 import { IsAscii, IsOptional, Matches, MaxLength } from "class-validator";
+import { createRegex, ENG_REGEX, NUM_REGEX, UKR_REGEX } from "../../../utils/GLOBALS";
 
 export class UpdateContactDTO {
 

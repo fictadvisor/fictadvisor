@@ -1,4 +1,5 @@
 import { IsOptional, Matches, MaxLength, MinLength } from "class-validator";
+import { createRegex, UKR_REGEX, UKRSPEC_REGEX } from "../../../utils/GLOBALS";
 
 export class UpdateTeacherDTO {
     @MinLength(2, {

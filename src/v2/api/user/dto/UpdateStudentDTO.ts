@@ -1,5 +1,6 @@
 import { IsEnum, IsOptional, Matches, MaxLength, MinLength } from "class-validator";
 import { State } from "@prisma/client";
+import { createRegex, UKR_REGEX, UKRSPEC_REGEX } from "../../../utils/GLOBALS";
 
 export class UpdateStudentDTO {
   @Matches(

@@ -1,8 +1,8 @@
-const UKR_REGEX = "ҐЄІЇЬА-ЩЮЯґєіїьа-щюя";
-const UKRSPEC_REGEX = "\\-' ";
-const ENG_REGEX = "^[a-zA-Z]+$";
-const NUM_REGEX = "^[0-9]+$";
+export const UKR_REGEX = "ҐЄІЇЬА-ЩЮЯґєіїьа-щюя";
+export const UKRSPEC_REGEX = "\\-' ";
+export const ENG_REGEX = "^[a-zA-Z]+$";
+export const NUM_REGEX = "^[0-9]+$";
 
-function createRegex(...regexes) {
-  return new RegExp("^[" + regexes.toString() + "]+$");
+export function createRegex(...regexes: string[]) {
+  return new RegExp("^[" + regexes.join('') + "]+$");
 }

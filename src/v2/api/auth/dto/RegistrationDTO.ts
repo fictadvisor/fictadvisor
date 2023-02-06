@@ -9,6 +9,7 @@ import {
   ValidateNested,
 } from "class-validator";
 import { Type } from 'class-transformer';
+import { createRegex, ENG_REGEX, NUM_REGEX, UKR_REGEX, UKRSPEC_REGEX } from "../../../utils/GLOBALS";
 
 export class StudentDTO {
   @IsNotEmpty()

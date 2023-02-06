@@ -1,5 +1,6 @@
 import { State } from "@prisma/client";
 import { IsEmail, IsEnum, IsOptional, Matches, MaxLength, MinLength } from "class-validator";
+import { createRegex, ENG_REGEX, NUM_REGEX } from "../../../utils/GLOBALS";
 
 export class UpdateUserDTO {
 

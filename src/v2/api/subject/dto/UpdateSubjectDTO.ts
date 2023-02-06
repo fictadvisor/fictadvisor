@@ -1,4 +1,5 @@
 import { IsNotEmpty, Matches, MaxLength, MinLength } from "class-validator";
+import { createRegex, UKR_REGEX, UKRSPEC_REGEX } from "../../../utils/GLOBALS";
 
 export class UpdateSubjectDTO {
   @MinLength(5, {
