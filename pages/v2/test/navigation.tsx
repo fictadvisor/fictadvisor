@@ -23,7 +23,7 @@ function navigation() {
 
                 <Header buttons={buttons} isLoggined={false}/>
                 <br />
-                <Header buttons={buttons} isLoggined={true}/>
+                <Header groupName="ІС-11" username="Ярмоленко Єлизавета Миколаївна" position="Зам. староста" buttons={buttons} isLoggined={true}/>
                 <br />
                 <Footer/>
         </div>
