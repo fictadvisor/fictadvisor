@@ -13,7 +13,7 @@ export class UpdateUserDTO {
     @Matches(
       createRegex(ENG_REGEX, NUM_REGEX, "_"),
       {
-          message: 'username is not correct',
+          message: 'username is not correct (a-zA-Z0-9_)',
       })
     @IsOptional()
     username?: string;

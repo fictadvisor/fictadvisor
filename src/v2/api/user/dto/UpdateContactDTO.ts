@@ -9,7 +9,7 @@ export class UpdateContactDTO {
     @Matches(
       createRegex(UKR_REGEX, ENG_REGEX, NUM_REGEX, UKRSPEC_REGEX),
       {
-        message: 'name is not correct',
+        message: 'name is not correct (a-zA-Z0-9A-Я(укр.)\\-\' )',
       })
     @IsOptional()
     name?: string;
