@@ -2,8 +2,8 @@ import { ConfigService } from '@nestjs/config';
 import { ClassSerializerInterceptor, ValidationPipe, VERSION_NEUTRAL, VersioningType } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './v2/AppModule';
-import { HttpExceptionFilter, validationExceptionFactory } from './v1/common/common.exception';
-import { systemLogger } from './v1/logger/logger.core';
+import { HttpExceptionFilter, validationExceptionFactory } from './v2/security/exception-handler/CommonExceptions';
+import { systemLogger } from './v2/security/exception-handler/LoggerCore';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { applyStaticMiddleware } from './v1/static/static.util';
 

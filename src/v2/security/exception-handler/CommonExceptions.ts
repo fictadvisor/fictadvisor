@@ -9,7 +9,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
 import { iterate } from 'iterare';
-import { Logger, SystemLogger } from 'src/v1/logger/logger.core';
+import { Logger, SystemLogger } from '../../security/exception-handler/LoggerCore';
 
 export type ServiceExceptionPayload = {
   message: string;
