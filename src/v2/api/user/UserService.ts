@@ -1,9 +1,7 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { PrismaService } from '../../database/PrismaService';
 import { GroupService } from '../group/GroupService';
 import { DisciplineService } from '../discipline/DisciplineService';
 import { GiveRoleDTO } from './dto/GiveRoleDTO';
-import { GrantRepository } from './grant/GrantRepository';
 import { StudentRepository } from './StudentRepository';
 import { RoleService } from './role/RoleService';
 import { UpdateSuperheroData } from "./dto/UpdateSuperheroData";
@@ -15,15 +13,13 @@ import { CreateContactDTO } from "./dto/CreateContactDTO";
 import { EntityType } from "@prisma/client";
 import { UpdateContactDTO } from "./dto/UpdateContactDTO";
 import { UpdateStudentDTO } from "./dto/UpdateStudentDTO";
+import { CreateSuperheroDTO } from './dto/CreateSuperheroDTO';
 
 @Injectable()
 export class UserService {
   constructor(
     private disciplineService: DisciplineService,
     @Inject(forwardRef(() => GroupService))
-    private groupService: GroupService,
-    private prisma: PrismaService,
-    private grantRepository: GrantRepository,
     private studentRepository: StudentRepository,
     private userRepository: UserRepository,
     private roleService: RoleService,
@@ -32,7 +28,7 @@ export class UserService {
   ) {
   }
 
-  async createSuperhero(id, body) {
+  async createSuperhero(id: string, body: CreateSuperheroDTO) {
     return this.superheroRepository.createSuperhero(id, body);
   }
 
@@ -53,6 +49,19 @@ export class UserService {
 
   async giveRole(id: string, { roleId }: GiveRoleDTO) {
     await this.studentRepository.addRole(id, roleId);
+  }
+  async getGroupByRole(id: string) {
+    return await this.studentRepository.getGroupByRole(id);
+  }
+
+  async getGroupRole(userId: string) {
+    const roles = await this.studentRepository.getRoles(userId);
+    const role = roles.find((r) => r.name == 'CAPTAIN' || r.name == 'MODERATOR' || r.name == 'STUDENT');
+    const group = await this.getGroupByRole(role.id);
+    return {
+      ...role,
+      groupId: group.id,
+    };
   }
 
   async removeRole(id: string, roleId: string) {
@@ -87,15 +96,15 @@ export class UserService {
     });
   }
 
-  async updateContact(userId, name, data: UpdateContactDTO) {
+  async updateContact(userId: string, name: string, data: UpdateContactDTO) {
     await this.contactRepository.updateContact(userId, name, data);
   }
 
-  async deleteContact(userId, name) {
+  async deleteContact(userId: string, name: string) {
     await this.contactRepository.deleteContact(userId, name);
   }
 
-  async deleteStudent(userId) {
+  async deleteStudent(userId: string) {
     await this.studentRepository.delete(userId);
   }
 
@@ -103,17 +112,19 @@ export class UserService {
     await this.userRepository.get(userId);
   }
 
-  async getMe(userId: string) {
-    const { username, email, avatar,
+  async getUser(userId: string) {
+    const { id, username, email, avatar, telegramId,
       student: { firstName, lastName, middleName },
     } = await this.userRepository.get(userId);
     return {
+      id,
       username,
       email,
       firstName,
       lastName,
       middleName,
       avatar,
+      telegramId,
     };
   }
 }

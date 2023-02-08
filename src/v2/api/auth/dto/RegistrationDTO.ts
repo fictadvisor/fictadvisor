@@ -1,19 +1,6 @@
 import { IsBoolean, IsEmail, IsNotEmpty, IsOptional, Matches, ValidateNested } from "class-validator";
 import { Type } from 'class-transformer';
 
-export class RegistrationDTO {
-  @ValidateNested()
-  @Type(() => StudentDTO)
-  student: StudentDTO;
-
-  @ValidateNested()
-  @Type(() => UserDTO)
-  user: UserDTO;
-
-  @IsOptional()
-  telegram: TelegramDTO;
-}
-
 export class StudentDTO {
   @IsNotEmpty()
   groupId: string;
@@ -21,14 +8,14 @@ export class StudentDTO {
   @Matches(
     /^[AБВГДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгдеєжзиіїйклмнопрстуфхцчшщьюя\- ]{2,40}$/, {
       message: 'firstName is not correct or too short (min: 2) or too long (max: 40)',
-  })
+    })
   @IsNotEmpty()
   firstName: string;
 
   @Matches(
     /^[AБВГДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгдеєжзиіїйклмнопрстуфхцчшщьюя\- ]{2,40}$/, {
       message: 'middleName is not correct or too short (min: 2) or too long (max: 40)',
-  })
+    })
   @IsOptional()
   middleName: string;
 
@@ -48,7 +35,7 @@ export class UserDTO {
   @Matches(
     /^[a-zA-Z0-9_]{2,40}$/, {
       message: 'username is not correct or too short (min: 2) or too long (max: 40)',
-  })
+    })
   @IsNotEmpty()
   username: string;
 
@@ -59,7 +46,7 @@ export class UserDTO {
   @Matches(
     /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,50}$/, {
       message: 'password is not correct or too short (min: 8) or too long (max: 50)',
-  })
+    })
   @IsNotEmpty()
   password: string;
 }
@@ -72,4 +59,17 @@ export class TelegramDTO {
   last_name: string;
   photo_url: string;
   username: string;
+}
+
+export class RegistrationDTO {
+  @ValidateNested()
+  @Type(() => StudentDTO)
+  student: StudentDTO;
+
+  @ValidateNested()
+  @Type(() => UserDTO)
+  user: UserDTO;
+
+  @IsOptional()
+  telegram: TelegramDTO;
 }

@@ -43,21 +43,23 @@ export class UserController {
     return this.userService.updateSuperhero(userId, body);
   }
 
-  @UseGuards(JwtGuard)
-  @Post('/superhero')
+  @Permission('users.$userId.superhero.create')
+  @UseGuards(JwtGuard, PermissionGuard)
+  @Post('/:userId/superhero')
   async createSuperhero(
-    @Request() req,
+    @Param('userId', UserByIdPipe) userId: string,
     @Body() body: CreateSuperheroDTO,
   ) {
-    return this.userService.createSuperhero(req.user.id, body);
+    return this.userService.createSuperhero(userId, body);
   }
 
-  @UseGuards()
-  @Get('/selective')
+  @Permission('users.$userId.selective.get')
+  @UseGuards(JwtGuard, PermissionGuard)
+  @Get('/:userId/selective')
   async getSelective(
-    @Request() req,
+    @Param('userId', UserByIdPipe) userId: string,
   ) {
-    const dbDisciplines = await this.userService.getSelective(req.user.id);
+    const dbDisciplines = await this.userService.getSelective(userId);
     return { disciplines: dbDisciplines.map((d) => d.id) };
   }
 
@@ -169,7 +171,7 @@ export class UserController {
   getMe(
     @Param('userId', UserByIdPipe) userId: string,
   ){
-    return this.userService.getMe(userId);
+    return this.userService.getUser(userId);
   }
 
 
