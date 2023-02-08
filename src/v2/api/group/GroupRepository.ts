@@ -28,7 +28,7 @@ export class GroupRepository {
     const page = DatabaseUtils.getPage(body);
     const sort = DatabaseUtils.getSort(body);
 
-    return await this.prisma.group.findMany({
+    return this.prisma.group.findMany({
       ...page,
       ...sort,
       where: {

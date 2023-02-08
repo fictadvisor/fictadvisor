@@ -11,7 +11,7 @@ export class ScheduleRepository {
   ) {}
 
   async createFortnightLesson(lessonId: string, fortnight: number) {
-    return await this.prisma.fortnightLesson.create({
+    return this.prisma.fortnightLesson.create({
       data: {
         lessonId,
         fortnight,
@@ -20,7 +20,7 @@ export class ScheduleRepository {
   }
 
   async getFortnightLesson(lessonId: string, fortnight: number) {
-    return await this.prisma.fortnightLesson.findFirst({
+    return this.prisma.fortnightLesson.findFirst({
       where: {
         lessonId,
         fortnight,
@@ -35,7 +35,7 @@ export class ScheduleRepository {
   }
 
   async getSemesterLesson(id: string) {
-    return await this.prisma.semesterLesson.findUnique({
+    return this.prisma.semesterLesson.findUnique({
       where: {
         id,
       },
@@ -46,7 +46,7 @@ export class ScheduleRepository {
   }
 
   async getTemporaryLesson(id: string) {
-    return await this.prisma.temporaryLesson.findUnique({
+    return this.prisma.temporaryLesson.findUnique({
       where: {
         id,
       },
@@ -58,7 +58,7 @@ export class ScheduleRepository {
   }
 
   async getTemporaryLessonsByType(disciplineTypeId: string, fortnight: number) {
-    return await this.prisma.temporaryLesson.findMany({
+    return this.prisma.temporaryLesson.findMany({
       where: {
         disciplineTypeId,
         fortnight,
@@ -67,7 +67,7 @@ export class ScheduleRepository {
   }
 
   async getSemesterLessonsByType(disciplineTypeId: string) {
-    return await this.prisma.semesterLesson.findMany({
+    return this.prisma.semesterLesson.findMany({
       where: {
         disciplineTypeId,
       },
@@ -75,7 +75,7 @@ export class ScheduleRepository {
   }
 
   async getFortnightLessonInfo(lessonId: string, type: FortnightLessonInfoType) {
-    return await this.prisma.fortnightLessonInfo.findFirst({
+    return this.prisma.fortnightLessonInfo.findFirst({
       where: {
         lessonId,
         type,
@@ -86,7 +86,7 @@ export class ScheduleRepository {
   async updateOrCreateFortnightLessonInfo(lessonId: string, type: FortnightLessonInfoType, value: string) {
     const fortnightLessonInfo = await this.getFortnightLessonInfo(lessonId, type);
     if (!fortnightLessonInfo) {
-      return await this.prisma.fortnightLessonInfo.create({
+      return this.prisma.fortnightLessonInfo.create({
         data: {
           lessonId,
           type,
@@ -94,7 +94,7 @@ export class ScheduleRepository {
         },
       });
     } else {
-      return await this.prisma.fortnightLessonInfo.updateMany({
+      return this.prisma.fortnightLessonInfo.updateMany({
         where: {
           lessonId,
           type,
@@ -107,7 +107,7 @@ export class ScheduleRepository {
   }
 
   async updateSemesterLessonInfo(id: string, data) {
-    return await this.prisma.semesterLesson.update({
+    return this.prisma.semesterLesson.update({
       where: {
         id,
       },
