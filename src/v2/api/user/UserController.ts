@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { UserService } from './UserService';
 import { TelegramGuard } from '../../security/TelegramGuard';
 import { JwtGuard } from '../../security/JwtGuard';
