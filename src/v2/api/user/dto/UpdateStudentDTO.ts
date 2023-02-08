@@ -6,13 +6,13 @@ export class UpdateStudentDTO {
   @Matches(
     createRegex(UKR_REGEX, UKRSPEC_REGEX),
     {
-      message: 'First name is not correct (A-Я(укр.)\\-\' )',
+      message: 'firstName is not correct (A-Я(укр.)\\-\' )',
     })
   @MinLength(2, {
-    message: 'First name is too short (min 2)',
+    message: 'firstName is too short (min 2)',
   })
   @MaxLength(40, {
-    message: 'First name is too long (max 40)',
+    message: 'firstName is too long (max 40)',
   })
   @IsOptional()
   firstName?: string;
@@ -20,13 +20,13 @@ export class UpdateStudentDTO {
   @Matches(
     createRegex(UKR_REGEX, UKRSPEC_REGEX),
     {
-    message: 'Last name is not correct (A-Я(укр.)\\-\' )',
+    message: 'lastName is not correct (A-Я(укр.)\\-\' )',
   })
   @MinLength(2, {
-    message: 'Last name is too short (min 2)',
+    message: 'lastName is too short (min 2)',
   })
   @MaxLength(40, {
-    message: 'Last name is too long (max 40)',
+    message: 'lastName is too long (max 40)',
   })
   @IsOptional()
   lastName?: string;
@@ -34,13 +34,13 @@ export class UpdateStudentDTO {
   @Matches(
     createRegex(UKR_REGEX, UKRSPEC_REGEX),
     {
-      message: 'Middle name is not correct (A-Я(укр.)\\-\' )',
+      message: 'middleName is not correct (A-Я(укр.)\\-\' )',
     })
   @MinLength(2, {
-    message: 'Middle name is too short (min 2)',
+    message: 'middleName is too short (min 2)',
   })
   @MaxLength(40, {
-    message: 'Middle name is too long (max 40)',
+    message: 'middleName is too long (max 40)',
   })
   @IsOptional()
   middleName?: string;
