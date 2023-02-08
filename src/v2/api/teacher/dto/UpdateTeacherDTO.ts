@@ -11,7 +11,7 @@ export class UpdateTeacherDTO {
     @Matches(
       createRegex(UKR_REGEX, UKRSPEC_REGEX),
       {
-        message: 'firstName incorrect',
+        message: 'firstName is incorrect',
       }
     )
     @IsOptional()
@@ -26,7 +26,7 @@ export class UpdateTeacherDTO {
     @Matches(
       createRegex(UKR_REGEX, UKRSPEC_REGEX),
       {
-        message: 'middleName incorrect',
+        message: 'middleName is incorrect',
       }
     )
     @IsOptional()
@@ -41,7 +41,7 @@ export class UpdateTeacherDTO {
     @Matches(
       createRegex(UKR_REGEX, UKRSPEC_REGEX),
       {
-        message: 'lastName incorrect',
+        message: 'lastName is incorrect',
       }
     )
     @IsOptional()

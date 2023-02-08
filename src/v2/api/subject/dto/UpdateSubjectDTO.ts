@@ -14,7 +14,7 @@ export class UpdateSubjectDTO {
   @Matches(
     createRegex(UKR_REGEX, UKRSPEC_REGEX),
     {
-      message: 'name incorrect',
+      message: 'name is incorrect',
     }
   )
   name: string;

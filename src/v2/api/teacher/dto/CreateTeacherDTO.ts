@@ -14,7 +14,7 @@ export class CreateTeacherDTO {
   @Matches(
     createRegex(UKR_REGEX, UKRSPEC_REGEX),
     {
-      message: 'firstName incorrect',
+      message: 'firstName is incorrect',
     }
   )
   firstName: string;
@@ -28,7 +28,7 @@ export class CreateTeacherDTO {
   @Matches(
     createRegex(UKR_REGEX, UKRSPEC_REGEX),
     {
-      message: 'middleName incorrect',
+      message: 'middleName is incorrect',
     }
   )
   @IsNotEmpty({
@@ -48,7 +48,7 @@ export class CreateTeacherDTO {
   @Matches(
     createRegex(UKR_REGEX, UKRSPEC_REGEX),
     {
-      message: 'lastName incorrect',
+      message: 'lastName is incorrect',
     }
   )
   lastName: string;
