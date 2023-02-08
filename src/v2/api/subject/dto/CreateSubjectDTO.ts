@@ -1,4 +1,5 @@
-import { IsNotEmpty, MaxLength, MinLength } from "class-validator";
+import { IsNotEmpty, Matches, MaxLength, MinLength } from "class-validator";
+import { createRegex, ENG_REGEX, NUM_REGEX, PUNCTUAL_REGEX, UKR_REGEX } from "../../../utils/GLOBALS";
 
 export class CreateSubjectDTO {
   @MinLength(5, {
@@ -10,5 +11,11 @@ export class CreateSubjectDTO {
   @IsNotEmpty({
     message: 'name can not be empty',
   })
+  @Matches(
+    createRegex(UKR_REGEX, PUNCTUAL_REGEX, ENG_REGEX, NUM_REGEX),
+    {
+      message: 'name is incorrect (a-zA-Z0-9A-Я(укр.)\\-\' )(/+.,")',
+    }
+  )
   name: string;
 }

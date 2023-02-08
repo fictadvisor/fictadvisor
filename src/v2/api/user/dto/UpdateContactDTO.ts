@@ -1,4 +1,5 @@
 import { IsAscii, IsOptional, Matches, MaxLength } from "class-validator";
+import { createRegex, ENG_REGEX, NUM_REGEX, UKR_REGEX, UKRSPEC_REGEX } from "../../../utils/GLOBALS";
 
 export class UpdateContactDTO {
 
@@ -6,9 +7,9 @@ export class UpdateContactDTO {
       message: 'name is too long (max: 100)',
     })
     @Matches(
-      /^[a-zA-Z0-9AБВГДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯабвгдеєжзиіїйклмнопрстуфхцчшщьюя\- ]+$/,
+      createRegex(UKR_REGEX, ENG_REGEX, NUM_REGEX, UKRSPEC_REGEX),
       {
-        message: 'name is not correct',
+        message: 'name is not correct (a-zA-Z0-9A-Я(укр.)\\-\' )',
       })
     @IsOptional()
     name?: string;
