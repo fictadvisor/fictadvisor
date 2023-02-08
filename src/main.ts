@@ -5,7 +5,7 @@ import { AppModule } from './v2/AppModule';
 import { HttpExceptionFilter, validationExceptionFactory } from './v2/security/exception-handler/CommonExceptions';
 import { systemLogger } from './v2/security/exception-handler/LoggerCore';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { applyStaticMiddleware } from './v1/static/static.util';
+import { applyStaticMiddleware } from './v2/utils/StaticUtil';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
