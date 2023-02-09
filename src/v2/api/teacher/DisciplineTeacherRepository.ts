@@ -23,31 +23,79 @@ export class DisciplineTeacherRepository {
   }
 
   async getDisciplineTeacher(id: string) {
-    const disciplineTeacher = await this.get(id);
-    delete disciplineTeacher.teacher;
-    delete disciplineTeacher.roles;
-    delete disciplineTeacher.discipline;
-    return disciplineTeacher;
+    return this.prisma.disciplineTeacher.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        teacher: {
+          select: {
+            id: true,
+            firstName: true,
+            middleName: true,
+            lastName: true,
+            avatar: true,
+          },
+        },
+        roles: {
+          select: {
+            role: true,
+          },
+        },
+      },
+    });
   }
 
   async getTeacher(id: string) {
-    const disciplineTeacher = await this.get(id);
-    return disciplineTeacher.teacher;
+    return this.prisma.teacher.findFirst({
+      where: {
+        disciplineTeachers: {
+          some: {
+            id,
+          },
+        },
+      },
+    });
   }
 
   async getRoles(id: string) {
-    const disciplineTeacher = await this.get(id);
-    return disciplineTeacher.roles;
+    return this.prisma.disciplineTeacherRole.findMany({
+      where: {
+        disciplineTeacher: {
+          id,
+        },
+      },
+    });
   }
 
   async getAnswers(id: string) {
-    const disciplineTeacher = await this.get(id);
-    return disciplineTeacher.questionAnswers;
+    return this.prisma.questionAnswer.findMany({
+      where: {
+        disciplineTeacher: {
+          id,
+        },
+      },
+    });
   }
 
   async getDiscipline(id: string) {
-    const disciplineTeacher = await this.get(id);
-    return disciplineTeacher.discipline;
+    return this.prisma.discipline.findFirst({
+      where: {
+        disciplineTeachers: {
+          some: {
+            id,
+          },
+        },
+      },
+      select: {
+        id: true,
+        subject: true,
+        group: true,
+        year: true,
+        semester: true,
+      },
+    });
   }
 
   async create(data: CreateDisciplineTeacherData) {

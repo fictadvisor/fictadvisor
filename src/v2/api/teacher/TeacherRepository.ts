@@ -6,7 +6,6 @@ import { CreateTeacherDTO } from './dto/CreateTeacherDTO';
 import { UpdateTeacherDTO } from './dto/UpdateTeacherDTO';
 
 
-
 @Injectable()
 export class TeacherRepository {
   constructor(

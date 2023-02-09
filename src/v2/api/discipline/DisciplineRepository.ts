@@ -40,8 +40,15 @@ export class DisciplineRepository {
   }
 
   async getGroup(id: string) {
-    const discipline = await this.get(id);
-    return discipline.group;
+    return this.prisma.group.findFirst({
+      where: {
+        disciplines: {
+          some: {
+            id,
+          },
+        },
+      },
+    });
   }
 
   async getTypes(id: string) {

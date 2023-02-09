@@ -12,6 +12,7 @@ import { DisciplineService } from "../discipline/DisciplineService";
 import { DisciplineRepository } from '../discipline/DisciplineRepository';
 import { NotEnoughAnswersException } from '../../utils/exceptions/NotEnoughAnswersException';
 import { ExcessiveAnswerException } from '../../utils/exceptions/ExcessiveAnswerException';
+import { DisciplineTeacherWithRoles } from "./DisciplineTeacherDatas";
 
 @Injectable()
 export class DisciplineTeacherService {
@@ -32,18 +33,30 @@ export class DisciplineTeacherService {
 
   async getGroup(id: string) {
     const discipline = await this.disciplineTeacherRepository.getDiscipline(id);
-    return this.disciplineRepository.getGroup(discipline.id);
+    return discipline.group;
   }
 
-  async getDisciplineTeacher(disciplineTeacherId: string) {
-    const teacher = await this.disciplineTeacherRepository.getTeacher(disciplineTeacherId);
-    const roles = await this.disciplineTeacherRepository.getRoles(disciplineTeacherId);
+  async getDisciplineTeacher(id: string) {
+    const { teacher, roles, id: disciplineTeacherId } = await this.disciplineTeacherRepository.getDisciplineTeacher(id);
 
     return {
       ...teacher,
       disciplineTeacherId,
-      roles: roles.map((role) => (role.role)),
+      roles: roles.map((r) => (r.role)),
     };
+  }
+
+  getUniqueRoles(disciplineTeachers: DisciplineTeacherWithRoles[]) {
+    const roles = [];
+    for (const disciplineTeacher of disciplineTeachers) {
+      const dbRoles = disciplineTeacher.roles
+        .map((r) => r.role)
+        .filter((r) => !roles.includes(r));
+
+      roles.push(...dbRoles);
+    }
+
+    return roles;
   }
 
   getQuestions(disciplineTeacherId: string) {
