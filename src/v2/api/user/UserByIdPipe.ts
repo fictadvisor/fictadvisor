@@ -5,7 +5,7 @@ import { InvalidEntityIdException } from "../../utils/exceptions/InvalidEntityId
 
 
 @Injectable()
-export class UserByIdPipe implements PipeTransform<string, Promise<User>> {
+export class UserByIdPipe implements PipeTransform {
   constructor(
     private userRepository: UserRepository,
   ) {}
@@ -15,6 +15,6 @@ export class UserByIdPipe implements PipeTransform<string, Promise<User>> {
     if(!user) {
       throw new InvalidEntityIdException('user');
     }
-    return user;
+    return id;
   }
 }

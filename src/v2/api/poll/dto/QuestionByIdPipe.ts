@@ -1,5 +1,4 @@
 import { Injectable, PipeTransform } from "@nestjs/common";
-import { PollController } from "../PollController";
 import { Question } from "@prisma/client";
 import { InvalidEntityIdException } from "../../../utils/exceptions/InvalidEntityIdException";
 import { PollService } from "../PollService";

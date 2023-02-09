@@ -18,7 +18,7 @@ export class GroupRepository {
       include: {
         disciplines: true,
         students: true,
-        groupRole: true,
+        groupRoles: true,
       },
     });
   }
@@ -28,7 +28,7 @@ export class GroupRepository {
     const page = DatabaseUtils.getPage(body);
     const sort = DatabaseUtils.getSort(body);
 
-    return await this.prisma.group.findMany({
+    return this.prisma.group.findMany({
       ...page,
       ...sort,
       where: {
@@ -49,7 +49,7 @@ export class GroupRepository {
     const group = await this.get(id);
     delete group.disciplines;
     delete group.students;
-    delete group.groupRole;
+    delete group.groupRoles;
     return group;
   }
 

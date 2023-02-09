@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsOptional, MaxLength, MinLength } from "class-validator";
+import { IsNotEmpty, IsOptional, Matches, MaxLength, MinLength } from "class-validator";
+import { createRegex, UKR_REGEX, UKRSPEC_REGEX } from "../../../utils/GLOBALS";
 
 export class CreateTeacherDTO {
   @MinLength(2, {
@@ -10,6 +11,12 @@ export class CreateTeacherDTO {
   @IsNotEmpty({
     message: 'firstName can not be empty',
   })
+  @Matches(
+    createRegex(UKR_REGEX, UKRSPEC_REGEX),
+    {
+      message: 'firstName is incorrect (A-Я(укр.)\\-\' )',
+    }
+  )
   firstName: string;
 
   @MinLength(2, {
@@ -18,7 +25,15 @@ export class CreateTeacherDTO {
   @MaxLength(40, {
     message: 'middleName is too long (max: 40)',
   })
-  @IsOptional()
+  @Matches(
+    createRegex(UKR_REGEX, UKRSPEC_REGEX),
+    {
+      message: 'middleName is incorrect (A-Я(укр.)\\-\' )',
+    }
+  )
+  @IsNotEmpty({
+    message: 'middleName can not be empty',
+  })
   middleName: string;
 
   @MinLength(2, {
@@ -30,6 +45,12 @@ export class CreateTeacherDTO {
   @IsNotEmpty({
     message: 'lastName can not be empty',
   })
+  @Matches(
+    createRegex(UKR_REGEX, UKRSPEC_REGEX),
+    {
+      message: 'lastName is incorrect (A-Я(укр.)\\-\' )',
+    }
+  )
   lastName: string;
 
   @MaxLength(400, {
