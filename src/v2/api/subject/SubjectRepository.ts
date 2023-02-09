@@ -60,15 +60,35 @@ export class SubjectRepository {
     });
   }
 
-  async getDisciplines(id: string) {
-    const subject = await this.get(id);
-    return subject.disciplines;
+  async getDisciplines(subjectId: string) {
+    return this.prisma.discipline.findMany({
+      where: {
+        subjectId,
+      },
+      select: {
+        id: true,
+        isSelective: true,
+        year: true,
+        semester: true,
+        subject: true,
+        group: true,
+        disciplineTeachers: {
+          select: {
+            id: true,
+            teacher: true,
+            roles: true,
+          },
+        },
+      },
+    });
   }
 
   async getSubject(id: string) {
-    const subject = await this.get(id);
-    delete subject.disciplines;
-    return subject;
+    return this.prisma.subject.findUnique({
+      where: {
+        id,
+      },
+    });
   }
 
   async update(id: string, data: UpdateSubjectDTO) {
