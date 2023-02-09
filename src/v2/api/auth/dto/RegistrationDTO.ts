@@ -15,7 +15,7 @@ export class StudentDTO {
 
 
   @Matches(
-    new RegExp("^[" + UKR_REGEX + UKRSPEC_REGEX + "]+${2, 40}"), {
+    new RegExp("^[" + UKR_REGEX + UKRSPEC_REGEX + "]{2,40}$"), {
       message: 'firstName is not correct (A-Я(укр.)\\-\' ), or too short (min: 2), or too long (max: 40)',
     })
   @IsNotEmpty({
@@ -24,7 +24,7 @@ export class StudentDTO {
   firstName: string;
 
   @Matches(
-    new RegExp("^[" + UKR_REGEX + UKRSPEC_REGEX + "]+${2, 40}"), {
+    new RegExp("^[" + UKR_REGEX + UKRSPEC_REGEX + "]{2,40}$"), {
       message: 'middleName is not correct (A-Я(укр.)\\-\' ), or too short (min: 2), or too long (max: 40)',
     })
   @IsNotEmpty({
@@ -33,7 +33,7 @@ export class StudentDTO {
   middleName: string;
 
   @Matches(
-    new RegExp("^[" + UKR_REGEX + UKRSPEC_REGEX + "]+${2, 40}"), {
+    new RegExp("^[" + UKR_REGEX + UKRSPEC_REGEX + "]{2,40}$"), {
       message: 'lastName is not correct (A-Я(укр.)\\-\' ), or too short (min: 2), or too long (max: 40)',
     })
   @IsNotEmpty({
@@ -50,7 +50,7 @@ export class StudentDTO {
 export class UserDTO {
 
   @Matches(
-    new RegExp("^[" + ENG_REGEX + NUM_REGEX + "_" + "]+${2, 40}"), {
+    new RegExp("^[" + ENG_REGEX + NUM_REGEX + "_" + "]{2,40}$"), {
       message: 'Username is not correct (a-zA-Z0-9_), or too short (min: 2), or too long (max: 40)',
     })
   @IsNotEmpty({
@@ -68,7 +68,7 @@ export class UserDTO {
   email: string;
 
   @Matches(
-    /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]${8,50}/, {
+    /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,50}$/, {
       message: 'password is not correct or too short (min: 8) or too long (max: 50)',
     })
   @IsNotEmpty({

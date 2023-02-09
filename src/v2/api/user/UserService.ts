@@ -19,7 +19,7 @@ import { CreateSuperheroDTO } from './dto/CreateSuperheroDTO';
 export class UserService {
   constructor(
     private disciplineService: DisciplineService,
-    @Inject(forwardRef(() => GroupService))
+    @Inject(forwardRef(() => StudentRepository))
     private studentRepository: StudentRepository,
     private userRepository: UserRepository,
     private roleService: RoleService,
