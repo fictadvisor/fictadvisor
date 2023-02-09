@@ -123,7 +123,7 @@ export class AuthService {
     const group = await this.groupRepository.getGroup(groupId);
     const data = {
       id,
-      telegramId,
+      telegramId: telegramId ? telegramId : undefined,
       ...student,
       groupCode: group.code,
     };
