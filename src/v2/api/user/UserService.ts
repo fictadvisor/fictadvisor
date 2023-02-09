@@ -109,7 +109,18 @@ export class UserService {
   }
 
   async getUserForTelegram(userId: string) {
-    await this.userRepository.get(userId);
+    const { student: { group, ...student }, ...user } = await this.userRepository.get(userId);
+
+    return {
+      id: user.id,
+      firstName: student.firstName,
+      middleName: student.middleName,
+      lastName: student.lastName,
+      groupCode: group.code,
+      email: user.email,
+      username: user.username,
+      avatar: user.avatar,
+    };
   }
 
   async getUser(userId: string) {

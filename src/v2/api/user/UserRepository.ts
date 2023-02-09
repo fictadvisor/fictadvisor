@@ -21,7 +21,11 @@ export class UserRepository {
         id,
       },
       include: {
-        student: true,
+        student: {
+          include: {
+            group: true,
+          },
+        },
       },
     });
   }
