@@ -55,13 +55,7 @@ export class DisciplineService {
   }
 
   async getTeachers(id: string) {
-    const results = [];
-
     const disciplineTeachers = await this.disciplineRepository.getDisciplineTeachers(id);
-    for (const disciplineTeacher of disciplineTeachers) {
-      results.push(await this.disciplineTeacherService.getDisciplineTeacher(disciplineTeacher.id));
-    }
-
-    return results;
+    return this.disciplineTeacherService.getTeachers(disciplineTeachers);
   }
 }

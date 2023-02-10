@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
 import { ScheduleParser } from '../../utils/parser/ScheduleParser';
-import { Group, Subject, FortnightLessonInfoType, DisciplineType } from '@prisma/client';
+import { Group, FortnightLessonInfoType, DisciplineTypeEnum } from '@prisma/client';
 import { DateService } from '../../utils/date/DateService';
 import { ConfigService } from '@nestjs/config';
 import { SubjectService } from '../subject/SubjectService';
@@ -63,14 +63,11 @@ export class ScheduleService {
     const disciplines = await this.groupRepository.getDisciplines(group.id);
 
     for (const discipline of disciplines) {
-      const disciplineTypes = await this.disciplineRepository.getTypes(discipline.id);
-      const subject = await this.disciplineRepository.getSubject(discipline.id);
-
-      for (const type of disciplineTypes) {
+      for (const type of discipline.disciplineTypes) {
         if (callback === 'static') {
-          results.push(...await this.getStaticLessons(fortnight, discipline, subject, type));
+          results.push(...await this.getStaticLessons(fortnight, discipline, type));
         } else if (callback === 'temporary') {
-          results.push(...await this.getTemporaryLessons(fortnight, discipline, subject, type));
+          results.push(...await this.getTemporaryLessons(fortnight, discipline, type));
         }
       }
     }
@@ -81,11 +78,10 @@ export class ScheduleService {
   async getStaticLessons(
     fortnight: number,
     discipline: any,
-    subject: Subject,
-    type: DisciplineType
+    type: { id: string, name: DisciplineTypeEnum },
   ): Promise<StaticLessonInfo[]> {
     const lessons = await this.scheduleRepository.getSemesterLessonsByType(type.id);
-    const results: StaticLessonInfo[] = [];
+    const results = [];
 
     for (const lesson of lessons) {
       const [
@@ -104,7 +100,7 @@ export class ScheduleService {
         startDate: new Date(startDate),
         endDate: new Date(endDate),
         type: type.name,
-        subjectName: subject.name,
+        subject: discipline.subject,
         isSelective: discipline.isSelective,
         isTest: Boolean(isTest),
       });
@@ -134,12 +130,11 @@ export class ScheduleService {
   async getTemporaryLessons(
     fortnight: number,
     discipline: any,
-    subject: Subject,
-    type: DisciplineType
+    type: { id: string, name: DisciplineTypeEnum },
   ): Promise<TemporaryLessonInfo[]> {
     const lessons = await this.scheduleRepository.getTemporaryLessonsByType(type.id, fortnight);
 
-    const results: TemporaryLessonInfo[] = [];
+    const results = [];
 
     for (const lesson of lessons) {
       results.push({
@@ -147,7 +142,7 @@ export class ScheduleService {
         startDate: lesson.startDate,
         endDate: lesson.endDate,
         type: type.name,
-        subjectName: subject.name,
+        subject: discipline.subject,
       });
     }
 

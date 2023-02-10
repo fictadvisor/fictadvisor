@@ -36,6 +36,35 @@ export class DisciplineTypeRepository {
     return type.discipline;
   }
 
+  async getDisciplineTeachers(disciplineTypeId: string) {
+    return this.prisma.disciplineTeacher.findMany({
+      where: {
+        roles: {
+          some: {
+            disciplineTypeId,
+          },
+        },
+      },
+      select: {
+        id: true,
+        teacher: {
+          select: {
+            id: true,
+            firstName: true,
+            middleName: true,
+            lastName: true,
+            avatar: true,
+          },
+        },
+        roles: {
+          select: {
+            role: true,
+          },
+        },
+      },
+    });
+  }
+
   async getDisciplineTeacherRoles(id: string) {
     const type = await this.get(id);
     return type.disciplineTeacherRoles;

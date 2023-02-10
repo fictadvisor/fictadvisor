@@ -35,8 +35,15 @@ export class DisciplineRepository {
   }
 
   async getSubject(id: string) {
-    const discipline = await this.get(id);
-    return discipline.subject;
+    return this.prisma.subject.findFirst({
+      where: {
+        disciplines: {
+          some: {
+            id,
+          },
+        },
+      },
+    });
   }
 
   async getGroup(id: string) {
@@ -52,18 +59,67 @@ export class DisciplineRepository {
   }
 
   async getTypes(id: string) {
-    const discipline = await this.get(id);
-    return discipline.disciplineTypes;
+    return this.prisma.disciplineType.findMany({
+      where: {
+        discipline: {
+          id,
+        },
+      },
+    });
   }
 
-  async getSelective(id: string) {
-    const discipline = await this.get(id);
-    return discipline.selectiveDisciplines;
+  async getUserSelective(disciplineId: string) {
+    return this.prisma.student.findMany({
+      where: {
+        selectiveDisciplines: {
+          some: {
+            disciplineId,
+          },
+        },
+      },
+      select: {
+        firstName: true,
+        middleName: true,
+        lastName: true,
+        user: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+            telegramId: true,
+            avatar: true,
+          },
+        },
+        group: true,
+      },
+    });
   }
 
   async getDisciplineTeachers(id: string) {
-    const discipline = await this.get(id);
-    return discipline.disciplineTeachers;
+    return this.prisma.disciplineTeacher.findMany({
+      where: {
+        discipline: {
+          id,
+        },
+      },
+      select: {
+        id: true,
+        teacher: {
+          select: {
+            id: true,
+            firstName: true,
+            middleName: true,
+            lastName: true,
+            avatar: true,
+          },
+        },
+        roles: {
+          select: {
+            role: true,
+          },
+        },
+      },
+    });
   }
 
   async find(where: CreateDisciplineDTO) {

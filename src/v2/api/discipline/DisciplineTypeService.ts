@@ -12,21 +12,14 @@ export class DisciplineTypeService {
     private disciplineRepository: DisciplineRepository,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
     @Inject(forwardRef(() => DisciplineTeacherService))
-    private disciplineTeachersService: DisciplineTeacherService,
+    private disciplineTeacherService: DisciplineTeacherService,
     @Inject(forwardRef(() => TeacherService))
     private teacherService: TeacherService
   ) {}
 
   async getTeachers(id: string) {
-    const roles = await this.disciplineTypeRepository.getDisciplineTeacherRoles(id);
-    const results = [];
-
-    for (const role of roles) {
-      const teacher = await this.disciplineTeacherRepository.getTeacher(role.disciplineTeacherId);
-      results.push({ disciplineTeacherId: role.disciplineTeacherId, roles: [role.role], ...teacher });
-    }
-
-    return results;
+    const teachers = await this.disciplineTypeRepository.getDisciplineTeachers(id);
+    return this.disciplineTeacherService.getTeachers(teachers);
   }
 
   async getGroup(id: string) {

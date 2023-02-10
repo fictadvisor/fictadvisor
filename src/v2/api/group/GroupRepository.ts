@@ -65,6 +65,12 @@ export class GroupRepository {
         semester: true,
         subject: true,
         group: true,
+        disciplineTypes: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
         disciplineTeachers: {
           select: {
             id: true,

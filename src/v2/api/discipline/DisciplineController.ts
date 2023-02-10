@@ -35,7 +35,8 @@ export class DisciplineController {
   async getAllByDiscipline(
     @Param('disciplineId') disciplineId: string
   ) {
-    return this.disciplineService.getTeachers(disciplineId);
+    const teachers = await this.disciplineService.getTeachers(disciplineId);
+    return { teachers };
   }
 
 }
