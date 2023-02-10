@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
 import { ScheduleParser } from '../../utils/parser/ScheduleParser';
-import { Group, Subject, FortnightLessonInfoType, Discipline, DisciplineType } from '@prisma/client';
+import { Group, Subject, FortnightLessonInfoType, DisciplineType } from '@prisma/client';
 import { DateService } from '../../utils/date/DateService';
 import { ConfigService } from '@nestjs/config';
 import { SubjectService } from '../subject/SubjectService';
@@ -80,7 +80,7 @@ export class ScheduleService {
 
   async getStaticLessons(
     fortnight: number,
-    discipline: Discipline,
+    discipline: any,
     subject: Subject,
     type: DisciplineType
   ): Promise<StaticLessonInfo[]> {
@@ -133,7 +133,7 @@ export class ScheduleService {
 
   async getTemporaryLessons(
     fortnight: number,
-    discipline: Discipline,
+    discipline: any,
     subject: Subject,
     type: DisciplineType
   ): Promise<TemporaryLessonInfo[]> {

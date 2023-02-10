@@ -1,5 +1,4 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { GroupService } from '../group/GroupService';
 import { DisciplineService } from '../discipline/DisciplineService';
 import { GiveRoleDTO } from './dto/GiveRoleDTO';
 import { StudentRepository } from './StudentRepository';
@@ -10,10 +9,11 @@ import { UserRepository } from "./UserRepository";
 import { ContactRepository } from "./ContactRepository";
 import { UpdateUserDTO } from "./dto/UpdateUserDTO";
 import { CreateContactDTO } from "./dto/CreateContactDTO";
-import { EntityType } from "@prisma/client";
+import { EntityType, Role } from "@prisma/client";
 import { UpdateContactDTO } from "./dto/UpdateContactDTO";
 import { UpdateStudentDTO } from "./dto/UpdateStudentDTO";
 import { CreateSuperheroDTO } from './dto/CreateSuperheroDTO';
+import { StudentWithUser } from "./dto/StudentDTOs";
 
 @Injectable()
 export class UserService {
@@ -54,7 +54,7 @@ export class UserService {
     return await this.studentRepository.getGroupByRole(id);
   }
 
-  async getGroupRole(userId: string) {
+  async getGroupRoleDB(userId: string) {
     const roles = await this.studentRepository.getRoles(userId);
     const role = roles.find((r) => r.name == 'CAPTAIN' || r.name == 'MODERATOR' || r.name == 'STUDENT');
     const group = await this.getGroupByRole(role.id);
@@ -62,6 +62,11 @@ export class UserService {
       ...role,
       groupId: group.id,
     };
+  }
+
+  getGroupRole(roles: { role: Role }[]) {
+    const groupRole = roles.find((r) => r.role.name == 'CAPTAIN' || r.role.name == 'MODERATOR' || r.role.name == 'STUDENT');
+    return groupRole.role;
   }
 
   async removeRole(id: string, roleId: string) {
@@ -120,6 +125,19 @@ export class UserService {
       email: user.email,
       username: user.username,
       avatar: user.avatar,
+    };
+  }
+
+  getStudent(student: StudentWithUser) {
+    return {
+      id: student.user.id,
+      username: student.user.username,
+      email: student.user.email,
+      firstName: student.firstName,
+      lastName: student.lastName,
+      middleName: student.middleName,
+      avatar: student.user.avatar,
+      telegramId: student.user.telegramId,
     };
   }
 

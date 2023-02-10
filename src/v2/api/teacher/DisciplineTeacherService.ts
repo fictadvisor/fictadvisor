@@ -16,7 +16,7 @@ import { DateService } from "../../utils/date/DateService";
 import { PrismaService } from "../../database/PrismaService";
 import { ConfigService } from "@nestjs/config";
 import { WrongTimeException } from "../../utils/exceptions/WrongTimeException";
-import { DisciplineTeacherWithRoles } from "./DisciplineTeacherDatas";
+import { DisciplineTeacherWithRoles, DisciplineTeacherWithRolesAndTeacher } from "./DisciplineTeacherDatas";
 
 @Injectable()
 export class DisciplineTeacherService {
@@ -44,13 +44,9 @@ export class DisciplineTeacherService {
   }
 
   async getDisciplineTeacher(id: string) {
-    const { teacher, roles, id: disciplineTeacherId } = await this.disciplineTeacherRepository.getDisciplineTeacher(id);
+    const disciplineTeacher = await this.disciplineTeacherRepository.getDisciplineTeacher(id);
 
-    return {
-      ...teacher,
-      disciplineTeacherId,
-      roles: roles.map((r) => (r.role)),
-    };
+    return this.formatTeacher(disciplineTeacher);
   }
 
   getUniqueRoles(disciplineTeachers: DisciplineTeacherWithRoles[]) {
@@ -64,6 +60,18 @@ export class DisciplineTeacherService {
     }
 
     return roles;
+  }
+
+  getTeachers(teachers: DisciplineTeacherWithRolesAndTeacher[]) {
+    return teachers.map(this.formatTeacher);
+  }
+
+  formatTeacher(teacher: DisciplineTeacherWithRolesAndTeacher) {
+    return {
+      disciplineTeacherId: teacher.id,
+      ...teacher.teacher,
+      roles: teacher.roles.map((r) => (r.role)),
+    };
   }
 
   getQuestions(disciplineTeacherId: string) {
