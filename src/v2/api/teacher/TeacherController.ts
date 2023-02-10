@@ -21,7 +21,6 @@ export class TeacherController {
   ) {}
 
 
-  @UseGuards(JwtGuard)
   @Get()
   getAll(
     @Query() query: QueryAllDTO,
@@ -29,7 +28,6 @@ export class TeacherController {
     return this.teacherService.getAll(query);
   }
 
-  @UseGuards(JwtGuard)
   @Get('/:teacherId/roles')
   getTeacherRoles(
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
@@ -37,7 +35,6 @@ export class TeacherController {
     return this.teacherService.getTeacherRoles(teacherId);
   }
 
-  @UseGuards(JwtGuard)
   @Get('/:teacherId')
   getTeacher(
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
@@ -73,7 +70,6 @@ export class TeacherController {
     return this.teacherService.delete(teacherId);
   }
 
-  @UseGuards(JwtGuard)
   @Get('/:teacherId/contacts')
   getAllContacts(
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
@@ -81,7 +77,6 @@ export class TeacherController {
     return this.teacherService.getAllContacts(teacherId);
   }
 
-  @UseGuards(JwtGuard)
   @Get('/:teacherId/contacts/:name')
   getContact(
     @Param(ContactByNamePipe) params: {teacherId: string, name: string},

@@ -31,10 +31,8 @@ export class CreateTeacherDTO {
       message: 'middleName is incorrect (A-Я(укр.)\\-\' )',
     }
   )
-  @IsNotEmpty({
-    message: 'middleName can not be empty',
-  })
-  middleName: string;
+  @IsOptional()
+  middleName?: string;
 
   @MinLength(2, {
     message: 'lastName is too short (min: 2)',
