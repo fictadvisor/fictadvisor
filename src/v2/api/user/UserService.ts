@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { ForbiddenException, forwardRef, Inject, Injectable } from '@nestjs/common';
 import { GroupService } from '../group/GroupService';
 import { DisciplineService } from '../discipline/DisciplineService';
 import { GiveRoleDTO } from './dto/GiveRoleDTO';
@@ -10,10 +10,12 @@ import { UserRepository } from "./UserRepository";
 import { ContactRepository } from "./ContactRepository";
 import { UpdateUserDTO } from "./dto/UpdateUserDTO";
 import { CreateContactDTO } from "./dto/CreateContactDTO";
-import { EntityType } from "@prisma/client";
+import { EntityType, State } from "@prisma/client";
 import { UpdateContactDTO } from "./dto/UpdateContactDTO";
 import { UpdateStudentDTO } from "./dto/UpdateStudentDTO";
 import { CreateSuperheroDTO } from './dto/CreateSuperheroDTO';
+import { AuthService } from '../auth/AuthService';
+import { GroupRequestDTO } from './dto/GroupRequestDTO';
 
 @Injectable()
 export class UserService {
@@ -25,6 +27,7 @@ export class UserService {
     private roleService: RoleService,
     private superheroRepository: SuperheroRepository,
     private contactRepository: ContactRepository,
+    private authService: AuthService,
   ) {
   }
 
@@ -74,6 +77,20 @@ export class UserService {
 
   async updateSuperhero(userId: string, data: UpdateSuperheroData) {
     await this.superheroRepository.updateSuperhero(userId, data);
+  }
+
+  async requestNewGroup(id: string, {groupId, isCaptain}: GroupRequestDTO) {
+    const user = await this.userRepository.get(id);
+    if(user.state === State.APPROVED)
+      throw new ForbiddenException();
+
+    await this.studentRepository.update(id, {state: State.PENDING}); 
+    const student = {
+      firstName: user.student.firstName,
+      middleName: user.student.middleName,
+      lastName: user.student.lastName,
+    }
+    await this.authService.verify(user, {groupId, isCaptain, ...student})
   }
 
   async deleteUser(userId: string) {
