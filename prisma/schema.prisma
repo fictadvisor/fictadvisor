@@ -198,7 +198,7 @@ enum TeacherRole {
 model Teacher {
   id                 String              @id @default(uuid())
   firstName          String              @map("first_name")
-  middleName         String              @map("middle_name")
+  middleName         String?              @map("middle_name") @default("")
   lastName           String              @map("last_name")
   description        String?
   avatar             String?
