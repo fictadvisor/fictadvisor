@@ -1,5 +1,5 @@
 import React, {ReactNode} from "react";
-import styles from "styles/v2/local/elements/AlertButton.module.scss";
+import styles from "./AlertButton.module.scss";
 import mergeClassNames from "merge-class-names";
 export enum AlertButtonType{
     SUCCESS = "success", ERROR_PRIMARY = "error-primary", ERROR_SECONDARY = "error-secondary"

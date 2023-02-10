@@ -1,7 +1,7 @@
 import Link from "next/dist/client/link";
 import { LinkProps } from "next/link";
 import {ArrowLeftIcon} from "@heroicons/react/24/outline";
-import styles from "styles/v2/local/elements/Link.module.scss";
+import styles from "./Link.module.scss";
 import React from "react";
 
 export enum LinkColor {
@@ -15,7 +15,7 @@ type CustomLinkProps = {
   arrow?: boolean;
 } & LinkProps;
 
-export const CustomLink: React.FC<CustomLinkProps> = ({
+const CustomLink: React.FC<CustomLinkProps> = ({
   arrow,
   text,
   color = LinkColor.WHITE,
@@ -39,3 +39,5 @@ export const CustomLink: React.FC<CustomLinkProps> = ({
     </span>
   );
 };
+
+export default CustomLink;

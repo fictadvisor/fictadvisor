@@ -1,5 +1,5 @@
 import React, {ReactNode} from "react";
-import styles from "styles/v2/local/elements/Button.module.scss";
+import styles from "./Button.module.scss";
 import mergeClassNames from "merge-class-names";
 export enum ButtonSize {
     LARGE = "large", MEDIUM = "medium", SMALL = "small"

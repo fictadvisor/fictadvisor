@@ -1,6 +1,6 @@
 import React from "react";
 import {BarsArrowDownIcon, BarsArrowUpIcon, TrashIcon} from "@heroicons/react/24/outline";
-import styles from "styles/v2/local/elements/IconButton.module.scss";
+import styles from "./IconButton.module.scss";
 
 type IconButtonProps = {
   size: "normal" | "large";

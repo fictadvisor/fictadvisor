@@ -1,4 +1,4 @@
-export const WarningIcon = (props) => (
+export const WarningIcon = () => (
   <svg
     width="14"
     height="13"

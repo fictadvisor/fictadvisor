@@ -1,6 +1,5 @@
-import React from "react";
-import styles from "styles/v2/local/elements/Switch.module.scss";
-import mergeClassNames from 'merge-class-names'
+import React, {FC} from "react";
+import styles from "./Switch.module.scss";
 export enum SwitchTextPosition {
   RIGHT = "right",
   LEFT = "left",
@@ -11,13 +10,13 @@ export enum SwitchType {
   MOBILE = "mobile",
 }
 
-export interface SwitchProps {
+interface SwitchProps {
   text?: string,
   textPosition?: string,
   type: SwitchType
 }
 
-export function Switch(props: SwitchProps) {
+const Switch: FC<SwitchProps> = (props) => {
   return (
     <div>
       <div className={styles[props.type + "-container"]}>

@@ -1,5 +1,5 @@
 import React, {useState, useRef} from "react";
-import styles from "styles/v2/local/elements/TextArea.module.scss";
+import styles from "./TextArea.module.scss";
 
 // props
 export enum TextAreaSpecs{
@@ -17,7 +17,7 @@ interface TextAreaProps {
     areaCurrState?: TextAreaState
 }
 
-export const TextArea: React.FC<TextAreaProps> = (TextAreaProps) => {
+const TextArea: React.FC<TextAreaProps> = (TextAreaProps) => {
     // refs and hooks
     const ref = useRef(null); // == event.target
     const [currTAText, setCurrTAText] = useState('');
@@ -50,3 +50,5 @@ export const TextArea: React.FC<TextAreaProps> = (TextAreaProps) => {
         </form>
     )
 }
+
+export default TextArea;

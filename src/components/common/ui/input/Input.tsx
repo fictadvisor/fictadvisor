@@ -6,7 +6,7 @@ import {
     EyeSlashIcon,
     MagnifyingGlassIcon, XMarkIcon
 } from "@heroicons/react/24/outline";
-import styles from "styles/v2/local/elements/Input.module.scss";
+import styles from "./Input.module.scss";
 import mergeClassNames from 'merge-class-names'
 
 export enum InputState{

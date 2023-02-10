@@ -1,5 +1,5 @@
-import {ReactNode} from "react";
-import styles from "styles/v2/local/elements/Tab.module.scss";
+import {FC, ReactNode} from "react";
+import styles from "./Tab.module.scss";
 import mergeClassNames from 'merge-class-names'
 
 export enum TabContentPosition {
@@ -7,7 +7,7 @@ export enum TabContentPosition {
     LEFT = 'left',
 }
 
-export interface TabProps {
+interface TabProps {
     className: string,
     text: string,
     position: TabContentPosition,
@@ -16,7 +16,7 @@ export interface TabProps {
     count?: number,
 }
 
-export function Tab(props: TabProps) {
+const Tab: FC<TabProps> = (props) => {
     const handleClick = () => {
     }
     return (

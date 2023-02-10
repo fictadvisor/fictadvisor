@@ -1,19 +1,19 @@
-import React, { ReactNode } from "react";
-import styles from "styles/v2/local/elements/Tag.module.scss";
+import React, {FC, ReactNode} from "react";
+import styles from "./Tag.module.scss";
 import mergeClassNames from 'merge-class-names'
 
 export enum TagState {
     BIG = 'big',
     SMALL = 'small',
 }
-export interface TagProps {
+interface TagProps {
     className?: string,
     text?: string,
     icon?: ReactNode;
     state: TagState,
 }
 
-export function Tag(props: TagProps) {
+const Tag: FC<TagProps> = (props) => {
 
     const tagClassName = mergeClassNames(styles["tag"], styles[props.state + "-tag"],
         styles[props.className ? props.className + "-bgc" : ""]);

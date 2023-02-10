@@ -1,6 +1,6 @@
 import React from "react";
 import mergeClassNames from 'merge-class-names'
-import styles from "styles/v2/local/elements/Tooltip.module.scss";
+import styles from "./Tooltip.module.scss";
 
 export enum TooltipDirection {
   TOP = "top",
@@ -14,7 +14,7 @@ interface TooltipProps {
   direction?: TooltipDirection;
 }
 
-export const Tooltip: React.FC<TooltipProps> = ({ direction, text }) => {
+const Tooltip: React.FC<TooltipProps> = ({ direction, text }) => {
   if (direction) {
     return (
       <div className={styles["tooltip-body"]}>
@@ -31,3 +31,5 @@ export const Tooltip: React.FC<TooltipProps> = ({ direction, text }) => {
     </div>
   );
 };
+
+export default Tooltip;
