@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import styles from "./PageLayout.module.scss";
 import config from "@/config";
+import Script from "next/script";
 
 interface PageLayoutProps {
     title?: string;
@@ -19,11 +20,9 @@ function PageLayout(props: PageLayoutProps) {
                 <meta property="og:site_name" content={config.service}/>
                 <meta property="og:image" content="/assets/preview.jpg"/>
                 <meta property="og:type" content="website"/>
-
+                <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
                 <meta name="google-site-verification" content="M93dY9EuPcQ5AzSYwxc6_el0GwZp_XlDHBhphP6z-7g"/>
-                <script async src="https://telegram.org/js/telegram-widget.js"/>
-                <script async src="https://www.googletagmanager.com/gtag/js?id=G-GXYG7SJKYT"/>
-                <script
+                <Script
                     dangerouslySetInnerHTML={{
                         __html:
                             `
@@ -39,11 +38,6 @@ function PageLayout(props: PageLayoutProps) {
                     props?.description &&
                     <meta property="og:description" content={props.description}/>
                 }
-
-                <link rel="icon" href="/favicon.ico"/>
-                <link rel="preconnect" href="https://fonts.gstatic.com"/>
-                <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Manrope"/>
-                <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
             </Head>
 
             <div className={styles["page"]}>
