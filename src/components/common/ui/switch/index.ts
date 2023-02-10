@@ -1,0 +1,1 @@
+export { default, SwitchType, SwitchTextPosition } from './Switch';

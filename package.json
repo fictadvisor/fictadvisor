@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.0.14",
+    "@zeit/next-sass": "^1.0.1",
     "axios": "^1.2.3",
     "merge-class-names": "^1.4.2",
     "next": "13.1.5",
