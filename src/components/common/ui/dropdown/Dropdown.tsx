@@ -62,19 +62,19 @@ const Dropdown: React.FC<DropdownProps> = ({
         onMenuClose={() => setIsMenuOpen(false)}
         maxMenuHeight={dropDownOptionHeight * numberOfOptions}
         classNames={{
-          control: state =>
+          control: () =>
             icon
               ? styles['dropdown-control'] +
                 ' ' +
                 styles['dropdown-control-iconed']
               : styles['dropdown-control'],
-          container: state =>
+          container: () =>
             `${styles['dropdown-container']} ${
               styles[`dropdown-container-${className}`]
             }`,
           //   input: (state) => "dropdown-input",
-          menu: state => styles['dropdown-menu'],
-          menuList: state => styles['dropdown-menu-list'],
+          menu: () => styles['dropdown-menu'],
+          menuList: () => styles['dropdown-menu-list'],
           option: state =>
             state.isSelected
               ? styles['dropdown-option'] +
@@ -85,7 +85,7 @@ const Dropdown: React.FC<DropdownProps> = ({
             state.isDisabled
               ? styles['dropdown-placeholder-disabled']
               : styles['dropdown-placeholder'],
-          singleValue: state => styles['dropdown-single-value'],
+          singleValue: () => styles['dropdown-single-value'],
         }}
         styles={{
           control(baseStyles, state) {
