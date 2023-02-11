@@ -1,17 +1,25 @@
-
-.ratings {
-    position: relative;
+.rating-conatainer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
 }
 
-.full-stars {
+
+.ratings {
+    display: flex;
+    position: relative;
+    width: 120px;
+}
+
+.full-stars,.empry-stars {
     position: absolute;
     left: 0;
     top: 0;
     white-space: nowrap;
     overflow: hidden;
-    width: 100%;
+    width: 50%;
 }
-
 
 .empty-stars:before {
     content: url("/assets/stars-empty.svg");
