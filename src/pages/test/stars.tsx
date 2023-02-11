@@ -1,7 +1,5 @@
-import StarsPage from "@/components/pages/test-pages/stars-page";
+import StarsPage from '@/components/pages/test-pages/stars-page';
 
-const Stars = () => (
-    <StarsPage/>
-);
+const Stars = () => <StarsPage />;
 
 export default Stars;

@@ -1,6 +1,6 @@
 export type CreateQuestionBody = {
-    name: string,
-    question: string,
-    criteria: string,
-    type: string,
-}
+  name: string;
+  question: string;
+  criteria: string;
+  type: string;
+};

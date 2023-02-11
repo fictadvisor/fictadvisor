@@ -1,4 +1,4 @@
 export type CreateSubjectDTO = {
-  id: string,
-  name: string,
-}
+  id: string;
+  name: string;
+};

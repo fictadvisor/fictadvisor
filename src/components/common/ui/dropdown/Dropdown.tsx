@@ -1,14 +1,14 @@
-import Select from "react-select";
-import React, { ReactNode, useState } from "react";
-import styles from "./Dropdown.module.scss";
+import React, { ReactNode, useState } from 'react';
+import Select from 'react-select';
 
+import styles from './Dropdown.module.scss';
 
 const dropDownOptionHeight = 36; //px
 
 export enum DropDownState {
-  ERROR = "error",
-  SUCCESS = "success",
-  DISABLED = "disabled",
+  ERROR = 'error',
+  SUCCESS = 'success',
+  DISABLED = 'disabled',
 }
 
 type DropDownOption = {
@@ -33,21 +33,21 @@ const Dropdown: React.FC<DropdownProps> = ({
   className,
   icon,
   placeholder = className === DropDownState.DISABLED
-    ? "Недоступно..."
-    : "Тиць...",
-  noOptionsText = "Опції відсутні",
+    ? 'Недоступно...'
+    : 'Тиць...',
+  noOptionsText = 'Опції відсутні',
   numberOfOptions = 4,
 }) => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const isDisabled = className === "disabled";
+  const isDisabled = className === 'disabled';
 
   return (
-    <div className={styles["dropdown"]}>
-      <span className={className ? styles[`dropdown-${className}-label`] : ""}>
+    <div className={styles['dropdown']}>
+      <span className={className ? styles[`dropdown-${className}-label`] : ''}>
         {label}
       </span>
-      {icon && <div className={styles["dropdown-icon-container"]}>{icon}</div>}
+      {icon && <div className={styles['dropdown-icon-container']}>{icon}</div>}
 
       <Select
         placeholder={placeholder}
@@ -62,46 +62,53 @@ const Dropdown: React.FC<DropdownProps> = ({
         onMenuClose={() => setIsMenuOpen(false)}
         maxMenuHeight={dropDownOptionHeight * numberOfOptions}
         classNames={{
-          control: (state) =>
+          control: state =>
             icon
-              ? styles["dropdown-control"] + " " + styles["dropdown-control-iconed"]
-              : styles["dropdown-control"],
-          container: (state) =>
-            `${styles["dropdown-container"]} ${styles[`dropdown-container-${className}`]}`,
-        //   input: (state) => "dropdown-input",
-          menu: (state) => styles["dropdown-menu"],
-          menuList: (state) => styles["dropdown-menu-list"],
-          option: (state) =>
+              ? styles['dropdown-control'] +
+                ' ' +
+                styles['dropdown-control-iconed']
+              : styles['dropdown-control'],
+          container: state =>
+            `${styles['dropdown-container']} ${
+              styles[`dropdown-container-${className}`]
+            }`,
+          //   input: (state) => "dropdown-input",
+          menu: state => styles['dropdown-menu'],
+          menuList: state => styles['dropdown-menu-list'],
+          option: state =>
             state.isSelected
-              ? styles["dropdown-option"] + " " + styles["dropdown-option-selected"]
-              : styles["dropdown-option"],
-          placeholder: (state) => state.isDisabled? styles['dropdown-placeholder-disabled']: styles['dropdown-placeholder'],
-          singleValue: (state) => styles["dropdown-single-value"],
+              ? styles['dropdown-option'] +
+                ' ' +
+                styles['dropdown-option-selected']
+              : styles['dropdown-option'],
+          placeholder: state =>
+            state.isDisabled
+              ? styles['dropdown-placeholder-disabled']
+              : styles['dropdown-placeholder'],
+          singleValue: state => styles['dropdown-single-value'],
         }}
-        styles={
-                {
-                    control(baseStyles, state){
-                        return {
-                            ...baseStyles,
-                            cursor:state.isDisabled?'not-allowed':'pointer'
-                        }
-                    },
-                    dropdownIndicator(baseStyles, _) {
-                        return {
-                            ...baseStyles,
-                            transform: isMenuOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                            transition: 'transform .2s linear',
-                            cursor: 'pointer',
-                        }
-                    },
-                    container(baseStyles, _){
-                        return {
-                            cursor: 'pointer',
-                        }
-                    }
-                }
-            }
-        />
+        styles={{
+          control(baseStyles, state) {
+            return {
+              ...baseStyles,
+              cursor: state.isDisabled ? 'not-allowed' : 'pointer',
+            };
+          },
+          dropdownIndicator(baseStyles, _) {
+            return {
+              ...baseStyles,
+              transform: isMenuOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+              transition: 'transform .2s linear',
+              cursor: 'pointer',
+            };
+          },
+          container(baseStyles, _) {
+            return {
+              cursor: 'pointer',
+            };
+          },
+        }}
+      />
     </div>
   );
 };

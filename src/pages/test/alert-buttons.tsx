@@ -1,8 +1,5 @@
-import AlertButtonsPage from "@/components/pages/test-pages/alert-buttons-page";
+import AlertButtonsPage from '@/components/pages/test-pages/alert-buttons-page';
 
-const AlertButtons = () => (
-    <AlertButtonsPage />
-)
-
+const AlertButtons = () => <AlertButtonsPage />;
 
 export default AlertButtons;

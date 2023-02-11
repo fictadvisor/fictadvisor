@@ -1,7 +1,5 @@
-import SlidersPage from "@/components/pages/test-pages/sliders-page";
+import SlidersPage from '@/components/pages/test-pages/sliders-page';
 
-const Sliders = () => (
-    <SlidersPage/>
-);
+const Sliders = () => <SlidersPage />;
 
 export default Sliders;

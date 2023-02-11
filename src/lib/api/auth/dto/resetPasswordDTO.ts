@@ -1,3 +1,3 @@
-export type resetPasswordDTO={
-    token:string
-}
+export type resetPasswordDTO = {
+  token: string;
+};

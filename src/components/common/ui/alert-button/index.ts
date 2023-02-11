@@ -1,1 +1,5 @@
-export { default, AlertButtonType, AlertButtonIconPosition } from './AlertButton';
+export {
+  AlertButtonIconPosition,
+  AlertButtonType,
+  default,
+} from './AlertButton';

@@ -1,3 +1,3 @@
 export type CreateRoleUserBody = {
-    roleId: string,
-}
+  roleId: string;
+};

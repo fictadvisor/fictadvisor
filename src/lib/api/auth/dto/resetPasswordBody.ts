@@ -1,4 +1,3 @@
 export type resetPasswordBody = {
-    password: string;
-  };
-
+  password: string;
+};

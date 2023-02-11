@@ -1,3 +1,3 @@
-export type confirmPasswordResetBody={
-	email: string
-}
+export type confirmPasswordResetBody = {
+  email: string;
+};

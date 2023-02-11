@@ -1,4 +1,4 @@
 export type updateRoleBody = {
-	name?: string,
-	weight?: boolean,
-}
+  name?: string;
+  weight?: boolean;
+};

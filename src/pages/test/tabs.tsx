@@ -1,7 +1,5 @@
-import TabsPage from "@/components/pages/test-pages/tabs-page";
+import TabsPage from '@/components/pages/test-pages/tabs-page';
 
-const Tabs = () => (
-    <TabsPage />
-);
+const Tabs = () => <TabsPage />;
 
 export default Tabs;

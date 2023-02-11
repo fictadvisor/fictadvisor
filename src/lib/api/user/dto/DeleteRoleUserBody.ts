@@ -1,4 +1,4 @@
 export type DeleteRoleUserBody = {
-    userId: string,
-    roleId: string,
-}
+  userId: string;
+  roleId: string;
+};

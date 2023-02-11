@@ -1,7 +1,5 @@
-import ArrowsPage from "@/components/pages/test-pages/arrows-page";
+import ArrowsPage from '@/components/pages/test-pages/arrows-page';
 
-const Arrows = () => (
-    <ArrowsPage />
-);
+const Arrows = () => <ArrowsPage />;
 
 export default Arrows;

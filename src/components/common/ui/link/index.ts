@@ -1,1 +1,1 @@
-export { default, LinkColor} from './Link';
+export { default, LinkColor } from './Link';

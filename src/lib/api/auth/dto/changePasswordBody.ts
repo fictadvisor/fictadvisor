@@ -1,4 +1,4 @@
 export type changePasswordBody = {
-    oldPassword: string,
-    newPassword: string
-}
+  oldPassword: string;
+  newPassword: string;
+};

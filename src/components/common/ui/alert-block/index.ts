@@ -1,1 +1,6 @@
-export { default, AlertBlockStyle, AlertBlockColor, AlertBlockSize} from './AlertBlock';
+export {
+  AlertBlockColor,
+  AlertBlockSize,
+  AlertBlockStyle,
+  default,
+} from './AlertBlock';

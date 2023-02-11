@@ -1,6 +1,4 @@
-import DropdownsPage from "@/components/pages/test-pages/dropdowns-page";
+import DropdownsPage from '@/components/pages/test-pages/dropdowns-page';
 
-const Dropdowns = () => (
-    <DropdownsPage />
-);
+const Dropdowns = () => <DropdownsPage />;
 export default Dropdowns;

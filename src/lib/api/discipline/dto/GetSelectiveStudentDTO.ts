@@ -1,5 +1,7 @@
 export type GetSelectiveStudentDTO = {
-  disciplines: [{
-    id: string
-  }]
-}
+  disciplines: [
+    {
+      id: string;
+    },
+  ];
+};

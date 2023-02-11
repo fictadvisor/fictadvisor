@@ -1,6 +1,8 @@
 export type CreateTeacherGradeBody = {
-	answers: [{ 
-	questionId: string, 
-	value: string, 
-	}]
-}
+  answers: [
+    {
+      questionId: string;
+      value: string;
+    },
+  ];
+};

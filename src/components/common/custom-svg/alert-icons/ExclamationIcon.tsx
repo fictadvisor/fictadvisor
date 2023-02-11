@@ -1,4 +1,4 @@
-export const ExclamationIcon = (props) => (
+export const ExclamationIcon = props => (
   <svg
     width="16"
     height="16"

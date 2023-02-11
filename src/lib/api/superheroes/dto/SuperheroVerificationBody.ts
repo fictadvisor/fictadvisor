@@ -1,4 +1,4 @@
 export type SuperheroVerificationBody = {
-    userId: string,
-    state: string, 
-}
+  userId: string;
+  state: string;
+};

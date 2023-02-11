@@ -1,7 +1,5 @@
-import TagsPage from "@/components/pages/test-pages/tags-page";
+import TagsPage from '@/components/pages/test-pages/tags-page';
 
-const Tags = () => (
-    <TagsPage />
-);
+const Tags = () => <TagsPage />;
 
 export default Tags;

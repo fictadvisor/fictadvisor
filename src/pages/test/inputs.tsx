@@ -1,6 +1,4 @@
-import InputsPage from "@/components/pages/test-pages/inputs-page";
+import InputsPage from '@/components/pages/test-pages/inputs-page';
 
-const Inputs = () => (
-    <InputsPage />
-);
+const Inputs = () => <InputsPage />;
 export default Inputs;

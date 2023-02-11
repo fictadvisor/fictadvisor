@@ -1,7 +1,5 @@
-import TablesPage from "@/components/pages/test-pages/tables-page";
+import TablesPage from '@/components/pages/test-pages/tables-page';
 
-const Tables = () => (
-    <TablesPage/>
-);
+const Tables = () => <TablesPage />;
 
 export default Tables;

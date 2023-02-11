@@ -1,8 +1,8 @@
 export type UpdateSubjectBody = {
   params: {
-    subjectId: string,
-  }
+    subjectId: string;
+  };
   body: {
-    name: string,
-  }
-}
+    name: string;
+  };
+};

@@ -1,12 +1,13 @@
-import React from "react";
-import mergeClassNames from 'merge-class-names'
-import styles from "./Tooltip.module.scss";
+import React from 'react';
+import mergeClassNames from 'merge-class-names';
+
+import styles from './Tooltip.module.scss';
 
 export enum TooltipDirection {
-  TOP = "top",
-  BOTTOM = "bottom",
-  LEFT = "left",
-  RIGHT = "right",
+  TOP = 'top',
+  BOTTOM = 'bottom',
+  LEFT = 'left',
+  RIGHT = 'right',
 }
 
 interface TooltipProps {
@@ -17,8 +18,13 @@ interface TooltipProps {
 const Tooltip: React.FC<TooltipProps> = ({ direction, text }) => {
   if (direction) {
     return (
-      <div className={styles["tooltip-body"]}>
-        <span className={mergeClassNames(styles["tooltip-text"], styles[`tooltip-text-${direction}`])}>
+      <div className={styles['tooltip-body']}>
+        <span
+          className={mergeClassNames(
+            styles['tooltip-text'],
+            styles[`tooltip-text-${direction}`],
+          )}
+        >
           {text}
         </span>
       </div>
@@ -26,7 +32,7 @@ const Tooltip: React.FC<TooltipProps> = ({ direction, text }) => {
   }
 
   return (
-    <div className={styles["tooltip-body"]}>
+    <div className={styles['tooltip-body']}>
       <span>{text}</span>
     </div>
   );

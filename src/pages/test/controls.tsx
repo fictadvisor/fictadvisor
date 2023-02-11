@@ -1,7 +1,5 @@
-import ControlsPage from "@/components/pages/test-pages/controls-page";
+import ControlsPage from '@/components/pages/test-pages/controls-page';
 
-const Controls = () => (
-    <ControlsPage/>
-);
+const Controls = () => <ControlsPage />;
 
 export default Controls;

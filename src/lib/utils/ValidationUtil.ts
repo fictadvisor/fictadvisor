@@ -22,7 +22,7 @@ export class ValidationUtil {
     const isValid = VALIDATING_REGEX.test(name);
 
     if (!isValid) {
-      return "Юзернейм може містити лише літери латинського алфавіту, цифри або нижнє підкреслення";
+      return 'Юзернейм може містити лише літери латинського алфавіту, цифри або нижнє підкреслення';
     }
   }
 
@@ -133,8 +133,6 @@ export class GroupValidationUtil {
   static validateGroup(
     ...group: [type: ValidationType, value: string][]
   ): string[] {
-    return group
-      .map((v) => ValidationUtil[v[0]](v[1]))
-      .filter((v) => v != null);
+    return group.map(v => ValidationUtil[v[0]](v[1])).filter(v => v != null);
   }
 }

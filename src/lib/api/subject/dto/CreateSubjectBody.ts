@@ -1,5 +1,5 @@
 export type CreateSubjectBody = {
   body: {
-    name: string,
-  }
-}
+    name: string;
+  };
+};

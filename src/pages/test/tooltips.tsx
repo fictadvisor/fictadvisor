@@ -1,7 +1,5 @@
-import TooltipsPage from "@/components/pages/test-pages/tooltips-page";
+import TooltipsPage from '@/components/pages/test-pages/tooltips-page';
 
-const Tooltips = () => (
-    <TooltipsPage />
-);
+const Tooltips = () => <TooltipsPage />;
 
-export default  Tooltips;
+export default Tooltips;

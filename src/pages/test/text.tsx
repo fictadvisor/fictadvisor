@@ -1,7 +1,5 @@
-import TextPage from "@/components/pages/test-pages/text-page";
+import TextPage from '@/components/pages/test-pages/text-page';
 
-const Text = () => (
-    <TextPage/>
-);
+const Text = () => <TextPage />;
 
 export default Text;
