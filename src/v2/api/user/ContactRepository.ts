@@ -16,6 +16,11 @@ export class ContactRepository {
       where: {
         entityId,
       },
+      select: {
+        id: true,
+        name: true,
+        value: true,
+      },
     });
   }
 

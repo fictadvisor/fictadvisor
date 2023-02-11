@@ -12,20 +12,6 @@ export class TeacherRepository {
     private prisma: PrismaService,
   ) {}
 
-  async get(
-    id: string,
-  ) {
-    return this.prisma.teacher.findUnique({
-      where: {
-        id,
-      },
-      include: {
-        disciplineTeachers: true,
-        temporaryLessons: true,
-      },
-    });
-  }
-
   async getAll(
     body: QueryAllDTO,
   ){
@@ -45,24 +31,49 @@ export class TeacherRepository {
   async getTeacher(
     id: string,
   ) {
-    const teacher = await this.get(id);
-    delete teacher.disciplineTeachers;
-    delete teacher.temporaryLessons;
-    return teacher;
+    return this.prisma.teacher.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        firstName: true,
+        middleName: true,
+        lastName: true,
+        description: true,
+        avatar: true,
+        disciplineTeachers: {
+          select: {
+            id: true,
+            roles: {
+              select: {
+                role: true,
+              },
+            },
+          },
+        },
+      },
+    });
   }
 
   async getDisciplineTeachers(
-    id: string,
+    teacherId: string,
   ) {
-    const teacher = await this.get(id);
-    return teacher.disciplineTeachers;
+    return this.prisma.disciplineTeacher.findMany({
+      where: {
+        teacherId,
+      },
+    });
   }
 
   async getTemporaryLessons(
-    id: string,
+    teacherId: string,
   ) {
-    const teacher = await this.get(id);
-    return teacher.temporaryLessons;
+    return this.prisma.temporaryLesson.findMany({
+      where: {
+        teacherId,
+      },
+    });
   }
 
   async delete(

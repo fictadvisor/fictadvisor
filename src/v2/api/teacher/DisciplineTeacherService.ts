@@ -6,7 +6,7 @@ import { DisciplineTypeRepository } from '../discipline/DisciplineTypeRepository
 import { PollService } from "../poll/PollService";
 import { CreateAnswerDTO, CreateAnswersDTO } from './dto/CreateAnswersDTO';
 import { QuestionAnswerRepository } from "../poll/QuestionAnswerRepository";
-import { User } from "@prisma/client";
+import { Question, TeacherRole, User } from "@prisma/client";
 import { AlreadyAnsweredException } from "../../utils/exceptions/AlreadyAnsweredException";
 import { DisciplineService } from "../discipline/DisciplineService";
 import { DisciplineRepository } from '../discipline/DisciplineRepository';
@@ -49,7 +49,7 @@ export class DisciplineTeacherService {
     return this.formatTeacher(disciplineTeacher);
   }
 
-  getUniqueRoles(disciplineTeachers: DisciplineTeacherWithRoles[]) {
+  getUniqueRoles(disciplineTeachers: DisciplineTeacherWithRoles[]): TeacherRole[] {
     const roles = [];
     for (const disciplineTeacher of disciplineTeachers) {
       const dbRoles = disciplineTeacher.roles
@@ -79,10 +79,11 @@ export class DisciplineTeacherService {
   }
 
   async sendAnswers(disciplineTeacherId: string, { answers }: CreateAnswersDTO, user: User) {
-    await this.checkExcessiveQuestions(disciplineTeacherId, answers);
-    await this.checkRequiredQuestions(disciplineTeacherId, answers);
+    const questions = await this.getUniqueQuestions(disciplineTeacherId);
+    await this.checkExcessiveQuestions(questions, answers);
+    await this.checkRequiredQuestions(questions, answers);
     await this.checkAnsweredQuestions(disciplineTeacherId, answers, user.id);
-    await this.CheckSendingTime();
+    await this.checkSendingTime();
 
     for (const answer of answers) {
       this.questionAnswerRepository.create({
@@ -106,12 +107,17 @@ export class DisciplineTeacherService {
   }
 
   async getUniqueQuestions(id: string) {
-    const roles = await this.disciplineTeacherRepository.getRoles(id);
-    return this.pollService.getUnifyQuestionByRoles(roles.map((r) => r.role));
+    const { disciplineTeachers } = await this.disciplineTeacherRepository.getDiscipline(id);
+
+    const teacherRoles = disciplineTeachers
+      .find((dt) => dt.id === id)
+      .roles.map((r) => r.role);
+    const disciplineRoles = this.getUniqueRoles(disciplineTeachers);
+
+    return this.disciplineTeacherRepository.getQuestions(teacherRoles, disciplineRoles);
   }
 
-  async checkRequiredQuestions(disciplineTeacherId: string, questions: CreateAnswerDTO[]) {
-    const dbQuestions = await this.getUniqueQuestions(disciplineTeacherId);
+  async checkRequiredQuestions(dbQuestions: Question[], questions: CreateAnswerDTO[]) {
     for (const question of dbQuestions) {
       if (question.isRequired && !questions.some((q) => q.questionId === question.id)) {
         throw new NotEnoughAnswersException();
@@ -119,10 +125,9 @@ export class DisciplineTeacherService {
     }
   }
 
-  async checkExcessiveQuestions(disciplineTeacherId: string, questions: CreateAnswerDTO[]) {
-    const dbQuestions = await this.getUniqueQuestions(disciplineTeacherId);
+  async checkExcessiveQuestions(dbQuestions: Question[], questions: CreateAnswerDTO[]) {
     for (const question of questions) {
-      if (!dbQuestions.some((q) => (q.questionId === question.questionId))) {
+      if (!dbQuestions.some((q) => (q.id === question.questionId))) {
         throw new ExcessiveAnswerException();
       }
     }
@@ -154,7 +159,7 @@ export class DisciplineTeacherService {
       endPoll,
     };
   }
-  async CheckSendingTime() {
+  async checkSendingTime() {
     const dateBorders = await this.getPollTimeBorders();
     const closingPollTime = dateBorders.startPoll.getTime();
     const openingPollTime = dateBorders.endPoll.getTime();

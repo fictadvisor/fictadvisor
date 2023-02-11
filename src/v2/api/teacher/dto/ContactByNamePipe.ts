@@ -1,6 +1,5 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
 import { TeacherService } from '../TeacherService';
-import { Teacher } from '@prisma/client';
 import { InvalidEntityIdException } from 'src/v2/utils/exceptions/InvalidEntityIdException';
 import { InvalidContactNameException } from 'src/v2/utils/exceptions/InvalidContactNameException';
 
@@ -14,7 +13,7 @@ export class ContactByNamePipe implements PipeTransform {
 
     const { teacherId, name } = params;
 
-    const teacher: Teacher = await this.teacherService.getTeacher(teacherId);
+    const teacher = await this.teacherService.getTeacher(teacherId);
     if (!teacher) {
       throw new InvalidEntityIdException('teacher');
     }

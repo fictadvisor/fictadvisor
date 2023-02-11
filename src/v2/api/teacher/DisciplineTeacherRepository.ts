@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
 import { CreateDisciplineTeacherData } from './dto/CreateDisciplineTeacherData';
+import { TeacherRole } from "@prisma/client";
 
 @Injectable()
 export class DisciplineTeacherRepository {
@@ -36,6 +37,18 @@ export class DisciplineTeacherRepository {
             middleName: true,
             lastName: true,
             avatar: true,
+          },
+        },
+        discipline: {
+          select: {
+            id: true,
+            year: true,
+            semester: true,
+            isSelective: true,
+            group: true,
+            subject: true,
+            evaluatingSystem: true,
+            resource: true,
           },
         },
         roles: {
@@ -94,6 +107,25 @@ export class DisciplineTeacherRepository {
         group: true,
         year: true,
         semester: true,
+        disciplineTeachers: {
+          select: {
+            id: true,
+            teacher: {
+              select: {
+                id: true,
+                firstName: true,
+                middleName: true,
+                lastName: true,
+                avatar: true,
+              },
+            },
+            roles: {
+              select: {
+                role: true,
+              },
+            },
+          },
+        },
       },
     });
   }
@@ -122,6 +154,38 @@ export class DisciplineTeacherRepository {
     return this.prisma.disciplineTeacher.delete({
       where: {
         id,
+      },
+    });
+  }
+
+  getQuestions(roles: TeacherRole[], disciplineRoles: TeacherRole[]) {
+    return this.prisma.question.findMany({
+      where: {
+        questionRoles: {
+          some: {
+            AND: [{
+              isShown: true,
+              role: {
+                in: roles,
+              },
+            }, {
+              isRequired: true,
+              role: {
+                in: disciplineRoles,
+              },
+            }],
+          },
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        category: true,
+        criteria: true,
+        isRequired: true,
+        text: true,
+        type: true,
+        description: true,
       },
     });
   }

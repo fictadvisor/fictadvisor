@@ -1,10 +1,10 @@
-import { DisciplineTeacher, DisciplineTeacherRole, TeacherRole } from "@prisma/client";
+import { TeacherRole } from "@prisma/client";
 
-export class DisciplineTeacherWithRoles implements DisciplineTeacher {
-  disciplineId: string;
+export class DisciplineTeacherWithRoles {
   id: string;
-  teacherId: string;
-  roles: DisciplineTeacherRole[];
+  roles: {
+    role: TeacherRole,
+  }[];
 }
 
 export class DisciplineTeacherWithRolesAndTeacher {

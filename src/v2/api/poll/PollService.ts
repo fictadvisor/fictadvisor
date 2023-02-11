@@ -49,20 +49,6 @@ export class PollService {
     return await this.questionRepository.deleteRole(questionId, role);
   }
 
-  async getQuestionsByRoles(roles: TeacherRole[]) {
-    const results = [];
-    for (const role of roles) {
-      const roleQuestions = await this.questionRepository.getQuestionsByRole(role);
-      results.push(...roleQuestions);
-    }
-    return results;
-  }
-
-  async getUnifyQuestionByRoles(roles: TeacherRole[]) {
-    const questions = await this.getQuestionsByRoles(roles);
-    return this.unifyQuestions(questions);
-  }
-
   sortByCategories(questions: Question[]) {
     const results = [];
     for(const question of questions){
@@ -78,16 +64,6 @@ export class PollService {
       } else {
         category.count++;
         category.questions.push(question);
-      }
-    }
-    return results;
-  }
-
-  unifyQuestions(questions: Question[]){
-    const results = [];
-    for (const question of questions) {
-      if (!results.some((q) => (q.id === question.id))) {
-        results.push(question);
       }
     }
     return results;

@@ -8,12 +8,14 @@ import { TeacherRepository } from './TeacherRepository';
 import { DisciplineTeacherRepository } from './DisciplineTeacherRepository';
 import { UpdateContactDTO } from '../user/dto/UpdateContactDTO';
 import { ContactRepository } from "../user/ContactRepository";
+import { DisciplineTeacherService } from "./DisciplineTeacherService";
 
 @Injectable()
 export class TeacherService {
   constructor(
     private teacherRepository: TeacherRepository,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
+    private disciplineTeacherService: DisciplineTeacherService,
     private contactRepository: ContactRepository,
   ) {}
 
@@ -27,24 +29,23 @@ export class TeacherService {
 
   async getTeacher(
     id: string,
-    ) {
-      return this.teacherRepository.getTeacher(id);
-    }
+  ) {
+    const { disciplineTeachers, ...teacher } = await this.teacherRepository.getTeacher(id);
+    const contacts = await this.contactRepository.getAllContacts(id);
+    const roles = this.disciplineTeacherService.getUniqueRoles(disciplineTeachers);
+
+    return {
+      ...teacher,
+      roles,
+      contacts,
+    };
+  }
 
   async getTeacherRoles(
     teacherId: string,
   ) {
-    const disciplineTeachers = await this.teacherRepository.getDisciplineTeachers(teacherId);
-    const results = [];
-
-    for (const discipline of disciplineTeachers) {
-      const roles = await this.disciplineTeacherRepository.getRoles(discipline.id);
-      for (const role of roles) {
-        if (results.includes(role.role)) continue;
-        results.push(role.role);
-      }
-    }
-    return { roles: results };
+    const teacher = await this.teacherRepository.getTeacher(teacherId);
+    return this.disciplineTeacherService.getUniqueRoles(teacher.disciplineTeachers);
   }
 
   async create(
@@ -69,11 +70,7 @@ export class TeacherService {
   async getAllContacts(
     entityId: string,
   ) {
-    const contacts = (await this.contactRepository.getAllContacts(entityId))
-      .map(
-        (c) => ({ name: c.name, value: c.value })
-      );
-    return { contacts };
+    return this.contactRepository.getAllContacts(entityId);
   }
 
   async getContact(
