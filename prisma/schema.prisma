@@ -37,7 +37,7 @@ model Group {
   code        String
   students    Student[]
   disciplines Discipline[]
-  groupRoles   GroupRole[]
+  groupRoles  GroupRole[]
 
   @@map("groups")
 }
@@ -198,7 +198,7 @@ enum TeacherRole {
 model Teacher {
   id                 String              @id @default(uuid())
   firstName          String              @map("first_name")
-  middleName         String?              @map("middle_name") @default("")
+  middleName         String?             @default("") @map("middle_name")
   lastName           String              @map("last_name")
   description        String?
   avatar             String?
@@ -266,6 +266,7 @@ model QuestionAnswer {
 }
 
 enum RoleName {
+  USER
   STUDENT
   MODERATOR
   CAPTAIN
@@ -273,7 +274,7 @@ enum RoleName {
 }
 
 model Role {
-  id        String      @id @default(uuid())
+  id        String     @id @default(uuid())
   name      RoleName
   weight    Int
   userRoles UserRole[]
