@@ -1,4 +1,4 @@
-@import './../../global/partials/theme.scss';
+@import 'src/styles/partials/theme.scss';
 $theme-color:$dark-primary;
 
 @mixin style-tag($className,$first,$second,$third){

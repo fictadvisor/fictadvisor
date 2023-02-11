@@ -1,17 +1,18 @@
-import { useRef, useState, useCallback } from "react";
-import { Tooltip } from "./Tooltip";
-import { Tag, TagState } from "./Tag";
-import Button, { ButtonType, ButtonSize } from "./Button";
-import Rating from "./Rating";
-import styles from "styles/v2/local/elements/Cards.module.scss";
+import React, { useRef, useState } from 'react';
 import mergeClassNames from 'merge-class-names';
+
+import styles from '@/components/common/composite/cards/Cards.module.scss';
+import Button, { ButtonSize, ButtonType } from '@/components/common/ui/button';
+import Rating from '@/components/common/ui/rating';
+import Tag, { TagState } from '@/components/common/ui/tag';
+import Tooltip from '@/components/common/ui/tooltip';
 
 interface HeaderCardProps {
   name: string;
   groupName: string;
   position: string;
   url?: string;
-} 
+}
 
 interface LecturerHeaderCardProps {
   name: string;
@@ -36,12 +37,12 @@ interface RatingCardProps {
 interface SimpleCardProps {
   name: string;
   details?: string;
-  rating?:number;
+  rating?: number;
 }
 
 const useToolTip = (
   element: HTMLParagraphElement,
-  toolTipWidth: number
+  toolTipWidth: number,
 ): any => {
   console.dir(element);
   //to find out if the p element is truncated
@@ -58,13 +59,13 @@ const useToolTip = (
       //tooltip is over the screen
 
       offsetX = { left: props.left - toolTipWidth };
-      toolTipDirection = "right";
+      toolTipDirection = 'right';
     } else {
       //tooltip is within the screen
 
       // console.log("here");
       offsetX = { left: props.right };
-      toolTipDirection = "left";
+      toolTipDirection = 'left';
     }
   }
   return { offsetX, isTruncated, offsetY, toolTipDirection };
@@ -74,15 +75,15 @@ export const HeaderCard: React.FC<HeaderCardProps> = ({
   name,
   groupName,
   position,
-  url = "/assets/icons/frog36.png",
+  url = '/assets/icons/frog36.png',
 }) => {
   return (
     <div className={mergeClassNames(styles[`header-card-container`])}>
       <div className={styles[`header-card-info`]}>
         <h4 className={styles[`card-name`]}>{name}</h4>
         <div>
-          <span className={styles["header-card-postition"]}>{position}</span>
-          <span className={styles["header-card-group-name"]}>{groupName}</span>
+          <span className={styles['header-card-postition']}>{position}</span>
+          <span className={styles['header-card-group-name']}>{groupName}</span>
         </div>
       </div>
       <img src={url} alt="Картинка профілю" />
@@ -93,36 +94,41 @@ export const HeaderCard: React.FC<HeaderCardProps> = ({
 export const LecturerHeaderCard: React.FC<LecturerHeaderCardProps> = ({
   name,
   description,
-  url = "/assets/icons/lecturer60.png",
+  url = '/assets/icons/lecturer60.png',
 }) => {
   const [showToolTip, setShowToolTip] = useState<boolean>(false);
   const ref = useRef<HTMLParagraphElement>(null);
   const { offsetX, offsetY, isTruncated, toolTipDirection } = useToolTip(
     ref.current,
-    300
+    300,
   );
 
   return (
-    <div className={mergeClassNames(styles["card"],styles["header-lecturer-card-container"])}>
+    <div
+      className={mergeClassNames(
+        styles['card'],
+        styles['header-lecturer-card-container'],
+      )}
+    >
       <img src={url} alt="картинка викладача" />
-      <div className={styles["header-lecturer-card-info"]}>
-        <h4 className={styles["card-name"]}>{name}</h4>
+      <div className={styles['header-lecturer-card-info']}>
+        <h4 className={styles['card-name']}>{name}</h4>
         <p
           ref={ref}
-          className={styles["lecturer-description"]}
+          className={styles['lecturer-description']}
           onMouseEnter={() => setShowToolTip(true)}
           onMouseLeave={() => setShowToolTip(false)}
         >
           {description}
-         
+
           {showToolTip && isTruncated && (
             <Tooltip
               text={description}
               style={{
-                position: "absolute",
+                position: 'absolute',
                 ...offsetX,
-                width: "300px",
-                fontSize: "11px",
+                width: '300px',
+                fontSize: '11px',
                 top: offsetY,
               }}
               direction={toolTipDirection}
@@ -138,24 +144,30 @@ export const PollCard: React.FC<PollCardProps> = ({
   name,
   description,
   roles,
-  url = "/assets/icons/lecturer60.png",
+  url = '/assets/icons/lecturer60.png',
 }) => {
   const [showToolTip, setShowToolTip] = useState<boolean>(false);
   const ref = useRef<HTMLParagraphElement>(null);
   const { offsetX, offsetY, isTruncated, toolTipDirection } = useToolTip(
     ref.current,
-    300
+    300,
   );
 
   return (
-    <article className={mergeClassNames(styles["card"],styles["card-effect"],styles["poll-card-container"])}>
-      <img className={styles["card-avatar"]} src={url} alt="викладач" />
+    <article
+      className={mergeClassNames(
+        styles['card'],
+        styles['card-effect'],
+        styles['poll-card-container'],
+      )}
+    >
+      <img className={styles['card-avatar']} src={url} alt="викладач" />
       <br />
       <CardRoles roles={roles} />
-      <h4 className={styles["card-name"]}>{name}</h4>
+      <h4 className={styles['card-name']}>{name}</h4>
       <p
         ref={ref}
-        className={styles["lecturer-description"]}
+        className={styles['lecturer-description']}
         onMouseEnter={() => setShowToolTip(true)}
         onMouseLeave={() => setShowToolTip(false)}
       >
@@ -165,10 +177,10 @@ export const PollCard: React.FC<PollCardProps> = ({
             text={description}
             direction={toolTipDirection}
             style={{
-              position: "absolute",
+              position: 'absolute',
               ...offsetX,
-              width: "300px",
-              fontSize: "11px",
+              width: '300px',
+              fontSize: '11px',
               top: offsetY,
             }}
           />
@@ -178,8 +190,7 @@ export const PollCard: React.FC<PollCardProps> = ({
       <Button
         type={ButtonType.SECONDARY_RED}
         size={ButtonSize.SMALL}
-        onClick={() => {}}
-        text={"Пройти опитування"}
+        text={'Пройти опитування'}
       ></Button>
     </article>
   );
@@ -189,35 +200,52 @@ export const RatingCard: React.FC<RatingCardProps> = ({
   rating,
   name,
   roles,
-  url = "/assets/icons/lecturer60.png",
+  url = '/assets/icons/lecturer60.png',
 }) => {
   return (
-    <article className={mergeClassNames(styles["card"],styles["card-effect"],styles["rating-card-container"])}>
-      <img className={styles["card-avatar"]} src={url} alt="викладач" />
-
-      {rating && (
-        <Rating rating={rating}/>
+    <article
+      className={mergeClassNames(
+        styles['card'],
+        styles['card-effect'],
+        styles['rating-card-container'],
       )}
+    >
+      <img className={styles['card-avatar']} src={url} alt="викладач" />
+
+      {rating && <Rating rating={rating} />}
       {!rating && <br />}
       {roles && <CardRoles roles={roles} />}
-      <h4 className={styles["card-name"]}>{name}</h4>
+      <h4 className={styles['card-name']}>{name}</h4>
     </article>
   );
 };
 
-export const SimpleCard: React.FC<SimpleCardProps> = ({ name, details, rating }) => {
+export const SimpleCard: React.FC<SimpleCardProps> = ({
+  name,
+  details,
+  rating,
+}) => {
   const [showToolTip, setShowToolTip] = useState<boolean>(false);
   const ref = useRef<HTMLParagraphElement>(null);
   const { offsetX, offsetY, isTruncated, toolTipDirection } = useToolTip(
     ref.current,
-    300
+    300,
   );
 
   return (
-    <article className={mergeClassNames(styles["card"],styles["card-effect"],styles["simple-card-container"])}>
+    <article
+      className={mergeClassNames(
+        styles['card'],
+        styles['card-effect'],
+        styles['simple-card-container'],
+      )}
+    >
       <p
         ref={ref}
-        className={mergeClassNames(styles["card-name "],styles["simple-card-name"])}
+        className={mergeClassNames(
+          styles['card-name '],
+          styles['simple-card-name'],
+        )}
         onMouseEnter={() => setShowToolTip(true)}
         onMouseLeave={() => setShowToolTip(false)}
       >
@@ -227,51 +255,53 @@ export const SimpleCard: React.FC<SimpleCardProps> = ({ name, details, rating })
             text={name}
             direction={toolTipDirection}
             style={{
-              position: "absolute",
+              position: 'absolute',
               ...offsetX,
-              width: "300px",
-              fontSize: "11px",
+              width: '300px',
+              fontSize: '11px',
               top: offsetY,
             }}
           />
         )}
       </p>
 
-      {details&&<p>{details}</p>}
-      {rating&&<Rating rating={rating} style={{justifyContent:'flex-start'}}/>}
+      {details && <p>{details}</p>}
+      {rating && (
+        <Rating rating={rating} style={{ justifyContent: 'flex-start' }} />
+      )}
     </article>
   );
 };
 
 const CardRoles: React.FC<{ roles: string[] }> = ({ roles }) => {
   return (
-    <div className={styles["card-roles"]}>
-      {roles.map((role) => {
+    <div className={styles['card-roles']}>
+      {roles.map(role => {
         switch (role) {
-          case "лаборант":
+          case 'лаборант':
             return (
               <Tag
                 state={TagState.SMALL}
                 text="Лаборант"
-                className={"mint-first"}
+                className={'mint-first'}
                 key={Math.random()}
               />
             );
-          case "лектор":
+          case 'лектор':
             return (
               <Tag
                 state={TagState.SMALL}
                 text="Лектор"
-                className={"violet-first"}
+                className={'violet-first'}
                 key={Math.random()}
               />
             );
-          case "практик":
+          case 'практик':
             return (
               <Tag
                 state={TagState.SMALL}
                 text="Практик"
-                className={"orange-first"}
+                className={'orange-first'}
                 key={Math.random()}
               />
             );

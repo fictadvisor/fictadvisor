@@ -1,5 +1,5 @@
+import starStyles from '../../../common/ui/rating/Rating.module.scss';
 import testStyles from '../test-pages.module.scss';
-import starStyles from './StarsPage.module.scss';
 
 const StarsPage = () => (
   <div className={testStyles['test-page-wrap']}>

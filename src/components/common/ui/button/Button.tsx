@@ -24,7 +24,7 @@ export enum ButtonIconPosition {
 interface ButtonProps {
   text: string;
   onClick?: any;
-  isDisabled: boolean;
+  isDisabled?: boolean;
   icon?: ReactNode;
   size: ButtonSize;
   type: ButtonType;
