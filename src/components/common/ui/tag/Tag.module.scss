@@ -1,4 +1,5 @@
-@import 'src/styles/partials/theme.scss';
+@import 'src/styles/partials/theme';
+@import 'src/styles/partials/utils';
 $theme-color:$dark-primary;
 
 @mixin style-tag($className,$first,$second,$third){
@@ -28,7 +29,7 @@ $theme-color:$dark-primary;
 }
 
 .tag{
-    // @include flex-center;
+    @include flex-center;
     border-radius: 6px;
     gap: 4px;
  }
