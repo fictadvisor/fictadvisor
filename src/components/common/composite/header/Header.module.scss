@@ -1,0 +1,48 @@
+@import "/src/styles/partials/theme";
+@import "/src/styles/partials/utils";
+
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-width: fit-content;
+    height: 56px;
+    background: #151515;
+    position: relative;
+}
+
+.header-logo {
+    @include flex-center;
+    width: 197px;
+    height: 28px;
+    margin-left: 80px;
+    & img {
+        @include flex-center;
+        height: 20px;
+    }
+}
+
+.menu {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    width: 513px;
+    height: 34px;
+}
+
+.user-container {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    width: 286px;
+    height: 42px;
+    margin-right: 80px;
+}
+
+.auth-container {
+    @extend .user-container;
+    height: 36px;
+    gap: 8px;
+}

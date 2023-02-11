@@ -1,0 +1,59 @@
+@import 'src/styles/partials/theme.scss';
+$theme-color:$dark-primary;
+
+@mixin style-tag($className,$first,$second,$third){
+    .#{$className}-first-bgc{
+        background: $first;
+    }
+    .#{$className}-second-bgc{
+        background: $second;
+    }
+    .#{$className}-third-bgc{
+        background: $theme-color;
+        border: 1px solid $third;
+        border-radius: 6px;
+    }
+ }
+
+.small-tag-body{
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+.big-tag-body{
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 500;
+}
+
+.tag{
+    // @include flex-center;
+    border-radius: 6px;
+    gap: 4px;
+ }
+ 
+ .small-tag{
+     padding: 2px 6px;
+ }
+ 
+ .big-tag{
+     padding: 4px 8px;
+ }
+ 
+ .done-svg{
+     fill: #FFFFFF;
+     width: 20px;
+     height: 20px;
+ }
+ 
+ 
+ @include style-tag("primary",#B83838,#873030,#873030);
+ @include style-tag("success",#157F44,#106034,#64B98A);
+ @include style-tag("error",#C11018,#970C13,#EC131E);
+ @include style-tag("warning",#EA580C,#9A3412,#EA580C);
+ @include style-tag("info",#0284C7,#0C4A6E,#0284C7);
+ @include style-tag("gray",#404040,#292929,#525252);
+ @include style-tag("violet",#813481,#712871,#712871);
+ @include style-tag("mint",#00564A,#01453D,#01453D);
+ @include style-tag("orange",#C03F14,#A22A02,#A22A02);
