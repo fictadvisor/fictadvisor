@@ -4,9 +4,9 @@ import { AppProps } from 'next/app';
 
 import { store } from '@/redux';
 
-import '@/styles/reset.css';
-import '@/styles/typography.css';
-import '@/styles/global-styles.css';
+import '@/styles/reset.scss';
+import '@/styles/typography.scss';
+import '@/styles/global-styles.scss';
 
 const queryClient = new QueryClient();
 
