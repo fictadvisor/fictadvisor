@@ -37,7 +37,6 @@ const LoginPage = () => (
             <div className={styles['login-button-container']}>
               <Button
                 text="Зарeєструватися"
-                onClick={() => {}}
                 isDisabled={false}
                 size={ButtonSize.MEDIUM}
                 type={ButtonType.PRIMARY_RED}
@@ -55,7 +54,6 @@ const LoginPage = () => (
               icon={<HeartIcon className="icon" />}
               iconPosition={ButtonIconPosition.LEFT}
               text="Увійти за допомогою Telegram"
-              onClick={() => {}}
               isDisabled={false}
               size={ButtonSize.LARGE}
               type={ButtonType.PRIMARY_RED}
@@ -86,7 +84,6 @@ const LoginPage = () => (
             </div>
             <Button
               text="Увійти"
-              onClick={() => {}}
               isDisabled={true}
               size={ButtonSize.LARGE}
               type={ButtonType.PRIMARY_RED}
@@ -96,7 +93,6 @@ const LoginPage = () => (
               icon={<ArrowLeftIcon className="icon" />}
               iconPosition={ButtonIconPosition.LEFT}
               text="Повернутись до головної"
-              onClick={() => {}}
               isDisabled={false}
               size={ButtonSize.MEDIUM}
               type={ButtonType.TERTIARY}

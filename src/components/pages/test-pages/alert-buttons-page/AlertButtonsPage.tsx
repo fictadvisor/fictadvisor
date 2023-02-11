@@ -15,7 +15,6 @@ const AlertButtonsPage = () => (
         text="Success"
         icon={<CustomCheck />}
         iconPosition={AlertButtonIconPosition.LEFT}
-        onClick={() => {}}
         isDisabled={false}
         type={AlertButtonType.SUCCESS}
       />
@@ -23,19 +22,16 @@ const AlertButtonsPage = () => (
         text="Success"
         icon={<CustomCheck />}
         iconPosition={AlertButtonIconPosition.RIGHT}
-        onClick={() => {}}
         isDisabled={false}
         type={AlertButtonType.SUCCESS}
       />
       <AlertButton
         text="Success"
-        onClick={() => {}}
         isDisabled={false}
         type={AlertButtonType.SUCCESS}
       />
       <AlertButton
         text="Success"
-        onClick={() => {}}
         isDisabled={false}
         type={AlertButtonType.SUCCESS}
       />
@@ -44,7 +40,6 @@ const AlertButtonsPage = () => (
         text="Error primary"
         icon={<XMarkIcon className="icon" />}
         iconPosition={AlertButtonIconPosition.LEFT}
-        onClick={() => {}}
         isDisabled={false}
         type={AlertButtonType.ERROR_PRIMARY}
       />
@@ -52,19 +47,16 @@ const AlertButtonsPage = () => (
         text="Error primary"
         icon={<XMarkIcon className="icon" />}
         iconPosition={AlertButtonIconPosition.RIGHT}
-        onClick={() => {}}
         isDisabled={false}
         type={AlertButtonType.ERROR_PRIMARY}
       />
       <AlertButton
         text="Error primary"
-        onClick={() => {}}
         isDisabled={false}
         type={AlertButtonType.ERROR_PRIMARY}
       />
       <AlertButton
         text="Error primary"
-        onClick={() => {}}
         isDisabled={false}
         type={AlertButtonType.ERROR_PRIMARY}
       />
@@ -73,26 +65,22 @@ const AlertButtonsPage = () => (
         text="Error secondary"
         icon={<XMarkIcon className="icon" />}
         iconPosition={AlertButtonIconPosition.LEFT}
-        onClick={() => {}}
         isDisabled={false}
         type={AlertButtonType.ERROR_SECONDARY}
       />
       <AlertButton
         icon={<XMarkIcon className="icon" />}
         iconPosition={AlertButtonIconPosition.RIGHT}
-        onClick={() => {}}
         isDisabled={false}
         type={AlertButtonType.ERROR_SECONDARY}
       />
       <AlertButton
         text="Error secondary"
-        onClick={() => {}}
         isDisabled={false}
         type={AlertButtonType.ERROR_SECONDARY}
       />
       <AlertButton
         text="Error secondary"
-        onClick={() => {}}
         isDisabled={false}
         type={AlertButtonType.ERROR_SECONDARY}
       />

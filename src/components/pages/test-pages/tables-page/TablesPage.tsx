@@ -43,7 +43,6 @@ const TablesPage = () => {
           text="Прийняти"
           icon={<CustomCheck />}
           iconPosition={AlertButtonIconPosition.RIGHT}
-          onClick={() => {}}
           isDisabled={false}
           type={AlertButtonType.SUCCESS}
         />
@@ -52,7 +51,6 @@ const TablesPage = () => {
         <AlertButton
           icon={<XMarkIcon className="icon" />}
           iconPosition={AlertButtonIconPosition.RIGHT}
-          onClick={() => {}}
           isDisabled={false}
           type={AlertButtonType.ERROR_SECONDARY}
         />
@@ -90,7 +88,6 @@ const TablesPage = () => {
           text="Прийняти"
           icon={<CustomCheck />}
           iconPosition={AlertButtonIconPosition.RIGHT}
-          onClick={() => {}}
           isDisabled={false}
           type={AlertButtonType.SUCCESS}
         />
@@ -113,7 +110,6 @@ const TablesPage = () => {
           text="Прийняти"
           icon={<CustomCheck />}
           iconPosition={AlertButtonIconPosition.RIGHT}
-          onClick={() => {}}
           isDisabled={false}
           type={AlertButtonType.SUCCESS}
         />
@@ -130,7 +126,6 @@ const TablesPage = () => {
           text="Прийняти"
           icon={<CustomCheck />}
           iconPosition={AlertButtonIconPosition.RIGHT}
-          onClick={() => {}}
           isDisabled={false}
           type={AlertButtonType.SUCCESS}
         />
@@ -140,7 +135,6 @@ const TablesPage = () => {
           className="custom-x"
           icon={<XMarkIcon className="icon" />}
           iconPosition={AlertButtonIconPosition.RIGHT}
-          onClick={() => {}}
           isDisabled={false}
           type={AlertButtonType.ERROR_SECONDARY}
         />

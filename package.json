@@ -3,10 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "lint": "next lint",
+    "lint": "./node_modules/.bin/eslint --ext .ts,.tsx,.js src",
     "dev": "next dev -p 3000",
     "build": "next build",
-    "start": "next start -p 80"
+    "start": "next start -p 80",
+    "prepare": "husky install",
+    "typecheck": "tsc"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.14",
@@ -16,6 +18,7 @@
     "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-simple-import-sort": "^10.0.0",
+    "husky": "^8.0.3",
     "merge-class-names": "^1.4.2",
     "next": "13.1.5",
     "node-html-parser": "^6.1.4",

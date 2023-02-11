@@ -25,9 +25,9 @@ const GroupRadio: React.FC<GroupRadioProps> = props => {
   };
   return (
     <div>
-      {props.options.map(radio => {
+      {props.options.map((radio, index) => {
         return (
-          <div>
+          <div key={index}>
             <div className={styles['radio-container']}>
               <label>
                 <input

@@ -15,7 +15,7 @@ export enum AlertButtonIconPosition {
 
 interface AlertButtonProps {
   text?: string;
-  onClick: any;
+  onClick?: any;
   isDisabled: boolean;
   type: AlertButtonType;
   icon?: ReactNode;
@@ -40,7 +40,7 @@ const AlertButton: React.FC<AlertButtonProps> = props => {
       disabled={props.isDisabled}
       className={className}
       onClick={() => {
-        props.onClick;
+        props?.onClick;
       }}
     >
       {props.icon && props.iconPosition == AlertButtonIconPosition.LEFT && (

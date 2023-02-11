@@ -15,28 +15,24 @@ const ButtonsPage = () => (
     <div className={styles['test-page-content']}>
       <Button
         text="Primary Red"
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.LARGE}
         type={ButtonType.PRIMARY_RED}
       />
       <Button
         text="Primary Red"
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.LARGE}
         type={ButtonType.PRIMARY_RED}
       />
       <Button
         text="Primary Red"
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.MEDIUM}
         type={ButtonType.PRIMARY_RED}
       />
       <Button
         text="Primary Red"
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.SMALL}
         type={ButtonType.PRIMARY_RED}
@@ -46,7 +42,6 @@ const ButtonsPage = () => (
         text="Primary Red"
         icon={<AcademicCapIcon />}
         iconPosition={ButtonIconPosition.LEFT}
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.LARGE}
         type={ButtonType.PRIMARY_RED}
@@ -55,7 +50,6 @@ const ButtonsPage = () => (
         text="Primary Red"
         icon={<AcademicCapIcon />}
         iconPosition={ButtonIconPosition.LEFT}
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.MEDIUM}
         type={ButtonType.PRIMARY_RED}
@@ -64,7 +58,6 @@ const ButtonsPage = () => (
         text="Primary Red"
         icon={<AcademicCapIcon />}
         iconPosition={ButtonIconPosition.LEFT}
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.SMALL}
         type={ButtonType.PRIMARY_RED}
@@ -74,7 +67,6 @@ const ButtonsPage = () => (
         text="Primary Red"
         icon={<AcademicCapIcon />}
         iconPosition={ButtonIconPosition.RIGHT}
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.LARGE}
         type={ButtonType.PRIMARY_RED}
@@ -83,7 +75,6 @@ const ButtonsPage = () => (
         text="Primary Red"
         icon={<AcademicCapIcon />}
         iconPosition={ButtonIconPosition.RIGHT}
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.MEDIUM}
         type={ButtonType.PRIMARY_RED}
@@ -92,7 +83,6 @@ const ButtonsPage = () => (
         text="Primary Red"
         icon={<AcademicCapIcon />}
         iconPosition={ButtonIconPosition.RIGHT}
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.SMALL}
         type={ButtonType.PRIMARY_RED}
@@ -100,21 +90,18 @@ const ButtonsPage = () => (
 
       <Button
         text="Primary Gray"
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.LARGE}
         type={ButtonType.PRIMARY_GRAY}
       />
       <Button
         text="Primary Gray"
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.MEDIUM}
         type={ButtonType.PRIMARY_GRAY}
       />
       <Button
         text="Primary Gray"
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.SMALL}
         type={ButtonType.PRIMARY_GRAY}
@@ -124,7 +111,6 @@ const ButtonsPage = () => (
         text="Primary Gray"
         icon={<AcademicCapIcon />}
         iconPosition={ButtonIconPosition.LEFT}
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.LARGE}
         type={ButtonType.PRIMARY_GRAY}
@@ -133,7 +119,6 @@ const ButtonsPage = () => (
         text="Primary Gray"
         icon={<AcademicCapIcon />}
         iconPosition={ButtonIconPosition.LEFT}
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.MEDIUM}
         type={ButtonType.PRIMARY_GRAY}
@@ -142,7 +127,6 @@ const ButtonsPage = () => (
         text="Primary Gray"
         icon={<AcademicCapIcon />}
         iconPosition={ButtonIconPosition.LEFT}
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.SMALL}
         type={ButtonType.PRIMARY_GRAY}
@@ -152,7 +136,6 @@ const ButtonsPage = () => (
         text="Primary Gray"
         icon={<AcademicCapIcon />}
         iconPosition={ButtonIconPosition.RIGHT}
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.LARGE}
         type={ButtonType.PRIMARY_GRAY}
@@ -161,7 +144,6 @@ const ButtonsPage = () => (
         text="Primary Gray"
         icon={<AcademicCapIcon />}
         iconPosition={ButtonIconPosition.RIGHT}
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.MEDIUM}
         type={ButtonType.PRIMARY_GRAY}
@@ -170,7 +152,6 @@ const ButtonsPage = () => (
         text="Primary Gray"
         icon={<AcademicCapIcon />}
         iconPosition={ButtonIconPosition.RIGHT}
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.SMALL}
         type={ButtonType.PRIMARY_GRAY}
@@ -178,21 +159,18 @@ const ButtonsPage = () => (
 
       <Button
         text="Secondary Red"
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.LARGE}
         type={ButtonType.SECONDARY_RED}
       />
       <Button
         text="Secondary Red"
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.MEDIUM}
         type={ButtonType.SECONDARY_RED}
       />
       <Button
         text="Secondary Red"
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.SMALL}
         type={ButtonType.SECONDARY_RED}
@@ -202,7 +180,6 @@ const ButtonsPage = () => (
         text="Secondary Red"
         icon={<AcademicCapIcon />}
         iconPosition={ButtonIconPosition.LEFT}
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.LARGE}
         type={ButtonType.SECONDARY_RED}
@@ -211,7 +188,6 @@ const ButtonsPage = () => (
         text="Secondary Red"
         icon={<AcademicCapIcon />}
         iconPosition={ButtonIconPosition.LEFT}
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.MEDIUM}
         type={ButtonType.SECONDARY_RED}
@@ -220,7 +196,6 @@ const ButtonsPage = () => (
         text="Secondary Red"
         icon={<AcademicCapIcon />}
         iconPosition={ButtonIconPosition.LEFT}
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.SMALL}
         type={ButtonType.SECONDARY_RED}
@@ -230,7 +205,6 @@ const ButtonsPage = () => (
         text="Secondary Red"
         icon={<AcademicCapIcon />}
         iconPosition={ButtonIconPosition.RIGHT}
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.LARGE}
         type={ButtonType.SECONDARY_RED}
@@ -239,7 +213,6 @@ const ButtonsPage = () => (
         text="Secondary Red"
         icon={<AcademicCapIcon />}
         iconPosition={ButtonIconPosition.RIGHT}
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.MEDIUM}
         type={ButtonType.SECONDARY_RED}
@@ -248,7 +221,6 @@ const ButtonsPage = () => (
         text="Secondary Red"
         icon={<AcademicCapIcon />}
         iconPosition={ButtonIconPosition.RIGHT}
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.SMALL}
         type={ButtonType.SECONDARY_RED}
@@ -256,21 +228,18 @@ const ButtonsPage = () => (
 
       <Button
         text="Secondary Gray"
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.LARGE}
         type={ButtonType.SECONDARY_GRAY}
       />
       <Button
         text="Secondary Gray"
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.MEDIUM}
         type={ButtonType.SECONDARY_GRAY}
       />
       <Button
         text="Secondary Gray"
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.SMALL}
         type={ButtonType.SECONDARY_GRAY}
@@ -280,7 +249,6 @@ const ButtonsPage = () => (
         text="Secondary Gray"
         icon={<AcademicCapIcon />}
         iconPosition={ButtonIconPosition.LEFT}
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.LARGE}
         type={ButtonType.SECONDARY_GRAY}
@@ -289,7 +257,6 @@ const ButtonsPage = () => (
         text="Secondary Gray"
         icon={<AcademicCapIcon />}
         iconPosition={ButtonIconPosition.LEFT}
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.MEDIUM}
         type={ButtonType.SECONDARY_GRAY}
@@ -298,7 +265,6 @@ const ButtonsPage = () => (
         text="Secondary Gray"
         icon={<AcademicCapIcon />}
         iconPosition={ButtonIconPosition.LEFT}
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.SMALL}
         type={ButtonType.SECONDARY_GRAY}
@@ -308,7 +274,6 @@ const ButtonsPage = () => (
         text="Secondary Gray"
         icon={<AcademicCapIcon />}
         iconPosition={ButtonIconPosition.RIGHT}
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.LARGE}
         type={ButtonType.SECONDARY_GRAY}
@@ -317,7 +282,6 @@ const ButtonsPage = () => (
         text="Secondary Gray"
         icon={<AcademicCapIcon />}
         iconPosition={ButtonIconPosition.RIGHT}
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.MEDIUM}
         type={ButtonType.SECONDARY_GRAY}
@@ -326,7 +290,6 @@ const ButtonsPage = () => (
         text="Secondary Gray"
         icon={<AcademicCapIcon />}
         iconPosition={ButtonIconPosition.RIGHT}
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.SMALL}
         type={ButtonType.SECONDARY_GRAY}
@@ -334,21 +297,18 @@ const ButtonsPage = () => (
 
       <Button
         text="Tertiary"
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.LARGE}
         type={ButtonType.TERTIARY}
       />
       <Button
         text="Tertiary"
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.MEDIUM}
         type={ButtonType.TERTIARY}
       />
       <Button
         text="Tertiary"
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.SMALL}
         type={ButtonType.TERTIARY}
@@ -358,7 +318,6 @@ const ButtonsPage = () => (
         text="Tertiary"
         icon={<AcademicCapIcon />}
         iconPosition={ButtonIconPosition.LEFT}
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.LARGE}
         type={ButtonType.TERTIARY}
@@ -367,7 +326,6 @@ const ButtonsPage = () => (
         text="Tertiary"
         icon={<AcademicCapIcon />}
         iconPosition={ButtonIconPosition.LEFT}
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.MEDIUM}
         type={ButtonType.TERTIARY}
@@ -376,7 +334,6 @@ const ButtonsPage = () => (
         text="Tertiary"
         icon={<AcademicCapIcon />}
         iconPosition={ButtonIconPosition.LEFT}
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.SMALL}
         type={ButtonType.TERTIARY}
@@ -386,7 +343,6 @@ const ButtonsPage = () => (
         text="Tertiary"
         icon={<AcademicCapIcon />}
         iconPosition={ButtonIconPosition.RIGHT}
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.LARGE}
         type={ButtonType.TERTIARY}
@@ -395,7 +351,6 @@ const ButtonsPage = () => (
         text="Tertiary"
         icon={<AcademicCapIcon />}
         iconPosition={ButtonIconPosition.RIGHT}
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.MEDIUM}
         type={ButtonType.TERTIARY}
@@ -404,7 +359,6 @@ const ButtonsPage = () => (
         text="Tertiary"
         icon={<AcademicCapIcon />}
         iconPosition={ButtonIconPosition.RIGHT}
-        onClick={() => {}}
         isDisabled={false}
         size={ButtonSize.SMALL}
         type={ButtonType.TERTIARY}

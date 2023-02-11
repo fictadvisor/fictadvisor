@@ -37,14 +37,21 @@ const Table: React.FC<TableProps> = props => {
           userWidth = '288px';
         return (
           <div key={index} className={styles['table-container']}>
-            <div className={styles['user-container']} style={{ gap: userGap }}>
+            <div
+              className={styles['user-container']}
+              style={{
+                gap: userGap,
+              }}
+            >
               <div className={styles['user-avatar']}>
                 <img src={`/assets/${field.avatar}`} alt="avatar" />
               </div>
               <div className={styles['user-info']}>
                 <div
                   className={styles['full-name']}
-                  style={{ width: userWidth }}
+                  style={{
+                    width: userWidth,
+                  }}
                 >
                   {field.fullName}
                 </div>
@@ -58,7 +65,9 @@ const Table: React.FC<TableProps> = props => {
               ) : (
                 <div
                   className={styles['first-button']}
-                  style={{ width: '134px' }}
+                  style={{
+                    width: '134px',
+                  }}
                 >
                   {field.firstButton}
                 </div>

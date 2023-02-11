@@ -23,7 +23,7 @@ export enum ButtonIconPosition {
 
 interface ButtonProps {
   text: string;
-  onClick: any;
+  onClick?: any;
   isDisabled: boolean;
   icon?: ReactNode;
   size: ButtonSize;
@@ -49,7 +49,7 @@ const Button: React.FC<ButtonProps> = props => {
       disabled={props.isDisabled}
       className={className}
       onClick={() => {
-        props.onClick;
+        props?.onClick;
       }}
     >
       {props.icon && props.iconPosition == ButtonIconPosition.LEFT && (

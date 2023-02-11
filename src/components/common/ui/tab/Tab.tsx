@@ -18,7 +18,6 @@ interface TabProps {
 }
 
 const Tab: FC<TabProps> = props => {
-  const handleClick = () => {};
   return (
     <div>
       <button
@@ -27,7 +26,6 @@ const Tab: FC<TabProps> = props => {
           styles[props.position],
         )}
         disabled={props.isDisabled}
-        onClick={handleClick}
       >
         {props.icon && <div className="icon">{props.icon}</div>}
         <text className="text">{props.text}</text>
