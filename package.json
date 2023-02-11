@@ -3,20 +3,32 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "lint": "./node_modules/.bin/eslint --ext .ts,.tsx,.js src",
     "dev": "next dev -p 3000",
     "build": "next build",
-    "start": "next start -p 80"
+    "start": "next start -p 80",
+    "prepare": "husky install",
+    "typecheck": "tsc"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.14",
+    "@reduxjs/toolkit": "^1.9.2",
+    "@typescript-eslint/eslint-plugin": "^5.51.0",
+    "@zeit/next-sass": "^1.0.1",
     "axios": "^1.2.3",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-simple-import-sort": "^10.0.0",
+    "husky": "^8.0.3",
     "merge-class-names": "^1.4.2",
     "next": "13.1.5",
     "node-html-parser": "^6.1.4",
     "normalize.css": "^8.0.1",
+    "prettier": "^2.8.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-query": "^3.39.2",
+    "react-redux": "^8.0.5",
     "react-select": "^5.7.0",
     "react-textarea-autosize": "^8.4.0",
     "sass": "^1.58.0"
@@ -25,6 +37,8 @@
     "@types/node": "^18.11.18",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
+    "eslint": "8.34.0",
+    "eslint-config-next": "13.1.6",
     "typescript": "^4.9.4"
   }
 }

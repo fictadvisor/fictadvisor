@@ -1,0 +1,66 @@
+@import "button-style";
+
+
+.primary-red-button-color{
+  background: #FF5B5B;
+  color: #FAFAFA;
+  outline: 2px transparent solid;
+
+  &:hover {
+    background: #D33D3D;
+  }
+
+  &:active {
+    background: #FD4444;
+  }
+
+  &:focus {
+    background: #FD4444;
+    outline: 2px solid #873030;
+  }
+
+  &:disabled {
+    background: #747474;
+    color: #D4D4D4;
+  }
+}
+
+.primary-gray-button-color{
+  background: #292929;
+  color: #FAFAFA;
+  outline: 2px transparent solid;
+
+  &:hover {
+    background: #343434;
+  }
+
+  &:active {
+    background: #404040;
+  }
+
+  &:focus {
+    background: #292929;
+    outline: 2px solid #404040;
+  }
+
+  &:disabled {
+    background: #1E1E1E;
+    color: #404040;
+  }
+}
+
+@include button-style("primary-large", 8px, 16px 32px, 16px 32px, 12px);
+@include button-text("primary-large", 18px, 1.32, 700);
+
+@include button-style("primary-medium", 8px, 12px 24px, 12px 24px, 12px);
+@include button-text("primary-medium", 18px, 1.32, 700);
+
+@include button-style("primary-small", 6px, 8px 12px, 6px 12px, 12px);
+@include button-text("primary-small", 14px, 1.4, 700);
+
+
+
+
+
+
+
