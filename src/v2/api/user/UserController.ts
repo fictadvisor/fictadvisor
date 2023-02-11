@@ -14,6 +14,7 @@ import { UpdateUserDTO } from "./dto/UpdateUserDTO";
 import { UpdateStudentDTO } from "./dto/UpdateStudentDTO";
 
 import { ContactByUserIdPipe } from "./ContactByUserIdPipe";
+import { GroupRequestDTO } from './dto/GroupRequestDTO';
 
 @Controller({
   version: '2',
@@ -41,6 +42,16 @@ export class UserController {
     @Body() body: ApproveDTO,
   ) {
     return this.userService.updateSuperhero(userId, body);
+  }
+
+  @Permission('users.$userId.group.request')
+  @UseGuards(JwtGuard, PermissionGuard)
+  @Patch('/:userId/requestNewGroup')
+  requestNewGroup(
+    @Param('userId', UserByIdPipe) userId: string,
+    @Body() body: GroupRequestDTO,
+  ) {
+    return this.userService.requestNewGroup(userId, body);
   }
 
   @Permission('users.$userId.superhero.create')
