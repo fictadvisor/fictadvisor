@@ -20,8 +20,9 @@ export class RoleController {
   }
 
   @Get()
-  getAll() {
-    return this.roleService.getAll();
+  async getAll() {
+    const roles = await this.roleService.getAll();
+    return { roles };
   }
 
   @Post()

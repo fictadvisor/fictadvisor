@@ -27,6 +27,18 @@ export class RoleRepository {
           create: grants,
         },
       },
+      select: {
+        id: true,
+        name: true,
+        weight: true,
+        grants: {
+          select: {
+            id: true,
+            set: true,
+            permission: true,
+          },
+        },
+      },
     });
   }
 
