@@ -42,17 +42,17 @@ export class RoleRepository {
     });
   }
 
-  async getGrants(id: string) {
-    const role = await this.prisma.role.findUnique({
+  async getGrants(roleId: string) {
+    return this.prisma.grant.findMany({
       where: {
-        id,
+        roleId,
       },
-      include: {
-        grants: true,
+      select: {
+        id: true,
+        set: true,
+        permission: true,
       },
     });
-
-    return role.grants;
   }
 
   async delete(id: string) {
