@@ -128,7 +128,7 @@ export class GroupService {
     const students = await this.groupRepository.getStudents(groupId);
 
     const student = students.find(({ roles }) => {
-      return roles.some(this.checkRole.bind(this, RoleName.CAPTAIN));
+      return roles.some((r) => this.checkRole(RoleName.CAPTAIN, r));
     });
 
     return student?.user;

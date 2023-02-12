@@ -43,7 +43,7 @@ export class UserService {
   async hasPermission(userId: string, permission: string) {
     const roles = await this.studentRepository.getRoles(userId);
     for (const role of roles) {
-      const hasRight = this.roleService.hasPermission(role.id, permission);
+      const hasRight = this.roleService.hasPermission(role.grants, permission);
       if (hasRight) return true;
     }
 

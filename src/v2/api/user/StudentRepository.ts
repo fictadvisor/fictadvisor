@@ -14,8 +14,21 @@ export class StudentRepository {
       where: {
         studentId,
       },
-      include: {
-        role: true,
+      select: {
+        role: {
+          select: {
+            id: true,
+            name: true,
+            weight: true,
+            grants: {
+              select: {
+                id: true,
+                set: true,
+                permission: true,
+              },
+            },
+          },
+        },
       },
       orderBy: {
         role: {
@@ -28,15 +41,19 @@ export class StudentRepository {
   }
 
   async getGroupByRole(roleId: string) {
-    const groupRole = await this.prisma.groupRole.findFirst({
+    return this.prisma.group.findFirst({
       where: {
-        roleId,
+        groupRoles: {
+          some: {
+            roleId,
+          },
+        },
       },
-      include: { 
-        group: true,
+      select: {
+        id: true,
+        code: true,
       },
     });
-    return groupRole.group;
   }
 
   async addRole(studentId: string, roleId: string) {

@@ -1,23 +1,33 @@
 import { RoleName } from '@prisma/client';
 
-export interface CreateRoleWithGrantsDTO extends CreateRoleDTO {
-  grants: CreateGrantDTO[],
+export class CreateRoleDTO {
+  name: RoleName;
+  weight: number;
 }
 
-export interface CreateRoleDTO {
-  name: RoleName,
-  weight: number,
+export class CreateRoleData {
+  name: RoleName;
+  weight: number;
 }
 
-export interface CreateGrantDTO {
-  permission: string,
-  set?: boolean,
+export class CreateRoleWithGrantsDTO extends CreateRoleDTO {
+  grants: CreateGrantDTO[];
 }
 
-export interface CreateGrantData extends CreateGrantDTO {
-  roleId: string,
+export class CreateGrantDTO {
+  permission: string;
+  set?: boolean;
 }
 
-export interface CreateGrantsDTO {
-  grants: CreateGrantDTO[],
+export class CreateGrantInRoleData {
+  permission: string;
+  set?: boolean;
+}
+
+export class CreateGrantData extends CreateGrantInRoleData {
+  roleId: string;
+}
+
+export class CreateGrantsDTO {
+  grants: CreateGrantDTO[];
 }

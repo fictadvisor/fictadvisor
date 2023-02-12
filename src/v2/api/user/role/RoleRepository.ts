@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../database/PrismaService';
-import { CreateRoleDTO } from '../dto/CreateRoleDTO';
+import {
+  CreateGrantInRoleData,
+  CreateRoleData,
+  CreateRoleDTO,
+} from '../dto/CreateRoleDTO';
 import { UpdateRoleDTO } from './dto/UpdateRoleDTO';
 
 @Injectable()
@@ -12,6 +16,17 @@ export class RoleRepository {
   create(data: CreateRoleDTO) {
     return this.prisma.role.create({
       data,
+    });
+  }
+
+  createWithGrants(role: CreateRoleData, grants: CreateGrantInRoleData[]) {
+    return this.prisma.role.create({
+      data: {
+        ...role,
+        grants: {
+          create: grants,
+        },
+      },
     });
   }
 
@@ -42,6 +57,43 @@ export class RoleRepository {
         id,
       },
       data,
+    });
+  }
+
+  get(id: string) {
+    return this.prisma.role.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        name: true,
+        weight: true,
+        grants: {
+          select: {
+            id: true,
+            set: true,
+            permission: true,
+          },
+        },
+      },
+    });
+  }
+
+  getAll() {
+    return this.prisma.role.findMany({
+      select: {
+        id: true,
+        name: true,
+        weight: true,
+        grants: {
+          select: {
+            id: true,
+            set: true,
+            permission: true,
+          },
+        },
+      },
     });
   }
 }
