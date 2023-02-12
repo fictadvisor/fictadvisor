@@ -16,6 +16,7 @@ import { GroupModule } from '../group/GroupModule';
 @Module({
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy, TelegramAPI],
+  exports: [AuthService],
   imports: [
     JwtModule.registerAsync({
       imports: [ConfigurationModule],
