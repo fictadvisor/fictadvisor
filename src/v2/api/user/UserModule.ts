@@ -8,12 +8,11 @@ import { RoleService } from './role/RoleService';
 import { RoleController } from './role/RoleController';
 import { PrismaModule } from '../../database/PrismaModule';
 import { GrantService } from './grant/GrantService';
-import { AuthModule } from '../auth/AuthModule';
 
 @Module({
   controllers: [UserController, RoleController],
   providers: [UserService, RoleService, GrantService],
   exports: [UserService, RoleService, GrantService],
-  imports: [ConfigurationModule, forwardRef(() => GroupModule), forwardRef(() => DisciplineModule), PrismaModule, forwardRef(() => AuthModule)],
+  imports: [ConfigurationModule, forwardRef(() => GroupModule), forwardRef(() => DisciplineModule), PrismaModule],
 })
 export class UserModule {}

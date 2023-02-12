@@ -27,7 +27,6 @@ export class UserService {
     private roleService: RoleService,
     private superheroRepository: SuperheroRepository,
     private contactRepository: ContactRepository,
-    @Inject(forwardRef(() => AuthService))
     private authService: AuthService,
   ) {
   }
@@ -80,18 +79,18 @@ export class UserService {
     await this.superheroRepository.updateSuperhero(userId, data);
   }
 
-  async requestNewGroup(id: string, { groupId, isCaptain }: GroupRequestDTO) {
+  async requestNewGroup(id: string, {groupId, isCaptain}: GroupRequestDTO) {
     const user = await this.userRepository.get(id);
     if(user.state === State.APPROVED)
       throw new ForbiddenException();
 
-    await this.studentRepository.update(id, { state: State.PENDING }); 
+    await this.studentRepository.update(id, {state: State.PENDING}); 
     const student = {
       firstName: user.student.firstName,
       middleName: user.student.middleName,
       lastName: user.student.lastName,
-    };
-    await this.authService.verify(user, { groupId, isCaptain, ...student });
+    }
+    await this.authService.verify(user, {groupId, isCaptain, ...student})
   }
 
   async deleteUser(userId: string) {
