@@ -27,6 +27,7 @@ export class UserService {
     private roleService: RoleService,
     private superheroRepository: SuperheroRepository,
     private contactRepository: ContactRepository,
+    @Inject(forwardRef(() => AuthService))
     private authService: AuthService,
   ) {
   }
