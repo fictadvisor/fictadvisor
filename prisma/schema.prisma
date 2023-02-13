@@ -56,7 +56,7 @@ model Student {
   user                 User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId               String                @unique @map("user_id")
   firstName            String?               @map("first_name")
-  middleName           String?               @map("middle_name")
+  middleName           String?               @default("") @map("middle_name")
   lastName             String?               @map("last_name")
   groupId              String                @map("group_id")
   group                Group                 @relation(fields: [groupId], references: [id], onDelete: Cascade)
