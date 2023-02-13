@@ -1,5 +1,4 @@
 import { ForbiddenException, forwardRef, Inject, Injectable } from '@nestjs/common';
-import { GroupService } from '../group/GroupService';
 import { DisciplineService } from '../discipline/DisciplineService';
 import { GiveRoleDTO } from './dto/GiveRoleDTO';
 import { StudentRepository } from './StudentRepository';

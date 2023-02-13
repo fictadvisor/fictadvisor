@@ -69,7 +69,7 @@ export class UserDTO {
   email: string;
 
   @Matches(
-    /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z$-/:-?{-~!"^_`\[\]\d]{8,50}$/, {
+    /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z$-/:-?{-~!"^_`[\]\d]{8,50}$/, {
       message: 'password is not correct or too short (min: 8) or too long (max: 50)',
     })
   @IsNotEmpty({
