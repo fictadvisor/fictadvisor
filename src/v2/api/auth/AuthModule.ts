@@ -11,12 +11,14 @@ import { EmailModule } from '../../email/EmailModule';
 import { TelegramAPI } from "../../telegram/TelegramAPI";
 import { PrismaModule } from '../../database/PrismaModule';
 import { GroupModule } from '../group/GroupModule';
+import { RoleService } from "../user/role/RoleService";
+import { GrantService } from "../user/grant/GrantService";
 
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy, TelegramAPI],
-  exports: [AuthService],
+  providers: [AuthService, LocalStrategy, JwtStrategy, TelegramAPI, RoleService, GrantService],
+  exports: [AuthService, RoleService, GrantService],
   imports: [
     JwtModule.registerAsync({
       imports: [ConfigurationModule],

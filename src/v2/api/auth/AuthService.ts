@@ -1,9 +1,8 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { PrismaService } from '../../database/PrismaService';
 import { JwtPayload } from '../../security/JwtPayload';
 import { SecurityConfigService } from '../../config/SecurityConfigService';
-import { State, User } from '@prisma/client';
+import { State, User, RoleName } from '@prisma/client';
 import { TokensDTO } from './dto/TokensDTO';
 import { RegistrationDTO, StudentDTO, TelegramDTO, UserDTO } from './dto/RegistrationDTO';
 import { createHash, createHmac } from 'crypto';
@@ -28,6 +27,8 @@ import { AlreadyRegisteredException } from "../../utils/exceptions/AlreadyRegist
 import { NotRegisteredException } from "../../utils/exceptions/NotRegisteredException";
 import { PasswordRepeatException } from '../../utils/exceptions/PasswordRepeatException';
 import { GroupService } from '../group/GroupService';
+import { RoleService } from "../user/role/RoleService";
+import { RoleRepository } from "../user/role/RoleRepository";
 
 export const ONE_MINUTE = 1000 * 60;
 export const HOUR = ONE_MINUTE * 60;
@@ -39,7 +40,8 @@ export class AuthService {
   private verifyEmailTokens: Map<string, { email: string, date: Date }> = new Map();
 
   constructor(
-    private prisma: PrismaService,
+    private roleService: RoleService,
+    private roleRepository: RoleRepository,
     private jwtService: JwtService,
     private securityConfig: SecurityConfigService,
     private telegramConfig: TelegramConfigService,
@@ -119,7 +121,7 @@ export class AuthService {
     await this.requestEmailVerification(user.email);
   }
 
-  async verify({ id, telegramId}: User, { groupId, isCaptain, middleName, ...student }: StudentDTO) {
+  async verify({ id, telegramId }: User, { groupId, isCaptain, middleName, ...student }: StudentDTO) {
     const group = await this.groupRepository.getGroup(groupId);
     const data = {
       id,
@@ -280,6 +282,12 @@ export class AuthService {
 
     this.verifyEmailTokens.delete(token);
 
+    const { id } = await this.roleService.createRole({
+      grants: [{ permission : `users.${user.id}.*` }],
+      name: RoleName.USER,
+      weight: 10,
+    });
+    await this.studentRepository.addRole(user.id, id);
     return this.getTokens(user);
   }
 
