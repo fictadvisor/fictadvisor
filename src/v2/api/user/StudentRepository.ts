@@ -40,6 +40,36 @@ export class StudentRepository {
     return roles.map((role) => role.role);
   }
 
+  get(userId: string) {
+    return this.prisma.student.findUnique({
+      where: {
+        userId,
+      },
+      select: {
+        firstName: true,
+        middleName: true,
+        lastName: true,
+        user: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+            telegramId: true,
+            avatar: true,
+            state: true,
+          },
+        },
+        group: true,
+        roles: {
+          select: {
+            role: true,
+          },
+        },
+        state: true,
+      },
+    });
+  }
+
   async getGroupByRole(roleId: string) {
     return this.prisma.group.findFirst({
       where: {

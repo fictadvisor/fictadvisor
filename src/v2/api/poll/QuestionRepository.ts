@@ -41,7 +41,7 @@ export class QuestionRepository {
       where: {
         id,
       },
-    },);
+    });
   }
 
   async update(id: string, data: UpdateQuestionDTO) {
