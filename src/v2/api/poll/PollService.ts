@@ -1,6 +1,6 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import { CreateQuestionsDTO } from "./dto/CreateQuestionDTO";
+import { CreateQuestionWithRolesDTO } from "./dto/CreateQuestionDTO";
 import { QuestionRepository } from "./QuestionRepository";
 import { UpdateQuestionDTO } from "./dto/UpdateQuestionDTO";
 import { Question, TeacherRole } from "@prisma/client";
@@ -19,14 +19,8 @@ export class PollService {
     private disciplineTeacherRepository: DisciplineTeacherRepository,
   ){}
 
-  async createQuestions(body: CreateQuestionsDTO){
-    const questions = [];
-    for (const question of body.questions){
-      questions.push(await this.questionRepository.create(question));
-    }
-    return {
-      questions,
-    };
+  async createQuestions(data: CreateQuestionWithRolesDTO){
+    return this.questionRepository.createWithRoles(data);
   }
 
   async delete(id: string){
@@ -52,7 +46,7 @@ export class PollService {
   sortByCategories(questions: Question[]) {
     const results = [];
     for(const question of questions){
-      const name = question.name;
+      const name = question.category;
       delete question.category;
       const category = results.find((c) => (c.name === name));
       if(!category){

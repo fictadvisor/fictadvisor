@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import { CreateQuestionData } from "./dto/CreateQuestionDTO";
+import { CreateQuestionDTO } from "./dto/CreateQuestionDTO";
 import { UpdateQuestionDTO } from "./dto/UpdateQuestionDTO";
 import { CreateQuestionRoleData } from "./dto/CreateQuestionRoleData";
 import { TeacherRole } from "@prisma/client";
+import { CreateQuestionWithRolesData } from "./data/CreateQuestionWithRolesData";
 
 @Injectable()
 export class QuestionRepository {
@@ -12,7 +13,7 @@ export class QuestionRepository {
   ) {
   }
 
-  async create(data: CreateQuestionData) {
+  async create(data: CreateQuestionDTO) {
     return this.prisma.question.create({
       data,
     });
@@ -82,8 +83,24 @@ export class QuestionRepository {
     return roles.map((r) => r.question);
   }
 
-
-
-
+  createWithRoles({ roles, ...data }: CreateQuestionWithRolesData) {
+    return this.prisma.question.create({
+      data: {
+        ...data,
+        questionRoles: {
+          create: roles,
+        },
+      },
+      include: {
+        questionRoles: {
+          select: {
+            role: true,
+            isRequired: true,
+            isShown: true,
+          },
+        },
+      },
+    });
+  }
 }
 

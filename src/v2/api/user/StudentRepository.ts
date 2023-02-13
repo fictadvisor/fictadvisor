@@ -126,4 +126,25 @@ export class StudentRepository {
       },
     });
   }
+
+  getSelective(studentId: string) {
+    return this.prisma.discipline.findMany({
+      where: {
+        selectiveDisciplines: {
+          some: {
+            studentId,
+          },
+        },
+      },
+      select: {
+        id: true,
+        subject: true,
+        group: true,
+        semester: true,
+        year: true,
+        evaluatingSystem: true,
+        resource: true,
+      },
+    });
+  }
 }

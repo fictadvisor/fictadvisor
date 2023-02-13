@@ -23,17 +23,95 @@ export class DisciplineTypeRepository {
   }
 
   async getType(id: string) {
-    const type = await this.get(id);
-    delete type.discipline;
-    delete type.disciplineTeacherRoles;
-    delete type.lessons;
-    delete type.temporaryLessons;
-    return type;
+    return this.prisma.disciplineType.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        name: true,
+        discipline: {
+          select: {
+            id: true,
+            group: true,
+            subject: true,
+            year: true,
+            semester: true,
+            resource: true,
+            evaluatingSystem: true,
+            isSelective: true,
+            disciplineTeachers: {
+              select: {
+                id: true,
+                teacher: {
+                  select: {
+                    id: true,
+                    avatar: true,
+                    lastName: true,
+                    middleName: true,
+                    firstName: true,
+                    description: true,
+                  },
+                },
+                roles: {
+                  select: {
+                    role: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        disciplineTeacherRoles: {
+          select: {
+            role: true,
+            disciplineTeacherId: true,
+          },
+        },
+      },
+    });
   }
 
   async getDiscipline(id: string) {
-    const type = await this.get(id);
-    return type.discipline;
+    return this.prisma.discipline.findFirst({
+      where: {
+        disciplineTypes: {
+          some: {
+            id,
+          },
+        },
+      },
+      select: {
+        id: true,
+        group: true,
+        subject: true,
+        year: true,
+        semester: true,
+        resource: true,
+        evaluatingSystem: true,
+        isSelective: true,
+        disciplineTeachers: {
+          select: {
+            id: true,
+            teacher: {
+              select: {
+                id: true,
+                avatar: true,
+                lastName: true,
+                middleName: true,
+                firstName: true,
+                description: true,
+              },
+            },
+            roles: {
+              select: {
+                role: true,
+              },
+            },
+          },
+        },
+      },
+    });
   }
 
   async getDisciplineTeachers(disciplineTypeId: string) {

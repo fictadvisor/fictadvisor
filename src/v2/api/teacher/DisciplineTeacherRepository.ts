@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import { CreateDisciplineTeacherData } from './dto/CreateDisciplineTeacherData';
+import { CreateDisciplineTeacherData } from './data/CreateDisciplineTeacherData';
 import { TeacherRole } from "@prisma/client";
+import { CreateDisciplineTeacherWithRolesData } from "./data/CreateDisciplineTeacherWithRolesData";
 
 @Injectable()
 export class DisciplineTeacherRepository {
@@ -136,6 +137,17 @@ export class DisciplineTeacherRepository {
     });
   }
 
+  async createWithRoles({ roles, ...data }: CreateDisciplineTeacherWithRolesData) {
+    return this.prisma.disciplineTeacher.create({
+      data: {
+        ...data,
+        roles: {
+          create: roles,
+        },
+      },
+    });
+  }
+
   async find(data: CreateDisciplineTeacherData) {
     return this.prisma.disciplineTeacher.findFirst({
       where: data,
@@ -159,21 +171,21 @@ export class DisciplineTeacherRepository {
   }
 
   getQuestions(roles: TeacherRole[], disciplineRoles: TeacherRole[]) {
+
     return this.prisma.question.findMany({
       where: {
         questionRoles: {
           some: {
-            AND: [{
-              isShown: true,
-              role: {
-                in: roles,
-              },
-            }, {
-              isRequired: true,
-              role: {
-                in: disciplineRoles,
-              },
-            }],
+            isShown: true,
+            role: {
+              in: roles,
+            },
+          },
+          none: {
+            isRequired: true,
+            role: {
+              notIn: disciplineRoles,
+            },
           },
         },
       },

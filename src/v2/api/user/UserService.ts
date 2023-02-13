@@ -37,7 +37,7 @@ export class UserService {
   }
 
   async getSelective(studentId: string) {
-    return this.disciplineService.getSelective(studentId);
+    return this.studentRepository.getSelective(studentId);
   }
 
 
@@ -86,17 +86,17 @@ export class UserService {
   }
 
   async requestNewGroup(id: string, { groupId, isCaptain }: GroupRequestDTO) {
-    const user = await this.userRepository.get(id);
-    if(user.state === State.APPROVED)
+    const student = await this.studentRepository.get(id);
+    if(student.state === State.APPROVED)
       throw new ForbiddenException();
-
+    
     await this.studentRepository.update(id, { state: State.PENDING });
-    const student = {
-      firstName: user.student.firstName,
-      middleName: user.student.middleName,
-      lastName: user.student.lastName,
+    const name = {
+      firstName: student.firstName,
+      middleName: student.middleName,
+      lastName: student.lastName,
     };
-    await this.authService.verify(user, { groupId, isCaptain, ...student });
+    await this.authService.verify(student.user, { groupId, isCaptain, ...name });
   }
 
   async deleteUser(userId: string) {
@@ -131,21 +131,6 @@ export class UserService {
     await this.studentRepository.delete(userId);
   }
 
-  async getUserForTelegram(userId: string) {
-    const { student: { group, ...student }, ...user } = await this.userRepository.get(userId);
-
-    return {
-      id: user.id,
-      firstName: student.firstName,
-      middleName: student.middleName,
-      lastName: student.lastName,
-      groupCode: group.code,
-      email: user.email,
-      username: user.username,
-      avatar: user.avatar,
-    };
-  }
-
   getStudent(student: StudentWithUser) {
     return {
       id: student.user.id,
@@ -160,18 +145,8 @@ export class UserService {
   }
 
   async getUser(userId: string) {
-    const { id, username, email, avatar, telegramId,
-      student: { firstName, lastName, middleName },
-    } = await this.userRepository.get(userId);
-    return {
-      id,
-      username,
-      email,
-      firstName,
-      lastName,
-      middleName,
-      avatar,
-      telegramId,
-    };
+    const student = await this.studentRepository.get(userId);
+
+    return this.getStudent(student);
   }
 }
