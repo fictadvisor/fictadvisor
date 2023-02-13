@@ -21,7 +21,6 @@ export class RoleService {
         grants: await this.createGrants(role.id, grants),
       };
     }
-
     return role;
   }
 
