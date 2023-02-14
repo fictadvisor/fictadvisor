@@ -95,13 +95,12 @@ export class DisciplineTeacherService {
   }
 
   async getCategories(id: string) {
-    const { disciplineId, teacher } = await this.disciplineTeacherRepository.get(id);
+    const { discipline, teacher } = await this.disciplineTeacherRepository.getDisciplineTeacher(id);
     const questions = await this.getUniqueQuestions(id);
-    const subject = await this.disciplineRepository.getSubject(disciplineId);
     const categories = this.pollService.sortByCategories(questions);
     return {
-      teacher: `${teacher.lastName} ${teacher.firstName} ${teacher.middleName}`,
-      subject: subject.name,
+      teacher,
+      subject: discipline.subject,
       categories,
     };
   }

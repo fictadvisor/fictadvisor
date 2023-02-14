@@ -8,7 +8,6 @@ import { SubjectService } from '../subject/SubjectService';
 import { DisciplineService } from '../discipline/DisciplineService';
 import { TemporaryLessonInfo } from './dto/TemporaryLessonInfo';
 import { StaticLessonInfo } from './dto/StaticLessonInfo';
-import { FullLessonDTO } from './dto/FullLessonDTO';
 import { TeacherService } from '../teacher/TeacherService';
 import { UpdateDynamicInfoDTO } from './dto/UpdateDynamicInfoDTO';
 import { ScheduleRepository } from './ScheduleRepository';
@@ -23,6 +22,7 @@ import { DisciplineTypeRepository } from '../discipline/DisciplineTypeRepository
 import { GroupRepository } from '../group/GroupRepository';
 import { DisciplineTeacherRepository } from '../teacher/DisciplineTeacherRepository';
 import { DisciplineTeacherRoleRepository } from '../teacher/DisciplineTeacherRoleRepository';
+import { DisciplineTeacherService } from "../teacher/DisciplineTeacherService";
 
 @Injectable()
 export class ScheduleService {
@@ -32,6 +32,7 @@ export class ScheduleService {
     private dateService: DateService,
     private config: ConfigService,
     private subjectService: SubjectService,
+    private disciplineTeacherService: DisciplineTeacherService,
     private disciplineTypeService: DisciplineTypeService,
     private disciplineService: DisciplineService,
     private groupRepository: GroupRepository,
@@ -149,15 +150,10 @@ export class ScheduleService {
     return results;
   }
 
-  async getFullStaticLesson(id: string, fortnight: number): Promise<FullLessonDTO> {
+  async getFullStaticLesson(id: string, fortnight: number) {
+    const discipline = await this.scheduleRepository.getDiscipline(id);
     const lesson = await this.scheduleRepository.getSemesterLesson(id);
-    const dbTeachers = await this.disciplineTypeService.getTeachers(lesson.disciplineTypeId);
-    const discipline = await this.disciplineTypeRepository.getDiscipline(lesson.disciplineTypeId);
-    const teachers = dbTeachers.map((t) => ({
-      id: t.id,
-      name: `${t.lastName} ${t.firstName} ${t.middleName}`,
-    }));
-    const subject = await this.subjectService.get(discipline.subjectId);
+    const teachers = this.disciplineTeacherService.getTeachers(discipline.disciplineTeachers);
     const [
       url = lesson.url,
       startDate = lesson.startDate,
@@ -177,7 +173,7 @@ export class ScheduleService {
 
     return {
       id: lesson.id,
-      subject,
+      subject: discipline.subject,
       teachers,
       url,
       comment,
@@ -192,20 +188,14 @@ export class ScheduleService {
     };
   }
 
-  async getFullTemporaryLesson(id: string): Promise<FullLessonDTO> {
+  async getFullTemporaryLesson(id: string) {
+    const discipline = await this.scheduleRepository.getDiscipline(id);
     const lesson = await this.scheduleRepository.getTemporaryLesson(id);
-    const teacher = lesson.teacher;
-    const discipline = await this.disciplineTypeRepository.getDiscipline(lesson.disciplineTypeId);
-    const subject = await this.subjectService.get(discipline.id);
-    const teacherFullName = `${teacher.lastName} ${teacher.firstName} ${teacher.middleName}`;
 
     return {
       id: lesson.id,
-      subject,
-      teachers: [{
-        id: teacher.id,
-        name: teacherFullName,
-      }],
+      subject: discipline.subject,
+      teachers: [lesson.teacher],
       type: lesson.disciplineType.name,
       url: lesson.url,
       resources: discipline.resource,
@@ -227,7 +217,7 @@ export class ScheduleService {
 
   async updateSemesterInfo(id: string, body: UpdateStaticInfoDTO) {
     const semesterLesson = await this.scheduleRepository.getSemesterLesson(id);
-    const discipline = await this.disciplineTypeRepository.getDiscipline(semesterLesson.disciplineTypeId);
+    const discipline = await this.disciplineTypeRepository.getDiscipline(semesterLesson.disciplineType.id);
 
     for (const key in body) {
       if (['endDate', 'startDate', 'url'].includes(key)) {
@@ -239,7 +229,7 @@ export class ScheduleService {
           discipline.id, { [key]: body[key] }
         );
       } else {
-        await this.disciplineTypeService.deleteDisciplineTeachers(semesterLesson.disciplineTypeId);
+        await this.disciplineTypeService.deleteDisciplineTeachers(semesterLesson.disciplineType.id);
         const role = TeacherRoleAdapter[semesterLesson.disciplineType.name];
         for (const teacherId of body.teachersId) {
           const disciplineTeacher = await this.disciplineTeacherRepository.getOrCreate({ teacherId, disciplineId: discipline.id });
@@ -265,20 +255,35 @@ export class ScheduleService {
     }
   }
 
-  async createTemporaryLesson(fortnight, disciplineTypeId, data) {
-    return await this.scheduleRepository.getOrCreateTemporaryLesson({ fortnight, disciplineTypeId, ...data });
+  createTemporaryLesson(fortnight, disciplineTypeId, data) {
+    return this.scheduleRepository.getOrCreateTemporaryLesson({ fortnight, disciplineTypeId, ...data });
   }
 
   async createSemesterLesson(disciplineTypeId: string, { teacherId, ...data }: {teacherId: string} & CreateDateDTO) {
     const type = await this.disciplineTypeRepository.getType(disciplineTypeId);
     const role = TeacherRoleAdapter[type.name];
 
-    const disciplineTeacher = await this.disciplineTeacherRepository.getOrCreate({ teacherId, disciplineId: type.disciplineId });
-    await this.disciplineTeacherRoleRepository.create({
-      disciplineTeacherId: disciplineTeacher.id,
-      disciplineTypeId,
-      role,
-    });
+    const existTeacher = type.discipline.disciplineTeachers.find((dt) => dt.teacher.id === teacherId);
+    if (existTeacher) {
+      const existRole = existTeacher.roles.find((r) => r.role === role);
+      if (!existRole) {
+        await this.disciplineTeacherRoleRepository.create({
+          role,
+          disciplineTypeId,
+          disciplineTeacherId: existTeacher.id,
+        });
+      }
+    } else {
+      await this.disciplineTeacherRepository.createWithRoles({
+        teacherId,
+        disciplineId: type.discipline.id,
+        roles: [{
+          role,
+          disciplineTypeId,
+        }],
+      });
+    }
+
     return await this.scheduleRepository.getOrCreateSemesterLesson({ disciplineTypeId, ...data });
   }
 }

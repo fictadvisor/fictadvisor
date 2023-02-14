@@ -174,7 +174,7 @@ export class UserController {
   getUserForTelegram(
     @Param('userId', UserByIdPipe) userId: string,
   ){
-    return this.userService.getUserForTelegram(userId);
+    return this.userService.getUser(userId);
   }
 
   @Permission('users.$userId.get')

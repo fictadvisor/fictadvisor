@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Patch, Param, Post, UseGuards } from '@n
 import { PollService } from './PollService';
 import { JwtGuard } from '../../security/JwtGuard';
 import { UpdateQuestionDTO } from "./dto/UpdateQuestionDTO";
-import { CreateQuestionsDTO } from "./dto/CreateQuestionDTO";
+import { CreateQuestionWithRolesDTO } from "./dto/CreateQuestionDTO";
 import { Permission } from "../../security/permission-guard/Permission";
 import { PermissionGuard } from "../../security/permission-guard/PermissionGuard";
 import { QuestionByIdPipe } from "./dto/QuestionByIdPipe";
@@ -22,7 +22,7 @@ export class PollController {
   @UseGuards(JwtGuard, PermissionGuard)
   @Post('/questions')
   async createQuestion(
-    @Body() body : CreateQuestionsDTO,
+    @Body() body : CreateQuestionWithRolesDTO,
   ) {
     return this.pollService.createQuestions(body);
   }
