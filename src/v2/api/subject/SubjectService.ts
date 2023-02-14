@@ -4,12 +4,16 @@ import { UpdateSubjectDTO } from './dto/UpdateSubjectDTO';
 import { SubjectRepository } from './SubjectRepository';
 import { QueryAllDTO } from 'src/v2/utils/QueryAllDTO';
 import { DisciplineService } from '../discipline/DisciplineService';
+import { TeacherService } from "../teacher/TeacherService";
+import { DisciplineTeacherService } from "../teacher/DisciplineTeacherService";
 
 @Injectable()
 export class SubjectService {
   constructor(
     private subjectRepository: SubjectRepository,
     private disciplineService: DisciplineService,
+    private teacherService: TeacherService,
+    private disciplineTeacherService: DisciplineTeacherService,
   ) {}
 
   async getAll(body: QueryAllDTO) {
@@ -17,17 +21,15 @@ export class SubjectService {
     const results = [];
 
     for(const subject of subjects) {
-      const teachersAmount = (await this.getSubjectTeachers(subject.id)).length;
+      const amount = await this.subjectRepository.countTeachers(subject.id);
       results.push({
         id: subject.id,
         name: subject.name,
-        amount: teachersAmount,
+        amount,
       });
     }
 
-    return {
-      subjects: results,
-    };
+    return results;
   }
 
   async get(id: string) {
@@ -36,35 +38,23 @@ export class SubjectService {
 
   async getTeachers(id: string) {
     const subjectName = (await this.subjectRepository.getSubject(id)).name;
-    const teachers = this.getSubjectTeachers(id);
+    const dbTeachers = await this.subjectRepository.getTeachers(id);
+
+    const teachers = [];
+
+    for (const { disciplineTeachers, ...teacher } of dbTeachers) {
+      const roles = this.disciplineTeacherService.getUniqueRoles(disciplineTeachers);
+
+      teachers.push({
+        ...teacher,
+        roles,
+      });
+    }
+
     return {
       subjectName,
       teachers,
     };
-  }
-
-  async getSubjectTeachers(id: string) {
-    const  results = [];
-    const disciplines = await this.subjectRepository.getDisciplines(id);
-
-    for(const discipline of disciplines) {
-      const teachers = await this.disciplineService.getTeachers(discipline.id);
-
-      for (const teacher of teachers) {
-        const result = results.find((t) => t.id === teacher.id);
-        if (result) {
-          for (const role of teacher.roles) {
-            if (!result.roles.includes(role)) 
-              result.roles.push(role);
-          }
-        } else {
-          delete teacher.description;
-          delete teacher.disciplineTeacherId;
-          results.push(teacher);
-        }
-      }
-    }
-    return results;
   }
 
   async create({ name }: CreateSubjectDTO) {
@@ -72,7 +62,7 @@ export class SubjectService {
   }
 
   async update(id: string, body: UpdateSubjectDTO) {
-    await this.subjectRepository.update(id, body);
+    return this.subjectRepository.update(id, body);
   }
 
   async deleteSubject(id: string) {

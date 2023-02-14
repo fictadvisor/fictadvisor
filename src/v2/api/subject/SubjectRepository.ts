@@ -51,7 +51,7 @@ export class SubjectRepository {
     const page = DatabaseUtils.getPage(body);
     const sort = DatabaseUtils.getSort(body);
 
-    return await this.prisma.subject.findMany({
+    return this.prisma.subject.findMany({
       ...page,
       ...sort,
       where: {
@@ -60,23 +60,24 @@ export class SubjectRepository {
     });
   }
 
-  async getDisciplines(id: string) {
-    const subject = await this.get(id);
-    return subject.disciplines;
-  }
-
   async getSubject(id: string) {
-    const subject = await this.get(id);
-    delete subject.disciplines;
-    return subject;
+    return this.prisma.subject.findUnique({
+      where: {
+        id,
+      },
+    });
   }
 
   async update(id: string, data: UpdateSubjectDTO) {
-    return await this.prisma.subject.update({
+    return this.prisma.subject.update({
       where: {
         id,
       },
       data,
+      select: {
+        id: true,
+        name: true,
+      },
     });
   }
 
@@ -84,6 +85,46 @@ export class SubjectRepository {
     return this.prisma.subject.delete({
       where: {
         id,
+      },
+    });
+  }
+
+  countTeachers(subjectId: string) {
+    return this.prisma.teacher.count({
+      where: {
+        disciplineTeachers: {
+          some: {
+            discipline: {
+              subjectId,
+            },
+          },
+        },
+      },
+    });
+  }
+
+  getTeachers(subjectId: string) {
+    return this.prisma.teacher.findMany({
+      where: {
+        disciplineTeachers: {
+          some: {
+            discipline: {
+              subjectId,
+            },
+          },
+        },
+      },
+      select: {
+        id: true,
+        firstName: true,
+        middleName: true,
+        lastName: true,
+        avatar: true,
+        disciplineTeachers: {
+          include: {
+            roles: true,
+          },
+        },
       },
     });
   }

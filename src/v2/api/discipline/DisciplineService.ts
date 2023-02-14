@@ -41,27 +41,8 @@ export class DisciplineService {
     });
   }
 
-  async getSelective(studentId: string) {
-    const selectiveDisciplines = await this.prisma.selectiveDiscipline.findMany({
-      where: {
-        studentId,
-      },
-      include: {
-        discipline: true,
-      },
-    });
-
-    return selectiveDisciplines.map((sd) => sd.discipline);
-  }
-
   async getTeachers(id: string) {
-    const results = [];
-
     const disciplineTeachers = await this.disciplineRepository.getDisciplineTeachers(id);
-    for (const disciplineTeacher of disciplineTeachers) {
-      results.push(await this.disciplineTeacherService.getDisciplineTeacher(disciplineTeacher.id));
-    }
-
-    return results;
+    return this.disciplineTeacherService.getTeachers(disciplineTeachers);
   }
 }

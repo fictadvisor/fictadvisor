@@ -27,7 +27,7 @@ export abstract class GroupByLessonGuard extends GroupGuard {
     if (!disciplineType) return null;
     const discipline = await this.disciplineService.get(disciplineType.disciplineId);
 
-    return await this.groupService.get(discipline.groupId);
+    return discipline.group;
   }
 
   abstract getDisciplineType(lessonId: string): Promise<DisciplineType>;

@@ -27,10 +27,12 @@ export class TeacherController {
   }
 
   @Get('/:teacherId/roles')
-  getTeacherRoles(
+  async getTeacherRoles(
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
   ) {
-    return this.teacherService.getTeacherRoles(teacherId);
+    const roles = await this.teacherService.getTeacherRoles(teacherId);
+
+    return { roles };
   }
 
   @Get('/:teacherId')
@@ -66,10 +68,11 @@ export class TeacherController {
   }
 
   @Get('/:teacherId/contacts')
-  getAllContacts(
+  async getAllContacts(
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
   ) {
-    return this.teacherService.getAllContacts(teacherId);
+    const contacts = await this.teacherService.getAllContacts(teacherId);
+    return { contacts };
   }
 
   @Get('/:teacherId/contacts/:name')

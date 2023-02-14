@@ -69,7 +69,9 @@ export class GroupController {
   async getStudents(
     @Param('groupId', GroupByIdPipe) groupId: string,
   ){
-    return this.groupService.getStudents(groupId);
+    const students = await this.groupService.getStudents(groupId);
+
+    return { students };
   }
   @Permission('groups.$groupId.captain.get')
   @UseGuards(JwtGuard, PermissionGuard)
@@ -148,7 +150,9 @@ export class GroupController {
   async getUnverifiedStudents(
       @Param('groupId', GroupByIdPipe) groupId: string,
   ){
-    return this.groupService.getUnverifiedStudents(groupId);
+    const students = await this.groupService.getUnverifiedStudents(groupId);
+
+    return { students };
   }
 
 }

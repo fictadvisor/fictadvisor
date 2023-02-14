@@ -114,10 +114,11 @@ export class UserController {
   @Permission('users.$userId.contacts.get')
   @UseGuards(JwtGuard, PermissionGuard)
   @Get('/:userId/contacts')
-  getContacts(
+  async getContacts(
     @Param('userId', UserByIdPipe) userId: string,
   ){
-    return this.userService.getContacts(userId);
+    const contacts = await this.userService.getContacts(userId);
+    return { contacts };
   }
 
   @Permission('users.$userId.contacts.create')
@@ -173,7 +174,7 @@ export class UserController {
   getUserForTelegram(
     @Param('userId', UserByIdPipe) userId: string,
   ){
-    return this.userService.getUserForTelegram(userId);
+    return this.userService.getUser(userId);
   }
 
   @Permission('users.$userId.get')

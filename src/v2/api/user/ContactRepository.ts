@@ -16,17 +16,24 @@ export class ContactRepository {
       where: {
         entityId,
       },
+      select: {
+        id: true,
+        name: true,
+        value: true,
+      },
     });
   }
 
-  async getContact(
-    entityId: string,
-    name: string,
-  ) {
+  async getContact(entityId: string, name: string) {
     return this.prisma.contact.findFirst({
       where: {
         entityId,
         name,
+      },
+      select: {
+        id: true,
+        name: true,
+        value: true,
       },
     });
   }

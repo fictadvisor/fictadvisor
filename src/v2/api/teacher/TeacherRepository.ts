@@ -6,26 +6,11 @@ import { CreateTeacherDTO } from './dto/CreateTeacherDTO';
 import { UpdateTeacherDTO } from './dto/UpdateTeacherDTO';
 
 
-
 @Injectable()
 export class TeacherRepository {
   constructor(
     private prisma: PrismaService,
   ) {}
-
-  async get(
-    id: string,
-  ) {
-    return this.prisma.teacher.findUnique({
-      where: {
-        id,
-      },
-      include: {
-        disciplineTeachers: true,
-        temporaryLessons: true,
-      },
-    });
-  }
 
   async getAll(
     body: QueryAllDTO,
@@ -46,24 +31,29 @@ export class TeacherRepository {
   async getTeacher(
     id: string,
   ) {
-    const teacher = await this.get(id);
-    delete teacher.disciplineTeachers;
-    delete teacher.temporaryLessons;
-    return teacher;
-  }
-
-  async getDisciplineTeachers(
-    id: string,
-  ) {
-    const teacher = await this.get(id);
-    return teacher.disciplineTeachers;
-  }
-
-  async getTemporaryLessons(
-    id: string,
-  ) {
-    const teacher = await this.get(id);
-    return teacher.temporaryLessons;
+    return this.prisma.teacher.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        firstName: true,
+        middleName: true,
+        lastName: true,
+        description: true,
+        avatar: true,
+        disciplineTeachers: {
+          select: {
+            id: true,
+            roles: {
+              select: {
+                role: true,
+              },
+            },
+          },
+        },
+      },
+    });
   }
 
   async delete(
@@ -92,15 +82,20 @@ export class TeacherRepository {
     });
   }
 
-  async update(
-    id: string,
-    data: UpdateTeacherDTO,
-  ) {
+  async update(id: string, data: UpdateTeacherDTO) {
     return this.prisma.teacher.update({
-      where:{
+      where: {
         id,
       },
       data,
+      select: {
+        id: true,
+        firstName: true,
+        middleName: true,
+        lastName: true,
+        description: true,
+        avatar: true,
+      },
     });
   }
 

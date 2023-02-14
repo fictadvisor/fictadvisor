@@ -46,33 +46,92 @@ export class GroupRepository {
   }
 
   async getGroup(id: string) {
-    const group = await this.get(id);
-    delete group.disciplines;
-    delete group.students;
-    delete group.groupRoles;
-    return group;
+    return this.prisma.group.findUnique({
+      where: {
+        id,
+      },
+    });
   }
 
-  async getDisciplines(id: string) {
-    const group = await this.get(id);
-    return group.disciplines;
+  async getDisciplines(groupId: string) {
+    return this.prisma.discipline.findMany({
+      where: {
+        groupId,
+      },
+      select: {
+        id: true,
+        isSelective: true,
+        year: true,
+        semester: true,
+        subject: true,
+        group: true,
+        disciplineTypes: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        disciplineTeachers: {
+          select: {
+            id: true,
+            teacher: {
+              select: {
+                id: true,
+                firstName: true,
+                middleName: true,
+                lastName: true,
+                avatar: true,
+              },
+            },
+            roles: {
+              select: {
+                role: true,
+              },
+            },
+          },
+        },
+      },
+    });
   }
 
-  async getStudents(id: string) {
-    const group = await this.get(id);
-    return group.students;
+  async getStudents(groupId: string) {
+    return this.prisma.student.findMany({
+      where: {
+        groupId,
+      },
+      select: {
+        firstName: true,
+        middleName: true,
+        lastName: true,
+        user: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+            telegramId: true,
+            avatar: true,
+            state: true,
+          },
+        },
+        group: true,
+        roles: {
+          select: {
+            role: true,
+          },
+        },
+        state: true,
+      },
+    });
   }
 
   async getRoles(groupId: string) {
-    const groupRoles = await this.prisma.groupRole.findMany({
-      where:{
-        groupId,
-      },
-      include:{
-        role: true,
+    return this.prisma.role.findMany({
+      where: {
+        groupRole: {
+          groupId,
+        },
       },
     });
-    return groupRoles.map((gr) => (gr.role));
   }
 
   async find(code: string) {
@@ -105,6 +164,10 @@ export class GroupRepository {
         id,
       },
       data,
+      select: {
+        id: true,
+        code: true,
+      },
     });
   }
 }

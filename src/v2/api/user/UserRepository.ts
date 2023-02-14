@@ -78,6 +78,13 @@ export class UserRepository {
         id,
       },
       data,
+      select: {
+        id: true,
+        email: true,
+        username: true,
+        avatar: true,
+        telegramId: true,
+      },
     });
   }
 }

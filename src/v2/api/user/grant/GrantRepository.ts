@@ -15,6 +15,12 @@ export class GrantRepository {
     });
   }
 
+  createMany(data: CreateGrantData[]) {
+    return this.prisma.grant.createMany({
+      data,
+    });
+  }
+
   async find(where: CreateGrantData) {
     return this.prisma.grant.findFirst({
       where,
@@ -35,6 +41,12 @@ export class GrantRepository {
         id,
       },
       data,
+      select: {
+        id: true,
+        roleId: true,
+        permission: true,
+        set: true,
+      },
     });
   }
 }

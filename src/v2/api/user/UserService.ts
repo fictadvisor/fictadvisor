@@ -9,10 +9,11 @@ import { UserRepository } from "./UserRepository";
 import { ContactRepository } from "./ContactRepository";
 import { UpdateUserDTO } from "./dto/UpdateUserDTO";
 import { CreateContactDTO } from "./dto/CreateContactDTO";
-import { EntityType, State } from "@prisma/client";
+import { EntityType, Role, State } from "@prisma/client";
 import { UpdateContactDTO } from "./dto/UpdateContactDTO";
 import { UpdateStudentDTO } from "./dto/UpdateStudentDTO";
 import { CreateSuperheroDTO } from './dto/CreateSuperheroDTO';
+import { StudentWithUser } from "./dto/StudentDTOs";
 import { AuthService } from '../auth/AuthService';
 import { GroupRequestDTO } from './dto/GroupRequestDTO';
 
@@ -36,14 +37,14 @@ export class UserService {
   }
 
   async getSelective(studentId: string) {
-    return this.disciplineService.getSelective(studentId);
+    return this.studentRepository.getSelective(studentId);
   }
 
 
   async hasPermission(userId: string, permission: string) {
     const roles = await this.studentRepository.getRoles(userId);
     for (const role of roles) {
-      const hasRight = this.roleService.hasPermission(role.id, permission);
+      const hasRight = this.roleService.hasPermission(role.grants, permission);
       if (hasRight) return true;
     }
 
@@ -57,7 +58,7 @@ export class UserService {
     return await this.studentRepository.getGroupByRole(id);
   }
 
-  async getGroupRole(userId: string) {
+  async getGroupRoleDB(userId: string) {
     const roles = await this.studentRepository.getRoles(userId);
     const role = roles.find((r) => r.name == 'CAPTAIN' || r.name == 'MODERATOR' || r.name == 'STUDENT');
     const group = await this.getGroupByRole(role.id);
@@ -67,30 +68,35 @@ export class UserService {
     };
   }
 
+  getGroupRole(roles: { role: Role }[]) {
+    const groupRole = roles.find((r) => r.role.name == 'CAPTAIN' || r.role.name == 'MODERATOR' || r.role.name == 'STUDENT');
+    return groupRole.role;
+  }
+
   async removeRole(id: string, roleId: string) {
     await this.studentRepository.removeRole(id, roleId);
   }
 
   async updateStudent(userId: string, data: UpdateStudentDTO) {
-    await this.studentRepository.update(userId, data);
+    return this.studentRepository.update(userId, data);
   }
 
   async updateSuperhero(userId: string, data: UpdateSuperheroData) {
-    await this.superheroRepository.updateSuperhero(userId, data);
+    return this.superheroRepository.updateSuperhero(userId, data);
   }
 
   async requestNewGroup(id: string, { groupId, isCaptain }: GroupRequestDTO) {
-    const user = await this.userRepository.get(id);
-    if(user.state === State.APPROVED)
+    const student = await this.studentRepository.get(id);
+    if(student.state === State.APPROVED)
       throw new ForbiddenException();
-
-    await this.studentRepository.update(id, { state: State.PENDING }); 
-    const student = {
-      firstName: user.student.firstName,
-      middleName: user.student.middleName,
-      lastName: user.student.lastName,
+    
+    await this.studentRepository.update(id, { state: State.PENDING });
+    const name = {
+      firstName: student.firstName,
+      middleName: student.middleName,
+      lastName: student.lastName,
     };
-    await this.authService.verify(user, { groupId, isCaptain, ...student });
+    await this.authService.verify(student.user, { groupId, isCaptain, ...name });
   }
 
   async deleteUser(userId: string) {
@@ -98,7 +104,7 @@ export class UserService {
   }
 
   async updateUser(userId: string, data: UpdateUserDTO) {
-    await this.userRepository.update(userId, data);
+    return this.userRepository.update(userId, data);
   }
 
   async getContacts(userId: string) {
@@ -115,6 +121,7 @@ export class UserService {
 
   async updateContact(userId: string, name: string, data: UpdateContactDTO) {
     await this.contactRepository.updateContact(userId, name, data);
+    return this.contactRepository.getContact(userId, name);
   }
 
   async deleteContact(userId: string, name: string) {
@@ -125,34 +132,22 @@ export class UserService {
     await this.studentRepository.delete(userId);
   }
 
-  async getUserForTelegram(userId: string) {
-    const { student: { group, ...student }, ...user } = await this.userRepository.get(userId);
-
+  getStudent(student: StudentWithUser) {
     return {
-      id: user.id,
+      id: student.user.id,
+      username: student.user.username,
+      email: student.user.email,
       firstName: student.firstName,
-      middleName: student.middleName,
       lastName: student.lastName,
-      groupCode: group.code,
-      email: user.email,
-      username: user.username,
-      avatar: user.avatar,
+      middleName: student.middleName,
+      avatar: student.user.avatar,
+      telegramId: student.user.telegramId,
     };
   }
 
   async getUser(userId: string) {
-    const { id, username, email, avatar, telegramId,
-      student: { firstName, lastName, middleName },
-    } = await this.userRepository.get(userId);
-    return {
-      id,
-      username,
-      email,
-      firstName,
-      lastName,
-      middleName,
-      avatar,
-      telegramId,
-    };
+    const student = await this.studentRepository.get(userId);
+
+    return this.getStudent(student);
   }
 }

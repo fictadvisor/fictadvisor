@@ -9,32 +9,6 @@ export class DisciplineTeacherRoleRepository {
     private prisma: PrismaService,
   ) {}
 
-  async getDisciplineTeachers(disciplineTypeId: string) {
-    const roles = await this.prisma.disciplineTeacherRole.findMany({
-      where: {
-        disciplineTypeId,
-      },
-      include: {
-        disciplineTeacher: true,
-      },
-    });
-
-    return roles.map((r) => ({ role: r.role, ...r.disciplineTeacher }));
-  }
-
-  async getTypes(disciplineTeacherId: string) {
-    const roles = await this.prisma.disciplineTeacherRole.findMany({
-      where: {
-        disciplineTeacherId,
-      },
-      include: {
-        disciplineType: true,
-      },
-    });
-
-    return roles.map((r) => ({ role: r.role, ...r.disciplineType }));
-  }
-
   async find(data: CreateDisciplineTeacherRoleData) {
     return this.prisma.disciplineTeacherRole.findFirst({
       where: data,

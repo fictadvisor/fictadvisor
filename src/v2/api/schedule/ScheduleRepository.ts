@@ -139,4 +139,75 @@ export class ScheduleRepository {
     return lesson;
   }
 
+  async getDiscipline(id: string) {
+    return this.prisma.discipline.findFirst({
+      where: {
+        disciplineTypes: {
+          some: {
+            lessons: {
+              some: {
+                id,
+              },
+            },
+          },
+        },
+      },
+      select: {
+        id: true,
+        group: true,
+        subject: true,
+        year: true,
+        semester: true,
+        isSelective: true,
+        resource: true,
+        evaluatingSystem: true,
+        disciplineTeachers: {
+          where: {
+            roles: {
+              some: {
+                disciplineType: {
+                  lessons: {
+                    some: {
+                      id,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          select: {
+            id: true,
+            teacher: {
+              select: {
+                id: true,
+                firstName: true,
+                middleName: true,
+                lastName: true,
+                avatar: true,
+                description: true,
+              },
+            },
+            roles: {
+              select: {
+                role: true,
+              },
+            },
+          },
+        },
+        disciplineTypes: {
+          where: {
+            lessons: {
+              some: {
+                id,
+              },
+            },
+          },
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+  }
 }

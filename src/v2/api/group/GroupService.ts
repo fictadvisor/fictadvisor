@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import { Group, RoleName, State, User } from '@prisma/client';
+import { Group, Role, RoleName, State, User } from '@prisma/client';
 import { DisciplineService } from '../discipline/DisciplineService';
 import { DisciplineRepository } from '../discipline/DisciplineRepository';
 import { GroupRepository } from './GroupRepository';
@@ -13,11 +13,13 @@ import { NoPermissionException } from "../../utils/exceptions/NoPermissionExcept
 import { RoleDTO } from "./dto/RoleDTO";
 import { UpdateGroupDTO } from "./dto/UpdateGroupDTO";
 import { UserService } from '../user/UserService';
+import { DisciplineTeacherService } from "../teacher/DisciplineTeacherService";
 
 @Injectable()
 export class GroupService {
   constructor(
     private disciplineService: DisciplineService,
+    private disciplineTeacherService: DisciplineTeacherService,
     private disciplineRepository: DisciplineRepository,
     private groupRepository: GroupRepository,
     private prisma: PrismaService,
@@ -39,27 +41,28 @@ export class GroupService {
   }
 
   async getDisciplineTeachers(groupId: string) {
-    const disciplines = await this.getDisciplines(groupId);
+    const disciplines = await this.groupRepository.getDisciplines(groupId);
 
-    for (const discipline of disciplines) {
-      discipline.teachers = await this.disciplineService.getTeachers(discipline.id);
-    }
-
-    return disciplines;
+    return disciplines.map((d) => ({
+      id: d.id,
+      subject: d.subject,
+      year: d.year,
+      semester: d.semester,
+      isSelective: d.isSelective,
+      teachers: this.disciplineTeacherService.getTeachers(d.disciplineTeachers),
+    }));
   }
 
   async getDisciplines(groupId: string) {
     const disciplines = await this.groupRepository.getDisciplines(groupId);
-    const results = [];
-    for (const discipline of disciplines) {
-      const subject = await this.disciplineRepository.getSubject(discipline.id);
-      results.push({
-        id: discipline.id,
-        subjectName: subject.name,
-      });
-    }
 
-    return results;
+    return disciplines.map((d) => ({
+      id: d.id,
+      subject: d.subject,
+      year: d.year,
+      semester: d.semester,
+      isSelective: d.isSelective,
+    }));
   }
 
   async addUnregistered(groupId: string, body: EmailDTO) {
@@ -79,14 +82,15 @@ export class GroupService {
     return { users };
   }
 
-  async verifyStudent(groupId: string, userId: string, data: ApproveDTO){
+  async verifyStudent(groupId: string, userId: string, data: ApproveDTO) {
     const user = await this.userRepository.get(userId);
 
     if (user.student.groupId !== groupId) {
       throw new NoPermissionException();
     }
 
-    await this.studentRepository.update(user.id, data);
+    const verifiedStudent = await this.studentRepository.update(user.id, data);
+    return this.userService.getStudent(verifiedStudent);
   }
 
   async moderatorSwitch(groupId: string, userId: string, body: RoleDTO){
@@ -101,17 +105,17 @@ export class GroupService {
 
     const roles = await this.groupRepository.getRoles(groupId);
     const role = roles.find((r) => r.name === body.roleName);
-    const userRole = await this.userService.getGroupRole(userId);
+    const userRole = await this.userService.getGroupRoleDB(userId);
 
     await this.studentRepository.removeRole(userId, userRole.id);
     await this.studentRepository.addRole(userId, role.id);
   }
 
   async removeStudent(groupId: string, userId: string, reqUser: User) {
-    const userRole = await this.userService.getGroupRole(userId);
-    const reqUserRole = await this.userService.getGroupRole(reqUser.id);
+    const userRole = await this.userService.getGroupRoleDB(userId);
+    const reqUserRole = await this.userService.getGroupRoleDB(reqUser.id);
 
-    if(reqUserRole.weight <= userRole.weight) {
+    if (reqUserRole.weight <= userRole.weight) {
       throw new NoPermissionException();
     }
     if (userRole.groupId !== groupId) {
@@ -123,13 +127,16 @@ export class GroupService {
 
   async getCaptain(groupId: string) {
     const students = await this.groupRepository.getStudents(groupId);
-    for (const student of students) {
-      const roles = await this.studentRepository.getRoles(student.userId);
-      if (roles.some((r) => r.name === RoleName.CAPTAIN)) {
-        return this.userService.getUser(student.userId);
-      }
-    }
-    return null;
+
+    const student = students.find(({ roles }) => {
+      return roles.some((r) => this.checkRole(RoleName.CAPTAIN, r));
+    });
+
+    return student?.user;
+  }
+
+  checkRole(name: RoleName, role: { role: Role }) {
+    return role.role.name === name;
   }
 
   async deleteGroup(groupId: string) {
@@ -137,39 +144,23 @@ export class GroupService {
   }
 
   async getStudents(groupId: string) {
-    let students = await this.groupRepository.getStudents(groupId);
-    students = students.filter((st) => st.state === State.APPROVED);
-    const results = [];
-    for (const student of students) {
-      const role = await this.userService.getGroupRole(student.userId);
-      const user = await this.userService.getUser(student.userId);
-      results.push({
-        ...user,
-        role: role.name,
-      });
-    }
-    return { students: results };
+    const students = await this.groupRepository.getStudents(groupId);
+    return students
+      .filter((st) => st.state === State.APPROVED)
+      .map((s) => ({
+        ...this.userService.getStudent(s),
+        role: this.userService.getGroupRole(s.roles),
+      }));
   }
 
   async updateGroup(groupId: string, body: UpdateGroupDTO){
-    await this.groupRepository.updateGroup(groupId, body);
+    return this.groupRepository.updateGroup(groupId, body);
   }
 
   async getUnverifiedStudents(groupId: string) {
-    let students = await this.groupRepository.getStudents(groupId);
-    students = students.filter((st) => st.state === State.PENDING);
-    const results = [];
-    for (const student of students) {
-      const user = await this.userRepository.get(student.userId);
-      results.push({
-        firstName: student.firstName,
-        middleName: student.middleName,
-        lastName: student.lastName,
-        email: user.email,
-        avatar: user.avatar,
-        id: user.id,
-      });
-    }
-    return { students: results };
+    const students = await this.groupRepository.getStudents(groupId);
+    return students
+      .filter((s) => s.state === State.PENDING)
+      .map((s) => this.userService.getStudent(s));
   }
 }

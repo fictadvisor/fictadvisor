@@ -9,54 +9,88 @@ export class DisciplineRepository {
     private prisma: PrismaService,
   ) {}
 
-  async get(id: string) {
+  async getDiscipline(id: string) {
     return this.prisma.discipline.findUnique({
       where: {
         id,
       },
-      include: {
+      select: {
+        id: true,
         group: true,
-        disciplineTypes: true,
-        selectiveDisciplines: true,
         subject: true,
-        disciplineTeachers: true,
+        year: true,
+        semester: true,
+        isSelective: true,
+        evaluatingSystem: true,
+        resource: true,
       },
     });
   }
 
-  async getDiscipline(id: string) {
-    const discipline = await this.get(id);
-    delete discipline.group;
-    delete discipline.subject;
-    delete discipline.disciplineTypes;
-    delete discipline.selectiveDisciplines;
-    delete discipline.disciplineTeachers;
-    return discipline;
-  }
-
-  async getSubject(id: string) {
-    const discipline = await this.get(id);
-    return discipline.subject;
-  }
-
   async getGroup(id: string) {
-    const discipline = await this.get(id);
-    return discipline.group;
+    return this.prisma.group.findFirst({
+      where: {
+        disciplines: {
+          some: {
+            id,
+          },
+        },
+      },
+    });
   }
 
-  async getTypes(id: string) {
-    const discipline = await this.get(id);
-    return discipline.disciplineTypes;
-  }
-
-  async getSelective(id: string) {
-    const discipline = await this.get(id);
-    return discipline.selectiveDisciplines;
+  async getUserSelective(disciplineId: string) {
+    return this.prisma.student.findMany({
+      where: {
+        selectiveDisciplines: {
+          some: {
+            disciplineId,
+          },
+        },
+      },
+      select: {
+        firstName: true,
+        middleName: true,
+        lastName: true,
+        user: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+            telegramId: true,
+            avatar: true,
+          },
+        },
+        group: true,
+      },
+    });
   }
 
   async getDisciplineTeachers(id: string) {
-    const discipline = await this.get(id);
-    return discipline.disciplineTeachers;
+    return this.prisma.disciplineTeacher.findMany({
+      where: {
+        discipline: {
+          id,
+        },
+      },
+      select: {
+        id: true,
+        teacher: {
+          select: {
+            id: true,
+            firstName: true,
+            middleName: true,
+            lastName: true,
+            avatar: true,
+          },
+        },
+        roles: {
+          select: {
+            role: true,
+          },
+        },
+      },
+    });
   }
 
   async find(where: CreateDisciplineDTO) {

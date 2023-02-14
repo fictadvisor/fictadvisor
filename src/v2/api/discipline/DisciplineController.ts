@@ -3,6 +3,8 @@ import { DisciplineService } from './DisciplineService';
 import { CreateDisciplineDTO } from './dto/CreateDisciplineDTO';
 import { JwtGuard } from '../../security/JwtGuard';
 import { GroupByDisciplineGuard } from '../../security/group-guard/GroupByDisciplineGuard';
+import { PermissionGuard } from "../../security/permission-guard/PermissionGuard";
+import { Permission } from "../../security/permission-guard/Permission";
 
 @Controller({
   version: '2',
@@ -27,12 +29,14 @@ export class DisciplineController {
     return this.disciplineService.makeSelective(req.user, disciplineId);
   }
 
-  @UseGuards(JwtGuard, GroupByDisciplineGuard)
+  @Permission('groups.$groupId.disciplines.teachers.get')
+  @UseGuards(JwtGuard, GroupByDisciplineGuard, PermissionGuard)
   @Get('/:disciplineId/teachers')
   async getAllByDiscipline(
     @Param('disciplineId') disciplineId: string
   ) {
-    return this.disciplineService.getTeachers(disciplineId);
+    const teachers = await this.disciplineService.getTeachers(disciplineId);
+    return { teachers };
   }
 
 }

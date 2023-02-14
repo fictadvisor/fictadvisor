@@ -32,6 +32,6 @@ export class GrantService {
   }
 
   async update(grantId: string, body: UpdateGrantDTO) {
-    await this.grantRepository.update(grantId, body);
+    return this.grantRepository.update(grantId, body);
   }
 }

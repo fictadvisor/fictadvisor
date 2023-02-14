@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import { CreateDisciplineTeacherData } from './dto/CreateDisciplineTeacherData';
+import { CreateDisciplineTeacherData } from './data/CreateDisciplineTeacherData';
+import { TeacherRole } from "@prisma/client";
+import { CreateDisciplineTeacherWithRolesData } from "./data/CreateDisciplineTeacherWithRolesData";
 
 @Injectable()
 export class DisciplineTeacherRepository {
@@ -8,51 +10,95 @@ export class DisciplineTeacherRepository {
     private prisma: PrismaService,
   ) {}
 
-  async get(id: string) {
+  async getDisciplineTeacher(id: string) {
     return this.prisma.disciplineTeacher.findUnique({
       where: {
         id,
       },
-      include: {
-        teacher: true,
-        roles: true,
-        questionAnswers: true,
-        discipline: true,
+      select: {
+        id: true,
+        teacher: {
+          select: {
+            id: true,
+            firstName: true,
+            middleName: true,
+            lastName: true,
+            avatar: true,
+          },
+        },
+        discipline: {
+          select: {
+            id: true,
+            year: true,
+            semester: true,
+            isSelective: true,
+            group: true,
+            subject: true,
+            evaluatingSystem: true,
+            resource: true,
+          },
+        },
+        roles: {
+          select: {
+            role: true,
+          },
+        },
       },
     });
   }
 
-  async getDisciplineTeacher(id: string) {
-    const disciplineTeacher = await this.get(id);
-    delete disciplineTeacher.teacher;
-    delete disciplineTeacher.roles;
-    delete disciplineTeacher.discipline;
-    return disciplineTeacher;
-  }
-
-  async getTeacher(id: string) {
-    const disciplineTeacher = await this.get(id);
-    return disciplineTeacher.teacher;
-  }
-
-  async getRoles(id: string) {
-    const disciplineTeacher = await this.get(id);
-    return disciplineTeacher.roles;
-  }
-
-  async getAnswers(id: string) {
-    const disciplineTeacher = await this.get(id);
-    return disciplineTeacher.questionAnswers;
-  }
-
   async getDiscipline(id: string) {
-    const disciplineTeacher = await this.get(id);
-    return disciplineTeacher.discipline;
+    return this.prisma.discipline.findFirst({
+      where: {
+        disciplineTeachers: {
+          some: {
+            id,
+          },
+        },
+      },
+      select: {
+        id: true,
+        subject: true,
+        group: true,
+        year: true,
+        semester: true,
+        disciplineTeachers: {
+          select: {
+            id: true,
+            teacher: {
+              select: {
+                id: true,
+                firstName: true,
+                middleName: true,
+                lastName: true,
+                avatar: true,
+              },
+            },
+            roles: {
+              select: {
+                role: true,
+              },
+            },
+          },
+        },
+      },
+    });
   }
 
   async create(data: CreateDisciplineTeacherData) {
     return this.prisma.disciplineTeacher.create({
       data,
+    });
+  }
+
+  async createWithRoles({ roles, ...data }: CreateDisciplineTeacherWithRolesData) {
+    return this.prisma.disciplineTeacher.create({
+      data: {
+        ...data,
+        roles: {
+          create: roles,
+        },
+      },
     });
   }
 
@@ -74,6 +120,37 @@ export class DisciplineTeacherRepository {
     return this.prisma.disciplineTeacher.delete({
       where: {
         id,
+      },
+    });
+  }
+
+  getQuestions(roles: TeacherRole[], disciplineRoles: TeacherRole[]) {
+    return this.prisma.question.findMany({
+      where: {
+        questionRoles: {
+          some: {
+            isShown: true,
+            role: {
+              in: roles,
+            },
+          },
+          none: {
+            isRequired: true,
+            role: {
+              notIn: disciplineRoles,
+            },
+          },
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        category: true,
+        criteria: true,
+        isRequired: true,
+        text: true,
+        type: true,
+        description: true,
       },
     });
   }

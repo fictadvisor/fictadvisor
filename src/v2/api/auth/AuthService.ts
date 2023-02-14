@@ -121,7 +121,7 @@ export class AuthService {
     await this.requestEmailVerification(user.email);
   }
 
-  async verify({ id, telegramId }: User, { groupId, isCaptain, middleName, ...student }: StudentDTO) {
+  async verify({ id, telegramId }: { id: string, telegramId: number }, { groupId, isCaptain, middleName, ...student }: StudentDTO) {
     const group = await this.groupRepository.getGroup(groupId);
     const data = {
       id,
@@ -282,11 +282,12 @@ export class AuthService {
 
     this.verifyEmailTokens.delete(token);
 
-    const { id } = await this.roleService.createRole({
-      grants: [{ permission : `users.${user.id}.*` }],
-      name: RoleName.USER,
-      weight: 10,
-    });
+    const { id } = await this.roleRepository.createWithGrants({
+        name: RoleName.USER,
+        weight: 10,
+      },
+      [{ permission : `users.${user.id}.*` }],
+    );
     await this.studentRepository.addRole(user.id, id);
     return this.getTokens(user);
   }
