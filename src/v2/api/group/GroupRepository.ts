@@ -164,6 +164,10 @@ export class GroupRepository {
         id,
       },
       data,
+      select: {
+        id: true,
+        code: true,
+      },
     });
   }
 }

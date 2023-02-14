@@ -97,6 +97,10 @@ export class SubjectRepository {
         id,
       },
       data,
+      select: {
+        id: true,
+        name: true,
+      },
     });
   }
 

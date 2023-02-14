@@ -78,11 +78,11 @@ export class UserService {
   }
 
   async updateStudent(userId: string, data: UpdateStudentDTO) {
-    await this.studentRepository.update(userId, data);
+    return this.studentRepository.update(userId, data);
   }
 
   async updateSuperhero(userId: string, data: UpdateSuperheroData) {
-    await this.superheroRepository.updateSuperhero(userId, data);
+    return this.superheroRepository.updateSuperhero(userId, data);
   }
 
   async requestNewGroup(id: string, { groupId, isCaptain }: GroupRequestDTO) {
@@ -104,7 +104,7 @@ export class UserService {
   }
 
   async updateUser(userId: string, data: UpdateUserDTO) {
-    await this.userRepository.update(userId, data);
+    return this.userRepository.update(userId, data);
   }
 
   async getContacts(userId: string) {
@@ -121,6 +121,7 @@ export class UserService {
 
   async updateContact(userId: string, name: string, data: UpdateContactDTO) {
     await this.contactRepository.updateContact(userId, name, data);
+    return this.contactRepository.getContact(userId, name);
   }
 
   async deleteContact(userId: string, name: string) {

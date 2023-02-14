@@ -82,14 +82,15 @@ export class GroupService {
     return { users };
   }
 
-  async verifyStudent(groupId: string, userId: string, data: ApproveDTO){
+  async verifyStudent(groupId: string, userId: string, data: ApproveDTO) {
     const user = await this.userRepository.get(userId);
 
     if (user.student.groupId !== groupId) {
       throw new NoPermissionException();
     }
 
-    await this.studentRepository.update(user.id, data);
+    const verifiedStudent = await this.studentRepository.update(user.id, data);
+    return this.userService.getStudent(verifiedStudent);
   }
 
   async moderatorSwitch(groupId: string, userId: string, body: RoleDTO){
@@ -153,7 +154,7 @@ export class GroupService {
   }
 
   async updateGroup(groupId: string, body: UpdateGroupDTO){
-    await this.groupRepository.updateGroup(groupId, body);
+    return this.groupRepository.updateGroup(groupId, body);
   }
 
   async getUnverifiedStudents(groupId: string) {

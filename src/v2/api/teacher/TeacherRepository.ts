@@ -102,15 +102,20 @@ export class TeacherRepository {
     });
   }
 
-  async update(
-    id: string,
-    data: UpdateTeacherDTO,
-  ) {
+  async update(id: string, data: UpdateTeacherDTO) {
     return this.prisma.teacher.update({
-      where:{
+      where: {
         id,
       },
       data,
+      select: {
+        id: true,
+        firstName: true,
+        middleName: true,
+        lastName: true,
+        description: true,
+        avatar: true,
+      },
     });
   }
 

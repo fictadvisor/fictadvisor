@@ -62,7 +62,7 @@ export class SubjectService {
   }
 
   async update(id: string, body: UpdateSubjectDTO) {
-    await this.subjectRepository.update(id, body);
+    return this.subjectRepository.update(id, body);
   }
 
   async deleteSubject(id: string) {

@@ -41,6 +41,12 @@ export class GrantRepository {
         id,
       },
       data,
+      select: {
+        id: true,
+        roleId: true,
+        permission: true,
+        set: true,
+      },
     });
   }
 }

@@ -105,11 +105,33 @@ export class StudentRepository {
   }
 
   async update(userId: string, data: UpdateStudentData) {
-    await this.prisma.student.update({
+    return this.prisma.student.update({
       where: {
         userId,
       },
       data,
+      select: {
+        firstName: true,
+        middleName: true,
+        lastName: true,
+        user: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+            telegramId: true,
+            avatar: true,
+            state: true,
+          },
+        },
+        group: true,
+        roles: {
+          select: {
+            role: true,
+          },
+        },
+        state: true,
+      },
     });
   }
 

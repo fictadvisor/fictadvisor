@@ -33,8 +33,8 @@ export class PollService {
     await this.questionRepository.delete(id);
   }
 
-  async update(id: string, body: UpdateQuestionDTO){
-    await this.questionRepository.update(id, body);
+  async update(id: string, body: UpdateQuestionDTO) {
+    return this.questionRepository.update(id, body);
   }
 
   async getQuestion(id: string){

@@ -54,11 +54,8 @@ export class TeacherService {
     return this.teacherRepository.create(body);
   }
     
-  async update(
-    id: string,
-    body: UpdateTeacherDTO,
-  ) {  
-    await this.teacherRepository.update(id, body);
+  async update(id: string, body: UpdateTeacherDTO) {
+    return this.teacherRepository.update(id, body);
   }
 
   async delete(
@@ -95,14 +92,9 @@ export class TeacherService {
     });
   }
 
-  async updateContact(
-    entityId: string,
-    name: string,
-    body: UpdateContactDTO,
-  ) {
-    await this.contactRepository.updateContact(
-      entityId, name, body,
-    );
+  async updateContact(entityId: string, name: string, body: UpdateContactDTO) {
+    await this.contactRepository.updateContact(entityId, name, body);
+    return this.contactRepository.getContact(entityId, name);
   }
 
   async deleteContact(

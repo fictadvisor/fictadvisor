@@ -50,6 +50,14 @@ export class QuestionRepository {
         id,
       },
       data,
+      select: {
+        id: true,
+        category: true,
+        name: true,
+        description: true,
+        text: true,
+        criteria: true,
+      },
     });
   }
 
