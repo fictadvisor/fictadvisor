@@ -56,26 +56,6 @@ export class TeacherRepository {
     });
   }
 
-  async getDisciplineTeachers(
-    teacherId: string,
-  ) {
-    return this.prisma.disciplineTeacher.findMany({
-      where: {
-        teacherId,
-      },
-    });
-  }
-
-  async getTemporaryLessons(
-    teacherId: string,
-  ) {
-    return this.prisma.temporaryLesson.findMany({
-      where: {
-        teacherId,
-      },
-    });
-  }
-
   async delete(
     id: string,
   ) {

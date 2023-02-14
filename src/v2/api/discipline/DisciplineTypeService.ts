@@ -17,14 +17,9 @@ export class DisciplineTypeService {
     private teacherService: TeacherService
   ) {}
 
-  async getTeachers(id: string) {
-    const teachers = await this.disciplineTypeRepository.getDisciplineTeachers(id);
-    return this.disciplineTeacherService.getTeachers(teachers);
-  }
-
   async getGroup(id: string) {
     const discipline = await this.disciplineTypeRepository.getDiscipline(id);
-    return this.disciplineRepository.getGroup(discipline.id);
+    return discipline.group;
   }
 
 

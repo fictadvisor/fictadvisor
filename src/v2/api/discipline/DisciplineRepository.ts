@@ -9,39 +9,20 @@ export class DisciplineRepository {
     private prisma: PrismaService,
   ) {}
 
-  async get(id: string) {
+  async getDiscipline(id: string) {
     return this.prisma.discipline.findUnique({
       where: {
         id,
       },
-      include: {
+      select: {
+        id: true,
         group: true,
-        disciplineTypes: true,
-        selectiveDisciplines: true,
         subject: true,
-        disciplineTeachers: true,
-      },
-    });
-  }
-
-  async getDiscipline(id: string) {
-    const discipline = await this.get(id);
-    delete discipline.group;
-    delete discipline.subject;
-    delete discipline.disciplineTypes;
-    delete discipline.selectiveDisciplines;
-    delete discipline.disciplineTeachers;
-    return discipline;
-  }
-
-  async getSubject(id: string) {
-    return this.prisma.subject.findFirst({
-      where: {
-        disciplines: {
-          some: {
-            id,
-          },
-        },
+        year: true,
+        semester: true,
+        isSelective: true,
+        evaluatingSystem: true,
+        resource: true,
       },
     });
   }
@@ -53,16 +34,6 @@ export class DisciplineRepository {
           some: {
             id,
           },
-        },
-      },
-    });
-  }
-
-  async getTypes(id: string) {
-    return this.prisma.disciplineType.findMany({
-      where: {
-        discipline: {
-          id,
         },
       },
     });

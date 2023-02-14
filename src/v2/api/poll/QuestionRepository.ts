@@ -78,18 +78,6 @@ export class QuestionRepository {
       },
     });
   }
-  async getQuestionsByRole(role: TeacherRole) {
-    const roles = await this.prisma.questionRole.findMany({
-      where: {
-        role,
-      },
-      select: {
-        question: true,
-      },
-    });
-
-    return roles.map((r) => r.question);
-  }
 
   createWithRoles({ roles, ...data }: CreateQuestionWithRolesData) {
     return this.prisma.question.create({

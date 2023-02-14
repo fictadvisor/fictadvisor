@@ -10,20 +10,6 @@ export class DisciplineTeacherRepository {
     private prisma: PrismaService,
   ) {}
 
-  async get(id: string) {
-    return this.prisma.disciplineTeacher.findUnique({
-      where: {
-        id,
-      },
-      include: {
-        teacher: true,
-        roles: true,
-        questionAnswers: true,
-        discipline: true,
-      },
-    });
-  }
-
   async getDisciplineTeacher(id: string) {
     return this.prisma.disciplineTeacher.findUnique({
       where: {
@@ -56,38 +42,6 @@ export class DisciplineTeacherRepository {
           select: {
             role: true,
           },
-        },
-      },
-    });
-  }
-
-  async getTeacher(id: string) {
-    return this.prisma.teacher.findFirst({
-      where: {
-        disciplineTeachers: {
-          some: {
-            id,
-          },
-        },
-      },
-    });
-  }
-
-  async getRoles(id: string) {
-    return this.prisma.disciplineTeacherRole.findMany({
-      where: {
-        disciplineTeacher: {
-          id,
-        },
-      },
-    });
-  }
-
-  async getAnswers(id: string) {
-    return this.prisma.questionAnswer.findMany({
-      where: {
-        disciplineTeacher: {
-          id,
         },
       },
     });
@@ -171,7 +125,6 @@ export class DisciplineTeacherRepository {
   }
 
   getQuestions(roles: TeacherRole[], disciplineRoles: TeacherRole[]) {
-
     return this.prisma.question.findMany({
       where: {
         questionRoles: {
