@@ -282,11 +282,12 @@ export class AuthService {
 
     this.verifyEmailTokens.delete(token);
 
-    const { id } = await this.roleService.createRole({
-      grants: [{ permission : `users.${user.id}.*` }],
-      name: RoleName.USER,
-      weight: 10,
-    });
+    const { id } = await this.roleRepository.createWithGrants({
+        name: RoleName.USER,
+        weight: 10,
+      },
+      [{ permission : `users.${user.id}.*` }],
+    );
     await this.studentRepository.addRole(user.id, id);
     return this.getTokens(user);
   }
