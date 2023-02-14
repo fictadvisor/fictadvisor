@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 
-import styles from 'styles/v2/local/components/Table.module.scss';
+import styles from './Table.module.scss';
 
 interface TableProps {
   fields: {
