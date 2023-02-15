@@ -345,3 +345,12 @@ model DateVar {
 
   @@map("date_vars")
 }
+
+model StudentResource {
+  id   String  @id @default(uuid())
+  link String
+  name String
+  icon String
+
+  @@map("student_resources")
+}
