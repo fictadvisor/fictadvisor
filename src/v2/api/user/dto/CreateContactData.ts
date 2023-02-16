@@ -4,5 +4,6 @@ export class CreateContactData {
     entityId: string;
     entityType: EntityType;
     name: string;
-    value: string;
+    displayName: string;
+    link: string;
   }

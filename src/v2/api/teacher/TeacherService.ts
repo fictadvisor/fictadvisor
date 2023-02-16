@@ -77,7 +77,7 @@ export class TeacherService {
     const contact = await this.contactRepository.getContact(teacherId, name);
     return {
       name: contact.name,
-      value: contact.value,
+      link: contact.link,
     };
   }
 
