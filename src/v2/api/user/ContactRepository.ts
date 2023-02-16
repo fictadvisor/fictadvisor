@@ -19,7 +19,8 @@ export class ContactRepository {
       select: {
         id: true,
         name: true,
-        value: true,
+        displayName: true,
+        link: true,
       },
     });
   }
@@ -33,7 +34,8 @@ export class ContactRepository {
       select: {
         id: true,
         name: true,
-        value: true,
+        displayName: true,
+        link: true,
       },
     });
   }
