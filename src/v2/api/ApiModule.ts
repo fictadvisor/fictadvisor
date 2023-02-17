@@ -7,6 +7,7 @@ import { SubjectModule } from './subject/SubjectModule';
 import { DisciplineModule } from './discipline/DisciplineModule';
 import { PollModule } from './poll/PollModule';
 import { ScheduleModule } from './schedule/ScheduleModule';
+import { ResourceModule } from './resources/ResourceModule';
 
 
 @Module({
@@ -19,6 +20,7 @@ import { ScheduleModule } from './schedule/ScheduleModule';
     DisciplineModule,
     PollModule,
     ScheduleModule,
+    ResourceModule,
   ],
 })
 export class ApiModule {}
