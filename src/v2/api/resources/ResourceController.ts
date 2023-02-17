@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { QueryAllDTO } from 'src/v2/utils/QueryAllDTO';
-import { ResourceService } from './ResourcesService';
+import { ResourceService } from './ResourceService';
 import { ResourceByIdPipe } from './ResourceByIdPipe';
 import { CreateResourceDTO } from './dto/CreateResourceDTO';
 import { UpdateResourceDTO } from './dto/UpdateResourceDTO';

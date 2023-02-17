@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { PrismaModule } from '../../database/PrismaModule';
-import { ResourceService } from './ResourcesService';
-import { ResourceController } from './ResourcesController';
+import { ResourceService } from './ResourceService';
+import { ResourceController } from './ResourceController';
 
 @Module({
   providers: [ResourceService],

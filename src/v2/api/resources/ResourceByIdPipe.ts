@@ -1,6 +1,6 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
-import { ResourceRepository } from './ResourcesRepository';
+import { ResourceRepository } from './ResourceRepository';
 
 @Injectable()
 export class ResourceByIdPipe implements PipeTransform {

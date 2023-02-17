@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { QueryAllDTO } from 'src/v2/utils/QueryAllDTO';
 import { CreateResourceDTO } from './dto/CreateResourceDTO';
 import { UpdateResourceDTO } from './dto/UpdateResourceDTO';
-import { ResourceRepository } from './ResourcesRepository';
+import { ResourceRepository } from './ResourceRepository';
 
 @Injectable()
 export class ResourceService {
