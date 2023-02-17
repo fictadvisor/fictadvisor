@@ -7,6 +7,7 @@ import { JwtGuard } from '../../security/JwtGuard';
 import { QueryAllDTO } from 'src/v2/utils/QueryAllDTO';
 import { Permission } from 'src/v2/security/permission-guard/Permission';
 import { PermissionGuard } from 'src/v2/security/permission-guard/PermissionGuard';
+import { Access } from 'src/v2/security/Access';
 
 @Controller({
   version: '2',
@@ -40,8 +41,7 @@ export class SubjectController {
     return this.subjectService.getTeachers(subjectId);
   }
 
-  @Permission('subjects.create')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('subjects.create')
   @Post()
   create(
     @Body() body: CreateSubjectDTO,
@@ -49,8 +49,7 @@ export class SubjectController {
     return this.subjectService.create(body);
   }
 
-  @Permission('subjects.update')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('subjects.update')
   @Patch('/:subjectId')
   async update(
     @Param('subjectId', SubjectByIdPipe) subjectId: string,
@@ -59,8 +58,7 @@ export class SubjectController {
     return this.subjectService.update(subjectId, body);
   }
 
-  @Permission('subjects.delete')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('subjects.delete')
   @Delete('/:subjectId')
   delete(
     @Param('subjectId', SubjectByIdPipe) subjectId: string,

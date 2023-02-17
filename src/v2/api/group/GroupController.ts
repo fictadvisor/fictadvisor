@@ -12,6 +12,7 @@ import { RoleDTO } from "./dto/RoleDTO";
 import { UserByIdPipe } from "../user/UserByIdPipe";
 import { QueryAllDTO } from '../../utils/QueryAllDTO';
 import { UpdateGroupDTO } from "./dto/UpdateGroupDTO";
+import { Access } from 'src/v2/security/Access';
 
 @Controller({
   version: '2',
@@ -22,8 +23,7 @@ export class GroupController {
     private groupService: GroupService
   ) {}
 
-  @Permission('groups.create')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('groups.create')
   @Post()
   create(@Body() body: CreateGroupDTO) {
     return this.groupService.create(body.code);
@@ -44,8 +44,7 @@ export class GroupController {
     return group;
   }
 
-  @Permission('groups.update')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('groups.update')
   @Patch()
   async update(
     @Param('groupId', GroupByIdPipe) groupId: string,
@@ -54,8 +53,7 @@ export class GroupController {
     return this.groupService.updateGroup(groupId, body);
   }
 
-  @Permission('groups.delete')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('groups.delete')
   @Delete('/:groupId')
   async deleteGroup(
     @Param('groupId', GroupByIdPipe) groupId: string,
@@ -63,8 +61,7 @@ export class GroupController {
     return this.groupService.deleteGroup(groupId);
   }
 
-  @Permission('groups.$groupId.students.get')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('groups.$groupId.students.get')
   @Get('/:groupId/students')
   async getStudents(
     @Param('groupId', GroupByIdPipe) groupId: string,
@@ -73,8 +70,8 @@ export class GroupController {
 
     return { students };
   }
-  @Permission('groups.$groupId.captain.get')
-  @UseGuards(JwtGuard, PermissionGuard)
+
+  @Access('groups.$groupId.captain.get')
   @Get('/:groupId/captain')
   async getCaptain(
     @Param('groupId', GroupByIdPipe) groupId: string,
@@ -82,8 +79,7 @@ export class GroupController {
     return this.groupService.getCaptain(groupId);
   }
 
-  @Permission('groups.$groupId.disciplines.teachers.get')
-  @UseGuards(JwtGuard)
+  @Access('groups.$groupId.disciplines.teachers.get')
   @Get('/:groupId/disciplineTeachers')
   async getDisciplineTeachers(
     @Param('groupId', GroupByIdPipe) groupId: string,
@@ -91,8 +87,7 @@ export class GroupController {
     return this.groupService.getDisciplineTeachers(groupId);
   }
 
-  @Permission('groups.$groupId.disciplines.get')
-  @UseGuards(JwtGuard)
+  @Access('groups.$groupId.disciplines.get')
   @Get('/:groupId/disciplines')
   async getDiscipline(
     @Param('groupId', GroupByIdPipe) groupId: string,
@@ -101,8 +96,7 @@ export class GroupController {
     return { disciplines };
   }
 
-  @Permission('groups.$groupId.students.add')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('groups.$groupId.students.add')
   @Post('/:groupId/addEmails')
   async addUnregistered(
     @Param('groupId', GroupByIdPipe) groupId: string,
@@ -111,8 +105,7 @@ export class GroupController {
     return this.groupService.addUnregistered(groupId, body);
   }
 
-  @Permission('groups.$groupId.students.verify')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('groups.$groupId.students.verify')
   @Patch('/:groupId/verify/:userId')
   async verifyStudent(
     @Param('groupId', GroupByIdPipe) groupId: string,
@@ -122,8 +115,7 @@ export class GroupController {
     return this.groupService.verifyStudent(groupId, userId, body);
   }
 
-  @Permission('groups.$groupId.admin.switch')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('groups.$groupId.admin.switch')
   @Patch('/:groupId/switch/:userId')
   async moderatorSwitch(
     @Param('groupId', GroupByIdPipe) groupId: string,
@@ -133,8 +125,7 @@ export class GroupController {
     return this.groupService.moderatorSwitch(groupId, userId, body);
   }
 
-  @Permission('groups.$groupId.students.remove')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('groups.$groupId.students.remove')
   @Delete('/:groupId/remove/:userId')
   async removeStudent(
     @Param('groupId', GroupByIdPipe) groupId: string,
@@ -144,8 +135,7 @@ export class GroupController {
     return this.groupService.removeStudent(groupId, userId, req.user);
   }
 
-  @Permission('groups.$groupId.students.unverified.get')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('groups.$groupId.students.unverified.get')
   @Get('/:groupId/unverifiedStudents')
   async getUnverifiedStudents(
       @Param('groupId', GroupByIdPipe) groupId: string,

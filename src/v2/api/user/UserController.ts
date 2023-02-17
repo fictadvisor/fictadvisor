@@ -15,6 +15,7 @@ import { UpdateStudentDTO } from "./dto/UpdateStudentDTO";
 
 import { ContactByUserIdPipe } from "./ContactByUserIdPipe";
 import { GroupRequestDTO } from './dto/GroupRequestDTO';
+import { Access } from 'src/v2/security/Access';
 
 @Controller({
   version: '2',
@@ -44,8 +45,7 @@ export class UserController {
     return this.userService.updateSuperhero(userId, body);
   }
 
-  @Permission('users.$userId.group.request')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('users.$userId.group.request')
   @Patch('/:userId/requestNewGroup')
   requestNewGroup(
     @Param('userId', UserByIdPipe) userId: string,
@@ -54,8 +54,7 @@ export class UserController {
     return this.userService.requestNewGroup(userId, body);
   }
 
-  @Permission('users.$userId.superhero.create')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('users.$userId.superhero.create')
   @Post('/:userId/superhero')
   async createSuperhero(
     @Param('userId', UserByIdPipe) userId: string,
@@ -64,8 +63,7 @@ export class UserController {
     return this.userService.createSuperhero(userId, body);
   }
 
-  @Permission('users.$userId.selective.get')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('users.$userId.selective.get')
   @Get('/:userId/selective')
   async getSelective(
     @Param('userId', UserByIdPipe) userId: string,
@@ -91,8 +89,7 @@ export class UserController {
     return this.userService.removeRole(userId, roleId);
   }
 
-  @Permission('users.delete')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('users.delete')
   @Delete('/:userId')
   deleteUser(
     @Param('userId', UserByIdPipe) userId: string,
@@ -100,8 +97,7 @@ export class UserController {
     return this.userService.deleteUser(userId);
   }
 
-  @Permission('users.update')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('users.update')
   @Patch('/:userId')
   updateUser(
     @Param('userId', UserByIdPipe) userId: string,
@@ -110,9 +106,7 @@ export class UserController {
     return this.userService.updateUser(userId, body);
   }
 
-
-  @Permission('users.$userId.contacts.get')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('users.$userId.contacts.get')
   @Get('/:userId/contacts')
   async getContacts(
     @Param('userId', UserByIdPipe) userId: string,
@@ -121,8 +115,7 @@ export class UserController {
     return { contacts };
   }
 
-  @Permission('users.$userId.contacts.create')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('users.$userId.contacts.create')
   @Post('/:userId/contacts')
   createContact(
     @Param('userId', UserByIdPipe) userId: string,
@@ -131,8 +124,7 @@ export class UserController {
     return this.userService.createContact(userId, body);
   }
 
-  @Permission('users.$userId.contacts.update')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('users.$userId.contacts.update')
   @Patch('/:userId/contacts/:name')
   updateContact(
     @Param(ContactByUserIdPipe) params,
@@ -141,8 +133,7 @@ export class UserController {
     return this.userService.updateContact(params.userId, params.name, body);
   }
 
-  @Permission('users.$userId.contacts.delete')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('users.$userId.contacts.delete')
   @Delete('/:userId/contacts/:name')
   deleteContact(
     @Param(ContactByUserIdPipe) params,
@@ -150,8 +141,7 @@ export class UserController {
     return this.userService.deleteContact(params.userId, params.name);
   }
 
-  @Permission('students.delete')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('students.delete')
   @Delete('/:userId/student')
   deleteStudent(
     @Param('userId', UserByIdPipe) userId: string,
@@ -159,8 +149,7 @@ export class UserController {
     return this.userService.deleteStudent(userId);
   }
 
-  @Permission('students.$userId.update')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('students.$userId.update')
   @Patch('/:userId/student')
   updateStudent(
     @Param('userId', UserByIdPipe) userId: string,
@@ -177,8 +166,7 @@ export class UserController {
     return this.userService.getUser(userId);
   }
 
-  @Permission('users.$userId.get')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('users.$userId.get')
   @Get('/:userId')
   getMe(
     @Param('userId', UserByIdPipe) userId: string,

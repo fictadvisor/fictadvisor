@@ -8,6 +8,7 @@ import { PermissionGuard } from "../../security/permission-guard/PermissionGuard
 import { QuestionByIdPipe } from "./dto/QuestionByIdPipe";
 import { QuestionByRoleAndIdPipe } from "./dto/QuestionByRoleAndIdPipe";
 import { CreateQuestionRoleDTO } from './dto/CreateQuestionRoleDTO';
+import { Access } from 'src/v2/security/Access';
 
 @Controller({
   version: '2',
@@ -18,8 +19,7 @@ export class PollController {
     private pollService: PollService,
   ) {}
 
-  @Permission('questions.create')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('questions.create')
   @Post('/questions')
   async createQuestion(
     @Body() body : CreateQuestionWithRolesDTO,
@@ -27,8 +27,8 @@ export class PollController {
     return this.pollService.createQuestions(body);
   }
 
-  @Permission('questions.delete')
-  @UseGuards(JwtGuard, PermissionGuard)
+
+  @Access('questions.delete')
   @Delete('/questions/:questionId')
   delete(
     @Param('questionId', QuestionByIdPipe) questionId: string,
@@ -36,8 +36,7 @@ export class PollController {
     return this.pollService.delete(questionId);
   }
 
-  @Permission('questions.update')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('questions.update')
   @Patch('/questions/:questionId')
   update(
     @Param('questionId', QuestionByIdPipe) questionId: string,
@@ -53,8 +52,7 @@ export class PollController {
     return this.pollService.getQuestion(questionId);
   }
 
-  @Permission('questions.roles.give')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('questions.update')
   @Post('/questions/:questionId/roles')
   giveRole(
     @Param('questionId', QuestionByIdPipe) questionId: string,
@@ -63,8 +61,7 @@ export class PollController {
     return this.pollService.giveRole(body, questionId);
   }
 
-  @Permission('question.roles.delete')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('question.roles.delete')
   @Delete('/questions/:questionId/roles/:role')
   deleteRole(
     @Param(QuestionByRoleAndIdPipe) params,
