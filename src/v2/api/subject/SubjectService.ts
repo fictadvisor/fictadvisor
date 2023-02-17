@@ -57,8 +57,8 @@ export class SubjectService {
     };
   }
 
-  async create({ name }: CreateSubjectDTO) {
-    return this.subjectRepository.create(name);
+  async create(body: CreateSubjectDTO) {
+    return this.subjectRepository.create(body);
   }
 
   async update(id: string, body: UpdateSubjectDTO) {
