@@ -68,7 +68,7 @@ $default-dropdown-padding: 8px;
       width: 12px;
     }
     &::-webkit-scrollbar-thumb {
-      background-color: #d6dee1;
+      background-color: $gray-400;
       border: 5px solid transparent;
       background-clip: content-box;
     }
