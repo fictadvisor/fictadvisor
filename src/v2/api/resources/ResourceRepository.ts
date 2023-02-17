@@ -3,6 +3,7 @@ import { StudentResource } from '@prisma/client';
 import { QueryAllDTO } from 'src/v2/utils/QueryAllDTO';
 import { PrismaService } from '../../database/PrismaService';
 import { DatabaseUtils } from '../utils/DatabaseUtils';
+import { CreateResourceData } from './data/CreateResourceData';
 import { UpdateResourceData } from './data/UpdateResourceData';
 
 @Injectable()
@@ -39,7 +40,7 @@ export class ResourceRepository {
     });
   }
 
-  async create(data: UpdateResourceData) {
+  async create(data: CreateResourceData) {
     return this.prisma.studentResource.create({
       data,
       select: {
