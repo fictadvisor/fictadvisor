@@ -45,7 +45,7 @@
       background-color: $background-dark-100;
     }
     &:focus {
-      border-color: #747474;
+      border-color: $background-dark-200;
     }
     & svg {
       transform: translateX(10%) translateY(10%);

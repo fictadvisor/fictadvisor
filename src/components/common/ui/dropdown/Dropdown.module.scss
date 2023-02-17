@@ -50,7 +50,7 @@ $default-dropdown-padding: 8px;
       border-color: $error-200;
     }
     &-disabled{
-      border-color: #747474;
+      border-color: $background-dark-200;
     }
 
   }
@@ -93,7 +93,7 @@ $default-dropdown-padding: 8px;
   }
   &placeholder {
     &-disabled{
-      color: #747474;
+      color: $background-dark-200;
     }
   }
   &success-label{
@@ -103,7 +103,7 @@ $default-dropdown-padding: 8px;
     color: $error-200;
   }
   &disabled-label{
-    color: #747474;
+    color: $background-dark-200;
   }
 }
 .dropdown-icon-container {

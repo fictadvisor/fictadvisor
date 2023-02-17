@@ -12,10 +12,10 @@ html, body {
 }
 
 *{
-  scrollbar-color: $white #C2D2E4;
+  scrollbar-color: $white $background-dark-100;
   scrollbar-width: thin;
   &:hover, &:focus{
-    scrollbar-color: $black #C2D2E4;
+    scrollbar-color: $black $background-dark-200;
   }
 }
 
@@ -29,7 +29,7 @@ html, body {
   transition: all 0.2s ease-in-out;
   background-color: $background-dark-100;
   &:hover{
-    background-color: #747474;
+    background-color: $background-dark-200;
   }
   &:active{
     background-color: $gray-300;

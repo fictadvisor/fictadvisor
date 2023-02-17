@@ -20,7 +20,7 @@
   }
 
   &:disabled {
-    background: #747474;
+    background: $background-dark-200;
     color: $gray-400;
   }
 }
