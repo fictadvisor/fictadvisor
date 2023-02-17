@@ -5,7 +5,7 @@ import Button, { ButtonSize, ButtonType } from '@/components/common/ui/button';
 
 import { HeaderCard } from '../cards';
 
-import styles from 'styles/v2/local/components/Navigation.module.scss';
+import styles from './Header.module.scss';
 
 interface HeaderProps {
   buttons: {

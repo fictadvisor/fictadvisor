@@ -1,4 +1,4 @@
-import Footer from '@/components/common/composite/footer/Footer';
+import Footer from '@/components/common/composite/footer';
 import Header from '@/components/common/composite/header';
 
 import styles from '../test.module.scss';
