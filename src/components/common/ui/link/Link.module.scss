@@ -1,4 +1,5 @@
 @import "../../../../styles/partials/utils";
+@import "src/styles/partials/theme";
 
 @mixin link-style($color, $className) {
   .#{$className}-link {
