@@ -1,16 +1,15 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
-import { Subject } from '@prisma/client';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
-import { ResourceService } from './ResourcesService';
+import { ResourceRepository } from './ResourcesRepository';
 
 @Injectable()
-export class ResourceByIdPipe implements PipeTransform<string, Promise<string>> {
+export class ResourceByIdPipe implements PipeTransform {
   constructor(
-    private resourceService: ResourceService
+    private resourceRepository: ResourceRepository
   ) {}
 
   async transform(value: string): Promise<string> {
-    const resource: Subject = await this.resourceService.get(value);
+    const resource = await this.resourceRepository.get(value);
     if (!resource) {
       throw new InvalidEntityIdException('resource');
     }
