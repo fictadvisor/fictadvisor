@@ -1,7 +1,7 @@
 import Footer from '@/components/common/composite/footer';
 import Header from '@/components/common/composite/header';
 
-import styles from '../test.module.scss';
+import styles from '../test-pages.module.scss';
 
 const NavigationPage = () => {
   const buttons = [
