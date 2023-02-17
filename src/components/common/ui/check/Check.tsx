@@ -11,8 +11,8 @@ export enum CheckState {
 interface CheckProps {
   text?: string;
   state: CheckState;
-  isChecked?: boolean;
-  isDisabled?: boolean;
+  checked?: boolean;
+  disabled?: boolean;
 }
 
 const Check: React.FC<CheckProps> = props => {
@@ -23,8 +23,8 @@ const Check: React.FC<CheckProps> = props => {
           <input
             type="checkbox"
             className={styles[props.state + '-check-input']}
-            disabled={props.isDisabled}
-            checked={props.isChecked}
+            disabled={props.disabled}
+            checked={props.checked}
           />
           <span className={styles[props.state + '-check-box']}></span>
         </label>

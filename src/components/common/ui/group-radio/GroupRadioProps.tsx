@@ -14,7 +14,7 @@ interface GroupRadioProps {
     name: string;
     value: string;
     text?: string;
-    isDisabled?: boolean;
+    disabled?: boolean;
   }[];
 }
 
@@ -35,7 +35,7 @@ const GroupRadio: React.FC<GroupRadioProps> = props => {
                   type="radio"
                   name={radio.name}
                   value={value}
-                  disabled={radio.isDisabled}
+                  disabled={radio.disabled}
                   onChange={handleChange}
                 />
                 <span className={styles[radio.state + '-radio-box']}></span>

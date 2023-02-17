@@ -40,7 +40,7 @@ const ControlsPage = () => {
       text: 'vegetable',
       name: 'radio-buttons',
       value: 'vegetable',
-      isDisabled: true,
+      disabled: true,
     },
   ];
 
@@ -63,13 +63,13 @@ const ControlsPage = () => {
         <Check
           state={CheckState.DISABLED}
           text="Disabled"
-          isDisabled={true}
+          disabled={true}
         ></Check>
         <Check
           state={CheckState.DISABLED}
           text="Disabled"
-          isDisabled={true}
-          isChecked={true}
+          disabled={true}
+          checked={true}
         ></Check>
 
         <GroupRadio options={radios}></GroupRadio>
