@@ -1,24 +1,24 @@
-@import "../../../../styles/partials/utils";
+@import "src/styles/partials/utils";
 
-@mixin link-style($color, $className) {
-  .#{$className}-link {
-    column-gap: 8px;
-    color: $color;
-    font-size: 14px;
-    border-bottom: transparent 1px solid;
-    cursor: pointer;
-    &:hover {
-      border-bottom: 1px solid $color;
-    }
-    svg {
-      margin-right: 8px;
-    }
-    a{
-      @include flex-center;
-    }
+.link {
+  color: #0EA5E9;
+;
+  column-gap: 8px;
+  font-size: 14px;
+  border-bottom: 1px solid #0EA5E9;
+  cursor: pointer;
+  &:visited{
+    color: #0369A1;
+    border-bottom: 1px solid #0369A1;
+  ;
+  }
+  &:hover {
+    color: #38BDF8;
+    border-bottom: 1px solid #38BDF8;
+  }
+  &:active {
+    color: #7DD3FC;
+    border-bottom: 1px solid #7DD3FC;
   }
 }
-
-@include link-style(#F0F9FF, "white");
-@include link-style(#0EA5E9, "blue");
 
