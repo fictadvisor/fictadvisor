@@ -1,4 +1,4 @@
-import { IsNotEmpty, MaxLength, MinLength } from "class-validator";
+import { IsOptional, MaxLength, MinLength } from "class-validator";
 
 export class UpdateResourceDTO {
   @MinLength(3, {
@@ -7,18 +7,12 @@ export class UpdateResourceDTO {
   @MaxLength(50, {
     message: 'name is too long (max: 50)',
   })
-  @IsNotEmpty({
-    message: 'name can not be empty',
-  })
+  @IsOptional()
   name: string;
 
-  @IsNotEmpty({
-    message: 'link can not be empty',
-  })
+  @IsOptional()
   link: string;
 
-  @IsNotEmpty({
-    message: 'icon can not be empty',
-  })
+  @IsOptional()
   icon: string;
 }
