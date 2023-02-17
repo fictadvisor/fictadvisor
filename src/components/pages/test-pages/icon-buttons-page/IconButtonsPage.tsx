@@ -6,6 +6,7 @@ import {
 } from '@/components/common/ui/icon-button/IconButton';
 import {
   SortButton,
+  StarButton,
   TrashBucketButton,
 } from '@/components/common/ui/icon-button/variants';
 
@@ -119,6 +120,29 @@ const IconButtonsPage = () => (
         disabled={true}
       />
 
+      <StarButton
+        size={IconButtonSize.LARGE}
+        shape={IconType.CIRCLE}
+        color={IconButtonColor.ERROR}
+      />
+      <StarButton
+        size={IconButtonSize.NORMAL}
+        shape={IconType.CIRCLE}
+        color={IconButtonColor.ERROR}
+      />
+      <StarButton
+        size={IconButtonSize.LARGE}
+        shape={IconType.CIRCLE}
+        disabled={true}
+        color={IconButtonColor.ERROR}
+      />
+      <StarButton
+        size={IconButtonSize.NORMAL}
+        shape={IconType.CIRCLE}
+        disabled={true}
+        color={IconButtonColor.ERROR}
+      />
+
       <TrashBucketButton
         size={IconButtonSize.LARGE}
         shape={IconType.CIRCLE}
@@ -140,6 +164,29 @@ const IconButtonsPage = () => (
         shape={IconType.CIRCLE}
         disabled={true}
         color={IconButtonColor.SECONDARY}
+      />
+
+      <StarButton
+        size={IconButtonSize.LARGE}
+        shape={IconType.CIRCLE}
+        color={IconButtonColor.SUCCESS}
+      />
+      <StarButton
+        size={IconButtonSize.NORMAL}
+        shape={IconType.CIRCLE}
+        color={IconButtonColor.SUCCESS}
+      />
+      <StarButton
+        size={IconButtonSize.LARGE}
+        shape={IconType.CIRCLE}
+        disabled={true}
+        color={IconButtonColor.SUCCESS}
+      />
+      <StarButton
+        size={IconButtonSize.NORMAL}
+        shape={IconType.CIRCLE}
+        disabled={true}
+        color={IconButtonColor.SUCCESS}
       />
     </div>
   </div>

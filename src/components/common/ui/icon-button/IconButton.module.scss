@@ -32,10 +32,20 @@
   }
 }
 @mixin style-round-button-icon($className, $size) {
-  .circle-button-icon-#{$className}-secondary {
+  .circle-button-icon-#{$className}-success,
+  .circle-button-icon-#{$className}-secondary,
+  .circle-button-icon-#{$className}-error {
     @include style-button-icon(999px, $size);
-    @include style-button-icon-color(#404040, #970c13, #ec131e, #970c13);
     padding: 6px;
+  }
+  .circle-button-icon-#{$className}-secondary {
+    @include style-button-icon-color(#404040, #970c13, #ec131e, #970c13);
+  }
+  .circle-button-icon-#{$className}-success {
+    @include style-button-icon-color(#189550, #157f44, #106034, #8dd3ac);
+  }
+  .circle-button-icon-#{$className}-error {
+    @include style-button-icon-color(#ff5b5b, #dc3d43, #fd4444, #ff9898);
   }
 }
 @mixin style-square-button-icon($className, $size) {
