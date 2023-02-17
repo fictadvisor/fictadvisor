@@ -1,6 +1,6 @@
 @import 'src/styles/partials/theme';
 @import 'src/styles/partials/utils';
-$theme-color:$dark-primary;
+$theme-color:$background-dark-0;
 
 @mixin style-tag($className,$first,$second,$third){
     .#{$className}-first-bgc{

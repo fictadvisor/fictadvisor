@@ -6,11 +6,11 @@ $default-large-input-width: 480px;
 $default-medium-input-width: 308px;
 
 .input-success-icon{
-  color: $success-color;
+  color: $success-300;
 }
 
 .input-error-icon{
-  color: $error-color;
+  color: $error-200;
 }
 
 .white-icon{
@@ -35,7 +35,7 @@ $default-medium-input-width: 308px;
     color: $placeholder-color;
   }
 
-  background: $dark-primary;
+  background: $background-dark-0;
   border: 2px $border-color solid;
   color: $text-color;
 }
@@ -75,7 +75,7 @@ $default-medium-input-width: 308px;
 }
 
 .error-input-color{
-  color: $error-color;
+  color: $error-200;
 
   label{
     background: linear-gradient(180deg, rgba(30, 30, 30, 0) 49.48%, $background-dark-0 49.95%);
@@ -84,7 +84,7 @@ $default-medium-input-width: 308px;
     @include input-color($gray-600, $error-200, $gray-50);
   }
   p{
-    color: $error-color;
+    color: $error-200;
   }
     .white-icon {
       color: $gray-600;
@@ -92,7 +92,7 @@ $default-medium-input-width: 308px;
 }
 
 .success-input-color{
-  color: $success-color;
+  color: $success-300;
 
   label{
     background: linear-gradient(180deg, rgba(30, 30, 30, 0) 49.48%, $background-dark-0 49.95%);
@@ -102,7 +102,7 @@ $default-medium-input-width: 308px;
     @include input-color($gray-600, $success-300, $gray-50);
   }
   p{
-    color: $success-color;
+    color: $success-300;
   }
   .white-icon {
     color: $gray-600;

@@ -1,6 +1,6 @@
 @import "../../../../styles/partials/theme";
 
-$theme-color: $dark-primary;
+$theme-color: $background-dark-0;
 
 //dropdown-sizings
 $small-dropdown-width: 200px;
@@ -12,7 +12,7 @@ $dropdown-header-height: 52px;
 $dropdown-option-left-padding: 26px;
 $default-dropdown-padding: 8px;
 
-@mixin roundcorners($radius: 10px, $color: $light-primary) {
+@mixin roundcorners($radius: 10px, $color: $grey-600) {
   border-radius: $radius;
   border: 2px solid $color;
 }
@@ -44,10 +44,10 @@ $default-dropdown-padding: 8px;
     background-color: $theme-color;
     @include roundcorners;
     &-success{
-      border-color: $success-color;
+      border-color: $success-300;
     }
     &-error{
-      border-color: $error-color;
+      border-color: $error-200;
     }
     &-disabled{
       border-color: #747474;
@@ -58,7 +58,7 @@ $default-dropdown-padding: 8px;
   &menu {
     margin-top: $default-dropdown-padding;
     padding: $default-dropdown-padding 0;
-    background-color: $dark-primary;
+    background-color: $background-dark-0;
     z-index: 2 !important;
     @include roundcorners;
   }
@@ -97,10 +97,10 @@ $default-dropdown-padding: 8px;
     }
   }
   &success-label{
-    color: $success-color;
+    color: $success-300;
   }
   &error-label{
-    color: $error-color;
+    color: $error-200;
   }
   &disabled-label{
     color: #747474;

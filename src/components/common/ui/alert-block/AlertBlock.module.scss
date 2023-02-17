@@ -59,9 +59,9 @@ $alert-green-secondary: $success-10;
     }
     .alert-#{$className}-outlined{
         border: 1px $primary-color solid;
-        background-color: $dark-primary;
+        background-color: $background-dark-0;
         &:hover{
-            background-color: lighten($color: $dark-primary,$amount: 5%);
+            background-color: lighten($color: $background-dark-0,$amount: 5%);
             border-color:lighten($color: $primary-color,$amount: 10%);
         }
     }

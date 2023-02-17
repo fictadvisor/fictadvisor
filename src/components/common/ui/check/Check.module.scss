@@ -40,7 +40,7 @@
 
 .error-check-text {
     @extend .default-check-text;
-    color: $error-color;
+    color: $error-200;
 }
 
 .default-check-box {
@@ -76,16 +76,16 @@
     border-color: $gray-100;
 
     &:hover {
-        background-color: $dark-primary;
+        background-color: $background-dark-0;
     }
 }
 
 .error-check-box {
     @extend .default-check-box;
-    border-color: $error-color;
+    border-color: $error-200;
 
     &:hover {
-        background-color: $dark-primary;
+        background-color: $background-dark-0;
     }
 }
 
@@ -124,5 +124,5 @@
 }
 
 .error-check-input:checked+.error-check-box {
-    background-color: $error-color;
+    background-color: $error-200;
 }

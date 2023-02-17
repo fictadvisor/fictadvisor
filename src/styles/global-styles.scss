@@ -1,8 +1,8 @@
 @import "partials/theme";
 
 html, body {
-  background-color: $dark-primary;
-  color: $light-primary;
+  background-color: $background-dark-0;
+  color: $grey-600;
 }
 
 .icon{
@@ -23,7 +23,7 @@ html, body {
   width: 1.11vw;
 }
 ::-webkit-scrollbar-thumb{
-  border: 0.28vw $dark-primary solid;
+  border: 0.28vw $background-dark-0 solid;
   background-clip: padding-box;
 
   transition: all 0.2s ease-in-out;

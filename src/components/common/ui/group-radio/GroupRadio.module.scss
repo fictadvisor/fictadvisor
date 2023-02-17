@@ -30,7 +30,7 @@
 
 .error-radio-text {
     @extend .default-radio-text;
-    color: $error-color;
+    color: $error-200;
 }
 
 .default-radio-box {
@@ -47,7 +47,7 @@
         position: absolute;
         width: 10px;
         height: 10px;
-        background-color: $dark-primary;
+        background-color: $background-dark-0;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
@@ -63,13 +63,13 @@
 
 .error-radio-box {
     @extend .default-radio-box;
-    border-color: $error-color;
+    border-color: $error-200;
 }
 
 .disabled-radio-box::before {
     @extend .default-radio-box, ::before;
     cursor: default;
-    border-color: $dark-primary;
+    border-color: $background-dark-0;
 }
 
 .default-radio-box:hover::before {
@@ -77,7 +77,7 @@
 }
 
 .disabled-radio-box:hover::before, .error-radio-box:hover::before {
-    background-color: $dark-primary;
+    background-color: $background-dark-0;
 }
 
 .default-radio-input:checked + .default-radio-box::before {
@@ -90,5 +90,5 @@
 }
 
 .error-radio-input:checked + .error-radio-box::before {
-    background-color: $error-color;
+    background-color: $error-200;
 }
