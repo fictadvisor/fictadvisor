@@ -17,11 +17,9 @@ export class UpdateContactDTO {
     @MaxLength(100, {
       message: 'displayName is too long (max: 100)',
     })
-    @Matches(
-      createRegex(UKR_REGEX, ENG_REGEX, NUM_REGEX, UKRSPEC_REGEX),
-      {
-        message: 'displayName is not correct (a-zA-Z0-9A-Я(укр.)\\-\' )',
-      })
+    @IsAscii({
+      message: 'link contains wrong symbols (ACSII only)',
+    })
     @IsOptional()
     displayName?: string;
 
