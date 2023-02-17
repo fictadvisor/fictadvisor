@@ -77,11 +77,11 @@ $default-dropdown-padding: 8px;
     padding: 5px 0 5px $dropdown-option-left-padding;
     height: $dropdown-option-height;
     &:hover{
-      background-color: #404040;
+      background-color: $gray-50;
       cursor: pointer;
     };
     &-selected {
-      background-color: #404040;
+      background-color: $gray-50;
     }
   }
   &indicator {

@@ -1,73 +1,73 @@
 @import "../button/styles/button-style";
 
 .error-primary-alert-button-color{
-  background: #970C13;
-  color: #FAFAFA;
+  background: $error-50;
+  color: $gray-600;
   outline: 1px transparent solid;
 
   &:hover {
-    background: #C11018;
+    background: $error-100;
   }
 
   &:active {
-    background: #EC131E;
+    background: $error-200;
   }
 
   &:focus {
-    background: #970C13;
-    outline: 1px solid #C11018;
+    background: $error-50;
+    outline: 1px solid $error-100;
   }
 
   &:disabled {
-    background: #1E1E1E;
-    color: #343434;
+    background: $background-dark;
+    color: $background-dark-35;
   }
 }
 
 .error-secondary-alert-button-color{
-  border: 1px solid #EC131E;
-  background: #343434;
-  color: #FAFAFA;
+  border: 1px solid $error-200;
+  background: $background-dark-35;
+  color: $gray-600;
 
   &:hover {
-    background: #970C13;
+    background: $error-50;
   }
 
   &:active {
-    background: #C11018;
+    background: $error-100;
   }
 
   &:focus {
-    background: #970C13;
+    background: $error-50;
   }
 
   &:disabled {
-    background: #1E1E1E;
-    color: #343434;
+    background: $background-dark;
+    color: $background-dark-35;
   }
 }
 
 .success-alert-button-color{
-  background: #189550;
-  color: #FAFAFA;
+  background: $success-200;
+  color: $gray-600;
   outline: 1px transparent solid;
 
   &:hover {
-    background: #157F44;
+    background: $success-100;
   }
 
   &:active {
-    background: #106034;
+    background: $success-50;
   }
 
   &:focus {
-    background: #189550;
-    outline: 1px solid #106034;
+    background: $success-200;
+    outline: 1px solid $success-50;
   }
 
   &:disabled {
-    background: #1E1E1E;
-    color: #343434;
+    background: $background-dark;
+    color: $background-dark-35;
   }
 }
 

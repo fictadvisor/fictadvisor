@@ -1,49 +1,49 @@
 @import "button-style";
 
 .secondary-red-button-color{
-  outline: 2px solid #D33D3D;
-  color: #FAFAFA;
+  outline: 2px solid $red-100;
+  color: $gray-600;
 
   &:hover {
-    background: #402626;
+    background: $red--10;
   }
 
   &:active {
-    background: #873030;
-    outline: 2px solid #FD4444;
+    background: $red-10;
+    outline: 2px solid $red-logo;
   }
 
   &:focus {
-    background: #5F3333;
+    background: $red;
   }
 
   &:disabled {
-    outline: 2px solid #737373;
-    color: #737373;
+    outline: 2px solid $gray-200;
+    color: $gray-200;
   }
 }
 
 .secondary-grey-button-color{
   outline: 2px solid #747474;
-  color: #FAFAFA;
+  color: $gray-600;
 
   &:hover {
-    background: #292929;
+    background: $background-dark-10;
   }
 
   &:active {
-    background: #343434;
-    outline: 2px solid #A3A3A3;
+    background: $background-dark-35;
+    outline: 2px solid $gray-300;
   }
 
   &:focus {
-    background: #292929;
-    outline: 2px solid #A3A3A3;
+    background: $background-dark-10;
+    outline: 2px solid $gray-300;
   }
 
   &:disabled {
-    background: #1E1E1E;
-    color: #404040;
+    background: $background-dark;
+    color: $gray-50;
   }
 }
 

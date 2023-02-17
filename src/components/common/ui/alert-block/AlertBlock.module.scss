@@ -1,14 +1,14 @@
 @import "../../../../styles/partials/theme";
 
 
-$alert-blue-primary: #0284c7;
-$alert-blue-secondary: #0c4a6e;
-$alert-red-primary: #970c13;
-$alert-red-secondary: #420508;
-$alert-orange-primary: #ea580c;
-$alert-orange-secondary: #7c2d12;
-$alert-green-primary: #106034;
-$alert-green-secondary: #08301a;
+$alert-blue-primary: $info-50;
+$alert-blue-secondary: $info;
+$alert-red-primary: $error-50;
+$alert-red-secondary: $error-10;
+$alert-orange-primary: $warning-100;
+$alert-orange-secondary: $warning-10;
+$alert-green-primary: $success-50;
+$alert-green-secondary: $success-10;
 
 
     .alert {
