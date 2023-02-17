@@ -11,8 +11,7 @@ export class ResourceService {
   ) {}
 
   async getAll(body: QueryAllDTO) {
-    const studentResources = await this.resourceRepository.getAll(body); 
-    return { studentResources };
+    return await this.resourceRepository.getAll(body);
   }
 
   async get(id: string) {
