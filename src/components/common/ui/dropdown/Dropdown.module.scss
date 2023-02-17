@@ -1,4 +1,4 @@
-@import "../../../../styles/partials/theme";
+@import "src/styles/partials/theme";
 
 $theme-color: $background-dark-0;
 
@@ -12,7 +12,7 @@ $dropdown-header-height: 52px;
 $dropdown-option-left-padding: 26px;
 $default-dropdown-padding: 8px;
 
-@mixin roundcorners($radius: 10px, $color: $grey-600) {
+@mixin roundcorners($radius: 10px, $color: $gray-600) {
   border-radius: $radius;
   border: 2px solid $color;
 }
