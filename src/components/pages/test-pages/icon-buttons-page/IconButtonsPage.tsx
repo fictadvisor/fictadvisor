@@ -1,4 +1,5 @@
 import {
+  IconButton,
   IconButtonColor,
   IconButtonSize,
   IconType,
@@ -211,6 +212,20 @@ const IconButtonsPage = () => (
         shape={IconType.CIRCLE}
         disabled={true}
         color={IconButtonColor.TRANSPARENT}
+      />
+
+      <IconButton
+        icon={CloseButton}
+        color={IconButtonColor.ERROR}
+        size={IconButtonSize.LARGE}
+        shape={IconType.CIRCLE}
+      />
+
+      <IconButton
+        icon={CloseButton}
+        color={IconButtonColor.SUCCESS}
+        size={IconButtonSize.NORMAL}
+        shape={IconType.CIRCLE}
       />
     </div>
   </div>
