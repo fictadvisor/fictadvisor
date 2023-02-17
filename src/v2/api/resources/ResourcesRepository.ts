@@ -3,8 +3,7 @@ import { StudentResource } from '@prisma/client';
 import { QueryAllDTO } from 'src/v2/utils/QueryAllDTO';
 import { PrismaService } from '../../database/PrismaService';
 import { DatabaseUtils } from '../utils/DatabaseUtils';
-import { CreateResourceDTO } from './dto/CreateResourceDTO';
-import { UpdateResourceDTO } from './dto/UpdateResourceDTO';
+import { UpdateResourceData } from './data/UpdateResourceData';
 
 @Injectable()
 export class ResourceRepository {
@@ -26,21 +25,33 @@ export class ResourceRepository {
     });
   }
 
-  async get(id: string) {
+  get(id: string) {
     return this.prisma.studentResource.findUnique({
       where: {
         id,
       },
+      select: {
+        id: true,
+        icon: true,
+        link: true,
+        name: true,
+      },
     });
   }
 
-  async create(data: CreateResourceDTO) {
+  async create(data: UpdateResourceData) {
     return this.prisma.studentResource.create({
       data,
+      select: {
+        id: true,
+        icon: true,
+        link: true,
+        name: true,     
+      },
     });
   }
 
-  async update(id: string, data: UpdateResourceDTO) {
+  async update(id: string, data: UpdateResourceData) {
     return this.prisma.studentResource.update({
       where: {
         id,
