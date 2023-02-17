@@ -4,11 +4,11 @@
 .default-check-text,
 .disabled-check-text,
 .error-check-text {
-  font-size: 14px;
-  line-height: 19.6px;
-  left: 28px;
-  font-weight: 400;
-  color: $white;
+    font-size: 14px;
+    line-height: 19.6px;
+    left: 28px;
+    font-weight: 400;
+    color: $white;
 }
 
 .check-container {
@@ -53,18 +53,17 @@
     border-radius: 3px;
 
     &::before {
+        @include flex-center;
         content: "";
         cursor: pointer;
-        @include flex-center;
         position: absolute;
-        width: 10.5px;
-        height: 7.5px;
+        width: 14px;
+        height: 11.57px;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
         transition: 0.4s;
         background-image: url("/assets/icons/check-mark.svg");
-        background-size: 100%;
         opacity: 0;
     }
 
@@ -90,12 +89,12 @@
 }
 
 .disabled-check-box::before {
+    @include flex-center;
     content: "";
     cursor: default;
-    @include flex-center;
     position: absolute;
-    width: 10.5px;
-    height: 7.5px;
+    width: 14px;
+    height: 11.57px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
