@@ -5,7 +5,6 @@
 *.css.map
 
 # npm/yarn files
-package.json
 yarn.lock
 package-lock.json
 

@@ -6,15 +6,15 @@
   overflow: hidden;
   align-items: center;
   border-radius: $radius;
-  color: $light-primary;
-  background-color: #404040;
+  color: $gray-600;
+  background-color: $gray-50;
   border: 1px solid transparent;
   height: $size;
   width: $size;
   position: relative;
   &:disabled {
-    background-color: $dark-primary !important;
-    color: #404040;
+    background-color: $background-dark-0 !important;
+    color: $gray-50;
     cursor: not-allowed;
   }
 }
@@ -24,13 +24,13 @@
     padding: 6px;
 
     &:hover {
-      background-color: #970c13;
+      background-color: $error-50;
     }
     &:active {
-      background-color: #ec131e;
+      background-color: $error-200;
     }
     &:focus {
-      border: #970c13 1px solid;
+      border: $error-50 1px solid;
     }
   }
 }
@@ -39,13 +39,13 @@
     @include style-button-icon(6px, $size);
     padding: 6px;
     &:hover {
-      background-color: #404040;
+      background-color: $gray-50;
     }
     &:active {
-      background-color: #4b4b4b;
+      background-color: $background-dark-100;
     }
     &:focus {
-      border-color: #747474;
+      border-color: $background-dark-200;
     }
     & svg {
       transform: translateX(10%) translateY(10%);

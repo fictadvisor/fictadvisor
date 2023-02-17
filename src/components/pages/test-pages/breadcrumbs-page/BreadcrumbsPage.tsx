@@ -1,5 +1,5 @@
 import pageStyles from '../test-pages.module.scss';
-import breadcrumbStyles from 'styles/v2/local/elements/Breadcrumb.module.scss';
+import breadcrumbStyles from './Breadcrumb.module.scss';
 
 const BreadcrumbsPage = () => (
   <div className={pageStyles['test-page-wrap']}>

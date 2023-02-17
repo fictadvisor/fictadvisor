@@ -1,51 +1,51 @@
 @import "button-style";
-
+@import "src/styles/partials/theme";
 
 .primary-red-button-color{
-  background: #FF5B5B;
-  color: #FAFAFA;
+  background: $red-400;
+  color: $gray-600;
   outline: 2px transparent solid;
 
   &:hover {
-    background: #D33D3D;
+    background: $red-100;
   }
 
   &:active {
-    background: #FD4444;
+    background: $red-logo;
   }
 
   &:focus {
-    background: #FD4444;
-    outline: 2px solid #873030;
+    background: $red-logo;
+    outline: 2px solid $red-10;
   }
 
   &:disabled {
-    background: #747474;
-    color: #D4D4D4;
+    background: $background-dark-200;
+    color: $gray-400;
   }
 }
 
 .primary-gray-button-color{
-  background: #292929;
-  color: #FAFAFA;
+  background: $background-dark-10;
+  color: $gray-600;
   outline: 2px transparent solid;
 
   &:hover {
-    background: #343434;
+    background: $background-dark-35;
   }
 
   &:active {
-    background: #404040;
+    background: $gray-50;
   }
 
   &:focus {
-    background: #292929;
-    outline: 2px solid #404040;
+    background: $background-dark-10;
+    outline: 2px solid $gray-50;
   }
 
   &:disabled {
-    background: #1E1E1E;
-    color: #404040;
+    background: $background-dark-0;
+    color: $gray-50;
   }
 }
 

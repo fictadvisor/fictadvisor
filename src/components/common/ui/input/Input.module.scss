@@ -6,16 +6,16 @@ $default-large-input-width: 480px;
 $default-medium-input-width: 308px;
 
 .input-success-icon{
-  color: $success-color;
+  color: $success-300;
 }
 
 .input-error-icon{
-  color: $error-color;
+  color: $error-200;
 }
 
 .white-icon{
   transition: all 0.2s ease-in-out;
-  color: #FAFAFA;
+  color: $gray-600;
 }
 
 @mixin input-color($text-color, $border-color, $placeholder-color){
@@ -35,35 +35,35 @@ $default-medium-input-width: 308px;
     color: $placeholder-color;
   }
 
-  background: $dark-primary;
+  background: $background-dark-0;
   border: 2px $border-color solid;
   color: $text-color;
 }
 
 .default-input-color{
-  color: #FAFAFA;
+  color: $gray-600;
 
   label{
-    background: linear-gradient(180deg, rgba(30, 30, 30, 0) 49.48%, #1E1E1E 49.95%);
+    background: linear-gradient(180deg, rgba(30, 30, 30, 0) 49.48%, $background-dark-0 49.95%);
     color: inherit;
   }
 
   input{
-    @include input-color(#FAFAFA, #737373, #D4D4D4);
+    @include input-color($gray-600, $gray-200, $gray-400);
     &:focus {
-      @include input-color(#FFFFFF, #FFFFFF, #404040);
+      @include input-color($white, $white, $gray-50);
     }
   }
 
   &:hover {
-    color: #FFFFFF;
+    color: $white;
 
     input {
-      border-color: #FFFFFF;
-      color: #FFFFFF;
+      border-color: $white;
+      color: $white;
     }
     .white-icon{
-      color: #FAFAFA;
+      color: $gray-600;
     }
   }
 }
@@ -75,37 +75,37 @@ $default-medium-input-width: 308px;
 }
 
 .error-input-color{
-  color: $error-color;
+  color: $error-200;
 
   label{
-    background: linear-gradient(180deg, rgba(30, 30, 30, 0) 49.48%, #1E1E1E 49.95%);
+    background: linear-gradient(180deg, rgba(30, 30, 30, 0) 49.48%, $background-dark-0 49.95%);
   }
   input {
-    @include input-color(#FAFAFA, #EC131E, #404040);
+    @include input-color($gray-600, $error-200, $gray-50);
   }
   p{
-    color: $error-color;
+    color: $error-200;
   }
     .white-icon {
-      color: #FAFAFA;
+      color: $gray-600;
     }
 }
 
 .success-input-color{
-  color: $success-color;
+  color: $success-300;
 
   label{
-    background: linear-gradient(180deg, rgba(30, 30, 30, 0) 49.48%, #1E1E1E 49.95%);
+    background: linear-gradient(180deg, rgba(30, 30, 30, 0) 49.48%, $background-dark-0 49.95%);
     color: inherit;
   }
   input {
-    @include input-color(#FAFAFA, #3DA96D, #404040);
+    @include input-color($gray-600, $success-300, $gray-50);
   }
   p{
-    color: $success-color;
+    color: $success-300;
   }
   .white-icon {
-    color: #FAFAFA;
+    color: $gray-600;
   }
 
 }

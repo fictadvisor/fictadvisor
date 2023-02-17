@@ -1,5 +1,5 @@
 import pageStyles from '../test-pages.module.scss';
-import arrowStyles from 'styles/v2/local/elements/ArrowButton.module.scss';
+import arrowStyles from './ArrowButton.module.scss';
 
 const ArrowsPage = () => (
   <div className={pageStyles['test-page-wrap']}>

@@ -1,3 +1,5 @@
+@import "src/styles/partials/theme";
+
 .table-items-style {
     display: flex;
     align-items: center;
@@ -10,8 +12,8 @@
     height: 72px;
     padding: 12px 16px;
     gap: 26px;
-    background-color: #292929;
-    border-top: 1px solid #404040;
+    background-color: $background-dark-10;
+    border-top: 1px solid $gray-50;
 }
 
 .user-avatar img {
@@ -32,7 +34,7 @@
     font-weight: 700;
     font-size: 16px;
     line-height: 138%;
-    color: #D4D4D4;
+    color: $gray-400;
     width: fit-content;
 }
 
@@ -58,7 +60,7 @@
     font-size: 16px;
     line-height: 138%;
     font-feature-settings: 'case' on, 'kern' off;
-    color: #D4D4D4;
+    color: $gray-400;
     width: fit-content;
 }
 

@@ -1,10 +1,10 @@
-@import "../../../../styles/partials/utils";
-@import "../../../../styles/partials/theme";
-@import "../../../../styles/partials/_typography-mixins.css";
+@import "src/styles/partials/utils";
+@import "src/styles/partials/theme";
+@import "src/styles/partials/typography-mixins";
 
-.textarea-test {
-  padding: 10px 0;
-  background: $dark-primary;
+.textarea-test{
+  padding:10px 0;
+  background: $background-dark-0;
   overflow-y: scroll;
 
   p {
@@ -41,26 +41,24 @@
     align-items: flex-start;
     padding: 16px 16px 16px 24px;
     gap: 8px;
-    background: #1E1E1E;
+    background: $background-dark-0;
     width: 480px;
     height: 120px;
-    border: 2px solid #E5E5E5;
-    color: #E5E5E5;
+    border: 2px solid $gray-500;
+    color: $gray-500;
     border-radius: 8px;
     resize: none;
 
     &:hover {
-      color: #FFFFFF;
-      border-color: #FFFFFF;
+      color: $white;
+      border-color: $white;
     }
-
-    &:focus {
-      color: #A3A3A3;
+    &:focus{
+      color: $gray-300;
     }
-
-    &:disabled {
-      color: #737373;
-      border-color: #737373;
+    &:disabled{
+      color: $gray-200;
+      border-color: $gray-200;
     }
   }
 
@@ -70,17 +68,15 @@
 
     //color: $Prototype-Base_Neutrals-Gray400;
     &:hover {
-      color: #FFFFFF;
-      border-color: #FFFFFF;
+      color: $white;
+      border-color: $white;
     }
-
-    &:focus {
-      color: #A3A3A3;
+    &:focus{
+      color: $gray-300;
     }
-
-    &:disabled {
-      color: #737373;
-      border-color: #737373;
+    &:disabled{
+      color: $gray-200;
+      border-color: $gray-200;
     }
   }
 }
@@ -93,28 +89,20 @@
   width: 740px;
 }
 
-.success-area {
-
-  textarea,
-  textarea:hover {
-    border-color: #3DA96D;
+.success-area{
+  textarea ,textarea:hover{
+    border-color:$success-300;
   }
-
-  label,
-  p {
-    color: #3DA96D;
+  label, p{
+    color:$success-300;
   }
 }
 
-.error-area {
-
-  textarea,
-  textarea:hover {
-    border-color: #EC131E;
+.error-area{
+  textarea ,textarea:hover{
+    border-color:$error-200;
   }
-
-  label,
-  p {
-    color: #EC131E;
+  label, p{
+    color:$error-200;
   }
 }
