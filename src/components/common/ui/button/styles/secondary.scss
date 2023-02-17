@@ -14,7 +14,7 @@
   }
 
   &:focus {
-    background: $red;
+    background: $red-0;
   }
 
   &:disabled {
@@ -42,7 +42,7 @@
   }
 
   &:disabled {
-    background: $background-dark;
+    background: $background-dark-0;
     color: $gray-50;
   }
 }

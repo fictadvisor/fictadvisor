@@ -5,7 +5,7 @@
 
   padding: 8px 16px;
   gap: 8px;
-  background: $background-dark;
+  background: $background-dark-0;
 
   cursor: pointer;
 
@@ -30,7 +30,7 @@
   }
 
   &:disabled {
-    background: $background-dark;
+    background: $background-dark-0;
     cursor: default;
 
     >.text {
@@ -42,7 +42,7 @@
     }
 
     >.count {
-      background: $background-dark;
+      background: $background-dark-0;
 
       >.count-text {
         color: $gray-50;

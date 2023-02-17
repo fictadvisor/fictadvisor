@@ -53,7 +53,7 @@ $theme-color:$dark-primary;
  @include style-tag("success",$success-100,$success-50,$success-400);
  @include style-tag("error",$error-100,$error-50,$error-200);
  @include style-tag("warning",$warning-100,$warning-25,$warning-100);
- @include style-tag("info",$info-50,$info,$info-50);
+ @include style-tag("info",$info-50,$info-0,$info-50);
  @include style-tag("gray",$gray-50,$background-dark-10,$gray-100);
  @include style-tag("violet",$violet-300,$violet-200,$violet-200);
  @include style-tag("mint",$mint-300,$mint-200,$mint-200);
