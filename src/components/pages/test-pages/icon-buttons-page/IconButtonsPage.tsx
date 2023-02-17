@@ -5,6 +5,7 @@ import {
   SortButtonOrder,
 } from '@/components/common/ui/icon-button/IconButton';
 import {
+  CloseButton,
   SortButton,
   StarButton,
   TrashBucketButton,
@@ -187,6 +188,29 @@ const IconButtonsPage = () => (
         shape={IconType.CIRCLE}
         disabled={true}
         color={IconButtonColor.SUCCESS}
+      />
+
+      <CloseButton
+        size={IconButtonSize.LARGE}
+        shape={IconType.CIRCLE}
+        color={IconButtonColor.TRANSPARENT}
+      />
+      <CloseButton
+        size={IconButtonSize.NORMAL}
+        shape={IconType.CIRCLE}
+        color={IconButtonColor.TRANSPARENT}
+      />
+      <CloseButton
+        size={IconButtonSize.LARGE}
+        shape={IconType.CIRCLE}
+        disabled={true}
+        color={IconButtonColor.TRANSPARENT}
+      />
+      <CloseButton
+        size={IconButtonSize.NORMAL}
+        shape={IconType.CIRCLE}
+        disabled={true}
+        color={IconButtonColor.TRANSPARENT}
       />
     </div>
   </div>

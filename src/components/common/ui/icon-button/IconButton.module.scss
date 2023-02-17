@@ -47,6 +47,11 @@
   .circle-button-icon-#{$className}-error {
     @include style-button-icon-color(#ff5b5b, #dc3d43, #fd4444, #ff9898);
   }
+  .circle-button-icon-#{$className}-transparent {
+    @include style-button-icon(999px, $size);
+    background-color: transparent;
+    padding: 6px;
+  }
 }
 @mixin style-square-button-icon($className, $size) {
   .square-button-icon-#{$className}-error,
