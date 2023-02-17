@@ -8,7 +8,7 @@ import { Access } from 'src/v2/security/Access';
 
 @Controller({
   version: '2',
-  path: '/resources',
+  path: '/studentResources',
 })
 export class ResourceController {
   constructor(
