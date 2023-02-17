@@ -3,7 +3,8 @@ import { Subject } from '@prisma/client';
 import { QueryAllDTO } from 'src/v2/utils/QueryAllDTO';
 import { PrismaService } from '../../database/PrismaService';
 import { DatabaseUtils } from '../utils/DatabaseUtils';
-import { UpdateSubjectDTO } from './dto/UpdateSubjectDTO';
+import { UpdateSubjectData } from "./data/UpdateSubjectData";
+import { CreateSubjectData } from "./data/CreateSubjectData";
 
 @Injectable()
 export class SubjectRepository {
@@ -19,7 +20,7 @@ export class SubjectRepository {
     });
   }
 
-  async create(name: string) {
+  async create({ name }: CreateSubjectData) {
     return this.prisma.subject.create({
       data: {
         name,
@@ -30,7 +31,7 @@ export class SubjectRepository {
   async getOrCreate(name: string) {
     let subject = await this.find(name);
     if (!subject) {
-      subject = await this.create(name);
+      subject = await this.create({ name });
     }
     return subject;
   }
@@ -68,7 +69,7 @@ export class SubjectRepository {
     });
   }
 
-  async update(id: string, data: UpdateSubjectDTO) {
+  async update(id: string, data: UpdateSubjectData) {
     return this.prisma.subject.update({
       where: {
         id,
