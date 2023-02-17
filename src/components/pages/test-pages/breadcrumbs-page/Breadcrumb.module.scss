@@ -1,5 +1,7 @@
-$breadcrumb-text-color: #D4D4D4;
-$last-breadcrumb-text-color: #E5E5E5;
+@import "src/styles/partials/theme";
+
+$breadcrumb-text-color: $gray-400;
+$last-breadcrumb-text-color: $gray-500;
 
 .breadcrumb-wrap{
   display: flex;

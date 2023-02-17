@@ -1,23 +1,23 @@
 @import "button-style";
 
 .tertiary-button-color{
-  color: #D4D4D4;
+  color: $gray-400;
 
   &:hover {
     text-decoration: underline;
   }
 
   &:active {
-    color: #FAFAFA;
+    color: $gray-600;
   }
 
   &:focus {
-    outline: 0.5px solid #E5E5E5;
-    color: #FAFAFA;
+    outline: 0.5px solid $gray-500;
+    color: $gray-600;
   }
 
   &:disabled {
-    color: #525252;
+    color: $gray-100;
   }
 }
 

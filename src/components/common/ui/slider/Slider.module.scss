@@ -1,5 +1,7 @@
-$slider-color: #343434;
-$thumb-color: #B83838;
+@import "src/styles/partials/theme";
+
+$slider-color: $background-dark-35;
+$thumb-color: $red-25;
 $number-range-width: 100%;
 $slider-desk-height: 16px;
 $slider-mob-height: 8px;

@@ -1,3 +1,5 @@
+@import "src/styles/partials/theme";
+
 .tab {
   display: flex;
   align-items: center;
@@ -5,47 +7,47 @@
 
   padding: 8px 16px;
   gap: 8px;
-  background: #1E1E1E;
+  background: $background-dark-0;
 
   cursor: pointer;
 
   &:focus {
-    outline: 1px solid #873030;
+    outline: 1px solid $red-10;
   }
 
   &:hover {
-    background: #292929;
+    background: $background-dark-10;
 
     >.count {
-      background: #343434;
+      background: $background-dark-35;
     }
   }
 
   &:active {
-    background: #343434;
+    background: $background-dark-35;
 
     >.count {
-      background: #404040;
+      background: $gray-50;
     }
   }
 
   &:disabled {
-    background: #1E1E1E;
+    background: $background-dark-0;
     cursor: default;
 
     >.text {
-      color: #404040;
+      color: $gray-50;
     }
 
     >.icon {
-      opacity: 15%; // imitate disabled-icon-color (#404040)
+      opacity: 15%; // imitate disabled-icon-color ($gray-50)
     }
 
     >.count {
-      background: #1E1E1E;
+      background: $background-dark-0;
 
       >.count-text {
-        color: #404040;
+        color: $gray-50;
       }
     }
   }
@@ -112,7 +114,7 @@
 .text {
   font-style: normal;
   font-feature-settings: 'case' on, 'kern' off;
-  color: #FAFAFA;
+  color: $gray-600;
 
   text-align: center;
   flex: none;
@@ -133,12 +135,12 @@
   justify-content: center;
   align-items: center;
 
-  background: #292929;
+  background: $background-dark-10;
   border-radius: 24px;
 }
 
 .count-text {
   @extend .text;
   font-weight: 500;
-  color: #E5E5E5;
+  color: $gray-500;
 }
