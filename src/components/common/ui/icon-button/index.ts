@@ -1,6 +1,1 @@
-export {
-  IconButtonSize,
-  SortButton,
-  SortButtonOrder,
-  TrashBucketButton,
-} from './IconButton';
+export { IconButtonSize, SortButtonOrder } from './IconButton';

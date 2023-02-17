@@ -1,14 +1,10 @@
-import React from 'react';
-import {
-  BarsArrowDownIcon,
-  BarsArrowUpIcon,
-  TrashIcon,
-} from '@heroicons/react/24/outline';
+import React, { ReactNode } from 'react';
 
-import styles from './IconButton.module.scss';
-
-type IconButtonProps = {
-  size: 'normal' | 'large';
+export type IconButtonProps = {
+  size: IconButtonSize;
+  shape: IconType;
+  color: IconButtonColor;
+  icon?: ReactNode;
 } & React.DetailedHTMLProps<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
   HTMLButtonElement
@@ -24,29 +20,15 @@ export enum IconButtonSize {
   LARGE = 'large',
 }
 
-export const SortButton: React.FC<
-  IconButtonProps & {
-    order: SortButtonOrder.ASCENDING | SortButtonOrder.DESCENDING;
-  }
-> = ({ size, order, ...rest }) => {
-  return (
-    <button className={styles[`square-button-icon-${size}`]} {...rest}>
-      {order === SortButtonOrder.ASCENDING ? (
-        <BarsArrowUpIcon className="icon" />
-      ) : (
-        <BarsArrowDownIcon className="icon" />
-      )}
-    </button>
-  );
-};
+export enum IconButtonColor {
+  PRIMARY = 'primary',
+  ERROR = 'error',
+  SUCCESS = 'success',
+  SECONDARY = 'secondary',
+  TRANSPARENT = 'transparent',
+}
 
-export const TrashBucketButton: React.FC<IconButtonProps> = ({
-  size,
-  ...rest
-}) => {
-  return (
-    <button className={styles[`round-button-icon-${size}`]} {...rest}>
-      <TrashIcon className="icon" />
-    </button>
-  );
-};
+export enum IconType {
+  CIRCLE = 'circle',
+  SQUARE = 'square',
+}

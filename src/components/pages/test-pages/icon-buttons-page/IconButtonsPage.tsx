@@ -1,9 +1,13 @@
 import {
+  IconButtonColor,
   IconButtonSize,
-  SortButton,
+  IconType,
   SortButtonOrder,
-  TrashBucketButton,
 } from '@/components/common/ui/icon-button/IconButton';
+import {
+  SortButton,
+  TrashBucketButton,
+} from '@/components/common/ui/icon-button/variants';
 
 import styles from '../test-pages.module.scss';
 
@@ -13,44 +17,130 @@ const IconButtonsPage = () => (
       <SortButton
         size={IconButtonSize.LARGE}
         order={SortButtonOrder.ASCENDING}
+        color={IconButtonColor.ERROR}
+        shape={IconType.SQUARE}
       />
       <SortButton
         size={IconButtonSize.LARGE}
         order={SortButtonOrder.DESCENDING}
+        color={IconButtonColor.ERROR}
+        shape={IconType.SQUARE}
       />
       <SortButton
         size={IconButtonSize.NORMAL}
         order={SortButtonOrder.ASCENDING}
+        color={IconButtonColor.ERROR}
+        shape={IconType.SQUARE}
       />
       <SortButton
         size={IconButtonSize.NORMAL}
         order={SortButtonOrder.DESCENDING}
+        color={IconButtonColor.ERROR}
+        shape={IconType.SQUARE}
       />
       <SortButton
         size={IconButtonSize.LARGE}
         order={SortButtonOrder.ASCENDING}
+        color={IconButtonColor.ERROR}
+        shape={IconType.SQUARE}
         disabled={true}
       />
       <SortButton
         size={IconButtonSize.LARGE}
         order={SortButtonOrder.DESCENDING}
+        color={IconButtonColor.ERROR}
+        shape={IconType.SQUARE}
         disabled={true}
       />
       <SortButton
         size={IconButtonSize.NORMAL}
         order={SortButtonOrder.ASCENDING}
+        color={IconButtonColor.ERROR}
+        shape={IconType.SQUARE}
         disabled={true}
       />
       <SortButton
         size={IconButtonSize.NORMAL}
         order={SortButtonOrder.DESCENDING}
+        color={IconButtonColor.ERROR}
+        shape={IconType.SQUARE}
+        disabled={true}
+      />
+      <SortButton
+        size={IconButtonSize.LARGE}
+        order={SortButtonOrder.ASCENDING}
+        color={IconButtonColor.PRIMARY}
+        shape={IconType.SQUARE}
+      />
+      <SortButton
+        size={IconButtonSize.LARGE}
+        order={SortButtonOrder.DESCENDING}
+        color={IconButtonColor.PRIMARY}
+        shape={IconType.SQUARE}
+      />
+      <SortButton
+        size={IconButtonSize.NORMAL}
+        order={SortButtonOrder.ASCENDING}
+        color={IconButtonColor.PRIMARY}
+        shape={IconType.SQUARE}
+      />
+      <SortButton
+        size={IconButtonSize.NORMAL}
+        order={SortButtonOrder.DESCENDING}
+        color={IconButtonColor.PRIMARY}
+        shape={IconType.SQUARE}
+      />
+      <SortButton
+        size={IconButtonSize.LARGE}
+        order={SortButtonOrder.ASCENDING}
+        color={IconButtonColor.PRIMARY}
+        shape={IconType.SQUARE}
+        disabled={true}
+      />
+      <SortButton
+        size={IconButtonSize.LARGE}
+        order={SortButtonOrder.DESCENDING}
+        color={IconButtonColor.PRIMARY}
+        shape={IconType.SQUARE}
+        disabled={true}
+      />
+      <SortButton
+        size={IconButtonSize.NORMAL}
+        order={SortButtonOrder.ASCENDING}
+        color={IconButtonColor.PRIMARY}
+        shape={IconType.SQUARE}
+        disabled={true}
+      />
+      <SortButton
+        size={IconButtonSize.NORMAL}
+        order={SortButtonOrder.DESCENDING}
+        color={IconButtonColor.PRIMARY}
+        shape={IconType.SQUARE}
         disabled={true}
       />
 
-      <TrashBucketButton size={IconButtonSize.LARGE} />
-      <TrashBucketButton size={IconButtonSize.NORMAL} />
-      <TrashBucketButton size={IconButtonSize.LARGE} disabled={true} />
-      <TrashBucketButton size={IconButtonSize.NORMAL} disabled={true} />
+      <TrashBucketButton
+        size={IconButtonSize.LARGE}
+        shape={IconType.CIRCLE}
+        color={IconButtonColor.SECONDARY}
+      />
+      <TrashBucketButton
+        size={IconButtonSize.NORMAL}
+        shape={IconType.CIRCLE}
+        color={IconButtonColor.SECONDARY}
+      />
+      <TrashBucketButton
+        size={IconButtonSize.LARGE}
+        shape={IconType.CIRCLE}
+        disabled={true}
+        color={IconButtonColor.SECONDARY}
+      />
+      <TrashBucketButton
+        size={IconButtonSize.NORMAL}
+        shape={IconType.CIRCLE}
+        disabled={true}
+        color={IconButtonColor.SECONDARY}
+      />
     </div>
   </div>
 );

@@ -1,5 +1,5 @@
-@import "../../../../styles/partials/theme";
-@import "../../../../styles/partials/utils";
+@import 'src/styles/partials/theme';
+@import 'src/styles/partials/utils';
 
 @mixin style-button-icon($radius, $size) {
   @include flex-center;
@@ -18,42 +18,44 @@
     cursor: not-allowed;
   }
 }
+@mixin style-button-icon-color($default, $hover, $active, $focus) {
+  background-color: $default;
+  &:hover {
+    background-color: $hover;
+  }
+  &:focus {
+    background-color: $default;
+    border: $focus 1px solid;
+  }
+  &:active {
+    background-color: $active;
+  }
+}
 @mixin style-round-button-icon($className, $size) {
-  .round-button-icon-#{$className} {
+  .circle-button-icon-#{$className}-secondary {
     @include style-button-icon(999px, $size);
+    @include style-button-icon-color(#404040, #970c13, #ec131e, #970c13);
     padding: 6px;
-
-    &:hover {
-      background-color: #970c13;
-    }
-    &:active {
-      background-color: #ec131e;
-    }
-    &:focus {
-      border: #970c13 1px solid;
-    }
   }
 }
 @mixin style-square-button-icon($className, $size) {
-  .square-button-icon-#{$className} {
+  .square-button-icon-#{$className}-error,
+  .square-button-icon-#{$className}-primary {
     @include style-button-icon(6px, $size);
     padding: 6px;
-    &:hover {
-      background-color: #404040;
-    }
-    &:active {
-      background-color: #4b4b4b;
-    }
-    &:focus {
-      border-color: #747474;
-    }
     & svg {
       transform: translateX(10%) translateY(10%);
     }
   }
+  .square-button-icon-#{$className}-error {
+    @include style-button-icon-color(#ff5b5b, #dc3d43, #fd4444, #ff9898);
+  }
+  .square-button-icon-#{$className}-primary {
+    @include style-button-icon-color(#292929, #404040, #4b4b4b, #747474);
+  }
 }
 
-@include style-round-button-icon("normal", 36px);
-@include style-round-button-icon("large", 28px);
-@include style-square-button-icon("normal", 32px);
-@include style-square-button-icon("large", 40px);
+@include style-round-button-icon('normal', 36px);
+@include style-round-button-icon('large', 28px);
+@include style-square-button-icon('normal', 32px);
+@include style-square-button-icon('large', 40px);
