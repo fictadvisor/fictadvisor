@@ -1,9 +1,7 @@
-import { Body, Controller, Get, Param, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Request } from '@nestjs/common';
 import { DisciplineTeacherService } from "./DisciplineTeacherService";
 import { CreateAnswersDTO } from "./dto/CreateAnswersDTO";
-import { JwtGuard } from "../../security/JwtGuard";
-import { Permission } from "../../security/permission-guard/Permission";
-import { PermissionGuard } from "../../security/permission-guard/PermissionGuard";
+import { GroupByDisciplineTeacherGuard } from 'src/v2/security/group-guard/GroupByDisciplineTeacherGuard';
 import { DisciplineTeacherByIdPipe } from './dto/DisciplineTeacherByIdPipe';
 import { Access } from 'src/v2/security/Access';
 
@@ -23,7 +21,7 @@ export class DisciplineTeacherController{
     return this.disciplineTeacherService.getQuestions(disciplineTeacherId);
   }
 
-  @Access('groups.$groupId.answers.send')
+  @Access('groups.$groupId.answers.send', GroupByDisciplineTeacherGuard)
   @Post('/:disciplineTeacherId/answers')
   sendAnswers(
     @Param('disciplineTeacherId', DisciplineTeacherByIdPipe) disciplineTeacherId: string,

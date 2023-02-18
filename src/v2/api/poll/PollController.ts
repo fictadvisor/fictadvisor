@@ -1,10 +1,7 @@
-import { Body, Controller, Delete, Get, Patch, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch, Param, Post } from '@nestjs/common';
 import { PollService } from './PollService';
-import { JwtGuard } from '../../security/JwtGuard';
 import { UpdateQuestionDTO } from "./dto/UpdateQuestionDTO";
 import { CreateQuestionWithRolesDTO } from "./dto/CreateQuestionDTO";
-import { Permission } from "../../security/permission-guard/Permission";
-import { PermissionGuard } from "../../security/permission-guard/PermissionGuard";
 import { QuestionByIdPipe } from "./dto/QuestionByIdPipe";
 import { QuestionByRoleAndIdPipe } from "./dto/QuestionByRoleAndIdPipe";
 import { CreateQuestionRoleDTO } from './dto/CreateQuestionRoleDTO';

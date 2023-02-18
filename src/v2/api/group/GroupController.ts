@@ -1,11 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request } from '@nestjs/common';
 import { GroupService } from './GroupService';
 import { CreateGroupDTO } from './dto/CreateGroupDTO';
 import { GroupByIdPipe } from './GroupByIdPipe';
 import { Group } from '@prisma/client';
-import { JwtGuard } from '../../security/JwtGuard';
-import { Permission } from 'src/v2/security/permission-guard/Permission';
-import { PermissionGuard } from 'src/v2/security/permission-guard/PermissionGuard';
 import { EmailDTO } from './dto/EmailDTO';
 import { ApproveDTO } from "../user/dto/ApproveDTO";
 import { RoleDTO } from "./dto/RoleDTO";

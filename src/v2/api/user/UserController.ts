@@ -1,12 +1,9 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { UserService } from './UserService';
 import { TelegramGuard } from '../../security/TelegramGuard';
-import { JwtGuard } from '../../security/JwtGuard';
 import { ApproveDTO } from './dto/ApproveDTO';
 import { GiveRoleDTO } from './dto/GiveRoleDTO';
 import { CreateSuperheroDTO } from "./dto/CreateSuperheroDTO";
-import { PermissionGuard } from "../../security/permission-guard/PermissionGuard";
-import { Permission } from "../../security/permission-guard/Permission";
 import { UserByIdPipe } from "./UserByIdPipe";
 import { CreateContactDTO } from "./dto/CreateContactDTO";
 import { UpdateContactDTO } from "./dto/UpdateContactDTO";

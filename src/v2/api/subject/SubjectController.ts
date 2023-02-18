@@ -1,12 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { SubjectService } from './SubjectService';
 import { CreateSubjectDTO } from './dto/CreateSubjectDTO';
 import { UpdateSubjectDTO } from './dto/UpdateSubjectDTO';
 import { SubjectByIdPipe } from './SubjectByIdPipe';
-import { JwtGuard } from '../../security/JwtGuard';
 import { QueryAllDTO } from 'src/v2/utils/QueryAllDTO';
-import { Permission } from 'src/v2/security/permission-guard/Permission';
-import { PermissionGuard } from 'src/v2/security/permission-guard/PermissionGuard';
 import { Access } from 'src/v2/security/Access';
 
 @Controller({
