@@ -1,4 +1,4 @@
-import { IsAscii, IsOptional,  MaxLength } from "class-validator";
+import { IsAscii, IsOptional, MaxLength } from "class-validator";
 
 export class UpdateContactDTO {
 
