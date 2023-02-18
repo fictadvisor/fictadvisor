@@ -7,10 +7,8 @@ import AlertButton, {
   AlertButtonType,
 } from '@/components/common/ui/alert-button/AlertButton';
 import Check, { CheckState } from '@/components/common/ui/check/Check';
-import {
-  IconButtonSize,
-  TrashBucketButton,
-} from '@/components/common/ui/icon-button/IconButton';
+import { IconButtonSize } from '@/components/common/ui/icon-button/IconButton';
+import { TrashBucketButton } from '@/components/common/ui/icon-button/variants';
 import Tag, { TagState } from '@/components/common/ui/tag/Tag';
 
 import styles from '../test-pages.module.scss';
