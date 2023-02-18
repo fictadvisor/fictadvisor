@@ -221,12 +221,7 @@ const IconButtonsPage = () => (
         shape={IconType.CIRCLE}
       />
 
-      <IconButton
-        icon={CloseButton}
-        color={IconButtonColor.SUCCESS}
-        size={IconButtonSize.NORMAL}
-        shape={IconType.CIRCLE}
-      />
+      <IconButton icon={CloseButton} />
     </div>
   </div>
 );

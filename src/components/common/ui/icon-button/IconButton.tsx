@@ -1,9 +1,9 @@
 import React from 'react';
 
 export type IconButtonProps = {
-  size: IconButtonSize;
-  shape: IconType;
-  color: IconButtonColor;
+  size?: IconButtonSize;
+  shape?: IconType;
+  color?: IconButtonColor;
 } & React.DetailedHTMLProps<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
   HTMLButtonElement
