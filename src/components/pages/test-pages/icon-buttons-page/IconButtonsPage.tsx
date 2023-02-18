@@ -1,3 +1,5 @@
+import { StarIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
+
 import {
   IconButton,
   IconButtonColor,
@@ -215,13 +217,15 @@ const IconButtonsPage = () => (
       />
 
       <IconButton
-        icon={CloseButton}
-        color={IconButtonColor.ERROR}
+        icon={<XMarkIcon />}
+        color={IconButtonColor.SUCCESS}
         size={IconButtonSize.LARGE}
         shape={IconType.CIRCLE}
       />
 
-      <IconButton icon={CloseButton} />
+      <IconButton icon={<StarIcon />} color={IconButtonColor.ERROR} />
+      <IconButton icon={<TrashIcon />} color={IconButtonColor.SECONDARY} />
+      <SortButton />
     </div>
   </div>
 );

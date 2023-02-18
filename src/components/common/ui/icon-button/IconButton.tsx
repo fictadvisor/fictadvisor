@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
+
+import styles from './IconButton.module.scss';
 
 export type IconButtonProps = {
   size?: IconButtonSize;
@@ -34,14 +36,21 @@ export enum IconType {
 
 export const IconButton: React.FC<
   IconButtonProps & {
-    icon: React.FC<IconButtonProps>;
+    icon: ReactNode;
   }
 > = ({
   size = IconButtonSize.NORMAL,
   shape = IconType.CIRCLE,
   color = IconButtonColor.PRIMARY,
-  icon: Icon,
+  icon,
   ...rest
 }) => {
-  return <Icon size={size} shape={shape} color={color} {...rest} />;
+  return (
+    <button
+      className={styles[`${shape}-button-icon-${size}-${color}`]}
+      {...rest}
+    >
+      {icon}
+    </button>
+  );
 };

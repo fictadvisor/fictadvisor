@@ -1,23 +1,28 @@
 import React from 'react';
 import { StarIcon } from '@heroicons/react/24/outline';
 
-import { IconButtonProps } from '../IconButton';
-
-import styles from '../IconButton.module.scss';
+import {
+  IconButton,
+  IconButtonColor,
+  IconButtonProps,
+  IconButtonSize,
+  IconType,
+} from '../IconButton';
 
 const StarButton: React.FC<IconButtonProps> = ({
-  size,
-  shape,
-  color,
+  size = IconButtonSize.NORMAL,
+  shape = IconType.CIRCLE,
+  color = IconButtonColor.SUCCESS,
   ...rest
 }) => {
   return (
-    <button
-      className={styles[`${shape}-button-icon-${size}-${color}`]}
+    <IconButton
+      icon={<StarIcon className="icon" />}
+      size={size}
+      shape={shape}
+      color={color}
       {...rest}
-    >
-      <StarIcon className="icon" />
-    </button>
+    />
   );
 };
 

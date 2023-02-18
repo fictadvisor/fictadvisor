@@ -4,26 +4,43 @@ import {
   BarsArrowUpIcon,
 } from '@heroicons/react/24/outline';
 
-import { IconButtonProps, SortButtonOrder } from '../IconButton';
-
-import styles from '../IconButton.module.scss';
+import {
+  IconButton,
+  IconButtonColor,
+  IconButtonProps,
+  IconButtonSize,
+  IconType,
+  SortButtonOrder,
+} from '../IconButton';
 
 const SortButton: React.FC<
   IconButtonProps & {
-    order: SortButtonOrder.ASCENDING | SortButtonOrder.DESCENDING;
+    order?: SortButtonOrder.ASCENDING | SortButtonOrder.DESCENDING;
   }
-> = ({ size, shape, order, color, ...rest }) => {
-  return (
-    <button
-      className={styles[`${shape}-button-icon-${size}-${color}`]}
-      {...rest}
-    >
+> = ({
+  size = IconButtonSize.NORMAL,
+  shape = IconType.SQUARE,
+  order = SortButtonOrder.ASCENDING,
+  color = IconButtonColor.ERROR,
+  ...rest
+}) => {
+  const SortIcon = () => (
+    <>
       {order === SortButtonOrder.ASCENDING ? (
         <BarsArrowUpIcon className="icon" />
       ) : (
         <BarsArrowDownIcon className="icon" />
       )}
-    </button>
+    </>
+  );
+  return (
+    <IconButton
+      icon={<SortIcon />}
+      size={size}
+      shape={shape}
+      color={color}
+      {...rest}
+    />
   );
 };
 

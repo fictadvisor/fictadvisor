@@ -1,23 +1,28 @@
 import React from 'react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 
-import { IconButtonProps } from '../IconButton';
-
-import styles from '../IconButton.module.scss';
+import {
+  IconButton,
+  IconButtonColor,
+  IconButtonProps,
+  IconButtonSize,
+  IconType,
+} from '../IconButton';
 
 const CloseButton: React.FC<IconButtonProps> = ({
-  size,
-  shape,
-  color,
+  size = IconButtonSize.NORMAL,
+  shape = IconType.SQUARE,
+  color = IconButtonColor.TRANSPARENT,
   ...rest
 }) => {
   return (
-    <button
-      className={styles[`${shape}-button-icon-${size}-${color}`]}
+    <IconButton
+      icon={<XMarkIcon className="icon" />}
+      size={size}
+      shape={shape}
+      color={color}
       {...rest}
-    >
-      <XMarkIcon className="icon" />
-    </button>
+    />
   );
 };
 
