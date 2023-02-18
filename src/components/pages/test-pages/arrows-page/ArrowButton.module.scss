@@ -1,6 +1,8 @@
-$arrow-default-color: #292929;
-$arrow-hover-color: #343434;
-$arrow-active-color: #404040;
+@import "src/styles/partials/theme";
+
+$arrow-default-color: $background-dark-10;
+$arrow-hover-color: $background-dark-35;
+$arrow-active-color: $gray-50;
 
 .arrow-desktop {
   padding: 6px 6px 6px 6px;

@@ -6,15 +6,15 @@
   overflow: hidden;
   align-items: center;
   border-radius: $radius;
-  color: $light-primary;
-  background-color: #404040;
+  color: $gray-600;
+  background-color: $gray-50;
   border: 1px solid transparent;
   height: $size;
   width: $size;
   position: relative;
   &:disabled {
-    background-color: $dark-primary !important;
-    color: #404040;
+    background-color: $background-dark-0 !important;
+    color: $gray-50;
     cursor: not-allowed;
   }
 }

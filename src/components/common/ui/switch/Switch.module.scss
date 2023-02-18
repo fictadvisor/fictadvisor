@@ -1,3 +1,4 @@
+@import "src/styles/partials/theme";
 
 .web-switch-text {
   font-size: 16px;
@@ -34,7 +35,7 @@
         width: 40px;
         height: 20px;
         top: 2px;
-        background-color: #747474;
+        background-color: $background-dark-200;
         border-radius: 100px;
         transition: 0.4s ease-in-out;
     }
@@ -48,7 +49,7 @@
         top: -17px;
         width: 18px;
         height: 18px;
-        background-color: #343434;
+        background-color: $background-dark-35;
         border-radius: 100px;
         transition: 0.4s ease-in-out;
     }
@@ -56,12 +57,12 @@
 
 
 .web-switch-input:checked+.web-switch-slider::before {
-    background-color: #FD4444;
+    background-color: $red-logo;
     box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .web-switch-input:checked+.web-switch-slider::after {
-    background-color: #FFFFFF;
+    background-color: $white;
     left: 21px;
 }
 
@@ -87,11 +88,11 @@
 }
 
 .mobile-switch-input:checked+.mobile-switch-slider::before {
-    background-color: #FD4444;
+    background-color: $red-logo;
     box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .mobile-switch-input:checked+.mobile-switch-slider::after {
-    background-color: #FFFFFF;
+    background-color: $white;
     left: 19px;
 }
