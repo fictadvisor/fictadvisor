@@ -5,6 +5,7 @@ import { JwtGuard } from "../../security/JwtGuard";
 import { Permission } from "../../security/permission-guard/Permission";
 import { PermissionGuard } from "../../security/permission-guard/PermissionGuard";
 import { DisciplineTeacherByIdPipe } from './dto/DisciplineTeacherByIdPipe';
+import { Access } from 'src/v2/security/Access';
 
 @Controller({
   version: '2',
@@ -22,8 +23,7 @@ export class DisciplineTeacherController{
     return this.disciplineTeacherService.getQuestions(disciplineTeacherId);
   }
 
-  @Permission('groups.$groupId.answers.send')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('groups.$groupId.answers.send')
   @Post('/:disciplineTeacherId/answers')
   sendAnswers(
     @Param('disciplineTeacherId', DisciplineTeacherByIdPipe) disciplineTeacherId: string,

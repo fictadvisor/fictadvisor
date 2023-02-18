@@ -52,7 +52,7 @@ export class PollController {
     return this.pollService.getQuestion(questionId);
   }
 
-  @Access('questions.update')
+  @Access('questions.roles.give')
   @Post('/questions/:questionId/roles')
   giveRole(
     @Param('questionId', QuestionByIdPipe) questionId: string,
