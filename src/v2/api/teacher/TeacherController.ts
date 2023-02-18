@@ -103,8 +103,8 @@ export class TeacherController {
   @Access('teachers.$teacherId.contacts.delete')
   @Delete('/:teacherId/contacts/:name')
   async deleteContact(
-    @Param(ContactByNamePipe) [teacherId, name]: string[],
+    @Param(ContactByNamePipe) params: {teacherId: string, name: string},
   ){
-    return this.teacherService.deleteContact(teacherId, name);
+    return this.teacherService.deleteContact(params.teacherId, params.name);
   }
 }

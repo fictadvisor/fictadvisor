@@ -21,11 +21,9 @@ export class CreateContactDTO {
     @IsNotEmpty({
       message: 'displayName can not be empty',
     })
-    @Matches(
-      createRegex(UKR_REGEX, ENG_REGEX, NUM_REGEX, UKRSPEC_REGEX),
-      {
-        message: 'displayName is not correct (a-zA-Z0-9A-Я(укр.)\\-\' )',
-      })
+    @IsAscii({
+      message: 'link contains wrong symbols (ACSII only)',
+    })
     displayName: string;
 
     @MaxLength(200, {

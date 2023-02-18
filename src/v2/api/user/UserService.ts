@@ -108,11 +108,11 @@ export class UserService {
   }
 
   async getContacts(userId: string) {
-    await this.contactRepository.getAllContacts(userId);
+    return this.contactRepository.getAllContacts(userId);
   }
 
   async createContact(userId: string, data: CreateContactDTO) {
-    await this.contactRepository.createContact({
+    return this.contactRepository.createContact({
       entityId: userId,
       entityType: EntityType.STUDENT,
       ...data,
