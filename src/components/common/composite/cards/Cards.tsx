@@ -7,45 +7,58 @@ import Rating from '@/components/common/ui/rating';
 import Tag, { TagState } from '@/components/common/ui/tag';
 import Tooltip from '@/components/common/ui/tooltip';
 
-interface HeaderCardProps {
+import {
+  CheckIcon,
+  DoubleCheckIcon,
+} from '../../custom-svg/card-icons/CheckIcon';
+
+type DivProps = React.DetailedHTMLProps<
+  React.HTMLAttributes<HTMLDivElement>,
+  HTMLDivElement
+>;
+
+type HeaderCardProps = {
   name: string;
   groupName: string;
   position: string;
   url?: string;
-}
+} & DivProps;
 
-interface LecturerHeaderCardProps {
+type LecturerHeaderCardProps = {
   name: string;
   description: string;
   url?: string;
-}
+} & DivProps;
 
-interface PollCardProps {
+type LecturerPollCardProps = {
   name: string;
   description: string;
   roles: string[];
   url?: string;
-}
+} & DivProps;
 
-interface RatingCardProps {
+type PollCard = {
+  questionNumber: number;
+  question: string;
+  numberOfAnswered: number;
+  numberOfQuestions: number;
+} & DivProps;
+
+type RatingCardProps = {
   name: string;
   rating?: number;
   roles?: string[];
   url?: string;
-}
+} & DivProps;
 
-interface SimpleCardProps {
+type SimpleCardProps = {
   name: string;
   details?: string;
   rating?: number;
-}
+} & DivProps;
 
-const useToolTip = (
-  element: HTMLParagraphElement,
-  toolTipWidth: number,
-): any => {
-  console.dir(element);
-  //to find out if the p element is truncated
+const useToolTip = (element: HTMLDivElement, toolTipWidth: number): any => {
+  //to find out if the div element is truncated
   let isTruncated;
 
   let offsetX, offsetY, toolTipDirection;
@@ -76,9 +89,10 @@ export const HeaderCard: React.FC<HeaderCardProps> = ({
   groupName,
   position,
   url = '/assets/icons/frog36.png',
+  ...rest
 }) => {
   return (
-    <div className={mergeClassNames(styles[`header-card-container`])}>
+    <div className={mergeClassNames(styles[`header-card-container`])} {...rest}>
       <div className={styles[`header-card-info`]}>
         <h4 className={styles[`card-name`]}>{name}</h4>
         <div>
@@ -95,6 +109,7 @@ export const LecturerHeaderCard: React.FC<LecturerHeaderCardProps> = ({
   name,
   description,
   url = '/assets/icons/lecturer60.png',
+  ...rest
 }) => {
   const [showToolTip, setShowToolTip] = useState<boolean>(false);
   const ref = useRef<HTMLParagraphElement>(null);
@@ -109,11 +124,12 @@ export const LecturerHeaderCard: React.FC<LecturerHeaderCardProps> = ({
         styles['card'],
         styles['header-lecturer-card-container'],
       )}
+      {...rest}
     >
       <img src={url} alt="картинка викладача" />
       <div className={styles['header-lecturer-card-info']}>
         <h4 className={styles['card-name']}>{name}</h4>
-        <p
+        <div
           ref={ref}
           className={styles['lecturer-description']}
           onMouseEnter={() => setShowToolTip(true)}
@@ -134,17 +150,18 @@ export const LecturerHeaderCard: React.FC<LecturerHeaderCardProps> = ({
               direction={toolTipDirection}
             />
           )}
-        </p>
+        </div>
       </div>
     </div>
   );
 };
 
-export const PollCard: React.FC<PollCardProps> = ({
+export const LecturerPollCard: React.FC<LecturerPollCardProps> = ({
   name,
   description,
   roles,
   url = '/assets/icons/lecturer60.png',
+  ...rest
 }) => {
   const [showToolTip, setShowToolTip] = useState<boolean>(false);
   const ref = useRef<HTMLParagraphElement>(null);
@@ -158,14 +175,15 @@ export const PollCard: React.FC<PollCardProps> = ({
       className={mergeClassNames(
         styles['card'],
         styles['card-effect'],
-        styles['poll-card-container'],
+        styles['lecturer-poll-card-container'],
       )}
+      {...rest}
     >
       <img className={styles['card-avatar']} src={url} alt="викладач" />
       <br />
       <CardRoles roles={roles} />
       <h4 className={styles['card-name']}>{name}</h4>
-      <p
+      <div
         ref={ref}
         className={styles['lecturer-description']}
         onMouseEnter={() => setShowToolTip(true)}
@@ -185,7 +203,7 @@ export const PollCard: React.FC<PollCardProps> = ({
             }}
           />
         )}
-      </p>
+      </div>
 
       <Button
         type={ButtonType.SECONDARY_RED}
@@ -196,11 +214,43 @@ export const PollCard: React.FC<PollCardProps> = ({
   );
 };
 
+export const PollCard: React.FC<PollCard> = ({
+  questionNumber,
+  question,
+  numberOfAnswered,
+  numberOfQuestions,
+  ...rest
+}) => {
+  let isDoubleCheckIcon,
+    showIcon = true;
+  if (numberOfAnswered >= 1 && numberOfAnswered !== numberOfQuestions) {
+    isDoubleCheckIcon = false;
+  } else if (numberOfAnswered === numberOfQuestions) {
+    isDoubleCheckIcon = true;
+  } else if (numberOfAnswered === 0) showIcon = false;
+
+  return (
+    <div
+      className={mergeClassNames(styles['card'], styles['poll-card-container'])}
+      {...rest}
+    >
+      <div>
+        <b>{questionNumber}. Рейтингова система</b>
+        <p>{`${numberOfAnswered}/${numberOfQuestions} запитання`}</p>
+      </div>
+      <div className="icon">
+        {showIcon && (isDoubleCheckIcon ? <DoubleCheckIcon /> : <CheckIcon />)}
+      </div>
+    </div>
+  );
+};
+
 export const RatingCard: React.FC<RatingCardProps> = ({
   rating,
   name,
   roles,
   url = '/assets/icons/lecturer60.png',
+  ...rest
 }) => {
   return (
     <article
@@ -209,6 +259,7 @@ export const RatingCard: React.FC<RatingCardProps> = ({
         styles['card-effect'],
         styles['rating-card-container'],
       )}
+      {...rest}
     >
       <img className={styles['card-avatar']} src={url} alt="викладач" />
 
@@ -240,7 +291,7 @@ export const SimpleCard: React.FC<SimpleCardProps> = ({
         styles['simple-card-container'],
       )}
     >
-      <p
+      <div
         ref={ref}
         className={mergeClassNames(
           styles['card-name '],
@@ -263,7 +314,7 @@ export const SimpleCard: React.FC<SimpleCardProps> = ({
             }}
           />
         )}
-      </p>
+      </div>
 
       {details && <p>{details}</p>}
       {rating && (

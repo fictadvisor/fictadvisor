@@ -1,5 +1,12 @@
-@import "src/styles/partials/utils";
+// @import "@/styles/global-styles.scss";
+@import "@/styles/partials/_utils.scss";
 
+// @import "../../global/partials/theme";
+
+// Dark background color
+$dark-primary: #1E1E1E;
+// $dark-secondary-1: #121212;
+// $dark-secondary-2: #232323;
 
 .header-card-container {
     & img {
@@ -160,6 +167,36 @@
 }
 
 .poll-card-container {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #404040;
+    // border-bottom: 1px solid #404040;
+    background-color: $dark-primary;
+    border-radius: 0px;
+    padding: 32px 16px;
+    cursor: pointer;
+    & p{
+        color: #A3A3A3;
+    }
+    &:hover,&:active{
+        border-radius: 6px;
+        border: transparent 1px solid;
+    }
+    &:hover{
+        background:#402626;
+        & svg{
+            display: none;
+        } 
+    }
+    &:active{
+        background:#873030;
+    }
+    
+}
+
+.lecturer-poll-card-container{
     margin-top: 3rem;
     display: flex;
     flex-flow: column nowrap;
@@ -170,7 +207,7 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    padding: 16px;
+    padding:16px;
     margin-top: 3rem;
     height: fit-content;
     background-color: #343434;
@@ -183,7 +220,7 @@
 
     & .simple-card-name {
         
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 700;
         display: -webkit-box;
         overflow: hidden;
