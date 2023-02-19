@@ -109,6 +109,9 @@ $dark-primary: #1E1E1E;
     border-color: transparent;
     background-color: #4b4b4b;
     pointer-events: none;
+    *{
+        color: #a3a3a3;
+    }
 }
 
 .lecturer-description {

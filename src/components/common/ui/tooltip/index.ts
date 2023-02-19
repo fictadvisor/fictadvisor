@@ -1,1 +1,1 @@
-export { default, TooltipDirection } from './Tooltip';
+export { default, TooltipPosition } from './Tooltip';
