@@ -1,20 +1,20 @@
-import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../../database/PrismaService";
-import { CreateAnswerData } from "./dto/CreateAnswerData";
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../../database/PrismaService';
+import { CreateAnswerData } from './dto/CreateAnswerData';
 
 @Injectable()
 export class QuestionAnswerRepository {
-  constructor(
+  constructor (
     private prisma: PrismaService,
   ) {}
 
-  create(data: CreateAnswerData) {
+  create (data: CreateAnswerData) {
     return this.prisma.questionAnswer.create({
       data,
     });
   }
 
-  find(where: Omit<CreateAnswerData, "value">) {
+  find (where: Omit<CreateAnswerData, 'value'>) {
     return this.prisma.questionAnswer.findFirst({
       where,
     });

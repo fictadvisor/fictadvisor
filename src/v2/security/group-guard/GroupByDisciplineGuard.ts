@@ -6,11 +6,11 @@ import { RequestUtils } from '../../utils/RequestUtils';
 @Injectable()
 export class GroupByDisciplineGuard implements CanActivate {
 
-  constructor(
+  constructor (
     private disciplineRepository: DisciplineRepository,
   ) {}
 
-  async canActivate(context: ExecutionContext) {
+  async canActivate (context: ExecutionContext) {
     const request = context.switchToHttp().getRequest<Request>();
     const disciplineId = RequestUtils.get(request, 'disciplineId');
     const group = await this.disciplineRepository.getGroup(disciplineId);

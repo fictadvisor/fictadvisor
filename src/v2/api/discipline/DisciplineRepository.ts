@@ -5,11 +5,11 @@ import { UpdateDisciplineDTO } from './dto/UpdateDisciplineDTO';
 
 @Injectable()
 export class DisciplineRepository {
-  constructor(
+  constructor (
     private prisma: PrismaService,
   ) {}
 
-  async getDiscipline(id: string) {
+  async getDiscipline (id: string) {
     return this.prisma.discipline.findUnique({
       where: {
         id,
@@ -27,7 +27,7 @@ export class DisciplineRepository {
     });
   }
 
-  async getGroup(id: string) {
+  async getGroup (id: string) {
     return this.prisma.group.findFirst({
       where: {
         disciplines: {
@@ -39,7 +39,7 @@ export class DisciplineRepository {
     });
   }
 
-  async getUserSelective(disciplineId: string) {
+  async getUserSelective (disciplineId: string) {
     return this.prisma.student.findMany({
       where: {
         selectiveDisciplines: {
@@ -66,7 +66,7 @@ export class DisciplineRepository {
     });
   }
 
-  async getDisciplineTeachers(id: string) {
+  async getDisciplineTeachers (id: string) {
     return this.prisma.disciplineTeacher.findMany({
       where: {
         discipline: {
@@ -93,19 +93,19 @@ export class DisciplineRepository {
     });
   }
 
-  async find(where: CreateDisciplineDTO) {
+  async find (where: CreateDisciplineDTO) {
     return this.prisma.discipline.findFirst({
       where,
     });
   }
 
-  async create(data: CreateDisciplineDTO) {
+  async create (data: CreateDisciplineDTO) {
     return this.prisma.discipline.create({
       data,
     });
   }
 
-  async getOrCreate(data: CreateDisciplineDTO) {
+  async getOrCreate (data: CreateDisciplineDTO) {
     let discipline = await this.find(data);
     if (!discipline) {
       discipline = await this.create(data);
@@ -113,7 +113,7 @@ export class DisciplineRepository {
     return discipline;
   }
 
-  async update(id: string, data: UpdateDisciplineDTO) {
+  async update (id: string, data: UpdateDisciplineDTO) {
     return this.prisma.discipline.update({
       where: {
         id,

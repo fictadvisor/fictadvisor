@@ -4,20 +4,20 @@ import { Group, Role, RoleName, State, User } from '@prisma/client';
 import { DisciplineService } from '../discipline/DisciplineService';
 import { DisciplineRepository } from '../discipline/DisciplineRepository';
 import { GroupRepository } from './GroupRepository';
-import { StudentRepository } from "../user/StudentRepository";
-import { QueryAllDTO } from "../../utils/QueryAllDTO";
-import { UserRepository } from "../user/UserRepository";
-import { EmailDTO } from "./dto/EmailDTO";
-import { ApproveDTO } from "../user/dto/ApproveDTO";
-import { NoPermissionException } from "../../utils/exceptions/NoPermissionException";
-import { RoleDTO } from "./dto/RoleDTO";
-import { UpdateGroupDTO } from "./dto/UpdateGroupDTO";
+import { StudentRepository } from '../user/StudentRepository';
+import { QueryAllDTO } from '../../utils/QueryAllDTO';
+import { UserRepository } from '../user/UserRepository';
+import { EmailDTO } from './dto/EmailDTO';
+import { ApproveDTO } from '../user/dto/ApproveDTO';
+import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
+import { RoleDTO } from './dto/RoleDTO';
+import { UpdateGroupDTO } from './dto/UpdateGroupDTO';
 import { UserService } from '../user/UserService';
-import { DisciplineTeacherService } from "../teacher/DisciplineTeacherService";
+import { DisciplineTeacherService } from '../teacher/DisciplineTeacherService';
 
 @Injectable()
 export class GroupService {
-  constructor(
+  constructor (
     private disciplineService: DisciplineService,
     private disciplineTeacherService: DisciplineTeacherService,
     private disciplineRepository: DisciplineRepository,
@@ -28,19 +28,19 @@ export class GroupService {
     private userRepository: UserRepository,
   ) {}
 
-  async create(code: string): Promise<Group>  {
+  async create (code: string): Promise<Group>  {
     return this.groupRepository.create(code);
   }
 
-  async getAll(body: QueryAllDTO) {
+  async getAll (body: QueryAllDTO) {
     return this.groupRepository.getAll(body);
   }
 
-  async get(id: string) {
+  async get (id: string) {
     return this.groupRepository.getGroup(id);
   }
 
-  async getDisciplineTeachers(groupId: string) {
+  async getDisciplineTeachers (groupId: string) {
     const disciplines = await this.groupRepository.getDisciplines(groupId);
 
     return disciplines.map((d) => ({
@@ -53,7 +53,7 @@ export class GroupService {
     }));
   }
 
-  async getDisciplines(groupId: string) {
+  async getDisciplines (groupId: string) {
     const disciplines = await this.groupRepository.getDisciplines(groupId);
 
     return disciplines.map((d) => ({
@@ -65,7 +65,7 @@ export class GroupService {
     }));
   }
 
-  async addUnregistered(groupId: string, body: EmailDTO) {
+  async addUnregistered (groupId: string, body: EmailDTO) {
     const users = [];
     for (const email of body.emails) {
       const user = await this.userRepository.create({ email });
@@ -82,7 +82,7 @@ export class GroupService {
     return { users };
   }
 
-  async verifyStudent(groupId: string, userId: string, data: ApproveDTO) {
+  async verifyStudent (groupId: string, userId: string, data: ApproveDTO) {
     const user = await this.userRepository.get(userId);
 
     if (user.student.groupId !== groupId) {
@@ -93,7 +93,7 @@ export class GroupService {
     return this.userService.getStudent(verifiedStudent);
   }
 
-  async moderatorSwitch(groupId: string, userId: string, body: RoleDTO){
+  async moderatorSwitch (groupId: string, userId: string, body: RoleDTO) {
     const user = await this.userRepository.get(userId);
 
     if (body.roleName !== RoleName.MODERATOR && body.roleName === RoleName.STUDENT) {
@@ -111,7 +111,7 @@ export class GroupService {
     await this.studentRepository.addRole(userId, role.id);
   }
 
-  async removeStudent(groupId: string, userId: string, reqUser: User) {
+  async removeStudent (groupId: string, userId: string, reqUser: User) {
     const userRole = await this.userService.getGroupRoleDB(userId);
     const reqUserRole = await this.userService.getGroupRoleDB(reqUser.id);
 
@@ -125,7 +125,7 @@ export class GroupService {
     await this.studentRepository.update(userId, { state: State.DECLINED });
   }
 
-  async getCaptain(groupId: string) {
+  async getCaptain (groupId: string) {
     const students = await this.groupRepository.getStudents(groupId);
 
     const student = students.find(({ roles }) => {
@@ -135,15 +135,15 @@ export class GroupService {
     return student?.user;
   }
 
-  checkRole(name: RoleName, role: { role: Role }) {
+  checkRole (name: RoleName, role: { role: Role }) {
     return role.role.name === name;
   }
 
-  async deleteGroup(groupId: string) {
+  async deleteGroup (groupId: string) {
     await this.groupRepository.delete(groupId);
   }
 
-  async getStudents(groupId: string) {
+  async getStudents (groupId: string) {
     const students = await this.groupRepository.getStudents(groupId);
     return students
       .filter((st) => st.state === State.APPROVED)
@@ -153,11 +153,11 @@ export class GroupService {
       }));
   }
 
-  async updateGroup(groupId: string, body: UpdateGroupDTO){
+  async updateGroup (groupId: string, body: UpdateGroupDTO) {
     return this.groupRepository.updateGroup(groupId, body);
   }
 
-  async getUnverifiedStudents(groupId: string) {
+  async getUnverifiedStudents (groupId: string) {
     const students = await this.groupRepository.getStudents(groupId);
     return students
       .filter((s) => s.state === State.PENDING)

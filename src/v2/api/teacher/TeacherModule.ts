@@ -5,9 +5,9 @@ import { DisciplineTeacherService } from './DisciplineTeacherService';
 import { DisciplineModule } from '../discipline/DisciplineModule';
 import { PrismaModule } from '../../database/PrismaModule';
 import { UserModule } from '../user/UserModule';
-import { PollModule } from "../poll/PollModule";
-import { DateService } from "../../utils/date/DateService";
-import { DisciplineTeacherController } from "./DisciplineTeacherController";
+import { PollModule } from '../poll/PollModule';
+import { DateService } from '../../utils/date/DateService';
+import { DisciplineTeacherController } from './DisciplineTeacherController';
 
 @Module({
   controllers: [TeacherController, DisciplineTeacherController],

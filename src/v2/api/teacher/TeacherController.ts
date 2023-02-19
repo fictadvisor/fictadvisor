@@ -14,20 +14,20 @@ import { ContactByNamePipe } from './dto/ContactByNamePipe';
   path: '/teachers',
 })
 export class TeacherController {
-  constructor(
+  constructor (
     private teacherService: TeacherService,
   ) {}
 
 
   @Get()
-  getAll(
+  getAll (
     @Query() query: QueryAllDTO,
   ) {
     return this.teacherService.getAll(query);
   }
 
   @Get('/:teacherId/roles')
-  async getTeacherRoles(
+  async getTeacherRoles (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
   ) {
     const roles = await this.teacherService.getTeacherRoles(teacherId);
@@ -36,7 +36,7 @@ export class TeacherController {
   }
 
   @Get('/:teacherId')
-  getTeacher(
+  getTeacher (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
   ) {
     return this.teacherService.getTeacher(teacherId);
@@ -44,7 +44,7 @@ export class TeacherController {
 
   @Access('teachers.$teacherId.create')
   @Post()
-  create(
+  create (
     @Body() body: CreateTeacherDTO,
   ) {
     return this.teacherService.create(body);
@@ -52,7 +52,7 @@ export class TeacherController {
 
   @Access('teachers.$teacherId.update')
   @Patch('/:teacherId')
-  async update(
+  async update (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
     @Body() body: UpdateTeacherDTO,
   ) {
@@ -61,14 +61,14 @@ export class TeacherController {
 
   @Access('teachers.$teacherId.delete')
   @Delete('/:teacherId')
-  async delete(
+  async delete (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
   ) {
     return this.teacherService.delete(teacherId);
   }
 
   @Get('/:teacherId/contacts')
-  async getAllContacts(
+  async getAllContacts (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
   ) {
     const contacts = await this.teacherService.getAllContacts(teacherId);
@@ -76,7 +76,7 @@ export class TeacherController {
   }
 
   @Get('/:teacherId/contacts/:name')
-  getContact(
+  getContact (
     @Param(ContactByNamePipe) params: {teacherId: string, name: string},
   ) {
     return this.teacherService.getContact(params.teacherId, params.name);
@@ -84,27 +84,27 @@ export class TeacherController {
 
   @Access('teachers.$teacherId.contacts.create')
   @Post('/:teacherId/contacts')
-  createContact(
+  createContact (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
     @Body() body: CreateContactDTO,
-  ){
+  ) {
     return this.teacherService.createContact(teacherId, body);
   }
 
   @Access('teachers.$teacherId.contacts.update')
   @Patch('/:teacherId/contacts/:name')
-  async updateContact(
+  async updateContact (
     @Param(ContactByNamePipe) params: {teacherId: string, name: string},
     @Body() body: UpdateContactDTO,
-  ){
+  ) {
     return this.teacherService.updateContact(params.teacherId, params.name, body);
   }
 
   @Access('teachers.$teacherId.contacts.delete')
   @Delete('/:teacherId/contacts/:name')
-  async deleteContact(
+  async deleteContact (
     @Param(ContactByNamePipe) params: {teacherId: string, name: string},
-  ){
+  ) {
     return this.teacherService.deleteContact(params.teacherId, params.name);
   }
 }

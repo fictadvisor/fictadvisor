@@ -28,7 +28,7 @@ export const getLogger = (source = 'system'): SystemLogger => {
 
 export { SystemLogger };
 
-export function Logger(source?: string): any {
+export function Logger (source?: string): any {
   return (target: unknown, propertyKey: string | symbol): any => {
     target[propertyKey] = getLogger(source ?? target.constructor.name);
   };

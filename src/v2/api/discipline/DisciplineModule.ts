@@ -5,7 +5,7 @@ import { GroupByDisciplineGuard } from '../../security/group-guard/GroupByDiscip
 import { TeacherModule } from '../teacher/TeacherModule';
 import { DisciplineTypeService } from './DisciplineTypeService';
 import { PrismaModule } from '../../database/PrismaModule';
-import { UserModule } from "../user/UserModule";
+import { UserModule } from '../user/UserModule';
 
 @Module({
   controllers: [DisciplineController],

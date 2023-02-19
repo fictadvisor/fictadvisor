@@ -10,18 +10,18 @@ import { Access } from 'src/v2/security/Access';
   path: '/disciplines',
 })
 export class DisciplineController {
-  constructor(
+  constructor (
     private disciplineService: DisciplineService,
   ) {}
 
   @Post()
-  create(@Body() body: CreateDisciplineDTO) {
+  create (@Body() body: CreateDisciplineDTO) {
     return this.disciplineService.create(body);
   }
 
   @UseGuards(JwtGuard, GroupByDisciplineGuard)
   @Post('/:disciplineId/selective')
-  makeSelective(
+  makeSelective (
     @Param('disciplineId') disciplineId: string,
     @Request() req,
   ) {
@@ -30,7 +30,7 @@ export class DisciplineController {
 
   @Access('groups.$groupId.disciplines.teachers.get', GroupByDisciplineGuard)
   @Get('/:disciplineId/teachers')
-  async getAllByDiscipline(
+  async getAllByDiscipline (
     @Param('disciplineId') disciplineId: string
   ) {
     const teachers = await this.disciplineService.getTeachers(disciplineId);

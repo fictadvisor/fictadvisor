@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
 import { CreateDisciplineTeacherData } from './data/CreateDisciplineTeacherData';
-import { TeacherRole } from "@prisma/client";
-import { CreateDisciplineTeacherWithRolesData } from "./data/CreateDisciplineTeacherWithRolesData";
+import { TeacherRole } from '@prisma/client';
+import { CreateDisciplineTeacherWithRolesData } from './data/CreateDisciplineTeacherWithRolesData';
 
 @Injectable()
 export class DisciplineTeacherRepository {
-  constructor(
+  constructor (
     private prisma: PrismaService,
   ) {}
 
-  async getDisciplineTeacher(id: string) {
+  async getDisciplineTeacher (id: string) {
     return this.prisma.disciplineTeacher.findUnique({
       where: {
         id,
@@ -47,7 +47,7 @@ export class DisciplineTeacherRepository {
     });
   }
 
-  async getDiscipline(id: string) {
+  async getDiscipline (id: string) {
     return this.prisma.discipline.findFirst({
       where: {
         disciplineTeachers: {
@@ -85,13 +85,13 @@ export class DisciplineTeacherRepository {
     });
   }
 
-  async create(data: CreateDisciplineTeacherData) {
+  async create (data: CreateDisciplineTeacherData) {
     return this.prisma.disciplineTeacher.create({
       data,
     });
   }
 
-  async createWithRoles({ roles, ...data }: CreateDisciplineTeacherWithRolesData) {
+  async createWithRoles ({ roles, ...data }: CreateDisciplineTeacherWithRolesData) {
     return this.prisma.disciplineTeacher.create({
       data: {
         ...data,
@@ -102,21 +102,21 @@ export class DisciplineTeacherRepository {
     });
   }
 
-  async find(data: CreateDisciplineTeacherData) {
+  async find (data: CreateDisciplineTeacherData) {
     return this.prisma.disciplineTeacher.findFirst({
       where: data,
     });
   }
 
-  async getOrCreate(data: CreateDisciplineTeacherData) {
+  async getOrCreate (data: CreateDisciplineTeacherData) {
     let disciplineTeacher = await this.find(data);
-    if (!disciplineTeacher){
+    if (!disciplineTeacher) {
       disciplineTeacher = await this.create(data);
     }
     return disciplineTeacher;
   }
 
-  async delete(id: string) {
+  async delete (id: string) {
     return this.prisma.disciplineTeacher.delete({
       where: {
         id,
@@ -124,7 +124,7 @@ export class DisciplineTeacherRepository {
     });
   }
 
-  getQuestions(roles: TeacherRole[], disciplineRoles: TeacherRole[]) {
+  getQuestions (roles: TeacherRole[], disciplineRoles: TeacherRole[]) {
     return this.prisma.question.findMany({
       where: {
         questionRoles: {

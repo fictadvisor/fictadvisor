@@ -6,11 +6,11 @@ import { CreateSemesterLessonData } from './dto/CreateSemesterLessonData';
 
 @Injectable()
 export class ScheduleRepository {
-  constructor(
+  constructor (
     private prisma: PrismaService,
   ) {}
 
-  async createFortnightLesson(lessonId: string, fortnight: number) {
+  async createFortnightLesson (lessonId: string, fortnight: number) {
     return this.prisma.fortnightLesson.create({
       data: {
         lessonId,
@@ -19,7 +19,7 @@ export class ScheduleRepository {
     });
   }
 
-  async getFortnightLesson(lessonId: string, fortnight: number) {
+  async getFortnightLesson (lessonId: string, fortnight: number) {
     return this.prisma.fortnightLesson.findFirst({
       where: {
         lessonId,
@@ -28,13 +28,13 @@ export class ScheduleRepository {
     });
   }
 
-  async getOrCreateFortnightLesson(id, fortnight) {
+  async getOrCreateFortnightLesson (id, fortnight) {
     let fortnightLesson = await this.getFortnightLesson(id, fortnight);
     if (!fortnightLesson) fortnightLesson = await this.createFortnightLesson(id, fortnight);
     return fortnightLesson;
   }
 
-  async getSemesterLesson(id: string) {
+  async getSemesterLesson (id: string) {
     return this.prisma.semesterLesson.findUnique({
       where: {
         id,
@@ -45,7 +45,7 @@ export class ScheduleRepository {
     });
   }
 
-  async getTemporaryLesson(id: string) {
+  async getTemporaryLesson (id: string) {
     return this.prisma.temporaryLesson.findUnique({
       where: {
         id,
@@ -57,7 +57,7 @@ export class ScheduleRepository {
     });
   }
 
-  async getTemporaryLessonsByType(disciplineTypeId: string, fortnight: number) {
+  async getTemporaryLessonsByType (disciplineTypeId: string, fortnight: number) {
     return this.prisma.temporaryLesson.findMany({
       where: {
         disciplineTypeId,
@@ -66,7 +66,7 @@ export class ScheduleRepository {
     });
   }
 
-  async getSemesterLessonsByType(disciplineTypeId: string) {
+  async getSemesterLessonsByType (disciplineTypeId: string) {
     return this.prisma.semesterLesson.findMany({
       where: {
         disciplineTypeId,
@@ -74,7 +74,7 @@ export class ScheduleRepository {
     });
   }
 
-  async getFortnightLessonInfo(lessonId: string, type: FortnightLessonInfoType) {
+  async getFortnightLessonInfo (lessonId: string, type: FortnightLessonInfoType) {
     return this.prisma.fortnightLessonInfo.findFirst({
       where: {
         lessonId,
@@ -83,7 +83,7 @@ export class ScheduleRepository {
     });
   }
 
-  async updateOrCreateFortnightLessonInfo(lessonId: string, type: FortnightLessonInfoType, value: string) {
+  async updateOrCreateFortnightLessonInfo (lessonId: string, type: FortnightLessonInfoType, value: string) {
     const fortnightLessonInfo = await this.getFortnightLessonInfo(lessonId, type);
     if (!fortnightLessonInfo) {
       return this.prisma.fortnightLessonInfo.create({
@@ -106,7 +106,7 @@ export class ScheduleRepository {
     }
   }
 
-  async updateSemesterLessonInfo(id: string, data) {
+  async updateSemesterLessonInfo (id: string, data) {
     return this.prisma.semesterLesson.update({
       where: {
         id,
@@ -115,7 +115,7 @@ export class ScheduleRepository {
     });
   }
 
-  async getOrCreateSemesterLesson(data: CreateSemesterLessonData) {
+  async getOrCreateSemesterLesson (data: CreateSemesterLessonData) {
     let lesson = await this.prisma.semesterLesson.findFirst({
       where: data,
     });
@@ -127,7 +127,7 @@ export class ScheduleRepository {
     return lesson;
   }
 
-  async getOrCreateTemporaryLesson(data: CreateTemporaryLessonData) {
+  async getOrCreateTemporaryLesson (data: CreateTemporaryLessonData) {
     let lesson = await this.prisma.temporaryLesson.findFirst({
       where: data,
     });
@@ -139,7 +139,7 @@ export class ScheduleRepository {
     return lesson;
   }
 
-  async getDiscipline(id: string) {
+  async getDiscipline (id: string) {
     return this.prisma.discipline.findFirst({
       where: {
         disciplineTypes: {

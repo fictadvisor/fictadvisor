@@ -4,13 +4,13 @@ import { DisciplineTeacherService } from '../../api/teacher/DisciplineTeacherSer
 import { RequestUtils } from '../../utils/RequestUtils';
 
 @Injectable()
-export class GroupByDisciplineTeacherGuard implements CanActivate{
+export class GroupByDisciplineTeacherGuard implements CanActivate {
 
-  constructor(
+  constructor (
     private disciplineTeacherService: DisciplineTeacherService,
   ) {}
 
-  async canActivate(context: ExecutionContext) {
+  async canActivate (context: ExecutionContext) {
     const request = context.switchToHttp().getRequest<Request>();
     const disciplineTeacherId = RequestUtils.get(request, 'disciplineTeacherId');
     const group = await this.disciplineTeacherService.getGroup(disciplineTeacherId);

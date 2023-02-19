@@ -7,12 +7,12 @@ import { EntityType } from '@prisma/client';
 import { TeacherRepository } from './TeacherRepository';
 import { DisciplineTeacherRepository } from './DisciplineTeacherRepository';
 import { UpdateContactDTO } from '../user/dto/UpdateContactDTO';
-import { ContactRepository } from "../user/ContactRepository";
-import { DisciplineTeacherService } from "./DisciplineTeacherService";
+import { ContactRepository } from '../user/ContactRepository';
+import { DisciplineTeacherService } from './DisciplineTeacherService';
 
 @Injectable()
 export class TeacherService {
-  constructor(
+  constructor (
     private teacherRepository: TeacherRepository,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
     private disciplineTeacherService: DisciplineTeacherService,
@@ -20,14 +20,14 @@ export class TeacherService {
   ) {}
 
 
-  async getAll(
+  async getAll (
     body: QueryAllDTO,
   ) {
     const teachers = await this.teacherRepository.getAll(body);
     return { teachers };
   }
 
-  async getTeacher(
+  async getTeacher (
     id: string,
   ) {
     const { disciplineTeachers, ...teacher } = await this.teacherRepository.getTeacher(id);
@@ -41,36 +41,36 @@ export class TeacherService {
     };
   }
 
-  async getTeacherRoles(
+  async getTeacherRoles (
     teacherId: string,
   ) {
     const teacher = await this.teacherRepository.getTeacher(teacherId);
     return this.disciplineTeacherService.getUniqueRoles(teacher.disciplineTeachers);
   }
 
-  async create(
+  async create (
     body: CreateTeacherDTO,
   ) {
     return this.teacherRepository.create(body);
   }
     
-  async update(id: string, body: UpdateTeacherDTO) {
+  async update (id: string, body: UpdateTeacherDTO) {
     return this.teacherRepository.update(id, body);
   }
 
-  async delete(
+  async delete (
     id: string,
   ) {
     await this.teacherRepository.delete(id);
   }
 
-  async getAllContacts(
+  async getAllContacts (
     entityId: string,
   ) {
     return this.contactRepository.getAllContacts(entityId);
   }
 
-  async getContact(
+  async getContact (
     teacherId: string,
     name: string,
   ) {
@@ -82,7 +82,7 @@ export class TeacherService {
     };
   }
 
-  async createContact(
+  async createContact (
     entityId: string,
     body: CreateContactDTO,
   ) {
@@ -93,12 +93,12 @@ export class TeacherService {
     });
   }
 
-  async updateContact(entityId: string, name: string, body: UpdateContactDTO) {
+  async updateContact (entityId: string, name: string, body: UpdateContactDTO) {
     await this.contactRepository.updateContact(entityId, name, body);
     return this.contactRepository.getContact(entityId, name);
   }
 
-  async deleteContact(
+  async deleteContact (
     entityId: string,
     name: string,
   ) {
