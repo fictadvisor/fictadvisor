@@ -1,6 +1,6 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import { CreateQuestionsDTO } from "./dto/CreateQuestionDTO";
+import { CreateQuestionWithRolesDTO } from "./dto/CreateQuestionDTO";
 import { QuestionRepository } from "./QuestionRepository";
 import { UpdateQuestionDTO } from "./dto/UpdateQuestionDTO";
 import { Question, TeacherRole } from "@prisma/client";
@@ -19,22 +19,16 @@ export class PollService {
     private disciplineTeacherRepository: DisciplineTeacherRepository,
   ){}
 
-  async createQuestions(body: CreateQuestionsDTO){
-    const questions = [];
-    for (const question of body.questions){
-      questions.push(await this.questionRepository.create(question));
-    }
-    return {
-      questions,
-    };
+  async createQuestions(data: CreateQuestionWithRolesDTO){
+    return this.questionRepository.createWithRoles(data);
   }
 
   async delete(id: string){
     await this.questionRepository.delete(id);
   }
 
-  async update(id: string, body: UpdateQuestionDTO){
-    await this.questionRepository.update(id, body);
+  async update(id: string, body: UpdateQuestionDTO) {
+    return this.questionRepository.update(id, body);
   }
 
   async getQuestion(id: string){
@@ -49,24 +43,10 @@ export class PollService {
     return await this.questionRepository.deleteRole(questionId, role);
   }
 
-  async getQuestionsByRoles(roles: TeacherRole[]) {
-    const results = [];
-    for (const role of roles) {
-      const roleQuestions = await this.questionRepository.getQuestionsByRole(role);
-      results.push(...roleQuestions);
-    }
-    return results;
-  }
-
-  async getUnifyQuestionByRoles(roles: TeacherRole[]) {
-    const questions = await this.getQuestionsByRoles(roles);
-    return this.unifyQuestions(questions);
-  }
-
   sortByCategories(questions: Question[]) {
     const results = [];
     for(const question of questions){
-      const name = question.name;
+      const name = question.category;
       delete question.category;
       const category = results.find((c) => (c.name === name));
       if(!category){
@@ -78,16 +58,6 @@ export class PollService {
       } else {
         category.count++;
         category.questions.push(question);
-      }
-    }
-    return results;
-  }
-
-  unifyQuestions(questions: Question[]){
-    const results = [];
-    for (const question of questions) {
-      if (!results.some((q) => (q.id === question.id))) {
-        results.push(question);
       }
     }
     return results;

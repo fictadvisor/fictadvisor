@@ -1,12 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { UserService } from './UserService';
 import { TelegramGuard } from '../../security/TelegramGuard';
-import { JwtGuard } from '../../security/JwtGuard';
 import { ApproveDTO } from './dto/ApproveDTO';
 import { GiveRoleDTO } from './dto/GiveRoleDTO';
 import { CreateSuperheroDTO } from "./dto/CreateSuperheroDTO";
-import { PermissionGuard } from "../../security/permission-guard/PermissionGuard";
-import { Permission } from "../../security/permission-guard/Permission";
 import { UserByIdPipe } from "./UserByIdPipe";
 import { CreateContactDTO } from "./dto/CreateContactDTO";
 import { UpdateContactDTO } from "./dto/UpdateContactDTO";
@@ -14,6 +11,8 @@ import { UpdateUserDTO } from "./dto/UpdateUserDTO";
 import { UpdateStudentDTO } from "./dto/UpdateStudentDTO";
 
 import { ContactByUserIdPipe } from "./ContactByUserIdPipe";
+import { GroupRequestDTO } from './dto/GroupRequestDTO';
+import { Access } from 'src/v2/security/Access';
 
 @Controller({
   version: '2',
@@ -43,21 +42,30 @@ export class UserController {
     return this.userService.updateSuperhero(userId, body);
   }
 
-  @UseGuards(JwtGuard)
-  @Post('/superhero')
-  async createSuperhero(
-    @Request() req,
-    @Body() body: CreateSuperheroDTO,
+  @Access('users.$userId.group.request')
+  @Patch('/:userId/requestNewGroup')
+  requestNewGroup(
+    @Param('userId', UserByIdPipe) userId: string,
+    @Body() body: GroupRequestDTO,
   ) {
-    return this.userService.createSuperhero(req.user.id, body);
+    return this.userService.requestNewGroup(userId, body);
   }
 
-  @UseGuards()
-  @Get('/selective')
-  async getSelective(
-    @Request() req,
+  @Access('users.$userId.superhero.create')
+  @Post('/:userId/superhero')
+  async createSuperhero(
+    @Param('userId', UserByIdPipe) userId: string,
+    @Body() body: CreateSuperheroDTO,
   ) {
-    const dbDisciplines = await this.userService.getSelective(req.user.id);
+    return this.userService.createSuperhero(userId, body);
+  }
+
+  @Access('users.$userId.selective.get')
+  @Get('/:userId/selective')
+  async getSelective(
+    @Param('userId', UserByIdPipe) userId: string,
+  ) {
+    const dbDisciplines = await this.userService.getSelective(userId);
     return { disciplines: dbDisciplines.map((d) => d.id) };
   }
 
@@ -78,8 +86,7 @@ export class UserController {
     return this.userService.removeRole(userId, roleId);
   }
 
-  @Permission('users.delete')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('users.delete')
   @Delete('/:userId')
   deleteUser(
     @Param('userId', UserByIdPipe) userId: string,
@@ -87,8 +94,7 @@ export class UserController {
     return this.userService.deleteUser(userId);
   }
 
-  @Permission('users.update')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('users.update')
   @Patch('/:userId')
   updateUser(
     @Param('userId', UserByIdPipe) userId: string,
@@ -97,18 +103,16 @@ export class UserController {
     return this.userService.updateUser(userId, body);
   }
 
-
-  @Permission('users.$userId.contacts.get')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('users.$userId.contacts.get')
   @Get('/:userId/contacts')
-  getContacts(
+  async getContacts(
     @Param('userId', UserByIdPipe) userId: string,
   ){
-    return this.userService.getContacts(userId);
+    const contacts = await this.userService.getContacts(userId);
+    return { contacts };
   }
 
-  @Permission('users.$userId.contacts.create')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('users.$userId.contacts.create')
   @Post('/:userId/contacts')
   createContact(
     @Param('userId', UserByIdPipe) userId: string,
@@ -117,8 +121,7 @@ export class UserController {
     return this.userService.createContact(userId, body);
   }
 
-  @Permission('users.$userId.contacts.update')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('users.$userId.contacts.update')
   @Patch('/:userId/contacts/:name')
   updateContact(
     @Param(ContactByUserIdPipe) params,
@@ -127,8 +130,7 @@ export class UserController {
     return this.userService.updateContact(params.userId, params.name, body);
   }
 
-  @Permission('users.$userId.contacts.delete')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('users.$userId.contacts.delete')
   @Delete('/:userId/contacts/:name')
   deleteContact(
     @Param(ContactByUserIdPipe) params,
@@ -136,8 +138,7 @@ export class UserController {
     return this.userService.deleteContact(params.userId, params.name);
   }
 
-  @Permission('students.delete')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('students.delete')
   @Delete('/:userId/student')
   deleteStudent(
     @Param('userId', UserByIdPipe) userId: string,
@@ -145,8 +146,7 @@ export class UserController {
     return this.userService.deleteStudent(userId);
   }
 
-  @Permission('students.$userId.update')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('students.$userId.update')
   @Patch('/:userId/student')
   updateStudent(
     @Param('userId', UserByIdPipe) userId: string,
@@ -160,11 +160,10 @@ export class UserController {
   getUserForTelegram(
     @Param('userId', UserByIdPipe) userId: string,
   ){
-    return this.userService.getUserForTelegram(userId);
+    return this.userService.getUser(userId);
   }
 
-  @Permission('users.$userId.get')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('users.$userId.get')
   @Get('/:userId')
   getMe(
     @Param('userId', UserByIdPipe) userId: string,

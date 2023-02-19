@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import { CreateQuestionData } from "./dto/CreateQuestionDTO";
+import { CreateQuestionDTO } from "./dto/CreateQuestionDTO";
 import { UpdateQuestionDTO } from "./dto/UpdateQuestionDTO";
 import { CreateQuestionRoleData } from "./dto/CreateQuestionRoleData";
 import { TeacherRole } from "@prisma/client";
+import { CreateQuestionWithRolesData } from "./data/CreateQuestionWithRolesData";
 
 @Injectable()
 export class QuestionRepository {
@@ -12,7 +13,7 @@ export class QuestionRepository {
   ) {
   }
 
-  async create(data: CreateQuestionData) {
+  async create(data: CreateQuestionDTO) {
     return this.prisma.question.create({
       data,
     });
@@ -41,7 +42,7 @@ export class QuestionRepository {
       where: {
         id,
       },
-    },);
+    });
   }
 
   async update(id: string, data: UpdateQuestionDTO) {
@@ -50,6 +51,14 @@ export class QuestionRepository {
         id,
       },
       data,
+      select: {
+        id: true,
+        category: true,
+        name: true,
+        description: true,
+        text: true,
+        criteria: true,
+      },
     });
   }
 
@@ -69,21 +78,25 @@ export class QuestionRepository {
       },
     });
   }
-  async getQuestionsByRole(role: TeacherRole) {
-    const roles = await this.prisma.questionRole.findMany({
-      where: {
-        role,
+
+  createWithRoles({ roles, ...data }: CreateQuestionWithRolesData) {
+    return this.prisma.question.create({
+      data: {
+        ...data,
+        questionRoles: {
+          create: roles,
+        },
       },
-      select: {
-        question: true,
+      include: {
+        questionRoles: {
+          select: {
+            role: true,
+            isRequired: true,
+            isShown: true,
+          },
+        },
       },
     });
-
-    return roles.map((r) => r.question);
   }
-
-
-
-
 }
 

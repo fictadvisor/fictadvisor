@@ -1,18 +1,19 @@
 import { State } from "@prisma/client";
 import { IsEmail, IsEnum, IsOptional, Matches, MaxLength, MinLength } from "class-validator";
+import { createRegex, ENG_REGEX, NUM_REGEX } from "../../../utils/GLOBALS";
 
 export class UpdateUserDTO {
 
-    @MinLength(4, {
-        message: 'username is too short (min: 4)',
+    @MinLength(2, {
+        message: 'username is too short (min: 2)',
     })
-    @MaxLength(30, {
-        message: 'username is too long (max: 30)',
+    @MaxLength(40, {
+        message: 'username is too long (max: 40)',
     })
     @Matches(
-      /^[a-zA-Z0-9_]+$/,
+      createRegex(ENG_REGEX, NUM_REGEX, "_"),
       {
-          message: 'username is not correct',
+          message: 'username is not correct (a-zA-Z0-9_)',
       })
     @IsOptional()
     username?: string;

@@ -5,11 +5,12 @@ import { GroupByIdPipe } from './GroupByIdPipe';
 import { DisciplineModule } from '../discipline/DisciplineModule';
 import { PrismaModule } from '../../database/PrismaModule';
 import { UserModule } from '../user/UserModule';
+import { TeacherModule } from "../teacher/TeacherModule";
 
 @Module({
   controllers: [GroupController],
   providers: [GroupService, GroupByIdPipe],
   exports: [GroupService, GroupByIdPipe],
-  imports: [forwardRef(() => DisciplineModule), PrismaModule, forwardRef(() => UserModule)],
+  imports: [forwardRef(() => DisciplineModule), PrismaModule, forwardRef(() => UserModule), TeacherModule],
 })
 export class GroupModule {}

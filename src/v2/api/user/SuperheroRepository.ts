@@ -9,11 +9,15 @@ export class SuperheroRepository {
   ) {}
 
   async updateSuperhero(userId: string, data: UpdateSuperheroData) {
-    await this.prisma.superhero.update({
+    return this.prisma.superhero.update({
       where: {
         userId,
       },
       data,
+      select: {
+        userId: true,
+        dorm: true,
+      },
     });
   }
 

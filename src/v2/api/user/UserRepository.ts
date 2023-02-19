@@ -21,7 +21,11 @@ export class UserRepository {
         id,
       },
       include: {
-        student: true,
+        student: {
+          include: {
+            group: true,
+          },
+        },
       },
     });
   }
@@ -74,6 +78,13 @@ export class UserRepository {
         id,
       },
       data,
+      select: {
+        id: true,
+        email: true,
+        username: true,
+        avatar: true,
+        telegramId: true,
+      },
     });
   }
 }

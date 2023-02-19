@@ -1,13 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards, Patch } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query, Patch } from '@nestjs/common';
 import { TeacherService } from './TeacherService';
 import { QueryAllDTO } from '../../utils/QueryAllDTO';
 import { CreateTeacherDTO } from './dto/CreateTeacherDTO';
 import { UpdateTeacherDTO } from './dto/UpdateTeacherDTO';
 import { CreateContactDTO } from '../user/dto/CreateContactDTO';
 import { UpdateContactDTO } from '../user/dto/UpdateContactDTO';
-import { JwtGuard } from '../../security/JwtGuard';
-import { Permission } from 'src/v2/security/permission-guard/Permission';
-import { PermissionGuard } from 'src/v2/security/permission-guard/PermissionGuard';
+import { Access } from 'src/v2/security/Access';
 import { TeacherByIdPipe } from './dto/TeacherByIdPipe';
 import { ContactByNamePipe } from './dto/ContactByNamePipe';
 
@@ -21,7 +19,6 @@ export class TeacherController {
   ) {}
 
 
-  @UseGuards(JwtGuard)
   @Get()
   getAll(
     @Query() query: QueryAllDTO,
@@ -29,15 +26,15 @@ export class TeacherController {
     return this.teacherService.getAll(query);
   }
 
-  @UseGuards(JwtGuard)
   @Get('/:teacherId/roles')
-  getTeacherRoles(
+  async getTeacherRoles(
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
   ) {
-    return this.teacherService.getTeacherRoles(teacherId);
+    const roles = await this.teacherService.getTeacherRoles(teacherId);
+
+    return { roles };
   }
 
-  @UseGuards(JwtGuard)
   @Get('/:teacherId')
   getTeacher(
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
@@ -45,8 +42,7 @@ export class TeacherController {
     return this.teacherService.getTeacher(teacherId);
   }
 
-  @Permission('teachers.$teacherId.create')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('teachers.$teacherId.create')
   @Post()
   create(
     @Body() body: CreateTeacherDTO,
@@ -54,8 +50,7 @@ export class TeacherController {
     return this.teacherService.create(body);
   }
 
-  @Permission('teachers.$teacherId.update')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('teachers.$teacherId.update')
   @Patch('/:teacherId')
   async update(
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
@@ -64,8 +59,7 @@ export class TeacherController {
     return this.teacherService.update(teacherId, body);
   }
 
-  @Permission('teachers.$teacherId.delete')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('teachers.$teacherId.delete')
   @Delete('/:teacherId')
   async delete(
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
@@ -73,15 +67,14 @@ export class TeacherController {
     return this.teacherService.delete(teacherId);
   }
 
-  @UseGuards(JwtGuard)
   @Get('/:teacherId/contacts')
-  getAllContacts(
+  async getAllContacts(
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
   ) {
-    return this.teacherService.getAllContacts(teacherId);
+    const contacts = await this.teacherService.getAllContacts(teacherId);
+    return { contacts };
   }
 
-  @UseGuards(JwtGuard)
   @Get('/:teacherId/contacts/:name')
   getContact(
     @Param(ContactByNamePipe) params: {teacherId: string, name: string},
@@ -89,8 +82,7 @@ export class TeacherController {
     return this.teacherService.getContact(params.teacherId, params.name);
   }
 
-  @Permission('teachers.$teacherId.contacts.create')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('teachers.$teacherId.contacts.create')
   @Post('/:teacherId/contacts')
   createContact(
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
@@ -99,8 +91,7 @@ export class TeacherController {
     return this.teacherService.createContact(teacherId, body);
   }
 
-  @Permission('teachers.$teacherId.contacts.update')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('teachers.$teacherId.contacts.update')
   @Patch('/:teacherId/contacts/:name')
   async updateContact(
     @Param(ContactByNamePipe) params: {teacherId: string, name: string},
@@ -109,12 +100,11 @@ export class TeacherController {
     return this.teacherService.updateContact(params.teacherId, params.name, body);
   }
 
-  @Permission('teachers.$teacherId.contacts.delete')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('teachers.$teacherId.contacts.delete')
   @Delete('/:teacherId/contacts/:name')
   async deleteContact(
-    @Param(ContactByNamePipe) [teacherId, name]: string[],
+    @Param(ContactByNamePipe) params: {teacherId: string, name: string},
   ){
-    return this.teacherService.deleteContact(teacherId, name);
+    return this.teacherService.deleteContact(params.teacherId, params.name);
   }
 }

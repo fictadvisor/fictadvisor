@@ -1,3 +1,6 @@
-export interface CreateSuperheroDTO {
-  dorm: boolean,
+import { IsBoolean } from "class-validator";
+
+export class CreateSuperheroDTO {
+  @IsBoolean()
+  dorm: boolean;
 }
