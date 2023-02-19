@@ -10,8 +10,12 @@ import {
   IconButtonProps,
   IconButtonShape,
   IconButtonSize,
-  SortButtonOrder,
 } from '../IconButton';
+
+export enum SortButtonOrder {
+  ASCENDING = 'ascending',
+  DESCENDING = 'descending',
+}
 
 const SortButton: React.FC<
   IconButtonProps & {
@@ -21,7 +25,7 @@ const SortButton: React.FC<
   size = IconButtonSize.NORMAL,
   shape = IconButtonShape.SQUARE,
   order = SortButtonOrder.ASCENDING,
-  color = IconButtonColor.ERROR,
+  color = IconButtonColor.SECONDARY,
   ...rest
 }) => {
   const SortIcon = () => (

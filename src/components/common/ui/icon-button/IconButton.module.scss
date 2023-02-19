@@ -32,7 +32,7 @@
   }
 }
 @mixin style-colors-button-theme($shape, $className) {
-  .#{$shape}-button-icon-#{$className}-primary {
+  .#{$shape}-button-icon-#{$className}-secondary {
     @include style-button-icon-color(
       $background-dark-10,
       $background-dark-50,
@@ -40,7 +40,7 @@
       $background-dark-200
     );
   }
-  .#{$shape}-button-icon-#{$className}-secondary {
+  .#{$shape}-button-icon-#{$className}-error {
     @include style-button-icon-color(
       $gray-50,
       $error-50,
@@ -56,7 +56,7 @@
       $success-500
     );
   }
-  .#{$shape}-button-icon-#{$className}-error {
+  .#{$shape}-button-icon-#{$className}-primary {
     @include style-button-icon-color($red-400, $red-200, $red-logo, $red-500);
   }
   .#{$shape}-button-icon-#{$className}-transparent {

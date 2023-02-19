@@ -12,7 +12,7 @@ import {
 const TrashBucketButton: React.FC<IconButtonProps> = ({
   size = IconButtonSize.NORMAL,
   shape = IconButtonShape.CIRCLE,
-  color = IconButtonColor.SECONDARY,
+  color = IconButtonColor.ERROR,
   ...rest
 }) => {
   return (

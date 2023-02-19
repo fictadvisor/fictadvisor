@@ -5,13 +5,13 @@ import {
   IconButton,
   IconButtonColor,
   IconButtonProps,
+  IconButtonShape,
   IconButtonSize,
-  IconType,
 } from '../IconButton';
 
 const CloseButton: React.FC<IconButtonProps> = ({
   size = IconButtonSize.NORMAL,
-  shape = IconType.SQUARE,
+  shape = IconButtonShape.SQUARE,
   color = IconButtonColor.TRANSPARENT,
   ...rest
 }) => {

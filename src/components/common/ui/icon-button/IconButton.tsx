@@ -11,11 +11,6 @@ export type IconButtonProps = {
   HTMLButtonElement
 >;
 
-export enum SortButtonOrder {
-  ASCENDING = 'ascending',
-  DESCENDING = 'descending',
-}
-
 export enum IconButtonSize {
   NORMAL = 'normal',
   LARGE = 'large',
