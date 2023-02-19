@@ -11,7 +11,11 @@ import {
   IconButtonSize,
   TrashBucketButton,
 } from '@/components/common/ui/icon-button/IconButton';
-import Tag, { TagState } from '@/components/common/ui/tag/Tag';
+import Tag, {
+  TagColor,
+  TagSize,
+  TagVariant,
+} from '@/components/common/ui/tag/Tag';
 
 import styles from '../test-pages.module.scss';
 
@@ -23,9 +27,10 @@ const TablesPage = () => {
       fullName: 'Ярмоленко Єлизавета Миколаївна',
       tag: (
         <Tag
-          state={TagState.SMALL}
+          variant={TagVariant.DARKER}
+          color={TagColor.PRIMARY}
+          size={TagSize.SMALL}
           text="Зам. староста"
-          className="primary-second"
         />
       ),
       checkBox: <Check state={CheckState.DEFAULT} text="Зам. староста" />,
@@ -36,7 +41,7 @@ const TablesPage = () => {
       avatar: 'stars-full.svg',
       email: 'elizabeth.yarmolenko@gmail.com',
       fullName: 'Ярмоленко Єлизавета Миколаївна',
-      //tag: <Tag state={TagState.SMALL} text="Зам. староста" className="primary-second" />,
+      //tag: <Tag variant={TagVariant.DARKER} color={TagColor.PRIMARY} size={TagSize.SMALL} text="Зам. староста"/>
       //checkBox: <Check state={CheckState.DEFAULT} text="Зам. староста" />,
       firstButton: (
         <AlertButton
@@ -62,9 +67,10 @@ const TablesPage = () => {
       fullName: 'Ярмоленко Єлизавета Миколаївна',
       tag: (
         <Tag
-          state={TagState.SMALL}
+          variant={TagVariant.DARKER}
+          color={TagColor.PRIMARY}
+          size={TagSize.SMALL}
           text="Зам. староста"
-          className="primary-second"
         />
       ),
       checkBox: <Check state={CheckState.DEFAULT} text="Зам. староста" />,
@@ -77,9 +83,10 @@ const TablesPage = () => {
       fullName: 'Ярмоленко Єлизавета Миколаївна',
       tag: (
         <Tag
-          state={TagState.SMALL}
+          variant={TagVariant.DARKER}
+          color={TagColor.PRIMARY}
+          size={TagSize.SMALL}
           text="Зам. староста"
-          className="primary-second"
         />
       ),
       checkBox: <Check state={CheckState.DEFAULT} text="Зам. староста" />,
@@ -99,9 +106,10 @@ const TablesPage = () => {
       fullName: 'Ярмоленко Єлизавета Миколаївна',
       tag: (
         <Tag
-          state={TagState.SMALL}
+          variant={TagVariant.DARKER}
+          color={TagColor.PRIMARY}
+          size={TagSize.SMALL}
           text="Зам. староста"
-          className="primary-second"
         />
       ),
       checkBox: <Check state={CheckState.DEFAULT} text="Зам. староста" />,
@@ -119,7 +127,7 @@ const TablesPage = () => {
     {
       email: 'elizabeth.yarmolenko@gmail.com',
       fullName: 'Ярмоленко Єлизавета Миколаївна',
-      //tag: <Tag state={TagState.SMALL} text="Зам. староста" className="primary-second" />,
+      //tag: <Tag variant={TagVariant.DARKER} color={TagColor.PRIMARY} size={TagSize.SMALL} text="Зам. староста"/>
       checkBox: <Check state={CheckState.DEFAULT} text="Зам. староста" />,
       firstButton: (
         <AlertButton
@@ -145,9 +153,10 @@ const TablesPage = () => {
       fullName: 'Ярмоленко Єлизавета Миколаївна',
       tag: (
         <Tag
-          state={TagState.SMALL}
+          variant={TagVariant.DARKER}
+          color={TagColor.PRIMARY}
+          size={TagSize.SMALL}
           text="Зам. староста"
-          className="primary-second"
         />
       ),
     },
@@ -156,9 +165,10 @@ const TablesPage = () => {
       fullName: 'Ярмоленко Єлизавета Миколаївна',
       tag: (
         <Tag
-          state={TagState.SMALL}
+          variant={TagVariant.DARKER}
+          color={TagColor.PRIMARY}
+          size={TagSize.SMALL}
           text="Зам. староста"
-          className="primary-second"
         />
       ),
     },
