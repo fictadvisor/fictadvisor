@@ -28,26 +28,26 @@ import { Teacher } from './teacher.entity';
 })
 export class TeacherCourseSearchIndex {
   @ViewColumn()
-    id: string;
+  id: string;
 
   @ViewColumn()
-    link: string;
+  link: string;
 
   @ViewColumn()
-    name: string;
+  name: string;
 
   @ViewColumn({ name: 'review_count' })
-    reviewCount: number;
+  reviewCount: number;
 
   @ViewColumn()
-    rating: number;
+  rating: number;
 
   @ViewColumn()
-    state: CourseState;
+  state: CourseState;
 
   @ViewColumn()
-    recommended: boolean;
+  recommended: boolean;
 
   @ViewColumn({ name: 'teacher_link' })
-    teacherLink: string;
+  teacherLink: string;
 }

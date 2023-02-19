@@ -13,9 +13,9 @@ import { GrantRepository } from '../api/user/grant/GrantRepository';
 import { StudentRepository } from '../api/user/StudentRepository';
 import { UserRepository } from '../api/user/UserRepository';
 import { SuperheroRepository } from '../api/user/SuperheroRepository';
-import { QuestionRepository } from '../api/poll/QuestionRepository';
-import { ContactRepository } from '../api/user/ContactRepository';
-import { QuestionAnswerRepository } from '../api/poll/QuestionAnswerRepository';
+import { QuestionRepository } from "../api/poll/QuestionRepository";
+import { ContactRepository } from "../api/user/ContactRepository";
+import { QuestionAnswerRepository } from "../api/poll/QuestionAnswerRepository";
 
 @Module({
   providers: [

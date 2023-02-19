@@ -1,4 +1,4 @@
-import { State } from '@prisma/client';
+import { State } from "@prisma/client";
 
 export class UpdateUserData {
   email?: string;

@@ -6,10 +6,10 @@ import { StudentResourceService } from './student-resource.service';
 
 @Controller('student-resources')
 export class StudentResourceController {
-  constructor (private studentResourceService: StudentResourceService) {}
+  constructor(private studentResourceService: StudentResourceService) {}
 
   @Get()
-  getResources (
+  getResources(
     @Query() query: SearchableQueryDto
   ): Promise<Page<StudentResourceDto>> {
     return this.studentResourceService.getResources(query);

@@ -3,17 +3,17 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class SecurityConfigService {
-  constructor (private configService: ConfigService) {}
+  constructor(private configService: ConfigService) {}
 
-  get secret (): string {
-    return this.configService.get<string>('security.secret');
+  get secret(): string {
+    return this.configService.get<string>("security.secret");
   }
 
-  get jwtTtl (): string {
+  get jwtTtl(): string {
     return this.configService.get<string>('security.jwt.ttl');
   }
 
-  get jwtRefreshTtl (): string {
+  get jwtRefreshTtl(): string {
     return this.configService.get<string>('security.jwt.refreshTtl');
   }
 }

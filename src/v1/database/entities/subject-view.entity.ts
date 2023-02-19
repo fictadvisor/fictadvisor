@@ -27,29 +27,29 @@ import { Review, ReviewState } from './review.entity';
 })
 export class SubjectView {
   @ViewColumn()
-    id: string;
+  id: string;
 
   @ViewColumn()
-    link: string;
+  link: string;
 
   @ViewColumn()
-    name: string;
+  name: string;
 
   @ViewColumn()
-    description?: string;
+  description?: string;
 
   @ViewColumn({ name: 'teacher_count' })
-    teacherCount: number;
+  teacherCount: number;
 
   @ViewColumn()
-    rating: number;
+  rating: number;
 
   @ViewColumn()
-    state: SubjectState;
+  state: SubjectState;
 
   @ViewColumn({ name: 'created_at' })
-    createdAt: Date;
+  createdAt: Date;
 
   @ViewColumn({ name: 'updated_at' })
-    updatedAt: Date;
+  updatedAt: Date;
 }

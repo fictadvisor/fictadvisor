@@ -9,14 +9,14 @@ import { RequestUtils } from '../../utils/RequestUtils';
 @Injectable()
 export class GroupByDisciplineGuard extends GroupGuard {
 
-  constructor (
+  constructor(
     protected prisma: PrismaService,
     private disciplineRepository: DisciplineRepository,
   ) {
     super(prisma);
   }
 
-  async getGroup (): Promise<Group> {
+  async getGroup(): Promise<Group> {
     const request = this.context.switchToHttp().getRequest<Request>();
     const disciplineId = RequestUtils.get(request, 'disciplineId');
     return await this.disciplineRepository.getGroup(disciplineId);

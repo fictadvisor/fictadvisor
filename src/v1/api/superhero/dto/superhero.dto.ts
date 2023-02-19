@@ -17,7 +17,7 @@ export class SuperheroDto {
 
   image: string;
 
-  public static from (h: Superhero) {
+  public static from(h: Superhero) {
     return assign(new SuperheroDto(), {
       name: h.name,
       username: h.username,

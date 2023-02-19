@@ -9,7 +9,7 @@ import { JwtPayload } from './jwt.payload';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor (
+  constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private configService: ConfigService
@@ -21,7 +21,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate (payload: JwtPayload) {
+  async validate(payload: JwtPayload) {
     return await this.userRepository.findOneBy({ id: payload.sub });
   }
 }

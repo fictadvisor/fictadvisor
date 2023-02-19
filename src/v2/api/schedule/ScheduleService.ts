@@ -26,7 +26,7 @@ import { DisciplineTeacherRoleRepository } from '../teacher/DisciplineTeacherRol
 
 @Injectable()
 export class ScheduleService {
-  constructor (
+  constructor(
     private scheduleParser: ScheduleParser,
     private prisma: PrismaService,
     private dateService: DateService,
@@ -44,16 +44,16 @@ export class ScheduleService {
   ) {}
 
 
-  async parse (parserType: string) {
+  async parse(parserType: string) {
     switch (parserType) {
-    case 'rozkpi':
-    case 'schedule':
-      await this.scheduleParser.parse();
-      break;
+      case 'rozkpi':
+      case 'schedule':
+        await this.scheduleParser.parse();
+        break;
     }
   }
 
-  async getSchedule (
+  async getSchedule(
     group: Group,
     fortnight: number,
     callback: 'static' | 'temporary'
@@ -78,7 +78,7 @@ export class ScheduleService {
     return results;
   }
 
-  async getStaticLessons (
+  async getStaticLessons(
     fortnight: number,
     discipline: Discipline,
     subject: Subject,
@@ -113,7 +113,7 @@ export class ScheduleService {
     return results;
   }
 
-  async getWeekLessonInfos (
+  async getWeekLessonInfos(
     lessonId: string,
     fortnight: number,
     ...types: FortnightLessonInfoType[]
@@ -131,7 +131,7 @@ export class ScheduleService {
     return values;
   }
 
-  async getTemporaryLessons (
+  async getTemporaryLessons(
     fortnight: number,
     discipline: Discipline,
     subject: Subject,
@@ -154,7 +154,7 @@ export class ScheduleService {
     return results;
   }
 
-  async getFullStaticLesson (id: string, fortnight: number): Promise<FullLessonDTO> {
+  async getFullStaticLesson(id: string, fortnight: number): Promise<FullLessonDTO> {
     const lesson = await this.scheduleRepository.getSemesterLesson(id);
     const dbTeachers = await this.disciplineTypeService.getTeachers(lesson.disciplineTypeId);
     const discipline = await this.disciplineTypeRepository.getDiscipline(lesson.disciplineTypeId);
@@ -197,7 +197,7 @@ export class ScheduleService {
     };
   }
 
-  async getFullTemporaryLesson (id: string): Promise<FullLessonDTO> {
+  async getFullTemporaryLesson(id: string): Promise<FullLessonDTO> {
     const lesson = await this.scheduleRepository.getTemporaryLesson(id);
     const teacher = lesson.teacher;
     const discipline = await this.disciplineTypeRepository.getDiscipline(lesson.disciplineTypeId);
@@ -221,7 +221,7 @@ export class ScheduleService {
     };
   }
 
-  async updateFortnightInfo (id, fortnight, data: UpdateDynamicInfoDTO) {
+  async updateFortnightInfo(id, fortnight, data: UpdateDynamicInfoDTO) {
     const fortnightLesson = await this.scheduleRepository.getOrCreateFortnightLesson(id, fortnight);
     if (!fortnightLesson) return null;
 
@@ -230,7 +230,7 @@ export class ScheduleService {
     }
   }
 
-  async updateSemesterInfo (id: string, body: UpdateStaticInfoDTO) {
+  async updateSemesterInfo(id: string, body: UpdateStaticInfoDTO) {
     const semesterLesson = await this.scheduleRepository.getSemesterLesson(id);
     const discipline = await this.disciplineTypeRepository.getDiscipline(semesterLesson.disciplineTypeId);
 
@@ -258,7 +258,7 @@ export class ScheduleService {
     }
   }
 
-  async createLesson ({ fortnight, disciplineId, type, ...data }: CreateLessonDTO) {
+  async createLesson({ fortnight, disciplineId, type, ...data }: CreateLessonDTO) {
     if (!disciplineId || !type) return null;
 
     const disciplineType = await this.disciplineTypeRepository.getOrCreate({ disciplineId, name: type });
@@ -270,11 +270,11 @@ export class ScheduleService {
     }
   }
 
-  async createTemporaryLesson (fortnight, disciplineTypeId, data) {
+  async createTemporaryLesson(fortnight, disciplineTypeId, data) {
     return await this.scheduleRepository.getOrCreateTemporaryLesson({ fortnight, disciplineTypeId, ...data });
   }
 
-  async createSemesterLesson (disciplineTypeId: string, { teacherId, ...data }: {teacherId: string} & CreateDateDTO) {
+  async createSemesterLesson(disciplineTypeId: string, { teacherId, ...data }: {teacherId: string} & CreateDateDTO) {
     const type = await this.disciplineTypeRepository.getType(disciplineTypeId);
     const role = TeacherRoleAdapter[type.name];
 

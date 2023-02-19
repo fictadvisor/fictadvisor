@@ -5,42 +5,42 @@ import { RegistrationDTO, TelegramDTO } from './dto/RegistrationDTO';
 import { JwtGuard } from '../../security/JwtGuard';
 import { ForgotPasswordDTO } from './dto/ForgotPasswordDTO';
 import { ResetPasswordDTO } from './dto/ResetPasswordDTO';
-import { UpdatePasswordDTO } from './dto/UpdatePasswordDTO';
+import { UpdatePasswordDTO } from "./dto/UpdatePasswordDTO";
 import { VerificateEmailDTO } from './dto/VerificateEmailDTO';
-import { IdentityQueryDTO } from './dto/IdentityQueryDTO';
+import { IdentityQueryDTO } from "./dto/IdentityQueryDTO";
 
 @Controller({
   version: '2',
   path: '/auth',
 })
 export class AuthController {
-  constructor (private authService: AuthService) {}
+  constructor(private authService: AuthService) {}
 
   @UseGuards(LocalAuthGuard)
   @Post('/login')
-  async login (@Request() req) {
+  async login(@Request() req) {
     return this.authService.login(req.user);
   }
 
   @Post('/register')
-  async register (@Body() body: RegistrationDTO) {
+  async register(@Body() body: RegistrationDTO) {
     return this.authService.register(body);
   }
 
   @Post('/loginTelegram')
-  async loginTelegram (@Body() body: TelegramDTO) {
+  async loginTelegram(@Body() body: TelegramDTO) {
     return this.authService.loginTelegram(body);
   }
 
   @UseGuards(JwtGuard)
   @Post('/refresh')
-  async refresh (@Request() req) {
+  async refresh(@Request() req) {
     return this.authService.refresh(req.user);
   }
 
   @UseGuards(JwtGuard)
   @Put('/updatePassword')
-  async updatePassword (
+  async updatePassword(
     @Body() body: UpdatePasswordDTO,
     @Request() req,
   ) {
@@ -48,14 +48,14 @@ export class AuthController {
   }
 
   @Post('/forgotPassword')
-  async forgotPassword (
+  async forgotPassword(
     @Body() body: ForgotPasswordDTO,
   ) {
     return this.authService.forgotPassword(body.email);
   }
 
   @Post('/resetPassword/:token')
-  async resetPassword (
+  async resetPassword(
     @Param('token') token: string,
     @Body() body: ResetPasswordDTO,
   ) {
@@ -63,28 +63,28 @@ export class AuthController {
   }
 
   @Post('/register/verifyEmail')
-  requestEmailVerification (
+  requestEmailVerification(
     @Body() body: VerificateEmailDTO,
   ) {
     return this.authService.requestEmailVerification(body.email);
   }
 
   @Post('/register/verifyEmail/:token')
-  verifyEmail (
+  verifyEmail(
     @Param('token') token: string,
   ) {
     return this.authService.verifyEmail(token);
   }
 
   @Get('/verifyIsRegistered')
-  verifyExistsByUnique (
+  verifyExistsByUnique(
     @Query() query: IdentityQueryDTO,
   ) {
     return this.authService.checkIfUserIsRegistered(query);
   }
 
   @Get('/checkCaptain/:groupId')
-  checkCaptain (
+  checkCaptain(
     @Param('groupId') groupId: string,
   ) {
     return this.authService.checkCaptain(groupId);

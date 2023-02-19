@@ -10,11 +10,11 @@ export class SearchSubjectItemDto {
   name: string;
 
   @Expose({ name: 'teacher_count' })
-    teacherCount: number;
+  teacherCount: number;
 
   rating: number;
 
-  public static from (i: SubjectSearchIndex): SearchSubjectItemDto {
+  public static from(i: SubjectSearchIndex): SearchSubjectItemDto {
     return assign(new SearchSubjectItemDto(), {
       id: i.id,
       link: i.link,

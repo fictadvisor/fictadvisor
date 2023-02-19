@@ -4,13 +4,13 @@ import { IsBoolean, IsEnum, IsNotEmpty } from 'class-validator';
 export class CreateQuestionRoleDTO {
   @IsEnum(TeacherRole)
   @IsNotEmpty()
-    role: TeacherRole;
+  role: TeacherRole;
 
   @IsBoolean()
   @IsNotEmpty()
-    isShown: boolean;
+  isShown: boolean;
 
   @IsBoolean()
   @IsNotEmpty()
-    isRequired: boolean;
+  isRequired: boolean;
 }

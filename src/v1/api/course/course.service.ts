@@ -19,7 +19,7 @@ export class CourseService {
   @Logger()
   private logger: SystemLogger;
 
-  constructor (
+  constructor(
     @InjectRepository(Course)
     private courseRepository: Repository<Course>,
     @InjectRepository(Teacher)
@@ -30,7 +30,7 @@ export class CourseService {
     private connection: Connection
   ) {}
 
-  async getCourse (link: string, relations?: string[]): Promise<Course> {
+  async getCourse(link: string, relations?: string[]): Promise<Course> {
     const course = await this.courseRepository.findOne({
       where: { link },
       relations,
@@ -45,7 +45,7 @@ export class CourseService {
     return course;
   }
 
-  async getCourseById (id: string, relations?: string[]): Promise<Course> {
+  async getCourseById(id: string, relations?: string[]): Promise<Course> {
     const course = await this.courseRepository.findOne({
       where: { id },
       relations,
@@ -60,7 +60,7 @@ export class CourseService {
     return course;
   }
 
-  async getCourseRating (id: string) {
+  async getCourseRating(id: string) {
     const { rating } = await this.connection
       .createQueryBuilder()
       .select('coalesce(avg(r.rating)::real, 0)', 'rating')
@@ -74,7 +74,7 @@ export class CourseService {
     return rating;
   }
 
-  async getCourseByLink (link: string): Promise<CourseDto> {
+  async getCourseByLink(link: string): Promise<CourseDto> {
     const course = await this.getCourse(link, ['teacher', 'subject']);
     const dto = CourseDto.from(course);
 
@@ -83,7 +83,7 @@ export class CourseService {
     return dto;
   }
 
-  async addCourse (course: CourseAddDto, user: User): Promise<CourseDto> {
+  async addCourse(course: CourseAddDto, user: User): Promise<CourseDto> {
     const subject = await this.subjectRepository.findOneBy({
       id: course.subjectId,
     });
@@ -128,7 +128,7 @@ export class CourseService {
     return CourseDto.from(entity);
   }
 
-  async updateCourse (id: string, update: CourseUpdateDto): Promise<CourseDto> {
+  async updateCourse(id: string, update: CourseUpdateDto): Promise<CourseDto> {
     const course = await this.getCourseById(id, ['teacher', 'subject']);
 
     if (update.state != null) {
@@ -142,7 +142,7 @@ export class CourseService {
     return CourseDto.from(saved);
   }
 
-  async deleteCourse (id: string): Promise<void> {
+  async deleteCourse(id: string): Promise<void> {
     const course = await this.getCourseById(id);
 
     await course.remove();

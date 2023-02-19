@@ -11,7 +11,7 @@ export class PermissionGuard implements CanActivate {
 
   private request: Request;
 
-  protected constructor (
+  protected constructor(
     @Inject(forwardRef(() => UserService))
     private userService: UserService,
     private reflector: Reflector,
@@ -20,7 +20,7 @@ export class PermissionGuard implements CanActivate {
     this.reflector = reflector;
   }
 
-  async canActivate (context: ExecutionContext) {
+  async canActivate(context: ExecutionContext) {
     this.request = context.switchToHttp().getRequest<Request>();
     const user: User = this.request.user as User;
     const permission = this.getPermission(context);
@@ -32,7 +32,7 @@ export class PermissionGuard implements CanActivate {
     return true;
   }
 
-  getPermission (context: ExecutionContext): string {
+  getPermission(context: ExecutionContext): string {
     const permission: string = this.reflector.get('permission', context.getHandler());
     return permission
       .split('.')
@@ -40,7 +40,7 @@ export class PermissionGuard implements CanActivate {
       .join('.');
   }
 
-  getPart (part: string): string {
+  getPart(part: string): string {
     if (part.startsWith('$')) {
       const newPart = RequestUtils.get(this.request, part.slice(1));
       if (!newPart) {

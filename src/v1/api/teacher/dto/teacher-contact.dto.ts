@@ -5,7 +5,7 @@ export class TeacherContactDto {
   name: string;
   value: string;
 
-  public static from (t: TeacherContact) {
+  public static from(t: TeacherContact) {
     return assign(new TeacherContactDto(), {
       name: t.name,
       value: t.value,

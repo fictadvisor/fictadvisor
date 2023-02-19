@@ -46,7 +46,7 @@ export class TeacherService {
   @Logger()
   private logger: SystemLogger;
 
-  constructor (
+  constructor(
     @InjectRepository(TeacherSearchIndex)
     private teacherSearchIndexRepository: Repository<TeacherSearchIndex>,
     @InjectRepository(Teacher)
@@ -64,7 +64,7 @@ export class TeacherService {
     private telegramService: TelegramService
   ) {}
 
-  private async getTeacher (link: string): Promise<Teacher> {
+  private async getTeacher(link: string): Promise<Teacher> {
     const teacher = await this.teacherRepository.findOneBy({ link });
 
     if (teacher == null) {
@@ -77,7 +77,7 @@ export class TeacherService {
     return teacher;
   }
 
-  private async getTeacherById (id: string): Promise<Teacher> {
+  private async getTeacherById(id: string): Promise<Teacher> {
     const teacher = await this.teacherRepository.findOneBy({ id });
 
     if (teacher == null) {
@@ -90,7 +90,7 @@ export class TeacherService {
     return teacher;
   }
 
-  async getTeacherByLink (link: string): Promise<TeacherDto> {
+  async getTeacherByLink(link: string): Promise<TeacherDto> {
     const teacher = await this.teacherViewRepository.findOneBy({ link });
 
     if (teacher == null) {
@@ -108,7 +108,7 @@ export class TeacherService {
     'lastName'
   ).fallback('id', 'ASC');
 
-  async getTeachers (query: SearchableQueryDto): Promise<Page<TeacherItemDto>> {
+  async getTeachers(query: SearchableQueryDto): Promise<Page<TeacherItemDto>> {
     const [items, count] = await this.teacherSearchIndexRepository.findAndCount(
       {
         ...Pageable.of(query.page, query.pageSize).toQuery(),
@@ -131,7 +131,7 @@ export class TeacherService {
     );
   }
 
-  private async getContactById (id: string): Promise<TeacherContact> {
+  private async getContactById(id: string): Promise<TeacherContact> {
     const contact = await this.teacherContactRepository.findOneBy({ id });
 
     if (contact == null) {
@@ -144,7 +144,7 @@ export class TeacherService {
     return contact;
   }
 
-  async getTeacherContacts (link: string): Promise<ResponseEntity<any>> {
+  async getTeacherContacts(link: string): Promise<ResponseEntity<any>> {
     const teacher = await this.getTeacher(link);
     const items = await this.teacherContactRepository.findBy({
       teacher: Equal(teacher),
@@ -160,7 +160,7 @@ export class TeacherService {
     TeacherCourseSearchIndex
   >({ rating: ['DESC'], name: ['ASC'] }, 'rating').fallback('id', 'ASC');
 
-  async getTeacherCourses (
+  async getTeacherCourses(
     link: string,
     query: SearchableQueryDto
   ): Promise<Page<TeacherCourseItemDto>> {
@@ -188,7 +188,7 @@ export class TeacherService {
     'date'
   ).fallback('id', 'ASC');
 
-  async getTeacherReviews (
+  async getTeacherReviews(
     link: string,
     query: SearchableQueryDto
   ): Promise<Page<TeacherReviewDto>> {
@@ -211,7 +211,7 @@ export class TeacherService {
     );
   }
 
-  async getTeacherStats (link: string): Promise<ResponseEntity<any>> {
+  async getTeacherStats(link: string): Promise<ResponseEntity<any>> {
     const teacher = await this.getTeacher(link);
     const stats = await this.teacherStatsRepository.findBy({ teacher: Equal(teacher) });
 
@@ -220,7 +220,7 @@ export class TeacherService {
     });
   }
 
-  async saveTeacher (teacher: TeacherAddDto, user: User): Promise<TeacherDto> {
+  async saveTeacher(teacher: TeacherAddDto, user: User): Promise<TeacherDto> {
     const existing = await this.teacherRepository.findOneBy({
       link: teacher.link(),
     });
@@ -270,7 +270,7 @@ export class TeacherService {
     }
   }
 
-  async updateTeacher (
+  async updateTeacher(
     id: string,
     update: TeacherUpdateDto
   ): Promise<TeacherDto> {
@@ -296,13 +296,13 @@ export class TeacherService {
     return this.getTeacherByLink(saved.link);
   }
 
-  async deleteTeacher (id: string): Promise<void> {
+  async deleteTeacher(id: string): Promise<void> {
     const review = await this.getTeacherById(id);
 
     await review.remove();
   }
 
-  async addContact (
+  async addContact(
     teacherLink: string,
     contact: TeacherContactCreateDto,
     user: User
@@ -331,7 +331,7 @@ export class TeacherService {
     return TeacherContactDto.from(inserted);
   }
 
-  async updateContact (
+  async updateContact(
     id: string,
     update: TeacherContactUpdateDto
   ): Promise<TeacherContactDto> {
@@ -351,7 +351,7 @@ export class TeacherService {
     return TeacherContactDto.from(saved);
   }
 
-  async deleteContact (id: string): Promise<void> {
+  async deleteContact(id: string): Promise<void> {
     const contact = await this.getContactById(id);
 
     await contact.remove();

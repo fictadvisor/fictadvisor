@@ -23,24 +23,24 @@ export const TransformBoolean = () => Transform(transformBooleanValue);
 export class PageableQueryDto {
   @IsOptional()
   @TransformInt()
-    page?: number;
+  page?: number;
 
   @IsOptional()
   @TransformInt()
   @Expose({ name: 'page_size' })
-    pageSize?: number;
+  pageSize?: number;
 }
 
 export class SearchableQueryDto extends PageableQueryDto {
   @IsOptional()
   @Expose({ name: 'search' })
-    searchQuery?: string;
+  searchQuery?: string;
 
   @IsOptional()
   @Expose({ name: 'sort' })
-    sort: string;
+  sort: string;
 
   @IsOptional()
   @TransformBoolean()
-    all: boolean;
+  all: boolean;
 }

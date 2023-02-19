@@ -20,31 +20,31 @@ export enum CourseState {
 @Entity('courses')
 export class Course extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-    id: string;
+  id: string;
 
   @Column({ type: 'varchar', unique: true })
-    link: string;
+  link: string;
 
   @ManyToOne((type) => Teacher)
   @JoinColumn({ name: 'teacher_id' })
-    teacher: Teacher;
+  teacher: Teacher;
 
   @ManyToOne((type) => Subject)
   @JoinColumn({ name: 'subject_id' })
-    subject: Subject;
+  subject: Subject;
 
   @Column({ default: false })
-    recommended: boolean;
+  recommended: boolean;
 
   @Column({ type: 'text', nullable: true })
-    description: string;
+  description: string;
 
   @Column({ type: 'varchar', default: CourseState.PENDING })
-    state: CourseState;
+  state: CourseState;
 
   @CreateDateColumn({ name: 'created_at' })
-    createdAt: Date;
+  createdAt: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
-    updatedAt: Date;
+  updatedAt: Date;
 }

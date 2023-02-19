@@ -10,13 +10,13 @@ export abstract class GroupGuard implements CanActivate {
   protected prisma: PrismaService;
   context: ExecutionContext;
 
-  protected constructor (
+  protected constructor(
     prisma: PrismaService
   ) {
     this.prisma = prisma;
   }
 
-  async canActivate (context: ExecutionContext) {
+  async canActivate(context: ExecutionContext) {
     this.context = context;
     const request = context.switchToHttp().getRequest<Request>();
     const user: User = request.user as User;

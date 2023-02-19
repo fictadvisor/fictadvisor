@@ -8,5 +8,5 @@ export class SubjectUpdateDto {
 
   @IsOptional()
   @IsEnum(SubjectState)
-    state?: SubjectState;
+  state?: SubjectState;
 }

@@ -5,11 +5,11 @@ import { TelegramConfigService } from '../config/TelegramConfigService';
 
 @Injectable()
 export class TelegramGuard implements CanActivate {
-  constructor (
+  constructor(
     private telegramConfig: TelegramConfigService,
   ) {}
 
-  canActivate (context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
+  canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
     const header: string = request.headers.authorization ?? '';
 

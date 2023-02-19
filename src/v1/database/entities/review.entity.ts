@@ -22,11 +22,11 @@ export enum ReviewState {
 @Entity('reviews')
 export class Review extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-    id: string;
+  id: string;
 
   @ManyToOne((type) => Course)
   @JoinColumn({ name: 'course_id' })
-    course: Course;
+  course: Course;
 
   @Column({
     type: 'numeric',
@@ -34,21 +34,21 @@ export class Review extends BaseEntity {
     scale: 2,
     transformer: FLOAT_TRANSFORMER,
   })
-    rating: number;
+  rating: number;
 
   @Column({ type: 'text' })
-    content: string;
+  content: string;
 
   @ManyToOne((type) => User)
   @JoinColumn({ name: 'user_id' })
-    user: User;
+  user: User;
 
   @Column({ type: 'varchar', default: ReviewState.PENDING })
-    state: ReviewState;
+  state: ReviewState;
 
   @CreateDateColumn({ name: 'created_at' })
-    createdAt: Date;
+  createdAt: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
-    updatedAt: Date;
+  updatedAt: Date;
 }

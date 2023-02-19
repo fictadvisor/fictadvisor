@@ -22,7 +22,7 @@ export default () => ({
     password: process.env.DB_PASSWORD ?? 'postgres',
     database: process.env.DB_NAME ?? 'postgres',
     schema: process.env.DB_SCHEMA ?? 'public',
-    logging: process.env.DB_LOGGING ?? 'true',
+    logging: process.env.DB_LOGGING == 'true',
   },
   telegram: {
     botToken: process.env.TELEGRAM_BOT_TOKEN,

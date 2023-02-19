@@ -5,9 +5,9 @@ import { GroupByDisciplineTeacherGuard } from '../../security/group-guard/GroupB
 import { GroupModule } from '../group/GroupModule';
 import { DisciplineModule } from '../discipline/DisciplineModule';
 import { TeacherModule } from '../teacher/TeacherModule';
-import { PrismaModule } from '../../database/PrismaModule';
-import { QuestionByIdPipe } from './dto/QuestionByIdPipe';
-import { UserModule } from '../user/UserModule';
+import { PrismaModule } from "../../database/PrismaModule";
+import { QuestionByIdPipe } from "./dto/QuestionByIdPipe";
+import { UserModule } from "../user/UserModule";
 
 @Module({
   controllers: [PollController],

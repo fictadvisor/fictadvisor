@@ -13,12 +13,12 @@ export interface CurrentDate {
 
 @Injectable()
 export class DateService {
-  constructor (
+  constructor(
     private prisma: PrismaService,
     private config: ConfigService,
   ) {}
 
-  async getCurrent (): Promise<CurrentDate> {
+  async getCurrent(): Promise<CurrentDate> {
     const { currentYear, currentSemester } = this.config.get('dates');
     const { startDate } = await this.prisma.startDate.findFirst({
       select: {

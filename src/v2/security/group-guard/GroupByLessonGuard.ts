@@ -10,7 +10,7 @@ export abstract class GroupByLessonGuard extends GroupGuard {
   protected disciplineService: DisciplineService;
   protected groupService: GroupService;
 
-  protected constructor (
+  protected constructor(
     prisma: PrismaService,
     disciplineService: DisciplineService,
     groupService: GroupService,
@@ -20,7 +20,7 @@ export abstract class GroupByLessonGuard extends GroupGuard {
     this.groupService = groupService;
   }
 
-  async getGroup (): Promise<Group> {
+  async getGroup(): Promise<Group> {
     const lessonId = this.context.switchToHttp().getRequest<Request>().params['lessonId'];
 
     const disciplineType = await this.getDisciplineType(lessonId);

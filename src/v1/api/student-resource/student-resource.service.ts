@@ -8,12 +8,12 @@ import { StudentResourceDto } from './dto/student-resource.dto';
 
 @Injectable()
 export class StudentResourceService {
-  constructor (
+  constructor(
     @InjectRepository(StudentResource)
     private teacherSearchIndexRepository: Repository<StudentResource>
   ) {}
 
-  async getResources (
+  async getResources(
     query: SearchableQueryDto
   ): Promise<Page<StudentResourceDto>> {
     const [items, count] = await this.teacherSearchIndexRepository.findAndCount(

@@ -10,7 +10,7 @@ import { InvalidLessonIdException } from '../../utils/exceptions/InvalidLessonId
 @Injectable()
 export class GroupBySemesterLessonGuard extends GroupByLessonGuard {
 
-  constructor (
+  constructor(
     protected prisma: PrismaService,
     protected disciplineService: DisciplineService,
     protected groupService: GroupService,
@@ -19,7 +19,7 @@ export class GroupBySemesterLessonGuard extends GroupByLessonGuard {
     super(prisma, disciplineService, groupService);
   }
 
-  async getDisciplineType (lessonId: string): Promise<DisciplineType> {
+  async getDisciplineType(lessonId: string): Promise<DisciplineType> {
     const lesson = await this.scheduleRepository.getSemesterLesson(lessonId);
     if (!lesson) {
       throw new InvalidLessonIdException();

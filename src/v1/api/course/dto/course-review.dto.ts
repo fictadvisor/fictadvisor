@@ -10,7 +10,7 @@ export class CourseReviewDto {
 
   date: Date;
 
-  public static from (r: Review) {
+  public static from(r: Review) {
     return assign(new CourseReviewDto(), {
       id: r.id,
       content: r.content,

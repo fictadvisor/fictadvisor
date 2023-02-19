@@ -25,7 +25,7 @@ export class ReviewService {
   @Logger()
   private logger: SystemLogger;
 
-  constructor (
+  constructor(
     @InjectRepository(Review)
     private reviewRepository: Repository<Review>,
     private courseService: CourseService,
@@ -37,7 +37,7 @@ export class ReviewService {
     'date'
   ).fallback('id', 'ASC');
 
-  async getReview (id: string, relations?: string[]): Promise<Review> {
+  async getReview(id: string, relations?: string[]): Promise<Review> {
     const review = await this.reviewRepository.findOne({
       where: { id },
       relations,
@@ -52,7 +52,7 @@ export class ReviewService {
     return review;
   }
 
-  async getReviews (
+  async getReviews(
     link: string,
     query: SearchableQueryDto
   ): Promise<Page<CourseReviewDto>> {
@@ -74,7 +74,7 @@ export class ReviewService {
     );
   }
 
-  async updateReview (id: string, update: UpdateReviewDto): Promise<ReviewDto> {
+  async updateReview(id: string, update: UpdateReviewDto): Promise<ReviewDto> {
     const review = await this.getReview(id, [
       'user',
       'course',
@@ -93,8 +93,8 @@ export class ReviewService {
       review.state = update.state;
     }
 
-    if (review.state !== previousState && previousState === ReviewState.PENDING) {
-      if (review.state === ReviewState.APPROVED) {
+    if (review.state != previousState && previousState == ReviewState.PENDING) {
+      if (review.state == ReviewState.APPROVED) {
         await this.reviewRepository.update(
           {
             user: Equal(review.user),
@@ -111,7 +111,7 @@ export class ReviewService {
             error: e.toString(),
           })
         );
-      } else if (review.state === ReviewState.DECLINED) {
+      } else if (review.state == ReviewState.DECLINED) {
         this.telegramService.broadcastDeclinedReview(review).catch((e) =>
           this.logger.error('Failed to broadcast a denied review', {
             user: review.user.id,
@@ -124,7 +124,7 @@ export class ReviewService {
     return ReviewDto.from(await this.reviewRepository.save(review));
   }
 
-  async createReview (
+  async createReview(
     link: string,
     user: User,
     dto: CreateReviewDto
@@ -150,7 +150,7 @@ export class ReviewService {
     return ReviewDto.from(review);
   }
 
-  async deleteReview (id: string): Promise<void> {
+  async deleteReview(id: string): Promise<void> {
     const review = await this.getReview(id);
 
     await review.remove();

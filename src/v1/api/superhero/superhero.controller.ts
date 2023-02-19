@@ -10,16 +10,16 @@ import { SuperheroService } from './superhero.service';
 
 @Controller('superheroes')
 export class SuperheroController {
-  constructor (private superheroService: SuperheroService) {}
+  constructor(private superheroService: SuperheroService) {}
 
   @Get('/me')
   @Authorize()
-  getMe (@Context() ctx: SecurityContext): Promise<SuperheroDto> {
+  getMe(@Context() ctx: SecurityContext): Promise<SuperheroDto> {
     return this.superheroService.getSuperhero(ctx.user);
   }
 
   @Get()
-  getSuperheroes (
+  getSuperheroes(
     @Query() query: SearchableQueryDto
   ): Promise<Page<SuperheroDto>> {
     return this.superheroService.getSuperheroes(query);
@@ -27,7 +27,7 @@ export class SuperheroController {
 
   @Post()
   @Authorize()
-  public createSuperhero (
+  public createSuperhero(
     @Context() ctx: SecurityContext,
     @Body() body: CreateSuperheroDto
   ) {
@@ -36,7 +36,7 @@ export class SuperheroController {
 
   @Authorize({ telegram: true })
   @Put('/:id')
-  updateSuperhero (
+  updateSuperhero(
     @Param('id') id: string,
     @Body() body: UpdateSuperheroDto
   ): Promise<SuperheroDto> {

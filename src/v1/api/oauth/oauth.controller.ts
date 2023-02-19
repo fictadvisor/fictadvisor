@@ -10,27 +10,27 @@ import { OAuthService } from './oauth.service';
 
 @Controller('oauth')
 export class OAuthController {
-  constructor (private oauthService: OAuthService) {}
+  constructor(private oauthService: OAuthService) {}
 
   @Authorize()
   @Get()
-  getMe (@Context() ctx: SecurityContext): UserDto {
+  getMe(@Context() ctx: SecurityContext): UserDto {
     return UserDto.from(ctx.user);
   }
 
   @Post('/telegram/exchange')
-  telegramExchange (@Body() body: ExchangeTokenDto): Promise<OAuthTokenDto> {
+  telegramExchange(@Body() body: ExchangeTokenDto): Promise<OAuthTokenDto> {
     return this.oauthService.exchange(body);
   }
 
   @Authorize({ telegram: true })
   @Post('/telegram')
-  telegram (@Body() body: OAuthTelegramDto): Promise<OAuthTokenDto> {
+  telegram(@Body() body: OAuthTelegramDto): Promise<OAuthTokenDto> {
     return this.oauthService.login(body);
   }
 
   @Post('/refresh')
-  refresh (@Body() body: RefreshTokenDto): Promise<OAuthTokenDto> {
+  refresh(@Body() body: RefreshTokenDto): Promise<OAuthTokenDto> {
     return this.oauthService.refresh(body.refreshToken);
   }
 }

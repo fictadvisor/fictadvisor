@@ -11,7 +11,7 @@ import { writeFile } from 'fs';
 
 @Injectable()
 export class SitemapService {
-  constructor (
+  constructor(
     @InjectRepository(Teacher)
     private teacherRepository: Repository<Teacher>,
     @InjectRepository(Subject)
@@ -21,7 +21,7 @@ export class SitemapService {
 
   private NAVIGATION = ['/', '/teachers', '/subjects', '/help', '/superheroes'];
 
-  public async build () {
+  public async build() {
     const baseUrl = this.configService.get<string>('frontBaseUrl');
 
     const root = create({ encoding: 'UTF-8' }).ele('urlset', {

@@ -17,7 +17,7 @@ export type ServiceExceptionPayload = {
 };
 
 export class ServiceException extends HttpException {
-  static create (status: HttpStatus, payload: ServiceExceptionPayload | string) {
+  static create(status: HttpStatus, payload: ServiceExceptionPayload | string) {
     if (typeof payload === 'string') {
       payload = { message: payload };
     }
@@ -31,9 +31,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
   @Logger('system')
   private logger: SystemLogger;
 
-  constructor (private configService: ConfigService) {}
+  constructor(private configService: ConfigService) {}
 
-  catch (exception: Error, host: ArgumentsHost) {
+  catch(exception: Error, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const res = ctx.getResponse<Response>();
 
@@ -48,8 +48,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
         exception instanceof ServiceException
           ? errorResponse
           : typeof errorResponse === 'string'
-            ? errorResponse
-            : (errorResponse as any).message;
+          ? errorResponse
+          : (errorResponse as any).message;
     } else {
       status = HttpStatus.INTERNAL_SERVER_ERROR;
       message = 'Internal Server Error';
@@ -63,7 +63,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     res.status(status).json(requestResponse);
 
-    if (this.configService.get<string>('logLevel') === 'debug') {
+    if (this.configService.get<string>('logLevel') == 'debug') {
       this.logger.debug('Resolved an exception', {
         status,
         response: JSON.stringify(requestResponse),

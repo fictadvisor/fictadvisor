@@ -8,7 +8,7 @@ export class WhereUnique<T> {
 
 export class DatabaseUtils {
 
-  static getSearch<T> ({ search }: SearchDTO, ...fields: (keyof T)[]): Search<T> | object {
+  static getSearch<T>({ search }: SearchDTO, ...fields: (keyof T)[]): Search<T> | object {
     if (!search) return {};
     return {
       OR: fields.map((field) => ({
@@ -20,7 +20,7 @@ export class DatabaseUtils {
     };
   }
 
-  static getPage ({ page = 0, pageSize }: PageDTO): Page | object {
+  static getPage({ page = 0, pageSize }: PageDTO): Page | object {
     page = +page;
     pageSize = +pageSize;
     if (!pageSize) return {};
@@ -30,7 +30,7 @@ export class DatabaseUtils {
     };
   }
 
-  static getSort ({ sort, order = 'asc' }: SortDTO): Sort | object {
+  static getSort({ sort, order = 'asc' }: SortDTO): Sort | object {
     if (!sort) return {};
     return {
       orderBy: {
@@ -39,7 +39,7 @@ export class DatabaseUtils {
     };
   }
 
-  static getWhere<T> (data: T): WhereUnique<T> {
+  static getWhere<T>(data: T): WhereUnique<T> {
     const arr = [];
     for (const [k, v] of Object.entries(data)) {
       arr.push({ [k]: v });

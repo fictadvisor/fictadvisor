@@ -20,7 +20,7 @@ import { createHmac, createHash } from 'crypto';
 export class OAuthService {
   private tokenSignature: Buffer;
 
-  constructor (
+  constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
     @InjectRepository(RefreshToken)
@@ -34,7 +34,7 @@ export class OAuthService {
       .digest();
   }
 
-  private async getToken (user: User): Promise<OAuthTokenDto> {
+  private async getToken(user: User): Promise<OAuthTokenDto> {
     const refreshToken = uuid();
 
     const payload: JwtPayload = {
@@ -50,7 +50,7 @@ export class OAuthService {
     return OAuthTokenDto.of(this.jwtService.sign(payload), refreshToken);
   }
 
-  private isValidExchange ({ hash, ...token }: ExchangeTokenDto) {
+  private isValidExchange({ hash, ...token }: ExchangeTokenDto) {
     try {
       if (typeof(token) !== 'object') {
         return false;
@@ -69,7 +69,7 @@ export class OAuthService {
     }
   }
 
-  async exchange (token: ExchangeTokenDto): Promise<OAuthTokenDto> {
+  async exchange(token: ExchangeTokenDto): Promise<OAuthTokenDto> {
     if (!this.isValidExchange(token)) {
       throw ServiceException.create(HttpStatus.FORBIDDEN, 'Invalid Telegram credentials');
     }
@@ -90,7 +90,7 @@ export class OAuthService {
     return await this.login(dto);
   }
 
-  async login (oauth: OAuthTelegramDto): Promise<OAuthTokenDto> {
+  async login(oauth: OAuthTelegramDto): Promise<OAuthTokenDto> {
     let user: User = await this.userRepository.findOneBy({
       telegramId: oauth.telegramId,
     });
@@ -106,7 +106,7 @@ export class OAuthService {
     return await this.getToken(await this.userRepository.save(user));
   }
 
-  async refresh (refreshToken: string): Promise<OAuthTokenDto> {
+  async refresh(refreshToken: string): Promise<OAuthTokenDto> {
     const ttl = ms(this.configService.get<string>('security.jwt.refreshTtl'));
     const token = await this.refreshTokenRepository.findOne({
       where: { token: refreshToken, createdAt: MoreThanOrEqual(new Date(Date.now() - ttl)) },

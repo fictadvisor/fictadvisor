@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import { QueryAllDTO } from '../../utils/QueryAllDTO';
-import { DatabaseUtils } from '../utils/DatabaseUtils';
-import { UpdateGroupDTO } from './dto/UpdateGroupDTO';
+import { QueryAllDTO } from "../../utils/QueryAllDTO";
+import { DatabaseUtils } from "../utils/DatabaseUtils";
+import { UpdateGroupDTO } from "./dto/UpdateGroupDTO";
 
 @Injectable()
 export class GroupRepository {
-  constructor (
+  constructor(
     private prisma: PrismaService,
   ) {}
 
-  async get (id: string) {
+  async get(id: string) {
     return this.prisma.group.findUnique({
       where: {
         id,
@@ -23,7 +23,7 @@ export class GroupRepository {
     });
   }
 
-  async getAll (body: QueryAllDTO) {
+  async getAll(body: QueryAllDTO) {
     const search = DatabaseUtils.getSearch(body, 'code');
     const page = DatabaseUtils.getPage(body);
     const sort = DatabaseUtils.getSort(body);
@@ -37,7 +37,7 @@ export class GroupRepository {
     });
   }
 
-  async delete (id: string) {
+  async delete(id: string) {
     return this.prisma.group.delete({
       where: {
         id,
@@ -45,7 +45,7 @@ export class GroupRepository {
     });
   }
 
-  async getGroup (id: string) {
+  async getGroup(id: string) {
     const group = await this.get(id);
     delete group.disciplines;
     delete group.students;
@@ -53,29 +53,29 @@ export class GroupRepository {
     return group;
   }
 
-  async getDisciplines (id: string) {
+  async getDisciplines(id: string) {
     const group = await this.get(id);
     return group.disciplines;
   }
 
-  async getStudents (id: string) {
+  async getStudents(id: string) {
     const group = await this.get(id);
     return group.students;
   }
 
-  async getRoles (groupId: string) {
+  async getRoles(groupId: string) {
     const groupRoles = await this.prisma.groupRole.findMany({
-      where: {
+      where:{
         groupId,
       },
-      include: {
+      include:{
         role: true,
       },
     });
     return groupRoles.map((gr) => (gr.role));
   }
 
-  async find (code: string) {
+  async find(code: string) {
     return this.prisma.group.findFirst({
       where: {
         code,
@@ -83,7 +83,7 @@ export class GroupRepository {
     });
   }
 
-  async create (code: string) {
+  async create(code: string) {
     return this.prisma.group.create({
       data: {
         code,
@@ -91,7 +91,7 @@ export class GroupRepository {
     });
   }
 
-  async getOrCreate (code: string) {
+  async getOrCreate(code: string) {
     let group = await this.find(code);
     if (!group) {
       group = await this.create(code);
@@ -99,7 +99,7 @@ export class GroupRepository {
     return group;
   }
 
-  async updateGroup (id: string, data: UpdateGroupDTO) {
+  async updateGroup(id: string, data: UpdateGroupDTO){
     return this.prisma.group.update({
       where: {
         id,

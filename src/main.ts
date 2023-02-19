@@ -7,7 +7,7 @@ import { systemLogger } from './v1/logger/logger.core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { applyStaticMiddleware } from './v1/static/static.util';
 
-async function bootstrap () {
+async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get<ConfigService>(ConfigService);
   const port = configService.get<number>('port');

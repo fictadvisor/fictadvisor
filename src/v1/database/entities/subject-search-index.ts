@@ -25,23 +25,23 @@ import { Subject, SubjectState } from './subject.entity';
 })
 export class SubjectSearchIndex {
   @ViewColumn()
-    id: string;
+  id: string;
 
   @ViewColumn()
-    link: string;
+  link: string;
 
   @ViewColumn()
-    name: string;
+  name: string;
 
   @ViewColumn()
-    description?: string;
+  description?: string;
 
   @ViewColumn({ name: 'teacher_count' })
-    teacherCount: number;
+  teacherCount: number;
 
   @ViewColumn()
-    rating: number;
+  rating: number;
 
   @ViewColumn()
-    state: SubjectState;
+  state: SubjectState;
 }

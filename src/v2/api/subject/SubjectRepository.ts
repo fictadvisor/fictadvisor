@@ -7,11 +7,11 @@ import { UpdateSubjectDTO } from './dto/UpdateSubjectDTO';
 
 @Injectable()
 export class SubjectRepository {
-  constructor (
+  constructor(
     private prisma: PrismaService,
   ) {}
 
-  async find (name: string) {
+  async find(name: string) {
     return this.prisma.subject.findFirst({
       where: {
         name,
@@ -19,7 +19,7 @@ export class SubjectRepository {
     });
   }
 
-  async create (name: string) {
+  async create(name: string) {
     return this.prisma.subject.create({
       data: {
         name,
@@ -27,7 +27,7 @@ export class SubjectRepository {
     });
   }
 
-  async getOrCreate (name: string) {
+  async getOrCreate(name: string) {
     let subject = await this.find(name);
     if (!subject) {
       subject = await this.create(name);
@@ -35,7 +35,7 @@ export class SubjectRepository {
     return subject;
   }
 
-  async get (id: string) {
+  async get(id: string) {
     return this.prisma.subject.findUnique({
       where: {
         id,
@@ -46,7 +46,7 @@ export class SubjectRepository {
     });
   }
 
-  async getAll (body: QueryAllDTO) {
+  async getAll(body: QueryAllDTO) {
     const search = DatabaseUtils.getSearch<Subject>(body, 'name');
     const page = DatabaseUtils.getPage(body);
     const sort = DatabaseUtils.getSort(body);
@@ -60,18 +60,18 @@ export class SubjectRepository {
     });
   }
 
-  async getDisciplines (id: string) {
+  async getDisciplines(id: string) {
     const subject = await this.get(id);
     return subject.disciplines;
   }
 
-  async getSubject (id: string) {
+  async getSubject(id: string) {
     const subject = await this.get(id);
     delete subject.disciplines;
     return subject;
   }
 
-  async update (id: string, data: UpdateSubjectDTO) {
+  async update(id: string, data: UpdateSubjectDTO) {
     return await this.prisma.subject.update({
       where: {
         id,
@@ -80,7 +80,7 @@ export class SubjectRepository {
     });
   }
 
-  async delete (id: string) {
+  async delete(id: string) {
     return this.prisma.subject.delete({
       where: {
         id,

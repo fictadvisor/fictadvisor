@@ -5,29 +5,29 @@ export class CreateQuestionsDTO {
 
     @ValidateNested({ each: true })
     @Type(() => CreateQuestionData)
-      questions: CreateQuestionData[];
+    questions: CreateQuestionData[];
 }
 
 export class CreateQuestionData {
 
     @IsNotEmpty()
-      category: string;
+    category: string;
 
     @IsEnum(QuestionType)
-      type: QuestionType;
+    type: QuestionType;
 
     @IsNotEmpty()
-      name: string;
+    name: string;
 
     @IsNotEmpty()
-      text: string;
+    text: string;
 
     @IsOptional()
-      criteria?: string;
+    criteria?: string;
 
     @IsOptional()
-      description?: string;
+    description?: string;
 
     @IsBoolean()
-      isRequired?: boolean;
+    isRequired?: boolean;
 }

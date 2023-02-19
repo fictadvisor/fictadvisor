@@ -1,4 +1,4 @@
-import { IsAscii, IsOptional, Matches, MaxLength } from 'class-validator';
+import { IsAscii, IsOptional, Matches, MaxLength } from "class-validator";
 
 export class UpdateContactDTO {
 
@@ -11,7 +11,7 @@ export class UpdateContactDTO {
         message: 'name is not correct',
       })
     @IsOptional()
-      name?: string;
+    name?: string;
 
     @MaxLength(200, {
       message: 'value is too long (max: 200)',
@@ -20,5 +20,5 @@ export class UpdateContactDTO {
       message: 'value contains wrong symbols (ACSII only)',
     })
     @IsOptional()
-      value?: string;
-}
+    value?: string;
+  }
