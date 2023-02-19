@@ -6,37 +6,34 @@ export enum SwitchTextPosition {
   LEFT = 'left',
 }
 
-export enum SwitchType {
-  WEB = 'web',
-  MOBILE = 'mobile',
+export enum SwitchSize {
+  MEDIUM = 'medium',
+  SMALL = 'small',
 }
 
 interface SwitchProps {
   text?: string;
   textPosition?: string;
-  type: SwitchType;
+  type: SwitchSize;
 }
 
-const Switch: FC<SwitchProps> = props => {
+const Switch: FC<SwitchProps> = ({
+  text,
+  textPosition = SwitchTextPosition.RIGHT,
+  type = SwitchSize.MEDIUM,
+}) => {
   return (
     <div>
-      <div className={styles[props.type + '-container']}>
-        {props.textPosition === 'left' && (
-          <span className={styles[props.type + '-switch-text']}>
-            {props.text}
-          </span>
+      <div className={styles[type + '-container']}>
+        {textPosition === 'left' && (
+          <span className={styles[type + '-switch-text']}>{text}</span>
         )}
-        <label className={styles[`${props.type}-switch`]}>
-          <input
-            type="checkbox"
-            className={styles[props.type + '-switch-input']}
-          />
-          <span className={styles[props.type + '-switch-slider']}></span>
+        <label className={styles[`${type}-switch`]}>
+          <input type="checkbox" className={styles[type + '-switch-input']} />
+          <span className={styles[type + '-switch-slider']}></span>
         </label>
-        {props.textPosition === 'right' && (
-          <span className={styles[props.type + '-switch-text']}>
-            {props.text}
-          </span>
+        {textPosition === 'right' && (
+          <span className={styles[type + '-switch-text']}>{text}</span>
         )}
       </div>
     </div>
