@@ -31,8 +31,8 @@
     background-color: $active;
   }
 }
-@mixin style-colors-button-theme($type, $className) {
-  .#{$type}-button-icon-#{$className}-primary {
+@mixin style-colors-button-theme($shape, $className) {
+  .#{$shape}-button-icon-#{$className}-primary {
     @include style-button-icon-color(
       $background-dark-10,
       $background-dark-50,
@@ -40,7 +40,7 @@
       $background-dark-200
     );
   }
-  .#{$type}-button-icon-#{$className}-secondary {
+  .#{$shape}-button-icon-#{$className}-secondary {
     @include style-button-icon-color(
       $gray-50,
       $error-50,
@@ -48,7 +48,7 @@
       $error-50
     );
   }
-  .#{$type}-button-icon-#{$className}-success {
+  .#{$shape}-button-icon-#{$className}-success {
     @include style-button-icon-color(
       $success-200,
       $success-100,
@@ -56,35 +56,36 @@
       $success-500
     );
   }
-  .#{$type}-button-icon-#{$className}-error {
+  .#{$shape}-button-icon-#{$className}-error {
     @include style-button-icon-color($red-400, $red-200, $red-logo, $red-500);
   }
-  .#{$type}-button-icon-#{$className}-transparent {
+  .#{$shape}-button-icon-#{$className}-transparent {
     background-color: transparent;
     padding: 6px;
   }
 }
-@mixin style-button-icon-styles($form, $className, $length, $size) {
-  .#{$form}-button-icon-#{$className}-success,
-  .#{$form}-button-icon-#{$className}-secondary,
-  .#{$form}-button-icon-#{$className}-primary,
-  .#{$form}-button-icon-#{$className}-error,
-  .#{$form}-button-icon-#{$className}-transparent {
+@mixin style-button-icon-styles($shape, $className, $length, $size) {
+  .#{$shape}-button-icon-#{$className}-success,
+  .#{$shape}-button-icon-#{$className}-secondary,
+  .#{$shape}-button-icon-#{$className}-primary,
+  .#{$shape}-button-icon-#{$className}-error,
+  .#{$shape}-button-icon-#{$className}-transparent {
     @include style-button-icon($length, $size);
     padding: 6px;
-    @if $form == 'square' {
+    @if $shape == 'square' {
       & svg {
         transform: translateX(10%) translateY(10%);
       }
     }
   }
-  @include style-colors-button-theme('circle', $className);
 }
 @mixin style-round-button-icon($className, $size) {
   @include style-button-icon-styles('circle', $className, 999px, $size);
+  @include style-colors-button-theme('circle', $className);
 }
 @mixin style-square-button-icon($className, $size) {
   @include style-button-icon-styles('square', $className, 6px, $size);
+  @include style-colors-button-theme('square', $className);
 }
 
 @include style-round-button-icon('normal', 36px);

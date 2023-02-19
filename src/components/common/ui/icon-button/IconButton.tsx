@@ -4,7 +4,7 @@ import styles from './IconButton.module.scss';
 
 export type IconButtonProps = {
   size?: IconButtonSize;
-  shape?: IconType;
+  shape?: IconButtonShape;
   color?: IconButtonColor;
 } & React.DetailedHTMLProps<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
@@ -29,7 +29,7 @@ export enum IconButtonColor {
   TRANSPARENT = 'transparent',
 }
 
-export enum IconType {
+export enum IconButtonShape {
   CIRCLE = 'circle',
   SQUARE = 'square',
 }
@@ -40,7 +40,7 @@ export const IconButton: React.FC<
   }
 > = ({
   size = IconButtonSize.NORMAL,
-  shape = IconType.CIRCLE,
+  shape = IconButtonShape.CIRCLE,
   color = IconButtonColor.PRIMARY,
   icon,
   ...rest

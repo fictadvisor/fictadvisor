@@ -8,8 +8,8 @@ import {
   IconButton,
   IconButtonColor,
   IconButtonProps,
+  IconButtonShape,
   IconButtonSize,
-  IconType,
   SortButtonOrder,
 } from '../IconButton';
 
@@ -19,7 +19,7 @@ const SortButton: React.FC<
   }
 > = ({
   size = IconButtonSize.NORMAL,
-  shape = IconType.SQUARE,
+  shape = IconButtonShape.SQUARE,
   order = SortButtonOrder.ASCENDING,
   color = IconButtonColor.ERROR,
   ...rest

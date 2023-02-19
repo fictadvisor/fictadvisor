@@ -3,8 +3,8 @@ import { StarIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import {
   IconButton,
   IconButtonColor,
+  IconButtonShape,
   IconButtonSize,
-  IconType,
   SortButtonOrder,
 } from '@/components/common/ui/icon-button/IconButton';
 import {
@@ -23,195 +23,195 @@ const IconButtonsPage = () => (
         size={IconButtonSize.LARGE}
         order={SortButtonOrder.ASCENDING}
         color={IconButtonColor.ERROR}
-        shape={IconType.SQUARE}
+        shape={IconButtonShape.SQUARE}
       />
       <SortButton
         size={IconButtonSize.LARGE}
         order={SortButtonOrder.DESCENDING}
         color={IconButtonColor.ERROR}
-        shape={IconType.SQUARE}
+        shape={IconButtonShape.SQUARE}
       />
       <SortButton
         size={IconButtonSize.NORMAL}
         order={SortButtonOrder.ASCENDING}
         color={IconButtonColor.ERROR}
-        shape={IconType.SQUARE}
+        shape={IconButtonShape.SQUARE}
       />
       <SortButton
         size={IconButtonSize.NORMAL}
         order={SortButtonOrder.DESCENDING}
         color={IconButtonColor.ERROR}
-        shape={IconType.SQUARE}
+        shape={IconButtonShape.SQUARE}
       />
       <SortButton
         size={IconButtonSize.LARGE}
         order={SortButtonOrder.ASCENDING}
         color={IconButtonColor.ERROR}
-        shape={IconType.SQUARE}
+        shape={IconButtonShape.SQUARE}
         disabled={true}
       />
       <SortButton
         size={IconButtonSize.LARGE}
         order={SortButtonOrder.DESCENDING}
         color={IconButtonColor.ERROR}
-        shape={IconType.SQUARE}
+        shape={IconButtonShape.SQUARE}
         disabled={true}
       />
       <SortButton
         size={IconButtonSize.NORMAL}
         order={SortButtonOrder.ASCENDING}
         color={IconButtonColor.ERROR}
-        shape={IconType.SQUARE}
+        shape={IconButtonShape.SQUARE}
         disabled={true}
       />
       <SortButton
         size={IconButtonSize.NORMAL}
         order={SortButtonOrder.DESCENDING}
         color={IconButtonColor.ERROR}
-        shape={IconType.SQUARE}
+        shape={IconButtonShape.SQUARE}
         disabled={true}
       />
       <SortButton
         size={IconButtonSize.LARGE}
         order={SortButtonOrder.ASCENDING}
         color={IconButtonColor.PRIMARY}
-        shape={IconType.SQUARE}
+        shape={IconButtonShape.SQUARE}
       />
       <SortButton
         size={IconButtonSize.LARGE}
         order={SortButtonOrder.DESCENDING}
         color={IconButtonColor.PRIMARY}
-        shape={IconType.SQUARE}
+        shape={IconButtonShape.SQUARE}
       />
       <SortButton
         size={IconButtonSize.NORMAL}
         order={SortButtonOrder.ASCENDING}
         color={IconButtonColor.PRIMARY}
-        shape={IconType.SQUARE}
+        shape={IconButtonShape.SQUARE}
       />
       <SortButton
         size={IconButtonSize.NORMAL}
         order={SortButtonOrder.DESCENDING}
         color={IconButtonColor.PRIMARY}
-        shape={IconType.SQUARE}
+        shape={IconButtonShape.SQUARE}
       />
       <SortButton
         size={IconButtonSize.LARGE}
         order={SortButtonOrder.ASCENDING}
         color={IconButtonColor.PRIMARY}
-        shape={IconType.SQUARE}
+        shape={IconButtonShape.SQUARE}
         disabled={true}
       />
       <SortButton
         size={IconButtonSize.LARGE}
         order={SortButtonOrder.DESCENDING}
         color={IconButtonColor.PRIMARY}
-        shape={IconType.SQUARE}
+        shape={IconButtonShape.SQUARE}
         disabled={true}
       />
       <SortButton
         size={IconButtonSize.NORMAL}
         order={SortButtonOrder.ASCENDING}
         color={IconButtonColor.PRIMARY}
-        shape={IconType.SQUARE}
+        shape={IconButtonShape.SQUARE}
         disabled={true}
       />
       <SortButton
         size={IconButtonSize.NORMAL}
         order={SortButtonOrder.DESCENDING}
         color={IconButtonColor.PRIMARY}
-        shape={IconType.SQUARE}
+        shape={IconButtonShape.SQUARE}
         disabled={true}
       />
 
       <StarButton
         size={IconButtonSize.LARGE}
-        shape={IconType.CIRCLE}
+        shape={IconButtonShape.CIRCLE}
         color={IconButtonColor.ERROR}
       />
       <StarButton
         size={IconButtonSize.NORMAL}
-        shape={IconType.CIRCLE}
+        shape={IconButtonShape.CIRCLE}
         color={IconButtonColor.ERROR}
       />
       <StarButton
         size={IconButtonSize.LARGE}
-        shape={IconType.CIRCLE}
+        shape={IconButtonShape.CIRCLE}
         disabled={true}
         color={IconButtonColor.ERROR}
       />
       <StarButton
         size={IconButtonSize.NORMAL}
-        shape={IconType.CIRCLE}
+        shape={IconButtonShape.CIRCLE}
         disabled={true}
         color={IconButtonColor.ERROR}
       />
 
       <TrashBucketButton
         size={IconButtonSize.LARGE}
-        shape={IconType.CIRCLE}
+        shape={IconButtonShape.CIRCLE}
         color={IconButtonColor.SECONDARY}
       />
       <TrashBucketButton
         size={IconButtonSize.NORMAL}
-        shape={IconType.CIRCLE}
+        shape={IconButtonShape.CIRCLE}
         color={IconButtonColor.SECONDARY}
       />
       <TrashBucketButton
         size={IconButtonSize.LARGE}
-        shape={IconType.CIRCLE}
+        shape={IconButtonShape.CIRCLE}
         disabled={true}
         color={IconButtonColor.SECONDARY}
       />
       <TrashBucketButton
         size={IconButtonSize.NORMAL}
-        shape={IconType.CIRCLE}
+        shape={IconButtonShape.CIRCLE}
         disabled={true}
         color={IconButtonColor.SECONDARY}
       />
 
       <StarButton
         size={IconButtonSize.LARGE}
-        shape={IconType.CIRCLE}
+        shape={IconButtonShape.CIRCLE}
         color={IconButtonColor.SUCCESS}
       />
       <StarButton
         size={IconButtonSize.NORMAL}
-        shape={IconType.CIRCLE}
+        shape={IconButtonShape.CIRCLE}
         color={IconButtonColor.SUCCESS}
       />
       <StarButton
         size={IconButtonSize.LARGE}
-        shape={IconType.CIRCLE}
+        shape={IconButtonShape.CIRCLE}
         disabled={true}
         color={IconButtonColor.SUCCESS}
       />
       <StarButton
         size={IconButtonSize.NORMAL}
-        shape={IconType.CIRCLE}
+        shape={IconButtonShape.CIRCLE}
         disabled={true}
         color={IconButtonColor.SUCCESS}
       />
 
       <CloseButton
         size={IconButtonSize.LARGE}
-        shape={IconType.CIRCLE}
+        shape={IconButtonShape.CIRCLE}
         color={IconButtonColor.TRANSPARENT}
       />
       <CloseButton
         size={IconButtonSize.NORMAL}
-        shape={IconType.CIRCLE}
+        shape={IconButtonShape.CIRCLE}
         color={IconButtonColor.TRANSPARENT}
       />
       <CloseButton
         size={IconButtonSize.LARGE}
-        shape={IconType.CIRCLE}
+        shape={IconButtonShape.CIRCLE}
         disabled={true}
         color={IconButtonColor.TRANSPARENT}
       />
       <CloseButton
         size={IconButtonSize.NORMAL}
-        shape={IconType.CIRCLE}
+        shape={IconButtonShape.CIRCLE}
         disabled={true}
         color={IconButtonColor.TRANSPARENT}
       />
@@ -220,7 +220,7 @@ const IconButtonsPage = () => (
         icon={<XMarkIcon />}
         color={IconButtonColor.SUCCESS}
         size={IconButtonSize.LARGE}
-        shape={IconType.CIRCLE}
+        shape={IconButtonShape.CIRCLE}
       />
 
       <IconButton icon={<StarIcon />} color={IconButtonColor.ERROR} />

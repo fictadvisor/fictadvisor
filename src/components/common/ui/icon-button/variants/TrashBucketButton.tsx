@@ -5,13 +5,13 @@ import {
   IconButton,
   IconButtonColor,
   IconButtonProps,
+  IconButtonShape,
   IconButtonSize,
-  IconType,
 } from '../IconButton';
 
 const TrashBucketButton: React.FC<IconButtonProps> = ({
   size = IconButtonSize.NORMAL,
-  shape = IconType.CIRCLE,
+  shape = IconButtonShape.CIRCLE,
   color = IconButtonColor.SECONDARY,
   ...rest
 }) => {
