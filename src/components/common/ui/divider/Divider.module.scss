@@ -26,20 +26,20 @@ $divide-regular-color: $gray-600;
   padding: 0 8px;
 }
 
-.first-line{
+.short-line{
   border: 0.01px solid $divide-regular-color;
   width: min(181.5px, 44.5%);
 }
 
-.second-text{
+.text-left{
   padding-left: 0;
 }
 
-.second-line{
+.long-line{
   border: 0.01px solid $divide-regular-color;
   width: min(371px, 91%);
 }
 
-.third-text{
+.text-right{
   padding-right: 0;
 }
