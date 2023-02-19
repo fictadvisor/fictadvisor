@@ -3,24 +3,24 @@ import { TeacherService } from './TeacherService';
 import { DisciplineTeacherRepository } from './DisciplineTeacherRepository';
 import { DisciplineTypeService } from '../discipline/DisciplineTypeService';
 import { DisciplineTypeRepository } from '../discipline/DisciplineTypeRepository';
-import { PollService } from "../poll/PollService";
+import { PollService } from '../poll/PollService';
 import { CreateAnswerDTO, CreateAnswersDTO } from './dto/CreateAnswersDTO';
-import { QuestionAnswerRepository } from "../poll/QuestionAnswerRepository";
-import { Question, TeacherRole, User } from "@prisma/client";
-import { AlreadyAnsweredException } from "../../utils/exceptions/AlreadyAnsweredException";
-import { DisciplineService } from "../discipline/DisciplineService";
+import { QuestionAnswerRepository } from '../poll/QuestionAnswerRepository';
+import { Question, TeacherRole, User } from '@prisma/client';
+import { AlreadyAnsweredException } from '../../utils/exceptions/AlreadyAnsweredException';
+import { DisciplineService } from '../discipline/DisciplineService';
 import { DisciplineRepository } from '../discipline/DisciplineRepository';
 import { NotEnoughAnswersException } from '../../utils/exceptions/NotEnoughAnswersException';
 import { ExcessiveAnswerException } from '../../utils/exceptions/ExcessiveAnswerException';
-import { DateService } from "../../utils/date/DateService";
-import { PrismaService } from "../../database/PrismaService";
-import { ConfigService } from "@nestjs/config";
-import { WrongTimeException } from "../../utils/exceptions/WrongTimeException";
-import { DisciplineTeacherWithRoles, DisciplineTeacherWithRolesAndTeacher } from "./DisciplineTeacherDatas";
+import { DateService } from '../../utils/date/DateService';
+import { PrismaService } from '../../database/PrismaService';
+import { ConfigService } from '@nestjs/config';
+import { WrongTimeException } from '../../utils/exceptions/WrongTimeException';
+import { DisciplineTeacherWithRoles, DisciplineTeacherWithRolesAndTeacher } from './DisciplineTeacherDatas';
 
 @Injectable()
 export class DisciplineTeacherService {
-  constructor(
+  constructor (
     @Inject(forwardRef(() => TeacherService))
     private teacherService: TeacherService,
     private prisma: PrismaService,
@@ -38,18 +38,18 @@ export class DisciplineTeacherService {
     private disciplineService: DisciplineService,
   ) {}
 
-  async getGroup(id: string) {
+  async getGroup (id: string) {
     const discipline = await this.disciplineTeacherRepository.getDiscipline(id);
     return discipline.group;
   }
 
-  async getDisciplineTeacher(id: string) {
+  async getDisciplineTeacher (id: string) {
     const disciplineTeacher = await this.disciplineTeacherRepository.getDisciplineTeacher(id);
 
     return this.formatTeacher(disciplineTeacher);
   }
 
-  getUniqueRoles(disciplineTeachers: DisciplineTeacherWithRoles[]): TeacherRole[] {
+  getUniqueRoles (disciplineTeachers: DisciplineTeacherWithRoles[]): TeacherRole[] {
     const roles = [];
     for (const disciplineTeacher of disciplineTeachers) {
       const dbRoles = disciplineTeacher.roles
@@ -62,11 +62,11 @@ export class DisciplineTeacherService {
     return roles;
   }
 
-  getTeachers(teachers: DisciplineTeacherWithRolesAndTeacher[]) {
+  getTeachers (teachers: DisciplineTeacherWithRolesAndTeacher[]) {
     return teachers.map(this.formatTeacher);
   }
 
-  formatTeacher(teacher: DisciplineTeacherWithRolesAndTeacher) {
+  formatTeacher (teacher: DisciplineTeacherWithRolesAndTeacher) {
     return {
       disciplineTeacherId: teacher.id,
       ...teacher.teacher,
@@ -74,11 +74,11 @@ export class DisciplineTeacherService {
     };
   }
 
-  getQuestions(disciplineTeacherId: string) {
+  getQuestions (disciplineTeacherId: string) {
     return this.getCategories(disciplineTeacherId);
   }
 
-  async sendAnswers(disciplineTeacherId: string, { answers }: CreateAnswersDTO, user: User) {
+  async sendAnswers (disciplineTeacherId: string, { answers }: CreateAnswersDTO, user: User) {
     const questions = await this.getUniqueQuestions(disciplineTeacherId);
     await this.checkExcessiveQuestions(questions, answers);
     await this.checkRequiredQuestions(questions, answers);
@@ -94,7 +94,7 @@ export class DisciplineTeacherService {
     }
   }
 
-  async getCategories(id: string) {
+  async getCategories (id: string) {
     const { discipline, teacher } = await this.disciplineTeacherRepository.getDisciplineTeacher(id);
     const questions = await this.getUniqueQuestions(id);
     const categories = this.pollService.sortByCategories(questions);
@@ -105,7 +105,7 @@ export class DisciplineTeacherService {
     };
   }
 
-  async getUniqueQuestions(id: string) {
+  async getUniqueQuestions (id: string) {
     const { disciplineTeachers } = await this.disciplineTeacherRepository.getDiscipline(id);
 
     const teacherRoles = disciplineTeachers
@@ -116,7 +116,7 @@ export class DisciplineTeacherService {
     return this.disciplineTeacherRepository.getQuestions(teacherRoles, disciplineRoles);
   }
 
-  async checkRequiredQuestions(dbQuestions: Question[], questions: CreateAnswerDTO[]) {
+  async checkRequiredQuestions (dbQuestions: Question[], questions: CreateAnswerDTO[]) {
     for (const question of dbQuestions) {
       if (question.isRequired && !questions.some((q) => q.questionId === question.id)) {
         throw new NotEnoughAnswersException();
@@ -124,7 +124,7 @@ export class DisciplineTeacherService {
     }
   }
 
-  async checkExcessiveQuestions(dbQuestions: Question[], questions: CreateAnswerDTO[]) {
+  async checkExcessiveQuestions (dbQuestions: Question[], questions: CreateAnswerDTO[]) {
     for (const question of questions) {
       if (!dbQuestions.some((q) => (q.id === question.questionId))) {
         throw new ExcessiveAnswerException();
@@ -132,13 +132,13 @@ export class DisciplineTeacherService {
     }
   }
 
-  async checkAnsweredQuestions(disciplineTeacherId: string, answers: CreateAnswerDTO[], userId: string) {
+  async checkAnsweredQuestions (disciplineTeacherId: string, answers: CreateAnswerDTO[], userId: string) {
     for (const answer of answers) {
       await this.checkAnsweredQuestion(disciplineTeacherId, answer.questionId, userId);
     }
   }
 
-  async checkAnsweredQuestion(disciplineTeacherId: string, questionId: string, userId: string) {
+  async checkAnsweredQuestion (disciplineTeacherId: string, questionId: string, userId: string) {
     const dbAnswer = await this.questionAnswerRepository.find({
       disciplineTeacherId,
       userId,
@@ -149,7 +149,7 @@ export class DisciplineTeacherService {
     }
   }
 
-  async getPollTimeBorders() {
+  async getPollTimeBorders () {
     const { year, semester } = await this.dateService.getCurrentYearAndSemester();
     const startPoll = await this.dateService.getDateVar(`START_POLL_${year}_${semester}`);
     const endPoll = await this.dateService.getDateVar(`END_POLL_${year}_${semester}`);
@@ -158,7 +158,7 @@ export class DisciplineTeacherService {
       endPoll,
     };
   }
-  async checkSendingTime() {
+  async checkSendingTime () {
     const dateBorders = await this.getPollTimeBorders();
     const closingPollTime = dateBorders.startPoll.getTime();
     const openingPollTime = dateBorders.endPoll.getTime();

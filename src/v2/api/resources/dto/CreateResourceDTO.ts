@@ -1,4 +1,4 @@
-import { IsNotEmpty, MaxLength, MinLength } from "class-validator";
+import { IsNotEmpty, MaxLength, MinLength } from 'class-validator';
 
 export class CreateResourceDTO {
   @MinLength(3, {
@@ -10,15 +10,15 @@ export class CreateResourceDTO {
   @IsNotEmpty({
     message: 'name can not be empty',
   })
-  name: string;
+    name: string;
 
   @IsNotEmpty({
     message: 'link can not be empty',
   })
-  link: string;
+    link: string;
 
   @IsNotEmpty({
     message: 'icon can not be empty',
   })
-  icon: string;
+    icon: string;
 }

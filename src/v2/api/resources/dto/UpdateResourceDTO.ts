@@ -1,4 +1,4 @@
-import { IsOptional, MaxLength, MinLength } from "class-validator";
+import { IsOptional, MaxLength, MinLength } from 'class-validator';
 
 export class UpdateResourceDTO {
   @MinLength(3, {
@@ -8,11 +8,11 @@ export class UpdateResourceDTO {
     message: 'name is too long (max: 50)',
   })
   @IsOptional()
-  name: string;
+    name: string;
 
   @IsOptional()
-  link: string;
+    link: string;
 
   @IsOptional()
-  icon: string;
+    icon: string;
 }

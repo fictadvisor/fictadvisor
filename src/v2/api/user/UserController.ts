@@ -3,14 +3,14 @@ import { UserService } from './UserService';
 import { TelegramGuard } from '../../security/TelegramGuard';
 import { ApproveDTO } from './dto/ApproveDTO';
 import { GiveRoleDTO } from './dto/GiveRoleDTO';
-import { CreateSuperheroDTO } from "./dto/CreateSuperheroDTO";
-import { UserByIdPipe } from "./UserByIdPipe";
-import { CreateContactDTO } from "./dto/CreateContactDTO";
-import { UpdateContactDTO } from "./dto/UpdateContactDTO";
-import { UpdateUserDTO } from "./dto/UpdateUserDTO";
-import { UpdateStudentDTO } from "./dto/UpdateStudentDTO";
+import { CreateSuperheroDTO } from './dto/CreateSuperheroDTO';
+import { UserByIdPipe } from './UserByIdPipe';
+import { CreateContactDTO } from './dto/CreateContactDTO';
+import { UpdateContactDTO } from './dto/UpdateContactDTO';
+import { UpdateUserDTO } from './dto/UpdateUserDTO';
+import { UpdateStudentDTO } from './dto/UpdateStudentDTO';
 
-import { ContactByUserIdPipe } from "./ContactByUserIdPipe";
+import { ContactByUserIdPipe } from './ContactByUserIdPipe';
 import { GroupRequestDTO } from './dto/GroupRequestDTO';
 import { Access } from 'src/v2/security/Access';
 
@@ -19,14 +19,14 @@ import { Access } from 'src/v2/security/Access';
   path: '/users',
 })
 export class UserController {
-  constructor(
+  constructor (
     private userService: UserService,
   ) {
   }
 
   @UseGuards(TelegramGuard)
   @Patch('/:userId/verifyStudent')
-  verify(
+  verify (
     @Param('userId', UserByIdPipe) userId: string,
     @Body() body: ApproveDTO,
   ) {
@@ -35,7 +35,7 @@ export class UserController {
 
   @UseGuards(TelegramGuard)
   @Patch('/:userId/verifySuperhero')
-  verifySuperhero(
+  verifySuperhero (
     @Param('userId', UserByIdPipe) userId: string,
     @Body() body: ApproveDTO,
   ) {
@@ -44,7 +44,7 @@ export class UserController {
 
   @Access('users.$userId.group.request')
   @Patch('/:userId/requestNewGroup')
-  requestNewGroup(
+  requestNewGroup (
     @Param('userId', UserByIdPipe) userId: string,
     @Body() body: GroupRequestDTO,
   ) {
@@ -53,7 +53,7 @@ export class UserController {
 
   @Access('users.$userId.superhero.create')
   @Post('/:userId/superhero')
-  async createSuperhero(
+  async createSuperhero (
     @Param('userId', UserByIdPipe) userId: string,
     @Body() body: CreateSuperheroDTO,
   ) {
@@ -62,7 +62,7 @@ export class UserController {
 
   @Access('users.$userId.selective.get')
   @Get('/:userId/selective')
-  async getSelective(
+  async getSelective (
     @Param('userId', UserByIdPipe) userId: string,
   ) {
     const dbDisciplines = await this.userService.getSelective(userId);
@@ -71,7 +71,7 @@ export class UserController {
 
   @UseGuards()
   @Post('/:userId/roles')
-  giveRole(
+  giveRole (
     @Param('userId', UserByIdPipe) userId: string,
     @Body() body: GiveRoleDTO,
   ) {
@@ -79,7 +79,7 @@ export class UserController {
   }
 
   @Delete('/:userId/roles/:roleId')
-  removeRole(
+  removeRole (
     @Param('userId', UserByIdPipe) userId: string,
     @Param('roleId') roleId: string,
   ) {
@@ -88,86 +88,86 @@ export class UserController {
 
   @Access('users.delete')
   @Delete('/:userId')
-  deleteUser(
+  deleteUser (
     @Param('userId', UserByIdPipe) userId: string,
-  ){
+  ) {
     return this.userService.deleteUser(userId);
   }
 
   @Access('users.update')
   @Patch('/:userId')
-  updateUser(
+  updateUser (
     @Param('userId', UserByIdPipe) userId: string,
     @Body() body: UpdateUserDTO
-  ){
+  ) {
     return this.userService.updateUser(userId, body);
   }
 
   @Access('users.$userId.contacts.get')
   @Get('/:userId/contacts')
-  async getContacts(
+  async getContacts (
     @Param('userId', UserByIdPipe) userId: string,
-  ){
+  ) {
     const contacts = await this.userService.getContacts(userId);
     return { contacts };
   }
 
   @Access('users.$userId.contacts.create')
   @Post('/:userId/contacts')
-  createContact(
+  createContact (
     @Param('userId', UserByIdPipe) userId: string,
     @Body() body: CreateContactDTO,
-  ){
+  ) {
     return this.userService.createContact(userId, body);
   }
 
   @Access('users.$userId.contacts.update')
   @Patch('/:userId/contacts/:name')
-  updateContact(
+  updateContact (
     @Param(ContactByUserIdPipe) params,
     @Body() body: UpdateContactDTO,
-  ){
+  ) {
     return this.userService.updateContact(params.userId, params.name, body);
   }
 
   @Access('users.$userId.contacts.delete')
   @Delete('/:userId/contacts/:name')
-  deleteContact(
+  deleteContact (
     @Param(ContactByUserIdPipe) params,
-  ){
+  ) {
     return this.userService.deleteContact(params.userId, params.name);
   }
 
   @Access('students.delete')
   @Delete('/:userId/student')
-  deleteStudent(
+  deleteStudent (
     @Param('userId', UserByIdPipe) userId: string,
-  ){
+  ) {
     return this.userService.deleteStudent(userId);
   }
 
   @Access('students.$userId.update')
   @Patch('/:userId/student')
-  updateStudent(
+  updateStudent (
     @Param('userId', UserByIdPipe) userId: string,
     @Body() body: UpdateStudentDTO,
-  ){
+  ) {
     return this.userService.updateStudent(userId, body);
   }
 
   @UseGuards(TelegramGuard)
   @Get('/:userId/telegram')
-  getUserForTelegram(
+  getUserForTelegram (
     @Param('userId', UserByIdPipe) userId: string,
-  ){
+  ) {
     return this.userService.getUser(userId);
   }
 
   @Access('users.$userId.get')
   @Get('/:userId')
-  getMe(
+  getMe (
     @Param('userId', UserByIdPipe) userId: string,
-  ){
+  ) {
     return this.userService.getUser(userId);
   }
 

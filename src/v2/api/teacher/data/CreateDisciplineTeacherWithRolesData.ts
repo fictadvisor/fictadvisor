@@ -1,5 +1,5 @@
-import { CreateDisciplineTeacherData } from "./CreateDisciplineTeacherData";
-import { TeacherRole } from "@prisma/client";
+import { CreateDisciplineTeacherData } from './CreateDisciplineTeacherData';
+import { TeacherRole } from '@prisma/client';
 
 export class CreateDisciplineTeacherWithRolesData extends CreateDisciplineTeacherData {
   roles: {

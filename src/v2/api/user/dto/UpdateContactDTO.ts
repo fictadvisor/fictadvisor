@@ -1,4 +1,4 @@
-import { IsAscii, IsOptional, MaxLength } from "class-validator";
+import { IsAscii, IsOptional, MaxLength } from 'class-validator';
 
 export class UpdateContactDTO {
 
@@ -9,7 +9,7 @@ export class UpdateContactDTO {
       message: 'link contains wrong symbols (ACSII only)',
     })
     @IsOptional()
-    displayName?: string;
+      displayName?: string;
 
     @MaxLength(200, {
       message: 'link is too long (max: 200)',
@@ -18,5 +18,5 @@ export class UpdateContactDTO {
       message: 'link contains wrong symbols (ACSII only)',
     })
     @IsOptional()
-    link?: string;
-  }
+      link?: string;
+}

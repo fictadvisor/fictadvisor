@@ -11,7 +11,7 @@ import { DisciplineTeacherService } from '../teacher/DisciplineTeacherService';
 
 @Injectable()
 export class DisciplineService {
-  constructor(
+  constructor (
     private disciplineRepository: DisciplineRepository,
     private disciplineTypeRepository: DisciplineTypeRepository,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
@@ -24,15 +24,15 @@ export class DisciplineService {
     private prisma: PrismaService,
   ) {}
 
-  async create(body: CreateDisciplineDTO) {
+  async create (body: CreateDisciplineDTO) {
     return this.disciplineRepository.create(body);
   }
 
-  async get(id: string) {
+  async get (id: string) {
     return this.disciplineRepository.getDiscipline(id);
   }
 
-  async makeSelective(user: User, disciplineId: string) {
+  async makeSelective (user: User, disciplineId: string) {
     return this.prisma.selectiveDiscipline.create({
       data: {
         studentId: user.id,
@@ -41,7 +41,7 @@ export class DisciplineService {
     });
   }
 
-  async getTeachers(id: string) {
+  async getTeachers (id: string) {
     const disciplineTeachers = await this.disciplineRepository.getDisciplineTeachers(id);
     return this.disciplineTeacherService.getTeachers(disciplineTeachers);
   }

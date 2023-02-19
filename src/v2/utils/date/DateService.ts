@@ -13,22 +13,22 @@ export interface CurrentDate {
 
 @Injectable()
 export class DateService {
-  constructor(
+  constructor (
     private prisma: PrismaService,
     private config: ConfigService,
   ) {}
 
-  async getCurrentYearAndSemester() {
+  async getCurrentYearAndSemester () {
     const { currentYear, currentSemester } = this.config.get<{
       currentYear: number,
       currentSemester: number
     }>('dates');
     return {
-      year : currentYear,
-      semester : currentSemester,
+      year: currentYear,
+      semester: currentSemester,
     };
   }
-  async getDateVar(name: string): Promise<Date> {
+  async getDateVar (name: string): Promise<Date> {
     const { date } = await this.prisma.dateVar.findUnique({
       where: {
         name,
@@ -36,7 +36,7 @@ export class DateService {
     });
     return date;
   }
-  async getCurrent(): Promise<CurrentDate> {
+  async getCurrent (): Promise<CurrentDate> {
     const { currentYear, currentSemester } = this.config.get('dates');
     const { startDate } = await this.prisma.startDate.findFirst({
       select: {

@@ -3,16 +3,16 @@ import { Subject } from '@prisma/client';
 import { QueryAllDTO } from 'src/v2/utils/QueryAllDTO';
 import { PrismaService } from '../../database/PrismaService';
 import { DatabaseUtils } from '../utils/DatabaseUtils';
-import { UpdateSubjectData } from "./data/UpdateSubjectData";
-import { CreateSubjectData } from "./data/CreateSubjectData";
+import { UpdateSubjectData } from './data/UpdateSubjectData';
+import { CreateSubjectData } from './data/CreateSubjectData';
 
 @Injectable()
 export class SubjectRepository {
-  constructor(
+  constructor (
     private prisma: PrismaService,
   ) {}
 
-  async find(name: string) {
+  async find (name: string) {
     return this.prisma.subject.findFirst({
       where: {
         name,
@@ -20,7 +20,7 @@ export class SubjectRepository {
     });
   }
 
-  async create({ name }: CreateSubjectData) {
+  async create ({ name }: CreateSubjectData) {
     return this.prisma.subject.create({
       data: {
         name,
@@ -28,7 +28,7 @@ export class SubjectRepository {
     });
   }
 
-  async getOrCreate(name: string) {
+  async getOrCreate (name: string) {
     let subject = await this.find(name);
     if (!subject) {
       subject = await this.create({ name });
@@ -36,7 +36,7 @@ export class SubjectRepository {
     return subject;
   }
 
-  async get(id: string) {
+  async get (id: string) {
     return this.prisma.subject.findUnique({
       where: {
         id,
@@ -47,7 +47,7 @@ export class SubjectRepository {
     });
   }
 
-  async getAll(body: QueryAllDTO) {
+  async getAll (body: QueryAllDTO) {
     const search = DatabaseUtils.getSearch<Subject>(body, 'name');
     const page = DatabaseUtils.getPage(body);
     const sort = DatabaseUtils.getSort(body);
@@ -61,7 +61,7 @@ export class SubjectRepository {
     });
   }
 
-  async getSubject(id: string) {
+  async getSubject (id: string) {
     return this.prisma.subject.findUnique({
       where: {
         id,
@@ -69,7 +69,7 @@ export class SubjectRepository {
     });
   }
 
-  async update(id: string, data: UpdateSubjectData) {
+  async update (id: string, data: UpdateSubjectData) {
     return this.prisma.subject.update({
       where: {
         id,
@@ -82,7 +82,7 @@ export class SubjectRepository {
     });
   }
 
-  async delete(id: string) {
+  async delete (id: string) {
     return this.prisma.subject.delete({
       where: {
         id,
@@ -90,7 +90,7 @@ export class SubjectRepository {
     });
   }
 
-  countTeachers(subjectId: string) {
+  countTeachers (subjectId: string) {
     return this.prisma.teacher.count({
       where: {
         disciplineTeachers: {
@@ -104,7 +104,7 @@ export class SubjectRepository {
     });
   }
 
-  getTeachers(subjectId: string) {
+  getTeachers (subjectId: string) {
     return this.prisma.teacher.findMany({
       where: {
         disciplineTeachers: {

@@ -4,11 +4,11 @@ import { CreateGroupDTO } from './dto/CreateGroupDTO';
 import { GroupByIdPipe } from './GroupByIdPipe';
 import { Group } from '@prisma/client';
 import { EmailDTO } from './dto/EmailDTO';
-import { ApproveDTO } from "../user/dto/ApproveDTO";
-import { RoleDTO } from "./dto/RoleDTO";
-import { UserByIdPipe } from "../user/UserByIdPipe";
+import { ApproveDTO } from '../user/dto/ApproveDTO';
+import { RoleDTO } from './dto/RoleDTO';
+import { UserByIdPipe } from '../user/UserByIdPipe';
 import { QueryAllDTO } from '../../utils/QueryAllDTO';
-import { UpdateGroupDTO } from "./dto/UpdateGroupDTO";
+import { UpdateGroupDTO } from './dto/UpdateGroupDTO';
 import { Access } from 'src/v2/security/Access';
 
 @Controller({
@@ -16,18 +16,18 @@ import { Access } from 'src/v2/security/Access';
   path: '/groups',
 })
 export class GroupController {
-  constructor(
+  constructor (
     private groupService: GroupService
   ) {}
 
   @Access('groups.create')
   @Post()
-  create(@Body() body: CreateGroupDTO) {
+  create (@Body() body: CreateGroupDTO) {
     return this.groupService.create(body.code);
   }
 
   @Get()
-  async getAll(@Query() body: QueryAllDTO) {
+  async getAll (@Query() body: QueryAllDTO) {
     const groups = await this.groupService.getAll(body);
     return {
       groups,
@@ -35,7 +35,7 @@ export class GroupController {
   }
 
   @Get('/:groupId')
-  get(
+  get (
     @Param('groupId', GroupByIdPipe) group: Group
   ) {
     return group;
@@ -43,26 +43,26 @@ export class GroupController {
 
   @Access('groups.update')
   @Patch()
-  async update(
+  async update (
     @Param('groupId', GroupByIdPipe) groupId: string,
     @Body() body: UpdateGroupDTO,
-  ){
+  ) {
     return this.groupService.updateGroup(groupId, body);
   }
 
   @Access('groups.delete')
   @Delete('/:groupId')
-  async deleteGroup(
+  async deleteGroup (
     @Param('groupId', GroupByIdPipe) groupId: string,
-  ){
+  ) {
     return this.groupService.deleteGroup(groupId);
   }
 
   @Access('groups.$groupId.students.get')
   @Get('/:groupId/students')
-  async getStudents(
+  async getStudents (
     @Param('groupId', GroupByIdPipe) groupId: string,
-  ){
+  ) {
     const students = await this.groupService.getStudents(groupId);
 
     return { students };
@@ -70,15 +70,15 @@ export class GroupController {
 
   @Access('groups.$groupId.captain.get')
   @Get('/:groupId/captain')
-  async getCaptain(
+  async getCaptain (
     @Param('groupId', GroupByIdPipe) groupId: string,
-  ){
+  ) {
     return this.groupService.getCaptain(groupId);
   }
 
   @Access('groups.$groupId.disciplines.teachers.get')
   @Get('/:groupId/disciplineTeachers')
-  async getDisciplineTeachers(
+  async getDisciplineTeachers (
     @Param('groupId', GroupByIdPipe) groupId: string,
   ) {
     return this.groupService.getDisciplineTeachers(groupId);
@@ -86,7 +86,7 @@ export class GroupController {
 
   @Access('groups.$groupId.disciplines.get')
   @Get('/:groupId/disciplines')
-  async getDiscipline(
+  async getDiscipline (
     @Param('groupId', GroupByIdPipe) groupId: string,
   ) {
     const disciplines = await this.groupService.getDisciplines(groupId);
@@ -95,7 +95,7 @@ export class GroupController {
 
   @Access('groups.$groupId.students.add')
   @Post('/:groupId/addEmails')
-  async addUnregistered(
+  async addUnregistered (
     @Param('groupId', GroupByIdPipe) groupId: string,
     @Body() body: EmailDTO
   ) {
@@ -104,7 +104,7 @@ export class GroupController {
 
   @Access('groups.$groupId.students.verify')
   @Patch('/:groupId/verify/:userId')
-  async verifyStudent(
+  async verifyStudent (
     @Param('groupId', GroupByIdPipe) groupId: string,
     @Param('userId', UserByIdPipe) userId: string,
     @Body() body : ApproveDTO
@@ -114,7 +114,7 @@ export class GroupController {
 
   @Access('groups.$groupId.admin.switch')
   @Patch('/:groupId/switch/:userId')
-  async moderatorSwitch(
+  async moderatorSwitch (
     @Param('groupId', GroupByIdPipe) groupId: string,
     @Param('userId', UserByIdPipe) userId: string,
     @Body() body: RoleDTO
@@ -124,7 +124,7 @@ export class GroupController {
 
   @Access('groups.$groupId.students.remove')
   @Delete('/:groupId/remove/:userId')
-  async removeStudent(
+  async removeStudent (
     @Param('groupId', GroupByIdPipe) groupId: string,
     @Param('userId', UserByIdPipe) userId: string,
     @Request() req,
@@ -134,9 +134,9 @@ export class GroupController {
 
   @Access('groups.$groupId.students.unverified.get')
   @Get('/:groupId/unverifiedStudents')
-  async getUnverifiedStudents(
+  async getUnverifiedStudents (
       @Param('groupId', GroupByIdPipe) groupId: string,
-  ){
+  ) {
     const students = await this.groupService.getUnverifiedStudents(groupId);
 
     return { students };

@@ -3,23 +3,23 @@ import { DisciplineService } from '../discipline/DisciplineService';
 import { GiveRoleDTO } from './dto/GiveRoleDTO';
 import { StudentRepository } from './StudentRepository';
 import { RoleService } from './role/RoleService';
-import { UpdateSuperheroData } from "./dto/UpdateSuperheroData";
-import { SuperheroRepository } from "./SuperheroRepository";
-import { UserRepository } from "./UserRepository";
-import { ContactRepository } from "./ContactRepository";
-import { UpdateUserDTO } from "./dto/UpdateUserDTO";
-import { CreateContactDTO } from "./dto/CreateContactDTO";
-import { EntityType, Role, State } from "@prisma/client";
-import { UpdateContactDTO } from "./dto/UpdateContactDTO";
-import { UpdateStudentDTO } from "./dto/UpdateStudentDTO";
+import { UpdateSuperheroData } from './dto/UpdateSuperheroData';
+import { SuperheroRepository } from './SuperheroRepository';
+import { UserRepository } from './UserRepository';
+import { ContactRepository } from './ContactRepository';
+import { UpdateUserDTO } from './dto/UpdateUserDTO';
+import { CreateContactDTO } from './dto/CreateContactDTO';
+import { EntityType, Role, State } from '@prisma/client';
+import { UpdateContactDTO } from './dto/UpdateContactDTO';
+import { UpdateStudentDTO } from './dto/UpdateStudentDTO';
 import { CreateSuperheroDTO } from './dto/CreateSuperheroDTO';
-import { StudentWithUser } from "./dto/StudentDTOs";
+import { StudentWithUser } from './dto/StudentDTOs';
 import { AuthService } from '../auth/AuthService';
 import { GroupRequestDTO } from './dto/GroupRequestDTO';
 
 @Injectable()
 export class UserService {
-  constructor(
+  constructor (
     private disciplineService: DisciplineService,
     @Inject(forwardRef(() => StudentRepository))
     private studentRepository: StudentRepository,
@@ -32,16 +32,16 @@ export class UserService {
   ) {
   }
 
-  async createSuperhero(id: string, body: CreateSuperheroDTO) {
+  async createSuperhero (id: string, body: CreateSuperheroDTO) {
     return this.superheroRepository.createSuperhero(id, body);
   }
 
-  async getSelective(studentId: string) {
+  async getSelective (studentId: string) {
     return this.studentRepository.getSelective(studentId);
   }
 
 
-  async hasPermission(userId: string, permission: string) {
+  async hasPermission (userId: string, permission: string) {
     const roles = await this.studentRepository.getRoles(userId);
     for (const role of roles) {
       const hasRight = this.roleService.hasPermission(role.grants, permission);
@@ -51,16 +51,16 @@ export class UserService {
     return false;
   }
 
-  async giveRole(id: string, { roleId }: GiveRoleDTO) {
+  async giveRole (id: string, { roleId }: GiveRoleDTO) {
     await this.studentRepository.addRole(id, roleId);
   }
-  async getGroupByRole(id: string) {
+  async getGroupByRole (id: string) {
     return await this.studentRepository.getGroupByRole(id);
   }
 
-  async getGroupRoleDB(userId: string) {
+  async getGroupRoleDB (userId: string) {
     const roles = await this.studentRepository.getRoles(userId);
-    const role = roles.find((r) => r.name == 'CAPTAIN' || r.name == 'MODERATOR' || r.name == 'STUDENT');
+    const role = roles.find((r) => r.name === 'CAPTAIN' || r.name === 'MODERATOR' || r.name === 'STUDENT');
     const group = await this.getGroupByRole(role.id);
     return {
       ...role,
@@ -68,26 +68,26 @@ export class UserService {
     };
   }
 
-  getGroupRole(roles: { role: Role }[]) {
-    const groupRole = roles.find((r) => r.role.name == 'CAPTAIN' || r.role.name == 'MODERATOR' || r.role.name == 'STUDENT');
+  getGroupRole (roles: { role: Role }[]) {
+    const groupRole = roles.find((r) => r.role.name === 'CAPTAIN' || r.role.name === 'MODERATOR' || r.role.name === 'STUDENT');
     return groupRole.role;
   }
 
-  async removeRole(id: string, roleId: string) {
+  async removeRole (id: string, roleId: string) {
     await this.studentRepository.removeRole(id, roleId);
   }
 
-  async updateStudent(userId: string, data: UpdateStudentDTO) {
+  async updateStudent (userId: string, data: UpdateStudentDTO) {
     return this.studentRepository.update(userId, data);
   }
 
-  async updateSuperhero(userId: string, data: UpdateSuperheroData) {
+  async updateSuperhero (userId: string, data: UpdateSuperheroData) {
     return this.superheroRepository.updateSuperhero(userId, data);
   }
 
-  async requestNewGroup(id: string, { groupId, isCaptain }: GroupRequestDTO) {
+  async requestNewGroup (id: string, { groupId, isCaptain }: GroupRequestDTO) {
     const student = await this.studentRepository.get(id);
-    if(student.state === State.APPROVED)
+    if (student.state === State.APPROVED)
       throw new ForbiddenException();
     
     await this.studentRepository.update(id, { state: State.PENDING });
@@ -99,19 +99,19 @@ export class UserService {
     await this.authService.verify(student.user, { groupId, isCaptain, ...name });
   }
 
-  async deleteUser(userId: string) {
+  async deleteUser (userId: string) {
     await this.userRepository.delete(userId);
   }
 
-  async updateUser(userId: string, data: UpdateUserDTO) {
+  async updateUser (userId: string, data: UpdateUserDTO) {
     return this.userRepository.update(userId, data);
   }
 
-  async getContacts(userId: string) {
+  async getContacts (userId: string) {
     return this.contactRepository.getAllContacts(userId);
   }
 
-  async createContact(userId: string, data: CreateContactDTO) {
+  async createContact (userId: string, data: CreateContactDTO) {
     return this.contactRepository.createContact({
       entityId: userId,
       entityType: EntityType.STUDENT,
@@ -119,20 +119,20 @@ export class UserService {
     });
   }
 
-  async updateContact(userId: string, name: string, data: UpdateContactDTO) {
+  async updateContact (userId: string, name: string, data: UpdateContactDTO) {
     await this.contactRepository.updateContact(userId, name, data);
     return this.contactRepository.getContact(userId, name);
   }
 
-  async deleteContact(userId: string, name: string) {
+  async deleteContact (userId: string, name: string) {
     await this.contactRepository.deleteContact(userId, name);
   }
 
-  async deleteStudent(userId: string) {
+  async deleteStudent (userId: string) {
     await this.studentRepository.delete(userId);
   }
 
-  getStudent(student: StudentWithUser) {
+  getStudent (student: StudentWithUser) {
     return {
       id: student.user.id,
       username: student.user.username,
@@ -145,7 +145,7 @@ export class UserService {
     };
   }
 
-  async getUser(userId: string) {
+  async getUser (userId: string) {
     const student = await this.studentRepository.get(userId);
 
     return this.getStudent(student);

@@ -11,12 +11,12 @@ import { Access } from 'src/v2/security/Access';
   path: '/subjects',
 })
 export class SubjectController {
-  constructor(
+  constructor (
     private subjectService: SubjectService,
   ) {}
 
   @Get()
-  async getAll(
+  async getAll (
     @Query() body: QueryAllDTO,
   ) {
     const subjects = await this.subjectService.getAll(body);
@@ -25,14 +25,14 @@ export class SubjectController {
   }
 
   @Get('/:subjectId')
-  get(
+  get (
     @Param('subjectId', SubjectByIdPipe) subjectId: string,
   ) {
     return this.subjectService.get(subjectId);
   }
   
   @Get('/:subjectId/teachers')
-  getTeachers(
+  getTeachers (
     @Param('subjectId', SubjectByIdPipe) subjectId: string,
   ) {
     return this.subjectService.getTeachers(subjectId);
@@ -40,7 +40,7 @@ export class SubjectController {
 
   @Access('subjects.create')
   @Post()
-  create(
+  create (
     @Body() body: CreateSubjectDTO,
   ) {
     return this.subjectService.create(body);
@@ -48,7 +48,7 @@ export class SubjectController {
 
   @Access('subjects.update')
   @Patch('/:subjectId')
-  async update(
+  async update (
     @Param('subjectId', SubjectByIdPipe) subjectId: string,
     @Body() body: UpdateSubjectDTO,
   ) {
@@ -57,7 +57,7 @@ export class SubjectController {
 
   @Access('subjects.delete')
   @Delete('/:subjectId')
-  delete(
+  delete (
     @Param('subjectId', SubjectByIdPipe) subjectId: string,
   ) {
     return this.subjectService.deleteSubject(subjectId);

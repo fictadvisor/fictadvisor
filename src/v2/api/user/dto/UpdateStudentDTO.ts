@@ -1,6 +1,6 @@
-import { IsEnum, IsOptional, Matches, MaxLength, MinLength } from "class-validator";
-import { State } from "@prisma/client";
-import { createRegex, UKR_REGEX, UKRSPEC_REGEX } from "../../../utils/GLOBALS";
+import { IsEnum, IsOptional, Matches, MaxLength, MinLength } from 'class-validator';
+import { State } from '@prisma/client';
+import { createRegex, UKR_REGEX, UKRSPEC_REGEX } from '../../../utils/GLOBALS';
 
 export class UpdateStudentDTO {
   @Matches(
@@ -15,13 +15,13 @@ export class UpdateStudentDTO {
     message: 'firstName is too long (max 40)',
   })
   @IsOptional()
-  firstName?: string;
+    firstName?: string;
 
   @Matches(
     createRegex(UKR_REGEX, UKRSPEC_REGEX),
     {
-    message: 'lastName is not correct (A-Я(укр.)\\-\' )',
-  })
+      message: 'lastName is not correct (A-Я(укр.)\\-\' )',
+    })
   @MinLength(2, {
     message: 'lastName is too short (min 2)',
   })
@@ -29,7 +29,7 @@ export class UpdateStudentDTO {
     message: 'lastName is too long (max 40)',
   })
   @IsOptional()
-  lastName?: string;
+    lastName?: string;
 
   @Matches(
     createRegex(UKR_REGEX, UKRSPEC_REGEX),
@@ -43,13 +43,13 @@ export class UpdateStudentDTO {
     message: 'middleName is too long (max 40)',
   })
   @IsOptional()
-  middleName?: string;
+    middleName?: string;
 
   @IsOptional()
-  groupId?: string;
+    groupId?: string;
 
   @IsEnum(State, {
     message: 'invalid state argument passed',
   })
-  state?: State;
+    state?: State;
 }

@@ -11,12 +11,12 @@ import { Access } from 'src/v2/security/Access';
   path: '/studentResources',
 })
 export class ResourceController {
-  constructor(
+  constructor (
     private resourceService: ResourceService,
   ) {}
 
   @Get()
-  async getAll(
+  async getAll (
     @Query() body: QueryAllDTO,
   ) {
     const studentResources = await this.resourceService.getAll(body);
@@ -25,7 +25,7 @@ export class ResourceController {
   }
 
   @Get('/:resourceId')
-  get(
+  get (
     @Param('resourceId', ResourceByIdPipe) resourceId: string,
   ) {
     return this.resourceService.get(resourceId);
@@ -33,7 +33,7 @@ export class ResourceController {
 
   @Access('resources.create')
   @Post()
-  create(
+  create (
     @Body() body: CreateResourceDTO,
   ) {
     return this.resourceService.create(body);
@@ -41,7 +41,7 @@ export class ResourceController {
 
   @Access('resources.update')
   @Patch('/:resourceId')
-  async update(
+  async update (
     @Param('resourceId', ResourceByIdPipe) resourceId: string,
     @Body() body: UpdateResourceDTO,
   ) {
@@ -50,7 +50,7 @@ export class ResourceController {
 
   @Access('resources.delete')
   @Delete('/:resourceId')
-  delete(
+  delete (
     @Param('resourceId', ResourceByIdPipe) resourceId: string,
   ) {
     return this.resourceService.delete(resourceId);

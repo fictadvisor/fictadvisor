@@ -1,8 +1,8 @@
-import { Matches } from "class-validator";
+import { Matches } from 'class-validator';
 
-export class UpdateGroupDTO{
+export class UpdateGroupDTO {
     @Matches(/І[МПКАСОВТ]-([зпв]|зп)?\d\d(мн|мп|ф)?і?/, {
-        message: "Proper name is expected",
+      message: 'Proper name is expected',
     })
-    code: string;
+      code: string;
 }

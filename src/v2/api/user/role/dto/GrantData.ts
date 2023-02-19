@@ -1,4 +1,4 @@
-import { RoleName } from "@prisma/client";
+import { RoleName } from '@prisma/client';
 
 export class Grant {
   id: string;

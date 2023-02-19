@@ -2,28 +2,28 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Request, UseGuards }
 import { RoleService } from './RoleService';
 import { CreateGrantsDTO, CreateRoleWithGrantsDTO } from '../dto/CreateRoleDTO';
 import { UpdateRoleDTO } from './dto/UpdateRoleDTO';
-import { JwtGuard } from "../../../security/JwtGuard";
-import { PermissionGuard } from "../../../security/permission-guard/PermissionGuard";
-import { Permission } from "../../../security/permission-guard/Permission";
+import { JwtGuard } from '../../../security/JwtGuard';
+import { PermissionGuard } from '../../../security/permission-guard/PermissionGuard';
+import { Permission } from '../../../security/permission-guard/Permission';
 
 @Controller({
   version: '2',
   path: '/roles',
 })
 export class RoleController {
-  constructor(
+  constructor (
     private roleService: RoleService,
   ) {}
 
   @Get('/:roleId')
-  getRole(
+  getRole (
     @Param('roleId') roleId: string,
   ) {
     return this.roleService.get(roleId);
   }
 
   @Get()
-  async getAll() {
+  async getAll () {
     const roles = await this.roleService.getAll();
     return { roles };
   }
@@ -31,7 +31,7 @@ export class RoleController {
   @Permission('roles.create')
   @UseGuards(JwtGuard, PermissionGuard)
   @Post()
-  create(
+  create (
     @Body() body: CreateRoleWithGrantsDTO,
     @Request() req
   ) {
@@ -39,7 +39,7 @@ export class RoleController {
   }
 
   @Post('/:roleId/grants')
-  createGrants(
+  createGrants (
     @Body() body: CreateGrantsDTO,
     @Param('roleId') roleId: string,
   ) {
@@ -47,7 +47,7 @@ export class RoleController {
   }
 
   @Get('/:roleId/grants')
-  async getGrants(
+  async getGrants (
     @Param('roleId') roleId: string,
   ) {
     const grants = await this.roleService.getGrants(roleId);
@@ -55,14 +55,14 @@ export class RoleController {
   }
 
   @Delete('/:roleId')
-  delete(
+  delete (
     @Param('roleId') roleId: string,
   ) {
     return this.roleService.delete(roleId);
   }
 
   @Patch('/:roleId')
-  update(
+  update (
     @Param('roleId') roleId: string,
     @Body() body: UpdateRoleDTO,
   ) {

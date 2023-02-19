@@ -35,7 +35,7 @@ export const TEACHER_TYPE = {
 
 @Injectable()
 export class ScheduleParser implements Parser {
-  constructor(
+  constructor (
     private groupRepository: GroupRepository,
     private teacherRepository: TeacherRepository,
     private subjectRepository: SubjectRepository,
@@ -46,7 +46,7 @@ export class ScheduleParser implements Parser {
     private disciplineTeacherRoleRepository: DisciplineTeacherRoleRepository,
   ) {}
 
-  async parse() {
+  async parse () {
     const groups = await axios.get('https://schedule.kpi.ua/api/schedule/groups');
     const filtered = groups.data.data.filter((group) => group.faculty === 'ФІОТ').map((group) => ({ id: group.id, name: group.name }));
 
@@ -55,26 +55,26 @@ export class ScheduleParser implements Parser {
     }
   }
 
-  async parseGroupSchedule(group) {
+  async parseGroupSchedule (group) {
     const schedule = (await axios.get('https://schedule.kpi.ua/api/schedule/lessons?groupId=' + group.id)).data.data;
     const dbGroup = await this.groupRepository.getOrCreate(group.name);
     await this.parseWeek(schedule.scheduleFirstWeek, dbGroup.id, 0);
     await this.parseWeek(schedule.scheduleSecondWeek, dbGroup.id, 1);
   }
 
-  async parseWeek(week, groupId, weekNumber) {
+  async parseWeek (week, groupId, weekNumber) {
     for (const day of week) {
       await this.parseDay(day, groupId, weekNumber);
     }
   }
 
-  async parseDay({ day, pairs }, groupId, weekNumber) {
+  async parseDay ({ day, pairs }, groupId, weekNumber) {
     for (const pair of pairs) {
       await this.parsePair(pair, groupId, weekNumber, DAY_NUMBER[day]);
     }
   }
 
-  async parsePair(pair, groupId, week, day) {
+  async parsePair (pair, groupId, week, day) {
     const [lastName = '', firstName = '', middleName = ''] = pair.teacherName.split(' ');
     const teacher = await this.teacherRepository.getOrCreate({ lastName, firstName, middleName });
     const subject = await this.subjectRepository.getOrCreate(pair.name ?? '');
@@ -119,7 +119,7 @@ export class ScheduleParser implements Parser {
     });
   }
 
-  createDate(day, week, hours, minutes): Date {
+  createDate (day, week, hours, minutes): Date {
     return new Date(1970, 0, day + week * 7, hours, minutes);
   }
 }

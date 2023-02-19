@@ -3,8 +3,8 @@ import { SubjectService } from './SubjectService';
 import { SubjectController } from './SubjectController';
 import { PrismaModule } from '../../database/PrismaModule';
 import { UserModule } from '../user/UserModule';
-import { DisciplineModule } from "../discipline/DisciplineModule";
-import { TeacherModule } from "../teacher/TeacherModule";
+import { DisciplineModule } from '../discipline/DisciplineModule';
+import { TeacherModule } from '../teacher/TeacherModule';
 
 @Module({
   providers: [SubjectService],

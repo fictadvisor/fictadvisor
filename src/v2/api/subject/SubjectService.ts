@@ -4,23 +4,23 @@ import { UpdateSubjectDTO } from './dto/UpdateSubjectDTO';
 import { SubjectRepository } from './SubjectRepository';
 import { QueryAllDTO } from 'src/v2/utils/QueryAllDTO';
 import { DisciplineService } from '../discipline/DisciplineService';
-import { TeacherService } from "../teacher/TeacherService";
-import { DisciplineTeacherService } from "../teacher/DisciplineTeacherService";
+import { TeacherService } from '../teacher/TeacherService';
+import { DisciplineTeacherService } from '../teacher/DisciplineTeacherService';
 
 @Injectable()
 export class SubjectService {
-  constructor(
+  constructor (
     private subjectRepository: SubjectRepository,
     private disciplineService: DisciplineService,
     private teacherService: TeacherService,
     private disciplineTeacherService: DisciplineTeacherService,
   ) {}
 
-  async getAll(body: QueryAllDTO) {
+  async getAll (body: QueryAllDTO) {
     const subjects = await this.subjectRepository.getAll(body);
     const results = [];
 
-    for(const subject of subjects) {
+    for (const subject of subjects) {
       const amount = await this.subjectRepository.countTeachers(subject.id);
       results.push({
         id: subject.id,
@@ -32,11 +32,11 @@ export class SubjectService {
     return results;
   }
 
-  async get(id: string) {
+  async get (id: string) {
     return this.subjectRepository.getSubject(id);
   }
 
-  async getTeachers(id: string) {
+  async getTeachers (id: string) {
     const subjectName = (await this.subjectRepository.getSubject(id)).name;
     const dbTeachers = await this.subjectRepository.getTeachers(id);
 
@@ -57,15 +57,15 @@ export class SubjectService {
     };
   }
 
-  async create(body: CreateSubjectDTO) {
+  async create (body: CreateSubjectDTO) {
     return this.subjectRepository.create(body);
   }
 
-  async update(id: string, body: UpdateSubjectDTO) {
+  async update (id: string, body: UpdateSubjectDTO) {
     return this.subjectRepository.update(id, body);
   }
 
-  async deleteSubject(id: string) {
+  async deleteSubject (id: string) {
     await this.subjectRepository.delete(id);
   }
 }

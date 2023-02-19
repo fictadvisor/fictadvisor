@@ -8,11 +8,11 @@ import { UpdateResourceData } from './data/UpdateResourceData';
 
 @Injectable()
 export class ResourceRepository {
-  constructor(
+  constructor (
     private prisma: PrismaService,
   ) {}
 
-  async getAll(body: QueryAllDTO) {
+  async getAll (body: QueryAllDTO) {
     const search = DatabaseUtils.getSearch<StudentResource>(body, 'name', 'link', 'icon');
     const page = DatabaseUtils.getPage(body);
     const sort = DatabaseUtils.getSort(body);
@@ -26,7 +26,7 @@ export class ResourceRepository {
     });
   }
 
-  get(id: string) {
+  get (id: string) {
     return this.prisma.studentResource.findUnique({
       where: {
         id,
@@ -40,7 +40,7 @@ export class ResourceRepository {
     });
   }
 
-  async create(data: CreateResourceData) {
+  async create (data: CreateResourceData) {
     return this.prisma.studentResource.create({
       data,
       select: {
@@ -52,7 +52,7 @@ export class ResourceRepository {
     });
   }
 
-  async update(id: string, data: UpdateResourceData) {
+  async update (id: string, data: UpdateResourceData) {
     return this.prisma.studentResource.update({
       where: {
         id,
@@ -67,7 +67,7 @@ export class ResourceRepository {
     });
   }
 
-  async delete(id: string) {
+  async delete (id: string) {
     return this.prisma.studentResource.delete({
       where: {
         id,

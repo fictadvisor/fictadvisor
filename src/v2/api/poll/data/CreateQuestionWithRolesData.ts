@@ -1,4 +1,4 @@
-import { QuestionType, TeacherRole } from "@prisma/client";
+import { QuestionType, TeacherRole } from '@prisma/client';
 
 export class CreateQuestionData {
   category: string;
