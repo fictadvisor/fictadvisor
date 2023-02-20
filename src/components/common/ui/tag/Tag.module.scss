@@ -2,16 +2,16 @@
 @import 'src/styles/partials/utils';
 $theme-color:$background-dark-0;
 
-@mixin style-tag($className,$first,$second,$third){
-    .#{$className}-first-bgc{
-        background: $first;
+@mixin style-tag($color,$filled,$darker,$outline){
+    .#{$color}-filled-background-color{
+        background: $filled;
     }
-    .#{$className}-second-bgc{
-        background: $second;
+    .#{$color}-darker-background-color{
+        background: $darker;
     }
-    .#{$className}-third-bgc{
+    .#{$color}-outline-background-color{
         background: $theme-color;
-        border: 1px solid $third;
+        border: 1px solid $outline;
         border-radius: 6px;
     }
  }
@@ -22,7 +22,7 @@ $theme-color:$background-dark-0;
   font-weight: 500;
 }
 
-.big-tag-body{
+.medium-tag-body{
   font-size: 16px;
   line-height: 22px;
   font-weight: 500;
@@ -38,7 +38,7 @@ $theme-color:$background-dark-0;
      padding: 2px 6px;
  }
  
- .big-tag{
+ .medium-tag{
      padding: 4px 8px;
  }
  

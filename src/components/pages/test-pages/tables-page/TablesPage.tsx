@@ -7,11 +7,13 @@ import AlertButton, {
   AlertButtonType,
 } from '@/components/common/ui/alert-button/AlertButton';
 import CheckBox, { CheckBoxState } from '@/components/common/ui/check/CheckBox';
-import {
-  IconButtonSize,
-  TrashBucketButton,
-} from '@/components/common/ui/icon-button/IconButton';
-import Tag, { TagState } from '@/components/common/ui/tag/Tag';
+import { IconButtonSize } from '@/components/common/ui/icon-button/IconButton';
+import { TrashBucketButton } from '@/components/common/ui/icon-button/variants';
+import Tag, {
+  TagColor,
+  TagSize,
+  TagVariant,
+} from '@/components/common/ui/tag/Tag';
 
 import styles from '../test-pages.module.scss';
 
@@ -23,9 +25,10 @@ const TablesPage = () => {
       fullName: 'Ярмоленко Єлизавета Миколаївна',
       tag: (
         <Tag
-          state={TagState.SMALL}
+          size={TagSize.SMALL}
           text="Зам. староста"
-          className="primary-second"
+          variant={TagVariant.DARKER}
+          color={TagColor.PRIMARY}
         />
       ),
       checkBox: <CheckBox state={CheckBoxState.DEFAULT} text="Зам. староста" />,
@@ -62,9 +65,10 @@ const TablesPage = () => {
       fullName: 'Ярмоленко Єлизавета Миколаївна',
       tag: (
         <Tag
-          state={TagState.SMALL}
+          size={TagSize.SMALL}
           text="Зам. староста"
-          className="primary-second"
+          variant={TagVariant.DARKER}
+          color={TagColor.PRIMARY}
         />
       ),
       checkBox: <CheckBox state={CheckBoxState.DEFAULT} text="Зам. староста" />,
@@ -77,9 +81,10 @@ const TablesPage = () => {
       fullName: 'Ярмоленко Єлизавета Миколаївна',
       tag: (
         <Tag
-          state={TagState.SMALL}
+          size={TagSize.SMALL}
           text="Зам. староста"
-          className="primary-second"
+          variant={TagVariant.DARKER}
+          color={TagColor.PRIMARY}
         />
       ),
       checkBox: <CheckBox state={CheckBoxState.DEFAULT} text="Зам. староста" />,
@@ -99,9 +104,10 @@ const TablesPage = () => {
       fullName: 'Ярмоленко Єлизавета Миколаївна',
       tag: (
         <Tag
-          state={TagState.SMALL}
+          size={TagSize.SMALL}
           text="Зам. староста"
-          className="primary-second"
+          variant={TagVariant.DARKER}
+          color={TagColor.PRIMARY}
         />
       ),
       checkBox: <CheckBox state={CheckBoxState.DEFAULT} text="Зам. староста" />,
@@ -145,9 +151,10 @@ const TablesPage = () => {
       fullName: 'Ярмоленко Єлизавета Миколаївна',
       tag: (
         <Tag
-          state={TagState.SMALL}
+          size={TagSize.SMALL}
           text="Зам. староста"
-          className="primary-second"
+          variant={TagVariant.DARKER}
+          color={TagColor.PRIMARY}
         />
       ),
     },
@@ -156,9 +163,10 @@ const TablesPage = () => {
       fullName: 'Ярмоленко Єлизавета Миколаївна',
       tag: (
         <Tag
-          state={TagState.SMALL}
+          size={TagSize.SMALL}
           text="Зам. староста"
-          className="primary-second"
+          variant={TagVariant.DARKER}
+          color={TagColor.PRIMARY}
         />
       ),
     },

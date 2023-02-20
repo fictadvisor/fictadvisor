@@ -3,27 +3,51 @@ import mergeClassNames from 'merge-class-names';
 
 import styles from './Tag.module.scss';
 
-export enum TagState {
-  BIG = 'big',
-  SMALL = 'small',
+export enum TagVariant {
+  FILLED = 'filled-background-color',
+  DARKER = 'darker-background-color',
+  OUTLINE = 'outline-background-color',
 }
-interface TagProps {
-  className?: string;
-  text?: string;
-  icon?: ReactNode;
-  state: TagState;
+export enum TagSize {
+  SMALL = 'small-tag',
+  MEDIUM = 'medium-tag',
+}
+export enum TagColor {
+  PRIMARY = 'primary',
+  SUCCESS = 'success',
+  ERROR = 'error',
+  WARNING = 'warning',
+  INFO = 'info',
+  GRAY = 'gray',
+  VIOLET = 'violet',
+  MINT = 'mint',
+  ORANGE = 'orange',
 }
 
-const Tag: FC<TagProps> = props => {
+interface TagProps {
+  text?: string;
+  variant?: TagVariant;
+  color?: TagColor;
+  size?: TagSize;
+  icon?: ReactNode;
+}
+
+const Tag: FC<TagProps> = ({
+  text,
+  variant = TagVariant.FILLED,
+  color = TagColor.PRIMARY,
+  size = TagSize.MEDIUM,
+  icon,
+}) => {
   const tagClassName = mergeClassNames(
     styles['tag'],
-    styles[props.state + '-tag'],
-    styles[props.className ? props.className + '-bgc' : ''],
+    styles[size],
+    styles[color + '-' + variant],
   );
   return (
     <div className={tagClassName}>
-      {props.icon}
-      <p className={styles[props.state + '-tag-body']}>{props.text}</p>
+      {icon}
+      {text && <p className={styles[size + '-body']}>{text}</p>}
     </div>
   );
 };
