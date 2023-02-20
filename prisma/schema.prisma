@@ -241,9 +241,9 @@ model Question {
   isRequired      Boolean          @default(true) @map("is_required")
   criteria        String?
   type            QuestionType
+  display         QuestionDisplay  @default(PERCENT)
   questionRoles   QuestionRole[]
   questionAnswers QuestionAnswer[]
-  display         QuestionDisplay  @default(PERCENT)
 
   @@map("questions")
 }
