@@ -4,8 +4,8 @@ import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import styles from './ArrowButton.module.scss';
 
 export enum ArrowButtonSize {
-  SMALL = 'small',
-  MEDIUM = 'medium',
+  SMALL = 'small-arrow',
+  MEDIUM = 'medium-arrow',
 }
 
 interface ArrowButtonProps extends React.ComponentPropsWithoutRef<'button'> {
@@ -18,7 +18,7 @@ const ArrowButton: React.FC<ArrowButtonProps> = ({
 }) => {
   return (
     <div>
-      <button className={styles[size + '-arrow']} {...rest}>
+      <button className={styles[size]} {...rest}>
         <ChevronLeftIcon />
       </button>
     </div>
