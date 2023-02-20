@@ -604,6 +604,7 @@ function Cards() {
           questionNumber={2}
           question="I am a simple question"
           numberOfAnswered={3}
+          disabled={true}
         />
       </div>
       <br />

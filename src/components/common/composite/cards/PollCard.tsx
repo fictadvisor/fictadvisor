@@ -15,6 +15,7 @@ type PollCard = {
   question: string;
   numberOfAnswered: number;
   numberOfQuestions: number;
+  disabled?: boolean;
 } & DivProps;
 
 export const PollCard: React.FC<PollCard> = ({
@@ -22,6 +23,7 @@ export const PollCard: React.FC<PollCard> = ({
   question,
   numberOfAnswered,
   numberOfQuestions,
+  disabled,
   ...rest
 }) => {
   let isDoubleCheckIcon,
@@ -34,7 +36,11 @@ export const PollCard: React.FC<PollCard> = ({
 
   return (
     <div
-      className={mergeClassNames(styles['card'], styles['poll-card-container'])}
+      className={mergeClassNames(
+        styles['card'],
+        styles['poll-card-container'],
+        disabled && styles['poll-card-container-disabled'],
+      )}
       {...rest}
     >
       <div>

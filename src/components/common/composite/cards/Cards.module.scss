@@ -178,7 +178,6 @@ $dark-primary: #1E1E1E;
     align-items: center;
     justify-content: space-between;
     border: 1px solid #404040;
-    // border-bottom: 1px solid #404040;
     background-color: $dark-primary;
     border-radius: 0px;
     padding: 32px 16px;
@@ -200,6 +199,16 @@ $dark-primary: #1E1E1E;
         background:#873030;
     }
     
+}
+
+.poll-card-container-disabled{
+    *{
+        color:#525252 !important;
+    }
+    pointer-events: none !important;
+    & svg{
+        display: none;
+    }
 }
 
 .lecturer-poll-card-container{
