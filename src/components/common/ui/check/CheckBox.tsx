@@ -17,7 +17,7 @@ const CheckBox: React.FC<CheckBoxProps> = ({
   state = CheckBoxState.DEFAULT,
   ...rest
 }) => {
-  const additional = rest.disabled === true ? '-disabled' : '';
+  const additional = rest.disabled ? '-disabled' : '';
 
   return (
     <div>
