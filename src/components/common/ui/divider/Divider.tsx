@@ -12,7 +12,10 @@ interface DividerProps {
   textPosition?: DividerTextPosition;
 }
 
-const Divider: React.FC<DividerProps> = ({ text, textPosition }) => {
+const Divider: React.FC<DividerProps> = ({
+  text,
+  textPosition = DividerTextPosition.CENTER,
+}) => {
   return (
     <div className={styles['dividers-list']}>
       {!text && (
@@ -21,7 +24,7 @@ const Divider: React.FC<DividerProps> = ({ text, textPosition }) => {
         </div>
       )}
 
-      {textPosition == DividerTextPosition.LEFT && (
+      {text && textPosition == DividerTextPosition.LEFT && (
         <div className={styles['dividers-list-items']}>
           <hr className={styles['side-line']} />
           <p className={`${styles['divider-text']} ${styles['text-right']}`}>
@@ -30,7 +33,7 @@ const Divider: React.FC<DividerProps> = ({ text, textPosition }) => {
         </div>
       )}
 
-      {textPosition == DividerTextPosition.CENTER && (
+      {text && textPosition == DividerTextPosition.CENTER && (
         <div className={styles['dividers-list-items']}>
           <hr className={styles['center-line']} />
           <p className={styles['divider-text']}>{text}</p>
@@ -38,7 +41,7 @@ const Divider: React.FC<DividerProps> = ({ text, textPosition }) => {
         </div>
       )}
 
-      {textPosition == DividerTextPosition.RIGHT && (
+      {text && textPosition == DividerTextPosition.RIGHT && (
         <div className={styles['dividers-list-items']}>
           <p className={`${styles['divider-text']} ${styles['text-left']}`}>
             {text}

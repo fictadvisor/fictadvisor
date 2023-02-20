@@ -37,7 +37,7 @@ $divide-regular-color: $gray-600;
 
 .center-line{
   border: 0.01px solid $divide-regular-color;
-  width: min(181.5px, 50%);
+  width: min(50%, 50%);
 }
 
 .text-left{
@@ -46,7 +46,7 @@ $divide-regular-color: $gray-600;
 
 .side-line{
   border: 0.01px solid $divide-regular-color;
-  width: min(371px, 91%);
+  width: 100%;
 }
 
 .text-right{
