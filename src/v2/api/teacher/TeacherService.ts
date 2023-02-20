@@ -3,12 +3,13 @@ import { QueryAllDTO } from '../../utils/QueryAllDTO';
 import { CreateTeacherDTO } from './dto/CreateTeacherDTO';
 import { UpdateTeacherDTO } from './dto/UpdateTeacherDTO';
 import { CreateContactDTO } from '../user/dto/CreateContactDTO';
-import { EntityType } from '@prisma/client';
+import { EntityType, QuestionType } from '@prisma/client';
 import { TeacherRepository } from './TeacherRepository';
 import { DisciplineTeacherRepository } from './DisciplineTeacherRepository';
 import { UpdateContactDTO } from '../user/dto/UpdateContactDTO';
 import { ContactRepository } from '../user/ContactRepository';
 import { DisciplineTeacherService } from './DisciplineTeacherService';
+import { MarksDTO } from './query/MarksDTO';
 
 @Injectable()
 export class TeacherService {
@@ -17,7 +18,8 @@ export class TeacherService {
     private disciplineTeacherRepository: DisciplineTeacherRepository,
     private disciplineTeacherService: DisciplineTeacherService,
     private contactRepository: ContactRepository,
-  ) {}
+  ) {
+  }
 
 
   async getAll (
@@ -53,7 +55,7 @@ export class TeacherService {
   ) {
     return this.teacherRepository.create(body);
   }
-    
+
   async update (id: string, body: UpdateTeacherDTO) {
     return this.teacherRepository.update(id, body);
   }
@@ -105,5 +107,34 @@ export class TeacherService {
     await this.contactRepository.deleteContact(
       entityId, name,
     );
+  }
+
+  async getMarks (teacherId: string, { subjectId, year, semester }: MarksDTO) {
+    const marks = [];
+    let questions;
+    if (!subjectId) {
+      questions = await this.teacherRepository.getMarksFullData(teacherId);
+    } else if (!year && !semester) {
+      questions = await this.teacherRepository.getMarksWithSubjectId(teacherId, subjectId);
+    } else {
+      questions = await this.teacherRepository.getMarks(teacherId, subjectId, year, semester);
+    }
+    for (const question of questions) {
+      let mark;
+      let marksSum = 0;
+      for (const answer of question.questionAnswers) {
+        marksSum = parseInt(answer.value);
+      }
+      const count = question.questionAnswers.length;
+      if (question.type === QuestionType.SCALE) mark = ((marksSum/(count*10))*100).toFixed(2);
+      else mark = ((marksSum/(count))*100).toFixed(2);
+      marks.push({
+        questionId: question.id,
+        questionName: question.name,
+        numberOfAnswers: count,
+        mark,
+      });
+    }
+    return marks;
   }
 }

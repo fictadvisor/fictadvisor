@@ -4,6 +4,7 @@ import { QueryAllDTO } from '../../utils/QueryAllDTO';
 import { DatabaseUtils } from '../utils/DatabaseUtils';
 import { CreateTeacherDTO } from './dto/CreateTeacherDTO';
 import { UpdateTeacherDTO } from './dto/UpdateTeacherDTO';
+import { QuestionType } from '@prisma/client';
 
 
 @Injectable()
@@ -108,5 +109,98 @@ export class TeacherRepository {
       teacher = await this.create(data);
     }
     return teacher;
+  }
+
+  async getMarksFullData (teacherId: string) {
+    return this.prisma.question.findMany({
+      where: {
+        OR: [{
+          type: QuestionType.TOGGLE,
+        }, {
+          type: QuestionType.SCALE,
+        }],
+      },
+      select: {
+        id: true,
+        category: true,
+        name: true,
+        text: true,
+        type: true,
+        questionAnswers: {
+          where: {
+            disciplineTeacher: {
+              teacherId,
+            },
+          },
+          select: {
+            value: true,
+          },
+        },
+      },
+    });
+  }
+
+  async getMarksWithSubjectId (teacherId: string, subjectId: string) {
+    return this.prisma.question.findMany({
+      where: {
+        OR: [{
+          type: QuestionType.TOGGLE,
+        }, {
+          type: QuestionType.SCALE,
+        }],
+      },
+      select: {
+        id: true,
+        category: true,
+        name: true,
+        text: true,
+        type: true,
+        questionAnswers: {
+          where: {
+            disciplineTeacher: {
+              teacherId,
+              discipline: {
+                subjectId,
+              },
+            },
+          },
+          select: {
+            value: true,
+          },
+        },
+      },
+    });
+  }
+  async getMarks (teacherId: string, subjectId: string, year: number, semester: number) {
+    return this.prisma.question.findMany({
+      where: {
+        OR: [{
+          type: QuestionType.TOGGLE,
+        }, {
+          type: QuestionType.SCALE,
+        }],
+      },
+      select: {
+        id: true,
+        category: true,
+        name: true,
+        text: true,
+        questionAnswers: {
+          where: {
+            disciplineTeacher: {
+              teacherId,
+              discipline: {
+                subjectId,
+                year,
+                semester,
+              },
+            },
+          },
+          select: {
+            value: true,
+          },
+        },
+      },
+    });
   }
 }

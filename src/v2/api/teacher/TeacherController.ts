@@ -8,6 +8,7 @@ import { UpdateContactDTO } from '../user/dto/UpdateContactDTO';
 import { Access } from 'src/v2/security/Access';
 import { TeacherByIdPipe } from './dto/TeacherByIdPipe';
 import { ContactByNamePipe } from './dto/ContactByNamePipe';
+import { MarksDTO } from './query/MarksDTO';
 
 @Controller({
   version: '2',
@@ -106,5 +107,13 @@ export class TeacherController {
     @Param(ContactByNamePipe) params: {teacherId: string, name: string},
   ) {
     return this.teacherService.deleteContact(params.teacherId, params.name);
+  }
+
+  @Get('/:teacherId/marks')
+  async getMarks (
+    @Param('teacherId', TeacherByIdPipe) teacherId: string,
+    @Query() query: MarksDTO,
+  ) {
+    return this.teacherService.getMarks(teacherId, query);
   }
 }
