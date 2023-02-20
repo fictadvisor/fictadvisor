@@ -1,16 +1,16 @@
-// import {
-//   HeaderCard,
-//   LecturerHeaderCard,
-//   LecturerPollCard,
-//   PollCard,
-//   RatingCard,
-//   SimpleCard,
-// } from '../../../common/composite/cards';
+import {
+  HeaderCard, //
+  LecturerHeaderCard, //
+  LecturerPollCard,
+  PollCard, //
+  RatingCard,
+  SimpleCard,
+} from '../../../common/composite/cards';
 
 function Cards() {
   return (
     <div className="test-page-wrap">
-      {/* <div
+      <div
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(2,1fr)',
@@ -116,6 +116,7 @@ function Cards() {
           name="Васильченко-Деружко Катерина Анатоліївна"
           description="Вища математика. Частина 1. Лінійна алгебра та аналітична геометрія. Диференціальне та інтегральне числення функцій однієї змінної"
           roles={['лектор', 'практик', 'лаборант']}
+          disabled={true}
         />
       </div>
       <br />
@@ -183,10 +184,13 @@ function Cards() {
           gap: '8px',
         }}
       >
-        <RatingCard name="Васильченко-Деружко Катерина Анатоліївна" />{' '}
-        <RatingCard name="Васильченко-Деружко Катерина Анатоліївна" />{' '}
-        <RatingCard name="Васильченко-Деружко Катерина Анатоліївна" />{' '}
         <RatingCard name="Васильченко-Деружко Катерина Анатоліївна" />
+        <RatingCard name="Васильченко-Деружко Катерина Анатоліївна" />
+        <RatingCard name="Васильченко-Деружко Катерина Анатоліївна" />
+        <RatingCard
+          name="Васильченко-Деружко Катерина Анатоліївна"
+          disabled={true}
+        />
       </div>
 
       <br />
@@ -252,6 +256,7 @@ function Cards() {
         <RatingCard
           name="Васильченко-Деружко Катерина Анатоліївна"
           roles={['лектор', 'практик', 'лаборант']}
+          disabled={true}
         />
       </div>
 
@@ -327,6 +332,7 @@ function Cards() {
           rating={3}
           name="Васильченко-Деружко Катерина Анатоліївна"
           roles={['лектор', 'практик', 'лаборант']}
+          disabled={true}
         />
       </div>
 
@@ -536,6 +542,7 @@ function Cards() {
         <SimpleCard
           name="Вища математика. Частина 1. Лінійна алгебра та аналітична геометрія. Диференціальне та інтегральне числення функцій однієї змінної"
           rating={4.1}
+          disabled={true}
         />
       </div>
       <br />
@@ -708,7 +715,7 @@ function Cards() {
           question="I am a simple question"
           numberOfAnswered={3}
         />
-      </div> */}
+      </div>
     </div>
   );
 }

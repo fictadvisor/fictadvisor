@@ -16,6 +16,7 @@ type TooltipProps = {
   text?: string;
   position?: Position;
   hasArrow?: boolean;
+  style?: React.CSSProperties;
 } & React.DetailedHTMLProps<
   React.HTMLAttributes<HTMLDivElement>,
   HTMLDivElement
