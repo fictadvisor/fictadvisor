@@ -8,13 +8,17 @@ import { ResetPasswordDTO } from './dto/ResetPasswordDTO';
 import { UpdatePasswordDTO } from './dto/UpdatePasswordDTO';
 import { VerificateEmailDTO } from './dto/VerificateEmailDTO';
 import { IdentityQueryDTO } from './dto/IdentityQueryDTO';
+import { UserService } from '../user/UserService';
 
 @Controller({
   version: '2',
   path: '/auth',
 })
 export class AuthController {
-  constructor (private authService: AuthService) {}
+  constructor (
+    private authService: AuthService,
+    private userService: UserService,
+  ) {}
 
   @UseGuards(LocalAuthGuard)
   @Post('/login')
@@ -45,6 +49,14 @@ export class AuthController {
     @Request() req,
   ) {
     return this.authService.updatePassword(body, req.user);
+  }
+
+  @UseGuards(JwtGuard)
+  @Get('/me')
+  getMe (
+    @Request() req,
+  ) {
+    return this.userService.getUser(req.user.id);
   }
 
   @Post('/forgotPassword')

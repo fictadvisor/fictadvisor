@@ -13,12 +13,13 @@ import { PrismaModule } from '../../database/PrismaModule';
 import { GroupModule } from '../group/GroupModule';
 import { RoleService } from '../user/role/RoleService';
 import { GrantService } from '../user/grant/GrantService';
+import { UserModule } from "../user/UserModule";
 
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy, TelegramAPI, RoleService, GrantService],
-  exports: [AuthService, RoleService, GrantService],
+  providers: [AuthService, LocalStrategy, JwtStrategy, TelegramAPI],
+  exports: [AuthService],
   imports: [
     JwtModule.registerAsync({
       imports: [ConfigurationModule],
@@ -35,6 +36,7 @@ import { GrantService } from '../user/grant/GrantService';
     EmailModule,
     PrismaModule,
     GroupModule,
+    UserModule,
   ],
 })
 export class AuthModule {}
