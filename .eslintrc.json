@@ -27,6 +27,7 @@
   },
   "rules": {
     "react/react-in-jsx-scope": "off",
+    "no-empty-function":"warn",
     "simple-import-sort/exports": "error",
     "simple-import-sort/imports": [
       "error",
