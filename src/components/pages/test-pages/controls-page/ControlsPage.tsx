@@ -1,7 +1,8 @@
+import { useState } from 'react';
+
 import Check, { CheckBoxState } from '@/components/common/ui/check/CheckBox';
-import RadioGroup, {
-  RadioState,
-} from '@/components/common/ui/radio-group/RadioGroup';
+import { Radio, RadioState } from '@/components/common/ui/radio-group/Radio';
+import RadioGroup from '@/components/common/ui/radio-group/RadioGroup';
 import Switch, {
   SwitchSize,
   SwitchTextPosition,
@@ -10,39 +11,11 @@ import Switch, {
 import styles from '../test-pages.module.scss';
 
 const ControlsPage = () => {
-  const radios = [
-    {
-      state: RadioState.DEFAULT,
-      text: 'apple',
-      value: 'apple',
-      name: 'radio-buttons',
-    },
-    {
-      state: RadioState.DEFAULT,
-      text: 'orange',
-      value: 'orange',
-      name: 'radio-buttons',
-    },
-    {
-      state: RadioState.DEFAULT,
-      text: 'lemon',
-      value: 'lemon',
-      name: 'radio-buttons',
-    },
-    {
-      state: RadioState.DEFAULT,
-      text: 'strawberry',
-      value: 'strawberry',
-      name: 'radio-buttons',
-    },
-    {
-      state: RadioState.DISABLED,
-      text: 'vegetable',
-      name: 'radio-buttons',
-      value: 'vegetable',
-      disabled: true,
-    },
-  ];
+  const [radioValue, setRadioValue] = useState('');
+
+  const handleChange = value => {
+    setRadioValue(value);
+  };
 
   return (
     <div className={styles['test-page-wrap']}>
@@ -63,7 +36,17 @@ const ControlsPage = () => {
         <Check text="Disabled" disabled={true}></Check>
         <Check text="Disabled" disabled={true} checked={true}></Check>
 
-        <RadioGroup options={radios}></RadioGroup>
+        <RadioGroup
+          onChange={handleChange}
+          name={'fruit'}
+          value={radioValue}
+          isDisabled={false}
+        >
+          <Radio text={'apple'} value={'apple'} />
+          <Radio text={'orange'} value={'orange'} />
+          <Radio text={'banana'} value={'banana'} isDisabled={true} />
+          <Radio text={'Error'} value={'Error'} state={RadioState.ERROR} />
+        </RadioGroup>
       </div>
     </div>
   );
