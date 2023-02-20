@@ -76,9 +76,6 @@ export const LecturerPollCard: React.FC<LecturerPollCardProps> = ({
   );
 };
 
-// const props = element.getBoundingClientRect();
-//     isTruncated = element.scrollHeight - 1 > props.height;
-
 export const RatingCard: React.FC<RatingCardProps> = ({
   rating,
   name,
@@ -123,6 +120,7 @@ export const SimpleCard: React.FC<SimpleCardProps> = ({
       )}
     >
       <Tooltip
+        display={false}
         text={name}
         style={{
           width: '300px',

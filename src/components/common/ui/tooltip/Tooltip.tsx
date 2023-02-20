@@ -13,6 +13,7 @@ export enum TooltipPosition {
 type Position = 'top' | 'bottom' | 'left' | 'right';
 
 type TooltipProps = {
+  display?: boolean;
   text?: string;
   position?: Position;
   hasArrow?: boolean;
@@ -36,72 +37,75 @@ const getInitialStylesObj = (position: Position) => {
 
 const reducer = (prev, action): TooltipState => {
   let { position } = prev;
-
-  switch (position) {
-    case 'right':
-      if (
-        action.divDimensions.right + action.toolTipDimensions.width >
-        window.innerWidth
-      )
-        position = 'left';
-      else
+  if (action.divDimensions && action.toolTipDimensions) {
+    switch (position) {
+      case 'right':
+        if (
+          action.divDimensions.right + action.toolTipDimensions.width >
+          window.innerWidth
+        )
+          position = 'left';
+        else
+          return {
+            position,
+            stylesObj: {
+              transform: `
+            translateX(${action.divDimensions.width}px)
+            translateY(${
+              action.divDimensions.height / 2 -
+              action.toolTipDimensions.height / 2
+            }px)`,
+            },
+          };
+      case 'left':
         return {
           position,
           stylesObj: {
             transform: `
-          translateX(${action.divDimensions.width}px)
-          translateY(${
-            action.divDimensions.height / 2 -
-            action.toolTipDimensions.height / 2
-          }px)`,
+            translateX(${-action.toolTipDimensions.width}px)
+            translateY(${
+              action.divDimensions.height / 2 -
+              action.toolTipDimensions.height / 2
+            }px)`,
           },
         };
-    case 'left':
-      return {
-        position,
-        stylesObj: {
-          transform: `
-          translateX(${-action.toolTipDimensions.width}px)
-          translateY(${
-            action.divDimensions.height / 2 -
-            action.toolTipDimensions.height / 2
-          }px)`,
-        },
-      };
-    case 'bottom':
-      return {
-        position,
-        stylesObj: {
-          transform: `
-            translateX(${
-              action.divDimensions.width / 2 -
-              action.toolTipDimensions.width / 2
-            }px)
-            translateY(${action.divDimensions.height}px)`,
-        },
-      };
-    case 'top':
-      return {
-        position,
-        stylesObj: {
-          transform: `
-             translateX(${
-               action.divDimensions.width / 2 -
-               action.toolTipDimensions.width / 2
-             }px)
-             translateY(${-action.toolTipDimensions.height}px)`,
-        },
-      };
+      case 'bottom':
+        return {
+          position,
+          stylesObj: {
+            transform: `
+              translateX(${
+                action.divDimensions.width / 2 -
+                action.toolTipDimensions.width / 2
+              }px)
+              translateY(${action.divDimensions.height}px)`,
+          },
+        };
+      case 'top':
+        return {
+          position,
+          stylesObj: {
+            transform: `
+               translateX(${
+                 action.divDimensions.width / 2 -
+                 action.toolTipDimensions.width / 2
+               }px)
+               translateY(${-action.toolTipDimensions.height}px)`,
+          },
+        };
+    }
   }
-  return prev;
+
+  return getInitialStylesObj(prev.position);
 };
 
 const Tooltip: React.FC<TooltipProps> = ({
   text,
   children,
+  style,
   position = 'right',
   hasArrow = true,
-  style,
+  display = true,
   ...props
 }) => {
   const [showToolTip, setShowToolTip] = useState<boolean>(false);
@@ -129,7 +133,7 @@ const Tooltip: React.FC<TooltipProps> = ({
       onMouseLeave={() => setShowToolTip(false)}
       {...props}
     >
-      {showToolTip && (
+      {showToolTip && display && (
         <div
           className={styles['tooltip-body']}
           style={{ ...tooltipState.stylesObj, ...style }}
