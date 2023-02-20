@@ -1,54 +1,37 @@
-import React, { useState } from 'react';
+import React, { createContext, ReactNode } from 'react';
 
-import styles from './RadioGroup.module.scss';
-
-export enum RadioState {
-  DEFAULT = 'default',
-  DISABLED = 'disabled',
-  ERROR = 'error',
+interface RadioContextType {
+  value: string;
+  onChange: (value: string) => void;
+  name: string;
+  isDisabled?: boolean;
 }
+
+export const RadioContext = createContext<RadioContextType>({
+  value: '',
+  // eslint-disable-next-line no-empty-function, @typescript-eslint/no-empty-function
+  onChange: () => {},
+  name: '',
+  isDisabled: false,
+});
 
 interface RadioGroupProps {
-  options: {
-    state: RadioState;
-    name: string;
-    value: string;
-    text?: string;
-    disabled?: boolean;
-  }[];
+  children: ReactNode[];
+  onChange: (value: string) => void;
+  name: string;
+  value?: string;
+  isDisabled?: boolean;
 }
 
-const RadioGroup: React.FC<RadioGroupProps> = props => {
-  const [value, setValue] = useState('');
-  const handleChange = event => {
-    setValue(event.target.value);
-  };
-  return (
-    <div>
-      {props.options.map((radio, index) => {
-        return (
-          <div key={index}>
-            <div className={styles['radio-container']}>
-              <label>
-                <input
-                  className={styles[radio.state + '-radio-input']}
-                  type="radio"
-                  name={radio.name}
-                  value={value}
-                  disabled={radio.disabled}
-                  onChange={handleChange}
-                />
-                <span className={styles[radio.state + '-radio-box']}></span>
-              </label>
-              <span className={styles[radio.state + '-radio-text']}>
-                {radio.text}
-              </span>
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  );
-};
-
+const RadioGroup: React.FC<RadioGroupProps> = ({
+  children,
+  onChange,
+  name,
+  value,
+  isDisabled = false,
+}) => (
+  <RadioContext.Provider value={{ value, onChange, name, isDisabled }}>
+    {children}
+  </RadioContext.Provider>
+);
 export default RadioGroup;
