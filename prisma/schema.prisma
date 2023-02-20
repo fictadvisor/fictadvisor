@@ -237,6 +237,7 @@ model Question {
   type            QuestionType
   questionRoles   QuestionRole[]
   questionAnswers QuestionAnswer[]
+  questionDisplay QuestionDisplay  @default(PERCENT)
 
   @@map("questions")
 }
@@ -310,12 +311,12 @@ enum EntityType {
 }
 
 model Contact {
-  id            String     @id @default(uuid())
-  name          String
-  displayName   String
-  link          String
-  entityType    EntityType @map("entity_type")
-  entityId      String     @map("entity_id")
+  id          String     @id @default(uuid())
+  name        String
+  displayName String
+  link        String
+  entityType  EntityType @map("entity_type")
+  entityId    String     @map("entity_id")
 
   @@map("contacts")
 }
@@ -347,8 +348,14 @@ model DateVar {
   @@map("date_vars")
 }
 
+enum QuestionDisplay {
+  PERCENT
+  AMOUNT
+  TEXT
+}
+
 model StudentResource {
-  id   String  @id @default(uuid())
+  id   String @id @default(uuid())
   link String
   name String
   icon String
