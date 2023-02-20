@@ -1,1 +1,1 @@
-export { default, TagState } from './Tag';
+export { default, TagColor, TagSize, TagVariant } from './Tag';
