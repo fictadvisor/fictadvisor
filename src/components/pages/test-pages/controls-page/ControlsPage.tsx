@@ -1,10 +1,10 @@
-import Check, { CheckState } from '@/components/common/ui/check/Check';
-import GroupRadio, {
+import Check, { CheckBoxState } from '@/components/common/ui/check/CheckBox';
+import RadioGroup, {
   RadioState,
-} from '@/components/common/ui/group-radio/GroupRadioProps';
+} from '@/components/common/ui/radio-group/RadioGroup';
 import Switch, {
+  SwitchSize,
   SwitchTextPosition,
-  SwitchType,
 } from '@/components/common/ui/switch/Switch';
 
 import styles from '../test-pages.module.scss';
@@ -48,31 +48,22 @@ const ControlsPage = () => {
     <div className={styles['test-page-wrap']}>
       <div className={styles['test-page-content']}>
         <Switch
-          type={SwitchType.WEB}
+          type={SwitchSize.MEDIUM}
           text="Hello"
           textPosition={SwitchTextPosition.LEFT}
         ></Switch>
         <Switch
-          type={SwitchType.MOBILE}
+          type={SwitchSize.SMALL}
           text="Biden"
           textPosition={SwitchTextPosition.RIGHT}
         ></Switch>
 
-        <Check state={CheckState.DEFAULT} text="Default"></Check>
-        <Check state={CheckState.ERROR} text="Error"></Check>
-        <Check
-          state={CheckState.DISABLED}
-          text="Disabled"
-          disabled={true}
-        ></Check>
-        <Check
-          state={CheckState.DISABLED}
-          text="Disabled"
-          disabled={true}
-          checked={true}
-        ></Check>
+        <Check state={CheckBoxState.DEFAULT} text="Default"></Check>
+        <Check state={CheckBoxState.ERROR} text="Error"></Check>
+        <Check text="Disabled" disabled={true}></Check>
+        <Check text="Disabled" disabled={true} checked={true}></Check>
 
-        <GroupRadio options={radios}></GroupRadio>
+        <RadioGroup options={radios}></RadioGroup>
       </div>
     </div>
   );
