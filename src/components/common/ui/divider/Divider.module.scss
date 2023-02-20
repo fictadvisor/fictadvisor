@@ -8,17 +8,26 @@ $divide-regular-color: $gray-600;
   line-height: 20px;
 }
 
-.container{
-  display: inline-block;
-  width: min(408px, 40%);
+.test-page-content {
+  width: 100%;
 }
 
 .dividers-list{
+  width: 35%;
+}
+
+.dividers-list-items {
   display: flex;
   align-items: center;
   margin: 0;
   padding: 0;
   margin-top: 36px;
+  width: 100%;
+}
+
+.no-text-line {
+  border: 0.01px solid $divide-regular-color;
+  width: 100%;
 }
 
 .divider-text{
@@ -26,16 +35,16 @@ $divide-regular-color: $gray-600;
   padding: 0 8px;
 }
 
-.short-line{
+.center-line{
   border: 0.01px solid $divide-regular-color;
-  width: min(181.5px, 44.5%);
+  width: min(181.5px, 50%);
 }
 
 .text-left{
   padding-left: 0;
 }
 
-.long-line{
+.side-line{
   border: 0.01px solid $divide-regular-color;
   width: min(371px, 91%);
 }

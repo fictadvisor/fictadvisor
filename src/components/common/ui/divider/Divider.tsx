@@ -1,54 +1,53 @@
 import React from 'react';
 
 import styles from './Divider.module.scss';
-export interface DividerProps {
-  text: string;
-  className?: string;
-  textPosition: DividerTextPosition;
-}
 
 export enum DividerTextPosition {
   CENTER,
   LEFT,
   RIGHT,
 }
+interface DividerProps {
+  text?: string;
+  textPosition?: DividerTextPosition;
+}
 
-export function Divider(props: DividerProps) {
+const Divider: React.FC<DividerProps> = ({ text, textPosition }) => {
   return (
     <div className={styles['dividers-list']}>
-      {props.textPosition == DividerTextPosition.LEFT && (
-        <hr className={styles['long-line']} />
+      {!text && (
+        <div className={styles['dividers-list-items']}>
+          <hr className={styles['no-text-line']} />
+        </div>
       )}
 
-      {props.textPosition == DividerTextPosition.LEFT && (
-        <p className={`${styles['divider-text']} ${styles['text-right']}`}>
-          {props.text}
-        </p>
+      {textPosition == DividerTextPosition.LEFT && (
+        <div className={styles['dividers-list-items']}>
+          <hr className={styles['side-line']} />
+          <p className={`${styles['divider-text']} ${styles['text-right']}`}>
+            {text}
+          </p>
+        </div>
       )}
 
-      {props.textPosition == DividerTextPosition.CENTER && (
-        <hr className={styles['short-line']} />
+      {textPosition == DividerTextPosition.CENTER && (
+        <div className={styles['dividers-list-items']}>
+          <hr className={styles['center-line']} />
+          <p className={styles['divider-text']}>{text}</p>
+          <hr className={styles['center-line']} />
+        </div>
       )}
 
-      {props.textPosition == DividerTextPosition.CENTER && (
-        <p className={styles['divider-text']}>{props.text}</p>
-      )}
-
-      {props.textPosition == DividerTextPosition.CENTER && (
-        <hr className={styles['short-line']} />
-      )}
-
-      {props.textPosition == DividerTextPosition.RIGHT && (
-        <p className={`${styles['divider-text']} ${styles['text-left']}`}>
-          {props.text}
-        </p>
-      )}
-
-      {props.textPosition == DividerTextPosition.RIGHT && (
-        <hr className={styles['long-line']} />
+      {textPosition == DividerTextPosition.RIGHT && (
+        <div className={styles['dividers-list-items']}>
+          <p className={`${styles['divider-text']} ${styles['text-left']}`}>
+            {text}
+          </p>
+          <hr className={styles['side-line']} />
+        </div>
       )}
     </div>
   );
-}
+};
 
 export default Divider;
