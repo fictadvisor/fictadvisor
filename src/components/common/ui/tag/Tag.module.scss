@@ -5,12 +5,15 @@ $theme-color:$dark-primary;
 @mixin style-tag($className,$first,$second,$third){
     .#{$className}-first-bgc{
         background: $first;
+        border: 1px solid transparent;
+        
     }
     .#{$className}-second-bgc{
         background: $second;
+        border: 1px solid transparent;
     }
     .#{$className}-third-bgc{
-        background: $theme-color;
+        background: transparent;
         border: 1px solid $third;
         border-radius: 6px;
     }

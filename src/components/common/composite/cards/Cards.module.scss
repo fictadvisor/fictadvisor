@@ -106,12 +106,14 @@ $dark-primary: #1E1E1E;
 }
 
 .card-disabled{
+    .card-avatar{
+        border-color:#4b4b4b;
+    }
     border-color: transparent;
-    background-color: #4b4b4b;
+    background-color: #4b4b4b !important;
     pointer-events: none;
     *{
-        color: #a3a3a3;
-        // background-color: #4b4b4b;
+        color: #a3a3a3 !important;
     }
 }
 

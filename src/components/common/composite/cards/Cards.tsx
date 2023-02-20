@@ -63,7 +63,7 @@ export const LecturerPollCard: React.FC<LecturerPollCardProps> = ({
     >
       <img className={styles['card-avatar']} src={url} alt="викладач" />
       <br />
-      <CardRoles roles={roles} />
+      <CardRoles roles={roles} disabled={disabled} />
       <h4 className={styles['card-name']}>{name}</h4>
       <Tooltip
         display={isTruncated}
@@ -102,10 +102,10 @@ export const RatingCard: React.FC<RatingCardProps> = ({
   return (
     <article
       className={mergeClassNames(
-        disabled && styles['card-disabled'],
         styles['card'],
         styles['card-effect'],
         styles['rating-card-container'],
+        disabled && styles['card-disabled'],
       )}
       {...rest}
     >
@@ -113,7 +113,7 @@ export const RatingCard: React.FC<RatingCardProps> = ({
 
       {rating && <Rating rating={rating} />}
       {!rating && <br />}
-      {roles && <CardRoles roles={roles} />}
+      {roles && <CardRoles roles={roles} disabled={disabled} />}
       <h4 className={styles['card-name']}>{name}</h4>
     </article>
   );
@@ -170,7 +170,10 @@ export const SimpleCard: React.FC<SimpleCardProps> = ({
   );
 };
 
-const CardRoles: React.FC<{ roles: string[] }> = ({ roles }) => {
+const CardRoles: React.FC<{ roles: string[]; disabled?: boolean }> = ({
+  roles,
+  disabled = false,
+}) => {
   return (
     <div className={styles['card-roles']}>
       {roles.map(role => {
@@ -180,7 +183,7 @@ const CardRoles: React.FC<{ roles: string[] }> = ({ roles }) => {
               <Tag
                 state={TagState.SMALL}
                 text="Лаборант"
-                className={'mint-first'}
+                className={disabled ? 'gray-third' : 'mint-first'}
                 key={Math.random()}
               />
             );
@@ -189,7 +192,7 @@ const CardRoles: React.FC<{ roles: string[] }> = ({ roles }) => {
               <Tag
                 state={TagState.SMALL}
                 text="Лектор"
-                className={'violet-first'}
+                className={disabled ? 'gray-third' : 'violet-first'}
                 key={Math.random()}
               />
             );
@@ -198,7 +201,7 @@ const CardRoles: React.FC<{ roles: string[] }> = ({ roles }) => {
               <Tag
                 state={TagState.SMALL}
                 text="Практик"
-                className={'orange-first'}
+                className={disabled ? 'gray-third' : 'orange-first'}
                 key={Math.random()}
               />
             );
