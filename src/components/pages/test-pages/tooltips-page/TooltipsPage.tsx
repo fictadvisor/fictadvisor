@@ -54,6 +54,23 @@ const TooltipsPage = () => (
           explicabo sit assumenda dolor consequuntur labore eveniet, beatae
           perferendis corporis. Adipisci, praesentium.
         </Tooltip>
+
+        <Tooltip
+          text="Toquam incidunt earum architecto exercitationem tenetur eaque quibusdam,
+          explicabo sit assumenda dolor consequuntur labore eveniet, beatae
+          perferendis corporis. Adipisci, praesentiuoltip left Example"
+        >
+          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sed illum
+          quam incidunt earum architecto exercitationem tenetur eaque quibusdam,
+          explicabo sit assumenda dolor consequuntur labore eveniet, beatae
+          perferendis corporis. Adipisci, praesentium.
+        </Tooltip>
+        <Tooltip hasArrow={false} text="No arrow tooltip">
+          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sed illum
+          quam incidunt earum architecto exercitationem tenetur eaque quibusdam,
+          explicabo sit assumenda dolor consequuntur labore eveniet, beatae
+          perferendis corporis. Adipisci, praesentium.
+        </Tooltip>
       </div>
     </div>
   </div>

@@ -1,5 +1,7 @@
 
-
+.tooltip-wrapper{
+  display: block;
+}
 
 .tooltip-body {
   position: absolute;
@@ -14,8 +16,7 @@
 .tooltip-text::after {
   content: " ";
   position: absolute;
-  border-width: 5px;
-  border-style: solid;
+  border: 5px solid transparent;
 }
 
 .tooltip-text-bottom::after {

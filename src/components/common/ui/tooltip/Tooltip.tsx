@@ -3,7 +3,6 @@ import mergeClassNames from 'merge-class-names';
 
 import styles from './Tooltip.module.scss';
 
-// shows position of an arrow
 export enum TooltipPosition {
   TOP = 'top',
   BOTTOM = 'bottom',
@@ -16,6 +15,7 @@ type Position = 'top' | 'bottom' | 'left' | 'right';
 type TooltipProps = {
   text?: string;
   position?: Position;
+  hasArrow?: boolean;
 } & React.DetailedHTMLProps<
   React.HTMLAttributes<HTMLDivElement>,
   HTMLDivElement
@@ -35,8 +35,6 @@ const getInitialStylesObj = (position: Position) => {
 
 const reducer = (prev, action): TooltipState => {
   let { position } = prev;
-
-  console.log(position);
 
   switch (position) {
     case 'right':
@@ -100,7 +98,9 @@ const reducer = (prev, action): TooltipState => {
 const Tooltip: React.FC<TooltipProps> = ({
   text,
   children,
-  position = 'left',
+  position = 'right',
+  hasArrow = true,
+  style,
   ...props
 }) => {
   const [showToolTip, setShowToolTip] = useState<boolean>(false);
@@ -126,18 +126,18 @@ const Tooltip: React.FC<TooltipProps> = ({
       className={styles['tooltip-wrapper']}
       onMouseEnter={() => setShowToolTip(true)}
       onMouseLeave={() => setShowToolTip(false)}
+      {...props}
     >
       {showToolTip && (
         <div
           className={styles['tooltip-body']}
-          style={tooltipState.stylesObj}
+          style={{ ...tooltipState.stylesObj, ...style }}
           ref={toolTipRef}
-          {...props}
         >
           <span
             className={mergeClassNames(
               styles['tooltip-text'],
-              styles[`tooltip-text-${tooltipState.position}`],
+              hasArrow && styles[`tooltip-text-${tooltipState.position}`],
             )}
           >
             {text}
