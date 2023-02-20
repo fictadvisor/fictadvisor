@@ -4,11 +4,7 @@ import mergeClassNames from 'merge-class-names';
 import styles from '@/components/common/composite/cards/Cards.module.scss';
 import Button, { ButtonSize, ButtonType } from '@/components/common/ui/button';
 import Rating from '@/components/common/ui/rating';
-import Tag, {
-  TagColor,
-  TagSize,
-  TagVariant,
-} from '@/components/common/ui/tag/Tag';
+import Tag, { TagColor, TagSize } from '@/components/common/ui/tag/Tag';
 import Tooltip from '@/components/common/ui/tooltip';
 
 interface HeaderCardProps {
@@ -285,7 +281,6 @@ const CardRoles: React.FC<{ roles: string[] }> = ({ roles }) => {
           case 'лаборант':
             return (
               <Tag
-                variant={TagVariant.FILLED}
                 color={TagColor.MINT}
                 size={TagSize.SMALL}
                 text="Лаборант"
@@ -295,7 +290,6 @@ const CardRoles: React.FC<{ roles: string[] }> = ({ roles }) => {
           case 'лектор':
             return (
               <Tag
-                variant={TagVariant.FILLED}
                 color={TagColor.VIOLET}
                 size={TagSize.SMALL}
                 text="Лектор"
@@ -305,7 +299,6 @@ const CardRoles: React.FC<{ roles: string[] }> = ({ roles }) => {
           case 'практик':
             return (
               <Tag
-                variant={TagVariant.FILLED}
                 color={TagColor.ORANGE}
                 size={TagSize.SMALL}
                 text="Практик"
