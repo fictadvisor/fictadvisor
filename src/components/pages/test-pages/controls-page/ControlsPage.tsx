@@ -58,7 +58,7 @@ const ControlsPage = () => {
           textPosition={SwitchTextPosition.RIGHT}
         ></Switch>
 
-        <Check state={CheckBoxState.DEFAULT} text="Default"></Check>
+        <Check text="Default"></Check>
         <Check state={CheckBoxState.ERROR} text="Error"></Check>
         <Check text="Disabled" disabled={true}></Check>
         <Check text="Disabled" disabled={true} checked={true}></Check>
