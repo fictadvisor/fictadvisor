@@ -60,11 +60,7 @@ const LoginPage = () => (
               size={ButtonSize.LARGE}
               type={ButtonType.PRIMARY_RED}
             />
-            <Divider
-              text="або"
-              textPosition={DividerTextPosition.CENTER}
-              className={styles['login-divider']}
-            />
+            <Divider text="або" textPosition={DividerTextPosition.CENTER} />
             <Input
               className={styles['login-input']}
               label={'Пошта або юзернейм'}
