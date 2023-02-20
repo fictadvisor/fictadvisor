@@ -43,6 +43,14 @@ export const LecturerPollCard: React.FC<LecturerPollCardProps> = ({
   disabled,
   ...rest
 }) => {
+  const divRef = useRef<HTMLDivElement | null>(null);
+  const [isTruncated, setIsTruncated] = useState(false);
+
+  const onMouseOverHandler = () => {
+    const elem = divRef.current;
+    setIsTruncated(elem.scrollHeight - 1 > elem.getBoundingClientRect().height);
+  };
+
   return (
     <article
       className={mergeClassNames(
@@ -58,13 +66,20 @@ export const LecturerPollCard: React.FC<LecturerPollCardProps> = ({
       <CardRoles roles={roles} />
       <h4 className={styles['card-name']}>{name}</h4>
       <Tooltip
+        display={isTruncated}
         text={description}
         style={{
           width: '300px',
           fontSize: '11px',
         }}
       >
-        <div className={styles['lecturer-description']}>{description}</div>
+        <div
+          onMouseOver={onMouseOverHandler}
+          ref={divRef}
+          className={styles['lecturer-description']}
+        >
+          {description}
+        </div>
       </Tooltip>
 
       <Button
@@ -110,6 +125,14 @@ export const SimpleCard: React.FC<SimpleCardProps> = ({
   rating,
   disabled,
 }) => {
+  const divRef = useRef<HTMLDivElement | null>(null);
+  const [isTruncated, setIsTruncated] = useState(false);
+
+  const onMouseOverHandler = () => {
+    const elem = divRef.current;
+    setIsTruncated(elem.scrollHeight - 1 > elem.getBoundingClientRect().height);
+  };
+
   return (
     <article
       className={mergeClassNames(
@@ -120,7 +143,7 @@ export const SimpleCard: React.FC<SimpleCardProps> = ({
       )}
     >
       <Tooltip
-        display={false}
+        display={isTruncated}
         text={name}
         style={{
           width: '300px',
@@ -128,6 +151,8 @@ export const SimpleCard: React.FC<SimpleCardProps> = ({
         }}
       >
         <div
+          onMouseOver={onMouseOverHandler}
+          ref={divRef}
           className={mergeClassNames(
             styles['card-name '],
             styles['simple-card-name'],
