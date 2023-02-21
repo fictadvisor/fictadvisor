@@ -114,30 +114,19 @@ export class TeacherService {
     const questions = await this.markQueryCheck(teacherId, { subjectId, year, semester });
     for (const question of questions) {
       const count = question.questionAnswers.length;
-      let mark;
       let marksSum = 0;
+      let mark;
       if (question.display === QuestionDisplay.PERCENT) {
         for (const answer of question.questionAnswers) {
           marksSum += parseInt(answer.value);
         }
-        mark = this.parseMark(question.type, marksSum, count);
+        mark = this.parseMark(question.type, marksSum, count).mark;
       } else if (question.display === QuestionDisplay.AMOUNT) {
-        const amountMarks = {
-          1: 0,
-          2: 0,
-          3: 0,
-          4: 0,
-          5: 0,
-          6: 0,
-          7: 0,
-          8: 0,
-          9: 0,
-          10: 0,
-        };
+        const { table } = this.parseMark(question.type, marksSum, count);
         for (const answer of question.questionAnswers) {
-          amountMarks[`${parseInt(answer.value)}`]++;
+          table[`${parseInt(answer.value)}`]++;
         }
-        mark = amountMarks;
+        mark = table;
       }
 
       marks.push({
@@ -150,8 +139,31 @@ export class TeacherService {
     return marks;
   }
   parseMark (type: QuestionType, marksSum: number, answerQty: number) {
-    if (type === QuestionType.SCALE) return parseFloat(((marksSum / (answerQty * 10)) * 100).toFixed(2));
-    else return parseFloat(((marksSum / (answerQty)) * 100).toFixed(2));
+    if (type === QuestionType.SCALE) {
+      return {
+        mark: parseFloat(((marksSum / (answerQty * 10)) * 100).toFixed(2)),
+        table: {
+          1: 0,
+          2: 0,
+          3: 0,
+          4: 0,
+          5: 0,
+          6: 0,
+          7: 0,
+          8: 0,
+          9: 0,
+          10: 0,
+        },
+      };
+    } else {
+      return {
+        mark: parseFloat(((marksSum / (answerQty)) * 100).toFixed(2)),
+        table: {
+          0: 0,
+          1: 0,
+        },
+      };
+    }
   }
   markQueryCheck (teacherId: string, { subjectId, year, semester }: MarksDTO) {
     if (!subjectId && !year && !semester) {
