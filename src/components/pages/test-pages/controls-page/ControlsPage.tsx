@@ -28,12 +28,18 @@ const ControlsPage = () => {
           textPosition={SwitchTextPosition.LEFT}
         ></Switch>
         <Switch
+          size={SwitchSize.MEDIUM}
+          text="Just"
+          textPosition={SwitchTextPosition.LEFT}
+        ></Switch>
+        <Switch
           size={SwitchSize.SMALL}
           text="Hoshion"
           textPosition={SwitchTextPosition.RIGHT}
         ></Switch>
 
         <Checkbox text="Default"></Checkbox>
+        <Checkbox></Checkbox>
         <Checkbox state={CheckboxState.ERROR} text="Error"></Checkbox>
         <Checkbox text="Disabled" disabled={true}></Checkbox>
         <Checkbox text="Disabled" disabled={true} checked={true}></Checkbox>

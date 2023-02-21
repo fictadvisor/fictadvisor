@@ -18,10 +18,10 @@ const Checkbox: React.FC<CheckboxProps> = ({
   ...rest
 }) => {
   const additional = rest.disabled ? '-disabled' : '';
-
+  const gap = text ? '8px' : '';
   return (
     <div>
-      <div className={styles['check-container']}>
+      <div className={styles['check-container']} style={{ gap: `${gap}` }}>
         <label className="check-button">
           <input
             type="checkbox"
