@@ -140,13 +140,14 @@ export class TeacherService {
         }
         mark = table;
       }
-
-      marks.push({
-        name: question.name,
-        amount: count,
-        type: question.type,
-        mark,
-      });
+      if (count> 0) {
+        marks.push({
+          name: question.name,
+          amount: count,
+          type: question.type,
+          mark,
+        });
+      }
     }
     return marks;
   }
