@@ -122,7 +122,19 @@ export class TeacherService {
         }
         mark = this.parseMark(question.type, marksSum, count).mark;
       } else if (question.display === QuestionDisplay.AMOUNT) {
-        const { table } = this.parseMark(question.type, marksSum, count);
+        const table =
+            {
+              1: 0,
+              2: 0,
+              3: 0,
+              4: 0,
+              5: 0,
+              6: 0,
+              7: 0,
+              8: 0,
+              9: 0,
+              10: 0,
+            };
         for (const answer of question.questionAnswers) {
           table[`${parseInt(answer.value)}`]++;
         }
@@ -142,26 +154,10 @@ export class TeacherService {
     if (type === QuestionType.SCALE) {
       return {
         mark: parseFloat(((marksSum / (answerQty * 10)) * 100).toFixed(2)),
-        table: {
-          1: 0,
-          2: 0,
-          3: 0,
-          4: 0,
-          5: 0,
-          6: 0,
-          7: 0,
-          8: 0,
-          9: 0,
-          10: 0,
-        },
       };
     } else {
       return {
         mark: parseFloat(((marksSum / (answerQty)) * 100).toFixed(2)),
-        table: {
-          0: 0,
-          1: 0,
-        },
       };
     }
   }
