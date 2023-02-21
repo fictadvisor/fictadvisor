@@ -3,7 +3,7 @@ import React from 'react';
 import Alert, {
   AlertColor,
   AlertVariant,
-} from '@/components/common/ui/alert-block/Alert';
+} from '@/components/common/ui/alert/Alert';
 
 import styles from '../test-pages.module.scss';
 
