@@ -151,6 +151,7 @@ export class DisciplineTeacherRepository {
         text: true,
         type: true,
         description: true,
+        display: true,
       },
     });
   }
