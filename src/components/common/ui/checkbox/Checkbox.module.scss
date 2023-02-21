@@ -13,6 +13,9 @@
 
 .check-container {
     display: flex;
+    flex-direction: row;
+    width: fit-content;
+    height: 20px;
     gap: 8px;
 }
 

@@ -1,20 +1,20 @@
 import React from 'react';
 
-import styles from './CheckBox.module.scss';
+import styles from './Checkbox.module.scss';
 
-export enum CheckBoxState {
+export enum CheckboxState {
   DEFAULT = 'default',
   ERROR = 'error',
 }
 
-interface CheckBoxProps extends React.ComponentPropsWithoutRef<'input'> {
+interface CheckboxProps extends React.ComponentPropsWithoutRef<'input'> {
   text?: string;
-  state?: CheckBoxState | string;
+  state?: CheckboxState | string;
 }
 
-const CheckBox: React.FC<CheckBoxProps> = ({
+const Checkbox: React.FC<CheckboxProps> = ({
   text,
-  state = CheckBoxState.DEFAULT,
+  state = CheckboxState.DEFAULT,
   ...rest
 }) => {
   const additional = rest.disabled ? '-disabled' : '';
@@ -44,4 +44,4 @@ const CheckBox: React.FC<CheckBoxProps> = ({
   );
 };
 
-export default CheckBox;
+export default Checkbox;
