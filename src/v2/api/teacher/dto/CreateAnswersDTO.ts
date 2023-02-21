@@ -1,8 +1,16 @@
+import { IsNotEmpty, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+
 export class CreateAnswersDTO {
-  answers: CreateAnswerDTO[];
+
+  @Type(() => CreateAnswerDTO)
+  @ValidateNested({ each: true })
+    answers: CreateAnswerDTO[];
 }
 
 export class CreateAnswerDTO {
-  questionId: string;
-  value: string;
+  @IsNotEmpty()
+    questionId: string;
+  @IsNotEmpty()
+    value: string;
 }

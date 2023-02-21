@@ -3,7 +3,7 @@ import { QueryAllDTO } from '../../utils/QueryAllDTO';
 import { CreateTeacherDTO } from './dto/CreateTeacherDTO';
 import { UpdateTeacherDTO } from './dto/UpdateTeacherDTO';
 import { CreateContactDTO } from '../user/dto/CreateContactDTO';
-import { EntityType, QuestionType } from '@prisma/client';
+import { EntityType, QuestionDisplay, QuestionType } from '@prisma/client';
 import { TeacherRepository } from './TeacherRepository';
 import { DisciplineTeacherRepository } from './DisciplineTeacherRepository';
 import { UpdateContactDTO } from '../user/dto/UpdateContactDTO';
@@ -111,23 +111,47 @@ export class TeacherService {
 
   async getMarks (teacherId: string, { subjectId, year, semester }: MarksDTO) {
     const marks = [];
+    const amountMarks = {
+      1: 0,
+      2: 0,
+      3: 0,
+      4: 0,
+      5: 0,
+      6: 0,
+      7: 0,
+      8: 0,
+      9: 0,
+      10: 0,
+    };
     let questions;
     if (!subjectId) {
       questions = await this.teacherRepository.getMarksFullData(teacherId);
     } else if (!year && !semester) {
       questions = await this.teacherRepository.getMarksWithSubjectId(teacherId, subjectId);
     } else {
-      questions = await this.teacherRepository.getMarks(teacherId, subjectId, year, semester);
+      questions = await this.teacherRepository.getMarks(teacherId, year, semester);
     }
     for (const question of questions) {
       let mark;
       let marksSum = 0;
-      for (const answer of question.questionAnswers) {
-        marksSum = parseInt(answer.value);
+      switch (question.display) {
+      case QuestionDisplay.PERCENT: {
+        for (const answer of question.questionAnswers) {
+          marksSum += parseInt(answer.value);
+        }
+      }
+        break;
+      case QuestionDisplay.AMOUNT: {
+        for (const answer of question.questionAnswers) {
+          amountMarks[`${parseInt(answer.value)}`]+=1;
+        }
+      }
+        break;
       }
       const count = question.questionAnswers.length;
-      if (question.type === QuestionType.SCALE) mark = ((marksSum/(count*10))*100).toFixed(2);
-      else mark = ((marksSum/(count))*100).toFixed(2);
+      if (question.type === QuestionType.SCALE) mark = ((marksSum / (count * 10)) * 100).toFixed(2);
+      else mark = ((marksSum / (count)) * 100).toFixed(2);
+
       marks.push({
         questionId: question.id,
         questionName: question.name,

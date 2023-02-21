@@ -84,9 +84,9 @@ export class DisciplineTeacherService {
     await this.checkRequiredQuestions(questions, answers);
     await this.checkAnsweredQuestions(disciplineTeacherId, answers, user.id);
     await this.checkSendingTime();
-
     for (const answer of answers) {
-      this.questionAnswerRepository.create({
+      console.log(answer);
+      await this.questionAnswerRepository.create({
         disciplineTeacherId: disciplineTeacherId,
         userId: user.id,
         ...answer,
@@ -163,7 +163,8 @@ export class DisciplineTeacherService {
     const closingPollTime = dateBorders.startPoll.getTime();
     const openingPollTime = dateBorders.endPoll.getTime();
     const currentTime = new Date().getTime();
-    if (currentTime > closingPollTime || currentTime < openingPollTime) {
+
+    if (currentTime < closingPollTime || currentTime > openingPollTime) {
       throw new WrongTimeException();
     }
   }
