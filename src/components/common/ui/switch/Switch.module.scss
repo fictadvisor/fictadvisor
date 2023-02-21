@@ -1,22 +1,22 @@
 @import "src/styles/partials/theme";
+@import "src/styles/partials/utils";
 
 .medium-switch-text {
-  font-size: 16px;
-  line-height: 21.76px;
-  padding-top: 2px;
-  font-weight: 400;
+    font-size: 16px;
+    line-height: 21.76px;
+    font-weight: 400;
 }
 
 .small-switch-text {
-  @extend .medium-switch-text;
-  font-size: 14px;
-  line-height: 19.6px;
-  font-weight: 400;
+    font-size: 14px;
+    line-height: 19.6px;
+    font-weight: 400;
 }
 
 .medium-container {
-    display: flex;
-    padding: 4px 8px 4px 8px;
+    @include flex-center;
+    width: fit-content;
+    height: 20px;
     gap: 8px;
 }
 
@@ -27,14 +27,16 @@
 
 
 .medium-switch-slider {
+    display: flex;
+    align-items: center;
+    position: relative;
     &::before {
-        display: flex;
+        @include flex-center;
         content: "";
         position: relative;
         cursor: pointer;
         width: 40px;
         height: 20px;
-        top: 2px;
         background-color: $background-dark-200;
         border-radius: 100px;
         transition: 0.4s ease-in-out;
@@ -43,14 +45,13 @@
     &::after {
         display: flex;
         content: "";
-        position: relative;
-        cursor: pointer;
+        position: absolute;
         left: 1px;
-        top: -17px;
+        cursor: pointer;
         width: 18px;
         height: 18px;
         background-color: $background-dark-35;
-        border-radius: 100px;
+        border-radius: 100%;
         transition: 0.4s ease-in-out;
     }
 }
@@ -67,16 +68,24 @@
 }
 
 .small-container {
-    display: flex;
-    padding: 2px 4px 2px 4px;
+    @include flex-center;
+    width: fit-content;
+    height: 20px;
     gap: 8px;
+}
+
+.small-switch-slider {
+    @extend .medium-switch-slider;
 }
 
 .small-switch-slider::before {
     @extend .medium-switch-slider, ::before;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
     width: 36px;
     height: 18px;
-    top: 4px;
 }
 
 
@@ -84,7 +93,6 @@
     @extend .medium-switch-slider, ::after;
     width: 16px;
     height: 16px;
-    top: -13px;
 }
 
 .small-switch-input:checked+.small-switch-slider::before {
