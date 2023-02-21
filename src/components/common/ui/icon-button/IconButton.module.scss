@@ -1,5 +1,5 @@
-@import "../../../../styles/partials/theme";
-@import "../../../../styles/partials/utils";
+@import 'src/styles/partials/theme';
+@import 'src/styles/partials/utils';
 
 @mixin style-button-icon($radius, $size) {
   @include flex-center;
@@ -18,42 +18,77 @@
     cursor: not-allowed;
   }
 }
-@mixin style-round-button-icon($className, $size) {
-  .round-button-icon-#{$className} {
-    @include style-button-icon(999px, $size);
+@mixin style-button-icon-color($default, $hover, $active, $focus) {
+  background-color: $default;
+  &:hover {
+    background-color: $hover;
+  }
+  &:focus {
+    background-color: $default;
+    border: $focus 1px solid;
+  }
+  &:active {
+    background-color: $active;
+  }
+}
+@mixin style-colors-button-theme($shape, $className) {
+  .#{$shape}-button-icon-#{$className}-secondary {
+    @include style-button-icon-color(
+      $background-dark-10,
+      $background-dark-50,
+      $background-dark-100,
+      $background-dark-200
+    );
+  }
+  .#{$shape}-button-icon-#{$className}-error {
+    @include style-button-icon-color(
+      $gray-50,
+      $error-50,
+      $error-200,
+      $error-50
+    );
+  }
+  .#{$shape}-button-icon-#{$className}-success {
+    @include style-button-icon-color(
+      $success-200,
+      $success-100,
+      $success-50,
+      $success-500
+    );
+  }
+  .#{$shape}-button-icon-#{$className}-primary {
+    @include style-button-icon-color($red-400, $red-200, $red-logo, $red-500);
+  }
+  .#{$shape}-button-icon-#{$className}-transparent {
+    background-color: transparent;
     padding: 6px;
-
-    &:hover {
-      background-color: $error-50;
-    }
-    &:active {
-      background-color: $error-200;
-    }
-    &:focus {
-      border: $error-50 1px solid;
+  }
+}
+@mixin style-button-icon-styles($shape, $className, $length, $size) {
+  .#{$shape}-button-icon-#{$className}-success,
+  .#{$shape}-button-icon-#{$className}-secondary,
+  .#{$shape}-button-icon-#{$className}-primary,
+  .#{$shape}-button-icon-#{$className}-error,
+  .#{$shape}-button-icon-#{$className}-transparent {
+    @include style-button-icon($length, $size);
+    padding: 6px;
+    @if $shape == 'square' {
+      & svg {
+        transform: translateX(10%) translateY(10%);
+      }
     }
   }
+}
+@mixin style-round-button-icon($className, $size) {
+  @include style-button-icon-styles('circle', $className, 999px, $size);
+  @include style-colors-button-theme('circle', $className);
 }
 @mixin style-square-button-icon($className, $size) {
-  .square-button-icon-#{$className} {
-    @include style-button-icon(6px, $size);
-    padding: 6px;
-    &:hover {
-      background-color: $gray-50;
-    }
-    &:active {
-      background-color: $background-dark-100;
-    }
-    &:focus {
-      border-color: $background-dark-200;
-    }
-    & svg {
-      transform: translateX(10%) translateY(10%);
-    }
-  }
+  @include style-button-icon-styles('square', $className, 6px, $size);
+  @include style-colors-button-theme('square', $className);
 }
 
-@include style-round-button-icon("normal", 36px);
-@include style-round-button-icon("large", 28px);
-@include style-square-button-icon("normal", 32px);
-@include style-square-button-icon("large", 40px);
+@include style-round-button-icon('normal', 36px);
+@include style-round-button-icon('large', 28px);
+@include style-square-button-icon('normal', 32px);
+@include style-square-button-icon('large', 40px);
