@@ -45,4 +45,15 @@ export class DisciplineService {
     const disciplineTeachers = await this.disciplineRepository.getDisciplineTeachers(id);
     return this.disciplineTeacherService.getTeachers(disciplineTeachers);
   }
+
+  getDisciplinesWithTeachers (disciplines: any[]) {
+    return disciplines.map((d) => ({
+      id: d.id,
+      subject: d.subject,
+      year: d.year,
+      semester: d.semester,
+      isSelective: d.isSelective,
+      teachers: this.disciplineTeacherService.getTeachers(d.disciplineTeachers),
+    }));
+  }
 }
