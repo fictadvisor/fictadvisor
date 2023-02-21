@@ -6,7 +6,7 @@ import AlertButton, {
   AlertButtonIconPosition,
   AlertButtonType,
 } from '@/components/common/ui/alert-button/AlertButton';
-import CheckBox, { CheckBoxState } from '@/components/common/ui/check/CheckBox';
+import Checkbox, { CheckboxState } from '@/components/common/ui/checkbox';
 import { IconButtonSize } from '@/components/common/ui/icon-button/IconButton';
 import { TrashBucketButton } from '@/components/common/ui/icon-button/variants';
 import Tag, {
@@ -31,7 +31,7 @@ const TablesPage = () => {
           color={TagColor.PRIMARY}
         />
       ),
-      checkBox: <CheckBox state={CheckBoxState.DEFAULT} text="Зам. староста" />,
+      checkbox: <Checkbox state={CheckboxState.DEFAULT} text="Зам. староста" />,
       //action={<AlertButton text="Прийняти" icon={<CustomCheck/>} iconPosition={AlertButtonIconPosition.RIGHT} onClick={() => {}} isDisabled={false} type={AlertButtonType.SUCCESS}/>}
       secondButton: <TrashBucketButton size={IconButtonSize.NORMAL} />,
     },
@@ -40,7 +40,7 @@ const TablesPage = () => {
       email: 'elizabeth.yarmolenko@gmail.com',
       fullName: 'Ярмоленко Єлизавета Миколаївна',
       //tag: <Tag state={TagState.SMALL} text="Зам. староста" className="primary-second" />,
-      //checkBox: <Check state={CheckBoxState.DEFAULT} text="Зам. староста" />,
+      //checkbox: <Check state={CheckboxState.DEFAULT} text="Зам. староста" />,
       firstButton: (
         <AlertButton
           text="Прийняти"
@@ -71,7 +71,7 @@ const TablesPage = () => {
           color={TagColor.PRIMARY}
         />
       ),
-      checkBox: <CheckBox state={CheckBoxState.DEFAULT} text="Зам. староста" />,
+      checkbox: <Checkbox state={CheckboxState.DEFAULT} text="Зам. староста" />,
       //action={<AlertButton text="Прийняти" icon={<CustomCheck/>} iconPosition={AlertButtonIconPosition.RIGHT} onClick={() => {}} isDisabled={false} type={AlertButtonType.SUCCESS}/>}
       secondButton: <TrashBucketButton size={IconButtonSize.NORMAL} />,
     },
@@ -87,7 +87,7 @@ const TablesPage = () => {
           color={TagColor.PRIMARY}
         />
       ),
-      checkBox: <CheckBox state={CheckBoxState.DEFAULT} text="Зам. староста" />,
+      checkbox: <Checkbox state={CheckboxState.DEFAULT} text="Зам. староста" />,
       firstButton: (
         <AlertButton
           text="Прийняти"
@@ -110,7 +110,7 @@ const TablesPage = () => {
           color={TagColor.PRIMARY}
         />
       ),
-      checkBox: <CheckBox state={CheckBoxState.DEFAULT} text="Зам. староста" />,
+      checkbox: <Checkbox state={CheckboxState.DEFAULT} text="Зам. староста" />,
       firstButton: (
         <AlertButton
           text="Прийняти"
@@ -126,7 +126,7 @@ const TablesPage = () => {
       email: 'elizabeth.yarmolenko@gmail.com',
       fullName: 'Ярмоленко Єлизавета Миколаївна',
       //tag: <Tag state={TagState.SMALL} text="Зам. староста" className="primary-second" />,
-      checkBox: <CheckBox state={CheckBoxState.DEFAULT} text="Зам. староста" />,
+      checkbox: <Checkbox state={CheckboxState.DEFAULT} text="Зам. староста" />,
       firstButton: (
         <AlertButton
           text="Прийняти"

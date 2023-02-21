@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import Check, { CheckBoxState } from '@/components/common/ui/check/CheckBox';
+import Checkbox, { CheckboxState } from '@/components/common/ui/checkbox';
 import { Radio, RadioState } from '@/components/common/ui/radio-group/Radio';
 import RadioGroup from '@/components/common/ui/radio-group/RadioGroup';
 import Switch, {
@@ -21,20 +21,20 @@ const ControlsPage = () => {
     <div className={styles['test-page-wrap']}>
       <div className={styles['test-page-content']}>
         <Switch
-          type={SwitchSize.MEDIUM}
-          text="Hello"
+          size={SwitchSize.MEDIUM}
+          text="Just"
           textPosition={SwitchTextPosition.LEFT}
         ></Switch>
         <Switch
-          type={SwitchSize.SMALL}
-          text="Biden"
+          size={SwitchSize.SMALL}
+          text="Hoshion"
           textPosition={SwitchTextPosition.RIGHT}
         ></Switch>
 
-        <Check text="Default"></Check>
-        <Check state={CheckBoxState.ERROR} text="Error"></Check>
-        <Check text="Disabled" disabled={true}></Check>
-        <Check text="Disabled" disabled={true} checked={true}></Check>
+        <Checkbox text="Default"></Checkbox>
+        <Checkbox state={CheckboxState.ERROR} text="Error"></Checkbox>
+        <Checkbox text="Disabled" disabled={true}></Checkbox>
+        <Checkbox text="Disabled" disabled={true} checked={true}></Checkbox>
 
         <RadioGroup
           onChange={handleChange}
@@ -43,8 +43,8 @@ const ControlsPage = () => {
           isDisabled={false}
         >
           <Radio text={'apple'} value={'apple'} />
-          <Radio text={'orange'} value={'orange'} />
-          <Radio text={'banana'} value={'banana'} isDisabled={true} />
+          <Radio text={'orange'} value={'orange'} isDisabled={true} />
+          <Radio text={'banana'} value={'banana'} />
           <Radio text={'Error'} value={'Error'} state={RadioState.ERROR} />
         </RadioGroup>
       </div>
