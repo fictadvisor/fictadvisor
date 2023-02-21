@@ -1,10 +1,9 @@
 @import "button-style";
 @import "src/styles/partials/theme";
 
-.primary-red-button-color{
+.primary-filled-button-variant{
   background: $red-400;
   color: $gray-600;
-  outline: 2px transparent solid;
 
   &:hover {
     background: $red-100;
@@ -25,30 +24,56 @@
   }
 }
 
-.primary-gray-button-color{
-  background: $background-dark-10;
+.primary-outline-button-variant{
+  background: none;
   color: $gray-600;
-  outline: 2px transparent solid;
+  outline: $red-100 solid 2px;
 
   &:hover {
-    background: $background-dark-35;
+    background: $red--10;
+    border-color: $red-100;
+
   }
 
   &:active {
-    background: $gray-50;
+    background: $red-10;
+    border-color: $red-logo;
   }
 
   &:focus {
-    background: $background-dark-10;
-    outline: 2px solid $gray-50;
+    background: $red-0;
+    border-color: $red-logo;
   }
 
   &:disabled {
     background: $background-dark-0;
     color: $gray-50;
+    outline-color: $gray-50;
   }
 }
+.primary-text-button-variant{
+  background: none;
+  color: $gray-400;
 
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:active {
+    text-decoration: underline;
+    color: $gray-600;
+  }
+
+  &:focus {
+    outline: 2px solid $gray-50;
+    color: $gray-600;
+  }
+
+  &:disabled {
+    color: $gray-100;
+    text-decoration: none;
+  }
+}
 @include button-style("primary-large", 8px, 16px 32px, 16px 32px, 12px);
 @include button-text("primary-large", 18px, 1.32, 700);
 
