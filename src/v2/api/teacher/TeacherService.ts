@@ -142,9 +142,9 @@ export class TeacherService {
       }
 
       marks.push({
-        questionId: question.id,
-        questionName: question.name,
-        numberOfAnswers: count,
+        name: question.name,
+        amount: count,
+        type: question.type,
         mark,
       });
     }
