@@ -9,7 +9,7 @@ import { DisciplineTeacherRepository } from './DisciplineTeacherRepository';
 import { UpdateContactDTO } from '../user/dto/UpdateContactDTO';
 import { ContactRepository } from '../user/ContactRepository';
 import { DisciplineTeacherService } from './DisciplineTeacherService';
-import { MarksDTO } from './query/MarksDTO';
+import { MarksQueryDTO } from './query/MarksQueryDTO';
 
 @Injectable()
 export class TeacherService {
@@ -109,7 +109,7 @@ export class TeacherService {
     );
   }
 
-  async getMarks (teacherId: string, { subjectId, year, semester }: MarksDTO) {
+  async getMarks (teacherId: string, { subjectId, year, semester }: MarksQueryDTO) {
     const marks = [];
     const questions = await this.markQueryCheck(teacherId, { subjectId, year, semester });
     for (const question of questions) {
@@ -162,7 +162,7 @@ export class TeacherService {
       };
     }
   }
-  markQueryCheck (teacherId: string, { subjectId, year, semester }: MarksDTO) {
+  markQueryCheck (teacherId: string, { subjectId, year, semester }: MarksQueryDTO) {
     if (!subjectId && !year && !semester) {
       return this.teacherRepository.getMarksFullData(teacherId);
     } else if (!year && !semester) {

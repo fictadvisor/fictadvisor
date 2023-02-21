@@ -85,7 +85,6 @@ export class DisciplineTeacherService {
     await this.checkAnsweredQuestions(disciplineTeacherId, answers, user.id);
     await this.checkSendingTime();
     for (const answer of answers) {
-      console.log(answer);
       await this.questionAnswerRepository.create({
         disciplineTeacherId: disciplineTeacherId,
         userId: user.id,

@@ -8,7 +8,7 @@ import { UpdateContactDTO } from '../user/dto/UpdateContactDTO';
 import { Access } from 'src/v2/security/Access';
 import { TeacherByIdPipe } from './dto/TeacherByIdPipe';
 import { ContactByNamePipe } from './dto/ContactByNamePipe';
-import { MarksDTO } from './query/MarksDTO';
+import { MarksQueryDTO } from './query/MarksQueryDTO';
 
 @Controller({
   version: '2',
@@ -112,7 +112,7 @@ export class TeacherController {
   @Get('/:teacherId/marks')
   async getMarks (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
-    @Query() query: MarksDTO,
+    @Query() query: MarksQueryDTO,
   ) {
     return this.teacherService.getMarks(teacherId, query);
   }
