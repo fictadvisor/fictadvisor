@@ -9,13 +9,13 @@
     background: $red-100;
   }
 
-  &:active {
-    background: $red-logo;
-  }
-
   &:focus {
     background: $red-logo;
     outline: 2px solid $red-10;
+  }
+
+  &:active {
+    background: $red-logo;
   }
 
   &:disabled {
@@ -35,13 +35,13 @@
 
   }
 
-  &:active {
-    background: $red-10;
+  &:focus {
+    background: $red-0;
     border-color: $red-logo;
   }
 
-  &:focus {
-    background: $red-0;
+  &:active {
+    background: $red-10;
     border-color: $red-logo;
   }
 
@@ -59,13 +59,13 @@
     text-decoration: underline;
   }
 
-  &:active {
-    text-decoration: underline;
+  &:focus {
+    outline: 2px solid $gray-50;
     color: $gray-600;
   }
 
-  &:focus {
-    outline: 2px solid $gray-50;
+  &:active {
+    text-decoration: underline;
     color: $gray-600;
   }
 

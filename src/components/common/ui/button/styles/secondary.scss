@@ -10,13 +10,13 @@
     background: $background-dark-35;
   }
 
-  &:active {
-    background: $background-dark-50;
-  }
-
   &:focus {
     background: $background-dark-10;
     outline-color: $background-dark-50;
+  }
+
+  &:active {
+    background: $background-dark-50;
   }
 
   &:disabled {
@@ -34,13 +34,13 @@
     background: $background-dark-10;
   }
 
-  &:active {
-    background: $background-dark-35;
+  &:focus {
+    background: $background-dark-10;
     outline: 2px solid $gray-300;
   }
 
-  &:focus {
-    background: $background-dark-10;
+  &:active {
+    background: $background-dark-35;
     outline: 2px solid $gray-300;
   }
 
@@ -58,13 +58,13 @@
     text-decoration: underline;
   }
 
-  &:active {
-    text-decoration: underline;
+  &:focus {
+    outline: 2px solid $gray-50;
     color: $gray-600;
   }
 
-  &:focus {
-    outline: 2px solid $gray-50;
+  &:active {
+    text-decoration: underline;
     color: $gray-600;
   }
 
