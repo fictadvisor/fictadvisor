@@ -142,6 +142,7 @@ export class UserService {
       middleName: student.middleName,
       avatar: student.user.avatar,
       telegramId: student.user.telegramId,
+      group: student.group,
     };
   }
 

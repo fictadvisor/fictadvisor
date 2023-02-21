@@ -11,6 +11,10 @@ export class StudentWithUser {
   firstName: string;
   middleName: string;
   lastName: string;
+  group: {
+    id: string,
+    code: string,
+  };
 }
 
 export class StudentWithUserAndRoles extends StudentWithUser {
