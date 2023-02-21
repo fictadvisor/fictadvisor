@@ -7,11 +7,15 @@ import { Question, TeacherRole } from '@prisma/client';
 import { DisciplineRepository } from '../discipline/DisciplineRepository';
 import { DisciplineTeacherRepository } from '../teacher/DisciplineTeacherRepository';
 import { CreateQuestionRoleDTO } from './dto/CreateQuestionRoleDTO';
+import { StudentRepository } from '../user/StudentRepository';
+import { QuestionAnswerRepository } from './QuestionAnswerRepository';
 
 @Injectable()
 export class PollService {
   constructor (
     private prisma: PrismaService,
+    private questionAnswerRepository: QuestionAnswerRepository,
+    private studentRepository: StudentRepository,
     private questionRepository: QuestionRepository,
 
     private disciplineRepository: DisciplineRepository,
@@ -61,5 +65,30 @@ export class PollService {
       }
     }
     return results;
+  }
+  async getDisciplineTeachers (userId: string) {
+    const disciplines = await this.studentRepository.getDisciplines(userId);
+    const answers = await this.studentRepository.getAnswers(userId);
+    const teachers = [];
+
+    for (const discipline of disciplines) {
+      for (const disciplineTeacher of discipline.disciplineTeachers) {
+        if (answers.some((answer) => disciplineTeacher.id !== answer.disciplineTeacherId)) {
+          teachers.push({
+            disciplineTeacherId: disciplineTeacher.id,
+            roles: disciplineTeacher.roles,
+            firstName: disciplineTeacher.teacher.firstName,
+            middleName: disciplineTeacher.teacher.middleName,
+            lastName: disciplineTeacher.teacher.lastName,
+            avatar: disciplineTeacher.teacher.avatar,
+            subject: discipline.subject,
+          });
+        }
+      }
+    }
+    return {
+      teachers,
+    };
+
   }
 }

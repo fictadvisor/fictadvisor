@@ -6,6 +6,7 @@ import { QuestionByIdPipe } from './dto/QuestionByIdPipe';
 import { QuestionByRoleAndIdPipe } from './dto/QuestionByRoleAndIdPipe';
 import { CreateQuestionRoleDTO } from './dto/CreateQuestionRoleDTO';
 import { Access } from 'src/v2/security/Access';
+import { UserByIdPipe } from '../user/UserByIdPipe';
 
 @Controller({
   version: '2',
@@ -24,6 +25,13 @@ export class PollController {
     return this.pollService.createQuestions(body);
   }
 
+  @Access('users.$userId.poll.teachers.get')
+  @Get('/teachers/:userId')
+  async getPollDisciplineTeachers (
+      @Param('userId', UserByIdPipe) userId: string,
+  ) {
+    return this.pollService.getDisciplineTeachers(userId);
+  }
 
   @Access('questions.delete')
   @Delete('/questions/:questionId')
