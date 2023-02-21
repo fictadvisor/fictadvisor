@@ -173,7 +173,7 @@ export class TeacherRepository {
       },
     });
   }
-  async getMarks (teacherId: string, year: number, semester: number) {
+  async getMarks (teacherId: string, subjectId: string, year: number, semester: number) {
     return this.prisma.question.findMany({
       where: {
         OR: [{
@@ -187,6 +187,42 @@ export class TeacherRepository {
         category: true,
         name: true,
         text: true,
+        type: true,
+        display: true,
+        questionAnswers: {
+          where: {
+            disciplineTeacher: {
+              teacherId,
+              discipline: {
+                subjectId,
+                year,
+                semester,
+              },
+            },
+          },
+          select: {
+            value: true,
+          },
+        },
+      },
+    });
+  }
+
+  async getMarksForDate (teacherId: string, year: number, semester: number) {
+    return this.prisma.question.findMany({
+      where: {
+        OR: [{
+          type: QuestionType.TOGGLE,
+        }, {
+          type: QuestionType.SCALE,
+        }],
+      },
+      select: {
+        id: true,
+        category: true,
+        name: true,
+        text: true,
+        type: true,
         display: true,
         questionAnswers: {
           where: {
