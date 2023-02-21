@@ -1,8 +1,10 @@
 import { useState } from 'react';
 
 import Checkbox, { CheckboxState } from '@/components/common/ui/checkbox';
-import { Radio, RadioState } from '@/components/common/ui/radio-group/Radio';
-import RadioGroup from '@/components/common/ui/radio-group/RadioGroup';
+import RadioGroup, {
+  Radio,
+  RadioState,
+} from '@/components/common/ui/radio-group/RadioGroup';
 import Switch, {
   SwitchSize,
   SwitchTextPosition,
@@ -43,9 +45,9 @@ const ControlsPage = () => {
           isDisabled={false}
         >
           <Radio text={'apple'} value={'apple'} />
-          <Radio text={'orange'} value={'orange'} isDisabled={true} />
+          <Radio text={'orange'} value={'orange'} state={RadioState.ERROR} />
           <Radio text={'banana'} value={'banana'} />
-          <Radio text={'Error'} value={'Error'} state={RadioState.ERROR} />
+          <Radio text={'Error'} value={'Error'} />
         </RadioGroup>
       </div>
     </div>
