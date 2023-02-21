@@ -13,11 +13,10 @@
     font-weight: 400;
 }
 
-.medium-container {
+.medium-container, .small-container  {
     @include flex-center;
     width: fit-content;
     height: 20px;
-    gap: 8px;
 }
 
 .medium-switch-input,
@@ -67,12 +66,7 @@
     left: 21px;
 }
 
-.small-container {
-    @include flex-center;
-    width: fit-content;
-    height: 20px;
-    gap: 8px;
-}
+
 
 .small-switch-slider {
     @extend .medium-switch-slider;

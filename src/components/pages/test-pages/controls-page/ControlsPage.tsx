@@ -29,7 +29,6 @@ const ControlsPage = () => {
         ></Switch>
         <Switch
           size={SwitchSize.MEDIUM}
-          text="Just"
           textPosition={SwitchTextPosition.LEFT}
         ></Switch>
         <Switch

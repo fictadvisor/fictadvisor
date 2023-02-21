@@ -22,9 +22,10 @@ const Switch: FC<SwitchProps> = ({
   textPosition = SwitchTextPosition.RIGHT,
   size = SwitchSize.MEDIUM,
 }) => {
+  const gap = text ? '8px' : '';
   return (
     <div>
-      <div className={styles[size + '-container']}>
+      <div className={styles[size + '-container']} style={{ gap: `${gap}` }}>
         {textPosition === 'left' && (
           <span className={styles[size + '-switch-text']}>{text}</span>
         )}
