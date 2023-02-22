@@ -24,7 +24,7 @@
 
     margin-left: 80px;
     margin-top: 40px;
-    flex-grow: 1;
+    
 }
 
 .signature {
@@ -74,11 +74,17 @@
 }
 
 .social-media {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    @include flex-center;
     flex-direction: column;
     margin-top: 40px;
+    align-items: flex-start;
+    height: fit-content;
+    gap: 4px;
+}
+
+.social-buttons {
+    @include flex-center;
+    flex-direction: column;
     align-items: flex-start;
     height: fit-content;
     gap: 2px;
@@ -94,21 +100,33 @@
         width: 100%;
     }
 
+    .title {
+        padding: 2px 4px;
+        width: fit-content;
+        height: 30px;
+    }
+
     .social-media {
         grid-row-start: 2;
         grid-column-start: 2;
         grid-row-end: 3;
         grid-column-end: 3;
-        flex-direction: column;
-        margin-top: 105px;
-        align-items: flex-start;
+        margin-top: 66px;
         height: 60px;
-
+        align-items: start;
         & p {
             font-weight: 400;
             font-size: 11px;
             line-height: 17.6px;
         }
+    }
+
+    .social-buttons {
+        @include flex-center;
+        flex-direction: row;
+        align-items: flex-start;
+        height: fit-content;
+        gap: 4px;
     }
 
     .support {

@@ -47,7 +47,8 @@ function PageLayout(props: PageLayoutProps) {
           <meta property="og:description" content={props.description} />
         )}
       </Head>
-
+      {props.hasHeader && <Header />}
+      {props.hasFooter && <Footer />}
       <div className={styles['page']}>{props.children}</div>
     </div>
   );

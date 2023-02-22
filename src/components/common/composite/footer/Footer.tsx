@@ -1,5 +1,5 @@
 import React from 'react';
-import { useQuery } from 'react-query';
+import { useMediaQuery } from '@mui/material';
 import Link from 'next/link';
 
 import { GitHubIcon } from '@/components/common/custom-svg/GitHub';
@@ -14,10 +14,18 @@ import Button, {
 import styles from './Footer.module.scss';
 
 const Footer: React.FC = () => {
-  const socialLabels =
-    window.innerWidth > 480
-      ? ['GitHub', 'Instagram', 'Telegram']
-      : ['', '', ''];
+  const isMobile = useMediaQuery('(max-width: 480px)');
+  const socialLabels = isMobile
+    ? [
+        { text: '', icon: <TelegramIcon /> },
+        { text: '', icon: <InstagramIcon /> },
+        { text: '', icon: <GitHubIcon /> },
+      ]
+    : [
+        { text: 'GitHub', icon: <GitHubIcon /> },
+        { text: 'Instagram', icon: <InstagramIcon /> },
+        { text: 'Telegram', icon: <TelegramIcon /> },
+      ];
   return (
     <div className={styles['footer-container']}>
       <div>
@@ -99,36 +107,38 @@ const Footer: React.FC = () => {
         <div className={styles['title']}>
           <p>Соціальне</p>
         </div>
-        <Link href={{}} style={{ height: '36px' }}>
-          <Button
-            text={socialLabels[0]}
-            icon={<GitHubIcon />}
-            iconPosition={ButtonIconPosition.LEFT}
-            isDisabled={false}
-            size={ButtonSize.MEDIUM}
-            type={ButtonType.TERTIARY}
-          />
-        </Link>
-        <Link href={{}} style={{ height: '36px' }}>
-          <Button
-            text={socialLabels[1]}
-            icon={<InstagramIcon />}
-            iconPosition={ButtonIconPosition.LEFT}
-            isDisabled={false}
-            size={ButtonSize.MEDIUM}
-            type={ButtonType.TERTIARY}
-          />
-        </Link>
-        <Link href={{}} style={{ height: '36px' }}>
-          <Button
-            text={socialLabels[2]}
-            icon={<TelegramIcon />}
-            iconPosition={ButtonIconPosition.LEFT}
-            isDisabled={false}
-            size={ButtonSize.MEDIUM}
-            type={ButtonType.TERTIARY}
-          />
-        </Link>
+        <div className={styles['social-buttons']}>
+          <Link href={{}} style={{ height: '36px', width: '36px' }}>
+            <Button
+              text={socialLabels[0].text}
+              icon={socialLabels[0].icon}
+              iconPosition={ButtonIconPosition.LEFT}
+              isDisabled={false}
+              size={ButtonSize.MEDIUM}
+              type={ButtonType.TERTIARY}
+            />
+          </Link>
+          <Link href={{}} style={{ height: '36px', width: '36px' }}>
+            <Button
+              text={socialLabels[1].text}
+              icon={socialLabels[1].icon}
+              iconPosition={ButtonIconPosition.LEFT}
+              isDisabled={false}
+              size={ButtonSize.MEDIUM}
+              type={ButtonType.TERTIARY}
+            />
+          </Link>
+          <Link href={{}} style={{ height: '36px', width: '36px' }}>
+            <Button
+              text={socialLabels[2].text}
+              icon={socialLabels[2].icon}
+              iconPosition={ButtonIconPosition.LEFT}
+              isDisabled={false}
+              size={ButtonSize.MEDIUM}
+              type={ButtonType.TERTIARY}
+            />
+          </Link>
+        </div>
       </div>
     </div>
   );
