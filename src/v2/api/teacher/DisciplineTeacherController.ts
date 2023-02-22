@@ -20,7 +20,7 @@ export class DisciplineTeacherController {
     @Request() req,
     @Param('disciplineTeacherId', DisciplineTeacherByIdPipe) disciplineTeacherId: string,
   ) {
-    return this.disciplineTeacherService.getQuestions(disciplineTeacherId, req.user);
+    return this.disciplineTeacherService.getQuestions(disciplineTeacherId, req.user.id);
   }
 
   @Access('groups.$groupId.answers.send', GroupByDisciplineTeacherGuard)
@@ -30,7 +30,7 @@ export class DisciplineTeacherController {
     @Request() req,
     @Body() body: CreateAnswersDTO,
   ) {
-    return this.disciplineTeacherService.sendAnswers(disciplineTeacherId, body, req.user.id);
+    return this.disciplineTeacherService.sendAnswers(disciplineTeacherId, body, req.user);
   }
 
 }
