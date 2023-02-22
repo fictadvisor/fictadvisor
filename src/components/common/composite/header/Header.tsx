@@ -8,23 +8,29 @@ import { HeaderCard } from '../cards';
 import styles from './Header.module.scss';
 
 interface HeaderProps {
-  buttons: {
+  buttons?: {
     text: string;
   }[];
-  isLoggined: boolean;
+  isLoggined?: boolean;
   username?: string;
   groupName?: string;
   position?: string;
 }
 
-const Header: React.FC<HeaderProps> = props => {
+const Header: React.FC<HeaderProps> = ({
+  buttons = [],
+  isLoggined = false,
+  username,
+  groupName,
+  position,
+}) => {
   return (
     <div className={styles['header-container']}>
       <div className={styles['header-logo']}>
         <img src={`/assets/logo.png`} alt="logo" />
       </div>
       <div className={styles['menu']}>
-        {props.buttons.map((tertiary, index) => {
+        {buttons.map((tertiary, index) => {
           return (
             <Link href={{}} key={index}>
               <Button
@@ -39,7 +45,7 @@ const Header: React.FC<HeaderProps> = props => {
       </div>
 
       <div>
-        {!props.isLoggined && (
+        {!isLoggined && (
           <div className={styles['auth-container']}>
             <div>
               <Link href={{}}>
@@ -63,7 +69,7 @@ const Header: React.FC<HeaderProps> = props => {
             </div>
           </div>
         )}
-        {props.isLoggined && (
+        {isLoggined && (
           <div className={styles['user-container']}>
             <div
               style={{
@@ -73,9 +79,9 @@ const Header: React.FC<HeaderProps> = props => {
               }}
             >
               <HeaderCard
-                name={props.username}
-                groupName={props.groupName}
-                position={props.position}
+                name={username}
+                groupName={groupName}
+                position={position}
               />{' '}
             </div>
           </div>
