@@ -5,73 +5,107 @@ import { UpdateDisciplineDTO } from './dto/UpdateDisciplineDTO';
 
 @Injectable()
 export class DisciplineRepository {
-  constructor(
+  constructor (
     private prisma: PrismaService,
   ) {}
 
-  async get(id: string) {
+  async getDiscipline (id: string) {
     return this.prisma.discipline.findUnique({
       where: {
         id,
       },
-      include: {
+      select: {
+        id: true,
         group: true,
-        disciplineTypes: true,
-        selectiveDisciplines: true,
         subject: true,
-        disciplineTeachers: true,
+        year: true,
+        semester: true,
+        isSelective: true,
+        evaluatingSystem: true,
+        resource: true,
       },
     });
   }
 
-  async getDiscipline(id: string) {
-    const discipline = await this.get(id);
-    delete discipline.group;
-    delete discipline.subject;
-    delete discipline.disciplineTypes;
-    delete discipline.selectiveDisciplines;
-    delete discipline.disciplineTeachers;
-    return discipline;
+  async getGroup (id: string) {
+    return this.prisma.group.findFirst({
+      where: {
+        disciplines: {
+          some: {
+            id,
+          },
+        },
+      },
+    });
   }
 
-  async getSubject(id: string) {
-    const discipline = await this.get(id);
-    return discipline.subject;
+  async getUserSelective (disciplineId: string) {
+    return this.prisma.student.findMany({
+      where: {
+        selectiveDisciplines: {
+          some: {
+            disciplineId,
+          },
+        },
+      },
+      select: {
+        firstName: true,
+        middleName: true,
+        lastName: true,
+        user: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+            telegramId: true,
+            avatar: true,
+          },
+        },
+        group: true,
+      },
+    });
   }
 
-  async getGroup(id: string) {
-    const discipline = await this.get(id);
-    return discipline.group;
+  async getDisciplineTeachers (id: string) {
+    return this.prisma.disciplineTeacher.findMany({
+      where: {
+        discipline: {
+          id,
+        },
+      },
+      select: {
+        id: true,
+        teacher: {
+          select: {
+            id: true,
+            firstName: true,
+            middleName: true,
+            lastName: true,
+            avatar: true,
+          },
+        },
+        roles: {
+          select: {
+            role: true,
+          },
+        },
+      },
+    });
   }
 
-  async getTypes(id: string) {
-    const discipline = await this.get(id);
-    return discipline.disciplineTypes;
-  }
-
-  async getSelective(id: string) {
-    const discipline = await this.get(id);
-    return discipline.selectiveDisciplines;
-  }
-
-  async getDisciplineTeachers(id: string) {
-    const discipline = await this.get(id);
-    return discipline.disciplineTeachers;
-  }
-
-  async find(where: CreateDisciplineDTO) {
+  async find (where: CreateDisciplineDTO) {
     return this.prisma.discipline.findFirst({
       where,
     });
   }
 
-  async create(data: CreateDisciplineDTO) {
+  async create (data: CreateDisciplineDTO) {
     return this.prisma.discipline.create({
       data,
     });
   }
 
-  async getOrCreate(data: CreateDisciplineDTO) {
+  async getOrCreate (data: CreateDisciplineDTO) {
     let discipline = await this.find(data);
     if (!discipline) {
       discipline = await this.create(data);
@@ -79,7 +113,7 @@ export class DisciplineRepository {
     return discipline;
   }
 
-  async update(id: string, data: UpdateDisciplineDTO) {
+  async update (id: string, data: UpdateDisciplineDTO) {
     return this.prisma.discipline.update({
       where: {
         id,

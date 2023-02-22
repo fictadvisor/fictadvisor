@@ -5,23 +5,29 @@ import { UpdateGrantDTO } from './dto/UpdateGrantDTO';
 
 @Injectable()
 export class GrantRepository {
-  constructor(
+  constructor (
     private prisma: PrismaService,
   ) {}
 
-  async create(data: CreateGrantData) {
+  async create (data: CreateGrantData) {
     return this.prisma.grant.create({
       data,
     });
   }
 
-  async find(where: CreateGrantData) {
+  createMany (data: CreateGrantData[]) {
+    return this.prisma.grant.createMany({
+      data,
+    });
+  }
+
+  async find (where: CreateGrantData) {
     return this.prisma.grant.findFirst({
       where,
     });
   }
 
-  delete(id: string) {
+  delete (id: string) {
     return this.prisma.grant.delete({
       where: {
         id,
@@ -29,12 +35,18 @@ export class GrantRepository {
     });
   }
 
-  async update(id: string, data: UpdateGrantDTO) {
+  async update (id: string, data: UpdateGrantDTO) {
     return this.prisma.grant.update({
       where: {
         id,
       },
       data,
+      select: {
+        id: true,
+        roleId: true,
+        permission: true,
+        set: true,
+      },
     });
   }
 }

@@ -1,9 +1,8 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { PrismaService } from '../../database/PrismaService';
 import { JwtPayload } from '../../security/JwtPayload';
 import { SecurityConfigService } from '../../config/SecurityConfigService';
-import { State, User } from '@prisma/client';
+import { State, User, RoleName } from '@prisma/client';
 import { TokensDTO } from './dto/TokensDTO';
 import { RegistrationDTO, StudentDTO, TelegramDTO, UserDTO } from './dto/RegistrationDTO';
 import { createHash, createHmac } from 'crypto';
@@ -17,17 +16,19 @@ import { ResetPasswordDTO } from './dto/ResetPasswordDTO';
 import { InvalidResetTokenException } from '../../utils/exceptions/InvalidResetTokenException';
 import { TooManyActionsException } from '../../utils/exceptions/TooManyActionsException';
 import { InvalidVerificationTokenException } from 'src/v2/utils/exceptions/InvalidVerificationTokenException';
-import { TelegramAPI } from "../../telegram/TelegramAPI";
-import { StudentRepository } from "../user/StudentRepository";
-import { GroupRepository } from "../group/GroupRepository";
+import { TelegramAPI } from '../../telegram/TelegramAPI';
+import { StudentRepository } from '../user/StudentRepository';
+import { GroupRepository } from '../group/GroupRepository';
 import bcrypt from 'bcrypt';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
 import { UniqueUserDTO } from '../user/dto/UniqueUserDTO';
-import { IdentityQueryDTO } from "./dto/IdentityQueryDTO";
-import { AlreadyRegisteredException } from "../../utils/exceptions/AlreadyRegisteredException";
-import { NotRegisteredException } from "../../utils/exceptions/NotRegisteredException";
+import { IdentityQueryDTO } from './dto/IdentityQueryDTO';
+import { AlreadyRegisteredException } from '../../utils/exceptions/AlreadyRegisteredException';
+import { NotRegisteredException } from '../../utils/exceptions/NotRegisteredException';
 import { PasswordRepeatException } from '../../utils/exceptions/PasswordRepeatException';
 import { GroupService } from '../group/GroupService';
+import { RoleService } from '../user/role/RoleService';
+import { RoleRepository } from '../user/role/RoleRepository';
 
 export const ONE_MINUTE = 1000 * 60;
 export const HOUR = ONE_MINUTE * 60;
@@ -38,8 +39,9 @@ export class AuthService {
   private resetPasswordTokens: Map<string, { email: string, date: Date }> = new Map();
   private verifyEmailTokens: Map<string, { email: string, date: Date }> = new Map();
 
-  constructor(
-    private prisma: PrismaService,
+  constructor (
+    private roleService: RoleService,
+    private roleRepository: RoleRepository,
     private jwtService: JwtService,
     private securityConfig: SecurityConfigService,
     private telegramConfig: TelegramConfigService,
@@ -52,7 +54,7 @@ export class AuthService {
   ) {
   }
 
-  async validateUser(username: string, password: string) {
+  async validateUser (username: string, password: string) {
     const user = await this.userRepository.getByUnique({
       username,
       email: username,
@@ -70,7 +72,7 @@ export class AuthService {
     return user;
   }
 
-  isExchangeValid({ hash, ...data }: TelegramDTO): boolean {
+  isExchangeValid ({ hash, ...data }: TelegramDTO): boolean {
     if (!data) return false;
 
     const str = Object.keys(data)
@@ -90,10 +92,10 @@ export class AuthService {
     }
   }
 
-  async register(registrationDTO: RegistrationDTO) {
+  async register (registrationDTO: RegistrationDTO) {
     const { telegram, student: { isCaptain, ...createStudent }, user } = registrationDTO;
 
-    if(await this.checkIfUserIsRegistered({ email: user.email, username: user.username })) {
+    if (await this.checkIfUserIsRegistered({ email: user.email, username: user.username })) {
       throw new AlreadyRegisteredException();
     }
 
@@ -110,7 +112,7 @@ export class AuthService {
 
     user.password = await this.hashPassword(user.password);
 
-    if(await this.isPseudoRegistered(user.email)) {
+    if (await this.isPseudoRegistered(user.email)) {
       await this.pseudoRegister(user, isCaptain, createStudent);
     } else {
       await this.trulyRegister(user, isCaptain, createStudent);
@@ -119,7 +121,7 @@ export class AuthService {
     await this.requestEmailVerification(user.email);
   }
 
-  async verify({ id, telegramId}: User, { groupId, isCaptain, middleName, ...student }: StudentDTO) {
+  async verify ({ id, telegramId }: { id: string, telegramId: number }, { groupId, isCaptain, middleName, ...student }: StudentDTO) {
     const group = await this.groupRepository.getGroup(groupId);
     const data = {
       id,
@@ -138,19 +140,19 @@ export class AuthService {
     }
   }
 
-  login(user: User): TokensDTO {
+  login (user: User): TokensDTO {
     if (user.state === State.PENDING) {
       throw new UnauthorizedException('The email hasn\'t verified yet');
     }
     return this.getTokens(user);
   }
 
-  async refresh(user: User): Promise<object | null> {
+  async refresh (user: User): Promise<object | null> {
     const payload = this.createPayload(user);
     return this.getAccessToken(payload);
   }
 
-  getTokens(user: User): TokensDTO {
+  getTokens (user: User): TokensDTO {
     const payload = this.createPayload(user);
 
     return {
@@ -161,13 +163,13 @@ export class AuthService {
     };
   }
 
-  getAccessToken(payload: JwtPayload) {
+  getAccessToken (payload: JwtPayload) {
     return {
       accessToken: this.jwtService.sign(payload),
     };
   }
 
-  async loginTelegram(telegram: TelegramDTO): Promise<TokensDTO> {
+  async loginTelegram (telegram: TelegramDTO): Promise<TokensDTO> {
     if (!this.isExchangeValid(telegram)) {
       throw new InvalidTelegramCredentialsException();
     }
@@ -179,7 +181,7 @@ export class AuthService {
     return this.getTokens(user);
   }
 
-  createPayload(user: User): JwtPayload {
+  createPayload (user: User): JwtPayload {
     return {
       sub: user.id,
       username: user.username,
@@ -187,7 +189,7 @@ export class AuthService {
     };
   }
 
-  async updatePassword({ oldPassword, newPassword }: UpdatePasswordDTO, user: User): Promise<TokensDTO> {
+  async updatePassword ({ oldPassword, newPassword }: UpdatePasswordDTO, user: User): Promise<TokensDTO> {
     await this.validateUser(user.username, oldPassword);
 
     if (oldPassword === newPassword) {
@@ -199,7 +201,7 @@ export class AuthService {
     return this.getTokens(user);
   }
 
-  async forgotPassword(email: string) {
+  async forgotPassword (email: string) {
     const uuid = crypto.randomUUID();
     for (const [token, value] of this.resetPasswordTokens.entries()) {
       if (value.email === email) {
@@ -227,7 +229,7 @@ export class AuthService {
     }, HOUR);
   }
 
-  async resetPassword(token: string, { password }: ResetPasswordDTO) {
+  async resetPassword (token: string, { password }: ResetPasswordDTO) {
     if (!this.resetPasswordTokens.has(token)) {
       throw new InvalidResetTokenException();
     }
@@ -238,8 +240,8 @@ export class AuthService {
     this.resetPasswordTokens.delete(token);
   }
 
-  async requestEmailVerification(email: string) {
-    if(!await this.checkIfUserIsRegistered({ email })) {
+  async requestEmailVerification (email: string) {
+    if (!await this.checkIfUserIsRegistered({ email })) {
       throw new NotRegisteredException();
     }
 
@@ -271,7 +273,7 @@ export class AuthService {
     }, HOUR);
   }
 
-  async verifyEmail(token: string) {
+  async verifyEmail (token: string) {
     if (!this.verifyEmailTokens.has(token)) {
       throw new InvalidVerificationTokenException();
     }
@@ -280,10 +282,17 @@ export class AuthService {
 
     this.verifyEmailTokens.delete(token);
 
+    const { id } = await this.roleRepository.createWithGrants({
+      name: RoleName.USER,
+      weight: 10,
+    },
+    [{ permission: `users.${user.id}.*` }],
+    );
+    await this.studentRepository.addRole(user.id, id);
     return this.getTokens(user);
   }
 
-  async setPassword(search: UniqueUserDTO, password) {
+  async setPassword (search: UniqueUserDTO, password) {
     const hash = await this.hashPassword(password);
 
     return this.userRepository.updateByUnique(search, {
@@ -292,27 +301,27 @@ export class AuthService {
     });
   }
 
-  async hashPassword(password: string) {
+  async hashPassword (password: string) {
     const saltRounds = 10;
     const salt = await bcrypt.genSalt(saltRounds);
     return bcrypt.hash(password, salt);
   }
 
-  async checkPassword(password: string, hash: string) {
+  async checkPassword (password: string, hash: string) {
     return bcrypt.compare(password, hash);
   }
 
-  async checkIfUserIsRegistered(query: IdentityQueryDTO) {
+  async checkIfUserIsRegistered (query: IdentityQueryDTO) {
     const user = await this.userRepository.getByUnique(query);
     return (user != null && user.password != null);
   }
 
-  async isPseudoRegistered(email: string) {
+  async isPseudoRegistered (email: string) {
     const user = await this.userRepository.getByUnique({ email });
     return (user != null && user.password == null);
   }
 
-  async trulyRegister(user: UserDTO, isCaptain:boolean, createStudent: Omit<StudentDTO, "isCaptain">) {
+  async trulyRegister (user: UserDTO, isCaptain:boolean, createStudent: Omit<StudentDTO, 'isCaptain'>) {
     const dbUser = await this.userRepository.create({
       ...user,
       lastPasswordChanged: new Date(),
@@ -328,20 +337,20 @@ export class AuthService {
     });
   }
 
-  async pseudoRegister(user: UserDTO, isCaptain:boolean, createStudent: Omit<StudentDTO, "isCaptain">) {
-    const dbUser = await this.userRepository.updateByEmail( user.email, {
+  async pseudoRegister (user: UserDTO, isCaptain:boolean, createStudent: Omit<StudentDTO, 'isCaptain'>) {
+    const dbUser = await this.userRepository.updateByEmail(user.email, {
       ...user,
       lastPasswordChanged: new Date(),
     });
     await this.studentRepository.update(dbUser.id, createStudent);
   }
 
-  async checkCaptain(groupId: string) {
+  async checkCaptain (groupId: string) {
     const captain = await this.groupService.getCaptain(groupId);
     return !!captain;
   }
 
-  checkResetToken(token: string) {
+  checkResetToken (token: string) {
     return this.resetPasswordTokens.has(token);
   }
 }

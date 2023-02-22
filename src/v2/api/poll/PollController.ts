@@ -1,45 +1,41 @@
-import { Body, Controller, Delete, Get, Patch, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch, Param, Post } from '@nestjs/common';
 import { PollService } from './PollService';
-import { JwtGuard } from '../../security/JwtGuard';
-import { UpdateQuestionDTO } from "./dto/UpdateQuestionDTO";
-import { CreateQuestionsDTO } from "./dto/CreateQuestionDTO";
-import { Permission } from "../../security/permission-guard/Permission";
-import { PermissionGuard } from "../../security/permission-guard/PermissionGuard";
-import { QuestionByIdPipe } from "./dto/QuestionByIdPipe";
-import { QuestionByRoleAndIdPipe } from "./dto/QuestionByRoleAndIdPipe";
+import { UpdateQuestionDTO } from './dto/UpdateQuestionDTO';
+import { CreateQuestionWithRolesDTO } from './dto/CreateQuestionDTO';
+import { QuestionByIdPipe } from './dto/QuestionByIdPipe';
+import { QuestionByRoleAndIdPipe } from './dto/QuestionByRoleAndIdPipe';
 import { CreateQuestionRoleDTO } from './dto/CreateQuestionRoleDTO';
+import { Access } from 'src/v2/security/Access';
 
 @Controller({
   version: '2',
   path: '/poll',
 })
 export class PollController {
-  constructor(
+  constructor (
     private pollService: PollService,
   ) {}
 
-  @Permission('questions.create')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('questions.create')
   @Post('/questions')
-  async createQuestion(
-    @Body() body : CreateQuestionsDTO,
+  async createQuestion (
+    @Body() body : CreateQuestionWithRolesDTO,
   ) {
     return this.pollService.createQuestions(body);
   }
 
-  @Permission('questions.delete')
-  @UseGuards(JwtGuard, PermissionGuard)
+
+  @Access('questions.delete')
   @Delete('/questions/:questionId')
-  delete(
+  delete (
     @Param('questionId', QuestionByIdPipe) questionId: string,
   ) {
     return this.pollService.delete(questionId);
   }
 
-  @Permission('questions.update')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('questions.update')
   @Patch('/questions/:questionId')
-  update(
+  update (
     @Param('questionId', QuestionByIdPipe) questionId: string,
     @Body() body: UpdateQuestionDTO,
   ) {
@@ -47,28 +43,26 @@ export class PollController {
   }
 
   @Get('/questions/:questionId')
-  getQuestion(
+  getQuestion (
     @Param('questionId', QuestionByIdPipe) questionId: string,
-  ){
+  ) {
     return this.pollService.getQuestion(questionId);
   }
 
-  @Permission('questions.roles.give')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('questions.roles.give')
   @Post('/questions/:questionId/roles')
-  giveRole(
+  giveRole (
     @Param('questionId', QuestionByIdPipe) questionId: string,
-    body: CreateQuestionRoleDTO,
-  ){
+      body: CreateQuestionRoleDTO,
+  ) {
     return this.pollService.giveRole(body, questionId);
   }
 
-  @Permission('question.roles.delete')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('question.roles.delete')
   @Delete('/questions/:questionId/roles/:role')
-  deleteRole(
+  deleteRole (
     @Param(QuestionByRoleAndIdPipe) params,
-  ){
+  ) {
     return this.pollService.deleteRole(params.questionId, params.role);
   }
 

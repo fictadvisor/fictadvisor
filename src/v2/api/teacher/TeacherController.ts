@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards, Patch } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query, Patch } from '@nestjs/common';
 import { TeacherService } from './TeacherService';
 import { QueryAllDTO } from '../../utils/QueryAllDTO';
 import { CreateTeacherDTO } from './dto/CreateTeacherDTO';
@@ -8,33 +8,36 @@ import { UpdateContactDTO } from '../user/dto/UpdateContactDTO';
 import { Access } from 'src/v2/security/Access';
 import { TeacherByIdPipe } from './dto/TeacherByIdPipe';
 import { ContactByNamePipe } from './dto/ContactByNamePipe';
+import { MarksQueryDTO } from './query/MarksQueryDTO';
 
 @Controller({
   version: '2',
   path: '/teachers',
 })
 export class TeacherController {
-  constructor(
+  constructor (
     private teacherService: TeacherService,
   ) {}
 
 
   @Get()
-  getAll(
+  getAll (
     @Query() query: QueryAllDTO,
   ) {
     return this.teacherService.getAll(query);
   }
 
   @Get('/:teacherId/roles')
-  getTeacherRoles(
+  async getTeacherRoles (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
   ) {
-    return this.teacherService.getTeacherRoles(teacherId);
+    const roles = await this.teacherService.getTeacherRoles(teacherId);
+
+    return { roles };
   }
 
   @Get('/:teacherId')
-  getTeacher(
+  getTeacher (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
   ) {
     return this.teacherService.getTeacher(teacherId);
@@ -42,7 +45,7 @@ export class TeacherController {
 
   @Access('teachers.$teacherId.create')
   @Post()
-  create(
+  create (
     @Body() body: CreateTeacherDTO,
   ) {
     return this.teacherService.create(body);
@@ -50,7 +53,7 @@ export class TeacherController {
 
   @Access('teachers.$teacherId.update')
   @Patch('/:teacherId')
-  async update(
+  async update (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
     @Body() body: UpdateTeacherDTO,
   ) {
@@ -59,21 +62,22 @@ export class TeacherController {
 
   @Access('teachers.$teacherId.delete')
   @Delete('/:teacherId')
-  async delete(
+  async delete (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
   ) {
     return this.teacherService.delete(teacherId);
   }
 
   @Get('/:teacherId/contacts')
-  getAllContacts(
+  async getAllContacts (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
   ) {
-    return this.teacherService.getAllContacts(teacherId);
+    const contacts = await this.teacherService.getAllContacts(teacherId);
+    return { contacts };
   }
 
   @Get('/:teacherId/contacts/:name')
-  getContact(
+  getContact (
     @Param(ContactByNamePipe) params: {teacherId: string, name: string},
   ) {
     return this.teacherService.getContact(params.teacherId, params.name);
@@ -81,27 +85,35 @@ export class TeacherController {
 
   @Access('teachers.$teacherId.contacts.create')
   @Post('/:teacherId/contacts')
-  createContact(
+  createContact (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
     @Body() body: CreateContactDTO,
-  ){
+  ) {
     return this.teacherService.createContact(teacherId, body);
   }
 
   @Access('teachers.$teacherId.contacts.update')
   @Patch('/:teacherId/contacts/:name')
-  async updateContact(
+  async updateContact (
     @Param(ContactByNamePipe) params: {teacherId: string, name: string},
     @Body() body: UpdateContactDTO,
-  ){
+  ) {
     return this.teacherService.updateContact(params.teacherId, params.name, body);
   }
 
   @Access('teachers.$teacherId.contacts.delete')
   @Delete('/:teacherId/contacts/:name')
-  async deleteContact(
-    @Param(ContactByNamePipe) [teacherId, name]: string[],
-  ){
-    return this.teacherService.deleteContact(teacherId, name);
+  async deleteContact (
+    @Param(ContactByNamePipe) params: {teacherId: string, name: string},
+  ) {
+    return this.teacherService.deleteContact(params.teacherId, params.name);
+  }
+
+  @Get('/:teacherId/marks')
+  async getMarks (
+    @Param('teacherId', TeacherByIdPipe) teacherId: string,
+    @Query() query: MarksQueryDTO,
+  ) {
+    return this.teacherService.getMarks(teacherId, query);
   }
 }

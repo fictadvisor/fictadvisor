@@ -1,17 +1,21 @@
-import { QuestionType } from '@prisma/client';
+import { QuestionDisplay, QuestionType } from '@prisma/client';
 import { IsEnum, IsOptional } from 'class-validator';
 
 export class UpdateQuestionDTO {
     @IsOptional()
-    text?: string;
+      text?: string;
 
     @IsOptional()
-    name?: string;
+      name?: string;
 
     @IsOptional()
-    criteria?: string;
+      criteria?: string;
 
     @IsEnum(QuestionType)
     @IsOptional()
-    type?: QuestionType;
+      type?: QuestionType;
+
+    @IsEnum(QuestionDisplay)
+    @IsOptional()
+      display?: QuestionDisplay;
 }

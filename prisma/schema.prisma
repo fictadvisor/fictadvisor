@@ -56,7 +56,7 @@ model Student {
   user                 User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId               String                @unique @map("user_id")
   firstName            String?               @map("first_name")
-  middleName           String?               @map("middle_name")
+  middleName           String?               @default("") @map("middle_name")
   lastName             String?               @map("last_name")
   groupId              String                @map("group_id")
   group                Group                 @relation(fields: [groupId], references: [id], onDelete: Cascade)
@@ -220,6 +220,12 @@ model DisciplineTeacher {
   @@map("discipline_teachers")
 }
 
+enum QuestionDisplay {
+  PERCENT
+  AMOUNT
+  TEXT
+}
+
 enum QuestionType {
   TEXT
   SCALE
@@ -235,6 +241,7 @@ model Question {
   isRequired      Boolean          @default(true) @map("is_required")
   criteria        String?
   type            QuestionType
+  display         QuestionDisplay  @default(PERCENT)
   questionRoles   QuestionRole[]
   questionAnswers QuestionAnswer[]
 
@@ -310,11 +317,12 @@ enum EntityType {
 }
 
 model Contact {
-  id         String     @id @default(uuid())
-  name       String
-  value      String
-  entityType EntityType @map("entity_type")
-  entityId   String     @map("entity_id")
+  id          String     @id @default(uuid())
+  name        String
+  displayName String
+  link        String
+  entityType  EntityType @map("entity_type")
+  entityId    String     @map("entity_id")
 
   @@map("contacts")
 }
@@ -344,4 +352,13 @@ model DateVar {
   date DateTime
 
   @@map("date_vars")
+}
+
+model StudentResource {
+  id   String @id @default(uuid())
+  link String
+  name String
+  icon String
+
+  @@map("student_resources")
 }

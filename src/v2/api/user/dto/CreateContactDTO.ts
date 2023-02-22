@@ -1,5 +1,5 @@
-import { IsAscii, IsNotEmpty, Matches, MaxLength } from "class-validator";
-import { createRegex, ENG_REGEX, NUM_REGEX, UKR_REGEX, UKRSPEC_REGEX } from "../../../utils/GLOBALS";
+import { IsAscii, IsNotEmpty, Matches, MaxLength } from 'class-validator';
+import { createRegex, ENG_REGEX, NUM_REGEX, UKR_REGEX, UKRSPEC_REGEX } from '../../../utils/GLOBALS';
 
 export class CreateContactDTO {
     @MaxLength(100, {
@@ -13,16 +13,27 @@ export class CreateContactDTO {
       {
         message: 'name is not correct (a-zA-Z0-9A-Я(укр.)\\-\' )',
       })
-    name: string;
-    
-    @MaxLength(200, {
-      message: 'value is too long (max: 200)',
+      name: string;
+
+    @MaxLength(100, {
+      message: 'displayName is too long (max: 100)',
     })
     @IsNotEmpty({
-      message: 'value can not be empty',
+      message: 'displayName can not be empty',
     })
     @IsAscii({
-      message: 'value contains wrong symbols (ACSII only)',
+      message: 'link contains wrong symbols (ACSII only)',
     })
-    value: string;
-  }
+      displayName: string;
+
+    @MaxLength(200, {
+      message: 'link is too long (max: 200)',
+    })
+    @IsNotEmpty({
+      message: 'link can not be empty',
+    })
+    @IsAscii({
+      message: 'link contains wrong symbols (ACSII only)',
+    })
+      link: string;
+}

@@ -1,11 +1,11 @@
-import { State } from "@prisma/client";
+import { State } from '@prisma/client';
 
 export class CreateUserData {
-    username?: string;
-    email: string;
-    password?: string;
-    avatar?: string;
-    telegramId?: number;
-    lastPasswordChanged?: Date;
-    state?: State;
+  username?: string;
+  email: string;
+  password?: string;
+  avatar?: string;
+  telegramId?: number;
+  lastPasswordChanged?: Date;
+  state?: State;
 }

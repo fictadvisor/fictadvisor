@@ -3,15 +3,16 @@ import { Subject } from '@prisma/client';
 import { QueryAllDTO } from 'src/v2/utils/QueryAllDTO';
 import { PrismaService } from '../../database/PrismaService';
 import { DatabaseUtils } from '../utils/DatabaseUtils';
-import { UpdateSubjectDTO } from './dto/UpdateSubjectDTO';
+import { UpdateSubjectData } from './data/UpdateSubjectData';
+import { CreateSubjectData } from './data/CreateSubjectData';
 
 @Injectable()
 export class SubjectRepository {
-  constructor(
+  constructor (
     private prisma: PrismaService,
   ) {}
 
-  async find(name: string) {
+  async find (name: string) {
     return this.prisma.subject.findFirst({
       where: {
         name,
@@ -19,7 +20,7 @@ export class SubjectRepository {
     });
   }
 
-  async create(name: string) {
+  async create ({ name }: CreateSubjectData) {
     return this.prisma.subject.create({
       data: {
         name,
@@ -27,15 +28,15 @@ export class SubjectRepository {
     });
   }
 
-  async getOrCreate(name: string) {
+  async getOrCreate (name: string) {
     let subject = await this.find(name);
     if (!subject) {
-      subject = await this.create(name);
+      subject = await this.create({ name });
     }
     return subject;
   }
 
-  async get(id: string) {
+  async get (id: string) {
     return this.prisma.subject.findUnique({
       where: {
         id,
@@ -46,12 +47,12 @@ export class SubjectRepository {
     });
   }
 
-  async getAll(body: QueryAllDTO) {
+  async getAll (body: QueryAllDTO) {
     const search = DatabaseUtils.getSearch<Subject>(body, 'name');
     const page = DatabaseUtils.getPage(body);
     const sort = DatabaseUtils.getSort(body);
 
-    return await this.prisma.subject.findMany({
+    return this.prisma.subject.findMany({
       ...page,
       ...sort,
       where: {
@@ -60,30 +61,71 @@ export class SubjectRepository {
     });
   }
 
-  async getDisciplines(id: string) {
-    const subject = await this.get(id);
-    return subject.disciplines;
+  async getSubject (id: string) {
+    return this.prisma.subject.findUnique({
+      where: {
+        id,
+      },
+    });
   }
 
-  async getSubject(id: string) {
-    const subject = await this.get(id);
-    delete subject.disciplines;
-    return subject;
-  }
-
-  async update(id: string, data: UpdateSubjectDTO) {
-    return await this.prisma.subject.update({
+  async update (id: string, data: UpdateSubjectData) {
+    return this.prisma.subject.update({
       where: {
         id,
       },
       data,
+      select: {
+        id: true,
+        name: true,
+      },
     });
   }
 
-  async delete(id: string) {
+  async delete (id: string) {
     return this.prisma.subject.delete({
       where: {
         id,
+      },
+    });
+  }
+
+  countTeachers (subjectId: string) {
+    return this.prisma.teacher.count({
+      where: {
+        disciplineTeachers: {
+          some: {
+            discipline: {
+              subjectId,
+            },
+          },
+        },
+      },
+    });
+  }
+
+  getTeachers (subjectId: string) {
+    return this.prisma.teacher.findMany({
+      where: {
+        disciplineTeachers: {
+          some: {
+            discipline: {
+              subjectId,
+            },
+          },
+        },
+      },
+      select: {
+        id: true,
+        firstName: true,
+        middleName: true,
+        lastName: true,
+        avatar: true,
+        disciplineTeachers: {
+          include: {
+            roles: true,
+          },
+        },
       },
     });
   }

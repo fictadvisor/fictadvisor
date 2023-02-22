@@ -5,11 +5,12 @@ import { GroupByDisciplineGuard } from '../../security/group-guard/GroupByDiscip
 import { TeacherModule } from '../teacher/TeacherModule';
 import { DisciplineTypeService } from './DisciplineTypeService';
 import { PrismaModule } from '../../database/PrismaModule';
+import { UserModule } from '../user/UserModule';
 
 @Module({
   controllers: [DisciplineController],
   providers: [DisciplineService, GroupByDisciplineGuard, DisciplineTypeService],
   exports: [DisciplineService, DisciplineTypeService],
-  imports: [forwardRef(() => TeacherModule), PrismaModule],
+  imports: [forwardRef(() => TeacherModule), PrismaModule, UserModule],
 })
 export class DisciplineModule {}

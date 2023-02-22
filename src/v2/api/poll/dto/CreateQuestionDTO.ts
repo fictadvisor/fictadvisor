@@ -1,33 +1,44 @@
-import { QuestionType } from '@prisma/client';
+import { QuestionDisplay, QuestionType } from '@prisma/client';
 import { Type } from 'class-transformer';
 import { IsBoolean, IsEnum, IsNotEmpty, IsOptional, ValidateNested } from 'class-validator';
+import { CreateQuestionRoleDTO } from './CreateQuestionRoleDTO';
 export class CreateQuestionsDTO {
 
     @ValidateNested({ each: true })
-    @Type(() => CreateQuestionData)
-    questions: CreateQuestionData[];
+    @Type(() => CreateQuestionDTO)
+      questions: CreateQuestionDTO[];
 }
 
-export class CreateQuestionData {
+export class CreateQuestionDTO {
 
     @IsNotEmpty()
-    category: string;
+      category: string;
 
     @IsEnum(QuestionType)
-    type: QuestionType;
+      type: QuestionType;
 
     @IsNotEmpty()
-    name: string;
+      name: string;
 
     @IsNotEmpty()
-    text: string;
+      text: string;
 
     @IsOptional()
-    criteria?: string;
+      criteria?: string;
 
     @IsOptional()
-    description?: string;
+      description?: string;
+
+    @IsEnum(QuestionDisplay)
+      display: QuestionDisplay;
 
     @IsBoolean()
-    isRequired?: boolean;
+    @IsOptional()
+      isRequired?: boolean;
+}
+
+export class CreateQuestionWithRolesDTO extends CreateQuestionDTO {
+    @ValidateNested({ each: true })
+    @Type(() => CreateQuestionRoleDTO)
+      roles: CreateQuestionRoleDTO[];
 }

@@ -9,7 +9,7 @@ import { ScheduleRepository } from '../../api/schedule/ScheduleRepository';
 @Injectable()
 export class GroupByTemporaryLessonGuard extends GroupByLessonGuard {
 
-  constructor(
+  constructor (
     protected prisma: PrismaService,
     protected disciplineService: DisciplineService,
     protected groupService: GroupService,
@@ -18,7 +18,7 @@ export class GroupByTemporaryLessonGuard extends GroupByLessonGuard {
     super(prisma, disciplineService, groupService);
   }
 
-  async getDisciplineType(lessonId: string): Promise<DisciplineType> {
+  async getDisciplineType (lessonId: string): Promise<DisciplineType> {
     const lesson = await this.scheduleRepository.getTemporaryLesson(lessonId);
     return lesson.disciplineType;
   }

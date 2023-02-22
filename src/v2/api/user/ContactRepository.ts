@@ -1,43 +1,52 @@
-import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../../database/PrismaService";
-import { CreateContactData } from "./dto/CreateContactData";
-import { UpdateContactData } from "./dto/UpdateContactData";
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../../database/PrismaService';
+import { CreateContactData } from './dto/CreateContactData';
+import { UpdateContactData } from './dto/UpdateContactData';
 
 @Injectable()
 export class ContactRepository {
-  constructor(
+  constructor (
     private prisma: PrismaService,
   ) {}
 
-  async getAllContacts(
+  async getAllContacts (
     entityId: string
   ) {
     return this.prisma.contact.findMany({
       where: {
         entityId,
       },
+      select: {
+        id: true,
+        name: true,
+        displayName: true,
+        link: true,
+      },
     });
   }
 
-  async getContact(
-    entityId: string,
-    name: string,
-  ) {
+  async getContact (entityId: string, name: string) {
     return this.prisma.contact.findFirst({
       where: {
         entityId,
         name,
       },
+      select: {
+        id: true,
+        name: true,
+        displayName: true,
+        link: true,
+      },
     });
   }
 
-  async createContact(data: CreateContactData) {
+  async createContact (data: CreateContactData) {
     return this.prisma.contact.create({
       data,
     });
   }
 
-  async updateContact(
+  async updateContact (
     entityId: string,
     name: string,
     data: UpdateContactData,
@@ -51,7 +60,7 @@ export class ContactRepository {
     });
   }
 
-  async deleteContact(
+  async deleteContact (
     entityId: string,
     name: string,
   ) {

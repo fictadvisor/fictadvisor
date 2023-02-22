@@ -8,9 +8,10 @@ import { LocalStrategy } from '../../security/LocalStrategy';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from '../../security/JwtStrategy';
 import { EmailModule } from '../../email/EmailModule';
-import { TelegramAPI } from "../../telegram/TelegramAPI";
+import { TelegramAPI } from '../../telegram/TelegramAPI';
 import { PrismaModule } from '../../database/PrismaModule';
 import { GroupModule } from '../group/GroupModule';
+import { UserModule } from '../user/UserModule';
 
 
 @Module({
@@ -33,6 +34,7 @@ import { GroupModule } from '../group/GroupModule';
     EmailModule,
     PrismaModule,
     GroupModule,
+    UserModule,
   ],
 })
 export class AuthModule {}

@@ -3,91 +3,89 @@ import { QueryAllDTO } from '../../utils/QueryAllDTO';
 import { CreateTeacherDTO } from './dto/CreateTeacherDTO';
 import { UpdateTeacherDTO } from './dto/UpdateTeacherDTO';
 import { CreateContactDTO } from '../user/dto/CreateContactDTO';
-import { EntityType } from '@prisma/client';
+import { EntityType, QuestionDisplay, QuestionType } from '@prisma/client';
 import { TeacherRepository } from './TeacherRepository';
 import { DisciplineTeacherRepository } from './DisciplineTeacherRepository';
 import { UpdateContactDTO } from '../user/dto/UpdateContactDTO';
-import { ContactRepository } from "../user/ContactRepository";
+import { ContactRepository } from '../user/ContactRepository';
+import { DisciplineTeacherService } from './DisciplineTeacherService';
+import { MarksQueryDTO } from './query/MarksQueryDTO';
+import { InvalidQueryException } from '../../utils/exceptions/InvalidQueryException';
 
 @Injectable()
 export class TeacherService {
-  constructor(
+  constructor (
     private teacherRepository: TeacherRepository,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
+    private disciplineTeacherService: DisciplineTeacherService,
     private contactRepository: ContactRepository,
-  ) {}
+  ) {
+  }
 
 
-  async getAll(
+  async getAll (
     body: QueryAllDTO,
   ) {
     const teachers = await this.teacherRepository.getAll(body);
     return { teachers };
   }
 
-  async getTeacher(
+  async getTeacher (
     id: string,
-    ) {
-      return this.teacherRepository.getTeacher(id);
-    }
+  ) {
+    const { disciplineTeachers, ...teacher } = await this.teacherRepository.getTeacher(id);
+    const contacts = await this.contactRepository.getAllContacts(id);
+    const roles = this.disciplineTeacherService.getUniqueRoles(disciplineTeachers);
 
-  async getTeacherRoles(
+    return {
+      ...teacher,
+      roles,
+      contacts,
+    };
+  }
+
+  async getTeacherRoles (
     teacherId: string,
-    ) {
-      const disciplineTeachers = await this.teacherRepository.getDisciplineTeachers(teacherId);
-      const results = [];
+  ) {
+    const teacher = await this.teacherRepository.getTeacher(teacherId);
+    return this.disciplineTeacherService.getUniqueRoles(teacher.disciplineTeachers);
+  }
 
-      for (const discipline of disciplineTeachers) {
-        const roles = await this.disciplineTeacherRepository.getRoles(discipline.id);
-        for (const role of roles) {
-          if (results.includes(role.role)) continue;
-          results.push(role.role);
-        }
-      }
-      return { roles: results };
-    }
-
-  async create(
+  async create (
     body: CreateTeacherDTO,
   ) {
     return this.teacherRepository.create(body);
   }
-    
-  async update(
-    id: string,
-    body: UpdateTeacherDTO,
-  ) {  
-    await this.teacherRepository.update(id, body);
+
+  async update (id: string, body: UpdateTeacherDTO) {
+    return this.teacherRepository.update(id, body);
   }
 
-  async delete(
+  async delete (
     id: string,
   ) {
     await this.teacherRepository.delete(id);
   }
 
-  async getAllContacts(
+  async getAllContacts (
     entityId: string,
   ) {
-    const contacts = (await this.contactRepository.getAllContacts(entityId))
-      .map(
-        (c) => ({ name: c.name, value: c.value })
-      );
-    return { contacts };
+    return this.contactRepository.getAllContacts(entityId);
   }
 
-  async getContact(
+  async getContact (
     teacherId: string,
     name: string,
   ) {
     const contact = await this.contactRepository.getContact(teacherId, name);
     return {
       name: contact.name,
-      value: contact.value,
+      displayName: contact.displayName,
+      link: contact.link,
     };
   }
 
-  async createContact(
+  async createContact (
     entityId: string,
     body: CreateContactDTO,
   ) {
@@ -98,22 +96,55 @@ export class TeacherService {
     });
   }
 
-  async updateContact(
-    entityId: string,
-    name: string,
-    body: UpdateContactDTO,
-  ) {
-    await this.contactRepository.updateContact(
-      entityId, name, body,
-    );
+  async updateContact (entityId: string, name: string, body: UpdateContactDTO) {
+    await this.contactRepository.updateContact(entityId, name, body);
+    return this.contactRepository.getContact(entityId, name);
   }
 
-  async deleteContact(
+  async deleteContact (
     entityId: string,
     name: string,
   ) {
     await this.contactRepository.deleteContact(
       entityId, name,
     );
+  }
+
+  async getMarks (teacherId: string, data?: MarksQueryDTO) {
+    this.checkQueryDate(data);
+    const marks = [];
+    const questions = await this.teacherRepository.getMarks(teacherId, data);
+    for (const question of questions) {
+      if (question.questionAnswers.length === 0) continue;
+      const count = question.questionAnswers.length;
+      const mark = this.getRightMarkFormat(question);
+      marks.push({
+        name: question.name,
+        amount: count,
+        type: question.display,
+        mark,
+      });
+    }
+    return marks;
+  }
+  parseMark (type: QuestionType, marksSum: number, answerQty: number) {
+    const divider = (answerQty * ((type === QuestionType.SCALE) ? 10 : 1));
+    return parseFloat(((marksSum / divider) * 100).toFixed(2));
+  }
+  getRightMarkFormat ({ display, type, questionAnswers: answers }) {
+    if (display === QuestionDisplay.PERCENT) {
+      return this.parseMark(type, answers.reduce((acc, answer) => acc + (+answer.value), 0), answers.length);
+    } else if (display === QuestionDisplay.AMOUNT) {
+      const table = {};
+      for (let i = 1; i <= 10; i++) {
+        table[i] = answers.filter((a) => +a.value === i).length;
+      }
+      return table;
+    }
+  }
+  checkQueryDate ({ semester, year }: MarksQueryDTO) {
+    if ((!year && semester) || (year && !semester)) {
+      throw new InvalidQueryException();
+    }
   }
 }

@@ -3,19 +3,19 @@ import { PrismaService } from '../../database/PrismaService';
 import { CreateUserData } from './dto/CreateUserData';
 import { UniqueUserDTO } from './dto/UniqueUserDTO';
 import { DatabaseUtils } from '../utils/DatabaseUtils';
-import { UpdateUserData } from "./dto/UpdateUserData";
+import { UpdateUserData } from './dto/UpdateUserData';
 
 @Injectable()
 export class UserRepository {
-  constructor(private prisma: PrismaService) {}
+  constructor (private prisma: PrismaService) {}
 
-  async create(data: CreateUserData) {
+  async create (data: CreateUserData) {
     return this.prisma.user.create({
       data,
     });
   }
 
-  async get(id: string) {
+  async get (id: string) {
     return this.prisma.user.findUnique({
       where: {
         id,
@@ -30,7 +30,7 @@ export class UserRepository {
     });
   }
 
-  async updateByEmail(email: string, data: UpdateUserData) {
+  async updateByEmail (email: string, data: UpdateUserData) {
     return this.prisma.user.update({
       where: {
         email,
@@ -39,7 +39,7 @@ export class UserRepository {
     });
   }
 
-  async deleteByEmail(email: string) {
+  async deleteByEmail (email: string) {
     return this.prisma.user.delete({
       where: {
         email,
@@ -47,7 +47,7 @@ export class UserRepository {
     });
   }
 
-  async getByUnique(data: UniqueUserDTO) {
+  async getByUnique (data: UniqueUserDTO) {
     return this.prisma.user.findFirst({
       where: {
         OR: Object.keys(data).map((k) => ({ [k]: data[k] })),
@@ -55,7 +55,7 @@ export class UserRepository {
     });
   }
 
-  async updateByUnique(search: UniqueUserDTO, data: UpdateUserData) {
+  async updateByUnique (search: UniqueUserDTO, data: UpdateUserData) {
     const where = DatabaseUtils.getWhere(search);
 
     return this.prisma.user.updateMany({
@@ -64,7 +64,7 @@ export class UserRepository {
     });
   }
 
-  async delete(id: string) {
+  async delete (id: string) {
     this.prisma.user.delete({
       where: {
         id,
@@ -72,12 +72,19 @@ export class UserRepository {
     });
   }
 
-  async update(id: string, data: UpdateUserData) {
+  async update (id: string, data: UpdateUserData) {
     this.prisma.user.update({
       where: {
         id,
       },
       data,
+      select: {
+        id: true,
+        email: true,
+        username: true,
+        avatar: true,
+        telegramId: true,
+      },
     });
   }
 }

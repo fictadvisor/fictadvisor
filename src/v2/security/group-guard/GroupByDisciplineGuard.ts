@@ -1,24 +1,20 @@
-import { Injectable } from '@nestjs/common';
-import { GroupGuard } from './GroupGuard';
-import { PrismaService } from '../../database/PrismaService';
-import { Group } from '@prisma/client';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Request } from 'express';
 import { DisciplineRepository } from '../../api/discipline/DisciplineRepository';
 import { RequestUtils } from '../../utils/RequestUtils';
 
 @Injectable()
-export class GroupByDisciplineGuard extends GroupGuard {
+export class GroupByDisciplineGuard implements CanActivate {
 
-  constructor(
-    protected prisma: PrismaService,
+  constructor (
     private disciplineRepository: DisciplineRepository,
-  ) {
-    super(prisma);
-  }
+  ) {}
 
-  async getGroup(): Promise<Group> {
-    const request = this.context.switchToHttp().getRequest<Request>();
+  async canActivate (context: ExecutionContext) {
+    const request = context.switchToHttp().getRequest<Request>();
     const disciplineId = RequestUtils.get(request, 'disciplineId');
-    return await this.disciplineRepository.getGroup(disciplineId);
+    const group = await this.disciplineRepository.getGroup(disciplineId);
+    request.query.groupId = group.id;
+    return true;
   }
 }

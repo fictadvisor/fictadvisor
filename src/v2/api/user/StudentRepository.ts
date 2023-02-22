@@ -1,21 +1,34 @@
 import { Injectable } from '@nestjs/common';
-import { CreateStudentData } from "./dto/СreateStudentData";
-import { UpdateStudentData } from "./dto/UpdateStudentData";
+import { CreateStudentData } from './dto/СreateStudentData';
+import { UpdateStudentData } from './dto/UpdateStudentData';
 import { PrismaService } from '../../database/PrismaService';
 
 @Injectable()
 export class StudentRepository {
-  constructor(
+  constructor (
     private prisma: PrismaService,
   ) {}
 
-  async getRoles(studentId: string) {
+  async getRoles (studentId: string) {
     const roles = await this.prisma.userRole.findMany({
       where: {
         studentId,
       },
-      include: {
-        role: true,
+      select: {
+        role: {
+          select: {
+            id: true,
+            name: true,
+            weight: true,
+            grants: {
+              select: {
+                id: true,
+                set: true,
+                permission: true,
+              },
+            },
+          },
+        },
       },
       orderBy: {
         role: {
@@ -27,19 +40,53 @@ export class StudentRepository {
     return roles.map((role) => role.role);
   }
 
-  async getGroupByRole(roleId: string) {
-    const groupRole = await this.prisma.groupRole.findFirst({
+  get (userId: string) {
+    return this.prisma.student.findUnique({
       where: {
-        roleId,
+        userId,
       },
-      include: { 
+      select: {
+        firstName: true,
+        middleName: true,
+        lastName: true,
+        user: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+            telegramId: true,
+            avatar: true,
+            state: true,
+          },
+        },
         group: true,
+        roles: {
+          select: {
+            role: true,
+          },
+        },
+        state: true,
       },
     });
-    return groupRole.group;
   }
 
-  async addRole(studentId: string, roleId: string) {
+  async getGroupByRole (roleId: string) {
+    return this.prisma.group.findFirst({
+      where: {
+        groupRoles: {
+          some: {
+            roleId,
+          },
+        },
+      },
+      select: {
+        id: true,
+        code: true,
+      },
+    });
+  }
+
+  async addRole (studentId: string, roleId: string) {
     return this.prisma.userRole.create({
       data: {
         studentId,
@@ -48,7 +95,7 @@ export class StudentRepository {
     });
   }
 
-  async removeRole(studentId: string, roleId: string) {
+  async removeRole (studentId: string, roleId: string) {
     return this.prisma.userRole.deleteMany({
       where: {
         studentId,
@@ -57,25 +104,68 @@ export class StudentRepository {
     });
   }
 
-  async update(userId: string, data: UpdateStudentData) {
-    await this.prisma.student.update({
+  async update (userId: string, data: UpdateStudentData) {
+    return this.prisma.student.update({
       where: {
         userId,
       },
       data,
+      select: {
+        firstName: true,
+        middleName: true,
+        lastName: true,
+        user: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+            telegramId: true,
+            avatar: true,
+            state: true,
+          },
+        },
+        group: true,
+        roles: {
+          select: {
+            role: true,
+          },
+        },
+        state: true,
+      },
     });
   }
 
-  async create(data: CreateStudentData) {
+  async create (data: CreateStudentData) {
     return this.prisma.student.create({
       data,
     });
   }
 
-  async delete(userId: string) {
+  async delete (userId: string) {
     await this.prisma.student.delete({
       where: {
         userId,
+      },
+    });
+  }
+
+  getSelective (studentId: string) {
+    return this.prisma.discipline.findMany({
+      where: {
+        selectiveDisciplines: {
+          some: {
+            studentId,
+          },
+        },
+      },
+      select: {
+        id: true,
+        subject: true,
+        group: true,
+        semester: true,
+        year: true,
+        evaluatingSystem: true,
+        resource: true,
       },
     });
   }

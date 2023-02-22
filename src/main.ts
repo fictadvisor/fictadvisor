@@ -3,11 +3,10 @@ import { ClassSerializerInterceptor, ValidationPipe, VERSION_NEUTRAL, Versioning
 import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './v2/AppModule';
 import { HttpExceptionFilter, validationExceptionFactory } from './v2/security/exception-handler/CommonExceptions';
-import { systemLogger } from './v2/security/exception-handler/LoggerCore';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { applyStaticMiddleware } from './v2/utils/StaticUtil';
 
-async function bootstrap() {
+async function bootstrap () {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get<ConfigService>(ConfigService);
   const port = configService.get<number>('port');
@@ -32,6 +31,6 @@ async function bootstrap() {
 
   await app.listen(port);
 
-  systemLogger.info(`Started server on 127.0.0.1:${port}`);
+  console.info(`Started server on 127.0.0.1:${port}`);
 }
 bootstrap();

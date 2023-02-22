@@ -5,13 +5,13 @@ import { GroupService } from './GroupService';
 
 @Injectable()
 export class GroupByIdPipe implements PipeTransform<string, Promise<string>> {
-  constructor(
+  constructor (
     private groupService: GroupService
   ) {}
 
-  async transform(groupId: string): Promise<string> {
+  async transform (groupId: string): Promise<string> {
     const group: Group = await this.groupService.get(groupId);
-    if(!group) {
+    if (!group) {
       throw new InvalidGroupIdException();
     }
     return groupId;

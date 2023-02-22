@@ -13,9 +13,10 @@ import { GrantRepository } from '../api/user/grant/GrantRepository';
 import { StudentRepository } from '../api/user/StudentRepository';
 import { UserRepository } from '../api/user/UserRepository';
 import { SuperheroRepository } from '../api/user/SuperheroRepository';
-import { QuestionRepository } from "../api/poll/QuestionRepository";
-import { ContactRepository } from "../api/user/ContactRepository";
-import { QuestionAnswerRepository } from "../api/poll/QuestionAnswerRepository";
+import { QuestionRepository } from '../api/poll/QuestionRepository';
+import { ContactRepository } from '../api/user/ContactRepository';
+import { QuestionAnswerRepository } from '../api/poll/QuestionAnswerRepository';
+import { ResourceRepository } from '../api/resources/ResourceRepository';
 
 @Module({
   providers: [
@@ -36,6 +37,7 @@ import { QuestionAnswerRepository } from "../api/poll/QuestionAnswerRepository";
     ContactRepository,
     QuestionRepository,
     QuestionAnswerRepository,
+    ResourceRepository,
   ],
   exports: [
     PrismaService,
@@ -55,6 +57,7 @@ import { QuestionAnswerRepository } from "../api/poll/QuestionAnswerRepository";
     ContactRepository,
     QuestionRepository,
     QuestionAnswerRepository,
+    ResourceRepository,
   ],
 })
 export class PrismaModule {}
