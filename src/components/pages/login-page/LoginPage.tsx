@@ -9,7 +9,7 @@ import {
   ButtonSize,
   ButtonType,
 } from '../../common/ui/button/Button';
-import Check, { CheckState } from '../../common/ui/check/Check';
+import Check, { CheckboxState } from '../../common/ui/checkbox';
 import Divider from '../../common/ui/divider';
 import Input, {
   InputSize,
@@ -79,7 +79,7 @@ const LoginPage = () => (
             />
             <div className={styles['one-line']}>
               <div className={styles['checkbox-container']}>
-                <Check state={CheckState.DEFAULT} />
+                <Check state={CheckboxState.DEFAULT} />
                 <p className="body-primary">Запам’ятати дані</p>
               </div>
               <CustomLink text="Забув пароль?" href={'#'} />
