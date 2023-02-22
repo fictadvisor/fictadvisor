@@ -19,4 +19,13 @@ export class QuestionAnswerRepository {
       where,
     });
   }
+
+  findAny (disciplineTeacherId: string, userId: string) {
+    return this.prisma.questionAnswer.findFirst({
+      where: {
+        disciplineTeacherId,
+        userId,
+      },
+    });
+  }
 }
