@@ -8,29 +8,15 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
-import { iterate } from 'iterare';
-import { Logger, SystemLogger } from '../../security/exception-handler/LoggerCore';
 
-export type ServiceExceptionPayload = {
-  message: string;
-  details?: string[];
-};
-
-export class ServiceException extends HttpException {
-  static create (status: HttpStatus, payload: ServiceExceptionPayload | string) {
-    if (typeof payload === 'string') {
-      payload = { message: payload };
-    }
-
-    return new ServiceException({ status, ...payload }, status);
+export class InvalidBodyException extends HttpException {
+  constructor (errors: string[]) {
+    super({ messages: errors }, HttpStatus.BAD_REQUEST);
   }
 }
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
-  @Logger('system')
-  private logger: SystemLogger;
-
   constructor (private configService: ConfigService) {}
 
   catch (exception: Error, host: ArgumentsHost) {
@@ -38,33 +24,37 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const res = ctx.getResponse<Response>();
 
     let status, message;
+    const error = exception.constructor.name;
 
     if (exception instanceof HttpException) {
       const errorResponse = exception.getResponse();
 
+      if (typeof errorResponse === 'object') {
+        const { statusCode, ...errorMessage } = errorResponse as any;
+        message = errorMessage;
+        status = statusCode;
+      } else {
+        message = { message: errorResponse };
+      }
+
       status = exception.getStatus() ?? HttpStatus.INTERNAL_SERVER_ERROR;
 
-      message =
-        exception instanceof ServiceException
-          ? errorResponse
-          : typeof errorResponse === 'string'
-            ? errorResponse
-            : (errorResponse as any).message;
     } else {
       status = HttpStatus.INTERNAL_SERVER_ERROR;
-      message = 'Internal Server Error';
+      message = { message: 'An error occurred on the server side' };
     }
 
     const requestResponse = {
       status,
       timestamp: new Date().toISOString(),
-      ...(typeof message === 'object' ? message : { message }),
+      error,
+      ...message,
     };
 
     res.status(status).json(requestResponse);
 
     if (this.configService.get<string>('logLevel') === 'debug') {
-      this.logger.debug('Resolved an exception', {
+      console.debug('Resolved an exception', {
         status,
         response: JSON.stringify(requestResponse),
       });
@@ -72,58 +62,26 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     if (status === HttpStatus.INTERNAL_SERVER_ERROR) {
 
-      this.logger.error(exception.stack);
+      console.error(exception.stack);
     }
   }
 }
 
-const prependConstraintsWithParentProp = (
-  parentError: ValidationError,
-  error: ValidationError
-) => {
-  const constraints = {};
+const flattenValidationErrors = (errors: ValidationError[], parent = 'obj'): string[] => {
+  const results = [];
 
-  for (const key in error.constraints) {
-    constraints[key] = `${parentError.property}.${error.constraints[key]}`;
-  }
-
-  return {
-    ...error,
-    constraints,
-  };
-};
-
-const mapChildrenToValidationErrors = (error: ValidationError) => {
-  if (!(error.children && error.children.length)) {
-    return [error];
-  }
-
-  const validationErrors = [];
-
-  for (const item of error.children) {
-    if (item.children && item.children.length) {
-      validationErrors.push(...mapChildrenToValidationErrors(item));
+  for (const { property, constraints, children } of errors) {
+    if (constraints) {
+      results.push(...Object.values(constraints).map((c) => `${parent}.${property}: ${c}`));
     }
-
-    validationErrors.push(prependConstraintsWithParentProp(error, item));
+    if (children.length !== 0) {
+      results.push(...flattenValidationErrors(children, `${parent}.${property}`));
+    }
   }
 
-  return validationErrors;
-};
-
-const flattenValidationErrors = (errors: ValidationError[]): string[] => {
-  return iterate(errors)
-    .map((error) => mapChildrenToValidationErrors(error))
-    .flatten()
-    .filter((item) => !!item.constraints)
-    .map((item) => Object.values(item.constraints))
-    .flatten()
-    .toArray() as string[];
+  return results;
 };
 
 export const validationExceptionFactory = () => (errors: ValidationError[]) => {
-  return ServiceException.create(HttpStatus.BAD_REQUEST, {
-    message: 'Invalid request',
-    details: flattenValidationErrors(errors),
-  });
+  return new InvalidBodyException(flattenValidationErrors(errors));
 };
