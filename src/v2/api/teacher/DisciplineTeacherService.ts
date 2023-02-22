@@ -170,7 +170,7 @@ export class DisciplineTeacherService {
     }
   }
   async checkAnswerInDatabase (disciplineTeacherId: string, userId: string) {
-    const answers = await this.questionAnswerRepository.findAny(disciplineTeacherId, userId);
+    const answers = await this.questionAnswerRepository.findMany(disciplineTeacherId, userId);
     if (answers) {
       throw new AnswerInDatabasePermissionException();
     }

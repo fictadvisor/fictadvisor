@@ -20,8 +20,8 @@ export class QuestionAnswerRepository {
     });
   }
 
-  findAny (disciplineTeacherId: string, userId: string) {
-    return this.prisma.questionAnswer.findFirst({
+  findMany (disciplineTeacherId: string, userId: string) {
+    return this.prisma.questionAnswer.findMany({
       where: {
         disciplineTeacherId,
         userId,

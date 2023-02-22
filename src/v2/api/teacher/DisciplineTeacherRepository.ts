@@ -17,7 +17,6 @@ export class DisciplineTeacherRepository {
       },
       select: {
         id: true,
-        questionAnswers: true,
         teacher: {
           select: {
             id: true,
