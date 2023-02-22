@@ -11,9 +11,7 @@ import { EmailModule } from '../../email/EmailModule';
 import { TelegramAPI } from '../../telegram/TelegramAPI';
 import { PrismaModule } from '../../database/PrismaModule';
 import { GroupModule } from '../group/GroupModule';
-import { RoleService } from '../user/role/RoleService';
-import { GrantService } from '../user/grant/GrantService';
-import { UserModule } from "../user/UserModule";
+import { UserModule } from '../user/UserModule';
 
 
 @Module({
