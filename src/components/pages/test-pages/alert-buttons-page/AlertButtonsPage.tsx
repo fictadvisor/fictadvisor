@@ -2,8 +2,7 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 
 import { CustomCheck } from '@/components/common/custom-svg/CustomCheck';
 import AlertButton, {
-  AlertButtonIconPosition,
-  AlertButtonType,
+  AlertButtonVariant,
 } from '@/components/common/ui/alert-button/AlertButton';
 
 import styles from '../test-pages.module.scss';
@@ -12,77 +11,72 @@ const AlertButtonsPage = () => (
   <div className={styles['test-page-wrap']}>
     <div className={styles['test-page-content']}>
       <AlertButton
-        text="Success"
+        text="Add"
         icon={<CustomCheck />}
-        iconPosition={AlertButtonIconPosition.LEFT}
-        isDisabled={false}
-        type={AlertButtonType.SUCCESS}
+        disabled={true}
+        variant={AlertButtonVariant.SUCCESS}
       />
       <AlertButton
-        text="Success"
+        text="Add"
         icon={<CustomCheck />}
-        iconPosition={AlertButtonIconPosition.RIGHT}
-        isDisabled={false}
-        type={AlertButtonType.SUCCESS}
+        disabled={true}
+        variant={AlertButtonVariant.SUCCESS}
       />
       <AlertButton
-        text="Success"
-        isDisabled={false}
-        type={AlertButtonType.SUCCESS}
+        text="Add"
+        disabled={false}
+        variant={AlertButtonVariant.SUCCESS}
       />
       <AlertButton
-        text="Success"
-        isDisabled={false}
-        type={AlertButtonType.SUCCESS}
+        icon={<CustomCheck />}
+        disabled={false}
+        variant={AlertButtonVariant.SUCCESS}
       />
 
       <AlertButton
-        text="Error primary"
+        text="Remove"
         icon={<XMarkIcon className="icon" />}
-        iconPosition={AlertButtonIconPosition.LEFT}
-        isDisabled={false}
-        type={AlertButtonType.ERROR_PRIMARY}
+        disabled={false}
+        variant={AlertButtonVariant.ERROR_FILLED}
       />
       <AlertButton
-        text="Error primary"
+        text="Remove"
         icon={<XMarkIcon className="icon" />}
-        iconPosition={AlertButtonIconPosition.RIGHT}
-        isDisabled={false}
-        type={AlertButtonType.ERROR_PRIMARY}
+        disabled={true}
+        variant={AlertButtonVariant.ERROR_FILLED}
       />
       <AlertButton
-        text="Error primary"
-        isDisabled={false}
-        type={AlertButtonType.ERROR_PRIMARY}
+        text="Remove"
+        disabled={false}
+        variant={AlertButtonVariant.ERROR_FILLED}
       />
       <AlertButton
-        text="Error primary"
-        isDisabled={false}
-        type={AlertButtonType.ERROR_PRIMARY}
+        icon={<XMarkIcon className="icon" />}
+        disabled={false}
+        variant={AlertButtonVariant.ERROR_FILLED}
       />
 
       <AlertButton
-        text="Error secondary"
+        text="Remove"
         icon={<XMarkIcon className="icon" />}
-        iconPosition={AlertButtonIconPosition.LEFT}
-        isDisabled={false}
-        type={AlertButtonType.ERROR_SECONDARY}
+        disabled={false}
+        variant={AlertButtonVariant.ERROR_OUTLINE}
+      />
+      <AlertButton
+        text="Remove"
+        icon={<XMarkIcon className="icon" />}
+        disabled={true}
+        variant={AlertButtonVariant.ERROR_OUTLINE}
+      />
+      <AlertButton
+        text="Remove"
+        disabled={false}
+        variant={AlertButtonVariant.ERROR_OUTLINE}
       />
       <AlertButton
         icon={<XMarkIcon className="icon" />}
-        iconPosition={AlertButtonIconPosition.RIGHT}
-        isDisabled={false}
-        type={AlertButtonType.ERROR_SECONDARY}
-      />
-      <AlertButton
-        text="Error secondary"
-        isDisabled={false}
-        type={AlertButtonType.ERROR_SECONDARY}
-      />
-      <AlertButton
-        text="Error secondary"
-        isDisabled={false}
-        type={AlertButtonType.ERROR_SECONDARY}
+        disabled={false}
+        variant={AlertButtonVariant.ERROR_OUTLINE}
       />
     </div>
   </div>

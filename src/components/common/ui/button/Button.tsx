@@ -8,57 +8,45 @@ export enum ButtonSize {
   SMALL = 'small',
 }
 
-export enum ButtonType {
-  PRIMARY_RED = 'primary-red',
-  PRIMARY_GRAY = 'primary-gray',
-  SECONDARY_RED = 'secondary-red',
-  SECONDARY_GRAY = 'secondary-grey',
-  TERTIARY = 'tertiary',
+export enum ButtonColor {
+  PRIMARY = 'primary',
+  SECONDARY = 'secondary',
 }
 
-export enum ButtonIconPosition {
-  LEFT,
-  RIGHT,
+export enum ButtonVariant {
+  FILLED = 'filled',
+  OUTLINE = 'outline',
+  TEXT = 'text',
 }
 
-interface ButtonProps {
+interface ButtonProps extends React.ComponentPropsWithoutRef<'button'> {
   text: string;
-  onClick?: any;
-  isDisabled?: boolean;
-  icon?: ReactNode;
-  size: ButtonSize;
-  type: ButtonType;
-  iconPosition?: ButtonIconPosition;
-  className?: string;
+  size?: ButtonSize;
+  color?: ButtonColor;
+  variant?: ButtonVariant;
+  startIcon?: ReactNode;
+  endIcon?: ReactNode;
 }
 
-const Button: React.FC<ButtonProps> = props => {
-  const buttonColor = `${props.type}-button-color`;
-  const buttonStyle = `${props.type.split('-')[0]}-${props.size}${
-    props.icon ? '-icon' : ''
+const Button: React.FC<ButtonProps> = ({
+  text,
+  size = ButtonSize.MEDIUM,
+  color = ButtonColor.PRIMARY,
+  variant = ButtonVariant.FILLED,
+  startIcon,
+  endIcon,
+  ...rest
+}) => {
+  const buttonStyle = `${color}-${size}${
+    !startIcon ? '' : endIcon ? '-icon' : ''
   }-button`;
-  const additionalClass = props.className ? props.className : '';
-  const className = mergeClassNames(
-    styles[buttonColor],
-    styles[buttonStyle],
-    styles[additionalClass],
-  );
-
+  const buttonVariant = `${color}-${variant}-button-variant`;
+  const className = mergeClassNames(styles[buttonVariant], styles[buttonStyle]);
   return (
-    <button
-      disabled={props.isDisabled}
-      className={className}
-      onClick={() => {
-        props?.onClick;
-      }}
-    >
-      {props.icon && props.iconPosition == ButtonIconPosition.LEFT && (
-        <div className="icon"> {props.icon} </div>
-      )}
-      {props.text}
-      {props.icon && props.iconPosition == ButtonIconPosition.RIGHT && (
-        <div className="icon"> {props.icon} </div>
-      )}
+    <button className={className} {...rest}>
+      {startIcon}
+      {text}
+      {endIcon}
     </button>
   );
 };

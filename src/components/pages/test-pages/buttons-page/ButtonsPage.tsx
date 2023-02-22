@@ -3,9 +3,9 @@ import { AcademicCapIcon } from '@heroicons/react/24/outline';
 
 import Button from '@/components/common/ui/button';
 import {
-  ButtonIconPosition,
+  ButtonColor,
   ButtonSize,
-  ButtonType,
+  ButtonVariant,
 } from '@/components/common/ui/button/Button';
 
 import styles from '../test-pages.module.scss';
@@ -14,354 +14,181 @@ const ButtonsPage = () => (
   <div className={styles['test-page-wrap']}>
     <div className={styles['test-page-content']}>
       <Button
-        text="Primary Red"
-        isDisabled={false}
+        text="Primary Filled"
+        disabled={false}
         size={ButtonSize.LARGE}
-        type={ButtonType.PRIMARY_RED}
+        color={ButtonColor.PRIMARY}
+        variant={ButtonVariant.FILLED}
       />
       <Button
-        text="Primary Red"
-        isDisabled={false}
+        text="Primary Filled"
+        disabled={false}
         size={ButtonSize.LARGE}
-        type={ButtonType.PRIMARY_RED}
+        color={ButtonColor.PRIMARY}
+        variant={ButtonVariant.FILLED}
+        startIcon={<AcademicCapIcon className="icon" />}
       />
       <Button
-        text="Primary Red"
-        isDisabled={false}
+        text="Primary Filled"
+        disabled={false}
+        size={ButtonSize.LARGE}
+        color={ButtonColor.PRIMARY}
+        variant={ButtonVariant.FILLED}
+        endIcon={<AcademicCapIcon className="icon" />}
+      />
+      <Button
+        text="Primary Filled"
+        disabled={false}
         size={ButtonSize.MEDIUM}
-        type={ButtonType.PRIMARY_RED}
+        color={ButtonColor.PRIMARY}
+        variant={ButtonVariant.FILLED}
+        startIcon={<AcademicCapIcon className="icon" />}
       />
       <Button
-        text="Primary Red"
-        isDisabled={false}
+        text="Primary Filled"
+        disabled={false}
         size={ButtonSize.SMALL}
-        type={ButtonType.PRIMARY_RED}
+        color={ButtonColor.PRIMARY}
+        variant={ButtonVariant.FILLED}
+        startIcon={<AcademicCapIcon className="icon" />}
+      />
+      <Button
+        text="Primary Outline"
+        disabled={false}
+        size={ButtonSize.LARGE}
+        color={ButtonColor.PRIMARY}
+        variant={ButtonVariant.OUTLINE}
+        startIcon={<AcademicCapIcon className="icon" />}
+      />
+      <Button
+        text="Primary Outline"
+        disabled={false}
+        size={ButtonSize.MEDIUM}
+        color={ButtonColor.PRIMARY}
+        variant={ButtonVariant.OUTLINE}
+        startIcon={<AcademicCapIcon className="icon" />}
+      />
+      <Button
+        text="Primary Outline"
+        disabled={false}
+        size={ButtonSize.SMALL}
+        color={ButtonColor.PRIMARY}
+        variant={ButtonVariant.OUTLINE}
+        startIcon={<AcademicCapIcon className="icon" />}
+      />
+      <Button
+        text="Text"
+        disabled={false}
+        size={ButtonSize.LARGE}
+        color={ButtonColor.PRIMARY}
+        variant={ButtonVariant.TEXT}
+        startIcon={<AcademicCapIcon className="icon" />}
+      />
+      <Button
+        text="Text"
+        disabled={false}
+        size={ButtonSize.MEDIUM}
+        color={ButtonColor.PRIMARY}
+        variant={ButtonVariant.TEXT}
+        startIcon={<AcademicCapIcon className="icon" />}
+      />
+      <Button
+        text="Text"
+        disabled={false}
+        size={ButtonSize.SMALL}
+        color={ButtonColor.PRIMARY}
+        variant={ButtonVariant.TEXT}
+        startIcon={<AcademicCapIcon className="icon" />}
+      />
+      <Button
+        text="Primary Filled"
+        disabled={true}
+        size={ButtonSize.LARGE}
+        color={ButtonColor.PRIMARY}
+        variant={ButtonVariant.FILLED}
+        startIcon={<AcademicCapIcon className="icon" />}
       />
 
       <Button
-        text="Primary Red"
-        icon={<AcademicCapIcon />}
-        iconPosition={ButtonIconPosition.LEFT}
-        isDisabled={false}
+        text="Primary Outline"
+        disabled={true}
         size={ButtonSize.LARGE}
-        type={ButtonType.PRIMARY_RED}
+        color={ButtonColor.PRIMARY}
+        variant={ButtonVariant.OUTLINE}
+        startIcon={<AcademicCapIcon className="icon" />}
       />
       <Button
-        text="Primary Red"
-        icon={<AcademicCapIcon />}
-        iconPosition={ButtonIconPosition.LEFT}
-        isDisabled={false}
+        text="Text"
+        disabled={true}
+        size={ButtonSize.LARGE}
+        color={ButtonColor.PRIMARY}
+        variant={ButtonVariant.TEXT}
+        startIcon={<AcademicCapIcon className="icon" />}
+      />
+      <Button
+        text="Secondary Filled"
+        disabled={false}
+        size={ButtonSize.LARGE}
+        color={ButtonColor.SECONDARY}
+        variant={ButtonVariant.FILLED}
+        startIcon={<AcademicCapIcon className="icon" />}
+      />
+      <Button
+        text="Secondary Filled"
+        disabled={false}
         size={ButtonSize.MEDIUM}
-        type={ButtonType.PRIMARY_RED}
+        color={ButtonColor.SECONDARY}
+        variant={ButtonVariant.FILLED}
+        startIcon={<AcademicCapIcon className="icon" />}
       />
       <Button
-        text="Primary Red"
-        icon={<AcademicCapIcon />}
-        iconPosition={ButtonIconPosition.LEFT}
-        isDisabled={false}
+        text="Secondary Filled"
+        disabled={false}
         size={ButtonSize.SMALL}
-        type={ButtonType.PRIMARY_RED}
+        color={ButtonColor.SECONDARY}
+        variant={ButtonVariant.FILLED}
+        startIcon={<AcademicCapIcon className="icon" />}
+      />
+      <Button
+        text="Secondary Outline"
+        disabled={false}
+        size={ButtonSize.LARGE}
+        color={ButtonColor.SECONDARY}
+        variant={ButtonVariant.OUTLINE}
+        startIcon={<AcademicCapIcon className="icon" />}
+      />
+      <Button
+        text="Secondary Outline"
+        disabled={false}
+        size={ButtonSize.MEDIUM}
+        color={ButtonColor.SECONDARY}
+        variant={ButtonVariant.OUTLINE}
+        startIcon={<AcademicCapIcon className="icon" />}
+      />
+      <Button
+        text="Secondary Outline"
+        disabled={false}
+        size={ButtonSize.SMALL}
+        color={ButtonColor.SECONDARY}
+        variant={ButtonVariant.OUTLINE}
+        startIcon={<AcademicCapIcon className="icon" />}
+      />
+      <Button
+        text="Secondary Filled"
+        disabled={true}
+        size={ButtonSize.LARGE}
+        color={ButtonColor.SECONDARY}
+        variant={ButtonVariant.FILLED}
+        startIcon={<AcademicCapIcon className="icon" />}
       />
 
       <Button
-        text="Primary Red"
-        icon={<AcademicCapIcon />}
-        iconPosition={ButtonIconPosition.RIGHT}
-        isDisabled={false}
+        text="Secondary Outline"
+        disabled={true}
         size={ButtonSize.LARGE}
-        type={ButtonType.PRIMARY_RED}
-      />
-      <Button
-        text="Primary Red"
-        icon={<AcademicCapIcon />}
-        iconPosition={ButtonIconPosition.RIGHT}
-        isDisabled={false}
-        size={ButtonSize.MEDIUM}
-        type={ButtonType.PRIMARY_RED}
-      />
-      <Button
-        text="Primary Red"
-        icon={<AcademicCapIcon />}
-        iconPosition={ButtonIconPosition.RIGHT}
-        isDisabled={false}
-        size={ButtonSize.SMALL}
-        type={ButtonType.PRIMARY_RED}
-      />
-
-      <Button
-        text="Primary Gray"
-        isDisabled={false}
-        size={ButtonSize.LARGE}
-        type={ButtonType.PRIMARY_GRAY}
-      />
-      <Button
-        text="Primary Gray"
-        isDisabled={false}
-        size={ButtonSize.MEDIUM}
-        type={ButtonType.PRIMARY_GRAY}
-      />
-      <Button
-        text="Primary Gray"
-        isDisabled={false}
-        size={ButtonSize.SMALL}
-        type={ButtonType.PRIMARY_GRAY}
-      />
-
-      <Button
-        text="Primary Gray"
-        icon={<AcademicCapIcon />}
-        iconPosition={ButtonIconPosition.LEFT}
-        isDisabled={false}
-        size={ButtonSize.LARGE}
-        type={ButtonType.PRIMARY_GRAY}
-      />
-      <Button
-        text="Primary Gray"
-        icon={<AcademicCapIcon />}
-        iconPosition={ButtonIconPosition.LEFT}
-        isDisabled={false}
-        size={ButtonSize.MEDIUM}
-        type={ButtonType.PRIMARY_GRAY}
-      />
-      <Button
-        text="Primary Gray"
-        icon={<AcademicCapIcon />}
-        iconPosition={ButtonIconPosition.LEFT}
-        isDisabled={false}
-        size={ButtonSize.SMALL}
-        type={ButtonType.PRIMARY_GRAY}
-      />
-
-      <Button
-        text="Primary Gray"
-        icon={<AcademicCapIcon />}
-        iconPosition={ButtonIconPosition.RIGHT}
-        isDisabled={false}
-        size={ButtonSize.LARGE}
-        type={ButtonType.PRIMARY_GRAY}
-      />
-      <Button
-        text="Primary Gray"
-        icon={<AcademicCapIcon />}
-        iconPosition={ButtonIconPosition.RIGHT}
-        isDisabled={false}
-        size={ButtonSize.MEDIUM}
-        type={ButtonType.PRIMARY_GRAY}
-      />
-      <Button
-        text="Primary Gray"
-        icon={<AcademicCapIcon />}
-        iconPosition={ButtonIconPosition.RIGHT}
-        isDisabled={false}
-        size={ButtonSize.SMALL}
-        type={ButtonType.PRIMARY_GRAY}
-      />
-
-      <Button
-        text="Secondary Red"
-        isDisabled={false}
-        size={ButtonSize.LARGE}
-        type={ButtonType.SECONDARY_RED}
-      />
-      <Button
-        text="Secondary Red"
-        isDisabled={false}
-        size={ButtonSize.MEDIUM}
-        type={ButtonType.SECONDARY_RED}
-      />
-      <Button
-        text="Secondary Red"
-        isDisabled={false}
-        size={ButtonSize.SMALL}
-        type={ButtonType.SECONDARY_RED}
-      />
-
-      <Button
-        text="Secondary Red"
-        icon={<AcademicCapIcon />}
-        iconPosition={ButtonIconPosition.LEFT}
-        isDisabled={false}
-        size={ButtonSize.LARGE}
-        type={ButtonType.SECONDARY_RED}
-      />
-      <Button
-        text="Secondary Red"
-        icon={<AcademicCapIcon />}
-        iconPosition={ButtonIconPosition.LEFT}
-        isDisabled={false}
-        size={ButtonSize.MEDIUM}
-        type={ButtonType.SECONDARY_RED}
-      />
-      <Button
-        text="Secondary Red"
-        icon={<AcademicCapIcon />}
-        iconPosition={ButtonIconPosition.LEFT}
-        isDisabled={false}
-        size={ButtonSize.SMALL}
-        type={ButtonType.SECONDARY_RED}
-      />
-
-      <Button
-        text="Secondary Red"
-        icon={<AcademicCapIcon />}
-        iconPosition={ButtonIconPosition.RIGHT}
-        isDisabled={false}
-        size={ButtonSize.LARGE}
-        type={ButtonType.SECONDARY_RED}
-      />
-      <Button
-        text="Secondary Red"
-        icon={<AcademicCapIcon />}
-        iconPosition={ButtonIconPosition.RIGHT}
-        isDisabled={false}
-        size={ButtonSize.MEDIUM}
-        type={ButtonType.SECONDARY_RED}
-      />
-      <Button
-        text="Secondary Red"
-        icon={<AcademicCapIcon />}
-        iconPosition={ButtonIconPosition.RIGHT}
-        isDisabled={false}
-        size={ButtonSize.SMALL}
-        type={ButtonType.SECONDARY_RED}
-      />
-
-      <Button
-        text="Secondary Gray"
-        isDisabled={false}
-        size={ButtonSize.LARGE}
-        type={ButtonType.SECONDARY_GRAY}
-      />
-      <Button
-        text="Secondary Gray"
-        isDisabled={false}
-        size={ButtonSize.MEDIUM}
-        type={ButtonType.SECONDARY_GRAY}
-      />
-      <Button
-        text="Secondary Gray"
-        isDisabled={false}
-        size={ButtonSize.SMALL}
-        type={ButtonType.SECONDARY_GRAY}
-      />
-
-      <Button
-        text="Secondary Gray"
-        icon={<AcademicCapIcon />}
-        iconPosition={ButtonIconPosition.LEFT}
-        isDisabled={false}
-        size={ButtonSize.LARGE}
-        type={ButtonType.SECONDARY_GRAY}
-      />
-      <Button
-        text="Secondary Gray"
-        icon={<AcademicCapIcon />}
-        iconPosition={ButtonIconPosition.LEFT}
-        isDisabled={false}
-        size={ButtonSize.MEDIUM}
-        type={ButtonType.SECONDARY_GRAY}
-      />
-      <Button
-        text="Secondary Gray"
-        icon={<AcademicCapIcon />}
-        iconPosition={ButtonIconPosition.LEFT}
-        isDisabled={false}
-        size={ButtonSize.SMALL}
-        type={ButtonType.SECONDARY_GRAY}
-      />
-
-      <Button
-        text="Secondary Gray"
-        icon={<AcademicCapIcon />}
-        iconPosition={ButtonIconPosition.RIGHT}
-        isDisabled={false}
-        size={ButtonSize.LARGE}
-        type={ButtonType.SECONDARY_GRAY}
-      />
-      <Button
-        text="Secondary Gray"
-        icon={<AcademicCapIcon />}
-        iconPosition={ButtonIconPosition.RIGHT}
-        isDisabled={false}
-        size={ButtonSize.MEDIUM}
-        type={ButtonType.SECONDARY_GRAY}
-      />
-      <Button
-        text="Secondary Gray"
-        icon={<AcademicCapIcon />}
-        iconPosition={ButtonIconPosition.RIGHT}
-        isDisabled={false}
-        size={ButtonSize.SMALL}
-        type={ButtonType.SECONDARY_GRAY}
-      />
-
-      <Button
-        text="Tertiary"
-        isDisabled={false}
-        size={ButtonSize.LARGE}
-        type={ButtonType.TERTIARY}
-      />
-      <Button
-        text="Tertiary"
-        isDisabled={false}
-        size={ButtonSize.MEDIUM}
-        type={ButtonType.TERTIARY}
-      />
-      <Button
-        text="Tertiary"
-        isDisabled={false}
-        size={ButtonSize.SMALL}
-        type={ButtonType.TERTIARY}
-      />
-
-      <Button
-        text="Tertiary"
-        icon={<AcademicCapIcon />}
-        iconPosition={ButtonIconPosition.LEFT}
-        isDisabled={false}
-        size={ButtonSize.LARGE}
-        type={ButtonType.TERTIARY}
-      />
-      <Button
-        text="Tertiary"
-        icon={<AcademicCapIcon />}
-        iconPosition={ButtonIconPosition.LEFT}
-        isDisabled={false}
-        size={ButtonSize.MEDIUM}
-        type={ButtonType.TERTIARY}
-      />
-      <Button
-        text="Tertiary"
-        icon={<AcademicCapIcon />}
-        iconPosition={ButtonIconPosition.LEFT}
-        isDisabled={false}
-        size={ButtonSize.SMALL}
-        type={ButtonType.TERTIARY}
-      />
-
-      <Button
-        text="Tertiary"
-        icon={<AcademicCapIcon />}
-        iconPosition={ButtonIconPosition.RIGHT}
-        isDisabled={false}
-        size={ButtonSize.LARGE}
-        type={ButtonType.TERTIARY}
-      />
-      <Button
-        text="Tertiary"
-        icon={<AcademicCapIcon />}
-        iconPosition={ButtonIconPosition.RIGHT}
-        isDisabled={false}
-        size={ButtonSize.MEDIUM}
-        type={ButtonType.TERTIARY}
-      />
-      <Button
-        text="Tertiary"
-        icon={<AcademicCapIcon />}
-        iconPosition={ButtonIconPosition.RIGHT}
-        isDisabled={false}
-        size={ButtonSize.SMALL}
-        type={ButtonType.TERTIARY}
+        color={ButtonColor.SECONDARY}
+        variant={ButtonVariant.OUTLINE}
+        startIcon={<AcademicCapIcon className="icon" />}
       />
     </div>
   </div>
