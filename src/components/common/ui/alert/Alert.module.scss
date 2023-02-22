@@ -1,0 +1,103 @@
+@import "src/styles/partials/theme";
+
+.alert {
+    align-items: flex-start;
+    border-radius: 4px;
+    padding: 12px;
+    display: flex;
+    justify-content: center;
+    &-description {
+        font-size: 14px;
+        padding-top: 4px;
+    }
+    &-icon {
+        width: 16px;
+        height: 16px;
+    }
+    &-icon-x {
+        @extend .alert-icon;
+        padding-top: 0;
+        cursor: pointer;
+    }
+}
+
+
+@mixin style-alert-color($className,$primary-color,$secondary-color){
+
+    .alert-#{$className}-filled{
+        @extend .alert;
+        background-color: $primary-color;
+        transition: background-color 0.2s linear;
+        &:hover{
+            background-color: lighten($color: $primary-color,$amount: 5%)
+        }
+    }
+    .alert-#{$className}-darker{
+        @extend .alert;
+        border-color: $primary-color !important;
+        background-color: $secondary-color;
+        &:hover{
+            background-color: lighten($color: $secondary-color,$amount: 5%)
+        }
+    }
+    .alert-#{$className}-outline{
+        border: 1px $primary-color solid;
+        background-color: $background-dark-0;
+        &:hover{
+            background-color: lighten($color: $background-dark-0,$amount: 5%);
+            border-color:lighten($color: $primary-color,$amount: 10%);
+        }
+    }
+}
+
+.alert.border-top{
+    border-top: 4px solid;
+
+}
+.alert.border-left{
+    border-left: 4px solid;
+}
+
+.alert-small{
+    .alert-icon{
+        margin-top: 1px;
+    }
+    .alert-title{
+        font-size: 14px;
+        margin: 0 8px;
+    }
+    .alert-title {
+        width: 160px;
+    }
+}
+
+.alert-medium{
+    .alert-icon{
+        margin-top: 1px;
+    }
+    .alert-title {
+        font-size: 14px;
+        margin: 0 8px;
+    }
+    .alert-title {
+        width: 252px;
+    }
+}
+
+.alert-large{
+    .alert-icon{
+        margin-top: 2px;
+    }
+    .alert-title {
+        font-size: 16px;
+        margin: 0 8px;
+    }
+    .alert-title {
+        width: 280px;
+    }
+}
+
+@include style-alert-color("info",$info-50,$info-0);
+@include style-alert-color("error",$error-50,$error-10);
+@include style-alert-color("warning",$warning-100,$warning-10);
+@include style-alert-color("success",$success-50,$success-10);

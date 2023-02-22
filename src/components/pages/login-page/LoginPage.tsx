@@ -1,9 +1,11 @@
 import { ArrowLeftIcon, HeartIcon } from '@heroicons/react/24/outline';
 
+import { DividerTextPosition } from '@/components/common/ui/divider/Divider';
+
 import PageLayout from '../../common/layout/page-layout/PageLayout';
 import Button, { ButtonColor, ButtonVariant } from '../../common/ui/button';
 import { ButtonSize } from '../../common/ui/button/Button';
-import Check, { CheckState } from '../../common/ui/check/Check';
+import Check, { CheckboxState } from '../../common/ui/checkbox';
 import Divider from '../../common/ui/divider';
 import Input, {
   InputSize,
@@ -53,7 +55,7 @@ const LoginPage = () => (
               variant={ButtonVariant.FILLED}
               color={ButtonColor.PRIMARY}
             />
-            <Divider text="або" className={styles['login-divider']} />
+            <Divider text="або" textPosition={DividerTextPosition.CENTER} />
             <Input
               className={styles['login-input']}
               label={'Пошта або юзернейм'}
@@ -72,7 +74,7 @@ const LoginPage = () => (
             />
             <div className={styles['one-line']}>
               <div className={styles['checkbox-container']}>
-                <Check state={CheckState.DEFAULT} />
+                <Check state={CheckboxState.DEFAULT} />
                 <p className="body-primary">Запам’ятати дані</p>
               </div>
               <CustomLink text="Забув пароль?" href={'#'} />

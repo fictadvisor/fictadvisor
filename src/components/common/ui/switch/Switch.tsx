@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 
 import styles from './Switch.module.scss';
 export enum SwitchTextPosition {
@@ -6,37 +6,35 @@ export enum SwitchTextPosition {
   LEFT = 'left',
 }
 
-export enum SwitchType {
-  WEB = 'web',
-  MOBILE = 'mobile',
+export enum SwitchSize {
+  MEDIUM = 'medium',
+  SMALL = 'small',
 }
 
 interface SwitchProps {
   text?: string;
   textPosition?: string;
-  type: SwitchType;
+  size?: SwitchSize;
 }
 
-const Switch: FC<SwitchProps> = props => {
+const Switch: FC<SwitchProps> = ({
+  text,
+  textPosition = SwitchTextPosition.RIGHT,
+  size = SwitchSize.MEDIUM,
+}) => {
+  const gap = text ? '8px' : '';
   return (
     <div>
-      <div className={styles[props.type + '-container']}>
-        {props.textPosition === 'left' && (
-          <span className={styles[props.type + '-switch-text']}>
-            {props.text}
-          </span>
+      <div className={styles[size + '-container']} style={{ gap: `${gap}` }}>
+        {textPosition === 'left' && (
+          <span className={styles[size + '-switch-text']}>{text}</span>
         )}
-        <label className={styles[`${props.type}-switch`]}>
-          <input
-            type="checkbox"
-            className={styles[props.type + '-switch-input']}
-          />
-          <span className={styles[props.type + '-switch-slider']}></span>
+        <label className={styles[`${size}-switch`]}>
+          <input type="checkbox" className={styles[size + '-switch-input']} />
+          <span className={styles[size + '-switch-slider']}></span>
         </label>
-        {props.textPosition === 'right' && (
-          <span className={styles[props.type + '-switch-text']}>
-            {props.text}
-          </span>
+        {textPosition === 'right' && (
+          <span className={styles[size + '-switch-text']}>{text}</span>
         )}
       </div>
     </div>
