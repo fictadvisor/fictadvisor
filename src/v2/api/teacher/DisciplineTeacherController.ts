@@ -14,11 +14,13 @@ export class DisciplineTeacherController {
     private disciplineTeacherService: DisciplineTeacherService,
   ) {}
 
+  @Access('groups.$groupId.questions.get', GroupByDisciplineTeacherGuard)
   @Get('/:disciplineTeacherId/questions')
   getQuestions (
+    @Request() req,
     @Param('disciplineTeacherId', DisciplineTeacherByIdPipe) disciplineTeacherId: string,
   ) {
-    return this.disciplineTeacherService.getQuestions(disciplineTeacherId);
+    return this.disciplineTeacherService.getQuestions(disciplineTeacherId, req.user);
   }
 
   @Access('groups.$groupId.answers.send', GroupByDisciplineTeacherGuard)

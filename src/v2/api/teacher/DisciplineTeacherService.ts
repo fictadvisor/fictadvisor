@@ -17,6 +17,7 @@ import { PrismaService } from '../../database/PrismaService';
 import { ConfigService } from '@nestjs/config';
 import { WrongTimeException } from '../../utils/exceptions/WrongTimeException';
 import { DisciplineTeacherWithRoles, DisciplineTeacherWithRolesAndTeacher } from './DisciplineTeacherDatas';
+import { AnswerInDatabasePermissionException } from '../../utils/exceptions/AnswerInDatabasePermissionException';
 
 @Injectable()
 export class DisciplineTeacherService {
@@ -74,7 +75,8 @@ export class DisciplineTeacherService {
     };
   }
 
-  getQuestions (disciplineTeacherId: string) {
+  async getQuestions (disciplineTeacherId: string, user: User) {
+    await this.checkAnswerInDatabase(disciplineTeacherId, user.id);
     return this.getCategories(disciplineTeacherId);
   }
 
@@ -159,12 +161,18 @@ export class DisciplineTeacherService {
   }
   async checkSendingTime () {
     const dateBorders = await this.getPollTimeBorders();
-    const closingPollTime = dateBorders.startPoll.getTime();
-    const openingPollTime = dateBorders.endPoll.getTime();
+    const openingPollTime = dateBorders.startPoll.getTime();
+    const closingPollTime = dateBorders.endPoll.getTime();
     const currentTime = new Date().getTime();
 
-    if (currentTime < closingPollTime || currentTime > openingPollTime) {
+    if (currentTime > closingPollTime || currentTime < openingPollTime) {
       throw new WrongTimeException();
+    }
+  }
+  async checkAnswerInDatabase (disciplineTeacherId: string, userId: string) {
+    const { questionAnswers } = await this.disciplineTeacherRepository.getDisciplineTeacher(disciplineTeacherId);
+    if ((questionAnswers.find((r) => r.userId === userId))) {
+      throw new AnswerInDatabasePermissionException();
     }
   }
 }
