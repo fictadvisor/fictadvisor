@@ -1,5 +1,4 @@
 import React from 'react';
-import { useMediaQuery } from '@mui/material';
 import Link from 'next/link';
 
 import { GitHubIcon } from '@/components/common/custom-svg/GitHub';
@@ -14,8 +13,8 @@ import Button, {
 import styles from './Footer.module.scss';
 
 const Footer: React.FC = () => {
-  const isMobile = useMediaQuery('(max-width: 480px)');
-  const socialLabels = isMobile
+  //const isMobile = useMediaQuery('(max-width: 480px)');
+  const socialLabels = false
     ? [
         { text: '', icon: <TelegramIcon /> },
         { text: '', icon: <InstagramIcon /> },
