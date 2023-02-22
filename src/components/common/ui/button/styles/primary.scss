@@ -4,51 +4,56 @@
 .primary-filled-button-variant{
   background: $red-400;
   color: $gray-600;
+  outline: 2px transparent solid;
 
   &:hover {
     background: $red-100;
+    outline: 2px transparent solid;
   }
 
-  &:focus {
+  &:focus:not(:active) {
     background: $red-logo;
     outline: 2px solid $red-10;
   }
 
   &:active {
     background: $red-logo;
+    outline: 2px transparent solid;
   }
 
   &:disabled {
     background: $background-dark-200;
     color: $gray-400;
+    cursor: not-allowed;
   }
 }
 
 .primary-outline-button-variant{
   background: none;
   color: $gray-600;
-  outline: $red-100 solid 2px;
+  outline: solid 2px;
 
   &:hover {
     background: $red--10;
-    border-color: $red-100;
+    outline-color: $red-100;
 
   }
 
-  &:focus {
+  &:focus:not(:active) {
     background: $red-0;
-    border-color: $red-logo;
+    outline-color: $red-logo;
   }
 
   &:active {
     background: $red-10;
-    border-color: $red-logo;
+    outline-color: $red-logo;
   }
 
   &:disabled {
     background: $background-dark-0;
     color: $gray-50;
     outline-color: $gray-50;
+    cursor: not-allowed;
   }
 }
 .primary-text-button-variant{
@@ -59,7 +64,7 @@
     text-decoration: underline;
   }
 
-  &:focus {
+  &:focus:not(:active) {
     outline: 2px solid $gray-50;
     color: $gray-600;
   }
@@ -72,6 +77,7 @@
   &:disabled {
     color: $gray-100;
     text-decoration: none;
+    cursor: not-allowed;
   }
 }
 @include button-style("primary-large", 8px, 16px 32px, 16px 32px, 12px);

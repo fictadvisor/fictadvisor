@@ -22,7 +22,9 @@ const AlertButton: React.FC<AlertButtonProps> = ({
 }) => {
   let className: string;
   text
-    ? (className = styles[variant])
+    ? icon
+      ? (className = styles[variant])
+      : (className = styles[variant + '-only-text'])
     : (className = styles[variant + '-without-text']);
   return (
     <button className={className} {...rest}>

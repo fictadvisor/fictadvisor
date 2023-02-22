@@ -10,7 +10,7 @@
     background: $background-dark-35;
   }
 
-  &:focus {
+  &:focus:not(:active) {
     background: $background-dark-10;
     outline-color: $background-dark-50;
   }
@@ -23,6 +23,7 @@
     background: none;
     outline: none;
     color: $background-dark-50;
+    cursor: not-allowed;
   }
 }
 
@@ -34,7 +35,7 @@
     background: $background-dark-10;
   }
 
-  &:focus {
+  &:focus:not(:active) {
     background: $background-dark-10;
     outline: 2px solid $gray-300;
   }
@@ -48,6 +49,7 @@
     outline: none;
     background: none;
     color: $background-dark-50;
+    cursor: not-allowed;
   }
 }
 .secondary-text-button-variant{
@@ -58,7 +60,7 @@
     text-decoration: underline;
   }
 
-  &:focus {
+  &:focus:not(:active) {
     outline: 2px solid $gray-50;
     color: $gray-600;
   }
@@ -71,6 +73,7 @@
   &:disabled {
     color: $gray-100;
     text-decoration: none;
+    cursor: not-allowed;
   }
 }
 

@@ -20,7 +20,7 @@ export enum ButtonVariant {
 }
 
 interface ButtonProps extends React.ComponentPropsWithoutRef<'button'> {
-  text?: string;
+  text: string;
   size?: ButtonSize;
   color?: ButtonColor;
   variant?: ButtonVariant;
