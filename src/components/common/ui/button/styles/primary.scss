@@ -31,7 +31,7 @@
 .primary-outline-button-variant{
   background: none;
   color: $gray-600;
-  outline: solid 2px;
+  outline: $red-100 solid 2px;
 
   &:hover {
     background: $red--10;
