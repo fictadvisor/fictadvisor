@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
 import { ScheduleParser } from '../../utils/parser/ScheduleParser';
+import { RozParser } from '../../utils/parser/RozParser';
 import { Group, Subject, FortnightLessonInfoType, Discipline, DisciplineType } from '@prisma/client';
 import { DateService } from '../../utils/date/DateService';
 import { ConfigService } from '@nestjs/config';
@@ -28,6 +29,7 @@ import { DisciplineTeacherRoleRepository } from '../teacher/DisciplineTeacherRol
 export class ScheduleService {
   constructor(
     private scheduleParser: ScheduleParser,
+    private RozParser: RozParser,
     private prisma: PrismaService,
     private dateService: DateService,
     private config: ConfigService,
@@ -47,6 +49,8 @@ export class ScheduleService {
   async parse(parserType: string) {
     switch (parserType) {
       case 'rozkpi':
+        await this.RozParser.parse();
+        break;
       case 'schedule':
         await this.scheduleParser.parse();
         break;
