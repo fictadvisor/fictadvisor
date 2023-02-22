@@ -90,14 +90,15 @@ export class DisciplineTeacherService {
     await this.checkAnsweredQuestions(disciplineTeacherId, answers, user.id);
     await this.checkSendingTime();
 
+    const { teacher, discipline } = await this.disciplineTeacherRepository.getDisciplineTeacher(disciplineTeacherId);
+
     for (const answer of answers) {
 
-      if ((await this.questionRepository.getQuestion(answer.questionId)).type === QuestionType.TEXT) {
-        const teacher = (await this.disciplineTeacherRepository.getDisciplineTeacher(disciplineTeacherId)).teacher;
+      if (questions.find((q) => q.id === answer.questionId).type === QuestionType.TEXT) {
 
         await this.telegramApi.verifyResponse({
           disciplineTeacherId: disciplineTeacherId,
-          subject: (await this.disciplineTeacherRepository.getDiscipline(disciplineTeacherId)).subject.name,
+          subject: discipline.subject.name,
           teacherName: teacher.firstName + teacher.middleName + teacher.lastName,
           userId: user.id,
           response: answer.value,

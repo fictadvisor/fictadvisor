@@ -17,6 +17,44 @@ export class QuestionAnswerRepository {
   find (where: Omit<CreateAnswerData, 'value'>) {
     return this.prisma.questionAnswer.findFirst({
       where,
+      select: {
+        question: {
+          select: {
+            id: true,
+            category: true,
+            name: true,
+            description: true,
+            text: true,
+            isRequired: true,
+            type: true,
+            display: true,
+          },
+        },
+        disciplineTeacher: {
+          select: {
+            id: true,
+            discipline: {
+              select: {
+                id: true,
+                subject: true,
+                group: true,
+                semester: true,
+                year: true,
+                isSelective: true,
+              },
+            },
+            teacher: {
+              select: {
+                id: true,
+                firstName: true,
+                middleName: true,
+                lastName: true,
+                avatar: true,
+              },
+            },
+          },
+        },
+      },
     });
   }
 }

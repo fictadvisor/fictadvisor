@@ -34,7 +34,7 @@ export class DisciplineTeacherController {
   }
 
   @UseGuards(TelegramGuard)
-  @Post('/:disciplineTeacherId/response')
+  @Post('/:disciplineTeacherId/responses')
   sendResponse (
     @Param('disciplineTeacherId', DisciplineTeacherByIdPipe) disciplineTeacherId: string,
     @Body() body: ResponseDTO
