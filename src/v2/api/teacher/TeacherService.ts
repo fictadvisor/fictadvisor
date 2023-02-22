@@ -113,8 +113,8 @@ export class TeacherService {
     const marks = [];
     const questions = await this.teacherRepository.getMarks(teacherId, data);
     for (const question of questions) {
+      if (question.questionAnswers.length === 0) continue;
       const count = question.questionAnswers.length;
-      if (count < 1) continue;
       const mark = this.getRightMarkFormat(question);
       marks.push({
         name: question.name,
@@ -122,15 +122,13 @@ export class TeacherService {
         type: question.type,
         mark,
       });
-
     }
     return marks;
   }
   parseMark (type: QuestionType, marksSum: number, answerQty: number) {
     return parseFloat(((marksSum / (answerQty * ((type === QuestionType.SCALE) ? 10 : 1))) * 100).toFixed(2));
   }
-  getRightMarkFormat (question) {
-    const { display, type, questionAnswers: answers } = question;
+  getRightMarkFormat ({ display, type, questionAnswers: answers }) {
     if (display === QuestionDisplay.PERCENT) {
       return this.parseMark(type, answers.reduce((acc, answer) => acc + (+answer.value), 0), answers.length);
     } else if (display === QuestionDisplay.AMOUNT) {
