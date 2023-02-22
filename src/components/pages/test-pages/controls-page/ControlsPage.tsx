@@ -1,78 +1,59 @@
-import Check, { CheckState } from '@/components/common/ui/check/Check';
-import GroupRadio, {
+import { useState } from 'react';
+
+import Checkbox, { CheckboxState } from '@/components/common/ui/checkbox';
+import RadioGroup, {
+  Radio,
   RadioState,
-} from '@/components/common/ui/group-radio/GroupRadioProps';
+} from '@/components/common/ui/radio-group/RadioGroup';
 import Switch, {
+  SwitchSize,
   SwitchTextPosition,
-  SwitchType,
 } from '@/components/common/ui/switch/Switch';
 
 import styles from '../test-pages.module.scss';
 
 const ControlsPage = () => {
-  const radios = [
-    {
-      state: RadioState.DEFAULT,
-      text: 'apple',
-      value: 'apple',
-      name: 'radio-buttons',
-    },
-    {
-      state: RadioState.DEFAULT,
-      text: 'orange',
-      value: 'orange',
-      name: 'radio-buttons',
-    },
-    {
-      state: RadioState.DEFAULT,
-      text: 'lemon',
-      value: 'lemon',
-      name: 'radio-buttons',
-    },
-    {
-      state: RadioState.DEFAULT,
-      text: 'strawberry',
-      value: 'strawberry',
-      name: 'radio-buttons',
-    },
-    {
-      state: RadioState.DISABLED,
-      text: 'vegetable',
-      name: 'radio-buttons',
-      value: 'vegetable',
-      isDisabled: true,
-    },
-  ];
+  const [radioValue, setRadioValue] = useState('');
+
+  const handleChange = value => {
+    setRadioValue(value);
+  };
 
   return (
     <div className={styles['test-page-wrap']}>
       <div className={styles['test-page-content']}>
         <Switch
-          type={SwitchType.WEB}
-          text="Hello"
+          size={SwitchSize.MEDIUM}
+          text="Just"
           textPosition={SwitchTextPosition.LEFT}
         ></Switch>
         <Switch
-          type={SwitchType.MOBILE}
-          text="Biden"
+          size={SwitchSize.MEDIUM}
+          textPosition={SwitchTextPosition.LEFT}
+        ></Switch>
+        <Switch
+          size={SwitchSize.SMALL}
+          text="Hoshion"
           textPosition={SwitchTextPosition.RIGHT}
         ></Switch>
 
-        <Check state={CheckState.DEFAULT} text="Default"></Check>
-        <Check state={CheckState.ERROR} text="Error"></Check>
-        <Check
-          state={CheckState.DISABLED}
-          text="Disabled"
-          isDisabled={true}
-        ></Check>
-        <Check
-          state={CheckState.DISABLED}
-          text="Disabled"
-          isDisabled={true}
-          isChecked={true}
-        ></Check>
+        <Checkbox text="Default"></Checkbox>
+        <Checkbox></Checkbox>
+        <Checkbox state={CheckboxState.ERROR} text="Error"></Checkbox>
+        <Checkbox text="Disabled" disabled={true}></Checkbox>
+        <Checkbox text="Disabled" disabled={true} checked={true}></Checkbox>
 
-        <GroupRadio options={radios}></GroupRadio>
+        <RadioGroup
+          onChange={handleChange}
+          name={'fruit'}
+          value={radioValue}
+          isDisabled={false}
+        >
+          <Radio text={'apple'} value={'apple'} />
+          <Radio text={'orange'} value={'orange'} state={RadioState.ERROR} />
+          <Radio text={'banana'} value={'banana'} />
+          <Radio text={'Error'} value={'Error'} />
+        </RadioGroup>
       </div>
     </div>
   );
