@@ -9,12 +9,13 @@ import Button, {
   ButtonSize,
   ButtonType,
 } from '@/components/common/ui/button';
+import useIsMobile from '@/hooks/use-is-mobile/UseIsMobile';
 
 import styles from './Footer.module.scss';
 
 const Footer: React.FC = () => {
-  //const isMobile = useMediaQuery('(max-width: 480px)');
-  const socialLabels = false
+  const isMobile = useIsMobile();
+  const socialLabels = isMobile
     ? [
         { text: '', icon: <TelegramIcon /> },
         { text: '', icon: <InstagramIcon /> },
@@ -26,12 +27,11 @@ const Footer: React.FC = () => {
         { text: 'Telegram', icon: <TelegramIcon /> },
       ];
   return (
-    <div className={styles['footer-container']}>
+    <footer className={styles['footer-container']}>
       <div>
         <div className={styles['footer-logo']}>
           <img src={`/assets/logo.png`} alt="logo" />
         </div>
-
         <div className={styles['signature']}>
           <p>By Dev відділ ср ФІОТ</p>
         </div>
@@ -139,7 +139,7 @@ const Footer: React.FC = () => {
           </Link>
         </div>
       </div>
-    </div>
+    </footer>
   );
 };
 

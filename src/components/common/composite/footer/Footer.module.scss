@@ -4,11 +4,11 @@
 .footer-container {
     display: grid;
     width: 100%;
+    bottom: 0;
     min-width: fit-content;
     grid-template-columns: 3fr 1fr 1fr 1fr;
     height: 300px;
     background: #151515;
-    position: relative;
 }
 
 .footer-logo {
@@ -17,14 +17,13 @@
     height: 28px;
     margin-left: 80px;
 
+    margin-left: 80px;
+    margin-top: 40px;
+
     & img {
         @include flex-center;
         height: 20px;
     }
-
-    margin-left: 80px;
-    margin-top: 40px;
-    
 }
 
 .signature {
