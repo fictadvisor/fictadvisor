@@ -74,8 +74,7 @@ export class PollService {
     const answers = await this.studentRepository.getAnswers(userId);
     const disciplinesWithTeachers = this.disciplineService.getDisciplinesWithTeachers(disciplines);
     const teachers = [];
-    //['a', 'b', 'c']
-    //['d', 'c']
+
     for (const disciplineWithTeachers of disciplinesWithTeachers) {
       for (const teacher of disciplineWithTeachers.teachers) {
         if (!answers.some((answer) => teacher.disciplineTeacherId === answer.disciplineTeacherId)) {

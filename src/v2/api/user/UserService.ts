@@ -20,15 +20,15 @@ import { GroupRequestDTO } from './dto/GroupRequestDTO';
 @Injectable()
 export class UserService {
   constructor (
-      @Inject(forwardRef(() => DisciplineService))
+    @Inject(forwardRef(() => DisciplineService))
     private disciplineService: DisciplineService,
     private studentRepository: StudentRepository,
     private userRepository: UserRepository,
-      @Inject(forwardRef(() => RoleService))
+    @Inject(forwardRef(() => RoleService))
     private roleService: RoleService,
     private superheroRepository: SuperheroRepository,
     private contactRepository: ContactRepository,
-      @Inject(forwardRef(() => AuthService))
+    @Inject(forwardRef(() => AuthService))
     private authService: AuthService,
   ) {
   }
