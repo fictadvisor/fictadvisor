@@ -1,6 +1,6 @@
 @import "src/styles/partials/utils";
 
-@mixin button-style($class-name, $border-radius, $padding, $padding-icon, $gap) {
+@mixin button-style($class-name, $border-radius, $padding, $padding-icon, $gap, $underline-offset) {
   .#{$class-name}-button, .#{$class-name}-icon-button {
     @include flex-center;
     display: flex;
@@ -12,6 +12,14 @@
     white-space: nowrap;
     padding: $padding;
     gap: $gap;
+    &:hover{
+      text-underline-offset: $underline-offset;
+      text-decoration-thickness: 0.5px;
+    }
+    &active{
+      text-underline-offset: $underline-offset;
+      text-decoration-thickness: 0.5px;
+    }
 
     &:disabled {
       img {

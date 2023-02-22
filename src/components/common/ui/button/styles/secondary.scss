@@ -3,15 +3,18 @@
 
 .secondary-filled-button-variant{
   background: $background-dark-10;
-  outline: $background-dark-10 2px solid;
   color: $gray-600;
+  outline: $background-dark-10 2px transparent;
+
 
   &:hover {
     background: $background-dark-35;
+    outline-color: $background-dark-35;
   }
 
   &:focus:not(:active) {
     background: $background-dark-10;
+    outline: 2px solid;
     outline-color: $background-dark-50;
   }
 
@@ -77,13 +80,13 @@
   }
 }
 
-@include button-style("secondary-large", 8px, 16px 32px, 16px 32px, 12px);
+@include button-style("secondary-large", 8px, 16px 32px, 16px 32px, 12px, 5px);
 @include button-text("secondary-large", 18px, 1.32, 700);
 
-@include button-style("secondary-medium", 8px, 12px 24px, 12px 24px, 12px);
+@include button-style("secondary-medium", 8px, 12px 24px, 12px 24px, 12px, 4px);
 @include button-text("secondary-medium", 18px, 1.32, 700);
 
-@include button-style("secondary-small", 6px, 8px 12px, 6px 12px, 12px);
+@include button-style("secondary-small", 6px, 8px 12px, 6px 12px, 12px, 4px);
 @include button-text("secondary-small", 14px, 1.4, 700);
 
 
