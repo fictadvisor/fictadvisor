@@ -10,6 +10,7 @@ import { UpdateContactDTO } from '../user/dto/UpdateContactDTO';
 import { ContactRepository } from '../user/ContactRepository';
 import { DisciplineTeacherService } from './DisciplineTeacherService';
 import { MarksQueryDTO } from './query/MarksQueryDTO';
+import { InvalidQueryException } from '../../utils/exceptions/InvalidQueryException';
 
 @Injectable()
 export class TeacherService {
@@ -110,6 +111,7 @@ export class TeacherService {
   }
 
   async getMarks (teacherId: string, data?: MarksQueryDTO) {
+    this.checkQueryDate(data);
     const marks = [];
     const questions = await this.teacherRepository.getMarks(teacherId, data);
     for (const question of questions) {
@@ -119,14 +121,15 @@ export class TeacherService {
       marks.push({
         name: question.name,
         amount: count,
-        type: question.type,
+        type: question.display,
         mark,
       });
     }
     return marks;
   }
   parseMark (type: QuestionType, marksSum: number, answerQty: number) {
-    return parseFloat(((marksSum / (answerQty * ((type === QuestionType.SCALE) ? 10 : 1))) * 100).toFixed(2));
+    const divider = (answerQty * ((type === QuestionType.SCALE) ? 10 : 1));
+    return parseFloat(((marksSum / divider) * 100).toFixed(2));
   }
   getRightMarkFormat ({ display, type, questionAnswers: answers }) {
     if (display === QuestionDisplay.PERCENT) {
@@ -137,6 +140,11 @@ export class TeacherService {
         table[i] = answers.filter((a) => +a.value === i).length;
       }
       return table;
+    }
+  }
+  checkQueryDate ({ semester, year }: MarksQueryDTO) {
+    if ((!year && !!semester) || (!!year && !semester)) {
+      throw new InvalidQueryException();
     }
   }
 }
