@@ -8,17 +8,21 @@ $divide-regular-color: $gray-600;
   line-height: 20px;
 }
 
-.container{
-  display: inline-block;
-  width: min(408px, 40%);
+.dividers-list{
+  width: 100%;
 }
 
-.dividers-list{
+.dividers-list-items {
   display: flex;
   align-items: center;
-  margin: 0;
   padding: 0;
-  margin-top: 36px;
+  margin: 36px 0 0;
+  width: 100%;
+}
+
+.no-text-line {
+  border: 0.01px solid $divide-regular-color;
+  width: 100%;
 }
 
 .divider-text{
@@ -26,20 +30,20 @@ $divide-regular-color: $gray-600;
   padding: 0 8px;
 }
 
-.first-line{
+.center-line{
   border: 0.01px solid $divide-regular-color;
-  width: min(181.5px, 44.5%);
+  width: min(50%, 50%);
 }
 
-.second-text{
+.text-left{
   padding-left: 0;
 }
 
-.second-line{
+.side-line{
   border: 0.01px solid $divide-regular-color;
-  width: min(371px, 91%);
+  width: 100%;
 }
 
-.third-text{
+.text-right{
   padding-right: 0;
 }
