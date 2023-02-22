@@ -50,7 +50,7 @@ const reducer = (prev, action): TooltipState => {
             position,
             stylesObj: {
               transform: `
-            translateX(${action.divDimensions.width}px)
+            translateX(${action.divDimensions.width - 1}px)
             translateY(${
               action.divDimensions.height / 2 -
               action.toolTipDimensions.height / 2

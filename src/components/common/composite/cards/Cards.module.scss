@@ -191,9 +191,6 @@ $dark-primary: #1E1E1E;
     }
     &:hover{
         background:#402626;
-        & svg{
-            display: none;
-        } 
     }
     &:active{
         background:#873030;
@@ -234,12 +231,7 @@ $dark-primary: #1E1E1E;
    gap: 8px;
 
     & .simple-card-name {
-        
         font-size: 14px;
         font-weight: 700;
-        display: -webkit-box;
-        overflow: hidden;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 3;
     }
 }

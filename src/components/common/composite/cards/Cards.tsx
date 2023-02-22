@@ -125,14 +125,6 @@ export const SimpleCard: React.FC<SimpleCardProps> = ({
   rating,
   disabled,
 }) => {
-  const divRef = useRef<HTMLDivElement | null>(null);
-  const [isTruncated, setIsTruncated] = useState(false);
-
-  const onMouseOverHandler = () => {
-    const elem = divRef.current;
-    setIsTruncated(elem.scrollHeight - 1 > elem.getBoundingClientRect().height);
-  };
-
   return (
     <article
       className={mergeClassNames(
@@ -142,26 +134,14 @@ export const SimpleCard: React.FC<SimpleCardProps> = ({
         styles['simple-card-container'],
       )}
     >
-      <Tooltip
-        display={isTruncated}
-        text={name}
-        style={{
-          width: '300px',
-          fontSize: '11px',
-        }}
+      <div
+        className={mergeClassNames(
+          styles['card-name'],
+          styles['simple-card-name'],
+        )}
       >
-        <div
-          onMouseOver={onMouseOverHandler}
-          ref={divRef}
-          className={mergeClassNames(
-            styles['card-name '],
-            styles['simple-card-name'],
-          )}
-        >
-          {name}
-        </div>
-      </Tooltip>
-
+        {name}
+      </div>
       {details && <p>{details}</p>}
       {rating && (
         <Rating rating={rating} style={{ justifyContent: 'flex-start' }} />
