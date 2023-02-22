@@ -143,7 +143,7 @@ export class TeacherService {
     }
   }
   checkQueryDate ({ semester, year }: MarksQueryDTO) {
-    if ((!year && !!semester) || (!!year && !semester)) {
+    if ((!year && semester) || (year && !semester)) {
       throw new InvalidQueryException();
     }
   }
