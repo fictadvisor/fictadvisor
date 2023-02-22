@@ -11,6 +11,6 @@ import { UserModule } from '../user/UserModule';
   controllers: [DisciplineController],
   providers: [DisciplineService, GroupByDisciplineGuard, DisciplineTypeService],
   exports: [DisciplineService, DisciplineTypeService],
-  imports: [forwardRef(() => TeacherModule), PrismaModule, UserModule],
+  imports: [forwardRef(() => TeacherModule), PrismaModule, forwardRef(() => (UserModule))],
 })
 export class DisciplineModule {}

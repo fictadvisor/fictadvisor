@@ -42,15 +42,7 @@ export class GroupService {
 
   async getDisciplineTeachers (groupId: string) {
     const disciplines = await this.groupRepository.getDisciplines(groupId);
-
-    return disciplines.map((d) => ({
-      id: d.id,
-      subject: d.subject,
-      year: d.year,
-      semester: d.semester,
-      isSelective: d.isSelective,
-      teachers: this.disciplineTeacherService.getTeachers(d.disciplineTeachers),
-    }));
+    return this.disciplineService.getDisciplinesWithTeachers(disciplines);
   }
 
   async getDisciplines (groupId: string) {

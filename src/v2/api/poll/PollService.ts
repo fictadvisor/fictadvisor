@@ -7,11 +7,18 @@ import { Question, TeacherRole } from '@prisma/client';
 import { DisciplineRepository } from '../discipline/DisciplineRepository';
 import { DisciplineTeacherRepository } from '../teacher/DisciplineTeacherRepository';
 import { CreateQuestionRoleDTO } from './dto/CreateQuestionRoleDTO';
+import { StudentRepository } from '../user/StudentRepository';
+import { QuestionAnswerRepository } from './QuestionAnswerRepository';
+import { DisciplineService } from '../discipline/DisciplineService';
 
 @Injectable()
 export class PollService {
   constructor (
     private prisma: PrismaService,
+    @Inject(forwardRef(() => DisciplineService))
+    private disciplineService: DisciplineService,
+    private questionAnswerRepository: QuestionAnswerRepository,
+    private studentRepository: StudentRepository,
     private questionRepository: QuestionRepository,
 
     private disciplineRepository: DisciplineRepository,
@@ -61,5 +68,28 @@ export class PollService {
       }
     }
     return results;
+  }
+  async getDisciplineTeachers (userId: string) {
+    const disciplines = await this.studentRepository.getDisciplines(userId);
+    const answers = await this.studentRepository.getAnswers(userId);
+    const disciplinesWithTeachers = this.disciplineService.getDisciplinesWithTeachers(disciplines);
+    const teachers = [];
+
+    for (const disciplineWithTeachers of disciplinesWithTeachers) {
+      for (const teacher of disciplineWithTeachers.teachers) {
+        if (!answers.some((answer) => teacher.disciplineTeacherId === answer.disciplineTeacherId)) {
+          teachers.push({
+            disciplineTeacherId: teacher.disciplineTeacherId,
+            roles: teacher.roles,
+            firstName: teacher.firstName,
+            middleName: teacher.middleName,
+            lastName: teacher.lastName,
+            avatar: teacher.avatar,
+            subject: disciplineWithTeachers.subject,
+          });
+        }
+      }
+    }
+    return teachers;
   }
 }

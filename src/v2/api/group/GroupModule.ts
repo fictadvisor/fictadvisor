@@ -11,6 +11,6 @@ import { TeacherModule } from '../teacher/TeacherModule';
   controllers: [GroupController],
   providers: [GroupService, GroupByIdPipe],
   exports: [GroupService, GroupByIdPipe],
-  imports: [forwardRef(() => DisciplineModule), PrismaModule, forwardRef(() => UserModule), TeacherModule],
+  imports: [forwardRef(() => DisciplineModule), forwardRef(() => PrismaModule), forwardRef(() => UserModule), forwardRef(() => TeacherModule)],
 })
 export class GroupModule {}
