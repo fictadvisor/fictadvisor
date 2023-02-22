@@ -3,8 +3,7 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 import Table from '@/components/common/composite/table/Table';
 import { CustomCheck } from '@/components/common/custom-svg/CustomCheck';
 import AlertButton, {
-  AlertButtonIconPosition,
-  AlertButtonType,
+  AlertButtonVariant,
 } from '@/components/common/ui/alert-button/AlertButton';
 import Check, { CheckState } from '@/components/common/ui/check/Check';
 import { IconButtonSize } from '@/components/common/ui/icon-button/IconButton';
@@ -45,17 +44,13 @@ const TablesPage = () => {
         <AlertButton
           text="Прийняти"
           icon={<CustomCheck />}
-          iconPosition={AlertButtonIconPosition.RIGHT}
-          isDisabled={false}
-          type={AlertButtonType.SUCCESS}
+          variant={AlertButtonVariant.SUCCESS}
         />
       ),
       secondButton: (
         <AlertButton
           icon={<XMarkIcon className="icon" />}
-          iconPosition={AlertButtonIconPosition.RIGHT}
-          isDisabled={false}
-          type={AlertButtonType.ERROR_SECONDARY}
+          variant={AlertButtonVariant.ERROR_OUTLINE}
         />
       ),
     },
@@ -92,9 +87,7 @@ const TablesPage = () => {
         <AlertButton
           text="Прийняти"
           icon={<CustomCheck />}
-          iconPosition={AlertButtonIconPosition.RIGHT}
-          isDisabled={false}
-          type={AlertButtonType.SUCCESS}
+          variant={AlertButtonVariant.SUCCESS}
         />
       ),
       secondButton: <TrashBucketButton size={IconButtonSize.NORMAL} />,
@@ -115,9 +108,7 @@ const TablesPage = () => {
         <AlertButton
           text="Прийняти"
           icon={<CustomCheck />}
-          iconPosition={AlertButtonIconPosition.RIGHT}
-          isDisabled={false}
-          type={AlertButtonType.SUCCESS}
+          variant={AlertButtonVariant.SUCCESS}
         />
       ),
       secondButton: <TrashBucketButton size={IconButtonSize.NORMAL} />,
@@ -131,18 +122,14 @@ const TablesPage = () => {
         <AlertButton
           text="Прийняти"
           icon={<CustomCheck />}
-          iconPosition={AlertButtonIconPosition.RIGHT}
-          isDisabled={false}
-          type={AlertButtonType.SUCCESS}
+          variant={AlertButtonVariant.SUCCESS}
         />
       ),
       secondButton: (
         <AlertButton
-          className="custom-x"
-          icon={<XMarkIcon className="icon" />}
-          iconPosition={AlertButtonIconPosition.RIGHT}
-          isDisabled={false}
-          type={AlertButtonType.ERROR_SECONDARY}
+          text="Прийняти"
+          icon={<CustomCheck />}
+          variant={AlertButtonVariant.SUCCESS}
         />
       ),
     },

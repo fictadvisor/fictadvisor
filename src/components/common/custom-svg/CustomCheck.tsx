@@ -8,7 +8,7 @@ export const CustomCheck = () => (
   >
     <path
       d="M5.5 13L9.5 17L19.5 7"
-      stroke="#FAFAFA"
+      stroke="currentColor"
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
