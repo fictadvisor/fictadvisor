@@ -13,6 +13,6 @@ import { DisciplineTeacherController } from './DisciplineTeacherController';
   controllers: [TeacherController, DisciplineTeacherController],
   providers: [TeacherService, DisciplineTeacherService, DateService],
   exports: [TeacherService, DisciplineTeacherService],
-  imports: [forwardRef(() => DisciplineModule), PrismaModule, forwardRef(() => UserModule), forwardRef(() => PollModule)],
+  imports: [forwardRef(() => DisciplineModule),  forwardRef(() => PrismaModule), forwardRef(() => UserModule), forwardRef(() => PollModule)],
 })
 export class TeacherModule {}

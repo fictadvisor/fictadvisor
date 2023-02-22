@@ -14,6 +14,6 @@ import { AuthModule } from '../auth/AuthModule';
   controllers: [UserController, RoleController],
   providers: [UserService, RoleService, GrantService],
   exports: [UserService, RoleService, GrantService],
-  imports: [ConfigurationModule, forwardRef(() => GroupModule), forwardRef(() => DisciplineModule), PrismaModule, forwardRef(() => AuthModule)],
+  imports: [ConfigurationModule, forwardRef(() => GroupModule), forwardRef(() => DisciplineModule), forwardRef(() => PrismaModule), forwardRef(() => AuthModule)],
 })
 export class UserModule {}

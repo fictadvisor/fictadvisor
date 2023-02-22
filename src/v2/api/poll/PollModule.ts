@@ -13,6 +13,6 @@ import { UserModule } from '../user/UserModule';
   controllers: [PollController],
   providers: [PollService, GroupByDisciplineTeacherGuard, QuestionByIdPipe],
   exports: [PollService],
-  imports: [forwardRef(() => GroupModule), forwardRef(() => DisciplineModule), forwardRef(() => TeacherModule), PrismaModule, UserModule],
+  imports: [forwardRef(() => GroupModule), forwardRef(() => DisciplineModule), forwardRef(() => TeacherModule), PrismaModule, forwardRef(() => UserModule), forwardRef(() => DisciplineModule)],
 })
 export class PollModule {}
