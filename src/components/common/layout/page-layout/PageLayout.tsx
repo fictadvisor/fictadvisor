@@ -4,17 +4,21 @@ import Script from 'next/script';
 
 import config from '@/config';
 
+import Footer from '../../composite/footer/Footer';
+import Header from '../../composite/header/Header';
+
 import styles from './PageLayout.module.scss';
 
 interface PageLayoutProps {
   title?: string;
   description?: string;
   children?: ReactNode;
+  hasHeader?: boolean;
+  hasFooter?: boolean;
 }
 
 function PageLayout(props: PageLayoutProps) {
   const metaTitle = props?.title ? props.title : config.service;
-
   return (
     <div>
       <Head>
