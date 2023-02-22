@@ -8,20 +8,15 @@ $divide-regular-color: $gray-600;
   line-height: 20px;
 }
 
-.test-page-content {
-  width: 100%;
-}
-
 .dividers-list{
-  width: 35%;
+  width: 100%;
 }
 
 .dividers-list-items {
   display: flex;
   align-items: center;
-  margin: 0;
   padding: 0;
-  margin-top: 36px;
+  margin: 36px 0 0;
   width: 100%;
 }
 
