@@ -13,6 +13,7 @@ interface SliderProps {
 }
 
 const Slider: FunctionComponent<SliderProps> = props => {
+  const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const sliderRef = useRef(null);
   function setBackgroundSize() {
     sliderRef.current.style.setProperty(
@@ -40,8 +41,15 @@ const Slider: FunctionComponent<SliderProps> = props => {
         defaultValue={props.defaultValue.toString()}
         className={styles['slider'] + ' ' + styles[`slider-${props.type}`]}
         onInput={setBackgroundSize}
-      ></input>
-      <div className={styles[`number-range-${props.type}`]}></div>
+      />
+      <div className={styles['target']}>
+        {numbers.map((number, index) => (
+          <div className={styles['component-target']} key={index}>
+            <div className={styles['white']}></div>
+            <p className={styles[`${props.type}-font`]}>{number}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

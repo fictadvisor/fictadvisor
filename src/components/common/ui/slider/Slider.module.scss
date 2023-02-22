@@ -1,15 +1,13 @@
 @import "src/styles/partials/theme";
 
-$slider-color: $background-dark-35;
-$thumb-color: $red-25;
 $number-range-width: 100%;
 $slider-desk-height: 16px;
 $slider-mob-height: 8px;
-$slider-border-radius: 500px; 
+$slider-border-radius: 500px;
 
 @mixin thumb-desk-size {
-    width: 28px;
-    height: 28px;
+    width: 26px;
+    height: 26px;
 }
 
 @mixin thumb-mob-size {
@@ -20,38 +18,18 @@ $slider-border-radius: 500px;
 @mixin thumb {
     position: relative;
     cursor: pointer;
-    background: $thumb-color;
+    background: $red-25;
     border: none;
     border-radius: 50%;
     margin-top: -6px;
 }
 
-.test-page-wrap {
-    gap: 30px;
-}
-
 .slider-container {
-    width: 50%;
+    width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 5px;
-}
-
-.slider-container:nth-child(2) {
-    width: 375px;
-    gap:3px;
-}
-
-.number-range-desktop {
-    content: url("/assets/icons/number-range-desk.svg");
-    width: $number-range-width;
-    padding: 0 0.4%;
-}
-
-.number-range-mobile {
-    content: url("/assets/icons/number-range-mob.svg");
-    width: $number-range-width;
-    padding: 0 0.2%;
+    align-items: center;
+    gap: 4px;
 }
 
 .slider,
@@ -59,12 +37,13 @@ $slider-border-radius: 500px;
 .slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     background: transparent;
+    width: 100%;
 }
 
 .slider {
     &::-webkit-slider-runnable-track {
         height: $slider-desk-height;
-        background: linear-gradient(to right, $thumb-color, $thumb-color), $slider-color;
+        background: linear-gradient(to right, $red-25, $red-25), $background-dark-35;
         background-size: var(--background-size, 0%) 100%;
         background-repeat: no-repeat;
         border-radius: $slider-border-radius;
@@ -76,12 +55,12 @@ $slider-border-radius: 500px;
     }
 
     &::-moz-range-progress {
-        background-color: $thumb-color;
+        background-color: $red-25;
         border-radius: $slider-border-radius;
     }
 
     &::-moz-range-track {
-        background-color: $slider-color;
+        background-color:$background-dark-35;
         border-radius: $slider-border-radius;
     }
 
@@ -103,4 +82,39 @@ $slider-border-radius: 500px;
     &::-moz-range-thumb {
         @include thumb-mob-size;
     }
+}
+
+.target{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 99%;
+}
+
+.desktop-font{
+    font-size: 16px;
+}
+
+.mobile-font{
+    font-size: 14px;
+}
+
+.component-target{
+    margin-top: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    gap: 4px;
+
+    width: 14px;
+    height: 32px;
+}
+
+.white {
+    background-color: $white;
+    height: 4px;
+    width: 0.85px;
 }
