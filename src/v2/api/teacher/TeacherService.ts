@@ -109,68 +109,36 @@ export class TeacherService {
     );
   }
 
-  async getMarks (teacherId: string, { subjectId, year, semester }: MarksQueryDTO) {
+  async getMarks (teacherId: string, data?: MarksQueryDTO) {
     const marks = [];
-    const questions = await this.markQueryCheck(teacherId, { subjectId, year, semester });
+    const questions = await this.teacherRepository.getMarks(teacherId, data);
     for (const question of questions) {
       const count = question.questionAnswers.length;
-      let marksSum = 0;
-      let mark;
-      if (question.display === QuestionDisplay.PERCENT) {
-        for (const answer of question.questionAnswers) {
-          marksSum += parseInt(answer.value);
-        }
-        mark = this.parseMark(question.type, marksSum, count).mark;
-      } else if (question.display === QuestionDisplay.AMOUNT) {
-        const table =
-            {
-              1: 0,
-              2: 0,
-              3: 0,
-              4: 0,
-              5: 0,
-              6: 0,
-              7: 0,
-              8: 0,
-              9: 0,
-              10: 0,
-            };
-        for (const answer of question.questionAnswers) {
-          table[`${parseInt(answer.value)}`]++;
-        }
-        mark = table;
-      }
-      if (count> 0) {
-        marks.push({
-          name: question.name,
-          amount: count,
-          type: question.type,
-          mark,
-        });
-      }
+      if (count < 1) continue;
+      const mark = this.getRightMarkFormat(question);
+      marks.push({
+        name: question.name,
+        amount: count,
+        type: question.type,
+        mark,
+      });
+
     }
     return marks;
   }
   parseMark (type: QuestionType, marksSum: number, answerQty: number) {
-    if (type === QuestionType.SCALE) {
-      return {
-        mark: parseFloat(((marksSum / (answerQty * 10)) * 100).toFixed(2)),
-      };
-    } else {
-      return {
-        mark: parseFloat(((marksSum / (answerQty)) * 100).toFixed(2)),
-      };
-    }
+    return parseFloat(((marksSum / (answerQty * ((type === QuestionType.SCALE) ? 10 : 1))) * 100).toFixed(2));
   }
-  markQueryCheck (teacherId: string, { subjectId, year, semester }: MarksQueryDTO) {
-    if (!subjectId && !year && !semester) {
-      return this.teacherRepository.getMarksFullData(teacherId);
-    } else if (!year && !semester) {
-      return this.teacherRepository.getMarksWithSubjectId(teacherId, subjectId);
-    } else if (!subjectId) {
-      return this.teacherRepository.getMarksForDate(teacherId, year, semester);
-    } else {
-      return this.teacherRepository.getMarks(teacherId, subjectId, year, semester);
+  getRightMarkFormat (question) {
+    const { display, type, questionAnswers: answers } = question;
+    if (display === QuestionDisplay.PERCENT) {
+      return this.parseMark(type, answers.reduce((acc, answer) => acc + (+answer.value), 0), answers.length);
+    } else if (display === QuestionDisplay.AMOUNT) {
+      const table = {};
+      for (let i = 1; i <= 10; i++) {
+        table[i] = answers.filter((a) => +a.value === i).length;
+      }
+      return table;
     }
   }
 }

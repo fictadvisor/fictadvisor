@@ -5,6 +5,7 @@ import { DatabaseUtils } from '../utils/DatabaseUtils';
 import { CreateTeacherDTO } from './dto/CreateTeacherDTO';
 import { UpdateTeacherDTO } from './dto/UpdateTeacherDTO';
 import { QuestionType } from '@prisma/client';
+import { MarksData } from './data/MarksData';
 
 
 @Injectable()
@@ -111,37 +112,7 @@ export class TeacherRepository {
     return teacher;
   }
 
-  async getMarksFullData (teacherId: string) {
-    return this.prisma.question.findMany({
-      where: {
-        OR: [{
-          type: QuestionType.TOGGLE,
-        }, {
-          type: QuestionType.SCALE,
-        }],
-      },
-      select: {
-        id: true,
-        category: true,
-        name: true,
-        text: true,
-        type: true,
-        display: true,
-        questionAnswers: {
-          where: {
-            disciplineTeacher: {
-              teacherId,
-            },
-          },
-          select: {
-            value: true,
-          },
-        },
-      },
-    });
-  }
-
-  async getMarksWithSubjectId (teacherId: string, subjectId: string) {
+  async getMarks (teacherId: string, data?: MarksData) {
     return this.prisma.question.findMany({
       where: {
         OR: [{
@@ -162,75 +133,7 @@ export class TeacherRepository {
             disciplineTeacher: {
               teacherId,
               discipline: {
-                subjectId,
-              },
-            },
-          },
-          select: {
-            value: true,
-          },
-        },
-      },
-    });
-  }
-  async getMarks (teacherId: string, subjectId: string, year: number, semester: number) {
-    return this.prisma.question.findMany({
-      where: {
-        OR: [{
-          type: QuestionType.TOGGLE,
-        }, {
-          type: QuestionType.SCALE,
-        }],
-      },
-      select: {
-        id: true,
-        category: true,
-        name: true,
-        text: true,
-        type: true,
-        display: true,
-        questionAnswers: {
-          where: {
-            disciplineTeacher: {
-              teacherId,
-              discipline: {
-                subjectId,
-                year,
-                semester,
-              },
-            },
-          },
-          select: {
-            value: true,
-          },
-        },
-      },
-    });
-  }
-
-  async getMarksForDate (teacherId: string, year: number, semester: number) {
-    return this.prisma.question.findMany({
-      where: {
-        OR: [{
-          type: QuestionType.TOGGLE,
-        }, {
-          type: QuestionType.SCALE,
-        }],
-      },
-      select: {
-        id: true,
-        category: true,
-        name: true,
-        text: true,
-        type: true,
-        display: true,
-        questionAnswers: {
-          where: {
-            disciplineTeacher: {
-              teacherId,
-              discipline: {
-                year,
-                semester,
+                ...data,
               },
             },
           },

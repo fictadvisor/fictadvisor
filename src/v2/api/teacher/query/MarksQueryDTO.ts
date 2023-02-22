@@ -1,15 +1,15 @@
 import { IsOptional } from 'class-validator';
-import { Transform } from 'class-transformer';
+import { Type } from 'class-transformer';
 
 export class MarksQueryDTO {
   @IsOptional()
     subjectId?: string;
 
-  @Transform((n) => +n)
+  @Type(() => Number)
   @IsOptional()
     year?: number;
 
-  @Transform((n) => +n)
+  @Type(() => Number)
   @IsOptional()
     semester?: number;
 }
