@@ -55,12 +55,14 @@
     cursor: not-allowed;
   }
 }
-.secondary-text-button-variant{
+.secondary-text-button-variant {
   background: none;
   color: $gray-400;
+  outline: transparent;
 
   &:hover {
     text-decoration: underline;
+    outline: transparent;
   }
 
   &:focus:not(:active) {
@@ -71,9 +73,11 @@
   &:active {
     text-decoration: underline;
     color: $gray-600;
+    outline: transparent;
   }
 
   &:disabled {
+    outline: none;
     color: $gray-100;
     text-decoration: none;
     cursor: not-allowed;

@@ -28,34 +28,35 @@
   }
 }
 
-.primary-outline-button-variant{
+.primary-text-button-variant{
   background: none;
-  color: $gray-600;
-  outline: $red-100 solid 2px;
+  color: $gray-400;
+  outline: transparent;
 
   &:hover {
-    background: $red--10;
-    outline-color: $red-100;
-
+    text-decoration: underline;
+    outline: transparent;
   }
 
   &:focus:not(:active) {
-    background: $red-0;
-    outline-color: $red-logo;
+    outline: 2px solid $gray-50;
+    color: $gray-600;
   }
 
   &:active {
-    background: $red-10;
-    outline-color: $red-logo;
+    text-decoration: underline;
+    color: $gray-600;
+    outline: transparent;
   }
 
   &:disabled {
-    background: $background-dark-0;
-    color: $gray-50;
-    outline-color: $gray-50;
+    outline: none;
+    color: $gray-100;
+    text-decoration: none;
     cursor: not-allowed;
   }
 }
+
 .primary-text-button-variant{
   background: none;
   color: $gray-400;
