@@ -21,7 +21,7 @@ const NavigationPage = () => {
 
   return (
     <div className={styles['test-page-wrap']}>
-      <Header buttons={buttons} isLoggined={false} />
+      {/* <Header buttons={buttons} isLoggined={false} />
       <br />
       <Header
         groupName="ІС-11"
@@ -29,8 +29,8 @@ const NavigationPage = () => {
         position="Зам. староста"
         buttons={buttons}
         isLoggined={true}
-      />
-      <br />
+      /> */}
+
       <Footer />
     </div>
   );
