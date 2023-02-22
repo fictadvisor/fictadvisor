@@ -14,11 +14,13 @@ export class DisciplineTeacherController {
     private disciplineTeacherService: DisciplineTeacherService,
   ) {}
 
+  @Access('groups.$groupId.questions.get', GroupByDisciplineTeacherGuard)
   @Get('/:disciplineTeacherId/questions')
   getQuestions (
+    @Request() req,
     @Param('disciplineTeacherId', DisciplineTeacherByIdPipe) disciplineTeacherId: string,
   ) {
-    return this.disciplineTeacherService.getQuestions(disciplineTeacherId);
+    return this.disciplineTeacherService.getQuestions(disciplineTeacherId, req.user.id);
   }
 
   @Access('groups.$groupId.answers.send', GroupByDisciplineTeacherGuard)
@@ -28,7 +30,7 @@ export class DisciplineTeacherController {
     @Request() req,
     @Body() body: CreateAnswersDTO,
   ) {
-    return this.disciplineTeacherService.sendAnswers(disciplineTeacherId, body, req.user);
+    return this.disciplineTeacherService.sendAnswers(disciplineTeacherId, body, req.user.id);
   }
 
 }

@@ -6,7 +6,7 @@ import { DisciplineTypeRepository } from '../discipline/DisciplineTypeRepository
 import { PollService } from '../poll/PollService';
 import { CreateAnswerDTO, CreateAnswersDTO } from './dto/CreateAnswersDTO';
 import { QuestionAnswerRepository } from '../poll/QuestionAnswerRepository';
-import { Question, TeacherRole, User } from '@prisma/client';
+import { Question, TeacherRole } from '@prisma/client';
 import { AlreadyAnsweredException } from '../../utils/exceptions/AlreadyAnsweredException';
 import { DisciplineService } from '../discipline/DisciplineService';
 import { DisciplineRepository } from '../discipline/DisciplineRepository';
@@ -17,6 +17,7 @@ import { PrismaService } from '../../database/PrismaService';
 import { ConfigService } from '@nestjs/config';
 import { WrongTimeException } from '../../utils/exceptions/WrongTimeException';
 import { DisciplineTeacherWithRoles, DisciplineTeacherWithRolesAndTeacher } from './DisciplineTeacherDatas';
+import { AnswerInDatabasePermissionException } from '../../utils/exceptions/AnswerInDatabasePermissionException';
 
 @Injectable()
 export class DisciplineTeacherService {
@@ -74,20 +75,21 @@ export class DisciplineTeacherService {
     };
   }
 
-  getQuestions (disciplineTeacherId: string) {
+  async getQuestions (disciplineTeacherId: string, userId: string) {
+    await this.checkAnswerInDatabase(disciplineTeacherId, userId);
     return this.getCategories(disciplineTeacherId);
   }
 
-  async sendAnswers (disciplineTeacherId: string, { answers }: CreateAnswersDTO, user: User) {
+  async sendAnswers (disciplineTeacherId: string, { answers }: CreateAnswersDTO, userId: string) {
     const questions = await this.getUniqueQuestions(disciplineTeacherId);
     await this.checkExcessiveQuestions(questions, answers);
     await this.checkRequiredQuestions(questions, answers);
-    await this.checkAnsweredQuestions(disciplineTeacherId, answers, user.id);
+    await this.checkAnsweredQuestions(disciplineTeacherId, answers, userId);
     await this.checkSendingTime();
     for (const answer of answers) {
       await this.questionAnswerRepository.create({
         disciplineTeacherId: disciplineTeacherId,
-        userId: user.id,
+        userId,
         ...answer,
       });
     }
@@ -159,12 +161,18 @@ export class DisciplineTeacherService {
   }
   async checkSendingTime () {
     const dateBorders = await this.getPollTimeBorders();
-    const closingPollTime = dateBorders.startPoll.getTime();
-    const openingPollTime = dateBorders.endPoll.getTime();
+    const openingPollTime = dateBorders.startPoll.getTime();
+    const closingPollTime = dateBorders.endPoll.getTime();
     const currentTime = new Date().getTime();
 
-    if (currentTime < closingPollTime || currentTime > openingPollTime) {
+    if (currentTime > closingPollTime || currentTime < openingPollTime) {
       throw new WrongTimeException();
+    }
+  }
+  async checkAnswerInDatabase (disciplineTeacherId: string, userId: string) {
+    const answers = await this.questionAnswerRepository.findMany(disciplineTeacherId, userId);
+    if (answers) {
+      throw new AnswerInDatabasePermissionException();
     }
   }
 }
