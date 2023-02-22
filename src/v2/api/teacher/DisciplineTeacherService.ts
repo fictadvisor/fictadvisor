@@ -6,7 +6,7 @@ import { DisciplineTypeRepository } from '../discipline/DisciplineTypeRepository
 import { PollService } from '../poll/PollService';
 import { CreateAnswerDTO, CreateAnswersDTO } from './dto/CreateAnswersDTO';
 import { QuestionAnswerRepository } from '../poll/QuestionAnswerRepository';
-import { Question, TeacherRole, User } from '@prisma/client';
+import { Question, QuestionType, TeacherRole, User } from '@prisma/client';
 import { AlreadyAnsweredException } from '../../utils/exceptions/AlreadyAnsweredException';
 import { DisciplineService } from '../discipline/DisciplineService';
 import { DisciplineRepository } from '../discipline/DisciplineRepository';
@@ -17,6 +17,9 @@ import { PrismaService } from '../../database/PrismaService';
 import { ConfigService } from '@nestjs/config';
 import { WrongTimeException } from '../../utils/exceptions/WrongTimeException';
 import { DisciplineTeacherWithRoles, DisciplineTeacherWithRolesAndTeacher } from './DisciplineTeacherDatas';
+import { QuestionRepository } from '../poll/QuestionRepository';
+import { TelegramAPI } from '../../telegram/TelegramAPI';
+import { ResponseDTO } from '../poll/dto/ResponseDTO';
 
 @Injectable()
 export class DisciplineTeacherService {
@@ -36,6 +39,8 @@ export class DisciplineTeacherService {
     private config: ConfigService,
     @Inject(forwardRef(() => DisciplineService))
     private disciplineService: DisciplineService,
+    private questionRepository: QuestionRepository,
+    private telegramApi: TelegramAPI,
   ) {}
 
   async getGroup (id: string) {
@@ -86,12 +91,35 @@ export class DisciplineTeacherService {
     await this.checkSendingTime();
 
     for (const answer of answers) {
+
+      if ((await this.questionRepository.getQuestion(answer.questionId)).type === QuestionType.TEXT) {
+        const teacher = (await this.disciplineTeacherRepository.getDisciplineTeacher(disciplineTeacherId)).teacher;
+
+        await this.telegramApi.verifyResponse({
+          disciplineTeacherId: disciplineTeacherId,
+          subject: (await this.disciplineTeacherRepository.getDiscipline(disciplineTeacherId)).subject.name,
+          teacherName: teacher.firstName + teacher.middleName + teacher.lastName,
+          userId: user.id,
+          response: answer.value,
+          questionId: answer.questionId,
+        });
+
+        continue;
+      }
+
       this.questionAnswerRepository.create({
         disciplineTeacherId: disciplineTeacherId,
         userId: user.id,
         ...answer,
       });
     }
+  }
+
+  async sendResponse (disciplineTeacherId: string, response: ResponseDTO) {
+    return this.questionAnswerRepository.create({
+      disciplineTeacherId: disciplineTeacherId,
+      ...response,
+    });
   }
 
   async getCategories (id: string) {

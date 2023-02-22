@@ -4,6 +4,7 @@ import axios, { AxiosInstance } from 'axios';
 import { VerifyStudentDTO } from './dto/VerifyStudentDTO';
 import { VerifyCaptainDTO } from './dto/VerifyCaptainDTO';
 import { VerifySuperheroDTO } from './dto/VerifySuperheroDTO';
+import { VerifyResponseDTO } from './dto/VerifyResponseDTO';
 
 @Injectable()
 export class TelegramAPI {
@@ -30,5 +31,9 @@ export class TelegramAPI {
 
   async verifySuperhero (data:VerifySuperheroDTO) {
     await this.client.post('/superheroes/broadcastPending', data);
+  }
+
+  async verifyResponse (data:VerifyResponseDTO) {
+    await this.client.post('/responses/broadcastPending', data);
   }
 }
