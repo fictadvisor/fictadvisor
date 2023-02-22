@@ -75,8 +75,8 @@ export class DisciplineTeacherService {
     };
   }
 
-  async getQuestions (disciplineTeacherId: string, user: User) {
-    await this.checkAnswerInDatabase(disciplineTeacherId, user.id);
+  async getQuestions (disciplineTeacherId: string, userId: string) {
+    await this.checkAnswerInDatabase(disciplineTeacherId, userId);
     return this.getCategories(disciplineTeacherId);
   }
 
