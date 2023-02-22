@@ -3,12 +3,14 @@ import { QueryAllDTO } from '../../utils/QueryAllDTO';
 import { CreateTeacherDTO } from './dto/CreateTeacherDTO';
 import { UpdateTeacherDTO } from './dto/UpdateTeacherDTO';
 import { CreateContactDTO } from '../user/dto/CreateContactDTO';
-import { EntityType } from '@prisma/client';
+import { EntityType, QuestionDisplay, QuestionType } from '@prisma/client';
 import { TeacherRepository } from './TeacherRepository';
 import { DisciplineTeacherRepository } from './DisciplineTeacherRepository';
 import { UpdateContactDTO } from '../user/dto/UpdateContactDTO';
 import { ContactRepository } from '../user/ContactRepository';
 import { DisciplineTeacherService } from './DisciplineTeacherService';
+import { MarksQueryDTO } from './query/MarksQueryDTO';
+import { InvalidQueryException } from '../../utils/exceptions/InvalidQueryException';
 
 @Injectable()
 export class TeacherService {
@@ -17,7 +19,8 @@ export class TeacherService {
     private disciplineTeacherRepository: DisciplineTeacherRepository,
     private disciplineTeacherService: DisciplineTeacherService,
     private contactRepository: ContactRepository,
-  ) {}
+  ) {
+  }
 
 
   async getAll (
@@ -53,7 +56,7 @@ export class TeacherService {
   ) {
     return this.teacherRepository.create(body);
   }
-    
+
   async update (id: string, body: UpdateTeacherDTO) {
     return this.teacherRepository.update(id, body);
   }
@@ -105,5 +108,43 @@ export class TeacherService {
     await this.contactRepository.deleteContact(
       entityId, name,
     );
+  }
+
+  async getMarks (teacherId: string, data?: MarksQueryDTO) {
+    this.checkQueryDate(data);
+    const marks = [];
+    const questions = await this.teacherRepository.getMarks(teacherId, data);
+    for (const question of questions) {
+      if (question.questionAnswers.length === 0) continue;
+      const count = question.questionAnswers.length;
+      const mark = this.getRightMarkFormat(question);
+      marks.push({
+        name: question.name,
+        amount: count,
+        type: question.display,
+        mark,
+      });
+    }
+    return marks;
+  }
+  parseMark (type: QuestionType, marksSum: number, answerQty: number) {
+    const divider = (answerQty * ((type === QuestionType.SCALE) ? 10 : 1));
+    return parseFloat(((marksSum / divider) * 100).toFixed(2));
+  }
+  getRightMarkFormat ({ display, type, questionAnswers: answers }) {
+    if (display === QuestionDisplay.PERCENT) {
+      return this.parseMark(type, answers.reduce((acc, answer) => acc + (+answer.value), 0), answers.length);
+    } else if (display === QuestionDisplay.AMOUNT) {
+      const table = {};
+      for (let i = 1; i <= 10; i++) {
+        table[i] = answers.filter((a) => +a.value === i).length;
+      }
+      return table;
+    }
+  }
+  checkQueryDate ({ semester, year }: MarksQueryDTO) {
+    if ((!year && semester) || (year && !semester)) {
+      throw new InvalidQueryException();
+    }
   }
 }
