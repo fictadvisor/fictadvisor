@@ -2,7 +2,11 @@ import React, { useRef, useState } from 'react';
 import mergeClassNames from 'merge-class-names';
 
 import styles from '@/components/common/composite/cards/Cards.module.scss';
-import Button, { ButtonSize, ButtonType } from '@/components/common/ui/button';
+import Button, {
+  ButtonColor,
+  ButtonSize,
+  ButtonVariant,
+} from '@/components/common/ui/button';
 import Rating from '@/components/common/ui/rating';
 import Tag, { TagColor, TagSize } from '@/components/common/ui/tag/Tag';
 import Tooltip from '@/components/common/ui/tooltip';
@@ -188,7 +192,8 @@ export const PollCard: React.FC<PollCardProps> = ({
       </p>
 
       <Button
-        type={ButtonType.SECONDARY_RED}
+        variant={ButtonVariant.OUTLINE}
+        color={ButtonColor.PRIMARY}
         size={ButtonSize.SMALL}
         text={'Пройти опитування'}
       ></Button>
