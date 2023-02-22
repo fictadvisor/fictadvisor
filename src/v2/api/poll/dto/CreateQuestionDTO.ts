@@ -1,4 +1,4 @@
-import { QuestionType } from '@prisma/client';
+import { QuestionDisplay, QuestionType } from '@prisma/client';
 import { Type } from 'class-transformer';
 import { IsBoolean, IsEnum, IsNotEmpty, IsOptional, ValidateNested } from 'class-validator';
 import { CreateQuestionRoleDTO } from './CreateQuestionRoleDTO';
@@ -28,6 +28,9 @@ export class CreateQuestionDTO {
 
     @IsOptional()
       description?: string;
+
+    @IsEnum(QuestionDisplay)
+      display: QuestionDisplay;
 
     @IsBoolean()
     @IsOptional()

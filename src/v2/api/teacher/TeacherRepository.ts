@@ -4,6 +4,8 @@ import { QueryAllDTO } from '../../utils/QueryAllDTO';
 import { DatabaseUtils } from '../utils/DatabaseUtils';
 import { CreateTeacherDTO } from './dto/CreateTeacherDTO';
 import { UpdateTeacherDTO } from './dto/UpdateTeacherDTO';
+import { QuestionType } from '@prisma/client';
+import { MarksData } from './data/MarksData';
 
 
 @Injectable()
@@ -108,5 +110,38 @@ export class TeacherRepository {
       teacher = await this.create(data);
     }
     return teacher;
+  }
+
+  async getMarks (teacherId: string, data?: MarksData) {
+    return this.prisma.question.findMany({
+      where: {
+        OR: [{
+          type: QuestionType.TOGGLE,
+        }, {
+          type: QuestionType.SCALE,
+        }],
+      },
+      select: {
+        id: true,
+        category: true,
+        name: true,
+        text: true,
+        type: true,
+        display: true,
+        questionAnswers: {
+          where: {
+            disciplineTeacher: {
+              teacherId,
+              discipline: {
+                ...data,
+              },
+            },
+          },
+          select: {
+            value: true,
+          },
+        },
+      },
+    });
   }
 }

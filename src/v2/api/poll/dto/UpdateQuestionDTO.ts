@@ -1,4 +1,4 @@
-import { QuestionType } from '@prisma/client';
+import { QuestionDisplay, QuestionType } from '@prisma/client';
 import { IsEnum, IsOptional } from 'class-validator';
 
 export class UpdateQuestionDTO {
@@ -14,4 +14,8 @@ export class UpdateQuestionDTO {
     @IsEnum(QuestionType)
     @IsOptional()
       type?: QuestionType;
+
+    @IsEnum(QuestionDisplay)
+    @IsOptional()
+      display?: QuestionDisplay;
 }
