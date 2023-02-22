@@ -93,20 +93,17 @@ export class RozParser implements Parser {
     const pairs = [];
     const table = dom.window.document.getElementById(WEEK_TAGS[week]);
 
-    // Iterate table rows
     for (let i = 1; i < table.rows.length; i++) {
       const row = table.rows[i];
 
-      const time = row.childNodes[1].innerHTML.split('<br>')[1]; // ['lesson number', 'time']
+      const time = row.childNodes[1].innerHTML.split('<br>')[1];
 
-      // Iterating table rows looking at each td
       for (let j = 2; j < row.childNodes.length; j++) {
         const td = row.childNodes[j];
 
         // Check for empty day - no lessons
         if (td.innerHTML === '' || td.innerHTML === undefined) continue;
 
-        // 1 - Пн, 2 - Вв ...
         const day = j - 1;
 
         const localRowPairs = [];
@@ -115,7 +112,6 @@ export class RozParser implements Parser {
         const pairType = td.lastChild.textContent.split(' ')[1];
         const span = td.childNodes[0];
 
-        // Actual discipline links inside of span
         let spanLinksCounter = 0;
 
         // Iterating span for getting discipline links data
@@ -133,21 +129,18 @@ export class RozParser implements Parser {
           spanLinksCounter += 1;
         }
 
-        let linksCounter = 0; // Actual teacher links inside of td
+        let linksCounter = 0;
 
         // Getting teacher links data
         for (let k = 1; k < td.childNodes.length - 1; k++) {
           const element = td.childNodes[k];
-          // Filtering <br> and ',' elements
           if (
             element instanceof dom.window.HTMLBRElement ||
             element instanceof dom.window.Text ||
             element.textContent.startsWith('-18') // if several links type of "-18 Лек on-line" ...
           )
             continue;
-          // position1 position2 lastName firstName MiddleName
           const teacherString = element.getAttribute('title').split(' ');
-          // console.log('teacher: ', week, group, teacherString, localRowPairs[linksCounter]);
           if (!localRowPairs[linksCounter]) continue; 
           localRowPairs[linksCounter].teacher = {
             lastName: teacherString[teacherString.length - 1 - 2] ?? '',
@@ -165,10 +158,8 @@ export class RozParser implements Parser {
 
   async parseWeek(weekNumber, group, dom) {
     const week = await this.parseHtmlWeek(weekNumber, group.code, dom);
-    // console.log(`Parsed ${weekNumber} week`, group.code, week.length);
     for (const pair of week) {
       await this.parsePair(pair, group.id);
-      console.log('есть', weekNumber);
     }
   }
 
