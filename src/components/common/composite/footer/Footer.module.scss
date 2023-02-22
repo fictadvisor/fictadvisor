@@ -2,11 +2,11 @@
 @import "/src/styles/partials/utils";
 
 .footer-container {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
     width: 100%;
     min-width: fit-content;
-    height: 242px;
+    grid-template-columns: 3fr 1fr 1fr 1fr;
+    height: 300px;
     background: #151515;
     position: relative;
 }
@@ -16,10 +16,12 @@
     width: 197px;
     height: 28px;
     margin-left: 80px;
+
     & img {
         @include flex-center;
         height: 20px;
     }
+
     margin-left: 80px;
     margin-top: 40px;
     flex-grow: 1;
@@ -29,6 +31,7 @@
     display: flex;
     margin-left: 78px;
     margin-top: 8px;
+
     & p {
         font-weight: 400;
         font-size: 16px;
@@ -37,17 +40,13 @@
     }
 }
 
-.link-container {
-    display: flex;
-    margin-top: 40px;
-    margin-right: 358px;
-}
-
 .main-references {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    height: 170px;
+    gap: 2px;
+    height: 220px;
+    margin-top: 40px;
 }
 
 .title {
@@ -55,7 +54,7 @@
     justify-content: left;
     padding: 2px 12px;
     width: 171px;
-    height: 28px;
+    height: 30px;
 
     & p {
         font-weight: 400;
@@ -69,14 +68,99 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    height: 170px;
-    margin-left: 45px;
+    margin-top: 40px;
+    height: 106px;
+    gap: 2px;
 }
 
 .social-media {
     display: flex;
+    justify-content: center;
+    align-items: center;
     flex-direction: column;
+    margin-top: 40px;
     align-items: flex-start;
-    height: 114px;
-    margin-left: 72px;
+    height: fit-content;
+    gap: 2px;
+}
+
+@media (max-width: 480px) {
+
+    .footer-container {
+        display: grid;
+        grid-template-rows: 4rem auto 74px;
+        grid-template-columns: 16rem auto;
+        height: 286px;
+        width: 100%;
+    }
+
+    .social-media {
+        grid-row-start: 2;
+        grid-column-start: 2;
+        grid-row-end: 3;
+        grid-column-end: 3;
+        flex-direction: column;
+        margin-top: 105px;
+        align-items: flex-start;
+        height: 60px;
+
+        & p {
+            font-weight: 400;
+            font-size: 11px;
+            line-height: 17.6px;
+        }
+    }
+
+    .support {
+        grid-row-start: 1;
+        grid-column-start: 2;
+        grid-row-end: 2;
+        grid-column-end: 3;
+        margin-top: 8px;
+        margin-right: 28px;
+        height: 144px;
+
+        & p {
+            font-weight: 400;
+            font-size: 11px;
+            line-height: 17.6px;
+        }
+    }
+
+    .main-references {
+        grid-row-start: 1;
+        grid-column-start: 1;
+        grid-row-end: 3;
+        grid-column-end: 2;
+        margin-top: 8px;
+        margin-left: 16px;
+        height: 204px;
+        
+        & p {
+            font-weight: 400;
+            font-size: 11px;
+            line-height: 17.6px;
+        }
+    }
+
+    .footer-logo {
+        grid-row-start: 3;
+        grid-column-start: 1;
+        grid-row-end: 4;
+        grid-column-end: 3;
+        margin-left: 50%;
+        margin-top: 0px;
+    }
+
+    .signature {
+        display: flex;
+        margin-left: 37%;
+        margin-top: 8px;
+        position: absolute;
+        & p {
+            font-weight: 400;
+            font-size: 11px;
+            line-height: 17.6px;
+        }
+    }
 }
