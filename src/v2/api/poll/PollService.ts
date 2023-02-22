@@ -9,11 +9,14 @@ import { DisciplineTeacherRepository } from '../teacher/DisciplineTeacherReposit
 import { CreateQuestionRoleDTO } from './dto/CreateQuestionRoleDTO';
 import { StudentRepository } from '../user/StudentRepository';
 import { QuestionAnswerRepository } from './QuestionAnswerRepository';
+import { DisciplineService } from '../discipline/DisciplineService';
 
 @Injectable()
 export class PollService {
   constructor (
     private prisma: PrismaService,
+    @Inject(forwardRef(() => DisciplineService))
+    private disciplineService: DisciplineService,
     private questionAnswerRepository: QuestionAnswerRepository,
     private studentRepository: StudentRepository,
     private questionRepository: QuestionRepository,
@@ -69,26 +72,25 @@ export class PollService {
   async getDisciplineTeachers (userId: string) {
     const disciplines = await this.studentRepository.getDisciplines(userId);
     const answers = await this.studentRepository.getAnswers(userId);
+    const disciplinesWithTeachers = this.disciplineService.getDisciplinesWithTeachers(disciplines);
     const teachers = [];
-
-    for (const discipline of disciplines) {
-      for (const disciplineTeacher of discipline.disciplineTeachers) {
-        if (answers.some((answer) => disciplineTeacher.id !== answer.disciplineTeacherId)) {
+    //['a', 'b', 'c']
+    //['d', 'c']
+    for (const disciplineWithTeachers of disciplinesWithTeachers) {
+      for (const teacher of disciplineWithTeachers.teachers) {
+        if (!answers.some((answer) => teacher.disciplineTeacherId === answer.disciplineTeacherId)) {
           teachers.push({
-            disciplineTeacherId: disciplineTeacher.id,
-            roles: disciplineTeacher.roles,
-            firstName: disciplineTeacher.teacher.firstName,
-            middleName: disciplineTeacher.teacher.middleName,
-            lastName: disciplineTeacher.teacher.lastName,
-            avatar: disciplineTeacher.teacher.avatar,
-            subject: discipline.subject,
+            disciplineTeacherId: teacher.disciplineTeacherId,
+            roles: teacher.roles,
+            firstName: teacher.firstName,
+            middleName: teacher.middleName,
+            lastName: teacher.lastName,
+            avatar: teacher.avatar,
+            subject: disciplineWithTeachers.subject,
           });
         }
       }
     }
-    return {
-      teachers,
-    };
-
+    return teachers;
   }
 }
