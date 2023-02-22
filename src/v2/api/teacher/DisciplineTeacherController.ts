@@ -30,7 +30,7 @@ export class DisciplineTeacherController {
     @Request() req,
     @Body() body: CreateAnswersDTO,
   ) {
-    return this.disciplineTeacherService.sendAnswers(disciplineTeacherId, body, req.user);
+    return this.disciplineTeacherService.sendAnswers(disciplineTeacherId, body, req.user.id);
   }
 
 }

@@ -6,7 +6,7 @@ import { DisciplineTypeRepository } from '../discipline/DisciplineTypeRepository
 import { PollService } from '../poll/PollService';
 import { CreateAnswerDTO, CreateAnswersDTO } from './dto/CreateAnswersDTO';
 import { QuestionAnswerRepository } from '../poll/QuestionAnswerRepository';
-import { Question, TeacherRole, User } from '@prisma/client';
+import { Question, TeacherRole } from '@prisma/client';
 import { AlreadyAnsweredException } from '../../utils/exceptions/AlreadyAnsweredException';
 import { DisciplineService } from '../discipline/DisciplineService';
 import { DisciplineRepository } from '../discipline/DisciplineRepository';
@@ -80,16 +80,16 @@ export class DisciplineTeacherService {
     return this.getCategories(disciplineTeacherId);
   }
 
-  async sendAnswers (disciplineTeacherId: string, { answers }: CreateAnswersDTO, user: User) {
+  async sendAnswers (disciplineTeacherId: string, { answers }: CreateAnswersDTO, userId: string) {
     const questions = await this.getUniqueQuestions(disciplineTeacherId);
     await this.checkExcessiveQuestions(questions, answers);
     await this.checkRequiredQuestions(questions, answers);
-    await this.checkAnsweredQuestions(disciplineTeacherId, answers, user.id);
+    await this.checkAnsweredQuestions(disciplineTeacherId, answers, userId);
     await this.checkSendingTime();
     for (const answer of answers) {
       await this.questionAnswerRepository.create({
         disciplineTeacherId: disciplineTeacherId,
-        userId: user.id,
+        userId,
         ...answer,
       });
     }
