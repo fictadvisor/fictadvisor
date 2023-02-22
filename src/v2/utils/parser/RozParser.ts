@@ -41,7 +41,7 @@ const WEEK_TAGS = {
 
 @Injectable()
 export class RozParser implements Parser {
-  constructor(
+  constructor (
     private groupRepository: GroupRepository,
     private teacherRepository: TeacherRepository,
     private subjectRepository: SubjectRepository,
@@ -52,7 +52,7 @@ export class RozParser implements Parser {
     private disciplineTeacherRoleRepository: DisciplineTeacherRoleRepository
   ) {}
 
-  async parse() {
+  async parse () {
     const groups = await this.groupRepository.getAll({});
     for (const group of groups) {
       if (group.code.endsWith('ф')) continue;
@@ -60,7 +60,7 @@ export class RozParser implements Parser {
     }
   }
 
-  async parseGroupSchedule(group) {
+  async parseGroupSchedule (group) {
     const groupHashId = await this.getGroupHashId(group.code);
     const url = `http://epi.kpi.ua/Schedules/ViewSchedule.aspx?g=${groupHashId}`;
 
@@ -71,7 +71,7 @@ export class RozParser implements Parser {
     await this.parseWeek(1, group, dom);
   }
 
-  async getGroupHashId(group) {
+  async getGroupHashId (group) {
     const SCHEDULE_GROUP_SELECTION_PARAMS = new URLSearchParams({
       __EVENTVALIDATION:
         '/wEdAAEAAAD/////AQAAAAAAAAAPAQAAAAUAAAAIsA3rWl3AM+6E94I5Tu9cRJoVjv0LAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHfLZVQO6kVoZVPGurJN4JJIAuaU',
@@ -83,13 +83,13 @@ export class RozParser implements Parser {
     const responce = await axios.post(url, SCHEDULE_GROUP_SELECTION_PARAMS);
     const dom = new JSDOM(responce.data);
 
-    const form = dom.window.document.querySelector(`form[name='aspnetForm']`);
+    const form = dom.window.document.querySelector('form[name=\'aspnetForm\']');
     const hashId = form.getAttribute('action').split('?g=')[1];
 
     return hashId;
   }
 
-  async parseHtmlWeek(week, group, dom) {
+  async parseHtmlWeek (week, group, dom) {
     const pairs = [];
     const table = dom.window.document.getElementById(WEEK_TAGS[week]);
 
@@ -156,14 +156,14 @@ export class RozParser implements Parser {
     return pairs;
   }
 
-  async parseWeek(weekNumber, group, dom) {
+  async parseWeek (weekNumber, group, dom) {
     const week = await this.parseHtmlWeek(weekNumber, group.code, dom);
     for (const pair of week) {
       await this.parsePair(pair, group.id);
     }
   }
 
-  async parsePair(pair, groupId) {
+  async parsePair (pair, groupId) {
     const { lastName, firstName, middleName } = pair.teacher;
     const teacher = await this.teacherRepository.getOrCreate({
       lastName,
@@ -219,7 +219,7 @@ export class RozParser implements Parser {
     });
   }
 
-  createDate(day, week, hours, minutes): Date {
+  createDate (day, week, hours, minutes): Date {
     return new Date(1970, 0, day + week * 7, hours, minutes);
   }
 }
