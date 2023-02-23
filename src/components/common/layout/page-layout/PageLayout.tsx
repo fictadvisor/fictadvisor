@@ -46,9 +46,15 @@ function PageLayout(props: PageLayoutProps) {
           <meta property="og:description" content={props.description} />
         )}
       </Head>
-      <div className={styles['footer']}></div>
-      {props.hasFooter && <Footer />}
-      <div className={styles['page']}>{props.children}</div>
+
+      <div className={styles['page']}>
+        {props.children}
+        <div className="navigation-wrap">
+          <div className={styles['footer']}>
+            {props.hasFooter && <Footer />}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

@@ -4,11 +4,7 @@ import Link from 'next/link';
 import { GitHubIcon } from '@/components/common/custom-svg/GitHub';
 import { InstagramIcon } from '@/components/common/custom-svg/Instagram';
 import { TelegramIcon } from '@/components/common/custom-svg/Telegram';
-import Button, {
-  ButtonIconPosition,
-  ButtonSize,
-  ButtonType,
-} from '@/components/common/ui/button';
+import Button, { ButtonSize, ButtonType } from '@/components/common/ui/button';
 import useIsMobile from '@/hooks/use-is-mobile/UseIsMobile';
 
 import styles from './Footer.module.scss';
@@ -111,7 +107,6 @@ const Footer: React.FC = () => {
             <Button
               text={socialLabels[0].text}
               icon={socialLabels[0].icon}
-              iconPosition={ButtonIconPosition.LEFT}
               isDisabled={false}
               size={ButtonSize.MEDIUM}
               type={ButtonType.TERTIARY}
@@ -121,7 +116,6 @@ const Footer: React.FC = () => {
             <Button
               text={socialLabels[1].text}
               icon={socialLabels[1].icon}
-              iconPosition={ButtonIconPosition.LEFT}
               isDisabled={false}
               size={ButtonSize.MEDIUM}
               type={ButtonType.TERTIARY}
@@ -131,7 +125,6 @@ const Footer: React.FC = () => {
             <Button
               text={socialLabels[2].text}
               icon={socialLabels[2].icon}
-              iconPosition={ButtonIconPosition.LEFT}
               isDisabled={false}
               size={ButtonSize.MEDIUM}
               type={ButtonType.TERTIARY}
