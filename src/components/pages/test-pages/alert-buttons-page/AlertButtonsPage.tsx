@@ -12,13 +12,13 @@ const AlertButtonsPage = () => (
     <div className={styles['test-page-content']}>
       <AlertButton
         text="Add"
-        icon={<CustomCheck />}
+        startIcon={<CustomCheck />}
         disabled={true}
         variant={AlertButtonVariant.SUCCESS}
       />
       <AlertButton
         text="Add"
-        icon={<CustomCheck />}
+        endIcon={<CustomCheck />}
         disabled={true}
         variant={AlertButtonVariant.SUCCESS}
       />
@@ -28,20 +28,20 @@ const AlertButtonsPage = () => (
         variant={AlertButtonVariant.SUCCESS}
       />
       <AlertButton
-        icon={<CustomCheck />}
+        startIcon={<CustomCheck />}
         disabled={false}
         variant={AlertButtonVariant.SUCCESS}
       />
 
       <AlertButton
         text="Remove"
-        icon={<XMarkIcon className="icon" />}
+        endIcon={<XMarkIcon className="icon" />}
         disabled={false}
         variant={AlertButtonVariant.ERROR_FILLED}
       />
       <AlertButton
         text="Remove"
-        icon={<XMarkIcon className="icon" />}
+        endIcon={<XMarkIcon className="icon" />}
         disabled={true}
         variant={AlertButtonVariant.ERROR_FILLED}
       />
@@ -51,20 +51,20 @@ const AlertButtonsPage = () => (
         variant={AlertButtonVariant.ERROR_FILLED}
       />
       <AlertButton
-        icon={<XMarkIcon className="icon" />}
+        startIcon={<XMarkIcon className="icon" />}
         disabled={false}
         variant={AlertButtonVariant.ERROR_FILLED}
       />
 
       <AlertButton
         text="Remove"
-        icon={<XMarkIcon className="icon" />}
+        endIcon={<XMarkIcon className="icon" />}
         disabled={false}
         variant={AlertButtonVariant.ERROR_OUTLINE}
       />
       <AlertButton
         text="Remove"
-        icon={<XMarkIcon className="icon" />}
+        endIcon={<XMarkIcon className="icon" />}
         disabled={true}
         variant={AlertButtonVariant.ERROR_OUTLINE}
       />
@@ -74,7 +74,7 @@ const AlertButtonsPage = () => (
         variant={AlertButtonVariant.ERROR_OUTLINE}
       />
       <AlertButton
-        icon={<XMarkIcon className="icon" />}
+        startIcon={<XMarkIcon className="icon" />}
         disabled={false}
         variant={AlertButtonVariant.ERROR_OUTLINE}
       />
