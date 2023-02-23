@@ -5,7 +5,6 @@ import Script from 'next/script';
 import config from '@/config';
 
 import Footer from '../../composite/footer/Footer';
-import Header from '../../composite/header/Header';
 
 import styles from './PageLayout.module.scss';
 
@@ -47,7 +46,7 @@ function PageLayout(props: PageLayoutProps) {
           <meta property="og:description" content={props.description} />
         )}
       </Head>
-      {props.hasHeader && <Header />}
+      <div className={styles['footer']}></div>
       {props.hasFooter && <Footer />}
       <div className={styles['page']}>{props.children}</div>
     </div>
