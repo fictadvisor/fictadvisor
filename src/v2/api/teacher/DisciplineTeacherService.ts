@@ -121,7 +121,7 @@ export class DisciplineTeacherService {
 
   async sendResponse (disciplineTeacherId: string, response: ResponseDTO) {
     return this.questionAnswerRepository.create({
-      disciplineTeacherId: disciplineTeacherId,
+      disciplineTeacherId,
       ...response,
     });
   }
