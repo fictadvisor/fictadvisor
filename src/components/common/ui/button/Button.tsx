@@ -35,6 +35,7 @@ const Button: React.FC<ButtonProps> = ({
   variant = ButtonVariant.FILLED,
   startIcon,
   endIcon,
+  type = 'button',
   ...rest
 }) => {
   const buttonStyle = `${color}-${size}${
@@ -43,7 +44,7 @@ const Button: React.FC<ButtonProps> = ({
   const buttonVariant = `${color}-${variant}-button-variant`;
   const className = mergeClassNames(styles[buttonVariant], styles[buttonStyle]);
   return (
-    <button className={className} {...rest}>
+    <button className={className} type={type} {...rest}>
       {startIcon}
       {text}
       {endIcon}
