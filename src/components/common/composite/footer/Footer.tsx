@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { GitHubIcon } from '@/components/common/custom-svg/GitHub';
 import { InstagramIcon } from '@/components/common/custom-svg/Instagram';
 import { TelegramIcon } from '@/components/common/custom-svg/Telegram';
-import Button, { ButtonSize, ButtonType } from '@/components/common/ui/button';
+import Button, { ButtonSize } from '@/components/common/ui/button';
 import useIsMobile from '@/hooks/use-is-mobile/UseIsMobile';
 
 import styles from './Footer.module.scss';
@@ -37,44 +37,19 @@ const Footer: React.FC = () => {
           <p>Основні посилання</p>
         </div>
         <Link href={{}} style={{ height: '36px' }}>
-          <Button
-            text="Головна"
-            isDisabled={false}
-            size={ButtonSize.MEDIUM}
-            type={ButtonType.TERTIARY}
-          />
+          <Button text="Головна" size={ButtonSize.MEDIUM} />
         </Link>
         <Link href={{}} style={{ height: '36px' }}>
-          <Button
-            text="Опитування"
-            isDisabled={false}
-            size={ButtonSize.MEDIUM}
-            type={ButtonType.TERTIARY}
-          />
+          <Button text="Опитування" size={ButtonSize.MEDIUM} />
         </Link>
         <Link href={{}} style={{ height: '36px' }}>
-          <Button
-            text="Викладачі"
-            isDisabled={false}
-            size={ButtonSize.MEDIUM}
-            type={ButtonType.TERTIARY}
-          />
+          <Button text="Викладачі" size={ButtonSize.MEDIUM} />
         </Link>
         <Link href={{}} style={{ height: '36px' }}>
-          <Button
-            text="Предмети"
-            isDisabled={false}
-            size={ButtonSize.MEDIUM}
-            type={ButtonType.TERTIARY}
-          />
+          <Button text="Предмети" size={ButtonSize.MEDIUM} />
         </Link>
         <Link href={{}} style={{ height: '36px' }}>
-          <Button
-            text="Розклад"
-            isDisabled={false}
-            size={ButtonSize.MEDIUM}
-            type={ButtonType.TERTIARY}
-          />
+          <Button text="Розклад" size={ButtonSize.MEDIUM} />
         </Link>
       </div>{' '}
       <div className={styles['support']}>
@@ -82,20 +57,10 @@ const Footer: React.FC = () => {
           <p>Підтримка</p>
         </div>
         <Link href={{}} style={{ height: '36px' }}>
-          <Button
-            text="Конфіденційність"
-            isDisabled={false}
-            size={ButtonSize.MEDIUM}
-            type={ButtonType.TERTIARY}
-          />
+          <Button text="Конфіденційність" size={ButtonSize.MEDIUM} />
         </Link>
         <Link href={{}} style={{ height: '36px' }}>
-          <Button
-            text="FICT robot"
-            isDisabled={false}
-            size={ButtonSize.MEDIUM}
-            type={ButtonType.TERTIARY}
-          />
+          <Button text="FICT robot" size={ButtonSize.MEDIUM} />
         </Link>
       </div>
       <div className={styles['social-media']}>
@@ -104,30 +69,20 @@ const Footer: React.FC = () => {
         </div>
         <div className={styles['social-buttons']}>
           <Link href={{}} style={{ height: '36px', width: '36px' }}>
-            <Button
-              text={socialLabels[0].text}
-              icon={socialLabels[0].icon}
-              isDisabled={false}
-              size={ButtonSize.MEDIUM}
-              type={ButtonType.TERTIARY}
-            />
+            <Button text={socialLabels[0].text} startIcon={<GitHubIcon />} />
           </Link>
           <Link href={{}} style={{ height: '36px', width: '36px' }}>
             <Button
               text={socialLabels[1].text}
-              icon={socialLabels[1].icon}
-              isDisabled={false}
+              startIcon={socialLabels[1].icon}
               size={ButtonSize.MEDIUM}
-              type={ButtonType.TERTIARY}
             />
           </Link>
           <Link href={{}} style={{ height: '36px', width: '36px' }}>
             <Button
               text={socialLabels[2].text}
-              icon={socialLabels[2].icon}
-              isDisabled={false}
+              startIcon={socialLabels[2].icon}
               size={ButtonSize.MEDIUM}
-              type={ButtonType.TERTIARY}
             />
           </Link>
         </div>
