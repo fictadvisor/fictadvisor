@@ -1,5 +1,12 @@
+import { IsNotEmpty } from 'class-validator';
+
 export class ResponseDTO {
-  questionId: string;
-  value: string;
-  userId: string;
+  @IsNotEmpty()
+    questionId: string;
+  
+  @IsNotEmpty()
+    value: string;
+  
+  @IsNotEmpty()
+    userId: string;
 }
