@@ -1,1 +1,1 @@
-export { default, InputSize, InputState, InputType } from './Input';
+export { default, InputSize, InputType } from './Input';

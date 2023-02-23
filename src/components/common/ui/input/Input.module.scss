@@ -2,9 +2,6 @@
 @import "src/styles/partials/_utils";
 @import "src/styles/partials/_typography-mixins";
 
-$default-large-input-width: 480px;
-$default-medium-input-width: 308px;
-
 .input-success-icon{
   color: $success-300;
 }
@@ -76,7 +73,6 @@ $default-medium-input-width: 308px;
 
 .error-input-color{
   color: $error-200;
-
   label{
     background: linear-gradient(180deg, rgba(30, 30, 30, 0) 49.48%, $background-dark-0 49.95%);
   }
@@ -86,9 +82,9 @@ $default-medium-input-width: 308px;
   p{
     color: $error-200;
   }
-    .white-icon {
-      color: $gray-600;
-    }
+  .white-icon {
+    color: $gray-600;
+  }
 }
 
 .success-input-color{
@@ -114,7 +110,6 @@ $default-medium-input-width: 308px;
   .#{$class-name}-input, .#{$class-name}-icon-input{
     min-width: 200px;
     width: 100%;
-    max-width: $max-width;
     transition: all 0.2s ease-in-out;
     position: relative;
     margin-top: 12px;
@@ -127,10 +122,9 @@ $default-medium-input-width: 308px;
     }
     label{
       color: inherit;
-      padding: 2px 8px;
+      padding: 1.5px 8px;
       isolation: isolate;
       width: fit-content;
-      block-size: fit-content;
       position: absolute;
       top: -12px;
       left: 8px;
@@ -142,6 +136,7 @@ $default-medium-input-width: 308px;
       margin-left: 16px;
       margin-right: 8px;
       width: calc(100% - 24px);
+      min-height: 20px;
     }
     .left-icon{
       position: absolute;
@@ -161,11 +156,11 @@ $default-medium-input-width: 308px;
   }
 }
 
-@include input-style(large-default, 24px, 24px, 54px, 2px, 480px);
-@include input-style(medium-default, 20px, 16px, 52px, 2px, 308px);
+@include input-style(large-text, 24px, 24px, 54px, 2px, 480px);
+@include input-style(medium-text, 20px, 16px, 52px, 2px, 308px);
 
-@include input-style(large-hiddable, 24px, 24px, 54px, 2px, 480px);
-@include input-style(medium-hiddable, 20px, 16px, 52px, 2px, 308px);
+@include input-style(large-password, 24px, 24px, 54px, 2px, 480px);
+@include input-style(medium-password, 20px, 16px, 52px, 2px, 308px);
 
 @include input-style(large-unlabeled, 16px, 16px, 44px, 2px, 480px);
 @include input-style(medium-unlabeled, 16px, 16px, 36px, 1.5px, 308px);

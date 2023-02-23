@@ -7,137 +7,133 @@ import {
   MagnifyingGlassIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
+import { useField } from 'formik';
 import mergeClassNames from 'merge-class-names';
 
 import styles from './Input.module.scss';
 
-export enum InputState {
+enum InputState {
   DEFAULT = 'default',
   DISABLED = 'disabled',
   ERROR = 'error',
   SUCCESS = 'success',
 }
-
 export enum InputSize {
   LARGE = 'large',
   MEDIUM = 'medium',
 }
 
 export enum InputType {
-  DEFAULT = 'default',
-  HIDDABLE = 'hiddable',
-  NO_LABEL = 'unlabeled',
+  DEFAULT = 'text',
+  PASSWORD = 'password',
   SEARCH = 'search',
 }
 
 interface InputProps {
   label?: string;
-  placeholder: string;
-  defaultRemark?: string;
-  successRemark?: string;
-  errorRemark?: string;
-  state: InputState;
-  size: InputSize;
-  type: InputType;
+  placeholder?: string;
+  name: string;
+  size?: InputSize;
+  type?: InputType;
+  isSuccessOnDefault?: boolean;
+  isDisabled?: boolean;
+  showRemarkOnDefault?: boolean;
   className?: string;
 }
 
-const Input: React.FC<InputProps> = props => {
-  let remark;
-  switch (props.state) {
-    case InputState.DEFAULT: {
-      remark = props.defaultRemark;
-      break;
-    }
-    case InputState.ERROR: {
-      remark = props.errorRemark;
-      break;
-    }
-    case InputState.SUCCESS: {
-      remark = props.successRemark;
-      break;
-    }
-    case InputState.DISABLED: {
-      remark = null;
-      break;
-    }
-  }
-
-  const [isHidden, setIsHidden] = useState(props.type === InputType.HIDDABLE);
+const Input: React.FC<InputProps> = ({
+  label,
+  placeholder,
+  name,
+  size = InputSize.MEDIUM,
+  type = InputType.DEFAULT,
+  isSuccessOnDefault = false,
+  isDisabled = false,
+  showRemarkOnDefault,
+  className: additionalClass,
+}) => {
+  const [field, meta, helpers] = useField(name);
+  const [isHidden, setIsHidden] = useState(type === InputType.PASSWORD);
   const inputType = isHidden ? 'password' : 'text';
 
-  const [value, setValue] = useState('');
-  function handleChange(event) {
-    setValue(event.target.value);
-  }
+  meta.initialError;
+
+  const customType = label || type === InputType.SEARCH ? type : 'unlabeled';
+  const customLabel = type === InputType.SEARCH ? undefined : label;
+
+  let state;
+  if (isDisabled) state = InputState.DISABLED;
+  else if (meta.touched && meta.error) state = InputState.ERROR;
+  else if (meta.touched && isSuccessOnDefault) state = InputState.SUCCESS;
+  else state = InputState.DEFAULT;
 
   const leftIcon =
-    props.type === InputType.SEARCH ? (
+    customType === InputType.SEARCH ? (
       <MagnifyingGlassIcon className="icon white-icon" />
     ) : null;
 
   let rightIcon = null;
-  if (props.type === InputType.HIDDABLE) {
+  if (customType === InputType.PASSWORD) {
     if (isHidden) rightIcon = <EyeIcon className="icon white-icon" />;
     else rightIcon = <EyeSlashIcon className="icon white-icon" />;
   } else {
-    if (props.state === InputState.SUCCESS)
+    if (state === InputState.SUCCESS)
       rightIcon = <CheckCircleIcon className="icon input-success-icon" />;
-    else if (props.state === InputState.ERROR)
+    if (meta.touched && meta.error)
       rightIcon = <ExclamationCircleIcon className="icon input-error-icon" />;
-    else if (props.type === InputType.SEARCH) {
-      if (value !== '') rightIcon = <XMarkIcon className="icon white-icon" />;
+    else if (customType === InputType.SEARCH) {
+      if (field.value !== '')
+        rightIcon = <XMarkIcon className="icon white-icon" />;
     }
   }
 
   function handleIconClick() {
-    if (props.type === InputType.HIDDABLE) {
+    if (customType === InputType.PASSWORD) {
       setIsHidden(!isHidden);
     }
-    if (props.type === InputType.SEARCH) {
-      setValue('');
+    if (customType === InputType.SEARCH) {
+      helpers.setValue('');
     }
   }
 
-  const inputColor = `${props.state}-input-color`;
-  const isIcon =
-    props.state === InputState.ERROR ||
-    props.state === InputState.SUCCESS ||
-    props.type === InputType.HIDDABLE ||
-    (props.type === InputType.SEARCH && value !== '');
-  const inputStyle = `${props.size}-${props.type}${
-    isIcon ? '-icon' : ''
-  }-input`;
-  const additionalClass = props.className ? props.className : '';
+  const inputColor = `${state}-input-color`;
+  const hasIcon =
+    state === InputState.ERROR ||
+    state === InputState.SUCCESS ||
+    customType === InputType.PASSWORD ||
+    (customType === InputType.SEARCH && field.value !== '');
+  const inputStyle = `${size}-${customType}${hasIcon ? '-icon' : ''}-input`;
   const className = mergeClassNames(
     styles[inputColor],
     styles[inputStyle],
     styles[additionalClass],
   );
 
+  console.log(meta.error + ' ' + showRemarkOnDefault);
+
   return (
     <div className={className}>
-      <label> {props.label} </label>
+      {customLabel && <label> {customLabel} </label>}
       {leftIcon && (
-        <div className={`${styles['icon']} ${styles['left-icon']}`}>
-          {leftIcon}
-        </div>
+        <div className={`icon ${styles['left-icon']}`}>{leftIcon}</div>
       )}
       {rightIcon && (
         <div
-          className={`${styles['icon']} ${styles['right-icon']}`}
+          className={`icon ${styles['right-icon']}`}
           onClick={handleIconClick}
         >
           {rightIcon}
         </div>
       )}
       <input
-        placeholder={props.placeholder}
+        placeholder={placeholder}
         type={inputType}
-        onChange={handleChange}
-        value={value}
+        name={name}
+        {...field}
       />
-      {remark && <p>{remark}</p>}
+      <p>
+        {(meta.touched && meta.error) || showRemarkOnDefault ? meta.error : ''}
+      </p>
     </div>
   );
 };

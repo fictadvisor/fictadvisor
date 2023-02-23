@@ -7,11 +7,7 @@ import Button, { ButtonColor, ButtonVariant } from '../../common/ui/button';
 import { ButtonSize } from '../../common/ui/button/Button';
 import Check, { CheckboxState } from '../../common/ui/checkbox';
 import Divider from '../../common/ui/divider';
-import Input, {
-  InputSize,
-  InputState,
-  InputType,
-} from '../../common/ui/input/Input';
+import Input, { InputSize, InputType } from '../../common/ui/input/Input';
 import CustomLink from '../../common/ui/link';
 
 import styles from './LoginPage.module.scss';
@@ -57,20 +53,19 @@ const LoginPage = () => (
             />
             <Divider text="або" textPosition={DividerTextPosition.CENTER} />
             <Input
+              name={'email'}
               className={styles['login-input']}
               label={'Пошта або юзернейм'}
               placeholder={'placeholder'}
-              state={InputState.DEFAULT}
               size={InputSize.LARGE}
               type={InputType.DEFAULT}
             />
             <Input
               label={'Пароль'}
               placeholder={'placeholder'}
-              state={InputState.DEFAULT}
               size={InputSize.LARGE}
-              type={InputType.HIDDABLE}
-              defaultRemark="Пароль повинен місити 8 символів та обов’язкові знаки"
+              type={InputType.PASSWORD}
+              name="password"
             />
             <div className={styles['one-line']}>
               <div className={styles['checkbox-container']}>
