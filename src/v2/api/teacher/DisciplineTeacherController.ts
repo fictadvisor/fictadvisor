@@ -1,9 +1,11 @@
-import { Body, Controller, Get, Param, Post, Request } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Request, UseGuards } from '@nestjs/common';
 import { DisciplineTeacherService } from './DisciplineTeacherService';
 import { CreateAnswersDTO } from './dto/CreateAnswersDTO';
 import { GroupByDisciplineTeacherGuard } from 'src/v2/security/group-guard/GroupByDisciplineTeacherGuard';
 import { DisciplineTeacherByIdPipe } from './dto/DisciplineTeacherByIdPipe';
 import { Access } from 'src/v2/security/Access';
+import { TelegramGuard } from '../../security/TelegramGuard';
+import { ResponseDTO } from '../poll/dto/ResponseDTO';
 
 @Controller({
   version: '2',
@@ -33,4 +35,12 @@ export class DisciplineTeacherController {
     return this.disciplineTeacherService.sendAnswers(disciplineTeacherId, body, req.user.id);
   }
 
+  @UseGuards(TelegramGuard)
+  @Post('/:disciplineTeacherId/responses')
+  sendResponse (
+    @Param('disciplineTeacherId', DisciplineTeacherByIdPipe) disciplineTeacherId: string,
+    @Body() body: ResponseDTO
+  ) {
+    return this.disciplineTeacherService.sendResponse(disciplineTeacherId, body);
+  }
 }

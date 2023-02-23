@@ -64,7 +64,7 @@ export class PollController {
   @Post('/questions/:questionId/roles')
   giveRole (
     @Param('questionId', QuestionByIdPipe) questionId: string,
-      body: CreateQuestionRoleDTO,
+    @Body() body: CreateQuestionRoleDTO,
   ) {
     return this.pollService.giveRole(body, questionId);
   }

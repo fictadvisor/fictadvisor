@@ -8,10 +8,12 @@ import { UserModule } from '../user/UserModule';
 import { PollModule } from '../poll/PollModule';
 import { DateService } from '../../utils/date/DateService';
 import { DisciplineTeacherController } from './DisciplineTeacherController';
+import { TelegramAPI } from '../../telegram/TelegramAPI';
+import { TelegramConfigService } from '../../config/TelegramConfigService';
 
 @Module({
   controllers: [TeacherController, DisciplineTeacherController],
-  providers: [TeacherService, DisciplineTeacherService, DateService],
+  providers: [TeacherService, DisciplineTeacherService, DateService, TelegramAPI, TelegramConfigService],
   exports: [TeacherService, DisciplineTeacherService],
   imports: [forwardRef(() => DisciplineModule),  forwardRef(() => PrismaModule), forwardRef(() => UserModule), forwardRef(() => PollModule)],
 })

@@ -6,7 +6,7 @@ import { DisciplineTypeRepository } from '../discipline/DisciplineTypeRepository
 import { PollService } from '../poll/PollService';
 import { CreateAnswerDTO, CreateAnswersDTO } from './dto/CreateAnswersDTO';
 import { QuestionAnswerRepository } from '../poll/QuestionAnswerRepository';
-import { Question, TeacherRole } from '@prisma/client';
+import { Question, QuestionType, TeacherRole } from '@prisma/client';
 import { AlreadyAnsweredException } from '../../utils/exceptions/AlreadyAnsweredException';
 import { DisciplineService } from '../discipline/DisciplineService';
 import { DisciplineRepository } from '../discipline/DisciplineRepository';
@@ -17,6 +17,10 @@ import { PrismaService } from '../../database/PrismaService';
 import { ConfigService } from '@nestjs/config';
 import { WrongTimeException } from '../../utils/exceptions/WrongTimeException';
 import { DisciplineTeacherWithRoles, DisciplineTeacherWithRolesAndTeacher } from './DisciplineTeacherDatas';
+import { QuestionRepository } from '../poll/QuestionRepository';
+import { TelegramAPI } from '../../telegram/TelegramAPI';
+import { ResponseDTO } from '../poll/dto/ResponseDTO';
+import { checkIfArrayIsUnique } from '../../utils/ArrayUtil';
 import { AnswerInDatabasePermissionException } from '../../utils/exceptions/AnswerInDatabasePermissionException';
 
 @Injectable()
@@ -37,6 +41,8 @@ export class DisciplineTeacherService {
     private config: ConfigService,
     @Inject(forwardRef(() => DisciplineService))
     private disciplineService: DisciplineService,
+    private questionRepository: QuestionRepository,
+    private telegramApi: TelegramAPI,
   ) {}
 
   async getGroup (id: string) {
@@ -85,14 +91,36 @@ export class DisciplineTeacherService {
     await this.checkExcessiveQuestions(questions, answers);
     await this.checkRequiredQuestions(questions, answers);
     await this.checkAnsweredQuestions(disciplineTeacherId, answers, userId);
+    await this.checkIsUnique(answers);
     await this.checkSendingTime();
+
+    const { teacher, discipline } = await this.disciplineTeacherRepository.getDisciplineTeacher(disciplineTeacherId);
+
     for (const answer of answers) {
+      if (questions.find((q) => q.id === answer.questionId).type === QuestionType.TEXT) {
+        await this.telegramApi.verifyResponse({
+          disciplineTeacherId: disciplineTeacherId,
+          subject: discipline.subject.name,
+          teacherName: teacher.firstName + ' ' + teacher.middleName + ' ' + teacher.lastName,
+          userId,
+          response: answer.value,
+          questionId: answer.questionId,
+        });
+        continue;
+      }
       await this.questionAnswerRepository.create({
         disciplineTeacherId: disciplineTeacherId,
         userId,
         ...answer,
       });
     }
+  }
+
+  async sendResponse (disciplineTeacherId: string, response: ResponseDTO) {
+    return this.questionAnswerRepository.create({
+      disciplineTeacherId,
+      ...response,
+    });
   }
 
   async getCategories (id: string) {
@@ -133,6 +161,13 @@ export class DisciplineTeacherService {
     }
   }
 
+  async checkIsUnique (answers: CreateAnswerDTO[]) {
+    const questionIds = answers.map((answer) => answer.questionId);
+    if (!checkIfArrayIsUnique(questionIds)) {
+      throw new ExcessiveAnswerException();
+    }
+  }
+
   async checkAnsweredQuestions (disciplineTeacherId: string, answers: CreateAnswerDTO[], userId: string) {
     for (const answer of answers) {
       await this.checkAnsweredQuestion(disciplineTeacherId, answer.questionId, userId);
@@ -169,6 +204,7 @@ export class DisciplineTeacherService {
       throw new WrongTimeException();
     }
   }
+
   async checkAnswerInDatabase (disciplineTeacherId: string, userId: string) {
     const answers = await this.questionAnswerRepository.findMany(disciplineTeacherId, userId);
     if (answers) {
