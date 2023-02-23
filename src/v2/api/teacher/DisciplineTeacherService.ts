@@ -20,6 +20,7 @@ import { DisciplineTeacherWithRoles, DisciplineTeacherWithRolesAndTeacher } from
 import { QuestionRepository } from '../poll/QuestionRepository';
 import { TelegramAPI } from '../../telegram/TelegramAPI';
 import { ResponseDTO } from '../poll/dto/ResponseDTO';
+import { checkIfArrayIsUnique } from '../../utils/ArrayUtil';
 
 @Injectable()
 export class DisciplineTeacherService {
@@ -88,7 +89,9 @@ export class DisciplineTeacherService {
     await this.checkExcessiveQuestions(questions, answers);
     await this.checkRequiredQuestions(questions, answers);
     await this.checkAnsweredQuestions(disciplineTeacherId, answers, user.id);
+    await this.checkIsUnique(answers);
     await this.checkSendingTime();
+
 
     const { teacher, discipline } = await this.disciplineTeacherRepository.getDisciplineTeacher(disciplineTeacherId);
 
@@ -99,7 +102,7 @@ export class DisciplineTeacherService {
         await this.telegramApi.verifyResponse({
           disciplineTeacherId: disciplineTeacherId,
           subject: discipline.subject.name,
-          teacherName: teacher.firstName + teacher.middleName + teacher.lastName,
+          teacherName: teacher.firstName + ' ' + teacher.middleName + ' ' + teacher.lastName,
           userId: user.id,
           response: answer.value,
           questionId: answer.questionId,
@@ -158,6 +161,13 @@ export class DisciplineTeacherService {
       if (!dbQuestions.some((q) => (q.id === question.questionId))) {
         throw new ExcessiveAnswerException();
       }
+    }
+  }
+
+  async checkIsUnique (answers: CreateAnswerDTO[]) {
+    const questionIds = answers.map((answer) => answer.questionId);
+    if (!checkIfArrayIsUnique(questionIds)) {
+      throw new ExcessiveAnswerException();
     }
   }
 
