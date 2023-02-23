@@ -38,6 +38,7 @@ interface InputProps {
   isSuccessOnDefault?: boolean;
   isDisabled?: boolean;
   showRemarkOnDefault?: boolean;
+  hasRemark?: boolean;
   className?: string;
 }
 
@@ -50,6 +51,7 @@ const Input: React.FC<InputProps> = ({
   isSuccessOnDefault = false,
   isDisabled = false,
   showRemarkOnDefault,
+  hasRemark = true,
   className: additionalClass,
 }) => {
   const [field, meta, helpers] = useField(name);
@@ -109,8 +111,6 @@ const Input: React.FC<InputProps> = ({
     styles[additionalClass],
   );
 
-  console.log(meta.error + ' ' + showRemarkOnDefault);
-
   return (
     <div className={className}>
       {customLabel && <label> {customLabel} </label>}
@@ -131,9 +131,13 @@ const Input: React.FC<InputProps> = ({
         name={name}
         {...field}
       />
-      <p>
-        {(meta.touched && meta.error) || showRemarkOnDefault ? meta.error : ''}
-      </p>
+      {hasRemark && (
+        <p>
+          {(meta.touched && meta.error) || showRemarkOnDefault
+            ? meta.error
+            : ''}
+        </p>
+      )}
     </div>
   );
 };

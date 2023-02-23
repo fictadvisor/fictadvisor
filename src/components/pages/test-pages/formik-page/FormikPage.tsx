@@ -21,8 +21,8 @@ const FormikPage = () => {
       <div className={testPageStyles['test-page-content']}>
         <Formik
           enableReinitialize
-          validateOnBlur={false}
           validateOnMount
+          validateOnChange
           initialValues={initialValues}
           onSubmit={handleSubmit}
           validationSchema={validationSchema}
