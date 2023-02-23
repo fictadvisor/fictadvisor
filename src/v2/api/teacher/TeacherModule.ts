@@ -15,6 +15,6 @@ import { TelegramConfigService } from '../../config/TelegramConfigService';
   controllers: [TeacherController, DisciplineTeacherController],
   providers: [TeacherService, DisciplineTeacherService, DateService, TelegramAPI, TelegramConfigService],
   exports: [TeacherService, DisciplineTeacherService],
-  imports: [forwardRef(() => DisciplineModule), PrismaModule, forwardRef(() => UserModule), forwardRef(() => PollModule)],
+  imports: [forwardRef(() => DisciplineModule),  forwardRef(() => PrismaModule), forwardRef(() => UserModule), forwardRef(() => PollModule)],
 })
 export class TeacherModule {}

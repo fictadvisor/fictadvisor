@@ -57,4 +57,13 @@ export class QuestionAnswerRepository {
       },
     });
   }
+
+  findMany (disciplineTeacherId: string, userId: string) {
+    return this.prisma.questionAnswer.findMany({
+      where: {
+        disciplineTeacherId,
+        userId,
+      },
+    });
+  }
 }
