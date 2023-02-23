@@ -55,10 +55,11 @@
     cursor: not-allowed;
   }
 }
-.secondary-text-button-variant {
+.secondary-text-button-variant{
   background: none;
   color: $gray-400;
   outline: transparent;
+  border-radius: 2px !important;
 
   &:hover {
     text-decoration: underline;
@@ -66,18 +67,18 @@
   }
 
   &:focus:not(:active) {
-    outline: 2px solid $gray-50;
+    outline: 0.5px solid $gray-500;
     color: $gray-600;
   }
 
   &:active {
     text-decoration: underline;
-    color: $gray-600;
     outline: transparent;
+    color: $gray-600;
   }
 
   &:disabled {
-    outline: none;
+    outline: 2px transparent;
     color: $gray-100;
     text-decoration: none;
     cursor: not-allowed;

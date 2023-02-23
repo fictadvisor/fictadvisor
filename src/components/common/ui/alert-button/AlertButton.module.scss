@@ -1,13 +1,14 @@
 @import "src/styles/partials/theme";
+@import "src/styles/partials/utils";
 
 .alert-buttons{
   padding: 6px 12px;
-  display: flex;
-  align-items: center;
+  @include flex-center;
   font-weight: 700;
   gap: 6px;
   border-radius: 4px;
-  width: fit-content;
+  min-width: fit-content;
+  width: 100%;
   white-space: nowrap;
 }
 
