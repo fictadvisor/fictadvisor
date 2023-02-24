@@ -7,6 +7,7 @@ export interface FormikPageFields {
   id: string;
   search: string;
   group: string;
+  review: string;
 }
 
 export const initialValues: FormikPageFields = {
@@ -16,6 +17,7 @@ export const initialValues: FormikPageFields = {
   id: '',
   search: '',
   group: '',
+  review: '',
 };
 
 export const validationSchema = yup.object().shape({
@@ -31,4 +33,5 @@ export const validationSchema = yup.object().shape({
     .required('Confirm password is required'),
   id: yup.string().required('Id is required'),
   group: yup.string().required('Group is required'),
+  review: yup.string().required('Review is required'),
 });

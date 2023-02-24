@@ -2,22 +2,18 @@
 @import "src/styles/partials/theme";
 @import "src/styles/partials/typography-mixins";
 
-.textarea-test{
+.textarea{
   padding:10px 0;
   background: $background-dark-0;
   overflow-y: scroll;
   p{
+    color: inherit;
     @include overline-text;
-    color:inherit;
-    padding: 2px 8px;
-    isolation: isolate;
-    max-width: 100px;
-    height: 20px;
-    position: relative;
-    top: -0px;
-    left: 10px;
-    display:flex;
-    align-items: center;
+    margin-top: 2px;
+    margin-left: 16px;
+    margin-right: 8px;
+    width: calc(100% - 24px);
+    min-height: 20px;
   }
   label{
     color:inherit;
@@ -39,7 +35,6 @@
     padding: 16px 16px 16px 24px;
     gap: 8px;
     background: $background-dark-0;
-    width: 480px;
     height: 120px;
     border: 2px solid $gray-500;
     color: $gray-500;
@@ -60,7 +55,6 @@
   textarea::placeholder{
     @include body-secondary;
     opacity: 1;
-    //color: $Prototype-Base_Neutrals-Gray400;
     &:hover {
       color: $white;
       border-color: $white;
@@ -76,11 +70,11 @@
 }
 
 .small-area textarea{
-    width: 308px;
+  width: 100%;
 }
 
 .large-area textarea{
-    width: 740px;
+  width: 100%;
 }
 
 .success-area{

@@ -1,9 +1,9 @@
-import React, { useRef, useState } from 'react';
+import React from 'react';
+import { useField } from 'formik';
 
 import styles from './TextArea.module.scss';
 
-// props
-export enum TextAreaSpecs {
+export enum TextAreaSize {
   LARGE = 'large',
   SMALL = 'small',
 }
@@ -13,48 +13,56 @@ export enum TextAreaState {
 }
 
 interface TextAreaProps {
-  placeholder?: string; // placeholder
+  name: string;
+  placeholder?: string;
   label?: string;
+  size?: TextAreaSize;
   isDisabled?: boolean;
-  sizing?: TextAreaSpecs;
-  areaCurrState?: TextAreaState;
+  isSuccessOnDefault?: boolean;
+  showRemarkOnDefault?: boolean;
+  hasRemark?: boolean;
 }
 
-const TextArea: React.FC<TextAreaProps> = TextAreaProps => {
-  // refs and hooks
-  const ref = useRef(null); // == event.target
-  const [currTAText, setCurrTAText] = useState('');
+const TextArea: React.FC<TextAreaProps> = ({
+  name,
+  placeholder,
+  label,
+  size = TextAreaSize.LARGE,
+  isSuccessOnDefault = false,
+  isDisabled = false,
+  showRemarkOnDefault,
+  hasRemark = true,
+}) => {
+  const [field, meta, helpers] = useField(name);
 
-  // styles
+  let state;
+  if (meta.touched && meta.error) state = TextAreaState.ERROR;
+  else if (meta.touched && isSuccessOnDefault) state = TextAreaState.SUCCESS;
+
   const divClasses = [
-    styles['textarea-test'],
-    styles[TextAreaProps.sizing ? `${TextAreaProps.sizing}-area` : ''],
-    styles[TextAreaProps.areaCurrState ? TextAreaProps.areaCurrState : ''],
+    styles['textarea'],
+    styles[size ? `${size}-area` : ''],
+    styles[state ? state : ''],
   ];
 
-  // for typing in and saving in hook
-  const onChangeTAValue = event => {
-    setCurrTAText(ref.current.value);
-  };
-
-  // render
   return (
-    <form className={divClasses.join(' ')}>
-      {TextAreaProps.label ? <label>{TextAreaProps.label}</label> : <></>}
+    <div className={divClasses.join(' ')}>
+      {label && <label>{label}</label>}
       <textarea
-        ref={ref}
-        className={styles['textarea-test_input']}
-        disabled={TextAreaProps.isDisabled}
-        placeholder={TextAreaProps.placeholder}
-        onChange={onChangeTAValue}
-        value={currTAText}
+        {...field}
+        className={styles['textarea_input']}
+        disabled={isDisabled}
+        placeholder={placeholder}
+        value={field.value}
       />
-      {TextAreaProps.areaCurrState ? (
-        <p>{TextAreaProps.areaCurrState}</p>
-      ) : (
-        <></>
+      {hasRemark && (
+        <p>
+          {(meta.touched && meta.error) || showRemarkOnDefault
+            ? meta.error
+            : ''}
+        </p>
       )}
-    </form>
+    </div>
   );
 };
 

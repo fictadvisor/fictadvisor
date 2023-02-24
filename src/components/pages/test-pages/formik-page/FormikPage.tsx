@@ -3,6 +3,7 @@ import { Form, Formik } from 'formik';
 import Button from '@/components/common/ui/button';
 import Dropdown from '@/components/common/ui/dropdown';
 import Input, { InputSize, InputType } from '@/components/common/ui/input';
+import TextArea from '@/components/common/ui/text-area';
 import {
   FormikPageFields,
   initialValues,
@@ -75,6 +76,11 @@ const FormikPage = () => {
                 type={InputType.SEARCH}
                 name="search"
                 placeholder="Taras Shevchenko IP-25"
+              />
+              <TextArea
+                name="review"
+                isSuccessOnDefault={true}
+                showRemarkOnDefault={true}
               />
               <Button text="Надіслати" type="submit" />
             </Form>

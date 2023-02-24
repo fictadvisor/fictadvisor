@@ -1,1 +1,1 @@
-export { default, TextAreaSpecs, TextAreaState } from './TextArea';
+export { default, TextAreaSize, TextAreaState } from './TextArea';

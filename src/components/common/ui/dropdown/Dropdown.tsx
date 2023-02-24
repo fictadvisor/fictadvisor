@@ -52,7 +52,6 @@ const Dropdown: React.FC<DropdownProps> = ({
   if (isDisabled) state = DropDownState.DISABLED;
   else if (meta.touched && meta.error) state = DropDownState.ERROR;
   else if (meta.touched && isSuccessOnDefault) state = DropDownState.SUCCESS;
-  else state = null;
 
   return (
     <div className={styles['dropdown']}>
