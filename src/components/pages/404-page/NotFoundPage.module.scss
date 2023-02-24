@@ -27,7 +27,7 @@
   font-size: 24px;
   line-height: 128%;
   text-align: center;
-  margin-top: 63px;
+  margin-top: 8%;
   margin-bottom: 7%;
 }
 
@@ -55,7 +55,6 @@
 // Laptop
 @media screen and (max-width: 1020px){
   .page-layout{
-    height: 100dvh;
     background-image:
             url("/assets/404-page/leaves_right_mobile.svg"),
             url("/assets/404-page/clouds_desktop.svg");
@@ -81,7 +80,7 @@
     flex-direction: column;
     align-self: center;
     margin-top: 32px;
-    margin-bottom: 12px;
+    margin-bottom: 3%;
     gap: 16px;
   }
   .not-found-text{
