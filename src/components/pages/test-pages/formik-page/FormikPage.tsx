@@ -1,6 +1,7 @@
 import { Form, Formik } from 'formik';
 
 import Button from '@/components/common/ui/button';
+import Checkbox from '@/components/common/ui/checkbox';
 import Dropdown from '@/components/common/ui/dropdown';
 import Input, { InputSize, InputType } from '@/components/common/ui/input';
 import TextArea from '@/components/common/ui/text-area';
@@ -82,6 +83,7 @@ const FormikPage = () => {
                 isSuccessOnDefault={true}
                 showRemarkOnDefault={true}
               />
+              <Checkbox name="isCaptain" text="Староста групи" />
               <Button text="Надіслати" type="submit" />
             </Form>
           )}

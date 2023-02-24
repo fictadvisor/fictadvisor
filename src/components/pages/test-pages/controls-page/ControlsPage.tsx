@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import Checkbox, { CheckboxState } from '@/components/common/ui/checkbox';
+import Checkbox from '@/components/common/ui/checkbox';
 import RadioGroup, {
   Radio,
   RadioState,
@@ -39,7 +39,7 @@ const ControlsPage = () => {
 
         <Checkbox text="Default"></Checkbox>
         <Checkbox></Checkbox>
-        <Checkbox state={CheckboxState.ERROR} text="Error"></Checkbox>
+        <Checkbox text="Error"></Checkbox>
         <Checkbox text="Disabled" disabled={true}></Checkbox>
         <Checkbox text="Disabled" disabled={true} checked={true}></Checkbox>
 

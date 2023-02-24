@@ -5,7 +5,7 @@ import { DividerTextPosition } from '@/components/common/ui/divider/Divider';
 import PageLayout from '../../common/layout/page-layout/PageLayout';
 import Button, { ButtonColor, ButtonVariant } from '../../common/ui/button';
 import { ButtonSize } from '../../common/ui/button/Button';
-import Check, { CheckboxState } from '../../common/ui/checkbox';
+import Check from '../../common/ui/checkbox';
 import Divider from '../../common/ui/divider';
 import Input, { InputSize, InputType } from '../../common/ui/input/Input';
 import CustomLink from '../../common/ui/link';
@@ -69,7 +69,7 @@ const LoginPage = () => (
             />
             <div className={styles['one-line']}>
               <div className={styles['checkbox-container']}>
-                <Check state={CheckboxState.DEFAULT} />
+                <Check />
                 <p className="body-primary">Запам’ятати дані</p>
               </div>
               <CustomLink text="Забув пароль?" href={'#'} />

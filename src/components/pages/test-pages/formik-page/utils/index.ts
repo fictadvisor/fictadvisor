@@ -8,6 +8,7 @@ export interface FormikPageFields {
   search: string;
   group: string;
   review: string;
+  isCaptain: boolean;
 }
 
 export const initialValues: FormikPageFields = {
@@ -18,6 +19,7 @@ export const initialValues: FormikPageFields = {
   search: '',
   group: '',
   review: '',
+  isCaptain: false,
 };
 
 export const validationSchema = yup.object().shape({
