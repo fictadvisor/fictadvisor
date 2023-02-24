@@ -103,9 +103,12 @@
     }
 
     .footer-logo-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
         margin-top: 10px;
-        margin-left: auto;
-        margin-right: auto;
+        margin-left: 50%;
     }
 
     .footer-logo {
@@ -113,18 +116,12 @@
         grid-column-start: 1;
         grid-row-end: 4;
         grid-column-end: 3;
-        margin-left: 36%;
         margin-top: 10px;
         width: 155px;
-        height: 15.74px;
-        position: absolute;
+        height: fit-content;
     }
 
     .signature {
-        margin-left: 39%;
-        margin-top: 40px;
-        position: absolute;
-
         & p {
             font-weight: 400;
             font-size: 11px;
