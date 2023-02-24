@@ -20,7 +20,6 @@
 }
 
 .not-found-text {
-  margin-top: 63px;
   width: 353px;
   height: 62px;
   font-style: normal;
@@ -28,6 +27,7 @@
   font-size: 24px;
   line-height: 128%;
   text-align: center;
+  margin-top: 63px;
   margin-bottom: 7%;
 }
 
@@ -46,15 +46,16 @@
 
 .button{
   display: flex;
-  gap: 18px;
   align-self: center;
   margin-top: 5%;
+  gap: 18px;
 }
 
 // Media Queries
 // Laptop
 @media screen and (max-width: 1020px){
   .page-layout{
+    height: 100dvh;
     background-image:
             url("/assets/404-page/leaves_right_mobile.svg"),
             url("/assets/404-page/clouds_desktop.svg");
@@ -77,20 +78,20 @@
   }
   .button{
     display: flex;
-    margin-bottom: 12px;
     flex-direction: column;
-    margin-top: 32px;
-    gap: 16px;
     align-self: center;
+    margin-top: 32px;
+    margin-bottom: 12px;
+    gap: 16px;
   }
   .not-found-text{
     width: 226px;
     font-weight: 400;
     font-size: 16px;
     line-height: 150%;
+    text-align: center;
     margin-top: 52px;
     margin-bottom: 48px;
-    text-align: center;
   }
   .frog-image{
     width: 65%;
