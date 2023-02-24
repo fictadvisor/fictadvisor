@@ -43,13 +43,13 @@ const TablesPage = () => {
       firstButton: (
         <AlertButton
           text="Прийняти"
-          icon={<CustomCheck />}
+          startIcon={<CustomCheck />}
           variant={AlertButtonVariant.SUCCESS}
         />
       ),
       secondButton: (
         <AlertButton
-          icon={<XMarkIcon className="icon" />}
+          startIcon={<XMarkIcon className="icon" />}
           variant={AlertButtonVariant.ERROR_OUTLINE}
         />
       ),
@@ -86,7 +86,7 @@ const TablesPage = () => {
       firstButton: (
         <AlertButton
           text="Прийняти"
-          icon={<CustomCheck />}
+          startIcon={<CustomCheck />}
           variant={AlertButtonVariant.SUCCESS}
         />
       ),
@@ -107,7 +107,7 @@ const TablesPage = () => {
       firstButton: (
         <AlertButton
           text="Прийняти"
-          icon={<CustomCheck />}
+          startIcon={<CustomCheck />}
           variant={AlertButtonVariant.SUCCESS}
         />
       ),
@@ -121,14 +121,14 @@ const TablesPage = () => {
       firstButton: (
         <AlertButton
           text="Прийняти"
-          icon={<CustomCheck />}
+          startIcon={<CustomCheck />}
           variant={AlertButtonVariant.SUCCESS}
         />
       ),
       secondButton: (
         <AlertButton
           text="Прийняти"
-          icon={<CustomCheck />}
+          startIcon={<CustomCheck />}
           variant={AlertButtonVariant.SUCCESS}
         />
       ),
