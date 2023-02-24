@@ -25,6 +25,7 @@ const Footer: React.FC = () => {
         { text: 'Instagram', icon: <InstagramIcon /> },
         { text: 'Telegram', icon: <TelegramIcon /> },
       ];
+
   return (
     <footer className={styles['footer-container']}>
       <div>
@@ -102,9 +103,9 @@ const Footer: React.FC = () => {
           <Link href={{}} style={{ height: '36px', width: '36px' }}>
             <Button
               text={socialLabels[0].text}
+              startIcon={socialLabels[0].icon}
               size={ButtonSize.SMALL}
               variant={ButtonVariant.TEXT}
-              startIcon={socialLabels[0].icon}
             />
           </Link>
           <Link href={{}} style={{ height: '36px', width: '36px' }}>

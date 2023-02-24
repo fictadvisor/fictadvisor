@@ -15,9 +15,7 @@
     @include flex-center;
     width: 197px;
     height: 28px;
-    margin-left: 80px;
-
-    margin-left: 80px;
+    margin-left: 8.4%;
     margin-top: 40px;
 
     & img {
@@ -28,7 +26,7 @@
 
 .signature {
     display: flex;
-    margin-left: 78px;
+    margin-left: 8.2%;
     margin-top: 8px;
 
     & p {
@@ -91,20 +89,16 @@
     gap: 2px;
 }
 
-@media (max-width: 480px) {
+
+
+@media (max-width: 710px) {
 
     .footer-container {
         display: grid;
         grid-template-rows: 4rem auto 74px;
-        grid-template-columns: 16rem auto;
+        grid-template-columns: auto;
         height: 286px;
         width: 100%;
-    }
-
-    .title {
-        padding: 2px 4px;
-        width: fit-content;
-        height: 30px;
     }
 
     .social-media {
@@ -113,6 +107,7 @@
         grid-row-end: 3;
         grid-column-end: 3;
         margin-top: 66px;
+        width: fit-content;
         height: 60px;
         align-items: start;
         & p {
@@ -120,14 +115,18 @@
             font-size: 11px;
             line-height: 17.6px;
         }
+
+        .title {
+            width: fit-content;
+            height: 30px;
+        }
     }
 
     .social-buttons {
         @include flex-center;
         flex-direction: row;
-        align-items: flex-start;
         height: fit-content;
-        
+        width: fit-content;
         gap: 4px;
     }
 
@@ -137,13 +136,19 @@
         grid-row-end: 2;
         grid-column-end: 3;
         margin-top: 8px;
-        margin-right: 28px;
+        margin-left: 2%;
         height: 144px;
-
+        width: fit-content;
         & p {
             font-weight: 400;
             font-size: 11px;
             line-height: 17.6px;
+        }
+
+        .title {
+            padding: 2px 8px;
+            width: fit-content;
+            height: 30px;
         }
     }
 
@@ -153,13 +158,19 @@
         grid-row-end: 3;
         grid-column-end: 2;
         margin-top: 8px;
-        margin-left: 16px;
+        margin-left: 5%;
         height: 204px;
-        
+        width: fit-content;
         & p {
             font-weight: 400;
             font-size: 11px;
             line-height: 17.6px;
+        }
+
+        .title {
+            padding: 2px 8px;
+            width: fit-content;
+            height: 30px;
         }
     }
 
@@ -168,14 +179,17 @@
         grid-column-start: 1;
         grid-row-end: 4;
         grid-column-end: 3;
-        margin-left: 50%;
+        margin-left: 36%;
         margin-top: 10px;
+        width: 155px;
+        position: absolute;
     }
 
     .signature {
-        display: flex;
-        margin-left: 37%;
-        margin-top: 8px;
+        @include flex-center;
+        width: fit-content;
+        margin-left: 39%;
+        margin-top: 40px;
         position: absolute;
         & p {
             font-weight: 400;
