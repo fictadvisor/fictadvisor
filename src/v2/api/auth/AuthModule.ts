@@ -1,40 +1,30 @@
 import { Module } from '@nestjs/common';
 import { AuthController } from './AuthController';
 import { AuthService } from './AuthService';
-import { JwtModule } from '@nestjs/jwt';
 import { ConfigurationModule } from '../../config/ConfigModule';
-import { SecurityConfigService } from '../../config/SecurityConfigService';
-import { LocalStrategy } from '../../security/LocalStrategy';
 import { PassportModule } from '@nestjs/passport';
-import { JwtStrategy } from '../../security/JwtStrategy';
 import { EmailModule } from '../../email/EmailModule';
 import { TelegramAPI } from '../../telegram/TelegramAPI';
 import { PrismaModule } from '../../database/PrismaModule';
 import { GroupModule } from '../group/GroupModule';
 import { UserModule } from '../user/UserModule';
+import { AccessModule } from 'src/v2/security/AccessModule';
+import { LocalStrategy } from 'src/v2/security/LocalStrategy';
+import { LocalAuthGuard } from 'src/v2/security/LocalGuard';
 
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy, TelegramAPI],
+  providers: [AuthService, TelegramAPI, LocalStrategy, LocalAuthGuard],
   exports: [AuthService],
   imports: [
-    JwtModule.registerAsync({
-      imports: [ConfigurationModule],
-      inject: [SecurityConfigService],
-      useFactory: (configService: SecurityConfigService) => ({
-        secret: configService.secret,
-        signOptions: {
-          expiresIn: configService.jwtTtl,
-        },
-      }),
-    }),
     PassportModule,
     ConfigurationModule,
     EmailModule,
     PrismaModule,
     GroupModule,
     UserModule,
+    AccessModule,
   ],
 })
 export class AuthModule {}
