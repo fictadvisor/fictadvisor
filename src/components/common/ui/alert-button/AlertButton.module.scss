@@ -1,9 +1,9 @@
 @import "src/styles/partials/theme";
-@import "src/styles/partials/utils";
 
 .alert-buttons{
   padding: 6px 12px;
-  @include flex-center;
+  display: flex;
+  align-items: center;
   font-weight: 700;
   gap: 6px;
   border-radius: 4px;

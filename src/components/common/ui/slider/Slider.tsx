@@ -42,7 +42,7 @@ const Slider: FunctionComponent<SliderProps> = props => {
         className={styles['slider'] + ' ' + styles[`slider-${props.type}`]}
         onInput={setBackgroundSize}
       />
-      <div className={styles['target']}>
+      <div className={styles[`${props.type}-target`]}>
         {numbers.map((number, index) => (
           <div className={styles['component-target']} key={index}>
             <div className={styles['white']}></div>
