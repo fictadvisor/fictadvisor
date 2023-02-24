@@ -1,9 +1,12 @@
+import * as yup from 'yup';
+
 export interface FormikPageFields {
   email: string;
   password: string;
   passwordConfirmation: string;
   id: string;
   search: string;
+  group: string;
 }
 
 export const initialValues: FormikPageFields = {
@@ -12,9 +15,8 @@ export const initialValues: FormikPageFields = {
   passwordConfirmation: '',
   id: '',
   search: '',
+  group: '',
 };
-
-import * as yup from 'yup';
 
 export const validationSchema = yup.object().shape({
   email: yup.string().email().required('Email is required'),
@@ -28,4 +30,5 @@ export const validationSchema = yup.object().shape({
     .oneOf([yup.ref('password'), null], 'Password must match')
     .required('Confirm password is required'),
   id: yup.string().required('Id is required'),
+  group: yup.string().required('Group is required'),
 });

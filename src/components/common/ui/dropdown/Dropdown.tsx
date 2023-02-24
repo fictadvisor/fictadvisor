@@ -1,5 +1,6 @@
 import React, { ReactNode, useState } from 'react';
 import Select from 'react-select';
+import { useField } from 'formik';
 
 import styles from './Dropdown.module.scss';
 
@@ -19,40 +20,54 @@ type DropDownOption = {
 interface DropdownProps {
   options: DropDownOption[];
   label: string;
-  className?: DropDownState;
+  name: string;
+  isDisabled?: boolean;
   icon?: ReactNode;
   placeholder?: string;
   noOptionsText?: string;
   disabledPlaceholder?: string;
   numberOfOptions?: number;
+  isSuccessOnDefault?: boolean;
+  showRemarkOnDefault?: boolean;
+  hasRemark?: boolean;
 }
 
 const Dropdown: React.FC<DropdownProps> = ({
   options,
   label,
-  className,
+  name,
+  isDisabled = false,
   icon,
-  placeholder = className === DropDownState.DISABLED
-    ? 'Недоступно...'
-    : 'Тиць...',
+  placeholder = isDisabled ? 'Недоступно...' : 'Тиць...',
   noOptionsText = 'Опції відсутні',
   numberOfOptions = 4,
+  showRemarkOnDefault = false,
+  isSuccessOnDefault = false,
+  hasRemark = true,
 }) => {
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [field, meta, helpers] = useField(name);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const isDisabled = className === 'disabled';
+
+  let state;
+  if (isDisabled) state = DropDownState.DISABLED;
+  else if (meta.touched && meta.error) state = DropDownState.ERROR;
+  else if (meta.touched && isSuccessOnDefault) state = DropDownState.SUCCESS;
+  else state = null;
 
   return (
     <div className={styles['dropdown']}>
-      <span className={className ? styles[`dropdown-${className}-label`] : ''}>
+      <span className={state ? styles[`dropdown-${state}-label`] : ''}>
         {label}
       </span>
       {icon && <div className={styles['dropdown-icon-container']}>{icon}</div>}
 
       <Select
+        value={meta.value}
+        instanceId={name}
+        onChange={option => helpers.setValue(option.value)}
+        name={name}
         placeholder={placeholder}
         noOptionsMessage={() => noOptionsText}
-        onChange={setSelectedOption}
         unstyled={true}
         options={options}
         openMenuOnClick={true}
@@ -70,7 +85,7 @@ const Dropdown: React.FC<DropdownProps> = ({
               : styles['dropdown-control'],
           container: () =>
             `${styles['dropdown-container']} ${
-              styles[`dropdown-container-${className}`]
+              styles[`dropdown-container-${state}`]
             }`,
           //   input: (state) => "dropdown-input",
           menu: () => styles['dropdown-menu'],
@@ -109,6 +124,13 @@ const Dropdown: React.FC<DropdownProps> = ({
           },
         }}
       />
+      {hasRemark && (
+        <p>
+          {(meta.touched && meta.error) || showRemarkOnDefault
+            ? meta.error
+            : ''}
+        </p>
+      )}
     </div>
   );
 };

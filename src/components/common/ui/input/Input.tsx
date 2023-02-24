@@ -58,8 +58,6 @@ const Input: React.FC<InputProps> = ({
   const [isHidden, setIsHidden] = useState(type === InputType.PASSWORD);
   const inputType = isHidden ? 'password' : 'text';
 
-  meta.initialError;
-
   const customType = label || type === InputType.SEARCH ? type : 'unlabeled';
   const customLabel = type === InputType.SEARCH ? undefined : label;
 

@@ -1,4 +1,5 @@
 @import "src/styles/partials/theme";
+@import "src/styles/partials/typography-mixins";
 
 $theme-color: $background-dark-0;
 
@@ -18,7 +19,6 @@ $default-dropdown-padding: 8px;
 }
 
 .dropdown {
-  margin: 1rem;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -31,6 +31,17 @@ $default-dropdown-padding: 8px;
     background-color: $theme-color;
     transform: translateY(-50%);
     padding: 0 8px;
+    @include body-primary;
+  }
+
+  p{
+    color: inherit;
+    @include overline-text;
+    margin-top: 2px;
+    margin-left: 16px;
+    margin-right: 8px;
+    width: calc(100% - 24px);
+    min-height: 20px;
   }
 }
 .dropdown- {

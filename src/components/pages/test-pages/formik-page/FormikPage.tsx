@@ -1,6 +1,7 @@
 import { Form, Formik } from 'formik';
 
 import Button from '@/components/common/ui/button';
+import Dropdown from '@/components/common/ui/dropdown';
 import Input, { InputSize, InputType } from '@/components/common/ui/input';
 import {
   FormikPageFields,
@@ -12,6 +13,14 @@ import testPageStyles from '../test-pages.module.scss';
 import styles from './FormikPage.module.scss';
 
 const FormikPage = () => {
+  const groups = [
+    { value: 'IP-15', label: 'ІП-15' },
+    { value: 'IP-14', label: 'ІП-14' },
+    { value: 'IP-13', label: 'ІП-13' },
+    { value: 'IP-12', label: 'ІП-12' },
+    { value: 'IP-11', label: 'ІП-11' },
+  ];
+
   const handleSubmit = (data: FormikPageFields) => {
     console.log(data);
   };
@@ -54,6 +63,7 @@ const FormikPage = () => {
                 showRemarkOnDefault={true}
               />
               <Input size={InputSize.MEDIUM} name="id" placeholder="Your id" />
+              <Dropdown name="group" options={groups} label={'Група'} />
               <Input
                 size={InputSize.LARGE}
                 type={InputType.SEARCH}
