@@ -4,7 +4,7 @@ import { JwtPayload } from '../../security/JwtPayload';
 import { SecurityConfigService } from '../../config/SecurityConfigService';
 import { State, User, RoleName } from '@prisma/client';
 import { TokensDTO } from './dto/TokensDTO';
-import { RegistrationDTO, StudentDTO, TelegramDTO, UserDTO } from './dto/RegistrationDTO';
+import { RegistrationDTO } from './dto/RegistrationDTO';
 import { createHash, createHmac } from 'crypto';
 import { TelegramConfigService } from '../../config/TelegramConfigService';
 import { UserRepository } from '../user/UserRepository';
@@ -29,6 +29,9 @@ import { PasswordRepeatException } from '../../utils/exceptions/PasswordRepeatEx
 import { GroupService } from '../group/GroupService';
 import { RoleService } from '../user/role/RoleService';
 import { RoleRepository } from '../user/role/RoleRepository';
+import { TelegramDTO } from './dto/TelegramDTO';
+import { StudentDTO } from './dto/StudentDTO';
+import { UserDTO } from './dto/UserDTO';
 
 export const ONE_MINUTE = 1000 * 60;
 export const HOUR = ONE_MINUTE * 60;

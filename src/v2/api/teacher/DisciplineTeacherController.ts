@@ -2,8 +2,9 @@ import { Body, Controller, Get, Param, Post, Request, UseGuards } from '@nestjs/
 import { DisciplineTeacherService } from './DisciplineTeacherService';
 import { CreateAnswersDTO } from './dto/CreateAnswersDTO';
 import { GroupByDisciplineTeacherGuard } from 'src/v2/security/group-guard/GroupByDisciplineTeacherGuard';
-import { DisciplineTeacherByIdPipe } from './dto/DisciplineTeacherByIdPipe';
+
 import { Access } from 'src/v2/security/Access';
+import { DisciplineTeacherByIdPipe } from './pipe/DisciplineTeacherByIdPipe';
 import { TelegramGuard } from '../../security/TelegramGuard';
 import { ResponseDTO } from '../poll/dto/ResponseDTO';
 

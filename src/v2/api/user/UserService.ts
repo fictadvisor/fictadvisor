@@ -3,7 +3,7 @@ import { DisciplineService } from '../discipline/DisciplineService';
 import { GiveRoleDTO } from './dto/GiveRoleDTO';
 import { StudentRepository } from './StudentRepository';
 import { RoleService } from './role/RoleService';
-import { UpdateSuperheroData } from './dto/UpdateSuperheroData';
+import { UpdateSuperheroData } from './data/UpdateSuperheroData';
 import { SuperheroRepository } from './SuperheroRepository';
 import { UserRepository } from './UserRepository';
 import { ContactRepository } from './ContactRepository';

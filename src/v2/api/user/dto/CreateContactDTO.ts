@@ -1,13 +1,16 @@
 import { IsAscii, IsNotEmpty, Matches, MaxLength } from 'class-validator';
-import { createRegex, ENG_REGEX, NUM_REGEX, UKR_REGEX, UKRSPEC_REGEX } from '../../../utils/GLOBALS';
+import {
+  createRegex,
+  ENG_REGEX,
+  NUM_REGEX,
+  UKR_REGEX,
+  UKRSPEC_REGEX,
+  validationOptionsMsg,
+} from '../../../utils/GLOBALS';
 
 export class CreateContactDTO {
-    @MaxLength(100, {
-      message: 'name is too long (max: 100)',
-    })
-    @IsNotEmpty({
-      message: 'name can not be empty',
-    })
+    @MaxLength(100, validationOptionsMsg('name is too long (max: 100)'))
+    @IsNotEmpty(validationOptionsMsg('name can not be empty'))
     @Matches(
       createRegex(UKR_REGEX, ENG_REGEX, NUM_REGEX, UKRSPEC_REGEX),
       {
@@ -15,25 +18,13 @@ export class CreateContactDTO {
       })
       name: string;
 
-    @MaxLength(100, {
-      message: 'displayName is too long (max: 100)',
-    })
-    @IsNotEmpty({
-      message: 'displayName can not be empty',
-    })
-    @IsAscii({
-      message: 'link contains wrong symbols (ACSII only)',
-    })
+    @MaxLength(100, validationOptionsMsg('displayName is too long (max: 100)'))
+    @IsNotEmpty(validationOptionsMsg('displayName can not be empty'))
+    @IsAscii(validationOptionsMsg('link contains wrong symbols (ACSII only)'))
       displayName: string;
 
-    @MaxLength(200, {
-      message: 'link is too long (max: 200)',
-    })
-    @IsNotEmpty({
-      message: 'link can not be empty',
-    })
-    @IsAscii({
-      message: 'link contains wrong symbols (ACSII only)',
-    })
+    @MaxLength(200, validationOptionsMsg('link is too long (max: 200)'))
+    @IsNotEmpty(validationOptionsMsg('link can not be empty'))
+    @IsAscii(validationOptionsMsg('link contains wrong symbols (ACSII only)'))
       link: string;
 }

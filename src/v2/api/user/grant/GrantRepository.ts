@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../database/PrismaService';
-import { CreateGrantData } from '../dto/CreateRoleDTO';
 import { UpdateGrantDTO } from './dto/UpdateGrantDTO';
+import { CreateGrantData } from '../data/CreateGrantData';
 
 @Injectable()
 export class GrantRepository {

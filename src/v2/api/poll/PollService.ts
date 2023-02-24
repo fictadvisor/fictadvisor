@@ -1,6 +1,6 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import { CreateQuestionWithRolesDTO } from './dto/CreateQuestionDTO';
+import { CreateQuestionWithRolesDTO } from './dto/CreateQuestionWithRolesDTO';
 import { QuestionRepository } from './QuestionRepository';
 import { UpdateQuestionDTO } from './dto/UpdateQuestionDTO';
 import { Question, TeacherRole } from '@prisma/client';

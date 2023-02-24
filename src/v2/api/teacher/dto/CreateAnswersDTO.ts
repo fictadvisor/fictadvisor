@@ -11,6 +11,7 @@ export class CreateAnswersDTO {
 export class CreateAnswerDTO {
   @IsNotEmpty()
     questionId: string;
+
   @IsNotEmpty()
     value: string;
 }

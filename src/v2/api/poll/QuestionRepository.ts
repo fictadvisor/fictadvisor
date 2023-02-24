@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
 import { CreateQuestionDTO } from './dto/CreateQuestionDTO';
 import { UpdateQuestionDTO } from './dto/UpdateQuestionDTO';
-import { CreateQuestionRoleData } from './dto/CreateQuestionRoleData';
 import { TeacherRole } from '@prisma/client';
 import { CreateQuestionWithRolesData } from './data/CreateQuestionWithRolesData';
+import { CreateQuestionRoleData } from './data/CreateQuestionRoleData';
 
 @Injectable()
 export class QuestionRepository {

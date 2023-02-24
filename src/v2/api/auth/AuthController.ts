@@ -1,13 +1,14 @@
 import { Controller, Request, Post, UseGuards, Body, Put, Param, Get, Query } from '@nestjs/common';
 import { LocalAuthGuard } from '../../security/LocalGuard';
 import { AuthService } from './AuthService';
-import { RegistrationDTO, TelegramDTO } from './dto/RegistrationDTO';
+import { RegistrationDTO } from './dto/RegistrationDTO';
 import { JwtGuard } from '../../security/JwtGuard';
 import { ForgotPasswordDTO } from './dto/ForgotPasswordDTO';
 import { ResetPasswordDTO } from './dto/ResetPasswordDTO';
 import { UpdatePasswordDTO } from './dto/UpdatePasswordDTO';
 import { VerificateEmailDTO } from './dto/VerificateEmailDTO';
 import { IdentityQueryDTO } from './dto/IdentityQueryDTO';
+import { TelegramDTO } from './dto/TelegramDTO';
 import { UserService } from '../user/UserService';
 
 @Controller({

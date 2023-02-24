@@ -6,8 +6,8 @@ import { GroupModule } from '../group/GroupModule';
 import { DisciplineModule } from '../discipline/DisciplineModule';
 import { TeacherModule } from '../teacher/TeacherModule';
 import { PrismaModule } from '../../database/PrismaModule';
-import { QuestionByIdPipe } from './dto/QuestionByIdPipe';
 import { UserModule } from '../user/UserModule';
+import { QuestionByIdPipe } from './pipe/QuestionByIdPipe';
 
 @Module({
   controllers: [PollController],

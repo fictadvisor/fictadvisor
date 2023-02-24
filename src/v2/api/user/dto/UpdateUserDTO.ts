@@ -1,39 +1,25 @@
 import { State } from '@prisma/client';
 import { IsEmail, IsEnum, IsOptional, Matches, MaxLength, MinLength } from 'class-validator';
-import { createRegex, ENG_REGEX, NUM_REGEX } from '../../../utils/GLOBALS';
+import { createRegex, ENG_REGEX, NUM_REGEX, validationOptionsMsg } from '../../../utils/GLOBALS';
 
 export class UpdateUserDTO {
 
-    @MinLength(2, {
-      message: 'username is too short (min: 2)',
-    })
-    @MaxLength(40, {
-      message: 'username is too long (max: 40)',
-    })
+    @MinLength(2, validationOptionsMsg('username is too short (min: 2)'))
+    @MaxLength(40, validationOptionsMsg('username is too long (max: 40)'))
     @Matches(
-      createRegex(ENG_REGEX, NUM_REGEX, '_'),
-      {
-        message: 'username is not correct (a-zA-Z0-9_)',
-      })
+      createRegex(ENG_REGEX, NUM_REGEX, '_'), validationOptionsMsg('username is not correct (a-zA-Z0-9_)'))
     @IsOptional()
       username?: string;
 
-    @IsEnum(State, {
-      message: 'invalid state argument passed',
-    })
+    @IsEnum(State, validationOptionsMsg('invalid state argument passed'))
     @IsOptional()
       state?: State;
 
-    @MaxLength(400, {
-      message: 'avatar link is too long (max: 400)',
-    })
+    @MaxLength(400, validationOptionsMsg('avatar link is too long (max: 400)'))
     @IsOptional()
       avatar?: string;
 
-    @IsEmail({},
-      {
-        message: 'given email is not email',
-      })
+    @IsEmail({}, validationOptionsMsg('given email is not email'))
     @IsOptional()
       email?: string;
 }

@@ -1,4 +1,9 @@
-export interface CreateDateDTO {
-  startDate: Date,
-  endDate: Date,
+import { Type } from 'class-transformer';
+
+export class CreateDateDTO {
+  @Type(() => Date)
+    startDate: Date;
+
+  @Type(() => Date)
+    endDate: Date;
 }
