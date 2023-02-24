@@ -11,7 +11,7 @@ export class PermissionGuard implements CanActivate {
 
   private request: Request;
 
-  protected constructor (
+  constructor (
     @Inject(forwardRef(() => UserService))
     private userService: UserService,
     private reflector: Reflector,

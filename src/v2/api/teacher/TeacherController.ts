@@ -35,6 +35,15 @@ export class TeacherController {
     return { roles };
   }
 
+  @Get('/:teacherId/subjects')
+  async getSubjects (
+    @Param('teacherId', TeacherByIdPipe) teacherId: string,
+  ) {
+    const subjects = await this.teacherService.getTeacherSubject(teacherId);
+
+    return { subjects };
+  }
+
   @Get('/:teacherId')
   getTeacher (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,

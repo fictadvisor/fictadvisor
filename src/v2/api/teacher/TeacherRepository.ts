@@ -144,4 +144,20 @@ export class TeacherRepository {
       },
     });
   }
+
+  getSubjects (teacherId: string) {
+    return this.prisma.subject.findMany({
+      where: {
+        disciplines: {
+          some: {
+            disciplineTeachers: {
+              some: {
+                teacherId,
+              },
+            },
+          },
+        },
+      },
+    });
+  }
 }
