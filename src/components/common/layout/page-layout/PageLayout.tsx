@@ -14,6 +14,7 @@ interface PageLayoutProps {
   children?: ReactNode;
   hasHeader?: boolean;
   hasFooter?: boolean;
+  className?: string;
 }
 
 function PageLayout(props: PageLayoutProps) {
@@ -47,13 +48,9 @@ function PageLayout(props: PageLayoutProps) {
         )}
       </Head>
 
-      <div className={styles['page']}>
+      <div className={styles['page'] + ' ' + props.className}>
         {props.children}
-        <div className="navigation-wrap">
-          <div className={styles['footer']}>
-            {props.hasFooter && <Footer />}
-          </div>
-        </div>
+        <div className={styles['footer']}>{props.hasFooter && <Footer />}</div>
       </div>
     </div>
   );
