@@ -147,4 +147,8 @@ export class TeacherService {
       throw new InvalidQueryException();
     }
   }
+
+  async getTeacherSubject (teacherId: string) {
+    return this.teacherRepository.getSubjects(teacherId);
+  }
 }
