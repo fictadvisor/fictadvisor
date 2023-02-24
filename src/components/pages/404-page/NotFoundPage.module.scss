@@ -1,4 +1,3 @@
-
 .navigation {
   background-color: #151515;
   height: 6vh;
@@ -62,6 +61,11 @@
   align-self: center;
 }
 
+.not-found-button-mobile{
+  display: none;
+  width: 226px;
+}
+
 .not-found-leaves {
   width: 100%;
   height: 10%;
@@ -81,4 +85,40 @@
 .four-zero-four-page {
   width: 200px;
   height: 200px;
+}
+
+@media screen and (max-width: 1024px){
+  .main-info{
+    background-image: url("/assets/404-page/leaves_right_mobile.svg"),
+    url("/assets/404-page/clouds_desktop.svg");
+    background-repeat: no-repeat, no-repeat;
+    background-position: right bottom, center center;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .not-found-text{
+    width: 226px;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 150%;
+    text-align: center;
+  }
+  .main-content{
+    justify-content: flex-start;
+  }
+  .not-found-alert-button{
+    display: flex;
+    align-self: center;
+    align-items: center;
+    margin-bottom: 25.12px;
+    margin-right: 0;
+  }
+  .not-found-button{
+    display: none;
+  }
+  .not-found-button-mobile{
+    margin-top: 30.33px;
+    display: block;
+  }
 }

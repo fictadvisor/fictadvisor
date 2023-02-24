@@ -31,6 +31,13 @@ const NotFoundPage = () => (
               startIcon={<ChevronLeftIcon className={'icon'} />}
             />
           </div>
+          <div className={styles['not-found-button-mobile']}>
+            <Button
+              text={'Повернутися на голову'}
+              size={ButtonSize.SMALL}
+              startIcon={<ChevronLeftIcon className={'icon'} />}
+            />
+          </div>
         </div>
         <div className={styles['not-found-alert-button']}>
           <AlertButton

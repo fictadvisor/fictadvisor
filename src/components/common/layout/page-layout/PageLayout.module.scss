@@ -1,4 +1,6 @@
+@import "src/styles/partials/theme";
+
 .page{
   width: 100%;
-  display: flex;
+  background-color: $background-dark-0;
 }
