@@ -7,9 +7,11 @@ export class CreateLessonDTO {
   @IsOptional()
     fortnight?: number;
 
+  @IsNotEmpty(validationOptionsMsg('startDate can not be empty'))
   @Type(() => Date)
     startDate: Date;
 
+  @IsNotEmpty(validationOptionsMsg('endDate can not be empty'))
   @Type(() => Date)
     endDate: Date;
 

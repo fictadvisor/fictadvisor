@@ -12,9 +12,11 @@ export class UpdateDynamicInfoDTO {
   @IsNotEmpty(validationOptionsMsg('Evaluating system can\'t be empty'))
     teacherId?: string;
 
+  @IsNotEmpty(validationOptionsMsg('startDate can not be empty'))
   @Type(() => Date)
     startDate?: Date;
 
+  @IsNotEmpty(validationOptionsMsg('endDate can not be empty'))
   @Type(() => Date)
     endDate?: Date;
 }
