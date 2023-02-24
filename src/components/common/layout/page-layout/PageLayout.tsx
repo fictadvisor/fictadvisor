@@ -4,17 +4,21 @@ import Script from 'next/script';
 
 import config from '@/config';
 
+import Footer from '../../composite/footer/Footer';
+
 import styles from './PageLayout.module.scss';
 
 interface PageLayoutProps {
   title?: string;
   description?: string;
   children?: ReactNode;
+  hasHeader?: boolean;
+  hasFooter?: boolean;
+  className?: string;
 }
 
 function PageLayout(props: PageLayoutProps) {
   const metaTitle = props?.title ? props.title : config.service;
-
   return (
     <div>
       <Head>
@@ -44,7 +48,10 @@ function PageLayout(props: PageLayoutProps) {
         )}
       </Head>
 
-      <div className={styles['page']}>{props.children}</div>
+      <div className={styles['page'] + ' ' + props.className}>
+        {props.children}
+        <div className={styles['footer']}>{props.hasFooter && <Footer />}</div>
+      </div>
     </div>
   );
 }

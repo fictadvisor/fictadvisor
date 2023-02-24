@@ -91,7 +91,3 @@
     background-color: $gray-100;
     border-color: $gray-100;
 }
-
-.error-radio-input:checked + .error-radio-box::before {
-    background-color: $error-200;
-}
