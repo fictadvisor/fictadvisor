@@ -11,7 +11,7 @@
           url("/assets/404-page/clouds_desktop.svg");
   background-repeat: no-repeat, no-repeat, no-repeat;
   background-position: left bottom, right bottom, center center;
-  background-size: auto, auto, 100%;
+  background-size: auto, auto, 90%;
 }
 
 .navbar {
@@ -85,13 +85,10 @@
 @media screen and (max-width: 768px) {
   .page-layout{
     background-image: url("/assets/404-page/leaves_right_mobile.svg"),
-    url("/assets/404-page/clouds_mobile.svg") !important;
+    url("/assets/404-page/clouds_mobile.svg");
     background-repeat: no-repeat, no-repeat;
     background-position: right bottom, center center;
-    background-size: auto, 100%;
-  }
-  .navbar{
-    height: 48px;
+    background-size: auto, 80%;
   }
   .page-content{
     justify-content: flex-start;
@@ -114,10 +111,16 @@
   .not-found-text {
     margin: 63px 0 49px 0;
   }
+  .frog-image {
+    width: 68.5%;
+  }
 }
 
 // Phone
 @media screen and (max-width: 425px){
+  .page-layout{
+    background-size: auto, 120%;
+  }
   .not-found-text{
     width: 226px;
     font-weight: 400;
