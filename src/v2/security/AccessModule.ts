@@ -7,15 +7,12 @@ import { GroupByDisciplineTeacherGuard } from './group-guard/GroupByDisciplineTe
 import { GroupBySemesterLessonGuard } from './group-guard/GroupBySemesterLessonGuard';
 import { GroupByTemporaryLessonGuard } from './group-guard/GroupByTemporaryLessonGuard';
 import { JwtStrategy } from './JwtStrategy';
-import { LocalStrategy } from './LocalStrategy';
 import { TelegramGuard } from './TelegramGuard';
-import { LocalAuthGuard } from './LocalGuard';
 import { PrismaModule } from '../database/PrismaModule';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigurationModule } from '../config/ConfigModule';
 import { SecurityConfigService } from '../config/SecurityConfigService';
 import { JwtModule, JwtService } from '@nestjs/jwt';
-import { TeacherModule } from '../api/teacher/TeacherModule';
 
 @Module({
   providers: [
@@ -27,7 +24,7 @@ import { TeacherModule } from '../api/teacher/TeacherModule';
     GroupByTemporaryLessonGuard,
     JwtStrategy,
     TelegramGuard,
-    JwtService
+    JwtService,
   ],
   exports: [
     PermissionGuard, 
@@ -38,7 +35,7 @@ import { TeacherModule } from '../api/teacher/TeacherModule';
     GroupByTemporaryLessonGuard,
     JwtStrategy,
     TelegramGuard,
-    JwtService
+    JwtService,
   ],
   imports: [
     forwardRef(() => UserModule),

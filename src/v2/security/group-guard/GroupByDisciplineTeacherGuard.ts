@@ -1,6 +1,5 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Request } from 'express';
-import { DisciplineTeacherService } from '../../api/teacher/DisciplineTeacherService';
 import { RequestUtils } from '../../utils/RequestUtils';
 import { DisciplineTeacherRepository } from 'src/v2/api/teacher/DisciplineTeacherRepository';
 

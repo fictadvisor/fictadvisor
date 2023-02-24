@@ -15,6 +15,6 @@ import { AccessModule } from 'src/v2/security/AccessModule';
   controllers: [UserController, RoleController],
   providers: [UserService, RoleService, GrantService],
   exports: [UserService, RoleService, GrantService],
-  imports: [ConfigurationModule, forwardRef(() => GroupModule), forwardRef(() => DisciplineModule), forwardRef(() => PrismaModule), forwardRef(() => AuthModule), forwardRef(()=> AccessModule)],
+  imports: [ConfigurationModule, forwardRef(() => GroupModule), forwardRef(() => DisciplineModule), forwardRef(() => PrismaModule), forwardRef(() => AuthModule), forwardRef(() => AccessModule)],
 })
 export class UserModule {}
