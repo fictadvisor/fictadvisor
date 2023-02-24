@@ -63,7 +63,13 @@ const FormikPage = () => {
                 showRemarkOnDefault={true}
               />
               <Input size={InputSize.MEDIUM} name="id" placeholder="Your id" />
-              <Dropdown name="group" options={groups} label={'Група'} />
+              <Dropdown
+                name="group"
+                options={groups}
+                label={'Група'}
+                isSuccessOnDefault={true}
+                showRemarkOnDefault={true}
+              />
               <Input
                 size={InputSize.LARGE}
                 type={InputType.SEARCH}

@@ -62,7 +62,6 @@ const Dropdown: React.FC<DropdownProps> = ({
       {icon && <div className={styles['dropdown-icon-container']}>{icon}</div>}
 
       <Select
-        value={meta.value}
         instanceId={name}
         onChange={option => helpers.setValue(option.value)}
         name={name}
@@ -125,7 +124,7 @@ const Dropdown: React.FC<DropdownProps> = ({
         }}
       />
       {hasRemark && (
-        <p>
+        <p className={styles['remark-' + state]}>
           {(meta.touched && meta.error) || showRemarkOnDefault
             ? meta.error
             : ''}

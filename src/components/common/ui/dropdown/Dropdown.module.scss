@@ -55,12 +55,21 @@ $default-dropdown-padding: 8px;
     background-color: $theme-color;
     @include roundcorners;
     &-success{
+      p{
+        color: $success-300;
+      }
       border-color: $success-300;
     }
     &-error{
+      p{
+        color: $error-200;
+      }
       border-color: $error-200;
     }
     &-disabled{
+      p{
+        color: $background-dark-200;
+      }
       border-color: $background-dark-200;
     }
 
@@ -125,6 +134,18 @@ $default-dropdown-padding: 8px;
   height: 24px;
   width: 24px;
   z-index: 1;
+}
+
+.remark-success{
+  color: $success-300 !important;
+}
+
+.remark-error{
+  color: $error-200 !important;
+}
+
+.remark-disabled{
+  color: $background-dark-200 !important;
 }
 
 
