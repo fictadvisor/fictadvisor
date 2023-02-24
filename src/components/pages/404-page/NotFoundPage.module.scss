@@ -1,0 +1,84 @@
+
+.navigation {
+  background-color: #151515;
+  height: 6vh;
+  width: 100%;
+}
+
+.not-found-page{
+  width: 100%;
+  min-height: calc(100vh);
+  overflow: hidden;
+}
+
+.main-info {
+  width: 100%;
+  display: flex;
+  min-height: 94vh;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-image:   url("/assets/404-page/leaves_left.svg"),
+  url("/assets/404-page/leaves_right.svg"),
+  url("/assets/404-page/clouds_desktop.svg");
+  background-repeat: no-repeat, no-repeat, no-repeat;
+  background-position: left bottom, right bottom, center center;
+}
+
+.center-position {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.not-found-text {
+  width: 353px;
+  height: 62px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 128%;
+  text-align: center;
+  margin: 84px 0 57.72px 0;
+}
+
+.not-found-image {
+  width: 60%;
+}
+
+.main-content{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-grow: 1;
+  align-content: center;
+  align-items: center
+}
+
+.not-found-button{
+  margin-top: 7.64px;
+  margin-bottom: 67px;
+  width: 60%;
+  align-self: center;
+}
+
+.not-found-leaves {
+  width: 100%;
+  height: 10%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.not-found-alert-button{
+  margin-bottom: 39px;
+  margin-right: 80px;
+  align-self: flex-end;
+  display: flex;
+  align-items: flex-end;
+}
+
+.four-zero-four-page {
+  width: 200px;
+  height: 200px;
+}

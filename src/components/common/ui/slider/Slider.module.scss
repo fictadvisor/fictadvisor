@@ -6,8 +6,8 @@ $slider-mob-height: 8px;
 $slider-border-radius: 500px;
 
 @mixin thumb-desk-size {
-    width: 26px;
-    height: 26px;
+    width: 24px;
+    height: 24px;
 }
 
 @mixin thumb-mob-size {
@@ -84,12 +84,20 @@ $slider-border-radius: 500px;
     }
 }
 
-.target{
+.mobile-target{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
     width: 99%;
+}
+
+.desktop-target{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 97.5%;
 }
 
 .desktop-font{
