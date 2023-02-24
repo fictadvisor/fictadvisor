@@ -9,11 +9,12 @@ import { RoleController } from './role/RoleController';
 import { PrismaModule } from '../../database/PrismaModule';
 import { GrantService } from './grant/GrantService';
 import { AuthModule } from '../auth/AuthModule';
+import { AccessModule } from 'src/v2/security/AccessModule';
 
 @Module({
   controllers: [UserController, RoleController],
   providers: [UserService, RoleService, GrantService],
   exports: [UserService, RoleService, GrantService],
-  imports: [ConfigurationModule, forwardRef(() => GroupModule), forwardRef(() => DisciplineModule), forwardRef(() => PrismaModule), forwardRef(() => AuthModule)],
+  imports: [ConfigurationModule, forwardRef(() => GroupModule), forwardRef(() => DisciplineModule), forwardRef(() => PrismaModule), forwardRef(() => AuthModule), forwardRef(()=> AccessModule)],
 })
 export class UserModule {}

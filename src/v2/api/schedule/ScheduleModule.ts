@@ -6,20 +6,15 @@ import { GroupModule } from '../group/GroupModule';
 import { DateModule } from '../../utils/date/DateModule';
 import { SubjectModule } from '../subject/SubjectModule';
 import { DisciplineModule } from '../discipline/DisciplineModule';
-import { JwtGuard } from '../../security/JwtGuard';
 import { TeacherModule } from '../teacher/TeacherModule';
 import { ScheduleRepository } from './ScheduleRepository';
-import { GroupBySemesterLessonGuard } from '../../security/group-guard/GroupBySemesterLessonGuard';
-import { GroupByTemporaryLessonGuard } from '../../security/group-guard/GroupByTemporaryLessonGuard';
 import { PrismaModule } from '../../database/PrismaModule';
+import { AccessModule } from 'src/v2/security/AccessModule';
 
 @Module({
   controllers: [ScheduleController],
   providers: [
     ScheduleService,
-    JwtGuard,
-    GroupBySemesterLessonGuard,
-    GroupByTemporaryLessonGuard,
     ScheduleRepository,
   ],
   exports: [ScheduleService],
@@ -31,6 +26,7 @@ import { PrismaModule } from '../../database/PrismaModule';
     DisciplineModule,
     TeacherModule,
     PrismaModule,
+    AccessModule,
   ],
 })
 export class ScheduleModule {}
