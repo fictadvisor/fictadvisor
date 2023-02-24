@@ -1,15 +1,16 @@
 .page-layout {
   width: 100%;
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   background-image:
           url("/assets/404-page/leaves_left.svg"),
-          url("/assets/404-page/leaves_right.svg");
-  background-repeat: no-repeat, no-repeat;
-  background-position: left bottom, right bottom;
+          url("/assets/404-page/leaves_right.svg"),
+          url("/assets/404-page/clouds_desktop.svg");
+  background-repeat: no-repeat, no-repeat, no-repeat;
+  background-position: left bottom, right bottom, center center;
+  background-size: 29%, 29%, 100%;
 }
 
 .navbar {
@@ -18,13 +19,8 @@
   width: 100%;
 }
 
-.center-position {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
 .not-found-text {
+  margin-top: 63px;
   width: 353px;
   height: 62px;
   font-style: normal;
@@ -32,90 +28,80 @@
   font-size: 24px;
   line-height: 128%;
   text-align: center;
-  margin: 84px 0 57.72px 0;
+  margin-bottom: 7%;
 }
 
 .frog-image {
-  width: 60%;
+  width: 69%;
 }
 
 .page-content{
   display: flex;
   flex-direction: column;
   justify-content: center;
-  flex-grow: 1;
   align-content: center;
-  align-items: center
+  align-items: center;
+  flex-grow: 1;
 }
 
-.button-desktop{
-  margin-top: 7.64px;
-  margin-bottom: 67px;
-  width: 457px;
-  align-self: center;
-}
-
-.button-mobile{
-  display: none;
-}
-
-.alert-button{
-  margin-bottom: 39px;
-  margin-right: 80px;
-  align-self: flex-end;
+.button{
   display: flex;
-  align-items: flex-end;
+  gap: 18px;
+  align-self: center;
+  margin-top: 5%;
 }
 
 // Media Queries
 // Laptop
 @media screen and (max-width: 1020px){
   .page-layout{
-    background-image: url("/assets/404-page/leaves_right_mobile.svg");
-    background-repeat: no-repeat;
-    background-position: right bottom;
+    background-image:
+            url("/assets/404-page/leaves_right_mobile.svg"),
+            url("/assets/404-page/clouds_desktop.svg");
+    background-repeat: no-repeat, no-repeat;
+    background-position: right bottom, center center;
+    background-size: auto, 100%;
   }
 }
 
 // Tablet
 @media screen and (max-width: 768px) {
   .page-content{
-    justify-content: flex-start;
+    flex-grow: 0;
   }
-  .alert-button{
-    display: flex;
-    align-self: center;
-    width: 248px;
-    align-items: center;
-    margin-bottom: 25.12px;
-    margin-right: 0;
+  .navbar{
+    height: 45px;
   }
   .button-desktop{
     display: none;
   }
-  .button-mobile{
-    margin-top: 30.33px;
-    display: block;
-  }
-  .not-found-text {
-    margin: 63px 0 49px 0;
-  }
-  .frog-image {
-    width: 68.5%;
-  }
-}
-
-// Phone
-@media screen and (max-width: 425px){
-  .page-layout{
-    background-size: auto, 120%;
-    height: 100dvh;
+  .button{
+    display: flex;
+    margin-bottom: 12px;
+    flex-direction: column;
+    margin-top: 32px;
+    gap: 16px;
+    align-self: center;
   }
   .not-found-text{
     width: 226px;
     font-weight: 400;
     font-size: 16px;
     line-height: 150%;
+    margin-top: 52px;
+    margin-bottom: 48px;
     text-align: center;
+  }
+  .frog-image{
+    width: 65%;
+  }
+}
+
+// Mobile
+@media screen and (max-width: 425px){
+  .page-layout{
+    background-image:
+            url("/assets/404-page/leaves_right_mobile.svg"),
+            url("/assets/404-page/clouds_mobile.svg");
   }
 }

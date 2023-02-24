@@ -1,10 +1,6 @@
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
-import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 
-import AlertButton, {
-  AlertButtonVariant,
-} from '@/components/common/ui/alert-button';
-import Button, { ButtonSize } from '@/components/common/ui/button';
+import Button, { ButtonColor, ButtonSize } from '@/components/common/ui/button';
 
 import PageLayout from '../../common/layout/page-layout/PageLayout';
 
@@ -23,27 +19,18 @@ const NotFoundPage = () => (
           className={styles['frog-image']}
           alt="Це 404"
         />
-        <div className={styles['button-desktop']}>
+        <div className={styles['button']}>
           <Button
             text={'Повернутися на голову'}
             size={ButtonSize.LARGE}
+            color={ButtonColor.SECONDARY}
             startIcon={<ChevronLeftIcon className={'icon'} />}
           />
-        </div>
-        <div className={styles['button-mobile']}>
           <Button
-            text={'Повернутися на голову'}
-            size={ButtonSize.SMALL}
-            startIcon={<ChevronLeftIcon className={'icon'} />}
+            text={"Зв'затися з адміністратором"}
+            size={ButtonSize.LARGE}
           />
         </div>
-      </div>
-      <div className={styles['alert-button']}>
-        <AlertButton
-          text={"Звя'жіться з адміністратором"}
-          variant={AlertButtonVariant.ERROR_FILLED}
-          startIcon={<ExclamationTriangleIcon className={'icon'} />}
-        />
       </div>
     </div>
   </PageLayout>
