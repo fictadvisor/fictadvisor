@@ -17,7 +17,6 @@ import { DateService } from '../../utils/date/DateService';
 import { JwtGuard } from '../../security/JwtGuard';
 import { UpdateDynamicInfoDTO } from './dto/UpdateDynamicInfoDTO';
 import { GroupBySemesterLessonGuard } from '../../security/group-guard/GroupBySemesterLessonGuard';
-import { GroupByParamsGuard } from '../../security/group-guard/GroupByParamsGuard';
 import { GroupByTemporaryLessonGuard } from '../../security/group-guard/GroupByTemporaryLessonGuard';
 import { UpdateStaticInfoDTO } from './dto/UpdateStaticInfoDTO';
 import { CreateLessonDTO } from './dto/CreateLessonDTO';
@@ -56,7 +55,7 @@ export class ScheduleController {
     return { lessons };
   }
 
-  @UseGuards(JwtGuard, GroupByParamsGuard)
+  @UseGuards(JwtGuard)
   @Get('/groups/:groupId/temporary')
   async getTemporaryLessons (
     @Param('groupId', GroupByIdPipe) group: Group,
@@ -66,7 +65,7 @@ export class ScheduleController {
     return { lessons };
   }
 
-  @UseGuards(JwtGuard, GroupByParamsGuard)
+  @UseGuards(JwtGuard)
   @Get('/groups/:groupId/temporary/:fortnight')
   async getTemporaryLessonsFortnight (
     @Param('groupId', GroupByIdPipe) group: Group,

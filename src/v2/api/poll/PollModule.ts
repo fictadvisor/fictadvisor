@@ -1,7 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { PollController } from './PollController';
 import { PollService } from './PollService';
-import { GroupByDisciplineTeacherGuard } from '../../security/group-guard/GroupByDisciplineTeacherGuard';
 import { GroupModule } from '../group/GroupModule';
 import { DisciplineModule } from '../discipline/DisciplineModule';
 import { TeacherModule } from '../teacher/TeacherModule';
@@ -11,8 +10,8 @@ import { QuestionByIdPipe } from './pipe/QuestionByIdPipe';
 
 @Module({
   controllers: [PollController],
-  providers: [PollService, GroupByDisciplineTeacherGuard, QuestionByIdPipe],
+  providers: [PollService, QuestionByIdPipe],
   exports: [PollService],
-  imports: [forwardRef(() => GroupModule), forwardRef(() => DisciplineModule), forwardRef(() => TeacherModule), PrismaModule, forwardRef(() => UserModule), forwardRef(() => DisciplineModule)],
+  imports: [forwardRef(() => GroupModule), forwardRef(() => DisciplineModule), forwardRef(() => TeacherModule), PrismaModule, forwardRef(() => UserModule), forwardRef(() => DisciplineModule), AccessModule],
 })
 export class PollModule {}
