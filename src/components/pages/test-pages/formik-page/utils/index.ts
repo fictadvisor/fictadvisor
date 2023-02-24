@@ -9,6 +9,8 @@ export interface FormikPageFields {
   group: string;
   review: string;
   isCaptain: boolean;
+  notification: boolean;
+  fruit: string;
 }
 
 export const initialValues: FormikPageFields = {
@@ -20,6 +22,8 @@ export const initialValues: FormikPageFields = {
   group: '',
   review: '',
   isCaptain: false,
+  notification: false,
+  fruit: '',
 };
 
 export const validationSchema = yup.object().shape({
@@ -36,4 +40,6 @@ export const validationSchema = yup.object().shape({
   id: yup.string().required('Id is required'),
   group: yup.string().required('Group is required'),
   review: yup.string().required('Review is required'),
+  fruit: yup.string().required('Fruit is required'),
+  isCaptain: yup.boolean().isTrue(),
 });

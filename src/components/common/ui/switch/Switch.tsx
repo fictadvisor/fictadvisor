@@ -1,4 +1,5 @@
-import { FC } from 'react';
+import React, { FC } from 'react';
+import { useField } from 'formik';
 
 import styles from './Switch.module.scss';
 export enum SwitchTextPosition {
@@ -11,7 +12,8 @@ export enum SwitchSize {
   SMALL = 'small',
 }
 
-interface SwitchProps {
+interface SwitchProps
+  extends Omit<React.ComponentPropsWithoutRef<'input'>, 'size'> {
   text?: string;
   textPosition?: string;
   size?: SwitchSize;
@@ -21,8 +23,11 @@ const Switch: FC<SwitchProps> = ({
   text,
   textPosition = SwitchTextPosition.RIGHT,
   size = SwitchSize.MEDIUM,
+  ...rest
 }) => {
   const gap = text ? '8px' : '';
+  const [field] = useField(rest.name);
+
   return (
     <div>
       <div className={styles[size + '-container']} style={{ gap: `${gap}` }}>
@@ -30,7 +35,13 @@ const Switch: FC<SwitchProps> = ({
           <span className={styles[size + '-switch-text']}>{text}</span>
         )}
         <label className={styles[`${size}-switch`]}>
-          <input type="checkbox" className={styles[size + '-switch-input']} />
+          <input
+            type="checkbox"
+            className={styles[size + '-switch-input']}
+            {...rest}
+            {...field}
+            checked={field.value}
+          />
           <span className={styles[size + '-switch-slider']}></span>
         </label>
         {textPosition === 'right' && (

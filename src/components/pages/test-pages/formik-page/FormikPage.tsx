@@ -4,6 +4,8 @@ import Button from '@/components/common/ui/button';
 import Checkbox from '@/components/common/ui/checkbox';
 import Dropdown from '@/components/common/ui/dropdown';
 import Input, { InputSize, InputType } from '@/components/common/ui/input';
+import RadioGroup, { Radio } from '@/components/common/ui/radio-group';
+import Switch from '@/components/common/ui/switch';
 import TextArea from '@/components/common/ui/text-area';
 import {
   FormikPageFields,
@@ -84,6 +86,15 @@ const FormikPage = () => {
                 showRemarkOnDefault={true}
               />
               <Checkbox name="isCaptain" text="Староста групи" />
+              <Switch
+                name="notification"
+                text="Бажаєте отримувати сповіщення?"
+              />
+              <RadioGroup name={'fruit'} isDisabled={false}>
+                <Radio text={'яблуко'} value={'apple'} />
+                <Radio text={'апельсин'} value={'orange'} />
+                <Radio text={'банан'} value={'banana'} />
+              </RadioGroup>
               <Button text="Надіслати" type="submit" />
             </Form>
           )}
