@@ -45,7 +45,7 @@ export const Popup: React.FC<PopupProps> = ({
 }) => {
   return (
     <div className={styles.wrapper}>
-      <div className={styles.shadow} />
+      <div className={styles.shadow} onClick={() => closeFunction(false)} />
       <div className={styles.content}>
         {isClosable && (
           <CloseButton
