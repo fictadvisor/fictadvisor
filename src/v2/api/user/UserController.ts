@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { UserService } from './UserService';
 import { TelegramGuard } from '../../security/TelegramGuard';
-import { ApproveDTO, ApproveUserDTO } from './dto/ApproveDTO';
+import { ApproveDTO, ApproveStudentByTelegramDTO } from './dto/ApproveDTO';
 import { GiveRoleDTO } from './dto/GiveRoleDTO';
 import { CreateSuperheroDTO } from './dto/CreateSuperheroDTO';
 import { UserByIdPipe } from './UserByIdPipe';
@@ -13,9 +13,7 @@ import { UpdateStudentDTO } from './dto/UpdateStudentDTO';
 import { ContactByUserIdPipe } from './ContactByUserIdPipe';
 import { GroupRequestDTO } from './dto/GroupRequestDTO';
 import { Access } from 'src/v2/security/Access';
-import { UserRepository } from './UserRepository';
-import { GroupService } from '../group/GroupService';
-import { RoleName, State } from '@prisma/client';
+import { State } from '@prisma/client';
 
 @Controller({
   version: '2',
@@ -24,22 +22,16 @@ import { RoleName, State } from '@prisma/client';
 export class UserController {
   constructor (
     private userService: UserService,
-    private userRepository: UserRepository,
-    private groupService: GroupService,
   ) {
   }
 
   @UseGuards(TelegramGuard)
   @Patch('/:userId/verifyStudent')
-  async verify (
+  verify (
     @Param('userId', UserByIdPipe) userId: string,
-    @Body() body: ApproveUserDTO,
+    @Body() body: ApproveStudentByTelegramDTO,
   ) {
-    if (body.state === State.APPROVED){
-      let roleName = body.isCaptain ? RoleName.CAPTAIN : RoleName.STUDENT;
-      let { group } = await this.userService.getUser(userId);
-      this.groupService.addVerifiedRole(group.id, userId, roleName);
-    }
+    if (body.state === State.APPROVED) this.userService.addStudentRole(userId, body.isCaptain);
     return this.userService.updateStudent(userId, body);
   }
 
