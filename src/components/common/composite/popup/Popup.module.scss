@@ -46,18 +46,26 @@
     right: 8px;
   }
 
+  .movedClose {
+    position: absolute;
+    top: 8px;
+    right: 16px;
+  }
+
   .title {
     font-size: 20px;
     text-align: start;
     padding: 13px 16px;
+    width: 100%;
   }
 
   .titleWrapper {
-    padding: 25px 107.5px;
+    padding: 25px 20px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    width: 100%;
 
     .icon {
       margin-bottom: 15px;
@@ -65,6 +73,7 @@
     .title {
       font-size: 20px;
       text-align: center;
+      width: 100%;
     }
   }
 
@@ -87,11 +96,29 @@
     align-items: center;
     justify-content: space-between;
 
-    &:first-child {
-      margin-right: 16px;
-    }
     .buttonWrapper {
       width: 182px;
+
+      &:first-child {
+        margin-right: 16px;
+      }
+    }
+    .line {
+      width: 100%;
+    }
+  }
+
+  .alignRightButton {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    .buttonWrapper {
+      width: 130px;
+      &:first-child {
+        margin-right: 16px;
+      }
     }
     .line {
       width: 100%;

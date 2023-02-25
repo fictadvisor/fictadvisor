@@ -36,9 +36,9 @@ const PopupPage = () => {
 
         {isFirstPopupOpen && (
           <Popup
-            isClosable={true}
+            isClosable={false}
             hasIcon={true}
-            title="title"
+            title="Application Received"
             text="This will remove all data relating to Alex. This action cannot be reversed. Deleted data can not be recovered."
             closeFunction={setIsFirstPopupOpen}
             firstLabel="cancel"
@@ -58,7 +58,7 @@ const PopupPage = () => {
           <Popup
             isClosable={true}
             hasIcon={true}
-            title="title"
+            title="Application Received"
             text="This will remove all data relating to Alex. This action cannot be reversed. Deleted data can not be recovered."
             closeFunction={setIsSecondPopupOpen}
             firstLabel="cancel"
@@ -73,7 +73,7 @@ const PopupPage = () => {
           <Popup
             isClosable={true}
             hasIcon={false}
-            title="title"
+            title="Application Received"
             text="This will remove all data relating to Alex. This action cannot be reversed. Deleted data can not be recovered."
             closeFunction={setIsThirdPopupOpen}
             firstLabel="cancel"
@@ -93,7 +93,7 @@ const PopupPage = () => {
           <Popup
             isClosable={false}
             hasIcon={true}
-            title="title"
+            title="Application Received"
             text="This will remove all data relating to Alex. This action cannot be reversed. Deleted data can not be recovered."
             closeFunction={setIsFourthPopupOpen}
             firstLabel="cancel"

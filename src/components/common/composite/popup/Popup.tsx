@@ -50,7 +50,7 @@ export const Popup: React.FC<PopupProps> = ({
         {isClosable && (
           <CloseButton
             onClick={() => closeFunction(false)}
-            className={styles.close}
+            className={hasIcon ? styles.close : styles.movedClose}
           />
         )}
         {hasIcon ? (
@@ -72,7 +72,9 @@ export const Popup: React.FC<PopupProps> = ({
         >
           {text}
         </p>
-        <div className={styles.buttonsWrapper}>
+        <div
+          className={hasIcon ? styles.buttonsWrapper : styles.alignRightButton}
+        >
           <div className={secondLabel ? styles.buttonWrapper : styles.line}>
             <Button
               size={ButtonSize.SMALL}
