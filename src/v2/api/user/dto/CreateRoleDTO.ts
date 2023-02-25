@@ -3,11 +3,11 @@ import { IsEnum, IsNotEmpty, IsNumber } from 'class-validator';
 import { validationOptionsMsg } from '../../../utils/GLOBALS';
 
 export class CreateRoleDTO {
-  @IsEnum(RoleName)
-  @IsNotEmpty(validationOptionsMsg('name can not be empty'))
+  @IsEnum(RoleName, validationOptionsMsg('Name is not an enum'))
+  @IsNotEmpty(validationOptionsMsg('Name can not be empty'))
     name: RoleName;
 
-  @IsNumber()
-  @IsNotEmpty(validationOptionsMsg('weight can not be empty'))
+  @IsNumber({}, validationOptionsMsg('Weight is not a number'))
+  @IsNotEmpty(validationOptionsMsg('Weight can not be empty'))
     weight: number;
 }

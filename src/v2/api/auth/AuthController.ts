@@ -6,7 +6,7 @@ import { JwtGuard } from '../../security/JwtGuard';
 import { ForgotPasswordDTO } from './dto/ForgotPasswordDTO';
 import { ResetPasswordDTO } from './dto/ResetPasswordDTO';
 import { UpdatePasswordDTO } from './dto/UpdatePasswordDTO';
-import { VerificateEmailDTO } from './dto/VerificateEmailDTO';
+import { VerificationEmailDTO } from './dto/VerificationEmailDTO';
 import { IdentityQueryDTO } from './dto/IdentityQueryDTO';
 import { TelegramDTO } from './dto/TelegramDTO';
 import { UserService } from '../user/UserService';
@@ -77,7 +77,7 @@ export class AuthController {
 
   @Post('/register/verifyEmail')
   requestEmailVerification (
-    @Body() body: VerificateEmailDTO,
+    @Body() body: VerificationEmailDTO,
   ) {
     return this.authService.requestEmailVerification(body.email);
   }

@@ -9,13 +9,13 @@ export class UserDTO {
   @IsNotEmpty(validationOptionsMsg('Username is empty'))
     username: string;
 
-  @IsEmail({}, validationOptionsMsg('Email is not email'))
+  @IsEmail({}, validationOptionsMsg('Email is not an email'))
   @IsNotEmpty(validationOptionsMsg('Email is empty'))
     email: string;
 
   @Matches(
     /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z$-/:-?{-~!"^_`[\]\d]{8,50}$/,
-    validationOptionsMsg('password is not correct or too short (min: 8) or too long (max: 50)'))
+    validationOptionsMsg('Password is not correct (A-Za-z, at least one capital letter; at least one specific character; at least one digit), or too short (min: 8) or too long (max: 50)'))
   @IsNotEmpty(validationOptionsMsg('password is empty'))
     password: string;
 }

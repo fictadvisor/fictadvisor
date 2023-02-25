@@ -4,16 +4,16 @@ import { validationOptionsMsg } from '../../../utils/GLOBALS';
 
 export class CreateQuestionDTO {
 
-    @IsNotEmpty(validationOptionsMsg('Category can\'t be empty'))
+    @IsNotEmpty(validationOptionsMsg('Category can not be empty'))
       category: string;
 
-    @IsEnum(QuestionType)
+    @IsEnum(QuestionType, validationOptionsMsg('Type is not an enum'))
       type: QuestionType;
 
-    @IsNotEmpty(validationOptionsMsg('Name can\'t be empty'))
+    @IsNotEmpty(validationOptionsMsg('Name can not be empty'))
       name: string;
 
-    @IsNotEmpty(validationOptionsMsg('Text can\'t be empty'))
+    @IsNotEmpty(validationOptionsMsg('Text can not be empty'))
       text: string;
 
     @IsOptional()
@@ -22,7 +22,7 @@ export class CreateQuestionDTO {
     @IsOptional()
       description?: string;
 
-    @IsBoolean()
+    @IsBoolean(validationOptionsMsg('Requirement parameter is not a boolean'))
     @IsOptional()
       isRequired?: boolean;
 }

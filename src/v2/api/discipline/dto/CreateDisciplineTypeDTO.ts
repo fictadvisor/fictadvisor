@@ -3,9 +3,9 @@ import { validationOptionsMsg } from '../../../utils/GLOBALS';
 import { IsEnum, IsNotEmpty } from 'class-validator';
 
 export class CreateDisciplineTypeDTO {
-  @IsNotEmpty(validationOptionsMsg('first_name can\'t be empty'))
+  @IsNotEmpty(validationOptionsMsg('DisciplineId can not be empty'))
     disciplineId: string;
 
-  @IsEnum(DisciplineTypeEnum)
+  @IsEnum(DisciplineTypeEnum, validationOptionsMsg('Name is not an enum'))
     name: DisciplineTypeEnum;
 }

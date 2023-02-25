@@ -3,13 +3,13 @@ import { validationOptionsMsg } from '../../../utils/GLOBALS';
 
 export class UpdateContactDTO {
 
-    @MaxLength(100, validationOptionsMsg('displayName is too long (max: 100)'))
-    @IsAscii(validationOptionsMsg('link contains wrong symbols (ACSII only)'))
+    @MaxLength(100, validationOptionsMsg('Display name is too long (max: 100)'))
+    @IsAscii(validationOptionsMsg('Display name contains wrong symbols (ASCII only)'))
     @IsOptional()
       displayName?: string;
 
-    @MaxLength(200, validationOptionsMsg('link is too long (max: 200)'))
-    @IsAscii(validationOptionsMsg('link contains wrong symbols (ACSII only)'))
+    @MaxLength(200, validationOptionsMsg('Link is too long (max: 200)'))
+    @IsAscii(validationOptionsMsg('Link contains wrong symbols (ASCII only)'))
     @IsOptional()
       link?: string;
 }

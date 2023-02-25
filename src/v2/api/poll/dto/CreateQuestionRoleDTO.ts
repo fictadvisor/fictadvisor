@@ -4,14 +4,14 @@ import { validationOptionsMsg } from '../../../utils/GLOBALS';
 
 export class CreateQuestionRoleDTO {
   @IsEnum(TeacherRole)
-  @IsNotEmpty(validationOptionsMsg('Role can\'t be empty'))
+  @IsNotEmpty(validationOptionsMsg('Role can not be empty'))
     role: TeacherRole;
 
-  @IsBoolean()
-  @IsNotEmpty(validationOptionsMsg('Visibility parameter can\'t be empty'))
+  @IsBoolean(validationOptionsMsg('Visibility parameter is not a boolean'))
+  @IsNotEmpty(validationOptionsMsg('Visibility parameter can not be empty'))
     isShown: boolean;
 
-  @IsBoolean()
-  @IsNotEmpty(validationOptionsMsg('Requirement parameter can\'t be empty'))
+  @IsBoolean(validationOptionsMsg('Requirement parameter is not a boolean'))
+  @IsNotEmpty(validationOptionsMsg('Requirement parameter can not be empty'))
     isRequired: boolean;
 }

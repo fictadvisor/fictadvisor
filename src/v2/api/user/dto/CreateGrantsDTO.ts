@@ -10,10 +10,10 @@ export class CreateGrantsDTO {
 }
 
 export class CreateGrantDTO {
-  @IsNotEmpty(validationOptionsMsg('permission can not be empty'))
+  @IsNotEmpty(validationOptionsMsg('Permission can not be empty'))
     permission: string;
 
-  @IsBoolean()
+  @IsBoolean(validationOptionsMsg('Set is not a boolean'))
   @IsOptional()
     set?: boolean;
 }
