@@ -10,14 +10,20 @@ export enum TabItemContentPosition {
   LEFT = 'left',
 }
 
+export enum TabItemContentSize {
+  NORMAL = 'tab-normal',
+  SMAll = 'tab-small',
+}
+
 interface ITabItemProps {
-  className: string;
+  className?: string;
   text: string;
   position: TabItemContentPosition;
   icon?: ReactNode;
   isDisabled?: boolean;
   count?: number;
   value?: string;
+  size: TabItemContentSize;
 }
 
 export const TabItem: FC<ITabItemProps> = ({
@@ -28,6 +34,7 @@ export const TabItem: FC<ITabItemProps> = ({
   isDisabled,
   count,
   value,
+  size,
 }) => {
   const { onChange } = useContext(TabContext);
   const handleClick = () => {
@@ -36,7 +43,11 @@ export const TabItem: FC<ITabItemProps> = ({
   return (
     <button
       onClick={handleClick}
-      className={mergeClassNames(styles[className], styles[position])}
+      className={mergeClassNames(
+        styles[className],
+        styles[position],
+        styles[size],
+      )}
       disabled={isDisabled}
     >
       {icon && <div className={styles['icon']}>{icon}</div>}
