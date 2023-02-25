@@ -1,40 +1,37 @@
 @import "src/styles/partials/theme";
 
 .tab {
+  width: 100%;
+  min-width: fit-content;
   display: flex;
   align-items: center;
-  overflow: hidden; // to disable scrolling if the text goes outside the bounds
+  // overflow: hidden; // to disable scrolling if the text goes outside the bounds
 
-  padding: 8px 16px;
   gap: 8px;
   background: $background-dark-0;
-
   cursor: pointer;
 
   &:focus {
     outline: 1px solid $red-10;
+    border-radius: 5px;
   }
 
   &:hover {
-    background: $background-dark-10;
 
-    >.count {
-      background: $background-dark-35;
-    }
+    outline: 2px solid $gray-50;
+    border-radius: 5px; 
   }
 
   &:active {
-    background: $background-dark-35;
 
-    >.count {
-      background: $gray-50;
-    }
+    background: $background-dark-10;
+    outline: 2px solid $background-dark-10; 
   }
 
   &:disabled {
     background: $background-dark-0;
+    outline: none;
     cursor: default;
-
     >.text {
       color: $gray-50;
     }
@@ -48,6 +45,7 @@
 
       >.count-text {
         color: $gray-50;
+       
       }
     }
   }
@@ -55,14 +53,17 @@
 
 .tab-normal {
   @extend .tab;
-  width: 200px;
-  height: 48px;
+
+  padding: 12px 19px;
+  // width: 200px;
+  // height: 48px;
+   
 
   >.text {
     height: 26px;
-    font-weight: 400;
-    font-size: 18px;
-    line-height: 142%;
+    font-weight: 700; 
+    font-size: 16px;
+    line-height: 163%;
   }
 
   >.count {
@@ -74,20 +75,23 @@
     >.count-text {
       font-size: 16px;
       line-height: 132%;
+     
     }
   }
+
 }
 
 .tab-small {
   @extend .tab;
-  width: 136px;
-  height: 36px;
+  // width: 136px;
+  // height: 36px;
+  padding: 6px 19px;
 
   >.text {
     height: 20px;
-    font-weight: 500;
     font-size: 16px;
-    line-height: 138%;
+    font-weight: 500;
+    line-height: 130%;
   }
 
   >.count {
@@ -103,7 +107,7 @@
   }
 }
 
-.centre {
+.center {
   justify-content: center;
 }
 
@@ -143,4 +147,16 @@
   @extend .text;
   font-weight: 500;
   color: $gray-500;
+}
+
+
+.tabs-list{
+  //styles
+}
+
+.tab-panel-list{
+  //styles
+}
+.tab-panel{
+ //styles
 }
