@@ -13,6 +13,7 @@ export class DisciplineController {
     private disciplineService: DisciplineService,
   ) {}
 
+  @Access('groups.$groupId.disciplines.create', GroupByDisciplineGuard)
   @Post()
   create (@Body() body: CreateDisciplineDTO) {
     return this.disciplineService.create(body);
