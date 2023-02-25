@@ -12,9 +12,9 @@ import { ResourceModule } from './resources/ResourceModule';
 
 @Module({
   imports: [
+    UserModule,
     AuthModule,
     GroupModule,
-    UserModule,
     TeacherModule,
     SubjectModule,
     DisciplineModule,

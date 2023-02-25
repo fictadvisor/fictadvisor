@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request } from '@nestjs/common';
 import { GroupService } from './GroupService';
 import { CreateGroupDTO } from './dto/CreateGroupDTO';
-import { GroupByIdPipe } from './GroupByIdPipe';
+import { GroupByIdPipe } from './pipe/GroupByIdPipe';
 import { Group } from '@prisma/client';
 import { EmailDTO } from './dto/EmailDTO';
 import { ApproveDTO } from '../user/dto/ApproveDTO';

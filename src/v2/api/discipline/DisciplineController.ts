@@ -1,7 +1,6 @@
-import { Body, Controller, Get, Param, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { DisciplineService } from './DisciplineService';
 import { CreateDisciplineDTO } from './dto/CreateDisciplineDTO';
-import { JwtGuard } from '../../security/JwtGuard';
 import { GroupByDisciplineGuard } from '../../security/group-guard/GroupByDisciplineGuard';
 import { Access } from 'src/v2/security/Access';
 
@@ -19,14 +18,14 @@ export class DisciplineController {
     return this.disciplineService.create(body);
   }
 
-  @UseGuards(JwtGuard, GroupByDisciplineGuard)
-  @Post('/:disciplineId/selective')
-  makeSelective (
-    @Param('disciplineId') disciplineId: string,
-    @Request() req,
-  ) {
-    return this.disciplineService.makeSelective(req.user, disciplineId);
-  }
+  // @UseGuards(JwtGuard, GroupByDisciplineGuard)
+  // @Post('/:disciplineId/selective')
+  // makeSelective (
+  //   @Param('disciplineId') disciplineId: string,
+  //   @Request() req,
+  // ) {
+  //   return this.disciplineService.makeSelective(req.user, disciplineId);
+  // }
 
   @Access('groups.$groupId.disciplines.teachers.get', GroupByDisciplineGuard)
   @Get('/:disciplineId/teachers')

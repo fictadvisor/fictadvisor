@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { PrismaService } from './PrismaService';
 import { DisciplineTypeRepository } from '../api/discipline/DisciplineTypeRepository';
 import { DisciplineRepository } from '../api/discipline/DisciplineRepository';
@@ -18,6 +18,7 @@ import { ContactRepository } from '../api/user/ContactRepository';
 import { QuestionAnswerRepository } from '../api/poll/QuestionAnswerRepository';
 import { ResourceRepository } from '../api/resources/ResourceRepository';
 
+@Global()
 @Module({
   providers: [
     PrismaService,

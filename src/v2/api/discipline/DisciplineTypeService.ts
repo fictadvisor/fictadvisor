@@ -1,20 +1,12 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { DisciplineTypeRepository } from './DisciplineTypeRepository';
-import { TeacherService } from '../teacher/TeacherService';
-import { DisciplineTeacherService } from '../teacher/DisciplineTeacherService';
-import { DisciplineRepository } from './DisciplineRepository';
 import { DisciplineTeacherRepository } from '../teacher/DisciplineTeacherRepository';
 
 @Injectable()
 export class DisciplineTypeService {
   constructor (
     private disciplineTypeRepository: DisciplineTypeRepository,
-    private disciplineRepository: DisciplineRepository,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
-    @Inject(forwardRef(() => DisciplineTeacherService))
-    private disciplineTeacherService: DisciplineTeacherService,
-    @Inject(forwardRef(() => TeacherService))
-    private teacherService: TeacherService
   ) {}
 
   async getGroup (id: string) {
