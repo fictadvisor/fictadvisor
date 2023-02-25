@@ -10,19 +10,21 @@ import Button, {
   ButtonVariant,
 } from '@/components/common/ui/button';
 
-import styles from './RegistrationEmailConfirmationPage.module.scss';
+import styles from './PasswordResetEmailConfirmationPage.module.scss';
 
-const RegistrationEmailConfirmationPage = () => {
+const PasswordResetEmailConfirmationPage = () => {
   const router = useRouter();
   const { email } = router.query;
   const emailText = email
-    ? 'Ми надіслали листа для підтвердження пошти на адресу '
-    : 'Ми надіслали листа для підтвердження пошти';
+    ? 'Ми надіслали листа для зміни пароля на адресу '
+    : 'Ми надіслали листа для зміни пароля';
 
   return (
-    <PageLayout description={'Перевірка пошти при реєстрації'}>
-      <div className={styles['registration-email-confirmation-page']}>
-        <div className={styles['registration-email-confirmation-page-content']}>
+    <PageLayout description={'Перевірка пошти при скиданні пароля'}>
+      <div className={styles['reset-password-email-confirmation-page']}>
+        <div
+          className={styles['reset-password-email-confirmation-page-content']}
+        >
           <div className={styles['icon']}>
             <EnvelopeOpenIcon />
           </div>
@@ -73,4 +75,4 @@ const RegistrationEmailConfirmationPage = () => {
   );
 };
 
-export default RegistrationEmailConfirmationPage;
+export default PasswordResetEmailConfirmationPage;
