@@ -9,6 +9,8 @@ import { UpdatePasswordDTO } from './dto/UpdatePasswordDTO';
 import { VerificateEmailDTO } from './dto/VerificateEmailDTO';
 import { IdentityQueryDTO } from './dto/IdentityQueryDTO';
 import { UserService } from '../user/UserService';
+import { TelegramGuard } from '../../security/TelegramGuard';
+import { RegisterTelegramDTO } from './dto/RegisterTelegramDTO';
 
 @Controller({
   version: '2',
@@ -24,6 +26,14 @@ export class AuthController {
   @Post('/login')
   async login (@Request() req) {
     return this.authService.login(req.user);
+  }
+
+  @UseGuards(TelegramGuard)
+  @Post('/registerTelegram')
+  async registerTelegram (
+    @Body() body: RegisterTelegramDTO,
+  ) {
+    this.authService.registerTelegram(body);
   }
 
   @Post('/register')
@@ -108,5 +118,13 @@ export class AuthController {
   ) {
     const isAvailable = this.authService.checkResetToken(token);
     return { isAvailable };
+  }
+
+  @Get('/checkRegisterTelegram/:token')
+  checkRegisterTelegram (
+    @Param('token') token: string,
+  ) {
+    const isRegistered = this.authService.checkTelegram(token);
+    return { isRegistered };
   }
 }
