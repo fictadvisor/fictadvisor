@@ -95,10 +95,10 @@ export class GroupService {
   }
 
   async addVerifiedRole(groupId: string, userId: string, roleName: RoleName) {
-    let groupRoles = await this.groupRepository.getRoles(groupId);
+    const groupRoles = await this.groupRepository.getRoles(groupId);
     for (let role of groupRoles) {
-      if (roleName === role.name){
-        this.studentRepository.addRole(userId, role.id);
+      if (role.name === roleName){
+        await this.studentRepository.addRole(userId, role.id);
         break;
       }
     }
