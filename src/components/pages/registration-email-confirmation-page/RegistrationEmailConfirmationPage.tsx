@@ -15,6 +15,9 @@ import styles from './RegistrationEmailConfirmationPage.module.scss';
 const RegistrationEmailConfirmationPage = () => {
   const router = useRouter();
   const { email } = router.query;
+  const emailText = email
+    ? 'Ми надіслали листа для підтвердження пошти на адресу '
+    : 'Ми надіслали листа для підтвердження пошти';
 
   return (
     <PageLayout description={'Сторінка для перевірки пароя при реєстрації'}>
@@ -23,12 +26,12 @@ const RegistrationEmailConfirmationPage = () => {
           <div className={styles['icon']}>
             <EnvelopeOpenIcon />
           </div>
-          <div className={styles['headline']}>
-            <h3>Перевір свою пошту</h3>
-          </div>
+
+          <h3 className={styles['headline']}>Перевір свою пошту</h3>
+
           <div className={styles['text-and-button']}>
             <h6>
-              Ми надіслали листа для підтвердження пошти на адресу{' '}
+              {emailText}
               <span className={styles['email']}>{email}</span>
             </h6>
             <div className={styles['email-not-received']}>

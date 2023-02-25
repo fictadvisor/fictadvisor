@@ -1,24 +1,24 @@
-@import "../../../styles/partials/utils";
+@import "src/styles/partials/utils";
 @import "src/styles/partials/theme";
+@import "src/styles/partials/typography-mixins";
 
 .registration-email-confirmation-page{
   display: flex;
-  //align-items: center;
   justify-content: center;
   width: 100%;
   min-height: 100vh;
-  border: 2px solid #2DD222;
+
 }
 .registration-email-confirmation-page-content{
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  width: 80%;
+  width: fit-content;
+  height: fit-content;
+  top: 103px;
+  position: absolute;
   text-align: center;
-  border: 2px solid #2DD222;
-  top:30%;
-  //flex-grow: 1;
   gap: 24px;
 
 }
@@ -27,27 +27,29 @@
     width: 64px;
     height: 64px;
 }
-.h3{
-  font-weight: 700;
+.headline{
+  font-weight: 600;
+
 }
 .text-and-button{
-  border: 2px solid #2DD222;
   align-items: center;
   display: flex;
+  width: 75%;
   flex-direction: column;
   gap: 12px;
+  font-size: 1.25em;
   color: $gray-300;
 }
 .email-not-received{
   flex-direction: row;
   display: flex;
   color: $gray-300;
+  gap:24px;
   align-items: center;
-  border: 2px solid #2DD222;
-  gap: 12px;
+
 }
 .alert{
-  width: 100%;
+  //width: 80%;
 }
 
 .email{
@@ -67,12 +69,10 @@
     display: flex;
     color: $gray-300;
     align-items: center;
-    border: 2px solid #FFBB4F;
     gap: 12px;
   }
   .registration-email-confirmation-page-content{
     width: fit-content;
-
   }
   .desktop{
     display: none;
@@ -80,4 +80,14 @@
   .mobile{
     display: flex;
   }
+  .text-and-button{
+    h6{
+      font-size: 16px;
+    }
+  }
+
+  .headline{
+   @include h4--bold;
+  }
+
 }
