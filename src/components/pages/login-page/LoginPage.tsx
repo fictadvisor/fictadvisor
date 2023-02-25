@@ -6,7 +6,6 @@ import PageLayout from '../../common/layout/page-layout/PageLayout';
 import Button, { ButtonColor, ButtonVariant } from '../../common/ui/button';
 import { ButtonSize } from '../../common/ui/button/Button';
 import Divider from '../../common/ui/divider';
-import Input, { InputSize, InputType } from '../../common/ui/form/input/Input';
 import CustomLink from '../../common/ui/link';
 
 import styles from './LoginPage.module.scss';
@@ -51,21 +50,6 @@ const LoginPage = () => (
               color={ButtonColor.PRIMARY}
             />
             <Divider text="або" textPosition={DividerTextPosition.CENTER} />
-            <Input
-              name={'email'}
-              className={styles['login-input']}
-              label={'Пошта або юзернейм'}
-              placeholder={'placeholder'}
-              size={InputSize.LARGE}
-              type={InputType.DEFAULT}
-            />
-            <Input
-              label={'Пароль'}
-              placeholder={'placeholder'}
-              size={InputSize.LARGE}
-              type={InputType.PASSWORD}
-              name="password"
-            />
             <div className={styles['one-line']}>
               <div className={styles['checkbox-container']}>
                 <p className="body-primary">Запам’ятати дані</p>
