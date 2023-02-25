@@ -1,9 +1,8 @@
 import { State } from '@prisma/client';
-import { IsIn } from 'class-validator';
+import { IsEnum } from 'class-validator';
+import { validationOptionsMsg } from '../../../utils/GLOBALS';
 
 export class ApproveDTO {
-  @IsIn(Object.keys(State), {
-    message: 'Invalid state argument passed',
-  })
+  @IsEnum(State, validationOptionsMsg('State is not an enum'))
     state: State;
 }

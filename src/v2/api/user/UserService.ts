@@ -3,7 +3,7 @@ import { DisciplineService } from '../discipline/DisciplineService';
 import { GiveRoleDTO } from './dto/GiveRoleDTO';
 import { StudentRepository } from './StudentRepository';
 import { RoleService } from './role/RoleService';
-import { UpdateSuperheroData } from './dto/UpdateSuperheroData';
+import { UpdateSuperheroData } from './data/UpdateSuperheroData';
 import { SuperheroRepository } from './SuperheroRepository';
 import { UserRepository } from './UserRepository';
 import { ContactRepository } from './ContactRepository';
@@ -13,7 +13,7 @@ import { EntityType, Role, State } from '@prisma/client';
 import { UpdateContactDTO } from './dto/UpdateContactDTO';
 import { UpdateStudentDTO } from './dto/UpdateStudentDTO';
 import { CreateSuperheroDTO } from './dto/CreateSuperheroDTO';
-import { StudentWithUser } from './dto/StudentDTOs';
+import { StudentWithUserData } from './data/StudentDTOs';
 import { AuthService } from '../auth/AuthService';
 import { GroupRequestDTO } from './dto/GroupRequestDTO';
 
@@ -133,7 +133,7 @@ export class UserService {
     await this.studentRepository.delete(userId);
   }
 
-  getStudent (student: StudentWithUser) {
+  getStudent (student: StudentWithUserData) {
     return {
       id: student.user.id,
       username: student.user.username,

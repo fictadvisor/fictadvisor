@@ -1,4 +1,9 @@
-export interface UpdateGrantDTO {
-  permission?: string,
-  set?: boolean
+import { IsOptional } from 'class-validator';
+
+export class UpdateGrantDTO {
+  @IsOptional()
+    permission?: string;
+
+  @IsOptional()
+    set?: boolean;
 }

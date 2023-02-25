@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
 import { FortnightLessonInfoType } from '@prisma/client';
-import { CreateTemporaryLessonData } from './dto/CreateTemporaryLessonData';
-import { CreateSemesterLessonData } from './dto/CreateSemesterLessonData';
+import { CreateTemporaryLessonData } from './data/CreateTemporaryLessonData';
+import { CreateSemesterLessonData } from './data/CreateSemesterLessonData';
 
 @Injectable()
 export class ScheduleRepository {

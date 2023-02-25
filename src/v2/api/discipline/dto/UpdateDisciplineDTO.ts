@@ -1,6 +1,15 @@
-export interface UpdateDisciplineDTO {
-  resource?: string,
-  evaluatingSystem?: string,
-  isSelective?: boolean,
-  subjectId?: string,
+import { IsOptional } from 'class-validator';
+
+export class UpdateDisciplineDTO {
+  @IsOptional()
+    resource?: string;
+
+  @IsOptional()
+    evaluatingSystem?: string;
+
+  @IsOptional()
+    isSelective?: boolean;
+
+  @IsOptional()
+    subjectId?: string;
 }

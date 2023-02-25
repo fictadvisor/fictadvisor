@@ -1,6 +1,10 @@
 import { RoleName } from '@prisma/client';
+import { IsOptional } from 'class-validator';
 
-export interface UpdateRoleDTO {
-  name?: RoleName,
-  weight?: number,
+export class UpdateRoleDTO {
+  @IsOptional()
+    name?: RoleName;
+
+  @IsOptional()
+    weight?: number;
 }

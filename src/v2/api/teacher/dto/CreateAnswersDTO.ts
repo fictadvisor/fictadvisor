@@ -1,5 +1,6 @@
 import { IsNotEmpty, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
+import { validationOptionsMsg } from '../../../utils/GLOBALS';
 
 export class CreateAnswersDTO {
 
@@ -9,8 +10,9 @@ export class CreateAnswersDTO {
 }
 
 export class CreateAnswerDTO {
-  @IsNotEmpty()
+  @IsNotEmpty(validationOptionsMsg('Question id can not be empty'))
     questionId: string;
-  @IsNotEmpty()
+
+  @IsNotEmpty(validationOptionsMsg('Value can not be empty'))
     value: string;
 }

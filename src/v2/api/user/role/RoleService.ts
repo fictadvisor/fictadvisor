@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { RoleRepository } from './RoleRepository';
-import { CreateGrantDTO, CreateRoleWithGrantsDTO } from '../dto/CreateRoleDTO';
 import { GrantRepository } from '../grant/GrantRepository';
 import { GrantService } from '../grant/GrantService';
 import { UpdateRoleDTO } from './dto/UpdateRoleDTO';
-import { Grant, Role } from './dto/GrantData';
+import { GrantData } from './data/GrantData';
 import { StudentRepository } from '../StudentRepository';
 import { NoPermissionException } from '../../../utils/exceptions/NoPermissionException';
+import { CreateRoleWithGrantsDTO } from '../dto/CreateRoleWithGrantsDTO';
+import { RoleData } from './data/RoleData';
+import { CreateGrantDTO } from '../dto/CreateGrantsDTO';
 
 @Injectable()
 export class RoleService {
@@ -36,7 +38,7 @@ export class RoleService {
     return this.roleRepository.createWithGrants(data, grants);
   }
 
-  checkPermission (roles: Role[], permission: string) {
+  checkPermission (roles: RoleData[], permission: string) {
     for (const role of roles) {
       const hasPermission = this.hasPermission(role.grants, permission);
       if (hasPermission) return true;
@@ -50,7 +52,7 @@ export class RoleService {
     return this.grantRepository.createMany(createGrants);
   }
 
-  async hasPermission (grants: Grant[], permission: string) {
+  async hasPermission (grants: GrantData[], permission: string) {
     for (const grant of grants) {
       const hasPermission = this.grantService.hasPermission(permission, grant.permission);
       if (hasPermission) return grant.set;

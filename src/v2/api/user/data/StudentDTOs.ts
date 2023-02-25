@@ -1,6 +1,4 @@
-import { Role } from '@prisma/client';
-
-export class StudentWithUser {
+export class StudentWithUserData {
   user: {
     id: string,
     username: string,
@@ -14,11 +12,5 @@ export class StudentWithUser {
   group: {
     id: string,
     code: string,
-  };
-}
-
-export class StudentWithUserAndRoles extends StudentWithUser {
-  roles: {
-    role: Role,
   };
 }

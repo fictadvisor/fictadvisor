@@ -1,4 +1,4 @@
-export class EmailOptions {
+export class EmailOptionsData {
   to: string | string[];
   link: string;
   subject: string;

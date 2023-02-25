@@ -7,8 +7,8 @@ import { DateService } from '../../utils/date/DateService';
 import { ConfigService } from '@nestjs/config';
 import { SubjectService } from '../subject/SubjectService';
 import { DisciplineService } from '../discipline/DisciplineService';
-import { TemporaryLessonInfo } from './dto/TemporaryLessonInfo';
-import { StaticLessonInfo } from './dto/StaticLessonInfo';
+import { TemporaryLessonData } from './data/TemporaryLessonData';
+import { StaticLessonData } from './data/StaticLessonData';
 import { TeacherService } from '../teacher/TeacherService';
 import { UpdateDynamicInfoDTO } from './dto/UpdateDynamicInfoDTO';
 import { ScheduleRepository } from './ScheduleRepository';
@@ -62,7 +62,7 @@ export class ScheduleService {
     group: Group,
     fortnight: number,
     callback: 'static' | 'temporary'
-  ): Promise<StaticLessonInfo[] | TemporaryLessonInfo[]> {
+  ): Promise<StaticLessonData[] | TemporaryLessonData[]> {
     const results = [];
 
     const disciplines = await this.groupRepository.getDisciplines(group.id);
@@ -84,7 +84,7 @@ export class ScheduleService {
     fortnight: number,
     discipline: any,
     type: { id: string, name: DisciplineTypeEnum },
-  ): Promise<StaticLessonInfo[]> {
+  ): Promise<StaticLessonData[]> {
     const lessons = await this.scheduleRepository.getSemesterLessonsByType(type.id);
     const results = [];
 
@@ -136,7 +136,7 @@ export class ScheduleService {
     fortnight: number,
     discipline: any,
     type: { id: string, name: DisciplineTypeEnum },
-  ): Promise<TemporaryLessonInfo[]> {
+  ): Promise<TemporaryLessonData[]> {
     const lessons = await this.scheduleRepository.getTemporaryLessonsByType(type.id, fortnight);
 
     const results = [];

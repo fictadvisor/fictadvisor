@@ -1,16 +1,17 @@
 import { TeacherRole } from '@prisma/client';
 import { IsBoolean, IsEnum, IsNotEmpty } from 'class-validator';
+import { validationOptionsMsg } from '../../../utils/GLOBALS';
 
 export class CreateQuestionRoleDTO {
   @IsEnum(TeacherRole)
-  @IsNotEmpty()
+  @IsNotEmpty(validationOptionsMsg('Role can not be empty'))
     role: TeacherRole;
 
-  @IsBoolean()
-  @IsNotEmpty()
+  @IsBoolean(validationOptionsMsg('Visibility parameter is not a boolean'))
+  @IsNotEmpty(validationOptionsMsg('Visibility parameter can not be empty'))
     isShown: boolean;
 
-  @IsBoolean()
-  @IsNotEmpty()
+  @IsBoolean(validationOptionsMsg('Requirement parameter is not a boolean'))
+  @IsNotEmpty(validationOptionsMsg('Requirement parameter can not be empty'))
     isRequired: boolean;
 }
