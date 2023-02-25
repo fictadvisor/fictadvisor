@@ -50,7 +50,7 @@ const Slider: FunctionComponent<SliderProps> = ({
         {...rest}
         value={value.toString()}
       />
-      <div className={styles['target']}>
+      <div className={styles[`${type}-target`]}>
         {numbers.map((number, index) => (
           <div className={styles['component-target']} key={index}>
             <div className={styles['white']}></div>

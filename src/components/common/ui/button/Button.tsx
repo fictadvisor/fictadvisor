@@ -42,7 +42,12 @@ const Button: React.FC<ButtonProps> = ({
     !startIcon ? '' : endIcon ? '-icon' : ''
   }-button`;
   const buttonVariant = `${color}-${variant}-button-variant`;
-  const className = mergeClassNames(styles[buttonVariant], styles[buttonStyle]);
+  const buttonText = `${variant}-${size}-button`;
+  const className = mergeClassNames(
+    styles[buttonVariant],
+    styles[buttonStyle],
+    styles[buttonText],
+  );
   return (
     <button className={className} type={type} {...rest}>
       {startIcon}

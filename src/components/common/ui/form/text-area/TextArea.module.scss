@@ -2,7 +2,7 @@
 @import "src/styles/partials/theme";
 @import "src/styles/partials/typography-mixins";
 
-.textarea{
+.textarea-test{
   padding:10px 0;
   background: $background-dark-0;
   overflow-y: scroll;
@@ -35,6 +35,7 @@
     padding: 16px 16px 16px 24px;
     gap: 8px;
     background: $background-dark-0;
+    width: 480px;
     height: 120px;
     border: 2px solid $gray-500;
     color: $gray-500;
@@ -55,6 +56,7 @@
   textarea::placeholder{
     @include body-secondary;
     opacity: 1;
+    //color: $Prototype-Base_Neutrals-Gray400;
     &:hover {
       color: $white;
       border-color: $white;
@@ -70,11 +72,11 @@
 }
 
 .small-area textarea{
-  width: 100%;
+    width: 308px;
 }
 
 .large-area textarea{
-  width: 100%;
+    width: 740px;
 }
 
 .success-area{
