@@ -27,7 +27,7 @@ const ROLE_LIST = [
   },
   {
     name: RoleName.MODERATOR,
-    weight: 50,
+    weight: 75,
     grants: {
       'groups.$groupId.admin.switch' : false,
       'groups.$groupId.*' : true
@@ -35,7 +35,7 @@ const ROLE_LIST = [
   }, 
   {
     name: RoleName.STUDENT,
-    weight: 10,
+    weight: 50,
     grants: {
       'groups.$groupId.admin.switch' : false,
       'groups.$groupId.students.get' : true,
@@ -60,9 +60,8 @@ export class GroupService {
   ) {}
 
   async create (code: string): Promise<Group>  {
-    let group = this.groupRepository.create(code);
-    let groupId = (await group).id;
-    this.addPermissions(groupId);
+    let group = await this.groupRepository.create(code);
+    this.addPermissions(group.id);
     return group;
   }
 
