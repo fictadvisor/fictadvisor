@@ -1,6 +1,6 @@
 @import "src/styles/partials/theme";
-@import "src/styles/partials/_utils";
-@import "src/styles/partials/_typography-mixins";
+@import "src/styles/partials/utils";
+@import "src/styles/partials/typography-mixins";
 
 .input-success-icon{
   color: $success-300;

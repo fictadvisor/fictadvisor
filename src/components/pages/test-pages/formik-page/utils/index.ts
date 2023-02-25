@@ -11,6 +11,7 @@ export interface FormikPageFields {
   isCaptain: boolean;
   notification: boolean;
   fruit: string;
+  rating: number;
 }
 
 export const initialValues: FormikPageFields = {
@@ -24,6 +25,7 @@ export const initialValues: FormikPageFields = {
   isCaptain: false,
   notification: false,
   fruit: '',
+  rating: 1,
 };
 
 export const validationSchema = yup.object().shape({

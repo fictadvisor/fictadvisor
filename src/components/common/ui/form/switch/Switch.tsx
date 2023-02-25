@@ -14,38 +14,39 @@ export enum SwitchSize {
 
 interface SwitchProps
   extends Omit<React.ComponentPropsWithoutRef<'input'>, 'size'> {
-  text?: string;
+  name: string;
+  label?: string;
   textPosition?: string;
   size?: SwitchSize;
 }
 
 const Switch: FC<SwitchProps> = ({
-  text,
+  label,
   textPosition = SwitchTextPosition.RIGHT,
   size = SwitchSize.MEDIUM,
   ...rest
 }) => {
-  const gap = text ? '8px' : '';
-  const [field] = useField(rest.name);
+  const gap = label ? '8px' : '';
+  const [{ onChange, value }] = useField(rest.name);
 
   return (
     <div>
       <div className={styles[size + '-container']} style={{ gap: `${gap}` }}>
         {textPosition === 'left' && (
-          <span className={styles[size + '-switch-text']}>{text}</span>
+          <span className={styles[size + '-switch-text']}>{label}</span>
         )}
         <label className={styles[`${size}-switch`]}>
           <input
             type="checkbox"
             className={styles[size + '-switch-input']}
             {...rest}
-            {...field}
-            checked={field.value}
+            onChange={onChange}
+            checked={value}
           />
           <span className={styles[size + '-switch-slider']}></span>
         </label>
         {textPosition === 'right' && (
-          <span className={styles[size + '-switch-text']}>{text}</span>
+          <span className={styles[size + '-switch-text']}>{label}</span>
         )}
       </div>
     </div>

@@ -1,5 +1,5 @@
-@import "src/styles/partials/theme";
-@import "src/styles/partials/utils";
+@import "../../../../../styles/partials/theme";
+@import "../../../../../styles/partials/utils";
 
 .default-check-text,
 .default-check-text-disabled,
@@ -65,7 +65,7 @@
         left: 50%;
         transform: translate(-50%, -50%);
         transition: 0.4s;
-        background-image: url("/assets/icons/check-mark.svg");
+        background-image: url("/icons/check-mark.svg");
         opacity: 0;
     }
 
@@ -100,7 +100,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-image: url("/assets/icons/check-mark.svg");
+    background-image: url("/icons/check-mark.svg");
     transition: 0.4s;
 }
 

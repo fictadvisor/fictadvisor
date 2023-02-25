@@ -1,12 +1,17 @@
 import { Form, Formik } from 'formik';
 
 import Button from '@/components/common/ui/button';
-import Checkbox from '@/components/common/ui/checkbox';
-import Dropdown from '@/components/common/ui/dropdown';
-import Input, { InputSize, InputType } from '@/components/common/ui/input';
-import RadioGroup, { Radio } from '@/components/common/ui/radio-group';
-import Switch from '@/components/common/ui/switch';
-import TextArea from '@/components/common/ui/text-area';
+import {
+  Checkbox,
+  Dropdown,
+  Input,
+  InputSize,
+  InputType,
+  RadioGroup,
+  Slider,
+  Switch,
+  TextArea,
+} from '@/components/common/ui/form';
 import {
   FormikPageFields,
   initialValues,
@@ -23,6 +28,12 @@ const FormikPage = () => {
     { value: 'IP-13', label: 'ІП-13' },
     { value: 'IP-12', label: 'ІП-12' },
     { value: 'IP-11', label: 'ІП-11' },
+  ];
+
+  const fruits = [
+    { value: 'banana', label: 'Банан' },
+    { value: 'apple', label: 'Яблуко' },
+    { value: 'kiwi', label: 'Ківі' },
   ];
 
   const handleSubmit = (data: FormikPageFields) => {
@@ -55,7 +66,7 @@ const FormikPage = () => {
                 name="password"
                 placeholder="meni13minalo"
                 isSuccessOnDefault={true}
-                showRemarkOnDefault={true}
+                defaultRemark={'Some default remark, idk'}
               />
               <Input
                 size={InputSize.MEDIUM}
@@ -64,37 +75,33 @@ const FormikPage = () => {
                 name="passwordConfirmation"
                 placeholder="meni13minalo"
                 isSuccessOnDefault={true}
-                showRemarkOnDefault={true}
+                defaultRemark={'Some default remark #2, idk idk'}
               />
               <Input size={InputSize.MEDIUM} name="id" placeholder="Your id" />
-              <Dropdown
-                name="group"
-                options={groups}
-                label={'Група'}
-                isSuccessOnDefault={true}
-                showRemarkOnDefault={true}
-              />
               <Input
                 size={InputSize.LARGE}
                 type={InputType.SEARCH}
                 name="search"
                 placeholder="Taras Shevchenko IP-25"
+                showRemark={false}
               />
-              <TextArea
-                name="review"
+              <Dropdown
+                name="group"
+                options={groups}
+                label={'Група'}
                 isSuccessOnDefault={true}
-                showRemarkOnDefault={true}
+                defaultRemark={'Dropdown Default remark'}
               />
-              <Checkbox name="isCaptain" text="Староста групи" />
+              <TextArea name="review" defaultRemark={'Text area remark'} />
+              <Checkbox name="isCaptain" label="Староста групи" />
               <Switch
                 name="notification"
-                text="Бажаєте отримувати сповіщення?"
+                label="Бажаєте отримувати сповіщення?"
               />
-              <RadioGroup name={'fruit'} isDisabled={false}>
-                <Radio text={'яблуко'} value={'apple'} />
-                <Radio text={'апельсин'} value={'orange'} />
-                <Radio text={'банан'} value={'banana'} />
-              </RadioGroup>
+              <RadioGroup options={fruits} name={'fruit'} />
+
+              <Slider name={'rating'} />
+
               <Button text="Надіслати" type="submit" />
             </Form>
           )}

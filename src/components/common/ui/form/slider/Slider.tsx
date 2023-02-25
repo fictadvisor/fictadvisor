@@ -1,4 +1,5 @@
 import React, { FunctionComponent, useRef } from 'react';
+import { useField } from 'formik';
 
 import styles from './Slider.module.scss';
 
@@ -7,46 +8,53 @@ export enum SliderType {
   DESKTOP = 'desktop',
 }
 
-interface SliderProps {
-  type: SliderType;
-  defaultValue: number;
+interface SliderProps extends React.ComponentPropsWithoutRef<'input'> {
+  name: string;
+  type?: SliderType;
 }
 
-const Slider: FunctionComponent<SliderProps> = props => {
+const Slider: FunctionComponent<SliderProps> = ({
+  type = SliderType.DESKTOP,
+  ...rest
+}) => {
   const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const sliderRef = useRef(null);
-  function setBackgroundSize() {
+  const [{ value }, {}, { setTouched, setValue }] = useField(rest.name);
+
+  const handleInput = () => {
     sliderRef.current.style.setProperty(
       '--background-size',
-      `${getBackgroundSize()}%`,
+      `${calculateBackgroundSize()}%`,
     );
-  }
+    setValue(sliderRef.current.value);
+    setTouched(true);
+  };
 
-  function getBackgroundSize() {
+  const calculateBackgroundSize = () => {
     const min = sliderRef.current.min || 0;
     const max = sliderRef.current.max || 100;
     const value = sliderRef.current.value;
     return ((value - min) / (max - min)) * 100;
-  }
+  };
 
   return (
     <div className={styles['slider-container']}>
       <input
         ref={sliderRef}
         type="range"
-        name="range"
         min="1"
         max="10"
         step="1"
-        defaultValue={props.defaultValue.toString()}
-        className={styles['slider'] + ' ' + styles[`slider-${props.type}`]}
-        onInput={setBackgroundSize}
+        className={styles['slider'] + ' ' + styles[`slider-${type}`]}
+        onInput={handleInput}
+        {...rest}
+        value={value.toString()}
       />
       <div className={styles['target']}>
         {numbers.map((number, index) => (
           <div className={styles['component-target']} key={index}>
             <div className={styles['white']}></div>
-            <p className={styles[`${props.type}-font`]}>{number}</p>
+            <p className={styles[`${type}-font`]}>{number}</p>
           </div>
         ))}
       </div>

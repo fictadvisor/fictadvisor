@@ -1,15 +1,13 @@
 import React from 'react';
 import { useField } from 'formik';
 
+import { FieldState } from '@/components/common/ui/form/common/types';
+
 import styles from './TextArea.module.scss';
 
 export enum TextAreaSize {
   LARGE = 'large',
   SMALL = 'small',
-}
-export enum TextAreaState {
-  SUCCESS = 'success-area',
-  ERROR = 'error-area',
 }
 
 interface TextAreaProps {
@@ -19,8 +17,9 @@ interface TextAreaProps {
   size?: TextAreaSize;
   isDisabled?: boolean;
   isSuccessOnDefault?: boolean;
-  showRemarkOnDefault?: boolean;
-  hasRemark?: boolean;
+  defaultRemark?: string;
+  showRemark?: boolean;
+  className?: string;
 }
 
 const TextArea: React.FC<TextAreaProps> = ({
@@ -28,21 +27,23 @@ const TextArea: React.FC<TextAreaProps> = ({
   placeholder,
   label,
   size = TextAreaSize.LARGE,
-  isSuccessOnDefault = false,
   isDisabled = false,
-  showRemarkOnDefault,
-  hasRemark = true,
+  isSuccessOnDefault = false,
+  defaultRemark,
+  showRemark = true,
+  className,
 }) => {
-  const [field, meta, helpers] = useField(name);
+  const [field, { touched, error }] = useField(name);
 
   let state;
-  if (meta.touched && meta.error) state = TextAreaState.ERROR;
-  else if (meta.touched && isSuccessOnDefault) state = TextAreaState.SUCCESS;
+  if (touched && error) state = FieldState.ERROR;
+  else if (touched && isSuccessOnDefault) state = FieldState.SUCCESS;
 
   const divClasses = [
     styles['textarea'],
     styles[size ? `${size}-area` : ''],
-    styles[state ? state : ''],
+    styles[state ? `${state}-area` : ''],
+    className,
   ];
 
   return (
@@ -53,15 +54,8 @@ const TextArea: React.FC<TextAreaProps> = ({
         className={styles['textarea_input']}
         disabled={isDisabled}
         placeholder={placeholder}
-        value={field.value}
       />
-      {hasRemark && (
-        <p>
-          {(meta.touched && meta.error) || showRemarkOnDefault
-            ? meta.error
-            : ''}
-        </p>
-      )}
+      {showRemark && <p>{touched && error ? error : defaultRemark}</p>}
     </div>
   );
 };

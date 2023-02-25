@@ -1,25 +1,22 @@
 import React from 'react';
 import { useField } from 'formik';
 
+import { FieldState } from '@/components/common/ui/form/common/types';
+
 import styles from './Checkbox.module.scss';
 
-enum CheckboxState {
-  DEFAULT = 'default',
-  ERROR = 'error',
-}
-
 interface CheckboxProps extends React.ComponentPropsWithoutRef<'input'> {
-  text?: string;
+  name: string;
+  label?: string;
 }
 
-const Checkbox: React.FC<CheckboxProps> = ({ text, ...rest }) => {
+const Checkbox: React.FC<CheckboxProps> = ({ label, ...rest }) => {
   const additional = rest.disabled ? '-disabled' : '';
-  const gap = text ? '8px' : '';
+  const gap = label ? '8px' : '';
 
-  const [field, meta, helpers] = useField(rest.name);
+  const [field, { touched, error }] = useField(rest.name);
 
-  const state =
-    meta.touched && meta.error ? CheckboxState.ERROR : CheckboxState.DEFAULT;
+  const state = touched && error ? FieldState.ERROR : FieldState.DEFAULT;
 
   return (
     <div>
@@ -40,7 +37,7 @@ const Checkbox: React.FC<CheckboxProps> = ({ text, ...rest }) => {
           className={styles[state + '-check-text' + `${additional}`]}
           {...rest}
         >
-          {text}
+          {label}
         </span>
       </div>
     </div>

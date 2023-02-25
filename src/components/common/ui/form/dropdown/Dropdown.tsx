@@ -2,20 +2,16 @@ import React, { ReactNode, useState } from 'react';
 import Select from 'react-select';
 import { useField } from 'formik';
 
+import { FieldState } from '@/components/common/ui/form/common/types';
+
 import styles from './Dropdown.module.scss';
 
 const dropDownOptionHeight = 36; //px
 
-export enum DropDownState {
-  ERROR = 'error',
-  SUCCESS = 'success',
-  DISABLED = 'disabled',
-}
-
-type DropDownOption = {
+interface DropDownOption {
   value: string;
   label: string;
-};
+}
 
 interface DropdownProps {
   options: DropDownOption[];
@@ -28,8 +24,8 @@ interface DropdownProps {
   disabledPlaceholder?: string;
   numberOfOptions?: number;
   isSuccessOnDefault?: boolean;
-  showRemarkOnDefault?: boolean;
-  hasRemark?: boolean;
+  defaultRemark?: string;
+  showRemark?: boolean;
 }
 
 const Dropdown: React.FC<DropdownProps> = ({
@@ -41,17 +37,22 @@ const Dropdown: React.FC<DropdownProps> = ({
   placeholder = isDisabled ? 'Недоступно...' : 'Тиць...',
   noOptionsText = 'Опції відсутні',
   numberOfOptions = 4,
-  showRemarkOnDefault = false,
+  defaultRemark,
   isSuccessOnDefault = false,
-  hasRemark = true,
+  showRemark = true,
 }) => {
-  const [field, meta, helpers] = useField(name);
+  const [{}, { touched, error }, { setTouched, setValue }] = useField(name);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   let state;
-  if (isDisabled) state = DropDownState.DISABLED;
-  else if (meta.touched && meta.error) state = DropDownState.ERROR;
-  else if (meta.touched && isSuccessOnDefault) state = DropDownState.SUCCESS;
+  if (isDisabled) state = FieldState.DISABLED;
+  else if (touched && error) state = FieldState.ERROR;
+  else if (touched && isSuccessOnDefault) state = FieldState.SUCCESS;
+
+  const handleChange = option => {
+    setTouched(true);
+    setValue(option.value);
+  };
 
   return (
     <div className={styles['dropdown']}>
@@ -62,7 +63,7 @@ const Dropdown: React.FC<DropdownProps> = ({
 
       <Select
         instanceId={name}
-        onChange={option => helpers.setValue(option.value)}
+        onChange={handleChange}
         name={name}
         placeholder={placeholder}
         noOptionsMessage={() => noOptionsText}
@@ -107,7 +108,7 @@ const Dropdown: React.FC<DropdownProps> = ({
               cursor: state.isDisabled ? 'not-allowed' : 'pointer',
             };
           },
-          dropdownIndicator(baseStyles, _) {
+          dropdownIndicator(baseStyles) {
             return {
               ...baseStyles,
               transform: isMenuOpen ? 'rotate(180deg)' : 'rotate(0deg)',
@@ -115,18 +116,16 @@ const Dropdown: React.FC<DropdownProps> = ({
               cursor: 'pointer',
             };
           },
-          container(baseStyles, _) {
+          container() {
             return {
               cursor: 'pointer',
             };
           },
         }}
       />
-      {hasRemark && (
+      {showRemark && (
         <p className={styles['remark-' + state]}>
-          {(meta.touched && meta.error) || showRemarkOnDefault
-            ? meta.error
-            : ''}
+          {touched && error ? error : defaultRemark}
         </p>
       )}
     </div>
