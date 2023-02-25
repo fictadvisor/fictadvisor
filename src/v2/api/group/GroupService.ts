@@ -17,6 +17,34 @@ import { DisciplineTeacherService } from '../teacher/DisciplineTeacherService';
 import { RoleRepository } from '../user/role/RoleRepository';
 import { CreateGrantInRoleData } from '../user/dto/CreateRoleDTO';
 
+const ROLE_LIST = [
+  {
+    name: RoleName.CAPTAIN,
+    weight: 100,
+    grants: {
+      'groups.$groupId.*' : true
+    },
+  },
+  {
+    name: RoleName.MODERATOR,
+    weight: 50,
+    grants: {
+      'groups.$groupId.admin.switch' : false,
+      'groups.$groupId.*' : true
+    },
+  }, 
+  {
+    name: RoleName.STUDENT,
+    weight: 10,
+    grants: {
+      'groups.$groupId.admin.switch' : false,
+      'groups.$groupId.students.get' : true,
+      'groups.$groupId.students.*' : false,
+      'groups.$groupId.*' : true
+    },
+  },
+];
+
 @Injectable()
 export class GroupService {
   constructor (
@@ -96,7 +124,7 @@ export class GroupService {
 
   async addVerifiedRole(groupId: string, userId: string, roleName: RoleName) {
     const groupRoles = await this.groupRepository.getRoles(groupId);
-    for (let role of groupRoles) {
+    for (const role of groupRoles) {
       if (role.name === roleName){
         await this.studentRepository.addRole(userId, role.id);
         break;
@@ -176,38 +204,14 @@ export class GroupService {
   }
 
   async addPermissions (groupId: string) {
-    let permissionList = {
-      [RoleName.CAPTAIN] : {
-        'groups.$groupId.*' : true
-      },
-      [RoleName.MODERATOR] : {
-        'groups.$groupId.admin.switch' : false,
-        'groups.$groupId.*' : true
-      },
-      [RoleName.STUDENT] : {
-        'groups.$groupId.admin.switch' : false,
-        'groups.$groupId.students.get' : true,
-        'groups.$groupId.students.*' : false,
-        'groups.$groupId.*' : true
-      }
-    }; 
-    let roleWeight = {
-      [RoleName.CAPTAIN] : 100,
-      [RoleName.MODERATOR] : 50,
-      [RoleName.STUDENT] : 10
-    };
-    for (let [roleName, permissions] of Object.entries(permissionList)){
-      let grants = Object.entries(permissions)
-        .map(([perm, set]) => ({
-          permission: perm.replace('$groupId', groupId), 
-          set: set
-        })) as CreateGrantInRoleData[];
-
-      let { id: roleId } = await this.roleRepository.createWithGrants(
-        {name: roleName as RoleName, weight: roleWeight[roleName]}, 
-        grants
+    for (let {name, weight, grants} of ROLE_LIST) {
+      let grantList: CreateGrantInRoleData[] = Object.entries(grants).map(
+          ([permission, set]) => ({permission, set})
       );
-
+      let { id: roleId } = await this.roleRepository.createWithGrants(
+        { name, weight }, 
+        grantList
+      );
       this.groupRepository.addRole(roleId, groupId);
     }
   }
