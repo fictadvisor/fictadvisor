@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import { Group, Role, RoleName, State, User } from '@prisma/client';
+import { Group, Prisma, Role, RoleName, State, User } from '@prisma/client';
 import { DisciplineService } from '../discipline/DisciplineService';
 import { DisciplineRepository } from '../discipline/DisciplineRepository';
 import { GroupRepository } from './GroupRepository';
@@ -14,6 +14,8 @@ import { RoleDTO } from './dto/RoleDTO';
 import { UpdateGroupDTO } from './dto/UpdateGroupDTO';
 import { UserService } from '../user/UserService';
 import { DisciplineTeacherService } from '../teacher/DisciplineTeacherService';
+import { RoleService } from '../user/role/RoleService';
+import { RoleRepository } from '../user/role/RoleRepository';
 
 @Injectable()
 export class GroupService {
@@ -26,10 +28,15 @@ export class GroupService {
     private userService: UserService,
     private studentRepository: StudentRepository,
     private userRepository: UserRepository,
+    private roleService: RoleService,
+    private roleRepository: RoleRepository
   ) {}
 
   async create (code: string): Promise<Group>  {
-    return this.groupRepository.create(code);
+    let group = this.groupRepository.create(code);
+    let groupId = (await group).id;
+    this.addPermissions(groupId);
+    return group;
   }
 
   async getAll (body: QueryAllDTO) {
@@ -154,5 +161,34 @@ export class GroupService {
     return students
       .filter((s) => s.state === State.PENDING)
       .map((s) => this.userService.getStudent(s));
+  }
+
+  async addPermissions (groupId: string) {
+    let permissionList = {
+      CAPTAIN : {
+        'groups.$groupId.*' : true
+      },
+      MODERATOR : {
+        'groups.$groupId.admin.switch' : false,
+        'groups.$groupId.*' : true
+      },
+      STUDENT : {
+        'groups.$groupId.admin.switch' : false,
+        'groups.$groupId.students.get' : true,
+        'groups.$groupId.students.*' : false,
+        'groups.$groupId.*' : true
+      }
+    };
+    let roles = (await this.roleRepository.getAll()); 
+    for (let [roleName, permission] of Object.entries(permissionList)){
+      
+      let roleId = roles.find(({name}) => name == roleName).id;
+      let grants = Object.entries(permission)
+        .map(([perm, set]) => ({
+          permission: perm.replace('$groupId', groupId), 
+          set: set
+        }));
+      return this.roleService.createGrants(roleId, grants);
+    }
   }
 }
