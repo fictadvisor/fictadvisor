@@ -204,12 +204,12 @@ export class GroupService {
   }
 
   async addPermissions (groupId: string) {
-    for (let {name, weight, grants} of ROLE_LIST) {
-      let grantList: CreateGrantInRoleData[] = Object.entries(grants).map(
+    for (const {grants, ...roles} of ROLE_LIST) {
+      const grantList: CreateGrantInRoleData[] = Object.entries(grants).map(
           ([permission, set]) => ({permission, set})
       );
-      let { id: roleId } = await this.roleRepository.createWithGrants(
-        { name, weight }, 
+      const { id: roleId } = await this.roleRepository.createWithGrants(
+        roles, 
         grantList
       );
       this.groupRepository.addRole(roleId, groupId);
