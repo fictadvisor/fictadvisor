@@ -1,0 +1,70 @@
+@import "/src/styles/partials/theme";
+@import "/src/styles/partials/utils";
+
+.header-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    height: 56px;
+    background-color: rgba(23, 23, 23, 1);
+    backdrop-filter: blur(8px);
+    
+}
+.clicked-header-container {
+    display: flex;
+    flex-direction: column
+}
+
+.header-logo {
+    @include flex-center;
+
+    & img {
+        width: 197px;
+        height: 20px;
+    }
+}
+
+.menu {
+    @include flex-center;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 28px;
+}
+
+.mobile-menu {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-left: 16px;
+    gap: 8px;
+    
+}
+
+.login-buttons {
+    @include flex-center;
+    gap: 8px;
+}
+
+.first-button,
+.second-button {
+    @include flex-center;
+}
+
+@media (max-width: 710px) {
+    .header-container {
+        display: flex;
+    }
+
+    .header-logo {
+
+        display: flex;
+        margin-left: 70px;
+        flex-grow: 4;
+    }
+}
+
+@media (max-width: 1031px) {}
+
+@media (max-width: 1113px) {}
