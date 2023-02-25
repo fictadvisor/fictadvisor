@@ -4,6 +4,8 @@ import {
   BriefcaseIcon,
   ClipboardIcon,
   HomeIcon,
+  LockClosedIcon,
+  UsersIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 
@@ -15,7 +17,7 @@ import useIsMobile from '@/hooks/use-is-mobile/UseIsMobile';
 
 import { BurgerMenu } from '../../custom-svg/BurgerMenu';
 import { XMark } from '../../custom-svg/XMark';
-import Divider, { DividerTextPosition } from '../../ui/divider/Divider';
+import Divider from '../../ui/divider/Divider';
 import { TabContentPosition } from '../../ui/tab';
 import Tab from '../../ui/tab/Tab';
 import { HeaderCard } from '../cards';
@@ -40,8 +42,104 @@ const Header: React.FC<HeaderProps> = ({
   const mobileUnloggined = '';
   const mobileLoggined = '';
   const clicked = true;
+  isLoggined = true;
+  if (isMobile && isLoggined) {
+    return clicked ? (
+      <div style={{ display: 'flex', gap: '16px', flexDirection: 'column' }}>
+        <div
+          className={styles['header-container']}
+          style={{ position: 'relative', backgroundColor: '#1E1E1E' }}
+        >
+          <div className={styles['header-logo']}>
+            <img src={`/assets/logo.png`} alt="logo" />
+          </div>
+          <div className={styles['mobile-button']}>
+            <Button
+              size={ButtonSize.MEDIUM}
+              text={''}
+              variant={ButtonVariant.TEXT}
+              startIcon={<XMark />}
+            ></Button>
+          </div>
+        </div>
+        <div>
+          <HeaderCard
+            name={name}
+            groupName={groupName}
+            position={position}
+          ></HeaderCard>
+        </div>
+        <div className={styles['account-buttons']}>
+          <Tab
+            className=""
+            text="Загальне"
+            position={TabContentPosition.CENTRE}
+            icon={<AcademicCapIcon />}
+          />
+          <Tab
+            className=""
+            text="Безпека"
+            position={TabContentPosition.CENTRE}
+            icon={<LockClosedIcon />}
+          />
+          <Tab
+            className=""
+            text="Група"
+            position={TabContentPosition.CENTRE}
+            icon={<UsersIcon />}
+          />
+        </div>
 
-  if (isMobile) {
+        <div style={{ width: '100%', marginTop: '-35px' }}>
+          <Divider></Divider>
+        </div>
+
+        <div className={styles['mobile-menu']}>
+          <Tab
+            className=""
+            text="Головна"
+            position={TabContentPosition.CENTRE}
+            icon={<HomeIcon />}
+          />
+          <Tab
+            className=""
+            text="Опитування"
+            position={TabContentPosition.CENTRE}
+            icon={<ClipboardIcon />}
+          />
+          <Tab
+            className=""
+            text="Викладачі"
+            position={TabContentPosition.CENTRE}
+            icon={<BriefcaseIcon />}
+          />
+          <Tab
+            className=""
+            text="Предмети"
+            position={TabContentPosition.CENTRE}
+            icon={<AcademicCapIcon />}
+          />
+        </div>
+      </div>
+    ) : (
+      <div className={styles['header-container']}>
+        <div className={styles['header-logo']}>
+          <img src={`/assets/logo.png`} alt="logo" />
+        </div>
+        <div className={styles['mobile-button']}>
+          <Button
+            size={ButtonSize.MEDIUM}
+            text={''}
+            variant={ButtonVariant.TEXT}
+            startIcon={<BurgerMenu />}
+          ></Button>
+        </div>
+      </div>
+    );
+  }
+
+  //isLoggined = false;
+  if (isMobile && !isLoggined) {
     return clicked ? (
       <div style={{ display: 'flex', gap: '16px', flexDirection: 'column' }}>
         <div
@@ -122,6 +220,7 @@ const Header: React.FC<HeaderProps> = ({
       </div>
     );
   }
+
   if (!isMobile) {
     return (
       <div className={styles['header-container']}>
