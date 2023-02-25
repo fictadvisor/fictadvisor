@@ -14,7 +14,8 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  width: fit-content;
+  min-width: fit-content;
+
   height: fit-content;
   top: 103px;
   position: absolute;
@@ -27,33 +28,31 @@
     width: 64px;
     height: 64px;
 }
-.headline{
+.headline {
   font-weight: 600;
-
 }
+
 .text-and-button{
+  h6{
+    width: 90%;
+  }
   align-items: center;
   display: flex;
-  width: 75%;
   flex-direction: column;
   gap: 12px;
-  font-size: 1.25em;
   color: $gray-300;
 }
 .email-not-received{
   flex-direction: row;
   display: flex;
-  color: $gray-300;
   gap:24px;
   align-items: center;
-
-}
-.alert{
-  //width: 80%;
+  overflow-wrap: anywhere;
 }
 
 .email{
   font-weight: 900;
+  overflow-wrap: anywhere;
 }
 
 .mobile{
@@ -61,18 +60,24 @@
 }
 
 @media screen and (max-width: 480px){
+  .registration-email-confirmation-page-content{
+    height: 100vh;
+  }
   .not-found-text{
     margin-top: 6%;
   }
   .email-not-received{
     flex-direction: row;
     display: flex;
-    color: $gray-300;
-    align-items: center;
     gap: 12px;
   }
+
   .registration-email-confirmation-page-content{
-    width: fit-content;
+    min-height: unset;
+    min-width: unset;
+    top: unset;
+    width:80%;
+
   }
   .desktop{
     display: none;

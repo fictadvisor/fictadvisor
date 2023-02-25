@@ -30,7 +30,7 @@ const RegistrationEmailConfirmationPage = () => {
           <h3 className={styles['headline']}>Перевір свою пошту</h3>
 
           <div className={styles['text-and-button']}>
-            <h6>
+            <h6 className={styles['texty']}>
               {emailText}
               <span className={styles['email']}>{email}</span>
             </h6>
@@ -65,7 +65,7 @@ const RegistrationEmailConfirmationPage = () => {
             text={'Повернутись до введення даних'}
             startIcon={<ChevronLeftIcon className="icon" />}
             variant={ButtonVariant.TEXT}
-            size={ButtonSize.MEDIUM}
+            size={ButtonSize.SMALL}
           />
         </div>
       </div>
