@@ -1,0 +1,100 @@
+@import 'src/styles/partials/theme';
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation-name: appear;
+  animation-duration: 0.3s;
+}
+
+.shadow {
+  background-color: $black;
+  opacity: 0.65;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.content {
+  background-color: $background-dark-10;
+  border-radius: 8px;
+  position: relative;
+  max-width: 420px;
+  min-width: 320px;
+  z-index: 2;
+
+  .close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+  }
+
+  .title {
+    font-size: 20px;
+    text-align: start;
+    padding: 13px 16px;
+  }
+
+  .titleWrapper {
+    padding: 25px 107.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    .icon {
+      margin-bottom: 15px;
+    }
+    .title {
+      font-size: 20px;
+      text-align: center;
+    }
+  }
+
+  .description,
+  .alignedLeftDescription {
+    width: 100%;
+    font-size: 14px;
+    padding: 0 20px 16px 20px;
+  }
+  .description {
+    text-align: center;
+  }
+
+  .alignedLeftDescription {
+    text-align: left;
+  }
+  .buttonsWrapper {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &:first-child {
+      margin-right: 16px;
+    }
+    .buttonWrapper {
+      width: 182px;
+    }
+    .line {
+      width: 100%;
+    }
+  }
+}
