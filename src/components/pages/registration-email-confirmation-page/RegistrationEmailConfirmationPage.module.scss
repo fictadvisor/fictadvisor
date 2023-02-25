@@ -14,7 +14,7 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  min-width: fit-content;
+  max-width: 500px;
 
   height: fit-content;
   top: 103px;
@@ -76,7 +76,7 @@
     min-height: unset;
     min-width: unset;
     top: unset;
-    width:80%;
+    width:100%;
 
   }
   .desktop{
