@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   AcademicCapIcon,
   BriefcaseIcon,
@@ -18,8 +18,8 @@ import useIsMobile from '@/hooks/use-is-mobile/UseIsMobile';
 import { BurgerMenu } from '../../custom-svg/BurgerMenu';
 import { XMark } from '../../custom-svg/XMark';
 import Divider from '../../ui/divider/Divider';
-import { TabContentPosition } from '../../ui/tab';
-import Tab from '../../ui/tab/Tab';
+import { TabItem, TabItemContentPosition } from '../../ui/tab';
+import { TabItemContentSize } from '../../ui/tab/tab-item/TabItem';
 import { HeaderCard } from '../cards';
 
 import styles from './Header.module.scss';
@@ -37,12 +37,16 @@ const Header: React.FC<HeaderProps> = ({
   position,
   isLoggined = false,
 }) => {
-  //1031-1033px, 1065, 977 - possible breakpoint
   const isMobile = useIsMobile();
-  const mobileUnloggined = '';
-  const mobileLoggined = '';
-  const clicked = true;
-  isLoggined = true;
+  const [clicked, setClicked] = useState(false);
+  const handleClick = () => {
+    if (clicked) {
+      setClicked(false);
+    } else {
+      setClicked(true);
+    }
+  };
+
   if (isMobile && isLoggined) {
     return clicked ? (
       <div style={{ display: 'flex', gap: '16px', flexDirection: 'column' }}>
@@ -55,6 +59,7 @@ const Header: React.FC<HeaderProps> = ({
           </div>
           <div className={styles['mobile-button']}>
             <Button
+              onClick={handleClick}
               size={ButtonSize.MEDIUM}
               text={''}
               variant={ButtonVariant.TEXT}
@@ -70,23 +75,26 @@ const Header: React.FC<HeaderProps> = ({
           ></HeaderCard>
         </div>
         <div className={styles['account-buttons']}>
-          <Tab
+          <TabItem
             className=""
             text="Загальне"
-            position={TabContentPosition.CENTRE}
+            position={TabItemContentPosition.LEFT}
             icon={<AcademicCapIcon />}
+            size={TabItemContentSize.SMAll}
           />
-          <Tab
+          <TabItem
             className=""
             text="Безпека"
-            position={TabContentPosition.CENTRE}
+            position={TabItemContentPosition.LEFT}
             icon={<LockClosedIcon />}
+            size={TabItemContentSize.SMAll}
           />
-          <Tab
+          <TabItem
             className=""
             text="Група"
-            position={TabContentPosition.CENTRE}
+            position={TabItemContentPosition.LEFT}
             icon={<UsersIcon />}
+            size={TabItemContentSize.SMAll}
           />
         </div>
 
@@ -95,29 +103,33 @@ const Header: React.FC<HeaderProps> = ({
         </div>
 
         <div className={styles['mobile-menu']}>
-          <Tab
+          <TabItem
             className=""
             text="Головна"
-            position={TabContentPosition.CENTRE}
+            position={TabItemContentPosition.LEFT}
             icon={<HomeIcon />}
+            size={TabItemContentSize.SMAll}
           />
-          <Tab
+          <TabItem
             className=""
             text="Опитування"
-            position={TabContentPosition.CENTRE}
+            position={TabItemContentPosition.LEFT}
             icon={<ClipboardIcon />}
+            size={TabItemContentSize.SMAll}
           />
-          <Tab
+          <TabItem
             className=""
             text="Викладачі"
-            position={TabContentPosition.CENTRE}
+            position={TabItemContentPosition.LEFT}
             icon={<BriefcaseIcon />}
+            size={TabItemContentSize.SMAll}
           />
-          <Tab
+          <TabItem
             className=""
             text="Предмети"
-            position={TabContentPosition.CENTRE}
+            position={TabItemContentPosition.LEFT}
             icon={<AcademicCapIcon />}
+            size={TabItemContentSize.SMAll}
           />
         </div>
       </div>
@@ -128,6 +140,7 @@ const Header: React.FC<HeaderProps> = ({
         </div>
         <div className={styles['mobile-button']}>
           <Button
+            onClick={handleClick}
             size={ButtonSize.MEDIUM}
             text={''}
             variant={ButtonVariant.TEXT}
@@ -178,29 +191,33 @@ const Header: React.FC<HeaderProps> = ({
           <Divider></Divider>
         </div>
         <div className={styles['mobile-menu']}>
-          <Tab
+          <TabItem
             className=""
             text="Головна"
-            position={TabContentPosition.CENTRE}
+            position={TabItemContentPosition.LEFT}
             icon={<HomeIcon />}
+            size={TabItemContentSize.SMAll}
           />
-          <Tab
+          <TabItem
             className=""
             text="Опитування"
-            position={TabContentPosition.CENTRE}
+            position={TabItemContentPosition.LEFT}
             icon={<ClipboardIcon />}
+            size={TabItemContentSize.SMAll}
           />
-          <Tab
+          <TabItem
             className=""
             text="Викладачі"
-            position={TabContentPosition.CENTRE}
+            position={TabItemContentPosition.LEFT}
             icon={<BriefcaseIcon />}
+            size={TabItemContentSize.SMAll}
           />
-          <Tab
+          <TabItem
             className=""
             text="Предмети"
-            position={TabContentPosition.CENTRE}
+            position={TabItemContentPosition.LEFT}
             icon={<AcademicCapIcon />}
+            size={TabItemContentSize.SMAll}
           />
         </div>
       </div>

@@ -12,19 +12,6 @@
     backdrop-filter: blur(8px);
     
 }
-.clicked-header-container {
-    display: flex;
-    flex-direction: column
-}
-
-.header-logo {
-    @include flex-center;
-
-    & img {
-        width: 197px;
-        height: 20px;
-    }
-}
 
 .menu {
     @include flex-center;
@@ -34,7 +21,6 @@
 }
 
 .mobile-menu, .account-buttons {
-    width: 100%;
     display: flex;
     flex-direction: column;
     margin-left: 16px;
@@ -52,19 +38,17 @@
     @include flex-center;
 }
 
-@media (max-width: 710px) {
-    .header-container {
-        display: flex;
+.header-logo {
+    @include flex-center;
+    & img {
+        width: 197px;
+        height: 20px;
     }
+}
 
+@media (max-width: 710px) {
     .header-logo {
-
-        display: flex;
         margin-left: 70px;
         flex-grow: 4;
     }
 }
-
-@media (max-width: 1031px) {}
-
-@media (max-width: 1113px) {}
