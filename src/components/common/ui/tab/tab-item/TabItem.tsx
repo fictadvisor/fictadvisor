@@ -54,7 +54,7 @@ export const TabItem: FC<ITabItemProps> = ({
       <text className={styles['text']}>{text}</text>
       {count && (
         <div className={styles['count']}>
-          <text className={styles['count-text']}>{count}</text>
+          <span className={styles['count-text']}>{count}</span>
         </div>
       )}
     </button>

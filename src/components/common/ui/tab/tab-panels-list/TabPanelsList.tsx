@@ -1,7 +1,4 @@
 import { createContext, FC, ReactNode } from 'react';
-import mergeClassNames from 'merge-class-names';
-
-import styles from './TabPanelsList.module.scss';
 
 interface ITabPanelsListProps {
   children: ReactNode;
@@ -23,7 +20,7 @@ export const TabPanelsList: FC<ITabPanelsListProps> = ({
   className,
 }) => {
   return (
-    <div className={mergeClassNames(styles[className])}>
+    <div className={className}>
       <TabListContext.Provider value={{ currentValue }}>
         {children}
       </TabListContext.Provider>
