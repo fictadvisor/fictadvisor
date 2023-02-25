@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import { Group, Prisma, Role, RoleName, State, User } from '@prisma/client';
+import { Group, Role, RoleName, State, User } from '@prisma/client';
 import { DisciplineService } from '../discipline/DisciplineService';
 import { DisciplineRepository } from '../discipline/DisciplineRepository';
 import { GroupRepository } from './GroupRepository';
@@ -14,8 +14,8 @@ import { RoleDTO } from './dto/RoleDTO';
 import { UpdateGroupDTO } from './dto/UpdateGroupDTO';
 import { UserService } from '../user/UserService';
 import { DisciplineTeacherService } from '../teacher/DisciplineTeacherService';
-import { RoleService } from '../user/role/RoleService';
 import { RoleRepository } from '../user/role/RoleRepository';
+import { CreateGrantInRoleData } from '../user/dto/CreateRoleDTO';
 
 @Injectable()
 export class GroupService {
@@ -28,8 +28,7 @@ export class GroupService {
     private userService: UserService,
     private studentRepository: StudentRepository,
     private userRepository: UserRepository,
-    private roleService: RoleService,
-    private roleRepository: RoleRepository
+    private roleRepository: RoleRepository,
   ) {}
 
   async create (code: string): Promise<Group>  {
@@ -89,7 +88,20 @@ export class GroupService {
     }
 
     const verifiedStudent = await this.studentRepository.update(user.id, data);
+
+    if (data.state === State.APPROVED) this.addVerifiedRole(groupId, userId, RoleName.STUDENT);
+
     return this.userService.getStudent(verifiedStudent);
+  }
+
+  async addVerifiedRole(groupId: string, userId: string, roleName: RoleName) {
+    let groupRoles = await this.groupRepository.getRoles(groupId);
+    for (let role of groupRoles) {
+      if (roleName === role.name){
+        this.studentRepository.addRole(userId, role.id);
+        break;
+      }
+    }
   }
 
   async moderatorSwitch (groupId: string, userId: string, body: RoleDTO) {
@@ -165,30 +177,38 @@ export class GroupService {
 
   async addPermissions (groupId: string) {
     let permissionList = {
-      CAPTAIN : {
+      [RoleName.CAPTAIN] : {
         'groups.$groupId.*' : true
       },
-      MODERATOR : {
+      [RoleName.MODERATOR] : {
         'groups.$groupId.admin.switch' : false,
         'groups.$groupId.*' : true
       },
-      STUDENT : {
+      [RoleName.STUDENT] : {
         'groups.$groupId.admin.switch' : false,
         'groups.$groupId.students.get' : true,
         'groups.$groupId.students.*' : false,
         'groups.$groupId.*' : true
       }
+    }; 
+    let roleWeight = {
+      [RoleName.CAPTAIN] : 100,
+      [RoleName.MODERATOR] : 50,
+      [RoleName.STUDENT] : 10
     };
-    let roles = (await this.roleRepository.getAll()); 
-    for (let [roleName, permission] of Object.entries(permissionList)){
-      
-      let roleId = roles.find(({name}) => name == roleName).id;
-      let grants = Object.entries(permission)
+    for (let [roleName, permissions] of Object.entries(permissionList)){
+      let grants = Object.entries(permissions)
         .map(([perm, set]) => ({
           permission: perm.replace('$groupId', groupId), 
           set: set
-        }));
-      return this.roleService.createGrants(roleId, grants);
+        })) as CreateGrantInRoleData[];
+
+      let { id: roleId } = await this.roleRepository.createWithGrants(
+        {name: roleName as RoleName, weight: roleWeight[roleName]}, 
+        grants
+      );
+
+      this.groupRepository.addRole(roleId, groupId);
     }
   }
 }
