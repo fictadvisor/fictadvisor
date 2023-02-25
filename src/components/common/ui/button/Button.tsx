@@ -35,6 +35,7 @@ const Button: React.FC<ButtonProps> = ({
   variant = ButtonVariant.FILLED,
   startIcon,
   endIcon,
+  type,
   ...rest
 }) => {
   const buttonStyle = `${color}-${size}${
@@ -48,7 +49,7 @@ const Button: React.FC<ButtonProps> = ({
     styles[buttonText],
   );
   return (
-    <button className={className} {...rest}>
+    <button className={className} type={type} {...rest}>
       {startIcon}
       {text}
       {endIcon}

@@ -1,3 +1,5 @@
+@import "src/styles/partials/theme";
+
 .page {
   width: 100%;
   display: flex;
@@ -5,8 +7,7 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: url("/assets/login-page/login-background.png") no-repeat;
-  background-size: 100% 100%;
+  background-color: $background-dark-0;
 }
 
 .footer {
