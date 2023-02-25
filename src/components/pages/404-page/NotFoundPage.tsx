@@ -21,13 +21,13 @@ const NotFoundPage = () => (
         />
         <div className={styles['button']}>
           <Button
-            text={'Повернутися на голову'}
+            text={'Повернутися на головну'}
             size={ButtonSize.LARGE}
             color={ButtonColor.SECONDARY}
             startIcon={<ChevronLeftIcon className={'icon'} />}
           />
           <Button
-            text={"Зв'затися з адміністратором"}
+            text={"Зв'язатися з адміністратором"}
             size={ButtonSize.LARGE}
           />
         </div>
