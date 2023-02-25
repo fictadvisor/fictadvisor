@@ -10,7 +10,6 @@ import { PrismaModule } from '../../database/PrismaModule';
 import { GrantService } from './grant/GrantService';
 import { AuthModule } from '../auth/AuthModule';
 import { AccessModule } from 'src/v2/security/AccessModule';
-import { GroupService } from '../group/GroupService';
 
 @Module({
   controllers: [UserController, RoleController],
