@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { PrismaService } from './database/PrismaService';
 import Configuration from './config/Configuration';
 import { SecurityConfigService } from './config/SecurityConfigService';
 import { ConfigurationModule } from './config/ConfigModule';
 import { ApiModule } from './api/ApiModule';
 import { EmailModule } from './email/EmailModule';
+import { PrismaModule } from './database/PrismaModule';
 
 @Module({
   imports: [
@@ -14,7 +14,8 @@ import { EmailModule } from './email/EmailModule';
     }),
     ApiModule,
     EmailModule,
+    PrismaModule,
   ],
-  providers: [PrismaService, SecurityConfigService],
+  providers: [SecurityConfigService],
 })
 export class AppModule {}

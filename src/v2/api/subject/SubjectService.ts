@@ -3,16 +3,12 @@ import { CreateSubjectDTO } from './dto/CreateSubjectDTO';
 import { UpdateSubjectDTO } from './dto/UpdateSubjectDTO';
 import { SubjectRepository } from './SubjectRepository';
 import { QueryAllDTO } from 'src/v2/utils/QueryAllDTO';
-import { DisciplineService } from '../discipline/DisciplineService';
-import { TeacherService } from '../teacher/TeacherService';
 import { DisciplineTeacherService } from '../teacher/DisciplineTeacherService';
 
 @Injectable()
 export class SubjectService {
   constructor (
     private subjectRepository: SubjectRepository,
-    private disciplineService: DisciplineService,
-    private teacherService: TeacherService,
     private disciplineTeacherService: DisciplineTeacherService,
   ) {}
 

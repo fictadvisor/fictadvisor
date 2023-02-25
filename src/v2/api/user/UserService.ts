@@ -1,8 +1,6 @@
 import { ForbiddenException, forwardRef, Inject, Injectable } from '@nestjs/common';
-import { DisciplineService } from '../discipline/DisciplineService';
 import { GiveRoleDTO } from './dto/GiveRoleDTO';
 import { StudentRepository } from './StudentRepository';
-import { RoleService } from './role/RoleService';
 import { UpdateSuperheroData } from './data/UpdateSuperheroData';
 import { SuperheroRepository } from './SuperheroRepository';
 import { UserRepository } from './UserRepository';
@@ -20,12 +18,8 @@ import { GroupRequestDTO } from './dto/GroupRequestDTO';
 @Injectable()
 export class UserService {
   constructor (
-    @Inject(forwardRef(() => DisciplineService))
-    private disciplineService: DisciplineService,
     private studentRepository: StudentRepository,
     private userRepository: UserRepository,
-    @Inject(forwardRef(() => RoleService))
-    private roleService: RoleService,
     private superheroRepository: SuperheroRepository,
     private contactRepository: ContactRepository,
     @Inject(forwardRef(() => AuthService))
@@ -39,17 +33,6 @@ export class UserService {
 
   async getSelective (studentId: string) {
     return this.studentRepository.getSelective(studentId);
-  }
-
-
-  async hasPermission (userId: string, permission: string) {
-    const roles = await this.studentRepository.getRoles(userId);
-    for (const role of roles) {
-      const hasRight = this.roleService.hasPermission(role.grants, permission);
-      if (hasRight) return true;
-    }
-
-    return false;
   }
 
   async giveRole (id: string, { roleId }: GiveRoleDTO) {

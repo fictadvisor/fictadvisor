@@ -2,19 +2,16 @@ import { forwardRef, Module } from '@nestjs/common';
 import { UserService } from './UserService';
 import { UserController } from './UserController';
 import { ConfigurationModule } from '../../config/ConfigModule';
-import { GroupModule } from '../group/GroupModule';
-import { DisciplineModule } from '../discipline/DisciplineModule';
 import { RoleService } from './role/RoleService';
 import { RoleController } from './role/RoleController';
-import { PrismaModule } from '../../database/PrismaModule';
 import { GrantService } from './grant/GrantService';
 import { AuthModule } from '../auth/AuthModule';
-import { AccessModule } from 'src/v2/security/AccessModule';
+import { AccessModule } from '../../security/AccessModule';
 
 @Module({
   controllers: [UserController, RoleController],
   providers: [UserService, RoleService, GrantService],
   exports: [UserService, RoleService, GrantService],
-  imports: [ConfigurationModule, forwardRef(() => GroupModule), forwardRef(() => DisciplineModule), forwardRef(() => PrismaModule), forwardRef(() => AuthModule), forwardRef(() => AccessModule)],
+  imports: [ConfigurationModule, AccessModule, forwardRef(() => AuthModule)],
 })
 export class UserModule {}
