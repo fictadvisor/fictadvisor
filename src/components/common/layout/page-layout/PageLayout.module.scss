@@ -1,4 +1,16 @@
-.page{
+@import "src/styles/partials/theme";
+
+.page {
   width: 100%;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: $background-dark-0;
+}
+
+.footer {
+  width: 100%;
+  margin-top: auto;
 }
