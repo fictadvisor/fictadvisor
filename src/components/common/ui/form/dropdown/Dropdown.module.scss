@@ -118,6 +118,9 @@ $default-dropdown-padding: 8px;
     }
   }
   &placeholder {
+    &:hover{
+      color: $background-dark-200;
+    }
     &-disabled{
       color: $background-dark-200;
     }
