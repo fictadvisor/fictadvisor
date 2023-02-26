@@ -1,5 +1,5 @@
 import Footer from '@/components/common/composite/footer';
-import Header from '@/components/common/composite/header/Header';
+import Header from '@/components/common/composite/header/';
 
 import styles from '../test-pages.module.scss';
 
