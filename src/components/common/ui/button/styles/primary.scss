@@ -28,10 +28,39 @@
   }
 }
 
+.primary-outline-button-variant{
+  background: none;
+  color: $gray-600;
+  outline: $red-100 solid 2px;
+
+  &:hover {
+    background: $red--10;
+    outline-color: $red-100;
+  }
+
+  &:active {
+    background: $red-10;
+    outline-color: $red-logo;
+  }
+
+  &:focus:not(:active) {
+    background: $red-0;
+    outline-color: $red-logo;
+  }
+
+  &:disabled {
+    background: $background-dark-0;
+    color: $gray-200;
+    outline-color: $gray-200;
+    cursor: not-allowed;
+  }
+}
+
 .primary-text-button-variant{
   background: none;
   color: $gray-400;
   outline: transparent;
+  border-radius: 2px !important;
 
   &:hover {
     text-decoration: underline;
@@ -39,48 +68,24 @@
   }
 
   &:focus:not(:active) {
-    outline: 2px solid $gray-50;
+    outline: 0.5px solid $gray-500;
     color: $gray-600;
   }
 
   &:active {
     text-decoration: underline;
-    color: $gray-600;
     outline: transparent;
+    color: $gray-600;
   }
 
-  &:disabled {
-    outline: none;
+    &:disabled {
+    outline: 2px transparent;
     color: $gray-100;
     text-decoration: none;
     cursor: not-allowed;
   }
 }
 
-.primary-text-button-variant{
-  background: none;
-  color: $gray-400;
-
-  &:hover {
-    text-decoration: underline;
-  }
-
-  &:focus:not(:active) {
-    outline: 2px solid $gray-50;
-    color: $gray-600;
-  }
-
-  &:active {
-    text-decoration: underline;
-    color: $gray-600;
-  }
-
-  &:disabled {
-    color: $gray-100;
-    text-decoration: none;
-    cursor: not-allowed;
-  }
-}
 @include button-style("primary-large", 8px, 16px 32px, 16px 32px, 12px, 5px);
 @include button-text("primary-large", 18px, 1.32, 700);
 

@@ -11,25 +11,28 @@ export enum AlertButtonVariant {
 interface AlertButtonProps extends React.ComponentPropsWithoutRef<'button'> {
   text?: string;
   variant?: AlertButtonVariant;
-  icon?: ReactNode;
+  startIcon?: ReactNode;
+  endIcon?: ReactNode;
 }
 
 const AlertButton: React.FC<AlertButtonProps> = ({
   text,
   variant = AlertButtonVariant.SUCCESS,
-  icon,
+  startIcon,
+  endIcon,
   ...rest
 }) => {
   let className: string;
   text
-    ? icon
+    ? startIcon || endIcon
       ? (className = styles[variant])
       : (className = styles[variant + '-only-text'])
     : (className = styles[variant + '-without-text']);
   return (
     <button className={className} {...rest}>
+      {startIcon}
       {text}
-      {icon}
+      {endIcon}
     </button>
   );
 };
