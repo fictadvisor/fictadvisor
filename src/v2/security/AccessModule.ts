@@ -10,7 +10,7 @@ import { TelegramGuard } from './TelegramGuard';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigurationModule } from '../config/ConfigModule';
 import { SecurityConfigService } from '../config/SecurityConfigService';
-import { JwtModule, JwtService } from '@nestjs/jwt';
+import { JwtModule } from '@nestjs/jwt';
 import { PermissionService } from './PermissionService';
 
 @Module({
@@ -23,7 +23,6 @@ import { PermissionService } from './PermissionService';
     GroupByTemporaryLessonGuard,
     JwtStrategy,
     TelegramGuard,
-    JwtService,
     PermissionService,
   ],
   exports: [
@@ -35,8 +34,8 @@ import { PermissionService } from './PermissionService';
     GroupByTemporaryLessonGuard,
     JwtStrategy,
     TelegramGuard,
-    JwtService,
     PermissionService,
+    JwtModule,
   ],
   imports: [
     PassportModule,

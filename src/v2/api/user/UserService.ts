@@ -7,13 +7,14 @@ import { UserRepository } from './UserRepository';
 import { ContactRepository } from './ContactRepository';
 import { UpdateUserDTO } from './dto/UpdateUserDTO';
 import { CreateContactDTO } from './dto/CreateContactDTO';
-import { EntityType, Role, State } from '@prisma/client';
+import { EntityType, Role, RoleName, State } from '@prisma/client';
 import { UpdateContactDTO } from './dto/UpdateContactDTO';
 import { UpdateStudentDTO } from './dto/UpdateStudentDTO';
 import { CreateSuperheroDTO } from './dto/CreateSuperheroDTO';
 import { StudentWithUserData } from './data/StudentDTOs';
 import { AuthService } from '../auth/AuthService';
 import { GroupRequestDTO } from './dto/GroupRequestDTO';
+import { GroupService } from '../group/GroupService';
 
 @Injectable()
 export class UserService {
@@ -24,6 +25,8 @@ export class UserService {
     private contactRepository: ContactRepository,
     @Inject(forwardRef(() => AuthService))
     private authService: AuthService,
+    @Inject(forwardRef(() => GroupService))
+    private groupService: GroupService,
   ) {
   }
 
@@ -128,6 +131,12 @@ export class UserService {
       telegramId: student.user.telegramId,
       group: student.group,
     };
+  }
+
+  async addGroupRole (userId: string, isCaptain: boolean) {
+    const roleName = isCaptain ? RoleName.CAPTAIN : RoleName.STUDENT;
+    const { group } = await this.studentRepository.get(userId);
+    await this.groupService.addGroupRole(group.id, userId, roleName);
   }
 
   async getUser (userId: string) {

@@ -11,6 +11,35 @@ import { NoPermissionException } from '../../utils/exceptions/NoPermissionExcept
 import { RoleDTO } from './dto/RoleDTO';
 import { UpdateGroupDTO } from './dto/UpdateGroupDTO';
 import { UserService } from '../user/UserService';
+import { RoleRepository } from '../user/role/RoleRepository';
+
+const ROLE_LIST = [
+  {
+    name: RoleName.CAPTAIN,
+    weight: 100,
+    grants: {
+      'groups.$groupId.*': true,
+    },
+  },
+  {
+    name: RoleName.MODERATOR,
+    weight: 75,
+    grants: {
+      'groups.$groupId.admin.switch': false,
+      'groups.$groupId.*': true,
+    },
+  },
+  {
+    name: RoleName.STUDENT,
+    weight: 50,
+    grants: {
+      'groups.$groupId.admin.switch': false,
+      'groups.$groupId.students.get': true,
+      'groups.$groupId.students.*': false,
+      'groups.$groupId.*': true,
+    },
+  },
+];
 
 @Injectable()
 export class GroupService {
@@ -20,10 +49,13 @@ export class GroupService {
     private userService: UserService,
     private studentRepository: StudentRepository,
     private userRepository: UserRepository,
+    private roleRepository: RoleRepository,
   ) {}
 
   async create (code: string): Promise<Group>  {
-    return this.groupRepository.create(code);
+    const group = await this.groupRepository.create(code);
+    await this.addPermissions(group.id);
+    return group;
   }
 
   async getAll (body: QueryAllDTO) {
@@ -76,13 +108,24 @@ export class GroupService {
     }
 
     const verifiedStudent = await this.studentRepository.update(user.id, data);
+
+    if (data.state === State.APPROVED) {
+      await this.addGroupRole(groupId, userId, RoleName.STUDENT);
+    }
+
     return this.userService.getStudent(verifiedStudent);
   }
 
-  async moderatorSwitch (groupId: string, userId: string, body: RoleDTO) {
+  async addGroupRole (groupId: string, userId: string, name: RoleName) {
+    const groupRoles = await this.groupRepository.getRoles(groupId);
+    const role = groupRoles.find((r) => r.name === name);
+    await this.studentRepository.addRole(userId, role.id);
+  }
+
+  async moderatorSwitch (groupId: string, userId: string, { roleName }: RoleDTO) {
     const user = await this.userRepository.get(userId);
 
-    if (body.roleName !== RoleName.MODERATOR && body.roleName === RoleName.STUDENT) {
+    if (roleName !== RoleName.MODERATOR && roleName === RoleName.STUDENT) {
       throw new NoPermissionException();
     }
     if (user.student.groupId !== groupId) {
@@ -90,7 +133,7 @@ export class GroupService {
     }
 
     const roles = await this.groupRepository.getRoles(groupId);
-    const role = roles.find((r) => r.name === body.roleName);
+    const role = roles.find((r) => r.name === roleName);
     const userRole = await this.userService.getGroupRoleDB(userId);
 
     await this.studentRepository.removeRole(userId, userRole.id);
@@ -108,6 +151,7 @@ export class GroupService {
       throw new NoPermissionException();
     }
 
+    await this.studentRepository.removeRole(userId, userRole.id);
     await this.studentRepository.update(userId, { state: State.DECLINED });
   }
 
@@ -126,6 +170,7 @@ export class GroupService {
   }
 
   async deleteGroup (groupId: string) {
+    await this.groupRepository.deleteRoles(groupId);
     await this.groupRepository.delete(groupId);
   }
 
@@ -148,5 +193,18 @@ export class GroupService {
     return students
       .filter((s) => s.state === State.PENDING)
       .map((s) => this.userService.getStudent(s));
+  }
+
+  async addPermissions (groupId: string) {
+    for (const { grants, ...roles } of ROLE_LIST) {
+
+      const grantList = Object.entries(grants).map(([permission, set]) => ({
+        permission: permission.replace('$groupId', groupId),
+        set,
+      }));
+
+      const role = await this.roleRepository.createWithGrants(roles, grantList);
+      await this.groupRepository.addRole(role.id, groupId);
+    }
   }
 }
