@@ -45,7 +45,8 @@ class TelegramService {
     try {
       const data: authTelegramBody =
         (await TelegramService.openAuthenticationDialog()) as authTelegramBody;
-      StorageUtil.setTelegramInfo(data);
+      console.log(data);
+      StorageUtil.setTelegramInfo({ telegram: data });
 
       return true;
     } catch (e) {

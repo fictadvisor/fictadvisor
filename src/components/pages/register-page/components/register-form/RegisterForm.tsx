@@ -29,7 +29,6 @@ const RegisterForm: FC = () => {
   const handleSubmit = useCallback(
     async (data: RegisterFormFields) => {
       try {
-        console.log(data);
         await AuthService.register(transformData(data));
         await router.push('/');
       } catch (e) {

@@ -22,11 +22,12 @@ class AuthService {
   }
 
   static async register(data) {
-    const telegramInfo = storageUtil.getTelegramInfo();
-    await AuthAPI.register({
+    const { telegram } = storageUtil.getTelegramInfo();
+    const obj = {
       ...data,
-      telegram: telegramInfo,
-    });
+      telegram,
+    };
+    await AuthAPI.register(obj);
   }
 
   static async redirectToRegisterBot(router: NextRouter) {

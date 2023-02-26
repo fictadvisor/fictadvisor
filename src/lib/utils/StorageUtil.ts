@@ -36,14 +36,15 @@ class StorageUtil {
     if (!process.browser) {
       return;
     }
-    sessionStorage.setItem(STORAGE_KEYS.TELEGRAM_INFO, data);
+    sessionStorage.setItem(STORAGE_KEYS.TELEGRAM_INFO, JSON.stringify(data));
   }
 
   static getTelegramInfo() {
     if (!process.browser) {
       return;
     }
-    return sessionStorage.getItem(STORAGE_KEYS.TELEGRAM_INFO);
+    const data = sessionStorage.getItem(STORAGE_KEYS.TELEGRAM_INFO);
+    return JSON.parse(data);
   }
 }
 

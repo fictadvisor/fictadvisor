@@ -17,7 +17,6 @@ const LoginForm: FC = () => {
   const handleSubmit = useCallback(
     async (data: LoginFormFields, { setErrors }) => {
       try {
-        console.log(data);
         await AuthService.login(data);
         await push('/');
       } catch (e) {
