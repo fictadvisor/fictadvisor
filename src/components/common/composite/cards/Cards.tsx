@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { StarIcon } from '@heroicons/react/24/solid';
 import mergeClassNames from 'merge-class-names';
 
@@ -9,7 +9,11 @@ import Button, {
   ButtonVariant,
 } from '@/components/common/ui/button';
 import Rating from '@/components/common/ui/rating';
-import Tag, { TagColor, TagSize } from '@/components/common/ui/tag/Tag';
+import Tag, {
+  TagColor,
+  TagSize,
+  TagVariant,
+} from '@/components/common/ui/tag/Tag';
 import Tooltip from '@/components/common/ui/tooltip';
 
 export type DivProps = React.DetailedHTMLProps<
@@ -174,30 +178,30 @@ const CardRoles: React.FC<{ roles: string[]; disabled?: boolean }> = ({
           case 'лаборант':
             return (
               <Tag
-                color={TagColor.MINT}
                 size={TagSize.SMALL}
                 text="Лаборант"
-                className={disabled ? 'gray-third' : 'mint-first'}
+                variant={disabled ? TagVariant.OUTLINE : TagVariant.FILLED}
+                color={disabled ? TagColor.GRAY : TagColor.MINT}
                 key={Math.random()}
               />
             );
           case 'лектор':
             return (
               <Tag
-                color={TagColor.VIOLET}
                 size={TagSize.SMALL}
                 text="Лектор"
-                className={disabled ? 'gray-third' : 'violet-first'}
+                variant={disabled ? TagVariant.OUTLINE : TagVariant.FILLED}
+                color={disabled ? TagColor.GRAY : TagColor.VIOLET}
                 key={Math.random()}
               />
             );
           case 'практик':
             return (
               <Tag
-                color={TagColor.ORANGE}
                 size={TagSize.SMALL}
                 text="Практик"
-                className={disabled ? 'gray-third' : 'orange-first'}
+                variant={disabled ? TagVariant.OUTLINE : TagVariant.FILLED}
+                color={disabled ? TagColor.GRAY : TagColor.ORANGE}
                 key={Math.random()}
               />
             );
