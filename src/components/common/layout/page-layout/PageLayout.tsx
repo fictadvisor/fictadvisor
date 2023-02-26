@@ -4,7 +4,7 @@ import Script from 'next/script';
 
 import config from '@/config';
 
-import Footer from '../../composite/footer/Footer';
+import Footer from '../footer/Footer';
 
 import styles from './PageLayout.module.scss';
 

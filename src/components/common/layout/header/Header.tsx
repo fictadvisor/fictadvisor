@@ -15,12 +15,12 @@ import Button, {
 } from '@/components/common/ui/button';
 import useIsMobile from '@/hooks/use-is-mobile/UseIsMobile';
 
+import { HeaderCard } from '../../composite/cards';
 import { BurgerMenu } from '../../custom-svg/BurgerMenu';
 import { XMark } from '../../custom-svg/XMark';
 import Divider from '../../ui/divider/Divider';
 import { TabItem, TabItemContentPosition } from '../../ui/tab';
 import { TabItemContentSize } from '../../ui/tab/tab-item/TabItem';
-import { HeaderCard } from '../cards';
 
 import styles from './Header.module.scss';
 
