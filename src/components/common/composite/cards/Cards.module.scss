@@ -103,7 +103,7 @@
         border-color:#4b4b4b;
     }
     border-color: transparent;
-    background-color: $background-dark-100;
+    background-color: $background-dark-100 !important;
     pointer-events: none;
     *{
         color: #a3a3a3 !important;
