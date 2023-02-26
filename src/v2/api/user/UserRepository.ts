@@ -4,6 +4,7 @@ import { CreateUserData } from './data/CreateUserData';
 import { UniqueUserDTO } from './dto/UniqueUserDTO';
 import { DatabaseUtils } from '../utils/DatabaseUtils';
 import { UpdateUserData } from './data/UpdateUserData';
+import { RoleName } from '@prisma/client';
 
 @Injectable()
 export class UserRepository {
@@ -84,6 +85,19 @@ export class UserRepository {
         username: true,
         avatar: true,
         telegramId: true,
+      },
+    });
+  }
+
+  async deleteRole (studentId: string) {
+    return this.prisma.role.deleteMany({
+      where: {
+        name: RoleName.USER,
+        userRoles: {
+          some: {
+            studentId,
+          },
+        },
       },
     });
   }
