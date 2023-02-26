@@ -107,7 +107,7 @@ export class GroupService {
       throw new NoPermissionException();
     }
 
-    const verifiedStudent = await this.studentRepository.update(user.id, data);
+    const verifiedStudent = await this.studentRepository.update(user.id, { state: data.state });
 
     if (data.state === State.APPROVED) {
       await this.addGroupRole(groupId, userId, RoleName.STUDENT);
