@@ -5,7 +5,7 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
-    position: fixed;
+    position: relative;
     width: 100%;
     height: 56px;
     background-color: rgba(23, 23, 23, 1);
@@ -24,6 +24,7 @@
     display: flex;
     flex-direction: column;
     margin-left: 16px;
+    margin-right: 16px;
     gap: 8px;
     
 }
@@ -46,7 +47,7 @@
     }
 }
 
-@media (max-width: 710px) {
+@media (max-width: 1101px) {
     .header-logo {
         margin-left: 70px;
         flex-grow: 4;

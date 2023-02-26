@@ -37,7 +37,7 @@ const Header: React.FC<HeaderProps> = ({
   position,
   isLoggined = false,
 }) => {
-  const isMobile = useIsMobile();
+  const isMobile = useIsMobile(1101);
   const [clicked, setClicked] = useState(false);
   const handleClick = () => {
     if (clicked) {
@@ -151,7 +151,6 @@ const Header: React.FC<HeaderProps> = ({
     );
   }
 
-  //isLoggined = false;
   if (isMobile && !isLoggined) {
     return clicked ? (
       <div style={{ display: 'flex', gap: '16px', flexDirection: 'column' }}>
@@ -164,6 +163,7 @@ const Header: React.FC<HeaderProps> = ({
           </div>
           <div className={styles['mobile-button']}>
             <Button
+              onClick={handleClick}
               size={ButtonSize.MEDIUM}
               text={''}
               variant={ButtonVariant.TEXT}
@@ -228,6 +228,7 @@ const Header: React.FC<HeaderProps> = ({
         </div>
         <div className={styles['mobile-button']}>
           <Button
+            onClick={handleClick}
             size={ButtonSize.MEDIUM}
             text={''}
             variant={ButtonVariant.TEXT}
