@@ -235,3 +235,20 @@ $dark-primary: #1E1E1E;
         font-weight: 700;
     }
 }
+
+.mobile-rating{
+    justify-content: flex-end;
+    align-items: center;
+    display: none;
+}
+.desktop-rating{
+    display: block;
+}
+@media only screen and (max-width: 768px) {
+    .mobile-rating{
+        display: flex;
+    }   
+    .desktop-rating{
+        display: none !important;
+    }     
+}

@@ -1,4 +1,5 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { StarIcon } from '@heroicons/react/24/solid';
 import mergeClassNames from 'merge-class-names';
 
 import styles from '@/components/common/composite/cards/Cards.module.scss';
@@ -15,7 +16,7 @@ export type DivProps = React.DetailedHTMLProps<
 type LecturerPollCardProps = {
   name: string;
   description: string;
-  roles: string[];
+  roles?: string[];
   url?: string;
   disabled?: boolean;
 } & DivProps;
@@ -110,8 +111,15 @@ export const RatingCard: React.FC<RatingCardProps> = ({
       {...rest}
     >
       <img className={styles['card-avatar']} src={url} alt="викладач" />
-
-      {rating && <Rating rating={rating} />}
+      {rating && (
+        <div className={styles['mobile-rating']}>
+          {rating}
+          <StarIcon color="#FCD34D" width={24} height={24} />
+        </div>
+      )}
+      {rating && (
+        <Rating rating={rating} className={styles['desktop-rating']} />
+      )}
       {!rating && <br />}
       {roles && <CardRoles roles={roles} disabled={disabled} />}
       <h4 className={styles['card-name']}>{name}</h4>
