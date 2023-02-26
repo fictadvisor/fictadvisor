@@ -2,8 +2,7 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 
 import { CustomCheck } from '@/components/common/custom-svg/CustomCheck';
 import AlertButton, {
-  AlertButtonIconPosition,
-  AlertButtonType,
+  AlertButtonVariant,
 } from '@/components/common/ui/alert-button/AlertButton';
 
 import styles from '../test-pages.module.scss';
@@ -12,77 +11,72 @@ const AlertButtonsPage = () => (
   <div className={styles['test-page-wrap']}>
     <div className={styles['test-page-content']}>
       <AlertButton
-        text="Success"
-        icon={<CustomCheck />}
-        iconPosition={AlertButtonIconPosition.LEFT}
-        isDisabled={false}
-        type={AlertButtonType.SUCCESS}
+        text="Add"
+        startIcon={<CustomCheck />}
+        disabled={true}
+        variant={AlertButtonVariant.SUCCESS}
       />
       <AlertButton
-        text="Success"
-        icon={<CustomCheck />}
-        iconPosition={AlertButtonIconPosition.RIGHT}
-        isDisabled={false}
-        type={AlertButtonType.SUCCESS}
+        text="Add"
+        endIcon={<CustomCheck />}
+        disabled={true}
+        variant={AlertButtonVariant.SUCCESS}
       />
       <AlertButton
-        text="Success"
-        isDisabled={false}
-        type={AlertButtonType.SUCCESS}
+        text="Add"
+        disabled={false}
+        variant={AlertButtonVariant.SUCCESS}
       />
       <AlertButton
-        text="Success"
-        isDisabled={false}
-        type={AlertButtonType.SUCCESS}
+        startIcon={<CustomCheck />}
+        disabled={false}
+        variant={AlertButtonVariant.SUCCESS}
       />
 
       <AlertButton
-        text="Error primary"
-        icon={<XMarkIcon className="icon" />}
-        iconPosition={AlertButtonIconPosition.LEFT}
-        isDisabled={false}
-        type={AlertButtonType.ERROR_PRIMARY}
+        text="Remove"
+        endIcon={<XMarkIcon className="icon" />}
+        disabled={false}
+        variant={AlertButtonVariant.ERROR_FILLED}
       />
       <AlertButton
-        text="Error primary"
-        icon={<XMarkIcon className="icon" />}
-        iconPosition={AlertButtonIconPosition.RIGHT}
-        isDisabled={false}
-        type={AlertButtonType.ERROR_PRIMARY}
+        text="Remove"
+        endIcon={<XMarkIcon className="icon" />}
+        disabled={true}
+        variant={AlertButtonVariant.ERROR_FILLED}
       />
       <AlertButton
-        text="Error primary"
-        isDisabled={false}
-        type={AlertButtonType.ERROR_PRIMARY}
+        text="Remove"
+        disabled={false}
+        variant={AlertButtonVariant.ERROR_FILLED}
       />
       <AlertButton
-        text="Error primary"
-        isDisabled={false}
-        type={AlertButtonType.ERROR_PRIMARY}
+        startIcon={<XMarkIcon className="icon" />}
+        disabled={false}
+        variant={AlertButtonVariant.ERROR_FILLED}
       />
 
       <AlertButton
-        text="Error secondary"
-        icon={<XMarkIcon className="icon" />}
-        iconPosition={AlertButtonIconPosition.LEFT}
-        isDisabled={false}
-        type={AlertButtonType.ERROR_SECONDARY}
+        text="Remove"
+        endIcon={<XMarkIcon className="icon" />}
+        disabled={false}
+        variant={AlertButtonVariant.ERROR_OUTLINE}
       />
       <AlertButton
-        icon={<XMarkIcon className="icon" />}
-        iconPosition={AlertButtonIconPosition.RIGHT}
-        isDisabled={false}
-        type={AlertButtonType.ERROR_SECONDARY}
+        text="Remove"
+        endIcon={<XMarkIcon className="icon" />}
+        disabled={true}
+        variant={AlertButtonVariant.ERROR_OUTLINE}
       />
       <AlertButton
-        text="Error secondary"
-        isDisabled={false}
-        type={AlertButtonType.ERROR_SECONDARY}
+        text="Remove"
+        disabled={false}
+        variant={AlertButtonVariant.ERROR_OUTLINE}
       />
       <AlertButton
-        text="Error secondary"
-        isDisabled={false}
-        type={AlertButtonType.ERROR_SECONDARY}
+        startIcon={<XMarkIcon className="icon" />}
+        disabled={false}
+        variant={AlertButtonVariant.ERROR_OUTLINE}
       />
     </div>
   </div>

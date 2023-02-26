@@ -1,225 +1,60 @@
+import React, { useState } from 'react';
 import { AcademicCapIcon } from '@heroicons/react/24/outline';
 
-import Tab, { TabContentPosition } from '@/components/common/ui/tab/Tab';
+import {
+  TabItem,
+  TabItemContentPosition,
+  TabItemContentSize,
+} from '@/components/common/ui/tab/tab-item/TabItem';
+import { TabList } from '@/components/common/ui/tab/tab-list/TabList';
+import { TabPanel } from '@/components/common/ui/tab/tab-panel/TabPanel';
+import { TabPanelsList } from '@/components/common/ui/tab/tab-panels-list/TabPanelsList';
 
 import styles from '../test-pages.module.scss';
 
-const TabsPage = () => (
-  <div className={styles['test-page-wrap']}>
-    <div className={styles['test-page-content']}>
-      <Tab
-        className="tab-normal"
-        text="Tab"
-        position={TabContentPosition.CENTRE}
-      ></Tab>
-      <Tab
-        className="tab-normal"
-        text="disabled"
-        position={TabContentPosition.CENTRE}
-        isDisabled={true}
-      ></Tab>
-      <Tab
-        className="tab-normal"
-        text="Tab"
-        position={TabContentPosition.LEFT}
-      ></Tab>
-      <Tab
-        className="tab-normal"
-        text="disabled"
-        position={TabContentPosition.LEFT}
-        isDisabled={true}
-      ></Tab>
-      <Tab
-        className="tab-small"
-        text="Tab"
-        position={TabContentPosition.CENTRE}
-      ></Tab>
-      <Tab
-        className="tab-small"
-        text="disabled"
-        position={TabContentPosition.CENTRE}
-        isDisabled={true}
-      ></Tab>
-      <Tab
-        className="tab-small"
-        text="Tab"
-        position={TabContentPosition.LEFT}
-      ></Tab>
-      <Tab
-        className="tab-small"
-        text="disabled"
-        position={TabContentPosition.LEFT}
-        isDisabled={true}
-      ></Tab>
-
-      <Tab
-        className="tab-normal"
-        text="Tab"
-        position={TabContentPosition.CENTRE}
-        icon={<AcademicCapIcon />}
-      ></Tab>
-      <Tab
-        className="tab-normal"
-        text="disabled"
-        position={TabContentPosition.CENTRE}
-        isDisabled={true}
-        icon={<AcademicCapIcon />}
-      ></Tab>
-      <Tab
-        className="tab-normal"
-        text="Tab"
-        position={TabContentPosition.LEFT}
-        icon={<AcademicCapIcon />}
-      ></Tab>
-      <Tab
-        className="tab-normal"
-        text="disabled"
-        position={TabContentPosition.LEFT}
-        isDisabled={true}
-        icon={<AcademicCapIcon />}
-      ></Tab>
-      <Tab
-        className="tab-small"
-        text="Tab"
-        position={TabContentPosition.CENTRE}
-        icon={<AcademicCapIcon />}
-      ></Tab>
-      <Tab
-        className="tab-small"
-        text="disabled"
-        position={TabContentPosition.CENTRE}
-        isDisabled={true}
-        icon={<AcademicCapIcon />}
-      ></Tab>
-      <Tab
-        className="tab-small"
-        text="Tab"
-        position={TabContentPosition.LEFT}
-        icon={<AcademicCapIcon />}
-      ></Tab>
-      <Tab
-        className="tab-small"
-        text="disabled"
-        position={TabContentPosition.LEFT}
-        isDisabled={true}
-        icon={<AcademicCapIcon />}
-      ></Tab>
-
-      <Tab
-        className="tab-normal"
-        text="Tab"
-        position={TabContentPosition.CENTRE}
-        count={1}
-      ></Tab>
-      <Tab
-        className="tab-normal"
-        text="disabled"
-        position={TabContentPosition.CENTRE}
-        isDisabled={true}
-        count={1}
-      ></Tab>
-      <Tab
-        className="tab-normal"
-        text="Tab"
-        position={TabContentPosition.LEFT}
-        count={2}
-      ></Tab>
-      <Tab
-        className="tab-normal"
-        text="disabled"
-        position={TabContentPosition.LEFT}
-        isDisabled={true}
-        count={2}
-      ></Tab>
-      <Tab
-        className="tab-small"
-        text="Tab"
-        position={TabContentPosition.CENTRE}
-        count={10}
-      ></Tab>
-      <Tab
-        className="tab-small"
-        text="disabled"
-        position={TabContentPosition.CENTRE}
-        isDisabled={true}
-        count={0}
-      ></Tab>
-      <Tab
-        className="tab-small"
-        text="Tab"
-        position={TabContentPosition.LEFT}
-        count={100}
-      ></Tab>
-      <Tab
-        className="tab-small"
-        text="disabled"
-        position={TabContentPosition.LEFT}
-        isDisabled={true}
-        count={100}
-      ></Tab>
-
-      <Tab
-        className="tab-normal"
-        text="Tab"
-        position={TabContentPosition.CENTRE}
-        icon={<AcademicCapIcon />}
-        count={1}
-      ></Tab>
-      <Tab
-        className="tab-normal"
-        text="disabled"
-        position={TabContentPosition.CENTRE}
-        isDisabled={true}
-        icon={<AcademicCapIcon />}
-        count={1}
-      ></Tab>
-      <Tab
-        className="tab-normal"
-        text="Tab"
-        position={TabContentPosition.LEFT}
-        icon={<AcademicCapIcon />}
-        count={2}
-      ></Tab>
-      <Tab
-        className="tab-normal"
-        text="disabled"
-        position={TabContentPosition.LEFT}
-        isDisabled={true}
-        icon={<AcademicCapIcon />}
-        count={2}
-      ></Tab>
-      <Tab
-        className="tab-small"
-        text="Tab"
-        position={TabContentPosition.CENTRE}
-        icon={<AcademicCapIcon />}
-        count={10}
-      ></Tab>
-      <Tab
-        className="tab-small"
-        text="disabled"
-        position={TabContentPosition.CENTRE}
-        isDisabled={true}
-        icon={<AcademicCapIcon />}
-        count={10}
-      ></Tab>
-      <Tab
-        className="tab-small"
-        text="Tab"
-        position={TabContentPosition.LEFT}
-        icon={<AcademicCapIcon />}
-        count={100}
-      ></Tab>
-      <Tab
-        className="tab-small"
-        text="disabled"
-        position={TabContentPosition.LEFT}
-        isDisabled={true}
-        icon={<AcademicCapIcon />}
-        count={100}
-      ></Tab>
+const TabsPage = () => {
+  const [index, setIndex] = useState<string>('1');
+  return (
+    <div className={styles['test-page-wrap']}>
+      <div className={styles['test-page-content']}>
+        <TabList className="tab-list" onChange={setIndex}>
+          <TabItem
+            size={TabItemContentSize.NORMAL}
+            className="tab-item"
+            text="Tab"
+            position={TabItemContentPosition.CENTER}
+            value={'1'}
+          ></TabItem>
+          <TabItem
+            size={TabItemContentSize.SMAll}
+            className="tab-item"
+            text="Tab"
+            position={TabItemContentPosition.CENTER}
+            value={'2'}
+          ></TabItem>
+          <TabItem
+            size={TabItemContentSize.SMAll}
+            className="tab-item"
+            text="Tab"
+            position={TabItemContentPosition.CENTER}
+            icon={<AcademicCapIcon />}
+            value={'3'}
+          ></TabItem>
+        </TabList>
+        <TabPanelsList className="tab-panels-list" currentValue={index}>
+          <TabPanel className="tab-panel" value={'1'}>
+            Apple
+          </TabPanel>
+          <TabPanel className="tab-panel" value={'2'}>
+            Computer
+          </TabPanel>
+          <TabPanel className="tab-panel" value={'3'}>
+            Iphone
+          </TabPanel>
+        </TabPanelsList>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default TabsPage;

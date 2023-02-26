@@ -1,55 +1,38 @@
 import React, { ReactNode } from 'react';
-import mergeClassNames from 'merge-class-names';
 
 import styles from './AlertButton.module.scss';
-export enum AlertButtonType {
-  SUCCESS = 'success',
-  ERROR_PRIMARY = 'error-primary',
-  ERROR_SECONDARY = 'error-secondary',
+
+export enum AlertButtonVariant {
+  ERROR_FILLED = 'error-filled-alert-button',
+  ERROR_OUTLINE = 'error-outline-alert-button',
+  SUCCESS = 'success-alert-button',
 }
 
-export enum AlertButtonIconPosition {
-  LEFT,
-  RIGHT,
-}
-
-interface AlertButtonProps {
+interface AlertButtonProps extends React.ComponentPropsWithoutRef<'button'> {
   text?: string;
-  onClick?: any;
-  isDisabled: boolean;
-  type: AlertButtonType;
-  icon?: ReactNode;
-  iconPosition?: AlertButtonIconPosition;
-  className?: string;
+  variant?: AlertButtonVariant;
+  startIcon?: ReactNode;
+  endIcon?: ReactNode;
 }
 
-const AlertButton: React.FC<AlertButtonProps> = props => {
-  const buttonColor = `${props.type}-alert-button-color`;
-  const buttonStyle = props.text
-    ? `alert${props.icon ? '-icon' : ''}-button`
-    : 'unlabeled-alert-button';
-  const additionalClass = props.className ? props.className : '';
-  const className = mergeClassNames(
-    styles[buttonColor],
-    styles[buttonStyle],
-    styles[additionalClass],
-  );
-
+const AlertButton: React.FC<AlertButtonProps> = ({
+  text,
+  variant = AlertButtonVariant.SUCCESS,
+  startIcon,
+  endIcon,
+  ...rest
+}) => {
+  let className: string;
+  text
+    ? startIcon || endIcon
+      ? (className = styles[variant])
+      : (className = styles[variant + '-only-text'])
+    : (className = styles[variant + '-without-text']);
   return (
-    <button
-      disabled={props.isDisabled}
-      className={className}
-      onClick={() => {
-        props?.onClick;
-      }}
-    >
-      {props.icon && props.iconPosition == AlertButtonIconPosition.LEFT && (
-        <div className="icon"> {props.icon} </div>
-      )}
-      {props.text}
-      {props.icon && props.iconPosition == AlertButtonIconPosition.RIGHT && (
-        <div className="icon"> {props.icon} </div>
-      )}
+    <button className={className} {...rest}>
+      {startIcon}
+      {text}
+      {endIcon}
     </button>
   );
 };

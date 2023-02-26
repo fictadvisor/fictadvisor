@@ -1,8 +1,8 @@
 @import "partials/theme";
 
 html, body {
-  background-color: $dark-primary;
-  color: $light-primary;
+  background-color: $background-dark--10;
+  color: $gray-600;
 }
 
 .icon{
@@ -12,10 +12,10 @@ html, body {
 }
 
 *{
-  scrollbar-color: #FFFFFF #C2D2E4;
+  scrollbar-color: $white $background-dark-100;
   scrollbar-width: thin;
   &:hover, &:focus{
-    scrollbar-color: black #C2D2E4;
+    scrollbar-color: $black $background-dark-200;
   }
 }
 
@@ -23,16 +23,16 @@ html, body {
   width: 1.11vw;
 }
 ::-webkit-scrollbar-thumb{
-  border: 0.28vw $dark-primary solid;
+  border: 0.28vw $background-dark-0 solid;
   background-clip: padding-box;
 
   transition: all 0.2s ease-in-out;
-  background-color: #4B4B4B;
+  background-color: $background-dark-100;
   &:hover{
-    background-color: #747474;
+    background-color: $background-dark-200;
   }
   &:active{
-    background-color: #A3A3A3;
+    background-color: $gray-300;
   }
 }
 

@@ -1,79 +1,129 @@
-@import "../button/styles/button-style";
+@import "src/styles/partials/theme";
 
-.error-primary-alert-button-color{
-  background: #970C13;
-  color: #FAFAFA;
-  outline: 1px transparent solid;
+.alert-buttons{
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  gap: 6px;
+  border-radius: 4px;
+  min-width: fit-content;
+  width: 100%;
+  white-space: nowrap;
+}
+
+.error-filled-alert-button {
+  @extend .alert-buttons;
+  outline: 2px transparent solid;
+  background: $error-50;
+  color: $gray-600;
 
   &:hover {
-    background: #C11018;
+    background: $error-100;
+  }
+
+  &:focus:not(:active) {
+    background: $error-50;
+    outline: 1px solid $error-100;
   }
 
   &:active {
-    background: #EC131E;
-  }
-
-  &:focus {
-    background: #970C13;
-    outline: 1px solid #C11018;
+    background: $error-200;
   }
 
   &:disabled {
-    background: #1E1E1E;
-    color: #343434;
+    background: $background-dark-0;
+    color: $background-dark-35;
+    cursor: not-allowed;
+    svg{
+      opacity:0.5;
+    }
   }
 }
 
-.error-secondary-alert-button-color{
-  border: 1px solid #EC131E;
-  background: #343434;
-  color: #FAFAFA;
+.error-outline-alert-button{
+  @extend .alert-buttons;
+  outline: 2px solid $error-200;
+  background: $background-dark-0;
+  color: $gray-600;
 
   &:hover {
-    background: #970C13;
+    background: $error-50;
+  }
+
+  &:focus:not(:active) {
+    background: $error-50;
   }
 
   &:active {
-    background: #C11018;
-  }
-
-  &:focus {
-    background: #970C13;
+    background: $error-100;
   }
 
   &:disabled {
-    background: #1E1E1E;
-    color: #343434;
+    outline: none;
+    background: $background-dark-0;
+    color: $background-dark-35;
+    cursor: not-allowed;
+    svg{
+      opacity:0.5;
+    }
   }
 }
 
-.success-alert-button-color{
-  background: #189550;
-  color: #FAFAFA;
-  outline: 1px transparent solid;
+.success-alert-button{
+  @extend .alert-buttons;
+  background: $success-200;
+  color: $gray-600;
+  outline: 2px transparent solid;
 
   &:hover {
-    background: #157F44;
+    background: $success-100;
+  }
+
+  &:focus:not(:active) {
+    background: $success-200;
+    outline: 1px solid $success-50;
   }
 
   &:active {
-    background: #106034;
-  }
-
-  &:focus {
-    background: #189550;
-    outline: 1px solid #106034;
+    background: $success-50;
   }
 
   &:disabled {
-    background: #1E1E1E;
-    color: #343434;
+    background: $background-dark-0;
+    color: $background-dark-35;
+    cursor: not-allowed;
+    svg{
+      opacity:0.5;
+    }
   }
 }
+.success-alert-button-without-text{
+  @extend .success-alert-button;
+  padding: 6px;
+};
+.error-outline-alert-button-without-text{
+  @extend .error-outline-alert-button;
+  padding: 6px;
+};
+.error-filled-alert-button-without-text{
+  @extend .error-filled-alert-button;
+  padding: 6px;
+};
 
+.success-alert-button-only-text{
+  @extend .success-alert-button;
+  padding: 8px 12px;
+};
+.error-outline-alert-button-only-text{
+  @extend .error-outline-alert-button;
+  padding: 8px 12px;
+};
+.error-filled-alert-button-only-text{
+  @extend .error-filled-alert-button;
+  padding: 8px 12px;
+};
 
-@include button-style("alert", 4px, 8px 16px, 4px 8px, 6px);
-@include button-style("unlabeled-alert", 4px, 4px 4px, 4px 4px, 0);
 
 
 

@@ -3,9 +3,13 @@ import { StarIcon } from '@heroicons/react/24/solid';
 import mergeClassNames from 'merge-class-names';
 
 import styles from '@/components/common/composite/cards/Cards.module.scss';
-import Button, { ButtonSize, ButtonType } from '@/components/common/ui/button';
+import Button, {
+  ButtonColor,
+  ButtonSize,
+  ButtonVariant,
+} from '@/components/common/ui/button';
 import Rating from '@/components/common/ui/rating';
-import Tag, { TagState } from '@/components/common/ui/tag';
+import Tag, { TagColor, TagSize } from '@/components/common/ui/tag/Tag';
 import Tooltip from '@/components/common/ui/tooltip';
 
 export type DivProps = React.DetailedHTMLProps<
@@ -84,7 +88,8 @@ export const LecturerPollCard: React.FC<LecturerPollCardProps> = ({
       </Tooltip>
 
       <Button
-        type={disabled ? ButtonType.SECONDARY_GRAY : ButtonType.SECONDARY_RED}
+        color={disabled ? ButtonColor.PRIMARY : ButtonColor.SECONDARY}
+        variant={ButtonVariant.OUTLINE}
         size={ButtonSize.SMALL}
         text={'Пройти опитування'}
       ></Button>
@@ -169,7 +174,8 @@ const CardRoles: React.FC<{ roles: string[]; disabled?: boolean }> = ({
           case 'лаборант':
             return (
               <Tag
-                state={TagState.SMALL}
+                color={TagColor.MINT}
+                size={TagSize.SMALL}
                 text="Лаборант"
                 className={disabled ? 'gray-third' : 'mint-first'}
                 key={Math.random()}
@@ -178,7 +184,8 @@ const CardRoles: React.FC<{ roles: string[]; disabled?: boolean }> = ({
           case 'лектор':
             return (
               <Tag
-                state={TagState.SMALL}
+                color={TagColor.VIOLET}
+                size={TagSize.SMALL}
                 text="Лектор"
                 className={disabled ? 'gray-third' : 'violet-first'}
                 key={Math.random()}
@@ -187,7 +194,8 @@ const CardRoles: React.FC<{ roles: string[]; disabled?: boolean }> = ({
           case 'практик':
             return (
               <Tag
-                state={TagState.SMALL}
+                color={TagColor.ORANGE}
+                size={TagSize.SMALL}
                 text="Практик"
                 className={disabled ? 'gray-third' : 'orange-first'}
                 key={Math.random()}

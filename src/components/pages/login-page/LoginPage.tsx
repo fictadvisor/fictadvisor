@@ -1,19 +1,11 @@
 import { ArrowLeftIcon, HeartIcon } from '@heroicons/react/24/outline';
 
+import { DividerTextPosition } from '@/components/common/ui/divider/Divider';
+
 import PageLayout from '../../common/layout/page-layout/PageLayout';
-import Button from '../../common/ui/button';
-import {
-  ButtonIconPosition,
-  ButtonSize,
-  ButtonType,
-} from '../../common/ui/button/Button';
-import Check, { CheckState } from '../../common/ui/check/Check';
+import Button, { ButtonColor, ButtonVariant } from '../../common/ui/button';
+import { ButtonSize } from '../../common/ui/button/Button';
 import Divider from '../../common/ui/divider';
-import Input, {
-  InputSize,
-  InputState,
-  InputType,
-} from '../../common/ui/input/Input';
 import CustomLink from '../../common/ui/link';
 
 import styles from './LoginPage.module.scss';
@@ -37,9 +29,9 @@ const LoginPage = () => (
             <div className={styles['login-button-container']}>
               <Button
                 text="Зарeєструватися"
-                isDisabled={false}
                 size={ButtonSize.MEDIUM}
-                type={ButtonType.PRIMARY_RED}
+                variant={ButtonVariant.FILLED}
+                color={ButtonColor.PRIMARY}
               />
             </div>
           </div>
@@ -51,51 +43,31 @@ const LoginPage = () => (
           <div className={styles['right-block__content']}>
             <h3 className={styles['register-header']}>З поверненням!</h3>
             <Button
-              icon={<HeartIcon className="icon" />}
-              iconPosition={ButtonIconPosition.LEFT}
+              startIcon={<HeartIcon className="icon" />}
               text="Увійти за допомогою Telegram"
-              isDisabled={false}
               size={ButtonSize.LARGE}
-              type={ButtonType.PRIMARY_RED}
+              variant={ButtonVariant.FILLED}
+              color={ButtonColor.PRIMARY}
             />
-            <Divider text="або" className={styles['login-divider']} />
-            <Input
-              className={styles['login-input']}
-              label={'Пошта або юзернейм'}
-              placeholder={'placeholder'}
-              state={InputState.DEFAULT}
-              size={InputSize.LARGE}
-              type={InputType.DEFAULT}
-            />
-            <Input
-              label={'Пароль'}
-              placeholder={'placeholder'}
-              state={InputState.DEFAULT}
-              size={InputSize.LARGE}
-              type={InputType.HIDDABLE}
-              defaultRemark="Пароль повинен місити 8 символів та обов’язкові знаки"
-            />
+            <Divider text="або" textPosition={DividerTextPosition.CENTER} />
             <div className={styles['one-line']}>
               <div className={styles['checkbox-container']}>
-                <Check state={CheckState.DEFAULT} />
                 <p className="body-primary">Запам’ятати дані</p>
               </div>
               <CustomLink text="Забув пароль?" href={'#'} />
             </div>
             <Button
               text="Увійти"
-              isDisabled={true}
               size={ButtonSize.LARGE}
-              type={ButtonType.PRIMARY_RED}
+              variant={ButtonVariant.FILLED}
+              color={ButtonColor.PRIMARY}
             />
             <div className={styles['placeholder']}></div>
             <Button
-              icon={<ArrowLeftIcon className="icon" />}
-              iconPosition={ButtonIconPosition.LEFT}
+              startIcon={<ArrowLeftIcon className="icon" />}
               text="Повернутись до головної"
-              isDisabled={false}
               size={ButtonSize.MEDIUM}
-              type={ButtonType.TERTIARY}
+              variant={ButtonVariant.TEXT}
             />
           </div>
         </div>

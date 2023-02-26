@@ -1,59 +1,97 @@
 @import "button-style";
+@import "src/styles/partials/theme";
 
-.secondary-red-button-color{
-  outline: 2px solid #D33D3D;
-  color: #FAFAFA;
+.secondary-filled-button-variant{
+  background: $background-dark-10;
+  color: $gray-600;
+  outline: $background-dark-10 2px transparent;
+
 
   &:hover {
-    background: #402626;
+    background: $background-dark-35;
+    outline-color: $background-dark-35;
+  }
+
+  &:focus:not(:active) {
+    background: $background-dark-10;
+    outline: 2px solid;
+    outline-color: $background-dark-50;
   }
 
   &:active {
-    background: #873030;
-    outline: 2px solid #FD4444;
-  }
-
-  &:focus {
-    background: #5F3333;
+    background: $background-dark-50;
   }
 
   &:disabled {
-    outline: 2px solid #737373;
-    color: #737373;
+    background: none;
+    outline: none;
+    color: $background-dark-50;
+    cursor: not-allowed;
   }
 }
 
-.secondary-grey-button-color{
-  outline: 2px solid #747474;
-  color: #FAFAFA;
+.secondary-outline-button-variant{
+  outline: 2px solid $background-dark-200;
+  color: $gray-600;
 
   &:hover {
-    background: #292929;
+    background: $background-dark-10;
+  }
+
+  &:focus:not(:active) {
+    background: $background-dark-10;
+    outline: 2px solid $gray-300;
   }
 
   &:active {
-    background: #343434;
-    outline: 2px solid #A3A3A3;
-  }
-
-  &:focus {
-    background: #292929;
-    outline: 2px solid #A3A3A3;
+    background: $background-dark-35;
+    outline: 2px solid $gray-300;
   }
 
   &:disabled {
-    background: #1E1E1E;
-    color: #404040;
+    outline: none;
+    background: none;
+    color: $background-dark-50;
+    cursor: not-allowed;
+  }
+}
+.secondary-text-button-variant{
+  background: none;
+  color: $gray-400;
+  outline: transparent;
+  border-radius: 2px !important;
+
+  &:hover {
+    text-decoration: underline;
+    outline: transparent;
+  }
+
+  &:focus:not(:active) {
+    outline: 0.5px solid $gray-500;
+    color: $gray-600;
+  }
+
+  &:active {
+    text-decoration: underline;
+    outline: transparent;
+    color: $gray-600;
+  }
+
+  &:disabled {
+    outline: 2px transparent;
+    color: $gray-100;
+    text-decoration: none;
+    cursor: not-allowed;
   }
 }
 
-@include button-style("secondary-large", 8px, 16px 32px, 16px 32px, 12px);
+@include button-style("secondary-large", 8px, 16px 32px, 16px 32px, 12px, 5px);
 @include button-text("secondary-large", 18px, 1.32, 700);
 
-@include button-style("secondary-medium", 8px, 12px 24px, 12px 24px, 12px);
+@include button-style("secondary-medium", 8px, 12px 24px, 12px 24px, 12px, 4px);
 @include button-text("secondary-medium", 18px, 1.32, 700);
 
-@include button-style("secondary-small", 6px, 8px 12px, 6px 12px, 12px);
+@include button-style("secondary-small", 6px, 8px 12px, 6px 12px, 12px, 4px);
 @include button-text("secondary-small", 14px, 1.4, 700);
 
 
