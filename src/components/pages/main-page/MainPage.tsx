@@ -1,7 +1,6 @@
-import ImageNohover from 'public/assets/main-page/ImageNohover';
 import React, { useCallback, useEffect } from 'react';
+import ImageNohover from 'public/assets/main-page/ImageNohover';
 
-import { BuildImage } from '../../../../public/assets/main-page/BuildImage';
 import PageLayout from '../../common/layout/page-layout/PageLayout';
 import Button from '../../common/ui/button';
 import { ButtonColor, ButtonSize, ButtonVariant } from '../../common/ui/button';
@@ -21,7 +20,7 @@ const MainPage = () => {
   // }, [loadData]);
 
   return (
-    <PageLayout description={'Головна сторінка'} hasFo>
+    <PageLayout description={'Головна сторінка'} hasFooter={true}>
       <div className={styles['main-page']}>
         <div className={styles['nav']}>navbar</div>
         <div className={styles['main-page-content']}>
@@ -74,7 +73,6 @@ const MainPage = () => {
                     variant={ButtonVariant.FILLED}
                     size={ButtonSize.SMALL}
                   />
-                  <hr className={styles['button-divider']} />
                   <Button
                     text={'Опитування 2022'}
                     disabled={false}
@@ -103,7 +101,6 @@ const MainPage = () => {
             </div>
           </div>
         </div>
-        <div className={styles['footer']}>footer</div>
       </div>
     </PageLayout>
   );
