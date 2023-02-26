@@ -7,11 +7,12 @@ import { RoleController } from './role/RoleController';
 import { GrantService } from './grant/GrantService';
 import { AuthModule } from '../auth/AuthModule';
 import { AccessModule } from '../../security/AccessModule';
+import { GroupModule } from '../group/GroupModule';
 
 @Module({
   controllers: [UserController, RoleController],
   providers: [UserService, RoleService, GrantService],
   exports: [UserService, RoleService, GrantService],
-  imports: [ConfigurationModule, AccessModule, forwardRef(() => AuthModule)],
+  imports: [ConfigurationModule, forwardRef(() => GroupModule), AccessModule, forwardRef(() => AuthModule)],
 })
 export class UserModule {}
