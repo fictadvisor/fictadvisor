@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 import { validationOptionsMsg } from '../../../utils/GLOBALS';
 
 export class TelegramDTO {
@@ -14,7 +14,7 @@ export class TelegramDTO {
   @IsNumber()
     id: number;
 
-  @IsNotEmpty(validationOptionsMsg('last_name can not be empty'))
+  @IsOptional()
     last_name: string;
 
   @IsNotEmpty(validationOptionsMsg('photo_url can not be empty'))
