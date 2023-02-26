@@ -126,10 +126,10 @@ export class GroupRepository {
 
   async addRole (roleId: string, groupId: string) {
     return this.prisma.groupRole.create({
-      data : {
+      data: {
         roleId: roleId,
-        groupId: groupId
-      }
+        groupId: groupId,
+      },
     });
   }
   
@@ -176,6 +176,16 @@ export class GroupRepository {
       select: {
         id: true,
         code: true,
+      },
+    });
+  }
+
+  async deleteRoles (groupId: string) {
+    return this.prisma.role.deleteMany({
+      where: {
+        groupRole: {
+          groupId,
+        },
       },
     });
   }

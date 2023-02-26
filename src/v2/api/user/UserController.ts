@@ -27,11 +27,13 @@ export class UserController {
 
   @UseGuards(TelegramGuard)
   @Patch('/:userId/verifyStudent')
-  verify (
+  async verify (
     @Param('userId', UserByIdPipe) userId: string,
     @Body() body: ApproveStudentByTelegramDTO,
   ) {
-    if (body.state === State.APPROVED) this.userService.addStudentRole(userId, body.isCaptain);
+    if (body.state === State.APPROVED) {
+      await this.userService.addGroupRole(userId, body.isCaptain);
+    }
     return this.userService.updateStudent(userId, body);
   }
 

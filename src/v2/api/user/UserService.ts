@@ -31,6 +31,7 @@ export class UserService {
     private contactRepository: ContactRepository,
     @Inject(forwardRef(() => AuthService))
     private authService: AuthService,
+    @Inject(forwardRef(() => GroupService))
     private groupService: GroupService,
   ) {
   }
@@ -149,10 +150,10 @@ export class UserService {
     };
   }
 
-  async addStudentRole(userId: string, isCaptain: boolean) {
-    let roleName = isCaptain ? RoleName.CAPTAIN : RoleName.STUDENT;
-    let { group } = await this.getUser(userId);
-    this.groupService.addVerifiedRole(group.id, userId, roleName);
+  async addGroupRole (userId: string, isCaptain: boolean) {
+    const roleName = isCaptain ? RoleName.CAPTAIN : RoleName.STUDENT;
+    const { group } = await this.studentRepository.get(userId);
+    await this.groupService.addGroupRole(group.id, userId, roleName);
   }
 
   async getUser (userId: string) {

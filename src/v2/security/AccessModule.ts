@@ -12,7 +12,7 @@ import { PrismaModule } from '../database/PrismaModule';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigurationModule } from '../config/ConfigModule';
 import { SecurityConfigService } from '../config/SecurityConfigService';
-import { JwtModule, JwtService } from '@nestjs/jwt';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   providers: [
@@ -24,7 +24,6 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
     GroupByTemporaryLessonGuard,
     JwtStrategy,
     TelegramGuard,
-    JwtService,
   ],
   exports: [
     PermissionGuard, 
@@ -35,7 +34,7 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
     GroupByTemporaryLessonGuard,
     JwtStrategy,
     TelegramGuard,
-    JwtService,
+    JwtModule,
   ],
   imports: [
     forwardRef(() => UserModule),

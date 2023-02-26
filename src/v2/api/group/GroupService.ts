@@ -15,32 +15,31 @@ import { UpdateGroupDTO } from './dto/UpdateGroupDTO';
 import { UserService } from '../user/UserService';
 import { DisciplineTeacherService } from '../teacher/DisciplineTeacherService';
 import { RoleRepository } from '../user/role/RoleRepository';
-import { CreateGrantInRoleData } from '../user/dto/CreateRoleDTO';
 
 const ROLE_LIST = [
   {
     name: RoleName.CAPTAIN,
     weight: 100,
     grants: {
-      'groups.$groupId.*' : true
+      'groups.$groupId.*': true,
     },
   },
   {
     name: RoleName.MODERATOR,
     weight: 75,
     grants: {
-      'groups.$groupId.admin.switch' : false,
-      'groups.$groupId.*' : true
+      'groups.$groupId.admin.switch': false,
+      'groups.$groupId.*': true,
     },
   }, 
   {
     name: RoleName.STUDENT,
     weight: 50,
     grants: {
-      'groups.$groupId.admin.switch' : false,
-      'groups.$groupId.students.get' : true,
-      'groups.$groupId.students.*' : false,
-      'groups.$groupId.*' : true
+      'groups.$groupId.admin.switch': false,
+      'groups.$groupId.students.get': true,
+      'groups.$groupId.students.*': false,
+      'groups.$groupId.*': true,
     },
   },
 ];
@@ -60,8 +59,8 @@ export class GroupService {
   ) {}
 
   async create (code: string): Promise<Group>  {
-    let group = await this.groupRepository.create(code);
-    this.addPermissions(group.id);
+    const group = await this.groupRepository.create(code);
+    await this.addPermissions(group.id);
     return group;
   }
 
@@ -116,25 +115,23 @@ export class GroupService {
 
     const verifiedStudent = await this.studentRepository.update(user.id, data);
 
-    if (data.state === State.APPROVED) this.addVerifiedRole(groupId, userId, RoleName.STUDENT);
+    if (data.state === State.APPROVED) {
+      await this.addGroupRole(groupId, userId, RoleName.STUDENT);
+    }
 
     return this.userService.getStudent(verifiedStudent);
   }
 
-  async addVerifiedRole(groupId: string, userId: string, roleName: RoleName) {
+  async addGroupRole (groupId: string, userId: string, name: RoleName) {
     const groupRoles = await this.groupRepository.getRoles(groupId);
-    for (const role of groupRoles) {
-      if (role.name === roleName){
-        await this.studentRepository.addRole(userId, role.id);
-        break;
-      }
-    }
+    const role = groupRoles.find((r) => r.name === name);
+    await this.studentRepository.addRole(userId, role.id);
   }
 
-  async moderatorSwitch (groupId: string, userId: string, body: RoleDTO) {
+  async moderatorSwitch (groupId: string, userId: string, { roleName }: RoleDTO) {
     const user = await this.userRepository.get(userId);
 
-    if (body.roleName !== RoleName.MODERATOR && body.roleName === RoleName.STUDENT) {
+    if (roleName !== RoleName.MODERATOR && roleName === RoleName.STUDENT) {
       throw new NoPermissionException();
     }
     if (user.student.groupId !== groupId) {
@@ -142,7 +139,7 @@ export class GroupService {
     }
 
     const roles = await this.groupRepository.getRoles(groupId);
-    const role = roles.find((r) => r.name === body.roleName);
+    const role = roles.find((r) => r.name === roleName);
     const userRole = await this.userService.getGroupRoleDB(userId);
 
     await this.studentRepository.removeRole(userId, userRole.id);
@@ -160,6 +157,7 @@ export class GroupService {
       throw new NoPermissionException();
     }
 
+    await this.studentRepository.removeRole(userId, userRole.id);
     await this.studentRepository.update(userId, { state: State.DECLINED });
   }
 
@@ -178,6 +176,7 @@ export class GroupService {
   }
 
   async deleteGroup (groupId: string) {
+    await this.groupRepository.deleteRoles(groupId);
     await this.groupRepository.delete(groupId);
   }
 
@@ -203,15 +202,15 @@ export class GroupService {
   }
 
   async addPermissions (groupId: string) {
-    for (const {grants, ...roles} of ROLE_LIST) {
-      const grantList: CreateGrantInRoleData[] = Object.entries(grants).map(
-          ([permission, set]) => ({permission, set})
-      );
-      const { id: roleId } = await this.roleRepository.createWithGrants(
-        roles, 
-        grantList
-      );
-      this.groupRepository.addRole(roleId, groupId);
+    for (const { grants, ...roles } of ROLE_LIST) {
+
+      const grantList = Object.entries(grants).map(([permission, set]) => ({
+        permission: permission.replace('$groupId', groupId),
+        set,
+      }));
+
+      const role = await this.roleRepository.createWithGrants(roles, grantList);
+      await this.groupRepository.addRole(role.id, groupId);
     }
   }
 }
