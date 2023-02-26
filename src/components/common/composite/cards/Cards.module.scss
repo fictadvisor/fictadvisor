@@ -99,9 +99,15 @@
 }
 
 .card-disabled{
+    .card-avatar{
+        border-color:#4b4b4b;
+    }
     border-color: transparent;
     background-color: $background-dark-100;
     pointer-events: none;
+    *{
+        color: #a3a3a3 !important;
+    }
 }
 
 .lecturer-description {
@@ -160,6 +166,42 @@
 }
 
 .poll-card-container {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #404040;
+    background-color: $background-dark-0;
+    border-radius: 0;
+    padding: 32px 16px;
+    cursor: pointer;
+    & p{
+        color: #A3A3A3;
+    }
+    &:hover,&:active{
+        border-radius: 6px;
+        border: transparent 1px solid;
+    }
+    &:hover{
+        background:#402626;
+    }
+    &:active{
+        background:#873030;
+    }
+    
+}
+
+.poll-card-container-disabled{
+    *{
+        color:#525252 !important;
+    }
+    pointer-events: none !important;
+    & svg{
+        display: none;
+    }
+}
+
+.lecturer-poll-card-container{
     margin-top: 3rem;
     display: flex;
     flex-flow: column nowrap;
@@ -170,7 +212,7 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    padding: 16px;
+    padding:16px;
     margin-top: 3rem;
     height: fit-content;
     background-color: $background-dark-35;
@@ -182,12 +224,24 @@
    gap: 8px;
 
     & .simple-card-name {
-        
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 700;
-        display: -webkit-box;
-        overflow: hidden;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 3;
     }
+}
+
+.mobile-rating{
+    justify-content: flex-end;
+    align-items: center;
+    display: none;
+}
+.desktop-rating{
+    display: block;
+}
+@media only screen and (max-width: 768px) {
+    .mobile-rating{
+        display: flex;
+    }   
+    .desktop-rating{
+        display: none !important;
+    }     
 }

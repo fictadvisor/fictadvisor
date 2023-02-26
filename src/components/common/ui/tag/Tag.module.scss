@@ -11,8 +11,7 @@ $theme-color:$background-dark-0;
     }
     .#{$color}-outline-background-color{
         background: $theme-color;
-        border: 1px solid $outline;
-        border-radius: 6px;
+        border: 1px solid $outline;        border-radius: 6px;
     }
  }
 
