@@ -180,7 +180,7 @@ export class GroupService {
       .filter((st) => st.state === State.APPROVED)
       .map((s) => ({
         ...this.userService.getStudent(s),
-        role: this.userService.getGroupRole(s.roles),
+        role: this.userService.getGroupRole(s.roles).name,
       }));
   }
 
