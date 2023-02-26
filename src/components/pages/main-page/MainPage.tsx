@@ -1,3 +1,4 @@
+import ImageNohover from 'public/assets/main-page/ImageNohover';
 import React, { useCallback, useEffect } from 'react';
 
 import { BuildImage } from '../../../../public/assets/main-page/BuildImage';
@@ -20,7 +21,7 @@ const MainPage = () => {
   // }, [loadData]);
 
   return (
-    <PageLayout description={'Головна сторінка'}>
+    <PageLayout description={'Головна сторінка'} hasFo>
       <div className={styles['main-page']}>
         <div className={styles['nav']}>navbar</div>
         <div className={styles['main-page-content']}>
@@ -84,7 +85,7 @@ const MainPage = () => {
               </div>
             </div>
             <div className={styles['build-image']}>
-              <BuildImage />
+              <ImageNohover />
             </div>
           </div>
           <div className={styles['resources']}>
