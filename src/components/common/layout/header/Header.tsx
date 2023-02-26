@@ -22,6 +22,9 @@ import Divider from '../../ui/divider/Divider';
 import { TabItem, TabItemContentPosition } from '../../ui/tab';
 import { TabItemContentSize } from '../../ui/tab/tab-item/TabItem';
 
+import HeaderDivider from './components/header-divider/HeaderDivider';
+import { HeaderMobileCard } from './components/mobile-card/HeaderMobileCard';
+
 import styles from './Header.module.scss';
 
 interface HeaderProps {
@@ -67,70 +70,72 @@ const Header: React.FC<HeaderProps> = ({
             ></Button>
           </div>
         </div>
-        <div>
-          <HeaderCard
-            name={name}
-            groupName={groupName}
-            position={position}
-          ></HeaderCard>
-        </div>
-        <div className={styles['account-buttons']}>
-          <TabItem
-            className=""
-            text="Загальне"
-            position={TabItemContentPosition.LEFT}
-            icon={<AcademicCapIcon />}
-            size={TabItemContentSize.SMAll}
-          />
-          <TabItem
-            className=""
-            text="Безпека"
-            position={TabItemContentPosition.LEFT}
-            icon={<LockClosedIcon />}
-            size={TabItemContentSize.SMAll}
-          />
-          <TabItem
-            className=""
-            text="Група"
-            position={TabItemContentPosition.LEFT}
-            icon={<UsersIcon />}
-            size={TabItemContentSize.SMAll}
-          />
-        </div>
+        <div className={styles['drop']}>
+          <div>
+            <HeaderMobileCard
+              name={name}
+              groupName={groupName}
+              position={position}
+            ></HeaderMobileCard>
+          </div>
+          <div className={styles['account-buttons']}>
+            <TabItem
+              className=""
+              text="Загальне"
+              position={TabItemContentPosition.LEFT}
+              icon={<AcademicCapIcon />}
+              size={TabItemContentSize.SMAll}
+            />
+            <TabItem
+              className=""
+              text="Безпека"
+              position={TabItemContentPosition.LEFT}
+              icon={<LockClosedIcon />}
+              size={TabItemContentSize.SMAll}
+            />
+            <TabItem
+              className=""
+              text="Група"
+              position={TabItemContentPosition.LEFT}
+              icon={<UsersIcon />}
+              size={TabItemContentSize.SMAll}
+            />
+          </div>
 
-        <div style={{ width: '100%', marginTop: '-35px' }}>
-          <Divider></Divider>
-        </div>
+          <div style={{ width: '100%', marginTop: '-35px' }}>
+            <HeaderDivider></HeaderDivider>
+          </div>
 
-        <div className={styles['mobile-menu']}>
-          <TabItem
-            className=""
-            text="Головна"
-            position={TabItemContentPosition.LEFT}
-            icon={<HomeIcon />}
-            size={TabItemContentSize.SMAll}
-          />
-          <TabItem
-            className=""
-            text="Опитування"
-            position={TabItemContentPosition.LEFT}
-            icon={<ClipboardIcon />}
-            size={TabItemContentSize.SMAll}
-          />
-          <TabItem
-            className=""
-            text="Викладачі"
-            position={TabItemContentPosition.LEFT}
-            icon={<BriefcaseIcon />}
-            size={TabItemContentSize.SMAll}
-          />
-          <TabItem
-            className=""
-            text="Предмети"
-            position={TabItemContentPosition.LEFT}
-            icon={<AcademicCapIcon />}
-            size={TabItemContentSize.SMAll}
-          />
+          <div className={styles['mobile-menu']}>
+            <TabItem
+              className=""
+              text="Головна"
+              position={TabItemContentPosition.LEFT}
+              icon={<HomeIcon />}
+              size={TabItemContentSize.SMAll}
+            />
+            <TabItem
+              className=""
+              text="Опитування"
+              position={TabItemContentPosition.LEFT}
+              icon={<ClipboardIcon />}
+              size={TabItemContentSize.SMAll}
+            />
+            <TabItem
+              className=""
+              text="Викладачі"
+              position={TabItemContentPosition.LEFT}
+              icon={<BriefcaseIcon />}
+              size={TabItemContentSize.SMAll}
+            />
+            <TabItem
+              className=""
+              text="Предмети"
+              position={TabItemContentPosition.LEFT}
+              icon={<AcademicCapIcon />}
+              size={TabItemContentSize.SMAll}
+            />
+          </div>
         </div>
       </div>
     ) : (

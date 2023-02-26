@@ -10,7 +10,7 @@
     height: 56px;
     background-color: rgba(23, 23, 23, 1);
     backdrop-filter: blur(8px);
-    
+
 }
 
 .menu {
@@ -20,13 +20,27 @@
     gap: 28px;
 }
 
-.mobile-menu, .account-buttons {
+.mobile-menu,
+.account-buttons {
     display: flex;
     flex-direction: column;
     margin-left: 16px;
     margin-right: 16px;
     gap: 8px;
-    
+
+}
+
+.drop {
+    display: flex;
+    height: fit-content;
+    width: 100%;
+    position: absolute;
+    margin-top: 56px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    background: #1e1e1e;
+    gap: 16px;
+    flex-direction: column;
 }
 
 .login-buttons {
@@ -41,6 +55,7 @@
 
 .header-logo {
     @include flex-center;
+
     & img {
         width: 197px;
         height: 20px;
