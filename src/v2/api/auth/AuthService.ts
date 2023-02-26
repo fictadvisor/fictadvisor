@@ -369,6 +369,10 @@ export class AuthService {
     }
     if (telegramKey) this.registerTelegramTokens.delete(telegramKey);
     this.registerTelegramTokens.set(register.token, register.telegramId);
+
+    setTimeout(() => {
+      this.registerTelegramTokens.delete(register.token);
+    }, HOUR);
   }
 
   checkTelegram (token: string) {
