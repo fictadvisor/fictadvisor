@@ -24,12 +24,12 @@ const PasswordResetLinkExpiredPage = () => {
 
           <div className={styles['text-and-button']}>
             <h6>
-              Час зімни пароля вичерпано. Для повторної відправки листа, натисни
+              Час зміни пароля вичерпано. Для повторної відправки листа, натисни
               на кнопку.
             </h6>
             <div className={styles['button-wrap']}>
               <Button
-                text={'Надіслати лист повторно'}
+                text={'Надіслати лист'}
                 variant={ButtonVariant.FILLED}
                 size={ButtonSize.LARGE}
                 color={ButtonColor.PRIMARY}
