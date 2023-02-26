@@ -59,7 +59,7 @@ export class UserService {
 
   getGroupRole (roles: { role: Role }[]) {
     const groupRole = roles.find((r) => r.role.name === 'CAPTAIN' || r.role.name === 'MODERATOR' || r.role.name === 'STUDENT');
-    return groupRole.role;
+    return groupRole?.role;
   }
 
   async removeRole (id: string, roleId: string) {
@@ -122,7 +122,7 @@ export class UserService {
     await this.studentRepository.delete(userId);
   }
 
-  getStudent (student: StudentWithUserData) {
+  getStudent (student: StudentWithUserData, hasGroup = true) {
     return {
       id: student.user.id,
       username: student.user.username,
@@ -132,7 +132,10 @@ export class UserService {
       middleName: student.middleName,
       avatar: student.user.avatar,
       telegramId: student.user.telegramId,
-      group: student.group,
+      group: !hasGroup ? undefined : {
+        ...student.group,
+        role: this.getGroupRole(student.roles)?.name,
+      },
     };
   }
 
