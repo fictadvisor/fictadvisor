@@ -1,6 +1,24 @@
 @import "/src/styles/partials/theme";
 @import "/src/styles/partials/utils";
 
+@keyframes appear {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.wrapper {
+    display: flex;
+    gap: 16px;
+    flex-direction: column;
+    animation-name: appear;
+  animation-duration: 0.3s;
+}
+
 .header-container {
     display: flex;
     justify-content: space-around;
@@ -28,6 +46,10 @@
     margin-right: 16px;
     gap: 8px;
 
+}
+
+.mobile-button {
+    @include flex-center;
 }
 
 .drop {

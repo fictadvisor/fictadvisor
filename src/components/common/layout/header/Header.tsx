@@ -43,16 +43,12 @@ const Header: React.FC<HeaderProps> = ({
   const isMobile = useIsMobile(1101);
   const [clicked, setClicked] = useState(false);
   const handleClick = () => {
-    if (clicked) {
-      setClicked(false);
-    } else {
-      setClicked(true);
-    }
+    clicked ? setClicked(false) : setClicked(true);
   };
 
   if (isMobile && isLoggined) {
     return clicked ? (
-      <div style={{ display: 'flex', gap: '16px', flexDirection: 'column' }}>
+      <div className={styles['wrapper']}>
         <div
           className={styles['header-container']}
           style={{ position: 'relative', backgroundColor: '#1E1E1E' }}
@@ -158,7 +154,7 @@ const Header: React.FC<HeaderProps> = ({
 
   if (isMobile && !isLoggined) {
     return clicked ? (
-      <div style={{ display: 'flex', gap: '16px', flexDirection: 'column' }}>
+      <div className={styles['wrapper']}>
         <div
           className={styles['header-container']}
           style={{ position: 'relative', backgroundColor: '#1E1E1E' }}
@@ -176,54 +172,56 @@ const Header: React.FC<HeaderProps> = ({
             ></Button>
           </div>
         </div>
-        <div className={styles['login-buttons']}>
-          <div className={styles['first-button']} style={{ width: '192px' }}>
-            <Button
-              text="Зареєструватись"
-              size={ButtonSize.SMALL}
-              variant={ButtonVariant.OUTLINE}
+        <div className={styles['drop']}>
+          <div className={styles['login-buttons']}>
+            <div className={styles['first-button']} style={{ width: '192px' }}>
+              <Button
+                text="Зареєструватись"
+                size={ButtonSize.SMALL}
+                variant={ButtonVariant.OUTLINE}
+              />
+            </div>
+            <div className={styles['second-button']} style={{ width: '120px' }}>
+              <Button
+                text="Увійти"
+                size={ButtonSize.SMALL}
+                variant={ButtonVariant.FILLED}
+              />
+            </div>
+          </div>
+          <div style={{ width: '100%', marginTop: '-35px' }}>
+            <Divider></Divider>
+          </div>
+          <div className={styles['mobile-menu']}>
+            <TabItem
+              className=""
+              text="Головна"
+              position={TabItemContentPosition.LEFT}
+              icon={<HomeIcon />}
+              size={TabItemContentSize.SMAll}
+            />
+            <TabItem
+              className=""
+              text="Опитування"
+              position={TabItemContentPosition.LEFT}
+              icon={<ClipboardIcon />}
+              size={TabItemContentSize.SMAll}
+            />
+            <TabItem
+              className=""
+              text="Викладачі"
+              position={TabItemContentPosition.LEFT}
+              icon={<BriefcaseIcon />}
+              size={TabItemContentSize.SMAll}
+            />
+            <TabItem
+              className=""
+              text="Предмети"
+              position={TabItemContentPosition.LEFT}
+              icon={<AcademicCapIcon />}
+              size={TabItemContentSize.SMAll}
             />
           </div>
-          <div className={styles['second-button']} style={{ width: '120px' }}>
-            <Button
-              text="Увійти"
-              size={ButtonSize.SMALL}
-              variant={ButtonVariant.FILLED}
-            />
-          </div>
-        </div>
-        <div style={{ width: '100%', marginTop: '-35px' }}>
-          <Divider></Divider>
-        </div>
-        <div className={styles['mobile-menu']}>
-          <TabItem
-            className=""
-            text="Головна"
-            position={TabItemContentPosition.LEFT}
-            icon={<HomeIcon />}
-            size={TabItemContentSize.SMAll}
-          />
-          <TabItem
-            className=""
-            text="Опитування"
-            position={TabItemContentPosition.LEFT}
-            icon={<ClipboardIcon />}
-            size={TabItemContentSize.SMAll}
-          />
-          <TabItem
-            className=""
-            text="Викладачі"
-            position={TabItemContentPosition.LEFT}
-            icon={<BriefcaseIcon />}
-            size={TabItemContentSize.SMAll}
-          />
-          <TabItem
-            className=""
-            text="Предмети"
-            position={TabItemContentPosition.LEFT}
-            icon={<AcademicCapIcon />}
-            size={TabItemContentSize.SMAll}
-          />
         </div>
       </div>
     ) : (
