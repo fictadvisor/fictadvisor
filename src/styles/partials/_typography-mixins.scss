@@ -17,7 +17,7 @@
 }
 
 @mixin h3--semi-bold {
-  @extend h3;
+  @include h3;
   font-weight: 600;
 }
 
@@ -28,12 +28,12 @@
 }
 
 @mixin h4--semi-bold {
-  @extend h4;
+  @include h4;
   font-weight: 600;
 }
 
 @mixin h4--bold {
-  @extend h4;
+  @include h4;
   font-weight: 700;
 }
 
@@ -50,12 +50,12 @@
 }
 
 @mixin h6--medium-bold {
-  @extend h6;
+  @include h6;
   font-weight: 500;
 }
 
 @mixin h6--bold {
-  @extend h6;
+  @include h6;
   font-weight: 700;
 }
 
@@ -66,7 +66,7 @@
 }
 
 @mixin body-primary--bold{
-  @extend .body-primary;
+  @include body-primary;
   font-weight: 700;
 }
 
@@ -77,7 +77,7 @@
 }
 
 @mixin body-secondary--bold{
-  @extend .body-secondary;
+  @include body-secondary;
   line-height: 1.38;
   font-weight: 700;
 }
