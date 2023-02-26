@@ -60,8 +60,10 @@
 }
 
 @media screen and (max-width: 480px){
+  .reset-password-valid-link-page{
+    min-height: 100vh;
+  }
   .registration-email-confirmation-page-content{
-    height: 100vh;
     min-height: unset;
     min-width: unset;
     justify-content: unset;
