@@ -92,7 +92,7 @@ export const LecturerPollCard: React.FC<LecturerPollCardProps> = ({
       </Tooltip>
 
       <Button
-        color={disabled ? ButtonColor.PRIMARY : ButtonColor.SECONDARY}
+        color={disabled ? ButtonColor.SECONDARY : ButtonColor.PRIMARY}
         variant={ButtonVariant.OUTLINE}
         size={ButtonSize.SMALL}
         text={'Пройти опитування'}
