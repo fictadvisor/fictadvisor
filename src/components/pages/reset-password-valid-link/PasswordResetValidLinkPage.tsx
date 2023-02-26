@@ -1,6 +1,6 @@
 import React from 'react';
-import { ShieldCheckIcon } from '@heroicons/react/24/outline';
 
+import { CustomShield } from '@/components/common/custom-svg/CustomShield';
 import PageLayout from '@/components/common/layout/page-layout';
 import Button, {
   ButtonColor,
@@ -16,7 +16,7 @@ const PasswordResetValidLinkPage = () => {
       <div className={styles['reset-password-valid-link-page']}>
         <div className={styles['reset-password-valid-link-page-content']}>
           <div className={styles['icon']}>
-            <ShieldCheckIcon />
+            <CustomShield />
           </div>
 
           <h3 className={styles['headline']}>Пароль змінено</h3>

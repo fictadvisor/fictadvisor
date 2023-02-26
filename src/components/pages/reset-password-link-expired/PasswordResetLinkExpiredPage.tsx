@@ -1,6 +1,7 @@
 import React from 'react';
-import { ChevronLeftIcon, ClockIcon } from '@heroicons/react/24/outline';
+import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 
+import { CustomClock } from '@/components/common/custom-svg/CustomClock';
 import PageLayout from '@/components/common/layout/page-layout';
 import Button, {
   ButtonColor,
@@ -16,7 +17,7 @@ const PasswordResetLinkExpiredPage = () => {
       <div className={styles['reset-password-link-expired-page']}>
         <div className={styles['reset-password-link-expired-page-content']}>
           <div className={styles['icon']}>
-            <ClockIcon />
+            <CustomClock />
           </div>
 
           <h3 className={styles['headline']}>Посилання більше не активне </h3>
@@ -28,7 +29,7 @@ const PasswordResetLinkExpiredPage = () => {
             </h6>
             <div className={styles['button-wrap']}>
               <Button
-                text={'Надіслати лист'}
+                text={'Надіслати лист повторно'}
                 variant={ButtonVariant.FILLED}
                 size={ButtonSize.LARGE}
                 color={ButtonColor.PRIMARY}

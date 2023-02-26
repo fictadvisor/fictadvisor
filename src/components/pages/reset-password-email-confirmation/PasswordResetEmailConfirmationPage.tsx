@@ -1,7 +1,8 @@
 import React from 'react';
-import { ChevronLeftIcon, EnvelopeOpenIcon } from '@heroicons/react/24/outline';
+import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/router';
 
+import { CustomEnvelopeOpen } from '@/components/common/custom-svg/CustomEnvelopeOpen';
 import PageLayout from '@/components/common/layout/page-layout';
 import Alert, { AlertColor, AlertVariant } from '@/components/common/ui/alert';
 import Button, {
@@ -26,7 +27,7 @@ const PasswordResetEmailConfirmationPage = () => {
           className={styles['reset-password-email-confirmation-page-content']}
         >
           <div className={styles['icon']}>
-            <EnvelopeOpenIcon />
+            <CustomEnvelopeOpen />
           </div>
 
           <h3 className={styles['headline']}>Перевір свою пошту</h3>
