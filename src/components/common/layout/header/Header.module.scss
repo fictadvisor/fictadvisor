@@ -16,7 +16,8 @@
     gap: 16px;
     flex-direction: column;
     animation-name: appear;
-  animation-duration: 0.3s;
+
+    animation-duration: 0.3s;
 }
 
 .header-container {
@@ -26,6 +27,8 @@
     position: relative;
     width: 100%;
     height: 56px;
+    padding-right: 6%;
+    padding-left: 6%;
     background-color: rgba(23, 23, 23, 1);
     backdrop-filter: blur(8px);
 
@@ -33,8 +36,9 @@
 
 .menu {
     @include flex-center;
+    width: 100%;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-evenly;
     gap: 28px;
 }
 
@@ -45,11 +49,6 @@
     margin-left: 16px;
     margin-right: 16px;
     gap: 8px;
-
-}
-
-.mobile-button {
-    @include flex-center;
 }
 
 .drop {
@@ -63,6 +62,7 @@
     background: #1e1e1e;
     gap: 16px;
     flex-direction: column;
+    box-shadow: 0px 24px 32px 0px rgba(23, 23, 23, 0.65);
 }
 
 .login-buttons {
@@ -86,7 +86,7 @@
 
 @media (max-width: 1101px) {
     .header-logo {
-        margin-left: 70px;
+        margin-left: 8%;
         flex-grow: 4;
     }
 }

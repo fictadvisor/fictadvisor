@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { SetStateAction, useState } from 'react';
 import {
   AcademicCapIcon,
   BriefcaseIcon,
@@ -18,7 +18,6 @@ import useIsMobile from '@/hooks/use-is-mobile/UseIsMobile';
 import { HeaderCard } from '../../composite/cards';
 import { BurgerMenu } from '../../custom-svg/BurgerMenu';
 import { XMark } from '../../custom-svg/XMark';
-import Divider from '../../ui/divider/Divider';
 import { TabItem, TabItemContentPosition } from '../../ui/tab';
 import { TabItemContentSize } from '../../ui/tab/tab-item/TabItem';
 
@@ -28,31 +27,30 @@ import { HeaderMobileCard } from './components/mobile-card/HeaderMobileCard';
 import styles from './Header.module.scss';
 
 interface HeaderProps {
-  name: string;
-  groupName: string;
-  position: string;
+  name?: string;
+  groupName?: string;
+  position?: string;
   isLoggined?: boolean;
+  closeFunction?: React.Dispatch<SetStateAction<boolean>>;
 }
 
 const Header: React.FC<HeaderProps> = ({
-  name,
-  groupName,
-  position,
+  name = 'Ярмоленко Єлизавета Миколаївна',
+  groupName = 'ІС-11',
+  position = 'Зам. ст',
   isLoggined = false,
+  closeFunction,
 }) => {
   const isMobile = useIsMobile(1101);
   const [clicked, setClicked] = useState(false);
   const handleClick = () => {
-    clicked ? setClicked(false) : setClicked(true);
+    setClicked(clicked => !clicked);
   };
 
   if (isMobile && isLoggined) {
     return clicked ? (
       <div className={styles['wrapper']}>
-        <div
-          className={styles['header-container']}
-          style={{ position: 'relative', backgroundColor: '#1E1E1E' }}
-        >
+        <div className={styles['header-container']}>
           <div className={styles['header-logo']}>
             <img src={`/assets/logo.png`} alt="logo" />
           </div>
@@ -190,7 +188,7 @@ const Header: React.FC<HeaderProps> = ({
             </div>
           </div>
           <div style={{ width: '100%', marginTop: '-35px' }}>
-            <Divider></Divider>
+            <HeaderDivider></HeaderDivider>
           </div>
           <div className={styles['mobile-menu']}>
             <TabItem
@@ -278,6 +276,13 @@ const Header: React.FC<HeaderProps> = ({
               variant={ButtonVariant.TEXT}
             />
           </Link>
+          {/* <Link href={{}}>
+            <Button
+              text="Розклад"
+              size={ButtonSize.MEDIUM}
+              variant={ButtonVariant.TEXT}
+            />
+          </Link> */}
         </div>
         {isLoggined ? (
           <div>
