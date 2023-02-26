@@ -92,6 +92,20 @@ const FormikPage = () => {
                 isSuccessOnDefault={true}
                 defaultRemark={'Dropdown Default remark'}
               />
+              <Dropdown
+                name="group"
+                options={groups}
+                label={'Група'}
+                isSuccessOnDefault={false}
+                defaultRemark={'Dropdown Default remark'}
+              />
+              <Dropdown
+                name="group"
+                options={groups}
+                label={'Група'}
+                isDisabled={true}
+                defaultRemark={'Dropdown Default remark'}
+              />
               <TextArea name="review" defaultRemark={'Text area remark'} />
               <Checkbox name="isCaptain" label="Староста групи" />
               <Switch

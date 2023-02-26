@@ -98,7 +98,10 @@ const Dropdown: React.FC<DropdownProps> = ({
           placeholder: state =>
             state.isDisabled
               ? styles['dropdown-placeholder-disabled']
+              : state.isFocused
+              ? styles['dropdown-placeholder-disabled']
               : styles['dropdown-placeholder'],
+
           singleValue: () => styles['dropdown-single-value'],
         }}
         styles={{

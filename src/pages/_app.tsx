@@ -1,7 +1,9 @@
+import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Provider } from 'react-redux';
 import { AppProps } from 'next/app';
 
+import AuthenticationProvider from '@/hooks/use-authentication/authentication-context';
 import { store } from '@/redux';
 
 import '@/styles/reset.scss';
@@ -13,7 +15,9 @@ const queryClient = new QueryClient();
 const Application = ({ Component, pageProps }: AppProps) => (
   <Provider store={store}>
     <QueryClientProvider client={queryClient}>
-      <Component {...pageProps} />
+      <AuthenticationProvider>
+        <Component {...pageProps} />
+      </AuthenticationProvider>
     </QueryClientProvider>
   </Provider>
 );

@@ -1,5 +1,5 @@
 export type registerBody = {
-  student?: {
+  student: {
     groupId: string;
     firstName: string;
     middleName: string;

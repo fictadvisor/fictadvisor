@@ -4,18 +4,17 @@
 .secondary-filled-button-variant{
   background: $background-dark-10;
   color: $gray-600;
-  outline: $background-dark-10 2px transparent;
+  border: 2px solid $background-dark-10;
 
 
   &:hover {
     background: $background-dark-35;
-    outline-color: $background-dark-35;
+    border-color: $background-dark-35;
   }
 
   &:focus:not(:active) {
     background: $background-dark-10;
-    outline: 2px solid;
-    outline-color: $background-dark-50;
+    border: 2px solid $background-dark-50;
   }
 
   &:active {
@@ -24,14 +23,14 @@
 
   &:disabled {
     background: none;
-    outline: none;
+    border: none;
     color: $background-dark-50;
     cursor: not-allowed;
   }
 }
 
 .secondary-outline-button-variant{
-  outline: 2px solid $background-dark-200;
+  border: 2px solid $background-dark-200;
   color: $gray-600;
 
   &:hover {
@@ -40,16 +39,16 @@
 
   &:focus:not(:active) {
     background: $background-dark-10;
-    outline: 2px solid $gray-300;
+    border: 2px solid $gray-300;
   }
 
   &:active {
     background: $background-dark-35;
-    outline: 2px solid $gray-300;
+    border: 2px solid $gray-300;
   }
 
   &:disabled {
-    outline: none;
+    border: none;
     background: none;
     color: $background-dark-50;
     cursor: not-allowed;
@@ -58,27 +57,27 @@
 .secondary-text-button-variant{
   background: none;
   color: $gray-400;
-  outline: transparent;
+  border: transparent;
   border-radius: 2px !important;
 
   &:hover {
     text-decoration: underline;
-    outline: transparent;
+    border: transparent;
   }
 
   &:focus:not(:active) {
-    outline: 0.5px solid $gray-500;
+    border: 0.5px solid $gray-500;
     color: $gray-600;
   }
 
   &:active {
     text-decoration: underline;
-    outline: transparent;
+    border: transparent;
     color: $gray-600;
   }
 
   &:disabled {
-    outline: 2px transparent;
+    border: 2px transparent;
     color: $gray-100;
     text-decoration: none;
     cursor: not-allowed;

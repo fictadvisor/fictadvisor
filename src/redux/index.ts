@@ -1,10 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import ExampleReducer from '@/redux/reducers/example.reducer';
+import GroupReducer from '@/redux/reducers/group-reducer/group.reducer';
 
 export const store = configureStore({
   reducer: {
-    example: ExampleReducer,
+    groups: GroupReducer,
   },
 });
 
