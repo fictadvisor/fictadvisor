@@ -14,6 +14,7 @@ import { ContactByUserIdPipe } from './ContactByUserIdPipe';
 import { GroupRequestDTO } from './dto/GroupRequestDTO';
 import { Access } from 'src/v2/security/Access';
 import { State } from '@prisma/client';
+import { TelegramDTO } from '../auth/dto/TelegramDTO';
 
 @Controller({
   version: '2',
@@ -165,6 +166,15 @@ export class UserController {
     @Param('userId', UserByIdPipe) userId: string,
   ) {
     return this.userService.getUser(userId);
+  }
+
+  @Access('users.$userId.telegram.link')
+  @Post('/:userId/telegram')
+  linkTelegram (
+    @Param('userId', UserByIdPipe) userId: string,
+    @Body() telegram: TelegramDTO,
+  ) {
+    return this.userService.linkTelegram(userId, telegram);
   }
 
   @Access('users.$userId.get')

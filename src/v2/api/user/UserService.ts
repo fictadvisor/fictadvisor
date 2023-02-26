@@ -15,6 +15,8 @@ import { StudentWithUserData } from './data/StudentDTOs';
 import { AuthService } from '../auth/AuthService';
 import { GroupRequestDTO } from './dto/GroupRequestDTO';
 import { GroupService } from '../group/GroupService';
+import { TelegramDTO } from '../auth/dto/TelegramDTO';
+import { InvalidTelegramCredentialsException } from '../../utils/exceptions/InvalidTelegramCredentialsException';
 
 @Injectable()
 export class UserService {
@@ -143,5 +145,14 @@ export class UserService {
     const student = await this.studentRepository.get(userId);
 
     return this.getStudent(student);
+  }
+
+
+  async linkTelegram (userId, telegram: TelegramDTO) {
+    if (!this.authService.isExchangeValid(telegram)) {
+      throw new InvalidTelegramCredentialsException();
+    }
+
+    await this.userRepository.update(userId, { telegramId: telegram.id });
   }
 }
