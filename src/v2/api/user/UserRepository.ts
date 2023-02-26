@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import { CreateUserData } from './dto/CreateUserData';
+import { CreateUserData } from './data/CreateUserData';
 import { UniqueUserDTO } from './dto/UniqueUserDTO';
 import { DatabaseUtils } from '../utils/DatabaseUtils';
-import { UpdateUserData } from './dto/UpdateUserData';
+import { UpdateUserData } from './data/UpdateUserData';
 
 @Injectable()
 export class UserRepository {

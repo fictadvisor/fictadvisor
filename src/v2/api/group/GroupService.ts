@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../database/PrismaService';
 import { Group, Role, RoleName, State, User } from '@prisma/client';
 import { DisciplineService } from '../discipline/DisciplineService';
-import { DisciplineRepository } from '../discipline/DisciplineRepository';
 import { GroupRepository } from './GroupRepository';
 import { StudentRepository } from '../user/StudentRepository';
 import { QueryAllDTO } from '../../utils/QueryAllDTO';
@@ -13,7 +11,6 @@ import { NoPermissionException } from '../../utils/exceptions/NoPermissionExcept
 import { RoleDTO } from './dto/RoleDTO';
 import { UpdateGroupDTO } from './dto/UpdateGroupDTO';
 import { UserService } from '../user/UserService';
-import { DisciplineTeacherService } from '../teacher/DisciplineTeacherService';
 import { RoleRepository } from '../user/role/RoleRepository';
 
 const ROLE_LIST = [
@@ -31,7 +28,7 @@ const ROLE_LIST = [
       'groups.$groupId.admin.switch': false,
       'groups.$groupId.*': true,
     },
-  }, 
+  },
   {
     name: RoleName.STUDENT,
     weight: 50,
@@ -48,10 +45,7 @@ const ROLE_LIST = [
 export class GroupService {
   constructor (
     private disciplineService: DisciplineService,
-    private disciplineTeacherService: DisciplineTeacherService,
-    private disciplineRepository: DisciplineRepository,
     private groupRepository: GroupRepository,
-    private prisma: PrismaService,
     private userService: UserService,
     private studentRepository: StudentRepository,
     private userRepository: UserRepository,

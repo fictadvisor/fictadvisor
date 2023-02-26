@@ -5,7 +5,6 @@ import { UpdateTeacherDTO } from './dto/UpdateTeacherDTO';
 import { CreateContactDTO } from '../user/dto/CreateContactDTO';
 import { EntityType, QuestionDisplay, QuestionType } from '@prisma/client';
 import { TeacherRepository } from './TeacherRepository';
-import { DisciplineTeacherRepository } from './DisciplineTeacherRepository';
 import { UpdateContactDTO } from '../user/dto/UpdateContactDTO';
 import { ContactRepository } from '../user/ContactRepository';
 import { DisciplineTeacherService } from './DisciplineTeacherService';
@@ -16,7 +15,6 @@ import { InvalidQueryException } from '../../utils/exceptions/InvalidQueryExcept
 export class TeacherService {
   constructor (
     private teacherRepository: TeacherRepository,
-    private disciplineTeacherRepository: DisciplineTeacherRepository,
     private disciplineTeacherService: DisciplineTeacherService,
     private contactRepository: ContactRepository,
   ) {

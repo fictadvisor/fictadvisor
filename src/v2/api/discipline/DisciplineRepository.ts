@@ -121,4 +121,10 @@ export class DisciplineRepository {
       data,
     });
   }
+
+  makeSelective (data: { studentId: string; disciplineId: string }) {
+    return this.prisma.selectiveDiscipline.create({
+      data,
+    });
+  }
 }

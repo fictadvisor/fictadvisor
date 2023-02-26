@@ -1,14 +1,17 @@
 import { Controller, Request, Post, UseGuards, Body, Put, Param, Get, Query } from '@nestjs/common';
 import { LocalAuthGuard } from '../../security/LocalGuard';
 import { AuthService } from './AuthService';
-import { RegistrationDTO, TelegramDTO } from './dto/RegistrationDTO';
+import { RegistrationDTO } from './dto/RegistrationDTO';
 import { JwtGuard } from '../../security/JwtGuard';
 import { ForgotPasswordDTO } from './dto/ForgotPasswordDTO';
 import { ResetPasswordDTO } from './dto/ResetPasswordDTO';
 import { UpdatePasswordDTO } from './dto/UpdatePasswordDTO';
-import { VerificateEmailDTO } from './dto/VerificateEmailDTO';
+import { VerificationEmailDTO } from './dto/VerificationEmailDTO';
 import { IdentityQueryDTO } from './dto/IdentityQueryDTO';
+import { TelegramDTO } from './dto/TelegramDTO';
 import { UserService } from '../user/UserService';
+import { TelegramGuard } from '../../security/TelegramGuard';
+import { RegisterTelegramDTO } from './dto/RegisterTelegramDTO';
 
 @Controller({
   version: '2',
@@ -24,6 +27,14 @@ export class AuthController {
   @Post('/login')
   async login (@Request() req) {
     return this.authService.login(req.user);
+  }
+
+  @UseGuards(TelegramGuard)
+  @Post('/registerTelegram')
+  async registerTelegram (
+    @Body() body: RegisterTelegramDTO,
+  ) {
+    this.authService.registerTelegram(body);
   }
 
   @Post('/register')
@@ -76,7 +87,7 @@ export class AuthController {
 
   @Post('/register/verifyEmail')
   requestEmailVerification (
-    @Body() body: VerificateEmailDTO,
+    @Body() body: VerificationEmailDTO,
   ) {
     return this.authService.requestEmailVerification(body.email);
   }
@@ -108,5 +119,13 @@ export class AuthController {
   ) {
     const isAvailable = this.authService.checkResetToken(token);
     return { isAvailable };
+  }
+
+  @Get('/checkRegisterTelegram/:token')
+  checkRegisterTelegram (
+    @Param('token') token: string,
+  ) {
+    const isRegistered = this.authService.checkTelegram(token);
+    return { isRegistered };
   }
 }

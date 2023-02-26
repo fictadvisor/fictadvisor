@@ -4,13 +4,12 @@ import { DisciplineService } from './DisciplineService';
 import { TeacherModule } from '../teacher/TeacherModule';
 import { DisciplineTypeService } from './DisciplineTypeService';
 import { PrismaModule } from '../../database/PrismaModule';
-import { UserModule } from '../user/UserModule';
 import { AccessModule } from 'src/v2/security/AccessModule';
 
 @Module({
   controllers: [DisciplineController],
   providers: [DisciplineService, DisciplineTypeService],
   exports: [DisciplineService, DisciplineTypeService],
-  imports: [forwardRef(() => TeacherModule), PrismaModule, forwardRef(() => (UserModule)), AccessModule],
+  imports: [AccessModule, forwardRef(() => TeacherModule), PrismaModule],
 })
 export class DisciplineModule {}

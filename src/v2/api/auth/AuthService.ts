@@ -4,7 +4,7 @@ import { JwtPayload } from '../../security/JwtPayload';
 import { SecurityConfigService } from '../../config/SecurityConfigService';
 import { State, User, RoleName } from '@prisma/client';
 import { TokensDTO } from './dto/TokensDTO';
-import { RegistrationDTO, StudentDTO, TelegramDTO, UserDTO } from './dto/RegistrationDTO';
+import { RegistrationDTO } from './dto/RegistrationDTO';
 import { createHash, createHmac } from 'crypto';
 import { TelegramConfigService } from '../../config/TelegramConfigService';
 import { UserRepository } from '../user/UserRepository';
@@ -29,6 +29,10 @@ import { PasswordRepeatException } from '../../utils/exceptions/PasswordRepeatEx
 import { GroupService } from '../group/GroupService';
 import { RoleService } from '../user/role/RoleService';
 import { RoleRepository } from '../user/role/RoleRepository';
+import { TelegramDTO } from './dto/TelegramDTO';
+import { StudentDTO } from './dto/StudentDTO';
+import { UserDTO } from './dto/UserDTO';
+import { RegisterTelegramDTO } from './dto/RegisterTelegramDTO';
 
 export const ONE_MINUTE = 1000 * 60;
 export const HOUR = ONE_MINUTE * 60;
@@ -38,6 +42,7 @@ export class AuthService {
 
   private resetPasswordTokens: Map<string, { email: string, date: Date }> = new Map();
   private verifyEmailTokens: Map<string, { email: string, date: Date }> = new Map();
+  private registerTelegramTokens: Map<string, number> = new Map();
 
   constructor (
     private roleService: RoleService,
@@ -352,5 +357,21 @@ export class AuthService {
 
   checkResetToken (token: string) {
     return this.resetPasswordTokens.has(token);
+  }
+
+  registerTelegram (register: RegisterTelegramDTO) {
+    let telegramKey;
+    for (const [key, value] of this.registerTelegramTokens.entries()) {
+      if (value === register.telegramId) {
+        telegramKey = key;
+        break;
+      }
+    }
+    if (telegramKey) this.registerTelegramTokens.delete(telegramKey);
+    this.registerTelegramTokens.set(register.token, register.telegramId);
+  }
+
+  checkTelegram (token: string) {
+    return this.registerTelegramTokens.has(token);
   }
 }

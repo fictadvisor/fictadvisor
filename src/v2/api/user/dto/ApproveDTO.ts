@@ -1,17 +1,16 @@
 import { State } from '@prisma/client';
-import { IsBoolean, IsEnum, IsIn } from 'class-validator';
+import { validationOptionsMsg } from '../../../utils/GLOBALS';
+import { IsBoolean, IsEnum } from 'class-validator';
 
 export class ApproveDTO {
-  @IsIn(Object.keys(State), {
-    message: 'Invalid state argument passed',
-  })
+  @IsEnum(State, validationOptionsMsg('State is not an enum'))
     state: State;
 }
 
 export class ApproveStudentByTelegramDTO {
-  @IsEnum(State, { message: 'State is not an enum' })
+  @IsEnum(State, validationOptionsMsg('State is not an enum'))
     state: State;
 
-  @IsBoolean({ message: 'isCaptain must be a boolean' })
+  @IsBoolean(validationOptionsMsg('isCaptain must be a boolean'))
     isCaptain: boolean;
 }

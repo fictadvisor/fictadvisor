@@ -1,29 +1,19 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { PrismaService } from '../../database/PrismaService';
-import { CreateQuestionWithRolesDTO } from './dto/CreateQuestionDTO';
+import { CreateQuestionWithRolesDTO } from './dto/CreateQuestionWithRolesDTO';
 import { QuestionRepository } from './QuestionRepository';
 import { UpdateQuestionDTO } from './dto/UpdateQuestionDTO';
 import { Question, TeacherRole } from '@prisma/client';
-import { DisciplineRepository } from '../discipline/DisciplineRepository';
-import { DisciplineTeacherRepository } from '../teacher/DisciplineTeacherRepository';
 import { CreateQuestionRoleDTO } from './dto/CreateQuestionRoleDTO';
 import { StudentRepository } from '../user/StudentRepository';
-import { QuestionAnswerRepository } from './QuestionAnswerRepository';
 import { DisciplineService } from '../discipline/DisciplineService';
 
 @Injectable()
 export class PollService {
   constructor (
-    private prisma: PrismaService,
     @Inject(forwardRef(() => DisciplineService))
     private disciplineService: DisciplineService,
-    private questionAnswerRepository: QuestionAnswerRepository,
     private studentRepository: StudentRepository,
     private questionRepository: QuestionRepository,
-
-    private disciplineRepository: DisciplineRepository,
-    @Inject(forwardRef(() => DisciplineTeacherRepository))
-    private disciplineTeacherRepository: DisciplineTeacherRepository,
   ) {}
 
   async createQuestions (data: CreateQuestionWithRolesDTO) {
@@ -47,7 +37,7 @@ export class PollService {
   }
 
   async deleteRole (questionId: string, role: TeacherRole) {
-    return await this.questionRepository.deleteRole(questionId, role);
+    return this.questionRepository.deleteRole(questionId, role);
   }
 
   sortByCategories (questions: Question[]) {

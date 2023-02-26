@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import { CreateContactData } from './dto/CreateContactData';
-import { UpdateContactData } from './dto/UpdateContactData';
+import { CreateContactData } from './data/CreateContactData';
+import { UpdateContactData } from './data/UpdateContactData';
 
 @Injectable()
 export class ContactRepository {

@@ -1,6 +1,6 @@
 import { DisciplineTypeEnum } from '@prisma/client';
 
-export interface TemporaryLessonInfo {
+export interface TemporaryLessonData {
   id: string,
   startDate: Date,
   endDate: Date,

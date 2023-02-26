@@ -1,11 +1,11 @@
 import { Body, Controller, Delete, Get, Patch, Param, Post } from '@nestjs/common';
 import { PollService } from './PollService';
 import { UpdateQuestionDTO } from './dto/UpdateQuestionDTO';
-import { CreateQuestionWithRolesDTO } from './dto/CreateQuestionDTO';
-import { QuestionByIdPipe } from './dto/QuestionByIdPipe';
-import { QuestionByRoleAndIdPipe } from './dto/QuestionByRoleAndIdPipe';
+import { CreateQuestionWithRolesDTO } from './dto/CreateQuestionWithRolesDTO';
 import { CreateQuestionRoleDTO } from './dto/CreateQuestionRoleDTO';
 import { Access } from 'src/v2/security/Access';
+import { QuestionByIdPipe } from './pipe/QuestionByIdPipe';
+import { QuestionByRoleAndIdPipe } from './pipe/QuestionByRoleAndIdPipe';
 import { UserByIdPipe } from '../user/UserByIdPipe';
 
 @Controller({
@@ -28,7 +28,7 @@ export class PollController {
   @Access('users.$userId.poll.teachers.get')
   @Get('/teachers/:userId')
   async getPollDisciplineTeachers (
-      @Param('userId', UserByIdPipe) userId: string,
+    @Param('userId', UserByIdPipe) userId: string,
   ) {
     const teachers = await this.pollService.getDisciplineTeachers(userId);
     return {

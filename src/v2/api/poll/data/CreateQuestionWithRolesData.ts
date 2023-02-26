@@ -1,4 +1,5 @@
-import { QuestionType, TeacherRole } from '@prisma/client';
+import { QuestionType } from '@prisma/client';
+import { CreateQuestionRoleData } from './CreateQuestionRoleData';
 
 export class CreateQuestionData {
   category: string;
@@ -8,12 +9,6 @@ export class CreateQuestionData {
   criteria?: string;
   description?: string;
   isRequired?: boolean;
-}
-
-export class CreateQuestionRoleData {
-  role: TeacherRole;
-  isShown: boolean;
-  isRequired: boolean;
 }
 
 export class CreateQuestionWithRolesData extends CreateQuestionData {

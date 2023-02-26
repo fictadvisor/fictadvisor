@@ -6,8 +6,8 @@ import { UpdateTeacherDTO } from './dto/UpdateTeacherDTO';
 import { CreateContactDTO } from '../user/dto/CreateContactDTO';
 import { UpdateContactDTO } from '../user/dto/UpdateContactDTO';
 import { Access } from 'src/v2/security/Access';
-import { TeacherByIdPipe } from './dto/TeacherByIdPipe';
-import { ContactByNamePipe } from './dto/ContactByNamePipe';
+import { TeacherByIdPipe } from './pipe/TeacherByIdPipe';
+import { ContactByNamePipe } from './pipe/ContactByNamePipe';
 import { MarksQueryDTO } from './query/MarksQueryDTO';
 
 @Controller({

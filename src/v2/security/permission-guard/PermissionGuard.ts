@@ -1,10 +1,10 @@
-import { CanActivate, ExecutionContext, forwardRef, Inject, Injectable } from '@nestjs/common';
-import { UserService } from '../../api/user/UserService';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Request } from 'express';
 import { Reflector } from '@nestjs/core';
 import { User } from '@prisma/client';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
 import { RequestUtils } from '../../utils/RequestUtils';
+import { PermissionService } from '../PermissionService';
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
@@ -12,19 +12,15 @@ export class PermissionGuard implements CanActivate {
   private request: Request;
 
   constructor (
-    @Inject(forwardRef(() => UserService))
-    private userService: UserService,
+    private permissionService: PermissionService,
     private reflector: Reflector,
-  ) {
-    this.userService = userService;
-    this.reflector = reflector;
-  }
+  ) {}
 
   async canActivate (context: ExecutionContext) {
     this.request = context.switchToHttp().getRequest<Request>();
     const user: User = this.request.user as User;
     const permission = this.getPermission(context);
-    const hasPermission = await this.userService.hasPermission(user.id, permission);
+    const hasPermission = await this.permissionService.hasPermission(user.id, permission);
 
     if (!hasPermission) {
       throw new NoPermissionException();

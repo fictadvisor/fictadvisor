@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { RoleRepository } from './RoleRepository';
-import { CreateGrantDTO, CreateRoleWithGrantsDTO } from '../dto/CreateRoleDTO';
 import { GrantRepository } from '../grant/GrantRepository';
 import { GrantService } from '../grant/GrantService';
 import { UpdateRoleDTO } from './dto/UpdateRoleDTO';
-import { Grant, Role } from './dto/GrantData';
 import { StudentRepository } from '../StudentRepository';
 import { NoPermissionException } from '../../../utils/exceptions/NoPermissionException';
+import { CreateRoleWithGrantsDTO } from '../dto/CreateRoleWithGrantsDTO';
+import { CreateGrantDTO } from '../dto/CreateGrantsDTO';
+import { PermissionService } from '../../../security/PermissionService';
 
 @Injectable()
 export class RoleService {
@@ -15,15 +16,16 @@ export class RoleService {
     private grantRepository: GrantRepository,
     private grantService: GrantService,
     private studentRepository: StudentRepository,
+    private permissionService: PermissionService
   ) {}
 
   async createRole ({ grants = [], ...data }: CreateRoleWithGrantsDTO, userId: string) {
     const roles = await this.studentRepository.getRoles(userId);
 
     const higherRoles = roles.filter((r) => r.weight > data.weight);
-    let hasPermission = this.checkPermission(higherRoles, 'roles.create');
+    let hasPermission = this.permissionService.checkPermission(higherRoles, 'roles.create');
     for (const grant of grants) {
-      if (!this.checkPermission(higherRoles, grant.permission)) {
+      if (!this.permissionService.checkPermission(higherRoles, grant.permission)) {
         hasPermission = false;
         break;
       }
@@ -36,25 +38,9 @@ export class RoleService {
     return this.roleRepository.createWithGrants(data, grants);
   }
 
-  checkPermission (roles: Role[], permission: string) {
-    for (const role of roles) {
-      const hasPermission = this.hasPermission(role.grants, permission);
-      if (hasPermission) return true;
-    }
-
-    return false;
-  }
-
   async createGrants (roleId: string, grants: CreateGrantDTO[]) {
     const createGrants = grants.map((g) => ({ roleId, ...g }));
     return this.grantRepository.createMany(createGrants);
-  }
-
-  async hasPermission (grants: Grant[], permission: string) {
-    for (const grant of grants) {
-      const hasPermission = this.grantService.hasPermission(permission, grant.permission);
-      if (hasPermission) return grant.set;
-    }
   }
 
   async delete (id: string) {

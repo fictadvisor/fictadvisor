@@ -1,4 +1,4 @@
-export interface StaticLessonInfo {
+export interface StaticLessonData {
   id: string,
   subjectName: string,
   isSelective: boolean,

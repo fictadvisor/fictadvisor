@@ -1,15 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../database/PrismaService';
 import { ScheduleParser } from '../../utils/parser/ScheduleParser';
 import { RozParser } from '../../utils/parser/RozParser';
 import { Group, FortnightLessonInfoType, DisciplineTypeEnum } from '@prisma/client';
-import { DateService } from '../../utils/date/DateService';
-import { ConfigService } from '@nestjs/config';
-import { SubjectService } from '../subject/SubjectService';
-import { DisciplineService } from '../discipline/DisciplineService';
-import { TemporaryLessonInfo } from './dto/TemporaryLessonInfo';
-import { StaticLessonInfo } from './dto/StaticLessonInfo';
-import { TeacherService } from '../teacher/TeacherService';
+import { TemporaryLessonData } from './data/TemporaryLessonData';
+import { StaticLessonData } from './data/StaticLessonData';
 import { UpdateDynamicInfoDTO } from './dto/UpdateDynamicInfoDTO';
 import { ScheduleRepository } from './ScheduleRepository';
 import { FortnightInfoAdaptor } from './dto/FortnightInfoAdaptor';
@@ -30,19 +24,13 @@ export class ScheduleService {
   constructor (
     private scheduleParser: ScheduleParser,
     private rozParser: RozParser,
-    private prisma: PrismaService,
-    private dateService: DateService,
-    private config: ConfigService,
-    private subjectService: SubjectService,
     private disciplineTeacherService: DisciplineTeacherService,
     private disciplineTypeService: DisciplineTypeService,
-    private disciplineService: DisciplineService,
     private groupRepository: GroupRepository,
     private disciplineRepository: DisciplineRepository,
     private disciplineTypeRepository: DisciplineTypeRepository,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
     private disciplineTeacherRoleRepository: DisciplineTeacherRoleRepository,
-    private teacherService: TeacherService,
     private scheduleRepository: ScheduleRepository,
   ) {}
 
@@ -62,7 +50,7 @@ export class ScheduleService {
     group: Group,
     fortnight: number,
     callback: 'static' | 'temporary'
-  ): Promise<StaticLessonInfo[] | TemporaryLessonInfo[]> {
+  ): Promise<StaticLessonData[] | TemporaryLessonData[]> {
     const results = [];
 
     const disciplines = await this.groupRepository.getDisciplines(group.id);
@@ -84,7 +72,7 @@ export class ScheduleService {
     fortnight: number,
     discipline: any,
     type: { id: string, name: DisciplineTypeEnum },
-  ): Promise<StaticLessonInfo[]> {
+  ): Promise<StaticLessonData[]> {
     const lessons = await this.scheduleRepository.getSemesterLessonsByType(type.id);
     const results = [];
 
@@ -136,7 +124,7 @@ export class ScheduleService {
     fortnight: number,
     discipline: any,
     type: { id: string, name: DisciplineTypeEnum },
-  ): Promise<TemporaryLessonInfo[]> {
+  ): Promise<TemporaryLessonData[]> {
     const lessons = await this.scheduleRepository.getTemporaryLessonsByType(type.id, fortnight);
 
     const results = [];
@@ -239,7 +227,7 @@ export class ScheduleService {
           const disciplineTeacher = await this.disciplineTeacherRepository.getOrCreate({ teacherId, disciplineId: discipline.id });
           await this.disciplineTeacherRoleRepository.create({
             disciplineTeacherId: disciplineTeacher.id,
-            disciplineTypeId: semesterLesson.disciplineTypeId,
+            disciplineTypeId: semesterLesson.disciplineType.id,
             role,
           });
         }

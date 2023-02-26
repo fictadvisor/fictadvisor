@@ -1,10 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Request, UseGuards } from '@nestjs/common';
 import { RoleService } from './RoleService';
-import { CreateGrantsDTO, CreateRoleWithGrantsDTO } from '../dto/CreateRoleDTO';
 import { UpdateRoleDTO } from './dto/UpdateRoleDTO';
 import { JwtGuard } from '../../../security/JwtGuard';
 import { PermissionGuard } from '../../../security/permission-guard/PermissionGuard';
 import { Permission } from '../../../security/permission-guard/Permission';
+import { CreateRoleWithGrantsDTO } from '../dto/CreateRoleWithGrantsDTO';
+import { CreateGrantsDTO } from '../dto/CreateGrantsDTO';
 
 @Controller({
   version: '2',

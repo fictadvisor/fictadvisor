@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ScheduleService } from './ScheduleService';
-import { GroupByIdPipe } from '../group/GroupByIdPipe';
+import { GroupByIdPipe } from '../group/pipe/GroupByIdPipe';
 import { Group } from '@prisma/client';
 import { DateService } from '../../utils/date/DateService';
 import { JwtGuard } from '../../security/JwtGuard';

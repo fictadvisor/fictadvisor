@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
 import { FortnightLessonInfoType } from '@prisma/client';
-import { CreateTemporaryLessonData } from './dto/CreateTemporaryLessonData';
-import { CreateSemesterLessonData } from './dto/CreateSemesterLessonData';
+import { CreateTemporaryLessonData } from './data/CreateTemporaryLessonData';
+import { CreateSemesterLessonData } from './data/CreateSemesterLessonData';
 
 @Injectable()
 export class ScheduleRepository {
@@ -39,8 +39,29 @@ export class ScheduleRepository {
       where: {
         id,
       },
-      include: {
-        disciplineType: true,
+      select: {
+        id: true,
+        url: true,
+        endDate: true,
+        startDate: true,
+        disciplineType: {
+          select: {
+            id: true,
+            name: true,
+            discipline: {
+              select: {
+                id: true,
+                isSelective: true,
+                subject: true,
+                group: true,
+                semester: true,
+                year: true,
+                evaluatingSystem: true,
+                resource: true,
+              },
+            },
+          },
+        },
       },
     });
   }
@@ -50,9 +71,40 @@ export class ScheduleRepository {
       where: {
         id,
       },
-      include: {
-        disciplineType: true,
-        teacher: true,
+      select: {
+        id: true,
+        fortnight: true,
+        comment: true,
+        url: true,
+        endDate: true,
+        startDate: true,
+        teacher: {
+          select: {
+            id: true,
+            avatar: true,
+            firstName: true,
+            middleName: true,
+            lastName: true,
+          },
+        },
+        disciplineType: {
+          select: {
+            id: true,
+            name: true,
+            discipline: {
+              select: {
+                id: true,
+                isSelective: true,
+                subject: true,
+                group: true,
+                semester: true,
+                year: true,
+                evaluatingSystem: true,
+                resource: true,
+              },
+            },
+          },
+        },
       },
     });
   }

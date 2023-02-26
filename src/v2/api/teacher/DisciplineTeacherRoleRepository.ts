@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
 import { TeacherRole } from '@prisma/client';
-import { CreateDisciplineTeacherRoleData } from './dto/CreateDisciplineTeacherRoleData';
+import { CreateDisciplineTeacherRoleData } from './data/CreateDisciplineTeacherRoleData';
 
 @Injectable()
 export class DisciplineTeacherRoleRepository {

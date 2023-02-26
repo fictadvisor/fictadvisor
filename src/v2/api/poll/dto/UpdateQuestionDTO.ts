@@ -1,5 +1,6 @@
 import { QuestionDisplay, QuestionType } from '@prisma/client';
 import { IsEnum, IsOptional } from 'class-validator';
+import { validationOptionsMsg } from '../../../utils/GLOBALS';
 
 export class UpdateQuestionDTO {
     @IsOptional()
@@ -11,11 +12,11 @@ export class UpdateQuestionDTO {
     @IsOptional()
       criteria?: string;
 
-    @IsEnum(QuestionType)
+    @IsEnum(QuestionType, validationOptionsMsg('Type is not an enum'))
     @IsOptional()
       type?: QuestionType;
 
-    @IsEnum(QuestionDisplay)
+    @IsEnum(QuestionDisplay, validationOptionsMsg('Type is not an enum'))
     @IsOptional()
       display?: QuestionDisplay;
 }

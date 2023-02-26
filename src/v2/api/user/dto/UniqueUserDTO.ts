@@ -1,6 +1,15 @@
+import { IsOptional } from 'class-validator';
+
 export class UniqueUserDTO {
-  telegramId?: number;
-  email?: string;
-  username?: string;
-  id?: string;
+  @IsOptional()
+    telegramId?: number;
+
+  @IsOptional()
+    email?: string;
+
+  @IsOptional()
+    username?: string;
+
+  @IsOptional()
+    id?: string;
 }

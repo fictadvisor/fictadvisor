@@ -1,23 +1,15 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { TeacherService } from './TeacherService';
 import { DisciplineTeacherRepository } from './DisciplineTeacherRepository';
-import { DisciplineTypeService } from '../discipline/DisciplineTypeService';
-import { DisciplineTypeRepository } from '../discipline/DisciplineTypeRepository';
 import { PollService } from '../poll/PollService';
 import { CreateAnswerDTO, CreateAnswersDTO } from './dto/CreateAnswersDTO';
 import { QuestionAnswerRepository } from '../poll/QuestionAnswerRepository';
 import { Question, QuestionType, TeacherRole } from '@prisma/client';
 import { AlreadyAnsweredException } from '../../utils/exceptions/AlreadyAnsweredException';
-import { DisciplineService } from '../discipline/DisciplineService';
-import { DisciplineRepository } from '../discipline/DisciplineRepository';
 import { NotEnoughAnswersException } from '../../utils/exceptions/NotEnoughAnswersException';
 import { ExcessiveAnswerException } from '../../utils/exceptions/ExcessiveAnswerException';
 import { DateService } from '../../utils/date/DateService';
-import { PrismaService } from '../../database/PrismaService';
-import { ConfigService } from '@nestjs/config';
 import { WrongTimeException } from '../../utils/exceptions/WrongTimeException';
 import { DisciplineTeacherWithRoles, DisciplineTeacherWithRolesAndTeacher } from './DisciplineTeacherDatas';
-import { QuestionRepository } from '../poll/QuestionRepository';
 import { TelegramAPI } from '../../telegram/TelegramAPI';
 import { ResponseDTO } from '../poll/dto/ResponseDTO';
 import { checkIfArrayIsUnique } from '../../utils/ArrayUtil';
@@ -26,22 +18,11 @@ import { AnswerInDatabasePermissionException } from '../../utils/exceptions/Answ
 @Injectable()
 export class DisciplineTeacherService {
   constructor (
-    @Inject(forwardRef(() => TeacherService))
-    private teacherService: TeacherService,
-    private prisma: PrismaService,
     private dateService: DateService,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
-    private disciplineTypeRepository: DisciplineTypeRepository,
-    @Inject(forwardRef(() => DisciplineTypeService))
-    private disciplineTypeService: DisciplineTypeService,
     @Inject(forwardRef(() => PollService))
     private pollService: PollService,
     private questionAnswerRepository: QuestionAnswerRepository,
-    private disciplineRepository: DisciplineRepository,
-    private config: ConfigService,
-    @Inject(forwardRef(() => DisciplineService))
-    private disciplineService: DisciplineService,
-    private questionRepository: QuestionRepository,
     private telegramApi: TelegramAPI,
   ) {}
 
@@ -207,7 +188,7 @@ export class DisciplineTeacherService {
 
   async checkAnswerInDatabase (disciplineTeacherId: string, userId: string) {
     const answers = await this.questionAnswerRepository.findMany(disciplineTeacherId, userId);
-    if (answers) {
+    if (answers.length !== 0) {
       throw new AnswerInDatabasePermissionException();
     }
   }
