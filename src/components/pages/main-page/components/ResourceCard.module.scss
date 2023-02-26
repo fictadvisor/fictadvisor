@@ -1,0 +1,46 @@
+@import "../../../../styles/partials/utils";
+
+.card {
+    width: 200px;
+    height: 200px;
+    background: rgba(38, 38, 38, 0.26);
+    border: 1px solid #404040;
+    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.11);
+    border-radius: 8px;
+
+    .card-content {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        @include flex-center;
+        justify-content: center;
+        padding: 29px 54px;
+        text-align: center;
+
+        img {
+            border-radius: 96px;
+            margin-bottom: 20px;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .card {
+        width: 104px;
+        height: 112px;
+
+        h6 {
+            font-size: 14px;
+        }
+
+        .card-content {
+            padding: 12px 28px;
+
+            img {
+                width: 48px;
+                height: 48px;
+                margin-bottom: 8px;
+            }
+        }
+    }
+}

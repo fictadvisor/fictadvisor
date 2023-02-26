@@ -1,0 +1,297 @@
+@import "../../../styles/partials/utils";
+
+$button-border-color: #D33D3D;
+$button-divider-color: #404040;
+
+$font-weight-bold: 700;
+
+.nav {
+    height: 56px;
+    width: 100%;
+    background-color: #151515;
+    @include flex-center;
+}
+
+.footer {
+    height: 300px;
+    width: 100%;
+    background-color: #151515;
+    @include flex-center;
+}
+
+.main-page{
+    width: 100%;
+    background: url("/assets/main-page/main-background.png");
+}
+
+.header {
+    display: flex;
+    justify-content: flex-end;
+    position: relative;
+    padding: 60px 0 100px 80px;
+    height: 100vh;
+
+    h2 {
+        font-weight: $font-weight-bold;
+    }
+} 
+
+.header-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: absolute;
+    width: fit-content;
+    left: 80px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    h2 {
+        width: fit-content;
+    }
+
+    p {
+        width: 40%;
+        margin: 50px 0 45px 0;
+        font-size: 16px;
+        line-height: 150%;
+    }
+}
+
+.build-image {
+    width: 60vw;
+    display: flex;
+    justify-content: flex-end;
+
+    align-items: center;
+
+    svg {
+        width: 100%;
+        height: max-content;
+    }
+}
+
+.buttons {
+    display: flex;
+    width: fit-content;
+
+    button:nth-child(3) {
+        border: 2px solid $button-border-color;
+    }
+
+    .buttons-desk {
+        display: flex;
+        gap: 20px;
+    }
+
+    .buttons-tabl, .buttons-mob {
+        display: none;
+    }
+} 
+
+.button-divider {
+    border: 1px solid $button-divider-color;
+}
+
+.resources {
+    @include flex-center;
+    flex-direction: column;
+    margin: 64px 0 127px 0;
+
+    h3 { 
+        font-weight: $font-weight-bold;
+    }
+}
+
+.resources-cards {
+    display: grid;
+    justify-content: center;
+    gap: 16px;
+    width: 100%;
+    grid-template-columns: repeat(auto-fill, 200px);
+
+    padding: 64px 80px 0 80px;
+}
+
+
+@media only screen and (max-width: 320px) {
+    .header .header-info p {
+        padding-right: 28px;
+    }
+
+    .buttons .buttons-mob {
+        width: 100%;
+        flex-direction: column;
+        padding-right: 17px;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .header {
+        padding: 28px 0 97px 17px;
+        height: auto;
+
+        h2 {
+            font-size: 28px;
+            width: 70%;
+        }
+    }
+
+    .header-info {
+        top: 70%;
+        left: 17px;
+
+        p {
+            width: auto;
+            margin: 24px 0 36px 0;
+            font-size: 14px;
+            line-height: 140%;
+            padding-right: 58px;
+        }
+    }
+
+    .buttons {
+        gap: 14px;
+        width: 100%;
+
+        button {
+            font-size: 14px;
+            width: auto;
+        }        
+
+        .buttons-desk {
+            display: none;
+        }
+        
+        .buttons-mob {
+            display: flex;
+            gap: 14px;
+        }
+    }
+
+    .build-image {
+        width: 80vw;
+        height: 50vh;
+        display: flex;
+        justify-content: flex-end;
+
+        svg {
+            height: 220px;
+            width: 100%;
+        }
+    }
+
+    .resources {
+        margin-top: 127px;
+    }
+
+    .resources-cards {
+        padding: 32px 16px;
+        gap: 8px;
+        grid-template-columns: repeat(auto-fill, 104px);
+    }
+
+    .resources h3 {
+        font-weight: 500;
+        font-size: 20px;
+    }
+
+    .button-divider {
+        display: none;
+    }
+}
+
+@media only screen and (min-width: 481px) and (max-width: 768px){
+    .build-image {
+        width: 100vw;
+        height: 60vh;
+        display: flex;
+        justify-content: flex-end;
+
+        svg {
+            height: 420px;
+            width: 100%;
+        }
+    }
+
+    .header-info {
+        top: 75%;
+        left: 17px;
+
+        h2 {
+            width: 80%;
+        }
+
+        p {
+            width: 80%;
+        }
+    }
+
+    .buttons {
+        .buttons-desk {
+            display: none;
+        }
+        
+        .buttons-tabl {
+            display: flex;
+            gap: 20px;
+        }
+    }
+
+    .button-divider {
+        display: none;
+    }
+
+    .resources {
+        margin-top: 127px;
+    }
+
+    .resources-cards {
+        grid-template-columns: repeat(auto-fill, 104px);
+    }
+}
+
+@media only screen and (min-width: 769px) and (max-width: 1024px){
+    .header h2 {
+        width: 80%;
+    }
+
+    .header-info {
+        top: 70%;
+
+        p {
+            width: 70%;
+        }
+    }
+
+    .build-image {
+        width: 80vw;
+        height: auto;
+    }
+
+    .buttons {
+        .buttons-desk {
+            display: none;
+        }
+        
+        .buttons-tabl {
+            display: flex;
+            gap: 20px;
+        }
+    }
+
+    .resources {
+        margin-top: 127px;
+    }
+
+    .main-page {
+        background-size: cover;
+    }
+        
+}
+
+@media screen and (min-width: 1430px) {
+    .main-page {
+        background-size: 100vw auto;
+    }
+}
