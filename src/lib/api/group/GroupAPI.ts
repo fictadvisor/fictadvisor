@@ -1,3 +1,5 @@
+import { GetAllDTO } from '@/lib/api/group/dto/GetAllDTO';
+
 import { client, getAuthorizationHeader } from '../index';
 
 import { GetDisciplineDTO } from './dto/GetDisciplineDTO';
@@ -22,5 +24,10 @@ export class GroupAPI {
       `/groups/${groupId}/disciplineTeachers`,
       getAuthorizationHeader(accessToken),
     );
+  }
+
+  static async getAll(): Promise<GetAllDTO> {
+    const res = await client.get('/groups');
+    return res.data;
   }
 }
