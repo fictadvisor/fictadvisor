@@ -178,10 +178,7 @@ export class GroupService {
     const students = await this.groupRepository.getStudents(groupId);
     return students
       .filter((st) => st.state === State.APPROVED)
-      .map((s) => ({
-        ...this.userService.getStudent(s),
-        role: this.userService.getGroupRole(s.roles).name,
-      }));
+      .map((s) => this.userService.getStudent(s));
   }
 
   async updateGroup (groupId: string, body: UpdateGroupDTO) {
@@ -192,7 +189,7 @@ export class GroupService {
     const students = await this.groupRepository.getStudents(groupId);
     return students
       .filter((s) => s.state === State.PENDING)
-      .map((s) => this.userService.getStudent(s));
+      .map((s) => this.userService.getStudent(s, false));
   }
 
   async addPermissions (groupId: string) {
