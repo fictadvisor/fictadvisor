@@ -17,6 +17,7 @@ const CreatePasswordForm: FC = () => {
       initialValues={initialValues}
       onSubmit={handleSubmit}
       validationSchema={validationSchema}
+      validateOnMount
       validateOnChange
     >
       {({ isValid, errors }) => (
