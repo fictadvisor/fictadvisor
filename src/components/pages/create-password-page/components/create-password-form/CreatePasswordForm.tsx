@@ -29,7 +29,7 @@ const CreatePasswordForm: FC = () => {
             size={InputSize.LARGE}
             type={InputType.PASSWORD}
             name="createPassword"
-            defaultRemark="Має бути не коротше 8 символів та містити спеціальні знаки ?!#$*()"
+            defaultRemark="Не коротше 8 символів, мінімум одна літера та одна цифра"
           />
           <Input
             className={styles['input']}
