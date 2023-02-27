@@ -23,11 +23,8 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
-    position: relative;
     width: 100%;
     height: 56px;
-    padding-right: 6%;
-    padding-left: 6%;
     background-color: rgba(23, 23, 23, 0.63);
     backdrop-filter: blur(8px);
 
@@ -57,7 +54,7 @@
     position: absolute;
     padding-top: 8px;
     padding-bottom: 8px;
-    background-color: rgba(23, 23, 23, 0.98);
+    background-color: #1e1e1e;
     gap: 16px;
     flex-direction: column;
     animation-name: appear;
@@ -85,7 +82,10 @@
 
 @media (max-width: 1101px) {
     .header-logo {
-        margin-left: 8%;
+        margin-left: 70px;
         flex-grow: 4;
+    }
+    .mobile-button {
+        margin-right: 10px;
     }
 }

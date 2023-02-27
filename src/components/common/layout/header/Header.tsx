@@ -50,7 +50,10 @@ const Header: React.FC<HeaderProps> = ({
     return clicked ? (
       <div className={styles['wrapper']}>
         <div className={styles['shadow']} onClick={handleClick}></div>
-        <div className={styles['header-container']}>
+        <div
+          className={styles['header-container']}
+          style={{ backgroundColor: '#1e1e1e' }}
+        >
           <div className={styles['header-logo']}>
             <img src={`/assets/logo.png`} alt="logo" />
           </div>
@@ -154,7 +157,10 @@ const Header: React.FC<HeaderProps> = ({
     return clicked ? (
       <div className={styles['wrapper']}>
         <div className={styles['shadow']} onClick={handleClick}></div>
-        <div className={styles['header-container']}>
+        <div
+          className={styles['header-container']}
+          style={{ backgroundColor: '#1e1e1e' }}
+        >
           <div className={styles['header-logo']}>
             <img src={`/assets/logo.png`} alt="logo" />
           </div>
