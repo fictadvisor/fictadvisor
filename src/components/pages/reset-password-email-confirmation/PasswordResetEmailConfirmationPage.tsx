@@ -23,7 +23,11 @@ const PasswordResetEmailConfirmationPage = () => {
     router.push('/register');
   };
   return (
-    <PageLayout description={'Перевірка пошти при скиданні пароля'}>
+    <PageLayout
+      hasHeader={false}
+      hasFooter={false}
+      description={'Перевірка пошти при скиданні пароля'}
+    >
       <div className={styles['reset-password-email-confirmation-page']}>
         <div
           className={styles['reset-password-email-confirmation-page-content']}

@@ -18,7 +18,11 @@ const PasswordResetLinkExpiredPage = () => {
     router.push('/register');
   };
   return (
-    <PageLayout description={'Час зміни пароля вичерпано'}>
+    <PageLayout
+      hasHeader={false}
+      hasFooter={false}
+      description={'Час зміни пароля вичерпано'}
+    >
       <div className={styles['reset-password-link-expired-page']}>
         <div className={styles['reset-password-link-expired-page-content']}>
           <div className={styles['icon']}>

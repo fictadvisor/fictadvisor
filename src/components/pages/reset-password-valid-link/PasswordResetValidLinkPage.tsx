@@ -17,7 +17,11 @@ const PasswordResetValidLinkPage = () => {
     router.push('/login');
   };
   return (
-    <PageLayout description={'Пароль успішно змінено'}>
+    <PageLayout
+      hasHeader={false}
+      hasFooter={false}
+      description={'Пароль успішно змінено'}
+    >
       <div className={styles['reset-password-valid-link-page']}>
         <div className={styles['reset-password-valid-link-page-content']}>
           <div className={styles['icon']}>
