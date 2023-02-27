@@ -100,11 +100,11 @@ const Header: React.FC<HeaderProps> = ({
             />
           </div>
 
-          <div style={{ width: '100%', height: '8px', marginTop: '-35px' }}>
+          <div style={{ width: '100%' }}>
             <HeaderDivider></HeaderDivider>
           </div>
 
-          <div className={styles['mobile-menu']} style={{ marginTop: '24px' }}>
+          <div className={styles['mobile-menu']}>
             <Link href={''}>
               <TabItem
                 className=""
@@ -204,10 +204,10 @@ const Header: React.FC<HeaderProps> = ({
               </Link>
             </div>
           </div>
-          <div style={{ width: '100%', height: '0px', marginTop: '-35px' }}>
+          <div style={{ width: '100%' }}>
             <HeaderDivider></HeaderDivider>
           </div>
-          <div className={styles['mobile-menu']} style={{ marginTop: '36px' }}>
+          <div className={styles['mobile-menu']}>
             <Link href={''}>
               {' '}
               <TabItem
