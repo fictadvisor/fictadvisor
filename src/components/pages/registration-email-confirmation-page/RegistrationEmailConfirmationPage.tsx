@@ -21,7 +21,11 @@ const RegistrationEmailConfirmationPage = () => {
     : 'Ми надіслали листа для підтвердження пошти';
 
   return (
-    <PageLayout description={'Перевірка пошти при реєстрації'}>
+    <PageLayout
+      hasHeader={false}
+      hasFooter={false}
+      description={'Перевірка пошти при реєстрації'}
+    >
       <div className={styles['registration-email-confirmation-page']}>
         <div className={styles['registration-email-confirmation-page-content']}>
           <div className={styles['icon']}>

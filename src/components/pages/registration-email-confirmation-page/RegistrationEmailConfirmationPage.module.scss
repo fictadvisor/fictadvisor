@@ -15,7 +15,6 @@
   justify-content: center;
   flex-direction: column;
   max-width: 500px;
-
   height: fit-content;
   top: 103px;
   position: absolute;
@@ -85,7 +84,7 @@
   }
   .text-and-button{
     h6{
-      font-size: 16px;
+      @include body-secondary;
     }
   }
 
