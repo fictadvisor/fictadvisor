@@ -104,34 +104,42 @@ const Header: React.FC<HeaderProps> = ({
           </div>
 
           <div className={styles['mobile-menu']}>
-            <TabItem
-              className=""
-              text="Головна"
-              position={TabItemContentPosition.LEFT}
-              icon={<HomeIcon />}
-              size={TabItemContentSize.SMAll}
-            />
-            <TabItem
-              className=""
-              text="Опитування"
-              position={TabItemContentPosition.LEFT}
-              icon={<ClipboardIcon />}
-              size={TabItemContentSize.SMAll}
-            />
-            <TabItem
-              className=""
-              text="Викладачі"
-              position={TabItemContentPosition.LEFT}
-              icon={<BriefcaseIcon />}
-              size={TabItemContentSize.SMAll}
-            />
-            <TabItem
-              className=""
-              text="Предмети"
-              position={TabItemContentPosition.LEFT}
-              icon={<AcademicCapIcon />}
-              size={TabItemContentSize.SMAll}
-            />
+            <Link href={''}>
+              <TabItem
+                className=""
+                text="Головна"
+                position={TabItemContentPosition.LEFT}
+                icon={<HomeIcon />}
+                size={TabItemContentSize.SMAll}
+              />
+            </Link>
+            <Link href={''}>
+              <TabItem
+                className=""
+                text="Опитування"
+                position={TabItemContentPosition.LEFT}
+                icon={<ClipboardIcon />}
+                size={TabItemContentSize.SMAll}
+              />
+            </Link>
+            <Link href={''}>
+              <TabItem
+                className=""
+                text="Викладачі"
+                position={TabItemContentPosition.LEFT}
+                icon={<BriefcaseIcon />}
+                size={TabItemContentSize.SMAll}
+              />
+            </Link>
+            <Link href={''}>
+              <TabItem
+                className=""
+                text="Предмети"
+                position={TabItemContentPosition.LEFT}
+                icon={<AcademicCapIcon />}
+                size={TabItemContentSize.SMAll}
+              />
+            </Link>
           </div>
         </div>
       </div>
@@ -176,53 +184,62 @@ const Header: React.FC<HeaderProps> = ({
         </div>
         <div className={styles['drop']}>
           <div className={styles['login-buttons']}>
-            <div className={styles['first-button']} style={{ width: '192px' }}>
+            <Link href={''}>
               <Button
                 text="Зареєструватись"
                 size={ButtonSize.SMALL}
                 variant={ButtonVariant.OUTLINE}
               />
-            </div>
-            <div className={styles['second-button']} style={{ width: '120px' }}>
+            </Link>
+            <Link href={''}>
               <Button
                 text="Увійти"
                 size={ButtonSize.SMALL}
                 variant={ButtonVariant.FILLED}
               />
-            </div>
+            </Link>
           </div>
           <div style={{ width: '100%', marginTop: '-35px' }}>
             <HeaderDivider></HeaderDivider>
           </div>
           <div className={styles['mobile-menu']}>
-            <TabItem
-              className=""
-              text="Головна"
-              position={TabItemContentPosition.LEFT}
-              icon={<HomeIcon />}
-              size={TabItemContentSize.SMAll}
-            />
-            <TabItem
-              className=""
-              text="Опитування"
-              position={TabItemContentPosition.LEFT}
-              icon={<ClipboardIcon />}
-              size={TabItemContentSize.SMAll}
-            />
-            <TabItem
-              className=""
-              text="Викладачі"
-              position={TabItemContentPosition.LEFT}
-              icon={<BriefcaseIcon />}
-              size={TabItemContentSize.SMAll}
-            />
-            <TabItem
-              className=""
-              text="Предмети"
-              position={TabItemContentPosition.LEFT}
-              icon={<AcademicCapIcon />}
-              size={TabItemContentSize.SMAll}
-            />
+            <Link href={''}>
+              {' '}
+              <TabItem
+                className=""
+                text="Головна"
+                position={TabItemContentPosition.LEFT}
+                icon={<HomeIcon />}
+                size={TabItemContentSize.SMAll}
+              />
+            </Link>
+            <Link href={''}>
+              <TabItem
+                className=""
+                text="Опитування"
+                position={TabItemContentPosition.LEFT}
+                icon={<ClipboardIcon />}
+                size={TabItemContentSize.SMAll}
+              />
+            </Link>
+            <Link href={''}>
+              <TabItem
+                className=""
+                text="Викладачі"
+                position={TabItemContentPosition.LEFT}
+                icon={<BriefcaseIcon />}
+                size={TabItemContentSize.SMAll}
+              />
+            </Link>
+            <Link href={''}>
+              <TabItem
+                className=""
+                text="Предмети"
+                position={TabItemContentPosition.LEFT}
+                icon={<AcademicCapIcon />}
+                size={TabItemContentSize.SMAll}
+              />
+            </Link>
           </div>
         </div>
       </div>
@@ -298,20 +315,22 @@ const Header: React.FC<HeaderProps> = ({
           </div>
         ) : (
           <div className={styles['login-buttons']}>
-            <div className={styles['first-button']}>
+            <Link href={{}}>
               <Button
                 text="Зареєструватись"
                 size={ButtonSize.SMALL}
                 variant={ButtonVariant.OUTLINE}
               />
-            </div>
-            <div className={styles['second-button']}>
+            </Link>
+
+            <Link href={{}}>
+              {' '}
               <Button
                 text="Увійти"
                 size={ButtonSize.SMALL}
                 variant={ButtonVariant.FILLED}
               />
-            </div>
+            </Link>
           </div>
         )}
       </div>
