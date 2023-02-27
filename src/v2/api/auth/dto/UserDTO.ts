@@ -14,8 +14,8 @@ export class UserDTO {
     email: string;
 
   @Matches(
-    /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z$-/:-?{-~!"^_`[\]\d]{8,50}$/,
-    validationOptionsMsg('Password is not correct (A-Za-z, at least one capital letter; at least one specific character; at least one digit), or too short (min: 8) or too long (max: 50)'))
+    /^(?=.*[A-Za-z])(?=.*\d)[\w\W]+$/,
+    validationOptionsMsg('The password must be between 8 and 50 characters long, include at least 1 digit and 1 letter'))
   @IsNotEmpty(validationOptionsMsg('password is empty'))
     password: string;
 }
