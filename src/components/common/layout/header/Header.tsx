@@ -1,4 +1,4 @@
-import React, { SetStateAction, useState } from 'react';
+import React, { useState } from 'react';
 import {
   AcademicCapIcon,
   BriefcaseIcon,
@@ -22,6 +22,7 @@ import { TabItem, TabItemContentPosition } from '../../ui/tab';
 import { TabItemContentSize } from '../../ui/tab/tab-item/TabItem';
 
 import HeaderDivider from './components/header-divider/HeaderDivider';
+import HeaderMobileButton from './components/header-mobile-button/HeaderMobileButton';
 import { HeaderMobileCard } from './components/mobile-card/HeaderMobileCard';
 
 import styles from './Header.module.scss';
@@ -31,7 +32,6 @@ interface HeaderProps {
   groupName?: string;
   position?: string;
   isLoggined?: boolean;
-  closeFunction?: React.Dispatch<SetStateAction<boolean>>;
 }
 
 const Header: React.FC<HeaderProps> = ({
@@ -39,7 +39,6 @@ const Header: React.FC<HeaderProps> = ({
   groupName = 'ІС-11',
   position = 'Зам. ст',
   isLoggined = false,
-  closeFunction,
 }) => {
   const isMobile = useIsMobile(1101);
   const [clicked, setClicked] = useState(false);
@@ -50,18 +49,19 @@ const Header: React.FC<HeaderProps> = ({
   if (isMobile && isLoggined) {
     return clicked ? (
       <div className={styles['wrapper']}>
+        <div className={styles['shadow']} onClick={handleClick}></div>
         <div className={styles['header-container']}>
           <div className={styles['header-logo']}>
             <img src={`/assets/logo.png`} alt="logo" />
           </div>
           <div className={styles['mobile-button']}>
-            <Button
+            <HeaderMobileButton
               onClick={handleClick}
               size={ButtonSize.MEDIUM}
               text={''}
               variant={ButtonVariant.TEXT}
               startIcon={<XMark />}
-            ></Button>
+            />
           </div>
         </div>
         <div className={styles['drop']}>
@@ -138,13 +138,13 @@ const Header: React.FC<HeaderProps> = ({
           <img src={`/assets/logo.png`} alt="logo" />
         </div>
         <div className={styles['mobile-button']}>
-          <Button
+          <HeaderMobileButton
             onClick={handleClick}
             size={ButtonSize.MEDIUM}
             text={''}
             variant={ButtonVariant.TEXT}
             startIcon={<BurgerMenu />}
-          ></Button>
+          />
         </div>
       </div>
     );
@@ -153,21 +153,18 @@ const Header: React.FC<HeaderProps> = ({
   if (isMobile && !isLoggined) {
     return clicked ? (
       <div className={styles['wrapper']}>
-        <div
-          className={styles['header-container']}
-          style={{ position: 'relative', backgroundColor: '#1E1E1E' }}
-        >
+        <div className={styles['header-container']}>
           <div className={styles['header-logo']}>
             <img src={`/assets/logo.png`} alt="logo" />
           </div>
           <div className={styles['mobile-button']}>
-            <Button
+            <HeaderMobileButton
               onClick={handleClick}
               size={ButtonSize.MEDIUM}
               text={''}
               variant={ButtonVariant.TEXT}
               startIcon={<XMark />}
-            ></Button>
+            />
           </div>
         </div>
         <div className={styles['drop']}>
@@ -228,13 +225,13 @@ const Header: React.FC<HeaderProps> = ({
           <img src={`/assets/logo.png`} alt="logo" />
         </div>
         <div className={styles['mobile-button']}>
-          <Button
+          <HeaderMobileButton
             onClick={handleClick}
             size={ButtonSize.MEDIUM}
             text={''}
             variant={ButtonVariant.TEXT}
             startIcon={<BurgerMenu />}
-          ></Button>
+          />
         </div>
       </div>
     );
