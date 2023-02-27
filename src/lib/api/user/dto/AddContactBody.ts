@@ -1,4 +1,4 @@
-export type addContactBody = {
+export interface AddContactBody {
   name: string;
   value: string;
 }

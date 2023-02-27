@@ -11,15 +11,13 @@ import { UpdateSubjectBody } from './dto/UpdateSubjectBody';
 
 export class SubjectsAPI {
   static async getTeachersBySubject(
-    accessToken: string,
     disciplineId: string,
   ): Promise<GetTeachersBySubjectDTO> {
-    return (
-      await client.get(
-        `disciplines/${disciplineId}/teachers`,
-        getAuthorizationHeader(accessToken),
-      )
-    ).data;
+    const { data } = await client.get(
+      `disciplines/${disciplineId}/teachers`,
+      getAuthorizationHeader(),
+    );
+    return data;
   }
 
   static async getListOfSubjects(): Promise<GetListOfSubjectsDTO[]> {
@@ -39,11 +37,12 @@ export class SubjectsAPI {
     disciplineId: string,
     body: UpdateDisciplineBody,
   ) {
-    await client.patch(
+    const { data } = await client.patch(
       `disciplines/${disciplineId}`,
       body,
       getAuthorizationHeader(),
     );
+    return data;
   }
 
   static async createSubject(

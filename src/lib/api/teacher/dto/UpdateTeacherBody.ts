@@ -1,4 +1,4 @@
-export type UpdateTeacherBody = {
+export interface UpdateTeacherBody {
   firstName: string;
   middleName: string;
   lastName: string;

@@ -1,4 +1,4 @@
-export type CreateSubjectBody = {
+export interface CreateSubjectBody {
   body: {
     name: string;
   };

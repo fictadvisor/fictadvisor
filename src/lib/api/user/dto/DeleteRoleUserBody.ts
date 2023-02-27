@@ -1,4 +1,4 @@
-export type DeleteRoleUserBody = {
+export interface DeleteRoleUserBody {
   userId: string;
   roleId: string;
 }

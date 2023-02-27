@@ -1,3 +1,3 @@
-export type CreateRoleUserBody = {
+export interface CreateRoleUserBody {
   roleId: string;
 }

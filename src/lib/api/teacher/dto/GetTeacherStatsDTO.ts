@@ -1,4 +1,4 @@
-export type GetTeacherStatsDTO = {
+export interface GetTeacherStatsDTO {
   questions: [
     {
       name: string;

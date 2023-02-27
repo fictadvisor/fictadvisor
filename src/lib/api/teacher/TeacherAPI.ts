@@ -9,84 +9,67 @@ import { GetTeacherStatsDTO } from './dto/GetTeacherStatsDTO';
 import { UpdateTeacherBody } from './dto/UpdateTeacherBody';
 
 export class TeacherAPI {
-  static async get(
-    accessToken: string,
-    teacherId: string,
-  ): Promise<GetTeacherDTO> {
-    return (
-      await client.get(
-        `/teachers/${teacherId}`,
-        getAuthorizationHeader(accessToken),
-      )
-    ).data;
+  static async get(teacherId: string): Promise<GetTeacherDTO> {
+    const { data } = await client.get(
+      `/teachers/${teacherId}`,
+      getAuthorizationHeader(),
+    );
+    return data;
   }
 
-  static async getAll(
-    accessToken: string,
-    search?: string,
-  ): Promise<GetTeacherDTO[]> {
-    return (
-      await client.get(
-        `/teachers?search=${search ? search : ''}`,
-        getAuthorizationHeader(accessToken),
-      )
-    ).data;
+  static async getAll(search?: string): Promise<GetTeacherDTO[]> {
+    const { data } = await client.get(
+      `/teachers?search=${search ? search : ''}`,
+      getAuthorizationHeader(),
+    );
+    return data;
   }
 
-  static async getTeachetStats(
+  static async getTeacherStats(
     teacherId: string,
     semester: number | string,
     subject: string,
     year: number,
   ): Promise<GetTeacherStatsDTO> {
-    return (
-      await client.get(`/teachers/${teacherId}/stats?
+    const { data } = await client.get(`/teachers/${teacherId}/stats?
         semester=${semester}
         &subject=${subject}
-        &year=${year}`)
-    ).data;
+        &year=${year}`);
+    return data;
   }
 
-  static async create(accessToken: string, body: CreateTeacherBody) {
-    return (
-      await client.post('/teachers', body, getAuthorizationHeader(accessToken))
-    ).data;
+  static async create(body: CreateTeacherBody) {
+    const { data } = await client.post(
+      '/teachers',
+      body,
+      getAuthorizationHeader(),
+    );
+    return data;
   }
 
-  static async addContacts(
-    accessToken: string,
-    teacherId: string,
-    body: AddContactsBody,
-  ) {
-    return (
-      await client.post(
-        `/teachers/${teacherId}/contacts`,
-        body,
-        getAuthorizationHeader(accessToken),
-      )
-    ).data;
+  static async addContacts(teacherId: string, body: AddContactsBody) {
+    const { data } = await client.post(
+      `/teachers/${teacherId}/contacts`,
+      body,
+      getAuthorizationHeader(),
+    );
+    return data;
   }
 
-  static async update(
-    accessToken: string,
-    teacherId: string,
-    body: UpdateTeacherBody,
-  ) {
-    return (
-      await client.patch(
-        `/teachers/${teacherId}`,
-        body,
-        getAuthorizationHeader(accessToken),
-      )
-    ).data;
+  static async update(teacherId: string, body: UpdateTeacherBody) {
+    const { data } = await client.patch(
+      `/teachers/${teacherId}`,
+      body,
+      getAuthorizationHeader(),
+    );
+    return data;
   }
 
-  static async delete(accessToken: string, teacherId: string) {
-    return (
-      await client.delete(
-        `/teachers/${teacherId}`,
-        getAuthorizationHeader(accessToken),
-      )
-    ).data;
+  static async delete(teacherId: string) {
+    const { data } = await client.delete(
+      `/teachers/${teacherId}`,
+      getAuthorizationHeader(),
+    );
+    return data;
   }
 }
