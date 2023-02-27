@@ -3,9 +3,9 @@ const config = {
   logo: '/assets/logo.png',
   faculty: 'ФІОТ',
   source: 'https://github.com/fictadvisor',
-  botId: '1699479241',
+  botId: '5916509477',
   contacts: {
-    bot: 'fictadvisor_bot',
+    bot: 'fictadvisordevbot',
     feedbackBot: 'fict_robot',
     scHead: 'gazinaft',
     scChannel: 'fict_time',
@@ -16,13 +16,6 @@ const config = {
     user: 'Користувач',
     admin: 'Адміністратор',
   },
-  menu: [
-    { text: 'Головна', href: '/' },
-    { text: 'Викладачі', href: '/teachers' },
-    { text: 'Предмети', href: '/subjects' },
-    { text: 'Супергерої', href: '/superheroes' },
-    { text: 'Допомога', href: '/help' },
-  ],
 };
 
 export default config;

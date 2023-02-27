@@ -2,10 +2,11 @@
 @import "src/styles/partials/theme";
 @import "src/styles/partials/typography-mixins";
 
-.textarea-test{
+.textarea{
   padding:10px 0;
   background: $background-dark-0;
   overflow-y: scroll;
+  width: 100%;
   p{
     color: inherit;
     @include overline-text;
@@ -28,6 +29,7 @@
     @include flex-center;
   }
   textarea{
+    width: 100%;
     @include body-secondary;
     display: flex;
     flex-direction: row;
@@ -35,7 +37,6 @@
     padding: 16px 16px 16px 24px;
     gap: 8px;
     background: $background-dark-0;
-    width: 480px;
     height: 120px;
     border: 2px solid $gray-500;
     color: $gray-500;
@@ -69,14 +70,6 @@
       border-color: $gray-200;
     }
   }
-}
-
-.small-area textarea{
-    width: 308px;
-}
-
-.large-area textarea{
-    width: 740px;
 }
 
 .success-area{
