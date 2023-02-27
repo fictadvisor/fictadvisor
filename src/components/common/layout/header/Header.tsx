@@ -153,6 +153,7 @@ const Header: React.FC<HeaderProps> = ({
   if (isMobile && !isLoggined) {
     return clicked ? (
       <div className={styles['wrapper']}>
+        <div className={styles['shadow']} onClick={handleClick}></div>
         <div className={styles['header-container']}>
           <div className={styles['header-logo']}>
             <img src={`/assets/logo.png`} alt="logo" />
