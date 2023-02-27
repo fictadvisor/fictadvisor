@@ -1,0 +1,93 @@
+@import "/src/styles/partials/theme";
+@import "/src/styles/partials/utils";
+
+@keyframes appear {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+
+.shadow {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    background-color: rgba(23, 23, 23, 0.65);
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    height: 56px;
+    padding-left: 80px;
+    padding-right: 80px;
+    background-color: rgba(23, 23, 23, 0.63);
+    backdrop-filter: blur(8px);
+}
+
+.menu {
+    @include flex-center;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-evenly;
+    gap: 28px;
+}
+
+.mobile-menu,
+.account-buttons {
+    display: flex;
+    flex-direction: column;
+
+    margin-left: 16px;
+    margin-right: 16px;
+    gap: 8px;
+}
+
+.drop {
+    display: flex;
+    height: fit-content;
+    width: 100%;
+    position: absolute;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    background-color: #1e1e1e;
+    gap: 16px;
+    flex-direction: column;
+    animation-name: appear;
+    animation-duration: 0.4s;
+}
+
+.login-buttons {
+    @include flex-center;
+    margin-left: 16px;
+    margin-right: 16px;
+    gap: 8px;
+}
+
+.header-logo {
+    @include flex-center;
+
+    & img {
+        width: 197px;
+        height: 20px;
+    }
+}
+
+@media (max-width: 1101px) {
+    .header-container {
+        padding-left: 0px;
+        padding-right: 0px;
+        position: relative;
+        justify-content: center;
+    }
+    .mobile-button {
+        position: absolute;
+        right: 10px;
+    }
+}
