@@ -1,4 +1,6 @@
-import { client, getAuthorizationHeader } from '../index';
+import { getAuthorizationHeader } from '@/lib/api/utils';
+
+import { client } from '../instance';
 
 import { AddContactsBody } from './dto/AddContactsBody';
 import { CreateTeacherBody } from './dto/CreateTeacherBody';

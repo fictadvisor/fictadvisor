@@ -1,7 +1,9 @@
-import { client, getAuthorizationHeader } from '../index';
+import { getAuthorizationHeader } from '@/lib/api/utils';
 
-import { addByMailBody } from './dto/addByMailBody';
-import { addContactBody } from './dto/addContactBody';
+import { client } from '../instance';
+
+import { AddByMailBody } from './dto/AddByMailBody';
+import { AddContactBody } from './dto/AddContactBody';
 import { CreateRoleUserBody } from './dto/CreateRoleUserBody';
 import { DeleteRoleUserBody } from './dto/DeleteRoleUserBody';
 export class UserAPI {
@@ -11,14 +13,13 @@ export class UserAPI {
     ).data;
   }
 
-  static async addContactBody(accessToken: string, body: addContactBody) {
-    return (
-      await client.post(
-        '/users/contacts',
-        body,
-        getAuthorizationHeader(accessToken),
-      )
-    ).data;
+  static async addContactBody(body: AddContactBody) {
+    const { data } = await client.post(
+      '/users/contacts',
+      body,
+      getAuthorizationHeader(),
+    );
+    return data;
   }
 
   static async createRoleUserBody(

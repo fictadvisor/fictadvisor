@@ -1,4 +1,4 @@
-export type GetSessionScheduleDTO = {
+export interface GetSessionScheduleDTO {
   week: number;
   lessons: [
     {
@@ -9,4 +9,4 @@ export type GetSessionScheduleDTO = {
       lessonId: string;
     },
   ];
-};
+}

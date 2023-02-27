@@ -1,9 +1,11 @@
-import { client, getAuthorizationHeader } from '../index';
+import { getAuthorizationHeader } from '@/lib/api/utils';
+
+import { client } from '../instance';
 
 import { SendSuperheroRequestBody } from './dto/SendSuperheroRequestBody';
 import { SuperheroVerificationBody } from './dto/SuperheroVerificationBody';
-import { updateGrantBody } from './dto/updateGrantBody';
-import { updateRoleBody } from './dto/updateRoleBody';
+import { UpdateGrantBody } from './dto/UpdateGrantBody';
+import { UpdateRoleBody } from './dto/UpdateRoleBody';
 
 export class SuperheroAPI {
   static async superheroVerification(

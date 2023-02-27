@@ -1,4 +1,4 @@
-export type authBody = {
+export interface AuthBody {
   username: string;
   password: string;
-};
+}

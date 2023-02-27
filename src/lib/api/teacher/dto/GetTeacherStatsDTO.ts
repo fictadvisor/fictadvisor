@@ -5,4 +5,4 @@ export type GetTeacherStatsDTO = {
       value: number;
     },
   ];
-};
+}

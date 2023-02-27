@@ -1,4 +1,4 @@
-export type authTelegramBody = {
+export interface AuthTelegramBody {
   auth_date: number;
   first_name: string;
   hash: string;
@@ -6,4 +6,4 @@ export type authTelegramBody = {
   last_name: string;
   photo_url: string;
   username: string;
-};
+}

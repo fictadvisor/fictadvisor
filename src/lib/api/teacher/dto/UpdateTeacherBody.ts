@@ -4,4 +4,4 @@ export type UpdateTeacherBody = {
   lastName: string;
   description: string;
   avatar: string;
-};
+}
