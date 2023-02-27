@@ -1,7 +1,11 @@
 import { useState } from 'react';
 
 import { Popup } from '@/components/common/composite/popup';
-import Button from '@/components/common/ui/button/Button';
+import Button, {
+  ButtonColor,
+  ButtonSize,
+  ButtonVariant,
+} from '@/components/common/ui/button/Button';
 
 import styles from '../test-pages.module.scss';
 
@@ -41,16 +45,28 @@ const PopupPage = () => {
             title="Application Received"
             text="This will remove all data relating to Alex. This action cannot be reversed. Deleted data can not be recovered."
             closeFunction={setIsFirstPopupOpen}
-            firstLabel="cancel"
-            firstFunction={() => {
-              console.log('cancelOne');
-              setIsFirstPopupOpen(false);
-            }}
-            secondLabel="submit"
-            secondFunction={() => {
-              console.log('submitOne');
-              setIsFirstPopupOpen(false);
-            }}
+            firstButton={
+              <Button
+                size={ButtonSize.SMALL}
+                text="cancel"
+                color={ButtonColor.PRIMARY}
+                variant={ButtonVariant.OUTLINE}
+                onClick={() => {
+                  setIsFirstPopupOpen(false);
+                }}
+              />
+            }
+            secondButton={
+              <Button
+                size={ButtonSize.SMALL}
+                text="submit"
+                color={ButtonColor.PRIMARY}
+                variant={ButtonVariant.FILLED}
+                onClick={() => {
+                  setIsFirstPopupOpen(false);
+                }}
+              />
+            }
           />
         )}
 
@@ -61,11 +77,18 @@ const PopupPage = () => {
             title="Application Received"
             text="This will remove all data relating to Alex. This action cannot be reversed. Deleted data can not be recovered."
             closeFunction={setIsSecondPopupOpen}
-            firstLabel="cancel"
-            firstFunction={() => {
-              console.log('cancelTwo');
-              setIsSecondPopupOpen(false);
-            }}
+            firstButton={
+              <Button
+                size={ButtonSize.SMALL}
+                text="cancel"
+                color={ButtonColor.PRIMARY}
+                variant={ButtonVariant.OUTLINE}
+                onClick={() => {
+                  setIsSecondPopupOpen(false);
+                }}
+              />
+            }
+            secondButton={''}
           />
         )}
 
@@ -76,16 +99,28 @@ const PopupPage = () => {
             title="Application Received"
             text="This will remove all data relating to Alex. This action cannot be reversed. Deleted data can not be recovered."
             closeFunction={setIsThirdPopupOpen}
-            firstLabel="cancel"
-            firstFunction={() => {
-              console.log('cancelThird');
-              setIsThirdPopupOpen(false);
-            }}
-            secondLabel="submit"
-            secondFunction={() => {
-              console.log('submitOne');
-              setIsThirdPopupOpen(false);
-            }}
+            firstButton={
+              <Button
+                size={ButtonSize.SMALL}
+                text="cancel"
+                color={ButtonColor.PRIMARY}
+                variant={ButtonVariant.OUTLINE}
+                onClick={() => {
+                  setIsFirstPopupOpen(false);
+                }}
+              />
+            }
+            secondButton={
+              <Button
+                size={ButtonSize.SMALL}
+                text="submit"
+                color={ButtonColor.PRIMARY}
+                variant={ButtonVariant.FILLED}
+                onClick={() => {
+                  setIsFirstPopupOpen(false);
+                }}
+              />
+            }
           />
         )}
 
@@ -96,11 +131,17 @@ const PopupPage = () => {
             title="Application Received"
             text="This will remove all data relating to Alex. This action cannot be reversed. Deleted data can not be recovered."
             closeFunction={setIsFourthPopupOpen}
-            firstLabel="cancel"
-            firstFunction={() => {
-              console.log('cancelThird');
-              setIsFourthPopupOpen(false);
-            }}
+            firstButton={
+              <Button
+                size={ButtonSize.SMALL}
+                text="cancel"
+                color={ButtonColor.PRIMARY}
+                variant={ButtonVariant.FILLED}
+                onClick={() => {
+                  setIsFourthPopupOpen(false);
+                }}
+              />
+            }
           />
         )}
       </div>
