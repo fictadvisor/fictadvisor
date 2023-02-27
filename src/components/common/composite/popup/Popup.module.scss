@@ -36,8 +36,8 @@
   background-color: $background-dark-10;
   border-radius: 8px;
   position: relative;
-  max-width: 420px;
-  min-width: 320px;
+  width: 420px;
+    height: fit-content;
   z-index: 2;
 
   .close {
@@ -123,5 +123,11 @@
     .line {
       width: 100%;
     }
+  }
+}
+
+@media (max-width: 420px) {
+  .content {
+    width: 314px;
   }
 }

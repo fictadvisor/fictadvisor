@@ -76,15 +76,23 @@
     & img {
         width: 197px;
         height: 20px;
+        margin-right: 16px;
     }
 }
 
-@media (max-width: 1101px) {
+@media (max-width: 1200px) {
     .header-container {
         padding-left: 0px;
         padding-right: 0px;
         position: relative;
         justify-content: center;
+    }
+    .header-logo {
+        & img {
+            width: 197px;
+            height: 20px;
+            margin-right: 0px;
+        }
     }
     .mobile-button {
         position: absolute;
