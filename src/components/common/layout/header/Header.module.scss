@@ -43,7 +43,7 @@
 .account-buttons {
     display: flex;
     flex-direction: column;
-    
+
     margin-left: 16px;
     margin-right: 16px;
     gap: 8px;
@@ -83,12 +83,11 @@
     .header-container {
         padding-left: 0px;
         padding-right: 0px;
-    }
-    .header-logo {
-        margin-left: 70px;
-        flex-grow: 4;
+        position: relative;
+        justify-content: center;
     }
     .mobile-button {
-        margin-right: 10px;
+        position: absolute;
+        right: 10px;
     }
 }
