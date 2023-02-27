@@ -32,8 +32,8 @@ const PasswordResetValidLinkPage = () => {
 
           <div className={styles['text-and-button']}>
             <h6 className={styles['text']}>
-              Твій пароль було успішно змінено! Натисни нижче, щоб повернутися
-              до поля авторизації.
+              Твій пароль успішно змінено! Натисни нижче, щоб повернутися до
+              поля авторизації.
             </h6>
             <div className={styles['button-wrap']}>
               <Button
