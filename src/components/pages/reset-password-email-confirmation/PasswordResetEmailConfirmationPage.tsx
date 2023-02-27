@@ -19,7 +19,9 @@ const PasswordResetEmailConfirmationPage = () => {
   const emailText = email
     ? 'Ми надіслали листа для зміни пароля на адресу '
     : 'Ми надіслали листа для зміни пароля';
-
+  const returnRegister = () => {
+    router.push('/register');
+  };
   return (
     <PageLayout description={'Перевірка пошти при скиданні пароля'}>
       <div className={styles['reset-password-email-confirmation-page']}>
@@ -69,6 +71,7 @@ const PasswordResetEmailConfirmationPage = () => {
             startIcon={<ChevronLeftIcon className="icon" />}
             variant={ButtonVariant.TEXT}
             size={ButtonSize.SMALL}
+            onClick={returnRegister}
           />
         </div>
       </div>

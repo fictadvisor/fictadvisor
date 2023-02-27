@@ -1,5 +1,6 @@
 import React from 'react';
 import { ChevronLeftIcon, FingerPrintIcon } from '@heroicons/react/24/outline';
+import { useRouter } from 'next/router';
 
 import Button, {
   ButtonSize,
@@ -12,6 +13,10 @@ import PageLayout from '../../common/layout/page-layout/PageLayout';
 import styles from './CreatePasswordPage.module.scss';
 
 const CreatePasswordPage = () => {
+  const router = useRouter();
+  const returnAuth = () => {
+    router.push('/login');
+  };
   return (
     <PageLayout
       hasHeader={false}
@@ -34,6 +39,7 @@ const CreatePasswordPage = () => {
             startIcon={<ChevronLeftIcon className="icon" />}
             variant={ButtonVariant.TEXT}
             size={ButtonSize.SMALL}
+            onClick={returnAuth}
           />
         </div>
       </div>

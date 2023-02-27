@@ -1,5 +1,6 @@
 import React from 'react';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
+import { useRouter } from 'next/router';
 
 import { CustomClock } from '@/components/common/custom-svg/CustomClock';
 import PageLayout from '@/components/common/layout/page-layout';
@@ -12,6 +13,10 @@ import Button, {
 import styles from './PasswordResetLinkExpiredPage.module.scss';
 
 const PasswordResetLinkExpiredPage = () => {
+  const router = useRouter();
+  const returnRegister = () => {
+    router.push('/register');
+  };
   return (
     <PageLayout description={'Час зміни пароля вичерпано'}>
       <div className={styles['reset-password-link-expired-page']}>
@@ -41,6 +46,7 @@ const PasswordResetLinkExpiredPage = () => {
             startIcon={<ChevronLeftIcon className="icon" />}
             variant={ButtonVariant.TEXT}
             size={ButtonSize.SMALL}
+            onClick={returnRegister}
           />
         </div>
       </div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useRouter } from 'next/router';
 
 import { CustomShield } from '@/components/common/custom-svg/CustomShield';
 import PageLayout from '@/components/common/layout/page-layout';
@@ -11,6 +12,10 @@ import Button, {
 import styles from './PasswordResetValidLinkPage.module.scss';
 
 const PasswordResetValidLinkPage = () => {
+  const router = useRouter();
+  const returnAuth = () => {
+    router.push('/login');
+  };
   return (
     <PageLayout description={'Пароль успішно змінено'}>
       <div className={styles['reset-password-valid-link-page']}>
@@ -32,6 +37,7 @@ const PasswordResetValidLinkPage = () => {
                 variant={ButtonVariant.FILLED}
                 size={ButtonSize.LARGE}
                 color={ButtonColor.PRIMARY}
+                onClick={returnAuth}
               />
             </div>
           </div>

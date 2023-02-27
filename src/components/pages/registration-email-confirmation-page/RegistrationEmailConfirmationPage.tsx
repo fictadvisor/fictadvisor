@@ -19,7 +19,9 @@ const RegistrationEmailConfirmationPage = () => {
   const emailText = email
     ? 'Ми надіслали листа для підтвердження пошти на адресу '
     : 'Ми надіслали листа для підтвердження пошти';
-
+  const returnRegister = () => {
+    router.push('/register');
+  };
   return (
     <PageLayout
       hasHeader={false}
@@ -71,6 +73,7 @@ const RegistrationEmailConfirmationPage = () => {
             startIcon={<ChevronLeftIcon className="icon" />}
             variant={ButtonVariant.TEXT}
             size={ButtonSize.SMALL}
+            onClick={returnRegister}
           />
         </div>
       </div>
