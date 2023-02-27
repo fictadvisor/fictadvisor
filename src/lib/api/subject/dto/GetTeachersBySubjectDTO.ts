@@ -1,4 +1,4 @@
-export type GetTeachersBySubjectDTO = {
+export interface GetTeachersBySubjectDTO {
   teachers: [
     {
       name: string;
@@ -6,4 +6,4 @@ export type GetTeachersBySubjectDTO = {
       role: string;
     },
   ];
-};
+}

@@ -23,7 +23,7 @@
   &:hover {
     background-color: $hover;
   }
-  &:focus {
+  &:focus:not(:active) {
     background-color: $default;
     border: $focus 1px solid;
   }
@@ -61,7 +61,6 @@
   }
   .#{$shape}-button-icon-#{$className}-transparent {
     background-color: transparent;
-    padding: 6px;
   }
 }
 @mixin style-button-icon-styles($shape, $className, $length, $size) {
@@ -71,10 +70,14 @@
   .#{$shape}-button-icon-#{$className}-error,
   .#{$shape}-button-icon-#{$className}-transparent {
     @include style-button-icon($length, $size);
-    padding: 6px;
+    padding: 0 3px 3px 0;
     @if $shape == 'square' {
       & svg {
         transform: translateX(10%) translateY(10%);
+      }
+    } @else {
+      & svg {
+        padding: 3px 0 0 3px;
       }
     }
   }
@@ -89,6 +92,6 @@
 }
 
 @include style-round-button-icon('normal', 36px);
-@include style-round-button-icon('large', 28px);
-@include style-square-button-icon('normal', 32px);
-@include style-square-button-icon('large', 40px);
+@include style-round-button-icon('large', 36px);
+@include style-square-button-icon('normal', 36px);
+@include style-square-button-icon('large', 44px);

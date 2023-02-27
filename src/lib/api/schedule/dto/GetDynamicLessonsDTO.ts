@@ -1,4 +1,4 @@
-export type GetDynamicLessonsDTO = {
+export interface GetDynamicLessonsDTO {
   current?: {
     fortnight: number;
     week: number;
@@ -13,4 +13,4 @@ export type GetDynamicLessonsDTO = {
       endDate: Date;
     },
   ];
-};
+}

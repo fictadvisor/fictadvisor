@@ -1,26 +1,32 @@
-import { client, getAuthorizationHeader } from '../index';
+import { GetAllDTO } from '@/lib/api/group/dto/GetAllDTO';
+import { getAuthorizationHeader } from '@/lib/api/utils';
+
+import { client } from '../instance';
 
 import { GetDisciplineDTO } from './dto/GetDisciplineDTO';
 import { GetTeachersDisciplineDTO } from './dto/GetTeachersDisciplineDTO';
 
 export class GroupAPI {
-  static async getDiscipline(
-    accessToken: string,
-    groupId: string,
-  ): Promise<GetDisciplineDTO> {
-    return await client.get(
+  static async getDiscipline(groupId: string): Promise<GetDisciplineDTO> {
+    const { data } = await client.get(
       `/groups/${groupId}/disciplines`,
-      getAuthorizationHeader(accessToken),
+      getAuthorizationHeader(),
     );
+    return data;
   }
 
   static async getDisciplineTeachers(
-    accessToken: string,
     groupId: string,
   ): Promise<GetTeachersDisciplineDTO> {
-    return await client.get(
+    const { data } = await client.get(
       `/groups/${groupId}/disciplineTeachers`,
-      getAuthorizationHeader(accessToken),
+      getAuthorizationHeader(),
     );
+    return data;
+  }
+
+  static async getAll(): Promise<GetAllDTO> {
+    const { data } = await client.get('/groups');
+    return data;
   }
 }

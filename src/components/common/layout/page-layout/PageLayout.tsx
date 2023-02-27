@@ -4,7 +4,8 @@ import Script from 'next/script';
 
 import config from '@/config';
 
-import Footer from '../../composite/footer/Footer';
+import Footer from '../footer/Footer';
+import Header from '../header/Header';
 
 import styles from './PageLayout.module.scss';
 
@@ -17,8 +18,15 @@ interface PageLayoutProps {
   className?: string;
 }
 
-function PageLayout(props: PageLayoutProps) {
-  const metaTitle = props?.title ? props.title : config.service;
+const PageLayout: React.FC<PageLayoutProps> = ({
+  title,
+  description,
+  children,
+  hasHeader = true,
+  hasFooter = true,
+  className,
+}: PageLayoutProps) => {
+  const metaTitle = title ? title : config.service;
   return (
     <div>
       <Head>
@@ -43,17 +51,18 @@ function PageLayout(props: PageLayoutProps) {
           }}
         />
 
-        {props?.description && (
-          <meta property="og:description" content={props.description} />
+        {description && (
+          <meta property="og:description" content={description} />
         )}
       </Head>
 
-      <div className={styles['page'] + ' ' + props.className}>
-        {props.children}
-        <div className={styles['footer']}>{props.hasFooter && <Footer />}</div>
+      <div className={styles['page'] + ' ' + className}>
+        <div className={styles['header']}>{hasHeader && <Header />}</div>
+        {children}
+        <div className={styles['footer']}>{hasFooter && <Footer />}</div>
       </div>
     </div>
   );
-}
+};
 
 export default PageLayout;

@@ -1,4 +1,4 @@
-export type GetTeacherScheduleDTO = {
+export interface GetTeacherScheduleDTO {
   current?: {
     fortnight: number;
     week: number;
@@ -19,4 +19,4 @@ export type GetTeacherScheduleDTO = {
       ];
     },
   ];
-};
+}
