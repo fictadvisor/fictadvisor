@@ -33,7 +33,7 @@ const Footer: React.FC = () => {
           <img src={`/assets/logo.png`} alt="logo" />
         </div>
         <div className={styles['signature']}>
-          <p>By Dev відділ ср ФІОТ</p>
+          <p>By Dev-відділ СР ФІОТ</p>
         </div>
       </div>
       <div className={styles['main-references']}>
