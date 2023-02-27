@@ -106,7 +106,7 @@ const PopupPage = () => {
                 color={ButtonColor.PRIMARY}
                 variant={ButtonVariant.OUTLINE}
                 onClick={() => {
-                  setIsFirstPopupOpen(false);
+                  setIsThirdPopupOpen(false);
                 }}
               />
             }
@@ -117,7 +117,7 @@ const PopupPage = () => {
                 color={ButtonColor.PRIMARY}
                 variant={ButtonVariant.FILLED}
                 onClick={() => {
-                  setIsFirstPopupOpen(false);
+                  setIsThirdPopupOpen(false);
                 }}
               />
             }
