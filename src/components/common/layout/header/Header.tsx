@@ -21,9 +21,10 @@ import { XMark } from '../../custom-svg/XMark';
 import { TabItem, TabItemContentPosition } from '../../ui/tab';
 import { TabItemContentSize } from '../../ui/tab/tab-item/TabItem';
 
+import { HeaderDesktopCard } from './components/header-desktop-card';
 import HeaderDivider from './components/header-divider/HeaderDivider';
 import HeaderMobileButton from './components/header-mobile-button/HeaderMobileButton';
-import { HeaderMobileCard } from './components/mobile-card/HeaderMobileCard';
+import { HeaderMobileCard } from './components/header-mobile-card/HeaderMobileCard';
 
 import styles from './Header.module.scss';
 
@@ -99,11 +100,11 @@ const Header: React.FC<HeaderProps> = ({
             />
           </div>
 
-          <div style={{ width: '100%', marginTop: '-35px' }}>
+          <div style={{ width: '100%', height: '8px', marginTop: '-35px' }}>
             <HeaderDivider></HeaderDivider>
           </div>
 
-          <div className={styles['mobile-menu']}>
+          <div className={styles['mobile-menu']} style={{ marginTop: '24px' }}>
             <Link href={''}>
               <TabItem
                 className=""
@@ -184,25 +185,29 @@ const Header: React.FC<HeaderProps> = ({
         </div>
         <div className={styles['drop']}>
           <div className={styles['login-buttons']}>
-            <Link href={''}>
-              <Button
-                text="Зареєструватись"
-                size={ButtonSize.SMALL}
-                variant={ButtonVariant.OUTLINE}
-              />
-            </Link>
-            <Link href={''}>
-              <Button
-                text="Увійти"
-                size={ButtonSize.SMALL}
-                variant={ButtonVariant.FILLED}
-              />
-            </Link>
+            <div style={{ width: '192px' }}>
+              <Link href={''}>
+                <Button
+                  text="Зареєструватись"
+                  size={ButtonSize.SMALL}
+                  variant={ButtonVariant.OUTLINE}
+                />
+              </Link>
+            </div>
+            <div style={{ width: '120px' }}>
+              <Link href={''}>
+                <Button
+                  text="Увійти"
+                  size={ButtonSize.SMALL}
+                  variant={ButtonVariant.FILLED}
+                />
+              </Link>
+            </div>
           </div>
-          <div style={{ width: '100%', marginTop: '-35px' }}>
+          <div style={{ width: '100%', height: '0px', marginTop: '-35px' }}>
             <HeaderDivider></HeaderDivider>
           </div>
-          <div className={styles['mobile-menu']}>
+          <div className={styles['mobile-menu']} style={{ marginTop: '36px' }}>
             <Link href={''}>
               {' '}
               <TabItem
@@ -306,12 +311,12 @@ const Header: React.FC<HeaderProps> = ({
           </Link> */}
         </div>
         {isLoggined ? (
-          <div>
-            <HeaderCard
+          <div style={{ width: '286px', height: '42px' }}>
+            <HeaderDesktopCard
               name={name}
               groupName={groupName}
               position={position}
-            ></HeaderCard>
+            ></HeaderDesktopCard>
           </div>
         ) : (
           <div className={styles['login-buttons']}>

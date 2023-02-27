@@ -11,7 +11,7 @@ const NavigationPage = () => {
     >
       <div className={styles['header']}>
         <Header
-          isLoggined={false}
+          isLoggined={true}
           name="Ярмоленко Єлизавета Миколаївна"
           position="Зам староста"
           groupName="ІК-11"
