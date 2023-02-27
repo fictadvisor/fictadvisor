@@ -53,7 +53,7 @@ $font-weight-bold: 700;
 }
 
 .build-image {
-    width: 60vw;
+    width: 90vw;
     display: flex;
     justify-content: flex-end;
     align-items: center;
@@ -61,11 +61,11 @@ $font-weight-bold: 700;
     overflow: hidden;
 
     svg {
-        width: 95%;
-        height: max-content;
+        width: auto;
+        height: 95%;
         color: #525252;
         position: absolute;
-        right: -10px;
+        right: -5%;
     }
 
     svg:hover {
@@ -217,10 +217,9 @@ $font-weight-bold: 700;
         justify-content: flex-end;
 
         svg {
-            height: 295px;
-            width: 100%;
-            right: -20px;
+            width: 95%;
         }
+    
     }
 
     .resources {
@@ -242,16 +241,9 @@ $font-weight-bold: 700;
 
 @media only screen and (min-width: 481px) and (max-width: 768px){
     .build-image {
-        width: 100vw;
-        height: 60vh;
+        height: 90vh;
         display: flex;
         justify-content: flex-end;
-
-        svg {
-            height: 420px;
-            width: 100%;
-            right: -55px;
-        }
     }
 
     .header-info {
@@ -270,6 +262,13 @@ $font-weight-bold: 700;
         }
     }
 
+    .build-image {
+        svg {
+            width: 95%;
+            
+        }
+    }
+    
     .buttons {
         .buttons-desk {
             display: none;
@@ -312,7 +311,11 @@ $font-weight-bold: 700;
     }
 
     .build-image {
-        height: auto;
+        svg {
+            width: 95%;
+            right: -10%;
+        }
+    
     }
 
     .buttons {
@@ -336,7 +339,7 @@ $font-weight-bold: 700;
         
 }
 
-@media screen and (min-width: 1430px) {
+@media screen and (min-width: 1441px) {
     .main-page {
         background-size: 100vw auto;
     }
