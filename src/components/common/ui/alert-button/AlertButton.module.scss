@@ -14,26 +14,29 @@
 
 .error-filled-alert-button {
   @extend .alert-buttons;
-  outline: 2px transparent solid;
+  border: 2px solid $error-50;
   background: $error-50;
   color: $gray-600;
 
   &:hover {
     background: $error-100;
+    border: 2px solid $error-100;
   }
 
   &:focus:not(:active) {
     background: $error-50;
-    outline: 1px solid $error-100;
+    border: 2px solid $error-200;
   }
 
   &:active {
     background: $error-200;
+    border: 2px solid $error-200;
   }
 
   &:disabled {
     background: $background-dark-0;
     color: $background-dark-35;
+    border: 2px solid $background-dark-0;
     cursor: not-allowed;
     svg{
       opacity:0.5;
@@ -43,7 +46,7 @@
 
 .error-outline-alert-button{
   @extend .alert-buttons;
-  outline: 2px solid $error-200;
+  border: 2px solid $error-200;
   background: $background-dark-0;
   color: $gray-600;
 
@@ -74,23 +77,26 @@
   @extend .alert-buttons;
   background: $success-200;
   color: $gray-600;
-  outline: 2px transparent solid;
+  border: 2px solid $success-200;
 
   &:hover {
     background: $success-100;
+    border: 2px solid $success-100;
   }
 
   &:focus:not(:active) {
     background: $success-200;
-    outline: 1px solid $success-50;
+    border: 2px solid $success-50;
   }
 
   &:active {
     background: $success-50;
+    border: 2px solid $success-50;
   }
 
   &:disabled {
     background: $background-dark-0;
+    border: 2px solid $background-dark-0;
     color: $background-dark-35;
     cursor: not-allowed;
     svg{

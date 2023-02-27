@@ -1,3 +1,6 @@
+import { CheckRegisterTelegramDTO } from '@/lib/api/auth/dto/CheckRegisterTelegramDTO';
+import { GetMeDTO } from '@/lib/api/auth/dto/GetMeDTO';
+
 import { client, getAuthorizationHeader } from '../index';
 
 import { authBody } from './dto/authBody';
@@ -56,6 +59,10 @@ export class AuthAPI {
     ).data;
   }
 
+  static async getMe(accessToken: string): Promise<GetMeDTO> {
+    return await client.get(`/auth/me`, getAuthorizationHeader(accessToken));
+  }
+
   static async authTelegram(body: authTelegramBody): Promise<tokensDTO> {
     return (await client.post('/auth/login', body)).data;
   }
@@ -70,5 +77,12 @@ export class AuthAPI {
 
   static async confirmPasswordReset(body: confirmPasswordResetBody) {
     return (await client.post('/users/resetPassword', body)).data;
+  }
+
+  static async checkRegisterTelegram(
+    token: string,
+  ): Promise<CheckRegisterTelegramDTO> {
+    const res = await client.get(`/auth/checkRegisterTelegram/${token}`);
+    return res.data;
   }
 }
