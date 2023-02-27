@@ -9,7 +9,6 @@ import styles from './NotFoundPage.module.scss';
 const NotFoundPage = () => (
   <PageLayout description={'Сторінку не знайдено'}>
     <div className={styles['page-layout']}>
-      <nav className={styles['navbar']}></nav>
       <div className={styles['page-content']}>
         <h5 className={styles['not-found-text']}>
           Упс! Сторінку не знайдено. Жабка з’їла твою сторінку

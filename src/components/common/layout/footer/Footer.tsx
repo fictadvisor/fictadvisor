@@ -13,7 +13,7 @@ import useIsMobile from '@/hooks/use-is-mobile/UseIsMobile';
 import styles from './Footer.module.scss';
 
 const Footer: React.FC = () => {
-  const isMobile = useIsMobile();
+  const isMobile = useIsMobile(710);
   const socialLabels = isMobile
     ? [
         { text: '', icon: <TelegramIcon /> },
