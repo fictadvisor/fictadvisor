@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   CheckCircleIcon,
   ExclamationCircleIcon,
@@ -35,6 +35,7 @@ interface InputProps
   defaultRemark?: string;
   showRemark?: boolean;
   className?: string;
+  onDeterredChange?:()=>void;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -46,6 +47,7 @@ const Input: React.FC<InputProps> = ({
   defaultRemark,
   showRemark = true,
   className: additionalClassName,
+  onDeterredChange,
   ...rest
 }) => {
   const [field, { touched, error }, { setTouched, setValue }] = useField(
@@ -113,6 +115,13 @@ const Input: React.FC<InputProps> = ({
     additionalClassName,
   );
 
+  useEffect(() => {
+    const curTimer = setTimeout(() => {
+      if (onDeterredChange) onDeterredChange();
+    }, 500);
+    return () => clearTimeout(curTimer);
+  }, [field.value,onDeterredChange]);
+
   return (
     <div className={className}>
       {customLabel && <label> {customLabel} </label>}
@@ -132,6 +141,7 @@ const Input: React.FC<InputProps> = ({
         type={inputType}
         name={rest.name}
         {...field}
+        // {...rest}
       />
       {showRemark && (
         <p className={styles['remark-' + state]}>
