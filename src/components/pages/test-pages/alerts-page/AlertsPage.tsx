@@ -19,6 +19,7 @@ const AlertsPage = () => (
       ].map((variant: AlertVariant) => (
         <>
           <Alert
+            isClosable={false}
             className={styles['test']}
             title="We are going live in July!"
             description="We are happy to announce that we are going live on July 28th. Get ready!"
@@ -26,6 +27,7 @@ const AlertsPage = () => (
             color={AlertColor.INFO}
           />
           <Alert
+            isClosable={false}
             title="We are going live in July!"
             variant={variant}
             color={AlertColor.INFO}

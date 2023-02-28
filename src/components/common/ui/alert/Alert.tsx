@@ -28,6 +28,7 @@ interface AlertProps {
   description?: string;
   color?: AlertColor;
   variant?: AlertVariant;
+  isClosable?: boolean;
   className?: string;
 }
 
@@ -43,6 +44,7 @@ const Alert: React.FC<AlertProps> = ({
   description,
   color = AlertColor.INFO,
   variant = AlertVariant.FILLED,
+  isClosable = true,
   className: additionalClassName,
 }) => {
   let className: string;
@@ -79,19 +81,21 @@ const Alert: React.FC<AlertProps> = ({
     >
       <div className={'icon ' + styles['alert-icon']}>{icon}</div>
 
-      <div className={styles['alert-title']}>
-        {title}
+      <div className={styles['alert-text']}>
+        <div className={styles['alert-title']}> {title} </div>
         {description && (
           <div className={styles['alert-description']}>{description}</div>
         )}
       </div>
 
-      <div
-        className={'icon ' + styles['alert-icon-x']}
-        onClick={() => setIsVisible(false)}
-      >
-        <XMarkIcon />
-      </div>
+      {isClosable && (
+        <div
+          className={'icon ' + styles['alert-icon-x']}
+          onClick={() => setIsVisible(false)}
+        >
+          <XMarkIcon />
+        </div>
+      )}
     </div>
   );
 };

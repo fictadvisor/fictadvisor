@@ -65,6 +65,11 @@
   font-weight: 400;
 }
 
+@mixin body-primary--medium{
+  @include body-primary;
+  font-weight: 500;
+}
+
 @mixin body-primary--bold{
   @include body-primary;
   font-weight: 700;
@@ -75,6 +80,13 @@
   line-height: 1.5;
   font-weight: 400;
 }
+
+@mixin body-secondary--medium{
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
 
 @mixin body-secondary--bold{
   @include body-secondary;
