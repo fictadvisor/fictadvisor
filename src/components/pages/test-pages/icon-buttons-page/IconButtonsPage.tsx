@@ -33,13 +33,13 @@ const IconButtonsPage = () => (
         shape={IconButtonShape.SQUARE}
       />
       <SortButton
-        size={IconButtonSize.NORMAL}
+        size={IconButtonSize.MEDIUM}
         order={SortButtonOrder.ASCENDING}
         color={IconButtonColor.PRIMARY}
         shape={IconButtonShape.SQUARE}
       />
       <SortButton
-        size={IconButtonSize.NORMAL}
+        size={IconButtonSize.MEDIUM}
         order={SortButtonOrder.DESCENDING}
         color={IconButtonColor.PRIMARY}
         shape={IconButtonShape.SQUARE}
@@ -59,14 +59,14 @@ const IconButtonsPage = () => (
         disabled={true}
       />
       <SortButton
-        size={IconButtonSize.NORMAL}
+        size={IconButtonSize.MEDIUM}
         order={SortButtonOrder.ASCENDING}
         color={IconButtonColor.PRIMARY}
         shape={IconButtonShape.SQUARE}
         disabled={true}
       />
       <SortButton
-        size={IconButtonSize.NORMAL}
+        size={IconButtonSize.MEDIUM}
         order={SortButtonOrder.DESCENDING}
         color={IconButtonColor.PRIMARY}
         shape={IconButtonShape.SQUARE}
@@ -85,13 +85,13 @@ const IconButtonsPage = () => (
         shape={IconButtonShape.SQUARE}
       />
       <SortButton
-        size={IconButtonSize.NORMAL}
+        size={IconButtonSize.MEDIUM}
         order={SortButtonOrder.ASCENDING}
         color={IconButtonColor.SECONDARY}
         shape={IconButtonShape.SQUARE}
       />
       <SortButton
-        size={IconButtonSize.NORMAL}
+        size={IconButtonSize.MEDIUM}
         order={SortButtonOrder.DESCENDING}
         color={IconButtonColor.SECONDARY}
         shape={IconButtonShape.SQUARE}
@@ -111,14 +111,14 @@ const IconButtonsPage = () => (
         disabled={true}
       />
       <SortButton
-        size={IconButtonSize.NORMAL}
+        size={IconButtonSize.MEDIUM}
         order={SortButtonOrder.ASCENDING}
         color={IconButtonColor.SECONDARY}
         shape={IconButtonShape.SQUARE}
         disabled={true}
       />
       <SortButton
-        size={IconButtonSize.NORMAL}
+        size={IconButtonSize.MEDIUM}
         order={SortButtonOrder.DESCENDING}
         color={IconButtonColor.SECONDARY}
         shape={IconButtonShape.SQUARE}
@@ -131,7 +131,7 @@ const IconButtonsPage = () => (
         color={IconButtonColor.PRIMARY}
       />
       <StarButton
-        size={IconButtonSize.NORMAL}
+        size={IconButtonSize.MEDIUM}
         shape={IconButtonShape.CIRCLE}
         color={IconButtonColor.PRIMARY}
       />
@@ -142,7 +142,7 @@ const IconButtonsPage = () => (
         color={IconButtonColor.PRIMARY}
       />
       <StarButton
-        size={IconButtonSize.NORMAL}
+        size={IconButtonSize.MEDIUM}
         shape={IconButtonShape.CIRCLE}
         disabled={true}
         color={IconButtonColor.PRIMARY}
@@ -154,7 +154,7 @@ const IconButtonsPage = () => (
         color={IconButtonColor.ERROR}
       />
       <TrashBucketButton
-        size={IconButtonSize.NORMAL}
+        size={IconButtonSize.MEDIUM}
         shape={IconButtonShape.CIRCLE}
         color={IconButtonColor.ERROR}
       />
@@ -165,7 +165,7 @@ const IconButtonsPage = () => (
         color={IconButtonColor.ERROR}
       />
       <TrashBucketButton
-        size={IconButtonSize.NORMAL}
+        size={IconButtonSize.MEDIUM}
         shape={IconButtonShape.CIRCLE}
         disabled={true}
         color={IconButtonColor.ERROR}
@@ -177,7 +177,7 @@ const IconButtonsPage = () => (
         color={IconButtonColor.SUCCESS}
       />
       <StarButton
-        size={IconButtonSize.NORMAL}
+        size={IconButtonSize.MEDIUM}
         shape={IconButtonShape.CIRCLE}
         color={IconButtonColor.SUCCESS}
       />
@@ -188,7 +188,7 @@ const IconButtonsPage = () => (
         color={IconButtonColor.SUCCESS}
       />
       <StarButton
-        size={IconButtonSize.NORMAL}
+        size={IconButtonSize.MEDIUM}
         shape={IconButtonShape.CIRCLE}
         disabled={true}
         color={IconButtonColor.SUCCESS}
@@ -200,7 +200,7 @@ const IconButtonsPage = () => (
         color={IconButtonColor.TRANSPARENT}
       />
       <CloseButton
-        size={IconButtonSize.NORMAL}
+        size={IconButtonSize.MEDIUM}
         shape={IconButtonShape.CIRCLE}
         color={IconButtonColor.TRANSPARENT}
       />
@@ -211,7 +211,7 @@ const IconButtonsPage = () => (
         color={IconButtonColor.TRANSPARENT}
       />
       <CloseButton
-        size={IconButtonSize.NORMAL}
+        size={IconButtonSize.MEDIUM}
         shape={IconButtonShape.CIRCLE}
         disabled={true}
         color={IconButtonColor.TRANSPARENT}

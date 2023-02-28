@@ -21,7 +21,7 @@ const SortButton: React.FC<
     order?: SortButtonOrder.ASCENDING | SortButtonOrder.DESCENDING;
   }
 > = ({
-  size = IconButtonSize.NORMAL,
+  size = IconButtonSize.MEDIUM,
   shape = IconButtonShape.SQUARE,
   order = SortButtonOrder.ASCENDING,
   color = IconButtonColor.SECONDARY,

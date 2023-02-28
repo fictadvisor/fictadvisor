@@ -31,7 +31,7 @@ const TablesPage = () => {
       ),
       // checkbox: <Checkbox label="Зам. староста" />,
       //action={<AlertButton text="Прийняти" icon={<CustomCheck/>} iconPosition={AlertButtonIconPosition.RIGHT} onClick={() => {}} isDisabled={false} type={AlertButtonType.SUCCESS}/>}
-      secondButton: <TrashBucketButton size={IconButtonSize.NORMAL} />,
+      secondButton: <TrashBucketButton size={IconButtonSize.MEDIUM} />,
     },
     {
       avatar: 'stars-full.svg',
@@ -67,7 +67,7 @@ const TablesPage = () => {
       ),
       // checkbox: <Checkbox label="Зам. староста" />,
       //action={<AlertButton text="Прийняти" icon={<CustomCheck/>} iconPosition={AlertButtonIconPosition.RIGHT} onClick={() => {}} isDisabled={false} type={AlertButtonType.SUCCESS}/>}
-      secondButton: <TrashBucketButton size={IconButtonSize.NORMAL} />,
+      secondButton: <TrashBucketButton size={IconButtonSize.MEDIUM} />,
     },
 
     {
@@ -89,7 +89,7 @@ const TablesPage = () => {
           variant={AlertButtonVariant.SUCCESS}
         />
       ),
-      secondButton: <TrashBucketButton size={IconButtonSize.NORMAL} />,
+      secondButton: <TrashBucketButton size={IconButtonSize.MEDIUM} />,
     },
     {
       email: 'elizabeth.yarmolenko@gmail.com',
@@ -110,7 +110,7 @@ const TablesPage = () => {
           variant={AlertButtonVariant.SUCCESS}
         />
       ),
-      secondButton: <TrashBucketButton size={IconButtonSize.NORMAL} />,
+      secondButton: <TrashBucketButton size={IconButtonSize.MEDIUM} />,
     },
     {
       email: 'elizabeth.yarmolenko@gmail.com',

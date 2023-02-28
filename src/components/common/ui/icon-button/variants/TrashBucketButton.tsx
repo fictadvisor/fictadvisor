@@ -10,7 +10,7 @@ import {
 } from '../IconButton';
 
 const TrashBucketButton: React.FC<IconButtonProps> = ({
-  size = IconButtonSize.NORMAL,
+  size = IconButtonSize.MEDIUM,
   shape = IconButtonShape.CIRCLE,
   color = IconButtonColor.ERROR,
   ...rest

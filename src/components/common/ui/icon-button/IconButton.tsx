@@ -14,7 +14,7 @@ export type IconButtonProps = {
 >;
 
 export enum IconButtonSize {
-  NORMAL = 'normal',
+  MEDIUM = 'normal',
   LARGE = 'large',
 }
 
@@ -36,7 +36,7 @@ export const IconButton: React.FC<
     icon: ReactNode;
   }
 > = ({
-  size = IconButtonSize.NORMAL,
+  size = IconButtonSize.MEDIUM,
   shape = IconButtonShape.CIRCLE,
   color = IconButtonColor.PRIMARY,
   icon,
