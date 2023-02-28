@@ -1,0 +1,125 @@
+@import "../../../../styles/partials/utils";
+@import "../../../../styles/partials/theme";
+@import "../../../../styles/partials/typography-mixins";
+
+.card{
+  display: flex;
+  flex-direction: row;
+  background: $background-dark-10;
+  outline: solid 1px $background-dark-50;
+  gap: 20px;
+  margin: 40px;
+}
+.contacts{
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-left: solid $white 2px;
+  width:fit-content;
+  height: fit-content;
+  padding-right: 42px;
+  padding-left: 42px;
+}
+
+.info{
+  display: grid;
+  height: fit-content;
+  grid-template-columns: 232px 1fr;
+}
+
+.photo{
+  outline-color: red;
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 1;
+  grid-row-end: 3;
+  margin-right: 32px;
+}
+
+.image{
+  height:200px;
+  width:200px;
+}
+.name-and-rating{
+  outline-color: #1C6B1C;
+  display: flex;
+  min-width: unset;
+  width: 100%;
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  h4{
+    @include h4--semi-bold
+  }
+}
+
+.tags-and-info{
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  h6{
+    @include body-primary;
+  }
+}
+.tags{
+  display: flex;
+  flex-direction: row;
+  height: fit-content;
+  gap: 8px;
+}
+
+
+
+@media screen and (max-width: 768px){
+  .card{
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+    margin: unset;
+  }
+  .info{
+    grid-template-columns:  73px 1fr;
+  }
+  .photo{
+    width: fit-content;
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    margin-right: 5px;
+
+  }
+  .image{
+    height:68px;
+    width:68px;
+  }
+  .name-and-rating{
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    gap: 5px;
+    h4{
+      @include button--bold;
+    }
+  }
+  .tags-and-info{
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 2;
+    grid-row-end: 3;
+    h6{
+      @include overline-text;
+    }
+  }
+  .contacts{
+    padding-right: unset;
+    padding-left: unset;
+}
+
+}

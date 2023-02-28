@@ -87,3 +87,8 @@
   line-height: 1.6;
   font-weight: 400;
 }
+@mixin button--bold{
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 132%;
+}

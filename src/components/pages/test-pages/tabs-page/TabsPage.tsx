@@ -41,6 +41,7 @@ const TabsPage = () => {
             value={'3'}
           ></TabItem>
         </TabList>
+        3
         <TabPanelsList className="tab-panels-list" currentValue={index}>
           <TabPanel className="tab-panel" value={'1'}>
             Apple

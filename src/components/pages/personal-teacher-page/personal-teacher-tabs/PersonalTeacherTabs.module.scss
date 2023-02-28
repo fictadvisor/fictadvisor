@@ -1,0 +1,24 @@
+@import "../../../../styles/partials/utils";
+@import "../../../../styles/partials/theme";
+@import "../../../../styles/partials/typography-mixins";
+
+.tab-list{
+  display: flex;
+  flex-direction: row;
+}
+
+@media screen and (max-width: 768px){
+  .karusel{
+    width: 100%;
+    overflow: hidden;
+  }
+  .tab-list{
+    display: flex;
+    flex-direction: row;
+    overflow-y: scroll;
+    scrollbar-width: none;
+  }
+  .tab-list::-webkit-scrollbar {
+    display: none;  /* Safari and Chrome */
+  }
+}
