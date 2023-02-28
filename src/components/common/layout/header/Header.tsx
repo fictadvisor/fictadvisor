@@ -8,6 +8,7 @@ import {
   UsersIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import Button, {
   ButtonSize,
@@ -40,6 +41,25 @@ const Header: React.FC<HeaderProps> = ({
   position = 'Зам. ст',
   isLoggined = false,
 }) => {
+  const router = useRouter();
+  const returnMain = () => {
+    router.push('/');
+  };
+  const returnPoll = () => {
+    router.push('/poll');
+  };
+  const returnSubjects = () => {
+    router.push('/subjects');
+  };
+  const returnTeachers = () => {
+    router.push('/teachers');
+  };
+  const returnLogin = () => {
+    router.push('/login');
+  };
+  const returnRegister = () => {
+    router.push('/register');
+  };
   const isMobile = useIsMobile(1200);
   const [clicked, setClicked] = useState(false);
   const mobileMenu = (
@@ -190,22 +210,20 @@ const Header: React.FC<HeaderProps> = ({
         <div className={styles['drop']}>
           <div className={styles['login-buttons']}>
             <div style={{ width: '192px' }}>
-              <Link href={''}>
-                <Button
-                  text="Зареєструватись"
-                  size={ButtonSize.SMALL}
-                  variant={ButtonVariant.OUTLINE}
-                />
-              </Link>
+              <Button
+                onClick={returnRegister}
+                text="Зареєструватись"
+                size={ButtonSize.SMALL}
+                variant={ButtonVariant.OUTLINE}
+              />
             </div>
             <div style={{ width: '120px' }}>
-              <Link href={''}>
-                <Button
-                  text="Увійти"
-                  size={ButtonSize.SMALL}
-                  variant={ButtonVariant.FILLED}
-                />
-              </Link>
+              <Button
+                onClick={returnLogin}
+                text="Увійти"
+                size={ButtonSize.SMALL}
+                variant={ButtonVariant.FILLED}
+              />
             </div>
           </div>
           {mobileDivider}
@@ -238,34 +256,34 @@ const Header: React.FC<HeaderProps> = ({
         </div>
 
         <div className={styles['menu']}>
-          <Link href={{}}>
-            <Button
-              text="Головна"
-              size={ButtonSize.MEDIUM}
-              variant={ButtonVariant.TEXT}
-            />
-          </Link>
-          <Link href={{}}>
-            <Button
-              text="Опитування"
-              size={ButtonSize.MEDIUM}
-              variant={ButtonVariant.TEXT}
-            />
-          </Link>
-          <Link href={{}}>
-            <Button
-              text="Викладачі"
-              size={ButtonSize.MEDIUM}
-              variant={ButtonVariant.TEXT}
-            />
-          </Link>
-          <Link href={{}}>
-            <Button
-              text="Предмети"
-              size={ButtonSize.MEDIUM}
-              variant={ButtonVariant.TEXT}
-            />
-          </Link>
+          <Button
+            onClick={returnMain}
+            text="Головна"
+            size={ButtonSize.MEDIUM}
+            variant={ButtonVariant.TEXT}
+          />
+
+          <Button
+            onClick={returnPoll}
+            text="Опитування"
+            size={ButtonSize.MEDIUM}
+            variant={ButtonVariant.TEXT}
+          />
+
+          <Button
+            onClick={returnTeachers}
+            text="Викладачі"
+            size={ButtonSize.MEDIUM}
+            variant={ButtonVariant.TEXT}
+          />
+
+          <Button
+            onClick={returnSubjects}
+            text="Предмети"
+            size={ButtonSize.MEDIUM}
+            variant={ButtonVariant.TEXT}
+          />
+
           {/* <Link href={{}}>
             <Button
               text="Розклад"
@@ -284,22 +302,18 @@ const Header: React.FC<HeaderProps> = ({
           </div>
         ) : (
           <div className={styles['login-buttons']}>
-            <Link href={{}}>
-              <Button
-                text="Зареєструватись"
-                size={ButtonSize.SMALL}
-                variant={ButtonVariant.OUTLINE}
-              />
-            </Link>
-
-            <Link href={{}}>
-              {' '}
-              <Button
-                text="Увійти"
-                size={ButtonSize.SMALL}
-                variant={ButtonVariant.FILLED}
-              />
-            </Link>
+            <Button
+              onClick={returnRegister}
+              text="Зареєструватись"
+              size={ButtonSize.SMALL}
+              variant={ButtonVariant.OUTLINE}
+            />
+            <Button
+              onClick={returnLogin}
+              text="Увійти"
+              size={ButtonSize.SMALL}
+              variant={ButtonVariant.FILLED}
+            />
           </div>
         )}
       </div>
