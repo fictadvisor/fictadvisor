@@ -29,7 +29,6 @@ import { TabItemContentSize } from '../../ui/tab/tab-item/TabItem';
 
 import { HeaderDesktopCard } from './components/header-desktop-card';
 import HeaderDivider from './components/header-divider/HeaderDivider';
-import HeaderMobileButton from './components/header-mobile-button/HeaderMobileButton';
 import { HeaderMobileCard } from './components/header-mobile-card/HeaderMobileCard';
 
 import styles from './Header.module.scss';
@@ -131,7 +130,7 @@ const Header: React.FC<HeaderProps> = ({
           <div className={styles['mobile-button']}>
             <CloseButton
               onClick={handleClick}
-              size={IconButtonSize.NORMAL}
+              size={IconButtonSize.MEDIUM}
               color={IconButtonColor.TRANSPARENT}
             />
           </div>
@@ -180,7 +179,7 @@ const Header: React.FC<HeaderProps> = ({
         <div className={styles['mobile-button']}>
           <IconButton
             onClick={handleClick}
-            size={IconButtonSize.NORMAL}
+            size={IconButtonSize.MEDIUM}
             color={IconButtonColor.TRANSPARENT}
             icon={<BurgerMenu />}
           />
@@ -203,7 +202,7 @@ const Header: React.FC<HeaderProps> = ({
           <div className={styles['mobile-button']}>
             <CloseButton
               onClick={handleClick}
-              size={IconButtonSize.NORMAL}
+              size={IconButtonSize.MEDIUM}
               color={IconButtonColor.TRANSPARENT}
             />
           </div>
@@ -239,7 +238,7 @@ const Header: React.FC<HeaderProps> = ({
         <div className={styles['mobile-button']}>
           <IconButton
             onClick={handleClick}
-            size={IconButtonSize.NORMAL}
+            size={IconButtonSize.MEDIUM}
             color={IconButtonColor.TRANSPARENT}
             icon={<BurgerMenu />}
           />
