@@ -1,8 +1,6 @@
 //margin right 80px margin bottom 36px
 import React, { ReactNode } from 'react';
 
-import Alert, { AlertProps } from '../alert/Alert';
-
 import styles from './AlertPopup.module.scss';
 
 interface AlertPopupProps {
