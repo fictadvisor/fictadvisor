@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { QueryAllDTO } from '../../utils/QueryAllDTO';
 import { CreateTeacherDTO } from './dto/CreateTeacherDTO';
 import { UpdateTeacherDTO } from './dto/UpdateTeacherDTO';
 import { CreateContactDTO } from '../user/dto/CreateContactDTO';
@@ -10,6 +9,7 @@ import { ContactRepository } from '../user/ContactRepository';
 import { DisciplineTeacherService } from './DisciplineTeacherService';
 import { MarksQueryDTO } from './query/MarksQueryDTO';
 import { InvalidQueryException } from '../../utils/exceptions/InvalidQueryException';
+import { QueryAllTeacherDTO } from './query/QueryAllTeacherDTO';
 
 @Injectable()
 export class TeacherService {
@@ -22,7 +22,7 @@ export class TeacherService {
 
 
   async getAll (
-    body: QueryAllDTO,
+    body: QueryAllTeacherDTO,
   ) {
     const teachers = await this.teacherRepository.getAll(body);
     return { teachers };
