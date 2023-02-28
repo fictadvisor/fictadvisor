@@ -15,7 +15,6 @@ import Button, {
 } from '@/components/common/ui/button';
 import useIsMobile from '@/hooks/use-is-mobile/UseIsMobile';
 
-import { HeaderCard } from '../../composite/cards';
 import { BurgerMenu } from '../../custom-svg/BurgerMenu';
 import { XMark } from '../../custom-svg/XMark';
 import { TabItem, TabItemContentPosition } from '../../ui/tab';
@@ -41,8 +40,53 @@ const Header: React.FC<HeaderProps> = ({
   position = 'Зам. ст',
   isLoggined = false,
 }) => {
-  const isMobile = useIsMobile(1101);
+  const isMobile = useIsMobile(1200);
   const [clicked, setClicked] = useState(false);
+  const mobileMenu = (
+    <div className={styles['mobile-menu']}>
+      <Link href={''}>
+        <TabItem
+          className=""
+          text="Головна"
+          position={TabItemContentPosition.LEFT}
+          icon={<HomeIcon />}
+          size={TabItemContentSize.SMAll}
+        />
+      </Link>
+      <Link href={''}>
+        <TabItem
+          className=""
+          text="Опитування"
+          position={TabItemContentPosition.LEFT}
+          icon={<ClipboardIcon />}
+          size={TabItemContentSize.SMAll}
+        />
+      </Link>
+      <Link href={''}>
+        <TabItem
+          className=""
+          text="Викладачі"
+          position={TabItemContentPosition.LEFT}
+          icon={<BriefcaseIcon />}
+          size={TabItemContentSize.SMAll}
+        />
+      </Link>
+      <Link href={''}>
+        <TabItem
+          className=""
+          text="Предмети"
+          position={TabItemContentPosition.LEFT}
+          icon={<AcademicCapIcon />}
+          size={TabItemContentSize.SMAll}
+        />
+      </Link>
+    </div>
+  );
+  const mobileDivider = (
+    <div style={{ width: '100%' }}>
+      <HeaderDivider />
+    </div>
+  );
   const handleClick = () => {
     setClicked(clicked => !clicked);
   };
@@ -74,7 +118,7 @@ const Header: React.FC<HeaderProps> = ({
               name={name}
               groupName={groupName}
               position={position}
-            ></HeaderMobileCard>
+            />
           </div>
           <div className={styles['account-buttons']}>
             <TabItem
@@ -100,48 +144,8 @@ const Header: React.FC<HeaderProps> = ({
             />
           </div>
 
-          <div style={{ width: '100%' }}>
-            <HeaderDivider></HeaderDivider>
-          </div>
-
-          <div className={styles['mobile-menu']}>
-            <Link href={''}>
-              <TabItem
-                className=""
-                text="Головна"
-                position={TabItemContentPosition.LEFT}
-                icon={<HomeIcon />}
-                size={TabItemContentSize.SMAll}
-              />
-            </Link>
-            <Link href={''}>
-              <TabItem
-                className=""
-                text="Опитування"
-                position={TabItemContentPosition.LEFT}
-                icon={<ClipboardIcon />}
-                size={TabItemContentSize.SMAll}
-              />
-            </Link>
-            <Link href={''}>
-              <TabItem
-                className=""
-                text="Викладачі"
-                position={TabItemContentPosition.LEFT}
-                icon={<BriefcaseIcon />}
-                size={TabItemContentSize.SMAll}
-              />
-            </Link>
-            <Link href={''}>
-              <TabItem
-                className=""
-                text="Предмети"
-                position={TabItemContentPosition.LEFT}
-                icon={<AcademicCapIcon />}
-                size={TabItemContentSize.SMAll}
-              />
-            </Link>
-          </div>
+          {mobileDivider}
+          {mobileMenu}
         </div>
       </div>
     ) : (
@@ -204,48 +208,8 @@ const Header: React.FC<HeaderProps> = ({
               </Link>
             </div>
           </div>
-          <div style={{ width: '100%' }}>
-            <HeaderDivider></HeaderDivider>
-          </div>
-          <div className={styles['mobile-menu']}>
-            <Link href={''}>
-              {' '}
-              <TabItem
-                className=""
-                text="Головна"
-                position={TabItemContentPosition.LEFT}
-                icon={<HomeIcon />}
-                size={TabItemContentSize.SMAll}
-              />
-            </Link>
-            <Link href={''}>
-              <TabItem
-                className=""
-                text="Опитування"
-                position={TabItemContentPosition.LEFT}
-                icon={<ClipboardIcon />}
-                size={TabItemContentSize.SMAll}
-              />
-            </Link>
-            <Link href={''}>
-              <TabItem
-                className=""
-                text="Викладачі"
-                position={TabItemContentPosition.LEFT}
-                icon={<BriefcaseIcon />}
-                size={TabItemContentSize.SMAll}
-              />
-            </Link>
-            <Link href={''}>
-              <TabItem
-                className=""
-                text="Предмети"
-                position={TabItemContentPosition.LEFT}
-                icon={<AcademicCapIcon />}
-                size={TabItemContentSize.SMAll}
-              />
-            </Link>
-          </div>
+          {mobileDivider}
+          {mobileMenu}
         </div>
       </div>
     ) : (
@@ -266,8 +230,8 @@ const Header: React.FC<HeaderProps> = ({
     );
   }
 
-  if (!isMobile) {
-    return (
+  return (
+    !isMobile && (
       <div className={styles['header-container']}>
         <div className={styles['header-logo']}>
           <img src={`/assets/logo.png`} alt="logo" />
@@ -339,8 +303,8 @@ const Header: React.FC<HeaderProps> = ({
           </div>
         )}
       </div>
-    );
-  }
+    )
+  );
 };
 
 export default Header;
