@@ -1,7 +1,7 @@
 @import "src/styles/partials/utils";
 @import "src/styles/partials/theme";
 @import "src/styles/partials/typography-mixins";
-
+// @import "src/styles/partials/";
 .textarea{
   position: relative;
   padding:10px 0;
@@ -38,7 +38,7 @@
     flex-direction: row;
     align-items: flex-start;
     // padding: 16px 16px 16px 24px;
-    padding: 16px 0;
+    padding: 8px 0;
 
     gap: 8px;
     background: $background-dark-0;
@@ -117,15 +117,14 @@
 .line-numbers span::before {
   content: counter(linenumber);
   display: block;
-  margin-top: 0.5px;
   color: #506882;
-  line-height: 24px;
   color: $gray-300;
   padding-left:5px;
 }
 
 .line-numbers{
-  padding-top: 14px;
+  padding-top: 7px;
+  line-height: 24px;
 }
 
 .divlines{
@@ -133,6 +132,17 @@
   top: 12px;
   left: 0;
   width: 22px;
-  min-height: 116px;
+  line-height: 24px;
+  min-height: 117px;
   overflow: hidden;
+}
+
+@media screen and (max-width: 480px) {
+  .textarea textarea{
+    height: 255px;
+  }
+
+  .divlines{
+    height: 253px;
+  }
 }

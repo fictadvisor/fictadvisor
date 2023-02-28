@@ -39,8 +39,8 @@ const TextArea: React.FC<TextAreaProps> = ({
   let state: FieldState;
   let numbers = [];
   let numberOfLines = 0;
-
   const handlerScroll = e => {
+    console.log(scrollTop);
     setScrollTop(e.target.scrollTop);
   };
 
@@ -59,8 +59,7 @@ const TextArea: React.FC<TextAreaProps> = ({
     field.value = field.value.replace(/;/g, '\n');
     field.value = field.value.replace(/\n\n/g, '\n');
   }
-  field.value += '\n';
-  field.value = field.value.replace(/\n\n/g, '\n');
+
   numberOfLines = field.value.split('\n').length;
   numbers = Array(numberOfLines).fill(
     <span className={styles['spanStyles']}></span>,
