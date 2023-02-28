@@ -1,0 +1,32 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.text-content {
+  display: flex;
+  gap: 8px;
+  h4{
+    font-style: normal;
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 116%;
+  }
+}
+
+.text {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 140%;
+}
+
+.division {
+  display: flex;
+  justify-content: center;
+}
+
+.button {
+  margin-left: 12px;
+}

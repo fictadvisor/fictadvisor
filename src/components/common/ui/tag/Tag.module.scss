@@ -28,7 +28,9 @@ $theme-color:$background-dark-0;
 }
 
 .tag{
-    @include flex-center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border-radius: 6px;
     gap: 4px;
  }

@@ -15,7 +15,6 @@ import Button, {
 } from '@/components/common/ui/button';
 import useIsMobile from '@/hooks/use-is-mobile/UseIsMobile';
 
-import { HeaderCard } from '../../composite/cards';
 import { BurgerMenu } from '../../custom-svg/BurgerMenu';
 import { XMark } from '../../custom-svg/XMark';
 import { TabItem, TabItemContentPosition } from '../../ui/tab';
@@ -41,7 +40,7 @@ const Header: React.FC<HeaderProps> = ({
   position = 'Зам. ст',
   isLoggined = false,
 }) => {
-  const isMobile = useIsMobile(1101);
+  const isMobile = useIsMobile(1200);
   const [clicked, setClicked] = useState(false);
   const handleClick = () => {
     setClicked(clicked => !clicked);

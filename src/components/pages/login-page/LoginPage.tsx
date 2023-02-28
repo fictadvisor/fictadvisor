@@ -7,7 +7,7 @@ import styles from './LoginPage.module.scss';
 
 const LoginPage = () => {
   return (
-    <PageLayout description={'Сторінка для авторизації'} hasFooter={true}>
+    <PageLayout description={'Сторінка для авторизації'}>
       <div className={styles['login-page']}>
         <div className={styles['login-page__content']}>
           <h3 className={styles['register-header']}>З поверненням!</h3>

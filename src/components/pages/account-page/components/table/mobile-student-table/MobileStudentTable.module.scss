@@ -1,0 +1,53 @@
+@import "src/styles/partials/theme";
+
+.table {
+  margin-bottom: 58px;
+}
+
+.table-container {
+  display: flex;
+  width: 100%;
+  height: 60px;
+  padding: 12px 10px;
+  gap: 12px;
+  background-color: $background-dark-10;
+  border-top: 1px solid $gray-50;
+  img {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+.user-info{
+  width: 52%;
+  .full-name {
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 140%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .email {
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 160%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.tag {
+  display: flex;
+  justify-self: center;
+  width: 32px;
+  height: 24px;
+}

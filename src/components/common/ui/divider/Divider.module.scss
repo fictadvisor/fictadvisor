@@ -9,6 +9,8 @@ $divide-regular-color: $gray-600;
 }
 
 .dividers-list{
+  display: flex;
+  justify-content: center;
   width: 100%;
 }
 
@@ -16,7 +18,6 @@ $divide-regular-color: $gray-600;
   display: flex;
   align-items: center;
   padding: 0;
-  margin: 36px 0 0;
   width: 100%;
 }
 
@@ -28,6 +29,7 @@ $divide-regular-color: $gray-600;
 .divider-text{
   color: $divide-regular-color;
   padding: 0 8px;
+  width: 9%;
 }
 
 .center-line{
