@@ -18,7 +18,7 @@ const LoginForm: FC = () => {
     async (data: LoginFormFields, { setErrors }) => {
       try {
         await AuthService.login(data);
-        await push('/');
+        //await push('/');
       } catch (e) {
         setErrors({
           username: 'Пароль та пошта не співпадають',
