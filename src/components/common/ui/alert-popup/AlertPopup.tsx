@@ -8,11 +8,7 @@ interface AlertPopupProps {
 }
 
 const AlertPopup: React.FC<AlertPopupProps> = ({ children }) => {
-  return (
-    <div className={styles.container}>
-      <div className={styles.wrapper}>{children}</div>
-    </div>
-  );
+  return <div className={styles.wrapper}>{children}</div>;
 };
 
 export default AlertPopup;

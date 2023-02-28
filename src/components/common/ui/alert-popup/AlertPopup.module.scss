@@ -8,18 +8,37 @@
     }
 }
 
-.container {
-    width: 100%;
-}
-
 .wrapper {
     position: absolute;
-    width: fit-content;
-    height: fit-content;
     bottom: 0;
     right: 0;
-    margin-right: 80px;
-    margin-bottom: 36px;
-    animation-name: appear;
-    animation-duration: 0.4s;
+    padding-right: 80px;
+    padding-bottom: 36px;
+    display: flex;
+    align-items: center;
+    
+    width: 100%;
+    max-width: fit-content;
+    transition: transform 0.4s ease-in-out;
+
+
+    @media screen and (max-width: 385px) {
+        max-width: 100%;
+        padding-left: 80px;
+        justify-content: center;
+        
+    }
+
+
 }
+
+// @media (max-width: 480px) {
+//     .container {
+
+//         justify-content: center;
+//     }
+
+//     .wrapper {
+//         position: relative;   
+//     }
+// }
