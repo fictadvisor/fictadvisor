@@ -1,4 +1,4 @@
-export type registerBody = {
+export interface RegisterBody {
   student: {
     groupId: string;
     firstName: string;
@@ -20,4 +20,4 @@ export type registerBody = {
     photo_url: string;
     username: string;
   };
-};
+}

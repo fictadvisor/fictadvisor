@@ -1,4 +1,6 @@
-import { client, getAuthorizationHeader } from '../index';
+import { getAuthorizationHeader } from '@/lib/api/utils';
+
+import { client } from '../instance';
 
 import { CreateQuestionBody } from './dto/CreateQuestionBody';
 import { CreateTeacherGradeBody } from './dto/CreateTeacherGradeBody';
@@ -8,59 +10,50 @@ import { QuestionRolesBody } from './dto/QuestionRolesBody';
 
 export class PollAPI {
   static async getTeacherQuestions(
-    accessToken: string,
     disciplineTeacherId: string,
   ): Promise<GetTeacherQuestionsDTO> {
-    return (
-      await client.get(
-        `/poll/answers/${disciplineTeacherId}`,
-        getAuthorizationHeader(accessToken),
-      )
-    ).data;
+    const { data } = await client.get(
+      `/poll/answers/${disciplineTeacherId}`,
+      getAuthorizationHeader(),
+    );
+    return data;
   }
 
   static async createTeacherGrade(
-    accessToken: string,
     body: CreateTeacherGradeBody,
     disciplineTeacherId: string,
   ) {
-    return await client.post(
+    const { data } = await client.post(
       `/poll/answers/${disciplineTeacherId}`,
       body,
-      getAuthorizationHeader(accessToken),
+      getAuthorizationHeader(),
     );
+    return data;
   }
 
-  static async createQuestion(accessToken: string, body: CreateQuestionBody) {
-    return await client.post(
+  static async createQuestion(body: CreateQuestionBody) {
+    const { data } = await client.post(
       `/poll/questions`,
       body,
-      getAuthorizationHeader(accessToken),
+      getAuthorizationHeader(),
     );
+    return data;
   }
 
-  static async deleteQuestion(
-    accessToken: string,
-    body: DeleteQuestionBody,
-    questionId: string,
-  ) {
-    return (
-      await client.delete(
-        `/questions/${questionId}`,
-        getAuthorizationHeader(accessToken),
-      )
-    ).data;
+  static async deleteQuestion(body: DeleteQuestionBody, questionId: string) {
+    const { data } = await client.delete(
+      `/questions/${questionId}`,
+      getAuthorizationHeader(),
+    );
+    return data;
   }
 
-  static async questionRoles(
-    accessToken: string,
-    body: QuestionRolesBody,
-    role: string,
-  ) {
-    return await client.post(
+  static async questionRoles(body: QuestionRolesBody, role: string) {
+    const { data } = await client.post(
       `/poll/questions/${role}`,
       body,
-      getAuthorizationHeader(accessToken),
+      getAuthorizationHeader(),
     );
+    return data;
   }
 }

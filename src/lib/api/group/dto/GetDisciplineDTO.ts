@@ -1,8 +1,8 @@
-export type GetDisciplineDTO = {
+export interface GetDisciplineDTO {
   disciplines: [
     {
       subjectName: string;
       id: string;
     },
   ];
-};
+}

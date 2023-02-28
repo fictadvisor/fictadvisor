@@ -1,4 +1,4 @@
-export interface AddContactsBody {
+export interface AddContactBody {
   name: string;
   value: string;
 }

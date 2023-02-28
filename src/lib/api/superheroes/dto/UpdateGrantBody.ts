@@ -1,4 +1,4 @@
-export type updateGrantBody = {
+export interface UpdateGrantBody {
   permission?: string;
   set?: boolean;
-};
+}

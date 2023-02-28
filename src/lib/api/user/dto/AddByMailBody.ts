@@ -1,4 +1,4 @@
-export type addByMailBody = {
+export interface AddByMailBody {
   email: string;
   groupId: string;
   fullName?: {
@@ -6,4 +6,4 @@ export type addByMailBody = {
     middleName: string;
     lastName: string;
   };
-};
+}
