@@ -18,11 +18,11 @@ $font-weight-bold: 700;
 }
 
 .header {
+    width: 100%;
     display: flex;
-    justify-content: flex-end;
+    padding-top: 10px;
     position: relative;
-    padding: 60px 0 100px 80px;
-    height: 100vh;
+    overflow: hidden;
 
     h2 {
         font-weight: $font-weight-bold;
@@ -32,45 +32,40 @@ $font-weight-bold: 700;
 .header-info {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    position: absolute;
-    z-index: 100;
-    width: 40%;
-    left: 80px;
-    top: 50%;
-    transform: translateY(-50%);
+    justify-content: center;  
+    width: 30%;
+    height: fit-content;
+    padding: 202px 0 0 80px;
 
     h2 {
-        width: fit-content;
+        position: relative;
+        z-index: 100;
+        width: max-content;
     }
 
     p {
-        width: 100%;
         margin: 50px 0 45px 0;
         font-size: 16px;
         line-height: 150%;
+        width: 150%;
     }
 }
 
 .build-image {
-    width: 90vw;
+    width: 70%;
     display: flex;
     justify-content: flex-end;
-    align-items: center;
     position: relative;
-    overflow: hidden;
+    right: -15px;
 
     svg {
-        width: auto;
-        height: 95%;
+        height: auto;
         color: #525252;
-        position: absolute;
-        right: -5%;
+        transition: color 0.3s cubic-bezier(0.37, 0, 0.63, 1);
     }
 
     svg:hover {
         color: white;
-        clip-path: polygon(61% 0, 100% 27%, 100% 100%, 0 100%, 0 37%);
         filter: url('data:image/svg+xml,\
         <svg xmlns="http://www.w3.org/2000/svg">\
         <filter id="waves" x="0.311428" y="0.311428" width="1161.93" height="793.477" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">\
@@ -107,7 +102,7 @@ $font-weight-bold: 700;
         <feBlend mode="normal" in2="effect5_dropShadow_3496_25513" result="effect6_dropShadow_3496_25513"/>\
         <feBlend mode="normal" in="SourceGraphic" in2="effect6_dropShadow_3496_25513" result="shape"/>\
         </filter>\
-        </svg>#waves')
+        </svg>#waves');
     }
 }
 
@@ -132,7 +127,7 @@ $font-weight-bold: 700;
 .resources {
     @include flex-center;
     flex-direction: column;
-    margin: 64px 0 127px 0;
+    margin: 97px 0 127px 0;
 
     h3 { 
         font-weight: $font-weight-bold;
@@ -140,54 +135,53 @@ $font-weight-bold: 700;
 }
 
 .resources-cards {
-    display: grid;
+    display: flex;
+    flex-wrap: wrap;
     justify-content: center;
-    gap: 16px;
-    width: 100%;
-    grid-template-columns: repeat(auto-fill, 200px);
-
+    gap: 8px;
     padding: 64px 80px 0 80px;
+    max-width: calc(8% + 199px * 5 + 160px); 
+    // justify-content: flex-start;
+    // padding: 64px calc(80px - 2%) 0 80px;
+    // outline: 2px solid pink; 
+    // gap: 2%;
 }
 
-
-@media only screen and (max-width: 320px) {
-    .header .header-info p {
-        padding-right: 28px;
-    }
-
-    .buttons .buttons-mob {
-        width: 100%;
-        flex-direction: column;
-        padding-right: 17px;
-    }
-
-    .main-page .resources {
-        margin-top: 127px;
-    }
+.card-holder {
+    // outline: 2px solid pink;
+    margin-bottom: 2%;
 }
 
 @media only screen and (max-width: 480px) {
     .header {
-        padding: 28px 0 97px 17px;
-        height: auto;
+        flex-direction: column-reverse;
+        align-items: flex-end;
+
+        .build-image {
+            width: 100%;
+        }
 
         h2 {
+            top: -24px;
             font-size: 28px;
-            width: 70%;
+            width: 100%;
         }
     }
 
     .header-info {
-        top: 70%;
-        left: 17px;
-        width: 90%;
+        width: 100%;
+        padding: 0 0 0 17px;
+
+        .header-info-content {
+            left: 17px;
+        }
 
         p {
-            width: auto;
-            margin: 24px 0 36px 0;
+            margin: 0 0 36px 0;
+            padding-right: 17px;
             font-size: 14px;
             line-height: 140%;
-            padding-right: 58px;
+            width: 100%;
         }
     }
 
@@ -210,27 +204,12 @@ $font-weight-bold: 700;
         }
     }
 
-    .build-image {
-        width: 80vw;
-        height: 50vh;
-        display: flex;
-        justify-content: flex-end;
-
-        svg {
-            width: 95%;
-        }
-    
-    }
-
     .resources {
-        margin-top: 64px;
-        margin-bottom: 64px;
+        margin-bottom: 40px;
     }
 
     .resources-cards {
-        padding: 32px 16px;
-        gap: 8px;
-        grid-template-columns: repeat(auto-fill, 104px);
+        padding: 32px 17px;
     }
 
     .resources h3 {
@@ -240,32 +219,30 @@ $font-weight-bold: 700;
 }
 
 @media only screen and (min-width: 481px) and (max-width: 768px){
-    .build-image {
-        height: 90vh;
-        display: flex;
-        justify-content: flex-end;
+    .header {
+        flex-direction: column-reverse;
+        align-items: flex-end;
+
+        .build-image {
+            width: 100%;
+
+            svg {
+                width: 80%;
+            }
+        }
     }
 
     .header-info {
-        top: 65%;
-        left: 17px;
-        width: 90%;
+        width: 100%;
+        padding: 0 40px 0 50px;
 
         h2 {
             width: 80%;
-            font-size: 28px;
+            top: -50px;
         }
-
         p {
-            width: 80%;
-            font-size: 14px;
-        }
-    }
-
-    .build-image {
-        svg {
-            width: 95%;
-            
+            margin: 0 0 44px 0;
+            width: 100%;
         }
     }
     
@@ -283,40 +260,18 @@ $font-weight-bold: 700;
     .button-divider {
         display: none;
     }
-
-    .resources {
-        margin-top: 127px;
-    }
-
-    .resources-cards {
-        grid-template-columns: repeat(auto-fill, 104px);
-    }
 }
 
 @media only screen and (min-width: 769px) and (max-width: 1024px){
-    .header {
-        padding-top: 30px;
-
-        h2 {
-            width: 80%;
-        }
-    } 
-
     .header-info {
-        top: 70%;
-
-        p {
+        h2 {
             width: 100%;
         }
-    }
 
-    .build-image {
-        svg {
-            width: 95%;
-            right: -10%;
+        p {
+            width: 200%;
         }
-    
-    }
+    } 
 
     .buttons {
         .buttons-desk {
@@ -327,10 +282,6 @@ $font-weight-bold: 700;
             display: flex;
             gap: 20px;
         }
-    }
-
-    .resources {
-        margin-top: 127px;
     }
 
     .main-page {

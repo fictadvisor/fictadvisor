@@ -26,7 +26,8 @@
 
 @media (max-width: 768px) {
     .card {
-        width: 104px;
+        flex-basis: 104px;
+        max-width: 130px;
         height: 112px;
 
         h6 {
