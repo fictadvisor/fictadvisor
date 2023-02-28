@@ -48,12 +48,12 @@ export class SubjectsAPI {
   static async createSubject(
     body: CreateSubjectBody,
   ): Promise<CreateSubjectDTO> {
-    const { data } = await client.post('/v2/subjects', body);
+    const { data } = await client.post('/subjects', body);
     return data;
   }
 
   static async updateSubject(subjectId: string, body: UpdateSubjectBody) {
-    const { data } = await client.patch(`/v2/subjects/${subjectId}`, body);
+    const { data } = await client.patch(`/subjects/${subjectId}`, body);
     return data;
   }
 }
