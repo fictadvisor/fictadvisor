@@ -1,9 +1,11 @@
 @import 'src/styles/partials/theme';
+@import 'src/styles/partials/breakpoints';
 
 @keyframes appear {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -32,13 +34,22 @@
   right: 0;
   bottom: 0;
 }
+
 .content {
   background-color: $background-dark-10;
   border-radius: 8px;
   position: relative;
-  width: 420px;
-    height: fit-content;
+  max-width: 420px;
+  height: fit-content;
   z-index: 2;
+
+  .buttonsContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 16px;
+  }
 
   .close {
     position: absolute;
@@ -76,6 +87,7 @@
     .icon {
       margin-bottom: 15px;
     }
+
     .title {
       font-size: 20px;
       text-align: center;
@@ -89,6 +101,7 @@
     font-size: 14px;
     padding: 0 20px 16px 20px;
   }
+
   .description {
     text-align: center;
   }
@@ -96,19 +109,23 @@
   .alignedLeftDescription {
     text-align: left;
   }
+
   .buttonsWrapper {
     padding: 16px 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    width: 100%;
+    gap: 16px;
 
     .buttonWrapper {
-      width: 182px;
+      width: 130px;
 
       &:first-child {
         margin-right: 16px;
       }
     }
+
     .line {
       width: 100%;
     }
@@ -119,21 +136,131 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    gap: 16px;
 
     .buttonWrapper {
       width: 130px;
+
       &:first-child {
         margin-right: 16px;
       }
     }
+
     .line {
       width: 100%;
     }
   }
 }
 
-@media (max-width: 420px) {
+@media (max-width: $breakpoint-mobile-medium) {
+
+
   .content {
-    width: 314px;
+    background-color: $background-dark-10;
+    border-radius: 8px;
+    position: relative;
+    // max-width: 314px;
+    margin-right: 15px;
+    margin-left: 15px;
+    height: fit-content;
+    z-index: 2;
+
+    .close {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 36px;
+      height: 36px;
+      padding: 6px;
+    }
+
+    .movedClose {
+      position: absolute;
+      top: 8px;
+      right: 16px;
+      width: 36px;
+      height: 36px;
+      padding: 6px;
+    }
+
+    .title {
+      font-size: 20px;
+      text-align: start;
+      padding: 13px 16px;
+      width: 100%;
+    }
+
+    .titleWrapper {
+      padding: 25px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      width: 100%;
+
+      .icon {
+        margin-bottom: 15px;
+      }
+
+      .title {
+        font-size: 20px;
+        text-align: center;
+        width: 100%;
+      }
+    }
+
+    .description,
+    .alignedLeftDescription {
+      width: 100%;
+      font-size: 14px;
+      padding: 0 20px 16px 20px;
+    }
+
+    .description {
+      text-align: center;
+    }
+
+    .alignedLeftDescription {
+      text-align: left;
+    }
+
+    .buttonsWrapper {
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      gap: 16px;
+
+      .buttonWrapper {
+        width: 182px;
+
+        &:first-child {
+          margin-right: 16px;
+        }
+      }
+
+      .line {
+        width: 100%;
+      }
+    }
+
+    .alignRightButton {
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+
+      .buttonWrapper {
+        &:first-child {
+          margin-right: 16px;
+        }
+      }
+
+      .line {
+        width: 100%;
+      }
+    }
   }
+
 }

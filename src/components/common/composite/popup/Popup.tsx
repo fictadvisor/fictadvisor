@@ -1,5 +1,7 @@
-import React, { ReactNode, SetStateAction } from 'react';
+import React, { ReactNode, SetStateAction, useState } from 'react';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
+
+import useIsMobile from '@/hooks/use-is-mobile/UseIsMobile';
 
 import { CloseButton } from '../../ui/icon-button/variants';
 
@@ -25,6 +27,8 @@ export const Popup: React.FC<PopupProps> = ({
   closeFunction,
 }) => {
   const secondLabel = secondButton ? true : false;
+  const isMobile = useIsMobile(480);
+  document.body.style.overflow = 'auto';
   return (
     <div className={styles.wrapper}>
       <div className={styles.shadow} onClick={() => closeFunction(false)} />
@@ -54,16 +58,36 @@ export const Popup: React.FC<PopupProps> = ({
         >
           {text}
         </p>
-        <div
-          className={hasIcon ? styles.buttonsWrapper : styles.alignRightButton}
-        >
-          <div className={secondLabel ? styles.buttonWrapper : styles.line}>
-            {firstButton}
+
+        {hasIcon && (
+          <div className={styles.buttonsContainer}>
+            <div className={styles.buttonsWrapper}>
+              <div className={styles.line}>{firstButton}</div>
+              {secondLabel && <div className={styles.line}>{secondButton}</div>}
+            </div>
           </div>
-          {secondLabel && (
-            <div className={styles.buttonWrapper}>{secondButton}</div>
-          )}
-        </div>
+        )}
+        {!hasIcon && (
+          <div
+            className={styles.buttonsContainer}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'flex-end',
+            }}
+          >
+            <div className={styles.alignRightButton} style={{ width: '276px' }}>
+              <div className={styles.line} style={{ width: '100%' }}>
+                {firstButton}
+              </div>
+              {secondLabel && (
+                <div className={styles.line} style={{ width: '100%' }}>
+                  {secondButton}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
