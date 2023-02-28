@@ -1,13 +1,9 @@
-import React from 'react';
-import { EllipsisVerticalIcon } from '@heroicons/react/24/outline';
+import React, { useState } from 'react';
 
 import { CaptainIcon } from '@/components/common/custom-svg/CaptainIcon';
 import { ModeratorIcon } from '@/components/common/custom-svg/ModeratorIcon';
-import {
-  IconButton,
-  IconButtonColor,
-} from '@/components/common/ui/icon-button/IconButton';
 import Tag, { TagSize } from '@/components/common/ui/tag';
+import MobileStudentTableButtons from '@/components/pages/account-page/components/table/mobile-student-table/components/mobile-student-table-buttons';
 import { StudentRole } from '@/components/pages/account-page/components/table/student-table/StudentTable';
 
 import styles from './MobileStudentTable.module.scss';
@@ -26,6 +22,7 @@ interface StudentTableProps {
 }
 
 const MobileStudentTable: React.FC<StudentTableProps> = ({ variant, rows }) => {
+  const [openedIndex, setOpenedIndex] = useState(-1);
   return (
     <div className={styles['table']}>
       {rows.map((row, index) => (
@@ -49,12 +46,11 @@ const MobileStudentTable: React.FC<StudentTableProps> = ({ variant, rows }) => {
               />
             )}
           </div>
-          <div className={styles['button']}>
-            <IconButton
-              icon={<EllipsisVerticalIcon className={'icon'} />}
-              color={IconButtonColor.TRANSPARENT}
-            />
-          </div>
+          <MobileStudentTableButtons
+            value={index}
+            currentValue={openedIndex}
+            onChange={setOpenedIndex}
+          />
         </div>
       ))}
     </div>

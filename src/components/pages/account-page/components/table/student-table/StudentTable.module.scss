@@ -26,8 +26,7 @@
     align-items: center;
     width: 60%;
     height: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    word-break: break-all;
   }
 }
 
