@@ -1,4 +1,5 @@
 import React from 'react';
+import { useRouter } from 'next/router';
 
 import { CustomShield } from '@/components/common/custom-svg/CustomShield';
 import PageLayout from '@/components/common/layout/page-layout';
@@ -11,8 +12,16 @@ import Button, {
 import styles from './PasswordResetValidLinkPage.module.scss';
 
 const PasswordResetValidLinkPage = () => {
+  const router = useRouter();
+  const returnAuth = () => {
+    router.push('/login');
+  };
   return (
-    <PageLayout description={'Пароль успішно змінено'}>
+    <PageLayout
+      hasHeader={false}
+      hasFooter={false}
+      description={'Пароль успішно змінено'}
+    >
       <div className={styles['reset-password-valid-link-page']}>
         <div className={styles['reset-password-valid-link-page-content']}>
           <div className={styles['icon']}>
@@ -23,8 +32,8 @@ const PasswordResetValidLinkPage = () => {
 
           <div className={styles['text-and-button']}>
             <h6 className={styles['text']}>
-              Твій пароль було успішно змінено! Натисни нижче, щоб повернутися
-              до поля авторизації.
+              Твій пароль успішно змінено! Натисни нижче, щоб повернутися до
+              поля авторизації.
             </h6>
             <div className={styles['button-wrap']}>
               <Button
@@ -32,6 +41,7 @@ const PasswordResetValidLinkPage = () => {
                 variant={ButtonVariant.FILLED}
                 size={ButtonSize.LARGE}
                 color={ButtonColor.PRIMARY}
+                onClick={returnAuth}
               />
             </div>
           </div>

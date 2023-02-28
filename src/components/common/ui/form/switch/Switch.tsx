@@ -1,7 +1,9 @@
 import React, { FC } from 'react';
 import { useField } from 'formik';
+import mergeClassNames from 'merge-class-names';
 
 import styles from './Switch.module.scss';
+
 export enum SwitchTextPosition {
   RIGHT = 'right',
   LEFT = 'left',
@@ -18,12 +20,14 @@ interface SwitchProps
   label?: string;
   textPosition?: string;
   size?: SwitchSize;
+  className?: string;
 }
 
 const Switch: FC<SwitchProps> = ({
   label,
   textPosition = SwitchTextPosition.RIGHT,
   size = SwitchSize.MEDIUM,
+  className,
   ...rest
 }) => {
   const gap = label ? '8px' : '';
@@ -31,7 +35,10 @@ const Switch: FC<SwitchProps> = ({
 
   return (
     <div>
-      <div className={styles[size + '-container']} style={{ gap: `${gap}` }}>
+      <div
+        className={mergeClassNames(styles[size + '-container'], className)}
+        style={{ gap: `${gap}` }}
+      >
         {textPosition === 'left' && (
           <span className={styles[size + '-switch-text']}>{label}</span>
         )}

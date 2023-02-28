@@ -1,4 +1,4 @@
-export type GetLessonDTO = {
+export interface GetLessonDTO {
   id: string;
   subject: {
     id: string;
@@ -18,4 +18,4 @@ export type GetLessonDTO = {
   isSelective: boolean;
   startDate: Date;
   endDate: Date;
-};
+}

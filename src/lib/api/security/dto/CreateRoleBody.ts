@@ -1,4 +1,4 @@
-export type CreateRoleBody = {
+export interface CreateRoleBody {
   name: string;
   priority: number;
-};
+}

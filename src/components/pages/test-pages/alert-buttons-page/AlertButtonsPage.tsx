@@ -15,6 +15,7 @@ const AlertButtonsPage = () => (
         startIcon={<CustomCheck />}
         disabled={true}
         variant={AlertButtonVariant.SUCCESS}
+        className={styles['test']}
       />
       <AlertButton
         text="Add"

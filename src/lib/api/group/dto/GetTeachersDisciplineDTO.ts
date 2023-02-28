@@ -1,4 +1,4 @@
-export type GetTeachersDisciplineDTO = {
+export interface GetTeachersDisciplineDTO {
   disciplines: [
     {
       id: string;
@@ -17,4 +17,4 @@ export type GetTeachersDisciplineDTO = {
       ];
     },
   ];
-};
+}

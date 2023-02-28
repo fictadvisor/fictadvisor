@@ -1,4 +1,4 @@
-export type CreateSubjectDTO = {
+export interface CreateSubjectDTO {
   id: string;
   name: string;
-};
+}

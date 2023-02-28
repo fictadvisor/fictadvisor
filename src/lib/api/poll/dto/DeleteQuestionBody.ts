@@ -1,3 +1,3 @@
-export type DeleteQuestionBody = {
+export interface DeleteQuestionBody {
   questionId: string;
-};
+}
