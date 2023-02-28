@@ -23,7 +23,7 @@ export enum AlertVariant {
   BORDER_TOP = 'border-top',
 }
 
-interface AlertProps {
+export interface AlertProps {
   title: string;
   description?: string;
   color?: AlertColor;
