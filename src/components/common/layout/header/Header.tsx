@@ -254,35 +254,42 @@ const Header: React.FC<HeaderProps> = ({
         <div className={styles['header-logo']}>
           <img src={`/assets/logo.png`} alt="logo" />
         </div>
-
         <div className={styles['menu']}>
-          <Button
-            onClick={returnMain}
-            text="Головна"
-            size={ButtonSize.MEDIUM}
-            variant={ButtonVariant.TEXT}
-          />
+          <div>
+            <Button
+              onClick={returnMain}
+              text="Головна"
+              size={ButtonSize.MEDIUM}
+              variant={ButtonVariant.TEXT}
+            />
+          </div>
 
-          <Button
-            onClick={returnPoll}
-            text="Опитування"
-            size={ButtonSize.MEDIUM}
-            variant={ButtonVariant.TEXT}
-          />
+          <div>
+            <Button
+              onClick={returnPoll}
+              text="Опитування"
+              size={ButtonSize.MEDIUM}
+              variant={ButtonVariant.TEXT}
+            />
+          </div>
 
-          <Button
-            onClick={returnTeachers}
-            text="Викладачі"
-            size={ButtonSize.MEDIUM}
-            variant={ButtonVariant.TEXT}
-          />
+          <div>
+            <Button
+              onClick={returnTeachers}
+              text="Викладачі"
+              size={ButtonSize.MEDIUM}
+              variant={ButtonVariant.TEXT}
+            />
+          </div>
 
-          <Button
-            onClick={returnSubjects}
-            text="Предмети"
-            size={ButtonSize.MEDIUM}
-            variant={ButtonVariant.TEXT}
-          />
+          <div>
+            <Button
+              onClick={returnSubjects}
+              text="Предмети"
+              size={ButtonSize.MEDIUM}
+              variant={ButtonVariant.TEXT}
+            />
+          </div>
 
           {/* <Link href={{}}>
             <Button
