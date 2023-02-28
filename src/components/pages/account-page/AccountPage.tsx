@@ -37,10 +37,10 @@ import PageLayout from '../../common/layout/page-layout/PageLayout';
 import styles from './AccountPage.module.scss';
 
 const getGroups = isMobile => {
-  if (!isMobile) {
-    return <StudentTab />;
-  } else {
+  if (isMobile) {
     return <MobileStudentTab />;
+  } else {
+    return <StudentTab />;
   }
 };
 

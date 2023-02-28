@@ -34,6 +34,7 @@
 .tag{
   width: fit-content;
   margin-right: auto;
+  text-wrap: none;
 }
 
 .other-content{
@@ -61,7 +62,7 @@
   align-items: center;
   width: fit-content;
   gap: 5%;
-  margin-right: 1%;
+  margin-left: auto;
 }
 
 .role-modifier {

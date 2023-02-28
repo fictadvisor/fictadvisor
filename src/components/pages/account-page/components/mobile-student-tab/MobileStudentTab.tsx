@@ -1,7 +1,5 @@
 import { PlusIcon } from '@heroicons/react/24/solid';
 
-import Button from '@/components/common/ui/button';
-import Divider, { DividerTextPosition } from '@/components/common/ui/divider';
 import {
   IconButton,
   IconButtonShape,
@@ -20,10 +18,8 @@ const getRequest = (requests: object, role: StudentRole) => {
     return (
       <div className={styles['requests']}>
         <div className={styles['division']}>
-          <Divider
-            textPosition={DividerTextPosition.RIGHT}
-            text={'Нові Запити'}
-          />
+          <h4 className={styles['division-text']}>Нові запити</h4>
+          <div className={styles['white']}></div>
         </div>
         <MobileRequestTable rows={transformData(testData)} />
       </div>
@@ -42,7 +38,8 @@ const MobileStudentTab = () => {
       {getRequest(transformData(testData), user.group.role)}
       {user.group.role && (
         <div className={styles['division']}>
-          <Divider textPosition={DividerTextPosition.RIGHT} text={'Студенти'} />
+          <h4 className={styles['division-text']}>Студенти</h4>
+          <div className={styles['white']}></div>
           <div className={styles['button']}>
             <IconButton
               icon={<PlusIcon className={'icon'} />}

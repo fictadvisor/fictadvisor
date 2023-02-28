@@ -1,8 +1,7 @@
 import { PlusIcon } from '@heroicons/react/24/solid';
 
 import Button from '@/components/common/ui/button';
-import Divider, { DividerTextPosition } from '@/components/common/ui/divider';
-import RequestTable from '@/components/pages/account-page/components/table/request-table/RequestTable';
+import RequestTable from '@/components/pages/account-page/components/table/request-table';
 import StudentTable from '@/components/pages/account-page/components/table/student-table';
 import { StudentRole } from '@/components/pages/account-page/components/table/student-table/StudentTable';
 import { transformData } from '@/components/pages/account-page/components/table/student-table/utils';
@@ -16,10 +15,8 @@ const getRequest = (requests: object, role: StudentRole) => {
     return (
       <div className={styles['requests']}>
         <div className={styles['division']}>
-          <Divider
-            textPosition={DividerTextPosition.RIGHT}
-            text={'Нові Запити'}
-          />
+          <h4 className={styles['division-text']}>Нові запити</h4>
+          <div className={styles['white']}></div>
         </div>
         <RequestTable rows={transformData(testData)} />
       </div>
@@ -38,7 +35,8 @@ const StudentTab = () => {
       {getRequest(transformData(testData), user.group.role)}
       {user.group.role && (
         <div className={styles['division']}>
-          <Divider textPosition={DividerTextPosition.RIGHT} text={'Студенти'} />
+          <h4 className={styles['division-text']}>Нові запити</h4>
+          <div className={styles['white']}></div>
           <div className={styles['button']}>
             <Button
               text={'Додати студента'}
