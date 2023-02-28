@@ -76,7 +76,10 @@ export const Popup: React.FC<PopupProps> = ({
               justifyContent: 'flex-end',
             }}
           >
-            <div className={styles.alignRightButton} style={{ width: '276px' }}>
+            <div
+              className={styles.alignRightButton}
+              style={isMobile ? { width: '100%' } : { width: '316px' }}
+            >
               <div className={styles.line} style={{ width: '100%' }}>
                 {firstButton}
               </div>
