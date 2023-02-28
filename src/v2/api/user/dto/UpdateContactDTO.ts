@@ -4,7 +4,6 @@ import { validationOptionsMsg } from '../../../utils/GLOBALS';
 export class UpdateContactDTO {
 
     @MaxLength(100, validationOptionsMsg('Display name is too long (max: 100)'))
-    @IsAscii(validationOptionsMsg('Display name contains wrong symbols (ASCII only)'))
     @IsOptional()
       displayName?: string;
 

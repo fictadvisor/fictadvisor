@@ -19,7 +19,6 @@ export class CreateContactDTO {
 
     @MaxLength(100, validationOptionsMsg('Display name is too long (max: 100)'))
     @IsNotEmpty(validationOptionsMsg('Display name can not be empty'))
-    @IsAscii(validationOptionsMsg('Display name contains wrong symbols (ASCII only)'))
       displayName: string;
 
     @MaxLength(200, validationOptionsMsg('Link is too long (max: 200)'))
