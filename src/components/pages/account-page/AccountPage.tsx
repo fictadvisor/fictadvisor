@@ -17,14 +17,14 @@ import {
   TabPanelsList,
 } from '@/components/common/ui/tab';
 import { TabItemContentSize } from '@/components/common/ui/tab/tab-item/TabItem';
+import MobileStudentTab from '@/components/pages/account-page/components/mobile-student-tab';
 import StudentTab from '@/components/pages/account-page/components/student-tab';
-import MobileRequestTable from '@/components/pages/account-page/components/table/mobile-request-table/MobileRequestTable';
-import MobileStudentTable from '@/components/pages/account-page/components/table/mobile-student-table';
 import StudentTable from '@/components/pages/account-page/components/table/student-table';
 import { StudentRole } from '@/components/pages/account-page/components/table/student-table/StudentTable';
 import { transformData } from '@/components/pages/account-page/components/table/student-table/utils';
 import { testData } from '@/components/pages/account-page/testData';
 import useAuthentication from '@/hooks/use-authentication';
+import useIsMobile from '@/hooks/use-is-mobile/UseIsMobile';
 import { GroupAPI } from '@/lib/api/group/GroupAPI';
 import {
   setRequests,
@@ -36,7 +36,16 @@ import PageLayout from '../../common/layout/page-layout/PageLayout';
 
 import styles from './AccountPage.module.scss';
 
+const getGroups = isMobile => {
+  if (!isMobile) {
+    return <StudentTab />;
+  } else {
+    return <MobileStudentTab />;
+  }
+};
+
 const AccountPage = () => {
+  const isMobile = useIsMobile(1024);
   const router = useRouter();
   const { user } = useAuthentication();
   const { tab } = router.query;
@@ -124,11 +133,10 @@ const AccountPage = () => {
                 />
               </TabPanel>
               <TabPanel className={styles['tab-panel']} value={'2'}>
-                <MobileRequestTable rows={transformData(testData)} />
-                <MobileStudentTable rows={transformData(testData)} />
+                <MobileStudentTab />
               </TabPanel>
               <TabPanel className={styles['tab-panel']} value={'3'}>
-                <StudentTab />
+                {getGroups(isMobile)}
               </TabPanel>
             </>
           )}

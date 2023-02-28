@@ -19,9 +19,10 @@ export interface StudentTableItem {
 
 interface StudentTableProps {
   rows: StudentTableItem[];
+  variant: StudentRole;
 }
 
-const MobileStudentTable: React.FC<StudentTableProps> = ({ rows }) => {
+const MobileStudentTable: React.FC<StudentTableProps> = ({ variant, rows }) => {
   return (
     <div className={styles['table']}>
       {rows.map((row, index) => (

@@ -19,35 +19,44 @@
   display: flex;
   align-items: center;
   gap: 3%;
-  width: 40%;
+  width: 45%;
+  height: 100%;
   .full-name{
-    width: 40%;
+    display: flex;
+    align-items: center;
+    width: 60%;
+    height: 100%;
     overflow: hidden;
-    white-space: nowrap;
     text-overflow: ellipsis;
   }
 }
 
 .tag{
-  margin-left: auto;
+  width: fit-content;
+  margin-right: auto;
 }
 
 .other-content{
   width: 60%;
   display: flex;
   justify-content: space-between;
+  .email {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 50%;
+  }
 }
 
-.email {
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+.tag-container{
+  margin-left: auto;
+  width: 30%;
 }
 
 .side-buttons {
   display: flex;
-  gap: 5%;
+  width: fit-content;
 }
 

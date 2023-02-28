@@ -19,22 +19,21 @@
   display: flex;
   align-items: center;
   gap: 3%;
-  width: 40%;
+  width: 45%;
+  height: 100%;
   .full-name{
-    width: 40%;
+    display: flex;
+    align-items: center;
+    width: 60%;
+    height: 100%;
     overflow: hidden;
-    white-space: nowrap;
     text-overflow: ellipsis;
   }
 }
 
-.tag{
-  margin-left: auto;
-}
-
 .other-content{
+  width: 60%;
   display: flex;
-  flex-grow: 1;
   justify-content: space-between;
 }
 

@@ -5,7 +5,6 @@ import { CustomCheck } from '@/components/common/custom-svg/CustomCheck';
 import AlertButton, {
   AlertButtonVariant,
 } from '@/components/common/ui/alert-button';
-import Tag, { TagSize } from '@/components/common/ui/tag';
 
 import styles from './RequestTable.module.scss';
 
@@ -29,9 +28,6 @@ const RequestTable: React.FC<StudentTableProps> = ({ rows }) => {
           <div className={styles['user-info']}>
             <img src={row.imgSrc} alt="avatar" />
             <div className={styles['full-name']}>{row.fullName}</div>
-            <div className={styles['tag']}>
-              {row.role && <Tag text={row.role} size={TagSize.SMALL} />}
-            </div>
           </div>
           <div className={styles['other-content']}>
             <div className={styles['email']}>{row.email}</div>

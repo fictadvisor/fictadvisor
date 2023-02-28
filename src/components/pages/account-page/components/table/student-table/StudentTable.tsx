@@ -2,14 +2,9 @@ import React from 'react';
 import {
   ArrowDownCircleIcon,
   ArrowUpCircleIcon,
-  XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { TrashIcon } from '@heroicons/react/24/outline';
 
-import { CustomCheck } from '@/components/common/custom-svg/CustomCheck';
-import AlertButton, {
-  AlertButtonVariant,
-} from '@/components/common/ui/alert-button';
 import Button, {
   ButtonColor,
   ButtonSize,
@@ -58,13 +53,15 @@ const getSettings = (variant: StudentRole, role: string) => {
   if (variant === StudentRole.CAPTAIN && role !== StudentRole.CAPTAIN) {
     return (
       <div className={styles['side-buttons']}>
-        <Button
-          text={buttonText}
-          size={ButtonSize.SMALL}
-          variant={ButtonVariant.OUTLINE}
-          startIcon={buttonIcon}
-        />
-        {trashButton}
+        <div>
+          <Button
+            text={buttonText}
+            size={ButtonSize.SMALL}
+            variant={ButtonVariant.OUTLINE}
+            startIcon={buttonIcon}
+          />
+        </div>
+        <div>{trashButton}</div>
       </div>
     );
   }
@@ -81,8 +78,10 @@ const StudentTable: React.FC<StudentTableProps> = ({ variant, rows }) => {
           <div className={styles['user-info']}>
             <img src={row.imgSrc} alt="avatar" />
             <div className={styles['full-name']}>{row.fullName}</div>
-            <div className={styles['tag']}>
-              {row.role && <Tag text={row.role} size={TagSize.SMALL} />}
+            <div className={styles['tag-container']}>
+              <div className={styles['tag']}>
+                {row.role && <Tag text={row.role} size={TagSize.SMALL} />}
+              </div>
             </div>
           </div>
           <div className={styles['other-content']}>

@@ -41,7 +41,7 @@ export const testData = [
     group: {
       id: '538be509-0b6e-433d-ae5f-afd6949ff1cf',
       code: 'ІК-23',
-      role: 'STUDENT',
+      role: 'MODERATOR',
     },
   },
   {
