@@ -7,7 +7,10 @@ import styles from '../test-pages.module.scss';
 const ArrowsPage = () => (
   <div className={styles['test-page-wrap']}>
     <div className={styles['test-page-content']}>
-      <ArrowButton size={ArrowButtonSize.SMALL}></ArrowButton>
+      <ArrowButton
+        className={styles['test']}
+        size={ArrowButtonSize.SMALL}
+      ></ArrowButton>
       <ArrowButton size={ArrowButtonSize.MEDIUM}></ArrowButton>
     </div>
   </div>

@@ -24,8 +24,11 @@
 
 .icon {
   color: #FFFFFF;
-  width: 64px;
-  height: 64px;
+  svg{
+    width: 64px;
+    height: 64px;
+  }
+
   padding: 6px;
   margin-bottom: 32px;
 }
@@ -82,8 +85,10 @@
   }
 
   .icon{
-    width: 48px;
-    height: 48px;
+    svg{
+      width: 48px;
+      height: 48px;
+    }
     margin-bottom: 28px;
     padding: 0;
   }

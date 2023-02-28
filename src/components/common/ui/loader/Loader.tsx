@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import mergeClassNames from 'merge-class-names';
 
 import { LargeProgressCircle } from '../../custom-svg/progress/LargeProgressCircle';
 import { LargestProgressCircle } from '../../custom-svg/progress/LargestProgressCircle';
@@ -6,9 +7,9 @@ import { MediumProgressCircle } from '../../custom-svg/progress/MediumProgressCi
 import { SmallestProgressCircle } from '../../custom-svg/progress/SmallestProgressCircle';
 import { SmallProgressCircle } from '../../custom-svg/progress/SmallProgressCircle';
 
-import styles from './Progress.module.scss';
+import styles from './Loader.module.scss';
 
-export enum ProgressSize {
+export enum LoaderSize {
   SMALLEST = 'smallest-loader',
   SMALL = 'small-loader',
   MEDIUM = 'medium-loader',
@@ -16,36 +17,41 @@ export enum ProgressSize {
   LARGEST = 'biggest-loader',
 }
 
-interface ProgressProps {
-  size: ProgressSize;
+interface LoaderProps {
+  size?: LoaderSize;
+  className?: string;
 }
 
-const Progress: FC<ProgressProps> = props => {
+const Loader: FC<LoaderProps> = ({ size = LoaderSize.SMALLEST, className }) => {
   let progressCircle;
-  switch (props.size) {
-    case ProgressSize.SMALLEST: {
+  switch (size) {
+    case LoaderSize.SMALLEST: {
       progressCircle = <SmallestProgressCircle />;
       break;
     }
-    case ProgressSize.SMALL: {
+    case LoaderSize.SMALL: {
       progressCircle = <SmallProgressCircle />;
       break;
     }
-    case ProgressSize.MEDIUM: {
+    case LoaderSize.MEDIUM: {
       progressCircle = <MediumProgressCircle />;
       break;
     }
-    case ProgressSize.LARGE: {
+    case LoaderSize.LARGE: {
       progressCircle = <LargeProgressCircle />;
       break;
     }
-    case ProgressSize.LARGEST: {
+    case LoaderSize.LARGEST: {
       progressCircle = <LargestProgressCircle />;
       break;
     }
   }
 
-  return <div className={styles[props.size]}>{progressCircle}</div>;
+  return (
+    <div className={mergeClassNames(styles[size], className)}>
+      {progressCircle}
+    </div>
+  );
 };
 
-export default Progress;
+export default Loader;

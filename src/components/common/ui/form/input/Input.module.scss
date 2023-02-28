@@ -15,8 +15,14 @@
   color: $gray-600;
 }
 
+.eye-icon{
+  @extend .white-icon;
+  cursor: pointer;
+}
+
 @mixin input-color($text-color, $border-color, $placeholder-color){
   transition: all 0.2s ease-in-out;
+
   &::placeholder {
     transition: all 0.2s ease-in-out;
     color: $placeholder-color;
@@ -180,4 +186,12 @@
   }
 }
 
+.medium-unlabeled-icon-input, .medium-unlabeled-input{
+  border-width: 1.5px;
+  input{
+    &:focus, &:active, &:hover{
+      border-width: 1.5px;
+    }
+  }
+}
 
