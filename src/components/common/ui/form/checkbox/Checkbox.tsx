@@ -1,5 +1,6 @@
 import React from 'react';
 import { useField } from 'formik';
+import mergeClassNames from 'merge-class-names';
 
 import { FieldState } from '@/components/common/ui/form/common/types';
 
@@ -8,9 +9,10 @@ import styles from './Checkbox.module.scss';
 interface CheckboxProps extends React.ComponentPropsWithoutRef<'input'> {
   name: string;
   label?: string;
+  className?: string;
 }
 
-const Checkbox: React.FC<CheckboxProps> = ({ label, ...rest }) => {
+const Checkbox: React.FC<CheckboxProps> = ({ label, className, ...rest }) => {
   const additional = rest.disabled ? '-disabled' : '';
   const gap = label ? '8px' : '';
 
@@ -20,7 +22,10 @@ const Checkbox: React.FC<CheckboxProps> = ({ label, ...rest }) => {
 
   return (
     <div>
-      <div className={styles['check-container']} style={{ gap: `${gap}` }}>
+      <div
+        className={mergeClassNames(styles['check-container'], className)}
+        style={{ gap: `${gap}` }}
+      >
         <label className="check-button">
           <input
             type="checkbox"

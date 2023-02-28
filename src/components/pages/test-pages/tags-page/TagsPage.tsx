@@ -12,6 +12,7 @@ const TagsPage = () => (
   <div className={styles['test-page-wrap']}>
     <div className={styles['test-page-content']}>
       <Tag
+        className={styles['test']}
         variant={TagVariant.FILLED}
         color={TagColor.PRIMARY}
         size={TagSize.SMALL}

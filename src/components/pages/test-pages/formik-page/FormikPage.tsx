@@ -106,8 +106,16 @@ const FormikPage = () => {
                 isDisabled={true}
                 defaultRemark={'Dropdown Default remark'}
               />
-              <TextArea name="review" defaultRemark={'Text area remark'} />
-              <Checkbox name="isCaptain" label="Староста групи" />
+              <TextArea
+                name="review"
+                defaultRemark={'Text area remark'}
+                className={testPageStyles['test']}
+              />
+              <Checkbox
+                name="isCaptain"
+                label="Староста групи"
+                className={testPageStyles['test']}
+              />
               <Switch
                 name="notification"
                 label="Бажаєте отримувати сповіщення?"

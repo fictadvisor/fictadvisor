@@ -10,6 +10,7 @@ import Button, {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button';
+import Link from '@/components/pages/registration-email-confirmation-page/components/send-again-link/Link';
 
 import styles from './RegistrationEmailConfirmationPage.module.scss';
 
@@ -17,11 +18,20 @@ const RegistrationEmailConfirmationPage = () => {
   const router = useRouter();
   const { email } = router.query;
   const emailText = email
-    ? 'Ми надіслали листа для підтвердження пошти на адресу '
+    ? 'Ми надіслали листа для підтвердження на адресу '
     : 'Ми надіслали листа для підтвердження пошти';
+  const returnRegister = () => {
+    router.push('/register');
+  };
+
+  const sendAgainLink = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
 
   return (
-    <PageLayout description={'Перевірка пошти при реєстрації'}>
+    <PageLayout
+      hasHeader={false}
+      hasFooter={false}
+      description={'Перевірка пошти при реєстрації'}
+    >
       <div className={styles['registration-email-confirmation-page']}>
         <div className={styles['registration-email-confirmation-page-content']}>
           <div className={styles['icon']}>
@@ -36,7 +46,7 @@ const RegistrationEmailConfirmationPage = () => {
               <span className={styles['email']}>{email}</span>
             </h6>
             <div className={styles['email-not-received']}>
-              <h6>Не отримали листа?</h6>
+              <h6>Не отримав листа?</h6>
               <div className={styles['mobile']}>
                 <Button
                   text={'Надіслати повторно'}
@@ -46,12 +56,7 @@ const RegistrationEmailConfirmationPage = () => {
                 />
               </div>
               <div className={styles['desktop']}>
-                <Button
-                  color={ButtonColor.PRIMARY}
-                  text={'Надіслати повторно'}
-                  variant={ButtonVariant.TEXT}
-                  size={ButtonSize.LARGE}
-                />
+                <Link text={'Надіслати повторно'} href={sendAgainLink} />
               </div>
             </div>
           </div>
@@ -67,6 +72,7 @@ const RegistrationEmailConfirmationPage = () => {
             startIcon={<ChevronLeftIcon className="icon" />}
             variant={ButtonVariant.TEXT}
             size={ButtonSize.SMALL}
+            onClick={returnRegister}
           />
         </div>
       </div>

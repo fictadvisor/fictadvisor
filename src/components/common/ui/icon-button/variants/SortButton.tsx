@@ -1,8 +1,7 @@
 import React from 'react';
-import {
-  BarsArrowDownIcon,
-  BarsArrowUpIcon,
-} from '@heroicons/react/24/outline';
+
+import SortAscending from '@/components/common/custom-svg/SortAscending';
+import SortDescending from '@/components/common/custom-svg/SortDescending';
 
 import {
   IconButton,
@@ -22,7 +21,7 @@ const SortButton: React.FC<
     order?: SortButtonOrder.ASCENDING | SortButtonOrder.DESCENDING;
   }
 > = ({
-  size = IconButtonSize.NORMAL,
+  size = IconButtonSize.MEDIUM,
   shape = IconButtonShape.SQUARE,
   order = SortButtonOrder.ASCENDING,
   color = IconButtonColor.SECONDARY,
@@ -31,9 +30,9 @@ const SortButton: React.FC<
   const SortIcon = () => (
     <>
       {order === SortButtonOrder.ASCENDING ? (
-        <BarsArrowUpIcon className="icon" />
+        <SortAscending />
       ) : (
-        <BarsArrowDownIcon className="icon" />
+        <SortDescending />
       )}
     </>
   );
