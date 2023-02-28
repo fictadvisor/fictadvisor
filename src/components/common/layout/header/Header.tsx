@@ -16,7 +16,13 @@ import Button, {
 import useIsMobile from '@/hooks/use-is-mobile/UseIsMobile';
 
 import { BurgerMenu } from '../../custom-svg/BurgerMenu';
-import { XMark } from '../../custom-svg/XMark';
+import {
+  IconButton,
+  IconButtonColor,
+  IconButtonShape,
+  IconButtonSize,
+} from '../../ui/icon-button/IconButton';
+import { CloseButton } from '../../ui/icon-button/variants';
 import { TabItem, TabItemContentPosition } from '../../ui/tab';
 import { TabItemContentSize } from '../../ui/tab/tab-item/TabItem';
 
@@ -103,12 +109,10 @@ const Header: React.FC<HeaderProps> = ({
             <img src={`/assets/logo.png`} alt="logo" />
           </div>
           <div className={styles['mobile-button']}>
-            <HeaderMobileButton
+            <CloseButton
               onClick={handleClick}
-              size={ButtonSize.MEDIUM}
-              text={''}
-              variant={ButtonVariant.TEXT}
-              startIcon={<XMark />}
+              size={IconButtonSize.NORMAL}
+              color={IconButtonColor.TRANSPARENT}
             />
           </div>
         </div>
@@ -154,12 +158,11 @@ const Header: React.FC<HeaderProps> = ({
           <img src={`/assets/logo.png`} alt="logo" />
         </div>
         <div className={styles['mobile-button']}>
-          <HeaderMobileButton
+          <IconButton
             onClick={handleClick}
-            size={ButtonSize.MEDIUM}
-            text={''}
-            variant={ButtonVariant.TEXT}
-            startIcon={<BurgerMenu />}
+            size={IconButtonSize.NORMAL}
+            color={IconButtonColor.TRANSPARENT}
+            icon={<BurgerMenu />}
           />
         </div>
       </div>
@@ -178,12 +181,10 @@ const Header: React.FC<HeaderProps> = ({
             <img src={`/assets/logo.png`} alt="logo" />
           </div>
           <div className={styles['mobile-button']}>
-            <HeaderMobileButton
+            <CloseButton
               onClick={handleClick}
-              size={ButtonSize.MEDIUM}
-              text={''}
-              variant={ButtonVariant.TEXT}
-              startIcon={<XMark />}
+              size={IconButtonSize.NORMAL}
+              color={IconButtonColor.TRANSPARENT}
             />
           </div>
         </div>
@@ -218,12 +219,11 @@ const Header: React.FC<HeaderProps> = ({
           <img src={`/assets/logo.png`} alt="logo" />
         </div>
         <div className={styles['mobile-button']}>
-          <HeaderMobileButton
+          <IconButton
             onClick={handleClick}
-            size={ButtonSize.MEDIUM}
-            text={''}
-            variant={ButtonVariant.TEXT}
-            startIcon={<BurgerMenu />}
+            size={IconButtonSize.NORMAL}
+            color={IconButtonColor.TRANSPARENT}
+            icon={<BurgerMenu />}
           />
         </div>
       </div>
