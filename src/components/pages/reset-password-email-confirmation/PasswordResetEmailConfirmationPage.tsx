@@ -10,6 +10,7 @@ import Button, {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button';
+import Link from '@/components/pages/reset-password-email-confirmation/components/send-again-link';
 
 import styles from './PasswordResetEmailConfirmationPage.module.scss';
 
@@ -19,9 +20,17 @@ const PasswordResetEmailConfirmationPage = () => {
   const emailText = email
     ? 'Ми надіслали листа для зміни пароля на адресу '
     : 'Ми надіслали листа для зміни пароля';
+  const returnRegister = () => {
+    router.push('/register');
+  };
 
+  const sendAgainLink = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
   return (
-    <PageLayout description={'Перевірка пошти при скиданні пароля'}>
+    <PageLayout
+      hasHeader={false}
+      hasFooter={false}
+      description={'Перевірка пошти при скиданні пароля'}
+    >
       <div className={styles['reset-password-email-confirmation-page']}>
         <div
           className={styles['reset-password-email-confirmation-page-content']}
@@ -38,7 +47,7 @@ const PasswordResetEmailConfirmationPage = () => {
               <span className={styles['email']}>{email}</span>
             </h6>
             <div className={styles['email-not-received']}>
-              <h6>Не отримали листа?</h6>
+              <h6>Не отримав листа?</h6>
               <div className={styles['mobile']}>
                 <Button
                   text={'Надіслати повторно'}
@@ -48,12 +57,7 @@ const PasswordResetEmailConfirmationPage = () => {
                 />
               </div>
               <div className={styles['desktop']}>
-                <Button
-                  color={ButtonColor.PRIMARY}
-                  text={'Надіслати повторно'}
-                  variant={ButtonVariant.TEXT}
-                  size={ButtonSize.LARGE}
-                />
+                <Link text={'Надіслати повторно'} href={sendAgainLink} />
               </div>
             </div>
           </div>
@@ -65,10 +69,11 @@ const PasswordResetEmailConfirmationPage = () => {
             ></Alert>
           </div>
           <Button
-            text={'Повернутись до введення даних'}
+            text={'Повернутись до авторизації'}
             startIcon={<ChevronLeftIcon className="icon" />}
             variant={ButtonVariant.TEXT}
             size={ButtonSize.SMALL}
+            onClick={returnRegister}
           />
         </div>
       </div>

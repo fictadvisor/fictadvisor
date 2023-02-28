@@ -1,7 +1,7 @@
 export const CustomEnvelopeOpen = () => (
   <svg
     width="52"
-    height="51"
+    height="52"
     viewBox="0 0 52 51"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
