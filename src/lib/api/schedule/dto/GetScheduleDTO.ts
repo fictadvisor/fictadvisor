@@ -1,4 +1,4 @@
-export type GetScheduleDTO = {
+export interface GetScheduleDTO {
   current?: {
     fortnight: number;
     week: number;
@@ -15,4 +15,4 @@ export type GetScheduleDTO = {
       endDate: Date;
     },
   ];
-};
+}

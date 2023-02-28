@@ -1,7 +1,7 @@
-export type GetSelectiveStudentDTO = {
+export interface GetSelectiveStudentDTO {
   disciplines: [
     {
       id: string;
     },
   ];
-};
+}

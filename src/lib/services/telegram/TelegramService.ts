@@ -1,6 +1,6 @@
 import config from '@/config';
 import { AuthAPI } from '@/lib/api/auth/AuthAPI';
-import { authTelegramBody } from '@/lib/api/auth/dto/authTelegramBody';
+import { AuthTelegramBody } from '@/lib/api/auth/dto/AuthTelegramBody';
 import StorageUtil from '@/lib/utils/StorageUtil';
 
 class TelegramService {
@@ -25,8 +25,8 @@ class TelegramService {
 
   private static async tryTelegramLogin() {
     try {
-      const data: authTelegramBody =
-        (await TelegramService.openAuthenticationDialog()) as authTelegramBody;
+      const data: AuthTelegramBody =
+        (await TelegramService.openAuthenticationDialog()) as AuthTelegramBody;
       const { accessToken, refreshToken } = await AuthAPI.authTelegram(data);
 
       StorageUtil.setTokens(accessToken, refreshToken);
@@ -43,8 +43,8 @@ class TelegramService {
 
   private static async tryTelegramRegister() {
     try {
-      const data: authTelegramBody =
-        (await TelegramService.openAuthenticationDialog()) as authTelegramBody;
+      const data: AuthTelegramBody =
+        (await TelegramService.openAuthenticationDialog()) as AuthTelegramBody;
       console.log(data);
       StorageUtil.setTelegramInfo({ telegram: data });
 

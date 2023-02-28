@@ -1,4 +1,4 @@
-export type QuestionRolesBody = {
+export interface QuestionRolesBody {
   role: string;
   questions: [
     {
@@ -7,4 +7,4 @@ export type QuestionRolesBody = {
       isRequired: boolean;
     },
   ];
-};
+}

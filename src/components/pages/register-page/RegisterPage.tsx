@@ -31,7 +31,11 @@ const RegisterPage = () => {
   }
   if (isFetched) {
     return (
-      <PageLayout description={'Сторінка для авторизації'}>
+      <PageLayout
+        description={'Сторінка для авторизації'}
+        hasFooter={false}
+        hasHeader={false}
+      >
         <div className={styles['login-page']}>
           <div className={styles['login-page__content']}>
             <h3 className={styles['register-header']}>З поверненням!</h3>

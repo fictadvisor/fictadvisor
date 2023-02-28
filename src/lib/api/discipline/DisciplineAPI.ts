@@ -1,37 +1,30 @@
-import { getAuthorizationHeader } from '../index';
-import { client, QueryParams } from '../index';
+import { getAuthorizationHeader } from '@/lib/api/utils';
+
+import { client } from '../instance';
 
 import { GetSelectiveStudentDTO } from './dto/GetSelectiveStudentDTO';
 
 export class DisciplineAPI {
-  static async getDisciplines(
-    subjectId: string,
-    params: QueryParams<'rating' | 'name'>,
-  ) {
-    return (await client.get('/subjects/${link}/courses', { params })).data;
-  }
-
   static async get(disciplineId: string) {
-    return (await client.get(`/disciplines/${disciplineId}`)).data;
+    const { data } = await client.get(`/disciplines/${disciplineId}`);
+    return data;
   }
 
   static async getSelectiveStudent(
-    accessToken: string,
     userId?: string,
   ): Promise<GetSelectiveStudentDTO> {
-    return await client.get(
+    const { data } = await client.get(
       `/disciplines/selective/${userId}`,
-      getAuthorizationHeader(accessToken),
+      getAuthorizationHeader(),
     );
+    return data;
   }
 
-  static async createSelectiveDiscipline(
-    accessToken: string,
-    disciplineId: string,
-  ) {
-    return await client.post(
+  static async createSelectiveDiscipline(disciplineId: string) {
+    const { data } = await client.post(
       `/disciplines/${disciplineId}/selective`,
-      getAuthorizationHeader(accessToken),
+      getAuthorizationHeader(),
     );
+    return data;
   }
 }

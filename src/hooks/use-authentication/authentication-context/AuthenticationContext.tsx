@@ -18,7 +18,7 @@ const AuthenticationProvider: FC<AuthenticationProviderProps> = ({
 
   const { error, isFetching, data } = useQuery(
     ['oauth', jwt?.accessToken, jwt?.refreshToken],
-    () => AuthAPI.getMe(jwt?.accessToken),
+    () => AuthAPI.getMe(),
     { enabled: jwt != null, retry: false },
   );
 

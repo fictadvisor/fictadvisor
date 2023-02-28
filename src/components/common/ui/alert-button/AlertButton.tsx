@@ -1,4 +1,5 @@
 import React, { ReactNode } from 'react';
+import mergeClassNames from 'merge-class-names';
 
 import styles from './AlertButton.module.scss';
 
@@ -13,6 +14,7 @@ interface AlertButtonProps extends React.ComponentPropsWithoutRef<'button'> {
   variant?: AlertButtonVariant;
   startIcon?: ReactNode;
   endIcon?: ReactNode;
+  className?: string;
 }
 
 const AlertButton: React.FC<AlertButtonProps> = ({
@@ -20,6 +22,7 @@ const AlertButton: React.FC<AlertButtonProps> = ({
   variant = AlertButtonVariant.SUCCESS,
   startIcon,
   endIcon,
+  className: additionalClassName,
   ...rest
 }) => {
   let className: string;
@@ -29,7 +32,10 @@ const AlertButton: React.FC<AlertButtonProps> = ({
       : (className = styles[variant + '-only-text'])
     : (className = styles[variant + '-without-text']);
   return (
-    <button className={className} {...rest}>
+    <button
+      className={mergeClassNames(className, additionalClassName)}
+      {...rest}
+    >
       {startIcon}
       {text}
       {endIcon}

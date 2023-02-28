@@ -10,14 +10,14 @@ import {
 } from '../IconButton';
 
 const StarButton: React.FC<IconButtonProps> = ({
-  size = IconButtonSize.NORMAL,
+  size = IconButtonSize.MEDIUM,
   shape = IconButtonShape.CIRCLE,
   color = IconButtonColor.SUCCESS,
   ...rest
 }) => {
   return (
     <IconButton
-      icon={<StarIcon className="icon" />}
+      icon={<StarIcon />}
       size={size}
       shape={shape}
       color={color}

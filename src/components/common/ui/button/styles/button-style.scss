@@ -1,4 +1,5 @@
 @import "src/styles/partials/utils";
+@import "src/styles/partials/typography-mixins";
 
 @mixin button-style($class-name, $border-radius, $padding, $padding-icon, $gap, $underline-offset) {
   .#{$class-name}-button, .#{$class-name}-icon-button {
@@ -40,6 +41,10 @@
   }
 }
 
+.text-large-button{
+  @include body-secondary--bold;
+}
+
 .text-medium-button, .text-small-button{
-  font-weight: 500;
+  @include body-primary;
 }

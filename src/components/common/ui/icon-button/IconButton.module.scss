@@ -9,8 +9,7 @@
   color: $gray-600;
   background-color: $gray-50;
   border: 1px solid transparent;
-  height: $size;
-  width: $size;
+  padding: 5.5px;
   position: relative;
   &:disabled {
     background-color: $background-dark-0 !important;
@@ -70,18 +69,19 @@
   .#{$shape}-button-icon-#{$className}-error,
   .#{$shape}-button-icon-#{$className}-transparent {
     @include style-button-icon($length, $size);
-    padding: 0 3px 3px 0;
-    @if $shape == 'square' {
-      & svg {
-        transform: translateX(10%) translateY(10%);
-      }
-    } @else {
-      & svg {
-        padding: 3px 0 0 3px;
-      }
-    }
   }
 }
+
+.normal-icon{
+  width: 24px;
+  height: 24px;
+}
+
+.large-icon {
+  width: 32px;
+  height: 32px;
+}
+
 @mixin style-round-button-icon($className, $size) {
   @include style-button-icon-styles('circle', $className, 999px, $size);
   @include style-colors-button-theme('circle', $className);

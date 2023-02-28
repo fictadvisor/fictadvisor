@@ -8,6 +8,7 @@ import {
   UsersIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import Button, {
   ButtonSize,
@@ -15,15 +16,19 @@ import Button, {
 } from '@/components/common/ui/button';
 import useIsMobile from '@/hooks/use-is-mobile/UseIsMobile';
 
-import { HeaderCard } from '../../composite/cards';
 import { BurgerMenu } from '../../custom-svg/BurgerMenu';
-import { XMark } from '../../custom-svg/XMark';
+import {
+  IconButton,
+  IconButtonColor,
+  IconButtonShape,
+  IconButtonSize,
+} from '../../ui/icon-button/IconButton';
+import { CloseButton } from '../../ui/icon-button/variants';
 import { TabItem, TabItemContentPosition } from '../../ui/tab';
 import { TabItemContentSize } from '../../ui/tab/tab-item/TabItem';
 
 import { HeaderDesktopCard } from './components/header-desktop-card';
 import HeaderDivider from './components/header-divider/HeaderDivider';
-import HeaderMobileButton from './components/header-mobile-button/HeaderMobileButton';
 import { HeaderMobileCard } from './components/header-mobile-card/HeaderMobileCard';
 
 import styles from './Header.module.scss';
@@ -41,8 +46,72 @@ const Header: React.FC<HeaderProps> = ({
   position = 'Зам. ст',
   isLoggined = false,
 }) => {
-  const isMobile = useIsMobile(1101);
+  const router = useRouter();
+  const returnMain = () => {
+    router.push('/');
+  };
+  const returnPoll = () => {
+    router.push('/poll');
+  };
+  const returnSubjects = () => {
+    router.push('/subjects');
+  };
+  const returnTeachers = () => {
+    router.push('/teachers');
+  };
+  const returnLogin = () => {
+    router.push('/login');
+  };
+  const returnRegister = () => {
+    router.push('/register');
+  };
+  const isMobile = useIsMobile(1200);
   const [clicked, setClicked] = useState(false);
+  const mobileMenu = (
+    <div className={styles['mobile-menu']}>
+      <Link href={''}>
+        <TabItem
+          className=""
+          text="Головна"
+          position={TabItemContentPosition.LEFT}
+          icon={<HomeIcon />}
+          size={TabItemContentSize.SMAll}
+        />
+      </Link>
+      <Link href={''}>
+        <TabItem
+          className=""
+          text="Опитування"
+          position={TabItemContentPosition.LEFT}
+          icon={<ClipboardIcon />}
+          size={TabItemContentSize.SMAll}
+        />
+      </Link>
+      <Link href={''}>
+        <TabItem
+          className=""
+          text="Викладачі"
+          position={TabItemContentPosition.LEFT}
+          icon={<BriefcaseIcon />}
+          size={TabItemContentSize.SMAll}
+        />
+      </Link>
+      <Link href={''}>
+        <TabItem
+          className=""
+          text="Предмети"
+          position={TabItemContentPosition.LEFT}
+          icon={<AcademicCapIcon />}
+          size={TabItemContentSize.SMAll}
+        />
+      </Link>
+    </div>
+  );
+  const mobileDivider = (
+    <div style={{ width: '100%' }}>
+      <HeaderDivider />
+    </div>
+  );
   const handleClick = () => {
     setClicked(clicked => !clicked);
   };
@@ -59,12 +128,10 @@ const Header: React.FC<HeaderProps> = ({
             <img src={`/assets/logo.png`} alt="logo" />
           </div>
           <div className={styles['mobile-button']}>
-            <HeaderMobileButton
+            <CloseButton
               onClick={handleClick}
-              size={ButtonSize.MEDIUM}
-              text={''}
-              variant={ButtonVariant.TEXT}
-              startIcon={<XMark />}
+              size={IconButtonSize.MEDIUM}
+              color={IconButtonColor.TRANSPARENT}
             />
           </div>
         </div>
@@ -74,7 +141,7 @@ const Header: React.FC<HeaderProps> = ({
               name={name}
               groupName={groupName}
               position={position}
-            ></HeaderMobileCard>
+            />
           </div>
           <div className={styles['account-buttons']}>
             <TabItem
@@ -100,48 +167,8 @@ const Header: React.FC<HeaderProps> = ({
             />
           </div>
 
-          <div style={{ width: '100%' }}>
-            <HeaderDivider></HeaderDivider>
-          </div>
-
-          <div className={styles['mobile-menu']}>
-            <Link href={''}>
-              <TabItem
-                className=""
-                text="Головна"
-                position={TabItemContentPosition.LEFT}
-                icon={<HomeIcon />}
-                size={TabItemContentSize.SMAll}
-              />
-            </Link>
-            <Link href={''}>
-              <TabItem
-                className=""
-                text="Опитування"
-                position={TabItemContentPosition.LEFT}
-                icon={<ClipboardIcon />}
-                size={TabItemContentSize.SMAll}
-              />
-            </Link>
-            <Link href={''}>
-              <TabItem
-                className=""
-                text="Викладачі"
-                position={TabItemContentPosition.LEFT}
-                icon={<BriefcaseIcon />}
-                size={TabItemContentSize.SMAll}
-              />
-            </Link>
-            <Link href={''}>
-              <TabItem
-                className=""
-                text="Предмети"
-                position={TabItemContentPosition.LEFT}
-                icon={<AcademicCapIcon />}
-                size={TabItemContentSize.SMAll}
-              />
-            </Link>
-          </div>
+          {mobileDivider}
+          {mobileMenu}
         </div>
       </div>
     ) : (
@@ -150,12 +177,11 @@ const Header: React.FC<HeaderProps> = ({
           <img src={`/assets/logo.png`} alt="logo" />
         </div>
         <div className={styles['mobile-button']}>
-          <HeaderMobileButton
+          <IconButton
             onClick={handleClick}
-            size={ButtonSize.MEDIUM}
-            text={''}
-            variant={ButtonVariant.TEXT}
-            startIcon={<BurgerMenu />}
+            size={IconButtonSize.MEDIUM}
+            color={IconButtonColor.TRANSPARENT}
+            icon={<BurgerMenu />}
           />
         </div>
       </div>
@@ -174,78 +200,34 @@ const Header: React.FC<HeaderProps> = ({
             <img src={`/assets/logo.png`} alt="logo" />
           </div>
           <div className={styles['mobile-button']}>
-            <HeaderMobileButton
+            <CloseButton
               onClick={handleClick}
-              size={ButtonSize.MEDIUM}
-              text={''}
-              variant={ButtonVariant.TEXT}
-              startIcon={<XMark />}
+              size={IconButtonSize.MEDIUM}
+              color={IconButtonColor.TRANSPARENT}
             />
           </div>
         </div>
         <div className={styles['drop']}>
           <div className={styles['login-buttons']}>
             <div style={{ width: '192px' }}>
-              <Link href={''}>
-                <Button
-                  text="Зареєструватись"
-                  size={ButtonSize.SMALL}
-                  variant={ButtonVariant.OUTLINE}
-                />
-              </Link>
+              <Button
+                onClick={returnRegister}
+                text="Зареєструватись"
+                size={ButtonSize.SMALL}
+                variant={ButtonVariant.OUTLINE}
+              />
             </div>
             <div style={{ width: '120px' }}>
-              <Link href={''}>
-                <Button
-                  text="Увійти"
-                  size={ButtonSize.SMALL}
-                  variant={ButtonVariant.FILLED}
-                />
-              </Link>
+              <Button
+                onClick={returnLogin}
+                text="Увійти"
+                size={ButtonSize.SMALL}
+                variant={ButtonVariant.FILLED}
+              />
             </div>
           </div>
-          <div style={{ width: '100%' }}>
-            <HeaderDivider></HeaderDivider>
-          </div>
-          <div className={styles['mobile-menu']}>
-            <Link href={''}>
-              {' '}
-              <TabItem
-                className=""
-                text="Головна"
-                position={TabItemContentPosition.LEFT}
-                icon={<HomeIcon />}
-                size={TabItemContentSize.SMAll}
-              />
-            </Link>
-            <Link href={''}>
-              <TabItem
-                className=""
-                text="Опитування"
-                position={TabItemContentPosition.LEFT}
-                icon={<ClipboardIcon />}
-                size={TabItemContentSize.SMAll}
-              />
-            </Link>
-            <Link href={''}>
-              <TabItem
-                className=""
-                text="Викладачі"
-                position={TabItemContentPosition.LEFT}
-                icon={<BriefcaseIcon />}
-                size={TabItemContentSize.SMAll}
-              />
-            </Link>
-            <Link href={''}>
-              <TabItem
-                className=""
-                text="Предмети"
-                position={TabItemContentPosition.LEFT}
-                icon={<AcademicCapIcon />}
-                size={TabItemContentSize.SMAll}
-              />
-            </Link>
-          </div>
+          {mobileDivider}
+          {mobileMenu}
         </div>
       </div>
     ) : (
@@ -254,54 +236,60 @@ const Header: React.FC<HeaderProps> = ({
           <img src={`/assets/logo.png`} alt="logo" />
         </div>
         <div className={styles['mobile-button']}>
-          <HeaderMobileButton
+          <IconButton
             onClick={handleClick}
-            size={ButtonSize.MEDIUM}
-            text={''}
-            variant={ButtonVariant.TEXT}
-            startIcon={<BurgerMenu />}
+            size={IconButtonSize.MEDIUM}
+            color={IconButtonColor.TRANSPARENT}
+            icon={<BurgerMenu />}
           />
         </div>
       </div>
     );
   }
 
-  if (!isMobile) {
-    return (
+  return (
+    !isMobile && (
       <div className={styles['header-container']}>
         <div className={styles['header-logo']}>
           <img src={`/assets/logo.png`} alt="logo" />
         </div>
-
         <div className={styles['menu']}>
-          <Link href={{}}>
+          <div>
             <Button
+              onClick={returnMain}
               text="Головна"
               size={ButtonSize.MEDIUM}
               variant={ButtonVariant.TEXT}
             />
-          </Link>
-          <Link href={{}}>
+          </div>
+
+          <div>
             <Button
+              onClick={returnPoll}
               text="Опитування"
               size={ButtonSize.MEDIUM}
               variant={ButtonVariant.TEXT}
             />
-          </Link>
-          <Link href={{}}>
+          </div>
+
+          <div>
             <Button
+              onClick={returnTeachers}
               text="Викладачі"
               size={ButtonSize.MEDIUM}
               variant={ButtonVariant.TEXT}
             />
-          </Link>
-          <Link href={{}}>
+          </div>
+
+          <div>
             <Button
+              onClick={returnSubjects}
               text="Предмети"
               size={ButtonSize.MEDIUM}
               variant={ButtonVariant.TEXT}
             />
-          </Link>
+          </div>
+
           {/* <Link href={{}}>
             <Button
               text="Розклад"
@@ -320,27 +308,23 @@ const Header: React.FC<HeaderProps> = ({
           </div>
         ) : (
           <div className={styles['login-buttons']}>
-            <Link href={{}}>
-              <Button
-                text="Зареєструватись"
-                size={ButtonSize.SMALL}
-                variant={ButtonVariant.OUTLINE}
-              />
-            </Link>
-
-            <Link href={{}}>
-              {' '}
-              <Button
-                text="Увійти"
-                size={ButtonSize.SMALL}
-                variant={ButtonVariant.FILLED}
-              />
-            </Link>
+            <Button
+              onClick={returnRegister}
+              text="Зареєструватись"
+              size={ButtonSize.SMALL}
+              variant={ButtonVariant.OUTLINE}
+            />
+            <Button
+              onClick={returnLogin}
+              text="Увійти"
+              size={ButtonSize.SMALL}
+              variant={ButtonVariant.FILLED}
+            />
           </div>
         )}
       </div>
-    );
-  }
+    )
+  );
 };
 
 export default Header;
