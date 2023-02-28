@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import { QueryAllDTO } from '../../utils/QueryAllDTO';
 import { DatabaseUtils } from '../utils/DatabaseUtils';
 import { CreateTeacherDTO } from './dto/CreateTeacherDTO';
 import { UpdateTeacherDTO } from './dto/UpdateTeacherDTO';
 import { QuestionType } from '@prisma/client';
 import { MarksData } from './data/MarksData';
+import { QueryAllTeacherDTO } from './query/QueryAllTeacherDTO';
 
 
 @Injectable()
@@ -15,20 +15,28 @@ export class TeacherRepository {
   ) {}
 
   async getAll (
-    body: QueryAllDTO,
+    body: QueryAllTeacherDTO,
   ) {
     const search = DatabaseUtils.getSearch(body, 'firstName', 'lastName', 'middleName');
     const page = DatabaseUtils.getPage(body);
     const sort = DatabaseUtils.getSort(body);
+    const groupId = body.group;
 
     return this.prisma.teacher.findMany({
       ...page,
       ...sort,
       where: {
         ...search,
-      },
-    });
+        disciplineTeachers: {
+          some: {
+            discipline: {
+              groupId,
+            },   
+          },
+        },
+      } });
   }
+
 
   async getTeacher (
     id: string,

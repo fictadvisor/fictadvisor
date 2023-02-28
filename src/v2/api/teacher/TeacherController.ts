@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Query, Patch } from '@nestjs/common';
 import { TeacherService } from './TeacherService';
-import { QueryAllDTO } from '../../utils/QueryAllDTO';
+import { QueryAllTeacherDTO } from './query/QueryAllTeacherDTO';
 import { CreateTeacherDTO } from './dto/CreateTeacherDTO';
 import { UpdateTeacherDTO } from './dto/UpdateTeacherDTO';
 import { CreateContactDTO } from '../user/dto/CreateContactDTO';
@@ -22,7 +22,7 @@ export class TeacherController {
 
   @Get()
   getAll (
-    @Query() query: QueryAllDTO,
+    @Query() query: QueryAllTeacherDTO,
   ) {
     return this.teacherService.getAll(query);
   }
