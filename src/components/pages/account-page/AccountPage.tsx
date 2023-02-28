@@ -129,7 +129,7 @@ const AccountPage = () => {
               <TabPanel className={styles['tab-panel']} value={'1'}>
                 <StudentTable
                   rows={transformData(testData)}
-                  variant={StudentRole.CAPTAIN}
+                  variant={StudentRole.MODERATOR}
                 />
               </TabPanel>
               <TabPanel className={styles['tab-panel']} value={'2'}>
