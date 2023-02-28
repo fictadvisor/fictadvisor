@@ -70,8 +70,14 @@ const Input: React.FC<InputProps> = ({
 
   let rightIcon = null;
   if (customType === InputType.PASSWORD) {
-    if (isHidden) rightIcon = <EyeIcon className="icon white-icon" />;
-    else rightIcon = <EyeSlashIcon className="icon white-icon" />;
+    if (isHidden)
+      rightIcon = (
+        <EyeSlashIcon className={mergeClassNames('icon', styles['eye-icon'])} />
+      );
+    else
+      rightIcon = (
+        <EyeIcon className={mergeClassNames('icon', styles['eye-icon'])} />
+      );
   } else {
     if (state === FieldState.SUCCESS)
       rightIcon = <CheckCircleIcon className="icon input-success-icon" />;
