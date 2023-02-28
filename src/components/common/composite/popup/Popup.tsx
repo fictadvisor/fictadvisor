@@ -19,7 +19,7 @@ interface PopupProps {
 
 export const Popup: React.FC<PopupProps> = ({
   isClosable,
-  hasIcon,
+  hasIcon = true,
   title,
   text,
   firstButton,

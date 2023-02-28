@@ -74,19 +74,18 @@
     text-align: start;
     padding: 13px 16px;
     width: 100%;
+    
   }
 
   .titleWrapper {
-    padding: 25px 20px;
+    padding: 14px 20px;
+    padding-top: 27px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
     width: 100%;
-
-    .icon {
-      margin-bottom: 15px;
-    }
+    
 
     .title {
       font-size: 20px;
@@ -159,7 +158,6 @@
     background-color: $background-dark-10;
     border-radius: 8px;
     position: relative;
-    // max-width: 314px;
     margin-right: 15px;
     margin-left: 15px;
     height: fit-content;
@@ -191,16 +189,13 @@
     }
 
     .titleWrapper {
-      padding: 25px 20px;
+      padding: 14px 20px;
+      padding-top: 27px;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-direction: column;
       width: 100%;
-
-      .icon {
-        margin-bottom: 15px;
-      }
 
       .title {
         font-size: 20px;
