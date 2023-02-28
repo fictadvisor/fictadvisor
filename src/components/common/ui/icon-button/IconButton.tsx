@@ -51,7 +51,9 @@ export const IconButton: React.FC<
       )}
       {...rest}
     >
-      {icon}
+      <div className={mergeClassNames('icon', styles[`${size}-icon`])}>
+        {icon}
+      </div>
     </button>
   );
 };

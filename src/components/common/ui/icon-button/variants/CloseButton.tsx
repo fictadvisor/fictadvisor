@@ -17,7 +17,7 @@ const CloseButton: React.FC<IconButtonProps> = ({
 }) => {
   return (
     <IconButton
-      icon={<XMarkIcon className="icon" />}
+      icon={<XMarkIcon />}
       size={size}
       shape={shape}
       color={color}

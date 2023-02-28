@@ -17,7 +17,7 @@ const TrashBucketButton: React.FC<IconButtonProps> = ({
 }) => {
   return (
     <IconButton
-      icon={<TrashIcon className="icon" />}
+      icon={<TrashIcon />}
       size={size}
       shape={shape}
       color={color}

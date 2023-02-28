@@ -20,6 +20,7 @@
 }
 
 .header-container {
+    overflow: hidden;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -82,8 +83,8 @@
 
 @media (max-width: 1200px) {
     .header-container {
-        padding-left: 0px;
-        padding-right: 0px;
+        padding-left: 0;
+        padding-right: 0;
         position: relative;
         justify-content: center;
     }
@@ -91,7 +92,7 @@
         & img {
             width: 197px;
             height: 20px;
-            margin-right: 0px;
+            margin-right: 0;
         }
     }
     .mobile-button {

@@ -17,7 +17,7 @@ const StarButton: React.FC<IconButtonProps> = ({
 }) => {
   return (
     <IconButton
-      icon={<StarIcon className="icon" />}
+      icon={<StarIcon />}
       size={size}
       shape={shape}
       color={color}
