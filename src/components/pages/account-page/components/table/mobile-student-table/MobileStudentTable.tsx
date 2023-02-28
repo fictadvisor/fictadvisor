@@ -3,7 +3,10 @@ import { EllipsisVerticalIcon } from '@heroicons/react/24/outline';
 
 import { CaptainIcon } from '@/components/common/custom-svg/CaptainIcon';
 import { ModeratorIcon } from '@/components/common/custom-svg/ModeratorIcon';
-import Button, { ButtonVariant } from '@/components/common/ui/button';
+import {
+  IconButton,
+  IconButtonColor,
+} from '@/components/common/ui/icon-button/IconButton';
 import Tag, { TagSize } from '@/components/common/ui/tag';
 import { StudentRole } from '@/components/pages/account-page/components/table/student-table/StudentTable';
 
@@ -47,10 +50,9 @@ const MobileStudentTable: React.FC<StudentTableProps> = ({ variant, rows }) => {
             )}
           </div>
           <div className={styles['button']}>
-            <Button
-              text={''}
-              variant={ButtonVariant.TEXT}
-              startIcon={<EllipsisVerticalIcon className={'icon'} />}
+            <IconButton
+              icon={<EllipsisVerticalIcon className={'icon'} />}
+              color={IconButtonColor.TRANSPARENT}
             />
           </div>
         </div>

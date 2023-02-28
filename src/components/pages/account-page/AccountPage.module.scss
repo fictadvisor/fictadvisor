@@ -35,3 +35,12 @@
 .tab-panel {
   width: 100%;
 }
+
+@media screen and (max-width: 1024px){
+  .tab-list{
+    display: none;
+  }
+  .tab-panels-list {
+    width: 100%;
+  }
+}

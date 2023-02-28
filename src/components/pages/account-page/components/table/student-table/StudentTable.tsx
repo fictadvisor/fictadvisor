@@ -3,13 +3,12 @@ import {
   ArrowDownCircleIcon,
   ArrowUpCircleIcon,
 } from '@heroicons/react/24/outline';
-import { TrashIcon } from '@heroicons/react/24/outline';
 
 import Button, {
-  ButtonColor,
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button';
+import { TrashBucketButton } from '@/components/common/ui/icon-button/variants';
 import Tag, { TagSize } from '@/components/common/ui/tag';
 
 import styles from './StudentTable.module.scss';
@@ -42,14 +41,6 @@ const getSettings = (variant: StudentRole, role: string) => {
     ) : (
       <ArrowUpCircleIcon className="icon" />
     );
-  const trashButton = (
-    <Button
-      text={''}
-      color={ButtonColor.SECONDARY}
-      size={ButtonSize.SMALL}
-      startIcon={<TrashIcon className="icon" />}
-    />
-  );
   if (variant === StudentRole.CAPTAIN && role !== StudentRole.CAPTAIN) {
     return (
       <div className={styles['side-buttons']}>
@@ -59,14 +50,17 @@ const getSettings = (variant: StudentRole, role: string) => {
             size={ButtonSize.SMALL}
             variant={ButtonVariant.OUTLINE}
             startIcon={buttonIcon}
+            className={styles['role-modifier']}
           />
         </div>
-        <div>{trashButton}</div>
+        <div>
+          <TrashBucketButton />
+        </div>
       </div>
     );
   }
   if (variant === StudentRole.MODERATOR && !role) {
-    return trashButton;
+    return <TrashBucketButton />;
   }
 };
 

@@ -43,6 +43,7 @@ const StudentTab = () => {
             <Button
               text={'Додати студента'}
               startIcon={<PlusIcon className={'icon'} />}
+              className={styles['add-button']}
             />
           </div>
         </div>

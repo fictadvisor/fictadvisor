@@ -8,7 +8,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/router';
 
-import Progress, { ProgressSize } from '@/components/common/ui/progress';
+import Loader, { LoaderSize } from '@/components/common/ui/loader';
 import {
   TabItem,
   TabItemContentPosition,
@@ -123,13 +123,21 @@ const AccountPage = () => {
           currentValue={index}
         >
           {!isFetchedStudents && !isFetchedRequests ? (
-            <Progress size={ProgressSize.SMALLEST} />
+            <Loader size={LoaderSize.SMALLEST} />
           ) : (
             <>
               <TabPanel className={styles['tab-panel']} value={'1'}>
                 <StudentTable
+                  variant={StudentRole.CAPTAIN}
+                  rows={transformData(testData)}
+                />
+                <StudentTable
                   rows={transformData(testData)}
                   variant={StudentRole.MODERATOR}
+                />
+                <StudentTable
+                  variant={StudentRole.STUDENT}
+                  rows={transformData(testData)}
                 />
               </TabPanel>
               <TabPanel className={styles['tab-panel']} value={'2'}>

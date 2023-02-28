@@ -1,57 +1,17 @@
 export const ModeratorIcon = () => (
   <svg
-    width="26"
-    height="20"
-    viewBox="0 0 26 20"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <g filter="url(#filter0_d_4594_8004)">
-      <path
-        d="M12.3371 1.45111L9.91292 3.87528C9.54679 4.2414 8.95321 4.2414 8.58708 3.87528L7.10042 2.38861C6.50982 1.79801 5.5 2.21629 5.5 3.05152V10.1632C5.5 10.681 5.91974 11.1007 6.4375 11.1007H19.5625C20.0803 11.1007 20.5 10.681 20.5 10.1632V3.05151C20.5 2.21629 19.4902 1.79801 18.8996 2.38861L17.4129 3.87528C17.0468 4.2414 16.4532 4.2414 16.0871 3.87528L13.6629 1.45111C13.2968 1.08498 12.7032 1.08498 12.3371 1.45111Z"
-        stroke="#FAFAFA"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        shapeRendering="crispEdges"
-      />
-    </g>
-    <defs>
-      <filter
-        id="filter0_d_4594_8004"
-        x="0.75"
-        y="0.426514"
-        width="24.5"
-        height="19.4241"
-        filterUnits="userSpaceOnUse"
-        colorInterpolationFilters="sRGB"
-      >
-        <feFlood floodOpacity="0" result="BackgroundImageFix" />
-        <feColorMatrix
-          in="SourceAlpha"
-          type="matrix"
-          values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-          result="hardAlpha"
-        />
-        <feOffset dy="4" />
-        <feGaussianBlur stdDeviation="2" />
-        <feComposite in2="hardAlpha" operator="out" />
-        <feColorMatrix
-          type="matrix"
-          values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"
-        />
-        <feBlend
-          mode="normal"
-          in2="BackgroundImageFix"
-          result="effect1_dropShadow_4594_8004"
-        />
-        <feBlend
-          mode="normal"
-          in="SourceGraphic"
-          in2="effect1_dropShadow_4594_8004"
-          result="shape"
-        />
-      </filter>
-    </defs>
+    <path
+      d="M11.2045 6.54142L8.2955 9.45044C7.85615 9.88977 7.14385 9.88977 6.7045 9.45044L4.9205 7.66642C4.21178 6.95771 3 7.45965 3 8.46192V16.9959C3 17.6173 3.50368 18.1209 4.125 18.1209H19.875C20.4963 18.1209 21 17.6173 21 16.9959V8.46191C21 7.45965 19.7883 6.95771 19.0795 7.66642L17.2955 9.45044C16.8562 9.88977 16.1438 9.88977 15.7045 9.45044L12.7955 6.54142C12.3562 6.10208 11.6438 6.10208 11.2045 6.54142Z"
+      stroke="white"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   </svg>
 );

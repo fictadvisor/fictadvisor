@@ -57,6 +57,14 @@
 
 .side-buttons {
   display: flex;
+  justify-content: center;
+  align-items: center;
   width: fit-content;
+  gap: 5%;
+  margin-right: 1%;
+}
+
+.role-modifier {
+  padding: 6px 12px;
 }
 

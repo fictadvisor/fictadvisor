@@ -2,6 +2,10 @@ import { PlusIcon } from '@heroicons/react/24/solid';
 
 import Button from '@/components/common/ui/button';
 import Divider, { DividerTextPosition } from '@/components/common/ui/divider';
+import {
+  IconButton,
+  IconButtonShape,
+} from '@/components/common/ui/icon-button/IconButton';
 import MobileRequestTable from '@/components/pages/account-page/components/table/mobile-request-table';
 import MobileStudentTable from '@/components/pages/account-page/components/table/mobile-student-table';
 import { StudentRole } from '@/components/pages/account-page/components/table/student-table/StudentTable';
@@ -40,7 +44,10 @@ const MobileStudentTab = () => {
         <div className={styles['division']}>
           <Divider textPosition={DividerTextPosition.RIGHT} text={'Студенти'} />
           <div className={styles['button']}>
-            <Button text={''} startIcon={<PlusIcon className={'icon'} />} />
+            <IconButton
+              icon={<PlusIcon className={'icon'} />}
+              shape={IconButtonShape.SQUARE}
+            />
           </div>
         </div>
       )}

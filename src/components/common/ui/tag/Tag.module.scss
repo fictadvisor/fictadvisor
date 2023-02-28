@@ -27,6 +27,13 @@ $theme-color:$background-dark-0;
   font-weight: 500;
 }
 
+.icon-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+}
+
 .tag{
     display: flex;
     justify-content: center;
