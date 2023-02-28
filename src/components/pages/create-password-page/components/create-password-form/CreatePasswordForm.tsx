@@ -42,12 +42,14 @@ const CreatePasswordForm: FC = () => {
             name="confirmPassword"
             disabled={errors.createPassword != null}
           />
-          <Button
-            text="Змінити пароль"
-            size={ButtonSize.LARGE}
-            type="submit"
-            disabled={!isValid}
-          />
+          <div className={styles['confirm-button']}>
+            <Button
+              text="Змінити пароль"
+              size={ButtonSize.LARGE}
+              type="submit"
+              disabled={!isValid}
+            />
+          </div>
         </Form>
       )}
     </Formik>
