@@ -45,7 +45,7 @@ const Input: React.FC<InputProps> = ({
   isSuccessOnDefault = false,
   defaultRemark,
   showRemark = true,
-  className: additionalClass,
+  className: additionalClassName,
   ...rest
 }) => {
   const [field, { touched, error }, { setTouched, setValue }] = useField(
@@ -104,7 +104,7 @@ const Input: React.FC<InputProps> = ({
   const className = mergeClassNames(
     styles[inputColor],
     styles[inputStyle],
-    styles[additionalClass],
+    additionalClassName,
   );
 
   return (

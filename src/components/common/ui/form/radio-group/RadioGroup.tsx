@@ -14,9 +14,14 @@ interface RadioGroupProps {
   options: RadioGroupOption[];
   isDisabled?: boolean;
   name: string;
+  className?: string;
 }
 
-const RadioGroup: React.FC<RadioGroupProps> = ({ options, ...rest }) => {
+const RadioGroup: React.FC<RadioGroupProps> = ({
+  options,
+  className,
+  ...rest
+}) => {
   const [{ value, onChange }, { touched, error }] = useField(rest.name);
 
   const state = touched && error ? FieldState.ERROR : FieldState.DEFAULT;
@@ -32,7 +37,7 @@ const RadioGroup: React.FC<RadioGroupProps> = ({ options, ...rest }) => {
     />
   ));
 
-  return <> {radioButtons} </>;
+  return <div className={className}> {radioButtons} </div>;
 };
 
 export default RadioGroup;

@@ -30,6 +30,7 @@ interface TagProps {
   color?: TagColor;
   size?: TagSize;
   icon?: ReactNode;
+  className?: string;
 }
 
 const Tag: FC<TagProps> = ({
@@ -38,11 +39,13 @@ const Tag: FC<TagProps> = ({
   color = TagColor.PRIMARY,
   size = TagSize.MEDIUM,
   icon,
+  className,
 }) => {
   const tagClassName = mergeClassNames(
     styles['tag'],
     styles[size],
     styles[color + '-' + variant],
+    className,
   );
   return (
     <div className={tagClassName}>

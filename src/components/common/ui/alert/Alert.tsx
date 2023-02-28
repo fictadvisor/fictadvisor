@@ -28,6 +28,7 @@ interface AlertProps {
   description?: string;
   color?: AlertColor;
   variant?: AlertVariant;
+  className?: string;
 }
 
 const AlertColorMap = {
@@ -42,6 +43,7 @@ const Alert: React.FC<AlertProps> = ({
   description,
   color = AlertColor.INFO,
   variant = AlertVariant.FILLED,
+  className: additionalClassName,
 }) => {
   let className: string;
   let classSizeName: string;
@@ -67,7 +69,12 @@ const Alert: React.FC<AlertProps> = ({
   const [isVisible, setIsVisible] = useState(true);
   return (
     <div
-      className={mergeClassNames(styles['alert'], className, classSizeName)}
+      className={mergeClassNames(
+        styles['alert'],
+        className,
+        classSizeName,
+        additionalClassName,
+      )}
       style={{ display: isVisible ? 'flex' : 'none' }}
     >
       <div className={'icon ' + styles['alert-icon']}>{icon}</div>

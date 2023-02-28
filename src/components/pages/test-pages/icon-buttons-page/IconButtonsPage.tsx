@@ -24,6 +24,7 @@ const IconButtonsPage = () => (
         order={SortButtonOrder.ASCENDING}
         color={IconButtonColor.PRIMARY}
         shape={IconButtonShape.SQUARE}
+        className={styles['test']}
       />
       <SortButton
         size={IconButtonSize.LARGE}
