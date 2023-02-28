@@ -1,5 +1,6 @@
 import React, { FunctionComponent, useRef } from 'react';
 import { useField } from 'formik';
+import mergeClassNames from 'merge-class-names';
 
 import styles from './Slider.module.scss';
 
@@ -11,10 +12,12 @@ export enum SliderType {
 interface SliderProps extends React.ComponentPropsWithoutRef<'input'> {
   name: string;
   type?: SliderType;
+  className?: string;
 }
 
 const Slider: FunctionComponent<SliderProps> = ({
   type = SliderType.DESKTOP,
+  className,
   ...rest
 }) => {
   const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -38,7 +41,7 @@ const Slider: FunctionComponent<SliderProps> = ({
   };
 
   return (
-    <div className={styles['slider-container']}>
+    <div className={mergeClassNames(styles['slider-container'], className)}>
       <input
         ref={sliderRef}
         type="range"

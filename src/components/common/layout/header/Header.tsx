@@ -123,7 +123,7 @@ const Header: React.FC<HeaderProps> = ({
             <img src={`/assets/logo.png`} alt="logo" />
           </div>
           <div className={styles['mobile-button']}>
-            <HeaderMobileButton
+            <Button
               onClick={handleClick}
               size={ButtonSize.MEDIUM}
               text={''}

@@ -84,15 +84,19 @@
     text-decoration: none;
     cursor: not-allowed;
   }
+  svg{
+    width: 18px;
+    height: 18px;
+  }
 }
 
-@include button-style("primary-large", 8px, 14px 30px, 16px 32px, 12px, 5px);
+@include button-style("primary-large", 8px, 16px 32px, 16px 32px, 12px, 5px);
 @include button-text("primary-large", 18px, 1.32, 700);
 
-@include button-style("primary-medium", 8px, 10px 22px, 12px 24px, 12px, 4px);
+@include button-style("primary-medium", 8px, 12px 24px, 12px 24px, 12px, 4px);
 @include button-text("primary-medium", 18px, 1.32, 700);
 
-@include button-style("primary-small", 6px, 6px 10px, 6px 12px, 12px, 4px);
+@include button-style("primary-small", 6px, 8px 16px, 6px 12px, 12px, 4px);
 @include button-text("primary-small", 14px, 1.4, 700);
 
 

@@ -19,6 +19,7 @@ const ButtonsPage = () => (
         size={ButtonSize.LARGE}
         color={ButtonColor.PRIMARY}
         variant={ButtonVariant.FILLED}
+        className={styles['test']}
       />
       <Button
         text="Primary Filled"

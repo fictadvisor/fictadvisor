@@ -1,4 +1,5 @@
 @import "partials/theme";
+@import "partials/typography-mixins";
 
 html, body {
   background-color: $background-dark--10;
@@ -36,4 +37,22 @@ html, body {
   }
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+textarea:-webkit-autofill:active,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:active,
+select:-webkit-autofill:focus {
+  -webkit-text-fill-color: $gray-600;
+  @include body-secondary;
+  -webkit-box-shadow: 0 0 0 1000px $background-dark-0 inset;
+  font-family: 'Manrope', sans-serif;
+  transition: all 0s 50000s !important;
+}
 
