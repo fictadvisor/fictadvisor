@@ -1,6 +1,17 @@
+@keyframes appear {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
 .container {
     width: 100%;
 }
+
 .wrapper {
     position: absolute;
     width: fit-content;
@@ -9,4 +20,6 @@
     right: 0;
     margin-right: 80px;
     margin-bottom: 36px;
+    animation-name: appear;
+    animation-duration: 0.4s;
 }
