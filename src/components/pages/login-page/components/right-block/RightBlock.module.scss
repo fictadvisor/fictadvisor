@@ -1,23 +1,24 @@
 @import "src/styles/partials/utils";
+@import "src/styles/partials/breakpoints";
+@import "src/styles/partials/typography-mixins";
 
-.form{
-  display: flex;
-  flex-direction: column;
-  @include flex-center;
-  gap: 25px;
-}
 
 .right-block{
   width: 480px;
   @include flex-center;
-  margin-left: 6px;
+  flex-direction: column;
 }
 
+.telegram-button{
+  margin: 32px 0;
+}
 
-.right-block__content{
+.form{
+  margin-top: 16px;
   width: 100%;
-  @include flex-center;
+  display: flex;
   flex-direction: column;
+  @include flex-center;
 }
 
 
@@ -26,37 +27,80 @@
   font-size: 36px;
   line-height: 120%;
   font-weight: 700;
-  margin-bottom: 32px
 }
 
-.login-divider{
-  margin-top: 32px;
+.password-link{
+  margin: 12px 0 24px 0;
+  align-self: flex-start;
 }
 
-.login-input{
-  margin-top: 15px;
+.mobile-login-logo{
+  width: calc(100% - 40px);
+  min-width: 200px;
+  display: none;
+  margin: 8vh 0 4vh 0;
 }
 
-.one-line{
-  margin-bottom: 24px;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
+.mobile-text{
+  @include body-secondary--medium;
+  display: none;
+  margin: 28px 0 14px 0;
+  color: #D4D4D4;
 }
 
-.register-checkbox{
-  width: 30px;
-}
-
-.checkbox-container{
-  display: flex;
-  gap: 12px;
-}
-
-.placeholder{
-  height: 24px;
-}
-
-.login-button-container{
+.register-mobile-button{
   width: fit-content;
+  display: none;
 }
+
+
+
+@media screen and (max-width: $breakpoint-desktop-semi-medium) {
+  .left-block {
+    display: none;
+  }
+  .mobile-login-logo {
+    display: flex;
+  }
+  .register-header{
+    display: none;
+  }
+  .mobile-text{
+    display: flex;
+  }
+  .telegram-button{
+    margin: 0 0 16px 0;
+    @include body-secondary--bold;
+    white-space: normal;
+  }
+  .register-mobile-button{
+    display: flex;
+  }
+
+}
+
+//
+//
+//.one-line{
+//  margin-bottom: 24px;
+//  width: 100%;
+//  display: flex;
+//  justify-content: space-between;
+//}
+//
+//.register-checkbox{
+//  width: 30px;
+//}
+//
+//.checkbox-container{
+//  display: flex;
+//  gap: 12px;
+//}
+//
+//.placeholder{
+//  height: 24px;
+//}
+//
+//.login-button-container{
+//  width: fit-content;
+//}

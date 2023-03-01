@@ -1,4 +1,5 @@
 @import "src/styles/partials/utils";
+@import "src/styles/partials/breakpoints";
 
 $left-block-width: 606px;
 $right-block-width: 834px;
@@ -6,21 +7,38 @@ $right-block-width: 834px;
 
 .login-page {
   width: 100%;
-  min-height: calc(100vh);
+  min-height: 100vh;
   @include flex-center;
   background: url("/assets/login-page/login-background.png") no-repeat;
   background-size: 100% 100%;
-  padding: 0 50px;
+  padding: 0 30px;
 }
 
 .login-page__content{
   display: flex;
   flex-direction: row;
   width: 100%;
+  height: 635px;
   max-width: 1200px;
   justify-content: space-around;
 }
 
+@media screen and (max-width: $breakpoint-desktop-semi-medium) {
+  .divider {
+    display: none;
+  }
+  .login-page__content {
+    max-width: 480px;
+    width: 100%;
+    align-items: flex-start;
+    height: 100vh;
+  }
+
+  .login-page {
+    background-size: $breakpoint-desktop-semi-medium 100%;
+  }
+
+}
 
 
 

@@ -15,7 +15,7 @@ const LoginPage = () => {
       <div className={styles['login-page']}>
         <div className={styles['login-page__content']}>
           <LeftBlock />
-          <hr />
+          <hr className={styles['divider']} />
           <RightBlock />
         </div>
       </div>

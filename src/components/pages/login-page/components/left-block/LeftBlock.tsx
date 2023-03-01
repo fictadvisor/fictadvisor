@@ -9,7 +9,7 @@ const LeftBlock = () => {
   const { push } = useRouter();
 
   return (
-    <div className={styles['left-block__content']}>
+    <div className={styles['left-block']}>
       <img
         className={styles['login-logo']}
         src="/assets/login-page/new_logo.png"

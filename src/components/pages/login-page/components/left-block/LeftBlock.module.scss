@@ -1,11 +1,8 @@
 @import "src/styles/partials/utils";
+@import "src/styles/partials/breakpoints";
+
 
 .left-block{
-  @include flex-center;
-  flex-direction: column;
-}
-
-.left-block__content{
   @include flex-center;
   flex-direction: column;
   gap: 50px;
@@ -25,4 +22,10 @@
 
 .register-button{
   max-width: 300px;
+}
+
+@media screen and (max-width: $breakpoint-desktop-semi-medium) {
+  .left-block{
+    display: none;
+  }
 }
