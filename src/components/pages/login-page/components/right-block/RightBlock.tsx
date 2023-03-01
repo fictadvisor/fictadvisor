@@ -28,8 +28,24 @@ const RightBlock = () => {
       />
       <h3 className={styles['register-header']}>З поверненням!</h3>
       <Button
-        endIcon={<CustomTelegramIcon />}
+        endIcon={
+          <div className="icon">
+            <CustomTelegramIcon />
+          </div>
+        }
         text="Увійти за допомогою"
+        size={ButtonSize.LARGE}
+        type="button"
+        onClick={handleClick}
+        className={styles['mobile-telegram-button']}
+      />
+      <Button
+        startIcon={
+          <div className="icon">
+            <CustomTelegramIcon />
+          </div>
+        }
+        text="Увійти за допомогою Telegram"
         size={ButtonSize.LARGE}
         type="button"
         onClick={handleClick}

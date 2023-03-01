@@ -13,6 +13,14 @@
   margin: 32px 0;
 }
 
+.mobile-telegram-button{
+  display: none;
+  margin: 0 0 16px 0;
+  @include body-secondary--bold;
+  white-space: normal;
+}
+
+
 .form{
   margin-top: 16px;
   width: 100%;
@@ -21,11 +29,10 @@
   @include flex-center;
 }
 
-
 .register-header{
   text-align: center;
   font-size: 36px;
-  line-height: 120%;
+  line-height: 128%;
   font-weight: 700;
 }
 
@@ -54,7 +61,6 @@
 }
 
 
-
 @media screen and (max-width: $breakpoint-desktop-semi-medium) {
   .left-block {
     display: none;
@@ -68,39 +74,17 @@
   .mobile-text{
     display: flex;
   }
-  .telegram-button{
-    margin: 0 0 16px 0;
-    @include body-secondary--bold;
-    white-space: normal;
-  }
   .register-mobile-button{
     display: flex;
   }
-
 }
 
-//
-//
-//.one-line{
-//  margin-bottom: 24px;
-//  width: 100%;
-//  display: flex;
-//  justify-content: space-between;
-//}
-//
-//.register-checkbox{
-//  width: 30px;
-//}
-//
-//.checkbox-container{
-//  display: flex;
-//  gap: 12px;
-//}
-//
-//.placeholder{
-//  height: 24px;
-//}
-//
-//.login-button-container{
-//  width: fit-content;
-//}
+@media screen and (max-width: $breakpoint-mobile-medium) {
+  .mobile-telegram-button{
+    display: flex;
+  }
+  .telegram-button{
+    display: none;
+  }
+}
+
