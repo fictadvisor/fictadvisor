@@ -1,0 +1,54 @@
+@import "../../../../styles/partials/utils";
+
+$left-block-width: 606px;
+$right-block-width: 834px;
+
+
+.login-page {
+  width: 100%;
+  min-height: calc(100vh);
+  @include flex-center;
+  background: url("/login-page/login-background.png") no-repeat;
+  background-size: 100% 100%;
+}
+
+
+.login-page__content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 30px;
+  padding: 50px 0;
+  width: 400px;
+}
+
+.form{
+  display: flex;
+  flex-direction: column;
+  @include flex-center;
+  gap: 10px;
+}
+
+.register-header {
+  text-align: center;
+  font-size: 36px;
+  line-height: 120%;
+  font-weight: 700;
+}
+
+.login-input {
+  margin-top: 15px;
+}
+
+.one-line {
+  margin-bottom: 24px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+
+.login-button-container {
+  width: fit-content;
+}
+

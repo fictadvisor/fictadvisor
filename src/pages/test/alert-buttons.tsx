@@ -1,4 +1,4 @@
-import AlertButtonsPage from '@/components/pages/test-pages/alert-buttons-page';
+import AlertButtonsPage from '@/components/pages/test/alert-buttons-page';
 
 const AlertButtons = () => <AlertButtonsPage />;
 
