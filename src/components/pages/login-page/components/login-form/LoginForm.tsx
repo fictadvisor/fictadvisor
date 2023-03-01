@@ -22,8 +22,8 @@ const LoginForm: FC = () => {
         await push('/');
       } catch (e) {
         setErrors({
-          username: 'Пароль та пошта не співпадають',
-          password: 'Пароль та пошта не співпадають',
+          username: 'Користувача з таким паролем та поштою не знайдено',
+          password: 'Користувача з таким паролем та поштою не знайдено',
         });
         console.log(e.response?.data.message);
       }

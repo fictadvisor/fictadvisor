@@ -1,6 +1,6 @@
 @import "src/styles/partials/theme";
 
-$divide-regular-color: $gray-600;
+$divide-regular-color: $gray-400;
 
 .divider-text{
   font-weight: 400;
@@ -20,17 +20,16 @@ $divide-regular-color: $gray-600;
 }
 
 .no-text-line {
-  border: 0.01px solid $divide-regular-color;
   width: 100%;
 }
 
 .divider-text{
-  color: $divide-regular-color;
+  color: $gray-500;
   padding: 0 8px;
 }
 
 .center-line{
-  border: 0.01px solid $divide-regular-color;
+  border-color: $divide-regular-color;
   width: min(50%, 50%);
 }
 
@@ -39,7 +38,7 @@ $divide-regular-color: $gray-600;
 }
 
 .side-line{
-  border: 0.01px solid $divide-regular-color;
+  border-color: $divide-regular-color;
   width: 100%;
 }
 

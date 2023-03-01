@@ -65,7 +65,7 @@
       border-color: $white;
       color: $white;
     }
-    .white-icon{
+    .white-icon, .eye-icon{
       color: $gray-600;
     }
   }
@@ -88,7 +88,7 @@
   p{
     color: $error-200;
   }
-  .white-icon {
+  .white-icon, .eye-icon{
     color: $gray-600;
   }
 }
@@ -106,7 +106,7 @@
   p{
     color: $success-300;
   }
-  .white-icon {
+  .white-icon, .eye-icon {
     color: $gray-600;
   }
 
