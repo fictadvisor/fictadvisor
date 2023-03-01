@@ -7,6 +7,7 @@ import {
   Input,
   InputSize,
   InputType,
+  NumberedTextArea,
   RadioGroup,
   Slider,
   Switch,
@@ -104,12 +105,16 @@ const FormikPage = () => {
                 options={groups}
                 label={'Група'}
                 isDisabled={true}
-                defaultRemark={'Dropdown Default remark'}
+                defaultRemark={'Dropdown Default emark'}
               />
               <TextArea
                 name="review"
                 defaultRemark={'Text area remark'}
                 className={testPageStyles['test']}
+              />
+              <NumberedTextArea
+                name="review"
+                defaultRemark={'Text area remark'}
               />
               <Checkbox
                 name="isCaptain"

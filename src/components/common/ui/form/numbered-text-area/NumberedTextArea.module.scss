@@ -1,11 +1,11 @@
 @import "src/styles/partials/utils";
 @import "src/styles/partials/theme";
 @import "src/styles/partials/typography-mixins";
-
 .textarea{
+  position: relative;
   padding:10px 0;
   background: $background-dark-0;
-  overflow-y: scroll;
+  @include body-secondary;
   width: 100%;
   p{
     color: inherit;
@@ -30,21 +30,29 @@
   }
   textarea{
     width: 100%;
+    word-wrap: normal;
     @include body-secondary;
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    padding: 16px 16px 16px 24px;
+    // padding-top: 1px;
+
     gap: 8px;
     background: $background-dark-0;
-    height: 120px;
-    border: 2px solid $gray-500;
+    height:209px;
     color: $gray-500;
     border-radius: 8px;
     resize: none;
+    outline: 2px solid $gray-500;
+    border: none;
+    border-left: 30px solid transparent;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+
+    border-right: 10px solid transparent;
     &:hover {
       color: $white;
-      border-color: $white;
+      outline: 2px solid $white;
     }
     &:focus{
       color: $gray-300;
@@ -60,6 +68,7 @@
     //color: $Prototype-Base_Neutrals-Gray400;
     &:hover {
       color: $white;
+      
       border-color: $white;
     }
     &:focus{
@@ -87,5 +96,51 @@
   }
   label, p{
     color:$error-200;
+  }
+}
+
+
+.line-numbers {
+  position: absolute;
+  padding-top: 2.5px;
+  display: inline;
+  text-align: center;
+  width: 30px;
+}
+
+.line-numbers span {
+  counter-increment: linenumber;
+
+}
+
+.line-numbers span::before {
+  content: counter(linenumber);
+  display: block;
+  color: #506882;
+  color: $gray-300;
+}
+
+.line-numbers{
+  font-size: 14px;
+  line-height: 24px;
+}
+
+.divlines{
+  position: absolute;
+  top: 12px;
+  left: 0;
+  width: 30px;
+  line-height: 24px;
+  min-height: 207px;
+  overflow: hidden;
+}
+
+@media screen and (min-width: 480px) {
+  .textarea textarea{
+    height: 255px;
+  }
+
+  .divlines{
+    height: 253px;
   }
 }

@@ -21,20 +21,28 @@ html, body {
 }
 
 ::-webkit-scrollbar{
-  width: 1.11vw;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-thumb{
-  border: 0.28vw $background-dark-0 solid;
+  // border: 0.28vw $background-dark-0 solid;
   background-clip: padding-box;
-
   transition: all 0.2s ease-in-out;
-  background-color: $background-dark-100;
+  background-color: #D4D4D4;
   &:hover{
     background-color: $background-dark-200;
   }
   &:active{
     background-color: $gray-300;
   }
+}
+
+::-webkit-scrollbar-corner {
+  background: rgba(0,0,0,0);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 input:-webkit-autofill,
