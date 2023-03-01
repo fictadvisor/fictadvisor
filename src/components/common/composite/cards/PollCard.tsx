@@ -12,10 +12,11 @@ import { DivProps } from './Cards';
 
 type PollCard = {
   questionNumber: number;
-  question: string;
+  question?: string;
   numberOfAnswered: number;
   numberOfQuestions: number;
   disabled?: boolean;
+  isComment?: boolean;
 } & DivProps;
 
 export const PollCard: React.FC<PollCard> = ({
@@ -24,6 +25,7 @@ export const PollCard: React.FC<PollCard> = ({
   numberOfAnswered,
   numberOfQuestions,
   disabled,
+  isComment,
   ...rest
 }) => {
   let isDoubleCheckIcon,
@@ -44,8 +46,20 @@ export const PollCard: React.FC<PollCard> = ({
       {...rest}
     >
       <div>
-        <b>{questionNumber}. Рейтингова система</b>
-        <p>{`${numberOfAnswered}/${numberOfQuestions} запитання`}</p>
+        <b>
+          {isComment ? (
+            'Ваш коментар'
+          ) : (
+            <>
+              {questionNumber}. {question}
+            </>
+          )}
+        </b>
+        <p>
+          {isComment
+            ? 'Відкрите запитання'
+            : `${numberOfAnswered}/${numberOfQuestions} запитання`}
+        </p>
       </div>
       <div className="icon">
         {showIcon && (isDoubleCheckIcon ? <DoubleCheckIcon /> : <CheckIcon />)}

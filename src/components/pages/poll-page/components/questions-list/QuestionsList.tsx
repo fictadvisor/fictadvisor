@@ -31,15 +31,22 @@ const QuestionsList: React.FC<QuestionListProps> = ({
         description={subject.name}
         url={avatar || undefined}
       />
-      {categories.map((category, id) => (
+      {categories.slice(0, categories.length - 1).map((category, id) => (
         <PollCard
           key={id}
           numberOfQuestions={category.count}
-          questionNumber={id}
+          questionNumber={1 + id}
           question={category.name}
           numberOfAnswered={2}
         />
       ))}
+      <PollCard
+        questionNumber={categories.length}
+        question={'Ваш коментар'}
+        isComment={true}
+        numberOfQuestions={1}
+        numberOfAnswered={1}
+      />
     </div>
   );
 };

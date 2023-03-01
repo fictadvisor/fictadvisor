@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
 
 import Loader from '@/components/common/ui/loader/Loader';
+import useAuthentication from '@/hooks/use-authentication';
 import { client } from '@/lib/api/instance';
 import { getAuthorizationHeader } from '@/lib/api/utils';
 
@@ -76,22 +78,30 @@ const initialState = {
 };
 
 const PollPage = () => {
-  const [isFetching, setIsFetching] = useState(false);
-  const [fetchedData, setFetchedData] =
-    useState<FetchedTeacherPollData>(initialState);
-  const getQuestions = async () => {
-    setIsFetching(true);
-    const data = await client.get(
-      'http://142.93.97.196:4001/v2/disciplineTeachers/24529274-6a79-4ad2-a4ae-9f0e7956ffad/questions',
-      getAuthorizationHeader(),
-    );
-    setFetchedData(data.data);
-    setIsFetching(false);
-  };
+  const [isLoading, setIsLoading] = useState(true);
+  const { user, isLoggedIn, isAuthenticationFetching } = useAuthentication();
+
+  const {
+    isSuccess: isSuccessFetching,
+    data: FetchedData,
+    isLoading: isQuestionsLoading,
+  } = useQuery(
+    ['pollQuestions'],
+    async () =>
+      await client.get(
+        'http://142.93.97.196:4001/v2/disciplineTeachers/24529274-6a79-4ad2-a4ae-9f0e7956ffad/questions',
+        getAuthorizationHeader(),
+      ),
+    {
+      retry: false,
+      enabled: Boolean(user),
+      refetchOnWindowFocus: false,
+    },
+  );
 
   useEffect(() => {
-    getQuestions();
-  }, []);
+    setIsLoading(isQuestionsLoading || isAuthenticationFetching);
+  }, [isQuestionsLoading, isAuthenticationFetching]);
 
   return (
     <PageLayout
@@ -101,7 +111,7 @@ const PollPage = () => {
     >
       <div className={styles['poll-page']}>
         <div className={styles['poll-page__content']}>
-          {isFetching ? <Loader /> : <PollForm data={fetchedData} />}
+          {isLoading ? <Loader /> : <PollForm data={FetchedData.data} />}
         </div>
       </div>
     </PageLayout>
