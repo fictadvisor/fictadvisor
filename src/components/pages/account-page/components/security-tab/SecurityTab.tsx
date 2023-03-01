@@ -1,7 +1,7 @@
 import React from 'react';
-import { CheckIcon } from '@heroicons/react/24/outline';
 import { Form, Formik } from 'formik';
 
+import { CustomCheck } from '@/components/common/custom-svg/CustomCheck';
 import Button, {
   ButtonColor,
   ButtonSize,
@@ -59,7 +59,7 @@ const changePassword = () => (
         <div className={styles['confirm-button']}>
           <Button
             text="Оновити пароль"
-            startIcon={<CheckIcon className={'icon'} />}
+            startIcon={<CustomCheck />}
             size={ButtonSize.MEDIUM}
             type="submit"
             disabled={!isValid}
@@ -69,7 +69,7 @@ const changePassword = () => (
         <div className={styles['confirm-button-mobile']}>
           <Button
             text="Оновити пароль"
-            startIcon={<CheckIcon className={'icon'} />}
+            startIcon={<CustomCheck />}
             size={ButtonSize.SMALL}
             type="submit"
             disabled={!isValid}

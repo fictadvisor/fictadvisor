@@ -1,8 +1,8 @@
 import React from 'react';
-import { CheckIcon } from '@heroicons/react/24/outline';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { Form, Formik } from 'formik';
 
+import { CustomCheck } from '@/components/common/custom-svg/CustomCheck';
 import { TelegramOutlineIcon } from '@/components/common/custom-svg/TelegramOutline';
 import Button, {
   ButtonSize,
@@ -36,7 +36,7 @@ const getPersonalInfo = () => (
           placeholder="user2000"
           size={InputSize.LARGE}
           type={InputType.PASSWORD}
-          name="Password"
+          name="checkPassword"
         />
         <Input
           className={styles['input']}
@@ -60,7 +60,7 @@ const getPersonalInfo = () => (
         <div className={styles['confirm-button']}>
           <Button
             text="Зберігти зміни"
-            startIcon={<CheckIcon className={'icon'} />}
+            startIcon={<CustomCheck />}
             size={ButtonSize.MEDIUM}
             type="submit"
             disabled={!isValid}
@@ -70,7 +70,7 @@ const getPersonalInfo = () => (
         <div className={styles['confirm-button-mobile']}>
           <Button
             text="Зберігти зміни"
-            startIcon={<CheckIcon className={'icon'} />}
+            startIcon={<CustomCheck />}
             size={ButtonSize.SMALL}
             type="submit"
             disabled={!isValid}

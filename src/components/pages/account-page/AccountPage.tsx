@@ -33,11 +33,11 @@ import PageLayout from '../../common/layout/page-layout/PageLayout';
 
 import styles from './AccountPage.module.scss';
 
-const getGroups = isMobile => {
+const getGroups = (isMobile, user) => {
   if (isMobile) {
-    return <MobileStudentTab />;
+    return <MobileStudentTab user={user} />;
   } else {
-    return <StudentTab />;
+    return <StudentTab user={user} />;
   }
 };
 
@@ -174,7 +174,7 @@ const AccountPage = () => {
                 className={styles['tab-panel']}
                 value={AccountPageTabs.GROUP}
               >
-                {getGroups(isMobile)}
+                {getGroups(isMobile, user)}
               </TabPanel>
             </>
           )}

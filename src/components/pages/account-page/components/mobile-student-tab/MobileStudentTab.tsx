@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import { PlusIcon } from '@heroicons/react/24/solid';
 
 import {
@@ -9,7 +10,6 @@ import MobileStudentTable from '@/components/pages/account-page/components/table
 import { StudentRole } from '@/components/pages/account-page/components/table/student-table/StudentTable';
 import { transformData } from '@/components/pages/account-page/components/table/student-table/utils';
 import { testData } from '@/components/pages/account-page/testData';
-import useAuthentication from '@/hooks/use-authentication';
 
 import styles from './MobileStudentTab.module.scss';
 
@@ -27,31 +27,34 @@ const getRequest = (requests: object, role: StudentRole) => {
   }
 };
 
-const MobileStudentTab = () => {
-  // const { user } = useAuthentication();
+interface MobileStudentTabProps {
+  user;
+}
+
+const MobileStudentTab: FC<MobileStudentTabProps> = ({ user }) => {
   return (
     <div className={styles['content']}>
-      {/*<div className={styles['text-content']}>*/}
-      {/*  <h4>Список групи</h4>*/}
-      {/*  <h4>{user.group.code}</h4>*/}
-      {/*</div>*/}
-      {/*{getRequest(transformData(testData), user.group.role)}*/}
-      {/*{user.group.role && (*/}
-      {/*  <div className={styles['division']}>*/}
-      {/*    <h4 className={styles['division-text']}>Студенти</h4>*/}
-      {/*    <div className={styles['white']}></div>*/}
-      {/*    <div className={styles['button']}>*/}
-      {/*      <IconButton*/}
-      {/*        icon={<PlusIcon className={'icon'} />}*/}
-      {/*        shape={IconButtonShape.SQUARE}*/}
-      {/*      />*/}
-      {/*    </div>*/}
-      {/*  </div>*/}
-      {/*)}*/}
-      {/*<MobileStudentTable*/}
-      {/*  variant={StudentRole.CAPTAIN}*/}
-      {/*  rows={transformData(testData)}*/}
-      {/*/>*/}
+      <div className={styles['text-content']}>
+        <h4>Список групи</h4>
+        <h4>{user.group.code}</h4>
+      </div>
+      {getRequest(transformData(testData), user.group.role)}
+      {user.group.role && (
+        <div className={styles['division']}>
+          <h4 className={styles['division-text']}>Студенти</h4>
+          <div className={styles['white']}></div>
+          <div className={styles['button']}>
+            <IconButton
+              icon={<PlusIcon className={'icon'} />}
+              shape={IconButtonShape.SQUARE}
+            />
+          </div>
+        </div>
+      )}
+      <MobileStudentTable
+        variant={StudentRole.MODERATOR}
+        rows={transformData(testData)}
+      />
     </div>
   );
 };

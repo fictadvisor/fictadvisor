@@ -15,8 +15,8 @@
   position: absolute;
   background-color: #1E1E1E;
   border-radius: 5px;
-  top: 95%;
-  right: 40%;
+  top: 105%;
+  right: 35%;
   width: 150px;
   height: 78px;
   z-index: 1;
@@ -26,4 +26,18 @@
   padding: 0 0 0 14px;
   height: 50%;
   justify-content: flex-start;
+}
+
+.moderator-dropdown-content{
+  @extend .dropdown-content;
+  height: 36px;
+}
+
+.moderator-dropdown-button{
+  @extend .dropdown-button;
+  height: 100%;
+}
+
+.button > .disabled-button{
+  background-color: transparent !important;
 }

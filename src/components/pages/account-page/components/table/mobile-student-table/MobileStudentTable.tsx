@@ -50,7 +50,9 @@ const MobileStudentTable: React.FC<StudentTableProps> = ({ variant, rows }) => {
           <MobileStudentTableButtons
             value={index}
             currentValue={openedIndex}
+            role={row.role}
             onChange={setOpenedIndex}
+            variant={variant}
           />
         </div>
       ))}
