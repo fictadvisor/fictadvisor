@@ -17,13 +17,10 @@ import {
   TabPanelsList,
 } from '@/components/common/ui/tab';
 import { TabItemContentSize } from '@/components/common/ui/tab/tab-item/TabItem';
+import GeneralTab from '@/components/pages/account-page/components/general-tab';
 import MobileStudentTab from '@/components/pages/account-page/components/mobile-student-tab';
 import SecurityTab from '@/components/pages/account-page/components/security-tab';
 import StudentTab from '@/components/pages/account-page/components/student-tab';
-import StudentTable from '@/components/pages/account-page/components/table/student-table';
-import { StudentRole } from '@/components/pages/account-page/components/table/student-table/StudentTable';
-import { transformData } from '@/components/pages/account-page/components/table/student-table/utils';
-import { testData } from '@/components/pages/account-page/testData';
 import useAuthentication from '@/hooks/use-authentication';
 import useIsMobile from '@/hooks/use-is-mobile/UseIsMobile';
 import { GroupAPI } from '@/lib/api/group/GroupAPI';
@@ -128,18 +125,7 @@ const AccountPage = () => {
           ) : (
             <>
               <TabPanel className={styles['tab-panel']} value={'1'}>
-                <StudentTable
-                  variant={StudentRole.CAPTAIN}
-                  rows={transformData(testData)}
-                />
-                <StudentTable
-                  rows={transformData(testData)}
-                  variant={StudentRole.MODERATOR}
-                />
-                <StudentTable
-                  variant={StudentRole.STUDENT}
-                  rows={transformData(testData)}
-                />
+                <GeneralTab />
               </TabPanel>
               <TabPanel className={styles['tab-panel']} value={'2'}>
                 <SecurityTab />

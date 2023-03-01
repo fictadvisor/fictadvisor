@@ -1,0 +1,113 @@
+.division {
+  display: flex;
+  margin: 20px 0 30px 0;
+  width: 100%;
+  align-items: center;
+  .white {
+    flex-grow: 1;
+    background-color: white;
+    height: 1px;
+  }
+  .division-text{
+    text-align: center;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 140%;
+    margin-right: 12px;
+  }
+}
+
+
+.container {
+  display: flex;
+  width: 100%;
+  gap: 8%
+}
+
+.personal-info{
+  width: 45%;
+}
+
+.form {
+  width: 100%;
+}
+
+.avatar{
+  width: 160px;
+  height: 160px;
+  margin-bottom: 18px;
+  img{
+    width: 160px;
+    height: 160px;
+    border-radius: 100%;
+  }
+}
+
+.confirm-button{
+  width: 50%;
+  margin: 18px 0 35px 0;
+}
+
+.confirm-button-mobile {
+  @extend .confirm-button;
+  display: none;
+}
+
+.input {
+  margin-top: 1.5%;
+}
+
+.telegram-button{
+  width: 270px;
+}
+
+.telegram-button-mobile{
+  @extend .telegram-button;
+  display: none;
+}
+
+@media screen and (max-width: 1024px){
+  .container{
+    flex-direction: column-reverse;
+  }
+  .telegram-button{
+    display: none;
+  }
+  .telegram-button-mobile{
+    display: block;
+  }
+  .avatar{
+    width: 68px;
+    height: 68px;
+    img{
+      width: 68px;
+      height: 68px;
+    }
+  }
+  .personal-info{
+    width: 100%;
+  }
+  .avatar-and-telegram-info{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .confirm-button{
+    display: none;
+  }
+  .confirm-button-mobile{
+    display: block;
+    width: fit-content;
+  }
+  .button-container{
+    display: none;
+  }
+  .container-mobile{
+    display: block;
+  }
+  .change-password-button{
+    padding: 6px 12px;
+  }
+}
