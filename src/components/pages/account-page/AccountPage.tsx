@@ -28,7 +28,6 @@ import {
   setRequests,
   setStudents,
 } from '@/redux/reducers/account-reducer/account.reducer';
-import { SetStudentsAction } from '@/redux/reducers/account-reducer/account.types';
 
 import PageLayout from '../../common/layout/page-layout/PageLayout';
 
@@ -42,50 +41,85 @@ const getGroups = isMobile => {
   }
 };
 
+enum AccountPageTabs {
+  GENERAL = 'general',
+  SECURITY = 'security',
+  GROUP = 'group',
+}
+
 const AccountPage = () => {
-  const isMobile = useIsMobile(1024);
-  const router = useRouter();
-  const { user } = useAuthentication();
-  const { tab } = router.query;
-  const [index, setIndex] = useState<string>('1');
+  const { push, query, isReady } = useRouter();
+  const { user, isLoggedIn, isAuthenticationFetching } = useAuthentication();
 
   useEffect(() => {
-    const tabOption = tab !== '1' && tab !== '2' && tab !== '3' ? '1' : tab;
-    if (tab === '1' || tab === '2' || tab === '3') {
-      setIndex(tabOption);
+    if (!isLoggedIn && !isAuthenticationFetching) {
+      void push('/login');
     }
-  }, [tab, user]);
+  }, [isAuthenticationFetching, isLoggedIn, push]);
+
+  const { tab } = query;
+  const [index, setIndex] = useState<AccountPageTabs>(AccountPageTabs.GENERAL);
+
+  useEffect(() => {
+    if (!isReady) {
+      return;
+    }
+
+    (tab as string) in AccountPageTabs && setIndex(tab as AccountPageTabs);
+  }, [tab, isReady]);
 
   const dispatch = useDispatch();
 
   const {
-    isFetched: isFetchedStudents,
     isSuccess: isSuccessStudents,
-    data: students,
-  } = useQuery(
-    ['students'],
-    () => GroupAPI.getGroupStudents(user?.data.group.id),
-    { retry: false, enabled: user != null },
-  );
+    data: groupStudents,
+    isLoading: isLoadingGroupStudents,
+  } = useQuery(['students'], () => GroupAPI.getGroupStudents(user?.group.id), {
+    retry: false,
+    enabled: Boolean(user),
+  });
 
   const {
-    isFetched: isFetchedRequests,
     isSuccess: isSuccessRequests,
-    data: requests,
+    isLoading: isLoadingRequestStudents,
+    data: requestStudents,
   } = useQuery(
-    ['students'],
-    () => GroupAPI.getRequestStudents(user?.data.group.id),
-    { retry: false, enabled: user != null },
+    ['requests'],
+    () => GroupAPI.getRequestStudents(user?.group.id),
+    { retry: false, enabled: Boolean(user) },
   );
 
-  if (isSuccessStudents) {
-    dispatch(setStudents(students as SetStudentsAction));
-  }
+  const [isLoading, setIsLoading] = useState(true);
 
-  if (isSuccessRequests) {
-    dispatch(setRequests({ requests: requests.students }));
-  }
-  console.log(requests, 'Hi');
+  useEffect(() => {
+    if (isSuccessStudents) {
+      dispatch(setStudents(groupStudents));
+    }
+
+    if (isSuccessRequests) {
+      dispatch(setRequests({ requests: requestStudents.students }));
+    }
+  }, [
+    dispatch,
+    isSuccessRequests,
+    isSuccessStudents,
+    requestStudents,
+    groupStudents,
+  ]);
+
+  const isMobile = useIsMobile(1024);
+
+  useEffect(() => {
+    setIsLoading(
+      isLoadingRequestStudents ||
+        isLoadingGroupStudents ||
+        isAuthenticationFetching,
+    );
+  }, [
+    isAuthenticationFetching,
+    isLoadingGroupStudents,
+    isLoadingRequestStudents,
+  ]);
 
   return (
     <PageLayout hasFooter={true}>
@@ -98,39 +132,48 @@ const AccountPage = () => {
             size={TabItemContentSize.NORMAL}
             text="Загальне"
             position={TabItemContentPosition.LEFT}
-            icon={<AcademicCapIcon className={'icon'} />}
-            value={'1'}
-          ></TabItem>
+            icon={<AcademicCapIcon className="icon" />}
+            value={AccountPageTabs.GENERAL}
+          />
           <TabItem
             size={TabItemContentSize.NORMAL}
             text="Безпека"
             position={TabItemContentPosition.LEFT}
-            icon={<LockClosedIcon className={'icon'} />}
-            value={'2'}
-          ></TabItem>
+            icon={<LockClosedIcon className="icon" />}
+            value={AccountPageTabs.SECURITY}
+          />
           <TabItem
             size={TabItemContentSize.NORMAL}
             text="Група"
             position={TabItemContentPosition.LEFT}
-            icon={<UsersIcon className={'icon'} />}
-            value={'3'}
-          ></TabItem>
+            icon={<UsersIcon className="icon" />}
+            value={AccountPageTabs.GROUP}
+          />
         </TabList>
         <TabPanelsList
           className={styles['tab-panels-list']}
           currentValue={index}
         >
-          {!isFetchedStudents && !isFetchedRequests ? (
-            <Loader size={LoaderSize.SMALLEST} />
+          {isLoading ? (
+            <Loader size={LoaderSize.SMALL} />
           ) : (
             <>
-              <TabPanel className={styles['tab-panel']} value={'1'}>
+              <TabPanel
+                className={styles['tab-panel']}
+                value={AccountPageTabs.GENERAL}
+              >
                 <GeneralTab />
               </TabPanel>
-              <TabPanel className={styles['tab-panel']} value={'2'}>
+              <TabPanel
+                className={styles['tab-panel']}
+                value={AccountPageTabs.SECURITY}
+              >
                 <SecurityTab />
               </TabPanel>
-              <TabPanel className={styles['tab-panel']} value={'3'}>
+              <TabPanel
+                className={styles['tab-panel']}
+                value={AccountPageTabs.GROUP}
+              >
                 {getGroups(isMobile)}
               </TabPanel>
             </>
