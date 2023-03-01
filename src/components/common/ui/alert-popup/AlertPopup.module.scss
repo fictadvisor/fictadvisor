@@ -12,33 +12,17 @@
     position: absolute;
     bottom: 0;
     right: 0;
-    padding-right: 80px;
-    padding-bottom: 36px;
     display: flex;
-    align-items: center;
-    
+    padding-right: 80px;
+    padding-left: 80px;  
+    padding-bottom: 36px;
+    justify-content: flex-end;
     width: 100%;
-    max-width: fit-content;
     transition: transform 0.4s ease-in-out;
-
-
-    @media screen and (max-width: 385px) {
-        max-width: 100%;
-        padding-left: 80px;
-        justify-content: center;
-        
-    }
-
-
 }
 
-// @media (max-width: 480px) {
-//     .container {
-
-//         justify-content: center;
-//     }
-
-//     .wrapper {
-//         position: relative;   
-//     }
-// }
+@media (max-width: 480px) {
+    .wrapper {
+        justify-content: center;   
+    }    
+}
