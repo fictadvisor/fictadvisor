@@ -47,7 +47,7 @@ $default-dropdown-padding: 8px;
 }
 .dropdown- {
   &control {
-    padding: 0 $dropdown-option-left-padding;
+    padding: 14px 24px;
     &-iconed {
       padding-left: $dropdown-option-left-padding + 15px;
     }

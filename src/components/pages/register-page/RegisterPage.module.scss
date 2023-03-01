@@ -5,35 +5,40 @@ $left-block-width: 606px;
 $right-block-width: 834px;
 
 
-.login-page {
+.register-page {
   width: 100%;
   min-height: 100vh;
   @include flex-center;
-  background: url("/assets/login-page/login-background.png") no-repeat;
+  background: url("/assets/register-page/background.png") no-repeat;
   background-size: 100% 100%;
   padding: 0 30px;
 }
 
-.login-page__content{
+.register-page__content{
   display: flex;
   flex-direction: row;
   width: 100%;
-  min-height: 635px;
   max-width: 1200px;
   justify-content: space-around;
+  align-items: center;
+}
+
+.divider{
+  height: 635px;
 }
 
 @media screen and (max-width: $breakpoint-desktop-semi-medium) {
   .divider {
     display: none;
   }
-  .login-page__content {
+  .register-page__content {
     max-width: 480px;
     width: 100%;
     align-items: flex-start;
+    height: 100vh;
   }
 
-  .login-page {
+  .register-page {
     background-size: $breakpoint-desktop-semi-medium 100%;
   }
 
