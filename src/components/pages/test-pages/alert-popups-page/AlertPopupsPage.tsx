@@ -13,7 +13,7 @@ const AlertPopupsPage = () => (
         description="We are happy to announce that we are going live on July 28th. Get ready!"
         variant={AlertVariant.FILLED}
         color={AlertColor.WARNING}
-      ></AlertPopup>
+      />
     </div>
   </div>
 );
