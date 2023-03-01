@@ -1,4 +1,6 @@
-export const SmallestProgressCircle = () => (
+import { FC } from 'react';
+
+export const SmallestProgressCircle: FC = () => (
   <svg
     width="64"
     height="64"
