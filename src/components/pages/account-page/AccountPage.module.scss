@@ -16,6 +16,7 @@
 
 .tabs-content {
   display: flex;
+  min-height: calc(100vh - 116px);
   width: 95%;
 }
 

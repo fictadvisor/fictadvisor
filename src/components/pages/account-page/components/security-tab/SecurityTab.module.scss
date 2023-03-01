@@ -1,0 +1,75 @@
+.division {
+  display: flex;
+  margin: 20px 0 30px 0;
+  width: 70%;
+  align-items: center;
+  .white {
+    flex-grow: 1;
+    background-color: white;
+    height: 1px;
+  }
+  .division-text{
+    text-align: center;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 140%;
+    margin-right: 12px;
+  }
+}
+
+.button-container{
+  width: 20%;
+}
+
+.button-container-mobile{
+  @extend .button-container;
+  display: none;
+}
+
+.input-form{
+  width: 40%;
+}
+
+.input {
+  margin-top: 5%;
+}
+
+.confirm-button{
+  width: 50%;
+  margin: 18px 0 35px 0;
+}
+
+.confirm-button-mobile {
+  @extend .confirm-button;
+  display: none;
+}
+
+.change-password-button{
+  padding-left: 10px;
+}
+
+@media screen and (max-width: 1024px) {
+  .input-form{
+    width: 100%;
+  }
+  .division{
+    width: 100%;
+    margin-top: 0;
+  }
+  .button-container{
+    margin-bottom: 10%;
+  }
+  .confirm-button{
+    display: none;
+  }
+  .confirm-button-mobile{
+    display: block;
+  }
+  .button-container{
+    display: none;
+  }
+  .button-container-mobile{
+    display: block;
+  }
+}

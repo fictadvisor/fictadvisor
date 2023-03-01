@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { CaptainIcon } from '@/components/common/custom-svg/CaptainIcon';
 import { ModeratorIcon } from '@/components/common/custom-svg/ModeratorIcon';
-import Tag, { TagSize } from '@/components/common/ui/tag';
+import Tag, { TagSize, TagVariant } from '@/components/common/ui/tag';
 import MobileStudentTableButtons from '@/components/pages/account-page/components/table/mobile-student-table/components/mobile-student-table-buttons';
 import { StudentRole } from '@/components/pages/account-page/components/table/student-table/StudentTable';
 
@@ -36,6 +36,7 @@ const MobileStudentTable: React.FC<StudentTableProps> = ({ variant, rows }) => {
             {row.role && (
               <Tag
                 size={TagSize.SMALL}
+                variant={TagVariant.DARKER}
                 icon={
                   row.role === StudentRole.CAPTAIN ? (
                     <CaptainIcon />

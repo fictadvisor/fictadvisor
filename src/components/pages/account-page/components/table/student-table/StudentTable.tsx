@@ -4,12 +4,14 @@ import {
   ArrowUpCircleIcon,
 } from '@heroicons/react/24/outline';
 
+import { CaptainIcon } from '@/components/common/custom-svg/CaptainIcon';
+import { ModeratorIcon } from '@/components/common/custom-svg/ModeratorIcon';
 import Button, {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button';
 import { TrashBucketButton } from '@/components/common/ui/icon-button/variants';
-import Tag, { TagSize } from '@/components/common/ui/tag';
+import Tag, { TagSize, TagVariant } from '@/components/common/ui/tag';
 
 import styles from './StudentTable.module.scss';
 export enum StudentRole {
@@ -74,7 +76,30 @@ const StudentTable: React.FC<StudentTableProps> = ({ variant, rows }) => {
             <div className={styles['full-name']}>{row.fullName}</div>
             <div className={styles['tag-container']}>
               <div className={styles['tag']}>
-                {row.role && <Tag text={row.role} size={TagSize.SMALL} />}
+                {row.role && (
+                  <Tag
+                    className={'tag-role'}
+                    text={row.role}
+                    variant={TagVariant.DARKER}
+                    size={TagSize.SMALL}
+                  />
+                )}
+              </div>
+              <div className={styles['tag-mobile']}>
+                {row.role && (
+                  <Tag
+                    className={'tag-role'}
+                    size={TagSize.SMALL}
+                    variant={TagVariant.DARKER}
+                    icon={
+                      row.role === StudentRole.CAPTAIN ? (
+                        <CaptainIcon />
+                      ) : (
+                        <ModeratorIcon />
+                      )
+                    }
+                  />
+                )}
               </div>
             </div>
           </div>

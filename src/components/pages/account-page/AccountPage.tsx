@@ -18,6 +18,7 @@ import {
 } from '@/components/common/ui/tab';
 import { TabItemContentSize } from '@/components/common/ui/tab/tab-item/TabItem';
 import MobileStudentTab from '@/components/pages/account-page/components/mobile-student-tab';
+import SecurityTab from '@/components/pages/account-page/components/security-tab';
 import StudentTab from '@/components/pages/account-page/components/student-tab';
 import StudentTable from '@/components/pages/account-page/components/table/student-table';
 import { StudentRole } from '@/components/pages/account-page/components/table/student-table/StudentTable';
@@ -141,7 +142,7 @@ const AccountPage = () => {
                 />
               </TabPanel>
               <TabPanel className={styles['tab-panel']} value={'2'}>
-                <MobileStudentTab />
+                <SecurityTab />
               </TabPanel>
               <TabPanel className={styles['tab-panel']} value={'3'}>
                 {getGroups(isMobile)}
