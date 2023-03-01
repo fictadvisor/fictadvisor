@@ -1,7 +1,11 @@
-import React from 'react';
-import { FC } from 'react';
-import { EllipsisVerticalIcon } from '@heroicons/react/24/outline';
+import React, { FC } from 'react';
+import {
+  ArrowUpCircleIcon,
+  EllipsisVerticalIcon,
+  TrashIcon,
+} from '@heroicons/react/24/outline';
 
+import Button, { ButtonVariant } from '@/components/common/ui/button';
 import {
   IconButton,
   IconButtonColor,
@@ -28,7 +32,20 @@ const MobileStudentTableButtons: FC<MobileStudentTableButtonsProps> = ({
         onClick={() => onChange(value)}
       />
       {currentValue === value && (
-        <div className={styles['dropdown-content']}></div>
+        <div className={styles['dropdown-content']}>
+          <Button
+            className={styles['dropdown-button']}
+            text={'Зам староста'}
+            variant={ButtonVariant.TEXT}
+            startIcon={<ArrowUpCircleIcon className="icon" />}
+          />
+          <Button
+            className={styles['dropdown-button']}
+            text={'Видалити'}
+            variant={ButtonVariant.TEXT}
+            startIcon={<TrashIcon className={'icon'} />}
+          />
+        </div>
       )}
     </div>
   );

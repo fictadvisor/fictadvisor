@@ -18,69 +18,74 @@ import styles from './GeneralTab.module.scss';
 const handleSubmit = (data: CreatePasswordFormFields) => {
   console.log({ data });
 };
+
+const getPersonalInfo = () => (
+  <Formik
+    initialValues={initialValues}
+    onSubmit={handleSubmit}
+    validationSchema={validationSchema}
+    validateOnMount
+    validateOnChange
+  >
+    {({ isValid, errors }) => (
+      <Form className={styles['form']}>
+        <Input
+          className={styles['input']}
+          isSuccessOnDefault={true}
+          label="Поточний пароль"
+          placeholder="user2000"
+          size={InputSize.LARGE}
+          type={InputType.PASSWORD}
+          name="Password"
+        />
+        <Input
+          className={styles['input']}
+          isSuccessOnDefault={true}
+          label="Новий пароль"
+          placeholder="user2000"
+          size={InputSize.LARGE}
+          type={InputType.PASSWORD}
+          name="createPassword"
+        />
+        <Input
+          className={styles['input']}
+          isSuccessOnDefault={true}
+          label="Підтвердження паролю"
+          placeholder="user2000"
+          size={InputSize.LARGE}
+          type={InputType.PASSWORD}
+          name="confirmPassword"
+          disabled={errors.createPassword != null}
+        />
+        <div className={styles['confirm-button']}>
+          <Button
+            text="Зберігти зміни"
+            startIcon={<CheckIcon className={'icon'} />}
+            size={ButtonSize.MEDIUM}
+            type="submit"
+            disabled={!isValid}
+            className={styles['change-password-button']}
+          />
+        </div>
+        <div className={styles['confirm-button-mobile']}>
+          <Button
+            text="Зберігти зміни"
+            startIcon={<CheckIcon className={'icon'} />}
+            size={ButtonSize.SMALL}
+            type="submit"
+            disabled={!isValid}
+            className={styles['change-password-button']}
+          />
+        </div>
+      </Form>
+    )}
+  </Formik>
+);
+
 const GeneralTab = () => (
   <div className={styles['container']}>
     <div className={styles['personal-info']}>
-      <Formik
-        initialValues={initialValues}
-        onSubmit={handleSubmit}
-        validationSchema={validationSchema}
-        validateOnMount
-        validateOnChange
-      >
-        {({ isValid, errors }) => (
-          <Form className={styles['form']}>
-            <Input
-              className={styles['input']}
-              isSuccessOnDefault={true}
-              label="Поточний пароль"
-              placeholder="user2000"
-              size={InputSize.LARGE}
-              type={InputType.PASSWORD}
-              name="Password"
-            />
-            <Input
-              className={styles['input']}
-              isSuccessOnDefault={true}
-              label="Новий пароль"
-              placeholder="user2000"
-              size={InputSize.LARGE}
-              type={InputType.PASSWORD}
-              name="createPassword"
-            />
-            <Input
-              className={styles['input']}
-              isSuccessOnDefault={true}
-              label="Підтвердження паролю"
-              placeholder="user2000"
-              size={InputSize.LARGE}
-              type={InputType.PASSWORD}
-              name="confirmPassword"
-              disabled={errors.createPassword != null}
-            />
-            <div className={styles['confirm-button']}>
-              <Button
-                text="Зберігти зміни"
-                startIcon={<CheckIcon className={'icon'} />}
-                size={ButtonSize.MEDIUM}
-                type="submit"
-                disabled={!isValid}
-                className={styles['change-password-button']}
-              />
-            </div>
-            <div className={styles['confirm-button-mobile']}>
-              <Button
-                text="Зберігти зміни"
-                startIcon={<CheckIcon className={'icon'} />}
-                size={ButtonSize.SMALL}
-                type="submit"
-                disabled={!isValid}
-                className={styles['change-password-button']}
-              />
-            </div>
-          </Form>
-        )}
-      </Formik>
+      {getPersonalInfo()}
       <div className={styles['division']}>
         <h4 className={styles['division-text']}>Посилання на соц. мережі</h4>
         <div className={styles['white']}></div>

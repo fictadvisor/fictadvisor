@@ -39,8 +39,18 @@
   }
 }
 
+.button-left{
+  height: 40px;
+}
+
+.button-right{
+  @extend .button-left;
+  background-color: $background-dark-35;
+}
+
 .side-buttons {
   display: flex;
   gap: 5px;
   margin-left: auto;
+  align-items: center;
 }

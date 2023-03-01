@@ -32,10 +32,12 @@ const MobileRequestTable: React.FC<StudentTableProps> = ({ rows }) => {
           </div>
           <div className={styles['side-buttons']}>
             <AlertButton
+              className={styles['button-left']}
               variant={AlertButtonVariant.SUCCESS}
               endIcon={<CustomCheck />}
             />
             <AlertButton
+              className={styles['button-right']}
               variant={AlertButtonVariant.ERROR_OUTLINE}
               startIcon={<XMarkIcon className="icon" />}
             />
