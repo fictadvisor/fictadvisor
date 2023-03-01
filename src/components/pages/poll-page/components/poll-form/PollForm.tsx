@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { FetchedTeacherPollData } from '../../PollPage';
 import AnswersSheet from '../answers-sheet/AnswersSheet';
@@ -12,6 +12,15 @@ interface PollFormProps {
 
 const PollForm: React.FC<PollFormProps> = ({ data }) => {
   const { categories, teacher, subject } = data;
+  const [currentQuestions, setCurrentQuestions] = React.useState(categories[0]);
+  const [progress, setProgress] = React.useState<number[]>(
+    Array(categories.length).fill(0),
+  );
+  const [currentCategory, setCurrentCategory] = React.useState(0);
+
+  useEffect(() => {
+    setCurrentQuestions(categories[currentCategory]);
+  }, [currentCategory, categories]);
 
   return (
     <div className={styles.wrapper}>
@@ -19,8 +28,15 @@ const PollForm: React.FC<PollFormProps> = ({ data }) => {
         categories={categories}
         teacher={teacher}
         subject={subject}
+        progress={progress}
+        current={currentCategory}
+        setCurrent={setCurrentCategory}
       />
-      <AnswersSheet />
+      <AnswersSheet
+        questions={currentQuestions}
+        setProgress={setProgress}
+        setCurrent={setCurrentCategory}
+      />
     </div>
   );
 };

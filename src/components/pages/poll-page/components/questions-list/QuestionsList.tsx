@@ -13,11 +13,18 @@ interface QuestionListProps {
   categories: Category[];
   teacher: Teacher;
   subject: Subject;
+  progress: number[];
+  current: number;
+  setCurrent: React.Dispatch<React.SetStateAction<number>>;
 }
+
 const QuestionsList: React.FC<QuestionListProps> = ({
   categories,
   teacher,
   subject,
+  progress,
+  current,
+  setCurrent,
 }) => {
   const { lastName, firstName, middleName, avatar } = teacher;
   useEffect(() => {
@@ -37,7 +44,9 @@ const QuestionsList: React.FC<QuestionListProps> = ({
           numberOfQuestions={category.count}
           questionNumber={1 + id}
           question={category.name}
-          numberOfAnswered={2}
+          numberOfAnswered={progress[id]}
+          isActive={current === id}
+          onClick={() => setCurrent(id)}
         />
       ))}
       <PollCard
@@ -45,7 +54,9 @@ const QuestionsList: React.FC<QuestionListProps> = ({
         question={'Ваш коментар'}
         isComment={true}
         numberOfQuestions={1}
-        numberOfAnswered={1}
+        numberOfAnswered={progress[categories.length - 1]}
+        isActive={current === categories.length - 1}
+        onClick={() => setCurrent(categories.length - 1)}
       />
     </div>
   );

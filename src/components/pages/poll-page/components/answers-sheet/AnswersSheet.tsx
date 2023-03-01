@@ -2,9 +2,18 @@
 // import { Formik, Form } from 'formik';
 import React from 'react';
 
+import { Category } from '../../PollPage';
+
 import styles from './AnswersSheet.module.scss';
 
-const AnswersSheet = () => {
+interface AnswersSheetProps {
+  questions: Category;
+  setProgress: React.Dispatch<React.SetStateAction<number[]>>;
+  setCurrent: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const AnswersSheet: React.FC<AnswersSheetProps> = ({ questions }) => {
+  console.log(questions);
   return (
     <div className={styles.wrapper}>
       {/* <Formik
