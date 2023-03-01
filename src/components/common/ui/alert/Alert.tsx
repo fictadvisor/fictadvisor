@@ -28,6 +28,8 @@ interface AlertProps {
   description?: string;
   color?: AlertColor;
   variant?: AlertVariant;
+  isClosable?: boolean;
+  className?: string;
 }
 
 const AlertColorMap = {
@@ -42,6 +44,8 @@ const Alert: React.FC<AlertProps> = ({
   description,
   color = AlertColor.INFO,
   variant = AlertVariant.FILLED,
+  isClosable = true,
+  className: additionalClassName,
 }) => {
   let className: string;
   let classSizeName: string;
@@ -67,24 +71,31 @@ const Alert: React.FC<AlertProps> = ({
   const [isVisible, setIsVisible] = useState(true);
   return (
     <div
-      className={mergeClassNames(styles['alert'], className, classSizeName)}
+      className={mergeClassNames(
+        styles['alert'],
+        className,
+        classSizeName,
+        additionalClassName,
+      )}
       style={{ display: isVisible ? 'flex' : 'none' }}
     >
       <div className={'icon ' + styles['alert-icon']}>{icon}</div>
 
-      <div className={styles['alert-title']}>
-        {title}
+      <div className={styles['alert-text']}>
+        <div className={styles['alert-title']}> {title} </div>
         {description && (
           <div className={styles['alert-description']}>{description}</div>
         )}
       </div>
 
-      <div
-        className={'icon ' + styles['alert-icon-x']}
-        onClick={() => setIsVisible(false)}
-      >
-        <XMarkIcon />
-      </div>
+      {isClosable && (
+        <div
+          className={'icon ' + styles['alert-icon-x']}
+          onClick={() => setIsVisible(false)}
+        >
+          <XMarkIcon />
+        </div>
+      )}
     </div>
   );
 };

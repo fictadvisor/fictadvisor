@@ -1,13 +1,17 @@
 @import "src/styles/partials/theme";
+@import "src/styles/partials/typography-mixins";
 
 .alert {
     align-items: flex-start;
-    border-radius: 4px;
+    border-radius: 8px;
     padding: 12px;
     display: flex;
     justify-content: center;
+    &-text {
+      margin: 0 8px;
+    }
     &-description {
-        font-size: 14px;
+        @include body-primary;
         padding-top: 4px;
     }
     &-icon {
@@ -19,6 +23,7 @@
         padding-top: 0;
         cursor: pointer;
     }
+
 }
 
 
@@ -62,39 +67,40 @@
     .alert-icon{
         margin-top: 1px;
     }
-    .alert-title{
-        font-size: 14px;
-        margin: 0 8px;
+  .alert-text{
+      .alert-title {
+        @include body-primary--medium;
+       white-space: nowrap;
+         min-width: fit-content;
     }
-    .alert-title {
-        min-width: 160px;
-    }
+  }
+
 }
 
 .alert-medium{
     .alert-icon{
         margin-top: 1px;
     }
+  .alert-text{
     .alert-title {
-        font-size: 14px;
-        margin: 0 8px;
+      @include body-primary--medium;
+      white-space: nowrap;
+      min-width: fit-content;
     }
-    .alert-title {
-        min-width: 252px;
-    }
+  }
 }
 
 .alert-large{
     .alert-icon{
         margin-top: 2px;
     }
+  .alert-text{
     .alert-title {
-        font-size: 16px;
-        margin: 0 8px;
+      @include body-secondary--medium;
+      white-space: nowrap;
+      min-width: fit-content;
     }
-    .alert-title {
-        min-width: 280px;
-    }
+  }
 }
 
 @include style-alert-color("info",$info-50,$info-0);

@@ -1,4 +1,5 @@
 import React from 'react';
+import mergeClassNames from 'merge-class-names';
 
 import styles from './Divider.module.scss';
 
@@ -10,14 +11,16 @@ export enum DividerTextPosition {
 interface DividerProps {
   text?: string;
   textPosition?: DividerTextPosition;
+  className?: string;
 }
 
 const Divider: React.FC<DividerProps> = ({
   text,
   textPosition = DividerTextPosition.CENTER,
+  className,
 }) => {
   return (
-    <div className={styles['dividers-list']}>
+    <div className={mergeClassNames(styles['dividers-list'], className)}>
       {!text && (
         <div className={styles['dividers-list-items']}>
           <hr className={styles['no-text-line']} />

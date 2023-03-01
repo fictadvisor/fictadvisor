@@ -10,14 +10,14 @@ import {
 } from '../IconButton';
 
 const CloseButton: React.FC<IconButtonProps> = ({
-  size = IconButtonSize.NORMAL,
+  size = IconButtonSize.MEDIUM,
   shape = IconButtonShape.SQUARE,
   color = IconButtonColor.TRANSPARENT,
   ...rest
 }) => {
   return (
     <IconButton
-      icon={<XMarkIcon className="icon" />}
+      icon={<XMarkIcon />}
       size={size}
       shape={shape}
       color={color}

@@ -1,4 +1,5 @@
 import React, { ReactNode } from 'react';
+import mergeClassNames from 'merge-class-names';
 
 import styles from './IconButton.module.scss';
 
@@ -6,13 +7,14 @@ export type IconButtonProps = {
   size?: IconButtonSize;
   shape?: IconButtonShape;
   color?: IconButtonColor;
+  className?: string;
 } & React.DetailedHTMLProps<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
   HTMLButtonElement
 >;
 
 export enum IconButtonSize {
-  NORMAL = 'normal',
+  MEDIUM = 'normal',
   LARGE = 'large',
 }
 
@@ -34,18 +36,24 @@ export const IconButton: React.FC<
     icon: ReactNode;
   }
 > = ({
-  size = IconButtonSize.NORMAL,
+  size = IconButtonSize.MEDIUM,
   shape = IconButtonShape.CIRCLE,
   color = IconButtonColor.PRIMARY,
   icon,
+  className,
   ...rest
 }) => {
   return (
     <button
-      className={styles[`${shape}-button-icon-${size}-${color}`]}
+      className={mergeClassNames(
+        styles[`${shape}-button-icon-${size}-${color}`],
+        className,
+      )}
       {...rest}
     >
-      {icon}
+      <div className={mergeClassNames('icon', styles[`${size}-icon`])}>
+        {icon}
+      </div>
     </button>
   );
 };

@@ -26,6 +26,7 @@ interface ButtonProps extends React.ComponentPropsWithoutRef<'button'> {
   variant?: ButtonVariant;
   startIcon?: ReactNode;
   endIcon?: ReactNode;
+  className?: string;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -36,6 +37,7 @@ const Button: React.FC<ButtonProps> = ({
   startIcon,
   endIcon,
   type,
+  className: additionalClassName,
   ...rest
 }) => {
   const buttonStyle = `${color}-${size}${
@@ -47,6 +49,7 @@ const Button: React.FC<ButtonProps> = ({
     styles[buttonVariant],
     styles[buttonStyle],
     styles[buttonText],
+    additionalClassName,
   );
   return (
     <button className={className} type={type} {...rest}>
