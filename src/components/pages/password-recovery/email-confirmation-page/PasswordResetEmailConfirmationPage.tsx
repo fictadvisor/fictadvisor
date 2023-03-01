@@ -10,7 +10,7 @@ import Button, {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button';
-import Link from '@/components/pages/password-recovery/email-confirmation/components/send-again-link';
+import Link from '@/components/pages/password-recovery/email-confirmation-page/components/send-again-link';
 
 import styles from './PasswordResetEmailConfirmationPage.module.scss';
 

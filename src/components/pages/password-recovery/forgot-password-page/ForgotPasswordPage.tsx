@@ -15,7 +15,7 @@ import styles from './ForgotPasswordPage.module.scss';
 const ForgotPasswordPage = () => {
   const router = useRouter();
   const returnAuth = () => {
-    router.push('/login');
+    void router.push('/login');
   };
   return (
     <PageLayout
