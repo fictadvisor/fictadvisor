@@ -1,7 +1,8 @@
-@import url(https://fonts.googleapis.com/css?family=Manrope);
+@import url('https://fonts.googleapis.com/css?family=Manrope');
 
 body, html, * {
-  font-family: 'Manrope', sans-serif;
+  font-family: 'Manrope';
+  //letter-spacing: 1.5px;
 }
 
 h1 {
