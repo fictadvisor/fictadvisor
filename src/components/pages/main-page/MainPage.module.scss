@@ -27,12 +27,12 @@ $font-weight-bold: 700;
     h2 {
         font-weight: $font-weight-bold;
     }
-} 
+}
 
 .header-info {
     display: flex;
     flex-direction: column;
-    justify-content: center;  
+    justify-content: center;
     width: 30%;
     height: fit-content;
     padding: 202px 0 0 80px;
@@ -118,7 +118,7 @@ $font-weight-bold: 700;
     .buttons-tabl, .buttons-mob {
         display: none;
     }
-} 
+}
 
 .button-divider {
     border: 1px solid $button-divider-color;
@@ -129,7 +129,7 @@ $font-weight-bold: 700;
     flex-direction: column;
     margin: 97px 0 127px 0;
 
-    h3 { 
+    h3 {
         font-weight: $font-weight-bold;
     }
 }
@@ -138,18 +138,17 @@ $font-weight-bold: 700;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 8px;
-    padding: 64px 80px 0 80px;
-    max-width: calc(8% + 199px * 5 + 160px); 
+    gap: 16px;
+    padding: 64px 0 80px;
+    max-width: 1064px;
     // justify-content: flex-start;
     // padding: 64px calc(80px - 2%) 0 80px;
-    // outline: 2px solid pink; 
+    // outline: 2px solid pink;
     // gap: 2%;
 }
 
 .card-holder {
     // outline: 2px solid pink;
-    margin-bottom: 2%;
 }
 
 @media only screen and (max-width: 480px) {
@@ -192,12 +191,12 @@ $font-weight-bold: 700;
         button {
             font-size: 14px;
             width: auto;
-        }        
+        }
 
         .buttons-desk {
             display: none;
         }
-        
+
         .buttons-mob {
             display: flex;
             gap: 14px;
@@ -245,12 +244,12 @@ $font-weight-bold: 700;
             width: 100%;
         }
     }
-    
+
     .buttons {
         .buttons-desk {
             display: none;
         }
-        
+
         .buttons-tabl {
             display: flex;
             gap: 20px;
@@ -271,13 +270,13 @@ $font-weight-bold: 700;
         p {
             width: 200%;
         }
-    } 
+    }
 
     .buttons {
         .buttons-desk {
             display: none;
         }
-        
+
         .buttons-tabl {
             display: flex;
             gap: 20px;
@@ -287,7 +286,7 @@ $font-weight-bold: 700;
     .main-page {
         background-size: cover;
     }
-        
+
 }
 
 @media screen and (min-width: 1441px) {
