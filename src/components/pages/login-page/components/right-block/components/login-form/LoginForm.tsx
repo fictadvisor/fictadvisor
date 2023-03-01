@@ -5,12 +5,12 @@ import { useRouter } from 'next/router';
 import Button, { ButtonSize } from '@/components/common/ui/button';
 import { Input, InputSize, InputType } from '@/components/common/ui/form';
 import CustomLink from '@/components/common/ui/link';
-import { initialValues } from '@/components/pages/login-page/components/login-form/constants';
-import { LoginFormFields } from '@/components/pages/login-page/components/login-form/types';
-import { validationSchema } from '@/components/pages/login-page/components/login-form/validation';
+import { initialValues } from '@/components/pages/login-page/components/right-block/components/login-form/constants';
+import { LoginFormFields } from '@/components/pages/login-page/components/right-block/components/login-form/types';
+import { validationSchema } from '@/components/pages/login-page/components/right-block/components/login-form/validation';
 import AuthService from '@/lib/services/auth';
 
-import styles from '../../LoginPage.module.scss';
+import styles from '../../RightBlock.module.scss';
 
 const LoginForm: FC = () => {
   const { push } = useRouter();

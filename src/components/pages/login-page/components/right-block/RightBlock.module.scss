@@ -1,0 +1,62 @@
+@import "src/styles/partials/utils";
+
+.form{
+  display: flex;
+  flex-direction: column;
+  @include flex-center;
+  gap: 25px;
+}
+
+.right-block{
+  width: 480px;
+  @include flex-center;
+  margin-left: 6px;
+}
+
+
+.right-block__content{
+  width: 100%;
+  @include flex-center;
+  flex-direction: column;
+}
+
+
+.register-header{
+  text-align: center;
+  font-size: 36px;
+  line-height: 120%;
+  font-weight: 700;
+  margin-bottom: 32px
+}
+
+.login-divider{
+  margin-top: 32px;
+}
+
+.login-input{
+  margin-top: 15px;
+}
+
+.one-line{
+  margin-bottom: 24px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.register-checkbox{
+  width: 30px;
+}
+
+.checkbox-container{
+  display: flex;
+  gap: 12px;
+}
+
+.placeholder{
+  height: 24px;
+}
+
+.login-button-container{
+  width: fit-content;
+}
