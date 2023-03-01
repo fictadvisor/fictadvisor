@@ -33,10 +33,10 @@ export interface AlertProps {
 }
 
 const AlertColorMap = {
-  [AlertColor.INFO]: <InformationCircleIcon />,
-  [AlertColor.ERROR]: <ExclamationTriangleIcon />,
-  [AlertColor.WARNING]: <ExclamationCircleIcon />,
-  [AlertColor.SUCCESS]: <CheckCircleIcon />,
+  [AlertColor.INFO]: InformationCircleIcon,
+  [AlertColor.ERROR]: ExclamationTriangleIcon,
+  [AlertColor.WARNING]: ExclamationCircleIcon,
+  [AlertColor.SUCCESS]: CheckCircleIcon,
 };
 
 const Alert: React.FC<AlertProps> = ({
@@ -67,7 +67,7 @@ const Alert: React.FC<AlertProps> = ({
         : (classSizeName = styles[`alert-small`]);
     }
   }
-  const icon = AlertColorMap[color];
+  const Icon = AlertColorMap[color];
   const [isVisible, setIsVisible] = useState(true);
   return (
     <div
@@ -79,7 +79,7 @@ const Alert: React.FC<AlertProps> = ({
       )}
       style={{ display: isVisible ? 'flex' : 'none' }}
     >
-      <div className={'icon ' + styles['alert-icon']}>{icon}</div>
+      {<Icon className={'icon ' + styles['alert-icon']} />}
 
       <div className={styles['alert-text']}>
         <div className={styles['alert-title']}> {title} </div>

@@ -15,8 +15,10 @@
         padding-top: 4px;
     }
     &-icon {
-        width: 16px;
-        height: 16px;
+      max-width: 16px;
+      max-height: 16px;
+      min-width: 16px;
+      min-height: 16px;
     }
     &-icon-x {
         @extend .alert-icon;
