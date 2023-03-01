@@ -9,6 +9,12 @@ import styles from './Dropdown.module.scss';
 
 const dropDownOptionHeight = 36; //px
 
+export enum DropDownSize {
+  SMALL = 'small',
+  MEDIUM = 'medium',
+  LARGE = 'large',
+}
+
 interface DropDownOption {
   value: string;
   label: string;
@@ -16,7 +22,7 @@ interface DropDownOption {
 
 interface DropdownProps {
   options: DropDownOption[];
-  label: string;
+  label?: string;
   name: string;
   isDisabled?: boolean;
   icon?: ReactNode;
@@ -27,22 +33,26 @@ interface DropdownProps {
   isSuccessOnDefault?: boolean;
   defaultRemark?: string;
   showRemark?: boolean;
+  size?: string;
   className?: string;
+  onChange?: () => void;
 }
 
 const Dropdown: React.FC<DropdownProps> = ({
   options,
   label,
   name,
-  isDisabled = false,
   icon,
+  isDisabled = false,
+  defaultRemark,
   placeholder = isDisabled ? 'Недоступно...' : 'Тиць...',
   noOptionsText = 'Опції відсутні',
   numberOfOptions = 4,
-  defaultRemark,
   isSuccessOnDefault = false,
   showRemark = true,
-  className,
+  size = DropDownSize.MEDIUM,
+  className = '',
+  onChange,
 }) => {
   const [{}, { touched, error }, { setTouched, setValue }] = useField(name);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -54,7 +64,8 @@ const Dropdown: React.FC<DropdownProps> = ({
 
   const handleChange = option => {
     setTouched(true);
-    setValue(option.value);
+    setValue(option?.value ? option.value : '');
+    if (onChange) onChange();
   };
 
   return (
@@ -74,17 +85,21 @@ const Dropdown: React.FC<DropdownProps> = ({
         options={options}
         openMenuOnClick={true}
         blurInputOnSelect={true}
+        isClearable
         isDisabled={isDisabled}
         onMenuOpen={() => setIsMenuOpen(true)}
         onMenuClose={() => setIsMenuOpen(false)}
         maxMenuHeight={dropDownOptionHeight * numberOfOptions}
         classNames={{
-          control: () =>
-            icon
-              ? styles['dropdown-control'] +
-                ' ' +
-                styles['dropdown-control-iconed']
-              : styles['dropdown-control'],
+          control: () => {
+            const control = mergeClassNames(
+              styles[`dropdown-control`],
+              styles[`dropdown-control-${size}`],
+            );
+            return icon
+              ? control + ' ' + styles['dropdown-control-iconed']
+              : control;
+          },
           container: () =>
             `${styles['dropdown-container']} ${
               styles[`dropdown-container-${state}`]

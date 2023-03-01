@@ -19,6 +19,7 @@ $default-dropdown-padding: 8px;
 }
 
 .dropdown {
+  
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -29,7 +30,7 @@ $default-dropdown-padding: 8px;
     left: 8px;
     z-index: 1;
     top: 0;
-    background: linear-gradient(180deg, rgba(30, 30, 30, 0) 49.48%, $background-dark-0 49.95%);;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 45%, $background-dark-0 50%);;
     transform: translateY(-50%);
     padding: 0 8px;
     @include body-primary;
@@ -45,21 +46,37 @@ $default-dropdown-padding: 8px;
     min-height: 20px;
   }
 }
-.dropdown- {
+.dropdown-{  
   &control {
-    padding: 0 $dropdown-option-left-padding;
-    &-iconed {
-      padding-left: $dropdown-option-left-padding + 15px;
-    }
-  }
-  &container {
-    transition: .2s ease-in-out all;
-    background-color: $theme-color;
-    @include roundcorners($color:$gray-200);
+    width: 100%;
+    min-width: 75px;
     &:hover{
       border-color: $gray-600;
     }
 
+    @include roundcorners($color:$gray-200);
+    padding: 0 $dropdown-option-left-padding;
+    &-iconed {
+      padding-left: $dropdown-option-left-padding + 15px;
+    }
+    &-small{
+      height: 40px;
+    }
+    &-medium{
+      height: 48px;
+    }
+    &-large{
+      height: 52px;
+    }
+
+  }
+  &container {
+    box-sizing: border-box;
+    color: $gray-500;
+    transition: .2s ease-in-out all;
+    background-color: $theme-color;
+    border-radius: 10px;
+   
     &-success,&-success:hover{
       p{
         color: $success-300;

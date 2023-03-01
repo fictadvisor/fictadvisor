@@ -1,5 +1,5 @@
 export interface GetTeacherDTO {
-  id?: boolean;
+  id?: string;
   firstName?: boolean;
   middleName?: boolean;
   lastName?: boolean;

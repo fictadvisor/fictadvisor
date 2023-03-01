@@ -35,7 +35,7 @@ interface InputProps
   defaultRemark?: string;
   showRemark?: boolean;
   className?: string;
-  onDeterredChange?:()=>void;
+  onDeterredChange?: () => void;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -120,7 +120,7 @@ const Input: React.FC<InputProps> = ({
       if (onDeterredChange) onDeterredChange();
     }, 500);
     return () => clearTimeout(curTimer);
-  }, [field.value,onDeterredChange]);
+  }, [field.value, onDeterredChange]);
 
   return (
     <div className={className}>
