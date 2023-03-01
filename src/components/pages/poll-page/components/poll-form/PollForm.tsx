@@ -1,14 +1,25 @@
 import React from 'react';
 
+import { FetchedTeacherPollData } from '../../PollPage';
 import AnswersSheet from '../answers-sheet/AnswersSheet';
 import QuestionsList from '../questions-list/QuestionsList';
 
 import styles from './PollForm.module.scss';
 
-const PollForm = () => {
+interface PollFormProps {
+  data: FetchedTeacherPollData;
+}
+
+const PollForm: React.FC<PollFormProps> = ({ data }) => {
+  const { categories, teacher, subject } = data;
+
   return (
     <div className={styles.wrapper}>
-      <QuestionsList />
+      <QuestionsList
+        categories={categories}
+        teacher={teacher}
+        subject={subject}
+      />
       <AnswersSheet />
     </div>
   );
