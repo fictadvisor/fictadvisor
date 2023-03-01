@@ -22,34 +22,21 @@ interface LoaderProps {
   className?: string;
 }
 
+const LoaderMap = {
+  [LoaderSize.SMALLEST]: SmallestProgressCircle,
+  [LoaderSize.SMALL]: SmallProgressCircle,
+  [LoaderSize.MEDIUM]: MediumProgressCircle,
+  [LoaderSize.LARGE]: LargestProgressCircle,
+  [LoaderSize.LARGEST]: LargestProgressCircle,
+};
+
 const Loader: FC<LoaderProps> = ({ size = LoaderSize.SMALLEST, className }) => {
-  let progressCircle;
-  switch (size) {
-    case LoaderSize.SMALLEST: {
-      progressCircle = <SmallestProgressCircle />;
-      break;
-    }
-    case LoaderSize.SMALL: {
-      progressCircle = <SmallProgressCircle />;
-      break;
-    }
-    case LoaderSize.MEDIUM: {
-      progressCircle = <MediumProgressCircle />;
-      break;
-    }
-    case LoaderSize.LARGE: {
-      progressCircle = <LargeProgressCircle />;
-      break;
-    }
-    case LoaderSize.LARGEST: {
-      progressCircle = <LargestProgressCircle />;
-      break;
-    }
-  }
+  const LoaderIcon = LoaderMap[size];
+  console.log(LoaderIcon);
 
   return (
     <div className={mergeClassNames(styles[size], className)}>
-      {progressCircle}
+      <LoaderIcon />
     </div>
   );
 };

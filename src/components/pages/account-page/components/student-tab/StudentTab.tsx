@@ -25,31 +25,30 @@ const getRequest = (requests: object, role: StudentRole) => {
 };
 
 const StudentTab = () => {
-  const { user } = useAuthentication();
   return (
     <div className={styles['content']}>
-      <div className={styles['text-content']}>
-        <h4>Список групи</h4>
-        <h4>{user.group.code}</h4>
-      </div>
-      {getRequest(transformData(testData), user.group.role)}
-      {user.group.role && (
-        <div className={styles['division']}>
-          <h4 className={styles['division-text']}>Нові запити</h4>
-          <div className={styles['white']}></div>
-          <div className={styles['button']}>
-            <Button
-              text={'Додати студента'}
-              startIcon={<PlusIcon className={'icon'} />}
-              className={styles['add-button']}
-            />
-          </div>
-        </div>
-      )}
-      <StudentTable
-        variant={StudentRole.CAPTAIN}
-        rows={transformData(testData)}
-      />
+      {/*<div className={styles['text-content']}>*/}
+      {/*  <h4>Список групи</h4>*/}
+      {/*  <h4>user.group.code</h4>*/}
+      {/*</div>*/}
+      {/*{getRequest(transformData(testData), user.group.role)}*/}
+      {/*{user.group.role && (*/}
+      {/*  <div className={styles['division']}>*/}
+      {/*    <h4 className={styles['division-text']}>Нові запити</h4>*/}
+      {/*    <div className={styles['white']}></div>*/}
+      {/*    <div className={styles['button']}>*/}
+      {/*      <Button*/}
+      {/*        text={'Додати студента'}*/}
+      {/*        startIcon={<PlusIcon className={'icon'} />}*/}
+      {/*        className={styles['add-button']}*/}
+      {/*      />*/}
+      {/*    </div>*/}
+      {/*  </div>*/}
+      {/*)}*/}
+      {/*<StudentTable*/}
+      {/*  variant={StudentRole.CAPTAIN}*/}
+      {/*  rows={transformData(testData)}*/}
+      {/*/>*/}
     </div>
   );
 };
