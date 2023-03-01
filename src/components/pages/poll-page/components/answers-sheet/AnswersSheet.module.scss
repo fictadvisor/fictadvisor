@@ -2,4 +2,54 @@
 @import 'src/styles/partials/theme';
 
 .wrapper {
+  max-width: 632px;
+}
+
+.question {
+  padding-bottom: 40px;
+}
+
+.question-number {
+  margin-bottom: 16px;
+  font-size: 16px;
+  color: $white;
+}
+
+.question-title {
+  margin-bottom: 16px;
+  font-size: 20px;
+  color: $white;
+}
+
+.question-description {
+  margin-bottom: 20px;
+  margin-top: 12px;
+  font-size: 14px;
+  color: $gray-500;
+  font-weight: 500;
+}
+
+.question-criteria {
+  font-size: 14px;
+  color: $gray-300;
+  font-weight: 300;
+}
+
+.slider {
+}
+
+.options {
+  display: flex;
+  justify-content: start;
+
+  div {
+    margin-right: 36px;
+  }
+}
+
+.textarea {
+}
+
+.button {
+  width: auto;
 }
