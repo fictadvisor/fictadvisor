@@ -1,5 +1,3 @@
-// import { Slider } from '@/components/common/ui/form';
-// import { Formik, Form } from 'formik';
 import React, { useEffect } from 'react';
 import { Form, Formik } from 'formik';
 import * as yup from 'yup';
@@ -15,42 +13,58 @@ interface AnswersSheetProps {
   questions: Category;
   setProgress: React.Dispatch<React.SetStateAction<number[]>>;
   setCurrent: React.Dispatch<React.SetStateAction<number>>;
+  isTheLast: boolean;
 }
 
-const AnswersSheet: React.FC<AnswersSheetProps> = ({ questions }) => {
-  console.log(questions);
+const AnswersSheet: React.FC<AnswersSheetProps> = ({
+  questions,
+  isTheLast,
+}) => {
   const initialValues = {};
 
   for (const question of questions.questions) {
-    if (question.type === 'SCALE') initialValues[question.id] = 1;
-    console.log('initial', initialValues);
+    if (question.type === 'SCALE') {
+      initialValues[question.id] = 1;
+    }
   }
   const handleSubmit = data => {
     console.log('hello', data);
   };
-  const validationSchema = yup.object().shape({});
+
+  let validationSchema = yup.object().shape({});
 
   useEffect(() => {
+    const tempValidationObject = {};
     for (const question of questions.questions) {
-      if (question.type === 'SCALE') initialValues[question.id] = 1;
+      if (question.type === 'SCALE') {
+        initialValues[question.id] = 1;
+        tempValidationObject[question.id] = yup
+          .string()
+          .required(` ${question.name} required`);
+      } else if (question.type === 'TOGGLE') {
+        tempValidationObject[question.id] = yup
+          .string()
+          .required(` ${question.name} required`);
+        initialValues[question.id] = '';
+      }
+      validationSchema = yup.object().shape(tempValidationObject);
     }
-    console.log('initial', initialValues);
   }, [questions, initialValues]);
 
   return (
     <div className={styles.wrapper}>
       <Formik
-        enableReinitialize
         validateOnMount
         validateOnChange
         initialValues={initialValues}
         onSubmit={handleSubmit}
         validationSchema={validationSchema}
+        enableReinitialize
       >
         {() => (
           <Form className={styles['form']}>
             {questions.questions.map((question, id) => (
-              <div key={id} className={styles['question']}>
+              <div key={question.id} className={styles['question']}>
                 {question.type === 'TEXT' ? (
                   <p className={styles['question-number']}> Відкрите питання</p>
                 ) : (
@@ -88,7 +102,7 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({ questions }) => {
             ))}
             <Button
               className={styles['button']}
-              text="Наступні питання"
+              text={isTheLast ? 'Завершити опитування' : 'Наступні питання'}
               type="submit"
             />
           </Form>

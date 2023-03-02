@@ -51,7 +51,7 @@ const Slider: FunctionComponent<SliderProps> = ({
         className={styles['slider'] + ' ' + styles[`slider-${type}`]}
         onInput={handleInput}
         {...rest}
-        value={value.toString()}
+        value={(value || '1').toString()}
       />
       <div className={styles[`${type}-target`]}>
         {numbers.map((number, index) => (

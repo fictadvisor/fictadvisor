@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 
+import useIsMobile from '@/hooks/use-is-mobile';
+
 import { FetchedTeacherPollData } from '../../PollPage';
 import AnswersSheet from '../answers-sheet/AnswersSheet';
 import QuestionsList from '../questions-list/QuestionsList';
@@ -16,6 +18,8 @@ const PollForm: React.FC<PollFormProps> = ({ data }) => {
   const [progress, setProgress] = React.useState<number[]>(
     Array(categories.length).fill(0),
   );
+  const isMobile = useIsMobile(1024);
+  console.log(isMobile);
   const [currentCategory, setCurrentCategory] = React.useState(0);
 
   useEffect(() => {
@@ -36,6 +40,7 @@ const PollForm: React.FC<PollFormProps> = ({ data }) => {
         questions={currentQuestions}
         setProgress={setProgress}
         setCurrent={setCurrentCategory}
+        isTheLast={currentCategory === categories.length - 1}
       />
     </div>
   );

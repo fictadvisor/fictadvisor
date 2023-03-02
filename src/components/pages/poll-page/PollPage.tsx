@@ -48,35 +48,6 @@ export interface FetchedTeacherPollData {
   teacher: Teacher;
 }
 
-// const initialState = {
-//   subject: { id: 'subjectId', name: 'subject' },
-//   categories: [
-//     {
-//       name: 'category',
-//       count: 3,
-//       questions: [
-//         {
-//           id: 'questionId',
-//           name: '1 question',
-//           criteria: 'criteria',
-//           text: 'text',
-//           type: 'type',
-//           description: 'description',
-//           display: 'display',
-//           isRequired: false,
-//         },
-//       ],
-//     },
-//   ],
-//   teacher: {
-//     id: 'teacherId',
-//     firstName: 'first',
-//     middleName: 'middle',
-//     lastName: 'last',
-//     avatar: null,
-//   },
-// };
-
 const PollPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { user, isLoggedIn, isAuthenticationFetching } = useAuthentication();
