@@ -12,6 +12,7 @@ import { DisciplineRepository } from '../../api/discipline/DisciplineRepository'
 import { SubjectRepository } from '../../api/subject/SubjectRepository';
 import { TeacherRepository } from '../../api/teacher/TeacherRepository';
 import { ScheduleRepository } from '../../api/schedule/ScheduleRepository';
+import { GroupService } from '../../api/group/GroupService';
 
 export const DISCIPLINE_TYPE = {
   Лек: DisciplineTypeEnum.LECTURE,
@@ -49,7 +50,8 @@ export class RozParser implements Parser {
     private disciplineRepository: DisciplineRepository,
     private disciplineTypeRepository: DisciplineTypeRepository,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
-    private disciplineTeacherRoleRepository: DisciplineTeacherRoleRepository
+    private disciplineTeacherRoleRepository: DisciplineTeacherRoleRepository,
+    private groupService: GroupService,
   ) {}
 
   async parse () {
@@ -59,20 +61,20 @@ export class RozParser implements Parser {
     })).data.d.filter((name: string) => /І[МПКАСОВТ]-([зпв]|зп)?\d\d(мн|мп|ф)?і?/.test(name));
 
     for (const group of groups) {
-      if (group.code.endsWith('ф')) continue;
+      if (group.endsWith('ф')) continue;
       await this.parseGroupSchedule(group);
     }
   }
 
-  async parseGroupSchedule (group) {
-    const groupHashId = await this.getGroupHashId(group.code);
+  async parseGroupSchedule (code) {
+    const groupHashId = await this.getGroupHashId(code);
     const url = `http://epi.kpi.ua/Schedules/ViewSchedule.aspx?g=${groupHashId}`;
 
-    const responce = await axios.post(url, VIEW_SCHEDULE_PARAMS);
-    const dom = new JSDOM(responce.data);
+    const response = await axios.post(url, VIEW_SCHEDULE_PARAMS);
+    const dom = new JSDOM(response.data);
 
-    await this.parseWeek(0, group, dom);
-    await this.parseWeek(1, group, dom);
+    await this.parseWeek(0, code, dom);
+    await this.parseWeek(1, code, dom);
   }
 
   async getGroupHashId (group) {
@@ -84,13 +86,11 @@ export class RozParser implements Parser {
       ctl00$MainContent$ctl00$btnShowSchedule: 'Розклад занять',
     });
     const url = 'http://epi.kpi.ua/Schedules/ScheduleGroupSelection.aspx';
-    const responce = await axios.post(url, SCHEDULE_GROUP_SELECTION_PARAMS);
-    const dom = new JSDOM(responce.data);
+    const response = await axios.post(url, SCHEDULE_GROUP_SELECTION_PARAMS);
+    const dom = new JSDOM(response.data);
 
     const form = dom.window.document.querySelector('form[name=\'aspnetForm\']');
-    const hashId = form.getAttribute('action').split('?g=')[1];
-
-    return hashId;
+    return form.getAttribute('action').split('?g=')[1];
   }
 
   async parseHtmlWeek (week, group, dom) {
@@ -160,8 +160,9 @@ export class RozParser implements Parser {
     return pairs;
   }
 
-  async parseWeek (weekNumber, group, dom) {
-    const week = await this.parseHtmlWeek(weekNumber, group.code, dom);
+  async parseWeek (weekNumber, code, dom) {
+    const week = await this.parseHtmlWeek(weekNumber, code, dom);
+    const group = await this.groupService.create(code);
     for (const pair of week) {
       await this.parsePair(pair, group.id);
     }
