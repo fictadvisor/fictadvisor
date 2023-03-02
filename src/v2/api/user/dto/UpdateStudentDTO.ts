@@ -34,5 +34,6 @@ export class UpdateStudentDTO {
     groupId?: string;
 
   @IsEnum(State, validationOptionsMsg('State is not an enum'))
+  @IsOptional()
     state?: State;
 }
