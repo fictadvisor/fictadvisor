@@ -8,9 +8,9 @@ import Button, {
   ButtonVariant,
 } from '@/components/common/ui/button';
 import { Input, InputSize, InputType } from '@/components/common/ui/form';
-import { initialValues } from '@/components/pages/create-password-page/components/create-password-form/constants';
-import { CreatePasswordFormFields } from '@/components/pages/create-password-page/components/create-password-form/types';
-import { validationSchema } from '@/components/pages/create-password-page/components/create-password-form/validation';
+import { initialValues } from '@/components/pages/password-recovery/create-password-page/components/create-password-form/constants';
+import { CreatePasswordFormFields } from '@/components/pages/password-recovery/create-password-page/components/create-password-form/types';
+import { validationSchema } from '@/components/pages/password-recovery/create-password-page/components/create-password-form/validation';
 
 import styles from './SecurityTab.module.scss';
 

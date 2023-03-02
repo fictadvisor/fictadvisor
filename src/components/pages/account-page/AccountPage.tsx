@@ -25,20 +25,18 @@ import StudentTab from '@/components/pages/account-page/components/student-tab';
 import useAuthentication from '@/hooks/use-authentication';
 import useIsMobile from '@/hooks/use-is-mobile/UseIsMobile';
 import { GroupAPI } from '@/lib/api/group/GroupAPI';
-import {
-  setRequests,
-  setStudents,
-} from '@/redux/reducers/account-reducer/account.reducer';
 
 import PageLayout from '../../common/layout/page-layout/PageLayout';
 
 import styles from './AccountPage.module.scss';
 
-const getGroups = (isMobile, user) => {
+const getStudentTab = (isMobile, user, requests, students) => {
   if (isMobile) {
-    return <MobileStudentTab user={user} />;
+    return (
+      <MobileStudentTab user={user} requests={requests} students={students} />
+    );
   } else {
-    return <StudentTab user={user} />;
+    return <StudentTab user={user} requests={requests} students={students} />;
   }
 };
 
@@ -171,7 +169,7 @@ const AccountPage = () => {
                 className={styles['tab-panel']}
                 value={AccountPageTabs.GENERAL}
               >
-                <GeneralTab />
+                <GeneralTab user={user} update={update} />
               </TabPanel>
               <TabPanel
                 className={styles['tab-panel']}
@@ -183,7 +181,12 @@ const AccountPage = () => {
                 className={styles['tab-panel']}
                 value={AccountPageTabs.GROUP}
               >
-                {getGroups(isMobile, user)}
+                {getStudentTab(
+                  isMobile,
+                  user,
+                  requestStudents.students,
+                  groupStudents.students,
+                )}
               </TabPanel>
               <TabPanel
                 className={styles['tab-panel']}

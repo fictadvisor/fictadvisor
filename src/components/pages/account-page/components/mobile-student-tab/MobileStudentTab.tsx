@@ -10,9 +10,9 @@ import MobileStudentTable from '@/components/pages/account-page/components/table
 import { StudentRole } from '@/components/pages/account-page/components/table/student-table/StudentTable';
 import {
   dataMapper,
-  transformData,
+  transformRequestsData,
+  transformStudentsData,
 } from '@/components/pages/account-page/components/table/student-table/utils';
-import { testData } from '@/components/pages/account-page/testData';
 
 import styles from './MobileStudentTab.module.scss';
 
@@ -24,7 +24,7 @@ const getRequest = (requests: object, role: StudentRole) => {
           <h4 className={styles['division-text']}>Нові запити</h4>
           <div className={styles['white']}></div>
         </div>
-        <MobileRequestTable rows={transformData(testData)} />
+        <MobileRequestTable rows={transformRequestsData(requests)} />
       </div>
     );
   }
@@ -32,16 +32,22 @@ const getRequest = (requests: object, role: StudentRole) => {
 
 interface MobileStudentTabProps {
   user;
+  requests;
+  students;
 }
 
-const MobileStudentTab: FC<MobileStudentTabProps> = ({ user }) => {
+const MobileStudentTab: FC<MobileStudentTabProps> = ({
+  user,
+  requests,
+  students,
+}) => {
   return (
     <div className={styles['content']}>
       <div className={styles['text-content']}>
         <h4>Список групи</h4>
         <h4>{user.group.code}</h4>
       </div>
-      {getRequest(transformData(testData), user.group.role)}
+      {getRequest(requests, user.group.role)}
       {user.group.role && (
         <div className={styles['division']}>
           <h4 className={styles['division-text']}>Студенти</h4>
@@ -56,7 +62,7 @@ const MobileStudentTab: FC<MobileStudentTabProps> = ({ user }) => {
       )}
       <MobileStudentTable
         variant={dataMapper[user.group.role]}
-        rows={transformData(testData)}
+        rows={transformStudentsData(students)}
       />
     </div>
   );

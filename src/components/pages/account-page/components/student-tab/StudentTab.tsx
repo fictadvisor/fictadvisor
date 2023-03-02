@@ -7,41 +7,45 @@ import StudentTable from '@/components/pages/account-page/components/table/stude
 import { StudentRole } from '@/components/pages/account-page/components/table/student-table/StudentTable';
 import {
   dataMapper,
-  transformData,
+  transformRequestsData,
+  transformStudentsData,
 } from '@/components/pages/account-page/components/table/student-table/utils';
-import { testData } from '@/components/pages/account-page/testData';
 
 import styles from './StudentsTab.module.scss';
 
 const getRequest = (requests: object, role: StudentRole) => {
   if (requests && role) {
     return (
-      <div className={styles['requests']}>
-        <div className={styles['division']}>
-          <h4 className={styles['division-text']}>Нові запити</h4>
-          <div className={styles['white']}></div>
+      requests && (
+        <div className={styles['requests']}>
+          <div className={styles['division']}>
+            <h4 className={styles['division-text']}>Нові запити</h4>
+            <div className={styles['white']}></div>
+          </div>
+          <RequestTable rows={transformRequestsData(requests)} />
         </div>
-        <RequestTable rows={transformData(testData)} />
-      </div>
+      )
     );
   }
 };
 
 interface StudentTabProps {
   user;
+  requests;
+  students;
 }
 
-const StudentTab: FC<StudentTabProps> = ({ user }) => {
+const StudentTab: FC<StudentTabProps> = ({ user, requests, students }) => {
   return (
     <div className={styles['content']}>
       <div className={styles['text-content']}>
         <h4>Список групи</h4>
-        <h4>user.group.code</h4>
+        <h4>{user.group.code}</h4>
       </div>
-      {getRequest(transformData(testData), user.group.role)}
+      {getRequest(requests, user.group.role)}
       {user.group.role && (
         <div className={styles['division']}>
-          <h4 className={styles['division-text']}>Нові запити</h4>
+          <h4 className={styles['division-text']}>Студенти</h4>
           <div className={styles['white']}></div>
           <div className={styles['button']}>
             <Button
@@ -54,7 +58,7 @@ const StudentTab: FC<StudentTabProps> = ({ user }) => {
       )}
       <StudentTable
         variant={dataMapper[user.group.role]}
-        rows={transformData(testData)}
+        rows={transformStudentsData(students)}
       />
     </div>
   );

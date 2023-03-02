@@ -27,7 +27,7 @@ const MobileStudentTable: React.FC<StudentTableProps> = ({ variant, rows }) => {
     <div className={styles['table']}>
       {rows.map((row, index) => (
         <div key={index} className={styles['table-container']}>
-          <img src={row.imgSrc} alt="avatar" />
+          <img className={styles['img']} src={row.imgSrc} alt="avatar" />
           <div className={styles['user-info']}>
             <h6 className={styles['full-name']}>{row.fullName}</h6>
             <h6 className={styles['email']}>{row.email}</h6>

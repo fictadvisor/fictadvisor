@@ -72,7 +72,7 @@ const StudentTable: React.FC<StudentTableProps> = ({ variant, rows }) => {
       {rows.map((row, index) => (
         <div key={index} className={styles['table-container']}>
           <div className={styles['user-info']}>
-            <img src={row.imgSrc} alt="avatar" />
+            <img className={styles['img']} src={row.imgSrc} alt="avatar" />
             <div className={styles['full-name']}>{row.fullName}</div>
             <div className={styles['tag-container']}>
               <div className={styles['tag']}>

@@ -26,7 +26,7 @@ const RequestTable: React.FC<StudentTableProps> = ({ rows }) => {
       {rows.map((row, index) => (
         <div key={index} className={styles['table-container']}>
           <div className={styles['user-info']}>
-            <img src={row.imgSrc} alt="avatar" />
+            <img className={styles['img']} src={row.imgSrc} alt="avatar" />
             <div className={styles['full-name']}>{row.fullName}</div>
           </div>
           <div className={styles['other-content']}>
