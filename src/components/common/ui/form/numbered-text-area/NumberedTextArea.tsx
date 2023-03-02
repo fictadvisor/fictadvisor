@@ -54,8 +54,8 @@ const NumberedTextArea: React.FC<NumberedTextAreaProps> = ({
 
   if (field.value.includes(',') || field.value.includes(';')) {
     field.value = field.value
-      .replace(/, /g, '\n')
-      .replace(/; /g, '\n')
+      .replace(/,/g, '\n')
+      .replace(/;/g, '\n')
       .replace(/\s+/g, '\n')
       .replace(/\n\n/g, '\n');
   }
