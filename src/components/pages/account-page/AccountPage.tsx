@@ -18,6 +18,7 @@ import {
 } from '@/components/common/ui/tab';
 import { TabItemContentSize } from '@/components/common/ui/tab/tab-item/TabItem';
 import GeneralTab from '@/components/pages/account-page/components/general-tab';
+import GroupTab from '@/components/pages/account-page/components/group-tab';
 import MobileStudentTab from '@/components/pages/account-page/components/mobile-student-tab';
 import SecurityTab from '@/components/pages/account-page/components/security-tab';
 import StudentTab from '@/components/pages/account-page/components/student-tab';
@@ -45,6 +46,7 @@ enum AccountPageTabs {
   GENERAL = 'general',
   SECURITY = 'security',
   GROUP = 'group',
+  GROUPTEST = 'grouptest',
 }
 
 const AccountPage = () => {
@@ -149,6 +151,13 @@ const AccountPage = () => {
             icon={<UsersIcon className="icon" />}
             value={AccountPageTabs.GROUP}
           />
+          <TabItem
+            size={TabItemContentSize.NORMAL}
+            text="Група"
+            position={TabItemContentPosition.LEFT}
+            icon={<UsersIcon className="icon" />}
+            value={AccountPageTabs.GROUPTEST}
+          />
         </TabList>
         <TabPanelsList
           className={styles['tab-panels-list']}
@@ -175,6 +184,12 @@ const AccountPage = () => {
                 value={AccountPageTabs.GROUP}
               >
                 {getGroups(isMobile, user)}
+              </TabPanel>
+              <TabPanel
+                className={styles['tab-panel']}
+                value={AccountPageTabs.GROUPTEST}
+              >
+                <GroupTab user={user} />
               </TabPanel>
             </>
           )}

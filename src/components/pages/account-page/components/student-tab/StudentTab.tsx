@@ -5,7 +5,10 @@ import Button from '@/components/common/ui/button';
 import RequestTable from '@/components/pages/account-page/components/table/request-table';
 import StudentTable from '@/components/pages/account-page/components/table/student-table';
 import { StudentRole } from '@/components/pages/account-page/components/table/student-table/StudentTable';
-import { transformData } from '@/components/pages/account-page/components/table/student-table/utils';
+import {
+  dataMapper,
+  transformData,
+} from '@/components/pages/account-page/components/table/student-table/utils';
 import { testData } from '@/components/pages/account-page/testData';
 
 import styles from './StudentsTab.module.scss';
@@ -29,12 +32,11 @@ interface StudentTabProps {
 }
 
 const StudentTab: FC<StudentTabProps> = ({ user }) => {
-  console.log(user);
   return (
     <div className={styles['content']}>
       <div className={styles['text-content']}>
         <h4>Список групи</h4>
-        <h4>{user.group.code}</h4>
+        <h4>user.group.code</h4>
       </div>
       {getRequest(transformData(testData), user.group.role)}
       {user.group.role && (
@@ -51,7 +53,7 @@ const StudentTab: FC<StudentTabProps> = ({ user }) => {
         </div>
       )}
       <StudentTable
-        variant={StudentRole.CAPTAIN}
+        variant={dataMapper[user.group.role]}
         rows={transformData(testData)}
       />
     </div>

@@ -8,7 +8,10 @@ import {
 import MobileRequestTable from '@/components/pages/account-page/components/table/mobile-request-table';
 import MobileStudentTable from '@/components/pages/account-page/components/table/mobile-student-table';
 import { StudentRole } from '@/components/pages/account-page/components/table/student-table/StudentTable';
-import { transformData } from '@/components/pages/account-page/components/table/student-table/utils';
+import {
+  dataMapper,
+  transformData,
+} from '@/components/pages/account-page/components/table/student-table/utils';
 import { testData } from '@/components/pages/account-page/testData';
 
 import styles from './MobileStudentTab.module.scss';
@@ -52,7 +55,7 @@ const MobileStudentTab: FC<MobileStudentTabProps> = ({ user }) => {
         </div>
       )}
       <MobileStudentTable
-        variant={StudentRole.MODERATOR}
+        variant={dataMapper[user.group.role]}
         rows={transformData(testData)}
       />
     </div>

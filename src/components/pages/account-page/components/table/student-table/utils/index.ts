@@ -9,8 +9,10 @@ export const transformData = (data): StudentTableItem[] =>
     value: dataItem.id,
   }));
 
-const dataMapper = {
+export const dataMapper = {
   ['CAPTAIN']: 'Староста',
   ['MODERATOR']: 'Зам. старости',
   ['STUDENT']: null,
 };
+
+export default dataMapper;
