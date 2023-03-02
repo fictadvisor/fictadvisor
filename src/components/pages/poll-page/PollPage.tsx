@@ -48,10 +48,38 @@ export interface FetchedTeacherPollData {
   teacher: Teacher;
 }
 
+const initialState = {
+  subject: { id: 'subjectId', name: 'subject' },
+  categories: [
+    {
+      name: 'category',
+      count: 3,
+      questions: [
+        {
+          id: 'questionId',
+          name: '1 question',
+          criteria: 'criteria',
+          text: 'text',
+          type: 'type',
+          description: 'description',
+          display: 'display',
+          isRequired: false,
+        },
+      ],
+    },
+  ],
+  teacher: {
+    id: 'teacherId',
+    firstName: 'first',
+    middleName: 'middle',
+    lastName: 'last',
+    avatar: null,
+  },
+};
+
 const PollPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { user, isLoggedIn, isAuthenticationFetching } = useAuthentication();
-
   const {
     isSuccess: isSuccessFetching,
     data: FetchedData,
@@ -70,6 +98,7 @@ const PollPage = () => {
     },
   );
 
+  console.log(isSuccessFetching, FetchedData, isLoading);
   useEffect(() => {
     setIsLoading(isQuestionsLoading || isAuthenticationFetching);
   }, [isQuestionsLoading, isAuthenticationFetching]);
@@ -82,7 +111,11 @@ const PollPage = () => {
     >
       <div className={styles['poll-page']}>
         <div className={styles['poll-page__content']}>
-          {isLoading ? <Loader /> : <PollForm data={FetchedData.data} />}
+          {isLoading ? (
+            <Loader />
+          ) : (
+            <PollForm data={FetchedData?.data || initialState} />
+          )}
         </div>
       </div>
     </PageLayout>

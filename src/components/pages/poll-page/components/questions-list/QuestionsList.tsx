@@ -16,6 +16,7 @@ interface QuestionListProps {
   progress: number[];
   current: number;
   setCurrent: React.Dispatch<React.SetStateAction<number>>;
+  setQuestionsListStatus: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const QuestionsList: React.FC<QuestionListProps> = ({
@@ -25,6 +26,7 @@ const QuestionsList: React.FC<QuestionListProps> = ({
   progress,
   current,
   setCurrent,
+  setQuestionsListStatus,
 }) => {
   const { lastName, firstName, middleName, avatar } = teacher;
   useEffect(() => {
@@ -46,7 +48,10 @@ const QuestionsList: React.FC<QuestionListProps> = ({
           question={category.name}
           numberOfAnswered={progress[id]}
           isActive={current === id}
-          onClick={() => setCurrent(id)}
+          onClick={() => {
+            setCurrent(id);
+            setQuestionsListStatus(false);
+          }}
         />
       ))}
       <PollCard
@@ -56,7 +61,10 @@ const QuestionsList: React.FC<QuestionListProps> = ({
         numberOfQuestions={1}
         numberOfAnswered={progress[categories.length - 1]}
         isActive={current === categories.length - 1}
-        onClick={() => setCurrent(categories.length - 1)}
+        onClick={() => {
+          setCurrent(categories.length - 1);
+          setQuestionsListStatus(false);
+        }}
       />
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import useIsMobile from '@/hooks/use-is-mobile';
 
@@ -19,6 +19,8 @@ const PollForm: React.FC<PollFormProps> = ({ data }) => {
     Array(categories.length).fill(0),
   );
   const isMobile = useIsMobile(1024);
+  const [isQuestionsListOpened, setQuestionsListOpened] = useState(false);
+
   console.log(isMobile);
   const [currentCategory, setCurrentCategory] = React.useState(0);
 
@@ -28,20 +30,27 @@ const PollForm: React.FC<PollFormProps> = ({ data }) => {
 
   return (
     <div className={styles.wrapper}>
-      <QuestionsList
-        categories={categories}
-        teacher={teacher}
-        subject={subject}
-        progress={progress}
-        current={currentCategory}
-        setCurrent={setCurrentCategory}
-      />
-      <AnswersSheet
-        questions={currentQuestions}
-        setProgress={setProgress}
-        setCurrent={setCurrentCategory}
-        isTheLast={currentCategory === categories.length - 1}
-      />
+      {(!isMobile || isQuestionsListOpened) && (
+        <QuestionsList
+          categories={categories}
+          teacher={teacher}
+          subject={subject}
+          progress={progress}
+          current={currentCategory}
+          setCurrent={setCurrentCategory}
+          setQuestionsListStatus={setQuestionsListOpened}
+        />
+      )}
+      {(!isMobile || !isQuestionsListOpened) && (
+        <AnswersSheet
+          questions={currentQuestions}
+          setProgress={setProgress}
+          setCurrent={setCurrentCategory}
+          isTheLast={currentCategory === categories.length - 1}
+          current={currentCategory}
+          setQuestionsListStatus={setQuestionsListOpened}
+        />
+      )}
     </div>
   );
 };

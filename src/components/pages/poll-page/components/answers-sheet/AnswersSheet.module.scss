@@ -3,8 +3,39 @@
 
 .wrapper {
   width: 632px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
 }
 
+.toQuestionsList {
+  width: 100%;
+  height: 52px;
+  border-bottom: 1px solid $gray-50;
+  display: none;
+  transition: 0.3s;
+  b {
+    width: auto;
+  }
+  div {
+    position: absolute;
+    left: 0;
+    top: calc(50% - 18px);
+    background-color: transparent;
+  }
+  &:hover {
+    background: $background-dark-35;
+  }
+
+  &:active {
+    background: $gray-50;
+  }
+}
+
+.answersWrapper {
+  width: 100%;
+}
 .question {
   padding-bottom: 40px;
 }
@@ -73,5 +104,44 @@
   .textarea {
     width: 328px;
     height: 228px;
+  }
+  .toQuestionsList {
+    display: flex;
+    align-items: center;
+    position: relative;
+    justify-content: center;
+  }
+  .wrapper {
+    max-width: 100vw;
+    width: 100vw;
+    margin: 0;
+    height: 100vh;
+    .answersWrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      .form {
+        width: 100%;
+        height: 100%;
+        padding: 24px 16px;
+
+        .textarea {
+          width: 100%;
+          min-height: 250px;
+          padding: 0;
+
+          textarea {
+            height: 228px;
+            margin: 0;
+          }
+        }
+        .button {
+          width: 100%;
+        }
+      }
+    }
   }
 }
