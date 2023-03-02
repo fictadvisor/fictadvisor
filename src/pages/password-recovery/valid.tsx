@@ -1,4 +1,4 @@
-import PasswordResetValidLinkPage from '@/components/pages/reset-password-valid-link';
+import PasswordResetValidLinkPage from '@/components/pages/password-recovery/link-valid';
 
 const PasswordResetValidLink = () => <PasswordResetValidLinkPage />;
 

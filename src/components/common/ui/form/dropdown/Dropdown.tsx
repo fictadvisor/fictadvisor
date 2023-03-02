@@ -88,7 +88,10 @@ const Dropdown: React.FC<DropdownProps> = ({
         isClearable
         isDisabled={isDisabled}
         onMenuOpen={() => setIsMenuOpen(true)}
-        onMenuClose={() => setIsMenuOpen(false)}
+        onMenuClose={() => {
+          setIsMenuOpen(false);
+          setTimeout(() => setTouched(true), 20);
+        }}
         maxMenuHeight={dropDownOptionHeight * numberOfOptions}
         classNames={{
           control: () => {

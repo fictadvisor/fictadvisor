@@ -56,6 +56,7 @@ $default-dropdown-padding: 8px;
 
     @include roundcorners($color:$gray-200);
     padding: 0 $dropdown-option-left-padding;
+    padding: 14px 16px;
     &-iconed {
       padding-left: $dropdown-option-left-padding + 15px;
     }
@@ -136,6 +137,7 @@ $default-dropdown-padding: 8px;
     }
   }
   &placeholder {
+    color: $background-dark-200;
     &:hover{
       color: $background-dark-200;
     }

@@ -1,4 +1,4 @@
-import TagsPage from '@/components/pages/test-pages/tags-page';
+import TagsPage from '@/components/pages/test/tags-page';
 
 const Tags = () => <TagsPage />;
 

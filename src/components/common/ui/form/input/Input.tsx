@@ -140,6 +140,7 @@ const Input: React.FC<InputProps> = ({
         placeholder={placeholder}
         type={inputType}
         name={rest.name}
+        onInput={field.onChange}
         {...field}
         // {...rest}
       />
