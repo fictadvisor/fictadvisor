@@ -1,4 +1,4 @@
-import TablesPage from '@/components/pages/test-pages/tables-page';
+import TablesPage from '@/components/pages/test/tables-page';
 
 const Tables = () => <TablesPage />;
 
