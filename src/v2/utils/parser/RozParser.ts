@@ -71,6 +71,8 @@ export class RozParser implements Parser {
     const url = `http://epi.kpi.ua/Schedules/ViewSchedule.aspx?g=${groupHashId}`;
 
     const response = await axios.post(url, VIEW_SCHEDULE_PARAMS);
+
+    await new Promise((res) => setTimeout(() => (res('')), 3000));
     const dom = new JSDOM(response.data);
 
     await this.parseWeek(0, code, dom);
