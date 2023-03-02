@@ -10,7 +10,7 @@ class TelegramService {
       try {
         const Telegram = (window as any).Telegram;
         Telegram.Login.auth(
-          { bot_id: process.env.BOT_ID, request_access: true },
+          { bot_id: process.env.NEXT_PUBLIC_BOT_ID, request_access: true },
           data => {
             return data
               ? resolve(data)
