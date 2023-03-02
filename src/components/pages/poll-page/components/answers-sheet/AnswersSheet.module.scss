@@ -23,6 +23,11 @@
     left: 0;
     top: calc(50% - 18px);
     background-color: transparent;
+    padding: 0 16px;
+
+    button {
+      background-color: transparent;
+    }
   }
   &:hover {
     background: $background-dark-35;

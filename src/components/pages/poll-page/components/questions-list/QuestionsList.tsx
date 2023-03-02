@@ -49,7 +49,7 @@ const QuestionsList: React.FC<QuestionListProps> = ({
           numberOfAnswered={progress[id]}
           isActive={current === id}
           onClick={() => {
-            setCurrent(id);
+            if (current !== id) setCurrent(id);
             setQuestionsListStatus(false);
           }}
         />

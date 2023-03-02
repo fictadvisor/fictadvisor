@@ -21,7 +21,6 @@ const PollForm: React.FC<PollFormProps> = ({ data }) => {
   const isMobile = useIsMobile(1024);
   const [isQuestionsListOpened, setQuestionsListOpened] = useState(false);
 
-  console.log(isMobile);
   const [currentCategory, setCurrentCategory] = React.useState(0);
 
   useEffect(() => {
