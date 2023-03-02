@@ -8,4 +8,4 @@ RUN yarn install
 
 RUN yarn build
 
-ENTRYPOINT yarn start
+ENTRYPOINT npx next dev -p 80

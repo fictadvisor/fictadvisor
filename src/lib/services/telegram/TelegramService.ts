@@ -1,4 +1,5 @@
-import config from '@/config';
+import * as process from 'process';
+
 import { AuthAPI } from '@/lib/api/auth/AuthAPI';
 import { AuthTelegramBody } from '@/lib/api/auth/dto/AuthTelegramBody';
 import StorageUtil from '@/lib/utils/StorageUtil';
@@ -9,7 +10,7 @@ class TelegramService {
       try {
         const Telegram = (window as any).Telegram;
         Telegram.Login.auth(
-          { bot_id: config.botId, request_access: true },
+          { bot_id: process.env.BOT_ID, request_access: true },
           data => {
             return data
               ? resolve(data)
