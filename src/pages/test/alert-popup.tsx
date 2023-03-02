@@ -1,4 +1,4 @@
-import AlertPopupsPage from '@/components/pages/test-pages/alert-popups-page/AlertPopupsPage';
+import AlertPopupsPage from '@/components/pages/test/alert-popups-page/AlertPopupsPage';
 
 const AlertPopups = () => <AlertPopupsPage />;
 
