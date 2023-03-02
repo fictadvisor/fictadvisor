@@ -1,4 +1,4 @@
-import TooltipsPage from '@/components/pages/test-pages/tooltips-page';
+import TooltipsPage from '@/components/pages/test/tooltips-page';
 
 const Tooltips = () => <TooltipsPage />;
 

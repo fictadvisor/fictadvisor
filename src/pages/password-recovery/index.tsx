@@ -1,4 +1,4 @@
-import ForgotPasswordPage from '@/components/pages/forgot-password-page/ForgotPasswordPage';
+import ForgotPasswordPage from '@/components/pages/password-recovery/forgot-password-page/ForgotPasswordPage';
 
 const ForgotPassword = () => <ForgotPasswordPage />;
 

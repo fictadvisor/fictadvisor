@@ -34,9 +34,7 @@ class AuthService {
 
   static async redirectToRegisterBot(router: NextRouter) {
     const botUrl = `https://t.me/${config.contacts.bot}`;
-    if (router.isReady) {
-      await router.push(botUrl);
-    }
+    await router.push(botUrl);
   }
 
   static async registerTelegram() {

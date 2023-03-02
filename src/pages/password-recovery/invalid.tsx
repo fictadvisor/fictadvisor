@@ -1,4 +1,4 @@
-import PasswordResetLinkExpiredPage from '@/components/pages/reset-password-link-expired';
+import PasswordResetLinkExpiredPage from '@/components/pages/password-recovery/link-expired';
 
 const PasswordResetLinkExpired = () => <PasswordResetLinkExpiredPage />;
 
