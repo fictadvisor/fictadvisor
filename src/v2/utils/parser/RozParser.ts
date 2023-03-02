@@ -173,7 +173,7 @@ export class RozParser implements Parser {
   }
 
   async parsePair (pair, groupId) {
-    const { lastName, firstName, middleName } = pair.teacher;
+    const { lastName = '', firstName = '', middleName = '' } = pair.teacher ? pair.teacher : {};
     const teacher = await this.teacherRepository.getOrCreate({
       lastName,
       firstName,
