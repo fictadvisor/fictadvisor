@@ -53,7 +53,11 @@ export class RozParser implements Parser {
   ) {}
 
   async parse () {
-    const groups = await this.groupRepository.getAll({});
+    const groups = (await axios.post('http://epi.kpi.ua/Schedules/ScheduleGroupSelection.aspx/GetGroups', {
+      count: 10,
+      prefixText: 'і',
+    })).data.d.filter((name: string) => /І[МПКАСОВТ]-([зпв]|зп)?\d\d(мн|мп|ф)?і?/.test(name));
+
     for (const group of groups) {
       if (group.code.endsWith('ф')) continue;
       await this.parseGroupSchedule(group);
