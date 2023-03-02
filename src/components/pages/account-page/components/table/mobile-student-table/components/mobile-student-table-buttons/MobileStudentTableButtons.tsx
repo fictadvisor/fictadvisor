@@ -76,9 +76,9 @@ const MobileStudentTableButtons: FC<MobileStudentTableButtonsProps> = ({
           )}
         </>
       ) : (
-        <>
-          {!role ? (
-            <>
+        variant === StudentRole.MODERATOR && (
+          <>
+            {!role ? (
               <div className={styles['button']}>
                 <IconButton
                   icon={<EllipsisVerticalIcon className={'icon'} />}
@@ -96,18 +96,18 @@ const MobileStudentTableButtons: FC<MobileStudentTableButtonsProps> = ({
                   </div>
                 )}
               </div>
-            </>
-          ) : (
-            <div className={styles['button']}>
-              <IconButton
-                icon={<EllipsisVerticalIcon className={'icon'} />}
-                color={IconButtonColor.TRANSPARENT}
-                disabled={true}
-                className={styles['disabled-button']}
-              />
-            </div>
-          )}
-        </>
+            ) : (
+              <div className={styles['button']}>
+                <IconButton
+                  icon={<EllipsisVerticalIcon className={'icon'} />}
+                  color={IconButtonColor.TRANSPARENT}
+                  disabled={true}
+                  className={styles['disabled-button']}
+                />
+              </div>
+            )}
+          </>
+        )
       )}
     </>
   );
