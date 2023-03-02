@@ -1,6 +1,7 @@
 import React, { ReactNode, useState } from 'react';
 import Select from 'react-select';
 import { useField } from 'formik';
+import mergeClassNames from 'merge-class-names';
 
 import { FieldState } from '@/components/common/ui/form/common/types';
 
@@ -26,6 +27,7 @@ interface DropdownProps {
   isSuccessOnDefault?: boolean;
   defaultRemark?: string;
   showRemark?: boolean;
+  className?: string;
 }
 
 const Dropdown: React.FC<DropdownProps> = ({
@@ -40,6 +42,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   defaultRemark,
   isSuccessOnDefault = false,
   showRemark = true,
+  className,
 }) => {
   const [{}, { touched, error }, { setTouched, setValue }] = useField(name);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -55,7 +58,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   };
 
   return (
-    <div className={styles['dropdown']}>
+    <div className={mergeClassNames(styles['dropdown'], className)}>
       <span className={state ? styles[`dropdown-${state}-label`] : ''}>
         {label}
       </span>
@@ -73,7 +76,10 @@ const Dropdown: React.FC<DropdownProps> = ({
         blurInputOnSelect={true}
         isDisabled={isDisabled}
         onMenuOpen={() => setIsMenuOpen(true)}
-        onMenuClose={() => setIsMenuOpen(false)}
+        onMenuClose={() => {
+          setIsMenuOpen(false);
+          setTimeout(() => setTouched(true), 20);
+        }}
         maxMenuHeight={dropDownOptionHeight * numberOfOptions}
         classNames={{
           control: () =>

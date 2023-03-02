@@ -1,4 +1,4 @@
-import PasswordResetEmailConfirmationPage from '@/components/pages/reset-password-email-confirmation';
+import PasswordResetEmailConfirmationPage from '@/components/pages/password-recovery/email-confirmation-page';
 
 const PasswordResetEmailConfirmation = () => (
   <PasswordResetEmailConfirmationPage />

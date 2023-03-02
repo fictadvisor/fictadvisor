@@ -1,4 +1,4 @@
-import IconButtonsPage from '@/components/pages/test-pages/icon-buttons-page';
+import IconButtonsPage from '@/components/pages/test/icon-buttons-page';
 
 const IconButtons = () => <IconButtonsPage />;
 

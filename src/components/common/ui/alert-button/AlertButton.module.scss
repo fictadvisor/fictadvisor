@@ -1,9 +1,11 @@
 @import "src/styles/partials/theme";
 
 .alert-buttons{
+  transition: all 0.2s ease-in-out;
   padding: 6px 12px;
   display: flex;
   align-items: center;
+  justify-content: center;
   font-weight: 700;
   gap: 6px;
   border-radius: 4px;
@@ -38,9 +40,6 @@
     color: $background-dark-35;
     border: 2px solid $background-dark-0;
     cursor: not-allowed;
-    svg{
-      opacity:0.5;
-    }
   }
 }
 
@@ -59,17 +58,16 @@
   }
 
   &:active {
+    border: 2px solid $error-100;
     background: $error-100;
   }
 
   &:disabled {
     outline: none;
+    border: 2px solid $background-dark-0;
     background: $background-dark-0;
     color: $background-dark-35;
     cursor: not-allowed;
-    svg{
-      opacity:0.5;
-    }
   }
 }
 
@@ -99,9 +97,6 @@
     border: 2px solid $background-dark-0;
     color: $background-dark-35;
     cursor: not-allowed;
-    svg{
-      opacity:0.5;
-    }
   }
 }
 .success-alert-button-without-text{

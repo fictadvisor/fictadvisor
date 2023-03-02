@@ -1,4 +1,4 @@
-import TabsPage from '@/components/pages/test-pages/tabs-page';
+import TabsPage from '@/components/pages/test/tabs-page';
 
 const Tabs = () => <TabsPage />;
 

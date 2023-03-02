@@ -1,4 +1,4 @@
-import RegistrationEmailConfirmationPage from '@/components/pages/registration-email-confirmation-page';
+import RegistrationEmailConfirmationPage from '@/components/pages/register/email-confirmation-page';
 
 const RegistrationEmailConfirmation = () => (
   <RegistrationEmailConfirmationPage />

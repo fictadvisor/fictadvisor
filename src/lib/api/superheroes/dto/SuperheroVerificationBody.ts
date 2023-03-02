@@ -1,4 +1,4 @@
-export type SuperheroVerificationBody = {
+export interface SuperheroVerificationBody {
   userId: string;
   state: string;
-};
+}

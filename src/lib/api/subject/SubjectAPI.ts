@@ -1,4 +1,6 @@
-import { client, getAuthorizationHeader } from '../index';
+import { getAuthorizationHeader } from '@/lib/api/utils';
+
+import { client } from '../instance';
 
 import { CreateSubjectBody } from './dto/CreateSubjectBody';
 import { CreateSubjectDTO } from './dto/CreateSubjectDTO';
@@ -9,55 +11,49 @@ import { UpdateSubjectBody } from './dto/UpdateSubjectBody';
 
 export class SubjectsAPI {
   static async getTeachersBySubject(
-    accessToken: string,
     disciplineId: string,
   ): Promise<GetTeachersBySubjectDTO> {
-    return (
-      await client.get(
-        `disciplines/${disciplineId}/teachers`,
-        getAuthorizationHeader(accessToken),
-      )
-    ).data;
-  }
-
-  static async getListOfSubjects(
-    accessToken: string,
-  ): Promise<GetListOfSubjectsDTO[]> {
-    return (await client.get(`/subjects`, getAuthorizationHeader(accessToken)))
-      .data;
-  }
-
-  static async deleteSubject(accessToken: string, subjectId: string) {
-    return await client.delete(
-      `/subjects/${subjectId}`,
-      getAuthorizationHeader(accessToken),
+    const { data } = await client.get(
+      `disciplines/${disciplineId}/teachers`,
+      getAuthorizationHeader(),
     );
+    return data;
+  }
+
+  static async getListOfSubjects(): Promise<GetListOfSubjectsDTO[]> {
+    const { data } = await client.get(`/subjects`, getAuthorizationHeader());
+    return data;
+  }
+
+  static async deleteSubject(subjectId: string) {
+    const { data } = await client.delete(
+      `/subjects/${subjectId}`,
+      getAuthorizationHeader(),
+    );
+    return data;
   }
 
   static async updateDiscipline(
-    accessToken: string,
     disciplineId: string,
     body: UpdateDisciplineBody,
   ) {
-    await client.patch(
+    const { data } = await client.patch(
       `disciplines/${disciplineId}`,
       body,
-      getAuthorizationHeader(accessToken),
+      getAuthorizationHeader(),
     );
+    return data;
   }
 
   static async createSubject(
-    accessToken: string,
     body: CreateSubjectBody,
   ): Promise<CreateSubjectDTO> {
-    return (await client.post('/v2/subjects', body)).data;
+    const { data } = await client.post('/subjects', body);
+    return data;
   }
 
-  static async updateSubject(
-    accessToken: string,
-    subjectId: string,
-    body: UpdateSubjectBody,
-  ) {
-    return (await client.patch(`/v2/subjects/${subjectId}`, body)).data;
+  static async updateSubject(subjectId: string, body: UpdateSubjectBody) {
+    const { data } = await client.patch(`/subjects/${subjectId}`, body);
+    return data;
   }
 }
