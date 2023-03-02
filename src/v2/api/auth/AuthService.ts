@@ -33,6 +33,7 @@ import { TelegramDTO } from './dto/TelegramDTO';
 import { StudentDTO } from './dto/StudentDTO';
 import { UserDTO } from './dto/UserDTO';
 import { RegisterTelegramDTO } from './dto/RegisterTelegramDTO';
+import { ConfigService } from '@nestjs/config';
 
 export const ONE_MINUTE = 1000 * 60;
 export const HOUR = ONE_MINUTE * 60;
@@ -56,6 +57,7 @@ export class AuthService {
     private telegramApi: TelegramAPI,
     private groupRepository: GroupRepository,
     private groupService: GroupService,
+    private config: ConfigService,
   ) {
   }
 
@@ -269,7 +271,7 @@ export class AuthService {
       to: email,
       subject: 'Верифікація пошти на fictadvisor.com',
       message: 'Для верифікації пошти перейдіть за посиланням нижче. Посилання діє годину.',
-      link: `https://fictadvisor.com/register/email-verification/${uuid}`,
+      link: `${this.config.get<string>('frontBaseUrl')}/register/email-verification/${uuid}`,
     });
 
     setTimeout(async () => {
