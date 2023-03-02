@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { useField } from 'formik';
 
-import { FieldState } from '@/components/common/ui/form/common/types';
-
 import styles from './NumberedTextArea.module.scss';
 
 export enum NumberedTextAreaSize {
@@ -28,27 +26,22 @@ const NumberedTextArea: React.FC<NumberedTextAreaProps> = ({
   label,
   size = NumberedTextAreaSize.LARGE,
   isDisabled = false,
-  isSuccessOnDefault = false,
   defaultRemark,
   showRemark = true,
   className,
 }) => {
   const [field, { touched, error }] = useField(name);
   const [scrollTop, setScrollTop] = useState(0);
-  let state: FieldState;
+
   const numbers = [];
   let numberOfLines = 0;
   const handlerScroll = e => {
     setScrollTop(e.target.scrollTop);
   };
 
-  if (touched && error) state = FieldState.ERROR;
-  else if (touched && isSuccessOnDefault) state = FieldState.SUCCESS;
-
   const divClasses = [
     styles['textarea'],
     styles[size ? `${size}-area` : ''],
-    styles[state ? `${state}-area` : ''],
     className,
   ];
 
