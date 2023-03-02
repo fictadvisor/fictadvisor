@@ -54,11 +54,13 @@ export class RozParser implements Parser {
     private groupService: GroupService,
   ) {}
 
-  async parse () {
+  async parse (page = 1) {
     const groups = (await axios.post('http://epi.kpi.ua/Schedules/ScheduleGroupSelection.aspx/GetGroups', {
       count: 10,
       prefixText: 'і',
-    })).data.d.filter((name: string) => /І[МПКАСОВТ]-([зпв]|зп)?\d\d(мн|мп|ф)?і?/.test(name));
+    })).data.d
+      .filter((name: string) => /І[МПКАСОВТ]-([зпв]|зп)?\d\d(мн|мп|ф)?і?/.test(name))
+      .slice((page - 1) * 40, page * 40);
 
     for (const group of groups) {
       if (group.endsWith('ф')) continue;

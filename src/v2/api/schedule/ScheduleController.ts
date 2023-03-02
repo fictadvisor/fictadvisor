@@ -33,8 +33,11 @@ export class ScheduleController {
 
 
   @Post('/parse')
-  async parse (@Query('parser') parser: string) {
-    return this.scheduleService.parse(parser);
+  async parse (
+    @Query('parser') parser: string,
+    @Query('page') page: string,
+  ) {
+    return this.scheduleService.parse(parser, +page);
   }
 
   @Get('/groups/:groupId/static')

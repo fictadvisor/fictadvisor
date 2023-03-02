@@ -35,10 +35,10 @@ export class ScheduleService {
   ) {}
 
 
-  async parse (parserType: string) {
+  async parse (parserType: string, page: number) {
     switch (parserType) {
     case 'rozkpi':
-      await this.rozParser.parse();
+      await this.rozParser.parse(page);
       break;
     case 'schedule':
       await this.scheduleParser.parse();
