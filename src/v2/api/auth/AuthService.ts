@@ -272,9 +272,12 @@ export class AuthService {
       link: `https://fictadvisor.com/register/email-verification/${uuid}`,
     });
 
-    setTimeout(() => {
-      this.verifyEmailTokens.delete(uuid);
-      this.userRepository.deleteByEmail(email);
+    setTimeout(async () => {
+      const user = await this.userRepository.getByUnique({ email });
+      if (user.state !== State.APPROVED) {
+        this.verifyEmailTokens.delete(uuid);
+        await this.userRepository.deleteByEmail(email);
+      }
     }, HOUR);
   }
 
