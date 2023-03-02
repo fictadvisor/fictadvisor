@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect } from 'react';
-import ImageNohover from 'public/assets/main-page/ImageNohover';
+import React from 'react';
+import BannerImage from 'public/assets/main-page/BannerImage';
 
 import PageLayout from '../../common/layout/page-layout/PageLayout';
 import Button from '../../common/ui/button';
@@ -85,7 +85,7 @@ const MainPage = () => {
               </div>
             </div>
             <div className={styles['build-image']}>
-              <ImageNohover />
+              <BannerImage />
             </div>
           </div>
           <div className={styles['resources']}>

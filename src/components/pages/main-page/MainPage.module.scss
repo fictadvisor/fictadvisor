@@ -17,10 +17,14 @@ $font-weight-bold: 700;
     background: url("/assets/main-page/main-background.png");
 }
 
+.main-page-content {
+    max-width: 1500px;
+    margin: 0 auto;
+}
+
 .header {
     width: 100%;
     display: flex;
-    padding-top: 10px;
     position: relative;
     overflow: hidden;
 
@@ -52,57 +56,20 @@ $font-weight-bold: 700;
 }
 
 .build-image {
-    width: 70%;
     display: flex;
     justify-content: flex-end;
     position: relative;
     right: -15px;
 
     svg {
-        height: auto;
         color: #525252;
+        clip-path: polygon(58% -10%, 100% 30%, 100% 96%, 88%  96%, 75% 100%, 0% 90%, 2% 75%, 4% 72%, 4% 50%);
         transition: color 0.3s cubic-bezier(0.37, 0, 0.63, 1);
     }
 
     svg:hover {
-        color: white;
-        filter: url('data:image/svg+xml,\
-        <svg xmlns="http://www.w3.org/2000/svg">\
-        <filter id="waves" x="0.311428" y="0.311428" width="1161.93" height="793.477" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">\
-        <feFlood flood-opacity="0" result="BackgroundImageFix"/>\
-        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>\
-        <feOffset/>\
-        <feGaussianBlur stdDeviation="0.746293"/>\
-        <feColorMatrix type="matrix" values="0 0 0 0 0.984314 0 0 0 0 0.635294 0 0 0 0 0.635294 0 0 0 1 0"/>\
-        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_3496_25513"/>\
-        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>\
-        <feOffset/>\
-        <feGaussianBlur stdDeviation="1.49259"/>\
-        <feColorMatrix type="matrix" values="0 0 0 0 0.984314 0 0 0 0 0.635294 0 0 0 0 0.635294 0 0 0 1 0"/>\
-        <feBlend mode="normal" in2="effect1_dropShadow_3496_25513" result="effect2_dropShadow_3496_25513"/>\
-        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>\
-        <feOffset/>\
-        <feGaussianBlur stdDeviation="5.22405"/>\
-        <feColorMatrix type="matrix" values="0 0 0 0 0.984314 0 0 0 0 0.635294 0 0 0 0 0.635294 0 0 0 1 0"/>\
-        <feBlend mode="normal" in2="effect2_dropShadow_3496_25513" result="effect3_dropShadow_3496_25513"/>\
-        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>\
-        <feOffset/>\
-        <feGaussianBlur stdDeviation="10.4481"/>\
-        <feColorMatrix type="matrix" values="0 0 0 0 0.984314 0 0 0 0 0.635294 0 0 0 0 0.635294 0 0 0 1 0"/>\
-        <feBlend mode="normal" in2="effect3_dropShadow_3496_25513" result="effect4_dropShadow_3496_25513"/>\
-        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>\
-        <feOffset/>\
-        <feGaussianBlur stdDeviation="17.911"/>\
-        <feColorMatrix type="matrix" values="0 0 0 0 0.984314 0 0 0 0 0.635294 0 0 0 0 0.635294 0 0 0 1 0"/>\
-        <feBlend mode="normal" in2="effect4_dropShadow_3496_25513" result="effect5_dropShadow_3496_25513"/>\
-        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>\
-        <feOffset/>\
-        <feGaussianBlur stdDeviation="31.3443"/>\
-        <feColorMatrix type="matrix" values="0 0 0 0 0.984314 0 0 0 0 0.635294 0 0 0 0 0.635294 0 0 0 1 0"/>\
-        <feBlend mode="normal" in2="effect5_dropShadow_3496_25513" result="effect6_dropShadow_3496_25513"/>\
-        <feBlend mode="normal" in="SourceGraphic" in2="effect6_dropShadow_3496_25513" result="shape"/>\
-        </filter>\
-        </svg>#waves');
+        color: #fff;
+        filter: url('#filter_neon');
     }
 }
 
@@ -149,6 +116,29 @@ $font-weight-bold: 700;
 
 .card-holder {
     // outline: 2px solid pink;
+}
+
+@media only screen and (max-width: 1200px) {
+    .build-image {
+        width: 75%;
+        right: -50px;
+
+        svg {
+            height: auto;
+        }
+    }
+}
+
+@media only screen and (max-width: 1024px) {
+    .build-image {
+        right: -15px;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .build-image {
+      right: -50px;
+    }
 }
 
 @media only screen and (max-width: 480px) {
@@ -214,6 +204,12 @@ $font-weight-bold: 700;
     .resources h3 {
         font-weight: 500;
         font-size: 20px;
+    }
+}
+
+@media only screen and (max-width: 375px) {
+    .build-image {
+        right: -30px;
     }
 }
 
