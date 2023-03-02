@@ -15,8 +15,10 @@
         padding-top: 4px;
     }
     &-icon {
-        width: 16px;
-        height: 16px;
+      max-width: 16px;
+      max-height: 16px;
+      min-width: 16px;
+      min-height: 16px;
     }
     &-icon-x {
         @extend .alert-icon;
@@ -65,7 +67,7 @@
 
 .alert-small{
     .alert-icon{
-        margin-top: 1px;
+        margin-top: 2px;
     }
   .alert-text{
       .alert-title {
@@ -92,7 +94,7 @@
 
 .alert-large{
     .alert-icon{
-        margin-top: 2px;
+        margin-top: 4px;
     }
   .alert-text{
     .alert-title {

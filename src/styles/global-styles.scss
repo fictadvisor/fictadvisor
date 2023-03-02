@@ -1,14 +1,17 @@
 @import "partials/theme";
 @import "partials/typography-mixins";
 
+
 html, body {
   background-color: $background-dark--10;
   color: $gray-600;
 }
 
 .icon{
-  height: 24px;
-  width: 24px;
+  max-width: 24px;
+  max-height: 24px;
+  min-width: 24px;
+  min-height: 24px;
   stroke-width: 1.5;
 }
 
@@ -24,7 +27,7 @@ html, body {
   width: 1.11vw;
 }
 ::-webkit-scrollbar-thumb{
-  border: 0.28vw $background-dark-0 solid;
+  border: 0.28vw transparent solid;
   background-clip: padding-box;
 
   transition: all 0.2s ease-in-out;
@@ -51,8 +54,8 @@ select:-webkit-autofill:active,
 select:-webkit-autofill:focus {
   -webkit-text-fill-color: $gray-600;
   @include body-secondary;
-  -webkit-box-shadow: 0 0 0 1000px $background-dark-0 inset;
+  -webkit-box-shadow: 0 0 0 1000px $background-dark-0 inset !important;
   font-family: 'Manrope', sans-serif;
-  transition: all 0s 50000s !important;
+  transition: all 0s 50000s;
 }
 

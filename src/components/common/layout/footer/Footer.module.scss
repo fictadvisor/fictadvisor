@@ -1,8 +1,10 @@
 @import "/src/styles/partials/theme";
 @import "/src/styles/partials/utils";
+@import "/src/styles/partials/breakpoints";
 
 .footer-container {
-    display: grid;
+  overflow: hidden;
+  display: grid;
     width: 100%;
     bottom: 0;
     min-width: fit-content;
@@ -52,7 +54,7 @@
     display: flex;
     justify-content: left;
     padding: 2px 12px;
-    width: 171px;
+    width: 187px;
     height: 30px;
 
     & p {
@@ -92,7 +94,7 @@
 
 
 
-@media (max-width: 710px) {
+@media (max-width: $breakpoint-tablet) {
 
     .footer-container {
         display: grid;

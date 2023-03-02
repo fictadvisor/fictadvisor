@@ -1,4 +1,4 @@
-import DividersPage from '@/components/pages/test-pages/dividers-page';
+import DividersPage from '@/components/pages/test/dividers-page';
 
 const Dividers = () => <DividersPage />;
 
