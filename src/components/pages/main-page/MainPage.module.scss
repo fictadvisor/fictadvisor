@@ -1,4 +1,5 @@
 @import "../../../styles/partials/utils";
+@import "@/styles/partials/_breakpoints.scss";
 
 $button-border-color: #D33D3D;
 $button-divider-color: #404040;
@@ -118,7 +119,7 @@ $font-weight-bold: 700;
     // outline: 2px solid pink;
 }
 
-@media only screen and (max-width: 1200px) {
+@media only screen and (max-width: $breakpoint-desktop-semi-medium) {
     .build-image {
         width: 75%;
         right: -50px;
@@ -129,19 +130,19 @@ $font-weight-bold: 700;
     }
 }
 
-@media only screen and (max-width: 1024px) {
+@media only screen and (max-width: $breakpoint-desktop) {
     .build-image {
         right: -15px;
     }
 }
 
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: $breakpoint-tablet) {
     .build-image {
       right: -50px;
     }
 }
 
-@media only screen and (max-width: 480px) {
+@media only screen and (max-width: $breakpoint-mobile-medium) {
     .header {
         flex-direction: column-reverse;
         align-items: flex-end;
@@ -207,13 +208,13 @@ $font-weight-bold: 700;
     }
 }
 
-@media only screen and (max-width: 375px) {
+@media only screen and (max-width: $breakpoint-mobile) {
     .build-image {
         right: -30px;
     }
 }
 
-@media only screen and (min-width: 481px) and (max-width: 768px){
+@media only screen and (min-width: $breakpoint-mobile-medium) and (max-width: $breakpoint-tablet){
     .header {
         flex-direction: column-reverse;
         align-items: flex-end;
@@ -257,7 +258,7 @@ $font-weight-bold: 700;
     }
 }
 
-@media only screen and (min-width: 769px) and (max-width: 1024px){
+@media only screen and (min-width: $breakpoint-tablet) and (max-width: $breakpoint-desktop){
     .header-info {
         h2 {
             width: 100%;
@@ -285,7 +286,7 @@ $font-weight-bold: 700;
 
 }
 
-@media screen and (min-width: 1441px) {
+@media screen and (min-width: $breakpoint-desktop-medium) {
     .main-page {
         background-size: 100vw auto;
     }
