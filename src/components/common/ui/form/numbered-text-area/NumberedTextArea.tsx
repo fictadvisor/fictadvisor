@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import { useField } from 'formik';
 
 import { FieldState } from '@/components/common/ui/form/common/types';
@@ -42,15 +42,15 @@ const NumberedTextArea: React.FC<NumberedTextAreaProps> = ({
     setScrollTop(e.target.scrollTop);
   };
 
+  if (touched && error) state = FieldState.ERROR;
+  else if (touched && isSuccessOnDefault) state = FieldState.SUCCESS;
+
   const divClasses = [
     styles['textarea'],
     styles[size ? `${size}-area` : ''],
     styles[state ? `${state}-area` : ''],
     className,
   ];
-
-  if (touched && error) state = FieldState.ERROR;
-  else if (touched && isSuccessOnDefault) state = FieldState.SUCCESS;
 
   if (field.value.includes(',') || field.value.includes(';')) {
     field.value = field.value
