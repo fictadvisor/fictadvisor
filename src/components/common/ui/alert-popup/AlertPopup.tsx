@@ -12,7 +12,7 @@ export interface AlertPopupProps {
   variant?: AlertVariant;
   isClosable?: boolean;
   className?: string;
-  delayTime?: number;
+  closeTime?: number;
 }
 
 const AlertPopup: React.FC<AlertPopupProps> = ({
@@ -22,10 +22,10 @@ const AlertPopup: React.FC<AlertPopupProps> = ({
   variant,
   isClosable,
   className,
-  delayTime,
+  closeTime,
 }) => {
   const [isVisible, setIsVisible] = useState(true);
-  setTimeout(() => setIsVisible(false), delayTime * 100);
+  closeTime && setTimeout(() => setIsVisible(false), closeTime * 1000);
   return (
     <div className={styles.wrapper}>
       {isVisible && (
