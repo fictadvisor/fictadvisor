@@ -204,4 +204,12 @@ export class GroupService {
       await this.groupRepository.addRole(role.id, groupId);
     }
   }
+
+  async getOrCreate (code) {
+    const group = await this.groupRepository.find(code);
+    if (!group) {
+      return this.create(code);
+    }
+    return group;
+  }
 }

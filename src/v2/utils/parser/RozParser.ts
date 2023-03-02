@@ -162,7 +162,7 @@ export class RozParser implements Parser {
 
   async parseWeek (weekNumber, code, dom) {
     const week = await this.parseHtmlWeek(weekNumber, code, dom);
-    const group = await this.groupService.create(code);
+    const group = await this.groupService.getOrCreate(code);
     for (const pair of week) {
       await this.parsePair(pair, group.id);
     }
