@@ -2,7 +2,7 @@ import { FC, useCallback } from 'react';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/router';
 
-import Button from '@/components/common/ui/button';
+import Button, { ButtonSize } from '@/components/common/ui/button';
 import {
   Checkbox,
   Dropdown,
@@ -14,17 +14,19 @@ import {
   transformData,
   transformGroups,
 } from '@/components/pages/register/register-page/components/register-form/utils';
-import useAppSelector from '@/hooks/use-app-selector';
 import AuthService from '@/lib/services/auth';
 
 import { initialValues } from './constants';
 import { validationSchema } from './validation';
 
-import styles from '../../RegisterPage.module.scss';
+import styles from '../left-block/LeftBlock.module.scss';
 
-const RegisterForm: FC = () => {
+interface RegisterFormProps {
+  groups;
+}
+
+const RegisterForm: FC<RegisterFormProps> = ({ groups }) => {
   const router = useRouter();
-  const { groups } = useAppSelector(state => state.groups);
 
   const handleSubmit = useCallback(
     async (data: RegisterFormFields) => {
@@ -78,12 +80,16 @@ const RegisterForm: FC = () => {
             placeholder="example@gmail.com"
             name="email"
           />
-          <Dropdown
-            options={transformGroups(groups)}
-            label={'група'}
-            name={'group'}
-          />
-          <Checkbox label={'Я староста'} name={'isCaptain'} />
+          <div className={styles['one-line']}>
+            <Dropdown
+              options={transformGroups(groups)}
+              label={'Група'}
+              name={'group'}
+            />
+            <div className={styles['checkbox-container']}>
+              <Checkbox label={'Я староста'} name={'isCaptain'} />
+            </div>
+          </div>
           <Input
             className={styles['login-input']}
             label="Пароль"
@@ -101,9 +107,16 @@ const RegisterForm: FC = () => {
           <Checkbox
             label={'Погоджуюсь на обробку персональних даних'}
             name={'agreement'}
+            className={styles['agreement-checkbox']}
           />
 
-          <Button text="Зареєструватись" type="submit" disabled={!isValid} />
+          <Button
+            text="Зареєструватись"
+            type="submit"
+            size={ButtonSize.LARGE}
+            disabled={!isValid}
+            className={styles['register-button']}
+          />
         </Form>
       )}
     </Formik>

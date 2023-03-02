@@ -15,11 +15,11 @@ const RightBlock = () => {
         src="/assets/login-page/new_logo.png"
         alt="fict advisor logo"
       />
-      <h3 className={mergeClassNames(styles['register-text'])}>
+      <h3 className={mergeClassNames(styles['login-text'])}>
         Вже маєш акаунт? Заходь!
       </h3>
       <Button
-        className={styles['register-button']}
+        className={styles['login-button']}
         text="Вхід"
         onClick={() => {
           void push('/login');

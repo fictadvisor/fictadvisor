@@ -1,54 +1,46 @@
 @import "src/styles/partials/utils";
+@import "src/styles/partials/breakpoints";
 
 $left-block-width: 606px;
 $right-block-width: 834px;
 
 
-.login-page {
+.register-page {
   width: 100%;
-  min-height: calc(100vh);
+  min-height: 100vh;
   @include flex-center;
-  background: url("/login-page/login-background.png") no-repeat;
+  background: url("/assets/register-page/background.png") no-repeat;
   background-size: 100% 100%;
+  padding: 0 30px;
 }
 
-
-.login-page__content {
+.register-page__content{
   display: flex;
-  flex-direction: column;
-  height: 100%;
-  gap: 30px;
-  padding: 50px 0;
-  width: 400px;
-}
-
-.form{
-  display: flex;
-  flex-direction: column;
-  @include flex-center;
-  gap: 10px;
-}
-
-.register-header {
-  text-align: center;
-  font-size: 36px;
-  line-height: 120%;
-  font-weight: 700;
-}
-
-.login-input {
-  margin-top: 15px;
-}
-
-.one-line {
-  margin-bottom: 24px;
+  flex-direction: row;
   width: 100%;
-  display: flex;
-  justify-content: space-between;
+  max-width: 1200px;
+  justify-content: space-around;
+  align-items: center;
 }
 
+.divider{
+  height: 635px;
+}
 
-.login-button-container {
-  width: fit-content;
+@media screen and (max-width: $breakpoint-desktop-semi-medium) {
+  .divider {
+    display: none;
+  }
+  .register-page__content {
+    max-width: 480px;
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .register-page {
+    background: url("/assets/login-page/login-background.png") no-repeat;
+    background-size: $breakpoint-desktop-semi-medium 100%;
+  }
+
 }
 

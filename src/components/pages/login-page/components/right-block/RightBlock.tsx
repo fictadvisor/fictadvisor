@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import { useRouter } from 'next/router';
 
 import CustomTelegramIcon from '@/components/common/custom-svg/CustomTelegramIcon';
+import { AlertColor, AlertVariant } from '@/components/common/ui/alert';
+import AlertPopup from '@/components/common/ui/alert-popup';
 import Button, {
   ButtonColor,
   ButtonSize,
@@ -14,13 +17,23 @@ import styles from './RightBlock.module.scss';
 
 const RightBlock = () => {
   const router = useRouter();
+  const [isError, setIsError] = useState(false);
   const handleClick = async () => {
-    await authService.loginTelegram();
-    await router.push('/');
+    const isSuccess = await authService.loginTelegram();
+    if (isSuccess) await router.push('/');
+    else setIsError(true);
+    setTimeout(() => setIsError(false), 7500);
   };
 
   return (
     <div className={styles['right-block']}>
+      {isError && (
+        <AlertPopup
+          title="Неможливо авторизуватись за допомогою telegram"
+          variant={AlertVariant.FILLED}
+          color={AlertColor.ERROR}
+        />
+      )}
       <img
         className={styles['mobile-login-logo']}
         src="/assets/login-page/new_logo.png"
@@ -34,7 +47,7 @@ const RightBlock = () => {
           </div>
         }
         text="Увійти за допомогою"
-        size={ButtonSize.LARGE}
+        size={ButtonSize.SMALL}
         type="button"
         onClick={handleClick}
         className={styles['mobile-telegram-button']}

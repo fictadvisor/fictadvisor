@@ -27,7 +27,7 @@ html, body {
   width: 1.11vw;
 }
 ::-webkit-scrollbar-thumb{
-  border: 0.28vw $background-dark-0 solid;
+  border: 0.28vw transparent solid;
   background-clip: padding-box;
 
   transition: all 0.2s ease-in-out;

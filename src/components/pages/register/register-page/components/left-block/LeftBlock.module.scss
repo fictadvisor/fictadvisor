@@ -58,10 +58,12 @@
 
 .login-mobile-button{
   width: fit-content;
+  margin-bottom: 30px;
   display: none;
 }
 
 .one-line{
+  margin-top: 12px;
   display: flex;
   width: 100%;
   gap: 32px;
@@ -95,12 +97,23 @@
   }
 }
 
-@media screen and (max-width: $breakpoint-mobile-medium) {
+@media screen and (max-width: $breakpoint-tablet) {
   .mobile-telegram-button{
     display: flex;
   }
   .telegram-button{
     display: none;
   }
+  .register-button{
+    padding: 12px 24px;
+  }
 }
 
+@media screen and (max-width: $breakpoint-mobile-medium) {
+  .agreement-checkbox{
+    align-items: center;
+    span{
+      white-space: normal;
+    }
+  }
+}
