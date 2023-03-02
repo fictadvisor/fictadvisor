@@ -1,4 +1,4 @@
-export type GetTeacherQuestionsDTO = {
+export interface GetTeacherQuestionsDTO {
   questions: [
     {
       name: string;
@@ -8,4 +8,4 @@ export type GetTeacherQuestionsDTO = {
       id: string;
     },
   ];
-};
+}

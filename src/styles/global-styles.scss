@@ -1,4 +1,5 @@
 @import "partials/theme";
+@import "partials/typography-mixins";
 
 html, body {
   background-color: $background-dark--10;
@@ -6,8 +7,10 @@ html, body {
 }
 
 .icon{
-  height: 24px;
-  width: 24px;
+  max-width: 24px;
+  max-height: 24px;
+  min-width: 24px;
+  min-height: 24px;
   stroke-width: 1.5;
 }
 
@@ -18,22 +21,44 @@ html, body {
     scrollbar-color: $black $background-dark-200;
   }
 }
-
 ::-webkit-scrollbar{
-  width: 1.11vw;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-thumb{
-  border: 0.28vw $background-dark-0 solid;
   background-clip: padding-box;
-
   transition: all 0.2s ease-in-out;
-  background-color: $background-dark-100;
+  background-color: $gray-400;
   &:hover{
     background-color: $background-dark-200;
   }
-  &:active{
-    background-color: $gray-300;
-  }
 }
 
+::-webkit-scrollbar-corner {
+  background: rgba(0,0,0,0);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+textarea:-webkit-autofill:active,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:active,
+select:-webkit-autofill:focus {
+  -webkit-text-fill-color: $gray-600;
+  @include body-secondary;
+  -webkit-box-shadow: 0 0 0 1000px $background-dark-0 inset !important;
+  font-family: 'Manrope', sans-serif;
+  transition: all 0s 50000s;
+}
 

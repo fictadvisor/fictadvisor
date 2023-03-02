@@ -18,8 +18,8 @@ const AuthenticationProvider: FC<AuthenticationProviderProps> = ({
 
   const { error, isFetching, data } = useQuery(
     ['oauth', jwt?.accessToken, jwt?.refreshToken],
-    () => AuthAPI.getMe(jwt?.accessToken),
-    { enabled: jwt != null, retry: false },
+    () => AuthAPI.getMe(),
+    { enabled: jwt != null, retry: false, refetchOnWindowFocus: false },
   );
 
   if (error && !isFetching) {

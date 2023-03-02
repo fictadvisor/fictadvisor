@@ -1,4 +1,4 @@
-import FormikPage from '@/components/pages/test-pages/formik-page';
+import FormikPage from '@/components/pages/test/formik-page';
 const Formik = () => <FormikPage />;
 
 export default Formik;

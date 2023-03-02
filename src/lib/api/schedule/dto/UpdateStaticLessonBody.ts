@@ -1,4 +1,4 @@
-export type UpdateStaticLessonBody = {
+export interface UpdateStaticLessonBody {
   startDate?: Date;
   endDate?: Date;
   teachersId?: string[];
@@ -6,4 +6,4 @@ export type UpdateStaticLessonBody = {
   resource?: string;
   evaluatingSystem?: string;
   isSelective?: boolean;
-};
+}

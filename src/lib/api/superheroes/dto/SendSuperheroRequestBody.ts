@@ -1,3 +1,3 @@
-export type SendSuperheroRequestBody = {
+export interface SendSuperheroRequestBody {
   dorm: boolean;
-};
+}

@@ -1,58 +1,46 @@
-import { client, getAuthorizationHeader } from '../index';
+import { getAuthorizationHeader } from '@/lib/api/utils';
+
+import { client } from '../instance';
 
 import { SendSuperheroRequestBody } from './dto/SendSuperheroRequestBody';
 import { SuperheroVerificationBody } from './dto/SuperheroVerificationBody';
-import { updateGrantBody } from './dto/updateGrantBody';
-import { updateRoleBody } from './dto/updateRoleBody';
+import { UpdateGrantBody } from './dto/UpdateGrantBody';
+import { UpdateRoleBody } from './dto/UpdateRoleBody';
 
 export class SuperheroAPI {
-  static async superheroVerification(
-    accessToken: string,
-    body: SuperheroVerificationBody,
-  ) {
-    return await client.patch(
+  static async superheroVerification(body: SuperheroVerificationBody) {
+    const { data } = await client.patch(
       `/user/superhero/verify`,
       body,
-      getAuthorizationHeader(accessToken),
+      getAuthorizationHeader(),
     );
+    return data;
   }
 
-  static async sendSuperheroRequest(
-    accessToken: string,
-    body: SendSuperheroRequestBody,
-  ) {
-    return await client.post(
+  static async sendSuperheroRequest(body: SendSuperheroRequestBody) {
+    const { data } = await client.post(
       `/user/superhero`,
       body,
-      getAuthorizationHeader(accessToken),
+      getAuthorizationHeader(),
     );
+    return data;
   }
 
-  static async updateRoleBody(
-    accessToken: string,
-    body: updateRoleBody,
-    roleId: string,
-  ) {
-    return (
-      await client.patch(
-        `/role/${roleId}`,
-        body,
-        getAuthorizationHeader(accessToken),
-      )
-    ).data;
+  static async updateRoleBody(body: UpdateRoleBody, roleId: string) {
+    const { data } = await client.patch(
+      `/role/${roleId}`,
+      body,
+      getAuthorizationHeader(),
+    );
+    return data;
   }
 
-  static async updateGrantBody(
-    accessToken: string,
-    body: updateGrantBody,
-    grantId: string,
-  ) {
-    return (
-      await client.patch(
-        `/grants/${grantId}`,
-        body,
-        getAuthorizationHeader(accessToken),
-      )
-    ).data;
+  static async updateGrantBody(body: UpdateGrantBody, grantId: string) {
+    const { data } = await client.patch(
+      `/grants/${grantId}`,
+      body,
+      getAuthorizationHeader(),
+    );
+    return data;
   }
 }
