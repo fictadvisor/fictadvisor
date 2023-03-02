@@ -59,6 +59,7 @@ const NumberedTextArea: React.FC<NumberedTextAreaProps> = ({
       .replace(/\s+/g, '\n')
       .replace(/\n\n/g, '\n');
   }
+  field.value = field.value.replace(/\s+/g, '\n');
   field.value = field.value.replace(/\n\n/g, '\n');
   numberOfLines = field.value.split('\n').length;
 
