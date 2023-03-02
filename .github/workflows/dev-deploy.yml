@@ -36,5 +36,5 @@ jobs:
           password: ${{ secrets.PRODUCTION_DO_PASSWORD }}
           port: ${{ secrets.PRODUCTION_DO_PORT }}
           script: |
-            cd ~/deployment/development/starters
+            cd ~/deployment/development/runners
             ./${{ steps.env.outputs.IMAGE_NAME }}.sh
