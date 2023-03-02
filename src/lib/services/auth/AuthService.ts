@@ -1,6 +1,5 @@
 import { NextRouter } from 'next/router';
 
-import config from '@/config';
 import { AuthAPI } from '@/lib/api/auth/AuthAPI';
 import { AuthBody } from '@/lib/api/auth/dto/AuthBody';
 import TelegramService from '@/lib/services/telegram';
@@ -33,7 +32,7 @@ class AuthService {
   }
 
   static async redirectToRegisterBot(router: NextRouter) {
-    const botUrl = `https://t.me/${config.contacts.bot}`;
+    const botUrl = `https://t.me/${process.env.NEXT_PUBLIC_BOT_NAME}`;
     await router.push(botUrl);
   }
 
