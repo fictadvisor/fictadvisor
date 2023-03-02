@@ -40,11 +40,11 @@ const RegisterForm: FC<RegisterFormProps> = ({ groups }) => {
         if (data.isCaptain && hasCaptain) {
           setError('В групі вже є староста');
         } else if (!data.isCaptain && !hasCaptain) {
-          setError('Дочекайся поки зареєструється староста');
+          setError('Дочекайся, поки зареєструється староста');
+        } else {
+          await AuthService.register(transformData(data));
+          await router.push(`/register/email-verification?email=${data.email}`);
         }
-
-        await AuthService.register(transformData(data));
-        await router.push(`/register/email-verification?email=${data.email}`);
       } catch (e) {
         const errorName = e.response.data.error;
 
