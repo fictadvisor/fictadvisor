@@ -1,4 +1,4 @@
-import ArrowsPage from '@/components/pages/test-pages/arrows-page';
+import ArrowsPage from '@/components/pages/test/arrows-page';
 
 const Arrows = () => <ArrowsPage />;
 

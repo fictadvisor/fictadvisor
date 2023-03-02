@@ -23,12 +23,12 @@ class TelegramService {
     });
   }
 
-  private static async tryTelegramLogin() {
+  static async login(): Promise<boolean> {
     try {
       const data: AuthTelegramBody =
         (await TelegramService.openAuthenticationDialog()) as AuthTelegramBody;
       const { accessToken, refreshToken } = await AuthAPI.authTelegram(data);
-
+      console.log(accessToken, refreshToken);
       StorageUtil.setTokens(accessToken, refreshToken);
 
       return true;
@@ -37,11 +37,7 @@ class TelegramService {
     }
   }
 
-  static async login(): Promise<boolean> {
-    return await TelegramService.tryTelegramLogin();
-  }
-
-  private static async tryTelegramRegister() {
+  static async register() {
     try {
       const data: AuthTelegramBody =
         (await TelegramService.openAuthenticationDialog()) as AuthTelegramBody;
@@ -52,10 +48,6 @@ class TelegramService {
     } catch (e) {
       return false;
     }
-  }
-
-  static async register() {
-    await TelegramService.tryTelegramRegister();
   }
 }
 

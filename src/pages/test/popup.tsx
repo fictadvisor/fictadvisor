@@ -1,4 +1,4 @@
-import PopupPage from '@/components/pages/test-pages/popup-page/PopupPage';
+import PopupPage from '@/components/pages/test/popup-page/PopupPage';
 
 const IconButtons = () => <PopupPage />;
 

@@ -7,6 +7,7 @@ import { RefreshAccessTokenDTO } from '@/lib/api/auth/dto/RefreshAccesTokenDTO';
 import { ResetPasswordBody } from '@/lib/api/auth/dto/ResetPasswordBody';
 import { ResetPasswordDTO } from '@/lib/api/auth/dto/ResetPasswordDTO';
 import { TokensDTO } from '@/lib/api/auth/dto/TokensDTO';
+import { VerifyEmailBody } from '@/lib/api/auth/dto/VerifyEmailBody';
 import { getAuthorizationHeader } from '@/lib/api/utils';
 
 import { client } from '../instance';
@@ -15,6 +16,11 @@ import { ChangePasswordBody } from './dto/ChangePasswordBody';
 import { RegisterBody } from './dto/RegisterBody';
 
 export class AuthAPI {
+  static async groupHasCaptain(groupId: string): Promise<boolean> {
+    const { data } = await client.get(`/auth/checkCaptain/${groupId}`);
+    return data;
+  }
+
   static async recoverPassword(body: ResetPasswordBody) {
     const { data } = await client.post(
       `user/resetPassword`,
@@ -75,6 +81,16 @@ export class AuthAPI {
 
   static async confirmPasswordReset(body: ConfirmPasswordResetBody) {
     const { data } = await client.post('/users/resetPassword', body);
+    return data;
+  }
+
+  static async verifyEmail(body: VerifyEmailBody) {
+    const { data } = await client.post('/auth/register/verifyEmail', body);
+    return data;
+  }
+
+  static async verifyEmailToken(token: string): Promise<TokensDTO> {
+    const { data } = await client.post(`/auth/register/verifyEmail/${token}`);
     return data;
   }
 
