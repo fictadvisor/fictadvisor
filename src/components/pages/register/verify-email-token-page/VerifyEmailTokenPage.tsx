@@ -18,7 +18,7 @@ const VerifyEmailTokenPage = () => {
             token,
           );
           StorageUtil.setTokens(accessToken, refreshToken);
-          await router.push(`/`);
+          // await router.push(`/`);
         } catch (e) {
           // await router.push(`/register?error=${e.response.data.error}`);
         }
@@ -32,7 +32,7 @@ const VerifyEmailTokenPage = () => {
   }, [loadData, token]);
 
   return (
-    <PageLayout hasHeader={true} hasFooter={false}>
+    <PageLayout hasHeader={true} hasFooter={true}>
       <div
         style={{
           flexGrow: 1,
