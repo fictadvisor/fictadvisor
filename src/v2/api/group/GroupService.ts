@@ -12,6 +12,7 @@ import { RoleDTO } from './dto/RoleDTO';
 import { UpdateGroupDTO } from './dto/UpdateGroupDTO';
 import { UserService } from '../user/UserService';
 import { RoleRepository } from '../user/role/RoleRepository';
+import { AVATARS } from '../auth/AuthService';
 
 const ROLE_LIST = [
   {
@@ -86,7 +87,10 @@ export class GroupService {
   async addUnregistered (groupId: string, body: EmailDTO) {
     const users = [];
     for (const email of body.emails) {
-      const user = await this.userRepository.create({ email });
+      const user = await this.userRepository.create({
+        email,
+        avatar: AVATARS[Math.floor(Math.random() * AVATARS.length)],
+      });
       await this.studentRepository.create({
         userId: user.id,
         groupId: groupId,

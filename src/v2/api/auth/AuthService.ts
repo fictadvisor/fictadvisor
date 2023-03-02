@@ -37,6 +37,20 @@ import { ConfigService } from '@nestjs/config';
 
 export const ONE_MINUTE = 1000 * 60;
 export const HOUR = ONE_MINUTE * 60;
+export const AVATARS = [
+  'https://i.imgur.com/0ySPaF0.jpeg',
+  'https://i.imgur.com/K58n0UQ.jpeg',
+  'https://i.imgur.com/9ZGjAgT.png',
+  'https://i.imgur.com/nKjNZfC.png',
+  'https://i.imgur.com/BdjXDoZ.png',
+  'https://i.imgur.com/lxqeV2H.png',
+  'https://i.imgur.com/haNSNwb.png',
+  'https://i.imgur.com/pFrr37l.png',
+  'https://i.imgur.com/K1VUoCG.png',
+  'https://i.imgur.com/cIUqJci.png',
+  'https://i.imgur.com/OTXludE.png',
+  'https://i.imgur.com/6ogcyVF.png',
+];
 
 @Injectable()
 export class AuthService {
@@ -58,8 +72,7 @@ export class AuthService {
     private groupRepository: GroupRepository,
     private groupService: GroupService,
     private config: ConfigService,
-  ) {
-  }
+  ) {}
 
   async validateUser (username: string, password: string) {
     const user = await this.userRepository.getByUnique({
@@ -334,6 +347,7 @@ export class AuthService {
   async trulyRegister (user: UserDTO, isCaptain:boolean, createStudent: Omit<StudentDTO, 'isCaptain'>) {
     const dbUser = await this.userRepository.create({
       ...user,
+      avatar: AVATARS[Math.floor(Math.random() * AVATARS.length)],
       lastPasswordChanged: new Date(),
     });
     await this.studentRepository.create({
@@ -349,6 +363,7 @@ export class AuthService {
 
   async pseudoRegister (user: UserDTO, isCaptain:boolean, createStudent: Omit<StudentDTO, 'isCaptain'>) {
     const dbUser = await this.userRepository.updateByEmail(user.email, {
+      avatar: AVATARS[Math.floor(Math.random() * AVATARS.length)],
       ...user,
       lastPasswordChanged: new Date(),
     });
