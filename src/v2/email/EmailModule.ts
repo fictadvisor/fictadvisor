@@ -16,7 +16,7 @@ import { join } from 'path';
         },
       },
       defaults: {
-        from: '"FictAdvisor" <noreply@fictadvisor.com>',
+        from: '"FICT Advisor" <noreply@fictadvisor.com>',
       },
       template: {
         dir: join(__dirname, 'templates'),
