@@ -1,5 +1,5 @@
-import LoginForm from '@/components/pages/login-page/components/login-form';
-import LoginTelegramButton from '@/components/pages/login-page/components/login-telegram-button';
+import LeftBlock from '@/components/pages/login-page/components/left-block';
+import RightBlock from '@/components/pages/login-page/components/right-block';
 
 import PageLayout from '../../common/layout/page-layout/PageLayout';
 
@@ -14,9 +14,9 @@ const LoginPage = () => {
     >
       <div className={styles['login-page']}>
         <div className={styles['login-page__content']}>
-          <h3 className={styles['register-header']}>З поверненням!</h3>
-          <LoginTelegramButton />
-          <LoginForm />
+          <LeftBlock />
+          <hr className={styles['divider']} />
+          <RightBlock />
         </div>
       </div>
     </PageLayout>

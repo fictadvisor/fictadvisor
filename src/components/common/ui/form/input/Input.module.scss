@@ -52,7 +52,7 @@
   }
 
   input{
-    @include input-color($gray-600, $gray-200, $gray-400);
+    @include input-color($gray-600, $gray-200, $gray-200);
     &:focus {
       @include input-color($white, $white, $gray-50);
     }
@@ -65,7 +65,7 @@
       border-color: $white;
       color: $white;
     }
-    .white-icon{
+    .white-icon, .eye-icon{
       color: $gray-600;
     }
   }
@@ -83,12 +83,12 @@
     background: linear-gradient(180deg, rgba(30, 30, 30, 0) 49.48%, $background-dark-0 49.95%);
   }
   input {
-    @include input-color($gray-600, $error-200, $gray-50);
+    @include input-color($gray-600, $error-200, $gray-200);
   }
   p{
     color: $error-200;
   }
-  .white-icon {
+  .white-icon, .eye-icon{
     color: $gray-600;
   }
 }
@@ -106,7 +106,7 @@
   p{
     color: $success-300;
   }
-  .white-icon {
+  .white-icon, .eye-icon {
     color: $gray-600;
   }
 
@@ -142,7 +142,7 @@
       margin-left: 16px;
       margin-right: 8px;
       width: calc(100% - 24px);
-      min-height: 20px;
+      min-height: 22px;
     }
     .left-icon{
       position: absolute;

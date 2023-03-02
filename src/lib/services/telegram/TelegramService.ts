@@ -1,4 +1,5 @@
-import config from '@/config';
+import * as process from 'process';
+
 import { AuthAPI } from '@/lib/api/auth/AuthAPI';
 import { AuthTelegramBody } from '@/lib/api/auth/dto/AuthTelegramBody';
 import StorageUtil from '@/lib/utils/StorageUtil';
@@ -9,7 +10,7 @@ class TelegramService {
       try {
         const Telegram = (window as any).Telegram;
         Telegram.Login.auth(
-          { bot_id: config.botId, request_access: true },
+          { bot_id: process.env.NEXT_PUBLIC_BOT_ID, request_access: true },
           data => {
             return data
               ? resolve(data)
@@ -23,12 +24,12 @@ class TelegramService {
     });
   }
 
-  private static async tryTelegramLogin() {
+  static async login(): Promise<boolean> {
     try {
       const data: AuthTelegramBody =
         (await TelegramService.openAuthenticationDialog()) as AuthTelegramBody;
       const { accessToken, refreshToken } = await AuthAPI.authTelegram(data);
-
+      console.log(accessToken, refreshToken);
       StorageUtil.setTokens(accessToken, refreshToken);
 
       return true;
@@ -37,11 +38,7 @@ class TelegramService {
     }
   }
 
-  static async login(): Promise<boolean> {
-    return await TelegramService.tryTelegramLogin();
-  }
-
-  private static async tryTelegramRegister() {
+  static async register() {
     try {
       const data: AuthTelegramBody =
         (await TelegramService.openAuthenticationDialog()) as AuthTelegramBody;
@@ -52,10 +49,6 @@ class TelegramService {
     } catch (e) {
       return false;
     }
-  }
-
-  static async register() {
-    await TelegramService.tryTelegramRegister();
   }
 }
 

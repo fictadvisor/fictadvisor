@@ -1,4 +1,4 @@
-import NavigationPage from '@/components/pages/test-pages/navigation-page';
+import NavigationPage from '@/components/pages/test/navigation-page';
 
 const Navigation = () => <NavigationPage />;
 

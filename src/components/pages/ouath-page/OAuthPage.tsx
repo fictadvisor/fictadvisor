@@ -2,6 +2,7 @@ import { useCallback, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 import PageLayout from '@/components/common/layout/page-layout';
+import Loader, { LoaderSize } from '@/components/common/ui/loader';
 import { AuthAPI } from '@/lib/api/auth/AuthAPI';
 import AuthService from '@/lib/services/auth';
 
@@ -30,7 +31,20 @@ const OAuthPage = () => {
     void loadData(token);
   }, [loadData, token]);
 
-  return <PageLayout hasFooter={true} />;
+  return (
+    <PageLayout hasHeader={true} hasFooter={false}>
+      <div
+        style={{
+          flexGrow: 1,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Loader size={LoaderSize.SMALLEST} />
+      </div>
+    </PageLayout>
+  );
 };
 
 export default OAuthPage;
