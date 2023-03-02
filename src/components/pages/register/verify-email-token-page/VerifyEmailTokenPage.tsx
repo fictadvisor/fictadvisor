@@ -18,9 +18,9 @@ const VerifyEmailTokenPage = () => {
             token,
           );
           StorageUtil.setTokens(accessToken, refreshToken);
-          // await router.push(`/`);
+          await router.push(`/`);
         } catch (e) {
-          // await router.push(`/register?error=${e.response.data.error}`);
+          await router.push(`/register?error=${e.response.data.error}`);
         }
       }
     },
