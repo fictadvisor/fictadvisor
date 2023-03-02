@@ -1,12 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Formik } from 'formik';
-import * as yup from 'yup';
 
 import ArrowButton from '@/components/common/ui/arrow-button/ArrowButton';
 import Button from '@/components/common/ui/button/Button';
 import { RadioGroup, Slider, TextArea } from '@/components/common/ui/form';
 
-import { Category } from '../../PollPage';
+import { Category, Question } from '../../PollPage';
+import { Answer } from '../poll-form/PollForm';
 
 import styles from './AnswersSheet.module.scss';
 
@@ -17,16 +17,30 @@ interface AnswersSheetProps {
   setQuestionsListStatus: React.Dispatch<React.SetStateAction<boolean>>;
   isTheLast: boolean;
   current: number;
+  answers: Answer[];
+  setAnswers: React.Dispatch<React.SetStateAction<Answer[]>>;
 }
+
+const initialValues = {};
+
+const validateResults = (answers, questions: Question[]) => {
+  console.log(questions, Object.keys(answers));
+  for (const question of questions) {
+    if (question.isRequired && !Object.keys(answers).includes(question.id)) {
+      return true;
+    }
+  }
+  return false;
+};
 
 const AnswersSheet: React.FC<AnswersSheetProps> = ({
   questions,
   isTheLast,
   current,
+  answers,
   setQuestionsListStatus,
+  setAnswers,
 }) => {
-  const initialValues = {};
-
   for (const question of questions.questions) {
     if (question.type === 'SCALE') {
       initialValues[question.id] = 1;
@@ -36,25 +50,15 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
     console.log('hello', data);
   };
 
-  let validationSchema = yup.object().shape({});
-
+  const [isValid, setIsValid] = useState(false);
   useEffect(() => {
-    const tempValidationObject = {};
     for (const question of questions.questions) {
       if (question.type === 'SCALE') {
         initialValues[question.id] = 1;
-        tempValidationObject[question.id] = yup
-          .string()
-          .required(` ${question.name} required`);
-      } else if (question.type === 'TOGGLE') {
-        tempValidationObject[question.id] = yup
-          .string()
-          .required(` ${question.name} required`);
-        initialValues[question.id] = '';
       }
-      validationSchema = yup.object().shape(tempValidationObject);
     }
-  }, [questions, initialValues]);
+    setIsValid(false);
+  }, [questions]);
 
   return (
     <div className={styles.wrapper}>
@@ -75,16 +79,20 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
           validateOnChange
           initialValues={initialValues}
           onSubmit={handleSubmit}
-          validationSchema={validationSchema}
           enableReinitialize
         >
-          {() => (
-            <Form className={styles['form']}>
+          {({ values }) => (
+            <Form
+              className={styles['form']}
+              onChange={() => {
+                console.log(validateResults(values, questions.questions));
+                setIsValid(validateResults(values, questions.questions));
+              }}
+            >
               {questions.questions.map((question, id) => (
                 <div key={question.id} className={styles['question']}>
                   {question.type === 'TEXT' ? (
                     <p className={styles['question-number']}>
-                      {' '}
                       Відкрите питання
                     </p>
                   ) : (
@@ -127,6 +135,26 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
                 className={styles['button']}
                 text={isTheLast ? 'Завершити опитування' : 'Наступні питання'}
                 type="submit"
+                // disabled={!isValid}
+                onClick={() => {
+                  let resultAnswers = [...answers];
+                  console.log(values);
+                  for (const valueId of Object.keys(values)) {
+                    const index = resultAnswers.findIndex(
+                      el => el.questionId === valueId,
+                    );
+                    if (index !== -1) {
+                      console.log(index);
+                      resultAnswers[index].value = values[valueId];
+                    } else {
+                      resultAnswers = [
+                        ...resultAnswers,
+                        { value: values[valueId], questionId: valueId },
+                      ];
+                    }
+                  }
+                  setAnswers(resultAnswers);
+                }}
               />
             </Form>
           )}

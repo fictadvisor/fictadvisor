@@ -13,7 +13,7 @@ export class PollAPI {
     disciplineTeacherId: string,
   ): Promise<GetTeacherQuestionsDTO> {
     const { data } = await client.get(
-      `/poll/answers/${disciplineTeacherId}`,
+      `/disciplineTeachers/${disciplineTeacherId}/questions`,
       getAuthorizationHeader(),
     );
     return data;

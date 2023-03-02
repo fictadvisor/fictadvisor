@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import { useRouter } from 'next/router';
 
+import { AlertColor, AlertVariant } from '@/components/common/ui/alert';
+import AlertPopup from '@/components/common/ui/alert-popup/AlertPopup';
 import Loader from '@/components/common/ui/loader/Loader';
 import useAuthentication from '@/hooks/use-authentication';
-import { client } from '@/lib/api/instance';
-import { getAuthorizationHeader } from '@/lib/api/utils';
+import { PollAPI } from '@/lib/api/poll/PollAPI';
 
 import PageLayout from '../../common/layout/page-layout/PageLayout';
 
@@ -25,7 +27,7 @@ export type Subject = {
   name: string;
 };
 
-type Question = {
+export type Question = {
   id: string;
   name: string;
   criteria: string;
@@ -80,17 +82,15 @@ const initialState = {
 const PollPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { user, isLoggedIn, isAuthenticationFetching } = useAuthentication();
+  const router = useRouter();
+  const disciplineTeacherId = router.query.disciplineTeacherId as string;
   const {
     isSuccess: isSuccessFetching,
     data: FetchedData,
     isLoading: isQuestionsLoading,
   } = useQuery(
     ['pollQuestions'],
-    async () =>
-      await client.get(
-        'http://142.93.97.196:4001/v2/disciplineTeachers/24529274-6a79-4ad2-a4ae-9f0e7956ffad/questions',
-        getAuthorizationHeader(),
-      ),
+    async () => await PollAPI.getTeacherQuestions(disciplineTeacherId),
     {
       retry: false,
       enabled: Boolean(user),
@@ -98,7 +98,6 @@ const PollPage = () => {
     },
   );
 
-  console.log(isSuccessFetching, FetchedData, isLoading);
   useEffect(() => {
     setIsLoading(isQuestionsLoading || isAuthenticationFetching);
   }, [isQuestionsLoading, isAuthenticationFetching]);
@@ -114,9 +113,17 @@ const PollPage = () => {
           {isLoading ? (
             <Loader />
           ) : (
-            <PollForm data={FetchedData?.data || initialState} />
+            <PollForm data={FetchedData || initialState} />
           )}
         </div>
+        {!isSuccessFetching && !isLoading && (
+          <AlertPopup
+            title="Помилка"
+            description="Не вдалося завантажити питання"
+            variant={AlertVariant.FILLED}
+            color={AlertColor.ERROR}
+          />
+        )}
       </div>
     </PageLayout>
   );

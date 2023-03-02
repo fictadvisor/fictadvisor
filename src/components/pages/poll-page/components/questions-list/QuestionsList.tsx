@@ -6,6 +6,7 @@ import {
 } from '@/components/common/composite/cards';
 
 import { Category, Subject, Teacher } from '../../PollPage';
+import { Answer } from '../poll-form/PollForm';
 
 import styles from './QuestionsList.module.scss';
 
@@ -17,6 +18,7 @@ interface QuestionListProps {
   current: number;
   setCurrent: React.Dispatch<React.SetStateAction<number>>;
   setQuestionsListStatus: React.Dispatch<React.SetStateAction<boolean>>;
+  answers: Answer[];
 }
 
 const QuestionsList: React.FC<QuestionListProps> = ({
@@ -27,6 +29,7 @@ const QuestionsList: React.FC<QuestionListProps> = ({
   current,
   setCurrent,
   setQuestionsListStatus,
+  answers,
 }) => {
   const { lastName, firstName, middleName, avatar } = teacher;
   useEffect(() => {

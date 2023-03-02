@@ -12,6 +12,11 @@ interface PollFormProps {
   data: FetchedTeacherPollData;
 }
 
+export interface Answer {
+  questionId: string;
+  value: string;
+}
+
 const PollForm: React.FC<PollFormProps> = ({ data }) => {
   const { categories, teacher, subject } = data;
   const [currentQuestions, setCurrentQuestions] = React.useState(categories[0]);
@@ -20,7 +25,7 @@ const PollForm: React.FC<PollFormProps> = ({ data }) => {
   );
   const isMobile = useIsMobile(1024);
   const [isQuestionsListOpened, setQuestionsListOpened] = useState(false);
-
+  const [answers, setAnswers] = useState<Answer[]>([]);
   const [currentCategory, setCurrentCategory] = React.useState(0);
 
   useEffect(() => {
@@ -38,6 +43,7 @@ const PollForm: React.FC<PollFormProps> = ({ data }) => {
           current={currentCategory}
           setCurrent={setCurrentCategory}
           setQuestionsListStatus={setQuestionsListOpened}
+          answers={answers}
         />
       )}
       {(!isMobile || !isQuestionsListOpened) && (
@@ -48,6 +54,8 @@ const PollForm: React.FC<PollFormProps> = ({ data }) => {
           isTheLast={currentCategory === categories.length - 1}
           current={currentCategory}
           setQuestionsListStatus={setQuestionsListOpened}
+          answers={answers}
+          setAnswers={setAnswers}
         />
       )}
     </div>
