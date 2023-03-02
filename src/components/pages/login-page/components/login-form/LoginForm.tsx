@@ -43,7 +43,7 @@ const LoginForm: FC = () => {
           <Input
             className={styles['login-input']}
             label="Пошта або юзернейм"
-            placeholder="example@gmail.com"
+            placeholder="введи свою пошту"
             size={InputSize.LARGE}
             type={InputType.DEFAULT}
             name="username"

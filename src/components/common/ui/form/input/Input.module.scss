@@ -52,7 +52,7 @@
   }
 
   input{
-    @include input-color($gray-600, $gray-200, $gray-400);
+    @include input-color($gray-600, $gray-200, $gray-200);
     &:focus {
       @include input-color($white, $white, $gray-50);
     }
@@ -83,7 +83,7 @@
     background: linear-gradient(180deg, rgba(30, 30, 30, 0) 49.48%, $background-dark-0 49.95%);
   }
   input {
-    @include input-color($gray-600, $error-200, $gray-50);
+    @include input-color($gray-600, $error-200, $gray-200);
   }
   p{
     color: $error-200;

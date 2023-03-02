@@ -4,23 +4,23 @@ import { useRouter } from 'next/router';
 import PageLayout from '@/components/common/layout/page-layout';
 import Loader, { LoaderSize } from '@/components/common/ui/loader';
 import { AuthAPI } from '@/lib/api/auth/AuthAPI';
-import AuthService from '@/lib/services/auth';
+import StorageUtil from '@/lib/utils/StorageUtil';
 
-const OAuthPage = () => {
+const VerifyEmailTokenPage = () => {
   const router = useRouter();
-  const { token } = router.query;
+  const token = router.query.token as string;
 
   const loadData = useCallback(
     async token => {
       if (router.isReady) {
-        const { isRegistered } = await AuthAPI.checkRegisterTelegram(
-          token as string,
-        );
-        if (isRegistered) {
-          await AuthService.registerTelegram();
-          await router.push('/register?telegram=true');
-        } else {
-          await router.push('/register?telegram=false');
+        try {
+          const { accessToken, refreshToken } = await AuthAPI.verifyEmailToken(
+            token,
+          );
+          StorageUtil.setTokens(accessToken, refreshToken);
+          await router.push(`/`);
+        } catch (e) {
+          // await router.push(`/register?error=${e.response.data.error}`);
         }
       }
     },
@@ -47,4 +47,4 @@ const OAuthPage = () => {
   );
 };
 
-export default OAuthPage;
+export default VerifyEmailTokenPage;

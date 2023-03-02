@@ -1,7 +1,9 @@
-import { FC, useCallback } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/router';
 
+import { AlertColor } from '@/components/common/ui/alert';
+import AlertPopup from '@/components/common/ui/alert-popup';
 import Button, { ButtonSize } from '@/components/common/ui/button';
 import {
   Checkbox,
@@ -14,6 +16,7 @@ import {
   transformData,
   transformGroups,
 } from '@/components/pages/register/register-page/components/register-form/utils';
+import { AuthAPI } from '@/lib/api/auth/AuthAPI';
 import AuthService from '@/lib/services/auth';
 
 import { initialValues } from './constants';
@@ -27,15 +30,31 @@ interface RegisterFormProps {
 
 const RegisterForm: FC<RegisterFormProps> = ({ groups }) => {
   const router = useRouter();
-
+  const [error, setError] = useState('');
   const handleSubmit = useCallback(
     async (data: RegisterFormFields) => {
       try {
-        console.log(data, transformData(data));
+        setTimeout(() => setError(''), 7500);
+
+        const hasCaptain = await AuthAPI.groupHasCaptain(data.group);
+        if (data.isCaptain && hasCaptain) {
+          setError('В групі вже є староста');
+        } else if (!data.isCaptain && !hasCaptain) {
+          setError('Дочекайся поки зареєструється староста');
+        }
+
         await AuthService.register(transformData(data));
-        await router.push('/');
+        await router.push(`/register/email-verification?email=${data.email}`);
       } catch (e) {
-        console.log(e);
+        const errorName = e.response.data.error;
+
+        if (errorName === 'AlreadyRegisteredException') {
+          setError('Пошта або юзернейм вже зайняті');
+        } else if (errorName === 'InvalidTelegramCredentialsException') {
+          setError('Як ти це зробив? :/');
+        } else if (errorName === 'InvalidTelegramCredentialsException') {
+          setError('Як ти це зробив? :/');
+        }
       }
     },
     [router],
@@ -46,21 +65,23 @@ const RegisterForm: FC<RegisterFormProps> = ({ groups }) => {
       initialValues={initialValues}
       onSubmit={handleSubmit}
       validateOnMount
+      validateOnChange
       validationSchema={validationSchema}
     >
       {({ isValid }) => (
         <Form className={styles['form']}>
+          {error && (
+            <AlertPopup
+              title="Помилка!"
+              description={error}
+              color={AlertColor.ERROR}
+            />
+          )}
           <Input
             className={styles['login-input']}
             label="Юзернейм"
             placeholder="Taras1814"
             name="username"
-          />
-          <Input
-            className={styles['login-input']}
-            label="Ім'я"
-            placeholder="Тарас"
-            name="firstName"
           />
           <Input
             className={styles['login-input']}
@@ -70,8 +91,14 @@ const RegisterForm: FC<RegisterFormProps> = ({ groups }) => {
           />
           <Input
             className={styles['login-input']}
+            label="Ім'я"
+            placeholder="Тарас"
+            name="firstName"
+          />
+          <Input
+            className={styles['login-input']}
             label="По батькові"
-            placeholder="Григорович"
+            placeholder="Григорович (опціонально)"
             name="middleName"
           />
           <Input
@@ -83,8 +110,9 @@ const RegisterForm: FC<RegisterFormProps> = ({ groups }) => {
           <div className={styles['one-line']}>
             <Dropdown
               options={transformGroups(groups)}
-              label={'Група'}
-              name={'group'}
+              label="Група"
+              name="group"
+              placeholder="вибери зі списку"
             />
             <div className={styles['checkbox-container']}>
               <Checkbox label={'Я староста'} name={'isCaptain'} />
@@ -94,14 +122,14 @@ const RegisterForm: FC<RegisterFormProps> = ({ groups }) => {
             className={styles['login-input']}
             label="Пароль"
             type={InputType.PASSWORD}
-            placeholder="example"
+            placeholder="введи свій пароль"
             name="password"
           />
           <Input
             className={styles['login-input']}
             label="Підтвердження пароля"
             type={InputType.PASSWORD}
-            placeholder="example"
+            placeholder="підтверди свій пароль"
             name="passwordConfirmation"
           />
           <Checkbox

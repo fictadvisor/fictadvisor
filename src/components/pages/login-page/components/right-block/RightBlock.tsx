@@ -29,7 +29,7 @@ const RightBlock = () => {
     <div className={styles['right-block']}>
       {isError && (
         <AlertPopup
-          title="Неможливо авторизуватись за допомогою telegram"
+          title="Неможливо авторизуватись за допомогою Telegram"
           variant={AlertVariant.FILLED}
           color={AlertColor.ERROR}
         />

@@ -51,8 +51,10 @@
   flex-direction: row;
   display: flex;
   align-items: center;
-  overflow-wrap: anywhere;
-  gap: 14px;
+  gap: 6px;
+  button{
+    width: fit-content;
+  }
 }
 
 .alert {
@@ -78,10 +80,6 @@
     justify-content: unset;
     top: 15%;
     width:100%;
-  }
-
-  .email-not-received{
-    gap: 0;
   }
 
   .icon{

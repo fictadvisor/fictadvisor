@@ -1,5 +1,5 @@
 import RegisterPage from '@/components/pages/register/register-page';
 
-const Index = () => <RegisterPage />;
+const Register = () => <RegisterPage />;
 
-export default Index;
+export default Register;

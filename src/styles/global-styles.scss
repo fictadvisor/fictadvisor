@@ -54,8 +54,8 @@ select:-webkit-autofill:active,
 select:-webkit-autofill:focus {
   -webkit-text-fill-color: $gray-600;
   @include body-secondary;
-  -webkit-box-shadow: 0 0 0 1000px $background-dark-0 inset;
+  -webkit-box-shadow: 0 0 0 1000px $background-dark-0 inset !important;
   font-family: 'Manrope', sans-serif;
-  transition: all 0s 50000s !important;
+  transition: all 0s 50000s;
 }
 

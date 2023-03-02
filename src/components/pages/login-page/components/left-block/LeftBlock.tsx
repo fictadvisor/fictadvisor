@@ -20,7 +20,7 @@ const LeftBlock = () => {
       </h3>
       <Button
         className={styles['register-button']}
-        text="Зареструватися"
+        text="Зареєструватися"
         onClick={() => {
           void push('/register');
         }}
