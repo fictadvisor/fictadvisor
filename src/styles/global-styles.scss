@@ -21,19 +21,16 @@ html, body {
     scrollbar-color: $black $background-dark-200;
   }
 }
-
 ::-webkit-scrollbar{
-  width: 1.11vw;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-thumb{
   background-clip: padding-box;
   transition: all 0.2s ease-in-out;
-  background-color: #D4D4D4;
+  background-color: $gray-400;
   &:hover{
     background-color: $background-dark-200;
-  }
-  &:active{
-    background-color: $gray-300;
   }
 }
 
@@ -44,6 +41,7 @@ html, body {
 ::-webkit-scrollbar-corner {
   background: transparent;
 }
+
 
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
