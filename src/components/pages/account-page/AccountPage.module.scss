@@ -1,14 +1,8 @@
 @import "src/styles/partials/theme";
 
 
-.content {
-  width: 95%;
-  display: flex;
-  flex-direction: column;
-}
-
 .breadcrumb {
-  width: 100%;
+  width: 95%;
   height: 36px;
   background-color: $background-dark-10;
   margin-bottom: 32px;

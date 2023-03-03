@@ -1,6 +1,8 @@
 import { GetAllDTO } from '@/lib/api/group/dto/GetAllDTO';
 import { GetGroupStudentsDTO } from '@/lib/api/group/dto/GetGroupStudentsDTO';
 import { GetRequestDTO } from '@/lib/api/group/dto/GetRequestDTO';
+import { VerifyStudentBody } from '@/lib/api/group/dto/VerifyStudentBody';
+import { VerifyStudentDTO } from '@/lib/api/group/dto/VerifyStudentDTO';
 import { getAuthorizationHeader } from '@/lib/api/utils';
 
 import { client } from '../instance';
@@ -44,5 +46,33 @@ export class GroupAPI {
       getAuthorizationHeader(),
     );
     return res.data;
+  }
+
+  static async removeStudent(groupId, studentId) {
+    await client.delete(
+      `/groups/${groupId}/remove/${studentId}`,
+      getAuthorizationHeader(),
+    );
+  }
+
+  static async switchStudentRole(groupId, studentId, body) {
+    await client.patch(
+      `/groups/${groupId}/switch/${studentId}`,
+      body,
+      getAuthorizationHeader(),
+    );
+  }
+
+  static async verifyStudent(
+    groupId: string,
+    userId: string,
+    body: VerifyStudentBody,
+  ): Promise<VerifyStudentDTO> {
+    const { data } = await client.patch(
+      `/groups/${groupId}/verify/${userId}`,
+      body,
+      getAuthorizationHeader(),
+    );
+    return data;
   }
 }

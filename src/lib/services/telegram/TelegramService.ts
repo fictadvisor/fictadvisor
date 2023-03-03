@@ -29,7 +29,6 @@ class TelegramService {
       const data: AuthTelegramBody =
         (await TelegramService.openAuthenticationDialog()) as AuthTelegramBody;
       const { accessToken, refreshToken } = await AuthAPI.authTelegram(data);
-      console.log(accessToken, refreshToken);
       StorageUtil.setTokens(accessToken, refreshToken);
 
       return true;

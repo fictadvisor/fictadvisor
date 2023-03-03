@@ -1,14 +1,11 @@
-import React, { FC, useState } from 'react';
+import React from 'react';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/router';
 
 import { CustomCheck } from '@/components/common/custom-svg/CustomCheck';
-import { AlertColor } from '@/components/common/ui/alert';
-import AlertPopup from '@/components/common/ui/alert-popup';
 import Button, { ButtonSize } from '@/components/common/ui/button';
 import { Input, InputType } from '@/components/common/ui/form';
 import Link from '@/components/common/ui/link';
-import useAuthentication from '@/hooks/use-authentication';
 import { AuthAPI } from '@/lib/api/auth/AuthAPI';
 import StorageUtil from '@/lib/utils/StorageUtil';
 
@@ -42,7 +39,6 @@ const ChangePasswordForm = () => {
         });
       }
     }
-    console.log(data);
   };
 
   return (

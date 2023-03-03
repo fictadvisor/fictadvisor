@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { isError, useQuery } from 'react-query';
 import {
   AcademicCapIcon,
   LockClosedIcon,
@@ -7,8 +6,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/router';
 
-import { AlertColor } from '@/components/common/ui/alert';
-import AlertPopup from '@/components/common/ui/alert-popup';
+import Breadcrumbs from '@/components/common/ui/breadcrumbs';
 import Loader, { LoaderSize } from '@/components/common/ui/loader';
 import {
   TabItem,
@@ -19,31 +17,18 @@ import {
 } from '@/components/common/ui/tab';
 import { TabItemContentSize } from '@/components/common/ui/tab/tab-item/TabItem';
 import GeneralTab from '@/components/pages/account-page/components/general-tab';
-import GroupTab2 from '@/components/pages/account-page/components/group-tab2';
-import MobileStudentTab from '@/components/pages/account-page/components/mobile-student-tab';
+import GroupTab from '@/components/pages/account-page/components/group-tab';
 import SecurityTab from '@/components/pages/account-page/components/security-tab';
-import StudentTab from '@/components/pages/account-page/components/student-tab';
 import useAuthentication from '@/hooks/use-authentication';
-import useIsMobile from '@/hooks/use-is-mobile/UseIsMobile';
-import { GroupAPI } from '@/lib/api/group/GroupAPI';
 
 import PageLayout from '../../common/layout/page-layout/PageLayout';
 
 import styles from './AccountPage.module.scss';
 
-const getStudentTab = (isMobile, requests, students) => {
-  if (isMobile) {
-    return <MobileStudentTab requests={requests} students={students} />;
-  } else {
-    return <StudentTab requests={requests} students={students} />;
-  }
-};
-
 enum AccountPageTabs {
   GENERAL = 'general',
   SECURITY = 'security',
   GROUP = 'group',
-  GROUPTEST = 'grouptest',
 }
 
 const AccountPage = () => {
@@ -56,11 +41,12 @@ const AccountPage = () => {
     if (!isReady) {
       return;
     }
-
-    (tab as string) in AccountPageTabs && setIndex(tab as AccountPageTabs);
+    if (Object.values(AccountPageTabs).includes(tab as AccountPageTabs)) {
+      setIndex(tab as AccountPageTabs);
+    }
   }, [tab, isReady]);
 
-  const { user, isLoggedIn, isAuthenticationFetching } = useAuthentication();
+  const { isLoggedIn, isAuthenticationFetching } = useAuthentication();
 
   useEffect(() => {
     if (!isLoggedIn && !isAuthenticationFetching) {
@@ -68,24 +54,21 @@ const AccountPage = () => {
     }
   }, [isAuthenticationFetching, isLoggedIn, push]);
 
-  const [isLoading, setIsLoading] = useState(true);
-  const [isError, setIsError] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-
-  useEffect(() => {
-    setIsLoading(isAuthenticationFetching);
-  }, [isAuthenticationFetching]);
-
-  useEffect(() => {
-    setIsSuccess(
-      isLoggedIn && !isLoading && !isAuthenticationFetching && !!user,
-    );
-  }, [isLoggedIn, isLoading, isAuthenticationFetching, user]);
-
   return (
     <PageLayout hasFooter={true}>
-      <div className={styles['content']}>
-        <div className={styles['breadcrumb']}></div>
+      <div className={styles['breadcrumb']}>
+        <Breadcrumbs
+          items={[
+            {
+              label: 'Головна',
+              href: '/',
+            },
+            {
+              label: AccountPagesMapper[index],
+              href: '/account?tab=' + index,
+            },
+          ]}
+        />
       </div>
       <div className={styles['tabs-content']}>
         <TabList className={styles['tab-list']} onChange={setIndex}>
@@ -110,27 +93,19 @@ const AccountPage = () => {
             icon={<UsersIcon className="icon" />}
             value={AccountPageTabs.GROUP}
           />
-          <TabItem
-            size={TabItemContentSize.NORMAL}
-            text="Група"
-            position={TabItemContentPosition.LEFT}
-            icon={<UsersIcon className="icon" />}
-            value={AccountPageTabs.GROUPTEST}
-          />
         </TabList>
         <TabPanelsList
           className={styles['tab-panels-list']}
           currentValue={index}
         >
-          {isLoading && <Loader size={LoaderSize.SMALL} />}
-          {isError && <AlertPopup title="Помилка" color={AlertColor.ERROR} />}
-          {isSuccess && (
+          {isAuthenticationFetching && <Loader size={LoaderSize.SMALL} />}
+          {isLoggedIn && (
             <>
               <TabPanel
                 className={styles['tab-panel']}
                 value={AccountPageTabs.GENERAL}
               >
-                <GeneralTab user={user} />
+                <GeneralTab />
               </TabPanel>
               <TabPanel
                 className={styles['tab-panel']}
@@ -142,13 +117,7 @@ const AccountPage = () => {
                 className={styles['tab-panel']}
                 value={AccountPageTabs.GROUP}
               >
-                <GroupTab2 />
-              </TabPanel>
-              <TabPanel
-                className={styles['tab-panel']}
-                value={AccountPageTabs.GROUPTEST}
-              >
-                <GroupTab2 />
+                <GroupTab />
               </TabPanel>
             </>
           )}

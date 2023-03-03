@@ -7,14 +7,14 @@ type HeaderCardProps = {
   name: string;
   groupName: string;
   position: string;
-  url?: string;
+  url: string;
 };
 
 export const HeaderDesktopCard: React.FC<HeaderCardProps> = ({
   name,
   groupName,
   position,
-  url = '/assets/icons/frog36.png',
+  url,
   ...rest
 }) => {
   return (

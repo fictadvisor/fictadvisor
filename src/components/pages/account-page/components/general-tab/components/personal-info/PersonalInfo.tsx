@@ -25,7 +25,6 @@ const PersonalInfoBlock: FC = () => {
   const [isUpdated, setIsUpdated] = useState(false);
 
   const handleSubmit = async (data: PersonalInfoForm) => {
-    console.log(initialValues, data);
     await UserAPI.changeInfo(user.id, data);
     update();
   };

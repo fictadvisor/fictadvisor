@@ -1,6 +1,5 @@
 import React from 'react';
 import { FC } from 'react';
-import { PlusIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/router';
 
 import { TelegramOutlineIcon } from '@/components/common/custom-svg/TelegramOutline';
@@ -8,6 +7,7 @@ import Button, {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button';
+import CustomDivider from '@/components/pages/account-page/components/divider';
 import ContactsBlock from '@/components/pages/account-page/components/general-tab/components/contacts-block/ContactsBlock';
 import PersonalInfoBlock from '@/components/pages/account-page/components/general-tab/components/personal-info';
 import useAuthentication from '@/hooks/use-authentication';
@@ -15,15 +15,9 @@ import AuthService from '@/lib/services/auth';
 
 import styles from './GeneralTab.module.scss';
 
-interface GeneralTabProps {
-  user;
-}
-
-const GeneralTab: FC<GeneralTabProps> = ({ user: user1 }) => {
+const GeneralTab: FC = () => {
   const { user } = useAuthentication();
-  console.log('YA YEBAV', user1);
-  console.log('CYU HUYNYU', user);
-  const buttonText = user?.telegramId
+  const buttonText = user.telegramId
     ? 'Телеграм під’єднано'
     : "Під'єднати телеграм";
 
@@ -37,10 +31,7 @@ const GeneralTab: FC<GeneralTabProps> = ({ user: user1 }) => {
     <div className={styles['container']}>
       <div className={styles['personal-info']}>
         <PersonalInfoBlock />
-        <div className={styles['division']}>
-          <h4 className={styles['division-text']}>Посилання на соц. мережі</h4>
-          <div className={styles['white']}></div>
-        </div>
+        <CustomDivider text="Посилання на соц. мережі" />
         <ContactsBlock />
       </div>
       <div className={styles['avatar-and-telegram-info']}>

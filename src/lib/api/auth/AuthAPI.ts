@@ -61,7 +61,6 @@ export class AuthAPI {
 
   static async getMe(): Promise<GetMeDTO> {
     const { data } = await client.get(`/auth/me`, getAuthorizationHeader());
-    console.log('ПІЗДА ЄБАНА ЗАПРАЦЮЙ');
     return data;
   }
 
