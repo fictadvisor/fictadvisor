@@ -97,26 +97,14 @@ const AccountPage = () => {
   const isMobile = useIsMobile(1024);
 
   useEffect(() => {
-    setIsLoading(
-      isLoadingRequestStudents ||
-        isLoadingGroupStudents ||
-        isAuthenticationFetching,
-    );
-  }, [
-    isAuthenticationFetching,
-    isLoadingGroupStudents,
-    isLoadingRequestStudents,
-  ]);
-
-  useEffect(() => {
-    setIsError(isErrorStudents || isErrorStudents);
-  }, [isErrorStudents, isErrorRequests]);
+    setIsLoading(isAuthenticationFetching);
+  }, [isAuthenticationFetching]);
 
   useEffect(() => {
     setIsSuccess(
-      isSuccessRequests && isSuccessStudents && isLoggedIn && !isLoading,
+      isLoggedIn && !isLoading && !isAuthenticationFetching && !!user,
     );
-  }, [isSuccessRequests, isSuccessStudents, isLoggedIn, isLoading]);
+  }, [isLoggedIn, isLoading, isAuthenticationFetching, user]);
 
   return (
     <PageLayout hasFooter={true}>
