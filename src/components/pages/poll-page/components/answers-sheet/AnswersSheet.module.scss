@@ -1,6 +1,16 @@
 @import 'src/styles/partials/utils';
 @import 'src/styles/partials/theme';
 
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
 .wrapper {
   width: 632px;
   display: flex;
@@ -121,6 +131,8 @@
     width: 100vw;
     margin: 0;
     height: 100vh;
+    animation-name: appear;
+    animation-duration: 0.3s;
     .answersWrapper {
       display: flex;
       flex-direction: column;
