@@ -1,12 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Formik } from 'formik';
 
 import ArrowButton from '@/components/common/ui/arrow-button/ArrowButton';
 import Button from '@/components/common/ui/button/Button';
 import { RadioGroup, Slider, TextArea } from '@/components/common/ui/form';
+import Loader from '@/components/common/ui/loader/Loader';
 
 import { Category } from '../../PollPage';
 import { Answer } from '../poll-form/PollForm';
+
+import AnswersSaved from './AnswersSaved';
 
 import styles from './AnswersSheet.module.scss';
 
@@ -15,7 +18,6 @@ interface AnswersSheetProps {
   setProgress: React.Dispatch<React.SetStateAction<number[]>>;
   setCurrent: React.Dispatch<React.SetStateAction<number>>;
   setQuestionsListStatus: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsValid: React.Dispatch<React.SetStateAction<boolean>>;
   isTheLast: boolean;
   isValid: boolean;
   current: number;
@@ -24,6 +26,13 @@ interface AnswersSheetProps {
 }
 
 const initialValues = {};
+
+enum SendingStatus {
+  ANY = 'any',
+  LOADING = 'loading',
+  SUCCESS = 'success',
+  ERROR = 'error',
+}
 
 const collectAnswers = (answers: Answer[], values) => {
   let resultAnswers = [...answers];
@@ -60,7 +69,6 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
   answers,
   setQuestionsListStatus,
   setAnswers,
-  setIsValid,
   setProgress,
   isValid,
   setCurrent,
@@ -73,6 +81,10 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
   const handleSubmit = data => {
     console.log('hello', data);
   };
+
+  const [sendingStatus, setIsSendingStatus] = useState<SendingStatus>(
+    SendingStatus.ANY,
+  );
 
   useEffect(() => {
     for (const question of questions.questions) {
@@ -95,90 +107,111 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
 
   return (
     <div className={styles.wrapper}>
-      <div
-        className={styles.toQuestionsList}
-        onClick={() => {
-          setQuestionsListStatus(true);
-        }}
-      >
-        <ArrowButton className={styles.arrow} />
-        <b>
-          {current + 1} . {questions.name}
-        </b>
-      </div>
-      <div className={styles.answersWrapper}>
-        <Formik
-          validateOnMount
-          validateOnChange
-          initialValues={initialValues}
-          onSubmit={handleSubmit}
-          enableReinitialize
-        >
-          {({ values }) => (
-            <Form
-              onChange={() => {
-                answer(values);
-              }}
-              className={styles['form']}
+      {sendingStatus === SendingStatus.LOADING ? (
+        <div className={styles.loaderWrapper}>
+          <Loader />
+        </div>
+      ) : sendingStatus === SendingStatus.SUCCESS ? (
+        <div className={styles.wrapper}>
+          <AnswersSaved />{' '}
+        </div>
+      ) : (
+        <>
+          <div
+            className={styles.toQuestionsList}
+            onClick={() => {
+              setQuestionsListStatus(true);
+            }}
+          >
+            <ArrowButton className={styles.arrow} />
+            <b>
+              {current + 1} . {questions.name}
+            </b>
+          </div>
+          <div className={styles.answersWrapper}>
+            <Formik
+              validateOnMount
+              validateOnChange
+              initialValues={initialValues}
+              onSubmit={handleSubmit}
+              enableReinitialize
             >
-              {questions.questions.map((question, id) => (
-                <div key={question.id} className={styles['question']}>
-                  {question.type === 'TEXT' ? (
-                    <p className={styles['question-number']}>
-                      Відкрите питання
-                    </p>
-                  ) : (
-                    <p className={styles['question-number']}>
-                      Питання {id + 1} / {questions.count}
-                    </p>
-                  )}
+              {({ values }) => (
+                <Form
+                  onChange={() => {
+                    answer(values);
+                  }}
+                  className={styles['form']}
+                >
+                  {questions.questions.map((question, id) => (
+                    <div key={question.id} className={styles['question']}>
+                      {question.type === 'TEXT' ? (
+                        <p className={styles['question-number']}>
+                          Відкрите питання
+                        </p>
+                      ) : (
+                        <p className={styles['question-number']}>
+                          Питання {id + 1} / {questions.count}
+                        </p>
+                      )}
 
-                  <b className={styles['question-title']}>{question.name}</b>
-                  {question.description && (
-                    <p className={styles['question-description']}>
-                      {question.description}
-                    </p>
-                  )}
-                  {question.type === 'SCALE' ? (
-                    <Slider className={styles['slider']} name={question.id} />
-                  ) : question.type === 'TOGGLE' ? (
-                    <RadioGroup
-                      className={styles['options']}
-                      options={[
-                        { value: '1', label: 'так' },
-                        { value: '0', label: 'ні' },
-                      ]}
-                      name={question.id}
-                    />
-                  ) : (
-                    <TextArea
-                      className={styles['textarea']}
-                      name={question.id}
-                    />
-                  )}
-                  {question.criteria && (
-                    <p className={styles['question-criteria']}>
-                      {question.criteria}
-                    </p>
-                  )}
-                </div>
-              ))}
-              <Button
-                className={styles['button']}
-                text={isTheLast ? 'Завершити опитування' : 'Наступні питання'}
-                type="submit"
-                disabled={isTheLast && !isValid}
-                onClick={() => {
-                  if (!isTheLast) {
-                    setCurrent(prev => ++prev);
-                  }
-                  answer(values);
-                }}
-              />
-            </Form>
-          )}
-        </Formik>
-      </div>
+                      <b className={styles['question-title']}>
+                        {question.name}
+                      </b>
+                      {question.description && (
+                        <p className={styles['question-description']}>
+                          {question.description}
+                        </p>
+                      )}
+                      {question.type === 'SCALE' ? (
+                        <Slider
+                          className={styles['slider']}
+                          name={question.id}
+                        />
+                      ) : question.type === 'TOGGLE' ? (
+                        <RadioGroup
+                          className={styles['options']}
+                          options={[
+                            { value: '1', label: 'так' },
+                            { value: '0', label: 'ні' },
+                          ]}
+                          name={question.id}
+                        />
+                      ) : (
+                        <TextArea
+                          className={styles['textarea']}
+                          name={question.id}
+                        />
+                      )}
+                      {question.criteria && (
+                        <p className={styles['question-criteria']}>
+                          {question.criteria}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                  <Button
+                    className={styles['button']}
+                    text={
+                      isTheLast ? 'Завершити опитування' : 'Наступні питання'
+                    }
+                    type="submit"
+                    disabled={isTheLast && !isValid}
+                    onClick={() => {
+                      answer(values);
+                      if (!isTheLast) {
+                        setCurrent(prev => ++prev);
+                      } else {
+                        setIsSendingStatus(SendingStatus.SUCCESS);
+                      }
+                    }}
+                  />
+                </Form>
+              )}
+            </Formik>
+          </div>
+        </>
+      )}
     </div>
   );
 };

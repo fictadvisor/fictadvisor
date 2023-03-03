@@ -1,0 +1,37 @@
+.savedWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .image {
+    width: 90px;
+    height: 90px;
+  }
+  h1 {
+    font-size: 36px;
+    font-weight: 600;
+    line-height: 46px;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 12px;
+  }
+  b {
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 26px;
+    text-align: center;
+    margin-bottom: 36px;
+  }
+  .buttons {
+    display: flex;
+    width: 100%;
+    .toOtherPolls {
+      width: 50%;
+      margin-right: 16px;
+      height: 48px;
+    }
+    .toMain {
+      width: 50%;
+      height: 48px;
+    }
+  }
+}

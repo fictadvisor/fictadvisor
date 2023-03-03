@@ -70,7 +70,6 @@ const PollForm: React.FC<PollFormProps> = ({ data }) => {
           current={currentCategory}
           setCurrent={setCurrentCategory}
           setQuestionsListStatus={setQuestionsListOpened}
-          answers={answers}
         />
       )}
       {(!isMobile || !isQuestionsListOpened) && (
@@ -83,7 +82,6 @@ const PollForm: React.FC<PollFormProps> = ({ data }) => {
           setQuestionsListStatus={setQuestionsListOpened}
           answers={answers}
           setAnswers={setAnswers}
-          setIsValid={setIsValid}
           isValid={isValid}
         />
       )}

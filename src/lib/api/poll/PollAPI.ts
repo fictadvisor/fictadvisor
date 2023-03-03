@@ -24,7 +24,7 @@ export class PollAPI {
     disciplineTeacherId: string,
   ) {
     const { data } = await client.post(
-      `/poll/answers/${disciplineTeacherId}`,
+      `/disciplineTeachers/${disciplineTeacherId}/answers`,
       body,
       getAuthorizationHeader(),
     );
