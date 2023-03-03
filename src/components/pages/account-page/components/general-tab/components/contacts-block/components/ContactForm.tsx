@@ -39,7 +39,7 @@ const ContactForm: FC<ContactFormProps> = ({ refetchContacts }) => {
   };
 
   return (
-    <>
+    <div className={styles['add-social-links-container']}>
       {error && (
         <AlertPopup
           title="Помилка!"
@@ -87,7 +87,7 @@ const ContactForm: FC<ContactFormProps> = ({ refetchContacts }) => {
           </Form>
         )}
       </Formik>
-    </>
+    </div>
   );
 };
 

@@ -3,7 +3,7 @@ import { StudentTableItem } from '@/components/pages/account-page/components/tab
 export const transformStudentsData = (data): StudentTableItem[] =>
   data.map(dataItem => ({
     imgSrc: dataItem.avatar,
-    fullName: `${dataItem.firstName} ${dataItem.lastName} ${dataItem.middleName}`,
+    fullName: `${dataItem.lastName} ${dataItem.firstName} ${dataItem.middleName}`,
     role: dataMapper[dataItem.group.role],
     email: dataItem.email,
     value: dataItem.id,
@@ -12,7 +12,7 @@ export const transformStudentsData = (data): StudentTableItem[] =>
 export const transformRequestsData = (data): StudentTableItem[] =>
   data.map(dataItem => ({
     imgSrc: dataItem.avatar,
-    fullName: `${dataItem.firstName} ${dataItem.lastName} ${dataItem.middleName}`,
+    fullName: `${dataItem.lastName} ${dataItem.firstName} ${dataItem.middleName}`,
     email: dataItem.email,
     value: dataItem.id,
   }));

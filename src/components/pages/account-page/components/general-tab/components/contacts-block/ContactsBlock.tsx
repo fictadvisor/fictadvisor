@@ -25,11 +25,11 @@ const ContactsBlock: FC = () => {
 
   return (
     <>
-      <>
+      <div className={styles['contact-item-container']}>
         {contacts.map((contact, index) => (
           <ContactItem key={index} refetchContacts={refetch} {...contact} />
         ))}
-      </>
+      </div>
       <div className={styles['confirm-button']}>
         <Button
           text="Додати посилання"

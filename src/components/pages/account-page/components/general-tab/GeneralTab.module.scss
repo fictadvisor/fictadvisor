@@ -1,3 +1,5 @@
+@import "src/styles/partials/theme";
+
 .division {
   display: flex;
   margin: 20px 0 30px 0;
@@ -110,4 +112,28 @@
   .change-password-button{
     padding: 6px 12px;
   }
+}
+
+.contact-item{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2.5%;
+  margin-bottom: 12px;
+  a{
+    flex-grow: 1;
+  }
+  button{
+    margin-top: 12px;
+  }
+}
+
+.contact-item-container{
+  width: 100%;
+}
+
+.add-social-links-container{
+  border: 2px solid $background-dark-35;
+  padding: 20px 25px;
+  margin-bottom: 58px;
 }

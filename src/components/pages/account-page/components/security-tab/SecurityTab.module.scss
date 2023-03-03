@@ -20,6 +20,7 @@
 
 .button-container{
   width: 20%;
+  margin-bottom: 54px;
 }
 
 .button-container-mobile{
@@ -49,6 +50,13 @@
   padding-left: 10px;
 }
 
+.user-information{
+  width: 40%;
+  div{
+    margin-bottom: 30px;
+  }
+}
+
 @media screen and (max-width: 1024px) {
   .input-form{
     width: 100%;
@@ -74,5 +82,8 @@
   }
   .change-password-button{
     padding: 6px 12px;
+  }
+  .user-information{
+    width: 100%;
   }
 }

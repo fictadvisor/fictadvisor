@@ -6,6 +6,7 @@ import { Contact } from '@/components/pages/account-page/components/general-tab/
 import useAuthentication from '@/hooks/use-authentication';
 import { UserAPI } from '@/lib/api/user/UserAPI';
 
+import styles from '../../../GeneralTab.module.scss';
 interface ContactProps extends Contact {
   refetchContacts;
 }
@@ -22,7 +23,7 @@ const ContactItem: FC<ContactProps> = ({
   };
 
   return (
-    <>
+    <div className={styles['contact-item']}>
       <ImmutableInput
         href={link}
         name={name}
@@ -30,7 +31,7 @@ const ContactItem: FC<ContactProps> = ({
         label={displayName}
       />
       <TrashBucketButton onClick={handleDeleteClick} />
-    </>
+    </div>
   );
 };
 
