@@ -21,7 +21,7 @@ const ContactsBlock: FC = () => {
   );
   const contacts = data?.contacts || [];
 
-  const handleClick = () => setIsOpened(true);
+  const handleClick = () => setIsOpened(!isOpened);
 
   return (
     <>

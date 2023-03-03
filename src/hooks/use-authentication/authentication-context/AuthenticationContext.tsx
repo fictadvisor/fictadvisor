@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useState } from 'react';
+import React, { FC, ReactNode, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { AxiosError } from 'axios';
 
@@ -25,6 +25,10 @@ const AuthenticationProvider: FC<AuthenticationProviderProps> = ({
       refetchOnWindowFocus: false,
     },
   );
+
+  useEffect(() => {
+    setIsFetching(isQueryFetching);
+  }, [isQueryFetching]);
 
   if (error && !isFetching) {
     const status = (error as AxiosError).response?.status;

@@ -1,115 +1,18 @@
 import React from 'react';
-import { Form, Formik } from 'formik';
 
-import { CustomCheck } from '@/components/common/custom-svg/CustomCheck';
 import Button, {
   ButtonColor,
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button';
-import { Input, InputSize, InputType } from '@/components/common/ui/form';
 import ImmutableInput from '@/components/common/ui/immutable-input';
-import { initialValues } from '@/components/pages/password-recovery/create-password-page/components/create-password-form/constants';
-import { CreatePasswordFormFields } from '@/components/pages/password-recovery/create-password-page/components/create-password-form/types';
-import { validationSchema } from '@/components/pages/password-recovery/create-password-page/components/create-password-form/validation';
+import ChangePasswordForm from '@/components/pages/account-page/components/security-tab/components/change-password-form';
+import useAuthentication from '@/hooks/use-authentication';
 
 import styles from './SecurityTab.module.scss';
 
-const ChangePasswordForm = () => {
-  const handleSubmit = (data: CreatePasswordFormFields) => {
-    console.log({ data });
-  };
-
-  return (
-    <Formik
-      initialValues={initialValues}
-      onSubmit={handleSubmit}
-      validationSchema={validationSchema}
-      validateOnMount
-      validateOnChange
-    >
-      {({ isValid, errors }) => (
-        <Form className={styles['form']}>
-          <Input
-            className={styles['input']}
-            isSuccessOnDefault={true}
-            label="Поточний пароль"
-            placeholder="user2000"
-            size={InputSize.LARGE}
-            type={InputType.PASSWORD}
-            name="Password"
-          />
-          <Input
-            className={styles['input']}
-            isSuccessOnDefault={true}
-            label="Новий пароль"
-            placeholder="user2000"
-            size={InputSize.LARGE}
-            type={InputType.PASSWORD}
-            name="createPassword"
-          />
-          <Input
-            className={styles['input']}
-            isSuccessOnDefault={true}
-            label="Підтвердження паролю"
-            placeholder="user2000"
-            size={InputSize.LARGE}
-            type={InputType.PASSWORD}
-            name="confirmPassword"
-            disabled={errors.createPassword != null}
-          />
-          <div className={styles['confirm-button']}>
-            <Button
-              text="Оновити пароль"
-              startIcon={<CustomCheck />}
-              size={ButtonSize.MEDIUM}
-              type="submit"
-              disabled={!isValid}
-              className={styles['change-password-button']}
-            />
-          </div>
-          <div className={styles['confirm-button-mobile']}>
-            <Button
-              text="Оновити пароль"
-              startIcon={<CustomCheck />}
-              size={ButtonSize.SMALL}
-              type="submit"
-              disabled={!isValid}
-              className={styles['change-password-button']}
-            />
-          </div>
-        </Form>
-      )}
-    </Formik>
-  );
-};
-
-const getUserInformation = () => (
-  // <Formik
-  //   initialValues={initialValues}
-  //   onSubmit={handleSubmit}
-  //   validationSchema={validationSchema}
-  //   validateOnMount
-  //   validateOnChange
-  // >
-  //   <Form>
-  //     <Input
-  //       className={styles['input']}
-  //       label="Юзернейм"
-  //       placeholder="Taras1814"
-  //       name="username"
-  //     />
-  //     <Input
-  //       className={styles['input']}
-  //       label="Пошта"
-  //       placeholder="example@gmail.com"
-  //     />
-  //   </Form>
-  // </Formik>
-  <div></div>
-);
-
 const SecurityTab = () => {
+  const { user } = useAuthentication();
   return (
     <div>
       <div className={styles['division']}>
@@ -117,14 +20,17 @@ const SecurityTab = () => {
         <div className={styles['white']}></div>
         <div className={styles['button']}></div>
       </div>
-      <div className={styles['input-form']}>{ChangePasswordForm()}</div>
+      <div className={styles['input-form']}>
+        <ChangePasswordForm />
+      </div>
       <div className={styles['division']}>
         <h4 className={styles['division-text']}>Юзернейм і пошта</h4>
         <div className={styles['white']}></div>
         <div className={styles['button']}></div>
       </div>
-      <div className={styles['changePassword']}>
-        <ImmutableInput value={} href={} />
+      <div className={styles['user-information']}>
+        <ImmutableInput label="Юзернейм" value={user.username} />
+        <ImmutableInput label="Пошта" value={user.email} />
       </div>
       <div className={styles['division']}>
         <div className={styles['white']}></div>

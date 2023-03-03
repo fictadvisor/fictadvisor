@@ -94,8 +94,6 @@ const AccountPage = () => {
   const [isError, setIsError] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const isMobile = useIsMobile(1024);
-
   useEffect(() => {
     setIsLoading(isAuthenticationFetching);
   }, [isAuthenticationFetching]);
@@ -154,7 +152,7 @@ const AccountPage = () => {
                 className={styles['tab-panel']}
                 value={AccountPageTabs.GENERAL}
               >
-                <GeneralTab />
+                <GeneralTab user={user} />
               </TabPanel>
               <TabPanel
                 className={styles['tab-panel']}
@@ -166,11 +164,7 @@ const AccountPage = () => {
                 className={styles['tab-panel']}
                 value={AccountPageTabs.GROUP}
               >
-                {getStudentTab(
-                  isMobile,
-                  requestStudents.students,
-                  groupStudents.students,
-                )}
+                <GroupTab2 />
               </TabPanel>
               <TabPanel
                 className={styles['tab-panel']}

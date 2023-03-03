@@ -15,10 +15,15 @@ import AuthService from '@/lib/services/auth';
 
 import styles from './GeneralTab.module.scss';
 
-const GeneralTab = () => {
-  const { user } = useAuthentication();
+interface GeneralTabProps {
+  user;
+}
 
-  const buttonText = user.telegramId
+const GeneralTab: FC<GeneralTabProps> = ({ user: user1 }) => {
+  const { user } = useAuthentication();
+  console.log('YA YEBAV', user1);
+  console.log('CYU HUYNYU', user);
+  const buttonText = user?.telegramId
     ? 'Телеграм під’єднано'
     : "Під'єднати телеграм";
 

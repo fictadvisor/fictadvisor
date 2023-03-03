@@ -19,7 +19,7 @@ const LoginForm: FC = () => {
     async (data: LoginFormFields, { setErrors }) => {
       try {
         await AuthService.login(data);
-        //await push('/');
+        await push('/');
       } catch (e) {
         setErrors({
           username: 'Користувача з таким паролем та поштою не знайдено',

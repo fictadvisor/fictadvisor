@@ -51,7 +51,7 @@ export class AuthAPI {
   }
 
   static async changePassword(body: ChangePasswordBody): Promise<TokensDTO> {
-    const { data } = await client.patch(
+    const { data } = await client.put(
       '/auth/updatePassword',
       body,
       getAuthorizationHeader(),
@@ -61,6 +61,7 @@ export class AuthAPI {
 
   static async getMe(): Promise<GetMeDTO> {
     const { data } = await client.get(`/auth/me`, getAuthorizationHeader());
+    console.log('ПІЗДА ЄБАНА ЗАПРАЦЮЙ');
     return data;
   }
 

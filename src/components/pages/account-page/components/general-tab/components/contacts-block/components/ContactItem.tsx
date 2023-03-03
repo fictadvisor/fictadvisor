@@ -27,8 +27,8 @@ const ContactItem: FC<ContactProps> = ({
       <ImmutableInput
         href={link}
         name={name}
-        value={link}
-        label={displayName}
+        value={displayName}
+        label={name}
       />
       <TrashBucketButton onClick={handleDeleteClick} />
     </div>
