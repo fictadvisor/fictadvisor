@@ -32,9 +32,6 @@ const QuestionsList: React.FC<QuestionListProps> = ({
   answers,
 }) => {
   const { lastName, firstName, middleName, avatar } = teacher;
-  useEffect(() => {
-    console.log(categories);
-  }, []);
 
   return (
     <div className={styles.wrapper}>
