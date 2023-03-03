@@ -129,9 +129,6 @@ export class GroupService {
   async moderatorSwitch (groupId: string, userId: string, { roleName }: RoleDTO) {
     const user = await this.userRepository.get(userId);
 
-    if (roleName !== RoleName.MODERATOR && roleName === RoleName.STUDENT) {
-      throw new NoPermissionException();
-    }
     if (user.student.groupId !== groupId) {
       throw new NoPermissionException();
     }
