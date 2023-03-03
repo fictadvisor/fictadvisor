@@ -34,8 +34,6 @@ const RegisterForm: FC<RegisterFormProps> = ({ groups }) => {
   const handleSubmit = useCallback(
     async (data: RegisterFormFields) => {
       try {
-        setTimeout(() => setError(''), 7500);
-
         const hasCaptain = await AuthAPI.groupHasCaptain(data.group);
         if (data.isCaptain && hasCaptain) {
           setError('В групі вже є староста');
@@ -75,6 +73,7 @@ const RegisterForm: FC<RegisterFormProps> = ({ groups }) => {
               title="Помилка!"
               description={error}
               color={AlertColor.ERROR}
+              closeTime={7}
             />
           )}
           <Input
