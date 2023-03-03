@@ -19,7 +19,7 @@ import {
 } from '@/components/common/ui/tab';
 import { TabItemContentSize } from '@/components/common/ui/tab/tab-item/TabItem';
 import GeneralTab from '@/components/pages/account-page/components/general-tab';
-import GroupTab from '@/components/pages/account-page/components/group-tab';
+import GroupTab2 from '@/components/pages/account-page/components/group-tab2';
 import MobileStudentTab from '@/components/pages/account-page/components/mobile-student-tab';
 import SecurityTab from '@/components/pages/account-page/components/security-tab';
 import StudentTab from '@/components/pages/account-page/components/student-tab';
@@ -67,28 +67,6 @@ const AccountPage = () => {
       void push('/login');
     }
   }, [isAuthenticationFetching, isLoggedIn, push]);
-
-  const {
-    isSuccess: isSuccessStudents,
-    isError: isErrorStudents,
-    data: groupStudents,
-    isLoading: isLoadingGroupStudents,
-  } = useQuery(['students'], () => GroupAPI.getGroupStudents(user?.group.id), {
-    retry: false,
-    enabled: Boolean(user),
-    refetchOnWindowFocus: false,
-  });
-
-  const {
-    isSuccess: isSuccessRequests,
-    isError: isErrorRequests,
-    isLoading: isLoadingRequestStudents,
-    data: requestStudents,
-  } = useQuery(
-    ['requests'],
-    () => GroupAPI.getRequestStudents(user?.group.id),
-    { retry: false, enabled: Boolean(user), refetchOnWindowFocus: false },
-  );
 
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
@@ -170,7 +148,7 @@ const AccountPage = () => {
                 className={styles['tab-panel']}
                 value={AccountPageTabs.GROUPTEST}
               >
-                <GroupTab />
+                <GroupTab2 />
               </TabPanel>
             </>
           )}
