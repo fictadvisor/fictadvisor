@@ -31,6 +31,12 @@ enum AccountPageTabs {
   GROUP = 'group',
 }
 
+const AccountPagesMapper = {
+  group: 'Група',
+  security: 'Безпека',
+  general: 'Загальне',
+};
+
 const AccountPage = () => {
   const { push, query, isReady } = useRouter();
 

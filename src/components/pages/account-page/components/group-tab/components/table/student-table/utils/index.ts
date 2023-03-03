@@ -7,7 +7,7 @@ export const transformStudentsData = (data): StudentTableItem[] =>
     fullName: `${dataItem.lastName} ${dataItem.firstName} ${dataItem.middleName}`,
     role: dataMapper[dataItem.group.role],
     email: dataItem.email,
-    value: dataItem.id,
+    id: dataItem.id,
   }));
 
 export const transformRequestsData = (data): RequestTableItem[] =>

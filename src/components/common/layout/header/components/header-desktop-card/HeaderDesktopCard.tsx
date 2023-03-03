@@ -26,7 +26,7 @@ export const HeaderDesktopCard: React.FC<HeaderCardProps> = ({
           <span className={styles['header-card-group-name']}>{groupName}</span>
         </div>
       </div>
-      <img src={url} alt="Картинка профілю" />
+      <img src={url} alt="Картинка профілю" style={{ borderRadius: '100%' }} />
     </div>
   );
 };

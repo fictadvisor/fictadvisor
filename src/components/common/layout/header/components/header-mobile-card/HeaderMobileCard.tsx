@@ -14,12 +14,16 @@ export const HeaderMobileCard: React.FC<HeaderMobileCardProps> = ({
   name,
   groupName,
   position,
-  url = '/assets/icons/frog36.png',
+  url,
 }) => {
   return (
     <div className={mergeClassNames(styles[`header-card-container`])}>
       <div className={styles[`header-card-info`]}>
-        <img src={url} alt="Картинка профілю" />
+        <img
+          src={url}
+          alt="Картинка профілю"
+          style={{ borderRadius: '100%' }}
+        />
         <div style={{ marginLeft: '8px' }}>
           <h4 className={styles[`card-name`]}>{name}</h4>
           <div style={{ marginTop: '8px', gap: '8px' }}>

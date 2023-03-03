@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import React, { FC } from 'react';
 import { useQuery } from 'react-query';
 
 import Loader, { LoaderSize } from '@/components/common/ui/loader';

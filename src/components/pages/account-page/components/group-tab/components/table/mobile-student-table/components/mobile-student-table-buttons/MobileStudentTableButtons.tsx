@@ -23,16 +23,17 @@ export interface MobileStudentTableButtonsProps {
   value: number;
   currentValue: number;
   onChange: (value) => void;
-  role: string;
+  student: StudentTableItem;
   variant?: string;
+  refetch;
 }
 
 const MobileStudentTableButtons: FC<MobileStudentTableButtonsProps> = ({
   value,
   currentValue,
   onChange,
-  role,
-  variant,
+  student,
+  refetch,
 }) => {
   const { user } = useAuthentication();
   const handleDelete = async () => {
@@ -57,9 +58,9 @@ const MobileStudentTableButtons: FC<MobileStudentTableButtonsProps> = ({
   const buttonName = student.role ? StudentRole.STUDENT : StudentRole.MODERATOR;
   return (
     <>
-      {variant === StudentRole.CAPTAIN ? (
+      {dataMapper[user.group.role] === StudentRole.CAPTAIN ? (
         <>
-          {role !== StudentRole.CAPTAIN ? (
+          {student.role !== StudentRole.CAPTAIN ? (
             <div className={styles['button']}>
               <IconButton
                 icon={<EllipsisVerticalIcon className={'icon'} />}
@@ -73,12 +74,14 @@ const MobileStudentTableButtons: FC<MobileStudentTableButtonsProps> = ({
                     text={buttonName}
                     variant={ButtonVariant.TEXT}
                     startIcon={buttonIcon}
+                    onClick={handleChangeRole}
                   />
                   <Button
                     className={styles['dropdown-button']}
                     text={'Видалити'}
                     variant={ButtonVariant.TEXT}
                     startIcon={<TrashIcon className={'icon'} />}
+                    onClick={handleDelete}
                   />
                 </div>
               )}
@@ -95,9 +98,9 @@ const MobileStudentTableButtons: FC<MobileStudentTableButtonsProps> = ({
           )}
         </>
       ) : (
-        variant === StudentRole.MODERATOR && (
+        dataMapper[user.group.role] === StudentRole.MODERATOR && (
           <>
-            {!role ? (
+            {!student.role ? (
               <div className={styles['button']}>
                 <IconButton
                   icon={<EllipsisVerticalIcon className={'icon'} />}
@@ -111,6 +114,7 @@ const MobileStudentTableButtons: FC<MobileStudentTableButtonsProps> = ({
                       text={'Видалити'}
                       variant={ButtonVariant.TEXT}
                       startIcon={<TrashIcon className={'icon'} />}
+                      onClick={handleDelete}
                     />
                   </div>
                 )}
