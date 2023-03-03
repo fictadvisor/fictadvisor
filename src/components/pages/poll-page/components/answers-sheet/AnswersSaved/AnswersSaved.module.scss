@@ -35,3 +35,19 @@
     }
   }
 }
+
+@media screen and (max-width: 680px) {
+  .buttons {
+    flex-direction: column;
+    align-items: center;
+    .toOtherPolls,
+    .toOtherPolls {
+      width: 100%;
+    }
+
+    .toOtherPolls {
+      margin-right: 0;
+      margin-bottom: 20px;
+    }
+  }
+}

@@ -26,14 +26,14 @@ const AnswersSaved = () => {
           className={styles.toOtherPolls}
           text={'Пройти нове опитування'}
           type="submit"
-          onClick={void router.push('/poll')}
+          onClick={() => router.push('/poll')}
         />
         <Button
           className={styles.toMain}
           text={'Повернутись на головну'}
           type="submit"
           variant={ButtonVariant.OUTLINE}
-          onClick={void router.push('/')}
+          onClick={() => router.push('/')}
         />
       </div>
     </div>
