@@ -3,42 +3,52 @@
 @import "../../../../styles/partials/typography-mixins";
 
 .card{
-  display: flex;
-  flex-direction: row;
-  background: $background-dark-10;
-  outline: solid 1px $background-dark-50;
-  gap: 20px;
+  box-sizing: border-box;
+  display: grid;
   margin: 40px;
+  width: 100%;
 }
-.contacts{
+.contacts-hidden{
   display: flex;
   flex-direction: column;
   gap: 16px;
   border-left: solid $white 2px;
   width:fit-content;
   height: fit-content;
-  padding-right: 42px;
+  padding-right: calc(42px + 10%);
   padding-left: 42px;
+  grid-column-start: 3;
+  grid-column-end: 4;
+  grid-row-start: 1;
+  grid-row-end: 4;
 }
-
-.info{
-  display: grid;
+.contacts-shown{
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-left: solid $white 2px;
+  width:fit-content;
   height: fit-content;
-  grid-template-columns: 232px 1fr;
+  //padding-right: 142px;
+  padding-left: 42px;
+  grid-column-start: 3;
+  grid-column-end: 4;
+  grid-row-start: 1;
+  grid-row-end: 4;
 }
 
 .photo{
-  outline-color: red;
   grid-column-start: 1;
   grid-column-end: 2;
   grid-row-start: 1;
-  grid-row-end: 3;
+  grid-row-end: 4;
   margin-right: 32px;
 }
 
 .image{
   height:200px;
   width:200px;
+  border-radius: 50%;
 }
 .name-and-rating{
   outline-color: #1C6B1C;
@@ -52,9 +62,14 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
+  overflow-wrap: anywhere;
   h4{
-    @include h4--semi-bold
+    @include h4--semi-bold;
+
+
   }
+  padding-bottom: 26px;
+  padding-right: 42px;
 }
 
 .tags-and-info{
@@ -62,48 +77,125 @@
   grid-column-end: 3;
   grid-row-start: 2;
   grid-row-end: 3;
+
   h6{
     @include body-primary;
   }
+  padding-right: 42px;
 }
+
 .tags{
   display: flex;
   flex-direction: row;
   height: fit-content;
   gap: 8px;
+  padding-bottom: 26px;
+}
+.contacts-button-wrapper {
+  display: none;
 }
 
 
+@media screen and (max-width: 768px) {
+  .card {
+    box-sizing: border-box;
 
-@media screen and (max-width: 768px){
+    width: 100%;
+    margin: 10px;
+    grid-template-columns:  auto 1fr;
+  }
+
+  .photo {
+    width: fit-content;
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+  .image {
+    height: 160px;
+    width: 160px;
+  }
+  .name-and-rating {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 2;
+
+  }
+  .tags-and-info {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 2;
+    grid-row-end: 3;
+    width: 90%;
+
+  }
+  .contacts-hidden{
+    display: none;
+  }
+  .contacts-shown{
+    display: flex;
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 4;
+    grid-row-end: 5;
+    padding-right: unset;
+    padding-left: unset;
+    border: none;
+  }
+
+  .contacts-button-wrapper{
+    display: flex;
+    width: 100%;
+    align-items: center;
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 3;
+    grid-row-end: 4;
+
+  }
+  .contacts-button{
+    padding-left: 0;
+    &:hover {
+      text-decoration: none;
+      border: transparent;
+    }
+    &:focus:not(:active) {
+      border: transparent;
+    }
+    &:active {
+      text-decoration: none;
+      border: transparent;
+    }
+  }
+}
+
+@media screen and (max-width: 480px){
   .card{
-    flex-direction: column;
+    box-sizing: border-box;
+    margin: 12px;
     gap: 14px;
     width: 100%;
-    margin: unset;
+    grid-template-columns:  73px 1fr ;
   }
-  .info{
-    grid-template-columns:  73px 1fr;
-  }
+
   .photo{
     width: fit-content;
     grid-column-start: 1;
     grid-column-end: 2;
     grid-row-start: 1;
     grid-row-end: 2;
-    margin-right: 5px;
-
   }
   .image{
-    height:68px;
-    width:68px;
+    height: 68px;
+    width: 68px;
   }
   .name-and-rating{
     grid-column-start: 2;
     grid-column-end: 3;
     grid-row-start: 1;
     grid-row-end: 2;
-    gap: 5px;
     h4{
       @include button--bold;
     }
@@ -113,13 +205,39 @@
     grid-column-end: 3;
     grid-row-start: 2;
     grid-row-end: 3;
+    width: 90%;
     h6{
       @include overline-text;
     }
   }
-  .contacts{
+  .contacts-button-wrapper{
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 3;
+    grid-row-end: 4;
+    &:hover {
+      text-decoration: none;
+      border: transparent;
+    }
+    &:focus:not(:active) {
+      border: transparent;
+
+    }
+    &:active {
+      border: transparent;
+    }
+  }
+  .contacts-hidden{
+    display: none;
+  }
+  .contacts-shown{
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 4;
+    grid-row-end: 5;
     padding-right: unset;
     padding-left: unset;
-}
+    border: unset;
+  }
 
 }

@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
 
+import Button, {
+  ButtonColor,
+  ButtonSize,
+  ButtonVariant,
+} from '@/components/common/ui/button';
 import {
   TabItem,
   TabItemContentPosition,
@@ -14,9 +19,9 @@ import styles from './PersonalTeacherTabs.module.scss';
 const TabsPage = () => {
   const [index, setIndex] = useState<string>('1');
   return (
-    <div className={styles['test-page-wrap']}>
-      <div className={styles['test-page-content']}>
-        <div className={styles['karusel']}>
+    <div className={styles['tabs']}>
+      <div className={styles['karusel']}>
+        <div className={styles['test-tab-list']}>
           <TabList className={styles['tab-list']} onChange={setIndex}>
             <TabItem
               size={TabItemContentSize.NORMAL}
@@ -26,14 +31,14 @@ const TabsPage = () => {
               value={'1'}
             ></TabItem>
             <TabItem
-              size={TabItemContentSize.SMAll}
+              size={TabItemContentSize.NORMAL}
               className="tab-item"
               text="Предмети"
               position={TabItemContentPosition.LEFT}
               value={'2'}
             ></TabItem>
             <TabItem
-              size={TabItemContentSize.SMAll}
+              size={TabItemContentSize.NORMAL}
               className="tab-item"
               text="Відгуки"
               position={TabItemContentPosition.LEFT}
@@ -41,7 +46,7 @@ const TabsPage = () => {
               value={'3'}
             ></TabItem>
             <TabItem
-              size={TabItemContentSize.SMAll}
+              size={TabItemContentSize.NORMAL}
               className="tab-item"
               text="Семестри"
               position={TabItemContentPosition.LEFT}
@@ -49,18 +54,118 @@ const TabsPage = () => {
             ></TabItem>
           </TabList>
         </div>
-        <TabPanelsList className="tab-panels-list" currentValue={index}>
-          <TabPanel className="tab-panel" value={'1'}>
-            Apple
-          </TabPanel>
-          <TabPanel className="tab-panel" value={'2'}>
-            Computer
-          </TabPanel>
-          <TabPanel className="tab-panel" value={'3'}>
-            Iphone
-          </TabPanel>
-        </TabPanelsList>
       </div>
+
+      <TabPanelsList className={styles['tab-panels-list']} currentValue={index}>
+        <TabPanel className="tab-panel" value={'1'}>
+          <div className={styles['my-tab-panel']}>
+            <div className={styles['text']}>
+              <p>
+                Статистика викладача ще збирається, як тільки опитування буде
+                завершене, результат буде опублікований. Опитувнання буде
+                впродовж 2 тижнів. Ви можете пройти опитування.
+              </p>
+            </div>
+            <div className={styles['button-wrapper-desktop']}>
+              <Button
+                text={'Пройти опитування'}
+                variant={ButtonVariant.FILLED}
+                color={ButtonColor.PRIMARY}
+                size={ButtonSize.LARGE}
+              />
+            </div>
+            <div className={styles['button-wrapper-mobile']}>
+              <Button
+                text={'Пройти опитування'}
+                variant={ButtonVariant.FILLED}
+                color={ButtonColor.PRIMARY}
+                size={ButtonSize.SMALL}
+              />
+            </div>
+          </div>
+        </TabPanel>
+        <TabPanel className="tab-panel" value={'2'}>
+          <div className={styles['my-tab-panel']}>
+            <div className={styles['text']}>
+              <p>
+                Статистика викладача ще збирається, як тільки опитування буде
+                завершене, результат буде опублікований. Опитувнання буде
+                впродовж 2 тижнів. Ви можете пройти опитування.
+              </p>
+            </div>
+            <div className={styles['button-wrapper-desktop']}>
+              <Button
+                text={'Пройти опитування'}
+                variant={ButtonVariant.FILLED}
+                color={ButtonColor.PRIMARY}
+                size={ButtonSize.LARGE}
+              />
+            </div>
+            <div className={styles['button-wrapper-mobile']}>
+              <Button
+                text={'Пройти опитування'}
+                variant={ButtonVariant.FILLED}
+                color={ButtonColor.PRIMARY}
+                size={ButtonSize.SMALL}
+              />
+            </div>
+          </div>
+        </TabPanel>
+        <TabPanel className="tab-panel" value={'3'}>
+          <div className={styles['my-tab-panel']}>
+            <div className={styles['text']}>
+              <p>
+                Статистика викладача ще збирається, як тільки опитування буде
+                завершене, результат буде опублікований. Опитувнання буде
+                впродовж 2 тижнів. Ви можете пройти опитування.
+              </p>
+            </div>
+            <div className={styles['button-wrapper-desktop']}>
+              <Button
+                text={'Пройти опитування'}
+                variant={ButtonVariant.FILLED}
+                color={ButtonColor.PRIMARY}
+                size={ButtonSize.LARGE}
+              />
+            </div>
+            <div className={styles['button-wrapper-mobile']}>
+              <Button
+                text={'Пройти опитування'}
+                variant={ButtonVariant.FILLED}
+                color={ButtonColor.PRIMARY}
+                size={ButtonSize.SMALL}
+              />
+            </div>
+          </div>
+        </TabPanel>
+        <TabPanel className="tab-panel" value={'4'}>
+          <div className={styles['my-tab-panel']}>
+            <div className={styles['text']}>
+              <p>
+                Статистика викладача ще збирається, як тільки опитування буде
+                завершене, результат буде опублікований. Опитувнання буде
+                впродовж 2 тижнів. Ви можете пройти опитування.
+              </p>
+            </div>
+            <div className={styles['button-wrapper-desktop']}>
+              <Button
+                text={'Пройти опитування'}
+                variant={ButtonVariant.FILLED}
+                color={ButtonColor.PRIMARY}
+                size={ButtonSize.LARGE}
+              />
+            </div>
+            <div className={styles['button-wrapper-mobile']}>
+              <Button
+                text={'Пройти опитування'}
+                variant={ButtonVariant.FILLED}
+                color={ButtonColor.PRIMARY}
+                size={ButtonSize.SMALL}
+              />
+            </div>
+          </div>
+        </TabPanel>
+      </TabPanelsList>
     </div>
   );
 };

@@ -1,3 +1,5 @@
+import { ContactType } from "@/components/pages/personal-teacher-page/contacts";
+
 export interface GetTeacherDTO {
   id: string;
   firstName: string;
@@ -9,7 +11,7 @@ export interface GetTeacherDTO {
   contacts: {
     link: string;
     id: string;
-    name: string;
+    name: ContactType;
     displayName: string;
   }[];
 }

@@ -1,0 +1,16 @@
+.contact{
+  display: flex;
+  flex-direction: row;
+  width: fit-content;
+  gap: 8px;
+  align-items: center;
+}
+.icon-small{
+  width: 18px;
+  height: 18px;
+}
+
+.icon-big{
+  width: 24px;
+  height: 24px;
+}

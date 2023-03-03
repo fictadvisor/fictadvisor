@@ -13,21 +13,45 @@
   margin-left: 60px;
   margin-right: 60px;
   width: 100%;
+
+.tabs{
+  width: 100%;
 }
-.cardy{
+}
+.card-wrapper{
+box-sizing: border-box;
+  width: 100%;
   display: flex;
   flex-direction: row;
-  background: $background-dark-10;
+  background: deeppink;
   outline: solid 1px $background-dark-50;
   gap: 15px;
-  width: 100%;
+  margin-bottom: 24px;
+}
+.breadcrumbs{
+  margin-top: 16px;
+  margin-bottom: 16px;
 }
 
 @media screen and (max-width: 768px){
   .personal-teacher-page-content{
-    width: 100%;
     margin-left: 10px;
     margin-right: 10px;
   }
+  .card-wrapper{
+    margin-bottom: 16px;
+  }
+}
 
+@media screen and (max-width: 480px){
+  .personal-teacher-page-content{
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  .card-wrapper{
+    margin-bottom: 16px;
+  }
+  .tabs-wrapper{
+    max-width: 100px;
+  }
 }
