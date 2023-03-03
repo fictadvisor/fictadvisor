@@ -34,6 +34,7 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
   setAnswers,
   setIsValid,
   isValid,
+  setCurrent,
 }) => {
   for (const question of questions.questions) {
     if (question.type === 'SCALE') {
@@ -138,6 +139,9 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
                     }
                   }
                   setAnswers(resultAnswers);
+                  if (!isTheLast) {
+                    setCurrent(prev => ++prev);
+                  }
                 }}
               />
             </Form>

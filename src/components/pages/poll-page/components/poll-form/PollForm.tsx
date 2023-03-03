@@ -52,7 +52,7 @@ const PollForm: React.FC<PollFormProps> = ({ data }) => {
 
   useEffect(() => {
     setQuestionsArray(getAllQuestionsArray(categories));
-  }, [categories]);
+  }, []);
 
   useEffect(() => {
     setCurrentQuestions(categories[currentCategory]);

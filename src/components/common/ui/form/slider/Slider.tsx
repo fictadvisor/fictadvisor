@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useRef } from 'react';
+import React, { FunctionComponent, useEffect, useRef } from 'react';
 import { useField } from 'formik';
 import mergeClassNames from 'merge-class-names';
 
@@ -39,6 +39,10 @@ const Slider: FunctionComponent<SliderProps> = ({
     const value = sliderRef.current.value;
     return ((value - min) / (max - min)) * 100;
   };
+
+  useEffect(() => {
+    handleInput();
+  }, []);
 
   return (
     <div className={mergeClassNames(styles['slider-container'], className)}>
