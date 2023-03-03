@@ -68,7 +68,7 @@ const Header: React.FC<HeaderProps> = ({
   const [clicked, setClicked] = useState(false);
   const mobileMenu = (
     <div className={styles['mobile-menu']}>
-      <Link href={''}>
+      <Link href={'/'}>
         <TabItem
           className=""
           text="Головна"
@@ -77,7 +77,7 @@ const Header: React.FC<HeaderProps> = ({
           size={TabItemContentSize.SMAll}
         />
       </Link>
-      <Link href={''}>
+      <Link href={'/poll'}>
         <TabItem
           className=""
           text="Опитування"
@@ -106,7 +106,7 @@ const Header: React.FC<HeaderProps> = ({
       </Link>
     </div>
   );
-  const mobileDivider = <HeaderDivider />;
+
   const handleClick = () => {
     setClicked(clicked => !clicked);
   };
@@ -162,7 +162,8 @@ const Header: React.FC<HeaderProps> = ({
             />
           </div>
 
-          {mobileDivider}
+          <HeaderDivider />
+
           {mobileMenu}
         </div>
       </div>
@@ -221,7 +222,9 @@ const Header: React.FC<HeaderProps> = ({
               />
             </div>
           </div>
-          {mobileDivider}
+
+          <HeaderDivider />
+
           {mobileMenu}
         </div>
       </div>

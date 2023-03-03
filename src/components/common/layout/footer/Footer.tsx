@@ -36,30 +36,35 @@ const Footer: React.FC = () => {
         {
           text: '',
           icon: <TelegramIcon />,
+          url: 'https://t.me/dekanat_fiot',
         },
         {
           text: '',
           icon: <InstagramIcon />,
-          ref: 'https://www.instagram.com/fiotkpi/',
+          url: 'https://www.instagram.com/fiotkpi/',
         },
         {
           text: '',
           icon: <GitHubIcon />,
-          ref: 'https://github.com/fictadvisor',
+          url: 'https://github.com/fictadvisor/',
         },
       ]
     : [
         {
           text: 'GitHub',
           icon: <GitHubIcon />,
-          ref: 'https://github.com/fictadvisor',
+          url: 'https://github.com/fictadvisor/',
         },
         {
           text: 'Instagram',
           icon: <InstagramIcon />,
-          ref: 'https://www.instagram.com/fiotkpi/',
+          url: 'https://www.instagram.com/fiotkpi/',
         },
-        { text: 'Telegram', icon: <TelegramIcon /> },
+        {
+          text: 'Telegram',
+          icon: <TelegramIcon />,
+          url: 'https://t.me/dekanat_fiot',
+        },
       ];
 
   return (
@@ -84,6 +89,7 @@ const Footer: React.FC = () => {
             variant={ButtonVariant.TEXT}
           />
         </div>
+
         <div style={{ height: '36px' }}>
           <Button
             onClick={returnPoll}
@@ -142,8 +148,8 @@ const Footer: React.FC = () => {
         </div>
         <div className={styles['social-buttons']}>
           <Link
-            href={'https://github.com/fictadvisor'}
             style={{ height: '36px', width: '36px' }}
+            href={socialLabels[0].url}
           >
             <Button
               text={socialLabels[0].text}
@@ -153,7 +159,7 @@ const Footer: React.FC = () => {
             />
           </Link>
           <Link
-            href={'https://www.instagram.com/fiotkpi/'}
+            href={socialLabels[1].url}
             style={{ height: '36px', width: '36px' }}
           >
             <Button
@@ -163,7 +169,10 @@ const Footer: React.FC = () => {
               variant={ButtonVariant.TEXT}
             />
           </Link>
-          <Link href={{}} style={{ height: '36px', width: '36px' }}>
+          <Link
+            href={socialLabels[2].url}
+            style={{ height: '36px', width: '36px' }}
+          >
             <Button
               text={socialLabels[2].text}
               startIcon={socialLabels[2].icon}
