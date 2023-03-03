@@ -3,28 +3,37 @@ import { useRouter } from 'next/router';
 
 import PageLayout from '@/components/common/layout/page-layout';
 import Loader, { LoaderSize } from '@/components/common/ui/loader';
+import useAuthentication from '@/hooks/use-authentication';
 import { AuthAPI } from '@/lib/api/auth/AuthAPI';
+import { UserAPI } from '@/lib/api/user/UserAPI';
 import AuthService from '@/lib/services/auth';
+import StorageUtil from '@/lib/utils/StorageUtil';
 
 const OAuthPage = () => {
   const router = useRouter();
   const { token } = router.query;
+  const { user, isLoggedIn, isAuthenticationFetching } = useAuthentication();
 
   const loadData = useCallback(
     async token => {
-      if (router.isReady) {
+      if (router.isReady && !isAuthenticationFetching) {
         const { isRegistered } = await AuthAPI.checkRegisterTelegram(
           token as string,
         );
         if (isRegistered) {
           await AuthService.registerTelegram();
-          await router.push('/register?telegram=true');
+
+          if (isLoggedIn) {
+            await UserAPI.linkTelegram(user.id, StorageUtil.getTelegramInfo());
+            await router.push('account');
+          } else await router.push('/register?telegram=true');
         } else {
-          await router.push('/register?telegram=false');
+          if (isLoggedIn) await router.push('account');
+          else await router.push('/register?telegram=false');
         }
       }
     },
-    [router],
+    [isAuthenticationFetching, isLoggedIn, router, user],
   );
 
   useEffect(() => {

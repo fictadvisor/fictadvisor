@@ -1,3 +1,5 @@
+import { ChangeInfoBody } from '@/lib/api/user/dto/ChangeInfoBody';
+import { LinkTelegramBody } from '@/lib/api/user/dto/LinkTelegramBody';
 import { getAuthorizationHeader } from '@/lib/api/utils';
 
 import { client } from '../instance';
@@ -6,7 +8,26 @@ import { AddByMailBody } from './dto/AddByMailBody';
 import { AddContactBody } from './dto/AddContactBody';
 import { CreateRoleUserBody } from './dto/CreateRoleUserBody';
 import { DeleteRoleUserBody } from './dto/DeleteRoleUserBody';
+
 export class UserAPI {
+  static async changeInfo(userId: string, body: ChangeInfoBody) {
+    const { data } = await client.patch(
+      `/users/${userId}/student`,
+      body,
+      getAuthorizationHeader(),
+    );
+    return data;
+  }
+
+  static async linkTelegram(userId: string, body: LinkTelegramBody) {
+    const { data } = await client.post(
+      `/users/${userId}/telegram`,
+      body,
+      getAuthorizationHeader(),
+    );
+    return data;
+  }
+
   static async addByMailBody(body: AddByMailBody) {
     const { data } = await client.post(
       '/users',

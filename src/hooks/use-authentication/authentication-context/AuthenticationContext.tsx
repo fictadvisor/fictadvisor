@@ -40,6 +40,7 @@ const AuthenticationProvider: FC<AuthenticationProviderProps> = ({
   const context = {
     user: data,
     isAuthenticationFetching: isFetching,
+    update: () => setJwt(StorageUtil.getTokens()),
   };
 
   return (

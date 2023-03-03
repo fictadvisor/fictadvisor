@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
-import { useDispatch } from 'react-redux';
 import {
   AcademicCapIcon,
   LockClosedIcon,
@@ -49,7 +48,8 @@ enum AccountPageTabs {
 
 const AccountPage = () => {
   const { push, query, isReady } = useRouter();
-  const { user, isLoggedIn, isAuthenticationFetching } = useAuthentication();
+  const { user, isLoggedIn, isAuthenticationFetching, update } =
+    useAuthentication();
 
   useEffect(() => {
     if (!isLoggedIn && !isAuthenticationFetching) {
@@ -68,44 +68,24 @@ const AccountPage = () => {
     (tab as string) in AccountPageTabs && setIndex(tab as AccountPageTabs);
   }, [tab, isReady]);
 
-  const dispatch = useDispatch();
-
-  const {
-    isSuccess: isSuccessStudents,
-    data: groupStudents,
-    isLoading: isLoadingGroupStudents,
-  } = useQuery(['students'], () => GroupAPI.getGroupStudents(user?.group.id), {
-    retry: false,
-    enabled: Boolean(user),
-  });
-
-  const {
-    isSuccess: isSuccessRequests,
-    isLoading: isLoadingRequestStudents,
-    data: requestStudents,
-  } = useQuery(
-    ['requests'],
-    () => GroupAPI.getRequestStudents(user?.group.id),
-    { retry: false, enabled: Boolean(user) },
+  const { isLoading: isLoadingGroupStudents, data: groupStudents } = useQuery(
+    ['students'],
+    () => GroupAPI.getGroupStudents(user?.group.id),
+    {
+      retry: false,
+      enabled: Boolean(user),
+      refetchOnWindowFocus: false,
+    },
   );
 
+  const { isLoading: isLoadingRequestStudents, data: requestStudents } =
+    useQuery(['requests'], () => GroupAPI.getRequestStudents(user?.group.id), {
+      retry: false,
+      enabled: Boolean(user),
+      refetchOnWindowFocus: false,
+    });
+
   const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    if (isSuccessStudents) {
-      dispatch(setStudents(groupStudents));
-    }
-
-    if (isSuccessRequests) {
-      dispatch(setRequests({ requests: requestStudents.students }));
-    }
-  }, [
-    dispatch,
-    isSuccessRequests,
-    isSuccessStudents,
-    requestStudents,
-    groupStudents,
-  ]);
 
   const isMobile = useIsMobile(1024);
 
