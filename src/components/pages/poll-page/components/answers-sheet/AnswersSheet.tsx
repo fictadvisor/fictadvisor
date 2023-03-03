@@ -41,13 +41,13 @@ const collectAnswers = (answers: Answer[], values) => {
   return resultAnswers;
 };
 
-const getProgress = (answers: Answer[], questions) => {
+export const getProgress = (answers: Answer[], questions) => {
   let count = 0;
   const resultAnswers = [...answers];
   for (const question of questions) {
-    const isCompleted =
-      // question.isRequired &&
-      resultAnswers.find(answer => answer.questionId === question.id);
+    const isCompleted = resultAnswers.find(
+      answer => answer.questionId === question.id,
+    );
     if (isCompleted) count++;
   }
   return count;
@@ -82,6 +82,17 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
     }
   }, [questions]);
 
+  const answer = values => {
+    const resultAnswers = collectAnswers(answers, values); // question =)
+    setAnswers(resultAnswers);
+    const count = getProgress(resultAnswers, questions.questions);
+    setProgress(previousProgress => {
+      const temp = [...previousProgress];
+      temp[current] = count;
+      return temp;
+    });
+  };
+
   return (
     <div className={styles.wrapper}>
       <div
@@ -106,8 +117,7 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
           {({ values }) => (
             <Form
               onChange={() => {
-                const resultAnswers = collectAnswers(answers, values); // question =)
-                setAnswers(resultAnswers);
+                answer(values);
               }}
               className={styles['form']}
             >
@@ -161,19 +171,8 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
                 onClick={() => {
                   if (!isTheLast) {
                     setCurrent(prev => ++prev);
-                    const resultAnswers = collectAnswers(answers, values);
-                    setAnswers(resultAnswers);
-                    const count = getProgress(
-                      resultAnswers,
-                      questions.questions,
-                    );
-                    console.log(count);
-                    setProgress(previousProgress => {
-                      const temp = [...previousProgress];
-                      temp[current] = count;
-                      return temp;
-                    });
                   }
+                  answer(values);
                 }}
               />
             </Form>

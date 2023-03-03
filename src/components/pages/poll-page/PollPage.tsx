@@ -99,6 +99,12 @@ const PollPage = () => {
   );
 
   useEffect(() => {
+    if (!isLoggedIn && !isAuthenticationFetching) {
+      void router.push('/login');
+    }
+  }, [isAuthenticationFetching, isLoggedIn, router]);
+
+  useEffect(() => {
     setIsLoading(isQuestionsLoading || isAuthenticationFetching);
   }, [isQuestionsLoading, isAuthenticationFetching]);
 
@@ -112,9 +118,9 @@ const PollPage = () => {
         <div className={styles['poll-page__content']}>
           {isLoading ? (
             <Loader />
-          ) : (
+          ) : isSuccessFetching ? (
             <PollForm data={FetchedData || initialState} />
-          )}
+          ) : null}
         </div>
         {!isSuccessFetching && !isLoading && (
           <AlertPopup
