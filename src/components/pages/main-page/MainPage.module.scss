@@ -134,6 +134,10 @@ $font-weight-bold: 700;
 @media only screen and (max-width: $breakpoint-tablet) {
     .build-image {
       right: -50px;
+
+        svg {
+            clip-path: none;
+        }
     }
 }
 
