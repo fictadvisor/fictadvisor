@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Formik } from 'formik';
+import { useRouter } from 'next/router';
 
+import { AlertColor, AlertVariant } from '@/components/common/ui/alert';
+import AlertPopup from '@/components/common/ui/alert-popup/AlertPopup';
 import ArrowButton from '@/components/common/ui/arrow-button/ArrowButton';
 import Button from '@/components/common/ui/button/Button';
 import { RadioGroup, Slider, TextArea } from '@/components/common/ui/form';
 import Loader from '@/components/common/ui/loader/Loader';
+import { PollAPI } from '@/lib/api/poll/PollAPI';
 
 import { Category } from '../../PollPage';
 import { Answer } from '../poll-form/PollForm';
@@ -79,12 +83,15 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
     }
   }
   const handleSubmit = data => {
-    console.log('hello', data);
+    console.log('answered data', data);
   };
 
   const [sendingStatus, setIsSendingStatus] = useState<SendingStatus>(
     SendingStatus.ANY,
   );
+  const router = useRouter();
+  const disciplineTeacherId = router.query.disciplineTeacherId as string;
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     for (const question of questions.questions) {
@@ -95,7 +102,7 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
   }, [questions]);
 
   const answer = values => {
-    const resultAnswers = collectAnswers(answers, values); // question =)
+    const resultAnswers = collectAnswers(answers, values);
     setAnswers(resultAnswers);
     const count = getProgress(resultAnswers, questions.questions);
     setProgress(previousProgress => {
@@ -197,12 +204,24 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
                     }
                     type="submit"
                     disabled={isTheLast && !isValid}
-                    onClick={() => {
+                    onClick={async () => {
                       answer(values);
                       if (!isTheLast) {
                         setCurrent(prev => ++prev);
                       } else {
-                        setIsSendingStatus(SendingStatus.SUCCESS);
+                        setIsSendingStatus(SendingStatus.LOADING);
+                        try {
+                          setErrorMessage('');
+                          const data = await PollAPI.createTeacherGrade(
+                            { answers },
+                            disciplineTeacherId,
+                          );
+                          console.log(data);
+                          setIsSendingStatus(SendingStatus.SUCCESS);
+                        } catch (e) {
+                          setErrorMessage(e.response.data.message);
+                          setIsSendingStatus(SendingStatus.ERROR);
+                        }
                       }
                     }}
                   />
@@ -210,6 +229,14 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
               )}
             </Formik>
           </div>
+          {errorMessage && (
+            <AlertPopup
+              title="Помилка"
+              description={errorMessage}
+              variant={AlertVariant.FILLED}
+              color={AlertColor.ERROR}
+            />
+          )}
         </>
       )}
     </div>
