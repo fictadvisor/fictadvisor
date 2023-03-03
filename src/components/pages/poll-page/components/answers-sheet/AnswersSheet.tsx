@@ -25,6 +25,22 @@ interface AnswersSheetProps {
 
 const initialValues = {};
 
+const collectAnswers = (answers: Answer[], values) => {
+  let resultAnswers = [...answers];
+  for (const valueId of Object.keys(values)) {
+    const index = resultAnswers.findIndex(el => el.questionId === valueId);
+    if (index !== -1) {
+      resultAnswers[index].value = values[valueId];
+    } else {
+      resultAnswers = [
+        ...resultAnswers,
+        { value: values[valueId], questionId: valueId },
+      ];
+    }
+  }
+  return resultAnswers;
+};
+
 const AnswersSheet: React.FC<AnswersSheetProps> = ({
   questions,
   isTheLast,
@@ -75,7 +91,13 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
           enableReinitialize
         >
           {({ values }) => (
-            <Form className={styles['form']}>
+            <Form
+              onChange={() => {
+                const resultAnswers = collectAnswers(answers, values);
+                setAnswers(resultAnswers);
+              }}
+              className={styles['form']}
+            >
               {questions.questions.map((question, id) => (
                 <div key={question.id} className={styles['question']}>
                   {question.type === 'TEXT' ? (
@@ -124,21 +146,6 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
                 type="submit"
                 disabled={isTheLast && !isValid}
                 onClick={() => {
-                  let resultAnswers = [...answers];
-                  for (const valueId of Object.keys(values)) {
-                    const index = resultAnswers.findIndex(
-                      el => el.questionId === valueId,
-                    );
-                    if (index !== -1) {
-                      resultAnswers[index].value = values[valueId];
-                    } else {
-                      resultAnswers = [
-                        ...resultAnswers,
-                        { value: values[valueId], questionId: valueId },
-                      ];
-                    }
-                  }
-                  setAnswers(resultAnswers);
                   if (!isTheLast) {
                     setCurrent(prev => ++prev);
                   }
