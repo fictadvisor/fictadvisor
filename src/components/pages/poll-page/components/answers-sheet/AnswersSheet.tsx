@@ -5,7 +5,7 @@ import ArrowButton from '@/components/common/ui/arrow-button/ArrowButton';
 import Button from '@/components/common/ui/button/Button';
 import { RadioGroup, Slider, TextArea } from '@/components/common/ui/form';
 
-import { Category } from '../../PollPage';
+import { Category, Question } from '../../PollPage';
 import { Answer } from '../poll-form/PollForm';
 
 import styles from './AnswersSheet.module.scss';
@@ -41,6 +41,18 @@ const collectAnswers = (answers: Answer[], values) => {
   return resultAnswers;
 };
 
+const getProgress = (answers: Answer[], questions) => {
+  let count = 0;
+  const resultAnswers = [...answers];
+  for (const question of questions) {
+    const isCompleted =
+      // question.isRequired &&
+      resultAnswers.find(answer => answer.questionId === question.id);
+    if (isCompleted) count++;
+  }
+  return count;
+};
+
 const AnswersSheet: React.FC<AnswersSheetProps> = ({
   questions,
   isTheLast,
@@ -49,6 +61,7 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
   setQuestionsListStatus,
   setAnswers,
   setIsValid,
+  setProgress,
   isValid,
   setCurrent,
 }) => {
@@ -93,7 +106,7 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
           {({ values }) => (
             <Form
               onChange={() => {
-                const resultAnswers = collectAnswers(answers, values);
+                const resultAnswers = collectAnswers(answers, values); // question =)
                 setAnswers(resultAnswers);
               }}
               className={styles['form']}
@@ -148,6 +161,18 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
                 onClick={() => {
                   if (!isTheLast) {
                     setCurrent(prev => ++prev);
+                    const resultAnswers = collectAnswers(answers, values);
+                    setAnswers(resultAnswers);
+                    const count = getProgress(
+                      resultAnswers,
+                      questions.questions,
+                    );
+                    console.log(count);
+                    setProgress(previousProgress => {
+                      const temp = [...previousProgress];
+                      temp[current] = count;
+                      return temp;
+                    });
                   }
                 }}
               />
