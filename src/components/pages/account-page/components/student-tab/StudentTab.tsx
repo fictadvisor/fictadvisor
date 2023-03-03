@@ -10,6 +10,7 @@ import {
   transformRequestsData,
   transformStudentsData,
 } from '@/components/pages/account-page/components/table/student-table/utils';
+import useAuthentication from '@/hooks/use-authentication';
 
 import styles from './StudentsTab.module.scss';
 
@@ -30,7 +31,6 @@ const getRequest = (requests: object, role: StudentRole) => {
 };
 
 interface StudentTabProps {
-  user;
   requests;
   students;
 }

@@ -13,6 +13,7 @@ import {
   transformRequestsData,
   transformStudentsData,
 } from '@/components/pages/account-page/components/table/student-table/utils';
+import useAuthentication from '@/hooks/use-authentication';
 
 import styles from './MobileStudentTab.module.scss';
 
@@ -31,16 +32,16 @@ const getRequest = (requests: object, role: StudentRole) => {
 };
 
 interface MobileStudentTabProps {
-  user;
   requests;
   students;
 }
 
 const MobileStudentTab: FC<MobileStudentTabProps> = ({
-  user,
   requests,
   students,
 }) => {
+  const { user } = useAuthentication();
+
   return (
     <div className={styles['content']}>
       <div className={styles['text-content']}>
