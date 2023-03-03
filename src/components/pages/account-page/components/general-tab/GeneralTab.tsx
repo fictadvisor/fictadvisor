@@ -8,7 +8,9 @@ import Button, {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button';
-import PersonalInfoBlock from '@/components/pages/account-page/components/general-tab/components';
+import ContactsBlock from '@/components/pages/account-page/components/general-tab/components/contacts-block/ContactsBlock';
+import PersonalInfoBlock from '@/components/pages/account-page/components/general-tab/components/personal-info';
+import useAuthentication from '@/hooks/use-authentication';
 import AuthService from '@/lib/services/auth';
 
 import styles from './GeneralTab.module.scss';
@@ -32,32 +34,12 @@ const GeneralTab: FC<GeneralTabProps> = ({ user, update }) => {
   return (
     <div className={styles['container']}>
       <div className={styles['personal-info']}>
-        <PersonalInfoBlock user={user} update={update} />
+        <PersonalInfoBlock />
         <div className={styles['division']}>
           <h4 className={styles['division-text']}>Посилання на соц. мережі</h4>
           <div className={styles['white']}></div>
-          <div className={styles['button']}></div>
         </div>
-        <div className={styles['confirm-button']}>
-          <Button
-            text="Додати посилання"
-            startIcon={<PlusIcon className={'icon'} />}
-            size={ButtonSize.MEDIUM}
-            variant={ButtonVariant.OUTLINE}
-            type="submit"
-            className={styles['change-password-button']}
-          />
-        </div>
-        <div className={styles['confirm-button-mobile']}>
-          <Button
-            text="Додати посилання"
-            startIcon={<PlusIcon className={'icon'} />}
-            size={ButtonSize.SMALL}
-            variant={ButtonVariant.OUTLINE}
-            type="submit"
-            className={styles['change-password-button']}
-          />
-        </div>
+        <ContactsBlock />
       </div>
       <div className={styles['avatar-and-telegram-info']}>
         <div className={styles['avatar']}>

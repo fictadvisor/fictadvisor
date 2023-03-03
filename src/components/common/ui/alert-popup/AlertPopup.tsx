@@ -20,7 +20,7 @@ const AlertPopup: React.FC<AlertPopupProps> = ({
   description,
   color,
   variant,
-  isClosable,
+  isClosable = false,
   className,
   closeTime,
 }) => {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
+import { isError, useQuery } from 'react-query';
 import {
   AcademicCapIcon,
   LockClosedIcon,
@@ -7,6 +7,8 @@ import {
 } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/router';
 
+import { AlertColor } from '@/components/common/ui/alert';
+import AlertPopup from '@/components/common/ui/alert-popup';
 import Loader, { LoaderSize } from '@/components/common/ui/loader';
 import {
   TabItem,
@@ -29,13 +31,11 @@ import PageLayout from '../../common/layout/page-layout/PageLayout';
 
 import styles from './AccountPage.module.scss';
 
-const getStudentTab = (isMobile, user, requests, students) => {
+const getStudentTab = (isMobile, requests, students) => {
   if (isMobile) {
-    return (
-      <MobileStudentTab user={user} requests={requests} students={students} />
-    );
+    return <MobileStudentTab requests={requests} students={students} />;
   } else {
-    return <StudentTab user={user} requests={requests} students={students} />;
+    return <StudentTab requests={requests} students={students} />;
   }
 };
 
@@ -48,14 +48,6 @@ enum AccountPageTabs {
 
 const AccountPage = () => {
   const { push, query, isReady } = useRouter();
-  const { user, isLoggedIn, isAuthenticationFetching, update } =
-    useAuthentication();
-
-  useEffect(() => {
-    if (!isLoggedIn && !isAuthenticationFetching) {
-      void push('/login');
-    }
-  }, [isAuthenticationFetching, isLoggedIn, push]);
 
   const { tab } = query;
   const [index, setIndex] = useState<AccountPageTabs>(AccountPageTabs.GENERAL);
@@ -68,24 +60,39 @@ const AccountPage = () => {
     (tab as string) in AccountPageTabs && setIndex(tab as AccountPageTabs);
   }, [tab, isReady]);
 
-  const { isLoading: isLoadingGroupStudents, data: groupStudents } = useQuery(
-    ['students'],
-    () => GroupAPI.getGroupStudents(user?.group.id),
-    {
-      retry: false,
-      enabled: Boolean(user),
-      refetchOnWindowFocus: false,
-    },
+  const { user, isLoggedIn, isAuthenticationFetching } = useAuthentication();
+
+  useEffect(() => {
+    if (!isLoggedIn && !isAuthenticationFetching) {
+      void push('/login');
+    }
+  }, [isAuthenticationFetching, isLoggedIn, push]);
+
+  const {
+    isSuccess: isSuccessStudents,
+    isError: isErrorStudents,
+    data: groupStudents,
+    isLoading: isLoadingGroupStudents,
+  } = useQuery(['students'], () => GroupAPI.getGroupStudents(user?.group.id), {
+    retry: false,
+    enabled: Boolean(user),
+    refetchOnWindowFocus: false,
+  });
+
+  const {
+    isSuccess: isSuccessRequests,
+    isError: isErrorRequests,
+    isLoading: isLoadingRequestStudents,
+    data: requestStudents,
+  } = useQuery(
+    ['requests'],
+    () => GroupAPI.getRequestStudents(user?.group.id),
+    { retry: false, enabled: Boolean(user), refetchOnWindowFocus: false },
   );
 
-  const { isLoading: isLoadingRequestStudents, data: requestStudents } =
-    useQuery(['requests'], () => GroupAPI.getRequestStudents(user?.group.id), {
-      retry: false,
-      enabled: Boolean(user),
-      refetchOnWindowFocus: false,
-    });
-
   const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const isMobile = useIsMobile(1024);
 
@@ -100,6 +107,16 @@ const AccountPage = () => {
     isLoadingGroupStudents,
     isLoadingRequestStudents,
   ]);
+
+  useEffect(() => {
+    setIsError(isErrorStudents || isErrorStudents);
+  }, [isErrorStudents, isErrorRequests]);
+
+  useEffect(() => {
+    setIsSuccess(
+      isSuccessRequests && isSuccessStudents && isLoggedIn && !isLoading,
+    );
+  }, [isSuccessRequests, isSuccessStudents, isLoggedIn, isLoading]);
 
   return (
     <PageLayout hasFooter={true}>
@@ -141,15 +158,15 @@ const AccountPage = () => {
           className={styles['tab-panels-list']}
           currentValue={index}
         >
-          {isLoading ? (
-            <Loader size={LoaderSize.SMALL} />
-          ) : (
+          {isLoading && <Loader size={LoaderSize.SMALL} />}
+          {isError && <AlertPopup title="Помилка" color={AlertColor.ERROR} />}
+          {isSuccess && (
             <>
               <TabPanel
                 className={styles['tab-panel']}
                 value={AccountPageTabs.GENERAL}
               >
-                <GeneralTab user={user} update={update} />
+                <GeneralTab />
               </TabPanel>
               <TabPanel
                 className={styles['tab-panel']}
@@ -163,7 +180,6 @@ const AccountPage = () => {
               >
                 {getStudentTab(
                   isMobile,
-                  user,
                   requestStudents.students,
                   groupStudents.students,
                 )}
@@ -172,7 +188,7 @@ const AccountPage = () => {
                 className={styles['tab-panel']}
                 value={AccountPageTabs.GROUPTEST}
               >
-                <GroupTab user={user} />
+                <GroupTab />
               </TabPanel>
             </>
           )}

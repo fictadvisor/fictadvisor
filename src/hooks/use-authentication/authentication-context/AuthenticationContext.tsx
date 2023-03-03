@@ -16,10 +16,14 @@ const AuthenticationProvider: FC<AuthenticationProviderProps> = ({
 }) => {
   const [jwt, setJwt] = useState(StorageUtil.getTokens());
 
-  const { error, isFetching, data } = useQuery(
+  const { error, isFetching, data, refetch } = useQuery(
     ['oauth', jwt?.accessToken, jwt?.refreshToken],
     () => AuthAPI.getMe(),
-    { enabled: jwt != null, retry: false, refetchOnWindowFocus: false },
+    {
+      enabled: jwt != null,
+      retry: false,
+      refetchOnWindowFocus: false,
+    },
   );
 
   if (error && !isFetching) {
@@ -40,7 +44,10 @@ const AuthenticationProvider: FC<AuthenticationProviderProps> = ({
   const context = {
     user: data,
     isAuthenticationFetching: isFetching,
-    update: () => setJwt(StorageUtil.getTokens()),
+    update: async () => {
+      setJwt(StorageUtil.getTokens());
+      await refetch();
+    },
   };
 
   return (

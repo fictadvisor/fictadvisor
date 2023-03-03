@@ -8,78 +8,81 @@ import Button, {
   ButtonVariant,
 } from '@/components/common/ui/button';
 import { Input, InputSize, InputType } from '@/components/common/ui/form';
+import ImmutableInput from '@/components/common/ui/immutable-input';
 import { initialValues } from '@/components/pages/password-recovery/create-password-page/components/create-password-form/constants';
 import { CreatePasswordFormFields } from '@/components/pages/password-recovery/create-password-page/components/create-password-form/types';
 import { validationSchema } from '@/components/pages/password-recovery/create-password-page/components/create-password-form/validation';
 
 import styles from './SecurityTab.module.scss';
 
-const handleSubmit = (data: CreatePasswordFormFields) => {
-  console.log({ data });
-};
+const ChangePasswordForm = () => {
+  const handleSubmit = (data: CreatePasswordFormFields) => {
+    console.log({ data });
+  };
 
-const changePassword = () => (
-  <Formik
-    initialValues={initialValues}
-    onSubmit={handleSubmit}
-    validationSchema={validationSchema}
-    validateOnMount
-    validateOnChange
-  >
-    {({ isValid, errors }) => (
-      <Form className={styles['form']}>
-        <Input
-          className={styles['input']}
-          isSuccessOnDefault={true}
-          label="Поточний пароль"
-          placeholder="user2000"
-          size={InputSize.LARGE}
-          type={InputType.PASSWORD}
-          name="Password"
-        />
-        <Input
-          className={styles['input']}
-          isSuccessOnDefault={true}
-          label="Новий пароль"
-          placeholder="user2000"
-          size={InputSize.LARGE}
-          type={InputType.PASSWORD}
-          name="createPassword"
-        />
-        <Input
-          className={styles['input']}
-          isSuccessOnDefault={true}
-          label="Підтвердження паролю"
-          placeholder="user2000"
-          size={InputSize.LARGE}
-          type={InputType.PASSWORD}
-          name="confirmPassword"
-          disabled={errors.createPassword != null}
-        />
-        <div className={styles['confirm-button']}>
-          <Button
-            text="Оновити пароль"
-            startIcon={<CustomCheck />}
-            size={ButtonSize.MEDIUM}
-            type="submit"
-            disabled={!isValid}
-            className={styles['change-password-button']}
+  return (
+    <Formik
+      initialValues={initialValues}
+      onSubmit={handleSubmit}
+      validationSchema={validationSchema}
+      validateOnMount
+      validateOnChange
+    >
+      {({ isValid, errors }) => (
+        <Form className={styles['form']}>
+          <Input
+            className={styles['input']}
+            isSuccessOnDefault={true}
+            label="Поточний пароль"
+            placeholder="user2000"
+            size={InputSize.LARGE}
+            type={InputType.PASSWORD}
+            name="Password"
           />
-        </div>
-        <div className={styles['confirm-button-mobile']}>
-          <Button
-            text="Оновити пароль"
-            startIcon={<CustomCheck />}
-            size={ButtonSize.SMALL}
-            type="submit"
-            disabled={!isValid}
-            className={styles['change-password-button']}
+          <Input
+            className={styles['input']}
+            isSuccessOnDefault={true}
+            label="Новий пароль"
+            placeholder="user2000"
+            size={InputSize.LARGE}
+            type={InputType.PASSWORD}
+            name="createPassword"
           />
-        </div>
-      </Form>
-    )}
-  </Formik>
-);
+          <Input
+            className={styles['input']}
+            isSuccessOnDefault={true}
+            label="Підтвердження паролю"
+            placeholder="user2000"
+            size={InputSize.LARGE}
+            type={InputType.PASSWORD}
+            name="confirmPassword"
+            disabled={errors.createPassword != null}
+          />
+          <div className={styles['confirm-button']}>
+            <Button
+              text="Оновити пароль"
+              startIcon={<CustomCheck />}
+              size={ButtonSize.MEDIUM}
+              type="submit"
+              disabled={!isValid}
+              className={styles['change-password-button']}
+            />
+          </div>
+          <div className={styles['confirm-button-mobile']}>
+            <Button
+              text="Оновити пароль"
+              startIcon={<CustomCheck />}
+              size={ButtonSize.SMALL}
+              type="submit"
+              disabled={!isValid}
+              className={styles['change-password-button']}
+            />
+          </div>
+        </Form>
+      )}
+    </Formik>
+  );
+};
 
 const getUserInformation = () => (
   // <Formik
@@ -114,13 +117,15 @@ const SecurityTab = () => {
         <div className={styles['white']}></div>
         <div className={styles['button']}></div>
       </div>
-      <div className={styles['input-form']}>{changePassword()}</div>
+      <div className={styles['input-form']}>{ChangePasswordForm()}</div>
       <div className={styles['division']}>
         <h4 className={styles['division-text']}>Юзернейм і пошта</h4>
         <div className={styles['white']}></div>
         <div className={styles['button']}></div>
       </div>
-      <div className={styles['changePassword']}>{getUserInformation()}</div>
+      <div className={styles['changePassword']}>
+        <ImmutableInput value={} href={} />
+      </div>
       <div className={styles['division']}>
         <div className={styles['white']}></div>
         <div className={styles['button']}></div>

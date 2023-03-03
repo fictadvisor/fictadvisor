@@ -32,7 +32,6 @@ const LoaderMap = {
 
 const Loader: FC<LoaderProps> = ({ size = LoaderSize.SMALLEST, className }) => {
   const LoaderIcon = LoaderMap[size];
-  console.log(LoaderIcon);
 
   return (
     <div className={mergeClassNames(styles[size], className)}>

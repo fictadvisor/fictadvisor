@@ -1,4 +1,5 @@
 export interface AddContactBody {
+  displayName: string;
   name: string;
-  value: string;
+  link: string;
 }

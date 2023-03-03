@@ -35,7 +35,9 @@ interface StudentTabProps {
   students;
 }
 
-const StudentTab: FC<StudentTabProps> = ({ user, requests, students }) => {
+const StudentTab: FC<StudentTabProps> = ({ requests, students }) => {
+  const { user } = useAuthentication();
+
   return (
     <div className={styles['content']}>
       <div className={styles['text-content']}>
