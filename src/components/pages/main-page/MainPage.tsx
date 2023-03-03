@@ -22,7 +22,6 @@ const MainPage = () => {
   return (
     <PageLayout description={'Головна сторінка'} hasFooter={true}>
       <div className={styles['main-page']}>
-        <div className={styles['nav']}>navbar</div>
         <div className={styles['main-page-content']}>
           <div className={styles['header']}>
             <div className={styles['header-info']}>
