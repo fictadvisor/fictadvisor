@@ -6,3 +6,6 @@ export interface GetTeacherDTO {
   description?: boolean;
   avatar?: boolean;
 }
+export interface GetTeachersDTO {
+  teachers: GetTeacherDTO[];
+}

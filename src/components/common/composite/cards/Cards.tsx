@@ -141,6 +141,7 @@ export const SimpleCard: React.FC<SimpleCardProps> = ({
   details,
   rating,
   disabled,
+  ...rest
 }) => {
   return (
     <article
@@ -150,6 +151,7 @@ export const SimpleCard: React.FC<SimpleCardProps> = ({
         styles['card-effect'],
         styles['simple-card-container'],
       )}
+      {...rest}
     >
       <div
         className={mergeClassNames(

@@ -23,15 +23,23 @@ import {
 } from '@/components/common/ui/icon-button';
 import { GroupAPI } from '@/lib/api/group/GroupAPI';
 
-import { initialValues } from './constants';
+import { SubjectSearchFormFields, TeacherSearchFormFields } from './types';
 
 import styles from '../SearchPage.module.scss';
 
 interface SearchFormProps {
   onSubmit: (obj) => void;
+  initialValues: SubjectSearchFormFields | TeacherSearchFormFields;
+  filterDropDownOptions: { value: string; label: string }[];
+  serchPlaceholder: string;
 }
 
-export const SearchForm: FC<SearchFormProps> = ({ onSubmit }) => {
+export const SearchForm: FC<SearchFormProps> = ({
+  onSubmit,
+  initialValues,
+  filterDropDownOptions,
+  serchPlaceholder,
+}) => {
   const [collapsed, setCollapsed] = useState(false);
 
   const { data: groupData } = useQuery('all-groups', GroupAPI.getAll, {
@@ -53,7 +61,7 @@ export const SearchForm: FC<SearchFormProps> = ({ onSubmit }) => {
             size={InputSize.LARGE}
             type={InputType.SEARCH}
             name="search"
-            placeholder="Оберіть викладача"
+            placeholder={serchPlaceholder}
             showRemark={false}
           />
           <div className={styles['collapse-btn']}>
@@ -94,10 +102,7 @@ export const SearchForm: FC<SearchFormProps> = ({ onSubmit }) => {
                   label="Порядок"
                   showRemark={false}
                   name="sort"
-                  options={[
-                    { value: 'firstName', label: 'Іменем' },
-                    { value: 'lastName', label: 'Прізвищем' },
-                  ]}
+                  options={filterDropDownOptions}
                 />
               </div>
               <div>
