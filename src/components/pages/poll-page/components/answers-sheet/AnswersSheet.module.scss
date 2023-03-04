@@ -111,9 +111,10 @@
     margin-left: 124px;
     max-width: 900px;
     width: 900px;
-  }
-  .textarea {
-    width: 900px;
+
+    .textarea {
+      width: 900px;
+    }
   }
 }
 
@@ -122,9 +123,10 @@
     margin-left: 124px;
     max-width: 800px;
     width: 800px;
-  }
-  .textarea {
-    width: 900px;
+
+    .textarea {
+      width: 900px;
+    }
   }
 }
 
@@ -152,6 +154,7 @@
 @media screen and (max-width: 1280px) {
   .wrapper {
     width: 360px;
+    min-height: calc(100vh);
   }
 }
 
@@ -200,5 +203,22 @@
         }
       }
     }
+  }
+}
+
+.successWrapper {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .wrapper {
+    min-height: 100vh;
+    min-width: 100vw;
+    width: 100%;
+    height: 100%;
+    margin: 0;
   }
 }

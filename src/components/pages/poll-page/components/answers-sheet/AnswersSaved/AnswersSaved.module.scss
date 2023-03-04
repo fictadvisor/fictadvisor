@@ -4,6 +4,18 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  width: calc(100vw);
+  height: 100vh;
+
+  .content {
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
   .image {
     width: 90px;
     height: 90px;
@@ -26,13 +38,14 @@
   .buttons {
     display: flex;
     width: 100%;
+    justify-content: center;
     .toOtherPolls {
-      width: 50%;
+      width: 308px;
       margin-right: 16px;
       height: 48px;
     }
     .toMain {
-      width: 50%;
+      width: 308px;
       height: 48px;
     }
   }
@@ -40,13 +53,15 @@
 
 @media screen and (max-width: 1024px) {
   .savedWrapper {
-    height: 100%;
-    width: 100%;
     padding: 16px;
-    width: 600px;
     display: flex;
     align-items: center;
     justify-content: center;
+
+    .content {
+      max-width: 600px;
+    }
+
     .buttons {
       flex-direction: column;
       align-items: center;
@@ -66,12 +81,14 @@
 @media screen and (max-width: 680px) {
   .savedWrapper {
     padding: 38px 16px;
-    width: 100%;
     .buttons {
       .toOtherPolls,
       .toMain {
         width: 328px;
       }
+    }
+    .content {
+      max-width: 400px;
     }
   }
 }

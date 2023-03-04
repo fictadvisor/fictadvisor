@@ -11,7 +11,7 @@ import Loader from '@/components/common/ui/loader/Loader';
 import { PollAPI } from '@/lib/api/poll/PollAPI';
 
 import { Category } from '../../PollPage';
-import { Answer } from '../poll-form/PollForm';
+import { Answer, SendingStatus } from '../poll-form/PollForm';
 
 import AnswersSaved from './AnswersSaved';
 
@@ -27,16 +27,11 @@ interface AnswersSheetProps {
   current: number;
   answers: Answer[];
   setAnswers: React.Dispatch<React.SetStateAction<Answer[]>>;
+  sendingStatus: SendingStatus;
+  setIsSendingStatus: React.Dispatch<React.SetStateAction<SendingStatus>>;
 }
 
 const initialValues = {};
-
-enum SendingStatus {
-  ANY = 'any',
-  LOADING = 'loading',
-  SUCCESS = 'success',
-  ERROR = 'error',
-}
 
 const collectAnswers = (answers: Answer[], values) => {
   let resultAnswers = [...answers];
@@ -76,6 +71,8 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
   setProgress,
   isValid,
   setCurrent,
+  sendingStatus,
+  setIsSendingStatus,
 }) => {
   for (const question of questions.questions) {
     if (question.type === 'SCALE') {
@@ -86,9 +83,6 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
     console.log('answered data', data);
   };
 
-  const [sendingStatus, setIsSendingStatus] = useState<SendingStatus>(
-    SendingStatus.ANY,
-  );
   const router = useRouter();
   const disciplineTeacherId = router.query.disciplineTeacherId as string;
   const [errorMessage, setErrorMessage] = useState('');
@@ -113,7 +107,13 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
   };
 
   return (
-    <div className={styles.wrapper}>
+    <div
+      className={
+        sendingStatus === SendingStatus.SUCCESS
+          ? styles.successWrapper
+          : styles.wrapper
+      }
+    >
       {sendingStatus === SendingStatus.LOADING ? (
         <div className={styles.loaderWrapper}>
           <Loader />

@@ -17,6 +17,13 @@ export interface Answer {
   value: string;
 }
 
+export enum SendingStatus {
+  ANY = 'any',
+  LOADING = 'loading',
+  SUCCESS = 'success',
+  ERROR = 'error',
+}
+
 const validateResults = (answers: Answer[], questions: Question[]) => {
   for (const question of questions) {
     if (
@@ -49,7 +56,9 @@ const PollForm: React.FC<PollFormProps> = ({ data }) => {
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [currentCategory, setCurrentCategory] = React.useState(0);
   const [questionsArray, setQuestionsArray] = useState<Question[]>([]);
-
+  const [sendingStatus, setIsSendingStatus] = useState<SendingStatus>(
+    SendingStatus.ANY,
+  );
   useEffect(() => {
     setQuestionsArray(getAllQuestionsArray(categories));
   }, []);
@@ -60,18 +69,25 @@ const PollForm: React.FC<PollFormProps> = ({ data }) => {
   }, [currentCategory, categories, answers, questionsArray]);
 
   return (
-    <div className={styles.wrapper}>
-      {(!isMobile || isQuestionsListOpened) && (
-        <QuestionsList
-          categories={categories}
-          teacher={teacher}
-          subject={subject}
-          progress={progress}
-          current={currentCategory}
-          setCurrent={setCurrentCategory}
-          setQuestionsListStatus={setQuestionsListOpened}
-        />
-      )}
+    <div
+      className={
+        sendingStatus === SendingStatus.SUCCESS
+          ? styles.successWrapper
+          : styles.wrapper
+      }
+    >
+      {(!isMobile || isQuestionsListOpened) &&
+        sendingStatus !== SendingStatus.SUCCESS && (
+          <QuestionsList
+            categories={categories}
+            teacher={teacher}
+            subject={subject}
+            progress={progress}
+            current={currentCategory}
+            setCurrent={setCurrentCategory}
+            setQuestionsListStatus={setQuestionsListOpened}
+          />
+        )}
       {(!isMobile || !isQuestionsListOpened) && (
         <AnswersSheet
           questions={currentQuestions}
@@ -83,6 +99,8 @@ const PollForm: React.FC<PollFormProps> = ({ data }) => {
           answers={answers}
           setAnswers={setAnswers}
           isValid={isValid}
+          sendingStatus={sendingStatus}
+          setIsSendingStatus={setIsSendingStatus}
         />
       )}
     </div>

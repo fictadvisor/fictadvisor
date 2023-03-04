@@ -6,6 +6,11 @@
   padding: 36px 188px 80px 60px;
 }
 
+.successWrapper {
+  margin: 0;
+  width: 100%;
+  min-height: calc(100vh);
+}
 @media screen and (max-width: 1024px) {
   .wrapper {
     width: 100vw;
