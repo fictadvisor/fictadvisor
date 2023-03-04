@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 
 import PageLayout from '@/components/common/layout/page-layout';
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
+import Loader, { LoaderSize } from '@/components/common/ui/loader';
 import styles from '@/components/pages/search-pages/SearchPage.module.scss';
 import { TeacherSearchList } from '@/components/pages/search-pages/teacher-search/TeacherSearchList';
 import { GetTeachersBySubjectDTO } from '@/lib/api/subject/dto/GetTeachersBySubjectDTO';
@@ -40,10 +41,13 @@ const SubjectTeacherPage = () => {
     <PageLayout title={data?.subjectName}>
       <div className={styles['layout']}>
         <Breadcrumbs items={breadcrumbs} className={styles['breadcrumb']} />
-        <h4 className={styles['subject-title']}>
-          <b>{data?.subjectName}</b>
-        </h4>
-        {data && <TeacherSearchList teachers={data.teachers} />}
+        <h4 className={styles['subject-title']}>{data?.subjectName}</h4>
+        {isLoading && (
+          <div className={styles['page-loader']}>
+            <Loader size={LoaderSize.SMALLEST} />
+          </div>
+        )}
+        {data && !isLoading && <TeacherSearchList teachers={data.teachers} />}
       </div>
     </PageLayout>
   );
