@@ -10,8 +10,8 @@
 .personal-teacher-page-content{
   display: flex;
   flex-direction: column;
-  margin-left: 60px;
-  margin-right: 60px;
+  padding-left: 60px;
+  padding-right: 60px;
   width: 100%;
 
 .tabs{
@@ -23,20 +23,20 @@ box-sizing: border-box;
   width: 100%;
   display: flex;
   flex-direction: row;
-  background: deeppink;
+  background: $background-dark-10;
   outline: solid 1px $background-dark-50;
   gap: 15px;
   margin-bottom: 24px;
 }
 .breadcrumbs{
-  margin-top: 16px;
-  margin-bottom: 16px;
+  padding-top: 16px;
+  padding-bottom: 16px;
 }
 
 @media screen and (max-width: 768px){
   .personal-teacher-page-content{
-    margin-left: 10px;
-    margin-right: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
   .card-wrapper{
     margin-bottom: 16px;
@@ -45,8 +45,8 @@ box-sizing: border-box;
 
 @media screen and (max-width: 480px){
   .personal-teacher-page-content{
-    margin-left: 10px;
-    margin-right: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
   .card-wrapper{
     margin-bottom: 16px;

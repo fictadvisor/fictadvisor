@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import mergeClassNames from 'merge-class-names';
 
 import { GitHubIcon } from '@/components/common/custom-svg/GitHub';
 import { InstagramIcon } from '@/components/common/custom-svg/Instagram';
@@ -19,14 +20,26 @@ export enum ContactType {
   TWITTER = 'TWITTER',
   MAIL = 'MAIL',
 }
+export enum ContactSize {
+  BIG = 'big',
+  SMALL = 'small',
+}
 
 export interface ContactProps {
   name: ContactType;
   displayName: string;
   link: string;
+  size?: ContactSize;
+  className?: string;
 }
 
-const Contact: React.FC<ContactProps> = ({ name, displayName, link }) => {
+const Contact: React.FC<ContactProps> = ({
+  name,
+  displayName,
+  link,
+  size = ContactSize.BIG,
+  className: additionalClassName,
+}) => {
   const icon = () => {
     switch (name) {
       case ContactType.YOUTUBE:
@@ -44,9 +57,11 @@ const Contact: React.FC<ContactProps> = ({ name, displayName, link }) => {
     }
   };
   return (
-    <div className={styles['contact']}>
-      <div className={styles['icon-big']}>{icon()}</div>
-      <a href={link}>{displayName}</a>
+    <div className={mergeClassNames('contact', additionalClassName)}>
+      <div className={styles[`icon-${size}`]}>{icon()}</div>
+      <a href={link} className={styles[`link-${size}`]}>
+        {displayName}
+      </a>
     </div>
   );
 };

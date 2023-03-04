@@ -7,7 +7,7 @@ import Tag, { TagColor, TagSize } from '@/components/common/ui/tag';
 import styles from '@/components/pages/personal-teacher-page/personal-teacher-card/PersonalTeacherCard.module.scss';
 import { GetTeacherDTO } from '@/lib/api/teacher/dto/GetTeacherDTO';
 
-import Contact, { ContactType } from '../contacts/Contact';
+import Contact, { ContactSize } from '../contacts/Contact';
 //
 // export enum TeacherRoles {
 //   LECTURER = 'LECTURER',
@@ -80,23 +80,25 @@ const PersonalTeacherCard: React.FC<PersonalTeacherCardProps> = props => {
         </div>
         <h6>{props.description}. </h6>
       </div>
-      <div className={styles['contacts-button-wrapper']}>
-        <Button
-          className={styles['contacts-button']}
-          text={'Контакти'}
-          endIcon={isContactsVisible ? <ChevronUpIcon /> : <ChevronDownIcon />}
-          variant={ButtonVariant.TEXT}
-          onClick={() => setContactsVisibility(!isContactsVisible)}
-        />
-      </div>
+
+      <Button
+        className={styles['contacts-button']}
+        text={'Контакти'}
+        endIcon={isContactsVisible ? <ChevronUpIcon /> : <ChevronDownIcon />}
+        variant={ButtonVariant.TEXT}
+        onClick={() => setContactsVisibility(!isContactsVisible)}
+      />
+
       <div
         className={styles[`contacts-${isContactsVisible ? `shown` : `hidden`}`]}
       >
         {props.contacts.map((contact, index) => (
           <Contact
+            key={index}
             name={contact.name}
             displayName={contact.displayName}
             link={'https://www.youtube.com/watch?v=dQw4w9WgXcQ'}
+            size={ContactSize.SMALL}
           />
         ))}
       </div>
