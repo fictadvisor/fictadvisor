@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
-import { AxiosError } from 'axios';
 import { useRouter } from 'next/router';
 
 import { AlertColor, AlertVariant } from '@/components/common/ui/alert';
@@ -113,8 +112,9 @@ const PollPage = () => {
 
   const status =
     FetchingQuestionsError &&
-    (FetchingQuestionsError as AxiosError).response?.status;
+    (FetchingQuestionsError as any).response?.data?.error;
 
+  console.log(status);
   return (
     <PageLayout
       description={'Сторінка для проходження опитування'}
@@ -149,10 +149,12 @@ const PollPage = () => {
           <AlertPopup
             title="Помилка!"
             description={
-              status === 400
+              status === 'InvalidEntityIdException'
                 ? 'Не знайдено опитування з таким id'
-                : status === 403
+                : status === 'AnswerInDatabasePermissionException'
                 ? 'Ви не маєте доступу до цієї сторінки оскільки вже пройшли опитування!'
+                : status === 'NoPermissionException'
+                ? ' У вас недостатньо прав для цієї дії'
                 : 'Помилка на сервері =('
             }
             variant={AlertVariant.FILLED}

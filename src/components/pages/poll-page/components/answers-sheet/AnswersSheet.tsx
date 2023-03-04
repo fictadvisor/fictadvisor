@@ -212,15 +212,32 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
                         setIsSendingStatus(SendingStatus.LOADING);
                         try {
                           setErrorMessage('');
-                          console.log(answers);
-                          const data = await PollAPI.createTeacherGrade(
+                          await PollAPI.createTeacherGrade(
                             { answers },
                             disciplineTeacherId,
                           );
-                          console.log(data);
                           setIsSendingStatus(SendingStatus.SUCCESS);
                         } catch (e) {
-                          setErrorMessage(e.response.data.message);
+                          const errorName = e.response.data.error;
+                          if (errorName === 'InvalidEntityIdException') {
+                            setErrorMessage(
+                              'Не знайдено опитування з таким Id!',
+                            );
+                          } else if (errorName === 'ExcessiveAnswerException') {
+                            setErrorMessage('Знайдено зайві відповіді!');
+                          } else if (
+                            errorName === 'NotEnoughAnswersException'
+                          ) {
+                            setErrorMessage(
+                              ' Ви відповіли не не всі зайві запитання!',
+                            );
+                          } else if (errorName === 'AlreadyAnsweredException') {
+                            setErrorMessage(' Ви вже відповіли!');
+                          } else if (errorName === 'NoPermissionException') {
+                            setErrorMessage('Недостатньо прав!');
+                          } else {
+                            setErrorMessage('Помилка на сервері =(');
+                          }
                           setIsSendingStatus(SendingStatus.ERROR);
                         }
                       }
