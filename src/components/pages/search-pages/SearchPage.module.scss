@@ -1,3 +1,6 @@
+@import "@/styles/partials/typography-mixins";
+@import "@/styles/partials/breakpoints";
+
 .layout {
     width: 100%;
     display: flex;
@@ -20,6 +23,9 @@
     .dropdown-2 {
         width: 100%;
     }
+}
+.subject-title{
+   @include h4--semi-bold;
 }
 .teacher-search-list {
     margin-top: 16px;
@@ -54,7 +60,10 @@
     width: 200px;
     align-self: center;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: $breakpoint-tablet) {
+    .subject-title{
+        @include h6--bold;
+    }
     .form {
         grid-template-columns: 35% 50% 10%;
         justify-items: center;
@@ -78,7 +87,7 @@
     }
 }
 
-@media only screen and (min-width: 768px) and (max-width: 1000px) {
+@media only screen and (min-width: $breakpoint-tablet) and (max-width: $breakpoint-desktop) {
     .teacher-search-list {
         grid-template-columns: repeat(3, 1fr);
         column-gap: 32px;

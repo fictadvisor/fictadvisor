@@ -8,18 +8,18 @@ import { TeacherSearchList } from '@/components/pages/search-pages/teacher-searc
 import { GetTeachersBySubjectDTO } from '@/lib/api/subject/dto/GetTeachersBySubjectDTO';
 import { SubjectsAPI } from '@/lib/api/subject/SubjectAPI';
 
-const breadcrumbs = [
-  {
-    label: 'Головна',
-    href: '/',
-  },
-  {
-    label: 'Предмети',
-    href: '/subjects',
-  },
-];
-
 const SubjectTeacherPage = () => {
+  const breadcrumbs = [
+    {
+      label: 'Головна',
+      href: '/',
+    },
+    {
+      label: 'Предмети',
+      href: '/subjects',
+    },
+  ];
+
   const { query, isReady } = useRouter();
 
   const { data, isLoading } = useQuery<GetTeachersBySubjectDTO>(
@@ -28,13 +28,19 @@ const SubjectTeacherPage = () => {
     { enabled: isReady, staleTime: Infinity },
   );
 
+  if (isReady && data)
+    breadcrumbs.push({
+      label: data.subjectName,
+      href: '#',
+    });
+
   console.log(data);
 
   return (
-    <PageLayout description={'Вчителі'}>
+    <PageLayout title={data?.subjectName}>
       <div className={styles['layout']}>
         <Breadcrumbs items={breadcrumbs} className={styles['breadcrumb']} />
-        <h4>
+        <h4 className={styles['subject-title']}>
           <b>{data?.subjectName}</b>
         </h4>
         {data && <TeacherSearchList teachers={data.teachers} />}

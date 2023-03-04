@@ -50,7 +50,7 @@ export const TeacherSearchPage = () => {
   }, [queryObj, curPage, refetch]);
 
   return (
-    <PageLayout description={'Вчителі'}>
+    <PageLayout title={'Вчителі'}>
       <div className={styles['layout']}>
         <Breadcrumbs items={breadcrumbs} className={styles['breadcrumb']} />
 

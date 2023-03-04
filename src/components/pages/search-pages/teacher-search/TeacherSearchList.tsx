@@ -19,23 +19,26 @@ export const TeacherSearchList = ({
   return (
     <ul className={styles['teacher-search-list']}>
       {teachers &&
-        teachers?.map(teacher => (
-          <li key={teacher.id}>
-            {!teacher.roles && (
-              <RatingCard
-                onClick={() => redirect(teacher.id)}
-                name={`${teacher.lastName} ${teacher.firstName} ${teacher.middleName} `}
-              />
-            )}
-            {teacher.roles && (
-              <RatingCard
-                roles={teacher.roles}
-                onClick={() => redirect(teacher.id)}
-                name={`${teacher.lastName} ${teacher.firstName} ${teacher.middleName} `}
-              />
-            )}
-          </li>
-        ))}
+        teachers?.map(
+          teacher =>
+            teacher.lastName.length > 0 && (
+              <li key={teacher.id}>
+                {!teacher.roles && (
+                  <RatingCard
+                    onClick={() => redirect(teacher.id)}
+                    name={`${teacher.lastName} ${teacher.firstName} ${teacher.middleName}`}
+                  />
+                )}
+                {teacher.roles && (
+                  <RatingCard
+                    roles={teacher.roles}
+                    onClick={() => redirect(teacher.id)}
+                    name={`${teacher.lastName} ${teacher.firstName} ${teacher.middleName} `}
+                  />
+                )}
+              </li>
+            ),
+        )}
     </ul>
   );
 };

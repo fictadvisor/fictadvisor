@@ -51,7 +51,7 @@ const SubjectSearchPage = () => {
   }, [queryObj, curPage, refetch]);
 
   return (
-    <PageLayout description={'Предмети'}>
+    <PageLayout title={'Предмети'}>
       <div className={styles['layout']}>
         <Breadcrumbs items={breadcrumbs} className={styles['breadcrumb']} />
 
