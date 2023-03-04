@@ -48,7 +48,7 @@
 
 .confirm-button{
   width: 50%;
-  margin: 18px 0 35px 0;
+  margin: 5px 0 36px 0;
 }
 
 .confirm-button-mobile {
@@ -67,6 +67,30 @@
 .telegram-button-mobile{
   @extend .telegram-button;
   display: none;
+}
+
+.contact-item{
+  display: flex;
+  align-items: flex-start;
+  gap: 2.5%;
+  margin-bottom: 26px;
+  a{
+    flex-grow: 1;
+  }
+  button{
+    margin-top: 20px;
+  }
+}
+
+.contact-item-container{
+  width: 100%;
+}
+
+.add-social-links-container{
+  border: 2px solid $background-dark-35;
+  padding: 26px 25px;
+  margin-bottom: 55px;
+  border-radius: 6px;
 }
 
 @media screen and (max-width: 1024px){
@@ -112,28 +136,4 @@
   .change-password-button{
     padding: 6px 12px;
   }
-}
-
-.contact-item{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 2.5%;
-  margin-bottom: 12px;
-  a{
-    flex-grow: 1;
-  }
-  button{
-    margin-top: 12px;
-  }
-}
-
-.contact-item-container{
-  width: 100%;
-}
-
-.add-social-links-container{
-  border: 2px solid $background-dark-35;
-  padding: 20px 25px;
-  margin-bottom: 58px;
 }

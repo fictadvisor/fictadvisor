@@ -26,7 +26,6 @@
     align-items: center;
     width: 60%;
     height: 100%;
-    word-break: break-all;
   }
   .img{
     width: 48px;
@@ -104,6 +103,10 @@
   .tag-container{
     display: flex;
     justify-content: center;
+    width: fit-content;
+  }
+  .full-name{
+    width: fit-content;
   }
 }
 

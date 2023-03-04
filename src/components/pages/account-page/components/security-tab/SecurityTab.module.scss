@@ -1,6 +1,6 @@
 .division {
   display: flex;
-  margin: 20px 0 30px 0;
+  margin-bottom: 30px;
   width: 70%;
   align-items: center;
   .white {
@@ -21,6 +21,9 @@
 .button-container{
   width: 20%;
   margin-bottom: 54px;
+  button{
+    padding: 12px 44.5px;
+  }
 }
 
 .button-container-mobile{
@@ -33,12 +36,15 @@
 }
 
 .input {
-  margin-top: 5%;
+  margin-top: 18px;
 }
 
 .confirm-button{
   width: 50%;
-  margin: 18px 0 35px 0;
+  margin: 16px 0 30px 0;
+  button{
+    padding: 12px 24px;
+  }
 }
 
 .confirm-button-mobile {
@@ -67,12 +73,18 @@
   }
   .button-container{
     margin-bottom: 10%;
+    button{
+      padding: 8px 29px;
+    }
   }
   .confirm-button{
     display: none;
   }
   .confirm-button-mobile{
     display: block;
+    button{
+      padding: 6px 12px;
+    }
   }
   .button-container{
     display: none;
