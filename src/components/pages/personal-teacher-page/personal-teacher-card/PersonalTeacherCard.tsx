@@ -98,7 +98,6 @@ const PersonalTeacherCard: React.FC<PersonalTeacherCardProps> = props => {
             name={contact.name}
             displayName={contact.displayName}
             link={'https://www.youtube.com/watch?v=dQw4w9WgXcQ'}
-            size={ContactSize.SMALL}
           />
         ))}
       </div>

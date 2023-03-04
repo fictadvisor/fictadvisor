@@ -1,5 +1,4 @@
 import React from 'react';
-import mergeClassNames from 'merge-class-names';
 
 import { GitHubIcon } from '@/components/common/custom-svg/GitHub';
 import { InstagramIcon } from '@/components/common/custom-svg/Instagram';
@@ -20,26 +19,14 @@ export enum ContactType {
   TWITTER = 'TWITTER',
   MAIL = 'MAIL',
 }
-export enum ContactSize {
-  BIG = 'big',
-  SMALL = 'small',
-}
 
 export interface ContactProps {
   name: ContactType;
   displayName: string;
   link: string;
-  size?: ContactSize;
-  className?: string;
 }
 
-const Contact: React.FC<ContactProps> = ({
-  name,
-  displayName,
-  link,
-  size = ContactSize.BIG,
-  className: additionalClassName,
-}) => {
+const Contact: React.FC<ContactProps> = ({ name, displayName, link }) => {
   const icon = () => {
     switch (name) {
       case ContactType.YOUTUBE:
@@ -52,14 +39,18 @@ const Contact: React.FC<ContactProps> = ({
         return <GitHubIcon />;
       case ContactType.INSTAGRAM:
         return <InstagramIcon />;
+      case ContactType.DISCORD:
+        return <TelegramIcon />;
+      case ContactType.FACEBOOK:
+        return <TelegramIcon />;
       case ContactType.TELEGRAM:
         return <TelegramIcon />;
     }
   };
   return (
-    <div className={mergeClassNames('contact', additionalClassName)}>
-      <div className={styles[`icon-${size}`]}>{icon()}</div>
-      <a href={link} className={styles[`link-${size}`]}>
+    <div className={styles['contact']}>
+      <div className={styles[`icon`]}>{icon()}</div>
+      <a href={link} className={styles[`link`]}>
         {displayName}
       </a>
     </div>
