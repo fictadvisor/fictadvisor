@@ -11,7 +11,7 @@ export const SubjectSearchList = ({ subjects }: GetListOfSubjectsDTO) => {
 
   const redirect = (subjectId: string) => {
     console.log('here');
-    router.push(`/subjects/${subjectId}`);
+    router.push(`/subjects/${subjectId}/teachers`);
   };
 
   return (

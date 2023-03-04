@@ -50,7 +50,7 @@ export const TeacherSearchPage = () => {
   }, [queryObj, curPage, refetch]);
 
   return (
-    <PageLayout description={'Вчителі'} hasFooter={true}>
+    <PageLayout description={'Вчителі'}>
       <div className={styles['layout']}>
         <Breadcrumbs items={breadcrumbs} className={styles['breadcrumb']} />
 
@@ -68,7 +68,7 @@ export const TeacherSearchPage = () => {
         {isLoading ||
           (isFetching && (
             <div className={styles['page-loader']}>
-              <Loader size={LoaderSize.LARGE} />
+              <Loader size={LoaderSize.SMALLEST} />
             </div>
           ))}
 

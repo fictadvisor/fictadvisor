@@ -10,6 +10,6 @@ export const TeacherInitialValues: TeacherSearchFormFields = {
 export const SubjectInitialValues: SubjectSearchFormFields = {
   search: '',
   order: 'asc',
-  sort: '',
+  sort: 'name',
   group: '',
 };

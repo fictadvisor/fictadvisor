@@ -51,7 +51,7 @@ const SubjectSearchPage = () => {
   }, [queryObj, curPage, refetch]);
 
   return (
-    <PageLayout description={'Предмети'} hasFooter={true}>
+    <PageLayout description={'Предмети'}>
       <div className={styles['layout']}>
         <Breadcrumbs items={breadcrumbs} className={styles['breadcrumb']} />
 
@@ -66,7 +66,7 @@ const SubjectSearchPage = () => {
         {isLoading ||
           (isFetching && (
             <div className={styles['page-loader']}>
-              <Loader size={LoaderSize.LARGE} />
+              <Loader size={LoaderSize.SMALLEST} />
             </div>
           ))}
 

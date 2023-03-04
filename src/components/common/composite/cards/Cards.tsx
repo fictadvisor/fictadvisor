@@ -177,7 +177,7 @@ const CardRoles: React.FC<{ roles: string[]; disabled?: boolean }> = ({
     <div className={styles['card-roles']}>
       {roles.map(role => {
         switch (role) {
-          case 'лаборант':
+          case 'LABORANT':
             return (
               <Tag
                 size={TagSize.SMALL}
@@ -187,7 +187,7 @@ const CardRoles: React.FC<{ roles: string[]; disabled?: boolean }> = ({
                 key={Math.random()}
               />
             );
-          case 'лектор':
+          case 'LECTURER':
             return (
               <Tag
                 size={TagSize.SMALL}
@@ -197,7 +197,7 @@ const CardRoles: React.FC<{ roles: string[]; disabled?: boolean }> = ({
                 key={Math.random()}
               />
             );
-          case 'практик':
+          case 'PRACTICIAN':
             return (
               <Tag
                 size={TagSize.SMALL}

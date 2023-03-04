@@ -14,10 +14,7 @@ export class SubjectsAPI {
   static async getTeachersBySubject(
     disciplineId: string,
   ): Promise<GetTeachersBySubjectDTO> {
-    const { data } = await client.get(
-      `disciplines/${disciplineId}/teachers`,
-      getAuthorizationHeader(),
-    );
+    const { data } = await client.get(`subjects/${disciplineId}/teachers`);
     return data;
   }
 
