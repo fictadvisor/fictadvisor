@@ -1,12 +1,9 @@
-@import 'src/styles/partials/utils';
-@import 'src/styles/partials/theme';
-
 .wrapper {
   display: flex;
   justify-content: space-between;
   width: 100%;
   min-height: calc(100vh);
-  padding: 72px 188px 80px 60px;
+  padding: 36px 188px 80px 60px;
 }
 
 @media screen and (max-width: 1024px) {

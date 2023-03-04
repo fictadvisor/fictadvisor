@@ -120,7 +120,7 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
         </div>
       ) : sendingStatus === SendingStatus.SUCCESS ? (
         <div className={styles.wrapper}>
-          <AnswersSaved />{' '}
+          <AnswersSaved />
         </div>
       ) : (
         <>
@@ -212,6 +212,7 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
                         setIsSendingStatus(SendingStatus.LOADING);
                         try {
                           setErrorMessage('');
+                          console.log(answers);
                           const data = await PollAPI.createTeacherGrade(
                             { answers },
                             disciplineTeacherId,

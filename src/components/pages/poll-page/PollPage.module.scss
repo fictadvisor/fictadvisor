@@ -16,3 +16,24 @@
   width: 100%;
   background-color: $background-dark-0;
 }
+
+.poll-page__content-wrapper {
+  height: 100vh;
+  width: 100%;
+
+  .breadcrumbs-wrapper {
+    height: 20px;
+    display: flex;
+    align-items: center;
+    margin-left: 60px;
+    margin-top: 16px;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .poll-page__content-wrapper {
+    .breadcrumbs-wrapper {
+      display: none;
+    }
+  }
+}

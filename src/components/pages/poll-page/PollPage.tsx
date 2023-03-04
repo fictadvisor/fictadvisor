@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 
 import { AlertColor, AlertVariant } from '@/components/common/ui/alert';
 import AlertPopup from '@/components/common/ui/alert-popup/AlertPopup';
+import Breadcrumbs from '@/components/common/ui/breadcrumbs/Breadcrumbs';
 import Loader from '@/components/common/ui/loader/Loader';
 import useAuthentication from '@/hooks/use-authentication';
 import { PollAPI } from '@/lib/api/poll/PollAPI';
@@ -125,7 +126,23 @@ const PollPage = () => {
           {isLoading ? (
             <Loader />
           ) : isSuccessFetching ? (
-            <PollForm data={FetchedData || initialState} />
+            <div className={styles['poll-page__content-wrapper']}>
+              <div className={styles['breadcrumbs-wrapper']}>
+                <Breadcrumbs
+                  items={[
+                    { label: 'Головна', href: '/' },
+                    { label: 'Опитування', href: '/poll' },
+                    {
+                      label: `${FetchedData.teacher.lastName} ${FetchedData.teacher.firstName} ${FetchedData.teacher.middleName}`,
+                      href: `/poll/${disciplineTeacherId}`,
+                    },
+                  ]}
+                  className={styles['breadcrumbs']}
+                />
+              </div>
+
+              <PollForm data={FetchedData || initialState} />
+            </div>
           ) : null}
         </div>
         {FetchingQuestionsError && !isLoading && (
