@@ -3,7 +3,7 @@ import { SubjectService } from './SubjectService';
 import { CreateSubjectDTO } from './dto/CreateSubjectDTO';
 import { UpdateSubjectDTO } from './dto/UpdateSubjectDTO';
 import { SubjectByIdPipe } from './SubjectByIdPipe';
-import { QueryAllDTO } from 'src/v2/utils/QueryAllDTO';
+import { QueryAllSubjectDTO } from './query/QueryAllSubjectDTO';
 import { Access } from 'src/v2/security/Access';
 
 @Controller({
@@ -17,7 +17,7 @@ export class SubjectController {
 
   @Get()
   async getAll (
-    @Query() body: QueryAllDTO,
+    @Query() body: QueryAllSubjectDTO,
   ) {
     const subjects = await this.subjectService.getAll(body);
 

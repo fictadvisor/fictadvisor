@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateSubjectDTO } from './dto/CreateSubjectDTO';
 import { UpdateSubjectDTO } from './dto/UpdateSubjectDTO';
 import { SubjectRepository } from './SubjectRepository';
-import { QueryAllDTO } from 'src/v2/utils/QueryAllDTO';
+import { QueryAllSubjectDTO } from './query/QueryAllSubjectDTO';
 import { DisciplineTeacherService } from '../teacher/DisciplineTeacherService';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class SubjectService {
     private disciplineTeacherService: DisciplineTeacherService,
   ) {}
 
-  async getAll (body: QueryAllDTO) {
+  async getAll (body: QueryAllSubjectDTO) {
     const subjects = await this.subjectRepository.getAll(body);
     const results = [];
 
