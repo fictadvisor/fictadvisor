@@ -7,7 +7,7 @@ import PageLayout from '../../common/layout/page-layout/PageLayout';
 import styles from './NotFoundPage.module.scss';
 
 const NotFoundPage = () => (
-  <PageLayout description={'Сторінку не знайдено'} hasFooter={true}>
+  <PageLayout description={'Сторінку не знайдено'} hasFooter={false}>
     <div className={styles['page-layout']}>
       <div className={styles['page-content']}>
         <h5 className={styles['not-found-text']}>

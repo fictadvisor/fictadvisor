@@ -41,7 +41,7 @@ const Footer: React.FC = () => {
         {
           text: '',
           icon: <InstagramIcon />,
-          url: 'https://www.instagram.com/sr_kpi/',
+          url: 'https://www.instagram.com/sr_fiot/',
         },
         {
           text: '',
@@ -58,7 +58,7 @@ const Footer: React.FC = () => {
         {
           text: 'Instagram',
           icon: <InstagramIcon />,
-          url: 'https://www.instagram.com/sr_kpi/',
+          url: 'https://www.instagram.com/sr_fiot/',
         },
         {
           text: 'Telegram',
