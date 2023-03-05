@@ -8,13 +8,15 @@
   // overflow: hidden; // to disable scrolling if the text goes outside the bounds
   border: 1px solid transparent;
   border-radius: 5px;
+  padding: 12px 16px;
   gap: 8px;
  
   // background: $background-dark-0;
   cursor: pointer;
 
   &:focus {
-    border: 1px solid $red-10;
+    background: $background-dark-35;
+    border: 1px solid $gray-50;
    
   }
 
