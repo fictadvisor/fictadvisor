@@ -70,11 +70,12 @@ const Footer: React.FC = () => {
   return (
     <div className={styles['footer-container']}>
       <div className={styles['footer-logo-container']}>
-        <Link href={'/'}>
-          <div className={styles['footer-logo']}>
+        <div className={styles['footer-logo']}>
+          <Link href={'/'}>
             <img src={`/assets/logo.png`} alt="logo" />
-          </div>
-        </Link>
+          </Link>
+        </div>
+
         <div className={styles['signature']}>
           <p>By Dev-відділ СР ФІОТ</p>
         </div>
