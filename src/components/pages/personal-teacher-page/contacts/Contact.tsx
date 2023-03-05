@@ -50,9 +50,12 @@ const Contact: React.FC<ContactProps> = ({ name, displayName, link }) => {
   return (
     <div className={styles['contact']}>
       <div className={styles[`icon`]}>{icon()}</div>
-      <a href={link} className={styles[`link`]}>
-        {displayName}
-      </a>
+      {link != '' && (
+        <a href={link} className={styles[`link`]}>
+          {displayName}
+        </a>
+      )}
+      {link == '' && <p className={styles[`link`]}>{displayName}</p>}
     </div>
   );
 };

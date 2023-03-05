@@ -26,11 +26,10 @@ box-sizing: border-box;
   background: $background-dark-10;
   outline: solid 1px $background-dark-50;
   gap: 15px;
-  margin-bottom: 24px;
 }
 .breadcrumbs{
   padding-top: 16px;
-  padding-bottom: 16px;
+  padding-bottom: 24px;
 }
 
 @media screen and (max-width: 768px){
@@ -39,7 +38,10 @@ box-sizing: border-box;
     padding-right: 10px;
   }
   .card-wrapper{
-    margin-bottom: 16px;
+  }
+  .breadcrumbs{
+    padding-top: 16px;
+    padding-bottom: 16px;
   }
 }
 
@@ -49,9 +51,12 @@ box-sizing: border-box;
     padding-right: 10px;
   }
   .card-wrapper{
-    margin-bottom: 16px;
   }
   .tabs-wrapper{
     max-width: 100px;
+  }
+  .breadcrumbs{
+    padding-top: 16px;
+    padding-bottom: 16px;
   }
 }

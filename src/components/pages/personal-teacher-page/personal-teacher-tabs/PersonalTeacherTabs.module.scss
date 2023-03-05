@@ -5,11 +5,18 @@
 .tabs{
 box-sizing: border-box;
 }
-.tab-list{
+.tab-list-desktop{
   display: flex;
   flex-direction: row;
   align-items: center;
+  width: fit-content;
   //gap: 8px;
+}
+.karusel{
+  padding-top: 24px;
+}
+.tab-list-mobile{
+  display: none;
 }
 .tab-panels-list{
   display: flex;
@@ -47,16 +54,17 @@ box-sizing: border-box;
 
 @media screen and (max-width: 768px){
   .karusel{
+    padding-top: 28px;
     width: calc(100% - 20px );
     overflow: hidden;
   }
-  .tab-list {
+  .tab-list-desktop {
     display: flex;
     flex-direction: row;
     overflow: scroll;
     scrollbar-width: none;
   }
-  .tab-list::-webkit-scrollbar {
+  .tab-list-desktop::-webkit-scrollbar {
     display: none;  /* Safari and Chrome */
   }
   .tab-panel-list{
@@ -68,7 +76,7 @@ box-sizing: border-box;
     text-align: left;
   }
   .my-tab-panel{
-    padding: 40px 0;
+    padding: 40px 16px;
   }
 
   .button-wrapper-mobile{
@@ -85,16 +93,17 @@ box-sizing: border-box;
 
 
   .karusel{
-
+    padding-top: 28px;
     width: 100%;
     overflow: hidden;
-    //box-sizing: border-box;
   }
   .test-tab-list{
     width: 100%;
   }
-
-  .tab-list {
+  .tab-list-desktop{
+    display: none;
+  }
+  .tab-list-mobile {
     //width: 100%;
     display: flex;
     flex-direction: row;
@@ -102,10 +111,11 @@ box-sizing: border-box;
     scrollbar-width: none;
     box-sizing: border-box;
   }
-  .tab-list::-webkit-scrollbar {
+  .tab-list-mobile::-webkit-scrollbar {
     display: none;  /* Safari and Chrome */
   }
   .my-tab-panel {
+    padding: 42px 16px 54px 16px;
     display: flex;
     flex-direction: column;
     gap: 32px;
