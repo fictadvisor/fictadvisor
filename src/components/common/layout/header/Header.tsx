@@ -20,7 +20,6 @@ import { BurgerMenu } from '../../custom-svg/BurgerMenu';
 import {
   IconButton,
   IconButtonColor,
-  IconButtonShape,
   IconButtonSize,
 } from '../../ui/icon-button/IconButton';
 import { CloseButton } from '../../ui/icon-button/variants';
@@ -69,7 +68,7 @@ const Header: React.FC<HeaderProps> = ({
   const [clicked, setClicked] = useState(false);
   const mobileMenu = (
     <div className={styles['mobile-menu']}>
-      <Link href={''}>
+      <Link href={'/'}>
         <TabItem
           className=""
           text="Головна"
@@ -78,7 +77,7 @@ const Header: React.FC<HeaderProps> = ({
           size={TabItemContentSize.SMAll}
         />
       </Link>
-      <Link href={''}>
+      <Link href={'/poll'}>
         <TabItem
           className=""
           text="Опитування"
@@ -87,7 +86,7 @@ const Header: React.FC<HeaderProps> = ({
           size={TabItemContentSize.SMAll}
         />
       </Link>
-      <Link href={''}>
+      <Link href={'/teachers'}>
         <TabItem
           className=""
           text="Викладачі"
@@ -96,7 +95,7 @@ const Header: React.FC<HeaderProps> = ({
           size={TabItemContentSize.SMAll}
         />
       </Link>
-      <Link href={''}>
+      <Link href={'/subjects'}>
         <TabItem
           className=""
           text="Предмети"
@@ -107,11 +106,7 @@ const Header: React.FC<HeaderProps> = ({
       </Link>
     </div>
   );
-  const mobileDivider = (
-    <div style={{ width: '100%' }}>
-      <HeaderDivider />
-    </div>
-  );
+
   const handleClick = () => {
     setClicked(clicked => !clicked);
   };
@@ -167,7 +162,8 @@ const Header: React.FC<HeaderProps> = ({
             />
           </div>
 
-          {mobileDivider}
+          <HeaderDivider />
+
           {mobileMenu}
         </div>
       </div>
@@ -226,7 +222,9 @@ const Header: React.FC<HeaderProps> = ({
               />
             </div>
           </div>
-          {mobileDivider}
+
+          <HeaderDivider />
+
           {mobileMenu}
         </div>
       </div>
@@ -299,7 +297,7 @@ const Header: React.FC<HeaderProps> = ({
           </Link> */}
         </div>
         {isLoggined ? (
-          <div style={{ width: '286px', height: '42px' }}>
+          <div className={styles['header-desktop-card']}>
             <HeaderDesktopCard
               name={name}
               groupName={groupName}
