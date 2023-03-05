@@ -10,7 +10,7 @@ $large-dropdown-width: 480px;
 $dropdown-option-height: 36px;
 $dropdown-menu-height: 240px;
 $dropdown-header-height: 52px;
-$dropdown-option-left-padding: 26px;
+$dropdown-option-left-padding: 16px;
 $default-dropdown-padding: 8px;
 
 @mixin roundcorners($radius: 10px, $color: $gray-600) {
@@ -50,13 +50,13 @@ $default-dropdown-padding: 8px;
   &control {
     width: 100%;
     min-width: 75px;
+    height:40px;
     &:hover{
       border-color: $gray-600;
     }
 
     @include roundcorners($color:$gray-200);
     padding: 0 $dropdown-option-left-padding;
-    padding: 14px 16px;
     &-iconed {
       padding-left: $dropdown-option-left-padding + 15px;
     }
@@ -137,6 +137,7 @@ $default-dropdown-padding: 8px;
     }
   }
   &placeholder {
+    white-space: nowrap;
     color: $background-dark-200;
     &:hover{
       color: $background-dark-200;
@@ -175,16 +176,4 @@ $default-dropdown-padding: 8px;
 
 .remark-disabled{
   color: $background-dark-200 !important;
-}
-
-
-.test-wrap-50{
-  display: flex;
-  flex-direction: column;
-  width: 50%;
-}
-.test-wrap-25{
-  display: flex;
-  flex-direction: column;
-  width: 25%;
 }

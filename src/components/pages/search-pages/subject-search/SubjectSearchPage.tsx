@@ -43,7 +43,7 @@ const SubjectSearchPage = () => {
     useQuery<GetListOfSubjectsDTO>(
       'subjects',
       SubjectsAPI.getAll.bind(null, queryObj, pageSize * (curPage + 1)),
-      { keepPreviousData: true },
+      { keepPreviousData: true, refetchOnWindowFocus: false },
     );
 
   useEffect(() => {

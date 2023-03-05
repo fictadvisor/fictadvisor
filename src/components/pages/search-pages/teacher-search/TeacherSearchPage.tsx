@@ -42,7 +42,7 @@ export const TeacherSearchPage = () => {
   const { data, isLoading, refetch, isFetching } = useQuery<GetTeachersDTO>(
     'lecturers',
     TeacherAPI.getAll.bind(null, queryObj, pageSize * (curPage + 1)),
-    { keepPreviousData: true },
+    { keepPreviousData: true, refetchOnWindowFocus: false },
   );
 
   useEffect(() => {

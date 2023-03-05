@@ -21,23 +21,21 @@ export const TeacherSearchList = ({
       {teachers &&
         teachers?.map(
           teacher =>
-            teacher.lastName.length > 0 && (
-              <li key={teacher.id}>
-                {!teacher.roles && (
-                  <RatingCard
-                    onClick={() => redirect(teacher.id)}
-                    name={`${teacher.lastName} ${teacher.firstName} ${teacher.middleName}`}
-                  />
-                )}
-                {teacher.roles && (
-                  <RatingCard
-                    roles={teacher.roles}
-                    onClick={() => redirect(teacher.id)}
-                    name={`${teacher.lastName} ${teacher.firstName} ${teacher.middleName} `}
-                  />
-                )}
-              </li>
-            ),
+            teacher.lastName.length > 0 &&
+            (teacher.roles ? (
+              <RatingCard
+                key={teacher.id}
+                onClick={() => redirect(teacher.id)}
+                name={`${teacher.lastName} ${teacher.firstName} ${teacher.middleName}`}
+                roles={teacher.roles}
+              />
+            ) : (
+              <RatingCard
+                key={teacher.id}
+                onClick={() => redirect(teacher.id)}
+                name={`${teacher.lastName} ${teacher.firstName} ${teacher.middleName} `}
+              />
+            )),
         )}
     </ul>
   );

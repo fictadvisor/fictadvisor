@@ -34,7 +34,8 @@
     grid-template-columns: repeat(4, 1fr);
     column-gap: 48px;
     row-gap: 16px;
-    grid-auto-rows: min-content 1fr;
+    grid-auto-rows: max-content !important;
+    align-items: center;
 }
 
 .subject-search-list {
@@ -65,7 +66,7 @@
         @include h6--bold;
     }
     .form {
-        grid-template-columns: 35% 50% 10%;
+        grid-template-columns: 35% 45% 10%;
         justify-items: center;
     }
     .layout {
@@ -87,6 +88,7 @@
     }
 }
 
+
 @media only screen and (min-width: $breakpoint-tablet) and (max-width: $breakpoint-desktop) {
     .teacher-search-list {
         grid-template-columns: repeat(3, 1fr);
@@ -97,7 +99,18 @@
     }
 }
 
+@media only screen and (max-width: $breakpoint-mobile){
+    .subject-search-list {
+        columns: 1;
+    }
+}
 .breadcrumb {
     margin-top: 16px;
     margin-bottom: 16px;
+}
+
+.icon{
+    height: 48px;
+    aspect-ratio: 1/1;
+    align-self: flex-start;
 }

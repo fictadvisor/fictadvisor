@@ -8,6 +8,7 @@ import {
   ChevronUpIcon,
 } from '@heroicons/react/24/outline';
 import { Form, Formik } from 'formik';
+import mergeClassNames from 'merge-class-names';
 
 import {
   Dropdown,
@@ -50,6 +51,7 @@ export const SearchForm: FC<SearchFormProps> = ({
     <Formik
       initialValues={initialValues}
       onSubmit={values => {
+        console.log(values);
         onSubmit(values);
       }}
     >
@@ -66,6 +68,7 @@ export const SearchForm: FC<SearchFormProps> = ({
           />
           <div className={styles['collapse-btn']}>
             <IconButton
+              className={styles['icon']}
               type="button"
               name="order"
               size={IconButtonSize.LARGE}
@@ -80,7 +83,6 @@ export const SearchForm: FC<SearchFormProps> = ({
             <>
               <div className={styles['dropdown-1']}>
                 <Dropdown
-                  label="Фільтр"
                   placeholder="Група"
                   onChange={handleSubmit}
                   showRemark={false}
@@ -99,7 +101,6 @@ export const SearchForm: FC<SearchFormProps> = ({
                 <Dropdown
                   placeholder="Фільрувати за"
                   onChange={handleSubmit}
-                  label="Порядок"
                   showRemark={false}
                   name="sort"
                   options={filterDropDownOptions}
@@ -107,6 +108,7 @@ export const SearchForm: FC<SearchFormProps> = ({
               </div>
               <div>
                 <IconButton
+                  className={styles['icon']}
                   type="button"
                   onClick={() => {
                     setFieldValue(
