@@ -33,22 +33,49 @@ const Footer: React.FC = () => {
   const isMobile = useIsMobile(710);
   const socialLabels = isMobile
     ? [
-        { text: '', icon: <TelegramIcon /> },
-        { text: '', icon: <InstagramIcon /> },
-        { text: '', icon: <GitHubIcon /> },
+        {
+          text: '',
+          icon: <TelegramIcon />,
+          url: 'https://t.me/fict_time',
+        },
+        {
+          text: '',
+          icon: <InstagramIcon />,
+          url: 'https://www.instagram.com/sr_fiot/',
+        },
+        {
+          text: '',
+          icon: <GitHubIcon />,
+          url: 'https://github.com/fictadvisor/',
+        },
       ]
     : [
-        { text: 'GitHub', icon: <GitHubIcon /> },
-        { text: 'Instagram', icon: <InstagramIcon /> },
-        { text: 'Telegram', icon: <TelegramIcon /> },
+        {
+          text: 'GitHub',
+          icon: <GitHubIcon />,
+          url: 'https://github.com/fictadvisor/',
+        },
+        {
+          text: 'Instagram',
+          icon: <InstagramIcon />,
+          url: 'https://www.instagram.com/sr_fiot/',
+        },
+        {
+          text: 'Telegram',
+          icon: <TelegramIcon />,
+          url: 'https://t.me/fict_time',
+        },
       ];
 
   return (
     <div className={styles['footer-container']}>
       <div className={styles['footer-logo-container']}>
         <div className={styles['footer-logo']}>
-          <img src={`/assets/logo.png`} alt="logo" />
+          <Link href={'/'}>
+            <img src={`/assets/logo.png`} alt="logo" />
+          </Link>
         </div>
+
         <div className={styles['signature']}>
           <p>By Dev-відділ СР ФІОТ</p>
         </div>
@@ -65,6 +92,7 @@ const Footer: React.FC = () => {
             variant={ButtonVariant.TEXT}
           />
         </div>
+
         <div style={{ height: '36px' }}>
           <Button
             onClick={returnPoll}
@@ -109,7 +137,7 @@ const Footer: React.FC = () => {
             variant={ButtonVariant.TEXT}
           />
         </div>
-        <Link href={{}} style={{ height: '36px' }}>
+        <Link href={'https://t.me/fict_robot'} style={{ height: '36px' }}>
           <Button
             text="FICT robot"
             size={ButtonSize.SMALL}
@@ -122,7 +150,10 @@ const Footer: React.FC = () => {
           <p>Соціальне</p>
         </div>
         <div className={styles['social-buttons']}>
-          <Link href={{}} style={{ height: '36px', width: '36px' }}>
+          <Link
+            style={{ height: '36px', width: '36px' }}
+            href={socialLabels[0].url}
+          >
             <Button
               text={socialLabels[0].text}
               startIcon={socialLabels[0].icon}
@@ -130,7 +161,10 @@ const Footer: React.FC = () => {
               variant={ButtonVariant.TEXT}
             />
           </Link>
-          <Link href={{}} style={{ height: '36px', width: '36px' }}>
+          <Link
+            href={socialLabels[1].url}
+            style={{ height: '36px', width: '36px' }}
+          >
             <Button
               text={socialLabels[1].text}
               startIcon={socialLabels[1].icon}
@@ -138,7 +172,10 @@ const Footer: React.FC = () => {
               variant={ButtonVariant.TEXT}
             />
           </Link>
-          <Link href={{}} style={{ height: '36px', width: '36px' }}>
+          <Link
+            href={socialLabels[2].url}
+            style={{ height: '36px', width: '36px' }}
+          >
             <Button
               text={socialLabels[2].text}
               startIcon={socialLabels[2].icon}
