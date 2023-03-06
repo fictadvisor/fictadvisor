@@ -47,7 +47,8 @@ const getRole = role => {
 const Header: React.FC = () => {
   const router = useRouter();
 
-  const { user, isLoggedIn, isAuthenticationFetching } = useAuthentication();
+  const { user, isLoggedIn } = useAuthentication();
+  if (!isLoggedIn) console.log('i am here');
   const returnMain = () => {
     void router.push('/');
   };
@@ -118,16 +119,7 @@ const Header: React.FC = () => {
     setClicked(clicked => !clicked);
   };
 
-  if (isAuthenticationFetching) {
-    return (
-      <div className={styles['wrapper']}>
-        <div
-          className={styles['header-container']}
-          style={{ backgroundColor: '#1e1e1e' }}
-        />
-      </div>
-    );
-  }
+  console.log(user, isLoggedIn);
 
   if (isMobile && isLoggedIn) {
     return clicked ? (

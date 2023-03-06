@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useRef } from 'react';
 import {
   ArrowDownCircleIcon,
   ArrowUpCircleIcon,
@@ -15,6 +15,7 @@ import { StudentTableItem } from '@/components/pages/account-page/components/gro
 import { StudentRole } from '@/components/pages/account-page/components/group-tab/components/table/student-table/StudentTable';
 import dataMapper from '@/components/pages/account-page/components/group-tab/components/table/student-table/utils';
 import useAuthentication from '@/hooks/use-authentication';
+import useOutsideClick from '@/hooks/use-outside-click';
 import { GroupAPI } from '@/lib/api/group/GroupAPI';
 
 import styles from './MobileStudentTableButtons.module.scss';
@@ -55,6 +56,9 @@ const MobileStudentTableButtons: FC<MobileStudentTableButtonsProps> = ({
     <ArrowUpCircleIcon className="icon" />
   );
 
+  const wrapperRef = useRef(null);
+  useOutsideClick(wrapperRef, () => onChange(-1));
+
   const buttonName = student.role ? StudentRole.STUDENT : StudentRole.MODERATOR;
   return (
     <>
@@ -68,7 +72,7 @@ const MobileStudentTableButtons: FC<MobileStudentTableButtonsProps> = ({
                 onClick={() => onChange(value)}
               />
               {currentValue === value && (
-                <div className={styles['dropdown-content']}>
+                <div className={styles['dropdown-content']} ref={wrapperRef}>
                   <Button
                     className={styles['dropdown-button']}
                     text={buttonName}

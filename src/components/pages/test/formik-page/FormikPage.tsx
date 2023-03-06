@@ -121,10 +121,7 @@ const FormikPage = () => {
                 defaultRemark={'Text area remark'}
                 className={testPageStyles['test']}
               />
-              <NumberedTextArea
-                name="review"
-                defaultRemark={'Text area remark'}
-              />
+              <NumberedTextArea name="review" />
               <Checkbox
                 name="isCaptain"
                 label="Староста групи"

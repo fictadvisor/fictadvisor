@@ -1,3 +1,5 @@
+import { AddStudentsByMailBody } from '@/lib/api/group/dto/AddStudentsByMailBody';
+import { AddStudentsByMailDTO } from '@/lib/api/group/dto/AddStudentsByMailDTO';
 import { GetAllDTO } from '@/lib/api/group/dto/GetAllDTO';
 import { GetGroupStudentsDTO } from '@/lib/api/group/dto/GetGroupStudentsDTO';
 import { GetRequestDTO } from '@/lib/api/group/dto/GetRequestDTO';
@@ -23,6 +25,17 @@ export class GroupAPI {
   ): Promise<GetTeachersDisciplineDTO> {
     return await client.get(
       `/groups/${groupId}/disciplineTeachers`,
+      getAuthorizationHeader(),
+    );
+  }
+
+  static async addStudentsByMail(
+    groupId: string,
+    body: AddStudentsByMailBody,
+  ): Promise<AddStudentsByMailDTO> {
+    return await client.post(
+      `/groups/${groupId}/addEmails`,
+      body,
       getAuthorizationHeader(),
     );
   }

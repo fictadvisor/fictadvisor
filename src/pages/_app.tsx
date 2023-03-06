@@ -12,14 +12,16 @@ import '@/styles/global-styles.scss';
 
 const queryClient = new QueryClient();
 
-const Application = ({ Component, pageProps }: AppProps) => (
-  <Provider store={store}>
-    <QueryClientProvider client={queryClient}>
-      <AuthenticationProvider>
-        <Component {...pageProps} />
-      </AuthenticationProvider>
-    </QueryClientProvider>
-  </Provider>
-);
+const Application = ({ Component, pageProps }: AppProps) => {
+  return (
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
+        <AuthenticationProvider>
+          <Component {...pageProps} />
+        </AuthenticationProvider>
+      </QueryClientProvider>
+    </Provider>
+  );
+};
 
 export default Application;

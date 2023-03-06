@@ -11,6 +11,9 @@ import Tag, { TagSize } from '@/components/common/ui/tag';
 import CustomDivider from '@/components/pages/account-page/components/divider';
 import MobileStudentTableButtons from '@/components/pages/account-page/components/group-tab/components/table/mobile-student-table/components/mobile-student-table-buttons';
 import { StudentRole } from '@/components/pages/account-page/components/group-tab/components/table/student-table/StudentTable';
+import { TextAreaPopup } from '@/components/pages/account-page/components/group-tab/components/text-area-popup';
+import useAuthentication from '@/hooks/use-authentication';
+import { GroupAPI } from '@/lib/api/group/GroupAPI';
 
 import styles from './MobileStudentTable.module.scss';
 
@@ -34,14 +37,35 @@ const MobileStudentTable: React.FC<StudentTableProps> = ({
   refetch,
 }) => {
   const [openedIndex, setOpenedIndex] = useState(-1);
+
+  const { user } = useAuthentication();
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const handleAddStudents = async value => {
+    try {
+      const emails = value
+        .split(/[\n\r\t ,]+/)
+        .map(line => line.trim())
+        .filter(line => line !== '' && line !== '\n');
+
+      await GroupAPI.addStudentsByMail(user.group.id, { emails });
+    } catch (e) {}
+  };
+
   return (
     <>
+      {isPopupOpen && (
+        <TextAreaPopup
+          handleSubmit={handleAddStudents}
+          closeFunction={() => setIsPopupOpen(false)}
+        />
+      )}
       {variant && (
         <CustomDivider text="Студенти">
           <div className={styles['button']}>
             <IconButton
               icon={<PlusIcon className={'icon'} />}
               shape={IconButtonShape.SQUARE}
+              onClick={() => setIsPopupOpen(true)}
             />
           </div>
         </CustomDivider>

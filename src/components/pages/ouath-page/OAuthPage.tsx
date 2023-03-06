@@ -12,11 +12,11 @@ import StorageUtil from '@/lib/utils/StorageUtil';
 const OAuthPage = () => {
   const router = useRouter();
   const { token } = router.query;
-  const { user, isLoggedIn, isAuthenticationFetching } = useAuthentication();
+  const { user, isLoggedIn } = useAuthentication();
 
   const loadData = useCallback(
     async token => {
-      if (router.isReady && !isAuthenticationFetching) {
+      if (router.isReady) {
         const { isRegistered } = await AuthAPI.checkRegisterTelegram(
           token as string,
         );
@@ -33,7 +33,7 @@ const OAuthPage = () => {
         }
       }
     },
-    [isAuthenticationFetching, isLoggedIn, router, user],
+    [isLoggedIn, router, user],
   );
 
   useEffect(() => {

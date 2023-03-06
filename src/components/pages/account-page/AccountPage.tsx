@@ -7,7 +7,6 @@ import {
 import { useRouter } from 'next/router';
 
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
-import Loader, { LoaderSize } from '@/components/common/ui/loader';
 import {
   TabItem,
   TabItemContentPosition,
@@ -52,13 +51,14 @@ const AccountPage = () => {
     }
   }, [tab, isReady]);
 
-  const { isLoggedIn, isAuthenticationFetching } = useAuthentication();
+  const { user, isLoggedIn } = useAuthentication();
+  console.log(user, isLoggedIn);
 
   useEffect(() => {
-    if (!isLoggedIn && !isAuthenticationFetching) {
+    if (!isLoggedIn) {
       void push('/login');
     }
-  }, [isAuthenticationFetching, isLoggedIn, push]);
+  }, [isLoggedIn, push]);
 
   return (
     <PageLayout hasFooter={true}>
@@ -77,7 +77,15 @@ const AccountPage = () => {
         />
       </div>
       <div className={styles['tabs-content']}>
-        <TabList className={styles['tab-list']} onChange={setIndex}>
+        <TabList
+          className={styles['tab-list']}
+          onChange={async value => {
+            await push({ query: { ...query, tab: value } }, undefined, {
+              shallow: true,
+            });
+            setIndex(value);
+          }}
+        >
           <TabItem
             size={TabItemContentSize.NORMAL}
             text="Загальне"
@@ -104,29 +112,26 @@ const AccountPage = () => {
           className={styles['tab-panels-list']}
           currentValue={index}
         >
-          {isAuthenticationFetching && <Loader size={LoaderSize.SMALL} />}
-          {isLoggedIn && (
-            <>
-              <TabPanel
-                className={styles['tab-panel']}
-                value={AccountPageTabs.GENERAL}
-              >
-                <GeneralTab />
-              </TabPanel>
-              <TabPanel
-                className={styles['tab-panel']}
-                value={AccountPageTabs.SECURITY}
-              >
-                <SecurityTab />
-              </TabPanel>
-              <TabPanel
-                className={styles['tab-panel']}
-                value={AccountPageTabs.GROUP}
-              >
-                <GroupTab />
-              </TabPanel>
-            </>
-          )}
+          <>
+            <TabPanel
+              className={styles['tab-panel']}
+              value={AccountPageTabs.GENERAL}
+            >
+              <GeneralTab />
+            </TabPanel>
+            <TabPanel
+              className={styles['tab-panel']}
+              value={AccountPageTabs.SECURITY}
+            >
+              <SecurityTab />
+            </TabPanel>
+            <TabPanel
+              className={styles['tab-panel']}
+              value={AccountPageTabs.GROUP}
+            >
+              <GroupTab />
+            </TabPanel>
+          </>
         </TabPanelsList>
       </div>
     </PageLayout>

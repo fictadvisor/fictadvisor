@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useEffect, useState } from 'react';
+import React, { FC, ReactNode, useState } from 'react';
 import { useQuery } from 'react-query';
 import { AxiosError } from 'axios';
 
@@ -15,28 +15,17 @@ const AuthenticationProvider: FC<AuthenticationProviderProps> = ({
   children,
 }) => {
   const [jwt, setJwt] = useState(StorageUtil.getTokens());
-  const [isFetching, setIsFetching] = useState(true);
 
-  const {
-    error,
-    isFetching: isQueryFetching,
-    data,
-    refetch,
-  } = useQuery(
+  const { error, isFetched, isError, data, refetch } = useQuery(
     ['oauth', jwt?.accessToken, jwt?.refreshToken],
     () => AuthAPI.getMe(),
     {
-      enabled: jwt != null,
       retry: false,
       refetchOnWindowFocus: false,
     },
   );
 
-  useEffect(() => {
-    setIsFetching(isQueryFetching);
-  }, [isQueryFetching]);
-
-  if (error && !isFetching) {
+  if (error && isError) {
     const status = (error as AxiosError).response?.status;
 
     if (jwt && status === 401) {
@@ -53,17 +42,15 @@ const AuthenticationProvider: FC<AuthenticationProviderProps> = ({
   }
   const context = {
     user: data,
-    isAuthenticationFetching: isFetching,
     update: async () => {
       setJwt(StorageUtil.getTokens());
-      setIsFetching(true);
       await refetch();
     },
   };
 
   return (
     <AuthenticationContext.Provider value={context}>
-      {children}
+      {(isFetched || isError) && children}
     </AuthenticationContext.Provider>
   );
 };

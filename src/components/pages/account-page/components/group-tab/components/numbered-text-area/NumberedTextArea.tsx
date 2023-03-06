@@ -14,9 +14,6 @@ interface NumberedTextAreaProps {
   label?: string;
   size?: NumberedTextAreaSize;
   isDisabled?: boolean;
-  isSuccessOnDefault?: boolean;
-  defaultRemark?: string;
-  showRemark?: boolean;
   className?: string;
 }
 
@@ -26,11 +23,9 @@ const NumberedTextArea: React.FC<NumberedTextAreaProps> = ({
   label,
   size = NumberedTextAreaSize.LARGE,
   isDisabled = false,
-  defaultRemark,
-  showRemark = true,
   className,
 }) => {
-  const [field, { touched, error }] = useField(name);
+  const [field] = useField(name);
   const [scrollTop, setScrollTop] = useState(0);
 
   const numbers = [];
@@ -75,7 +70,6 @@ const NumberedTextArea: React.FC<NumberedTextAreaProps> = ({
         disabled={isDisabled}
         placeholder={placeholder}
       />
-      {showRemark && <p>{touched && error ? error : defaultRemark}</p>}
     </div>
   );
 };

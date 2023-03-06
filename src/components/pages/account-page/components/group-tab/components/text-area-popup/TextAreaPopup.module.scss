@@ -1,5 +1,6 @@
 @import 'src/styles/partials/theme';
 @import 'src/styles/partials/breakpoints';
+@import 'src/styles/partials/typography-mixins';
 
 @keyframes appear {
   from {
@@ -9,6 +10,15 @@
   to {
     opacity: 1;
   }
+}
+
+.button{
+  width: fit-content;
+  padding: 6px 12px;
+}
+
+.textAreaWrapper{
+  padding: 0 36px;
 }
 
 .wrapper {
@@ -37,10 +47,10 @@
 }
 
 .content {
-  background-color: $background-dark-10;
+  background-color: $background-dark-0;
   border-radius: 8px;
   position: relative;
-  max-width: 420px;
+  max-width: 650px;
   height: fit-content;
   z-index: 2;
 
@@ -71,11 +81,12 @@
   }
 
   .title {
+    font-weight: 700;
     font-size: 20px;
-    text-align: start;
-    padding: 13px 16px;
+    line-height: 128%;
+    text-align: center;
+    padding: 20px 36px 18px 36px;
     width: 100%;
-    
   }
 
   .titleWrapper {
@@ -99,11 +110,11 @@
   .alignedLeftDescription {
     width: 100%;
     font-size: 14px;
-    padding: 0 20px 16px 20px;
+    padding: 0 36px 16px 36px;
   }
 
   .description {
-    text-align: center;
+    text-align: left;
   }
 
   .alignedLeftDescription {
@@ -111,7 +122,7 @@
   }
 
   .buttonsWrapper {
-    padding: 16px 20px;
+    padding: 16px 36px 26px 36px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -152,11 +163,10 @@
   }
 }
 
-@media (max-width: $breakpoint-mobile-medium) {
+@media (max-width: $breakpoint-tablet) {
 
 
   .content {
-    background-color: $background-dark-10;
     border-radius: 8px;
     position: relative;
     margin-right: 15px;
@@ -173,36 +183,9 @@
       padding: 6px;
     }
 
-    .movedClose {
-      position: absolute;
-      top: 8px;
-      right: 16px;
-      width: 36px;
-      height: 36px;
-      padding: 6px;
-    }
-
     .title {
-      font-size: 20px;
-      text-align: start;
       padding: 13px 16px;
-      width: 100%;
-    }
-
-    .titleWrapper {
-      padding: 14px 20px;
-      padding-top: 27px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      width: 100%;
-
-      .title {
-        font-size: 20px;
-        text-align: center;
-        width: 100%;
-      }
+      text-align: start;
     }
 
     .description,
@@ -212,33 +195,18 @@
       padding: 0 20px 16px 20px;
     }
 
-    .description {
-      text-align: center;
-    }
-
-    .alignedLeftDescription {
-      text-align: left;
-    }
 
     .buttonsWrapper {
-      padding: 16px 20px;
+      padding: 16px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       width: 100%;
       gap: 16px;
+    }
 
-      .buttonWrapper {
-        width: 182px;
-
-        &:first-child {
-          margin-right: 16px;
-        }
-      }
-
-      .line {
-        width: 100%;
-      }
+    .textAreaWrapper{
+      padding: 0 16px;
     }
 
     .alignRightButton {

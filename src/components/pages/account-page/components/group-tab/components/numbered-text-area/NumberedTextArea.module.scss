@@ -1,6 +1,7 @@
-@import "../../../../../../../../../../../styles/partials/utils";
-@import "../../../../../../../../../../../styles/partials/theme";
-@import "../../../../../../../../../../../styles/partials/typography-mixins";
+@import "src/styles/partials/utils";
+@import "src/styles/partials/theme";
+@import "src/styles/partials/typography-mixins";
+
 .textarea{
   position: relative;
   padding:10px 0;
