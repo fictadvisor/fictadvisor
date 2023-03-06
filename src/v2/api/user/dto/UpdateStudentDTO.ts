@@ -1,5 +1,4 @@
-import { IsEnum, IsOptional, Matches, MaxLength, MinLength } from 'class-validator';
-import { State } from '@prisma/client';
+import { IsOptional, Matches, MaxLength, MinLength } from 'class-validator';
 import { createRegex, UKR_REGEX, UKRSPEC_REGEX, validationOptionsMsg } from '../../../utils/GLOBALS';
 
 export class UpdateStudentDTO {
@@ -29,11 +28,4 @@ export class UpdateStudentDTO {
   @MaxLength(40, validationOptionsMsg('Middle name is too long (max 40)'))
   @IsOptional()
     middleName?: string;
-
-  @IsOptional()
-    groupId?: string;
-
-  @IsEnum(State, validationOptionsMsg('State is not an enum'))
-  @IsOptional()
-    state?: State;
 }

@@ -151,7 +151,7 @@ export class UserController {
     return this.userService.deleteStudent(userId);
   }
 
-  @Access('students.$userId.update')
+  @Access('users.$userId.student.update')
   @Patch('/:userId/student')
   updateStudent (
     @Param('userId', UserByIdPipe) userId: string,

@@ -9,7 +9,6 @@ import { UpdateUserDTO } from './dto/UpdateUserDTO';
 import { CreateContactDTO } from './dto/CreateContactDTO';
 import { EntityType, Role, RoleName, State } from '@prisma/client';
 import { UpdateContactDTO } from './dto/UpdateContactDTO';
-import { UpdateStudentDTO } from './dto/UpdateStudentDTO';
 import { CreateSuperheroDTO } from './dto/CreateSuperheroDTO';
 import { StudentWithUserData } from './data/StudentDTOs';
 import { AuthService } from '../auth/AuthService';
@@ -17,6 +16,7 @@ import { GroupRequestDTO } from './dto/GroupRequestDTO';
 import { GroupService } from '../group/GroupService';
 import { TelegramDTO } from '../auth/dto/TelegramDTO';
 import { InvalidTelegramCredentialsException } from '../../utils/exceptions/InvalidTelegramCredentialsException';
+import { UpdateStudentData } from './data/UpdateStudentData';
 
 @Injectable()
 export class UserService {
@@ -66,7 +66,7 @@ export class UserService {
     await this.studentRepository.removeRole(id, roleId);
   }
 
-  async updateStudent (userId: string, data: UpdateStudentDTO) {
+  async updateStudent (userId: string, data: UpdateStudentData) {
     return this.studentRepository.update(userId, data);
   }
 
