@@ -1,4 +1,4 @@
-import { ContactType } from "@/components/pages/personal-teacher-page/contacts";
+import { ContactType } from '@/components/pages/personal-teacher-page/contacts';
 
 export interface GetTeacherDTO {
   id: string;
