@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 
 import { GitHubIcon } from '@/components/common/custom-svg/GitHub';
 import { InstagramIcon } from '@/components/common/custom-svg/Instagram';
@@ -14,23 +13,7 @@ import useIsMobile from '@/hooks/use-is-mobile/UseIsMobile';
 import styles from './Footer.module.scss';
 
 const Footer: React.FC = () => {
-  const router = useRouter();
-  const returnMain = () => {
-    router.push('/');
-  };
-  const returnPoll = () => {
-    router.push('/poll');
-  };
-  const returnSubjects = () => {
-    router.push('/subjects');
-  };
-  const returnTeachers = () => {
-    router.push('/teachers');
-  };
-  const returnPrivacy = () => {
-    router.push('/privacy');
-  };
-  const isMobile = useIsMobile(710);
+  const isMobile = useIsMobile(768);
   const socialLabels = isMobile
     ? [
         {
@@ -84,39 +67,35 @@ const Footer: React.FC = () => {
         <div className={styles['title']}>
           <p>Основні посилання</p>
         </div>
-        <div style={{ height: '36px' }}>
+        <Link href={'/'} style={{ height: '36px' }}>
           <Button
-            onClick={returnMain}
             text="Головна"
             size={ButtonSize.SMALL}
             variant={ButtonVariant.TEXT}
           />
-        </div>
+        </Link>
 
-        <div style={{ height: '36px' }}>
+        <Link href={'/poll'} style={{ height: '36px' }}>
           <Button
-            onClick={returnPoll}
             text="Опитування"
             size={ButtonSize.SMALL}
             variant={ButtonVariant.TEXT}
           />
-        </div>
-        <div style={{ height: '36px' }}>
+        </Link>
+        <Link href={'/teachers'} style={{ height: '36px' }}>
           <Button
-            onClick={returnTeachers}
             text="Викладачі"
             size={ButtonSize.SMALL}
             variant={ButtonVariant.TEXT}
           />
-        </div>
-        <div style={{ height: '36px' }}>
+        </Link>
+        <Link href={'/subjects'} style={{ height: '36px' }}>
           <Button
-            onClick={returnSubjects}
             text="Предмети"
             size={ButtonSize.SMALL}
             variant={ButtonVariant.TEXT}
           />
-        </div>
+        </Link>
         {/* <Link href={{}} style={{ height: '36px' }}>
           <Button
             text="Розклад"
@@ -129,14 +108,13 @@ const Footer: React.FC = () => {
         <div className={styles['title']}>
           <p>Підтримка</p>
         </div>
-        <div style={{ height: '36px' }}>
+        <Link href={'/privacy'} style={{ height: '36px' }}>
           <Button
-            onClick={returnPrivacy}
             text="Конфіденційність"
             size={ButtonSize.SMALL}
             variant={ButtonVariant.TEXT}
           />
-        </div>
+        </Link>
         <Link href={'https://t.me/fict_robot'} style={{ height: '36px' }}>
           <Button
             text="FICT robot"
