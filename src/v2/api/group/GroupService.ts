@@ -96,6 +96,7 @@ export class GroupService {
         groupId: groupId,
         state: State.APPROVED,
       });
+      await this.addGroupRole(groupId, user.id, RoleName.STUDENT);
       users.push({
         id: user.id,
         email: user.email,

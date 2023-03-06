@@ -14,7 +14,7 @@ export class PermissionService {
     return this.checkPermission(roles, permission);
   }
 
-  async hasRolePermission (grants: GrantData[], permission: string) {
+  hasRolePermission (grants: GrantData[], permission: string) {
     for (const grant of grants) {
       const hasPermission = this.hasGrantPermission(permission, grant.permission);
       if (hasPermission) return grant.set;
