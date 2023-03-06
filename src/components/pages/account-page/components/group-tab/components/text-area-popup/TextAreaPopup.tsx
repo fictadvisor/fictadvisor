@@ -39,6 +39,7 @@ export const TextAreaPopup: React.FC<TextAreaPopup> = ({
           onSubmit={data => handleSubmit(data.textArea)}
           initialValues={initialValues}
           validationSchema={validationSchema}
+          validateOnMount
         >
           {({ isValid }) => (
             <Form>

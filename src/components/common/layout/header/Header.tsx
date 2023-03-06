@@ -45,7 +45,7 @@ const Header: React.FC = () => {
   const { isLoggedIn, user } = useAuthentication();
   const name = [user?.lastName, user?.firstName, user?.middleName].join(' ');
   const groupName = user?.group.code;
-  const position = roleMapper[user?.role];
+  const position = roleMapper[user?.group.role];
   const avatar = user?.avatar;
 
   const returnMain = () => {

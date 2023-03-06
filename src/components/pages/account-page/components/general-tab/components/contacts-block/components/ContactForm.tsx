@@ -45,7 +45,7 @@ const ContactForm: FC<ContactFormProps> = ({ refetchContacts }) => {
           title="Помилка!"
           description={error}
           color={AlertColor.ERROR}
-        />
+        //TODO
       )}
       <Formik
         enableReinitialize

@@ -48,6 +48,8 @@ const MobileStudentTable: React.FC<StudentTableProps> = ({
         .filter(line => line !== '' && line !== '\n');
 
       await GroupAPI.addStudentsByMail(user.group.id, { emails });
+      setIsPopupOpen(false);
+      refetch();
     } catch (e) {}
   };
 

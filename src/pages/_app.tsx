@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { Provider } from 'react-redux';
 import { AppProps } from 'next/app';
 
+import Toast from '@/components/common/ui/toast';
 import AuthenticationProvider from '@/hooks/use-authentication/authentication-context';
 import { store } from '@/redux';
 
@@ -17,6 +18,7 @@ const Application = ({ Component, pageProps }: AppProps) => {
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <AuthenticationProvider>
+          <Toast />
           <Component {...pageProps} />
         </AuthenticationProvider>
       </QueryClientProvider>

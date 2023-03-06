@@ -17,7 +17,6 @@ import styles from './GeneralTab.module.scss';
 
 const GeneralTab: FC = () => {
   const { user } = useAuthentication();
-  console.log(user);
   const buttonText = user.telegramId
     ? 'Телеграм під’єднано'
     : "Під'єднати телеграм";

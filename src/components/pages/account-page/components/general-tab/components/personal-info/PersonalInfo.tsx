@@ -35,7 +35,7 @@ const PersonalInfoBlock: FC = () => {
         <AlertPopup
           title="Вітаємо!"
           description="Ваші дані успішно збережено"
-          color={AlertColor.SUCCESS}
+          color={AlertColor.SUCCESS} //TODO
         />
       )}
       <Formik

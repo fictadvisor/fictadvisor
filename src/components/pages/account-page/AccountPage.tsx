@@ -48,11 +48,18 @@ const AccountPage = () => {
     }
     if (Object.values(AccountPageTabs).includes(tab as AccountPageTabs)) {
       setIndex(tab as AccountPageTabs);
+    } else {
+      void push(
+        { query: { ...query, tab: AccountPageTabs.GENERAL } },
+        undefined,
+        {
+          shallow: true,
+        },
+      );
     }
-  }, [tab, isReady]);
+  }, [tab, isReady, push, query]);
 
   const { user, isLoggedIn } = useAuthentication();
-  console.log(user, isLoggedIn);
 
   useEffect(() => {
     if (!isLoggedIn) {

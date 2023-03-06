@@ -1,5 +1,4 @@
-//margin right 80px margin bottom 36px
-import React, { useState } from 'react';
+import React from 'react';
 
 import Alert, { AlertColor, AlertVariant } from '../alert/Alert';
 
@@ -10,9 +9,7 @@ export interface AlertPopupProps {
   description?: string;
   color?: AlertColor;
   variant?: AlertVariant;
-  isClosable?: boolean;
-  className?: string;
-  closeTime?: number;
+  closeFunction: () => void;
 }
 
 const AlertPopup: React.FC<AlertPopupProps> = ({
@@ -20,24 +17,18 @@ const AlertPopup: React.FC<AlertPopupProps> = ({
   description,
   color,
   variant,
-  isClosable = false,
-  className,
-  closeTime,
+  closeFunction,
 }) => {
-  const [isVisible, setIsVisible] = useState(true);
-  closeTime && setTimeout(() => setIsVisible(false), closeTime * 1000);
   return (
     <div className={styles.wrapper}>
-      {isVisible && (
-        <Alert
-          className={className}
-          isClosable={isClosable}
-          title={title}
-          description={description}
-          variant={variant}
-          color={color}
-        />
-      )}
+      <Alert
+        isClosable={true}
+        title={title}
+        description={description}
+        variant={variant}
+        color={color}
+        closeFunction={closeFunction}
+      />
     </div>
   );
 };

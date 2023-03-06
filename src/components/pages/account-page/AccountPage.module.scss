@@ -32,6 +32,9 @@
 }
 
 @media screen and (max-width: 1200px){
+  .breadcrumb{
+    padding-left: 0;
+  }
   .tab-list{
     display: none;
   }

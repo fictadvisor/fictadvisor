@@ -2,7 +2,7 @@ import { useCallback, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 import PageLayout from '@/components/common/layout/page-layout';
-import Loader, { LoaderSize } from '@/components/common/ui/loader';
+import Button from '@/components/common/ui/button';
 import useAuthentication from '@/hooks/use-authentication';
 import { AuthAPI } from '@/lib/api/auth/AuthAPI';
 import { UserAPI } from '@/lib/api/user/UserAPI';
@@ -28,7 +28,7 @@ const OAuthPage = () => {
             await router.push('account');
           } else await router.push('/register?telegram=true');
         } else {
-          if (isLoggedIn) await router.push('account');
+          if (isLoggedIn) await router.push('/account');
           else await router.push('/register?telegram=false');
         }
       }
@@ -40,6 +40,10 @@ const OAuthPage = () => {
     void loadData(token);
   }, [loadData, token]);
 
+  const handleClick = async () => {
+    await AuthService.registerTelegram();
+  };
+
   return (
     <PageLayout hasHeader={true} hasFooter={false}>
       <div
@@ -50,7 +54,8 @@ const OAuthPage = () => {
           justifyContent: 'center',
         }}
       >
-        <Loader size={LoaderSize.SMALLEST} />
+        <Button text="LOL" onClick={handleClick} />
+        {/*<Loader size={LoaderSize.SMALLEST} />*/}
       </div>
     </PageLayout>
   );
