@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Subject } from '@prisma/client';
-import { QueryAllDTO } from 'src/v2/utils/QueryAllDTO';
+import { QueryAllSubjectDTO } from './query/QueryAllSubjectDTO';
 import { PrismaService } from '../../database/PrismaService';
 import { DatabaseUtils } from '../utils/DatabaseUtils';
 import { UpdateSubjectData } from './data/UpdateSubjectData';
@@ -47,16 +47,22 @@ export class SubjectRepository {
     });
   }
 
-  async getAll (body: QueryAllDTO) {
+  async getAll (body: QueryAllSubjectDTO) {
     const search = DatabaseUtils.getSearch<Subject>(body, 'name');
     const page = DatabaseUtils.getPage(body);
     const sort = DatabaseUtils.getSort(body);
+    const groupId = body.group;
 
     return this.prisma.subject.findMany({
       ...page,
       ...sort,
       where: {
         ...search,
+        disciplines: {
+          some: {
+            groupId,
+          }
+        }
       },
     });
   }
