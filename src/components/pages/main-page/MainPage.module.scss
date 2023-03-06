@@ -109,7 +109,7 @@ $font-weight-bold: 700;
     // outline: 2px solid pink;
 }
 
-@media only screen and (hover: hover) {
+@media only screen and (min-width: $breakpoint-tablet) {
     .build-image {
 
         svg:hover {
