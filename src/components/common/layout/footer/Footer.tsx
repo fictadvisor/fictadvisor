@@ -30,7 +30,7 @@ const Footer: React.FC = () => {
   const returnPrivacy = () => {
     router.push('/privacy');
   };
-  const isMobile = useIsMobile(710);
+  const isMobile = useIsMobile(768);
   const socialLabels = isMobile
     ? [
         {
