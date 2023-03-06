@@ -14,7 +14,7 @@
   // background: $background-dark-0;
   cursor: pointer;
 
-  &:focus {
+  &:focus:not(:active) {
     background: $background-dark-35;
     border: 1px solid $gray-50;
    
@@ -27,9 +27,13 @@
   }
 
   &:active {
-
     background: $background-dark-10;
     border: 1px solid $background-dark-10; 
+  }
+
+  &-active{
+    background: $background-dark-10;
+    border: 1px solid $background-dark-10;
   }
 
   &:disabled {
