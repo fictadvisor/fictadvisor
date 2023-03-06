@@ -1,23 +1,28 @@
 import React from 'react';
+import { useQuery } from 'react-query';
 import BannerImage from 'public/assets/main-page/BannerImage';
 
-import PageLayout from '../../common/layout/page-layout/PageLayout';
-import Button from '../../common/ui/button';
-import { ButtonColor, ButtonSize, ButtonVariant } from '../../common/ui/button';
+import PageLayout from '@/components/common/layout/page-layout/PageLayout';
+import Button, {
+  ButtonColor,
+  ButtonSize,
+  ButtonVariant,
+} from '@/components/common/ui/button';
+import Loader from '@/components/common/ui/loader';
+import { StudentResourcesAPI } from '@/lib/api/student-resources/StudentResourcesAPI';
 
 import ResourceCard from './components/ResourceCard';
 
 import styles from './MainPage.module.scss';
 
 const MainPage = () => {
-  // let studentResources = [];
-  // const loadData = useCallback(async () => {
-  //   studentResources = StudentResourcesApi.getAll();
-  // }, []);
-
-  // useEffect(() => {
-  //   void loadData();
-  // }, [loadData]);
+  const { isLoading, data } = useQuery(
+    ['resources'],
+    StudentResourcesAPI.getAll,
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
 
   return (
     <PageLayout description={'Головна сторінка'} hasFooter={true}>
@@ -91,76 +96,16 @@ const MainPage = () => {
             <h3>Студентські ресурси</h3>
             <div className={styles['resource-card-container']}>
               <div className={styles['resources-cards']}>
-                <div className={styles['card-holder']}>
-                  <ResourceCard
-                    text={'FICT Time'}
-                    image={'/assets/resource.png'}
-                  />
-                </div>
-                <div className={styles['card-holder']}>
-                  <ResourceCard
-                    text={'FICT Time'}
-                    image={'/assets/resource.png'}
-                  />
-                </div>
-                <div className={styles['card-holder']}>
-                  <ResourceCard
-                    text={'FICT Time'}
-                    image={'/assets/resource.png'}
-                  />
-                </div>
-                <div className={styles['card-holder']}>
-                  <ResourceCard
-                    text={'FICT Time'}
-                    image={'/assets/resource.png'}
-                  />
-                </div>
-                <div className={styles['card-holder']}>
-                  <ResourceCard
-                    text={'FICT Time'}
-                    image={'/assets/resource.png'}
-                  />
-                </div>
-                <div className={styles['card-holder']}>
-                  <ResourceCard
-                    text={'FICT Time'}
-                    image={'/assets/resource.png'}
-                  />
-                </div>
-                <div className={styles['card-holder']}>
-                  <ResourceCard
-                    text={'FICT Time'}
-                    image={'/assets/resource.png'}
-                  />
-                </div>
-                <div className={styles['card-holder']}>
-                  <ResourceCard
-                    text={'FICT Time'}
-                    image={'/assets/resource.png'}
-                  />
-                </div>
-                <div className={styles['card-holder']}>
-                  <ResourceCard
-                    text={'FICT Time'}
-                    image={'/assets/resource.png'}
-                  />
-                </div>
-                <div className={styles['card-holder']}>
-                  <ResourceCard
-                    text={'FICT Time'}
-                    image={'/assets/resource.png'}
-                  />
-                </div>
+                {isLoading ? (
+                  <Loader />
+                ) : (
+                  data?.studentResources.map(({ name, id, icon, link }) => (
+                    <div className={styles['card-holder']} key={id}>
+                      <ResourceCard text={name} image={icon} href={link} />
+                    </div>
+                  ))
+                )}
               </div>
-              {/* <ResourceCard text={'FICT Time'} image={'/assets/resource.png'} />
-              <ResourceCard text={'FICT Time'} image={'/assets/resource.png'} />
-              <ResourceCard text={'FICT Time'} image={'/assets/resource.png'} />
-              <ResourceCard text={'FICT Time'} image={'/assets/resource.png'} />
-              <ResourceCard text={'FICT Time'} image={'/assets/resource.png'} />
-              <ResourceCard text={'FICT Time'} image={'/assets/resource.png'} />
-              <ResourceCard text={'FICT Time'} image={'/assets/resource.png'} />
-              <ResourceCard text={'FICT Time'} image={'/assets/resource.png'} />
-              <ResourceCard text={'FICT Time'} image={'/assets/resource.png'} /> */}
             </div>
           </div>
         </div>

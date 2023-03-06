@@ -6,20 +6,20 @@ import styles from './ResourceCard.module.scss';
 interface CardProps {
   text: string;
   image: string;
-  href?: string;
+  href: string;
 }
 
 const ResourceCard: React.FC<CardProps> = ({
   text = 'FICT Time',
   image,
-  href = 'a',
+  href,
 }) => {
   return (
     <Link href={href}>
       <div className={styles['card']}>
         <div className={styles['card-content']}>
           <img src={image} />
-          <h6>{text}</h6>
+          <p>{text}</p>
         </div>
       </div>
     </Link>

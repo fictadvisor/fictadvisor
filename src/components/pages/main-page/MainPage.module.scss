@@ -85,7 +85,7 @@ $font-weight-bold: 700;
 .resources {
     @include flex-center;
     flex-direction: column;
-    margin: 97px 0 127px 0;
+    margin: 97px 0 127px;
 
     h3 {
         font-weight: $font-weight-bold;
@@ -143,6 +143,10 @@ $font-weight-bold: 700;
         svg {
             clip-path: none;
         }
+    }
+
+    .resources-cards {
+        gap: 0.5rem;
     }
 }
 
@@ -266,10 +270,6 @@ $font-weight-bold: 700;
     .header-info {
         h2 {
             width: 100%;
-        }
-
-        p {
-            width: 200%;
         }
     }
 
