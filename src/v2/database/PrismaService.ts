@@ -8,6 +8,11 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
     await this.user.deleteMany({
       where: {
         state: State.PENDING,
+        password: {
+          not: {
+            equals: null,
+          },
+        },
       },
     });
   }
