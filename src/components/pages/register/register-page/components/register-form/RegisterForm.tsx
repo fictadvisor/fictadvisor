@@ -2,8 +2,6 @@ import React, { FC, useCallback, useState } from 'react';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/router';
 
-import { AlertColor } from '@/components/common/ui/alert';
-import AlertPopup from '@/components/common/ui/alert-popup';
 import Button, { ButtonSize } from '@/components/common/ui/button';
 import {
   Checkbox,
@@ -49,9 +47,7 @@ const RegisterForm: FC<RegisterFormProps> = ({ groups }) => {
         if (errorName === 'AlreadyRegisteredException') {
           setError('Пошта або юзернейм вже зайняті');
         } else if (errorName === 'InvalidTelegramCredentialsException') {
-          setError('Як ти це зробив? :/');
-        } else if (errorName === 'InvalidTelegramCredentialsException') {
-          setError('Як ти це зробив? :/');
+          setError('Як ти це зробив? :/'); //TODO
         }
       }
     },
@@ -68,14 +64,6 @@ const RegisterForm: FC<RegisterFormProps> = ({ groups }) => {
     >
       {({ isValid }) => (
         <Form className={styles['form']}>
-          {error && (
-            <AlertPopup
-              title="Помилка!"
-              description={error}
-              color={AlertColor.ERROR}
-              closeTime={7}
-            />
-          )}
           <Input
             className={styles['login-input']}
             label="Юзернейм"

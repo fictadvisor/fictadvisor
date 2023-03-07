@@ -17,21 +17,21 @@ const TabsPage = () => {
   return (
     <div className={styles['test-page-wrap']}>
       <div className={styles['test-page-content']}>
-        <TabList className="tab-list" onChange={setIndex}>
+        <TabList className="tab-list" onChange={setIndex} currentValue={index}>
           <TabItem
             size={TabItemContentSize.NORMAL}
             className="tab-item"
             text="Tab"
             position={TabItemContentPosition.CENTER}
             value={'1'}
-          ></TabItem>
+          />
           <TabItem
             size={TabItemContentSize.SMAll}
             className="tab-item"
             text="Tab"
             position={TabItemContentPosition.CENTER}
             value={'2'}
-          ></TabItem>
+          />
           <TabItem
             size={TabItemContentSize.SMAll}
             className="tab-item"
@@ -39,8 +39,9 @@ const TabsPage = () => {
             position={TabItemContentPosition.CENTER}
             icon={<AcademicCapIcon />}
             value={'3'}
-          ></TabItem>
+          />
         </TabList>
+        3
         <TabPanelsList className="tab-panels-list" currentValue={index}>
           <TabPanel className="tab-panel" value={'1'}>
             Apple

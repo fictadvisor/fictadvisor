@@ -14,7 +14,6 @@ import styles from './RegisterPage.module.scss';
 
 const RegisterPage = () => {
   const { query } = useRouter();
-  const error = query.error as string;
 
   const { isLoading, data } = useQuery(['groups'], () => GroupAPI.getAll(), {
     refetchOnWindowFocus: false,
@@ -37,13 +36,13 @@ const RegisterPage = () => {
           )}
         </div>
       </div>
-      {error && (
-        <AlertPopup
-          title="Помилка!"
-          description="Лист для верифікації сплив або неправильний код!"
-          color={AlertColor.ERROR}
-        />
-      )}
+      {/*{error && (*/}
+      {/*  <AlertPopup*/}
+      {/*    title="Помилка!"*/}
+      {/*    description="Лист для верифікації сплив або неправильний код!"*/}
+      {/*    color={AlertColor.ERROR} //TODO*/}
+      {/*  />*/}
+      {/*)}*/}
     </PageLayout>
   );
 };

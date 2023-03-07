@@ -14,13 +14,13 @@ import Button, {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button';
+import useAuthentication from '@/hooks/use-authentication';
 import useIsMobile from '@/hooks/use-is-mobile/UseIsMobile';
 
 import { BurgerMenu } from '../../custom-svg/BurgerMenu';
 import {
   IconButton,
   IconButtonColor,
-  IconButtonShape,
   IconButtonSize,
 } from '../../ui/icon-button/IconButton';
 import { CloseButton } from '../../ui/icon-button/variants';
@@ -33,20 +33,21 @@ import { HeaderMobileCard } from './components/header-mobile-card/HeaderMobileCa
 
 import styles from './Header.module.scss';
 
-interface HeaderProps {
-  name?: string;
-  groupName?: string;
-  position?: string;
-  isLoggined?: boolean;
-}
+const roleMapper = {
+  ['CAPTAIN']: 'Староста',
+  ['MODERATOR']: 'Зам. старости',
+  ['STUDENT']: 'Студент',
+};
 
-const Header: React.FC<HeaderProps> = ({
-  name = 'Ярмоленко Єлизавета Миколаївна',
-  groupName = 'ІС-11',
-  position = 'Зам. ст',
-  isLoggined = false,
-}) => {
+const Header: React.FC = () => {
   const router = useRouter();
+
+  const { isLoggedIn, user } = useAuthentication();
+  const name = [user?.lastName, user?.firstName, user?.middleName].join(' ');
+  const groupName = user?.group.code;
+  const position = roleMapper[user?.group.role];
+  const avatar = user?.avatar;
+
   const returnMain = () => {
     router.push('/');
   };
@@ -69,7 +70,7 @@ const Header: React.FC<HeaderProps> = ({
   const [clicked, setClicked] = useState(false);
   const mobileMenu = (
     <div className={styles['mobile-menu']}>
-      <Link href={''}>
+      <Link href={'/'}>
         <TabItem
           className=""
           text="Головна"
@@ -78,7 +79,7 @@ const Header: React.FC<HeaderProps> = ({
           size={TabItemContentSize.SMAll}
         />
       </Link>
-      <Link href={''}>
+      <Link href={'/poll'}>
         <TabItem
           className=""
           text="Опитування"
@@ -87,7 +88,7 @@ const Header: React.FC<HeaderProps> = ({
           size={TabItemContentSize.SMAll}
         />
       </Link>
-      <Link href={''}>
+      <Link href={'/teachers'}>
         <TabItem
           className=""
           text="Викладачі"
@@ -96,7 +97,7 @@ const Header: React.FC<HeaderProps> = ({
           size={TabItemContentSize.SMAll}
         />
       </Link>
-      <Link href={''}>
+      <Link href={'/subjects'}>
         <TabItem
           className=""
           text="Предмети"
@@ -107,16 +108,12 @@ const Header: React.FC<HeaderProps> = ({
       </Link>
     </div>
   );
-  const mobileDivider = (
-    <div style={{ width: '100%' }}>
-      <HeaderDivider />
-    </div>
-  );
+
   const handleClick = () => {
     setClicked(clicked => !clicked);
   };
 
-  if (isMobile && isLoggined) {
+  if (isMobile && isLoggedIn) {
     return clicked ? (
       <div className={styles['wrapper']}>
         <div className={styles['shadow']} onClick={handleClick}></div>
@@ -141,6 +138,7 @@ const Header: React.FC<HeaderProps> = ({
               name={name}
               groupName={groupName}
               position={position}
+              url={avatar}
             />
           </div>
           <div className={styles['account-buttons']}>
@@ -167,7 +165,8 @@ const Header: React.FC<HeaderProps> = ({
             />
           </div>
 
-          {mobileDivider}
+          <HeaderDivider />
+
           {mobileMenu}
         </div>
       </div>
@@ -188,7 +187,7 @@ const Header: React.FC<HeaderProps> = ({
     );
   }
 
-  if (isMobile && !isLoggined) {
+  if (isMobile && !isLoggedIn) {
     return clicked ? (
       <div className={styles['wrapper']}>
         <div className={styles['shadow']} onClick={handleClick}></div>
@@ -226,7 +225,9 @@ const Header: React.FC<HeaderProps> = ({
               />
             </div>
           </div>
-          {mobileDivider}
+
+          <HeaderDivider />
+
           {mobileMenu}
         </div>
       </div>
@@ -298,13 +299,14 @@ const Header: React.FC<HeaderProps> = ({
             />
           </Link> */}
         </div>
-        {isLoggined ? (
-          <div style={{ width: '286px', height: '42px' }}>
+        {isLoggedIn ? (
+          <div className={styles['header-desktop-card']}>
             <HeaderDesktopCard
               name={name}
               groupName={groupName}
               position={position}
-            ></HeaderDesktopCard>
+              url={avatar}
+            />
           </div>
         ) : (
           <div className={styles['login-buttons']}>
