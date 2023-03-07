@@ -88,6 +88,7 @@ export class UserAPI {
   static async requestNewGroup(body: RequestNewGroupBody, userId: string) {
     const { data } = await client.patch(
       `/users/${userId}/requestNewGroup`,
+      body,
       getAuthorizationHeader(),
     );
     return data;
