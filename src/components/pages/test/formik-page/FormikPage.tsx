@@ -1,8 +1,6 @@
 import React from 'react';
 import { Form, Formik } from 'formik';
 
-import { AlertColor, AlertVariant } from '@/components/common/ui/alert';
-import AlertPopup from '@/components/common/ui/alert-popup';
 import Button from '@/components/common/ui/button';
 import {
   Checkbox,
@@ -10,7 +8,6 @@ import {
   Input,
   InputSize,
   InputType,
-  NumberedTextArea,
   RadioGroup,
   Slider,
   Switch,
@@ -47,12 +44,6 @@ const FormikPage = () => {
   return (
     <div className={testPageStyles['test-page-wrap']}>
       <div className={testPageStyles['test-page-content']}>
-        <AlertPopup
-          title="We are going live in July!"
-          description="We are happy to announce that we are going live on July 28th. Get ready!"
-          variant={AlertVariant.FILLED}
-          color={AlertColor.WARNING}
-        />
         <Formik
           enableReinitialize
           validateOnMount
@@ -120,10 +111,6 @@ const FormikPage = () => {
                 name="review"
                 defaultRemark={'Text area remark'}
                 className={testPageStyles['test']}
-              />
-              <NumberedTextArea
-                name="review"
-                defaultRemark={'Text area remark'}
               />
               <Checkbox
                 name="isCaptain"

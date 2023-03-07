@@ -1,5 +1,6 @@
+import { Group } from 'next/dist/shared/lib/router/utils/route-regex';
+
 import { RegisterFormFields } from '@/components/pages/register/register-page/components/register-form/types';
-import { Group } from '@/redux/reducers/group-reducer/group.types';
 
 export const transformData = (data: RegisterFormFields) => ({
   student: {
@@ -16,7 +17,7 @@ export const transformData = (data: RegisterFormFields) => ({
   },
 });
 
-export const transformGroups = (data: Group[]) =>
+export const transformGroups = data =>
   data.map(group => ({
     label: group.code,
     value: group.id,

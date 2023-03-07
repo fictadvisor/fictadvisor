@@ -8,17 +8,20 @@ import CustomLink from '@/components/common/ui/link';
 import { initialValues } from '@/components/pages/login-page/components/login-form/constants';
 import { LoginFormFields } from '@/components/pages/login-page/components/login-form/types';
 import { validationSchema } from '@/components/pages/login-page/components/login-form/validation';
+import useAuthentication from '@/hooks/use-authentication';
 import AuthService from '@/lib/services/auth';
 
 import styles from '../right-block/RightBlock.module.scss';
 
 const LoginForm: FC = () => {
   const { push } = useRouter();
+  const { update } = useAuthentication();
 
   const handleSubmit = useCallback(
     async (data: LoginFormFields, { setErrors }) => {
       try {
         await AuthService.login(data);
+        update();
         await push('/');
       } catch (e) {
         setErrors({

@@ -554,24 +554,28 @@ function Cards() {
           questionNumber={2}
           question="I am a simple question"
           numberOfAnswered={0}
+          isActive={false}
         />
         <PollCard
           numberOfQuestions={3}
           questionNumber={2}
           question="I am a simple question"
           numberOfAnswered={1}
+          isActive={false}
         />
         <PollCard
           numberOfQuestions={3}
           questionNumber={2}
           question="I am a simple question"
           numberOfAnswered={2}
+          isActive={false}
         />
         <PollCard
           numberOfQuestions={3}
           questionNumber={2}
           question="I am a simple question"
           numberOfAnswered={3}
+          isActive={false}
         />
       </div>
       <br />
@@ -588,12 +592,14 @@ function Cards() {
           questionNumber={2}
           question="I am a simple question"
           numberOfAnswered={1}
+          isActive={false}
         />
         <PollCard
           numberOfQuestions={3}
           questionNumber={2}
           question="I am a simple question"
           numberOfAnswered={2}
+          isActive={false}
         />
         <PollCard
           numberOfQuestions={3}
@@ -601,6 +607,7 @@ function Cards() {
           question="I am a simple question"
           numberOfAnswered={3}
           disabled={true}
+          isActive={false}
         />
       </div>
       <br />
@@ -617,24 +624,28 @@ function Cards() {
           questionNumber={2}
           question="I am a simple question"
           numberOfAnswered={0}
+          isActive={false}
         />
         <PollCard
           numberOfQuestions={3}
           questionNumber={2}
           question="I am a simple question"
           numberOfAnswered={1}
+          isActive={false}
         />
         <PollCard
           numberOfQuestions={3}
           questionNumber={2}
           question="I am a simple question"
           numberOfAnswered={2}
+          isActive={false}
         />
         <PollCard
           numberOfQuestions={3}
           questionNumber={2}
           question="I am a simple question"
           numberOfAnswered={3}
+          isActive={false}
         />
       </div>
     </div>

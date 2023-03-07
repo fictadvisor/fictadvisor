@@ -51,7 +51,7 @@ export class AuthAPI {
   }
 
   static async changePassword(body: ChangePasswordBody): Promise<TokensDTO> {
-    const { data } = await client.patch(
+    const { data } = await client.put(
       '/auth/updatePassword',
       body,
       getAuthorizationHeader(),
@@ -65,7 +65,7 @@ export class AuthAPI {
   }
 
   static async authTelegram(body: AuthTelegramBody): Promise<TokensDTO> {
-    const { data } = await client.post('/auth/login', body);
+    const { data } = await client.post('/auth/loginTelegram', body);
     return data;
   }
 

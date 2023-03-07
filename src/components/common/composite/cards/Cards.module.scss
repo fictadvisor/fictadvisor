@@ -98,16 +98,16 @@
     }
 }
 
-.card-disabled{
-    .card-avatar{
-        border-color:#4b4b4b;
-    }
-    border-color: transparent;
-    background-color: $background-dark-100 !important;
-    pointer-events: none;
-    *{
-        color: #a3a3a3 !important;
-    }
+.card-disabled {
+  .card-avatar {
+    border-color: #4b4b4b;
+  }
+  border-color: transparent;
+  background-color: $background-dark-100;
+  pointer-events: none;
+  * {
+    color: #a3a3a3 !important;
+  }
 }
 
 .lecturer-description {
@@ -223,14 +223,10 @@
    flex-direction: column;
    gap: 8px;
 
-    & .simple-card-name {
-        font-size: 14px;
-        font-weight: 700;
-    }
-     
-    // p{
-    //     font-size: 11px;
-    // }
+  & .simple-card-name {
+    font-size: 14px;
+    font-weight: 700;
+  }
 }
 
 .mobile-rating{
