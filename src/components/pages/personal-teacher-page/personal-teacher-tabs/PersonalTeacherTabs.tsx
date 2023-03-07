@@ -1,5 +1,6 @@
 import React, { FC, useState } from 'react';
 import { redirect } from 'next/navigation';
+import { useRouter } from 'next/router';
 
 import { SimpleCard } from '@/components/common/composite/cards';
 import Button, {
@@ -16,14 +17,14 @@ import { TabList } from '@/components/common/ui/tab/tab-list/TabList';
 import { TabPanel } from '@/components/common/ui/tab/tab-panel/TabPanel';
 import { TabPanelsList } from '@/components/common/ui/tab/tab-panels-list/TabPanelsList';
 import { GetTeacherSubjectsDTO } from '@/lib/api/teacher/dto/GetTeacherSubjectsDTO';
-import subjects from '@/pages/subjects';
 
-import styles1 from '../SearchPage.module.scss';
+import styles1 from '../../search-pages/SearchPage.module.scss';
 import styles from './PersonalTeacherTabs.module.scss';
-
 export type PersonalTeacherTabsProps = GetTeacherSubjectsDTO;
+
 const TabsPage: FC<PersonalTeacherTabsProps> = props => {
   const [index, setIndex] = useState<string>('1');
+  const router = useRouter();
   return (
     <div className={styles['tabs']}>
       <div className={styles['karusel']}>
@@ -128,13 +129,13 @@ const TabsPage: FC<PersonalTeacherTabsProps> = props => {
           </div>
         </TabPanel>
         <TabPanel className="tab-panel" value={'2'}>
-          <div className={styles['my-tab-panel']}>
+          <div className={styles['my-tab-panel-subjects']}>
             <ul className={styles1['subject-search-list']}>
               {props.subjects &&
                 props.subjects.map(subject => (
                   <li key={subject.id}>
                     <SimpleCard
-                      onClick={() => redirect(subject.id)}
+                      onClick={() => router.push(`../subjects/${subject.id}`)}
                       name={`${subject.name}`}
                     />
                   </li>

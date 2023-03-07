@@ -19,6 +19,7 @@ box-sizing: border-box;
   display: none;
 }
 .tab-panels-list{
+  width: 100%;
   display: flex;
   align-items: center;
   text-align: center;
@@ -27,6 +28,7 @@ box-sizing: border-box;
   //box-sizing: border-box;
 }
 .tab-panel{
+  width: 100%;
   display: flex;
   align-items: center;
   text-align: center;
@@ -43,6 +45,11 @@ box-sizing: border-box;
   max-width: 604px;
   gap: 32px;
   padding: 84px 0;
+  &-subjects{
+    align-items: flex-start;
+    justify-content: left;
+    text-align: left;
+  }
 }
 .button-wrapper-desktop{
   display: flex;

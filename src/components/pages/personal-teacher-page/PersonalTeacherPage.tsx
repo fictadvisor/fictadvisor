@@ -66,10 +66,16 @@ const PersonalTeacherPage = () => {
                     label: 'Головна',
                     href: '/',
                   },
-                  { label: 'Викладачі', href: '/subjects' },
+                  { label: 'Викладачі', href: '/teachers' },
                   {
-                    label: 'Викладач',
-                    href: '/teachers/$`{teacherId}',
+                    label: `${
+                      data.lastName +
+                      ' ' +
+                      data.firstName +
+                      ' ' +
+                      data.middleName
+                    }`,
+                    href: `/teachers/${teacherId}`,
                   },
                 ]}
               />
