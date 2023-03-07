@@ -44,7 +44,7 @@ const PersonalTeacherCard: React.FC<PersonalTeacherCardProps> = props => {
           )}
         </div>
       </div>
-      <div className={styles['info']}>{props.description}. </div>
+      <div className={styles['info']}>{props.description}</div>
 
       <Button
         className={styles['contacts-button']}
