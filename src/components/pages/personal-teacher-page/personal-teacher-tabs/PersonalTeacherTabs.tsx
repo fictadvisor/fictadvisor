@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
+import { redirect } from 'next/navigation';
 
+import { SimpleCard } from '@/components/common/composite/cards';
 import Button, {
   ButtonColor,
   ButtonSize,
@@ -13,10 +15,14 @@ import {
 import { TabList } from '@/components/common/ui/tab/tab-list/TabList';
 import { TabPanel } from '@/components/common/ui/tab/tab-panel/TabPanel';
 import { TabPanelsList } from '@/components/common/ui/tab/tab-panels-list/TabPanelsList';
+import { GetTeacherSubjectsDTO } from '@/lib/api/teacher/dto/GetTeacherSubjectsDTO';
+import subjects from '@/pages/subjects';
 
+import styles1 from '../SearchPage.module.scss';
 import styles from './PersonalTeacherTabs.module.scss';
 
-const TabsPage = () => {
+export type PersonalTeacherTabsProps = GetTeacherSubjectsDTO;
+const TabsPage: FC<PersonalTeacherTabsProps> = props => {
   const [index, setIndex] = useState<string>('1');
   return (
     <div className={styles['tabs']}>
@@ -123,29 +129,17 @@ const TabsPage = () => {
         </TabPanel>
         <TabPanel className="tab-panel" value={'2'}>
           <div className={styles['my-tab-panel']}>
-            <div className={styles['text']}>
-              <p>
-                Статистика викладача ще збирається, як тільки опитування буде
-                завершене, результат буде опублікований. Опитувнання буде
-                впродовж 2 тижнів. Ви можете пройти опитування.
-              </p>
-            </div>
-            <div className={styles['button-wrapper-desktop']}>
-              <Button
-                text={'Пройти опитування'}
-                variant={ButtonVariant.FILLED}
-                color={ButtonColor.PRIMARY}
-                size={ButtonSize.LARGE}
-              />
-            </div>
-            <div className={styles['button-wrapper-mobile']}>
-              <Button
-                text={'Пройти опитування'}
-                variant={ButtonVariant.FILLED}
-                color={ButtonColor.PRIMARY}
-                size={ButtonSize.SMALL}
-              />
-            </div>
+            <ul className={styles1['subject-search-list']}>
+              {props.subjects &&
+                props.subjects.map(subject => (
+                  <li key={subject.id}>
+                    <SimpleCard
+                      onClick={() => redirect(subject.id)}
+                      name={`${subject.name}`}
+                    />
+                  </li>
+                ))}
+            </ul>
           </div>
         </TabPanel>
         <TabPanel className="tab-panel" value={'3'}>

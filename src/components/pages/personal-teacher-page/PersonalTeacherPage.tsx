@@ -23,6 +23,18 @@ const PersonalTeacherPage = () => {
       retry: false,
     },
   );
+  const {
+    isLoading: isSubjecktsLoading,
+    isError: isSubjecktsError,
+    data: subjecktsData,
+  } = useQuery(
+    ['teacher', teacherId],
+    () => TeacherAPI.getTeacherSubjects(teacherId),
+    {
+      refetchOnWindowFocus: false,
+      retry: false,
+    },
+  );
   const dispatch = useDispatch();
   if (isError) {
     dispatch(
@@ -38,38 +50,38 @@ const PersonalTeacherPage = () => {
   return (
     <PageLayout description={'Сторінка викладача'}>
       <div className={styles['personal-teacher-page']}>
-        <div className={styles['personal-teacher-page-content']}>
-          {isLoading ? (
+        {isLoading ? (
+          <div className={styles['personal-teacher-page-content']}>
             <div className={styles['loader']}>
               <Loader></Loader>
             </div>
-          ) : (
-            !isError && (
-              <div>
-                <Breadcrumbs
-                  className={styles['breadcrumbs']}
-                  items={[
-                    {
-                      label: 'Головна',
-                      href: '/',
-                    },
-                    { label: 'Викладачі', href: '/subjects' },
-                    {
-                      label: 'Викладач',
-                      href: '/teachers/[token]',
-                    },
-                  ]}
-                />
-                <div className={styles['card-wrapper']}>
-                  <PersonalTeacherCard {...data} />
-                </div>
-                <div className={styles['tabs']}>
-                  <PersonalTeacherTabs />
-                </div>
+          </div>
+        ) : (
+          !isError && (
+            <div className={styles['personal-teacher-page-content']}>
+              <Breadcrumbs
+                className={styles['breadcrumbs']}
+                items={[
+                  {
+                    label: 'Головна',
+                    href: '/',
+                  },
+                  { label: 'Викладачі', href: '/subjects' },
+                  {
+                    label: 'Викладач',
+                    href: '/teachers/$`{teacherId}',
+                  },
+                ]}
+              />
+              <div className={styles['card-wrapper']}>
+                <PersonalTeacherCard {...data} />
               </div>
-            )
-          )}
-        </div>
+              <div className={styles['tabs']}>
+                <PersonalTeacherTabs {...subjecktsData} />
+              </div>
+            </div>
+          )
+        )}
       </div>
     </PageLayout>
   );
