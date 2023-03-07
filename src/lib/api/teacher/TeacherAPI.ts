@@ -1,15 +1,15 @@
+import { TeacherSearchFormFields } from '@/components/pages/search-pages/search-form/types';
 import { getAuthorizationHeader } from '@/lib/api/utils';
 
 import { client } from '../instance';
 
 import { AddContactsBody } from './dto/AddContactsBody';
 import { CreateTeacherBody } from './dto/CreateTeacherBody';
-import { GetTeacherDTO } from './dto/GetTeacherDTO';
+import { GetTeacherDTO, GetTeachersDTO } from './dto/GetTeacherDTO';
 import { GetTeacherStatsDTO } from './dto/GetTeacherStatsDTO';
 import { UpdateTeacherBody } from './dto/UpdateTeacherBody';
-
 export class TeacherAPI {
-  static async get(teacherId: string): Promise<GetTeacherDTO> {
+  static async get(teacherId: string): Promise<GetTeachersDTO> {
     const { data } = await client.get(
       `/teachers/${teacherId}`,
       getAuthorizationHeader(),
@@ -17,11 +17,17 @@ export class TeacherAPI {
     return data;
   }
 
-  static async getAll(search?: string): Promise<GetTeacherDTO[]> {
-    const { data } = await client.get(
-      `/teachers?search=${search ? search : ''}`,
-      getAuthorizationHeader(),
-    );
+  static async getAll(
+    { search, order, sort, group }: TeacherSearchFormFields,
+    pageSize: number,
+  ): Promise<{ teachers: GetTeacherDTO[] }> {
+    const url = `/teachers?${search ? `search=${search}` : ''}${
+      order ? `&order=${order}` : ''
+    }${sort ? `&sort=${sort}` : ''}${group ? `&group=${group}` : ''}${
+      pageSize ? `&pageSize=${pageSize}` : ''
+    }`;
+
+    const { data } = await client.get(url, getAuthorizationHeader());
     return data;
   }
 

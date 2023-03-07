@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
@@ -30,6 +30,7 @@ export interface AlertProps {
   variant?: AlertVariant;
   isClosable?: boolean;
   className?: string;
+  closeFunction?: () => void;
 }
 
 const AlertColorMap = {
@@ -45,6 +46,7 @@ const Alert: React.FC<AlertProps> = ({
   color = AlertColor.INFO,
   variant = AlertVariant.FILLED,
   isClosable = true,
+  closeFunction,
   className: additionalClassName,
 }) => {
   let className: string;
@@ -68,7 +70,6 @@ const Alert: React.FC<AlertProps> = ({
     }
   }
   const Icon = AlertColorMap[color];
-  const [isVisible, setIsVisible] = useState(true);
   return (
     <div
       className={mergeClassNames(
@@ -77,7 +78,7 @@ const Alert: React.FC<AlertProps> = ({
         classSizeName,
         additionalClassName,
       )}
-      style={{ display: isVisible ? 'flex' : 'none' }}
+      style={{ display: 'flex' }}
     >
       {<Icon className={'icon ' + styles['alert-icon']} />}
 
@@ -91,7 +92,7 @@ const Alert: React.FC<AlertProps> = ({
       {isClosable && (
         <div
           className={'icon ' + styles['alert-icon-x']}
-          onClick={() => setIsVisible(false)}
+          onClick={() => closeFunction()}
         >
           <XMarkIcon />
         </div>

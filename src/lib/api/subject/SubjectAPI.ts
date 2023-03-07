@@ -1,3 +1,4 @@
+import { SubjectSearchFormFields } from '@/components/pages/search-pages/search-form/types';
 import { getAuthorizationHeader } from '@/lib/api/utils';
 
 import { client } from '../instance';
@@ -13,15 +14,28 @@ export class SubjectsAPI {
   static async getTeachersBySubject(
     disciplineId: string,
   ): Promise<GetTeachersBySubjectDTO> {
-    const { data } = await client.get(
-      `disciplines/${disciplineId}/teachers`,
-      getAuthorizationHeader(),
-    );
+    const { data } = await client.get(`subjects/${disciplineId}/teachers`);
     return data;
   }
 
-  static async getListOfSubjects(): Promise<GetListOfSubjectsDTO[]> {
-    const { data } = await client.get(`/subjects`, getAuthorizationHeader());
+  // static async getListOfSubjects(): Promise<GetListOfSubjectsDTO[]> {
+  //   const { data } = await client.get(`/subjects`, getAuthorizationHeader());
+  //   return data;
+  // }
+
+  static async getAll(
+    { search, order, sort, group }: SubjectSearchFormFields,
+    pageSize: number,
+  ): Promise<GetListOfSubjectsDTO> {
+    const url = `/subjects?${search ? `search=${search}` : ''}${
+      order ? `&order=${order}` : ''
+    }${sort ? `&sort=${sort}` : ''}${group ? `&group=${group}` : ''}${
+      pageSize ? `&pageSize=${pageSize}` : ''
+    }`;
+
+    console.log(url);
+
+    const { data } = await client.get(url, getAuthorizationHeader());
     return data;
   }
 

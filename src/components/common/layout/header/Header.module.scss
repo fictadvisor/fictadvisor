@@ -70,6 +70,11 @@
     gap: 8px;
 }
 
+.header-desktop-card {
+    width: 286px;
+    height: 42px;
+}
+
 .header-logo {
     @include flex-center;
 

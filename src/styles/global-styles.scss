@@ -4,6 +4,7 @@
 html, body {
   background-color: $background-dark--10;
   color: $gray-600;
+  scrollbar-gutter: stable;
 }
 
 .icon{
@@ -39,6 +40,8 @@ html, body {
 ::-webkit-scrollbar-corner {
   background: transparent;
 }
+
+
 
 
 input:-webkit-autofill,

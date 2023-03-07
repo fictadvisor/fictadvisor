@@ -10,7 +10,7 @@ $theme-color:$background-dark-0;
         background: $darker;
     }
     .#{$color}-outline-background-color{
-        background: $theme-color;
+        background: transparent;
         border: 1px solid $outline;        border-radius: 6px;
     }
  }
@@ -27,8 +27,17 @@ $theme-color:$background-dark-0;
   font-weight: 500;
 }
 
+.icon-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+}
+
 .tag{
-    @include flex-center;
+    white-space: nowrap;
+    display: flex;
+    justify-content: center;
     border-radius: 6px;
     gap: 4px;
  }

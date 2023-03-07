@@ -1,9 +1,11 @@
 export interface GetTeachersBySubjectDTO {
-  teachers: [
-    {
-      name: string;
-      id: string;
-      role: string;
-    },
-  ];
+  subjectName: string;
+  teachers: {
+    id: string;
+    firstName: string;
+    middleName: string;
+    lastName: string;
+    avatar: string;
+    roles: ('LECTURER' | 'LABORANT' | 'PRACTICIAN')[];
+  }[];
 }

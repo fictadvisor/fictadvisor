@@ -92,7 +92,7 @@ export const LecturerPollCard: React.FC<LecturerPollCardProps> = ({
       </Tooltip>
 
       <Button
-        color={disabled ? ButtonColor.PRIMARY : ButtonColor.SECONDARY}
+        color={disabled ? ButtonColor.SECONDARY : ButtonColor.PRIMARY}
         variant={ButtonVariant.OUTLINE}
         size={ButtonSize.SMALL}
         text={'Пройти опитування'}
@@ -141,6 +141,7 @@ export const SimpleCard: React.FC<SimpleCardProps> = ({
   details,
   rating,
   disabled,
+  ...rest
 }) => {
   return (
     <article
@@ -150,6 +151,7 @@ export const SimpleCard: React.FC<SimpleCardProps> = ({
         styles['card-effect'],
         styles['simple-card-container'],
       )}
+      {...rest}
     >
       <div
         className={mergeClassNames(
@@ -175,7 +177,7 @@ const CardRoles: React.FC<{ roles: string[]; disabled?: boolean }> = ({
     <div className={styles['card-roles']}>
       {roles.map(role => {
         switch (role) {
-          case 'лаборант':
+          case 'LABORANT':
             return (
               <Tag
                 size={TagSize.SMALL}
@@ -185,7 +187,7 @@ const CardRoles: React.FC<{ roles: string[]; disabled?: boolean }> = ({
                 key={Math.random()}
               />
             );
-          case 'лектор':
+          case 'LECTURER':
             return (
               <Tag
                 size={TagSize.SMALL}
@@ -195,7 +197,7 @@ const CardRoles: React.FC<{ roles: string[]; disabled?: boolean }> = ({
                 key={Math.random()}
               />
             );
-          case 'практик':
+          case 'PRACTICIAN':
             return (
               <Tag
                 size={TagSize.SMALL}

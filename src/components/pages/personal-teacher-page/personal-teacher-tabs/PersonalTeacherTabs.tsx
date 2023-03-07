@@ -21,7 +21,11 @@ const TabsPage = () => {
   return (
     <div className={styles['tabs']}>
       <div className={styles['karusel']}>
-        <TabList className={styles['tab-list-desktop']} onChange={setIndex}>
+        <TabList
+          className={styles['tab-list-desktop']}
+          onChange={setIndex}
+          currentValue={index}
+        >
           <TabItem
             size={TabItemContentSize.NORMAL}
             className="tab-item"
@@ -52,7 +56,11 @@ const TabsPage = () => {
             value={'4'}
           ></TabItem>
         </TabList>
-        <TabList className={styles['tab-list-mobile']} onChange={setIndex}>
+        <TabList
+          className={styles['tab-list-mobile']}
+          onChange={setIndex}
+          currentValue={index}
+        >
           <TabItem
             size={TabItemContentSize.SMAll}
             className="tab-item"
