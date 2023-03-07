@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { PlusIcon } from '@heroicons/react/24/solid';
 
 import { CaptainIcon } from '@/components/common/custom-svg/CaptainIcon';
 import { ModeratorIcon } from '@/components/common/custom-svg/ModeratorIcon';
+import { AlertColor } from '@/components/common/ui/alert';
 import {
   IconButton,
   IconButtonShape,
@@ -14,6 +16,7 @@ import { StudentRole } from '@/components/pages/account-page/components/group-ta
 import { TextAreaPopup } from '@/components/pages/account-page/components/group-tab/components/text-area-popup';
 import useAuthentication from '@/hooks/use-authentication';
 import { GroupAPI } from '@/lib/api/group/GroupAPI';
+import { showAlert } from '@/redux/reducers/alert.reducer';
 
 import styles from './MobileStudentTable.module.scss';
 
@@ -40,6 +43,7 @@ const MobileStudentTable: React.FC<StudentTableProps> = ({
 
   const { user } = useAuthentication();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const dispatch = useDispatch();
   const handleAddStudents = async value => {
     try {
       const emails = value
@@ -50,7 +54,24 @@ const MobileStudentTable: React.FC<StudentTableProps> = ({
       await GroupAPI.addStudentsByMail(user.group.id, { emails });
       setIsPopupOpen(false);
       refetch();
-    } catch (e) {}
+    } catch (e) {
+      const name = e.response?.data.error;
+      if (name === 'AlreadyRegisteredException') {
+        dispatch(
+          showAlert({
+            title: 'Один або декілька користувачів вже зареєстровані!',
+            color: AlertColor.ERROR,
+          }),
+        );
+      } else {
+        dispatch(
+          showAlert({
+            title: 'Здається ти ввів неправильні значення!',
+            color: AlertColor.ERROR,
+          }),
+        );
+      }
+    }
   };
 
   return (

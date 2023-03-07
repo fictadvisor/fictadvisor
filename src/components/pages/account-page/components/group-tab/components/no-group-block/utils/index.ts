@@ -1,7 +1,4 @@
-import { Group } from 'next/dist/shared/lib/router/utils/route-regex';
-
 import { RegisterFormFields } from '@/components/pages/register/register-page/components/register-form/types';
-
 export const transformData = (data: RegisterFormFields) => ({
   student: {
     groupId: data.group,

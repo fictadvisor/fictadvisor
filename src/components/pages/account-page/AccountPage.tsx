@@ -59,7 +59,7 @@ const AccountPage = () => {
     }
   }, [tab, isReady, push, query]);
 
-  const { user, isLoggedIn } = useAuthentication();
+  const { isLoggedIn } = useAuthentication();
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -90,8 +90,9 @@ const AccountPage = () => {
             await push({ query: { ...query, tab: value } }, undefined, {
               shallow: true,
             });
-            setIndex(value);
+            setIndex(value as AccountPageTabs);
           }}
+          currentValue={index}
         >
           <TabItem
             size={TabItemContentSize.NORMAL}

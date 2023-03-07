@@ -27,13 +27,13 @@ const RightBlock = () => {
 
   return (
     <div className={styles['right-block']}>
-      {isError && (
-        <AlertPopup
-          title="Неможливо авторизуватись за допомогою Telegram"
-          variant={AlertVariant.FILLED}
-          color={AlertColor.ERROR}
-        />
-      )}
+      {/*{isError && (*/}
+      {/*  <AlertPopup*/}
+      {/*    title="Неможливо авторизуватись за допомогою Telegram"*/}
+      {/*    variant={AlertVariant.FILLED}*/}
+      {/*    color={AlertColor.ERROR}*/}
+      {/*  />*/}
+      {/*)  } //TODO*/}
       <img
         className={styles['mobile-login-logo']}
         src="/assets/login-page/new_logo.png"

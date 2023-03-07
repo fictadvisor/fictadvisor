@@ -1,13 +1,16 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 
 import { CustomCheck } from '@/components/common/custom-svg/CustomCheck';
+import { AlertColor } from '@/components/common/ui/alert';
 import AlertButton, {
   AlertButtonVariant,
 } from '@/components/common/ui/alert-button';
 import CustomDivider from '@/components/pages/account-page/components/divider';
 import useAuthentication from '@/hooks/use-authentication';
 import { GroupAPI } from '@/lib/api/group/GroupAPI';
+import { showAlert } from '@/redux/reducers/alert.reducer';
 
 import styles from './RequestTable.module.scss';
 
@@ -25,14 +28,37 @@ interface StudentTableProps {
 
 const RequestTable: React.FC<StudentTableProps> = ({ rows, refetch }) => {
   const { user } = useAuthentication();
+  const dispatch = useDispatch();
   const handleApprove = async (userId: string) => {
-    await GroupAPI.verifyStudent(user.group.id, userId, { state: 'APPROVED' });
-    await refetch();
+    try {
+      await GroupAPI.verifyStudent(user.group.id, userId, {
+        state: 'APPROVED',
+      });
+      await refetch();
+    } catch (e) {
+      dispatch(
+        showAlert({
+          title: 'Щось пішло не так, спробуй пізніше!',
+          color: AlertColor.ERROR,
+        }),
+      );
+    }
   };
 
   const handleDecline = async (userId: string) => {
-    await GroupAPI.verifyStudent(user.group.id, userId, { state: 'DECLINED' });
-    await refetch();
+    try {
+      await GroupAPI.verifyStudent(user.group.id, userId, {
+        state: 'DECLINED',
+      });
+      await refetch();
+    } catch (e) {
+      dispatch(
+        showAlert({
+          title: 'Щось пішло не так, спробуй пізніше!',
+          color: AlertColor.ERROR,
+        }),
+      );
+    }
   };
 
   return (

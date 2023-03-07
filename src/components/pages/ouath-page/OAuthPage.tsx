@@ -10,6 +10,7 @@ import AuthService from '@/lib/services/auth';
 import StorageUtil from '@/lib/utils/StorageUtil';
 
 const OAuthPage = () => {
+  //TODO ЗРОБИ ПЛЗ
   const router = useRouter();
   const { token } = router.query;
   const { user, isLoggedIn } = useAuthentication();

@@ -1,6 +1,7 @@
 import { ChangeInfoBody } from '@/lib/api/user/dto/ChangeInfoBody';
 import { GetContactsDTO } from '@/lib/api/user/dto/GetContactsDTO';
 import { LinkTelegramBody } from '@/lib/api/user/dto/LinkTelegramBody';
+import { RequestNewGroupBody } from '@/lib/api/user/dto/RequestNewGroupBody';
 import { getAuthorizationHeader } from '@/lib/api/utils';
 
 import { client } from '../instance';
@@ -79,6 +80,14 @@ export class UserAPI {
   ) {
     const { data } = await client.delete(
       `/users/${userId}/roles/${roleId}`,
+      getAuthorizationHeader(),
+    );
+    return data;
+  }
+
+  static async requestNewGroup(body: RequestNewGroupBody, userId: string) {
+    const { data } = await client.patch(
+      `/users/${userId}/requestNewGroup`,
       getAuthorizationHeader(),
     );
     return data;

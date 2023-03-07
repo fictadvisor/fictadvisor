@@ -1,16 +1,17 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
+import { useDispatch } from 'react-redux';
 import { Form, Formik } from 'formik';
 import * as yup from 'yup';
 
 import { CustomCheck } from '@/components/common/custom-svg/CustomCheck';
 import { AlertColor } from '@/components/common/ui/alert';
-import AlertPopup from '@/components/common/ui/alert-popup';
 import Button, { ButtonColor, ButtonSize } from '@/components/common/ui/button';
 import { Dropdown, Input, InputSize } from '@/components/common/ui/form';
 import { ContactType } from '@/components/pages/account-page/components/general-tab/components/contacts-block/types';
 import styles from '@/components/pages/account-page/components/general-tab/GeneralTab.module.scss';
 import useAuthentication from '@/hooks/use-authentication';
 import { UserAPI } from '@/lib/api/user/UserAPI';
+import { showAlert } from '@/redux/reducers/alert.reducer';
 
 interface ContactFormProps {
   refetchContacts;
@@ -18,8 +19,7 @@ interface ContactFormProps {
 
 const ContactForm: FC<ContactFormProps> = ({ refetchContacts }) => {
   const { user } = useAuthentication();
-  const [error, setError] = useState('');
-
+  const dispatch = useDispatch();
   const options = Object.values(ContactType).map(contact => ({
     label: contact,
     value: contact,
@@ -29,24 +29,18 @@ const ContactForm: FC<ContactFormProps> = ({ refetchContacts }) => {
     try {
       await UserAPI.addContact(user.id, data);
       refetchContacts();
-    } catch (err) {
-      const error = err.response?.data.error;
-      if (error === 'InvalidBodyException') {
-        setError('Здається, ви ввели неправильні значення');
-        setTimeout(() => setError(''), 5000);
-      }
+    } catch (e) {
+      dispatch(
+        showAlert({
+          title: 'Здається ти ввів неправильні значення!',
+          color: AlertColor.ERROR,
+        }),
+      );
     }
   };
 
   return (
     <div className={styles['add-social-links-container']}>
-      {error && (
-        <AlertPopup
-          title="Помилка!"
-          description={error}
-          color={AlertColor.ERROR}
-        //TODO
-      )}
       <Formik
         enableReinitialize
         validationSchema={yup.object().shape({

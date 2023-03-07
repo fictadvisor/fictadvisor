@@ -1,16 +1,16 @@
-import React, { FC, useState } from 'react';
-import { shallowEqual } from 'react-redux';
+import React, { FC } from 'react';
+import { shallowEqual, useDispatch } from 'react-redux';
 import { Form, Formik } from 'formik';
 
 import { CustomCheck } from '@/components/common/custom-svg/CustomCheck';
 import { AlertColor } from '@/components/common/ui/alert';
-import AlertPopup from '@/components/common/ui/alert-popup';
 import Button, { ButtonSize } from '@/components/common/ui/button';
 import { Input, InputSize } from '@/components/common/ui/form';
 import { PersonalInfoForm } from '@/components/pages/account-page/components/general-tab/components/personal-info/types';
 import { validationSchema } from '@/components/pages/account-page/components/general-tab/components/personal-info/validation';
 import useAuthentication from '@/hooks/use-authentication';
 import { UserAPI } from '@/lib/api/user/UserAPI';
+import { showAlert } from '@/redux/reducers/alert.reducer';
 
 import styles from '../../GeneralTab.module.scss';
 
@@ -22,22 +22,24 @@ const PersonalInfoBlock: FC = () => {
     middleName: user.middleName,
   };
 
-  const [isUpdated, setIsUpdated] = useState(false);
+  const dispatch = useDispatch();
 
   const handleSubmit = async (data: PersonalInfoForm) => {
-    await UserAPI.changeInfo(user.id, data);
-    update();
+    try {
+      await UserAPI.changeInfo(user.id, data);
+      update();
+    } catch (e) {
+      dispatch(
+        showAlert({
+          title: 'Щось пішло не так, спробуй пізніше!',
+          color: AlertColor.ERROR,
+        }),
+      );
+    }
   };
 
   return (
     <>
-      {isUpdated && (
-        <AlertPopup
-          title="Вітаємо!"
-          description="Ваші дані успішно збережено"
-          color={AlertColor.SUCCESS} //TODO
-        />
-      )}
       <Formik
         enableReinitialize
         initialValues={initialValues}

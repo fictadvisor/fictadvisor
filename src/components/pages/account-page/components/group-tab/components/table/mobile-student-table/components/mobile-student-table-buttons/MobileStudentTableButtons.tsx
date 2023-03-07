@@ -1,4 +1,5 @@
-import React, { FC, useRef } from 'react';
+import React, { FC, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import {
   ArrowDownCircleIcon,
   ArrowUpCircleIcon,
@@ -6,7 +7,13 @@ import {
   TrashIcon,
 } from '@heroicons/react/24/outline';
 
-import Button, { ButtonVariant } from '@/components/common/ui/button';
+import { Popup } from '@/components/common/composite/popup';
+import { AlertColor } from '@/components/common/ui/alert';
+import Button, {
+  ButtonColor,
+  ButtonSize,
+  ButtonVariant,
+} from '@/components/common/ui/button';
 import {
   IconButton,
   IconButtonColor,
@@ -17,6 +24,7 @@ import dataMapper from '@/components/pages/account-page/components/group-tab/com
 import useAuthentication from '@/hooks/use-authentication';
 import useOutsideClick from '@/hooks/use-outside-click';
 import { GroupAPI } from '@/lib/api/group/GroupAPI';
+import { showAlert } from '@/redux/reducers/alert.reducer';
 
 import styles from './MobileStudentTableButtons.module.scss';
 
@@ -37,17 +45,40 @@ const MobileStudentTableButtons: FC<MobileStudentTableButtonsProps> = ({
   refetch,
 }) => {
   const { user } = useAuthentication();
+  const [isOpenDelete, setIsOpenDelete] = useState(false);
+  const [isOpenChange, setIsOpenChange] = useState(false);
+  const dispatch = useDispatch();
   const handleDelete = async () => {
-    await GroupAPI.removeStudent(user.group.id, student.id);
-    await refetch();
+    try {
+      setIsOpenDelete(false);
+      await GroupAPI.removeStudent(user.group.id, student.id);
+      await refetch();
+    } catch (e) {
+      dispatch(
+        showAlert({
+          title: 'Щось пішло не так, спробуй пізніше!',
+          color: AlertColor.ERROR,
+        }),
+      );
+    }
   };
 
-  const handleChangeRole = async () => {
-    await GroupAPI.switchStudentRole(user.group.id, student.id, {
-      roleName:
-        student.role === StudentRole.MODERATOR ? 'STUDENT' : 'MODERATOR',
-    });
-    await refetch();
+  const handleChangeStatus = async () => {
+    try {
+      setIsOpenChange(false);
+      await GroupAPI.switchStudentRole(user.group.id, student.id, {
+        roleName:
+          student.role === StudentRole.MODERATOR ? 'STUDENT' : 'MODERATOR',
+      });
+      await refetch();
+    } catch (e) {
+      dispatch(
+        showAlert({
+          title: 'Щось пішло не так, спробуй пізніше!',
+          color: AlertColor.ERROR,
+        }),
+      );
+    }
   };
 
   const buttonIcon = student.role ? (
@@ -62,6 +93,68 @@ const MobileStudentTableButtons: FC<MobileStudentTableButtonsProps> = ({
   const buttonName = student.role ? StudentRole.STUDENT : StudentRole.MODERATOR;
   return (
     <>
+      {isOpenChange && (
+        <Popup
+          isClosable={true}
+          hasIcon={true}
+          title={
+            student.role === StudentRole.MODERATOR
+              ? 'Зробити студентом'
+              : 'Зробити зам старостою'
+          }
+          text={`Ви дійсно бажаєте зробити користувача ${student.fullName} ${
+            student.role === StudentRole.MODERATOR
+              ? 'зробити студентом'
+              : 'зробити зам старостою'
+          }?`}
+          closeFunction={() => setIsOpenChange(false)}
+          firstButton={
+            <Button
+              size={ButtonSize.SMALL}
+              text="Скасувати"
+              color={ButtonColor.PRIMARY}
+              variant={ButtonVariant.OUTLINE}
+              onClick={() => setIsOpenChange(false)}
+            />
+          }
+          secondButton={
+            <Button
+              size={ButtonSize.SMALL}
+              text="Так"
+              color={ButtonColor.PRIMARY}
+              variant={ButtonVariant.FILLED}
+              onClick={handleChangeStatus}
+            />
+          }
+        />
+      )}
+      {isOpenDelete && (
+        <Popup
+          isClosable={true}
+          hasIcon={true}
+          title="Видалити користувача"
+          text={`Чи дійсно ви бажаєте видалити користувача ${student.fullName}? Якщо ви випадково видалите користувача, йому треба буд відправити повторний запит до групи.`}
+          closeFunction={() => setIsOpenDelete(false)}
+          firstButton={
+            <Button
+              size={ButtonSize.SMALL}
+              text="Скасувати"
+              color={ButtonColor.PRIMARY}
+              variant={ButtonVariant.OUTLINE}
+              onClick={() => setIsOpenDelete(false)}
+            />
+          }
+          secondButton={
+            <Button
+              size={ButtonSize.SMALL}
+              text="Так"
+              color={ButtonColor.PRIMARY}
+              variant={ButtonVariant.FILLED}
+              onClick={handleDelete}
+            />
+          }
+        />
+      )}
       {dataMapper[user.group.role] === StudentRole.CAPTAIN ? (
         <>
           {student.role !== StudentRole.CAPTAIN ? (
@@ -78,14 +171,14 @@ const MobileStudentTableButtons: FC<MobileStudentTableButtonsProps> = ({
                     text={buttonName}
                     variant={ButtonVariant.TEXT}
                     startIcon={buttonIcon}
-                    onClick={handleChangeRole}
+                    onClick={() => setIsOpenChange(true)}
                   />
                   <Button
                     className={styles['dropdown-button']}
                     text={'Видалити'}
                     variant={ButtonVariant.TEXT}
                     startIcon={<TrashIcon className={'icon'} />}
-                    onClick={handleDelete}
+                    onClick={() => setIsOpenDelete(true)}
                   />
                 </div>
               )}
@@ -118,7 +211,7 @@ const MobileStudentTableButtons: FC<MobileStudentTableButtonsProps> = ({
                       text={'Видалити'}
                       variant={ButtonVariant.TEXT}
                       startIcon={<TrashIcon className={'icon'} />}
-                      onClick={handleDelete}
+                      onClick={() => setIsOpenDelete(true)}
                     />
                   </div>
                 )}
