@@ -1,5 +1,5 @@
 .content{
-  width: 45%;
+  width: fit-content;
 }
 
 .division {
@@ -51,9 +51,6 @@
 }
 
 @media screen and (max-width: 1024px){
-  .content{
-    width: 85%;
-  }
   .alert{
     text-wrap: normal;
     height: fit-content;
