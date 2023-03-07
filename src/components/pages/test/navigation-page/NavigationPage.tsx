@@ -10,12 +10,7 @@ const NavigationPage = () => {
       style={{ backgroundColor: '#1e1e1e' }}
     >
       <div className={styles['header']}>
-        <Header
-          isLoggined={false}
-          name="Ярмоленко Єлизавета Миколаївна"
-          position="Зам староста"
-          groupName="ІК-11"
-        />
+        <Header />
       </div>
       <p>
         *Lorem ipsum dolor sit amet coninus quod esse, illum omnis unde?

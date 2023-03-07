@@ -20,7 +20,7 @@ interface BreadcrumbsProps {
 const Breadcrumbs: FC<BreadcrumbsProps> = ({ items, className }) => {
   const breadcrumbs = items.map((item, index) => (
     <>
-      <div className={styles['breadcrumb']}>
+      <div key={index} className={styles['breadcrumb']}>
         <a href={item.href}>
           {index === 0 && (
             <HomeIcon
