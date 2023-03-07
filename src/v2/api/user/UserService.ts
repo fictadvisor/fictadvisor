@@ -17,6 +17,7 @@ import { GroupService } from '../group/GroupService';
 import { TelegramDTO } from '../auth/dto/TelegramDTO';
 import { InvalidTelegramCredentialsException } from '../../utils/exceptions/InvalidTelegramCredentialsException';
 import { UpdateStudentData } from './data/UpdateStudentData';
+import { AlreadyRegisteredException } from '../../utils/exceptions/AlreadyRegisteredException';
 
 @Injectable()
 export class UserService {
@@ -76,9 +77,16 @@ export class UserService {
 
   async requestNewGroup (id: string, { groupId, isCaptain }: GroupRequestDTO) {
     const student = await this.studentRepository.get(id);
-    if (student.state === State.APPROVED)
+    if (student.state === State.APPROVED) {
       throw new ForbiddenException();
-    
+    }
+
+    const captain = await this.groupService.getCaptain(groupId);
+
+    if (captain && isCaptain) {
+      throw new AlreadyRegisteredException();
+    }
+
     await this.studentRepository.update(id, { state: State.PENDING });
     const name = {
       firstName: student.firstName,

@@ -13,6 +13,7 @@ import { UpdateGroupDTO } from './dto/UpdateGroupDTO';
 import { UserService } from '../user/UserService';
 import { RoleRepository } from '../user/role/RoleRepository';
 import { AVATARS } from '../auth/AuthService';
+import { AlreadyRegisteredException } from '../../utils/exceptions/AlreadyRegisteredException';
 
 const ROLE_LIST = [
   {
@@ -86,6 +87,10 @@ export class GroupService {
 
   async addUnregistered (groupId: string, body: EmailDTO) {
     const users = [];
+    for (const email of body.emails) {
+      const user = await this.userRepository.getByUnique({ email });
+      if (user) throw new AlreadyRegisteredException();
+    }
     for (const email of body.emails) {
       const user = await this.userRepository.create({
         email,
