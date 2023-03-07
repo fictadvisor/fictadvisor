@@ -134,6 +134,7 @@ export class UserService {
       telegramId: student.user.telegramId,
       group: !hasGroup ? undefined : {
         ...student.group,
+        state: student.state,
         role: this.getGroupRole(student.roles)?.name,
       },
     };
