@@ -87,9 +87,14 @@
         columns: 2;
     }
 }
-
+@media only screen and (min-width: $breakpoint-desktop) {
+    .form {
+        grid-template-columns: 25% 15% 20% 5%;
+    }
+}
 
 @media only screen and (min-width: $breakpoint-tablet) and (max-width: $breakpoint-desktop) {
+
     .teacher-search-list {
         grid-template-columns: repeat(3, 1fr);
         column-gap: 32px;
