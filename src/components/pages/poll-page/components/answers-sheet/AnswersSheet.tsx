@@ -247,14 +247,14 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
               )}
             </Formik>
           </div>
-          {errorMessage && (
-            <AlertPopup
-              title="Помилка"
-              description={errorMessage}
-              variant={AlertVariant.FILLED}
-              color={AlertColor.ERROR}
-            />
-          )}
+          {/*{errorMessage && (*/}
+          {/*  <AlertPopup*/}
+          {/*    title="Помилка"*/}
+          {/*    description={errorMessage}*/}
+          {/*    variant={AlertVariant.FILLED}*/}
+          {/*    color={AlertColor.ERROR}*/}
+          {/* //TODO />*/}
+          {/*)}*/}
         </>
       )}
     </div>

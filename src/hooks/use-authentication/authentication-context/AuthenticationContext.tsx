@@ -25,8 +25,6 @@ const AuthenticationProvider: FC<AuthenticationProviderProps> = ({
     },
   );
 
-  console.log(jwt, error);
-
   if (error && !isFetching) {
     const status = (error as AxiosError).response?.status;
     if (jwt && status === 401) {

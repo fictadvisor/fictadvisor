@@ -13,6 +13,8 @@ import '@/styles/global-styles.scss';
 
 const queryClient = new QueryClient();
 
+if (!process.browser) React.useLayoutEffect = React.useEffect;
+
 const Application = ({ Component, pageProps }: AppProps) => {
   return (
     <Provider store={store}>

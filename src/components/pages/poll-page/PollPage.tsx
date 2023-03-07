@@ -82,7 +82,7 @@ const initialState = {
 
 const PollPage = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const { user, isLoggedIn, isAuthenticationFetching } = useAuthentication();
+  const { user, isLoggedIn } = useAuthentication();
   const router = useRouter();
   const disciplineTeacherId = router.query.disciplineTeacherId as string;
   const {
@@ -101,14 +101,14 @@ const PollPage = () => {
   );
 
   useEffect(() => {
-    if (!isLoggedIn && !isAuthenticationFetching) {
+    if (!isLoggedIn) {
       void router.push('/login');
     }
-  }, [isAuthenticationFetching, isLoggedIn, router]);
+  }, [isLoggedIn, router]);
 
   useEffect(() => {
-    setIsLoading(isQuestionsLoading || isAuthenticationFetching);
-  }, [isQuestionsLoading, isAuthenticationFetching]);
+    setIsLoading(isQuestionsLoading);
+  }, [isQuestionsLoading]);
 
   const status =
     FetchingQuestionsError &&
@@ -145,22 +145,22 @@ const PollPage = () => {
             </div>
           ) : null}
         </div>
-        {FetchingQuestionsError && !isLoading && (
-          <AlertPopup
-            title="Помилка!"
-            description={
-              status === 'InvalidEntityIdException'
-                ? 'Не знайдено опитування з таким id'
-                : status === 'AnswerInDatabasePermissionException'
-                ? 'Ви не маєте доступу до цієї сторінки оскільки вже пройшли опитування!'
-                : status === 'NoPermissionException'
-                ? ' У вас недостатньо прав для цієї дії'
-                : 'Помилка на сервері =('
-            }
-            variant={AlertVariant.FILLED}
-            color={AlertColor.ERROR}
-          />
-        )}
+        {/*{FetchingQuestionsError && !isLoading && (*/}
+        {/*  <AlertPopup*/}
+        {/*    title="Помилка!"*/}
+        {/*    description={*/}
+        {/*      status === 'InvalidEntityIdException'*/}
+        {/*        ? 'Не знайдено опитування з таким id'*/}
+        {/*        : status === 'AnswerInDatabasePermissionException'*/}
+        {/*        ? 'Ви не маєте доступу до цієї сторінки оскільки вже пройшли опитування!'*/}
+        {/*        : status === 'NoPermissionException'*/}
+        {/*        ? ' У вас недостатньо прав для цієї дії'*/}
+        {/*        : 'Помилка на сервері =('*/}
+        {/*    }*/}
+        {/*    variant={AlertVariant.FILLED}*/}
+        {/*    color={AlertColor.ERROR}*/}
+        {/* //TODO />*/}
+        {/*)}*/}
       </div>
     </PageLayout>
   );
