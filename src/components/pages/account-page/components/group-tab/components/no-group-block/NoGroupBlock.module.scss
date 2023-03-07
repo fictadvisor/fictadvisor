@@ -4,7 +4,7 @@
 
 .division {
   display: flex;
-  margin: 20px 0 30px 0;  width: 100%;
+  margin: 16px 0 24px 0;  width: 100%;
   align-items: center;
   .white {
     flex-grow: 1;
@@ -32,13 +32,27 @@
   }
 }
 
+.button-group{
+  margin-top: 24px;
+  width: 184px;
+  padding: 8px 16px;
+}
+
+.alert-desktop-pending{
+  width: fit-content;
+}
+
 .alert-mobile{
   display: none;
 }
 
+.dropdown{
+  width: 85%;
+}
+
 @media screen and (max-width: 1024px){
   .content{
-    width: 100%;
+    width: 85%;
   }
   .alert{
     text-wrap: normal;
@@ -52,5 +66,14 @@
   }
   .alert-mobile{
     display: flex;
+  }
+}
+
+@media screen and (max-width: 480px){
+  .content{
+    width: 100%;
+  }
+  .dropdown{
+    width: 100%;
   }
 }
