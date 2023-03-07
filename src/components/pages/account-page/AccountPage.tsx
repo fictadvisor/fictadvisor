@@ -116,31 +116,33 @@ const AccountPage = () => {
             value={AccountPageTabs.GROUP}
           />
         </TabList>
-        <TabPanelsList
-          className={styles['tab-panels-list']}
-          currentValue={index}
-        >
-          <>
-            <TabPanel
-              className={styles['tab-panel']}
-              value={AccountPageTabs.GENERAL}
-            >
-              <GeneralTab />
-            </TabPanel>
-            <TabPanel
-              className={styles['tab-panel']}
-              value={AccountPageTabs.SECURITY}
-            >
-              <SecurityTab />
-            </TabPanel>
-            <TabPanel
-              className={styles['tab-panel']}
-              value={AccountPageTabs.GROUP}
-            >
-              <GroupTab />
-            </TabPanel>
-          </>
-        </TabPanelsList>
+        {isLoggedIn && (
+          <TabPanelsList
+            className={styles['tab-panels-list']}
+            currentValue={index}
+          >
+            <>
+              <TabPanel
+                className={styles['tab-panel']}
+                value={AccountPageTabs.GENERAL}
+              >
+                <GeneralTab />
+              </TabPanel>
+              <TabPanel
+                className={styles['tab-panel']}
+                value={AccountPageTabs.SECURITY}
+              >
+                <SecurityTab />
+              </TabPanel>
+              <TabPanel
+                className={styles['tab-panel']}
+                value={AccountPageTabs.GROUP}
+              >
+                <GroupTab />
+              </TabPanel>
+            </>
+          </TabPanelsList>
+        )}
       </div>
     </PageLayout>
   );
