@@ -20,9 +20,9 @@ const RightBlock = () => {
   const [isError, setIsError] = useState(false);
   const handleClick = async () => {
     const isSuccess = await AuthService.loginTelegram();
-    if (isSuccess) await router.push('/');
-    else setIsError(true);
-    setTimeout(() => setIsError(false), 7500);
+    // if (isSuccess) await router.push('/');
+    // else setIsError(true);
+    // setTimeout(() => setIsError(false), 7500);
   };
 
   return (
