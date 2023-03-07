@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { ChevronLeftIcon } from '@heroicons/react/24/outline';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import CustomTelegramIcon from '@/components/common/custom-svg/CustomTelegramIcon';
@@ -78,6 +80,15 @@ const RightBlock = () => {
         variant={ButtonVariant.OUTLINE}
         className={styles['register-mobile-button']}
       />
+      <Link href="/">
+        <Button
+          className={styles['comeback-button']}
+          text="Повернутись на головну"
+          startIcon={<ChevronLeftIcon className="icon" />}
+          variant={ButtonVariant.TEXT}
+          size={ButtonSize.SMALL}
+        />
+      </Link>
     </div>
   );
 };

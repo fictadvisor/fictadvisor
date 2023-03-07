@@ -1,4 +1,5 @@
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
+import Link from 'next/link';
 
 import Button, { ButtonColor, ButtonSize } from '@/components/common/ui/button';
 
@@ -19,16 +20,20 @@ const NotFoundPage = () => (
           alt="Це 404"
         />
         <div className={styles['button']}>
-          <Button
-            text={'Повернутися на головну'}
-            size={ButtonSize.LARGE}
-            color={ButtonColor.SECONDARY}
-            startIcon={<ChevronLeftIcon className={'icon'} />}
-          />
-          <Button
-            text={"Зв'язатися з адміністратором"}
-            size={ButtonSize.LARGE}
-          />
+          <Link href={'/'}>
+            <Button
+              text={'Повернутися на головну'}
+              size={ButtonSize.LARGE}
+              color={ButtonColor.SECONDARY}
+              startIcon={<ChevronLeftIcon className={'icon'} />}
+            />
+          </Link>
+          <Link href={'https://t.me/fict_robot'}>
+            <Button
+              text={"Зв'язатися з адміністратором"}
+              size={ButtonSize.LARGE}
+            />
+          </Link>
         </div>
       </div>
     </div>

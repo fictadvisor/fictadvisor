@@ -1,4 +1,5 @@
 import mergeClassNames from 'merge-class-names';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import Button from '@/components/common/ui/button';
@@ -10,11 +11,13 @@ const LeftBlock = () => {
 
   return (
     <div className={styles['left-block']}>
-      <img
-        className={styles['login-logo']}
-        src="/assets/login-page/new_logo.png"
-        alt="fict advisor logo"
-      />
+      <Link href="/">
+        <img
+          className={styles['login-logo']}
+          src="/assets/login-page/new_logo.png"
+          alt="fict advisor logo"
+        />
+      </Link>
       <h3 className={mergeClassNames(styles['register-text'])}>
         Ти ще не знами? Приєднуйся!
       </h3>

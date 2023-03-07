@@ -1,5 +1,6 @@
 import React from 'react';
 import { useQuery } from 'react-query';
+import Link from 'next/link';
 import BannerImage from 'public/assets/main-page/BannerImage';
 
 import PageLayout from '@/components/common/layout/page-layout/PageLayout';
@@ -14,7 +15,6 @@ import { StudentResourcesAPI } from '@/lib/api/student-resources/StudentResource
 import ResourceCard from './components/ResourceCard';
 
 import styles from './MainPage.module.scss';
-
 const MainPage = () => {
   const { isLoading, data } = useQuery(
     ['resources'],
@@ -39,51 +39,63 @@ const MainPage = () => {
                 </p>
                 <div className={styles['buttons']}>
                   <div className={styles['buttons-desk']}>
-                    <Button
-                      text="Доєднатись"
-                      disabled={false}
-                      color={ButtonColor.PRIMARY}
-                      variant={ButtonVariant.FILLED}
-                      size={ButtonSize.LARGE}
-                    />
+                    <Link href={'/register'}>
+                      <Button
+                        text="Доєднатись"
+                        disabled={false}
+                        color={ButtonColor.PRIMARY}
+                        variant={ButtonVariant.FILLED}
+                        size={ButtonSize.LARGE}
+                      />
+                    </Link>
                     <hr className={styles['button-divider']} />
-                    <Button
-                      text={'Пройти Опитування 2022'}
-                      disabled={false}
-                      variant={ButtonVariant.OUTLINE}
-                      size={ButtonSize.LARGE}
-                    />
+                    <Link href={'/poll'}>
+                      <Button
+                        text={'Пройти Опитування 2022'}
+                        disabled={false}
+                        variant={ButtonVariant.OUTLINE}
+                        size={ButtonSize.LARGE}
+                      />
+                    </Link>
                   </div>
                   <div className={styles['buttons-tabl']}>
-                    <Button
-                      text="Доєднатись"
-                      disabled={false}
-                      color={ButtonColor.PRIMARY}
-                      variant={ButtonVariant.FILLED}
-                      size={ButtonSize.MEDIUM}
-                    />
+                    <Link href={'/register'}>
+                      <Button
+                        text="Доєднатись"
+                        disabled={false}
+                        color={ButtonColor.PRIMARY}
+                        variant={ButtonVariant.FILLED}
+                        size={ButtonSize.MEDIUM}
+                      />
+                    </Link>
                     <hr className={styles['button-divider']} />
-                    <Button
-                      text={'Пройти Опитування 2022'}
-                      disabled={false}
-                      variant={ButtonVariant.OUTLINE}
-                      size={ButtonSize.MEDIUM}
-                    />
+                    <Link href={'/poll'}>
+                      <Button
+                        text={'Пройти Опитування 2022'}
+                        disabled={false}
+                        variant={ButtonVariant.OUTLINE}
+                        size={ButtonSize.MEDIUM}
+                      />
+                    </Link>
                   </div>
                   <div className={styles['buttons-mob']}>
-                    <Button
-                      text="Доєднатись"
-                      disabled={false}
-                      color={ButtonColor.PRIMARY}
-                      variant={ButtonVariant.FILLED}
-                      size={ButtonSize.SMALL}
-                    />
-                    <Button
-                      text={'Опитування 2022'}
-                      disabled={false}
-                      variant={ButtonVariant.OUTLINE}
-                      size={ButtonSize.SMALL}
-                    />
+                    <Link href={'/register'}>
+                      <Button
+                        text="Доєднатись"
+                        disabled={false}
+                        color={ButtonColor.PRIMARY}
+                        variant={ButtonVariant.FILLED}
+                        size={ButtonSize.SMALL}
+                      />
+                    </Link>
+                    <Link href={'/poll'}>
+                      <Button
+                        text={'Опитування 2022'}
+                        disabled={false}
+                        variant={ButtonVariant.OUTLINE}
+                        size={ButtonSize.SMALL}
+                      />
+                    </Link>
                   </div>
                 </div>
               </div>

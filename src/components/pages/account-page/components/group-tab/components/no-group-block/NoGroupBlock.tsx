@@ -82,7 +82,7 @@ const NoGroupBlock: FC = () => {
             <Dropdown
               options={transformGroups(data.groups)}
               label="Група"
-              name="group"
+              name="groupId"
               placeholder="вибери зі списку"
             />
             <Checkbox label="Староста" name="isCaptain" />
