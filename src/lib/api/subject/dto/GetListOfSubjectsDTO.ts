@@ -3,6 +3,7 @@ export interface GetListOfSubjectsDTO {
     {
       name: string;
       id: string;
+      amount: number;
     },
   ];
 }

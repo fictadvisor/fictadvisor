@@ -15,3 +15,6 @@ export interface GetTeacherDTO {
     displayName: string;
   }[];
 }
+export interface GetTeachersDTO {
+  teachers: GetTeacherDTO[];
+}

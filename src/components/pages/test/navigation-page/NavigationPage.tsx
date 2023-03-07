@@ -6,7 +6,7 @@ import styles from '../test-pages.module.scss';
 const NavigationPage = () => {
   return (
     <div
-      className={styles['test-navigation-wrap']}
+      // className={styles['test-navigation-wrap']}
       style={{ backgroundColor: '#1e1e1e' }}
     >
       <div className={styles['header']}>

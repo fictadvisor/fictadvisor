@@ -1,1 +1,6 @@
-export { IconButtonSize } from './IconButton';
+export {
+  IconButton,
+  IconButtonColor,
+  IconButtonShape,
+  IconButtonSize,
+} from './IconButton';

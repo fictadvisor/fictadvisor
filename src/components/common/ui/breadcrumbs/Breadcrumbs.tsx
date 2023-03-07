@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, Fragment } from 'react';
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -19,8 +19,8 @@ interface BreadcrumbsProps {
 
 const Breadcrumbs: FC<BreadcrumbsProps> = ({ items, className }) => {
   const breadcrumbs = items.map((item, index) => (
-    <>
-      <div key={index} className={styles['breadcrumb']}>
+    <Fragment key={index}>
+      <div className={styles['breadcrumb']}>
         <a href={item.href}>
           {index === 0 && (
             <HomeIcon
@@ -35,7 +35,7 @@ const Breadcrumbs: FC<BreadcrumbsProps> = ({ items, className }) => {
           className={mergeClassNames('icon', styles['arrow-icon'])}
         />
       )}
-    </>
+    </Fragment>
   ));
 
   return (

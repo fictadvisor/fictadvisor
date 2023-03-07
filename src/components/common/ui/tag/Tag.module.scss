@@ -10,7 +10,7 @@ $theme-color:$background-dark-0;
         background: $darker;
     }
     .#{$color}-outline-background-color{
-        background: $theme-color;
+        background: transparent;
         border: 1px solid $outline;        border-radius: 6px;
     }
  }
