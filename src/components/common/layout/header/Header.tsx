@@ -14,13 +14,13 @@ import Button, {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button';
-import useAuthentication from '@/hooks/use-authentication';
 import useIsMobile from '@/hooks/use-is-mobile/UseIsMobile';
 
 import { BurgerMenu } from '../../custom-svg/BurgerMenu';
 import {
   IconButton,
   IconButtonColor,
+  IconButtonShape,
   IconButtonSize,
 } from '../../ui/icon-button/IconButton';
 import { CloseButton } from '../../ui/icon-button/variants';
@@ -33,21 +33,20 @@ import { HeaderMobileCard } from './components/header-mobile-card/HeaderMobileCa
 
 import styles from './Header.module.scss';
 
-const roleMapper = {
-  ['CAPTAIN']: 'Староста',
-  ['MODERATOR']: 'Зам. старости',
-  ['STUDENT']: 'Студент',
-};
+interface HeaderProps {
+  name?: string;
+  groupName?: string;
+  position?: string;
+  isLoggined?: boolean;
+}
 
-const Header: React.FC = () => {
+const Header: React.FC<HeaderProps> = ({
+  name = 'Ярмоленко Єлизавета Миколаївна',
+  groupName = 'ІС-11',
+  position = 'Зам. ст',
+  isLoggined = false,
+}) => {
   const router = useRouter();
-
-  const { isLoggedIn, user } = useAuthentication();
-  const name = [user?.lastName, user?.firstName, user?.middleName].join(' ');
-  const groupName = user?.group.code;
-  const position = roleMapper[user?.group.role];
-  const avatar = user?.avatar;
-
   const returnMain = () => {
     router.push('/');
   };
@@ -70,7 +69,7 @@ const Header: React.FC = () => {
   const [clicked, setClicked] = useState(false);
   const mobileMenu = (
     <div className={styles['mobile-menu']}>
-      <Link href={'/'}>
+      <Link href={''}>
         <TabItem
           className=""
           text="Головна"
@@ -79,7 +78,7 @@ const Header: React.FC = () => {
           size={TabItemContentSize.SMAll}
         />
       </Link>
-      <Link href={'/poll'}>
+      <Link href={''}>
         <TabItem
           className=""
           text="Опитування"
@@ -88,7 +87,7 @@ const Header: React.FC = () => {
           size={TabItemContentSize.SMAll}
         />
       </Link>
-      <Link href={'/teachers'}>
+      <Link href={''}>
         <TabItem
           className=""
           text="Викладачі"
@@ -97,7 +96,7 @@ const Header: React.FC = () => {
           size={TabItemContentSize.SMAll}
         />
       </Link>
-      <Link href={'/subjects'}>
+      <Link href={''}>
         <TabItem
           className=""
           text="Предмети"
@@ -108,12 +107,16 @@ const Header: React.FC = () => {
       </Link>
     </div>
   );
-
+  const mobileDivider = (
+    <div style={{ width: '100%' }}>
+      <HeaderDivider />
+    </div>
+  );
   const handleClick = () => {
     setClicked(clicked => !clicked);
   };
 
-  if (isMobile && isLoggedIn) {
+  if (isMobile && isLoggined) {
     return clicked ? (
       <div className={styles['wrapper']}>
         <div className={styles['shadow']} onClick={handleClick}></div>
@@ -138,7 +141,6 @@ const Header: React.FC = () => {
               name={name}
               groupName={groupName}
               position={position}
-              url={avatar}
             />
           </div>
           <div className={styles['account-buttons']}>
@@ -165,8 +167,7 @@ const Header: React.FC = () => {
             />
           </div>
 
-          <HeaderDivider />
-
+          {mobileDivider}
           {mobileMenu}
         </div>
       </div>
@@ -187,7 +188,7 @@ const Header: React.FC = () => {
     );
   }
 
-  if (isMobile && !isLoggedIn) {
+  if (isMobile && !isLoggined) {
     return clicked ? (
       <div className={styles['wrapper']}>
         <div className={styles['shadow']} onClick={handleClick}></div>
@@ -225,9 +226,7 @@ const Header: React.FC = () => {
               />
             </div>
           </div>
-
-          <HeaderDivider />
-
+          {mobileDivider}
           {mobileMenu}
         </div>
       </div>
@@ -299,14 +298,13 @@ const Header: React.FC = () => {
             />
           </Link> */}
         </div>
-        {isLoggedIn ? (
-          <div className={styles['header-desktop-card']}>
+        {isLoggined ? (
+          <div style={{ width: '286px', height: '42px' }}>
             <HeaderDesktopCard
               name={name}
               groupName={groupName}
               position={position}
-              url={avatar}
-            />
+            ></HeaderDesktopCard>
           </div>
         ) : (
           <div className={styles['login-buttons']}>

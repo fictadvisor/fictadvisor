@@ -16,17 +16,15 @@ const AuthenticationProvider: FC<AuthenticationProviderProps> = ({
 }) => {
   const [jwt, setJwt] = useState(StorageUtil.getTokens());
 
-  const { error, isFetching, isFetched, isError, data, refetch } = useQuery(
+  const { error, isFetching, data } = useQuery(
     ['oauth', jwt?.accessToken, jwt?.refreshToken],
     () => AuthAPI.getMe(),
-    {
-      retry: false,
-      refetchOnWindowFocus: false,
-    },
+    { enabled: jwt != null, retry: false, refetchOnWindowFocus: false },
   );
 
   if (error && !isFetching) {
     const status = (error as AxiosError).response?.status;
+
     if (jwt && status === 401) {
       AuthAPI.refreshAccessToken(jwt.refreshToken)
         .then(({ accessToken }) =>
@@ -41,15 +39,12 @@ const AuthenticationProvider: FC<AuthenticationProviderProps> = ({
   }
   const context = {
     user: data,
-    update: async () => {
-      setJwt(StorageUtil.getTokens());
-      await refetch();
-    },
+    isAuthenticationFetching: isFetching,
   };
 
   return (
     <AuthenticationContext.Provider value={context}>
-      {(isFetched || isError) && children}
+      {children}
     </AuthenticationContext.Provider>
   );
 };

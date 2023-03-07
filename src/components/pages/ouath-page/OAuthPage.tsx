@@ -2,18 +2,13 @@ import { useCallback, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 import PageLayout from '@/components/common/layout/page-layout';
-import Button from '@/components/common/ui/button';
-import useAuthentication from '@/hooks/use-authentication';
+import Loader, { LoaderSize } from '@/components/common/ui/loader';
 import { AuthAPI } from '@/lib/api/auth/AuthAPI';
-import { UserAPI } from '@/lib/api/user/UserAPI';
 import AuthService from '@/lib/services/auth';
-import StorageUtil from '@/lib/utils/StorageUtil';
 
 const OAuthPage = () => {
-  //TODO ЗРОБИ ПЛЗ
   const router = useRouter();
   const { token } = router.query;
-  const { user, isLoggedIn } = useAuthentication();
 
   const loadData = useCallback(
     async token => {
@@ -23,27 +18,18 @@ const OAuthPage = () => {
         );
         if (isRegistered) {
           await AuthService.registerTelegram();
-
-          if (isLoggedIn) {
-            await UserAPI.linkTelegram(user.id, StorageUtil.getTelegramInfo());
-            await router.push('account');
-          } else await router.push('/register?telegram=true');
+          await router.push('/register?telegram=true');
         } else {
-          if (isLoggedIn) await router.push('/account');
-          else await router.push('/register?telegram=false');
+          await router.push('/register?telegram=false');
         }
       }
     },
-    [isLoggedIn, router, user],
+    [router],
   );
 
   useEffect(() => {
     void loadData(token);
   }, [loadData, token]);
-
-  const handleClick = async () => {
-    await AuthService.registerTelegram();
-  };
 
   return (
     <PageLayout hasHeader={true} hasFooter={false}>
@@ -55,8 +41,7 @@ const OAuthPage = () => {
           justifyContent: 'center',
         }}
       >
-        <Button text="LOL" onClick={handleClick} />
-        {/*<Loader size={LoaderSize.SMALLEST} />*/}
+        <Loader size={LoaderSize.SMALLEST} />
       </div>
     </PageLayout>
   );

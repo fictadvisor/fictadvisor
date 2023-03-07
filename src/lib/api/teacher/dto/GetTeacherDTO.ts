@@ -1,21 +1,11 @@
-import { ContactType } from '@/components/pages/personal-teacher-page/contacts';
-
 export interface GetTeacherDTO {
-  id: string;
-  firstName: string;
-  middleName: string;
-  lastName: string;
-  description: string;
-  avatar: string;
-  roles: ('LECTURER' | 'LABORANT' | 'PRACTICIAN')[];
-  contacts: {
-    link: string;
-    id: string;
-    name: ContactType;
-    displayName: string;
-  }[];
+  id?: string;
+  firstName?: boolean;
+  middleName?: boolean;
+  lastName?: boolean;
+  description?: boolean;
+  avatar?: boolean;
 }
-
 export interface GetTeachersDTO {
-  teachers: GetTeachersDTO[];
+  teachers: GetTeacherDTO[];
 }

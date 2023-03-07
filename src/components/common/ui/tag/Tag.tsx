@@ -49,7 +49,7 @@ const Tag: FC<TagProps> = ({
   );
   return (
     <div className={tagClassName}>
-      <div className={'icon-container'}>{icon}</div>
+      {icon}
       {text && <p className={styles[size + '-body']}>{text}</p>}
     </div>
   );

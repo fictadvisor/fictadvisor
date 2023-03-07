@@ -6,7 +6,6 @@ import Button, {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button/Button';
-import { TextAreaPopup } from '@/components/pages/account-page/components/group-tab/components/text-area-popup';
 
 import styles from '../test-pages.module.scss';
 
@@ -40,9 +39,34 @@ const PopupPage = () => {
         />
 
         {isFirstPopupOpen && (
-          <TextAreaPopup
+          <Popup
+            isClosable={false}
+            hasIcon={true}
+            title="Application Received"
+            text="This will remove all data relating to Alex. This action cannot be reversed. Deleted data can not be recovered."
             closeFunction={setIsFirstPopupOpen}
-            handleSubmit={value => console.log(value)}
+            firstButton={
+              <Button
+                size={ButtonSize.SMALL}
+                text="cancel"
+                color={ButtonColor.PRIMARY}
+                variant={ButtonVariant.OUTLINE}
+                onClick={() => {
+                  setIsFirstPopupOpen(false);
+                }}
+              />
+            }
+            secondButton={
+              <Button
+                size={ButtonSize.SMALL}
+                text="submit"
+                color={ButtonColor.PRIMARY}
+                variant={ButtonVariant.FILLED}
+                onClick={() => {
+                  setIsFirstPopupOpen(false);
+                }}
+              />
+            }
           />
         )}
 

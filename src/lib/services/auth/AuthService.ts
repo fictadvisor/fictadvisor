@@ -32,7 +32,7 @@ class AuthService {
   }
 
   static async redirectToRegisterBot(router: NextRouter) {
-    const botUrl = `https://t.me/${process.env.NEXT_PUBLIC_BOT_NAME}?start=start`;
+    const botUrl = `https://t.me/${process.env.NEXT_PUBLIC_BOT_NAME}`;
     await router.push(botUrl);
   }
 

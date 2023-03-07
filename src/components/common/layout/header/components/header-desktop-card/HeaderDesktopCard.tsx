@@ -7,14 +7,14 @@ type HeaderCardProps = {
   name: string;
   groupName: string;
   position: string;
-  url: string;
+  url?: string;
 };
 
 export const HeaderDesktopCard: React.FC<HeaderCardProps> = ({
   name,
   groupName,
   position,
-  url,
+  url = '/assets/icons/frog36.png',
   ...rest
 }) => {
   return (
@@ -26,7 +26,7 @@ export const HeaderDesktopCard: React.FC<HeaderCardProps> = ({
           <span className={styles['header-card-group-name']}>{groupName}</span>
         </div>
       </div>
-      <img src={url} alt="Картинка профілю" style={{ borderRadius: '100%' }} />
+      <img src={url} alt="Картинка профілю" />
     </div>
   );
 };

@@ -49,13 +49,13 @@ const RegistrationEmailConfirmationPage = () => {
       hasFooter={false}
       description={'Перевірка пошти при реєстрації'}
     >
-      {/*{error && (*/}
-      {/*  <AlertPopup*/}
-      {/*    title="Помилка!"*/}
-      {/*    description={error}*/}
-      {/*    color={AlertColor.ERROR}*/}
-      {/*  //TODO  />*/}
-      {/*)}*/}
+      {error && (
+        <AlertPopup
+          title="Помилка!"
+          description={error}
+          color={AlertColor.ERROR}
+        />
+      )}
       <div className={styles['registration-email-confirmation-page']}>
         <div className={styles['registration-email-confirmation-page-content']}>
           <div className={styles['icon']}>

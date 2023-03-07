@@ -13,7 +13,7 @@ export class PollAPI {
     disciplineTeacherId: string,
   ): Promise<GetTeacherQuestionsDTO> {
     const { data } = await client.get(
-      `/disciplineTeachers/${disciplineTeacherId}/questions`,
+      `/poll/answers/${disciplineTeacherId}`,
       getAuthorizationHeader(),
     );
     return data;
@@ -24,7 +24,7 @@ export class PollAPI {
     disciplineTeacherId: string,
   ) {
     const { data } = await client.post(
-      `/disciplineTeachers/${disciplineTeacherId}/answers`,
+      `/poll/answers/${disciplineTeacherId}`,
       body,
       getAuthorizationHeader(),
     );

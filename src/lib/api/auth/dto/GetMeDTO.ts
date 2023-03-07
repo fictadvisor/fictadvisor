@@ -4,13 +4,11 @@ export interface GetMeDTO {
   firstName: string;
   middleName?: string;
   lastName: string;
+  telegramId: number;
   email: string;
-  telegramId?: number;
-  group?: {
+  group: {
     id: string;
     code: string;
-    role?: 'CAPTAIN' | 'MODERATOR' | 'STUDENT';
-    state: 'APPROVED' | 'DECLINED' | 'PENDING';
   };
   avatar: string;
 }

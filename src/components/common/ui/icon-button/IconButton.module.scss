@@ -10,6 +10,7 @@
   background-color: $gray-50;
   border: 1px solid transparent;
   padding: 5.5px;
+  position: relative;
   &:disabled {
     background-color: $background-dark-0 !important;
     color: $gray-50;

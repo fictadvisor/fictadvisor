@@ -36,13 +36,10 @@ export const TabItem: FC<ITabItemProps> = ({
   value,
   size,
 }) => {
-  const { onChange, currentValue } = useContext(TabContext);
+  const { onChange } = useContext(TabContext);
   const handleClick = () => {
     onChange(value);
   };
-
-  const isActive = currentValue === value;
-
   return (
     <button
       onClick={handleClick}
@@ -50,12 +47,11 @@ export const TabItem: FC<ITabItemProps> = ({
         styles[className],
         styles[position],
         styles[size],
-        styles[isActive ? 'tab-active' : ''],
       )}
       disabled={isDisabled}
     >
       {icon && <div className={styles['icon']}>{icon}</div>}
-      <span className={styles['text']}>{text}</span>
+      <text className={styles['text']}>{text}</text>
       {count && (
         <div className={styles['count']}>
           <span className={styles['count-text']}>{count}</span>
