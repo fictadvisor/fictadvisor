@@ -68,7 +68,7 @@ export const SearchForm: FC<SearchFormProps> = ({
           />
           <div className={styles['collapse-btn']}>
             <IconButton
-              className={styles['icon']}
+              className={styles['collapse-icon']}
               type="button"
               name="order"
               size={IconButtonSize.LARGE}
@@ -99,7 +99,7 @@ export const SearchForm: FC<SearchFormProps> = ({
               </div>
               <div className={styles['dropdown-2']}>
                 <Dropdown
-                  placeholder="Фільрувати за"
+                  placeholder="Сортувати за"
                   onChange={handleSubmit}
                   showRemark={false}
                   name="sort"
@@ -108,7 +108,7 @@ export const SearchForm: FC<SearchFormProps> = ({
               </div>
               <div>
                 <IconButton
-                  className={styles['icon']}
+                  className={styles['sort-icon']}
                   type="button"
                   onClick={() => {
                     setFieldValue(

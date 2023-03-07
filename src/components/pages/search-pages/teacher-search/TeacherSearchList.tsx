@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import { RatingCard } from '@/components/common/composite/cards/Cards';
@@ -9,32 +10,32 @@ import styles from '../SearchPage.module.scss';
 
 export const TeacherSearchList = ({
   teachers,
-}: GetTeachersDTO | Omit<GetTeachersBySubjectDTO, 'subjectName'>) => {
-  const router = useRouter();
-
-  const redirect = (teacherId: string) => {
-    router.push(`/teachers/${teacherId}`);
-  };
-
+  className,
+}:
+  | (GetTeachersDTO & { className: string })
+  | (Omit<GetTeachersBySubjectDTO, 'subjectName'> & { className: string })) => {
   return (
-    <ul className={styles['teacher-search-list']}>
+    <ul className={styles[`${className}-search-list`]}>
       {teachers &&
         teachers?.map(
           teacher =>
             teacher.lastName.length > 0 &&
             (teacher.roles ? (
-              <RatingCard
-                key={teacher.id}
-                onClick={() => redirect(teacher.id)}
-                name={`${teacher.lastName} ${teacher.firstName} ${teacher.middleName}`}
-                roles={teacher.roles}
-              />
+              <Link href={`/teachers/${teacher.id}`}>
+                <RatingCard
+                  key={teacher.id}
+                  name={`${teacher.lastName} ${teacher.firstName} ${teacher.middleName}`}
+                  roles={teacher.roles}
+                />
+              </Link>
             ) : (
-              <RatingCard
-                key={teacher.id}
-                onClick={() => redirect(teacher.id)}
-                name={`${teacher.lastName} ${teacher.firstName} ${teacher.middleName} `}
-              />
+              <Link href={`/teachers/${teacher.id}`}>
+                <RatingCard
+                  key={teacher.id}
+                  name={`${teacher.lastName} ${teacher.firstName} ${teacher.middleName}`}
+                  roles={teacher.roles}
+                />
+              </Link>
             )),
         )}
     </ul>
