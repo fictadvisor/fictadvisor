@@ -5,11 +5,11 @@ import { client } from '../instance';
 
 import { AddContactsBody } from './dto/AddContactsBody';
 import { CreateTeacherBody } from './dto/CreateTeacherBody';
-import { GetTeacherDTO, GetTeachersDTO } from './dto/GetTeacherDTO';
+import { GetTeacherDTO } from './dto/GetTeacherDTO';
 import { GetTeacherStatsDTO } from './dto/GetTeacherStatsDTO';
 import { UpdateTeacherBody } from './dto/UpdateTeacherBody';
 export class TeacherAPI {
-  static async get(teacherId: string): Promise<GetTeachersDTO> {
+  static async get(teacherId: string): Promise<GetTeacherDTO> {
     const { data } = await client.get(
       `/teachers/${teacherId}`,
       getAuthorizationHeader(),
