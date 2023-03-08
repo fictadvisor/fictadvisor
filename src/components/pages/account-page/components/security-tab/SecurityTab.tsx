@@ -17,7 +17,7 @@ const SecurityTab = () => {
   const { push } = useRouter();
   const { user } = useAuthentication();
   return (
-    <div>
+    <div className={styles['container']}>
       <div className={styles['division']}>
         <h4 className={styles['division-text']}>Зміна паролю</h4>
         <div className={styles['white']}></div>

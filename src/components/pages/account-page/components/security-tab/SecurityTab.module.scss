@@ -3,6 +3,7 @@
   margin-bottom: 30px;
   width: 70%;
   align-items: center;
+  min-width: 450px;
   .white {
     flex-grow: 1;
     background-color: white;
@@ -16,6 +17,10 @@
     line-height: 140%;
     margin-right: 12px;
   }
+}
+
+.container{
+  width: 100%;
 }
 
 .button-container{
@@ -33,6 +38,7 @@
 
 .input-form{
   width: 40%;
+  min-width: 400px;
 }
 
 .input {
@@ -58,19 +64,13 @@
 
 .user-information{
   width: 40%;
+  min-width: 400px;
   div{
     margin-bottom: 30px;
   }
 }
 
 @media screen and (max-width: 1024px) {
-  .input-form{
-    width: 100%;
-  }
-  .division{
-    width: 100%;
-    margin-top: 0;
-  }
   .button-container{
     margin-bottom: 10%;
     button{
@@ -95,7 +95,20 @@
   .change-password-button{
     padding: 6px 12px;
   }
+}
+
+@media screen and (max-width: 480px) {
+  .input-form{
+    width: 100%;
+    min-width: 0;
+  }
+  .division{
+    width: 100%;
+    margin-top: 0;
+    min-width: 0;
+  }
   .user-information{
     width: 100%;
+    min-width: 0;
   }
 }

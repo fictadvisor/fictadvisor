@@ -36,8 +36,6 @@
 }
 
 .avatar{
-  width: 160px;
-  height: 160px;
   margin-bottom: 18px;
   img{
     width: 160px;
@@ -104,11 +102,15 @@
     display: flex;
   }
   .avatar{
-    width: 68px;
-    height: 68px;
+    width: 50%;
+    height: 50%;
+    display: flex;
+    justify-content: center;
     img{
-      width: 68px;
-      height: 68px;
+      max-width: 136px;
+      max-height: 136px;
+      width: 50%;
+      height: 50%;
     }
   }
   .personal-info{
