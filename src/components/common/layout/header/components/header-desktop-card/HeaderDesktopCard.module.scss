@@ -9,7 +9,9 @@
     & h4 {
         font-size: 14px;
     }
-    @include flex-center;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
     transition: all linear 0.1s;
     min-width: fit-content;
     min-height: fit-content;
