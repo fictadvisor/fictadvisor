@@ -222,6 +222,10 @@ export class AuthService {
   }
 
   async forgotPassword (email: string) {
+    if (!await this.checkIfUserIsRegistered({ email })) {
+      throw new NotRegisteredException();
+    }
+
     const uuid = crypto.randomUUID();
     for (const [token, value] of this.resetPasswordTokens.entries()) {
       if (value.email === email) {
