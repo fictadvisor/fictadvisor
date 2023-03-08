@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useDispatch } from 'react-redux';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import CustomTelegramIcon from '@/components/common/custom-svg/CustomTelegramIcon';
-import { AlertColor, AlertVariant } from '@/components/common/ui/alert';
-import AlertPopup from '@/components/common/ui/alert-popup';
+import { AlertColor } from '@/components/common/ui/alert';
 import Button, {
   ButtonColor,
   ButtonSize,
@@ -14,28 +14,28 @@ import Button, {
 import Divider, { DividerTextPosition } from '@/components/common/ui/divider';
 import LoginForm from '@/components/pages/login-page/components/login-form';
 import AuthService from '@/lib/services/auth/AuthService';
+import { showAlert } from '@/redux/reducers/alert.reducer';
 
 import styles from './RightBlock.module.scss';
 
 const RightBlock = () => {
   const router = useRouter();
-  const [isError, setIsError] = useState(false);
+  const dispatch = useDispatch();
   const handleClick = async () => {
     const isSuccess = await AuthService.loginTelegram();
-    // if (isSuccess) await router.push('/');
-    // else setIsError(true);
-    // setTimeout(() => setIsError(false), 7500);
+    if (isSuccess) await router.push('/');
+    else {
+      dispatch(
+        showAlert({
+          title: 'Неможливо авторизуватись за допомогою Telegram',
+          color: AlertColor.ERROR,
+        }),
+      );
+    }
   };
 
   return (
     <div className={styles['right-block']}>
-      {/*{isError && (*/}
-      {/*  <AlertPopup*/}
-      {/*    title="Неможливо авторизуватись за допомогою Telegram"*/}
-      {/*    variant={AlertVariant.FILLED}*/}
-      {/*    color={AlertColor.ERROR}*/}
-      {/*  />*/}
-      {/*)  } //TODO*/}
       <img
         className={styles['mobile-login-logo']}
         src="/assets/login-page/new_logo.png"

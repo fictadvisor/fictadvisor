@@ -1,7 +1,9 @@
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/router';
 
+import { AlertColor } from '@/components/common/ui/alert';
 import Button, { ButtonSize } from '@/components/common/ui/button';
 import {
   Checkbox,
@@ -16,6 +18,7 @@ import {
 } from '@/components/pages/register/register-page/components/register-form/utils';
 import { AuthAPI } from '@/lib/api/auth/AuthAPI';
 import AuthService from '@/lib/services/auth';
+import { showAlert } from '@/redux/reducers/alert.reducer';
 
 import { initialValues } from './constants';
 import { validationSchema } from './validation';
@@ -28,15 +31,26 @@ interface RegisterFormProps {
 
 const RegisterForm: FC<RegisterFormProps> = ({ groups }) => {
   const router = useRouter();
-  const [error, setError] = useState('');
+  const dispatch = useDispatch();
+
   const handleSubmit = useCallback(
     async (data: RegisterFormFields) => {
       try {
         const hasCaptain = await AuthAPI.groupHasCaptain(data.group);
         if (data.isCaptain && hasCaptain) {
-          setError('В групі вже є староста');
+          dispatch(
+            showAlert({
+              title: 'В групі вже є староста',
+              color: AlertColor.ERROR,
+            }),
+          );
         } else if (!data.isCaptain && !hasCaptain) {
-          setError('Дочекайся, поки зареєструється староста');
+          dispatch(
+            showAlert({
+              title: 'Дочекайся, поки зареєструється староста',
+              color: AlertColor.ERROR,
+            }),
+          );
         } else {
           await AuthService.register(transformData(data));
           await router.push(`/register/email-verification?email=${data.email}`);
@@ -45,13 +59,23 @@ const RegisterForm: FC<RegisterFormProps> = ({ groups }) => {
         const errorName = e.response.data.error;
 
         if (errorName === 'AlreadyRegisteredException') {
-          setError('Пошта або юзернейм вже зайняті');
+          dispatch(
+            showAlert({
+              title: 'Пошта або юзернейм вже зайняті',
+              color: AlertColor.ERROR,
+            }),
+          );
         } else if (errorName === 'InvalidTelegramCredentialsException') {
-          setError('Як ти це зробив? :/'); //TODO
+          dispatch(
+            showAlert({
+              title: 'Як ти це зробив? :/',
+              color: AlertColor.ERROR,
+            }),
+          );
         }
       }
     },
-    [router],
+    [dispatch, router],
   );
 
   return (

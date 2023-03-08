@@ -38,16 +38,9 @@ class TelegramService {
   }
 
   static async register() {
-    try {
-      const data: AuthTelegramBody =
-        (await TelegramService.openAuthenticationDialog()) as AuthTelegramBody;
-      console.log(data);
-      StorageUtil.setTelegramInfo({ telegram: data });
-
-      return true;
-    } catch (e) {
-      return false;
-    }
+    const data: AuthTelegramBody =
+      (await TelegramService.openAuthenticationDialog()) as AuthTelegramBody;
+    StorageUtil.setTelegramInfo({ telegram: data });
   }
 }
 
