@@ -1,7 +1,5 @@
-import React, { FC, useState } from 'react';
-import Link from 'next/link';
+import React, { useState } from 'react';
 
-import { SimpleCard } from '@/components/common/composite/cards';
 import Button, {
   ButtonColor,
   ButtonSize,
@@ -15,18 +13,12 @@ import {
 import { TabList } from '@/components/common/ui/tab/tab-list/TabList';
 import { TabPanel } from '@/components/common/ui/tab/tab-panel/TabPanel';
 import { TabPanelsList } from '@/components/common/ui/tab/tab-panels-list/TabPanelsList';
+import { GetTeacherSubjectsDTO } from '@/lib/api/teacher/dto/GetTeacherSubjectsDTO';
 
-import styles1 from '../../search-pages/SearchPage.module.scss';
-import styles from './PersonalTeacherTabs.module.scss';
-export type PersonalTeacherTabsProps = {
-  id: string;
-  subjects: {
-    id: string;
-    name: string;
-  }[];
-};
+import styles from './PersonalTeacherSubjectTabs.module.scss';
+export type PersonalTeacherTabsProps = GetTeacherSubjectsDTO;
 
-const TabsPage: FC<PersonalTeacherTabsProps> = props => {
+const TabsPage = () => {
   const [index, setIndex] = useState<string>('1');
   return (
     <div className={styles['tabs']}>
@@ -46,25 +38,18 @@ const TabsPage: FC<PersonalTeacherTabsProps> = props => {
           <TabItem
             size={TabItemContentSize.NORMAL}
             className="tab-item"
-            text="Предмети"
-            position={TabItemContentPosition.LEFT}
-            value={'2'}
-          ></TabItem>
-          <TabItem
-            size={TabItemContentSize.NORMAL}
-            className="tab-item"
             text="Відгуки"
             position={TabItemContentPosition.LEFT}
-            count={-15}
-            value={'3'}
+            count={0}
+            value={'2'}
           ></TabItem>
           <TabItem
             size={TabItemContentSize.NORMAL}
             className="tab-item"
             text="Семестри"
             position={TabItemContentPosition.LEFT}
-            value={'4'}
-          />
+            value={'3'}
+          ></TabItem>
         </TabList>
         <TabList
           className={styles['tab-list-mobile']}
@@ -77,7 +62,7 @@ const TabsPage: FC<PersonalTeacherTabsProps> = props => {
             text="Загальне"
             position={TabItemContentPosition.LEFT}
             value={'1'}
-          />
+          ></TabItem>
           <TabItem
             size={TabItemContentSize.SMAll}
             className="tab-item"
@@ -90,16 +75,9 @@ const TabsPage: FC<PersonalTeacherTabsProps> = props => {
             className="tab-item"
             text="Відгуки"
             position={TabItemContentPosition.LEFT}
-            count={0}
+            count={-15}
             value={'3'}
-          />
-          <TabItem
-            size={TabItemContentSize.SMAll}
-            className="tab-item"
-            text="Семестри"
-            position={TabItemContentPosition.LEFT}
-            value={'4'}
-          />
+          ></TabItem>
         </TabList>
       </div>
 
@@ -131,23 +109,7 @@ const TabsPage: FC<PersonalTeacherTabsProps> = props => {
             </div>
           </div>
         </TabPanel>
-        <TabPanel className={styles['tab-panel']} value={'2'}>
-          <div className={styles['my-tab-panel-subjects']}>
-            <ul className={styles1['subject-search-list']}>
-              {props.subjects &&
-                props.subjects.map(subject => (
-                  <li key={subject.id}>
-                    <Link
-                      href={`/discipline?teacherId=${props.id}&subjectId=${subject.id}`}
-                    >
-                      <SimpleCard name={`${subject.name}`} />
-                    </Link>
-                  </li>
-                ))}
-            </ul>
-          </div>
-        </TabPanel>
-        <TabPanel className="tab-panel" value={'3'}>
+        <TabPanel className="tab-panel" value={'2'}>
           <div className={styles['my-tab-panel']}>
             <div className={styles['text']}>
               <p>
@@ -174,7 +136,7 @@ const TabsPage: FC<PersonalTeacherTabsProps> = props => {
             </div>
           </div>
         </TabPanel>
-        <TabPanel className="tab-panel" value={'4'}>
+        <TabPanel className="tab-panel" value={'3'}>
           <div className={styles['my-tab-panel']}>
             <div className={styles['text']}>
               <p>

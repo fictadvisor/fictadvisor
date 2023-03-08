@@ -1,4 +1,5 @@
 import { TeacherSearchFormFields } from '@/components/pages/search-pages/search-form/types';
+import { GetTeacherSubjectDTO } from '@/lib/api/teacher/dto/GetTeacherSubjectDTO';
 import { GetTeacherSubjectsDTO } from '@/lib/api/teacher/dto/GetTeacherSubjectsDTO';
 import { getAuthorizationHeader } from '@/lib/api/utils';
 
@@ -83,6 +84,15 @@ export class TeacherAPI {
     teacherId: string,
   ): Promise<GetTeacherSubjectsDTO> {
     const { data } = await client.get(`/teachers/${teacherId}/subjects`);
+    return data;
+  }
+  static async getTeacherSubject(
+    teacherId: string,
+    subjectId: string,
+  ): Promise<GetTeacherSubjectDTO> {
+    const { data } = await client.get(
+      `/teachers/${teacherId}/subjects/${subjectId}`,
+    );
     return data;
   }
 }
