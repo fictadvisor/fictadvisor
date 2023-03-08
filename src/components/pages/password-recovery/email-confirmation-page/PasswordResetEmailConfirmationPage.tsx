@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/router';
 
@@ -10,10 +10,11 @@ import Button, {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button';
-import Link from '@/components/pages/password-recovery/email-confirmation-page/components/send-again-link';
 
 import styles from './PasswordResetEmailConfirmationPage.module.scss';
 import {AuthAPI} from "@/lib/api/auth/AuthAPI";
+import {useDispatch} from "react-redux";
+import {showAlert} from "@/redux/reducers/alert.reducer";
 
 const PasswordResetEmailConfirmationPage = () => {
   const router = useRouter();
@@ -25,25 +26,30 @@ const PasswordResetEmailConfirmationPage = () => {
     router.push('/register');
   };
 
-  const [error, setError] = useState<string>('');
   let tries = 0;
-
+  const dispatch = useDispatch();
   const handleSendAgain = async () => {
     try {
       await AuthAPI.forgotPassword({ email });
     } catch (e) {
       const errorName = e.response.data.error;
-      console.log(e);
+      let errorMessage;
       if (errorName === 'TooManyActionsException') {
         tries++;
-        if (tries >= 5) setError('Да ти заєбав');
-        else setError('Час для надсилання нового листа ще не сплив');
+        if (tries >= 5) errorMessage = 'Да ти заєбав';
+        else errorMessage = ' Час для надсилання нового листа ще не сплив';
       } else if (errorName === 'NotRegisteredException') {
-        setError('Упс, реєструйся заново');
+        errorMessage = 'Упс, реєструйся заново';
       }
+      dispatch(
+          showAlert({
+            title: errorMessage,
+            color: AlertColor.ERROR,
+          }),
+      );
     }
   };
-  // const sendAgainLink = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+
   return (
     <PageLayout
       hasHeader={false}

@@ -29,10 +29,15 @@ const ForgotPasswordForm: FC = () => {
       await AuthAPI.forgotPassword({email: data.emailAddress})
       await router.push(`/password-recovery/email-verification?email=${data.emailAddress}`)
     } catch (e) {
-      dispatch(showAlert({
-        title:e.response?.data.error,
-        color: AlertColor.ERROR
-      }))
+      const errorMessage = e.response.data.error;
+      if(errorMessage == 'InvalidBodyException'){
+        dispatch(
+            showAlert({
+              title: "Невірно введено пошту для відновлення",
+              color: AlertColor.ERROR,
+            }),
+        );
+      }
     }
   };
 
