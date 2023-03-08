@@ -1,6 +1,5 @@
-@import "../../../../styles/partials/utils";
-@import "../../../../styles/partials/theme";
-@import "../../../../styles/partials/typography-mixins";
+@import "src/styles/partials/theme";
+@import "src/styles/partials/typography-mixins";
 
 .card{
   display: grid;
