@@ -18,22 +18,25 @@ const ForgotPasswordForm: FC = () => {
   const router = useRouter();
 
   const handleSubmit = async (data: ForgotPasswordFormFields) => {
-    console.log({ data });
+    let errorMessage;
     try {
       await AuthAPI.forgotPassword({ email: data.emailAddress });
       await router.push(
         `/password-recovery/email-verification?email=${data.emailAddress}`,
       );
     } catch (e) {
-      const errorMessage = e.response.data.error;
-      if (errorMessage == 'InvalidBodyException') {
-        dispatch(
-          showAlert({
-            title: 'Невірно введено пошту для відновлення',
-            color: AlertColor.ERROR,
-          }),
-        );
+      const errorName = e.response.data.error;
+      if (errorName == 'InvalidBodyException') {
+        errorMessage = 'Невірно введено пошту для відновлення';
+      } else if (errorName == 'NotRegisteredException') {
+        errorMessage = 'На цю пошту не зареєстровано користувача';
       }
+      dispatch(
+        showAlert({
+          title: errorMessage,
+          color: AlertColor.ERROR,
+        }),
+      );
     }
   };
 

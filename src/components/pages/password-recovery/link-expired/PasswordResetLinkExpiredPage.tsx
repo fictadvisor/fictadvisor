@@ -4,11 +4,15 @@ import { useRouter } from 'next/router';
 
 import { CustomClock } from '@/components/common/custom-svg/CustomClock';
 import PageLayout from '@/components/common/layout/page-layout';
+import { AlertColor } from '@/components/common/ui/alert';
 import Button, {
   ButtonColor,
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button';
+import { ForgotPasswordFormFields } from '@/components/pages/password-recovery/forgot-password-page/components/forgot-password-form/types';
+import { AuthAPI } from '@/lib/api/auth/AuthAPI';
+import { showAlert } from '@/redux/reducers/alert.reducer';
 
 import styles from './PasswordResetLinkExpiredPage.module.scss';
 
@@ -17,6 +21,34 @@ const PasswordResetLinkExpiredPage = () => {
   const returnRegister = () => {
     router.push('/register');
   };
+
+  const handleSubmit = () => {
+    router.push('/password-recovery');
+  };
+
+  // const handleSubmit = async (data: ForgotPasswordFormFields) => {
+  //   let errorMessage;
+  //   try {
+  //     await AuthAPI.forgotPassword({ email: data.emailAddress });
+  //     await router.push(
+  //       `/password-recovery/email-verification?email=${data.emailAddress}`,
+  //     );
+  //   } catch (e) {
+  //     const errorName = e.response.data.error;
+  //     if (errorName == 'InvalidBodyException') {
+  //       errorMessage = 'Невірно введено пошту для відновлення';
+  //     } else if (errorName == 'NotRegisteredException') {
+  //       errorMessage = 'На цю пошту не зареєстровано користувача';
+  //     }
+  //     // dispatch(
+  //     //   showAlert({
+  //     //     title: errorMessage,
+  //     //     color: AlertColor.ERROR,
+  //     //   }),
+  //     // );
+  //   }
+  // };
+
   return (
     <PageLayout
       hasHeader={false}
@@ -42,6 +74,7 @@ const PasswordResetLinkExpiredPage = () => {
                 variant={ButtonVariant.FILLED}
                 size={ButtonSize.LARGE}
                 color={ButtonColor.PRIMARY}
+                onClick={handleSubmit}
               />
             </div>
           </div>
