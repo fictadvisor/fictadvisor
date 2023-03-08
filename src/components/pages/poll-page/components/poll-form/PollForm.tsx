@@ -61,7 +61,7 @@ const PollForm: React.FC<PollFormProps> = ({ data }) => {
   );
   useEffect(() => {
     setQuestionsArray(getAllQuestionsArray(categories));
-  }, []);
+  }, [categories]);
 
   useEffect(() => {
     setCurrentQuestions(categories[currentCategory]);
@@ -76,8 +76,12 @@ const PollForm: React.FC<PollFormProps> = ({ data }) => {
           : styles.wrapper
       }
     >
-      {(!isMobile || isQuestionsListOpened) &&
-        sendingStatus !== SendingStatus.SUCCESS && (
+      <div
+        style={{
+          display: !isMobile || isQuestionsListOpened ? 'block' : 'none',
+        }}
+      >
+        {sendingStatus !== SendingStatus.SUCCESS && (
           <QuestionsList
             categories={categories}
             teacher={teacher}
@@ -88,7 +92,12 @@ const PollForm: React.FC<PollFormProps> = ({ data }) => {
             setQuestionsListStatus={setQuestionsListOpened}
           />
         )}
-      {(!isMobile || !isQuestionsListOpened) && (
+      </div>
+      <div
+        style={{
+          display: !isMobile || !isQuestionsListOpened ? 'block' : 'none',
+        }}
+      >
         <AnswersSheet
           questions={currentQuestions}
           setProgress={setProgress}
@@ -102,7 +111,7 @@ const PollForm: React.FC<PollFormProps> = ({ data }) => {
           sendingStatus={sendingStatus}
           setIsSendingStatus={setIsSendingStatus}
         />
-      )}
+      </div>
     </div>
   );
 };

@@ -144,25 +144,27 @@ const PollPage = () => {
         <div className={styles['poll-page__content']}>
           {isLoading ? (
             <Loader />
-          ) : isSuccessFetching ? (
-            <div className={styles['poll-page__content-wrapper']}>
-              <div className={styles['breadcrumbs-wrapper']}>
-                <Breadcrumbs
-                  items={[
-                    { label: 'Головна', href: '/' },
-                    { label: 'Опитування', href: '/poll' },
-                    {
-                      label: `${FetchedData.teacher.lastName} ${FetchedData.teacher.firstName} ${FetchedData.teacher.middleName}`,
-                      href: `/poll/${disciplineTeacherId}`,
-                    },
-                  ]}
-                  className={styles['breadcrumbs']}
-                />
-              </div>
+          ) : (
+            isSuccessFetching && (
+              <div className={styles['poll-page__content-wrapper']}>
+                <div className={styles['breadcrumbs-wrapper']}>
+                  <Breadcrumbs
+                    items={[
+                      { label: 'Головна', href: '/' },
+                      { label: 'Опитування', href: '/poll' },
+                      {
+                        label: `${FetchedData.teacher.lastName} ${FetchedData.teacher.firstName} ${FetchedData.teacher.middleName}`,
+                        href: `/poll/${disciplineTeacherId}`,
+                      },
+                    ]}
+                    className={styles['breadcrumbs']}
+                  />
+                </div>
 
-              <PollForm data={FetchedData || initialState} />
-            </div>
-          ) : null}
+                <PollForm data={FetchedData || initialState} />
+              </div>
+            )
+          )}
         </div>
       </div>
     </PageLayout>

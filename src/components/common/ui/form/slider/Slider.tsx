@@ -54,6 +54,7 @@ const Slider: FunctionComponent<SliderProps> = ({
         step="1"
         className={styles['slider'] + ' ' + styles[`slider-${type}`]}
         onInput={handleInput}
+        onClick={handleInput}
         {...rest}
         value={(value || '1').toString()}
       />

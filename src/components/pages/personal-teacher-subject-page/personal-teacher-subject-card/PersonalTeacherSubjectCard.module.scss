@@ -7,7 +7,7 @@
   padding: 40px;
   width: 100%;
   grid-template-columns: auto auto minmax(296px, 1fr);
-  grid-template-rows: auto  1fr   auto auto auto;
+  grid-template-rows: auto  1fr  1fr;
 }
 .contacts-hidden{
   display: flex;
@@ -52,7 +52,6 @@
   border-radius: 50%;
 }
 .name-and-rating{
-  outline-color: #1C6B1C;
   display: flex;
   min-width: unset;
   width: 100%;
@@ -66,23 +65,10 @@
   h4{
     @include h4--semi-bold;
   }
-  padding-bottom: 26px;
   padding-right: 42px;
 }
 
 .tags{
-  grid-column-start: 2;
-  grid-column-end: 3;
-  grid-row-start: 2;
-  grid-row-end: 3;
-
-  h6{
-    @include body-primary;
-  }
-  padding-right: 42px;
-}
-.info{
-  max-width: 700px;
   grid-column-start: 2;
   grid-column-end: 3;
   grid-row-start: 3;
@@ -99,12 +85,27 @@
   flex-direction: row;
   height: fit-content;
   gap: 8px;
-  padding-bottom: 26px;
 }
 .contacts-button {
   display: none;
 }
-
+.subject{
+  display: flex;
+  min-width: unset;
+  width: 100%;
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  flex-direction: column;
+  align-items: flex-start;
+  overflow-wrap: anywhere;
+  h5{
+    @include h5--bold;
+  }
+  padding-bottom: 18px;
+  padding-top: 21px;
+}
 
 @media screen and (max-width: 1200px) {
   .card {
@@ -112,7 +113,7 @@
     width: 100%;
     padding: 24px;
     grid-template-columns:  auto auto 1fr;
-    grid-template-rows: auto  1fr   auto auto auto;
+    grid-template-rows: auto  1fr   auto auto auto auto;
 
   }
 
@@ -134,24 +135,21 @@
     grid-row-end: 2;
     padding: 1px;
   }
-  .tags {
+  .subject {
     grid-column-start: 2;
     grid-column-end: 4;
     grid-row-start: 2;
     grid-row-end: 3;
-    width: 90%;
-    padding-top: 14px;
   }
-  .info {
+  .tags {
     grid-column-start: 1;
     grid-column-end: 4;
     grid-row-start: 3;
     grid-row-end: 4;
     width: 90%;
-    @include overline-text;
-    padding-right: unset;
-    padding-top: 16px;
+    padding-top: 14px;
   }
+
   .contacts-hidden{
     display: none;
   }
@@ -221,30 +219,31 @@
       @include button--bold;
     }
   }
-  .tags{
-    padding-top: 14px;
+  .subject{
+    width: 90%;
     grid-column-start: 1;
     grid-column-end: 4;
     grid-row-start: 2;
     grid-row-end: 3;
-    width: 90%;
-    h6{
-      @include overline-text;
+    h5{
+      @include body-secondary--bold;
     }
-
     padding-bottom: 8px;
+    padding-top: unset;
   }
-  .info{
+  .tags{
     grid-column-start: 1;
     grid-column-end: 4;
     grid-row-start: 3;
     grid-row-end: 4;
     width: 90%;
-
-    @include overline-text;
-
-    padding: unset;
+    h6{
+      @include overline-text;
+    }
+    padding-top: unset;
+    padding-bottom: 8px;
   }
+
 
   .contacts-button{
     grid-column-start: 1;
