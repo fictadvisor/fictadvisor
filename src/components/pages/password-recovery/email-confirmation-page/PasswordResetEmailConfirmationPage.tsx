@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/router';
 
@@ -13,10 +13,11 @@ import Button, {
 import Link from '@/components/pages/password-recovery/email-confirmation-page/components/send-again-link';
 
 import styles from './PasswordResetEmailConfirmationPage.module.scss';
+import {AuthAPI} from "@/lib/api/auth/AuthAPI";
 
 const PasswordResetEmailConfirmationPage = () => {
   const router = useRouter();
-  const { email } = router.query;
+  const email = router.query.email as string;
   const emailText = email
     ? 'Ми надіслали листа для зміни пароля на адресу '
     : 'Ми надіслали листа для зміни пароля';
@@ -24,7 +25,25 @@ const PasswordResetEmailConfirmationPage = () => {
     router.push('/register');
   };
 
-  const sendAgainLink = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+  const [error, setError] = useState<string>('');
+  let tries = 0;
+
+  const handleSendAgain = async () => {
+    try {
+      await AuthAPI.forgotPassword({ email });
+    } catch (e) {
+      const errorName = e.response.data.error;
+      console.log(e);
+      if (errorName === 'TooManyActionsException') {
+        tries++;
+        if (tries >= 5) setError('Да ти заєбав');
+        else setError('Час для надсилання нового листа ще не сплив');
+      } else if (errorName === 'NotRegisteredException') {
+        setError('Упс, реєструйся заново');
+      }
+    }
+  };
+  // const sendAgainLink = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
   return (
     <PageLayout
       hasHeader={false}
@@ -57,7 +76,13 @@ const PasswordResetEmailConfirmationPage = () => {
                 />
               </div>
               <div className={styles['desktop']}>
-                <Link text={'Надіслати повторно'} href={sendAgainLink} />
+                <Button
+                    text={'Надіслати повторно'}
+                    variant={ButtonVariant.TEXT}
+                    size={ButtonSize.SMALL}
+                    color={ButtonColor.PRIMARY}
+                    onClick={handleSendAgain}
+                />
               </div>
             </div>
           </div>

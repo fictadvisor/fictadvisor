@@ -14,6 +14,7 @@ import { client } from '../instance';
 
 import { ChangePasswordBody } from './dto/ChangePasswordBody';
 import { RegisterBody } from './dto/RegisterBody';
+import {ForgotPasswordBody} from "@/lib/api/auth/dto/ForgotPasswordBody";
 
 export class AuthAPI {
   static async groupHasCaptain(groupId: string): Promise<boolean> {
@@ -81,6 +82,11 @@ export class AuthAPI {
 
   static async confirmPasswordReset(body: ConfirmPasswordResetBody) {
     const { data } = await client.post('/users/resetPassword', body);
+    return data;
+  }
+
+  static async forgotPassword(body: ForgotPasswordBody) {
+    const { data } = await client.post('/auth/forgotPassword', body);
     return data;
   }
 

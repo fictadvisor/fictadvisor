@@ -1,16 +1,39 @@
-import React, { FC } from 'react';
-import { Form, Formik } from 'formik';
+import React, {FC} from 'react';
+import {Form, Formik} from 'formik';
 
-import Button, { ButtonSize } from '@/components/common/ui/button';
-import { Input, InputSize, InputType } from '@/components/common/ui/form';
-import { initialValues } from '@/components/pages/password-recovery/forgot-password-page/components/forgot-password-form/constants';
-import { ForgotPasswordFormFields } from '@/components/pages/password-recovery/forgot-password-page/components/forgot-password-form/types';
-import { validationSchema } from '@/components/pages/password-recovery/forgot-password-page/components/forgot-password-form/validation';
+import Button, {ButtonSize} from '@/components/common/ui/button';
+import {Input, InputSize, InputType} from '@/components/common/ui/form';
+import {
+  initialValues
+} from '@/components/pages/password-recovery/forgot-password-page/components/forgot-password-form/constants';
+import {
+  ForgotPasswordFormFields
+} from '@/components/pages/password-recovery/forgot-password-page/components/forgot-password-form/types';
+import {
+  validationSchema
+} from '@/components/pages/password-recovery/forgot-password-page/components/forgot-password-form/validation';
 import styles from '@/components/pages/password-recovery/forgot-password-page/ForgotPasswordPage.module.scss';
+import {AuthAPI} from "@/lib/api/auth/AuthAPI";
+import {useDispatch} from "react-redux";
+import {showAlert} from "@/redux/reducers/alert.reducer";
+import {AlertColor} from "@/components/common/ui/alert";
+import {useRouter} from "next/router";
 
 const ForgotPasswordForm: FC = () => {
-  const handleSubmit = (data: ForgotPasswordFormFields) => {
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  const handleSubmit = async (data: ForgotPasswordFormFields) => {
     console.log({ data });
+    try {
+      await AuthAPI.forgotPassword({email: data.emailAddress})
+      await router.push(`/password-recovery/email-verification?email=${data.emailAddress}`)
+    } catch (e) {
+      dispatch(showAlert({
+        title:e.response?.data.error,
+        color: AlertColor.ERROR
+      }))
+    }
   };
 
   return (
