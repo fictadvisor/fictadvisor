@@ -1,4 +1,5 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/router';
 
@@ -10,11 +11,10 @@ import Button, {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button';
+import { AuthAPI } from '@/lib/api/auth/AuthAPI';
+import { showAlert } from '@/redux/reducers/alert.reducer';
 
 import styles from './PasswordResetEmailConfirmationPage.module.scss';
-import {AuthAPI} from "@/lib/api/auth/AuthAPI";
-import {useDispatch} from "react-redux";
-import {showAlert} from "@/redux/reducers/alert.reducer";
 
 const PasswordResetEmailConfirmationPage = () => {
   const router = useRouter();
@@ -42,10 +42,10 @@ const PasswordResetEmailConfirmationPage = () => {
         errorMessage = 'Упс, реєструйся заново';
       }
       dispatch(
-          showAlert({
-            title: errorMessage,
-            color: AlertColor.ERROR,
-          }),
+        showAlert({
+          title: errorMessage,
+          color: AlertColor.ERROR,
+        }),
       );
     }
   };
@@ -83,11 +83,11 @@ const PasswordResetEmailConfirmationPage = () => {
               </div>
               <div className={styles['desktop']}>
                 <Button
-                    text={'Надіслати повторно'}
-                    variant={ButtonVariant.TEXT}
-                    size={ButtonSize.SMALL}
-                    color={ButtonColor.PRIMARY}
-                    onClick={handleSendAgain}
+                  text={'Надіслати повторно'}
+                  variant={ButtonVariant.TEXT}
+                  size={ButtonSize.SMALL}
+                  color={ButtonColor.PRIMARY}
+                  onClick={handleSendAgain}
                 />
               </div>
             </div>

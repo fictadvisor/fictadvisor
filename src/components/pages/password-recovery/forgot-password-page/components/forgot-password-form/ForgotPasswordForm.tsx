@@ -1,23 +1,17 @@
-import React, {FC} from 'react';
-import {Form, Formik} from 'formik';
+import React, { FC } from 'react';
+import { useDispatch } from 'react-redux';
+import { Form, Formik } from 'formik';
+import { useRouter } from 'next/router';
 
-import Button, {ButtonSize} from '@/components/common/ui/button';
-import {Input, InputSize, InputType} from '@/components/common/ui/form';
-import {
-  initialValues
-} from '@/components/pages/password-recovery/forgot-password-page/components/forgot-password-form/constants';
-import {
-  ForgotPasswordFormFields
-} from '@/components/pages/password-recovery/forgot-password-page/components/forgot-password-form/types';
-import {
-  validationSchema
-} from '@/components/pages/password-recovery/forgot-password-page/components/forgot-password-form/validation';
+import { AlertColor } from '@/components/common/ui/alert';
+import Button, { ButtonSize } from '@/components/common/ui/button';
+import { Input, InputSize, InputType } from '@/components/common/ui/form';
+import { initialValues } from '@/components/pages/password-recovery/forgot-password-page/components/forgot-password-form/constants';
+import { ForgotPasswordFormFields } from '@/components/pages/password-recovery/forgot-password-page/components/forgot-password-form/types';
+import { validationSchema } from '@/components/pages/password-recovery/forgot-password-page/components/forgot-password-form/validation';
 import styles from '@/components/pages/password-recovery/forgot-password-page/ForgotPasswordPage.module.scss';
-import {AuthAPI} from "@/lib/api/auth/AuthAPI";
-import {useDispatch} from "react-redux";
-import {showAlert} from "@/redux/reducers/alert.reducer";
-import {AlertColor} from "@/components/common/ui/alert";
-import {useRouter} from "next/router";
+import { AuthAPI } from '@/lib/api/auth/AuthAPI';
+import { showAlert } from '@/redux/reducers/alert.reducer';
 
 const ForgotPasswordForm: FC = () => {
   const dispatch = useDispatch();
@@ -26,16 +20,18 @@ const ForgotPasswordForm: FC = () => {
   const handleSubmit = async (data: ForgotPasswordFormFields) => {
     console.log({ data });
     try {
-      await AuthAPI.forgotPassword({email: data.emailAddress})
-      await router.push(`/password-recovery/email-verification?email=${data.emailAddress}`)
+      await AuthAPI.forgotPassword({ email: data.emailAddress });
+      await router.push(
+        `/password-recovery/email-verification?email=${data.emailAddress}`,
+      );
     } catch (e) {
       const errorMessage = e.response.data.error;
-      if(errorMessage == 'InvalidBodyException'){
+      if (errorMessage == 'InvalidBodyException') {
         dispatch(
-            showAlert({
-              title: "Невірно введено пошту для відновлення",
-              color: AlertColor.ERROR,
-            }),
+          showAlert({
+            title: 'Невірно введено пошту для відновлення',
+            color: AlertColor.ERROR,
+          }),
         );
       }
     }
