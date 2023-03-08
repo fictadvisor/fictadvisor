@@ -1,7 +1,6 @@
 import { AuthBody } from '@/lib/api/auth/dto/AuthBody';
 import { AuthTelegramBody } from '@/lib/api/auth/dto/AuthTelegramBody';
 import { CheckRegisterTelegramDTO } from '@/lib/api/auth/dto/CheckRegisterTelegramDTO';
-import { CheckResetTokenBody } from '@/lib/api/auth/dto/CheckResetTokenBody';
 import { ConfirmPasswordResetBody } from '@/lib/api/auth/dto/ConfirmPasswordResetBody';
 import { ForgotPasswordBody } from '@/lib/api/auth/dto/ForgotPasswordBody';
 import { GetMeDTO } from '@/lib/api/auth/dto/GetMeDTO';

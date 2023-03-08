@@ -4,15 +4,11 @@ import { useRouter } from 'next/router';
 
 import { CustomClock } from '@/components/common/custom-svg/CustomClock';
 import PageLayout from '@/components/common/layout/page-layout';
-import { AlertColor } from '@/components/common/ui/alert';
 import Button, {
   ButtonColor,
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button';
-import { ForgotPasswordFormFields } from '@/components/pages/password-recovery/forgot-password-page/components/forgot-password-form/types';
-import { AuthAPI } from '@/lib/api/auth/AuthAPI';
-import { showAlert } from '@/redux/reducers/alert.reducer';
 
 import styles from './PasswordResetLinkExpiredPage.module.scss';
 
