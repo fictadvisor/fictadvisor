@@ -1,5 +1,6 @@
 import React, { FC, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import { SimpleCard } from '@/components/common/composite/cards';
 import Button, {
@@ -28,6 +29,7 @@ export type PersonalTeacherTabsProps = {
 
 const TabsPage: FC<PersonalTeacherTabsProps> = props => {
   const [index, setIndex] = useState<string>('1');
+  const router = useRouter();
   return (
     <div className={styles['tabs']}>
       <div className={styles['karusel']}>
@@ -119,6 +121,7 @@ const TabsPage: FC<PersonalTeacherTabsProps> = props => {
                 variant={ButtonVariant.FILLED}
                 color={ButtonColor.PRIMARY}
                 size={ButtonSize.LARGE}
+                onClick={() => router.push('/poll')}
               />
             </div>
             <div className={styles['button-wrapper-mobile']}>
@@ -127,6 +130,7 @@ const TabsPage: FC<PersonalTeacherTabsProps> = props => {
                 variant={ButtonVariant.FILLED}
                 color={ButtonColor.PRIMARY}
                 size={ButtonSize.SMALL}
+                onClick={() => router.push('/poll')}
               />
             </div>
           </div>
@@ -162,6 +166,7 @@ const TabsPage: FC<PersonalTeacherTabsProps> = props => {
                 variant={ButtonVariant.FILLED}
                 color={ButtonColor.PRIMARY}
                 size={ButtonSize.LARGE}
+                onClick={() => router.push('/poll')}
               />
             </div>
             <div className={styles['button-wrapper-mobile']}>
@@ -170,6 +175,7 @@ const TabsPage: FC<PersonalTeacherTabsProps> = props => {
                 variant={ButtonVariant.FILLED}
                 color={ButtonColor.PRIMARY}
                 size={ButtonSize.SMALL}
+                onClick={() => router.push('/poll')}
               />
             </div>
           </div>
@@ -189,6 +195,7 @@ const TabsPage: FC<PersonalTeacherTabsProps> = props => {
                 variant={ButtonVariant.FILLED}
                 color={ButtonColor.PRIMARY}
                 size={ButtonSize.LARGE}
+                onClick={() => router.push('/poll')}
               />
             </div>
             <div className={styles['button-wrapper-mobile']}>
@@ -197,6 +204,7 @@ const TabsPage: FC<PersonalTeacherTabsProps> = props => {
                 variant={ButtonVariant.FILLED}
                 color={ButtonColor.PRIMARY}
                 size={ButtonSize.SMALL}
+                onClick={() => router.push('/poll')}
               />
             </div>
           </div>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 
 import Button, {
   ButtonColor,
@@ -20,6 +21,7 @@ export type PersonalTeacherTabsProps = GetTeacherSubjectsDTO;
 
 const TabsPage = () => {
   const [index, setIndex] = useState<string>('1');
+  const router = useRouter();
   return (
     <div className={styles['tabs']}>
       <div className={styles['karusel']}>
@@ -97,6 +99,7 @@ const TabsPage = () => {
                 variant={ButtonVariant.FILLED}
                 color={ButtonColor.PRIMARY}
                 size={ButtonSize.LARGE}
+                onClick={() => router.push('/poll')}
               />
             </div>
             <div className={styles['button-wrapper-mobile']}>
@@ -105,6 +108,7 @@ const TabsPage = () => {
                 variant={ButtonVariant.FILLED}
                 color={ButtonColor.PRIMARY}
                 size={ButtonSize.SMALL}
+                onClick={() => router.push('/poll')}
               />
             </div>
           </div>
@@ -124,6 +128,7 @@ const TabsPage = () => {
                 variant={ButtonVariant.FILLED}
                 color={ButtonColor.PRIMARY}
                 size={ButtonSize.LARGE}
+                onClick={() => router.push('/poll')}
               />
             </div>
             <div className={styles['button-wrapper-mobile']}>
@@ -132,6 +137,7 @@ const TabsPage = () => {
                 variant={ButtonVariant.FILLED}
                 color={ButtonColor.PRIMARY}
                 size={ButtonSize.SMALL}
+                onClick={() => router.push('/poll')}
               />
             </div>
           </div>
@@ -151,6 +157,7 @@ const TabsPage = () => {
                 variant={ButtonVariant.FILLED}
                 color={ButtonColor.PRIMARY}
                 size={ButtonSize.LARGE}
+                onClick={() => router.push('/poll')}
               />
             </div>
             <div className={styles['button-wrapper-mobile']}>
@@ -159,6 +166,7 @@ const TabsPage = () => {
                 variant={ButtonVariant.FILLED}
                 color={ButtonColor.PRIMARY}
                 size={ButtonSize.SMALL}
+                onClick={() => router.push('/poll')}
               />
             </div>
           </div>
