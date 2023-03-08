@@ -1,7 +1,6 @@
 import { TeacherRole } from '@prisma/client';
 
 export class DisciplineTeacherWithRoles {
-  id: string;
   roles: {
     role: TeacherRole,
   }[];

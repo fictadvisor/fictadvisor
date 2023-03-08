@@ -168,4 +168,36 @@ export class TeacherRepository {
       },
     });
   }
+
+  getTeacherSubject (teacherId: string, subjectId: string) {
+    return this.prisma.teacher.findFirst({
+      where: {
+        id: teacherId,
+        disciplineTeachers: {
+          some: {
+            discipline: {
+              subjectId,
+            },
+          },
+        },
+      },
+      select: {
+        id: true,
+        lastName: true,
+        avatar: true,
+        middleName: true,
+        firstName: true,
+        disciplineTeachers: {
+          select: {
+            discipline: {
+              select: {
+                subject: true,
+              },
+            },
+            roles: true,
+          },
+        },
+      },
+    });
+  }
 }

@@ -8,10 +8,11 @@ import { TelegramAPI } from '../../telegram/TelegramAPI';
 import { AccessModule } from '../../security/AccessModule';
 import { DateModule } from '../../utils/date/DateModule';
 import { ConfigurationModule } from '../../config/ConfigModule';
+import { SubjectByIdPipe } from '../subject/SubjectByIdPipe';
 
 @Module({
   controllers: [TeacherController, DisciplineTeacherController],
-  providers: [TeacherService, DisciplineTeacherService, TelegramAPI],
+  providers: [TeacherService, DisciplineTeacherService, TelegramAPI, SubjectByIdPipe],
   exports: [TeacherService, DisciplineTeacherService],
   imports: [forwardRef(() => PollModule), AccessModule, DateModule, ConfigurationModule],
 })

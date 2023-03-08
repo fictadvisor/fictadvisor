@@ -9,6 +9,7 @@ import { Access } from 'src/v2/security/Access';
 import { TeacherByIdPipe } from './pipe/TeacherByIdPipe';
 import { ContactByNamePipe } from './pipe/ContactByNamePipe';
 import { MarksQueryDTO } from './query/MarksQueryDTO';
+import { SubjectByIdPipe } from '../subject/SubjectByIdPipe';
 
 @Controller({
   version: '2',
@@ -40,9 +41,17 @@ export class TeacherController {
   async getSubjects (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
   ) {
-    const subjects = await this.teacherService.getTeacherSubject(teacherId);
+    const subjects = await this.teacherService.getTeacherSubjects(teacherId);
 
     return { subjects };
+  }
+
+  @Get('/:teacherId/subjects/:subjectId')
+  async getSubject (
+    @Param('teacherId', TeacherByIdPipe) teacherId: string,
+    @Param('subjectId', SubjectByIdPipe) subjectId: string,
+  ) {
+    return this.teacherService.getTeacherSubject(teacherId, subjectId);
   }
 
   @Get('/:teacherId')

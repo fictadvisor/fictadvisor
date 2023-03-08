@@ -10,6 +10,7 @@ import { DisciplineTeacherService } from './DisciplineTeacherService';
 import { MarksQueryDTO } from './query/MarksQueryDTO';
 import { InvalidQueryException } from '../../utils/exceptions/InvalidQueryException';
 import { QueryAllTeacherDTO } from './query/QueryAllTeacherDTO';
+import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
 
 @Injectable()
 export class TeacherService {
@@ -146,7 +147,26 @@ export class TeacherService {
     }
   }
 
-  async getTeacherSubject (teacherId: string) {
+  async getTeacherSubjects (teacherId: string) {
     return this.teacherRepository.getSubjects(teacherId);
+  }
+
+  async getTeacherSubject (teacherId: string, subjectId: string) {
+    const dbTeacher = await this.teacherRepository.getTeacherSubject(teacherId, subjectId);
+
+    if (!dbTeacher) {
+      throw new InvalidEntityIdException('subject');
+    }
+
+    const { disciplineTeachers, ...teacher } = dbTeacher;
+
+    const roles = this.disciplineTeacherService.getUniqueRoles(disciplineTeachers);
+    const subject = disciplineTeachers[0].discipline.subject;
+
+    return {
+      ...teacher,
+      subject,
+      roles,
+    };
   }
 }
