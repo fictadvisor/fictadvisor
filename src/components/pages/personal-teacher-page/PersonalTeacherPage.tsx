@@ -23,12 +23,9 @@ const PersonalTeacherPage = () => {
       retry: false,
     },
   );
-  const {
-    isLoading: isSubjecktsLoading,
-    isError: isSubjecktsError,
-    data: subjecktsData,
-  } = useQuery(
-    ['teacher', teacherId],
+
+  const { data: subjecktsData } = useQuery(
+    ['teacherSubjects', teacherId],
     () => TeacherAPI.getTeacherSubjects(teacherId),
     {
       refetchOnWindowFocus: false,
@@ -47,6 +44,9 @@ const PersonalTeacherPage = () => {
       void router.push('/teachers');
     }, 3000);
   }
+
+  console.log(subjecktsData);
+
   return (
     <PageLayout description={'Сторінка викладача'}>
       <div className={styles['personal-teacher-page']}>
