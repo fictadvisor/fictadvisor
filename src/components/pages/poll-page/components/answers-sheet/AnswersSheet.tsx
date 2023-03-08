@@ -166,9 +166,9 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
                         </p>
                       )}
 
-                      <b className={styles['question-title']}>
+                      <p className={styles['question-title']}>
                         {question.name}
-                      </b>
+                      </p>
                       {question.description && (
                         <p className={styles['question-description']}>
                           {question.description}

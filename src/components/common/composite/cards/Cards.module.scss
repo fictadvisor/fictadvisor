@@ -121,6 +121,16 @@
   color: $gray-500;
 }
 
+.main-content{
+  // Базована Хуйня STRONG
+  b{
+    font-size: 14px;
+  }
+  p{
+    font-size: 14px;
+  }
+}
+
 .card-avatar {
   box-sizing: content-box;
   position: absolute;
@@ -161,19 +171,19 @@
 
   & img {
     aspect-ratio: 1/1;
-    width: 60px;
+    width: 68px;
   }
 }
 
 .poll-card-container {
   display: flex;
   width: 100%;
+  height: 94px;
   align-items: center;
   justify-content: space-between;
   border: 1px solid #404040;
   background-color: $background-dark-0;
   border-radius: 0;
-  padding: 32px 16px;
   cursor: pointer;
   & p {
     color: #a3a3a3;
