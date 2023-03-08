@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { FormEvent, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/router';
@@ -146,7 +146,10 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
             >
               {({ values }) => (
                 <Form
-                  onChange={() => {
+                  onClick={(event: FormEvent<HTMLFormElement>) => {
+                    values[(event.target as any).name] = (
+                      event.target as any
+                    ).value;
                     answer(values);
                   }}
                   className={styles['form']}
