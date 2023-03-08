@@ -1,5 +1,4 @@
 import React, { FC, useState } from 'react';
-import { redirect } from 'next/navigation';
 import { useRouter } from 'next/router';
 
 import { SimpleCard } from '@/components/common/composite/cards';
@@ -128,7 +127,7 @@ const TabsPage: FC<PersonalTeacherTabsProps> = props => {
             </div>
           </div>
         </TabPanel>
-        <TabPanel className="tab-panel" value={'2'}>
+        <TabPanel className={styles['tab-panel']} value={'2'}>
           <div className={styles['my-tab-panel-subjects']}>
             <ul className={styles1['subject-search-list']}>
               {props.subjects &&

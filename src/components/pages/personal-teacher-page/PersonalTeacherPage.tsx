@@ -23,12 +23,8 @@ const PersonalTeacherPage = () => {
       retry: false,
     },
   );
-  const {
-    isLoading: isSubjecktsLoading,
-    isError: isSubjecktsError,
-    data: subjecktsData,
-  } = useQuery(
-    ['teacher', teacherId],
+  const { data: subjecktsData } = useQuery(
+    ['teacherSubjects', teacherId],
     () => TeacherAPI.getTeacherSubjects(teacherId),
     {
       refetchOnWindowFocus: false,
