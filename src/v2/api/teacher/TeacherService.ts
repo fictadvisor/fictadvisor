@@ -162,11 +162,13 @@ export class TeacherService {
 
     const roles = this.disciplineTeacherService.getUniqueRoles(disciplineTeachers);
     const subject = disciplineTeachers[0].discipline.subject;
+    const contacts = await this.contactRepository.getAllContacts(teacherId);
 
     return {
       ...teacher,
       subject,
       roles,
+      contacts,
     };
   }
 }
