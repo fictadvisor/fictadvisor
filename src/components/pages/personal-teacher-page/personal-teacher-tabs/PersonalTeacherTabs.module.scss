@@ -49,6 +49,7 @@ box-sizing: border-box;
     align-items: flex-start;
     justify-content: left;
     text-align: left;
+    padding-bottom: 50px;
   }
 }
 .button-wrapper-desktop{
@@ -129,6 +130,9 @@ box-sizing: border-box;
     align-items: flex-start;
     justify-content: left;
     text-align: left;
+    &-subjects{
+      padding-bottom: 50px;
+    }
   }
   .tab-panel-list{
     max-width: unset;
