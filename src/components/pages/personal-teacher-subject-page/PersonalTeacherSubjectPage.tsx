@@ -68,6 +68,10 @@ const PersonalTeacherSubjectPage = () => {
                     }`,
                     href: `/teachers/${teacherId}`,
                   },
+                  {
+                    label: `${data.subject.name}`,
+                    href: `/discipline?teacherId=${teacherId}&subjectId=${subjectId}`,
+                  },
                 ]}
               />
               <div className={styles['card-wrapper']}>
