@@ -1,6 +1,7 @@
 import React from 'react';
 import { useQuery } from 'react-query';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import BannerImage from 'public/assets/main-page/BannerImage';
 
 import PageLayout from '@/components/common/layout/page-layout/PageLayout';
@@ -10,9 +11,10 @@ import Button, {
   ButtonVariant,
 } from '@/components/common/ui/button';
 import Loader from '@/components/common/ui/loader';
+import TokenPopup from '@/components/pages/main-page/components/token-popup';
 import { StudentResourcesAPI } from '@/lib/api/student-resources/StudentResourcesAPI';
 
-import ResourceCard from './components/ResourceCard';
+import ResourceCard from './components/resource-card/ResourceCard';
 
 import styles from './MainPage.module.scss';
 const MainPage = () => {
@@ -24,6 +26,9 @@ const MainPage = () => {
     },
   );
 
+  const { query, isReady } = useRouter();
+  const token = query.token as string;
+
   return (
     <PageLayout
       description={'Головна сторінка'}
@@ -31,6 +36,7 @@ const MainPage = () => {
       className={styles['main-page']}
     >
       <div className={styles['main-page-content']}>
+        {token && isReady && <TokenPopup token={token} />}
         <div className={styles['header']}>
           <div className={styles['header-info']}>
             <div className={styles['header-info-content']}>

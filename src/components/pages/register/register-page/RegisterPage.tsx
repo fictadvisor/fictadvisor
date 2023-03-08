@@ -1,9 +1,10 @@
 import { useQuery } from 'react-query';
+import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 
 import { AlertColor } from '@/components/common/ui/alert';
-import AlertPopup from '@/components/common/ui/alert-popup';
 import { GroupAPI } from '@/lib/api/group/GroupAPI';
+import { showAlert } from '@/redux/reducers/alert.reducer';
 
 import PageLayout from '../../../common/layout/page-layout/PageLayout';
 
@@ -14,10 +15,21 @@ import styles from './RegisterPage.module.scss';
 
 const RegisterPage = () => {
   const { query } = useRouter();
-
+  const error = query.error as string;
   const { isLoading, data } = useQuery(['groups'], () => GroupAPI.getAll(), {
     refetchOnWindowFocus: false,
   });
+
+  const dispatch = useDispatch();
+  if (error) {
+    dispatch(
+      showAlert({
+        title: 'Помилка!',
+        description: 'Лист для верифікації сплив або неправильний код!',
+        color: AlertColor.ERROR,
+      }),
+    );
+  }
 
   return (
     <PageLayout
@@ -36,13 +48,6 @@ const RegisterPage = () => {
           )}
         </div>
       </div>
-      {/*{error && (*/}
-      {/*  <AlertPopup*/}
-      {/*    title="Помилка!"*/}
-      {/*    description="Лист для верифікації сплив або неправильний код!"*/}
-      {/*    color={AlertColor.ERROR} //TODO*/}
-      {/*  />*/}
-      {/*)}*/}
     </PageLayout>
   );
 };
