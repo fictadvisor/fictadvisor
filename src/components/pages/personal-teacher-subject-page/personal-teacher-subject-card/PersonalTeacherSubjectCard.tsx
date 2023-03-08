@@ -28,25 +28,17 @@ const PersonalTeacherSubjectCard: React.FC<
         <h5>{props.subject.name}</h5>
       </div>
       <div className={styles['tags']}>
-        <div>
-          {props.roles.includes('LECTURER') && (
-            <Tag color={TagColor.VIOLET} size={TagSize.SMALL} text={'Лектор'} />
-          )}
-        </div>
-        <div>
-          {props.roles.includes('PRACTICIAN') && (
-            <Tag
-              color={TagColor.ORANGE}
-              size={TagSize.SMALL}
-              text={'Практик'}
-            />
-          )}
-        </div>
-        <div>
-          {props.roles.includes('LABORANT') && (
-            <Tag color={TagColor.MINT} size={TagSize.SMALL} text={'Лаборант'} />
-          )}
-        </div>
+        {props.roles.includes('LECTURER') && (
+          <Tag color={TagColor.VIOLET} size={TagSize.SMALL} text={'Лектор'} />
+        )}
+
+        {props.roles.includes('PRACTICIAN') && (
+          <Tag color={TagColor.ORANGE} size={TagSize.SMALL} text={'Практик'} />
+        )}
+
+        {props.roles.includes('LABORANT') && (
+          <Tag color={TagColor.MINT} size={TagSize.SMALL} text={'Лаборант'} />
+        )}
       </div>
 
       <Button
