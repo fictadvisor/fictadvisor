@@ -58,25 +58,12 @@ const PollTeacherPage: FC = () => {
     },
   );
 
-  useEffect(() => {
-    void refetch();
-  }, [queryObj, curPage, refetch]);
-
   return (
     <PageLayout title={'Вчителі'}>
       <div className={styles['layout']}>
         {isLoggedIn && (
           <>
             <Breadcrumbs items={breadcrumbs} className={styles['breadcrumb']} />
-            <SearchForm
-              serchPlaceholder="Оберіть викладача"
-              filterDropDownOptions={[
-                { value: 'firstName', label: 'Іменем' },
-                { value: 'lastName', label: 'Прізвищем' },
-              ]}
-              onSubmit={submitHandler}
-              initialValues={TeacherInitialValues}
-            />
 
             {data && <PollTeacherSearchList data={data} className="teacher" />}
             {isLoading ||

@@ -71,25 +71,27 @@ export const LecturerPollCard: React.FC<LecturerPollCardProps> = ({
       {...rest}
     >
       <img className={styles['card-avatar']} src={avatar} alt="викладач" />
-      <br />
+
       <CardRoles roles={roles} disabled={disabled} />
-      <h4 className={styles['card-name']}>{name}</h4>
-      <Tooltip
-        display={isTruncated}
-        text={description}
-        style={{
-          width: '300px',
-          fontSize: '11px',
-        }}
-      >
-        <div
-          onMouseOver={onMouseOverHandler}
-          ref={divRef}
-          className={styles['lecturer-description']}
+      <div className={styles['card-name-tooltip']}>
+        <h4 className={styles['card-name']}>{name}</h4>
+        <Tooltip
+          display={isTruncated}
+          text={description}
+          style={{
+            width: '300px',
+            fontSize: '11px',
+          }}
         >
-          {description}
-        </div>
-      </Tooltip>
+          <div
+            onMouseOver={onMouseOverHandler}
+            ref={divRef}
+            className={styles['lecturer-description']}
+          >
+            {description}
+          </div>
+        </Tooltip>
+      </div>
 
       <Button
         color={disabled ? ButtonColor.SECONDARY : ButtonColor.PRIMARY}
@@ -129,9 +131,8 @@ export const RatingCard: React.FC<RatingCardProps> = ({
       {rating && (
         <Rating rating={rating} className={styles['desktop-rating']} />
       )}
-      {!rating && <br />}
       {roles && <CardRoles roles={roles} disabled={disabled} />}
-      <h4 className={styles['card-name']}>{name}</h4>
+      <h4 className={styles['teacher-card-name']}>{name}</h4>
     </article>
   );
 };
