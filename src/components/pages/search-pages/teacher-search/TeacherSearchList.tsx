@@ -1,6 +1,4 @@
-import { FC } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 
 import { RatingCard } from '@/components/common/composite/cards/Cards';
 import { GetTeachersBySubjectDTO } from '@/lib/api/subject/dto/GetTeachersBySubjectDTO';
@@ -17,27 +15,15 @@ export const TeacherSearchList = ({
   return (
     <ul className={styles[`${className}-search-list`]}>
       {teachers &&
-        teachers?.map(
-          teacher =>
-            teacher.lastName.length > 0 &&
-            (teacher.roles ? (
-              <Link href={`/teachers/${teacher.id}`}>
-                <RatingCard
-                  key={teacher.id}
-                  name={`${teacher.lastName} ${teacher.firstName} ${teacher.middleName}`}
-                  roles={teacher.roles}
-                />
-              </Link>
-            ) : (
-              <Link href={`/teachers/${teacher.id}`}>
-                <RatingCard
-                  key={teacher.id}
-                  name={`${teacher.lastName} ${teacher.firstName} ${teacher.middleName}`}
-                  roles={teacher.roles}
-                />
-              </Link>
-            )),
-        )}
+        teachers?.map((teacher, index) => (
+          <Link key={index} href={`/teachers/${teacher.id}`}>
+            <RatingCard
+              key={teacher.id}
+              name={`${teacher.lastName} ${teacher.firstName} ${teacher.middleName}`}
+              roles={teacher.roles}
+            />
+          </Link>
+        ))}
     </ul>
   );
 };
