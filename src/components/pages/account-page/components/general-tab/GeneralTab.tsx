@@ -18,8 +18,8 @@ import styles from './GeneralTab.module.scss';
 const GeneralTab: FC = () => {
   const { user } = useAuthentication();
   const buttonText = user.telegramId
-    ? 'Телеграм під’єднано'
-    : "Під'єднати телеграм";
+    ? 'Telegram під’єднано'
+    : "Під'єднати Telegram";
 
   const router = useRouter();
 

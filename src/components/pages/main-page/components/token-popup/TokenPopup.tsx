@@ -40,7 +40,7 @@ const TokenPopup: FC<TokenPopupProps> = ({ token }) => {
           }),
         );
         if (isLoggedIn) await push('/account');
-        else await push('/register?telegram=false');
+        else await push('/register');
       }
     },
     [dispatch, isLoggedIn, push],
@@ -59,11 +59,11 @@ const TokenPopup: FC<TokenPopupProps> = ({ token }) => {
       if (isLoggedIn) {
         await UserAPI.linkTelegram(user.id, StorageUtil.getTelegramInfo());
         await push('account');
-      } else await push('/register?telegram=true');
+      } else await push('/register');
     } catch (e) {
       dispatch(
         showAlert({
-          title: 'Не вдалось підключити телеграм, спробуй ще раз',
+          title: 'Не вдалось підключити Telegram, спробуй ще раз',
           color: AlertColor.ERROR,
         }),
       );
@@ -78,8 +78,8 @@ const TokenPopup: FC<TokenPopupProps> = ({ token }) => {
         isClosable={false}
         hasIcon
         isTelegramIcon
-        title="Підключити телеграм"
-        text="Натисни, щоб підключити телеграм"
+        title="Підключи Telegram"
+        text="Натисни, щоб підключити Telegram"
         closeFunction={setIsOpen}
         firstButton={
           <Button
