@@ -214,8 +214,14 @@
     gap: 8px;
     padding:16px;
     margin-top: 3rem;
-    height: fit-content;
+    height: 100px;
     background-color: $background-dark-35;
+  .card-name{
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
 }
 
 .simple-card-container {

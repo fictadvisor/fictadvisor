@@ -22,7 +22,7 @@ const PollTeacherSearchList: FC<PollTeacherSearchListProps> = ({
             <LecturerPollCard
               key={teacher.disciplineTeacherId}
               description={teacher.subject.name}
-              url={teacher.avatar}
+              avatar={teacher.avatar}
               name={`${teacher.lastName} ${teacher.firstName} ${teacher.middleName}`}
               roles={teacher.roles}
             />
