@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import mergeClassNames from 'merge-class-names';
 
 import styles from '@/components/common/composite/cards/Cards.module.scss';
@@ -48,7 +48,7 @@ export const PollCard: React.FC<PollCard> = ({
       )}
       {...rest}
     >
-      <div>
+      <div className={styles['main-content']}>
         <b>
           {isComment ? (
             'Ваш коментар'
