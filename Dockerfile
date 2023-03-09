@@ -6,7 +6,7 @@ COPY . /app
 
 RUN yarn install
 
-RUN npx prisma migrate deploy
+RUN npx prisma generate
 
 RUN yarn build
 
