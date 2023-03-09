@@ -100,12 +100,12 @@
 }
 
 .button {
-  width: auto;
+  width: fit-content;
 }
 
 .textarea {
   width: 632px;
-  height: 178px;
+  padding: 0;
 }
 
 @media screen and (max-width: 1600px) {
