@@ -25,6 +25,7 @@ const RegistrationEmailConfirmationPage = () => {
   const handleReturnRegister = () => {
     void router.push('/register');
   };
+
   let tries = 0;
   const dispatch = useDispatch();
   const handleSendAgain = async () => {
@@ -33,6 +34,7 @@ const RegistrationEmailConfirmationPage = () => {
     } catch (e) {
       const errorName = e.response.data.error;
       let errorMessage;
+
       if (errorName === 'TooManyActionsException') {
         tries++;
         if (tries >= 5) errorMessage = 'Да ти заєбав';
@@ -40,6 +42,7 @@ const RegistrationEmailConfirmationPage = () => {
       } else if (errorName === 'NotRegisteredException') {
         errorMessage = 'Упс, реєструйся заново';
       }
+
       dispatch(
         showAlert({
           title: errorMessage,

@@ -25,7 +25,7 @@ type LecturerPollCardProps = {
   name: string;
   description: string;
   roles?: string[];
-  url?: string;
+  avatar?: string;
   disabled?: boolean;
 } & DivProps;
 
@@ -33,7 +33,7 @@ type RatingCardProps = {
   name: string;
   rating?: number;
   roles?: string[];
-  url?: string;
+  avatar?: string;
   disabled?: boolean;
 } & DivProps;
 
@@ -48,7 +48,7 @@ export const LecturerPollCard: React.FC<LecturerPollCardProps> = ({
   name,
   description,
   roles,
-  url = '/assets/icons/lecturer60.png',
+  avatar,
   disabled,
   ...rest
 }) => {
@@ -70,7 +70,7 @@ export const LecturerPollCard: React.FC<LecturerPollCardProps> = ({
       )}
       {...rest}
     >
-      <img className={styles['card-avatar']} src={url} alt="викладач" />
+      <img className={styles['card-avatar']} src={avatar} alt="викладач" />
       <br />
       <CardRoles roles={roles} disabled={disabled} />
       <h4 className={styles['card-name']}>{name}</h4>
@@ -105,7 +105,7 @@ export const RatingCard: React.FC<RatingCardProps> = ({
   rating,
   name,
   roles,
-  url = '/assets/icons/lecturer60.png',
+  avatar,
   disabled,
   ...rest
 }) => {
@@ -119,7 +119,7 @@ export const RatingCard: React.FC<RatingCardProps> = ({
       )}
       {...rest}
     >
-      <img className={styles['card-avatar']} src={url} alt="викладач" />
+      <img className={styles['card-avatar']} src={avatar} alt="викладач" />
       {rating && (
         <div className={styles['mobile-rating']}>
           {rating}

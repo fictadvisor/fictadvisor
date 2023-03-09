@@ -18,6 +18,7 @@ export const TeacherSearchList = ({
         teachers?.map((teacher, index) => (
           <Link key={index} href={`/teachers/${teacher.id}`}>
             <RatingCard
+              avatar={teacher.avatar}
               key={teacher.id}
               name={`${teacher.lastName} ${teacher.firstName} ${teacher.middleName}`}
               roles={teacher.roles}

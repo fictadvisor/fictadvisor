@@ -1,4 +1,5 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/router';
 
@@ -10,13 +11,14 @@ import Button, {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button';
-import Link from '@/components/pages/password-recovery/email-confirmation-page/components/send-again-link';
+import { AuthAPI } from '@/lib/api/auth/AuthAPI';
+import { showAlert } from '@/redux/reducers/alert.reducer';
 
 import styles from './PasswordResetEmailConfirmationPage.module.scss';
 
 const PasswordResetEmailConfirmationPage = () => {
   const router = useRouter();
-  const { email } = router.query;
+  const email = router.query.email as string;
   const emailText = email
     ? 'Ми надіслали листа для зміни пароля на адресу '
     : 'Ми надіслали листа для зміни пароля';
@@ -24,7 +26,30 @@ const PasswordResetEmailConfirmationPage = () => {
     router.push('/register');
   };
 
-  const sendAgainLink = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+  let tries = 0;
+  const dispatch = useDispatch();
+  const handleSendAgain = async () => {
+    try {
+      await AuthAPI.forgotPassword({ email });
+    } catch (e) {
+      const errorName = e.response.data.error;
+      let errorMessage;
+      if (errorName === 'TooManyActionsException') {
+        tries++;
+        if (tries >= 5) errorMessage = 'Да ти заєбав';
+        else errorMessage = ' Час для надсилання нового листа ще не сплив';
+      } else if (errorName === 'NotRegisteredException') {
+        errorMessage = 'Упс, реєструйся заново';
+      }
+      dispatch(
+        showAlert({
+          title: errorMessage,
+          color: AlertColor.ERROR,
+        }),
+      );
+    }
+  };
+
   return (
     <PageLayout
       hasHeader={false}
@@ -57,7 +82,13 @@ const PasswordResetEmailConfirmationPage = () => {
                 />
               </div>
               <div className={styles['desktop']}>
-                <Link text={'Надіслати повторно'} href={sendAgainLink} />
+                <Button
+                  text={'Надіслати повторно'}
+                  variant={ButtonVariant.TEXT}
+                  size={ButtonSize.SMALL}
+                  color={ButtonColor.PRIMARY}
+                  onClick={handleSendAgain}
+                />
               </div>
             </div>
           </div>

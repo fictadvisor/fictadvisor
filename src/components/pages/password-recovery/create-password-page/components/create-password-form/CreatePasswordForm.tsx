@@ -1,15 +1,36 @@
 import React, { FC } from 'react';
+import { useDispatch } from 'react-redux';
 import { Form, Formik } from 'formik';
+import { useRouter } from 'next/router';
 
+import { AlertColor } from '@/components/common/ui/alert';
 import Button, { ButtonSize } from '@/components/common/ui/button';
 import { Input, InputSize, InputType } from '@/components/common/ui/form';
 import { initialValues } from '@/components/pages/password-recovery/create-password-page/components/create-password-form/constants';
 import { CreatePasswordFormFields } from '@/components/pages/password-recovery/create-password-page/components/create-password-form/types';
 import { validationSchema } from '@/components/pages/password-recovery/create-password-page/components/create-password-form/validation';
 import styles from '@/components/pages/password-recovery/create-password-page/CreatePasswordPage.module.scss';
+import { AuthAPI } from '@/lib/api/auth/AuthAPI';
+import { showAlert } from '@/redux/reducers/alert.reducer';
+
 const CreatePasswordForm: FC = () => {
-  const handleSubmit = (data: CreatePasswordFormFields) => {
-    console.log({ data });
+  const { query, push } = useRouter();
+  const token = query.token as string;
+  const dispatch = useDispatch();
+  const handleSubmit = async (data: CreatePasswordFormFields) => {
+    try {
+      await AuthAPI.resetPassword(token, { password: data.newPassword });
+      void push('/password-recovery/valid');
+    } catch (e) {
+      dispatch(
+        showAlert({
+          title: 'Помилка!',
+          description: 'Лист для верифікації сплив або неправильний код!',
+          color: AlertColor.ERROR,
+        }),
+      );
+      void push('/password-recovery/invalid');
+    }
   };
 
   return (
