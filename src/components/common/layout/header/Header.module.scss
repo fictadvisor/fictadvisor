@@ -64,19 +64,19 @@
 
 .login-buttons {
     @include flex-center;
-    margin-left: 16px;
-    margin-right: 16px;
     gap: 8px;
 }
 
 .header-desktop-card {
-    width: 286px;
-    height: 42px;
+    width: fit-content;
+    justify-content: center;
+    width: 280px;
 }
 
 .header-logo {
     @include flex-center;
-
+    justify-content: flex-start;
+    width:280px;
     & img {
         width: 197px;
         height: 20px;
@@ -87,7 +87,11 @@
 @media (max-width: 1440px) {
     .header-container {
         padding-left: 40px;
-        padding-right: 50px;
+        padding-right: 40px;
+    }
+
+    .header-logo{
+        width: fit-content;
     }
     .menu {
         gap: 10px;
