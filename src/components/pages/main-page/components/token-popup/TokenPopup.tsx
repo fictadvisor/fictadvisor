@@ -57,10 +57,13 @@ const TokenPopup: FC<TokenPopupProps> = ({ token }) => {
     try {
       await AuthService.registerTelegram();
       if (isLoggedIn) {
-        await UserAPI.linkTelegram(user.id, StorageUtil.getTelegramInfo());
+        await UserAPI.linkTelegram(user.id, {
+          ...StorageUtil.getTelegramInfo().telegram,
+        });
         await push('account');
       } else await push('/register');
     } catch (e) {
+      console.log(e);
       dispatch(
         showAlert({
           title: 'Не вдалось підключити Telegram, спробуй ще раз',
