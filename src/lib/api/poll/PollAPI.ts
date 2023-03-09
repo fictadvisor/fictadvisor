@@ -1,3 +1,4 @@
+import { PollTeachersDTO } from '@/lib/api/poll/dto/PollTeachersDTO';
 import { getAuthorizationHeader } from '@/lib/api/utils';
 
 import { client } from '../instance';
@@ -28,6 +29,15 @@ export class PollAPI {
       body,
       getAuthorizationHeader(),
     );
+    return data;
+  }
+
+  static async getUserTeachers(userId: string): Promise<PollTeachersDTO> {
+    const { data } = await client.get(
+      `/poll/teachers/${userId}`,
+      getAuthorizationHeader(),
+    );
+
     return data;
   }
 
