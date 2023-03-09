@@ -64,7 +64,9 @@ export const TeacherSearchPage = () => {
           initialValues={TeacherInitialValues}
         />
 
-        {data && <TeacherSearchList teachers={data.teachers} />}
+        {data && (
+          <TeacherSearchList teachers={data.teachers} className="teacher" />
+        )}
         {isLoading ||
           (isFetching && (
             <div className={styles['page-loader']}>

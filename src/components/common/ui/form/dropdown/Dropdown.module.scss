@@ -54,30 +54,6 @@ $default-dropdown-padding: 8px;
     &:hover{
       border-color: $gray-600;
     }
-
-    @include roundcorners($color:$gray-200);
-    padding: 0 $dropdown-option-left-padding;
-    &-iconed {
-      padding-left: $dropdown-option-left-padding + 15px;
-    }
-    &-small{
-      height: 40px;
-    }
-    &-medium{
-      height: 48px;
-    }
-    &-large{
-      height: 52px;
-    }
-
-  }
-  &container {
-    box-sizing: border-box;
-    color: $gray-500;
-    transition: .2s ease-in-out all;
-    background-color: $theme-color;
-    border-radius: 10px;
-   
     &-success,&-success:hover{
       p{
         color: $success-300;
@@ -97,10 +73,36 @@ $default-dropdown-padding: 8px;
       }
       border-color: $background-dark-200;
     }
+    @include roundcorners($color:$gray-200);
+    padding: 0 $dropdown-option-left-padding;
+    &-iconed {
+      padding-left: $dropdown-option-left-padding + 15px;
+    }
+    &-small{
+      height: 40px;
+    }
+    &-medium{
+      height: 48px;
+    }
+    &-large{
+      height: 52px;
+    }
+
+  }
+  &container {
+    position: relative;
+    box-sizing: border-box;
+    color: $gray-500;
+    transition: .2s ease-in-out all;
+    background-color: $theme-color;
+    border-radius: 10px;
+   
+    
 
   }
 
   &menu {
+    position: absolute;
     margin-top: $default-dropdown-padding;
     padding: $default-dropdown-padding 0;
     background-color: $background-dark-0;
@@ -144,6 +146,7 @@ $default-dropdown-padding: 8px;
     }
     &-disabled{
       color: $background-dark-200;
+      white-space: nowrap;
     }
   }
   &success-label{
