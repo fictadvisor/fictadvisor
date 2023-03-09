@@ -172,6 +172,7 @@
   & img {
     aspect-ratio: 1/1;
     width: 68px;
+    border-radius: 100%;
   }
 }
 
@@ -257,5 +258,22 @@
   }
   .desktop-rating {
     display: none !important;
+  }
+  .poll-card-container{
+    height: 78px;
+  }
+  .header-lecturer-card-container{
+    height: 78px;
+    background-color: #1E1E1E;
+    img{
+      display: none;
+    }
+    .card-name{
+      font-weight: 700;
+    }
+    .lecturer-description{
+      color: #A3A3A3;
+      font-size: 14px;
+    }
   }
 }
