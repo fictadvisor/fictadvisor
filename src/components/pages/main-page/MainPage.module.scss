@@ -1,5 +1,6 @@
 @import "../../../styles/partials/utils";
-@import "@/styles/partials/_breakpoints.scss";
+@import "src/styles/partials/breakpoints";
+@import "src/styles/partials/typography-mixins";
 
 $button-border-color: #D33D3D;
 $button-divider-color: #404040;
@@ -24,7 +25,7 @@ $font-weight-bold: 700;
     overflow: hidden;
 
     h2 {
-        font-weight: $font-weight-bold;
+        @include h2--bold;
     }
 }
 

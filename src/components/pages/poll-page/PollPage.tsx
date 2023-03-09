@@ -87,9 +87,9 @@ const PollPage = () => {
   const router = useRouter();
   const disciplineTeacherId = router.query.disciplineTeacherId as string;
   const {
-    error: FetchingQuestionsError,
+    error,
     isSuccess: isSuccessFetching,
-    data: FetchedData,
+    data,
     isLoading: isQuestionsLoading,
   } = useQuery(
     ['pollQuestions'],
@@ -111,13 +111,11 @@ const PollPage = () => {
     setIsLoading(isQuestionsLoading);
   }, [isQuestionsLoading]);
 
-  const status =
-    FetchingQuestionsError &&
-    (FetchingQuestionsError as any).response?.data?.error;
+  const status = error && (error as any).response?.data?.error;
 
   const dispatch = useDispatch();
 
-  if (FetchingQuestionsError && !isLoading) {
+  if (error && !isLoading) {
     dispatch(
       showAlert({
         title: 'Помилка!',
@@ -125,9 +123,11 @@ const PollPage = () => {
           status === 'InvalidEntityIdException'
             ? 'Не знайдено опитування з таким id'
             : status === 'AnswerInDatabasePermissionException'
-            ? 'Ви не маєте доступу до цієї сторінки оскільки вже пройшли опитування!'
+            ? 'Ти не маєш доступу до цієї сторінки, тому що вже пройшов опитування!'
             : status === 'NoPermissionException'
-            ? ' У вас недостатньо прав для цієї дії'
+            ? 'У тебе недостатньо прав для цієї дії'
+            : status === 'WrongTimeException'
+            ? 'Час проходження опитування сплив'
             : 'Помилка на сервері =(',
         color: AlertColor.ERROR,
       }),
@@ -153,7 +153,7 @@ const PollPage = () => {
                       { label: 'Головна', href: '/' },
                       { label: 'Опитування', href: '/poll' },
                       {
-                        label: `${FetchedData.teacher.lastName} ${FetchedData.teacher.firstName} ${FetchedData.teacher.middleName}`,
+                        label: `${data.teacher.lastName} ${data.teacher.firstName} ${data.teacher.middleName}`,
                         href: `/poll/${disciplineTeacherId}`,
                       },
                     ]}
@@ -161,7 +161,7 @@ const PollPage = () => {
                   />
                 </div>
 
-                <PollForm data={FetchedData || initialState} />
+                <PollForm data={data || initialState} />
               </div>
             )
           )}

@@ -73,6 +73,7 @@ const Dropdown: React.FC<DropdownProps> = ({
       <span className={state ? styles[`dropdown-${state}-label`] : ''}>
         {label}
       </span>
+
       {icon && <div className={styles['dropdown-icon-container']}>{icon}</div>}
 
       <Select
@@ -98,16 +99,14 @@ const Dropdown: React.FC<DropdownProps> = ({
             const control = mergeClassNames(
               styles[`dropdown-control`],
               styles[`dropdown-control-${size}`],
+              styles[`dropdown-control-${state}`],
             );
             return icon
               ? control + ' ' + styles['dropdown-control-iconed']
               : control;
           },
-          container: () =>
-            `${styles['dropdown-container']} ${
-              styles[`dropdown-container-${state}`]
-            }`,
-          //   input: (state) => "dropdown-input",
+          container: () => `${styles['dropdown-container']}`,
+          input: state => 'dropdown-input',
           menu: () => styles['dropdown-menu'],
           menuList: () => styles['dropdown-menu-list'],
           option: state =>
@@ -120,7 +119,10 @@ const Dropdown: React.FC<DropdownProps> = ({
             state.isDisabled
               ? styles['dropdown-placeholder-disabled']
               : state.isFocused
-              ? styles['dropdown-placeholder-disabled']
+              ? mergeClassNames(
+                  styles['dropdown-placeholder-disabled'],
+                  styles['dropdown-placeholder'],
+                )
               : styles['dropdown-placeholder'],
 
           singleValue: () => styles['dropdown-single-value'],
@@ -148,6 +150,7 @@ const Dropdown: React.FC<DropdownProps> = ({
         }}
       />
       {showRemark && (
+        // && !isMenuOpen
         <p className={styles['remark-' + state]}>
           {touched && error ? error : defaultRemark}
         </p>
