@@ -35,8 +35,8 @@ export class AuthAPI {
     resetToken: string,
     body: ResetPasswordBody,
   ): Promise<ResetPasswordDTO> {
-    const { data } = await client.patch(
-      `/users/resetPassword/${resetToken}`,
+    const { data } = await client.post(
+      `/auth/resetPassword/${resetToken}`,
       body,
     );
     return data;

@@ -18,10 +18,9 @@ import styles from './CreatePasswordPage.module.scss';
 const CreatePasswordPage = () => {
   const router = useRouter();
 
-  // const dispatch = useDispatch();
   const token = router.query.token as string;
   const returnAuth = () => {
-    router.push('/login');
+    void router.push('/login');
   };
 
   const { data, isFetching } = useQuery(
@@ -32,9 +31,8 @@ const CreatePasswordPage = () => {
     },
   );
   if (!isFetching) {
-    console.log(data.isAvailable);
     if (!data.isAvailable) {
-      router.push('/password-recovery/invalid');
+      void router.push('/password-recovery/invalid');
     }
   }
 
