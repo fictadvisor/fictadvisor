@@ -14,15 +14,16 @@ import AuthService from '@/lib/services/auth';
 import styles from '../right-block/RightBlock.module.scss';
 
 const LoginForm: FC = () => {
-  const { push } = useRouter();
+  const { push, query } = useRouter();
   const { update } = useAuthentication();
+  const redirect = query.redirect as string;
 
   const handleSubmit = useCallback(
     async (data: LoginFormFields, { setErrors }) => {
       try {
         await AuthService.login(data);
         update();
-        await push('/');
+        await push(redirect ? redirect.replace('~', '/') : '/');
       } catch (e) {
         setErrors({
           username: 'Користувача з таким паролем та поштою не знайдено',
@@ -31,7 +32,7 @@ const LoginForm: FC = () => {
         console.log(e.response?.data.message);
       }
     },
-    [push],
+    [push, redirect, update],
   );
 
   return (

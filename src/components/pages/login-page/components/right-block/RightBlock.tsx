@@ -13,6 +13,7 @@ import Button, {
 } from '@/components/common/ui/button';
 import Divider, { DividerTextPosition } from '@/components/common/ui/divider';
 import LoginForm from '@/components/pages/login-page/components/login-form';
+import useAuthentication from '@/hooks/use-authentication';
 import AuthService from '@/lib/services/auth/AuthService';
 import { showAlert } from '@/redux/reducers/alert.reducer';
 
@@ -21,9 +22,13 @@ import styles from './RightBlock.module.scss';
 const RightBlock = () => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const redirect = router.query.redirect as string;
+  const { update } = useAuthentication();
   const handleClick = async () => {
     const isSuccess = await AuthService.loginTelegram();
-    if (isSuccess) await router.push('/');
+    update();
+    if (isSuccess)
+      await router.push(redirect ? redirect.replace('~', '/') : '/');
     else {
       dispatch(
         showAlert({

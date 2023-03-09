@@ -103,7 +103,7 @@ const PollPage = () => {
 
   useEffect(() => {
     if (!isLoggedIn) {
-      void router.push('/login');
+      void router.push('/login?redirect=~poll');
     }
   }, [isLoggedIn, router]);
 

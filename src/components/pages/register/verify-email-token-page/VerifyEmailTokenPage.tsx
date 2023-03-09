@@ -29,8 +29,8 @@ const VerifyEmailTokenPage = () => {
         } catch (e) {
           dispatch(
             showAlert({
-              title: 'Помилка!',
-              description: 'Лист для верифікації сплив або неправильний код!',
+              title: 'Лист реєстрації вже не дійсний',
+              description: 'Пройди реєстрацію знов!',
               color: AlertColor.ERROR,
             }),
           );
