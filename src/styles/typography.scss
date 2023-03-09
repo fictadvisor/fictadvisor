@@ -1,8 +1,7 @@
-@import url('https://fonts.googleapis.com/css?family=Manrope');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap');
 
 body, html, * {
   font-family: 'Manrope', sans-serif;
-  letter-spacing: 0.04em;
 }
 
 h1 {
@@ -17,6 +16,11 @@ h2 {
   font-weight: 400;
 }
 
+.h2--bold {
+  @extend h2;
+  font-weight: 700;
+}
+
 h3 {
   font-size: 36px;
   line-height: 1.28;
@@ -25,7 +29,7 @@ h3 {
 
 .h3--semi-bold {
   @extend h3;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 h4 {
@@ -36,12 +40,12 @@ h4 {
 
 .h4--semi-bold {
   @extend h4;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .h4--bold {
   @extend h4;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 h5 {

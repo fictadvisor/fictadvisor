@@ -47,7 +47,12 @@ const SubjectTeacherPage = () => {
             <Loader size={LoaderSize.SMALLEST} />
           </div>
         )}
-        {data && !isLoading && <TeacherSearchList teachers={data.teachers} />}
+        {data && !isLoading && (
+          <TeacherSearchList
+            teachers={data.teachers}
+            className="subject-teacher"
+          />
+        )}
       </div>
     </PageLayout>
   );
