@@ -64,6 +64,8 @@ export class DisciplineTeacherService {
 
   async getQuestions (disciplineTeacherId: string, userId: string) {
     await this.checkAnswerInDatabase(disciplineTeacherId, userId);
+    await this.checkSendingTime();
+
     return this.getCategories(disciplineTeacherId);
   }
 
