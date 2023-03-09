@@ -1,16 +1,12 @@
 import { ConfigService } from '@nestjs/config';
-import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
+import { ClassSerializerInterceptor, ValidationPipe, VERSION_NEUTRAL, VersioningType } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
-import { AppModule } from './app.module';
-import {
-  HttpExceptionFilter,
-  validationExceptionFactory,
-} from './common/common.exception';
-import { systemLogger } from './logger/logger.core';
+import { AppModule } from './v2/AppModule';
+import { HttpExceptionFilter, validationExceptionFactory } from './v2/security/exception-handler/CommonExceptions';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { applyStaticMiddleware } from './static/static.util';
+import { applyStaticMiddleware } from './v2/utils/StaticUtil';
 
-async function bootstrap() {
+async function bootstrap () {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get<ConfigService>(ConfigService);
   const port = configService.get<number>('port');
@@ -24,12 +20,17 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
+      whitelist: true,
       exceptionFactory: validationExceptionFactory(),
     })
   );
+  app.enableVersioning({
+    type: VersioningType.URI,
+    defaultVersion: VERSION_NEUTRAL,
+  });
 
   await app.listen(port);
 
-  systemLogger.info(`Started server on 127.0.0.1:${port}`);
+  console.info(`Started server on 127.0.0.1:${port}`);
 }
 bootstrap();

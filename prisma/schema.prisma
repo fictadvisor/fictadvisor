@@ -1,0 +1,364 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum State {
+  APPROVED
+  PENDING
+  DECLINED
+}
+
+model User {
+  id                  String           @id @default(uuid())
+  email               String           @unique
+  username            String?
+  avatar              String?
+  password            String?
+  telegramId          Int?             @unique @map("telegram_id")
+  student             Student?
+  superhero           Superhero?
+  questionAnswers     QuestionAnswer[]
+  lastPasswordChanged DateTime         @default(now())
+  state               State            @default(PENDING)
+
+  @@map("users")
+}
+
+model Group {
+  id          String       @id @default(uuid())
+  code        String
+  students    Student[]
+  disciplines Discipline[]
+  groupRoles  GroupRole[]
+
+  @@map("groups")
+}
+
+model GroupRole {
+  group   Group  @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId String
+  role    Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  roleId  String @unique
+
+  @@id([groupId, roleId])
+  @@map("group_roles")
+}
+
+model Student {
+  user                 User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId               String                @unique @map("user_id")
+  firstName            String?               @default("") @map("first_name")
+  middleName           String?               @default("") @map("middle_name")
+  lastName             String?               @default("") @map("last_name")
+  groupId              String                @map("group_id")
+  group                Group                 @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  selectiveDisciplines SelectiveDiscipline[]
+  roles                UserRole[]
+  state                State                 @default(PENDING)
+
+  @@map("students")
+}
+
+model Superhero {
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String  @unique @map("user_id")
+  dorm   Boolean
+  state  State   @default(PENDING)
+
+  @@map("superheroes")
+}
+
+model Subject {
+  id          String       @id @default(uuid())
+  name        String
+  disciplines Discipline[]
+
+  @@map("subjects")
+}
+
+model Discipline {
+  id                   String                @id @default(uuid())
+  subject              Subject               @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  subjectId            String                @map("subject_id")
+  group                Group                 @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId              String                @map("group_id")
+  semester             Int
+  year                 Int
+  isSelective          Boolean               @default(false) @map("is_selective")
+  evaluatingSystem     String?               @map("evaluating_system")
+  resource             String?
+  selectiveDisciplines SelectiveDiscipline[]
+  disciplineTypes      DisciplineType[]
+  disciplineTeachers   DisciplineTeacher[]
+
+  @@map("disciplines")
+}
+
+model SelectiveDiscipline {
+  discipline   Discipline @relation(fields: [disciplineId], references: [id], onDelete: Cascade)
+  disciplineId String     @map("discipline_id")
+  student      Student    @relation(fields: [studentId], references: [userId], onDelete: Cascade)
+  studentId    String     @map("student_id")
+
+  @@id([disciplineId, studentId])
+  @@map("selective_disciplines")
+}
+
+enum DisciplineTypeEnum {
+  LECTURE
+  PRACTICE
+  LABORATORY
+  CONSULTATION
+  WORKOUT
+  EXAM
+}
+
+model DisciplineType {
+  id                     String                  @id @default(uuid())
+  discipline             Discipline              @relation(fields: [disciplineId], references: [id], onDelete: Cascade)
+  disciplineId           String                  @map("discipline_id")
+  name                   DisciplineTypeEnum
+  lessons                SemesterLesson[]
+  disciplineTeacherRoles DisciplineTeacherRole[]
+  temporaryLessons       TemporaryLesson[]
+
+  @@map("discipline_types")
+}
+
+model SemesterLesson {
+  id               String            @id @default(uuid())
+  startDate        DateTime          @map("start_date")
+  endDate          DateTime          @map("end_date")
+  url              String?
+  disciplineType   DisciplineType    @relation(fields: [disciplineTypeId], references: [id], onDelete: Cascade)
+  disciplineTypeId String            @map("discipline_type_id")
+  fortnightLessons FortnightLesson[]
+
+  @@map("semester_lessons")
+}
+
+model FortnightLesson {
+  id        String                @id @default(uuid())
+  lesson    SemesterLesson        @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  lessonId  String                @map("lesson_id")
+  fortnight Int
+  info      FortnightLessonInfo[]
+
+  @@map("fortnight_lessons")
+}
+
+model FortnightLessonInfo {
+  lesson   FortnightLesson         @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  lessonId String                  @map("week_lesson_id")
+  type     FortnightLessonInfoType
+  value    String
+
+  @@id([lessonId, type])
+  @@map("fortnight_lessons_info")
+}
+
+enum FortnightLessonInfoType {
+  HOMEWORK
+  URL
+  START_DATE
+  END_DATE
+  COMMENT
+  IS_TEST
+}
+
+model TemporaryLesson {
+  id               String         @id @default(uuid())
+  startDate        DateTime       @map("start_date")
+  endDate          DateTime       @map("end_date")
+  url              String?
+  fortnight        Int
+  teacher          Teacher        @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  teacherId        String         @map("teacher_id")
+  disciplineType   DisciplineType @relation(fields: [disciplineTypeId], references: [id], onDelete: Cascade)
+  disciplineTypeId String         @map("discipline_type_id")
+  comment          String?
+
+  @@map("temporary_lessons")
+}
+
+enum TeacherRole {
+  LECTURER
+  LABORANT
+  PRACTICIAN
+}
+
+model Teacher {
+  id                 String              @id @default(uuid())
+  firstName          String              @map("first_name")
+  middleName         String?             @default("") @map("middle_name")
+  lastName           String              @map("last_name")
+  description        String?
+  avatar             String?
+  disciplineTeachers DisciplineTeacher[]
+  temporaryLessons   TemporaryLesson[]
+
+  @@map("teachers")
+}
+
+model DisciplineTeacher {
+  id              String                  @id @default(uuid())
+  teacher         Teacher                 @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  teacherId       String                  @map("teacher_id")
+  discipline      Discipline              @relation(fields: [disciplineId], references: [id], onDelete: Cascade)
+  disciplineId    String                  @map("discipline_id")
+  roles           DisciplineTeacherRole[]
+  questionAnswers QuestionAnswer[]
+
+  @@map("discipline_teachers")
+}
+
+enum QuestionDisplay {
+  PERCENT
+  AMOUNT
+  TEXT
+}
+
+enum QuestionType {
+  TEXT
+  SCALE
+  TOGGLE
+}
+
+model Question {
+  id              String           @id @default(uuid())
+  category        String
+  name            String
+  description     String?
+  text            String
+  isRequired      Boolean          @default(true) @map("is_required")
+  criteria        String?
+  type            QuestionType
+  display         QuestionDisplay  @default(PERCENT)
+  questionRoles   QuestionRole[]
+  questionAnswers QuestionAnswer[]
+
+  @@map("questions")
+}
+
+model QuestionRole {
+  role       TeacherRole
+  question   Question    @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  questionId String      @map("question_id")
+  isShown    Boolean     @map("is_shown")
+  isRequired Boolean     @map("is_required")
+
+  @@id([questionId, role])
+  @@map("question_roles")
+}
+
+model QuestionAnswer {
+  disciplineTeacher   DisciplineTeacher @relation(fields: [disciplineTeacherId], references: [id], onDelete: Cascade)
+  disciplineTeacherId String            @map("discipline_teacher_id")
+  question            Question          @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  questionId          String            @map("question_id")
+  user                User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId              String            @map("user_id")
+  value               String
+
+  @@id([disciplineTeacherId, questionId, userId])
+  @@map("question_answers")
+}
+
+enum RoleName {
+  USER
+  STUDENT
+  MODERATOR
+  CAPTAIN
+  ADMIN
+}
+
+model Role {
+  id        String     @id @default(uuid())
+  name      RoleName
+  weight    Int
+  userRoles UserRole[]
+  grants    Grant[]
+  groupRole GroupRole?
+
+  @@map("roles")
+}
+
+model UserRole {
+  student   Student @relation(fields: [studentId], references: [userId], onDelete: Cascade)
+  studentId String  @map("student_id")
+  role      Role    @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  roleId    String  @map("role_id")
+
+  @@id([studentId, roleId])
+  @@map("user_roles")
+}
+
+model Grant {
+  id         String  @id @default(uuid())
+  role       Role    @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  roleId     String  @map("role_id")
+  permission String
+  set        Boolean @default(true)
+
+  @@map("grants")
+}
+
+enum EntityType {
+  STUDENT
+  TEACHER
+}
+
+model Contact {
+  id          String     @id @default(uuid())
+  name        String
+  displayName String
+  link        String
+  entityType  EntityType @map("entity_type")
+  entityId    String     @map("entity_id")
+
+  @@map("contacts")
+}
+
+model StartDate {
+  year      Int
+  semester  Int
+  startDate DateTime @map("start_date")
+
+  @@id([year, semester])
+  @@map("start_dates")
+}
+
+model DisciplineTeacherRole {
+  disciplineTeacher   DisciplineTeacher @relation(fields: [disciplineTeacherId], references: [id], onDelete: Cascade)
+  disciplineTeacherId String            @map("discipline_teacher_id")
+  disciplineType      DisciplineType    @relation(fields: [disciplineTypeId], references: [id], onDelete: Cascade)
+  disciplineTypeId    String            @map("discipline_type_id")
+  role                TeacherRole
+
+  @@id([disciplineTeacherId, disciplineTypeId, role])
+  @@map("discipline_teacher_roles")
+}
+
+model DateVar {
+  name String   @unique
+  date DateTime
+
+  @@map("date_vars")
+}
+
+model StudentResource {
+  id   String @id @default(uuid())
+  link String
+  name String
+  icon String
+
+  @@map("student_resources")
+}
