@@ -19,17 +19,28 @@ const CreatePasswordForm: FC = () => {
   const dispatch = useDispatch();
   const handleSubmit = async (data: CreatePasswordFormFields) => {
     try {
-      await AuthAPI.resetPassword(token, { password: data.newPassword });
+      await AuthAPI.resetPassword(token, { password: data.password });
       void push('/password-recovery/valid');
     } catch (e) {
-      dispatch(
-        showAlert({
-          title: 'Помилка!',
-          description: 'Лист для верифікації сплив або неправильний код!',
-          color: AlertColor.ERROR,
-        }),
-      );
-      void push('/password-recovery/invalid');
+      const errorName = e.response.data.error;
+      if (errorName === 'PasswordRepeatException') {
+        dispatch(
+          showAlert({
+            title: 'Помилка!',
+            description: 'Такий пароль вже був!',
+            color: AlertColor.ERROR,
+          }),
+        );
+      } else {
+        dispatch(
+          showAlert({
+            title: 'Помилка!',
+            description: 'Лист для верифікації сплив або неправильний код!',
+            color: AlertColor.ERROR,
+          }),
+        );
+        void push('/password-recovery/invalid');
+      }
     }
   };
 
@@ -50,7 +61,7 @@ const CreatePasswordForm: FC = () => {
             placeholder="user2000"
             size={InputSize.LARGE}
             type={InputType.PASSWORD}
-            name="createPassword"
+            name="password"
             defaultRemark="Не коротше 8 символів, мінімум одна літера та одна цифра"
           />
           <Input
@@ -61,7 +72,7 @@ const CreatePasswordForm: FC = () => {
             size={InputSize.LARGE}
             type={InputType.PASSWORD}
             name="confirmPassword"
-            disabled={errors.createPassword != null}
+            disabled={errors.password != null}
           />
           <div className={styles['confirm-button']}>
             <Button
