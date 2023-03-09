@@ -10,6 +10,11 @@
   font-weight: 400;
 }
 
+@mixin h2--bold {
+  @extend h2;
+  font-weight: 700;
+}
+
 @mixin h3 {
   font-size: 36px;
   line-height: 1.28;
