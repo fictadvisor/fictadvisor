@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 
-import { AlertColor, AlertVariant } from '@/components/common/ui/alert';
-import AlertPopup from '@/components/common/ui/alert-popup/AlertPopup';
+import { AlertColor } from '@/components/common/ui/alert';
 import Breadcrumbs from '@/components/common/ui/breadcrumbs/Breadcrumbs';
 import Loader from '@/components/common/ui/loader/Loader';
 import useAuthentication from '@/hooks/use-authentication';
 import { PollAPI } from '@/lib/api/poll/PollAPI';
+import { showAlert } from '@/redux/reducers/alert.reducer';
 
 import PageLayout from '../../common/layout/page-layout/PageLayout';
 
@@ -114,7 +115,25 @@ const PollPage = () => {
     FetchingQuestionsError &&
     (FetchingQuestionsError as any).response?.data?.error;
 
-  console.log(status);
+  const dispatch = useDispatch();
+
+  if (FetchingQuestionsError && !isLoading) {
+    dispatch(
+      showAlert({
+        title: 'Помилка!',
+        description:
+          status === 'InvalidEntityIdException'
+            ? 'Не знайдено опитування з таким id'
+            : status === 'AnswerInDatabasePermissionException'
+            ? 'Ви не маєте доступу до цієї сторінки оскільки вже пройшли опитування!'
+            : status === 'NoPermissionException'
+            ? ' У вас недостатньо прав для цієї дії'
+            : 'Помилка на сервері =(',
+        color: AlertColor.ERROR,
+      }),
+    );
+  }
+
   return (
     <PageLayout
       description={'Сторінка для проходження опитування'}
@@ -125,42 +144,28 @@ const PollPage = () => {
         <div className={styles['poll-page__content']}>
           {isLoading ? (
             <Loader />
-          ) : isSuccessFetching ? (
-            <div className={styles['poll-page__content-wrapper']}>
-              <div className={styles['breadcrumbs-wrapper']}>
-                <Breadcrumbs
-                  items={[
-                    { label: 'Головна', href: '/' },
-                    { label: 'Опитування', href: '/poll' },
-                    {
-                      label: `${FetchedData.teacher.lastName} ${FetchedData.teacher.firstName} ${FetchedData.teacher.middleName}`,
-                      href: `/poll/${disciplineTeacherId}`,
-                    },
-                  ]}
-                  className={styles['breadcrumbs']}
-                />
-              </div>
+          ) : (
+            isSuccessFetching && (
+              <div className={styles['poll-page__content-wrapper']}>
+                <div className={styles['breadcrumbs-wrapper']}>
+                  <Breadcrumbs
+                    items={[
+                      { label: 'Головна', href: '/' },
+                      { label: 'Опитування', href: '/poll' },
+                      {
+                        label: `${FetchedData.teacher.lastName} ${FetchedData.teacher.firstName} ${FetchedData.teacher.middleName}`,
+                        href: `/poll/${disciplineTeacherId}`,
+                      },
+                    ]}
+                    className={styles['breadcrumbs']}
+                  />
+                </div>
 
-              <PollForm data={FetchedData || initialState} />
-            </div>
-          ) : null}
+                <PollForm data={FetchedData || initialState} />
+              </div>
+            )
+          )}
         </div>
-        {/*{FetchingQuestionsError && !isLoading && (*/}
-        {/*  <AlertPopup*/}
-        {/*    title="Помилка!"*/}
-        {/*    description={*/}
-        {/*      status === 'InvalidEntityIdException'*/}
-        {/*        ? 'Не знайдено опитування з таким id'*/}
-        {/*        : status === 'AnswerInDatabasePermissionException'*/}
-        {/*        ? 'Ви не маєте доступу до цієї сторінки оскільки вже пройшли опитування!'*/}
-        {/*        : status === 'NoPermissionException'*/}
-        {/*        ? ' У вас недостатньо прав для цієї дії'*/}
-        {/*        : 'Помилка на сервері =('*/}
-        {/*    }*/}
-        {/*    variant={AlertVariant.FILLED}*/}
-        {/*    color={AlertColor.ERROR}*/}
-        {/* //TODO />*/}
-        {/*)}*/}
       </div>
     </PageLayout>
   );

@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
+import { SimpleCard } from '@/components/common/composite/cards';
 import Button, {
   ButtonColor,
   ButtonSize,
@@ -14,10 +17,19 @@ import { TabList } from '@/components/common/ui/tab/tab-list/TabList';
 import { TabPanel } from '@/components/common/ui/tab/tab-panel/TabPanel';
 import { TabPanelsList } from '@/components/common/ui/tab/tab-panels-list/TabPanelsList';
 
+import styles1 from '../../search-pages/SearchPage.module.scss';
 import styles from './PersonalTeacherTabs.module.scss';
+export type PersonalTeacherTabsProps = {
+  id: string;
+  subjects: {
+    id: string;
+    name: string;
+  }[];
+};
 
-const TabsPage = () => {
+const TabsPage: FC<PersonalTeacherTabsProps> = props => {
   const [index, setIndex] = useState<string>('1');
+  const router = useRouter();
   return (
     <div className={styles['tabs']}>
       <div className={styles['karusel']}>
@@ -45,7 +57,7 @@ const TabsPage = () => {
             className="tab-item"
             text="Відгуки"
             position={TabItemContentPosition.LEFT}
-            count={-15}
+            count={0}
             value={'3'}
           ></TabItem>
           <TabItem
@@ -54,7 +66,7 @@ const TabsPage = () => {
             text="Семестри"
             position={TabItemContentPosition.LEFT}
             value={'4'}
-          ></TabItem>
+          />
         </TabList>
         <TabList
           className={styles['tab-list-mobile']}
@@ -67,7 +79,7 @@ const TabsPage = () => {
             text="Загальне"
             position={TabItemContentPosition.LEFT}
             value={'1'}
-          ></TabItem>
+          />
           <TabItem
             size={TabItemContentSize.SMAll}
             className="tab-item"
@@ -80,16 +92,16 @@ const TabsPage = () => {
             className="tab-item"
             text="Відгуки"
             position={TabItemContentPosition.LEFT}
-            count={-15}
+            count={0}
             value={'3'}
-          ></TabItem>
+          />
           <TabItem
             size={TabItemContentSize.SMAll}
             className="tab-item"
             text="Семестри"
             position={TabItemContentPosition.LEFT}
             value={'4'}
-          ></TabItem>
+          />
         </TabList>
       </div>
 
@@ -109,6 +121,7 @@ const TabsPage = () => {
                 variant={ButtonVariant.FILLED}
                 color={ButtonColor.PRIMARY}
                 size={ButtonSize.LARGE}
+                onClick={() => router.push('/poll')}
               />
             </div>
             <div className={styles['button-wrapper-mobile']}>
@@ -117,35 +130,25 @@ const TabsPage = () => {
                 variant={ButtonVariant.FILLED}
                 color={ButtonColor.PRIMARY}
                 size={ButtonSize.SMALL}
+                onClick={() => router.push('/poll')}
               />
             </div>
           </div>
         </TabPanel>
-        <TabPanel className="tab-panel" value={'2'}>
-          <div className={styles['my-tab-panel']}>
-            <div className={styles['text']}>
-              <p>
-                Статистика викладача ще збирається, як тільки опитування буде
-                завершене, результат буде опублікований. Опитувнання буде
-                впродовж 2 тижнів. Ви можете пройти опитування.
-              </p>
-            </div>
-            <div className={styles['button-wrapper-desktop']}>
-              <Button
-                text={'Пройти опитування'}
-                variant={ButtonVariant.FILLED}
-                color={ButtonColor.PRIMARY}
-                size={ButtonSize.LARGE}
-              />
-            </div>
-            <div className={styles['button-wrapper-mobile']}>
-              <Button
-                text={'Пройти опитування'}
-                variant={ButtonVariant.FILLED}
-                color={ButtonColor.PRIMARY}
-                size={ButtonSize.SMALL}
-              />
-            </div>
+        <TabPanel className={styles['tab-panel']} value={'2'}>
+          <div className={styles['my-tab-panel-subjects']}>
+            <ul className={styles1['subject-search-list']}>
+              {props.subjects &&
+                props.subjects.map(subject => (
+                  <li key={subject.id}>
+                    <Link
+                      href={`/discipline?teacherId=${props.id}&subjectId=${subject.id}`}
+                    >
+                      <SimpleCard name={`${subject.name}`} />
+                    </Link>
+                  </li>
+                ))}
+            </ul>
           </div>
         </TabPanel>
         <TabPanel className="tab-panel" value={'3'}>
@@ -163,6 +166,7 @@ const TabsPage = () => {
                 variant={ButtonVariant.FILLED}
                 color={ButtonColor.PRIMARY}
                 size={ButtonSize.LARGE}
+                onClick={() => router.push('/poll')}
               />
             </div>
             <div className={styles['button-wrapper-mobile']}>
@@ -171,6 +175,7 @@ const TabsPage = () => {
                 variant={ButtonVariant.FILLED}
                 color={ButtonColor.PRIMARY}
                 size={ButtonSize.SMALL}
+                onClick={() => router.push('/poll')}
               />
             </div>
           </div>
@@ -190,6 +195,7 @@ const TabsPage = () => {
                 variant={ButtonVariant.FILLED}
                 color={ButtonColor.PRIMARY}
                 size={ButtonSize.LARGE}
+                onClick={() => router.push('/poll')}
               />
             </div>
             <div className={styles['button-wrapper-mobile']}>
@@ -198,6 +204,7 @@ const TabsPage = () => {
                 variant={ButtonVariant.FILLED}
                 color={ButtonColor.PRIMARY}
                 size={ButtonSize.SMALL}
+                onClick={() => router.push('/poll')}
               />
             </div>
           </div>

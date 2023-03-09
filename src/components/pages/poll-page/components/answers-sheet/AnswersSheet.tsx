@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { FormEvent, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/router';
 
-import { AlertColor, AlertVariant } from '@/components/common/ui/alert';
-import AlertPopup from '@/components/common/ui/alert-popup/AlertPopup';
+import { AlertColor } from '@/components/common/ui/alert';
 import ArrowButton from '@/components/common/ui/arrow-button/ArrowButton';
 import Button from '@/components/common/ui/button/Button';
 import { RadioGroup, Slider, TextArea } from '@/components/common/ui/form';
 import Loader from '@/components/common/ui/loader/Loader';
 import { PollAPI } from '@/lib/api/poll/PollAPI';
+import { showAlert } from '@/redux/reducers/alert.reducer';
 
 import { Category } from '../../PollPage';
 import { Answer, SendingStatus } from '../poll-form/PollForm';
@@ -83,9 +84,9 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
     console.log('answered data', data);
   };
 
+  const dispatch = useDispatch();
   const router = useRouter();
   const disciplineTeacherId = router.query.disciplineTeacherId as string;
-  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     for (const question of questions.questions) {
@@ -145,7 +146,10 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
             >
               {({ values }) => (
                 <Form
-                  onChange={() => {
+                  onClick={(event: FormEvent<HTMLFormElement>) => {
+                    values[(event.target as any).name] = (
+                      event.target as any
+                    ).value;
                     answer(values);
                   }}
                   className={styles['form']}
@@ -211,7 +215,6 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
                       } else {
                         setIsSendingStatus(SendingStatus.LOADING);
                         try {
-                          setErrorMessage('');
                           await PollAPI.createTeacherGrade(
                             { answers },
                             disciplineTeacherId,
@@ -220,23 +223,56 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
                         } catch (e) {
                           const errorName = e.response.data.error;
                           if (errorName === 'InvalidEntityIdException') {
-                            setErrorMessage(
-                              'Не знайдено опитування з таким Id!',
+                            dispatch(
+                              showAlert({
+                                title: 'Помилка',
+                                description:
+                                  'Не знайдено опитування з таким Id!',
+                                color: AlertColor.ERROR,
+                              }),
                             );
                           } else if (errorName === 'ExcessiveAnswerException') {
-                            setErrorMessage('Знайдено зайві відповіді!');
+                            dispatch(
+                              showAlert({
+                                title: 'Помилка',
+                                description: 'Знайдено зайві відповіді!',
+                                color: AlertColor.ERROR,
+                              }),
+                            );
                           } else if (
                             errorName === 'NotEnoughAnswersException'
                           ) {
-                            setErrorMessage(
-                              ' Ви відповіли не не всі зайві запитання!',
+                            dispatch(
+                              showAlert({
+                                title: 'Помилка',
+                                description: `Ви відповіли не на всі обов'язкові запитання!`,
+                                color: AlertColor.ERROR,
+                              }),
                             );
                           } else if (errorName === 'AlreadyAnsweredException') {
-                            setErrorMessage(' Ви вже відповіли!');
+                            dispatch(
+                              showAlert({
+                                title: 'Помилка',
+                                description: `Ви вже відповіли!`,
+                                color: AlertColor.ERROR,
+                              }),
+                            );
                           } else if (errorName === 'NoPermissionException') {
-                            setErrorMessage('Недостатньо прав!');
+                            dispatch(
+                              showAlert({
+                                title: 'Помилка',
+                                description: `Недостатньо прав!`,
+                                color: AlertColor.ERROR,
+                              }),
+                            );
                           } else {
-                            setErrorMessage('Помилка на сервері =(');
+                            dispatch(
+                              showAlert({
+                                title: 'Помилка',
+                                description: `Помилка на сервері :(`,
+                                color: AlertColor.ERROR,
+                              }),
+                            );
                           }
                           setIsSendingStatus(SendingStatus.ERROR);
                         }
@@ -247,14 +283,6 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
               )}
             </Formik>
           </div>
-          {/*{errorMessage && (*/}
-          {/*  <AlertPopup*/}
-          {/*    title="Помилка"*/}
-          {/*    description={errorMessage}*/}
-          {/*    variant={AlertVariant.FILLED}*/}
-          {/*    color={AlertColor.ERROR}*/}
-          {/* //TODO />*/}
-          {/*)}*/}
         </>
       )}
     </div>

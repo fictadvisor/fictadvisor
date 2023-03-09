@@ -1,12 +1,12 @@
-@import "../../../../styles/partials/utils";
-@import "../../../../styles/partials/theme";
-@import "../../../../styles/partials/typography-mixins";
+@import "src/styles/partials/theme";
+@import "src/styles/partials/typography-mixins";
 
 .card{
   display: grid;
   padding: 40px;
   width: 100%;
   grid-template-columns: auto auto minmax(296px, 1fr);
+  grid-template-rows: auto  1fr   auto auto auto;
 }
 .contacts-hidden{
   display: flex;
@@ -110,8 +110,8 @@
     box-sizing: border-box;
     width: 100%;
     padding: 24px;
-    grid-template-columns:  auto 1fr;
-    grid-template-rows:  auto  1fr auto auto auto;
+    grid-template-columns:  auto auto 1fr;
+    grid-template-rows: auto  1fr   auto auto auto;
 
   }
 
@@ -123,12 +123,12 @@
     grid-row-end: 3;
   }
   .image {
-    height: 160px;
-    width: 160px;
+    height: 140px;
+    width: 140px;
   }
   .name-and-rating {
     grid-column-start: 2;
-    grid-column-end: 4;
+    grid-column-end: 3;
     grid-row-start: 1;
     grid-row-end: 2;
     padding: 1px;
@@ -188,6 +188,7 @@
   }
 }
 
+
 @media screen and (max-width: 480px){
   .card{
     box-sizing: border-box;
@@ -220,6 +221,7 @@
     }
   }
   .tags{
+    padding-top: 14px;
     grid-column-start: 1;
     grid-column-end: 4;
     grid-row-start: 2;
@@ -229,7 +231,7 @@
       @include overline-text;
     }
 
-    padding: 8px 0;
+    padding-bottom: 8px;
   }
   .info{
     grid-column-start: 1;

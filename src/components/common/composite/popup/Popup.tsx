@@ -1,6 +1,7 @@
-import React, { ReactNode, SetStateAction, useState } from 'react';
+import React, { ReactNode, SetStateAction } from 'react';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
 
+import { TelegramOutlineIcon } from '@/components/common/custom-svg/TelegramOutline';
 import useIsMobile from '@/hooks/use-is-mobile/UseIsMobile';
 
 import { CloseButton } from '../../ui/icon-button/variants';
@@ -10,6 +11,7 @@ import styles from './Popup.module.scss';
 interface PopupProps {
   isClosable: boolean;
   hasIcon: boolean;
+  isTelegramIcon?: boolean;
   title: string;
   text: string;
   firstButton: ReactNode;
@@ -25,10 +27,10 @@ export const Popup: React.FC<PopupProps> = ({
   firstButton,
   secondButton,
   closeFunction,
+  isTelegramIcon = false,
 }) => {
-  const secondLabel = secondButton ? true : false;
+  const secondLabel = !!secondButton;
   const isMobile = useIsMobile(480);
-  document.body.style.overflow = 'auto';
   return (
     <div className={styles.wrapper}>
       <div className={styles.shadow} onClick={() => closeFunction(false)} />
@@ -41,11 +43,15 @@ export const Popup: React.FC<PopupProps> = ({
         )}
         {hasIcon ? (
           <div className={styles.titleWrapper}>
-            <CheckCircleIcon
-              width="24px"
-              height="24px"
-              className={styles.icon}
-            />
+            {isTelegramIcon ? (
+              <TelegramOutlineIcon />
+            ) : (
+              <CheckCircleIcon
+                width="24px"
+                height="24px"
+                className={styles.icon}
+              />
+            )}
             <h1 className={styles.title}>{title}</h1>
           </div>
         ) : (

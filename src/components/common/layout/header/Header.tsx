@@ -8,7 +8,6 @@ import {
   UsersIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 
 import Button, {
   ButtonSize,
@@ -40,34 +39,16 @@ const roleMapper = {
 };
 
 const Header: React.FC = () => {
-  const router = useRouter();
-
   const { isLoggedIn, user } = useAuthentication();
   const name = [user?.lastName, user?.firstName, user?.middleName].join(' ');
   const groupName = user?.group.code;
   const position = roleMapper[user?.group.role];
   const avatar = user?.avatar;
-
-  const returnMain = () => {
-    router.push('/');
-  };
-  const returnPoll = () => {
-    router.push('/poll');
-  };
-  const returnSubjects = () => {
-    router.push('/subjects');
-  };
-  const returnTeachers = () => {
-    router.push('/teachers');
-  };
-  const returnLogin = () => {
-    router.push('/login');
-  };
-  const returnRegister = () => {
-    router.push('/register');
-  };
   const isMobile = useIsMobile(1200);
-  const [clicked, setClicked] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const handleClick = () => {
+    setIsOpen(isOpen => !isOpen);
+  };
   const mobileMenu = (
     <div className={styles['mobile-menu']}>
       <Link href={'/'}>
@@ -109,21 +90,20 @@ const Header: React.FC = () => {
     </div>
   );
 
-  const handleClick = () => {
-    setClicked(clicked => !clicked);
-  };
-
   if (isMobile && isLoggedIn) {
-    return clicked ? (
+    return isOpen ? (
       <div className={styles['wrapper']}>
         <div className={styles['shadow']} onClick={handleClick}></div>
         <div
           className={styles['header-container']}
           style={{ backgroundColor: '#1e1e1e' }}
         >
-          <div className={styles['header-logo']}>
-            <img src={`/assets/logo.png`} alt="logo" />
-          </div>
+          <Link href={'/'}>
+            <div className={styles['header-logo']}>
+              <img src={`/assets/logo.png`} alt="logo" />
+            </div>
+          </Link>
+
           <div className={styles['mobile-button']}>
             <CloseButton
               onClick={handleClick}
@@ -133,36 +113,42 @@ const Header: React.FC = () => {
           </div>
         </div>
         <div className={styles['drop']}>
-          <div>
+          <Link href={'/account'}>
             <HeaderMobileCard
               name={name}
               groupName={groupName}
               position={position}
               url={avatar}
             />
-          </div>
+          </Link>
           <div className={styles['account-buttons']}>
-            <TabItem
-              className=""
-              text="Загальне"
-              position={TabItemContentPosition.LEFT}
-              icon={<AcademicCapIcon />}
-              size={TabItemContentSize.SMAll}
-            />
-            <TabItem
-              className=""
-              text="Безпека"
-              position={TabItemContentPosition.LEFT}
-              icon={<LockClosedIcon />}
-              size={TabItemContentSize.SMAll}
-            />
-            <TabItem
-              className=""
-              text="Група"
-              position={TabItemContentPosition.LEFT}
-              icon={<UsersIcon />}
-              size={TabItemContentSize.SMAll}
-            />
+            <Link href={'/account?tab=general'}>
+              <TabItem
+                className=""
+                text="Загальне"
+                position={TabItemContentPosition.LEFT}
+                icon={<AcademicCapIcon />}
+                size={TabItemContentSize.SMAll}
+              />
+            </Link>
+            <Link href={'/account?tab=security'}>
+              <TabItem
+                className=""
+                text="Безпека"
+                position={TabItemContentPosition.LEFT}
+                icon={<LockClosedIcon />}
+                size={TabItemContentSize.SMAll}
+              />
+            </Link>
+            <Link href={'/account?tab=group'}>
+              <TabItem
+                className=""
+                text="Група"
+                position={TabItemContentPosition.LEFT}
+                icon={<UsersIcon />}
+                size={TabItemContentSize.SMAll}
+              />
+            </Link>
           </div>
 
           <HeaderDivider />
@@ -172,9 +158,11 @@ const Header: React.FC = () => {
       </div>
     ) : (
       <div className={styles['header-container']}>
-        <div className={styles['header-logo']}>
-          <img src={`/assets/logo.png`} alt="logo" />
-        </div>
+        <Link href={'/'}>
+          <div className={styles['header-logo']}>
+            <img src={`/assets/logo.png`} alt="logo" />
+          </div>
+        </Link>
         <div className={styles['mobile-button']}>
           <IconButton
             onClick={handleClick}
@@ -188,16 +176,18 @@ const Header: React.FC = () => {
   }
 
   if (isMobile && !isLoggedIn) {
-    return clicked ? (
+    return isOpen ? (
       <div className={styles['wrapper']}>
         <div className={styles['shadow']} onClick={handleClick}></div>
         <div
           className={styles['header-container']}
           style={{ backgroundColor: '#1e1e1e' }}
         >
-          <div className={styles['header-logo']}>
-            <img src={`/assets/logo.png`} alt="logo" />
-          </div>
+          <Link href={'/'}>
+            <div className={styles['header-logo']}>
+              <img src={`/assets/logo.png`} alt="logo" />
+            </div>
+          </Link>
           <div className={styles['mobile-button']}>
             <CloseButton
               onClick={handleClick}
@@ -209,20 +199,22 @@ const Header: React.FC = () => {
         <div className={styles['drop']}>
           <div className={styles['login-buttons']}>
             <div style={{ width: '192px' }}>
-              <Button
-                onClick={returnRegister}
-                text="Зареєструватись"
-                size={ButtonSize.SMALL}
-                variant={ButtonVariant.OUTLINE}
-              />
+              <Link href={'/register'}>
+                <Button
+                  text="Зареєструватись"
+                  size={ButtonSize.SMALL}
+                  variant={ButtonVariant.OUTLINE}
+                />
+              </Link>
             </div>
             <div style={{ width: '120px' }}>
-              <Button
-                onClick={returnLogin}
-                text="Увійти"
-                size={ButtonSize.SMALL}
-                variant={ButtonVariant.FILLED}
-              />
+              <Link href={'/login'}>
+                <Button
+                  text="Увійти"
+                  size={ButtonSize.SMALL}
+                  variant={ButtonVariant.FILLED}
+                />
+              </Link>
             </div>
           </div>
 
@@ -233,9 +225,11 @@ const Header: React.FC = () => {
       </div>
     ) : (
       <div className={styles['header-container']}>
-        <div className={styles['header-logo']}>
-          <img src={`/assets/logo.png`} alt="logo" />
-        </div>
+        <Link href={'/'}>
+          <div className={styles['header-logo']}>
+            <img src={`/assets/logo.png`} alt="logo" />
+          </div>
+        </Link>
         <div className={styles['mobile-button']}>
           <IconButton
             onClick={handleClick}
@@ -251,45 +245,40 @@ const Header: React.FC = () => {
   return (
     !isMobile && (
       <div className={styles['header-container']}>
-        <div className={styles['header-logo']}>
-          <img src={`/assets/logo.png`} alt="logo" />
-        </div>
+        <Link href={'/'}>
+          <div className={styles['header-logo']}>
+            <img src={`/assets/logo.png`} alt="logo" />
+          </div>
+        </Link>
         <div className={styles['menu']}>
-          <div>
+          <Link href={'/'}>
             <Button
-              onClick={returnMain}
               text="Головна"
               size={ButtonSize.MEDIUM}
               variant={ButtonVariant.TEXT}
             />
-          </div>
-
-          <div>
+          </Link>
+          <Link href={'/poll'}>
             <Button
-              onClick={returnPoll}
               text="Опитування"
               size={ButtonSize.MEDIUM}
               variant={ButtonVariant.TEXT}
             />
-          </div>
-
-          <div>
+          </Link>
+          <Link href={'/teachers'}>
             <Button
-              onClick={returnTeachers}
               text="Викладачі"
               size={ButtonSize.MEDIUM}
               variant={ButtonVariant.TEXT}
             />
-          </div>
-
-          <div>
+          </Link>
+          <Link href={'/subjects'}>
             <Button
-              onClick={returnSubjects}
               text="Предмети"
               size={ButtonSize.MEDIUM}
               variant={ButtonVariant.TEXT}
             />
-          </div>
+          </Link>
 
           {/* <Link href={{}}>
             <Button
@@ -301,27 +290,31 @@ const Header: React.FC = () => {
         </div>
         {isLoggedIn ? (
           <div className={styles['header-desktop-card']}>
-            <HeaderDesktopCard
-              name={name}
-              groupName={groupName}
-              position={position}
-              url={avatar}
-            />
+            <Link href={'/account'}>
+              <HeaderDesktopCard
+                name={name}
+                groupName={groupName}
+                position={position}
+                url={avatar}
+              />
+            </Link>
           </div>
         ) : (
           <div className={styles['login-buttons']}>
-            <Button
-              onClick={returnRegister}
-              text="Зареєструватись"
-              size={ButtonSize.SMALL}
-              variant={ButtonVariant.OUTLINE}
-            />
-            <Button
-              onClick={returnLogin}
-              text="Увійти"
-              size={ButtonSize.SMALL}
-              variant={ButtonVariant.FILLED}
-            />
+            <Link href={'/register'}>
+              <Button
+                text="Зареєструватись"
+                size={ButtonSize.SMALL}
+                variant={ButtonVariant.OUTLINE}
+              />
+            </Link>
+            <Link href={'/login'}>
+              <Button
+                text="Увійти"
+                size={ButtonSize.SMALL}
+                variant={ButtonVariant.FILLED}
+              />
+            </Link>
           </div>
         )}
       </div>

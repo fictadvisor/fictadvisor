@@ -36,12 +36,14 @@ const NoGroupBlock: FC = () => {
           <div className={styles['text-content']}>
             <h4>{user.group.code}</h4>
           </div>
-          <Alert
-            title={''}
-            description={'Ваша заявка ще не прийнята, очікуйте підтвердження'}
-            isClosable={false}
-            className={styles['alert alert-description']}
-          />
+          <div className={styles['alert-desktop-pending']}>
+            <Alert
+              title={''}
+              description={'Ваша заявка ще не прийнята, очікуйте підтвердження'}
+              isClosable={false}
+              className={styles['alert alert-description']}
+            />
+          </div>
           <div className={styles['division']}>
             <div className={styles['white']}></div>
             <h4 className={styles['division-text']}>Або виберіть іншу групу</h4>
@@ -82,15 +84,17 @@ const NoGroupBlock: FC = () => {
             <Dropdown
               options={transformGroups(data.groups)}
               label="Група"
-              name="group"
+              name="groupId"
               placeholder="вибери зі списку"
+              className={styles['dropdown']}
             />
             <Checkbox label="Староста" name="isCaptain" />
             <Button
               text="Надіслати запит"
               type="submit"
-              size={ButtonSize.LARGE}
+              size={ButtonSize.SMALL}
               disabled={!isValid}
+              className={styles['button-group']}
             />
           </Form>
         )}

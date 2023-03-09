@@ -10,7 +10,7 @@ box-sizing: border-box;
   flex-direction: row;
   align-items: center;
   width: fit-content;
-  //gap: 8px;
+  gap: 8px;
 }
 .karusel{
   padding-top: 24px;
@@ -19,6 +19,7 @@ box-sizing: border-box;
   display: none;
 }
 .tab-panels-list{
+  width: 100%;
   display: flex;
   align-items: center;
   text-align: center;
@@ -27,6 +28,7 @@ box-sizing: border-box;
   //box-sizing: border-box;
 }
 .tab-panel{
+  width: 100%;
   display: flex;
   align-items: center;
   text-align: center;
@@ -43,6 +45,12 @@ box-sizing: border-box;
   max-width: 604px;
   gap: 32px;
   padding: 84px 0;
+  &-subjects{
+    align-items: flex-start;
+    justify-content: left;
+    text-align: left;
+    padding-bottom: 50px;
+  }
 }
 .button-wrapper-desktop{
   display: flex;
@@ -76,7 +84,7 @@ box-sizing: border-box;
     text-align: left;
   }
   .my-tab-panel{
-    padding: 40px 16px;
+    padding: 40px 20px;
   }
 
   .button-wrapper-mobile{
@@ -93,7 +101,7 @@ box-sizing: border-box;
 
 
   .karusel{
-    padding-top: 28px;
+    padding-top: 20px;
     width: 100%;
     overflow: hidden;
   }
@@ -122,6 +130,9 @@ box-sizing: border-box;
     align-items: flex-start;
     justify-content: left;
     text-align: left;
+    &-subjects{
+      padding-bottom: 50px;
+    }
   }
   .tab-panel-list{
     max-width: unset;
