@@ -2,6 +2,7 @@ import { AuthBody } from '@/lib/api/auth/dto/AuthBody';
 import { AuthTelegramBody } from '@/lib/api/auth/dto/AuthTelegramBody';
 import { CheckRegisterTelegramDTO } from '@/lib/api/auth/dto/CheckRegisterTelegramDTO';
 import { ConfirmPasswordResetBody } from '@/lib/api/auth/dto/ConfirmPasswordResetBody';
+import { ForgotPasswordBody } from '@/lib/api/auth/dto/ForgotPasswordBody';
 import { GetMeDTO } from '@/lib/api/auth/dto/GetMeDTO';
 import { RefreshAccessTokenDTO } from '@/lib/api/auth/dto/RefreshAccesTokenDTO';
 import { ResetPasswordBody } from '@/lib/api/auth/dto/ResetPasswordBody';
@@ -34,8 +35,8 @@ export class AuthAPI {
     resetToken: string,
     body: ResetPasswordBody,
   ): Promise<ResetPasswordDTO> {
-    const { data } = await client.patch(
-      `/users/resetPassword/${resetToken}`,
+    const { data } = await client.post(
+      `/auth/resetPassword/${resetToken}`,
       body,
     );
     return data;
@@ -81,6 +82,16 @@ export class AuthAPI {
 
   static async confirmPasswordReset(body: ConfirmPasswordResetBody) {
     const { data } = await client.post('/users/resetPassword', body);
+    return data;
+  }
+
+  static async forgotPassword(body: ForgotPasswordBody) {
+    const { data } = await client.post('/auth/forgotPassword', body);
+    return data;
+  }
+
+  static async checkResetToken(token: string) {
+    const { data } = await client.get(`auth/checkResetToken/${token}`);
     return data;
   }
 
