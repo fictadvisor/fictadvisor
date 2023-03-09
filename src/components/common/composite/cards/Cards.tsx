@@ -33,7 +33,7 @@ type RatingCardProps = {
   name: string;
   rating?: number;
   roles?: string[];
-  avatar: string;
+  avatar?: string;
   disabled?: boolean;
 } & DivProps;
 
