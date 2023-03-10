@@ -73,8 +73,8 @@ export const LecturerPollCard: React.FC<LecturerPollCardProps> = ({
       <img className={styles['card-avatar']} src={avatar} alt="викладач" />
 
       <CardRoles roles={roles} disabled={disabled} />
-      <div className={styles['card-name-tooltip']}>
-        <h4 className={styles['card-name']}>{name}</h4>
+      <div className={styles['poll-card-info']}>
+        <h4 className={styles['poll-teacher-name']}>{name}</h4>
         <Tooltip
           display={isTruncated}
           text={description}
@@ -86,7 +86,7 @@ export const LecturerPollCard: React.FC<LecturerPollCardProps> = ({
           <div
             onMouseOver={onMouseOverHandler}
             ref={divRef}
-            className={styles['lecturer-description']}
+            className={styles['poll-subject-name']}
           >
             {description}
           </div>
@@ -170,7 +170,7 @@ export const SimpleCard: React.FC<SimpleCardProps> = ({
   );
 };
 
-const CardRoles: React.FC<{ roles: string[]; disabled?: boolean }> = ({
+export const CardRoles: React.FC<{ roles: string[]; disabled?: boolean }> = ({
   roles,
   disabled = false,
 }) => {

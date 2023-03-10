@@ -114,7 +114,7 @@
   }
 }
 
-.lecturer-description {
+.poll-subject-name {
   display: inline-block;
   @include body-primary;
   height: 35.2px;
@@ -149,8 +149,19 @@
   @include body-secondary--bold;
 }
 
-.card-name-tooltip{
-  height: 92px;
+.poll-teacher-name {
+  @include body-secondary--bold;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.poll-card-info{
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 .teacher-card-name{
@@ -291,7 +302,7 @@
     .card-name{
       font-weight: 700;
     }
-    .lecturer-description{
+    .poll-subject-name {
       color: #A3A3A3;
       font-size: 14px;
     }

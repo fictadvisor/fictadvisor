@@ -1,0 +1,96 @@
+@import 'src/styles/partials/theme';
+@import 'src/styles/partials/typography-mixins';
+@import 'src/styles/partials/utils';
+
+.poll-teacher-card {
+  height: 224px;
+  padding: 16px;
+  background-color: $background-dark-35;
+  border-radius: 6px;
+  width: 100%;
+  min-width: fit-content;
+  border: 1px solid transparent;
+  transition: all 0.2s ease-in-out;
+  margin-top: 3rem;
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 8px;
+}
+
+.poll-teacher-card-effect {
+  cursor: pointer;
+  &:focus {
+    border-color: $red-25;
+  }
+  &:active {
+    border-color: $red-logo;
+    background-color: $gray-50;
+  }
+  &:hover {
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.card-roles {
+  @include flex-center;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 8px;
+  justify-content: flex-start;
+}
+
+.poll-teacher-card-avatar {
+  box-sizing: content-box;
+  aspect-ratio: 1/1;
+  width: 64px;
+  margin-bottom: 12px;
+  outline: 2px solid $background-dark-35;
+  border-radius: 100%;
+}
+
+.poll-teacher-card-shift {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  top: -50px;
+}
+
+.poll-subject-name {
+  display: inline-block;
+  @include body-primary;
+  height: 35.2px;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  color: $gray-500;
+}
+
+.poll-teacher-name {
+  @include body-secondary--bold;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.poll-teacher-card-info{
+  flex-grow: 1;
+  display: flex;
+  gap: 2px;
+  margin-bottom: 12px;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.card-disabled {
+  .poll-teacher-card-avatar {
+    border-color: #4b4b4b;
+  }
+  border-color: transparent;
+  background-color: $background-dark-100;
+  pointer-events: none;
+  * {
+    color: #a3a3a3 !important;
+  }
+}

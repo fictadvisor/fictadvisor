@@ -5,6 +5,7 @@ import { LecturerPollCard } from '@/components/common/composite/cards/Cards';
 import { PollTeachersDTO } from '@/lib/api/poll/dto/PollTeachersDTO';
 
 import styles from '../SearchPage.module.scss';
+import { PollTeacherCard } from '@/components/common/composite/cards/poll-teacher-card';
 
 interface PollTeacherSearchListProps {
   data: PollTeachersDTO;
@@ -19,7 +20,7 @@ const PollTeacherSearchList: FC<PollTeacherSearchListProps> = ({
       {data &&
         data.teachers?.map((teacher, index) => (
           <Link key={index} href={`/poll/${teacher.disciplineTeacherId}`}>
-            <LecturerPollCard
+            <PollTeacherCard
               key={teacher.disciplineTeacherId}
               description={teacher.subject.name}
               avatar={teacher.avatar}

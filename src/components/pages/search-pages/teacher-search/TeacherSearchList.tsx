@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { RatingCard } from '@/components/common/composite/cards/Cards';
+import { TeacherCard } from '@/components/common/composite/cards/teacher-card';
 import { GetTeachersBySubjectDTO } from '@/lib/api/subject/dto/GetTeachersBySubjectDTO';
 import { GetTeachersDTO } from '@/lib/api/teacher/dto/GetTeacherDTO';
 
@@ -17,11 +17,10 @@ export const TeacherSearchList = ({
       {teachers &&
         teachers?.map((teacher, index) => (
           <Link key={index} href={`/teachers/${teacher.id}`}>
-            <RatingCard
+            <TeacherCard
               avatar={teacher.avatar}
               key={teacher.id}
               name={`${teacher.lastName} ${teacher.firstName} ${teacher.middleName}`}
-              roles={teacher.roles}
             />
           </Link>
         ))}
