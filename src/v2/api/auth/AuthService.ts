@@ -141,11 +141,11 @@ export class AuthService {
     await this.requestEmailVerification(user.email);
   }
 
-  async verify ({ id, telegramId }: { id: string, telegramId: number }, { groupId, isCaptain, middleName, ...student }: StudentDTO) {
+  async verify (body: { id: string, telegramId: number }, { groupId, isCaptain, middleName, ...student }: StudentDTO) {
     const group = await this.groupRepository.getGroup(groupId);
     const data = {
-      id,
-      telegramId: telegramId ? telegramId : undefined,
+      id: body.id,
+      telegramId: body?.telegramId ? body.telegramId : undefined,
       middleName: middleName ? middleName : '',
       ...student,
       groupCode: group.code,
