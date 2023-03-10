@@ -35,8 +35,6 @@ const SubjectTeacherPage = () => {
       href: '#',
     });
 
-  console.log(data);
-
   return (
     <PageLayout title={data?.subjectName}>
       <div className={styles['layout']}>

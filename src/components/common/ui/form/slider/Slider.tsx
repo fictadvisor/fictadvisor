@@ -42,7 +42,7 @@ const Slider: FunctionComponent<SliderProps> = ({
 
   useEffect(() => {
     handleInput();
-  }, []);
+  }, [handleInput]);
 
   return (
     <div className={mergeClassNames(styles['slider-container'], className)}>

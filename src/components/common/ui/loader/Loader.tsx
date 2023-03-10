@@ -26,7 +26,7 @@ const LoaderMap = {
   [LoaderSize.SMALLEST]: SmallestProgressCircle,
   [LoaderSize.SMALL]: SmallProgressCircle,
   [LoaderSize.MEDIUM]: MediumProgressCircle,
-  [LoaderSize.LARGE]: LargestProgressCircle,
+  [LoaderSize.LARGE]: LargeProgressCircle,
   [LoaderSize.LARGEST]: LargestProgressCircle,
 };
 

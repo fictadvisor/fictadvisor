@@ -33,8 +33,6 @@ export class SubjectsAPI {
       pageSize ? `&pageSize=${pageSize}` : ''
     }`;
 
-    console.log(url);
-
     const { data } = await client.get(url, getAuthorizationHeader());
     return data;
   }

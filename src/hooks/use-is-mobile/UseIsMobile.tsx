@@ -13,7 +13,7 @@ const useIsMobile = (maxWidth): boolean => {
     updateSize();
 
     return (): void => window.removeEventListener('resize', updateSize);
-  }, []);
+  }, [maxWidth]);
 
   return isMobile;
 };

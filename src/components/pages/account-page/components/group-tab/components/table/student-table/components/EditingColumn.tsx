@@ -197,7 +197,6 @@ const EditingColumn: FC<EditingColumnProps> = ({ student, refetch }) => {
         <TrashBucketButton
           onClick={() => {
             setIsOpenDelete(true);
-            console.log();
           }}
         />
       </>

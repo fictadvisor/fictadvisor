@@ -106,7 +106,7 @@ const Dropdown: React.FC<DropdownProps> = ({
               : control;
           },
           container: () => `${styles['dropdown-container']}`,
-          input: state => 'dropdown-input',
+          input: () => 'dropdown-input',
           menu: () => styles['dropdown-menu'],
           menuList: () => styles['dropdown-menu-list'],
           option: state =>

@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { useRouter } from 'next/router';
 
 import { SubjectCard } from '@/components/common/composite/cards/subject-card';
@@ -10,7 +10,6 @@ export const SubjectSearchList = ({ subjects }: GetListOfSubjectsDTO) => {
   const router = useRouter();
 
   const redirect = (subjectId: string) => {
-    console.log('here');
     router.push(`/subjects/${subjectId}/teachers`);
   };
 
