@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import {
   AcademicCapIcon,
   LockClosedIcon,
@@ -6,6 +7,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/router';
 
+import { AlertColor } from '@/components/common/ui/alert';
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
 import {
   TabItem,
@@ -19,6 +21,7 @@ import GeneralTab from '@/components/pages/account-page/components/general-tab';
 import GroupTab from '@/components/pages/account-page/components/group-tab';
 import SecurityTab from '@/components/pages/account-page/components/security-tab';
 import useAuthentication from '@/hooks/use-authentication';
+import { showAlert } from '@/redux/reducers/alert.reducer';
 
 import PageLayout from '../../common/layout/page-layout/PageLayout';
 
@@ -37,7 +40,7 @@ const AccountPagesMapper = {
 };
 
 const AccountPage = () => {
-  const { push, query, isReady } = useRouter();
+  const { push, replace, query, isReady } = useRouter();
 
   const { tab } = query;
   const [index, setIndex] = useState<AccountPageTabs>(AccountPageTabs.GENERAL);
@@ -60,12 +63,19 @@ const AccountPage = () => {
   }, [tab, isReady, push, query]);
 
   const { isLoggedIn } = useAuthentication();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!isLoggedIn) {
-      void push('/login?account');
+      dispatch(
+        showAlert({
+          title: 'Кабінет доступний тільки для авторизованих користувачів',
+          color: AlertColor.ERROR,
+        }),
+      );
+      void replace('/login?account');
     }
-  }, [isLoggedIn, push]);
+  }, [dispatch, isLoggedIn, push, replace]);
 
   return (
     <PageLayout hasFooter={true}>

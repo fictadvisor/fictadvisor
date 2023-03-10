@@ -71,20 +71,25 @@ const PollPage = () => {
       refetchOnWindowFocus: false,
     },
   );
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!isLoggedIn) {
-      void router.push('/login?redirect=~poll');
+      dispatch(
+        showAlert({
+          title: 'Для проходження опитування потрібно авторизуватися',
+          color: AlertColor.ERROR,
+        }),
+      );
+      void router.replace('login/?redirect=~poll');
     }
-  }, [isLoggedIn, router]);
+  }, [dispatch, isLoggedIn, router]);
 
   useEffect(() => {
     setIsLoading(isQuestionsLoading);
   }, [isQuestionsLoading]);
 
   const status = error && (error as any).response?.data?.error;
-
-  const dispatch = useDispatch();
 
   if (error && !isLoading) {
     dispatch(
