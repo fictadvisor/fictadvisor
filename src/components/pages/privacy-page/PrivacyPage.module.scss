@@ -1,43 +1,33 @@
-.privacy-content {
-    padding: 42px 296px 50px 188px;
 
-    h4 {
-        padding-bottom: 8px;
-    }
+.privacy-content{
+  padding: 3% 20% 4% 13%;
 }
 
-.privacy-list-item {
-    margin-top: 36px;
-
-    h6 {
-        margin-bottom: 12px;
-    }
+.h4-content {
+  font-weight: 700;
+  font-size: 28px;
+  margin-bottom: 3%;
 }
 
-@media screen and (max-width: 480px) {
-    .privacy-content {
-        padding-left: 37px;
-        padding-right: 23.5px;
-    } 
+.h6-content{
+  font-weight: 700;
+  font-size: 20px;
+  margin-bottom: 1%;
 }
 
-@media screen and (min-width: 481px) and (max-width: 768px) {
-    .privacy-content {
-        padding-left: 74px;
-        padding-right: 47px;
-    } 
+.privacy-list{
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
 }
 
-@media screen and (min-width: 769px) and (max-width: 1024px) {
-    .privacy-content {
-        padding-left: 148px;
-        padding-right: 94px;
-    } 
+.body-primary{
+  font-weight: 400;
+  font-size: 14px;
 }
 
-@media screen and (min-width: 1025px) and (max-width: 1300px) {
-    .privacy-content {
-        padding-left: 197px;
-        padding-right: 125px;
-    } 
+@media screen and (max-width: 480px){
+  .privacy-content{
+    padding: 8%;
+  }
 }

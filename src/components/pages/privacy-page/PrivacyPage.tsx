@@ -13,10 +13,10 @@ const PrivacyPage = () => {
       hasHeader={true}
     >
       <div className={styles['privacy-content']}>
-        <h4 className={'h4--bold'}>Політика конфіденційності</h4>
+        <h4 className={styles['h4-content']}>Політика конфіденційності</h4>
         <div className={styles['privacy-list']}>
           <div className={styles['privacy-list-item']}>
-            <p className={'body-primary'}>
+            <p className={styles['body-primary']}>
               FICT Advisor – це інформаційна система Стуради ФІОТ для студентів
               Факультету інформатики та обчислювальної техніки Національного
               технічного університету України “Київський політехнічний інститут
@@ -27,8 +27,8 @@ const PrivacyPage = () => {
             </p>
           </div>
           <div className={styles['privacy-list-item']}>
-            <h6 className={'h6--bold'}>Які дані ми збираємо?</h6>
-            <p className={'body-primary'}>
+            <h6 className={styles['h6-content']}>Які дані ми збираємо?</h6>
+            <p className={styles['body-primary']}>
               Згідно з законом України “Про захист персональних прав”,
               персональними даними вважаються такі дані, за допомогою яких можна
               однозначно ідентифікувати особу. Система збирає такі дані:
@@ -38,8 +38,8 @@ const PrivacyPage = () => {
             </p>
           </div>
           <div className={styles['privacy-list-item']}>
-            <h6 className={'h6--bold'}>Як ми ці дані оброблюємо?</h6>
-            <p className={'body-primary'}>
+            <h6 className={styles['h6-content']}>Як ми ці дані оброблюємо?</h6>
+            <p className={styles['body-primary']}>
               Система є Open-Source проєктом, тому весь код знаходиться у
               публічному просторі за посиланням{' '}
               <Link href={'https://github.com/fictadvisor/'}>
@@ -54,8 +54,10 @@ const PrivacyPage = () => {
             </p>
           </div>
           <div className={styles['privacy-list-item']}>
-            <h6 className={'h6--bold'}>Коли ми видаляємо персональні дані?</h6>
-            <p className={'body-primary'}>
+            <h6 className={styles['h6-content']}>
+              Коли ми видаляємо персональні дані?
+            </h6>
+            <p className={styles['body-primary']}>
               Персональні дані користувача видаляються: після відрахування
               користувача з Факультету; за власним запитом користувача; після
               деактивації системи. Адміністрація Системи залишає за собою право
