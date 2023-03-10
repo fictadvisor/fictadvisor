@@ -42,7 +42,7 @@ const TabsPage = () => {
             className="tab-item"
             text="Відгуки"
             position={TabItemContentPosition.LEFT}
-            count={0}
+            count={'0'}
             value={'2'}
           ></TabItem>
           <TabItem
@@ -77,7 +77,7 @@ const TabsPage = () => {
             className="tab-item"
             text="Відгуки"
             position={TabItemContentPosition.LEFT}
-            count={-15}
+            count={'-15'}
             value={'3'}
           ></TabItem>
         </TabList>

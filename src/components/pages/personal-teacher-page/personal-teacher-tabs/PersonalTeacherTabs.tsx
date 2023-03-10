@@ -56,7 +56,7 @@ const TabsPage: FC<PersonalTeacherTabsProps> = props => {
             className="tab-item"
             text="Відгуки"
             position={TabItemContentPosition.LEFT}
-            count={0}
+            count={'0'}
             value={'3'}
           />
           <TabItem
@@ -91,7 +91,7 @@ const TabsPage: FC<PersonalTeacherTabsProps> = props => {
             className="tab-item"
             text="Відгуки"
             position={TabItemContentPosition.LEFT}
-            count={0}
+            count={'0'}
             value={'3'}
           />
           <TabItem
