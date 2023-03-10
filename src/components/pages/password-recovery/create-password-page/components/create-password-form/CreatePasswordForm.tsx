@@ -19,7 +19,7 @@ const CreatePasswordForm: FC = () => {
   const dispatch = useDispatch();
   const handleSubmit = async (data: CreatePasswordFormFields) => {
     try {
-      await AuthAPI.resetPassword(token, { password: data.newPassword });
+      await AuthAPI.resetPassword(token, { password: data.confirmPassword });
       void push('/password-recovery/valid');
     } catch (e) {
       dispatch(
