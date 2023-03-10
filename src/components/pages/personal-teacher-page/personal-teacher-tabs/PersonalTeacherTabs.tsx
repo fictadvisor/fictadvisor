@@ -2,7 +2,7 @@ import React, { FC, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { SimpleCard } from '@/components/common/composite/cards';
+import { SubjectCard } from '@/components/common/composite/cards/subject-card';
 import Button, {
   ButtonColor,
   ButtonSize,
@@ -18,7 +18,6 @@ import { TabPanel } from '@/components/common/ui/tab/tab-panel/TabPanel';
 import { TabPanelsList } from '@/components/common/ui/tab/tab-panels-list/TabPanelsList';
 
 import styles from './PersonalTeacherTabs.module.scss';
-import { SubjectCard } from '@/components/common/composite/cards/subject-card';
 export type PersonalTeacherTabsProps = {
   id: string;
   subjects: {

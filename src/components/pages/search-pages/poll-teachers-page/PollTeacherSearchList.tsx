@@ -1,11 +1,9 @@
 import { FC } from 'react';
-import Link from 'next/link';
 
-import { LecturerPollCard } from '@/components/common/composite/cards/Cards';
+import { PollTeacherCard } from '@/components/common/composite/cards/poll-teacher-card';
 import { PollTeachersDTO } from '@/lib/api/poll/dto/PollTeachersDTO';
 
 import styles from './PollTeacherSearchList.module.scss';
-import { PollTeacherCard } from '@/components/common/composite/cards/poll-teacher-card';
 
 interface PollTeacherSearchListProps {
   data: PollTeachersDTO;
@@ -18,7 +16,7 @@ const PollTeacherSearchList: FC<PollTeacherSearchListProps> = ({
   return (
     <ul className={styles[`${className}-search-list`]}>
       {data &&
-        data.teachers?.map((teacher, index) => (
+        data.teachers?.map(teacher => (
           <PollTeacherCard
             key={teacher.disciplineTeacherId}
             description={teacher.subject.name}

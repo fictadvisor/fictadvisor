@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 
@@ -14,8 +14,6 @@ import { PollTeachersDTO } from '@/lib/api/poll/dto/PollTeachersDTO';
 import { PollAPI } from '@/lib/api/poll/PollAPI';
 
 import PageLayout from '../../../common/layout/page-layout/PageLayout';
-import { TeacherInitialValues } from '../search-form/constants';
-import { SearchForm } from '../search-form/SearchForm';
 
 import styles from '../SearchPage.module.scss';
 
@@ -32,7 +30,6 @@ const breadcrumbs = [
 const pageSize = 20;
 
 const PollTeacherPage: FC = () => {
-  const [queryObj, setQueryObj] = useState(TeacherInitialValues);
   const [curPage, setCurPage] = useState(0);
   const { push } = useRouter();
   const { user, isLoggedIn } = useAuthentication();
@@ -43,12 +40,7 @@ const PollTeacherPage: FC = () => {
     }
   }, [isLoggedIn, push]);
 
-  const submitHandler = useCallback(query => {
-    setQueryObj(query);
-    setCurPage(0);
-  }, []);
-
-  const { data, isLoading, refetch, isFetching } = useQuery<PollTeachersDTO>(
+  const { data, isLoading, isFetching } = useQuery<PollTeachersDTO>(
     'pollTeachers',
     () => PollAPI.getUserTeachers(user.id),
     {
@@ -65,7 +57,9 @@ const PollTeacherPage: FC = () => {
           <>
             <Breadcrumbs items={breadcrumbs} className={styles['breadcrumb']} />
 
-            {data && <PollTeacherSearchList data={data} className="poll-teacher" />}
+            {data && (
+              <PollTeacherSearchList data={data} className="poll-teacher" />
+            )}
             {isLoading ||
               (isFetching && (
                 <div className={styles['page-loader']}>

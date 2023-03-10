@@ -5,9 +5,9 @@ import PageLayout from '@/components/common/layout/page-layout';
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
 import Loader, { LoaderSize } from '@/components/common/ui/loader';
 import styles from '@/components/pages/search-pages/SearchPage.module.scss';
+import { SubjectTeacherSearchList } from '@/components/pages/search-pages/subject-teacher-search/SubjectTeacherSearchList';
 import { GetTeachersBySubjectDTO } from '@/lib/api/subject/dto/GetTeachersBySubjectDTO';
 import { SubjectsAPI } from '@/lib/api/subject/SubjectAPI';
-import { SubjectTeacherSearchList } from '@/components/pages/search-pages/subject-teacher-search/SubjectTeacherSearchList';
 
 const SubjectTeacherPage = () => {
   const breadcrumbs = [

@@ -1,9 +1,10 @@
 import React from 'react';
+import Link from 'next/link';
+
+import { SubjectTeacherCard } from '@/components/common/composite/cards/subject-teacher-card';
+import { GetTeacherDTO } from '@/lib/api/teacher/dto/GetTeacherDTO';
 
 import styles from './SubjectTeacherSearchList.module.scss';
-import Link from 'next/link';
-import { GetTeacherDTO } from '@/lib/api/teacher/dto/GetTeacherDTO';
-import { SubjectTeacherCard } from '@/components/common/composite/cards/subject-teacher-card';
 
 export interface SubjectTeacherSearchListProps {
   subjectId: string;
@@ -31,4 +32,4 @@ export const SubjectTeacherSearchList: React.FC<
         ))}
     </ul>
   );
-}
+};
