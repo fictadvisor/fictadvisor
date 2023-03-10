@@ -1,11 +1,9 @@
 import React from 'react';
 
-import {
-  LecturerHeaderCard,
-  PollCard,
-} from '@/components/common/composite/cards';
-
 import { Category, Subject, Teacher } from '../../PollPage';
+
+import PollCard from './components/poll-card';
+import TeacherHeaderCard from './components/teacher-header-card';
 
 import styles from './QuestionsList.module.scss';
 
@@ -32,7 +30,7 @@ const QuestionsList: React.FC<QuestionListProps> = ({
 
   return (
     <div className={styles.wrapper}>
-      <LecturerHeaderCard
+      <TeacherHeaderCard
         name={`${lastName} ${firstName} ${middleName}`}
         description={subject.name}
         url={avatar || undefined}
