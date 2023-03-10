@@ -17,8 +17,8 @@
   min-width: 420px;
   max-width: 420px;
   height: fit-content;
-  top: 103px;
-  position: absolute;
+  padding-top: 103px;
+  padding-bottom: 103px;
   text-align: center;
 }
 
@@ -28,14 +28,13 @@
     width: 64px;
     height: 64px;
   }
+  padding: 6px 6px 38px 6px;
 
-  padding: 6px;
-  margin-bottom: 32px;
 }
 
 .headline {
   font-weight: 600;
-  margin-bottom: 24px;
+  padding-bottom: 24px;
 }
 
 .text-and-button{
@@ -44,7 +43,7 @@
   flex-direction: column;
   gap: 24px;
   color: $gray-300;
-  margin-bottom: 32px;
+  padding-bottom: 32px;
 }
 
 .email-not-received{
@@ -58,7 +57,7 @@
 }
 
 .alert {
-  margin-bottom: 38px;
+  padding-bottom: 38px;
 }
 
 .email{
@@ -75,6 +74,7 @@
     height: 100vh;
   }
   .registration-email-confirmation-page-content{
+
     min-height: unset;
     min-width: unset;
     justify-content: unset;
@@ -87,12 +87,11 @@
       width: 48px;
       height: 48px;
     }
-    margin-bottom: 28px;
-    padding: 0;
+    padding-bottom: 28px;
   }
 
   .alert {
-    margin-bottom: 28px;
+    padding-bottom: 28px;
   }
 
   .desktop{
@@ -107,14 +106,14 @@
       @include body-secondary;
     }
     gap: 22px;
-    margin-bottom: 26px;
+    padding-bottom: 26px;
     padding-left: 8px;
     padding-right: 8px;
   }
 
   .headline{
     @include h4--bold;
-    margin-bottom: 28px;
+    padding-bottom: 28px;
   }
 
 }
