@@ -46,8 +46,8 @@
   display: none;
 }
 
-.dropdown{
-  width: 85%;
+.alert{
+  margin-bottom: 20px;
 }
 
 @media screen and (max-width: 1024px){
@@ -58,12 +58,6 @@
   .alert-description{
     padding-top: 0;
   }
-  .alert-desktop{
-    display: none;
-  }
-  .alert-mobile{
-    display: flex;
-  }
 }
 
 @media screen and (max-width: 480px){
@@ -72,5 +66,11 @@
   }
   .dropdown{
     width: 100%;
+  }
+  .alert-desktop{
+    display: none;
+  }
+  .alert-mobile{
+    display: flex;
   }
 }

@@ -97,6 +97,7 @@ const PasswordResetEmailConfirmationPage = () => {
               title={'Лист реєстрації діє 1 годину'}
               color={AlertColor.INFO}
               variant={AlertVariant.DARKER}
+              isClosable={false}
             ></Alert>
           </div>
           <Button
