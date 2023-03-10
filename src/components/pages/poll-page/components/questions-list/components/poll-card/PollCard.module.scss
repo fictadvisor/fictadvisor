@@ -4,7 +4,6 @@
 .card {
   background-color: $background-dark-35;
   padding: 16px;
-  border-radius: 6px;
   width: 100%;
   min-width: fit-content;
   border: 1px solid transparent;
@@ -37,14 +36,12 @@
   justify-content: space-between;
   border: 1px solid #404040;
   background-color: $background-dark-0;
-  border-radius: 0;
   cursor: pointer;
   & p {
     color: #a3a3a3;
   }
   &:hover,
   &:active {
-    border-radius: 6px;
     border: transparent 1px solid;
   }
   &:hover {

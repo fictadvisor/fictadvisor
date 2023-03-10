@@ -41,6 +41,7 @@ $slider-border-radius: 500px;
 }
 
 .slider {
+    cursor: pointer;
     &::-webkit-slider-runnable-track {
         height: $slider-desk-height;
         background: linear-gradient(to right, $red-25, $red-25), $background-dark-35;

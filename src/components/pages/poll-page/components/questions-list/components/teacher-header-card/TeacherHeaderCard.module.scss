@@ -5,7 +5,8 @@
 .card {
   background-color: $background-dark-35;
   padding: 16px;
-  border-radius: 6px;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
   width: 100%;
   min-width: fit-content;
   border: 1px solid transparent;
@@ -35,7 +36,9 @@
   min-width: fit-content;
   min-height: fit-content;
   width: 100%;
-  @include flex-center;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
   gap: 16px;
 
   & .header-lecturer-card-info {

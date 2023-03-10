@@ -52,35 +52,6 @@ export interface FetchedTeacherPollData {
   teacher: Teacher;
 }
 
-const initialState = {
-  subject: { id: 'subjectId', name: 'subject' },
-  categories: [
-    {
-      name: 'category',
-      count: 3,
-      questions: [
-        {
-          id: 'questionId',
-          name: '1 question',
-          criteria: 'criteria',
-          text: 'text',
-          type: 'type',
-          description: 'description',
-          display: 'display',
-          isRequired: false,
-        },
-      ],
-    },
-  ],
-  teacher: {
-    id: 'teacherId',
-    firstName: 'first',
-    middleName: 'middle',
-    lastName: 'last',
-    avatar: null,
-  },
-};
-
 const PollPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { user, isLoggedIn } = useAuthentication();
@@ -132,6 +103,7 @@ const PollPage = () => {
         color: AlertColor.ERROR,
       }),
     );
+    void router.push('/poll');
   }
 
   return (
@@ -160,8 +132,7 @@ const PollPage = () => {
                     className={styles['breadcrumbs']}
                   />
                 </div>
-
-                <PollForm data={data || initialState} />
+                <PollForm data={data} />
               </div>
             )
           )}

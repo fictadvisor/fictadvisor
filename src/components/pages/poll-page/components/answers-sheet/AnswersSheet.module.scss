@@ -16,7 +16,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  cursor: pointer;
 }
 
 .loaderWrapper {
@@ -86,7 +85,7 @@
 
 .options {
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
 
   div {
     margin-right: 36px;

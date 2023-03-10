@@ -147,10 +147,12 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
               {({ values }) => (
                 <Form
                   onClick={(event: FormEvent<HTMLFormElement>) => {
-                    values[(event.target as any).name] = (
-                      event.target as any
-                    ).value;
-                    answer(values);
+                    const name = (event.target as any).name;
+                    const value = (event.target as any).value;
+                    if (name && value) {
+                      values[name] = value;
+                      answer(values);
+                    }
                   }}
                   className={styles['form']}
                 >

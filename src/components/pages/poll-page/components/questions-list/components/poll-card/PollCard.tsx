@@ -1,9 +1,11 @@
 import React from 'react';
-import { CheckIcon } from '@heroicons/react/24/outline';
 import mergeClassNames from 'merge-class-names';
 
 import { DivProps } from '@/components/common/composite/cards/Cards';
-import { DoubleCheckIcon } from '@/components/common/custom-svg/card-icons/CheckIcon';
+import {
+  CheckIcon,
+  DoubleCheckIcon,
+} from '@/components/common/custom-svg/card-icons/CheckIcon';
 
 import styles from './PollCard.module.scss';
 
