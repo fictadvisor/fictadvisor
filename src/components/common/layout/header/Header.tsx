@@ -122,7 +122,7 @@ const Header: React.FC = () => {
             />
           </Link>
           <div className={styles['account-buttons']}>
-            <Link href={'/account?tab=general'}>
+            <Link href={'/account?tab=general'} onClick={handleClick}>
               <TabItem
                 className=""
                 text="Загальне"
@@ -131,7 +131,7 @@ const Header: React.FC = () => {
                 size={TabItemContentSize.SMAll}
               />
             </Link>
-            <Link href={'/account?tab=security'}>
+            <Link href={'/account?tab=security'} onClick={handleClick}>
               <TabItem
                 className=""
                 text="Безпека"
@@ -140,7 +140,7 @@ const Header: React.FC = () => {
                 size={TabItemContentSize.SMAll}
               />
             </Link>
-            <Link href={'/account?tab=group'}>
+            <Link href={'/account?tab=group'} onClick={handleClick}>
               <TabItem
                 className=""
                 text="Група"
