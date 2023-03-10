@@ -25,8 +25,8 @@ const breadcrumbs = [
     href: '/',
   },
   {
-    label: 'Вчителі',
-    href: '/teachers',
+    label: 'Опитування',
+    href: '/poll',
   },
 ];
 const pageSize = 20;
@@ -59,13 +59,13 @@ const PollTeacherPage: FC = () => {
   );
 
   return (
-    <PageLayout title={'Вчителі'}>
+    <PageLayout title={'Викладачі'}>
       <div className={styles['layout']}>
         {isLoggedIn && (
           <>
             <Breadcrumbs items={breadcrumbs} className={styles['breadcrumb']} />
 
-            {data && <PollTeacherSearchList data={data} className="teacher" />}
+            {data && <PollTeacherSearchList data={data} className="poll-teacher" />}
             {isLoading ||
               (isFetching && (
                 <div className={styles['page-loader']}>

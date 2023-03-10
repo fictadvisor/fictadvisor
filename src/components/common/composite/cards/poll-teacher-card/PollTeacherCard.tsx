@@ -1,6 +1,8 @@
 import React, { useRef, useState } from 'react';
 import mergeClassNames from 'merge-class-names';
+import Link from 'next/link';
 
+import { CardRoles } from '@/components/common/composite/cards/card-roles';
 import { DivProps } from '@/components/common/composite/cards/Cards';
 import styles from '@/components/common/composite/cards/poll-teacher-card/PollTeacherCard.module.scss';
 import Button, {
@@ -9,7 +11,6 @@ import Button, {
   ButtonVariant,
 } from '@/components/common/ui/button';
 import Tooltip from '@/components/common/ui/tooltip';
-import Tag, { TagColor, TagSize, TagVariant } from '@/components/common/ui/tag';
 
 type PollTeacherCardProps = {
   name: string;
@@ -17,6 +18,7 @@ type PollTeacherCardProps = {
   roles?: string[];
   avatar?: string;
   disabled?: boolean;
+  href?: string;
 } & DivProps;
 
 export const PollTeacherCard: React.FC<PollTeacherCardProps> = ({
@@ -25,6 +27,7 @@ export const PollTeacherCard: React.FC<PollTeacherCardProps> = ({
   roles,
   avatar,
   disabled,
+  href,
   ...rest
 }) => {
   const divRef = useRef<HTMLDivElement | null>(null);
@@ -51,7 +54,10 @@ export const PollTeacherCard: React.FC<PollTeacherCardProps> = ({
           alt="викладач"
         />
 
-        <CardRoles roles={roles} disabled={disabled} />
+        <CardRoles
+          roles={roles}
+          className={styles['poll-teacher-card-roles']}
+        />
         <div className={styles['poll-teacher-card-info']}>
           <h4 className={styles['poll-teacher-name']}>{name}</h4>
           <Tooltip
@@ -72,56 +78,15 @@ export const PollTeacherCard: React.FC<PollTeacherCardProps> = ({
           </Tooltip>
         </div>
 
-        <Button
-          color={disabled ? ButtonColor.SECONDARY : ButtonColor.PRIMARY}
-          variant={ButtonVariant.OUTLINE}
-          size={ButtonSize.SMALL}
-          text={'Пройти опитування'}
-        ></Button>
+        <Link href={href}>
+          <Button
+            color={disabled ? ButtonColor.SECONDARY : ButtonColor.PRIMARY}
+            variant={ButtonVariant.OUTLINE}
+            size={ButtonSize.SMALL}
+            text={'Пройти опитування'}
+          ></Button>
+        </Link>
       </div>
     </article>
   );
 };
-
-const CardRoles: React.FC<{ roles: string[]; disabled?: boolean }> = ({ roles,
-                                                                               disabled = false,}) => {
-  return (
-    <div className={styles['card-roles']}>
-      {roles.map(role => {
-        switch (role) {
-          case 'LABORANT':
-            return (
-              <Tag
-                size={TagSize.SMALL}
-                text="Лаборант"
-                variant={disabled ? TagVariant.OUTLINE : TagVariant.FILLED}
-                color={disabled ? TagColor.GRAY : TagColor.MINT}
-                key={Math.random()}
-              />
-            );
-          case 'LECTURER':
-            return (
-              <Tag
-                size={TagSize.SMALL}
-                text="Лектор"
-                variant={disabled ? TagVariant.OUTLINE : TagVariant.FILLED}
-                color={disabled ? TagColor.GRAY : TagColor.VIOLET}
-                key={Math.random()}
-              />
-            );
-          case 'PRACTICIAN':
-            return (
-              <Tag
-                size={TagSize.SMALL}
-                text="Практик"
-                variant={disabled ? TagVariant.OUTLINE : TagVariant.FILLED}
-                color={disabled ? TagColor.GRAY : TagColor.ORANGE}
-                key={Math.random()}
-              />
-            );
-        }
-      })}
-    </div>
-  );
-};
-

@@ -6,7 +6,6 @@
     display: flex;
     flex-direction: column;
     padding: 12px 80px;
-
 }
 
 .form {
@@ -30,29 +29,16 @@
 .subject-title{
    @include h4--semi-bold;
 }
-.teacher-search-list {
-    margin-top: 16px;
+
+.subject-teacher-search-list{
+    margin-top: 40px;
     margin-bottom: 16px;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    column-gap: 48px;
-    row-gap: 16px;
+    row-gap: 4rem;
     grid-auto-rows: max-content !important;
     align-items: center;
-}
-.subject-teacher-search-list{
-    @extend .teacher-search-list;
     column-gap: 16px;
-}
-.subject-search-list {
-    margin-top: 16px;
-    margin-bottom: 16px;
-    display: column;
-    columns: 4;
-    & li {
-        margin-bottom: 16px;
-        break-inside: avoid;
-    }
 }
 
 .page-loader {
@@ -97,13 +83,6 @@
         display: block !important;
         align-self: center;
     }
-    .teacher-search-list {
-        grid-template-columns: repeat(2, 1fr);
-        column-gap: 16px;
-    }
-    .subject-search-list {
-        columns: 2;
-    }
     .sort-icon{
         height: 36px;
         svg{
@@ -112,21 +91,7 @@
     }
 }
 
-@media only screen and (min-width: $breakpoint-tablet) and (max-width: $breakpoint-desktop) {
-
-    .teacher-search-list {
-        grid-template-columns: repeat(3, 1fr);
-        column-gap: 32px;
-    }
-    .subject-search-list {
-        columns: 3;
-    }
-}
-
 @media only screen and (max-width: $breakpoint-mobile){
-    .subject-search-list {
-        columns: 1;
-    }
     .form{
         column-gap: 15px;
     }

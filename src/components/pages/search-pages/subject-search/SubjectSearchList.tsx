@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
 import { useRouter } from 'next/router';
 
-import { SimpleCard } from '@/components/common/composite/cards/Cards';
+import { SubjectCard } from '@/components/common/composite/cards/subject-card';
 import { GetListOfSubjectsDTO } from '@/lib/api/subject/dto/GetListOfSubjectsDTO';
 
-import styles from '../SearchPage.module.scss';
+import styles from './SubjectSearchList.module.scss';
 
 export const SubjectSearchList = ({ subjects }: GetListOfSubjectsDTO) => {
   const router = useRouter();
@@ -19,7 +19,8 @@ export const SubjectSearchList = ({ subjects }: GetListOfSubjectsDTO) => {
       {subjects &&
         subjects.map(subject => (
           <li key={subject.id}>
-            <SimpleCard
+            <SubjectCard
+              // className={'subject-card'}
               onClick={() => redirect(subject.id)}
               name={`${subject.name}`}
               details={`${

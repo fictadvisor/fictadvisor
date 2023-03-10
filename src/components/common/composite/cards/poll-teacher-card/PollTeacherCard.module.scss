@@ -3,7 +3,7 @@
 @import 'src/styles/partials/utils';
 
 .poll-teacher-card {
-  height: 224px;
+  height: 228px;
   padding: 16px;
   background-color: $background-dark-35;
   border-radius: 6px;
@@ -11,32 +11,14 @@
   min-width: fit-content;
   border: 1px solid transparent;
   transition: all 0.2s ease-in-out;
-  margin-top: 3rem;
+  //margin-top: 3rem;
   display: flex;
   flex-flow: column nowrap;
   gap: 8px;
 }
 
-.poll-teacher-card-effect {
-  cursor: pointer;
-  &:focus {
-    border-color: $red-25;
-  }
-  &:active {
-    border-color: $red-logo;
-    background-color: $gray-50;
-  }
-  &:hover {
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
-  }
-}
-
-.card-roles {
-  @include flex-center;
-  flex-wrap: wrap;
-  gap: 4px;
+.poll-teacher-card-roles {
   margin-bottom: 8px;
-  justify-content: flex-start;
 }
 
 .poll-teacher-card-avatar {
@@ -58,7 +40,7 @@
 .poll-subject-name {
   display: inline-block;
   @include body-primary;
-  height: 35.2px;
+  height: 39.2px;
   display: -webkit-box;
   overflow: hidden;
   -webkit-box-orient: vertical;
@@ -78,6 +60,7 @@
   flex-grow: 1;
   display: flex;
   gap: 2px;
+  height: 88px;
   margin-bottom: 12px;
   flex-direction: column;
   justify-content: flex-start;

@@ -4,7 +4,7 @@ import { TeacherCard } from '@/components/common/composite/cards/teacher-card';
 import { GetTeachersBySubjectDTO } from '@/lib/api/subject/dto/GetTeachersBySubjectDTO';
 import { GetTeachersDTO } from '@/lib/api/teacher/dto/GetTeacherDTO';
 
-import styles from '../SearchPage.module.scss';
+import styles from './TeacherSearchList.module.scss';
 
 export const TeacherSearchList = ({
   teachers,

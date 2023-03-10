@@ -1,8 +1,9 @@
+@import 'src/styles/partials/utils';
 @import 'src/styles/partials/theme';
 @import 'src/styles/partials/typography-mixins';
 
-.teacher-card {
-  height: 104px;
+.subject-teacher-card {
+  height: 140px;
   padding: 16px;
   background-color: $background-dark-35;
   border-radius: 6px;
@@ -12,35 +13,14 @@
   transition: all 0.2s ease-in-out;
 }
 
-.teacher-card-shift {
+.subject-teacher-card-shift {
   display: flex;
   flex-direction: column;
-  gap: 8px;
   position: relative;
   top: -50px;
 }
 
-.card-disabled {
-  .teacher-card-avatar {
-    border-color: #4b4b4b;
-  }
-  border-color: transparent;
-  background-color: $background-dark-100;
-  pointer-events: none;
-  * {
-    color: #a3a3a3 !important;
-  }
-}
-
-.teacher-card-avatar {
-  box-sizing: content-box;
-  aspect-ratio: 1/1;
-  width: 64px;
-  outline: 2px solid $background-dark-35;
-  border-radius: 100%;
-}
-
-.teacher-card-effect {
+.subject-teacher-card-effect {
   cursor: pointer;
   &:focus {
     border-color: $red-25;
@@ -54,13 +34,39 @@
   }
 }
 
-.teacher-card-name{
+.card-disabled {
+  .subject-teacher-card-avatar {
+    border-color: #4b4b4b;
+  }
+  border-color: transparent;
+  background-color: $background-dark-100;
+  pointer-events: none;
+  * {
+    color: #a3a3a3 !important;
+  }
+}
+
+.subject-teacher-card-avatar {
+  box-sizing: content-box;
+  aspect-ratio: 1/1;
+  width: 64px;
+  outline: 2px solid $background-dark-35;
+  border-radius: 100%;
+  margin-bottom: 12px;
+}
+
+.subject-teacher-card-name{
   @include body-secondary--bold;
   display: -webkit-box;
   overflow: hidden;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 }
+
+.subject-teacher-card-roles {
+  margin-bottom: 12px;
+}
+
 
 @media only screen and (max-width: 768px) {
   .teacher-card {
