@@ -30,7 +30,7 @@ const QuestionsList: React.FC<QuestionListProps> = ({
 
   return (
     <div className={styles.wrapper}>
-      <LecturerHeaderCard
+      <TeacherHeaderCard
         name={`${lastName} ${firstName} ${middleName}`}
         description={subject.name}
         url={avatar || undefined}
