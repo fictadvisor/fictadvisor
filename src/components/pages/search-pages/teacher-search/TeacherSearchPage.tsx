@@ -24,7 +24,7 @@ const breadcrumbs = [
     href: '/',
   },
   {
-    label: 'Вчителі',
+    label: 'Викладачі',
     href: '/teachers',
   },
 ];
@@ -50,7 +50,7 @@ export const TeacherSearchPage = () => {
   }, [queryObj, curPage, refetch]);
 
   return (
-    <PageLayout title={'Вчителі'}>
+    <PageLayout title={'Викладачі'}>
       <div className={styles['layout']}>
         <Breadcrumbs items={breadcrumbs} className={styles['breadcrumb']} />
 

@@ -5,7 +5,7 @@ import PageLayout from '@/components/common/layout/page-layout';
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
 import Loader, { LoaderSize } from '@/components/common/ui/loader';
 import styles from '@/components/pages/search-pages/SearchPage.module.scss';
-import { TeacherSearchList } from '@/components/pages/search-pages/teacher-search/TeacherSearchList';
+import { SubjectTeacherSearchList } from '@/components/pages/search-pages/subject-teacher-search/SubjectTeacherSearchList';
 import { GetTeachersBySubjectDTO } from '@/lib/api/subject/dto/GetTeachersBySubjectDTO';
 import { SubjectsAPI } from '@/lib/api/subject/SubjectAPI';
 
@@ -48,9 +48,9 @@ const SubjectTeacherPage = () => {
           </div>
         )}
         {data && !isLoading && (
-          <TeacherSearchList
+          <SubjectTeacherSearchList
             teachers={data.teachers}
-            className="subject-teacher"
+            subjectId={query.subjectId as string}
           />
         )}
       </div>
