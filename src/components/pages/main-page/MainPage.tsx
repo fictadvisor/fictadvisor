@@ -42,9 +42,10 @@ const MainPage = () => {
             <div className={styles['header-info-content']}>
               <h2>Твій студентський портал</h2>
               <p>
-                Мега текст що розповість про проект, що на ньому буде і тд і ще
-                текст і ще текст і ще текст і ще текст і ще текст і ще текст і
-                ще текст і ще текст і ще текст і ще текст
+                Зустрічай FICT Advisor — офіційний сайт Студради ФІОТ.
+                Опитування про викладачів, багатофункціональний розклад,
+                керування групою, набори в наше активне ком’юніті, розіграш шар
+                та інші інструменти — шукай саме тут!
               </p>
               <div className={styles['buttons']}>
                 <div className={styles['buttons-desk']}>
@@ -60,7 +61,7 @@ const MainPage = () => {
                   <hr className={styles['button-divider']} />
                   <Link href={'/poll'}>
                     <Button
-                      text={'Пройти Опитування 2022'}
+                      text={'Пройти Опитування 2023'}
                       disabled={false}
                       variant={ButtonVariant.OUTLINE}
                       size={ButtonSize.LARGE}
