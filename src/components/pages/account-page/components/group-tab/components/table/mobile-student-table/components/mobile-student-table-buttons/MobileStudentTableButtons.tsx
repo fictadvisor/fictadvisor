@@ -205,7 +205,10 @@ const MobileStudentTableButtons: FC<MobileStudentTableButtonsProps> = ({
                   onClick={() => onChange(value)}
                 />
                 {currentValue === value && (
-                  <div className={styles['moderator-dropdown-content']}>
+                  <div
+                    className={styles['moderator-dropdown-content']}
+                    ref={wrapperRef}
+                  >
                     <Button
                       className={styles['moderator-dropdown-button']}
                       text={'Видалити'}
