@@ -87,7 +87,8 @@ const RegistrationEmailConfirmationPage = () => {
               title={'Лист реєстрації діє 1 годину'}
               color={AlertColor.INFO}
               variant={AlertVariant.DARKER}
-            ></Alert>
+              isClosable={false}
+            />
           </div>
           <Button
             text={'Повернутись до введення даних'}

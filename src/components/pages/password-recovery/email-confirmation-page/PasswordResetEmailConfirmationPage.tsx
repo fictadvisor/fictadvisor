@@ -98,7 +98,7 @@ const PasswordResetEmailConfirmationPage = () => {
               color={AlertColor.INFO}
               variant={AlertVariant.DARKER}
               isClosable={false}
-            ></Alert>
+            />
           </div>
           <Button
             text={'Повернутись до авторизації'}
