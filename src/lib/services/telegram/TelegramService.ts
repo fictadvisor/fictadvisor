@@ -18,7 +18,6 @@ class TelegramService {
           },
         );
       } catch (e) {
-        console.log(e);
         reject(e);
       }
     });

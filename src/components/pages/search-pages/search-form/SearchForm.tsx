@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react';
+import { useState } from 'react';
 import { FC } from 'react';
 import { useQuery } from 'react-query';
 import {
@@ -8,7 +8,6 @@ import {
   ChevronUpIcon,
 } from '@heroicons/react/24/outline';
 import { Form, Formik } from 'formik';
-import mergeClassNames from 'merge-class-names';
 
 import {
   Dropdown,
@@ -51,7 +50,6 @@ export const SearchForm: FC<SearchFormProps> = ({
     <Formik
       initialValues={initialValues}
       onSubmit={values => {
-        console.log(values);
         onSubmit(values);
       }}
     >

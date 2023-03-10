@@ -80,10 +80,6 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
       initialValues[question.id] = 1;
     }
   }
-  const handleSubmit = data => {
-    console.log('answered data', data);
-  };
-
   const dispatch = useDispatch();
   const router = useRouter();
   const disciplineTeacherId = router.query.disciplineTeacherId as string;
@@ -106,6 +102,8 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
       return temp;
     });
   };
+
+  const handleSubmit = () => {};
 
   return (
     <div
@@ -141,8 +139,8 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
               validateOnMount
               validateOnChange
               initialValues={initialValues}
-              onSubmit={handleSubmit}
               enableReinitialize
+              onSubmit={handleSubmit}
             >
               {({ values }) => (
                 <Form

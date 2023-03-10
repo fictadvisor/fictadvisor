@@ -17,7 +17,7 @@ const Toast: FC = () => {
       clearTimeout(timeout);
       const newTimeout = setTimeout(() => {
         dispatch(hideAlert());
-      }, 15000);
+      }, 12000);
       dispatch(setNewTimeout({ timeout: newTimeout }));
     }
   }, [dispatch, hasTimeout, open, timeout]);

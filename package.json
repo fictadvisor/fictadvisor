@@ -37,6 +37,7 @@
     "yup": "^1.0.0"
   },
   "devDependencies": {
+    "@next/eslint-plugin-next": "^13.2.4",
     "@types/node": "^18.11.18",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",

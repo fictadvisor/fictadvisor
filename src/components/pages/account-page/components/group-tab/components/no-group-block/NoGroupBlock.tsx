@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { useQuery } from 'react-query';
+import { useDispatch } from 'react-redux';
 import { Form, Formik } from 'formik';
-import { useRouter } from 'next/router';
 
 import Alert, { AlertColor } from '@/components/common/ui/alert';
 import Button, { ButtonSize } from '@/components/common/ui/button';
@@ -12,19 +12,39 @@ import { validationSchema } from '@/components/pages/account-page/components/gro
 import useAuthentication from '@/hooks/use-authentication';
 import { GroupAPI } from '@/lib/api/group/GroupAPI';
 import { UserAPI } from '@/lib/api/user/UserAPI';
+import { showAlert } from '@/redux/reducers/alert.reducer';
 
 import styles from './NoGroupBlock.module.scss';
 
 const NoGroupBlock: FC = () => {
-  const { user } = useAuthentication();
-  const { push } = useRouter();
+  const { user, update } = useAuthentication();
   const { isLoading, data } = useQuery(['groups'], () => GroupAPI.getAll(), {
     refetchOnWindowFocus: false,
   });
+  const dispatch = useDispatch();
 
   const handleSubmitGroup = async data => {
-    await UserAPI.requestNewGroup(data, user.id);
-    await push('/account?tab=group');
+    try {
+      await UserAPI.requestNewGroup(data, user.id);
+      update();
+    } catch (e) {
+      const errorName = e.response.data.error;
+      if (errorName === 'AlreadyRegisteredException') {
+        dispatch(
+          showAlert({
+            title: 'В групі вже є староста',
+            color: AlertColor.ERROR,
+          }),
+        );
+      } else {
+        dispatch(
+          showAlert({
+            title: 'Як ти це зробив? :/',
+            color: AlertColor.ERROR,
+          }),
+        );
+      }
+    }
   };
 
   if (isLoading) return <Loader size={LoaderSize.SMALLEST} />;

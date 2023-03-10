@@ -6,13 +6,11 @@ import styles from '@/components/common/composite/cards/teacher-card/TeacherCard
 
 type TeacherCardProps = {
   name: string;
-  rating?: number;
   avatar?: string;
   disabled?: boolean;
 } & DivProps;
 
 export const TeacherCard: React.FC<TeacherCardProps> = ({
-  rating,
   name,
   avatar,
   disabled,

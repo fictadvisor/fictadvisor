@@ -29,7 +29,6 @@ const LoginForm: FC = () => {
           username: 'Користувача з таким паролем та поштою не знайдено',
           password: 'Користувача з таким паролем та поштою не знайдено',
         });
-        console.log(e.response?.data.message);
       }
     },
     [push, redirect, update],
