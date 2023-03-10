@@ -168,4 +168,20 @@ export class UserService {
 
     await this.userRepository.update(userId, { telegramId: telegram.id });
   }
+
+  async verifyStudent (userId: string, isCaptain: boolean, state: State) {
+    if (state === State.APPROVED) {
+      if (isCaptain) {
+        const user = await this.userRepository.get(userId);
+        const captain = await this.groupService.getCaptain(user.student.group.id);
+
+        if (captain) {
+          throw new AlreadyRegisteredException();
+        }
+      }
+      await this.addGroupRole(userId, isCaptain);
+    }
+
+    return this.updateStudent(userId, { state });
+  }
 }

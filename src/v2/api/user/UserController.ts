@@ -13,7 +13,6 @@ import { UpdateStudentDTO } from './dto/UpdateStudentDTO';
 import { ContactByUserIdPipe } from './ContactByUserIdPipe';
 import { GroupRequestDTO } from './dto/GroupRequestDTO';
 import { Access } from 'src/v2/security/Access';
-import { State } from '@prisma/client';
 import { TelegramDTO } from '../auth/dto/TelegramDTO';
 
 @Controller({
@@ -32,10 +31,7 @@ export class UserController {
     @Param('userId', UserByIdPipe) userId: string,
     @Body() { state, isCaptain }: ApproveStudentByTelegramDTO,
   ) {
-    if (state === State.APPROVED) {
-      await this.userService.addGroupRole(userId, isCaptain);
-    }
-    return this.userService.updateStudent(userId, { state });
+    return this.userService.verifyStudent(userId, isCaptain, state);
   }
 
   @UseGuards(TelegramGuard)
