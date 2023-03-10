@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import CustomTelegramIcon from '@/components/common/custom-svg/CustomTelegramIcon';
@@ -10,6 +11,7 @@ import Button, {
 import Divider, { DividerTextPosition } from '@/components/common/ui/divider';
 import RegisterForm from '@/components/pages/register/register-page/components/register-form';
 import AuthService from '@/lib/services/auth/AuthService';
+import StorageUtil from '@/lib/utils/StorageUtil';
 
 import styles from './LeftBlock.module.scss';
 
@@ -19,32 +21,34 @@ interface LeftBlockProps {
 
 const LeftBlock: FC<LeftBlockProps> = ({ groups }) => {
   const router = useRouter();
-  const hasTelegram = router.query.telegram as string;
+  const hasTelegram = !!StorageUtil.getTelegramInfo();
   const handleClick = async () => {
     await AuthService.redirectToRegisterBot(router);
   };
 
   return (
     <div className={styles['left-block']}>
-      <img
-        className={styles['mobile-register-logo']}
-        src="/assets/login-page/new_logo.png"
-        alt="fict advisor logo"
-      />
+      <Link href="/" className={styles['mobile-register-logo-container']}>
+        <img
+          className={styles['mobile-register-logo']}
+          src="/assets/login-page/new_logo.png"
+          alt="fict advisor logo"
+        />
+      </Link>
       <h3 className={styles['login-header']}>Створи акаунт</h3>
-      {hasTelegram === 'true' ? (
+      {hasTelegram ? (
         <h6 className={styles['telegram-connected']}>
           Telegram приєднано, дозаповни усі поля
         </h6>
       ) : (
         <>
           <Button
-            endIcon={
+            startIcon={
               <div className="icon">
                 <CustomTelegramIcon />
               </div>
             }
-            text="Зареєструватися за допомогою"
+            text="Приєднай Telegram"
             size={ButtonSize.SMALL}
             type="button"
             onClick={handleClick}
@@ -56,14 +60,14 @@ const LeftBlock: FC<LeftBlockProps> = ({ groups }) => {
                 <CustomTelegramIcon />
               </div>
             }
-            text="Зареєструватися за допомогою Telegram"
+            text="Приєднай Telegram"
             size={ButtonSize.LARGE}
             type="button"
             onClick={handleClick}
             className={styles['telegram-button']}
           />
           <Divider
-            text="або можеш ввести дані вручну"
+            text="та введи дані нижче"
             textPosition={DividerTextPosition.CENTER}
             className={styles['right-divider']}
           />

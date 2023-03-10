@@ -63,7 +63,7 @@ const AccountPage = () => {
 
   useEffect(() => {
     if (!isLoggedIn) {
-      void push('/login');
+      void push('/login?account');
     }
   }, [isLoggedIn, push]);
 

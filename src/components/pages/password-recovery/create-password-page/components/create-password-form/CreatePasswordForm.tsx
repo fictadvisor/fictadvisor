@@ -22,14 +22,25 @@ const CreatePasswordForm: FC = () => {
       await AuthAPI.resetPassword(token, { password: data.confirmPassword });
       void push('/password-recovery/valid');
     } catch (e) {
-      dispatch(
-        showAlert({
-          title: 'Помилка!',
-          description: 'Лист для верифікації сплив або неправильний код!',
-          color: AlertColor.ERROR,
-        }),
-      );
-      void push('/password-recovery/invalid');
+      const errorName = e.response.data.error;
+      if (errorName === 'PasswordRepeatException') {
+        dispatch(
+          showAlert({
+            title: 'Помилка!',
+            description: 'Такий пароль вже був!',
+            color: AlertColor.ERROR,
+          }),
+        );
+      } else {
+        dispatch(
+          showAlert({
+            title: 'Помилка!',
+            description: 'Лист для верифікації сплив або неправильний код!',
+            color: AlertColor.ERROR,
+          }),
+        );
+        void push('/password-recovery/invalid');
+      }
     }
   };
 

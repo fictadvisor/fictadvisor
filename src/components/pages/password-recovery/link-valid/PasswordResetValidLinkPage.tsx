@@ -14,7 +14,7 @@ import styles from './PasswordResetValidLinkPage.module.scss';
 const PasswordResetValidLinkPage = () => {
   const router = useRouter();
   const returnAuth = () => {
-    router.push('/login');
+    void router.push('/login');
   };
   return (
     <PageLayout

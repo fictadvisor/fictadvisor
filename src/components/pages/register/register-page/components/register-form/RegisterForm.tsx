@@ -8,6 +8,7 @@ import Button, { ButtonSize } from '@/components/common/ui/button';
 import {
   Checkbox,
   Dropdown,
+  DropDownSize,
   Input,
   InputType,
 } from '@/components/common/ui/form';
@@ -120,6 +121,7 @@ const RegisterForm: FC<RegisterFormProps> = ({ groups }) => {
           />
           <div className={styles['one-line']}>
             <Dropdown
+              size={DropDownSize.LARGE}
               options={transformGroups(groups)}
               label="Група"
               name="group"

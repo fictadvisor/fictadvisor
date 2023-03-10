@@ -15,7 +15,14 @@ import styles from './SecurityTab.module.scss';
 
 const SecurityTab = () => {
   const { push } = useRouter();
-  const { user } = useAuthentication();
+  const { user, update } = useAuthentication();
+
+  const handleLogout = async () => {
+    await AuthService.logout();
+    update();
+    await push('/login');
+  };
+
   return (
     <div className={styles['container']}>
       <div className={styles['division']}>
@@ -45,10 +52,7 @@ const SecurityTab = () => {
           variant={ButtonVariant.FILLED}
           color={ButtonColor.SECONDARY}
           size={ButtonSize.MEDIUM}
-          onClick={async () => {
-            await AuthService.logout();
-            await push('/login');
-          }}
+          onClick={handleLogout}
         />
       </div>
       <div className={styles['button-container-mobile']}>
@@ -57,6 +61,7 @@ const SecurityTab = () => {
           variant={ButtonVariant.FILLED}
           color={ButtonColor.SECONDARY}
           size={ButtonSize.SMALL}
+          onClick={handleLogout}
         />
       </div>
     </div>

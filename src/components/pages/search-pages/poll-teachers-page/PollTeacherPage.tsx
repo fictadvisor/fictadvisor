@@ -39,7 +39,7 @@ const PollTeacherPage: FC = () => {
 
   useEffect(() => {
     if (!isLoggedIn) {
-      void push('/login');
+      void push('/login?redirect=~poll');
     }
   }, [isLoggedIn, push]);
 

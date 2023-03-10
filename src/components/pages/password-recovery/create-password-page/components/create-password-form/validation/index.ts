@@ -1,7 +1,7 @@
 import * as yup from 'yup';
 
 export const validationSchema = yup.object().shape({
-  createPassword: yup
+  password: yup
     .string()
     .required(`Обов'язкове поле`)
     .matches(

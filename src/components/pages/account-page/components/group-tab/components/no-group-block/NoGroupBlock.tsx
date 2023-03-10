@@ -38,8 +38,7 @@ const NoGroupBlock: FC = () => {
           </div>
           <div className={styles['alert-desktop-pending']}>
             <Alert
-              title={''}
-              description={'Ваша заявка ще не прийнята, очікуйте підтвердження'}
+              title="Ваша заявка ще не прийнята, очікуйте підтвердження"
               isClosable={false}
               className={styles['alert alert-description']}
             />

@@ -19,31 +19,8 @@ const PasswordResetLinkExpiredPage = () => {
   };
 
   const handleSubmit = () => {
-    router.push('/password-recovery');
+    void router.push('/password-recovery');
   };
-
-  // const handleSubmit = async (data: ForgotPasswordFormFields) => {
-  //   let errorMessage;
-  //   try {
-  //     await AuthAPI.forgotPassword({ email: data.emailAddress });
-  //     await router.push(
-  //       `/password-recovery/email-verification?email=${data.emailAddress}`,
-  //     );
-  //   } catch (e) {
-  //     const errorName = e.response.data.error;
-  //     if (errorName == 'InvalidBodyException') {
-  //       errorMessage = 'Невірно введено пошту для відновлення';
-  //     } else if (errorName == 'NotRegisteredException') {
-  //       errorMessage = 'На цю пошту не зареєстровано користувача';
-  //     }
-  //     // dispatch(
-  //     //   showAlert({
-  //     //     title: errorMessage,
-  //     //     color: AlertColor.ERROR,
-  //     //   }),
-  //     // );
-  //   }
-  // };
 
   return (
     <PageLayout

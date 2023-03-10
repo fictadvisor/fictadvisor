@@ -118,6 +118,7 @@
     width: 100%;
     transition: all 0.2s ease-in-out;
     position: relative;
+    margin-top: 12px;
     input{
       width: 100%;
       padding: 0 $left-padding 0 $right-padding;
@@ -174,18 +175,21 @@
 @include input-style(medium-search, 24px, 8px, 40px, 2px, 308px);
 
 .large-search-input, .large-search-icon-input{
+  margin-top: 0;
   input {
     padding-left: 45px;
   }
 }
 
 .medium-search-input, .medium-search-icon-input{
+  margin-top: 0;
   input {
     padding-left: 40px;
   }
 }
 
 .medium-unlabeled-icon-input, .medium-unlabeled-input{
+  margin-top: 0;
   border-width: 1.5px;
   input{
     &:focus, &:active, &:hover{
