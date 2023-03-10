@@ -37,7 +37,8 @@ const Slider: FunctionComponent<SliderProps> = ({
     const min = sliderRef.current.min || 0;
     const max = sliderRef.current.max || 100;
     const value = sliderRef.current.value;
-    return ((value - min) / (max - min)) * 100;
+    const addedValue = value == 2 ? 2 : value == 9 ? -1 : 0;
+    return ((value - min) / (max - min)) * 100 + addedValue;
   };
 
   useEffect(() => {
