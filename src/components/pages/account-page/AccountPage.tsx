@@ -7,7 +7,6 @@ import {
 } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/router';
 
-import { AlertColor } from '@/components/common/ui/alert';
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
 import {
   TabItem,
@@ -21,7 +20,6 @@ import GeneralTab from '@/components/pages/account-page/components/general-tab';
 import GroupTab from '@/components/pages/account-page/components/group-tab';
 import SecurityTab from '@/components/pages/account-page/components/security-tab';
 import useAuthentication from '@/hooks/use-authentication';
-import { showAlert } from '@/redux/reducers/alert.reducer';
 
 import PageLayout from '../../common/layout/page-layout/PageLayout';
 
@@ -67,13 +65,7 @@ const AccountPage = () => {
 
   useEffect(() => {
     if (!isLoggedIn) {
-      dispatch(
-        showAlert({
-          title: 'Кабінет доступний тільки для авторизованих користувачів',
-          color: AlertColor.ERROR,
-        }),
-      );
-      void replace('/login?account');
+      void replace('/login?~account');
     }
   }, [dispatch, isLoggedIn, push, replace]);
 
