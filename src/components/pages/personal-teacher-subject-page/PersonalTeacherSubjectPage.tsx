@@ -24,8 +24,6 @@ const PersonalTeacherSubjectPage = () => {
       retry: false,
     },
   );
-  console.log(teacherId);
-  console.log(subjectId);
   const dispatch = useDispatch();
   if (isError) {
     dispatch(

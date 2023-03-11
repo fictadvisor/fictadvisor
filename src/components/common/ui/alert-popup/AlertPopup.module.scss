@@ -24,7 +24,7 @@
     transition: transform 0.4s ease-in-out;
 }
 
-@media (max-width: $breakpoint-mobile-medium) {
+@media (max-width: $breakpoint-tablet) {
     .wrapper {
         width: 100%;
         height: fit-content;

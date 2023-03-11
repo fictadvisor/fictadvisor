@@ -16,7 +16,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  cursor: pointer;
 }
 
 .loaderWrapper {
@@ -86,7 +85,7 @@
 
 .options {
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
 
   div {
     margin-right: 36px;
@@ -190,8 +189,6 @@
 }
 
 .successWrapper {
-  width: 100vw;
-  height: 100vh;
   margin: 0;
   display: flex;
   align-items: center;
@@ -199,8 +196,8 @@
 
   .wrapper {
     min-height: 100vh;
-    min-width: 100vw;
-    width: 100%;
+    min-width: 100%;
+    width: 100vw;
     height: 100%;
     margin: 0;
   }

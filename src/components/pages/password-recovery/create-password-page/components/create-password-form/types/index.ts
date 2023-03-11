@@ -1,4 +1,4 @@
 export interface CreatePasswordFormFields {
-  password: string;
+  createPassword: string;
   confirmPassword: string;
 }

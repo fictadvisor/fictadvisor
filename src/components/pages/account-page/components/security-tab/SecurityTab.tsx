@@ -1,4 +1,5 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 
 import Button, {
@@ -10,17 +11,20 @@ import ImmutableInput from '@/components/common/ui/immutable-input';
 import ChangePasswordForm from '@/components/pages/account-page/components/security-tab/components/change-password-form';
 import useAuthentication from '@/hooks/use-authentication';
 import AuthService from '@/lib/services/auth';
+import { hideAlert } from '@/redux/reducers/alert.reducer';
 
 import styles from './SecurityTab.module.scss';
 
 const SecurityTab = () => {
-  const { push } = useRouter();
+  const { replace, reload } = useRouter();
   const { user, update } = useAuthentication();
-
+  const dispatch = useDispatch();
   const handleLogout = async () => {
     await AuthService.logout();
     update();
-    await push('/login');
+    reload();
+    await replace('/login');
+    dispatch(hideAlert());
   };
 
   return (

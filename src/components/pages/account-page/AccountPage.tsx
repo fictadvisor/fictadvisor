@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import {
   AcademicCapIcon,
   LockClosedIcon,
@@ -37,7 +38,7 @@ const AccountPagesMapper = {
 };
 
 const AccountPage = () => {
-  const { push, query, isReady } = useRouter();
+  const { push, replace, query, isReady } = useRouter();
 
   const { tab } = query;
   const [index, setIndex] = useState<AccountPageTabs>(AccountPageTabs.GENERAL);
@@ -60,12 +61,13 @@ const AccountPage = () => {
   }, [tab, isReady, push, query]);
 
   const { isLoggedIn } = useAuthentication();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!isLoggedIn) {
-      void push('/login?account');
+      void replace('/login?~account');
     }
-  }, [isLoggedIn, push]);
+  }, [dispatch, isLoggedIn, push, replace]);
 
   return (
     <PageLayout hasFooter={true}>

@@ -1,4 +1,4 @@
-import React, { FormEvent, useEffect } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/router';
@@ -31,8 +31,6 @@ interface AnswersSheetProps {
   sendingStatus: SendingStatus;
   setIsSendingStatus: React.Dispatch<React.SetStateAction<SendingStatus>>;
 }
-
-const initialValues = {};
 
 const collectAnswers = (answers: Answer[], values) => {
   let resultAnswers = [...answers];
@@ -75,16 +73,8 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
   sendingStatus,
   setIsSendingStatus,
 }) => {
-  for (const question of questions.questions) {
-    if (question.type === 'SCALE') {
-      initialValues[question.id] = 1;
-    }
-  }
-  const handleSubmit = data => {
-    console.log('answered data', data);
-  };
-
   const dispatch = useDispatch();
+  const [initialValues, setInitialValues] = useState({});
   const router = useRouter();
   const disciplineTeacherId = router.query.disciplineTeacherId as string;
 
@@ -106,6 +96,9 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
       return temp;
     });
   };
+
+  const handleSubmit = () => {};
+  console.log('initialValues', initialValues);
 
   return (
     <div
@@ -141,16 +134,26 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
               validateOnMount
               validateOnChange
               initialValues={initialValues}
-              onSubmit={handleSubmit}
               enableReinitialize
+              onSubmit={handleSubmit}
             >
               {({ values }) => (
                 <Form
                   onClick={(event: FormEvent<HTMLFormElement>) => {
-                    values[(event.target as any).name] = (
-                      event.target as any
-                    ).value;
-                    answer(values);
+                    const name = (event.target as any).name;
+                    const value = (event.target as any).value;
+                    if (name && value) {
+                      values[name] = String(value);
+                      answer(values);
+                    }
+                  }}
+                  onChange={(event: FormEvent<HTMLFormElement>) => {
+                    const name = (event.target as any).name;
+                    const value = (event.target as any).value;
+                    if (name && value) {
+                      values[name] = String(value);
+                      answer(values);
+                    }
                   }}
                   className={styles['form']}
                 >

@@ -54,7 +54,7 @@
     height: 20px;
     border: 2px solid $white;
     border-radius: 3px;
-
+    
     &::before {
         @include flex-center;
         content: "";
@@ -70,25 +70,27 @@
         opacity: 0;
     }
 
+    
 }
+
 
 .default-check-box-disabled {
     @extend .default-check-box;
     cursor: default;
     border-color: $gray-100;
 
-    &:hover {
-        background-color: $background-dark-0;
-    }
+    // &:hover {
+    //     background-color: $background-dark-0;
+    // }
 }
 
 .error-check-box {
     @extend .default-check-box;
     border-color: $error-200;
 
-    &:hover {
-        background-color: $background-dark-0;
-    }
+    // &:hover {
+    //     background-color: $background-dark-0;
+    // }
 }
 
 .default-check-box-disabled::before {
@@ -101,30 +103,41 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-image: url("/icons/check-mark.svg");
+    background-image: url("/assets/icons/check-mark.svg");
     transition: 0.4s;
 }
 
-.default-check-input-disabled:checked + .default-check-box-disabled {
+
+// .default-check-input:hover + .default-check-box:hover {
+//     background: rgba($white, 0.5);
+//     background-image: url("/assets/icons/check-mark.svg");
+//     background-repeat: no-repeat;
+//     background-position-x: center;
+//     background-position-y:center;
+//     opacity: 1;
+// }
+
+.default-check-input-disabled:checked+.default-check-box-disabled {
     background-color: $gray-100;
 }
 
-.default-check-input:checked + .default-check-box {
+.default-check-input:checked+.default-check-box {
     background-color: $white;
 }
 
-.error-check-input:checked + .error-check-box {
+.error-check-input:checked+.error-check-box {
     background-color: $error-200;
 }
 
-.default-check-input:checked:hover + .default-check-box {
-    transition: 0.4s;
-    background: rgba($white, 0.5);
-}
+// .default-check-input:checked:hover+.default-check-box {
+//     Хто видалить цей і всі інші хавери - вб'ю
+//     transition: 0.4s;
+//     background: rgba($white, 0.5);
+// }
 
-.default-check-input:checked + .default-check-box::before,
-.default-check-input-disabled:checked + .default-check-box-disabled::before,
-.error-check-input:checked + .error-check-box::before {
+.default-check-input:checked+.default-check-box::before,
+.default-check-input-disabled:checked+.default-check-box-disabled::before,
+.error-check-input:checked+.error-check-box::before {
     transition: 0.4s;
     opacity: 1;
 }

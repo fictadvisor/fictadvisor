@@ -42,8 +42,6 @@ html, body {
 }
 
 
-
-
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
@@ -61,5 +59,6 @@ select:-webkit-autofill:focus {
   -webkit-box-shadow: 0 0 0 1000px $background-dark-0 inset !important;
   font-family: 'Manrope', sans-serif;
   transition: all 0s 50000s;
+  background-clip: content-box;
 }
 

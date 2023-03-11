@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import mergeClassNames from 'merge-class-names';
 import Link from 'next/link';
 
-import { FieldState } from '@/components/common/ui/form/common/types';
-
 import styles from './ImmutableInput.module.scss';
 
 export enum InputSize {
@@ -42,8 +40,6 @@ const ImmutableInput: React.FC<InputProps> = ({
 
   const customType = label || type === InputType.SEARCH ? type : 'unlabeled';
   const customLabel = type === InputType.SEARCH ? undefined : label;
-
-  const state = FieldState.DEFAULT;
 
   const inputColor = `default-input-color`;
   const hasIcon =

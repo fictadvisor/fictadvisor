@@ -2,7 +2,7 @@ import React, { FC, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { SimpleCard } from '@/components/common/composite/cards';
+import { SubjectCard } from '@/components/common/composite/cards/subject-card';
 import Button, {
   ButtonColor,
   ButtonSize,
@@ -17,7 +17,6 @@ import { TabList } from '@/components/common/ui/tab/tab-list/TabList';
 import { TabPanel } from '@/components/common/ui/tab/tab-panel/TabPanel';
 import { TabPanelsList } from '@/components/common/ui/tab/tab-panels-list/TabPanelsList';
 
-import styles1 from '../../search-pages/SearchPage.module.scss';
 import styles from './PersonalTeacherTabs.module.scss';
 export type PersonalTeacherTabsProps = {
   id: string;
@@ -44,22 +43,22 @@ const TabsPage: FC<PersonalTeacherTabsProps> = props => {
             text="Загальне"
             position={TabItemContentPosition.LEFT}
             value={'1'}
-          ></TabItem>
+          />
           <TabItem
             size={TabItemContentSize.NORMAL}
             className="tab-item"
             text="Предмети"
             position={TabItemContentPosition.LEFT}
             value={'2'}
-          ></TabItem>
+          />
           <TabItem
             size={TabItemContentSize.NORMAL}
             className="tab-item"
             text="Відгуки"
             position={TabItemContentPosition.LEFT}
-            count={0}
+            count={'0'}
             value={'3'}
-          ></TabItem>
+          />
           <TabItem
             size={TabItemContentSize.NORMAL}
             className="tab-item"
@@ -86,13 +85,13 @@ const TabsPage: FC<PersonalTeacherTabsProps> = props => {
             text="Предмети"
             position={TabItemContentPosition.LEFT}
             value={'2'}
-          ></TabItem>
+          />
           <TabItem
             size={TabItemContentSize.SMAll}
             className="tab-item"
             text="Відгуки"
             position={TabItemContentPosition.LEFT}
-            count={0}
+            count={'0'}
             value={'3'}
           />
           <TabItem
@@ -137,14 +136,14 @@ const TabsPage: FC<PersonalTeacherTabsProps> = props => {
         </TabPanel>
         <TabPanel className={styles['tab-panel']} value={'2'}>
           <div className={styles['my-tab-panel-subjects']}>
-            <ul className={styles1['subject-search-list']}>
+            <ul className={styles['subject-search-list']}>
               {props.subjects &&
                 props.subjects.map(subject => (
                   <li key={subject.id}>
                     <Link
                       href={`/discipline?teacherId=${props.id}&subjectId=${subject.id}`}
                     >
-                      <SimpleCard name={`${subject.name}`} />
+                      <SubjectCard name={`${subject.name}`} />
                     </Link>
                   </li>
                 ))}

@@ -21,7 +21,7 @@ interface TokenPopupProps {
 }
 const TokenPopup: FC<TokenPopupProps> = ({ token }) => {
   const { push } = useRouter();
-  const { user, isLoggedIn } = useAuthentication();
+  const { user, isLoggedIn, update } = useAuthentication();
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
 
@@ -60,10 +60,10 @@ const TokenPopup: FC<TokenPopupProps> = ({ token }) => {
         await UserAPI.linkTelegram(user.id, {
           ...StorageUtil.getTelegramInfo().telegram,
         });
-        await push('account');
+        update();
+        await push('/account');
       } else await push('/register');
     } catch (e) {
-      console.log(e);
       dispatch(
         showAlert({
           title: 'Не вдалось підключити Telegram, спробуй ще раз',

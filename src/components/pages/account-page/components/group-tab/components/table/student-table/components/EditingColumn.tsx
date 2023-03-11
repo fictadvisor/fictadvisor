@@ -165,7 +165,42 @@ const EditingColumn: FC<EditingColumnProps> = ({ student, refetch }) => {
   }
 
   if (dataMapper[user.group.role] === StudentRole.MODERATOR && !student.role) {
-    return <TrashBucketButton onClick={() => setIsOpenDelete(true)} />;
+    return (
+      <>
+        {isOpenDelete && (
+          <Popup
+            isClosable={true}
+            hasIcon={true}
+            title="Видалити користувача"
+            text={`Чи дійсно ви бажаєте видалити користувача ${student.fullName}? Якщо ви випадково видалите користувача, йому треба буд відправити повторний запит до групи.`}
+            closeFunction={() => setIsOpenDelete(false)}
+            firstButton={
+              <Button
+                size={ButtonSize.SMALL}
+                text="Скасувати"
+                color={ButtonColor.PRIMARY}
+                variant={ButtonVariant.OUTLINE}
+                onClick={() => setIsOpenDelete(false)}
+              />
+            }
+            secondButton={
+              <Button
+                size={ButtonSize.SMALL}
+                text="Так"
+                color={ButtonColor.PRIMARY}
+                variant={ButtonVariant.FILLED}
+                onClick={handleDelete}
+              />
+            }
+          />
+        )}
+        <TrashBucketButton
+          onClick={() => {
+            setIsOpenDelete(true);
+          }}
+        />
+      </>
+    );
   }
 };
 

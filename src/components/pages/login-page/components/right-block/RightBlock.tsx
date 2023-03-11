@@ -1,7 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import CustomTelegramIcon from '@/components/common/custom-svg/CustomTelegramIcon';
@@ -84,16 +83,16 @@ const RightBlock = () => {
         color={ButtonColor.SECONDARY}
         variant={ButtonVariant.OUTLINE}
         className={styles['register-mobile-button']}
+        onClick={() => router.push('/register')}
       />
-      <Link href="/">
-        <Button
-          className={styles['comeback-button']}
-          text="Повернутись на головну"
-          startIcon={<ChevronLeftIcon className="icon" />}
-          variant={ButtonVariant.TEXT}
-          size={ButtonSize.SMALL}
-        />
-      </Link>
+      <Button
+        className={styles['comeback-button']}
+        text="Повернутись на головну"
+        startIcon={<ChevronLeftIcon className="icon" />}
+        variant={ButtonVariant.TEXT}
+        size={ButtonSize.SMALL}
+        onClick={() => router.push('/ ')}
+      />
     </div>
   );
 };

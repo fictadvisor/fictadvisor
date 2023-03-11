@@ -21,7 +21,7 @@ interface ITabItemProps {
   position: TabItemContentPosition;
   icon?: ReactNode;
   isDisabled?: boolean;
-  count?: number;
+  count?: string;
   value?: string;
   size: TabItemContentSize;
 }
