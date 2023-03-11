@@ -190,7 +190,7 @@ export class AuthService {
   }
 
   async loginTelegram (telegram: TelegramDTO): Promise<TokensDTO> {
-    if (!this.isExchangeValid(telegram)) {
+    if (!telegram || !this.isExchangeValid(telegram)) {
       throw new InvalidTelegramCredentialsException();
     }
 
