@@ -104,6 +104,7 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
   };
 
   const handleSubmit = () => {};
+  console.log('initialValues', initialValues);
 
   return (
     <div
@@ -148,7 +149,15 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
                     const name = (event.target as any).name;
                     const value = (event.target as any).value;
                     if (name && value) {
-                      values[name] = value;
+                      values[name] = String(value);
+                      answer(values);
+                    }
+                  }}
+                  onChange={(event: FormEvent<HTMLFormElement>) => {
+                    const name = (event.target as any).name;
+                    const value = (event.target as any).value;
+                    if (name && value) {
+                      values[name] = String(value);
                       answer(values);
                     }
                   }}
