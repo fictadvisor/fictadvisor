@@ -68,16 +68,16 @@ const TabsPage = () => {
           <TabItem
             size={TabItemContentSize.SMAll}
             className="tab-item"
-            text="Предмети"
+            text="Відгуки"
             position={TabItemContentPosition.LEFT}
+            count={0}
             value={'2'}
           ></TabItem>
           <TabItem
             size={TabItemContentSize.SMAll}
             className="tab-item"
-            text="Відгуки"
+            text="Семестри"
             position={TabItemContentPosition.LEFT}
-            count={-15}
             value={'3'}
           ></TabItem>
         </TabList>
