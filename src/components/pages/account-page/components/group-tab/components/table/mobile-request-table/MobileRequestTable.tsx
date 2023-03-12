@@ -7,6 +7,7 @@ import { AlertColor } from '@/components/common/ui/alert';
 import AlertButton, {
   AlertButtonVariant,
 } from '@/components/common/ui/alert-button';
+import CustomDivider from '@/components/pages/account-page/components/divider';
 import useAuthentication from '@/hooks/use-authentication';
 import { GroupAPI } from '@/lib/api/group/GroupAPI';
 import { showAlert } from '@/redux/reducers/alert.reducer';
@@ -61,13 +62,23 @@ const MobileRequestTable: React.FC<RequestTableProps> = ({ rows, refetch }) => {
   };
   return (
     <>
-      <div className={styles['division']}>
-        <h4 className={styles['division-text']}>Нові запити</h4>
-        <div className={styles['white']}></div>
-      </div>
+      <CustomDivider text="Нові запити" />
       <div className={styles['table']}>
         {rows.map((row, index) => (
-          <div key={index} className={styles['table-container']}>
+          <div
+            key={index}
+            className={
+              styles[
+                rows.length === 1
+                  ? 'table-container-one'
+                  : index === rows.length - 1
+                  ? 'table-container-end'
+                  : index === 0
+                  ? 'table-container-start'
+                  : 'table-container'
+              ]
+            }
+          >
             <img className={styles['img']} src={row.imgSrc} alt="avatar" />
             <div className={styles['user-info']}>
               <h6 className={styles['full-name']}>{row.fullName}</h6>
