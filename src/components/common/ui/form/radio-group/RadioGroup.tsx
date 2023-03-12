@@ -22,7 +22,7 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
   className,
   ...rest
 }) => {
-  const [{ value, onChange }, { touched, error }] = useField(rest.name);
+  const [field, { touched, error }, helpers] = useField(rest.name);
 
   const state = touched && error ? FieldState.ERROR : FieldState.DEFAULT;
 
@@ -30,8 +30,9 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
     <Radio
       key={index}
       state={state}
-      selectedValue={value}
-      onChange={onChange}
+      selectedValue={field.value}
+      onChange={field.onChange}
+      helpers={helpers}
       {...option}
       {...rest}
     />

@@ -11,6 +11,7 @@ interface RadioProps {
   isDisabled?: boolean;
   onChange: (value) => void;
   state?: FieldState;
+  helpers;
 }
 
 const Radio: FC<RadioProps> = ({
@@ -18,10 +19,16 @@ const Radio: FC<RadioProps> = ({
   selectedValue,
   isDisabled = false,
   state = FieldState.DEFAULT,
+  helpers,
   ...rest
 }) => {
+  const handleClick = () => {
+    helpers.setValue(rest.value);
+    helpers.setTouched(true);
+  };
+
   return (
-    <div className={styles['radio-container']}>
+    <div className={styles['radio-container']} onClick={handleClick}>
       <label>
         <input
           className={
