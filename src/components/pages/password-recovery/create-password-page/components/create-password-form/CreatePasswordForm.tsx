@@ -19,7 +19,7 @@ const CreatePasswordForm: FC = () => {
   const dispatch = useDispatch();
   const handleSubmit = async (data: CreatePasswordFormFields) => {
     try {
-      await AuthAPI.resetPassword(token, { password: data.confirmPassword });
+      await AuthAPI.resetPassword(token, { password: data.password });
       void push('/password-recovery/valid');
     } catch (e) {
       const errorName = e.response.data.error;
@@ -61,8 +61,7 @@ const CreatePasswordForm: FC = () => {
             placeholder="user2000"
             size={InputSize.LARGE}
             type={InputType.PASSWORD}
-            name="createPassword"
-            defaultRemark="Не коротше 8 символів, мінімум одна літера та одна цифра"
+            name="password"
           />
           <Input
             className={styles['input']}
@@ -72,7 +71,7 @@ const CreatePasswordForm: FC = () => {
             size={InputSize.LARGE}
             type={InputType.PASSWORD}
             name="confirmPassword"
-            disabled={errors.createPassword != null}
+            disabled={errors.password != null}
           />
           <div className={styles['confirm-button']}>
             <Button
