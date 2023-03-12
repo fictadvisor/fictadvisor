@@ -95,7 +95,20 @@ const MobileStudentTable: React.FC<StudentTableProps> = ({
       )}
       <div className={styles['table']}>
         {rows.map((row, index) => (
-          <div key={index} className={styles['table-container']}>
+          <div
+            key={index}
+            className={
+              styles[
+                rows.length === 1
+                  ? 'table-container-one'
+                  : index === rows.length - 1
+                  ? 'table-container-end'
+                  : index === 0
+                  ? 'table-container-start'
+                  : 'table-container'
+              ]
+            }
+          >
             <img className={styles['img']} src={row.imgSrc} alt="avatar" />
             <div className={styles['user-info']}>
               <h6 className={styles['full-name']}>{row.fullName}</h6>

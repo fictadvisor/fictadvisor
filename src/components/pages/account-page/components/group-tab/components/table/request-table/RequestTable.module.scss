@@ -13,6 +13,26 @@
   gap: 26px;
   background-color: $background-dark-10;
   border-top: 1px solid $gray-50;
+  border-left: 1px solid $gray-50;
+  border-right: 1px solid $gray-50;
+  border-bottom: 0.5px solid $gray-50;
+}
+
+.table-container-start{
+  @extend .table-container;
+  border-radius: 6px 6px 0 0;
+}
+
+.table-container-end{
+  @extend .table-container;
+  border-radius: 0 0 6px 6px;
+  border-bottom: 1px solid $gray-50;
+}
+
+.table-container-one{
+  @extend .table-container;
+  border-radius: 6px;
+  border-bottom: 1px solid $gray-50;
 }
 
 .user-info{
