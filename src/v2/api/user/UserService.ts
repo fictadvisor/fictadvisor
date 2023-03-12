@@ -173,9 +173,11 @@ export class UserService {
   }
 
   async verifyStudent (userId: string, isCaptain: boolean, state: State) {
+    const user = await this.userRepository.get(userId);
+    if (user.student.state !== State.PENDING) return this.studentRepository.get(userId);
+
     if (state === State.APPROVED) {
       if (isCaptain) {
-        const user = await this.userRepository.get(userId);
         const captain = await this.groupService.getCaptain(user.student.group.id);
 
         if (captain) {
