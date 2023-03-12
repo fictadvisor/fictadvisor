@@ -123,8 +123,8 @@ $font-weight-bold: 700;
 }
 
 // SAFARI YA EBAV TVIY ROT
-@media not all and (min-resolution:.001dpcm)
-{ @supports (-webkit-appearance:none) and (stroke-color:transparent) {
+@media not all and (min-resolution:.001dpcm) {
+  @supports (-webkit-appearance:none) and (stroke-color:transparent) {
   .build-image {
     pointer-events: none;
   }
@@ -139,12 +139,11 @@ $font-weight-bold: 700;
   }}
 
 // SAFARI YA EBAV TVIY ROT x3
-@media screen and (min-color-index:0) and(-webkit-min-device-pixel-ratio:0){
-  @media {
+@media screen and (min-color-index:0) and (-webkit-min-device-pixel-ratio:0){
     .build-image {
       pointer-events: none;
     }
-  }}
+}
 
 
 
