@@ -66,10 +66,10 @@ const ContactForm: FC<ContactFormProps> = ({ refetchContacts }) => {
               placeholder="Введіть посилання"
             />
             <Input
-              label="Назва"
+              label="Відображуване ім'я"
               size={InputSize.LARGE}
               name="displayName"
-              placeholder="Введіть посилання"
+              placeholder="Введіть відображуване ім'я"
             />
             <Button
               text="Додати"

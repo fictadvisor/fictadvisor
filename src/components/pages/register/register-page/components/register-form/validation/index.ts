@@ -36,7 +36,7 @@ export const validationSchema = yup.object().shape({
   email: yup
     .string()
     .required(`Обов'язкове поле`)
-    .email('Це не схоже на пошту'),
+    .matches(/.+@.+\..+/g, 'Це не схоже на поштову адресу'),
   group: yup.string().required(`Обов'язкове поле`),
   password: yup
     .string()
