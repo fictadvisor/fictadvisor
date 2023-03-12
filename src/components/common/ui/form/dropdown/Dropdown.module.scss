@@ -123,6 +123,8 @@ $default-dropdown-padding: 8px;
   &option {
     padding: 5px 0 5px $dropdown-option-left-padding;
     height: $dropdown-option-height;
+    display: flex !important;
+    align-items: center;
     &:hover{
       background-color: $gray-50;
       cursor: pointer;
