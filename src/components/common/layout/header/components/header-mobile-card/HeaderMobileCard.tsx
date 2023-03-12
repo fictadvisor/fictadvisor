@@ -27,9 +27,11 @@ export const HeaderMobileCard: React.FC<HeaderMobileCardProps> = ({
         <div style={{ marginLeft: '8px' }}>
           <h4 className={styles[`card-name`]}>{name}</h4>
           <div style={{ marginTop: '8px', gap: '8px' }}>
-            <span className={styles['header-card-group-name']}>
-              {groupName}
-            </span>
+            {groupName && (
+              <span className={styles['header-card-group-name']}>
+                {groupName}
+              </span>
+            )}
             <span className={styles['header-card-postition']}>{position}</span>
           </div>
         </div>

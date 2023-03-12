@@ -57,18 +57,20 @@ const PollPage = () => {
   const { user, isLoggedIn } = useAuthentication();
   const router = useRouter();
   const disciplineTeacherId = router.query.disciplineTeacherId as string;
+
   const {
     error,
     isSuccess: isSuccessFetching,
     data,
     isLoading: isQuestionsLoading,
   } = useQuery(
-    ['pollQuestions'],
+    ['pollQuestions', disciplineTeacherId],
     async () => await PollAPI.getTeacherQuestions(disciplineTeacherId),
     {
       retry: false,
       enabled: Boolean(user),
       refetchOnWindowFocus: false,
+      keepPreviousData: false,
     },
   );
   const dispatch = useDispatch();

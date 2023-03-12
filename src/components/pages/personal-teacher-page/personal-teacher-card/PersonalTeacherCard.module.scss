@@ -175,16 +175,17 @@
     grid-row-start: 4;
     grid-row-end: 5;
     padding-left: 0;
+    border: 2px transparent;
     &:hover {
       text-decoration: none;
-      border: transparent;
+      border: 2px transparent;
     }
     &:focus:not(:active) {
-      border: transparent;
+      border: 2px transparent;
     }
     &:active {
       text-decoration: none;
-      border: transparent;
+      border: 2px transparent;
     }
   }
 }
@@ -251,16 +252,17 @@
     grid-column-end: 4;
     grid-row-start: 4;
     grid-row-end: 5;
+    border: 2px transparent;
     &:hover {
       text-decoration: none;
-      border: transparent;
+      border: 2px transparent;
     }
     &:focus:not(:active) {
-      border: transparent;
+      border: 2px transparent;
 
     }
     &:active {
-      border: transparent;
+      border: 2px transparent;
     }
   }
   .contacts-hidden{

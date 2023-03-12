@@ -5,7 +5,7 @@ import { Form, Formik } from 'formik';
 import { CustomCheck } from '@/components/common/custom-svg/CustomCheck';
 import { AlertColor } from '@/components/common/ui/alert';
 import Button, { ButtonSize } from '@/components/common/ui/button';
-import { Input, InputSize } from '@/components/common/ui/form';
+import { Input } from '@/components/common/ui/form';
 import { PersonalInfoForm } from '@/components/pages/account-page/components/general-tab/components/personal-info/types';
 import { validationSchema } from '@/components/pages/account-page/components/general-tab/components/personal-info/validation';
 import useAuthentication from '@/hooks/use-authentication';
@@ -51,19 +51,12 @@ const PersonalInfoBlock: FC = () => {
             <Input
               className={styles['input']}
               label="Прізвище"
-              size={InputSize.LARGE}
               name="lastName"
             />
-            <Input
-              className={styles['input']}
-              label="Ім'я"
-              size={InputSize.LARGE}
-              name="firstName"
-            />
+            <Input className={styles['input']} label="Ім'я" name="firstName" />
             <Input
               className={styles['input']}
               label="По батькові"
-              size={InputSize.LARGE}
               name="middleName"
             />
             <div className={styles['confirm-button']}>

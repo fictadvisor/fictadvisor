@@ -1,10 +1,8 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/router';
 
 import CustomTelegramIcon from '@/components/common/custom-svg/CustomTelegramIcon';
-import { AlertColor } from '@/components/common/ui/alert';
 import Button, {
   ButtonColor,
   ButtonSize,
@@ -14,13 +12,11 @@ import Divider, { DividerTextPosition } from '@/components/common/ui/divider';
 import LoginForm from '@/components/pages/login-page/components/login-form';
 import useAuthentication from '@/hooks/use-authentication';
 import AuthService from '@/lib/services/auth/AuthService';
-import { showAlert } from '@/redux/reducers/alert.reducer';
 
 import styles from './RightBlock.module.scss';
 
 const RightBlock = () => {
   const router = useRouter();
-  const dispatch = useDispatch();
   const redirect = router.query.redirect as string;
   const { update } = useAuthentication();
   const handleClick = async () => {
@@ -29,12 +25,7 @@ const RightBlock = () => {
     if (isSuccess)
       await router.push(redirect ? redirect.replace('~', '/') : '/');
     else {
-      dispatch(
-        showAlert({
-          title: 'Неможливо авторизуватись за допомогою Telegram',
-          color: AlertColor.ERROR,
-        }),
-      );
+      await AuthService.redirectToRegisterBot(router);
     }
   };
 

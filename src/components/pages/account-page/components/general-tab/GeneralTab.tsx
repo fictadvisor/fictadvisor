@@ -2,7 +2,7 @@ import React from 'react';
 import { FC } from 'react';
 import { useRouter } from 'next/router';
 
-import { TelegramOutlineIcon } from '@/components/common/custom-svg/TelegramOutline';
+import { TelegramForAccount } from '@/components/common/custom-svg/TelegramForAccount';
 import Button, {
   ButtonSize,
   ButtonVariant,
@@ -43,7 +43,7 @@ const GeneralTab: FC = () => {
           text={buttonText}
           disabled={user.telegramId}
           size={ButtonSize.MEDIUM}
-          startIcon={<TelegramOutlineIcon />}
+          startIcon={<TelegramForAccount />}
           variant={ButtonVariant.OUTLINE}
           onClick={handleConnectTelegram}
         />
@@ -52,7 +52,7 @@ const GeneralTab: FC = () => {
           text={buttonText}
           disabled={user.telegramId}
           size={ButtonSize.SMALL}
-          startIcon={<TelegramOutlineIcon />}
+          startIcon={<TelegramForAccount />}
           variant={ButtonVariant.OUTLINE}
           onClick={handleConnectTelegram}
         />

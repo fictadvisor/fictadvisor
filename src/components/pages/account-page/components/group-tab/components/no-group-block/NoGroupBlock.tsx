@@ -92,7 +92,7 @@ const NoGroupBlock: FC = () => {
         </>
       )}
       <Formik
-        initialValues={{ groupId: [], isCaptain: false }}
+        initialValues={{ groupId: '', isCaptain: false }}
         onSubmit={handleSubmitGroup}
         validateOnMount
         validateOnChange

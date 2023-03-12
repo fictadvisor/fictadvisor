@@ -80,7 +80,7 @@ const PollTeacherPage: FC = () => {
             {data?.teachers.length === (curPage + 1) * pageSize && (
               <Button
                 className={styles['load-btn']}
-                text="Завантажити"
+                text="Завантажити ще"
                 variant={ButtonVariant.FILLED}
                 color={ButtonColor.SECONDARY}
                 onClick={() => setCurPage(pr => pr + 1)}

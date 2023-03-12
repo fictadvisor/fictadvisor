@@ -8,6 +8,7 @@ import StorageUtil from '@/lib/utils/StorageUtil';
 class AuthService {
   static async logout() {
     StorageUtil.deleteTokens();
+    StorageUtil.deleteTelegramInfo();
   }
 
   static async login(data: AuthBody) {
@@ -21,7 +22,7 @@ class AuthService {
 
   static async register(data) {
     const telegramInfo = StorageUtil.getTelegramInfo();
-
+    StorageUtil.deleteTelegramInfo();
     if (telegramInfo) {
       const obj = {
         ...data,
