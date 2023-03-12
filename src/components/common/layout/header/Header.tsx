@@ -113,7 +113,7 @@ const Header: React.FC = () => {
           </div>
         </div>
         <div className={styles['drop']}>
-          <Link href={'/account'}>
+          <Link href={'/account'} onClick={handleClick}>
             <HeaderMobileCard
               name={name}
               groupName={groupName}
