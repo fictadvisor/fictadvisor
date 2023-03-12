@@ -59,8 +59,22 @@ const TokenPopup: FC<TokenPopupProps> = ({ token }) => {
         });
         update();
         StorageUtil.deleteTelegramInfo();
+        dispatch(
+          showAlert({
+            title: 'Telegram успішно приєднано!',
+            color: AlertColor.SUCCESS,
+          }),
+        );
         await push('/account');
-      } else await push('/register');
+      } else {
+        dispatch(
+          showAlert({
+            title: 'Telegram успішно приєднано, дозаповни усі поля!',
+            color: AlertColor.SUCCESS,
+          }),
+        );
+        await push('/register');
+      }
     } catch (e) {
       dispatch(
         showAlert({
