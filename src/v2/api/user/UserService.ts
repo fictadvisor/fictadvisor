@@ -87,7 +87,10 @@ export class UserService {
       throw new AlreadyRegisteredException();
     }
 
-    await this.studentRepository.update(id, { state: State.PENDING });
+    await this.studentRepository.update(id, {
+      state: State.PENDING,
+      groupId,
+    });
     const name = {
       firstName: student.firstName,
       middleName: student.middleName,
