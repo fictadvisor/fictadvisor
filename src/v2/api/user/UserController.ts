@@ -166,11 +166,11 @@ export class UserController {
 
   @Access('users.$userId.telegram.link')
   @Post('/:userId/telegram')
-  linkTelegram (
+  async linkTelegram (
     @Param('userId', UserByIdPipe) userId: string,
     @Body() telegram: TelegramDTO,
   ) {
-    return this.userService.linkTelegram(userId, telegram);
+    await this.userService.linkTelegram(userId, telegram);
   }
 
   @Access('users.$userId.get')
