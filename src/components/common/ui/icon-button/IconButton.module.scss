@@ -1,0 +1,96 @@
+@import 'src/styles/partials/theme';
+@import 'src/styles/partials/utils';
+
+@mixin style-button-icon($radius, $size) {
+  @include flex-center;
+  overflow: hidden;
+  align-items: center;
+  border-radius: $radius;
+  color: $gray-600;
+  background-color: $gray-50;
+  border: 1px solid transparent;
+  padding: 5.5px;
+  &:disabled {
+    background-color: $background-dark-0 !important;
+    color: $gray-50;
+    cursor: not-allowed;
+  }
+}
+@mixin style-button-icon-color($default, $hover, $active, $focus) {
+  background-color: $default;
+  &:hover {
+    background-color: $hover;
+  }
+  &:focus:not(:active) {
+    background-color: $default;
+    border: $focus 1px solid;
+  }
+  &:active {
+    background-color: $active;
+  }
+}
+@mixin style-colors-button-theme($shape, $className) {
+  .#{$shape}-button-icon-#{$className}-secondary {
+    @include style-button-icon-color(
+      $background-dark-10,
+      $background-dark-50,
+      $background-dark-100,
+      $background-dark-200
+    );
+  }
+  .#{$shape}-button-icon-#{$className}-error {
+    @include style-button-icon-color(
+      $gray-50,
+      $error-50,
+      $error-200,
+      $error-50
+    );
+  }
+  .#{$shape}-button-icon-#{$className}-success {
+    @include style-button-icon-color(
+      $success-200,
+      $success-100,
+      $success-50,
+      $success-500
+    );
+  }
+  .#{$shape}-button-icon-#{$className}-primary {
+    @include style-button-icon-color($red-400, $red-200, $red-logo, $red-500);
+  }
+  .#{$shape}-button-icon-#{$className}-transparent {
+    background-color: transparent;
+  }
+}
+@mixin style-button-icon-styles($shape, $className, $length, $size) {
+  .#{$shape}-button-icon-#{$className}-success,
+  .#{$shape}-button-icon-#{$className}-secondary,
+  .#{$shape}-button-icon-#{$className}-primary,
+  .#{$shape}-button-icon-#{$className}-error,
+  .#{$shape}-button-icon-#{$className}-transparent {
+    @include style-button-icon($length, $size);
+  }
+}
+
+.normal-icon{
+  width: 24px;
+  height: 24px;
+}
+
+.large-icon {
+  width: 32px;
+  height: 32px;
+}
+
+@mixin style-round-button-icon($className, $size) {
+  @include style-button-icon-styles('circle', $className, 999px, $size);
+  @include style-colors-button-theme('circle', $className);
+}
+@mixin style-square-button-icon($className, $size) {
+  @include style-button-icon-styles('square', $className, 6px, $size);
+  @include style-colors-button-theme('square', $className);
+}
+
+@include style-round-button-icon('normal', 36px);
+@include style-round-button-icon('large', 36px);
+@include style-square-button-icon('normal', 36px);
+@include style-square-button-icon('large', 44px);

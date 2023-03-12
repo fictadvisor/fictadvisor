@@ -1,0 +1,1 @@
+export { PollTeacherCard } from './PollTeacherCard';

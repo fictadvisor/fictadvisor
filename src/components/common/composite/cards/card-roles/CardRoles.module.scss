@@ -1,0 +1,9 @@
+@import 'src/styles/partials/utils';
+
+.card-roles {
+  @include flex-center;
+  flex-wrap: nowrap;
+  overflow: hidden;
+  gap: 4px;
+  justify-content: flex-start;
+}

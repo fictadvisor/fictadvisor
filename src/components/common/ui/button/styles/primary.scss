@@ -1,0 +1,107 @@
+@import "button-style";
+@import "src/styles/partials/theme";
+
+.primary-filled-button-variant{
+  background: $red-400;
+  color: $gray-600;
+  border: 2px transparent solid;
+
+  &:hover {
+    background: $red-100;
+    border: 2px transparent solid;
+  }
+
+  &:focus:not(:active) {
+    background: $red-logo;
+    border: 2px solid $red-10;
+  }
+
+  &:active {
+    background: $red-logo;
+    border: 2px transparent solid;
+  }
+
+  &:disabled {
+    background: $background-dark-200;
+    color: $gray-400;
+    cursor: not-allowed;
+  }
+}
+
+.primary-outline-button-variant{
+  background: none;
+  color: $gray-600;
+  border: $red-100 solid 2px;
+
+  &:hover {
+    background: $red--10;
+    border-color: $red-100;
+  }
+
+  &:active {
+    background: $red-10;
+    border-color: $red-logo;
+  }
+
+  &:focus:not(:active) {
+    background: $red-0;
+    border-color: $red-logo;
+  }
+
+  &:disabled {
+    background: $background-dark-0;
+    color: $gray-200;
+    border-color: $gray-200;
+    cursor: not-allowed;
+  }
+}
+
+.primary-text-button-variant{
+  background: none;
+  color: $gray-400;
+  border: 0.5px transparent solid;
+  border-radius: 2px !important;
+
+  &:hover {
+    text-decoration: underline;
+    border: 0.5px transparent solid;
+  }
+
+  &:focus:not(:active) {
+    border: 0.5px solid $gray-500;
+    color: $gray-600;
+  }
+
+  &:active {
+    text-decoration: underline;
+    border: 0.5px transparent solid;
+    color: $gray-600;
+  }
+
+    &:disabled {
+    border: 2px transparent;
+    color: $gray-100;
+    text-decoration: none;
+    cursor: not-allowed;
+  }
+  svg{
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@include button-style("primary-large", 8px, 16px 32px, 16px 32px, 12px, 5px);
+@include button-text("primary-large", 18px, 1.32, 700);
+
+@include button-style("primary-medium", 8px, 12px 24px, 12px 24px, 12px, 4px);
+@include button-text("primary-medium", 18px, 1.32, 700);
+
+@include button-style("primary-small", 6px, 8px 16px, 6px 12px, 12px, 4px);
+@include button-text("primary-small", 14px, 1.4, 700);
+
+
+
+
+
+
+

@@ -1,5 +1,13 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# Generated css files
+*.css
+*.css.map
+
+# npm/yarn files
+yarn.lock
+package-lock.json
+
 # dependencies
 /node_modules
 /.pnp
@@ -25,13 +33,12 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env
 
 # vercel
 .vercel
 
 .vscode
 /.idea/
+
+tsconfig.tsbuildinfo

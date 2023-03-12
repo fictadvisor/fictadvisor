@@ -1,4 +1,4 @@
-<p align="center">
+<div align="center">
   <a href="https://github.com/fictadvisor/fictadvisor-web">
     <img src="https://i.imgur.com/ChzUSaU.png" alt="Logo" width="80px">
   </a>
@@ -17,7 +17,7 @@
     ·
     <a href="https://github.com/fictadvisor/fictadvisor-web/issues">Request a Feature</a>
   </p>
-</p>
+</div>
 
 <details open="open">
   <summary>Table of contents</summary>
