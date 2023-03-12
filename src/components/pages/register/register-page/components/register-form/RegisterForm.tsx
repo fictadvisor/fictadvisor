@@ -19,6 +19,7 @@ import {
 } from '@/components/pages/register/register-page/components/register-form/utils';
 import { AuthAPI } from '@/lib/api/auth/AuthAPI';
 import AuthService from '@/lib/services/auth';
+import StorageUtil from '@/lib/utils/StorageUtil';
 import { showAlert } from '@/redux/reducers/alert.reducer';
 
 import { initialValues } from './constants';
@@ -54,6 +55,7 @@ const RegisterForm: FC<RegisterFormProps> = ({ groups }) => {
           );
         } else {
           await AuthService.register(transformData(data));
+          StorageUtil.deleteTelegramInfo();
           await router.push(`/register/email-verification?email=${data.email}`);
         }
       } catch (e) {
@@ -67,6 +69,20 @@ const RegisterForm: FC<RegisterFormProps> = ({ groups }) => {
             }),
           );
         } else if (errorName === 'InvalidTelegramCredentialsException') {
+          dispatch(
+            showAlert({
+              title: 'Як ти це зробив? :/',
+              color: AlertColor.ERROR,
+            }),
+          );
+        } else if (errorName === 'InvalidBodyException') {
+          dispatch(
+            showAlert({
+              title: 'Некорректно введені дані',
+              color: AlertColor.ERROR,
+            }),
+          );
+        } else {
           dispatch(
             showAlert({
               title: 'Як ти це зробив? :/',

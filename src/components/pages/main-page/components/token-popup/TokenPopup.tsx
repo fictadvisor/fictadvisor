@@ -50,9 +50,6 @@ const TokenPopup: FC<TokenPopupProps> = ({ token }) => {
     void loadData(token);
   }, [loadData, token]);
 
-  if (isOpen) document.body.style.overflow = 'hidden';
-  else document.body.style.overflow = 'auto';
-
   const handleClick = async () => {
     try {
       await AuthService.registerTelegram();
@@ -61,9 +58,11 @@ const TokenPopup: FC<TokenPopupProps> = ({ token }) => {
           ...StorageUtil.getTelegramInfo().telegram,
         });
         update();
+        StorageUtil.deleteTelegramInfo();
         await push('/account');
       } else await push('/register');
     } catch (e) {
+      console.log(e);
       dispatch(
         showAlert({
           title: 'Не вдалось підключити Telegram, спробуй ще раз',

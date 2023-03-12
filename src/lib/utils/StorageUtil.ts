@@ -39,6 +39,13 @@ class StorageUtil {
     sessionStorage.setItem(STORAGE_KEYS.TELEGRAM_INFO, JSON.stringify(data));
   }
 
+  static deleteTelegramInfo() {
+    if (!process.browser) {
+      return;
+    }
+    sessionStorage.removeItem(STORAGE_KEYS.TELEGRAM_INFO);
+  }
+
   static getTelegramInfo() {
     if (!process.browser) {
       return;

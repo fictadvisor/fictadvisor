@@ -12,6 +12,7 @@ import Button, {
 } from '@/components/common/ui/button';
 import Loader from '@/components/common/ui/loader';
 import TokenPopup from '@/components/pages/main-page/components/token-popup';
+import useAuthentication from '@/hooks/use-authentication';
 import { StudentResourcesAPI } from '@/lib/api/student-resources/StudentResourcesAPI';
 
 import ResourceCard from './components/resource-card/ResourceCard';
@@ -28,6 +29,7 @@ const MainPage = () => {
 
   const { query, isReady } = useRouter();
   const token = query.token as string;
+  const { isLoggedIn } = useAuthentication();
 
   return (
     <PageLayout
@@ -49,16 +51,20 @@ const MainPage = () => {
               </p>
               <div className={styles['buttons']}>
                 <div className={styles['buttons-desk']}>
-                  <Link href={'/register'}>
-                    <Button
-                      text="Доєднатись"
-                      disabled={false}
-                      color={ButtonColor.PRIMARY}
-                      variant={ButtonVariant.FILLED}
-                      size={ButtonSize.LARGE}
-                    />
-                  </Link>
-                  <hr className={styles['button-divider']} />
+                  {!isLoggedIn && (
+                    <>
+                      <Link href={'/register'}>
+                        <Button
+                          text="Доєднатись"
+                          disabled={false}
+                          color={ButtonColor.PRIMARY}
+                          variant={ButtonVariant.FILLED}
+                          size={ButtonSize.LARGE}
+                        />
+                      </Link>
+                      <hr className={styles['button-divider']} />
+                    </>
+                  )}
                   <Link href={'/poll'}>
                     <Button
                       text={'Пройти Опитування 2023'}
@@ -69,19 +75,23 @@ const MainPage = () => {
                   </Link>
                 </div>
                 <div className={styles['buttons-tabl']}>
-                  <Link href={'/register'}>
-                    <Button
-                      text="Доєднатись"
-                      disabled={false}
-                      color={ButtonColor.PRIMARY}
-                      variant={ButtonVariant.FILLED}
-                      size={ButtonSize.MEDIUM}
-                    />
-                  </Link>
-                  <hr className={styles['button-divider']} />
+                  {!isLoggedIn && (
+                    <>
+                      <Link href={'/register'}>
+                        <Button
+                          text="Доєднатись"
+                          disabled={false}
+                          color={ButtonColor.PRIMARY}
+                          variant={ButtonVariant.FILLED}
+                          size={ButtonSize.MEDIUM}
+                        />
+                      </Link>
+                      <hr className={styles['button-divider']} />
+                    </>
+                  )}
                   <Link href={'/poll'}>
                     <Button
-                      text={'Пройти Опитування 2022'}
+                      text={'Пройти Опитування 2023'}
                       disabled={false}
                       variant={ButtonVariant.OUTLINE}
                       size={ButtonSize.MEDIUM}
@@ -89,18 +99,22 @@ const MainPage = () => {
                   </Link>
                 </div>
                 <div className={styles['buttons-mob']}>
-                  <Link href={'/register'}>
-                    <Button
-                      text="Доєднатись"
-                      disabled={false}
-                      color={ButtonColor.PRIMARY}
-                      variant={ButtonVariant.FILLED}
-                      size={ButtonSize.SMALL}
-                    />
-                  </Link>
+                  {!isLoggedIn && (
+                    <>
+                      <Link href={'/register'}>
+                        <Button
+                          text="Доєднатись"
+                          disabled={false}
+                          color={ButtonColor.PRIMARY}
+                          variant={ButtonVariant.FILLED}
+                          size={ButtonSize.SMALL}
+                        />
+                      </Link>
+                    </>
+                  )}
                   <Link href={'/poll'}>
                     <Button
-                      text={'Опитування 2022'}
+                      text={'Опитування 2023'}
                       disabled={false}
                       variant={ButtonVariant.OUTLINE}
                       size={ButtonSize.SMALL}

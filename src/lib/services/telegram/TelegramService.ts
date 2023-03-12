@@ -29,7 +29,6 @@ class TelegramService {
         (await TelegramService.openAuthenticationDialog()) as AuthTelegramBody;
       const { accessToken, refreshToken } = await AuthAPI.authTelegram(data);
       StorageUtil.setTokens(accessToken, refreshToken);
-
       return true;
     } catch (e) {
       return false;
@@ -37,9 +36,15 @@ class TelegramService {
   }
 
   static async register() {
-    const data: AuthTelegramBody =
-      (await TelegramService.openAuthenticationDialog()) as AuthTelegramBody;
-    StorageUtil.setTelegramInfo({ telegram: data });
+    try {
+      const data: AuthTelegramBody =
+        (await TelegramService.openAuthenticationDialog()) as AuthTelegramBody;
+      StorageUtil.setTelegramInfo({ telegram: data });
+    } catch (e) {
+      const data: AuthTelegramBody =
+        (await TelegramService.openAuthenticationDialog()) as AuthTelegramBody;
+      StorageUtil.setTelegramInfo({ telegram: data });
+    }
   }
 }
 
