@@ -316,11 +316,4 @@ $font-weight-bold: 700;
     .main-page {
         background-size: cover;
     }
-
-}
-
-@media screen and (min-width: $breakpoint-desktop-medium) {
-    .main-page {
-        background-size: 100vw auto;
-    }
 }
