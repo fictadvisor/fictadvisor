@@ -1,3 +1,5 @@
+@import "src/styles/partials/theme";
+
 .button {
   display: flex;
   position: relative;
@@ -18,7 +20,9 @@
   top: 105%;
   right: 35%;
   width: 160px;
+  z-index: 2;
   height: 78px;
+  box-shadow: 1px 1px 3px rgba(10, 10, 10, 0.09), 2px 4px 16px rgba(13, 13, 13, 0.13);
 }
 
 .dropdown-button{
