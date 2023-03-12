@@ -14,7 +14,7 @@
     grid-template-columns: 35% 15% 15% 5%;
     grid-template-rows: 1fr;
     gap: 12px;
-    margin-bottom: 10px;
+    margin-bottom: 34px;
     align-items: center;
     .collapse-btn {
         display: none;
@@ -95,6 +95,7 @@
 @media only screen and (max-width: $breakpoint-mobile){
     .form{
         column-gap: 15px;
+        margin-bottom: 24px;
     }
 }
 .breadcrumb {
