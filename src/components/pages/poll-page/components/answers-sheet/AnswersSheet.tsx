@@ -98,7 +98,6 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
   };
 
   const handleSubmit = () => {};
-  console.log('initialValues', initialValues);
 
   return (
     <div

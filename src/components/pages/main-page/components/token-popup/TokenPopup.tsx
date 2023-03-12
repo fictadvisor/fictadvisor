@@ -62,7 +62,6 @@ const TokenPopup: FC<TokenPopupProps> = ({ token }) => {
         await push('/account');
       } else await push('/register');
     } catch (e) {
-      console.log(e);
       dispatch(
         showAlert({
           title: 'Не вдалось підключити Telegram, спробуй ще раз',
