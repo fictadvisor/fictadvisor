@@ -22,8 +22,8 @@ jobs:
           docker build -t "${{ steps.env.outputs.DOCKERHUB_IMAGE_NAME }}:latest" -t "${{ steps.env.outputs.DOCKERHUB_IMAGE_NAME }}:${GITHUB_SHA::8}" .
 
       # Login to the package repository
-      - name: Package repository login-page.scss
-        run: docker login-page.scss docker.pkg.github.com -u $GITHUB_ACTOR -p ${{secrets.GITHUB_TOKEN}}
+      - name: Package repository login
+        run: docker login docker.pkg.github.com -u $GITHUB_ACTOR -p ${{secrets.GITHUB_TOKEN}}
 
       # Publish the image to the package repository
       - name: Docker image publish 
