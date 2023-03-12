@@ -23,7 +23,11 @@ export const HeaderDesktopCard: React.FC<HeaderCardProps> = ({
         <h4 className={styles[`card-name`]}>{name}</h4>
         <div>
           <span className={styles['header-card-postition']}>{position}</span>
-          <span className={styles['header-card-group-name']}>{groupName}</span>
+          {groupName && (
+            <span className={styles['header-card-group-name']}>
+              {groupName}
+            </span>
+          )}
         </div>
       </div>
       <img src={url} alt="Картинка профілю" style={{ borderRadius: '100%' }} />
