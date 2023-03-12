@@ -122,6 +122,15 @@ $font-weight-bold: 700;
     }
 }
 
+// SAFARI YA EBAV TVIY ROT
+@media not all and (min-resolution:.001dpcm){
+  .build-image {
+    pointer-events: none;
+  }
+}
+
+
+
 @media only screen and (max-width: $breakpoint-desktop-semi-medium) {
     .build-image {
         width: 75%;
