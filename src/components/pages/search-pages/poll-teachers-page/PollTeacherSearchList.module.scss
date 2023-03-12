@@ -2,7 +2,7 @@
 @import "src/styles/partials/breakpoints";
 
 .poll-teacher-search-list {
-  margin-top: 40px;
+  margin-top: 50px;
   margin-bottom: 16px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -33,6 +33,7 @@
 @media only screen and (max-width: $breakpoint-mobile-medium){
   .poll-teacher-search-list {
     grid-template-columns: repeat(1, 1fr);
+    margin-top: 40px;
   }
   .form{
     column-gap: 15px;
