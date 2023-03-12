@@ -14,6 +14,13 @@ $font-weight-bold: 700;
     display: block;
 }
 
+@media screen and (max-width: $breakpoint-desktop-medium) {
+  .main-page{
+    background-size: $breakpoint-desktop-medium 100%;
+  }
+}
+
+
 .main-page-content {
     max-width: 1700px;
     margin: 0 auto;
@@ -317,3 +324,5 @@ $font-weight-bold: 700;
         background-size: cover;
     }
 }
+
+
