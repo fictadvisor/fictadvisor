@@ -45,6 +45,7 @@
 
 .default-input-color{
   color: $gray-600;
+  transition: all 0.2s ease-in-out;
 
   label{
     background: linear-gradient(180deg, rgba(30, 30, 30, 0) 49.48%, $background-dark-0 49.95%);
@@ -62,6 +63,7 @@
     color: $white;
 
     input {
+      transition: all 0.2s ease-in-out !important;
       border-color: $white;
       color: $white;
     }
@@ -78,11 +80,13 @@
 }
 
 .error-input-color{
+  transition: all 0.2s ease-in-out !important;
   color: $error-200;
   label{
     background: linear-gradient(180deg, rgba(30, 30, 30, 0) 49.48%, $background-dark-0 49.95%);
   }
   input {
+    transition: all 0.2s ease-in-out !important;
     @include input-color($gray-600, $error-200, $gray-200);
   }
   p{
@@ -94,6 +98,7 @@
 }
 
 .success-input-color{
+  transition: all 0.2s ease-in-out !important;
   color: $success-300;
 
   label{
@@ -101,6 +106,7 @@
     color: inherit;
   }
   input {
+    transition: all 0.2s ease-in-out !important;
     @include input-color($gray-600, $success-300, $gray-50);
   }
   p{
@@ -120,6 +126,7 @@
     position: relative;
     margin-top: 12px;
     input{
+      transition: all 0.2s ease-in-out;
       width: 100%;
       padding: 0 $left-padding 0 $right-padding;
       border-width: $border-size;

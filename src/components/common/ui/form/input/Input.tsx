@@ -141,8 +141,9 @@ const Input: React.FC<InputProps> = ({
         type={inputType}
         name={rest.name}
         onInput={field.onChange}
+        onChange={field.onChange}
         {...field}
-        // {...rest}
+        {...rest}
       />
       {showRemark && (
         <p className={styles['remark-' + state]}>
