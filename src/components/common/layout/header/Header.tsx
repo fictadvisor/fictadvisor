@@ -41,7 +41,7 @@ const roleMapper = {
 const Header: React.FC = () => {
   const { isLoggedIn, user } = useAuthentication();
   const name = [user?.lastName, user?.firstName, user?.middleName].join(' ');
-  const groupName = user.group.state === 'APPROVED' ? user?.group.code : null;
+  const groupName = user?.group.state === 'APPROVED' ? user?.group.code : null;
   const position = roleMapper[user?.group.role];
   const avatar = user?.avatar;
   const isMobile = useIsMobile(1200);
