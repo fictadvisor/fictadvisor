@@ -125,7 +125,7 @@ const Footer: React.FC = () => {
       </div>
       <div className={styles['social-media']}>
         <div className={styles['title']}>
-          <p>Соціальне</p>
+          <p>Соцмережі</p>
         </div>
         <div className={styles['social-buttons']}>
           <Link
