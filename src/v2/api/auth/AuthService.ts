@@ -119,6 +119,11 @@ export class AuthService {
       throw new AlreadyRegisteredException();
     }
 
+    const captain = this.groupService.getCaptain(createStudent.groupId);
+    if (captain && isCaptain) {
+      throw new AlreadyRegisteredException();
+    }
+
     if (telegram) {
       if (this.isExchangeValid(telegram)) {
         Object.assign(user, {
@@ -308,9 +313,17 @@ export class AuthService {
     }
     const { user: { student, ...tokenUser }, isCaptain } = this.verifyEmailTokens.get(token);
 
-    const dbUser = this.userRepository.getByUnique({ email: tokenUser.email, username: tokenUser.username, telegramId: tokenUser.telegramId });
-    if (dbUser) {
-      throw new AlreadyRegisteredException();
+
+    if (!(await this.isPseudoRegistered(tokenUser.email))) {
+      const telegram = tokenUser.telegramId ? {} : { telegramId: tokenUser.telegramId };
+      const dbUser = await this.userRepository.getByUnique({
+        email: tokenUser.email,
+        username: tokenUser.username,
+        ...telegram,
+      });
+      if (dbUser) {
+        throw new AlreadyRegisteredException();
+      }
     }
 
     let user;
