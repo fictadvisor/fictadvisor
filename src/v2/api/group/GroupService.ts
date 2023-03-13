@@ -159,6 +159,10 @@ export class GroupService {
     }
 
     await this.studentRepository.removeRole(userId, userRole.id);
+    const user = await this.userRepository.get(userId);
+    if (!user.username) {
+      await this.userRepository.delete(userId);
+    }
     await this.studentRepository.update(userId, { state: State.DECLINED });
   }
 

@@ -87,7 +87,10 @@ export class UserService {
       throw new AlreadyRegisteredException();
     }
 
-    await this.studentRepository.update(id, { state: State.PENDING });
+    await this.studentRepository.update(id, {
+      state: State.PENDING,
+      groupId,
+    });
     const name = {
       firstName: student.firstName,
       middleName: student.middleName,
@@ -167,5 +170,23 @@ export class UserService {
     }
 
     await this.userRepository.update(userId, { telegramId: telegram.id });
+  }
+
+  async verifyStudent (userId: string, isCaptain: boolean, state: State) {
+    const user = await this.userRepository.get(userId);
+    if (user.student.state !== State.PENDING) return this.studentRepository.get(userId);
+
+    if (state === State.APPROVED) {
+      if (isCaptain) {
+        const captain = await this.groupService.getCaptain(user.student.group.id);
+
+        if (captain) {
+          throw new AlreadyRegisteredException();
+        }
+      }
+      await this.addGroupRole(userId, isCaptain);
+    }
+
+    return this.updateStudent(userId, { state });
   }
 }

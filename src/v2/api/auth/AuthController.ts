@@ -89,7 +89,7 @@ export class AuthController {
   requestEmailVerification (
     @Body() body: VerificationEmailDTO,
   ) {
-    return this.authService.requestEmailVerification(body.email);
+    return this.authService.repeatEmailVerification(body.email);
   }
 
   @Post('/register/verifyEmail/:token')

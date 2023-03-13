@@ -66,7 +66,7 @@ export class UserRepository {
   }
 
   async delete (id: string) {
-    this.prisma.user.delete({
+    return this.prisma.user.delete({
       where: {
         id,
       },
@@ -74,7 +74,7 @@ export class UserRepository {
   }
 
   async update (id: string, data: UpdateUserData) {
-    this.prisma.user.update({
+    return this.prisma.user.update({
       where: {
         id,
       },

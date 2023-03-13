@@ -56,7 +56,7 @@ export const AVATARS = [
 export class AuthService {
 
   private resetPasswordTokens: Map<string, { email: string, date: Date }> = new Map();
-  private verifyEmailTokens: Map<string, { email: string, date: Date }> = new Map();
+  private verifyEmailTokens: Map<string, { date: Date, isCaptain: boolean, user: UserDTO & { student: any } }> = new Map();
   private registerTelegramTokens: Map<string, number> = new Map();
 
   constructor (
@@ -119,6 +119,11 @@ export class AuthService {
       throw new AlreadyRegisteredException();
     }
 
+    const captain = this.groupService.getCaptain(createStudent.groupId);
+    if (captain && isCaptain) {
+      throw new AlreadyRegisteredException();
+    }
+
     if (telegram) {
       if (this.isExchangeValid(telegram)) {
         Object.assign(user, {
@@ -130,22 +135,21 @@ export class AuthService {
       }
     }
 
-    user.password = await this.hashPassword(user.password);
+    const userForDb = {
+      ...user,
+      password: await this.hashPassword(user.password),
+      avatar: user.avatar ? user.avatar : AVATARS[Math.floor(Math.random() * AVATARS.length)],
+      student: createStudent,
+    };
 
-    if (await this.isPseudoRegistered(user.email)) {
-      await this.pseudoRegister(user, isCaptain, createStudent);
-    } else {
-      await this.trulyRegister(user, isCaptain, createStudent);
-    }
-
-    await this.requestEmailVerification(user.email);
+    await this.requestEmailVerification(userForDb, isCaptain);
   }
 
-  async verify ({ id, telegramId }: { id: string, telegramId: number }, { groupId, isCaptain, middleName, ...student }: StudentDTO) {
+  async verify (body: { id: string, telegramId: number }, { groupId, isCaptain, middleName, ...student }: StudentDTO) {
     const group = await this.groupRepository.getGroup(groupId);
     const data = {
-      id,
-      telegramId: telegramId ? telegramId : undefined,
+      id: body.id,
+      telegramId: body?.telegramId ? body.telegramId : undefined,
       middleName: middleName ? middleName : '',
       ...student,
       groupCode: group.code,
@@ -190,7 +194,7 @@ export class AuthService {
   }
 
   async loginTelegram (telegram: TelegramDTO): Promise<TokensDTO> {
-    if (!this.isExchangeValid(telegram)) {
+    if (!telegram || !this.isExchangeValid(telegram)) {
       throw new InvalidTelegramCredentialsException();
     }
 
@@ -264,14 +268,19 @@ export class AuthService {
     this.resetPasswordTokens.delete(token);
   }
 
-  async requestEmailVerification (email: string) {
-    if (!await this.checkIfUserIsRegistered({ email })) {
+  async repeatEmailVerification (email: string) {
+    const obj = Object.values(this.verifyEmailTokens).find((t) => t.user.email === email);
+
+    if (!obj) {
       throw new NotRegisteredException();
     }
 
-    const uuid = crypto.randomUUID();
+    await this.requestEmailVerification(obj.user, obj.isCaptain);
+  }
+
+  async requestEmailVerification (user: UserDTO & { student: any }, isCaptain: boolean) {
     for (const [token, value] of this.verifyEmailTokens.entries()) {
-      if (value.email === email) {
+      if (value.user.email === user.email) {
         if (Date.now() - value.date.getTime() < ONE_MINUTE) {
           throw new TooManyActionsException();
         } else {
@@ -280,23 +289,21 @@ export class AuthService {
       }
     }
 
+    const uuid = crypto.randomUUID();
     this.verifyEmailTokens.set(uuid, {
-      email,
       date: new Date(),
+      isCaptain,
+      user,
     });
     await this.emailService.sendEmail({
-      to: email,
+      to: user.email,
       subject: 'Верифікація пошти на fictadvisor.com',
       message: 'Для верифікації пошти перейдіть за посиланням нижче. Посилання діє годину.',
       link: `${this.config.get<string>('frontBaseUrl')}/register/email-verification/${uuid}`,
     });
 
     setTimeout(async () => {
-      const user = await this.userRepository.getByUnique({ email });
-      if (user.state !== State.APPROVED) {
-        this.verifyEmailTokens.delete(uuid);
-        await this.userRepository.deleteByEmail(email);
-      }
+      this.verifyEmailTokens.delete(uuid);
     }, HOUR);
   }
 
@@ -304,8 +311,28 @@ export class AuthService {
     if (!this.verifyEmailTokens.has(token)) {
       throw new InvalidVerificationTokenException();
     }
-    const email = this.verifyEmailTokens.get(token).email;
-    const user = await this.userRepository.updateByEmail(email, { state: State.APPROVED });
+    const { user: { student, ...tokenUser }, isCaptain } = this.verifyEmailTokens.get(token);
+
+
+    if (!(await this.isPseudoRegistered(tokenUser.email))) {
+      const telegram = tokenUser.telegramId ? {} : { telegramId: tokenUser.telegramId };
+      const dbUser = await this.userRepository.getByUnique({
+        email: tokenUser.email,
+        username: tokenUser.username,
+        ...telegram,
+      });
+      if (dbUser) {
+        throw new AlreadyRegisteredException();
+      }
+    }
+
+    let user;
+
+    if (await this.isPseudoRegistered(tokenUser.email)) {
+      user = await this.pseudoRegister(tokenUser, isCaptain, student);
+    } else {
+      user = await this.trulyRegister(tokenUser, isCaptain, student);
+    }
 
     this.verifyEmailTokens.delete(token);
 
@@ -348,11 +375,11 @@ export class AuthService {
     return (user != null && user.password == null);
   }
 
-  async trulyRegister (user: UserDTO, isCaptain:boolean, createStudent: Omit<StudentDTO, 'isCaptain'>) {
+  async trulyRegister (user: UserDTO, isCaptain: boolean, createStudent: Omit<StudentDTO, 'isCaptain'>) {
     const dbUser = await this.userRepository.create({
       ...user,
-      avatar: AVATARS[Math.floor(Math.random() * AVATARS.length)],
       lastPasswordChanged: new Date(),
+      state: State.APPROVED,
     });
     await this.studentRepository.create({
       userId: dbUser.id,
@@ -363,15 +390,19 @@ export class AuthService {
       isCaptain,
       ...createStudent,
     });
+
+    return dbUser;
   }
 
   async pseudoRegister (user: UserDTO, isCaptain:boolean, createStudent: Omit<StudentDTO, 'isCaptain'>) {
     const dbUser = await this.userRepository.updateByEmail(user.email, {
-      avatar: AVATARS[Math.floor(Math.random() * AVATARS.length)],
       ...user,
       lastPasswordChanged: new Date(),
+      state: State.APPROVED,
     });
     await this.studentRepository.update(dbUser.id, createStudent);
+
+    return dbUser;
   }
 
   async checkCaptain (groupId: string) {
