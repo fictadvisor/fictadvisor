@@ -34,6 +34,7 @@ import { StudentDTO } from './dto/StudentDTO';
 import { UserDTO } from './dto/UserDTO';
 import { RegisterTelegramDTO } from './dto/RegisterTelegramDTO';
 import { ConfigService } from '@nestjs/config';
+import { CaptainAlreadyRegisteredException } from '../../utils/exceptions/CaptainAlreadyRegisteredException';
 
 export const ONE_MINUTE = 1000 * 60;
 export const HOUR = ONE_MINUTE * 60;
@@ -119,9 +120,9 @@ export class AuthService {
       throw new AlreadyRegisteredException();
     }
 
-    const captain = this.groupService.getCaptain(createStudent.groupId);
+    const captain = await this.groupService.getCaptain(createStudent.groupId);
     if (captain && isCaptain) {
-      throw new AlreadyRegisteredException();
+      throw new CaptainAlreadyRegisteredException();
     }
 
     if (telegram) {
