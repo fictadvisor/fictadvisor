@@ -51,7 +51,7 @@ const Header: React.FC = () => {
   };
   const mobileMenu = (
     <div className={styles['mobile-menu']}>
-      <Link href={'/'}>
+      <Link href={'/'} onClick={handleClick}>
         <TabItem
           className=""
           text="Головна"
@@ -60,7 +60,7 @@ const Header: React.FC = () => {
           size={TabItemContentSize.SMAll}
         />
       </Link>
-      <Link href={'/poll'}>
+      <Link href={'/poll'} onClick={handleClick}>
         <TabItem
           className=""
           text="Опитування"
@@ -69,7 +69,7 @@ const Header: React.FC = () => {
           size={TabItemContentSize.SMAll}
         />
       </Link>
-      <Link href={'/teachers'}>
+      <Link href={'/teachers'} onClick={handleClick}>
         <TabItem
           className=""
           text="Викладачі"
@@ -78,7 +78,7 @@ const Header: React.FC = () => {
           size={TabItemContentSize.SMAll}
         />
       </Link>
-      <Link href={'/subjects'}>
+      <Link href={'/subjects'} onClick={handleClick}>
         <TabItem
           className=""
           text="Предмети"
