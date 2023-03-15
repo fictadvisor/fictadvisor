@@ -48,9 +48,13 @@ export class UserService {
     return await this.studentRepository.getGroupByRole(id);
   }
 
+  private isGroupRole (r: Role) {
+    return r.name === RoleName.CAPTAIN || r.name === RoleName.MODERATOR || r.name === RoleName.STUDENT;
+  }
+
   async getGroupRoleDB (userId: string) {
     const roles = await this.studentRepository.getRoles(userId);
-    const role = roles.find((r) => r.name === 'CAPTAIN' || r.name === 'MODERATOR' || r.name === 'STUDENT');
+    const role = roles.find(this.isGroupRole);
     const group = await this.getGroupByRole(role.id);
     return {
       ...role,
@@ -59,8 +63,7 @@ export class UserService {
   }
 
   getGroupRole (roles: { role: Role }[]) {
-    const groupRole = roles.find((r) => r.role.name === 'CAPTAIN' || r.role.name === 'MODERATOR' || r.role.name === 'STUDENT');
-    return groupRole?.role;
+    return roles.map((r) => r?.role).find(this.isGroupRole);
   }
 
   async removeRole (id: string, roleId: string) {
