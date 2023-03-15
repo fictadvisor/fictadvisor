@@ -101,11 +101,11 @@ const PollPage = () => {
           status === 'InvalidEntityIdException'
             ? 'Не знайдено опитування з таким id'
             : status === 'AnswerInDatabasePermissionException'
-            ? 'Ти не маєш доступу до цієї сторінки, тому що вже пройшов опитування!'
+            ? 'Ти вже пройшов опитування за цього викладача!'
             : status === 'NoPermissionException'
             ? 'У тебе недостатньо прав для цієї дії'
             : status === 'WrongTimeException'
-            ? 'Час проходження опитування сплив'
+            ? 'Час проходження опитування сплив або опитування ще не почалось'
             : 'Помилка на сервері =(',
         color: AlertColor.ERROR,
       }),

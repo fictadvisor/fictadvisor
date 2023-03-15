@@ -2,7 +2,7 @@
 @import "src/styles/partials/breakpoints";
 
 .subject-teacher-search-list{
-  margin-top: 40px;
+  margin-top: 65px;
   margin-bottom: 16px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -20,6 +20,7 @@
 
 @media screen and (max-width: $breakpoint-tablet) {
   .subject-teacher-search-list {
+    margin-top: 58px;
     grid-template-columns: repeat(2, 1fr);
   }
 }

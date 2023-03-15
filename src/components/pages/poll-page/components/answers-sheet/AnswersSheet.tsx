@@ -169,7 +169,7 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
                       )}
 
                       <p className={styles['question-title']}>
-                        {question.name}
+                        {question.text}
                       </p>
                       {question.description && (
                         <p className={styles['question-description']}>
@@ -214,6 +214,7 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
                       answer(values);
                       if (!isTheLast) {
                         setCurrent(prev => ++prev);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
                       } else {
                         setIsSendingStatus(SendingStatus.LOADING);
                         try {

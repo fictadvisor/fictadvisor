@@ -5,7 +5,7 @@
 .footer-container {
     overflow: hidden;
     display: grid;
-    width: 100%;
+    max-width: 100%;
     bottom: 0;
     min-width: fit-content;
     grid-template-columns: 3fr 1fr 1fr 1fr;
@@ -111,6 +111,7 @@
         align-items: center;
         margin-top: 10px;
         margin-left: 50%;
+        margin-bottom: 15px;
     }
 
     .footer-logo {

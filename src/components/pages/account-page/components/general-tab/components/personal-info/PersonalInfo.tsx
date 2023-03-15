@@ -25,6 +25,15 @@ const PersonalInfoBlock: FC = () => {
   const dispatch = useDispatch();
 
   const handleSubmit = async (data: PersonalInfoForm) => {
+    data.firstName = data.firstName.trim().replace('`', `'`).replace('ʼ', `'`);
+    data.middleName = data.middleName
+      ?.trim()
+      .replace('`', `'`)
+      .replace('ʼ', `'`);
+    data.lastName = data.lastName.trim().replace('`', `'`).replace('ʼ', `'`);
+
+    if (!data.middleName) delete data.middleName;
+
     try {
       await UserAPI.changeInfo(user.id, data);
       update();
@@ -71,7 +80,7 @@ const PersonalInfoBlock: FC = () => {
             </div>
             <div className={styles['confirm-button-mobile']}>
               <Button
-                text="Зберігти зміни"
+                text="Зберегти зміни"
                 startIcon={<CustomCheck />}
                 size={ButtonSize.SMALL}
                 type="submit"
