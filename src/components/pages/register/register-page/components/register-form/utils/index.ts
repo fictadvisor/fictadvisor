@@ -4,9 +4,9 @@ export const transformData = (data: RegisterFormFields) => {
   const transformedData = {
     student: {
       groupId: data.group,
-      firstName: data.firstName.trim(),
-      middleName: data.middleName?.trim(),
-      lastName: data.lastName.trim(),
+      firstName: data.firstName.trim().replace('`', `'`).replace('ʼ', `'`),
+      middleName: data.middleName?.trim().replace('`', `'`).replace('ʼ', `'`),
+      lastName: data.lastName.trim().replace('`', `'`).replace('ʼ', `'`),
       isCaptain: data.isCaptain,
     },
     user: {

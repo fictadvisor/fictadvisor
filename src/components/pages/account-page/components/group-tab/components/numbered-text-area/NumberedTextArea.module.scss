@@ -51,13 +51,14 @@
     border-bottom: 4px solid transparent;
 
     border-right: 10px solid transparent;
-    &:hover {
-      color: $white;
-      outline: 2px solid $white;
-    }
-    &:focus{
-      color: $gray-300;
-    }
+    //Doesn't really work
+    //&:hover {
+    //  color: $white;
+    //  outline: 2px solid $white;
+    //}
+    //&:focus{
+    //  color: $gray-300;
+    //}
     &:disabled{
       color: $gray-200;
       border-color: $gray-200;
@@ -67,14 +68,14 @@
     @include body-secondary;
     opacity: 1;
     //color: $Prototype-Base_Neutrals-Gray400;
-    &:hover {
-      color: $white;
-      
-      border-color: $white;
-    }
-    &:focus{
-      color: $gray-300;
-    }
+    //&:hover {
+    //  color: $white;
+    //
+    //  border-color: $white;
+    //}
+    //&:focus{
+    //  color: $gray-300;
+    //}
     &:disabled{
       color: $gray-200;
       border-color: $gray-200;

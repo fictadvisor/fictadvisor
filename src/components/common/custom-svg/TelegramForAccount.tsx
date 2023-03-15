@@ -6,7 +6,7 @@ export const TelegramForAccount = () => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <g clipPath="url(#clip0_5739_3628)">
+    <g clipPath="url(#clip0_5873_5747)">
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -15,7 +15,7 @@ export const TelegramForAccount = () => (
       />
     </g>
     <defs>
-      <clipPath id="clip0_5739_3628">
+      <clipPath id="clip0_5873_5747">
         <rect width="24" height="24" fill="white" />
       </clipPath>
     </defs>

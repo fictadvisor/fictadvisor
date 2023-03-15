@@ -42,29 +42,29 @@
     color: $gray-500;
     border-radius: 8px;
     resize: none;
-    &:hover {
-      color: $white;
-      border-color: $white;
-    }
-    &:focus{
-      color: $gray-300;
-    }
+    //&:hover {
+    //  color: $white;
+    //  border-color: $white;
+    //}
+    //&:focus{
+    //  color: $gray-300;
+    //}
     &:disabled{
       color: $gray-200;
       border-color: $gray-200;
     }
   }
+  //Doesn't really work well
   textarea::placeholder{
     @include body-secondary;
     opacity: 1;
-    //color: $Prototype-Base_Neutrals-Gray400;
-    &:hover {
-      color: $white;
-      border-color: $white;
-    }
-    &:focus{
-      color: $gray-300;
-    }
+    //&:hover {
+    //  color: $white;
+    //  border-color: $white;
+    //}
+    //&:focus{
+    //  color: $gray-300;
+    //}
     &:disabled{
       color: $gray-200;
       border-color: $gray-200;
