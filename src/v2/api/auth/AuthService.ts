@@ -299,7 +299,7 @@ export class AuthService {
     await this.emailService.sendEmail({
       to: user.email,
       subject: 'Верифікація пошти на fictadvisor.com',
-      message: 'Для верифікації пошти перейдіть за посиланням нижче. Посилання діє годину.',
+      message: 'Для верифікації пошти перейди за посиланням нижче. Посилання діє годину.',
       link: `${this.config.get<string>('frontBaseUrl')}/register/email-verification/${uuid}`,
     });
 
