@@ -38,10 +38,14 @@
     gap: 8px;
     background: $background-dark-0;
     height: 120px;
-    border: 2px solid $gray-500;
     color: $gray-500;
     border-radius: 8px;
     resize: none;
+    border-right: 10px solid transparent;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    outline: 2px solid $gray-500;
+    outline-offset: -2px;
     //&:hover {
     //  color: $white;
     //  border-color: $white;
