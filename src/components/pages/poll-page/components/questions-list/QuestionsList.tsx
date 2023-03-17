@@ -35,10 +35,11 @@ const QuestionsList: React.FC<QuestionListProps> = ({
         description={subject.name}
         url={avatar || undefined}
       />
-      {categories.slice(0, categories.length - 1).map((category, id) => (
+      {categories.map((category, id) => (
         <PollCard
           key={id}
           numberOfQuestions={category.count}
+          isComment={category.questions[0].type === 'TEXT'}
           questionNumber={1 + id}
           question={category.name}
           numberOfAnswered={progress[id]}
@@ -49,18 +50,6 @@ const QuestionsList: React.FC<QuestionListProps> = ({
           }}
         />
       ))}
-      <PollCard
-        questionNumber={categories.length}
-        question={'Ваш коментар'}
-        isComment={true}
-        numberOfQuestions={1}
-        numberOfAnswered={progress[categories.length - 1]}
-        isActive={current === categories.length - 1}
-        onClick={() => {
-          setCurrent(categories.length - 1);
-          setQuestionsListStatus(false);
-        }}
-      />
     </div>
   );
 };
