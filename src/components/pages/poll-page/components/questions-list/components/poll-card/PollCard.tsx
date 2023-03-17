@@ -49,13 +49,7 @@ const PollCard: React.FC<PollCard> = ({
     >
       <div className={styles['main-content']}>
         <b>
-          {isComment ? (
-            'Ваш коментар'
-          ) : (
-            <>
-              {questionNumber}. {question}
-            </>
-          )}
+          {questionNumber}. {question}
         </b>
         <p>
           {isComment
