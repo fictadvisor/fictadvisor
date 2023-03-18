@@ -61,7 +61,7 @@ export class TeacherController {
     return this.teacherService.getTeacher(teacherId);
   }
 
-  @Access('teachers.$teacherId.create')
+  @Access('teachers.create')
   @Post()
   create (
     @Body() body: CreateTeacherDTO,
