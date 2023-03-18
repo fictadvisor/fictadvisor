@@ -21,19 +21,20 @@ export class TeacherRepository {
     const page = DatabaseUtils.getPage(body);
     const sort = DatabaseUtils.getSort(body);
     const groupId = body.group;
+    const disciplines = {
+      some: {
+        discipline: {
+          groupId,
+        },   
+      }
+    }
 
     return this.prisma.teacher.findMany({
       ...page,
       ...sort,
       where: {
         ...search,
-        disciplineTeachers: {
-          some: {
-            discipline: {
-              groupId,
-            },   
-          },
-        },
+        disciplineTeachers: groupId != null ? disciplines : undefined,
       } });
   }
 
