@@ -69,6 +69,7 @@ const Footer: React.FC = () => {
         </div>
         <Link href={'/'} style={{ height: '36px' }}>
           <Button
+            style={{ paddingLeft: '12px' }}
             text="Головна"
             size={ButtonSize.SMALL}
             variant={ButtonVariant.TEXT}
@@ -77,6 +78,7 @@ const Footer: React.FC = () => {
 
         <Link href={'/poll'} style={{ height: '36px' }}>
           <Button
+            style={{ paddingLeft: '12px' }}
             text="Опитування"
             size={ButtonSize.SMALL}
             variant={ButtonVariant.TEXT}
@@ -84,6 +86,7 @@ const Footer: React.FC = () => {
         </Link>
         <Link href={'/teachers'} style={{ height: '36px' }}>
           <Button
+            style={{ paddingLeft: '12px' }}
             text="Викладачі"
             size={ButtonSize.SMALL}
             variant={ButtonVariant.TEXT}
@@ -91,6 +94,8 @@ const Footer: React.FC = () => {
         </Link>
         <Link href={'/subjects'} style={{ height: '36px' }}>
           <Button
+            style={{ paddingLeft: '12px' }}
+            // style={{ height: '36px', padding: '8px 12px' }}
             text="Предмети"
             size={ButtonSize.SMALL}
             variant={ButtonVariant.TEXT}
@@ -110,6 +115,7 @@ const Footer: React.FC = () => {
         </div>
         <Link href={'/privacy'} style={{ height: '36px' }}>
           <Button
+            style={{ paddingLeft: '12px' }}
             text="Конфіденційність"
             size={ButtonSize.SMALL}
             variant={ButtonVariant.TEXT}
@@ -117,6 +123,7 @@ const Footer: React.FC = () => {
         </Link>
         <Link href={'https://t.me/fict_robot'} style={{ height: '36px' }}>
           <Button
+            style={{ paddingLeft: '12px' }}
             text="FICT robot"
             size={ButtonSize.SMALL}
             variant={ButtonVariant.TEXT}
@@ -133,6 +140,7 @@ const Footer: React.FC = () => {
             href={socialLabels[0].url}
           >
             <Button
+              style={{ paddingLeft: '12px' }}
               text={socialLabels[0].text}
               startIcon={socialLabels[0].icon}
               size={ButtonSize.SMALL}
@@ -144,6 +152,7 @@ const Footer: React.FC = () => {
             style={{ height: '36px', width: '36px' }}
           >
             <Button
+              style={{ paddingLeft: '12px' }}
               text={socialLabels[1].text}
               startIcon={socialLabels[1].icon}
               size={ButtonSize.SMALL}
@@ -155,6 +164,7 @@ const Footer: React.FC = () => {
             style={{ height: '36px', width: '36px' }}
           >
             <Button
+              style={{ paddingLeft: '12px' }}
               text={socialLabels[2].text}
               startIcon={socialLabels[2].icon}
               size={ButtonSize.SMALL}
