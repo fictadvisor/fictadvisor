@@ -19,7 +19,7 @@ const LeftBlock = () => {
         />
       </Link>
       <h3 className={mergeClassNames(styles['register-text'])}>
-        Ти ще не знами? Приєднуйся!
+        Ти ще не з нами? Приєднуйся!
       </h3>
       <Button
         className={styles['register-button']}

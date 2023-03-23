@@ -104,8 +104,8 @@ const MobileStudentTableButtons: FC<MobileStudentTableButtonsProps> = ({
           }
           text={`Ви дійсно бажаєте зробити користувача ${student.fullName} ${
             student.role === StudentRole.MODERATOR
-              ? 'зробити студентом'
-              : 'зробити зам старостою'
+              ? 'студентом'
+              : 'зам старостою'
           }?`}
           closeFunction={() => setIsOpenChange(false)}
           firstButton={
