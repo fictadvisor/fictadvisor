@@ -116,7 +116,7 @@ const TabsPage: FC<PersonalTeacherTabsProps> = props => {
             </div>
             <div className={styles['button-wrapper-desktop']}>
               <Button
-                text={'Пройти опитування'}
+                text={'Перейти до опитувань'}
                 variant={ButtonVariant.FILLED}
                 color={ButtonColor.PRIMARY}
                 size={ButtonSize.LARGE}
@@ -125,7 +125,7 @@ const TabsPage: FC<PersonalTeacherTabsProps> = props => {
             </div>
             <div className={styles['button-wrapper-mobile']}>
               <Button
-                text={'Пройти опитування'}
+                text={'Перейти до опитувань'}
                 variant={ButtonVariant.FILLED}
                 color={ButtonColor.PRIMARY}
                 size={ButtonSize.SMALL}
@@ -161,7 +161,7 @@ const TabsPage: FC<PersonalTeacherTabsProps> = props => {
             </div>
             <div className={styles['button-wrapper-desktop']}>
               <Button
-                text={'Пройти опитування'}
+                text={'Перейти до опитувань'}
                 variant={ButtonVariant.FILLED}
                 color={ButtonColor.PRIMARY}
                 size={ButtonSize.LARGE}
@@ -170,7 +170,7 @@ const TabsPage: FC<PersonalTeacherTabsProps> = props => {
             </div>
             <div className={styles['button-wrapper-mobile']}>
               <Button
-                text={'Пройти опитування'}
+                text={'Перейти до опитувань'}
                 variant={ButtonVariant.FILLED}
                 color={ButtonColor.PRIMARY}
                 size={ButtonSize.SMALL}
@@ -190,7 +190,7 @@ const TabsPage: FC<PersonalTeacherTabsProps> = props => {
             </div>
             <div className={styles['button-wrapper-desktop']}>
               <Button
-                text={'Пройти опитування'}
+                text={'Перейти до опитувань'}
                 variant={ButtonVariant.FILLED}
                 color={ButtonColor.PRIMARY}
                 size={ButtonSize.LARGE}
@@ -199,7 +199,7 @@ const TabsPage: FC<PersonalTeacherTabsProps> = props => {
             </div>
             <div className={styles['button-wrapper-mobile']}>
               <Button
-                text={'Пройти опитування'}
+                text={'Перейти до опитувань'}
                 variant={ButtonVariant.FILLED}
                 color={ButtonColor.PRIMARY}
                 size={ButtonSize.SMALL}
