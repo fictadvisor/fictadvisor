@@ -51,6 +51,9 @@
     border-bottom: 4px solid transparent;
 
     border-right: 10px solid transparent;
+    &:focus{
+      cursor: auto;
+    }
     //Doesn't really work
     //&:hover {
     //  color: $white;

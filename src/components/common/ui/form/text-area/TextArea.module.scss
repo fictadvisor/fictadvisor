@@ -34,21 +34,22 @@
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    padding: 16px 16px 16px 24px;
+    padding: 6px 16px 16px 24px;
     gap: 8px;
     background: $background-dark-0;
     height: 120px;
-    border: 2px solid $gray-500;
     color: $gray-500;
     border-radius: 8px;
     resize: none;
-    //&:hover {
-    //  color: $white;
-    //  border-color: $white;
-    //}
-    //&:focus{
+    border-right: 10px solid transparent;
+    border-top: 16px solid transparent;
+    border-bottom: 6px solid transparent;
+    outline: 2px solid $gray-500;
+    outline-offset: -2px;
+    &:focus{
     //  color: $gray-300;
-    //}
+     cursor: auto;
+    }
     &:disabled{
       color: $gray-200;
       border-color: $gray-200;
