@@ -1,5 +1,6 @@
 import React from 'react';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import CustomTelegramIcon from '@/components/common/custom-svg/CustomTelegramIcon';
@@ -31,11 +32,13 @@ const RightBlock = () => {
 
   return (
     <div className={styles['right-block']}>
-      <img
-        className={styles['mobile-login-logo']}
-        src="/assets/login-page/new_logo.png"
-        alt="fict advisor logo"
-      />
+      <Link href="/">
+        <img
+          className={styles['mobile-login-logo']}
+          src="/assets/login-page/new_logo.png"
+          alt="fict advisor logo"
+        />
+      </Link>
       <h3 className={styles['register-header']}>З поверненням!</h3>
       <Button
         endIcon={
