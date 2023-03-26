@@ -18,7 +18,7 @@ export class DisciplineTypeService {
   async deleteDisciplineTeachers (id: string) {
     const roles = await this.disciplineTypeRepository.getDisciplineTeacherRoles(id);
     for (const role of roles) {
-      await this.disciplineTeacherRepository.delete(role.disciplineTeacherId);
+      await this.disciplineTeacherRepository.deleteById(role.disciplineTeacherId);
     }
   }
 }

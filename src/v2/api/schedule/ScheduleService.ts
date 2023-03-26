@@ -224,7 +224,10 @@ export class ScheduleService {
         await this.disciplineTypeService.deleteDisciplineTeachers(semesterLesson.disciplineType.id);
         const role = TeacherRoleAdapter[semesterLesson.disciplineType.name];
         for (const teacherId of body.teachersId) {
-          const disciplineTeacher = await this.disciplineTeacherRepository.getOrCreate({ teacherId, disciplineId: discipline.id });
+          const disciplineTeacher = await this.disciplineTeacherRepository.getOrCreate({
+            teacherId,
+            disciplineId: discipline.id,
+          });
           await this.disciplineTeacherRoleRepository.create({
             disciplineTeacherId: disciplineTeacher.id,
             disciplineTypeId: semesterLesson.disciplineType.id,

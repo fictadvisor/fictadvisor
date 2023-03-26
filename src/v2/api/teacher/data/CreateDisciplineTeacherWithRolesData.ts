@@ -1,7 +1,7 @@
-import { CreateDisciplineTeacherData } from './CreateDisciplineTeacherData';
+import { CreateDisciplineTeacherDTO } from './CreateDisciplineTeacherDTO';
 import { TeacherRole } from '@prisma/client';
 
-export class CreateDisciplineTeacherWithRolesData extends CreateDisciplineTeacherData {
+export class CreateDisciplineTeacherWithRolesData extends CreateDisciplineTeacherDTO {
   roles: {
     role: TeacherRole,
     disciplineTypeId: string,

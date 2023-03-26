@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
 import { CreateDisciplineTypeDTO } from './dto/CreateDisciplineTypeDTO';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class DisciplineTypeRepository {
@@ -153,7 +154,7 @@ export class DisciplineTypeRepository {
     return type.lessons;
   }
 
-  async create (data: CreateDisciplineTypeDTO) {
+  async create (data: Prisma.DisciplineTypeUncheckedCreateInput) {
     return this.prisma.disciplineType.create({
       data,
     });

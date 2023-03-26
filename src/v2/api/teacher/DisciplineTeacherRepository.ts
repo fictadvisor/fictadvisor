@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import { CreateDisciplineTeacherData } from './data/CreateDisciplineTeacherData';
-import { TeacherRole } from '@prisma/client';
+import { Prisma, TeacherRole } from '@prisma/client';
 import { CreateDisciplineTeacherWithRolesData } from './data/CreateDisciplineTeacherWithRolesData';
 
 @Injectable()
@@ -85,8 +84,17 @@ export class DisciplineTeacherRepository {
     });
   }
 
-  async create (data: CreateDisciplineTeacherData) {
+  async create (data: Prisma.DisciplineTeacherUncheckedCreateInput) {
     return this.prisma.disciplineTeacher.create({
+      data,
+    });
+  }
+
+  async updateById (id: string, data: Prisma.DisciplineTeacherUncheckedUpdateInput) {
+    return this.prisma.disciplineTeacher.update({
+      where: {
+        id,
+      },
       data,
     });
   }
@@ -102,21 +110,21 @@ export class DisciplineTeacherRepository {
     });
   }
 
-  async find (data: CreateDisciplineTeacherData) {
+  async find (where: Prisma.DisciplineTeacherWhereInput) {
     return this.prisma.disciplineTeacher.findFirst({
-      where: data,
+      where,
     });
   }
 
-  async getOrCreate (data: CreateDisciplineTeacherData) {
-    let disciplineTeacher = await this.find(data);
+  async getOrCreate (data: Prisma.DisciplineTeacherUncheckedCreateInput) {
+    let disciplineTeacher = await this.find({ teacherId: data.teacherId, disciplineId: data.disciplineId });
     if (!disciplineTeacher) {
       disciplineTeacher = await this.create(data);
     }
     return disciplineTeacher;
   }
 
-  async delete (id: string) {
+  async deleteById (id: string) {
     return this.prisma.disciplineTeacher.delete({
       where: {
         id,

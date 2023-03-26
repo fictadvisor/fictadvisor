@@ -26,8 +26,8 @@ export class TeacherRepository {
         discipline: {
           groupId,
         },   
-      }
-    }
+      },
+    };
 
     return this.prisma.teacher.findMany({
       ...page,

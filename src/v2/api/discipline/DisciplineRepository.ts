@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
 import { CreateDisciplineDTO } from './dto/CreateDisciplineDTO';
 import { UpdateDisciplineDTO } from './dto/UpdateDisciplineDTO';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class DisciplineRepository {
@@ -125,6 +126,30 @@ export class DisciplineRepository {
   makeSelective (data: { studentId: string; disciplineId: string }) {
     return this.prisma.selectiveDiscipline.create({
       data,
+    });
+  }
+
+  async findBy (where: Prisma.DisciplineWhereInput) {
+    return this.prisma.discipline.findFirst({
+      where,
+      include: {
+        disciplineTypes: true,
+        subject: true,
+        group: true,
+      },
+    });
+  }
+
+  async findById (id: string) {
+    return this.prisma.discipline.findFirst({
+      where: {
+        id,
+      },
+      include: {
+        disciplineTypes: true,
+        subject: true,
+        group: true,
+      },
     });
   }
 }

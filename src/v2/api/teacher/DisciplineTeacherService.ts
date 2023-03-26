@@ -14,12 +14,18 @@ import { TelegramAPI } from '../../telegram/TelegramAPI';
 import { ResponseDTO } from '../poll/dto/ResponseDTO';
 import { checkIfArrayIsUnique } from '../../utils/ArrayUtil';
 import { AnswerInDatabasePermissionException } from '../../utils/exceptions/AnswerInDatabasePermissionException';
+import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
+import { DisciplineRepository } from '../discipline/DisciplineRepository';
+import { DisciplineTypeRepository } from '../discipline/DisciplineTypeRepository';
+import { TeacherTypeAdapter } from './dto/TeacherRoleAdapter';
 
 @Injectable()
 export class DisciplineTeacherService {
   constructor (
     private dateService: DateService,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
+    private disciplineRepository: DisciplineRepository,
+    private disciplineTypeRepository: DisciplineTypeRepository,
     @Inject(forwardRef(() => PollService))
     private pollService: PollService,
     private questionAnswerRepository: QuestionAnswerRepository,
@@ -193,5 +199,83 @@ export class DisciplineTeacherService {
     if (answers.length !== 0) {
       throw new AnswerInDatabasePermissionException();
     }
+  }
+
+  async create (teacherId: string, disciplineId: string, roles: TeacherRole[]) {
+    const discipline = await this.disciplineRepository.findById(disciplineId);
+    const dbRoles = [];
+    for (const role of roles) {
+      let disciplineType = discipline.disciplineTypes.find((dt) => dt.name === TeacherTypeAdapter[role]);
+      if (!disciplineType) {
+        disciplineType = await this.disciplineTypeRepository.create({
+          disciplineId: discipline.id,
+          name: TeacherTypeAdapter[role],
+        });
+      }
+
+      dbRoles.push({
+        role,
+        disciplineTypeId: disciplineType.id,
+      });
+    }
+    return this.disciplineTeacherRepository.create({
+      teacherId: teacherId,
+      disciplineId: disciplineId,
+      roles: { create: dbRoles },
+    });
+  }
+
+  async updateById (disciplineTeacherId: string, roles: TeacherRole[]) {
+    const discipline = await this.disciplineRepository.findBy({
+      disciplineTeachers: {
+        some: {
+          id: disciplineTeacherId,
+        },
+      },
+    });
+    const dbRoles = [];
+    for (const role of roles) {
+      let disciplineType = discipline.disciplineTypes.find((dt) => dt.name === TeacherTypeAdapter[role]);
+      if (!disciplineType) {
+        disciplineType = await this.disciplineTypeRepository.create({
+          disciplineId: discipline.id,
+          name: TeacherTypeAdapter[role],
+        });
+      }
+
+      dbRoles.push({
+        role,
+        disciplineTypeId: disciplineType.id,
+      });
+    }
+    return this.disciplineTeacherRepository.updateById(disciplineTeacherId, {
+      roles: {
+        deleteMany: {},
+        create: dbRoles,
+      },
+    });
+  }
+
+  async updateByTeacherAndDiscipline (teacherId: string, disciplineId: string, roles: TeacherRole[]) {
+    let disciplineTeacher = await this.disciplineTeacherRepository.find({ teacherId, disciplineId });
+    if (!disciplineTeacher) {
+      disciplineTeacher = await this.disciplineTeacherRepository.create({
+        teacherId: teacherId,
+        disciplineId: disciplineId,
+      });
+    }
+    return this.updateById(disciplineTeacher.id, roles);
+  }
+
+  async deleteById (disciplineTeacherId: string) {
+    await this.disciplineTeacherRepository.deleteById(disciplineTeacherId);
+  }
+
+  async deleteByTeacherAndDiscipline (teacherId: string, disciplineId: string) {
+    const disciplineTeacher = await this.disciplineTeacherRepository.find({ teacherId, disciplineId });
+    if (!disciplineTeacher) {
+      throw new InvalidEntityIdException('disciplineTeacher');
+    }
+    await this.disciplineTeacherRepository.deleteById(disciplineTeacher.id);
   }
 }

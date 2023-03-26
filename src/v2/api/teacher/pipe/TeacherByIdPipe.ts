@@ -1,5 +1,4 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
-import { TeacherService } from '../TeacherService';
 import { InvalidEntityIdException } from 'src/v2/utils/exceptions/InvalidEntityIdException';
 import { TeacherRepository } from '../TeacherRepository';
 

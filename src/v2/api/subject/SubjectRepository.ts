@@ -61,8 +61,8 @@ export class SubjectRepository {
         disciplines: {
           some: {
             groupId,
-          }
-        }
+          },
+        },
       },
     });
   }
