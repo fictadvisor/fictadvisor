@@ -8,5 +8,5 @@ export const wrapper: SxProps<Theme> = {
     md: '100vh',
     xl: '50vh',
   },
-  backgroundColor: 'gray.100',
+  backgroundColor: 'grey.200',
 };

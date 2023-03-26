@@ -1,7 +1,7 @@
 import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Provider } from 'react-redux';
-import { ThemeProvider } from '@mui/material';
+import { ThemeProvider } from '@mui/system';
 import { AppProps } from 'next/app';
 
 import Toast from '@/components/common/ui/toast';
