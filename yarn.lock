@@ -813,6 +813,13 @@ babel-code-frame@^6.26.0:
     esutils "^2.0.2"
     js-tokens "^3.0.2"
 
+babel-plugin-direct-import@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-direct-import/-/babel-plugin-direct-import-1.0.0.tgz#d31eee76b1c359e89f253be10f0a2bbbd1047347"
+  integrity sha512-WQCA5RJz/VVKHoxNKMrXc5YdsWw2d3vN2vrfKMdHLzf3+YROzKtlcZFhRjYx82nd30ijtWD4cxhV7RssUpCfjw==
+  dependencies:
+    resolve "^1.20.0"
+
 babel-plugin-import@^1.13.6:
   version "1.13.6"
   resolved "https://registry.yarnpkg.com/babel-plugin-import/-/babel-plugin-import-1.13.6.tgz#4ff2aa3b9759e6a4458ce59890da3684fe3dda9d"
@@ -3099,7 +3106,7 @@ resolve-from@^4.0.0:
   resolved "https://registry.yarnpkg.com/resolve-from/-/resolve-from-4.0.0.tgz#4abcd852ad32dd7baabfe9b40e00a36db5f392e6"
   integrity sha512-pb/MYmXstAkysRFx8piNI1tGFNQIFA3vkE3Gq4EuA1dF6gHp/+vgZqsCGJapvy8N3Q+4o7FwvquPJcnZ7RYy4g==
 
-resolve@^1.19.0, resolve@^1.22.1:
+resolve@^1.19.0, resolve@^1.20.0, resolve@^1.22.1:
   version "1.22.1"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.22.1.tgz#27cb2ebb53f91abb49470a928bba7558066ac177"
   integrity sha512-nBpuuYuY5jFsli/JIs1oldw6fOQCBioohqWZg/2hiaOybXOft4lonv85uDOKXdf8rhyK159cxU5cDcK/NKk8zw==
