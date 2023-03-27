@@ -7,7 +7,6 @@
     "dev": "next dev -p 3000",
     "build": "next build",
     "start": "next start -p 80",
-    "prepare": "husky install",
     "typecheck": "tsc"
   },
   "dependencies": {
@@ -23,7 +22,6 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "formik": "^2.2.9",
-    "husky": "^8.0.3",
     "lodash-es": "^4.17.21",
     "merge-class-names": "^1.4.2",
     "next": "13.1.5",
