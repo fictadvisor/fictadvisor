@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { createTheme } from '@mui/material/styles';
+import '@mui/material/styles';
 
 declare module '@mui/material/styles' {
   interface Palette {
@@ -26,12 +25,5 @@ declare module '@mui/material/styles' {
     violet?: PaletteOptions['primary'];
     mint?: PaletteOptions['primary'];
     orange?: PaletteOptions['primary'];
-  }
-
-  interface Color {
-    [-10]: string;
-    0: string;
-    10: string;
-    25: string;
   }
 }
