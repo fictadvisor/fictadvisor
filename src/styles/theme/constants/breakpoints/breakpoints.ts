@@ -2,7 +2,8 @@ import { BreakpointsOptions } from '@mui/system';
 
 const breakpoints: BreakpointsOptions = {
   values: {
-    mobile: 375,
+    mobile: 0,
+    mobileSemiMedium: 375,
     mobileMedium: 480,
     tablet: 768,
     desktop: 1024,

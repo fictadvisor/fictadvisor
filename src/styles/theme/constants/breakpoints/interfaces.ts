@@ -8,6 +8,7 @@ declare module '@mui/material/styles' {
     lg: false;
     xl: false;
     mobile: true;
+    mobileSemiMedium: true;
     mobileMedium: true;
     tablet: true;
     desktop: true;
