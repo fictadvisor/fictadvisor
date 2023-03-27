@@ -95,7 +95,7 @@ const TabsPage = () => {
             </div>
             <div className={styles['button-wrapper-desktop']}>
               <Button
-                text={'Пройти опитування'}
+                text={'Перейти до опитувань'}
                 variant={ButtonVariant.FILLED}
                 color={ButtonColor.PRIMARY}
                 size={ButtonSize.LARGE}
@@ -104,7 +104,7 @@ const TabsPage = () => {
             </div>
             <div className={styles['button-wrapper-mobile']}>
               <Button
-                text={'Пройти опитування'}
+                text={'Перейти до опитувань'}
                 variant={ButtonVariant.FILLED}
                 color={ButtonColor.PRIMARY}
                 size={ButtonSize.SMALL}
@@ -124,7 +124,7 @@ const TabsPage = () => {
             </div>
             <div className={styles['button-wrapper-desktop']}>
               <Button
-                text={'Пройти опитування'}
+                text={'Перейти до опитувань'}
                 variant={ButtonVariant.FILLED}
                 color={ButtonColor.PRIMARY}
                 size={ButtonSize.LARGE}
@@ -133,7 +133,7 @@ const TabsPage = () => {
             </div>
             <div className={styles['button-wrapper-mobile']}>
               <Button
-                text={'Пройти опитування'}
+                text={'Перейти до опитувань'}
                 variant={ButtonVariant.FILLED}
                 color={ButtonColor.PRIMARY}
                 size={ButtonSize.SMALL}
@@ -153,7 +153,7 @@ const TabsPage = () => {
             </div>
             <div className={styles['button-wrapper-desktop']}>
               <Button
-                text={'Пройти опитування'}
+                text={'Перейти до опитувань'}
                 variant={ButtonVariant.FILLED}
                 color={ButtonColor.PRIMARY}
                 size={ButtonSize.LARGE}
@@ -162,7 +162,7 @@ const TabsPage = () => {
             </div>
             <div className={styles['button-wrapper-mobile']}>
               <Button
-                text={'Пройти опитування'}
+                text={'Перейти до опитувань'}
                 variant={ButtonVariant.FILLED}
                 color={ButtonColor.PRIMARY}
                 size={ButtonSize.SMALL}
