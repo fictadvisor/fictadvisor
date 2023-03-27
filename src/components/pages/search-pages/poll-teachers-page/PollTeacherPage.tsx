@@ -47,7 +47,6 @@ const PollTeacherPage: FC = () => {
         }),
       );
       void replace('/login?redirect=~poll');
-      console.log('LOL');
     }
   }, [dispatch, isLoggedIn, push, replace]);
 
