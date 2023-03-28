@@ -7,11 +7,13 @@
     "dev": "next dev -p 3000",
     "build": "next build",
     "start": "next start -p 80",
-    "prepare": "husky install",
     "typecheck": "tsc"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
     "@heroicons/react": "^2.0.14",
+    "@mui/material": "^5.11.14",
     "@reduxjs/toolkit": "^1.9.2",
     "@typescript-eslint/eslint-plugin": "^5.51.0",
     "@zeit/next-sass": "^1.0.1",
@@ -20,7 +22,6 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "formik": "^2.2.9",
-    "husky": "^8.0.3",
     "lodash-es": "^4.17.21",
     "merge-class-names": "^1.4.2",
     "next": "13.1.5",
@@ -41,6 +42,8 @@
     "@types/node": "^18.11.18",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
+    "babel-plugin-direct-import": "^1.0.0",
+    "babel-plugin-import": "^1.13.6",
     "eslint": "8.34.0",
     "eslint-config-next": "13.1.6",
     "typescript": "^4.9.4"
