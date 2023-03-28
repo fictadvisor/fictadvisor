@@ -139,22 +139,30 @@ export class RozParser implements Parser {
 
         let linksCounter = 0;
 
-        // Getting teacher links data
-        for (let k = 1; k < td.childNodes.length - 1; k++) {
-          const element = td.childNodes[k];
-          if (
-            element instanceof dom.window.HTMLBRElement ||
-            element instanceof dom.window.Text ||
-            element.textContent.startsWith('-18') // if several links type of "-18 Лек on-line" ...
-          )
+        // Filter junk
+        const domainRegex = /^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:/\n?]+)/igm;
+        const teacherLinks = Object.values(td.childNodes).filter((n: any) => !(n instanceof dom.window.HTMLBRElement || n instanceof dom.window.Text || n instanceof dom.window.HTMLSpanElement || n.href.match(domainRegex)?.includes('http://maps.google.com'))); 
+
+        for (let k = 0; k < teacherLinks.length; k++) {
+          const anchor = teacherLinks[k] as HTMLAnchorElement;
+          const teacherString = anchor.getAttribute('title').split(' ');
+          const parseTeacherName = (str) => ({
+            lastName: str[str.length - 1 - 2] ?? '',
+            firstName: str[str.length - 1 - 1] ?? '',
+            middleName: str[str.length - 1 - 0] ?? '',
+          });
+          // Previous and last teacher bind to the last discipline
+          if (teacherLinks.length > localRowPairs.length && k === teacherLinks.length - 1 - 1) {
+            const nextAnchor = teacherLinks[k + 1] as HTMLAnchorElement;
+            const mainTeacher = parseTeacherName(teacherString);
+            const secondaryTeacher = parseTeacherName(nextAnchor.getAttribute('title').split(' '));
+            const teachers = [mainTeacher, secondaryTeacher];
+            localRowPairs[linksCounter].teachers = teachers;
+            // Force loop finish
+            k += 1;
             continue;
-          const teacherString = element.getAttribute('title').split(' ');
-          if (!localRowPairs[linksCounter]) continue; 
-          localRowPairs[linksCounter].teacher = {
-            lastName: teacherString[teacherString.length - 1 - 2] ?? '',
-            firstName: teacherString[teacherString.length - 1 - 1] ?? '',
-            middleName: teacherString[teacherString.length - 1 - 0] ?? '',
-          };
+          }
+          localRowPairs[linksCounter].teacher = parseTeacherName(teacherString);
           linksCounter += 1;
         }
         pairs.push(...localRowPairs);
@@ -173,13 +181,6 @@ export class RozParser implements Parser {
   }
 
   async parsePair (pair, groupId) {
-    const { lastName = '', firstName = '', middleName = '' } = pair.teacher ? pair.teacher : {};
-    const teacher = await this.teacherRepository.getOrCreate({
-      lastName,
-      firstName,
-      middleName,
-    });
-
     const subject = await this.subjectRepository.getOrCreate(pair.name ?? '');
     const [startHours, startMinutes] = pair.time
       .split(':')
@@ -209,17 +210,26 @@ export class RozParser implements Parser {
       name,
     });
 
-    const disciplineTeacher =
-      await this.disciplineTeacherRepository.getOrCreate({
-        teacherId: teacher.id,
-        disciplineId: discipline.id,
-      });
+    const teachers = pair.teachers ? pair.teachers : [{ lastName: '', firstName: '', middleName: '' }];
+    for (const { lastName, firstName, middleName } of teachers) {
+      const teacher = await this.teacherRepository.getOrCreate({
+        lastName,
+        firstName,
+        middleName,
+      });  
 
-    await this.disciplineTeacherRoleRepository.getOrCreate({
-      role,
-      disciplineTeacherId: disciplineTeacher.id,
-      disciplineTypeId: disciplineType.id,
-    });
+      const disciplineTeacher =
+        await this.disciplineTeacherRepository.getOrCreate({
+          teacherId: teacher.id,
+          disciplineId: discipline.id,
+        });
+
+      await this.disciplineTeacherRoleRepository.getOrCreate({
+        role,
+        disciplineTeacherId: disciplineTeacher.id,
+        disciplineTypeId: disciplineType.id,
+      });
+    }
 
     await this.scheduleRepository.getOrCreateSemesterLesson({
       disciplineTypeId: disciplineType.id,
