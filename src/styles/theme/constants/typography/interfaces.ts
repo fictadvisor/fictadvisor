@@ -27,3 +27,20 @@ declare module '@mui/material/styles' {
     buttonBold?: CSSProperties;
   }
 }
+
+declare module '@mui/material/Typography' {
+  interface TypographyPropsVariantOverrides {
+    h2Bold: true;
+    h3SemiBold: true;
+    h4Medium: true;
+    h4Bold: true;
+    h6Medium: true;
+    h6Bold: true;
+    body1Bold: true;
+    body2Bold: true;
+    buttonBold: true;
+    subtitle1: false;
+    subtitle2: false;
+    caption: false;
+  }
+}

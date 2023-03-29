@@ -3,7 +3,6 @@ import '@mui/material/styles';
 declare module '@mui/material/styles' {
   interface Palette {
     gray: Palette['primary'];
-    red: Palette['primary'];
     backgroundDark: Palette['primary'];
     backgroundLight: Palette['primary'];
     amber: Palette['primary'];
@@ -16,7 +15,6 @@ declare module '@mui/material/styles' {
 
   interface PaletteOptions {
     gray?: PaletteOptions['primary'];
-    red?: PaletteOptions['primary'];
     backgroundDark?: PaletteOptions['primary'];
     backgroundLight?: PaletteOptions['primary'];
     amber?: PaletteOptions['primary'];
