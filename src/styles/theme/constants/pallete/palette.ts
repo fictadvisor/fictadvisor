@@ -10,7 +10,7 @@ const palette = {
     500: '#E5E5E5',
     600: '#FAFAFA',
   },
-  red: {
+  primary: {
     [-10]: '#402626',
     0: '#5F3333',
     10: '#873030',
@@ -166,7 +166,6 @@ const palette = {
     600: '#F89473',
     700: '#F8CABB',
   },
-  primary: undefined,
   secondary: undefined,
   grey: undefined,
 };

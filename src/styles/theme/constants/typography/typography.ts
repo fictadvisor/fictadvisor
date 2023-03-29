@@ -13,7 +13,7 @@ const typography: TypographyOptions = {
     lineHeight: 1.16,
   },
   h2Bold: {
-    fontSize: 96,
+    fontSize: 60,
     fontWeight: 700,
     lineHeight: 1.16,
   },

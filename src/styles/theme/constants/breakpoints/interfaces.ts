@@ -2,7 +2,7 @@ import '@mui/material/styles';
 
 declare module '@mui/material/styles' {
   interface BreakpointOverrides {
-    xs: false; // removes the `xs` breakpoint
+    xs: false;
     sm: false;
     md: false;
     lg: false;

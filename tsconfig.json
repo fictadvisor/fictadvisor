@@ -27,7 +27,8 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "src/lib/component"
+    "src/lib/component",
+    "mui.d.ts",
   ],
   "exclude": [
     "node_modules"
