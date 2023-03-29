@@ -44,7 +44,7 @@ export class ScheduleController {
   async getStaticLessons (
     @Param('groupId', GroupByIdPipe) group: Group
   ) {
-    const current = await this.dateService.getCurrent();
+    const current = await this.dateService.getCurrentDay();
     const lessons = await this.scheduleService.getSchedule(group, current.fortnight, 'static');
     return { current, lessons };
   }
@@ -63,7 +63,7 @@ export class ScheduleController {
   async getTemporaryLessons (
     @Param('groupId', GroupByIdPipe) group: Group,
   ) {
-    const current = await this.dateService.getCurrent();
+    const current = await this.dateService.getCurrentDay();
     const lessons = await this.scheduleService.getSchedule(group, current.fortnight, 'temporary');
     return { lessons };
   }

@@ -1,11 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import { ConfigService } from '@nestjs/config';
+import { DataNotFoundException } from '../exceptions/DataNotFoundException';
+
 
 export const DAY = 1000 * 60 * 60 * 24;
 export const WEEK = DAY * 7;
 export const FORTNITE = WEEK * 2;
-export interface CurrentDate {
+
+export interface CurrentSemester {
+  year: number,
+  semester: number,
+  startDate: Date,
+}
+export interface CurrentDay {
   fortnight: number,
   week: number,
   day: number,
@@ -15,18 +22,23 @@ export interface CurrentDate {
 export class DateService {
   constructor (
     private prisma: PrismaService,
-    private config: ConfigService,
   ) {}
+  async getCurrentSemester (): Promise<CurrentSemester> {
+    const semester = await this.prisma.startDate.findFirst({
+      where: {
+        startDate: {
+          lte: new Date(),
+        },
+      },
+      orderBy: {
+        startDate: 'desc',
+      },
+    });
 
-  async getCurrentYearAndSemester () {
-    const { currentYear, currentSemester } = this.config.get<{
-      currentYear: number,
-      currentSemester: number
-    }>('dates');
-    return {
-      year: currentYear,
-      semester: currentSemester,
-    };
+    if (!semester) {
+      throw new DataNotFoundException();
+    }
+    return semester;
   }
   async getDateVar (name: string): Promise<Date> {
     const { date } = await this.prisma.dateVar.findUnique({
@@ -36,17 +48,8 @@ export class DateService {
     });
     return date;
   }
-  async getCurrent (): Promise<CurrentDate> {
-    const { currentYear, currentSemester } = this.config.get('dates');
-    const { startDate } = await this.prisma.startDate.findFirst({
-      select: {
-        startDate: true,
-      },
-      where: {
-        year: currentYear,
-        semester: currentSemester,
-      },
-    });
+  async getCurrentDay (): Promise<CurrentDay> {
+    const { startDate }  = await this.getCurrentSemester();
 
     const difference = new Date().getTime() - startDate.getTime();
     const fortnight = Math.ceil(difference / FORTNITE);
@@ -54,10 +57,9 @@ export class DateService {
     let week = Math.ceil(difference / WEEK) % 2;
     if (week === 0) week = 2;
 
-    let day = Math.ceil(difference / DAY) % 7;
+    let day = new Date().getDay();
     if (day === 0) day = 7;
 
     return { fortnight, week, day };
   }
-
 }
