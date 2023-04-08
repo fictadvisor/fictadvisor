@@ -12,9 +12,8 @@ export class StudentDTO {
     firstName: string;
 
   @Matches(
-    new RegExp('^[' + UKR_REGEX + UKRSPEC_REGEX + ']{2,40}$'),
-    validationOptionsMsg('Middle name is not correct (A-Я(укр.)\\-\' ), or too short (min: 2), or too long (max: 40)'))
-  @IsNotEmpty(validationOptionsMsg('Middle name is empty'))
+    new RegExp('^[' + UKR_REGEX + UKRSPEC_REGEX + ']{0,40}$'),
+    validationOptionsMsg('Middle name is not correct (A-Я(укр.)\\-\' ), or too long (max: 40)'))
   @IsOptional()
     middleName?: string;
 

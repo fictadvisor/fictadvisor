@@ -24,7 +24,6 @@ export class UpdateStudentDTO {
     createRegex(UKR_REGEX, UKRSPEC_REGEX),
     validationOptionsMsg('Middle name is not correct (A-Я(укр.)\\-\' )'),
   )
-  @MinLength(2, validationOptionsMsg('Middle name is too short (min 2)'))
   @MaxLength(40, validationOptionsMsg('Middle name is too long (max 40)'))
   @IsOptional()
     middleName?: string;
