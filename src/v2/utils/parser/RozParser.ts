@@ -3,6 +3,7 @@ import { JSDOM } from 'jsdom';
 import { URLSearchParams } from 'node:url';
 import { Injectable } from '@nestjs/common';
 import { Parser } from './Parser';
+import { PrismaService } from '../../database/PrismaService';
 import { DisciplineTypeEnum, TeacherRole } from '@prisma/client';
 import { DisciplineTeacherRepository } from '../../api/teacher/DisciplineTeacherRepository';
 import { DisciplineTeacherRoleRepository } from '../../api/teacher/DisciplineTeacherRoleRepository';
@@ -43,6 +44,7 @@ const WEEK_TAGS = {
 @Injectable()
 export class RozParser implements Parser {
   constructor (
+    private prisma: PrismaService,
     private groupRepository: GroupRepository,
     private teacherRepository: TeacherRepository,
     private subjectRepository: SubjectRepository,
@@ -147,9 +149,9 @@ export class RozParser implements Parser {
           const anchor = teacherLinks[k] as HTMLAnchorElement;
           const teacherString = anchor.getAttribute('title').split(' ');
           const parseTeacherName = (str) => ({
-            lastName: str[str.length - 1 - 2] ?? '',
-            firstName: str[str.length - 1 - 1] ?? '',
-            middleName: str[str.length - 1 - 0] ?? '',
+            lastName: str[str.length - 1 - 2].replace('.', '') ?? '',
+            firstName: str[str.length - 1 - 1].replace('.', '') ?? '',
+            middleName: str[str.length - 1 - 0].replace('.', '') ?? '',
           });
           // Previous and last teacher bind to the last discipline
           if (teacherLinks.length > localRowPairs.length && k === teacherLinks.length - 1 - 1) {
@@ -178,6 +180,24 @@ export class RozParser implements Parser {
     for (const pair of week) {
       await this.parsePair(pair, group.id);
     }
+  }
+
+  async getTeacherFullInitials (lastName, firstName, middleName) {
+    if (firstName.length <= 1 || middleName.length <= 1) {
+      const teachers = await this.prisma.teacher.findMany({ 
+        where: { lastName, firstName: { startsWith: firstName }, middleName: { startsWith: middleName } }, 
+      });
+
+      if (teachers.length === 1) return teachers[0];
+    }
+
+    // If several teachers with same initials or if there is no such teacher at all
+    const teacher = await this.teacherRepository.getOrCreate({
+      lastName,
+      firstName,
+      middleName,
+    }); 
+    return teacher;
   }
 
   async parsePair (pair, groupId) {
@@ -212,11 +232,7 @@ export class RozParser implements Parser {
 
     const teachers = pair.teachers ? pair.teachers : [{ lastName: '', firstName: '', middleName: '' }];
     for (const { lastName, firstName, middleName } of teachers) {
-      const teacher = await this.teacherRepository.getOrCreate({
-        lastName,
-        firstName,
-        middleName,
-      });  
+      const teacher = await this.getTeacherFullInitials(lastName, firstName, middleName);
 
       const disciplineTeacher =
         await this.disciplineTeacherRepository.getOrCreate({
