@@ -14,6 +14,7 @@ import { ContactByUserIdPipe } from './ContactByUserIdPipe';
 import { GroupRequestDTO } from './dto/GroupRequestDTO';
 import { Access } from 'src/v2/security/Access';
 import { TelegramDTO } from '../auth/dto/TelegramDTO';
+import { UserMapper } from './UserMapper';
 
 @Controller({
   version: '2',
@@ -22,6 +23,7 @@ import { TelegramDTO } from '../auth/dto/TelegramDTO';
 export class UserController {
   constructor (
     private userService: UserService,
+    private userMapper: UserMapper,
   ) {
   }
 
@@ -97,11 +99,12 @@ export class UserController {
 
   @Access('users.update')
   @Patch('/:userId')
-  updateUser (
+  async updateUser (
     @Param('userId', UserByIdPipe) userId: string,
     @Body() body: UpdateUserDTO
   ) {
-    return this.userService.updateUser(userId, body);
+    const user = await this.userService.updateUser(userId, body);
+    return this.userMapper.updateUser(user);
   }
 
   @Access('users.$userId.contacts.get')
@@ -180,6 +183,4 @@ export class UserController {
   ) {
     return this.userService.getUser(userId);
   }
-
-
 }

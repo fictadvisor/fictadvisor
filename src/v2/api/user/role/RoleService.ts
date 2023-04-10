@@ -44,7 +44,7 @@ export class RoleService {
   }
 
   async delete (id: string) {
-    await this.roleRepository.delete(id);
+    await this.roleRepository.delete({ id });
   }
 
   async update (id: string, body: UpdateRoleDTO) {

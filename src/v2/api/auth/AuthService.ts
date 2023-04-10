@@ -76,9 +76,11 @@ export class AuthService {
   ) {}
 
   async validateUser (username: string, password: string) {
-    const user = await this.userRepository.getByUnique({
-      username,
-      email: username,
+    const user = await this.userRepository.find({
+      OR: [
+        { username },
+        { email: username },
+      ],
     });
     if (!user) {
       throw new InvalidEntityIdException('user');
@@ -198,11 +200,9 @@ export class AuthService {
     if (!telegram || !this.isExchangeValid(telegram)) {
       throw new InvalidTelegramCredentialsException();
     }
-
-    const user = await this.userRepository.getByUnique({
+    const user = await this.userRepository.find({
       telegramId: telegram.id,
     });
-
     return this.getTokens(user);
   }
 
@@ -317,12 +317,14 @@ export class AuthService {
 
     if (!(await this.isPseudoRegistered(tokenUser.email))) {
       const telegram = tokenUser.telegramId ? {} : { telegramId: tokenUser.telegramId };
-      const dbUser = await this.userRepository.getByUnique({
-        email: tokenUser.email,
-        username: tokenUser.username,
-        ...telegram,
+      const user = await this.userRepository.find({
+        OR: [
+          { email: tokenUser.email },
+          { username: tokenUser.username },
+          { ...telegram },
+        ],
       });
-      if (dbUser) {
+      if (user) {
         throw new AlreadyRegisteredException();
       }
     }
@@ -349,8 +351,15 @@ export class AuthService {
 
   async setPassword (search: UniqueUserDTO, password) {
     const hash = await this.hashPassword(password);
-
-    return this.userRepository.updateByUnique(search, {
+    return this.userRepository.updateMany({
+      OR: [
+        { id: search.id },
+        { email: search.email },
+        { telegramId: search.telegramId },
+        { username: search.username },
+      ],
+    }, 
+    {
       password: hash,
       lastPasswordChanged: new Date(),
     });
@@ -367,12 +376,17 @@ export class AuthService {
   }
 
   async checkIfUserIsRegistered (query: IdentityQueryDTO) {
-    const user = await this.userRepository.getByUnique(query);
+    const user = await this.userRepository.find({
+      OR: [
+        { email: query.email },
+        { username: query.username },
+      ],
+    });
     return (user != null && user.password != null);
   }
 
   async isPseudoRegistered (email: string) {
-    const user = await this.userRepository.getByUnique({ email });
+    const user = await this.userRepository.find({ email });
     return (user != null && user.password == null);
   }
 
@@ -396,11 +410,13 @@ export class AuthService {
   }
 
   async pseudoRegister (user: UserDTO, isCaptain:boolean, createStudent: Omit<StudentDTO, 'isCaptain'>) {
-    const dbUser = await this.userRepository.updateByEmail(user.email, {
-      ...user,
-      lastPasswordChanged: new Date(),
-      state: State.APPROVED,
-    });
+    const dbUser = await this.userRepository.update(
+      { email: user.email }, 
+      {
+        ...user,
+        lastPasswordChanged: new Date(),
+        state: State.APPROVED,
+      });
     await this.studentRepository.update(dbUser.id, createStudent);
 
     return dbUser;

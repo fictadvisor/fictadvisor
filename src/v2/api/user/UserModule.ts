@@ -8,11 +8,11 @@ import { GrantService } from './grant/GrantService';
 import { AuthModule } from '../auth/AuthModule';
 import { AccessModule } from '../../security/AccessModule';
 import { GroupModule } from '../group/GroupModule';
-
+import { UserMapper } from './UserMapper';
 @Module({
   controllers: [UserController, RoleController],
-  providers: [UserService, RoleService, GrantService],
-  exports: [UserService, RoleService, GrantService],
+  providers: [UserService, RoleService, GrantService, UserMapper],
+  exports: [UserService, RoleService, GrantService, UserMapper],
   imports: [ConfigurationModule, forwardRef(() => GroupModule), AccessModule, forwardRef(() => AuthModule)],
 })
 export class UserModule {}

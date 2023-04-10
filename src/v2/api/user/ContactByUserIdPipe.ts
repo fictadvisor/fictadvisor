@@ -15,7 +15,7 @@ export class ContactByUserIdPipe implements PipeTransform {
   async transform (params: {userId: string, name: string}) {
     const { userId, name } = params;
 
-    const user: User = await this.userRepository.get(userId);
+    const user: User = await this.userRepository.findById(userId);
     if (!user) {
       throw new InvalidEntityIdException('user');
     }

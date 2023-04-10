@@ -4,6 +4,7 @@ import { StudentRepository } from './StudentRepository';
 import { UpdateSuperheroData } from './data/UpdateSuperheroData';
 import { SuperheroRepository } from './SuperheroRepository';
 import { UserRepository } from './UserRepository';
+import { RoleRepository } from './role/RoleRepository';
 import { ContactRepository } from './ContactRepository';
 import { UpdateUserDTO } from './dto/UpdateUserDTO';
 import { CreateContactDTO } from './dto/CreateContactDTO';
@@ -26,6 +27,7 @@ export class UserService {
     private userRepository: UserRepository,
     private superheroRepository: SuperheroRepository,
     private contactRepository: ContactRepository,
+    private roleRepository: RoleRepository,
     @Inject(forwardRef(() => AuthService))
     private authService: AuthService,
     @Inject(forwardRef(() => GroupService))
@@ -102,13 +104,21 @@ export class UserService {
     await this.authService.verify(student.user, { groupId, isCaptain, ...name });
   }
 
-  async deleteUser (userId: string) {
-    await this.userRepository.deleteRole(userId);
-    await this.userRepository.delete(userId);
+  async deleteUser (studentId: string) {
+    await this.roleRepository.deleteMany({
+      name: RoleName.USER,
+      userRoles: {
+        some: {
+          studentId,
+        },
+      },
+    });
+    await this.userRepository.deleteById(studentId);
   }
 
   async updateUser (userId: string, data: UpdateUserDTO) {
-    return this.userRepository.update(userId, data);
+    const user = await this.userRepository.updateById(userId, data);
+    return user;
   }
 
   async getContacts (userId: string) {
@@ -172,11 +182,11 @@ export class UserService {
       throw new InvalidTelegramCredentialsException();
     }
 
-    await this.userRepository.update(userId, { telegramId: telegram.id });
+    await this.userRepository.updateById(userId, { telegramId: telegram.id });
   }
 
   async verifyStudent (userId: string, isCaptain: boolean, state: State) {
-    const user = await this.userRepository.get(userId);
+    const user = await this.userRepository.findById(userId);
     if (user.student.state !== State.PENDING) return this.studentRepository.get(userId);
 
     if (state === State.APPROVED) {

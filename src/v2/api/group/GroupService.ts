@@ -88,7 +88,7 @@ export class GroupService {
   async addUnregistered (groupId: string, body: EmailDTO) {
     const users = [];
     for (const email of body.emails) {
-      const user = await this.userRepository.getByUnique({ email });
+      const user = await this.userRepository.find({ email });
       if (user) throw new AlreadyRegisteredException();
     }
     for (const email of body.emails) {
@@ -111,8 +111,7 @@ export class GroupService {
   }
 
   async verifyStudent (groupId: string, userId: string, data: ApproveDTO) {
-    const user = await this.userRepository.get(userId);
-
+    const user = await this.userRepository.findById(userId);
     if (user.student.groupId !== groupId) {
       throw new NoPermissionException();
     }
@@ -133,7 +132,7 @@ export class GroupService {
   }
 
   async moderatorSwitch (groupId: string, userId: string, { roleName }: RoleDTO) {
-    const user = await this.userRepository.get(userId);
+    const user = await this.userRepository.findById(userId);
 
     if (user.student.groupId !== groupId) {
       throw new NoPermissionException();
@@ -159,9 +158,9 @@ export class GroupService {
     }
 
     await this.studentRepository.removeRole(userId, userRole.id);
-    const user = await this.userRepository.get(userId);
+    const user = await this.userRepository.findById(userId);
     if (!user.username) {
-      await this.userRepository.delete(userId);
+      await this.userRepository.deleteById(userId);
     }
     await this.studentRepository.update(userId, { state: State.DECLINED });
   }

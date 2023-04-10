@@ -4,6 +4,7 @@ import { CreateRoleDTO } from '../dto/CreateRoleDTO';
 import { UpdateRoleDTO } from './dto/UpdateRoleDTO';
 import { CreateRoleData } from '../data/CreateRoleData';
 import { CreateGrantInRoleData } from '../data/CreateGrantInRoleData';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class RoleRepository {
@@ -53,11 +54,15 @@ export class RoleRepository {
     });
   }
 
-  async delete (id: string) {
+  async delete (where: Prisma.RoleWhereUniqueInput) {
     return this.prisma.role.delete({
-      where: {
-        id,
-      },
+      where,
+    });
+  }
+
+  async deleteMany (where: Prisma.RoleWhereInput) {
+    return this.prisma.role.deleteMany({
+      where,
     });
   }
 
