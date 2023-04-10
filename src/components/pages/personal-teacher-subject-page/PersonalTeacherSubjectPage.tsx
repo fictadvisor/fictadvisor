@@ -14,6 +14,7 @@ import { showAlert } from '@/redux/reducers/alert.reducer';
 
 const PersonalTeacherSubjectPage = () => {
   const router = useRouter();
+
   const teacherId = router.query.teacherId as string;
   const subjectId = router.query.subjectId as string;
   const { isLoading, isError, data } = useQuery(
