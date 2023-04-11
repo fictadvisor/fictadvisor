@@ -236,6 +236,7 @@ model Question {
   id              String           @id @default(uuid())
   category        String
   name            String
+  order           Int              @default(0)
   description     String?
   text            String
   isRequired      Boolean          @default(true) @map("is_required")
