@@ -5,6 +5,7 @@ export class CreateQuestionData {
   category: string;
   type: QuestionType;
   name: string;
+  order: number;
   text: string;
   criteria?: string;
   description?: string;

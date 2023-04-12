@@ -10,6 +10,9 @@ export class UpdateQuestionDTO {
       name?: string;
 
     @IsOptional()
+      order?: number;
+
+    @IsOptional()
       criteria?: string;
 
     @IsEnum(QuestionType, validationOptionsMsg('Type is not an enum'))

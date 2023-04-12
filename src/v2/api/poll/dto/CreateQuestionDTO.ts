@@ -13,6 +13,9 @@ export class CreateQuestionDTO {
     @IsNotEmpty(validationOptionsMsg('Name can not be empty'))
       name: string;
 
+    @IsNotEmpty(validationOptionsMsg('Order can not be empty'))
+      order: number;
+
     @IsNotEmpty(validationOptionsMsg('Text can not be empty'))
       text: string;
 

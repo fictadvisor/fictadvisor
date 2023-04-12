@@ -23,6 +23,7 @@ export class QuestionAnswerRepository {
             id: true,
             category: true,
             name: true,
+            order: true,
             description: true,
             text: true,
             isRequired: true,

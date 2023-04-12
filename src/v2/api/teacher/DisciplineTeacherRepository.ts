@@ -162,6 +162,9 @@ export class DisciplineTeacherRepository {
         description: true,
         display: true,
       },
+      orderBy: {
+        order: 'asc',
+      },
     });
   }
 }

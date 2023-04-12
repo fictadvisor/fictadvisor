@@ -55,6 +55,7 @@ export class QuestionRepository {
         id: true,
         category: true,
         name: true,
+        order: true,
         description: true,
         text: true,
         criteria: true,
