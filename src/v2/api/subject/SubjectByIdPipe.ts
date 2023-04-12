@@ -1,5 +1,4 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
-import { Subject } from '@prisma/client';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
 import { SubjectRepository } from './SubjectRepository';
 
@@ -9,11 +8,11 @@ export class SubjectByIdPipe implements PipeTransform<string, Promise<string>> {
     private subjectRepository: SubjectRepository
   ) {}
 
-  async transform (value: string): Promise<string> {
-    const subject: Subject = await this.subjectRepository.get(value);
+  async transform (id: string): Promise<string> {
+    const subject = await this.subjectRepository.findById(id);
     if (!subject) {
       throw new InvalidEntityIdException('subject');
     }
-    return value;
+    return id;
   }
 }

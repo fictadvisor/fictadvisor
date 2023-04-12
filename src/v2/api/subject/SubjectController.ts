@@ -1,10 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { SubjectService } from './SubjectService';
-import { CreateSubjectDTO } from './dto/CreateSubjectDTO';
-import { UpdateSubjectDTO } from './dto/UpdateSubjectDTO';
 import { SubjectByIdPipe } from './SubjectByIdPipe';
 import { QueryAllSubjectDTO } from './query/QueryAllSubjectDTO';
 import { Access } from 'src/v2/security/Access';
+import { SubjectMapper } from './SubjectMapper';
+import { CreateSubjectDTO } from './dto/CreateSubjectDTO';
+import { UpdateSubjectDTO } from './dto/UpdateSubjectDTO';
 
 @Controller({
   version: '2',
@@ -12,6 +13,7 @@ import { Access } from 'src/v2/security/Access';
 })
 export class SubjectController {
   constructor (
+    private subjectMapper: SubjectMapper,
     private subjectService: SubjectService,
   ) {}
 
@@ -25,10 +27,11 @@ export class SubjectController {
   }
 
   @Get('/:subjectId')
-  get (
+  async get (
     @Param('subjectId', SubjectByIdPipe) subjectId: string,
   ) {
-    return this.subjectService.get(subjectId);
+    const dbSubject = await this.subjectService.get(subjectId);
+    return this.subjectMapper.getSubject(dbSubject);
   }
   
   @Get('/:subjectId/teachers')
@@ -40,10 +43,11 @@ export class SubjectController {
 
   @Access('subjects.create')
   @Post()
-  create (
+  async create (
     @Body() body: CreateSubjectDTO,
   ) {
-    return this.subjectService.create(body);
+    const dbSubject = await this.subjectService.create(body);
+    return this.subjectMapper.getSubject(dbSubject);
   }
 
   @Access('subjects.update')

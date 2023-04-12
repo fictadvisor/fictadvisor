@@ -201,4 +201,44 @@ export class TeacherRepository {
       },
     });
   }
+
+  countSubjectTeachers (subjectId: string) {
+    return this.prisma.teacher.count({
+      where: {
+        disciplineTeachers: {
+          some: {
+            discipline: {
+              subjectId,
+            },
+          },
+        },
+      },
+    });
+  }
+
+  getSubjectTeachers (subjectId: string) {
+    return this.prisma.teacher.findMany({
+      where: {
+        disciplineTeachers: {
+          some: {
+            discipline: {
+              subjectId,
+            },
+          },
+        },
+      },
+      select: {
+        id: true,
+        firstName: true,
+        middleName: true,
+        lastName: true,
+        avatar: true,
+        disciplineTeachers: {
+          include: {
+            roles: true,
+          },
+        },
+      },
+    });
+  }
 }
