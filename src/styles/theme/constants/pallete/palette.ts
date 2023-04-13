@@ -50,6 +50,7 @@ const palette = {
     500: '#F5A8AC',
     600: '#F9CDCF',
     700: '#FFE5E7',
+    800: '#CBA7AC',
   },
   warning: {
     0: '#642009',
@@ -113,6 +114,7 @@ const palette = {
     500: '#5373E7',
     600: '#849DFF',
     700: '#EEF1FD',
+    800: '#56ADE1',
   },
   green: {
     0: '#001A00',
@@ -126,6 +128,7 @@ const palette = {
     500: '#64BC64',
     600: '#90DA90',
     700: '#BAE1BA',
+    800: '#50DA98',
   },
   violet: {
     0: '#1A001A',
@@ -165,9 +168,8 @@ const palette = {
     500: '#E26E47',
     600: '#F89473',
     700: '#F8CABB',
+    800: '#FD7D4C',
   },
-  secondary: undefined,
-  grey: undefined,
 };
 
 export default palette;
