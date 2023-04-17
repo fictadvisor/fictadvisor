@@ -3,7 +3,7 @@ import { DisciplineTeacherRepository } from './DisciplineTeacherRepository';
 import { PollService } from '../poll/PollService';
 import { CreateAnswerDTO, CreateAnswersDTO } from './dto/CreateAnswersDTO';
 import { QuestionAnswerRepository } from '../poll/QuestionAnswerRepository';
-import { Question, QuestionType, TeacherRole } from '@prisma/client';
+import { QuestionType, TeacherRole } from '@prisma/client';
 import { AlreadyAnsweredException } from '../../utils/exceptions/AlreadyAnsweredException';
 import { NotEnoughAnswersException } from '../../utils/exceptions/NotEnoughAnswersException';
 import { ExcessiveAnswerException } from '../../utils/exceptions/ExcessiveAnswerException';
@@ -18,6 +18,7 @@ import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityId
 import { DisciplineRepository } from '../discipline/DisciplineRepository';
 import { DisciplineTypeRepository } from '../discipline/DisciplineTypeRepository';
 import { TeacherTypeAdapter } from './dto/TeacherRoleAdapter';
+import { DbQuestion } from './DbQuestion';
 
 @Injectable()
 export class DisciplineTeacherService {
@@ -134,7 +135,7 @@ export class DisciplineTeacherService {
     return this.disciplineTeacherRepository.getQuestions(teacherRoles, disciplineRoles);
   }
 
-  async checkRequiredQuestions (dbQuestions: Question[], questions: CreateAnswerDTO[]) {
+  async checkRequiredQuestions (dbQuestions: DbQuestion[], questions: CreateAnswerDTO[]) {
     for (const question of dbQuestions) {
       if (question.isRequired && !questions.some((q) => q.questionId === question.id)) {
         throw new NotEnoughAnswersException();
@@ -142,7 +143,7 @@ export class DisciplineTeacherService {
     }
   }
 
-  async checkExcessiveQuestions (dbQuestions: Question[], questions: CreateAnswerDTO[]) {
+  async checkExcessiveQuestions (dbQuestions: DbQuestion[], questions: CreateAnswerDTO[]) {
     for (const question of questions) {
       if (!dbQuestions.some((q) => (q.id === question.questionId))) {
         throw new ExcessiveAnswerException();

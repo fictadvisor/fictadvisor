@@ -2,10 +2,11 @@ import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { CreateQuestionWithRolesDTO } from './dto/CreateQuestionWithRolesDTO';
 import { QuestionRepository } from './QuestionRepository';
 import { UpdateQuestionDTO } from './dto/UpdateQuestionDTO';
-import { Question, TeacherRole } from '@prisma/client';
+import { TeacherRole } from '@prisma/client';
 import { CreateQuestionRoleDTO } from './dto/CreateQuestionRoleDTO';
 import { StudentRepository } from '../user/StudentRepository';
 import { DisciplineService } from '../discipline/DisciplineService';
+import { DbQuestion } from '../teacher/DbQuestion';
 
 @Injectable()
 export class PollService {
@@ -40,7 +41,7 @@ export class PollService {
     return this.questionRepository.deleteRole(questionId, role);
   }
 
-  sortByCategories (questions: Question[]) {
+  sortByCategories (questions: DbQuestion[]) {
     const results = [];
     for (const question of questions) {
       const name = question.category;

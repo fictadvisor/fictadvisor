@@ -153,7 +153,6 @@ export class DisciplineTeacherRepository {
       select: {
         id: true,
         name: true,
-        order: true,
         category: true,
         criteria: true,
         isRequired: true,
