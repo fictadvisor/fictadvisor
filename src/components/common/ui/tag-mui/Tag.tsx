@@ -34,7 +34,7 @@ const Tag: FC<TagProps> = ({
   sx,
 }) => {
   return (
-    <Box sx={withSxProp(sx, styles.tag(variant, color, size, icon))}>
+    <Box sx={withSxProp(styles.tag(variant, color, size, icon), sx)}>
       {icon && <Box sx={styles.icon}>{icon}</Box>}
       <p>{text}</p>
     </Box>
