@@ -14,7 +14,7 @@ interface DividerProps {
 
 const Divider: FC<DividerProps> = ({ text, sx, textAlign = 'center' }) => {
   return (
-    <DividerMui sx={withSxProp(sx, styles.divider)} textAlign={textAlign}>
+    <DividerMui sx={withSxProp(styles.divider, sx)} textAlign={textAlign}>
       {text}
     </DividerMui>
   );
