@@ -279,4 +279,21 @@ export class DisciplineTeacherService {
     }
     await this.disciplineTeacherRepository.deleteById(disciplineTeacher.id);
   }
+
+  async getUserDisciplineTeachers (teacherId: string, userId: string) {
+    return this.disciplineTeacherRepository.findMany({
+      where: {
+        teacherId,
+        discipline: {
+          group: {
+            students: {
+              some: {
+                userId,
+              },
+            },
+          },
+        },
+      },
+    });
+  }
 }

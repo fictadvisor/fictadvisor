@@ -166,4 +166,21 @@ export class DisciplineTeacherRepository {
       },
     });
   }
+
+  findMany (data: Prisma.DisciplineTeacherFindManyArgs): any {
+    return this.prisma.disciplineTeacher.findMany({
+      ...data,
+      include: {
+        discipline: {
+          include: {
+            group: true,
+            subject: true,
+            disciplineTypes: true,
+          },
+        },
+        roles: true,
+        teacher: true,
+      },
+    });
+  }
 }
