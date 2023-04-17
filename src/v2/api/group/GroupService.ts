@@ -210,7 +210,12 @@ export class GroupService {
         set,
       }));
 
-      const role = await this.roleRepository.createWithGrants(roles, grantList);
+      const role = await this.roleRepository.create({
+        ...roles, 
+        grants: {
+          create: grantList,
+        },
+      });
       await this.groupRepository.addRole(role.id, groupId);
     }
   }

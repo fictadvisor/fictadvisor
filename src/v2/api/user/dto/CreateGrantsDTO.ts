@@ -1,10 +1,9 @@
 import { IsBoolean, IsNotEmpty, IsOptional, ValidateNested } from 'class-validator';
 import { validationOptionsMsg } from '../../../utils/GLOBALS';
 import { Type } from 'class-transformer';
-import { CreateAnswerDTO } from '../../teacher/dto/CreateAnswersDTO';
 
 export class CreateGrantsDTO {
-  @Type(() => CreateAnswerDTO)
+  @Type(() => CreateGrantDTO)
   @ValidateNested({ each: true })
     grants: CreateGrantDTO[];
 }

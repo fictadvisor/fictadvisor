@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../database/PrismaService';
 import { UpdateGrantDTO } from './dto/UpdateGrantDTO';
-import { CreateGrantData } from '../data/CreateGrantData';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class GrantRepository {
@@ -9,43 +9,79 @@ export class GrantRepository {
     private prisma: PrismaService,
   ) {}
 
-  async create (data: CreateGrantData) {
+  async create (data: Prisma.GrantUncheckedCreateInput) {
     return this.prisma.grant.create({
       data,
+      include: {
+        role: true,
+      },
     });
   }
 
-  createMany (data: CreateGrantData[]) {
+  createMany (data: Prisma.GrantCreateManyInput[]) {
     return this.prisma.grant.createMany({
       data,
     });
   }
 
-  async find (where: CreateGrantData) {
+  async find (where: Prisma.GrantWhereInput) {
     return this.prisma.grant.findFirst({
       where,
-    });
-  }
-
-  delete (id: string) {
-    return this.prisma.grant.delete({
-      where: {
-        id,
+      include: {
+        role: true,
       },
     });
   }
 
-  async update (id: string, data: UpdateGrantDTO) {
+  async findById (id: string) {
+    return this.prisma.grant.findFirst({
+      where: {
+        id,
+      },
+      include: {
+        role: true,
+      },
+    });
+  }
+
+  delete (where: Prisma.GrantWhereUniqueInput) {
+    return this.prisma.grant.delete({
+      where,
+      include: {
+        role: true,
+      },
+    });
+  }
+
+  deleteById (id: string) {
+    return this.prisma.grant.delete({
+      where: {
+        id,
+      },
+      include: {
+        role: true,
+      },
+    });
+  }
+
+  async update (where: Prisma.GrantWhereUniqueInput, data: UpdateGrantDTO) {
+    return this.prisma.grant.update({
+      where,
+      data,
+      include: {
+        role: true,
+      },
+    });
+  }
+
+  async updateById (id: string, data: UpdateGrantDTO) {
     return this.prisma.grant.update({
       where: {
         id,
       },
       data,
-      select: {
-        id: true,
-        roleId: true,
-        permission: true,
-        set: true,
+      include: {
+        role: true,
       },
     });
   }

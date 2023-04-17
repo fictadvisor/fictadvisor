@@ -6,6 +6,7 @@ import { PermissionGuard } from '../../../security/permission-guard/PermissionGu
 import { Permission } from '../../../security/permission-guard/Permission';
 import { CreateRoleWithGrantsDTO } from '../dto/CreateRoleWithGrantsDTO';
 import { CreateGrantsDTO } from '../dto/CreateGrantsDTO';
+import { RoleMapper } from './RoleMapper';
 
 @Controller({
   version: '2',
@@ -14,29 +15,33 @@ import { CreateGrantsDTO } from '../dto/CreateGrantsDTO';
 export class RoleController {
   constructor (
     private roleService: RoleService,
+    private roleMapper: RoleMapper,
   ) {}
 
   @Get('/:roleId')
-  getRole (
+  async getRole (
     @Param('roleId') roleId: string,
   ) {
-    return this.roleService.get(roleId);
+    const role = await this.roleService.get(roleId);
+    return this.roleMapper.getRole(role);
   }
 
   @Get()
   async getAll () {
     const roles = await this.roleService.getAll();
-    return { roles };
+    const roleMap = this.roleMapper.getAll(roles);
+    return { roles: roleMap };
   }
 
   @Permission('roles.create')
   @UseGuards(JwtGuard, PermissionGuard)
   @Post()
-  create (
+  async create (
     @Body() body: CreateRoleWithGrantsDTO,
     @Request() req
   ) {
-    return this.roleService.createRole(body, req.user.id);
+    const role = await this.roleService.createRole(body, req.user.id);
+    return this.roleMapper.create(role);
   }
 
   @Post('/:roleId/grants')
@@ -52,22 +57,25 @@ export class RoleController {
     @Param('roleId') roleId: string,
   ) {
     const grants = await this.roleService.getGrants(roleId);
-    return { grants };
+    const grantsMap = this.roleMapper.getGrants(grants);
+    return { grants: grantsMap };
   }
 
   @Delete('/:roleId')
-  delete (
+  async delete (
     @Param('roleId') roleId: string,
   ) {
-    return this.roleService.delete(roleId);
+    const role = await this.roleService.delete(roleId);
+    return this.roleMapper.delete(role);
   }
 
   @Patch('/:roleId')
-  update (
+  async update (
     @Param('roleId') roleId: string,
     @Body() body: UpdateRoleDTO,
   ) {
-    return this.roleService.update(roleId, body);
+    const role = await this.roleService.update(roleId, body);
+    return this.roleMapper.update(role);
   }
 
 }

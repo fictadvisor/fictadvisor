@@ -339,11 +339,13 @@ export class AuthService {
 
     this.verifyEmailTokens.delete(token);
 
-    const { id } = await this.roleRepository.createWithGrants({
+    const { id } = await this.roleRepository.create({
       name: RoleName.USER,
       weight: 10,
+      grants: {
+        create: [{ permission: `users.${user.id}.*` }],
+      },
     },
-    [{ permission: `users.${user.id}.*` }],
     );
     await this.studentRepository.addRole(user.id, id);
     return this.getTokens(user);

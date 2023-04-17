@@ -9,10 +9,10 @@ export class GrantService {
   ) {}
 
   async delete (id: string) {
-    await this.grantRepository.delete(id);
+    return this.grantRepository.deleteById(id);
   }
 
   async update (grantId: string, body: UpdateGrantDTO) {
-    return this.grantRepository.update(grantId, body);
+    return this.grantRepository.updateById(grantId, body);
   }
 }

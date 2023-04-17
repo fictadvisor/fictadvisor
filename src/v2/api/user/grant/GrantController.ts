@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Param, Patch } from '@nestjs/common';
 import { GrantService } from './GrantService';
 import { UpdateGrantDTO } from './dto/UpdateGrantDTO';
+import { GrantMapper } from './GrantMapper';
 
 @Controller({
   version: '2',
@@ -9,13 +10,15 @@ import { UpdateGrantDTO } from './dto/UpdateGrantDTO';
 export class GrantController {
   constructor (
     private grantService: GrantService,
+    private grantMapper: GrantMapper,
   ) {}
 
   @Delete('/:grantId')
   async delete (
     @Param('grantId') grantId: string,
   ) {
-    return this.grantService.delete(grantId);
+    const grant = await this.grantService.delete(grantId);
+    return this.grantMapper.delete(grant);
   }
 
   @Patch('/:grantId')
@@ -23,6 +26,7 @@ export class GrantController {
     @Param('grantId') grantId: string,
     @Body() body: UpdateGrantDTO,
   ) {
-    return this.grantService.update(grantId, body);
+    const grant = await this.grantService.update(grantId, body);
+    return this.grantMapper.update(grant);
   }
 }

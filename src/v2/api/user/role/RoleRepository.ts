@@ -1,9 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../database/PrismaService';
-import { CreateRoleDTO } from '../dto/CreateRoleDTO';
-import { UpdateRoleDTO } from './dto/UpdateRoleDTO';
-import { CreateRoleData } from '../data/CreateRoleData';
-import { CreateGrantInRoleData } from '../data/CreateGrantInRoleData';
 import { Prisma } from '@prisma/client';
 
 @Injectable()
@@ -12,44 +8,13 @@ export class RoleRepository {
     private prisma: PrismaService,
   ) {}
 
-  create (data: CreateRoleDTO) {
+  create (data: Prisma.RoleUncheckedCreateInput) {
     return this.prisma.role.create({
       data,
-    });
-  }
-
-  createWithGrants (role: CreateRoleData, grants: CreateGrantInRoleData[]) {
-    return this.prisma.role.create({
-      data: {
-        ...role,
-        grants: {
-          create: grants,
-        },
-      },
-      select: {
-        id: true,
-        name: true,
-        weight: true,
-        grants: {
-          select: {
-            id: true,
-            set: true,
-            permission: true,
-          },
-        },
-      },
-    });
-  }
-
-  async getGrants (roleId: string) {
-    return this.prisma.grant.findMany({
-      where: {
-        roleId,
-      },
-      select: {
-        id: true,
-        set: true,
-        permission: true,
+      include: {
+        groupRole: true,
+        userRoles: true,
+        grants: true,
       },
     });
   }
@@ -57,6 +22,24 @@ export class RoleRepository {
   async delete (where: Prisma.RoleWhereUniqueInput) {
     return this.prisma.role.delete({
       where,
+      include: {
+        grants: true,
+        groupRole: true,
+        userRoles: true,
+      },
+    });
+  }
+
+  async deleteById (id:string) {
+    return this.prisma.role.delete({
+      where: {
+        id,
+      },
+      include: {
+        grants: true,
+        groupRole: true,
+        userRoles: true,
+      },
     });
   }
 
@@ -65,49 +48,71 @@ export class RoleRepository {
       where,
     });
   }
-
-  async update (id: string, data: UpdateRoleDTO) {
+  
+  async update (where: Prisma.RoleWhereUniqueInput, data: Prisma.RoleUncheckedUpdateInput) {
+    return this.prisma.role.update({
+      where,
+      data,
+      include: {
+        grants: true,
+        groupRole: true,
+        userRoles: true,
+      },
+    });
+  }
+  
+  async updateById (id: string, data: Prisma.RoleUncheckedUpdateInput) {
     return this.prisma.role.update({
       where: {
         id,
       },
       data,
+      include: {
+        grants: true,
+        groupRole: true,
+        userRoles: true,
+      },
     });
   }
 
-  get (id: string) {
-    return this.prisma.role.findUnique({
+  async updateMany (where: Prisma.RoleWhereInput, data: Prisma.RoleUncheckedUpdateInput) {
+    return this.prisma.role.updateMany({
+      where,
+      data,
+    });
+  }
+
+  find (where: Prisma.RoleWhereInput) {
+    return this.prisma.role.findFirst({
+      where,
+      include: {
+        grants: true,
+        groupRole: true,
+        userRoles: true,
+      },
+    });
+  }
+
+  findById (id: string) {
+    return this.prisma.role.findFirst({
       where: {
         id,
       },
-      select: {
-        id: true,
-        name: true,
-        weight: true,
-        grants: {
-          select: {
-            id: true,
-            set: true,
-            permission: true,
-          },
-        },
+      include: {
+        grants: true,
+        groupRole: true,
+        userRoles: true,
       },
     });
   }
-
-  getAll () {
+  
+  findMany (where?: Prisma.RoleWhereInput) {
     return this.prisma.role.findMany({
-      select: {
-        id: true,
-        name: true,
-        weight: true,
-        grants: {
-          select: {
-            id: true,
-            set: true,
-            permission: true,
-          },
-        },
+      where,
+      include: {
+        grants: true,
+        groupRole: true,
+        userRoles: true,
       },
     });
   }

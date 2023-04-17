@@ -35,7 +35,12 @@ export class RoleService {
       throw new NoPermissionException();
     }
 
-    return this.roleRepository.createWithGrants(data, grants);
+    return this.roleRepository.create({ 
+      ...data,
+      grants: {
+        create: grants,
+      },
+    });
   }
 
   async createGrants (roleId: string, grants: CreateGrantDTO[]) {
@@ -43,23 +48,24 @@ export class RoleService {
     return this.grantRepository.createMany(createGrants);
   }
 
-  async delete (id: string) {
-    await this.roleRepository.delete({ id });
+  delete (id: string) {
+    return this.roleRepository.deleteById(id);
   }
 
-  async update (id: string, body: UpdateRoleDTO) {
-    await this.roleRepository.update(id, body);
+  update (id: string, body: UpdateRoleDTO) {
+    return this.roleRepository.updateById(id, body);
   }
 
   get (roleId: string) {
-    return this.roleRepository.get(roleId);
+    return this.roleRepository.findById(roleId);
   }
 
   getAll () {
-    return this.roleRepository.getAll();
+    return this.roleRepository.findMany();
   }
 
-  getGrants (roleId: string) {
-    return this.roleRepository.getGrants(roleId);
+  async getGrants (roleId: string) {
+    const role = await this.roleRepository.findById(roleId);
+    return role.grants;
   }
 }
