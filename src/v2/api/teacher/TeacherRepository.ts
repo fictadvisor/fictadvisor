@@ -1,11 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../database/PrismaService';
-import { DatabaseUtils } from '../utils/DatabaseUtils';
-import { CreateTeacherDTO } from './dto/CreateTeacherDTO';
-import { UpdateTeacherDTO } from './dto/UpdateTeacherDTO';
-import { QuestionType } from '@prisma/client';
-import { MarksData } from './data/MarksData';
-import { QueryAllTeacherDTO } from './query/QueryAllTeacherDTO';
 
 
 @Injectable()
@@ -14,104 +9,73 @@ export class TeacherRepository {
     private prisma: PrismaService,
   ) {}
 
-  async getAll (
-    body: QueryAllTeacherDTO,
+  async findMany (
+    data: Prisma.TeacherFindManyArgs,
   ) {
-    const search = DatabaseUtils.getSearch(body, 'firstName', 'lastName', 'middleName');
-    const page = DatabaseUtils.getPage(body);
-    const sort = DatabaseUtils.getSort(body);
-    const groupId = body.group;
-    const disciplines = {
-      some: {
-        discipline: {
-          groupId,
-        },   
-      },
-    };
 
     return this.prisma.teacher.findMany({
-      ...page,
-      ...sort,
-      where: {
-        ...search,
-        disciplineTeachers: groupId != null ? disciplines : undefined,
-      } });
-  }
-
-
-  async getTeacher (
-    id: string,
-  ) {
-    return this.prisma.teacher.findUnique({
-      where: {
-        id,
-      },
-      select: {
-        id: true,
-        firstName: true,
-        middleName: true,
-        lastName: true,
-        description: true,
-        avatar: true,
+      ...data,
+      include: {
         disciplineTeachers: {
-          select: {
-            id: true,
-            roles: {
-              select: {
-                role: true,
-              },
-            },
+          include: {
+            discipline: true,
+            roles: true,
           },
         },
       },
     });
   }
 
-  async delete (
-    id: string,
+  async find (
+    where: Prisma.TeacherWhereInput,
   ) {
-    return this.prisma.teacher.delete({
-      where: {
-        id,
+    return this.prisma.teacher.findFirst({
+      where,
+      include: {
+        disciplineTeachers: {
+          include: {
+            discipline: true,
+            roles: true,
+          },
+        },
       },
     });
   }
 
-  async find (
-    where: CreateTeacherDTO,
-  ) {
-    return this.prisma.teacher.findFirst({
-      where,
+  async findById (id: string) {
+    return this.prisma.teacher.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        disciplineTeachers: {
+          include: {
+            discipline: true,
+            roles: true,
+          },
+        },
+      },
     });
   }
 
   async create (
-    data: CreateTeacherDTO,
+    data: Prisma.TeacherUncheckedCreateInput,
   ) {
     return this.prisma.teacher.create({
       data,
-    });
-  }
-
-  async update (id: string, data: UpdateTeacherDTO) {
-    return this.prisma.teacher.update({
-      where: {
-        id,
-      },
-      data,
-      select: {
-        id: true,
-        firstName: true,
-        middleName: true,
-        lastName: true,
-        description: true,
-        avatar: true,
+      include: {
+        disciplineTeachers: {
+          include: {
+            discipline: true,
+            roles: true,
+          },
+        },
       },
     });
   }
 
   async getOrCreate (
-    data: CreateTeacherDTO,
+    data: {lastName: string, firstName: string, middleName: string},
   ) {
     let teacher = await this.find(data);
 
@@ -121,124 +85,49 @@ export class TeacherRepository {
     return teacher;
   }
 
-  async getMarks (teacherId: string, data?: MarksData) {
-    return this.prisma.question.findMany({
-      where: {
-        OR: [{
-          type: QuestionType.TOGGLE,
-        }, {
-          type: QuestionType.SCALE,
-        }],
-      },
-      select: {
-        id: true,
-        category: true,
-        name: true,
-        text: true,
-        type: true,
-        display: true,
-        questionAnswers: {
-          where: {
-            disciplineTeacher: {
-              teacherId,
-              discipline: {
-                ...data,
-              },
-            },
-          },
-          select: {
-            value: true,
-          },
-        },
-      },
+  async update (where: Prisma.TeacherWhereUniqueInput, data: Prisma.TeacherUncheckedUpdateInput) {
+    return this.prisma.teacher.update({
+      where,
+      data,
     });
   }
 
-  getSubjects (teacherId: string) {
-    return this.prisma.subject.findMany({
+  async updateById (id: string, data: Prisma.TeacherUncheckedUpdateInput) {
+    return this.prisma.teacher.update({
       where: {
-        disciplines: {
-          some: {
-            disciplineTeachers: {
-              some: {
-                teacherId,
-              },
-            },
-          },
-        },
+        id,
       },
-    });
-  }
-
-  getTeacherSubject (teacherId: string, subjectId: string) {
-    return this.prisma.teacher.findFirst({
-      where: {
-        id: teacherId,
-        disciplineTeachers: {
-          some: {
-            discipline: {
-              subjectId,
-            },
-          },
-        },
-      },
-      select: {
-        id: true,
-        lastName: true,
-        avatar: true,
-        middleName: true,
-        firstName: true,
-        disciplineTeachers: {
-          select: {
-            discipline: {
-              select: {
-                subject: true,
-              },
-            },
-            roles: true,
-          },
-        },
-      },
-    });
-  }
-
-  countSubjectTeachers (subjectId: string) {
-    return this.prisma.teacher.count({
-      where: {
-        disciplineTeachers: {
-          some: {
-            discipline: {
-              subjectId,
-            },
-          },
-        },
-      },
-    });
-  }
-
-  getSubjectTeachers (subjectId: string) {
-    return this.prisma.teacher.findMany({
-      where: {
-        disciplineTeachers: {
-          some: {
-            discipline: {
-              subjectId,
-            },
-          },
-        },
-      },
-      select: {
-        id: true,
-        firstName: true,
-        middleName: true,
-        lastName: true,
-        avatar: true,
+      data,
+      include: {
         disciplineTeachers: {
           include: {
+            discipline: true,
             roles: true,
           },
         },
       },
     });
+  }
+
+  async delete (where: Prisma.TeacherWhereUniqueInput) {
+    return this.prisma.teacher.delete({
+      where,
+    });
+  }
+
+  async deleteById (
+    id: string,
+  ) {
+    return this.prisma.teacher.delete({
+      where: {
+        id,
+      },
+    });
+  }
+
+  count (data: Prisma.TeacherCountArgs) {
+    return this.prisma.teacher.count(
+      data,
+    );
   }
 }

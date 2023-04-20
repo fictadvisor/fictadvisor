@@ -1,16 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { CreateTeacherDTO } from './dto/CreateTeacherDTO';
-import { UpdateTeacherDTO } from './dto/UpdateTeacherDTO';
 import { CreateContactDTO } from '../user/dto/CreateContactDTO';
-import { EntityType, QuestionDisplay, QuestionType } from '@prisma/client';
+import { EntityType, QuestionDisplay, QuestionType, Prisma } from '@prisma/client';
 import { TeacherRepository } from './TeacherRepository';
 import { UpdateContactDTO } from '../user/dto/UpdateContactDTO';
 import { ContactRepository } from '../user/ContactRepository';
+import { DatabaseUtils } from '../utils/DatabaseUtils';
 import { DisciplineTeacherService } from './DisciplineTeacherService';
 import { MarksQueryDTO } from './query/MarksQueryDTO';
 import { InvalidQueryException } from '../../utils/exceptions/InvalidQueryException';
 import { QueryAllTeacherDTO } from './query/QueryAllTeacherDTO';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
+import { SubjectRepository } from '../subject/SubjectRepository';
+import { QuestionRepository } from '../poll/QuestionRepository';
 
 @Injectable()
 export class TeacherService {
@@ -18,26 +19,43 @@ export class TeacherService {
     private teacherRepository: TeacherRepository,
     private disciplineTeacherService: DisciplineTeacherService,
     private contactRepository: ContactRepository,
-  ) {
-  }
+    private subjectRepository: SubjectRepository,
+    private questionRepository: QuestionRepository
+  ) {}
 
+  async getAll (body: QueryAllTeacherDTO) {
 
-  async getAll (
-    body: QueryAllTeacherDTO,
-  ) {
-    const teachers = await this.teacherRepository.getAll(body);
-    return { teachers };
+    const search = DatabaseUtils.getSearch(body, 'firstName', 'lastName', 'middleName');
+    const page = DatabaseUtils.getPage(body);
+    const sort = DatabaseUtils.getSort(body);
+
+    const data: Prisma.TeacherFindManyArgs = {
+      where: {
+        ...search,
+        disciplineTeachers: body.group != null ?  {
+          some: {
+            discipline: {
+              groupId: body.group,
+            },
+          },
+        } : undefined,
+      },
+      ...page,
+      ...sort,
+    };
+
+    return this.teacherRepository.findMany(data);
   }
 
   async getTeacher (
     id: string,
   ) {
-    const { disciplineTeachers, ...teacher } = await this.teacherRepository.getTeacher(id);
+    const { disciplineTeachers, ...teacher } = await this.teacherRepository.findById(id);
     const contacts = await this.contactRepository.getAllContacts(id);
     const roles = this.disciplineTeacherService.getUniqueRoles(disciplineTeachers);
 
     return {
-      ...teacher,
+      teacher,
       roles,
       contacts,
     };
@@ -46,24 +64,27 @@ export class TeacherService {
   async getTeacherRoles (
     teacherId: string,
   ) {
-    const teacher = await this.teacherRepository.getTeacher(teacherId);
+    const teacher = await this.teacherRepository.findById(teacherId);
     return this.disciplineTeacherService.getUniqueRoles(teacher.disciplineTeachers);
   }
 
   async create (
-    body: CreateTeacherDTO,
+    body: Prisma.TeacherUncheckedCreateInput,
   ) {
     return this.teacherRepository.create(body);
   }
 
-  async update (id: string, body: UpdateTeacherDTO) {
-    return this.teacherRepository.update(id, body);
+  async update (
+    id: string,
+    body: Prisma.TeacherUncheckedUpdateInput
+  ) {
+    return this.teacherRepository.updateById(id, body);
   }
 
   async delete (
     id: string,
   ) {
-    await this.teacherRepository.delete(id);
+    await this.teacherRepository.deleteById(id);
   }
 
   async getAllContacts (
@@ -112,7 +133,7 @@ export class TeacherService {
   async getMarks (teacherId: string, data?: MarksQueryDTO) {
     this.checkQueryDate(data);
     const marks = [];
-    const questions = await this.teacherRepository.getMarks(teacherId, data);
+    const questions = await this.questionRepository.getMarks(teacherId, data);
     for (const question of questions) {
       if (question.questionAnswers.length === 0) continue;
       const count = question.questionAnswers.length;
@@ -148,11 +169,34 @@ export class TeacherService {
   }
 
   async getTeacherSubjects (teacherId: string) {
-    return this.teacherRepository.getSubjects(teacherId);
+
+    return this.subjectRepository.getAll({
+      where: {
+        disciplines: {
+          some: {
+            disciplineTeachers: {
+              some: {
+                teacherId,
+              },
+            },
+          },
+        },
+      },
+    }
+    );
   }
 
   async getTeacherSubject (teacherId: string, subjectId: string) {
-    const dbTeacher = await this.teacherRepository.getTeacherSubject(teacherId, subjectId);
+    const dbTeacher = await this.teacherRepository.find({
+      id: teacherId,
+      disciplineTeachers: {
+        some: {
+          discipline: {
+            subjectId,
+          },
+        },
+      },
+    });
 
     if (!dbTeacher) {
       throw new InvalidEntityIdException('subject');
@@ -161,7 +205,7 @@ export class TeacherService {
     const { disciplineTeachers, ...teacher } = dbTeacher;
 
     const roles = this.disciplineTeacherService.getUniqueRoles(disciplineTeachers);
-    const subject = disciplineTeachers[0].discipline.subject;
+    const { disciplines, ...subject } = await this.subjectRepository.findById(subjectId);
     const contacts = await this.contactRepository.getAllContacts(teacherId);
 
     return {

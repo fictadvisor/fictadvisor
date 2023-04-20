@@ -37,7 +37,19 @@ export class SubjectService {
 
     const results = [];
     for (const subject of subjects) {
-      const amount = await this.teacherRepository.countSubjectTeachers(subject.id);
+
+      const amount = await this.teacherRepository.count({
+        where: {
+          disciplineTeachers: {
+            some: {
+              discipline: {
+                subjectId: subject.id,
+              },
+            },
+          },
+        },
+      });
+
       results.push({
         id: subject.id,
         name: subject.name,
@@ -54,7 +66,18 @@ export class SubjectService {
 
   async getTeachers (id: string) {
     const { name: subjectName } = await this.subjectRepository.findById(id);
-    const dbTeachers = await this.teacherRepository.getSubjectTeachers(id);
+
+    const dbTeachers = await this.teacherRepository.findMany({
+      where: {
+        disciplineTeachers: {
+          some: {
+            discipline: {
+              id,
+            },
+          },
+        },
+      },
+    });
 
     const teachers = [];
 

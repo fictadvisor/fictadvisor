@@ -3,6 +3,8 @@ import { PrismaService } from '../../database/PrismaService';
 import { CreateQuestionDTO } from './dto/CreateQuestionDTO';
 import { UpdateQuestionDTO } from './dto/UpdateQuestionDTO';
 import { TeacherRole } from '@prisma/client';
+import { QuestionType } from '@prisma/client';
+import { MarksData } from '../teacher/data/MarksData';
 import { CreateQuestionWithRolesData } from './data/CreateQuestionWithRolesData';
 import { CreateQuestionRoleData } from './data/CreateQuestionRoleData';
 
@@ -99,5 +101,37 @@ export class QuestionRepository {
       },
     });
   }
-}
 
+  async getMarks (teacherId: string, data?: MarksData) {
+    return this.prisma.question.findMany({
+      where: {
+        OR: [{
+          type: QuestionType.TOGGLE,
+        }, {
+          type: QuestionType.SCALE,
+        }],
+      },
+      select: {
+        id: true,
+        category: true,
+        name: true,
+        text: true,
+        type: true,
+        display: true,
+        questionAnswers: {
+          where: {
+            disciplineTeacher: {
+              teacherId,
+              discipline: {
+                ...data,
+              },
+            },
+          },
+          select: {
+            value: true,
+          },
+        },
+      },
+    });
+  }
+}

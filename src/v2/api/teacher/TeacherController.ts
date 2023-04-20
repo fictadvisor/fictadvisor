@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Query, Patch } from '@nestjs/common';
 import { TeacherService } from './TeacherService';
+import { TeacherMapper } from './TeacherMapper';
 import { QueryAllTeacherDTO } from './query/QueryAllTeacherDTO';
 import { CreateTeacherDTO } from './dto/CreateTeacherDTO';
 import { UpdateTeacherDTO } from './dto/UpdateTeacherDTO';
@@ -18,14 +19,17 @@ import { SubjectByIdPipe } from '../subject/SubjectByIdPipe';
 export class TeacherController {
   constructor (
     private teacherService: TeacherService,
+    private teacherMapper: TeacherMapper,
   ) {}
 
 
   @Get()
-  getAll (
+  async getAll (
     @Query() query: QueryAllTeacherDTO,
   ) {
-    return this.teacherService.getAll(query);
+    const dbTeachers = await this.teacherService.getAll(query);
+
+    return this.teacherMapper.getAllTeachers(dbTeachers);
   }
 
   @Get('/:teacherId/roles')
@@ -63,10 +67,11 @@ export class TeacherController {
 
   @Access('teachers.create')
   @Post()
-  create (
+  async create (
     @Body() body: CreateTeacherDTO,
   ) {
-    return this.teacherService.create(body);
+    const dbTeacher = await this.teacherService.create(body);
+    return this.teacherMapper.getTeacher(dbTeacher);
   }
 
   @Access('teachers.$teacherId.update')
@@ -75,7 +80,8 @@ export class TeacherController {
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
     @Body() body: UpdateTeacherDTO,
   ) {
-    return this.teacherService.update(teacherId, body);
+    const dbTeacher = await this.teacherService.update(teacherId, body);
+    return this.teacherMapper.getTeacher(dbTeacher);
   }
 
   @Access('teachers.$teacherId.delete')

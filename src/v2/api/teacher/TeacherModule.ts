@@ -9,11 +9,12 @@ import { AccessModule } from '../../security/AccessModule';
 import { DateModule } from '../../utils/date/DateModule';
 import { ConfigurationModule } from '../../config/ConfigModule';
 import { SubjectByIdPipe } from '../subject/SubjectByIdPipe';
+import { TeacherMapper } from './TeacherMapper';
 
 @Module({
   controllers: [TeacherController, DisciplineTeacherController],
-  providers: [TeacherService, DisciplineTeacherService, TelegramAPI, SubjectByIdPipe],
-  exports: [TeacherService, DisciplineTeacherService],
+  providers: [TeacherService, DisciplineTeacherService, TelegramAPI, SubjectByIdPipe, TeacherMapper],
+  exports: [TeacherService, DisciplineTeacherService, TeacherMapper],
   imports: [forwardRef(() => PollModule), AccessModule, DateModule, ConfigurationModule],
 })
 export class TeacherModule {}
