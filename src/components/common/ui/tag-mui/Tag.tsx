@@ -2,7 +2,7 @@ import React, { FC, ReactNode } from 'react';
 import { Box } from '@mui/material';
 import { SxProps, Theme } from '@mui/material/styles';
 
-import { withSxProp } from '@/lib/utils/MergeSxStylesUtil';
+import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 
 import * as styles from './Tag.styles';
 
@@ -34,7 +34,7 @@ const Tag: FC<TagProps> = ({
   sx,
 }) => {
   return (
-    <Box sx={withSxProp(styles.tag(variant, color, size, icon), sx)}>
+    <Box sx={mergeSx(styles.tag(variant, color, size, icon), sx)}>
       {icon && <Box sx={styles.icon}>{icon}</Box>}
       <p>{text}</p>
     </Box>

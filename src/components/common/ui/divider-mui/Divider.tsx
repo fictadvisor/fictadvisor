@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { Divider as DividerMui } from '@mui/material';
 import { SxProps, Theme } from '@mui/material/styles';
 
-import { withSxProp } from '@/lib/utils/MergeSxStylesUtil';
+import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 
 import * as styles from './Divider.styles';
 
@@ -14,7 +14,7 @@ interface DividerProps {
 
 const Divider: FC<DividerProps> = ({ text, sx, textAlign = 'center' }) => {
   return (
-    <DividerMui sx={withSxProp(styles.divider, sx)} textAlign={textAlign}>
+    <DividerMui sx={mergeSx(styles.divider, sx)} textAlign={textAlign}>
       {text}
     </DividerMui>
   );
