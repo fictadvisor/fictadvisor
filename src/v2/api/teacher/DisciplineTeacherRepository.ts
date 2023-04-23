@@ -5,88 +5,36 @@ import { CreateDisciplineTeacherWithRolesData } from './data/CreateDisciplineTea
 
 @Injectable()
 export class DisciplineTeacherRepository {
+
+  private include = {
+    discipline: {
+      include: {
+        group: true,
+        subject: true,
+        disciplineTypes: true,
+      },
+    },
+    roles: true,
+    teacher: true,
+  };
+
   constructor (
     private prisma: PrismaService,
   ) {}
 
-  async getDisciplineTeacher (id: string) {
+  async findById (id: string) {
     return this.prisma.disciplineTeacher.findUnique({
       where: {
         id,
       },
-      select: {
-        id: true,
-        teacher: {
-          select: {
-            id: true,
-            firstName: true,
-            middleName: true,
-            lastName: true,
-            avatar: true,
-          },
-        },
-        discipline: {
-          select: {
-            id: true,
-            year: true,
-            semester: true,
-            isSelective: true,
-            group: true,
-            subject: true,
-            evaluatingSystem: true,
-            resource: true,
-          },
-        },
-        roles: {
-          select: {
-            role: true,
-          },
-        },
-      },
-    });
-  }
-
-  async getDiscipline (id: string) {
-    return this.prisma.discipline.findFirst({
-      where: {
-        disciplineTeachers: {
-          some: {
-            id,
-          },
-        },
-      },
-      select: {
-        id: true,
-        subject: true,
-        group: true,
-        year: true,
-        semester: true,
-        disciplineTeachers: {
-          select: {
-            id: true,
-            teacher: {
-              select: {
-                id: true,
-                firstName: true,
-                middleName: true,
-                lastName: true,
-                avatar: true,
-              },
-            },
-            roles: {
-              select: {
-                role: true,
-              },
-            },
-          },
-        },
-      },
+      include: this.include,
     });
   }
 
   async create (data: Prisma.DisciplineTeacherUncheckedCreateInput) {
     return this.prisma.disciplineTeacher.create({
       data,
+      include: this.include,
     });
   }
 
@@ -96,28 +44,19 @@ export class DisciplineTeacherRepository {
         id,
       },
       data,
-    });
-  }
-
-  async createWithRoles ({ roles, ...data }: CreateDisciplineTeacherWithRolesData) {
-    return this.prisma.disciplineTeacher.create({
-      data: {
-        ...data,
-        roles: {
-          create: roles,
-        },
-      },
+      include: this.include,
     });
   }
 
   async find (where: Prisma.DisciplineTeacherWhereInput) {
     return this.prisma.disciplineTeacher.findFirst({
       where,
+      include: this.include,
     });
   }
 
-  async getOrCreate (data: Prisma.DisciplineTeacherUncheckedCreateInput) {
-    let disciplineTeacher = await this.find({ teacherId: data.teacherId, disciplineId: data.disciplineId });
+  async getOrCreate ( data: { teacherId: string, disciplineId: string } ) {
+    let disciplineTeacher = await this.find(data);
     if (!disciplineTeacher) {
       disciplineTeacher = await this.create(data);
     }
@@ -129,6 +68,7 @@ export class DisciplineTeacherRepository {
       where: {
         id,
       },
+      include: this.include,
     });
   }
 
@@ -170,17 +110,7 @@ export class DisciplineTeacherRepository {
   findMany (data: Prisma.DisciplineTeacherFindManyArgs): any {
     return this.prisma.disciplineTeacher.findMany({
       ...data,
-      include: {
-        discipline: {
-          include: {
-            group: true,
-            subject: true,
-            disciplineTypes: true,
-          },
-        },
-        roles: true,
-        teacher: true,
-      },
+      include: this.include,
     });
   }
 }

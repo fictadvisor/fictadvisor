@@ -1,14 +1,14 @@
-import { Teacher, Group, Subject, DisciplineType, DisciplineTeacherRole } from '@prisma/client';
+import { Group, Subject, DisciplineType, DisciplineTeacher, DisciplineTeacherRole, Discipline, Teacher } from '@prisma/client';
 
 export class DbDisciplineTeacher {
   id: string;
-  teacher: Teacher;
   teacherId: string;
-  discipline: {
+  disciplineId: string;
+  teacher: Teacher;
+  discipline: Discipline & {
     group: Group,
     subject: Subject,
     disciplineTypes: DisciplineType[],
-  }
-  disciplineId: string;
+  };
   roles: DisciplineTeacherRole[];
 }

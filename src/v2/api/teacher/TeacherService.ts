@@ -12,11 +12,13 @@ import { QueryAllTeacherDTO } from './query/QueryAllTeacherDTO';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
 import { SubjectRepository } from '../subject/SubjectRepository';
 import { QuestionRepository } from '../poll/QuestionRepository';
+import { TeacherMapper } from './TeacherMapper';
 
 @Injectable()
 export class TeacherService {
   constructor (
     private teacherRepository: TeacherRepository,
+    private teacherMapper: TeacherMapper,
     private disciplineTeacherService: DisciplineTeacherService,
     private contactRepository: ContactRepository,
     private subjectRepository: SubjectRepository,
@@ -50,9 +52,10 @@ export class TeacherService {
   async getTeacher (
     id: string,
   ) {
-    const { disciplineTeachers, ...teacher } = await this.teacherRepository.findById(id);
+    const dbTeacher = await this.teacherRepository.findById(id);
+    const { disciplineTeachers, ...teacher } = dbTeacher;
+    const roles = this.teacherMapper.getRoles(dbTeacher);
     const contacts = await this.contactRepository.getAllContacts(id);
-    const roles = this.disciplineTeacherService.getUniqueRoles(disciplineTeachers);
 
     return {
       teacher,
@@ -65,7 +68,7 @@ export class TeacherService {
     teacherId: string,
   ) {
     const teacher = await this.teacherRepository.findById(teacherId);
-    return this.disciplineTeacherService.getUniqueRoles(teacher.disciplineTeachers);
+    return this.teacherMapper.getRoles(teacher);
   }
 
   async create (
@@ -204,7 +207,7 @@ export class TeacherService {
 
     const { disciplineTeachers, ...teacher } = dbTeacher;
 
-    const roles = this.disciplineTeacherService.getUniqueRoles(disciplineTeachers);
+    const roles = this.teacherMapper.getRoles(dbTeacher);
     const { disciplines, ...subject } = await this.subjectRepository.findById(subjectId);
     const contacts = await this.contactRepository.getAllContacts(teacherId);
 

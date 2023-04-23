@@ -1,15 +1,15 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { DisciplineTeacherRepository } from './DisciplineTeacherRepository';
+import { DisciplineTeacherMapper } from './DisciplineTeacherMapper';
 import { PollService } from '../poll/PollService';
 import { CreateAnswerDTO, CreateAnswersDTO } from './dto/CreateAnswersDTO';
 import { QuestionAnswerRepository } from '../poll/QuestionAnswerRepository';
-import { QuestionType, State, TeacherRole } from '@prisma/client';
+import { DisciplineTeacher, DisciplineTeacherRole, QuestionType, State, TeacherRole } from '@prisma/client';
 import { AlreadyAnsweredException } from '../../utils/exceptions/AlreadyAnsweredException';
 import { NotEnoughAnswersException } from '../../utils/exceptions/NotEnoughAnswersException';
 import { ExcessiveAnswerException } from '../../utils/exceptions/ExcessiveAnswerException';
 import { DateService } from '../../utils/date/DateService';
 import { WrongTimeException } from '../../utils/exceptions/WrongTimeException';
-import { DisciplineTeacherWithRoles, DisciplineTeacherWithRolesAndTeacher } from './DisciplineTeacherDatas';
 import { TelegramAPI } from '../../telegram/TelegramAPI';
 import { ResponseDTO } from '../poll/dto/ResponseDTO';
 import { checkIfArrayIsUnique } from '../../utils/ArrayUtil';
@@ -19,14 +19,17 @@ import { DisciplineRepository } from '../discipline/DisciplineRepository';
 import { DisciplineTypeRepository } from '../discipline/DisciplineTypeRepository';
 import { TeacherTypeAdapter } from './dto/TeacherRoleAdapter';
 import { DbQuestion } from './DbQuestion';
+import { DbDisciplineTeacher } from './DbDisciplineTeacher';
 import { UserRepository } from '../user/UserRepository';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
+
 @Injectable()
 export class DisciplineTeacherService {
   constructor (
     private dateService: DateService,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
     private disciplineRepository: DisciplineRepository,
+    private disciplineTeacherMapper: DisciplineTeacherMapper,
     private disciplineTypeRepository: DisciplineTypeRepository,
     @Inject(forwardRef(() => PollService))
     private pollService: PollService,
@@ -36,39 +39,16 @@ export class DisciplineTeacherService {
   ) {}
 
   async getGroup (id: string) {
-    const discipline = await this.disciplineTeacherRepository.getDiscipline(id);
+    const discipline = await this.disciplineRepository.findBy({
+      where: {
+        disciplineTeachers: {
+          some: {
+            id,
+          },
+        },
+      },
+    });
     return discipline.group;
-  }
-
-  async getDisciplineTeacher (id: string) {
-    const disciplineTeacher = await this.disciplineTeacherRepository.getDisciplineTeacher(id);
-
-    return this.formatTeacher(disciplineTeacher);
-  }
-
-  getUniqueRoles (disciplineTeachers: DisciplineTeacherWithRoles[]): TeacherRole[] {
-    const roles = [];
-    for (const disciplineTeacher of disciplineTeachers) {
-      const dbRoles = disciplineTeacher.roles
-        .map((r) => r.role)
-        .filter((r) => !roles.includes(r));
-
-      roles.push(...dbRoles);
-    }
-
-    return roles;
-  }
-
-  getTeachers (teachers: DisciplineTeacherWithRolesAndTeacher[]) {
-    return teachers.map(this.formatTeacher);
-  }
-
-  formatTeacher (teacher: DisciplineTeacherWithRolesAndTeacher) {
-    return {
-      disciplineTeacherId: teacher.id,
-      ...teacher.teacher,
-      roles: teacher.roles.map((r) => (r.role)),
-    };
   }
 
   async getQuestions (disciplineTeacherId: string, userId: string) {
@@ -91,7 +71,7 @@ export class DisciplineTeacherService {
       throw new NoPermissionException();
     }
 
-    const { teacher, discipline } = await this.disciplineTeacherRepository.getDisciplineTeacher(disciplineTeacherId);
+    const { teacher, discipline } = await this.disciplineTeacherRepository.findById(disciplineTeacherId);
 
     const previousSemester = await this.dateService.isPreviousSemester(discipline.semester, discipline.year);
     if (!previousSemester) {
@@ -127,7 +107,7 @@ export class DisciplineTeacherService {
   }
 
   async getCategories (id: string) {
-    const { discipline, teacher } = await this.disciplineTeacherRepository.getDisciplineTeacher(id);
+    const { discipline, teacher } = await this.disciplineTeacherRepository.findById(id);
     const questions = await this.getUniqueQuestions(id);
     const categories = this.pollService.sortByCategories(questions);
     return {
@@ -138,12 +118,27 @@ export class DisciplineTeacherService {
   }
 
   async getUniqueQuestions (id: string) {
-    const { disciplineTeachers } = await this.disciplineTeacherRepository.getDiscipline(id);
+    const { disciplineTeachers } = await this.disciplineRepository.findBy({
+      where: {
+        disciplineTeachers: {
+          some: {
+            id,
+          },
+        },
+      },
+    });
 
     const teacherRoles = disciplineTeachers
       .find((dt) => dt.id === id)
       .roles.map((r) => r.role);
-    const disciplineRoles = this.getUniqueRoles(disciplineTeachers);
+
+    const disciplineRoles = [];
+    for (const disciplineTeacher of disciplineTeachers) {
+      const dbRoles = disciplineTeacher.roles
+        .map((r) => r.role)
+        .filter((r) => !disciplineRoles.includes(r));
+      disciplineRoles.push(...dbRoles);
+    }
 
     return this.disciplineTeacherRepository.getQuestions(teacherRoles, disciplineRoles);
   }
@@ -241,9 +236,11 @@ export class DisciplineTeacherService {
 
   async updateById (disciplineTeacherId: string, roles: TeacherRole[]) {
     const discipline = await this.disciplineRepository.findBy({
-      disciplineTeachers: {
-        some: {
-          id: disciplineTeacherId,
+      where: {
+        disciplineTeachers: {
+          some: {
+            id: disciplineTeacherId,
+          },
         },
       },
     });

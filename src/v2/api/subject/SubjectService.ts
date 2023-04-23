@@ -7,12 +7,14 @@ import { TeacherRepository } from '../teacher/TeacherRepository';
 import { Prisma, Subject } from '@prisma/client';
 import { DatabaseUtils } from '../utils/DatabaseUtils';
 import { UpdateSubjectDTO } from './dto/UpdateSubjectDTO';
+import { TeacherMapper } from '../teacher/TeacherMapper';
 
 @Injectable()
 export class SubjectService {
   constructor (
     private subjectRepository: SubjectRepository,
     private teacherRepository: TeacherRepository,
+    private teacherMapper: TeacherMapper,
     private disciplineTeacherService: DisciplineTeacherService,
   ) {}
 
@@ -72,23 +74,14 @@ export class SubjectService {
         disciplineTeachers: {
           some: {
             discipline: {
-              id,
+              subjectId: id,
             },
           },
         },
       },
     });
 
-    const teachers = [];
-
-    for (const { disciplineTeachers, ...teacher } of dbTeachers) {
-      const roles = this.disciplineTeacherService.getUniqueRoles(disciplineTeachers);
-
-      teachers.push({
-        ...teacher,
-        roles,
-      });
-    }
+    const teachers = this.teacherMapper.getTeachersWithRoles(dbTeachers);
 
     return {
       subjectName,

@@ -17,14 +17,13 @@ import { DisciplineTypeRepository } from '../discipline/DisciplineTypeRepository
 import { GroupRepository } from '../group/GroupRepository';
 import { DisciplineTeacherRepository } from '../teacher/DisciplineTeacherRepository';
 import { DisciplineTeacherRoleRepository } from '../teacher/DisciplineTeacherRoleRepository';
-import { DisciplineTeacherService } from '../teacher/DisciplineTeacherService';
+import { DisciplineTeacherMapper } from '../teacher/DisciplineTeacherMapper';
 
 @Injectable()
 export class ScheduleService {
   constructor (
     private scheduleParser: ScheduleParser,
     private rozParser: RozParser,
-    private disciplineTeacherService: DisciplineTeacherService,
     private disciplineTypeService: DisciplineTypeService,
     private groupRepository: GroupRepository,
     private disciplineRepository: DisciplineRepository,
@@ -32,6 +31,7 @@ export class ScheduleService {
     private disciplineTeacherRepository: DisciplineTeacherRepository,
     private disciplineTeacherRoleRepository: DisciplineTeacherRoleRepository,
     private scheduleRepository: ScheduleRepository,
+    private disciplineTeacherMapper: DisciplineTeacherMapper,
   ) {}
 
 
@@ -144,8 +144,23 @@ export class ScheduleService {
 
   async getFullStaticLesson (id: string, fortnight: number) {
     const discipline = await this.scheduleRepository.getDiscipline(id);
+    const disciplineTeachers = this.disciplineTeacherRepository.findMany({
+      where: {
+        discipline: {
+          disciplineTypes: {
+            some: {
+              lessons: {
+                some: {
+                  id,
+                },
+              },
+            },
+          },
+        },
+      },
+    });
     const lesson = await this.scheduleRepository.getSemesterLesson(id);
-    const teachers = this.disciplineTeacherService.getTeachers(discipline.disciplineTeachers);
+    const teachers = this.disciplineTeacherMapper.getDisciplineTeachersWithTeacherParams(disciplineTeachers);
     const [
       url = lesson.url,
       startDate = lesson.startDate,
@@ -269,13 +284,12 @@ export class ScheduleService {
         });
       }
     } else {
-      await this.disciplineTeacherRepository.createWithRoles({
+      await this.disciplineTeacherRepository.create({
         teacherId,
         disciplineId: type.discipline.id,
-        roles: [{
-          role,
-          disciplineTypeId,
-        }],
+        roles: {
+          create: [{ role, disciplineTypeId }],
+        },
       });
     }
 

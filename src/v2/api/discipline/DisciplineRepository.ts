@@ -129,13 +129,19 @@ export class DisciplineRepository {
     });
   }
 
-  async findBy (where: Prisma.DisciplineWhereInput) {
+  async findBy (data: Prisma.DisciplineFindFirstArgs) {
     return this.prisma.discipline.findFirst({
-      where,
+      ...data,
       include: {
         disciplineTypes: true,
         subject: true,
         group: true,
+        disciplineTeachers: {
+          include: {
+            roles: true,
+            teacher: true,
+          }
+        },
       },
     });
   }
