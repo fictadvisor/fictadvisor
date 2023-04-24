@@ -3,7 +3,7 @@ import { SxProps, Theme } from '@mui/material/styles';
 export const divider: SxProps<Theme> = {
   borderTopWidth: 1,
   borderBottom: 'transparent',
-  borderColor: 'gray.600',
+  borderColor: 'grey.800',
 
   '&.MuiDivider-textAlignLeft': {
     '&::before': {
@@ -32,11 +32,11 @@ export const divider: SxProps<Theme> = {
   },
   '&::before': {
     borderWidth: 1,
-    borderColor: 'gray.600',
+    borderColor: 'grey.800',
   },
   '&::after': {
     borderWidth: 1,
-    borderColor: 'gray.600',
+    borderColor: 'grey.800',
   },
   span: {
     padding: '0px 8px',

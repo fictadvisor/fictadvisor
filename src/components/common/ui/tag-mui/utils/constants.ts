@@ -1,15 +1,15 @@
 import { TagColorType } from '@/components/common/ui/tag-mui/Tag';
 
 const ColorMap: Record<TagColorType, string[]> = {
-  primary: ['primary.25', 'primary.10', 'primary.25'],
-  success: ['success.100', 'success.50', 'success.400'],
-  error: ['error.100', 'error.50', 'error.200'],
-  warning: ['warning.100', 'warning.25', 'warning.100'],
-  info: ['info.50', 'info.0', 'info.50'],
-  secondary: ['gray.100', 'backgroundDark.10', 'gray.100'],
-  violet: ['violet.300', 'violet.200', 'violet.400'],
-  mint: ['mint.300', 'mint.200', 'mint.400'],
-  orange: ['orange.300', 'orange.200', 'orange.400'],
+  primary: ['primary.300', 'primary.200', 'primary.300'],
+  success: ['success.400', 'success.300', 'success.700'],
+  error: ['error.400', 'error.300', 'error.500'],
+  warning: ['warning.400', 'warning.200', 'warning.400'],
+  info: ['info.300', 'info.50', 'info.300'],
+  secondary: ['grey.200', 'backgroundDark.200', 'grey.300'],
+  violet: ['violet.600', 'violet.500', 'violet.700'],
+  mint: ['mint.400', 'mint.500', 'mint.500'],
+  orange: ['orange.600', 'orange.500', 'orange.700'],
 };
 
 const VariantIndexMap = {
