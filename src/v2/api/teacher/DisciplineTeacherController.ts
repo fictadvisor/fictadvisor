@@ -6,7 +6,7 @@ import { GroupByDisciplineTeacherGuard } from 'src/v2/security/group-guard/Group
 import { Access } from 'src/v2/security/Access';
 import { DisciplineTeacherByIdPipe } from './pipe/DisciplineTeacherByIdPipe';
 import { TelegramGuard } from '../../security/TelegramGuard';
-import { JwtGuard } from "../../security/JwtGuard";
+import { JwtGuard } from '../../security/JwtGuard';
 import { ResponseDTO } from '../poll/dto/ResponseDTO';
 import { TeacherByIdPipe } from './pipe/TeacherByIdPipe';
 import { DisciplineByIdPipe } from '../discipline/pipe/DisciplineByIdPipe';
@@ -33,7 +33,7 @@ export class DisciplineTeacherController {
 
   @UseGuards(JwtGuard)
   @Get('/:teacherId/disciplines')
-  async getDisciplines(
+  async getDisciplines (
     @Request() req,
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
   ) {

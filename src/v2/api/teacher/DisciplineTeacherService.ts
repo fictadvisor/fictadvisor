@@ -3,7 +3,7 @@ import { DisciplineTeacherRepository } from './DisciplineTeacherRepository';
 import { PollService } from '../poll/PollService';
 import { CreateAnswerDTO, CreateAnswersDTO } from './dto/CreateAnswersDTO';
 import { QuestionAnswerRepository } from '../poll/QuestionAnswerRepository';
-import { QuestionType, TeacherRole } from '@prisma/client';
+import { QuestionType, State, TeacherRole } from '@prisma/client';
 import { AlreadyAnsweredException } from '../../utils/exceptions/AlreadyAnsweredException';
 import { NotEnoughAnswersException } from '../../utils/exceptions/NotEnoughAnswersException';
 import { ExcessiveAnswerException } from '../../utils/exceptions/ExcessiveAnswerException';
@@ -19,7 +19,8 @@ import { DisciplineRepository } from '../discipline/DisciplineRepository';
 import { DisciplineTypeRepository } from '../discipline/DisciplineTypeRepository';
 import { TeacherTypeAdapter } from './dto/TeacherRoleAdapter';
 import { DbQuestion } from './DbQuestion';
-
+import { UserRepository } from '../user/UserRepository';
+import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
 @Injectable()
 export class DisciplineTeacherService {
   constructor (
@@ -31,6 +32,7 @@ export class DisciplineTeacherService {
     private pollService: PollService,
     private questionAnswerRepository: QuestionAnswerRepository,
     private telegramApi: TelegramAPI,
+    private userRepository: UserRepository
   ) {}
 
   async getGroup (id: string) {
@@ -84,25 +86,36 @@ export class DisciplineTeacherService {
     await this.checkIsUnique(answers);
     await this.checkSendingTime();
 
+    const user = await this.userRepository.findById(userId);
+    if (user.state !== State.APPROVED) {
+      throw new NoPermissionException();
+    }
+
     const { teacher, discipline } = await this.disciplineTeacherRepository.getDisciplineTeacher(disciplineTeacherId);
 
+    const previousSemester = await this.dateService.isPreviousSemester(discipline.semester, discipline.year);
+    if (!previousSemester) {
+      throw new WrongTimeException();
+    }
+
     for (const answer of answers) {
-      if (questions.find((q) => q.id === answer.questionId).type === QuestionType.TEXT) {
+      const { type } = questions.find((q) => q.id === answer.questionId);
+      if (type === QuestionType.TEXT) {
         await this.telegramApi.verifyResponse({
-          disciplineTeacherId: disciplineTeacherId,
+          disciplineTeacherId,
           subject: discipline.subject.name,
           teacherName: teacher.firstName + ' ' + teacher.middleName + ' ' + teacher.lastName,
           userId,
           response: answer.value,
           questionId: answer.questionId,
         });
-        continue;
+      } else {
+        await this.questionAnswerRepository.create({
+          disciplineTeacherId,
+          userId,
+          ...answer,
+        });
       }
-      await this.questionAnswerRepository.create({
-        disciplineTeacherId: disciplineTeacherId,
-        userId,
-        ...answer,
-      });
     }
   }
 

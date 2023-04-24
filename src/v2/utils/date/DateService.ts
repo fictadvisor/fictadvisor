@@ -62,4 +62,9 @@ export class DateService {
 
     return { fortnight, week, day };
   }
+
+  async isPreviousSemester (semester: number, year: number) {
+    const { semester: currentSemester, year: currentYear } = await this.getCurrentSemester();
+    return (semester < currentSemester && year === currentYear) || (year < currentYear);
+  }
 }
