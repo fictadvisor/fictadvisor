@@ -13,6 +13,7 @@
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@heroicons/react": "^2.0.14",
+    "@mui/lab": "^5.0.0-alpha.128",
     "@mui/material": "^5.11.14",
     "@reduxjs/toolkit": "^1.9.2",
     "@typescript-eslint/eslint-plugin": "^5.51.0",
