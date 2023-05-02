@@ -170,53 +170,6 @@ export class StudentRepository {
     });
   }
 
-  getDisciplines (userId: string) {
-    return this.prisma.discipline.findMany({
-      where: {
-        group: {
-          students: {
-            some: {
-              userId,
-            },
-          },
-        },
-      },
-      select: {
-        id: true,
-        isSelective: true,
-        year: true,
-        semester: true,
-        subject: true,
-        group: true,
-        disciplineTypes: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-        disciplineTeachers: {
-          select: {
-            id: true,
-            teacher: {
-              select: {
-                id: true,
-                firstName: true,
-                middleName: true,
-                lastName: true,
-                avatar: true,
-              },
-            },
-            roles: {
-              select: {
-                role: true,
-              },
-            },
-          },
-        },
-      },
-    });
-  }
-
   getAnswers (userId: string) {
     return this.prisma.questionAnswer.findMany({
       where: {

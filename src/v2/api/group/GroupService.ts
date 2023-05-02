@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { Group, Role, RoleName, State, User } from '@prisma/client';
-import { DisciplineService } from '../discipline/DisciplineService';
+import { DisciplineMapper } from '../discipline/DisciplineMapper';
 import { GroupRepository } from './GroupRepository';
 import { StudentRepository } from '../user/StudentRepository';
+import { DisciplineRepository } from '../discipline/DisciplineRepository';
 import { QueryAllDTO } from '../../utils/QueryAllDTO';
 import { UserRepository } from '../user/UserRepository';
 import { EmailDTO } from './dto/EmailDTO';
@@ -46,12 +47,13 @@ const ROLE_LIST = [
 @Injectable()
 export class GroupService {
   constructor (
-    private disciplineService: DisciplineService,
+    private disciplineMapper: DisciplineMapper,
     private groupRepository: GroupRepository,
     private userService: UserService,
     private studentRepository: StudentRepository,
     private userRepository: UserRepository,
     private roleRepository: RoleRepository,
+    private disciplineRepository: DisciplineRepository,
   ) {}
 
   async create (code: string): Promise<Group>  {
@@ -69,8 +71,10 @@ export class GroupService {
   }
 
   async getDisciplineTeachers (groupId: string) {
-    const disciplines = await this.groupRepository.getDisciplines(groupId);
-    return this.disciplineService.getDisciplinesWithTeachers(disciplines);
+    const disciplines = await this.disciplineRepository.findMany({
+      where: { groupId },
+    });
+    return this.disciplineMapper.getDisciplinesWithTeachers(disciplines);
   }
 
   async getDisciplines (groupId: string) {
@@ -211,7 +215,7 @@ export class GroupService {
       }));
 
       const role = await this.roleRepository.create({
-        ...roles, 
+        ...roles,
         grants: {
           create: grantList,
         },
@@ -221,7 +225,7 @@ export class GroupService {
   }
 
   async getOrCreate (code) {
-    const group = await this.groupRepository.find(code);
+    const group = await this.groupRepository.find({ code });
     if (!group) {
       return this.create(code);
     }

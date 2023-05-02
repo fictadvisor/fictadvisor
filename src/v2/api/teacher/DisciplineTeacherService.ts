@@ -4,7 +4,7 @@ import { DisciplineTeacherMapper } from './DisciplineTeacherMapper';
 import { PollService } from '../poll/PollService';
 import { CreateAnswerDTO, CreateAnswersDTO } from './dto/CreateAnswersDTO';
 import { QuestionAnswerRepository } from '../poll/QuestionAnswerRepository';
-import { DisciplineTeacher, DisciplineTeacherRole, QuestionType, State, TeacherRole } from '@prisma/client';
+import { QuestionType, State, TeacherRole } from '@prisma/client';
 import { AlreadyAnsweredException } from '../../utils/exceptions/AlreadyAnsweredException';
 import { NotEnoughAnswersException } from '../../utils/exceptions/NotEnoughAnswersException';
 import { ExcessiveAnswerException } from '../../utils/exceptions/ExcessiveAnswerException';
@@ -19,7 +19,6 @@ import { DisciplineRepository } from '../discipline/DisciplineRepository';
 import { DisciplineTypeRepository } from '../discipline/DisciplineTypeRepository';
 import { TeacherTypeAdapter } from './dto/TeacherRoleAdapter';
 import { DbQuestion } from './DbQuestion';
-import { DbDisciplineTeacher } from './DbDisciplineTeacher';
 import { UserRepository } from '../user/UserRepository';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
 
@@ -37,19 +36,6 @@ export class DisciplineTeacherService {
     private telegramApi: TelegramAPI,
     private userRepository: UserRepository
   ) {}
-
-  async getGroup (id: string) {
-    const discipline = await this.disciplineRepository.findBy({
-      where: {
-        disciplineTeachers: {
-          some: {
-            id,
-          },
-        },
-      },
-    });
-    return discipline.group;
-  }
 
   async getQuestions (disciplineTeacherId: string, userId: string) {
     await this.checkAnswerInDatabase(disciplineTeacherId, userId);
@@ -118,12 +104,10 @@ export class DisciplineTeacherService {
   }
 
   async getUniqueQuestions (id: string) {
-    const { disciplineTeachers } = await this.disciplineRepository.findBy({
-      where: {
-        disciplineTeachers: {
-          some: {
-            id,
-          },
+    const { disciplineTeachers } = await this.disciplineRepository.find({
+      disciplineTeachers: {
+        some: {
+          id,
         },
       },
     });
@@ -235,12 +219,10 @@ export class DisciplineTeacherService {
   }
 
   async updateById (disciplineTeacherId: string, roles: TeacherRole[]) {
-    const discipline = await this.disciplineRepository.findBy({
-      where: {
-        disciplineTeachers: {
-          some: {
-            id: disciplineTeacherId,
-          },
+    const discipline = await this.disciplineRepository.find({
+      disciplineTeachers: {
+        some: {
+          id: disciplineTeacherId,
         },
       },
     });

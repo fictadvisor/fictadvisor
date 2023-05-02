@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { DbTeacher } from './DbTeacher';
-import { DbDisciplineTeacher } from './DbDisciplineTeacher';
 import { TeacherRole } from '@prisma/client';
 
 @Injectable()
@@ -22,7 +21,7 @@ export class TeacherMapper {
       teachers.push(
         this.getTeacher(dbTeacher)
       );
-    };
+    }
     return { teachers };
   }
 
@@ -43,7 +42,7 @@ export class TeacherMapper {
       return {
         ...teacher,
         roles: this.getRoles(dbTeacher),
-      }
+      };
     });
   }
 }

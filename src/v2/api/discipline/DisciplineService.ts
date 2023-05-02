@@ -1,6 +1,4 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { CreateDisciplineDTO } from './dto/CreateDisciplineDTO';
-import { User } from '@prisma/client';
+import { Injectable } from '@nestjs/common';
 import { DisciplineRepository } from './DisciplineRepository';
 import { DisciplineTeacherMapper } from '../teacher/DisciplineTeacherMapper';
 import { DisciplineTeacherRepository } from '../teacher/DisciplineTeacherRepository';
@@ -13,19 +11,12 @@ export class DisciplineService {
     private disciplineTeacherRepository: DisciplineTeacherRepository,
   ) {}
 
-  async create (body: CreateDisciplineDTO) {
-    return this.disciplineRepository.create(body);
+  async create (data: { subjectId: string, groupId: string, year: number, semester: number }) {
+    return this.disciplineRepository.create(data);
   }
 
   async get (id: string) {
-    return this.disciplineRepository.getDiscipline(id);
-  }
-
-  async makeSelective (user: User, disciplineId: string) {
-    return this.disciplineRepository.makeSelective({
-      studentId: user.id,
-      disciplineId,
-    });
+    return this.disciplineRepository.findById(id);
   }
 
   async getTeachers (id: string) {
@@ -37,16 +28,5 @@ export class DisciplineService {
       },
     });
     return this.disciplineTeacherMapper.getDisciplineTeachersWithTeacherParams(disciplineTeachers);
-  }
-
-  getDisciplinesWithTeachers (disciplines: any[]) {
-    return disciplines.map((d) => ({
-      id: d.id,
-      subject: d.subject,
-      year: d.year,
-      semester: d.semester,
-      isSelective: d.isSelective,
-      teachers: this.disciplineTeacherMapper.getDisciplineTeachersWithTeacherParams(d.disciplineTeachers),
-    }));
   }
 }

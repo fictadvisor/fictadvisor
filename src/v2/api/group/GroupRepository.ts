@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
+import { Prisma } from '@prisma/client';
 import { QueryAllDTO } from '../../utils/QueryAllDTO';
 import { DatabaseUtils } from '../utils/DatabaseUtils';
 import { UpdateGroupDTO } from './dto/UpdateGroupDTO';
@@ -132,7 +133,7 @@ export class GroupRepository {
       },
     });
   }
-  
+
   async getRoles (groupId: string) {
     return this.prisma.role.findMany({
       where: {
@@ -143,11 +144,9 @@ export class GroupRepository {
     });
   }
 
-  async find (code: string) {
+  async find (where: Prisma.GroupWhereInput) {
     return this.prisma.group.findFirst({
-      where: {
-        code,
-      },
+      where,
     });
   }
 
@@ -160,7 +159,7 @@ export class GroupRepository {
   }
 
   async getOrCreate (code: string) {
-    let group = await this.find(code);
+    let group = await this.find({ code });
     if (!group) {
       group = await this.create(code);
     }

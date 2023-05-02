@@ -232,7 +232,7 @@ export class ScheduleService {
           id, { [key]: body[key] }
         );
       } else if (['resource', 'evaluatingSystem', 'isSelective'].includes(key)) {
-        await this.disciplineRepository.update(
+        await this.disciplineRepository.updateById(
           discipline.id, { [key]: body[key] }
         );
       } else {

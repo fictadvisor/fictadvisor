@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
 import { Prisma, TeacherRole } from '@prisma/client';
-import { CreateDisciplineTeacherWithRolesData } from './data/CreateDisciplineTeacherWithRolesData';
 
 @Injectable()
 export class DisciplineTeacherRepository {
@@ -55,7 +54,7 @@ export class DisciplineTeacherRepository {
     });
   }
 
-  async getOrCreate ( data: { teacherId: string, disciplineId: string } ) {
+  async getOrCreate (data: { teacherId: string, disciplineId: string }) {
     let disciplineTeacher = await this.find(data);
     if (!disciplineTeacher) {
       disciplineTeacher = await this.create(data);

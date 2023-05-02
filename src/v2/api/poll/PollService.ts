@@ -6,6 +6,8 @@ import { TeacherRole } from '@prisma/client';
 import { CreateQuestionRoleDTO } from './dto/CreateQuestionRoleDTO';
 import { StudentRepository } from '../user/StudentRepository';
 import { DisciplineService } from '../discipline/DisciplineService';
+import { DisciplineRepository } from '../discipline/DisciplineRepository';
+import { DisciplineMapper } from '../discipline/DisciplineMapper';
 import { DbQuestion } from '../teacher/DbQuestion';
 
 @Injectable()
@@ -13,6 +15,8 @@ export class PollService {
   constructor (
     @Inject(forwardRef(() => DisciplineService))
     private disciplineService: DisciplineService,
+    private disciplineRepository: DisciplineRepository,
+    private disciplineMapper: DisciplineMapper,
     private studentRepository: StudentRepository,
     private questionRepository: QuestionRepository,
   ) {}
@@ -61,9 +65,20 @@ export class PollService {
     return results;
   }
   async getDisciplineTeachers (userId: string) {
-    const disciplines = await this.studentRepository.getDisciplines(userId);
+    const disciplines = await this.disciplineRepository.findMany({
+      where: {
+        group: {
+          students: {
+            some: {
+              userId,
+            },
+          },
+        },
+      },
+    });
+
     const answers = await this.studentRepository.getAnswers(userId);
-    const disciplinesWithTeachers = this.disciplineService.getDisciplinesWithTeachers(disciplines);
+    const disciplinesWithTeachers = this.disciplineMapper.getDisciplinesWithTeachers(disciplines);
     const teachers = [];
 
     for (const disciplineWithTeachers of disciplinesWithTeachers) {

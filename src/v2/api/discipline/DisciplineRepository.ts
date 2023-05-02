@@ -1,112 +1,57 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import { CreateDisciplineDTO } from './dto/CreateDisciplineDTO';
-import { UpdateDisciplineDTO } from './dto/UpdateDisciplineDTO';
 import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class DisciplineRepository {
+
+  private include = {
+    subject: true,
+    group: true,
+    disciplineTypes: true,
+    disciplineTeachers: {
+      include: {
+        teacher: true,
+        roles: true,
+      },
+    },
+  };
+
   constructor (
     private prisma: PrismaService,
   ) {}
 
-  async getDiscipline (id: string) {
+  async findById (id: string) {
     return this.prisma.discipline.findUnique({
       where: {
         id,
       },
-      select: {
-        id: true,
-        group: true,
-        subject: true,
-        year: true,
-        semester: true,
-        isSelective: true,
-        evaluatingSystem: true,
-        resource: true,
-      },
+      include: this.include,
     });
   }
 
-  async getGroup (id: string) {
-    return this.prisma.group.findFirst({
-      where: {
-        disciplines: {
-          some: {
-            id,
-          },
-        },
-      },
-    });
-  }
-
-  async getUserSelective (disciplineId: string) {
-    return this.prisma.student.findMany({
-      where: {
-        selectiveDisciplines: {
-          some: {
-            disciplineId,
-          },
-        },
-      },
-      select: {
-        firstName: true,
-        middleName: true,
-        lastName: true,
-        user: {
-          select: {
-            id: true,
-            username: true,
-            email: true,
-            telegramId: true,
-            avatar: true,
-          },
-        },
-        group: true,
-      },
-    });
-  }
-
-  async getDisciplineTeachers (id: string) {
-    return this.prisma.disciplineTeacher.findMany({
-      where: {
-        discipline: {
-          id,
-        },
-      },
-      select: {
-        id: true,
-        teacher: {
-          select: {
-            id: true,
-            firstName: true,
-            middleName: true,
-            lastName: true,
-            avatar: true,
-          },
-        },
-        roles: {
-          select: {
-            role: true,
-          },
-        },
-      },
-    });
-  }
-
-  async find (where: CreateDisciplineDTO) {
+  async find (where: Prisma.DisciplineWhereInput) {
     return this.prisma.discipline.findFirst({
       where,
+      include: this.include,
     });
   }
 
-  async create (data: CreateDisciplineDTO) {
+  async findMany (data: Prisma.DisciplineFindManyArgs) {
+    return this.prisma.discipline.findMany({
+      ...data,
+      include: this.include,
+    });
+  }
+
+  async create (data: Prisma.DisciplineUncheckedCreateInput) {
     return this.prisma.discipline.create({
       data,
+      include: this.include,
     });
   }
 
-  async getOrCreate (data: CreateDisciplineDTO) {
+  async getOrCreate (data: { subjectId: string, groupId: string, year: number, semester: number }) {
     let discipline = await this.find(data);
     if (!discipline) {
       discipline = await this.create(data);
@@ -114,48 +59,13 @@ export class DisciplineRepository {
     return discipline;
   }
 
-  async update (id: string, data: UpdateDisciplineDTO) {
+  async updateById (id: string, data: Prisma.DisciplineUncheckedUpdateInput) {
     return this.prisma.discipline.update({
       where: {
         id,
       },
       data,
-    });
-  }
-
-  makeSelective (data: { studentId: string; disciplineId: string }) {
-    return this.prisma.selectiveDiscipline.create({
-      data,
-    });
-  }
-
-  async findBy (data: Prisma.DisciplineFindFirstArgs) {
-    return this.prisma.discipline.findFirst({
-      ...data,
-      include: {
-        disciplineTypes: true,
-        subject: true,
-        group: true,
-        disciplineTeachers: {
-          include: {
-            roles: true,
-            teacher: true,
-          }
-        },
-      },
-    });
-  }
-
-  async findById (id: string) {
-    return this.prisma.discipline.findFirst({
-      where: {
-        id,
-      },
-      include: {
-        disciplineTypes: true,
-        subject: true,
-        group: true,
-      },
+      include: this.include,
     });
   }
 }
