@@ -1,14 +1,17 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { State, TeacherRole } from '@prisma/client';
 import { CreateQuestionWithRolesDTO } from './dto/CreateQuestionWithRolesDTO';
-import { QuestionRepository } from './QuestionRepository';
 import { UpdateQuestionDTO } from './dto/UpdateQuestionDTO';
-import { TeacherRole } from '@prisma/client';
 import { CreateQuestionRoleDTO } from './dto/CreateQuestionRoleDTO';
-import { StudentRepository } from '../user/StudentRepository';
-import { DisciplineService } from '../discipline/DisciplineService';
+import { QuestionRepository } from './QuestionRepository';
 import { DisciplineRepository } from '../discipline/DisciplineRepository';
+import { StudentRepository } from '../user/StudentRepository';
+import { UserRepository } from '../user/UserRepository';
+import { DisciplineService } from '../discipline/DisciplineService';
+import { DateService } from '../../utils/date/DateService';
 import { DisciplineMapper } from '../discipline/DisciplineMapper';
 import { DbQuestion } from '../teacher/DbQuestion';
+import { NoPermissionException } from 'src/v2/utils/exceptions/NoPermissionException';
 
 @Injectable()
 export class PollService {
@@ -19,6 +22,8 @@ export class PollService {
     private disciplineMapper: DisciplineMapper,
     private studentRepository: StudentRepository,
     private questionRepository: QuestionRepository,
+    private userRepository: UserRepository,
+    private dateService: DateService,
   ) {}
 
   async createQuestions (data: CreateQuestionWithRolesDTO) {
@@ -65,7 +70,12 @@ export class PollService {
     return results;
   }
   async getDisciplineTeachers (userId: string) {
-    const disciplines = await this.disciplineRepository.findMany({
+    const user = await this.userRepository.findById(userId);
+    if (user.state !== State.APPROVED) {
+      throw new NoPermissionException();
+    }
+
+    let disciplines = await this.disciplineRepository.findMany({
       where: {
         group: {
           students: {
@@ -77,25 +87,24 @@ export class PollService {
       },
     });
 
-    const answers = await this.studentRepository.getAnswers(userId);
-    const disciplinesWithTeachers = this.disciplineMapper.getDisciplinesWithTeachers(disciplines);
-    const teachers = [];
+    const { semester, year } = await this.dateService.getCurrentSemester();
 
-    for (const disciplineWithTeachers of disciplinesWithTeachers) {
-      for (const teacher of disciplineWithTeachers.teachers) {
-        if (!answers.some((answer) => teacher.disciplineTeacherId === answer.disciplineTeacherId)) {
-          teachers.push({
-            disciplineTeacherId: teacher.disciplineTeacherId,
-            roles: teacher.roles,
-            firstName: teacher.firstName,
-            middleName: teacher.middleName,
-            lastName: teacher.lastName,
-            avatar: teacher.avatar,
-            subject: disciplineWithTeachers.subject,
-          });
-        }
-      }
+    disciplines = disciplines.filter((discipline) => {
+      return this.dateService.earlierSemester(
+        { semester, year },
+        { semester: discipline.semester, year: discipline.year }
+      );
+    });
+
+    const answers = await this.studentRepository.getAnswers(userId);
+
+    for (const discipline of disciplines) {
+      discipline.disciplineTeachers = discipline.disciplineTeachers.filter((teacher) => {
+        const hasAnyAnswer = (answer) => teacher.id === answer.disciplineTeacherId;
+        return answers.some(hasAnyAnswer);
+      });
     }
-    return teachers;
+
+    return this.disciplineMapper.getDisciplineTeachers(disciplines);
   }
 }

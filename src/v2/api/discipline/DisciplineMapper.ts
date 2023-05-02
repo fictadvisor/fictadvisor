@@ -17,4 +17,23 @@ export class DisciplineMapper {
       })),
     }));
   }
+  getDisciplineTeachers (disciplines: DbDiscipline[]) {
+    const teachers = [];
+
+    for (const discipline of disciplines) {
+      for (const disciplineTeacher of discipline.disciplineTeachers) {
+        teachers.push({
+          disciplineTeacherId: disciplineTeacher.id,
+          roles: disciplineTeacher.roles.map((r) => (r.role)),
+          firstName: disciplineTeacher.teacher.firstName,
+          middleName: disciplineTeacher.teacher.middleName,
+          lastName: disciplineTeacher.teacher.lastName,
+          avatar: disciplineTeacher.teacher.avatar,
+          subject: discipline.subject,
+        });
+      }
+    }
+
+    return teachers;
+  }
 }

@@ -12,6 +12,10 @@ export interface CurrentSemester {
   semester: number,
   startDate: Date,
 }
+export interface StudyingSemester {
+  year: number,
+  semester: number,
+}
 export interface CurrentDay {
   fortnight: number,
   week: number,
@@ -64,7 +68,12 @@ export class DateService {
   }
 
   async isPreviousSemester (semester: number, year: number) {
-    const { semester: currentSemester, year: currentYear } = await this.getCurrentSemester();
-    return (semester < currentSemester && year === currentYear) || (year < currentYear);
+    const curSemester = await this.getCurrentSemester();
+    return this.earlierSemester(curSemester, { semester, year });
   }
+
+  earlierSemester (curSem: StudyingSemester, compSem: StudyingSemester) {
+    return (compSem.semester < curSem.semester && compSem.year === curSem.year) || (compSem.year < curSem.year);
+  }
+
 }
