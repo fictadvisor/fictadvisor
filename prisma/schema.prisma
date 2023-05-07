@@ -38,6 +38,7 @@ model Group {
   students    Student[]
   disciplines Discipline[]
   groupRoles  GroupRole[]
+  events Event[]
 
   @@map("groups")
 }
@@ -93,8 +94,7 @@ model Discipline {
   semester             Int
   year                 Int
   isSelective          Boolean               @default(false) @map("is_selective")
-  evaluatingSystem     String?               @map("evaluating_system")
-  resource             String?
+  description          String                @default("")
   selectiveDisciplines SelectiveDiscipline[]
   disciplineTypes      DisciplineType[]
   disciplineTeachers   DisciplineTeacher[]
@@ -126,67 +126,10 @@ model DisciplineType {
   discipline             Discipline              @relation(fields: [disciplineId], references: [id], onDelete: Cascade)
   disciplineId           String                  @map("discipline_id")
   name                   DisciplineTypeEnum
-  lessons                SemesterLesson[]
   disciplineTeacherRoles DisciplineTeacherRole[]
-  temporaryLessons       TemporaryLesson[]
+  lessons                Lesson[]
 
   @@map("discipline_types")
-}
-
-model SemesterLesson {
-  id               String            @id @default(uuid())
-  startDate        DateTime          @map("start_date")
-  endDate          DateTime          @map("end_date")
-  url              String?
-  disciplineType   DisciplineType    @relation(fields: [disciplineTypeId], references: [id], onDelete: Cascade)
-  disciplineTypeId String            @map("discipline_type_id")
-  fortnightLessons FortnightLesson[]
-
-  @@map("semester_lessons")
-}
-
-model FortnightLesson {
-  id        String                @id @default(uuid())
-  lesson    SemesterLesson        @relation(fields: [lessonId], references: [id], onDelete: Cascade)
-  lessonId  String                @map("lesson_id")
-  fortnight Int
-  info      FortnightLessonInfo[]
-
-  @@map("fortnight_lessons")
-}
-
-model FortnightLessonInfo {
-  lesson   FortnightLesson         @relation(fields: [lessonId], references: [id], onDelete: Cascade)
-  lessonId String                  @map("week_lesson_id")
-  type     FortnightLessonInfoType
-  value    String
-
-  @@id([lessonId, type])
-  @@map("fortnight_lessons_info")
-}
-
-enum FortnightLessonInfoType {
-  HOMEWORK
-  URL
-  START_DATE
-  END_DATE
-  COMMENT
-  IS_TEST
-}
-
-model TemporaryLesson {
-  id               String         @id @default(uuid())
-  startDate        DateTime       @map("start_date")
-  endDate          DateTime       @map("end_date")
-  url              String?
-  fortnight        Int
-  teacher          Teacher        @relation(fields: [teacherId], references: [id], onDelete: Cascade)
-  teacherId        String         @map("teacher_id")
-  disciplineType   DisciplineType @relation(fields: [disciplineTypeId], references: [id], onDelete: Cascade)
-  disciplineTypeId String         @map("discipline_type_id")
-  comment          String?
-
-  @@map("temporary_lessons")
 }
 
 enum TeacherRole {
@@ -203,7 +146,6 @@ model Teacher {
   description        String?
   avatar             String?
   disciplineTeachers DisciplineTeacher[]
-  temporaryLessons   TemporaryLesson[]
 
   @@map("teachers")
 }
@@ -362,4 +304,45 @@ model StudentResource {
   icon String
 
   @@map("student_resources")
+}
+
+enum Period {
+  NO_PERIOD
+  EVERY_WEEK
+  EVERY_FORTNIGHT
+}
+
+model Event {
+  id        String      @id @default(uuid())
+  name      String
+  startTime DateTime    @map("start_time")
+  endTime   DateTime    @map("end_time")
+  period    Period
+  url       String
+  group     Group       @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId   String      @map("group_id")
+  eventInfo EventInfo[]
+  lessons   Lesson[]
+
+  @@map("events")
+}
+
+model EventInfo {
+  event       Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId     String @map("event_id")
+  number      Int
+  description String
+
+  @@id([eventId, number])
+  @@map("event_info")
+}
+
+model Lesson {
+  event            Event          @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId          String         @map("event_id")
+  disciplineType   DisciplineType @relation(fields: [disciplineTypeId], references: [id], onDelete: Cascade)
+  disciplineTypeId String         @map("discipline_type_id")
+
+  @@id([eventId, disciplineTypeId])
+  @@map("lessons")
 }

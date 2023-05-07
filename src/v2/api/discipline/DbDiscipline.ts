@@ -7,8 +7,7 @@ export class DbDiscipline {
   semester: number;
   year: number;
   isSelective: boolean;
-  evaluatingSystem: string;
-  resource: string;
+  description: string;
   subject: Subject;
   group: Group;
   disciplineTypes: DisciplineType[];

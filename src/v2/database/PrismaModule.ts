@@ -7,7 +7,6 @@ import { TeacherRepository } from '../api/teacher/TeacherRepository';
 import { GroupRepository } from '../api/group/GroupRepository';
 import { DisciplineTeacherRoleRepository } from '../api/teacher/DisciplineTeacherRoleRepository';
 import { SubjectRepository } from '../api/subject/SubjectRepository';
-import { ScheduleRepository } from '../api/schedule/ScheduleRepository';
 import { RoleRepository } from '../api/user/role/RoleRepository';
 import { GrantRepository } from '../api/user/grant/GrantRepository';
 import { StudentRepository } from '../api/user/StudentRepository';
@@ -29,7 +28,6 @@ import { ResourceRepository } from '../api/resources/ResourceRepository';
     TeacherRepository,
     GroupRepository,
     SubjectRepository,
-    ScheduleRepository,
     RoleRepository,
     GrantRepository,
     StudentRepository,
@@ -49,7 +47,6 @@ import { ResourceRepository } from '../api/resources/ResourceRepository';
     TeacherRepository,
     GroupRepository,
     SubjectRepository,
-    ScheduleRepository,
     RoleRepository,
     GrantRepository,
     StudentRepository,

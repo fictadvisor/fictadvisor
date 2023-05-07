@@ -16,7 +16,6 @@ export class DisciplineTypeRepository {
       },
       include: {
         lessons: true,
-        temporaryLessons: true,
         discipline: true,
         disciplineTeacherRoles: true,
       },
@@ -38,8 +37,6 @@ export class DisciplineTypeRepository {
             subject: true,
             year: true,
             semester: true,
-            resource: true,
-            evaluatingSystem: true,
             isSelective: true,
             disciplineTeachers: {
               select: {
@@ -88,8 +85,6 @@ export class DisciplineTypeRepository {
         subject: true,
         year: true,
         semester: true,
-        resource: true,
-        evaluatingSystem: true,
         isSelective: true,
         disciplineTeachers: {
           select: {

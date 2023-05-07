@@ -12,7 +12,7 @@ import { GroupRepository } from '../../api/group/GroupRepository';
 import { DisciplineRepository } from '../../api/discipline/DisciplineRepository';
 import { SubjectRepository } from '../../api/subject/SubjectRepository';
 import { TeacherRepository } from '../../api/teacher/TeacherRepository';
-import { ScheduleRepository } from '../../api/schedule/ScheduleRepository';
+// import { ScheduleRepository } from '../../api/schedule/ScheduleRepository';
 import { GroupService } from '../../api/group/GroupService';
 
 export const DISCIPLINE_TYPE = {
@@ -48,7 +48,7 @@ export class RozParser implements Parser {
     private groupRepository: GroupRepository,
     private teacherRepository: TeacherRepository,
     private subjectRepository: SubjectRepository,
-    private scheduleRepository: ScheduleRepository,
+    // private scheduleRepository: ScheduleRepository,
     private disciplineRepository: DisciplineRepository,
     private disciplineTypeRepository: DisciplineTypeRepository,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
@@ -143,7 +143,7 @@ export class RozParser implements Parser {
 
         // Filter junk
         const domainRegex = /^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:/\n?]+)/igm;
-        const teacherLinks = Object.values(td.childNodes).filter((n: any) => !(n instanceof dom.window.HTMLBRElement || n instanceof dom.window.Text || n instanceof dom.window.HTMLSpanElement || n.href.match(domainRegex)?.includes('http://maps.google.com'))); 
+        const teacherLinks = Object.values(td.childNodes).filter((n: any) => !(n instanceof dom.window.HTMLBRElement || n instanceof dom.window.Text || n instanceof dom.window.HTMLSpanElement || n.href.match(domainRegex)?.includes('http://maps.google.com')));
 
         for (let k = 0; k < teacherLinks.length; k++) {
           const anchor = teacherLinks[k] as HTMLAnchorElement;
@@ -184,8 +184,8 @@ export class RozParser implements Parser {
 
   async getTeacherFullInitials (lastName, firstName, middleName) {
     if (firstName.length <= 1 || middleName.length <= 1) {
-      const teachers = await this.prisma.teacher.findMany({ 
-        where: { lastName, firstName: { startsWith: firstName }, middleName: { startsWith: middleName } }, 
+      const teachers = await this.prisma.teacher.findMany({
+        where: { lastName, firstName: { startsWith: firstName }, middleName: { startsWith: middleName } },
       });
 
       if (teachers.length === 1) return teachers[0];
@@ -196,7 +196,7 @@ export class RozParser implements Parser {
       lastName,
       firstName,
       middleName,
-    }); 
+    });
     return teacher;
   }
 
@@ -247,11 +247,11 @@ export class RozParser implements Parser {
       });
     }
 
-    await this.scheduleRepository.getOrCreateSemesterLesson({
-      disciplineTypeId: disciplineType.id,
-      startDate,
-      endDate,
-    });
+    // await this.scheduleRepository.getOrCreateSemesterLesson({
+    //   disciplineTypeId: disciplineType.id,
+    //   startDate,
+    //   endDate,
+    // });
   }
 
   createDate (day, week, hours, minutes): Date {

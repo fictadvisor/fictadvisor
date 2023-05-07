@@ -15,11 +15,8 @@ import { GroupByIdPipe } from '../group/pipe/GroupByIdPipe';
 import { Group } from '@prisma/client';
 import { DateService } from '../../utils/date/DateService';
 import { JwtGuard } from '../../security/JwtGuard';
-import { UpdateDynamicInfoDTO } from './dto/UpdateDynamicInfoDTO';
 import { GroupBySemesterLessonGuard } from '../../security/group-guard/GroupBySemesterLessonGuard';
 import { GroupByTemporaryLessonGuard } from '../../security/group-guard/GroupByTemporaryLessonGuard';
-import { UpdateStaticInfoDTO } from './dto/UpdateStaticInfoDTO';
-import { CreateLessonDTO } from './dto/CreateLessonDTO';
 
 @Controller({
   version: '2',
@@ -100,7 +97,7 @@ export class ScheduleController {
   async updateFortnightLesson (
     @Param('lessonId') id: string,
     @Param('fortnight', ParseIntPipe) fortnight: number,
-    @Body() body: UpdateDynamicInfoDTO,
+    @Body() body,
   ) {
     return this.scheduleService.updateFortnightInfo(id, fortnight, body);
   }
@@ -109,26 +106,26 @@ export class ScheduleController {
   @Patch('/lessons/static/:lessonId')
   async updateSemesterLesson (
     @Param('lessonId') id: string,
-    @Body() body: UpdateStaticInfoDTO,
+    @Body() body,
   ) {
     return this.scheduleService.updateSemesterInfo(id, body);
   }
 
-  @UseGuards(JwtGuard)
-  @Post('')
-  async createLesson (
-    @Request() req,
-    @Body() body: CreateLessonDTO,
-  ) {
-    const lesson = await this.scheduleService.createLesson(body);
-    if (!lesson) {
-      throw new BadRequestException('Invalid create lesson DTO');
-    }
-    if (!body.fortnight) {
-      return this.scheduleService.getFullStaticLesson(lesson.id, body.fortnight);
-    } else {
-      return this.scheduleService.getFullTemporaryLesson(lesson.id);
-    }
-  }
-
+//   @UseGuards(JwtGuard)
+//   @Post('')
+//   async createLesson (
+//     @Request() req,
+//     @Body() body,
+//   ) {
+//     const lesson = await this.scheduleService.createLesson(body);
+//     if (!lesson) {
+//       throw new BadRequestException('Invalid create lesson DTO');
+//     }
+//     if (!body.fortnight) {
+//       return this.scheduleService.getFullStaticLesson(lesson.id, body.fortnight);
+//     } else {
+//       return this.scheduleService.getFullTemporaryLesson(lesson.id);
+//     }
+//   }
+//
 }

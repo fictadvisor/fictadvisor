@@ -164,8 +164,6 @@ export class StudentRepository {
         group: true,
         semester: true,
         year: true,
-        evaluatingSystem: true,
-        resource: true,
       },
     });
   }

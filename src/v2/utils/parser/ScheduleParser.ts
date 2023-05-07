@@ -9,7 +9,7 @@ import { GroupRepository } from '../../api/group/GroupRepository';
 import { DisciplineRepository } from '../../api/discipline/DisciplineRepository';
 import { SubjectRepository } from '../../api/subject/SubjectRepository';
 import { TeacherRepository } from '../../api/teacher/TeacherRepository';
-import { ScheduleRepository } from '../../api/schedule/ScheduleRepository';
+// import { ScheduleRepository } from '../../api/schedule/ScheduleRepository';
 
 export const DAY_NUMBER = {
   'Пн': 1,
@@ -39,7 +39,7 @@ export class ScheduleParser implements Parser {
     private groupRepository: GroupRepository,
     private teacherRepository: TeacherRepository,
     private subjectRepository: SubjectRepository,
-    private scheduleRepository: ScheduleRepository,
+    // private scheduleRepository: ScheduleRepository,
     private disciplineRepository: DisciplineRepository,
     private disciplineTypeRepository: DisciplineTypeRepository,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
@@ -112,11 +112,11 @@ export class ScheduleParser implements Parser {
       disciplineTypeId: disciplineType.id,
     });
 
-    await this.scheduleRepository.getOrCreateSemesterLesson({
-      disciplineTypeId: disciplineType.id,
-      startDate,
-      endDate,
-    });
+    // await this.scheduleRepository.getOrCreateSemesterLesson({
+    //   disciplineTypeId: disciplineType.id,
+    //   startDate,
+    //   endDate,
+    // });
   }
 
   createDate (day, week, hours, minutes): Date {
