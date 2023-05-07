@@ -101,7 +101,7 @@ export class PollService {
     for (const discipline of disciplines) {
       discipline.disciplineTeachers = discipline.disciplineTeachers.filter((teacher) => {
         const hasAnyAnswer = (answer) => teacher.id === answer.disciplineTeacherId;
-        return answers.some(hasAnyAnswer);
+        return !answers.some(hasAnyAnswer);
       });
     }
 

@@ -4,10 +4,11 @@ import { PollService } from './PollService';
 import { DisciplineModule } from '../discipline/DisciplineModule';
 import { AccessModule } from 'src/v2/security/AccessModule';
 import { QuestionByIdPipe } from './pipe/QuestionByIdPipe';
+import { DateService } from '../../utils/date/DateService';
 
 @Module({
   controllers: [PollController],
-  providers: [PollService, QuestionByIdPipe],
+  providers: [PollService, QuestionByIdPipe, DateService],
   exports: [PollService],
   imports: [forwardRef(() => DisciplineModule), AccessModule],
 })
