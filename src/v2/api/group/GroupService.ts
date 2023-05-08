@@ -15,6 +15,7 @@ import { UserService } from '../user/UserService';
 import { RoleRepository } from '../user/role/RoleRepository';
 import { AVATARS } from '../auth/AuthService';
 import { AlreadyRegisteredException } from '../../utils/exceptions/AlreadyRegisteredException';
+import { DatabaseUtils } from '../utils/DatabaseUtils';
 import { StudentMapper } from '../user/StudentMapper';
 
 const ROLE_LIST = [
@@ -59,36 +60,37 @@ export class GroupService {
   ) {}
 
   async create (code: string): Promise<Group>  {
-    const group = await this.groupRepository.create(code);
+    const group = await this.groupRepository.create({ code });
     await this.addPermissions(group.id);
     return group;
   }
 
   async getAll (body: QueryAllDTO) {
-    return this.groupRepository.getAll(body);
+    const search = DatabaseUtils.getSearch(body, 'code');
+    const page = DatabaseUtils.getPage(body);
+    const sort = DatabaseUtils.getSort(body);
+
+    return this.groupRepository.findMany({
+      where: {
+        ...search,
+      },
+      ...page,
+      ...sort,
+    });
   }
 
   async get (id: string) {
-    return this.groupRepository.getGroup(id);
+    return this.groupRepository.findById(id);
   }
 
   async getDisciplineTeachers (groupId: string) {
-    const disciplines = await this.disciplineRepository.findMany({
-      where: { groupId },
-    });
+    const disciplines = await this.disciplineRepository.findMany({ where: { groupId } });
     return this.disciplineMapper.getDisciplinesWithTeachers(disciplines);
   }
 
   async getDisciplines (groupId: string) {
-    const disciplines = await this.groupRepository.getDisciplines(groupId);
-
-    return disciplines.map((d) => ({
-      id: d.id,
-      subject: d.subject,
-      year: d.year,
-      semester: d.semester,
-      isSelective: d.isSelective,
-    }));
+    const disciplines = await this.disciplineRepository.findMany({ where: { groupId } });
+    return this.disciplineMapper.getDisciplines(disciplines);
   }
 
   async addUnregistered (groupId: string, body: EmailDTO) {
@@ -132,8 +134,14 @@ export class GroupService {
   }
 
   async addGroupRole (groupId: string, userId: string, name: RoleName) {
-    const groupRoles = await this.groupRepository.getRoles(groupId);
-    const role = groupRoles.find((r) => r.name === name);
+    const role = await this.roleRepository.find({
+      groupRole: {
+        groupId,
+        role: {
+          name,
+        },
+      },
+    });
     this.userService.giveRole(userId, role.id);
   }
 
@@ -144,8 +152,12 @@ export class GroupService {
       throw new NoPermissionException();
     }
 
-    const roles = await this.groupRepository.getRoles(groupId);
-    const role = roles.find((r) => r.name === roleName);
+    const groupRole = await this.roleRepository.find({
+      groupRole: {
+        groupId,        
+      },
+      name: roleName,
+    });
     const userRole = await this.userService.getGroupRoleDB(userId);
 
     await this.studentRepository.updateById(userId, { 
@@ -158,7 +170,7 @@ export class GroupService {
             },
           },
           data: {
-            roleId: role.id,
+            roleId: groupRole.id,
           },
         },
       },
@@ -189,13 +201,18 @@ export class GroupService {
   }
 
   async getCaptain (groupId: string) {
-    const students = await this.groupRepository.getStudents(groupId);
-
-    const student = students.find(({ roles }) => {
-      return roles.some((r) => this.checkRole(RoleName.CAPTAIN, r));
+    const captain = await this.studentRepository.find({
+      groupId,
+      roles: {
+        some: {
+          role: {
+            name: RoleName.CAPTAIN,
+          },
+        },
+      },
     });
 
-    return student?.user;
+    return captain?.user;
   }
 
   checkRole (name: RoleName, role: { role: Role }) {
@@ -203,26 +220,22 @@ export class GroupService {
   }
 
   async deleteGroup (groupId: string) {
-    await this.groupRepository.deleteRoles(groupId);
-    await this.groupRepository.delete(groupId);
+    await this.roleRepository.deleteMany({ groupRole: { groupId } });
+    await this.groupRepository.deleteById(groupId);
   }
 
   async getStudents (groupId: string) {
-    const students = await this.groupRepository.getStudents(groupId);
-    return students
-      .filter((st) => st.state === State.APPROVED)
-      .map((s) => this.studentMapper.getStudent(s));
+    const students = await this.studentRepository.findMany({ where: { groupId, state: State.APPROVED } });
+    return students.map((s) => this.studentMapper.getStudent(s));
   }
 
   async updateGroup (groupId: string, body: UpdateGroupDTO) {
-    return this.groupRepository.updateGroup(groupId, body);
+    return this.groupRepository.updateById(groupId, body);
   }
 
   async getUnverifiedStudents (groupId: string) {
-    const students = await this.groupRepository.getStudents(groupId);
-    return students
-      .filter((s) => s.state === State.PENDING)
-      .map((s) => this.studentMapper.getStudent(s, false));
+    const students = await this.studentRepository.findMany({ where: { groupId, state: State.PENDING } });
+    return students.map((s) => this.studentMapper.getStudent(s, false));
   }
 
   async addPermissions (groupId: string) {
@@ -233,21 +246,18 @@ export class GroupService {
         set,
       }));
 
-      const role = await this.roleRepository.create({
+      await this.roleRepository.create({
         ...roles,
         grants: {
           create: grantList,
         },
+        groupRole: {
+          create: {
+            groupId,
+          },
+        },
       });
-      await this.groupRepository.addRole(role.id, groupId);
     }
   }
 
-  async getOrCreate (code) {
-    const group = await this.groupRepository.find({ code });
-    if (!group) {
-      return this.create(code);
-    }
-    return group;
-  }
 }

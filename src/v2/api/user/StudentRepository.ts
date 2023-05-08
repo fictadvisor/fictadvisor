@@ -26,18 +26,21 @@ export class StudentRepository {
     });
   }
 
-  find (args: Prisma.StudentFindUniqueArgs) {
-    return this.prisma.student.findUnique({
-      ...args,
+  find (where: Prisma.StudentWhereInput) {
+    return this.prisma.student.findFirst({
+      where,
       include: this.include,
     });
   }
 
   findById (userId: string) {
-    return this.find({
-      where: {
-        userId,
-      },
+    return this.find({ userId });
+  }
+
+  findMany (data: Prisma.StudentFindManyArgs) {
+    return this.prisma.student.findMany({
+      ...data,
+      include: this.include,
     });
   }
 

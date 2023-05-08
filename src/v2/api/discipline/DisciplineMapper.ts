@@ -17,6 +17,17 @@ export class DisciplineMapper {
       })),
     }));
   }
+
+  getDisciplines (disciplines: DbDiscipline[]) {
+    return disciplines.map((d) => ({
+      id: d.id,
+      subject: d.subject,
+      year: d.year,
+      semester: d.semester,
+      isSelective: d.isSelective,
+    }));
+  }
+
   getDisciplineTeachers (disciplines: DbDiscipline[]) {
     const teachers = [];
 

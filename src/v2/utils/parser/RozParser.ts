@@ -12,7 +12,6 @@ import { DisciplineRepository } from '../../api/discipline/DisciplineRepository'
 import { SubjectRepository } from '../../api/subject/SubjectRepository';
 import { TeacherRepository } from '../../api/teacher/TeacherRepository';
 // import { ScheduleRepository } from '../../api/schedule/ScheduleRepository';
-import { GroupService } from '../../api/group/GroupService';
 
 export const DISCIPLINE_TYPE = {
   Лек: DisciplineTypeEnum.LECTURE,
@@ -46,12 +45,10 @@ export class RozParser implements Parser {
     private groupRepository: GroupRepository,
     private teacherRepository: TeacherRepository,
     private subjectRepository: SubjectRepository,
-    // private scheduleRepository: ScheduleRepository,
     private disciplineRepository: DisciplineRepository,
     private disciplineTypeRepository: DisciplineTypeRepository,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
     private disciplineTeacherRoleRepository: DisciplineTeacherRoleRepository,
-    private groupService: GroupService,
   ) {}
 
   async parse (page = 1) {
@@ -174,7 +171,7 @@ export class RozParser implements Parser {
 
   async parseWeek (weekNumber, code, dom) {
     const week = await this.parseHtmlWeek(weekNumber, code, dom);
-    const group = await this.groupService.getOrCreate(code);
+    const group = await this.groupRepository.getOrCreate(code);
     for (const pair of week) {
       await this.parsePair(pair, group.id);
     }
