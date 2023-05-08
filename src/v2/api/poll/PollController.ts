@@ -1,12 +1,13 @@
 import { Body, Controller, Delete, Get, Patch, Param, Post } from '@nestjs/common';
 import { PollService } from './PollService';
-import { UpdateQuestionDTO } from './dto/UpdateQuestionDTO';
 import { CreateQuestionWithRolesDTO } from './dto/CreateQuestionWithRolesDTO';
-import { CreateQuestionRoleDTO } from './dto/CreateQuestionRoleDTO';
 import { Access } from 'src/v2/security/Access';
 import { QuestionByIdPipe } from './pipe/QuestionByIdPipe';
 import { QuestionByRoleAndIdPipe } from './pipe/QuestionByRoleAndIdPipe';
 import { UserByIdPipe } from '../user/UserByIdPipe';
+import { QuestionMapper } from './QuestionMapper';
+import { UpdateQuestionWithRolesDTO } from './dto/UpdateQuestionWithRolesDTO';
+import { CreateQuestionRoleDTO } from './dto/CreateQuestionRoleDTO';
 
 @Controller({
   version: '2',
@@ -15,14 +16,16 @@ import { UserByIdPipe } from '../user/UserByIdPipe';
 export class PollController {
   constructor (
     private pollService: PollService,
+    private questionMapper: QuestionMapper,
   ) {}
 
   @Access('questions.create')
   @Post('/questions')
-  async createQuestion (
+  async create (
     @Body() body : CreateQuestionWithRolesDTO,
   ) {
-    return this.pollService.createQuestions(body);
+    const question = await this.pollService.create(body);
+    return this.questionMapper.getQuestionWithRoles(question);
   }
 
   @Access('users.$userId.poll.teachers.get')
@@ -38,43 +41,48 @@ export class PollController {
 
   @Access('questions.delete')
   @Delete('/questions/:questionId')
-  delete (
+  async delete (
     @Param('questionId', QuestionByIdPipe) questionId: string,
   ) {
-    return this.pollService.delete(questionId);
+    const question = await this.pollService.deleteById(questionId);
+    return this.questionMapper.getQuestionWithRoles(question);
   }
 
   @Access('questions.update')
   @Patch('/questions/:questionId')
-  update (
+  async update (
     @Param('questionId', QuestionByIdPipe) questionId: string,
-    @Body() body: UpdateQuestionDTO,
+    @Body() body: UpdateQuestionWithRolesDTO,
   ) {
-    return this.pollService.update(questionId, body);
+    const question = await this.pollService.updateById(questionId, body);
+    return this.questionMapper.getQuestionWithRoles(question);
   }
 
   @Get('/questions/:questionId')
-  getQuestion (
+  async getQuestion (
     @Param('questionId', QuestionByIdPipe) questionId: string,
   ) {
-    return this.pollService.getQuestion(questionId);
+    const question = await this.pollService.getQuestionById(questionId);
+    return this.questionMapper.getQuestionWithRoles(question);
   }
 
   @Access('questions.roles.give')
   @Post('/questions/:questionId/roles')
-  giveRole (
+  async giveRole (
     @Param('questionId', QuestionByIdPipe) questionId: string,
     @Body() body: CreateQuestionRoleDTO,
   ) {
-    return this.pollService.giveRole(body, questionId);
+    const question = await this.pollService.giveRole(body, questionId);
+    return this.questionMapper.getQuestionWithRoles(question);
   }
 
   @Access('question.roles.delete')
   @Delete('/questions/:questionId/roles/:role')
-  deleteRole (
+  async deleteRole (
     @Param(QuestionByRoleAndIdPipe) params,
   ) {
-    return this.pollService.deleteRole(params.questionId, params.role);
+    const question = await this.pollService.deleteRole(params.questionId, params.role);
+    return this.questionMapper.getQuestionWithRoles(question);
   }
 
 }

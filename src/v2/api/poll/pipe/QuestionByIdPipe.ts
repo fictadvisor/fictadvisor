@@ -1,16 +1,15 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
-import { Question } from '@prisma/client';
 import { InvalidEntityIdException } from '../../../utils/exceptions/InvalidEntityIdException';
-import { PollService } from '../PollService';
+import { QuestionRepository } from '../QuestionRepository';
 
 @Injectable()
 export class QuestionByIdPipe implements PipeTransform<string, Promise<string>> {
   constructor (
-    private pollService: PollService,
+    private questionRepository: QuestionRepository,
   ) {}
 
   async transform (questionId: string): Promise<string> {
-    const question : Question = await this.pollService.getQuestion(questionId);
+    const question = await this.questionRepository.findById(questionId);
     if (!question) {
       throw new InvalidEntityIdException('question');
     }

@@ -1,74 +1,130 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { State, TeacherRole } from '@prisma/client';
 import { CreateQuestionWithRolesDTO } from './dto/CreateQuestionWithRolesDTO';
-import { UpdateQuestionDTO } from './dto/UpdateQuestionDTO';
-import { CreateQuestionRoleDTO } from './dto/CreateQuestionRoleDTO';
 import { QuestionRepository } from './QuestionRepository';
-import { DisciplineRepository } from '../discipline/DisciplineRepository';
+import { QuestionType, State, TeacherRole } from '@prisma/client';
 import { StudentRepository } from '../user/StudentRepository';
-import { UserRepository } from '../user/UserRepository';
 import { DisciplineService } from '../discipline/DisciplineService';
-import { DateService } from '../../utils/date/DateService';
+import { UpdateQuestionWithRolesDTO } from './dto/UpdateQuestionWithRolesDTO';
+import { MarksData } from '../teacher/data/MarksData';
+import { CreateQuestionRoleDTO } from './dto/CreateQuestionRoleDTO';
+import { DbQuestionWithAnswers } from './DbQuestionWithAnswers';
+import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
+import { UserRepository } from '../user/UserRepository';
 import { DisciplineMapper } from '../discipline/DisciplineMapper';
-import { DbQuestion } from '../teacher/DbQuestion';
-import { NoPermissionException } from 'src/v2/utils/exceptions/NoPermissionException';
+import { DateService } from '../../utils/date/DateService';
+import { DisciplineRepository } from '../discipline/DisciplineRepository';
+import { DbQuestionWithRoles } from './DbQuestionWithRoles';
 
 @Injectable()
 export class PollService {
   constructor (
     @Inject(forwardRef(() => DisciplineService))
     private disciplineService: DisciplineService,
-    private disciplineRepository: DisciplineRepository,
-    private disciplineMapper: DisciplineMapper,
     private studentRepository: StudentRepository,
     private questionRepository: QuestionRepository,
     private userRepository: UserRepository,
+    private disciplineMapper: DisciplineMapper,
     private dateService: DateService,
+    private disciplineRepository: DisciplineRepository,
   ) {}
 
-  async createQuestions (data: CreateQuestionWithRolesDTO) {
-    return this.questionRepository.createWithRoles(data);
+  async create ({ roles, ...data }: CreateQuestionWithRolesDTO) {
+    return this.questionRepository.create({
+      ...data,
+      questionRoles: {
+        create: roles,
+      },
+    });
   }
 
-  async delete (id: string) {
-    await this.questionRepository.delete(id);
+  async deleteById (id: string) {
+    return  this.questionRepository.deleteById(id);
   }
 
-  async update (id: string, body: UpdateQuestionDTO) {
-    return this.questionRepository.update(id, body);
+  async updateById (id: string, { roles, ...data }: UpdateQuestionWithRolesDTO) {
+    const questionRoles = roles ? {
+      deleteMany: {},
+      create: roles,
+    } : {};
+    return this.questionRepository.updateById(id, {
+      ...data,
+      questionRoles,
+    });
+
   }
 
-  async getQuestion (id: string) {
-    return await this.questionRepository.getQuestion(id);
+  async getQuestions (roles: TeacherRole[], disciplineRoles: TeacherRole[]) {
+    return this.questionRepository.findMany({
+      where: {
+        questionRoles: {
+          some: {
+            isShown: true,
+            role: {
+              in: roles,
+            },
+          },
+          none: {
+            isRequired: true,
+            role: {
+              notIn: disciplineRoles,
+            },
+          },
+        },
+      },
+    }) as unknown as Promise<DbQuestionWithRoles[]>;
   }
 
-  async giveRole (body: CreateQuestionRoleDTO, questionId: string) {
-    return await this.questionRepository.connectRole(questionId, body);
+  async getQuestionWithMarks (teacherId: string, data?: MarksData): Promise<DbQuestionWithAnswers[]> {
+    return await this.questionRepository.findMany({
+      where: {
+        OR: [{
+          type: QuestionType.TOGGLE,
+        }, {
+          type: QuestionType.SCALE,
+        }],
+      },
+      include: {
+        questionAnswers: {
+          where: {
+            disciplineTeacher: {
+              teacherId,
+              discipline: {
+                ...data,
+              },
+            },
+          },
+        },
+      },
+    }) as unknown as Promise<DbQuestionWithAnswers[]>;
+  }
+
+  async getQuestionById (id: string) {
+    return this.questionRepository.findById(id);
+  }
+
+  async giveRole (data: CreateQuestionRoleDTO, questionId: string) {
+    return await this.questionRepository.updateById(questionId, {
+      questionRoles: {
+        create: {
+          ...data,
+        },
+      },
+    });
   }
 
   async deleteRole (questionId: string, role: TeacherRole) {
-    return this.questionRepository.deleteRole(questionId, role);
+    return this.questionRepository.updateById(questionId, {
+      questionRoles: {
+        delete: {
+          questionId_role: {
+            questionId: questionId,
+            role: role,
+          },
+        },
+      },
+    });
   }
 
-  sortByCategories (questions: DbQuestion[]) {
-    const results = [];
-    for (const question of questions) {
-      const name = question.category;
-      delete question.category;
-      const category = results.find((c) => (c.name === name));
-      if (!category) {
-        results.push({
-          name: name,
-          count: 1,
-          questions: [question],
-        });
-      } else {
-        category.count++;
-        category.questions.push(question);
-      }
-    }
-    return results;
-  }
   async getDisciplineTeachers (userId: string) {
     const user = await this.userRepository.findById(userId);
     if (user.state !== State.APPROVED) {

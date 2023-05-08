@@ -11,8 +11,8 @@ import { InvalidQueryException } from '../../utils/exceptions/InvalidQueryExcept
 import { QueryAllTeacherDTO } from './query/QueryAllTeacherDTO';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
 import { SubjectRepository } from '../subject/SubjectRepository';
-import { QuestionRepository } from '../poll/QuestionRepository';
 import { TeacherMapper } from './TeacherMapper';
+import { PollService } from '../poll/PollService';
 
 @Injectable()
 export class TeacherService {
@@ -22,7 +22,7 @@ export class TeacherService {
     private disciplineTeacherService: DisciplineTeacherService,
     private contactRepository: ContactRepository,
     private subjectRepository: SubjectRepository,
-    private questionRepository: QuestionRepository
+    private pollService: PollService
   ) {}
 
   async getAll (body: QueryAllTeacherDTO) {
@@ -136,7 +136,7 @@ export class TeacherService {
   async getMarks (teacherId: string, data?: MarksQueryDTO) {
     this.checkQueryDate(data);
     const marks = [];
-    const questions = await this.questionRepository.getMarks(teacherId, data);
+    const questions = await this.pollService.getQuestionWithMarks(teacherId, data);
     for (const question of questions) {
       if (question.questionAnswers.length === 0) continue;
       const count = question.questionAnswers.length;

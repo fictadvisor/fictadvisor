@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import { Prisma, TeacherRole } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class DisciplineTeacherRepository {
@@ -68,41 +68,6 @@ export class DisciplineTeacherRepository {
         id,
       },
       include: this.include,
-    });
-  }
-
-  getQuestions (roles: TeacherRole[], disciplineRoles: TeacherRole[]) {
-    return this.prisma.question.findMany({
-      where: {
-        questionRoles: {
-          some: {
-            isShown: true,
-            role: {
-              in: roles,
-            },
-          },
-          none: {
-            isRequired: true,
-            role: {
-              notIn: disciplineRoles,
-            },
-          },
-        },
-      },
-      select: {
-        id: true,
-        name: true,
-        category: true,
-        criteria: true,
-        isRequired: true,
-        text: true,
-        type: true,
-        description: true,
-        display: true,
-      },
-      orderBy: {
-        order: 'asc',
-      },
     });
   }
 

@@ -18,9 +18,10 @@ import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityId
 import { DisciplineRepository } from '../discipline/DisciplineRepository';
 import { DisciplineTypeRepository } from '../discipline/DisciplineTypeRepository';
 import { TeacherTypeAdapter } from './dto/TeacherRoleAdapter';
-import { DbQuestion } from './DbQuestion';
 import { UserRepository } from '../user/UserRepository';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
+import { QuestionMapper } from '../poll/QuestionMapper';
+import { DbQuestionWithRoles } from '../poll/DbQuestionWithRoles';
 
 @Injectable()
 export class DisciplineTeacherService {
@@ -34,7 +35,8 @@ export class DisciplineTeacherService {
     private pollService: PollService,
     private questionAnswerRepository: QuestionAnswerRepository,
     private telegramApi: TelegramAPI,
-    private userRepository: UserRepository
+    private userRepository: UserRepository,
+    private questionMapper: QuestionMapper,
   ) {}
 
   async getQuestions (disciplineTeacherId: string, userId: string) {
@@ -95,7 +97,7 @@ export class DisciplineTeacherService {
   async getCategories (id: string) {
     const { discipline, teacher } = await this.disciplineTeacherRepository.findById(id);
     const questions = await this.getUniqueQuestions(id);
-    const categories = this.pollService.sortByCategories(questions);
+    const categories = this.questionMapper.sortByCategories(questions);
     return {
       teacher,
       subject: discipline.subject,
@@ -124,10 +126,10 @@ export class DisciplineTeacherService {
       disciplineRoles.push(...dbRoles);
     }
 
-    return this.disciplineTeacherRepository.getQuestions(teacherRoles, disciplineRoles);
+    return this.pollService.getQuestions(teacherRoles, disciplineRoles);
   }
 
-  async checkRequiredQuestions (dbQuestions: DbQuestion[], questions: CreateAnswerDTO[]) {
+  async checkRequiredQuestions (dbQuestions: DbQuestionWithRoles[], questions: CreateAnswerDTO[]) {
     for (const question of dbQuestions) {
       if (question.isRequired && !questions.some((q) => q.questionId === question.id)) {
         throw new NotEnoughAnswersException();
@@ -135,7 +137,7 @@ export class DisciplineTeacherService {
     }
   }
 
-  async checkExcessiveQuestions (dbQuestions: DbQuestion[], questions: CreateAnswerDTO[]) {
+  async checkExcessiveQuestions (dbQuestions: DbQuestionWithRoles[], questions: CreateAnswerDTO[]) {
     for (const question of questions) {
       if (!dbQuestions.some((q) => (q.id === question.questionId))) {
         throw new ExcessiveAnswerException();

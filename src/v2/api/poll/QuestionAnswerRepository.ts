@@ -1,61 +1,34 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
 import { CreateAnswerData } from './data/CreateAnswerData';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class QuestionAnswerRepository {
   constructor (
     private prisma: PrismaService,
   ) {}
+  private include = {
+    question: true,
+    disciplineTeacher: {
+      include: {
+        discipline: true,
+        teacher: true,
+      },
+    },
+  };
 
   create (data: CreateAnswerData) {
     return this.prisma.questionAnswer.create({
       data,
+      include: this.include,
     });
   }
 
-  find (where: Omit<CreateAnswerData, 'value'>) {
+  find (where: Prisma.QuestionAnswerWhereInput) {
     return this.prisma.questionAnswer.findFirst({
       where,
-      select: {
-        question: {
-          select: {
-            id: true,
-            category: true,
-            name: true,
-            order: true,
-            description: true,
-            text: true,
-            isRequired: true,
-            type: true,
-            display: true,
-          },
-        },
-        disciplineTeacher: {
-          select: {
-            id: true,
-            discipline: {
-              select: {
-                id: true,
-                subject: true,
-                group: true,
-                semester: true,
-                year: true,
-                isSelective: true,
-              },
-            },
-            teacher: {
-              select: {
-                id: true,
-                firstName: true,
-                middleName: true,
-                lastName: true,
-                avatar: true,
-              },
-            },
-          },
-        },
-      },
+      include: this.include,
     });
   }
 
@@ -65,6 +38,7 @@ export class QuestionAnswerRepository {
         disciplineTeacherId,
         userId,
       },
+      include: this.include,
     });
   }
 }
