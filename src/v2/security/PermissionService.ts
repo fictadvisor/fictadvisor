@@ -1,16 +1,24 @@
 import { Injectable } from '@nestjs/common';
-import { StudentRepository } from '../api/user/StudentRepository';
 import { GrantData } from '../api/user/role/data/GrantData';
 import { RoleData } from '../api/user/role/data/RoleData';
+import { RoleRepository } from '../api/user/role/RoleRepository';
 
 @Injectable()
 export class PermissionService {
   constructor (
-    private studentRepository: StudentRepository,
+    private roleRepository: RoleRepository,
   ) {}
 
   async hasPermission (userId: string, permission: string) {
-    const roles = await this.studentRepository.getRoles(userId);
+    const roles = await this.roleRepository.findMany({
+      where: {
+        userRoles: {
+          some: {
+            studentId: userId,
+          },
+        },
+      },
+    });
     return this.checkPermission(roles, permission);
   }
 

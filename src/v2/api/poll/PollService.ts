@@ -14,6 +14,7 @@ import { DisciplineMapper } from '../discipline/DisciplineMapper';
 import { DateService } from '../../utils/date/DateService';
 import { DisciplineRepository } from '../discipline/DisciplineRepository';
 import { DbQuestionWithRoles } from './DbQuestionWithRoles';
+import { QuestionAnswerRepository } from './QuestionAnswerRepository';
 
 @Injectable()
 export class PollService {
@@ -26,6 +27,7 @@ export class PollService {
     private disciplineMapper: DisciplineMapper,
     private dateService: DateService,
     private disciplineRepository: DisciplineRepository,
+    private questionAnswerRepository: QuestionAnswerRepository,
   ) {}
 
   async create ({ roles, ...data }: CreateQuestionWithRolesDTO) {
@@ -152,7 +154,7 @@ export class PollService {
       );
     });
 
-    const answers = await this.studentRepository.getAnswers(userId);
+    const answers = await this.questionAnswerRepository.findMany({ where: { userId } });
 
     for (const discipline of disciplines) {
       discipline.disciplineTeachers = discipline.disciplineTeachers.filter((teacher) => {

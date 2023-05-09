@@ -1,180 +1,73 @@
 import { Injectable } from '@nestjs/common';
-import { CreateStudentData } from './data/СreateStudentData';
-import { UpdateStudentData } from './data/UpdateStudentData';
 import { PrismaService } from '../../database/PrismaService';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class StudentRepository {
+
+  private include = {
+    group: true,
+    roles: {
+      include: {
+        role: true,
+      },
+    },
+    user: true,
+  };
+
   constructor (
     private prisma: PrismaService,
   ) {}
 
-  async getRoles (studentId: string) {
-    const roles = await this.prisma.userRole.findMany({
-      where: {
-        studentId,
-      },
-      select: {
-        role: {
-          select: {
-            id: true,
-            name: true,
-            weight: true,
-            grants: {
-              select: {
-                id: true,
-                set: true,
-                permission: true,
-              },
-            },
-          },
-        },
-      },
-      orderBy: {
-        role: {
-          weight: 'desc',
-        },
-      },
-    });
-
-    return roles.map((role) => role.role);
-  }
-
-  get (userId: string) {
-    return this.prisma.student.findUnique({
-      where: {
-        userId,
-      },
-      select: {
-        firstName: true,
-        middleName: true,
-        lastName: true,
-        user: {
-          select: {
-            id: true,
-            username: true,
-            email: true,
-            telegramId: true,
-            avatar: true,
-            state: true,
-          },
-        },
-        group: true,
-        roles: {
-          select: {
-            role: true,
-          },
-        },
-        state: true,
-      },
-    });
-  }
-
-  async getGroupByRole (roleId: string) {
-    return this.prisma.group.findFirst({
-      where: {
-        groupRoles: {
-          some: {
-            roleId,
-          },
-        },
-      },
-      select: {
-        id: true,
-        code: true,
-      },
-    });
-  }
-
-  async addRole (studentId: string, roleId: string) {
-    return this.prisma.userRole.create({
-      data: {
-        studentId,
-        roleId,
-      },
-    });
-  }
-
-  async removeRole (studentId: string, roleId: string) {
-    return this.prisma.userRole.deleteMany({
-      where: {
-        studentId,
-        roleId,
-      },
-    });
-  }
-
-  async update (userId: string, data: UpdateStudentData) {
-    return this.prisma.student.update({
-      where: {
-        userId,
-      },
-      data,
-      select: {
-        firstName: true,
-        middleName: true,
-        lastName: true,
-        user: {
-          select: {
-            id: true,
-            username: true,
-            email: true,
-            telegramId: true,
-            avatar: true,
-            state: true,
-          },
-        },
-        group: true,
-        roles: {
-          select: {
-            role: true,
-          },
-        },
-        state: true,
-      },
-    });
-  }
-
-  async create (data: CreateStudentData) {
+  async create (data: Prisma.StudentUncheckedCreateInput) {
     return this.prisma.student.create({
       data,
+      include: this.include,
     });
   }
 
-  async delete (userId: string) {
+  find (args: Prisma.StudentFindUniqueArgs) {
+    return this.prisma.student.findUnique({
+      ...args,
+      include: this.include,
+    });
+  }
+
+  findById (userId: string) {
+    return this.find({
+      where: {
+        userId,
+      },
+    });
+  }
+
+  update (args: Prisma.StudentUpdateArgs) {
+    return this.prisma.student.update({
+      ...args,
+      include: this.include,
+    });
+  }
+
+  updateById (userId: string, data: Prisma.StudentUncheckedUpdateInput) {
+    return this.update({
+      where: {
+        userId,
+      },
+      data,
+    });
+  }
+
+  async delete (args: Prisma.StudentDeleteArgs) {
     await this.prisma.student.delete({
-      where: {
-        userId,
-      },
+      ...args,
+      include: this.include,
     });
   }
-
-  getSelective (studentId: string) {
-    return this.prisma.discipline.findMany({
-      where: {
-        selectiveDisciplines: {
-          some: {
-            studentId,
-          },
-        },
-      },
-      select: {
-        id: true,
-        subject: true,
-        group: true,
-        semester: true,
-        year: true,
-      },
-    });
-  }
-
-  getAnswers (userId: string) {
-    return this.prisma.questionAnswer.findMany({
+  
+  async deleteById (userId: string) {
+    await this.delete({
       where: {
         userId,
-      },
-      select: {
-        disciplineTeacherId: true,
       },
     });
   }

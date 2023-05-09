@@ -1,9 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { RoleRepository } from './RoleRepository';
 import { GrantRepository } from '../grant/GrantRepository';
-import { GrantService } from '../grant/GrantService';
 import { UpdateRoleDTO } from './dto/UpdateRoleDTO';
-import { StudentRepository } from '../StudentRepository';
 import { NoPermissionException } from '../../../utils/exceptions/NoPermissionException';
 import { CreateRoleWithGrantsDTO } from '../dto/CreateRoleWithGrantsDTO';
 import { CreateGrantDTO } from '../dto/CreateGrantsDTO';
@@ -14,14 +12,19 @@ export class RoleService {
   constructor (
     private roleRepository: RoleRepository,
     private grantRepository: GrantRepository,
-    private grantService: GrantService,
-    private studentRepository: StudentRepository,
-    private permissionService: PermissionService
+    private permissionService: PermissionService,
   ) {}
 
   async createRole ({ grants = [], ...data }: CreateRoleWithGrantsDTO, userId: string) {
-    const roles = await this.studentRepository.getRoles(userId);
-
+    const roles = await this.roleRepository.findMany({
+      where: {
+        userRoles: {
+          some: {
+            studentId: userId,
+          },
+        },
+      },
+    });
     const higherRoles = roles.filter((r) => r.weight > data.weight);
     let hasPermission = this.permissionService.checkPermission(higherRoles, 'roles.create');
     for (const grant of grants) {

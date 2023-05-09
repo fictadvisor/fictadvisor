@@ -10,6 +10,7 @@ import { UserByIdPipe } from '../user/UserByIdPipe';
 import { QueryAllDTO } from '../../utils/QueryAllDTO';
 import { UpdateGroupDTO } from './dto/UpdateGroupDTO';
 import { Access } from 'src/v2/security/Access';
+import { StudentMapper } from '../user/StudentMapper';
 
 @Controller({
   version: '2',
@@ -17,7 +18,8 @@ import { Access } from 'src/v2/security/Access';
 })
 export class GroupController {
   constructor (
-    private groupService: GroupService
+    private groupService: GroupService,
+    private studentMapper: StudentMapper,
   ) {}
 
   @Access('groups.create')
@@ -109,7 +111,8 @@ export class GroupController {
     @Param('userId', UserByIdPipe) userId: string,
     @Body() body : ApproveDTO
   ) {
-    return this.groupService.verifyStudent(groupId, userId, body);
+    const student = await this.groupService.verifyStudent(groupId, userId, body);
+    return this.studentMapper.getStudent(student);
   }
 
   @Access('groups.$groupId.admin.switch')

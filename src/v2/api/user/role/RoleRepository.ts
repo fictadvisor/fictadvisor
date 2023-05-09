@@ -8,25 +8,23 @@ export class RoleRepository {
     private prisma: PrismaService,
   ) {}
 
+  private include = {
+    grants: true,
+    groupRole: true,
+    userRoles: true,
+  };
+
   create (data: Prisma.RoleUncheckedCreateInput) {
     return this.prisma.role.create({
       data,
-      include: {
-        groupRole: true,
-        userRoles: true,
-        grants: true,
-      },
+      include: this.include,
     });
   }
 
   async delete (where: Prisma.RoleWhereUniqueInput) {
     return this.prisma.role.delete({
       where,
-      include: {
-        grants: true,
-        groupRole: true,
-        userRoles: true,
-      },
+      include: this.include,
     });
   }
 
@@ -35,11 +33,7 @@ export class RoleRepository {
       where: {
         id,
       },
-      include: {
-        grants: true,
-        groupRole: true,
-        userRoles: true,
-      },
+      include: this.include,
     });
   }
 
@@ -53,11 +47,7 @@ export class RoleRepository {
     return this.prisma.role.update({
       where,
       data,
-      include: {
-        grants: true,
-        groupRole: true,
-        userRoles: true,
-      },
+      include: this.include,
     });
   }
   
@@ -67,11 +57,7 @@ export class RoleRepository {
         id,
       },
       data,
-      include: {
-        grants: true,
-        groupRole: true,
-        userRoles: true,
-      },
+      include: this.include,
     });
   }
 
@@ -85,11 +71,7 @@ export class RoleRepository {
   find (where: Prisma.RoleWhereInput) {
     return this.prisma.role.findFirst({
       where,
-      include: {
-        grants: true,
-        groupRole: true,
-        userRoles: true,
-      },
+      include: this.include,
     });
   }
 
@@ -98,22 +80,14 @@ export class RoleRepository {
       where: {
         id,
       },
-      include: {
-        grants: true,
-        groupRole: true,
-        userRoles: true,
-      },
+      include: this.include,
     });
   }
   
-  findMany (where?: Prisma.RoleWhereInput) {
+  findMany (args?: Prisma.RoleFindManyArgs) {
     return this.prisma.role.findMany({
-      where,
-      include: {
-        grants: true,
-        groupRole: true,
-        userRoles: true,
-      },
+      ...args,
+      include: this.include,
     });
   }
 }

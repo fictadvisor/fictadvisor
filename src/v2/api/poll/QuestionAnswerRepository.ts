@@ -32,12 +32,9 @@ export class QuestionAnswerRepository {
     });
   }
 
-  findMany (disciplineTeacherId: string, userId: string) {
+  findMany (args: Prisma.QuestionAnswerFindManyArgs) {
     return this.prisma.questionAnswer.findMany({
-      where: {
-        disciplineTeacherId,
-        userId,
-      },
+      ...args,
       include: this.include,
     });
   }

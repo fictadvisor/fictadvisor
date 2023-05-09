@@ -12,10 +12,11 @@ import { UserMapper } from './UserMapper';
 import { RoleMapper } from './role/RoleMapper';
 import { GrantController } from './grant/GrantController';
 import { GrantMapper } from './grant/GrantMapper';
+import { StudentMapper } from './StudentMapper';
 @Module({
   controllers: [UserController, RoleController, GrantController],
-  providers: [UserService, RoleService, GrantService, UserMapper, RoleMapper, GrantMapper],
-  exports: [UserService, RoleService, GrantService, UserMapper, RoleMapper, GrantMapper],
-  imports: [ConfigurationModule, forwardRef(() => GroupModule), AccessModule, forwardRef(() => AuthModule)],
+  providers: [UserService, RoleService, GrantService, UserMapper, StudentMapper, RoleMapper, GrantMapper],
+  exports: [UserService, RoleService, GrantService, UserMapper, StudentMapper, RoleMapper, GrantMapper],
+  imports: [ConfigurationModule, forwardRef(() => GroupModule), forwardRef(() => AccessModule), forwardRef(() => AuthModule)],
 })
 export class UserModule {}

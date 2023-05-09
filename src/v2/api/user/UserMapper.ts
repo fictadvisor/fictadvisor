@@ -10,6 +10,7 @@ export class UserMapper {
       username: user.username,
       avatar: user.avatar,
       telegramId: user.telegramId,
+      state: user.state,
     };
   }
 }

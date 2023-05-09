@@ -1,20 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { Grant, Role } from '@prisma/client';
-
-type GrantMap = Grant & {
-  role: Role
-}
+import { DbGrant } from './DbGrant';
 
 @Injectable()
 export class GrantMapper {
-  update (grant: GrantMap) {
+  update (grant: DbGrant) {
     return {
       id: grant.id,
       permission: grant.permission,
       set: grant.set,
     };
   }
-  delete (grant: GrantMap) {
+  delete (grant: DbGrant) {
     return {
       id: grant.id,
       permission: grant.permission,

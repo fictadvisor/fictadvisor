@@ -1,15 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { Role, Grant, GroupRole, UserRole } from '@prisma/client';
-
-type RoleMap = Role & {
-  grants: Grant[],
-  userRoles: UserRole[],
-  groupRole: GroupRole,
-} 
-
+import { Grant } from '@prisma/client';
+import { DbRole } from './DbRole';
 @Injectable()
 export class RoleMapper {
-  create (role: RoleMap) {
+  create (role: DbRole) {
     const grants = role.grants.map((grant) => ({
       id: grant.id,
       set: grant.set,
@@ -23,7 +17,7 @@ export class RoleMapper {
     };
   }
 
-  delete (role: RoleMap) {
+  delete (role: DbRole) {
     return {
       id: role.id,
       name: role.name,
@@ -31,7 +25,7 @@ export class RoleMapper {
     };
   }
 
-  update (role: RoleMap) {
+  update (role: DbRole) {
     return {
       id: role.id,
       name: role.name,
@@ -39,7 +33,7 @@ export class RoleMapper {
     };
   }
 
-  getRole (role: RoleMap) {
+  getRole (role: DbRole) {
     const grants = role.grants.map((grant) => ({
       id: grant.id,
       set: grant.set,
@@ -53,7 +47,7 @@ export class RoleMapper {
     };
   }
 
-  getAll (roles: RoleMap[]) {
+  getAll (roles: DbRole[]) {
     return roles.map(
       (role) => (this.getRole(role))
     );

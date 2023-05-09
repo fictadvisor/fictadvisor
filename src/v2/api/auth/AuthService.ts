@@ -339,15 +339,19 @@ export class AuthService {
 
     this.verifyEmailTokens.delete(token);
 
-    const { id } = await this.roleRepository.create({
+    await this.roleRepository.create({
       name: RoleName.USER,
       weight: 10,
       grants: {
         create: [{ permission: `users.${user.id}.*` }],
       },
+      userRoles: {
+        create: {
+          studentId: user.id,
+        },
+      },
     },
     );
-    await this.studentRepository.addRole(user.id, id);
     return this.getTokens(user);
   }
 
@@ -419,7 +423,7 @@ export class AuthService {
         lastPasswordChanged: new Date(),
         state: State.APPROVED,
       });
-    await this.studentRepository.update(dbUser.id, createStudent);
+    await this.studentRepository.updateById(dbUser.id, createStudent);
 
     return dbUser;
   }

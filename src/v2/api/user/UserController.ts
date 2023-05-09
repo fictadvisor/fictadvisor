@@ -76,9 +76,9 @@ export class UserController {
   @Post('/:userId/roles')
   giveRole (
     @Param('userId', UserByIdPipe) userId: string,
-    @Body() body: GiveRoleDTO,
+    @Body() { roleId }: GiveRoleDTO,
   ) {
-    return this.userService.giveRole(userId, body);
+    return this.userService.giveRole(userId, roleId);
   }
 
   @Delete('/:userId/roles/:roleId')
