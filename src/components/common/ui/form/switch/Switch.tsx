@@ -1,63 +1,34 @@
-import React, { FC } from 'react';
-import { useField } from 'formik';
-import mergeClassNames from 'merge-class-names';
+import { FC } from 'react';
+import {
+  FormControlLabel,
+  Switch as SwitchMui,
+  SxProps,
+  Theme,
+  Typography,
+} from '@mui/material';
 
-import styles from './Switch.module.scss';
+import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 
-export enum SwitchTextPosition {
-  RIGHT = 'right',
-  LEFT = 'left',
-}
+import * as styles from './Switch.styles';
 
-export enum SwitchSize {
-  MEDIUM = 'medium',
-  SMALL = 'small',
-}
-
-interface SwitchProps
-  extends Omit<React.ComponentPropsWithoutRef<'input'>, 'size'> {
-  name: string;
+interface SwitchProps {
+  labelPlacement?: 'start' | 'end';
+  sx?: SxProps<Theme>;
   label?: string;
-  textPosition?: string;
-  size?: SwitchSize;
-  className?: string;
 }
 
-const Switch: FC<SwitchProps> = ({
-  label,
-  textPosition = SwitchTextPosition.RIGHT,
-  size = SwitchSize.MEDIUM,
-  className,
-  ...rest
-}) => {
-  const gap = label ? '8px' : '';
-  const [{ onChange, value }] = useField(rest.name);
-
+const Switch: FC<SwitchProps> = ({ labelPlacement = 'end', sx, label }) => {
   return (
-    <div>
-      <div
-        className={mergeClassNames(styles[size + '-container'], className)}
-        style={{ gap: `${gap}` }}
-      >
-        {textPosition === 'left' && (
-          <span className={styles[size + '-switch-text']}>{label}</span>
-        )}
-        <label className={styles[`${size}-switch`]}>
-          <input
-            type="checkbox"
-            className={styles[size + '-switch-input']}
-            {...rest}
-            onChange={onChange}
-            checked={value}
-          />
-          <span className={styles[size + '-switch-slider']}></span>
-        </label>
-        {textPosition === 'right' && (
-          <span className={styles[size + '-switch-text']}>{label}</span>
-        )}
-      </div>
-    </div>
+    <FormControlLabel
+      sx={mergeSx(styles.wrapper, sx)}
+      control={<SwitchMui sx={styles.switchStyle} disableRipple />}
+      label={
+        <Typography sx={styles.label(label, labelPlacement)}>
+          {label}
+        </Typography>
+      }
+      labelPlacement={labelPlacement}
+    />
   );
 };
-
 export default Switch;

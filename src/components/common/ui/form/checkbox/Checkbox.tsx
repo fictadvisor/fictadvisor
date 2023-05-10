@@ -1,51 +1,67 @@
-import React from 'react';
+import { FC } from 'react';
+import {
+  Checkbox as CheckboxMui,
+  FormControlLabel,
+  SxProps,
+  Theme,
+  Typography,
+} from '@mui/material';
 import { useField } from 'formik';
-import mergeClassNames from 'merge-class-names';
 
-import { FieldState } from '@/components/common/ui/form/common/types';
+import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 
-import styles from './Checkbox.module.scss';
+import CheckedIcon from './components/CheckedIcon';
+import Icon from './components/Icon';
+import * as styles from './Checkbox.styles';
 
-interface CheckboxProps extends React.ComponentPropsWithoutRef<'input'> {
-  name: string;
+export type CheckboxColorType =
+  | 'primary'
+  | 'error'
+  | 'lection'
+  | 'practice'
+  | 'laba'
+  | 'event';
+
+interface CheckboxProps {
   label?: string;
-  className?: string;
+  disabled?: boolean;
+  sx?: SxProps<Theme>;
+  name: string;
+  color?: CheckboxColorType;
+  textType?: 'body1' | 'body2Medium';
 }
 
-const Checkbox: React.FC<CheckboxProps> = ({ label, className, ...rest }) => {
-  const additional = rest.disabled ? '-disabled' : '';
-  const gap = label ? '8px' : '';
-
-  const [field, { touched, error }] = useField(rest.name);
-
-  const state = touched && error ? FieldState.ERROR : FieldState.DEFAULT;
+const Checkbox: FC<CheckboxProps> = ({
+  label,
+  disabled = false,
+  sx,
+  name,
+  color = 'primary',
+  textType = 'body1',
+}) => {
+  const [field, { touched, error }] = useField(name);
+  color = touched && error ? 'error' : color;
 
   return (
-    <div>
-      <div
-        className={mergeClassNames(styles['check-container'], className)}
-        style={{ gap: `${gap}` }}
-      >
-        <label className="check-button">
-          <input
-            type="checkbox"
-            className={styles[state + '-check-input' + `${additional}`]}
-            {...rest}
-            {...field}
-          />
-          <span
-            className={styles[state + '-check-box' + `${additional}`]}
-            {...rest}
-          ></span>
-        </label>
-        <span
-          className={styles[state + '-check-text' + `${additional}`]}
-          {...rest}
-        >
+    <FormControlLabel
+      sx={mergeSx(styles.wrapper, sx)}
+      disabled={disabled}
+      control={
+        <CheckboxMui
+          {...field}
+          name={name}
+          checkedIcon={<CheckedIcon disabled={disabled} color={color} />}
+          icon={<Icon disabled={disabled} color={color} />}
+          disableRipple
+          sx={styles.checkBox}
+        />
+      }
+      label={
+        <Typography variant={textType} sx={styles.label(disabled, label)}>
           {label}
-        </span>
-      </div>
-    </div>
+        </Typography>
+      }
+    />
   );
 };
 

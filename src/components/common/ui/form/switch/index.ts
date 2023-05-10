@@ -1,1 +1,1 @@
-export { default, SwitchSize, SwitchTextPosition } from './Switch';
+export { default } from './Switch';

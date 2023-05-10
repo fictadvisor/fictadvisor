@@ -1,12 +1,14 @@
 import React, { FormEvent, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { RadioGroup } from '@mui/material';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/router';
 
 import { AlertColor } from '@/components/common/ui/alert';
 import ArrowButton from '@/components/common/ui/arrow-button/ArrowButton';
 import Button from '@/components/common/ui/button/Button';
-import { RadioGroup, Slider, TextArea } from '@/components/common/ui/form';
+import { Slider, TextArea } from '@/components/common/ui/form';
+import Radio from '@/components/common/ui/form/radio';
 import Loader from '@/components/common/ui/loader/Loader';
 import { PollAPI } from '@/lib/api/poll/PollAPI';
 import { showAlert } from '@/redux/reducers/alert.reducer';
@@ -182,14 +184,11 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
                           name={question.id}
                         />
                       ) : question.type === 'TOGGLE' ? (
-                        <RadioGroup
+                        <RadioGroup>
                           className={styles['options']}
-                          options={[
-                            { value: '1', label: 'так' },
-                            { value: '0', label: 'ні' },
-                          ]}
-                          name={question.id}
-                        />
+                          <Radio value="1" label="так" name={question.id} />
+                          <Radio value="0" label="ні" name={question.id} />
+                        </RadioGroup>
                       ) : (
                         <TextArea
                           className={styles['textarea']}
