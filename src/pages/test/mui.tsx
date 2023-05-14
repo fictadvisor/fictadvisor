@@ -1,4 +1,4 @@
-import MUITestPage from '@/components/pages/mui-test-page';
+import MUITestPage from '@/components/pages/test-pages/mui-test-page';
 
 const MUI = () => <MUITestPage />;
 

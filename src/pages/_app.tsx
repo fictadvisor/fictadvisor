@@ -4,8 +4,8 @@ import { Provider } from 'react-redux';
 import { ThemeProvider } from '@mui/system';
 import { AppProps } from 'next/app';
 
-import Toast from '@/components/common/ui/toast';
 import AuthenticationProvider from '@/hooks/use-authentication/authentication-context';
+import ToastContextProvider from '@/hooks/use-toast/toast-context';
 import { store } from '@/redux';
 import theme from '@/styles/theme';
 
@@ -23,8 +23,9 @@ const Application = ({ Component, pageProps }: AppProps) => {
       <ThemeProvider theme={theme}>
         <QueryClientProvider client={queryClient}>
           <AuthenticationProvider>
-            <Toast />
-            <Component {...pageProps} />
+            <ToastContextProvider>
+              <Component {...pageProps} />
+            </ToastContextProvider>
           </AuthenticationProvider>
         </QueryClientProvider>
       </ThemeProvider>
