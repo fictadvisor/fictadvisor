@@ -3,7 +3,6 @@ import { JSDOM } from 'jsdom';
 import { URLSearchParams } from 'node:url';
 import { Injectable } from '@nestjs/common';
 import { Parser } from './Parser';
-import { PrismaService } from '../../database/PrismaService';
 import { DisciplineTypeEnum, TeacherRole } from '@prisma/client';
 import { DisciplineTeacherRepository } from '../../api/teacher/DisciplineTeacherRepository';
 import { DisciplineTeacherRoleRepository } from '../../api/teacher/DisciplineTeacherRoleRepository';
@@ -44,7 +43,6 @@ const WEEK_TAGS = {
 @Injectable()
 export class RozParser implements Parser {
   constructor (
-    private prisma: PrismaService,
     private groupRepository: GroupRepository,
     private teacherRepository: TeacherRepository,
     private subjectRepository: SubjectRepository,
@@ -184,7 +182,7 @@ export class RozParser implements Parser {
 
   async getTeacherFullInitials (lastName, firstName, middleName) {
     if (firstName.length <= 1 || middleName.length <= 1) {
-      const teachers = await this.prisma.teacher.findMany({
+      const teachers = await this.teacherRepository.findMany({
         where: { lastName, firstName: { startsWith: firstName }, middleName: { startsWith: middleName } },
       });
 
