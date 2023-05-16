@@ -155,7 +155,7 @@ export class TeacherService {
     return parseFloat(((marksSum / divider) * 100).toFixed(2));
   }
   getRightMarkFormat ({ display, type, questionAnswers: answers }) {
-    if (display === QuestionDisplay.PERCENT) {
+    if (display === QuestionDisplay.RADAR || display === QuestionDisplay.CIRCLE) {
       return this.parseMark(type, answers.reduce((acc, answer) => acc + (+answer.value), 0), answers.length);
     } else if (display === QuestionDisplay.AMOUNT) {
       const table = {};

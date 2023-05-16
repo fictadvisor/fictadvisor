@@ -163,7 +163,8 @@ model DisciplineTeacher {
 }
 
 enum QuestionDisplay {
-  PERCENT
+  RADAR
+  CIRCLE
   AMOUNT
   TEXT
 }
@@ -184,7 +185,7 @@ model Question {
   isRequired      Boolean          @default(true) @map("is_required")
   criteria        String?
   type            QuestionType
-  display         QuestionDisplay  @default(PERCENT)
+  display         QuestionDisplay  @default(RADAR)
   questionRoles   QuestionRole[]
   questionAnswers QuestionAnswer[]
 
