@@ -11,6 +11,7 @@ import { ResponseDTO } from '../poll/dto/ResponseDTO';
 import { TeacherByIdPipe } from './pipe/TeacherByIdPipe';
 import { DisciplineByIdPipe } from '../discipline/pipe/DisciplineByIdPipe';
 import { UpdateDisciplineTeacherDTO } from './dto/UpdateDisciplineTeacherDTO';
+import { QuestionAnswersValidationPipe } from './pipe/QuestionAnswersValidationPipe';
 
 @Controller({
   version: '2',
@@ -46,7 +47,7 @@ export class DisciplineTeacherController {
   sendAnswers (
     @Param('disciplineTeacherId', DisciplineTeacherByIdPipe) disciplineTeacherId: string,
     @Request() req,
-    @Body() body: CreateAnswersDTO,
+    @Body('body', QuestionAnswersValidationPipe) body: CreateAnswersDTO,
   ) {
     return this.disciplineTeacherService.sendAnswers(disciplineTeacherId, body, req.user.id);
   }
