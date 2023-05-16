@@ -16,6 +16,7 @@ import { QuestionRepository } from '../api/poll/QuestionRepository';
 import { ContactRepository } from '../api/user/ContactRepository';
 import { QuestionAnswerRepository } from '../api/poll/QuestionAnswerRepository';
 import { ResourceRepository } from '../api/resources/ResourceRepository';
+import { EventRepository } from './repositories/EventRepository';
 
 @Global()
 @Module({
@@ -37,6 +38,7 @@ import { ResourceRepository } from '../api/resources/ResourceRepository';
     QuestionRepository,
     QuestionAnswerRepository,
     ResourceRepository,
+    EventRepository,
   ],
   exports: [
     PrismaService,
@@ -56,6 +58,7 @@ import { ResourceRepository } from '../api/resources/ResourceRepository';
     QuestionRepository,
     QuestionAnswerRepository,
     ResourceRepository,
+    EventRepository,
   ],
 })
 export class PrismaModule {}
