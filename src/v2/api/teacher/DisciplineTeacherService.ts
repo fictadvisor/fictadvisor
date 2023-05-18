@@ -22,6 +22,7 @@ import { UserRepository } from '../user/UserRepository';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
 import { QuestionMapper } from '../poll/QuestionMapper';
 import { DbQuestionWithRoles } from '../poll/DbQuestionWithRoles';
+import { DatabaseUtils } from '../utils/DatabaseUtils';
 
 @Injectable()
 export class DisciplineTeacherService {
@@ -279,7 +280,7 @@ export class DisciplineTeacherService {
     await this.disciplineTeacherRepository.deleteById(disciplineTeacher.id);
   }
 
-  async getUserDisciplineTeachers (teacherId: string, userId: string) {
+  async getUserDisciplineTeachers (teacherId: string, userId: string, notAnswered: boolean) {
     return this.disciplineTeacherRepository.findMany({
       where: {
         teacherId,
@@ -292,6 +293,15 @@ export class DisciplineTeacherService {
             },
           },
         },
+        ...DatabaseUtils.getOptional(notAnswered, {
+          NOT: {
+            questionAnswers: {
+              some: {
+                userId,
+              },
+            },
+          },
+        }),
       },
     });
   }

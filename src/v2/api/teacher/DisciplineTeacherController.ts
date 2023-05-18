@@ -6,7 +6,6 @@ import { GroupByDisciplineTeacherGuard } from 'src/v2/security/group-guard/Group
 import { Access } from 'src/v2/security/Access';
 import { DisciplineTeacherByIdPipe } from './pipe/DisciplineTeacherByIdPipe';
 import { TelegramGuard } from '../../security/TelegramGuard';
-import { JwtGuard } from '../../security/JwtGuard';
 import { ResponseDTO } from '../poll/dto/ResponseDTO';
 import { TeacherByIdPipe } from './pipe/TeacherByIdPipe';
 import { DisciplineByIdPipe } from '../discipline/pipe/DisciplineByIdPipe';
@@ -32,13 +31,14 @@ export class DisciplineTeacherController {
     return this.disciplineTeacherService.getQuestions(disciplineTeacherId, req.user.id);
   }
 
-  @UseGuards(JwtGuard)
+  @Access('teachers.$teacherId.disciplines.get')
   @Get('/:teacherId/disciplines')
   async getDisciplines (
     @Request() req,
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
+    @Query('notAnswered') notAnswered: boolean,
   ) {
-    const dbDisciplineTeachers = await this.disciplineTeacherService.getUserDisciplineTeachers(teacherId, req.user.id);
+    const dbDisciplineTeachers = await this.disciplineTeacherService.getUserDisciplineTeachers(teacherId, req.user.id, notAnswered);
     return this.disciplineTeacherMapper.getDisciplineTeachers(dbDisciplineTeachers);
   }
 

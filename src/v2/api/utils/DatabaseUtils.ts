@@ -49,4 +49,8 @@ export class DatabaseUtils {
       OR: arr,
     };
   }
+
+  static getOptional (condition: boolean, obj: object) {
+    return condition ? obj : {};
+  }
 }
