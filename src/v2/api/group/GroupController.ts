@@ -2,7 +2,6 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request } fro
 import { GroupService } from './GroupService';
 import { CreateGroupDTO } from './dto/CreateGroupDTO';
 import { GroupByIdPipe } from './pipe/GroupByIdPipe';
-import { Group } from '@prisma/client';
 import { EmailDTO } from './dto/EmailDTO';
 import { ApproveDTO } from '../user/dto/ApproveDTO';
 import { RoleDTO } from './dto/RoleDTO';
@@ -11,6 +10,7 @@ import { QueryAllDTO } from '../../utils/QueryAllDTO';
 import { UpdateGroupDTO } from './dto/UpdateGroupDTO';
 import { Access } from 'src/v2/security/Access';
 import { StudentMapper } from '../user/StudentMapper';
+import { AbsenceOfCaptainException } from '../../utils/exceptions/AbsenceOfCaptainException';
 
 @Controller({
   version: '2',
@@ -38,13 +38,13 @@ export class GroupController {
 
   @Get('/:groupId')
   get (
-    @Param('groupId', GroupByIdPipe) group: Group
+    @Param('groupId', GroupByIdPipe) groupId: string
   ) {
-    return group;
+    return this.groupService.get(groupId);
   }
 
   @Access('groups.update')
-  @Patch()
+  @Patch('/:groupId')
   async update (
     @Param('groupId', GroupByIdPipe) groupId: string,
     @Body() body: UpdateGroupDTO,
@@ -75,7 +75,11 @@ export class GroupController {
   async getCaptain (
     @Param('groupId', GroupByIdPipe) groupId: string,
   ) {
-    return this.groupService.getCaptain(groupId);
+    const captain = await this.groupService.getCaptain(groupId);
+    if (!captain) {
+      throw new AbsenceOfCaptainException();
+    }
+    return captain;
   }
 
   @Access('groups.$groupId.disciplines.teachers.get')

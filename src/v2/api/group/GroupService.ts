@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Group, Role, RoleName, State, User } from '@prisma/client';
+import { Group, RoleName, State, User } from '@prisma/client';
 import { DisciplineMapper } from '../discipline/DisciplineMapper';
 import { GroupRepository } from './GroupRepository';
 import { StudentRepository } from '../user/StudentRepository';
@@ -154,13 +154,13 @@ export class GroupService {
 
     const groupRole = await this.roleRepository.find({
       groupRole: {
-        groupId,        
+        groupId,
       },
       name: roleName,
     });
     const userRole = await this.userService.getGroupRoleDB(userId);
 
-    await this.studentRepository.updateById(userId, { 
+    await this.studentRepository.updateById(userId, {
       roles: {
         update: {
           where: {
@@ -188,9 +188,9 @@ export class GroupService {
       throw new NoPermissionException();
     }
 
-    await this.userService.removeRole( 
-      userId, 
-      userRole.id, 
+    await this.userService.removeRole(
+      userId,
+      userRole.id,
     );
 
     const user = await this.userRepository.findById(userId);
@@ -213,10 +213,6 @@ export class GroupService {
     });
 
     return captain?.user;
-  }
-
-  checkRole (name: RoleName, role: { role: Role }) {
-    return role.role.name === name;
   }
 
   async deleteGroup (groupId: string) {
