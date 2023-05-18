@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DbQuestionWithRoles } from './DbQuestionWithRoles';
 import { QuestionRole } from '@prisma/client';
+import { DbQuestionWithDiscipline } from './DbQuestionWithDiscipline';
 
 
 @Injectable()
@@ -62,5 +63,28 @@ export class QuestionMapper {
       display: question.display,
       questionRoles: this.getRoles(question.questionRoles),
     };
+  }
+
+  getQuestionWithResponses (questions: DbQuestionWithDiscipline[]) {
+    const responses = { 
+      questions: [],
+    };
+    for (const question of questions) {
+      if (question.questionAnswers.length === 0) continue;
+      responses.questions.push({
+        name: question.name,
+        amount: question.questionAnswers.length,
+        comments: [],
+      });
+      for (const answer of question.questionAnswers) {
+        responses.questions.at(-1).comments.push({
+          discipline: answer.disciplineTeacher.discipline.subject.name,
+          semester: answer.disciplineTeacher.discipline.semester,
+          year: answer.disciplineTeacher.discipline.year,
+          comment: answer.value,
+        });
+      }
+    }
+    return responses;
   }
 }

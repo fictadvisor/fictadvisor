@@ -1,7 +1,7 @@
 import { IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
 
-export class MarksQueryDTO {
+export class ResponseQueryDTO {
   @IsOptional()
     subjectId?: string;
 

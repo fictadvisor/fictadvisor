@@ -6,13 +6,13 @@ import { UpdateContactDTO } from '../user/dto/UpdateContactDTO';
 import { ContactRepository } from '../user/ContactRepository';
 import { DatabaseUtils } from '../utils/DatabaseUtils';
 import { DisciplineTeacherService } from './DisciplineTeacherService';
-import { MarksQueryDTO } from './query/MarksQueryDTO';
 import { InvalidQueryException } from '../../utils/exceptions/InvalidQueryException';
 import { QueryAllTeacherDTO } from './query/QueryAllTeacherDTO';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
 import { SubjectRepository } from '../subject/SubjectRepository';
 import { TeacherMapper } from './TeacherMapper';
 import { PollService } from '../poll/PollService';
+import { ResponseQueryDTO } from './query/ResponseQueryDTO';
 
 @Injectable()
 export class TeacherService {
@@ -133,7 +133,7 @@ export class TeacherService {
     );
   }
 
-  async getMarks (teacherId: string, data?: MarksQueryDTO) {
+  async getMarks (teacherId: string, data?: ResponseQueryDTO) {
     this.checkQueryDate(data);
     const marks = [];
     const questions = await this.pollService.getQuestionWithMarks(teacherId, data);
@@ -165,7 +165,7 @@ export class TeacherService {
       return table;
     }
   }
-  checkQueryDate ({ semester, year }: MarksQueryDTO) {
+  checkQueryDate ({ semester, year }: ResponseQueryDTO) {
     if ((!year && semester) || (year && !semester)) {
       throw new InvalidQueryException();
     }

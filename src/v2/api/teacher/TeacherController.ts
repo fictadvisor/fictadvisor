@@ -9,8 +9,10 @@ import { UpdateContactDTO } from '../user/dto/UpdateContactDTO';
 import { Access } from 'src/v2/security/Access';
 import { TeacherByIdPipe } from './pipe/TeacherByIdPipe';
 import { ContactByNamePipe } from './pipe/ContactByNamePipe';
-import { MarksQueryDTO } from './query/MarksQueryDTO';
 import { SubjectByIdPipe } from '../subject/SubjectByIdPipe';
+import { ResponseQueryDTO } from './query/ResponseQueryDTO';
+import { PollService } from '../poll/PollService';
+import { QuestionMapper } from '../poll/QuestionMapper';
 
 @Controller({
   version: '2',
@@ -20,6 +22,8 @@ export class TeacherController {
   constructor (
     private teacherService: TeacherService,
     private teacherMapper: TeacherMapper,
+    private pollService: PollService,
+    private questionMapper: QuestionMapper,
   ) {}
 
 
@@ -136,8 +140,18 @@ export class TeacherController {
   @Get('/:teacherId/marks')
   async getMarks (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
-    @Query() query: MarksQueryDTO,
+    @Query() query: ResponseQueryDTO,
   ) {
     return this.teacherService.getMarks(teacherId, query);
+  }
+
+  @Get('/:teacherId/comments')
+  async getComments (
+    @Param('teacherId', TeacherByIdPipe) teacherId: string,
+    @Query() query: ResponseQueryDTO,
+  ) {
+    this.teacherService.checkQueryDate(query);
+    const questions = await this.pollService.getQuestionWithText(teacherId, query);
+    return this.questionMapper.getQuestionWithResponses(questions);
   }
 }
