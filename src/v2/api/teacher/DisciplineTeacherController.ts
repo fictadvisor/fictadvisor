@@ -11,6 +11,7 @@ import { TeacherByIdPipe } from './pipe/TeacherByIdPipe';
 import { DisciplineByIdPipe } from '../discipline/pipe/DisciplineByIdPipe';
 import { UpdateDisciplineTeacherDTO } from './dto/UpdateDisciplineTeacherDTO';
 import { QuestionAnswersValidationPipe } from './pipe/QuestionAnswersValidationPipe';
+import { UserByIdPipe } from '../user/UserByIdPipe';
 
 @Controller({
   version: '2',
@@ -31,14 +32,14 @@ export class DisciplineTeacherController {
     return this.disciplineTeacherService.getQuestions(disciplineTeacherId, req.user.id);
   }
 
-  @Access('teachers.$teacherId.disciplines.get')
+  @Access('user.$userId.disciplineTeachers.$teacherId.get')
   @Get('/:teacherId/disciplines')
   async getDisciplines (
-    @Request() req,
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
     @Query('notAnswered') notAnswered: boolean,
+    @Query('userId', UserByIdPipe) userId: string,
   ) {
-    const dbDisciplineTeachers = await this.disciplineTeacherService.getUserDisciplineTeachers(teacherId, req.user.id, notAnswered);
+    const dbDisciplineTeachers = await this.disciplineTeacherService.getUserDisciplineTeachers(teacherId, userId, notAnswered);
     return this.disciplineTeacherMapper.getDisciplineTeachers(dbDisciplineTeachers);
   }
 
