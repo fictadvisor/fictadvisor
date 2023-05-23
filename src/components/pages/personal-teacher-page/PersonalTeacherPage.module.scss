@@ -19,13 +19,14 @@
 }
 
 .card-wrapper{
-box-sizing: border-box;
+  box-sizing: border-box;
   width: 100%;
   display: flex;
   flex-direction: row;
   background: $background-dark-10;
   outline: solid 1px $background-dark-50;
   gap: 15px;
+  border-radius: 4px;
 }
 .breadcrumbs{
   padding-top: 16px;
