@@ -18,7 +18,7 @@ import styles from './PasswordResetEmailConfirmationPage.module.scss';
 
 const PasswordResetEmailConfirmationPage = () => {
   const router = useRouter();
-  const email = router.query.email as string;
+  const email = (router.query.email as string).toLowerCase();
   const emailText = email
     ? 'Ми надіслали листа для зміни пароля на адресу '
     : 'Ми надіслали листа для зміни пароля';

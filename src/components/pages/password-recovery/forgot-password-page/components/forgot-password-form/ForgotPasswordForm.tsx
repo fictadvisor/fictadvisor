@@ -20,10 +20,9 @@ const ForgotPasswordForm: FC = () => {
   const handleSubmit = async (data: ForgotPasswordFormFields) => {
     let errorMessage;
     try {
-      await AuthAPI.forgotPassword({ email: data.emailAddress });
-      await router.push(
-        `/password-recovery/email-verification?email=${data.emailAddress}`,
-      );
+      const email = data.emailAddress.toLowerCase();
+      await AuthAPI.forgotPassword({ email });
+      await router.push(`/password-recovery/email-verification?email=${email}`);
     } catch (e) {
       const errorName = e.response.data.error;
       if (errorName == 'InvalidBodyException') {

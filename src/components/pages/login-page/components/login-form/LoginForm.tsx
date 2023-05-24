@@ -21,6 +21,8 @@ const LoginForm: FC = () => {
   const handleSubmit = useCallback(
     async (data: LoginFormFields, { setErrors }) => {
       try {
+        if (data.username.includes('@'))
+          data.username = data.username.toLowerCase();
         await AuthService.login(data);
         update();
         await push(redirect ? redirect.replace('~', '/') : '/');
