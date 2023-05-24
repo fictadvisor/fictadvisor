@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Request } from 'express';
 import { RequestUtils } from '../../utils/RequestUtils';
-import { DisciplineTeacherRepository } from 'src/v2/api/teacher/DisciplineTeacherRepository';
+import { DisciplineTeacherRepository } from 'src/v2/database/repositories/DisciplineTeacherRepository';
 
 @Injectable()
 export class GroupByDisciplineTeacherGuard implements CanActivate {

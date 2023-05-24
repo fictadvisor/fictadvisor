@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import Configuration from './config/Configuration';
 import { SecurityConfigService } from './config/SecurityConfigService';
-import { ConfigurationModule } from './config/ConfigModule';
+import { ConfigurationModule } from './modules/ConfigModule';
 import { ApiModule } from './api/ApiModule';
-import { EmailModule } from './email/EmailModule';
-import { PrismaModule } from './database/PrismaModule';
+import { EmailModule } from './modules/EmailModule';
+import { PrismaModule } from './modules/PrismaModule';
 
 @Module({
   imports: [

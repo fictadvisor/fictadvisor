@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { Parser } from './Parser';
 import axios from 'axios';
 import { DisciplineTypeEnum, TeacherRole } from '@prisma/client';
-import { DisciplineTeacherRepository } from '../../api/teacher/DisciplineTeacherRepository';
-import { DisciplineTeacherRoleRepository } from '../../api/teacher/DisciplineTeacherRoleRepository';
-import { DisciplineTypeRepository } from '../../api/discipline/DisciplineTypeRepository';
-import { GroupRepository } from '../../api/group/GroupRepository';
-import { DisciplineRepository } from '../../api/discipline/DisciplineRepository';
-import { SubjectRepository } from '../../api/subject/SubjectRepository';
-import { TeacherRepository } from '../../api/teacher/TeacherRepository';
+import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
+import { DisciplineTeacherRoleRepository } from '../../database/repositories/DisciplineTeacherRoleRepository';
+import { DisciplineTypeRepository } from '../../database/repositories/DisciplineTypeRepository';
+import { GroupRepository } from '../../database/repositories/GroupRepository';
+import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
+import { SubjectRepository } from '../../database/repositories/SubjectRepository';
+import { TeacherRepository } from '../../database/repositories/TeacherRepository';
 // import { ScheduleRepository } from '../../api/schedule/ScheduleRepository';
 
 export const DAY_NUMBER = {

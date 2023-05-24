@@ -4,7 +4,7 @@ import { Reflector } from '@nestjs/core';
 import { User } from '@prisma/client';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
 import { RequestUtils } from '../../utils/RequestUtils';
-import { PermissionService } from '../PermissionService';
+import { PermissionService } from '../../api/services/PermissionService';
 
 @Injectable()
 export class PermissionGuard implements CanActivate {

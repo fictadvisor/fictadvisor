@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
-import { AuthModule } from './auth/AuthModule';
-import { GroupModule } from './group/GroupModule';
-import { UserModule } from './user/UserModule';
-import { TeacherModule } from './teacher/TeacherModule';
-import { SubjectModule } from './subject/SubjectModule';
-import { DisciplineModule } from './discipline/DisciplineModule';
-import { PollModule } from './poll/PollModule';
-import { ScheduleModule } from './schedule/ScheduleModule';
-import { ResourceModule } from './resources/ResourceModule';
+import { AuthModule } from '../modules/AuthModule';
+import { GroupModule } from '../modules/GroupModule';
+import { UserModule } from '../modules/UserModule';
+import { TeacherModule } from '../modules/TeacherModule';
+import { SubjectModule } from '../modules/SubjectModule';
+import { DisciplineModule } from '../modules/DisciplineModule';
+import { PollModule } from '../modules/PollModule';
+import { ScheduleModule } from '../modules/ScheduleModule';
+import { ResourceModule } from '../modules/ResourceModule';
 
 
 @Module({

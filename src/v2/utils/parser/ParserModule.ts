@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ScheduleParser } from './ScheduleParser';
 import { RozParser } from './RozParser';
-import { PrismaModule } from '../../database/PrismaModule';
+import { PrismaModule } from '../../modules/PrismaModule';
 
 @Module({
   providers: [ScheduleParser, RozParser],
