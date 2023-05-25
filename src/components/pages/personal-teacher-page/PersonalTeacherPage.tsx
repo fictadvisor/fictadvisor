@@ -65,11 +65,11 @@ const PersonalTeacherPage = () => {
                   { label: 'Викладачі', href: '/teachers' },
                   {
                     label: `${
-                      data.lastName +
+                      data.teacher.lastName +
                       ' ' +
-                      data.firstName +
+                      data.teacher.firstName +
                       ' ' +
-                      data.middleName
+                      data.teacher.middleName
                     }`,
                     href: `/teachers/${teacherId}`,
                   },
@@ -79,7 +79,7 @@ const PersonalTeacherPage = () => {
                 <PersonalTeacherCard {...data} />
               </div>
               <div className={styles['tabs']}>
-                <PersonalTeacherTabs id={data.id} {...subjecktsData} />
+                <PersonalTeacherTabs id={data.teacher.id} {...subjecktsData} />
               </div>
             </div>
           )

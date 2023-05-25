@@ -2,13 +2,13 @@ import React from 'react';
 import Link from 'next/link';
 
 import { SubjectTeacherCard } from '@/components/common/composite/cards/subject-teacher-card';
-import { GetTeacherDTO } from '@/lib/api/teacher/dto/GetTeacherDTO';
+import { GetTeacherSubjectDTO } from '@/lib/api/teacher/dto/GetTeacherSubjectDTO';
 
 import styles from './SubjectTeacherSearchList.module.scss';
 
 export interface SubjectTeacherSearchListProps {
   subjectId: string;
-  teachers: Omit<GetTeacherDTO, 'contacts' | 'description'>[];
+  teachers: Omit<GetTeacherSubjectDTO, 'contacts' | 'subject'>[];
 }
 
 export const SubjectTeacherSearchList: React.FC<
