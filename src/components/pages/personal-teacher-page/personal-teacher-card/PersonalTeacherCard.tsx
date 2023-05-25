@@ -15,11 +15,19 @@ const PersonalTeacherCard: React.FC<PersonalTeacherCardProps> = props => {
   return (
     <div className={styles['card']}>
       <div className={styles['photo']}>
-        <img src={props.avatar} className={styles['image']} alt={'photo'}></img>
+        <img
+          src={props.teacher.avatar}
+          className={styles['image']}
+          alt={'photo'}
+        ></img>
       </div>
       <div className={styles['name-and-rating']}>
         <h4>
-          {props.lastName + ' ' + props.firstName + ' ' + props.middleName}
+          {props.teacher.lastName +
+            ' ' +
+            props.teacher.firstName +
+            ' ' +
+            props.teacher.middleName}
         </h4>
       </div>
 
@@ -36,7 +44,7 @@ const PersonalTeacherCard: React.FC<PersonalTeacherCardProps> = props => {
           <Tag color={TagColor.MINT} size={TagSize.SMALL} text={'Лаборант'} />
         )}
       </div>
-      <div className={styles['info']}>{props.description}</div>
+      <div className={styles['info']}>{props.teacher.description}</div>
 
       <Button
         className={styles['contacts-button']}
