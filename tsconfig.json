@@ -20,6 +20,7 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
+      "NextLink": ["next/link"],
       "@/*": ["./src/*"]
     }
   },

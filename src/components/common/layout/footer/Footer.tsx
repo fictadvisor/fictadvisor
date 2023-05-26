@@ -1,179 +1,88 @@
-import React from 'react';
-import Link from 'next/link';
+import { FC } from 'react';
+import { Box, Link, Typography, useMediaQuery } from '@mui/material';
+import NextLink from 'next/link';
 
-import { GitHubIcon } from '@/components/common/custom-svg/GitHub';
-import { InstagramIcon } from '@/components/common/custom-svg/Instagram';
-import { TelegramIcon } from '@/components/common/custom-svg/Telegram';
-import Button, {
-  ButtonSize,
-  ButtonVariant,
-} from '@/components/common/ui/button';
-import useIsMobile from '@/hooks/use-is-mobile/UseIsMobile';
+import Button from '../../ui/button-mui';
+import IconButton from '../../ui/icon-button-mui/IconButton';
 
-import styles from './Footer.module.scss';
+import { mainLinks, socialLinks, supportLinks } from './constants';
+import * as styles from './Footer.styles';
 
-const Footer: React.FC = () => {
-  const isMobile = useIsMobile(768);
-  const socialLabels = isMobile
-    ? [
-        {
-          text: '',
-          icon: <TelegramIcon />,
-          url: 'https://t.me/fict_time',
-        },
-        {
-          text: '',
-          icon: <InstagramIcon />,
-          url: 'https://www.instagram.com/sr_fiot/',
-        },
-        {
-          text: '',
-          icon: <GitHubIcon />,
-          url: 'https://github.com/fictadvisor/',
-        },
-      ]
-    : [
-        {
-          text: 'GitHub',
-          icon: <GitHubIcon />,
-          url: 'https://github.com/fictadvisor/',
-        },
-        {
-          text: 'Instagram',
-          icon: <InstagramIcon />,
-          url: 'https://www.instagram.com/sr_fiot/',
-        },
-        {
-          text: 'Telegram',
-          icon: <TelegramIcon />,
-          url: 'https://t.me/fict_time',
-        },
-      ];
+const Footer: FC = () => {
+  const isMobile = useMediaQuery('(max-width:1024px)');
 
   return (
-    <div className={styles['footer-container']}>
-      <div className={styles['footer-logo-container']}>
-        <div className={styles['footer-logo']}>
-          <Link href={'/'}>
-            <img src={`/assets/logo.png`} alt="logo" />
-          </Link>
-        </div>
+    <Box sx={styles.footerContainer}>
+      <Box sx={styles.footerLogoContainer}>
+        <Link href="/" component={NextLink} sx={styles.footerLogo}>
+          <Box component="img" src="/assets/logo.png" alt="logo" />
+        </Link>
+        <Typography sx={styles.signature}>By Dev-відділ СР ФІОТ</Typography>
+      </Box>
 
-        <div className={styles['signature']}>
-          <p>By Dev-відділ СР ФІОТ</p>
-        </div>
-      </div>
-      <div className={styles['main-references']}>
-        <div className={styles['title']}>
-          <p>Основні посилання</p>
-        </div>
-        <Link href={'/'} style={{ height: '36px' }}>
-          <Button
-            style={{ paddingLeft: '12px' }}
-            text="Головна"
-            size={ButtonSize.SMALL}
-            variant={ButtonVariant.TEXT}
-          />
-        </Link>
+      <Box sx={styles.mainReferences}>
+        <Typography sx={styles.title}>Основні посилання</Typography>
+        {mainLinks.map((data, index) => (
+          <Link
+            key={index}
+            component={NextLink}
+            href={data.link}
+            underline="none"
+          >
+            <Button
+              sx={styles.button}
+              text={data.text}
+              size="small"
+              variant="text"
+            />
+          </Link>
+        ))}
+      </Box>
 
-        <Link href={'/poll'} style={{ height: '36px' }}>
-          <Button
-            style={{ paddingLeft: '12px' }}
-            text="Опитування"
-            size={ButtonSize.SMALL}
-            variant={ButtonVariant.TEXT}
-          />
-        </Link>
-        <Link href={'/teachers'} style={{ height: '36px' }}>
-          <Button
-            style={{ paddingLeft: '12px' }}
-            text="Викладачі"
-            size={ButtonSize.SMALL}
-            variant={ButtonVariant.TEXT}
-          />
-        </Link>
-        <Link href={'/subjects'} style={{ height: '36px' }}>
-          <Button
-            style={{ paddingLeft: '12px' }}
-            // style={{ height: '36px', padding: '8px 12px' }}
-            text="Предмети"
-            size={ButtonSize.SMALL}
-            variant={ButtonVariant.TEXT}
-          />
-        </Link>
-        {/* <Link href={{}} style={{ height: '36px' }}>
-          <Button
-            text="Розклад"
-            size={ButtonSize.SMALL}
-            variant={ButtonVariant.TEXT}
-          />
-        </Link> */}
-      </div>
-      <div className={styles['support']}>
-        <div className={styles['title']}>
-          <p>Підтримка</p>
-        </div>
-        <Link href={'/privacy'} style={{ height: '36px' }}>
-          <Button
-            style={{ paddingLeft: '12px' }}
-            text="Конфіденційність"
-            size={ButtonSize.SMALL}
-            variant={ButtonVariant.TEXT}
-          />
-        </Link>
-        <Link href={'https://t.me/fict_robot'} style={{ height: '36px' }}>
-          <Button
-            style={{ paddingLeft: '12px' }}
-            text="FICT robot"
-            size={ButtonSize.SMALL}
-            variant={ButtonVariant.TEXT}
-          />
-        </Link>
-      </div>
-      <div className={styles['social-media']}>
-        <div className={styles['title']}>
-          <p>Соцмережі</p>
-        </div>
-        <div className={styles['social-buttons']}>
+      <Box sx={styles.support}>
+        <Typography sx={styles.title}>Підтримка</Typography>
+        {supportLinks.map((data, index) => (
           <Link
-            style={{ height: '36px', width: '36px' }}
-            href={socialLabels[0].url}
+            key={index}
+            component={NextLink}
+            href={data.link}
+            underline="none"
           >
             <Button
-              style={{ paddingLeft: '12px' }}
-              text={socialLabels[0].text}
-              startIcon={socialLabels[0].icon}
-              size={ButtonSize.SMALL}
-              variant={ButtonVariant.TEXT}
+              sx={styles.button}
+              text={data.text}
+              size="small"
+              variant="text"
             />
           </Link>
-          <Link
-            href={socialLabels[1].url}
-            style={{ height: '36px', width: '36px' }}
-          >
-            <Button
-              style={{ paddingLeft: '12px' }}
-              text={socialLabels[1].text}
-              startIcon={socialLabels[1].icon}
-              size={ButtonSize.SMALL}
-              variant={ButtonVariant.TEXT}
-            />
-          </Link>
-          <Link
-            href={socialLabels[2].url}
-            style={{ height: '36px', width: '36px' }}
-          >
-            <Button
-              style={{ paddingLeft: '12px' }}
-              text={socialLabels[2].text}
-              startIcon={socialLabels[2].icon}
-              size={ButtonSize.SMALL}
-              variant={ButtonVariant.TEXT}
-            />
-          </Link>
-        </div>
-      </div>
-    </div>
+        ))}
+      </Box>
+
+      <Box sx={styles.socialMedia}>
+        <Typography sx={styles.title}>Соцмережі</Typography>
+        <Box sx={styles.socialButtons}>
+          {socialLinks.map((data, index) => (
+            <Link
+              sx={styles.iconLink}
+              key={index}
+              component={NextLink}
+              href={data.link}
+              target="_blanket"
+              underline="none"
+            >
+              <IconButton
+                sx={styles.button}
+                icon={data.icon}
+                color="transparent"
+              />
+              <Typography variant="body1Bold" color="grey.600">
+                {!isMobile && data.text}
+              </Typography>
+            </Link>
+          ))}
+        </Box>
+      </Box>
+    </Box>
   );
 };
 
