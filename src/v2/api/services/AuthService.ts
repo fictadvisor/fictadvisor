@@ -27,7 +27,6 @@ import { AlreadyRegisteredException } from '../../utils/exceptions/AlreadyRegist
 import { NotRegisteredException } from '../../utils/exceptions/NotRegisteredException';
 import { PasswordRepeatException } from '../../utils/exceptions/PasswordRepeatException';
 import { GroupService } from './GroupService';
-import { RoleService } from './RoleService';
 import { RoleRepository } from '../../database/repositories/RoleRepository';
 import { TelegramDTO } from '../dtos/TelegramDTO';
 import { StudentDTO } from '../dtos/StudentDTO';
@@ -61,7 +60,6 @@ export class AuthService {
   private registerTelegramTokens: Map<string, number> = new Map();
 
   constructor (
-    private roleService: RoleService,
     private roleRepository: RoleRepository,
     private jwtService: JwtService,
     private securityConfig: SecurityConfigService,

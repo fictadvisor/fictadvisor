@@ -2,14 +2,13 @@ import { Module } from '@nestjs/common';
 import { SubjectService } from '../api/services/SubjectService';
 import { SubjectController } from '../api/controllers/SubjectController';
 import { PrismaModule } from './PrismaModule';
-import { TeacherModule } from './TeacherModule';
 import { AccessModule } from './AccessModule';
-import { SubjectMapper } from '../mappers/SubjectMapper';
+import { MapperModule } from './MapperModule';
 
 @Module({
-  providers: [SubjectService, SubjectMapper],
+  providers: [SubjectService],
   controllers: [SubjectController],
-  exports: [SubjectService, SubjectMapper],
-  imports: [PrismaModule, TeacherModule, AccessModule],
+  exports: [SubjectService],
+  imports: [PrismaModule, AccessModule, MapperModule],
 })
 export class SubjectModule {}

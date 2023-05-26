@@ -1,9 +1,7 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateQuestionWithRolesDTO } from '../dtos/CreateQuestionWithRolesDTO';
 import { QuestionRepository } from '../../database/repositories/QuestionRepository';
 import { QuestionType, State, TeacherRole } from '@prisma/client';
-import { StudentRepository } from '../../database/repositories/StudentRepository';
-import { DisciplineService } from './DisciplineService';
 import { UpdateQuestionWithRolesDTO } from '../dtos/UpdateQuestionWithRolesDTO';
 import { ResponseData } from '../datas/ResponseData';
 import { CreateQuestionRoleDTO } from '../dtos/CreateQuestionRoleDTO';
@@ -20,9 +18,6 @@ import { DbQuestionWithDiscipline } from '../../database/entities/DbQuestionWith
 @Injectable()
 export class PollService {
   constructor (
-    @Inject(forwardRef(() => DisciplineService))
-    private disciplineService: DisciplineService,
-    private studentRepository: StudentRepository,
     private questionRepository: QuestionRepository,
     private userRepository: UserRepository,
     private disciplineMapper: DisciplineMapper,

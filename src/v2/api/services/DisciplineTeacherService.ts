@@ -1,6 +1,5 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
-import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
 import { PollService } from './PollService';
 import { CreateAnswerDTO, CreateAnswersDTO } from '../dtos/CreateAnswersDTO';
 import { QuestionAnswerRepository } from '../../database/repositories/QuestionAnswerRepository';
@@ -30,9 +29,7 @@ export class DisciplineTeacherService {
     private dateService: DateService,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
     private disciplineRepository: DisciplineRepository,
-    private disciplineTeacherMapper: DisciplineTeacherMapper,
     private disciplineTypeRepository: DisciplineTypeRepository,
-    @Inject(forwardRef(() => PollService))
     private pollService: PollService,
     private questionAnswerRepository: QuestionAnswerRepository,
     private telegramApi: TelegramAPI,

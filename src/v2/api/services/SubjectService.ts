@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { SubjectRepository } from '../../database/repositories/SubjectRepository';
 import { QueryAllSubjectDTO } from '../dtos/QueryAllSubjectDTO';
-import { DisciplineTeacherService } from './DisciplineTeacherService';
 import { CreateSubjectDTO } from '../dtos/CreateSubjectDTO';
 import { TeacherRepository } from '../../database/repositories/TeacherRepository';
 import { Prisma, Subject } from '@prisma/client';
@@ -15,7 +14,6 @@ export class SubjectService {
     private subjectRepository: SubjectRepository,
     private teacherRepository: TeacherRepository,
     private teacherMapper: TeacherMapper,
-    private disciplineTeacherService: DisciplineTeacherService,
   ) {}
 
   async getAll (body: QueryAllSubjectDTO) {
