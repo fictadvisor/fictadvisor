@@ -8,7 +8,7 @@
   <p align="center">
     Backend application for <a href="https://fictadvisor.com">fictadvisor.com</a>
     <br />
-    <a href="https://github.com/fictadvisor/documentation"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/fictadvisor/fictadvisor-api/wiki"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://fictadvisor.com">View the Website</a>
@@ -73,14 +73,26 @@ To get a local copy up and running follow these steps.
 
 ## Usage
 
+To start the application for production:
+```sh
+yarn build
+yarn start:prod
+```
+
 To start the application locally: 
 ```sh
 yarn start:dev
 ```
 
+To run tests:
+```sh
+yarn test
+```
+
 ## Roadmap
 
 See the [open issues](https://github.com/fictadvisor/fictadvisor-api/issues) for a list of proposed features (and known issues).
+Also you can check out [design document](https://docs.google.com/document/d/1Wdjv38hjq8VsVJsoJTa1jKZnF1H-4jEr/edit?usp=sharing&ouid=106875465955999672293&rtpof=true&sd=true) for better understanding of architecture and functionality of our back-end service.
 
 ## Contributing
 
@@ -98,12 +110,11 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Contact
 
-Feedback - [https://t.me/fict_robot](https://t.me/fict_robot)
-
+Feedback - [https://t.me/fict_robot](https://t.me/fict_robot)  
 Project - [https://github.com/fictadvisor](https://github.com/fictadvisor)
 
 ## Acknowledgements
-* [passport](https://github.com/jaredhanson/passport)
-* [winston](https://github.com/winstonjs/winston)
+* [Nest.js](https://docs.nestjs.com)
+* [Prisma](https://prisma.io)
 * [class-transformer](https://github.com/typestack/class-transformer)
 * [class-validator](https://github.com/typestack/class-validator)
