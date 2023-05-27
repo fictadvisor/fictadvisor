@@ -14,6 +14,6 @@ import { MapperModule } from './MapperModule';
   controllers: [UserController, RoleController, GrantController],
   providers: [UserService, RoleService, GrantService],
   exports: [UserService, RoleService, GrantService],
-  imports: [ConfigurationModule, forwardRef(() => GroupModule), forwardRef(() => AccessModule), forwardRef(() => AuthModule), MapperModule],
+  imports: [ConfigurationModule, forwardRef(() => GroupModule), AccessModule, forwardRef(() => AuthModule), MapperModule],
 })
 export class UserModule {}

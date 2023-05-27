@@ -1,4 +1,4 @@
-import { IsOptional, ValidateNested } from 'class-validator';
+import { IsOptional, IsUUID, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { CreateRoleDTO } from './CreateRoleDTO';
 import { CreateGrantDTO } from './CreateGrantsDTO';
@@ -8,4 +8,8 @@ export class CreateRoleWithGrantsDTO extends CreateRoleDTO {
   @Type(() => CreateGrantDTO)
   @IsOptional()
     grants?: CreateGrantDTO[];
+
+  @IsUUID()
+  @IsOptional()
+    parentId?: string;
 }

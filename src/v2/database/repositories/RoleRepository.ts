@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../PrismaService';
 import { Prisma } from '@prisma/client';
+import { DbRole } from '../entities/DbRole';
 
 @Injectable()
 export class RoleRepository {
@@ -75,7 +76,7 @@ export class RoleRepository {
     });
   }
 
-  findById (id: string) {
+  findById (id: string): Promise<DbRole> {
     return this.prisma.role.findFirst({
       where: {
         id,
@@ -88,6 +89,6 @@ export class RoleRepository {
     return this.prisma.role.findMany({
       ...args,
       include: this.include,
-    });
+    }) as unknown as Promise<DbRole[]>;
   }
 }

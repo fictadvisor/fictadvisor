@@ -6,42 +6,46 @@ import { NoPermissionException } from '../../utils/exceptions/NoPermissionExcept
 import { CreateRoleWithGrantsDTO } from '../dtos/CreateRoleWithGrantsDTO';
 import { CreateGrantDTO } from '../dtos/CreateGrantsDTO';
 import { PermissionService } from './PermissionService';
+import { DbRole } from '../../database/entities/DbRole';
+import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
 
 @Injectable()
 export class RoleService {
   constructor (
-    private roleRepository: RoleRepository,
-    private grantRepository: GrantRepository,
-    private permissionService: PermissionService,
+    public roleRepository: RoleRepository,
+    public grantRepository: GrantRepository,
+    public permissionService: PermissionService,
   ) {}
 
   async createRole ({ grants = [], ...data }: CreateRoleWithGrantsDTO, userId: string) {
-    const roles = await this.roleRepository.findMany({
+    const userRoles = await this.getUserHigherRoles(userId, data.weight);
+
+    const hasCreateRolesPermission = await this.permissionService.hasPermissionInRoles(userRoles, 'roles.create');
+    if (!hasCreateRolesPermission) {
+      throw new NoPermissionException();
+    }
+    
+    await this.checkRole(userRoles, { ...data, grants });
+    
+    return this.roleRepository.create({ 
+      ...data,
+      grants: {
+        create: grants,
+      },
+    });
+  }
+
+  private getUserHigherRoles (userId, weight) {
+    return this.roleRepository.findMany({
       where: {
         userRoles: {
           some: {
             studentId: userId,
           },
         },
-      },
-    });
-    const higherRoles = roles.filter((r) => r.weight > data.weight);
-    let hasPermission = this.permissionService.checkPermission(higherRoles, 'roles.create');
-    for (const grant of grants) {
-      if (!this.permissionService.checkPermission(higherRoles, grant.permission)) {
-        hasPermission = false;
-        break;
-      }
-    }
-
-    if (!hasPermission) {
-      throw new NoPermissionException();
-    }
-
-    return this.roleRepository.create({ 
-      ...data,
-      grants: {
-        create: grants,
+        weight: {
+          gt: weight,
+        },
       },
     });
   }
@@ -70,5 +74,33 @@ export class RoleService {
   async getGrants (roleId: string) {
     const role = await this.roleRepository.findById(roleId);
     return role.grants;
+  }
+
+  private async canCreateGrants (userRoles: DbRole[], grants: CreateGrantDTO[]) {
+    for (const { permission } of grants) {
+      const hasPermission = await this.permissionService.hasPermissionInRoles(userRoles, permission);
+      if (!hasPermission) return false;
+    }
+    return true;
+  }
+
+  private async checkRole (userRoles: DbRole[], role: CreateRoleWithGrantsDTO) {
+
+    const canCreateGrants = await this.canCreateGrants(userRoles, role.grants);
+    if (!canCreateGrants) {
+      throw new NoPermissionException();
+    }
+
+    if (!role.parentId) return;
+
+    const parent = await this.roleRepository.findById(role.parentId);
+    if (!parent) {
+      throw new InvalidEntityIdException('parentId');
+    }
+    if (parent.weight > role.weight) {
+      throw new NoPermissionException();
+    }
+
+    await this.checkRole(userRoles, parent);
   }
 }

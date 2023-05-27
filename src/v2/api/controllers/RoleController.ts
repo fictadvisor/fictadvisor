@@ -1,12 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Request } from '@nestjs/common';
 import { RoleService } from '../services/RoleService';
 import { UpdateRoleDTO } from '../dtos/UpdateRoleDTO';
-import { JwtGuard } from '../../security/JwtGuard';
-import { PermissionGuard } from '../../security/permission-guard/PermissionGuard';
-import { Permission } from '../../security/permission-guard/Permission';
 import { CreateRoleWithGrantsDTO } from '../dtos/CreateRoleWithGrantsDTO';
 import { CreateGrantsDTO } from '../dtos/CreateGrantsDTO';
 import { RoleMapper } from '../../mappers/RoleMapper';
+import { Access } from '../../security/Access';
 
 @Controller({
   version: '2',
@@ -33,8 +31,7 @@ export class RoleController {
     return { roles: roleMap };
   }
 
-  @Permission('roles.create')
-  @UseGuards(JwtGuard, PermissionGuard)
+  @Access('roles.create')
   @Post()
   async create (
     @Body() body: CreateRoleWithGrantsDTO,
@@ -44,6 +41,7 @@ export class RoleController {
     return this.roleMapper.create(role);
   }
 
+  @Access('roles.$roleId.grants.create')
   @Post('/:roleId/grants')
   createGrants (
     @Body() body: CreateGrantsDTO,
@@ -61,6 +59,7 @@ export class RoleController {
     return { grants: grantsMap };
   }
 
+  @Access('roles.$roleId.delete')
   @Delete('/:roleId')
   async delete (
     @Param('roleId') roleId: string,
@@ -69,6 +68,7 @@ export class RoleController {
     return this.roleMapper.delete(role);
   }
 
+  @Access('roles.$roleId.update')
   @Patch('/:roleId')
   async update (
     @Param('roleId') roleId: string,
