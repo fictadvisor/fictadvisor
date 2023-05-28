@@ -8,7 +8,11 @@ export class EventRepository {
   private include = {
     group: true,
     eventInfo: true,
-    lessons: true,
+    lessons: {
+      include: {
+        disciplineType: true,
+      },
+    },
   };
 
   constructor (private prisma: PrismaService) {}
@@ -34,9 +38,9 @@ export class EventRepository {
   }
 
   findMany (args: Prisma.EventFindManyArgs) {
-    return this.prisma.event.findFirst({
-      ...args,
+    return this.prisma.event.findMany({
       include: this.include,
+      ...args,
     });
   }
 

@@ -16,6 +16,7 @@ import { DateService } from '../../utils/date/DateService';
 import { JwtGuard } from '../../security/JwtGuard';
 import { GroupBySemesterLessonGuard } from '../../security/group-guard/GroupBySemesterLessonGuard';
 import { GroupByTemporaryLessonGuard } from '../../security/group-guard/GroupByTemporaryLessonGuard';
+import { ScheduleMapper } from '../../mappers/ScheduleMapper';
 
 @Controller({
   version: '2',
@@ -25,6 +26,7 @@ export class ScheduleController {
   constructor (
     private scheduleService: ScheduleService,
     private dateService: DateService,
+    private scheduleMapper: ScheduleMapper,
   ) {}
 
 
@@ -108,6 +110,15 @@ export class ScheduleController {
     @Body() body,
   ) {
     return this.scheduleService.updateSemesterInfo(id, body);
+  }
+
+  @Get('/groups/:groupId/general')
+  async getGeneralEvents (
+    @Param('groupId', GroupByIdPipe) id: string,
+    @Query('week') week: number,
+  ) {
+    const events = await this.scheduleService.getGeneralGroupEvents(id, week);
+    return this.scheduleMapper.getGeneralEvents(events);
   }
 
 //   @UseGuards(JwtGuard)

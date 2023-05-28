@@ -8,6 +8,7 @@ import { StudentMapper } from '../mappers/StudentMapper';
 import { SubjectMapper } from '../mappers/SubjectMapper';
 import { TeacherMapper } from '../mappers/TeacherMapper';
 import { UserMapper } from '../mappers/UserMapper';
+import { ScheduleMapper } from '../mappers/ScheduleMapper';
 
 @Module({
   providers: [
@@ -20,6 +21,7 @@ import { UserMapper } from '../mappers/UserMapper';
     SubjectMapper,
     TeacherMapper,
     UserMapper,
+    ScheduleMapper,
   ],
   exports: [
     DisciplineMapper,
@@ -31,6 +33,7 @@ import { UserMapper } from '../mappers/UserMapper';
     SubjectMapper,
     TeacherMapper,
     UserMapper,
+    ScheduleMapper,
   ],
 })
 export class MapperModule {}

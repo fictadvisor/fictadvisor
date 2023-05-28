@@ -1,7 +1,17 @@
 import { Injectable } from '@nestjs/common';
+import { DateService } from '../../utils/date/DateService';
+import { EventRepository } from '../../database/repositories/EventRepository';
+import { DbEvent } from '../../database/entities/DbEvent';
+import { Period, DisciplineTypeEnum } from '@prisma/client';
+
 
 @Injectable()
 export class ScheduleService {
+
+  constructor (
+    private dateService: DateService,
+    private eventRepository: EventRepository,
+  ) {}
 
   async parse (parserType, page) {
     // TODO: create method that applies page parser by parserType (see rozParser, scheduleParser)
@@ -30,5 +40,47 @@ export class ScheduleService {
 
   async createLesson (lesson) {
     // TODO: implement method that creates temporary or semester lesson and returns it
+  }
+
+  getIndexOfLesson (period, startTime, endOfWeek) {
+    const difference = endOfWeek.getTime() - startTime.getTime();
+    let index = difference / (1000 * 60 * 60 * 24 * 7);
+    if (period === Period.EVERY_FORTNIGHT) index /= 2;
+
+    if (index % 1 <= 0.5) {
+      return +parseInt(String(index));
+    } else {
+      return null;
+    }
+  }
+
+  async getGeneralGroupEvents (id, week) {
+    const { startOfWeek, endOfWeek } = week ? await this.dateService.getDatesOfWeek(week) : this.dateService.getDatesOfCurrentWeek();
+    const events = await this.eventRepository.findMany({
+      where: {
+        groupId: id,
+        endTime: {
+          gte: startOfWeek,
+        },
+        startTime: {
+          lte: endOfWeek,
+        },
+        lessons: {
+          some: {
+            disciplineType: {
+              name: {
+                in: [DisciplineTypeEnum.PRACTICE, DisciplineTypeEnum.LECTURE, DisciplineTypeEnum.LABORATORY],
+              },
+            },
+          },
+        },
+      },
+    }) as unknown as DbEvent[];
+
+    return events
+      .filter((event) => {
+        const indexOfLesson = this.getIndexOfLesson(event.period, event.startTime, endOfWeek);
+        return indexOfLesson !== null;
+      });
   }
 }

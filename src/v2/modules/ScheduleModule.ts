@@ -8,6 +8,7 @@ import { DisciplineModule } from './DisciplineModule';
 import { TeacherModule } from './TeacherModule';
 import { PrismaModule } from './PrismaModule';
 import { AccessModule } from 'src/v2/modules/AccessModule';
+import { MapperModule } from './MapperModule';
 
 @Module({
   controllers: [ScheduleController],
@@ -21,6 +22,7 @@ import { AccessModule } from 'src/v2/modules/AccessModule';
     TeacherModule,
     PrismaModule,
     AccessModule,
+    MapperModule,
   ],
 })
 export class ScheduleModule {}

@@ -1,4 +1,4 @@
-import { EventInfo, Group, Lesson, Period } from '@prisma/client';
+import { DisciplineType, EventInfo, Group, Period } from '@prisma/client';
 
 export class DbEvent {
   id: string;
@@ -10,5 +10,9 @@ export class DbEvent {
   group: Group;
   groupId: string;
   eventInfo: EventInfo[];
-  lessons: Lesson[];
+  lessons: {
+    eventId: string;
+    disciplineTypeId: string;
+    disciplineType: DisciplineType;
+  }[];
 }

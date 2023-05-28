@@ -67,6 +67,29 @@ export class DateService {
     return { fortnight, week, day };
   }
 
+  async getCurrentWeek () {
+    const { startDate } = await this.getCurrentSemester();
+    const difference = new Date().getTime() - startDate.getTime();
+    return  Math.ceil(difference / WEEK);
+  }
+
+  getDatesOfCurrentWeek () {
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+    const currentDay = currentDate.getDay() ? currentDate.getDay() : 7;
+    const startOfWeek = new Date(currentDate.getTime() - (currentDay-1)*DAY);
+    const endOfWeek = (new Date(startOfWeek.getTime() + DAY*7));
+    return { startOfWeek, endOfWeek };
+  }
+
+  async getDatesOfWeek (week) {
+    const { startOfWeek, endOfWeek } = this.getDatesOfCurrentWeek();
+    const currentWeek = await this.getCurrentWeek();
+    const difference = week - currentWeek;
+    startOfWeek.setDate(startOfWeek.getDate() + difference*7);
+    endOfWeek.setDate(endOfWeek.getDate() + difference*7);
+    return { startOfWeek, endOfWeek };
+  }
   async isPreviousSemester (semester: number, year: number) {
     const curSemester = await this.getCurrentSemester();
     return this.earlierSemester(curSemester, { semester, year });
