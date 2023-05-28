@@ -150,11 +150,13 @@ export class TeacherService {
     }
     return marks;
   }
-  parseMark (type: QuestionType, marksSum: number, answerQty: number) {
+
+  private parseMark (type: QuestionType, marksSum: number, answerQty: number) {
     const divider = (answerQty * ((type === QuestionType.SCALE) ? 10 : 1));
     return parseFloat(((marksSum / divider) * 100).toFixed(2));
   }
-  getRightMarkFormat ({ display, type, questionAnswers: answers }) {
+
+  private getRightMarkFormat ({ display, type, questionAnswers: answers }) {
     if (display === QuestionDisplay.RADAR || display === QuestionDisplay.CIRCLE) {
       return this.parseMark(type, answers.reduce((acc, answer) => acc + (+answer.value), 0), answers.length);
     } else if (display === QuestionDisplay.AMOUNT) {
@@ -165,6 +167,7 @@ export class TeacherService {
       return table;
     }
   }
+
   checkQueryDate ({ semester, year }: ResponseQueryDTO) {
     if ((!year && semester) || (year && !semester)) {
       throw new InvalidQueryException();
