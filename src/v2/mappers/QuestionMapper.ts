@@ -6,7 +6,7 @@ import { DbQuestionWithDiscipline } from '../database/entities/DbQuestionWithDis
 
 @Injectable()
 export class QuestionMapper {
-  getQuestion (question: DbQuestionWithRoles) {
+  private getQuestion (question: DbQuestionWithRoles) {
     return {
       id: question.id,
       category: question.category,
@@ -41,7 +41,7 @@ export class QuestionMapper {
     return results;
   }
 
-  getRoles (roles: QuestionRole[]) {
+  private getRoles (roles: QuestionRole[]) {
     return roles.map((r) => ({
       role: r.role,
       isShown: r.isShown,
@@ -66,7 +66,7 @@ export class QuestionMapper {
   }
 
   getQuestionWithResponses (questions: DbQuestionWithDiscipline[]) {
-    const responses = { 
+    const responses = {
       questions: [],
     };
     for (const question of questions) {
