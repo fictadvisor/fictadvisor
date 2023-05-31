@@ -5,17 +5,22 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
-    "start:dev": "nest start --watch",
+    "start:dev": "NODE_ENV=development nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
+    "start:prod": "NODE_ENV=production node dist/main",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
-    "test": "jest --passWithNoTests",
+    "test:unit": "NODE_ENV=testing dotenv -e .testing.env -- jest -c jest.unit.config.json",
+    "test:integration": "NODE_ENV=testing dotenv -e .testing.env -- jest -c jest.integration.config.json",
+    "test:migrate": "dotenv -e .testing.env -- prisma migrate deploy",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
@@ -39,6 +44,7 @@
     "bcrypt": "^5.1.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
+    "dotenv-cli": "^7.2.1",
     "handlebars": "^4.7.7",
     "jsdom": "^22.0.0",
     "nodemailer": "^6.9.0",
@@ -75,22 +81,5 @@
     "ts-node": "10.9.1",
     "tsconfig-paths": "^4.1.1",
     "typescript": "5.0.4"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
-    "rootDir": "./",
-    "modulePaths": [
-      "<rootDir>"
-    ],
-    "testRegex": ".spec.ts$",
-    "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
-    },
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
   }
 }

@@ -5,11 +5,13 @@ import { ConfigurationModule } from './modules/ConfigModule';
 import { ApiModule } from './api/ApiModule';
 import { EmailModule } from './modules/EmailModule';
 import { PrismaModule } from './modules/PrismaModule';
+import * as process from 'process';
 
 @Module({
   imports: [
     ConfigurationModule.forRoot({
       isGlobal: true,
+      envFilePath: [`.${process.env.NODE_ENV}.env`, '.env'],
       load: [Configuration],
     }),
     ApiModule,

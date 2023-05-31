@@ -37,4 +37,5 @@ lerna-debug.log*
 .env
 /.env.production
 /.env.dev
-/docker-compose.yml
+/.development.env
+/.production.env

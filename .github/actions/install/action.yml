@@ -1,0 +1,13 @@
+name: 'Install Node and dependencies'
+
+description: 'Set up Node and dependencies'
+runs:
+  using: composite
+  steps:
+    - name: Use Node.js 17.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+    - name: Install dependencies
+      shell: bash
+      run: npm install
