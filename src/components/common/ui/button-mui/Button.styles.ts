@@ -90,4 +90,8 @@ export const icon: SxProps<Theme> = {
   alignContent: 'center',
   padding: '0',
   border: 'none',
+  svg: {
+    width: '24px',
+    height: '24px',
+  },
 };

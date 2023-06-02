@@ -21,10 +21,18 @@ export const button = (size): SxProps<Theme> => ({
 
 export const iconStyles = (size): SxProps<Theme> => ({
   ...(size === 'large' && {
+    svg: {
+      width: '24px',
+      height: '24px',
+    },
     width: '24px',
     height: '24px',
   }),
   ...(size === 'normal' && {
+    svg: {
+      width: '20px',
+      height: '20px',
+    },
     width: '20px',
     height: '20px',
   }),

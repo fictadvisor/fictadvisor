@@ -53,8 +53,16 @@ export const iconStyles = (size): SxProps<Theme> => ({
   ...(size === 'large' && {
     width: '32px',
     height: '32px',
+    svg: {
+      width: '32px',
+      height: '32px',
+    },
   }),
   ...(size === 'normal' && {
+    svg: {
+      width: '24px',
+      height: '24px',
+    },
     width: '24px',
     height: '24px',
   }),
