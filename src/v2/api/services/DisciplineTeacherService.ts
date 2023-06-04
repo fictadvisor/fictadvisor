@@ -59,7 +59,7 @@ export class DisciplineTeacherService {
 
     const { teacher, discipline } = await this.disciplineTeacherRepository.findById(disciplineTeacherId);
 
-    const previousSemester = await this.dateService.isPreviousSemester(discipline.semester, discipline.year);
+    const previousSemester = await this.dateService.isPreviousSemesterToCurrent(discipline.semester, discipline.year);
     if (!previousSemester) {
       throw new WrongTimeException();
     }
@@ -190,7 +190,7 @@ export class DisciplineTeacherService {
   async checkAnswerInDatabase (disciplineTeacherId: string, userId: string) {
     const answers = await this.questionAnswerRepository.findMany({
       where: {
-        disciplineTeacherId, 
+        disciplineTeacherId,
         userId,
       },
     });

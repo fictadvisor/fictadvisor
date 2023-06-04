@@ -175,7 +175,7 @@ export class PollService {
     const { semester, year } = await this.dateService.getCurrentSemester();
 
     disciplines = disciplines.filter((discipline) => {
-      return this.dateService.earlierSemester(
+      return this.dateService.isPreviousSemester(
         { semester, year },
         { semester: discipline.semester, year: discipline.year }
       );
