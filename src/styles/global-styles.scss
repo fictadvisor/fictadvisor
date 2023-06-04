@@ -7,6 +7,10 @@ html, body {
   scrollbar-gutter: stable;
 }
 
+html {
+  overflow-y: scroll;
+}
+
 .icon{
   width: 24px;
   height: 24px;

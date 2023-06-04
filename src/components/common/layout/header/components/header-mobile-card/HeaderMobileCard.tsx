@@ -1,7 +1,7 @@
-import React from 'react';
-import mergeClassNames from 'merge-class-names';
+import { FC } from 'react';
+import { Avatar, Box, Typography } from '@mui/material';
 
-import styles from './HeaderMobileCard.module.scss';
+import * as styles from './HeaderMobileCard.styles';
 
 interface HeaderMobileCardProps {
   name: string;
@@ -10,32 +10,34 @@ interface HeaderMobileCardProps {
   url?: string;
 }
 
-export const HeaderMobileCard: React.FC<HeaderMobileCardProps> = ({
+const HeaderMobileCard: FC<HeaderMobileCardProps> = ({
   name,
   groupName,
   position,
   url,
 }) => {
   return (
-    <div className={mergeClassNames(styles[`header-card-container`])}>
-      <div className={styles[`header-card-info`]}>
-        <img
-          src={url}
-          alt="Картинка профілю"
-          style={{ borderRadius: '100%' }}
-        />
-        <div style={{ marginLeft: '8px' }}>
-          <h4 className={styles[`card-name`]}>{name}</h4>
-          <div style={{ marginTop: '8px', gap: '8px' }}>
+    <Box sx={styles.headerCardContainer}>
+      <Box sx={styles.headerCardInfo}>
+        <Avatar src={url} alt="Картинка профілю" sx={styles.avatar} />
+        <Box>
+          <Typography variant="body1Medium" color="grey.600">
+            {name}
+          </Typography>
+          <Box sx={styles.userInfo}>
             {groupName && (
-              <span className={styles['header-card-group-name']}>
+              <Typography variant="overline" sx={styles.headerCardGroupName}>
                 {groupName}
-              </span>
+              </Typography>
             )}
-            <span className={styles['header-card-postition']}>{position}</span>
-          </div>
-        </div>
-      </div>
-    </div>
+            <Typography variant="overline" sx={styles.position}>
+              {position}
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
   );
 };
+
+export default HeaderMobileCard;

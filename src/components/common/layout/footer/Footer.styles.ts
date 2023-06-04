@@ -8,7 +8,6 @@ export const footerContainer: SxProps<Theme> = theme => ({
   },
   overflow: 'hidden',
   width: '100%',
-  minWidth: 'fit-content',
   backgroundColor: alpha(theme.palette.grey[50], 0.62),
   height: {
     desktop: '300px',

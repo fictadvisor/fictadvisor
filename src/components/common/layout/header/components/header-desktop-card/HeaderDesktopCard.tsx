@@ -1,36 +1,41 @@
-import React from 'react';
-import mergeClassNames from 'merge-class-names';
+import { FC } from 'react';
+import { Avatar, Box, Typography } from '@mui/material';
 
-import styles from './HeaderDesktopCard.module.scss';
+import * as styles from './HeaderDesktopCard.styles';
 
-type HeaderCardProps = {
+interface HeaderCardProps {
   name: string;
   groupName: string;
   position: string;
   url: string;
-};
+}
 
-export const HeaderDesktopCard: React.FC<HeaderCardProps> = ({
+const HeaderDesktopCard: FC<HeaderCardProps> = ({
   name,
   groupName,
   position,
   url,
-  ...rest
 }) => {
   return (
-    <div className={mergeClassNames(styles[`header-card-container`])} {...rest}>
-      <div className={styles[`header-card-info`]}>
-        <h4 className={styles[`card-name`]}>{name}</h4>
-        <div>
-          <span className={styles['header-card-postition']}>{position}</span>
+    <Box sx={styles.container}>
+      <Box sx={styles.cardInfo}>
+        <Typography variant="body1Medium" sx={styles.name}>
+          {name}
+        </Typography>
+        <Box>
+          <Typography variant="overline" sx={styles.position}>
+            {position}
+          </Typography>
           {groupName && (
-            <span className={styles['header-card-group-name']}>
+            <Typography variant="overline" sx={styles.groupName}>
               {groupName}
-            </span>
+            </Typography>
           )}
-        </div>
-      </div>
-      <img src={url} alt="Картинка профілю" style={{ borderRadius: '100%' }} />
-    </div>
+        </Box>
+      </Box>
+      <Avatar src={url} alt="Картинка профілю" sx={styles.avatar} />
+    </Box>
   );
 };
+
+export default HeaderDesktopCard;

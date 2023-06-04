@@ -1,1 +1,1 @@
-export { HeaderMobileCard } from './HeaderMobileCard';
+export { default } from './HeaderMobileCard';

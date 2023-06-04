@@ -1,1 +1,1 @@
-export { HeaderDesktopCard } from './HeaderDesktopCard';
+export { default } from './HeaderDesktopCard';
