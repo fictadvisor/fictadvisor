@@ -19,10 +19,9 @@
     "@typescript-eslint/eslint-plugin": "^5.51.0",
     "@zeit/next-sass": "^1.0.1",
     "axios": "^1.2.3",
+    "babel-plugin-direct-import": "^1.0.0",
+    "babel-plugin-import": "^1.13.6",
     "chart.js": "^4.3.0",
-    "eslint-config-prettier": "^8.6.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-simple-import-sort": "^10.0.0",
     "formik": "^2.2.9",
     "lodash-es": "^4.17.21",
     "merge-class-names": "^1.4.2",
@@ -42,13 +41,14 @@
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^13.2.4",
-    "@types/node": "^18.11.18",
+    "@types/node": "20.2.5",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
-    "babel-plugin-direct-import": "^1.0.0",
-    "babel-plugin-import": "^1.13.6",
     "eslint": "8.34.0",
     "eslint-config-next": "13.1.6",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-simple-import-sort": "^10.0.0",
     "typescript": "^4.9.4"
   }
 }
