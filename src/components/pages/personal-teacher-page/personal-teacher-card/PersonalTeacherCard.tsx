@@ -45,15 +45,15 @@ const PersonalTeacherCard: React.FC<PersonalTeacherCardProps> = props => {
         )}
       </div>
       <div className={styles['info']}>{props.teacher.description}</div>
-
-      <Button
-        className={styles['contacts-button']}
-        text={'Контакти'}
-        endIcon={isContactsVisible ? <ChevronUpIcon /> : <ChevronDownIcon />}
-        variant={ButtonVariant.TEXT}
-        onClick={() => setContactsVisibility(!isContactsVisible)}
-      />
-
+      {props.contacts.length !== 0 && (
+        <Button
+          className={styles['contacts-button']}
+          text={'Контакти'}
+          endIcon={isContactsVisible ? <ChevronUpIcon /> : <ChevronDownIcon />}
+          variant={ButtonVariant.TEXT}
+          onClick={() => setContactsVisibility(!isContactsVisible)}
+        />
+      )}
       <div
         className={styles[`contacts-${isContactsVisible ? `shown` : `hidden`}`]}
       >
