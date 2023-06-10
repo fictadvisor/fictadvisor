@@ -24,7 +24,7 @@ export const HeaderCard: React.FC<HeaderCardProps> = ({
   name,
   groupName,
   position,
-  url = '/assets/icons/frog36.png',
+  url = '/images/icons/frog36.png',
   ...rest
 }) => {
   return (
@@ -44,7 +44,7 @@ export const HeaderCard: React.FC<HeaderCardProps> = ({
 export const LecturerHeaderCard: React.FC<LecturerHeaderCardProps> = ({
   name,
   description,
-  url = '/assets/icons/lecturer60.png',
+  url = '/images/icons/lecturer60.png',
   ...rest
 }) => {
   const divRef = useRef<HTMLDivElement | null>(null);

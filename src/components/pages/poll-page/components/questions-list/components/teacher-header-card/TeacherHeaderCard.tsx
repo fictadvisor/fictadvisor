@@ -15,7 +15,7 @@ type TeacherHeaderCardProps = {
 const TeacherHeaderCard: React.FC<TeacherHeaderCardProps> = ({
   name,
   description,
-  url = '/assets/icons/lecturer60.png',
+  url = '/images/icons/lecturer60.png',
   ...rest
 }) => {
   const divRef = useRef<HTMLDivElement | null>(null);
