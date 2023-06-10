@@ -28,6 +28,8 @@ jobs:
           docker-compose up -d
       - name: Start migration
         run: npm run test:migrate
+      - name: Start seeding
+        run: npm run test:seed
       - name: Run integration tests
         run: npm run test:integration
   build:

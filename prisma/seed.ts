@@ -10,6 +10,13 @@ async function main () {
       name: 'subject',
     },
   });
+
+  await prisma.startDate.createMany({
+    data: [
+      { year: 2022, semester: 1, startDate: new Date('2023-09-10T00:00:00')},
+      { year: 2023, semester: 2, startDate: new Date('2023-02-10T00:00:00')},
+    ],
+  });
   console.log('Finished seeding');
 }
 main()
