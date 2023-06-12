@@ -1,6 +1,5 @@
 import { Global, Module } from '@nestjs/common';
 import { PrismaService } from '../database/PrismaService';
-import { DisciplineTypeRepository } from '../database/repositories/DisciplineTypeRepository';
 import { DisciplineRepository } from '../database/repositories/DisciplineRepository';
 import { DisciplineTeacherRepository } from '../database/repositories/DisciplineTeacherRepository';
 import { TeacherRepository } from '../database/repositories/TeacherRepository';
@@ -22,7 +21,6 @@ import { EventRepository } from '../database/repositories/EventRepository';
 @Module({
   providers: [
     PrismaService,
-    DisciplineTypeRepository,
     DisciplineRepository,
     DisciplineTeacherRepository,
     DisciplineTeacherRoleRepository,
@@ -42,7 +40,6 @@ import { EventRepository } from '../database/repositories/EventRepository';
   ],
   exports: [
     PrismaService,
-    DisciplineTypeRepository,
     DisciplineRepository,
     DisciplineTeacherRepository,
     DisciplineTeacherRoleRepository,

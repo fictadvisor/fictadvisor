@@ -15,7 +15,6 @@ import { checkIfArrayIsUnique } from '../../utils/ArrayUtil';
 import { AnswerInDatabasePermissionException } from '../../utils/exceptions/AnswerInDatabasePermissionException';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
-import { DisciplineTypeRepository } from '../../database/repositories/DisciplineTypeRepository';
 import { TeacherTypeAdapter } from '../dtos/TeacherRoleAdapter';
 import { UserRepository } from '../../database/repositories/UserRepository';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
@@ -29,7 +28,6 @@ export class DisciplineTeacherService {
     private dateService: DateService,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
     private disciplineRepository: DisciplineRepository,
-    private disciplineTypeRepository: DisciplineTypeRepository,
     private pollService: PollService,
     private questionAnswerRepository: QuestionAnswerRepository,
     private telegramApi: TelegramAPI,
@@ -200,16 +198,20 @@ export class DisciplineTeacherService {
   }
 
   async create (teacherId: string, disciplineId: string, roles: TeacherRole[]) {
-    const discipline = await this.disciplineRepository.findById(disciplineId);
+    let discipline = await this.disciplineRepository.findById(disciplineId);
     const dbRoles = [];
     for (const role of roles) {
-      let disciplineType = discipline.disciplineTypes.find((dt) => dt.name === TeacherTypeAdapter[role]);
-      if (!disciplineType) {
-        disciplineType = await this.disciplineTypeRepository.create({
-          disciplineId: discipline.id,
-          name: TeacherTypeAdapter[role],
+      if (!discipline.disciplineTypes.some((type) => type.name === TeacherTypeAdapter[role])) {
+        discipline = await this.disciplineRepository.updateById(discipline.id, {
+          disciplineTypes: {
+            create: {
+              name: TeacherTypeAdapter[role],
+            },
+          },
         });
       }
+
+      const disciplineType = discipline.disciplineTypes.find((dt) => dt.name === TeacherTypeAdapter[role]);
 
       dbRoles.push({
         role,
@@ -224,7 +226,7 @@ export class DisciplineTeacherService {
   }
 
   async updateById (disciplineTeacherId: string, roles: TeacherRole[]) {
-    const discipline = await this.disciplineRepository.find({
+    let discipline = await this.disciplineRepository.find({
       disciplineTeachers: {
         some: {
           id: disciplineTeacherId,
@@ -233,13 +235,17 @@ export class DisciplineTeacherService {
     });
     const dbRoles = [];
     for (const role of roles) {
-      let disciplineType = discipline.disciplineTypes.find((dt) => dt.name === TeacherTypeAdapter[role]);
-      if (!disciplineType) {
-        disciplineType = await this.disciplineTypeRepository.create({
-          disciplineId: discipline.id,
-          name: TeacherTypeAdapter[role],
+      if (!discipline.disciplineTypes.some((type) => type.name === TeacherTypeAdapter[role])) {
+        discipline = await this.disciplineRepository.updateById(discipline.id, {
+          disciplineTypes: {
+            create: {
+              name: TeacherTypeAdapter[role],
+            },
+          },
         });
       }
+
+      const disciplineType = discipline.disciplineTypes.find((dt) => dt.name === TeacherTypeAdapter[role]);
 
       dbRoles.push({
         role,

@@ -4,7 +4,6 @@ import axios from 'axios';
 import { DisciplineTypeEnum, TeacherRole } from '@prisma/client';
 import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
 import { DisciplineTeacherRoleRepository } from '../../database/repositories/DisciplineTeacherRoleRepository';
-import { DisciplineTypeRepository } from '../../database/repositories/DisciplineTypeRepository';
 import { GroupRepository } from '../../database/repositories/GroupRepository';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
 import { SubjectRepository } from '../../database/repositories/SubjectRepository';
@@ -41,7 +40,6 @@ export class ScheduleParser implements Parser {
     private subjectRepository: SubjectRepository,
     // private scheduleRepository: ScheduleRepository,
     private disciplineRepository: DisciplineRepository,
-    private disciplineTypeRepository: DisciplineTypeRepository,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
     private disciplineTeacherRoleRepository: DisciplineTeacherRoleRepository,
   ) {}
@@ -86,7 +84,7 @@ export class ScheduleParser implements Parser {
     const startDate = this.createDate(day, week, startHours, startMinutes);
     const endDate = this.createDate(day, week, endHours, endMinutes);
 
-    const discipline =
+    let discipline =
       await this.disciplineRepository.getOrCreate({
         subjectId: subject.id,
         groupId,
@@ -94,11 +92,17 @@ export class ScheduleParser implements Parser {
         semester: 1,
       });
 
-    const disciplineType =
-      await this.disciplineTypeRepository.getOrCreate({
-        disciplineId: discipline.id,
-        name,
+    if (!discipline.disciplineTypes.some((type) => type.name === name)) {
+      discipline = await this.disciplineRepository.updateById(discipline.id, {
+        disciplineTypes: {
+          create: {
+            name,
+          },
+        },
       });
+    }
+
+    const disciplineType = discipline.disciplineTypes.find((type) => type.name === name);
 
     const disciplineTeacher =
       await this.disciplineTeacherRepository.getOrCreate({
