@@ -8,6 +8,11 @@ import { UserByIdPipe } from '../pipes/UserByIdPipe';
 import { QuestionMapper } from '../../mappers/QuestionMapper';
 import { UpdateQuestionWithRolesDTO } from '../dtos/UpdateQuestionWithRolesDTO';
 import { CreateQuestionRoleDTO } from '../dtos/CreateQuestionRoleDTO';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiForbiddenResponse, ApiOkResponse, ApiParam } from '@nestjs/swagger';
+import { QuestionWithRolesResponse } from '../responses/QuestionWithRolesResponse';
+import { PollDisciplineTeachersResponse } from '../responses/PollDisciplineTeachersResponse';
+import { TeacherRole } from '@prisma/client';
+
 
 @Controller({
   version: '2',
@@ -20,7 +25,22 @@ export class PollController {
   ) {}
 
   @Access('questions.create')
+  @ApiBearerAuth()
   @Post('/questions')
+  @ApiOkResponse({
+    type: QuestionWithRolesResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `InvalidBodyException:\n
+                  Visibility parameter is not a boolean
+                  Visibility parameter can not be empty
+                  Requirement parameter is not a boolean
+                  Requirement parameter can not be empty`,
+  })
+  @ApiForbiddenResponse({
+    description: `NoPermissionException:\n
+                  You do not have permission to perform this action`,
+  })
   async create (
     @Body() body : CreateQuestionWithRolesDTO,
   ) {
@@ -29,7 +49,19 @@ export class PollController {
   }
 
   @Access('users.$userId.poll.teachers.get')
+  @ApiBearerAuth()
   @Get('/teachers/:userId')
+  @ApiOkResponse({
+    type: [PollDisciplineTeachersResponse],
+  })
+  @ApiBadRequestResponse({
+    description: `InvalidEntityIdException:\n 
+                  User with such id is not found`,
+  })
+  @ApiForbiddenResponse({
+    description: `NoPermissionException:\n
+                  You do not have permission to perform this action`,
+  })
   async getPollDisciplineTeachers (
     @Param('userId', UserByIdPipe) userId: string,
   ) {
@@ -40,7 +72,19 @@ export class PollController {
   }
 
   @Access('questions.delete')
+  @ApiBearerAuth()
   @Delete('/questions/:questionId')
+  @ApiOkResponse({
+    type: QuestionWithRolesResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `InvalidEntityIdException:\n
+                  Question with such id is not found`,
+  })
+  @ApiForbiddenResponse({
+    description: `NoPermissionException:\n
+                  You do not have permission to perform this action`,
+  })
   async delete (
     @Param('questionId', QuestionByIdPipe) questionId: string,
   ) {
@@ -49,7 +93,19 @@ export class PollController {
   }
 
   @Access('questions.update')
+  @ApiBearerAuth()
   @Patch('/questions/:questionId')
+  @ApiOkResponse({
+    type: QuestionWithRolesResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `InvalidBodyException:Type is not an enum
+                  InvalidEntityIdException: Question with such id is not found`,
+  })
+  @ApiForbiddenResponse({
+    description: `NoPermissionException:\n
+                  You do not have permission to perform this action`,
+  })
   async update (
     @Param('questionId', QuestionByIdPipe) questionId: string,
     @Body() body: UpdateQuestionWithRolesDTO,
@@ -59,6 +115,13 @@ export class PollController {
   }
 
   @Get('/questions/:questionId')
+  @ApiOkResponse({
+    type: QuestionWithRolesResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `InvalidEntityIdException:\n
+                  question with such id is not found`,
+  })
   async getQuestion (
     @Param('questionId', QuestionByIdPipe) questionId: string,
   ) {
@@ -67,7 +130,22 @@ export class PollController {
   }
 
   @Access('questions.roles.give')
+  @ApiBearerAuth()
   @Post('/questions/:questionId/roles')
+  @ApiOkResponse({
+    type: QuestionWithRolesResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `InvalidBodyException: Role can not be empty
+                  InvalidBodyException: Visibility parameter is not a boolean
+                  InvalidBodyException: Visibility parameter can not be empty
+                  InvalidBodyException: Requirement parameter is not a boolean
+                  InvalidEntityIdException: question with such id is not found`,
+  })
+  @ApiForbiddenResponse({
+    description: `NoPermissionException:\n
+                  You do not have permission to perform this action`,
+  })
   async giveRole (
     @Param('questionId', QuestionByIdPipe) questionId: string,
     @Body() body: CreateQuestionRoleDTO,
@@ -77,7 +155,30 @@ export class PollController {
   }
 
   @Access('question.roles.delete')
+  @ApiBearerAuth()
   @Delete('/questions/:questionId/roles/:role')
+  @ApiParam({
+    name: 'role',
+    enum: [TeacherRole.LECTURER, TeacherRole.LABORANT, TeacherRole.PRACTICIAN],
+    required: true,
+  })
+  @ApiParam({
+    name: 'questionId',
+    type: String,
+    required: true,
+  })
+  @ApiOkResponse({
+    type: QuestionWithRolesResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `InvalidEntityIdException:\n
+                  Question with such id is not found
+                  QuestionRole is not found`,
+  })
+  @ApiForbiddenResponse({
+    description: `NoPermissionException:\n
+                  You do not have permission to perform this action`,
+  })
   async deleteRole (
     @Param(QuestionByRoleAndIdPipe) params,
   ) {

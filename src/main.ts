@@ -5,6 +5,7 @@ import { AppModule } from './v2/AppModule';
 import { HttpExceptionFilter, validationExceptionFactory } from './v2/security/exception-handler/CommonExceptions';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { applyStaticMiddleware } from './v2/utils/StaticUtil';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap () {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -28,6 +29,17 @@ async function bootstrap () {
     type: VersioningType.URI,
     defaultVersion: VERSION_NEUTRAL,
   });
+
+  const config = new DocumentBuilder()
+    .setTitle('FICT ADVISOR API')
+    .setDescription('Here is FICT ADVISOR API documentation')
+    .setVersion('2.0.4')
+    .addTag('api')
+    .addBearerAuth()
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
+
 
   await app.listen(port);
 

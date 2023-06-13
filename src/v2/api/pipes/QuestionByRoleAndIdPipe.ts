@@ -11,11 +11,11 @@ export class QuestionByRoleAndIdPipe implements PipeTransform {
 
   async transform (params: {questionId: string, role: TeacherRole}) {
     const { questionId, role } = params;
-    const { questionRoles, ...question } = await this.questionRepository.findById(questionId);
+    const question = await this.questionRepository.findById(questionId);
     if (!question) {
       throw new InvalidEntityIdException('question');
     }
-    if (!questionRoles.some((r) => r.role === role)) {
+    if (!question.questionRoles.some((r) => r.role === role)) {
       throw new InvalidEntityIdException('questionRole');
     }
     return params;
