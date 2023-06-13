@@ -1,6 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request, UseGuards } from '@nestjs/common';
 import { DisciplineTeacherService } from '../services/DisciplineTeacherService';
-import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
 import { CreateAnswersDTO } from '../dtos/CreateAnswersDTO';
 import { GroupByDisciplineTeacherGuard } from 'src/v2/security/group-guard/GroupByDisciplineTeacherGuard';
 import { Access } from 'src/v2/security/Access';
@@ -11,7 +10,6 @@ import { TeacherByIdPipe } from '../pipes/TeacherByIdPipe';
 import { DisciplineByIdPipe } from '../pipes/DisciplineByIdPipe';
 import { UpdateDisciplineTeacherDTO } from '../dtos/UpdateDisciplineTeacherDTO';
 import { QuestionAnswersValidationPipe } from '../pipes/QuestionAnswersValidationPipe';
-import { UserByIdPipe } from '../pipes/UserByIdPipe';
 
 @Controller({
   version: '2',
@@ -20,7 +18,6 @@ import { UserByIdPipe } from '../pipes/UserByIdPipe';
 export class DisciplineTeacherController {
   constructor (
     private disciplineTeacherService: DisciplineTeacherService,
-    private disciplineTeacherMapper: DisciplineTeacherMapper,
   ) {}
 
   @Access('groups.$groupId.questions.get', GroupByDisciplineTeacherGuard)
@@ -37,7 +34,7 @@ export class DisciplineTeacherController {
   sendAnswers (
     @Param('disciplineTeacherId', DisciplineTeacherByIdPipe) disciplineTeacherId: string,
     @Request() req,
-    @Body('body', QuestionAnswersValidationPipe) body: CreateAnswersDTO,
+    @Body(QuestionAnswersValidationPipe) body: CreateAnswersDTO,
   ) {
     return this.disciplineTeacherService.sendAnswers(disciplineTeacherId, body, req.user.id);
   }
