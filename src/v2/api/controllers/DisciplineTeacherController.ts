@@ -32,17 +32,6 @@ export class DisciplineTeacherController {
     return this.disciplineTeacherService.getQuestions(disciplineTeacherId, req.user.id);
   }
 
-  @Access('user.$userId.disciplineTeachers.$teacherId.get')
-  @Get('/:teacherId/disciplines')
-  async getDisciplines (
-    @Param('teacherId', TeacherByIdPipe) teacherId: string,
-    @Query('notAnswered') notAnswered: boolean,
-    @Query('userId', UserByIdPipe) userId: string,
-  ) {
-    const dbDisciplineTeachers = await this.disciplineTeacherService.getUserDisciplineTeachers(teacherId, userId, notAnswered);
-    return this.disciplineTeacherMapper.getDisciplineTeachers(dbDisciplineTeachers);
-  }
-
   @Access('groups.$groupId.answers.send', GroupByDisciplineTeacherGuard)
   @Post('/:disciplineTeacherId/answers')
   sendAnswers (

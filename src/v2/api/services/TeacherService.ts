@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateContactDTO } from '../dtos/CreateContactDTO';
 import { EntityType, QuestionDisplay, QuestionType, Prisma } from '@prisma/client';
 import { TeacherRepository } from '../../database/repositories/TeacherRepository';
+import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
 import { UpdateContactDTO } from '../dtos/UpdateContactDTO';
 import { ContactRepository } from '../../database/repositories/ContactRepository';
 import { DatabaseUtils } from '../../database/DatabaseUtils';
@@ -18,6 +19,7 @@ import { ResponseQueryDTO } from '../dtos/ResponseQueryDTO';
 export class TeacherService {
   constructor (
     private teacherRepository: TeacherRepository,
+    private disciplineTeacherRepository: DisciplineTeacherRepository,
     private teacherMapper: TeacherMapper,
     private disciplineTeacherService: DisciplineTeacherService,
     private contactRepository: ContactRepository,
@@ -62,6 +64,32 @@ export class TeacherService {
       roles,
       contacts,
     };
+  }
+
+  async getUserDisciplineTeachers (teacherId: string, userId: string, notAnswered: boolean) {
+    return this.disciplineTeacherRepository.findMany({
+      where: {
+        teacherId,
+        discipline: {
+          group: {
+            students: {
+              some: {
+                userId,
+              },
+            },
+          },
+        },
+        ...DatabaseUtils.getOptional(notAnswered, {
+          NOT: {
+            questionAnswers: {
+              some: {
+                userId,
+              },
+            },
+          },
+        }),
+      },
+    });
   }
 
   async getTeacherRoles (

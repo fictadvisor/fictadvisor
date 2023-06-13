@@ -4,7 +4,7 @@ import { TeacherRole } from '@prisma/client';
 
 @Injectable()
 export class DisciplineTeacherMapper {
-  getDisciplineTeachers (disciplineTeachers: DbDisciplineTeacher[]) {
+  getDisciplines (disciplineTeachers: DbDisciplineTeacher[]) {
     return disciplineTeachers.map((disciplineTeacher) => ({
       disciplineTeacherId: disciplineTeacher.id,
       subjectName: disciplineTeacher.discipline.subject.name,

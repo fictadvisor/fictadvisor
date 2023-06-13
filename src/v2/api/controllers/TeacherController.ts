@@ -13,6 +13,8 @@ import { SubjectByIdPipe } from '../pipes/SubjectByIdPipe';
 import { ResponseQueryDTO } from '../dtos/ResponseQueryDTO';
 import { PollService } from '../services/PollService';
 import { QuestionMapper } from '../../mappers/QuestionMapper';
+import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
+import { UserByIdPipe } from '../pipes/UserByIdPipe';
 
 @Controller({
   version: '2',
@@ -24,6 +26,7 @@ export class TeacherController {
     private teacherMapper: TeacherMapper,
     private pollService: PollService,
     private questionMapper: QuestionMapper,
+    private disciplineTeacherMapper: DisciplineTeacherMapper,
   ) {}
 
 
@@ -52,6 +55,17 @@ export class TeacherController {
     const subjects = await this.teacherService.getTeacherSubjects(teacherId);
 
     return { subjects };
+  }
+
+  @Access('user.$userId.disciplineTeachers.$teacherId.get')
+  @Get('/:teacherId/disciplines')
+  async getDisciplines (
+    @Param('teacherId', TeacherByIdPipe) teacherId: string,
+    @Query('notAnswered') notAnswered: boolean,
+    @Query('userId', UserByIdPipe) userId: string,
+  ) {
+    const disciplineTeachers = await this.teacherService.getUserDisciplineTeachers(teacherId, userId, notAnswered);
+    return this.disciplineTeacherMapper.getDisciplines(disciplineTeachers);
   }
 
   @Get('/:teacherId/subjects/:subjectId')
