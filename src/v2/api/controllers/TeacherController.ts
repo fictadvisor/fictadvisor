@@ -156,7 +156,8 @@ export class TeacherController {
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
     @Query() query: ResponseQueryDTO,
   ) {
-    return this.teacherService.getMarks(teacherId, query);
+    const marks = await this.teacherService.getMarks(teacherId, query);
+    return { marks };
   }
 
   @Get('/:teacherId/comments')
