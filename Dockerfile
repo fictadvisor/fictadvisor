@@ -11,7 +11,9 @@ COPY . ./
 RUN yarn install --prod && \
     yarn add @vercel/ncc && \
     yarn ncc build src/main.ts -o dist && \
-    mv dist/client/* dist
+    mv dist/client/* dist && \
+    mkdir dist/static && \
+    cp node_modules/swagger-ui-dist/swagger-ui* dist/static
 
 ###################
 # PRODUCTION

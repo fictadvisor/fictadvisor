@@ -6,6 +6,7 @@ import { HttpExceptionFilter, validationExceptionFactory } from './v2/security/e
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { applyStaticMiddleware } from './v2/utils/StaticUtil';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { join } from 'path';
 
 async function bootstrap () {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -40,6 +41,11 @@ async function bootstrap () {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
+  if (process.env.NODE_ENV === 'production') {
+    app.useStaticAssets(join(__dirname, '/static'), {
+      prefix: '/api',
+    });
+  }
 
   await app.listen(port);
 
