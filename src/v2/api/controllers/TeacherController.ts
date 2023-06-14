@@ -57,7 +57,7 @@ export class TeacherController {
     return { subjects };
   }
 
-  @Access('user.$userId.disciplineTeachers.$teacherId.get')
+  @Access('users.$userId.teachers.$teacherId.disciplines.get')
   @Get('/:teacherId/disciplines')
   async getDisciplines (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
