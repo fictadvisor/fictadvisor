@@ -4,3 +4,9 @@ export enum FieldState {
   ERROR = 'error',
   SUCCESS = 'success',
 }
+
+export enum FieldSize {
+  SMALL = 'small',
+  MEDIUM = 'medium',
+  LARGE = 'large',
+}

@@ -17,7 +17,7 @@ export type TagColorType =
   | 'mint'
   | 'orange';
 
-interface TagProps {
+export interface TagProps {
   text: string;
   size?: 'medium' | 'small';
   color?: TagColorType;

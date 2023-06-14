@@ -3,7 +3,10 @@ import Select from 'react-select';
 import { useField } from 'formik';
 import mergeClassNames from 'merge-class-names';
 
-import { FieldState } from '@/components/common/ui/form/common/types';
+import {
+  FieldSize,
+  FieldState,
+} from '@/components/common/ui/form/common/types';
 
 import styles from './Dropdown.module.scss';
 
@@ -50,7 +53,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   numberOfOptions = 4,
   isSuccessOnDefault = false,
   showRemark = true,
-  size = DropDownSize.MEDIUM,
+  size = FieldSize.MEDIUM,
   className = '',
   onChange,
 }) => {
