@@ -2,7 +2,7 @@ import { alpha, SxProps, Theme } from '@mui/material/styles';
 
 import theme from '@/styles/theme';
 
-import { FieldState } from '../common/types';
+import { FieldState } from '../../common/types';
 
 export const radioColour = (state: FieldState) => {
   return state === FieldState.ERROR ? 'error.500' : 'grey.800';
