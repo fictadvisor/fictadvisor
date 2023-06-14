@@ -1,4 +1,4 @@
-import React, { FC, PropsWithChildren, useState } from 'react';
+import React, { FC, PropsWithChildren, useCallback, useState } from 'react';
 
 import { AlertType } from '@/components/common/ui/alert-mui/Alert';
 import Toast from '@/components/common/ui/toast-mui';
@@ -26,7 +26,10 @@ const ToastContextProvider: FC<PropsWithChildren> = ({ children }) => {
     open: false,
   });
 
-  const hideToast = () => setOptions({ ...options, open: false });
+  const hideToast = useCallback(
+    () => setOptions({ ...options, open: false }),
+    [options],
+  );
 
   const showToast = ({ title, type = 'error', description }: OptionsType) => {
     setOptions({

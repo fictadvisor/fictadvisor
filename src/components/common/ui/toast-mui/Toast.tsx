@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, memo } from 'react';
 import { Box, Slide, Snackbar } from '@mui/material';
 
 import Alert from '@/components/common/ui/alert-mui';
@@ -44,4 +44,4 @@ const Toast: FC<ToastProps> = ({ open, onClose, title, type, description }) => {
   );
 };
 
-export default Toast;
+export default memo(Toast);
