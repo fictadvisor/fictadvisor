@@ -13,7 +13,9 @@ RUN yarn install --prod && \
     yarn ncc build src/main.ts -o dist && \
     mv dist/client/* dist && \
     mkdir dist/static && \
-    cp node_modules/swagger-ui-dist/swagger-ui* dist/static
+    cp node_modules/swagger-ui-dist/swagger-ui* dist/static && \
+    mkdir -p dist/email/templates && \
+    cp email/templates/template.hbs dist/email/templates
 
 ###################
 # PRODUCTION
