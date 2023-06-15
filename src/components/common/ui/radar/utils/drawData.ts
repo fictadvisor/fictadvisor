@@ -20,6 +20,19 @@ const getData = (grades: number[]) => {
         pointRadius: 3,
         lineTension: 0,
       },
+      {
+        color: 'transparent',
+        label: '',
+        data: Array(grades.length).fill(9),
+        backgroundColor: 'transparent',
+        borderColor: 'transparent',
+        pointBorderColor: 'transparent',
+        pointBackgroundColor: '#212121',
+        pointBorderWidth: 0,
+        borderWidth: 0,
+        pointRadius: 3,
+        lineTension: 0,
+      },
     ],
   };
 };
