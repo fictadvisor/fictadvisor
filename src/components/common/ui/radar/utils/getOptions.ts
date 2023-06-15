@@ -1,8 +1,9 @@
 const getOptions = () => {
   return {
-    events: [],
     scales: {
       r: {
+        min: 10,
+        max: 100,
         angleLines: {
           display: false,
         },

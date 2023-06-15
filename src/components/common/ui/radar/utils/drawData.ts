@@ -1,12 +1,12 @@
 const getData = (grades: number[]) => {
   const labels = new Array(grades.length).fill('');
-  const formattedValues = grades.map(x => x / 10 - 1);
+  const formattedValues = grades.map(x => Math.round(x));
   return {
     labels: labels,
     datasets: [
       {
         color: 'white',
-        label: 'Data',
+        label: 'Оцінка(у %)',
         data: formattedValues,
         //TODO: replace with theme
         backgroundColor: 'rgba(188, 61, 61, 0.54)',

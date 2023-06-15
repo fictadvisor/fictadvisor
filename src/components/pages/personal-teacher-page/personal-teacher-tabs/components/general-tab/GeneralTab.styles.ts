@@ -82,7 +82,6 @@ export const circleWrapper: SxProps<Theme> = {
   flexDirection: 'row',
   justifyContent: 'center',
   alignItems: 'flex-start',
-  alignContent: 'flex-start',
   paddingTop: {
     mobile: '0',
     desktopSemiMedium: '66px',
@@ -97,6 +96,7 @@ export const circleWrapper: SxProps<Theme> = {
 export const circleGraphNameWrapper: SxProps<Theme> = {
   display: 'flex',
   textAlign: 'center',
+  justifyContent: 'center',
 };
 
 export const circleGraph: SxProps<Theme> = {

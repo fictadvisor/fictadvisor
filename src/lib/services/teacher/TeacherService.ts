@@ -44,6 +44,7 @@ class TeacherService {
     const comments = await TeacherAPI.getTeacherComments(teacherId);
     const marks = (await TeacherAPI.getTeacherMarks(teacherId)).marks;
     const hasEnoughMarks = marks[0]?.amount >= MIN_MARKS_LENGTH;
+    const marksAmount = marks[0]?.amount;
     let buttonInfo = [
       {
         text: 'Перейти до опитувань',
@@ -79,7 +80,7 @@ class TeacherService {
       subjects,
       comments,
       marks,
-      marksText: `На жаль, оцінок недостатньо для розрахунку статистики (${MIN_MARKS_LENGTH}). ${text}`,
+      marksText: `На жаль, оцінок недостатньо для розрахунку статистики (${marksAmount}/${MIN_MARKS_LENGTH}). ${text}`,
       commentText: `На жаль, ніхто не залишив відгук. ${text}`,
       hasEnoughMarks,
       buttonInfo,
@@ -95,8 +96,9 @@ class TeacherService {
     const comments = await TeacherAPI.getTeacherComments(teacherId, subjectId);
     const marks = (await TeacherAPI.getTeacherMarks(teacherId, subjectId))
       .marks;
-
     const hasEnoughMarks = marks[0]?.amount >= MIN_MARKS_LENGTH;
+    const marksAmount = marks[0]?.amount;
+
     let buttonInfo = [
       {
         text: 'Перейти до опитувань',
@@ -134,7 +136,7 @@ class TeacherService {
       info,
       comments,
       marks,
-      marksText: `На жаль, оцінок недостатньо для розрахунку статистики (${MIN_MARKS_LENGTH}).\n${text}`,
+      marksText: `На жаль, оцінок недостатньо для розрахунку статистики (${marksAmount}/${MIN_MARKS_LENGTH}).\n${text}`,
       commentText: `На жаль, ніхто не залишив відгук.\n${text}`,
       hasEnoughMarks,
       buttonInfo,
