@@ -1,5 +1,7 @@
 import dynamic from 'next/dynamic';
 
+import { TeacherRoles } from '@/lib/api/teacher/dto/GetTeacherDTO';
+
 const Mobile11 = dynamic(() =>
   import('@/components/common/ui/radar/utils/radar-background/11-mobile').then(
     module => module.Mobile11,
@@ -54,7 +56,7 @@ const Pract12Desktop = dynamic(() =>
 const getBackgroundImage = (
   labels: string[],
   isMobile: boolean,
-  tags: string[],
+  roles: TeacherRoles[],
 ) => {
   if (isMobile)
     switch (labels.length) {
@@ -72,12 +74,12 @@ const getBackgroundImage = (
       case 11:
         return <Lect11Desktop />;
       case 12:
-        if ('Laborant' in tags) {
+        if ('LABORANT' in roles) {
           return <Lab12Desktop />;
         }
         return <Pract12Desktop />;
       case 13:
-        if ('Laborant' in tags) {
+        if ('LABORANT' in roles) {
           return <LectLab13Desktop />;
         }
         return <LectPract13Desktop />;

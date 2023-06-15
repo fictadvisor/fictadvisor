@@ -10,9 +10,9 @@ const text =
 const CommentTestPage = () => {
   return (
     <Box sx={styles.wrapper}>
-      <Comment text={text} semester={'II'} year={2023} />
-      <Comment text={text + text} semester={'I'} year={2022} />
-      <Comment text={text + text + text} semester={'II'} year={2024} />
+      <Comment text={text} semester={2} year={2023} />
+      <Comment text={text + text} semester={1} year={2022} />
+      <Comment text={text + text + text} semester={2} year={2024} />
     </Box>
   );
 };

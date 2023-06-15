@@ -1,7 +1,9 @@
+import { TeacherRoles } from '@/lib/api/teacher/dto/GetTeacherDTO';
+
 export interface PollTeachersDTO {
   teachers: {
     disciplineTeacherId: string;
-    roles: ('LECTURER' | 'LABORANT' | 'PRACTICIAN')[];
+    roles: TeacherRoles[];
     firstName: string;
     middleName: string;
     lastName: string;

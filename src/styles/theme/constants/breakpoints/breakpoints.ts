@@ -9,6 +9,7 @@ const breakpoints: BreakpointsOptions = {
     desktop: 1024,
     desktopSemiMedium: 1200,
     desktopMedium: 1440,
+    desktopSemiLarge: 1600,
     desktopLarge: 1920,
   },
 };

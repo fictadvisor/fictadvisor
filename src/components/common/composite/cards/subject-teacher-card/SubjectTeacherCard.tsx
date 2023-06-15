@@ -4,11 +4,12 @@ import mergeClassNames from 'merge-class-names';
 import { CardRoles } from '@/components/common/composite/cards/card-roles';
 import { DivProps } from '@/components/common/composite/cards/Cards';
 import styles from '@/components/common/composite/cards/subject-teacher-card/SubjectTeacherCard.module.scss';
+import { TeacherRoles } from '@/lib/api/teacher/dto/GetTeacherDTO';
 
 type SubjectTeacherCardProps = {
   name: string;
   rating?: number;
-  roles?: string[];
+  roles?: TeacherRoles[];
   avatar?: string;
   disabled?: boolean;
 } & DivProps;

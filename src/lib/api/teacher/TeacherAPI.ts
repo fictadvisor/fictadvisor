@@ -1,4 +1,6 @@
 import { TeacherSearchFormFields } from '@/components/pages/search-pages/search-form/types';
+import { GetTeacherCommentsDTO } from '@/lib/api/teacher/dto/GetTeacherCommentsDTO';
+import { GetTeacherDisciplinesDTO } from '@/lib/api/teacher/dto/GetTeacherDisciplinesDTO';
 import { GetTeacherSubjectDTO } from '@/lib/api/teacher/dto/GetTeacherSubjectDTO';
 import { GetTeacherSubjectsDTO } from '@/lib/api/teacher/dto/GetTeacherSubjectsDTO';
 import { getAuthorizationHeader } from '@/lib/api/utils';
@@ -8,7 +10,7 @@ import { client } from '../instance';
 import { AddContactsBody } from './dto/AddContactsBody';
 import { CreateTeacherBody } from './dto/CreateTeacherBody';
 import { GetTeacherDTO } from './dto/GetTeacherDTO';
-import { GetTeacherStatsDTO } from './dto/GetTeacherStatsDTO';
+import { GetTeacherMarksDTO } from './dto/GetTeacherMarksDTO';
 import { UpdateTeacherBody } from './dto/UpdateTeacherBody';
 export class TeacherAPI {
   static async get(teacherId: string): Promise<GetTeacherDTO> {
@@ -33,16 +35,47 @@ export class TeacherAPI {
     return data;
   }
 
-  static async getTeacherStats(
+  static async getTeacherMarks(
     teacherId: string,
-    semester: number | string,
-    subject: string,
-    year: number,
-  ): Promise<GetTeacherStatsDTO> {
-    const { data } = await client.get(`/teachers/${teacherId}/stats?
-        semester=${semester}
-        &subject=${subject}
-        &year=${year}`);
+    subjectId?: string,
+    semester?: number,
+    year?: number,
+  ): Promise<GetTeacherMarksDTO> {
+    const { data } = await client.get(`/teachers/${teacherId}/marks`, {
+      params: {
+        semester,
+        subjectId,
+        year,
+      },
+    });
+    return data;
+  }
+
+  static async getTeacherComments(
+    teacherId: string,
+    subjectId?: string,
+    semester?: number,
+    year?: number,
+  ): Promise<GetTeacherCommentsDTO> {
+    const { data } = await client.get(`/teachers/${teacherId}/comments`, {
+      params: {
+        semester,
+        subjectId,
+        year,
+      },
+    });
+    return data;
+  }
+
+  static async getTeacherDisciplines(
+    teacherId: string,
+    notAnswered?: boolean,
+    userId?: string,
+  ): Promise<GetTeacherDisciplinesDTO> {
+    const { data } = await client.get(
+      `/teachers/${teacherId}/disciplines?notAnswered=${notAnswered}&userId=${userId}`,
+      getAuthorizationHeader(),
+    );
     return data;
   }
 

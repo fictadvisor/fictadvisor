@@ -14,6 +14,7 @@ declare module '@mui/material/styles' {
     desktop: true;
     desktopSemiMedium: true;
     desktopMedium: true;
+    desktopSemiLarge: true;
     desktopLarge: true;
   }
 }

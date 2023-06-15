@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
+import { FC, useState } from 'react';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 
 import Button, { ButtonVariant } from '@/components/common/ui/button';
 import Tag, { TagColor, TagSize } from '@/components/common/ui/tag';
 import styles from '@/components/pages/personal-teacher-subject-page/personal-teacher-subject-card/PersonalTeacherSubjectCard.module.scss';
+import { TeacherRoles } from '@/lib/api/teacher/dto/GetTeacherDTO';
 import { GetTeacherSubjectDTO } from '@/lib/api/teacher/dto/GetTeacherSubjectDTO';
 
 import Contact from '../contacts/Contact';
 
 export type PersonalTeacherSubjectCardProps = GetTeacherSubjectDTO;
 
-const PersonalTeacherSubjectCard: React.FC<
+const PersonalTeacherSubjectCard: FC<
   PersonalTeacherSubjectCardProps
 > = props => {
   const [isContactsVisible, setContactsVisibility] = useState(false);
@@ -28,15 +29,15 @@ const PersonalTeacherSubjectCard: React.FC<
         <h5>{props.subject.name}</h5>
       </div>
       <div className={styles['tags']}>
-        {props.roles.includes('LECTURER') && (
+        {props.roles.includes(TeacherRoles.LECTURER) && (
           <Tag color={TagColor.VIOLET} size={TagSize.SMALL} text={'Лектор'} />
         )}
 
-        {props.roles.includes('PRACTICIAN') && (
+        {props.roles.includes(TeacherRoles.PRACTICIAN) && (
           <Tag color={TagColor.ORANGE} size={TagSize.SMALL} text={'Практик'} />
         )}
 
-        {props.roles.includes('LABORANT') && (
+        {props.roles.includes(TeacherRoles.LABORANT) && (
           <Tag color={TagColor.MINT} size={TagSize.SMALL} text={'Лаборант'} />
         )}
       </div>

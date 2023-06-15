@@ -11,11 +11,12 @@ import Button, {
   ButtonVariant,
 } from '@/components/common/ui/button';
 import Tooltip from '@/components/common/ui/tooltip';
+import { TeacherRoles } from '@/lib/api/teacher/dto/GetTeacherDTO';
 
 type PollTeacherCardProps = {
   name: string;
   description: string;
-  roles?: string[];
+  roles?: TeacherRoles[];
   avatar?: string;
   disabled?: boolean;
   href?: string;

@@ -10,7 +10,7 @@ import RightBlock from './components/right-block';
 import styles from './RegisterPage.module.scss';
 
 const RegisterPage = () => {
-  const { isLoading, data } = useQuery(['groups'], () => GroupAPI.getAll(), {
+  const { isLoading, data } = useQuery(['groups'], GroupAPI.getAll, {
     refetchOnWindowFocus: false,
   });
 

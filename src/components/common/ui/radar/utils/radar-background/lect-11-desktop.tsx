@@ -32,14 +32,14 @@ export const Lect11Desktop = () => {
           fontWeight="500"
           letterSpacing="0em"
         >
-          <tspan x="409.117" y="19.128">
+          <tspan x="410.117" y="19.128">
             &#x412;&#x43e;&#x43b;&#x43e;&#x434;&#x456;&#x43d;&#x43d;&#x44f;
             &#x442;&#x435;&#x445;&#x43d;&#x43e;&#x43b;&#x43e;&#x433;&#x456;&#x44f;&#x43c;&#x438;
             &#x434;&#x438;&#x441;&#x442;&#x430;&#x43d;&#x446;&#x456;&#x439;&#x43d;&#x43e;&#x433;&#x43e;
             &#x43d;&#x430;&#x432;&#x447;&#x430;&#x43d;&#x43d;&#x44f;
           </tspan>
         </text>
-        <line x1="600.5" y1="53" x2="600.5" y2="29" stroke="#404040" />
+        <line x1="601.5" y1="53" x2="601.5" y2="29" stroke="#404040" />
         <text
           fill="white"
           xmlSpace="preserve"

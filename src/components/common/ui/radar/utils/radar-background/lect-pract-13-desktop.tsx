@@ -7,7 +7,7 @@ export const LectPract13Desktop = () => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g clipPath="url(#clip0_8203_40883)">
+      <g clipPath="url(#clip0_8247_1485)">
         <text
           fill="white"
           xmlSpace="preserve"
@@ -24,22 +24,6 @@ export const LectPract13Desktop = () => {
         </text>
         <path d="M285 56L427 56" stroke="#404040" />
         <path d="M442 81L427.749 56H427" stroke="#404040" />
-        <text
-          fill="white"
-          xmlSpace="preserve"
-          fontFamily="Manrope"
-          fontSize="16"
-          fontWeight="500"
-          letterSpacing="0em"
-        >
-          <tspan x="411.117" y="20.128">
-            &#x412;&#x43e;&#x43b;&#x43e;&#x434;&#x456;&#x43d;&#x43d;&#x44f;
-            &#x442;&#x435;&#x445;&#x43d;&#x43e;&#x43b;&#x43e;&#x433;&#x456;&#x44f;&#x43c;&#x438;
-            &#x434;&#x438;&#x441;&#x442;&#x430;&#x43d;&#x446;&#x456;&#x439;&#x43d;&#x43e;&#x433;&#x43e;
-            &#x43d;&#x430;&#x432;&#x447;&#x430;&#x43d;&#x43d;&#x44f;
-          </tspan>
-        </text>
-        <line x1="602.5" y1="54" x2="602.5" y2="30" stroke="#404040" />
         <text
           fill="white"
           xmlSpace="preserve"
@@ -207,11 +191,11 @@ export const LectPract13Desktop = () => {
           fill="white"
           xmlSpace="preserve"
           fontFamily="Manrope"
-          fontSize="16"
+          fontSize="21.9687"
           fontWeight="500"
           letterSpacing="0em"
         >
-          <tspan x="797.877" y="604.077">
+          <tspan x="796.023" y="610.863">
             6
           </tspan>
         </text>
@@ -219,11 +203,11 @@ export const LectPract13Desktop = () => {
           fill="white"
           xmlSpace="preserve"
           fontFamily="Manrope"
-          fontSize="16"
+          fontSize="21.9687"
           fontWeight="500"
           letterSpacing="0em"
         >
-          <tspan x="851.021" y="205.894">
+          <tspan x="849.343" y="212.68">
             3
           </tspan>
         </text>
@@ -231,11 +215,11 @@ export const LectPract13Desktop = () => {
           fill="white"
           xmlSpace="preserve"
           fontFamily="Manrope"
-          fontSize="16"
+          fontSize="21.9687"
           fontWeight="500"
           letterSpacing="0em"
         >
-          <tspan x="305.791" y="487.368">
+          <tspan x="302.71" y="494.154">
             10
           </tspan>
         </text>
@@ -243,11 +227,11 @@ export const LectPract13Desktop = () => {
           fill="white"
           xmlSpace="preserve"
           fontFamily="Manrope"
-          fontSize="16"
+          fontSize="21.9687"
           fontWeight="500"
           letterSpacing="0em"
         >
-          <tspan x="292.191" y="336.333">
+          <tspan x="289.267" y="343.119">
             11
           </tspan>
         </text>
@@ -255,11 +239,11 @@ export const LectPract13Desktop = () => {
           fill="white"
           xmlSpace="preserve"
           fontFamily="Manrope"
-          fontSize="16"
+          fontSize="21.9687"
           fontWeight="500"
           letterSpacing="0em"
         >
-          <tspan x="336.254" y="205.894">
+          <tspan x="333.316" y="212.68">
             12
           </tspan>
         </text>
@@ -267,11 +251,11 @@ export const LectPract13Desktop = () => {
           fill="white"
           xmlSpace="preserve"
           fontFamily="Manrope"
-          fontSize="16"
+          fontSize="21.9687"
           fontWeight="500"
           letterSpacing="0em"
         >
-          <tspan x="444.85" y="105.661">
+          <tspan x="441.958" y="112.447">
             13
           </tspan>
         </text>
@@ -279,11 +263,11 @@ export const LectPract13Desktop = () => {
           fill="white"
           xmlSpace="preserve"
           fontFamily="Manrope"
-          fontSize="16"
+          fontSize="21.9687"
           fontWeight="500"
           letterSpacing="0em"
         >
-          <tspan x="597.631" y="69.962">
+          <tspan x="596.418" y="76.748">
             1
           </tspan>
         </text>
@@ -291,11 +275,11 @@ export const LectPract13Desktop = () => {
           fill="white"
           xmlSpace="preserve"
           fontFamily="Manrope"
-          fontSize="16"
+          fontSize="21.9687"
           fontWeight="500"
           letterSpacing="0em"
         >
-          <tspan x="739.18" y="105.661">
+          <tspan x="737.954" y="112.447">
             2
           </tspan>
         </text>
@@ -303,11 +287,11 @@ export const LectPract13Desktop = () => {
           fill="white"
           xmlSpace="preserve"
           fontFamily="Manrope"
-          fontSize="16"
+          fontSize="21.9687"
           fontWeight="500"
           letterSpacing="0em"
         >
-          <tspan x="895.566" y="336.333">
+          <tspan x="893.789" y="343.119">
             4
           </tspan>
         </text>
@@ -315,11 +299,11 @@ export const LectPract13Desktop = () => {
           fill="white"
           xmlSpace="preserve"
           fontFamily="Manrope"
-          fontSize="16"
+          fontSize="21.9687"
           fontWeight="500"
           letterSpacing="0em"
         >
-          <tspan x="877.842" y="487.368">
+          <tspan x="876.611" y="494.154">
             5
           </tspan>
         </text>
@@ -327,11 +311,11 @@ export const LectPract13Desktop = () => {
           fill="white"
           xmlSpace="preserve"
           fontFamily="Manrope"
-          fontSize="16"
+          fontSize="21.9687"
           fontWeight="500"
           letterSpacing="0em"
         >
-          <tspan x="668.805" y="675.476">
+          <tspan x="666.775" y="682.262">
             7
           </tspan>
         </text>
@@ -339,11 +323,11 @@ export const LectPract13Desktop = () => {
           fill="white"
           xmlSpace="preserve"
           fontFamily="Manrope"
-          fontSize="16"
+          fontSize="21.9687"
           fontWeight="500"
           letterSpacing="0em"
         >
-          <tspan x="523.51" y="675.476">
+          <tspan x="522.247" y="682.262">
             8
           </tspan>
         </text>
@@ -351,16 +335,16 @@ export const LectPract13Desktop = () => {
           fill="white"
           xmlSpace="preserve"
           fontFamily="Manrope"
-          fontSize="16"
+          fontSize="21.9687"
           fontWeight="500"
           letterSpacing="0em"
         >
-          <tspan x="391.455" y="604.077">
+          <tspan x="389.602" y="610.863">
             9
           </tspan>
         </text>
-        <g clipPath="url(#clip1_8203_40883)">
-          <mask id="path-46-inside-1_8203_40883" fill="white">
+        <g clipPath="url(#clip1_8247_1485)">
+          <mask id="path-44-inside-1_8247_1485" fill="white">
             <path
               fillRule="evenodd"
               clipRule="evenodd"
@@ -376,9 +360,9 @@ export const LectPract13Desktop = () => {
           <path
             d="M840.783 374.5C840.783 507.205 733.205 614.783 600.5 614.783V617.529C734.721 617.529 843.529 508.721 843.529 374.5H840.783ZM600.5 134.217C733.205 134.217 840.783 241.795 840.783 374.5H843.529C843.529 240.279 734.721 131.471 600.5 131.471V134.217ZM360.217 374.5C360.217 241.795 467.795 134.217 600.5 134.217V131.471C466.279 131.471 357.471 240.279 357.471 374.5H360.217ZM600.5 614.783C467.795 614.783 360.217 507.205 360.217 374.5H357.471C357.471 508.721 466.279 617.529 600.5 617.529V614.783ZM810.576 374.5C810.576 490.522 716.522 584.576 600.5 584.576V587.322C718.038 587.322 813.322 492.038 813.322 374.5H810.576ZM600.5 164.424C716.522 164.424 810.576 258.478 810.576 374.5H813.322C813.322 256.961 718.038 161.678 600.5 161.678V164.424ZM390.424 374.5C390.424 258.478 484.478 164.424 600.5 164.424V161.678C482.961 161.678 387.678 256.961 387.678 374.5H390.424ZM600.5 584.576C484.478 584.576 390.424 490.522 390.424 374.5H387.678C387.678 492.038 482.961 587.322 600.5 587.322V584.576Z"
             fill="#353535"
-            mask="url(#path-46-inside-1_8203_40883)"
+            mask="url(#path-44-inside-1_8247_1485)"
           />
-          <mask id="path-48-inside-2_8203_40883" fill="white">
+          <mask id="path-46-inside-2_8247_1485" fill="white">
             <path
               fillRule="evenodd"
               clipRule="evenodd"
@@ -394,9 +378,9 @@ export const LectPract13Desktop = () => {
           <path
             d="M780.369 374.5C780.369 473.839 699.839 554.369 600.5 554.369V557.115C701.356 557.115 783.115 475.356 783.115 374.5H780.369ZM600.5 194.631C699.839 194.631 780.369 275.161 780.369 374.5H783.115C783.115 273.644 701.356 191.885 600.5 191.885V194.631ZM420.631 374.5C420.631 275.161 501.161 194.631 600.5 194.631V191.885C499.644 191.885 417.885 273.644 417.885 374.5H420.631ZM600.5 554.369C501.161 554.369 420.631 473.839 420.631 374.5H417.885C417.885 475.356 499.644 557.115 600.5 557.115V554.369ZM750.162 374.5C750.162 457.156 683.156 524.162 600.5 524.162V526.908C684.673 526.908 752.908 458.673 752.908 374.5H750.162ZM600.5 224.838C683.156 224.838 750.162 291.844 750.162 374.5H752.908C752.908 290.327 684.673 222.092 600.5 222.092V224.838ZM450.838 374.5C450.838 291.844 517.844 224.838 600.5 224.838V222.092C516.327 222.092 448.092 290.327 448.092 374.5H450.838ZM600.5 524.162C517.844 524.162 450.838 457.156 450.838 374.5H448.092C448.092 458.673 516.327 526.908 600.5 526.908V524.162Z"
             fill="#353535"
-            mask="url(#path-48-inside-2_8203_40883)"
+            mask="url(#path-46-inside-2_8247_1485)"
           />
-          <mask id="path-50-inside-3_8203_40883" fill="white">
+          <mask id="path-48-inside-3_8247_1485" fill="white">
             <path
               fillRule="evenodd"
               clipRule="evenodd"
@@ -412,9 +396,9 @@ export const LectPract13Desktop = () => {
           <path
             d="M719.955 374.5C719.955 440.473 666.473 493.955 600.5 493.955V496.701C667.99 496.701 722.701 441.99 722.701 374.5H719.955ZM600.5 255.045C666.473 255.045 719.955 308.527 719.955 374.5H722.701C722.701 307.01 667.99 252.299 600.5 252.299V255.045ZM481.045 374.5C481.045 308.527 534.527 255.045 600.5 255.045V252.299C533.01 252.299 478.299 307.01 478.299 374.5H481.045ZM600.5 493.955C534.527 493.955 481.045 440.473 481.045 374.5H478.299C478.299 441.99 533.01 496.701 600.5 496.701V493.955ZM689.748 374.5C689.748 423.79 649.79 463.748 600.5 463.748V466.494C651.307 466.494 692.494 425.307 692.494 374.5H689.748ZM600.5 285.252C649.79 285.252 689.748 325.21 689.748 374.5H692.494C692.494 323.693 651.307 282.506 600.5 282.506V285.252ZM511.252 374.5C511.252 325.21 551.21 285.252 600.5 285.252V282.506C549.693 282.506 508.506 323.693 508.506 374.5H511.252ZM600.5 463.748C551.21 463.748 511.252 423.79 511.252 374.5H508.506C508.506 425.307 549.693 466.494 600.5 466.494V463.748Z"
             fill="#353535"
-            mask="url(#path-50-inside-3_8203_40883)"
+            mask="url(#path-48-inside-3_8247_1485)"
           />
-          <mask id="path-52-inside-4_8203_40883" fill="white">
+          <mask id="path-50-inside-4_8247_1485" fill="white">
             <path
               fillRule="evenodd"
               clipRule="evenodd"
@@ -430,7 +414,7 @@ export const LectPract13Desktop = () => {
           <path
             d="M659.541 374.5C659.541 407.107 633.107 433.541 600.5 433.541V436.287C634.624 436.287 662.287 408.624 662.287 374.5H659.541ZM600.5 315.459C633.107 315.459 659.541 341.893 659.541 374.5H662.287C662.287 340.376 634.624 312.713 600.5 312.713V315.459ZM541.459 374.5C541.459 341.893 567.893 315.459 600.5 315.459V312.713C566.376 312.713 538.713 340.376 538.713 374.5H541.459ZM600.5 433.541C567.893 433.541 541.459 407.107 541.459 374.5H538.713C538.713 408.624 566.376 436.287 600.5 436.287V433.541ZM629.334 374.5C629.334 390.425 616.425 403.334 600.5 403.334V406.08C617.941 406.08 632.08 391.941 632.08 374.5H629.334ZM600.5 345.666C616.425 345.666 629.334 358.575 629.334 374.5H632.08C632.08 357.059 617.941 342.92 600.5 342.92V345.666ZM571.666 374.5C571.666 358.575 584.575 345.666 600.5 345.666V342.92C583.059 342.92 568.92 357.059 568.92 374.5H571.666ZM600.5 403.334C584.575 403.334 571.666 390.425 571.666 374.5H568.92C568.92 391.941 583.059 406.08 600.5 406.08V403.334Z"
             fill="#353535"
-            mask="url(#path-52-inside-4_8203_40883)"
+            mask="url(#path-50-inside-4_8247_1485)"
           />
           <rect
             width="274.609"
@@ -521,11 +505,27 @@ export const LectPract13Desktop = () => {
           strokeWidth="1.37305"
         />
       </g>
+      <text
+        fill="white"
+        xmlSpace="preserve"
+        fontFamily="Manrope"
+        fontSize="16"
+        fontWeight="500"
+        letterSpacing="0em"
+      >
+        <tspan x="410.117" y="18.128">
+          &#x412;&#x43e;&#x43b;&#x43e;&#x434;&#x456;&#x43d;&#x43d;&#x44f;
+          &#x442;&#x435;&#x445;&#x43d;&#x43e;&#x43b;&#x43e;&#x433;&#x456;&#x44f;&#x43c;&#x438;
+          &#x434;&#x438;&#x441;&#x442;&#x430;&#x43d;&#x446;&#x456;&#x439;&#x43d;&#x43e;&#x433;&#x43e;
+          &#x43d;&#x430;&#x432;&#x447;&#x430;&#x43d;&#x43d;&#x44f;
+        </tspan>
+      </text>
+      <line x1="601.5" y1="52" x2="601.5" y2="28" stroke="#404040" />
       <defs>
-        <clipPath id="clip0_8203_40883">
+        <clipPath id="clip0_8247_1485">
           <rect width="1200" height="749" fill="white" />
         </clipPath>
-        <clipPath id="clip1_8203_40883">
+        <clipPath id="clip1_8247_1485">
           <rect
             x="328.637"
             y="102.637"

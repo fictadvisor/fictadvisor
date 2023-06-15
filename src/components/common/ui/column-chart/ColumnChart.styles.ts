@@ -1,5 +1,7 @@
 import { SxProps, Theme } from '@mui/material/styles';
 
+import palette from '@/styles/theme/constants/pallete';
+
 export const chartContainer: SxProps<Theme> = {
   position: 'relative',
   height: {
@@ -8,20 +10,20 @@ export const chartContainer: SxProps<Theme> = {
   },
   width: '100%',
   maxWidth: '404px',
-  minWidth: '328px',
-  border: '1px solid rgba(64, 64, 64)',
+  // minWidth: '328px',
+  border: `1px solid ${palette.grey['200']}`,
   borderRadius: '8px',
   padding: '10px',
-  backgroundColor: 'rgb(33,33,33)',
   display: 'grid',
   gridTemplateColumns: '30px 1fr',
   gridTemplateRows: '30px 1fr',
+  backgroundColor: 'backgroundDark.200',
 };
 
 export const yTitle: SxProps<Theme> = {
   fontSize: '16',
   transform: 'rotate(-90deg)',
-  color: 'rgb(116, 116, 116)',
+  color: 'backgroundDark.600',
   fontWeight: '500',
   whiteSpace: 'nowrap',
   position: 'relative',
@@ -42,6 +44,9 @@ export const legend: SxProps<Theme> = {
 };
 
 export const chart: SxProps<Theme> = {
+  canvas: {
+    width: '100% !important',
+  },
   height: {
     mobile: '205px',
     desktopSemiMedium: '264px',

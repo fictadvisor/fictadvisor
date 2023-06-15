@@ -1,3 +1,5 @@
+import { TeacherRoles } from '@/lib/api/teacher/dto/GetTeacherDTO';
+
 export interface GetTeachersBySubjectDTO {
   subjectName: string;
   teachers: {
@@ -6,6 +8,6 @@ export interface GetTeachersBySubjectDTO {
     middleName: string;
     lastName: string;
     avatar: string;
-    roles: ('LECTURER' | 'LABORANT' | 'PRACTICIAN')[];
+    roles: TeacherRoles[];
   }[];
 }

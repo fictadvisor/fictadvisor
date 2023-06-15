@@ -1,49 +1,61 @@
+import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
-import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 
 import PageLayout from '@/components/common/layout/page-layout';
-import { AlertColor } from '@/components/common/ui/alert';
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
 import Loader from '@/components/common/ui/loader';
+import { TeachersPageTabs } from '@/components/pages/personal-teacher-page/PersonalTeacherPage';
+import PersonalSubjectTeacherTabs from '@/components/pages/personal-teacher-subject-page/personal-subject-teacher-tabs';
 import PersonalTeacherSubjectCard from '@/components/pages/personal-teacher-subject-page/personal-teacher-subject-card';
-import PersonalTeacherSubjectTabs from '@/components/pages/personal-teacher-subject-page/personal-teacher-subject-tabs';
 import styles from '@/components/pages/personal-teacher-subject-page/PersonalTeacherSubjectPage.module.scss';
-import { TeacherAPI } from '@/lib/api/teacher/TeacherAPI';
-import { showAlert } from '@/redux/reducers/alert.reducer';
+import useAuthentication from '@/hooks/use-authentication';
+import useTabState from '@/hooks/use-tab-state';
+import useToast from '@/hooks/use-toast';
+import TeacherService from '@/lib/services/teacher/TeacherService';
 
 const PersonalTeacherSubjectPage = () => {
   const router = useRouter();
+  const { query, push } = router;
 
   const teacherId = router.query.teacherId as string;
   const subjectId = router.query.subjectId as string;
+  const { user } = useAuthentication();
+
   const { isLoading, isError, data } = useQuery(
-    ['teachersubject', teacherId, subjectId],
-    () => TeacherAPI.getTeacherSubject(teacherId, subjectId),
+    ['teacher', teacherId, subjectId],
+    () =>
+      TeacherService.getTeacherSubjectPageInfo(teacherId, subjectId, user?.id),
     {
       refetchOnWindowFocus: false,
       retry: false,
     },
   );
-  const dispatch = useDispatch();
-  if (isError) {
-    dispatch(
-      showAlert({
-        color: AlertColor.ERROR,
-        title: 'не лізь не в свою справу',
-      }),
-    );
-    setTimeout(() => {
-      void router.push('/teachers');
-    }, 3000);
-  }
+  const toast = useToast();
+
+  useEffect(() => {
+    if (isError) {
+      toast.error('Не лізь не в свою справу!');
+      void push('/teachers');
+    }
+  }, [isError]);
+
+  const { tab } = query;
+  const [index, setIndex] = useState<TeachersPageTabs>(
+    TeachersPageTabs.GENERAL,
+  );
+
+  const handleChange = useTabState({ tab, router, setIndex });
+
+  const teacher = data?.info;
+
   return (
     <PageLayout description={'Сторінка викладача'}>
       <div className={styles['personal-teacher-page']}>
         {isLoading ? (
           <div className={styles['personal-teacher-page-content']}>
             <div className={styles['loader']}>
-              <Loader></Loader>
+              <Loader />
             </div>
           </div>
         ) : (
@@ -58,26 +70,24 @@ const PersonalTeacherSubjectPage = () => {
                   },
                   { label: 'Викладачі', href: '/teachers' },
                   {
-                    label: `${
-                      data.lastName +
-                      ' ' +
-                      data.firstName +
-                      ' ' +
-                      data.middleName
-                    }`,
+                    label: `${teacher.lastName} ${teacher.firstName} ${teacher.middleName}`,
                     href: `/teachers/${teacherId}`,
                   },
                   {
-                    label: `${data.subject.name}`,
+                    label: `${teacher.subject.name}`,
                     href: `/discipline?teacherId=${teacherId}&subjectId=${subjectId}`,
                   },
                 ]}
               />
               <div className={styles['card-wrapper']}>
-                <PersonalTeacherSubjectCard {...data} />
+                <PersonalTeacherSubjectCard {...data.info} />
               </div>
               <div className={styles['tabs']}>
-                <PersonalTeacherSubjectTabs />
+                <PersonalSubjectTeacherTabs
+                  data={data}
+                  tabIndex={index}
+                  handleChange={handleChange}
+                />
               </div>
             </div>
           )

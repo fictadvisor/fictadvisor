@@ -2,11 +2,12 @@ import React from 'react';
 import mergeClassNames from 'merge-class-names';
 
 import Tag, { TagColor, TagSize, TagVariant } from '@/components/common/ui/tag';
+import { TeacherRoles } from '@/lib/api/teacher/dto/GetTeacherDTO';
 
 import styles from './CardRoles.module.scss';
 
 export interface CardRolesProps {
-  roles: string[];
+  roles: TeacherRoles[];
   className?: string;
 }
 

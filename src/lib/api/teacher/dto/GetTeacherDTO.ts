@@ -1,5 +1,11 @@
 import { ContactType } from '@/components/pages/personal-teacher-page/contacts';
 
+export enum TeacherRoles {
+  'LECTURER',
+  'LABORANT',
+  'PRACTICIAN',
+}
+
 export interface GetTeacherDTO {
   teacher: {
     id: string;
@@ -9,7 +15,7 @@ export interface GetTeacherDTO {
     description: string;
     avatar: string;
   };
-  roles: ('LECTURER' | 'LABORANT' | 'PRACTICIAN')[];
+  roles: TeacherRoles[];
   contacts: {
     link: string;
     id: string;

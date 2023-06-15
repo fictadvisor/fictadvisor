@@ -1,7 +1,7 @@
 import { SxProps, Theme } from '@mui/material/styles';
 
 export const wrapper: SxProps<Theme> = {
-  maxWidth: '740px',
+  wordWrap: 'break-word',
   height: '100%',
   padding: '11px 16px 12px 16px',
   backgroundColor: 'backgroundDark.200',
