@@ -34,7 +34,7 @@ const TextArea: React.FC<TextAreaProps> = ({
   className,
 }) => {
   const [field, { touched, error }] = useField(name);
-
+  console.log(field.value);
   let state;
   if (touched && error) state = FieldState.ERROR;
   else if (touched && isSuccessOnDefault) state = FieldState.SUCCESS;

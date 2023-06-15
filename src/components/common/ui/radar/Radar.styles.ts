@@ -1,39 +1,35 @@
 import { SxProps, Theme } from '@mui/material/styles';
 
-export const background = (isMobile): SxProps<Theme> => {
-  const containerWidth = isMobile ? '100%' : '1000px';
+export const background: SxProps<Theme> = {
+  width: {
+    mobile: '100%',
+    desktopSemiMedium: '1000px',
+  },
+  position: 'relative',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
 
-  // Calculate the canvas width based on the first width (containerWidth)
-  const canvasWidth = `calc(0.76 * ${containerWidth} + 59.2px)`;
-
-  return {
-    width: containerWidth,
+  div: {
+    marginLeft: '3px',
+    marginBottom: '3px',
     position: 'relative',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+    zIndex: '1',
+    width: `calc(76% + 60px)`,
+    height: `calc(76% + 60px)`,
+    maxWidth: { mobile: '455px', desktopSemiMedium: '510px' },
+    maxHeight: { mobile: '455px', desktopSemiMedium: '510px' },
+    boxSizing: 'border-box',
 
-    div: {
-      marginLeft: '3px',
-      marginBottom: '3px',
-      position: 'relative',
-      zIndex: '1',
-      width: `${canvasWidth}`,
-      height: `${canvasWidth}`,
-      maxWidth: isMobile ? '455px' : '510px',
-      maxHeight: isMobile ? '455px' : '510px',
-      boxSizing: 'border-box',
-
-      canvas: {
-        width: '100% !important',
-        height: '100% !important',
-      },
+    canvas: {
+      width: '100% !important',
+      height: '100% !important',
     },
+  },
 
-    svg: {
-      position: 'absolute',
-      right: 0,
-      width: '100%',
-    },
-  };
+  svg: {
+    position: 'absolute',
+    right: 0,
+    width: '100%',
+  },
 };

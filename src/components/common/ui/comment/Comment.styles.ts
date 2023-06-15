@@ -12,6 +12,7 @@ export const text: SxProps<Theme> = {
   marginBottom: '2px',
   textAlign: 'justify',
   typography: 'body1',
+  whiteSpace: 'pre-wrap',
 };
 
 export const date: SxProps<Theme> = {

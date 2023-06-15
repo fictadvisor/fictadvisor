@@ -68,7 +68,7 @@ class TeacherService {
           'Для покращення ситуації візьми участь в опитуванні з наступних предметів:';
 
         buttonInfo = disciplines.map(discipline => ({
-          text: `Перейти до опитування ${discipline.subjectName}`,
+          text: `${discipline.subjectName}`,
           href: `/poll/${discipline.disciplineTeacherId}`,
         }));
       } else {
@@ -126,7 +126,7 @@ class TeacherService {
         text =
           'Для покращення ситуації візьми участь в опитуванні з наступних предметів:';
         buttonInfo = thisDiscipline.map(discipline => ({
-          text: `Перейти до опитування ${discipline.subjectName}`,
+          text: `${discipline.subjectName}`,
           href: `/poll/${discipline.disciplineTeacherId}`,
         }));
       }

@@ -25,3 +25,9 @@ export const wrapper: SxProps<Theme> = {
 export const button: SxProps<Theme> = {
   width: 'fit-content',
 };
+
+export const buttonWrapper: SxProps<Theme> = {
+  display: 'flex',
+  gap: '16px',
+  alignItems: 'center',
+};

@@ -30,7 +30,6 @@ const useTabState = ({ tab, router, setIndex }: UseTabStateProps) => {
   }, [tab, isReady, replace, query]);
 
   return async (event: SyntheticEvent, value) => {
-    console.log(value);
     await replace({ query: { ...query, tab: value } }, undefined, {
       shallow: true,
     });

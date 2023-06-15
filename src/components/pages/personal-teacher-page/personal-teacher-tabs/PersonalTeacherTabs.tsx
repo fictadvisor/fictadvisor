@@ -76,13 +76,7 @@ const PersonalTeacherTabs: FC<PersonalTeacherTabs> = ({
             {data.hasEnoughMarks ? (
               <GeneralTab marks={data.marks} roles={data.info.roles} />
             ) : (
-              data.buttonInfo.map((button, index) => (
-                <PollButtons
-                  key={index}
-                  text={data.marksText}
-                  buttonInfo={data.buttonInfo}
-                />
-              ))
+              <PollButtons text={data.marksText} buttonInfo={data.buttonInfo} />
             )}
           </TabPanel>
           <TabPanel value={TeachersPageTabs.SUBJECTS}>

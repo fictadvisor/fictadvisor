@@ -46,7 +46,7 @@ const RadarChart: FC<RadarProps> = ({ marks, roles }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down('desktopSemiMedium'));
 
   return (
-    <Box sx={styles.background(isMobile)}>
+    <Box sx={styles.background}>
       <Box>
         <Radar options={options} data={data} />
       </Box>
