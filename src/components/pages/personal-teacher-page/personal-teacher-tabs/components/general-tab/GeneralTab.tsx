@@ -86,7 +86,7 @@ const GeneralTab: FC<GeneralTabProps> = ({ marks, roles }) => {
             </Typography>
           </Box>
         ))}
-        {!isLargeDesktop && <FillerBox width={isMobile ? '150px' : '200px'} />}
+        {<FillerBox width={isMobile ? '150px' : '200px'} />}
       </Box>
       <Box sx={styles.columnWrapper}>
         {columnMarks.map(mark => (

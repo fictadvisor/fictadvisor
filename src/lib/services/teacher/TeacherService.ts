@@ -44,7 +44,7 @@ class TeacherService {
     const comments = await TeacherAPI.getTeacherComments(teacherId);
     const marks = (await TeacherAPI.getTeacherMarks(teacherId)).marks;
     const hasEnoughMarks = marks[0]?.amount >= MIN_MARKS_LENGTH;
-    const marksAmount = marks[0]?.amount;
+    const marksAmount = marks[0]?.amount ?? 0;
     let buttonInfo = [
       {
         text: 'Перейти до опитувань',
@@ -97,7 +97,7 @@ class TeacherService {
     const marks = (await TeacherAPI.getTeacherMarks(teacherId, subjectId))
       .marks;
     const hasEnoughMarks = marks[0]?.amount >= MIN_MARKS_LENGTH;
-    const marksAmount = marks[0]?.amount;
+    const marksAmount = marks[0]?.amount ?? 0;
 
     let buttonInfo = [
       {

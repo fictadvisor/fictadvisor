@@ -7,10 +7,8 @@ export const wrapper: SxProps<Theme> = {
     desktopSemiMedium: 'backgroundDark.200',
   },
   borderRadius: '4px',
-  paddingTop: {
-    mobile: '20px',
-    desktopSemiMedium: '20px',
-  },
+  paddingTop: '20px',
+  paddingBottom: { mobile: '0', desktopSemiMedium: '40px' },
   width: '100%',
   display: 'flex',
   flexDirection: 'column',
@@ -79,6 +77,10 @@ export const circleWrapper: SxProps<Theme> = {
   width: '100%',
   display: 'flex',
   flexWrap: 'wrap',
+  maxWidth: {
+    mobile: '900px',
+    desktopSemiMedium: '1200px',
+  },
   flexDirection: 'row',
   justifyContent: 'center',
   alignItems: 'flex-start',

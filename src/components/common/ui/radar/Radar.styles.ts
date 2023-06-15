@@ -13,16 +13,21 @@ export const background = (isMobile): SxProps<Theme> => {
     justifyContent: 'center',
     alignItems: 'center',
 
-    canvas: {
+    div: {
       marginLeft: '3px',
       marginBottom: '3px',
       position: 'relative',
       zIndex: '1',
-      width: `${canvasWidth} !important`,
-      height: `${canvasWidth} !important`,
+      width: `${canvasWidth}`,
+      height: `${canvasWidth}`,
       maxWidth: isMobile ? '455px' : '510px',
       maxHeight: isMobile ? '455px' : '510px',
       boxSizing: 'border-box',
+
+      canvas: {
+        width: '100% !important',
+        height: '100% !important',
+      },
     },
 
     svg: {

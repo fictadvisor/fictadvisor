@@ -47,7 +47,9 @@ const RadarChart: FC<RadarProps> = ({ marks, roles }) => {
 
   return (
     <Box sx={styles.background(isMobile)}>
-      <Radar options={options} data={data} />
+      <Box>
+        <Radar options={options} data={data} />
+      </Box>
       {getBackgroundImage(labels, isMobile, roles)}
     </Box>
   );
