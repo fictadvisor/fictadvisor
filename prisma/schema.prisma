@@ -33,12 +33,13 @@ model User {
 }
 
 model Group {
-  id          String       @id @default(uuid())
-  code        String
-  students    Student[]
-  disciplines Discipline[]
-  groupRoles  GroupRole[]
-  events      Event[]
+  id               String            @id @default(uuid())
+  code             String
+  students         Student[]
+  disciplines      Discipline[]
+  groupRoles       GroupRole[]
+  events           Event[]
+  selectiveAmounts SelectiveAmount[]
 
   @@map("groups")
 }
@@ -110,6 +111,17 @@ model SelectiveDiscipline {
 
   @@id([disciplineId, studentId])
   @@map("selective_disciplines")
+}
+
+model SelectiveAmount {
+  group    Group  @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId  String @map("group_id")
+  year     Int
+  semester Int
+  amount   Int
+
+  @@id([groupId, year, semester])
+  @@map("selective_amounts")
 }
 
 enum DisciplineTypeEnum {
