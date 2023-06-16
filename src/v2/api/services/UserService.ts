@@ -20,6 +20,7 @@ import { AlreadyRegisteredException } from '../../utils/exceptions/AlreadyRegist
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
 import { GroupRepository } from '../../database/repositories/GroupRepository';
 import { StudentMapper } from '../../mappers/StudentMapper';
+import { FileService } from '../../utils/files/FileService';
 
 @Injectable()
 export class UserService {
@@ -33,6 +34,7 @@ export class UserService {
     private groupRepository: GroupRepository,
     @Inject(forwardRef(() => AuthService))
     private authService: AuthService,
+    private fileService: FileService,
     @Inject(forwardRef(() => GroupService))
     private groupService: GroupService,
     private studentMapper: StudentMapper,
@@ -64,7 +66,7 @@ export class UserService {
       },
     });
   }
-  
+
   async getGroupByRole (roleId: string) {
     return await this.groupRepository.find({
       groupRoles: {
@@ -232,5 +234,13 @@ export class UserService {
     }
 
     return this.updateStudent(userId, { state });
+  }
+
+  async updateAvatar (file: Express.Multer.File, userId: string) {
+    const path = await this.fileService.saveByHash(file, 'avatars');
+
+    return this.userRepository.updateById(userId, {
+      avatar: path,
+    });
   }
 }

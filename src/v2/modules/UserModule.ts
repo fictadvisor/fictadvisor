@@ -10,10 +10,12 @@ import { AccessModule } from './AccessModule';
 import { GroupModule } from './GroupModule';
 import { GrantController } from '../api/controllers/GrantController';
 import { MapperModule } from './MapperModule';
+import { FileModule } from '../utils/files/FileModule';
+
 @Module({
   controllers: [UserController, RoleController, GrantController],
   providers: [UserService, RoleService, GrantService],
   exports: [UserService, RoleService, GrantService],
-  imports: [ConfigurationModule, forwardRef(() => GroupModule), AccessModule, forwardRef(() => AuthModule), MapperModule],
+  imports: [ConfigurationModule, forwardRef(() => GroupModule), AccessModule, forwardRef(() => AuthModule), MapperModule, FileModule],
 })
 export class UserModule {}

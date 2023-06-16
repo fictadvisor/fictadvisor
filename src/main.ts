@@ -42,10 +42,12 @@ async function bootstrap () {
   SwaggerModule.setup('api', app, document);
 
   if (process.env.NODE_ENV === 'production') {
-    app.useStaticAssets(join(__dirname, '/static'), {
+    app.useStaticAssets(join(__dirname, '/swagger'), {
       prefix: '/api',
     });
   }
+
+  app.useStaticAssets(join(__dirname, '/static/'));
 
   await app.listen(port);
 

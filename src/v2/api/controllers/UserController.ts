@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { UserService } from '../services/UserService';
 import { TelegramGuard } from '../../security/TelegramGuard';
 import { ApproveDTO, ApproveStudentByTelegramDTO } from '../dtos/ApproveDTO';
@@ -15,6 +15,8 @@ import { GroupRequestDTO } from '../dtos/GroupRequestDTO';
 import { Access } from 'src/v2/security/Access';
 import { TelegramDTO } from '../dtos/TelegramDTO';
 import { UserMapper } from '../../mappers/UserMapper';
+import { AvatarValidationPipe } from '../pipes/AvatarValidationPipe';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller({
   version: '2',
@@ -182,5 +184,16 @@ export class UserController {
     @Param('userId', UserByIdPipe) userId: string,
   ) {
     return this.userService.getUser(userId);
+  }
+
+  @Access('users.$userId.update')
+  @Patch('/:userId/avatar')
+  @UseInterceptors(FileInterceptor('avatar'))
+  async uploadAvatar (
+    @Param('userId', UserByIdPipe) userId: string,
+    @UploadedFile(AvatarValidationPipe) file: Express.Multer.File,
+  ) {
+    const user = await this.userService.updateAvatar(file, userId);
+    return this.userMapper.updateUser(user);
   }
 }
