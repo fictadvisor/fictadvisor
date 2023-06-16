@@ -1,4 +1,5 @@
 import React from 'react';
+import NextLink from 'next/link';
 
 import { GitHubIcon } from '@/components/common/custom-svg/GitHub';
 import { InstagramIcon } from '@/components/common/custom-svg/Instagram';
@@ -51,9 +52,9 @@ const Contact: React.FC<ContactProps> = ({ name, displayName, link }) => {
     <div className={styles['contact']}>
       <div className={styles[`icon`]}>{icon()}</div>
       {link != '' && (
-        <a href={link} className={styles[`link`]}>
+        <NextLink href={link} className={styles[`link`]}>
           {displayName}
-        </a>
+        </NextLink>
       )}
       {link == '' && <p className={styles[`link`]}>{displayName}</p>}
     </div>

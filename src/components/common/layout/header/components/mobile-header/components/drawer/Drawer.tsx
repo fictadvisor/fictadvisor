@@ -17,7 +17,6 @@ export interface DrawerProps {
   handleClick: () => void;
   user: any;
 }
-
 const Drawer: FC<DrawerProps> = ({
   isLoggedIn,
   isOpened,
