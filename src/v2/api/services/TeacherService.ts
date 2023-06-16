@@ -14,6 +14,7 @@ import { SubjectRepository } from '../../database/repositories/SubjectRepository
 import { TeacherMapper } from '../../mappers/TeacherMapper';
 import { PollService } from './PollService';
 import { ResponseQueryDTO } from '../dtos/ResponseQueryDTO';
+import { SearchDTO } from '../../utils/QueryAllDTO';
 
 @Injectable()
 export class TeacherService {
@@ -29,7 +30,12 @@ export class TeacherService {
 
   async getAll (body: QueryAllTeacherDTO) {
 
-    const search = DatabaseUtils.getSearch(body, 'firstName', 'lastName', 'middleName');
+    const searchedNames = body.search ? body.search.split(/\s+/g) : [];
+    const search = {
+      AND: searchedNames.map((search) => ({
+        ...DatabaseUtils.getSearch({ search } as SearchDTO, 'firstName', 'lastName', 'middleName'),
+      })),
+    };
     const page = DatabaseUtils.getPage(body);
     const sort = DatabaseUtils.getSort(body);
 
