@@ -20,7 +20,6 @@ import { UserRepository } from '../../database/repositories/UserRepository';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
 import { QuestionMapper } from '../../mappers/QuestionMapper';
 import { DbQuestionWithRoles } from '../../database/entities/DbQuestionWithRoles';
-import { DatabaseUtils } from '../../database/DatabaseUtils';
 
 @Injectable()
 export class DisciplineTeacherService {
@@ -166,9 +165,18 @@ export class DisciplineTeacherService {
   }
 
   async getPollTimeBorders () {
-    const { year, semester } = await this.dateService.getCurrentSemester();
-    const startPoll = await this.dateService.getDateVar(`START_POLL_${year}_${semester}`);
-    const endPoll = await this.dateService.getDateVar(`END_POLL_${year}_${semester}`);
+    const { year, semester, isFinished } = await this.dateService.getCurrentSemester();
+    let startPollName, endPollName;
+    if (isFinished) {
+      startPollName = `START_POLL_${year}_${semester}`;
+      endPollName = `END_POLL_${year}_${semester}`;
+    } else {
+      const previous = this.dateService.getPreviousSemester(semester, year);
+      startPollName = `START_POLL_${previous.year}_${previous.semester}`;
+      endPollName = `END_POLL_${previous.year}_${previous.semester}`;
+    }
+    const startPoll = await this.dateService.getDateVar(startPollName);
+    const endPoll = await this.dateService.getDateVar(endPollName);
     return {
       startPoll,
       endPoll,

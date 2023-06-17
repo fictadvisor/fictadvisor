@@ -10,6 +10,8 @@ export interface CurrentSemester {
   year: number,
   semester: number,
   startDate: Date,
+  endDate: Date,
+  isFinished: boolean,
 }
 export interface StudyingSemester {
   year: number,
@@ -28,7 +30,7 @@ export class DateService {
   ) {}
 
   async getCurrentSemester (): Promise<CurrentSemester> {
-    const semester = await this.prisma.startDate.findFirst({
+    const semester = await this.prisma.semesterDate.findFirst({
       where: {
         startDate: {
           lte: new Date(),
@@ -42,7 +44,10 @@ export class DateService {
     if (!semester) {
       throw new DataNotFoundException();
     }
-    return semester;
+    return {
+      ...semester,
+      isFinished: semester.endDate < new Date(),
+    };
   }
 
   async getDateVar (name: string): Promise<Date> {
@@ -95,11 +100,19 @@ export class DateService {
 
   async isPreviousSemesterToCurrent (semester: number, year: number) {
     const curSemester = await this.getCurrentSemester();
+
     return this.isPreviousSemester(curSemester, { semester, year });
   }
 
-  isPreviousSemester (curSem: StudyingSemester, compSem: StudyingSemester) {
-    return (compSem.semester < curSem.semester && compSem.year === curSem.year) || (compSem.year < curSem.year);
+  isPreviousSemester (curSem: CurrentSemester, compSem: StudyingSemester) {
+    const cur = curSem.year + (curSem.semester - 1)/2;
+    const comp = compSem.year + (compSem.semester - 1)/2;
+    return curSem.isFinished ? comp <= cur : comp < cur;
   }
 
+  getPreviousSemester (semester, year) {
+    return semester === 1
+      ? { semester: 2, year: year - 1 }
+      : { semester: 1, year };
+  }
 }

@@ -286,13 +286,14 @@ model Contact {
   @@map("contacts")
 }
 
-model StartDate {
+model SemesterDate {
   year      Int
   semester  Int
   startDate DateTime @map("start_date")
+  endDate   DateTime @map("end_date") @default("2023-01-01T00:00:00.000Z")
 
   @@id([year, semester])
-  @@map("start_dates")
+  @@map("semester_dates")
 }
 
 model DisciplineTeacherRole {

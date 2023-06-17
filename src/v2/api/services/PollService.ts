@@ -172,11 +172,11 @@ export class PollService {
       },
     });
 
-    const { semester, year } = await this.dateService.getCurrentSemester();
+    const semester = await this.dateService.getCurrentSemester();
 
     disciplines = disciplines.filter((discipline) => {
       return this.dateService.isPreviousSemester(
-        { semester, year },
+        semester,
         { semester: discipline.semester, year: discipline.year }
       );
     });
