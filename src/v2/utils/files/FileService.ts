@@ -14,6 +14,6 @@ export class FileService {
 
     await fs.promises.writeFile(filePath, file.buffer);
 
-    return resolve(process.env.BASE_URL, filePath);
+    return resolve(process.env.BASE_URL, join(directory, fileName + extname(file.originalname)));
   }
 }
