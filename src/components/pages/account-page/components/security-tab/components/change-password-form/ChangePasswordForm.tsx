@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/router';
 
-import { CustomCheck } from '@/components/common/custom-svg/CustomCheck';
+import { CustomCheck } from '@/components/common/icons/CustomCheck';
 import { AlertColor } from '@/components/common/ui/alert';
 import Button, { ButtonSize } from '@/components/common/ui/button';
 import { Input, InputType } from '@/components/common/ui/form';

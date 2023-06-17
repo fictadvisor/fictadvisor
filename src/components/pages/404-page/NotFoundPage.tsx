@@ -18,7 +18,7 @@ const NotFoundPage = () => (
         Упс! Сторінку не знайдено. Жабка з’їла твою сторінку
       </h5>
       <img
-        src="/assets/404-page/404_and_frog.svg"
+        src="/icons/404-page/404-frog.svg"
         className={styles['frog-image']}
         alt="Це 404"
       />

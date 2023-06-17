@@ -14,7 +14,7 @@ const LeftBlock = () => {
       <Link href="/">
         <img
           className={styles['login-logo']}
-          src="/assets/login-page/new_logo.png"
+          src="/images/login-page/new-logo.png"
           alt="fict advisor logo"
         />
       </Link>

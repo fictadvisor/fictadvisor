@@ -3,7 +3,7 @@ import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import CustomTelegramIcon from '@/components/common/custom-svg/CustomTelegramIcon';
+import CustomTelegram from '@/components/common/icons/CustomTelegram';
 import Button, {
   ButtonColor,
   ButtonSize,
@@ -35,7 +35,7 @@ const RightBlock = () => {
       <Link href="/">
         <img
           className={styles['mobile-login-logo']}
-          src="/assets/login-page/new_logo.png"
+          src="/images/login-page/new-logo.png"
           alt="fict advisor logo"
         />
       </Link>
@@ -43,7 +43,7 @@ const RightBlock = () => {
       <Button
         endIcon={
           <div className="icon">
-            <CustomTelegramIcon />
+            <CustomTelegram />
           </div>
         }
         text="Увійти за допомогою"
@@ -55,7 +55,7 @@ const RightBlock = () => {
       <Button
         startIcon={
           <div className="icon">
-            <CustomTelegramIcon />
+            <CustomTelegram />
           </div>
         }
         text="Увійти за допомогою Telegram"

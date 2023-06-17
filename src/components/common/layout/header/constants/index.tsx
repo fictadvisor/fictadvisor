@@ -1,25 +1,25 @@
-import { AcademicCapIcon } from '@/components/common/custom-svg/AcademicCap';
-import { BriefcaseIcon } from '@/components/common/custom-svg/Briefcase';
-import { ClipboardIcon } from '@/components/common/custom-svg/Clipboard';
-import { HomeIcon } from '@/components/common/custom-svg/Home';
-import { LockClosedIcon } from '@/components/common/custom-svg/LockClosed';
-import { UsersIcon } from '@/components/common/custom-svg/Users';
+import { AcademicCap } from '@/components/common/icons/AcademicCap';
+import { Briefcase } from '@/components/common/icons/Briefcase';
+import { Clipboard } from '@/components/common/icons/Clipboard';
+import { Home } from '@/components/common/icons/Home';
+import { LockClosed } from '@/components/common/icons/LockClosed';
+import { Users } from '@/components/common/icons/Users';
 
 export const accountButtons = [
   {
     link: '/account?tab=general',
     text: 'Загальне',
-    icon: <AcademicCapIcon />,
+    icon: <AcademicCap />,
   },
   {
     link: '/account?tab=security',
     text: 'Безпека',
-    icon: <LockClosedIcon />,
+    icon: <LockClosed />,
   },
   {
     link: '/account?tab=group',
     text: 'Група',
-    icon: <UsersIcon />,
+    icon: <Users />,
   },
 ];
 
@@ -27,21 +27,21 @@ export const mainLinks = [
   {
     link: '/',
     text: 'Головна',
-    icon: <HomeIcon />,
+    icon: <Home />,
   },
   {
     link: '/poll',
     text: 'Опитування',
-    icon: <ClipboardIcon />,
+    icon: <Clipboard />,
   },
   {
     link: '/teachers',
     text: 'Викладачі',
-    icon: <BriefcaseIcon />,
+    icon: <Briefcase />,
   },
   {
     link: '/subjects',
     text: 'Предмети',
-    icon: <AcademicCapIcon />,
+    icon: <AcademicCap />,
   },
 ];

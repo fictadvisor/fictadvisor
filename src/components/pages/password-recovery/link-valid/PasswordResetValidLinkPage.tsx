@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 
-import { CustomShield } from '@/components/common/custom-svg/CustomShield';
+import { CustomShield } from '@/components/common/icons/CustomShield';
 import PageLayout from '@/components/common/layout/page-layout';
 import Button, {
   ButtonColor,

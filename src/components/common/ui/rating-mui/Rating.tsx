@@ -14,12 +14,12 @@ const Rating: FC<RatingProps> = ({ rating, sx }) => {
       precision={0.1}
       emptyIcon={
         <Icon>
-          <img src="/assets/stars-empty.svg" />
+          <img src="/icons/stars-empty.svg" />
         </Icon>
       }
       icon={
         <Icon>
-          <img src="/assets/stars-full.svg" />
+          <img src="/icons/stars-full.svg" />
         </Icon>
       }
       readOnly

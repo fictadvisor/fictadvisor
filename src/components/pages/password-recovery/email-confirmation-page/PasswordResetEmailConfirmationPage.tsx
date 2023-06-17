@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/router';
 
-import { CustomEnvelopeOpen } from '@/components/common/custom-svg/CustomEnvelopeOpen';
+import { CustomEnvelopeOpen } from '@/components/common/icons/CustomEnvelopeOpen';
 import PageLayout from '@/components/common/layout/page-layout';
 import Alert, { AlertColor, AlertVariant } from '@/components/common/ui/alert';
 import Button, {

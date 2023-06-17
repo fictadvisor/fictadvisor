@@ -2,7 +2,7 @@ import React from 'react';
 import { FC } from 'react';
 import { useRouter } from 'next/router';
 
-import { TelegramForAccount } from '@/components/common/custom-svg/TelegramForAccount';
+import { TelegramForAccount } from '@/components/common/icons/TelegramForAccount';
 import Button, {
   ButtonSize,
   ButtonVariant,

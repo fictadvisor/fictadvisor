@@ -1,12 +1,12 @@
 import React from 'react';
 import NextLink from 'next/link';
 
-import { GitHubIcon } from '@/components/common/custom-svg/GitHub';
-import { InstagramIcon } from '@/components/common/custom-svg/Instagram';
-import { MailIcon } from '@/components/common/custom-svg/Mail';
-import { TelegramIcon } from '@/components/common/custom-svg/Telegram';
-import { TwitterIcon } from '@/components/common/custom-svg/Twitter';
-import { YouTubeIcon } from '@/components/common/custom-svg/YouTube';
+import { GitHub } from '@/components/common/icons/GitHub';
+import { Instagram } from '@/components/common/icons/Instagram';
+import { Mail } from '@/components/common/icons/Mail';
+import { Telegram } from '@/components/common/icons/Telegram';
+import { Twitter } from '@/components/common/icons/Twitter';
+import { YouTube } from '@/components/common/icons/YouTube';
 
 import styles from './Contact.module.scss';
 
@@ -31,21 +31,21 @@ const Contact: React.FC<ContactProps> = ({ name, displayName, link }) => {
   const icon = () => {
     switch (name) {
       case ContactType.YOUTUBE:
-        return <YouTubeIcon />;
+        return <YouTube />;
       case ContactType.TWITTER:
-        return <TwitterIcon />;
+        return <Twitter />;
       case ContactType.MAIL:
-        return <MailIcon />;
+        return <Mail />;
       case ContactType.GITHUB:
-        return <GitHubIcon />;
+        return <GitHub />;
       case ContactType.INSTAGRAM:
-        return <InstagramIcon />;
+        return <Instagram />;
       case ContactType.DISCORD:
-        return <TelegramIcon />;
+        return <Telegram />;
       case ContactType.FACEBOOK:
-        return <TelegramIcon />;
+        return <Telegram />;
       case ContactType.TELEGRAM:
-        return <TelegramIcon />;
+        return <Telegram />;
     }
   };
   return (

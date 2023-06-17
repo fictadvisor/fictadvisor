@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box } from '@mui/material';
 
-import { CustomCheck } from '@/components/common/custom-svg/CustomCheck';
+import { CustomCheck } from '@/components/common/icons/CustomCheck';
 import Tag from '@/components/common/ui/tag-mui';
 
 import * as styles from './TagTestPage.styles';

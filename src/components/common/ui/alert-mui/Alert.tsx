@@ -8,7 +8,7 @@ import {
 import { Alert as MUIAlert, AlertColor, Typography } from '@mui/material';
 import { SxProps, Theme } from '@mui/material/styles';
 
-import { AlertXMark } from '@/components/common/custom-svg/AlertXMark';
+import { AlertXMark } from '@/components/common/icons/AlertXMark';
 import * as styles from '@/components/common/ui/alert-mui/Alert.styles';
 
 export type AlertType = 'info' | 'warning' | 'error' | 'success';

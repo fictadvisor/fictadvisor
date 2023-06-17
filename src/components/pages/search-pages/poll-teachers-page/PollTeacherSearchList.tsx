@@ -1,6 +1,6 @@
 import React, { FC, useEffect } from 'react';
 
-import { PollTeacherCard } from '@/components/common/composite/cards/poll-teacher-card';
+import { PollTeacherCard } from '@/components/common/ui/cards/poll-teacher-card';
 import useToast from '@/hooks/use-toast';
 import { PollTeachersDTO } from '@/lib/api/poll/dto/PollTeachersDTO';
 

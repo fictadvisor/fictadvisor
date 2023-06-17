@@ -3,7 +3,7 @@ import { AppBar, Box, Link } from '@mui/material';
 import Image from 'next/image';
 import NextLink from 'next/link';
 
-import { BurgerMenu } from '@/components/common/custom-svg/BurgerMenu';
+import { BurgerMenu } from '@/components/common/icons/BurgerMenu';
 import IconButton from '@/components/common/ui/icon-button-mui';
 import CloseButton from '@/components/common/ui/icon-button-mui/variants/CloseButton';
 
@@ -24,7 +24,7 @@ const MobileHeader: FC<MobileHeaderProps> = ({ isLoggedIn, user }) => {
   return (
     <AppBar sx={styles.headerContainer(isOpened)}>
       <Link href="/" component={NextLink} sx={styles.headerLogo}>
-        <Image src="/assets/logo.png" alt="logo" width={197} height={20} />
+        <Image src="/images/logo.png" alt="logo" width={197} height={20} />
       </Link>
       {isOpened ? (
         <Box sx={styles.iconButton}>

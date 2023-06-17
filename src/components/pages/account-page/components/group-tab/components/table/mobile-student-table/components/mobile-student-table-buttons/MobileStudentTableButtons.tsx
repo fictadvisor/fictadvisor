@@ -6,8 +6,8 @@ import {
   EllipsisVerticalIcon,
   TrashIcon,
 } from '@heroicons/react/24/outline';
+import { Popup } from 'src/components/common/ui/popup';
 
-import { Popup } from '@/components/common/composite/popup';
 import { AlertColor } from '@/components/common/ui/alert';
 import Button, {
   ButtonColor,

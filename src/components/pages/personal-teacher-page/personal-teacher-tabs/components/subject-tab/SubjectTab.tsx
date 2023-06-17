@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Box } from '@mui/material';
 import Link from 'next/link';
 
-import { SubjectCard } from '@/components/common/composite/cards/subject-card';
+import { SubjectCard } from '@/components/common/ui/cards/subject-card';
 import { GetTeacherSubjectsDTO } from '@/lib/api/teacher/dto/GetTeacherSubjectsDTO';
 
 import * as styles from './SubjectTab.styles';

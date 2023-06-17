@@ -33,7 +33,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
         <title>{metaTitle}</title>
         <meta property="og:title" content={metaTitle} />
         <meta property="og:site_name" content={config.service} />
-        <meta property="og:image" content="/assets/preview.jpg" />
+        <meta property="og:image" content="/images/preview.jpg" />
         <meta property="og:type" content="website" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta

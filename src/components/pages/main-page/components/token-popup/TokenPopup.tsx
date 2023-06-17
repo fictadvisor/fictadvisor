@@ -1,8 +1,8 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
+import { Popup } from 'src/components/common/ui/popup';
 
-import { Popup } from '@/components/common/composite/popup';
 import { AlertColor } from '@/components/common/ui/alert';
 import Button, {
   ButtonColor,

@@ -47,14 +47,12 @@ export const footerLogoContainer: SxProps<Theme> = {
 export const footerLogo: SxProps<Theme> = {
   display: 'flex',
   alignItems: 'center',
-  width: '197px',
+  width: 'fit-content',
   height: {
     desktop: '28px',
     mobile: '22px',
   },
-  '& img': {
-    height: '20px',
-  },
+  zIndex: 1,
   marginTop: {
     desktop: '0',
     mobile: '10px',

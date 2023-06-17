@@ -1,11 +1,11 @@
 import React, { FC } from 'react';
 import mergeClassNames from 'merge-class-names';
 
-import { LargeProgressCircle } from '../../custom-svg/progress/LargeProgressCircle';
-import { LargestProgressCircle } from '../../custom-svg/progress/LargestProgressCircle';
-import { MediumProgressCircle } from '../../custom-svg/progress/MediumProgressCircle';
-import { SmallestProgressCircle } from '../../custom-svg/progress/SmallestProgressCircle';
-import { SmallProgressCircle } from '../../custom-svg/progress/SmallProgressCircle';
+import { LargeProgressCircle } from '@/components/common/icons/progress/LargeProgressCircle';
+import { LargestProgressCircle } from '@/components/common/icons/progress/LargestProgressCircle';
+import { MediumProgressCircle } from '@/components/common/icons/progress/MediumProgressCircle';
+import { SmallestProgressCircle } from '@/components/common/icons/progress/SmallestProgressCircle';
+import { SmallProgressCircle } from '@/components/common/icons/progress/SmallProgressCircle';
 
 import styles from './Loader.module.scss';
 

@@ -1,7 +1,7 @@
 import React from 'react';
 
-import SortAscending from '@/components/common/custom-svg/SortAscending';
-import SortDescending from '@/components/common/custom-svg/SortDescending';
+import SortAscending from '@/components/common/icons/SortAscending';
+import SortDescending from '@/components/common/icons/SortDescending';
 import IconButton, {
   VariantIconButtonProps,
 } from '@/components/common/ui/icon-button-mui/IconButton';

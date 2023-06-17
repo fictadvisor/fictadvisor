@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { TeacherCard } from '@/components/common/composite/cards/teacher-card';
+import { TeacherCard } from '@/components/common/ui/cards/teacher-card';
 import { GetTeachersBySubjectDTO } from '@/lib/api/subject/dto/GetTeachersBySubjectDTO';
 import { GetTeachersDTO } from '@/lib/api/teacher/dto/GetTeacherDTO';
 

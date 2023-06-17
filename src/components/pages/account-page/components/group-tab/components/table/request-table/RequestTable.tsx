@@ -2,7 +2,7 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 
-import { CustomCheck } from '@/components/common/custom-svg/CustomCheck';
+import { CustomCheck } from '@/components/common/icons/CustomCheck';
 import { AlertColor } from '@/components/common/ui/alert';
 import AlertButton, {
   AlertButtonVariant,

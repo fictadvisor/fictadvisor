@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box } from '@mui/material';
 
-import { CustomCheck } from '@/components/common/custom-svg/CustomCheck';
+import { CustomCheck } from '@/components/common/icons/CustomCheck';
 import AlertButton from '@/components/common/ui/alert-button-mui';
 
 import * as styles from './AlertButtonTestPage.styles';

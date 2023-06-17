@@ -2,7 +2,7 @@ import React from 'react';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/router';
 
-import { CustomClock } from '@/components/common/custom-svg/CustomClock';
+import { CustomClock } from '@/components/common/icons/CustomClock';
 import PageLayout from '@/components/common/layout/page-layout';
 import Button, {
   ButtonColor,

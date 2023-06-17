@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box } from '@mui/material';
 
-import { CaptainIcon } from '@/components/common/custom-svg/CaptainIcon';
+import { Captain } from '@/components/common/icons/Captain';
 import Tab from '@/components/common/ui/tab-mui/tab';
 import TabContext from '@/components/common/ui/tab-mui/tab-context';
 import TabList from '@/components/common/ui/tab-mui/tab-list';
@@ -67,28 +67,28 @@ const TabsPage = () => {
             <TabList onChange={handleChange} aria-label="lab API tabs example">
               <Tab
                 sx={styles.normalButton}
-                icon={<CaptainIcon />}
+                icon={<Captain />}
                 label="Tab"
                 value="1"
               />
               <Tab
                 sx={styles.normalButton}
                 label="Tab"
-                icon={<CaptainIcon />}
+                icon={<Captain />}
                 value="2"
                 disabled={true}
               />
               <Tab
                 sx={styles.normalButton}
                 label="Tab"
-                icon={<CaptainIcon />}
+                icon={<Captain />}
                 textPosition="left"
                 value="3"
               />
               <Tab
                 sx={styles.normalButton}
                 label="Tab"
-                icon={<CaptainIcon />}
+                icon={<Captain />}
                 textPosition="left"
                 value="4"
                 disabled={true}
@@ -96,27 +96,27 @@ const TabsPage = () => {
               <Tab
                 sx={styles.smallButton}
                 label="Tab"
-                icon={<CaptainIcon />}
+                icon={<Captain />}
                 value="5"
               />
               <Tab
                 sx={styles.smallButton}
                 label="Tab"
-                icon={<CaptainIcon />}
+                icon={<Captain />}
                 value="6"
                 disabled={true}
               />
               <Tab
                 sx={styles.smallButton}
                 label="Tab"
-                icon={<CaptainIcon />}
+                icon={<Captain />}
                 textPosition="left"
                 value="7"
               />
               <Tab
                 sx={styles.smallButton}
                 label="Tab"
-                icon={<CaptainIcon />}
+                icon={<Captain />}
                 textPosition="left"
                 value="8"
                 disabled={true}
@@ -181,14 +181,14 @@ const TabsPage = () => {
             <TabList onChange={handleChange} aria-label="lab API tabs example">
               <Tab
                 sx={styles.normalButton}
-                icon={<CaptainIcon />}
+                icon={<Captain />}
                 label="Tab"
                 count={1}
                 value="1"
               />
               <Tab
                 sx={styles.normalButton}
-                icon={<CaptainIcon />}
+                icon={<Captain />}
                 label="Tab"
                 count={1}
                 value="2"
@@ -196,7 +196,7 @@ const TabsPage = () => {
               />
               <Tab
                 sx={styles.normalButton}
-                icon={<CaptainIcon />}
+                icon={<Captain />}
                 label="Tab"
                 count={1}
                 textPosition="left"
@@ -204,7 +204,7 @@ const TabsPage = () => {
               />
               <Tab
                 sx={styles.normalButton}
-                icon={<CaptainIcon />}
+                icon={<Captain />}
                 label="Tab"
                 count={1}
                 textPosition="left"
@@ -212,7 +212,7 @@ const TabsPage = () => {
                 disabled={true}
               />
               <Tab
-                icon={<CaptainIcon />}
+                icon={<Captain />}
                 sx={styles.smallButton}
                 label="Tab"
                 count={1}
@@ -222,7 +222,7 @@ const TabsPage = () => {
                 sx={styles.smallButton}
                 label="Tab"
                 count={1}
-                icon={<CaptainIcon />}
+                icon={<Captain />}
                 value="6"
                 disabled={true}
               />
@@ -230,7 +230,7 @@ const TabsPage = () => {
                 sx={styles.smallButton}
                 label="Tab"
                 count={1}
-                icon={<CaptainIcon />}
+                icon={<Captain />}
                 textPosition="left"
                 value="7"
               />
@@ -238,7 +238,7 @@ const TabsPage = () => {
                 sx={styles.smallButton}
                 label="Tab"
                 count={1}
-                icon={<CaptainIcon />}
+                icon={<Captain />}
                 textPosition="left"
                 value="8"
                 disabled={true}

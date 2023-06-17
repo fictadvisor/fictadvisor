@@ -1,6 +1,9 @@
 import { FC } from 'react';
 import { Box, Link, Typography, useMediaQuery } from '@mui/material';
+import Image from 'next/image';
 import NextLink from 'next/link';
+
+import theme from '@/styles/theme';
 
 import Button from '../../ui/button-mui';
 import IconButton from '../../ui/icon-button-mui/IconButton';
@@ -9,13 +12,19 @@ import { mainLinks, socialLinks, supportLinks } from './constants';
 import * as styles from './Footer.styles';
 
 const Footer: FC = () => {
-  const isMobile = useMediaQuery('(max-width:1024px)');
+  const isMobile = useMediaQuery(theme.breakpoints.down('desktop'));
 
   return (
     <Box sx={styles.footerContainer}>
       <Box sx={styles.footerLogoContainer}>
         <Link href="/" component={NextLink} sx={styles.footerLogo}>
-          <Box component="img" src="/assets/logo.png" alt="logo" />
+          <Image
+            src="/images/logo.png"
+            quality={100}
+            width={197}
+            height={20}
+            alt="logo"
+          />
         </Link>
         <Typography sx={styles.signature}>By Dev-відділ СР ФІОТ</Typography>
       </Box>
