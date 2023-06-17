@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateQuestionWithRolesDTO } from '../dtos/CreateQuestionWithRolesDTO';
 import { QuestionRepository } from '../../database/repositories/QuestionRepository';
-import { QuestionType, State, TeacherRole } from '@prisma/client';
+import { QuestionType, SemesterDate, State, TeacherRole } from '@prisma/client';
 import { UpdateQuestionWithRolesDTO } from '../dtos/UpdateQuestionWithRolesDTO';
 import { ResponseData } from '../datas/ResponseData';
 import { CreateQuestionRoleDTO } from '../dtos/CreateQuestionRoleDTO';
@@ -160,23 +160,21 @@ export class PollService {
       throw new NoPermissionException();
     }
 
-    let disciplines = await this.disciplineRepository.findMany({
-      where: {
-        group: {
-          students: {
-            some: {
-              userId,
-            },
-          },
-        },
-      },
-    });
+    const { isFinished, semesters } = await this.dateService.getAllPreviousSemesters();
 
-    const semester = await this.dateService.getCurrentSemester();
+    let disciplines = [];
+
+    for (const semester of semesters) {
+      const mandatoryDisciplines = await this.getSemesterMandatoryDisciplines(semester, userId);
+      const selectiveDisciplines = await this.getSemesterSelectiveDisciplines(semester, userId);
+      disciplines.push(...mandatoryDisciplines, ...selectiveDisciplines);
+    }
+
+    const hasSelectedInLastSemester = !!((await this.getSelectedInSemester(isFinished ? semesters[0] : semesters[1], userId)).length);
 
     disciplines = disciplines.filter((discipline) => {
       return this.dateService.isPreviousSemester(
-        semester,
+        { isFinished, ...semesters[0] },
         { semester: discipline.semester, year: discipline.year }
       );
     });
@@ -190,6 +188,63 @@ export class PollService {
       });
     }
 
-    return this.disciplineMapper.getDisciplineTeachers(disciplines);
+    return {
+      hasSelectedInLastSemester: hasSelectedInLastSemester,
+      teachers: this.disciplineMapper.getDisciplineTeachers(disciplines),
+    };
+  }
+
+  private async getSelectedInSemester (semester: SemesterDate, studentId: string) {
+    return this.disciplineRepository.findMany({
+      where: {
+        semester: semester.semester,
+        year: semester.year,
+        selectiveDisciplines: {
+          some: {
+            studentId,
+          },
+        },
+      },
+    });
+  }
+
+  private async getSemesterSelectiveDisciplines (semester: SemesterDate, studentId: string) {
+    const selected = await this.getSelectedInSemester(semester, studentId);
+
+    if (selected.length) {
+      return selected;
+    } else {
+      return this.disciplineRepository.findMany({
+        where: {
+          semester: semester.semester,
+          year: semester.year,
+          group: {
+            students: {
+              some: {
+                userId: studentId,
+              },
+            },
+          },
+          isSelective: true,
+        },
+      });
+    }
+  }
+
+  private async getSemesterMandatoryDisciplines (semester: SemesterDate, userId: string) {
+    return this.disciplineRepository.findMany({
+      where: {
+        semester: semester.semester,
+        year: semester.year,
+        group: {
+          students: {
+            some: {
+              userId,
+            },
+          },
+        },
+        isSelective: false,
+      },
+    });
   }
 }

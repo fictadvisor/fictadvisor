@@ -65,10 +65,7 @@ export class PollController {
   async getPollDisciplineTeachers (
     @Param('userId', UserByIdPipe) userId: string,
   ) {
-    const teachers = await this.pollService.getDisciplineTeachers(userId);
-    return {
-      teachers,
-    };
+    return this.pollService.getDisciplineTeachers(userId);
   }
 
   @Access('questions.delete')

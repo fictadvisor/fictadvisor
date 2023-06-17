@@ -50,6 +50,26 @@ export class DateService {
     };
   }
 
+  async getAllPreviousSemesters () {
+    const semesters = await this.prisma.semesterDate.findMany({
+      where: {
+        startDate: {
+          lte: new Date(),
+        },
+      },
+      orderBy: {
+        startDate: 'desc',
+      },
+    });
+
+    const isFinished = semesters[0].endDate < new Date();
+
+    return {
+      isFinished,
+      semesters,
+    };
+  }
+
   async getDateVar (name: string): Promise<Date> {
     const { date } = await this.prisma.dateVar.findFirst({
       where: {

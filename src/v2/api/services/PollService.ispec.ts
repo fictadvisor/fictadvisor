@@ -491,9 +491,9 @@ describe('PollService', () => {
 
   describe('getDisciplineTeachers', () => {
     it('should return disciplines of questions for which user haven\'t answered yet', async () => {
-      const disciplineTeachers = await pollService.getDisciplineTeachers(user.id);
-      expect(disciplineTeachers.length).toBe(1);
-      expect(disciplineTeachers[0].disciplineTeacherId === discipline3.disciplineTeachers[0].id);
+      const { hasSelectedInLastSemester, teachers } = await pollService.getDisciplineTeachers(user.id);
+      expect(teachers.length).toBe(1);
+      expect(teachers[0].disciplineTeacherId === discipline3.disciplineTeachers[0].id);
     }); 
 
     it('should return an error because user doesn\'t have permissions', async () => {
