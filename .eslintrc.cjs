@@ -37,7 +37,6 @@ module.exports = {
     'key-spacing': 'error',
     'keyword-spacing': 'error',
     'space-before-function-paren': 'error',
-    'linebreak-style': ['error', 'windows'],
     'new-parens': 'error',
     'quotes': ['error', 'single'],
     'space-before-blocks': 'error',
