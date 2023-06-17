@@ -22,7 +22,7 @@ export class DisciplineTeacherRepository {
   ) {}
 
   async findById (id: string) {
-    return this.prisma.disciplineTeacher.findUnique({
+    return this.prisma.disciplineTeacher.findFirst({
       where: {
         id,
       },
