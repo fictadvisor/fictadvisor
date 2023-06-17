@@ -49,7 +49,7 @@ export class RozParser implements Parser {
     private disciplineTeacherRoleRepository: DisciplineTeacherRoleRepository,
   ) {}
 
-  async parse (page = 1) {
+  async parse (page = 1, period={}) {
     const groups = (await axios.post('http://epi.kpi.ua/Schedules/ScheduleGroupSelection.aspx/GetGroups', {
       count: 10,
       prefixText: 'і',
@@ -59,11 +59,11 @@ export class RozParser implements Parser {
 
     for (const group of groups) {
       if (group.endsWith('ф')) continue;
-      await this.parseGroupSchedule(group);
+      await this.parseGroupSchedule(group, period);
     }
   }
 
-  async parseGroupSchedule (code) {
+  async parseGroupSchedule (code, period) {
     const groupHashId = await this.getGroupHashId(code);
     const url = `http://epi.kpi.ua/Schedules/ViewSchedule.aspx?g=${groupHashId}`;
 
@@ -72,8 +72,8 @@ export class RozParser implements Parser {
     await new Promise((res) => setTimeout(() => (res('')), 3000));
     const dom = new JSDOM(response.data);
 
-    await this.parseWeek(0, code, dom);
-    await this.parseWeek(1, code, dom);
+    await this.parseWeek(0, code, dom, period);
+    await this.parseWeek(1, code, dom, period);
   }
 
   async getGroupHashId (group) {
@@ -167,11 +167,11 @@ export class RozParser implements Parser {
     return pairs;
   }
 
-  async parseWeek (weekNumber, code, dom) {
+  async parseWeek (weekNumber, code, dom, period) {
     const week = await this.parseHtmlWeek(weekNumber, code, dom);
     const group = await this.groupRepository.getOrCreate(code);
     for (const pair of week) {
-      await this.parsePair(pair, group.id);
+      await this.parsePair(pair, group.id, period);
     }
   }
 
@@ -193,7 +193,7 @@ export class RozParser implements Parser {
     return teacher;
   }
 
-  async parsePair (pair, groupId) {
+  async parsePair (pair, groupId, period) {
     const subject = await this.subjectRepository.getOrCreate(pair.name ?? '');
     const [startHours, startMinutes] = pair.time
       .split(':')
@@ -214,8 +214,8 @@ export class RozParser implements Parser {
     let discipline = await this.disciplineRepository.getOrCreate({
       subjectId: subject.id,
       groupId,
-      year: 2022,
-      semester: 1,
+      year: period.year,
+      semester: period.semester,
     });
 
     if (!discipline.disciplineTypes.some((type) => type.name === name)) {

@@ -5,6 +5,7 @@ import { PrismaModule } from '../../modules/PrismaModule';
 import { Period } from '@prisma/client';
 import { EventRepository } from '../../database/repositories/EventRepository';
 import { DateService } from '../../utils/date/DateService';
+import { ParserModule } from '../../utils/parser/ParserModule';
 describe('ScheduleService', () => {
   let scheduleService: ScheduleService;
   let eventRepository: EventRepository;
@@ -16,6 +17,7 @@ describe('ScheduleService', () => {
       imports: [
         DateModule,
         PrismaModule,
+        ParserModule,
       ],
     }).compile();
 

@@ -3,6 +3,8 @@ import { DateService } from '../../utils/date/DateService';
 import { EventRepository } from '../../database/repositories/EventRepository';
 import { DbEvent } from '../../database/entities/DbEvent';
 import { Period, DisciplineTypeEnum } from '@prisma/client';
+import { RozParser } from '../../utils/parser/RozParser';
+import { ScheduleParser } from '../../utils/parser/ScheduleParser';
 
 
 @Injectable()
@@ -11,10 +13,19 @@ export class ScheduleService {
   constructor (
     private dateService: DateService,
     private eventRepository: EventRepository,
+    private rozParser: RozParser,
+    private scheduleParser: ScheduleParser,
   ) {}
 
-  async parse (parserType, page) {
-    // TODO: create method that applies page parser by parserType (see rozParser, scheduleParser)
+  async parse (parserType, page, period) {
+    switch (parserType) {
+    case 'rozkpi':
+      await this.rozParser.parse(page, period);
+      break;
+    case 'schedule':
+      await this.scheduleParser.parse(period);
+      break;
+    }
   }
 
   async getSchedule (group, fortnight, callback) {

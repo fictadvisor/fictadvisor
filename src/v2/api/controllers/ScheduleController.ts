@@ -17,6 +17,7 @@ import { JwtGuard } from '../../security/JwtGuard';
 import { GroupBySemesterLessonGuard } from '../../security/group-guard/GroupBySemesterLessonGuard';
 import { GroupByTemporaryLessonGuard } from '../../security/group-guard/GroupByTemporaryLessonGuard';
 import { ScheduleMapper } from '../../mappers/ScheduleMapper';
+import { Access } from '../../security/Access';
 
 @Controller({
   version: '2',
@@ -29,13 +30,19 @@ export class ScheduleController {
     private scheduleMapper: ScheduleMapper,
   ) {}
 
-
+  @Access('schedule.parse')
   @Post('/parse')
   async parse (
     @Query('parser') parser: string,
     @Query('page') page: string,
+    @Query('year', ParseIntPipe) year: number,
+    @Query('semester', ParseIntPipe) semester: number,
   ) {
-    return this.scheduleService.parse(parser, +page);
+    const period = {
+      year,
+      semester,
+    };
+    return this.scheduleService.parse(parser, +page, period);
   }
 
   @Get('/groups/:groupId/static')
