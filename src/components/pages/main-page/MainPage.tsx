@@ -90,9 +90,9 @@ const MainPage = () => {
                       <hr className={styles['button-divider']} />
                     </>
                   )}
-                  <Link href={'/poll'}>
+                  <Link href={'/teachers'}>
                     <Button
-                      text={'Пройти Опитування 2023'}
+                      text={'Результати Опитування 2023'}
                       disabled={false}
                       variant={ButtonVariant.OUTLINE}
                       size={ButtonSize.MEDIUM}
