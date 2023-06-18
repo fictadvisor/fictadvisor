@@ -66,7 +66,7 @@ export class TeacherService {
     const contacts = await this.contactRepository.getAllContacts(id);
 
     return {
-      teacher,
+      ...teacher,
       roles,
       contacts,
     };
