@@ -41,7 +41,10 @@ export interface RadarProps {
 
 const RadarChart: FC<RadarProps> = ({ marks, roles }) => {
   const labels = marks.map(mark => mark.name);
-  const data = getData(marks.map(mark => mark.mark));
+  const data = getData(
+    marks.map(mark => mark.mark),
+    marks.map(mark => mark.name),
+  );
   const options = getOptions();
   const isMobile = useMediaQuery(theme.breakpoints.down('desktopSemiMedium'));
 

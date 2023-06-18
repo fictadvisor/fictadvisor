@@ -26,6 +26,9 @@ const getOptions = () => {
       legend: {
         display: false,
       },
+      tooltip: {
+        displayColors: false,
+      },
     },
   };
 };

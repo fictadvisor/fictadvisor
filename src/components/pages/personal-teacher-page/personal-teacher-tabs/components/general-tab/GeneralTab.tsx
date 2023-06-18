@@ -27,7 +27,7 @@ interface GeneralTabProps {
 }
 
 const GeneralTab: FC<GeneralTabProps> = ({ marks, roles }) => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const isMobile = useMediaQuery(theme.breakpoints.down('desktopSemiMedium'));
   const isLargeDesktop = useMediaQuery(
     theme.breakpoints.up('desktopSemiLarge'),
