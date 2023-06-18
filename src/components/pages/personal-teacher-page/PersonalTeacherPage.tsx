@@ -48,7 +48,7 @@ const PersonalTeacherPage = () => {
     }
   }, [isError]);
 
-  const teacher = data?.info?.teacher;
+  const teacher = data?.info;
 
   return (
     <PageLayout description={'Сторінка викладача'}>

@@ -7,14 +7,12 @@ export enum TeacherRoles {
 }
 
 export interface GetTeacherDTO {
-  teacher: {
-    id: string;
-    firstName: string;
-    middleName: string;
-    lastName: string;
-    description: string;
-    avatar: string;
-  };
+  id: string;
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  description: string;
+  avatar: string;
   roles: TeacherRoles[];
   contacts: {
     link: string;
