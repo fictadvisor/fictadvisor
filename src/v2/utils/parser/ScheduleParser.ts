@@ -68,11 +68,12 @@ export class ScheduleParser implements Parser {
 
   async parseDay (period, { day, pairs }, groupId, weekNumber) {
     for (const pair of pairs) {
-      await this.parsePair(pair, groupId, period, weekNumber, DAY_NUMBER[day]);
+      const isSelective = pairs.some(({ name, time }) => pair.name !== name && pair.time === time);
+      await this.parsePair(pair, groupId, period, isSelective, weekNumber, DAY_NUMBER[day]);
     }
   }
 
-  async parsePair (pair, groupId, period, week, day) {
+  async parsePair (pair, groupId, period, isSelective, week, day) {
     const teacher = await this.getTeacher(pair.teacherName);
     const subject = await this.subjectRepository.getOrCreate(pair.name ?? '');
     const [startHours, startMinutes] = pair.time.split('.').map((s) => +s);
@@ -88,6 +89,7 @@ export class ScheduleParser implements Parser {
         subjectId: subject.id,
         groupId,
         year: period.year,
+        isSelective,
         semester: period.semester,
       });
 

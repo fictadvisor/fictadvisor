@@ -51,7 +51,7 @@ export class DisciplineRepository {
     });
   }
 
-  async getOrCreate (data: { subjectId: string, groupId: string, year: number, semester: number }) {
+  async getOrCreate (data: { subjectId: string, groupId: string, year: number, isSelective?: boolean, semester: number }) {
     let discipline = await this.find(data);
     if (!discipline) {
       discipline = await this.create(data);
