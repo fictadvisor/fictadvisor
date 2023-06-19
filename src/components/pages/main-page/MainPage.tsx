@@ -113,9 +113,9 @@ const MainPage = () => {
                       </Link>
                     </>
                   )}
-                  <Link href={'/poll'}>
+                  <Link href={'/teachers'}>
                     <Button
-                      text={'Опитування 2023'}
+                      text={'Результати Опитування 2023'}
                       disabled={false}
                       variant={ButtonVariant.OUTLINE}
                       size={ButtonSize.SMALL}
