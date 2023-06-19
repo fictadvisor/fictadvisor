@@ -8,12 +8,19 @@ import { UserByIdPipe } from '../pipes/UserByIdPipe';
 import { QuestionMapper } from '../../mappers/QuestionMapper';
 import { UpdateQuestionWithRolesDTO } from '../dtos/UpdateQuestionWithRolesDTO';
 import { CreateQuestionRoleDTO } from '../dtos/CreateQuestionRoleDTO';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiForbiddenResponse, ApiOkResponse, ApiParam } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiOkResponse,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 import { QuestionWithRolesResponse } from '../responses/QuestionWithRolesResponse';
 import { PollDisciplineTeachersResponse } from '../responses/PollDisciplineTeachersResponse';
 import { TeacherRole } from '@prisma/client';
 
-
+@ApiTags('Poll')
 @Controller({
   version: '2',
   path: '/poll',
@@ -52,7 +59,7 @@ export class PollController {
   @ApiBearerAuth()
   @Get('/teachers/:userId')
   @ApiOkResponse({
-    type: [PollDisciplineTeachersResponse],
+    type: PollDisciplineTeachersResponse,
   })
   @ApiBadRequestResponse({
     description: `InvalidEntityIdException:\n 
@@ -64,7 +71,7 @@ export class PollController {
   })
   async getPollDisciplineTeachers (
     @Param('userId', UserByIdPipe) userId: string,
-  ) {
+  ): Promise<PollDisciplineTeachersResponse> {
     return this.pollService.getDisciplineTeachers(userId);
   }
 
