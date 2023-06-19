@@ -89,9 +89,12 @@ export class ScheduleParser implements Parser {
         subjectId: subject.id,
         groupId,
         year: period.year,
-        isSelective,
         semester: period.semester,
       });
+
+    if (isSelective && !discipline.isSelective) {
+      discipline = await this.disciplineRepository.updateById(discipline.id, { isSelective });
+    }
 
     if (!discipline.disciplineTypes.some((type) => type.name === name)) {
       discipline = await this.disciplineRepository.updateById(discipline.id, {
