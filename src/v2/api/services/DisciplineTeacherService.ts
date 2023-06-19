@@ -3,7 +3,7 @@ import { DisciplineTeacherRepository } from '../../database/repositories/Discipl
 import { PollService } from './PollService';
 import { CreateAnswerDTO, CreateAnswersDTO } from '../dtos/CreateAnswersDTO';
 import { QuestionAnswerRepository } from '../../database/repositories/QuestionAnswerRepository';
-import { QuestionType, State, TeacherRole } from '@prisma/client';
+import { Discipline, QuestionType, State, TeacherRole } from '@prisma/client';
 import { AlreadyAnsweredException } from '../../utils/exceptions/AlreadyAnsweredException';
 import { NotEnoughAnswersException } from '../../utils/exceptions/NotEnoughAnswersException';
 import { ExcessiveAnswerException } from '../../utils/exceptions/ExcessiveAnswerException';
@@ -15,11 +15,13 @@ import { checkIfArrayIsUnique } from '../../utils/ArrayUtil';
 import { AnswerInDatabasePermissionException } from '../../utils/exceptions/AnswerInDatabasePermissionException';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
+import { StudentRepository } from '../../database/repositories/StudentRepository';
 import { TeacherTypeAdapter } from '../dtos/TeacherRoleAdapter';
 import { UserRepository } from '../../database/repositories/UserRepository';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
 import { QuestionMapper } from '../../mappers/QuestionMapper';
 import { DbQuestionWithRoles } from '../../database/entities/DbQuestionWithRoles';
+import { NotSelectedDisciplineException } from '../../utils/exceptions/NotSelectedDisciplineException';
 
 @Injectable()
 export class DisciplineTeacherService {
@@ -27,6 +29,7 @@ export class DisciplineTeacherService {
     private dateService: DateService,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
     private disciplineRepository: DisciplineRepository,
+    private studentRepository: StudentRepository,
     private pollService: PollService,
     private questionAnswerRepository: QuestionAnswerRepository,
     private telegramApi: TelegramAPI,
@@ -55,6 +58,8 @@ export class DisciplineTeacherService {
     }
 
     const { teacher, discipline } = await this.disciplineTeacherRepository.findById(disciplineTeacherId);
+
+    if (discipline.isSelective) await this.checkSelectiveness(userId, discipline);
 
     const previousSemester = await this.dateService.isPreviousSemesterToCurrent(discipline.semester, discipline.year);
     if (!previousSemester) {
@@ -289,5 +294,17 @@ export class DisciplineTeacherService {
       throw new InvalidEntityIdException('disciplineTeacher');
     }
     await this.disciplineTeacherRepository.deleteById(disciplineTeacher.id);
+  }
+
+  async checkSelectiveness (userId: string, { id, year, semester }: Discipline) {
+    const { selectiveDisciplines } = await this.studentRepository.findById(userId);
+
+    const relevantSelectiveDisciplines = selectiveDisciplines.filter((selective) => {
+      return selective.discipline.year === year && selective.discipline.semester === semester;
+    });
+
+    if (relevantSelectiveDisciplines.length && !relevantSelectiveDisciplines.some(({ disciplineId }) => disciplineId === id)) {
+      throw new NotSelectedDisciplineException();
+    }
   }
 }

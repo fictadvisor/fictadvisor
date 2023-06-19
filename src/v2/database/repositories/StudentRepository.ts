@@ -12,6 +12,11 @@ export class StudentRepository {
         role: true,
       },
     },
+    selectiveDisciplines: {
+      include: {
+        discipline: true,
+      },
+    },
     user: true,
   };
 
@@ -66,7 +71,7 @@ export class StudentRepository {
       include: this.include,
     });
   }
-  
+
   async deleteById (userId: string) {
     await this.delete({
       where: {
