@@ -10,7 +10,13 @@ import { TeacherByIdPipe } from '../pipes/TeacherByIdPipe';
 import { DisciplineByIdPipe } from '../pipes/DisciplineByIdPipe';
 import { UpdateDisciplineTeacherDTO } from '../dtos/UpdateDisciplineTeacherDTO';
 import { QuestionAnswersValidationPipe } from '../pipes/QuestionAnswersValidationPipe';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiForbiddenResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { DisciplineTeacherQuestionsResponse } from '../responses/DisciplineTeacherQuestionsResponse';
+import { QuestionAnswerResponse } from '../responses/QuestionAnswerResponse';
+import { DisciplineTeacherCreateResponse } from '../responses/DisciplineTeacherCreateResponse';
+import { CreateDisciplineTeacherDTO } from '../dtos/CreateDisciplineTeacherDTO';
 
+@ApiTags('DisciplineTeacher')
 @Controller({
   version: '2',
   path: '/disciplineTeachers',
@@ -20,6 +26,20 @@ export class DisciplineTeacherController {
     private disciplineTeacherService: DisciplineTeacherService,
   ) {}
 
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: DisciplineTeacherQuestionsResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `
+      InvalidEntityIdException: disciplineTeacher with such id is not found
+    `,
+  })
+  @ApiForbiddenResponse({
+    description: `
+      NoPermissionException: You do not have permission to perform this action
+    `,
+  })
   @Access('groups.$groupId.questions.get', GroupByDisciplineTeacherGuard)
   @Get('/:disciplineTeacherId/questions')
   getQuestions (
@@ -29,6 +49,22 @@ export class DisciplineTeacherController {
     return this.disciplineTeacherService.getQuestions(disciplineTeacherId, req.user.id);
   }
 
+  @ApiBearerAuth()
+  @ApiOkResponse()
+  @ApiForbiddenResponse({
+    description: `
+      NoPermissionException: You do not have permission to perform this action
+    `,
+  })
+  @ApiBadRequestResponse({
+    description: `
+      InvalidBodyException: Question id can not be empty\n
+      InvalidBodyException: Value can not be empty\n
+      ExcessiveAnswerException: There are excessive answers in the request\n
+      NotEnoughAnswersException: There are not enough answers\n
+      AlreadyAnsweredException: This question is already answered    
+    `,
+  })
   @Access('groups.$groupId.answers.send', GroupByDisciplineTeacherGuard)
   @Post('/:disciplineTeacherId/answers')
   sendAnswers (
@@ -39,6 +75,23 @@ export class DisciplineTeacherController {
     return this.disciplineTeacherService.sendAnswers(disciplineTeacherId, body, req.user.id);
   }
 
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: QuestionAnswerResponse,
+  })
+  @ApiForbiddenResponse({
+    description: `
+      NoPermissionException: You do not have permission to perform this action
+    `,
+  })
+  @ApiBadRequestResponse({
+    description: `
+      InvalidBodyException: Question id can not be empty\n
+      InvalidBodyException: Value can not be empty\n
+      InvalidBodyException: User id can not be empty\n
+      InvalidEntityIdException: disciplineTeacher with such id is not found
+    `,
+  })
   @UseGuards(TelegramGuard)
   @Post('/:disciplineTeacherId/responses')
   sendResponse (
@@ -48,6 +101,27 @@ export class DisciplineTeacherController {
     return this.disciplineTeacherService.sendResponse(disciplineTeacherId, body);
   }
 
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: DisciplineTeacherCreateResponse,
+  })
+  @ApiForbiddenResponse({
+    description: `
+      NoPermissionException: You do not have permission to perform this action
+    `,
+  })
+  @ApiBadRequestResponse({
+    description: `
+      InvalidEntityIdException: discipline with such id is not found\n
+      InvalidEntityIdException: teacher with such id is not found\n
+      InvalidBodyException: each value in roles must be one of the following values: LECTURER, LABORANT, PRACTICIAN\n
+      InvalidBodyException: roles must be an array\n
+      InvalidBodyException: roles should not be empty
+    `,
+  })
+  @ApiBody({
+    type: CreateDisciplineTeacherDTO,
+  })
   @Access('disciplineTeachers.create')
   @Post()
   create (
@@ -58,6 +132,23 @@ export class DisciplineTeacherController {
     return this.disciplineTeacherService.create(teacherId, disciplineId, body.roles);
   }
 
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: DisciplineTeacherCreateResponse,
+  })
+  @ApiForbiddenResponse({
+    description: `
+      NoPermissionException: You do not have permission to perform this action
+    `,
+  })
+  @ApiBadRequestResponse({
+    description: `
+      InvalidEntityIdException: disciplineTeacher with such id is not found\n
+      InvalidBodyException: each value in roles must be one of the following values: LECTURER, LABORANT, PRACTICIAN\n
+      InvalidBodyException: roles must be an array\n
+      InvalidBodyException: roles should not be empty
+    `,
+  })
   @Access('disciplineTeachers.update')
   @Patch('/:disciplineTeacherId/')
   updateById (
@@ -67,6 +158,24 @@ export class DisciplineTeacherController {
     return this.disciplineTeacherService.updateById(disciplineTeacherId, body.roles);
   }
 
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: DisciplineTeacherCreateResponse,
+  })
+  @ApiForbiddenResponse({
+    description: `
+      NoPermissionException: You do not have permission to perform this action
+    `,
+  })
+  @ApiBadRequestResponse({
+    description: `
+      InvalidEntityIdException: discipline with such id is not found\n
+      InvalidEntityIdException: teacher with such id is not found\n
+      InvalidBodyException: each value in roles must be one of the following values: LECTURER, LABORANT, PRACTICIAN\n
+      InvalidBodyException: roles must be an array\n
+      InvalidBodyException: roles should not be empty
+    `,
+  })
   @Access('disciplineTeachers.update')
   @Patch()
   updateByTeacherAndDiscipline (
@@ -77,6 +186,17 @@ export class DisciplineTeacherController {
     return this.disciplineTeacherService.updateByTeacherAndDiscipline(teacherId, disciplineId, body.roles);
   }
 
+  @ApiBearerAuth()
+  @ApiForbiddenResponse({
+    description: `
+      NoPermissionException: You do not have permission to perform this action
+    `,
+  })
+  @ApiBadRequestResponse({
+    description: `
+      InvalidEntityIdException: disciplineTeacher with such id is not found\n
+    `,
+  })
   @Access('disciplineTeachers.delete')
   @Delete('/:disciplineTeacherId/')
   deleteById (
@@ -85,6 +205,18 @@ export class DisciplineTeacherController {
     return this.disciplineTeacherService.deleteById(disciplineTeacherId);
   }
 
+  @ApiBearerAuth()
+  @ApiForbiddenResponse({
+    description: `
+      NoPermissionException: You do not have permission to perform this action
+    `,
+  })
+  @ApiBadRequestResponse({
+    description: `
+      InvalidEntityIdException: discipline with such id is not found\n
+      InvalidEntityIdException: teacher with such id is not found\n
+    `,
+  })
   @Access('disciplineTeachers.delete')
   @Delete()
   deleteByTeacherAndDiscipline (
