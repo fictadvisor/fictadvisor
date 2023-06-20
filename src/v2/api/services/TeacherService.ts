@@ -15,6 +15,7 @@ import { TeacherMapper } from '../../mappers/TeacherMapper';
 import { PollService } from './PollService';
 import { ResponseQueryDTO } from '../dtos/ResponseQueryDTO';
 import { SearchDTO } from '../../utils/QueryAllDTO';
+import { filterAsync } from '../../utils/ArrayUtil';
 
 @Injectable()
 export class TeacherService {
@@ -73,7 +74,7 @@ export class TeacherService {
   }
 
   async getUserDisciplineTeachers (teacherId: string, userId: string, notAnswered: boolean) {
-    return this.disciplineTeacherRepository.findMany({
+    const disciplineTeachers = await this.disciplineTeacherRepository.findMany({
       where: {
         teacherId,
         discipline: {
@@ -95,6 +96,10 @@ export class TeacherService {
           },
         }),
       },
+    });
+
+    return filterAsync(disciplineTeachers as any[], async ({ discipline }) => {
+      return !discipline.isSelective || await this.disciplineTeacherService.isSelectedByUser(userId, discipline);
     });
   }
 

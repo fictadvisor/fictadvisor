@@ -59,7 +59,9 @@ export class DisciplineTeacherService {
 
     const { teacher, discipline } = await this.disciplineTeacherRepository.findById(disciplineTeacherId);
 
-    if (discipline.isSelective) await this.checkSelectiveness(userId, discipline);
+    if (discipline.isSelective && !await this.isSelectedByUser(userId, discipline)) {
+      throw new NotSelectedDisciplineException();
+    }
 
     const previousSemester = await this.dateService.isPreviousSemesterToCurrent(discipline.semester, discipline.year);
     if (!previousSemester) {
@@ -296,15 +298,13 @@ export class DisciplineTeacherService {
     await this.disciplineTeacherRepository.deleteById(disciplineTeacher.id);
   }
 
-  async checkSelectiveness (userId: string, { id, year, semester }: Discipline) {
+  async isSelectedByUser (userId: string, { id, year, semester }: Discipline) {
     const { selectiveDisciplines } = await this.studentRepository.findById(userId);
 
     const relevantSelectiveDisciplines = selectiveDisciplines.filter((selective) => {
       return selective.discipline.year === year && selective.discipline.semester === semester;
     });
 
-    if (relevantSelectiveDisciplines.length && !relevantSelectiveDisciplines.some(({ disciplineId }) => disciplineId === id)) {
-      throw new NotSelectedDisciplineException();
-    }
+    return !relevantSelectiveDisciplines.length || relevantSelectiveDisciplines.some(({ disciplineId }) => disciplineId === id);
   }
 }

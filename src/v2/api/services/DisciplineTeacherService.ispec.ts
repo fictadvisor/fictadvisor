@@ -7,7 +7,7 @@ import { PollService } from './PollService';
 import { TelegramAPI } from '../../telegram/TelegramAPI';
 import { MapperModule } from '../../modules/MapperModule';
 import { TelegramConfigService } from '../../config/TelegramConfigService';
-import { QuestionType, State, TeacherRole } from '@prisma/client';
+import { Discipline, QuestionType, State, TeacherRole } from '@prisma/client';
 import { ExcessiveAnswerException } from '../../utils/exceptions/ExcessiveAnswerException';
 import { NotEnoughAnswersException } from '../../utils/exceptions/NotEnoughAnswersException';
 import { AlreadyAnsweredException } from '../../utils/exceptions/AlreadyAnsweredException';
@@ -85,6 +85,14 @@ describe('DisciplineTeacherService', () => {
           id: '29e2df3b-f362-411f-a725-8af30330f728',
           email: 'govno6@gmail.com',
         },
+        {
+          id: '6c436e5f-a53d-4f87-8cb6-5df167763088',
+          email: 'govno7@gmail.com',
+        },
+        {
+          id: '4bd48200-14dd-453e-8ddc-78e395dcd2f7',
+          email: 'govno8@gmail.com',
+        },
       ],
     });
 
@@ -120,6 +128,53 @@ describe('DisciplineTeacherService', () => {
         semester: 2,
         year: 3,
       },
+    });
+
+    await prismaService.discipline.createMany({
+      data: [
+        {
+          id: '2b3068c2-7360-490e-a806-26fbce371f60',
+          subjectId: 'de8c98a4-a20f-4848-b852-33f7ea449c59',
+          groupId: 'aafdce81-7f29-4c38-ae94-44445a678ec0',
+          semester: 1,
+          year: 2022,
+          isSelective: true,
+        }, {
+          id: '3f4faa25-b4bd-4587-900e-5d38929a32a6',
+          subjectId: 'de8c98a4-a20f-4848-b852-33f7ea449c59',
+          groupId: 'aafdce81-7f29-4c38-ae94-44445a678ec0',
+          semester: 2,
+          year: 2022,
+          isSelective: true,
+        },
+      ],
+    });
+
+    await prismaService.student.createMany({
+      data: [
+        {
+          userId: '6c436e5f-a53d-4f87-8cb6-5df167763088',
+          groupId: 'aafdce81-7f29-4c38-ae94-44445a678ec0',
+        }, {
+          userId: '4bd48200-14dd-453e-8ddc-78e395dcd2f7',
+          groupId: 'aafdce81-7f29-4c38-ae94-44445a678ec0',
+        },
+      ],
+    });
+
+    await prismaService.selectiveDiscipline.createMany({
+      data: [
+        {
+          studentId: '6c436e5f-a53d-4f87-8cb6-5df167763088',
+          disciplineId: '2b3068c2-7360-490e-a806-26fbce371f60',
+        }, {
+          studentId: '4bd48200-14dd-453e-8ddc-78e395dcd2f7',
+          disciplineId: '2b3068c2-7360-490e-a806-26fbce371f60',
+        }, {
+          studentId: '4bd48200-14dd-453e-8ddc-78e395dcd2f7',
+          disciplineId: '3f4faa25-b4bd-4587-900e-5d38929a32a6',
+        },
+      ],
     });
 
     await prismaService.teacher.create({
@@ -459,6 +514,26 @@ describe('DisciplineTeacherService', () => {
     });
   });
 
+  describe('isSelectedByUser', () => {
+    it('should return true if student has not selected any discipline', async () => {
+      const userId = '6c436e5f-a53d-4f87-8cb6-5df167763088';
+      const discipline = { id: '3f4faa25-b4bd-4587-900e-5d38929a32a6', year: 2022, semester: 2 } as Discipline;
+
+      const result = await disciplineTeacherService.isSelectedByUser(userId, discipline);
+
+      expect(result).toBe(true);
+    });
+
+    it('should return true if student has selected given discipline', async () => {
+      const userId = '4bd48200-14dd-453e-8ddc-78e395dcd2f7';
+      const discipline = { id: '3f4faa25-b4bd-4587-900e-5d38929a32a6', year: 2022, semester: 2 } as Discipline;
+
+      const result = await disciplineTeacherService.isSelectedByUser(userId, discipline);
+
+      expect(result).toBe(true);
+    });
+  });
+
   afterAll(async () => {
     await prismaService.dateVar.deleteMany();
     await prismaService.user.deleteMany();
@@ -472,5 +547,7 @@ describe('DisciplineTeacherService', () => {
     await prismaService.question.deleteMany();
     await prismaService.questionRole.deleteMany();
     await prismaService.questionAnswer.deleteMany();
+    await prismaService.student.deleteMany();
+    await prismaService.selectiveDiscipline.deleteMany();
   });
 });
