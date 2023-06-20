@@ -144,7 +144,7 @@ const RegisterForm: FC<RegisterFormProps> = ({ groups }) => {
               placeholder="вибери зі списку"
             />
             <div className={styles['checkbox-container']}>
-              <Checkbox label={'Я староста'} name={'isCaptain'} />
+              <Checkbox label="Я староста" name="isCaptain" />
             </div>
           </div>
           <Input
