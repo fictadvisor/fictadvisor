@@ -8,6 +8,7 @@ import { GroupRepository } from '../../database/repositories/GroupRepository';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
 import { SubjectRepository } from '../../database/repositories/SubjectRepository';
 import { TeacherRepository } from '../../database/repositories/TeacherRepository';
+import { ScheduleDayType, ScheduleGroupType, SchedulePairType, ScheduleType } from './ScheduleParserTypes';
 // import { ScheduleRepository } from '../../api/schedule/ScheduleRepository';
 
 export const DAY_NUMBER = {
@@ -45,36 +46,38 @@ export class ScheduleParser implements Parser {
   ) {}
 
   async parse (period={}) {
-    const groups = await axios.get('https://schedule.kpi.ua/api/schedule/groups');
-    const filtered = groups.data.data.filter((group) => group.faculty === 'ФІОТ').map((group) => ({ id: group.id, name: group.name }));
+    const groups: ScheduleGroupType[] = (await axios.get('https://schedule.kpi.ua/api/schedule/groups')).data.data;
+    const filtered = groups.filter((group) => group.faculty === 'ФІОТ').map((group) => ({ id: group.id, name: group.name }));
 
     for (const group of filtered) {
-      await this.parseGroupSchedule(group, period);
+      await this.parseGroupSchedule(group as ScheduleGroupType, period);
     }
   }
 
-  async parseGroupSchedule (group, period) {
-    const schedule = (await axios.get('https://schedule.kpi.ua/api/schedule/lessons?groupId=' + group.id)).data.data;
+  async parseGroupSchedule (group: ScheduleGroupType, period: any) {
+    const schedule: ScheduleType = (await axios.get('https://schedule.kpi.ua/api/schedule/lessons?groupId=' + group.id)).data.data;
     const dbGroup = await this.groupRepository.getOrCreate(group.name);
+    if (dbGroup.id !== 'f3ec843c-913a-4cbd-b57b-6918ca6a0fc3') return;
     await this.parseWeek(period, schedule.scheduleFirstWeek, dbGroup.id, 0);
     await this.parseWeek(period, schedule.scheduleSecondWeek, dbGroup.id, 1);
   }
 
-  async parseWeek (period, week, groupId, weekNumber) {
+  async parseWeek (period: any, week: ScheduleDayType[], groupId: string, weekNumber: number) {
     for (const day of week) {
       await this.parseDay(period, day, groupId, weekNumber);
     }
   }
 
-  async parseDay (period, { day, pairs }, groupId, weekNumber) {
+  async parseDay (period: any, { day, pairs }: ScheduleDayType, groupId: string, weekNumber: number) {
     for (const pair of pairs) {
       const isSelective = pairs.some(({ name, time }) => pair.name !== name && pair.time === time);
       await this.parsePair(pair, groupId, period, isSelective, weekNumber, DAY_NUMBER[day]);
     }
   }
 
-  async parsePair (pair, groupId, period, isSelective, week, day) {
-    const teacher = await this.getTeacher(pair.teacherName);
+  async parsePair (pair: SchedulePairType, groupId: string, period: any, isSelective: boolean, week, day) {
+    const teacher = pair.teacherName ? await this.getTeacher(pair.teacherName) : null;
+    console.log(teacher);
     const subject = await this.subjectRepository.getOrCreate(pair.name ?? '');
     const [startHours, startMinutes] = pair.time.split('.').map((s) => +s);
     const endHours = startHours + 1;
@@ -108,17 +111,18 @@ export class ScheduleParser implements Parser {
 
     const disciplineType = discipline.disciplineTypes.find((type) => type.name === name);
 
-    const disciplineTeacher =
-      await this.disciplineTeacherRepository.getOrCreate({
+    if (teacher) {
+      const disciplineTeacher = await this.disciplineTeacherRepository.getOrCreate({
         teacherId: teacher.id,
         disciplineId: discipline.id,
       });
 
-    await this.disciplineTeacherRoleRepository.getOrCreate({
-      role,
-      disciplineTeacherId: disciplineTeacher.id,
-      disciplineTypeId: disciplineType.id,
-    });
+      await this.disciplineTeacherRoleRepository.getOrCreate({
+        role,
+        disciplineTeacherId: disciplineTeacher.id,
+        disciplineTypeId: disciplineType.id,
+      });
+    }
 
     // await this.scheduleRepository.getOrCreateSemesterLesson({
     //   disciplineTypeId: disciplineType.id,
@@ -132,11 +136,11 @@ export class ScheduleParser implements Parser {
   }
 
   async getTeacher (teacherName: string) {
-    let [lastName = '', firstName = '', middleName = ''] = teacherName.split(' ');
+    let [lastName, firstName, middleName] = teacherName.split(' ');
 
-    lastName = lastName.trim().replace('.', '') ?? '';
-    firstName = firstName.trim().replace('.', '') ?? '';
-    middleName = middleName.trim().replace('.', '') ?? '';
+    lastName = lastName.trim().replace('.', '');
+    firstName = firstName.trim().replace('.', '');
+    middleName = middleName.trim().replace('.', '');
 
     if (firstName.length <= 1 || middleName.length <= 1) {
       const teachers = await this.teacherRepository.findMany({
