@@ -19,7 +19,7 @@
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "test:unit": "cross-env NODE_ENV=testing dotenv -e .testing.env -- jest -c jest.unit.config.json",
-    "test:integration": "cross-env NODE_ENV=testing dotenv -e .testing.env -- jest -c jest.integration.config.json",
+    "test:integration": "cross-env NODE_ENV=testing dotenv -e .testing.env -- jest -c jest.integration.config.json -i",
     "test:migrate": "dotenv -e .testing.env -- prisma migrate deploy",
     "test:seed": "dotenv -e .testing.env -- prisma db seed",
     "test:watch": "jest --watch",
