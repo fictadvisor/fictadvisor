@@ -15,12 +15,15 @@ import { WrongTimeException } from '../../utils/exceptions/WrongTimeException';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
 import { TeacherService } from './TeacherService';
 import { PrismaService } from '../../database/PrismaService';
+import { IsRemovedDisciplineTeacherException } from '../../utils/exceptions/IsRemovedDisciplineTeacherException';
 
 describe('DisciplineTeacherService', () => {
   let disciplineTeacherService: DisciplineTeacherService;
   let teacherService: TeacherService;
   let telegramApi: TelegramAPI;
   let prismaService: PrismaService;
+  let nonSelective20221: Omit<Discipline, 'description'>;
+  let selective20222: Omit<Discipline, 'description'>;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -45,8 +48,6 @@ describe('DisciplineTeacherService', () => {
     telegramApi = moduleRef.get(TelegramAPI);
     prismaService = moduleRef.get(PrismaService);
 
-    //region Seeding
-
     await prismaService.dateVar.createMany({
       data: [
         { name: 'START_POLL_2022_2', date: new Date('2023-07-03T00:00:00') },
@@ -57,107 +58,97 @@ describe('DisciplineTeacherService', () => {
     await prismaService.user.createMany({
       data: [
         {
-          id: '6642e06c-28b5-4af3-942b-c866e54b3d8b',
+          id: 'userWithNoSelectedId1',
           email: 'govno1@gmail.com',
           state: State.APPROVED,
         },
         {
-          id: 'd4c2f31f-482d-450e-841f-67d73eedb195',
-          email: 'govno2@gmail.com',
-          state: State.APPROVED,
-        },
-        {
-          id: '943d6588-8a2d-4a3c-91db-5e01a8aad5ef',
-          email: 'govno3@gmail.com',
-          state: State.APPROVED,
-        },
-        {
-          id: 'a8c6bcac-4e07-4081-84fe-ebb5235fe956',
-          email: 'govno4@gmail.com',
-          state: State.APPROVED,
-        },
-        {
-          id: 'b4de7b30-7aa2-4170-b8f4-5d314084df22',
+          id: 'userWithRemovedId1',
           email: 'govno5@gmail.com',
           state: State.APPROVED,
         },
         {
-          id: '29e2df3b-f362-411f-a725-8af30330f728',
+          id: 'notApprovedUserId',
           email: 'govno6@gmail.com',
         },
         {
-          id: '6c436e5f-a53d-4f87-8cb6-5df167763088',
+          id: 'userWithSelectiveIn20221Id',
           email: 'govno7@gmail.com',
+          state: State.APPROVED,
         },
         {
-          id: '4bd48200-14dd-453e-8ddc-78e395dcd2f7',
+          id: 'userWithSelectiveIn20221and20222Id',
           email: 'govno8@gmail.com',
+          state: State.APPROVED,
         },
       ],
     });
 
     await prismaService.group.create({
       data: {
-        id: 'aafdce81-7f29-4c38-ae94-44445a678ec0',
+        id: 'groupId1',
         code: 'RE-00',
       },
     });
 
     await prismaService.subject.create({
       data: {
-        id: 'de8c98a4-a20f-4848-b852-33f7ea449c59',
+        id: 'subjectId1',
         name: 'Subject - N: Some useless info',
       },
     });
 
-    await prismaService.discipline.create({
-      data: {
-        id: '5aa663a0-0ae7-11ee-be56-0242ac120002',
-        subjectId: 'de8c98a4-a20f-4848-b852-33f7ea449c59',
-        groupId: 'aafdce81-7f29-4c38-ae94-44445a678ec0',
-        semester: 2,
-        year: 2,
-      },
-    });
-
-    await prismaService.discipline.create({
-      data: {
-        id: 'b0c31731-fb1f-4f70-8723-2f80e81cad4c',
-        subjectId: 'de8c98a4-a20f-4848-b852-33f7ea449c59',
-        groupId: 'aafdce81-7f29-4c38-ae94-44445a678ec0',
-        semester: 2,
-        year: 3,
-      },
-    });
+    nonSelective20221 = {
+      id: 'nonSelective20221Id',
+      subjectId: 'subjectId1',
+      groupId: 'groupId1',
+      semester: 1,
+      year: 2022,
+      isSelective: false,
+    };
+    selective20222 = {
+      id: 'selective20222Id',
+      subjectId: 'subjectId1',
+      groupId: 'groupId1',
+      semester: 2,
+      year: 2022,
+      isSelective: true,
+    };
 
     await prismaService.discipline.createMany({
       data: [
-        {
-          id: '2b3068c2-7360-490e-a806-26fbce371f60',
-          subjectId: 'de8c98a4-a20f-4848-b852-33f7ea449c59',
-          groupId: 'aafdce81-7f29-4c38-ae94-44445a678ec0',
+        nonSelective20221, {
+          id: 'nonSelective20222Id',
+          subjectId: 'subjectId1',
+          groupId: 'groupId1',
+          semester: 2,
+          year: 2022,
+        }, {
+          id: 'selective20221Id',
+          subjectId: 'subjectId1',
+          groupId: 'groupId1',
           semester: 1,
           year: 2022,
           isSelective: true,
-        }, {
-          id: '3f4faa25-b4bd-4587-900e-5d38929a32a6',
-          subjectId: 'de8c98a4-a20f-4848-b852-33f7ea449c59',
-          groupId: 'aafdce81-7f29-4c38-ae94-44445a678ec0',
-          semester: 2,
-          year: 2022,
-          isSelective: true,
-        },
+        }, 
+        selective20222,
       ],
     });
 
     await prismaService.student.createMany({
       data: [
         {
-          userId: '6c436e5f-a53d-4f87-8cb6-5df167763088',
-          groupId: 'aafdce81-7f29-4c38-ae94-44445a678ec0',
+          userId: 'userWithSelectiveIn20221Id',
+          groupId: 'groupId1',
         }, {
-          userId: '4bd48200-14dd-453e-8ddc-78e395dcd2f7',
-          groupId: 'aafdce81-7f29-4c38-ae94-44445a678ec0',
+          userId: 'userWithSelectiveIn20221and20222Id',
+          groupId: 'groupId1',
+        }, {
+          userId: 'userWithNoSelectedId1',
+          groupId: 'groupId1',
+        }, {
+          userId: 'userWithRemovedId1',
+          groupId: 'groupId1',
         },
       ],
     });
@@ -165,78 +156,87 @@ describe('DisciplineTeacherService', () => {
     await prismaService.selectiveDiscipline.createMany({
       data: [
         {
-          studentId: '6c436e5f-a53d-4f87-8cb6-5df167763088',
-          disciplineId: '2b3068c2-7360-490e-a806-26fbce371f60',
+          studentId: 'userWithSelectiveIn20221Id',
+          disciplineId: 'selective20221Id',
         }, {
-          studentId: '4bd48200-14dd-453e-8ddc-78e395dcd2f7',
-          disciplineId: '2b3068c2-7360-490e-a806-26fbce371f60',
+          studentId: 'userWithSelectiveIn20221and20222Id',
+          disciplineId: 'selective20221Id',
         }, {
-          studentId: '4bd48200-14dd-453e-8ddc-78e395dcd2f7',
-          disciplineId: '3f4faa25-b4bd-4587-900e-5d38929a32a6',
+          studentId: 'userWithSelectiveIn20221and20222Id',
+          disciplineId: 'selective20222Id',
         },
       ],
     });
 
     await prismaService.teacher.create({
       data: {
-        id: '3b3812ca-0ae7-11ee-be56-0242ac120002a',
+        id: 'teacherId1',
         firstName: 'Fname',
         lastName: 'Lnamovna',
       },
     });
 
-    await prismaService.disciplineType.create({
-      data: {
+    await prismaService.disciplineType.createMany({
+      data: [{
         id: 'ec7866e2-a426-4e1b-b76c-1ce68fdb46a1',
-        disciplineId: '5aa663a0-0ae7-11ee-be56-0242ac120002',
+        disciplineId: 'nonSelective20221Id',
         name: 'LECTURE',
-      },
-    });
-
-    await prismaService.disciplineType.create({
-      data: {
+      }, {
         id: 'f3717ce9-cd52-4c40-889a-094a9b6a01de',
-        disciplineId: 'b0c31731-fb1f-4f70-8723-2f80e81cad4c',
+        disciplineId: 'nonSelective20222Id',
         name: 'LECTURE',
-      },
+      }],
+    });
+
+    await prismaService.disciplineTeacher.createMany({
+      data: [{
+        id: 'lecturerForNonSelective20221Id',
+        teacherId: 'teacherId1',
+        disciplineId: 'nonSelective20221Id',
+      }, {
+        id: 'lecturerForNonSelective20222Id',
+        teacherId: 'teacherId1',
+        disciplineId: 'nonSelective20222Id',
+      }, {
+        id: 'lecturerForSelective20221Id',
+        teacherId: 'teacherId1',
+        disciplineId: 'selective20221Id',
+      }],
     });
 
     await prismaService.disciplineTeacher.create({
       data: {
-        id: 'f79d1af4-0ae8-11ee-be56-0242ac120002',
-        teacherId: '3b3812ca-0ae7-11ee-be56-0242ac120002a',
-        disciplineId: '5aa663a0-0ae7-11ee-be56-0242ac120002',
+        id: 'removedId1',
+        teacherId: 'teacherId1',
+        disciplineId: 'nonSelective20222Id',
+        removedDisciplineTeachers: {
+          create: {
+            studentId: 'userWithRemovedId1',
+          },
+        },
       },
     });
 
-    await prismaService.disciplineTeacher.create({
-      data: {
-        id: '2330895d-3190-409e-90fa-1a7cd18adc62',
-        teacherId: '3b3812ca-0ae7-11ee-be56-0242ac120002a',
-        disciplineId: 'b0c31731-fb1f-4f70-8723-2f80e81cad4c',
-      },
-    });
-
-    await prismaService.disciplineTeacherRole.create({
-      data: {
-        disciplineTeacherId: 'f79d1af4-0ae8-11ee-be56-0242ac120002',
+    await prismaService.disciplineTeacherRole.createMany({
+      data: [{
+        disciplineTeacherId: 'lecturerForNonSelective20221Id',
         disciplineTypeId: 'ec7866e2-a426-4e1b-b76c-1ce68fdb46a1',
         role: 'LECTURER',
-      },
-    });
-
-    await prismaService.disciplineTeacherRole.create({
-      data: {
-        disciplineTeacherId: '2330895d-3190-409e-90fa-1a7cd18adc62',
+      }, {
+        disciplineTeacherId: 'removedId1',
+        disciplineTypeId: 'ec7866e2-a426-4e1b-b76c-1ce68fdb46a1',
+        role: 'LECTURER',
+      }, {
+        disciplineTeacherId: 'lecturerForNonSelective20222Id',
         disciplineTypeId: 'f3717ce9-cd52-4c40-889a-094a9b6a01de',
         role: 'LECTURER',
-      },
+      }],
     });
 
     await prismaService.question.createMany({
       data: [
         {
-          id: 'f2ad2167-6a5c-49f4-9ab1-43e6e787398b',
+          id: 'lecturerQuestionId1',
           category: 'Empty',
           name: 'Empty',
           order: 0,
@@ -245,7 +245,7 @@ describe('DisciplineTeacherService', () => {
           isRequired: true,
         },
         {
-          id: '20c8aa13-6ad6-434c-803a-71fa8a6afcea',
+          id: 'lecturerQuestionId2',
           category: 'Empty',
           name: 'Empty',
           order: 1,
@@ -254,7 +254,7 @@ describe('DisciplineTeacherService', () => {
           isRequired: true,
         },
         {
-          id: '72ba3309-7fed-4bb4-8eed-fdcac334fec5',
+          id: 'practicianQuestionId',
           category: 'Empty',
           name: 'Empty',
           order: 2,
@@ -263,7 +263,7 @@ describe('DisciplineTeacherService', () => {
           isRequired: false,
         },
         {
-          id: '36f5b9bb-b448-4c00-b0dc-2685183123ed',
+          id: 'lecturerQuestionId3',
           category: 'Empty',
           name: 'Empty',
           order: 3,
@@ -278,31 +278,30 @@ describe('DisciplineTeacherService', () => {
       data: [
         {
           role: TeacherRole.LECTURER,
-          questionId: 'f2ad2167-6a5c-49f4-9ab1-43e6e787398b',
+          questionId: 'lecturerQuestionId1',
           isShown: true,
           isRequired: true,
         },
         {
           role: TeacherRole.LECTURER,
-          questionId: '20c8aa13-6ad6-434c-803a-71fa8a6afcea',
+          questionId: 'lecturerQuestionId2',
           isShown: true,
           isRequired: true,
         },
         {
           role: TeacherRole.PRACTICIAN,
-          questionId: '72ba3309-7fed-4bb4-8eed-fdcac334fec5',
+          questionId: 'practicianQuestionId',
           isShown: true,
           isRequired: false,
         },
         {
           role: TeacherRole.LECTURER,
-          questionId: '36f5b9bb-b448-4c00-b0dc-2685183123ed',
+          questionId: 'lecturerQuestionId3',
           isShown: true,
           isRequired: false,
         },
       ],
     });
-    //endregion
   });
 
 
@@ -314,19 +313,38 @@ describe('DisciplineTeacherService', () => {
         .setSystemTime(new Date('2023-07-13T00:00:00'));
     });
 
+    it('should throw IsRemovedDisciplineTeacherException', async () => {
+      const answers: CreateAnswersDTO = {
+        answers: [
+          { questionId: 'lecturerQuestionId1', value: '0' },
+          { questionId: 'lecturerQuestionId2', value: '0' },
+          { questionId: 'lecturerQuestionId3', value: '0' },
+        ],
+      };
+
+      expect.assertions(1);
+      await disciplineTeacherService.sendAnswers(
+        'removedId1',
+        answers,
+        'userWithRemovedId1',
+      ).catch((ex) =>
+        expect(ex)
+          .toBeInstanceOf(IsRemovedDisciplineTeacherException));
+    });
+
     it('should return nothing', async () => {
       const answers: CreateAnswersDTO = {
         answers: [
-          { questionId: 'f2ad2167-6a5c-49f4-9ab1-43e6e787398b', value: '0' },
-          { questionId: '20c8aa13-6ad6-434c-803a-71fa8a6afcea', value: '0' },
-          { questionId: '36f5b9bb-b448-4c00-b0dc-2685183123ed', value: '0' },
+          { questionId: 'lecturerQuestionId1', value: '0' },
+          { questionId: 'lecturerQuestionId2', value: '0' },
+          { questionId: 'lecturerQuestionId3', value: '0' },
         ],
       };
 
       const result = await disciplineTeacherService.sendAnswers(
-        'f79d1af4-0ae8-11ee-be56-0242ac120002',
+        'lecturerForNonSelective20221Id',
         answers,
-        '6642e06c-28b5-4af3-942b-c866e54b3d8b',
+        'userWithNoSelectedId1',
       );
 
       expect(result).toBeUndefined();
@@ -335,18 +353,18 @@ describe('DisciplineTeacherService', () => {
     it('should throw ExcessiveAnswerException when method gets excessive answered questions', async () => {
       const answers: CreateAnswersDTO = {
         answers: [
-          { questionId: 'f2ad2167-6a5c-49f4-9ab1-43e6e787398b', value: '0' },
-          { questionId: '20c8aa13-6ad6-434c-803a-71fa8a6afcea', value: '0' },
-          { questionId: '72ba3309-7fed-4bb4-8eed-fdcac334fec5', value: '0' },
-          { questionId: '36f5b9bb-b448-4c00-b0dc-2685183123ed', value: '0' },
+          { questionId: 'lecturerQuestionId1', value: '0' },
+          { questionId: 'lecturerQuestionId2', value: '0' },
+          { questionId: 'practicianQuestionId', value: '0' },
+          { questionId: 'lecturerQuestionId3', value: '0' },
         ],
       };
 
       expect.assertions(1);
       await disciplineTeacherService.sendAnswers(
-        'f79d1af4-0ae8-11ee-be56-0242ac120002',
+        'lecturerForNonSelective20221Id',
         answers,
-        'd4c2f31f-482d-450e-841f-67d73eedb195',
+        'userWithNoSelectedId1',
       ).catch((ex) =>
         expect(ex)
           .toBeInstanceOf(ExcessiveAnswerException));
@@ -355,16 +373,16 @@ describe('DisciplineTeacherService', () => {
     it('should throw NotEnoughAnswersException when one of more required questions is missing', async () => {
       const answers: CreateAnswersDTO = {
         answers: [
-          { questionId: 'f2ad2167-6a5c-49f4-9ab1-43e6e787398b', value: '0' },
-          { questionId: '36f5b9bb-b448-4c00-b0dc-2685183123ed', value: '0' },
+          { questionId: 'lecturerQuestionId1', value: '0' },
+          { questionId: 'lecturerQuestionId3', value: '0' },
         ],
       };
 
       expect.assertions(1);
       await disciplineTeacherService.sendAnswers(
-        'f79d1af4-0ae8-11ee-be56-0242ac120002',
+        'lecturerForNonSelective20221Id',
         answers,
-        '72ba3309-7fed-4bb4-8eed-fdcac334fec5',
+        'userWithNoSelectedId1',
       ).catch((ex) =>
         expect(ex)
           .toBeInstanceOf(NotEnoughAnswersException));
@@ -373,18 +391,22 @@ describe('DisciplineTeacherService', () => {
     it('should throw AlreadyAnsweredException when answered question already in database', async () => {
       const answers: CreateAnswersDTO = {
         answers: [
-          { questionId: 'f2ad2167-6a5c-49f4-9ab1-43e6e787398b', value: '0' },
-          { questionId: '20c8aa13-6ad6-434c-803a-71fa8a6afcea', value: '0' },
-          { questionId: '36f5b9bb-b448-4c00-b0dc-2685183123ed', value: '0' },
+          { questionId: 'lecturerQuestionId1', value: '0' },
+          { questionId: 'lecturerQuestionId2', value: '0' },
+          { questionId: 'lecturerQuestionId3', value: '0' },
         ],
-
       };
 
       expect.assertions(1);
       await disciplineTeacherService.sendAnswers(
-        'f79d1af4-0ae8-11ee-be56-0242ac120002',
+        'lecturerForNonSelective20221Id',
         answers,
-        '6642e06c-28b5-4af3-942b-c866e54b3d8b',
+        'userWithNoSelectedId1',
+      );
+      await disciplineTeacherService.sendAnswers(
+        'lecturerForNonSelective20221Id',
+        answers,
+        'userWithNoSelectedId1',
       ).catch((ex) =>
         expect(ex)
           .toBeInstanceOf(AlreadyAnsweredException));
@@ -393,18 +415,18 @@ describe('DisciplineTeacherService', () => {
     it('should throw ExcessiveAnswerException when answered question duplicated', async () => {
       const answers: CreateAnswersDTO = {
         answers: [
-          { questionId: 'f2ad2167-6a5c-49f4-9ab1-43e6e787398b', value: '0' },
-          { questionId: '20c8aa13-6ad6-434c-803a-71fa8a6afcea', value: '0' },
-          { questionId: '36f5b9bb-b448-4c00-b0dc-2685183123ed', value: '0' },
-          { questionId: '36f5b9bb-b448-4c00-b0dc-2685183123ed', value: '0' },
+          { questionId: 'lecturerQuestionId1', value: '0' },
+          { questionId: 'lecturerQuestionId2', value: '0' },
+          { questionId: 'lecturerQuestionId3', value: '0' },
+          { questionId: 'lecturerQuestionId3', value: '0' },
         ],
       };
 
       expect.assertions(1);
       await disciplineTeacherService.sendAnswers(
-        'f79d1af4-0ae8-11ee-be56-0242ac120002',
+        'lecturerForNonSelective20221Id',
         answers,
-        'b4de7b30-7aa2-4170-b8f4-5d314084df22',
+        'userWithNoSelectedId1',
       ).catch((ex) =>
         expect(ex)
           .toBeInstanceOf(ExcessiveAnswerException));
@@ -416,17 +438,17 @@ describe('DisciplineTeacherService', () => {
         .setSystemTime(new Date('2023-08-11T00:00:00'));
       const answers: CreateAnswersDTO = {
         answers: [
-          { questionId: 'f2ad2167-6a5c-49f4-9ab1-43e6e787398b', value: '0' },
-          { questionId: '20c8aa13-6ad6-434c-803a-71fa8a6afcea', value: '0' },
-          { questionId: '36f5b9bb-b448-4c00-b0dc-2685183123ed', value: '0' },
+          { questionId: 'lecturerQuestionId1', value: '0' },
+          { questionId: 'lecturerQuestionId2', value: '0' },
+          { questionId: 'lecturerQuestionId3', value: '0' },
         ],
       };
 
       expect.assertions(1);
       await disciplineTeacherService.sendAnswers(
-        'f79d1af4-0ae8-11ee-be56-0242ac120002',
+        'lecturerForNonSelective20221Id',
         answers,
-        'a8c6bcac-4e07-4081-84fe-ebb5235fe956',
+        'userWithNoSelectedId1',
       ).catch((ex) =>
         expect(ex)
           .toBeInstanceOf(WrongTimeException));
@@ -439,17 +461,17 @@ describe('DisciplineTeacherService', () => {
     it('should throw NoPermissionException when user state isn`t approved', async () => {
       const answers: CreateAnswersDTO = {
         answers: [
-          { questionId: 'f2ad2167-6a5c-49f4-9ab1-43e6e787398b', value: '0' },
-          { questionId: '20c8aa13-6ad6-434c-803a-71fa8a6afcea', value: '0' },
-          { questionId: '36f5b9bb-b448-4c00-b0dc-2685183123ed', value: '0' },
+          { questionId: 'lecturerQuestionId1', value: '0' },
+          { questionId: 'lecturerQuestionId2', value: '0' },
+          { questionId: 'lecturerQuestionId3', value: '0' },
         ],
       };
 
       expect.assertions(1);
       await disciplineTeacherService.sendAnswers(
-        'f79d1af4-0ae8-11ee-be56-0242ac120002',
+        'lecturerForNonSelective20221Id',
         answers,
-        '29e2df3b-f362-411f-a725-8af30330f728',
+        'notApprovedUserId',
       ).catch((ex) =>
         expect(ex)
           .toBeInstanceOf(NoPermissionException));
@@ -458,23 +480,28 @@ describe('DisciplineTeacherService', () => {
     it('should throw WrongTimeException when discipline not from semester before (or not from this semester)', async () => {
       const answers: CreateAnswersDTO = {
         answers: [
-          { questionId: 'f2ad2167-6a5c-49f4-9ab1-43e6e787398b', value: '0' },
-          { questionId: '20c8aa13-6ad6-434c-803a-71fa8a6afcea', value: '0' },
-          { questionId: '36f5b9bb-b448-4c00-b0dc-2685183123ed', value: '0' },
+          { questionId: 'lecturerQuestionId1', value: '0' },
+          { questionId: 'lecturerQuestionId2', value: '0' },
+          { questionId: 'lecturerQuestionId3', value: '0' },
         ],
       };
 
       await disciplineTeacherService.sendAnswers(
-        '2330895d-3190-409e-90fa-1a7cd18adc62',
+        'lecturerForNonSelective20222Id',
         answers,
-        'a8c6bcac-4e07-4081-84fe-ebb5235fe956',
+        'userWithNoSelectedId1',
       ).catch((ex) =>
         expect(ex)
           .toBeInstanceOf(WrongTimeException));
     });
 
-    afterAll(async () => {
+    afterEach(async () => {
       await prismaService.questionAnswer.deleteMany({});
+    });
+
+    afterAll(async () => {
+      jest
+        .useRealTimers();
     });
   });
 
@@ -483,54 +510,82 @@ describe('DisciplineTeacherService', () => {
     beforeAll(async () => {
       qa = await prismaService.questionAnswer.create({
         data: {
-          disciplineTeacherId: 'f79d1af4-0ae8-11ee-be56-0242ac120002',
-          questionId: 'f2ad2167-6a5c-49f4-9ab1-43e6e787398b',
-          userId: '6642e06c-28b5-4af3-942b-c866e54b3d8b',
+          disciplineTeacherId: 'lecturerForNonSelective20221Id',
+          questionId: 'lecturerQuestionId1',
+          userId: 'userWithNoSelectedId1',
           value: '0',
         },
       });
+      jest
+        .useFakeTimers()
+        .setSystemTime(new Date('2023-07-13T00:00:00'));
     });
 
-    it('should return all discipline teachers and collocated QA when notAnswered set to false', async () => {
-      const dteachers: any[] = await teacherService.getUserDisciplineTeachers(
-        '3b3812ca-0ae7-11ee-be56-0242ac120002a',
-        '6642e06c-28b5-4af3-942b-c866e54b3d8b',
+    it('should return all discipline teachers with not selected any', async () => {
+      const dteachers = await teacherService.getUserDisciplineTeachers(
+        'teacherId1',
+        'userWithNoSelectedId1',
         false,
       );
-      const mapQA = dteachers.map((dt) => dt.questionAnswer);
-      expect(dteachers).toBeDefined();
-      expect(mapQA).toBeDefined(); //change to .toContain(qa); after DbDisciplineTeacher update
+      expect(dteachers.length).toBe(4);
     });
 
-    it('should return all discipline teachers without collocated QA when notAnswered set to false', async () => {
-      const dteachers: any[] = await teacherService.getUserDisciplineTeachers(
-        '3b3812ca-0ae7-11ee-be56-0242ac120002a',
-        '6642e06c-28b5-4af3-942b-c866e54b3d8b',
+    it('should return discipline teachers without already answered', async () => {
+      const dteachers = await teacherService.getUserDisciplineTeachers(
+        'teacherId1',
+        'userWithNoSelectedId1',
         true,
       );
-      const mapQA = dteachers.map((dt) => dt.questionAnswer);
-      expect(dteachers).toBeDefined();
-      expect(mapQA).not.toContain(qa);
+      expect(dteachers.length).toBe(3);
+    });
+
+    it('should return discipline teachers with selective', async () => {
+      const dteachers = await teacherService.getUserDisciplineTeachers(
+        'teacherId1',
+        'userWithSelectiveIn20221Id',
+        false,
+      );
+      expect(dteachers.length).toBe(4);
+    });
+
+    it('should return discipline teachers without removed', async () => {
+      const dteachers = await teacherService.getUserDisciplineTeachers(
+        'teacherId1',
+        'userWithRemovedId1',
+        true,
+      );
+      expect(dteachers.length).toBe(3);
+    });
+
+    afterAll(() => {
+      jest
+        .useRealTimers();
     });
   });
 
-  describe('isSelectedByUser', () => {
-    it('should return true if student has not selected any discipline', async () => {
-      const userId = '6c436e5f-a53d-4f87-8cb6-5df167763088';
-      const discipline = { id: '3f4faa25-b4bd-4587-900e-5d38929a32a6', year: 2022, semester: 2 } as Discipline;
+  describe('isNotSelectedByUser', () => {
+    it('should return false if student has not selected any discipline in year and semester of discipline', async () => {
+      const userId = 'userWithSelectiveIn20221Id';
 
-      const result = await disciplineTeacherService.isSelectedByUser(userId, discipline);
+      const result = await disciplineTeacherService.isNotSelectedByUser(userId, selective20222 as Discipline);
 
-      expect(result).toBe(true);
+      expect(result).toBeFalsy();
     });
 
-    it('should return true if student has selected given discipline', async () => {
-      const userId = '4bd48200-14dd-453e-8ddc-78e395dcd2f7';
-      const discipline = { id: '3f4faa25-b4bd-4587-900e-5d38929a32a6', year: 2022, semester: 2 } as Discipline;
+    it('should return false if student has selected given discipline', async () => {
+      const userId = 'userWithSelectiveIn20221and20222Id';
 
-      const result = await disciplineTeacherService.isSelectedByUser(userId, discipline);
+      const result = await disciplineTeacherService.isNotSelectedByUser(userId, selective20222 as Discipline);
 
-      expect(result).toBe(true);
+      expect(result).toBeFalsy();
+    });
+
+    it('should return false if discipline is not selective', async () => {
+      const userId = 'userWithSelectiveIn20221and20222Id';
+
+      const result = await disciplineTeacherService.isNotSelectedByUser(userId, nonSelective20221 as Discipline);
+
+      expect(result).toBeFalsy();
     });
   });
 

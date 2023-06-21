@@ -10,7 +10,14 @@ import { TeacherByIdPipe } from '../pipes/TeacherByIdPipe';
 import { DisciplineByIdPipe } from '../pipes/DisciplineByIdPipe';
 import { UpdateDisciplineTeacherDTO } from '../dtos/UpdateDisciplineTeacherDTO';
 import { QuestionAnswersValidationPipe } from '../pipes/QuestionAnswersValidationPipe';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiForbiddenResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiBody,
+  ApiForbiddenResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { DisciplineTeacherQuestionsResponse } from '../responses/DisciplineTeacherQuestionsResponse';
 import { QuestionAnswerResponse } from '../responses/QuestionAnswerResponse';
 import { DisciplineTeacherCreateResponse } from '../responses/DisciplineTeacherCreateResponse';
@@ -220,9 +227,30 @@ export class DisciplineTeacherController {
   @Access('disciplineTeachers.delete')
   @Delete()
   deleteByTeacherAndDiscipline (
-    @Query('teacherId', TeacherByIdPipe) teacherId : string,
-    @Query('disciplineId', DisciplineByIdPipe) disciplineId : string,
+    @Query('teacherId', TeacherByIdPipe) teacherId: string,
+    @Query('disciplineId', DisciplineByIdPipe) disciplineId: string,
   ) {
     return this.disciplineTeacherService.deleteByTeacherAndDiscipline(teacherId, disciplineId);
+  }
+
+  @ApiBearerAuth()
+  @ApiOkResponse()
+  @ApiForbiddenResponse({
+    description: `
+      NoPermissionException: You do not have permission to perform this action
+    `,
+  })
+  @ApiBadRequestResponse({
+    description: `
+      NotSelectedDisciplineException: Current discipline is not selected by this student
+    `,
+  })
+  @Access('groups.$groupId.disciplineTeachers.remove', GroupByDisciplineTeacherGuard)
+  @Post('/:disciplineTeacherId/removeFromPoll')
+  removeDisciplineTeacherFromPoll (
+    @Param('disciplineTeacherId', DisciplineTeacherByIdPipe) disciplineTeacherId: string,
+    @Request() req,
+  ) {
+    return this.disciplineTeacherService.removeFromPoll(disciplineTeacherId, req.user.id);
   }
 }

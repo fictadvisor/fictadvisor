@@ -11,9 +11,11 @@ export class DbDiscipline {
   subject: Subject;
   group: Group;
   disciplineTypes: DisciplineType[];
-  disciplineTeachers: {
-    id: string,
-    teacher: Teacher,
-    roles: DisciplineTeacherRole[],
-  }[];
+  disciplineTeachers: DbDiscipline_DisciplineTeacher[];
+}
+
+export class DbDiscipline_DisciplineTeacher {
+  id: string;
+  teacher: Teacher;
+  roles: DisciplineTeacherRole[];
 }

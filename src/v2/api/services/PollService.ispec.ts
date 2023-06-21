@@ -20,6 +20,7 @@ describe('PollService', () => {
   let teacherLecturer: Teacher;
   let teacherPractitian: Teacher;
   let teacherLaborant: Teacher;
+  let rejectedTeacher: Teacher;
   let subject: Subject;
   let discipline1: DbDiscipline;
   let discipline2: DbDiscipline;
@@ -96,6 +97,14 @@ describe('PollService', () => {
         lastName: 'teacherLaborantLastName',
       },
     });
+
+    rejectedTeacher = await prisma.teacher.create({
+      data: {
+        id: 'c2ff029f-3ae9-4cf8-a2d6-aa7a7eeac345',
+        firstName: 'rejectedTeacherFirstName',
+        lastName: 'rejectedTeacherLastName',
+      },
+    });
   
     subject = await prisma.subject.create({
       data: {
@@ -113,6 +122,7 @@ describe('PollService', () => {
               { id: 'd97af0f2-af7e-4eee-9d2d-952510ac2d14', teacherId: teacherLecturer.id },
               { id: '6653877a-f8c9-40a0-9acb-ef5139e863c3', teacherId: teacherPractitian.id },
               { id: '286c6dca-ca79-4468-96c3-380442fc4b72', teacherId: teacherLaborant.id },
+              { id: '286c6dca-ca79-4468-96c3-380442fc4b45', teacherId: rejectedTeacher.id },
             ],
           },
         },
@@ -178,6 +188,19 @@ describe('PollService', () => {
         },
       },
     }) as any as DbDiscipline;
+
+    await prisma.disciplineTeacher.update({
+      where: {
+        id: discipline1.disciplineTeachers[3].id,
+      },
+      data: {
+        removedDisciplineTeachers: {
+          create: {
+            studentId: user.id,
+          },
+        },
+      },
+    });
   
     questionMark1 = await prisma.question.create({
       data: {
@@ -537,6 +560,14 @@ describe('PollService', () => {
       await expect(
         pollService.getDisciplineTeachers(userPending.id)
       ).rejects.toThrow(NoPermissionException);
-    }); 
+    });
+
+    it('should not contain rejected discipline teacher', async () => {
+      const obj = await pollService.getDisciplineTeachers(user.id);
+
+      const result = obj.teachers.find((t) => t.disciplineTeacherId === discipline1.disciplineTeachers[3].id);
+
+      expect(result).not.toBeDefined();
+    });
   });
 });

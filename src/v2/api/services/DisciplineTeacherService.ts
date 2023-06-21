@@ -22,6 +22,7 @@ import { NoPermissionException } from '../../utils/exceptions/NoPermissionExcept
 import { QuestionMapper } from '../../mappers/QuestionMapper';
 import { DbQuestionWithRoles } from '../../database/entities/DbQuestionWithRoles';
 import { NotSelectedDisciplineException } from '../../utils/exceptions/NotSelectedDisciplineException';
+import { IsRemovedDisciplineTeacherException } from '../../utils/exceptions/IsRemovedDisciplineTeacherException';
 
 @Injectable()
 export class DisciplineTeacherService {
@@ -49,6 +50,7 @@ export class DisciplineTeacherService {
     await this.checkExcessiveQuestions(questions, answers);
     await this.checkRequiredQuestions(questions, answers);
     await this.checkAnsweredQuestions(disciplineTeacherId, answers, userId);
+    await this.checkIsRemoved(disciplineTeacherId, userId);
     await this.checkIsUnique(answers);
     await this.checkSendingTime();
 
@@ -59,7 +61,7 @@ export class DisciplineTeacherService {
 
     const { teacher, discipline } = await this.disciplineTeacherRepository.findById(disciplineTeacherId);
 
-    if (discipline.isSelective && !await this.isSelectedByUser(userId, discipline)) {
+    if (await this.isNotSelectedByUser(userId, discipline)) {
       throw new NotSelectedDisciplineException();
     }
 
@@ -151,6 +153,20 @@ export class DisciplineTeacherService {
     const questionIds = answers.map((answer) => answer.questionId);
     if (!checkIfArrayIsUnique(questionIds)) {
       throw new ExcessiveAnswerException();
+    }
+  }
+
+  async checkIsRemoved (disciplineTeacherId, userId) {
+    const isRemoved = await this.disciplineTeacherRepository.find({
+      id: disciplineTeacherId,
+      removedDisciplineTeachers: {
+        some: {
+          studentId: userId,
+        },
+      },
+    });
+    if (isRemoved) {
+      throw new IsRemovedDisciplineTeacherException();
     }
   }
 
@@ -298,13 +314,31 @@ export class DisciplineTeacherService {
     await this.disciplineTeacherRepository.deleteById(disciplineTeacher.id);
   }
 
-  async isSelectedByUser (userId: string, { id, year, semester }: Discipline) {
+  async isNotSelectedByUser (userId: string, { id, year, semester, isSelective }: Discipline) {
+    if (!isSelective) return false;
+
     const { selectiveDisciplines } = await this.studentRepository.findById(userId);
 
     const relevantSelectiveDisciplines = selectiveDisciplines.filter((selective) => {
       return selective.discipline.year === year && selective.discipline.semester === semester;
     });
 
-    return !relevantSelectiveDisciplines.length || relevantSelectiveDisciplines.some(({ disciplineId }) => disciplineId === id);
+    return relevantSelectiveDisciplines.length && !relevantSelectiveDisciplines.some(({ disciplineId }) => disciplineId === id);
+  }
+
+  async removeFromPoll (disciplineTeacherId: string, userId: string) {
+    const disciplineTeacher = await this.disciplineTeacherRepository.findById(disciplineTeacherId);
+
+    if (await this.isNotSelectedByUser(userId, disciplineTeacher.discipline)) {
+      throw new NotSelectedDisciplineException();
+    }
+
+    await this.disciplineTeacherRepository.updateById(disciplineTeacherId, {
+      removedDisciplineTeachers: {
+        create: {
+          studentId: userId,
+        },
+      },
+    });
   }
 }

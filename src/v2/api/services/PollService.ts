@@ -15,6 +15,10 @@ import { DbQuestionWithRoles } from '../../database/entities/DbQuestionWithRoles
 import { QuestionAnswerRepository } from '../../database/repositories/QuestionAnswerRepository';
 import { DbQuestionWithDiscipline } from '../../database/entities/DbQuestionWithDiscipline';
 import { CommentsQueryDTO, CommentsSortMapper } from '../dtos/CommentsQueryDTO';
+import { filterAsync } from '../../utils/ArrayUtil';
+import { DbDiscipline, DbDiscipline_DisciplineTeacher } from '../../database/entities/DbDiscipline';
+import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
+import { PollDisciplineTeachersResponse } from '../responses/PollDisciplineTeachersResponse';
 
 @Injectable()
 export class PollService {
@@ -25,6 +29,7 @@ export class PollService {
     private dateService: DateService,
     private disciplineRepository: DisciplineRepository,
     private questionAnswerRepository: QuestionAnswerRepository,
+    private disciplineTeacherRepository: DisciplineTeacherRepository,
   ) {}
 
   async create ({ roles, ...data }: CreateQuestionWithRolesDTO) {
@@ -160,7 +165,7 @@ export class PollService {
     });
   }
 
-  async getDisciplineTeachers (userId: string) {
+  async getDisciplineTeachers (userId: string): Promise<PollDisciplineTeachersResponse> {
     const user = await this.userRepository.findById(userId);
     if (user.state !== State.APPROVED) {
       throw new NoPermissionException();
@@ -168,7 +173,7 @@ export class PollService {
 
     const { isFinished, semesters } = await this.dateService.getAllPreviousSemesters();
 
-    let disciplines = [];
+    let disciplines: DbDiscipline[] = [];
 
     for (const semester of semesters) {
       const mandatoryDisciplines = await this.getSemesterMandatoryDisciplines(semester, userId);
@@ -188,9 +193,17 @@ export class PollService {
     const answers = await this.questionAnswerRepository.findMany({ where: { userId } });
 
     for (const discipline of disciplines) {
-      discipline.disciplineTeachers = discipline.disciplineTeachers.filter((teacher) => {
+      discipline.disciplineTeachers = await filterAsync<DbDiscipline_DisciplineTeacher>(discipline.disciplineTeachers, async (teacher) => {
         const hasAnyAnswer = (answer) => teacher.id === answer.disciplineTeacherId;
-        return !answers.some(hasAnyAnswer);
+        const isRemoved = await this.disciplineTeacherRepository.find({
+          id: teacher.id,
+          removedDisciplineTeachers: {
+            some: {
+              studentId: userId,
+            },
+          },
+        });
+        return !answers.some(hasAnyAnswer) && !isRemoved;
       });
     }
 

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../PrismaService';
 import { Prisma } from '@prisma/client';
+import { DbDisciplineTeacher } from '../entities/DbDisciplineTeacher';
 
 @Injectable()
 export class DisciplineTeacherRepository {
@@ -21,7 +22,7 @@ export class DisciplineTeacherRepository {
     private prisma: PrismaService,
   ) {}
 
-  async findById (id: string) {
+  async findById (id: string): Promise<DbDisciplineTeacher> {
     return this.prisma.disciplineTeacher.findFirst({
       where: {
         id,

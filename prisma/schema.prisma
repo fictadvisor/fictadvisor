@@ -55,16 +55,17 @@ model GroupRole {
 }
 
 model Student {
-  user                 User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId               String                @unique @map("user_id")
-  firstName            String?               @default("") @map("first_name")
-  middleName           String?               @default("") @map("middle_name")
-  lastName             String?               @default("") @map("last_name")
-  groupId              String                @map("group_id")
-  group                Group                 @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  selectiveDisciplines SelectiveDiscipline[]
-  roles                UserRole[]
-  state                State                 @default(PENDING)
+  user                      User                       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                    String                     @unique @map("user_id")
+  firstName                 String?                    @default("") @map("first_name")
+  middleName                String?                    @default("") @map("middle_name")
+  lastName                  String?                    @default("") @map("last_name")
+  groupId                   String                     @map("group_id")
+  group                     Group                      @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  selectiveDisciplines      SelectiveDiscipline[]
+  roles                     UserRole[]
+  state                     State                      @default(PENDING)
+  removedDisciplineTeachers RemovedDisciplineTeacher[]
 
   @@map("students")
 }
@@ -163,13 +164,14 @@ model Teacher {
 }
 
 model DisciplineTeacher {
-  id              String                  @id @default(uuid())
-  teacher         Teacher                 @relation(fields: [teacherId], references: [id], onDelete: Cascade)
-  teacherId       String                  @map("teacher_id")
-  discipline      Discipline              @relation(fields: [disciplineId], references: [id], onDelete: Cascade)
-  disciplineId    String                  @map("discipline_id")
-  roles           DisciplineTeacherRole[]
-  questionAnswers QuestionAnswer[]
+  id                        String                     @id @default(uuid())
+  teacher                   Teacher                    @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  teacherId                 String                     @map("teacher_id")
+  discipline                Discipline                 @relation(fields: [disciplineId], references: [id], onDelete: Cascade)
+  disciplineId              String                     @map("discipline_id")
+  roles                     DisciplineTeacherRole[]
+  questionAnswers           QuestionAnswer[]
+  removedDisciplineTeachers RemovedDisciplineTeacher[]
 
   @@map("discipline_teachers")
 }
@@ -290,7 +292,7 @@ model SemesterDate {
   year      Int
   semester  Int
   startDate DateTime @map("start_date")
-  endDate   DateTime @map("end_date") @default("2023-01-01T00:00:00.000Z")
+  endDate   DateTime @default("2023-01-01T00:00:00.000Z") @map("end_date")
 
   @@id([year, semester])
   @@map("semester_dates")
@@ -362,4 +364,14 @@ model Lesson {
 
   @@id([eventId, disciplineTypeId])
   @@map("lessons")
+}
+
+model RemovedDisciplineTeacher {
+  studentId           String            @map("student_id")
+  disciplineTeacherId String            @map("discipline_teacher_id")
+  student             Student           @relation(fields: [studentId], references: [userId], onDelete: Cascade)
+  disciplineTeacher   DisciplineTeacher @relation(fields: [disciplineTeacherId], references: [id], onDelete: Cascade)
+
+  @@id([disciplineTeacherId, studentId])
+  @@map("removed_discipline_teachers")
 }

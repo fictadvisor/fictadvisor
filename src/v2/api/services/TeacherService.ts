@@ -101,8 +101,16 @@ export class TeacherService {
       },
     });
 
-    return filterAsync(disciplineTeachers as any[], async ({ discipline }) => {
-      return !discipline.isSelective || await this.disciplineTeacherService.isSelectedByUser(userId, discipline);
+    return filterAsync(disciplineTeachers as DbDisciplineTeacher[], async ({ discipline, id }) => {
+      const isRemoved = await this.disciplineTeacherRepository.find({
+        id,
+        removedDisciplineTeachers: {
+          some: {
+            studentId: userId,
+          },
+        },
+      });
+      return !await this.disciplineTeacherService.isNotSelectedByUser(userId, discipline) && !isRemoved;
     });
   }
 
