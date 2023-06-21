@@ -15,6 +15,7 @@ import { PollService } from '../services/PollService';
 import { QuestionMapper } from '../../mappers/QuestionMapper';
 import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
 import { UserByIdPipe } from '../pipes/UserByIdPipe';
+import { CommentsQueryDTO } from '../dtos/CommentsQueryDTO';
 
 @Controller({
   version: '2',
@@ -163,7 +164,7 @@ export class TeacherController {
   @Get('/:teacherId/comments')
   async getComments (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
-    @Query() query: ResponseQueryDTO,
+    @Query() query: CommentsQueryDTO,
   ) {
     this.teacherService.checkQueryDate(query);
     const questions = await this.pollService.getQuestionWithText(teacherId, query);

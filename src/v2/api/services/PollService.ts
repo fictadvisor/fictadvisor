@@ -14,6 +14,7 @@ import { DisciplineRepository } from '../../database/repositories/DisciplineRepo
 import { DbQuestionWithRoles } from '../../database/entities/DbQuestionWithRoles';
 import { QuestionAnswerRepository } from '../../database/repositories/QuestionAnswerRepository';
 import { DbQuestionWithDiscipline } from '../../database/entities/DbQuestionWithDiscipline';
+import { CommentsQueryDTO, CommentsSortMapper } from '../dtos/CommentsQueryDTO';
 
 @Injectable()
 export class PollService {
@@ -96,7 +97,7 @@ export class PollService {
     }) as unknown as Promise<DbQuestionWithAnswers[]>;
   }
 
-  async getQuestionWithText (teacherId: string, data?: ResponseData): Promise<DbQuestionWithDiscipline[]> {
+  async getQuestionWithText (teacherId: string, query: CommentsQueryDTO = {}): Promise<DbQuestionWithDiscipline[]> {
     return await this.questionRepository.findMany({
       where: {
         type: QuestionType.TEXT,
@@ -107,10 +108,15 @@ export class PollService {
             disciplineTeacher: {
               teacherId,
               discipline: {
-                ...data,
+                subjectId: query.subjectId,
+                year: query.year,
+                semester: query.semester,
               },
             },
           },
+          orderBy: query.sortBy 
+            ? CommentsSortMapper[query.sortBy]
+            : undefined,
           include: {
             disciplineTeacher: {
               include: {

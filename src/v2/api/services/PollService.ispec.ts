@@ -8,6 +8,7 @@ import { NoPermissionException } from '../../utils/exceptions/NoPermissionExcept
 import { DbDiscipline } from 'src/v2/database/entities/DbDiscipline';
 import { DbQuestionWithRoles } from 'src/v2/database/entities/DbQuestionWithRoles';
 import { DbQuestionWithAnswers } from 'src/v2/database/entities/DbQuestionWithAnswers';
+import { CommentsSort } from '../dtos/CommentsQueryDTO';
 
 
 describe('PollService', () => {
@@ -183,7 +184,7 @@ describe('PollService', () => {
         id: 'f0141b13-73a6-4d4a-a321-d92d75c4e223',
         name: 'questionName1',
         category: 'questionCategory1',
-        text: 'questionText1',
+        text: 'questionMark1',
         type: QuestionType.SCALE,
         display: QuestionDisplay.RADAR,
         order: 1,
@@ -269,10 +270,24 @@ describe('PollService', () => {
             { role: TeacherRole.PRACTICIAN, isRequired: false, isShown: true },
           ],
         } },
-        questionAnswers: { create: {
-          disciplineTeacherId: discipline1.disciplineTeachers[2].id,
-          userId: user.id, 
-          value: 'text',
+        questionAnswers: { createMany: {
+          data: [
+            {
+              disciplineTeacherId: discipline1.disciplineTeachers[0].id,
+              userId: user.id, 
+              value: 'text',
+            },
+            {
+              disciplineTeacherId: discipline2.disciplineTeachers[0].id,
+              userId: user.id, 
+              value: 'text',
+            },
+            {
+              disciplineTeacherId: discipline1.disciplineTeachers[2].id,
+              userId: user.id, 
+              value: 'text',
+            },
+          ],
         } },
       },
       include: {
@@ -281,6 +296,8 @@ describe('PollService', () => {
       },
     });
   });
+
+ 
 
   afterAll(async () => {
     await prisma.user.deleteMany({
@@ -452,11 +469,11 @@ describe('PollService', () => {
   describe('getQuestionsWithText', () => {
     it('should return all comments about teacher', async () => {
       const questions = await pollService.getQuestionWithText(teacherLaborant.id);
-      expect(questions.length).toBe(1);
-      expect(questions[0].type).toBe(QuestionType.TEXT);
+      expect(questions.length).not.toBe(0);
+      expect(questions.every((question) => question.type === QuestionType.TEXT)).toBe(true);
     });
 
-    it('should return specified marks with year, semester and subjectId', async () => {
+    it('should return specified comments with year, semester and subjectId', async () => {
       const questions = await pollService.getQuestionWithText(
         teacherLaborant.id,
         {
@@ -466,9 +483,29 @@ describe('PollService', () => {
         }
       );
       expect(questions.length).toBe(1);
-      expect(questions[0].type).toBe(QuestionType.TEXT);
+      expect(questions.every((question) => question.type === QuestionType.TEXT)).toBe(true);
       expect(questions[0].questionAnswers.length).toBe(1);
       expect(questions[0].questionAnswers[0].disciplineTeacher.discipline.id === discipline1.id);
+    });
+
+    it('should return the newest and oldest comments', async () => {
+      const questionsOldest = await pollService.getQuestionWithText(
+        teacherLecturer.id,
+        {
+          sortBy: CommentsSort.OLDEST,
+        }
+      );
+      const questionsNewest = await pollService.getQuestionWithText(
+        teacherLecturer.id,
+        {
+          sortBy: CommentsSort.NEWEST,
+        }
+      );
+      expect(questionsOldest.length).toBe(1);
+      expect(questionsNewest.length).toBe(1);
+      expect(questionsOldest[0].type).toBe(QuestionType.TEXT);
+      expect(questionsNewest[0].type).toBe(QuestionType.TEXT);
+      expect(questionsOldest[0].questionAnswers).toStrictEqual(questionsNewest[0].questionAnswers.reverse());
     });
 
     it('should return empty array of answers because teacher with the id not found', async () => {
