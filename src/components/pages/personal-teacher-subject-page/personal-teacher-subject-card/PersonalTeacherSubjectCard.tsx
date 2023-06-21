@@ -54,12 +54,13 @@ const PersonalTeacherSubjectCard: FC<
         className={styles[`contacts-${isContactsVisible ? `shown` : `hidden`}`]}
       >
         {props.contacts.map((contact, index) => (
-          <Contact
-            key={index}
-            name={contact.name}
-            displayName={contact.displayName}
-            link={contact.link}
-          />
+          <div key={index} className={styles['contacts-item']}>
+            <Contact
+              name={contact.name}
+              displayName={contact.displayName}
+              link={contact.link}
+            />
+          </div>
         ))}
       </div>
     </div>
