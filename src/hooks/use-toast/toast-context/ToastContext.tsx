@@ -16,6 +16,7 @@ interface OptionsType {
   title: string;
   type: AlertType;
   description?: string;
+  timer?: number;
 }
 
 const ToastContextProvider: FC<PropsWithChildren> = ({ children }) => {
@@ -31,12 +32,18 @@ const ToastContextProvider: FC<PropsWithChildren> = ({ children }) => {
     [options],
   );
 
-  const showToast = ({ title, type = 'error', description }: OptionsType) => {
+  const showToast = ({
+    title,
+    type = 'error',
+    description,
+    timer,
+  }: OptionsType) => {
     setOptions({
       open: true,
       type,
       title,
       description,
+      timer,
     });
   };
 

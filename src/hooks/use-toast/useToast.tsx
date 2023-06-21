@@ -6,14 +6,14 @@ const useToast = () => {
   const { showToast } = useContext(ToastContext);
 
   return {
-    error: (title, description?) =>
-      showToast({ title, description, type: 'error' }),
-    warning: (title, description?) =>
-      showToast({ title, description, type: 'warning' }),
-    success: (title, description?) =>
-      showToast({ title, description, type: 'success' }),
-    info: (title, description?) =>
-      showToast({ title, description, type: 'info' }),
+    error: (title, description?, timer?) =>
+      showToast({ title, description, type: 'error', timer }),
+    warning: (title, description?, timer?) =>
+      showToast({ title, description, type: 'warning', timer }),
+    success: (title, description?, timer?) =>
+      showToast({ title, description, type: 'success', timer }),
+    info: (title, description?, timer?) =>
+      showToast({ title, description, type: 'info', timer }),
   };
 };
 
