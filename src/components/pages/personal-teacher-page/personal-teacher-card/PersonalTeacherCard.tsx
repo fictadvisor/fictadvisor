@@ -2,7 +2,7 @@ import { FC, useState } from 'react';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 
 import Button, { ButtonVariant } from '@/components/common/ui/button';
-import Tag, { TagColor, TagSize } from '@/components/common/ui/tag';
+import Tag from '@/components/common/ui/tag-mui';
 import styles from '@/components/pages/personal-teacher-page/personal-teacher-card/PersonalTeacherCard.module.scss';
 import {
   GetTeacherDTO,
@@ -29,13 +29,15 @@ const PersonalTeacherCard: FC<PersonalTeacherCardProps> = props => {
 
       <div className={styles['tags']}>
         {props.roles.includes(TeacherRoles.LECTURER) && (
-          <Tag color={TagColor.VIOLET} size={TagSize.SMALL} text={'Лектор'} />
+          <Tag color="indigo" size="small" text="Лектор" />
         )}
+
         {props.roles.includes(TeacherRoles.PRACTICIAN) && (
-          <Tag color={TagColor.ORANGE} size={TagSize.SMALL} text={'Практик'} />
+          <Tag color="orange" size="small" text="Практик" />
         )}
+
         {props.roles.includes(TeacherRoles.LABORANT) && (
-          <Tag color={TagColor.MINT} size={TagSize.SMALL} text={'Лаборант'} />
+          <Tag color="mint" size="small" text="Лаборант" />
         )}
       </div>
       <div className={styles['info']}>{props.description}</div>

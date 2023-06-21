@@ -15,7 +15,8 @@ export type TagColorType =
   | 'secondary'
   | 'violet'
   | 'mint'
-  | 'orange';
+  | 'orange'
+  | 'indigo';
 
 export interface TagProps {
   text: string;
@@ -34,7 +35,7 @@ const Tag: FC<TagProps> = ({
   sx,
 }) => {
   return (
-    <Box sx={mergeSx(styles.tag(variant, color, size, icon), sx)}>
+    <Box sx={mergeSx(styles.tag(variant, color, size, icon, text), sx)}>
       {icon && <Box sx={styles.icon}>{icon}</Box>}
       <p>{text}</p>
     </Box>

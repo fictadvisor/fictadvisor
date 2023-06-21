@@ -2,7 +2,7 @@ import { SxProps, Theme } from '@mui/material/styles';
 
 import colorInfo from '@/components/common/ui/tag-mui/utils/constants';
 
-export const tag = (variant, color, size, icon): SxProps<Theme> => ({
+export const tag = (variant, color, size, icon, text): SxProps<Theme> => ({
   width: 'fit-content',
   display: 'flex',
   alignItems: 'center',
@@ -28,7 +28,7 @@ export const tag = (variant, color, size, icon): SxProps<Theme> => ({
     },
   }),
   ...(icon && {
-    gap: '4px',
+    gap: text ? '4px' : '0px',
   }),
 });
 

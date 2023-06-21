@@ -9,7 +9,7 @@ import {
   IconButton,
   IconButtonShape,
 } from '@/components/common/ui/icon-button/IconButton';
-import Tag, { TagSize } from '@/components/common/ui/tag';
+import Tag from '@/components/common/ui/tag-mui';
 import CustomDivider from '@/components/pages/account-page/components/divider';
 import MobileStudentTableButtons from '@/components/pages/account-page/components/group-tab/components/table/mobile-student-table/components/mobile-student-table-buttons';
 import { StudentRole } from '@/components/pages/account-page/components/group-tab/components/table/student-table/StudentTable';
@@ -117,7 +117,7 @@ const MobileStudentTable: React.FC<StudentTableProps> = ({
             <div className={styles['tag']}>
               {row.role && (
                 <Tag
-                  size={TagSize.SMALL}
+                  size="small"
                   icon={
                     row.role === StudentRole.CAPTAIN ? (
                       <Captain />
@@ -125,6 +125,7 @@ const MobileStudentTable: React.FC<StudentTableProps> = ({
                       <Moderator />
                     )
                   }
+                  text=""
                 />
               )}
             </div>

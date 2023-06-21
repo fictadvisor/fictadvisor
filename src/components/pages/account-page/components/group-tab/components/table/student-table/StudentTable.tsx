@@ -6,7 +6,7 @@ import { Captain } from '@/components/common/icons/Captain';
 import { Moderator } from '@/components/common/icons/Moderator';
 import { AlertColor } from '@/components/common/ui/alert';
 import Button from '@/components/common/ui/button';
-import Tag, { TagSize, TagVariant } from '@/components/common/ui/tag';
+import Tag from '@/components/common/ui/tag-mui';
 import CustomDivider from '@/components/pages/account-page/components/divider';
 import EditingColumn from '@/components/pages/account-page/components/group-tab/components/table/student-table/components/EditingColumn';
 import { TextAreaPopup } from '@/components/pages/account-page/components/group-tab/components/text-area-popup';
@@ -114,20 +114,14 @@ const StudentTable: React.FC<StudentTableProps> = ({
               <div className={styles['tag-container']}>
                 <div className={styles['tag']}>
                   {row.role && (
-                    <Tag
-                      className={'tag-role'}
-                      text={row.role}
-                      variant={TagVariant.DARKER}
-                      size={TagSize.SMALL}
-                    />
+                    <Tag text={row.role} variant="darker" size="small" />
                   )}
                 </div>
                 <div className={styles['tag-mobile']}>
                   {row.role && (
                     <Tag
-                      className={'tag-role'}
-                      size={TagSize.SMALL}
-                      variant={TagVariant.DARKER}
+                      size="small"
+                      variant="darker"
                       icon={
                         row.role === StudentRole.CAPTAIN ? (
                           <Captain />
@@ -135,6 +129,7 @@ const StudentTable: React.FC<StudentTableProps> = ({
                           <Moderator />
                         )
                       }
+                      text=""
                     />
                   )}
                 </div>

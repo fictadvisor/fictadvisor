@@ -10,14 +10,14 @@ const TagTestPage = () => {
   return (
     <Box sx={styles.wrapper}>
       <ul>
-        <Tag variant="fill" color="primary" text="Tag" size="small"></Tag>
+        <Tag color="primary" text="Tag" size="small"></Tag>
         <Tag
           variant="outline"
           color="success"
           text="Tag"
           size="medium"
           icon={<CustomCheck />}
-        ></Tag>
+        />
       </ul>
     </Box>
   );
