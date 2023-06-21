@@ -5,5 +5,5 @@ export class CreateContactData {
   entityType: EntityType;
   name: string;
   displayName: string;
-  link: string;
+  link?: string;
 }

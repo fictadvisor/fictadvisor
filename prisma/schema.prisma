@@ -279,7 +279,7 @@ model Contact {
   id          String     @id @default(uuid())
   name        String
   displayName String
-  link        String
+  link        String?
   entityType  EntityType @map("entity_type")
   entityId    String     @map("entity_id")
 
