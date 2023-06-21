@@ -7,38 +7,8 @@
   margin-bottom: 32px;
   padding: 16px;
 }
-
-.tabs-content {
-  display: flex;
-  min-height: calc(100vh - 116px);
-  width: 95%;
-}
-
-.tab-list {
-  display: flex;
-  flex-direction: column;
-  width: 14%;
-  margin-right: 3%;
-  gap: 6px;
-}
-
-.tab-panels-list {
-  margin-top: 8px;
-  width: 86%;
-}
-
-.tab-panel {
-  width: 100%;
-}
-
 @media screen and (max-width: 1200px){
   .breadcrumb{
     padding-left: 0;
-  }
-  .tab-list{
-    display: none;
-  }
-  .tab-panels-list {
-    width: 100%;
   }
 }
