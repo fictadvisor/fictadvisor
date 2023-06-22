@@ -13,15 +13,16 @@ Chart.register(...registerables);
 
 interface ColumnChartProps {
   data: GetTeacherEvaluationsDTO;
+  maxValue?: number;
 }
 
-const ColumnChart: FC<ColumnChartProps> = ({ data }) => {
+const ColumnChart: FC<ColumnChartProps> = ({ data, maxValue }) => {
   return (
     <Box sx={styles.chartContainer}>
       <Typography sx={styles.legend}>{data.name}</Typography>
       <Typography sx={styles.yTitle}>Кількість голосів</Typography>
       <Box sx={styles.chart}>
-        <Bar data={getData(data)} options={getOptions()} />
+        <Bar data={getData(data)} options={getOptions(maxValue)} />
       </Box>
     </Box>
   );

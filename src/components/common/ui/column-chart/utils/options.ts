@@ -1,6 +1,6 @@
 import { ChartOptions } from 'chart.js';
 
-export const getOptions = (): ChartOptions<'bar'> => {
+export const getOptions = (maxValue: number): ChartOptions<'bar'> => {
   return {
     responsive: true,
     maintainAspectRatio: false,
@@ -19,6 +19,7 @@ export const getOptions = (): ChartOptions<'bar'> => {
         },
         type: 'linear',
         beginAtZero: true,
+        max: maxValue,
         grid: {
           color: context => {
             const index = context.index;
@@ -45,6 +46,7 @@ export const getOptions = (): ChartOptions<'bar'> => {
           tickWidth: 0,
         },
         ticks: {
+          maxTicksLimit: 7,
           callback: function (value, index, values) {
             if (index === values.length - 1) {
               return '';
