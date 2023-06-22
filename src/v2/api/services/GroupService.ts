@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Group, RoleName, State, User } from '@prisma/client';
+import { RoleName, State, User } from '@prisma/client';
 import { DisciplineMapper } from '../../mappers/DisciplineMapper';
 import { GroupRepository } from '../../database/repositories/GroupRepository';
 import { StudentRepository } from '../../database/repositories/StudentRepository';
@@ -17,6 +17,7 @@ import { AVATARS } from './AuthService';
 import { AlreadyRegisteredException } from '../../utils/exceptions/AlreadyRegisteredException';
 import { DatabaseUtils } from '../../database/DatabaseUtils';
 import { StudentMapper } from '../../mappers/StudentMapper';
+import { DbGroup } from '../../database/entities/DbGroup';
 
 const ROLE_LIST = [
   {
@@ -59,7 +60,7 @@ export class GroupService {
     private studentMapper: StudentMapper,
   ) {}
 
-  async create (code: string): Promise<Group>  {
+  async create (code: string): Promise<DbGroup>  {
     const group = await this.groupRepository.create({ code });
     await this.addPermissions(group.id);
     return group;

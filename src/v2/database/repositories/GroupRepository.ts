@@ -8,9 +8,14 @@ export class GroupRepository {
     private prisma: PrismaService,
   ) {}
 
+  private include = {
+    selectiveAmounts: true,
+  };
+
   async find (where: Prisma.GroupWhereInput) {
     return this.prisma.group.findFirst({
       where,
+      include: this.include,
     });
   }
 
@@ -19,12 +24,14 @@ export class GroupRepository {
       where: {
         id,
       },
+      include: this.include,
     });
   }
 
   async findMany (data: Prisma.GroupFindManyArgs) {
     return this.prisma.group.findMany({
       ...data,
+      include: this.include,
     });
   }
 
@@ -39,6 +46,7 @@ export class GroupRepository {
   async create (data: Prisma.GroupUncheckedCreateInput) {
     return this.prisma.group.create({
       data,
+      include: this.include,
     });
   }
 
@@ -48,6 +56,7 @@ export class GroupRepository {
         id,
       },
       data,
+      include: this.include,
     });
   }
 
@@ -56,6 +65,7 @@ export class GroupRepository {
       where: {
         id,
       },
+      include: this.include,
     });
   }
 }

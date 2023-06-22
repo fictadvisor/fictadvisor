@@ -9,6 +9,7 @@ import { SubjectMapper } from '../mappers/SubjectMapper';
 import { TeacherMapper } from '../mappers/TeacherMapper';
 import { UserMapper } from '../mappers/UserMapper';
 import { ScheduleMapper } from '../mappers/ScheduleMapper';
+import { GroupMapper } from '../mappers/GroupMapper';
 
 @Module({
   providers: [
@@ -22,6 +23,7 @@ import { ScheduleMapper } from '../mappers/ScheduleMapper';
     TeacherMapper,
     UserMapper,
     ScheduleMapper,
+    GroupMapper,
   ],
   exports: [
     DisciplineMapper,
@@ -34,6 +36,7 @@ import { ScheduleMapper } from '../mappers/ScheduleMapper';
     TeacherMapper,
     UserMapper,
     ScheduleMapper,
+    GroupMapper,
   ],
 })
 export class MapperModule {}

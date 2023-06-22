@@ -47,4 +47,21 @@ export class DisciplineMapper {
 
     return teachers;
   }
+
+  getSortedDisciplinesByPeriod (disciplines: DbDiscipline[]) {
+    const periods = [];
+    disciplines.map((discipline) => {
+      const period = periods.find((p) => p.semester === discipline.semester && p.year === discipline.year);
+      if (!period) {
+        periods.push({
+          year: discipline.year,
+          semester: discipline.semester,
+          disciplines: [discipline.id],
+        });
+      } else {
+        period.disciplines.push(discipline.id);
+      }
+    });
+    return periods;
+  }
 }

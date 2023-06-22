@@ -11,6 +11,7 @@ import { UpdateGroupDTO } from '../dtos/UpdateGroupDTO';
 import { Access } from 'src/v2/security/Access';
 import { StudentMapper } from '../../mappers/StudentMapper';
 import { AbsenceOfCaptainException } from '../../utils/exceptions/AbsenceOfCaptainException';
+import { GroupMapper } from '../../mappers/GroupMapper';
 
 @Controller({
   version: '2',
@@ -20,27 +21,31 @@ export class GroupController {
   constructor (
     private groupService: GroupService,
     private studentMapper: StudentMapper,
+    private groupMapper: GroupMapper,
   ) {}
 
   @Access('groups.create')
   @Post()
-  create (@Body() body: CreateGroupDTO) {
-    return this.groupService.create(body.code);
+  async create (@Body() body: CreateGroupDTO) {
+    const group = await this.groupService.create(body.code);
+    return this.groupMapper.getGroup(group);
   }
 
   @Get()
   async getAll (@Query() body: QueryAllDTO) {
-    const groups = await this.groupService.getAll(body);
+    const groupsWithSelectiveAmounts = await this.groupService.getAll(body);
+    const groups = this.groupMapper.getGroups(groupsWithSelectiveAmounts);
     return {
       groups,
     };
   }
 
   @Get('/:groupId')
-  get (
+  async get (
     @Param('groupId', GroupByIdPipe) groupId: string
   ) {
-    return this.groupService.get(groupId);
+    const group = await this.groupService.get(groupId);
+    return this.groupMapper.getGroup(group);
   }
 
   @Access('groups.update')
@@ -49,7 +54,8 @@ export class GroupController {
     @Param('groupId', GroupByIdPipe) groupId: string,
     @Body() body: UpdateGroupDTO,
   ) {
-    return this.groupService.updateGroup(groupId, body);
+    const group = await this.groupService.updateGroup(groupId, body);
+    return this.groupMapper.getGroup(group);
   }
 
   @Access('groups.delete')
