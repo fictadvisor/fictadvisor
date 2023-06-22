@@ -33,4 +33,13 @@ export class DisciplineTeacherMapper {
     }
     return roles;
   }
+
+  getRolesBySubject (disciplineTeachers: DbDisciplineTeacher[], subjectId: string) {
+    const roles = [];
+    for (const dt of disciplineTeachers) {
+      if (dt.discipline.subjectId !== subjectId) continue;
+      roles.push(...dt.roles.map((r) => r.role));
+    }
+    return new Set(roles);
+  }
 }

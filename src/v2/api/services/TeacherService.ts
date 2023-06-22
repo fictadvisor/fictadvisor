@@ -16,6 +16,8 @@ import { PollService } from './PollService';
 import { ResponseQueryDTO } from '../dtos/ResponseQueryDTO';
 import { SearchDTO } from '../../utils/QueryAllDTO';
 import { filterAsync } from '../../utils/ArrayUtil';
+import { DbDisciplineTeacher } from '../../database/entities/DbDisciplineTeacher';
+import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
 
 @Injectable()
 export class TeacherService {
@@ -26,7 +28,8 @@ export class TeacherService {
     private disciplineTeacherService: DisciplineTeacherService,
     private contactRepository: ContactRepository,
     private subjectRepository: SubjectRepository,
-    private pollService: PollService
+    private pollService: PollService,
+    private disciplineTeacherMapper: DisciplineTeacherMapper
   ) {}
 
   async getAll (body: QueryAllTeacherDTO) {
@@ -249,7 +252,7 @@ export class TeacherService {
 
     const { disciplineTeachers, ...teacher } = dbTeacher;
 
-    const roles = this.teacherMapper.getRoles(dbTeacher);
+    const roles = this.disciplineTeacherMapper.getRolesBySubject(disciplineTeachers as DbDisciplineTeacher[], subjectId);
     const { disciplines, ...subject } = await this.subjectRepository.findById(subjectId);
     const contacts = await this.contactRepository.getAllContacts(teacherId);
 
