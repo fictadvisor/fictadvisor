@@ -114,7 +114,7 @@ export class PollService {
               },
             },
           },
-          orderBy: query.sortBy 
+          orderBy: query.sortBy
             ? CommentsSortMapper[query.sortBy]
             : undefined,
           include: {

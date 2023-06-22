@@ -70,6 +70,12 @@ export class DateService {
     };
   }
 
+  async getPreviousSemesters (isLastFinished?: boolean) {
+    const { semesters, isFinished } = await this.getAllPreviousSemesters();
+    if (isFinished === isLastFinished || isLastFinished === undefined) return semesters;
+    return semesters.slice(1);
+  }
+
   async getDateVar (name: string): Promise<Date> {
     const { date } = await this.prisma.dateVar.findFirst({
       where: {
