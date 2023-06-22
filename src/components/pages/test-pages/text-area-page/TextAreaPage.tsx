@@ -4,7 +4,9 @@ import { Form, Formik } from 'formik';
 import * as yup from 'yup';
 
 import Button from '@/components/common/ui/button-mui';
-import TextArea from '@/components/common/ui/form/text-area-mui';
+import TextArea, {
+  TextAreaSize,
+} from '@/components/common/ui/form/text-area-mui';
 
 import * as styles from './TextAreaPage.styles';
 
@@ -29,9 +31,13 @@ const TextAreaPage: FC = () => {
             <TextArea
               name="t3"
               label="small label no placeholder"
-              size="small"
+              size={TextAreaSize.SMALL}
             />
-            <TextArea name="t4" placeholder="small no label" size="small" />
+            <TextArea
+              name="t4"
+              placeholder="small no label"
+              size={TextAreaSize.SMALL}
+            />
             <TextArea
               name="t5"
               label="error if empty"

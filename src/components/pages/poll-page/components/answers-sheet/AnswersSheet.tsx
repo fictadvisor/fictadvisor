@@ -1,4 +1,4 @@
-import React, { FormEvent, useEffect, useState } from 'react';
+import React, { FormEvent, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/router';
@@ -15,7 +15,9 @@ import { showAlert } from '@/redux/reducers/alert.reducer';
 import { Category } from '../../PollPage';
 import { Answer, SendingStatus } from '../poll-form/PollForm';
 
+import * as sxStyles from './AnswerSheet.style';
 import AnswersSaved from './AnswersSaved';
+import { initialValues } from './constants';
 
 import styles from './AnswersSheet.module.scss';
 
@@ -75,7 +77,6 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
   setIsSendingStatus,
 }) => {
   const dispatch = useDispatch();
-  const [initialValues, setInitialValues] = useState({});
   const router = useRouter();
   const disciplineTeacherId = router.query.disciplineTeacherId as string;
 
@@ -196,11 +197,9 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
                           name={question.id}
                         />
                       ) : (
-                        <TextArea
-                          className={styles['textarea']}
-                          name={question.id}
-                        />
+                        <TextArea sx={sxStyles.textArea} name={question.id} />
                       )}
+
                       {question.criteria && (
                         <p className={styles['question-criteria']}>
                           {question.criteria}

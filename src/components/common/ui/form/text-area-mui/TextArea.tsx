@@ -16,20 +16,26 @@ interface TextAreaProps {
   name: string;
   placeholder?: string;
   label?: string;
-  size?: 'medium' | 'small';
+  size?: TextAreaSize;
   disabled?: boolean;
   showRemark?: boolean;
   rowsNumber?: number;
+
   sx?: SxProps<Theme>;
 }
 
 const MAX_LENGTH = 2000;
 
+export enum TextAreaSize {
+  SMALL = 'small',
+  MEDIUM = 'medium',
+}
+
 const TextArea: React.FC<TextAreaProps> = ({
   name,
   placeholder,
   label,
-  size = 'medium',
+  size = TextAreaSize.MEDIUM,
   disabled = false,
   showRemark = false,
   rowsNumber = 4,
