@@ -3,16 +3,16 @@ import { RegisterFormFields } from '@/components/pages/register/register-page/co
 export const transformData = (data: RegisterFormFields) => {
   const transformedData = {
     student: {
-      groupId: data.group,
+      groupId: data.group.trim(),
       firstName: data.firstName.trim().replace('`', `'`).replace('ʼ', `'`),
       middleName: data.middleName?.trim().replace('`', `'`).replace('ʼ', `'`),
       lastName: data.lastName.trim().replace('`', `'`).replace('ʼ', `'`),
       isCaptain: data.isCaptain,
     },
     user: {
-      username: data.username,
-      email: data.email.toLowerCase(),
-      password: data.password,
+      username: data.username.trim(),
+      email: data.email.toLowerCase().trim(),
+      password: data.password.trim(),
     },
   };
   if (!data.middleName) delete transformedData.student.middleName;
