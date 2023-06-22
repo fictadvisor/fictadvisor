@@ -105,7 +105,6 @@ const NoGroupBlock: FC = () => {
               label="Група"
               name="groupId"
               placeholder="вибери зі списку"
-              className={styles['dropdown']}
             />
             <Checkbox label="Староста" name="isCaptain" />
             <Button

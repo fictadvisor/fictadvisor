@@ -38,10 +38,7 @@ export const input = (
     },
     '& .MuiInputLabel-shrink': {
       paddingRight: '0px',
-      transform: `matrix(.75,0,0,.75,14,${-(
-        9 +
-        (inputHeight[size] - 53) / 2
-      )})`,
+      transform: `matrix(.8,0,0,.8,14,${-(9 + (inputHeight[size] - 53) / 2)})`,
       color: color[inputState],
     },
 
@@ -85,11 +82,9 @@ export const input = (
 };
 
 export const dropdown: SxProps<Theme> = {
-  minWidth: '150px',
+  minWidth: '100px',
   width: '100%',
-  p: 2,
-  pb: 0,
-
+  p: 0,
   '& .MuiAutocomplete-popper': {
     top: '8px !important',
     '& ul': {
@@ -139,6 +134,7 @@ export const remark = (
   dropDownState: FieldState,
   isFocused: boolean,
 ): SxProps<Theme> => ({
+  height: '14px',
   color: color[dropDownState],
   pl: '16px',
   fontSize: '11px',

@@ -81,7 +81,8 @@ export const SearchForm: FC<SearchFormProps> = ({
             <>
               <div className={styles['dropdown-1']}>
                 <Dropdown
-                  placeholder="Група"
+                  placeholder="ІП-22"
+                  label="Група"
                   onChange={handleSubmit}
                   showRemark={false}
                   name="group"
@@ -97,7 +98,8 @@ export const SearchForm: FC<SearchFormProps> = ({
               </div>
               <div className={styles['dropdown-2']}>
                 <Dropdown
-                  placeholder="Сортувати за"
+                  label="Сортувати за"
+                  placeholder="Іменем"
                   onChange={handleSubmit}
                   showRemark={false}
                   name="sort"

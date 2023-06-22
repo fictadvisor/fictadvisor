@@ -4,20 +4,20 @@ import { Form, Formik } from 'formik';
 import * as yup from 'yup';
 
 import { FieldSize } from '@/components/common/ui/form/common/types';
-import { Dropdown } from '@/components/common/ui/form/dropdown-mui/Dropdown';
+import { Dropdown } from '@/components/common/ui/form/dropdown/Dropdown';
 
 import * as styles from './dropdownTest.styles';
 
 const options = [
-  { label: 'Option 1', id: 'o1' },
-  { label: 'Option 12', id: 'o2' },
-  { label: 'Option 123', id: 'o3' },
-  { label: 'Option 1234', id: 'o4' },
-  { label: 'Option 12345', id: 'o5' },
-  { label: 'Option 123456', id: 'o6' },
-  { label: 'Option 123сіфсфісфісіфсфісфісіфсісфісфсфсфсфі4567', id: 'o7' },
-  { label: 'Option 12345678', id: 'o8' },
-  { label: 'Option 9', id: 'o9' },
+  { label: 'Option 1', value: 'o1' },
+  { label: 'Option 12', value: 'o2' },
+  { label: 'Option 123', value: 'o3' },
+  { label: 'Option 1234', value: 'o4' },
+  { label: 'Option 12345', value: 'o5' },
+  { label: 'Option 123456', value: 'o6' },
+  { label: 'Option 123сіфсфісфісіфсфісфісіфсісфісфсфсфсфі4567', value: 'o7' },
+  { label: 'Option 12345678', value: 'o8' },
+  { label: 'Option 9', value: 'o9' },
 ];
 
 const scheme = yup.object({
@@ -104,22 +104,27 @@ const TagTestPage = () => {
             defaultRemark="Some defualt text"
             size={FieldSize.SMALL}
             options={[
-              { text: 'Лекція', id: 'lection', color: 'info', size: 'small' },
+              {
+                text: 'Лекція',
+                value: 'lection',
+                color: 'info',
+                size: 'small',
+              },
               {
                 text: 'Практика',
-                id: 'practice',
+                value: 'practice',
                 color: 'orange',
                 size: 'small',
               },
               {
                 text: 'Лабораторна',
-                id: 'laboratory',
+                value: 'laboratory',
                 color: 'mint',
                 size: 'small',
               },
               {
                 text: 'Інша подія',
-                id: 'otherOccasion',
+                value: 'otherOccasion',
                 color: 'violet',
                 size: 'small',
               },
@@ -130,22 +135,27 @@ const TagTestPage = () => {
             defaultRemark="Some defualt text"
             size={FieldSize.MEDIUM}
             options={[
-              { text: 'Лекція', id: 'lection', color: 'info', size: 'small' },
+              {
+                text: 'Лекція',
+                value: 'lection',
+                color: 'info',
+                size: 'small',
+              },
               {
                 text: 'Практика',
-                id: 'practice',
+                value: 'practice',
                 color: 'orange',
                 size: 'small',
               },
               {
                 text: 'Лабораторна',
-                id: 'laboratory',
+                value: 'laboratory',
                 color: 'mint',
                 size: 'small',
               },
               {
                 text: 'Інша подія',
-                id: 'otherOccasion',
+                value: 'otherOccasion',
                 color: 'violet',
                 size: 'small',
               },
@@ -156,22 +166,27 @@ const TagTestPage = () => {
             defaultRemark="Some defualt text"
             size={FieldSize.LARGE}
             options={[
-              { text: 'Лекція', id: 'lection', color: 'info', size: 'small' },
+              {
+                text: 'Лекція',
+                value: 'lection',
+                color: 'info',
+                size: 'small',
+              },
               {
                 text: 'Практика',
-                id: 'practice',
+                value: 'practice',
                 color: 'orange',
                 size: 'small',
               },
               {
                 text: 'Лабораторна',
-                id: 'laboratory',
+                value: 'laboratory',
                 color: 'mint',
                 size: 'small',
               },
               {
                 text: 'Інша подія',
-                id: 'otherOccasion',
+                value: 'otherOccasion',
                 color: 'violet',
                 size: 'small',
               },
