@@ -57,7 +57,6 @@ export class ScheduleParser implements Parser {
   async parseGroupSchedule (group: ScheduleGroupType, period: any) {
     const schedule: ScheduleType = (await axios.get('https://schedule.kpi.ua/api/schedule/lessons?groupId=' + group.id)).data.data;
     const dbGroup = await this.groupRepository.getOrCreate(group.name);
-    if (dbGroup.id !== 'f3ec843c-913a-4cbd-b57b-6918ca6a0fc3') return;
     await this.parseWeek(period, schedule.scheduleFirstWeek, dbGroup.id, 0);
     await this.parseWeek(period, schedule.scheduleSecondWeek, dbGroup.id, 1);
   }
@@ -77,7 +76,6 @@ export class ScheduleParser implements Parser {
 
   async parsePair (pair: SchedulePairType, groupId: string, period: any, isSelective: boolean, week, day) {
     const teacher = pair.teacherName ? await this.getTeacher(pair.teacherName) : null;
-    console.log(teacher);
     const subject = await this.subjectRepository.getOrCreate(pair.name ?? '');
     const [startHours, startMinutes] = pair.time.split('.').map((s) => +s);
     const endHours = startHours + 1;
