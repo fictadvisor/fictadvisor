@@ -2,7 +2,7 @@ import { Head, Html, Main, NextScript } from 'next/document';
 import Script from 'next/script';
 
 const Document = () => (
-  <Html>
+  <Html lang="uk-UA">
     <Head>
       <Script
         async

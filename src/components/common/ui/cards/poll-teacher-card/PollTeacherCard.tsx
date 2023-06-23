@@ -1,5 +1,6 @@
-import { FC, useRef, useState } from 'react';
+import React, { FC, useRef, useState } from 'react';
 import mergeClassNames from 'merge-class-names';
+import Image from 'next/image';
 import Link from 'next/link';
 
 import Button, {
@@ -49,12 +50,13 @@ export const PollTeacherCard: FC<PollTeacherCardProps> = ({
       {...rest}
     >
       <div className={styles['poll-teacher-card-shift']}>
-        <img
+        <Image
           className={styles['poll-teacher-card-avatar']}
           src={avatar}
           alt="викладач"
+          width={64}
+          height={64}
         />
-
         <CardRoles
           roles={roles}
           className={styles['poll-teacher-card-roles']}

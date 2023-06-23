@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import Image from 'next/image';
 
 import { CustomCheck } from '@/components/common/icons/CustomCheck';
 import { AlertColor } from '@/components/common/ui/alert';
@@ -79,7 +80,15 @@ const MobileRequestTable: React.FC<RequestTableProps> = ({ rows, refetch }) => {
               ]
             }
           >
-            <img className={styles['img']} src={row.imgSrc} alt="avatar" />
+            <Image
+              src={row.imgSrc}
+              alt="avatar"
+              style={{
+                borderRadius: '100%',
+              }}
+              width={34}
+              height={34}
+            />
             <div className={styles['user-info']}>
               <h6 className={styles['full-name']}>{row.fullName}</h6>
               <h6 className={styles['email']}>{row.email}</h6>

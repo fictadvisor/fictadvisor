@@ -1,4 +1,5 @@
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
+import Image from 'next/image';
 import Link from 'next/link';
 
 import Button, { ButtonColor, ButtonSize } from '@/components/common/ui/button';
@@ -17,11 +18,9 @@ const NotFoundPage = () => (
       <h5 className={styles['not-found-text']}>
         Упс! Сторінку не знайдено. Жабка з’їла твою сторінку
       </h5>
-      <img
-        src="/icons/404-page/404-frog.svg"
-        className={styles['frog-image']}
-        alt="Це 404"
-      />
+      <div className={styles['frog-image']}>
+        <Image src="/icons/404-page/404-frog.svg" alt="Це 404" fill />
+      </div>
       <div className={styles['button']}>
         <Link href={'/'}>
           <Button

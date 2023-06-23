@@ -51,15 +51,13 @@
 
 .mobile-register-logo-container{
   @include flex-center;
-  margin: 8vh 4vh 8vh 4vh;
+  position: relative;
+  margin: 8vh 4vh;
   display: none;
-  padding: 8px;
-  justify-content: center;
-}
-
-.mobile-register-logo{
   width: calc(100% - 40px);
   min-width: 200px;
+  aspect-ratio: 7.1/1;
+  justify-content: center;
 }
 
 .mobile-text{

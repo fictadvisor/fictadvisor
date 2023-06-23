@@ -1,5 +1,6 @@
 import React from 'react';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
@@ -32,11 +33,12 @@ const RightBlock = () => {
 
   return (
     <div className={styles['right-block']}>
-      <Link href="/">
-        <img
-          className={styles['mobile-login-logo']}
+      <Link href="/" className={styles['mobile-login-logo']}>
+        <Image
           src="/images/login-page/new-logo.png"
           alt="fict advisor logo"
+          priority
+          fill
         />
       </Link>
       <h3 className={styles['register-header']}>З поверненням!</h3>

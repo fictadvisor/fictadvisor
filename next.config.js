@@ -1,4 +1,12 @@
 module.exports = {
-    output: 'standalone'
+    output: 'standalone',
+    images: {
+        remotePatterns: [
+            {
+                protocol: "https",
+                hostname: "**",
+            },
+        ],
+    }
   };
   

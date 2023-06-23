@@ -44,8 +44,10 @@
 .mobile-login-logo{
   width: calc(100% - 40px);
   min-width: 200px;
+  aspect-ratio: 7.1/1;
   display: none;
-  margin: 8vh 0 4vh 4vh;
+  margin: 8vh 4vh;
+  position:relative;
 }
 
 .mobile-text{

@@ -1,5 +1,6 @@
 import React from 'react';
 import mergeClassNames from 'merge-class-names';
+import Image from 'next/image';
 
 import { CardRoles } from '@/components/common/ui/cards/card-roles';
 import styles from '@/components/common/ui/cards/subject-teacher-card/SubjectTeacherCard.module.scss';
@@ -31,10 +32,12 @@ export const SubjectTeacherCard: React.FC<SubjectTeacherCardProps> = ({
       {...rest}
     >
       <div className={styles['subject-teacher-card-shift']}>
-        <img
+        <Image
           className={styles['subject-teacher-card-avatar']}
           src={avatar}
           alt="викладач"
+          width={64}
+          height={64}
         />
         <CardRoles
           roles={roles}

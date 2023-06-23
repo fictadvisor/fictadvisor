@@ -1,4 +1,5 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
@@ -33,6 +34,14 @@ const MainPage: FC<MainPageProps> = ({ data }) => {
       hasFooter={true}
       className={styles['main-page']}
     >
+      <Image
+        quality={100}
+        className={styles['background-image']}
+        src="/images/main-page/main-background.png"
+        fill
+        priority
+        alt={'дуже гарна картинка'}
+      />
       <div className={styles['main-page-content']}>
         {token && isReady && <TokenPopup token={token} />}
         <div className={styles['header']}>

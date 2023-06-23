@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { PlusIcon } from '@heroicons/react/24/solid';
+import Image from 'next/image';
 
 import { Captain } from '@/components/common/icons/Captain';
 import { Moderator } from '@/components/common/icons/Moderator';
@@ -109,7 +110,15 @@ const StudentTable: React.FC<StudentTableProps> = ({
             }
           >
             <div className={styles['user-info']}>
-              <img className={styles['img']} src={row.imgSrc} alt="avatar" />
+              <Image
+                src={row.imgSrc}
+                alt="avatar"
+                style={{
+                  borderRadius: '100%',
+                }}
+                width={48}
+                height={48}
+              />
               <div className={styles['full-name']}>{row.fullName}</div>
               <div className={styles['tag-container']}>
                 <div className={styles['tag']}>

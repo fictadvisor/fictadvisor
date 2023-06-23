@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import Image from 'next/image';
 
 import { CustomCheck } from '@/components/common/icons/CustomCheck';
 import { AlertColor } from '@/components/common/ui/alert';
@@ -81,7 +82,15 @@ const RequestTable: React.FC<StudentTableProps> = ({ rows, refetch }) => {
             }
           >
             <div className={styles['user-info']}>
-              <img className={styles['img']} src={row.imgSrc} alt="avatar" />
+              <Image
+                src={row.imgSrc}
+                alt="avatar"
+                style={{
+                  borderRadius: '100%',
+                }}
+                width={48}
+                height={48}
+              />
               <div className={styles['full-name']}>{row.fullName}</div>
             </div>
             <div className={styles['other-content']}>

@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import mergeClassNames from 'merge-class-names';
+import Image from 'next/image';
 
 import { DivProps } from '@/components/common/ui/cards/types';
 import Tooltip from '@/components/common/ui/tooltip';
@@ -34,7 +35,15 @@ const TeacherHeaderCard: React.FC<TeacherHeaderCardProps> = ({
       )}
       {...rest}
     >
-      <img src={url} alt="картинка викладача" />
+      <Image
+        src={url}
+        alt="картинка викладача"
+        style={{
+          borderRadius: '100%',
+        }}
+        width={68}
+        height={68}
+      />
       <div className={styles['header-lecturer-card-info']}>
         <h4 className={styles['card-name']}>{name}</h4>
         <Tooltip

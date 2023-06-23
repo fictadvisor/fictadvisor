@@ -15,13 +15,6 @@
     @include flex-center;
     flex-direction: column;
     gap: 1.25rem;
-
-    img {
-        width: 6rem;
-        height: 6rem;
-        border-radius: 50%;
-    }
-
     p {
         font-size: 1.25rem;
         text-align: center;

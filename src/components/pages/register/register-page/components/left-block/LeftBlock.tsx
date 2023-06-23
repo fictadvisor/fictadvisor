@@ -1,4 +1,5 @@
-import { FC } from 'react';
+import React, { FC } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
@@ -29,10 +30,10 @@ const LeftBlock: FC<LeftBlockProps> = ({ groups }) => {
   return (
     <div className={styles['left-block']}>
       <Link href="/" className={styles['mobile-register-logo-container']}>
-        <img
-          className={styles['mobile-register-logo']}
+        <Image
           src="/images/login-page/new-logo.png"
           alt="fict advisor logo"
+          fill
         />
       </Link>
       <h3 className={styles['login-header']}>Створи акаунт</h3>
