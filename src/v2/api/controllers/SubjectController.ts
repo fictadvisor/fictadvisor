@@ -6,7 +6,10 @@ import { Access } from 'src/v2/security/Access';
 import { SubjectMapper } from '../../mappers/SubjectMapper';
 import { CreateSubjectDTO } from '../dtos/CreateSubjectDTO';
 import { UpdateSubjectDTO } from '../dtos/UpdateSubjectDTO';
+import { ApiBadRequestResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { SubjectWithTeachersResponse } from '../responses/SubjectWithTeachersResponse';
 
+@ApiTags('Subjects')
 @Controller({
   version: '2',
   path: '/subjects',
@@ -35,6 +38,13 @@ export class SubjectController {
   }
   
   @Get('/:subjectId/teachers')
+  @ApiOkResponse({
+    type: SubjectWithTeachersResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `InvalidEntityIdException:\n
+                  subject with such id is not found`,
+  })
   getTeachers (
     @Param('subjectId', SubjectByIdPipe) subjectId: string,
   ) {

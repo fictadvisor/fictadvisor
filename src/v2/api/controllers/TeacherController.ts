@@ -16,7 +16,10 @@ import { QuestionMapper } from '../../mappers/QuestionMapper';
 import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
 import { UserByIdPipe } from '../pipes/UserByIdPipe';
 import { CommentsQueryDTO } from '../dtos/CommentsQueryDTO';
+import { ApiBadRequestResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { TeachersWithRatingResponse } from '../responses/TeachersWithRatingResponse';
 
+@ApiTags('Teachers')
 @Controller({
   version: '2',
   path: '/teachers',
@@ -32,12 +35,20 @@ export class TeacherController {
 
 
   @Get()
+  @ApiOkResponse({
+    type: TeachersWithRatingResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `InvalidQueryException:\n
+                  Page must be a number
+                  PageSize must be a number
+                  Wrong value for order`,
+  })
   async getAll (
     @Query() query: QueryAllTeacherDTO,
   ) {
-    const dbTeachers = await this.teacherService.getAll(query);
-
-    return this.teacherMapper.getAllTeachers(dbTeachers);
+    const teachers = await this.teacherService.getAllTeachersWithRating(query);
+    return { teachers };
   }
 
   @Get('/:teacherId/roles')

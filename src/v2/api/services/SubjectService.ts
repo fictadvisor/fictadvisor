@@ -7,6 +7,7 @@ import { Prisma, Subject } from '@prisma/client';
 import { DatabaseUtils } from '../../database/DatabaseUtils';
 import { UpdateSubjectDTO } from '../dtos/UpdateSubjectDTO';
 import { TeacherMapper } from '../../mappers/TeacherMapper';
+import { TeacherService } from './TeacherService';
 
 @Injectable()
 export class SubjectService {
@@ -14,6 +15,7 @@ export class SubjectService {
     private subjectRepository: SubjectRepository,
     private teacherRepository: TeacherRepository,
     private teacherMapper: TeacherMapper,
+    private teacherService : TeacherService,
   ) {}
 
   async getAll (body: QueryAllSubjectDTO) {
@@ -79,7 +81,17 @@ export class SubjectService {
       },
     });
 
-    const teachers = this.teacherMapper.getTeachersWithRoles(dbTeachers);
+    const teachers = [];
+    const data = {
+      subjectId: id,
+    };
+
+    for (const dbTeacher of dbTeachers) {
+      teachers.push({
+        ...this.teacherMapper.getTeacherWithRoles(dbTeacher),
+        rating: await this.teacherService.getRating(dbTeacher.id, data),
+      });
+    }
 
     return {
       subjectName,

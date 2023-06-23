@@ -9,6 +9,7 @@ import { DbQuestionWithAnswers } from '../../database/entities/DbQuestionWithAns
 import { ResponseQueryDTO } from '../dtos/ResponseQueryDTO';
 import { PrismaModule } from '../../modules/PrismaModule';
 import { MapperModule } from '../../modules/MapperModule';
+import { QuestionDisplay } from '@prisma/client';
 
 describe('TeacherService', () => {
   let teacherService: TeacherService;
@@ -190,6 +191,78 @@ describe('TeacherService', () => {
       const result = () => teacherService.checkQueryDate(data);
 
       expect(result).toThrow();
+    });
+  });
+
+  describe('getRating', () => {
+    it('should calculate teacher rating', async () => {
+      jest.spyOn(teacherService, 'getMarks').mockImplementation(() => ([
+        {
+          name: 'Radar1',
+          amount: 10,
+          type: QuestionDisplay.RADAR,
+          mark: 60,
+        },
+        {
+          name: 'Circle1',
+          amount: 10,
+          type: QuestionDisplay.CIRCLE,
+          mark: 70,
+        },
+        {
+          name: 'Radar2',
+          amount: 10,
+          type: QuestionDisplay.RADAR,
+          mark: 40,
+        },
+        {
+          name: 'Amount1',
+          amount: 10,
+          type: QuestionDisplay.AMOUNT,
+          mark: {
+            '1': 0,
+            '2': 2,
+            '3': 2,
+            '4': 0,
+            '5': 1,
+            '6': 1,
+            '7': 2,
+            '8': 2,
+            '9': 0,
+            '10': 0,
+          },
+        },
+      ] as any));
+
+      const result = await teacherService.getRating('id');
+      expect(result).toBe(55.25);
+    });
+
+    it('should return 0 if there are no marks', async () => {
+      jest.spyOn(teacherService, 'getMarks').mockImplementation(() => [] as any);
+
+      const result = await teacherService.getRating('id');
+      expect(result).toBe(0);
+    });
+
+    it('should return 0 if amount of votes less then 8', async () => {
+      jest.spyOn(teacherService, 'getMarks').mockImplementation(() => [
+        {
+          name: 'Radar1',
+          amount: 7,
+          type: QuestionDisplay.RADAR,
+          mark: 60,
+        },
+        {
+          name: 'Circle1',
+          amount: 7,
+          type: QuestionDisplay.CIRCLE,
+          mark: 70,
+        },
+      ] as any);
+
+      const result = await teacherService.getRating('id');
+      expect(result).toBe(0);
     });
   });
 });

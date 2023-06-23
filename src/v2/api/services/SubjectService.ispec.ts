@@ -4,13 +4,21 @@ import { MapperModule } from '../../modules/MapperModule';
 import { PrismaModule } from '../../modules/PrismaModule';
 import { QueryAllSubjectDTO } from '../dtos/QueryAllSubjectDTO';
 import { PrismaService } from '../../database/PrismaService';
+import { TeacherService } from './TeacherService';
+import { DisciplineTeacherService } from './DisciplineTeacherService';
+import { PollService } from './PollService';
+import { TelegramAPI } from '../../telegram/TelegramAPI';
+import { DateService } from '../../utils/date/DateService';
+import { TelegramConfigService } from '../../config/TelegramConfigService';
+import { ConfigService } from '@nestjs/config';
 
 describe('SubjectService', () => {
   let subjectService: SubjectService;
   let prisma: PrismaService;
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
-      providers: [SubjectService],
+      providers: [SubjectService, TeacherService, DisciplineTeacherService, PollService, DateService, TelegramAPI,
+        TelegramConfigService, ConfigService],
       imports: [
         PrismaModule,
         MapperModule,

@@ -15,16 +15,6 @@ export class TeacherMapper {
     };
   }
 
-  getAllTeachers (dbTeachers: DbTeacher[]) {
-    const teachers = [];
-    for (const dbTeacher of dbTeachers) {
-      teachers.push(
-        this.getTeacher(dbTeacher)
-      );
-    }
-    return { teachers };
-  }
-
   getRoles (teacher: DbTeacher): TeacherRole[] {
     const roles = [];
     for (const disciplineTeacher of teacher.disciplineTeachers) {
@@ -36,13 +26,11 @@ export class TeacherMapper {
     return roles;
   }
 
-  getTeachersWithRoles (dbTeachers: DbTeacher[]) {
-    return dbTeachers.map((dbTeacher) => {
-      const { disciplineTeachers, ...teacher } = dbTeacher;
-      return {
-        ...teacher,
-        roles: this.getRoles(dbTeacher),
-      };
-    });
+  getTeacherWithRoles (dbTeacher: DbTeacher) {
+    const { disciplineTeachers, ...teacher } = dbTeacher;
+    return {
+      ...teacher,
+      roles: this.getRoles(dbTeacher),
+    };
   }
 }

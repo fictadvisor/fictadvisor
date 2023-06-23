@@ -33,7 +33,6 @@ export class TeacherService {
   ) {}
 
   async getAll (body: QueryAllTeacherDTO) {
-
     const searchedNames = body.search ? body.search.split(/\s+/g) : [];
     const search = {
       AND: searchedNames.map((search) => ({
@@ -59,6 +58,38 @@ export class TeacherService {
     };
 
     return this.teacherRepository.findMany(data);
+  }
+
+  async getAllTeachersWithRating (body: QueryAllTeacherDTO) {
+    const dbTeachers = await this.getAll(body);
+    const teachers =[];
+    for (const dbTeacher of dbTeachers) {
+      teachers.push({
+        ...this.teacherMapper.getTeacher(dbTeacher),
+        rating: await this.getRating(dbTeacher.id),
+      });
+    }
+    return teachers;
+  }
+
+  async getRating (teacherId, data?: ResponseQueryDTO) {
+    const marks = await this.getMarks(teacherId, data);
+    if (!marks.length || marks[0].amount < 8) {
+      return 0;
+    }
+
+    const sum = marks.reduce((sum, m) => {
+      if (m.type === QuestionDisplay.AMOUNT) {
+        let amountSum = 0;
+        for (const mark in m.mark) {
+          amountSum += m.mark[mark]*(+mark);
+        }
+        return sum + (amountSum/m.amount)*10;
+      } else {
+        return sum + m.mark;
+      }
+    }, 0);
+    return +(sum/marks.length).toFixed(2);
   }
 
   async getTeacher (
@@ -184,7 +215,9 @@ export class TeacherService {
   }
 
   async getMarks (teacherId: string, data?: ResponseQueryDTO) {
-    this.checkQueryDate(data);
+    if (data) {
+      this.checkQueryDate(data);
+    }
     const marks = [];
     const questions = await this.pollService.getQuestionWithMarks(teacherId, data);
     for (const question of questions) {
