@@ -2,7 +2,7 @@ import { Controller, Get, Query } from '@nestjs/common';
 import { DateService } from '../../utils/date/DateService';
 import { ConvertToBooleanPipe } from '../pipes/ConvertToBooleanPipe';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { SemesterResponse } from '../responses/SemesterResponse';
+import { SemestersResponse } from '../responses/SemesterResponse';
 
 @ApiTags('Date')
 @Controller({
@@ -16,11 +16,11 @@ export class DateController {
 
   @Get('/semesters')
   @ApiOkResponse({
-    type: [SemesterResponse],
+    type: SemestersResponse,
   })
   async getPreviousSemesters (
     @Query('isFinished', ConvertToBooleanPipe) isFinished?
   ) {
-    return this.dateService.getPreviousSemesters(isFinished as boolean);
+    return { semesters: await this.dateService.getPreviousSemesters(isFinished as boolean) };
   }
 }

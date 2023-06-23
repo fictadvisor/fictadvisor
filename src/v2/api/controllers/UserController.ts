@@ -17,7 +17,10 @@ import { TelegramDTO } from '../dtos/TelegramDTO';
 import { UserMapper } from '../../mappers/UserMapper';
 import { AvatarValidationPipe } from '../pipes/AvatarValidationPipe';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBadRequestResponse, ApiForbiddenResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { SelectiveBySemestersResponse } from '../responses/SelectiveBySemestersResponse';
 
+@ApiTags('User')
 @Controller({
   version: '2',
   path: '/users',
@@ -72,6 +75,25 @@ export class UserController {
   ) {
     const dbDisciplines = await this.userService.getSelective(userId);
     return { disciplines: dbDisciplines.map((d) => d.id) };
+  }
+
+  @Access('users.$userId.selective.get')
+  @Get('/:userId/selectiveBySemesters')
+  @ApiOkResponse({
+    type: SelectiveBySemestersResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `InvalidEntityIdException:\n 
+                  User with such id is not found`,
+  })
+  @ApiForbiddenResponse({
+    description: `NoPermissionException:\n
+                  You do not have permission to perform this action`,
+  })
+  async getSelectiveBySemesters (
+    @Param('userId', UserByIdPipe) userId: string,
+  ) {
+    return { selective: await this.userService.getSelectiveBySemesters(userId) };
   }
 
   @UseGuards()

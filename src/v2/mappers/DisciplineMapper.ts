@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DbDiscipline } from '../database/entities/DbDiscipline';
+import { SelectiveAmount } from '@prisma/client';
 
 @Injectable()
 export class DisciplineMapper {
@@ -63,5 +64,20 @@ export class DisciplineMapper {
       }
     });
     return periods;
+  }
+
+  getSelectiveWithAmount (disciplines: DbDiscipline[], amounts: SelectiveAmount[]) {
+    return amounts.map(({ year, semester, amount }) => {
+      const names = [];
+      disciplines.map((discipline) => {
+        if (discipline.semester === semester && discipline.year === year) names.push(discipline.subject.name);
+      });
+      return {
+        year,
+        semester,
+        amount,
+        disciplines: names,
+      };
+    });
   }
 }

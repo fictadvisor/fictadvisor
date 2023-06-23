@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class SemesterResponse {
+class Semester {
   @ApiProperty()
     year: number;
 
@@ -9,7 +9,14 @@ export class SemesterResponse {
 
   @ApiProperty()
     startDate: Date;
-  
+
   @ApiProperty()
     endDate: Date;
+}
+
+export class SemestersResponse {
+  @ApiProperty({
+    type: [Semester],
+  })
+    semesters: Semester[];
 }

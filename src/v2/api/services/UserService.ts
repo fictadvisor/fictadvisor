@@ -21,6 +21,7 @@ import { DisciplineRepository } from '../../database/repositories/DisciplineRepo
 import { GroupRepository } from '../../database/repositories/GroupRepository';
 import { StudentMapper } from '../../mappers/StudentMapper';
 import { FileService } from '../../utils/files/FileService';
+import { DisciplineMapper } from '../../mappers/DisciplineMapper';
 
 @Injectable()
 export class UserService {
@@ -38,6 +39,7 @@ export class UserService {
     @Inject(forwardRef(() => GroupService))
     private groupService: GroupService,
     private studentMapper: StudentMapper,
+    private disciplineMapper: DisciplineMapper,
   ) {
   }
 
@@ -55,6 +57,18 @@ export class UserService {
         },
       },
     });
+  }
+
+  async getSelectiveBySemesters (userId: string) {
+    const selectiveByUser = await this.getSelective(userId);
+    const { selectiveAmounts } = await this.groupRepository.find({
+      students: {
+        some: {
+          userId,
+        },
+      },
+    });
+    return this.disciplineMapper.getSelectiveWithAmount(selectiveByUser, selectiveAmounts);
   }
 
   async giveRole (studentId: string, roleId: string) {
