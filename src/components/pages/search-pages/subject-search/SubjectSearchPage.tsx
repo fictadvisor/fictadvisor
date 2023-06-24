@@ -33,6 +33,7 @@ const pageSize = 20;
 const SubjectSearchPage = () => {
   const [queryObj, setQueryObj] = useState(SubjectInitialValues);
   const [curPage, setCurPage] = useState(0);
+  //const localStorageName = 'subjectForm';
 
   const submitHandler = useCallback(query => {
     setQueryObj(query);
@@ -60,6 +61,7 @@ const SubjectSearchPage = () => {
           filterDropDownOptions={[{ value: 'name', label: 'За назвою' }]}
           onSubmit={submitHandler}
           initialValues={SubjectInitialValues}
+          //localStorageName={localStorageName}
         />
 
         {data && <SubjectSearchList subjects={data.subjects} />}

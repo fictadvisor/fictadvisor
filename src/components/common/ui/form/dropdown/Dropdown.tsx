@@ -40,6 +40,7 @@ interface DropdownProps {
   noOptionsText?: string;
   width?: string;
   onChange?: () => void;
+  defaultValue?: any;
 }
 
 export const Dropdown: FC<DropdownProps> = ({
@@ -55,10 +56,10 @@ export const Dropdown: FC<DropdownProps> = ({
   showRemark = true,
   size = FieldSize.MEDIUM,
   isDisabled = false,
+  defaultValue,
 }) => {
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [values, { touched, error }, { setTouched, setValue }] = useField(name);
-
   const dropdownState = useMemo(() => {
     if (isDisabled) return FieldState.DISABLED;
     else if (touched && error) return FieldState.ERROR;
@@ -71,7 +72,6 @@ export const Dropdown: FC<DropdownProps> = ({
     setValue(option?.value || '', true);
     if (onChange) onChange();
   };
-
   return (
     <Box
       sx={{
@@ -83,17 +83,16 @@ export const Dropdown: FC<DropdownProps> = ({
           disabled={isDisabled}
           onFocus={() => {
             setIsFocused(true);
-            debugger;
           }}
           onBlur={() => {
             setIsFocused(false);
-            debugger;
           }}
           fullWidth
           disablePortal
           onChange={handleChange}
           blurOnSelect={true}
           options={options}
+          isOptionEqualToValue={(option, value) => option.value === value.value}
           renderInput={params => (
             <TextField
               inputProps={values}
@@ -133,6 +132,7 @@ export const Dropdown: FC<DropdownProps> = ({
           popupIcon={
             <ChevronDownIcon width={24} height={24} strokeWidth={1.5} />
           }
+          value={defaultValue ?? null}
           noOptionsText={noOptionsText}
           renderOption={(props, option: DropDownOption) => (
             <Option props={props} option={option} key={option.value} />
