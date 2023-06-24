@@ -28,3 +28,13 @@ export class QueryAllSubjectDTO {
   @IsOptional()
     group?: string;
 }
+
+export enum SortQASParam {
+  id = 'id',
+  name = 'name',
+}
+
+export enum OrderQASParam {
+  asc = 'asc',
+  desc = 'desc',
+}

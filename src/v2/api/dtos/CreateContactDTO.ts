@@ -7,8 +7,10 @@ import {
   UKRSPEC_REGEX,
   validationOptionsMsg,
 } from '../../utils/GLOBALS';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateContactDTO {
+    @ApiProperty()
     @MaxLength(100, validationOptionsMsg('Name is too long (max: 100)'))
     @IsNotEmpty(validationOptionsMsg('Name can not be empty'))
     @Matches(
@@ -17,10 +19,12 @@ export class CreateContactDTO {
     )
       name: string;
 
+    @ApiProperty()
     @MaxLength(100, validationOptionsMsg('Display name is too long (max: 100)'))
     @IsNotEmpty(validationOptionsMsg('Display name can not be empty'))
       displayName: string;
 
+    @ApiPropertyOptional()
     @MaxLength(200, validationOptionsMsg('Link is too long (max: 200)'))
     @IsAscii(validationOptionsMsg('Link contains wrong symbols (ASCII only)'))
     @IsOptional()

@@ -7,8 +7,10 @@ import {
   UKR_REGEX,
   validationOptionsMsg,
 } from '../../utils/GLOBALS';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateSubjectDTO {
+  @ApiProperty()
   @MinLength(5, validationOptionsMsg('Name is too short (min: 5)'))
   @MaxLength(150, validationOptionsMsg('Name is too long (max: 150)'))
   @IsNotEmpty(validationOptionsMsg('Name can not be empty'))

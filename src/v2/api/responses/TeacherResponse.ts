@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 
 export class TeacherResponse {
@@ -8,15 +8,17 @@ export class TeacherResponse {
   @ApiProperty()
     firstName: string;
   
-  @ApiProperty()
-    middleName: string;
+  @ApiPropertyOptional()
+    middleName?: string;
   
   @ApiProperty()
     lastName: string;
   
-  @ApiProperty()
-    description: string;
+  @ApiPropertyOptional()
+    description?: string;
   
-  @ApiProperty()
-    avatar: string;
+  @ApiPropertyOptional()
+    avatar?: string;
 }
+
+

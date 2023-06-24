@@ -1,24 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { TeacherResponse } from './TeacherResponse';
 
-export class TeacherWithRatingResponse {
-  @ApiProperty()
-    id: string;
-
-  @ApiProperty()
-    firstName: string;
-
-  @ApiProperty()
-    middleName: string;
-
-  @ApiProperty()
-    lastName: string;
-
-  @ApiProperty()
-    description: string;
-
-  @ApiProperty()
-    avatar: string;
-
+export class TeacherWithRatingResponse extends TeacherResponse {
   @ApiProperty()
     rating: number;
 }

@@ -16,12 +16,27 @@ import { QuestionMapper } from '../../mappers/QuestionMapper';
 import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
 import { UserByIdPipe } from '../pipes/UserByIdPipe';
 import { CommentsQueryDTO } from '../dtos/CommentsQueryDTO';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiForbiddenResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiOkResponse, ApiParam,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
+import { TeacherResponse } from '../responses/TeacherResponse';
+import { TeacherRolesResponse } from '../responses/TeacherRolesResponse';
+import { SubjectsResponse } from '../responses/SubjectsResponse';
+import { DisciplineTeacherAndSubjectResponse } from '../responses/DisciplineTeacherAndSubjectResponse';
+import { ContactResponse } from '../responses/ContactResponse';
+import { MarksResponse } from '../responses/MarkResponse';
+import { ResponsesQuestionResponse } from '../responses/ResponsesQuestionResponse';
 import { TeachersWithRatingResponse } from '../responses/TeachersWithRatingResponse';
+import { TeacherWithRatingAndSubjectResponse } from '../responses/TeacherWithRatingAndSubjectResponse';
+import { TeacherWithContactAndRoleResponse } from '../responses/TeacherWithContactAndRoleResponse';
+import { ContactsResponse } from '../responses/ContactsResponse';
 import { CathedraByIdPipe } from '../pipes/CathedraByIdPipe';
 import { TeacherWithRolesAndContactsResponse } from '../responses/TeacherWithRolesAndContactsResponse';
-import { TeacherWithContactsResponse } from '../responses/TeacherWithContactsResponse';
-import { TeacherWithSubjectResponse } from '../responses/TeacherWithSubjectResponse';
 
 @ApiTags('Teachers')
 @Controller({
@@ -55,6 +70,12 @@ export class TeacherController {
     return { teachers };
   }
 
+  @ApiOkResponse({
+    type: TeacherRolesResponse,
+  })
+  @ApiBadRequestResponse({
+    description: 'InvalidEntityId: teacher with such id is not found',
+  })
   @Get('/:teacherId/roles')
   async getTeacherRoles (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
@@ -64,6 +85,12 @@ export class TeacherController {
     return { roles };
   }
 
+  @ApiOkResponse({
+    type: SubjectsResponse,
+  })
+  @ApiBadRequestResponse({
+    description: 'InvalidEntityId: teacher with such id is not found',
+  })
   @Get('/:teacherId/subjects')
   async getSubjects (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
@@ -74,6 +101,26 @@ export class TeacherController {
   }
 
   @Access('users.$userId.teachers.$teacherId.disciplines.get')
+  @ApiBearerAuth()
+  @ApiQuery({
+    type: Boolean,
+    name: 'notAnswered',
+  })
+  @ApiQuery({
+    type: String,
+    name: 'userId',
+  })
+  @ApiOkResponse({
+    type: DisciplineTeacherAndSubjectResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `InvalidEntityIdException: teacher with such id is not found
+                  InvalidEntityIdException: user with such id is not found`,
+  })
+  @ApiForbiddenResponse({
+    description: `NoPermissionException:\n
+                  You do not have permission to perform this action`,
+  })
   @Get('/:teacherId/disciplines')
   async getDisciplines (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
@@ -84,15 +131,14 @@ export class TeacherController {
     return this.disciplineTeacherMapper.getDisciplines(disciplineTeachers);
   }
 
-  @Get('/:teacherId/subjects/:subjectId')
   @ApiOkResponse({
-    type: TeacherWithSubjectResponse,
+    type: TeacherWithRatingAndSubjectResponse,
   })
   @ApiBadRequestResponse({
-    description: `InvalidEntityIdException:\n
-                  Teacher with such id is not found
-                  Subject with such id is not found`,
+    description: `InvalidEntityIdException: teacher with such id is not found
+                  InvalidEntityIdException: subject with such id is not found`,
   })
+  @Get('/:teacherId/subjects/:subjectId')
   async getSubject (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
     @Param('subjectId', SubjectByIdPipe) subjectId: string,
@@ -100,14 +146,13 @@ export class TeacherController {
     return this.teacherService.getTeacherSubject(teacherId, subjectId);
   }
 
-  @Get('/:teacherId')
   @ApiOkResponse({
-    type: TeacherWithContactsResponse,
+    type: TeacherWithContactAndRoleResponse,
   })
   @ApiBadRequestResponse({
-    description: `InvalidEntityIdException:\n
-                  teacher with such id is not found`,
+    description: 'InvalidEntityIdException: teacher with such id is not found',
   })
+  @Get('/:teacherId')
   getTeacher (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
   ) {
@@ -115,6 +160,28 @@ export class TeacherController {
   }
 
   @Access('teachers.create')
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: TeacherResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `InvalidBodyException: First name is too short (min: 2
+                  InvalidBodyException: First name is too long (max: 40)
+                  InvalidBodyException: First name can not be empty
+                  InvalidBodyException: First name is incorrect (A-Я(укр.)\\\\-\\' )')
+                  InvalidBodyException: Middle name is too short (min: 2
+                  InvalidBodyException: Middle name is too long (max: 40)
+                  InvalidBodyException: Middle name is incorrect (A-Я(укр.)\\\\-\\' )')
+                  InvalidBodyException: Last name is too short (min: 2
+                  InvalidBodyException: Last name is too long (max: 40)
+                  InvalidBodyException: Last name can not be empty
+                  InvalidBodyException: Last name is incorrect (A-Я(укр.)\\\\-\\' )')
+                  InvalidBodyException: 'Description is too long (max: 400)`,
+  })
+  @ApiForbiddenResponse({
+    description: `NoPermissionException:\n
+                  You do not have permission to perform this action`,
+  })
   @Post()
   async create (
     @Body() body: CreateTeacherDTO,
@@ -124,6 +191,27 @@ export class TeacherController {
   }
 
   @Access('teachers.$teacherId.update')
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: TeacherResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `InvalidEntityIdException: teacher with such id is not found
+                  InvalidBodyException: First name is too short (min: 2
+                  InvalidBodyException: First name is too long (max: 40)
+                  InvalidBodyException: First name is incorrect (A-Я(укр.)\\\\-\\' )')
+                  InvalidBodyException: Middle name is too short (min: 2
+                  InvalidBodyException: Middle name is too long (max: 40)
+                  InvalidBodyException: Middle name is incorrect (A-Я(укр.)\\\\-\\' )')
+                  InvalidBodyException: Last name is too short (min: 2
+                  InvalidBodyException: Last name is too long (max: 40)
+                  InvalidBodyException: Last name is incorrect (A-Я(укр.)\\\\-\\' )')
+                  InvalidBodyException: 'Description is too long (max: 400)`,
+  })
+  @ApiForbiddenResponse({
+    description: `NoPermissionException:\n
+                  You do not have permission to perform this action`,
+  })
   @Patch('/:teacherId')
   async update (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
@@ -134,6 +222,15 @@ export class TeacherController {
   }
 
   @Access('teachers.$teacherId.delete')
+  @ApiBearerAuth()
+  @ApiOkResponse()
+  @ApiBadRequestResponse({
+    description: 'InvalidEntityIdException: teacher with such id is not found',
+  })
+  @ApiForbiddenResponse({
+    description: `NoPermissionException:\n
+                  You do not have permission to perform this action`,
+  })
   @Delete('/:teacherId')
   async delete (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
@@ -141,6 +238,12 @@ export class TeacherController {
     return this.teacherService.delete(teacherId);
   }
 
+  @ApiOkResponse({
+    type: ContactsResponse,
+  })
+  @ApiBadRequestResponse({
+    description: 'InvalidEntityIdException: teacher with such id is not found',
+  })
   @Get('/:teacherId/contacts')
   async getAllContacts (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
@@ -149,6 +252,21 @@ export class TeacherController {
     return { contacts };
   }
 
+  @ApiParam({
+    type: String,
+    name: 'teacherId',
+  })
+  @ApiParam({
+    type: String,
+    name: 'name',
+  })
+  @ApiOkResponse({
+    type: ContactResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `InvalidEntityIdException: teacher with such id is not found
+                  InvalidContactNameException: Contact with such name is not found`,
+  })
   @Get('/:teacherId/contacts/:name')
   getContact (
     @Param(ContactByNamePipe) params: {teacherId: string, name: string},
@@ -157,6 +275,24 @@ export class TeacherController {
   }
 
   @Access('teachers.$teacherId.contacts.create')
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: ContactResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `InvalidEntityIdException: teacher with such id is not found
+                  InvalidBodyException: Name is too long (max: 100)
+                  InvalidBodyException: Name can not be empty
+                  InvalidBodyException: Name is not correct (a-zA-Z0-9A-Я(укр.)\\-' )
+                  InvalidBodyException: Display name is too long (max: 100)
+                  InvalidBodyException: Display name can not be empty
+                  InvalidBodyException: Link is too long (max: 200)
+                  InvalidBodyException: Link contains wrong symbols (ASCII only)`,
+  })
+  @ApiForbiddenResponse({
+    description: `NoPermissionException:\n
+                  You do not have permission to perform this action`,
+  })
   @Post('/:teacherId/contacts')
   createContact (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
@@ -166,6 +302,29 @@ export class TeacherController {
   }
 
   @Access('teachers.$teacherId.contacts.update')
+  @ApiBearerAuth()
+  @ApiParam({
+    type: String,
+    name: 'teacherId',
+  })
+  @ApiParam({
+    type: String,
+    name: 'name',
+  })
+  @ApiOkResponse({
+    type: ContactResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `InvalidEntityIdException: teacher with such id is not found
+                  InvalidContactNameException: Contact with such name is not found
+                  InvalidBodyException: Display name is too long (max: 100)
+                  InvalidBodyException: Link is too long (max: 200)
+                  InvalidBodyException: Link contains wrong symbols (ASCII only)`,
+  })
+  @ApiForbiddenResponse({
+    description: `NoPermissionException:\n
+                  You do not have permission to perform this action`,
+  })
   @Patch('/:teacherId/contacts/:name')
   async updateContact (
     @Param(ContactByNamePipe) params: {teacherId: string, name: string},
@@ -175,6 +334,24 @@ export class TeacherController {
   }
 
   @Access('teachers.$teacherId.contacts.delete')
+  @ApiBearerAuth()
+  @ApiParam({
+    type: String,
+    name: 'teacherId',
+  })
+  @ApiParam({
+    type: String,
+    name: 'name',
+  })
+  @ApiOkResponse()
+  @ApiBadRequestResponse({
+    description: `InvalidEntityIdException: teacher with such id is not found
+                  InvalidContactNameException: Contact with such name is not found`,
+  })
+  @ApiForbiddenResponse({
+    description: `NoPermissionException:\n
+                  You do not have permission to perform this action`,
+  })
   @Delete('/:teacherId/contacts/:name')
   async deleteContact (
     @Param(ContactByNamePipe) params: {teacherId: string, name: string},
@@ -182,6 +359,13 @@ export class TeacherController {
     return this.teacherService.deleteContact(params.teacherId, params.name);
   }
 
+  @ApiOkResponse({
+    type: MarksResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `InvalidEntityIdException: teacher with such id is not found
+                  InvalidQueryException`,
+  })
   @Get('/:teacherId/marks')
   async getMarks (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
@@ -191,6 +375,12 @@ export class TeacherController {
     return { marks };
   }
 
+  @ApiOkResponse({
+    type: ResponsesQuestionResponse,
+  })
+  @ApiBadRequestResponse({
+    description: 'InvalidQueryException',
+  })
   @Get('/:teacherId/comments')
   async getComments (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,

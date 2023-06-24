@@ -1,6 +1,7 @@
 import { IsEnum, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
 import { Prisma } from '@prisma/client';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export enum CommentsSort {
   NEWEST = 'newest',
@@ -43,17 +44,21 @@ export const CommentsSortMapper: { [key in CommentsSort]: Prisma.Enumerable<Pris
 };
 
 export class CommentsQueryDTO {
+  @ApiPropertyOptional()
   @IsOptional()
     subjectId?: string;
 
+  @ApiPropertyOptional()
   @Type(() => Number)
   @IsOptional()
     year?: number;
 
+  @ApiPropertyOptional()
   @Type(() => Number)
   @IsOptional()
     semester?: number;
 
+  @ApiPropertyOptional()
   @IsEnum(CommentsSort)
   @IsOptional()
     sortBy?: CommentsSort;
