@@ -29,7 +29,7 @@ const RegisterPage: FC<RegisterPageProps> = ({ data }) => {
           src="/images/register-page/background.png"
           fill
           priority
-          alt={'дуже гарна картинка'}
+          alt="дуже гарна картинка"
         />
         <div className={styles['register-page__content']}>
           <LeftBlock groups={data.groups || []} />

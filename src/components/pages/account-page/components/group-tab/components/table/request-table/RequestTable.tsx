@@ -82,15 +82,7 @@ const RequestTable: React.FC<StudentTableProps> = ({ rows, refetch }) => {
             }
           >
             <div className={styles['user-info']}>
-              <Image
-                src={row.imgSrc}
-                alt="avatar"
-                style={{
-                  borderRadius: '100%',
-                }}
-                width={48}
-                height={48}
-              />
+              <img className={styles['img']} src={row.imgSrc} alt="avatar" />
               <div className={styles['full-name']}>{row.fullName}</div>
             </div>
             <div className={styles['other-content']}>

@@ -9,20 +9,11 @@ $font-weight-bold: 700;
 
 .main-page{
     width: 100%;
-    position: relative;
+    background: url("/images/main-page/main-background.png");
     background-size: 100% 100%;
     display: block;
-    z-index: 2;
 }
 
-.background-image {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    height: 100%;
-    width: 100%;
-    z-index: -1;
-}
 @media screen and (max-width: $breakpoint-desktop-medium) {
   .main-page{
     background-size: $breakpoint-desktop-medium 100%;
@@ -33,7 +24,7 @@ $font-weight-bold: 700;
 .main-page-content {
     z-index: 1;
     max-width: 1700px;
-    margin: 0 auto;
+    margin: 64px auto;
 }
 
 .header {

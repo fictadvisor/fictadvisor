@@ -74,9 +74,7 @@ export const PollTeacherCard: FC<PollTeacherCardProps> = ({
           onClick={() => setOpen(true)}
         />
         <div className={styles['poll-teacher-card-shift']}>
-          <Image
-            width={64}
-            height={64}
+          <img
             className={styles['poll-teacher-card-avatar']}
             src={avatar}
             alt="викладач"

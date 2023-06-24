@@ -32,12 +32,10 @@ export const SubjectTeacherCard: React.FC<SubjectTeacherCardProps> = ({
       {...rest}
     >
       <div className={styles['subject-teacher-card-shift']}>
-        <Image
+        <img
           className={styles['subject-teacher-card-avatar']}
           src={avatar}
           alt="викладач"
-          width={64}
-          height={64}
         />
         <CardRoles
           roles={roles}

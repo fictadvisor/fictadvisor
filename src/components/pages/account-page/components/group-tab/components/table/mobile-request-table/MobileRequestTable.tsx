@@ -80,15 +80,7 @@ const MobileRequestTable: React.FC<RequestTableProps> = ({ rows, refetch }) => {
               ]
             }
           >
-            <Image
-              src={row.imgSrc}
-              alt="avatar"
-              style={{
-                borderRadius: '100%',
-              }}
-              width={34}
-              height={34}
-            />
+            <img className={styles['img']} src={row.imgSrc} alt="avatar" />
             <div className={styles['user-info']}>
               <h6 className={styles['full-name']}>{row.fullName}</h6>
               <h6 className={styles['email']}>{row.email}</h6>

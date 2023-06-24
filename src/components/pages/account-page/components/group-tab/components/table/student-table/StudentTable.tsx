@@ -110,15 +110,7 @@ const StudentTable: React.FC<StudentTableProps> = ({
             }
           >
             <div className={styles['user-info']}>
-              <Image
-                src={row.imgSrc}
-                alt="avatar"
-                style={{
-                  borderRadius: '100%',
-                }}
-                width={48}
-                height={48}
-              />
+              <img className={styles['img']} src={row.imgSrc} alt="avatar" />
               <div className={styles['full-name']}>{row.fullName}</div>
               <div className={styles['tag-container']}>
                 <div className={styles['tag']}>

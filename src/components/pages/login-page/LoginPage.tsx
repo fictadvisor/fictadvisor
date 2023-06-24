@@ -22,7 +22,7 @@ const LoginPage = () => {
           src="/images/login-page/login-background.png"
           fill
           priority
-          alt={'дуже гарна картинка'}
+          alt="дуже гарна картинка"
         />
         <div className={styles['login-page__content']}>
           <LeftBlock />

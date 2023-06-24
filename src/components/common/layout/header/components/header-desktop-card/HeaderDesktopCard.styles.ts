@@ -29,6 +29,7 @@ export const groupName: SxProps<Theme> = {
   color: 'grey.500',
   border: 0.2,
   borderColor: 'grey.500',
+  textTransform: 'none !important',
 };
 
 export const position: SxProps<Theme> = {

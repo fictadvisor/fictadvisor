@@ -20,15 +20,7 @@ const PersonalTeacherCard: FC<PersonalTeacherCardProps> = props => {
   return (
     <div className={styles['card']}>
       <div className={styles['photo']}>
-        <Image
-          src={props.avatar}
-          alt="photo"
-          style={{
-            borderRadius: '50%',
-          }}
-          width={200}
-          height={200}
-        />
+        <img src={props.avatar} className={styles['image']} alt="photo" />
       </div>
       <div className={styles['name-and-rating']}>
         <h4>

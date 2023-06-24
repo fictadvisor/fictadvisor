@@ -110,15 +110,7 @@ const MobileStudentTable: React.FC<StudentTableProps> = ({
               ]
             }
           >
-            <Image
-              src={row.imgSrc}
-              alt="avatar"
-              style={{
-                borderRadius: '100%',
-              }}
-              width={36}
-              height={36}
-            />
+            <img className={styles['img']} src={row.imgSrc} alt="avatar" />
             <div className={styles['user-info']}>
               <h6 className={styles['full-name']}>{row.fullName}</h6>
               <h6 className={styles['email']}>{row.email}</h6>

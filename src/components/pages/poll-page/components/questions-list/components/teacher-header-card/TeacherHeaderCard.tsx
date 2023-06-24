@@ -35,15 +35,7 @@ const TeacherHeaderCard: React.FC<TeacherHeaderCardProps> = ({
       )}
       {...rest}
     >
-      <Image
-        src={url}
-        alt="картинка викладача"
-        style={{
-          borderRadius: '100%',
-        }}
-        width={68}
-        height={68}
-      />
+      <img src={url} alt="картинка викладача" />
       <div className={styles['header-lecturer-card-info']}>
         <h4 className={styles['card-name']}>{name}</h4>
         <Tooltip
