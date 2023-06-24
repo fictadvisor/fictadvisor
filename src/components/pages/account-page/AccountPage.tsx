@@ -37,7 +37,7 @@ const AccountPagesMapper = {
 };
 
 const AccountPage = () => {
-  const { push, replace, query, isReady } = useRouter();
+  const { replace, query, isReady } = useRouter();
 
   const { tab } = query;
   const [index, setIndex] = useState<AccountPageTabs>(AccountPageTabs.GENERAL);
@@ -49,7 +49,7 @@ const AccountPage = () => {
     if (Object.values(AccountPageTabs).includes(tab as AccountPageTabs)) {
       setIndex(tab as AccountPageTabs);
     } else {
-      void push(
+      void replace(
         { query: { ...query, tab: AccountPageTabs.GENERAL } },
         undefined,
         {
@@ -57,7 +57,7 @@ const AccountPage = () => {
         },
       );
     }
-  }, [tab, isReady, push, query]);
+  }, [tab, isReady, query, replace]);
 
   const { isLoggedIn } = useAuthentication();
   const dispatch = useDispatch();
@@ -66,10 +66,10 @@ const AccountPage = () => {
     if (!isLoggedIn) {
       void replace('/login?~account');
     }
-  }, [dispatch, isLoggedIn, push, replace]);
+  }, [dispatch, isLoggedIn, replace]);
 
   const handleChange = async (event, value) => {
-    await push({ query: { ...query, tab: value } }, undefined, {
+    await replace({ query: { ...query, tab: value } }, undefined, {
       shallow: true,
     });
     setIndex(value as AccountPageTabs);
