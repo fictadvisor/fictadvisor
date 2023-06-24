@@ -10,6 +10,9 @@ export const tabList: SxProps<Theme> = {
       width: '0',
       height: '0',
     },
+    '.MuiTab-root': {
+      zIndex: '1',
+    },
   },
   width: '100%',
 };
