@@ -11,10 +11,10 @@
   min-width: fit-content;
   border: 1px solid transparent;
   transition: all 0.2s ease-in-out;
-  //margin-top: 3rem;
   display: flex;
   flex-flow: column nowrap;
   gap: 8px;
+  position: relative;
 }
 
 .poll-teacher-card-roles {
@@ -76,3 +76,4 @@
     color: #a3a3a3 !important;
   }
 }
+

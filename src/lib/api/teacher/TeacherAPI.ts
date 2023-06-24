@@ -128,4 +128,12 @@ export class TeacherAPI {
     );
     return data;
   }
+
+  static async removeTeacher(teacherId: string): Promise<void> {
+    await client.post(
+      `/disciplineTeachers/${teacherId}/removeFromPoll`,
+      {},
+      getAuthorizationHeader(),
+    );
+  }
 }
