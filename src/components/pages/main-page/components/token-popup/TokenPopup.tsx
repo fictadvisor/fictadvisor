@@ -1,7 +1,7 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
-import { Popup } from 'src/components/common/ui/popup';
+import Popup from 'src/components/common/ui/pop-ups-mui/Popup';
 
 import { AlertColor } from '@/components/common/ui/alert';
 import Button, {
@@ -88,25 +88,21 @@ const TokenPopup: FC<TokenPopupProps> = ({ token }) => {
   };
 
   return (
-    isOpen && (
-      <Popup
-        isClosable={false}
-        hasIcon
-        isTelegramIcon
-        title="Підключи Telegram"
-        text="Натисни, щоб підключити Telegram"
-        closeFunction={setIsOpen}
-        firstButton={
-          <Button
-            size={ButtonSize.MEDIUM}
-            text="Прийняти"
-            color={ButtonColor.PRIMARY}
-            variant={ButtonVariant.FILLED}
-            onClick={handleClick}
-          />
-        }
-      />
-    )
+    <Popup
+      open={isOpen}
+      title="Підключи Telegram"
+      text="Натисни, щоб підключити Telegram"
+      onClose={() => setIsOpen(false)}
+      firstButton={
+        <Button
+          size={ButtonSize.MEDIUM}
+          text="Прийняти"
+          color={ButtonColor.PRIMARY}
+          variant={ButtonVariant.FILLED}
+          onClick={handleClick}
+        />
+      }
+    />
   );
 };
 

@@ -1,6 +1,10 @@
 import { SxProps, Theme } from '@mui/material/styles';
 
 export const popup = (contentLeft): SxProps<Theme> => ({
+  position: 'absolute',
+  left: 0,
+  right: 0,
+
   '.MuiDialog-paper': {
     backgroundColor: 'backgroundDark.200',
     maxWidth: '420px',

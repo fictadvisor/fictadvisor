@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react';
+import React, { FC, MouseEvent, ReactNode, useRef } from 'react';
 import { Box, Typography } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import { SxProps, Theme } from '@mui/material/styles';
@@ -35,11 +35,23 @@ const Popup: FC<PopupProps> = ({
   secondButton,
   contentLeft = false,
 }) => {
+  const handleClose = (event: MouseEvent) => {
+    if (
+      dialogRef.current.querySelector('.MuiDialog-container') === event.target
+    )
+      onClose();
+  };
+
+  const dialogRef = useRef<HTMLDivElement>(null);
+
   return (
     <Dialog
+      ref={dialogRef}
       sx={mergeSx(styles.popup(contentLeft), sx)}
       open={open}
       onClose={onClose}
+      onClick={handleClose}
+      disableScrollLock
     >
       <PopupsTitle
         sx={styles.popupsTitle(contentLeft)}

@@ -4,7 +4,7 @@ import {
   ArrowDownCircleIcon,
   ArrowUpCircleIcon,
 } from '@heroicons/react/24/outline';
-import { Popup } from 'src/components/common/ui/popup';
+import Popup from 'src/components/common/ui/pop-ups-mui/Popup';
 
 import { AlertColor } from '@/components/common/ui/alert';
 import Button, {
@@ -85,68 +85,62 @@ const EditingColumn: FC<EditingColumnProps> = ({ student, refetch }) => {
   ) {
     return (
       <div className={styles['side-buttons']}>
-        {isOpenChange && (
-          <Popup
-            isClosable={true}
-            hasIcon={true}
-            title={
-              student.role === StudentRole.MODERATOR
-                ? 'Зробити студентом'
-                : 'Зробити зам старостою'
-            }
-            text={`Ви дійсно бажаєте зробити користувача ${student.fullName} ${
-              student.role === StudentRole.MODERATOR
-                ? 'студентом'
-                : 'зам старостою'
-            }?`}
-            closeFunction={() => setIsOpenChange(false)}
-            firstButton={
-              <Button
-                size={ButtonSize.SMALL}
-                text="Скасувати"
-                color={ButtonColor.PRIMARY}
-                variant={ButtonVariant.OUTLINE}
-                onClick={() => setIsOpenChange(false)}
-              />
-            }
-            secondButton={
-              <Button
-                size={ButtonSize.SMALL}
-                text="Так"
-                color={ButtonColor.PRIMARY}
-                variant={ButtonVariant.FILLED}
-                onClick={handleChangeStatus}
-              />
-            }
-          />
-        )}
-        {isOpenDelete && (
-          <Popup
-            isClosable={true}
-            hasIcon={true}
-            title="Видалити користувача"
-            text={`Чи дійсно ви бажаєте видалити користувача ${student.fullName}? Якщо ви випадково видалите користувача, йому треба буд відправити повторний запит до групи.`}
-            closeFunction={() => setIsOpenDelete(false)}
-            firstButton={
-              <Button
-                size={ButtonSize.SMALL}
-                text="Скасувати"
-                color={ButtonColor.PRIMARY}
-                variant={ButtonVariant.OUTLINE}
-                onClick={() => setIsOpenDelete(false)}
-              />
-            }
-            secondButton={
-              <Button
-                size={ButtonSize.SMALL}
-                text="Так"
-                color={ButtonColor.PRIMARY}
-                variant={ButtonVariant.FILLED}
-                onClick={handleDelete}
-              />
-            }
-          />
-        )}
+        <Popup
+          open={isOpenChange}
+          title={
+            student.role === StudentRole.MODERATOR
+              ? 'Зробити студентом'
+              : 'Зробити зам старостою'
+          }
+          text={`Ви дійсно бажаєте зробити користувача ${student.fullName} ${
+            student.role === StudentRole.MODERATOR
+              ? 'студентом'
+              : 'зам старостою'
+          }?`}
+          onClose={() => setIsOpenChange(false)}
+          firstButton={
+            <Button
+              size={ButtonSize.SMALL}
+              text="Скасувати"
+              color={ButtonColor.PRIMARY}
+              variant={ButtonVariant.OUTLINE}
+              onClick={() => setIsOpenChange(false)}
+            />
+          }
+          secondButton={
+            <Button
+              size={ButtonSize.SMALL}
+              text="Так"
+              color={ButtonColor.PRIMARY}
+              variant={ButtonVariant.FILLED}
+              onClick={handleChangeStatus}
+            />
+          }
+        />
+        <Popup
+          open={isOpenDelete}
+          title="Видалити користувача"
+          text={`Чи дійсно ви бажаєте видалити користувача ${student.fullName}? Якщо ви випадково видалите користувача, йому треба буд відправити повторний запит до групи.`}
+          onClose={() => setIsOpenDelete(false)}
+          firstButton={
+            <Button
+              size={ButtonSize.SMALL}
+              text="Скасувати"
+              color={ButtonColor.PRIMARY}
+              variant={ButtonVariant.OUTLINE}
+              onClick={() => setIsOpenDelete(false)}
+            />
+          }
+          secondButton={
+            <Button
+              size={ButtonSize.SMALL}
+              text="Так"
+              color={ButtonColor.PRIMARY}
+              variant={ButtonVariant.FILLED}
+              onClick={handleDelete}
+            />
+          }
+        />
         <div>
           <Button
             text={buttonText}
@@ -167,33 +161,30 @@ const EditingColumn: FC<EditingColumnProps> = ({ student, refetch }) => {
   if (dataMapper[user.group.role] === StudentRole.MODERATOR && !student.role) {
     return (
       <>
-        {isOpenDelete && (
-          <Popup
-            isClosable={true}
-            hasIcon={true}
-            title="Видалити користувача"
-            text={`Чи дійсно ви бажаєте видалити користувача ${student.fullName}? Якщо ви випадково видалите користувача, йому треба буд відправити повторний запит до групи.`}
-            closeFunction={() => setIsOpenDelete(false)}
-            firstButton={
-              <Button
-                size={ButtonSize.SMALL}
-                text="Скасувати"
-                color={ButtonColor.PRIMARY}
-                variant={ButtonVariant.OUTLINE}
-                onClick={() => setIsOpenDelete(false)}
-              />
-            }
-            secondButton={
-              <Button
-                size={ButtonSize.SMALL}
-                text="Так"
-                color={ButtonColor.PRIMARY}
-                variant={ButtonVariant.FILLED}
-                onClick={handleDelete}
-              />
-            }
-          />
-        )}
+        <Popup
+          open={isOpenDelete}
+          title="Видалити користувача"
+          text={`Чи дійсно ви бажаєте видалити користувача ${student.fullName}? Якщо ви випадково видалите користувача, йому треба буд відправити повторний запит до групи.`}
+          onClose={() => setIsOpenDelete(false)}
+          firstButton={
+            <Button
+              size={ButtonSize.SMALL}
+              text="Скасувати"
+              color={ButtonColor.PRIMARY}
+              variant={ButtonVariant.OUTLINE}
+              onClick={() => setIsOpenDelete(false)}
+            />
+          }
+          secondButton={
+            <Button
+              size={ButtonSize.SMALL}
+              text="Так"
+              color={ButtonColor.PRIMARY}
+              variant={ButtonVariant.FILLED}
+              onClick={handleDelete}
+            />
+          }
+        />
         <TrashBucketButton
           onClick={() => {
             setIsOpenDelete(true);
