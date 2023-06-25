@@ -17,7 +17,6 @@ import { Answer, SendingStatus } from '../poll-form/PollForm';
 
 import * as sxStyles from './AnswerSheet.style';
 import AnswersSaved from './AnswersSaved';
-import { initialValues } from './constants';
 
 import styles from './AnswersSheet.module.scss';
 
@@ -63,6 +62,8 @@ export const getProgress = (answers: Answer[], questions) => {
   return count;
 };
 
+let initialValues = {};
+
 const AnswersSheet: React.FC<AnswersSheetProps> = ({
   questions,
   isTheLast,
@@ -99,6 +100,10 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
     });
   };
 
+  useEffect(() => {
+    initialValues = {};
+  }, []);
+
   const handleSubmit = () => {};
 
   return (
@@ -134,7 +139,7 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
             <Formik
               validateOnMount
               validateOnChange
-              initialValues={initialValues}
+              initialValues={{}}
               enableReinitialize
               onSubmit={handleSubmit}
             >
@@ -222,6 +227,15 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
                       } else {
                         setIsSendingStatus(SendingStatus.LOADING);
                         try {
+                          for (let i = 0; i < answers.length; i++) {
+                            answers[i].value = answers[i].value.trim();
+
+                            if (answers[i].value.length === 0) {
+                              answers = answers.filter(
+                                item => item !== answers[i],
+                              );
+                            }
+                          }
                           await PollAPI.createTeacherGrade(
                             { answers },
                             disciplineTeacherId,
