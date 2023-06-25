@@ -9,20 +9,23 @@ export class TeacherRepository {
     private prisma: PrismaService,
   ) {}
 
+  private include = {
+    cathedras: true,
+    disciplineTeachers: {
+      include: {
+        discipline: true,
+        roles: true,
+      },
+    },
+  };
+
   async findMany (
     data: Prisma.TeacherFindManyArgs,
   ) {
 
     return this.prisma.teacher.findMany({
       ...data,
-      include: {
-        disciplineTeachers: {
-          include: {
-            discipline: true,
-            roles: true,
-          },
-        },
-      },
+      include: this.include,
     });
   }
 
@@ -31,14 +34,7 @@ export class TeacherRepository {
   ) {
     return this.prisma.teacher.findFirst({
       where,
-      include: {
-        disciplineTeachers: {
-          include: {
-            discipline: true,
-            roles: true,
-          },
-        },
-      },
+      include: this.include,
     });
   }
 
@@ -47,14 +43,7 @@ export class TeacherRepository {
       where: {
         id,
       },
-      include: {
-        disciplineTeachers: {
-          include: {
-            discipline: true,
-            roles: true,
-          },
-        },
-      },
+      include: this.include,
     });
   }
 
@@ -63,14 +52,7 @@ export class TeacherRepository {
   ) {
     return this.prisma.teacher.create({
       data,
-      include: {
-        disciplineTeachers: {
-          include: {
-            discipline: true,
-            roles: true,
-          },
-        },
-      },
+      include: this.include,
     });
   }
 
@@ -89,6 +71,7 @@ export class TeacherRepository {
     return this.prisma.teacher.update({
       where,
       data,
+      include: this.include,
     });
   }
 
@@ -98,20 +81,14 @@ export class TeacherRepository {
         id,
       },
       data,
-      include: {
-        disciplineTeachers: {
-          include: {
-            discipline: true,
-            roles: true,
-          },
-        },
-      },
+      include: this.include,
     });
   }
 
   async delete (where: Prisma.TeacherWhereUniqueInput) {
     return this.prisma.teacher.delete({
       where,
+      include: this.include,
     });
   }
 
@@ -122,6 +99,7 @@ export class TeacherRepository {
       where: {
         id,
       },
+      include: this.include,
     });
   }
 

@@ -16,8 +16,10 @@ import { QuestionMapper } from '../../mappers/QuestionMapper';
 import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
 import { UserByIdPipe } from '../pipes/UserByIdPipe';
 import { CommentsQueryDTO } from '../dtos/CommentsQueryDTO';
-import { ApiBadRequestResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiForbiddenResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { TeachersWithRatingResponse } from '../responses/TeachersWithRatingResponse';
+import { CathedraByIdPipe } from '../pipes/CathedraByIdPipe';
+import { TeacherWithRolesAndContactsResponse } from '../responses/TeacherWithRolesAndContactsResponse';
 import { TeacherWithContactsResponse } from '../responses/TeacherWithContactsResponse';
 import { TeacherWithSubjectResponse } from '../responses/TeacherWithSubjectResponse';
 
@@ -197,5 +199,27 @@ export class TeacherController {
     this.teacherService.checkQueryDate(query);
     const questions = await this.pollService.getQuestionWithText(teacherId, query);
     return this.questionMapper.getQuestionWithResponses(questions);
+  }
+
+  @Access('teachers.$teacherId.cathedrae.update')
+  @ApiBearerAuth()
+  @Patch('/:teacherId/cathedra/:cathedraId')
+  @ApiOkResponse({
+    type: TeacherWithRolesAndContactsResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `InvalidEntityIdException:\n
+                  teacher with such id is not found
+                  cathedra with such id is not found`,
+  })
+  @ApiForbiddenResponse({
+    description: `NoPermissionException:\n
+                  You do not have permission to perform this action`,
+  })
+  async connectCathedra (
+    @Param('teacherId', TeacherByIdPipe) teacherId: string,
+    @Param('cathedraId', CathedraByIdPipe) cathedraId: string,
+  ) {
+    return this.teacherService.connectTeacherWithCathedra(teacherId, cathedraId);
   }
 }

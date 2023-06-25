@@ -111,6 +111,17 @@ export class TeacherService {
     };
   }
 
+  async connectTeacherWithCathedra (teacherId: string, cathedraId: string) {
+    await this.teacherRepository.updateById(teacherId, {
+      cathedras: {
+        create: {
+          cathedraId,
+        },
+      },
+    });
+    return this.getTeacher(teacherId);
+  }
+
   async getUserDisciplineTeachers (teacherId: string, userId: string, notAnswered: boolean) {
     const disciplineTeachers = await this.disciplineTeacherRepository.findMany({
       where: {

@@ -152,13 +152,14 @@ enum TeacherRole {
 }
 
 model Teacher {
-  id                 String              @id @default(uuid())
-  firstName          String              @map("first_name")
-  middleName         String?             @default("") @map("middle_name")
-  lastName           String              @map("last_name")
+  id                 String                @id @default(uuid())
+  firstName          String                @map("first_name")
+  middleName         String?               @default("") @map("middle_name")
+  lastName           String                @map("last_name")
   description        String?
   avatar             String?
   disciplineTeachers DisciplineTeacher[]
+  cathedras          TeachersOnCathedras[]
 
   @@map("teachers")
 }
@@ -374,4 +375,23 @@ model RemovedDisciplineTeacher {
 
   @@id([disciplineTeacherId, studentId])
   @@map("removed_discipline_teachers")
+}
+
+model Cathedra {
+  id           String                @id @default(uuid())
+  name         String                @default("")
+  abbreviation String
+  teachers     TeachersOnCathedras[]
+
+  @@map("cathedras")
+}
+
+model TeachersOnCathedras {
+  teacher    Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  teacherId  String   @map("teacher_id")
+  cathedra   Cathedra @relation(fields: [cathedraId], references: [id], onDelete: Cascade)
+  cathedraId String   @map("cathedra_id")
+
+  @@id([teacherId, cathedraId])
+  @@map("teachers_on_cathedras")
 }
