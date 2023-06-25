@@ -18,6 +18,8 @@ import { UserByIdPipe } from '../pipes/UserByIdPipe';
 import { CommentsQueryDTO } from '../dtos/CommentsQueryDTO';
 import { ApiBadRequestResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { TeachersWithRatingResponse } from '../responses/TeachersWithRatingResponse';
+import { TeacherWithContactsResponse } from '../responses/TeacherWithContactsResponse';
+import { TeacherWithSubjectResponse } from '../responses/TeacherWithSubjectResponse';
 
 @ApiTags('Teachers')
 @Controller({
@@ -81,6 +83,14 @@ export class TeacherController {
   }
 
   @Get('/:teacherId/subjects/:subjectId')
+  @ApiOkResponse({
+    type: TeacherWithSubjectResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `InvalidEntityIdException:\n
+                  Teacher with such id is not found
+                  Subject with such id is not found`,
+  })
   async getSubject (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
     @Param('subjectId', SubjectByIdPipe) subjectId: string,
@@ -89,6 +99,13 @@ export class TeacherController {
   }
 
   @Get('/:teacherId')
+  @ApiOkResponse({
+    type: TeacherWithContactsResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `InvalidEntityIdException:\n
+                  teacher with such id is not found`,
+  })
   getTeacher (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
   ) {

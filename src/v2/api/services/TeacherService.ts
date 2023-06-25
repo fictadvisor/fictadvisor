@@ -99,11 +99,13 @@ export class TeacherService {
     const { disciplineTeachers, ...teacher } = dbTeacher;
     const roles = this.teacherMapper.getRoles(dbTeacher);
     const contacts = await this.contactRepository.getAllContacts(id);
+    const rating = await this.getRating(id);
 
     return {
       ...teacher,
       roles,
       contacts,
+      rating,
     };
   }
 
@@ -296,12 +298,17 @@ export class TeacherService {
     const roles = this.disciplineTeacherMapper.getRolesBySubject(disciplineTeachers as DbDisciplineTeacher[], subjectId);
     const { disciplines, ...subject } = await this.subjectRepository.findById(subjectId);
     const contacts = await this.contactRepository.getAllContacts(teacherId);
+    const data = {
+      subjectId,
+    };
+    const rating = await this.getRating(teacherId, data);
 
     return {
       ...teacher,
       subject,
       roles,
       contacts,
+      rating,
     };
   }
 }
