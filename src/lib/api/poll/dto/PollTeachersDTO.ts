@@ -13,4 +13,5 @@ export interface PollTeachersDTO {
       name: string;
     };
   }[];
+  hasSelectedInLastSemester: boolean;
 }

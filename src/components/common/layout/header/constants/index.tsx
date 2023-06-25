@@ -1,3 +1,5 @@
+import { FireIcon } from '@heroicons/react/24/outline';
+
 import { AcademicCap } from '@/components/common/icons/AcademicCap';
 import { Briefcase } from '@/components/common/icons/Briefcase';
 import { Clipboard } from '@/components/common/icons/Clipboard';
@@ -20,6 +22,11 @@ export const accountButtons = [
     link: '/account?tab=group',
     text: 'Група',
     icon: <Users />,
+  },
+  {
+    link: '/account?tab=selective',
+    text: 'Мої вибіркові',
+    icon: <FireIcon />,
   },
 ];
 

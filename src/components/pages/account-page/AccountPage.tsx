@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import {
   AcademicCapIcon,
+  FireIcon,
   LockClosedIcon,
   UsersIcon,
 } from '@heroicons/react/24/outline';
@@ -16,6 +17,7 @@ import TabPanel from '@/components/common/ui/tab-mui/tab-panel';
 import GeneralTab from '@/components/pages/account-page/components/general-tab';
 import GroupTab from '@/components/pages/account-page/components/group-tab';
 import SecurityTab from '@/components/pages/account-page/components/security-tab';
+import SelectiveTab from '@/components/pages/account-page/components/selective-tab';
 import useAuthentication from '@/hooks/use-authentication';
 
 import PageLayout from '../../common/layout/page-layout/PageLayout';
@@ -28,12 +30,14 @@ enum AccountPageTabs {
   GENERAL = 'general',
   SECURITY = 'security',
   GROUP = 'group',
+  SELECTIVE = 'selective',
 }
 
 const AccountPagesMapper = {
   group: 'Група',
   security: 'Безпека',
   general: 'Загальне',
+  selective: 'Мої вибіркові',
 };
 
 const AccountPage = () => {
@@ -112,6 +116,12 @@ const AccountPage = () => {
               icon={<UsersIcon />}
               textPosition="left"
             />
+            <Tab
+              label="Мої вибіркові"
+              value={AccountPageTabs.SELECTIVE}
+              icon={<FireIcon />}
+              textPosition="left"
+            />
           </TabList>
           {isLoggedIn && (
             <Box sx={stylesMui.tabPanelsList}>
@@ -126,6 +136,12 @@ const AccountPage = () => {
               </TabPanel>
               <TabPanel sx={stylesMui.tabPanel} value={AccountPageTabs.GROUP}>
                 <GroupTab />
+              </TabPanel>
+              <TabPanel
+                sx={stylesMui.tabPanel}
+                value={AccountPageTabs.SELECTIVE}
+              >
+                <SelectiveTab />
               </TabPanel>
             </Box>
           )}

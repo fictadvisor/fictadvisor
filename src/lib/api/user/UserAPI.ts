@@ -1,6 +1,9 @@
 import { ChangeInfoBody } from '@/lib/api/user/dto/ChangeInfoBody';
 import { GetContactsDTO } from '@/lib/api/user/dto/GetContactsDTO';
+import { GetSelectiveDisciplinesBySemesterDTO } from '@/lib/api/user/dto/GetSelectiveDisciplinesBySemesterDTO';
+import { GetSelectiveDisciplinesDTO } from '@/lib/api/user/dto/GetSelectiveDisciplinesDTO';
 import { LinkTelegramBody } from '@/lib/api/user/dto/LinkTelegramBody';
+import { PostSelectiveDisciplinesBody } from '@/lib/api/user/dto/PostSelectiveDisciplinesBody';
 import { RequestNewGroupBody } from '@/lib/api/user/dto/RequestNewGroupBody';
 import { getAuthorizationHeader } from '@/lib/api/utils';
 
@@ -90,6 +93,40 @@ export class UserAPI {
       `/users/${userId}/requestNewGroup`,
       body,
       getAuthorizationHeader(),
+    );
+    return data;
+  }
+
+  static async getSelectiveDisciplinesBySemester(
+    userId: string,
+  ): Promise<GetSelectiveDisciplinesBySemesterDTO> {
+    const { data } = await client.get(
+      `/users/${userId}/selectiveBySemesters`,
+      getAuthorizationHeader(),
+    );
+    return data;
+  }
+
+  static async postSelectiveDisciplines(
+    userId: string,
+    body: PostSelectiveDisciplinesBody,
+  ) {
+    const { data } = await client.post(
+      `/disciplines/${userId}/selectiveDisciplines`,
+      body,
+      getAuthorizationHeader(),
+    );
+    return data;
+  }
+
+  static async getSelectiveDisciplines(
+    userId: string,
+    year: number,
+    semester: number,
+  ): Promise<GetSelectiveDisciplinesDTO> {
+    const { data } = await client.get(
+      `/users/${userId}/selectiveDisciplines?`,
+      { ...getAuthorizationHeader(), params: { year, semester } },
     );
     return data;
   }

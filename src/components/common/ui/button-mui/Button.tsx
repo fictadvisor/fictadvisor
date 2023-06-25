@@ -16,6 +16,7 @@ interface ButtonProps {
   disabled?: boolean;
   onClick?: MouseEventHandler<HTMLButtonElement>;
   href?: string;
+  type?: 'button' | 'reset' | 'submit';
 }
 
 const Button: FC<ButtonProps> = ({
