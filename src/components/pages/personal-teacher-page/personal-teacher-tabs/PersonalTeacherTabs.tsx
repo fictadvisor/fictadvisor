@@ -89,7 +89,7 @@ const PersonalTeacherTabs: FC<PersonalTeacherTabs> = ({
                 buttonInfo={data.buttonInfo}
               />
             ) : (
-              <CommentTab {...data.comments} />
+              <CommentTab teacherId={data.info.id} />
             )}
           </TabPanel>
         </Box>

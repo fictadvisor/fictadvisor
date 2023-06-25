@@ -56,12 +56,14 @@ export class TeacherAPI {
     subjectId?: string,
     semester?: number,
     year?: number,
+    sortBy?: string,
   ): Promise<GetTeacherCommentsDTO> {
     const { data } = await client.get(`/teachers/${teacherId}/comments`, {
       params: {
         semester,
         subjectId,
         year,
+        sortBy,
       },
     });
     return data;

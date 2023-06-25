@@ -7,3 +7,7 @@ export const wrapper: SxProps<Theme> = {
   flexDirection: 'column',
   gap: '14px',
 };
+
+export const dropdown = {
+  marginBottom: '12 px',
+};
