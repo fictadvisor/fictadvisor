@@ -97,7 +97,7 @@ export class DisciplineService {
           },
         },
       });
-      const { amount } = selectiveAmounts[0];
+      const { amount } = selectiveAmounts.find((s) => s.year === year && s.semester === semester);
       if (pendingAmount + selectedAmount > amount) {
         throw new ExcessiveSelectiveDisciplinesException();
       }
