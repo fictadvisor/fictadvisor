@@ -1,5 +1,9 @@
 import { FC } from 'react';
-import { Icon, Rating as RatingMui, SxProps, Theme } from '@mui/material';
+import { Box, Icon, Rating as RatingMui, SxProps, Theme } from '@mui/material';
+
+import mergeSx from '@/lib/utils/MergeSxStylesUtil';
+
+import * as styles from './Rating.styles';
 
 export enum RatingVariant {
   LONG = 'long',
@@ -16,27 +20,32 @@ const Rating: FC<RatingProps> = ({
   variant = RatingVariant.LONG,
   sx,
 }) => {
-  const maxStarsNumber = variant === RatingVariant.LONG ? 5 : 1;
-  const number = variant === RatingVariant.LONG ? rating : rating / 5;
-  const precision = variant === RatingVariant.LONG ? 0.1 : 0.02;
+  const isLongVariant = variant === RatingVariant.LONG;
+  const maxStarsNumber = isLongVariant ? 5 : 1;
+  const value = isLongVariant ? rating : rating / 5;
+  const precision = isLongVariant ? 0.1 : 0.02;
   return (
-    <RatingMui
-      value={number}
-      sx={sx}
-      precision={precision}
-      max={maxStarsNumber}
-      emptyIcon={
-        <Icon>
-          <img src="/icons/stars-empty.svg" alt="stars" />
-        </Icon>
-      }
-      icon={
-        <Icon>
-          <img src="/icons/stars-full.svg" alt="stars" />
-        </Icon>
-      }
-      readOnly
-    />
+    <Box sx={mergeSx(styles.rating(variant), sx)}>
+      {!isLongVariant && <Box>{rating}</Box>}
+      <RatingMui
+        value={value}
+        sx={styles.ratingStars}
+        precision={precision}
+        max={maxStarsNumber}
+        emptyIcon={
+          <Icon>
+            <img src="/icons/stars-empty.svg" alt="stars" />
+          </Icon>
+        }
+        icon={
+          <Icon>
+            <img src="/icons/stars-full.svg" alt="stars" />
+          </Icon>
+        }
+        readOnly
+      />
+      {isLongVariant && <Box>{rating}</Box>}
+    </Box>
   );
 };
 
