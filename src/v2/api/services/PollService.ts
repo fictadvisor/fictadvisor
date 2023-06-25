@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateQuestionWithRolesDTO } from '../dtos/CreateQuestionWithRolesDTO';
 import { QuestionRepository } from '../../database/repositories/QuestionRepository';
-import { QuestionType, SemesterDate, State, TeacherRole } from '@prisma/client';
+import { Prisma, QuestionType, SemesterDate, State, TeacherRole } from '@prisma/client';
 import { UpdateQuestionWithRolesDTO } from '../dtos/UpdateQuestionWithRolesDTO';
 import { ResponseData } from '../datas/ResponseData';
 import { CreateQuestionRoleDTO } from '../dtos/CreateQuestionRoleDTO';
@@ -21,7 +21,7 @@ import { DisciplineTeacherRepository } from '../../database/repositories/Discipl
 import { PollDisciplineTeachersResponse } from '../responses/PollDisciplineTeachersResponse';
 import { StudentRepository } from '../../database/repositories/StudentRepository';
 import { GroupRepository } from '../../database/repositories/GroupRepository';
-
+import { DatabaseUtils } from '../../database/DatabaseUtils';
 @Injectable()
 export class PollService {
   constructor (
@@ -106,10 +106,28 @@ export class PollService {
     }) as unknown as Promise<DbQuestionWithAnswers[]>;
   }
 
-  async getQuestionWithText (teacherId: string, query: CommentsQueryDTO = {}): Promise<DbQuestionWithDiscipline[]> {
-    return await this.questionRepository.findMany({
+  async getQuestionWithText (
+    teacherId: string,
+    query: CommentsQueryDTO = {}
+  ): Promise<DbQuestionWithDiscipline[]> {
+
+    const pageOptions = DatabaseUtils.getPage(query);
+
+    return this.questionRepository.findMany({
       where: {
         type: QuestionType.TEXT,
+        questionAnswers: {
+          some: {
+            disciplineTeacher: {
+              teacherId,
+              discipline: {
+                subjectId: query.subjectId,
+                year: query.year,
+                semester: query.semester,
+              },
+            },
+          },
+        },
       },
       include: {
         questionAnswers: {
@@ -137,6 +155,7 @@ export class PollService {
               },
             },
           },
+          ...pageOptions,
         },
       },
     }) as unknown as Promise<DbQuestionWithDiscipline[]>;

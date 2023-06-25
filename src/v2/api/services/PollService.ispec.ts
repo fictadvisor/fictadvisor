@@ -34,7 +34,7 @@ describe('PollService', () => {
       providers: [PollService],
       imports: [
         PrismaModule,
-        DateModule, 
+        DateModule,
         MapperModule,
       ],
     }).compile();
@@ -65,7 +65,7 @@ describe('PollService', () => {
         },
       },
     });
-    
+
     userPending = await prisma.user.create({
       data: {
         id: '32c06837-38ff-4e6f-a7f0-b5b38a9f4d7a',
@@ -81,7 +81,7 @@ describe('PollService', () => {
         lastName: 'teacherLecturerLastName',
       },
     });
-  
+
     teacherPractitian = await prisma.teacher.create({
       data: {
         id: 'aae47f01-975b-4c95-8719-cacf46795b22',
@@ -89,7 +89,7 @@ describe('PollService', () => {
         lastName: 'teacherPractitianLastName',
       },
     });
-  
+
     teacherLaborant = await prisma.teacher.create({
       data: {
         id: 'c2ff029f-3ae9-4cf8-a2d6-aa7a7eeac185',
@@ -105,19 +105,19 @@ describe('PollService', () => {
         lastName: 'rejectedTeacherLastName',
       },
     });
-  
+
     subject = await prisma.subject.create({
       data: {
         id: '87e204ea-4243-4633-b69d-014613bac59e',
         name: 'subject1',
       },
     });
-  
+
     discipline1 = await prisma.discipline.create({
       data: {
         id: '7974396c-5d98-4cc2-8dca-c14f32e4e7de',
         disciplineTeachers: {
-          createMany: { 
+          createMany: {
             data: [
               { id: 'd97af0f2-af7e-4eee-9d2d-952510ac2d14', teacherId: teacherLecturer.id },
               { id: '6653877a-f8c9-40a0-9acb-ef5139e863c3', teacherId: teacherPractitian.id },
@@ -139,12 +139,12 @@ describe('PollService', () => {
         },
       },
     }) as any as DbDiscipline;
-  
+
     discipline2 = await prisma.discipline.create({
       data: {
         id: '32030fb6-d882-4762-a4cd-184ec0e291bf',
         disciplineTeachers: {
-          createMany: { 
+          createMany: {
             data: [
               { id: 'e045b960-1af7-4202-828d-ed3c276a9790', teacherId: teacherLecturer.id },
               { id: 'bdeb5c18-68f9-4261-b38c-91f683569994', teacherId: teacherPractitian.id },
@@ -164,12 +164,12 @@ describe('PollService', () => {
         },
       },
     }) as any as DbDiscipline;
-  
+
     discipline3 = await prisma.discipline.create({
       data: {
         id: 'e011b152-3c7d-4121-90c3-506c9fe3ae67',
         disciplineTeachers: {
-          createMany: { 
+          createMany: {
             data: [
               { id: '821fafbf-67d2-495a-acd3-d1c1338e3619', teacherId: teacherPractitian.id },
             ],
@@ -201,7 +201,7 @@ describe('PollService', () => {
         },
       },
     });
-  
+
     questionMark1 = await prisma.question.create({
       data: {
         id: 'f0141b13-73a6-4d4a-a321-d92d75c4e223',
@@ -211,23 +211,23 @@ describe('PollService', () => {
         type: QuestionType.SCALE,
         display: QuestionDisplay.RADAR,
         order: 1,
-        questionRoles: { 
+        questionRoles: {
           createMany: { data: [
             { role: TeacherRole.LABORANT, isRequired: false, isShown: false },
             { role: TeacherRole.LECTURER, isRequired: true, isShown: false },
             { role: TeacherRole.PRACTICIAN, isRequired: true, isShown: true },
-          ] }, 
+          ] },
         },
         questionAnswers: {
           createMany: { data: [
             {
-              disciplineTeacherId: discipline2.disciplineTeachers[0].id, 
-              userId: user.id, 
+              disciplineTeacherId: discipline2.disciplineTeachers[0].id,
+              userId: user.id,
               value: '5',
             },
             {
-              disciplineTeacherId: discipline2.disciplineTeachers[1].id, 
-              userId: user.id, 
+              disciplineTeacherId: discipline2.disciplineTeachers[1].id,
+              userId: user.id,
               value: '5',
             },
           ] },
@@ -238,7 +238,7 @@ describe('PollService', () => {
         questionRoles: true,
       },
     });
-  
+
     questionMark2 = await prisma.question.create({
       data: {
         id: 'b92d77d8-3cf9-44d8-b041-061273c7c6b6',
@@ -248,23 +248,23 @@ describe('PollService', () => {
         type: QuestionType.TOGGLE,
         display: QuestionDisplay.CIRCLE,
         order: 2,
-        questionRoles: { 
+        questionRoles: {
           createMany: { data: [
             { role: TeacherRole.LABORANT, isRequired: true, isShown: true },
             { role: TeacherRole.LECTURER, isRequired: true, isShown: true },
             { role: TeacherRole.PRACTICIAN, isRequired: true, isShown: true },
-          ] }, 
+          ] },
         },
         questionAnswers: {
           createMany: { data: [
             {
-              disciplineTeacherId: discipline1.disciplineTeachers[0].id, 
-              userId: user.id, 
+              disciplineTeacherId: discipline1.disciplineTeachers[0].id,
+              userId: user.id,
               value: 'text',
             },
             {
-              disciplineTeacherId: discipline1.disciplineTeachers[1].id, 
-              userId: user.id, 
+              disciplineTeacherId: discipline1.disciplineTeachers[1].id,
+              userId: user.id,
               value: 'text',
             },
           ] },
@@ -275,7 +275,7 @@ describe('PollService', () => {
         questionRoles: true,
       },
     });
-  
+
     questionText = await prisma.question.create({
       data: {
         id: 'd13e053e-2a08-486f-b4f8-34b8dab3da17',
@@ -297,17 +297,17 @@ describe('PollService', () => {
           data: [
             {
               disciplineTeacherId: discipline1.disciplineTeachers[0].id,
-              userId: user.id, 
+              userId: user.id,
               value: 'text',
             },
             {
               disciplineTeacherId: discipline2.disciplineTeachers[0].id,
-              userId: user.id, 
+              userId: user.id,
               value: 'text',
             },
             {
               disciplineTeacherId: discipline1.disciplineTeachers[2].id,
-              userId: user.id, 
+              userId: user.id,
               value: 'text',
             },
           ],
@@ -320,7 +320,7 @@ describe('PollService', () => {
     });
   });
 
- 
+
 
   afterAll(async () => {
     await prisma.user.deleteMany({
@@ -390,7 +390,7 @@ describe('PollService', () => {
       expect(questions.length).toBe(0);
     });
 
-    it('should return 2 questions: first one requires PRACTICIAN and LECTURER and show PRACTICIAN and the second one shows every role', 
+    it('should return 2 questions: first one requires PRACTICIAN and LECTURER and show PRACTICIAN and the second one shows every role',
       async () => {
         const questions = await pollService.getQuestions([
           TeacherRole.PRACTICIAN,
@@ -404,7 +404,7 @@ describe('PollService', () => {
       }
     );
 
-    it('should return only one question because the second one doesn\'t show LECTURER question but only PRACTICIAN', 
+    it('should return only one question because the second one doesn\'t show LECTURER question but only PRACTICIAN',
       async () => {
         const questions = await pollService.getQuestions([
           TeacherRole.LECTURER,
@@ -423,7 +423,7 @@ describe('PollService', () => {
       const questions = await pollService.getQuestionWithMarks(teacherLecturer.id);
       expect(questions.length).toBe(2);
       expect(
-        questions.every((question) => 
+        questions.every((question) =>
           question.type === QuestionType.SCALE || question.type === QuestionType.TOGGLE
         )
       ).toBe(true);
@@ -444,7 +444,7 @@ describe('PollService', () => {
 
       expect(questions1.length).toBe(2);
       expect(
-        questions1.every((question) => 
+        questions1.every((question) =>
           question.type === QuestionType.SCALE || question.type === QuestionType.TOGGLE
         )
       ).toBe(true);
@@ -463,7 +463,7 @@ describe('PollService', () => {
 
       expect(questions2.length).toBe(2);
       expect(
-        questions2.every((question) => 
+        questions2.every((question) =>
           question.type === QuestionType.SCALE || question.type === QuestionType.TOGGLE
         )
       ).toBe(true);
@@ -531,11 +531,11 @@ describe('PollService', () => {
       expect(questionsOldest[0].questionAnswers).toStrictEqual(questionsNewest[0].questionAnswers.reverse());
     });
 
-    it('should return empty array of answers because teacher with the id not found', async () => {
+    it('should return empty array because the teacher with the id not found', async () => {
       const questions = await pollService.getQuestionWithText('e94f17b2-e6d9-4b10-bc38-a76d98061192');
-      expect(questions[0].questionAnswers.length).toBe(0);
+      expect(questions.length).toBe(0);
     });
-    
+
     it('should return empty array of answers because data is wrong', async () => {
       const questions = await pollService.getQuestionWithMarks(
         teacherLecturer.id,
@@ -554,7 +554,7 @@ describe('PollService', () => {
       const { hasSelectedInLastSemester, teachers } = await pollService.getDisciplineTeachers(user.id);
       expect(teachers.length).toBe(1);
       expect(teachers[0].disciplineTeacherId === discipline3.disciplineTeachers[0].id);
-    }); 
+    });
 
     it('should return an error because user doesn\'t have permissions', async () => {
       await expect(

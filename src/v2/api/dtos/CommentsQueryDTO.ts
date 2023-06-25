@@ -62,4 +62,12 @@ export class CommentsQueryDTO {
   @IsEnum(CommentsSort)
   @IsOptional()
     sortBy?: CommentsSort;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+    page?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+    pageSize?: number;
 }
