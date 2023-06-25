@@ -1,8 +1,7 @@
-import React from 'react';
-
 import { GitHub } from '@/components/common/icons/GitHub';
 import { Instagram } from '@/components/common/icons/Instagram';
 import { Telegram } from '@/components/common/icons/Telegram';
+import { TikTok } from '@/components/common/icons/TikTok';
 
 export const mainLinks = [
   {
@@ -49,5 +48,10 @@ export const socialLinks = [
     link: 'https://t.me/fict_time',
     text: 'Telegram',
     icon: <Telegram />,
+  },
+  {
+    link: 'https://www.tiktok.com/@sr_fiot',
+    text: 'TikTok',
+    icon: <TikTok />,
   },
 ];
