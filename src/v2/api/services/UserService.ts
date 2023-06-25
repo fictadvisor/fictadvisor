@@ -94,18 +94,6 @@ export class UserService {
     });
   }
 
-  async getRoles (studentId: string) {
-    return this.roleRepository.findMany({
-      where: {
-        userRoles: {
-          some: {
-            studentId,
-          },
-        },
-      },
-    });
-  }
-
   async getGroupRole (studentId: string) {
     return this.roleRepository.find({
       userRoles: {
@@ -187,8 +175,7 @@ export class UserService {
   }
 
   async updateUser (userId: string, data: UpdateUserDTO) {
-    const user = await this.userRepository.updateById(userId, data);
-    return user;
+    return this.userRepository.updateById(userId, data);
   }
 
   async getContacts (userId: string) {
@@ -248,9 +235,50 @@ export class UserService {
         }
       }
       await this.addGroupRole(userId, isCaptain);
+      await this.putSelective(userId);
     }
 
     return this.updateStudent(userId, { state });
+  }
+
+  async putSelective (studentId: string) {
+    const { firstName, lastName, group: { code } } = await this.studentRepository.findById(studentId);
+    const name = `${lastName} ${firstName}`;
+    const years = await this.dateService.getYears();
+    for (const year of years) {
+      const selectiveFile = this.fileService.getFileContent(`selective/${year}.csv`);
+      for (const parsedRow of selectiveFile.split(/\r\n/g)) {
+        const [,, subjectName,, semester,,,,, studentName] = parsedRow.split(';');
+        if (!studentName.startsWith(name)) continue;
+        const discipline = await this.disciplineRepository.find({
+          group: {
+            code,
+          },
+          subject: {
+            name: subjectName,
+          },
+          year,
+          semester: +semester % 2 === 0 ? 2 : 1,
+          isSelective: true,
+        });
+
+        this.studentRepository.updateById(studentId, {
+          selectiveDisciplines: {
+            connectOrCreate: {
+              where: {
+                disciplineId_studentId: {
+                  disciplineId: discipline.id,
+                  studentId,
+                },
+              },
+              create: {
+                disciplineId: discipline.id,
+              },
+            },
+          },
+        });
+      }
+    }
   }
 
   async updateAvatar (file: Express.Multer.File, userId: string) {

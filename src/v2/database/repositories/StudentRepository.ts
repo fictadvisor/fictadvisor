@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../PrismaService';
 import { Prisma } from '@prisma/client';
+import { DbStudent } from '../entities/DbStudent';
 
 @Injectable()
 export class StudentRepository {
@@ -38,7 +39,7 @@ export class StudentRepository {
     });
   }
 
-  findById (userId: string) {
+  findById (userId: string): Promise<DbStudent> {
     return this.find({ userId });
   }
 

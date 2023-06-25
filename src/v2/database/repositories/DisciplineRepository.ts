@@ -68,4 +68,8 @@ export class DisciplineRepository {
       include: this.include,
     });
   }
+
+  async updateMany (where: Prisma.DisciplineWhereInput, data: Prisma.DisciplineUncheckedUpdateManyInput) {
+    return this.prisma.discipline.updateMany({ where, data });
+  }
 }

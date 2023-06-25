@@ -16,4 +16,9 @@ export class FileService {
 
     return resolve(process.env.BASE_URL, join(directory, fileName + extname(file.originalname)));
   }
+
+  getFileContent (path: string, isPrivate = false) {
+    const filePath = join(__dirname, isPrivate ? 'private' : 'static', path);
+    return fs.readFileSync(filePath, 'utf-8');
+  }
 }

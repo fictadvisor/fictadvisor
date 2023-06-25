@@ -70,6 +70,15 @@ export class DateService {
     };
   }
 
+  async getYears (): Promise<number[]> {
+    const set = new Set<number>();
+    const { semesters } = await this.getAllPreviousSemesters();
+    for (const semester of semesters) {
+      set.add(semester.year);
+    }
+    return Array.from(set);
+  }
+
   async getPreviousSemesters (isLastFinished?: boolean) {
     const { semesters, isFinished } = await this.getAllPreviousSemesters();
     if (isFinished === isLastFinished || isLastFinished === undefined) return semesters;

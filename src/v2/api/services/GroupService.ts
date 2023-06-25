@@ -130,6 +130,7 @@ export class GroupService {
 
     if (data.state === State.APPROVED) {
       await this.addGroupRole(groupId, userId, RoleName.STUDENT);
+      await this.userService.putSelective(userId);
     }
 
     return verifiedStudent;
@@ -144,7 +145,7 @@ export class GroupService {
         },
       },
     });
-    this.userService.giveRole(userId, role.id);
+    await this.userService.giveRole(userId, role.id);
   }
 
   async moderatorSwitch (groupId: string, userId: string, { roleName }: RoleDTO) {
