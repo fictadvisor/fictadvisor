@@ -3,8 +3,8 @@
 @import 'src/styles/partials/typography-mixins';
 
 .subject-teacher-card {
-  height: 140px;
-  padding: 16px;
+  height: 104px;
+  padding: 12px;
   background-color: $background-dark-35;
   border-radius: 6px;
   width: 100%;
@@ -18,6 +18,18 @@
   flex-direction: column;
   position: relative;
   top: -50px;
+}
+
+.subject-teacher-card-top-part{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  position: relative;
+}
+
+.subject-teacher-card-top-part-rating{
+  position: relative;
+  top: 44px;
 }
 
 .subject-teacher-card-effect {

@@ -13,5 +13,5 @@ export const rating = (variant): SxProps<Theme> => ({
 });
 
 export const ratingStars: SxProps<Theme> = {
-  paddingBottom: '8px',
+  paddingBottom: '4px',
 };

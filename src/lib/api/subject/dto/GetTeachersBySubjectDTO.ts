@@ -8,6 +8,7 @@ export interface GetTeachersBySubjectDTO {
     middleName: string;
     lastName: string;
     avatar: string;
+    rating: number;
     roles: TeacherRoles[];
   }[];
 }

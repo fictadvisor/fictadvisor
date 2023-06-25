@@ -13,6 +13,7 @@ export interface GetTeacherDTO {
   lastName: string;
   description: string;
   avatar: string;
+  rating: number;
   roles: TeacherRoles[];
   contacts: {
     link: string;

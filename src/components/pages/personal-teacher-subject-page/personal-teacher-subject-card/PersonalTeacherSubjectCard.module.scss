@@ -74,6 +74,7 @@
 }
 
 .name-and-rating{
+  gap: 8px;
   display: flex;
   min-width: unset;
   width: 100%;
@@ -153,6 +154,7 @@
     width: 140px;
   }
   .name-and-rating {
+    gap: 2px;
     grid-column-start: 2;
     grid-column-end: 3;
     grid-row-start: 1;

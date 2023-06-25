@@ -23,10 +23,11 @@ const Rating: FC<RatingProps> = ({
   const isLongVariant = variant === RatingVariant.LONG;
   const maxStarsNumber = isLongVariant ? 5 : 1;
   const value = isLongVariant ? rating : rating / 5;
+  const ratingText = isLongVariant ? rating.toFixed(2) : rating.toFixed(1);
   const precision = isLongVariant ? 0.1 : 0.02;
   return (
     <Box sx={mergeSx(styles.rating(variant), sx)}>
-      {!isLongVariant && <Box>{rating}</Box>}
+      {!isLongVariant && <Box>{ratingText}</Box>}
       <RatingMui
         value={value}
         sx={styles.ratingStars}
@@ -44,7 +45,7 @@ const Rating: FC<RatingProps> = ({
         }
         readOnly
       />
-      {isLongVariant && <Box>{rating}</Box>}
+      {isLongVariant && <Box>{ratingText}</Box>}
     </Box>
   );
 };

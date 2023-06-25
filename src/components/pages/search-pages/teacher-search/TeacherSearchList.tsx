@@ -33,6 +33,7 @@ export const TeacherSearchList = ({
               avatar={teacher.avatar}
               key={teacher.id}
               name={`${teacher.lastName} ${teacher.firstName} ${teacher.middleName}`}
+              rating={teacher.rating / 20}
             />
           </Link>
         ))}

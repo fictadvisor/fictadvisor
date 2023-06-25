@@ -72,6 +72,7 @@
 }
 
 .name-and-rating{
+  gap: 8px;
   outline-color: #1C6B1C;
   display: flex;
   min-width: unset;
@@ -234,6 +235,7 @@
     width: 68px;
   }
   .name-and-rating{
+    gap: 2px;
     width: 90%;
     grid-column-start: 2;
     grid-column-end: 4;

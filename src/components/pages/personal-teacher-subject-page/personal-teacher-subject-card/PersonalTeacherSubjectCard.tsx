@@ -2,6 +2,7 @@ import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 
 import Button, { ButtonVariant } from '@/components/common/ui/button';
+import Rating from '@/components/common/ui/rating-mui';
 import Tag from '@/components/common/ui/tag-mui';
 import styles from '@/components/pages/personal-teacher-subject-page/personal-teacher-subject-card/PersonalTeacherSubjectCard.module.scss';
 import { TeacherSubjectContext } from '@/components/pages/personal-teacher-subject-page/PersonalTeacherSubjectPage';
@@ -41,6 +42,7 @@ const PersonalTeacherSubjectCard: FC<
         <h4>
           {props.lastName + ' ' + props.firstName + ' ' + props.middleName}
         </h4>
+        {props.rating != 0 && <Rating rating={props.rating / 20} />}
       </div>
       <div className={styles['subject']}>
         <h5>{props.subject.name}</h5>

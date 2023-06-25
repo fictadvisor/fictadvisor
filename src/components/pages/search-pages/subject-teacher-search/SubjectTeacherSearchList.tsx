@@ -46,6 +46,7 @@ export const SubjectTeacherSearchList: FC<SubjectTeacherSearchListProps> = ({
                 key={teacher.id}
                 name={`${teacher.lastName} ${teacher.firstName} ${teacher.middleName}`}
                 roles={teacher.roles}
+                rating={teacher.rating / 20}
               />
             </Link>
           ))}

@@ -3,7 +3,7 @@
 
 .teacher-card {
   height: 104px;
-  padding: 16px;
+  padding: 12px;
   background-color: $background-dark-35;
   border-radius: 6px;
   width: 100%;
@@ -20,6 +20,17 @@
   top: -50px;
 }
 
+.teacher-card-top-part{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  position: relative;
+}
+
+.teacher-card-top-part-rating{
+  position: relative;
+  top: 44px;
+}
 .card-disabled {
   .teacher-card-avatar {
     border-color: #4b4b4b;
