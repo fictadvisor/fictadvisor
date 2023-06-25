@@ -1,10 +1,10 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
-import Image from 'next/image';
 
 import Button, { ButtonVariant } from '@/components/common/ui/button';
 import Tag from '@/components/common/ui/tag-mui';
 import styles from '@/components/pages/personal-teacher-subject-page/personal-teacher-subject-card/PersonalTeacherSubjectCard.module.scss';
+import { TeacherSubjectContext } from '@/components/pages/personal-teacher-subject-page/PersonalTeacherSubjectPage';
 import { TeacherRoles } from '@/lib/api/teacher/dto/GetTeacherDTO';
 import { GetTeacherSubjectDTO } from '@/lib/api/teacher/dto/GetTeacherSubjectDTO';
 
@@ -16,8 +16,24 @@ const PersonalTeacherSubjectCard: FC<
   PersonalTeacherSubjectCardProps
 > = props => {
   const [isContactsVisible, setContactsVisibility] = useState(false);
+  const blockRef = useRef(null);
+  const { setFloatingCardShowed } = useContext(TeacherSubjectContext);
+  useEffect(() => {
+    const handleScroll = () => {
+      const bottom = blockRef.current?.getBoundingClientRect().bottom;
+      if (bottom < 0) {
+        setFloatingCardShowed(true);
+      } else {
+        setFloatingCardShowed(false);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
   return (
-    <div className={styles['card']}>
+    <div ref={blockRef} className={styles['card']}>
       <div className={styles['photo']}>
         <img src={props.avatar} className={styles['image']} alt="photo" />
       </div>
