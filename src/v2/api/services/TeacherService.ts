@@ -18,6 +18,7 @@ import { SearchDTO } from '../../utils/QueryAllDTO';
 import { filterAsync } from '../../utils/ArrayUtil';
 import { DbDisciplineTeacher } from '../../database/entities/DbDisciplineTeacher';
 import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
+import { DateService } from '../../utils/date/DateService';
 
 @Injectable()
 export class TeacherService {
@@ -29,7 +30,8 @@ export class TeacherService {
     private contactRepository: ContactRepository,
     private subjectRepository: SubjectRepository,
     private pollService: PollService,
-    private disciplineTeacherMapper: DisciplineTeacherMapper
+    private disciplineTeacherMapper: DisciplineTeacherMapper,
+    private dateService: DateService,
   ) {}
 
   async getAll (body: QueryAllTeacherDTO) {
@@ -143,7 +145,10 @@ export class TeacherService {
           },
         },
       });
-      return !await this.disciplineTeacherService.isNotSelectedByUser(userId, discipline) && !isRemoved;
+      const isPrevious = await this.dateService.isPreviousSemesterToCurrent(discipline.semester, discipline.year);
+      return isPrevious &&
+        !await this.disciplineTeacherService.isNotSelectedByUser(userId, discipline) &&
+        !isRemoved;
     });
   }
 

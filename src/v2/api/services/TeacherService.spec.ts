@@ -10,6 +10,7 @@ import { ResponseQueryDTO } from '../dtos/ResponseQueryDTO';
 import { PrismaModule } from '../../modules/PrismaModule';
 import { MapperModule } from '../../modules/MapperModule';
 import { QuestionDisplay } from '@prisma/client';
+import { DateModule } from '../../utils/date/DateModule';
 
 describe('TeacherService', () => {
   let teacherService: TeacherService;
@@ -27,6 +28,7 @@ describe('TeacherService', () => {
           isGlobal: true,
           load: [Configuration],
         }),
+        DateModule,
       ],
     }).compile();
 

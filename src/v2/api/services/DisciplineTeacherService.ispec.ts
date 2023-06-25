@@ -557,6 +557,23 @@ describe('DisciplineTeacherService', () => {
       expect(dteachers.length).toBe(3);
     });
 
+    it('should not return discipline teachers of not finished semester', async () => {
+      jest
+        .useFakeTimers()
+        .setSystemTime(new Date('2023-05-13T00:00:00'));
+      const dteachers = await teacherService.getUserDisciplineTeachers(
+        'teacherId1',
+        'userWithNoSelectedId1',
+        false,
+      );
+
+      expect(dteachers.length).toBe(2);
+
+      jest
+        .useFakeTimers()
+        .setSystemTime(new Date('2023-07-13T00:00:00'));
+    });
+
     afterAll(() => {
       jest
         .useRealTimers();
