@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { RoleName, State, User } from '@prisma/client';
 import { DisciplineMapper } from '../../mappers/DisciplineMapper';
 import { GroupRepository } from '../../database/repositories/GroupRepository';
@@ -52,6 +52,7 @@ export class GroupService {
   constructor (
     private disciplineMapper: DisciplineMapper,
     private groupRepository: GroupRepository,
+    @Inject(forwardRef(() => UserService))
     private userService: UserService,
     private studentRepository: StudentRepository,
     private userRepository: UserRepository,

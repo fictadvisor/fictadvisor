@@ -11,10 +11,11 @@ import { GroupModule } from './GroupModule';
 import { GrantController } from '../api/controllers/GrantController';
 import { MapperModule } from './MapperModule';
 import { FileModule } from '../utils/files/FileModule';
+import { DateService } from '../utils/date/DateService';
 
 @Module({
   controllers: [UserController, RoleController, GrantController],
-  providers: [UserService, RoleService, GrantService],
+  providers: [UserService, RoleService, GrantService, DateService],
   exports: [UserService, RoleService, GrantService],
   imports: [ConfigurationModule, forwardRef(() => GroupModule), AccessModule, forwardRef(() => AuthModule), MapperModule, FileModule],
 })

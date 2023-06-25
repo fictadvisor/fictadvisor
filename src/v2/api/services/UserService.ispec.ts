@@ -14,6 +14,7 @@ import { DisciplineMapper } from '../../mappers/DisciplineMapper';
 import { InjectionToken } from '@nestjs/common';
 import { PrismaModule } from '../../modules/PrismaModule';
 import { MapperModule } from '../../modules/MapperModule';
+import { DateService } from '../../utils/date/DateService';
 
 describe('UserService', () => {
   let userService: UserService;
@@ -21,7 +22,7 @@ describe('UserService', () => {
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
-      providers: [UserService, PrismaService],
+      providers: [UserService, PrismaService, GroupService, DateService],
       imports: [PrismaModule, MapperModule],
     }).useMocker((token) => {
       const tokens = [
@@ -32,7 +33,6 @@ describe('UserService', () => {
         RoleRepository,
         AuthService,
         FileService,
-        GroupService,
         StudentMapper,
         DisciplineMapper,
       ] as InjectionToken[];
@@ -51,19 +51,37 @@ describe('UserService', () => {
       },
     });
 
-    await prisma.user.create({
-      data: {
-        id: 'userId1',
-        email: 'poshta@gmail.com',
-      },
+    await prisma.user.createMany({
+      data: [
+        {
+          id: 'userId1',
+          email: 'poshta@gmail.com',
+        }, {
+          id: 'userId2',
+          email: 'poshta2@gmail.com',
+        }, {
+          id: 'userId3',
+          email: 'poshta3@gmail.com',
+        },
+      ],
     });
 
-    await prisma.student.create({
-      data: {
-        userId: 'userId1',
-        groupId: 'groupId1',
-        state: 'APPROVED',
-      },
+    await prisma.student.createMany({
+      data: [
+        {
+          userId: 'userId1',
+          groupId: 'groupId1',
+          state: 'APPROVED',
+        }, {
+          userId: 'userId2',
+          groupId: 'groupId1',
+          state: 'APPROVED',
+        }, {
+          userId: 'userId3',
+          groupId: 'groupId1',
+          state: 'APPROVED',
+        },
+      ],
     });
 
     await prisma.selectiveAmount.createMany({
@@ -93,6 +111,12 @@ describe('UserService', () => {
         }, {
           id: 'subjectId3',
           name: 'subject3',
+        }, {
+          id: 'subjectId4',
+          name: 'subject4',
+        }, {
+          id: 'subjectId5',
+          name: 'subject5',
         },
       ],
     });
@@ -120,6 +144,34 @@ describe('UserService', () => {
           year: 2022,
           semester: 1,
           isSelective: false,
+        }, {
+          id: 'disciplineId4',
+          subjectId: 'subjectId4',
+          groupId: 'groupId1',
+          year: 2022,
+          semester: 2,
+          isSelective: true,
+        },  {
+          id: 'disciplineId5',
+          subjectId: 'subjectId5',
+          groupId: 'groupId1',
+          year: 2022,
+          semester: 2,
+          isSelective: true,
+        },  {
+          id: 'disciplineId6',
+          subjectId: 'subjectId5',
+          groupId: 'groupId1',
+          year: 2022,
+          semester: 2,
+          isSelective: true,
+        },  {
+          id: 'disciplineId7',
+          subjectId: 'subjectId4',
+          groupId: 'groupId1',
+          year: 2022,
+          semester: 1,
+          isSelective: true,
         },
       ],
     });
@@ -130,8 +182,23 @@ describe('UserService', () => {
           disciplineId: 'disciplineId1',
           studentId: 'userId1',
         }, {
+          disciplineId: 'disciplineId1',
+          studentId: 'userId2',
+        }, {
+          disciplineId: 'disciplineId1',
+          studentId: 'userId3',
+        }, {
           disciplineId: 'disciplineId2',
           studentId: 'userId1',
+        },  {
+          disciplineId: 'disciplineId2',
+          studentId: 'userId2',
+        }, {
+          disciplineId: 'disciplineId4',
+          studentId: 'userId2',
+        }, {
+          disciplineId: 'disciplineId5',
+          studentId: 'userId2',
         },
       ],
     });
@@ -154,6 +221,56 @@ describe('UserService', () => {
           disciplines: ['subject1', 'subject2'],
         },
       ]);
+    });
+  });
+
+  describe('getRemainingSelective', () => {
+    it('should return empty obj for reason all needed disciplines taken', async () => {
+      const remainingDisciplines = await userService.getRemainingSelective(
+        'userId2',
+        { year: 2022, semester: 2 }
+      );
+
+      expect(remainingDisciplines).toStrictEqual({});
+    });
+
+    it('should return empty obj for incorrect date', async () => {
+      const remainingDisciplines = await userService.getRemainingSelective(
+        'userId3',
+        { year: 2000, semester: 2 }
+      );
+
+      expect(remainingDisciplines).toStrictEqual({});
+    });
+
+    it('should return correct remaining disciplines', async () => {
+      const remainingDisciplines = await userService.getRemainingSelective(
+        'userId3',
+        { year: 2022, semester: 2 }
+      );
+
+      const expectedRemaining = {
+        availableSelectiveAmount: 3,
+        year: 2022,
+        semester: 2,
+        remainingSelective: [
+          {
+            disciplineId: 'disciplineId2',
+            subjectName: 'subject2',
+          }, {
+            disciplineId: 'disciplineId4',
+            subjectName: 'subject4',
+          }, {
+            disciplineId: 'disciplineId5',
+            subjectName: 'subject5',
+          }, {
+            disciplineId: 'disciplineId6',
+            subjectName: 'subject5',
+          },
+        ],
+      };
+
+      expect(remainingDisciplines).toStrictEqual(expectedRemaining);
     });
   });
 

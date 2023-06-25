@@ -22,6 +22,8 @@ import { GroupRepository } from '../../database/repositories/GroupRepository';
 import { StudentMapper } from '../../mappers/StudentMapper';
 import { FileService } from '../../utils/files/FileService';
 import { DisciplineMapper } from '../../mappers/DisciplineMapper';
+import { RemainingSelectiveDTO } from '../dtos/RemainingSelectiveDTO';
+import { DateService } from '../../utils/date/DateService';
 
 @Injectable()
 export class UserService {
@@ -40,6 +42,7 @@ export class UserService {
     private groupService: GroupService,
     private studentMapper: StudentMapper,
     private disciplineMapper: DisciplineMapper,
+    private dateService: DateService,
   ) {
   }
 
@@ -256,5 +259,43 @@ export class UserService {
     return this.userRepository.updateById(userId, {
       avatar: path,
     });
+  }
+
+  async getRemainingSelective (userId, body: RemainingSelectiveDTO) {
+    const user = await this.getUser(userId);
+    const group = await this.groupService.get(user.group.id);
+
+    const selective = await this.getSelective(user.id);
+    const semesterSelective = selective.filter((x) => x.year === body.year && x.semester === body.semester);
+
+    const { semesters } = await this.dateService.getAllPreviousSemesters();
+    if (!semesters.some((s) => s.year === body.year && s.semester === body.semester)) {
+      return {};
+    }
+
+    const semesterAmount = group.selectiveAmounts.find((x) => x.semester === body.semester && x.year === body.year);
+    const availableSelectiveAmount = semesterAmount.amount - semesterSelective.length;
+
+    if (availableSelectiveAmount <= 0) {
+      return {};
+    }
+
+    const disciplines = (await this.disciplineRepository.findMany({
+      where: {
+        semester: body.semester,
+        year: body.year,
+        isSelective: true,
+        groupId: group.id,
+      },
+    })).map(({ id, subject: { name } }) => ({ disciplineId: id, subjectName: name }));
+
+    const remainingSelective = disciplines.filter((selectiveDisc) =>
+      !semesterSelective.some((requiredSemeDisc) => requiredSemeDisc.id === selectiveDisc.disciplineId));
+
+    return {
+      ...body,
+      availableSelectiveAmount,
+      remainingSelective,
+    };
   }
 }

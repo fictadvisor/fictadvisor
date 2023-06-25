@@ -1,4 +1,16 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { UserService } from '../services/UserService';
 import { TelegramGuard } from '../../security/TelegramGuard';
 import { ApproveDTO, ApproveStudentByTelegramDTO } from '../dtos/ApproveDTO';
@@ -19,6 +31,8 @@ import { AvatarValidationPipe } from '../pipes/AvatarValidationPipe';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBadRequestResponse, ApiForbiddenResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { SelectiveBySemestersResponse } from '../responses/SelectiveBySemestersResponse';
+import { RemainingSelectiveDTO } from '../dtos/RemainingSelectiveDTO';
+import { RemainingSelectiveResponse } from '../responses/RemainingSelectiveResponse';
 
 @ApiTags('User')
 @Controller({
@@ -217,5 +231,26 @@ export class UserController {
   ) {
     const user = await this.userService.updateAvatar(file, userId);
     return this.userMapper.updateUser(user);
+  }
+
+
+  @Access('users.$userId.selective.get')
+  @Get('/:userId/selectiveDisciplines')
+  @ApiOkResponse({
+    type: RemainingSelectiveResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `InvalidEntityIdException:\n 
+                  User with such id is not found`,
+  })
+  @ApiForbiddenResponse({
+    description: `NoPermissionException:\n
+                  You do not have permission to perform this action`,
+  })
+  async getRemainingSelective (
+      @Param('userId', UserByIdPipe) userId: string,
+      @Query() body: RemainingSelectiveDTO,
+  ) {
+    return await this.userService.getRemainingSelective(userId, body);
   }
 }
