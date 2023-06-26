@@ -19,6 +19,8 @@ import { filterAsync } from '../../utils/ArrayUtil';
 import { DbDiscipline, DbDiscipline_DisciplineTeacher } from '../../database/entities/DbDiscipline';
 import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
 import { PollDisciplineTeachersResponse } from '../responses/PollDisciplineTeachersResponse';
+import { StudentRepository } from '../../database/repositories/StudentRepository';
+import { GroupRepository } from '../../database/repositories/GroupRepository';
 
 @Injectable()
 export class PollService {
@@ -30,6 +32,8 @@ export class PollService {
     private disciplineRepository: DisciplineRepository,
     private questionAnswerRepository: QuestionAnswerRepository,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
+    private studentRepository: StudentRepository,
+    private groupRepository: GroupRepository,
   ) {}
 
   async create ({ roles, ...data }: CreateQuestionWithRolesDTO) {
@@ -165,6 +169,23 @@ export class PollService {
     });
   }
 
+  async checkDoesUserHaveSelectiveDisciplines (userId: string, semester: SemesterDate) {
+    const group = await this.groupRepository.find({
+      students: {
+        some: {
+          userId: userId,
+        },
+      },
+      selectiveAmounts: {
+        some: {
+          semester: semester.semester,
+          year: semester.year,
+        },
+      },
+    });
+    return !!group;
+  }
+
   async getDisciplineTeachers (userId: string): Promise<PollDisciplineTeachersResponse> {
     const user = await this.userRepository.findById(userId);
     if (user.state !== State.APPROVED) {
@@ -181,7 +202,10 @@ export class PollService {
       disciplines.push(...mandatoryDisciplines, ...selectiveDisciplines);
     }
 
-    const hasSelectedInLastSemester = !!((await this.getSelectedInSemester(isFinished ? semesters[0] : semesters[1], userId)).length);
+    const hasSelective = await this.checkDoesUserHaveSelectiveDisciplines(userId, isFinished ? semesters[0] : semesters[1]);
+    const hasSelectedInLastSemester = hasSelective
+      ? !!((await this.getSelectedInSemester(isFinished ? semesters[0] : semesters[1], userId)).length)
+      : true;
 
     disciplines = disciplines.filter((discipline) => {
       return this.dateService.isPreviousSemester(
