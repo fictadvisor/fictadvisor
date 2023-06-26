@@ -13,7 +13,7 @@ export class QuestionAnswersValidationPipe implements PipeTransform {
   private validators = {
     [QuestionType.SCALE]: (value: string) => (Number.isInteger(+value) && +value >= 1 && +value <= 10),
     [QuestionType.TOGGLE]: (value: string) => (value === '1' || value === '0'),
-    [QuestionType.TEXT]: (value: string) => (value.length >= 4 && value.length <= 2000),
+    [QuestionType.TEXT]: (value: string) => (value.length >= 4 && value.length <= 4000),
   };
 
   async validateValue (answer: CreateAnswerDTO) {
