@@ -1,5 +1,6 @@
 import React, { FormEvent, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { useMediaQuery } from '@mui/material';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/router';
 
@@ -11,6 +12,7 @@ import RadioGroup from '@/components/common/ui/form/radio/RadipGroup';
 import Loader from '@/components/common/ui/loader/Loader';
 import { PollAPI } from '@/lib/api/poll/PollAPI';
 import { showAlert } from '@/redux/reducers/alert.reducer';
+import theme from '@/styles/theme';
 
 import { Category } from '../../PollPage';
 import { Answer, SendingStatus } from '../poll-form/PollForm';
@@ -80,6 +82,9 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
   const dispatch = useDispatch();
   const router = useRouter();
   const disciplineTeacherId = router.query.disciplineTeacherId as string;
+
+  const isMobile = useMediaQuery(theme.breakpoints.down('desktop'));
+  const numberRowsTextArea = isMobile ? 8 : 4;
 
   useEffect(() => {
     for (const question of questions.questions) {
@@ -202,7 +207,11 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
                           name={question.id}
                         />
                       ) : (
-                        <TextArea sx={sxStyles.textArea} name={question.id} />
+                        <TextArea
+                          rowsNumber={numberRowsTextArea}
+                          sx={sxStyles.textArea}
+                          name={question.id}
+                        />
                       )}
 
                       {question.criteria && (
