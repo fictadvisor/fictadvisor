@@ -1,7 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import Image from 'next/image';
 
 import { CustomCheck } from '@/components/common/icons/CustomCheck';
 import { AlertColor } from '@/components/common/ui/alert';

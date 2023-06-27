@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react';
 import mergeClassNames from 'merge-class-names';
-import Image from 'next/image';
 
 import { DivProps } from '@/components/common/ui/cards/types';
 import Tooltip from '@/components/common/ui/tooltip';
