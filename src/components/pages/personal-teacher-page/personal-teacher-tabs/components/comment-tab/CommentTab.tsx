@@ -29,7 +29,7 @@ const CommentTab: FC<TeacherTabProps> = ({
     : teacherSubjectCont;
   const [sort, setSort] = useState('newest');
   const { refetch, data: lol } = useQuery(
-    ['teacherInfo', teacherId, subjectId],
+    ['teacherInfo', teacherId, subjectId, sort],
     () =>
       TeacherAPI.getTeacherComments(
         teacherId,
@@ -76,9 +76,9 @@ const CommentTab: FC<TeacherTabProps> = ({
                 size={FieldSize.MEDIUM}
                 options={sortInfo}
                 name="dropdown"
-                label=""
-                showRemark={false}
+                showRemark
                 onChange={handleSubmit}
+                label=""
               />
             </Form>
           )}
