@@ -35,7 +35,7 @@ const ImmutableInput: React.FC<InputProps> = ({
   href,
   ...rest
 }) => {
-  const [isHidden, setIsHidden] = useState(type === InputType.PASSWORD);
+  const isHidden = type === InputType.PASSWORD;
   const inputType = isHidden ? 'password' : 'text';
 
   const customType = label || type === InputType.SEARCH ? type : 'unlabeled';
