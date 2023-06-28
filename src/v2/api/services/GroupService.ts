@@ -69,16 +69,15 @@ export class GroupService {
 
   async getAll (body: QueryAllDTO) {
     const search = DatabaseUtils.getSearch(body, 'code');
-    const page = DatabaseUtils.getPage(body);
     const sort = DatabaseUtils.getSort(body);
 
-    return this.groupRepository.findMany({
+    const data = {
       where: {
         ...search,
       },
-      ...page,
       ...sort,
-    });
+    };
+    return DatabaseUtils.paginate(this.groupRepository, body, data);
   }
 
   async get (id: string) {

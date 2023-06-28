@@ -491,13 +491,13 @@ describe('PollService', () => {
 
   describe('getQuestionsWithText', () => {
     it('should return all comments about teacher', async () => {
-      const questions = await pollService.getQuestionWithText(teacherLaborant.id);
+      const { data: questions } = await pollService.getQuestionWithText(teacherLaborant.id);
       expect(questions.length).not.toBe(0);
       expect(questions.every((question) => question.type === QuestionType.TEXT)).toBe(true);
     });
 
     it('should return specified comments with year, semester and subjectId', async () => {
-      const questions = await pollService.getQuestionWithText(
+      const { data: questions } = await pollService.getQuestionWithText(
         teacherLaborant.id,
         {
           subjectId: subject.id,
@@ -512,13 +512,13 @@ describe('PollService', () => {
     });
 
     it('should return the newest and oldest comments', async () => {
-      const questionsOldest = await pollService.getQuestionWithText(
+      const { data: questionsOldest } = await pollService.getQuestionWithText(
         teacherLecturer.id,
         {
           sortBy: CommentsSort.OLDEST,
         }
       );
-      const questionsNewest = await pollService.getQuestionWithText(
+      const { data: questionsNewest } = await pollService.getQuestionWithText(
         teacherLecturer.id,
         {
           sortBy: CommentsSort.NEWEST,
@@ -532,7 +532,7 @@ describe('PollService', () => {
     });
 
     it('should return empty array because the teacher with the id not found', async () => {
-      const questions = await pollService.getQuestionWithText('e94f17b2-e6d9-4b10-bc38-a76d98061192');
+      const { data: questions } = await pollService.getQuestionWithText('e94f17b2-e6d9-4b10-bc38-a76d98061192');
       expect(questions.length).toBe(0);
     });
 

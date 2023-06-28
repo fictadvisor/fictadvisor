@@ -30,13 +30,13 @@ import { SubjectsResponse } from '../responses/SubjectsResponse';
 import { DisciplineTeacherAndSubjectResponse } from '../responses/DisciplineTeacherAndSubjectResponse';
 import { ContactResponse } from '../responses/ContactResponse';
 import { MarksResponse } from '../responses/MarkResponse';
-import { ResponsesQuestionResponse } from '../responses/ResponsesQuestionResponse';
-import { TeachersWithRatingResponse } from '../responses/TeachersWithRatingResponse';
+import { PaginatedQuestionResponse } from '../responses/PaginatedQuestionResponse';
 import { TeacherWithRatingAndSubjectResponse } from '../responses/TeacherWithRatingAndSubjectResponse';
 import { TeacherWithContactAndRoleResponse } from '../responses/TeacherWithContactAndRoleResponse';
 import { ContactsResponse } from '../responses/ContactsResponse';
 import { CathedraByIdPipe } from '../pipes/CathedraByIdPipe';
 import { TeacherWithRolesAndContactsResponse } from '../responses/TeacherWithRolesAndContactsResponse';
+import { PaginatedTeachersResponse } from '../responses/PaginatedTeachersResponse';
 
 @ApiTags('Teachers')
 @Controller({
@@ -55,7 +55,7 @@ export class TeacherController {
 
   @Get()
   @ApiOkResponse({
-    type: TeachersWithRatingResponse,
+    type: PaginatedTeachersResponse,
   })
   @ApiBadRequestResponse({
     description: `InvalidQueryException:\n
@@ -67,7 +67,7 @@ export class TeacherController {
     @Query() query: QueryAllTeacherDTO,
   ) {
     const teachers = await this.teacherService.getAllTeachersWithRating(query);
-    return { teachers };
+    return { teachers: teachers.data, meta: teachers.meta };
   }
 
   @ApiOkResponse({
@@ -376,7 +376,7 @@ export class TeacherController {
   }
 
   @ApiOkResponse({
-    type: ResponsesQuestionResponse,
+    type: PaginatedQuestionResponse,
   })
   @ApiBadRequestResponse({
     description: 'InvalidQueryException',
@@ -388,7 +388,10 @@ export class TeacherController {
   ) {
     this.teacherService.checkQueryDate(query);
     const questions = await this.pollService.getQuestionWithText(teacherId, query);
-    return this.questionMapper.getQuestionWithResponses(questions);
+    return {
+      ...this.questionMapper.getQuestionWithResponses(questions.data),
+      meta: questions.meta,
+    };
   }
 
   @Access('teachers.$teacherId.cathedrae.update')

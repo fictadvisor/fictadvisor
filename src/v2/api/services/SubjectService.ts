@@ -20,7 +20,6 @@ export class SubjectService {
 
   async getAll (body: QueryAllSubjectDTO) {
     const search = DatabaseUtils.getSearch<Subject>(body, 'name');
-    const page = DatabaseUtils.getPage(body);
     const sort = DatabaseUtils.getSort(body);
 
     const data: Prisma.SubjectFindManyArgs = {
@@ -32,13 +31,15 @@ export class SubjectService {
           },
         },
       },
-      ...page,
       ...sort,
     };
-    const subjects = await this.subjectRepository.getAll(data);
+    const subjects = await DatabaseUtils.paginate<Subject>(this.subjectRepository, body, data);
 
-    const results = [];
-    for (const subject of subjects) {
+    const results = {
+      data: [],
+      meta: subjects.meta,
+    };
+    for (const subject of subjects.data) {
 
       const amount = await this.teacherRepository.count({
         where: {
@@ -52,7 +53,7 @@ export class SubjectService {
         },
       });
 
-      results.push({
+      results.data.push({
         id: subject.id,
         name: subject.name,
         amount,

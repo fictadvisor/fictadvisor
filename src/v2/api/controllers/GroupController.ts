@@ -34,10 +34,8 @@ export class GroupController {
   @Get()
   async getAll (@Query() body: QueryAllDTO) {
     const groupsWithSelectiveAmounts = await this.groupService.getAll(body);
-    const groups = this.groupMapper.getGroups(groupsWithSelectiveAmounts);
-    return {
-      groups,
-    };
+    const groups = this.groupMapper.getGroups(groupsWithSelectiveAmounts.data);
+    return { groups, meta: groupsWithSelectiveAmounts.meta };
   }
 
   @Get('/:groupId')

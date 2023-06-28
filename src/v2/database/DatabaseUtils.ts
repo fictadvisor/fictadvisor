@@ -1,3 +1,4 @@
+import { PaginatedData } from '../api/datas/PaginatedData';
 import { Page, PageDTO, Search, SearchDTO, Sort, SortDTO } from '../utils/QueryAllDTO';
 
 export class WhereUnique<T> {
@@ -20,13 +21,76 @@ export class DatabaseUtils {
     };
   }
 
-  static getPage ({ page = 0, pageSize }: PageDTO): Page | object {
+  protected static getPage ({ page = 0, pageSize }: PageDTO): Page | object {
     page = +page;
     pageSize = +pageSize;
     if (!pageSize) return {};
+    if (page === 0) {
+      return {
+        skip: 0,
+        take: pageSize*2,
+      };   
+    }
     return {
-      skip: page * pageSize,
-      take: pageSize,
+      skip: (page-1)*pageSize,
+      take: pageSize*3,
+    };
+  }
+
+  static async paginate<T=any> (
+    repository, 
+    { page = 0, pageSize }: PageDTO, 
+    args: object
+  ): Promise<PaginatedData<T>> {
+    page = +page;
+    pageSize = +pageSize;
+
+    const data = await repository.findMany({
+      ...args,
+      ...this.getPage({ page, pageSize }),
+    });
+
+    const pages = Math.ceil(data.length / pageSize);
+    if (!pageSize) {
+      return {
+        data,
+        meta: {
+          pageSize,
+          page,
+          prevPageElems: 0,
+          nextPageElems: 0,
+        },
+      };
+    }
+    if (page === 0) {
+      return {
+        data: data.slice(0, pageSize),
+        meta: {
+          pageSize,
+          page,
+          prevPageElems: 0,
+          nextPageElems: data.slice(pageSize).length,
+        },
+      };
+    } else if (pages === 2) {
+      return {
+        data: data.slice(pageSize),
+        meta: {
+          pageSize,
+          page,
+          prevPageElems: data.slice(0, pageSize).length,
+          nextPageElems: 0,
+        },
+      };
+    }
+    return {
+      data: data.slice(pageSize, pageSize*2),
+      meta: {
+        pageSize,
+        page,
+        prevPageElems: data.slice(0, pageSize).length,
+        nextPageElems: data.slice(pageSize*2).length,
+      },
     };
   }
 

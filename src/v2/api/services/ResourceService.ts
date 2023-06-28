@@ -11,7 +11,7 @@ export class ResourceService {
   ) {}
 
   async getAll (body: QueryAllDTO) {
-    return await this.resourceRepository.getAll(body);
+    return this.resourceRepository.getAll(body);
   }
 
   async get (id: string) {

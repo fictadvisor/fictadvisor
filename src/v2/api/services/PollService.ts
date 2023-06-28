@@ -109,11 +109,9 @@ export class PollService {
   async getQuestionWithText (
     teacherId: string,
     query: CommentsQueryDTO = {}
-  ): Promise<DbQuestionWithDiscipline[]> {
+  ) {
 
-    const pageOptions = DatabaseUtils.getPage(query);
-
-    return this.questionRepository.findMany({
+    const data = {
       where: {
         type: QuestionType.TEXT,
         questionAnswers: {
@@ -155,10 +153,10 @@ export class PollService {
               },
             },
           },
-          ...pageOptions,
         },
       },
-    }) as unknown as Promise<DbQuestionWithDiscipline[]>;
+    }; 
+    return DatabaseUtils.paginate<DbQuestionWithDiscipline>(this.questionRepository, query, data);
   }
 
   async getQuestionById (id: string) {

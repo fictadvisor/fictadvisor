@@ -14,9 +14,9 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { SubjectsCountResponse } from '../responses/SubjectsCountResponse';
 import { SubjectResponse } from '../responses/SubjectResponse';
 import { SubjectWithTeachersResponse } from '../responses/SubjectWithTeachersResponse';
+import { PaginatedSubjectsResponse } from '../responses/PaginatedSubjectsResponse';
 
 @ApiTags('Subjects')
 @Controller({
@@ -65,7 +65,7 @@ export class SubjectController {
     required: false,
   })
   @ApiOkResponse({
-    type: SubjectsCountResponse,
+    type: PaginatedSubjectsResponse,
   })
   @Get()
   async getAll (
@@ -73,7 +73,7 @@ export class SubjectController {
   ) {
     const subjects = await this.subjectService.getAll(body);
 
-    return { subjects };
+    return { subjects: subjects.data, meta: subjects.meta };
   }
 
   @ApiOkResponse({

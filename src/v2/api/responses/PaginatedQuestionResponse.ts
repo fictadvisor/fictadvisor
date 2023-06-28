@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { MetaDataResponse } from './MetaDataResponse';
 
 class Comment {
   @ApiProperty()
@@ -27,17 +28,15 @@ class Question {
     comments: Comment[];
 }
 
-class ResponseQuestion {
+export class PaginatedQuestionResponse {
   @ApiProperty({
     type: [Question],
   })
     questions: Question[];
+  
+  @ApiProperty()
+    meta: MetaDataResponse;
 }
 
-export class ResponsesQuestionResponse {
-  @ApiProperty({
-    type: [ResponseQuestion],
-  })
-    marks: ResponseQuestion[];
-}
+
 

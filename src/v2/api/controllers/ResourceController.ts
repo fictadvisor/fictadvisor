@@ -21,7 +21,7 @@ export class ResourceController {
   ) {
     const studentResources = await this.resourceService.getAll(body);
 
-    return { studentResources };
+    return { studentResources: studentResources.data, meta: studentResources.meta };
   }
 
   @Get('/:resourceId')

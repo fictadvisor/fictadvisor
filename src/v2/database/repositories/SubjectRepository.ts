@@ -28,7 +28,7 @@ export class SubjectRepository {
     });
   }
 
-  async getAll (data: Prisma.SubjectFindManyArgs) {
+  async findMany (data: Prisma.SubjectFindManyArgs) {
     return this.prisma.subject.findMany({
       ...data,
       include: {

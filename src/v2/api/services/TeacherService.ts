@@ -19,6 +19,7 @@ import { filterAsync } from '../../utils/ArrayUtil';
 import { DbDisciplineTeacher } from '../../database/entities/DbDisciplineTeacher';
 import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
 import { DateService } from '../../utils/date/DateService';
+import { DbTeacher } from 'src/v2/database/entities/DbTeacher';
 
 @Injectable()
 export class TeacherService {
@@ -41,7 +42,6 @@ export class TeacherService {
         ...DatabaseUtils.getSearch({ search } as SearchDTO, 'firstName', 'lastName', 'middleName'),
       })),
     };
-    const page = DatabaseUtils.getPage(body);
     const sort = DatabaseUtils.getSort(body);
 
     const data: Prisma.TeacherFindManyArgs = {
@@ -55,23 +55,22 @@ export class TeacherService {
           },
         } : undefined,
       },
-      ...page,
       ...sort,
     };
 
-    return this.teacherRepository.findMany(data);
+    return await DatabaseUtils.paginate<DbTeacher>(this.teacherRepository, body, data);
   }
 
   async getAllTeachersWithRating (body: QueryAllTeacherDTO) {
     const dbTeachers = await this.getAll(body);
-    const teachers =[];
-    for (const dbTeacher of dbTeachers) {
+    const teachers = [];
+    for (const dbTeacher of dbTeachers.data) {
       teachers.push({
         ...this.teacherMapper.getTeacher(dbTeacher),
         rating: await this.getRating(dbTeacher.id),
       });
     }
-    return teachers;
+    return { data: teachers, meta: dbTeachers.meta };
   }
 
   async getRating (teacherId, data?: ResponseQueryDTO) {
@@ -277,7 +276,7 @@ export class TeacherService {
 
   async getTeacherSubjects (teacherId: string) {
 
-    return this.subjectRepository.getAll({
+    return this.subjectRepository.findMany({
       where: {
         disciplines: {
           some: {

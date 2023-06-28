@@ -14,16 +14,15 @@ export class ResourceRepository {
 
   async getAll (body: QueryAllDTO) {
     const search = DatabaseUtils.getSearch<StudentResource>(body, 'name', 'link', 'icon');
-    const page = DatabaseUtils.getPage(body);
     const sort = DatabaseUtils.getSort(body);
 
-    return this.prisma.studentResource.findMany({
-      ...page,
+    const data = {
       ...sort,
       where: {
         ...search,
       },
-    });
+    };
+    return await DatabaseUtils.paginate<StudentResource>(this.prisma.studentResource, body, data);
   }
 
   get (id: string) {

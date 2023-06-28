@@ -122,7 +122,7 @@ describe('TeacherService', () => {
       const query: QueryAllTeacherDTO = {
         pageSize: 3,
       };
-      const teachers = await teacherService.getAll(query);
+      const { data: teachers } = await teacherService.getAll(query);
 
       expect(teachers.length).toBeLessThanOrEqual(3);
     });
@@ -131,7 +131,7 @@ describe('TeacherService', () => {
       const query: QueryAllTeacherDTO = {
         group: 'group3',
       };
-      const teachers = await teacherService.getAll(query);
+      const { data: teachers } = await teacherService.getAll(query);
 
       expect(teachers.length).toBeGreaterThanOrEqual(1);
     });
@@ -141,7 +141,7 @@ describe('TeacherService', () => {
         search: 'Костя',
       };
 
-      const teachers = await teacherService.getAll(query);
+      const { data: teachers } = await teacherService.getAll(query);
 
       expect(teachers.length).toEqual(1);
     });
@@ -152,7 +152,7 @@ describe('TeacherService', () => {
         order: 'asc',
       };
 
-      const teachers = await teacherService.getAll(query);
+      const { data: teachers } = await teacherService.getAll(query);
 
       for (let i = 0; i < teachers.length - 1; i++) {
         const current = teachers[i];
@@ -168,7 +168,7 @@ describe('TeacherService', () => {
         order: 'desc',
       };
 
-      const teachers = await teacherService.getAll(query);
+      const { data: teachers } = await teacherService.getAll(query);
 
       for (let i = 0; i < teachers.length - 1; i++) {
         const current = teachers[i];

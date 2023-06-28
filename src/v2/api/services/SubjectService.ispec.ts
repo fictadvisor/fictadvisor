@@ -116,16 +116,14 @@ describe('SubjectService', () => {
       const query: QueryAllSubjectDTO = {
         pageSize: 3,
       };
-      const subjects = await subjectService.getAll(query);
-
+      const { data: subjects } = await subjectService.getAll(query);
       expect(subjects.length).toEqual(3);
     });
     it('should return specific group subjects', async () => {
       const query: QueryAllSubjectDTO = {
         group: '87e204ea-4243-4633-b69d-014613bac02g',
       };
-      const subjects = await subjectService.getAll(query);
-
+      const { data: subjects } = await subjectService.getAll(query);
       expect(subjects.length).toEqual(3);
     });
     it('should return searched subjects', async () => {
@@ -133,8 +131,7 @@ describe('SubjectService', () => {
         search: 'subject2',
       };
 
-      const subjects = await subjectService.getAll(query);
-
+      const { data: subjects } = await subjectService.getAll(query);
       expect(subjects.length).toEqual(1);
     });
 
@@ -143,7 +140,7 @@ describe('SubjectService', () => {
         order: 'asc',
       };
 
-      const subjects = await subjectService.getAll(query);
+      const { data: subjects } = await subjectService.getAll(query);
 
       for (let i = 0; i < subjects.length - 1; i++) {
         const current = subjects[i];
@@ -158,7 +155,7 @@ describe('SubjectService', () => {
         order: 'desc',
       };
 
-      const subjects = await subjectService.getAll(query);
+      const { data: subjects } = await subjectService.getAll(query);
 
       for (let i = 0; i < subjects.length - 1; i++) {
         const current = subjects[i];
