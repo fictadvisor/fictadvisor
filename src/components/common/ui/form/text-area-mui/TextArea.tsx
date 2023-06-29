@@ -24,7 +24,7 @@ interface TextAreaProps {
   sx?: SxProps<Theme>;
 }
 
-const MAX_LENGTH = 2000;
+const MAX_LENGTH = 4000;
 
 export enum TextAreaSize {
   SMALL = 'small',
