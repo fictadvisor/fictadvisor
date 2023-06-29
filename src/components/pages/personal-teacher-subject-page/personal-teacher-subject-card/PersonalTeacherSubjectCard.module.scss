@@ -17,14 +17,13 @@
   gap: 16px;
 
   width:fit-content;
-  height: fit-content;
-  padding-right: 5%;
-  padding-left: 42px;
-  padding-top: 12px;
   grid-column-start: 3;
   grid-column-end: 4;
   grid-row-start: 1;
   grid-row-end: 5;
+  height: 100%;
+  overflow: hidden;
+  padding: 12px 5% 12px 42px;
 }
 .contacts-shown{
   display: flex;
@@ -40,14 +39,16 @@
 }
 
 .contacts-item{
-  &:only-child::after {
+
+  &:nth-child(n+1)::after {
     top: 1px;
-    height: 120px;
+    height: 130px;
   }
-  &:not(:only-child)::after {
-    top: 0;
-    height: 150%;
+  &:nth-child(n+4)::after {
+    top: 1px;
+    height: 100%;
   }
+
   &::after{
     content: "";
     position: absolute;
@@ -179,6 +180,11 @@
   .contacts-hidden{
     display: none;
   }
+  .contacts-item{
+    &::after{
+      display: none;
+    }
+  }
   .contacts-shown{
     display: flex;
     grid-column-start: 1;
@@ -293,6 +299,11 @@
   }
   .contacts-hidden{
     display: none;
+  }
+  .contacts-item{
+    &::after{
+      display: none;
+    }
   }
   .contacts-shown{
     grid-column-start: 1;
