@@ -3,7 +3,7 @@
 @import 'src/styles/partials/typography-mixins';
 
 .subject-teacher-card {
-  height: 104px;
+  max-height: 132px;
   padding: 12px;
   background-color: $background-dark-35;
   border-radius: 6px;
