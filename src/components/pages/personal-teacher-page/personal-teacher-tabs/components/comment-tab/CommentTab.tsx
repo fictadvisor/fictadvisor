@@ -3,7 +3,7 @@ import { useQuery } from 'react-query';
 import { Box } from '@mui/material';
 import { Form, Formik } from 'formik';
 
-import { FloatingCard } from '@/components/common/ui/cards/floating-card';
+import FloatingCard from '@/components/common/ui/cards/floating-card';
 import Comment from '@/components/common/ui/comment';
 import { FieldSize } from '@/components/common/ui/form/common/types';
 import { Dropdown } from '@/components/common/ui/form/dropdown/Dropdown';

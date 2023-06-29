@@ -1,1 +1,1 @@
-export { FloatingCard } from './FloatingCard';
+export { default } from './FloatingCard';

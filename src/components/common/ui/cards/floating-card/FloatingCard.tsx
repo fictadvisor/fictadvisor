@@ -14,7 +14,7 @@ interface FloatingCardProps extends GetTeacherDTO {
   subjectName?: string;
 }
 
-export const FloatingCard: FC<FloatingCardProps> = ({
+const FloatingCard: FC<FloatingCardProps> = ({
   firstName,
   middleName,
   lastName,
@@ -36,15 +36,15 @@ export const FloatingCard: FC<FloatingCardProps> = ({
           {/*<Rating sx={styles.rating} rating={rating} />*/}
           <Box sx={styles.tags}>
             {roles?.includes(TeacherRoles.LECTURER) && (
-              <Tag color="info" size="small" text="Лектор" />
+              <Tag color="indigo" size="small" text="Лекції" />
             )}
 
             {roles?.includes(TeacherRoles.PRACTICIAN) && (
-              <Tag color="orange" size="small" text="Практик" />
+              <Tag color="orange" size="small" text="Практики" />
             )}
 
             {roles?.includes(TeacherRoles.LABORANT) && (
-              <Tag color="mint" size="small" text="Лаборант" />
+              <Tag color="mint" size="small" text="Лабораторні" />
             )}
           </Box>
         </Box>
@@ -73,3 +73,5 @@ export const FloatingCard: FC<FloatingCardProps> = ({
     </Box>
   );
 };
+
+export default FloatingCard;
