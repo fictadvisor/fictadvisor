@@ -1,22 +1,20 @@
 import React, { FC } from 'react';
-import { useDispatch } from 'react-redux';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/router';
 
-import { AlertColor } from '@/components/common/ui/alert';
 import Button, { ButtonSize } from '@/components/common/ui/button';
 import { Input, InputSize, InputType } from '@/components/common/ui/form';
 import { initialValues } from '@/components/pages/password-recovery/create-password-page/components/create-password-form/constants';
 import { CreatePasswordFormFields } from '@/components/pages/password-recovery/create-password-page/components/create-password-form/types';
 import { validationSchema } from '@/components/pages/password-recovery/create-password-page/components/create-password-form/validation';
 import styles from '@/components/pages/password-recovery/create-password-page/CreatePasswordPage.module.scss';
+import useToast from '@/hooks/use-toast';
 import { AuthAPI } from '@/lib/api/auth/AuthAPI';
-import { showAlert } from '@/redux/reducers/alert.reducer';
 
 const CreatePasswordForm: FC = () => {
   const { query, push } = useRouter();
   const token = query.token as string;
-  const dispatch = useDispatch();
+  const toast = useToast();
   const handleSubmit = async (data: CreatePasswordFormFields) => {
     try {
       await AuthAPI.resetPassword(token, { password: data.password });
@@ -24,21 +22,9 @@ const CreatePasswordForm: FC = () => {
     } catch (e) {
       const errorName = e.response.data.error;
       if (errorName === 'PasswordRepeatException') {
-        dispatch(
-          showAlert({
-            title: 'Помилка!',
-            description: 'Такий пароль вже був!',
-            color: AlertColor.ERROR,
-          }),
-        );
+        toast.error('Такий пароль вже був!');
       } else {
-        dispatch(
-          showAlert({
-            title: 'Помилка!',
-            description: 'Лист для верифікації сплив або неправильний код!',
-            color: AlertColor.ERROR,
-          }),
-        );
+        toast.error('Лист для верифікації сплив або неправильний код!');
         void push('/password-recovery/invalid');
       }
     }
