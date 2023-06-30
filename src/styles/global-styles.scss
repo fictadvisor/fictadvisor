@@ -24,6 +24,9 @@ html {
     scrollbar-color: $black $background-dark-200;
   }
 }
+*::selection{
+  background-color: $gray-200;
+}
 ::-webkit-scrollbar{
   width: 6px;
   height: 6px;
