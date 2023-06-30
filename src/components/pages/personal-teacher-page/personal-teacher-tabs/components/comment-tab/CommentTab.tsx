@@ -72,6 +72,7 @@ const CommentTab: FC<TeacherTabProps> = ({
           {({ handleSubmit }) => (
             <Form style={styles.dropdown}>
               <Dropdown
+                disableClearable={true}
                 placeholder="Сортувати відгуки"
                 size={FieldSize.MEDIUM}
                 options={sortInfo}

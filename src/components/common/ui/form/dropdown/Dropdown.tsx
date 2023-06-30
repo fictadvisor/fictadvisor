@@ -40,6 +40,7 @@ interface DropdownProps {
   noOptionsText?: string;
   width?: string;
   onChange?: () => void;
+  disableClearable?: boolean;
 }
 
 export const Dropdown: FC<DropdownProps> = ({
@@ -55,6 +56,7 @@ export const Dropdown: FC<DropdownProps> = ({
   showRemark = true,
   size = FieldSize.MEDIUM,
   isDisabled = false,
+  disableClearable = false,
 }) => {
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [values, { touched, error }, { setTouched, setValue }] = useField(name);
@@ -80,6 +82,7 @@ export const Dropdown: FC<DropdownProps> = ({
     >
       <Box sx={styles.dropdown}>
         <Autocomplete
+          disableClearable={disableClearable}
           value={values.value}
           onChange={handleChange}
           disabled={isDisabled}
