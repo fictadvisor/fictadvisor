@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { SubjectService } from '../services/SubjectService';
 import { SubjectByIdPipe } from '../pipes/SubjectByIdPipe';
-import { OrderQASParam, QueryAllSubjectDTO, SortQASParam } from '../dtos/QueryAllSubjectDTO';
+import { QueryAllSubjectDTO } from '../dtos/QueryAllSubjectDTO';
 import { Access } from 'src/v2/security/Access';
 import { SubjectMapper } from '../../mappers/SubjectMapper';
 import { CreateSubjectDTO } from '../dtos/CreateSubjectDTO';
@@ -11,7 +11,6 @@ import {
   ApiBearerAuth,
   ApiForbiddenResponse,
   ApiOkResponse,
-  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 import { SubjectResponse } from '../responses/SubjectResponse';
@@ -29,41 +28,6 @@ export class SubjectController {
     private subjectService: SubjectService,
   ) {}
 
-  @ApiQuery({
-    name: 'group',
-    type: String,
-    description: 'GroupId',
-    required: false,
-  })
-  @ApiQuery({
-    name: 'order',
-    enum: OrderQASParam,
-    description: 'Ascending by default',
-    required: false,
-  })
-  @ApiQuery({
-    name: 'sort',
-    enum: SortQASParam,
-    required: false,
-  })
-  @ApiQuery({
-    name: 'search',
-    type: String,
-    description: 'Accepts subject full name',
-    required: false,
-  })
-  @ApiQuery({
-    name: 'pageSize',
-    type: Number,
-    description: 'Visualization parameter: Divide data by amount of subjects',
-    required: false,
-  })
-  @ApiQuery({
-    name: 'page',
-    type: Number,
-    description: 'Visualization parameter: access to parts of divided data',
-    required: false,
-  })
   @ApiOkResponse({
     type: PaginatedSubjectsResponse,
   })
@@ -80,7 +44,8 @@ export class SubjectController {
     type: SubjectResponse,
   })
   @ApiBadRequestResponse({
-    description: 'InvalidEntityIdException: subject with such id is not found',
+    description: `InvalidEntityIdException\n 
+                  subject with such id is not found`,
   })
   @Get('/:subjectId')
   async get (
@@ -110,10 +75,11 @@ export class SubjectController {
     type: SubjectResponse,
   })
   @ApiBadRequestResponse({
-    description: `InvalidBodyException: Name is too short (min: 5)
-                  InvalidBodyException: Name is too long (max: 150)
-                  InvalidBodyException: Name can not be empty
-                  InvalidBodyException: Name is incorrect (a-zA-Z0-9A-Я(укр.)\\-' )(/+.,")`,
+    description: `InvalidBodyException:\n 
+                  Name is too short (min: 5)
+                  Name is too long (max: 150)
+                  Name can not be empty
+                  Name is incorrect (a-zA-Z0-9A-Я(укр.)\\-' )(/+.,")`,
   })
   @ApiForbiddenResponse({
     description: `NoPermissionException:\n
@@ -133,11 +99,14 @@ export class SubjectController {
     type: SubjectResponse,
   })
   @ApiBadRequestResponse({
-    description: `InvalidBodyException: Name is too short (min: 5)
-                  InvalidBodyException: Name is too long (max: 150)
-                  InvalidBodyException: Name can not be empty
-                  InvalidBodyException: Name is incorrect (a-zA-Z0-9A-Я(укр.)\\-' )(/+.,")
-                  InvalidEntityIdException: subject with such id is not found`,
+    description: `InvalidEntityIdException:\n 
+                  subject with such id is not found
+                  
+                  InvalidBodyException:\n 
+                  Name is too short (min: 5)
+                  Name is too long (max: 150)
+                  Name can not be empty
+                  Name is incorrect (a-zA-Z0-9A-Я(укр.)\\-' )(/+.,")`,
   })
   @ApiForbiddenResponse({
     description: `NoPermissionException:\n
@@ -155,7 +124,8 @@ export class SubjectController {
   @ApiBearerAuth()
   @ApiOkResponse()
   @ApiBadRequestResponse({
-    description: 'InvalidEntityIdException: subject with such id is not found',
+    description: `InvalidEntityIdException:\n 
+                  subject with such id is not found`,
   })
   @ApiForbiddenResponse({
     description: `NoPermissionException:\n

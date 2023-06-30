@@ -29,7 +29,7 @@ import { TeacherRolesResponse } from '../responses/TeacherRolesResponse';
 import { SubjectsResponse } from '../responses/SubjectsResponse';
 import { DisciplineTeacherAndSubjectResponse } from '../responses/DisciplineTeacherAndSubjectResponse';
 import { ContactResponse } from '../responses/ContactResponse';
-import { MarksResponse } from '../responses/MarkResponse';
+import { MarksResponse } from '../responses/MarksResponse';
 import { PaginatedQuestionResponse } from '../responses/PaginatedQuestionResponse';
 import { TeacherWithSubjectResponse } from '../responses/TeacherWithSubjectResponse';
 import { TeacherWithContactAndRoleResponse } from '../responses/TeacherWithContactAndRoleResponse';
@@ -74,7 +74,8 @@ export class TeacherController {
     type: TeacherRolesResponse,
   })
   @ApiBadRequestResponse({
-    description: 'InvalidEntityId: teacher with such id is not found',
+    description: `InvalidEntityId:\n
+                  teacher with such id is not found`,
   })
   @Get('/:teacherId/roles')
   async getTeacherRoles (
@@ -89,7 +90,8 @@ export class TeacherController {
     type: SubjectsResponse,
   })
   @ApiBadRequestResponse({
-    description: 'InvalidEntityId: teacher with such id is not found',
+    description: `InvalidEntityId:\n
+                  teacher with such id is not found`,
   })
   @Get('/:teacherId/subjects')
   async getSubjects (
@@ -114,8 +116,9 @@ export class TeacherController {
     type: DisciplineTeacherAndSubjectResponse,
   })
   @ApiBadRequestResponse({
-    description: `InvalidEntityIdException: teacher with such id is not found
-                  InvalidEntityIdException: user with such id is not found`,
+    description: `InvalidEntityIdException:\n 
+                  teacher with such id is not found
+                  user with such id is not found`,
   })
   @ApiForbiddenResponse({
     description: `NoPermissionException:\n
@@ -135,8 +138,9 @@ export class TeacherController {
     type: TeacherWithSubjectResponse,
   })
   @ApiBadRequestResponse({
-    description: `InvalidEntityIdException: teacher with such id is not found
-                  InvalidEntityIdException: subject with such id is not found`,
+    description: `InvalidEntityIdException:\n
+                  teacher with such id is not found
+                  subject with such id is not found`,
   })
   @Get('/:teacherId/subjects/:subjectId')
   async getSubject (
@@ -150,7 +154,8 @@ export class TeacherController {
     type: TeacherWithContactAndRoleResponse,
   })
   @ApiBadRequestResponse({
-    description: 'InvalidEntityIdException: teacher with such id is not found',
+    description: `InvalidEntityIdException:\n 
+                  teacher with such id is not found`,
   })
   @Get('/:teacherId')
   getTeacher (
@@ -165,18 +170,19 @@ export class TeacherController {
     type: TeacherResponse,
   })
   @ApiBadRequestResponse({
-    description: `InvalidBodyException: First name is too short (min: 2
-                  InvalidBodyException: First name is too long (max: 40)
-                  InvalidBodyException: First name can not be empty
-                  InvalidBodyException: First name is incorrect (A-Я(укр.)\\\\-\\' )')
-                  InvalidBodyException: Middle name is too short (min: 2
-                  InvalidBodyException: Middle name is too long (max: 40)
-                  InvalidBodyException: Middle name is incorrect (A-Я(укр.)\\\\-\\' )')
-                  InvalidBodyException: Last name is too short (min: 2
-                  InvalidBodyException: Last name is too long (max: 40)
-                  InvalidBodyException: Last name can not be empty
-                  InvalidBodyException: Last name is incorrect (A-Я(укр.)\\\\-\\' )')
-                  InvalidBodyException: 'Description is too long (max: 400)`,
+    description: `InvalidBodyException:\n
+                  First name is too short (min: 2
+                  First name is too long (max: 40)
+                  First name can not be empty
+                  First name is incorrect (A-Я(укр.)\\\\-\\' )')
+                  Middle name is too short (min: 2
+                  Middle name is too long (max: 40)
+                  Middle name is incorrect (A-Я(укр.)\\\\-\\' )')
+                  Last name is too short (min: 2
+                  Last name is too long (max: 40)
+                  Last name can not be empty
+                  Last name is incorrect (A-Я(укр.)\\\\-\\' )')
+                  Description is too long (max: 400)`,
   })
   @ApiForbiddenResponse({
     description: `NoPermissionException:\n
@@ -196,17 +202,20 @@ export class TeacherController {
     type: TeacherResponse,
   })
   @ApiBadRequestResponse({
-    description: `InvalidEntityIdException: teacher with such id is not found
-                  InvalidBodyException: First name is too short (min: 2
-                  InvalidBodyException: First name is too long (max: 40)
-                  InvalidBodyException: First name is incorrect (A-Я(укр.)\\\\-\\' )')
-                  InvalidBodyException: Middle name is too short (min: 2
-                  InvalidBodyException: Middle name is too long (max: 40)
-                  InvalidBodyException: Middle name is incorrect (A-Я(укр.)\\\\-\\' )')
-                  InvalidBodyException: Last name is too short (min: 2
-                  InvalidBodyException: Last name is too long (max: 40)
-                  InvalidBodyException: Last name is incorrect (A-Я(укр.)\\\\-\\' )')
-                  InvalidBodyException: 'Description is too long (max: 400)`,
+    description: `InvalidEntityIdException:\n 
+                  teacher with such id is not found
+                  
+                  InvalidBodyException:\n
+                  First name is too short (min: 2
+                  First name is too long (max: 40)
+                  First name is incorrect (A-Я(укр.)\\\\-\\' )')
+                  Middle name is too long (max: 40)
+                  Middle name is too short (min: 2
+                  Middle name is incorrect (A-Я(укр.)\\\\-\\' )')
+                  Last name is too short (min: 2
+                  Last name is too long (max: 40)
+                  Last name is incorrect (A-Я(укр.)\\\\-\\' )')
+                  Description is too long (max: 400)`,
   })
   @ApiForbiddenResponse({
     description: `NoPermissionException:\n
@@ -225,7 +234,8 @@ export class TeacherController {
   @ApiBearerAuth()
   @ApiOkResponse()
   @ApiBadRequestResponse({
-    description: 'InvalidEntityIdException: teacher with such id is not found',
+    description: `InvalidEntityIdException:\n  
+                  teacher with such id is not found`,
   })
   @ApiForbiddenResponse({
     description: `NoPermissionException:\n
@@ -242,7 +252,8 @@ export class TeacherController {
     type: ContactsResponse,
   })
   @ApiBadRequestResponse({
-    description: 'InvalidEntityIdException: teacher with such id is not found',
+    description: `InvalidEntityIdException:\n  
+                  teacher with such id is not found`,
   })
   @Get('/:teacherId/contacts')
   async getAllContacts (
@@ -264,8 +275,11 @@ export class TeacherController {
     type: ContactResponse,
   })
   @ApiBadRequestResponse({
-    description: `InvalidEntityIdException: teacher with such id is not found
-                  InvalidContactNameException: Contact with such name is not found`,
+    description: `InvalidEntityIdException:\n  
+                  teacher with such id is not found
+                  
+                  InvalidContactNameException:\n 
+                  Contact with such name is not found`,
   })
   @Get('/:teacherId/contacts/:name')
   getContact (
@@ -280,14 +294,17 @@ export class TeacherController {
     type: ContactResponse,
   })
   @ApiBadRequestResponse({
-    description: `InvalidEntityIdException: teacher with such id is not found
-                  InvalidBodyException: Name is too long (max: 100)
-                  InvalidBodyException: Name can not be empty
-                  InvalidBodyException: Name is not correct (a-zA-Z0-9A-Я(укр.)\\-' )
-                  InvalidBodyException: Display name is too long (max: 100)
-                  InvalidBodyException: Display name can not be empty
-                  InvalidBodyException: Link is too long (max: 200)
-                  InvalidBodyException: Link contains wrong symbols (ASCII only)`,
+    description: `InvalidEntityIdException:\n 
+                  teacher with such id is not found 
+                  
+                  InvalidBodyException:\n 
+                  Name is too long (max: 100)
+                  Name can not be empty
+                  Name is not correct (a-zA-Z0-9A-Я(укр.)\\-' )
+                  Display name is too long (max: 100)
+                  Display name can not be empty
+                  Link is too long (max: 200)
+                  Link contains wrong symbols (ASCII only)`,
   })
   @ApiForbiddenResponse({
     description: `NoPermissionException:\n
@@ -315,11 +332,16 @@ export class TeacherController {
     type: ContactResponse,
   })
   @ApiBadRequestResponse({
-    description: `InvalidEntityIdException: teacher with such id is not found
-                  InvalidContactNameException: Contact with such name is not found
-                  InvalidBodyException: Display name is too long (max: 100)
-                  InvalidBodyException: Link is too long (max: 200)
-                  InvalidBodyException: Link contains wrong symbols (ASCII only)`,
+    description: `InvalidEntityIdException:\n  
+                  teacher with such id is not found
+                  
+                  InvalidContactNameException:\n  
+                  Contact with such name is not found
+                  
+                  InvalidBodyException:\n  
+                  Display name is too long (max: 100)
+                  Link is too long (max: 200)
+                  Link contains wrong symbols (ASCII only)`,
   })
   @ApiForbiddenResponse({
     description: `NoPermissionException:\n
@@ -345,8 +367,11 @@ export class TeacherController {
   })
   @ApiOkResponse()
   @ApiBadRequestResponse({
-    description: `InvalidEntityIdException: teacher with such id is not found
-                  InvalidContactNameException: Contact with such name is not found`,
+    description: `InvalidEntityIdException:\n  
+                  teacher with such id is not found
+                  
+                  InvalidContactNameException:\n  
+                  Contact with such name is not found`,
   })
   @ApiForbiddenResponse({
     description: `NoPermissionException:\n
@@ -363,7 +388,9 @@ export class TeacherController {
     type: MarksResponse,
   })
   @ApiBadRequestResponse({
-    description: `InvalidEntityIdException: teacher with such id is not found
+    description: `InvalidEntityIdException:\n  
+                  teacher with such id is not found
+                  
                   InvalidQueryException`,
   })
   @Get('/:teacherId/marks')
