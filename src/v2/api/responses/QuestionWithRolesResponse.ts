@@ -1,44 +1,13 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { QuestionDisplay, QuestionType } from '@prisma/client';
+import { ApiProperty } from '@nestjs/swagger';
 import { CreateQuestionRoleDTO } from '../dtos/CreateQuestionRoleDTO';
+import { QuestionResponse } from './QuestionResponse';
 
-export class QuestionWithRolesResponse {
-	@ApiProperty() 
-	  id: string;
+export class QuestionWithRolesResponse extends QuestionResponse {
+  @ApiProperty()
+    order: number;
 
-	@ApiProperty()
-	  category: string;
-
-	@ApiProperty()
-	  name: string;
-
-	@ApiProperty()
-	  order: number;
-
-	@ApiPropertyOptional()
-	  description?: string;
-
-	@ApiProperty()
-	  text: string;
-
-	@ApiProperty()
-	  isRequired: boolean;
-
-	@ApiPropertyOptional()
-	  criteria?: string;
-
-	@ApiProperty({
-	  enum: QuestionType,
-	})
-	  type: QuestionType;
-
-	@ApiProperty({
-	  enum: QuestionDisplay,
-	})
-	  display: QuestionDisplay;
-
-	@ApiProperty({
-	  type: [CreateQuestionRoleDTO],
-	})
-	  roles: CreateQuestionRoleDTO[];
+  @ApiProperty({
+    type: [CreateQuestionRoleDTO],
+  })
+    roles: CreateQuestionRoleDTO[];
 }

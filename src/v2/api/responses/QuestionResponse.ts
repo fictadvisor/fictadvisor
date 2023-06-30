@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { QuestionDisplay, QuestionType } from '@prisma/client';
 
 export class QuestionResponse {
@@ -11,8 +11,8 @@ export class QuestionResponse {
   @ApiProperty()
     name: string;
   
-  @ApiProperty()
-    description: string;
+  @ApiPropertyOptional()
+    description?: string;
   
   @ApiProperty()
     text: string;
@@ -20,8 +20,8 @@ export class QuestionResponse {
   @ApiProperty()
     isRequired: boolean;
   
-  @ApiProperty()
-    criteria: string;
+  @ApiPropertyOptional()
+    criteria?: string;
   
   @ApiProperty({
     enum: QuestionType,
