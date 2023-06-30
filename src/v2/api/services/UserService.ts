@@ -77,8 +77,16 @@ export class UserService {
   async giveRole (studentId: string, roleId: string) {
     await this.studentRepository.updateById(studentId, {
       roles: {
-        create: {
-          roleId,
+        connectOrCreate: {
+          where: {
+            studentId_roleId: {
+              studentId,
+              roleId,
+            },
+          },
+          create: {
+            roleId,
+          },
         },
       },
     });
@@ -249,8 +257,8 @@ export class UserService {
       const selectiveFile = this.fileService.getFileContent(`selective/${year}.csv`);
       for (const parsedRow of selectiveFile.split(/\r\n/g)) {
         const [,, subjectName,, semester,,,,, studentName] = parsedRow.split(';');
-        if (!studentName.startsWith(name)) continue;
-        const discipline = await this.disciplineRepository.find({
+        if (!studentName?.startsWith(name)) continue;
+        const { id: disciplineId } = await this.disciplineRepository.find({
           group: {
             code,
           },
@@ -262,17 +270,17 @@ export class UserService {
           isSelective: true,
         });
 
-        this.studentRepository.updateById(studentId, {
+        await this.studentRepository.updateById(studentId, {
           selectiveDisciplines: {
             connectOrCreate: {
               where: {
                 disciplineId_studentId: {
-                  disciplineId: discipline.id,
+                  disciplineId,
                   studentId,
                 },
               },
               create: {
-                disciplineId: discipline.id,
+                disciplineId,
               },
             },
           },

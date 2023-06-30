@@ -57,7 +57,7 @@ export class StudentRepository {
     });
   }
 
-  updateById (userId: string, data: Prisma.StudentUncheckedUpdateInput) {
+  async updateById (userId: string, data: Prisma.StudentUncheckedUpdateInput) {
     return this.update({
       where: {
         userId,
