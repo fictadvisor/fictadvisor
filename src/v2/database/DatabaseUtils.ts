@@ -29,7 +29,7 @@ export class DatabaseUtils {
       return {
         skip: 0,
         take: pageSize*2,
-      };   
+      };
     }
     return {
       skip: (page-1)*pageSize,
@@ -38,8 +38,8 @@ export class DatabaseUtils {
   }
 
   static async paginate<T=any> (
-    repository, 
-    { page = 0, pageSize }: PageDTO, 
+    repository,
+    { page = 0, pageSize }: PageDTO,
     args: object
   ): Promise<PaginatedData<T>> {
     page = +page;

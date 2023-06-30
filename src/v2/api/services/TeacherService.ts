@@ -20,7 +20,7 @@ import { DbDisciplineTeacher } from '../../database/entities/DbDisciplineTeacher
 import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
 import { DateService } from '../../utils/date/DateService';
 import { DbTeacher } from 'src/v2/database/entities/DbTeacher';
-
+import { SortQATParam } from '../dtos/SortQATParam';
 @Injectable()
 export class TeacherService {
   constructor (
@@ -39,10 +39,13 @@ export class TeacherService {
     const searchedNames = body.search ? body.search.split(/\s+/g) : [];
     const search = {
       AND: searchedNames.map((search) => ({
-        ...DatabaseUtils.getSearch({ search } as SearchDTO, 'firstName', 'lastName', 'middleName'),
+        ...DatabaseUtils.getSearch({ search } as SearchDTO,
+          SortQATParam.FIRST_NAME.toString(),
+          SortQATParam.LAST_NAME.toString(),
+          SortQATParam.MIDDLE_NAME.toString()),
       })),
     };
-    const sort = DatabaseUtils.getSort(body);
+    const sort = this.teacherMapper.getSortedTeacher(body);
 
     const data: Prisma.TeacherFindManyArgs = {
       where: {

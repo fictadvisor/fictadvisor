@@ -1,6 +1,7 @@
 import { IsIn, IsNumberString, IsOptional } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { OrderQASParam, SortQASParam } from './QueryAllSubjectDTO';
+import { SortQATParam } from './SortQATParam';
+import { OrderQAParam } from './OrderQAParam';
 
 export class QueryAllTeacherDTO {
   @ApiPropertyOptional({
@@ -28,13 +29,13 @@ export class QueryAllTeacherDTO {
     search?: string;
 
   @ApiPropertyOptional({
-    enum: SortQASParam,
+    enum: SortQATParam,
   })
   @IsOptional()
     sort?: string;
 
   @ApiPropertyOptional({
-    enum: OrderQASParam,
+    enum: OrderQAParam,
     description: 'Ascending by default',
   })
   @IsIn(['asc', 'desc'], {
