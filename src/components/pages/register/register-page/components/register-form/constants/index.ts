@@ -6,7 +6,7 @@ export const initialValues: RegisterFormFields = {
   lastName: '',
   middleName: '',
   email: '',
-  group: undefined,
+  group: '',
   isCaptain: false,
   password: '',
   passwordConfirmation: '',

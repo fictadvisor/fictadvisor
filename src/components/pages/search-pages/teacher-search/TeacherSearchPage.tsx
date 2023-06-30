@@ -34,7 +34,6 @@ export const TeacherSearchPage = () => {
   const initialValues = localStorage.getItem('teachersForm')
     ? JSON.parse(localStorage.getItem('teachersForm'))
     : TeacherInitialValues;
-
   const localStorageName = 'teachersForm';
   const [queryObj, setQueryObj] = useState(initialValues);
   const [curPage, setCurPage] = useState(0);
