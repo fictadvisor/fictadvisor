@@ -44,11 +44,60 @@ describe('UserService', () => {
     userService = moduleRef.get(UserService);
     prisma = moduleRef.get(PrismaService);
 
-    await prisma.group.create({
-      data: {
-        id: 'groupId1',
-        code: 'SA-32',
-      },
+    await prisma.group.createMany({
+      data: [
+        {
+          id: 'groupId1',
+          code: 'SA-32',
+        }, {
+          id: 'groupId2',
+          code: 'SA-33',
+        },
+      ],
+    });
+
+    await prisma.role.createMany({
+      data: [
+        {
+          id: 'roleId1',
+          name: 'CAPTAIN',
+          weight: 80,
+        }, {
+          id: 'roleId2',
+          name: 'CAPTAIN',
+          weight: 80,
+        }, {
+          id: 'roleId3',
+          name: 'STUDENT',
+          weight: 50,
+        }, {
+          id: 'roleId4',
+          name: 'STUDENT',
+          weight: 50,
+        }, {
+          id: 'roleId5',
+          name: 'USER',
+          weight: 20,
+        },
+      ],
+    });
+
+    await prisma.groupRole.createMany({
+      data: [
+        {
+          groupId: 'groupId1',
+          roleId: 'roleId1',
+        }, {
+          groupId: 'groupId1',
+          roleId: 'roleId3',
+        }, {
+          groupId: 'groupId2',
+          roleId: 'roleId2',
+        }, {
+          groupId: 'groupId2',
+          roleId: 'roleId4',
+        },
+      ],
     });
 
     await prisma.user.createMany({
@@ -62,6 +111,9 @@ describe('UserService', () => {
         }, {
           id: 'userId3',
           email: 'poshta3@gmail.com',
+        }, {
+          id: 'userId4',
+          email: 'poshta4@gmail.com',
         },
       ],
     });
@@ -80,6 +132,22 @@ describe('UserService', () => {
           userId: 'userId3',
           groupId: 'groupId1',
           state: 'APPROVED',
+        }, {
+          userId: 'userId4',
+          groupId: 'groupId1',
+          state: 'APPROVED',
+        },
+      ],
+    });
+
+    await prisma.userRole.createMany({
+      data: [
+        {
+          studentId: 'userId4',
+          roleId: 'roleId1',
+        }, {
+          studentId: 'userId4',
+          roleId: 'roleId5',
         },
       ],
     });
@@ -272,9 +340,49 @@ describe('UserService', () => {
 
       expect(remainingDisciplines).toStrictEqual(expectedRemaining);
     });
+
+    describe('changeGroup', () => {
+      it('should correctly change the user\'s group and role', async () => {
+        const studentId = 'userId4';
+        const groupId = 'groupId2';
+
+        const { group, roles } = await userService.changeGroup(studentId, groupId);
+
+        expect({ group, roles }).toStrictEqual({
+          group: {
+            id: 'groupId2',
+            code: 'SA-33',
+          },
+          roles: [
+            {
+              studentId: 'userId4',
+              roleId: 'roleId5',
+              role: {
+                id: 'roleId5',
+                name: 'USER',
+                weight: 20,
+                parentId: null,
+              },
+            }, {
+              studentId: 'userId4',
+              roleId: 'roleId2',
+              role: {
+                id: 'roleId2',
+                name: 'CAPTAIN',
+                weight: 80,
+                parentId: null,
+              },
+            },
+          ],
+        });
+      });
+    });
   });
 
   afterAll(async () => {
+    await prisma.userRole.deleteMany({});
+    await prisma.groupRole.deleteMany({});
+    await prisma.role.deleteMany({});
     await prisma.selectiveDiscipline.deleteMany({});
     await prisma.student.deleteMany({});
     await prisma.user.deleteMany({});

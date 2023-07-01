@@ -33,6 +33,10 @@ import { ApiBadRequestResponse, ApiForbiddenResponse, ApiOkResponse, ApiTags } f
 import { SelectiveBySemestersResponse } from '../responses/SelectiveBySemestersResponse';
 import { RemainingSelectiveDTO } from '../dtos/RemainingSelectiveDTO';
 import { RemainingSelectiveResponse } from '../responses/RemainingSelectiveResponse';
+import { GroupByIdPipe } from '../pipes/GroupByIdPipe';
+import { StudentPipe } from '../pipes/StudentPipe';
+import { StudentMapper } from '../../mappers/StudentMapper';
+import { StudentResponse } from '../responses/StudentResponse';
 
 @ApiTags('User')
 @Controller({
@@ -43,6 +47,7 @@ export class UserController {
   constructor (
     private userService: UserService,
     private userMapper: UserMapper,
+    private studentMapper: StudentMapper,
   ) {
   }
 
@@ -252,5 +257,29 @@ export class UserController {
       @Query() body: RemainingSelectiveDTO,
   ) {
     return await this.userService.getRemainingSelective(userId, body);
+  }
+
+  @Access('admin.switch')
+  @Patch('/:userId/group/:groupId')
+  @ApiOkResponse({
+    type: StudentResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `Exceptions:\n
+                  InvalidEntityIdException: User with such id is not found
+                  InvalidEntityIdException: Group with such id is not found`,
+
+  })
+  @ApiForbiddenResponse({
+    description: `Exceptions:\n
+                  NotApprovedException: Student is not approved
+                  NoPermissionException: You do not have permission to perform this action`,
+  })
+  async changeGroup (
+    @Param('userId', UserByIdPipe, StudentPipe) userId: string,
+    @Param('groupId', GroupByIdPipe) groupId: string,
+  ) {
+    const student = await this.userService.changeGroup(userId, groupId);
+    return this.studentMapper.updateStudent(student);
   }
 }

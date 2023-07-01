@@ -137,6 +137,30 @@ export class UserService {
     });
   }
 
+  async changeGroup (studentId: string, groupId: string) {
+    const prevRole = await this.getGroupRole(studentId);
+    const nextRole = await this.roleRepository.find({
+      name: prevRole.name,
+      groupRole: {
+        groupId,
+      },
+    });
+    return this.studentRepository.updateById(studentId, {
+      groupId,
+      roles: {
+        delete: {
+          studentId_roleId: {
+            roleId: prevRole.id,
+            studentId,
+          },
+        },
+        create: {
+          roleId: nextRole.id,
+        },
+      },
+    });
+  }
+
   async updateStudent (userId: string, data: UpdateStudentData) {
     const student = await this.studentRepository.updateById(userId, data);
     return this.studentMapper.updateStudent(student);
