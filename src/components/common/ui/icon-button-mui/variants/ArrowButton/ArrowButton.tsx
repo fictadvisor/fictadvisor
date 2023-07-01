@@ -1,15 +1,19 @@
 import React from 'react';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 
-import IconButton, {
+import IconButton from '@/components/common/ui/icon-button-mui/IconButton';
+import {
+  IconButtonColor,
+  IconButtonShape,
+  IconButtonSize,
   VariantIconButtonProps,
-} from '@/components/common/ui/icon-button-mui/IconButton';
+} from '@/components/common/ui/icon-button-mui/types';
 import * as styles from '@/components/common/ui/icon-button-mui/variants/ArrowButton/ArrowButton.styles';
 
 const ArrowButton: React.FC<VariantIconButtonProps> = ({
-  size = 'normal',
-  shape = 'square',
-  color = 'secondary',
+  size = IconButtonSize.NORMAL,
+  shape = IconButtonShape.SQUARE,
+  color = IconButtonColor.SECONDARY,
   disabled,
 }) => {
   return (

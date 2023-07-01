@@ -1,10 +1,10 @@
 import React, { FC, useState } from 'react';
+import { QueryObserverBaseResult } from 'react-query';
 import { useDispatch } from 'react-redux';
 import {
   ArrowDownCircleIcon,
   ArrowUpCircleIcon,
 } from '@heroicons/react/24/outline';
-import Popup from 'src/components/common/ui/pop-ups-mui/Popup';
 
 import { AlertColor } from '@/components/common/ui/alert';
 import Button, {
@@ -13,20 +13,20 @@ import Button, {
   ButtonVariant,
 } from '@/components/common/ui/button';
 import { TrashBucketButton } from '@/components/common/ui/icon-button/variants';
-import {
-  StudentRole,
-  StudentTableItem,
-} from '@/components/pages/account-page/components/group-tab/components/table/student-table/StudentTable';
-import dataMapper from '@/components/pages/account-page/components/group-tab/components/table/student-table/utils';
+import Popup from '@/components/common/ui/pop-ups-mui/Popup';
+import roleNamesMapper from '@/components/pages/account-page/components/group-tab/components/table/constants';
 import UseAuthentication from '@/hooks/use-authentication/useAuthentication';
-import { GroupAPI } from '@/lib/api/group/GroupAPI';
+import GroupAPI from '@/lib/api/group/GroupAPI';
 import { showAlert } from '@/redux/reducers/alert.reducer';
+import { UserGroupRole } from '@/types/user';
 
-import styles from '../StudentTable.module.scss';
+import { StudentsTableItem } from '../../types';
+
+import styles from '../StudentsTable.module.scss';
 
 interface EditingColumnProps {
-  student: StudentTableItem;
-  refetch;
+  student: StudentsTableItem;
+  refetch: QueryObserverBaseResult['refetch'];
 }
 
 const EditingColumn: FC<EditingColumnProps> = ({ student, refetch }) => {
@@ -38,7 +38,8 @@ const EditingColumn: FC<EditingColumnProps> = ({ student, refetch }) => {
   const handleDelete = async () => {
     try {
       setIsOpenDelete(false);
-      await GroupAPI.removeStudent(user.group.id, student.id);
+      // TODO: remove as and refactor props
+      await GroupAPI.removeStudent(user.group?.id as string, student.id);
       await refetch();
     } catch (e) {
       dispatch(
@@ -53,9 +54,11 @@ const EditingColumn: FC<EditingColumnProps> = ({ student, refetch }) => {
   const handleChangeStatus = async () => {
     try {
       setIsOpenChange(false);
-      await GroupAPI.switchStudentRole(user.group.id, student.id, {
+      await GroupAPI.updateStudentRole(user?.group?.id as string, student.id, {
         roleName:
-          student.role === StudentRole.MODERATOR ? 'STUDENT' : 'MODERATOR',
+          student.role === UserGroupRole.MODERATOR
+            ? UserGroupRole.STUDENT
+            : UserGroupRole.MODERATOR,
       });
       await refetch();
     } catch (e) {
@@ -69,31 +72,31 @@ const EditingColumn: FC<EditingColumnProps> = ({ student, refetch }) => {
   };
 
   const buttonText =
-    student.role === StudentRole.MODERATOR
-      ? StudentRole.STUDENT
-      : StudentRole.MODERATOR;
+    student.role === UserGroupRole.MODERATOR
+      ? roleNamesMapper[UserGroupRole.STUDENT]
+      : roleNamesMapper[UserGroupRole.MODERATOR];
   const buttonIcon =
-    student.role === StudentRole.MODERATOR ? (
+    student.role === UserGroupRole.MODERATOR ? (
       <ArrowDownCircleIcon className="icon" />
     ) : (
       <ArrowUpCircleIcon className="icon" />
     );
 
   if (
-    dataMapper[user.group.role] === StudentRole.CAPTAIN &&
-    student.role !== StudentRole.CAPTAIN
+    user.group?.role === UserGroupRole.CAPTAIN &&
+    student.role !== UserGroupRole.CAPTAIN
   ) {
     return (
       <div className={styles['side-buttons']}>
         <Popup
           open={isOpenChange}
           title={
-            student.role === StudentRole.MODERATOR
+            student.role === UserGroupRole.MODERATOR
               ? 'Зробити студентом'
               : 'Зробити зам старостою'
           }
           text={`Ви дійсно бажаєте зробити користувача ${student.fullName} ${
-            student.role === StudentRole.MODERATOR
+            student.role === UserGroupRole.MODERATOR
               ? 'студентом'
               : 'зам старостою'
           }?`}
@@ -158,7 +161,7 @@ const EditingColumn: FC<EditingColumnProps> = ({ student, refetch }) => {
     );
   }
 
-  if (dataMapper[user.group.role] === StudentRole.MODERATOR && !student.role) {
+  if (user.group?.role === UserGroupRole.MODERATOR && !student.role) {
     return (
       <>
         <Popup
@@ -193,6 +196,9 @@ const EditingColumn: FC<EditingColumnProps> = ({ student, refetch }) => {
       </>
     );
   }
+
+  // TODO: check what is wrong with return
+  return null;
 };
 
 export default EditingColumn;

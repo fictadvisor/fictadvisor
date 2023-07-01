@@ -4,7 +4,7 @@ import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
-import mergeClassNames from 'merge-class-names';
+import cn from 'classnames';
 
 import styles from './Alert.module.scss';
 
@@ -33,7 +33,7 @@ export interface AlertProps {
   closeFunction?: () => void;
 }
 
-const AlertColorMap = {
+const AlertIconMap = {
   [AlertColor.INFO]: InformationCircleIcon,
   [AlertColor.ERROR]: ExclamationTriangleIcon,
   [AlertColor.WARNING]: ExclamationCircleIcon,
@@ -69,10 +69,10 @@ const Alert: React.FC<AlertProps> = ({
         : (classSizeName = styles[`alert-small`]);
     }
   }
-  const Icon = AlertColorMap[color];
+  const Icon = AlertIconMap[color];
   return (
     <div
-      className={mergeClassNames(
+      className={cn(
         styles['alert'],
         className,
         classSizeName,
@@ -92,7 +92,7 @@ const Alert: React.FC<AlertProps> = ({
       {isClosable && (
         <div
           className={'icon ' + styles['alert-icon-x']}
-          onClick={() => closeFunction()}
+          onClick={closeFunction}
         >
           <XMarkIcon />
         </div>

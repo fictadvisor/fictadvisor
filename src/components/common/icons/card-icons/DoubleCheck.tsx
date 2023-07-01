@@ -1,11 +1,12 @@
-export const DoubleCheck = props => (
+import { FC } from 'react';
+
+export const DoubleCheck: FC = () => (
   <svg
     width="20"
     height="20"
     viewBox="0 0 20 20"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    {...props}
   >
     <path
       d="M2.5 10.8333L5.83333 14.1666L14.1667 5.83325"
@@ -24,14 +25,13 @@ export const DoubleCheck = props => (
   </svg>
 );
 
-export const CheckIcon = props => (
+export const CheckIcon: FC = () => (
   <svg
     width="20"
     height="20"
     viewBox="0 0 20 20"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    {...props}
   >
     <path
       d="M4.16602 10.8333L7.49935 14.1666L15.8327 5.83325"

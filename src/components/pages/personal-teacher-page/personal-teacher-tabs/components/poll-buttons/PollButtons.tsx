@@ -3,6 +3,7 @@ import { Box, Typography, useMediaQuery } from '@mui/material';
 import NextLink from 'next/link';
 
 import Button from '@/components/common/ui/button-mui';
+import { ButtonSize } from '@/components/common/ui/button-mui/types';
 import theme from '@/styles/theme';
 
 import * as styles from './PollButtons.styles';
@@ -25,7 +26,7 @@ const PollButtons: FC<PollButtonsProps> = ({ text, buttonInfo }) => {
           <NextLink key={index} href={button.href}>
             <Button
               text={button.text}
-              size={isMobile ? 'small' : 'large'}
+              size={isMobile ? ButtonSize.SMALL : ButtonSize.LARGE}
               sx={styles.button}
             />
           </NextLink>

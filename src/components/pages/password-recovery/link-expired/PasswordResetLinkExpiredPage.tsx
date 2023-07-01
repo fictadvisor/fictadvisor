@@ -6,12 +6,17 @@ import { useRouter } from 'next/router';
 import { CustomClock } from '@/components/common/icons/CustomClock';
 import PageLayout from '@/components/common/layout/page-layout';
 import Button from '@/components/common/ui/button-mui';
+import {
+  ButtonColor,
+  ButtonSize,
+  ButtonVariant,
+} from '@/components/common/ui/button-mui/types';
 import * as styles from '@/components/pages/password-recovery/link-expired/PasswordResetLinkExpiredPage.styles';
 
 const PasswordResetLinkExpiredPage = () => {
   const router = useRouter();
   const returnRegister = () => {
-    router.push('/register');
+    void router.push('/register');
   };
 
   const handleSubmit = () => {
@@ -36,16 +41,16 @@ const PasswordResetLinkExpiredPage = () => {
           </Typography>
           <Button
             text="Надіслати лист"
-            variant="filled"
-            size="large"
-            color="primary"
+            variant={ButtonVariant.FILLED}
+            size={ButtonSize.LARGE}
+            color={ButtonColor.PRIMARY}
             onClick={handleSubmit}
             sx={styles.button}
           />
           <Button
             text="Повернутись до введення даних"
-            variant="text"
-            size="small"
+            variant={ButtonVariant.TEXT}
+            size={ButtonSize.SMALL}
             startIcon={<ChevronLeftIcon />}
             onClick={returnRegister}
             sx={styles.buttonBack}

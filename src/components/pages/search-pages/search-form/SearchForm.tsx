@@ -21,20 +21,21 @@ import {
   IconButtonShape,
   IconButtonSize,
 } from '@/components/common/ui/icon-button';
-import { GroupAPI } from '@/lib/api/group/GroupAPI';
+import GroupAPI from '@/lib/api/group/GroupAPI';
 
 import { SubjectSearchFormFields, TeacherSearchFormFields } from './types';
 
 import styles from '../SearchPage.module.scss';
 
-interface SearchFormProps {
-  onSubmit: (obj) => void;
+export interface SearchFormProps {
+  onSubmit: (obj: SubjectSearchFormFields | TeacherSearchFormFields) => void;
   initialValues: SubjectSearchFormFields | TeacherSearchFormFields;
   filterDropDownOptions: { value: string; label: string }[];
-  serchPlaceholder: string;
+  searchPlaceholder: string;
   localStorageName?: string;
 }
 
+// TODO: refactor this shit
 const FormObserver = (props: { name?: string }) => {
   const { values } = useFormikContext();
   useEffect(() => {
@@ -47,20 +48,16 @@ export const SearchForm: FC<SearchFormProps> = ({
   onSubmit,
   initialValues,
   filterDropDownOptions,
-  serchPlaceholder,
+  searchPlaceholder,
   localStorageName,
 }) => {
   const [collapsed, setCollapsed] = useState(false);
   const { data: groupData } = useQuery('all-groups', GroupAPI.getAll, {
     staleTime: Infinity,
   });
+
   return (
-    <Formik
-      initialValues={initialValues}
-      onSubmit={values => {
-        onSubmit(values);
-      }}
-    >
+    <Formik initialValues={initialValues} onSubmit={onSubmit}>
       {({ handleSubmit, values, setFieldValue }) => (
         <Form className={styles['form']}>
           <FormObserver name={localStorageName} />
@@ -70,7 +67,7 @@ export const SearchForm: FC<SearchFormProps> = ({
             size={InputSize.LARGE}
             type={InputType.SEARCH}
             name="search"
-            placeholder={serchPlaceholder}
+            placeholder={searchPlaceholder}
             showRemark={false}
           />
           <div className={styles['collapse-btn']}>

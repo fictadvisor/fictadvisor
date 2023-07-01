@@ -2,22 +2,24 @@ import React from 'react';
 
 import SortAscending from '@/components/common/icons/SortAscending';
 import SortDescending from '@/components/common/icons/SortDescending';
-import IconButton, {
-  VariantIconButtonProps,
-} from '@/components/common/ui/icon-button-mui/IconButton';
+import IconButton from '@/components/common/ui/icon-button-mui/IconButton';
+import {
+  IconButtonColor,
+  IconButtonOrder,
+  IconButtonShape,
+  IconButtonSize,
+  OrderedIconButtonProps,
+} from '@/components/common/ui/icon-button-mui/types';
 
-const SortButton: React.FC<
-  VariantIconButtonProps & {
-    order?: 'ascending' | 'descending';
-  }
-> = ({
-  size = 'normal',
-  shape = 'square',
-  order = 'ascending',
-  color = 'secondary',
+const SortButton: React.FC<OrderedIconButtonProps> = ({
+  size = IconButtonSize.NORMAL,
+  shape = IconButtonShape.SQUARE,
+  order = IconButtonOrder.ASCENDING,
+  color = IconButtonColor.SECONDARY,
   disabled,
 }) => {
-  const SortIcon = order === 'ascending' ? SortAscending : SortDescending;
+  const SortIcon =
+    order === IconButtonOrder.ASCENDING ? SortAscending : SortDescending;
 
   return (
     <IconButton

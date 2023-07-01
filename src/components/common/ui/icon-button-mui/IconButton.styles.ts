@@ -1,8 +1,18 @@
 import { SxProps, Theme } from '@mui/material/styles';
 
-import getColor from '@/components/common/ui/icon-button-mui/utils/constants';
+import getColor from './utils/get-color';
+import {
+  IconButtonColor,
+  IconButtonShape,
+  IconButtonSize,
+  IconButtonState,
+} from './types';
 
-export const button = (shape, color, size): SxProps<Theme> => ({
+export const button = (
+  shape: IconButtonShape,
+  color: IconButtonColor,
+  size: IconButtonSize,
+): SxProps<Theme> => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -10,30 +20,30 @@ export const button = (shape, color, size): SxProps<Theme> => ({
   minWidth: 'unset',
   minHeight: 'unset',
   padding: ' 6px',
-  ...(shape === 'circle' && {
-    ...(size === 'normal' && {
+  ...(shape === IconButtonShape.CIRCLE && {
+    ...(size === IconButtonSize.NORMAL && {
       borderRadius: '18px',
     }),
-    ...(size === 'large' && {
+    ...(size === IconButtonSize.LARGE && {
       borderRadius: '24px',
     }),
   }),
 
-  ...(shape === 'square' && {
+  ...(shape === IconButtonShape.SQUARE && {
     borderRadius: '4px',
   }),
 
-  backgroundColor: getColor(color, 'default'),
+  backgroundColor: getColor(color, IconButtonState.DEFAULT),
   border: `1px transparent solid`,
   '&:hover': {
-    backgroundColor: getColor(color, 'hover'),
+    backgroundColor: getColor(color, IconButtonState.HOVER),
   },
   '&:focus': {
-    backgroundColor: getColor(color, 'focused'),
-    borderColor: getColor(color, 'border'),
+    backgroundColor: getColor(color, IconButtonState.FOCUSED),
+    borderColor: getColor(color, IconButtonState.BORDER),
   },
   '&:active': {
-    backgroundColor: getColor(color, 'active'),
+    backgroundColor: getColor(color, IconButtonState.ACTIVE),
   },
   '&:disabled': {
     color: 'grey.200',
@@ -43,14 +53,14 @@ export const button = (shape, color, size): SxProps<Theme> => ({
   },
 });
 
-export const iconStyles = (size): SxProps<Theme> => ({
+export const iconStyles = (size: IconButtonSize): SxProps<Theme> => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   alignContent: 'center',
   padding: '0',
   border: 'none',
-  ...(size === 'large' && {
+  ...(size === IconButtonSize.LARGE && {
     width: '32px',
     height: '32px',
     svg: {
@@ -58,7 +68,7 @@ export const iconStyles = (size): SxProps<Theme> => ({
       height: '32px',
     },
   }),
-  ...(size === 'normal' && {
+  ...(size === IconButtonSize.NORMAL && {
     svg: {
       width: '24px',
       height: '24px',

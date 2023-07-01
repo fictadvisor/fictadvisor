@@ -1,10 +1,12 @@
 import { SxProps, Theme } from '@mui/material/styles';
 
-export const button = (size): SxProps<Theme> => ({
-  ...(size === 'large' && {
+import { IconButtonSize } from '@/components/common/ui/icon-button-mui/types';
+
+export const button = (size: IconButtonSize): SxProps<Theme> => ({
+  ...(size === IconButtonSize.LARGE && {
     padding: '6px',
   }),
-  ...(size === 'normal' && {
+  ...(size === IconButtonSize.NORMAL && {
     padding: '4px',
   }),
   '&:hover': {
@@ -19,8 +21,8 @@ export const button = (size): SxProps<Theme> => ({
   },
 });
 
-export const iconStyles = (size): SxProps<Theme> => ({
-  ...(size === 'large' && {
+export const iconStyles = (size: IconButtonSize): SxProps<Theme> => ({
+  ...(size === IconButtonSize.LARGE && {
     svg: {
       width: '24px',
       height: '24px',
@@ -28,7 +30,7 @@ export const iconStyles = (size): SxProps<Theme> => ({
     width: '24px',
     height: '24px',
   }),
-  ...(size === 'normal' && {
+  ...(size === IconButtonSize.NORMAL && {
     svg: {
       width: '20px',
       height: '20px',

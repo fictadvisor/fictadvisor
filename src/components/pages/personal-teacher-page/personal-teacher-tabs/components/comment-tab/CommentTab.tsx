@@ -1,34 +1,46 @@
-import React, { FC, useContext, useState } from 'react';
+import { FC, useContext, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Box } from '@mui/material';
 import { Form, Formik } from 'formik';
 
 import FloatingCard from '@/components/common/ui/cards/floating-card';
 import Comment from '@/components/common/ui/comment';
+import { Dropdown } from '@/components/common/ui/form';
 import { FieldSize } from '@/components/common/ui/form/common/types';
-import { Dropdown } from '@/components/common/ui/form/dropdown/Dropdown';
-import { TeacherContext } from '@/components/pages/personal-teacher-page/PersonalTeacherPage';
-import { TeacherSubjectContext } from '@/components/pages/personal-teacher-subject-page/PersonalTeacherSubjectPage';
-import { TeacherAPI } from '@/lib/api/teacher/TeacherAPI';
+import { teacherContext } from '@/components/pages/personal-teacher-page/PersonalTeacherPage';
+import { teacherSubjectContext } from '@/components/pages/personal-teacher-subject-page/PersonalTeacherSubjectPage';
+import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
 
 import * as styles from './CommentTab.styles';
+
+const sortInfo = [
+  {
+    label: 'Спочатку нові',
+    value: 'newest',
+  },
+  {
+    label: 'Спочатку від дідів',
+    value: 'oldest',
+  },
+];
 
 export interface TeacherTabProps {
   teacherId: string;
   subjectId?: string;
 }
 
-const CommentTab: FC<TeacherTabProps> = ({
-  teacherId,
-  subjectId = undefined,
-}) => {
-  const teacherCont = useContext(TeacherContext);
-  const teacherSubjectCont = useContext(TeacherSubjectContext);
-  const { floatingCardShowed, teacher } = teacherCont
-    ? teacherCont
-    : teacherSubjectCont;
+const CommentTab: FC<TeacherTabProps> = ({ teacherId, subjectId }) => {
+  // TODO: refactor this shit
+  const {
+    teacher: teacherContextTeacher,
+    floatingCardShowed: teacherFloatingShowed,
+  } = useContext(teacherContext);
+  const {
+    teacher: teacherSubject,
+    floatingCardShowed: teacherSubjectFloatingShowed,
+  } = useContext(teacherSubjectContext);
   const [sort, setSort] = useState('newest');
-  const { refetch, data: lol } = useQuery(
+  const { refetch, data } = useQuery(
     ['teacherInfo', teacherId, subjectId, sort],
     () =>
       TeacherAPI.getTeacherComments(
@@ -44,21 +56,17 @@ const CommentTab: FC<TeacherTabProps> = ({
     },
   );
 
-  const sortInfo = [
-    {
-      label: 'Спочатку нові',
-      value: 'newest',
-    },
-    {
-      label: 'Спочатку від дідів',
-      value: 'oldest',
-    },
-  ];
+  const teacher = teacherContextTeacher.id
+    ? teacherContextTeacher
+    : teacherSubject;
+  const floatingCardShowed =
+    teacherFloatingShowed || teacherSubjectFloatingShowed;
 
-  const onChange = options => {
+  const onChange = (options: { dropdown: string }) => {
     setSort(options.dropdown);
     void refetch();
   };
+
   return (
     <Box sx={styles.wrapper}>
       <Box sx={styles.commentsWrapper}>
@@ -72,7 +80,7 @@ const CommentTab: FC<TeacherTabProps> = ({
           {({ handleSubmit }) => (
             <Form style={styles.dropdown}>
               <Dropdown
-                disableClearable={true}
+                disableClearable
                 placeholder="Сортувати відгуки"
                 size={FieldSize.MEDIUM}
                 options={sortInfo}
@@ -85,19 +93,14 @@ const CommentTab: FC<TeacherTabProps> = ({
           )}
         </Formik>
 
-        {lol?.questions?.map(question =>
+        {data?.questions?.map(question =>
           question?.comments?.map((comment, index) => (
-            <Comment
-              key={index}
-              text={comment.comment}
-              semester={comment.semester}
-              year={comment.year}
-            />
+            <Comment key={index} {...comment} />
           )),
         )}
       </Box>
-      {teacher && floatingCardShowed && (
-        <FloatingCard {...teacher} subjectName={teacher.subject?.name} />
+      {teacherSubject && floatingCardShowed && (
+        <FloatingCard {...teacher} subjectName={teacherSubject.subject?.name} />
       )}
     </Box>
   );

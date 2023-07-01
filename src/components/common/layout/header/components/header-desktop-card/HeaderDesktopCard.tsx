@@ -1,20 +1,15 @@
 import { FC } from 'react';
 import { Avatar, Box, Typography } from '@mui/material';
 
-import * as styles from './HeaderDesktopCard.styles';
+import { HeaderCardProps } from '../../types';
 
-interface HeaderCardProps {
-  name: string;
-  groupName: string;
-  position: string;
-  url: string;
-}
+import * as styles from './HeaderDesktopCard.styles';
 
 const HeaderDesktopCard: FC<HeaderCardProps> = ({
   name,
   groupName,
   position,
-  url,
+  avatar,
 }) => {
   return (
     <Box sx={styles.container}>
@@ -33,7 +28,7 @@ const HeaderDesktopCard: FC<HeaderCardProps> = ({
           )}
         </Box>
       </Box>
-      <Avatar src={url} alt="Картинка профілю" sx={styles.avatar} />
+      <Avatar src={avatar} alt="Картинка профілю" sx={styles.avatar} />
     </Box>
   );
 };

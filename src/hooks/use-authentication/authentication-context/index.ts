@@ -1,1 +1,1 @@
-export { AuthenticationContext, default } from './AuthenticationContext';
+export { default, useAuthenticationContext } from './AuthenticationContext';

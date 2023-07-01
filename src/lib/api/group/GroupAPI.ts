@@ -1,74 +1,57 @@
-import { AddStudentsByMailBody } from '@/lib/api/group/dto/AddStudentsByMailBody';
-import { AddStudentsByMailDTO } from '@/lib/api/group/dto/AddStudentsByMailDTO';
-import { GetAllDTO } from '@/lib/api/group/dto/GetAllDTO';
-import { GetGroupStudentsDTO } from '@/lib/api/group/dto/GetGroupStudentsDTO';
-import { GetRequestDTO } from '@/lib/api/group/dto/GetRequestDTO';
-import { VerifyStudentBody } from '@/lib/api/group/dto/VerifyStudentBody';
-import { VerifyStudentDTO } from '@/lib/api/group/dto/VerifyStudentDTO';
+import { AddStudentsByMailBody } from '@/lib/api/group/types/AddStudentsByMailBody';
+import { AddStudentsByMailResponse } from '@/lib/api/group/types/AddStudentsByMailResponse';
+import { GetAllResponse } from '@/lib/api/group/types/GetAllResponse';
+import { GetGroupStudentResponse } from '@/lib/api/group/types/GetGroupStudentsResponse';
+import { GetPendingStudentsResponse } from '@/lib/api/group/types/GetPendingStudentsResponse';
+import { UpdateStudentRoleBody } from '@/lib/api/group/types/UpdateStudentRoleBody';
+import { VerifyStudentBody } from '@/lib/api/group/types/VerifyStudentBody';
 import { getAuthorizationHeader } from '@/lib/api/utils';
+import { GroupStudent } from '@/types/student';
 
 import { client } from '../instance';
 
-import { GetDisciplineDTO } from './dto/GetDisciplineDTO';
-import { GetTeachersDisciplineDTO } from './dto/GetTeachersDisciplineDTO';
-
-export class GroupAPI {
-  static async getDiscipline(groupId: string): Promise<GetDisciplineDTO> {
-    return await client.get(
-      `/groups/${groupId}/disciplines`,
-      getAuthorizationHeader(),
-    );
-  }
-
-  static async getDisciplineTeachers(
-    groupId: string,
-  ): Promise<GetTeachersDisciplineDTO> {
-    return await client.get(
-      `/groups/${groupId}/disciplineTeachers`,
-      getAuthorizationHeader(),
-    );
-  }
-
-  static async addStudentsByMail(
-    groupId: string,
-    body: AddStudentsByMailBody,
-  ): Promise<AddStudentsByMailDTO> {
-    return await client.post(
+class GroupAPI {
+  async addStudentsByMail(groupId: string, body: AddStudentsByMailBody) {
+    return await client.post<AddStudentsByMailResponse>(
       `/groups/${groupId}/addEmails`,
       body,
       getAuthorizationHeader(),
     );
   }
 
-  static async getAll(): Promise<GetAllDTO> {
-    const res = await client.get('/groups');
+  async getAll() {
+    const res = await client.get<GetAllResponse>('/groups');
     return res.data;
   }
 
-  static async getGroupStudents(groupId: string): Promise<GetGroupStudentsDTO> {
-    const res = await client.get(
+  async getGroupStudents(groupId: string) {
+    const res = await client.get<GetGroupStudentResponse>(
       `/groups/${groupId}/students`,
       getAuthorizationHeader(),
     );
     return res.data;
   }
 
-  static async getRequestStudents(groupId: string): Promise<GetRequestDTO> {
-    const res = await client.get(
+  async getRequestStudents(groupId: string) {
+    const res = await client.get<GetPendingStudentsResponse>(
       `/groups/${groupId}/unverifiedStudents`,
       getAuthorizationHeader(),
     );
     return res.data;
   }
 
-  static async removeStudent(groupId, studentId) {
+  async removeStudent(groupId: string, studentId: string) {
     await client.delete(
       `/groups/${groupId}/remove/${studentId}`,
       getAuthorizationHeader(),
     );
   }
 
-  static async switchStudentRole(groupId, studentId, body) {
+  async updateStudentRole(
+    groupId: string,
+    studentId: string,
+    body: UpdateStudentRoleBody,
+  ) {
     await client.patch(
       `/groups/${groupId}/switch/${studentId}`,
       body,
@@ -76,12 +59,12 @@ export class GroupAPI {
     );
   }
 
-  static async verifyStudent(
+  async verifyStudent(
     groupId: string,
     userId: string,
     body: VerifyStudentBody,
-  ): Promise<VerifyStudentDTO> {
-    const { data } = await client.patch(
+  ) {
+    const { data } = await client.patch<GroupStudent>(
       `/groups/${groupId}/verify/${userId}`,
       body,
       getAuthorizationHeader(),
@@ -89,3 +72,5 @@ export class GroupAPI {
     return data;
   }
 }
+
+export default new GroupAPI();

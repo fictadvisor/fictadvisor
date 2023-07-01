@@ -1,5 +1,5 @@
 import React from 'react';
-import mergeClassNames from 'merge-class-names';
+import cn from 'classnames';
 
 import {
   CheckIcon,
@@ -39,11 +39,11 @@ const PollCard: React.FC<PollCard> = ({
 
   return (
     <div
-      className={mergeClassNames(
+      className={cn(
         styles['card'],
         styles['poll-card-container'],
-        disabled && styles['poll-card-container-disabled'],
-        isActive && styles['poll-card-container-active'],
+        { [styles['poll-card-container-disabled']]: disabled },
+        { [styles['poll-card-container-active']]: isActive },
       )}
       {...rest}
     >

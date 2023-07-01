@@ -1,25 +1,20 @@
 import { FC } from 'react';
 import { Avatar, Box, Typography } from '@mui/material';
 
+import { HeaderCardProps } from '../../types';
+
 import * as styles from './HeaderMobileCard.styles';
 
-interface HeaderMobileCardProps {
-  name: string;
-  groupName: string;
-  position: string;
-  url?: string;
-}
-
-const HeaderMobileCard: FC<HeaderMobileCardProps> = ({
+const HeaderMobileCard: FC<HeaderCardProps> = ({
   name,
   groupName,
   position,
-  url,
+  avatar,
 }) => {
   return (
     <Box sx={styles.headerCardContainer}>
       <Box sx={styles.headerCardInfo}>
-        <Avatar src={url} alt="Картинка профілю" sx={styles.avatar} />
+        <Avatar src={avatar} alt="Картинка профілю" sx={styles.avatar} />
         <Box>
           <Typography variant="body1Medium" color="grey.600">
             {name}

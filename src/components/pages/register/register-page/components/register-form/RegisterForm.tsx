@@ -1,5 +1,6 @@
 import React, { FC, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
+import { AxiosError } from 'axios';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/router';
 
@@ -8,16 +9,17 @@ import Button, { ButtonSize } from '@/components/common/ui/button';
 import {
   Checkbox,
   Dropdown,
-  DropDownSize,
   Input,
   InputType,
 } from '@/components/common/ui/form';
+import { FieldSize } from '@/components/common/ui/form/common/types';
 import { RegisterFormFields } from '@/components/pages/register/register-page/components/register-form/types';
 import {
   transformData,
   transformGroups,
 } from '@/components/pages/register/register-page/components/register-form/utils';
-import { AuthAPI } from '@/lib/api/auth/AuthAPI';
+import AuthAPI from '@/lib/api/auth/AuthAPI';
+import { GetAllResponse } from '@/lib/api/group/types/GetAllResponse';
 import AuthService from '@/lib/services/auth';
 import StorageUtil from '@/lib/utils/StorageUtil';
 import { showAlert } from '@/redux/reducers/alert.reducer';
@@ -27,11 +29,7 @@ import { validationSchema } from './validation';
 
 import styles from '../left-block/LeftBlock.module.scss';
 
-interface RegisterFormProps {
-  groups;
-}
-
-const RegisterForm: FC<RegisterFormProps> = ({ groups }) => {
+const RegisterForm: FC<GetAllResponse> = ({ groups }) => {
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -58,8 +56,10 @@ const RegisterForm: FC<RegisterFormProps> = ({ groups }) => {
           StorageUtil.deleteTelegramInfo();
           await router.push(`/register/email-verification?email=${data.email}`);
         }
-      } catch (e) {
-        const errorName = e.response.data.error;
+      } catch (error) {
+        // Temporary solution
+        const errorName = (error as AxiosError<{ error: string }>).response
+          ?.data.error;
 
         if (errorName === 'AlreadyRegisteredException') {
           dispatch(
@@ -137,7 +137,7 @@ const RegisterForm: FC<RegisterFormProps> = ({ groups }) => {
           />
           <div className={styles['one-line']}>
             <Dropdown
-              size={DropDownSize.LARGE}
+              size={FieldSize.LARGE}
               options={transformGroups(groups)}
               label="Група"
               name="group"

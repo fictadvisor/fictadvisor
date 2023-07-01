@@ -10,6 +10,7 @@ export const validationSchema = yup.object().shape({
     ),
   confirmPassword: yup
     .string()
+    .nullable()
     .oneOf([yup.ref('password'), null], 'Паролі не збігаються')
     .required('Це поле не може бути пустим'),
 });

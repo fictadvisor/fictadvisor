@@ -1,3 +1,9 @@
+// TODO: find types from library
+interface TooltipContext {
+  dataIndex: number;
+  formattedValue: string;
+}
+
 const getData = (grades: number[], names: string[]) => {
   const labels = new Array(grades.length).fill('');
   const formattedValues = grades.map(x => Math.round(x));
@@ -21,7 +27,7 @@ const getData = (grades: number[], names: string[]) => {
         lineTension: 0,
         tooltip: {
           callbacks: {
-            label: context => {
+            label: (context: TooltipContext) => {
               return (
                 names[context.dataIndex] + ': ' + context.formattedValue + '%'
               );

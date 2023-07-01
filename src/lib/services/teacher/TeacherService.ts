@@ -1,48 +1,18 @@
-import { GetTeacherCommentsDTO } from '@/lib/api/teacher/dto/GetTeacherCommentsDTO';
-import { GetTeacherDTO } from '@/lib/api/teacher/dto/GetTeacherDTO';
-import { GetTeacherMarksDTO } from '@/lib/api/teacher/dto/GetTeacherMarksDTO';
-import { GetTeacherSubjectDTO } from '@/lib/api/teacher/dto/GetTeacherSubjectDTO';
-import { GetTeacherSubjectsDTO } from '@/lib/api/teacher/dto/GetTeacherSubjectsDTO';
-import { TeacherAPI } from '@/lib/api/teacher/TeacherAPI';
+import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
+
+import { TeacherPageInfo, TeacherSubjectPageInfo } from './types';
 
 const MIN_MARKS_LENGTH = 8;
-
-export interface GetTeacherResponse {
-  info: GetTeacherDTO;
-  subjects: GetTeacherSubjectsDTO['subjects'];
-  comments: GetTeacherCommentsDTO;
-  marks: GetTeacherMarksDTO['marks'];
-  hasEnoughMarks: boolean;
-  marksText: string;
-  commentText: string;
-  buttonInfo: {
-    text: string;
-    href: string;
-  }[];
-}
-
-export interface GetTeacherSubjectResponse {
-  info: GetTeacherSubjectDTO;
-  comments: GetTeacherCommentsDTO;
-  marks: GetTeacherMarksDTO['marks'];
-  marksText: string;
-  commentText: string;
-  hasEnoughMarks: boolean;
-  buttonInfo: {
-    text: string;
-    href: string;
-  }[];
-}
 
 class TeacherService {
   async getTeacherPageInfo(
     teacherId: string,
     userId: string | undefined,
-  ): Promise<GetTeacherResponse> {
+  ): Promise<TeacherPageInfo> {
     const info = await TeacherAPI.get(teacherId);
-    const subjects = (await TeacherAPI.getTeacherSubjects(teacherId)).subjects;
+    const { subjects } = await TeacherAPI.getTeacherSubjects(teacherId);
     const comments = await TeacherAPI.getTeacherComments(teacherId);
-    const marks = (await TeacherAPI.getTeacherMarks(teacherId)).marks;
+    const { marks } = await TeacherAPI.getTeacherMarks(teacherId);
     const hasEnoughMarks = marks[0]?.amount >= MIN_MARKS_LENGTH;
     const marksAmount = marks[0]?.amount ?? 0;
     let buttonInfo = [
@@ -91,11 +61,10 @@ class TeacherService {
     teacherId: string,
     subjectId: string,
     userId: string | undefined,
-  ): Promise<GetTeacherSubjectResponse> {
+  ): Promise<TeacherSubjectPageInfo> {
     const info = await TeacherAPI.getTeacherSubject(teacherId, subjectId);
     const comments = await TeacherAPI.getTeacherComments(teacherId, subjectId);
-    const marks = (await TeacherAPI.getTeacherMarks(teacherId, subjectId))
-      .marks;
+    const { marks } = await TeacherAPI.getTeacherMarks(teacherId, subjectId);
     const hasEnoughMarks = marks[0]?.amount >= MIN_MARKS_LENGTH;
     const marksAmount = marks[0]?.amount ?? 0;
 

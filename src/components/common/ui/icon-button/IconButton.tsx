@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import mergeClassNames from 'merge-class-names';
+import cn from 'classnames';
 
 import styles from './IconButton.module.scss';
 
@@ -45,15 +45,10 @@ export const IconButton: React.FC<
 }) => {
   return (
     <button
-      className={mergeClassNames(
-        styles[`${shape}-button-icon-${size}-${color}`],
-        className,
-      )}
+      className={cn(styles[`${shape}-button-icon-${size}-${color}`], className)}
       {...rest}
     >
-      <div className={mergeClassNames('icon', styles[`${size}-icon`])}>
-        {icon}
-      </div>
+      <div className={cn('icon', styles[`${size}-icon`])}>{icon}</div>
     </button>
   );
 };

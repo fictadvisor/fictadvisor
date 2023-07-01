@@ -10,13 +10,20 @@ enum LinkType {
   WHITE = 'white',
   BLUE = 'blue',
 }
+
 interface LinkProps {
   href: string;
   text: string | ReactNode;
   sx?: SxProps<Theme>;
   type?: LinkType;
 }
-const Link: FC<LinkProps> = ({ href, text, sx, type = LinkType.WHITE }) => {
+
+const Link: FC<LinkProps> = ({
+  href,
+  text,
+  type = LinkType.WHITE,
+  sx = {},
+}) => {
   return (
     <MuiLink href={href} sx={mergeSx(styles.LinkStyles(type), sx)}>
       {text}

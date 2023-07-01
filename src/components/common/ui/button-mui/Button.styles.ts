@@ -1,8 +1,13 @@
 import { SxProps, Theme } from '@mui/material/styles';
 
-import getColors from '@/components/common/ui/button-mui/utils/constants';
+import getColors from './utils/get-colors';
+import { ButtonColor, ButtonSize, ButtonState, ButtonVariant } from './types';
 
-export const button = (color, variant, size): SxProps<Theme> => ({
+export const button = (
+  color: ButtonColor,
+  variant: ButtonVariant,
+  size: ButtonSize,
+): SxProps<Theme> => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -15,43 +20,48 @@ export const button = (color, variant, size): SxProps<Theme> => ({
   gap: '16px',
   width: '100%',
 
-  ...(size === 'small' && {
+  ...(size === ButtonSize.SMALL && {
     padding: '6px 12px',
     fontSize: '14px',
   }),
-  ...(size === 'medium' && {
+  ...(size === ButtonSize.MEDIUM && {
     padding: '12px 24px',
     fontSize: '18px',
   }),
-  ...(size === 'large' && {
+  ...(size === ButtonSize.LARGE && {
     padding: '16px 32px',
     fontSize: '18px',
   }),
-  ...(variant != 'text' && {
+  ...(variant !== ButtonVariant.TEXT && {
     border: `2px solid`,
-    backgroundColor: getColors(color, variant, 'default').backgroundColor,
-    borderColor: getColors(color, variant, 'default').borderColor,
+    backgroundColor: getColors(color, variant, ButtonState.DEFAULT)
+      .backgroundColor,
+    borderColor: getColors(color, variant, ButtonState.DEFAULT).borderColor,
     '&:hover': {
-      backgroundColor: getColors(color, variant, 'hover').backgroundColor,
-      borderColor: getColors(color, variant, 'hover').borderColor,
+      backgroundColor: getColors(color, variant, ButtonState.HOVER)
+        .backgroundColor,
+      borderColor: getColors(color, variant, ButtonState.HOVER).borderColor,
     },
     '&:focus': {
-      backgroundColor: getColors(color, variant, 'focused').backgroundColor,
-      borderColor: getColors(color, variant, 'focused').borderColor,
+      backgroundColor: getColors(color, variant, ButtonState.FOCUSED)
+        .backgroundColor,
+      borderColor: getColors(color, variant, ButtonState.FOCUSED).borderColor,
     },
     '&:active': {
-      backgroundColor: getColors(color, variant, 'active').backgroundColor,
-      borderColor: getColors(color, variant, 'active').borderColor,
+      backgroundColor: getColors(color, variant, ButtonState.ACTIVE)
+        .backgroundColor,
+      borderColor: getColors(color, variant, ButtonState.ACTIVE).borderColor,
     },
     '&:disabled': {
-      backgroundColor: getColors(color, variant, 'disabled').backgroundColor,
-      borderColor: getColors(color, variant, 'disabled').borderColor,
-      color: getColors(color, variant, 'disabled').colorDisabled,
+      backgroundColor: getColors(color, variant, ButtonState.DISABLED)
+        .backgroundColor,
+      borderColor: getColors(color, variant, ButtonState.DISABLED).borderColor,
+      color: getColors(color, variant, ButtonState.DISABLED).colorDisabled,
       cursor: 'not-allowed',
     },
   }),
 
-  ...(variant === 'text' && {
+  ...(variant === ButtonVariant.TEXT && {
     color: 'grey.600',
     backgroundColor: 'transparent',
     border: `1px  solid`,

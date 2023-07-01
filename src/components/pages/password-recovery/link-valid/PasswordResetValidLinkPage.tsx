@@ -5,6 +5,11 @@ import { useRouter } from 'next/router';
 import { CustomShield } from '@/components/common/icons/CustomShield';
 import PageLayout from '@/components/common/layout/page-layout';
 import Button from '@/components/common/ui/button-mui';
+import {
+  ButtonColor,
+  ButtonSize,
+  ButtonVariant,
+} from '@/components/common/ui/button-mui/types';
 import * as styles from '@/components/pages/password-recovery/link-valid/PasswordResetValidLinkPage.styles';
 
 const PasswordResetValidLinkPage = () => {
@@ -30,9 +35,9 @@ const PasswordResetValidLinkPage = () => {
           </Typography>
           <Button
             text="Повернутися до авторизації"
-            variant="filled"
-            size="large"
-            color="primary"
+            variant={ButtonVariant.FILLED}
+            size={ButtonSize.LARGE}
+            color={ButtonColor.PRIMARY}
             onClick={returnAuth}
             sx={styles.button}
           />

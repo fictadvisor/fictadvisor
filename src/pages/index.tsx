@@ -2,7 +2,7 @@ import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 
 import MainPage from '@/components/pages/main-page';
 import { MainPageProps } from '@/components/pages/main-page/MainPage';
-import { StudentResourcesAPI } from '@/lib/api/student-resources/StudentResourcesAPI';
+import StudentResourcesAPI from '@/lib/api/student-resources/StudentResourcesAPI';
 
 export const getStaticProps: GetStaticProps<MainPageProps> = async () => {
   let data: MainPageProps['data'];

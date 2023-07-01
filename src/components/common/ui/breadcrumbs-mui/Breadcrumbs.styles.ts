@@ -1,6 +1,6 @@
 import { SxProps, Theme } from '@mui/system';
 
-import palette from '@/styles/theme/constants/pallete/palette';
+import theme from '@/styles/theme';
 
 export const homeIcon: SxProps<Theme> = {
   width: '14px',
@@ -21,7 +21,7 @@ export const breadcrumb: SxProps<Theme> = {
     gap: '4px',
     display: 'flex',
     alignItems: 'center',
-    color: palette.grey[700],
+    color: theme.palette.grey[700],
   },
 };
 

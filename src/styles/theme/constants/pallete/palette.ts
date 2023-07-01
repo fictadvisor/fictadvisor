@@ -1,6 +1,7 @@
-const palette = {
+import { PaletteOptions } from '@mui/material';
+
+const palette: PaletteOptions = {
   grey: {
-    black: '#000000',
     50: '#171717',
     100: '#262626',
     200: '#404040',
@@ -10,7 +11,9 @@ const palette = {
     600: '#D4D4D4',
     700: '#E5E5E5',
     800: '#FAFAFA',
-    white: '#FFFFFF',
+  },
+  white: {
+    main: '#FFFFFF',
   },
   primary: {
     50: '#402626',

@@ -1,6 +1,6 @@
 import React from 'react';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
-import mergeClassNames from 'merge-class-names';
+import cn from 'classnames';
 
 import styles from './ArrowButton.module.scss';
 
@@ -21,7 +21,7 @@ const ArrowButton: React.FC<ArrowButtonProps> = ({
 }) => {
   return (
     <div>
-      <button className={mergeClassNames(styles[size], className)} {...rest}>
+      <button className={cn(styles[size], className)} {...rest}>
         <ChevronLeftIcon />
       </button>
     </div>

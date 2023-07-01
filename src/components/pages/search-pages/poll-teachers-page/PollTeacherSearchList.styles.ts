@@ -1,7 +1,5 @@
 import { SxProps, Theme } from '@mui/material/styles';
 
-import typography from '@/styles/theme/constants/typography';
-
 export const wrapper: SxProps<Theme> = {
   width: '100%',
   display: 'flex',
@@ -18,7 +16,7 @@ export const content: SxProps<Theme> = {
 
 export const headText: SxProps<Theme> = {
   typography: {
-    tablet: typography.h4Bold,
-    mobile: typography.h6Bold,
+    tablet: 'h4Bold',
+    mobile: 'h6Bold',
   },
 };

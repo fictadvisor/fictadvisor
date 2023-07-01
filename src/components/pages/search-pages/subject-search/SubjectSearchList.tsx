@@ -3,13 +3,13 @@ import { useRouter } from 'next/router';
 
 import { SubjectCard } from '@/components/common/ui/cards/subject-card';
 import useToast from '@/hooks/use-toast';
-import { GetListOfSubjectsDTO } from '@/lib/api/subject/dto/GetListOfSubjectsDTO';
+import { GetListOfSubjectsResponse } from '@/lib/api/subject/types/GetListOfSubjectsResponse';
 
 import styles from './SubjectSearchList.module.scss';
 
 const TOAST_TIMER = 4000;
 
-export const SubjectSearchList = ({ subjects }: GetListOfSubjectsDTO) => {
+export const SubjectSearchList = ({ subjects }: GetListOfSubjectsResponse) => {
   const router = useRouter();
   const toast = useToast();
 
@@ -20,7 +20,7 @@ export const SubjectSearchList = ({ subjects }: GetListOfSubjectsDTO) => {
   }, [subjects.length]);
 
   const redirect = (subjectId: string) => {
-    router.push(`/subjects/${subjectId}/teachers`);
+    void router.push(`/subjects/${subjectId}/teachers`);
   };
 
   return (

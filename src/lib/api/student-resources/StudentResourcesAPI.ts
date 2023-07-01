@@ -1,11 +1,13 @@
 import { client } from '@/lib/api/instance';
-import { GetStudentResourcesDTO } from '@/lib/api/student-resources/dto/GetStudentResourcesDTO';
+import { GetStudentResourcesResponse } from '@/lib/api/student-resources/types/GetStudentResourcesResponse';
 
-export class StudentResourcesAPI {
-  static async getAll() {
-    const { data } = await client.get<GetStudentResourcesDTO>(
+class StudentResourcesAPI {
+  async getAll() {
+    const { data } = await client.get<GetStudentResourcesResponse>(
       '/studentResources',
     );
     return data;
   }
 }
+
+export default new StudentResourcesAPI();

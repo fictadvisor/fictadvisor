@@ -4,14 +4,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { SubjectTeacherCard } from '@/components/common/ui/cards/subject-teacher-card';
-import { GetTeacherSubjectDTO } from '@/lib/api/teacher/dto/GetTeacherSubjectDTO';
+import { Teacher } from '@/types/teacher';
 
 import * as stylesMUI from './SubjectTeacherSearchList.styles';
 
 import styles from './SubjectTeacherSearchList.module.scss';
 export interface SubjectTeacherSearchListProps {
   subjectId: string;
-  teachers: Omit<GetTeacherSubjectDTO, 'contacts' | 'subject'>[];
+  teachers: Omit<Teacher, 'contacts'>[];
 }
 
 export const SubjectTeacherSearchList: FC<SubjectTeacherSearchListProps> = ({

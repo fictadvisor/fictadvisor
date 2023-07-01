@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import mergeClassNames from 'merge-class-names';
+import cn from 'classnames';
 
 import { LargeProgressCircle } from '@/components/common/icons/progress/LargeProgressCircle';
 import { LargestProgressCircle } from '@/components/common/icons/progress/LargestProgressCircle';
@@ -34,7 +34,7 @@ const Loader: FC<LoaderProps> = ({ size = LoaderSize.SMALLEST, className }) => {
   const LoaderIcon = LoaderMap[size];
 
   return (
-    <div className={mergeClassNames(styles[size], className)}>
+    <div className={cn(styles[size], className)}>
       <LoaderIcon />
     </div>
   );

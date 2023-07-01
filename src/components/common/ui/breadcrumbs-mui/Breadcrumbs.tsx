@@ -27,7 +27,7 @@ interface BreadcrumbsProps {
   sx?: SxProps<Theme>;
 }
 
-const Breadcrumbs: FC<BreadcrumbsProps> = ({ items, sx }) => {
+const Breadcrumbs: FC<BreadcrumbsProps> = ({ items, sx = {} }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down('mobileMedium'));
 
   const breadcrumbs = items.map((item, index) => (

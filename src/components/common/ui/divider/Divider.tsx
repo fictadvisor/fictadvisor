@@ -1,5 +1,5 @@
 import React from 'react';
-import mergeClassNames from 'merge-class-names';
+import cn from 'classnames';
 
 import styles from './Divider.module.scss';
 
@@ -20,7 +20,7 @@ const Divider: React.FC<DividerProps> = ({
   className,
 }) => {
   return (
-    <div className={mergeClassNames(styles['dividers-list'], className)}>
+    <div className={cn(styles['dividers-list'], className)}>
       {!text && (
         <div className={styles['dividers-list-items']}>
           <hr className={styles['no-text-line']} />

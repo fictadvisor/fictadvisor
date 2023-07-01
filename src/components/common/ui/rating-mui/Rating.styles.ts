@@ -1,8 +1,8 @@
 import { SxProps, Theme } from '@mui/material/styles';
 
-import { RatingVariant } from '@/components/common/ui/rating-mui/Rating';
+import { RatingVariant } from './types';
 
-export const rating = (variant): SxProps<Theme> => ({
+export const rating = (variant: RatingVariant): SxProps<Theme> => ({
   width: 'fit-content',
   display: 'flex',
   alignItems: 'center',

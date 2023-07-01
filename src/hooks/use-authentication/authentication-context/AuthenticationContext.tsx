@@ -1,19 +1,27 @@
-import React, { FC, ReactNode, useState } from 'react';
+import React, {
+  FC,
+  PropsWithChildren,
+  useContext,
+  useMemo,
+  useState,
+} from 'react';
 import { useQuery } from 'react-query';
 import { AxiosError } from 'axios';
 
-import { AuthAPI } from '@/lib/api/auth/AuthAPI';
+import AuthAPI from '@/lib/api/auth/AuthAPI';
 import StorageUtil from '@/lib/utils/StorageUtil';
+import { User } from '@/types/user';
 
-export const AuthenticationContext = React.createContext(null);
+import { AuthenticationContext } from '../types';
 
-interface AuthenticationProviderProps {
-  children: ReactNode;
-}
+const authenticationContext = React.createContext<AuthenticationContext>({
+  update: () => new Promise(() => {}),
+  user: {} as User,
+});
 
-const AuthenticationProvider: FC<AuthenticationProviderProps> = ({
-  children,
-}) => {
+export const useAuthenticationContext = () => useContext(authenticationContext);
+
+const AuthenticationProvider: FC<PropsWithChildren> = ({ children }) => {
   const [jwt, setJwt] = useState(StorageUtil.getTokens());
 
   const { error, isFetching, isFetched, isError, data, refetch } = useQuery(
@@ -39,18 +47,21 @@ const AuthenticationProvider: FC<AuthenticationProviderProps> = ({
       StorageUtil.deleteTokens();
     }
   }
-  const context = {
-    user: data,
-    update: async () => {
-      setJwt(StorageUtil.getTokens());
-      await refetch();
-    },
-  };
+  const context: AuthenticationContext = useMemo(
+    () => ({
+      user: data as User,
+      update: async () => {
+        setJwt(StorageUtil.getTokens());
+        await refetch();
+      },
+    }),
+    [data, refetch],
+  );
 
   return (
-    <AuthenticationContext.Provider value={context}>
+    <authenticationContext.Provider value={context}>
       {(isFetched || isError) && children}
-    </AuthenticationContext.Provider>
+    </authenticationContext.Provider>
   );
 };
 

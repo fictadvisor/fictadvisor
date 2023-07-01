@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { Category, Subject, Teacher } from '../../PollPage';
+import { Category, PollTeacher } from '@/types/poll';
+import { TeacherSubject } from '@/types/teacher';
 
 import PollCard from './components/poll-card';
 import TeacherHeaderCard from './components/teacher-header-card';
@@ -9,8 +10,8 @@ import styles from './QuestionsList.module.scss';
 
 interface QuestionListProps {
   categories: Category[];
-  teacher: Teacher;
-  subject: Subject;
+  teacher: PollTeacher;
+  subject: TeacherSubject;
   progress: number[];
   current: number;
   setCurrent: React.Dispatch<React.SetStateAction<number>>;

@@ -1,16 +1,27 @@
 import React from 'react';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import { Box, Typography } from '@mui/material';
+import { AxiosError } from 'axios';
 import { useRouter } from 'next/router';
 
 import { CustomEnvelopeOpen } from '@/components/common/icons/CustomEnvelopeOpen';
 import PageLayout from '@/components/common/layout/page-layout';
 import Alert from '@/components/common/ui/alert-mui';
+import {
+  AlertType,
+  AlertVariant,
+} from '@/components/common/ui/alert-mui/types';
 import Button from '@/components/common/ui/button-mui';
+import {
+  ButtonColor,
+  ButtonSize,
+  ButtonVariant,
+} from '@/components/common/ui/button-mui/types';
 import * as styles from '@/components/pages/password-recovery/email-confirmation-page/PasswordResetEmailConfirmationPage.module';
 import chooseMessageError from '@/components/pages/password-recovery/email-confirmation-page/utils/chooseMessageError';
 import useToast from '@/hooks/use-toast';
-import { AuthAPI } from '@/lib/api/auth/AuthAPI';
+import AuthAPI from '@/lib/api/auth/AuthAPI';
+
 const PasswordResetEmailConfirmationPage = () => {
   const router = useRouter();
   const email = (router.query.email as string).toLowerCase();
@@ -18,7 +29,7 @@ const PasswordResetEmailConfirmationPage = () => {
     ? 'Ми надіслали листа для зміни пароля на адресу '
     : 'Ми надіслали листа для зміни пароля';
   const returnRegister = () => {
-    router.push('/register');
+    void router.push('/register');
   };
 
   const tries = 0;
@@ -26,11 +37,13 @@ const PasswordResetEmailConfirmationPage = () => {
   const handleSendAgain = async () => {
     try {
       await AuthAPI.forgotPassword({ email });
-    } catch (e) {
-      const errorName = e.response.data.error;
+    } catch (error) {
+      const errorName =
+        (error as AxiosError<{ error: string }>).response?.data.error || '';
       toast.error(chooseMessageError(errorName, tries));
     }
   };
+
   return (
     <PageLayout
       hasHeader={false}
@@ -53,22 +66,22 @@ const PasswordResetEmailConfirmationPage = () => {
             <Typography sx={styles.question}>Не отримав листа?</Typography>
             <Button
               text="Надіслати повторно"
-              variant="text"
-              size="small"
-              color="primary"
+              variant={ButtonVariant.TEXT}
+              size={ButtonSize.SMALL}
+              color={ButtonColor.PRIMARY}
               onClick={handleSendAgain}
               sx={styles.button}
             />
           </Box>
           <Alert
             title="Лист реєстрації діє 1 годину"
-            type="info"
-            variant="darker"
+            type={AlertType.INFO}
+            variant={AlertVariant.DARKER}
           />
           <Button
             text="Повернутись до авторизації"
-            variant="text"
-            size="small"
+            variant={ButtonVariant.TEXT}
+            size={ButtonSize.SMALL}
             startIcon={<ChevronLeftIcon />}
             onClick={returnRegister}
             sx={styles.arrow}

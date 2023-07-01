@@ -1,27 +1,17 @@
-import React, { FC, MouseEventHandler, ReactNode } from 'react';
+import React, { FC } from 'react';
 import { Box, Button } from '@mui/material';
-import { SxProps, Theme } from '@mui/material/styles';
 
 import * as styles from '@/components/common/ui/alert-button-mui/AlertButton.styles';
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 
-interface AlertButtonProps {
-  text?: string;
-  variant?: 'error_fill' | 'error_outline' | 'success';
-  startIcon?: ReactNode;
-  endIcon?: ReactNode;
-  sx?: SxProps<Theme>;
-  disabled?: boolean;
-  onClick?: MouseEventHandler<HTMLButtonElement>;
-  href?: string;
-}
+import { AlertButtonProps, AlertButtonVariant } from './types';
 
 const AlertButton: FC<AlertButtonProps> = ({
   text,
-  variant,
+  variant = AlertButtonVariant.SUCCESS,
   startIcon,
   endIcon,
-  sx,
+  sx = {},
   ...rest
 }) => {
   return (

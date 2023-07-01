@@ -1,9 +1,9 @@
 import { FC } from 'react';
-import { TabList as List, TabListProps } from '@mui/lab';
+import { TabList as MuiTabList, TabListProps } from '@mui/lab';
 
 const TabList: FC<TabListProps> = props => {
   return (
-    <List
+    <MuiTabList
       scrollButtons="auto"
       allowScrollButtonsMobile
       TabIndicatorProps={{

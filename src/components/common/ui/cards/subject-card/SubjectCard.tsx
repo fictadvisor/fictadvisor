@@ -1,5 +1,5 @@
 import React from 'react';
-import mergeClassNames from 'merge-class-names';
+import cn from 'classnames';
 
 import styles from '@/components/common/ui/cards/subject-card/SubjectCard.module.scss';
 import { DivProps } from '@/components/common/ui/cards/types';
@@ -19,11 +19,9 @@ export const SubjectCard: React.FC<SubjectCardProps> = ({
 }) => {
   return (
     <div
-      className={mergeClassNames(
-        disabled && styles['card-disabled'],
-        styles['subject-card'],
-        styles['subject-card-effect'],
-      )}
+      className={cn(styles['subject-card'], styles['subject-card-effect'], {
+        [styles['card-disabled']]: disabled,
+      })}
       {...rest}
     >
       <div className={styles['subject-name']}>{name}</div>

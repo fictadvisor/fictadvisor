@@ -2,15 +2,13 @@ import React, { FC } from 'react';
 import { Box, Typography } from '@mui/material';
 
 import Tag from '@/components/common/ui/tag-mui';
+import { TagColor, TagSize } from '@/components/common/ui/tag-mui/types';
 import Contact from '@/components/pages/personal-teacher-page/contacts';
-import {
-  GetTeacherDTO,
-  TeacherRoles,
-} from '@/lib/api/teacher/dto/GetTeacherDTO';
+import { Teacher, TeacherRole } from '@/types/teacher';
 
 import * as styles from './FloatingCard.styles';
 
-interface FloatingCardProps extends GetTeacherDTO {
+interface FloatingCardProps extends Teacher {
   subjectName?: string;
 }
 
@@ -35,16 +33,20 @@ const FloatingCard: FC<FloatingCardProps> = ({
           >{`${lastName} ${firstName} ${middleName}`}</Typography>
           {/*<Rating sx={styles.rating} rating={rating} />*/}
           <Box sx={styles.tags}>
-            {roles?.includes(TeacherRoles.LECTURER) && (
-              <Tag color="indigo" size="small" text="Лекції" />
+            {roles?.includes(TeacherRole.LECTURER) && (
+              <Tag color={TagColor.INFO} size={TagSize.SMALL} text="Лектор" />
             )}
 
-            {roles?.includes(TeacherRoles.PRACTICIAN) && (
-              <Tag color="orange" size="small" text="Практики" />
+            {roles?.includes(TeacherRole.PRACTICIAN) && (
+              <Tag
+                color={TagColor.ORANGE}
+                size={TagSize.SMALL}
+                text="Практик"
+              />
             )}
 
-            {roles?.includes(TeacherRoles.LABORANT) && (
-              <Tag color="mint" size="small" text="Лабораторні" />
+            {roles?.includes(TeacherRole.LABORANT) && (
+              <Tag color={TagColor.MINT} size={TagSize.SMALL} text="Лаборант" />
             )}
           </Box>
         </Box>

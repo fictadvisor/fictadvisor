@@ -1,11 +1,11 @@
 import React from 'react';
 import { useMediaQuery } from '@mui/material';
-import mergeClassNames from 'merge-class-names';
+import cn from 'classnames';
 
 import styles from '@/components/common/ui/cards/teacher-card/TeacherCard.module.scss';
 import { DivProps } from '@/components/common/ui/cards/types';
 import Rating from '@/components/common/ui/rating-mui';
-import { RatingVariant } from '@/components/common/ui/rating-mui/Rating';
+import { RatingVariant } from '@/components/common/ui/rating-mui/types';
 import theme from '@/styles/theme';
 
 type TeacherCardProps = {
@@ -19,17 +19,15 @@ export const TeacherCard: React.FC<TeacherCardProps> = ({
   name,
   avatar,
   disabled,
-  rating,
+  rating = 0,
   ...rest
 }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down('desktopSemiMedium'));
   return (
     <div
-      className={mergeClassNames(
-        styles['teacher-card'],
-        styles['teacher-card-effect'],
-        disabled && styles['card-disabled'],
-      )}
+      className={cn(styles['teacher-card'], styles['teacher-card-effect'], {
+        [styles['card-disabled']]: disabled,
+      })}
       {...rest}
     >
       <div className={styles['teacher-card-shift']}>
@@ -40,7 +38,7 @@ export const TeacherCard: React.FC<TeacherCardProps> = ({
             alt="викладач"
           />
           <div className={styles['teacher-card-top-part-rating']}>
-            {rating != 0 && (
+            {rating !== 0 && (
               <Rating
                 rating={rating}
                 variant={isMobile ? RatingVariant.SHORT : RatingVariant.LONG}

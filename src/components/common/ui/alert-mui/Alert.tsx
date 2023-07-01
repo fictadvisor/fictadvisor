@@ -5,29 +5,13 @@ import {
   ExclamationTriangleIcon,
   InformationCircleIcon,
 } from '@heroicons/react/24/outline';
-import { Alert as MUIAlert, AlertColor, Typography } from '@mui/material';
-import { SxProps, Theme } from '@mui/material/styles';
+import { Alert as MuiAlert, AlertColor, Typography } from '@mui/material';
 
 import { AlertXMark } from '@/components/common/icons/AlertXMark';
-import * as styles from '@/components/common/ui/alert-mui/Alert.styles';
+import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 
-export type AlertType = 'info' | 'warning' | 'error' | 'success';
-
-export type AlertVariantType =
-  | 'filled'
-  | 'darker'
-  | 'outlined'
-  | 'border-left'
-  | 'border-top';
-
-interface AlertProps {
-  title: string;
-  type?: AlertType;
-  description?: string;
-  variant?: AlertVariantType;
-  onClose?: () => void;
-  sx?: SxProps<Theme>;
-}
+import * as styles from './Alert.styles';
+import { AlertProps, AlertType, AlertVariant } from './types';
 
 const AlertIconMap: Record<AlertColor, React.ReactNode> = {
   info: <InformationCircleIcon />,
@@ -37,25 +21,30 @@ const AlertIconMap: Record<AlertColor, React.ReactNode> = {
 };
 
 const Alert: FC<AlertProps> = ({
-  type = 'error',
-  variant = 'filled',
+  type = AlertType.ERROR,
+  variant = AlertVariant.FILLED,
   title,
   onClose,
   description,
+  sx = {},
 }) => {
-  const MUIVariant = variant === 'outlined' ? 'outlined' : 'filled';
+  const MUIVariant =
+    variant === AlertVariant.OUTLINED
+      ? AlertVariant.OUTLINED
+      : AlertVariant.FILLED;
 
   return (
-    <MUIAlert
+    <MuiAlert
       severity={type}
       variant={MUIVariant}
       iconMapping={AlertIconMap}
+      // TODO: wrap icon with button and get rid of onClick prop on svg
       action={onClose && <AlertXMark onClick={onClose} />}
-      sx={styles.alert(type, variant)}
+      sx={mergeSx(styles.alert(type, variant), sx)}
     >
       <Typography variant="body2Medium">{title}</Typography>
       {description && <Typography variant="body1">{description}</Typography>}
-    </MUIAlert>
+    </MuiAlert>
   );
 };
 

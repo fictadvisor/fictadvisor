@@ -7,7 +7,7 @@ export interface AlertStore {
   title: string;
   description?: string;
   open: boolean;
-  timeout: NodeJS.Timeout;
+  timeout: NodeJS.Timeout | null;
   hasTimeout: boolean;
 }
 

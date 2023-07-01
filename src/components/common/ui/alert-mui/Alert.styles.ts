@@ -1,8 +1,12 @@
 import { SxProps, Theme } from '@mui/material/styles';
 
-import getColor from './constants';
+import getColor from './utils/get-color';
+import { AlertType, AlertVariant } from './types';
 
-export const alert = (color, variant): SxProps<Theme> => ({
+export const alert = (
+  color: AlertType,
+  variant: AlertVariant,
+): SxProps<Theme> => ({
   display: 'flex',
   alignItems: 'flex-start',
   justifyContent: 'center',
@@ -12,27 +16,27 @@ export const alert = (color, variant): SxProps<Theme> => ({
   color: 'grey.800',
   transition: 'none !important',
 
-  ...(variant !== 'border-top' &&
-    variant !== 'border-left' && {
+  ...(variant !== AlertVariant.BORDER_LEFT &&
+    variant !== AlertVariant.BORDER_TOP && {
       borderRadius: '8px',
     }),
 
-  ...(variant !== 'outlined' && {
+  ...(variant !== AlertVariant.OUTLINED && {
     backgroundColor: getColor(color, variant),
   }),
-  ...(variant === 'outlined' && {
+  ...(variant === AlertVariant.OUTLINED && {
     border: `solid 1px`,
     borderColor: getColor(color, variant),
   }),
 
-  ...(variant === 'border-top' && {
+  ...(variant === AlertVariant.BORDER_TOP && {
     borderTop: `solid 4px`,
-    borderColor: getColor(color, 'outlined'),
+    borderColor: getColor(color, AlertVariant.OUTLINED),
   }),
 
-  ...(variant === 'border-left' && {
+  ...(variant === AlertVariant.BORDER_LEFT && {
     borderLeft: `solid 4px`,
-    borderColor: getColor(color, 'outlined'),
+    borderColor: getColor(color, AlertVariant.OUTLINED),
   }),
 
   '.MuiAlert-icon, .MuiAlert-action': {

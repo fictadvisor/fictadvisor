@@ -10,7 +10,7 @@ import Button, {
 } from '@/components/common/ui/button';
 import TokenPopup from '@/components/pages/main-page/components/token-popup';
 import useAuthentication from '@/hooks/use-authentication';
-import { GetStudentResourcesDTO } from '@/lib/api/student-resources/dto/GetStudentResourcesDTO';
+import { GetStudentResourcesResponse } from '@/lib/api/student-resources/types/GetStudentResourcesResponse';
 
 import BannerImage from '../../common/icons/BannerImage';
 
@@ -19,7 +19,7 @@ import ResourceCard from './components/resource-card/ResourceCard';
 import styles from './MainPage.module.scss';
 
 export interface MainPageProps {
-  data: GetStudentResourcesDTO;
+  data: GetStudentResourcesResponse | null;
 }
 
 const MainPage: FC<MainPageProps> = ({ data }) => {

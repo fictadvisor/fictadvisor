@@ -1,19 +1,20 @@
-import { useContext } from 'react';
+import { AlertType } from '@/components/common/ui/alert-mui/types';
 
-import { ToastContext } from '@/hooks/use-toast/toast-context';
+import { useToastContext } from './toast-context';
+import { UseToastReturn } from './types';
 
-const useToast = () => {
-  const { showToast } = useContext(ToastContext);
+const useToast = (): UseToastReturn => {
+  const { showToast } = useToastContext();
 
   return {
-    error: (title, description?, timer?) =>
-      showToast({ title, description, type: 'error', timer }),
-    warning: (title, description?, timer?) =>
-      showToast({ title, description, type: 'warning', timer }),
-    success: (title, description?, timer?) =>
-      showToast({ title, description, type: 'success', timer }),
-    info: (title, description?, timer?) =>
-      showToast({ title, description, type: 'info', timer }),
+    error: (title, description, timer) =>
+      showToast({ title, description, type: AlertType.ERROR, timer }),
+    warning: (title, description, timer) =>
+      showToast({ title, description, type: AlertType.WARNING, timer }),
+    success: (title, description, timer) =>
+      showToast({ title, description, type: AlertType.SUCCESS, timer }),
+    info: (title, description, timer) =>
+      showToast({ title, description, type: AlertType.INFO, timer }),
   };
 };
 

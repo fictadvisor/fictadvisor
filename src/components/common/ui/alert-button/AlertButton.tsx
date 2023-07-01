@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import mergeClassNames from 'merge-class-names';
+import cn from 'classnames';
 
 import styles from './AlertButton.module.scss';
 
@@ -32,10 +32,7 @@ const AlertButton: React.FC<AlertButtonProps> = ({
       : (className = styles[variant + '-only-text'])
     : (className = styles[variant + '-without-text']);
   return (
-    <button
-      className={mergeClassNames(className, additionalClassName)}
-      {...rest}
-    >
+    <button className={cn(className, additionalClassName)} {...rest}>
       {startIcon}
       {text}
       {endIcon}

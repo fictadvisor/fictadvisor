@@ -1,10 +1,17 @@
-import { FC } from 'react';
+import { FC, SyntheticEvent } from 'react';
 import { Box } from '@mui/material';
+import dynamic from 'next/dynamic';
 
 import Tab from '@/components/common/ui/tab-mui/tab';
+import { TabTextPosition } from '@/components/common/ui/tab-mui/tab/types';
 import TabContext from '@/components/common/ui/tab-mui/tab-context';
 import TabList from '@/components/common/ui/tab-mui/tab-list';
 import TabPanel from '@/components/common/ui/tab-mui/tab-panel';
+import { TeachersPageTabs } from '@/components/pages/personal-teacher-page/PersonalTeacherPage';
+import { TeacherSubjectPageInfo } from '@/lib/services/teacher/types';
+
+import * as styles from './PersonalSubjectTeacherTabs.styles';
+
 const CommentTab = dynamic(
   () =>
     import(
@@ -23,17 +30,11 @@ const PollButtons = dynamic(
       '@/components/pages/personal-teacher-page/personal-teacher-tabs/components/poll-buttons'
     ),
 );
-import dynamic from 'next/dynamic';
-
-import { TeachersPageTabs } from '@/components/pages/personal-teacher-page/PersonalTeacherPage';
-import { GetTeacherSubjectResponse } from '@/lib/services/teacher/TeacherService';
-
-import * as styles from './PersonalSubjectTeacherTabs.styles';
 
 interface PersonalSubjectTeacherProps {
-  data: GetTeacherSubjectResponse;
+  data: TeacherSubjectPageInfo;
   tabIndex: string;
-  handleChange: (event, value) => void;
+  handleChange: (event: SyntheticEvent, value: TeachersPageTabs) => void;
 }
 const PersonalSubjectTeacherTabs: FC<PersonalSubjectTeacherProps> = ({
   data,
@@ -47,13 +48,13 @@ const PersonalSubjectTeacherTabs: FC<PersonalSubjectTeacherProps> = ({
         <TabList id="lol" onChange={handleChange} sx={styles.tabList}>
           <Tab
             label="Загальне"
-            textPosition="center"
+            textPosition={TabTextPosition.CENTER}
             value={TeachersPageTabs.GENERAL}
           />
           <Tab
             label="Відгуки"
             count={count}
-            textPosition="center"
+            textPosition={TabTextPosition.CENTER}
             value={TeachersPageTabs.COMMENTS}
           />
         </TabList>

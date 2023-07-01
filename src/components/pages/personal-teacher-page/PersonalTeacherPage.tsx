@@ -1,4 +1,10 @@
-import { createContext, useEffect, useState } from 'react';
+import {
+  createContext,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+} from 'react';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 
@@ -12,8 +18,20 @@ import useAuthentication from '@/hooks/use-authentication';
 import useTabState from '@/hooks/use-tab-state';
 import useToast from '@/hooks/use-toast';
 import TeacherService from '@/lib/services/teacher';
+import { Teacher } from '@/types/teacher';
 
-export const TeacherContext = createContext(null);
+// TODO: move context to separate folder, move types to separate folder
+export interface TeacherContext {
+  floatingCardShowed: boolean;
+  setFloatingCardShowed: Dispatch<SetStateAction<boolean>>;
+  teacher: Teacher;
+}
+
+export const teacherContext = createContext<TeacherContext>({
+  floatingCardShowed: false,
+  setFloatingCardShowed: () => {},
+  teacher: {} as Teacher,
+});
 
 export enum TeachersPageTabs {
   GENERAL = 'general',
@@ -42,19 +60,21 @@ const PersonalTeacherPage = () => {
     TeachersPageTabs.GENERAL,
   );
 
-  const handleChange = useTabState({ tab, router, setIndex });
+  const handleChange = useTabState<TeachersPageTabs>({ tab, router, setIndex });
 
   useEffect(() => {
     if (isError) {
       toast.error('Куди ти лізеш, цієї людини не існує');
       void push('/teachers');
     }
-  }, [isError]);
+  }, [isError, push, toast]);
+
+  if (!data) return null;
 
   const teacher = data?.info;
 
   return (
-    <TeacherContext.Provider
+    <teacherContext.Provider
       value={{ floatingCardShowed, setFloatingCardShowed, teacher }}
     >
       <PageLayout description={'Сторінка викладача'}>
@@ -97,7 +117,7 @@ const PersonalTeacherPage = () => {
           )}
         </div>
       </PageLayout>
-    </TeacherContext.Provider>
+    </teacherContext.Provider>
   );
 };
 export default PersonalTeacherPage;

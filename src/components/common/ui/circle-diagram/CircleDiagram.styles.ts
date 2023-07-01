@@ -1,7 +1,5 @@
 import { SxProps, Theme } from '@mui/material/styles';
 
-import typography from '@/styles/theme/constants/typography';
-
 export const boxCircle: SxProps<Theme> = {
   position: 'relative',
   display: 'inline-flex',
@@ -31,7 +29,7 @@ export const boxCounter: SxProps<Theme> = {
   justifyContent: 'center',
 };
 
-export const progressFront = (value): SxProps<Theme> => ({
+export const progressFront = (value: number): SxProps<Theme> => ({
   ...progressColor(value),
 });
 
@@ -41,14 +39,14 @@ export const progressBack: SxProps<Theme> = {
   left: 0,
 };
 
-export const textCounter = (value): SxProps<Theme> => ({
+export const textCounter = (value: number): SxProps<Theme> => ({
   typography: {
-    mobile: typography.h5,
-    desktopSemiMedium: typography.h3SemiBold,
+    mobile: 'h5',
+    desktopSemiMedium: 'h3SemiBold',
   },
   ...progressColor(value),
 });
 
-const progressColor = (value): SxProps<Theme> => ({
+const progressColor = (value: number): SxProps<Theme> => ({
   color: value < 40 ? 'warning.200' : value <= 70 ? 'amber.600' : 'green.700',
 });

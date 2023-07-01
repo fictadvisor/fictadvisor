@@ -5,10 +5,14 @@ import { Box, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 
 import Button from '@/components/common/ui/button-mui';
+import {
+  ButtonSize,
+  ButtonVariant,
+} from '@/components/common/ui/button-mui/types';
 import Loader, { LoaderSize } from '@/components/common/ui/loader';
 import CreatePasswordForm from '@/components/pages/password-recovery/create-password-page/components/create-password-form';
 import * as styles from '@/components/pages/password-recovery/create-password-page/CreatePasswordPage.styles';
-import { AuthAPI } from '@/lib/api/auth/AuthAPI';
+import AuthAPI from '@/lib/api/auth/AuthAPI';
 
 import PageLayout from '../../../common/layout/page-layout/PageLayout';
 
@@ -54,8 +58,8 @@ const CreatePasswordPage = () => {
               </Box>
               <Button
                 text="Повернутись до авторизації"
-                variant="text"
-                size="small"
+                variant={ButtonVariant.TEXT}
+                size={ButtonSize.SMALL}
                 startIcon={<ChevronLeftIcon />}
                 onClick={returnAuth}
               />

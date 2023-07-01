@@ -41,7 +41,7 @@ const GeneralTab: FC = () => {
         <Button
           className={styles['telegram-button']}
           text={buttonText}
-          disabled={user.telegramId}
+          disabled={!!user.telegramId}
           size={ButtonSize.MEDIUM}
           startIcon={<TelegramForAccount />}
           variant={ButtonVariant.OUTLINE}
@@ -50,7 +50,7 @@ const GeneralTab: FC = () => {
         <Button
           className={styles['telegram-button-mobile']}
           text={buttonText}
-          disabled={user.telegramId}
+          disabled={!!user.telegramId}
           size={ButtonSize.SMALL}
           startIcon={<TelegramForAccount />}
           variant={ButtonVariant.OUTLINE}

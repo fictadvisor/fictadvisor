@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import mergeClassNames from 'merge-class-names';
+import cn from 'classnames';
 
 import { DivProps } from '@/components/common/ui/cards/types';
 import Tooltip from '@/components/common/ui/tooltip';
@@ -18,20 +18,21 @@ const TeacherHeaderCard: React.FC<TeacherHeaderCardProps> = ({
   url = '/images/lecturer-avatar.png',
   ...rest
 }) => {
-  const divRef = useRef<HTMLDivElement | null>(null);
+  const divRef = useRef<HTMLDivElement>(null);
   const [isTruncated, setIsTruncated] = useState(false);
 
   const onMouseOverHandler = () => {
     const elem = divRef.current;
-    setIsTruncated(elem.scrollHeight - 1 > elem.getBoundingClientRect().height);
+    if (elem) {
+      setIsTruncated(
+        elem.scrollHeight - 1 > elem.getBoundingClientRect().height,
+      );
+    }
   };
 
   return (
     <div
-      className={mergeClassNames(
-        styles['card'],
-        styles['header-lecturer-card-container'],
-      )}
+      className={cn(styles['card'], styles['header-lecturer-card-container'])}
       {...rest}
     >
       <img src={url} alt="картинка викладача" />

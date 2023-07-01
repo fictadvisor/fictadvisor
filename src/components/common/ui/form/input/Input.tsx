@@ -7,8 +7,8 @@ import {
   MagnifyingGlassIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
+import cn from 'classnames';
 import { useField } from 'formik';
-import mergeClassNames from 'merge-class-names';
 
 import { FieldState } from '@/components/common/ui/form/common/types';
 
@@ -48,11 +48,10 @@ const Input: React.FC<InputProps> = ({
   showRemark = true,
   className: additionalClassName,
   onDeterredChange,
+  name = '',
   ...rest
 }) => {
-  const [field, { touched, error }, { setTouched, setValue }] = useField(
-    rest.name,
-  );
+  const [field, { touched, error }, { setTouched, setValue }] = useField(name);
   const [isHidden, setIsHidden] = useState(type === InputType.PASSWORD);
   const inputType = isHidden ? 'password' : 'text';
 
@@ -73,13 +72,8 @@ const Input: React.FC<InputProps> = ({
   let rightIcon = null;
   if (customType === InputType.PASSWORD) {
     if (isHidden)
-      rightIcon = (
-        <EyeSlashIcon className={mergeClassNames('icon', styles['eye-icon'])} />
-      );
-    else
-      rightIcon = (
-        <EyeIcon className={mergeClassNames('icon', styles['eye-icon'])} />
-      );
+      rightIcon = <EyeSlashIcon className={cn('icon', styles['eye-icon'])} />;
+    else rightIcon = <EyeIcon className={cn('icon', styles['eye-icon'])} />;
   } else {
     if (state === FieldState.SUCCESS)
       rightIcon = <CheckCircleIcon className="icon input-success-icon" />;
@@ -109,7 +103,7 @@ const Input: React.FC<InputProps> = ({
     (customType === InputType.SEARCH && field.value !== '');
   const inputStyle = `${size}-${customType}${hasIcon ? '-icon' : ''}-input`;
 
-  const className = mergeClassNames(
+  const className = cn(
     styles[inputColor],
     styles[inputStyle],
     additionalClassName,
@@ -139,9 +133,7 @@ const Input: React.FC<InputProps> = ({
       <input
         placeholder={placeholder}
         type={inputType}
-        name={rest.name}
         onInput={field.onChange}
-        onChange={field.onChange}
         {...field}
         {...rest}
       />

@@ -1,14 +1,18 @@
 import { FC } from 'react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 
-import IconButton, {
+import IconButton from '@/components/common/ui/icon-button-mui/IconButton';
+import {
+  IconButtonColor,
+  IconButtonShape,
+  IconButtonSize,
   VariantIconButtonProps,
-} from '@/components/common/ui/icon-button-mui/IconButton';
+} from '@/components/common/ui/icon-button-mui/types';
 
 const CloseButton: FC<VariantIconButtonProps> = ({
-  size = 'large',
-  shape = 'square',
-  color = 'transparent',
+  size = IconButtonSize.LARGE,
+  shape = IconButtonShape.SQUARE,
+  color = IconButtonColor.TRANSPARENT,
   onClick,
   disabled,
 }) => {

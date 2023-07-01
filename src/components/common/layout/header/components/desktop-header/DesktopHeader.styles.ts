@@ -1,7 +1,7 @@
 import { SxProps, Theme } from '@mui/material/styles';
 import { alpha } from '@mui/system';
 
-import palette from '@/styles/theme/constants/pallete';
+import theme from '@/styles/theme';
 
 export const headerContainer: SxProps<Theme> = {
   overflow: 'hidden',
@@ -14,7 +14,7 @@ export const headerContainer: SxProps<Theme> = {
   paddingLeft: '80px',
   paddingRight: '80px',
   boxShadow: 'unset',
-  backgroundColor: alpha(palette.grey[50], 0.62),
+  backgroundColor: alpha(theme.palette.grey[50], 0.62),
   backdropFilter: 'blur(8px)',
 };
 

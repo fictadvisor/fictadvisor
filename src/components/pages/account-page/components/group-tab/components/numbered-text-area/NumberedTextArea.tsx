@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { FC, UIEvent, useState } from 'react';
 import { useField } from 'formik';
 
 import styles from './NumberedTextArea.module.scss';
@@ -17,7 +17,7 @@ interface NumberedTextAreaProps {
   className?: string;
 }
 
-const NumberedTextArea: React.FC<NumberedTextAreaProps> = ({
+const NumberedTextArea: FC<NumberedTextAreaProps> = ({
   name,
   placeholder,
   label,
@@ -30,8 +30,8 @@ const NumberedTextArea: React.FC<NumberedTextAreaProps> = ({
 
   const numbers = [];
   let numberOfLines = 0;
-  const handlerScroll = e => {
-    setScrollTop(e.target.scrollTop);
+  const handlerScroll = (event: UIEvent<HTMLTextAreaElement>) => {
+    setScrollTop((event.target as HTMLTextAreaElement).scrollTop);
   };
 
   const divClasses = [
@@ -64,7 +64,7 @@ const NumberedTextArea: React.FC<NumberedTextAreaProps> = ({
       </div>
       {label && <label>{label}</label>}
       <textarea
-        onScroll={e => handlerScroll(e)}
+        onScroll={handlerScroll}
         {...field}
         className={styles['textarea_input']}
         disabled={isDisabled}

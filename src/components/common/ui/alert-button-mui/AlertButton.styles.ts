@@ -1,8 +1,16 @@
+import { ReactNode } from 'react';
 import { SxProps, Theme } from '@mui/material/styles';
 
-import getColors from '@/components/common/ui/alert-button-mui/utils/constants';
+import getColors from '@/components/common/ui/alert-button-mui/utils/get-colors';
 
-export const button = (variant, startIcon, endIcon, text): SxProps<Theme> => ({
+import { AlertButtonState, AlertButtonVariant } from './types';
+
+export const button = (
+  variant: AlertButtonVariant,
+  startIcon?: ReactNode,
+  endIcon?: ReactNode,
+  text?: string,
+): SxProps<Theme> => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -31,25 +39,27 @@ export const button = (variant, startIcon, endIcon, text): SxProps<Theme> => ({
       gap: '0',
     }),
   border: `2px transparent solid`,
-  backgroundColor: getColors(variant, 'default').backgroundColor,
-  borderColor: getColors(variant, 'default').borderColor,
+  backgroundColor: getColors(variant, AlertButtonState.DEFAULT).backgroundColor,
+  borderColor: getColors(variant, AlertButtonState.DEFAULT).borderColor,
   '&:hover': {
-    backgroundColor: getColors(variant, 'hover').backgroundColor,
-    borderColor: getColors(variant, 'hover').borderColor,
+    backgroundColor: getColors(variant, AlertButtonState.HOVER).backgroundColor,
+    borderColor: getColors(variant, AlertButtonState.HOVER).borderColor,
   },
   '&:focus': {
-    backgroundColor: getColors(variant, 'focus').backgroundColor,
-    borderColor: getColors(variant, 'focus').borderColor,
+    backgroundColor: getColors(variant, AlertButtonState.FOCUS).backgroundColor,
+    borderColor: getColors(variant, AlertButtonState.FOCUS).borderColor,
   },
   '&:active': {
-    backgroundColor: getColors(variant, 'active').backgroundColor,
-    borderColor: getColors(variant, 'active').borderColor,
+    backgroundColor: getColors(variant, AlertButtonState.ACTIVE)
+      .backgroundColor,
+    borderColor: getColors(variant, AlertButtonState.ACTIVE).borderColor,
   },
   '&:disabled': {
     color: 'backgroundDark.300',
     cursor: 'not-allowed',
-    backgroundColor: getColors(variant, 'disabled').backgroundColor,
-    borderColor: getColors(variant, 'disabled').borderColor,
+    backgroundColor: getColors(variant, AlertButtonState.DISABLED)
+      .backgroundColor,
+    borderColor: getColors(variant, AlertButtonState.DISABLED).borderColor,
   },
 });
 

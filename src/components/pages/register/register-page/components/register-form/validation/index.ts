@@ -36,7 +36,7 @@ export const validationSchema = yup.object().shape({
   email: yup
     .string()
     .required(`Обов'язкове поле`)
-    .matches(/.+@.+\..+/g, 'Це не схоже на поштову адресу'),
+    .email('Це не схоже на поштову адресу'),
   group: yup.string().required(`Обов'язкове поле`),
   password: yup
     .string()
@@ -47,6 +47,7 @@ export const validationSchema = yup.object().shape({
     ),
   passwordConfirmation: yup
     .string()
+    .nullable()
     .oneOf([yup.ref('password'), null], 'Паролі не збігаються')
     .required(`Обов'язкове поле`),
   agreement: yup.boolean().isTrue(''),

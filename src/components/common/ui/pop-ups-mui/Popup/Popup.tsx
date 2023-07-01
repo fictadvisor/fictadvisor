@@ -26,7 +26,7 @@ interface PopupProps {
 const Popup: FC<PopupProps> = ({
   open,
   onClose,
-  sx,
+  sx = {},
   hasCross = false,
   icon,
   title,
@@ -35,14 +35,14 @@ const Popup: FC<PopupProps> = ({
   secondButton,
   contentLeft = false,
 }) => {
+  const dialogRef = useRef<HTMLDivElement>(null);
+
   const handleClose = (event: MouseEvent) => {
     if (
-      dialogRef.current.querySelector('.MuiDialog-container') === event.target
+      dialogRef.current?.querySelector('.MuiDialog-container') === event.target
     )
       onClose();
   };
-
-  const dialogRef = useRef<HTMLDivElement>(null);
 
   return (
     <Dialog

@@ -1,11 +1,11 @@
-import React, { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import Box from '@mui/material/Box';
 
 import * as styles from '../Tab.styles';
 
 interface CustomLabelProps {
-  label: string | React.ReactElement;
-  count: number | string;
+  label: string | ReactNode;
+  count: number | null;
   disabled: boolean;
 }
 
@@ -17,7 +17,7 @@ export const CustomLabel: FC<CustomLabelProps> = ({
   return (
     <Box sx={styles.label}>
       {label}
-      {count != null && <Box sx={styles.counter(disabled)}>{count}</Box>}
+      {count !== null && <Box sx={styles.counter(disabled)}>{count}</Box>}
     </Box>
   );
 };

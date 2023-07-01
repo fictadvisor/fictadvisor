@@ -1,1 +1,1 @@
-export { default, ToastContext } from './ToastContext';
+export { default, useToastContext } from './ToastContext';

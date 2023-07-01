@@ -1,12 +1,12 @@
 import theme from '@/styles/theme';
 
-import { CheckboxColorType } from '../Checkbox';
+import { CheckboxColor } from '../types';
 
-export const ControlsColorMap: Record<CheckboxColorType, string> = {
-  primary: theme.palette.grey[800],
-  error: theme.palette.error[500],
-  lection: theme.palette.violet[600],
-  practice: theme.palette.orange[600],
-  laba: theme.palette.mint[600],
-  event: theme.palette.indigo[800],
+export const ControlsColorMap: Record<CheckboxColor, string> = {
+  [CheckboxColor.PRIMARY]: theme.palette.grey[800],
+  [CheckboxColor.ERROR]: theme.palette.error[500],
+  [CheckboxColor.LECTURE]: theme.palette.violet[600],
+  [CheckboxColor.PRACTICE]: theme.palette.orange[600],
+  [CheckboxColor.LAB]: theme.palette.mint[600],
+  [CheckboxColor.EVENT]: theme.palette.indigo[800],
 };

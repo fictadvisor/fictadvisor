@@ -1,27 +1,25 @@
-import React, { FC, PropsWithChildren, useCallback, useState } from 'react';
+import React, {
+  FC,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useState,
+} from 'react';
 
-import { AlertType } from '@/components/common/ui/alert-mui/Alert';
+import { AlertType } from '@/components/common/ui/alert-mui/types';
 import Toast from '@/components/common/ui/toast-mui';
 
-interface ToastContextType {
-  showToast: (OptionsType) => void;
-}
+import { ToastActionProps, ToastContext, ToastState } from '../types';
 
-export const ToastContext = React.createContext<ToastContextType>({
+export const toastContext = React.createContext<ToastContext>({
   showToast: () => {},
 });
 
-interface OptionsType {
-  open: boolean;
-  title: string;
-  type: AlertType;
-  description?: string;
-  timer?: number;
-}
+export const useToastContext = () => useContext(toastContext);
 
 const ToastContextProvider: FC<PropsWithChildren> = ({ children }) => {
-  const [options, setOptions] = useState<OptionsType>({
-    type: 'error',
+  const [options, setOptions] = useState<ToastState>({
+    type: AlertType.ERROR,
     title: '',
     description: '',
     open: false,
@@ -32,26 +30,29 @@ const ToastContextProvider: FC<PropsWithChildren> = ({ children }) => {
     [options],
   );
 
-  const showToast = ({
-    title,
-    type = 'error',
-    description,
-    timer,
-  }: OptionsType) => {
-    setOptions({
-      open: true,
-      type,
+  const showToast = useCallback(
+    ({
       title,
+      type = AlertType.ERROR,
       description,
       timer,
-    });
-  };
+    }: ToastActionProps) => {
+      setOptions({
+        open: true,
+        type,
+        title,
+        description,
+        timer,
+      });
+    },
+    [],
+  );
 
   return (
-    <ToastContext.Provider value={{ showToast }}>
+    <toastContext.Provider value={{ showToast }}>
       <Toast onClose={hideToast} {...options} />
       {children}
-    </ToastContext.Provider>
+    </toastContext.Provider>
   );
 };
 

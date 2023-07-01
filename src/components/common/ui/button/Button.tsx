@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import mergeClassNames from 'merge-class-names';
+import cn from 'classnames';
 
 import styles from './Button.module.scss';
 export enum ButtonSize {
@@ -45,7 +45,7 @@ const Button: React.FC<ButtonProps> = ({
   }-button`;
   const buttonVariant = `${color}-${variant}-button-variant`;
   const buttonText = `${variant}-${size}-button`;
-  const className = mergeClassNames(
+  const className = cn(
     styles[buttonVariant],
     styles[buttonStyle],
     styles[buttonText],

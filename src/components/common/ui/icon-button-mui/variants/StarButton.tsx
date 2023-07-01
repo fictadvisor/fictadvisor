@@ -1,14 +1,18 @@
 import React from 'react';
 import { StarIcon } from '@heroicons/react/24/outline';
 
-import IconButton, {
+import IconButton from '@/components/common/ui/icon-button-mui/IconButton';
+import {
+  IconButtonColor,
+  IconButtonShape,
+  IconButtonSize,
   VariantIconButtonProps,
-} from '@/components/common/ui/icon-button-mui/IconButton';
+} from '@/components/common/ui/icon-button-mui/types';
 
 const StarButton: React.FC<VariantIconButtonProps> = ({
-  size = 'normal',
-  shape = 'circle',
-  color = 'success',
+  size = IconButtonSize.NORMAL,
+  shape = IconButtonShape.CIRCLE,
+  color = IconButtonColor.SUCCESS,
   disabled,
 }) => {
   return (

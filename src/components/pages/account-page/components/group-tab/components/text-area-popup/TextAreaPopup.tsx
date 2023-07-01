@@ -12,7 +12,7 @@ import { CloseButton } from '../../../../../../common/ui/icon-button/variants';
 import styles from './TextAreaPopup.module.scss';
 
 interface TextAreaPopup {
-  handleSubmit: (value) => void;
+  handleSubmit: (value: string) => void;
   closeFunction: React.Dispatch<SetStateAction<boolean>>;
 }
 
@@ -20,6 +20,7 @@ export const TextAreaPopup: React.FC<TextAreaPopup> = ({
   closeFunction,
   handleSubmit,
 }) => {
+  // TODO: remove this shit
   document.body.style.overflow = 'auto';
   return (
     <div className={styles.wrapper}>

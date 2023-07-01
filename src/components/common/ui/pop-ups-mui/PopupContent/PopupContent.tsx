@@ -10,7 +10,8 @@ interface PopupContentProps {
   children?: React.ReactNode;
   sx?: SxProps<Theme>;
 }
-const PopupContent: FC<PopupContentProps> = ({ children, sx }) => {
+
+const PopupContent: FC<PopupContentProps> = ({ children, sx = {} }) => {
   return (
     <DialogContent sx={mergeSx(styles.popupContent, sx)}>
       {children}

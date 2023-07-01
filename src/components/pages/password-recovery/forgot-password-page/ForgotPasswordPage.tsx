@@ -4,6 +4,10 @@ import { Box, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 
 import Button from '@/components/common/ui/button-mui';
+import {
+  ButtonSize,
+  ButtonVariant,
+} from '@/components/common/ui/button-mui/types';
 import ForgotPasswordForm from '@/components/pages/password-recovery/forgot-password-page/components/forgot-password-form';
 import * as styles from '@/components/pages/password-recovery/forgot-password-page/ForgotPasswordPage.styles';
 
@@ -34,8 +38,8 @@ const ForgotPasswordPage = () => {
           </Box>
           <Button
             text="Повернутись до авторизації"
-            variant="text"
-            size="small"
+            variant={ButtonVariant.TEXT}
+            size={ButtonSize.SMALL}
             startIcon={<ChevronLeftIcon />}
             onClick={returnAuth}
           />

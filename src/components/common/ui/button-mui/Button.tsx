@@ -1,36 +1,23 @@
-import React, { FC, MouseEventHandler, ReactNode } from 'react';
-import { Box, Button as ButtonMui } from '@mui/material';
-import { SxProps, Theme } from '@mui/material/styles';
+import React, { FC } from 'react';
+import { Box, Button as MuiButton } from '@mui/material';
 
-import * as styles from '@/components/common/ui/button-mui/Button.styles';
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 
-interface ButtonProps {
-  text?: string;
-  color?: 'primary' | 'secondary';
-  variant?: 'filled' | 'outline' | 'text';
-  size?: 'large' | 'medium' | 'small';
-  startIcon?: ReactNode;
-  endIcon?: ReactNode;
-  sx?: SxProps<Theme>;
-  disabled?: boolean;
-  onClick?: MouseEventHandler<HTMLButtonElement>;
-  href?: string;
-  type?: 'button' | 'reset' | 'submit';
-}
+import * as styles from './Button.styles';
+import { ButtonColor, ButtonProps, ButtonSize, ButtonVariant } from './types';
 
 const Button: FC<ButtonProps> = ({
   text,
-  color = 'primary',
-  variant = 'filled',
-  size = 'medium',
+  color = ButtonColor.PRIMARY,
+  variant = ButtonVariant.FILLED,
+  size = ButtonSize.MEDIUM,
   startIcon,
   endIcon,
-  sx,
+  sx = {},
   ...rest
 }) => {
   return (
-    <ButtonMui
+    <MuiButton
       sx={mergeSx(styles.button(color, variant, size), sx)}
       disableRipple
       {...rest}
@@ -38,7 +25,7 @@ const Button: FC<ButtonProps> = ({
       {startIcon && <Box sx={styles.icon}>{startIcon}</Box>}
       <p> {text} </p>
       {endIcon && <Box sx={styles.icon}>{endIcon}</Box>}
-    </ButtonMui>
+    </MuiButton>
   );
 };
 

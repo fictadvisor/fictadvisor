@@ -6,7 +6,7 @@ import PageLayout from '@/components/common/layout/page-layout';
 import { AlertColor } from '@/components/common/ui/alert';
 import Loader, { LoaderSize } from '@/components/common/ui/loader';
 import useAuthentication from '@/hooks/use-authentication';
-import { AuthAPI } from '@/lib/api/auth/AuthAPI';
+import AuthAPI from '@/lib/api/auth/AuthAPI';
 import StorageUtil from '@/lib/utils/StorageUtil';
 import { showAlert } from '@/redux/reducers/alert.reducer';
 
@@ -17,7 +17,7 @@ const VerifyEmailTokenPage = () => {
   const { update } = useAuthentication();
 
   const loadData = useCallback(
-    async token => {
+    async (token: string) => {
       if (router.isReady) {
         try {
           const { accessToken, refreshToken } = await AuthAPI.verifyEmailToken(

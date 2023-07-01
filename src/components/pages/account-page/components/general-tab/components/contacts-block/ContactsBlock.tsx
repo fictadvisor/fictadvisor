@@ -9,7 +9,7 @@ import Button, {
 import ContactForm from '@/components/pages/account-page/components/general-tab/components/contacts-block/components/ContactForm';
 import ContactItem from '@/components/pages/account-page/components/general-tab/components/contacts-block/components/ContactItem';
 import useAuthentication from '@/hooks/use-authentication';
-import { UserAPI } from '@/lib/api/user/UserAPI';
+import UserAPI from '@/lib/api/user/UserAPI';
 
 import styles from '../../GeneralTab.module.scss';
 

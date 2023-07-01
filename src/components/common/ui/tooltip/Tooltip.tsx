@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer, useRef, useState } from 'react';
-import mergeClassNames from 'merge-class-names';
+import cn from 'classnames';
 
 import styles from './Tooltip.module.scss';
 
@@ -23,6 +23,12 @@ type TooltipProps = {
   HTMLDivElement
 >;
 
+interface TooltipAction {
+  position: Position;
+  divDimensions?: DOMRect;
+  toolTipDimensions?: DOMRect;
+}
+
 interface TooltipState {
   stylesObj: React.CSSProperties;
   position: Position;
@@ -35,7 +41,7 @@ const getInitialStylesObj = (position: Position) => {
   };
 };
 
-const reducer = (prev, action): TooltipState => {
+const reducer = (prev: TooltipState, action: TooltipAction): TooltipState => {
   let { position } = prev;
   if (action.divDimensions && action.toolTipDimensions) {
     switch (position) {
@@ -109,7 +115,7 @@ const Tooltip: React.FC<TooltipProps> = ({
   ...props
 }) => {
   const [showToolTip, setShowToolTip] = useState<boolean>(false);
-  const [tooltipState, dispatchstylesObj] = useReducer(
+  const [tooltipState, dispatchStylesObj] = useReducer(
     reducer,
     getInitialStylesObj(position),
   );
@@ -119,9 +125,9 @@ const Tooltip: React.FC<TooltipProps> = ({
 
   useEffect(() => {
     if (showToolTip) {
-      const divDimensions = divRef.current.getBoundingClientRect();
+      const divDimensions = divRef.current?.getBoundingClientRect();
       const toolTipDimensions = toolTipRef.current?.getBoundingClientRect();
-      dispatchstylesObj({ position, divDimensions, toolTipDimensions });
+      dispatchStylesObj({ position, divDimensions, toolTipDimensions });
     }
   }, [showToolTip, position]);
 
@@ -140,10 +146,9 @@ const Tooltip: React.FC<TooltipProps> = ({
           ref={toolTipRef}
         >
           <span
-            className={mergeClassNames(
-              styles['tooltip-text'],
-              hasArrow && styles[`tooltip-text-${tooltipState.position}`],
-            )}
+            className={cn(styles['tooltip-text'], {
+              [styles[`tooltip-text-${tooltipState.position}`]]: hasArrow,
+            })}
           >
             {text}
           </span>

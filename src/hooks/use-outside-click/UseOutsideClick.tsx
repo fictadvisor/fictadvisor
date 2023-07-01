@@ -1,9 +1,12 @@
-import { useEffect } from 'react';
+import { MutableRefObject, RefObject, useEffect } from 'react';
 
-const useOutsideAlerter = (ref, onClick) => {
+const useOutsideClick = (
+  ref: RefObject<HTMLElement> | MutableRefObject<HTMLElement>,
+  onClick: () => void,
+) => {
   useEffect(() => {
-    const handleClickOutside = event => {
-      if (ref.current && !ref.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
         onClick();
       }
     };
@@ -14,4 +17,4 @@ const useOutsideAlerter = (ref, onClick) => {
   }, [onClick, ref]);
 };
 
-export default useOutsideAlerter;
+export default useOutsideClick;

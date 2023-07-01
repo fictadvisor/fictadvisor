@@ -1,3 +1,3 @@
 export interface ForgotPasswordFormFields {
-  emailAddress: string;
+  email: string;
 }

@@ -1,11 +1,10 @@
-import { useContext } from 'react';
+import { useAuthenticationContext } from '@/hooks/use-authentication/authentication-context';
+import { UseAuthenticationReturn } from '@/hooks/use-authentication/types';
 
-import { AuthenticationContext } from '@/hooks/use-authentication/authentication-context';
+const useAuthentication = (): UseAuthenticationReturn => {
+  const { user, update } = useAuthenticationContext();
 
-const useAuthentication = () => {
-  const { user, update } = useContext(AuthenticationContext);
-
-  const isLoggedIn = user != null;
+  const isLoggedIn = !!user;
 
   return {
     user,

@@ -1,37 +1,23 @@
-import React, { FC, MouseEventHandler, ReactNode } from 'react';
+import React, { FC } from 'react';
 import { Box, Button } from '@mui/material';
-import { SxProps, Theme } from '@mui/material/styles';
 
 import * as styles from '@/components/common/ui/icon-button-mui/IconButton.styles';
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 
-export type IconButtonColorType =
-  | 'primary'
-  | 'error'
-  | 'success'
-  | 'secondary'
-  | 'transparent';
-
-interface IconButtonProps {
-  size?: 'normal' | 'large';
-  shape?: 'circle' | 'square';
-  color?: IconButtonColorType;
-  disabled?: boolean;
-  onClick?: MouseEventHandler<HTMLButtonElement>;
-  href?: string;
-  icon?: ReactNode;
-  sx?: SxProps<Theme>;
-  iconSx?: SxProps<Theme>;
-}
-export type VariantIconButtonProps = Omit<IconButtonProps, 'icon'>;
+import {
+  IconButtonColor,
+  IconButtonProps,
+  IconButtonShape,
+  IconButtonSize,
+} from './types';
 
 const IconButton: FC<IconButtonProps> = ({
-  sx,
+  sx = {},
   icon,
-  iconSx,
-  shape = 'square',
-  color = 'primary',
-  size = 'normal',
+  iconSx = {},
+  shape = IconButtonShape.SQUARE,
+  color = IconButtonColor.PRIMARY,
+  size = IconButtonSize.NORMAL,
   ...rest
 }) => {
   return (

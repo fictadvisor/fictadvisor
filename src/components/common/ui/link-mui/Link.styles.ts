@@ -18,12 +18,12 @@ export const LinkStyles = (type: LinkType): SxProps<Theme> => ({
       textDecorationColor: theme.palette.grey[700],
     },
     '&:hover': {
-      color: theme.palette.grey['white'],
-      textDecorationColor: theme.palette.grey['white'],
+      color: theme.palette.white,
+      textDecorationColor: theme.palette.white,
     },
     '&:active': {
-      color: theme.palette.grey['white'],
-      textDecorationColor: theme.palette.grey['white'],
+      color: theme.palette.white,
+      textDecorationColor: theme.palette.white,
     },
   }),
   ...(type === LinkType.BLUE && {

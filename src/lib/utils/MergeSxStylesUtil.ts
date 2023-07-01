@@ -1,4 +1,5 @@
 import { SxProps, Theme } from '@mui/material/styles';
+
 const mergeSx = (...sxProps: SxProps<Theme>[]): SxProps<Theme> => {
   return sxProps
     .filter(value => value)

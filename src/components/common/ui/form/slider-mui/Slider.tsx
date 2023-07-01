@@ -18,7 +18,7 @@ export interface SliderProps {
 const Slider: FC<SliderProps> = ({
   defaultValue = 1,
   size = 'medium',
-  sx,
+  sx = {},
   onChange,
   value,
 }) => {

@@ -5,31 +5,14 @@ import {
   InputLabel,
   OutlinedInput,
 } from '@mui/material';
-import { SxProps, Theme } from '@mui/material/styles';
 import { useField } from 'formik';
 
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 
 import * as styles from './TextArea.styles';
-
-interface TextAreaProps {
-  name: string;
-  placeholder?: string;
-  label?: string;
-  size?: TextAreaSize;
-  disabled?: boolean;
-  showRemark?: boolean;
-  rowsNumber?: number;
-
-  sx?: SxProps<Theme>;
-}
+import { TextAreaProps, TextAreaSize, TextAreaState } from './types';
 
 const MAX_LENGTH = 4000;
-
-export enum TextAreaSize {
-  SMALL = 'small',
-  MEDIUM = 'medium',
-}
 
 const TextArea: React.FC<TextAreaProps> = ({
   name,
@@ -39,11 +22,11 @@ const TextArea: React.FC<TextAreaProps> = ({
   disabled = false,
   showRemark = false,
   rowsNumber = 4,
-  sx,
+  sx = {},
 }) => {
   const [field, { touched, error }] = useField(name);
 
-  const state = touched && error ? 'error' : 'default';
+  const state = touched && error ? TextAreaState.ERROR : TextAreaState.DEFAULT;
 
   return (
     <FormControl

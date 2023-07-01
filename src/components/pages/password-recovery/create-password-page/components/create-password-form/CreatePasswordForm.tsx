@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import { AxiosError } from 'axios';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/router';
 
@@ -9,7 +10,7 @@ import { CreatePasswordFormFields } from '@/components/pages/password-recovery/c
 import { validationSchema } from '@/components/pages/password-recovery/create-password-page/components/create-password-form/validation';
 import styles from '@/components/pages/password-recovery/create-password-page/CreatePasswordPage.module.scss';
 import useToast from '@/hooks/use-toast';
-import { AuthAPI } from '@/lib/api/auth/AuthAPI';
+import AuthAPI from '@/lib/api/auth/AuthAPI';
 
 const CreatePasswordForm: FC = () => {
   const { query, push } = useRouter();
@@ -19,8 +20,10 @@ const CreatePasswordForm: FC = () => {
     try {
       await AuthAPI.resetPassword(token, { password: data.password });
       void push('/password-recovery/valid');
-    } catch (e) {
-      const errorName = e.response.data.error;
+    } catch (error) {
+      // TODO: remove as and create readable types
+      const errorName = (error as AxiosError<{ error: string }>).response?.data
+        .error;
       if (errorName === 'PasswordRepeatException') {
         toast.error('Такий пароль вже був!');
       } else {

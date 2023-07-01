@@ -1,19 +1,16 @@
 import { TeacherSearchFormFields } from '@/components/pages/search-pages/search-form/types';
-import { GetTeacherCommentsDTO } from '@/lib/api/teacher/dto/GetTeacherCommentsDTO';
-import { GetTeacherDisciplinesDTO } from '@/lib/api/teacher/dto/GetTeacherDisciplinesDTO';
-import { GetTeacherSubjectDTO } from '@/lib/api/teacher/dto/GetTeacherSubjectDTO';
-import { GetTeacherSubjectsDTO } from '@/lib/api/teacher/dto/GetTeacherSubjectsDTO';
+import { GetTeacherCommentsResponse } from '@/lib/api/teacher/types/GetTeacherCommentsResponse';
+import { GetTeacherDisciplinesResponse } from '@/lib/api/teacher/types/GetTeacherDisciplinesResponse';
+import { GetTeacherMarksResponse } from '@/lib/api/teacher/types/GetTeacherMarksResponse';
+import { GetTeachersResponse } from '@/lib/api/teacher/types/GetTeachersResponse';
+import { GetTeacherSubjectsResponse } from '@/lib/api/teacher/types/GetTeacherSubjectsResponse';
 import { getAuthorizationHeader } from '@/lib/api/utils';
+import { Teacher, TeacherWithSubject } from '@/types/teacher';
 
 import { client } from '../instance';
 
-import { AddContactsBody } from './dto/AddContactsBody';
-import { CreateTeacherBody } from './dto/CreateTeacherBody';
-import { GetTeacherDTO } from './dto/GetTeacherDTO';
-import { GetTeacherMarksDTO } from './dto/GetTeacherMarksDTO';
-import { UpdateTeacherBody } from './dto/UpdateTeacherBody';
-export class TeacherAPI {
-  static async get(teacherId: string): Promise<GetTeacherDTO> {
+class TeacherAPI {
+  async get(teacherId: string): Promise<Teacher> {
     const { data } = await client.get(
       `/teachers/${teacherId}`,
       getAuthorizationHeader(),
@@ -21,117 +18,95 @@ export class TeacherAPI {
     return data;
   }
 
-  static async getAll(
+  async getAll(
     { search, order, sort, group }: TeacherSearchFormFields,
     pageSize: number,
-  ): Promise<{ teachers: GetTeacherDTO[] }> {
-    const url = `/teachers?${search ? `search=${search}` : ''}${
-      order ? `&order=${order}` : ''
-    }${sort ? `&sort=${sort}` : ''}${group ? `&group=${group}` : ''}${
-      pageSize ? `&pageSize=${pageSize}` : ''
-    }`;
-
-    const { data } = await client.get(url, getAuthorizationHeader());
-    return data;
-  }
-
-  static async getTeacherMarks(
-    teacherId: string,
-    subjectId?: string,
-    semester?: number,
-    year?: number,
-  ): Promise<GetTeacherMarksDTO> {
-    const { data } = await client.get(`/teachers/${teacherId}/marks`, {
+  ) {
+    const { data } = await client.get<GetTeachersResponse>('/teachers', {
       params: {
-        semester,
-        subjectId,
-        year,
+        search,
+        order,
+        sort,
+        group,
+        pageSize,
       },
     });
     return data;
   }
 
-  static async getTeacherComments(
-    teacherId: string,
-    subjectId?: string,
-    semester?: number,
-    year?: number,
-    sortBy?: string,
-  ): Promise<GetTeacherCommentsDTO> {
-    const { data } = await client.get(`/teachers/${teacherId}/comments`, {
-      params: {
-        semester,
-        subjectId,
-        year,
-        sortBy,
-      },
-    });
-    return data;
-  }
-
-  static async getTeacherDisciplines(
-    teacherId: string,
-    notAnswered?: boolean,
-    userId?: string,
-  ): Promise<GetTeacherDisciplinesDTO> {
-    const { data } = await client.get(
-      `/teachers/${teacherId}/disciplines?notAnswered=${notAnswered}&userId=${userId}`,
-      getAuthorizationHeader(),
+  async getTeacherSubjects(teacherId: string) {
+    const { data } = await client.get<GetTeacherSubjectsResponse>(
+      `/teachers/${teacherId}/subjects`,
     );
     return data;
   }
 
-  static async create(body: CreateTeacherBody) {
-    const { data } = await client.post(
-      '/teachers',
-      body,
-      getAuthorizationHeader(),
-    );
-    return data;
-  }
-
-  static async addContacts(teacherId: string, body: AddContactsBody) {
-    const { data } = await client.post(
-      `/teachers/${teacherId}/contacts`,
-      body,
-      getAuthorizationHeader(),
-    );
-    return data;
-  }
-
-  static async update(teacherId: string, body: UpdateTeacherBody) {
-    const { data } = await client.patch(
-      `/teachers/${teacherId}`,
-      body,
-      getAuthorizationHeader(),
-    );
-    return data;
-  }
-
-  static async delete(teacherId: string) {
-    const { data } = await client.delete(
-      `/teachers/${teacherId}`,
-      getAuthorizationHeader(),
-    );
-    return data;
-  }
-  static async getTeacherSubjects(
-    teacherId: string,
-  ): Promise<GetTeacherSubjectsDTO> {
-    const { data } = await client.get(`/teachers/${teacherId}/subjects`);
-    return data;
-  }
-  static async getTeacherSubject(
-    teacherId: string,
-    subjectId: string,
-  ): Promise<GetTeacherSubjectDTO> {
-    const { data } = await client.get(
+  async getTeacherSubject(teacherId: string, subjectId: string) {
+    const { data } = await client.get<TeacherWithSubject>(
       `/teachers/${teacherId}/subjects/${subjectId}`,
     );
     return data;
   }
 
-  static async removeTeacher(teacherId: string): Promise<void> {
+  async getTeacherMarks(
+    teacherId: string,
+    subjectId?: string,
+    semester?: number,
+    year?: number,
+  ) {
+    const { data } = await client.get<GetTeacherMarksResponse>(
+      `/teachers/${teacherId}/marks`,
+      {
+        params: {
+          semester,
+          subjectId,
+          year,
+        },
+      },
+    );
+    return data;
+  }
+
+  async getTeacherComments(
+    teacherId: string,
+    subjectId?: string,
+    semester?: number,
+    year?: number,
+    sortBy?: string,
+  ) {
+    const { data } = await client.get<GetTeacherCommentsResponse>(
+      `/teachers/${teacherId}/comments`,
+      {
+        params: {
+          semester,
+          subjectId,
+          year,
+          sortBy,
+        },
+      },
+    );
+    return data;
+  }
+
+  async getTeacherDisciplines(
+    teacherId: string,
+    notAnswered?: boolean,
+    userId?: string,
+  ) {
+    const { data } = await client.get<GetTeacherDisciplinesResponse>(
+      `/teachers/${teacherId}/disciplines`,
+      {
+        ...getAuthorizationHeader(),
+        params: {
+          notAnswered,
+          userId,
+        },
+      },
+    );
+    return data;
+  }
+
+  async removeFromPoll(teacherId: string): Promise<void> {
     await client.post(
       `/disciplineTeachers/${teacherId}/removeFromPoll`,
       {},
@@ -139,3 +114,5 @@ export class TeacherAPI {
     );
   }
 }
+
+export default new TeacherAPI();

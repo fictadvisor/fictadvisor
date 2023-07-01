@@ -1,6 +1,6 @@
 import { SxProps, Theme } from '@mui/material/styles';
 
-export const popup = (contentLeft): SxProps<Theme> => ({
+export const popup = (contentLeft: boolean): SxProps<Theme> => ({
   position: 'absolute',
   left: 0,
   right: 0,
@@ -13,7 +13,7 @@ export const popup = (contentLeft): SxProps<Theme> => ({
   },
 });
 
-export const popupsTitle = (contentLeft): SxProps<Theme> => ({
+export const popupsTitle = (contentLeft: boolean): SxProps<Theme> => ({
   paddingTop: contentLeft ? '0px' : '8.5px',
 });
 
@@ -23,13 +23,13 @@ export const checkCircleIcon: SxProps<Theme> = {
   margin: '0 auto',
 };
 
-export const popupsTitleText = (contentLeft): SxProps<Theme> => ({
+export const popupsTitleText = (contentLeft: boolean): SxProps<Theme> => ({
   paddingTop: contentLeft ? '0px' : '12px',
   paddingBottom: contentLeft ? '29px' : '25px',
   textAlign: contentLeft ? 'left' : 'center',
 });
 
-export const popupsContent = (contentLeft): SxProps<Theme> => ({
+export const popupsContent = (contentLeft: boolean): SxProps<Theme> => ({
   paddingBottom: '32px',
   textAlign: contentLeft ? 'left' : 'center',
 });

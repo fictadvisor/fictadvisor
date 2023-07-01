@@ -1,5 +1,3 @@
-import React from 'react';
-import mergeClassNames from 'merge-class-names';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -9,7 +7,7 @@ import Button from '@/components/common/ui/button';
 import styles from './RightBlock.module.scss';
 
 const RightBlock = () => {
-  const { push } = useRouter();
+  const router = useRouter();
 
   return (
     <div className={styles['left-block']}>
@@ -23,14 +21,12 @@ const RightBlock = () => {
           height={54}
         />
       </Link>
-      <h3 className={mergeClassNames(styles['login-text'])}>
-        Вже маєш акаунт? Заходь!
-      </h3>
+      <h3 className={styles['login-text']}>Вже маєш акаунт? Заходь!</h3>
       <Button
         className={styles['login-button']}
         text="Вхід"
         onClick={() => {
-          void push('/login');
+          void router.push('/login');
         }}
       />
     </div>

@@ -9,7 +9,8 @@ interface PopupActionsProps {
   children?: React.ReactNode;
   sx?: SxProps<Theme>;
 }
-const PopupActions: FC<PopupActionsProps> = ({ children, sx }) => {
+
+const PopupActions: FC<PopupActionsProps> = ({ children, sx = {} }) => {
   return (
     <DialogActions sx={mergeSx(styles.popupActions, sx)}>
       {children}

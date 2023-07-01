@@ -1,27 +1,35 @@
+import { ReactNode } from 'react';
 import { SxProps, Theme } from '@mui/material/styles';
 
-import colorInfo from '@/components/common/ui/tag-mui/utils/constants';
+import getColor from './utils/get-color';
+import { TagColor, TagSize, TagVariant } from './types';
 
-export const tag = (variant, color, size, icon, text): SxProps<Theme> => ({
+export const tag = (
+  variant: TagVariant,
+  color: TagColor,
+  size: TagSize,
+  icon?: ReactNode,
+  text?: string,
+): SxProps<Theme> => ({
   width: 'fit-content',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   borderRadius: '6px',
-  ...(variant != 'outline' && {
-    backgroundColor: colorInfo(color, variant),
+  ...(variant !== TagVariant.OUTLINE && {
+    backgroundColor: getColor(color, variant),
   }),
-  ...(variant == 'outline' && {
+  ...(variant === TagVariant.OUTLINE && {
     border: `solid 1px`,
-    borderColor: colorInfo(color, variant),
+    borderColor: getColor(color, variant),
   }),
-  ...(size == 'medium' && {
+  ...(size === TagSize.MEDIUM && {
     padding: '4px  8px',
     p: {
       fontSize: '16px',
     },
   }),
-  ...(size == 'small' && {
+  ...(size === TagSize.SMALL && {
     padding: '2px 6px',
     p: {
       fontSize: '14px',

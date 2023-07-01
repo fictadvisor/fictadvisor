@@ -1,8 +1,11 @@
-import { PostSelectiveDisciplinesBody } from '@/lib/api/user/dto/PostSelectiveDisciplinesBody';
+import { FormikValues } from 'formik';
 
-export const transformData = (
-  data: { string: boolean }[],
-): PostSelectiveDisciplinesBody => {
+import { PostSelectiveDisciplinesBody } from '@/lib/api/user/types/PostSelectiveDisciplinesBody';
+import { UserRemainingSelective } from '@/types/user';
+
+export const transformData = (data: {
+  [key: string]: boolean;
+}): PostSelectiveDisciplinesBody => {
   const newData = [];
   for (const discipline in data) {
     if (data[discipline]) newData.push(discipline);
@@ -10,8 +13,8 @@ export const transformData = (
   return { disciplines: newData };
 };
 
-export const getInitialValues = disciplines => {
-  const initialValues = {};
+export const getInitialValues = (disciplines: UserRemainingSelective[]) => {
+  const initialValues: FormikValues = {};
   disciplines.forEach(
     discipline => (initialValues[discipline.disciplineId] = false),
   );

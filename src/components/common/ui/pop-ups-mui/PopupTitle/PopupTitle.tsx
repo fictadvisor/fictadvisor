@@ -7,6 +7,7 @@ import { CloseIcon } from 'next/dist/client/components/react-dev-overlay/interna
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 
 import * as styles from './PopupTitle.styles';
+
 interface PopupTitleProps {
   id?: string;
   children?: React.ReactNode;
@@ -18,13 +19,13 @@ interface PopupTitleProps {
 const BootstrapDialogTitle: FC<PopupTitleProps> = ({
   children,
   onClose,
-  sx,
+  sx = {},
   ...rest
 }) => {
   return (
     <DialogTitle sx={mergeSx(styles.dialogTitle, sx)} {...rest}>
       {children}
-      {onClose ? (
+      {onClose && (
         <IconButton
           aria-label="close"
           onClick={onClose}
@@ -32,7 +33,7 @@ const BootstrapDialogTitle: FC<PopupTitleProps> = ({
         >
           <CloseIcon />
         </IconButton>
-      ) : null}
+      )}
     </DialogTitle>
   );
 };
@@ -42,20 +43,16 @@ const PopupTitle: FC<PopupTitleProps> = ({
   children,
   onClose,
   withCross = false,
-  sx,
+  sx = {},
   ...rest
 }) => {
-  if (withCross) {
-    return (
-      <BootstrapDialogTitle id={id} onClose={onClose} sx={sx} {...rest}>
-        {children}
-      </BootstrapDialogTitle>
-    );
-  } else {
-    return (
-      <DialogTitle sx={mergeSx(styles.dialogTitle, sx)}>{children}</DialogTitle>
-    );
-  }
+  return withCross ? (
+    <BootstrapDialogTitle id={id} onClose={onClose} sx={sx} {...rest}>
+      {children}
+    </BootstrapDialogTitle>
+  ) : (
+    <DialogTitle sx={mergeSx(styles.dialogTitle, sx)}>{children}</DialogTitle>
+  );
 };
 
 export default PopupTitle;

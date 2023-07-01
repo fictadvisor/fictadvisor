@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 import SelectiveBlock from '@/components/pages/account-page/components/selective-tab/components/selective-block';
 import useAuthentication from '@/hooks/use-authentication';
-import { UserAPI } from '@/lib/api/user/UserAPI';
+import UserAPI from '@/lib/api/user/UserAPI';
 
 import * as styles from './SelectiveTab.styles';
 

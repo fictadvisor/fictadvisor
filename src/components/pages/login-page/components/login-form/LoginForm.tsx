@@ -1,5 +1,5 @@
 import { FC, useCallback } from 'react';
-import { Form, Formik } from 'formik';
+import { Form, Formik, FormikHelpers } from 'formik';
 import { useRouter } from 'next/router';
 
 import Button, { ButtonSize } from '@/components/common/ui/button';
@@ -19,12 +19,15 @@ const LoginForm: FC = () => {
   const redirect = query.redirect as string;
 
   const handleSubmit = useCallback(
-    async (data: LoginFormFields, { setErrors }) => {
+    async (
+      data: LoginFormFields,
+      { setErrors }: FormikHelpers<LoginFormFields>,
+    ) => {
       try {
         if (data.username.includes('@'))
           data.username = data.username.toLowerCase();
         await AuthService.login(data);
-        update();
+        await update();
         await push(redirect ? redirect.replace('~', '/') : '/');
       } catch (e) {
         setErrors({

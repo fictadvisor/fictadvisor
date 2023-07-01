@@ -1,5 +1,5 @@
 import React from 'react';
-import mergeClassNames from 'merge-class-names';
+import cn from 'classnames';
 import Link from 'next/dist/client/link';
 import { LinkProps } from 'next/link';
 
@@ -15,7 +15,7 @@ const CustomLink: React.FC<CustomLinkProps> = ({
   ...rest
 }) => {
   return (
-    <Link {...rest} className={mergeClassNames(styles['link'], className)}>
+    <Link {...rest} className={cn(styles['link'], className)}>
       {text}
     </Link>
   );

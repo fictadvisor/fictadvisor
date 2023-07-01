@@ -1,27 +1,24 @@
 import { FC } from 'react';
 import {
   FormControlLabel,
-  Switch as SwitchMui,
-  SxProps,
-  Theme,
+  Switch as MuiSwitch,
   Typography,
 } from '@mui/material';
 
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 
 import * as styles from './Switch.styles';
+import { SwitchLabelPlacement, SwitchProps } from './types';
 
-interface SwitchProps {
-  labelPlacement?: 'start' | 'end';
-  sx?: SxProps<Theme>;
-  label?: string;
-}
-
-const Switch: FC<SwitchProps> = ({ labelPlacement = 'end', sx, label }) => {
+const Switch: FC<SwitchProps> = ({
+  labelPlacement = SwitchLabelPlacement.END,
+  sx = {},
+  label = '',
+}) => {
   return (
     <FormControlLabel
       sx={mergeSx(styles.wrapper, sx)}
-      control={<SwitchMui sx={styles.switchStyle} disableRipple />}
+      control={<MuiSwitch sx={styles.switchStyle} disableRipple />}
       label={
         <Typography sx={styles.label(label, labelPlacement)}>
           {label}

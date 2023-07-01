@@ -1,4 +1,10 @@
-import { createContext, useEffect, useState } from 'react';
+import {
+  createContext,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+} from 'react';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 
@@ -13,8 +19,20 @@ import useAuthentication from '@/hooks/use-authentication';
 import useTabState from '@/hooks/use-tab-state';
 import useToast from '@/hooks/use-toast';
 import TeacherService from '@/lib/services/teacher/TeacherService';
+import { TeacherWithSubject } from '@/types/teacher';
 
-export const TeacherSubjectContext = createContext(null);
+// TODO: move context and types to separate folders
+export interface TeacherSubjectContext {
+  floatingCardShowed: boolean;
+  setFloatingCardShowed: Dispatch<SetStateAction<boolean>>;
+  teacher: TeacherWithSubject;
+}
+
+export const teacherSubjectContext = createContext<TeacherSubjectContext>({
+  floatingCardShowed: false,
+  setFloatingCardShowed: () => {},
+  teacher: {} as TeacherWithSubject,
+});
 
 const PersonalTeacherSubjectPage = () => {
   const router = useRouter();
@@ -52,12 +70,14 @@ const PersonalTeacherSubjectPage = () => {
     TeachersPageTabs.GENERAL,
   );
 
-  const handleChange = useTabState({ tab, router, setIndex });
+  const handleChange = useTabState<TeachersPageTabs>({ tab, router, setIndex });
 
-  const teacher = teacherInfo?.info;
+  if (!teacherInfo) return null;
+
+  const teacher = teacherInfo.info;
 
   return (
-    <TeacherSubjectContext.Provider
+    <teacherSubjectContext.Provider
       value={{ floatingCardShowed, setFloatingCardShowed, teacher }}
     >
       <PageLayout description={'Сторінка викладача'}>
@@ -90,7 +110,7 @@ const PersonalTeacherSubjectPage = () => {
                   ]}
                 />
                 <div className={styles['card-wrapper']}>
-                  <PersonalTeacherSubjectCard {...teacherInfo.info} />
+                  <PersonalTeacherSubjectCard {...teacher} />
                 </div>
                 <div className={styles['tabs']}>
                   <PersonalSubjectTeacherTabs
@@ -104,7 +124,7 @@ const PersonalTeacherSubjectPage = () => {
           )}
         </div>
       </PageLayout>
-    </TeacherSubjectContext.Provider>
+    </teacherSubjectContext.Provider>
   );
 };
 export default PersonalTeacherSubjectPage;

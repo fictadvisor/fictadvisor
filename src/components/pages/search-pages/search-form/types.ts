@@ -4,6 +4,7 @@ export interface TeacherSearchFormFields {
   sort?: 'firstName' | 'lastName';
   group?: string;
 }
+
 export interface SubjectSearchFormFields {
   search: string;
   order?: 'asc' | 'desc';

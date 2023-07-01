@@ -1,6 +1,6 @@
 import { SxProps, Theme } from '@mui/material/styles';
 
-import palette from '@/styles/theme/constants/pallete';
+import theme from '@/styles/theme';
 
 export const chartContainer: SxProps<Theme> = {
   position: 'relative',
@@ -10,8 +10,7 @@ export const chartContainer: SxProps<Theme> = {
   },
   width: '100%',
   maxWidth: '404px',
-  // minWidth: '328px',
-  border: `1px solid ${palette.grey['200']}`,
+  border: `1px solid ${theme.palette.grey['200']}`,
   borderRadius: '8px',
   padding: '10px',
   display: 'grid',

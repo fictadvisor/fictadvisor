@@ -1,6 +1,10 @@
 import { Dispatch, FC, SetStateAction } from 'react';
 
 import Button from '@/components/common/ui/button-mui';
+import {
+  ButtonSize,
+  ButtonVariant,
+} from '@/components/common/ui/button-mui/types';
 import Popup from '@/components/common/ui/pop-ups-mui/Popup';
 
 interface skipTeacherPopupProps {
@@ -21,14 +25,18 @@ export const SkipTeacherPopup: FC<skipTeacherPopupProps> = ({
       firstButton={
         <Button
           text={'Лишити'}
-          size={'small'}
-          variant="outline"
+          size={ButtonSize.SMALL}
+          variant={ButtonVariant.OUTLINE}
           onClick={() => setOpen(false)}
         />
       }
       hasCross={true}
       secondButton={
-        <Button text={'Пропустити'} size={'small'} onClick={onTeacherSkip} />
+        <Button
+          text="Пропустити"
+          size={ButtonSize.SMALL}
+          onClick={onTeacherSkip}
+        />
       }
       onClose={() => setOpen(false)}
     />

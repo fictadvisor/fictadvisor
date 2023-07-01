@@ -1,6 +1,7 @@
-import React from 'react';
+import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
+import { AxiosError } from 'axios';
 import { useRouter } from 'next/router';
 
 import { CustomEnvelopeOpen } from '@/components/common/icons/CustomEnvelopeOpen';
@@ -11,12 +12,14 @@ import Button, {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button';
-import { AuthAPI } from '@/lib/api/auth/AuthAPI';
+import AuthAPI from '@/lib/api/auth/AuthAPI';
 import { showAlert } from '@/redux/reducers/alert.reducer';
 
 import styles from './RegistrationEmailConfirmationPage.module.scss';
 
 const RegistrationEmailConfirmationPage = () => {
+  const [tries, setTries] = useState(0);
+
   const router = useRouter();
   const email = router.query.email as string;
   const emailText = email
@@ -26,19 +29,22 @@ const RegistrationEmailConfirmationPage = () => {
     void router.push('/register');
   };
 
-  let tries = 0;
   const dispatch = useDispatch();
-  const handleSendAgain = async () => {
+  const handleSendAgain = useCallback(async () => {
     try {
       await AuthAPI.verifyEmail({ email });
-    } catch (e) {
-      const errorName = e.response.data.error;
-      let errorMessage;
+    } catch (error) {
+      // Temporary solution
+      const errorName = (error as AxiosError<{ error: string }>).response?.data
+        .error;
+      let errorMessage = '';
 
       if (errorName === 'TooManyActionsException') {
-        tries++;
-        if (tries >= 5) errorMessage = 'Да ти заєбав';
-        else errorMessage = ' Час для надсилання нового листа ще не сплив';
+        setTries(prev => prev++);
+        errorMessage =
+          tries > 5
+            ? 'Да ти заєбав'
+            : 'Час для надсилання нового листа ще не сплив';
       } else if (errorName === 'NotRegisteredException') {
         errorMessage = 'Упс, реєструйся заново';
       }
@@ -50,7 +56,7 @@ const RegistrationEmailConfirmationPage = () => {
         }),
       );
     }
-  };
+  }, [dispatch, email, tries]);
 
   return (
     <PageLayout

@@ -1,6 +1,14 @@
+import { Color } from '@mui/material';
+
 import '@mui/material/styles';
 
 declare module '@mui/material/styles' {
+  interface SimplePaletteColorOptions {
+    logo?: string;
+  }
+
+  interface PaletteColor extends Color {}
+
   interface Palette {
     gray: Palette['primary'];
     backgroundDark: Palette['primary'];
@@ -11,6 +19,7 @@ declare module '@mui/material/styles' {
     violet: Palette['primary'];
     mint: Palette['primary'];
     orange: Palette['primary'];
+    white: Palette['primary'];
   }
 
   interface PaletteOptions {
@@ -23,5 +32,6 @@ declare module '@mui/material/styles' {
     violet?: PaletteOptions['primary'];
     mint?: PaletteOptions['primary'];
     orange?: PaletteOptions['primary'];
+    white?: PaletteOptions['primary'];
   }
 }

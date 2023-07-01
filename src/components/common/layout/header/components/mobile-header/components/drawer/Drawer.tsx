@@ -4,8 +4,10 @@ import NextLink from 'next/link';
 
 import Divider from '@/components/common/ui/divider-mui';
 import Tab from '@/components/common/ui/tab-mui/tab';
+import { TabTextPosition } from '@/components/common/ui/tab-mui/tab/types';
 
 import { accountButtons, mainLinks } from '../../../../constants';
+import { TransformedUser } from '../../../../types';
 import AuthenticationButtons from '../../../authentication-buttons';
 import HeaderMobileCard from '../../../header-mobile-card';
 
@@ -15,7 +17,7 @@ export interface DrawerProps {
   isLoggedIn: boolean;
   isOpened: boolean;
   handleClick: () => void;
-  user: any;
+  user: TransformedUser;
 }
 const Drawer: FC<DrawerProps> = ({
   isLoggedIn,
@@ -40,12 +42,7 @@ const Drawer: FC<DrawerProps> = ({
             underline="none"
             color="inherit"
           >
-            <HeaderMobileCard
-              name={user.name}
-              groupName={user.groupName}
-              position={user.position}
-              url={user.avatar}
-            />
+            <HeaderMobileCard {...user} />
           </Link>
           <Box sx={styles.menu}>
             {accountButtons.map((button, index) => (
@@ -59,7 +56,7 @@ const Drawer: FC<DrawerProps> = ({
               >
                 <Tab
                   label={button.text}
-                  textPosition="left"
+                  textPosition={TabTextPosition.LEFT}
                   icon={button.icon}
                   sx={styles.menuTab}
                 />
@@ -84,7 +81,7 @@ const Drawer: FC<DrawerProps> = ({
             <Tab
               label={data.text}
               sx={styles.menuTab}
-              textPosition="left"
+              textPosition={TabTextPosition.LEFT}
               icon={data.icon}
             />
           </Link>

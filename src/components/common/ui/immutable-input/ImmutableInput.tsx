@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import mergeClassNames from 'merge-class-names';
+import cn from 'classnames';
 import Link from 'next/link';
 
 import styles from './ImmutableInput.module.scss';
@@ -47,7 +47,7 @@ const ImmutableInput: React.FC<InputProps> = ({
     (customType === InputType.SEARCH && rest.value !== '');
   const inputStyle = `${size}-${customType}${hasIcon ? '-icon' : ''}-input`;
 
-  const className = mergeClassNames(
+  const className = cn(
     styles[inputColor],
     styles[inputStyle],
     additionalClassName,

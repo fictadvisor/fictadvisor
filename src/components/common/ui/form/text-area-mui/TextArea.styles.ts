@@ -2,25 +2,28 @@ import { SxProps, Theme } from '@mui/material/styles';
 
 import theme from '@/styles/theme';
 
+import { TextAreaSize, TextAreaState } from './types';
+
 export const wrapper: SxProps<Theme> = {
   width: '100%',
 };
 
-export const label = (state: string): SxProps<Theme> => ({
+export const label = (state: TextAreaState): SxProps<Theme> => ({
   overflow: 'unset',
   padding: '2px 8px',
   maxWidth: '100%',
-  // Makes only lower half of the label to have background (designers asked to do this)
+  marginTop: '2rem',
+  // Temporary solution, need to be fixed
   background: `linear-gradient(180deg, rgba(30, 30, 30, 0) 49.48%, ${theme.palette.backgroundDark[50]} 49.95%)`,
 
-  ...(state === 'error' && {
+  ...(state === TextAreaState.ERROR && {
     color: 'error.500',
     '&.Mui-focused': {
       color: 'error.500',
     },
   }),
 
-  ...(state === 'default' && {
+  ...(state === TextAreaState.DEFAULT && {
     color: 'grey.800',
     '&.Mui-focused': {
       color: 'grey.800',
@@ -39,10 +42,14 @@ export const errorRemark: SxProps<Theme> = {
   minHeight: '20px',
 };
 
-export const input = (state: string, size: string): SxProps<Theme> => ({
+export const input = (
+  state: TextAreaState,
+  size: TextAreaSize,
+): SxProps<Theme> => ({
   transition: 'all 0.2s ease-in-out',
   width: '100%',
   display: 'flex',
+  marginTop: '2rem',
   flexDirection: 'row',
   alignItems: 'flex-start',
 
@@ -53,17 +60,17 @@ export const input = (state: string, size: string): SxProps<Theme> => ({
   border: '2px solid',
   color: 'grey.800',
 
-  ...(size === 'medium' && {
+  ...(size === TextAreaSize.MEDIUM && {
     padding: '16px 16px 16px 20px',
     typography: 'body2',
   }),
 
-  ...(size === 'small' && {
+  ...(size === TextAreaSize.SMALL && {
     padding: '12px',
     typography: 'body1',
   }),
 
-  ...(state === 'default' && {
+  ...(state === TextAreaState.DEFAULT && {
     borderColor: 'grey.500',
     '&:hover': {
       borderColor: 'grey.700',
@@ -73,7 +80,7 @@ export const input = (state: string, size: string): SxProps<Theme> => ({
     },
   }),
 
-  ...(state === 'error' && {
+  ...(state === TextAreaState.ERROR && {
     borderColor: 'error.500',
   }),
 

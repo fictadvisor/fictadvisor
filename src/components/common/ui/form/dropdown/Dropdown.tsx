@@ -11,41 +11,13 @@ import {
   FieldState,
 } from '@/components/common/ui/form/common/types';
 
-import type { TagProps } from '../../tag-mui/Tag';
-
+import Option from './components/option';
 import * as styles from './Dropdown.styles';
-import { Option } from './Option';
+import { DropDownOption, DropdownProps } from './types';
 
-interface OptionBase {
-  value: string;
-}
-interface DropDownTextOption extends OptionBase {
-  label: string;
-}
-
-interface DropDownTagOption extends OptionBase, TagProps {}
-
-export type DropDownOption = DropDownTagOption | DropDownTextOption;
-
-interface DropdownProps {
-  options: DropDownOption[];
-  label?: string;
-  name?: string;
-  isDisabled?: boolean;
-  placeholder?: string;
-  isSuccessOnDefault?: boolean;
-  defaultRemark?: string;
-  showRemark?: boolean;
-  size?: FieldSize;
-  noOptionsText?: string;
-  width?: string;
-  onChange?: () => void;
-  disableClearable?: boolean;
-}
-
-export const Dropdown: FC<DropdownProps> = ({
+const Dropdown: FC<DropdownProps> = ({
   options,
-  name,
+  name = '',
   width,
   onChange,
   defaultRemark,
@@ -68,7 +40,7 @@ export const Dropdown: FC<DropdownProps> = ({
     else return FieldState.DEFAULT;
   }, [touched, error, isSuccessOnDefault, isDisabled]);
 
-  const handleChange = (_: SyntheticEvent, option: DropDownOption) => {
+  const handleChange = (_: SyntheticEvent, option: DropDownOption | null) => {
     setTouched(true);
     setValue(option?.value || '', true);
     if (onChange) onChange();
@@ -96,10 +68,10 @@ export const Dropdown: FC<DropdownProps> = ({
           disablePortal
           blurOnSelect={true}
           options={options}
+          // TODO: check why value is string
           isOptionEqualToValue={(option, value) => option.value === value.value}
           renderInput={params => (
             <TextField
-              inputProps={values}
               {...params}
               label={label}
               sx={styles.input(dropdownState, size)}
@@ -140,7 +112,7 @@ export const Dropdown: FC<DropdownProps> = ({
           }
           noOptionsText={noOptionsText}
           renderOption={(props, option: DropDownOption) => (
-            <Option props={props} option={option} key={option.value} />
+            <Option {...props} option={option} key={option.value} />
           )}
         />
         {showRemark && (
@@ -152,3 +124,5 @@ export const Dropdown: FC<DropdownProps> = ({
     </Box>
   );
 };
+
+export default Dropdown;

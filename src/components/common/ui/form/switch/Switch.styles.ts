@@ -1,5 +1,7 @@
 import { SxProps, Theme } from '@mui/material/styles';
 
+import { SwitchLabelPlacement } from './types';
+
 export const wrapper: SxProps<Theme> = {
   margin: 0,
   alignItems: 'center',
@@ -9,8 +11,9 @@ export const label = (
   label: string,
   labelPlacement: string,
 ): SxProps<Theme> => ({
-  marginLeft: label && labelPlacement === 'end' && '8px',
-  marginRight: label && labelPlacement === 'start' && '8px',
+  marginLeft: label && labelPlacement === SwitchLabelPlacement.END ? '8px' : 0,
+  marginRight:
+    label && labelPlacement === SwitchLabelPlacement.START ? '8px' : 0,
   typography: {
     desktop: 'body2',
     mobile: 'body1',
