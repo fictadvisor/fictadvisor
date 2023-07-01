@@ -11,7 +11,6 @@ import { SearchFormProps } from '@/components/pages/search-pages/search-form/Sea
 import SubjectsAPI from '@/lib/api/subject/SubjectAPI';
 import { GetListOfSubjectsResponse } from '@/lib/api/subject/types/GetListOfSubjectsResponse';
 
-import PageLayout from '../../../common/layout/page-layout/PageLayout';
 import { SubjectInitialValues } from '../search-form/constants';
 import { SearchForm } from '../search-form/SearchForm';
 
@@ -53,37 +52,35 @@ const SubjectSearchPage = () => {
   }, [queryObj, curPage, refetch]);
 
   return (
-    <PageLayout title={'Предмети'}>
-      <div className={styles['layout']}>
-        <Breadcrumbs items={breadcrumbs} className={styles['breadcrumb']} />
+    <div className={styles['layout']}>
+      <Breadcrumbs items={breadcrumbs} className={styles['breadcrumb']} />
 
-        <SearchForm
-          searchPlaceholder="Оберіть предмет"
-          filterDropDownOptions={[{ value: 'name', label: 'За назвою' }]}
-          onSubmit={submitHandler}
-          initialValues={SubjectInitialValues}
-          //localStorageName={localStorageName}
+      <SearchForm
+        searchPlaceholder="Оберіть предмет"
+        filterDropDownOptions={[{ value: 'name', label: 'За назвою' }]}
+        onSubmit={submitHandler}
+        initialValues={SubjectInitialValues}
+        //localStorageName={localStorageName}
+      />
+
+      {data && <SubjectSearchList subjects={data.subjects} />}
+      {isLoading ||
+        (isFetching && (
+          <div className={styles['page-loader']}>
+            <Loader size={LoaderSize.SMALLEST} />
+          </div>
+        ))}
+
+      {data?.subjects?.length === (curPage + 1) * pageSize && (
+        <Button
+          className={styles['load-btn']}
+          text="Завантажити ще"
+          variant={ButtonVariant.FILLED}
+          color={ButtonColor.SECONDARY}
+          onClick={() => setCurPage(pr => pr + 1)}
         />
-
-        {data && <SubjectSearchList subjects={data.subjects} />}
-        {isLoading ||
-          (isFetching && (
-            <div className={styles['page-loader']}>
-              <Loader size={LoaderSize.SMALLEST} />
-            </div>
-          ))}
-
-        {data?.subjects?.length === (curPage + 1) * pageSize && (
-          <Button
-            className={styles['load-btn']}
-            text="Завантажити ще"
-            variant={ButtonVariant.FILLED}
-            color={ButtonColor.SECONDARY}
-            onClick={() => setCurPage(pr => pr + 1)}
-          />
-        )}
-      </div>
-    </PageLayout>
+      )}
+    </div>
   );
 };
 

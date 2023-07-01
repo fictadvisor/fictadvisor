@@ -24,7 +24,7 @@ $font-weight-bold: 700;
 .main-page-content {
     z-index: 1;
     max-width: 1700px;
-    margin: 64px auto;
+    margin: auto;
 }
 
 .header {
@@ -32,8 +32,10 @@ $font-weight-bold: 700;
     display: flex;
     position: relative;
     overflow: hidden;
-    h2 {
-        @include h2--bold;
+    .title {
+        font-size: 60px;
+        line-height: 1.16;
+        font-weight: 700;
     }
 }
 
@@ -47,7 +49,7 @@ $font-weight-bold: 700;
     z-index: 1;
     padding: 202px 0 0 80px;
 
-    h2 {
+    .title {
         position: relative;
         z-index: 100;
         width: max-content;
@@ -195,7 +197,7 @@ $font-weight-bold: 700;
             width: 100%;
         }
 
-        h2 {
+        .title {
             top: -24px;
             font-size: 28px;
             width: 100%;
@@ -276,7 +278,7 @@ $font-weight-bold: 700;
         width: 100%;
         padding: 0 40px 0 50px;
 
-        h2 {
+        .title {
             width: 80%;
             top: -50px;
         }
@@ -304,7 +306,7 @@ $font-weight-bold: 700;
 
 @media only screen and (min-width: $breakpoint-tablet) and (max-width: $breakpoint-desktop){
     .header-info {
-        h2 {
+        .title {
             width: 100%;
         }
     }

@@ -29,8 +29,10 @@ const MainPage: FC<MainPageProps> = ({ data }) => {
 
   return (
     <PageLayout
-      description={'Головна сторінка'}
-      hasFooter={true}
+      description="FICT Advisor - офіційний сайт Студради ФІОТ.
+     Зустрічайте ваш студентський портал, який надає багато корисних інструментів для студентів.
+     Тут ви знайдете опитування про викладачів, багатофункціональний розклад, можливість керувати групою,
+      набори в активне ком’юніті та багато інших цікавих інструментів."
       className={styles['main-page']}
     >
       <div className={styles['main-page-content']}>
@@ -38,7 +40,7 @@ const MainPage: FC<MainPageProps> = ({ data }) => {
         <div className={styles['header']}>
           <div className={styles['header-info']}>
             <div className={styles['header-info-content']}>
-              <h2>Твій студентський портал</h2>
+              <h1 className={styles['title']}>Твій студентський портал</h1>
               <p>
                 Зустрічай FICT Advisor — офіційний сайт Студради ФІОТ.
                 Опитування про викладачів, багатофункціональний розклад,

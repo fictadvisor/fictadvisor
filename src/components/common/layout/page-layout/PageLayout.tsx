@@ -13,6 +13,7 @@ interface PageLayoutProps {
   title?: string;
   description?: string;
   children?: ReactNode;
+  robots?: string;
   hasHeader?: boolean;
   hasFooter?: boolean;
   className?: string;
@@ -22,6 +23,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   title,
   description,
   children,
+  robots,
   hasHeader = true,
   hasFooter = true,
   className,
@@ -31,7 +33,10 @@ const PageLayout: React.FC<PageLayoutProps> = ({
     <div>
       <Head>
         <title>{metaTitle}</title>
+        <meta name="description" content={description}></meta>
+        <meta name="robots" content={robots} />
         <meta property="og:title" content={metaTitle} />
+        <meta property="og:description" content={description} />
         <meta property="og:site_name" content={config.service} />
         <meta property="og:image" content="/images/preview.jpg" />
         <meta property="og:type" content="website" />
@@ -50,10 +55,6 @@ const PageLayout: React.FC<PageLayoutProps> = ({
                 `,
           }}
         />
-
-        {description && (
-          <meta property="og:description" content={description} />
-        )}
       </Head>
 
       <div className={styles['page'] + ' ' + className}>

@@ -69,7 +69,7 @@ const StudentsTable: React.FC<StudentsTableProps> = ({
           closeFunction={() => setIsPopupOpen(false)}
         />
       )}
-      {role && (
+      {role !== UserGroupRole.STUDENT && (
         <CustomDivider text="Студенти">
           <div className={styles['button']}>
             <Button

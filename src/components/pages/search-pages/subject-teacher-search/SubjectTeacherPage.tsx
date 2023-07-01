@@ -2,7 +2,6 @@ import { useMemo } from 'react';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 
-import PageLayout from '@/components/common/layout/page-layout';
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
 import { Breadcrumb } from '@/components/common/ui/breadcrumbs/Breadcrumbs';
 import Loader, { LoaderSize } from '@/components/common/ui/loader';
@@ -37,26 +36,24 @@ const SubjectTeacherPage = () => {
   );
 
   return (
-    <PageLayout title={data?.subjectName}>
-      <div className={styles['layout']}>
-        <Breadcrumbs
-          items={[...breadcrumbs, subject]}
-          className={styles['breadcrumb']}
+    <div className={styles['layout']}>
+      <Breadcrumbs
+        items={[...breadcrumbs, subject]}
+        className={styles['breadcrumb']}
+      />
+      <h4 className={styles['subject-title']}>{data?.subjectName}</h4>
+      {isLoading && (
+        <div className={styles['page-loader']}>
+          <Loader size={LoaderSize.SMALLEST} />
+        </div>
+      )}
+      {data && !isLoading && (
+        <SubjectTeacherSearchList
+          teachers={data.teachers}
+          subjectId={query.subjectId as string}
         />
-        <h4 className={styles['subject-title']}>{data?.subjectName}</h4>
-        {isLoading && (
-          <div className={styles['page-loader']}>
-            <Loader size={LoaderSize.SMALLEST} />
-          </div>
-        )}
-        {data && !isLoading && (
-          <SubjectTeacherSearchList
-            teachers={data.teachers}
-            subjectId={query.subjectId as string}
-          />
-        )}
-      </div>
-    </PageLayout>
+      )}
+    </div>
   );
 };
 

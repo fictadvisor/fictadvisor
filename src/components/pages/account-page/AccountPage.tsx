@@ -21,8 +21,6 @@ import SecurityTab from '@/components/pages/account-page/components/security-tab
 import SelectiveTab from '@/components/pages/account-page/components/selective-tab';
 import useAuthentication from '@/hooks/use-authentication';
 
-import PageLayout from '../../common/layout/page-layout/PageLayout';
-
 import * as stylesMui from './AccountPage.styles';
 
 import styles from './AccountPage.module.scss';
@@ -81,7 +79,7 @@ const AccountPage = () => {
   };
 
   return (
-    <PageLayout hasFooter={true}>
+    <>
       <div className={styles['breadcrumb']}>
         <Breadcrumbs
           items={[
@@ -145,7 +143,7 @@ const AccountPage = () => {
           )}
         </TabContext>
       </Box>
-    </PageLayout>
+    </>
   );
 };
 

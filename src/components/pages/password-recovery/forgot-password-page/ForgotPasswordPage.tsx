@@ -11,41 +11,33 @@ import {
 import ForgotPasswordForm from '@/components/pages/password-recovery/forgot-password-page/components/forgot-password-form';
 import * as styles from '@/components/pages/password-recovery/forgot-password-page/ForgotPasswordPage.styles';
 
-import PageLayout from '../../../common/layout/page-layout/PageLayout';
-
 const ForgotPasswordPage = () => {
   const router = useRouter();
   const returnAuth = () => {
     void router.push('/login');
   };
   return (
-    <PageLayout
-      hasHeader={false}
-      hasFooter={false}
-      description={'Сторінка для створення нового паролю'}
-    >
-      <Box sx={styles.container}>
-        <Box sx={styles.content}>
-          <Box sx={styles.icon}>
-            <EnvelopeIcon />
-          </Box>
-          <Typography sx={styles.title}>Забув пароль?</Typography>
-          <Typography sx={styles.text}>
-            Ми надішлемо на введену пошту лист для зміни паролю
-          </Typography>
-          <Box sx={styles.form}>
-            <ForgotPasswordForm />
-          </Box>
-          <Button
-            text="Повернутись до авторизації"
-            variant={ButtonVariant.TEXT}
-            size={ButtonSize.SMALL}
-            startIcon={<ChevronLeftIcon />}
-            onClick={returnAuth}
-          />
+    <Box sx={styles.container}>
+      <Box sx={styles.content}>
+        <Box sx={styles.icon}>
+          <EnvelopeIcon />
         </Box>
+        <Typography sx={styles.title}>Забув пароль?</Typography>
+        <Typography sx={styles.text}>
+          Ми надішлемо на введену пошту лист для зміни паролю
+        </Typography>
+        <Box sx={styles.form}>
+          <ForgotPasswordForm />
+        </Box>
+        <Button
+          text="Повернутись до авторизації"
+          variant={ButtonVariant.TEXT}
+          size={ButtonSize.SMALL}
+          startIcon={<ChevronLeftIcon />}
+          onClick={returnAuth}
+        />
       </Box>
-    </PageLayout>
+    </Box>
   );
 };
 

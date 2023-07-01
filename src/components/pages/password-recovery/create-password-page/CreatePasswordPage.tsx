@@ -14,8 +14,6 @@ import CreatePasswordForm from '@/components/pages/password-recovery/create-pass
 import * as styles from '@/components/pages/password-recovery/create-password-page/CreatePasswordPage.styles';
 import AuthAPI from '@/lib/api/auth/AuthAPI';
 
-import PageLayout from '../../../common/layout/page-layout/PageLayout';
-
 const CreatePasswordPage = () => {
   const router = useRouter();
 
@@ -38,36 +36,30 @@ const CreatePasswordPage = () => {
   }
 
   return (
-    <PageLayout
-      hasHeader={false}
-      hasFooter={false}
-      description={'Сторінка для створення нового пароля'}
-    >
-      <Box sx={styles.container}>
-        <Box sx={styles.content}>
-          {isFetching || !data.isAvailable ? (
-            <Loader size={LoaderSize.SMALLEST} />
-          ) : (
-            <>
-              <Box sx={styles.icon}>
-                <FingerPrintIcon />
-              </Box>
-              <Typography sx={styles.title}>Вигадай новий пароль</Typography>
-              <Box sx={styles.form}>
-                <CreatePasswordForm />
-              </Box>
-              <Button
-                text="Повернутись до авторизації"
-                variant={ButtonVariant.TEXT}
-                size={ButtonSize.SMALL}
-                startIcon={<ChevronLeftIcon />}
-                onClick={returnAuth}
-              />
-            </>
-          )}
-        </Box>
+    <Box sx={styles.container}>
+      <Box sx={styles.content}>
+        {isFetching || !data.isAvailable ? (
+          <Loader size={LoaderSize.SMALLEST} />
+        ) : (
+          <>
+            <Box sx={styles.icon}>
+              <FingerPrintIcon />
+            </Box>
+            <Typography sx={styles.title}>Вигадай новий пароль</Typography>
+            <Box sx={styles.form}>
+              <CreatePasswordForm />
+            </Box>
+            <Button
+              text="Повернутись до авторизації"
+              variant={ButtonVariant.TEXT}
+              size={ButtonSize.SMALL}
+              startIcon={<ChevronLeftIcon />}
+              onClick={returnAuth}
+            />
+          </>
+        )}
       </Box>
-    </PageLayout>
+    </Box>
   );
 };
 

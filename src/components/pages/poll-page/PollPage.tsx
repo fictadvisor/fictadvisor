@@ -11,8 +11,6 @@ import useAuthentication from '@/hooks/use-authentication';
 import PollAPI from '@/lib/api/poll/PollAPI';
 import { showAlert } from '@/redux/reducers/alert.reducer';
 
-import PageLayout from '../../common/layout/page-layout/PageLayout';
-
 import PollForm from './components/poll-form';
 
 import styles from './PollPage.module.scss';
@@ -80,38 +78,32 @@ const PollPage = () => {
   }
 
   return (
-    <PageLayout
-      description={'Сторінка для проходження опитування'}
-      hasFooter={true}
-      hasHeader={true}
-    >
-      <div className={styles['poll-page']}>
-        <div className={styles['poll-page__content']}>
-          {isLoading ? (
-            <Loader />
-          ) : (
-            isSuccessFetching && (
-              <div className={styles['poll-page__content-wrapper']}>
-                <div className={styles['breadcrumbs-wrapper']}>
-                  <Breadcrumbs
-                    items={[
-                      { label: 'Головна', href: '/' },
-                      { label: 'Опитування', href: '/poll' },
-                      {
-                        label: `${data.teacher.lastName} ${data.teacher.firstName} ${data.teacher.middleName}`,
-                        href: `/poll/${disciplineTeacherId}`,
-                      },
-                    ]}
-                    className={styles['breadcrumbs']}
-                  />
-                </div>
-                <PollForm data={data} />
+    <div className={styles['poll-page']}>
+      <div className={styles['poll-page__content']}>
+        {isLoading ? (
+          <Loader />
+        ) : (
+          isSuccessFetching && (
+            <div className={styles['poll-page__content-wrapper']}>
+              <div className={styles['breadcrumbs-wrapper']}>
+                <Breadcrumbs
+                  items={[
+                    { label: 'Головна', href: '/' },
+                    { label: 'Опитування', href: '/poll' },
+                    {
+                      label: `${data.teacher.lastName} ${data.teacher.firstName} ${data.teacher.middleName}`,
+                      href: `/poll/${disciplineTeacherId}`,
+                    },
+                  ]}
+                  className={styles['breadcrumbs']}
+                />
               </div>
-            )
-          )}
-        </div>
+              <PollForm data={data} />
+            </div>
+          )
+        )}
       </div>
-    </PageLayout>
+    </div>
   );
 };
 

@@ -4,7 +4,6 @@ import { Box, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 
 import { CustomClock } from '@/components/common/icons/CustomClock';
-import PageLayout from '@/components/common/layout/page-layout';
 import Button from '@/components/common/ui/button-mui';
 import {
   ButtonColor,
@@ -24,40 +23,34 @@ const PasswordResetLinkExpiredPage = () => {
   };
 
   return (
-    <PageLayout
-      hasHeader={false}
-      hasFooter={false}
-      description={'Час зміни пароля вичерпано'}
-    >
-      <Box sx={styles.container}>
-        <Box sx={styles.content}>
-          <Box sx={styles.icon}>
-            <CustomClock />
-          </Box>
-          <Typography sx={styles.title}>Посилання більше не активне</Typography>
-          <Typography sx={styles.description}>
-            Час зміни пароля вичерпано. Для повторної відправки листа, натисни
-            на кнопку.
-          </Typography>
-          <Button
-            text="Надіслати лист"
-            variant={ButtonVariant.FILLED}
-            size={ButtonSize.LARGE}
-            color={ButtonColor.PRIMARY}
-            onClick={handleSubmit}
-            sx={styles.button}
-          />
-          <Button
-            text="Повернутись до введення даних"
-            variant={ButtonVariant.TEXT}
-            size={ButtonSize.SMALL}
-            startIcon={<ChevronLeftIcon />}
-            onClick={returnRegister}
-            sx={styles.buttonBack}
-          />
+    <Box sx={styles.container}>
+      <Box sx={styles.content}>
+        <Box sx={styles.icon}>
+          <CustomClock />
         </Box>
+        <Typography sx={styles.title}>Посилання більше не активне</Typography>
+        <Typography sx={styles.description}>
+          Час зміни пароля вичерпано. Для повторної відправки листа, натисни на
+          кнопку.
+        </Typography>
+        <Button
+          text="Надіслати лист"
+          variant={ButtonVariant.FILLED}
+          size={ButtonSize.LARGE}
+          color={ButtonColor.PRIMARY}
+          onClick={handleSubmit}
+          sx={styles.button}
+        />
+        <Button
+          text="Повернутись до введення даних"
+          variant={ButtonVariant.TEXT}
+          size={ButtonSize.SMALL}
+          startIcon={<ChevronLeftIcon />}
+          onClick={returnRegister}
+          sx={styles.buttonBack}
+        />
       </Box>
-    </PageLayout>
+    </Box>
   );
 };
 

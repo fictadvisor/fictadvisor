@@ -8,7 +8,6 @@ import {
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 
-import PageLayout from '@/components/common/layout/page-layout';
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
 import Loader from '@/components/common/ui/loader';
 import PersonalTeacherCard from '@/components/pages/personal-teacher-page/personal-teacher-card';
@@ -77,46 +76,44 @@ const PersonalTeacherPage = () => {
     <teacherContext.Provider
       value={{ floatingCardShowed, setFloatingCardShowed, teacher }}
     >
-      <PageLayout description={'Сторінка викладача'}>
-        <div className={styles['personal-teacher-page']}>
-          {isLoading ? (
+      <div className={styles['personal-teacher-page']}>
+        {isLoading ? (
+          <div className={styles['personal-teacher-page-content']}>
+            <div className={styles['loader']}>
+              <Loader />
+            </div>
+          </div>
+        ) : (
+          !isError && (
             <div className={styles['personal-teacher-page-content']}>
-              <div className={styles['loader']}>
-                <Loader />
+              <Breadcrumbs
+                className={styles['breadcrumbs']}
+                items={[
+                  {
+                    label: 'Головна',
+                    href: '/',
+                  },
+                  { label: 'Викладачі', href: '/teachers' },
+                  {
+                    label: `${teacher.lastName} ${teacher.firstName} ${teacher.middleName}`,
+                    href: `/teachers/${teacherId}`,
+                  },
+                ]}
+              />
+              <div className={styles['card-wrapper']}>
+                <PersonalTeacherCard {...data.info} />
+              </div>
+              <div className={styles['tabs']}>
+                <PersonalTeacherTabs
+                  data={data}
+                  tabIndex={index}
+                  handleChange={handleChange}
+                />
               </div>
             </div>
-          ) : (
-            !isError && (
-              <div className={styles['personal-teacher-page-content']}>
-                <Breadcrumbs
-                  className={styles['breadcrumbs']}
-                  items={[
-                    {
-                      label: 'Головна',
-                      href: '/',
-                    },
-                    { label: 'Викладачі', href: '/teachers' },
-                    {
-                      label: `${teacher.lastName} ${teacher.firstName} ${teacher.middleName}`,
-                      href: `/teachers/${teacherId}`,
-                    },
-                  ]}
-                />
-                <div className={styles['card-wrapper']}>
-                  <PersonalTeacherCard {...data.info} />
-                </div>
-                <div className={styles['tabs']}>
-                  <PersonalTeacherTabs
-                    data={data}
-                    tabIndex={index}
-                    handleChange={handleChange}
-                  />
-                </div>
-              </div>
-            )
-          )}
-        </div>
-      </PageLayout>
+          )
+        )}
+      </div>
     </teacherContext.Provider>
   );
 };

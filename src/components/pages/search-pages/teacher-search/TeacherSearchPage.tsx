@@ -12,7 +12,6 @@ import { TeacherSearchFormFields } from '@/components/pages/search-pages/search-
 import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
 import { GetTeachersResponse } from '@/lib/api/teacher/types/GetTeachersResponse';
 
-import PageLayout from '../../../common/layout/page-layout/PageLayout';
 import { TeacherInitialValues } from '../search-form/constants';
 import { SearchForm } from '../search-form/SearchForm';
 
@@ -57,43 +56,41 @@ export const TeacherSearchPage = () => {
   }, [queryObj, curPage, refetch]);
 
   return (
-    <PageLayout title={'Викладачі'}>
-      <div className={styles['layout']}>
-        <Breadcrumbs items={breadcrumbs} className={styles['breadcrumb']} />
+    <div className={styles['layout']}>
+      <Breadcrumbs items={breadcrumbs} className={styles['breadcrumb']} />
 
-        <SearchForm
-          searchPlaceholder="Оберіть викладача"
-          filterDropDownOptions={[
-            { value: 'firstName', label: 'Іменем' },
-            { value: 'lastName', label: 'Прізвищем' },
-          ]}
-          onSubmit={submitHandler}
-          initialValues={initialValues}
-          localStorageName={localStorageName}
+      <SearchForm
+        searchPlaceholder="Оберіть викладача"
+        filterDropDownOptions={[
+          { value: 'firstName', label: 'Іменем' },
+          { value: 'lastName', label: 'Прізвищем' },
+        ]}
+        onSubmit={submitHandler}
+        initialValues={initialValues}
+        localStorageName={localStorageName}
+      />
+
+      {data && (
+        <TeacherSearchList teachers={data.teachers} className="teacher" />
+      )}
+
+      {isLoading ||
+        (isFetching && (
+          <div className={styles['page-loader']}>
+            <Loader size={LoaderSize.SMALLEST} />
+          </div>
+        ))}
+
+      {data?.teachers.length === (curPage + 1) * pageSize && (
+        <Button
+          className={styles['load-btn']}
+          text="Завантажити ще"
+          variant={ButtonVariant.FILLED}
+          color={ButtonColor.SECONDARY}
+          onClick={() => setCurPage(pr => pr + 1)}
         />
-
-        {data && (
-          <TeacherSearchList teachers={data.teachers} className="teacher" />
-        )}
-
-        {isLoading ||
-          (isFetching && (
-            <div className={styles['page-loader']}>
-              <Loader size={LoaderSize.SMALLEST} />
-            </div>
-          ))}
-
-        {data?.teachers.length === (curPage + 1) * pageSize && (
-          <Button
-            className={styles['load-btn']}
-            text="Завантажити ще"
-            variant={ButtonVariant.FILLED}
-            color={ButtonColor.SECONDARY}
-            onClick={() => setCurPage(pr => pr + 1)}
-          />
-        )}
-      </div>
-    </PageLayout>
+      )}
+    </div>
   );
 };
 

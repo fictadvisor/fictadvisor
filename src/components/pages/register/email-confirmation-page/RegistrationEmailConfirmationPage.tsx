@@ -65,52 +65,46 @@ const RegistrationEmailConfirmationPage = () => {
   }, [dispatch, email, tries]);
 
   return (
-    <PageLayout
-      hasHeader={false}
-      hasFooter={false}
-      description={'Перевірка пошти при реєстрації'}
-    >
-      <div className={styles['registration-email-confirmation-page']}>
-        <div className={styles['registration-email-confirmation-page-content']}>
-          <div className={styles['icon']}>
-            <CustomEnvelopeOpen />
-          </div>
+    <div className={styles['registration-email-confirmation-page']}>
+      <div className={styles['registration-email-confirmation-page-content']}>
+        <div className={styles['icon']}>
+          <CustomEnvelopeOpen />
+        </div>
 
-          <h3 className={styles['headline']}>Перевір свою пошту</h3>
+        <h3 className={styles['headline']}>Перевір свою пошту</h3>
 
-          <div className={styles['text-and-button']}>
-            <h6>
-              {emailText}
-              <span className={styles['email']}>{email}</span>
-            </h6>
-            <div className={styles['email-not-received']}>
-              <h6>Не отримав листа?</h6>
-              <Button
-                text={'Надіслати повторно'}
-                variant={ButtonVariant.TEXT}
-                size={ButtonSize.SMALL}
-                color={ButtonColor.PRIMARY}
-                onClick={handleSendAgain}
-              />
-            </div>
-          </div>
-          <div className={styles['alert']}>
-            <Alert
-              title={'Лист реєстрації діє 1 годину'}
-              type={AlertType.ERROR}
-              variant={AlertVariant.DARKER}
+        <div className={styles['text-and-button']}>
+          <h6>
+            {emailText}
+            <span className={styles['email']}>{email}</span>
+          </h6>
+          <div className={styles['email-not-received']}>
+            <h6>Не отримав листа?</h6>
+            <Button
+              text={'Надіслати повторно'}
+              variant={ButtonVariant.TEXT}
+              size={ButtonSize.SMALL}
+              color={ButtonColor.PRIMARY}
+              onClick={handleSendAgain}
             />
           </div>
-          <Button
-            text={'Повернутись до введення даних'}
-            startIcon={<ChevronLeftIcon className="icon" />}
-            variant={ButtonVariant.TEXT}
-            size={ButtonSize.SMALL}
-            onClick={handleReturnRegister}
+        </div>
+        <div className={styles['alert']}>
+          <Alert
+            title={'Лист реєстрації діє 1 годину'}
+            type={AlertType.ERROR}
+            variant={AlertVariant.DARKER}
           />
         </div>
+        <Button
+          text={'Повернутись до введення даних'}
+          startIcon={<ChevronLeftIcon className="icon" />}
+          variant={ButtonVariant.TEXT}
+          size={ButtonSize.SMALL}
+          onClick={handleReturnRegister}
+        />
       </div>
-    </PageLayout>
+    </div>
   );
 };
 

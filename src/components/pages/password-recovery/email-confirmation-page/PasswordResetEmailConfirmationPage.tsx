@@ -5,7 +5,6 @@ import { AxiosError } from 'axios';
 import { useRouter } from 'next/router';
 
 import { CustomEnvelopeOpen } from '@/components/common/icons/CustomEnvelopeOpen';
-import PageLayout from '@/components/common/layout/page-layout';
 import Alert from '@/components/common/ui/alert-mui';
 import {
   AlertType,
@@ -45,50 +44,44 @@ const PasswordResetEmailConfirmationPage = () => {
   };
 
   return (
-    <PageLayout
-      hasHeader={false}
-      hasFooter={false}
-      description={'Перевірка пошти при скиданні пароля'}
-    >
-      <Box sx={styles.container}>
-        <Box sx={styles.content}>
-          <Box sx={styles.icon}>
-            <CustomEnvelopeOpen />
+    <Box sx={styles.container}>
+      <Box sx={styles.content}>
+        <Box sx={styles.icon}>
+          <CustomEnvelopeOpen />
+        </Box>
+        <Typography sx={styles.title}>Перевір свою пошту</Typography>
+        <Typography sx={styles.description}>
+          {emailText}
+          <Box component="span" sx={styles.email}>
+            {email}
           </Box>
-          <Typography sx={styles.title}>Перевір свою пошту</Typography>
-          <Typography sx={styles.description}>
-            {emailText}
-            <Box component="span" sx={styles.email}>
-              {email}
-            </Box>
-          </Typography>
-          <Box sx={styles.flex}>
-            <Typography sx={styles.question}>Не отримав листа?</Typography>
-            <Button
-              text="Надіслати повторно"
-              variant={ButtonVariant.TEXT}
-              size={ButtonSize.SMALL}
-              color={ButtonColor.PRIMARY}
-              onClick={handleSendAgain}
-              sx={styles.button}
-            />
-          </Box>
-          <Alert
-            title="Лист реєстрації діє 1 годину"
-            type={AlertType.INFO}
-            variant={AlertVariant.DARKER}
-          />
+        </Typography>
+        <Box sx={styles.flex}>
+          <Typography sx={styles.question}>Не отримав листа?</Typography>
           <Button
-            text="Повернутись до авторизації"
+            text="Надіслати повторно"
             variant={ButtonVariant.TEXT}
             size={ButtonSize.SMALL}
-            startIcon={<ChevronLeftIcon />}
-            onClick={returnRegister}
-            sx={styles.arrow}
+            color={ButtonColor.PRIMARY}
+            onClick={handleSendAgain}
+            sx={styles.button}
           />
         </Box>
+        <Alert
+          title="Лист реєстрації діє 1 годину"
+          type={AlertType.INFO}
+          variant={AlertVariant.DARKER}
+        />
+        <Button
+          text="Повернутись до авторизації"
+          variant={ButtonVariant.TEXT}
+          size={ButtonSize.SMALL}
+          startIcon={<ChevronLeftIcon />}
+          onClick={returnRegister}
+          sx={styles.arrow}
+        />
       </Box>
-    </PageLayout>
+    </Box>
   );
 };
 
