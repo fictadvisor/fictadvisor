@@ -4,7 +4,10 @@ import { useDispatch } from 'react-redux';
 import { AxiosError } from 'axios';
 import { Form, Formik } from 'formik';
 
-import Alert, { AlertColor } from '@/components/common/ui/alert';
+//TODO cut off AlertColor
+import { AlertColor } from '@/components/common/ui/alert';
+import Alert from '@/components/common/ui/alert-mui';
+import { AlertType } from '@/components/common/ui/alert-mui/types';
 import Button, { ButtonSize } from '@/components/common/ui/button';
 import { Checkbox, Dropdown } from '@/components/common/ui/form';
 import Loader, { LoaderSize } from '@/components/common/ui/loader';
@@ -64,11 +67,7 @@ const NoGroupBlock: FC = () => {
             <h4>{user.group.code}</h4>
           </div>
           <div className={styles['alert-desktop-pending']}>
-            <Alert
-              title="Ваша заявка ще не прийнята, очікуйте підтвердження"
-              isClosable={false}
-              className={styles['alert alert-description']}
-            />
+            <Alert title="Ваша заявка ще не прийнята, очікуйте підтвердження" />
           </div>
           <div className={styles['division']}>
             <div className={styles['white']}></div>
@@ -82,19 +81,12 @@ const NoGroupBlock: FC = () => {
           <div className={styles['alert-desktop']}>
             <Alert
               title={'Ваша заявка відхилена'}
-              color={AlertColor.ERROR}
-              isClosable={false}
+              type={AlertType.ERROR}
               description={'Оберіть іншу групу нижче та надішліть новий запит'}
-              className={styles['alert']}
             />
           </div>
           <div className={styles['alert-mobile']}>
-            <Alert
-              title={'Ваша заявка відхилена'}
-              color={AlertColor.ERROR}
-              isClosable={false}
-              className={styles['alert']}
-            />
+            <Alert title={'Ваша заявка відхилена'} type={AlertType.ERROR} />
           </div>
         </>
       )}
