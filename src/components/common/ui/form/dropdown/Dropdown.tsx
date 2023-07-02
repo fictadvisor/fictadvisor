@@ -79,20 +79,10 @@ const Dropdown: FC<DropdownProps> = ({
               disabled={isDisabled}
             />
           )}
-          getOptionLabel={(input: DropDownOption | 'string') => {
-            let value;
-            if (typeof input === 'string') value = input;
-            else if ('text' in input) value = input.text;
-            else value = input.value;
-
-            const foundOption: DropDownOption = options.find(opt => {
-              if ('text' in opt) return opt.text === value;
-              return opt.value === value;
-            });
-
-            if (!foundOption) return '';
-            if ('text' in foundOption) return foundOption.text;
-            return foundOption.label;
+          getOptionLabel={value => {
+            const option = options.find(opt => opt.value === value);
+            if (!option) return '';
+            return 'text' in option ? option.text : option.label;
           }}
           componentsProps={{
             popper: {
