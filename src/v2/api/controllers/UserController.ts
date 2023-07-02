@@ -46,8 +46,10 @@ import { StudentMapper } from '../../mappers/StudentMapper';
 import { StudentResponse } from '../responses/StudentResponse';
 import { UserResponse } from '../responses/UserResponse';
 import { ApiImplicitFile } from '@nestjs/swagger/dist/decorators/api-implicit-file.decorator';
+import { SelectiveDisciplinesPipe } from '../pipes/SelectiveDisciplinesPipe';
+import { AttachSelectiveDisciplinesDTO } from '../dtos/AttachSelectiveDisciplinesDTO';
 
-@ApiTags('Users')
+@ApiTags('User')
 @Controller({
   version: '2',
   path: '/users',
@@ -291,6 +293,31 @@ export class UserController {
       @Query() body: RemainingSelectiveDTO,
   ) {
     return await this.userService.getRemainingSelective(userId, body);
+  }
+
+  @Access('users.$userId.selectiveDisciplines')
+  @ApiBearerAuth()
+  @Post(':userId/selectiveDisciplines')
+  @ApiOkResponse()
+  @ApiBadRequestResponse({
+    description: `Exceptions:\n
+                  InvalidEntityIdException: User with such id is not found
+                  InvalidEntityIdException: Discipline with such id is not found
+                  NotSelectiveException: This discipline is not selective
+                  AlreadySelectedException: You have already selected this disciplines
+                  NotBelongToGroupException: Discipline does not belong to this group
+                  ExcessiveSelectiveDisciplinesException: There are excessive selective disciplines in the request`,
+  })
+  @ApiForbiddenResponse({
+    description: `Exceptions:\n
+                  NotApprovedException: Student is not approved
+                  NoPermissionException: You do not have permission to perform this action`,
+  })
+  async attachSelectiveDisciplines (
+    @Param('userId', UserByIdPipe, StudentPipe) userId: string,
+    @Body(SelectiveDisciplinesPipe) body: AttachSelectiveDisciplinesDTO,
+  ) {
+    return this.userService.selectDisciplines(userId, body);
   }
 
   @Access('admin.switch')

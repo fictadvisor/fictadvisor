@@ -3,13 +3,9 @@ import { DisciplineService } from '../services/DisciplineService';
 import { CreateDisciplineDTO } from '../dtos/CreateDisciplineDTO';
 import { GroupByDisciplineGuard } from '../../security/group-guard/GroupByDisciplineGuard';
 import { Access } from 'src/v2/security/Access';
-import { UserByIdPipe } from '../pipes/UserByIdPipe';
-import { SelectiveDisciplinesPipe } from '../pipes/SelectiveDisciplinesPipe';
-import { StudentPipe } from '../pipes/StudentPipe';
-import { AttachSelectiveDisciplinesDTO } from '../dtos/AttachSelectiveDisciplinesDTO';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiForbiddenResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 
-@ApiTags('Disciplines')
+@ApiTags('Discipline')
 @Controller({
   version: '2',
   path: '/disciplines',
@@ -41,30 +37,5 @@ export class DisciplineController {
   ) {
     const teachers = await this.disciplineService.getTeachers(disciplineId);
     return { teachers };
-  }
-
-  @Access('users.$userId.selectiveDisciplines')
-  @ApiBearerAuth()
-  @Post(':userId/selectiveDisciplines')
-  @ApiOkResponse()
-  @ApiBadRequestResponse({
-    description: `Exceptions:\n
-                  InvalidEntityIdException: User with such id is not found
-                  InvalidEntityIdException: Discipline with such id is not found
-                  NotSelectiveException: This discipline is not selective
-                  AlreadySelectedException: You have already selected this disciplines
-                  NotBelongToGroupException: Discipline does not belong to this group
-                  ExcessiveSelectiveDisciplinesException: There are excessive selective disciplines in the request`,
-  })
-  @ApiForbiddenResponse({
-    description: `Exceptions:\n
-                  NotApprovedException: Student is not approved
-                  NoPermissionException: You do not have permission to perform this action`,
-  })
-  async attachSelectiveDisciplines (
-    @Param('userId', UserByIdPipe, StudentPipe) userId: string,
-    @Body(SelectiveDisciplinesPipe) body: AttachSelectiveDisciplinesDTO,
-  ) {
-    return this.disciplineService.selectDisciplines(userId, body);
   }
 }

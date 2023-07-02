@@ -15,6 +15,9 @@ import { InjectionToken } from '@nestjs/common';
 import { PrismaModule } from '../../modules/PrismaModule';
 import { MapperModule } from '../../modules/MapperModule';
 import { DateService } from '../../utils/date/DateService';
+import { NotBelongToGroupException } from '../../utils/exceptions/NotBelongToGroupException';
+import { AlreadySelectedException } from '../../utils/exceptions/AlreadySelectedException';
+import { ExcessiveSelectiveDisciplinesException } from '../../utils/exceptions/ExcessiveSelectiveDisciplinesException';
 
 describe('UserService', () => {
   let userService: UserService;
@@ -52,6 +55,12 @@ describe('UserService', () => {
         }, {
           id: 'groupId2',
           code: 'SA-33',
+        }, {
+          id: 'groupId3',
+          code: 'ІО-01',
+        }, {
+          id: 'groupId4',
+          code: 'IO-02',
         },
       ],
     });
@@ -114,6 +123,9 @@ describe('UserService', () => {
         }, {
           id: 'userId4',
           email: 'poshta4@gmail.com',
+        }, {
+          id: 'userId5',
+          email: 'poshta5@gmail.com',
         },
       ],
     });
@@ -135,6 +147,10 @@ describe('UserService', () => {
         }, {
           userId: 'userId4',
           groupId: 'groupId1',
+          state: 'APPROVED',
+        }, {
+          userId: 'userId5',
+          groupId: 'groupId3',
           state: 'APPROVED',
         },
       ],
@@ -164,6 +180,16 @@ describe('UserService', () => {
           year: 2022,
           semester: 2,
           amount: 4,
+        }, {
+          semester: 1,
+          year: 2022,
+          amount: 2,
+          groupId: 'groupId3',
+        }, {
+          semester: 2,
+          year: 2023,
+          amount: 2,
+          groupId: 'groupId3',
         },
       ],
     });
@@ -185,6 +211,21 @@ describe('UserService', () => {
         }, {
           id: 'subjectId5',
           name: 'subject5',
+        }, {
+          id: 'subjectId6',
+          name: 'subject6',
+        }, {
+          id: 'subjectId7',
+          name: 'subject7',
+        }, {
+          id: 'subjectId8',
+          name: 'subject8',
+        }, {
+          id: 'subjectId9',
+          name: 'subject9',
+        }, {
+          id: 'subjectId10',
+          name: 'subject10',
         },
       ],
     });
@@ -240,6 +281,41 @@ describe('UserService', () => {
           year: 2022,
           semester: 1,
           isSelective: true,
+        }, {
+          id: 'disciplineId8',
+          subjectId: 'subjectId6',
+          groupId: 'groupId3',
+          semester: 1,
+          year: 2022,
+          isSelective: true,
+        }, {
+          id: 'disciplineId9',
+          subjectId: 'subjectId7',
+          groupId: 'groupId3',
+          semester: 2,
+          year: 2023,
+          isSelective: true,
+        }, {
+          id: 'disciplineId10',
+          subjectId: 'subjectId8',
+          groupId: 'groupId4',
+          semester: 1,
+          year: 2022,
+          isSelective: true,
+        }, {
+          id: 'disciplineId11',
+          subjectId: 'subjectId9',
+          groupId: 'groupId3',
+          semester: 1,
+          year: 2022,
+          isSelective: true,
+        }, {
+          id: 'disciplineId12',
+          subjectId: 'subjectId10',
+          groupId: 'groupId3',
+          semester: 1,
+          year: 2022,
+          isSelective: true,
         },
       ],
     });
@@ -267,6 +343,9 @@ describe('UserService', () => {
         }, {
           disciplineId: 'disciplineId5',
           studentId: 'userId2',
+        }, {
+          disciplineId: 'disciplineId11',
+          studentId: 'userId5',
         },
       ],
     });
@@ -376,6 +455,67 @@ describe('UserService', () => {
           ],
         });
       });
+    });
+  });
+
+  describe('selectDisciplines', () => {
+    it('should connect selective disciplines to student', async () => {
+      await userService.selectDisciplines('userId5', { disciplines: ['disciplineId8', 'disciplineId9'] });
+
+      const result = await prisma.selectiveDiscipline.findMany({
+        where: {
+          studentId: 'userId5',
+        },
+      });
+      await prisma.selectiveDiscipline.delete({
+        where: {
+          disciplineId_studentId: {
+            disciplineId: 'disciplineId8',
+            studentId: 'userId5',
+          },
+        },
+      });
+      await prisma.selectiveDiscipline.delete({
+        where: {
+          disciplineId_studentId: {
+            disciplineId: 'disciplineId9',
+            studentId: 'userId5',
+          },
+        },
+      });
+
+      expect(result).toStrictEqual([
+        {
+          disciplineId: 'disciplineId11',
+          studentId: 'userId5',
+        },
+        {
+          disciplineId: 'disciplineId8',
+          studentId: 'userId5',
+        },
+        {
+          disciplineId: 'disciplineId9',
+          studentId: 'userId5',
+        },
+      ]);
+    });
+
+    it('should throw NotBelongToGroupException if discipline do not belong to users group',  async () => {
+      await expect(
+        userService.selectDisciplines('userId5', { disciplines: ['disciplineId8', 'disciplineId9', 'disciplineId10'] })
+      ).rejects.toThrow(NotBelongToGroupException);
+    });
+
+    it('should throw AlreadySelectedException if user have already selected this discipline', async () => {
+      await expect(
+        userService.selectDisciplines('userId5', { disciplines: ['disciplineId8', 'disciplineId9', 'disciplineId11'] })
+      ).rejects.toThrow(AlreadySelectedException);
+    });
+
+    it('should throw ExcessiveSelectiveDisciplinesException if selected disciplines more than selective amount', async () => {
+      await expect(
+        userService.selectDisciplines('userId5', { disciplines: ['disciplineId8', 'disciplineId9', 'disciplineId12'] })
+      ).rejects.toThrow(ExcessiveSelectiveDisciplinesException);
     });
   });
 
