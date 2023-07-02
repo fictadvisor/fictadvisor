@@ -2,26 +2,21 @@ import { FC, ReactNode } from 'react';
 import { Link as MuiLink } from '@mui/material';
 import { SxProps, Theme } from '@mui/material/styles';
 
+import { CustomLinkType } from '@/components/common/ui/link-mui/types';
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 
 import * as styles from './Link.styles';
 
-enum LinkType {
-  WHITE = 'white',
-  BLUE = 'blue',
-}
-
-interface LinkProps {
+interface CustomLinkProps {
   href: string;
   text: string | ReactNode;
   sx?: SxProps<Theme>;
-  type?: LinkType;
+  type?: CustomLinkType;
 }
-
-const Link: FC<LinkProps> = ({
+const CustomLink: FC<CustomLinkProps> = ({
   href,
   text,
-  type = LinkType.WHITE,
+  type = CustomLinkType.WHITE,
   sx = {},
 }) => {
   return (
@@ -31,4 +26,4 @@ const Link: FC<LinkProps> = ({
   );
 };
 
-export default Link;
+export default CustomLink;

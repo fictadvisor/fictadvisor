@@ -8,7 +8,8 @@ import { CustomCheck } from '@/components/common/icons/CustomCheck';
 import { AlertColor } from '@/components/common/ui/alert';
 import Button, { ButtonSize } from '@/components/common/ui/button';
 import { Input, InputType } from '@/components/common/ui/form';
-import Link from '@/components/common/ui/link';
+import CustomLink from '@/components/common/ui/link-mui';
+import { CustomLinkType } from '@/components/common/ui/link-mui/types';
 import AuthAPI from '@/lib/api/auth/AuthAPI';
 import StorageUtil from '@/lib/utils/StorageUtil';
 import { showAlert } from '@/redux/reducers/alert.reducer';
@@ -79,7 +80,11 @@ const ChangePasswordForm = () => {
           {errors.oldPassword === 'Введений пароль недійсний' && (
             <p className="body-primary">
               Забули пароль? Щоб відновити, перейдіть за{' '}
-              <Link href="/password-recovery" text="посиланням" />
+              <CustomLink
+                href="/password-recovery"
+                type={CustomLinkType.BLUE}
+                text="посиланням"
+              />
             </p>
           )}
           <Input
