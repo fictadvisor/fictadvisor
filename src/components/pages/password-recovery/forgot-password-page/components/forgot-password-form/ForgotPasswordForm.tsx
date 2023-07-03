@@ -52,7 +52,7 @@ const ForgotPasswordForm: FC = () => {
             placeholder="example@gmail.com"
             size={InputSize.LARGE}
             type={InputType.DEFAULT}
-            name="emailAddress"
+            name="email"
           />
           <Button
             text="Надіслати лист"
