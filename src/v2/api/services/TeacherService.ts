@@ -21,6 +21,7 @@ import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
 import { DateService } from '../../utils/date/DateService';
 import { DbTeacher } from 'src/v2/database/entities/DbTeacher';
 import { SortQATParam } from '../dtos/SortQATParam';
+
 @Injectable()
 export class TeacherService {
   constructor (
@@ -50,7 +51,7 @@ export class TeacherService {
     const data: Prisma.TeacherFindManyArgs = {
       where: {
         ...search,
-        disciplineTeachers: body.group != null ?  {
+        disciplineTeachers: body.group ?  {
           some: {
             discipline: {
               groupId: body.group,

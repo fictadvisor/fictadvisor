@@ -14,7 +14,7 @@ export class ResourceRepository {
 
   async getAll (body: QueryAllDTO) {
     const search = DatabaseUtils.getSearch<StudentResource>(body, 'name', 'link', 'icon');
-    const sort = DatabaseUtils.getSort(body);
+    const sort = DatabaseUtils.getSort(body, 'name');
 
     const data = {
       ...sort,

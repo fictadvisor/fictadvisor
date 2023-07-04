@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateQuestionWithRolesDTO } from '../dtos/CreateQuestionWithRolesDTO';
 import { QuestionRepository } from '../../database/repositories/QuestionRepository';
-import { Prisma, QuestionType, SemesterDate, State, TeacherRole } from '@prisma/client';
+import { QuestionType, SemesterDate, State, TeacherRole } from '@prisma/client';
 import { UpdateQuestionWithRolesDTO } from '../dtos/UpdateQuestionWithRolesDTO';
 import { ResponseData } from '../datas/ResponseData';
 import { CreateQuestionRoleDTO } from '../dtos/CreateQuestionRoleDTO';
@@ -14,7 +14,7 @@ import { DisciplineRepository } from '../../database/repositories/DisciplineRepo
 import { DbQuestionWithRoles } from '../../database/entities/DbQuestionWithRoles';
 import { QuestionAnswerRepository } from '../../database/repositories/QuestionAnswerRepository';
 import { DbQuestionWithDiscipline } from '../../database/entities/DbQuestionWithDiscipline';
-import { CommentsQueryDTO, CommentsSortMapper } from '../dtos/CommentsQueryDTO';
+import { CommentsQueryDTO, CommentsSort, CommentsSortMapper } from '../dtos/CommentsQueryDTO';
 import { filterAsync } from '../../utils/ArrayUtil';
 import { DbDiscipline, DbDiscipline_DisciplineTeacher } from '../../database/entities/DbDiscipline';
 import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
@@ -141,7 +141,7 @@ export class PollService {
           },
           orderBy: query.sortBy
             ? CommentsSortMapper[query.sortBy]
-            : undefined,
+            : CommentsSortMapper[CommentsSort.NEWEST],
           include: {
             disciplineTeacher: {
               include: {

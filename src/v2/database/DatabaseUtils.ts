@@ -94,8 +94,12 @@ export class DatabaseUtils {
     };
   }
 
-  static getSort ({ sort, order = 'asc' }: SortDTO): Sort | object {
-    if (!sort) return {};
+  static getSort ({ sort, order = 'asc' }: SortDTO, standardField: string): Sort | object {
+    if (!sort) return {
+      orderBy: {
+        [standardField]: order,
+      },
+    };
     return {
       orderBy: {
         [sort]: order,

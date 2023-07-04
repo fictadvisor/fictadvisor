@@ -69,7 +69,7 @@ export class GroupService {
 
   async getAll (body: QueryAllDTO) {
     const search = DatabaseUtils.getSearch(body, 'code');
-    const sort = DatabaseUtils.getSort(body);
+    const sort = DatabaseUtils.getSort(body, 'code');
 
     const data = {
       where: {

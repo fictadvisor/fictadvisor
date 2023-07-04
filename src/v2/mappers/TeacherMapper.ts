@@ -30,7 +30,9 @@ export class TeacherMapper {
     return roles;
   }
 
-  getSortedTeacher ({ sort = SortQATParam.LAST_NAME, order = OrderQAParam.ASC }: SortDTO): Sort | object {
+  getSortedTeacher ({ sort, order }: SortDTO): Sort | object {
+    if (!sort) sort = SortQATParam.LAST_NAME;
+    if (!order) order = OrderQAParam.ASC;
     const orderBy = [{ [sort]: order }];
 
     orderBy.push({ [SortQATParam.LAST_NAME]: order });

@@ -20,16 +20,16 @@ export class SubjectService {
 
   async getAll (body: QueryAllSubjectDTO) {
     const search = DatabaseUtils.getSearch<Subject>(body, 'name');
-    const sort = DatabaseUtils.getSort(body);
+    const sort = DatabaseUtils.getSort(body, 'name');
 
     const data: Prisma.SubjectFindManyArgs = {
       where: {
         ...search,
-        disciplines: {
+        disciplines: body.group ? {
           some: {
             groupId: body.group,
           },
-        },
+        } : undefined,
       },
       ...sort,
     };
