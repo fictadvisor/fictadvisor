@@ -1,53 +1,65 @@
-import { FC, Fragment } from 'react';
+import { FC } from 'react';
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
   HomeIcon,
 } from '@heroicons/react/24/outline';
-import cn from 'classnames';
-import NextLink from 'next/link';
+import {
+  Box,
+  Breadcrumbs as BreadcrumbsMUI,
+  Link,
+  Typography,
+  useMediaQuery,
+} from '@mui/material';
+import { SxProps, Theme } from '@mui/material/styles';
 
-import styles from './Breadcrumbs.module.scss';
+import mergeSx from '@/lib/utils/MergeSxStylesUtil';
+import theme from '@/styles/theme';
 
-export interface Breadcrumb {
-  label: string;
-  href: string;
-}
+import * as styles from './Breadcrumbs.styles';
+import { Breadcrumb } from './types';
 
 interface BreadcrumbsProps {
   items: Breadcrumb[];
-  className?: string;
+  sx?: SxProps<Theme>;
 }
 
-const Breadcrumbs: FC<BreadcrumbsProps> = ({ items, className }) => {
+const Breadcrumbs: FC<BreadcrumbsProps> = ({ items, sx = {} }) => {
+  const isMobile = useMediaQuery(theme.breakpoints.down('mobileMedium'));
+
   const breadcrumbs = items.map((item, index) => (
-    <Fragment key={index}>
-      <div className={styles['breadcrumb']}>
-        <NextLink href={item.href}>
-          {index === 0 && (
-            <HomeIcon className={cn('icon', styles['home-icon'])} />
-          )}
-          <span> {item.label} </span>
-        </NextLink>
-      </div>
-      {index !== items.length - 1 && (
-        <ChevronRightIcon className={cn('icon', styles['arrow-icon'])} />
+    <Link key={index} href={item.href} underline="none">
+      {index === 0 && (
+        <Box sx={styles.homeIcon}>
+          <HomeIcon />
+        </Box>
       )}
-    </Fragment>
+      <Typography sx={styles.label}>{item.label}</Typography>
+    </Link>
   ));
 
   return (
-    <div className={cn(styles['wrapper'], className)}>
-      <div className={cn(styles['breadcrumb'], styles['mobile'])}>
-        <ChevronLeftIcon className={cn('icon', styles['arrow-icon'])} />
-        <NextLink href={items[0]?.href}>
-          <span> {items[0]?.label} </span>
-        </NextLink>
-      </div>
-      <div className={cn(styles['breadcrumbs-container'], styles['desktop'])}>
-        {breadcrumbs}
-      </div>
-    </div>
+    <BreadcrumbsMUI
+      sx={mergeSx(styles.breadcrumb, sx)}
+      color="inherit"
+      separator={
+        <Box sx={styles.arrow}>
+          <ChevronRightIcon />
+        </Box>
+      }
+      aria-label="breadcrumb"
+    >
+      {isMobile ? (
+        <Link href={items[0].href} underline="none">
+          <Box sx={styles.homeIcon}>
+            <ChevronLeftIcon />
+          </Box>
+          <Typography>{items[0].label}</Typography>
+        </Link>
+      ) : (
+        breadcrumbs
+      )}
+    </BreadcrumbsMUI>
   );
 };
 

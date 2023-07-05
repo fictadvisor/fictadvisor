@@ -57,8 +57,8 @@ export const TeacherSearchPage = () => {
 
   return (
     <div className={styles['layout']}>
-      <Breadcrumbs items={breadcrumbs} className={styles['breadcrumb']} />
-
+      {/*//TODO move inline styles when refactor*/}
+      <Breadcrumbs items={breadcrumbs} sx={{ margin: '16px 0px 16px 0px' }} />
       <SearchForm
         searchPlaceholder="Оберіть викладача"
         filterDropDownOptions={[
@@ -69,18 +69,15 @@ export const TeacherSearchPage = () => {
         initialValues={initialValues}
         localStorageName={localStorageName}
       />
-
       {data && (
         <TeacherSearchList teachers={data.teachers} className="teacher" />
       )}
-
       {isLoading ||
         (isFetching && (
           <div className={styles['page-loader']}>
             <Loader size={LoaderSize.SMALLEST} />
           </div>
         ))}
-
       {data?.teachers.length === (curPage + 1) * pageSize && (
         <Button
           className={styles['load-btn']}

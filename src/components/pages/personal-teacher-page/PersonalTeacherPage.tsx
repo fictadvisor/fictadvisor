@@ -87,7 +87,7 @@ const PersonalTeacherPage = () => {
           !isError && (
             <div className={styles['personal-teacher-page-content']}>
               <Breadcrumbs
-                className={styles['breadcrumbs']}
+                sx={{ margin: '16px 0px 16px 0px' }} //TODO move inline styles when refactor
                 items={[
                   {
                     label: 'Головна',

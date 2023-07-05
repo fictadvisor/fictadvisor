@@ -53,8 +53,8 @@ const SubjectSearchPage = () => {
 
   return (
     <div className={styles['layout']}>
-      <Breadcrumbs items={breadcrumbs} className={styles['breadcrumb']} />
-
+      {/*TODO move inline styles when refactor*/}
+      <Breadcrumbs items={breadcrumbs} sx={{ margin: '16px 0px 16px 0px' }} />
       <SearchForm
         searchPlaceholder="Оберіть предмет"
         filterDropDownOptions={[{ value: 'name', label: 'За назвою' }]}
@@ -62,7 +62,6 @@ const SubjectSearchPage = () => {
         initialValues={SubjectInitialValues}
         //localStorageName={localStorageName}
       />
-
       {data && <SubjectSearchList subjects={data.subjects} />}
       {isLoading ||
         (isFetching && (
@@ -70,7 +69,6 @@ const SubjectSearchPage = () => {
             <Loader size={LoaderSize.SMALLEST} />
           </div>
         ))}
-
       {data?.subjects?.length === (curPage + 1) * pageSize && (
         <Button
           className={styles['load-btn']}

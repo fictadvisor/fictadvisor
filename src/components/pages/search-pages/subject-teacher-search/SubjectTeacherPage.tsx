@@ -3,7 +3,7 @@ import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
-import { Breadcrumb } from '@/components/common/ui/breadcrumbs/Breadcrumbs';
+import { Breadcrumb } from '@/components/common/ui/breadcrumbs/types';
 import Loader, { LoaderSize } from '@/components/common/ui/loader';
 import styles from '@/components/pages/search-pages/SearchPage.module.scss';
 import { SubjectTeacherSearchList } from '@/components/pages/search-pages/subject-teacher-search/SubjectTeacherSearchList';
@@ -39,7 +39,7 @@ const SubjectTeacherPage = () => {
     <div className={styles['layout']}>
       <Breadcrumbs
         items={[...breadcrumbs, subject]}
-        className={styles['breadcrumb']}
+        sx={{ margin: '16px 0px 16px 0px' }} //TODO move inline styles when refactor
       />
       <h4 className={styles['subject-title']}>{data?.subjectName}</h4>
       {isLoading && (

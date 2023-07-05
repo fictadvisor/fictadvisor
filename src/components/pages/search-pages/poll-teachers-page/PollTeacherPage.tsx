@@ -75,7 +75,10 @@ const PollTeacherPage: FC = () => {
     <div className={styles['layout']}>
       {isLoggedIn && (
         <>
-          <Breadcrumbs items={breadcrumbs} className={styles['breadcrumb']} />
+          <Breadcrumbs
+            items={breadcrumbs}
+            sx={{ margin: '16px 0px 16px 0px' }} //TODO move inline styles when refactor
+          />
 
           {data && (
             <PollTeacherSearchList data={data} className="poll-teacher" />
