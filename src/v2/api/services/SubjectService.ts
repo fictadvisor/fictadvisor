@@ -3,11 +3,14 @@ import { SubjectRepository } from '../../database/repositories/SubjectRepository
 import { QueryAllSubjectDTO } from '../dtos/QueryAllSubjectDTO';
 import { CreateSubjectDTO } from '../dtos/CreateSubjectDTO';
 import { TeacherRepository } from '../../database/repositories/TeacherRepository';
-import { Prisma, Subject } from '@prisma/client';
+import { Prisma, QuestionType, Subject } from '@prisma/client';
 import { DatabaseUtils } from '../../database/DatabaseUtils';
 import { UpdateSubjectDTO } from '../dtos/UpdateSubjectDTO';
 import { TeacherMapper } from '../../mappers/TeacherMapper';
 import { TeacherService } from './TeacherService';
+import { DbTeacher } from '../../database/entities/DbTeacher';
+import { QuestionMapper } from '../../mappers/QuestionMapper';
+import { DbDisciplineTeacherWithAnswers } from '../../database/entities/DbDisciplineTeacherWithAnswers';
 
 @Injectable()
 export class SubjectService {
@@ -16,6 +19,7 @@ export class SubjectService {
     private teacherRepository: TeacherRepository,
     private teacherMapper: TeacherMapper,
     private teacherService : TeacherService,
+    private questionMapper: QuestionMapper,
   ) {}
 
   async getAll (body: QueryAllSubjectDTO) {
@@ -80,17 +84,41 @@ export class SubjectService {
           },
         },
       },
+      include: {
+        disciplineTeachers: {
+          include: {
+            roles: true,
+            questionAnswers: {
+              where: {
+                disciplineTeacher: {
+                  discipline: {
+                    subjectId: id,
+                  },
+                },
+                question: {
+                  type: {
+                    in: [QuestionType.SCALE, QuestionType.TOGGLE],
+                  },
+                },
+              },
+              include: {
+                question: true,
+              },
+            },
+          },
+        },
+      },
     });
 
     const teachers = [];
-    const data = {
-      subjectId: id,
-    };
 
     for (const dbTeacher of dbTeachers) {
+      const sortedQuestionsWithAnswers = this.questionMapper.getSortedQuestionsWithAnswers(dbTeacher.disciplineTeachers as any as DbDisciplineTeacherWithAnswers[]);
+      const marks = this.questionMapper.getMarks(sortedQuestionsWithAnswers);
+
       teachers.push({
-        ...this.teacherMapper.getTeacherWithRoles(dbTeacher),
-        rating: await this.teacherService.getRating(dbTeacher.id, data),
+        ...this.teacherMapper.getTeacherWithRoles(dbTeacher as DbTeacher),
+        rating: this.teacherService.getRating(marks),
       });
     }
 

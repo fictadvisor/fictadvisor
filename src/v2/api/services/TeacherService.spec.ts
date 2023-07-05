@@ -197,58 +197,110 @@ describe('TeacherService', () => {
   });
 
   describe('getRating', () => {
-    it('should calculate teacher rating', async () => {
-      jest.spyOn(teacherService, 'getMarks').mockImplementation(() => ([
+    it('should calculate teacher rating', () => {
+      const marks = [
         {
-          name: 'Radar1',
-          amount: 10,
-          type: QuestionDisplay.RADAR,
-          mark: 60,
-        },
-        {
-          name: 'Circle1',
-          amount: 10,
-          type: QuestionDisplay.CIRCLE,
-          mark: 70,
-        },
-        {
-          name: 'Radar2',
-          amount: 10,
-          type: QuestionDisplay.RADAR,
-          mark: 40,
-        },
-        {
-          name: 'Amount1',
-          amount: 10,
-          type: QuestionDisplay.AMOUNT,
+          name: 'Володіння матеріалом',
+          amount: 8,
+          type: 'AMOUNT',
           mark: {
             '1': 0,
-            '2': 2,
-            '3': 2,
+            '2': 0,
+            '3': 0,
             '4': 0,
-            '5': 1,
-            '6': 1,
-            '7': 2,
-            '8': 2,
+            '5': 0,
+            '6': 0,
+            '7': 0,
+            '8': 1,
             '9': 0,
-            '10': 0,
+            '10': 7,
           },
         },
-      ] as any));
+        { name: 'Організація занять',
+          amount: 8,
+          type: 'RADAR',
+          mark: 98.75,
+        },
+        {
+          name: 'Академічна доброчесність',
+          amount: 8,
+          type: 'RADAR',
+          mark: 98.75,
+        },
+        {
+          name: 'Коректність поведінки',
+          amount: 8,
+          type: 'RADAR',
+          mark: 98.75,
+        },
+        { name: 'Доступність оцінок',
+          amount: 8,
+          type: 'RADAR',
+          mark: 93.75,
+        },
+        {
+          name: 'Зручність здачі лабораторних',
+          amount: 8,
+          type: 'RADAR',
+          mark: 100,
+        },
+        {
+          name: 'Володіння технологіями дистанційного навчання',
+          amount: 8,
+          type: 'RADAR',
+          mark: 100,
+        },
+        {
+          name: 'Налагодження комунікації',
+          amount: 8,
+          type: 'RADAR',
+          mark: 96.25,
+        },
+        {
+          name: 'Адаптованість навчання',
+          amount: 8,
+          type: 'CIRCLE',
+          mark: 100,
+        },
+        {
+          name: 'Дотримання нормативних документів',
+          amount: 8,
+          type: 'CIRCLE',
+          mark: 100,
+        },
+        {
+          name: 'Сприяння творчій діяльності',
+          amount: 8,
+          type: 'CIRCLE',
+          mark: 100,
+        },
+        {
+          name: 'Сприяння науковій діяльності',
+          amount: 8,
+          type: 'CIRCLE',
+          mark: 76.25,
+        },
+        {
+          name: 'Відповідність системи оцінювання',
+          amount: 8,
+          type: 'RADAR',
+          mark: 100,
+        },
+      ];
 
-      const result = await teacherService.getRating('id');
-      expect(result).toBe(55.25);
+      const result = teacherService.getRating(marks);
+      expect(result).toBe(96.92);
     });
 
-    it('should return 0 if there are no marks', async () => {
-      jest.spyOn(teacherService, 'getMarks').mockImplementation(() => [] as any);
+    it('should return 0 if there are no marks', () => {
+      const marks = [];
 
-      const result = await teacherService.getRating('id');
+      const result = teacherService.getRating(marks);
       expect(result).toBe(0);
     });
 
-    it('should return 0 if amount of votes less then 8', async () => {
-      jest.spyOn(teacherService, 'getMarks').mockImplementation(() => [
+    it('should return 0 if amount of votes less then 8', () => {
+      const marks = [
         {
           name: 'Radar1',
           amount: 7,
@@ -261,9 +313,9 @@ describe('TeacherService', () => {
           type: QuestionDisplay.CIRCLE,
           mark: 70,
         },
-      ] as any);
+      ];
 
-      const result = await teacherService.getRating('id');
+      const result = teacherService.getRating(marks);
       expect(result).toBe(0);
     });
   });

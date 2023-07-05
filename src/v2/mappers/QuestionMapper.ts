@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { DbQuestionWithRoles } from '../database/entities/DbQuestionWithRoles';
-import { QuestionRole } from '@prisma/client';
+import { QuestionDisplay, QuestionRole, QuestionType } from '@prisma/client';
 import { DbQuestionWithDiscipline } from '../database/entities/DbQuestionWithDiscipline';
+import { DbDisciplineTeacherWithAnswers } from '../database/entities/DbDisciplineTeacherWithAnswers';
+import { DbQuestionWithAnswers } from '../database/entities/DbQuestionWithAnswers';
 
 
 @Injectable()
@@ -86,5 +88,54 @@ export class QuestionMapper {
       }
     }
     return responses;
+  }
+
+  getSortedQuestionsWithAnswers (disciplineTeachers: DbDisciplineTeacherWithAnswers[]) {
+    const sortedQuestions = [];
+    for (const disciplineTeacher of disciplineTeachers) {
+      for (const questionWithAnswer of disciplineTeacher.questionAnswers) {
+        const { question, value } = questionWithAnswer;
+        const sortedQuestion = sortedQuestions.find((q) => q.name === question.name);
+        if (!sortedQuestion) {
+          sortedQuestions.push({
+            name: question.name,
+            type: question.type,
+            display: question.display,
+            questionAnswers: [{
+              value,
+            }],
+          });
+        } else {
+          sortedQuestion.questionAnswers.push({ value });
+        }
+      }
+    }
+    return sortedQuestions;
+  }
+
+  getMarks (questionWithAnswers: DbQuestionWithAnswers[]) {
+    return questionWithAnswers.map((q) => ({
+      name: q.name,
+      amount: q.questionAnswers.length,
+      type: q.display,
+      mark: this.getRightMarkFormat(q),
+    }));
+  }
+
+  private parseMark (type: QuestionType, marksSum: number, answerQty: number) {
+    const divider = (answerQty * ((type === QuestionType.SCALE) ? 10 : 1));
+    return parseFloat(((marksSum / divider) * 100).toFixed(2));
+  }
+
+  getRightMarkFormat ({ display, type, questionAnswers: answers }: DbQuestionWithAnswers) {
+    if (display === QuestionDisplay.RADAR || display === QuestionDisplay.CIRCLE) {
+      return this.parseMark(type, answers.reduce((acc, answer) => acc + (+answer.value), 0), answers.length);
+    } else if (display === QuestionDisplay.AMOUNT) {
+      const table = {};
+      for (let i = 1; i <= 10; i++) {
+        table[i] = answers.filter((a) => +a.value === i).length;
+      }
+      return table;
+    }
   }
 }

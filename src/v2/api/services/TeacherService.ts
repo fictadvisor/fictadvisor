@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateContactDTO } from '../dtos/CreateContactDTO';
-import { EntityType, QuestionDisplay, QuestionType, Prisma } from '@prisma/client';
+import { EntityType, QuestionDisplay, Prisma, QuestionType } from '@prisma/client';
 import { TeacherRepository } from '../../database/repositories/TeacherRepository';
 import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
 import { UpdateContactDTO } from '../dtos/UpdateContactDTO';
@@ -21,6 +21,8 @@ import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
 import { DateService } from '../../utils/date/DateService';
 import { DbTeacher } from 'src/v2/database/entities/DbTeacher';
 import { SortQATParam } from '../dtos/SortQATParam';
+import { QuestionMapper } from '../../mappers/QuestionMapper';
+import { DbDisciplineTeacherWithAnswers } from '../../database/entities/DbDisciplineTeacherWithAnswers';
 
 @Injectable()
 export class TeacherService {
@@ -34,6 +36,7 @@ export class TeacherService {
     private pollService: PollService,
     private disciplineTeacherMapper: DisciplineTeacherMapper,
     private dateService: DateService,
+    private questionMapper: QuestionMapper,
   ) {}
 
   async getAll (body: QueryAllTeacherDTO) {
@@ -60,25 +63,47 @@ export class TeacherService {
         } : undefined,
       },
       ...sort,
+      include: {
+        disciplineTeachers: {
+          include: {
+            discipline: true,
+            roles: true,
+            questionAnswers: {
+              where: {
+                question: {
+                  type: {
+                    in: [QuestionType.SCALE, QuestionType.TOGGLE],
+                  },
+                },
+              },
+              include: {
+                question: true,
+              },
+            },
+          },
+        },
+      },
     };
 
     return await DatabaseUtils.paginate<DbTeacher>(this.teacherRepository, body, data);
   }
 
   async getAllTeachersWithRating (body: QueryAllTeacherDTO) {
-    const dbTeachers = await this.getAll(body);
-    const teachers = [];
-    for (const dbTeacher of dbTeachers.data) {
-      teachers.push({
-        ...this.teacherMapper.getTeacher(dbTeacher),
-        rating: await this.getRating(dbTeacher.id),
+    const teachers = await this.getAll(body);
+    const teachersWithRating = [];
+    for (const { disciplineTeachers, ...dbTeacher } of teachers.data) {
+      const sortedQuestionsWithAnswers = this.questionMapper.getSortedQuestionsWithAnswers(disciplineTeachers as any as DbDisciplineTeacherWithAnswers[]);
+      const marks = this.questionMapper.getMarks(sortedQuestionsWithAnswers);
+
+      teachersWithRating.push({
+        ...this.teacherMapper.getTeacher(dbTeacher as DbTeacher),
+        rating: this.getRating(marks),
       });
     }
-    return { data: teachers, meta: dbTeachers.meta };
+    return { data: teachersWithRating, meta: teachers.meta };
   }
 
-  async getRating (teacherId, data?: ResponseQueryDTO) {
-    const marks = await this.getMarks(teacherId, data);
+  getRating (marks) {
     if (!marks.length || marks[0].amount < 8) {
       return 0;
     }
@@ -104,7 +129,8 @@ export class TeacherService {
     const { disciplineTeachers, ...teacher } = dbTeacher;
     const roles = this.teacherMapper.getRoles(dbTeacher);
     const contacts = await this.contactRepository.getAllContacts(id);
-    const rating = await this.getRating(id);
+    const marks = await this.getMarks(id);
+    const rating = this.getRating(marks);
 
     return {
       ...teacher,
@@ -244,7 +270,7 @@ export class TeacherService {
     for (const question of questions) {
       if (question.questionAnswers.length === 0) continue;
       const count = question.questionAnswers.length;
-      const mark = this.getRightMarkFormat(question);
+      const mark = this.questionMapper.getRightMarkFormat(question);
       marks.push({
         name: question.name,
         amount: count,
@@ -253,23 +279,6 @@ export class TeacherService {
       });
     }
     return marks;
-  }
-
-  private parseMark (type: QuestionType, marksSum: number, answerQty: number) {
-    const divider = (answerQty * ((type === QuestionType.SCALE) ? 10 : 1));
-    return parseFloat(((marksSum / divider) * 100).toFixed(2));
-  }
-
-  private getRightMarkFormat ({ display, type, questionAnswers: answers }) {
-    if (display === QuestionDisplay.RADAR || display === QuestionDisplay.CIRCLE) {
-      return this.parseMark(type, answers.reduce((acc, answer) => acc + (+answer.value), 0), answers.length);
-    } else if (display === QuestionDisplay.AMOUNT) {
-      const table = {};
-      for (let i = 1; i <= 10; i++) {
-        table[i] = answers.filter((a) => +a.value === i).length;
-      }
-      return table;
-    }
   }
 
   checkQueryDate ({ semester, year }: ResponseQueryDTO) {
@@ -320,7 +329,8 @@ export class TeacherService {
     const data = {
       subjectId,
     };
-    const rating = await this.getRating(teacherId, data);
+    const marks = await this.getMarks(teacherId, data);
+    const rating = this.getRating(marks);
 
     return {
       ...teacher,

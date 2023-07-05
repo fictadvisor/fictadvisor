@@ -24,8 +24,8 @@ export class TeacherRepository {
   ) {
 
     return this.prisma.teacher.findMany({
-      ...data,
       include: this.include,
+      ...data,
     });
   }
 
