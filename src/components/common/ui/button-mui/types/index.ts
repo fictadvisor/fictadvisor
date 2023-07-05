@@ -1,6 +1,3 @@
-import { MouseEventHandler, ReactNode } from 'react';
-import { SxProps, Theme } from '@mui/material/styles';
-
 export enum ButtonColor {
   PRIMARY = 'primary',
   SECONDARY = 'secondary',
@@ -36,17 +33,3 @@ export type ButtonColorsMap = Record<
   Exclude<ButtonVariant, ButtonVariant.TEXT>,
   Record<ButtonColor, ButtonColorsStruct>
 >;
-
-export interface ButtonProps {
-  text?: string;
-  color?: ButtonColor;
-  variant?: ButtonVariant;
-  size?: ButtonSize;
-  startIcon?: ReactNode;
-  endIcon?: ReactNode;
-  sx?: SxProps<Theme>;
-  disabled?: boolean;
-  onClick?: MouseEventHandler<HTMLButtonElement>;
-  href?: string;
-  type?: 'button' | 'reset' | 'submit';
-}

@@ -4,8 +4,3 @@ export interface TeacherEvaluations {
   type: string;
   mark: Record<number, number>;
 }
-
-export interface ColumnChartProps {
-  data: TeacherEvaluations;
-  maxValue?: number;
-}

@@ -5,15 +5,26 @@ import {
   InputLabel,
   OutlinedInput,
 } from '@mui/material';
+import { SxProps, Theme } from '@mui/material/styles';
 import { useField } from 'formik';
 
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 
 import * as styles from './TextArea.styles';
-import { TextAreaProps, TextAreaSize, TextAreaState } from './types';
+import { TextAreaSize, TextAreaState } from './types';
 
 const MAX_LENGTH = 4000;
 
+interface TextAreaProps {
+  name: string;
+  placeholder?: string;
+  label?: string;
+  size?: TextAreaSize;
+  disabled?: boolean;
+  showRemark?: boolean;
+  rowsNumber?: number;
+  sx?: SxProps<Theme>;
+}
 const TextArea: React.FC<TextAreaProps> = ({
   name,
   placeholder,

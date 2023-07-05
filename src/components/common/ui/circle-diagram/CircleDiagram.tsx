@@ -1,10 +1,18 @@
 import { FC } from 'react';
 import { Box, CircularProgress, Typography } from '@mui/material';
+import { SxProps, Theme } from '@mui/material/styles';
 
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 
 import * as styles from './CircleDiagram.styles';
-import { CircleDiagramProps, CircleDiagramVariant } from './types';
+import { CircleDiagramVariant } from './types';
+
+interface CircleDiagramProps {
+  value: number;
+  variant?: CircleDiagramVariant;
+  sx?: SxProps<Theme>;
+  thickness?: number;
+}
 
 const CircleDiagram: FC<CircleDiagramProps> = ({
   value,

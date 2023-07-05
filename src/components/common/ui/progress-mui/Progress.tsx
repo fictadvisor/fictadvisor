@@ -1,15 +1,19 @@
 import { FC } from 'react';
 import { Box, CircularProgress } from '@mui/material';
+import { SxProps, Theme } from '@mui/material/styles';
 
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 
 import * as styles from './Progress.styles';
-import {
-  ProgressColor,
-  ProgressProps,
-  ProgressSize,
-  ProgressVariant,
-} from './types';
+import { ProgressColor, ProgressSize, ProgressVariant } from './types';
+
+interface ProgressProps {
+  value?: number;
+  variant?: ProgressVariant;
+  sx?: SxProps<Theme>;
+  size?: ProgressSize;
+  color?: ProgressColor;
+}
 
 const Progress: FC<ProgressProps> = ({
   variant = ProgressVariant.DETERMINATE,

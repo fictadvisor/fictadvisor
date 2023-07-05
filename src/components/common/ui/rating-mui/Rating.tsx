@@ -1,10 +1,16 @@
 import { FC } from 'react';
-import { Box, Icon, Rating as MuiRating } from '@mui/material';
+import { Box, Icon, Rating as MuiRating, SxProps, Theme } from '@mui/material';
 
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 
 import * as styles from './Rating.styles';
-import { RatingProps, RatingVariant } from './types';
+import { RatingVariant } from './types';
+
+interface RatingProps {
+  rating: number;
+  variant?: RatingVariant;
+  sx?: SxProps<Theme>;
+}
 
 const Rating: FC<RatingProps> = ({
   rating,

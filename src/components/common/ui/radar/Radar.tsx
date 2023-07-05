@@ -16,9 +16,9 @@ import getData from '@/components/common/ui/radar/utils/drawData';
 import getBackgroundImage from '@/components/common/ui/radar/utils/findImage';
 import getOptions from '@/components/common/ui/radar/utils/getOptions';
 import theme from '@/styles/theme';
+import { TeacherRadarCircleMark, TeacherRole } from '@/types/teacher';
 
 import * as styles from './Radar.styles';
-import { RadarProps } from './types';
 
 ChartJS.register(
   RadialLinearScale,
@@ -29,6 +29,11 @@ ChartJS.register(
   Tooltip,
   Legend,
 );
+
+interface RadarProps {
+  roles: TeacherRole[];
+  marks: TeacherRadarCircleMark[];
+}
 
 const RadarChart: FC<RadarProps> = ({ marks, roles }) => {
   const labels = marks.map(mark => mark.name);

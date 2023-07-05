@@ -1,12 +1,22 @@
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import { Box, Tab as MuiTab } from '@mui/material';
+import { SxProps, Theme } from '@mui/material/styles';
 
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 
 import { CustomLabel } from './components/CustomLabel';
 import * as styles from './Tab.styles';
-import { TabProps, TabTextPosition } from './types';
+import { TabTextPosition } from './types';
 
+interface TabProps {
+  value?: string;
+  label?: string | ReactNode;
+  count?: number | null;
+  icon?: ReactNode | string;
+  textPosition?: TabTextPosition;
+  disabled?: boolean;
+  sx?: SxProps<Theme>;
+}
 const Tab: FC<TabProps> = ({
   label,
   count = null,

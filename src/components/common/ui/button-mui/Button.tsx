@@ -1,10 +1,25 @@
-import React, { FC } from 'react';
+import React, { FC, MouseEventHandler, ReactNode } from 'react';
 import { Box, Button as MuiButton } from '@mui/material';
+import { SxProps, Theme } from '@mui/material/styles';
 
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 
 import * as styles from './Button.styles';
-import { ButtonColor, ButtonProps, ButtonSize, ButtonVariant } from './types';
+import { ButtonColor, ButtonSize, ButtonVariant } from './types';
+
+interface ButtonProps {
+  text?: string;
+  color?: ButtonColor;
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  startIcon?: ReactNode;
+  endIcon?: ReactNode;
+  sx?: SxProps<Theme>;
+  disabled?: boolean;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
+  href?: string;
+  type?: 'button' | 'reset' | 'submit';
+}
 
 const Button: FC<ButtonProps> = ({
   text,

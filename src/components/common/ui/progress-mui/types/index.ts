@@ -1,5 +1,3 @@
-import { SxProps, Theme } from '@mui/material/styles';
-
 export enum ProgressColor {
   PRIMARY = 'primary',
   SECONDARY = 'secondary',
@@ -21,12 +19,4 @@ export enum ProgressSize {
 export enum ProgressVariant {
   DETERMINATE = 'determinate',
   INDETERMINATE = 'indeterminate',
-}
-
-export interface ProgressProps {
-  value?: number;
-  variant?: ProgressVariant;
-  sx?: SxProps<Theme>;
-  size?: ProgressSize;
-  color?: ProgressColor;
 }

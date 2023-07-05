@@ -1,5 +1,3 @@
-import { SxProps, Theme } from '@mui/material/styles';
-
 export enum AlertType {
   INFO = 'info',
   WARNING = 'warning',
@@ -13,13 +11,4 @@ export enum AlertVariant {
   OUTLINED = 'outlined',
   BORDER_LEFT = 'border-left',
   BORDER_TOP = 'border-top',
-}
-
-export interface AlertProps {
-  title: string;
-  type?: AlertType;
-  description?: string;
-  variant?: AlertVariant;
-  onClose?: () => void;
-  sx?: SxProps<Theme>;
 }

@@ -7,10 +7,14 @@ import getData from '@/components/common/ui/column-chart/utils/get-data';
 import getOptions from '@/components/common/ui/column-chart/utils/get-options';
 
 import * as styles from './ColumnChart.styles';
-import { ColumnChartProps } from './types';
+import { TeacherEvaluations } from './types';
 
 Chart.register(...registerables);
 
+interface ColumnChartProps {
+  data: TeacherEvaluations;
+  maxValue?: number;
+}
 const ColumnChart: FC<ColumnChartProps> = ({ data, maxValue = 10 }) => {
   return (
     <Box sx={styles.chartContainer}>

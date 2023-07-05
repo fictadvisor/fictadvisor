@@ -6,12 +6,13 @@ import {
   InformationCircleIcon,
 } from '@heroicons/react/24/outline';
 import { Alert as MuiAlert, AlertColor, Typography } from '@mui/material';
+import { SxProps, Theme } from '@mui/material/styles';
 
 import { AlertXMark } from '@/components/common/icons/AlertXMark';
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 
 import * as styles from './Alert.styles';
-import { AlertProps, AlertType, AlertVariant } from './types';
+import { AlertType, AlertVariant } from './types';
 
 const AlertIconMap: Record<AlertColor, React.ReactNode> = {
   info: <InformationCircleIcon />,
@@ -20,6 +21,14 @@ const AlertIconMap: Record<AlertColor, React.ReactNode> = {
   success: <CheckCircleIcon />,
 };
 
+interface AlertProps {
+  title: string;
+  type?: AlertType;
+  description?: string;
+  variant?: AlertVariant;
+  onClose?: () => void;
+  sx?: SxProps<Theme>;
+}
 const Alert: FC<AlertProps> = ({
   type = AlertType.ERROR,
   variant = AlertVariant.FILLED,

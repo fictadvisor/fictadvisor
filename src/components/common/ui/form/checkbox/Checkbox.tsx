@@ -4,6 +4,7 @@ import {
   FormControlLabel,
   Typography,
 } from '@mui/material';
+import { SxProps, Theme } from '@mui/material/styles';
 import { useField } from 'formik';
 
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
@@ -11,7 +12,16 @@ import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 import CheckedIcon from './components/CheckedIcon';
 import Icon from './components/Icon';
 import * as styles from './Checkbox.styles';
-import { CheckboxColor, CheckboxProps, CheckboxTextType } from './types';
+import { CheckboxColor, CheckboxTextType } from './types';
+
+interface CheckboxProps {
+  label?: string;
+  disabled?: boolean;
+  sx?: SxProps<Theme>;
+  name: string;
+  color?: CheckboxColor;
+  textType?: CheckboxTextType;
+}
 
 const Checkbox: FC<CheckboxProps> = ({
   label,

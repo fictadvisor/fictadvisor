@@ -1,8 +1,16 @@
-import React, { FC } from 'react';
-import { Tooltip as MuiTooltip } from '@mui/material';
+import React, { FC, ReactElement } from 'react';
+import { SxProps, Theme, Tooltip as MuiTooltip } from '@mui/material';
 
 import * as styles from './Tooltip.styles';
-import { TooltipPosition, TooltipProps } from './types';
+import { TooltipPosition } from './types';
+
+interface TooltipProps {
+  text: string;
+  hasArrow?: boolean;
+  position?: TooltipPosition;
+  children: ReactElement;
+  sx?: SxProps<Theme>;
+}
 
 const Tooltip: FC<TooltipProps> = ({
   text,
