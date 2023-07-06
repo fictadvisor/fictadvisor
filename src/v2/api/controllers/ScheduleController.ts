@@ -18,7 +18,10 @@ import { GroupBySemesterLessonGuard } from '../../security/group-guard/GroupBySe
 import { GroupByTemporaryLessonGuard } from '../../security/group-guard/GroupByTemporaryLessonGuard';
 import { ScheduleMapper } from '../../mappers/ScheduleMapper';
 import { Access } from '../../security/Access';
+import { ApiBadRequestResponse, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { GeneralEventResponse } from '../responses/GeneralEventResponse';
 
+@ApiTags('Schedule')
 @Controller({
   version: '2',
   path: '/schedule',
@@ -120,6 +123,18 @@ export class ScheduleController {
   }
 
   @Get('/groups/:groupId/general')
+  @ApiQuery({
+    name: 'week',
+    required: false,
+  })
+  @ApiOkResponse({
+    type: [GeneralEventResponse],
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+                  InvalidEntityIdException: Group with such id is not found\n
+                  DataNotFoundException: Data was not found`,
+  })
   async getGeneralEvents (
     @Param('groupId', GroupByIdPipe) id: string,
     @Query('week') week: number,

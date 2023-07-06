@@ -29,7 +29,14 @@ import { TelegramDTO } from '../dtos/TelegramDTO';
 import { UserMapper } from '../../mappers/UserMapper';
 import { AvatarValidationPipe } from '../pipes/AvatarValidationPipe';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBadRequestResponse, ApiForbiddenResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiOkResponse, ApiPayloadTooLargeResponse,
+  ApiTags,
+  ApiUnsupportedMediaTypeResponse,
+} from '@nestjs/swagger';
 import { SelectiveBySemestersResponse } from '../responses/SelectiveBySemestersResponse';
 import { RemainingSelectiveDTO } from '../dtos/RemainingSelectiveDTO';
 import { RemainingSelectiveResponse } from '../responses/RemainingSelectiveResponse';
@@ -37,8 +44,10 @@ import { GroupByIdPipe } from '../pipes/GroupByIdPipe';
 import { StudentPipe } from '../pipes/StudentPipe';
 import { StudentMapper } from '../../mappers/StudentMapper';
 import { StudentResponse } from '../responses/StudentResponse';
+import { UserResponse } from '../responses/UserResponse';
+import { ApiImplicitFile } from '@nestjs/swagger/dist/decorators/api-implicit-file.decorator';
 
-@ApiTags('User')
+@ApiTags('Users')
 @Controller({
   version: '2',
   path: '/users',
@@ -228,7 +237,32 @@ export class UserController {
   }
 
   @Access('users.$userId.update')
+  @ApiBearerAuth()
   @Patch('/:userId/avatar')
+  @ApiImplicitFile({
+    name: 'avatar',
+    required: true,
+  })
+  @ApiOkResponse({
+    type: UserResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+                  InvalidEntityIdException: User with such id is not found\n
+                  DataNotFoundException: Data was not found`,
+  })
+  @ApiUnsupportedMediaTypeResponse({
+    description: `InvalidExtensionException:\n
+                  File extension is wrong`,
+  })
+  @ApiPayloadTooLargeResponse({
+    description: `TooLargeSizeException:\n
+                  The file size exceeds 1.5 MB`,
+  })
+  @ApiForbiddenResponse({
+    description: `NoPermissionException:\n
+                  You do not have permission to perform this action`,
+  })
   @UseInterceptors(FileInterceptor('avatar'))
   async uploadAvatar (
     @Param('userId', UserByIdPipe) userId: string,
