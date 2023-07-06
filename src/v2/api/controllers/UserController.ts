@@ -82,6 +82,20 @@ export class UserController {
 
   @Access('users.$userId.group.request')
   @Patch('/:userId/requestNewGroup')
+  @ApiBearerAuth()
+  @ApiOkResponse()
+  @ApiBadRequestResponse({
+    description: `Exceptions:\n
+                  InvalidEntityIdException: User with such id is not found
+                  AlreadyRegisteredException: User is already registered
+                  InvalidBodyException: Group id can not be empty
+                  InvalidBodyException: IsCaptain must be a boolean
+                  InvalidBodyException: IsCaptain can not be empty`,
+  })
+  @ApiForbiddenResponse({
+    description: `NoPermissionException:\n
+                  You do not have permission to perform this action`,
+  })
   requestNewGroup (
     @Param('userId', UserByIdPipe) userId: string,
     @Body() body: GroupRequestDTO,
