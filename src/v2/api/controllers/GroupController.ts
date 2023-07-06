@@ -12,7 +12,10 @@ import { Access } from 'src/v2/security/Access';
 import { StudentMapper } from '../../mappers/StudentMapper';
 import { AbsenceOfCaptainException } from '../../utils/exceptions/AbsenceOfCaptainException';
 import { GroupMapper } from '../../mappers/GroupMapper';
+import { ApiTags, ApiBearerAuth, ApiForbiddenResponse, ApiBadRequestResponse, ApiOkResponse } from '@nestjs/swagger';
+import { GroupResponse, GroupsResponse } from '../responses/GroupResponse';
 
+@ApiTags('Groups')
 @Controller({
   version: '2',
   path: '/groups',
@@ -24,6 +27,21 @@ export class GroupController {
     private groupMapper: GroupMapper,
   ) {}
 
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: GroupResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `
+      InvalidBodyException: Proper name is expected
+      InvalidBodyException: Code can not be empty
+    `,
+  })
+  @ApiForbiddenResponse({
+    description: `
+      NoPermissionException: You do not have permission to perform this action
+    `,
+  })
   @Access('groups.create')
   @Post()
   async create (@Body() body: CreateGroupDTO) {
@@ -31,6 +49,16 @@ export class GroupController {
     return this.groupMapper.getGroup(group);
   }
 
+  @ApiOkResponse({
+    type: GroupsResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `
+      InvalidBodyException: Page must be a number
+      InvalidBodyException: PageSize must be a number
+      InvalidBodyException: Wrong value for order
+    `,
+  })
   @Get()
   async getAll (@Query() body: QueryAllDTO) {
     const groupsWithSelectiveAmounts = await this.groupService.getAll(body);
@@ -38,6 +66,14 @@ export class GroupController {
     return { groups, meta: groupsWithSelectiveAmounts.meta };
   }
 
+  @ApiOkResponse({
+    type: GroupResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `
+      InvalidEntityIdException: Group with such id is not found
+    `,
+  })
   @Get('/:groupId')
   async get (
     @Param('groupId', GroupByIdPipe) groupId: string
@@ -46,6 +82,22 @@ export class GroupController {
     return this.groupMapper.getGroup(group);
   }
 
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: GroupResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `
+      InvalidEntityIdException: Group with such id is not found
+      InvalidBodyException: Proper name is expected
+      InvalidBodyException: Code can not be empty
+    `,
+  })
+  @ApiForbiddenResponse({
+    description: `
+      NoPermissionException: You do not have permission to perform this action
+    `,
+  })
   @Access('groups.update')
   @Patch('/:groupId')
   async update (
@@ -56,6 +108,18 @@ export class GroupController {
     return this.groupMapper.getGroup(group);
   }
 
+  @ApiBearerAuth()
+  @ApiOkResponse()
+  @ApiBadRequestResponse({
+    description: `
+      InvalidEntityIdException: Group with such id is not found
+    `,
+  })
+  @ApiForbiddenResponse({
+    description: `
+      NoPermissionException: You do not have permission to perform this action
+    `,
+  })
   @Access('groups.delete')
   @Delete('/:groupId')
   async deleteGroup (

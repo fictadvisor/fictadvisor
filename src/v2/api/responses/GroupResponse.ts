@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { MetaDataResponse } from './MetaDataResponse';
 
 export class GroupResponse {
   @ApiProperty()
@@ -6,4 +7,16 @@ export class GroupResponse {
 
   @ApiProperty()
     code: string;
+}
+
+export class GroupsResponse {
+  @ApiProperty({
+    type: [GroupResponse],
+  })
+    groups: GroupResponse[];
+
+  @ApiProperty({
+    type: MetaDataResponse,
+  })
+    meta: MetaDataResponse;
 }
