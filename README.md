@@ -51,6 +51,8 @@ This application renders and serves frontend for the FICT Advisor. Some componen
 
 * [Next.js](https://nextjs.org)
 * [SASS](https://github.com/sass/sass)
+* [Material UI](https://mui.com)
+* [EsLint](https://eslint.org)
 
 ## Getting started
 
