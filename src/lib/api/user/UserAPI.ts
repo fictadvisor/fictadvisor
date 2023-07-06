@@ -77,7 +77,7 @@ class UserAPI {
     body: PostSelectiveDisciplinesBody,
   ) {
     const { data } = await client.post(
-      `/disciplines/${userId}/selectiveDisciplines`,
+      `/users/${userId}/selectiveDisciplines`,
       body,
       getAuthorizationHeader(),
     );
