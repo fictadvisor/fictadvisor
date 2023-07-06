@@ -29,7 +29,12 @@ const MobileHeader: FC<MobileHeaderProps> = ({ isLoggedIn, user }) => {
   return (
     <AppBar sx={styles.headerContainer(isOpened)}>
       <Link href="/" component={NextLink} sx={styles.headerLogo}>
-        <Image src="/images/logo.png" alt="logo" width={197} height={20} />
+        <Image
+          src={'/icons/fly-logo.svg'}
+          alt="FA logo"
+          width={197}
+          height={28}
+        />
       </Link>
       {isOpened ? (
         <Box sx={styles.iconButton}>

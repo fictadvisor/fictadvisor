@@ -23,11 +23,10 @@ const Footer: FC = () => {
       <Box sx={styles.footerLogoContainer}>
         <Link href="/" component={NextLink} sx={styles.footerLogo}>
           <Image
-            src="/images/logo.png"
-            quality={100}
+            src={'/icons/fly-logo.svg'}
+            alt="FA logo"
             width={197}
-            height={20}
-            alt="logo"
+            height={28}
           />
         </Link>
         <Typography sx={styles.signature}>By Dev-відділ СР ФІОТ</Typography>
