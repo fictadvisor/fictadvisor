@@ -19,6 +19,9 @@ export class TeacherResponse {
   
   @ApiPropertyOptional()
     avatar?: string;
+
+  @ApiProperty()
+    rating: number;
 }
 
 

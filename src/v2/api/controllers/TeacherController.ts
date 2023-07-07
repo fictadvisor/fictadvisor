@@ -31,7 +31,7 @@ import { DisciplineTeacherAndSubjectResponse } from '../responses/DisciplineTeac
 import { ContactResponse } from '../responses/ContactResponse';
 import { MarksResponse } from '../responses/MarkResponse';
 import { PaginatedQuestionResponse } from '../responses/PaginatedQuestionResponse';
-import { TeacherWithRatingAndSubjectResponse } from '../responses/TeacherWithRatingAndSubjectResponse';
+import { TeacherWithSubjectResponse } from '../responses/TeacherWithSubjectResponse';
 import { TeacherWithContactAndRoleResponse } from '../responses/TeacherWithContactAndRoleResponse';
 import { ContactsResponse } from '../responses/ContactsResponse';
 import { CathedraByIdPipe } from '../pipes/CathedraByIdPipe';
@@ -66,8 +66,8 @@ export class TeacherController {
   async getAll (
     @Query() query: QueryAllTeacherDTO,
   ) {
-    const teachers = await this.teacherService.getAllTeachersWithRating(query);
-    return { teachers: teachers.data, meta: teachers.meta };
+    const teachers = await this.teacherService.getAll(query);
+    return { teachers: this.teacherMapper.getTeachers(teachers.data), meta: teachers.meta };
   }
 
   @ApiOkResponse({
@@ -132,7 +132,7 @@ export class TeacherController {
   }
 
   @ApiOkResponse({
-    type: TeacherWithRatingAndSubjectResponse,
+    type: TeacherWithSubjectResponse,
   })
   @ApiBadRequestResponse({
     description: `InvalidEntityIdException: teacher with such id is not found
@@ -394,7 +394,7 @@ export class TeacherController {
     };
   }
 
-  @Access('teachers.$teacherId.cathedrae.update')
+  @Access('teachers.$teacherId.cathedras.update')
   @ApiBearerAuth()
   @Patch('/:teacherId/cathedra/:cathedraId')
   @ApiOkResponse({

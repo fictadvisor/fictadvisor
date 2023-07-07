@@ -1,4 +1,5 @@
 import { Discipline, DisciplineTeacherRole, TeachersOnCathedras } from '@prisma/client';
+import { Decimal } from '@prisma/client/runtime';
 
 export class DbTeacher {
   id: string;
@@ -8,6 +9,7 @@ export class DbTeacher {
   description?: string;
   avatar?: string;
   cathedras: TeachersOnCathedras[];
+  rating: Decimal;
   disciplineTeachers: {
     id: string,
     teacherId: string,

@@ -16,7 +16,12 @@ export class TeacherMapper {
       lastName: teacher.lastName,
       description: teacher.description,
       avatar: teacher.avatar,
+      rating: teacher.rating.toNumber(),
     };
+  }
+
+  getTeachers (teachers: DbTeacher[]) {
+    return teachers.map(this.getTeacher);
   }
 
   getRoles (teacher: DbTeacher): TeacherRole[] {

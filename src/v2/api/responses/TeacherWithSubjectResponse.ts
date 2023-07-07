@@ -2,9 +2,9 @@ import { ApiProperty } from '@nestjs/swagger';
 import { SubjectResponse } from './SubjectResponse';
 import { TeacherRole } from '@prisma/client';
 import { ContactResponse } from './ContactResponse';
-import { TeacherWithRatingResponse } from './TeacherWithRatingResponse';
+import { TeacherResponse } from './TeacherResponse';
 
-export class TeacherWithRatingAndSubjectResponse extends TeacherWithRatingResponse {
+export class TeacherWithSubjectResponse extends TeacherResponse {
   @ApiProperty()
     subject: SubjectResponse;
 

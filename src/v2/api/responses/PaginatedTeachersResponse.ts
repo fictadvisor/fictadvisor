@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { MetaDataResponse } from './MetaDataResponse';
-import { TeacherWithRatingResponse } from './TeacherWithRatingResponse';
+import { TeacherResponse } from './TeacherResponse';
 
 export class PaginatedTeachersResponse {
   @ApiProperty({
-    type: [TeacherWithRatingResponse],
+    type: [TeacherResponse],
   })
-    teachers: TeacherWithRatingResponse[];
+    teachers: TeacherResponse[];
   
   @ApiProperty()
     meta: MetaDataResponse;

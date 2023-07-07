@@ -3,4 +3,5 @@ export enum SortQATParam {
   FIRST_NAME = 'firstName',
   MIDDLE_NAME = 'middleName',
   LAST_NAME = 'lastName',
+  RATING = 'rating',
 }

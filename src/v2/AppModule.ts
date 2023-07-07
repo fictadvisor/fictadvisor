@@ -6,6 +6,7 @@ import { ApiModule } from './api/ApiModule';
 import { EmailModule } from './modules/EmailModule';
 import { PrismaModule } from './modules/PrismaModule';
 import * as process from 'process';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import * as process from 'process';
       envFilePath: [`.${process.env.NODE_ENV}.env`, '.env'],
       load: [Configuration],
     }),
+    ScheduleModule.forRoot(),
     ApiModule,
     EmailModule,
     PrismaModule,

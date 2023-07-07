@@ -158,6 +158,7 @@ model Teacher {
   lastName           String                @map("last_name")
   description        String?
   avatar             String?
+  rating             Decimal               @default(0.00) @db.Decimal(5, 2)
   disciplineTeachers DisciplineTeacher[]
   cathedras          TeachersOnCathedras[]
 

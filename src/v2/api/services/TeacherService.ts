@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateContactDTO } from '../dtos/CreateContactDTO';
-import { EntityType, QuestionDisplay, Prisma, QuestionType } from '@prisma/client';
+import { EntityType, QuestionDisplay, Prisma } from '@prisma/client';
 import { TeacherRepository } from '../../database/repositories/TeacherRepository';
 import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
 import { UpdateContactDTO } from '../dtos/UpdateContactDTO';
@@ -22,7 +22,7 @@ import { DateService } from '../../utils/date/DateService';
 import { DbTeacher } from 'src/v2/database/entities/DbTeacher';
 import { SortQATParam } from '../dtos/SortQATParam';
 import { QuestionMapper } from '../../mappers/QuestionMapper';
-import { DbDisciplineTeacherWithAnswers } from '../../database/entities/DbDisciplineTeacherWithAnswers';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class TeacherService {
@@ -63,46 +63,10 @@ export class TeacherService {
         } : undefined,
       },
       ...sort,
-      include: {
-        disciplineTeachers: {
-          include: {
-            discipline: true,
-            roles: true,
-            questionAnswers: {
-              where: {
-                question: {
-                  type: {
-                    in: [QuestionType.SCALE, QuestionType.TOGGLE],
-                  },
-                },
-              },
-              include: {
-                question: true,
-              },
-            },
-          },
-        },
-      },
     };
 
     return await DatabaseUtils.paginate<DbTeacher>(this.teacherRepository, body, data);
   }
-
-  async getAllTeachersWithRating (body: QueryAllTeacherDTO) {
-    const teachers = await this.getAll(body);
-    const teachersWithRating = [];
-    for (const { disciplineTeachers, ...dbTeacher } of teachers.data) {
-      const sortedQuestionsWithAnswers = this.questionMapper.getSortedQuestionsWithAnswers(disciplineTeachers as any as DbDisciplineTeacherWithAnswers[]);
-      const marks = this.questionMapper.getMarks(sortedQuestionsWithAnswers);
-
-      teachersWithRating.push({
-        ...this.teacherMapper.getTeacher(dbTeacher as DbTeacher),
-        rating: this.getRating(marks),
-      });
-    }
-    return { data: teachersWithRating, meta: teachers.meta };
-  }
-
   getRating (marks) {
     if (!marks.length || marks[0].amount < 8) {
       return 0;
@@ -122,21 +86,29 @@ export class TeacherService {
     return +(sum/marks.length).toFixed(2);
   }
 
+  @Cron('0 0 3 * * *')
+  async updateRating () {
+    const teachers = await this.teacherRepository.findMany({});
+    for (const { id } of teachers) {
+      const marks = await this.getMarks(id);
+      const rating = this.getRating(marks);
+      await this.teacherRepository.updateById(id, { rating });
+    }
+  }
+
   async getTeacher (
     id: string,
   ) {
     const dbTeacher = await this.teacherRepository.findById(id);
-    const { disciplineTeachers, ...teacher } = dbTeacher;
+    const { disciplineTeachers, rating, ...teacher } = dbTeacher;
     const roles = this.teacherMapper.getRoles(dbTeacher);
     const contacts = await this.contactRepository.getAllContacts(id);
-    const marks = await this.getMarks(id);
-    const rating = this.getRating(marks);
 
     return {
       ...teacher,
       roles,
       contacts,
-      rating,
+      rating: rating.toNumber(),
     };
   }
 
