@@ -1,101 +1,109 @@
-import { FC } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { FC } from 'react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import { Box, Grid, Typography, useMediaQuery } from '@mui/material';
+import Image from 'next/image';
 
 import { CustomCheck } from '@/components/common/icons/CustomCheck';
-import { AlertColor } from '@/components/common/ui/alert';
-import AlertButton, {
-  AlertButtonVariant,
-} from '@/components/common/ui/alert-button';
-import CustomDivider from '@/components/pages/account-page/components/divider';
+import AlertButton from '@/components/common/ui/alert-button-mui/AlertButton';
+import { AlertButtonVariant } from '@/components/common/ui/alert-button-mui/types';
+import Divider from '@/components/common/ui/divider-mui';
+import { DividerTextAlign } from '@/components/common/ui/divider-mui/types';
 import useAuthentication from '@/hooks/use-authentication';
+import useToast from '@/hooks/use-toast';
 import GroupAPI from '@/lib/api/group/GroupAPI';
-import { showAlert } from '@/redux/reducers/alert.reducer';
+import theme from '@/styles/theme';
 import { UserGroupState } from '@/types/user';
 
+import * as gridStyles from '../grid.styles';
 import { RequestsTableProps } from '../types';
 
-import styles from './RequestsTable.module.scss';
+import * as styles from './RequestTable.styles';
 
 const RequestsTable: FC<RequestsTableProps> = ({ rows, refetch }) => {
   const { user } = useAuthentication();
-  const dispatch = useDispatch();
+  const isMobile = useMediaQuery(theme.breakpoints.down('desktop'));
+  const toast = useToast();
   const handleApprove = async (userId: string) => {
     try {
-      // TODO: remove as and refactor props
-      await GroupAPI.verifyStudent(user.group?.id as string, userId, {
-        state: UserGroupState.APPROVED,
-      });
+      if (user.group)
+        await GroupAPI.verifyStudent(user.group?.id, userId, {
+          state: UserGroupState.APPROVED,
+        });
       await refetch();
     } catch (e) {
-      dispatch(
-        showAlert({
-          title: 'Щось пішло не так, спробуй пізніше!',
-          color: AlertColor.ERROR,
-        }),
-      );
+      toast.error('Щось пішло не так, спробуй пізніше!', '', 3000);
     }
   };
 
   const handleDecline = async (userId: string) => {
     try {
-      // TODO: remove as and refactor props
-      await GroupAPI.verifyStudent(user.group?.id as string, userId, {
-        state: UserGroupState.DECLINED,
-      });
+      if (user.group)
+        await GroupAPI.verifyStudent(user.group?.id as string, userId, {
+          state: UserGroupState.DECLINED,
+        });
       await refetch();
     } catch (e) {
-      dispatch(
-        showAlert({
-          title: 'Щось пішло не так, спробуй пізніше!',
-          color: AlertColor.ERROR,
-        }),
-      );
+      toast.error('Щось пішло не так, спробуй пізніше!', '', 3000);
     }
   };
 
   return (
     <>
-      <CustomDivider text="Нові запити" />
-      <div className={styles['table']}>
+      <Divider
+        text="Нові запити"
+        textAlign={DividerTextAlign.LEFT}
+        sx={styles.divider}
+      />
+      <Grid container sx={gridStyles.studentsGrid}>
         {rows.map((row, index) => (
-          <div
-            key={index}
-            className={
-              styles[
-                rows.length === 1
-                  ? 'table-container-one'
-                  : index === rows.length - 1
-                  ? 'table-container-end'
-                  : index === 0
-                  ? 'table-container-start'
-                  : 'table-container'
-              ]
-            }
-          >
-            <div className={styles['user-info']}>
-              <img className={styles['img']} src={row.imgSrc} alt="avatar" />
-              <div className={styles['full-name']}>{row.fullName}</div>
-            </div>
-            <div className={styles['other-content']}>
-              <div className={styles['email']}>{row.email}</div>
-              <div className={styles['side-buttons']}>
+          <Grid container key={index} sx={gridStyles.row}>
+            {row.imgSrc && (
+              <Grid item desktop={6} mobile={7}>
+                <Image width={48} height={48} src={row.imgSrc} alt="avatar" />
+                {!isMobile && (
+                  <Typography className="name">{row.fullName}</Typography>
+                )}
+                {isMobile && (
+                  <Box>
+                    <Typography className="name">{row.fullName}</Typography>
+                    <Typography className="email">{row.email}</Typography>
+                  </Box>
+                )}
+              </Grid>
+            )}
+
+            <Grid item mobile={3} desktop={4}>
+              {!isMobile && (
+                <Typography className="email">{row.email}</Typography>
+              )}
+            </Grid>
+            <Grid item mobile={2} desktop={2} sx={styles.lastColumn}>
+              {isMobile ? (
+                <AlertButton
+                  sx={styles.fixSized}
+                  variant={AlertButtonVariant.SUCCESS}
+                  endIcon={<CustomCheck />}
+                  onClick={() => handleApprove(row.id)}
+                />
+              ) : (
                 <AlertButton
                   text={'Прийняти'}
                   variant={AlertButtonVariant.SUCCESS}
                   endIcon={<CustomCheck />}
                   onClick={() => handleApprove(row.id)}
                 />
-                <AlertButton
-                  variant={AlertButtonVariant.ERROR_OUTLINE}
-                  startIcon={<XMarkIcon className="icon" />}
-                  onClick={() => handleDecline(row.id)}
-                />
-              </div>
-            </div>
-          </div>
+              )}
+
+              <AlertButton
+                sx={styles.fixSized}
+                variant={AlertButtonVariant.ERROR_OUTLINE}
+                startIcon={<XMarkIcon className="icon" />}
+                onClick={() => handleDecline(row.id)}
+              />
+            </Grid>
+          </Grid>
         ))}
-      </div>
+      </Grid>
     </>
   );
 };

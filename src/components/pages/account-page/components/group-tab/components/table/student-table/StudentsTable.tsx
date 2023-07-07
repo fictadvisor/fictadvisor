@@ -1,33 +1,42 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { PlusIcon } from '@heroicons/react/24/solid';
+import { Box, Grid, Typography, useMediaQuery } from '@mui/material';
 import { AxiosError } from 'axios';
+import Image from 'next/image';
 
-import { AlertColor } from '@/components/common/ui/alert';
-import Button from '@/components/common/ui/button';
+import { Captain } from '@/components/common/icons/Captain';
+import { Moderator } from '@/components/common/icons/Moderator';
+import Button from '@/components/common/ui/button-mui';
+import Divider from '@/components/common/ui/divider-mui';
+import { DividerTextAlign } from '@/components/common/ui/divider-mui/types';
+import {
+  IconButton,
+  IconButtonShape,
+} from '@/components/common/ui/icon-button';
 import Tag from '@/components/common/ui/tag-mui';
 import { TagSize, TagVariant } from '@/components/common/ui/tag-mui/types';
-import CustomDivider from '@/components/pages/account-page/components/divider';
 import roleNamesMapper from '@/components/pages/account-page/components/group-tab/components/table/constants';
 import EditingColumn from '@/components/pages/account-page/components/group-tab/components/table/student-table/components/EditingColumn';
 import { TextAreaPopup } from '@/components/pages/account-page/components/group-tab/components/text-area-popup';
 import useAuthentication from '@/hooks/use-authentication';
+import useToast from '@/hooks/use-toast';
 import GroupAPI from '@/lib/api/group/GroupAPI';
-import { showAlert } from '@/redux/reducers/alert.reducer';
+import theme from '@/styles/theme';
 import { UserGroupRole } from '@/types/user';
 
+import * as gridStyles from '../grid.styles';
 import { StudentsTableProps } from '../types';
 
-import styles from './StudentsTable.module.scss';
-
+import * as styles from './StudentsTable.styles';
 const StudentsTable: React.FC<StudentsTableProps> = ({
   role,
   rows,
   refetch,
 }) => {
+  const isMobile = useMediaQuery(theme.breakpoints.down('desktop'));
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const { user } = useAuthentication();
-  const dispatch = useDispatch();
+  const toast = useToast();
   const handleAddStudents = async (value: string) => {
     try {
       const emails = value
@@ -35,32 +44,27 @@ const StudentsTable: React.FC<StudentsTableProps> = ({
         .map(line => line.trim())
         .filter(line => line !== '' && line !== '\n');
 
-      // TODO: remove as and refactor props
-      await GroupAPI.addStudentsByMail(user.group?.id as string, { emails });
+      if (typeof user.group?.id === 'string')
+        await GroupAPI.addStudentsByMail(user.group?.id, { emails });
+
       setIsPopupOpen(false);
+
       await refetch();
     } catch (error) {
-      // TODO: refactor this shit
-      const name = (error as AxiosError<{ error: string }>).response?.data
-        .error;
+      let name;
+      if (error instanceof AxiosError) name = error.response?.data.error;
+
       if (name === 'AlreadyRegisteredException') {
-        dispatch(
-          showAlert({
-            title: 'Один або декілька користувачів вже зареєстровані!',
-            color: AlertColor.ERROR,
-          }),
+        toast.error(
+          'Один або декілька користувачів з такою поштою вже зареєстровані!',
+          '',
+          3000,
         );
       } else {
-        dispatch(
-          showAlert({
-            title: 'Здається ти ввів неправильні значення!',
-            color: AlertColor.ERROR,
-          }),
-        );
+        toast.error('Здається, ти ввів неправильні значення!', '', 3000);
       }
     }
   };
-
   return (
     <>
       {isPopupOpen && (
@@ -70,58 +74,81 @@ const StudentsTable: React.FC<StudentsTableProps> = ({
         />
       )}
       {role !== UserGroupRole.STUDENT && (
-        <CustomDivider text="Студенти">
-          <div className={styles['button']}>
+        <Box sx={styles.dividerWrapper}>
+          <Divider
+            text="Студенти"
+            textAlign={DividerTextAlign.LEFT}
+            sx={{ flexGrow: 1 }}
+          />
+          {isMobile ? (
+            <IconButton
+              icon={<PlusIcon />}
+              shape={IconButtonShape.SQUARE}
+              onClick={() => setIsPopupOpen(true)}
+            />
+          ) : (
             <Button
+              sx={styles.button}
               text={'Додати студента'}
               startIcon={<PlusIcon className={'icon'} />}
               onClick={() => setIsPopupOpen(true)}
             />
-          </div>
-        </CustomDivider>
+          )}
+        </Box>
       )}
-      <div className={styles['table']}>
+
+      <Grid container sx={gridStyles.studentsGrid}>
         {rows.map((row, index) => (
-          <div
-            key={index}
-            className={
-              styles[
-                rows.length === 1
-                  ? 'table-container-one'
-                  : index === rows.length - 1
-                  ? 'table-container-end'
-                  : index === 0
-                  ? 'table-container-start'
-                  : 'table-container'
-              ]
-            }
-          >
-            <div className={styles['user-info']}>
-              <img className={styles['img']} src={row.imgSrc} alt="avatar" />
-              <div className={styles['full-name']}>{row.fullName}</div>
-              <div className={styles['tag-container']}>
-                {row.role !== UserGroupRole.STUDENT && (
-                  <div className={styles['tag']}>
-                    <Tag
-                      text={roleNamesMapper[row.role]}
-                      variant={TagVariant.DARKER}
-                      size={TagSize.SMALL}
-                    />
-                  </div>
+          <Grid container key={index} sx={gridStyles.row}>
+            {row.imgSrc && (
+              <Grid item desktop={4} mobile={9}>
+                <Image width={48} height={48} src={row.imgSrc} alt="avatar" />
+                {!isMobile && (
+                  <Typography className="name">{row.fullName}</Typography>
                 )}
-              </div>
-            </div>
-            <div className={styles['other-content']}>
-              <div className={styles['email']}>{row.email}</div>
-              <div className={styles['side-buttons']}>
-                <EditingColumn student={row} refetch={refetch} />
-              </div>
-            </div>
-          </div>
+                {isMobile && (
+                  <Box>
+                    <Typography className="name">{row.fullName}</Typography>
+                    <Typography className="email">{row.email}</Typography>
+                  </Box>
+                )}
+              </Grid>
+            )}
+            <Grid item desktop={2} mobile={1}>
+              {row.role !== UserGroupRole.STUDENT && isMobile && (
+                <Tag
+                  size={TagSize.SMALL}
+                  icon={
+                    row.role === UserGroupRole.CAPTAIN ? (
+                      <Captain />
+                    ) : (
+                      <Moderator />
+                    )
+                  }
+                  text=""
+                />
+              )}
+              {row.role !== UserGroupRole.STUDENT && !isMobile && (
+                <Tag
+                  text={roleNamesMapper[row.role]}
+                  variant={TagVariant.DARKER}
+                  size={TagSize.SMALL}
+                />
+              )}
+            </Grid>
+
+            <Grid item desktop={3}>
+              {!isMobile && (
+                <Typography className="email">{row.email}</Typography>
+              )}
+            </Grid>
+            <Grid item mobile={2} desktop={3}>
+              {<EditingColumn student={row} refetch={refetch} />}
+            </Grid>
+          </Grid>
         ))}
-      </div>
+      </Grid>
     </>
   );
 };
-
 export default StudentsTable;

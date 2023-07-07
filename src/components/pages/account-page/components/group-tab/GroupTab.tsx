@@ -1,8 +1,5 @@
 import { FC } from 'react';
 import { useQuery } from 'react-query';
-import { useMediaQuery } from '@mui/material';
-import MobileRequestsTable from 'src/components/pages/account-page/components/group-tab/components/table/mobile-requests-table';
-import MobileStudentsTable from 'src/components/pages/account-page/components/group-tab/components/table/mobile-students-table';
 import RequestsTable from 'src/components/pages/account-page/components/group-tab/components/table/requests-table';
 import {
   transformRequestsData,
@@ -14,9 +11,8 @@ import NoGroupBlock from '@/components/pages/account-page/components/group-tab/c
 import StudentsTable from '@/components/pages/account-page/components/group-tab/components/table/student-table';
 import useAuthentication from '@/hooks/use-authentication';
 import GroupAPI from '@/lib/api/group/GroupAPI';
-import theme from '@/styles/theme';
 import { PendingStudent } from '@/types/student';
-import { User, UserGroupRole } from '@/types/user';
+import { User, UserGroupRole, UserGroupState } from '@/types/user';
 
 import styles from './GroupTab.module.scss';
 
@@ -41,7 +37,6 @@ const getStudents = async (user: User) => {
 };
 
 const GroupTab: FC = () => {
-  const isMobile = useMediaQuery(theme.breakpoints.down('desktop'));
   const { user } = useAuthentication();
 
   const { data, isLoading, refetch } = useQuery(
@@ -53,11 +48,17 @@ const GroupTab: FC = () => {
     },
   );
 
+  console.log(user);
+
   if (isLoading) return <Loader size={LoaderSize.SMALLEST} />;
 
-  if (!data) return null;
+  if (
+    user?.group?.state === UserGroupState.DECLINED ||
+    user?.group?.state === UserGroupState.PENDING
+  )
+    return <NoGroupBlock />;
 
-  if (!user?.group?.role) return <NoGroupBlock />;
+  if (!data || !user?.group || !user?.group.role) return null;
 
   const showRequests =
     data?.requests?.length !== 0 && user?.group?.role !== UserGroupRole.STUDENT;
@@ -67,31 +68,19 @@ const GroupTab: FC = () => {
       <div className={styles['text-content']}>
         <h4>Список групи {user.group.code}</h4>
       </div>
-      {showRequests &&
-        (isMobile ? (
-          <MobileRequestsTable
-            refetch={refetch}
-            rows={transformRequestsData(data?.requests)}
-          />
-        ) : (
-          <RequestsTable
-            refetch={refetch}
-            rows={transformRequestsData(data.requests)}
-          />
-        ))}
-      {isMobile ? (
-        <MobileStudentsTable
+      {showRequests && (
+        <RequestsTable
           refetch={refetch}
-          role={user.group.role}
-          rows={transformStudentsData(data.students)}
+          rows={transformRequestsData(data.requests)}
         />
-      ) : (
+      )}
+      {
         <StudentsTable
           refetch={refetch}
           role={user.group.role}
           rows={transformStudentsData(data.students)}
         />
-      )}
+      }
     </div>
   );
 };
