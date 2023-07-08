@@ -1,7 +1,6 @@
 import React, { FC } from 'react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { Box, Grid, Typography, useMediaQuery } from '@mui/material';
-import Image from 'next/image';
 
 import { CustomCheck } from '@/components/common/icons/CustomCheck';
 import AlertButton from '@/components/common/ui/alert-button-mui/AlertButton';
@@ -59,7 +58,7 @@ const RequestsTable: FC<RequestsTableProps> = ({ rows, refetch }) => {
           <Grid container key={index} sx={gridStyles.row}>
             {row.imgSrc && (
               <Grid item desktop={6} mobile={7}>
-                <Image width={48} height={48} src={row.imgSrc} alt="avatar" />
+                <img width={48} height={48} src={row.imgSrc} alt="avatar" />
                 {!isMobile && (
                   <Typography className="name">{row.fullName}</Typography>
                 )}

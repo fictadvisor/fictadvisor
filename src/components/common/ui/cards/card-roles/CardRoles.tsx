@@ -13,9 +13,9 @@ export interface CardRolesProps {
 }
 
 const TagText: Record<TeacherRole, string> = {
-  [TeacherRole.LABORANT]: 'Лаборант',
-  [TeacherRole.LECTURER]: 'Лектор',
-  [TeacherRole.PRACTICIAN]: 'Практик',
+  [TeacherRole.LABORANT]: 'Лабораторні',
+  [TeacherRole.LECTURER]: 'Лекції',
+  [TeacherRole.PRACTICIAN]: 'Практики',
 };
 
 const TagColors: Record<TeacherRole, TagColor> = {

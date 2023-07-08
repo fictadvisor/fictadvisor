@@ -48,15 +48,15 @@ const PersonalTeacherSubjectCard: FC<TeacherWithSubject> = props => {
       </div>
       <div className={styles['tags']}>
         {props.roles.includes(TeacherRole.LECTURER) && (
-          <Tag color={TagColor.INDIGO} size={TagSize.SMALL} text="Лектор" />
+          <Tag color={TagColor.INDIGO} size={TagSize.SMALL} text="Лекції" />
         )}
 
         {props.roles.includes(TeacherRole.PRACTICIAN) && (
-          <Tag color={TagColor.ORANGE} size={TagSize.SMALL} text="Практик" />
+          <Tag color={TagColor.ORANGE} size={TagSize.SMALL} text="Практики" />
         )}
 
         {props.roles.includes(TeacherRole.LABORANT) && (
-          <Tag color={TagColor.MINT} size={TagSize.SMALL} text="Лаборант" />
+          <Tag color={TagColor.MINT} size={TagSize.SMALL} text="Лабораторні" />
         )}
       </div>
 

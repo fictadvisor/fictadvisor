@@ -48,8 +48,6 @@ const GroupTab: FC = () => {
     },
   );
 
-  console.log(user);
-
   if (isLoading) return <Loader size={LoaderSize.SMALLEST} />;
 
   if (

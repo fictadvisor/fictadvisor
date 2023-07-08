@@ -34,19 +34,23 @@ const FloatingCard: FC<FloatingCardProps> = ({
           {/*<Rating sx={styles.rating} rating={rating} />*/}
           <Box sx={styles.tags}>
             {roles?.includes(TeacherRole.LECTURER) && (
-              <Tag color={TagColor.INFO} size={TagSize.SMALL} text="Лектор" />
+              <Tag color={TagColor.INDIGO} size={TagSize.SMALL} text="Лекції" />
             )}
 
             {roles?.includes(TeacherRole.PRACTICIAN) && (
               <Tag
                 color={TagColor.ORANGE}
                 size={TagSize.SMALL}
-                text="Практик"
+                text="Практики"
               />
             )}
 
             {roles?.includes(TeacherRole.LABORANT) && (
-              <Tag color={TagColor.MINT} size={TagSize.SMALL} text="Лаборант" />
+              <Tag
+                color={TagColor.MINT}
+                size={TagSize.SMALL}
+                text="Лабораторні"
+              />
             )}
           </Box>
         </Box>

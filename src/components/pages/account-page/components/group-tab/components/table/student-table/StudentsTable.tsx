@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { PlusIcon } from '@heroicons/react/24/solid';
 import { Box, Grid, Typography, useMediaQuery } from '@mui/material';
 import { AxiosError } from 'axios';
-import Image from 'next/image';
 
 import { Captain } from '@/components/common/icons/Captain';
 import { Moderator } from '@/components/common/icons/Moderator';
@@ -102,7 +101,7 @@ const StudentsTable: React.FC<StudentsTableProps> = ({
           <Grid container key={index} sx={gridStyles.row}>
             {row.imgSrc && (
               <Grid item desktop={4} mobile={9}>
-                <Image width={48} height={48} src={row.imgSrc} alt="avatar" />
+                <img width={48} height={48} src={row.imgSrc} alt="avatar" />
                 {!isMobile && (
                   <Typography className="name">{row.fullName}</Typography>
                 )}

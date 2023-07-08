@@ -27,8 +27,8 @@ export const row: SxProps<Theme> = {
       gap: '16px',
       '& img': {
         borderRadius: '50%',
-        width: { mobile: '36px', desktop: 'unset' },
-        height: { mobile: '36px', desktop: 'unset' },
+        width: { mobile: '36px', desktop: '48px' },
+        height: { mobile: '36px', desktop: '48px' },
       },
       '& .MuiBox-root': {
         width: '100%',
