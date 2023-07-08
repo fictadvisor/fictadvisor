@@ -15,7 +15,8 @@ export class RoleService {
     public roleRepository: RoleRepository,
     public grantRepository: GrantRepository,
     public permissionService: PermissionService,
-  ) {}
+  ) {
+  }
 
   async createRole ({ grants = [], ...data }: CreateRoleWithGrantsDTO, userId: string) {
     const userRoles = await this.getUserHigherRoles(userId, data.weight);
@@ -24,10 +25,10 @@ export class RoleService {
     if (!hasCreateRolesPermission) {
       throw new NoPermissionException();
     }
-    
+
     await this.checkRole(userRoles, { ...data, grants });
-    
-    return this.roleRepository.create({ 
+
+    return this.roleRepository.create({
       ...data,
       grants: {
         create: grants,

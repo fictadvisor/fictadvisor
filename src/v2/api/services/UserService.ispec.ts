@@ -19,6 +19,7 @@ import { NotBelongToGroupException } from '../../utils/exceptions/NotBelongToGro
 import { AlreadySelectedException } from '../../utils/exceptions/AlreadySelectedException';
 import { ExcessiveSelectiveDisciplinesException } from '../../utils/exceptions/ExcessiveSelectiveDisciplinesException';
 import { AlreadyRegisteredException } from '../../utils/exceptions/AlreadyRegisteredException';
+import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
 
 describe('UserService', () => {
   let userService: UserService;
@@ -47,6 +48,93 @@ describe('UserService', () => {
 
     userService = moduleRef.get(UserService);
     prisma = moduleRef.get(PrismaService);
+
+
+    await prisma.user.createMany({
+      data: [
+        {
+          id: 'transferredCaptainId',
+          email: 'fiotvsehvrot1@gmail.com',
+          state: 'APPROVED',
+        },
+        {
+          id: 'transferredStudentId',
+          email: 'fiotvsehvrot2@gmail.com',
+          state: 'APPROVED',
+        },
+      ],
+    });
+
+    await prisma.group.createMany({
+      data: [
+        {
+          id: 'groupWithTransferredRolesId',
+          code: 'IM-54',
+        }, {
+          id: 'staticGroupId',
+          code: 'IO-19',
+        },
+      ],
+    });
+
+    await prisma.student.createMany({
+      data: [
+        {
+          userId: 'transferredCaptainId',
+          groupId: 'groupWithTransferredRolesId',
+          state: 'APPROVED',
+        },
+        {
+          userId: 'transferredStudentId',
+          groupId: 'groupWithTransferredRolesId',
+          state: 'APPROVED',
+        },
+      ],
+    });
+
+
+    await prisma.role.createMany({
+      data: [
+        {
+          id: 'studentRoleId',
+          name: 'STUDENT',
+          weight: 50,
+        }, {
+          id: 'captainRoleId',
+          name: 'CAPTAIN',
+          weight: 80,
+        },
+      ],
+    });
+
+    await prisma.groupRole.createMany({
+      data: [
+        {
+          groupId: 'groupWithTransferredRolesId',
+          roleId: 'studentRoleId',
+        },
+        {
+          groupId: 'groupWithTransferredRolesId',
+          roleId: 'captainRoleId',
+        },
+      ],
+    });
+
+
+    await prisma.userRole.createMany({
+      data: [
+        {
+          studentId: 'transferredCaptainId',
+          roleId: 'captainRoleId',
+        },
+        {
+          studentId: 'transferredStudentId',
+          roleId: 'studentRoleId',
+        },
+      ],
+    });
+
+
 
     await prisma.user.createMany({
       data: [
@@ -264,7 +352,7 @@ describe('UserService', () => {
 
       expect(remainingDisciplines).toStrictEqual(expectedRemaining);
     });
-  });    
+  });
 
   describe('selectDisciplines', () => {
     it('should connect selective disciplines to student', async () => {
@@ -365,6 +453,51 @@ describe('UserService', () => {
 
       await userService.requestNewGroup(id, request).catch((e) => {
         expect(e).toBeInstanceOf(AlreadyRegisteredException);
+      });
+    });
+  });
+
+
+  describe('transferRole', () => {
+    it('should transfer role from captain to student', async () => {
+      const captainUserId = 'transferredCaptainId';
+      const studentId = 'transferredStudentId';
+
+      await userService.transferRole(captainUserId, studentId);
+
+      const captainUserRoles = await prisma.userRole.findMany({
+        where: {
+          studentId: captainUserId,
+        },
+      });
+
+      const studentUserRoles = await prisma.userRole.findMany({
+        where: {
+          studentId,
+        },
+      });
+
+      expect(captainUserRoles).toStrictEqual([
+        {
+          roleId: 'studentRoleId',
+          studentId: 'transferredCaptainId',
+        },
+      ]);
+
+      expect(studentUserRoles).toStrictEqual([
+        {
+          roleId: 'captainRoleId',
+          studentId: 'transferredStudentId',
+        },
+      ]);
+    });
+
+    it('should throw NoPermissionException if captain and student are not in the same group', async () => {
+      const captainUserId = 'transferredCaptainId';
+      const studentId = 'transferredStudentId';
+
+      await userService.transferRole(captainUserId, studentId).catch((e) => {
+        expect(e).toBeInstanceOf(NoPermissionException);
       });
     });
   });

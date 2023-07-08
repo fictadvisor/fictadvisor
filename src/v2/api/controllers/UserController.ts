@@ -29,6 +29,7 @@ import { TelegramDTO } from '../dtos/TelegramDTO';
 import { UserMapper } from '../../mappers/UserMapper';
 import { AvatarValidationPipe } from '../pipes/AvatarValidationPipe';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { TransferRoleDto } from '../dtos/TransferRoleDto';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -48,6 +49,7 @@ import { UserResponse } from '../responses/UserResponse';
 import { ApiImplicitFile } from '@nestjs/swagger/dist/decorators/api-implicit-file.decorator';
 import { SelectiveDisciplinesPipe } from '../pipes/SelectiveDisciplinesPipe';
 import { AttachSelectiveDisciplinesDTO } from '../dtos/AttachSelectiveDisciplinesDTO';
+
 
 @ApiTags('User')
 @Controller({
@@ -169,7 +171,7 @@ export class UserController {
   @Patch('/:userId')
   async updateUser (
     @Param('userId', UserByIdPipe) userId: string,
-    @Body() body: UpdateUserDTO
+    @Body() body: UpdateUserDTO,
   ) {
     const user = await this.userService.updateUser(userId, body);
     return this.userMapper.updateUser(user);
@@ -303,8 +305,8 @@ export class UserController {
                   You do not have permission to perform this action`,
   })
   async getRemainingSelective (
-      @Param('userId', UserByIdPipe) userId: string,
-      @Query() body: RemainingSelectiveDTO,
+    @Param('userId', UserByIdPipe) userId: string,
+    @Query() body: RemainingSelectiveDTO,
   ) {
     return await this.userService.getRemainingSelective(userId, body);
   }
@@ -356,5 +358,26 @@ export class UserController {
   ) {
     const student = await this.userService.changeGroup(userId, groupId);
     return this.studentMapper.updateStudent(student);
+  }
+
+  @Access('users.$groupId.transfer')
+  @Post('/:studentId/transfer')
+  @ApiOkResponse()
+  @ApiBadRequestResponse({
+    description: `
+                  InvalidEntityIdException: User with such id is not found
+                  InvalidBodyException: User id should not be empty
+                  InvalidBodyException: User id should be a string`,
+  })
+  @ApiForbiddenResponse({
+    description: `
+                  NotApprovedException: Student is not approved
+                  NoPermissionException: You do not have permission to perform this action`,
+  })
+  async transferRole (
+    @Param('studentId', UserByIdPipe, StudentPipe) studentId: string,
+    @Body() { captainUserId }: TransferRoleDto,
+  ) {
+    await this.userService.transferRole(captainUserId, studentId);
   }
 }

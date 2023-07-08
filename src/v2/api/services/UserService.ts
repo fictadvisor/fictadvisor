@@ -30,6 +30,7 @@ import { NotBelongToGroupException } from '../../utils/exceptions/NotBelongToGro
 import { ExcessiveSelectiveDisciplinesException } from '../../utils/exceptions/ExcessiveSelectiveDisciplinesException';
 import { checkIfArrayIsUnique } from '../../utils/ArrayUtil';
 import { AlreadySelectedException } from '../../utils/exceptions/AlreadySelectedException';
+import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
 
 type SortedDisciplines = {
   year: number;
@@ -469,5 +470,78 @@ export class UserService {
     this.checkAlreadySelectedDisciplines(body.disciplines, selectedDisciplines.map((d) => d.id));
     await this.checkExcessiveSelectiveDisciplines(sortedDisciplines, sortedSelectedDisciplines, groupId);
     await this.attachSelectiveDisciplines(userId, body.disciplines);
+  }
+
+  async transferRole (captainId : string, studentId: string) {
+    const group = await this.groupRepository.find({
+      AND: [
+        {
+          students: {
+            some: {
+              userId: captainId,
+            },
+          },
+        },
+        {
+          students: {
+            some: {
+              userId: studentId,
+            },
+          },
+        },
+      ],
+    });
+
+    if (!group) {
+      throw new NoPermissionException();
+    }
+
+    const newStudentUserRole = await this.roleRepository.find({
+      groupRole: {
+        groupId: group.id,
+      },
+      userRoles: {
+        some: {
+          studentId: captainId,
+        },
+      },
+    });
+
+    const oldStudentUserRole = await this.roleRepository.find({
+      groupRole: {
+        groupId: group.id,
+      },
+      userRoles: {
+        some: {
+          studentId,
+        },
+      },
+    });
+
+    await this.roleRepository.updateById(newStudentUserRole.id, {
+      userRoles: {
+        updateMany: {
+          where: {
+            studentId: captainId,
+          },
+          data: {
+            studentId,
+          },
+        },
+      },
+    });
+
+    await this.roleRepository.updateById(oldStudentUserRole.id, {
+      userRoles: {
+        updateMany: {
+          where: {
+            studentId,
+          },
+          data: {
+            studentId: captainId,
+          },
+        },
+      },
+    });
   }
 }
