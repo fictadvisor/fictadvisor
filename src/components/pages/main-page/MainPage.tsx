@@ -1,4 +1,6 @@
 import { FC } from 'react';
+import { isIOS, isSafari } from 'react-device-detect';
+import cn from 'classnames';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
@@ -122,7 +124,11 @@ const MainPage: FC<MainPageProps> = ({ data }) => {
               </div>
             </div>
           </div>
-          <div className={styles['build-image']}>
+          <div
+            className={cn(styles['build-image'], {
+              [styles['animate']]: !isIOS && !isSafari,
+            })}
+          >
             <BannerImage />
           </div>
         </div>

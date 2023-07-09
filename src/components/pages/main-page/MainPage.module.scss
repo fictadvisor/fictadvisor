@@ -2,12 +2,12 @@
 @import "src/styles/partials/breakpoints";
 @import "src/styles/partials/typography-mixins";
 
-$button-border-color: #D33D3D;
+$button-border-color: #d33d3d;
 $button-divider-color: #404040;
 
 $font-weight-bold: 700;
 
-.main-page{
+.main-page {
     width: 100%;
     background: url("/images/main-page/main-background.png");
     background-size: 100% 100%;
@@ -15,11 +15,10 @@ $font-weight-bold: 700;
 }
 
 @media screen and (max-width: $breakpoint-desktop-medium) {
-  .main-page{
-    background-size: $breakpoint-desktop-medium 100%;
-  }
+    .main-page {
+        background-size: $breakpoint-desktop-medium 100%;
+    }
 }
-
 
 .main-page-content {
     z-index: 1;
@@ -32,6 +31,7 @@ $font-weight-bold: 700;
     display: flex;
     position: relative;
     overflow: hidden;
+
     .title {
         font-size: 60px;
         line-height: 1.16;
@@ -71,8 +71,15 @@ $font-weight-bold: 700;
 
     svg {
         color: #525252;
-        clip-path: polygon(58% -10%, 100% 30%, 100% 96%, 88%  96%, 75% 100%, 0% 90%, 2% 75%, 4% 72%, 4% 50%);
+        clip-path: polygon(58% -10%, 100% 30%, 100% 96%, 88% 96%, 75% 100%, 0% 90%, 2% 75%, 4% 72%, 4% 50%);
         transition: color 225ms cubic-bezier(0.37, 0, 0.63, 1);
+    }
+}
+
+.build-image.animate {
+    svg:hover {
+        color: #fff;
+        filter: url("#filter_neon");
     }
 }
 
@@ -85,7 +92,8 @@ $font-weight-bold: 700;
         gap: 20px;
     }
 
-    .buttons-tabl, .buttons-mob {
+    .buttons-tabl,
+    .buttons-mob {
         display: none;
     }
 }
@@ -111,51 +119,7 @@ $font-weight-bold: 700;
     gap: 16px;
     padding-top: 64px;
     max-width: 1064px;
-    // justify-content: flex-start;
-    // padding: 64px calc(80px - 2%) 0 80px;
-    // outline: 2px solid pink;
-    // gap: 2%;
 }
-
-.card-holder {
-    // outline: 2px solid pink;
-}
-
-@media only screen and (min-width: $breakpoint-tablet) {
-    .build-image {
-
-        svg:hover {
-            color: #fff;
-            filter: url('#filter_neon');
-        }
-    }
-}
-
-// SAFARI YA EBAV TVIY ROT
-
-@media not all and (min-resolution:.001dpcm)
-{ @supports (-webkit-appearance:none) and (stroke-color:transparent) {
-  .build-image {
-    pointer-events: none;
-  }
-}}
-
-// SAFARI YA EBAV TVIY ROT
-@media not all and (min-resolution:.001dpcm){
-  @supports (-webkit-appearance:none) and (not (stroke-color:transparent)) {
-    .build-image {
-      pointer-events: none;
-    }
-  }}
-
-// SAFARI YA EBAV TVIY ROT
-@media not all and (min-resolution:.001dpcm){
-  .build-image {
-    pointer-events: none;
-  }
-}
-
-
 
 @media only screen and (max-width: $breakpoint-desktop-semi-medium) {
     .build-image {
@@ -176,7 +140,7 @@ $font-weight-bold: 700;
 
 @media only screen and (max-width: $breakpoint-tablet) {
     .build-image {
-      right: -50px;
+        right: -50px;
 
         svg {
             clip-path: none;
@@ -260,7 +224,7 @@ $font-weight-bold: 700;
     }
 }
 
-@media only screen and (min-width: $breakpoint-mobile-medium) and (max-width: $breakpoint-tablet){
+@media only screen and (min-width: $breakpoint-mobile-medium) and (max-width: $breakpoint-tablet) {
     .header {
         flex-direction: column-reverse;
         align-items: flex-end;
@@ -282,6 +246,7 @@ $font-weight-bold: 700;
             width: 80%;
             top: -50px;
         }
+
         p {
             margin: 0 0 44px 0;
             width: 100%;
@@ -304,7 +269,7 @@ $font-weight-bold: 700;
     }
 }
 
-@media only screen and (min-width: $breakpoint-tablet) and (max-width: $breakpoint-desktop){
+@media only screen and (min-width: $breakpoint-tablet) and (max-width: $breakpoint-desktop) {
     .header-info {
         .title {
             width: 100%;
@@ -326,5 +291,3 @@ $font-weight-bold: 700;
         background-size: cover;
     }
 }
-
-
