@@ -1,12 +1,14 @@
 import { FC } from 'react';
 import { useQuery } from 'react-query';
+import { Box } from '@mui/material';
 import RequestsTable from 'src/components/pages/account-page/components/group-tab/components/table/requests-table';
 import {
   transformRequestsData,
   transformStudentsData,
 } from 'src/components/pages/account-page/components/group-tab/components/table/utils';
 
-import Loader, { LoaderSize } from '@/components/common/ui/loader';
+import Progress from '@/components/common/ui/progress-mui';
+import { ProgressSize } from '@/components/common/ui/progress-mui/types';
 import NoGroupBlock from '@/components/pages/account-page/components/group-tab/components/no-group-block';
 import StudentsTable from '@/components/pages/account-page/components/group-tab/components/table/student-table';
 import useAuthentication from '@/hooks/use-authentication';
@@ -48,7 +50,19 @@ const GroupTab: FC = () => {
     },
   );
 
-  if (isLoading) return <Loader size={LoaderSize.SMALLEST} />;
+  if (isLoading)
+    return (
+      <Box
+        sx={{
+          //TODO move inline styles when refactor
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <Progress size={ProgressSize.SMALL} />
+      </Box>
+    );
 
   if (
     user?.group?.state === UserGroupState.DECLINED ||
