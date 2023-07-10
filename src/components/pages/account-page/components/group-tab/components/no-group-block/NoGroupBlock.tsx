@@ -1,11 +1,9 @@
 import React, { FC } from 'react';
 import { useQuery } from 'react-query';
-import { useDispatch } from 'react-redux';
 import { AxiosError } from 'axios';
 import { Form, Formik } from 'formik';
 
 //TODO cut off AlertColor
-import { AlertColor } from '@/components/common/ui/alert';
 import Alert from '@/components/common/ui/alert-mui';
 import { AlertType } from '@/components/common/ui/alert-mui/types';
 import Button, { ButtonSize } from '@/components/common/ui/button';
@@ -14,10 +12,10 @@ import Loader, { LoaderSize } from '@/components/common/ui/loader';
 import { transformGroups } from '@/components/pages/account-page/components/group-tab/components/no-group-block/utils';
 import { validationSchema } from '@/components/pages/account-page/components/group-tab/components/no-group-block/validation';
 import useAuthentication from '@/hooks/use-authentication';
+import useToast from '@/hooks/use-toast';
 import GroupAPI from '@/lib/api/group/GroupAPI';
 import { RequestNewGroupBody } from '@/lib/api/user/types/RequestNewGroupBody';
 import UserAPI from '@/lib/api/user/UserAPI';
-import { showAlert } from '@/redux/reducers/alert.reducer';
 import { UserGroupState } from '@/types/user';
 
 import styles from './NoGroupBlock.module.scss';
@@ -27,7 +25,7 @@ const NoGroupBlock: FC = () => {
   const { isLoading, data } = useQuery(['groups'], () => GroupAPI.getAll(), {
     refetchOnWindowFocus: false,
   });
-  const dispatch = useDispatch();
+  const toast = useToast();
 
   const handleSubmitGroup = async (data: RequestNewGroupBody) => {
     try {
@@ -38,19 +36,9 @@ const NoGroupBlock: FC = () => {
       const errorName = (error as AxiosError<{ error: string }>).response?.data
         .error;
       if (errorName === 'AlreadyRegisteredException') {
-        dispatch(
-          showAlert({
-            title: 'В групі вже є староста',
-            color: AlertColor.ERROR,
-          }),
-        );
+        toast.error('В групі вже є староста');
       } else {
-        dispatch(
-          showAlert({
-            title: 'Як ти це зробив? :/',
-            color: AlertColor.ERROR,
-          }),
-        );
+        toast.error('Як ти це зробив? :/');
       }
     }
   };

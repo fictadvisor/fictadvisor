@@ -1,13 +1,9 @@
 import { useCallback, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import { AxiosError } from 'axios';
 import { useRouter } from 'next/router';
 
 import { CustomEnvelopeOpen } from '@/components/common/icons/CustomEnvelopeOpen';
-import PageLayout from '@/components/common/layout/page-layout';
-//TODO cut off AlertColor
-import { AlertColor } from '@/components/common/ui/alert';
 import Alert from '@/components/common/ui/alert-mui';
 import {
   AlertType,
@@ -18,8 +14,8 @@ import Button, {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button';
+import useToast from '@/hooks/use-toast';
 import AuthAPI from '@/lib/api/auth/AuthAPI';
-import { showAlert } from '@/redux/reducers/alert.reducer';
 
 import styles from './RegistrationEmailConfirmationPage.module.scss';
 
@@ -35,7 +31,7 @@ const RegistrationEmailConfirmationPage = () => {
     void router.push('/register');
   };
 
-  const dispatch = useDispatch();
+  const toast = useToast();
   const handleSendAgain = useCallback(async () => {
     try {
       await AuthAPI.verifyEmail({ email });
@@ -54,15 +50,9 @@ const RegistrationEmailConfirmationPage = () => {
       } else if (errorName === 'NotRegisteredException') {
         errorMessage = 'Упс, реєструйся заново';
       }
-
-      dispatch(
-        showAlert({
-          title: errorMessage,
-          color: AlertColor.ERROR,
-        }),
-      );
+      toast.error(errorMessage);
     }
-  }, [dispatch, email, tries]);
+  }, [toast, email, tries]);
 
   return (
     <div className={styles['registration-email-confirmation-page']}>
@@ -92,7 +82,7 @@ const RegistrationEmailConfirmationPage = () => {
         <div className={styles['alert']}>
           <Alert
             title={'Лист реєстрації діє 1 годину'}
-            type={AlertType.ERROR}
+            type={AlertType.INFO}
             variant={AlertVariant.DARKER}
           />
         </div>

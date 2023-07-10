@@ -1,5 +1,4 @@
 import { SyntheticEvent, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import {
   AcademicCapIcon,
   FireIcon,
@@ -63,13 +62,12 @@ const AccountPage = () => {
   }, [tab, isReady, query, replace]);
 
   const { isLoggedIn } = useAuthentication();
-  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!isLoggedIn) {
       void replace('/login?~account');
     }
-  }, [dispatch, isLoggedIn, replace]);
+  }, [isLoggedIn, replace]);
 
   const handleChange = async (event: SyntheticEvent, value: AccountPageTab) => {
     await replace({ query: { ...query, tab: value } }, undefined, {

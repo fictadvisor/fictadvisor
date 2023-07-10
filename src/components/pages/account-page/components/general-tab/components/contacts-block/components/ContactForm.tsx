@@ -1,17 +1,15 @@
 import React, { FC } from 'react';
-import { useDispatch } from 'react-redux';
 import { Form, Formik } from 'formik';
 import * as yup from 'yup';
 
 import { CustomCheck } from '@/components/common/icons/CustomCheck';
-import { AlertColor } from '@/components/common/ui/alert';
 import Button, { ButtonColor, ButtonSize } from '@/components/common/ui/button';
 import { Dropdown, Input, InputSize } from '@/components/common/ui/form';
 import styles from '@/components/pages/account-page/components/general-tab/GeneralTab.module.scss';
 import useAuthentication from '@/hooks/use-authentication';
+import useToast from '@/hooks/use-toast';
 import { AddContactBody } from '@/lib/api/user/types/AddContactBody';
 import UserAPI from '@/lib/api/user/UserAPI';
-import { showAlert } from '@/redux/reducers/alert.reducer';
 import { ContactType } from '@/types/contact';
 
 interface ContactFormProps {
@@ -20,7 +18,7 @@ interface ContactFormProps {
 
 const ContactForm: FC<ContactFormProps> = ({ refetchContacts }) => {
   const { user } = useAuthentication();
-  const dispatch = useDispatch();
+  const toast = useToast();
   const options = Object.values(ContactType).map(contact => ({
     label: contact,
     value: contact,
@@ -31,12 +29,7 @@ const ContactForm: FC<ContactFormProps> = ({ refetchContacts }) => {
       await UserAPI.addContact(user.id, data);
       void refetchContacts();
     } catch (e) {
-      dispatch(
-        showAlert({
-          title: 'Здається ти ввів неправильні значення!',
-          color: AlertColor.ERROR,
-        }),
-      );
+      toast.error('Здається ти ввів неправильні значення!');
     }
   };
 

@@ -1,18 +1,16 @@
 import { useCallback, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 
-import { AlertColor } from '@/components/common/ui/alert';
 import Loader, { LoaderSize } from '@/components/common/ui/loader';
 import useAuthentication from '@/hooks/use-authentication';
+import useToast from '@/hooks/use-toast';
 import AuthAPI from '@/lib/api/auth/AuthAPI';
 import StorageUtil from '@/lib/utils/StorageUtil';
-import { showAlert } from '@/redux/reducers/alert.reducer';
 
 const VerifyEmailTokenPage = () => {
   const router = useRouter();
   const token = router.query.token as string;
-  const dispatch = useDispatch();
+  const toast = useToast();
   const { update } = useAuthentication();
 
   const loadData = useCallback(
@@ -26,18 +24,16 @@ const VerifyEmailTokenPage = () => {
           update();
           await router.push(`/`);
         } catch (e) {
-          dispatch(
-            showAlert({
-              title: 'Лист реєстрації вже не дійсний',
-              description: 'Пройди реєстрацію знов!',
-              color: AlertColor.ERROR,
-            }),
+          toast.error(
+            'Лист реєстрації вже не дійсний',
+            'Пройди реєстрацію знов!',
           );
+
           await router.push(`/register`);
         }
       }
     },
-    [dispatch, router, update],
+    [toast, router, update],
   );
 
   useEffect(() => {

@@ -1,18 +1,16 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
 import { AxiosError } from 'axios';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { useRouter } from 'next/router';
 
 import { CustomCheck } from '@/components/common/icons/CustomCheck';
-import { AlertColor } from '@/components/common/ui/alert';
 import Button, { ButtonSize } from '@/components/common/ui/button';
 import { Input, InputType } from '@/components/common/ui/form';
 import CustomLink from '@/components/common/ui/link-mui';
 import { CustomLinkType } from '@/components/common/ui/link-mui/types';
+import useToast from '@/hooks/use-toast';
 import AuthAPI from '@/lib/api/auth/AuthAPI';
 import StorageUtil from '@/lib/utils/StorageUtil';
-import { showAlert } from '@/redux/reducers/alert.reducer';
 
 import { initialValues } from './constants';
 import { ChangePasswordFormFields } from './types';
@@ -22,7 +20,7 @@ import styles from '../../SecurityTab.module.scss';
 
 const ChangePasswordForm = () => {
   const router = useRouter();
-  const dispatch = useDispatch();
+  const toast = useToast();
   const handleSubmit = async (
     data: ChangePasswordFormFields,
     { setErrors }: FormikHelpers<ChangePasswordFormFields>,
@@ -33,12 +31,7 @@ const ChangePasswordForm = () => {
         newPassword: data.newPassword,
       });
       StorageUtil.setTokens(accessToken, refreshToken);
-      dispatch(
-        showAlert({
-          title: 'Пароль успішно змінено',
-          color: AlertColor.SUCCESS,
-        }),
-      );
+      toast.success('Пароль успішно змінено');
       router.reload();
     } catch (error) {
       // TODO: refactor this shit
