@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import { Box, Typography } from '@mui/material';
 
+import Rating from '@/components/common/ui/rating-mui';
 import Tag from '@/components/common/ui/tag-mui';
 import { TagColor, TagSize } from '@/components/common/ui/tag-mui/types';
 import Contact from '@/components/pages/personal-teacher-page/contacts';
@@ -21,6 +22,7 @@ const FloatingCard: FC<FloatingCardProps> = ({
   roles,
   contacts,
   subjectName,
+  rating,
 }) => {
   return (
     <Box sx={styles.card}>
@@ -31,7 +33,7 @@ const FloatingCard: FC<FloatingCardProps> = ({
             sx={styles.title}
             component="h4"
           >{`${lastName} ${firstName} ${middleName}`}</Typography>
-          {/*<Rating sx={styles.rating} rating={rating} />*/}
+          {rating !== 0 && <Rating sx={styles.rating} rating={rating / 20} />}
           <Box sx={styles.tags}>
             {roles?.includes(TeacherRole.LECTURER) && (
               <Tag color={TagColor.INDIGO} size={TagSize.SMALL} text="Лекції" />
