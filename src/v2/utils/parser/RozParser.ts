@@ -49,7 +49,7 @@ export class RozParser implements Parser {
     private disciplineTeacherRoleRepository: DisciplineTeacherRoleRepository,
   ) {}
 
-  async parse (page = 1, period={}) {
+  async parse (period, page = 1) {
     const groups = (await axios.post('http://epi.kpi.ua/Schedules/ScheduleGroupSelection.aspx/GetGroups', {
       count: 10,
       prefixText: 'і',

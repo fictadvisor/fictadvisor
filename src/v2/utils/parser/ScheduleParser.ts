@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Parser } from './Parser';
 import axios from 'axios';
-import { DisciplineTypeEnum, TeacherRole } from '@prisma/client';
+import { DisciplineTypeEnum, Period, TeacherRole } from '@prisma/client';
 import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
 import { DisciplineTeacherRoleRepository } from '../../database/repositories/DisciplineTeacherRoleRepository';
 import { GroupRepository } from '../../database/repositories/GroupRepository';
@@ -9,7 +9,8 @@ import { DisciplineRepository } from '../../database/repositories/DisciplineRepo
 import { SubjectRepository } from '../../database/repositories/SubjectRepository';
 import { TeacherRepository } from '../../database/repositories/TeacherRepository';
 import { ScheduleDayType, ScheduleGroupType, SchedulePairType, ScheduleType } from './ScheduleParserTypes';
-// import { ScheduleRepository } from '../../api/schedule/ScheduleRepository';
+import { EventRepository } from '../../database/repositories/EventRepository';
+import { DateService, DAY, HOUR, MINUTE, StudyingSemester, WEEK } from '../date/DateService';
 
 export const DAY_NUMBER = {
   'Пн': 1,
@@ -39,13 +40,14 @@ export class ScheduleParser implements Parser {
     private groupRepository: GroupRepository,
     private teacherRepository: TeacherRepository,
     private subjectRepository: SubjectRepository,
-    // private scheduleRepository: ScheduleRepository,
     private disciplineRepository: DisciplineRepository,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
     private disciplineTeacherRoleRepository: DisciplineTeacherRoleRepository,
+    private eventRepository: EventRepository,
+    private dateService: DateService,
   ) {}
 
-  async parse (period={}) {
+  async parse (period: StudyingSemester) {
     const groups: ScheduleGroupType[] = (await axios.get('https://schedule.kpi.ua/api/schedule/groups')).data.data;
     const filtered = groups.filter((group) => group.faculty === 'ФІОТ').map((group) => ({ id: group.id, name: group.name }));
 
@@ -54,83 +56,172 @@ export class ScheduleParser implements Parser {
     }
   }
 
-  async parseGroupSchedule (group: ScheduleGroupType, period: any) {
+  async parseGroupSchedule (group: ScheduleGroupType, period: StudyingSemester) {
     const schedule: ScheduleType = (await axios.get('https://schedule.kpi.ua/api/schedule/lessons?groupId=' + group.id)).data.data;
     const dbGroup = await this.groupRepository.getOrCreate(group.name);
     await this.parseWeek(period, schedule.scheduleFirstWeek, dbGroup.id, 0);
     await this.parseWeek(period, schedule.scheduleSecondWeek, dbGroup.id, 1);
   }
 
-  async parseWeek (period: any, week: ScheduleDayType[], groupId: string, weekNumber: number) {
+  async parseWeek (period: StudyingSemester, week: ScheduleDayType[], groupId: string, weekNumber: number) {
     for (const day of week) {
       await this.parseDay(period, day, groupId, weekNumber);
     }
   }
 
-  async parseDay (period: any, { day, pairs }: ScheduleDayType, groupId: string, weekNumber: number) {
+  async parseDay (period: StudyingSemester, { day, pairs }: ScheduleDayType, groupId: string, weekNumber: number) {
     for (const pair of pairs) {
       const isSelective = pairs.some(({ name, time }) => pair.name !== name && pair.time === time);
       await this.parsePair(pair, groupId, period, isSelective, weekNumber, DAY_NUMBER[day]);
     }
   }
 
-  async parsePair (pair: SchedulePairType, groupId: string, period: any, isSelective: boolean, week, day) {
+  async parsePair (pair: SchedulePairType, groupId: string, period: StudyingSemester, isSelective: boolean, week, day) {
     const teacher = pair.teacherName ? await this.getTeacher(pair.teacherName) : null;
     const subject = await this.subjectRepository.getOrCreate(pair.name ?? '');
-    const [startHours, startMinutes] = pair.time.split('.').map((s) => +s);
-    const endHours = startHours + 1;
-    const endMinutes = startMinutes + 35;
     const name = DISCIPLINE_TYPE[pair.tag] ?? DISCIPLINE_TYPE.lec;
     const role = TEACHER_TYPE[pair.tag] ?? TEACHER_TYPE.lec;
-    // const startDate = this.createDate(day, week, startHours, startMinutes);
-    // const endDate = this.createDate(day, week, endHours, endMinutes);
+
+    const { startDate: startOfSemester } = await this.dateService.getSemester(period);
+    const [hours, minutes] = pair.time
+      .split('.')
+      .map((number) => +number);
+    const startOfEvent = new Date(startOfSemester.getTime()+week*WEEK+(day-1)*DAY+hours*HOUR+minutes*MINUTE);
+    const endOfEvent = new Date(startOfEvent.getTime()+16*WEEK+HOUR+35*MINUTE);
 
     let discipline =
-      await this.disciplineRepository.getOrCreate({
+      await this.disciplineRepository.find({
         subjectId: subject.id,
         groupId,
         year: period.year,
         semester: period.semester,
       });
 
-    if (isSelective && !discipline.isSelective) {
-      discipline = await this.disciplineRepository.updateById(discipline.id, { isSelective });
-    }
-
-    if (!discipline.disciplineTypes.some((type) => type.name === name)) {
-      discipline = await this.disciplineRepository.updateById(discipline.id, {
+    if (!discipline) {
+      discipline = await this.disciplineRepository.create({
+        subjectId: subject.id,
+        groupId,
+        year: period.year,
+        semester: period.semester,
         disciplineTypes: {
           create: {
             name,
           },
         },
       });
+    } else {
+      const data = {
+        isSelective: undefined,
+        disciplineTypes: undefined,
+      };
+
+      if (!discipline.disciplineTypes.some((type) => type.name === name)) {
+        data.disciplineTypes = {
+          create: {
+            name,
+          },
+        };
+      }
+      if (isSelective && !discipline.isSelective) {
+        data.isSelective = isSelective;
+      }
+
+      if (data.disciplineTypes || data.isSelective) discipline = await this.disciplineRepository.updateById(discipline.id, data);
     }
 
     const disciplineType = discipline.disciplineTypes.find((type) => type.name === name);
 
     if (teacher) {
-      const disciplineTeacher = await this.disciplineTeacherRepository.getOrCreate({
+      const disciplineTeacher = await this.disciplineTeacherRepository.find({
         teacherId: teacher.id,
         disciplineId: discipline.id,
       });
 
-      await this.disciplineTeacherRoleRepository.getOrCreate({
-        role,
-        disciplineTeacherId: disciplineTeacher.id,
-        disciplineTypeId: disciplineType.id,
+      if (!disciplineTeacher) {
+        await this.disciplineTeacherRepository.create({
+          teacherId: teacher.id,
+          disciplineId: discipline.id,
+          roles: {
+            create: {
+              role,
+              disciplineTypeId: disciplineType.id,
+            },
+          },
+        });
+      } else if (!disciplineTeacher.roles.some((r) => r.role === role)) {
+        await this.disciplineTeacherRepository.updateById(disciplineTeacher.id, {
+          roles: {
+            create: {
+              role,
+              disciplineTypeId: disciplineType.id,
+            },
+          },
+        });
+      }
+    }
+    const event = await this.eventRepository.find({
+      OR: [
+        {
+          startTime: startOfEvent,
+          groupId: groupId,
+          lessons: {
+            some: {
+              disciplineTypeId: disciplineType.id,
+            },
+          },
+        },
+        {
+          startTime: new Date(startOfEvent.getTime() - WEEK),
+          groupId: groupId,
+          lessons: {
+            some: {
+              disciplineTypeId: disciplineType.id,
+            },
+          },
+        },
+      ],
+    });
+
+    if (!event) {
+      await this.eventRepository.create({
+        name: pair.name,
+        startTime: startOfEvent,
+        endTime: endOfEvent,
+        period: Period.EVERY_FORTNIGHT,
+        groupId: groupId,
+        lessons: {
+          create: {
+            disciplineTypeId: disciplineType.id,
+          },
+        },
+        eventInfo: {
+          createMany: {
+            data: this.getEventInfo(0, 7),
+          },
+        },
+      });
+    } else if (
+      event.startTime.getTime() === startOfEvent.getTime() - WEEK &&
+      event.period === Period.EVERY_FORTNIGHT
+    ) {
+      await this.eventRepository.updateById(event.id, {
+        period: Period.EVERY_WEEK,
+        endTime: endOfEvent,
+        eventInfo: {
+          createMany: {
+            data: this.getEventInfo(8, 15),
+          },
+        },
       });
     }
-
-    // await this.scheduleRepository.getOrCreateSemesterLesson({
-    //   disciplineTypeId: disciplineType.id,
-    //   startDate,
-    //   endDate,
-    // });
   }
 
-  createDate (day, week, hours, minutes): Date {
-    return new Date(1970, 0, day + week * 7, hours, minutes);
+  private getEventInfo (startIndex: number, endIndex: number) {
+    return Array.from({
+      length: endIndex - startIndex + 1,
+    }, (_, i) => ({
+      number: i + startIndex,
+    }));
   }
 
   async getTeacher (teacherName: string) {

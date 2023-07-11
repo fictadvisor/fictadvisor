@@ -2,7 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
 import { DataNotFoundException } from '../exceptions/DataNotFoundException';
 
-export const DAY = 1000 * 60 * 60 * 24;
+export const MINUTE = 1000 * 60;
+export const HOUR = MINUTE * 60;
+export const DAY = HOUR * 24;
 export const WEEK = DAY * 7;
 export const FORTNITE = WEEK * 2;
 
@@ -28,6 +30,15 @@ export class DateService {
   constructor (
     private prisma: PrismaService,
   ) {}
+
+  getSemester (period: StudyingSemester) {
+    return this.prisma.semesterDate.findFirst({
+      where: {
+        semester: period.semester,
+        year: period.year,
+      },
+    });
+  }
 
   async getCurrentSemester (): Promise<CurrentSemester> {
     const semester = await this.prisma.semesterDate.findFirst({

@@ -19,7 +19,7 @@ export class ScheduleService {
   async parse (parserType, page, period) {
     switch (parserType) {
     case 'rozkpi':
-      await this.rozParser.parse(page, period);
+      await this.rozParser.parse(period, page);
       break;
     case 'schedule':
       await this.scheduleParser.parse(period);
