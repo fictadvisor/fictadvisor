@@ -6,6 +6,7 @@ import { Period } from '@prisma/client';
 import { EventRepository } from '../../database/repositories/EventRepository';
 import { DateService } from '../../utils/date/DateService';
 import { ParserModule } from '../../utils/parser/ParserModule';
+import { DisciplineService } from './DisciplineService';
 import { DisciplineTeacherService } from './DisciplineTeacherService';
 
 describe('ScheduleService', () => {
@@ -23,6 +24,8 @@ describe('ScheduleService', () => {
       ],
     }).useMocker((token) => {
       if (token === DisciplineTeacherService) {
+        return {};
+      } else if (token === DisciplineService) {
         return {};
       }
     })

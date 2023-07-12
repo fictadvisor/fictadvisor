@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { DisciplineTypeEnum } from '@prisma/client';
 
-class TeacherNamesResponse {
+export class TeacherNamesResponse {
   @ApiProperty()
     id: string;
 
@@ -45,5 +45,5 @@ export class EventResponse {
   @ApiProperty({
     type: [TeacherNamesResponse],
   })
-    teachers: TeacherNamesResponse;
+    teachers: TeacherNamesResponse[];
 }

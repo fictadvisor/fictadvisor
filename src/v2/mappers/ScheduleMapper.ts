@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { DbEvent } from '../database/entities/DbEvent';
 import { DbDiscipline } from '../database/entities/DbDiscipline';
-import { TeacherRoleAdapter } from '../api/dtos/TeacherRoleAdapter';
+import { TeacherRoleAdapter } from './TeacherRoleAdapter';
 import { some } from '../utils/ArrayUtil';
+import { EventResponse } from '../api/responses/EventResponse';
 
 @Injectable()
 export class ScheduleMapper {
@@ -16,7 +17,7 @@ export class ScheduleMapper {
     }));
   }
 
-  getEvent (event: DbEvent, discipline?: DbDiscipline) {
+  getEvent (event: DbEvent, discipline?: DbDiscipline): EventResponse {
     const disciplineType = event.lessons[0]?.disciplineType.name;
     return {
       id: event.id,
@@ -29,14 +30,12 @@ export class ScheduleMapper {
       disciplineInfo: discipline?.description || null,
       teachers: discipline?.disciplineTeachers
         .filter(({ roles }) => some(roles, 'role', TeacherRoleAdapter[disciplineType]))
-        .map(({ teacher }) => {
-          return {
-            id: teacher.id,
-            firstName: teacher.firstName,
-            middleName: teacher.middleName,
-            lastName: teacher.lastName,
-          };
-        }) || null,
+        .map(({ teacher }) => ({
+          id: teacher.id,
+          firstName: teacher.firstName,
+          middleName: teacher.middleName,
+          lastName: teacher.lastName,
+        })) || null,
     };
   }
 }

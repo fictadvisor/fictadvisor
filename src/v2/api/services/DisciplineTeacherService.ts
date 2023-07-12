@@ -16,7 +16,7 @@ import { AnswerInDatabasePermissionException } from '../../utils/exceptions/Answ
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
 import { StudentRepository } from '../../database/repositories/StudentRepository';
-import { TeacherTypeAdapter } from '../dtos/TeacherRoleAdapter';
+import { TeacherTypeAdapter } from '../../mappers/TeacherRoleAdapter';
 import { UserRepository } from '../../database/repositories/UserRepository';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
 import { QuestionMapper } from '../../mappers/QuestionMapper';

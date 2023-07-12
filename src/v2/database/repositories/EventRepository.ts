@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../database/PrismaService';
+import { PrismaService } from '../PrismaService';
 import { Prisma } from '@prisma/client';
+import { DbEvent } from '../entities/DbEvent';
 
 @Injectable()
 export class EventRepository {
@@ -24,7 +25,7 @@ export class EventRepository {
     });
   }
 
-  find (where: Prisma.EventWhereInput) {
+  find (where: Prisma.EventWhereInput): Promise<DbEvent> {
     return this.prisma.event.findFirst({
       where,
       include: this.include,

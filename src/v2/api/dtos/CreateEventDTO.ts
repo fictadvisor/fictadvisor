@@ -1,10 +1,15 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsArray, IsDate, IsEnum, IsNotEmpty, IsOptional, IsUrl, MaxLength, MinLength } from 'class-validator';
+import { IsArray, IsDate, IsEnum, IsNotEmpty, IsOptional, IsUrl, IsUUID, MaxLength, MinLength } from 'class-validator';
 import { validationOptionsMsg } from '../../utils/GLOBALS';
 import { DisciplineTypeEnum, Period } from '@prisma/client';
 import { Type } from 'class-transformer';
 
 export class CreateEventDTO {
+  @ApiProperty()
+  @IsUUID()
+  @IsNotEmpty(validationOptionsMsg('Group id cannot be empty'))
+    groupId: string;
+
   @ApiProperty()
   @MinLength(2, validationOptionsMsg('Name is too short (min: 2)'))
   @MaxLength(100, validationOptionsMsg('Name is too long (max: 100)'))

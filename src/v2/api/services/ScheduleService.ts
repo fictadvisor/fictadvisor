@@ -9,13 +9,15 @@ import { CreateEventDTO } from '../dtos/CreateEventDTO';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
 import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
 import { DisciplineTeacherService } from './DisciplineTeacherService';
-import { TeacherRoleAdapter } from '../dtos/TeacherRoleAdapter';
+import { TeacherRoleAdapter } from '../../mappers/TeacherRoleAdapter';
 import { AttachLessonDTO } from '../dtos/AttachLessonDTO';
 import { InvalidDateException } from '../../utils/exceptions/InvalidDateException';
 import { ObjectIsRequiredException } from '../../utils/exceptions/ObjectIsRequiredException';
 import { DisciplineTeacherRoleRepository } from '../../database/repositories/DisciplineTeacherRoleRepository';
 import { find, some } from '../../utils/ArrayUtil';
 import { DbDiscipline } from '../../database/entities/DbDiscipline';
+import { InvalidWeekException } from '../../utils/exceptions/InvalidWeekException';
+
 
 @Injectable()
 export class ScheduleService {
@@ -40,27 +42,6 @@ export class ScheduleService {
       await this.scheduleParser.parse(period);
       break;
     }
-  }
-
-  async getSchedule (group, fortnight, callback) {
-    // TODO: implement method that returns all lessons (static or temporary) depending on
-    //       group id and fortnight number (see body in Wiki)
-  }
-
-  async getFullStaticLesson (id, fortnight) {
-    // TODO: add method that returns full static lesson depending on lesson id and fortnight number (see Wiki)
-  }
-
-  async getFullTemporaryLesson (id) {
-    // TODO: add method that returns full temporary lesson depending on lesson id and fortnight number (see Wiki)
-  }
-
-  async updateFortnightInfo (id, fortnight, data) {
-    // TODO: create method that updates fortnight lesson info dpending on lesson id and fortnight number (see Wiki)
-  }
-
-  async updateSemesterInfo (id, body) {
-    // TODO: create method that updates semester lesson info dpending on lesson id (see Wiki)
   }
 
   getIndexOfLesson (period, startTime, endOfWeek) {
@@ -103,6 +84,56 @@ export class ScheduleService {
         const indexOfLesson = this.getIndexOfLesson(event.period, event.startTime, endOfWeek);
         return indexOfLesson !== null;
       });
+  }
+
+  async getEvent (id: string, week: number): Promise<{ event: DbEvent, discipline: DbDiscipline }> {
+    if (!week) {
+      throw new InvalidWeekException();
+    }
+
+    const event = await this.eventRepository.findById(id);
+    if (event.period !== Period.NO_PERIOD) {
+      const { startWeek } = await this.setWeekTime(event, week);
+
+      const eventInfoIndex = (week - startWeek) / (event.period === Period.EVERY_FORTNIGHT ? 2 : 1);
+      event.eventInfo[0] = event.eventInfo[eventInfoIndex];
+    }
+
+    const discipline = await this.getEventDiscipline(event.id);
+
+    return { event, discipline };
+  }
+
+  private async setWeekTime (event: DbEvent, week: number): Promise<{ startWeek: number, endWeek: number }> {
+    const { startDate } = await this.dateService.getCurrentSemester();
+    const startWeek = Math.ceil((event.startTime.getTime() - startDate.getTime()) / WEEK);
+    const endWeek = Math.ceil((event.endTime.getTime() - startDate.getTime()) / WEEK);
+
+    if (
+      week > endWeek || week < startWeek ||
+      (event.period === Period.EVERY_FORTNIGHT && startWeek % 2 !== week % 2)
+    ) {
+      throw new InvalidWeekException();
+    }
+
+    event.startTime.setDate(event.startTime.getDate() + (week - startWeek) * 7);
+    event.endTime.setDate(event.endTime.getDate() - (endWeek - week) * 7);
+
+    return { startWeek, endWeek };
+  }
+
+  private async getEventDiscipline (eventId: string) {
+    return this.disciplineRepository.find({
+      disciplineTypes: {
+        some: {
+          lessons: {
+            some: {
+              eventId,
+            },
+          },
+        },
+      },
+    });
   }
 
   private async checkEventDates (startTime: Date, endTime: Date) {
@@ -164,7 +195,7 @@ export class ScheduleService {
     };
   }
 
-  async createGroupEvent (groupId: string, body: CreateEventDTO) {
+  async createGroupEvent (body: CreateEventDTO) {
     await this.checkEventDates(body.startTime, body.endTime);
     if (body.disciplineId && !body.disciplineType) throw new ObjectIsRequiredException('DisciplineType');
 
@@ -180,7 +211,7 @@ export class ScheduleService {
     eventInfo[0].description = body.eventInfo;
 
     const event = await this.eventRepository.create({
-      groupId,
+      groupId: body.groupId,
       name: body.name,
       period: body.period,
       startTime: body.startTime,

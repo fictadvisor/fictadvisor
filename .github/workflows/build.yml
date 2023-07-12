@@ -2,9 +2,8 @@ name: Build
 
 on:
   pull_request:
-    branches:
-      - 'dev'
-      - 'master'
+    types:
+      - opened
 
 jobs:
   test:

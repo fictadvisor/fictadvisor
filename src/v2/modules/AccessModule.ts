@@ -3,8 +3,7 @@ import { JwtGuard } from 'src/v2/security/JwtGuard';
 import { PermissionGuard } from 'src/v2/security/permission-guard/PermissionGuard';
 import { GroupByDisciplineGuard } from '../security/group-guard/GroupByDisciplineGuard';
 import { GroupByDisciplineTeacherGuard } from '../security/group-guard/GroupByDisciplineTeacherGuard';
-import { GroupBySemesterLessonGuard } from '../security/group-guard/GroupBySemesterLessonGuard';
-import { GroupByTemporaryLessonGuard } from '../security/group-guard/GroupByTemporaryLessonGuard';
+import { GroupByEventGuard } from '../security/group-guard/GroupByEventGuard';
 import { JwtStrategy } from '../security/JwtStrategy';
 import { TelegramGuard } from '../security/TelegramGuard';
 import { PassportModule } from '@nestjs/passport';
@@ -19,8 +18,7 @@ import { PermissionService } from '../api/services/PermissionService';
     JwtGuard,
     GroupByDisciplineGuard,
     GroupByDisciplineTeacherGuard,
-    GroupBySemesterLessonGuard,
-    GroupByTemporaryLessonGuard,
+    GroupByEventGuard,
     JwtStrategy,
     TelegramGuard,
     PermissionService,
@@ -30,8 +28,7 @@ import { PermissionService } from '../api/services/PermissionService';
     JwtGuard, 
     GroupByDisciplineGuard, 
     GroupByDisciplineTeacherGuard,
-    GroupBySemesterLessonGuard, 
-    GroupByTemporaryLessonGuard,
+    GroupByEventGuard,
     JwtStrategy,
     TelegramGuard,
     PermissionService,
