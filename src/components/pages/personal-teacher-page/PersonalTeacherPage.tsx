@@ -9,7 +9,8 @@ import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
-import Loader from '@/components/common/ui/loader';
+import Progress from '@/components/common/ui/progress-mui';
+import { ProgressSize } from '@/components/common/ui/progress-mui/types';
 import PersonalTeacherCard from '@/components/pages/personal-teacher-page/personal-teacher-card';
 import PersonalTeacherTabs from '@/components/pages/personal-teacher-page/personal-teacher-tabs';
 import styles from '@/components/pages/personal-teacher-page/PersonalTeacherPage.module.scss';
@@ -80,7 +81,7 @@ const PersonalTeacherPage = () => {
         {isLoading ? (
           <div className={styles['personal-teacher-page-content']}>
             <div className={styles['loader']}>
-              <Loader />
+              <Progress />
             </div>
           </div>
         ) : (

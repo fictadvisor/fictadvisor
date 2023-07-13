@@ -4,7 +4,7 @@ import { AxiosError } from 'axios';
 import { useRouter } from 'next/router';
 
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
-import Loader from '@/components/common/ui/loader/Loader';
+import Progress from '@/components/common/ui/progress-mui';
 import useAuthentication from '@/hooks/use-authentication';
 import useToast from '@/hooks/use-toast';
 import PollAPI from '@/lib/api/poll/PollAPI';
@@ -71,7 +71,7 @@ const PollPage = () => {
     <div className={styles['poll-page']}>
       <div className={styles['poll-page__content']}>
         {isLoading ? (
-          <Loader />
+          <Progress />
         ) : (
           isSuccessFetching && (
             <div className={styles['poll-page__content-wrapper']}>

@@ -7,7 +7,8 @@ import Button, {
   ButtonColor,
   ButtonVariant,
 } from '@/components/common/ui/button/Button';
-import Loader, { LoaderSize } from '@/components/common/ui/loader/Loader';
+import Progress from '@/components/common/ui/progress-mui';
+import { ProgressSize } from '@/components/common/ui/progress-mui/types';
 import PollTeacherSearchList from '@/components/pages/search-pages/poll-teachers-page/PollTeacherSearchList';
 import useAuthentication from '@/hooks/use-authentication';
 import useToast from '@/hooks/use-toast';
@@ -77,7 +78,7 @@ const PollTeacherPage: FC = () => {
           {isLoading ||
             (isFetching && (
               <div className={styles['page-loader']}>
-                <Loader size={LoaderSize.SMALLEST} />
+                <Progress />
               </div>
             ))}
 

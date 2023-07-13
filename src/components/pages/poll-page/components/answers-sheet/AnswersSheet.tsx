@@ -8,7 +8,7 @@ import ArrowButton from '@/components/common/ui/arrow-button/ArrowButton';
 import Button from '@/components/common/ui/button/Button';
 import { Slider, TextArea } from '@/components/common/ui/form';
 import RadioGroup from '@/components/common/ui/form/radio/RadipGroup';
-import Loader from '@/components/common/ui/loader/Loader';
+import Progress from '@/components/common/ui/progress-mui';
 import useToast from '@/hooks/use-toast';
 import PollAPI from '@/lib/api/poll/PollAPI';
 import theme from '@/styles/theme';
@@ -118,7 +118,7 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
     >
       {sendingStatus === SendingStatus.LOADING ? (
         <div className={styles.loaderWrapper}>
-          <Loader />
+          <Progress />
         </div>
       ) : sendingStatus === SendingStatus.SUCCESS ? (
         <div className={styles.wrapper}>

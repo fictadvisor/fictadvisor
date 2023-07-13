@@ -18,7 +18,7 @@ interface ProgressProps {
 const Progress: FC<ProgressProps> = ({
   variant = ProgressVariant.DETERMINATE,
   sx = {},
-  size = ProgressSize.MEDIUM,
+  size = ProgressSize.SMALL,
   color = ProgressColor.PRIMARY,
 }) => {
   return (

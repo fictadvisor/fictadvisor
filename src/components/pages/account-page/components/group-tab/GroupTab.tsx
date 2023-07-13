@@ -60,7 +60,7 @@ const GroupTab: FC = () => {
           alignItems: 'center',
         }}
       >
-        <Progress size={ProgressSize.SMALL} />
+        <Progress />
       </Box>
     );
 

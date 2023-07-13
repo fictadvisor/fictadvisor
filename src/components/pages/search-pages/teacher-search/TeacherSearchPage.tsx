@@ -6,7 +6,8 @@ import Button, {
   ButtonColor,
   ButtonVariant,
 } from '@/components/common/ui/button/Button';
-import Loader, { LoaderSize } from '@/components/common/ui/loader/Loader';
+import Progress from '@/components/common/ui/progress-mui';
+import { ProgressSize } from '@/components/common/ui/progress-mui/types';
 import { SearchFormProps } from '@/components/pages/search-pages/search-form/SearchForm';
 import { TeacherSearchFormFields } from '@/components/pages/search-pages/search-form/types';
 import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
@@ -75,7 +76,7 @@ export const TeacherSearchPage = () => {
       {isLoading ||
         (isFetching && (
           <div className={styles['page-loader']}>
-            <Loader size={LoaderSize.SMALLEST} />
+            <Progress />
           </div>
         ))}
       {data?.teachers.length === (curPage + 1) * pageSize && (

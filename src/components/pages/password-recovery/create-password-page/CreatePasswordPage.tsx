@@ -9,7 +9,8 @@ import {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
-import Loader, { LoaderSize } from '@/components/common/ui/loader';
+import Progress from '@/components/common/ui/progress-mui';
+import { ProgressSize } from '@/components/common/ui/progress-mui/types';
 import CreatePasswordForm from '@/components/pages/password-recovery/create-password-page/components/create-password-form';
 import * as styles from '@/components/pages/password-recovery/create-password-page/CreatePasswordPage.styles';
 import AuthAPI from '@/lib/api/auth/AuthAPI';
@@ -39,7 +40,7 @@ const CreatePasswordPage = () => {
     <Box sx={styles.container}>
       <Box sx={styles.content}>
         {isFetching || !data.isAvailable ? (
-          <Loader size={LoaderSize.SMALLEST} />
+          <Progress />
         ) : (
           <>
             <Box sx={styles.icon}>

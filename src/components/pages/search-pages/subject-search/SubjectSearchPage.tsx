@@ -6,7 +6,8 @@ import Button, {
   ButtonColor,
   ButtonVariant,
 } from '@/components/common/ui/button/Button';
-import Loader, { LoaderSize } from '@/components/common/ui/loader/Loader';
+import Progress from '@/components/common/ui/progress-mui';
+import { ProgressSize } from '@/components/common/ui/progress-mui/types';
 import { SearchFormProps } from '@/components/pages/search-pages/search-form/SearchForm';
 import SubjectsAPI from '@/lib/api/subject/SubjectAPI';
 import { GetListOfSubjectsResponse } from '@/lib/api/subject/types/GetListOfSubjectsResponse';
@@ -66,7 +67,7 @@ const SubjectSearchPage = () => {
       {isLoading ||
         (isFetching && (
           <div className={styles['page-loader']}>
-            <Loader size={LoaderSize.SMALLEST} />
+            <Progress />
           </div>
         ))}
       {data?.subjects?.length === (curPage + 1) * pageSize && (

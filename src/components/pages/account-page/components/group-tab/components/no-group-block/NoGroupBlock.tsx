@@ -8,7 +8,8 @@ import Alert from '@/components/common/ui/alert-mui';
 import { AlertType } from '@/components/common/ui/alert-mui/types';
 import Button, { ButtonSize } from '@/components/common/ui/button';
 import { Checkbox, Dropdown } from '@/components/common/ui/form';
-import Loader, { LoaderSize } from '@/components/common/ui/loader';
+import Progress from '@/components/common/ui/progress-mui';
+import { ProgressSize } from '@/components/common/ui/progress-mui/types';
 import { transformGroups } from '@/components/pages/account-page/components/group-tab/components/no-group-block/utils';
 import { validationSchema } from '@/components/pages/account-page/components/group-tab/components/no-group-block/validation';
 import useAuthentication from '@/hooks/use-authentication';
@@ -43,7 +44,7 @@ const NoGroupBlock: FC = () => {
     }
   };
 
-  if (isLoading) return <Loader size={LoaderSize.SMALLEST} />;
+  if (isLoading) return <Progress />;
 
   if (!data) return null;
 
