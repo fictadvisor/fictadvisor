@@ -55,7 +55,7 @@ class StorageUtil {
       return;
     }
     const data = sessionStorage.getItem(STORAGE_KEYS.TELEGRAM_INFO);
-    return JSON.parse(data || '{}');
+    return data ? JSON.parse(data) : null;
   }
 }
 
