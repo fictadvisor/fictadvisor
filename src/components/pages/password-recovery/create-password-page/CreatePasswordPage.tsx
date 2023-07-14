@@ -10,7 +10,6 @@ import {
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
 import Progress from '@/components/common/ui/progress-mui';
-import { ProgressSize } from '@/components/common/ui/progress-mui/types';
 import CreatePasswordForm from '@/components/pages/password-recovery/create-password-page/components/create-password-form';
 import * as styles from '@/components/pages/password-recovery/create-password-page/CreatePasswordPage.styles';
 import AuthAPI from '@/lib/api/auth/AuthAPI';

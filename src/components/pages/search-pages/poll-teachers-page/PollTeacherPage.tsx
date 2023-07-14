@@ -8,7 +8,6 @@ import Button, {
   ButtonVariant,
 } from '@/components/common/ui/button/Button';
 import Progress from '@/components/common/ui/progress-mui';
-import { ProgressSize } from '@/components/common/ui/progress-mui/types';
 import PollTeacherSearchList from '@/components/pages/search-pages/poll-teachers-page/PollTeacherSearchList';
 import useAuthentication from '@/hooks/use-authentication';
 import useToast from '@/hooks/use-toast';

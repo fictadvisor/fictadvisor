@@ -7,7 +7,6 @@ import Button, {
   ButtonVariant,
 } from '@/components/common/ui/button/Button';
 import Progress from '@/components/common/ui/progress-mui';
-import { ProgressSize } from '@/components/common/ui/progress-mui/types';
 import { SearchFormProps } from '@/components/pages/search-pages/search-form/SearchForm';
 import SubjectsAPI from '@/lib/api/subject/SubjectAPI';
 import { GetListOfSubjectsResponse } from '@/lib/api/subject/types/GetListOfSubjectsResponse';

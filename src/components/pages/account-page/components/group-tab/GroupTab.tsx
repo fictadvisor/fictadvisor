@@ -8,7 +8,6 @@ import {
 } from 'src/components/pages/account-page/components/group-tab/components/table/utils';
 
 import Progress from '@/components/common/ui/progress-mui';
-import { ProgressSize } from '@/components/common/ui/progress-mui/types';
 import NoGroupBlock from '@/components/pages/account-page/components/group-tab/components/no-group-block';
 import StudentsTable from '@/components/pages/account-page/components/group-tab/components/table/student-table';
 import useAuthentication from '@/hooks/use-authentication';

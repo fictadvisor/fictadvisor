@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { AlertColor } from '@/components/common/ui/alert';
+import { AlertType } from '@/components/common/ui/alert-mui/types';
 
 export interface AlertStore {
-  color: AlertColor;
+  color: AlertType;
   title: string;
   description?: string;
   open: boolean;
@@ -12,7 +12,7 @@ export interface AlertStore {
 }
 
 export interface ShowToastAction {
-  color: AlertColor;
+  color: AlertType;
   title: string;
   description?: string;
 }
@@ -22,7 +22,7 @@ export interface setNewTimeoutAction {
 }
 
 const initialState: AlertStore = {
-  color: AlertColor.ERROR,
+  color: AlertType.ERROR,
   title: '',
   description: '',
   open: false,
