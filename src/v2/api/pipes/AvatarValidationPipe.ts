@@ -5,7 +5,7 @@ import { InvalidExtensionException } from '../../utils/exceptions/InvalidExtensi
 import { extname } from 'path';
 
 const AVATAR_MAX_SIZE = 1572864;
-const AVATAR_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.web'];
+const AVATAR_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.webp'];
 
 @Injectable()
 export class AvatarValidationPipe implements PipeTransform {

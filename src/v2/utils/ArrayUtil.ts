@@ -14,3 +14,11 @@ export async function mapAsync<T> (array: T[], callback: (item: T) => Promise<ob
   }
   return arr;
 }
+
+export function some<T, K extends keyof T> (objs: Array<T>, field: K, comp: any): boolean {
+  return objs.some((obj) => obj[field] === comp);
+}
+
+export function find <T, K extends keyof T> (objs: Array<T>, field: K, comp: any): T | undefined {
+  return objs.find((obj) => obj[field] === comp);
+}

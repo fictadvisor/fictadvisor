@@ -18,9 +18,17 @@ import { GroupBySemesterLessonGuard } from '../../security/group-guard/GroupBySe
 import { GroupByTemporaryLessonGuard } from '../../security/group-guard/GroupByTemporaryLessonGuard';
 import { ScheduleMapper } from '../../mappers/ScheduleMapper';
 import { Access } from '../../security/Access';
-import { ApiBadRequestResponse, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth, ApiForbiddenResponse,
+  ApiOkResponse,
+  ApiQuery,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { GeneralEventResponse } from '../responses/GeneralEventResponse';
-
+import { CreateEventDTO } from '../dtos/CreateEventDTO';
+import { EventResponse } from '../responses/EventResponse';
 @ApiTags('Schedule')
 @Controller({
   version: '2',
@@ -141,6 +149,61 @@ export class ScheduleController {
   ) {
     const events = await this.scheduleService.getGeneralGroupEvents(id, week);
     return this.scheduleMapper.getGeneralEvents(events);
+  }
+
+  @Access('groups.$groupId.event.create')
+  @Post('/groups/:groupId/event')
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: EventResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidGroupIdException: 
+      Group with such id is not found
+      
+    InvalidBodyException:
+      Name is too short (min: 2)
+      Name is too long (max: 100)
+      Name cannot be empty
+      Discipline type must be an enum
+      Teachers must be Array
+      Teachers cannot be empty (empty array is required)
+      Start time cannot be empty
+      Start time must be Date
+      End time cannot be empty
+      End Time must be Date
+      Period cannot be empty
+      Period must be an enum
+      Url must be a URL address
+      Discipline description is too long (max: 2000)
+      Event description is too long (max: 2000)
+      
+    ObjectIsRequiredException:
+      DisciplineType is required
+      
+    InvalidDateException:
+      Date is not valid or does not belong to this semester
+      
+    DataNotFoundException:
+      Data was not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  async createEvent (
+    @Param('groupId', GroupByIdPipe) groupId: string,
+    @Body() body: CreateEventDTO,
+  ) {
+    const result = await this.scheduleService.createGroupEvent(groupId, body);
+    return this.scheduleMapper.getEvent(result.event, result.discipline);
   }
 
 //   @UseGuards(JwtGuard)

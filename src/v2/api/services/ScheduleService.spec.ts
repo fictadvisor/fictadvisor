@@ -6,6 +6,8 @@ import { Period } from '@prisma/client';
 import { EventRepository } from '../../database/repositories/EventRepository';
 import { DateService } from '../../utils/date/DateService';
 import { ParserModule } from '../../utils/parser/ParserModule';
+import { DisciplineTeacherService } from './DisciplineTeacherService';
+
 describe('ScheduleService', () => {
   let scheduleService: ScheduleService;
   let eventRepository: EventRepository;
@@ -19,7 +21,12 @@ describe('ScheduleService', () => {
         PrismaModule,
         ParserModule,
       ],
-    }).compile();
+    }).useMocker((token) => {
+      if (token === DisciplineTeacherService) {
+        return {};
+      }
+    })
+      .compile();
 
     scheduleService = moduleRef.get(ScheduleService);
     eventRepository = moduleRef.get(EventRepository);
