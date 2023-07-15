@@ -14,7 +14,8 @@ export class DisciplineMapper {
       teachers: discipline.disciplineTeachers.map((disciplineTeacher) => ({
         disciplineTeacherId: disciplineTeacher.id,
         ...disciplineTeacher.teacher,
-        roles: disciplineTeacher.roles.map((r) => (r.role)),
+        rating: disciplineTeacher.teacher.rating.toNumber(),
+        roles: disciplineTeacher.roles.map((r) => r.role),
       })),
     }));
   }
@@ -36,7 +37,7 @@ export class DisciplineMapper {
       for (const disciplineTeacher of discipline.disciplineTeachers) {
         teachers.push({
           disciplineTeacherId: disciplineTeacher.id,
-          roles: disciplineTeacher.roles.map((r) => (r.role)),
+          roles: disciplineTeacher.roles.map((r) => r.role),
           firstName: disciplineTeacher.teacher.firstName,
           middleName: disciplineTeacher.teacher.middleName,
           lastName: disciplineTeacher.teacher.lastName,
@@ -52,7 +53,9 @@ export class DisciplineMapper {
   getSortedDisciplinesByPeriod (disciplines: DbDiscipline[]) {
     const periods = [];
     disciplines.map((discipline) => {
-      const period = periods.find((p) => p.semester === discipline.semester && p.year === discipline.year);
+      const period = periods.find(
+        (p) => p.semester === discipline.semester && p.year === discipline.year
+      );
       if (!period) {
         periods.push({
           year: discipline.year,
@@ -70,7 +73,8 @@ export class DisciplineMapper {
     return amounts.map(({ year, semester, amount }) => {
       const names = [];
       disciplines.map((discipline) => {
-        if (discipline.semester === semester && discipline.year === year) names.push(discipline.subject.name);
+        if (discipline.semester === semester && discipline.year === year)
+          names.push(discipline.subject.name);
       });
       return {
         year,

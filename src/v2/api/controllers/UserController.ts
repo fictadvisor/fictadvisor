@@ -29,7 +29,6 @@ import { TelegramDTO } from '../dtos/TelegramDTO';
 import { UserMapper } from '../../mappers/UserMapper';
 import { AvatarValidationPipe } from '../pipes/AvatarValidationPipe';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { TransferRoleDto } from '../dtos/TransferRoleDto';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -44,12 +43,12 @@ import { RemainingSelectiveResponse } from '../responses/RemainingSelectiveRespo
 import { GroupByIdPipe } from '../pipes/GroupByIdPipe';
 import { StudentPipe } from '../pipes/StudentPipe';
 import { StudentMapper } from '../../mappers/StudentMapper';
-import { StudentResponse } from '../responses/StudentResponse';
+import { FullStudentResponse } from '../responses/StudentResponse';
 import { UserResponse } from '../responses/UserResponse';
 import { ApiImplicitFile } from '@nestjs/swagger/dist/decorators/api-implicit-file.decorator';
 import { SelectiveDisciplinesPipe } from '../pipes/SelectiveDisciplinesPipe';
 import { AttachSelectiveDisciplinesDTO } from '../dtos/AttachSelectiveDisciplinesDTO';
-
+import { TransferRoleDto } from '../dtos/TransferRoleDto';
 
 @ApiTags('User')
 @Controller({
@@ -290,7 +289,6 @@ export class UserController {
     return this.userMapper.updateUser(user);
   }
 
-
   @Access('users.$userId.selective.get')
   @Get('/:userId/selectiveDisciplines')
   @ApiOkResponse({
@@ -339,13 +337,12 @@ export class UserController {
   @Access('admin.switch')
   @Patch('/:userId/group/:groupId')
   @ApiOkResponse({
-    type: StudentResponse,
+    type: FullStudentResponse,
   })
   @ApiBadRequestResponse({
     description: `Exceptions:\n
                   InvalidEntityIdException: User with such id is not found
                   InvalidEntityIdException: Group with such id is not found`,
-
   })
   @ApiForbiddenResponse({
     description: `Exceptions:\n

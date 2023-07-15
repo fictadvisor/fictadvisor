@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-
+import { TeacherRole } from '@prisma/client';
 
 export class TeacherResponse {
   @ApiProperty()
@@ -7,16 +7,16 @@ export class TeacherResponse {
 
   @ApiProperty()
     firstName: string;
-  
+
   @ApiPropertyOptional()
     middleName?: string;
-  
+
   @ApiProperty()
     lastName: string;
-  
+
   @ApiPropertyOptional()
     description?: string;
-  
+
   @ApiPropertyOptional()
     avatar?: string;
 
@@ -24,4 +24,13 @@ export class TeacherResponse {
     rating: number;
 }
 
+export class ExtendTeacherResponse extends TeacherResponse {
+  @ApiProperty()
+    disciplineTeacherId: string;
 
+  @ApiProperty({
+    type: [TeacherRole],
+    enum: TeacherRole,
+  })
+    roles: TeacherRole[];
+}

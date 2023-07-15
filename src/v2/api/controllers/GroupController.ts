@@ -12,8 +12,20 @@ import { Access } from 'src/v2/security/Access';
 import { StudentMapper } from '../../mappers/StudentMapper';
 import { AbsenceOfCaptainException } from '../../utils/exceptions/AbsenceOfCaptainException';
 import { GroupMapper } from '../../mappers/GroupMapper';
-import { ApiTags, ApiBearerAuth, ApiForbiddenResponse, ApiBadRequestResponse, ApiOkResponse } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiBadRequestResponse,
+  ApiOkResponse,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { GroupResponse, GroupsResponse } from '../responses/GroupResponse';
+import { GroupStudentsResponse } from '../responses/GroupStudentsResponse';
+import { CaptainResponse } from '../responses/CaptainResponse';
+import { ExtendDisciplineTeachersResponse } from '../responses/DisciplineTeachersResponse';
+import { ShortDisciplinesResponse } from '../responses/DisciplineResponse';
+import { ShortUsersResponse } from '../responses/UserResponse';
 
 @ApiTags('Groups')
 @Controller({
@@ -131,6 +143,25 @@ export class GroupController {
     return this.groupService.deleteGroup(groupId);
   }
 
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: GroupStudentsResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidGroupIdException: 
+      Group with such id is not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException: 
+      You do not have permission to perform this action`,
+  })
   @Access('groups.$groupId.students.get')
   @Get('/:groupId/students')
   async getStudents (
@@ -141,6 +172,25 @@ export class GroupController {
     return { students };
   }
 
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: CaptainResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidGroupIdException: 
+      Group with such id is not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException: 
+      You do not have permission to perform this action`,
+  })
   @Access('groups.$groupId.captain.get')
   @Get('/:groupId/captain')
   async getCaptain (
@@ -153,6 +203,25 @@ export class GroupController {
     return captain;
   }
 
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: [ExtendDisciplineTeachersResponse],
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidGroupIdException: 
+      Group with such id is not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException: 
+      You do not have permission to perform this action`,
+  })
   @Access('groups.$groupId.disciplines.teachers.get')
   @Get('/:groupId/disciplineTeachers')
   async getDisciplineTeachers (
@@ -161,6 +230,25 @@ export class GroupController {
     return this.groupService.getDisciplineTeachers(groupId);
   }
 
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: ShortDisciplinesResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidGroupIdException: 
+      Group with such id is not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException: 
+      You do not have permission to perform this action`,
+  })
   @Access('groups.$groupId.disciplines.get')
   @Get('/:groupId/disciplines')
   async getDiscipline (
@@ -170,6 +258,29 @@ export class GroupController {
     return { disciplines };
   }
 
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: ShortUsersResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidGroupIdException: 
+      Group with such id is not found
+      
+    InvalidBodyException: 
+      Email cannot be empty
+      The email is not a valid email address`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `
+    NoPermissionException: 
+      You do not have permission to perform this action`,
+  })
   @Access('groups.$groupId.students.add')
   @Post('/:groupId/addEmails')
   async addUnregistered (
