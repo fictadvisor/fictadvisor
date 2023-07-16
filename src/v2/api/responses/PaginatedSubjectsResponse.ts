@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { MetaDataResponse } from './MetaDataResponse';
+import { PaginationDataResponse } from './PaginationDataResponse';
 import { SubjectCountResponse } from './SubjectCountResponse';
 
 export class PaginatedSubjectsResponse {
@@ -9,5 +9,5 @@ export class PaginatedSubjectsResponse {
     subjects: SubjectCountResponse[];
   
   @ApiProperty()
-    meta: MetaDataResponse;
+    pagination: PaginationDataResponse;
 }

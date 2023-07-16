@@ -22,7 +22,6 @@ export class TeacherRepository {
   async findMany (
     data: Prisma.TeacherFindManyArgs,
   ) {
-
     return this.prisma.teacher.findMany({
       include: this.include,
       ...data,
@@ -103,7 +102,7 @@ export class TeacherRepository {
     });
   }
 
-  count (data: Prisma.TeacherCountArgs) {
+  async count (data: Prisma.TeacherCountArgs) {
     return this.prisma.teacher.count(
       data,
     );

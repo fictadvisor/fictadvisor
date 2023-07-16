@@ -1,13 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { PaginationDataResponse } from './PaginationDataResponse';
-import { TeacherResponse } from './TeacherResponse';
+import { ResourceResponse } from './ResourceResponse';
 
-export class PaginatedTeachersResponse {
+export class PaginatedResourcesResponse {
   @ApiProperty({
-    type: [TeacherResponse],
+    type: [ResourceResponse],
   })
-    teachers: TeacherResponse[];
+    studentResources: ResourceResponse[];
   
   @ApiProperty()
     pagination: PaginationDataResponse;
 }
+
+
+

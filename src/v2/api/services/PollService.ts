@@ -110,7 +110,6 @@ export class PollService {
     teacherId: string,
     query: CommentsQueryDTO = {}
   ) {
-
     const data = {
       where: {
         type: QuestionType.TEXT,

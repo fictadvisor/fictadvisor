@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class MetaDataResponse {
+export class PaginationDataResponse {
   @ApiProperty()
     pageSize: number;
 
@@ -8,8 +8,11 @@ export class MetaDataResponse {
     page: number;
 
   @ApiProperty()
+    totalPages: number;
+
+  @ApiProperty()
     prevPageElems: number;
-    
+  
   @ApiProperty()
     nextPageElems: number;
 }

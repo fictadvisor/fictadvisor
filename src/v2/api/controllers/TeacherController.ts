@@ -52,7 +52,6 @@ export class TeacherController {
     private disciplineTeacherMapper: DisciplineTeacherMapper,
   ) {}
 
-
   @Get()
   @ApiOkResponse({
     type: PaginatedTeachersResponse,
@@ -67,7 +66,10 @@ export class TeacherController {
     @Query() query: QueryAllTeacherDTO,
   ) {
     const teachers = await this.teacherService.getAll(query);
-    return { teachers: this.teacherMapper.getTeachers(teachers.data), meta: teachers.meta };
+    return {
+      teachers: this.teacherMapper.getTeachers(teachers.data),
+      pagination: teachers.pagination,
+    };
   }
 
   @ApiOkResponse({
@@ -417,7 +419,7 @@ export class TeacherController {
     const questions = await this.pollService.getQuestionWithText(teacherId, query);
     return {
       ...this.questionMapper.getQuestionWithResponses(questions.data),
-      meta: questions.meta,
+      pagination: questions.pagination,
     };
   }
 

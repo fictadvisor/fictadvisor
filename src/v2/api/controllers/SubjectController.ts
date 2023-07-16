@@ -37,7 +37,10 @@ export class SubjectController {
   ) {
     const subjects = await this.subjectService.getAll(body);
 
-    return { subjects: subjects.data, meta: subjects.meta };
+    return {
+      subjects: subjects.data,
+      pagination: subjects.pagination,
+    };
   }
 
   @ApiOkResponse({

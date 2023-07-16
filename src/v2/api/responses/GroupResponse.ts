@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { MetaDataResponse } from './MetaDataResponse';
+import { PaginationDataResponse } from './PaginationDataResponse';
 
 export class GroupResponse {
   @ApiProperty()
@@ -16,7 +16,7 @@ export class GroupsResponse {
     groups: GroupResponse[];
 
   @ApiProperty({
-    type: MetaDataResponse,
+    type: PaginationDataResponse,
   })
-    meta: MetaDataResponse;
+    pagination: PaginationDataResponse;
 }

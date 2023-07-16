@@ -56,6 +56,12 @@ export class QuestionRepository {
       include: this.include,
     });
   }
+
+  async count (data: Prisma.QuestionCountArgs) {
+    return this.prisma.question.count(
+      data,
+    );
+  }
 }
 
 

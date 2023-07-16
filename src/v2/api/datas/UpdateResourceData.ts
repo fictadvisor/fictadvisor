@@ -1,5 +1,5 @@
 export class UpdateResourceData {
-  name: string;
+  name?: string;
   link?: string;
   icon?: string;
 }

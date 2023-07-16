@@ -83,4 +83,10 @@ export class SubjectRepository {
       where,
     });
   }
+
+  async count (data: Prisma.SubjectCountArgs) {
+    return this.prisma.subject.count(
+      data,
+    );
+  }
 }

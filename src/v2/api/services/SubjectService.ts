@@ -41,7 +41,7 @@ export class SubjectService {
 
     const results = {
       data: [],
-      meta: subjects.meta,
+      pagination: subjects.pagination,
     };
     for (const subject of subjects.data) {
 

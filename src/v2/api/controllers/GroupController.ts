@@ -63,7 +63,10 @@ export class GroupController {
   async getAll (@Query() body: QueryAllDTO) {
     const groupsWithSelectiveAmounts = await this.groupService.getAll(body);
     const groups = this.groupMapper.getGroups(groupsWithSelectiveAmounts.data);
-    return { groups, meta: groupsWithSelectiveAmounts.meta };
+    return {
+      groups,
+      pagination: groupsWithSelectiveAmounts.pagination,
+    };
   }
 
   @ApiOkResponse({

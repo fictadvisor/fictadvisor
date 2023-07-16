@@ -68,4 +68,10 @@ export class GroupRepository {
       include: this.include,
     });
   }
+
+  async count (data: Prisma.GroupCountArgs) {
+    return this.prisma.group.count(
+      data,
+    );
+  }
 }

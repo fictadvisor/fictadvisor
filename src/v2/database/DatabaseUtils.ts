@@ -40,7 +40,7 @@ export class DatabaseUtils {
   static async paginate<T=any> (
     repository,
     { page = 0, pageSize }: PageDTO,
-    args: object
+    args: any
   ): Promise<PaginatedData<T>> {
     page = +page;
     pageSize = +pageSize;
@@ -49,14 +49,20 @@ export class DatabaseUtils {
       ...args,
       ...this.getPage({ page, pageSize }),
     });
-
+    const count = await repository.count({
+      where: args.where,
+    });    
+    
+    const totalPages = Math.ceil(count/pageSize)-1;
     const pages = Math.ceil(data.length / pageSize);
+
     if (!pageSize) {
       return {
         data,
-        meta: {
+        pagination: {
           pageSize,
           page,
+          totalPages,
           prevPageElems: 0,
           nextPageElems: 0,
         },
@@ -65,9 +71,10 @@ export class DatabaseUtils {
     if (page === 0) {
       return {
         data: data.slice(0, pageSize),
-        meta: {
+        pagination: {
           pageSize,
           page,
+          totalPages,
           prevPageElems: 0,
           nextPageElems: data.slice(pageSize).length,
         },
@@ -75,9 +82,10 @@ export class DatabaseUtils {
     } else if (pages === 2) {
       return {
         data: data.slice(pageSize),
-        meta: {
+        pagination: {
           pageSize,
           page,
+          totalPages,
           prevPageElems: data.slice(0, pageSize).length,
           nextPageElems: 0,
         },
@@ -85,9 +93,10 @@ export class DatabaseUtils {
     }
     return {
       data: data.slice(pageSize, pageSize*2),
-      meta: {
+      pagination: {
         pageSize,
         page,
+        totalPages,
         prevPageElems: data.slice(0, pageSize).length,
         nextPageElems: data.slice(pageSize*2).length,
       },
