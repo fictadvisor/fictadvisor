@@ -8,46 +8,38 @@ import Button, {
 } from '@/components/common/ui/button/Button';
 import Progress from '@/components/common/ui/progress-mui';
 import { SearchFormProps } from '@/components/pages/search-pages/search-form/SearchForm';
-import { TeacherSearchFormFields } from '@/components/pages/search-pages/search-form/types';
+import { SearchFormFields } from '@/components/pages/search-pages/search-form/types';
+import {
+  breadcrumbs,
+  filterOptions,
+  PAGE_SIZE,
+} from '@/components/pages/search-pages/teacher-search/constants';
 import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
 import { GetTeachersResponse } from '@/lib/api/teacher/types/GetTeachersResponse';
 
 import { TeacherInitialValues } from '../search-form/constants';
-import { SearchForm } from '../search-form/SearchForm';
+import SearchForm from '../search-form/SearchForm';
 
 import { TeacherSearchList } from './TeacherSearchList';
 
 import styles from '../SearchPage.module.scss';
-
-const breadcrumbs = [
-  {
-    label: 'Головна',
-    href: '/',
-  },
-  {
-    label: 'Викладачі',
-    href: '/teachers',
-  },
-];
-const pageSize = 20;
 
 export const TeacherSearchPage = () => {
   const initialValues = localStorage.getItem('teachersForm')
     ? JSON.parse(localStorage.getItem('teachersForm') || '{}')
     : TeacherInitialValues;
   const localStorageName = 'teachersForm';
-  const [queryObj, setQueryObj] =
-    useState<TeacherSearchFormFields>(initialValues);
+  const [queryObj, setQueryObj] = useState<SearchFormFields>(initialValues);
   const [curPage, setCurPage] = useState(0);
   const submitHandler: SearchFormProps['onSubmit'] = useCallback(query => {
-    setQueryObj(query as TeacherSearchFormFields);
+    setQueryObj(prev => ({ ...prev, ...query }));
     setCurPage(0);
   }, []);
 
   const { data, isLoading, refetch, isFetching } =
     useQuery<GetTeachersResponse>(
       'lecturers',
-      () => TeacherAPI.getAll(queryObj, pageSize * (curPage + 1)),
+      () => TeacherAPI.getAll(queryObj, PAGE_SIZE * (curPage + 1)),
       { keepPreviousData: true, refetchOnWindowFocus: false },
     );
 
@@ -61,10 +53,7 @@ export const TeacherSearchPage = () => {
       <Breadcrumbs items={breadcrumbs} sx={{ margin: '16px 0px 16px 0px' }} />
       <SearchForm
         searchPlaceholder="Оберіть викладача"
-        filterDropDownOptions={[
-          { value: 'firstName', label: 'Іменем' },
-          { value: 'lastName', label: 'Прізвищем' },
-        ]}
+        filterDropDownOptions={filterOptions}
         onSubmit={submitHandler}
         initialValues={initialValues}
         localStorageName={localStorageName}
@@ -78,7 +67,7 @@ export const TeacherSearchPage = () => {
             <Progress />
           </div>
         ))}
-      {data?.teachers.length === (curPage + 1) * pageSize && (
+      {data?.teachers.length === (curPage + 1) * PAGE_SIZE && (
         <Button
           className={styles['load-btn']}
           text="Завантажити ще"

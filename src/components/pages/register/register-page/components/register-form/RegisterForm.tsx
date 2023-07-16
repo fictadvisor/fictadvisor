@@ -4,13 +4,9 @@ import { Form, Formik } from 'formik';
 import { useRouter } from 'next/router';
 
 import Button, { ButtonSize } from '@/components/common/ui/button';
-import {
-  Checkbox,
-  Dropdown,
-  Input,
-  InputType,
-} from '@/components/common/ui/form';
+import { Checkbox, Input, InputType } from '@/components/common/ui/form';
 import { FieldSize } from '@/components/common/ui/form/common/types';
+import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown';
 import { RegisterFormFields } from '@/components/pages/register/register-page/components/register-form/types';
 import {
   transformData,
@@ -45,7 +41,7 @@ const RegisterForm: FC<GetAllResponse> = ({ groups }) => {
           await router.push(`/register/email-verification?email=${data.email}`);
         }
       } catch (error) {
-        // Temporary solution
+        // TODO: refactor this shit
         const errorName = (error as AxiosError<{ error: string }>).response
           ?.data.error;
 
@@ -69,6 +65,7 @@ const RegisterForm: FC<GetAllResponse> = ({ groups }) => {
       onSubmit={handleSubmit}
       validateOnMount
       validateOnChange
+      enableReinitialize
       validationSchema={validationSchema}
     >
       {({ isValid }) => (
@@ -104,7 +101,7 @@ const RegisterForm: FC<GetAllResponse> = ({ groups }) => {
             name="email"
           />
           <div className={styles['one-line']}>
-            <Dropdown
+            <FormikDropdown
               size={FieldSize.LARGE}
               options={transformGroups(groups)}
               label="Група"

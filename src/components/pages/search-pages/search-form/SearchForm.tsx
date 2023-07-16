@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FC } from 'react';
 import { useQuery } from 'react-query';
 import {
@@ -7,7 +7,7 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
 } from '@heroicons/react/24/outline';
-import { Form, Formik, useFormikContext } from 'formik';
+import { Form, Formik, FormikProps, useFormikContext } from 'formik';
 
 import {
   Dropdown,
@@ -15,6 +15,7 @@ import {
   InputSize,
   InputType,
 } from '@/components/common/ui/form';
+import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
 import {
   IconButton,
   IconButtonColor,
@@ -23,14 +24,14 @@ import {
 } from '@/components/common/ui/icon-button';
 import GroupAPI from '@/lib/api/group/GroupAPI';
 
-import { SubjectSearchFormFields, TeacherSearchFormFields } from './types';
+import { SearchFormFields } from './types';
 
 import styles from '../SearchPage.module.scss';
 
 export interface SearchFormProps {
-  onSubmit: (obj: SubjectSearchFormFields | TeacherSearchFormFields) => void;
-  initialValues: SubjectSearchFormFields | TeacherSearchFormFields;
-  filterDropDownOptions: { value: string; label: string }[];
+  onSubmit: (values: Partial<SearchFormFields>) => void;
+  initialValues: SearchFormFields;
+  filterDropDownOptions: DropDownOption[];
   searchPlaceholder: string;
   localStorageName?: string;
 }
@@ -44,7 +45,7 @@ const FormObserver = (props: { name?: string }) => {
   return null;
 };
 
-export const SearchForm: FC<SearchFormProps> = ({
+const SearchForm: FC<SearchFormProps> = ({
   onSubmit,
   initialValues,
   filterDropDownOptions,
@@ -56,9 +57,38 @@ export const SearchForm: FC<SearchFormProps> = ({
     staleTime: Infinity,
   });
 
+  const groups: DropDownOption[] = useMemo(
+    () => groupData?.groups.map(({ code, id }) => ({ label: code, id })) || [],
+    [groupData?.groups],
+  );
+
+  // This is a temporary solution. It will be removed when we rewrite input component to be used without formik and get rid of formik in this case
+  const formikRef = useRef<FormikProps<SearchFormFields>>(null);
+
+  const handleGroupChange = useCallback((group: string) => {
+    formikRef.current?.setFieldValue('group', group);
+    formikRef.current?.handleSubmit();
+  }, []);
+
+  const handleSortChange = useCallback((sort: string) => {
+    formikRef.current?.setFieldValue('sort', sort);
+    formikRef.current?.handleSubmit();
+  }, []);
+
+  const handleOrderChange = useCallback(() => {
+    const order = formikRef.current?.values.order;
+    formikRef.current?.setFieldValue('order', order === 'asc' ? 'desc' : 'asc');
+    formikRef.current?.handleSubmit();
+  }, []);
+
   return (
-    <Formik initialValues={initialValues} onSubmit={onSubmit}>
-      {({ handleSubmit, values, setFieldValue }) => (
+    <Formik
+      initialValues={initialValues}
+      onSubmit={onSubmit}
+      enableReinitialize
+      innerRef={formikRef}
+    >
+      {({ handleSubmit, values }) => (
         <Form className={styles['form']}>
           <FormObserver name={localStorageName} />
           <Input
@@ -89,26 +119,19 @@ export const SearchForm: FC<SearchFormProps> = ({
                 <Dropdown
                   placeholder="ІП-22"
                   label="Група"
-                  onChange={handleSubmit}
+                  onChange={handleGroupChange}
                   showRemark={false}
-                  name="group"
-                  options={
-                    groupData
-                      ? groupData.groups.map(group => ({
-                          label: group.code,
-                          value: group.id,
-                        }))
-                      : []
-                  }
+                  value={values.group}
+                  options={groups}
                 />
               </div>
               <div className={styles['dropdown-2']}>
                 <Dropdown
                   label="Сортувати за"
                   placeholder="Іменем"
-                  onChange={handleSubmit}
+                  onChange={handleSortChange}
                   showRemark={false}
-                  name="sort"
+                  value={values.sort}
                   options={filterDropDownOptions}
                 />
               </div>
@@ -116,22 +139,16 @@ export const SearchForm: FC<SearchFormProps> = ({
                 <IconButton
                   className={styles['sort-icon']}
                   type="button"
-                  onClick={() => {
-                    setFieldValue(
-                      'order',
-                      values.order === 'asc' ? 'desc' : 'asc',
-                    );
-                    handleSubmit();
-                  }}
+                  onClick={handleOrderChange}
                   name="order"
                   size={IconButtonSize.LARGE}
                   shape={IconButtonShape.SQUARE}
                   color={IconButtonColor.SECONDARY}
                   icon={
-                    values.order !== 'asc' ? (
-                      <BarsArrowUpIcon />
-                    ) : (
+                    values.order === 'asc' ? (
                       <BarsArrowDownIcon />
+                    ) : (
+                      <BarsArrowUpIcon />
                     )
                   }
                 />
@@ -143,3 +160,5 @@ export const SearchForm: FC<SearchFormProps> = ({
     </Formik>
   );
 };
+
+export default SearchForm;

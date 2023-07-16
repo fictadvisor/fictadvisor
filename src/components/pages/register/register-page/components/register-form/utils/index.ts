@@ -8,6 +8,7 @@ export const transformData = (data: RegisterFormFields): RegisterBody => {
   const transformedData: RegisterBody = {
     student: {
       groupId: data.group.trim(),
+      // TODO: refactor this
       firstName: data.firstName.trim().replace('`', `'`).replace('ʼ', `'`),
       middleName: data.middleName?.trim().replace('`', `'`).replace('ʼ', `'`),
       lastName: data.lastName.trim().replace('`', `'`).replace('ʼ', `'`),
@@ -24,7 +25,7 @@ export const transformData = (data: RegisterFormFields): RegisterBody => {
 };
 
 export const transformGroups = (data: Group[]): DropDownOption[] =>
-  data.map(group => ({
-    label: group.code,
-    value: group.id,
+  data.map(({ code, id }) => ({
+    label: code,
+    id,
   }));

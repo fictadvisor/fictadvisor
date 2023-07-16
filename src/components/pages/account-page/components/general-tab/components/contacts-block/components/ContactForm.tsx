@@ -1,10 +1,11 @@
-import React, { FC } from 'react';
+import React, { FC, useCallback } from 'react';
 import { Form, Formik } from 'formik';
 import * as yup from 'yup';
 
 import { CustomCheck } from '@/components/common/icons/CustomCheck';
 import Button, { ButtonColor, ButtonSize } from '@/components/common/ui/button';
-import { Dropdown, Input, InputSize } from '@/components/common/ui/form';
+import { Input, InputSize } from '@/components/common/ui/form';
+import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown';
 import styles from '@/components/pages/account-page/components/general-tab/GeneralTab.module.scss';
 import useAuthentication from '@/hooks/use-authentication';
 import useToast from '@/hooks/use-toast';
@@ -21,17 +22,20 @@ const ContactForm: FC<ContactFormProps> = ({ refetchContacts }) => {
   const toast = useToast();
   const options = Object.values(ContactType).map(contact => ({
     label: contact,
-    value: contact,
+    id: contact,
   }));
 
-  const handleSubmit = async (data: AddContactBody) => {
-    try {
-      await UserAPI.addContact(user.id, data);
-      void refetchContacts();
-    } catch (e) {
-      toast.error('Здається ти ввів неправильні значення!');
-    }
-  };
+  const handleSubmit = useCallback(
+    async (data: AddContactBody) => {
+      try {
+        await UserAPI.addContact(user.id, data);
+        void refetchContacts();
+      } catch (e) {
+        toast.error('Здається ти ввів неправильні значення!');
+      }
+    },
+    [refetchContacts, toast, user.id],
+  );
 
   return (
     <div className={styles['add-social-links-container']}>
@@ -49,11 +53,12 @@ const ContactForm: FC<ContactFormProps> = ({ refetchContacts }) => {
           link: '',
           displayName: '',
         }}
+        validateOnChange
         onSubmit={handleSubmit}
       >
-        {({}) => (
+        {() => (
           <Form>
-            <Dropdown
+            <FormikDropdown
               options={options}
               name="name"
               label="Соціальна мережа"

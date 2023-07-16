@@ -1,7 +1,6 @@
 import { FC, useContext, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Box } from '@mui/material';
-import { Form, Formik } from 'formik';
 
 import FloatingCard from '@/components/common/ui/cards/floating-card';
 import Comment from '@/components/common/ui/comment';
@@ -12,17 +11,7 @@ import { teacherSubjectContext } from '@/components/pages/personal-teacher-subje
 import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
 
 import * as styles from './CommentTab.styles';
-
-const sortInfo = [
-  {
-    label: 'Спочатку нові',
-    value: 'newest',
-  },
-  {
-    label: 'Спочатку від дідів',
-    value: 'oldest',
-  },
-];
+import { sortInfo } from './constants';
 
 export interface TeacherTabProps {
   teacherId: string;
@@ -40,7 +29,7 @@ const CommentTab: FC<TeacherTabProps> = ({ teacherId, subjectId }) => {
     floatingCardShowed: teacherSubjectFloatingShowed,
   } = useContext(teacherSubjectContext);
   const [sort, setSort] = useState('newest');
-  const { refetch, data } = useQuery(
+  const { data } = useQuery(
     ['teacherInfo', teacherId, subjectId, sort],
     () =>
       TeacherAPI.getTeacherComments(
@@ -62,36 +51,25 @@ const CommentTab: FC<TeacherTabProps> = ({ teacherId, subjectId }) => {
   const floatingCardShowed =
     teacherFloatingShowed || teacherSubjectFloatingShowed;
 
-  const onChange = (options: { dropdown: string }) => {
-    setSort(options.dropdown);
-    void refetch();
+  const onSortChange = (sort: string) => {
+    setSort(sort);
   };
 
   return (
     <Box sx={styles.wrapper}>
       <Box sx={styles.commentsWrapper}>
-        <Formik
-          validateOnMount
-          initialValues={{ dropdown: 'newest' }}
-          onSubmit={values => {
-            onChange(values);
-          }}
-        >
-          {({ handleSubmit }) => (
-            <Form style={styles.dropdown}>
-              <Dropdown
-                disableClearable
-                placeholder="Сортувати відгуки"
-                size={FieldSize.MEDIUM}
-                options={sortInfo}
-                name="dropdown"
-                showRemark
-                onChange={handleSubmit}
-                label=""
-              />
-            </Form>
-          )}
-        </Formik>
+        <Box sx={styles.dropdown}>
+          <Dropdown
+            disableClearable
+            placeholder="Сортувати відгуки"
+            size={FieldSize.MEDIUM}
+            options={sortInfo}
+            showRemark={false}
+            onChange={onSortChange}
+            value={sort}
+            label=""
+          />
+        </Box>
 
         {data?.questions?.map(question =>
           question?.comments?.map((comment, index) => (

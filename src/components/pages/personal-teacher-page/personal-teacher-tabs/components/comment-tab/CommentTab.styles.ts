@@ -14,5 +14,5 @@ export const commentsWrapper: SxProps<Theme> = {
 };
 
 export const dropdown = {
-  marginBottom: '12 px',
+  marginBottom: '12px',
 };

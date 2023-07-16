@@ -121,10 +121,9 @@ export const dropdown: SxProps<Theme> = {
         minHeight: '36px',
         pt: '0px',
         pb: '0px',
-        '&[aria-selected="true"],&[aria-selected="true"].Mui-focused, &:hover':
-          {
-            backgroundColor: 'grey.200',
-          },
+        '&[aria-selected="true"],&.Mui-focused, &:hover': {
+          backgroundColor: 'grey.200',
+        },
       },
     },
   },

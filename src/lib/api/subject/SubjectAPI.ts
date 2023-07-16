@@ -1,4 +1,4 @@
-import { SubjectSearchFormFields } from '@/components/pages/search-pages/search-form/types';
+import { SearchFormFields } from '@/components/pages/search-pages/search-form/types';
 import { GetListOfSubjectsResponse } from '@/lib/api/subject/types/GetListOfSubjectsResponse';
 import { GetTeachersBySubjectResponse } from '@/lib/api/subject/types/GetTeachersBySubjectResponse';
 
@@ -13,7 +13,7 @@ class SubjectsAPI {
   }
 
   async getAll(
-    { search, order, sort, group }: SubjectSearchFormFields,
+    { search, order, sort, group }: SearchFormFields,
     pageSize: number,
   ) {
     const { data } = await client.get<GetListOfSubjectsResponse>('/subjects', {

@@ -2,8 +2,7 @@ import { FieldSize } from '@/components/common/ui/form/common/types';
 import { TagProps } from '@/components/common/ui/tag-mui/types';
 
 interface OptionBase {
-  // TODO: rename to id
-  value: string;
+  id: string;
 }
 interface DropDownTextOption extends OptionBase {
   label: string;
@@ -16,7 +15,6 @@ export type DropDownOption = DropDownTagOption | DropDownTextOption;
 export interface DropdownProps {
   options: DropDownOption[];
   label?: string;
-  name?: string;
   isDisabled?: boolean;
   placeholder?: string;
   isSuccessOnDefault?: boolean;
@@ -25,6 +23,9 @@ export interface DropdownProps {
   size?: FieldSize;
   noOptionsText?: string;
   width?: string;
-  onChange?: () => void;
   disableClearable?: boolean;
+  value: string;
+  onChange: (value: string) => void;
+  touched?: boolean;
+  error?: string;
 }
