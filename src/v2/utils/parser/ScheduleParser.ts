@@ -47,9 +47,18 @@ export class ScheduleParser implements Parser {
     private dateService: DateService,
   ) {}
 
-  async parse (period: StudyingSemester) {
+  async parse (period: StudyingSemester, groupList: string[]) {
     const groups: ScheduleGroupType[] = (await axios.get('https://schedule.kpi.ua/api/schedule/groups')).data.data;
-    const filtered = groups.filter((group) => group.faculty === 'ФІОТ').map((group) => ({ id: group.id, name: group.name }));
+    let filtered = groups
+      .filter((group) => group.faculty === 'ФІОТ')
+      .map((group) => ({
+        id: group.id,
+        name: group.name, 
+      }));
+
+    if (groupList.length) {
+      filtered = filtered.filter((group) => groupList.includes(group.name));
+    }
 
     for (const group of filtered) {
       await this.parseGroupSchedule(group as ScheduleGroupType, period);

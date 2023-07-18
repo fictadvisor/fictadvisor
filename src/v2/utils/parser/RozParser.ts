@@ -10,6 +10,8 @@ import { GroupRepository } from '../../database/repositories/GroupRepository';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
 import { SubjectRepository } from '../../database/repositories/SubjectRepository';
 import { TeacherRepository } from '../../database/repositories/TeacherRepository';
+import { StudyingSemester } from '../date/DateService';
+import { ScheduleGroupType } from './ScheduleParserTypes';
 // import { ScheduleRepository } from '../../api/schedule/ScheduleRepository';
 
 export const DISCIPLINE_TYPE = {
@@ -49,15 +51,18 @@ export class RozParser implements Parser {
     private disciplineTeacherRoleRepository: DisciplineTeacherRoleRepository,
   ) {}
 
-  async parse (period, page = 1) {
-    const groups = (await axios.post('http://epi.kpi.ua/Schedules/ScheduleGroupSelection.aspx/GetGroups', {
+  async parse (period: StudyingSemester, groupList: string[], page = 1) {
+    let filtered = (await axios.post('http://epi.kpi.ua/Schedules/ScheduleGroupSelection.aspx/GetGroups', {
       count: 10,
       prefixText: 'і',
     })).data.d
-      .filter((name: string) => /І[МПКАСОВТ]-([зпв]|зп)?\d\d(мн|мп|ф)?і?/.test(name))
-      .slice((page - 1) * 40, page * 40);
+      .filter((name: string) => /І[МПКАСОВТ]-([зпв]|зп)?\d\d(мн|мп|ф)?і?/.test(name));
 
-    for (const group of groups) {
+    filtered = groupList.length
+      ? filtered.filter((group) => groupList.includes(group))
+      : filtered.slice((page - 1) * 40, page * 40);
+
+    for (const group of filtered) {
       if (group.endsWith('ф')) continue;
       await this.parseGroupSchedule(group, period);
     }

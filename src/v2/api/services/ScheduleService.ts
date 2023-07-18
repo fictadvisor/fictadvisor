@@ -33,13 +33,15 @@ export class ScheduleService {
     private scheduleParser: ScheduleParser,
   ) {}
 
-  async parse (parserType, page, period) {
+  async parse (parserType, page, period, groups) {
+    const groupList = groups ? groups.trim().split(';') : [];
+
     switch (parserType) {
     case 'rozkpi':
-      await this.rozParser.parse(period, page);
+      await this.rozParser.parse(period, groupList, page);
       break;
     case 'schedule':
-      await this.scheduleParser.parse(period);
+      await this.scheduleParser.parse(period, groupList);
       break;
     }
   }

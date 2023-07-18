@@ -1,3 +1,3 @@
 export interface Parser {
-  parse(period);
+  parse(period, groupList);
 }
