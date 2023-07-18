@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import { Box } from '@mui/material';
 
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
-import Button, {
+import Button from '@/components/common/ui/button-mui/Button';
+import {
   ButtonColor,
   ButtonVariant,
-} from '@/components/common/ui/button/Button';
+} from '@/components/common/ui/button-mui/types';
 import Progress from '@/components/common/ui/progress-mui';
 import { SearchFormProps } from '@/components/pages/search-pages/search-form/SearchForm';
 import { SearchFormFields } from '@/components/pages/search-pages/search-form/types';
@@ -20,9 +22,8 @@ import { GetListOfSubjectsResponse } from '@/lib/api/subject/types/GetListOfSubj
 import { SubjectInitialValues } from '../search-form/constants';
 import SearchForm from '../search-form/SearchForm';
 
-import { SubjectSearchList } from './SubjectSearchList';
-
-import styles from '../SearchPage.module.scss';
+import { SubjectSearchList } from './components/SubjectSearchList';
+import * as styles from './SubjectSearchPage.styles';
 
 const SubjectSearchPage = () => {
   const [queryObj, setQueryObj] =
@@ -33,6 +34,10 @@ const SubjectSearchPage = () => {
     setQueryObj(prev => ({ ...prev, ...query }));
     setCurPage(0);
   }, []);
+
+  const downloadHandler = () => {
+    setCurPage(prev => prev + 1);
+  };
 
   const { data, isLoading, refetch, isFetching } =
     useQuery<GetListOfSubjectsResponse>(
@@ -46,9 +51,8 @@ const SubjectSearchPage = () => {
   }, [queryObj, curPage, refetch]);
 
   return (
-    <div className={styles['layout']}>
-      {/*TODO move inline styles when refactor*/}
-      <Breadcrumbs items={breadcrumbs} sx={{ margin: '16px 0px 16px 0px' }} />
+    <Box sx={styles.layout}>
+      <Breadcrumbs items={breadcrumbs} sx={styles.breadcrumbs} />
       <SearchForm
         searchPlaceholder="Оберіть предмет"
         filterDropDownOptions={filterOptions}
@@ -58,20 +62,20 @@ const SubjectSearchPage = () => {
       {data && <SubjectSearchList subjects={data.subjects} />}
       {isLoading ||
         (isFetching && (
-          <div className={styles['page-loader']}>
+          <Box sx={styles.pageLoader}>
             <Progress />
-          </div>
+          </Box>
         ))}
       {data?.subjects?.length === (curPage + 1) * PAGE_SIZE && (
         <Button
-          className={styles['load-btn']}
+          sx={styles.loadBtn}
           text="Завантажити ще"
           variant={ButtonVariant.FILLED}
           color={ButtonColor.SECONDARY}
-          onClick={() => setCurPage(pr => pr + 1)}
+          onClick={downloadHandler}
         />
       )}
-    </div>
+    </Box>
   );
 };
 

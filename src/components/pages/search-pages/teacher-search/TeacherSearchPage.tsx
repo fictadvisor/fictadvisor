@@ -20,9 +20,9 @@ import { GetTeachersResponse } from '@/lib/api/teacher/types/GetTeachersResponse
 import { TeacherInitialValues } from '../search-form/constants';
 import SearchForm from '../search-form/SearchForm';
 
-import { TeacherSearchList } from './TeacherSearchList';
+import { TeacherSearchList } from './components/TeacherSearchList';
 
-import styles from '../SearchPage.module.scss';
+import styles from './TeacherSearchPage.module.scss';
 
 export const TeacherSearchPage = () => {
   const initialValues = localStorage.getItem('teachersForm')

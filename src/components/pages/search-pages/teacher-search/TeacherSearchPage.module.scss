@@ -1,0 +1,30 @@
+@import "src/styles/partials/typography-mixins";
+@import "src/styles/partials/breakpoints";
+
+.layout {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 0px 80px 32px 80px;
+
+}
+
+.page-loader {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.load-btn{
+    width: 200px;
+    align-self: center;
+}
+
+@media screen and (max-width: $breakpoint-tablet) {
+    .layout {
+        padding: 12px 16px;
+    }
+
+}

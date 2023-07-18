@@ -1,0 +1,27 @@
+@import "src/styles/partials/typography-mixins";
+@import "src/styles/partials/breakpoints";
+
+.layout {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 0px 80px 32px 80px;
+}
+
+.subject-title{
+   @include h4--semi-bold;
+}
+
+.page-loader {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+@media screen and (max-width: $breakpoint-tablet) {
+    .subject-title{
+        @include h6--bold;
+    }
+}

@@ -26,7 +26,7 @@ import GroupAPI from '@/lib/api/group/GroupAPI';
 
 import { SearchFormFields } from './types';
 
-import styles from '../SearchPage.module.scss';
+import styles from './SearchForm.module.scss';
 
 export interface SearchFormProps {
   onSubmit: (values: Partial<SearchFormFields>) => void;
