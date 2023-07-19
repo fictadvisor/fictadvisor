@@ -149,6 +149,8 @@ enum TeacherRole {
   LECTURER
   LABORANT
   PRACTICIAN
+  EXAMINER
+  OTHER
 }
 
 model Teacher {
@@ -349,8 +351,8 @@ model Event {
 }
 
 model EventInfo {
-  event       Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  eventId     String @map("event_id")
+  event       Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId     String  @map("event_id")
   number      Int
   description String?
 
