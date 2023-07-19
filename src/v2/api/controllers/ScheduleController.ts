@@ -6,6 +6,7 @@ import {
   ParseIntPipe,
   Post,
   Query,
+  Request,
 } from '@nestjs/common';
 import { ScheduleService } from '../services/ScheduleService';
 import { GroupByIdPipe } from '../pipes/GroupByIdPipe';
@@ -14,17 +15,19 @@ import { ScheduleMapper } from '../../mappers/ScheduleMapper';
 import { Access } from '../../security/Access';
 import {
   ApiBadRequestResponse,
-  ApiBearerAuth, ApiForbiddenResponse,
+  ApiBearerAuth,
+  ApiForbiddenResponse,
   ApiOkResponse,
   ApiQuery,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { GeneralEventResponse } from '../responses/GeneralEventResponse';
 import { CreateEventDTO } from '../dtos/CreateEventDTO';
 import { EventResponse } from '../responses/EventResponse';
 import { EventByIdPipe } from '../pipes/EventByIdPipe';
 import { GroupByEventGuard } from '../../security/group-guard/GroupByEventGuard';
+import { ConvertToBooleanPipe } from '../pipes/ConvertToBooleanPipe';
+import { EventsResponse } from '../responses/EventsResponse';
 
 @ApiTags('Schedule')
 @Controller({
@@ -83,19 +86,24 @@ export class ScheduleController {
     required: false,
   })
   @ApiOkResponse({
-    type: [GeneralEventResponse],
+    type: EventsResponse,
   })
   @ApiBadRequestResponse({
     description: `\n
-                  InvalidEntityIdException: Group with such id is not found\n
-                  DataNotFoundException: Data was not found`,
+    InvalidEntityIdException: 
+      Group with such id is not found
+    DataNotFoundException: 
+      Data was not found`,
   })
   async getGeneralEvents (
     @Param('groupId', GroupByIdPipe) id: string,
     @Query('week') week: number,
   ) {
-    const events = await this.scheduleService.getGeneralGroupEvents(id, week);
-    return this.scheduleMapper.getGeneralEvents(events);
+    const result = await this.scheduleService.getGeneralGroupEvents(id, week);
+    return {
+      events: this.scheduleMapper.getEvents(result.events),
+      week: result.week,
+    };
   }
 
   @Access('groups.$groupId.events.get', GroupByEventGuard)
@@ -179,5 +187,48 @@ export class ScheduleController {
   ) {
     const result = await this.scheduleService.createGroupEvent(body);
     return this.scheduleMapper.getEvent(result.event, result.discipline);
+  }
+
+  @Access('groups.$groupId.events.get')
+  @Get('/groups/:groupId/events')
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: EventsResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidGroupIdException:
+      Group with such id is not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @ApiQuery({
+    type: Boolean,
+    name: 'showOwnSelective',
+  })
+  @ApiQuery({
+    type: Number,
+    name: 'week',
+    required: false,
+  })
+  async getGroupEvents (
+      @Request() req,
+      @Param('groupId', GroupByIdPipe) groupId: string,
+      @Query('showOwnSelective', ConvertToBooleanPipe) showOwnSelective,
+      @Query('week') week: number,
+  ) {
+    const result = await this.scheduleService.getGroupEvents(req.user.id, groupId, showOwnSelective, week);
+    return {
+      events: this.scheduleMapper.getEvents(result.events),
+      week: result.week,
+    };
   }
 }

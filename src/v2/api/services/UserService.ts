@@ -382,7 +382,7 @@ export class UserService {
     });
   }
 
-  private async getSelectiveDisciplines (userId: string) {
+  async getSelectiveDisciplines (userId: string) {
     return this.disciplineRepository.findMany({
       where: {
         selectiveDisciplines: {

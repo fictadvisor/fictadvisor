@@ -3,7 +3,7 @@ import { DisciplineRepository } from '../../database/repositories/DisciplineRepo
 import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
 import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
 import { DisciplineTypeEnum } from '@prisma/client';
-import { TeacherRoleAdapter } from '../dtos/TeacherRoleAdapter';
+import { TeacherRoleAdapter } from '../../mappers/TeacherRoleAdapter';
 
 @Injectable()
 export class DisciplineService {

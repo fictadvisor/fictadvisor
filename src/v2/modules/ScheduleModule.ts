@@ -9,6 +9,7 @@ import { TeacherModule } from './TeacherModule';
 import { PrismaModule } from './PrismaModule';
 import { AccessModule } from 'src/v2/modules/AccessModule';
 import { MapperModule } from './MapperModule';
+import { UserModule } from './UserModule';
 
 @Module({
   controllers: [ScheduleController],
@@ -23,6 +24,7 @@ import { MapperModule } from './MapperModule';
     PrismaModule,
     AccessModule,
     MapperModule,
+    UserModule,
   ],
 })
 export class ScheduleModule {}

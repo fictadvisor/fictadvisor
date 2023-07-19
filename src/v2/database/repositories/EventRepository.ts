@@ -38,11 +38,11 @@ export class EventRepository {
     });
   }
 
-  findMany (args: Prisma.EventFindManyArgs) {
+  findMany (args: Prisma.EventFindManyArgs): Promise<DbEvent[]> {
     return this.prisma.event.findMany({
       include: this.include,
       ...args,
-    });
+    }) as unknown as Promise<DbEvent[]>;
   }
 
   update (args: Prisma.EventUpdateArgs) {

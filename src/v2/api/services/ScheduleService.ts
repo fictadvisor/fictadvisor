@@ -14,9 +14,10 @@ import { AttachLessonDTO } from '../dtos/AttachLessonDTO';
 import { InvalidDateException } from '../../utils/exceptions/InvalidDateException';
 import { ObjectIsRequiredException } from '../../utils/exceptions/ObjectIsRequiredException';
 import { DisciplineTeacherRoleRepository } from '../../database/repositories/DisciplineTeacherRoleRepository';
-import { find, some } from '../../utils/ArrayUtil';
+import { filterAsync, find, some } from '../../utils/ArrayUtil';
 import { DbDiscipline } from '../../database/entities/DbDiscipline';
 import { InvalidWeekException } from '../../utils/exceptions/InvalidWeekException';
+import { UserService } from './UserService';
 
 
 @Injectable()
@@ -31,6 +32,7 @@ export class ScheduleService {
     private disciplineTeacherRoleRepository: DisciplineTeacherRoleRepository,
     private rozParser: RozParser,
     private scheduleParser: ScheduleParser,
+    private userService: UserService,
   ) {}
 
   async parse (parserType, page, period, groups) {
@@ -49,12 +51,18 @@ export class ScheduleService {
   getIndexOfLesson (period, startTime, endOfWeek) {
     const difference = endOfWeek.getTime() - startTime.getTime();
     let index = difference / (1000 * 60 * 60 * 24 * 7);
-    if (period === Period.EVERY_FORTNIGHT) index /= 2;
 
-    if (index % 1 <= 0.5) {
+    if (period === Period.EVERY_WEEK) {
       return +parseInt(String(index));
-    } else {
-      return null;
+    } else if (period === Period.EVERY_FORTNIGHT) {
+      index /= 2;
+      if (index % 1 <= 0.5) {
+        return +parseInt(String(index));
+      } else {
+        return null;
+      }
+    } else if (period === Period.NO_PERIOD) {
+      return 0;
     }
   }
 
@@ -78,14 +86,28 @@ export class ScheduleService {
             },
           },
         },
+        period: {
+          notIn: [Period.NO_PERIOD],
+        },
       },
     }) as unknown as DbEvent[];
 
-    return events
+    week = week || await this.dateService.getCurrentWeek();
+
+    const result  = events
       .filter((event) => {
         const indexOfLesson = this.getIndexOfLesson(event.period, event.startTime, endOfWeek);
         return indexOfLesson !== null;
       });
+
+    for (const event of result) {
+      await this.setWeekTime(event, week);
+    }
+
+    return {
+      events: result,
+      week,
+    };
   }
 
   async getEvent (id: string, week: number): Promise<{ event: DbEvent, discipline: DbDiscipline }> {
@@ -235,6 +257,69 @@ export class ScheduleService {
     return {
       event: { ...result.event, endTime: body.endTime },
       discipline: result.discipline,
+    };
+  }
+
+  async getAllGroupEvents (groupId, week) {
+    const { startOfWeek, endOfWeek } = week ? await this.dateService.getDatesOfWeek(week) : this.dateService.getDatesOfCurrentWeek();
+    const events = await this.eventRepository.findMany({
+      where: {
+        groupId,
+        endTime: {
+          gte: startOfWeek,
+        },
+        startTime: {
+          lte: endOfWeek,
+        },
+      },
+    });
+
+    const result  = events
+      .filter((event) => {
+        const indexOfLesson = this.getIndexOfLesson(event.period, event.startTime, endOfWeek);
+        return indexOfLesson !== null;
+      });
+
+    for (const event of result) {
+      if (event.period !== Period.NO_PERIOD) {
+        await this.setWeekTime(event, week);
+      }
+    }
+
+    return result;
+  }
+
+  async getGroupEvents (
+    userId: string,
+    groupId: string,
+    isOwnSelected: boolean,
+    week: number,
+  ) {
+
+    const user = await this.userService.getUser(userId);
+    if (user.group.id !== groupId) {
+      return await this.getGeneralGroupEvents(groupId, week);
+    }
+
+    const groupEvents = await this.getAllGroupEvents(groupId, week);
+
+    if (isOwnSelected) {
+      const userSelective = await this.userService.getSelectiveDisciplines(userId);
+      await filterAsync(groupEvents, async (event) => {
+        const lesson = event.lessons[0];
+        const discipline = await this.disciplineRepository.findById(lesson.disciplineType.disciplineId);
+
+        if (!discipline.isSelective) return true;
+
+        return some(userSelective, 'id', lesson.disciplineType.disciplineId);
+      });
+    }
+
+    week = week || await this.dateService.getCurrentWeek();
+
+    return {
+      events: groupEvents,
+      week,
     };
   }
 }
