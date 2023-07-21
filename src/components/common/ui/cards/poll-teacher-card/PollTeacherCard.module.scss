@@ -3,7 +3,7 @@
 @import 'src/styles/partials/utils';
 
 .poll-teacher-card {
-  height: 228px;
+  height: 85%;
   padding: 16px;
   background-color: $background-dark-35;
   border-radius: 6px;
@@ -19,6 +19,7 @@
 
 .poll-teacher-card-roles {
   margin-bottom: 8px;
+  flex-wrap: wrap;
 }
 
 .poll-teacher-card-avatar {
