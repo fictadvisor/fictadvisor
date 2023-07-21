@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
 import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
 import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
+import { DisciplineTypeEnum } from '@prisma/client';
+import { TeacherRoleAdapter } from '../dtos/TeacherRoleAdapter';
 
 @Injectable()
 export class DisciplineService {
@@ -19,11 +21,17 @@ export class DisciplineService {
     return this.disciplineRepository.findById(id);
   }
 
-  async getTeachers (id: string) {
+  async getTeachers (disciplineId: string, disciplineType: DisciplineTypeEnum) {
+    const role = TeacherRoleAdapter[disciplineType];
     const disciplineTeachers = await this.disciplineTeacherRepository.findMany({
       where: {
+        roles: {
+          some: {
+            role,
+          },
+        },
         discipline: {
-          id,
+          id: disciplineId,
         },
       },
     });

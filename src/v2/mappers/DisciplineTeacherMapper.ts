@@ -16,6 +16,7 @@ export class DisciplineTeacherMapper {
       disciplineTeacherId: disciplineTeacher.id,
       ...disciplineTeacher.teacher,
       roles: disciplineTeacher.roles.map((r) => (r.role)),
+      rating: disciplineTeacher.teacher.rating.toNumber(),
     };
   }
 
