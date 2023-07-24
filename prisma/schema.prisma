@@ -40,8 +40,25 @@ model Group {
   groupRoles       GroupRole[]
   events           Event[]
   selectiveAmounts SelectiveAmount[]
+  telegramGroups TelegramGroup[]
 
   @@map("groups")
+}
+
+enum TelegramSource {
+  GROUP
+  CHANNEL
+  PERSONAL_CHAT
+}
+
+model TelegramGroup {
+  group      Group          @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId    String         @map("group_id")
+  telegramId BigInt         @map("telegram_id")
+  source     TelegramSource
+
+  @@id([groupId, telegramId])
+  @@map("telegram_groups")
 }
 
 model GroupRole {
