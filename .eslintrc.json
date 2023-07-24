@@ -28,6 +28,7 @@
   "rules": {
     "@typescript-eslint/no-explicit-any": "error",
     "react/react-in-jsx-scope": "off",
+    "react/display-name": "off",
     "@typescript-eslint/no-empty-function":"off",
     "simple-import-sort/exports": "error",
     "@typescript-eslint/no-empty-interface": [
