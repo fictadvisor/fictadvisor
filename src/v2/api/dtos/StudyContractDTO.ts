@@ -2,7 +2,6 @@ import { PaymentTypeParam, StudyFormParam, StudyTypeParam } from './StudyContrac
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsBoolean,
-  IsDate,
   IsEmail,
   IsEnum,
   IsIn,
@@ -17,8 +16,8 @@ import { Type } from 'class-transformer';
 
 class MetaContractDTO {
   @ApiProperty()
-  @IsIn([121, 123, 126], validationOptionsMsg('The specialty code is not valid'))
-    speciality: number;
+  @IsIn(['121', '123', '126'], validationOptionsMsg('The specialty code is not valid'))
+    speciality: string;
 
   @ApiProperty()
   @IsEnum(StudyTypeParam, validationOptionsMsg('Study type must be an enum'))
@@ -41,7 +40,7 @@ class MetaContractDTO {
     isToAdmission: boolean;
 }
 
-class PersonalDataDTO {
+export class PersonalDataDTO {
   @ApiProperty()
   @MinLength(2, validationOptionsMsg('First name is too short (min: 2)'))
   @MaxLength(40, validationOptionsMsg('First name is too long (max: 40)'))
@@ -73,11 +72,12 @@ class PersonalDataDTO {
     lastName: string;
 
   @ApiPropertyOptional()
+  @IsOptional()
     passportSeries?: string;
 
   @ApiProperty()
   @IsNotEmpty(validationOptionsMsg('Passport number can not be empty'))
-    passportNumber: number;
+    passportNumber: string;
 
   @ApiProperty()
   @IsNotEmpty(validationOptionsMsg('Passport Institute can not be empty'))
@@ -85,17 +85,27 @@ class PersonalDataDTO {
 
   @ApiProperty()
   @IsNotEmpty(validationOptionsMsg('Passport date cannot be empty'))
-  @Type(() => Date)
-  @IsDate(validationOptionsMsg('Passport date must be Date'))
-    passportDate: Date;
+    passportDate: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+    region?: string;
+
+  @ApiProperty()
+  @IsNotEmpty(validationOptionsMsg('Settlement cannot be empty'))
+    settlement: string;
 
   @ApiProperty()
   @IsNotEmpty(validationOptionsMsg('Address cannot be empty'))
     address: string;
 
+  @ApiProperty()
+  @IsNotEmpty(validationOptionsMsg('Index cannot be empty'))
+    index: string;
+
   @ApiPropertyOptional()
   @IsOptional()
-    idCode?: number;
+    idCode?: string;
 
   @ApiProperty()
   @IsNotEmpty(validationOptionsMsg('Phone number cannot be empty'))

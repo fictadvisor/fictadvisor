@@ -20,4 +20,20 @@ export class EmailService {
       },
     });
   }
+
+  async sendWithAttachments ({ to, subject, message, attachments }: EmailOptionsData) {
+    await this.mailerService.sendMail({
+      to,
+      subject,
+      template: path.resolve('./email/templates/message.hbs'),
+      context: {
+        message,
+      },
+      attachments: attachments.map(({ name, buffer, contentType }) => ({
+        filename: name,
+        content: buffer,
+        contentType,
+      })),
+    });
+  }
 }

@@ -3,6 +3,8 @@ import { Express } from 'express';
 import { createHash } from 'crypto';
 import { join, extname } from 'path';
 import { resolve } from 'url';
+import PizZip from 'pizzip';
+import Docxtemplater from 'docxtemplater';
 import * as fs from 'fs';
 import * as process from 'process';
 
@@ -20,5 +22,22 @@ export class FileService {
   getFileContent (path: string, isPrivate = true) {
     const filePath = join(__dirname, isPrivate ? 'private' : 'static', path);
     return fs.readFileSync(filePath, 'utf-8');
+  }
+
+  fillTemplate (fileName: string, data: object) {
+    const path = join(__dirname, 'private/templates', fileName);
+    const zip = new PizZip(fs.readFileSync(path, 'binary'));
+
+    const doc = new Docxtemplater(zip, {
+      paragraphLoop: true,
+      linebreaks: true,
+      nullGetter: () => '',
+    });
+
+    doc.render(data);
+    return doc.getZip().generate({
+      type: 'nodebuffer',
+      compression: 'DEFLATE',
+    });
   }
 }
