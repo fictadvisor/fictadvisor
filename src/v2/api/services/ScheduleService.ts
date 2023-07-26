@@ -6,7 +6,6 @@ import { Period, DisciplineTypeEnum } from '@prisma/client';
 import { RozParser } from '../../utils/parser/RozParser';
 import { ScheduleParser } from '../../utils/parser/ScheduleParser';
 
-
 @Injectable()
 export class ScheduleService {
 

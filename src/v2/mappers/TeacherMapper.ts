@@ -24,15 +24,12 @@ export class TeacherMapper {
     return teachers.map(this.getTeacher);
   }
 
-  getRoles (teacher: DbTeacher): TeacherRole[] {
+  getRoles (teacher: DbTeacher): Set<TeacherRole> {
     const roles = [];
-    for (const disciplineTeacher of teacher.disciplineTeachers) {
-      const dbRoles = disciplineTeacher.roles
-        .map((r) => r.role)
-        .filter((r) => !roles.includes(r));
-      roles.push(...dbRoles);
+    for (const dt of teacher.disciplineTeachers) {
+      roles.push(...dt.roles.map((r) => r.role));
     }
-    return roles;
+    return new Set(roles);
   }
 
   getSortedTeacher ({ sort, order }: SortDTO): Sort | object {

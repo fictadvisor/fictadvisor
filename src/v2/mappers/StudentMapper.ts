@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { Role } from '@prisma/client';
 import { DbStudent } from '../database/entities/DbStudent';
 
-
 @Injectable()
 export class StudentMapper {
   private getGroupRole (roles: { role: Role }[]) {

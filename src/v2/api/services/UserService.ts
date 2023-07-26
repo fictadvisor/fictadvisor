@@ -56,8 +56,7 @@ export class UserService {
     private studentMapper: StudentMapper,
     private disciplineMapper: DisciplineMapper,
     private dateService: DateService,
-  ) {
-  }
+  ) {}
 
   async createSuperhero (id: string, body: CreateSuperheroDTO) {
     return this.superheroRepository.createSuperhero(id, body);

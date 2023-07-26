@@ -1,7 +1,6 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
 import path from 'path';
-
 import { EmailOptionsData } from '../datas/EmailData';
 
 @Injectable()

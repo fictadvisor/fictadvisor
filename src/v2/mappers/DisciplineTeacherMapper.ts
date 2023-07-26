@@ -25,22 +25,22 @@ export class DisciplineTeacherMapper {
   }
 
   getRoles (disciplineTeachers: DbDisciplineTeacher[]): TeacherRole[] {
-    const roles = [];
-    for (const disciplineTeacher of disciplineTeachers) {
-      const dbRoles = disciplineTeacher.roles
-        .map((r) => r.role)
-        .filter((r) => !roles.includes(r));
-      roles.push(...dbRoles);
+    const roles = new Set<TeacherRole>();
+    for (const dt of disciplineTeachers) {
+      dt.roles.forEach((r) => roles.add(r.role));
     }
-    return roles;
+
+    return Array.from(roles);
   }
 
-  getRolesBySubject (disciplineTeachers: DbDisciplineTeacher[], subjectId: string) {
-    const roles = [];
+  getRolesBySubject (disciplineTeachers: DbDisciplineTeacher[], subjectId: string): TeacherRole[] {
+    const roles = new Set<TeacherRole>();
     for (const dt of disciplineTeachers) {
-      if (dt.discipline.subjectId !== subjectId) continue;
-      roles.push(...dt.roles.map((r) => r.role));
+      if (dt.discipline.subjectId === subjectId) {
+        dt.roles.forEach((r) => roles.add(r.role));
+      }
     }
-    return new Set(roles);
+
+    return Array.from(roles);
   }
 }

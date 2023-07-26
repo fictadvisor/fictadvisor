@@ -5,7 +5,6 @@ import { DbQuestionWithDiscipline } from '../database/entities/DbQuestionWithDis
 import { DbDisciplineTeacherWithAnswers } from '../database/entities/DbDisciplineTeacherWithAnswers';
 import { DbQuestionWithAnswers } from '../database/entities/DbQuestionWithAnswers';
 
-
 @Injectable()
 export class QuestionMapper {
   private getQuestion (question: DbQuestionWithRoles) {

@@ -22,6 +22,7 @@ import { PollDisciplineTeachersResponse } from '../responses/PollDisciplineTeach
 import { StudentRepository } from '../../database/repositories/StudentRepository';
 import { GroupRepository } from '../../database/repositories/GroupRepository';
 import { DatabaseUtils } from '../../database/DatabaseUtils';
+
 @Injectable()
 export class PollService {
   constructor (

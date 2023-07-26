@@ -122,15 +122,12 @@ export class DisciplineTeacherService {
       .find((dt) => dt.id === id)
       .roles.map((r) => r.role);
 
-    const disciplineRoles = [];
-    for (const disciplineTeacher of disciplineTeachers) {
-      const dbRoles = disciplineTeacher.roles
-        .map((r) => r.role)
-        .filter((r) => !disciplineRoles.includes(r));
-      disciplineRoles.push(...dbRoles);
+    const disciplineRoles = new Set<TeacherRole>();
+    for (const dt of disciplineTeachers) {
+      dt.roles.forEach((r) => disciplineRoles.add(r.role));
     }
 
-    return this.pollService.getQuestions(teacherRoles, disciplineRoles);
+    return this.pollService.getQuestions(teacherRoles, Array.from(disciplineRoles));
   }
 
   async checkRequiredQuestions (dbQuestions: DbQuestionWithRoles[], questions: CreateAnswerDTO[]) {

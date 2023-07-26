@@ -96,9 +96,7 @@ export class TeacherService {
     }
   }
 
-  async getTeacher (
-    id: string,
-  ) {
+  async getTeacher (id: string) {
     const dbTeacher = await this.teacherRepository.findById(id);
     const { disciplineTeachers, rating, ...teacher } = dbTeacher;
     const roles = this.teacherMapper.getRoles(dbTeacher);
@@ -164,42 +162,28 @@ export class TeacherService {
     });
   }
 
-  async getTeacherRoles (
-    teacherId: string,
-  ) {
+  async getTeacherRoles (teacherId: string) {
     const teacher = await this.teacherRepository.findById(teacherId);
     return this.teacherMapper.getRoles(teacher);
   }
 
-  async create (
-    body: Prisma.TeacherUncheckedCreateInput,
-  ) {
+  async create (body: Prisma.TeacherUncheckedCreateInput) {
     return this.teacherRepository.create(body);
   }
 
-  async update (
-    id: string,
-    body: Prisma.TeacherUncheckedUpdateInput
-  ) {
+  async update (id: string, body: Prisma.TeacherUncheckedUpdateInput) {
     return this.teacherRepository.updateById(id, body);
   }
 
-  async delete (
-    id: string,
-  ) {
+  async delete (id: string) {
     await this.teacherRepository.deleteById(id);
   }
 
-  async getAllContacts (
-    entityId: string,
-  ) {
+  async getAllContacts (entityId: string) {
     return this.contactRepository.getAllContacts(entityId);
   }
 
-  async getContact (
-    teacherId: string,
-    name: string,
-  ) {
+  async getContact (teacherId: string, name: string) {
     const contact = await this.contactRepository.getContact(teacherId, name);
     return {
       name: contact.name,
@@ -208,10 +192,7 @@ export class TeacherService {
     };
   }
 
-  async createContact (
-    entityId: string,
-    body: CreateContactDTO,
-  ) {
+  async createContact (entityId: string, body: CreateContactDTO,) {
     return this.contactRepository.createContact({
       entityId,
       entityType: EntityType.TEACHER,
@@ -224,10 +205,7 @@ export class TeacherService {
     return this.contactRepository.getContact(entityId, name);
   }
 
-  async deleteContact (
-    entityId: string,
-    name: string,
-  ) {
+  async deleteContact (entityId: string, name: string) {
     await this.contactRepository.deleteContact(
       entityId, name,
     );
