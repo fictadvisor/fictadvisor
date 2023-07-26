@@ -24,8 +24,9 @@ import { GroupResponse, GroupsResponse } from '../responses/GroupResponse';
 import { GroupStudentsResponse } from '../responses/GroupStudentsResponse';
 import { CaptainResponse } from '../responses/CaptainResponse';
 import { ExtendDisciplineTeachersResponse } from '../responses/DisciplineTeachersResponse';
-import { ShortDisciplinesResponse } from '../responses/DisciplineResponse';
 import { ShortUsersResponse } from '../responses/UserResponse';
+import { QuerySemesterDTO } from '../dtos/QuerySemesterDTO';
+import { ShortDisciplinesResponse } from '../responses/DisciplineResponse';
 
 @ApiTags('Groups')
 @Controller({
@@ -236,8 +237,15 @@ export class GroupController {
   })
   @ApiBadRequestResponse({
     description: `\n
-    InvalidGroupIdException: 
-      Group with such id is not found`,
+    InvalidGroupIdException:
+      Group with such id is not found
+  
+    DataMissingException:
+      Data are missing
+      
+    DataNotFoundException:
+      Data were not found
+    `,
   })
   @ApiUnauthorizedResponse({
     description: `\n
@@ -253,8 +261,9 @@ export class GroupController {
   @Get('/:groupId/disciplines')
   async getDiscipline (
     @Param('groupId', GroupByIdPipe) groupId: string,
+    @Query() query?: QuerySemesterDTO,
   ) {
-    const disciplines = await this.groupService.getDisciplines(groupId);
+    const disciplines = await this.groupService.getDisciplines(groupId, query);
     return { disciplines };
   }
 

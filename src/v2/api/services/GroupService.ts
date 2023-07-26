@@ -18,6 +18,10 @@ import { AlreadyRegisteredException } from '../../utils/exceptions/AlreadyRegist
 import { DatabaseUtils } from '../../database/DatabaseUtils';
 import { StudentMapper } from '../../mappers/StudentMapper';
 import { DbGroup } from '../../database/entities/DbGroup';
+import { QuerySemesterDTO } from '../dtos/QuerySemesterDTO';
+import { DateService } from '../../utils/date/DateService';
+import { DataNotFoundException } from '../../utils/exceptions/DataNotFoundException';
+import { DataMissingException } from '../../utils/exceptions/DataMissingException';
 
 const ROLE_LIST = [
   {
@@ -59,6 +63,7 @@ export class GroupService {
     private roleRepository: RoleRepository,
     private disciplineRepository: DisciplineRepository,
     private studentMapper: StudentMapper,
+    private dateService: DateService,
   ) {}
 
   async create (code: string): Promise<DbGroup>  {
@@ -89,8 +94,25 @@ export class GroupService {
     return this.disciplineMapper.getDisciplinesWithTeachers(disciplines);
   }
 
-  async getDisciplines (groupId: string) {
-    const disciplines = await this.disciplineRepository.findMany({ where: { groupId } });
+  async getDisciplines (groupId: string, { year, semester }: QuerySemesterDTO) {
+    if ((year && !semester) || (!year && semester)) {
+      throw new DataMissingException();
+    }
+    if (semester < 1 || semester > 2) {
+      throw new DataNotFoundException();
+    }
+    if (year && semester) {
+      const years = await this.dateService.getYears();
+      if (!years.includes(year)) {
+        throw new DataNotFoundException();
+      }
+    }
+    const disciplines = await this.disciplineRepository.findMany({ 
+      where: {
+        groupId,
+        semester,
+        year,
+      } });
     return this.disciplineMapper.getDisciplines(disciplines);
   }
 
