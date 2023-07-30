@@ -10,8 +10,8 @@ import Button, {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button';
-import Divider from '@/components/common/ui/divider-mui';
-import { DividerTextAlign } from '@/components/common/ui/divider-mui/types';
+import Divider from '@/components/common/ui/divider';
+import { DividerTextAlign } from '@/components/common/ui/divider/types';
 import LoginForm from '@/components/pages/login-page/components/login-form';
 import useAuthentication from '@/hooks/use-authentication';
 import AuthService from '@/lib/services/auth/AuthService';

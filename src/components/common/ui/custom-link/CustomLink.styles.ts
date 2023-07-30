@@ -1,9 +1,9 @@
 import { SxProps, Theme } from '@mui/material/styles';
 
-import { CustomLinkType } from '@/components/common/ui/link-mui/types';
+import { CustomLinkType } from '@/components/common/ui/custom-link/types';
 import theme from '@/styles/theme';
 
-export const LinkStyles = (type: CustomLinkType): SxProps<Theme> => ({
+export const CustomLinkStyles = (type: CustomLinkType): SxProps<Theme> => ({
   typography: {
     mobile: 'body1',
     desktopSemiMedium: 'body1',

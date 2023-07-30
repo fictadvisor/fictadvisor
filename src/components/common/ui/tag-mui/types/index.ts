@@ -26,10 +26,28 @@ export enum TagVariant {
 }
 
 export interface TagProps {
+  /**
+   * Tag content
+   */
   text: string;
+  /**
+   * Optional tag size
+   */
   size?: TagSize;
+  /**
+   * Optional tag color
+   */
   color?: TagColor;
+  /**
+   * Optional tag icon
+   */
   variant?: TagVariant;
+  /**
+   * Optional tag icon
+   */
   icon?: ReactNode;
+  /**
+   * Optional sx styles
+   */
   sx?: SxProps<Theme>;
 }

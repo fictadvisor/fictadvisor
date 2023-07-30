@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { QueryObserverBaseResult } from 'react-query';
 
-import { TrashBucketButton } from '@/components/common/ui/icon-button/variants';
+import { TrashBucketButton } from '@/components/common/ui/icon-button-mui/variants';
 import ImmutableInput from '@/components/common/ui/immutable-input';
 import { Contact } from '@/components/pages/account-page/components/general-tab/components/contacts-block/types';
 import useAuthentication from '@/hooks/use-authentication';

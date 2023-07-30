@@ -9,8 +9,8 @@ import Button, {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button';
-import Divider from '@/components/common/ui/divider-mui';
-import { DividerTextAlign } from '@/components/common/ui/divider-mui/types';
+import Divider from '@/components/common/ui/divider';
+import { DividerTextAlign } from '@/components/common/ui/divider/types';
 import RegisterForm from '@/components/pages/register/register-page/components/register-form';
 import { GetAllResponse } from '@/lib/api/group/types/GetAllResponse';
 import AuthService from '@/lib/services/auth/AuthService';

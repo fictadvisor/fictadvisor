@@ -6,8 +6,8 @@ import { AxiosError } from 'axios';
 import { Captain } from '@/components/common/icons/Captain';
 import { Moderator } from '@/components/common/icons/Moderator';
 import Button from '@/components/common/ui/button-mui';
-import Divider from '@/components/common/ui/divider-mui';
-import { DividerTextAlign } from '@/components/common/ui/divider-mui/types';
+import Divider from '@/components/common/ui/divider';
+import { DividerTextAlign } from '@/components/common/ui/divider/types';
 import {
   IconButton,
   IconButtonShape,

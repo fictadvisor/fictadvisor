@@ -1,10 +1,10 @@
 import React, { FormEvent, useEffect, useState } from 'react';
+import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import { useMediaQuery } from '@mui/material';
 import { AxiosError } from 'axios';
 import { Form, Formik, FormikValues } from 'formik';
 import { useRouter } from 'next/router';
 
-import ArrowButton from '@/components/common/ui/arrow-button/ArrowButton';
 import Button from '@/components/common/ui/button/Button';
 import { Slider, TextArea } from '@/components/common/ui/form';
 import RadioGroup from '@/components/common/ui/form/radio/RadipGroup';
@@ -132,7 +132,7 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
               setQuestionsListStatus(true);
             }}
           >
-            <ArrowButton className={styles.arrow} />
+            <ChevronLeftIcon style={{ height: '20px' }} />
             <b>
               {current + 1} . {category.name}
             </b>

@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Box, Drawer as MuiDrawer, Link } from '@mui/material';
 import NextLink from 'next/link';
 
-import Divider from '@/components/common/ui/divider-mui';
+import Divider from '@/components/common/ui/divider';
 import Tab from '@/components/common/ui/tab-mui/tab';
 import { TabTextPosition } from '@/components/common/ui/tab-mui/tab/types';
 

@@ -5,9 +5,9 @@ import { useRouter } from 'next/router';
 
 import { CustomCheck } from '@/components/common/icons/CustomCheck';
 import Button, { ButtonSize } from '@/components/common/ui/button';
+import CustomLink from '@/components/common/ui/custom-link';
+import { CustomLinkType } from '@/components/common/ui/custom-link/types';
 import { Input, InputType } from '@/components/common/ui/form';
-import CustomLink from '@/components/common/ui/link-mui';
-import { CustomLinkType } from '@/components/common/ui/link-mui/types';
 import useToast from '@/hooks/use-toast';
 import AuthAPI from '@/lib/api/auth/AuthAPI';
 import StorageUtil from '@/lib/utils/StorageUtil';

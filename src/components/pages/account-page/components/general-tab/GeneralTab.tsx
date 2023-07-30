@@ -6,8 +6,8 @@ import Button, {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button';
-import Divider from '@/components/common/ui/divider-mui';
-import { DividerTextAlign } from '@/components/common/ui/divider-mui/types';
+import Divider from '@/components/common/ui/divider';
+import { DividerTextAlign } from '@/components/common/ui/divider/types';
 import ContactsBlock from '@/components/pages/account-page/components/general-tab/components/contacts-block/ContactsBlock';
 import PersonalInfoBlock from '@/components/pages/account-page/components/general-tab/components/personal-info';
 import useAuthentication from '@/hooks/use-authentication';

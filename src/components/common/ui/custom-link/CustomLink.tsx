@@ -2,10 +2,10 @@ import { FC, ReactNode } from 'react';
 import { Link as MuiLink } from '@mui/material';
 import { SxProps, Theme } from '@mui/material/styles';
 
-import { CustomLinkType } from '@/components/common/ui/link-mui/types';
+import { CustomLinkType } from '@/components/common/ui/custom-link/types';
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 
-import * as styles from './Link.styles';
+import * as styles from './CustomLink.styles';
 
 interface CustomLinkProps {
   href: string;
@@ -16,11 +16,11 @@ interface CustomLinkProps {
 const CustomLink: FC<CustomLinkProps> = ({
   href,
   text,
-  type = CustomLinkType.WHITE,
   sx = {},
+  type = CustomLinkType.WHITE,
 }) => {
   return (
-    <MuiLink href={href} sx={mergeSx(styles.LinkStyles(type), sx)}>
+    <MuiLink href={href} sx={mergeSx(styles.CustomLinkStyles(type), sx)}>
       {text}
     </MuiLink>
   );

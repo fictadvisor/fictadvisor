@@ -60,7 +60,7 @@ const PollTeacherPage: FC = () => {
         'Обери свої вибіркові в профілі у вкладці "Мої вибіркові".',
       );
     }
-  }, [data, toast]);
+  }, [data]);
 
   return (
     <div className={styles['layout']}>

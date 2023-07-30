@@ -1,6 +1,8 @@
 import { FC } from 'react';
 import { Box, Icon, Rating as MuiRating, SxProps, Theme } from '@mui/material';
 
+import StarsEmpty from '@/components/common/icons/StarsEmpty';
+import StarsFull from '@/components/common/icons/StarsFull';
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 
 import * as styles from './Rating.styles';
@@ -33,12 +35,14 @@ const Rating: FC<RatingProps> = ({
         max={maxStarsNumber}
         emptyIcon={
           <Icon>
-            <img src="/icons/stars-empty.svg" alt="stars" />
+            <StarsEmpty />
+            {/*<img src="/icons/stars-empty.svg" alt="stars" />*/}
           </Icon>
         }
         icon={
           <Icon>
-            <img src="/icons/stars-full.svg" alt="stars" />
+            <StarsFull />
+            {/*<img src="/icons/stars-full.svg" alt="stars" />*/}
           </Icon>
         }
         readOnly
