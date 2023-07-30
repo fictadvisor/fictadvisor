@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import React, { FC } from 'react';
 import NextLink from 'next/link';
 
 import { GitHub } from '@/components/common/icons/GitHub';
@@ -17,31 +17,31 @@ export interface ContactProps {
   link: string;
 }
 
-const contactIconsMap: Record<ContactType, FC> = {
-  [ContactType.YOUTUBE]: YouTube,
-  [ContactType.TWITTER]: Twitter,
-  [ContactType.MAIL]: Mail,
-  [ContactType.GITHUB]: GitHub,
-  [ContactType.INSTAGRAM]: Instagram,
-  [ContactType.DISCORD]: Telegram,
-  [ContactType.FACEBOOK]: Telegram,
-  [ContactType.TELEGRAM]: Telegram,
+const contactIconsMap: Record<ContactType, React.ReactElement> = {
+  [ContactType.YOUTUBE]: <YouTube />,
+  [ContactType.TWITTER]: <Twitter />,
+  [ContactType.MAIL]: <Mail />,
+  [ContactType.GITHUB]: <GitHub />,
+  [ContactType.INSTAGRAM]: <Instagram />,
+  [ContactType.DISCORD]: <Telegram />,
+  [ContactType.FACEBOOK]: <Telegram />,
+  [ContactType.TELEGRAM]: <Telegram />,
 };
 
 const Contact: FC<ContactProps> = ({ name, displayName, link }) => {
-  const Icon = contactIconsMap[name];
+  const Icon = () => contactIconsMap[name];
 
   return (
     <div className={styles['contact']}>
       <div className={styles[`icon`]}>
         <Icon />
       </div>
-      {link != '' && (
+      {link && (
         <NextLink href={link} className={styles[`link`]}>
           {displayName}
         </NextLink>
       )}
-      {link == '' && <p className={styles[`link`]}>{displayName}</p>}
+      {!link && <p className={styles[`link`]}>{displayName}</p>}
     </div>
   );
 };
