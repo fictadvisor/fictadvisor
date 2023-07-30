@@ -11,6 +11,7 @@ import { ResourceModule } from '../modules/ResourceModule';
 import { CathedraModule } from '../modules/CathedraModule';
 import { DocumentModule } from '../modules/DocumentModule';
 import { EntrantModule } from '../modules/EntrantModule';
+import { AdmissionModule } from '../modules/AdmissionModule';
 
 
 @Module({
@@ -27,6 +28,7 @@ import { EntrantModule } from '../modules/EntrantModule';
     CathedraModule,
     DocumentModule,
     EntrantModule,
+    AdmissionModule,
   ],
 })
 export class ApiModule {}

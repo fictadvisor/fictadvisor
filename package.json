@@ -26,7 +26,9 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "integration:full": "docker compose up -d && yarn test:migrate && yarn test:seed && yarn test:integration && docker compose down"
+    "test:generate": "dotenv -e .testing.env -- prisma generate",
+    "integration:full": "docker compose up -d && yarn test:migrate && yarn test:seed && yarn test:integration && docker compose down",
+    "generate:dev": "dotenv -e .development.env -- npx prisma generate"
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^1.8.1",

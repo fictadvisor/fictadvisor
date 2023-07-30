@@ -8,7 +8,7 @@ import { VerifyResponseDTO } from '../api/dtos/VerifyResponseDTO';
 
 @Injectable()
 export class TelegramAPI {
-  private client:AxiosInstance;
+  private client: AxiosInstance;
 
   constructor (
     private telegramConfig: TelegramConfigService,
