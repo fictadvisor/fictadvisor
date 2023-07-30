@@ -40,7 +40,7 @@ model Group {
   groupRoles       GroupRole[]
   events           Event[]
   selectiveAmounts SelectiveAmount[]
-  telegramGroups TelegramGroup[]
+  telegramGroups   TelegramGroup[]
 
   @@map("groups")
 }
@@ -414,4 +414,125 @@ model TeachersOnCathedras {
 
   @@id([teacherId, cathedraId])
   @@map("teachers_on_cathedras")
+}
+
+model QueueUser {
+  id             String          @id @default(uuid())
+  username       String?
+  firstName      String          @map("first_name")
+  middleName     String?         @map("middle_name")
+  lastName       String          @map("last_name")
+  telegramId     BigInt?         @map("telegram_id")
+  email          String?
+  speciality     String
+  isDorm         Boolean?        @map("is_dorm")
+  printedEdbo    Boolean?        @map("printed_edbo")
+  queuePositions QueuePosition[]
+
+  @@map("queue_users")
+}
+
+enum QueuePositionStatus {
+  WAITING
+  GOING
+  PROCESSING
+}
+
+model QueuePosition {
+  id                   String              @id @default(uuid())
+  entrant              QueueUser           @relation(fields: [entrantId], references: [id], onDelete: Cascade)
+  entrantId            String              @map("entrant_id")
+  queue                Queue               @relation(fields: [queueId], references: [id], onDelete: Cascade)
+  queueId              String              @map("queue_id")
+  code                 Int
+  position             Int
+  status               QueuePositionStatus @default(WAITING)
+  lastNotifiedPosition Int                 @default(0) @map("last_notified_position")
+
+  @@map("queue_positions")
+}
+
+model Queue {
+  id        String          @id @default(uuid())
+  name      String
+  active    Boolean
+  open      Boolean         @default(false)
+  positions QueuePosition[]
+
+  @@map("queues")
+}
+
+model Entrant {
+  id               String           @id @default(uuid())
+  firstName        String           @map("first_name")
+  middleName       String?          @map("middle_name")
+  lastName         String           @map("last_name")
+  specialty        String
+  entrantData      EntrantData?
+  priority         EntrantPriority?
+  contract         Contract?
+  competitivePoint Float            @map("competitive_point")
+
+  @@map("entrants")
+}
+
+model EntrantPriority {
+  entrant    Entrant       @relation(fields: [entrantId], references: [id], onDelete: Cascade)
+  entrantId  String        @unique @map("entrant_id")
+  state      PriorityState
+  date       String
+  priorities Priority[]
+
+  @@map("entrant_priorities")
+}
+
+model Priority {
+  entrant   EntrantPriority  @relation(fields: [entrantId], references: [entrantId], onDelete: Cascade)
+  entrantId String           @map("entrant_id")
+  priority  Int
+  program   EducationProgram
+
+  @@id([entrantId, priority])
+  @@map("priorities")
+}
+
+enum EducationProgram {
+  CSSE
+  ISSE
+  IIS
+  ISRS
+  IMST
+}
+
+model EntrantData {
+  entrant           Entrant @relation(fields: [entrantId], references: [id], onDelete: Cascade)
+  entrantId         String  @unique @map("entrant_id")
+  passportSeries    String? @map("passport_series")
+  passportNumber    String  @map("passport_number")
+  passportInstitute String  @map("passport_institute")
+  passportDate      String  @map("passport_date")
+  region            String?
+  settlement        String
+  address           String
+  index             String
+  idCode            String  @map("id_code")
+  phoneNumber       String  @map("phone_number")
+  email             String
+
+  @@map("entrant_data")
+}
+
+enum PriorityState {
+  APPROVED
+  NOT_APPROVED
+}
+
+model Contract {
+  entrant   Entrant @relation(fields: [entrantId], references: [id], onDelete: Cascade)
+  entrantId String  @unique @map("entrant_id")
+  number    String
+  date      String
+  group     String
+
+  @@map("contracts")
 }
