@@ -28,7 +28,6 @@ model User {
   questionAnswers     QuestionAnswer[]
   lastPasswordChanged DateTime         @default(now())
   state               State            @default(PENDING)
-  queuePositions      QueuePosition[]
 
   @@map("users")
 }
@@ -428,6 +427,7 @@ model QueueUser {
   speciality     String
   isDorm         Boolean?        @map("is_dorm")
   printedEdbo    Boolean?        @map("printed_edbo")
+  queuePositions      QueuePosition[]
 
   @@map("queue_users")
 }
@@ -440,8 +440,8 @@ enum QueuePositionStatus {
 
 model QueuePosition {
   id                   String              @id @default(uuid())
-  user                 User                @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId               String              @map("user_id")
+  user                 QueueUser           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId               Int                 @map("user_id")
   queue                Queue               @relation(fields: [queueId], references: [id], onDelete: Cascade)
   queueId              String              @map("queue_id")
   code                 Int
