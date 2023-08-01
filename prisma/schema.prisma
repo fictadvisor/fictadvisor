@@ -28,6 +28,7 @@ model User {
   questionAnswers     QuestionAnswer[]
   lastPasswordChanged DateTime         @default(now())
   state               State            @default(PENDING)
+  queuePositions      QueuePosition[]
 
   @@map("users")
 }
@@ -417,7 +418,7 @@ model TeachersOnCathedras {
 }
 
 model QueueUser {
-  id             String          @id @default(uuid())
+  id             Int          @id @default(autoincrement())
   username       String?
   firstName      String          @map("first_name")
   middleName     String?         @map("middle_name")
@@ -427,7 +428,6 @@ model QueueUser {
   speciality     String
   isDorm         Boolean?        @map("is_dorm")
   printedEdbo    Boolean?        @map("printed_edbo")
-  queuePositions QueuePosition[]
 
   @@map("queue_users")
 }
@@ -440,8 +440,8 @@ enum QueuePositionStatus {
 
 model QueuePosition {
   id                   String              @id @default(uuid())
-  entrant              QueueUser           @relation(fields: [entrantId], references: [id], onDelete: Cascade)
-  entrantId            String              @map("entrant_id")
+  user                 User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId               String              @map("user_id")
   queue                Queue               @relation(fields: [queueId], references: [id], onDelete: Cascade)
   queueId              String              @map("queue_id")
   code                 Int
@@ -467,7 +467,7 @@ model Entrant {
   firstName        String           @map("first_name")
   middleName       String?          @map("middle_name")
   lastName         String           @map("last_name")
-  specialty        String
+  specialty        String?
   entrantData      EntrantData?
   priority         EntrantPriority?
   contract         Contract?

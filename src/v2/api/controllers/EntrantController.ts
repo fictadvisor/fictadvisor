@@ -1,11 +1,11 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Post } from '@nestjs/common';
 import { CreateContractDTO } from '../dtos/CreateContractDTO';
 import { EntrantService } from '../services/EntrantService';
 import { EntrantMapper } from '../../mappers/EntrantMapper';
 import { Access } from '../../security/Access';
 import {
   ApiBadRequestResponse,
-  ApiBearerAuth, ApiForbiddenResponse,
+  ApiBearerAuth, ApiForbiddenResponse, ApiNotFoundResponse,
   ApiOkResponse, ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -53,6 +53,11 @@ export class EntrantController {
       Contract can not be empty
     `,
   })
+  @ApiNotFoundResponse({
+    description: `\n
+    NotFoundException:
+      Entrant is not found`,
+  })
   @ApiUnauthorizedResponse({
     description: `\n
     UnauthorizedException:
@@ -92,7 +97,11 @@ export class EntrantController {
       Last name is incorrect (A-Я(укр.)\\-' )
       
     DataNotFoundException:
-      Data were not found`,
+      Data were not found
+      
+    AlreadyExistException:
+      Contract already exist 
+    `,
   })
   @ApiUnauthorizedResponse({
     description: `\n
@@ -109,5 +118,43 @@ export class EntrantController {
   ) {
     const entrant = await this.entrantService.getPriority(body);
     return this.entrantMapper.getEntrantWithPriority(entrant);
+  }
+
+  @Access('admission.priorities.approve')
+  @ApiBearerAuth()
+  @Patch('/priority/approve')
+  @ApiOkResponse()
+  @ApiBadRequestResponse({
+    description: `\n
+    First name is too short (min: 2)
+      First name is too long (max: 40)
+      First name can not be empty
+      First name is incorrect (A-Я(укр.)' )
+      Middle name is too short (min: 2)
+      Middle name is too long (max: 40)
+      Middle name is incorrect (A-Я(укр.)
+      Last name is too short (min: 2)
+      Last name is too long (max: 40)
+      Last name can not be empty
+      Last name is incorrect (A-Я(укр.)
+      
+    DataNotFoundException:
+      Data were not found
+    `,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  async approvePriority (
+    @Body() body: NamesDTO,
+  ) {
+    await this.entrantService.approvePriority(body);
   }
 }

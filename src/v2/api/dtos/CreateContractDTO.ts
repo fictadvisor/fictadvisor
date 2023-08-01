@@ -1,5 +1,4 @@
 import {
-  IsIn,
   IsNotEmpty,
   IsOptional,
   Matches,
@@ -41,12 +40,6 @@ class Entrant {
     validationOptionsMsg('Last name is incorrect (A-Я(укр.)\\-\' )'),
   )
     lastName: string;
-
-  @ApiProperty({
-    enum: ['121', '123', '126'],
-  })
-  @IsIn(['121', '123', '126'], validationOptionsMsg('The specialty code is not valid'))
-    specialty: string;
 }
 
 class Contract {
