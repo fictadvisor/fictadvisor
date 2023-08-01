@@ -1,40 +1,35 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
 import { PrismaService } from '../PrismaService';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class EntrantRepository {
-
-  private include: Prisma.EntrantInclude = {
+  private include = {
     entrantData: true,
+    priority: true,
     contract: true,
-    priority: {
-      include: {
-        priorities: true,
-      },
-    },
   };
 
   constructor (
-    private prisma: PrismaService,
+    private readonly prismaService: PrismaService,
   ) {}
 
   find (where: Prisma.EntrantWhereInput) {
-    return this.prisma.entrant.findFirst({
+    return this.prismaService.entrant.findFirst({
       where,
       include: this.include,
     });
   }
 
   create (data: Prisma.EntrantUncheckedCreateInput) {
-    return this.prisma.entrant.create({
+    return this.prismaService.entrant.create({
       data,
       include: this.include,
     });
   }
 
   updateById (id: string, data: Prisma.EntrantUncheckedUpdateInput) {
-    return this.prisma.entrant.update({
+    return this.prismaService.entrant.update({
       where: {
         id,
       },

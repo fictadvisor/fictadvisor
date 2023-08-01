@@ -10,6 +10,7 @@ import { ScheduleModule } from '../modules/ScheduleModule';
 import { ResourceModule } from '../modules/ResourceModule';
 import { CathedraModule } from '../modules/CathedraModule';
 import { DocumentModule } from '../modules/DocumentModule';
+import { EntrantModule } from '../modules/EntrantModule';
 
 
 @Module({
@@ -25,6 +26,7 @@ import { DocumentModule } from '../modules/DocumentModule';
     ResourceModule,
     CathedraModule,
     DocumentModule,
+    EntrantModule,
   ],
 })
 export class ApiModule {}

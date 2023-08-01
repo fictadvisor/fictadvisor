@@ -10,11 +10,13 @@ import { TeacherMapper } from '../mappers/TeacherMapper';
 import { UserMapper } from '../mappers/UserMapper';
 import { ScheduleMapper } from '../mappers/ScheduleMapper';
 import { GroupMapper } from '../mappers/GroupMapper';
+import { EntrantMapper } from '../mappers/EntrantMapper';
 
 @Module({
   providers: [
     DisciplineMapper,
     DisciplineTeacherMapper,
+    EntrantMapper,
     GrantMapper,
     QuestionMapper,
     RoleMapper,
@@ -28,6 +30,7 @@ import { GroupMapper } from '../mappers/GroupMapper';
   exports: [
     DisciplineMapper,
     DisciplineTeacherMapper,
+    EntrantMapper,
     GrantMapper,
     QuestionMapper,
     RoleMapper,
