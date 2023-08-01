@@ -17,6 +17,7 @@ import { QuestionAnswerRepository } from '../database/repositories/QuestionAnswe
 import { ResourceRepository } from '../database/repositories/ResourceRepository';
 import { EventRepository } from '../database/repositories/EventRepository';
 import { CathedraRepository } from '../database/repositories/CathedraRepository';
+import { EntrantRepository } from '../database/repositories/EntrantRepository';
 
 @Global()
 @Module({
@@ -39,6 +40,7 @@ import { CathedraRepository } from '../database/repositories/CathedraRepository'
     ResourceRepository,
     EventRepository,
     CathedraRepository,
+    EntrantRepository,
   ],
   exports: [
     PrismaService,
@@ -59,6 +61,7 @@ import { CathedraRepository } from '../database/repositories/CathedraRepository'
     ResourceRepository,
     EventRepository,
     CathedraRepository,
+    EntrantRepository,
   ],
 })
 export class PrismaModule {}

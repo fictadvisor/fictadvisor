@@ -10,6 +10,7 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { DocumentService } from '../services/DocumentService';
 import { StudyContractDTO } from '../dtos/StudyContractDTO';
 import { Access } from '../../security/Access';
+import { PriorityDTO } from '../dtos/PriorityDTO';
 
 @ApiTags('Document')
 @Controller({
@@ -74,5 +75,54 @@ export class DocumentController {
     @Body() body: StudyContractDTO,
   ) {
     return this.documentService.generateStudyContract(body);
+  }
+
+  @Access('documents.priority.create')
+  @Post('/priority')
+  @ApiBearerAuth()
+  @ApiOkResponse()
+  @ApiBadRequestResponse({
+    description: `\n  
+    InvalidBodyException:
+      First name is too short (min: 2)
+      First name is too long (max: 40)
+      First name can not be empty
+      First name is incorrect (A-Я(укр.)\\-' )
+      Middle name is too short (min: 2)
+      Middle name is too long (max: 40)
+      Middle name is incorrect (A-Я(укр.)\\-' )
+      Last name is too short (min: 2)
+      Last name is too long (max: 40)
+      Last name can not be empty
+      Last name is incorrect (A-Я(укр.)\\-' )
+      The specialty code is not valid
+      1st priority must be an enum
+      1st priority cannot be empty
+      2nd priority must be an enum
+      2nd priority cannot be empty
+      3rd priority must be an enum
+      isToAdmission form must be boolean
+      isToAdmission cannot be empty
+      Day cannot be empty
+      Email is not an email
+      Email is empty
+      
+    InvalidEducationProgramsException:
+      Education programs is invalid`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  async generatePriority (
+    @Body() body: PriorityDTO,
+  ) {
+    return this.documentService.generatePriority(body);
   }
 }

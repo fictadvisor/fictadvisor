@@ -471,7 +471,7 @@ model Entrant {
   entrantData      EntrantData?
   priority         EntrantPriority?
   contract         Contract?
-  competitivePoint Float            @map("competitive_point")
+  competitivePoint Float?            @map("competitive_point")
 
   @@map("entrants")
 }
@@ -515,7 +515,7 @@ model EntrantData {
   settlement        String
   address           String
   index             String
-  idCode            String  @map("id_code")
+  idCode            String?  @map("id_code")
   phoneNumber       String  @map("phone_number")
   email             String
 
@@ -532,7 +532,7 @@ model Contract {
   entrantId String  @unique @map("entrant_id")
   number    String
   date      String
-  group     String
+  group     String?
 
   @@map("contracts")
 }
