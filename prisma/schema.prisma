@@ -427,7 +427,7 @@ model QueueUser {
   speciality     String
   isDorm         Boolean?        @map("is_dorm")
   printedEdbo    Boolean?        @map("printed_edbo")
-  queuePositions      QueuePosition[]
+  queuePositions QueuePosition[]
 
   @@map("queue_users")
 }
