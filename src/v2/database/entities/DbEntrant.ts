@@ -1,4 +1,4 @@
-import { Contract, EntrantData, EntrantPriority } from '@prisma/client';
+import { Contract, EntrantData, EntrantPriority, Priority } from '@prisma/client';
 
 export class DbEntrant {
   id: string;
@@ -7,7 +7,9 @@ export class DbEntrant {
   lastName: string;
   specialty: string;
   competitivePoint: number;
-  entrantData: EntrantData;
-  priority: EntrantPriority;
-  contract: Contract;
+  entrantData?: EntrantData;
+  contract?: Contract;
+  priority?: EntrantPriority & {
+    priorities?: Priority[],
+  };
 }

@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { CreateContractDTO } from '../dtos/CreateContractDTO';
 import { EntrantRepository } from '../../database/repositories/EntrantRepository';
 import { AlreadyExistException } from '../../utils/exceptions/AlreadyExistException';
+import { NamesDTO } from '../dtos/NamesDTO';
+import { DataNotFoundException } from '../../utils/exceptions/DataNotFoundException';
 
 @Injectable()
 export class EntrantService {
@@ -32,5 +34,11 @@ export class EntrantService {
         },
       });
     }
+  }
+
+  async getPriority (data: NamesDTO) {
+    const entrant = await this.entrantRepository.find(data);
+    if (!entrant?.priority) throw new DataNotFoundException();
+    return entrant;
   }
 }
