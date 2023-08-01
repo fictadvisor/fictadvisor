@@ -440,11 +440,11 @@ enum QueuePositionStatus {
 }
 
 model QueuePosition {
-  id                   String              @id @default(uuid())
+  id                   Int                 @id @default(autoincrement())
   user                 QueueUser           @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId               Int                 @map("user_id")
   queue                Queue               @relation(fields: [queueId], references: [id], onDelete: Cascade)
-  queueId              String              @map("queue_id")
+  queueId              Int                 @map("queue_id")
   code                 Int
   position             Int
   status               QueuePositionStatus @default(WAITING)
@@ -454,7 +454,7 @@ model QueuePosition {
 }
 
 model Queue {
-  id        String          @id @default(uuid())
+  id        Int             @id @default(autoincrement())
   name      String
   active    Boolean
   open      Boolean         @default(false)

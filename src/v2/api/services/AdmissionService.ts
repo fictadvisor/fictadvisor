@@ -61,7 +61,7 @@ export class AdmissionService {
     };
   }
 
-  async getQueue (queueId: string) {
+  async getQueue (queueId: number) {
     const queue = await this.getAndCheckQueue(queueId);
 
     const queueSize = await this.prisma.queuePosition.count({
@@ -80,7 +80,7 @@ export class AdmissionService {
     };
   }
 
-  async updateQueue (queueId: string, body: UpdateQueueDTO) {
+  async updateQueue (queueId: number, body: UpdateQueueDTO) {
     await this.getAndCheckQueue(queueId);
 
     await this.prisma.queue.update({
@@ -91,7 +91,7 @@ export class AdmissionService {
     });
   }
 
-  async deleteQueue (queueId: string) {
+  async deleteQueue (queueId: number) {
     await this.getAndCheckQueue(queueId);
 
     await this.prisma.queue.delete({
@@ -101,7 +101,7 @@ export class AdmissionService {
     });
   }
 
-  async advanceQueue (queueId: string) {
+  async advanceQueue (queueId: number) {
     const queue = await this.getAndCheckQueue(queueId);
 
     const position = await this.prisma.queuePosition.findFirst({
@@ -138,7 +138,7 @@ export class AdmissionService {
     return position;
   }
 
-  async notifyQueue (queueId: string) {
+  async notifyQueue (queueId: number) {
     const queue = await this.getAndCheckQueue(queueId);
 
     const positions = await this.prisma.queuePosition.findMany({
@@ -183,7 +183,7 @@ export class AdmissionService {
     }
   }
 
-  async deleteQueuePosition (queueId: string, userId: number) {
+  async deleteQueuePosition (queueId: number, userId: number) {
     const queue = await this.getAndCheckQueue(queueId);
     const user = await this.getAndCheckUser(userId);
 
@@ -197,7 +197,7 @@ export class AdmissionService {
     await this.sendMessage(user, MessageType.DELETED, { queue: queue.name });
   }
 
-  async getAndCheckQueue (queueId: string) {
+  async getAndCheckQueue (queueId: number) {
     const queue = await this.prisma.queue.findUnique({
       where: {
         id: queueId,
@@ -211,7 +211,7 @@ export class AdmissionService {
     return queue;
   }
 
-  async getQueueUsers (queueId: string, page: Page) {
+  async getQueueUsers (queueId: number, page: Page) {
     const queue = await this.getAndCheckQueue(queueId);
     const count = await this.prisma.queuePosition.count({
       where: {
@@ -274,7 +274,7 @@ export class AdmissionService {
     return user;
   }
 
-  async createQueueUser (queueId: string, body: CreateQueueUserDTO) {
+  async createQueueUser (queueId: number, body: CreateQueueUserDTO) {
     const queue = await this.getAndCheckQueue(queueId);
     const user = await this.getAndCheckUser(body.id);
 
@@ -321,7 +321,7 @@ export class AdmissionService {
     return ++this.questionLastPosition[queue.id];
   }
 
-  async getAndCheckQueueUser (queueId: string, userId: number) {
+  async getAndCheckQueueUser (queueId: number, userId: number) {
     const queuePosition = await this.prisma.queuePosition.findFirst({
       where: {
         queueId,
@@ -336,7 +336,7 @@ export class AdmissionService {
     return queuePosition;
   }
 
-  async updateQueueUser (queueId: string, userId: number, body: UpdateQueueUserDTO) {
+  async updateQueueUser (queueId: number, userId: number, body: UpdateQueueUserDTO) {
     const queue = await this.getAndCheckQueue(queueId);
     const user = await this.getAndCheckUser(userId);
     const position = await this.getAndCheckQueueUser(queueId, userId);
@@ -384,7 +384,7 @@ export class AdmissionService {
     };
   }
 
-  async getQueueUser (queueId: string, userId: number) {
+  async getQueueUser (queueId: number, userId: number) {
     const queue = await this.getAndCheckQueue(queueId);
     const user = await this.getAndCheckUser(userId);
     const position = await this.getAndCheckQueueUser(queueId, userId);
