@@ -6,7 +6,7 @@ import {
   ParseIntPipe,
   Post,
   Query,
-  Request,
+  Request, UseGuards,
 } from '@nestjs/common';
 import { ScheduleService } from '../services/ScheduleService';
 import { GroupByIdPipe } from '../pipes/GroupByIdPipe';
@@ -28,6 +28,7 @@ import { EventByIdPipe } from '../pipes/EventByIdPipe';
 import { GroupByEventGuard } from '../../security/group-guard/GroupByEventGuard';
 import { ConvertToBooleanPipe } from '../pipes/ConvertToBooleanPipe';
 import { EventsResponse } from '../responses/EventsResponse';
+import { TelegramGuard } from '../../security/TelegramGuard';
 
 @ApiTags('Schedule')
 @Controller({
@@ -92,8 +93,9 @@ export class ScheduleController {
     description: `\n
     InvalidEntityIdException: 
       Group with such id is not found
+      
     DataNotFoundException: 
-      Data was not found`,
+      Data were not found`,
   })
   async getGeneralEvents (
     @Param('groupId', GroupByIdPipe) id: string,
@@ -103,6 +105,46 @@ export class ScheduleController {
     return {
       events: this.scheduleMapper.getEvents(result.events),
       week: result.week,
+    };
+  }
+
+  @UseGuards(TelegramGuard)
+  @Get('/groups/:groupId/general/day')
+  @ApiQuery({
+    name: 'day',
+    required: false,
+  })
+  @ApiOkResponse({
+    type: EventsResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidGroupIdException: 
+      Group with such id is not found
+      
+    InvalidWeekException:
+      Week parameter is invalid
+      
+    InvalidDayException: 
+      Day parameter is invalid`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  async getGeneralGroupEventsByDay (
+    @Param('groupId', GroupByIdPipe) id: string,
+    @Query('day') day: number,
+  ) {
+    const result = await this.scheduleService.getGeneralGroupEventsByDay(id, day);
+    return {
+      events: this.scheduleMapper.getEvents(result.events),
     };
   }
 

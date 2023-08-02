@@ -10,11 +10,12 @@ import { PrismaModule } from './PrismaModule';
 import { AccessModule } from 'src/v2/modules/AccessModule';
 import { MapperModule } from './MapperModule';
 import { UserModule } from './UserModule';
+import { TelegramConfigService } from '../config/TelegramConfigService';
 
 @Module({
   controllers: [ScheduleController],
-  providers: [ScheduleService],
-  exports: [ScheduleService],
+  providers: [ScheduleService, TelegramConfigService],
+  exports: [ScheduleService, TelegramConfigService],
   imports: [
     ParserModule,
     GroupModule,

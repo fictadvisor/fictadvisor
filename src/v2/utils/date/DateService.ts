@@ -161,4 +161,18 @@ export class DateService {
       ? { semester: 2, year: year - 1 }
       : { semester: 1, year };
   }
+
+  async getSpecificDayInWeek (week, dayOfWeek) {
+    const { startOfWeek } = await this.getDatesOfWeek(week);
+    const differenceInDays = dayOfWeek - 1;
+
+    const startOfDay = new Date(startOfWeek);
+    startOfDay.setDate(startOfWeek.getDate() + differenceInDays);
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const endOfDay = new Date(startOfDay);
+    endOfDay.setHours(23, 59, 59, 999);
+
+    return { startOfDay, endOfDay };
+  }
 }

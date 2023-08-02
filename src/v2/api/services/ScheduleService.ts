@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DateService, DAY, FORTNITE, WEEK } from '../../utils/date/DateService';
+import { CurrentSemester, DateService, DAY, FORTNITE, WEEK } from '../../utils/date/DateService';
 import { EventRepository } from '../../database/repositories/EventRepository';
 import { DbEvent } from '../../database/entities/DbEvent';
 import { Period, DisciplineTypeEnum } from '@prisma/client';
@@ -18,6 +18,7 @@ import { filterAsync, find, some } from '../../utils/ArrayUtil';
 import { DbDiscipline } from '../../database/entities/DbDiscipline';
 import { InvalidWeekException } from '../../utils/exceptions/InvalidWeekException';
 import { UserService } from './UserService';
+import { InvalidDayException } from '../../utils/exceptions/InvalidDayException';
 
 
 @Injectable()
@@ -66,7 +67,7 @@ export class ScheduleService {
     }
   }
 
-  async getGeneralGroupEvents (id, week) {
+  async getGeneralGroupEvents (id: string, week: number) {
     const { startOfWeek, endOfWeek } = week ? await this.dateService.getDatesOfWeek(week) : this.dateService.getDatesOfCurrentWeek();
     const events = await this.eventRepository.findMany({
       where: {
@@ -107,6 +108,30 @@ export class ScheduleService {
     return {
       events: result,
       week,
+    };
+  }
+
+  async getGeneralGroupEventsByDay (id: string, day: number) {
+    const week = await this.dateService.getCurrentWeek();
+    const currentSemester = await this.dateService.getCurrentSemester();
+    if (!this.isWeekValid(week, currentSemester)) {
+      throw new InvalidWeekException();
+    }
+
+    day = day ? day : (await this.dateService.getCurrentDay()).day;
+    if (day < 1 || day > 6) {
+      throw new InvalidDayException();
+    }
+    const { startOfDay } = await this.dateService.getSpecificDayInWeek(week, day);
+
+    const result = await this.getGeneralGroupEvents(id, week);
+
+    return {
+      events: result.events.filter((event) => {
+        const startTime = new Date(event.startTime);
+        startTime.setHours(0, 0, 0, 0);
+        return (startOfDay.getTime() - startTime.getTime()) % WEEK === 0;
+      }),
     };
   }
 
@@ -217,6 +242,17 @@ export class ScheduleService {
         description: data.disciplineInfo,
       }),
     };
+  }
+
+  private isWeekValid (week: number, currentSemester: CurrentSemester): boolean {
+    const startWeek = Math.ceil(
+      (currentSemester.startDate.getTime() - currentSemester.endDate.getTime()) / WEEK
+    );
+    const endWeek = Math.ceil(
+      (currentSemester.endDate.getTime() - currentSemester.startDate.getTime()) / WEEK
+    );
+
+    return week >= startWeek && week <= endWeek;
   }
 
   async createGroupEvent (body: CreateEventDTO) {
