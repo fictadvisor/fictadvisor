@@ -36,6 +36,7 @@ interface InputProps
   showRemark?: boolean;
   className?: string;
   onDeterredChange?: () => void;
+  resetOnDisabled?: boolean;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -49,6 +50,7 @@ const Input: React.FC<InputProps> = ({
   className: additionalClassName,
   onDeterredChange,
   name = '',
+  resetOnDisabled = false,
   ...rest
 }) => {
   const [field, { touched, error }, { setTouched, setValue }] = useField(name);
@@ -108,6 +110,10 @@ const Input: React.FC<InputProps> = ({
     styles[inputStyle],
     additionalClassName,
   );
+
+  useEffect(() => {
+    if (resetOnDisabled) setValue('');
+  }, [resetOnDisabled]);
 
   useEffect(() => {
     const curTimer = setTimeout(() => {

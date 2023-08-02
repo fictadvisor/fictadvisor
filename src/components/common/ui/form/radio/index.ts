@@ -1,1 +1,1 @@
-export { default } from './RadipGroup';
+export { default } from './RadioGroup';

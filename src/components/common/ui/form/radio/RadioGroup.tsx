@@ -1,4 +1,4 @@
-import { FC, FormEvent } from 'react';
+import React, { FC, FormEvent } from 'react';
 import { Box, SxProps, Theme } from '@mui/material';
 import { useField } from 'formik';
 
@@ -16,7 +16,7 @@ interface RadioGroupProps {
   disabled?: boolean;
   name: string;
   textType?: 'body1' | 'body2Medium';
-  onChange?: (event: FormEvent<HTMLDivElement>) => void;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   sx?: SxProps<Theme>;
 }
 

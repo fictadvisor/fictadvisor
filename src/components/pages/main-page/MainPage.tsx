@@ -65,9 +65,9 @@ const MainPage: FC<MainPageProps> = ({ data }) => {
                       <hr className={styles['button-divider']} />
                     </>
                   )}
-                  <Link href={'/poll'}>
+                  <Link href={'/contract'}>
                     <Button
-                      text={'Опитування 2023'}
+                      text={'Договір про навчання'}
                       disabled={false}
                       variant={ButtonVariant.OUTLINE}
                       size={ButtonSize.LARGE}
@@ -89,9 +89,9 @@ const MainPage: FC<MainPageProps> = ({ data }) => {
                       <hr className={styles['button-divider']} />
                     </>
                   )}
-                  <Link href={'/poll'}>
+                  <Link href={'/contract'}>
                     <Button
-                      text={'Опитування 2023'}
+                      text={'Договір про навчання'}
                       disabled={false}
                       variant={ButtonVariant.OUTLINE}
                       size={ButtonSize.MEDIUM}
@@ -112,9 +112,9 @@ const MainPage: FC<MainPageProps> = ({ data }) => {
                       </Link>
                     </>
                   )}
-                  <Link href={'/poll'}>
+                  <Link href={'/contract'}>
                     <Button
-                      text={'Опитування 2023'}
+                      text={'Договір про навчання'}
                       disabled={false}
                       variant={ButtonVariant.OUTLINE}
                       size={ButtonSize.SMALL}

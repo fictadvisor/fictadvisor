@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 
 import Button from '@/components/common/ui/button/Button';
 import { Slider, TextArea } from '@/components/common/ui/form';
-import RadioGroup from '@/components/common/ui/form/radio/RadipGroup';
+import RadioGroup from '@/components/common/ui/form/radio/RadioGroup';
 import Progress from '@/components/common/ui/progress-mui';
 import useToast from '@/hooks/use-toast';
 import PollAPI from '@/lib/api/poll/PollAPI';
