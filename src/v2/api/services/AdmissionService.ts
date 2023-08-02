@@ -288,7 +288,7 @@ export class AdmissionService {
       }
     }
 
-    const queuePosition = this.prisma.queuePosition.findFirst({
+    const queuePosition = await this.prisma.queuePosition.findFirst({
       where: {
         queue,
         user,
