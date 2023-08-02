@@ -17,7 +17,8 @@ RUN yarn install --prod && \
     mkdir dist/swagger && \
     cp node_modules/swagger-ui-dist/swagger-ui* dist/swagger && \
     mkdir -p dist/email/templates && \
-    cp email/templates/template.hbs dist/email/templates
+    cp email/templates/template.hbs dist/email/templates && \
+    cp email/templates/message.hbs dist/email/templates
 
 ###################
 # PRODUCTION

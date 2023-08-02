@@ -34,9 +34,8 @@ export class DocumentService {
   private formatPersonalData (data: PersonalDataDTO) {
     return {
       ...data,
-      passportData: this.getFullString(data.passportNumber, data.passportInstitute, data.passportDate),
-      settlement: this.getFullString(data.region, data.settlement),
-      address: this.getFullString(data.address, data.index),
+      passportData: this.getFullString(data.passportDate, data.passportInstitute),
+      address: this.getFullString(data.region, data.settlement, data.address, data.index),
       bigName: data.lastName.toUpperCase(),
     };
   }
@@ -83,8 +82,7 @@ export class DocumentService {
       const payment = this.fileService.fillTemplate(paymentName, obj);
       attachments.push({ name: 'Договір про надання платної освітньої послуги.docx', buffer: payment, contentType: DOCX });
     }
-
-    this.emailService.sendWithAttachments({
+    await this.emailService.sendWithAttachments({
       to: emails,
       subject: `Договори щодо вступу | ${data.entrant.lastName} ${data.entrant.firstName}`,
       message: 'Документи вкладені у цей лист.',
@@ -140,7 +138,7 @@ export class DocumentService {
     const emails = [data.email];
     if (data.isToAdmission) emails.push(process.env.ADMISSION_EMAIL);
 
-    this.emailService.sendWithAttachments({
+    await this.emailService.sendWithAttachments({
       to: emails,
       subject: `Пріоритетка | ${data.lastName} ${data.firstName}`,
       message: 'Документ вкладений у цей лист.',
