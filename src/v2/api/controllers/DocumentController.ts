@@ -22,9 +22,7 @@ export class DocumentController {
     private documentService: DocumentService,
   ) {}
 
-  @Access('documents.contract.create')
   @Post('/contract')
-  @ApiBearerAuth()
   @ApiOkResponse()
   @ApiBadRequestResponse({
     description: `\n  

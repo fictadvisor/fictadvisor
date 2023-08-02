@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Post, Query } from '@nestjs/common';
 import { CreateContractDTO } from '../dtos/CreateContractDTO';
 import { EntrantService } from '../services/EntrantService';
 import { EntrantMapper } from '../../mappers/EntrantMapper';
@@ -69,7 +69,7 @@ export class EntrantController {
       You do not have permission to perform this action`,
   })
   async saveContract (
-    @Body() body: CreateContractDTO
+    @Body() body: CreateContractDTO,
   ) {
     const entrant = await this.entrantService.saveContract(body);
     return this.entrantMapper.getEntrantWithContract(entrant);
@@ -114,9 +114,9 @@ export class EntrantController {
       You do not have permission to perform this action`,
   })
   async getEntrantPriority (
-    @Body() body: NamesDTO,
+    @Query() query: NamesDTO,
   ) {
-    const entrant = await this.entrantService.getPriority(body);
+    const entrant = await this.entrantService.getPriority(query);
     return this.entrantMapper.getEntrantWithPriority(entrant);
   }
 
