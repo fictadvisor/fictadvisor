@@ -59,11 +59,6 @@ export class DocumentController {
     ObjectIsRequiredException:
       Payment type is required`,
   })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
   @ApiForbiddenResponse({
     description: `\n
     NoPermissionException:

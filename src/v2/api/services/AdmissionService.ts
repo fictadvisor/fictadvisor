@@ -424,7 +424,7 @@ export class AdmissionService {
         firstName: body.firstName,
         middleName: body.middleName,
         lastName: body.lastName,
-        specialty: body.speciality,
+        specialty: body.specialty,
       },
     });
 

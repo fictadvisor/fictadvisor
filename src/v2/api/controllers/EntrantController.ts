@@ -71,8 +71,7 @@ export class EntrantController {
   async saveContract (
     @Body() body: CreateContractDTO,
   ) {
-    const entrant = await this.entrantService.saveContract(body);
-    return this.entrantMapper.getEntrantWithContract(entrant);
+    return  await this.entrantService.saveContract(body);
   }
 
   @Access('admission.priorities.get')

@@ -425,7 +425,7 @@ model QueueUser {
   telegramId     BigInt?         @map("telegram_id")
   email          String?
   phone          String?
-  speciality     String
+  specialty      String
   isDorm         Boolean?        @map("is_dorm")
   printedEdbo    Boolean?        @map("printed_edbo")
   queuePositions QueuePosition[]

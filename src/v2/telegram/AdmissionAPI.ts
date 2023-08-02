@@ -1,5 +1,6 @@
 import axios from 'axios';
 import * as process from 'process';
+import { EntrantWithContractResponse } from '../api/responses/EntrantWithContractResponse';
 
 const ADMISSION_BOT_API = process.env.ADMISSION_BOT_API;
 const ADMISSION_BOT_TOKEN = process.env.ADMISSION_BOT_TOKEN;
@@ -17,4 +18,12 @@ export class AdmissionAPI {
       },
     });
   }
+
+  async sendContract (entrant: EntrantWithContractResponse) {
+    await axios.post(`${ADMISSION_BOT_API}/sendContract`, entrant, {
+      headers: {
+        Authorization: `Bearer ${ADMISSION_BOT_TOKEN}`,
+      },
+    });
+  };
 }

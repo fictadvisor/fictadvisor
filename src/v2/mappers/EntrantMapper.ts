@@ -8,7 +8,7 @@ export class EntrantMapper {
       firstName: entrant.firstName,
       lastName: entrant.lastName,
       middleName: entrant.middleName,
-      speciality: entrant.specialty,
+      specialty: entrant.specialty,
       competitivePoint: entrant.competitivePoint,
       contractNumber: entrant.contract.number,
       date: entrant.contract.date,

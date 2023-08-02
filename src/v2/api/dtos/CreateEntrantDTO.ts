@@ -20,7 +20,7 @@ export class CreateEntrantDTO {
     email: string;
 
   @IsNotEmpty()
-    speciality: string;
+    specialty: string;
 
   @IsOptional()
     isDorm: boolean;

@@ -5,11 +5,15 @@ import { AlreadyExistException } from '../../utils/exceptions/AlreadyExistExcept
 import { NamesDTO } from '../dtos/NamesDTO';
 import { DataNotFoundException } from '../../utils/exceptions/DataNotFoundException';
 import { PriorityState } from '@prisma/client';
+import { AdmissionAPI } from '../../telegram/AdmissionAPI';
+import { EntrantMapper } from '../../mappers/EntrantMapper';
 
 @Injectable()
 export class EntrantService {
   constructor (
     private readonly entrantRepository: EntrantRepository,
+    private readonly admissionAPI: AdmissionAPI,
+    private readonly entrantMapper: EntrantMapper,
   ) {
   }
   private findEntrant (firstName: string, middleName: string, lastName: string) {
@@ -27,11 +31,14 @@ export class EntrantService {
     if (entrant.contract) {
       throw new AlreadyExistException('contract');
     }
-    return this.entrantRepository.updateById(entrant.id, {
+    const newEntrant = await this.entrantRepository.updateById(entrant.id, {
       contract: {
         create: contract,
       },
     });
+    const mappedEntrant = this.entrantMapper.getEntrantWithContract(newEntrant);
+    await this.admissionAPI.sendContract(mappedEntrant);
+    return mappedEntrant;
   }
 
 

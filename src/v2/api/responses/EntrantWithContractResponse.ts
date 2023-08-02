@@ -1,20 +1,29 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { EntrantResponse } from './EntrantResponse';
 
-class Contract {
+export class EntrantWithContractResponse {
   @ApiProperty()
-    number: number;
+    firstName: string;
+
+  @ApiProperty()
+    middleName: string;
+
+  @ApiProperty()
+    lastName: string;
+
+  @ApiProperty({
+    enum: ['121', '123', '126'],
+  })
+    specialty: string;
+
+  @ApiProperty({
+    minimum: 100,
+    maximum: 200,
+  })
+    competitivePoint: number;
+
+  @ApiProperty()
+    contractNumber: string;
 
   @ApiProperty()
     date: string;
-
-  @ApiProperty()
-    group: string;
-}
-
-export class EntrantWithContractResponse extends EntrantResponse {
-  @ApiProperty({
-    type: Contract,
-  })
-    contract: Contract;
 }
