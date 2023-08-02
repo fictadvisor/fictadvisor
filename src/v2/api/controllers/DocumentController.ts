@@ -1,6 +1,5 @@
 import {
   ApiBadRequestResponse,
-  ApiBearerAuth,
   ApiForbiddenResponse,
   ApiOkResponse,
   ApiTags,
@@ -9,7 +8,6 @@ import {
 import { Body, Controller, Post } from '@nestjs/common';
 import { DocumentService } from '../services/DocumentService';
 import { StudyContractDTO } from '../dtos/StudyContractDTO';
-import { Access } from '../../security/Access';
 import { PriorityDTO } from '../dtos/PriorityDTO';
 
 @ApiTags('Document')
@@ -70,9 +68,7 @@ export class DocumentController {
     return this.documentService.generateStudyContract(body);
   }
 
-  @Access('documents.priority.create')
   @Post('/priority')
-  @ApiBearerAuth()
   @ApiOkResponse()
   @ApiBadRequestResponse({
     description: `\n  
