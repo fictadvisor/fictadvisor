@@ -23,6 +23,9 @@ export class CreateEntrantDTO {
     specialty: string;
 
   @IsOptional()
+    phone: string;
+
+  @IsOptional()
     isDorm: boolean;
 
   @IsOptional()
