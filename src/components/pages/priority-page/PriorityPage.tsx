@@ -43,11 +43,11 @@ const PriorityPage: FC = () => {
         }
         if (values.specialty === '126') {
           for (let i = 1; i <= 3; i++) {
-            if (values.priorities[i] === values.priorities[i + 1]) {
-              toast.error('Помилка в пріоритетах');
-              setSubmited(false);
-              return;
-            }
+            // if (values.priorities[i] === values.priorities[i + 1]) {
+            //   toast.error('Помилка в пріоритетах');
+            //   setSubmited(false);
+            //   return;
+            // }
           }
         }
 

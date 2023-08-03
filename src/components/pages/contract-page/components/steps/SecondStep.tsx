@@ -10,10 +10,10 @@ import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown';
 import { Actions } from '@/components/pages/contract-page/components/Actions';
 import { CheckBox } from '@/components/pages/contract-page/components/CheckBox';
 import { REGIONS } from '@/components/pages/contract-page/constants';
+import { kyiv } from '@/components/pages/contract-page/constants';
 import * as stylesMui from '@/components/pages/contract-page/ContractPage.styles';
 import { entrantValidationSchema } from '@/components/pages/contract-page/validation';
 import { ExtendedContractBody } from '@/lib/api/contract/types/ContractBody';
-
 export interface SecondStepProps {
   onNextStep: (data: ExtendedContractBody, final?: boolean) => void;
   onPrevStep: (data: ExtendedContractBody) => void;
@@ -185,18 +185,20 @@ export const SecondStep: FC<SecondStepProps> = ({
             <FormikDropdown
               size={FieldSize.LARGE}
               options={REGIONS}
-              label="Область"
+              label="Регіон"
               name="entrant.region"
               placeholder="виберіть зі списку"
             />
           </Box>
-          <Box sx={stylesMui.item}>
-            <Input
-              name="entrant.settlement"
-              placeholder="м. Київ"
-              label="Населений пункт"
-            />
-          </Box>
+          {values.entrant.region !== kyiv && (
+            <Box sx={stylesMui.item}>
+              <Input
+                name="entrant.settlement"
+                placeholder="с. Пуків"
+                label="Населений пункт"
+              />
+            </Box>
+          )}
           <Box sx={stylesMui.item}>
             <Input
               name="entrant.address"
@@ -219,9 +221,7 @@ export const SecondStep: FC<SecondStepProps> = ({
                 text="Підтвердження даних"
                 sx={stylesMui.divider}
               />
-              <Typography variant="h6Bold">
-                Віддайте телефон оператору
-              </Typography>
+              <Typography variant="h6Bold">Зверніться до оператора</Typography>
               <Input
                 name="helper.secretNumber"
                 label="Секретний код"

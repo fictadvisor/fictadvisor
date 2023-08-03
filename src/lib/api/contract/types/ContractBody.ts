@@ -12,7 +12,7 @@ interface PersonalData {
   settlement: string;
   idCode?: string;
   phoneNumber: string;
-  region: string;
+  region?: string;
   email: string;
   index: string;
 }

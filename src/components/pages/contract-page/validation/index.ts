@@ -1,5 +1,6 @@
 import * as yup from 'yup';
 
+import { kyiv } from '@/components/pages/contract-page/constants';
 import { ExtendedContractBody } from '@/lib/api/contract/types/ContractBody';
 const secretString = /^4261$/;
 export const metaValidationSchema = yup.object().shape({
@@ -25,7 +26,7 @@ export const representativeValidation = yup.object().shape({
       .min(2, 'Не коротше 2 символів')
       .max(40, 'Не довше 40 символів')
       .matches(
-        /^[ҐЄІЇЬА-ЩЮЯґєіїьа-щюя\-`ʼ' ]+$/,
+        /^[ҐЄІЇЬА-ЩЮЯґєіїьа-щюя\-`'’‘“”* ]+$/,
         'Має містити українські літери, апостроф або дефіс',
       ),
     firstName: yup
@@ -34,7 +35,7 @@ export const representativeValidation = yup.object().shape({
       .min(2, 'Не коротше 2 символів')
       .max(40, 'Не довше 40 символів')
       .matches(
-        /^[ҐЄІЇЬА-ЩЮЯґєіїьа-щюя\-`ʼ' ]+$/,
+        /^[ҐЄІЇЬА-ЩЮЯґєіїьа-щюя\-`'’‘“”* ]+$/,
         'Має містити українські літери, апостроф або дефіс',
       ),
 
@@ -43,7 +44,7 @@ export const representativeValidation = yup.object().shape({
       .min(2, 'Не коротше 2 символів')
       .max(40, 'Не довше 40 символів')
       .matches(
-        /^[ҐЄІЇЬА-ЩЮЯґєіїьа-щюя\-`ʼ' ]+$/,
+        /^[ҐЄІЇЬА-ЩЮЯґєіїьа-щюя\-`'’‘“”* ]+$/,
         'Має містити українські літери, апостроф або дефіс',
       ),
     phoneNumber: yup
@@ -102,18 +103,22 @@ export const representativeValidation = yup.object().shape({
       .max(10, 'Лише 10 цифр')
       .matches(/(\d{10})/, 'Лише 10 цифр'),
     region: yup.string().required(`Обов'язкове поле`),
-    settlement: yup
-      .string()
-      .required(`Обов'язкове поле`)
-      .matches(
-        /^[ҐЄІЇЬА-ЩЮЯґєіїьа-щюя0-9\-`ʼ',. ]+$/,
-        'Має містити українські літери, апостроф або дефіс',
-      ),
+    settlement: yup.string().when('region', {
+      is: kyiv,
+      then: schema => schema.optional(),
+      otherwise: schema =>
+        schema
+          .required(`Обов'язкове поле`)
+          .matches(
+            /^[ҐЄІЇЬА-ЩЮЯґєіїьа-щюя0-9\-`'’‘“”*,. ]+$/,
+            'Має містити українські літери, апостроф або дефіс',
+          ),
+    }),
     address: yup
       .string()
       .required(`Обов'язкове поле`)
       .matches(
-        /^[ҐЄІЇЬА-ЩЮЯґєіїьа-щюя0-9\-`ʼ',. /]+$/,
+        /^[ҐЄІЇЬА-ЩЮЯґєіїьа-щюя0-9\-`'’‘“”*,. /]+$/,
         'Має містити українські літери, апостроф або дефіс',
       ),
     index: yup
@@ -152,7 +157,7 @@ export const entrantValidationSchema = yup.object().shape({
       .min(2, 'Не коротше 2 символів')
       .max(40, 'Не довше 40 символів')
       .matches(
-        /^[ҐЄІЇЬА-ЩЮЯґєіїьа-щюя\-`ʼ' ]+$/,
+        /^[ҐЄІЇЬА-ЩЮЯґєіїьа-щюя\-`'’‘“”* ]+$/,
         'Має містити українські літери, апостроф або дефіс',
       ),
     firstName: yup
@@ -161,7 +166,7 @@ export const entrantValidationSchema = yup.object().shape({
       .min(2, 'Не коротше 2 символів')
       .max(40, 'Не довше 40 символів')
       .matches(
-        /^[ҐЄІЇЬА-ЩЮЯґєіїьа-щюя\-`ʼ' ]+$/,
+        /^[ҐЄІЇЬА-ЩЮЯґєіїьа-щюя\-`'’‘“”* ]+$/,
         'Має містити українські літери, апостроф або дефіс',
       ),
     middleName: yup
@@ -169,7 +174,7 @@ export const entrantValidationSchema = yup.object().shape({
       .min(2, 'Не коротше 2 символів')
       .max(40, 'Не довше 40 символів')
       .matches(
-        /^[ҐЄІЇЬА-ЩЮЯґєіїьа-щюя\-`ʼ' ]+$/,
+        /^[ҐЄІЇЬА-ЩЮЯґєіїьа-щюя\-`'’‘“”* ]+$/,
         'Має містити українські літери, апостроф або дефіс',
       ),
     phoneNumber: yup
@@ -229,18 +234,23 @@ export const entrantValidationSchema = yup.object().shape({
       .max(10, 'Лише 10 цифр')
       .matches(/(\d{10})/, 'Лише 10 цифр'),
     region: yup.string().required(`Обов'язкове поле`),
-    settlement: yup
-      .string()
-      .required(`Обов'язкове поле`)
-      .matches(
-        /^[ҐЄІЇЬА-ЩЮЯґєіїьа-щюя0-9\-`ʼ',. ]+$/,
-        'Має містити українські літери, апостроф або дефіс',
-      ),
+    settlement: yup.string().when('region', {
+      is: kyiv,
+      then: schema => schema.optional(),
+      otherwise: schema =>
+        schema
+          .required(`Обов'язкове поле`)
+          .matches(
+            /^[ҐЄІЇЬА-ЩЮЯґєіїьа-щюя0-9\-`'’‘“”*,. ]+$/,
+            'Має містити українські літери, апостроф або дефіс',
+          ),
+    }),
+
     address: yup
       .string()
       .required(`Обов'язкове поле`)
       .matches(
-        /^[ҐЄІЇЬА-ЩЮЯґєіїьа-щюя0-9\-`ʼ',. /]+$/,
+        /^[ҐЄІЇЬА-ЩЮЯґєіїьа-щюя0-9\-`'’‘“”*,. /]+$/,
         'Має містити українські літери, апостроф або дефіс',
       ),
     index: yup
