@@ -27,15 +27,18 @@ export class DocumentService {
     private entrantRepository: EntrantRepository,
   ) {}
 
-  private getFullString (...args) {
-    return args.filter((a) => a).join(', ');
+  private getFullString (separator: string, ...args) {
+    return args.filter((a) => a).join(separator);
   }
 
   private formatPersonalData (data: PersonalDataDTO) {
+    const passport = this.getFullString(' ', data.passportSeries, data.passportNumber);
     return {
       ...data,
-      passportData: this.getFullString(data.passportDate, data.passportInstitute),
-      address: this.getFullString(data.region, data.settlement, data.address, data.index),
+      passport,
+      passportData: this.getFullString(', ', data.passportDate, data.passportInstitute),
+      address: this.getFullString(', ', data.region, data.settlement, data.address, data.index),
+      idCode: !data.idCode ? passport : data.idCode,
       bigName: data.lastName.toUpperCase(),
     };
   }
@@ -82,6 +85,7 @@ export class DocumentService {
       const payment = this.fileService.fillTemplate(paymentName, obj);
       attachments.push({ name: 'Договір про надання платної освітньої послуги.docx', buffer: payment, contentType: DOCX });
     }
+
     await this.emailService.sendWithAttachments({
       to: emails,
       subject: `Договори щодо вступу | ${data.entrant.lastName} ${data.entrant.firstName}`,
