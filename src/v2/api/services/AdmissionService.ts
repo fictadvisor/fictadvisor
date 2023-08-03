@@ -104,7 +104,7 @@ export class AdmissionService {
   async advanceQueue (queueId: number) {
     const queue = await this.getAndCheckQueue(queueId);
 
-    const position = await this.prisma.queuePosition.findFirst({
+    let position = await this.prisma.queuePosition.findFirst({
       where: {
         queueId: queue.id,
         status: QueuePositionStatus.WAITING,
@@ -118,9 +118,9 @@ export class AdmissionService {
       throw new BadRequestException('There is no one in queue');
     }
 
-    this.prisma.queuePosition.update({
+    position = await this.prisma.queuePosition.update({
       where: {
-        id: queue.id,
+        id: position.id,
       },
       data: {
         status: QueuePositionStatus.GOING,
@@ -135,7 +135,10 @@ export class AdmissionService {
 
     await this.sendMessage(user, MessageType.PROCESSING, { queue: queue.name, code: position.code });
 
-    return position;
+    return {
+      position,
+      user,
+    };
   }
 
   async notifyQueue (queueId: number) {
