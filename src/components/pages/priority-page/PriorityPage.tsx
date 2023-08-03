@@ -19,7 +19,6 @@ import {
 import { preparePriorityData } from '@/components/pages/priority-page/utils';
 import { validationSchema } from '@/components/pages/priority-page/validation';
 import useToast from '@/hooks/use-toast';
-import ContractAPI from '@/lib/api/contract/ContractAPI';
 import { PriorityData } from '@/lib/api/contract/types/ContractBody';
 
 const PriorityPage: FC = () => {
@@ -43,11 +42,11 @@ const PriorityPage: FC = () => {
         }
         if (values.specialty === '126') {
           for (let i = 1; i <= 3; i++) {
-            if (values.priorities[i] === values.priorities[i + 1]) {
-              toast.error('Помилка в пріоритетах');
-              setSubmited(false);
-              return;
-            }
+            // if (values.priorities[i] === values.priorities[i + 1]) {
+            //   toast.error('Помилка в пріоритетах');
+            //   setSubmited(false);
+            //   return;
+            // }
           }
         }
 
