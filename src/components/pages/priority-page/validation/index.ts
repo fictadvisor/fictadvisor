@@ -1,4 +1,21 @@
 import * as yup from 'yup';
+import { TestConfig } from 'yup';
+
+import option from '@/components/common/ui/form/dropdown/components/option';
+
+const secretString = /^4261$/;
+
+const priorityFieldTestOptions: TestConfig = {
+  name: 'uniqueOption',
+  test: (value, context) => {
+    const curKey = context.path.split('.').at(-1);
+    const otherOptions = Object.entries(context.parent).filter(
+      option => option[0] !== curKey,
+    );
+    return otherOptions.every(option => option[1] !== value);
+  },
+  message: 'Кожен пріоритет повинен бути унікальним',
+};
 
 export const validationSchema = yup.object().shape({
   lastName: yup
@@ -44,12 +61,27 @@ export const validationSchema = yup.object().shape({
       'Має бути номер дня, одиничний починається з 0',
     ),
   priorities: yup.object().shape({
-    1: yup.string().required(`Обов'язкове поле`),
-    2: yup.string().required(`Обов'язкове поле`),
-    3: yup.string().when('specialty', {
-      is: '126',
-      then: schema => schema.required(`Обов'язкове поле`),
-      otherwise: schema => schema.optional(),
-    }),
+    1: yup.string().required(`Обов'язкове поле`).test(priorityFieldTestOptions),
+    2: yup.string().required(`Обов'язкове поле`).test(priorityFieldTestOptions),
+    3: yup
+      .string()
+      .test({
+        message: "Обов'язкове поле",
+        test: (value, context) => {
+          const speciality = context.options.context?.specialty;
+          if (speciality === '126') return !!value;
+          return true;
+        },
+      })
+      .test(priorityFieldTestOptions),
   }),
+  secretNumber: yup
+    .string()
+    .when('isToAdmission', ([isToAdmission], schema) => {
+      return isToAdmission
+        ? schema
+            .matches(secretString, 'Неправильний код')
+            .required('Зверніться до оператора')
+        : schema.optional();
+    }),
 });

@@ -1,7 +1,10 @@
 import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
-import { PriorityData } from '@/lib/api/contract/types/ContractBody';
+import {
+  ExtendedPriorityData,
+  PriorityData,
+} from '@/lib/api/contract/types/ContractBody';
 
-export const initialValues: PriorityData = {
+export const initialValues: ExtendedPriorityData = {
   firstName: '',
   lastName: '',
   middleName: '',
@@ -14,6 +17,7 @@ export const initialValues: PriorityData = {
     2: '',
     3: '',
   },
+  secretNumber: '',
 };
 enum EducationProgram {
   CSSE = 'CSSE',

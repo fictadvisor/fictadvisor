@@ -63,4 +63,8 @@ export interface PriorityData {
   };
 }
 
+export interface ExtendedPriorityData extends PriorityData {
+  secretNumber: string;
+}
+
 export type ContractBody = Omit<ExtendedContractBody, 'helper'>;

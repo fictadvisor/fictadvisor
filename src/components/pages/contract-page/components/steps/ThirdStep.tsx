@@ -173,13 +173,13 @@ export const ThirdStep: FC<ThirdStepProps> = ({
                 name="representative.idCode"
                 disabled={true}
                 resetOnDisabled
-                label="Ідентифікаційний код (РНОКПП)"
+                label="Ідентифікаційний код"
               />
             ) : (
               <Input
                 name="representative.idCode"
                 disabled={false}
-                label="Ідентифікаційний код (РНОКПП)"
+                label="Ідентифікаційний код"
               />
             )}
           </Box>

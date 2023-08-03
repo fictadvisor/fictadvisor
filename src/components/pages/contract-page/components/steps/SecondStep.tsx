@@ -166,13 +166,13 @@ export const SecondStep: FC<SecondStepProps> = ({
                 name="entrant.idCode"
                 disabled={true}
                 resetOnDisabled
-                label="Ідентифікаційний код (РНОКПП)"
+                label="Ідентифікаційний код"
               />
             ) : (
               <Input
                 name="entrant.idCode"
                 disabled={false}
-                label="Ідентифікаційний код (РНОКПП)"
+                label="Ідентифікаційний код"
               />
             )}
           </Box>

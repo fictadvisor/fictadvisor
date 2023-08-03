@@ -20,43 +20,50 @@ import { preparePriorityData } from '@/components/pages/priority-page/utils';
 import { validationSchema } from '@/components/pages/priority-page/validation';
 import useToast from '@/hooks/use-toast';
 import ContractAPI from '@/lib/api/contract/ContractAPI';
-import { PriorityData } from '@/lib/api/contract/types/ContractBody';
+import {
+  ExtendedPriorityData,
+  PriorityData,
+} from '@/lib/api/contract/types/ContractBody';
 
 const PriorityPage: FC = () => {
   const [submited, setSubmited] = useState(false);
 
   const toast = useToast();
 
+  const handleFormSubmit = (values: ExtendedPriorityData) => {
+    console.log(values);
+
+    preparePriorityData(values);
+    if (
+      values.specialty === '121' &&
+      values.priorities[1] === values.priorities[2]
+    ) {
+      toast.error('Помилка в пріоритетах');
+      setSubmited(false);
+      return;
+    }
+    if (values.specialty === '126') {
+      for (let i = 1; i <= 3; i++) {
+        // if (values.priorities[i] === values.priorities[i + 1]) {
+        //   toast.error('Помилка в пріоритетах');
+        //   setSubmited(false);
+        //   return;
+        // }
+      }
+    }
+
+    console.log(values);
+    // ContractAPI.createPriority(values);
+    setSubmited(true);
+  };
+
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={(values: PriorityData) => {
-        preparePriorityData(values);
-        if (
-          values.specialty === '121' &&
-          values.priorities[1] === values.priorities[2]
-        ) {
-          toast.error('Помилка в пріоритетах');
-          setSubmited(false);
-          return;
-        }
-        if (values.specialty === '126') {
-          for (let i = 1; i <= 3; i++) {
-            // if (values.priorities[i] === values.priorities[i + 1]) {
-            //   toast.error('Помилка в пріоритетах');
-            //   setSubmited(false);
-            //   return;
-            // }
-          }
-        }
-
-        console.log(values);
-        // ContractAPI.createPriority(values);
-        setSubmited(true);
-      }}
+      onSubmit={handleFormSubmit}
     >
-      {({ values, isValid, isSubmitting }) => (
+      {({ values, isValid }) => (
         <Form
           style={{ gap: '40px', paddingTop: '24px', paddingBottom: '50px' }}
         >
@@ -86,13 +93,15 @@ const PriorityPage: FC = () => {
                   size={FieldSize.LARGE}
                   label="Перший пріоритет"
                   placeholder="виберіть зі списку"
+                  clearOnUnmount
                 />
                 <FormikDropdown
                   name="priorities.2"
                   options={IPeduPrograms}
                   size={FieldSize.LARGE}
-                  label="Перший пріоритет"
+                  label="Другий пріоритет"
                   placeholder="виберіть зі списку"
+                  clearOnUnmount
                 />
               </Box>
             )}
@@ -104,6 +113,7 @@ const PriorityPage: FC = () => {
                   size={FieldSize.LARGE}
                   label="Перший пріоритет"
                   placeholder="виберіть зі списку"
+                  clearOnUnmount
                 />
                 <FormikDropdown
                   name="priorities.2"
@@ -111,6 +121,7 @@ const PriorityPage: FC = () => {
                   size={FieldSize.LARGE}
                   label="Другий пріоритет"
                   placeholder="виберіть зі списку"
+                  clearOnUnmount
                 />
                 <FormikDropdown
                   name="priorities.3"
@@ -118,6 +129,7 @@ const PriorityPage: FC = () => {
                   size={FieldSize.LARGE}
                   label="Третій пріоритет"
                   placeholder="виберіть зі списку"
+                  clearOnUnmount
                 />
               </Box>
             )}
@@ -125,13 +137,13 @@ const PriorityPage: FC = () => {
           <Box sx={{ gap: '24px' }}>
             <Divider
               textAlign={DividerTextAlign.LEFT}
-              text="Дані про вступника"
+              text="Дані про вступника (в род.відмінку)"
             />
-            <Input name="lastName" placeholder="Шевченко" label="Прізвище" />
-            <Input name="firstName" placeholder="Тарас" label="Ім'я" />
+            <Input name="lastName" placeholder="Шевченка" label="Прізвище" />
+            <Input name="firstName" placeholder="Тараса" label="Ім'я" />
             <Input
               name="middleName"
-              placeholder="Григорович"
+              placeholder="Григоровича"
               label="По-батькові"
             />
           </Box>
