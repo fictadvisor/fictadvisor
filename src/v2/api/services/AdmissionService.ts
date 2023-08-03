@@ -444,11 +444,19 @@ export class AdmissionService {
       throw new BadRequestException('Such user does not exist');
     }
 
-    const queues = await this.prisma.queuePosition.findMany({
+    const positions = await this.prisma.queuePosition.findMany({
       where: {
         user,
       },
     });
+
+    const queues = await mapAsync(positions, async (p) => ({
+      ...(await this.getAndCheckQueue(p.queueId)),
+      position: {
+        ...p,
+        relativePosition: await this.getRelativePosition(p),
+      },
+    }));
 
     return {
       user,
