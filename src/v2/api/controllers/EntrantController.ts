@@ -86,14 +86,14 @@ export class EntrantController {
       First name is too short (min: 2)
       First name is too long (max: 40)
       First name can not be empty
-      First name is incorrect (A-Я(укр.)\\-' )
+      First name is incorrect (A-Я(укр.)\\-\` )
       Middle name is too short (min: 2)
       Middle name is too long (max: 40)
-      Middle name is incorrect (A-Я(укр.)\\-' )
+      Middle name is incorrect (A-Я(укр.)\\-\` )
       Last name is too short (min: 2)
       Last name is too long (max: 40)
       Last name can not be empty
-      Last name is incorrect (A-Я(укр.)\\-' )
+      Last name is incorrect (A-Я(укр.)\\-\` )
       
     DataNotFoundException:
       Data were not found
@@ -125,17 +125,18 @@ export class EntrantController {
   @ApiOkResponse()
   @ApiBadRequestResponse({
     description: `\n
-    First name is too short (min: 2)
+    InvalidBodyException:
+      First name is too short (min: 2)
       First name is too long (max: 40)
       First name can not be empty
-      First name is incorrect (A-Я(укр.)' )
+      First name is incorrect (A-Я(укр.)\\-\` )
       Middle name is too short (min: 2)
       Middle name is too long (max: 40)
-      Middle name is incorrect (A-Я(укр.)
+      Middle name is incorrect (A-Я(укр.)\\-\` )
       Last name is too short (min: 2)
       Last name is too long (max: 40)
       Last name can not be empty
-      Last name is incorrect (A-Я(укр.)
+      Last name is incorrect (A-Я(укр.)\\-\` ))
       
     DataNotFoundException:
       Data were not found

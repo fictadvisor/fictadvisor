@@ -28,14 +28,14 @@ export class DocumentController {
       First name is too short (min: 2)
       First name is too long (max: 40)
       First name can not be empty
-      First name is incorrect (A-Я(укр.)\\-' )
+      First name is incorrect (A-Я(укр.)\\-\` )
       Middle name is too short (min: 2)
       Middle name is too long (max: 40)
-      Middle name is incorrect (A-Я(укр.)\\-' )
+      Middle name is incorrect (A-Я(укр.)\\-\` )
       Last name is too short (min: 2)
       Last name is too long (max: 40)
       Last name can not be empty
-      Last name is incorrect (A-Я(укр.)\\-' )
+      Last name is incorrect (A-Я(укр.)\\-\` )
       Passport number can not be empty
       Passport Institute can not be empty
       Passport date cannot be empty
@@ -76,14 +76,14 @@ export class DocumentController {
       First name is too short (min: 2)
       First name is too long (max: 40)
       First name can not be empty
-      First name is incorrect (A-Я(укр.)\\-' )
+      First name is incorrect (A-Я(укр.)\\-\` )
       Middle name is too short (min: 2)
       Middle name is too long (max: 40)
-      Middle name is incorrect (A-Я(укр.)\\-' )
+      Middle name is incorrect (A-Я(укр.)\\-\` )
       Last name is too short (min: 2)
       Last name is too long (max: 40)
       Last name can not be empty
-      Last name is incorrect (A-Я(укр.)\\-' )
+      Last name is incorrect (A-Я(укр.)\\-\` )
       The specialty code is not valid
       1st priority must be an enum
       1st priority cannot be empty
