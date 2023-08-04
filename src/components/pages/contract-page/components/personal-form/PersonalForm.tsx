@@ -3,11 +3,15 @@ import { Box } from '@mui/material';
 import { AxiosError } from 'axios';
 
 import { initialValues } from '@/components/pages/contract-page/constants';
+import {
+  getLocalStorage,
+  saveLocalStorage,
+} from '@/components/pages/contract-page/utils/localStorage';
 import useToast from '@/hooks/use-toast';
 import ContractAPI from '@/lib/api/contract/ContractAPI';
 import { ExtendedContractBody } from '@/lib/api/contract/types/ContractBody';
 
-import { prepareData } from '../../utils/index';
+import { prepareData } from '../../utils/prepareData';
 import { PassFormAgain } from '../PassFormAgain';
 
 import { FirstStep } from './../steps/FirstStep';
@@ -17,7 +21,7 @@ import { formWrapper } from './PersonalForm.styles';
 
 export const PersonalForm: FC = () => {
   const toast = useToast();
-  const [data, setData] = useState(initialValues);
+  const [data, setData] = useState(getLocalStorage() || initialValues);
   const [step, setStep] = useState(0);
   const [submitted, setSubmitted] = useState(false);
 
@@ -31,6 +35,7 @@ export const PersonalForm: FC = () => {
         );
         setData(prevState => ({ ...prevState, ...data }));
         setSubmitted(true);
+        saveLocalStorage(null);
         toast.success(
           `Ви успішно надіслали контракт, перевірте пошту ${data.entrant.email}`,
         );

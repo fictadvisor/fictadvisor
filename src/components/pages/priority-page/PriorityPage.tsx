@@ -1,7 +1,7 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useRef, useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import { AxiosError } from 'axios';
-import { Form, Formik } from 'formik';
+import { Form, Formik, FormikProps } from 'formik';
 
 import Button from '@/components/common/ui/button-mui';
 import Divider from '@/components/common/ui/divider';
@@ -17,22 +17,28 @@ import {
   IPeduPrograms,
   ISTeduPrograms,
 } from '@/components/pages/priority-page/constants';
+import {
+  getLocalStorage,
+  saveLocalStorage,
+} from '@/components/pages/priority-page/utils/localStorage';
 import { validationSchema } from '@/components/pages/priority-page/validation';
+import useTabClose from '@/hooks/use-tab-close';
 import useToast from '@/hooks/use-toast';
 import ContractAPI from '@/lib/api/contract/ContractAPI';
 import { ExtendedPriorityData } from '@/lib/api/contract/types/ContractBody';
 
-import { prepareData } from './utils/index';
+import { prepareData } from './utils/prepareData';
 import { SuccessScreen } from './SuccessScreen';
 const PriorityPage: FC = () => {
   const [submited, setSubmited] = useState(false);
-
+  const form = useRef<FormikProps<ExtendedPriorityData>>(null);
   const toast = useToast();
 
   const handleFormSubmit = async (values: ExtendedPriorityData) => {
     try {
       await ContractAPI.createPriority(prepareData({ ...values }));
       setSubmited(true);
+      saveLocalStorage(null);
     } catch (error) {
       if ((error as AxiosError).status === 500) {
         toast.error(`Внутрішня помилка сервера`);
@@ -42,13 +48,20 @@ const PriorityPage: FC = () => {
     }
   };
 
+  useTabClose(() => {
+    if (form?.current?.values) {
+      saveLocalStorage(form?.current?.values);
+    }
+  });
+
   if (submited) {
     return <SuccessScreen />;
   }
 
   return (
     <Formik
-      initialValues={initialValues}
+      innerRef={form}
+      initialValues={getLocalStorage() || initialValues}
       validationSchema={validationSchema}
       onSubmit={handleFormSubmit}
     >

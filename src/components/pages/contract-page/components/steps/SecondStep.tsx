@@ -12,7 +12,9 @@ import { CheckBox } from '@/components/pages/contract-page/components/CheckBox';
 import { REGIONS } from '@/components/pages/contract-page/constants';
 import { kyiv } from '@/components/pages/contract-page/constants';
 import * as stylesMui from '@/components/pages/contract-page/ContractPage.styles';
+import { saveLocalStorage } from '@/components/pages/contract-page/utils/localStorage';
 import { entrantValidationSchema } from '@/components/pages/contract-page/validation';
+import useTabClose from '@/hooks/use-tab-close';
 import { ExtendedContractBody } from '@/lib/api/contract/types/ContractBody';
 export interface SecondStepProps {
   onNextStep: (data: ExtendedContractBody, final?: boolean) => void;
@@ -28,6 +30,12 @@ export const SecondStep: FC<SecondStepProps> = ({
   const handleSubmit = (values: ExtendedContractBody) => {
     onNextStep(values, data?.helper?.isAdult);
   };
+
+  useTabClose(() => {
+    if (form?.current?.values) {
+      saveLocalStorage(form?.current?.values);
+    }
+  });
 
   return (
     <Formik

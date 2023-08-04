@@ -1,11 +1,12 @@
-import React, { FC } from 'react';
+import React, { FC, useRef } from 'react';
 import { Box, Typography } from '@mui/material';
-import { Form, Formik } from 'formik';
+import { Form, Formik, FormikProps } from 'formik';
 
 import FormikRadioGroup from '@/components/common/ui/form/with-formik/radio/FormikRadioGroup';
 import { CheckBox } from '@/components/pages/contract-page/components/CheckBox';
 import * as stylesMui from '@/components/pages/contract-page/ContractPage.styles';
 import { metaValidationSchema } from '@/components/pages/contract-page/validation';
+import useTabClose from '@/hooks/use-tab-close';
 import { ExtendedContractBody } from '@/lib/api/contract/types/ContractBody';
 import {
   PaymentTypeParam,
@@ -13,6 +14,7 @@ import {
   StudyTypeParam,
 } from '@/types/contract';
 
+import { saveLocalStorage } from '../../utils/localStorage';
 import { Actions } from '../Actions';
 export interface FirstStepProps {
   onNextStep: (data: ExtendedContractBody) => void;
@@ -23,8 +25,17 @@ export const FirstStep: FC<FirstStepProps> = ({ onNextStep, data }) => {
     onNextStep(values);
   };
 
+  const form = useRef<FormikProps<ExtendedContractBody>>(null);
+
+  useTabClose(() => {
+    if (form?.current?.values) {
+      saveLocalStorage(form?.current?.values);
+    }
+  });
+
   return (
     <Formik
+      innerRef={form}
       initialValues={data}
       onSubmit={handleSubmit}
       validationSchema={metaValidationSchema}

@@ -11,7 +11,9 @@ import { Actions } from '@/components/pages/contract-page/components/Actions';
 import { kyiv } from '@/components/pages/contract-page/constants';
 import { REGIONS } from '@/components/pages/contract-page/constants';
 import * as stylesMui from '@/components/pages/contract-page/ContractPage.styles';
+import { saveLocalStorage } from '@/components/pages/contract-page/utils/localStorage';
 import { representativeValidation } from '@/components/pages/contract-page/validation';
+import useTabClose from '@/hooks/use-tab-close';
 import { ExtendedContractBody } from '@/lib/api/contract/types/ContractBody';
 
 import { CheckBox } from '../../components/CheckBox';
@@ -30,6 +32,12 @@ export const ThirdStep: FC<ThirdStepProps> = ({
   };
 
   const form = useRef<FormikProps<ExtendedContractBody>>(null);
+
+  useTabClose(() => {
+    if (form?.current?.values) {
+      saveLocalStorage(form?.current?.values);
+    }
+  });
 
   return (
     <Formik
