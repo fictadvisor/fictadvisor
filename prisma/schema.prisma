@@ -469,6 +469,9 @@ model Entrant {
   middleName         String?             @map("middle_name")
   lastName           String              @map("last_name")
   specialty          String?
+  studyType          String              @default("") @map("study_type")
+  studyForm          String              @default("") @map("study_form")
+  paymentType        String              @default("") @map("payment_type")
   entrantData        EntrantData?
   representativeData RepresentativeData?
   priority           EntrantPriority?
