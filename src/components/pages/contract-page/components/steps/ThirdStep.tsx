@@ -201,7 +201,7 @@ export const ThirdStep: FC<ThirdStepProps> = ({
             <Box sx={stylesMui.item}>
               <Input
                 name="representative.settlement"
-                placeholder="с. Пуків"
+                placeholder="с. Пуків/м. Київ"
                 label="Населений пункт"
               />
             </Box>
@@ -209,8 +209,8 @@ export const ThirdStep: FC<ThirdStepProps> = ({
           <Box sx={stylesMui.item}>
             <Input
               name="representative.address"
-              label="Адреса"
-              placeholder="Вулиця, дім, квартира"
+              label={`Адреса (зі скороченнями)`}
+              placeholder="вул. Липова, буд.32 ,кв.1"
             />
           </Box>
           <Box sx={stylesMui.item}>

@@ -194,7 +194,7 @@ export const SecondStep: FC<SecondStepProps> = ({
             <Box sx={stylesMui.item}>
               <Input
                 name="entrant.settlement"
-                placeholder="с. Пуків"
+                placeholder="с. Пуків/м. Київ"
                 label="Населений пункт"
               />
             </Box>
@@ -202,8 +202,8 @@ export const SecondStep: FC<SecondStepProps> = ({
           <Box sx={stylesMui.item}>
             <Input
               name="entrant.address"
-              label={`Адреса`}
-              placeholder="Вулиця, дім, квартира"
+              label={`Адреса (зі скороченнями)`}
+              placeholder="вул. Липова, буд.32 ,кв.1"
             />
           </Box>
           <Box sx={stylesMui.item}>
