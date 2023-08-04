@@ -1,8 +1,25 @@
 import * as yup from 'yup';
+import { TestConfig } from 'yup';
 
 import { kyiv } from '@/components/pages/contract-page/constants';
 import { ExtendedContractBody } from '@/lib/api/contract/types/ContractBody';
 const secretString = /^4261$/;
+
+const isTheSameAsEntrant: TestConfig = {
+  name: 'isTheSameAsEntrant',
+  test: (value, context) => {
+    const curKey = context.path
+      .split('.')
+      .at(-1) as keyof ExtendedContractBody['representative'];
+
+    const valueInEntrant = (context.options.context as ExtendedContractBody)
+      ?.entrant[curKey] as string;
+
+    return value !== +valueInEntrant;
+  },
+  message: 'Це сторінка стосується законного представника, а не вступника',
+};
+
 export const metaValidationSchema = yup.object().shape({
   meta: yup.object().shape({
     speciality: yup.string().required(`Обов'язкове поле`),
@@ -85,7 +102,8 @@ export const representativeValidation = yup.object().shape({
     passportNumber: yup
       .number()
       .required(`Обов'язкове поле`)
-      .typeError('Тільки цифри'),
+      .typeError('Тільки цифри')
+      .test(isTheSameAsEntrant),
     passportDate: yup
       .string()
       .required(`Обов'язкове поле`)
