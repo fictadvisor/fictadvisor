@@ -26,7 +26,9 @@ export const PersonalForm: FC = () => {
 
     if (final) {
       try {
-        await ContractAPI.createContract(prepareData({ ...data }));
+        await ContractAPI.createContract(
+          prepareData(JSON.parse(JSON.stringify(data))),
+        );
         setData(prevState => ({ ...prevState, ...data }));
         setSubmitted(true);
         toast.success(
