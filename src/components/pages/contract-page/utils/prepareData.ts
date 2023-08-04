@@ -10,39 +10,55 @@ export const prepareData = (
 ): ContractBody => {
   delete (initialData as PartialBy<ExtendedContractBody, 'helper'>).helper;
 
-  if (initialData.entrant.middleName?.length === 0)
-    initialData.entrant.middleName = undefined;
-  if (initialData.entrant.idCode?.length === 0)
-    initialData.entrant.idCode = undefined;
-  if (initialData.entrant.passportSeries?.length === 0)
-    initialData.entrant.passportSeries = undefined;
+  const data = replaceApostrophes(initialData);
 
-  if (initialData.representative.middleName?.length === 0)
-    initialData.representative.middleName = undefined;
-  if (initialData.representative.idCode?.length === 0)
-    initialData.representative.idCode = undefined;
-  if (initialData.representative.passportSeries?.length === 0)
-    initialData.representative.passportSeries = undefined;
-  if (initialData.representative.email?.length === 0)
-    initialData.representative.email = undefined;
+  data.entrant = trimObject(data.entrant);
+  data.meta = trimObject(data.meta);
+  data.representative = trimObject(data.representative);
 
-  if (initialData.meta.paymentType?.length === 0)
-    initialData.meta.paymentType = undefined;
+  if (data.entrant.middleName?.length === 0)
+    data.entrant.middleName = undefined;
+  if (data.entrant.idCode?.length === 0) data.entrant.idCode = undefined;
+  if (data.entrant.passportSeries?.length === 0)
+    data.entrant.passportSeries = undefined;
 
-  if (initialData.entrant.region === kyiv) {
-    initialData.entrant.settlement = kyiv;
-    initialData.entrant.region = undefined;
+  if (data.representative.middleName?.length === 0)
+    data.representative.middleName = undefined;
+  if (data.representative.idCode?.length === 0)
+    data.representative.idCode = undefined;
+  if (data.representative.passportSeries?.length === 0)
+    data.representative.passportSeries = undefined;
+  if (data.representative.email?.length === 0)
+    data.representative.email = undefined;
+
+  if (data.meta.paymentType?.length === 0) data.meta.paymentType = undefined;
+
+  if (data.entrant.region === kyiv) {
+    data.entrant.settlement = kyiv;
+    data.entrant.region = undefined;
   }
 
-  if (initialData.representative.region === kyiv) {
-    initialData.representative.settlement = kyiv;
-    initialData.representative.region = undefined;
+  if (data.representative.region === kyiv) {
+    data.representative.settlement = kyiv;
+    data.representative.region = undefined;
   }
 
-  console.log(initialData);
-  return replaceApostrophes(initialData);
+  console.log(data);
+
+  return data;
 };
 
-const replaceApostrophes = (initialData: ContractBody) => {
+const replaceApostrophes = (initialData: ContractBody): ContractBody => {
   return JSON.parse(JSON.stringify(initialData).replaceAll(/[`'’‘“”*]/g, '`'));
+};
+
+const trimObject = <T extends object>(originalObj: T): T => {
+  const obj: T = { ...originalObj };
+
+  const entries = window.Object.entries(obj).map(item => {
+    if (typeof item[1] === 'string') item[1] = item[1].trim();
+    return item;
+  });
+
+  return window.Object.fromEntries(entries) as T;
 };

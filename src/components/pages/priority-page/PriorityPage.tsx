@@ -178,7 +178,10 @@ const PriorityPage: FC = () => {
               label="Електронна пошта вступника"
               clearOnUnmount
             />
-            <CheckBox name="isToAdmission" label="Подаю документи в корпусі" />
+            <CheckBox
+              name="isToAdmission"
+              label="Формую пріоритетку в корпусі"
+            />
             {values.isToAdmission && (
               <Box sx={stylesMui.item}>
                 <Divider

@@ -109,7 +109,7 @@ export const FirstStep: FC<FirstStepProps> = ({ onNextStep, data }) => {
           <Box sx={stylesMui.item}>
             <CheckBox
               name="meta.isToAdmission"
-              label="Подаю документи в корпусі"
+              label="Формую договір в корпусі"
             />
           </Box>
           <Box sx={stylesMui.item}>
