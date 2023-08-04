@@ -7,6 +7,7 @@ export class EntrantRepository {
 
   private include: Prisma.EntrantInclude = {
     entrantData: true,
+    representativeData: true,
     contract: true,
     priority: {
       include: {

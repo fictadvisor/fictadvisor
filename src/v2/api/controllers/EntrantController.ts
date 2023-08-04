@@ -10,7 +10,7 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { EntrantWithContractResponse } from '../responses/EntrantWithContractResponse';
-import { NamesDTO } from '../dtos/NamesDTO';
+import { FullNameDTO } from '../dtos/FullNameDTO';
 import { EntrantWithPriorityResponse } from '../responses/EntrantWithPriorityResponse';
 
 @ApiTags('Entrants')
@@ -113,7 +113,7 @@ export class EntrantController {
       You do not have permission to perform this action`,
   })
   async getEntrantPriority (
-    @Query() query: NamesDTO,
+    @Query() query: FullNameDTO,
   ) {
     const entrant = await this.entrantService.getPriority(query);
     return this.entrantMapper.getEntrantWithPriority(entrant);
@@ -153,7 +153,7 @@ export class EntrantController {
       You do not have permission to perform this action`,
   })
   async approvePriority (
-    @Body() body: NamesDTO,
+    @Body() body: FullNameDTO,
   ) {
     await this.entrantService.approvePriority(body);
   }

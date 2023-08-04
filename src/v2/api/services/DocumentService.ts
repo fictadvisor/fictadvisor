@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { FileService } from '../../utils/files/FileService';
 import { PersonalDataDTO, StudyContractDTO } from '../dtos/StudyContractDTO';
-import { StudyTypeParam } from '../dtos/StudyContractParams';
+import { PaymentTypeParam, StudyFormParam, StudyTypeParam } from '../dtos/StudyContractParams';
 import { ObjectIsRequiredException } from '../../utils/exceptions/ObjectIsRequiredException';
 import * as process from 'process';
 import { EmailService } from './EmailService';
@@ -10,6 +10,8 @@ import { EducationProgram, PriorityState } from '@prisma/client';
 import { InvalidEducationProgramsException } from '../../utils/exceptions/InvalidEducationProgramsException';
 import { EntrantRepository } from '../../database/repositories/EntrantRepository';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
+import { FullNameDTO } from '../dtos/FullNameDTO';
+import { DataNotFoundException } from '../../utils/exceptions/DataNotFoundException';
 
 const DOCX = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
 
@@ -43,36 +45,10 @@ export class DocumentService {
     };
   }
 
-  async generateStudyContract (data: StudyContractDTO) {
-    if (data.meta.studyType === StudyTypeParam.CONTRACT && !data.meta.paymentType) {
-      throw new ObjectIsRequiredException('Payment type');
-    }
-
-    const { firstName, middleName,  lastName, ...entrant } = data.entrant;
-
-    const dbEntrant = await this.entrantRepository.getOrCreate({
-      firstName,
-      middleName,
-      lastName,
-      specialty: data.meta.speciality,
-    });
-
-    if (dbEntrant.entrantData) throw new NoPermissionException();
-
-    await this.entrantRepository.updateById(dbEntrant.id, {
-      entrantData: {
-        create: entrant,
-      },
-      representativeData: {
-        create: data.representative.firstName
-          ? data.representative
-          : undefined,
-      },
-    });
-
+  private async sendContract (data: StudyContractDTO) {
     const obj = {
       entrant: this.formatPersonalData(data.entrant),
-      representative: data.representative.firstName ? this.formatPersonalData(data.representative) : {},
+      representative: data.representative?.firstName ? this.formatPersonalData(data.representative) : {},
     };
 
     const emails = [data.entrant.email];
@@ -94,6 +70,63 @@ export class DocumentService {
       subject: `Договори щодо вступу | ${data.entrant.lastName} ${data.entrant.firstName}`,
       message: 'Документи вкладені у цей лист.',
       attachments,
+    });
+  }
+
+  async createContract (data: StudyContractDTO) {
+    if (data.meta.studyType === StudyTypeParam.CONTRACT && !data.meta.paymentType) {
+      throw new ObjectIsRequiredException('Payment type');
+    }
+
+    const { firstName, middleName, lastName, ...entrant } = data.entrant;
+
+    const dbEntrant = await this.entrantRepository.getOrCreate({
+      firstName,
+      middleName,
+      lastName,
+      specialty: data.meta.speciality,
+    });
+
+    if (dbEntrant.entrantData) throw new NoPermissionException();
+
+    await this.entrantRepository.updateById(dbEntrant.id, {
+      studyType: data.meta.studyType,
+      studyForm: data.meta.studyForm,
+      paymentType: data.meta.paymentType,
+      entrantData: {
+        create: entrant,
+      },
+      representativeData: {
+        create: data.representative.firstName
+          ? data.representative
+          : undefined,
+      },
+    });
+
+    await this.sendContract(data);
+  }
+
+  async generateContract (data: FullNameDTO) {
+    const entrant = await this.entrantRepository.find(data);
+    if (!entrant?.entrantData) throw new DataNotFoundException();
+
+    if (!entrant.studyForm || !entrant.studyType) throw new NoPermissionException();
+
+    await this.sendContract({
+      meta: {
+        speciality: entrant.specialty,
+        studyType: entrant.studyType as StudyTypeParam,
+        studyForm: entrant.studyForm as StudyFormParam,
+        paymentType: entrant.paymentType as PaymentTypeParam,
+        isToAdmission: true,
+      },
+      entrant: {
+        firstName: entrant.firstName,
+        middleName: entrant.middleName,
+        lastName: entrant.lastName,
+        ...entrant.entrantData,
+      },
+      representative: entrant.representativeData,
     });
   }
 

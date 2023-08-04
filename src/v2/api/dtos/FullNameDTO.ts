@@ -7,7 +7,7 @@ import {
   validationOptionsMsg,
 } from '../../utils/GLOBALS';
 
-export class NamesDTO {
+export class FullNameDTO {
   @ApiProperty()
   @MinLength(2, validationOptionsMsg('First name is too short (min: 2)'))
   @MaxLength(40, validationOptionsMsg('First name is too long (max: 40)'))
