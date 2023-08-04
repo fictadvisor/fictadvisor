@@ -200,6 +200,7 @@ $font-weight-bold: 700;
 
         .buttons-mob {
             display: flex;
+            flex-wrap: wrap;
             gap: 14px;
         }
     }

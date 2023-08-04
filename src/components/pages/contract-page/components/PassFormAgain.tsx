@@ -1,9 +1,12 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { Box, Typography, useMediaQuery } from '@mui/material';
 import Image from 'next/image';
 
 import Button from '@/components/common/ui/button-mui';
-import { ButtonSize } from '@/components/common/ui/button-mui/types';
+import {
+  ButtonSize,
+  ButtonVariant,
+} from '@/components/common/ui/button-mui/types';
 import * as stylesMUI from '@/components/pages/search-pages/poll-teachers-page/components/PollTeacherSearchList.styles';
 import theme from '@/styles/theme';
 
@@ -26,12 +29,28 @@ export const PassFormAgain = () => {
           договір буде сформовано, з тобою зв’яжуться члени приймальної комісії
           та запросять на підписання.
         </Typography>
-        <Button
-          href={'/contract'}
-          sx={{ width: '80%' }}
-          size={isMobile ? ButtonSize.SMALL : ButtonSize.MEDIUM}
-          text="Подати дані на ще один договір"
-        />
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: { mobile: 'column', mobileMedium: 'row' },
+            gap: '16px',
+            alignItems: 'center',
+          }}
+        >
+          <Button
+            href={'/contract'}
+            sx={{ width: '80%' }}
+            size={isMobile ? ButtonSize.SMALL : ButtonSize.MEDIUM}
+            text="Подати дані на ще один договір"
+          />
+          <Button
+            href={'/priority'}
+            sx={{ width: '80%' }}
+            size={isMobile ? ButtonSize.SMALL : ButtonSize.MEDIUM}
+            text="Обрати проіритет"
+            variant={ButtonVariant.OUTLINE}
+          />
+        </Box>
       </Box>
     </Box>
   );

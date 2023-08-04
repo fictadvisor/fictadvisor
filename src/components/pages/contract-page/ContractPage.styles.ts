@@ -31,9 +31,10 @@ export const breadcrumbs: SxProps<Theme> = {
 };
 
 export const item: SxProps<Theme> = {
+  marginTop: '8px',
   display: 'flex',
   flexDirection: 'column',
-  gap: '12px',
-  marginBottom: '12px',
+  gap: '8px',
+  marginBottom: '16px',
   width: { tablet: '480px', mobile: '100%' },
 };

@@ -37,6 +37,7 @@ interface InputProps
   className?: string;
   onDeterredChange?: () => void;
   resetOnDisabled?: boolean;
+  clearOnUnmount?: boolean;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -51,6 +52,7 @@ const Input: React.FC<InputProps> = ({
   onDeterredChange,
   name = '',
   resetOnDisabled = false,
+  clearOnUnmount = false,
   ...rest
 }) => {
   const [field, { touched, error }, { setTouched, setValue }] = useField(name);
@@ -121,6 +123,17 @@ const Input: React.FC<InputProps> = ({
     }, 500);
     return () => clearTimeout(curTimer);
   }, [field.value, onDeterredChange]);
+
+  useEffect(() => {
+    window.addEventListener('mousemove', () => {});
+
+    return () => {
+      window.removeEventListener('mousemove', () => {});
+      if (clearOnUnmount) {
+        setValue('');
+      }
+    };
+  }, []);
 
   return (
     <div className={className}>

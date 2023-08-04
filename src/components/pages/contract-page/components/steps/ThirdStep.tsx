@@ -8,6 +8,7 @@ import { Input } from '@/components/common/ui/form';
 import { FieldSize } from '@/components/common/ui/form/common/types';
 import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown';
 import { Actions } from '@/components/pages/contract-page/components/Actions';
+import { kyiv } from '@/components/pages/contract-page/constants';
 import { REGIONS } from '@/components/pages/contract-page/constants';
 import * as stylesMui from '@/components/pages/contract-page/ContractPage.styles';
 import { representativeValidation } from '@/components/pages/contract-page/validation';
@@ -172,13 +173,13 @@ export const ThirdStep: FC<ThirdStepProps> = ({
                 name="representative.idCode"
                 disabled={true}
                 resetOnDisabled
-                label="Ідентифікаційний код (РНОКПП)"
+                label="Ідентифікаційний код"
               />
             ) : (
               <Input
                 name="representative.idCode"
                 disabled={false}
-                label="Ідентифікаційний код (РНОКПП)"
+                label="Ідентифікаційний код"
               />
             )}
           </Box>
@@ -191,18 +192,20 @@ export const ThirdStep: FC<ThirdStepProps> = ({
             <FormikDropdown
               size={FieldSize.LARGE}
               options={REGIONS}
-              label="Область"
+              label="Регіон"
               name="representative.region"
               placeholder="виберіть зі списку"
             />
           </Box>
-          <Box sx={stylesMui.item}>
-            <Input
-              name="representative.settlement"
-              placeholder="м. Київ"
-              label="Населений пункт"
-            />
-          </Box>
+          {values.representative.region !== kyiv && (
+            <Box sx={stylesMui.item}>
+              <Input
+                name="entrant.settlement"
+                placeholder="с. Пуків"
+                label="Населений пункт"
+              />
+            </Box>
+          )}
           <Box sx={stylesMui.item}>
             <Input
               name="representative.address"
@@ -224,9 +227,7 @@ export const ThirdStep: FC<ThirdStepProps> = ({
                 text="Підтвердження даних"
                 sx={stylesMui.divider}
               />
-              <Typography variant="h6Bold">
-                Віддайте телефон оператору
-              </Typography>
+              <Typography variant="h6Bold">Зверніться до оператора</Typography>
               <Input
                 name="helper.secretNumber"
                 label="Секретний код"

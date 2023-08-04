@@ -1,5 +1,6 @@
 import React, { FC, useState } from 'react';
 import { Box, Typography } from '@mui/material';
+import { AxiosError } from 'axios';
 import { Form, Formik } from 'formik';
 
 import Button from '@/components/common/ui/button-mui';
@@ -16,46 +17,44 @@ import {
   IPeduPrograms,
   ISTeduPrograms,
 } from '@/components/pages/priority-page/constants';
-import { preparePriorityData } from '@/components/pages/priority-page/utils';
 import { validationSchema } from '@/components/pages/priority-page/validation';
 import useToast from '@/hooks/use-toast';
-import { PriorityData } from '@/lib/api/contract/types/ContractBody';
 
+import ContractAPI from '@/lib/api/contract/ContractAPI';
+import { ExtendedPriorityData } from '@/lib/api/contract/types/ContractBody';
+
+
+import { prepareData } from './utils/index';
+import { SuccessScreen } from './SuccessScreen';
 const PriorityPage: FC = () => {
   const [submited, setSubmited] = useState(false);
 
   const toast = useToast();
 
+  const handleFormSubmit = async (values: ExtendedPriorityData) => {
+    try {
+      await ContractAPI.createPriority(prepareData({ ...values }));
+      setSubmited(true);
+    } catch (error) {
+      if ((error as AxiosError).status === 500) {
+        toast.error(`Внутрішня помилка сервера`);
+        return;
+      }
+      toast.error(`Трапилась помилка, перевірте усі дані та спробуйте ще раз`);
+    }
+  };
+
+  if (submited) {
+    return <SuccessScreen />;
+  }
+
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={(values: PriorityData) => {
-        preparePriorityData(values);
-        if (
-          values.specialty === '121' &&
-          values.priorities[1] === values.priorities[2]
-        ) {
-          toast.error('Помилка в пріоритетах');
-          setSubmited(false);
-          return;
-        }
-        if (values.specialty === '126') {
-          for (let i = 1; i <= 3; i++) {
-            // if (values.priorities[i] === values.priorities[i + 1]) {
-            //   toast.error('Помилка в пріоритетах');
-            //   setSubmited(false);
-            //   return;
-            // }
-          }
-        }
-
-        console.log(values);
-        // ContractAPI.createPriority(values);
-        setSubmited(true);
-      }}
+      onSubmit={handleFormSubmit}
     >
-      {({ values, isValid, isSubmitting }) => (
+      {({ values, isValid }) => (
         <Form
           style={{ gap: '40px', paddingTop: '24px', paddingBottom: '50px' }}
         >
@@ -76,33 +75,37 @@ const PriorityPage: FC = () => {
             />
           </Box>
           <Box sx={stylesMui.item}>
-            <Typography variant="h6Bold">Освітні програми</Typography>
             {values.specialty === '121' && (
               <Box sx={stylesMui.item}>
+                <Typography variant="h6Bold">Освітні програми</Typography>
                 <FormikDropdown
                   name="priorities.1"
                   options={IPeduPrograms}
                   size={FieldSize.LARGE}
                   label="Перший пріоритет"
                   placeholder="виберіть зі списку"
+                  clearOnUnmount
                 />
                 <FormikDropdown
                   name="priorities.2"
                   options={IPeduPrograms}
                   size={FieldSize.LARGE}
-                  label="Перший пріоритет"
+                  label="Другий пріоритет"
                   placeholder="виберіть зі списку"
+                  clearOnUnmount
                 />
               </Box>
             )}
             {values.specialty === '126' && (
               <Box sx={stylesMui.item}>
+                <Typography variant="h6Bold">Освітні програми</Typography>
                 <FormikDropdown
                   options={ISTeduPrograms}
                   name="priorities.1"
                   size={FieldSize.LARGE}
                   label="Перший пріоритет"
                   placeholder="виберіть зі списку"
+                  clearOnUnmount
                 />
                 <FormikDropdown
                   name="priorities.2"
@@ -110,6 +113,7 @@ const PriorityPage: FC = () => {
                   size={FieldSize.LARGE}
                   label="Другий пріоритет"
                   placeholder="виберіть зі списку"
+                  clearOnUnmount
                 />
                 <FormikDropdown
                   name="priorities.3"
@@ -117,22 +121,38 @@ const PriorityPage: FC = () => {
                   size={FieldSize.LARGE}
                   label="Третій пріоритет"
                   placeholder="виберіть зі списку"
+                  clearOnUnmount
                 />
               </Box>
             )}
           </Box>
           <Box sx={{ gap: '24px' }}>
             <Divider
+              sx={{ marginBottom: '12px' }}
               textAlign={DividerTextAlign.LEFT}
-              text="Дані про вступника"
+              text="Дані про вступника (в род.відмінку)"
             />
-            <Input name="lastName" placeholder="Шевченко" label="Прізвище" />
-            <Input name="firstName" placeholder="Тарас" label="Ім'я" />
-            <Input
-              name="middleName"
-              placeholder="Григорович"
-              label="По-батькові"
-            />
+            <Input name="lastName" placeholder="Шевченка" label="Прізвище" />
+            <Input name="firstName" placeholder="Тараса" label="Ім'я" />
+            <Box sx={stylesMui.item}>
+              <CheckBox name="noMiddleName" label="Немає по-батькові" />
+              {values?.noMiddleName ? (
+                <Input
+                  resetOnDisabled
+                  name="middleName"
+                  disabled={true}
+                  placeholder={'Григоровича'}
+                  label={`По-батькові`}
+                />
+              ) : (
+                <Input
+                  name="middleName"
+                  disabled={false}
+                  placeholder={'Григоровича'}
+                  label={`По-батькові`}
+                />
+              )}
+            </Box>
           </Box>
           <Divider
             textAlign={DividerTextAlign.LEFT}
@@ -141,19 +161,19 @@ const PriorityPage: FC = () => {
           />
           <Box sx={stylesMui.item}>
             <Input name="day" label="Число (день місяця)" placeholder="21" />
+            <Input
+              name="email"
+              placeholder="smthcool@gmail.com"
+              label="Електронна пошта вступника"
+              clearOnUnmount
+            />
             <CheckBox name="isToAdmission" label="Подаю документи в корпусі" />
-            {!values.isToAdmission ? (
-              <Input
-                name="email"
-                placeholder="smthcool@gmail.com"
-                label="Електронна пошта вступника"
-              />
-            ) : (
+            {values.isToAdmission && (
               <Box sx={stylesMui.item}>
                 <Divider
                   textAlign={DividerTextAlign.LEFT}
                   text="Підтвердження даних"
-                  sx={stylesMui.divider}
+                  sx={{ marginBottom: '12px' }}
                 />
                 <Typography variant="h6Bold">
                   Віддайте телефон оператору
