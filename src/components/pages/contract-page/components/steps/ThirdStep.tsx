@@ -200,7 +200,7 @@ export const ThirdStep: FC<ThirdStepProps> = ({
           {values.representative.region !== kyiv && (
             <Box sx={stylesMui.item}>
               <Input
-                name="entrant.settlement"
+                name="representative.settlement"
                 placeholder="с. Пуків"
                 label="Населений пункт"
               />

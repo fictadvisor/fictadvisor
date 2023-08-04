@@ -39,6 +39,7 @@ export const PersonalForm: FC = () => {
         }
         toast.error(
           `Трапилась помилка, перевірте усі дані та спробуйте ще раз`,
+          (error as AxiosError).message,
         );
       }
       return;
