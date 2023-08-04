@@ -19,10 +19,8 @@ import {
 } from '@/components/pages/priority-page/constants';
 import { validationSchema } from '@/components/pages/priority-page/validation';
 import useToast from '@/hooks/use-toast';
-
 import ContractAPI from '@/lib/api/contract/ContractAPI';
 import { ExtendedPriorityData } from '@/lib/api/contract/types/ContractBody';
-
 
 import { prepareData } from './utils/index';
 import { SuccessScreen } from './SuccessScreen';
@@ -130,10 +128,10 @@ const PriorityPage: FC = () => {
             <Divider
               sx={{ marginBottom: '12px' }}
               textAlign={DividerTextAlign.LEFT}
-              text="Дані про вступника (в род.відмінку)"
+              text="Дані про вступника"
             />
-            <Input name="lastName" placeholder="Шевченка" label="Прізвище" />
-            <Input name="firstName" placeholder="Тараса" label="Ім'я" />
+            <Input name="lastName" placeholder="Шевченко" label="Прізвище" />
+            <Input name="firstName" placeholder="Тарас" label="Ім'я" />
             <Box sx={stylesMui.item}>
               <CheckBox name="noMiddleName" label="Немає по-батькові" />
               {values?.noMiddleName ? (
@@ -141,14 +139,14 @@ const PriorityPage: FC = () => {
                   resetOnDisabled
                   name="middleName"
                   disabled={true}
-                  placeholder={'Григоровича'}
+                  placeholder={'Григорович'}
                   label={`По-батькові`}
                 />
               ) : (
                 <Input
                   name="middleName"
                   disabled={false}
-                  placeholder={'Григоровича'}
+                  placeholder={'Григорович'}
                   label={`По-батькові`}
                 />
               )}
