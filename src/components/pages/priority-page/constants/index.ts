@@ -18,6 +18,7 @@ export const initialValues: ExtendedPriorityData = {
     3: '',
   },
   secretNumber: '',
+  noMiddleName: false,
 };
 enum EducationProgram {
   CSSE = 'CSSE',

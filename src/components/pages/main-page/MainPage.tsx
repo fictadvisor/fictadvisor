@@ -53,9 +53,9 @@ const MainPage: FC<MainPageProps> = ({ data }) => {
                 <div className={styles['buttons-desk']}>
                   {!isLoggedIn && (
                     <>
-                      <Link href={'/register'}>
+                      <Link href={'/contract'}>
                         <Button
-                          text="Доєднатись"
+                          text="Договір про навчання"
                           disabled={false}
                           color={ButtonColor.PRIMARY}
                           variant={ButtonVariant.FILLED}
@@ -65,9 +65,9 @@ const MainPage: FC<MainPageProps> = ({ data }) => {
                       <hr className={styles['button-divider']} />
                     </>
                   )}
-                  <Link href={'/contract'}>
+                  <Link href={'/priority'}>
                     <Button
-                      text={'Договір про навчання'}
+                      text={'Обрати пріоритет'}
                       disabled={false}
                       variant={ButtonVariant.OUTLINE}
                       size={ButtonSize.LARGE}
@@ -77,9 +77,9 @@ const MainPage: FC<MainPageProps> = ({ data }) => {
                 <div className={styles['buttons-tabl']}>
                   {!isLoggedIn && (
                     <>
-                      <Link href={'/register'}>
+                      <Link href={'/contract'}>
                         <Button
-                          text="Доєднатись"
+                          text="Договір про навчання"
                           disabled={false}
                           color={ButtonColor.PRIMARY}
                           variant={ButtonVariant.FILLED}
@@ -89,9 +89,9 @@ const MainPage: FC<MainPageProps> = ({ data }) => {
                       <hr className={styles['button-divider']} />
                     </>
                   )}
-                  <Link href={'/contract'}>
+                  <Link href={'/priority'}>
                     <Button
-                      text={'Договір про навчання'}
+                      text={'Обрати пріоритет'}
                       disabled={false}
                       variant={ButtonVariant.OUTLINE}
                       size={ButtonSize.MEDIUM}
@@ -101,9 +101,9 @@ const MainPage: FC<MainPageProps> = ({ data }) => {
                 <div className={styles['buttons-mob']}>
                   {!isLoggedIn && (
                     <>
-                      <Link href={'/register'}>
+                      <Link href={'/contract'}>
                         <Button
-                          text="Доєднатись"
+                          text="Договір про навчання"
                           disabled={false}
                           color={ButtonColor.PRIMARY}
                           variant={ButtonVariant.FILLED}
@@ -112,9 +112,9 @@ const MainPage: FC<MainPageProps> = ({ data }) => {
                       </Link>
                     </>
                   )}
-                  <Link href={'/contract'}>
+                  <Link href={'/priority'}>
                     <Button
-                      text={'Договір про навчання'}
+                      text={'Обрати пріоритет'}
                       disabled={false}
                       variant={ButtonVariant.OUTLINE}
                       size={ButtonSize.SMALL}

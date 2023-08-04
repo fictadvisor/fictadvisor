@@ -59,12 +59,13 @@ export interface PriorityData {
   priorities: {
     1: string;
     2: string;
-    3: string;
+    3?: string;
   };
 }
 
 export interface ExtendedPriorityData extends PriorityData {
   secretNumber: string;
+  noMiddleName: boolean;
 }
 
 export type ContractBody = Omit<ExtendedContractBody, 'helper'>;

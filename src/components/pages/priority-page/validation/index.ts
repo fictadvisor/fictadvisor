@@ -1,8 +1,6 @@
 import * as yup from 'yup';
 import { TestConfig } from 'yup';
 
-import option from '@/components/common/ui/form/dropdown/components/option';
-
 const secretString = /^4261$/;
 
 const priorityFieldTestOptions: TestConfig = {
@@ -18,6 +16,7 @@ const priorityFieldTestOptions: TestConfig = {
 };
 
 export const validationSchema = yup.object().shape({
+  noMiddleName: yup.boolean(),
   lastName: yup
     .string()
     .required(`Обов'язкове поле`)
@@ -33,7 +32,7 @@ export const validationSchema = yup.object().shape({
     .min(2, 'Не коротше 2 символів')
     .max(40, 'Не довше 40 символів')
     .matches(
-      /^[ҐЄІЇЬА-ЩЮЯґєіїьа-щюя\-`ʼ' ]+$/,
+      /^[ҐЄІЇЬА-ЩЮЯґєіїьа-щюя\-`'’‘“”* ]+$/,
       'Має містити українські літери, апостроф або дефіс',
     ),
   middleName: yup
@@ -41,18 +40,19 @@ export const validationSchema = yup.object().shape({
     .min(2, 'Не коротше 2 символів')
     .max(40, 'Не довше 40 символів')
     .matches(
-      /^[ҐЄІЇЬА-ЩЮЯґєіїьа-щюя\-`ʼ' ]+$/,
+      /^[ҐЄІЇЬА-ЩЮЯґєіїьа-щюя\-`'’‘“”* ]+$/,
       'Має містити українські літери, апостроф або дефіс',
-    ),
+    )
+    .when('noMiddleName', {
+      is: true,
+      then: schema => schema.optional(),
+      otherwise: schema => schema.required("Обов'зкове поле"),
+    }),
   specialty: yup.string().required("Обов'зкове поле"),
-  email: yup.string().when('isToAdmission', {
-    is: false,
-    then: schema =>
-      schema
-        .email('Це не схоже на поштову адресу')
-        .required(`Обов'язкове поле`),
-    otherwise: schema => schema.optional(),
-  }),
+  email: yup
+    .string()
+    .email('Це не схоже на поштову адресу')
+    .required(`Обов'язкове поле`),
   day: yup
     .string()
     .required(`Обов'язкове поле`)
