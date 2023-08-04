@@ -13,8 +13,8 @@ interface PersonalData {
   idCode?: string;
   phoneNumber: string;
   region?: string;
-  email: string;
   index: string;
+  email: string;
 }
 
 interface MetaContract {
@@ -43,7 +43,7 @@ export interface HelperData {
 //kostili ebani
 export interface ExtendedContractBody {
   entrant: PersonalData;
-  representative: PersonalData;
+  representative: PartialBy<PersonalData, 'email'>;
   meta: MetaContract;
   helper: HelperData;
 }

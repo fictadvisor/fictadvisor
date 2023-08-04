@@ -54,10 +54,7 @@ export const representativeValidation = yup.object().shape({
         /^[+][(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/,
         'Має починатися з символу "+" і коду країни ',
       ),
-    email: yup
-      .string()
-      .required(`Обов'язкове поле`)
-      .email('Це не схоже на поштову адресу'),
+    email: yup.string().email('Це не схоже на поштову адресу'),
     passportSeries: yup
       .string()
       .optional()

@@ -23,6 +23,8 @@ export const prepareData = (
     initialData.representative.idCode = undefined;
   if (initialData.representative.passportSeries?.length === 0)
     initialData.representative.passportSeries = undefined;
+  if (initialData.representative.email?.length === 0)
+    initialData.representative.email = undefined;
 
   if (initialData.meta.paymentType?.length === 0)
     initialData.meta.paymentType = undefined;
