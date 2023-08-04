@@ -61,9 +61,12 @@ export class DocumentService {
 
     await this.entrantRepository.updateById(dbEntrant.id, {
       entrantData: {
-        create: {
-          ...entrant,
-        },
+        create: entrant,
+      },
+      representativeData: {
+        create: data.representative.firstName
+          ? data.representative
+          : undefined,
       },
     });
 
