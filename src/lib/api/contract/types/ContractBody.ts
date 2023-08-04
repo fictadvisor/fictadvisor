@@ -48,6 +48,28 @@ export interface ExtendedContractBody {
   helper: HelperData;
 }
 
+interface PersonalAdminData {
+  firstName: string;
+  middleName: string;
+  lastName: string;
+}
+
+interface ContractAdminData {
+  number: string;
+  date: string;
+}
+
+export interface AdminContractData {
+  entrant: PersonalAdminData;
+  contract: ContractAdminData;
+}
+
+export interface EntrantsPriorityBody {
+  firstName: string;
+  middleName: string;
+  lastName: string;
+}
+
 export interface PriorityData {
   firstName: string;
   middleName: string;
