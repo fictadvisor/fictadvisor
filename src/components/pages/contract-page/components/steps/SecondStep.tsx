@@ -38,6 +38,7 @@ export const SecondStep: FC<SecondStepProps> = ({
     >
       {({ values, isValid, touched, setValues }) => (
         <Form>
+          <Typography variant="h4Bold">Інформація про вступника</Typography>
           <Box sx={stylesMui.item}>
             <Divider
               textAlign={DividerTextAlign.LEFT}
