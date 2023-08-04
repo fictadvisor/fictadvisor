@@ -379,6 +379,7 @@ export class AdmissionService {
 
       if (body.status === QueuePositionStatus.GOING) {
         await this.sendMessage(user, MessageType.PROCESSING, { queue: queue.name, code: position.code });
+        await AdmissionAPI.sendGoingUser(userId);
       }
     }
 

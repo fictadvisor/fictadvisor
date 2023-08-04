@@ -26,4 +26,15 @@ export class AdmissionAPI {
       },
     });
   };
+
+  static async sendGoingUser (id: number) {
+    await axios.get(`${ADMISSION_BOT_API}/sendGoingUser`, {
+      params: {
+        id,
+      },
+      headers: {
+        Authorization: `Bearer ${ADMISSION_BOT_TOKEN}`,
+      },
+    });
+  }
 }
