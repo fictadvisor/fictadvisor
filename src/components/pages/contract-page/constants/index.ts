@@ -1,6 +1,6 @@
 import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
 import { ExtendedContractBody } from '@/lib/api/contract/types/ContractBody';
-export const kyiv = 'Київ';
+export const kyiv = 'м. Київ';
 
 export const REGIONS: DropDownOption[] = [
   { label: 'Київ', id: kyiv },
