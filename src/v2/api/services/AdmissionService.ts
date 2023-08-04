@@ -190,7 +190,7 @@ export class AdmissionService {
     const queue = await this.getAndCheckQueue(queueId);
     const user = await this.getAndCheckUser(userId);
 
-    this.prisma.queuePosition.deleteMany({
+    await this.prisma.queuePosition.deleteMany({
       where: {
         queueId,
         userId,
