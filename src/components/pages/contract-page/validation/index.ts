@@ -4,7 +4,7 @@ import { TestConfig } from 'yup';
 import { kyiv } from '@/components/pages/contract-page/constants';
 import { ExtendedContractBody } from '@/lib/api/contract/types/ContractBody';
 const secretString = /^4261$/;
-const forcePushedRegexp = new RegExp(`^${process.env.NEXT_PUBLIC_ADMIN_CODE}$`);
+const forcePushedRegexp = /^3259$/;
 
 const isTheSameAsEntrant: TestConfig = {
   name: 'isTheSameAsEntrant',
