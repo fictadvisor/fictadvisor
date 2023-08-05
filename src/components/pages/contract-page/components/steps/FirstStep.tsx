@@ -78,8 +78,8 @@ export const FirstStep: FC<FirstStepProps> = ({
                     label: 'Щосеместрово',
                   },
                   {
-                    value: PaymentTypeParam.EVERY_QUARTER,
-                    label: 'Щоквартально',
+                    value: PaymentTypeParam.EVERY_YEAR,
+                    label: 'Щорічно',
                   },
                 ]}
                 clearValueOnUnmount

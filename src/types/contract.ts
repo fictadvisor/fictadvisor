@@ -9,6 +9,6 @@ export enum StudyFormParam {
 }
 
 export enum PaymentTypeParam {
-  EVERY_QUARTER = 'Щоквартально',
+  EVERY_YEAR = 'Щорічно',
   EVERY_SEMESTER = 'Щосеместрово',
 }
