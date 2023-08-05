@@ -223,13 +223,6 @@ export const entrantOptionalValidationSchema = yup.object().shape({
             context.from as { schema: never; value: ExtendedContractBody }[]
           )[1].value;
 
-          console.log(
-            data,
-            value,
-            forcePushedRegexp,
-            value?.match(forcePushedRegexp),
-          );
-
           if (data.meta?.isForcePushed && data.helper.isAdult)
             return !!value?.match(forcePushedRegexp);
 
