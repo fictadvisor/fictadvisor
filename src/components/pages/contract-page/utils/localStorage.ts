@@ -12,7 +12,11 @@ export const saveLocalStorage = (data: ExtendedContractBody | null) => {
 export const getLocalStorage = (): ExtendedContractBody | null => {
   const data = localStorage.getItem('contractData');
 
-  if (data) return JSON.parse(data);
+  if (data) {
+    const parsedData: ExtendedContractBody = JSON.parse(data);
+    parsedData.meta.isForcePushed = !!parsedData.meta.isForcePushed;
+    return parsedData;
+  }
 
   return null;
 };
