@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, OnModuleInit } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
 import { CreateQueueDTO } from '../dtos/CreateQueueDTO';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
@@ -33,7 +33,7 @@ const messages = {
 };
 
 @Injectable()
-export class AdmissionService {
+export class AdmissionService implements OnModuleInit {
   constructor (
     private prisma: PrismaService,
   ) {}
@@ -71,7 +71,7 @@ export class AdmissionService {
       },
     });
 
-    const lastPosition = this.questionLastPosition[queue.id] ?? 1;
+    const lastPosition = this.questionLastPosition[queue.id] ?? 0;
 
     return {
       queue,
@@ -240,7 +240,7 @@ export class AdmissionService {
       relativePosition: await this.getRelativePosition(position),
       user: await this.prisma.queueUser.findUnique({
         where: {
-          id: +position.userId,
+          id: position.userId,
         },
       }),
     }));
@@ -375,7 +375,9 @@ export class AdmissionService {
     }
 
     if (statusUpdated || positionDelta !== 0) {
-      await this.notifyQueue(queueId);
+      if (body.status === QueuePositionStatus.PROCESSING) {
+        await this.notifyQueue(queueId);
+      }
 
       if (body.status === QueuePositionStatus.GOING) {
         await this.sendMessage(user, MessageType.PROCESSING, { queue: queue.name, code: position.code });
@@ -473,5 +475,22 @@ export class AdmissionService {
 
     const text = messages[type](data);
     await AdmissionAPI.sendMessage(user.telegramId, text, 'HTML');
+  }
+
+  async onModuleInit () {
+
+    const queues = await this.prisma.queue.findMany({});
+    for (const queue of queues) {
+      const lastPosition = await this.prisma.queuePosition.findFirst({
+        where: {
+          queue,
+        },
+        orderBy: {
+          code: 'desc',
+        },
+      });
+
+      this.questionLastPosition[queue.id] = lastPosition ? lastPosition.code : 0;
+    }
   }
 }
