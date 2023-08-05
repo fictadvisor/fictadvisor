@@ -12,6 +12,7 @@ import { EntrantRepository } from '../../database/repositories/EntrantRepository
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
 import { FullNameDTO } from '../dtos/FullNameDTO';
 import { DataNotFoundException } from '../../utils/exceptions/DataNotFoundException';
+import { DbEntrant } from '../../database/entities/DbEntrant';
 
 const DOCX = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
 
@@ -135,18 +136,23 @@ export class DocumentService {
     });
   }
 
-  private validatePrograms ({ specialty, priorities }: PriorityDTO) {
+  private validatePrograms ({ specialty, priorities, isForcePushed }: PriorityDTO) {
     const programs = Object.values(priorities);
     const expected = EducationPrograms[specialty];
-    if (expected.length !== programs.length || !expected.every((p) => programs.includes(p))) {
+    if (isForcePushed) {
+      if (!programs.every((p) => expected.includes(p))) {
+        throw new InvalidEducationProgramsException();
+      }
+    } else if (expected.length !== programs.length || !expected.every((p) => programs.includes(p))) {
       throw new InvalidEducationProgramsException();
     }
   }
 
   async generatePriority (data: PriorityDTO) {
     this.validatePrograms(data);
+    const day = data.day.padStart(2, '0');
 
-    const priorities = [];
+    let priorities = [];
     for (const priority in data.priorities) {
       priorities.push({ priority: Number(priority), program: data.priorities[priority] });
     }
@@ -158,23 +164,49 @@ export class DocumentService {
       specialty: data.specialty,
     });
 
-    if (entrant.priority) throw new NoPermissionException();
-
-    const day = data.day.padStart(2, '0');
-    await this.entrantRepository.updateById(entrant.id, {
-      priority: {
-        create: {
-          state: PriorityState.NOT_APPROVED,
-          date: `${day}.08.${new Date().getFullYear()}`,
-          priorities: {
-            createMany: {
-              data: priorities,
+    if (entrant.priority && data.isForcePushed) {
+      for (const priority of priorities) {
+        await this.entrantRepository.updateById(entrant.id, {
+          priority: {
+            update: {
+              priorities: {
+                update: {
+                  where: {
+                    entrantId_priority: {
+                      entrantId: entrant.id,
+                      priority: priority.priority,
+                    },
+                  },
+                  data: {
+                    program: priority.program,
+                  },
+                },
+              },
+            },
+          },
+        });
+      }
+      priorities = (await this.entrantRepository.findById(entrant.id) as DbEntrant).priority.priorities.map((p) => ({
+        priority: p.priority,
+        program: p.program,
+      }));
+    } else if (entrant.priority) {
+      throw new NoPermissionException();
+    } else {
+      await this.entrantRepository.updateById(entrant.id, {
+        priority: {
+          create: {
+            state: PriorityState.NOT_APPROVED,
+            date: `${day}.08.${new Date().getFullYear()}`,
+            priorities: {
+              createMany: {
+                data: priorities,
+              },
             },
           },
         },
-      },
-    });
-
+      });
+    }
     const obj = {};
     priorities.map(({ priority, program }) => obj[program] = priority);
 

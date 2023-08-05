@@ -20,6 +20,15 @@ export class EntrantRepository {
     private readonly prisma: PrismaService,
   ) {}
 
+  findById (id: string) {
+    return this.prisma.entrant.findFirst({
+      where: {
+        id,
+      },
+      include: this.include,
+    });
+  }
+
   find (where: Prisma.EntrantWhereInput) {
     return this.prisma.entrant.findFirst({
       where,

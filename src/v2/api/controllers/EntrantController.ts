@@ -69,10 +69,10 @@ export class EntrantController {
     NoPermissionException:
       You do not have permission to perform this action`,
   })
-  async saveContract (
+  async approveContract (
     @Body() body: CreateContractDTO,
   ) {
-    return  await this.entrantService.saveContract(body);
+    return  await this.entrantService.approveContract(body);
   }
 
   @Access('admission.priorities.get')

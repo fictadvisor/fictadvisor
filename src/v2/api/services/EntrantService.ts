@@ -24,19 +24,39 @@ export class EntrantService {
       lastName,
     });
   }
-  async saveContract ({ entrant: entrantInfo, contract }: CreateContractDTO) {
+
+  async approveContract ({ entrant: entrantInfo, contract, isForcePushed }: CreateContractDTO) {
     const entrant = await this.findEntrant(entrantInfo.firstName, entrantInfo.middleName, entrantInfo.lastName);
-    if (!entrant) {
-      throw new NotFoundException('entrant is not found');
+    let newEntrant;
+    if (isForcePushed) {
+      if (!entrant) {
+        newEntrant = await this.entrantRepository.create({
+          firstName: entrantInfo.firstName,
+          middleName: entrantInfo.middleName,
+          lastName: entrantInfo.lastName,
+        });
+      }
+      if (entrant.contract) {
+        newEntrant = await this.entrantRepository.updateById(entrant.id, {
+          contract: {
+            delete: true,
+            create: contract,
+          },
+        });
+      }
+    } else {
+      if (!entrant) {
+        throw new NotFoundException('entrant is not found');
+      }
+      if (entrant.contract) {
+        throw new AlreadyExistException('contract');
+      }
+      newEntrant = await this.entrantRepository.updateById(entrant.id, {
+        contract: {
+          create: contract,
+        },
+      });
     }
-    if (entrant.contract) {
-      throw new AlreadyExistException('contract');
-    }
-    const newEntrant = await this.entrantRepository.updateById(entrant.id, {
-      contract: {
-        create: contract,
-      },
-    });
     const mappedEntrant = this.entrantMapper.getEntrantWithContract(newEntrant);
     await this.admissionAPI.sendContract(mappedEntrant);
     return mappedEntrant;
