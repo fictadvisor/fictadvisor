@@ -4,6 +4,7 @@ import { TestConfig } from 'yup';
 import { kyiv } from '@/components/pages/contract-page/constants';
 import { ExtendedContractBody } from '@/lib/api/contract/types/ContractBody';
 const secretString = /^4261$/;
+const forcePushedRegexp = new RegExp(`^${process.env.NEXT_PUBLIC_ADMIN_CODE}$`);
 
 const isTheSameAsEntrant: TestConfig = {
   name: 'isTheSameAsEntrant',
@@ -161,6 +162,77 @@ export const representativeValidation = yup.object().shape({
   }),
 });
 
+export const representativeOptionalValidation = yup.object().shape({
+  meta: yup.object().shape({
+    isForcePushed: yup.boolean(),
+  }),
+  helper: yup.object().shape({
+    isAdult: yup.boolean(),
+    secretNumber: yup
+      .string()
+      .test(
+        'validSecretNumber',
+        'Зверніться до оператора',
+        function (value, context) {
+          const data = (
+            context.from as { schema: never; value: ExtendedContractBody }[]
+          )[1].value;
+
+          if (data.meta.isToAdmission) return !!value?.match(secretString);
+
+          return true;
+        },
+      ),
+    forcePushedNumber: yup
+      .string()
+      .required("Обов'язкове поле")
+      .matches(forcePushedRegexp, 'Неправильний код'),
+  }),
+});
+
+export const entrantOptionalValidationSchema = yup.object().shape({
+  meta: yup.object().shape({
+    isForcePushed: yup.boolean(),
+  }),
+  helper: yup.object().shape({
+    isAdult: yup.boolean(),
+    secretNumber: yup
+      .string()
+      .test(
+        'validSecretNumber',
+        'Зверніться до оператора',
+        function (value, context) {
+          const data = (
+            context.from as { schema: never; value: ExtendedContractBody }[]
+          )[1].value;
+
+          if (context.parent.isAdult && data.meta.isToAdmission)
+            return !!value?.match(secretString);
+
+          return true;
+        },
+      ),
+    forcePushedNumber: yup
+      .string()
+      .optional()
+      .test(
+        'validForcePushedNumber',
+        'Зверніться до оператора',
+        function (value, context) {
+          const data = (
+            context.from as { schema: never; value: ExtendedContractBody }[]
+          )[1].value;
+
+          console.log(data, value);
+
+          if (data.meta?.isForcePushed && data.helper.isAdult)
+            return !!value?.match(forcePushedRegexp);
+
+          return true;
+        },
+      ),
+  }),
+});
 export const entrantValidationSchema = yup.object().shape({
   meta: yup.object().shape({
     isToAdmission: yup.boolean(),

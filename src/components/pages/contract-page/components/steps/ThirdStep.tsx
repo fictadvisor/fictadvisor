@@ -12,7 +12,10 @@ import { kyiv } from '@/components/pages/contract-page/constants';
 import { REGIONS } from '@/components/pages/contract-page/constants';
 import * as stylesMui from '@/components/pages/contract-page/ContractPage.styles';
 import { saveLocalStorage } from '@/components/pages/contract-page/utils/localStorage';
-import { representativeValidation } from '@/components/pages/contract-page/validation';
+import {
+  representativeOptionalValidation,
+  representativeValidation,
+} from '@/components/pages/contract-page/validation';
 import useTabClose from '@/hooks/use-tab-close';
 import { ExtendedContractBody } from '@/lib/api/contract/types/ContractBody';
 
@@ -21,11 +24,13 @@ export interface ThirdStepProps {
   onNextStep: (data: ExtendedContractBody, last: boolean) => void;
   onPrevStep: (data: ExtendedContractBody) => void;
   data: ExtendedContractBody;
+  isForcePushed: boolean;
 }
 export const ThirdStep: FC<ThirdStepProps> = ({
   onPrevStep,
   onNextStep,
   data,
+  isForcePushed,
 }) => {
   const handleSubmit = (values: ExtendedContractBody) => {
     onNextStep(values, true);
@@ -39,12 +44,18 @@ export const ThirdStep: FC<ThirdStepProps> = ({
     }
   });
 
+  console.log('isForcePushed', isForcePushed);
+
   return (
     <Formik
       innerRef={form}
       initialValues={data}
       onSubmit={handleSubmit}
-      validationSchema={representativeValidation}
+      validationSchema={
+        isForcePushed
+          ? representativeOptionalValidation
+          : representativeValidation
+      }
     >
       {({ values, isValid, touched, setValues }) => (
         <Form>
@@ -244,6 +255,17 @@ export const ThirdStep: FC<ThirdStepProps> = ({
               />
             </Box>
           )}
+
+          {values?.meta?.isForcePushed && (
+            <Box sx={stylesMui.item}>
+              <Input
+                name="helper.forcePushedNumber"
+                label="Код форс пушу"
+                placeholder="0000"
+              />
+            </Box>
+          )}
+
           <Actions
             onPrevStep={() => {
               if (form.current) onPrevStep(form.current.values);

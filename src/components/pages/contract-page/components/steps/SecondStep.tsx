@@ -13,18 +13,24 @@ import { REGIONS } from '@/components/pages/contract-page/constants';
 import { kyiv } from '@/components/pages/contract-page/constants';
 import * as stylesMui from '@/components/pages/contract-page/ContractPage.styles';
 import { saveLocalStorage } from '@/components/pages/contract-page/utils/localStorage';
-import { entrantValidationSchema } from '@/components/pages/contract-page/validation';
+import {
+  entrantOptionalValidationSchema,
+  entrantValidationSchema,
+} from '@/components/pages/contract-page/validation';
 import useTabClose from '@/hooks/use-tab-close';
 import { ExtendedContractBody } from '@/lib/api/contract/types/ContractBody';
 export interface SecondStepProps {
   onNextStep: (data: ExtendedContractBody, final?: boolean) => void;
   onPrevStep: (data: ExtendedContractBody) => void;
   data: ExtendedContractBody;
+
+  isForcePushed: boolean;
 }
 export const SecondStep: FC<SecondStepProps> = ({
   onNextStep,
   data,
   onPrevStep,
+  isForcePushed,
 }) => {
   const form = useRef<FormikProps<ExtendedContractBody>>(null);
   const handleSubmit = (values: ExtendedContractBody) => {
@@ -37,11 +43,17 @@ export const SecondStep: FC<SecondStepProps> = ({
     }
   });
 
+  console.log('isForcePushed', isForcePushed);
+
   return (
     <Formik
       initialValues={data}
       onSubmit={handleSubmit}
-      validationSchema={entrantValidationSchema}
+      validationSchema={
+        isForcePushed
+          ? entrantOptionalValidationSchema
+          : entrantValidationSchema
+      }
       innerRef={form}
     >
       {({ values, isValid, touched, setValues }) => (
@@ -234,6 +246,16 @@ export const SecondStep: FC<SecondStepProps> = ({
               <Input
                 name="helper.secretNumber"
                 label="Секретний код"
+                placeholder="0000"
+              />
+            </Box>
+          )}
+
+          {values?.helper?.isAdult && values?.meta?.isForcePushed && (
+            <Box sx={stylesMui.item}>
+              <Input
+                name="helper.forcePushedNumber"
+                label="Код форс пушу"
                 placeholder="0000"
               />
             </Box>

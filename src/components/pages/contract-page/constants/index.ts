@@ -3,7 +3,7 @@ import { ExtendedContractBody } from '@/lib/api/contract/types/ContractBody';
 export const kyiv = 'м. Київ';
 
 export const REGIONS: DropDownOption[] = [
-  { label: 'Київ', id: kyiv },
+  { label: 'м. Київ', id: kyiv },
   { label: 'Київська обл.', id: 'Київська обл.' },
   { label: 'Вінницька обл.', id: 'Вінницька обл.' },
   { label: 'Волинська обл.', id: 'Волинська обл.' },
@@ -70,6 +70,7 @@ export const initialValues: ExtendedContractBody = {
     paymentType: '',
     speciality: '',
     isToAdmission: false,
+    isForcePushed: false,
   },
   helper: {
     entrantHasForeignPassport: false,
@@ -80,6 +81,7 @@ export const initialValues: ExtendedContractBody = {
     isAdult: false,
 
     secretNumber: '',
+    forcePushedNumber: '',
 
     representativeHasForeignPassport: false,
     representativeHasOldPassport: false,

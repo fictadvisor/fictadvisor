@@ -19,8 +19,15 @@ import { Actions } from '../Actions';
 export interface FirstStepProps {
   onNextStep: (data: ExtendedContractBody) => void;
   data: ExtendedContractBody;
+  setIsForcePushed: React.Dispatch<React.SetStateAction<boolean>>;
+  isForcePushed: boolean;
 }
-export const FirstStep: FC<FirstStepProps> = ({ onNextStep, data }) => {
+export const FirstStep: FC<FirstStepProps> = ({
+  onNextStep,
+  data,
+  isForcePushed,
+  setIsForcePushed,
+}) => {
   const handleSubmit = (values: ExtendedContractBody) => {
     onNextStep(values);
   };
@@ -32,6 +39,10 @@ export const FirstStep: FC<FirstStepProps> = ({ onNextStep, data }) => {
       saveLocalStorage(form?.current?.values);
     }
   });
+
+  const handleCheck = () => {
+    setIsForcePushed(pr => !pr);
+  };
 
   return (
     <Formik
@@ -114,6 +125,13 @@ export const FirstStep: FC<FirstStepProps> = ({ onNextStep, data }) => {
           </Box>
           <Box sx={stylesMui.item}>
             <CheckBox name="helper.isAdult" label="Є 18 років" />
+          </Box>
+          <Box sx={stylesMui.item}>
+            <CheckBox
+              name="meta.isForcePushed"
+              label="Надіслати примусово (пропустіть цю опцію)"
+              onClick={handleCheck}
+            />
           </Box>
 
           <Actions isFormValid={touched && isValid} first />

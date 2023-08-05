@@ -23,6 +23,7 @@ interface MetaContract {
   studyForm: string;
   paymentType?: string;
   isToAdmission: boolean;
+  isForcePushed: boolean;
 }
 
 export interface HelperData {
@@ -33,6 +34,7 @@ export interface HelperData {
 
   isAdult: boolean;
   secretNumber: string;
+  forcePushedNumber: string;
 
   representativeHasForeignPassport: boolean;
   representativeHasOldPassport: boolean;

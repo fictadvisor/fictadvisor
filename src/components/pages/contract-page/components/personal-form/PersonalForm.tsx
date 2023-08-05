@@ -20,6 +20,9 @@ export const PersonalForm: FC = () => {
   const toast = useToast();
   const [data, setData] = useState(getLocalStorage() || initialValues);
   const [step, setStep] = useState(0);
+  const [isForcePushed, setIsForcePushed] = useState(
+    !!getLocalStorage()?.meta.isForcePushed,
+  );
   const [submitted, setSubmitted] = useState(false);
 
   const handleNextStep = async (data: ExtendedContractBody, final = false) => {
@@ -58,26 +61,29 @@ export const PersonalForm: FC = () => {
 
   //TODO:
   // [] кнопка червона на початку, коли не заповнено нічо
-  // [x] коли натискаєш "немає по-батькові" або відміняєш щось з вибору в паспорті не очищається поле
-  // [x] серія паспорту по дефолту активна (має бути неактивна)
-  // [x] Паспорт старого зразка — неправильна валідація серії (має бути 2 кириличні літери)
-  // [x] можна обрати закордонний паспорт і паспорт старого зразка одночасно (так не має бути)
-  // [x] якщо попап важко реалізувати, просто інпут куди оператор вводить секретний код
   // [] make middleName required, when "I don't have a middle name" checkbox is checked
   // [] make password series required, when one of either checkboxes is checked
 
   const steps = [
-    <FirstStep onNextStep={handleNextStep} data={data} key={1} />,
+    <FirstStep
+      onNextStep={handleNextStep}
+      data={data}
+      isForcePushed={isForcePushed}
+      setIsForcePushed={setIsForcePushed}
+      key={1}
+    />,
     <SecondStep
       onNextStep={handleNextStep}
       onPrevStep={handlePrevStep}
       data={data}
+      isForcePushed={isForcePushed}
       key={2}
     />,
     <ThirdStep
       onNextStep={handleNextStep}
       onPrevStep={handlePrevStep}
       data={data}
+      isForcePushed={isForcePushed}
       key={3}
     />,
   ];
