@@ -1,6 +1,8 @@
 import type { ExtendedPriorityData } from '@/lib/api/contract/types/ContractBody';
 
 export const saveLocalStorage = (data: ExtendedPriorityData | null) => {
+  if (data && 'secretNumber' in data) data.secretNumber = '';
+
   localStorage.setItem('priorityData', JSON.stringify(data));
 };
 

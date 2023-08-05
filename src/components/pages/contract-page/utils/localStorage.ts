@@ -1,6 +1,10 @@
 import type { ExtendedContractBody } from '@/lib/api/contract/types/ContractBody';
 
 export const saveLocalStorage = (data: ExtendedContractBody | null) => {
+  if (data && 'helper' in data) {
+    data.helper.secretNumber = '';
+  }
+
   localStorage.setItem('contractData', JSON.stringify(data));
 };
 
