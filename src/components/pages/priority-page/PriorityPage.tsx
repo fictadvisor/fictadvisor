@@ -38,7 +38,6 @@ const PriorityPage: FC = () => {
     try {
       await ContractAPI.createPriority(prepareData({ ...values }));
       setSubmited(true);
-      saveLocalStorage(null);
     } catch (error) {
       if ((error as AxiosError).status === 500) {
         toast.error(`Внутрішня помилка сервера`);

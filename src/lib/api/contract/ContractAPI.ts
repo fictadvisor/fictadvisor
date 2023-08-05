@@ -3,6 +3,7 @@ import {
   EntrantsPriorityBody,
   PriorityData,
 } from '@/lib/api/contract/types/ContractBody';
+import { DeleteEntrantBody } from '@/lib/api/contract/types/DeleteEntrantBody';
 import { client } from '@/lib/api/instance';
 import { getAuthorizationHeader } from '@/lib/api/utils';
 
@@ -41,6 +42,16 @@ class ContractAPI {
 
   async createPriority(body: PriorityData) {
     const { data } = await client.post('/documents/priority', body);
+    return data;
+  }
+
+  async deleteEntrant(body: DeleteEntrantBody) {
+    console.log(body);
+
+    const { data } = await client.delete('/entrants', {
+      params: body,
+      ...getAuthorizationHeader(),
+    });
     return data;
   }
 }

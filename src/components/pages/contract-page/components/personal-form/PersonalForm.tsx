@@ -3,10 +3,7 @@ import { Box } from '@mui/material';
 import { AxiosError } from 'axios';
 
 import { initialValues } from '@/components/pages/contract-page/constants';
-import {
-  getLocalStorage,
-  saveLocalStorage,
-} from '@/components/pages/contract-page/utils/localStorage';
+import { getLocalStorage } from '@/components/pages/contract-page/utils/localStorage';
 import useToast from '@/hooks/use-toast';
 import ContractAPI from '@/lib/api/contract/ContractAPI';
 import { ExtendedContractBody } from '@/lib/api/contract/types/ContractBody';
@@ -35,7 +32,7 @@ export const PersonalForm: FC = () => {
         );
         setData(prevState => ({ ...prevState, ...data }));
         setSubmitted(true);
-        saveLocalStorage(null);
+
         toast.success(
           `Ви успішно надіслали контракт, перевірте пошту ${data.entrant.email}`,
         );
