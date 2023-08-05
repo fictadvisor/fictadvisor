@@ -87,19 +87,23 @@ export class DocumentService {
       specialty: data.meta.speciality,
     });
 
-    if (dbEntrant.entrantData) throw new NoPermissionException();
+    if (dbEntrant.entrantData && !data.meta.isForcePushed) throw new NoPermissionException();
 
     await this.entrantRepository.updateById(dbEntrant.id, {
       studyType: data.meta.studyType,
       studyForm: data.meta.studyForm,
       paymentType: data.meta.paymentType,
       entrantData: {
-        create: entrant,
+        upsert: {
+          update: entrant,
+          create: entrant,
+        },
       },
       representativeData: {
-        create: data.representative?.firstName
-          ? data.representative
-          : undefined,
+        upsert: data.representative.firstName ? {
+          update: data.representative,
+          create: data.representative,
+        } : undefined,
       },
     });
 
@@ -119,6 +123,7 @@ export class DocumentService {
         studyForm: entrant.studyForm as StudyFormParam,
         paymentType: entrant.paymentType as PaymentTypeParam,
         isToAdmission: true,
+        isForcePushed: false,
       },
       entrant: {
         firstName: entrant.firstName,

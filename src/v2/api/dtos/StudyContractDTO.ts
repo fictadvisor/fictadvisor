@@ -1,79 +1,46 @@
 import { PaymentTypeParam, StudyFormParam, StudyTypeParam } from './StudyContractParams';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import {
-  IsBoolean,
-  IsEmail,
-  IsEnum,
-  IsIn,
-  IsNotEmpty, IsOptional,
-  Matches,
-  MaxLength,
-  MinLength,
-  ValidateNested,
-} from 'class-validator';
-import {
-  ADMISSION_UKRSPEC_REGEX,
-  createRegex,
-  UKR_REGEX,
-  validationOptionsMsg,
-} from '../../utils/GLOBALS';
+import { IsNotEmpty, IsOptional, ValidateNested } from 'class-validator';
+import { validationOptionsMsg } from '../../utils/GLOBALS';
 import { Type } from 'class-transformer';
 
 class MetaContractDTO {
   @ApiProperty()
-  @IsIn(['121', '123', '126'], validationOptionsMsg('The specialty code is not valid'))
+  @IsNotEmpty(validationOptionsMsg('Speciality cannot be empty'))
     speciality: string;
 
   @ApiProperty()
-  @IsEnum(StudyTypeParam, validationOptionsMsg('Study type must be an enum'))
   @IsNotEmpty(validationOptionsMsg('Study type cannot be empty'))
     studyType: StudyTypeParam;
 
   @ApiProperty()
-  @IsEnum(StudyFormParam, validationOptionsMsg('Study form must be an enum'))
   @IsNotEmpty(validationOptionsMsg('Study form cannot be empty'))
     studyForm: StudyFormParam;
 
   @ApiPropertyOptional()
-  @IsEnum(PaymentTypeParam, validationOptionsMsg('Payment type must be an enum'))
   @IsOptional()
     paymentType?: PaymentTypeParam;
 
   @ApiProperty()
-  @IsBoolean(validationOptionsMsg('isToAdmission form must be boolean'))
   @IsNotEmpty(validationOptionsMsg('isToAdmission cannot be empty'))
     isToAdmission: boolean;
+
+  @ApiProperty()
+  @IsNotEmpty(validationOptionsMsg('isForcePushed cannot be empty'))
+    isForcePushed: boolean;
 }
 
 export class PersonalDataDTO {
   @ApiProperty()
-  @MinLength(2, validationOptionsMsg('First name is too short (min: 2)'))
-  @MaxLength(40, validationOptionsMsg('First name is too long (max: 40)'))
   @IsNotEmpty(validationOptionsMsg('First name can not be empty'))
-  @Matches(
-    createRegex(UKR_REGEX, ADMISSION_UKRSPEC_REGEX),
-    validationOptionsMsg('First name is incorrect (A-Я(укр.)\\-` )'),
-  )
     firstName: string;
 
   @ApiPropertyOptional()
-  @MinLength(2, validationOptionsMsg('Middle name is too short (min: 2)'))
-  @MaxLength(40, validationOptionsMsg('Middle name is too long (max: 40)'))
-  @Matches(
-    createRegex(UKR_REGEX, ADMISSION_UKRSPEC_REGEX),
-    validationOptionsMsg('Middle name is incorrect (A-Я(укр.)\\-` )'),
-  )
   @IsOptional()
     middleName?: string;
 
   @ApiProperty()
-  @MinLength(2, validationOptionsMsg('Last name is too short (min: 2)'))
-  @MaxLength(40, validationOptionsMsg('Last name is too long (max: 40)'))
   @IsNotEmpty(validationOptionsMsg('Last name can not be empty'))
-  @Matches(
-    createRegex(UKR_REGEX, ADMISSION_UKRSPEC_REGEX),
-    validationOptionsMsg('Last name is incorrect (A-Я(укр.)\\-` )'),
-  )
     lastName: string;
 
   @ApiPropertyOptional()
@@ -117,8 +84,7 @@ export class PersonalDataDTO {
     phoneNumber: string;
 
   @ApiProperty()
-  @IsEmail({}, validationOptionsMsg('Email is not an email'))
-  @IsNotEmpty(validationOptionsMsg('Email is empty'))
+  @IsNotEmpty(validationOptionsMsg('Email cannot be empty'))
     email: string;
 }
 

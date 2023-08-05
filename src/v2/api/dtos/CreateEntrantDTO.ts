@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsOptional } from 'class-validator';
+import { PaymentTypeParam, StudyFormParam, StudyTypeParam } from './StudyContractParams';
 
 export class CreateEntrantDTO {
   @IsOptional()
@@ -21,6 +22,15 @@ export class CreateEntrantDTO {
 
   @IsNotEmpty()
     specialty: string;
+
+  @IsNotEmpty()
+    studyType: StudyTypeParam;
+
+  @IsNotEmpty()
+    studyForm: StudyFormParam;
+
+  @IsOptional()
+    paymentType: PaymentTypeParam;
 
   @IsOptional()
     phone: string;
