@@ -17,25 +17,25 @@ export class EntrantRepository {
   };
 
   constructor (
-    private readonly prismaService: PrismaService,
+    private readonly prisma: PrismaService,
   ) {}
 
   find (where: Prisma.EntrantWhereInput) {
-    return this.prismaService.entrant.findFirst({
+    return this.prisma.entrant.findFirst({
       where,
       include: this.include,
     });
   }
 
   create (data: Prisma.EntrantUncheckedCreateInput) {
-    return this.prismaService.entrant.create({
+    return this.prisma.entrant.create({
       data,
       include: this.include,
     });
   }
 
   updateById (id: string, data: Prisma.EntrantUncheckedUpdateInput) {
-    return this.prismaService.entrant.update({
+    return this.prisma.entrant.update({
       where: {
         id,
       },
@@ -50,5 +50,13 @@ export class EntrantRepository {
       entrant = await this.create(data);
     }
     return entrant;
+  }
+
+  async deleteById (id: string) {
+    return this.prisma.entrant.delete({
+      where: {
+        id,
+      },
+    });
   }
 }

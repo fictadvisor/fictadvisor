@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch, Post, Query } from '@nestjs/common';
 import { CreateContractDTO } from '../dtos/CreateContractDTO';
 import { EntrantService } from '../services/EntrantService';
 import { EntrantMapper } from '../../mappers/EntrantMapper';
@@ -12,6 +12,7 @@ import {
 import { EntrantWithContractResponse } from '../responses/EntrantWithContractResponse';
 import { FullNameDTO } from '../dtos/FullNameDTO';
 import { EntrantWithPriorityResponse } from '../responses/EntrantWithPriorityResponse';
+import { DeleteEntrantQueryDTO } from '../dtos/DeleteEntrantQueryDTO';
 
 @ApiTags('Entrants')
 @Controller({
@@ -156,5 +157,45 @@ export class EntrantController {
     @Body() body: FullNameDTO,
   ) {
     await this.entrantService.approvePriority(body);
+  }
+
+  @Access('admission.delete')
+  @ApiBearerAuth()
+  @Delete()
+  @ApiOkResponse()
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidBodyException:
+      First name is too short (min: 2)
+      First name is too long (max: 40)
+      First name can not be empty
+      First name is incorrect (A-Я(укр.)\\-\` )
+      Middle name is too short (min: 2)
+      Middle name is too long (max: 40)
+      Middle name is incorrect (A-Я(укр.)\\-\` )
+      Last name is too short (min: 2)
+      Last name is too long (max: 40)
+      Last name can not be empty
+      Last name is incorrect (A-Я(укр.)\\-\` ))
+      Action priority must be an enum
+      Action cannot be empty
+      
+    DataNotFoundException:
+      Data were not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  async deleteEntrant (
+    @Query() query: DeleteEntrantQueryDTO,
+  ) {
+    await this.entrantService.deleteEntrantData(query);
   }
 }

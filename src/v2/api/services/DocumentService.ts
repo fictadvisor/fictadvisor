@@ -97,7 +97,7 @@ export class DocumentService {
         create: entrant,
       },
       representativeData: {
-        create: data.representative.firstName
+        create: data.representative?.firstName
           ? data.representative
           : undefined,
       },

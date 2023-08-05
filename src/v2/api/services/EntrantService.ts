@@ -7,6 +7,7 @@ import { DataNotFoundException } from '../../utils/exceptions/DataNotFoundExcept
 import { PriorityState } from '@prisma/client';
 import { AdmissionAPI } from '../../telegram/AdmissionAPI';
 import { EntrantMapper } from '../../mappers/EntrantMapper';
+import { DeleteEntrantQueryDTO, EntrantActions } from '../dtos/DeleteEntrantQueryDTO';
 
 @Injectable()
 export class EntrantService {
@@ -57,5 +58,29 @@ export class EntrantService {
         },
       },
     });
+  }
+
+  async deleteEntrantData ({ action, ...data }: DeleteEntrantQueryDTO) {
+    const entrant = await this.entrantRepository.find(data);
+    if (!entrant) throw new DataNotFoundException();
+
+    if (action === EntrantActions.CONTRACT) {
+      if (!entrant.entrantData) throw new DataNotFoundException();
+
+      await this.entrantRepository.updateById(entrant.id, {
+        entrantData: { delete: true },
+        representativeData: { delete: !!entrant.representativeData },
+      });
+
+    } else if (action === EntrantActions.PRIORITY) {
+      if (!entrant.priority) throw new DataNotFoundException();
+
+      await this.entrantRepository.updateById(entrant.id, {
+        priority: { delete: true },
+      });
+
+    } else {
+      await this.entrantRepository.deleteById(entrant.id);
+    }
   }
 }
