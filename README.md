@@ -104,8 +104,3 @@ Distributed under the MIT License. See `LICENSE` for more information.
 Feedback - [https://t.me/fict_robot](https://t.me/fict_robot)
 
 Project - [https://github.com/fictadvisor](https://github.com/fictadvisor)
-
-## Acknowledgements
-* [react-query](https://github.com/tannerlinsley/react-query)
-* [normalize.css](https://necolas.github.io/normalize.css/)
-* [readme-template](https://github.com/othneildrew/Best-README-Template/blob/master/README.md)
