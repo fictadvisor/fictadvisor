@@ -229,7 +229,7 @@ const PriorityPage: FC = () => {
             <Button
               text="Підтвердити вибір"
               type="submit"
-              disabled={!isValid}
+              // disabled={!isValid}
             />
           </Box>
         </Form>
