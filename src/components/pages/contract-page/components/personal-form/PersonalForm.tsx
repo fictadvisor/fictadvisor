@@ -40,10 +40,9 @@ export const PersonalForm: FC = () => {
           `Ви успішно надіслали контракт, перевірте пошту ${data.entrant.email}`,
         );
       } catch (error) {
-        console.log(error);
         if (
-          (error as AxiosError).status === 500 ||
-          (error as AxiosError).status === 403
+          (error as { response: AxiosError }).response.status === 500 ||
+          (error as { response: AxiosError }).response.status === 403
         ) {
           toast.error(
             `Внутрішня помилка сервера`,
