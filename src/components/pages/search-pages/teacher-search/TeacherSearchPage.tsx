@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import { Box } from '@mui/material';
 
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
-import Button, {
+import Button from '@/components/common/ui/button-mui/Button';
+import {
   ButtonColor,
   ButtonVariant,
-} from '@/components/common/ui/button/Button';
+} from '@/components/common/ui/button-mui/types';
 import Progress from '@/components/common/ui/progress-mui';
 import { SearchFormProps } from '@/components/pages/search-pages/search-form/SearchForm';
 import { SearchFormFields } from '@/components/pages/search-pages/search-form/types';
@@ -21,8 +23,7 @@ import { TeacherInitialValues } from '../search-form/constants';
 import SearchForm from '../search-form/SearchForm';
 
 import { TeacherSearchList } from './components/TeacherSearchList';
-
-import styles from './TeacherSearchPage.module.scss';
+import * as styles from './TeacherSearchPage.styles';
 
 export const TeacherSearchPage = () => {
   const initialValues = localStorage.getItem('teachersForm')
@@ -48,9 +49,8 @@ export const TeacherSearchPage = () => {
   }, [queryObj, curPage, refetch]);
 
   return (
-    <div className={styles['layout']}>
-      {/*//TODO move inline styles when refactor*/}
-      <Breadcrumbs items={breadcrumbs} sx={{ margin: '16px 0px 16px 0px' }} />
+    <Box sx={styles.layout}>
+      <Breadcrumbs items={breadcrumbs} sx={styles.breadcrumbs} />
       <SearchForm
         searchPlaceholder="Оберіть викладача"
         filterDropDownOptions={filterOptions}
@@ -58,25 +58,23 @@ export const TeacherSearchPage = () => {
         initialValues={initialValues}
         localStorageName={localStorageName}
       />
-      {data && (
-        <TeacherSearchList teachers={data.teachers} className="teacher" />
-      )}
+      {data && <TeacherSearchList teachers={data.teachers} />}
       {isLoading ||
         (isFetching && (
-          <div className={styles['page-loader']}>
+          <Box sx={styles.pageLoader}>
             <Progress />
-          </div>
+          </Box>
         ))}
       {data?.teachers.length === (curPage + 1) * PAGE_SIZE && (
         <Button
-          className={styles['load-btn']}
+          sx={styles.loadBtn}
           text="Завантажити ще"
           variant={ButtonVariant.FILLED}
           color={ButtonColor.SECONDARY}
           onClick={() => setCurPage(pr => pr + 1)}
         />
       )}
-    </div>
+    </Box>
   );
 };
 

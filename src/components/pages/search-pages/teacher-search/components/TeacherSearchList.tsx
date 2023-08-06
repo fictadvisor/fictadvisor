@@ -1,11 +1,12 @@
 import { FC, HTMLProps, useEffect } from 'react';
+import { Box } from '@mui/material';
 import Link from 'next/link';
 
 import { TeacherCard } from '@/components/common/ui/cards/teacher-card';
 import useToast from '@/hooks/use-toast';
 import { GetTeachersResponse } from '@/lib/api/teacher/types/GetTeachersResponse';
 
-import styles from './TeacherSearchList.module.scss';
+import * as styles from './TeacherSearchList.styles';
 
 interface TeacherSearchListProps
   extends HTMLProps<HTMLDivElement>,
@@ -13,10 +14,7 @@ interface TeacherSearchListProps
 
 const TOAST_TIMER = 4000;
 
-export const TeacherSearchList: FC<TeacherSearchListProps> = ({
-  teachers,
-  className,
-}) => {
+export const TeacherSearchList: FC<TeacherSearchListProps> = ({ teachers }) => {
   const toast = useToast();
 
   useEffect(() => {
@@ -25,7 +23,7 @@ export const TeacherSearchList: FC<TeacherSearchListProps> = ({
     }
   }, [teachers.length]);
   return (
-    <ul className={styles[`${className}-search-list`]}>
+    <Box sx={styles.teacherSearchList}>
       {teachers?.map((teacher, index) => (
         <Link key={index} href={`/teachers/${teacher.id}`}>
           <TeacherCard
@@ -36,6 +34,6 @@ export const TeacherSearchList: FC<TeacherSearchListProps> = ({
           />
         </Link>
       ))}
-    </ul>
+    </Box>
   );
 };
