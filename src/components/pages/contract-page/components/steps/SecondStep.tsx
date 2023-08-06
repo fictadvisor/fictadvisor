@@ -43,8 +43,6 @@ export const SecondStep: FC<SecondStepProps> = ({
     }
   });
 
-  console.log('isForcePushed', isForcePushed);
-
   return (
     <Formik
       initialValues={data}

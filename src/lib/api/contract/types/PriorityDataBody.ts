@@ -16,4 +16,6 @@ export interface PriorityDataBody {
 export interface ExtendedPriorityDataBody extends PriorityDataBody {
   secretNumber: string;
   noMiddleName: boolean;
+  isForcePushed: boolean;
+  forcePushedNumber: string;
 }

@@ -68,7 +68,6 @@ export const PersonalForm: FC = () => {
     <FirstStep
       onNextStep={handleNextStep}
       data={data}
-      isForcePushed={isForcePushed}
       setIsForcePushed={setIsForcePushed}
       key={1}
     />,

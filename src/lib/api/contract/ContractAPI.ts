@@ -44,8 +44,6 @@ class ContractAPI {
   }
 
   async deleteEntrant(body: DeleteEntrantBody) {
-    console.log(body);
-
     const { data } = await client.delete('/entrants', {
       params: body,
       ...getAuthorizationHeader(),

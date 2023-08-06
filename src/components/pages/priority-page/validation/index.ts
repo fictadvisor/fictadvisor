@@ -2,6 +2,7 @@ import * as yup from 'yup';
 import { TestConfig } from 'yup';
 
 const secretString = /^4261$/;
+const forcePushedRegexp = /^3259$/;
 
 const priorityFieldTestOptions: TestConfig = {
   name: 'uniqueOption',
@@ -15,6 +16,26 @@ const priorityFieldTestOptions: TestConfig = {
   message: 'Кожен пріоритет повинен бути унікальним',
 };
 
+export const optionalValidationSchema = yup.object().shape({
+  isForcePushed: yup.boolean(),
+  forcePushedNumber: yup.string().when('isForcePushed', {
+    is: true,
+    then: schema =>
+      schema
+        .required("Обов'язкове поле")
+        .matches(forcePushedRegexp, 'Неправильний код'),
+    otherwise: schema => schema.optional(),
+  }),
+  secretNumber: yup
+    .string()
+    .when('isToAdmission', ([isToAdmission], schema) => {
+      return isToAdmission
+        ? schema
+            .matches(secretString, 'Неправильний код')
+            .required('Зверніться до оператора')
+        : schema.optional();
+    }),
+});
 export const validationSchema = yup.object().shape({
   noMiddleName: yup.boolean(),
   lastName: yup
@@ -59,7 +80,9 @@ export const validationSchema = yup.object().shape({
     .matches(
       /(0[1-9]|[12]\d|3[01])/,
       'Має бути номер дня, одиничний починається з 0',
-    ),
+    )
+    .min(2, '2 цифри')
+    .max(2, '2 цифри'),
   priorities: yup.object().shape({
     1: yup.string().required(`Обов'язкове поле`).test(priorityFieldTestOptions),
     2: yup.string().required(`Обов'язкове поле`).test(priorityFieldTestOptions),
@@ -84,4 +107,5 @@ export const validationSchema = yup.object().shape({
             .required('Зверніться до оператора')
         : schema.optional();
     }),
+  isForcePushed: yup.boolean(),
 });

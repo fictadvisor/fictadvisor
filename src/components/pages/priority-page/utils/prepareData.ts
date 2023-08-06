@@ -10,6 +10,10 @@ export const prepareData = (
   delete (intialData as PartialBy<ExtendedPriorityDataBody, 'secretNumber'>)
     .secretNumber;
 
+  delete (
+    intialData as PartialBy<ExtendedPriorityDataBody, 'forcePushedNumber'>
+  ).forcePushedNumber;
+
   delete (intialData as PartialBy<ExtendedPriorityDataBody, 'noMiddleName'>)
     .noMiddleName;
 

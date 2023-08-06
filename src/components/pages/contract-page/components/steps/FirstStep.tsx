@@ -20,12 +20,10 @@ export interface FirstStepProps {
   onNextStep: (data: ExtendedContractBody) => void;
   data: ExtendedContractBody;
   setIsForcePushed: React.Dispatch<React.SetStateAction<boolean>>;
-  isForcePushed: boolean;
 }
 export const FirstStep: FC<FirstStepProps> = ({
   onNextStep,
   data,
-  isForcePushed,
   setIsForcePushed,
 }) => {
   const handleSubmit = (values: ExtendedContractBody) => {
@@ -41,7 +39,7 @@ export const FirstStep: FC<FirstStepProps> = ({
   });
 
   const handleCheck = () => {
-    setIsForcePushed(pr => !pr);
+    setIsForcePushed(!form?.current?.values.meta.isForcePushed);
   };
 
   return (

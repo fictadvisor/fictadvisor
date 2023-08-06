@@ -44,8 +44,6 @@ export const ThirdStep: FC<ThirdStepProps> = ({
     }
   });
 
-  console.log('isForcePushed', isForcePushed);
-
   return (
     <Formik
       innerRef={form}

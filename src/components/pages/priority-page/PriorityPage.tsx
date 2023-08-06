@@ -21,7 +21,10 @@ import {
   getLocalStorage,
   saveLocalStorage,
 } from '@/components/pages/priority-page/utils/localStorage';
-import { validationSchema } from '@/components/pages/priority-page/validation';
+import {
+  optionalValidationSchema,
+  validationSchema,
+} from '@/components/pages/priority-page/validation';
 import useTabClose from '@/hooks/use-tab-close';
 import useToast from '@/hooks/use-toast';
 import ContractAPI from '@/lib/api/contract/ContractAPI';
@@ -32,6 +35,10 @@ import { SuccessScreen } from './SuccessScreen';
 const PriorityPage: FC = () => {
   const [submited, setSubmited] = useState(false);
   const form = useRef<FormikProps<ExtendedPriorityDataBody>>(null);
+  const [isForcePushed, setIsForcePushed] = useState(
+    getLocalStorage()?.isForcePushed,
+  );
+
   const toast = useToast();
 
   const handleFormSubmit = async (values: ExtendedPriorityDataBody) => {
@@ -61,7 +68,9 @@ const PriorityPage: FC = () => {
     <Formik
       innerRef={form}
       initialValues={getLocalStorage() || initialValues}
-      validationSchema={validationSchema}
+      validationSchema={
+        isForcePushed ? optionalValidationSchema : validationSchema
+      }
       onSubmit={handleFormSubmit}
     >
       {({ values, isValid }) => (
@@ -199,16 +208,24 @@ const PriorityPage: FC = () => {
               </Box>
             )}
 
-            {/*{values?.helper?.isAdult && values?.meta?.isForcePushed && (*/}
-            {/*  <Box sx={stylesMui.item}>*/}
-            {/*    <Input*/}
-            {/*      name="helper.forcePushedNumber"*/}
-            {/*      label="Код форс пушу"*/}
-            {/*      placeholder="0000"*/}
-            {/*    />*/}
-            {/*  </Box>*/}
-            {/*)}*/}
-
+            <Box sx={stylesMui.item}>
+              <CheckBox
+                name="isForcePushed"
+                label="Надіслати примусово (пропустіть цю опцію)"
+                onClick={() =>
+                  setIsForcePushed(!form?.current?.values.isForcePushed)
+                }
+              />
+            </Box>
+            {values?.isForcePushed && (
+              <Box sx={stylesMui.item}>
+                <Input
+                  name="forcePushedNumber"
+                  label="Код форс пушу"
+                  placeholder="0000"
+                />
+              </Box>
+            )}
             <Button
               text="Підтвердити вибір"
               type="submit"
