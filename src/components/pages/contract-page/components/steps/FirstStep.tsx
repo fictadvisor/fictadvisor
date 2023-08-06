@@ -130,7 +130,7 @@ export const FirstStep: FC<FirstStepProps> = ({
               <Box sx={stylesMui.item}>
                 <CheckBox
                   name="meta.isForcePushed"
-                  label="Надіслати примусово (пропустіть цю опцію)"
+                  label="Надіслати примусово (НЕ НАТИСКАТИ)"
                   onClick={handleCheck}
                 />
               </Box>

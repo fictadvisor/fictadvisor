@@ -218,7 +218,7 @@ const PriorityPage: FC = () => {
             <Box sx={stylesMui.item}>
               <CheckBox
                 name="isForcePushed"
-                label="Надіслати примусово (пропустіть цю опцію)"
+                label="Надіслати примусово (НЕ НАТИСКАТИ)"
                 onClick={() =>
                   setIsForcePushed(!form?.current?.values.isForcePushed)
                 }
