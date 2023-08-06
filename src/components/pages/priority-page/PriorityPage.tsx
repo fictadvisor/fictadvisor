@@ -46,10 +46,18 @@ const PriorityPage: FC = () => {
       await ContractAPI.createPriority(prepareData({ ...values }));
       setSubmited(true);
     } catch (error) {
-      if ((error as AxiosError).status === 500) {
-        toast.error(`Внутрішня помилка сервера`);
+      console.log(error);
+      if (
+        (error as AxiosError).status === 500 ||
+        (error as AxiosError).status === 403
+      ) {
+        toast.error(
+          `Внутрішня помилка сервера`,
+          'Зверніться до оператора або в чат абітурієнтів',
+        );
         return;
       }
+
       toast.error(`Трапилась помилка, перевірте усі дані та спробуйте ще раз`);
     }
   };
