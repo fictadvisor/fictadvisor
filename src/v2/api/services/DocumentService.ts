@@ -69,7 +69,8 @@ export class DocumentService {
     await this.emailService.sendWithAttachments({
       to: emails,
       subject: `Договори щодо вступу | ${data.entrant.lastName} ${data.entrant.firstName}`,
-      message: 'Документи вкладені у цей лист.',
+      message: 'Договір НЕ ТРЕБА друкувати чи доповнювати іншою інформацією. Якщо подаєте дистанційно, завантажте документ та підпишіть КЕПом вступника та законного представника, якщо вступнику немає 18 років. Якщо виникають запитання, звертайтеся в чат в телеграмі:',
+      link: 'https://t.me/abit_fict',
       attachments,
     });
   }
@@ -218,7 +219,8 @@ export class DocumentService {
     await this.emailService.sendWithAttachments({
       to: emails,
       subject: `Пріоритетка | ${data.lastName} ${data.firstName}`,
-      message: 'Документ вкладений у цей лист.',
+      message: 'Пріоритетку НЕ ТРЕБА друкувати чи доповнювати іншою інформацією. Якщо подаєте дистанційно, завантажте документ та підпишіть КЕПом вступника. Якщо виникають запитання, звертайтеся в чат в телеграмі:',
+      link: 'https://t.me/abit_fict',
       attachments: [{ name: 'Пріоритетка.docx', buffer: priority, contentType: DOCX }],
     });
   }
