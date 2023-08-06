@@ -8,13 +8,13 @@ import theme from '@/styles/theme';
 
 interface ActionsProps {
   onPrevStep?: () => void;
-  isFormValid: boolean;
+  isFormValid?: boolean;
   first?: boolean;
   last?: boolean;
 }
 export const Actions: FC<ActionsProps> = ({
   onPrevStep,
-  isFormValid,
+  isFormValid = true,
   first = false,
   last = false,
 }) => {

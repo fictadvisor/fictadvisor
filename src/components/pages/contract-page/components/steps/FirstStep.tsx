@@ -50,9 +50,9 @@ export const FirstStep: FC<FirstStepProps> = ({
       onSubmit={handleSubmit}
       validationSchema={metaValidationSchema}
     >
-      {({ values, isValid, touched }) => (
+      {({ values }) => (
         <Form>
-          <Stack gap={'20px'}>
+          <Stack gap={'40px'}>
             <Box sx={stylesMui.item}>
               <Typography variant="h6Bold">
                 Форма навчання (бюджет/контракт)
@@ -136,7 +136,7 @@ export const FirstStep: FC<FirstStepProps> = ({
               </Box>
             </Box>
 
-            <Actions isFormValid={touched && isValid} first />
+            <Actions first />
           </Stack>
         </Form>
       )}

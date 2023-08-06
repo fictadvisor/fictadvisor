@@ -55,7 +55,7 @@ export const ThirdStep: FC<ThirdStepProps> = ({
           : representativeValidation
       }
     >
-      {({ values, isValid, touched, setValues }) => (
+      {({ values, setValues }) => (
         <Form>
           <Typography variant="h4Bold">Інформація про представника</Typography>
           <Box sx={stylesMui.item}>
@@ -269,7 +269,7 @@ export const ThirdStep: FC<ThirdStepProps> = ({
               if (form.current) onPrevStep(form.current.values);
             }}
             last={!values?.helper?.isAdult}
-            isFormValid={touched && isValid}
+            // isFormValid={touched && isValid}
           />
         </Form>
       )}

@@ -54,7 +54,7 @@ export const SecondStep: FC<SecondStepProps> = ({
       }
       innerRef={form}
     >
-      {({ values, isValid, touched, setValues }) => (
+      {({ values, setValues }) => (
         <Form>
           <Typography variant="h4Bold">Інформація про вступника</Typography>
           <Box sx={stylesMui.item}>
@@ -263,7 +263,7 @@ export const SecondStep: FC<SecondStepProps> = ({
             onPrevStep={() => {
               if (form.current) onPrevStep(form.current.values);
             }}
-            isFormValid={touched && isValid}
+            // isFormValid={touched && isValid}
             last={values?.helper?.isAdult}
           />
         </Form>
