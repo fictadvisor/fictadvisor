@@ -13,7 +13,7 @@ import * as styles from '@/components/pages/priority-approve-page/PriorityApprov
 import { checkError } from '@/components/pages/priority-approve-page/utils/checkError';
 import useToast from '@/hooks/use-toast';
 import contractAPI from '@/lib/api/contract/ContractAPI';
-import { EntrantsPriorityBody } from '@/lib/api/contract/types/ContractBody';
+import { EntrantsPriorityBody } from '@/lib/api/contract/types/EntrantsPriorityBody';
 
 const TOAST_TIMER = 4000;
 

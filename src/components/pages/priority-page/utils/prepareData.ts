@@ -1,17 +1,20 @@
 import {
-  ExtendedPriorityData,
-  PartialBy,
-  PriorityData,
-} from '@/lib/api/contract/types/ContractBody';
-export const prepareData = (intialData: ExtendedPriorityData): PriorityData => {
-  delete (intialData as PartialBy<ExtendedPriorityData, 'secretNumber'>)
+  ExtendedPriorityDataBody,
+  PriorityDataBody,
+} from '@/lib/api/contract/types/PriorityDataBody';
+import { PartialBy } from '@/lib/api/contract/types/utils';
+
+export const prepareData = (
+  intialData: ExtendedPriorityDataBody,
+): PriorityDataBody => {
+  delete (intialData as PartialBy<ExtendedPriorityDataBody, 'secretNumber'>)
     .secretNumber;
 
-  delete (intialData as PartialBy<ExtendedPriorityData, 'noMiddleName'>)
+  delete (intialData as PartialBy<ExtendedPriorityDataBody, 'noMiddleName'>)
     .noMiddleName;
 
   if (intialData.middleName.length === 0)
-    delete (intialData as PartialBy<ExtendedPriorityData, 'middleName'>)
+    delete (intialData as PartialBy<ExtendedPriorityDataBody, 'middleName'>)
       .middleName;
 
   if (intialData.specialty === '121') intialData.priorities['3'] = undefined;
@@ -23,7 +26,7 @@ export const prepareData = (intialData: ExtendedPriorityData): PriorityData => {
   return data;
 };
 
-const replaceApostrophes = (initialData: PriorityData) => {
+const replaceApostrophes = (initialData: PriorityDataBody) => {
   return JSON.parse(JSON.stringify(initialData).replaceAll(/[`'’‘“”*]/g, '`'));
 };
 

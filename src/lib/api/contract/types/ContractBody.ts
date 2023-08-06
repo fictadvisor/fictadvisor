@@ -1,4 +1,4 @@
-export type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
+import { PartialBy } from './utils';
 
 interface PersonalData {
   firstName: string;
@@ -48,48 +48,6 @@ export interface ExtendedContractBody {
   representative: PartialBy<PersonalData, 'email'>;
   meta: MetaContract;
   helper: HelperData;
-}
-
-interface PersonalAdminData {
-  firstName: string;
-  middleName: string;
-  lastName: string;
-}
-
-interface ContractAdminData {
-  number: string;
-  date: string;
-}
-
-export interface AdminContractData {
-  entrant: PersonalAdminData;
-  contract: ContractAdminData;
-}
-
-export interface EntrantsPriorityBody {
-  firstName: string;
-  middleName: string;
-  lastName: string;
-}
-
-export interface PriorityData {
-  firstName: string;
-  middleName: string;
-  lastName: string;
-  specialty: string;
-  email: string;
-  day: string;
-  isToAdmission: boolean;
-  priorities: {
-    1: string;
-    2: string;
-    3?: string;
-  };
-}
-
-export interface ExtendedPriorityData extends PriorityData {
-  secretNumber: string;
-  noMiddleName: boolean;
 }
 
 export type ContractBody = Omit<ExtendedContractBody, 'helper'>;

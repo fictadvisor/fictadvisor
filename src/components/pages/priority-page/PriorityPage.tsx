@@ -25,16 +25,16 @@ import { validationSchema } from '@/components/pages/priority-page/validation';
 import useTabClose from '@/hooks/use-tab-close';
 import useToast from '@/hooks/use-toast';
 import ContractAPI from '@/lib/api/contract/ContractAPI';
-import { ExtendedPriorityData } from '@/lib/api/contract/types/ContractBody';
+import { ExtendedPriorityDataBody } from '@/lib/api/contract/types/PriorityDataBody';
 
 import { prepareData } from './utils/prepareData';
 import { SuccessScreen } from './SuccessScreen';
 const PriorityPage: FC = () => {
   const [submited, setSubmited] = useState(false);
-  const form = useRef<FormikProps<ExtendedPriorityData>>(null);
+  const form = useRef<FormikProps<ExtendedPriorityDataBody>>(null);
   const toast = useToast();
 
-  const handleFormSubmit = async (values: ExtendedPriorityData) => {
+  const handleFormSubmit = async (values: ExtendedPriorityDataBody) => {
     try {
       await ContractAPI.createPriority(prepareData({ ...values }));
       setSubmited(true);
@@ -198,6 +198,17 @@ const PriorityPage: FC = () => {
                 />
               </Box>
             )}
+
+            {/*{values?.helper?.isAdult && values?.meta?.isForcePushed && (*/}
+            {/*  <Box sx={stylesMui.item}>*/}
+            {/*    <Input*/}
+            {/*      name="helper.forcePushedNumber"*/}
+            {/*      label="Код форс пушу"*/}
+            {/*      placeholder="0000"*/}
+            {/*    />*/}
+            {/*  </Box>*/}
+            {/*)}*/}
+
             <Button
               text="Підтвердити вибір"
               type="submit"

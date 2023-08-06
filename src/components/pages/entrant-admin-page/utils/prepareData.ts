@@ -1,5 +1,5 @@
-import { PartialBy } from '@/lib/api/contract/types/ContractBody';
 import { DeleteEntrantBody } from '@/lib/api/contract/types/DeleteEntrantBody';
+import { PartialBy } from '@/lib/api/contract/types/utils';
 export const prepareData = (
   intialData: DeleteEntrantBody,
 ): DeleteEntrantBody => {

@@ -217,7 +217,7 @@ export const entrantOptionalValidationSchema = yup.object().shape({
       .optional()
       .test(
         'validForcePushedNumber',
-        'Зверніться до оператора',
+        'Неправильний код',
         function (value, context) {
           const data = (
             context.from as { schema: never; value: ExtendedContractBody }[]

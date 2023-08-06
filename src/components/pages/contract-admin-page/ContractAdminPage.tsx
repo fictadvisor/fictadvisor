@@ -12,7 +12,7 @@ import { checkError } from '@/components/pages/contract-admin-page/utils';
 import { validationSchema } from '@/components/pages/contract-admin-page/validation';
 import useToast from '@/hooks/use-toast';
 import contractAPI from '@/lib/api/contract/ContractAPI';
-import { AdminContractData } from '@/lib/api/contract/types/ContractBody';
+import { AdminContractBody } from '@/lib/api/contract/types/AdminContractBody';
 
 import { initialValues } from './constants/index';
 import * as styles from './ContractAdminPage.styles';
@@ -22,8 +22,8 @@ const TOAST_TIMER = 4000;
 const ContractAdminPage = () => {
   const toast = useToast();
   const handleSubmit = async (
-    values: AdminContractData,
-    { resetForm }: FormikHelpers<AdminContractData>,
+    values: AdminContractBody,
+    { resetForm }: FormikHelpers<AdminContractBody>,
   ) => {
     try {
       await contractAPI.createAdminContract(values);

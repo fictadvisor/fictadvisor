@@ -2,9 +2,8 @@ import { kyiv } from '@/components/pages/contract-page/constants';
 import {
   ContractBody,
   ExtendedContractBody,
-  PartialBy,
 } from '@/lib/api/contract/types/ContractBody';
-
+import { PartialBy } from '@/lib/api/contract/types/utils';
 export const prepareData = (
   initialData: ExtendedContractBody,
 ): ContractBody => {
