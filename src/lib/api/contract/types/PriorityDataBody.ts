@@ -1,7 +1,6 @@
-export interface PriorityDataBody {
-  firstName: string;
-  middleName: string;
-  lastName: string;
+import { Fullname } from '@/types/contract';
+
+export interface PriorityDataBody extends Fullname {
   specialty: string;
   email: string;
   day: string;

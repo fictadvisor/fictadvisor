@@ -1,9 +1,9 @@
 import { useRouter } from 'next/router';
 
 import PageLayout from '@/components/common/layout/page-layout';
-import EntrantAdminPage from '@/components/pages/delete-entrant-admin-page';
+import EntrantAdminPage from '@/components/pages/entrant-admin-page/EntrantAdminPage';
 import useAuthentication from '@/hooks/use-authentication';
-const EntrantAdmin = () => {
+const DeleteEntrantAdmin = () => {
   const { isLoggedIn } = useAuthentication();
   const router = useRouter();
 
@@ -15,4 +15,4 @@ const EntrantAdmin = () => {
   );
 };
 
-export default EntrantAdmin;
+export default DeleteEntrantAdmin;

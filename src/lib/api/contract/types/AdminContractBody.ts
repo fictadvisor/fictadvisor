@@ -1,8 +1,4 @@
-interface PersonalAdminBody {
-  firstName: string;
-  middleName: string;
-  lastName: string;
-}
+import { Fullname } from '@/types/contract';
 
 interface ContractAdminBody {
   number: string;
@@ -10,6 +6,6 @@ interface ContractAdminBody {
 }
 
 export interface AdminContractBody {
-  entrant: PersonalAdminBody;
+  entrant: Fullname;
   contract: ContractAdminBody;
 }

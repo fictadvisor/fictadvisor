@@ -17,7 +17,7 @@ export const prepareData = (
   delete (intialData as PartialBy<ExtendedPriorityDataBody, 'noMiddleName'>)
     .noMiddleName;
 
-  if (intialData.middleName.length === 0)
+  if (intialData?.middleName?.length === 0)
     delete (intialData as PartialBy<ExtendedPriorityDataBody, 'middleName'>)
       .middleName;
 

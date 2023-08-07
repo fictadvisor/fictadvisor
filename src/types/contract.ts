@@ -12,3 +12,9 @@ export enum PaymentTypeParam {
   EVERY_YEAR = 'Щороку',
   EVERY_SEMESTER = 'Щосеместрово',
 }
+
+export interface Fullname {
+  firstName: string;
+  middleName?: string;
+  lastName: string;
+}

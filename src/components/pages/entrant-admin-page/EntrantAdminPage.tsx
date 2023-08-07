@@ -1,95 +1,44 @@
-import React, { FC, useRef } from 'react';
-import { Box } from '@mui/material';
-import { AxiosError } from 'axios';
-import { Form, Formik, FormikProps } from 'formik';
+import React, { useState } from 'react';
+import { Box, Divider } from '@mui/material';
 
-import Button from '@/components/common/ui/button-mui';
-import Divider from '@/components/common/ui/divider';
-import { DividerTextAlign } from '@/components/common/ui/divider/types';
-import { FieldSize } from '@/components/common/ui/form/common/types';
-import Input from '@/components/common/ui/form/input';
-import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown';
-import * as stylesMui from '@/components/pages/contract-page/ContractPage.styles';
-import {
-  EntrantActionsOptions,
-  initialValues,
-} from '@/components/pages/entrant-admin-page/constants';
-import {
-  getLocalStorage,
-  saveLocalStorage,
-} from '@/components/pages/entrant-admin-page/utils/localStorage';
-import { validationSchema } from '@/components/pages/entrant-admin-page/validation';
-import useTabClose from '@/hooks/use-tab-close';
-import useToast from '@/hooks/use-toast';
-import ContractAPI from '@/lib/api/contract/ContractAPI';
-import { DeleteEntrantBody } from '@/lib/api/contract/types/DeleteEntrantBody';
+import Breadcrumbs from '@/components/common/ui/breadcrumbs';
+import { ContractDetailsSection } from '@/components/pages/entrant-admin-page/components/ContractDetailsSection';
+import { ContractPersonalDetailsSection } from '@/components/pages/entrant-admin-page/components/ContractPersonalDetailsSection';
+import { PersonalDataSection } from '@/components/pages/entrant-admin-page/components/PersonalDataSection';
+import { PrioritiesSection } from '@/components/pages/entrant-admin-page/components/PrioritiesSection';
+import * as styles from '@/components/pages/entrant-admin-page/EntrantAdminPage.styles';
+import { EntrantFuIlResponse } from '@/lib/api/contract/types/EntrantFullResponse';
 
-import { prepareData } from './utils/prepareData';
-
-const EntrantAdminPage: FC = () => {
-  const form = useRef<FormikProps<DeleteEntrantBody>>(null);
-  const toast = useToast();
-
-  const handleFormSubmit = async (values: DeleteEntrantBody) => {
-    try {
-      await ContractAPI.deleteEntrant(prepareData(values));
-      toast.success(
-        `${values.action} у ${values.firstName} ${values.lastName} ${values.middleName} видалено`,
-      );
-    } catch (error) {
-      if ((error as AxiosError).status === 500) {
-        toast.error(`Якась чухня з сервером`);
-        return;
-      }
-      toast.error(`Свят, введи ти дані нормально!`);
-    }
-  };
-
-  useTabClose(() => {
-    if (form?.current?.values) {
-      saveLocalStorage(form?.current?.values);
-    }
-  });
+import EntrantSearchForm from './components/entrant-search-form/EntrantSearchForm';
+const EntrantAdminPage = () => {
+  const [entrantData, setEntrantData] = useState<EntrantFuIlResponse | null>(
+    null,
+  );
 
   return (
-    <Formik
-      innerRef={form}
-      initialValues={getLocalStorage() || initialValues}
-      validationSchema={validationSchema}
-      onSubmit={handleFormSubmit}
-    >
-      {({ isValid }) => (
-        <Form
-          style={{ gap: '40px', paddingTop: '24px', paddingBottom: '50px' }}
-        >
-          <Box sx={{ gap: '24px' }}>
-            <Divider
-              sx={{ marginBottom: '12px' }}
-              textAlign={DividerTextAlign.LEFT}
-              text="Дані про вступника"
-            />
-            <Input name="lastName" placeholder="Шевченко" label="Прізвище" />
-            <Input name="firstName" placeholder="Тарас" label="Ім'я" />
-            <Input
-              name="middleName"
-              placeholder={'Григорович'}
-              label={`По-батькові`}
-            />
+    <Box sx={styles.page}>
+      <Breadcrumbs
+        sx={styles.breadcrumbs}
+        items={[
+          { label: 'Головна', href: '/' },
+          { label: 'Менеджмент встуників', href: '/entrant-admin' },
+        ]}
+      />
+      {!entrantData && <EntrantSearchForm setEntrantData={setEntrantData} />}
+      {entrantData && (
+        <Box sx={styles.container}>
+          <Box sx={styles.leftBlock}>
+            <PersonalDataSection data={entrantData} />
+            <PrioritiesSection data={entrantData} />
+            <ContractDetailsSection data={entrantData} />
           </Box>
-          <Box sx={stylesMui.item}>
-            <FormikDropdown
-              options={EntrantActionsOptions}
-              name="action"
-              size={FieldSize.LARGE}
-              label="Вибрати дію"
-              placeholder="Вибрати дію"
-            />
+          <Divider orientation="vertical" flexItem sx={styles.divider} />
+          <Box sx={styles.rightBlock}>
+            <ContractPersonalDetailsSection data={entrantData} />
           </Box>
-
-          <Button type={'submit'} text="Видалити" disabled={!isValid} />
-        </Form>
+        </Box>
       )}
-    </Formik>
+    </Box>
   );
 };
 

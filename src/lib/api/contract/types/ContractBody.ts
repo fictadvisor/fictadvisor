@@ -1,9 +1,8 @@
+import { Fullname } from '@/types/contract';
+
 import { PartialBy } from './utils';
 
-interface PersonalData {
-  firstName: string;
-  middleName?: string;
-  lastName: string;
+export interface PersonalData extends Fullname {
   passportSeries?: string;
   passportNumber: string;
   passportInstitute: string;

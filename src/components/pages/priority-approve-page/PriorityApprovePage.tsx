@@ -13,7 +13,7 @@ import * as styles from '@/components/pages/priority-approve-page/PriorityApprov
 import { checkError } from '@/components/pages/priority-approve-page/utils/checkError';
 import useToast from '@/hooks/use-toast';
 import contractAPI from '@/lib/api/contract/ContractAPI';
-import { EntrantsPriorityBody } from '@/lib/api/contract/types/EntrantsPriorityBody';
+import { Fullname } from '@/types/contract';
 
 const TOAST_TIMER = 4000;
 
@@ -22,7 +22,7 @@ const MyComponent = () => {
   const [data, setData] = useState(expectedValues);
   const toast = useToast();
 
-  const handleChange = async (values: EntrantsPriorityBody) => {
+  const handleChange = async (values: Fullname) => {
     try {
       const request = await contractAPI.getEntrantPriority(values);
       setData({ ...request });

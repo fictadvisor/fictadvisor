@@ -7,12 +7,12 @@ import Divider from '@/components/common/ui/divider';
 import { DividerTextAlign } from '@/components/common/ui/divider/types';
 import { Input } from '@/components/common/ui/form';
 import { validationSchema } from '@/components/pages/priority-approve-page/validation';
-import { EntrantsPriorityBody } from '@/lib/api/contract/types/EntrantsPriorityBody';
+import { Fullname } from '@/types/contract';
 
 import * as styles from '../PriorityApprovePage.styles';
 
 interface EntrantPriorityFormProps {
-  submit: (values: EntrantsPriorityBody) => Promise<void>;
+  submit: (values: Fullname) => Promise<void>;
   initValues: {
     firstName: string;
     middleName: string;

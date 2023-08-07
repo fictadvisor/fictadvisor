@@ -46,12 +46,11 @@ export const item: SxProps<Theme> = {
   },
 };
 
-export const divider: SxProps<Theme> = {
-  marginBottom: '12px',
-};
-
 export const button: SxProps<Theme> = {
   width: '150px',
   height: '48px',
   borderRadius: '8px',
+};
+export const divider: SxProps<Theme> = {
+  marginBottom: '12px',
 };
