@@ -13,6 +13,7 @@ import { EntrantWithContractResponse } from '../responses/EntrantWithContractRes
 import { FullNameDTO } from '../dtos/FullNameDTO';
 import { EntrantWithPriorityResponse } from '../responses/EntrantWithPriorityResponse';
 import { DeleteEntrantQueryDTO } from '../dtos/DeleteEntrantQueryDTO';
+import { EntrantFullResponse } from '../responses/EntrantFullResponse';
 
 @ApiTags('Entrants')
 @Controller({
@@ -197,5 +198,46 @@ export class EntrantController {
     @Query() query: DeleteEntrantQueryDTO,
   ) {
     await this.entrantService.deleteEntrantData(query);
+  }
+
+  @Access('admission.get')
+  @ApiBearerAuth()
+  @Get()
+  @ApiOkResponse({
+    type: EntrantFullResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidBodyException:
+      First name is too short (min: 2)
+      First name is too long (max: 40)
+      First name can not be empty
+      First name is incorrect (A-Я(укр.)\\-\` )
+      Middle name is too short (min: 2)
+      Middle name is too long (max: 40)
+      Middle name is incorrect (A-Я(укр.)\\-\` )
+      Last name is too short (min: 2)
+      Last name is too long (max: 40)
+      Last name can not be empty
+      Last name is incorrect (A-Я(укр.)\\-\` ))
+      
+    DataNotFoundException:
+      Data were not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  async get (
+    @Query() query: FullNameDTO,
+  ) {
+    const entrant = await this.entrantService.get(query);
+    return this.entrantMapper.getFullEntrant(entrant);
   }
 }

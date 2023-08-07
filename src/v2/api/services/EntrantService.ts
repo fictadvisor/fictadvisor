@@ -103,4 +103,10 @@ export class EntrantService {
       await this.entrantRepository.deleteById(entrant.id);
     }
   }
+
+  async get (query: FullNameDTO) {
+    const entrant = await this.entrantRepository.find(query);
+    if (!entrant) throw new DataNotFoundException();
+    return entrant;
+  }
 }

@@ -2,7 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { EducationProgram, PriorityState } from '@prisma/client';
 import { EntrantResponse } from './EntrantResponse';
 
-class Priorities {
+export class Priorities {
   @ApiProperty({
     enum: EducationProgram,
   })
@@ -32,5 +32,4 @@ export class EntrantWithPriorityResponse extends EntrantResponse {
     type: Priorities,
   })
     priorities: Priorities;
-
 }

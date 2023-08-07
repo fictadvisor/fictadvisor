@@ -15,11 +15,15 @@ export class EntrantMapper {
     };
   }
 
-  getEntrantWithPriority (entrant: DbEntrant) {
+  getPriorities (entrant: DbEntrant) {
     const priorities = {};
     entrant.priority.priorities.map(({ priority, program }) => {
       priorities[priority] = program;
     });
+    return priorities;
+  }
+
+  getEntrantWithPriority (entrant: DbEntrant) {
     return {
       id: entrant.id,
       firstName: entrant.firstName,
@@ -29,7 +33,17 @@ export class EntrantMapper {
       competitivePoint: entrant.competitivePoint,
       state: entrant.priority.state,
       date: entrant.priority.date,
-      priorities,
+      priorities: this.getPriorities(entrant),
+    };
+  }
+
+  getFullEntrant (entrant: DbEntrant) {
+    return {
+      ...entrant,
+      priority: {
+        ...entrant.priority,
+        priorities: this.getPriorities(entrant),
+      },
     };
   }
 }
