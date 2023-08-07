@@ -11,7 +11,6 @@ import { EntrantRepository } from '../../database/repositories/EntrantRepository
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
 import { FullNameDTO } from '../dtos/FullNameDTO';
 import { DataNotFoundException } from '../../utils/exceptions/DataNotFoundException';
-import { DbEntrant } from '../../database/entities/DbEntrant';
 
 const DOCX = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
 
@@ -74,6 +73,28 @@ export class DocumentService {
     });
   }
 
+  private async sendPriority (data: PriorityDTO) {
+    const priorities = {};
+    for (const num in data.priorities) {
+      const program = data.priorities[num];
+      priorities[program] = num;
+    }
+
+    const day = data.day.padStart(2, '0');
+    const priority = this.fileService.fillTemplate(`Пріоритетка_${data.specialty}.docx`, { ...data, day, ...priorities });
+
+    const emails = [data.email];
+    if (data.isToAdmission) emails.push(process.env.ADMISSION_EMAIL);
+
+    await this.emailService.sendWithAttachments({
+      to: emails,
+      subject: `Пріоритетка | ${data.lastName} ${data.firstName}`,
+      message: 'Пріоритетку НЕ ТРЕБА друкувати чи доповнювати іншою інформацією. Якщо подаєте дистанційно, завантажте документ та підпишіть КЕПом вступника. Якщо виникають запитання, звертайтеся в чат в телеграмі:',
+      link: 'https://t.me/abit_fict',
+      attachments: [{ name: 'Пріоритетка.docx', buffer: priority, contentType: DOCX }],
+    });
+  }
+
   async createContract (data: StudyContractDTO) {
 
     const { firstName, middleName, lastName, ...entrant } = data.entrant;
@@ -86,6 +107,8 @@ export class DocumentService {
     });
 
     if (dbEntrant.entrantData && !data.meta.isForcePushed) throw new NoPermissionException();
+
+    await this.sendContract(data);
 
     await this.entrantRepository.updateById(dbEntrant.id, {
       studyType: data.meta.studyType,
@@ -104,8 +127,6 @@ export class DocumentService {
         } : undefined,
       },
     });
-
-    await this.sendContract(data);
   }
 
   async generateContract (data: FullNameDTO) {
@@ -148,7 +169,7 @@ export class DocumentService {
     this.validatePrograms(data);
     const day = data.day.padStart(2, '0');
 
-    let priorities = [];
+    const priorities = [];
     for (const priority in data.priorities) {
       priorities.push({ priority: Number(priority), program: data.priorities[priority] });
     }
@@ -182,10 +203,6 @@ export class DocumentService {
           },
         });
       }
-      priorities = (await this.entrantRepository.findById(entrant.id) as DbEntrant).priority.priorities.map((p) => ({
-        priority: p.priority,
-        program: p.program,
-      }));
     } else if (entrant.priority) {
       throw new NoPermissionException();
     } else {
@@ -203,20 +220,7 @@ export class DocumentService {
         },
       });
     }
-    const obj = {};
-    priorities.map(({ priority, program }) => obj[program] = priority);
 
-    const priority = this.fileService.fillTemplate(`Пріоритетка_${data.specialty}.docx`, { ...data, day, ...obj });
-
-    const emails = [data.email];
-    if (data.isToAdmission) emails.push(process.env.ADMISSION_EMAIL);
-
-    await this.emailService.sendWithAttachments({
-      to: emails,
-      subject: `Пріоритетка | ${data.lastName} ${data.firstName}`,
-      message: 'Пріоритетку НЕ ТРЕБА друкувати чи доповнювати іншою інформацією. Якщо подаєте дистанційно, завантажте документ та підпишіть КЕПом вступника. Якщо виникають запитання, звертайтеся в чат в телеграмі:',
-      link: 'https://t.me/abit_fict',
-      attachments: [{ name: 'Пріоритетка.docx', buffer: priority, contentType: DOCX }],
-    });
+    await this.sendPriority(data);
   }
 }
