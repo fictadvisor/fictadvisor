@@ -68,10 +68,7 @@ export const representativeValidation = yup.object().shape({
     phoneNumber: yup
       .string()
       .required(`Обов'язкове поле`)
-      .matches(
-        /^[+][(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/,
-        'Має починатися з символу "+" і коду країни ',
-      ),
+      .matches(/^\+\d+$/, 'Має починатися з символу "+"'),
     email: yup.string().email('Це не схоже на поштову адресу'),
     passportSeries: yup
       .string()
@@ -265,10 +262,7 @@ export const entrantValidationSchema = yup.object().shape({
     phoneNumber: yup
       .string()
       .required(`Обов'язкове поле`)
-      .matches(
-        /^[+][(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/,
-        'Має починатися з символу "+" і коду країни ',
-      ),
+      .matches(/^\+\d+$/, 'Має починатися з символу "+"'),
     email: yup
       .string()
       .required(`Обов'язкове поле`)

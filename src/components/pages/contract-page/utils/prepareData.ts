@@ -4,6 +4,7 @@ import {
   ExtendedContractBody,
 } from '@/lib/api/contract/types/ContractBody';
 import { PartialBy } from '@/lib/api/contract/types/utils';
+import { PaymentTypeParam, StudyTypeParam } from '@/types/contract';
 export const prepareData = (
   initialData: ExtendedContractBody,
 ): ContractBody => {
@@ -40,6 +41,12 @@ export const prepareData = (
   if (data.representative.region === kyiv) {
     data.representative.settlement = kyiv;
     data.representative.region = undefined;
+  }
+
+  if (data.meta.studyType === StudyTypeParam.CONTRACT) {
+    data.meta.paymentType = PaymentTypeParam.EVERY_SEMESTER;
+  } else {
+    data.meta.paymentType = undefined;
   }
 
   console.log(data);
