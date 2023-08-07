@@ -425,18 +425,6 @@ export class AdmissionService implements OnModuleInit {
       },
     });
 
-    await this.prisma.entrant.create({
-      data: {
-        firstName: body.firstName,
-        middleName: body.middleName,
-        lastName: body.lastName,
-        specialty: body.specialty,
-        studyType,
-        studyForm,
-        paymentType,
-      },
-    });
-
     return {
       user,
     };
