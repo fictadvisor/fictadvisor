@@ -1,11 +1,15 @@
 import { ContractBody } from '@/lib/api/contract/types/ContractBody';
 import { DeleteEntrantBody } from '@/lib/api/contract/types/DeleteEntrantBody';
+import { EntrantFuIlResponse } from '@/lib/api/contract/types/EntrantFullResponse';
 import { EntrantsPriorityBody } from '@/lib/api/contract/types/EntrantsPriorityBody';
 import { PriorityDataBody } from '@/lib/api/contract/types/PriorityDataBody';
 import { client } from '@/lib/api/instance';
 import { getAuthorizationHeader } from '@/lib/api/utils';
 
-import { AdminContractBody } from './types/AdminContractBody';
+import {
+  AdminContractBody,
+  PersonalAdminBody,
+} from './types/AdminContractBody';
 
 class ContractAPI {
   async createContract(body: ContractBody) {
@@ -44,7 +48,15 @@ class ContractAPI {
   }
 
   async deleteEntrant(body: DeleteEntrantBody) {
-    const { data } = await client.delete('/entrants', {
+    const { data } = await client.delete('/entrants/data', {
+      params: body,
+      ...getAuthorizationHeader(),
+    });
+    return data;
+  }
+
+  async getEntrantInfo(body: PersonalAdminBody) {
+    const { data } = await client.get<EntrantFuIlResponse>('/entrants', {
       params: body,
       ...getAuthorizationHeader(),
     });
