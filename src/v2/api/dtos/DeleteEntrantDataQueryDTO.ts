@@ -9,7 +9,7 @@ export enum EntrantActions {
   ENTRANT = 'entrant',
 }
 
-export class DeleteEntrantQueryDTO extends FullNameDTO {
+export class DeleteEntrantDataQueryDTO extends FullNameDTO {
   @ApiProperty({
     enum: EntrantActions,
   })

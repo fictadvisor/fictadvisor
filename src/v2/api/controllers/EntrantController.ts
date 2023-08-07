@@ -1,19 +1,19 @@
-import { Body, Controller, Delete, Get, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { CreateContractDTO } from '../dtos/CreateContractDTO';
-import { EntrantService } from '../services/EntrantService';
+import { Actions, EntrantService } from '../services/EntrantService';
 import { EntrantMapper } from '../../mappers/EntrantMapper';
 import { Access } from '../../security/Access';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth, ApiForbiddenResponse, ApiNotFoundResponse,
-  ApiOkResponse, ApiTags,
+  ApiOkResponse, ApiQuery, ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { EntrantWithContractResponse } from '../responses/EntrantWithContractResponse';
 import { FullNameDTO } from '../dtos/FullNameDTO';
 import { EntrantWithPriorityResponse } from '../responses/EntrantWithPriorityResponse';
-import { DeleteEntrantQueryDTO } from '../dtos/DeleteEntrantQueryDTO';
 import { EntrantFullResponse } from '../responses/EntrantFullResponse';
+import { DeleteEntrantDataQueryDTO } from '../dtos/DeleteEntrantDataQueryDTO';
 
 @ApiTags('Entrants')
 @Controller({
@@ -162,7 +162,7 @@ export class EntrantController {
 
   @Access('admission.delete')
   @ApiBearerAuth()
-  @Delete()
+  @Delete('/data')
   @ApiOkResponse()
   @ApiBadRequestResponse({
     description: `\n
@@ -194,8 +194,8 @@ export class EntrantController {
     NoPermissionException:
       You do not have permission to perform this action`,
   })
-  async deleteEntrant (
-    @Query() query: DeleteEntrantQueryDTO,
+  async deleteEntrantData (
+    @Query() query: DeleteEntrantDataQueryDTO,
   ) {
     await this.entrantService.deleteEntrantData(query);
   }
@@ -220,7 +220,7 @@ export class EntrantController {
       Last name is too long (max: 40)
       Last name can not be empty
       Last name is incorrect (A-Я(укр.)\\-\` ))
-      
+    
     DataNotFoundException:
       Data were not found`,
   })
@@ -239,5 +239,35 @@ export class EntrantController {
   ) {
     const entrant = await this.entrantService.get(query);
     return this.entrantMapper.getFullEntrant(entrant);
+  }
+
+  @Access('admission.delete')
+  @ApiBearerAuth()
+  @Delete('/:entrantId')
+  @ApiQuery({
+    name: 'action',
+    enum: Actions,
+  })
+  @ApiOkResponse()
+  @ApiBadRequestResponse({
+    description: `\n
+    DataNotFoundException:
+      Data were not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  async delete (
+    @Param('entrantId') entrantId: string,
+    @Query('action') action: Actions,
+  ) {
+    await this.entrantService.deleteEntrant(entrantId, action);
   }
 }

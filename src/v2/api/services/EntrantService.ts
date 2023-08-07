@@ -7,10 +7,18 @@ import { DataNotFoundException } from '../../utils/exceptions/DataNotFoundExcept
 import { PriorityState } from '@prisma/client';
 import { AdmissionAPI } from '../../telegram/AdmissionAPI';
 import { EntrantMapper } from '../../mappers/EntrantMapper';
-import { DeleteEntrantQueryDTO, EntrantActions } from '../dtos/DeleteEntrantQueryDTO';
+import { DeleteEntrantDataQueryDTO, EntrantActions } from '../dtos/DeleteEntrantDataQueryDTO';
+
+export enum Actions {
+  PRIORITY = 'пріоритет',
+  CONTRACT = 'договір',
+  ENTRANT = 'вступник',
+  ENTRANT_DATA = 'дані',
+}
 
 @Injectable()
 export class EntrantService {
+
   constructor (
     private readonly entrantRepository: EntrantRepository,
     private readonly admissionAPI: AdmissionAPI,
@@ -80,7 +88,7 @@ export class EntrantService {
     });
   }
 
-  async deleteEntrantData ({ action, ...data }: DeleteEntrantQueryDTO) {
+  async deleteEntrantData ({ action, ...data }: DeleteEntrantDataQueryDTO) {
     const entrant = await this.entrantRepository.find(data);
     if (!entrant) throw new DataNotFoundException();
 
@@ -108,5 +116,35 @@ export class EntrantService {
     const entrant = await this.entrantRepository.find(query);
     if (!entrant) throw new DataNotFoundException();
     return entrant;
+  }
+
+  async deleteEntrant (id: string, action: Actions) {
+    const entrant = await this.entrantRepository.findById(id);
+    if (!entrant) throw new DataNotFoundException();
+
+    if (action === Actions.ENTRANT_DATA) {
+      if (!entrant.entrantData) throw new DataNotFoundException();
+
+      await this.entrantRepository.updateById(entrant.id, {
+        entrantData: { delete: true },
+        representativeData: { delete: !!entrant.representativeData },
+      });
+
+    } else if (action === Actions.PRIORITY) {
+      if (!entrant.priority) throw new DataNotFoundException();
+
+      await this.entrantRepository.updateById(entrant.id, {
+        priority: { delete: true },
+      });
+
+    } else if (action === Actions.ENTRANT) {
+      await this.entrantRepository.deleteById(entrant.id);
+    } else if (action === Actions.CONTRACT) {
+      if (!entrant.contract) throw new DataNotFoundException();
+
+      await this.entrantRepository.updateById(entrant.id, {
+        contract: { delete: true },
+      });
+    }
   }
 }
