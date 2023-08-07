@@ -40,10 +40,10 @@ export class EntrantMapper {
   getFullEntrant (entrant: DbEntrant) {
     return {
       ...entrant,
-      priority: {
+      priority: entrant.priority ? {
         ...entrant.priority,
         priorities: this.getPriorities(entrant),
-      },
+      } : null,
     };
   }
 }

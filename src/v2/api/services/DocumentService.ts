@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { FileService } from '../../utils/files/FileService';
 import { PersonalDataDTO, StudyContractDTO } from '../dtos/StudyContractDTO';
-import { PaymentTypeParam, StudyFormParam, StudyTypeParam } from '../dtos/StudyContractParams';
-import { ObjectIsRequiredException } from '../../utils/exceptions/ObjectIsRequiredException';
+import { StudyFormParam, StudyTypeParam } from '../dtos/StudyContractParams';
 import * as process from 'process';
 import { EmailService } from './EmailService';
 import { PriorityDTO } from '../dtos/PriorityDTO';
@@ -61,7 +60,7 @@ export class DocumentService {
     const attachments = [{ name: 'Договір про навчання.docx', buffer: agreement, contentType: DOCX }];
 
     if (data.meta.studyType === StudyTypeParam.CONTRACT) {
-      const paymentName = `${data.meta.speciality}_${data.meta.paymentType}_${data.meta.studyForm}.docx`;
+      const paymentName = `${data.meta.speciality}_Щороку_${data.meta.studyForm}.docx`;
       const payment = this.fileService.fillTemplate(paymentName, obj);
       attachments.push({ name: 'Договір про надання платної освітньої послуги.docx', buffer: payment, contentType: DOCX });
     }
@@ -76,9 +75,6 @@ export class DocumentService {
   }
 
   async createContract (data: StudyContractDTO) {
-    if (data.meta.studyType === StudyTypeParam.CONTRACT && !data.meta.paymentType) {
-      throw new ObjectIsRequiredException('Payment type');
-    }
 
     const { firstName, middleName, lastName, ...entrant } = data.entrant;
 
@@ -94,7 +90,7 @@ export class DocumentService {
     await this.entrantRepository.updateById(dbEntrant.id, {
       studyType: data.meta.studyType,
       studyForm: data.meta.studyForm,
-      paymentType: data.meta.paymentType,
+      paymentType: data.meta.studyType === StudyTypeParam.CONTRACT ? 'Щороку' : '',
       entrantData: {
         upsert: {
           update: entrant,
@@ -123,7 +119,6 @@ export class DocumentService {
         speciality: entrant.specialty,
         studyType: entrant.studyType as StudyTypeParam,
         studyForm: entrant.studyForm as StudyFormParam,
-        paymentType: entrant.paymentType as PaymentTypeParam,
         isToAdmission: true,
         isForcePushed: false,
       },

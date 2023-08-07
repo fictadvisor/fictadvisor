@@ -1,4 +1,4 @@
-import { PaymentTypeParam, StudyFormParam, StudyTypeParam } from './StudyContractParams';
+import { StudyFormParam, StudyTypeParam } from './StudyContractParams';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, ValidateNested } from 'class-validator';
 import { validationOptionsMsg } from '../../utils/GLOBALS';
@@ -16,11 +16,7 @@ class MetaContractDTO {
   @ApiProperty()
   @IsNotEmpty(validationOptionsMsg('Study form cannot be empty'))
     studyForm: StudyFormParam;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-    paymentType?: PaymentTypeParam;
-
+  
   @ApiProperty()
   @IsNotEmpty(validationOptionsMsg('isToAdmission cannot be empty'))
     isToAdmission: boolean;
