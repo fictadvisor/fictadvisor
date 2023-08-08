@@ -58,14 +58,14 @@ const ContractApproveForm: FC<ContractApproveFormProps> = ({
 
   return (
     <Formik
-      initialValues={initialValues}
       onSubmit={handleSubmit}
+      initialValues={initialValues}
       validationSchema={validationSchema}
     >
       {() => (
         <Form>
           <Input
-            name="contractNumber"
+            name="number"
             placeholder="Номер договору"
             size={InputSize.LARGE}
           />
