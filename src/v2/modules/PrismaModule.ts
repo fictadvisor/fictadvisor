@@ -18,6 +18,7 @@ import { ResourceRepository } from '../database/repositories/ResourceRepository'
 import { EventRepository } from '../database/repositories/EventRepository';
 import { CathedraRepository } from '../database/repositories/CathedraRepository';
 import { EntrantRepository } from '../database/repositories/EntrantRepository';
+import { TelegramGroupRepository } from '../database/repositories/TelegramGroupRepository';
 
 @Global()
 @Module({
@@ -42,6 +43,7 @@ import { EntrantRepository } from '../database/repositories/EntrantRepository';
     EventRepository,
     CathedraRepository,
     EntrantRepository,
+    TelegramGroupRepository,
   ],
   exports: [
     PrismaService,
@@ -64,6 +66,7 @@ import { EntrantRepository } from '../database/repositories/EntrantRepository';
     EventRepository,
     CathedraRepository,
     EntrantRepository,
+    TelegramGroupRepository,
   ],
 })
 export class PrismaModule {}

@@ -12,7 +12,7 @@ import { CathedraModule } from '../modules/CathedraModule';
 import { DocumentModule } from '../modules/DocumentModule';
 import { EntrantModule } from '../modules/EntrantModule';
 import { AdmissionModule } from '../modules/AdmissionModule';
-
+import { TelegramGroupModule } from '../modules/TelegramGroupModule';
 
 @Module({
   imports: [
@@ -29,6 +29,7 @@ import { AdmissionModule } from '../modules/AdmissionModule';
     DocumentModule,
     EntrantModule,
     AdmissionModule,
+    TelegramGroupModule,
   ],
 })
 export class ApiModule {}
