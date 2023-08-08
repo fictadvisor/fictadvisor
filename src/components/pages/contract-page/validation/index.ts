@@ -3,6 +3,7 @@ import { TestConfig } from 'yup';
 
 import { kyiv } from '@/components/pages/contract-page/constants';
 import { ExtendedContractBody } from '@/lib/api/contract/types/ContractBody';
+import { PaymentTypeParam } from '@/types/contract';
 const secretString = /^4261$/;
 const forcePushedRegexp = /^3259$/;
 
@@ -36,6 +37,7 @@ export const metaValidationSchema = yup.object().shape({
 export const representativeValidation = yup.object().shape({
   meta: yup.object().shape({
     isToAdmission: yup.boolean(),
+    paymentType: yup.string(),
   }),
   representative: yup.object().shape({
     lastName: yup
@@ -156,6 +158,14 @@ export const representativeValidation = yup.object().shape({
           return true;
         },
       ),
+    forcePushedNumber: yup.string().when('paymentType', {
+      is: PaymentTypeParam.EVERY_MONTH,
+      then: schema =>
+        schema
+          .required("Обов'язкове поле")
+          .matches(forcePushedRegexp, 'Неправильний код'),
+      otherwise: schema => schema.optional(),
+    }),
   }),
 });
 
@@ -352,6 +362,26 @@ export const entrantValidationSchema = yup.object().shape({
 
           if (context.parent.isAdult && data.meta.isToAdmission)
             return !!value?.match(secretString);
+
+          return true;
+        },
+      ),
+    forcePushedNumber: yup
+      .string()
+      .optional()
+      .test(
+        'validForcePushedNumber',
+        'Неправильний код',
+        function (value, context) {
+          const data = (
+            context.from as { schema: never; value: ExtendedContractBody }[]
+          )[1].value;
+
+          if (
+            data.helper.isAdult &&
+            data.meta.paymentType === PaymentTypeParam.EVERY_MONTH
+          )
+            return !!value?.match(forcePushedRegexp);
 
           return true;
         },

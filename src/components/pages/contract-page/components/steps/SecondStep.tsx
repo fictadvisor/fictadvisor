@@ -19,6 +19,7 @@ import {
 } from '@/components/pages/contract-page/validation';
 import useTabClose from '@/hooks/use-tab-close';
 import { ExtendedContractBody } from '@/lib/api/contract/types/ContractBody';
+import { PaymentTypeParam } from '@/types/contract';
 export interface SecondStepProps {
   onNextStep: (data: ExtendedContractBody, final?: boolean) => void;
   onPrevStep: (data: ExtendedContractBody) => void;
@@ -249,15 +250,17 @@ export const SecondStep: FC<SecondStepProps> = ({
             </Box>
           )}
 
-          {values?.helper?.isAdult && values?.meta?.isForcePushed && (
-            <Box sx={stylesMui.item}>
-              <Input
-                name="helper.forcePushedNumber"
-                label="Код форс пушу"
-                placeholder="0000"
-              />
-            </Box>
-          )}
+          {values?.helper?.isAdult &&
+            (values?.meta?.isForcePushed ||
+              values.meta.paymentType === PaymentTypeParam.EVERY_MONTH) && (
+              <Box sx={stylesMui.item}>
+                <Input
+                  name="helper.forcePushedNumber"
+                  label="Код форс пушу"
+                  placeholder="0000"
+                />
+              </Box>
+            )}
 
           <Actions
             onPrevStep={() => {

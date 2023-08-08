@@ -65,27 +65,32 @@ export const FirstStep: FC<FirstStepProps> = ({
                 ]}
               />
             </Box>
-            {/*{values.meta.studyType === StudyTypeParam.CONTRACT && (*/}
-            {/*  <Box sx={stylesMui.item}>*/}
-            {/*    <Typography variant="h6Bold">*/}
-            {/*      Оплата(Щосеместрово/Щоквартально)*/}
-            {/*    </Typography>*/}
-            {/*    <FormikRadioGroup*/}
-            {/*      name="meta.paymentType"*/}
-            {/*      options={[*/}
-            {/*        {*/}
-            {/*          value: PaymentTypeParam.EVERY_SEMESTER,*/}
-            {/*          label: 'Щосеместрово',*/}
-            {/*        },*/}
-            {/*        {*/}
-            {/*          value: PaymentTypeParam.EVERY_YEAR,*/}
-            {/*          label: 'Щорічно',*/}
-            {/*        },*/}
-            {/*      ]}*/}
-            {/*      clearValueOnUnmount*/}
-            {/*    />*/}
-            {/*  </Box>*/}
-            {/*)}*/}
+            {values.meta.studyType === StudyTypeParam.CONTRACT && (
+              <Box sx={stylesMui.item}>
+                <Typography variant="h6Bold">
+                  Оплата(Щосеместрово/Щоквартально)
+                </Typography>
+                <FormikRadioGroup
+                  name="meta.paymentType"
+                  options={[
+                    {
+                      value: PaymentTypeParam.EVERY_MONTH,
+                      label: 'Щомісяця',
+                    },
+                    {
+                      value: PaymentTypeParam.EVERY_SEMESTER,
+                      label: 'Щосеместрово',
+                    },
+
+                    {
+                      value: PaymentTypeParam.EVERY_YEAR,
+                      label: 'Щороку',
+                    },
+                  ]}
+                  clearValueOnUnmount
+                />
+              </Box>
+            )}
             <Box sx={stylesMui.item}>
               <Typography variant="h6Bold">
                 Форма навчання (денна/заочна)

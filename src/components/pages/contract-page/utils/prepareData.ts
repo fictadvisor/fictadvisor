@@ -43,11 +43,11 @@ export const prepareData = (
     data.representative.region = undefined;
   }
 
-  if (data.meta.studyType === StudyTypeParam.CONTRACT) {
-    data.meta.paymentType = PaymentTypeParam.EVERY_SEMESTER;
-  } else {
-    data.meta.paymentType = undefined;
-  }
+  // if (data.meta.studyType === StudyTypeParam.CONTRACT) {
+  //   data.meta.paymentType = PaymentTypeParam.EVERY_SEMESTER;
+  // } else {
+  //   data.meta.paymentType = undefined;
+  // }
 
   console.log(data);
 

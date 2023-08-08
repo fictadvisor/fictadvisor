@@ -18,6 +18,7 @@ import {
 } from '@/components/pages/contract-page/validation';
 import useTabClose from '@/hooks/use-tab-close';
 import { ExtendedContractBody } from '@/lib/api/contract/types/ContractBody';
+import { PaymentTypeParam } from '@/types/contract';
 
 import { CheckBox } from '../../components/CheckBox';
 export interface ThirdStepProps {
@@ -254,7 +255,8 @@ export const ThirdStep: FC<ThirdStepProps> = ({
             </Box>
           )}
 
-          {values?.meta?.isForcePushed && (
+          {(values?.meta?.isForcePushed ||
+            values.meta.paymentType === PaymentTypeParam.EVERY_MONTH) && (
             <Box sx={stylesMui.item}>
               <Input
                 name="helper.forcePushedNumber"
