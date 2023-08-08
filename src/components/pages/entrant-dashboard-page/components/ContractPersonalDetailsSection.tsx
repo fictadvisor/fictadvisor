@@ -130,7 +130,7 @@ export const ContractPersonalDetailsSection: FC<
             width: 'fit-content',
           }}
           disabled={
-            data?.priority?.state === priorityState.APPROVED && !!data?.contract
+            data?.priority?.state === priorityState.APPROVED || !!data?.contract
           }
         />
       </Box>
