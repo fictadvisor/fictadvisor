@@ -60,14 +60,14 @@ export class DocumentService {
 
     if (data.meta.studyType === StudyTypeParam.CONTRACT) {
       const paymentName = `${data.meta.speciality}_${data.meta.paymentType}_${data.meta.studyForm}.docx`;
-      const payment = this.fileService.fillTemplate(paymentName, obj);
+      const payment = this.fileService.fillTemplate(paymentName, { ...obj, customer: this.formatPersonalData(data.customer) });
       attachments.push({ name: 'Договір про надання платної освітньої послуги.docx', buffer: payment, contentType: DOCX });
     }
 
     await this.emailService.sendWithAttachments({
       to: emails,
       subject: `Договори щодо вступу | ${data.entrant.lastName} ${data.entrant.firstName}`,
-      message: 'Договори НЕ ТРЕБА друкувати чи доповнювати іншою інформацією. Якщо подаєте дистанційно, завантажте документи та підпишіть КЕПом вступника та законного представника, якщо вступнику немає 18 років. Якщо виникають запитання, звертайтеся в чат в телеграмі:',
+      message: 'Договори НЕ ТРЕБА друкувати чи доповнювати іншою інформацією. Якщо подаєте дистанційно, завантажте документи та підпишіть КЕПом вступника та законного представника (замовника), якщо вступнику немає 18 років. Якщо виникають запитання, звертайтеся в чат в телеграмі:',
       link: 'https://t.me/abit_fict',
       attachments,
     });
@@ -111,7 +111,13 @@ export class DocumentService {
 
     if (dbEntrant.entrantData && !data.meta.isForcePushed) throw new NoPermissionException();
 
-    await this.sendContract(data);
+    const customer = data.customer?.firstName
+      ? data.customer
+      : data.representative?.firstName
+        ? data.representative
+        : data.entrant;
+
+    await this.sendContract({ ...data, customer });
 
     await this.entrantRepository.updateById(dbEntrant.id, {
       studyType: data.meta.studyType,
@@ -124,9 +130,15 @@ export class DocumentService {
         },
       },
       representativeData: {
-        upsert: data.representative.firstName ? {
+        upsert: data.representative?.firstName ? {
           update: data.representative,
           create: data.representative,
+        } : undefined,
+      },
+      customerData: {
+        upsert: data.meta.studyType === StudyTypeParam.CONTRACT ? {
+          update: customer,
+          create: customer,
         } : undefined,
       },
     });
@@ -136,7 +148,9 @@ export class DocumentService {
     const entrant = await this.entrantRepository.findById(id);
     if (!entrant?.entrantData) throw new DataNotFoundException();
 
-    if (!entrant.studyForm || !entrant.studyType) throw new NoPermissionException();
+    if (!entrant.studyForm || !entrant.studyType || entrant.paymentType === StudyTypeParam.CONTRACT && !entrant.customerData) {
+      throw new NoPermissionException();
+    }
 
     await this.sendContract({
       meta: {
@@ -154,6 +168,7 @@ export class DocumentService {
         ...entrant.entrantData,
       },
       representative: entrant.representativeData,
+      customer: entrant.customerData,
     });
   }
 

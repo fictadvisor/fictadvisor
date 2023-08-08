@@ -99,6 +99,11 @@ export class StudyContractDTO {
   @Type(() => PersonalDataDTO)
     representative?: PersonalDataDTO;
 
+  @ApiPropertyOptional()
+  @IsOptional()
+  @Type(() => PersonalDataDTO)
+    customer?: PersonalDataDTO;
+
   @ApiProperty()
   @ValidateNested()
   @Type(() => MetaContractDTO)

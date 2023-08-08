@@ -9,6 +9,7 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { DocumentService } from '../services/DocumentService';
 import { StudyContractDTO } from '../dtos/StudyContractDTO';
 import { PriorityDTO } from '../dtos/PriorityDTO';
+import { EntrantByIdPipe } from '../pipes/EntrantByIdPipe';
 
 @ApiTags('Document')
 @Controller({
@@ -117,7 +118,7 @@ export class DocumentController {
       You do not have permission to perform this action`,
   })
   async getContract (
-    @Param() entrantId: string,
+    @Param('entrantId', EntrantByIdPipe) entrantId: string,
   ) {
     return this.documentService.getContract(entrantId);
   }
