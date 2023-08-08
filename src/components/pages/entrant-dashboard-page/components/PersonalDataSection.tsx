@@ -56,7 +56,7 @@ export const PersonalDataSection: FC<PersonalDataSectionProps> = ({
         text="Вступник"
         sx={styles.divider}
       />
-      <Typography variant={'h6Bold'}>{`${data.firstName} ${data.lastName} ${
+      <Typography variant={'h6Bold'}>{`${data.lastName} ${data.firstName} ${
         data.middleName ?? ''
       }`}</Typography>
       <Typography variant={'body2Medium'}>
