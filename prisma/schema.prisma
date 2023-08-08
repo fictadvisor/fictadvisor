@@ -474,6 +474,7 @@ model Entrant {
   paymentType        String              @default("") @map("payment_type")
   entrantData        EntrantData?
   representativeData RepresentativeData?
+  customerData       CustomerData?
   priority           EntrantPriority?
   contract           Contract?
   competitivePoint   Float?              @map("competitive_point")
@@ -546,6 +547,27 @@ model RepresentativeData {
   email             String?
 
   @@map("representative_data")
+}
+
+model CustomerData {
+  entrant           Entrant @relation(fields: [entrantId], references: [id], onDelete: Cascade)
+  entrantId         String  @unique @map("entrant_id")
+  firstName         String  @map("first_name")
+  middleName        String? @map("middle_name")
+  lastName          String  @map("last_name")
+  passportSeries    String? @map("passport_series")
+  passportNumber    String  @map("passport_number")
+  passportInstitute String  @map("passport_institute")
+  passportDate      String  @map("passport_date")
+  region            String?
+  settlement        String
+  address           String
+  index             String
+  idCode            String? @map("id_code")
+  phoneNumber       String  @map("phone_number")
+  email             String?
+
+  @@map("customer_data")
 }
 
 enum PriorityState {
