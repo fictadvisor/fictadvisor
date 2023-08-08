@@ -197,7 +197,7 @@ export class EntrantController {
   async deleteEntrantData (
     @Query() query: DeleteEntrantDataQueryDTO,
   ) {
-    await this.entrantService.deleteEntrantData(query);
+    await this.entrantService.deleteEntrantByFullName(query);
   }
 
   @Access('admission.get')
@@ -268,6 +268,6 @@ export class EntrantController {
     @Param('entrantId') entrantId: string,
     @Query('action') action: Actions,
   ) {
-    await this.entrantService.deleteEntrant(entrantId, action);
+    await this.entrantService.deleteEntrantById(entrantId, action);
   }
 }

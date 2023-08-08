@@ -8,6 +8,7 @@ import { PriorityState } from '@prisma/client';
 import { AdmissionAPI } from '../../telegram/AdmissionAPI';
 import { EntrantMapper } from '../../mappers/EntrantMapper';
 import { DeleteEntrantDataQueryDTO, EntrantActions } from '../dtos/DeleteEntrantDataQueryDTO';
+import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
 
 export enum Actions {
   PRIORITY = 'пріоритет',
@@ -88,7 +89,7 @@ export class EntrantService {
     });
   }
 
-  async deleteEntrantData ({ action, ...data }: DeleteEntrantDataQueryDTO) {
+  async deleteEntrantByFullName ({ action, ...data }: DeleteEntrantDataQueryDTO) {
     const entrant = await this.entrantRepository.find(data);
     if (!entrant) throw new DataNotFoundException();
 
@@ -108,6 +109,9 @@ export class EntrantService {
       });
 
     } else {
+      if (entrant.priority?.state === PriorityState.APPROVED || entrant.contract) {
+        throw new NoPermissionException();
+      }
       await this.entrantRepository.deleteById(entrant.id);
     }
   }
@@ -118,7 +122,7 @@ export class EntrantService {
     return entrant;
   }
 
-  async deleteEntrant (id: string, action: Actions) {
+  async deleteEntrantById (id: string, action: Actions) {
     const entrant = await this.entrantRepository.findById(id);
     if (!entrant) throw new DataNotFoundException();
 
@@ -138,6 +142,10 @@ export class EntrantService {
       });
 
     } else if (action === Actions.ENTRANT) {
+      if (entrant.priority?.state === PriorityState.APPROVED || entrant.contract) {
+        throw new NoPermissionException();
+      }
+
       await this.entrantRepository.deleteById(entrant.id);
     } else if (action === Actions.CONTRACT) {
       if (!entrant.contract) throw new DataNotFoundException();

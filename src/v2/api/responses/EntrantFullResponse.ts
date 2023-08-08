@@ -58,7 +58,7 @@ class ContractResponse {
     entrantId: string;
 
   @ApiProperty()
-    contractNumber: string;
+    number: string;
 
   @ApiProperty()
     date: string;
