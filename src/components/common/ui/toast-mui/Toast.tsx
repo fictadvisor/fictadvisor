@@ -12,11 +12,29 @@ import * as styles from './Toast.styles';
 const AUTO_HIDE_DURATION = 12000;
 
 interface ToastProps {
-  open: boolean;
-  onClose: () => void;
+  /**
+   * Toast title
+   */
   title: string;
+  /**
+   * Toast visibility status
+   */
+  open: boolean;
+  /**
+   * Toast onClose function
+   */
+  onClose: () => void;
+  /**
+   * Toast type
+   */
   type: AlertType;
+  /**
+   * Optional toast description
+   */
   description?: string;
+  /**
+   * Optional toast timer duration in milliseconds
+   */
   timer?: number;
 }
 
