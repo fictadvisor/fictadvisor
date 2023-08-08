@@ -9,7 +9,6 @@ import { EducationProgram, PriorityState } from '@prisma/client';
 import { InvalidEducationProgramsException } from '../../utils/exceptions/InvalidEducationProgramsException';
 import { EntrantRepository } from '../../database/repositories/EntrantRepository';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
-import { FullNameDTO } from '../dtos/FullNameDTO';
 import { DataNotFoundException } from '../../utils/exceptions/DataNotFoundException';
 import { ObjectIsRequiredException } from '../../utils/exceptions/ObjectIsRequiredException';
 
@@ -133,8 +132,8 @@ export class DocumentService {
     });
   }
 
-  async generateContract (data: FullNameDTO) {
-    const entrant = await this.entrantRepository.find(data);
+  async getContract (id: string) {
+    const entrant = await this.entrantRepository.findById(id);
     if (!entrant?.entrantData) throw new DataNotFoundException();
 
     if (!entrant.studyForm || !entrant.studyType) throw new NoPermissionException();

@@ -5,11 +5,10 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { DocumentService } from '../services/DocumentService';
 import { StudyContractDTO } from '../dtos/StudyContractDTO';
 import { PriorityDTO } from '../dtos/PriorityDTO';
-import { FullNameDTO } from '../dtos/FullNameDTO';
 
 @ApiTags('Document')
 @Controller({
@@ -102,25 +101,12 @@ export class DocumentController {
     return this.documentService.generatePriority(body);
   }
 
-  @Post('/generateContract')
+  @Get('/contract/:entrantId')
   @ApiOkResponse()
   @ApiBadRequestResponse({
-    description: `\n  
-    InvalidBodyException:
-      First name is too short (min: 2)
-      First name is too long (max: 40)
-      First name can not be empty
-      First name is incorrect (A-Я(укр.)\\-\` )
-      Middle name is too short (min: 2)
-      Middle name is too long (max: 40)
-      Middle name is incorrect (A-Я(укр.)\\-\` )
-      Last name is too short (min: 2)
-      Last name is too long (max: 40)
-      Last name can not be empty
-      Last name is incorrect (A-Я(укр.)\\-\` )
-      
-    InvalidEducationProgramsException:
-      Education programs is invalid
+    description: `\n     
+    InvalidEntityIdException:
+      Entrant with such id is not found
       
     DataNotFoundException:
       Data were not found`,
@@ -130,9 +116,9 @@ export class DocumentController {
     NoPermissionException:
       You do not have permission to perform this action`,
   })
-  async generateContract (
-    @Body() body: FullNameDTO,
+  async getContract (
+    @Param() entrantId: string,
   ) {
-    return this.documentService.generateContract(body);
+    return this.documentService.getContract(entrantId);
   }
 }
