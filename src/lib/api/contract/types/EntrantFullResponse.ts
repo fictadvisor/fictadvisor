@@ -19,15 +19,15 @@ export interface EntrantFuIlResponse extends Fullname {
   studyType: StudyTypeParam;
   studyForm: StudyFormParam;
   paymentType: PaymentTypeParam;
-  entrantData: PersonalData;
-  representativeData: PersonalData;
-  contract: {
+  entrantData?: PersonalData;
+  representativeData?: PersonalData;
+  contract?: {
     entrantId: string;
-    contractNumber: string;
+    number: string;
     date: string;
     group: string;
   };
-  priority: {
+  priority?: {
     entrantId: string;
     state: priorityState;
     date: string;

@@ -3,8 +3,8 @@ import { SxProps, Theme } from '@mui/material/styles';
 export const page: SxProps<Theme> = {
   width: '100%',
   display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
+  justifyContent: 'space-evenly',
+  alignItems: 'stretch',
   flexDirection: 'column',
   padding: {
     mobileSemiMedium: '16px 80px 50px 80px',
@@ -26,25 +26,6 @@ export const form: SxProps<Theme> = {
   flexDirection: 'column',
   gap: '18px',
 };
-//
-// export const item: SxProps<Theme> = {
-//   display: 'flex',
-//   flexDirection: 'column',
-//   gap: '2px',
-//   width: { tablet: '480px', mobile: '100%' },
-//   '& input': {
-//     height: '52px',
-//     '::placeholder': {
-//       typography: 'body1',
-//       color: 'grey.800',
-//     },
-//     '&:hover': {
-//       '::placeholder': {
-//         color: 'grey.500',
-//       },
-//     },
-//   },
-// };
 
 export const button: SxProps<Theme> = {
   width: '150px',
@@ -52,17 +33,36 @@ export const button: SxProps<Theme> = {
   borderRadius: '8px',
 };
 
-export const leftBlock: SxProps<Theme> = {};
-export const rightBlock: SxProps<Theme> = {};
+export const leftBlock: SxProps<Theme> = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '30px',
+};
 
-export const divider: SxProps<Theme> = {
+export const block: SxProps<Theme> = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '12px',
+};
+export const rightBlock: SxProps<Theme> = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '30px',
+};
+
+export const verticalDivider: SxProps<Theme> = {
   backgroundColor: 'white.main',
   display: { mobile: 'none', tablet: 'block' },
 };
 
+export const divider: SxProps<Theme> = {
+  borderColor: 'grey.400',
+  color: 'grey.500',
+};
+
 export const container: SxProps<Theme> = {
   display: 'flex',
-  justifyContent: 'space-between',
+  justifyContent: 'space-evenly',
   flexDirection: { mobile: 'column', tablet: 'row' },
-  // gap: { mobile: 'initial', tablet: '32px' },
+  gap: { mobile: '16px', tablet: '48px' },
 };

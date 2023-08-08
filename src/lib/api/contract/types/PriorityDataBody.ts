@@ -1,3 +1,4 @@
+import { EducationProgram } from '@/components/pages/priority-page/constants/index';
 import { Fullname } from '@/types/contract';
 
 export interface PriorityDataBody extends Fullname {

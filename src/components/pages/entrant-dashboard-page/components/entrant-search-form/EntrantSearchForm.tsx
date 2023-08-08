@@ -13,7 +13,7 @@ import ContractAPI from '@/lib/api/contract/ContractAPI';
 import { EntrantFuIlResponse } from '@/lib/api/contract/types/EntrantFullResponse';
 import { Fullname } from '@/types/contract';
 
-import * as styles from '../../EntrantAdminPage.styles';
+import * as styles from '../../EntrantDashboardPage.styles';
 import { getLocalStorage, saveLocalStorage } from '../../utils/localStorage';
 
 import { initialValues } from './constants';
@@ -32,9 +32,13 @@ const EntrantSearchForm: FC<EntrantSearchFormProps> = ({ setEntrantData }) => {
   const toast = useToast();
   const handleSubmit = async (values: Fullname) => {
     try {
+      if (values.middleName?.trim().length === 0) {
+        values.middleName = undefined;
+      }
       const data = await ContractAPI.getEntrantInfo(values);
       setEntrantData(data);
       saveLocalStorage(values);
+      console.log(data);
     } catch (e) {
       const error = (
         e as { response: { data: { error: keyof typeof errorMapper } } }
@@ -58,7 +62,14 @@ const EntrantSearchForm: FC<EntrantSearchFormProps> = ({ setEntrantData }) => {
       validationSchema={validationSchema}
     >
       {() => (
-        <Form style={{ gap: '40px', paddingBottom: '50px' }}>
+        <Form
+          style={{
+            gap: '40px',
+            paddingBottom: '50px',
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
           <Box sx={styles.form}>
             <Divider
               sx={{ marginBottom: '12px' }}
@@ -72,9 +83,8 @@ const EntrantSearchForm: FC<EntrantSearchFormProps> = ({ setEntrantData }) => {
               placeholder={'Григорович'}
               label={`По-батькові`}
             />
+            <Button sx={styles.button} text="Знайти" type="submit" />
           </Box>
-
-          <Button sx={styles.button} text="Знайти" type="submit" />
         </Form>
       )}
     </Formik>

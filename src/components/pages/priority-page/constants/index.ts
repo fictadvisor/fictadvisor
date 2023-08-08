@@ -22,7 +22,7 @@ export const initialValues: ExtendedPriorityDataBody = {
   isForcePushed: false,
   forcePushedNumber: '',
 };
-enum EducationProgram {
+export enum EducationProgram {
   CSSE = 'CSSE',
   ISSE = 'ISSE',
   IIS = 'IIS',

@@ -7,7 +7,7 @@ const useToast = (): UseToastReturn => {
   const { showToast } = useToastContext();
 
   return {
-    error: (title, description, timer) =>
+    error: (title, description, timer = 3000) =>
       showToast({ title, description, type: AlertType.ERROR, timer }),
     warning: (title, description, timer) =>
       showToast({ title, description, type: AlertType.WARNING, timer }),

@@ -1,6 +1,6 @@
 import { Fullname } from '@/types/contract';
 
-interface ContractAdminBody {
+export interface ContractAdminBody {
   number: string;
   date: string;
 }

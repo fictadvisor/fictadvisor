@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 
 import PageLayout from '@/components/common/layout/page-layout';
-import EntrantAdminPage from '@/components/pages/entrant-admin-page/EntrantAdminPage';
+import EntrantDashboardPage from '@/components/pages/entrant-dashboard-page';
 import useAuthentication from '@/hooks/use-authentication';
 const DeleteEntrantAdmin = () => {
   const { isLoggedIn } = useAuthentication();
@@ -10,7 +10,7 @@ const DeleteEntrantAdmin = () => {
   if (!isLoggedIn) router.push('/login');
   return (
     <PageLayout title="Менеджент вступника | FICT Advisor">
-      <EntrantAdminPage />
+      <EntrantDashboardPage />
     </PageLayout>
   );
 };

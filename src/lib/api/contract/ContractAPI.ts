@@ -1,5 +1,6 @@
 import { ContractBody } from '@/lib/api/contract/types/ContractBody';
 import { DeleteEntrantBody } from '@/lib/api/contract/types/DeleteEntrantBody';
+import { DeleteEntrantDataBody } from '@/lib/api/contract/types/DeleteEntrantDataBody';
 import { EntrantFuIlResponse } from '@/lib/api/contract/types/EntrantFullResponse';
 import { PriorityDataBody } from '@/lib/api/contract/types/PriorityDataBody';
 import { client } from '@/lib/api/instance';
@@ -49,6 +50,15 @@ class ContractAPI {
       params: body,
       ...getAuthorizationHeader(),
     });
+    return data;
+  }
+
+  async deleteEntrantData(body: DeleteEntrantDataBody) {
+    const { data } = await client.delete(`/entrants/${body.entrantId}`, {
+      params: { action: body.action },
+      ...getAuthorizationHeader(),
+    });
+
     return data;
   }
 

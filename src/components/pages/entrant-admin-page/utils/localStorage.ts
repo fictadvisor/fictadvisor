@@ -1,17 +1,13 @@
-import { Fullname } from '@/types/contract';
+import type { DeleteEntrantBody } from '@/lib/api/contract/types/DeleteEntrantBody';
 
-export const saveLocalStorage = (data: Fullname | null) => {
-  localStorage.setItem('entrantAdminPageData', JSON.stringify(data));
+export const saveLocalStorage = (data: DeleteEntrantBody | null) => {
+  localStorage.setItem('deleteEntrantData', JSON.stringify(data));
 };
 
-export const getLocalStorage = (): Fullname | null => {
-  const data = localStorage.getItem('entrantAdminPageData');
+export const getLocalStorage = (): DeleteEntrantBody | null => {
+  const data = localStorage.getItem('deleteEntrantData');
 
-  let parsedData;
-  if (data) {
-    parsedData = JSON.parse(data);
-    return parsedData as Fullname;
-  }
+  if (data) return JSON.parse(data);
 
   return null;
 };
