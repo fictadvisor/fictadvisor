@@ -562,3 +562,18 @@ model Contract {
 
   @@map("contracts")
 }
+
+enum StudyForm {
+  FULL_TIME
+  PART_TIME
+}
+
+model EdboBudget {
+  id               String    @id @default(uuid())
+  fullName         String    @map("full_name")
+  specialty        String
+  studyForm        StudyForm @map("study_form")
+  competitivePoint Float     @map("competitive_point")
+
+  @@map("edbo_budget")
+}
