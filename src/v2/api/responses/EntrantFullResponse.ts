@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { PriorityState } from '@prisma/client';
 import { Priorities } from './EntrantWithPriorityResponse';
 import { EntrantResponse } from './EntrantResponse';
-import { StudyFormParam, StudyTypeParam } from '../dtos/StudyContractParams';
+import { PaymentTypeParam, StudyFormParam, StudyTypeParam } from '../dtos/StudyContractParams';
 
 class EntrantDataResponse {
   @ApiProperty()
@@ -96,8 +96,10 @@ export class EntrantFullResponse extends EntrantResponse {
   })
     studyForm: StudyFormParam;
 
-  @ApiProperty()
-    paymentType: string;
+  @ApiProperty({
+    enum: PaymentTypeParam,
+  })
+    paymentType: PaymentTypeParam;
 
   @ApiProperty({
     type: EntrantDataResponse,

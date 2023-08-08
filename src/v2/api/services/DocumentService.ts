@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { FileService } from '../../utils/files/FileService';
 import { PersonalDataDTO, StudyContractDTO } from '../dtos/StudyContractDTO';
-import { StudyFormParam, StudyTypeParam } from '../dtos/StudyContractParams';
+import { PaymentTypeParam, StudyFormParam, StudyTypeParam } from '../dtos/StudyContractParams';
 import * as process from 'process';
 import { EmailService } from './EmailService';
 import { PriorityDTO } from '../dtos/PriorityDTO';
@@ -11,6 +11,7 @@ import { EntrantRepository } from '../../database/repositories/EntrantRepository
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
 import { FullNameDTO } from '../dtos/FullNameDTO';
 import { DataNotFoundException } from '../../utils/exceptions/DataNotFoundException';
+import { ObjectIsRequiredException } from '../../utils/exceptions/ObjectIsRequiredException';
 
 const DOCX = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
 
@@ -59,7 +60,7 @@ export class DocumentService {
     const attachments = [{ name: 'Договір про навчання.docx', buffer: agreement, contentType: DOCX }];
 
     if (data.meta.studyType === StudyTypeParam.CONTRACT) {
-      const paymentName = `${data.meta.speciality}_Щороку_${data.meta.studyForm}.docx`;
+      const paymentName = `${data.meta.speciality}_${data.meta.paymentType}_${data.meta.studyForm}.docx`;
       const payment = this.fileService.fillTemplate(paymentName, obj);
       attachments.push({ name: 'Договір про надання платної освітньої послуги.docx', buffer: payment, contentType: DOCX });
     }
@@ -67,7 +68,7 @@ export class DocumentService {
     await this.emailService.sendWithAttachments({
       to: emails,
       subject: `Договори щодо вступу | ${data.entrant.lastName} ${data.entrant.firstName}`,
-      message: 'Договір НЕ ТРЕБА друкувати чи доповнювати іншою інформацією. Якщо подаєте дистанційно, завантажте документ та підпишіть КЕПом вступника та законного представника, якщо вступнику немає 18 років. Якщо виникають запитання, звертайтеся в чат в телеграмі:',
+      message: 'Договори НЕ ТРЕБА друкувати чи доповнювати іншою інформацією. Якщо подаєте дистанційно, завантажте документи та підпишіть КЕПом вступника та законного представника, якщо вступнику немає 18 років. Якщо виникають запитання, звертайтеся в чат в телеграмі:',
       link: 'https://t.me/abit_fict',
       attachments,
     });
@@ -96,6 +97,9 @@ export class DocumentService {
   }
 
   async createContract (data: StudyContractDTO) {
+    if (data.meta.studyType === StudyTypeParam.CONTRACT && !data.meta.paymentType) {
+      throw new ObjectIsRequiredException('Payment type');
+    }
 
     const { firstName, middleName, lastName, ...entrant } = data.entrant;
 
@@ -113,7 +117,7 @@ export class DocumentService {
     await this.entrantRepository.updateById(dbEntrant.id, {
       studyType: data.meta.studyType,
       studyForm: data.meta.studyForm,
-      paymentType: data.meta.studyType === StudyTypeParam.CONTRACT ? 'Щороку' : '',
+      paymentType: data.meta.paymentType,
       entrantData: {
         upsert: {
           update: entrant,
@@ -140,6 +144,7 @@ export class DocumentService {
         speciality: entrant.specialty,
         studyType: entrant.studyType as StudyTypeParam,
         studyForm: entrant.studyForm as StudyFormParam,
+        paymentType: entrant.paymentType as PaymentTypeParam,
         isToAdmission: true,
         isForcePushed: false,
       },

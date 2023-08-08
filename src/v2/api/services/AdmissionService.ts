@@ -417,7 +417,7 @@ export class AdmissionService implements OnModuleInit {
     };
   }
 
-  async createUser ({ studyType, studyForm, ...body }: CreateEntrantDTO) {
+  async createUser ({ studyType, studyForm, paymentType, ...body }: CreateEntrantDTO) {
 
     const user = await this.prisma.queueUser.create({
       data: {
