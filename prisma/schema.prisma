@@ -469,6 +469,7 @@ model Entrant {
   middleName         String?             @map("middle_name")
   lastName           String              @map("last_name")
   specialty          String?
+  specialties        Specialty[]
   studyType          String              @default("") @map("study_type")
   studyForm          String              @default("") @map("study_form")
   paymentType        String              @default("") @map("payment_type")
@@ -598,4 +599,14 @@ model EdboBudget {
   competitivePoint Float     @map("competitive_point")
 
   @@map("edbo_budget")
+}
+
+model Specialty {
+  entrant   Entrant @relation(fields: [entrantId], references: [id], onDelete: Cascade)
+  entrantId String  @unique @map("entrant_id")
+  specialty String
+  studyForm String
+
+  @@id([entrantId, specialty])
+  @@map("specialties")
 }

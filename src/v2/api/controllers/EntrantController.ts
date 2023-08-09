@@ -160,6 +160,45 @@ export class EntrantController {
     await this.entrantService.approvePriority(body);
   }
 
+  @Access('admission.priorities.approve')
+  @ApiBearerAuth()
+  @Patch('/priority/approve/:entrantId')
+  @ApiOkResponse()
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidBodyException:
+      First name is too short (min: 2)
+      First name is too long (max: 40)
+      First name can not be empty
+      First name is incorrect (A-Я(укр.)\\-\` )
+      Middle name is too short (min: 2)
+      Middle name is too long (max: 40)
+      Middle name is incorrect (A-Я(укр.)\\-\` )
+      Last name is too short (min: 2)
+      Last name is too long (max: 40)
+      Last name can not be empty
+      Last name is incorrect (A-Я(укр.)\\-\` ))
+      
+    DataNotFoundException:
+      Data were not found
+    `,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  async approvePriorityById (
+    @Param('entrantId') entrantId: string
+  ) {
+    await this.entrantService.approvePriorityById(entrantId);
+  }
+
   @Access('admission.delete')
   @ApiBearerAuth()
   @Delete('/data')

@@ -89,6 +89,19 @@ export class EntrantService {
     });
   }
 
+  async approvePriorityById (id: string) {
+    const entrant = await this.entrantRepository.findById(id);
+    if (!entrant || !entrant.priority) throw new DataNotFoundException();
+
+    await this.entrantRepository.updateById(id, {
+      priority: {
+        update: {
+          state: PriorityState.APPROVED,
+        },
+      },
+    });
+  }
+
   async deleteEntrantByFullName ({ action, ...data }: DeleteEntrantDataQueryDTO) {
     const entrant = await this.entrantRepository.find(data);
     if (!entrant) throw new DataNotFoundException();
