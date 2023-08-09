@@ -41,6 +41,8 @@ export const ContractDetailsSection: FC<ContractDetailsSectionProps> = ({
     } catch (e) {}
   };
 
+  const handleContractApprove = () => {};
+
   return (
     <Box sx={styles.block}>
       <Divider
@@ -56,17 +58,19 @@ export const ContractDetailsSection: FC<ContractDetailsSectionProps> = ({
           <Typography variant={'body2Medium'}>
             Дата заповнення: {data.contract?.date}
           </Typography>
-          <Button
-            size={ButtonSize.SMALL}
-            type={'button'}
-            text="Видалити"
-            onClick={handleDelete}
-            variant={ButtonVariant.OUTLINE}
-            sx={{
-              width: 'fit-content',
-            }}
-            disabled={!!data.contract}
-          />
+          <Box sx={{ display: 'flex', gap: '20px' }}>
+            <Button
+              size={ButtonSize.SMALL}
+              type={'button'}
+              text="Видалити"
+              onClick={handleDelete}
+              variant={ButtonVariant.OUTLINE}
+              sx={{
+                width: 'fit-content',
+              }}
+              disabled={!!data.contract}
+            />
+          </Box>
         </>
       )}
       {!data.contract && (

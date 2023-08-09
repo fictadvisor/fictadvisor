@@ -15,6 +15,20 @@ class ContractAPI {
     return data;
   }
 
+  async createContractById(entrantld: string) {
+    const { data } = await client.get(`/documents/contract/${entrantld}`);
+    return data;
+  }
+
+  async approveContract(body: Fullname) {
+    const { data } = await client.post(
+      '/documents/generateContract',
+      body,
+      getAuthorizationHeader(),
+    );
+    return data;
+  }
+
   async createAdminContract(body: AdminContractBody) {
     const { data } = await client.post(
       '/entrants/contract',
