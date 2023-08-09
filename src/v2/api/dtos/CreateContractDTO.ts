@@ -19,6 +19,10 @@ export class Entrant {
   @ApiProperty()
   @IsNotEmpty(validationOptionsMsg('Last name can not be empty'))
     lastName: string;
+
+  @ApiProperty()
+  @IsNotEmpty(validationOptionsMsg('Last name can not be empty'))
+    specialty: string;
 }
 
 export class Contract {

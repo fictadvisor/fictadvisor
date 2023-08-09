@@ -9,6 +9,7 @@ import { AdmissionAPI } from '../../telegram/AdmissionAPI';
 import { EntrantMapper } from '../../mappers/EntrantMapper';
 import { DeleteEntrantDataQueryDTO, EntrantActions } from '../dtos/DeleteEntrantDataQueryDTO';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
+import { FullNameWithSpecialtyDTO } from '../dtos/FullNameWithSpecialtyDTO';
 
 export enum Actions {
   PRIORITY = 'пріоритет',
@@ -26,16 +27,14 @@ export class EntrantService {
     private readonly entrantMapper: EntrantMapper,
   ) {
   }
-  private findEntrant (firstName: string, middleName: string, lastName: string) {
-    return this.entrantRepository.find({
-      firstName,
-      middleName,
-      lastName,
-    });
-  }
 
   async approveContract ({ entrant: entrantInfo, contract, isForcePushed }: CreateContractDTO) {
-    const entrant = await this.findEntrant(entrantInfo.firstName, entrantInfo.middleName, entrantInfo.lastName);
+    const entrant = await this.entrantRepository.find({
+      firstName: entrantInfo.firstName,
+      middleName: entrantInfo.middleName,
+      lastName: entrantInfo.lastName,
+      specialty: entrantInfo.specialty,
+    });
     let newEntrant;
     if (isForcePushed) {
       if (!entrant) {
@@ -43,6 +42,7 @@ export class EntrantService {
           firstName: entrantInfo.firstName,
           middleName: entrantInfo.middleName,
           lastName: entrantInfo.lastName,
+          specialty: entrantInfo.specialty,
         });
       }
       if (entrant.contract) {
@@ -72,13 +72,13 @@ export class EntrantService {
   }
 
 
-  async getPriority (data: FullNameDTO) {
+  async getPriority (data: FullNameWithSpecialtyDTO) {
     const entrant = await this.entrantRepository.find(data);
     if (!entrant?.priority) throw new DataNotFoundException();
     return entrant;
   }
 
-  async approvePriority (body: FullNameDTO) {
+  async approvePriority (body: FullNameWithSpecialtyDTO) {
     const entrant = await this.getPriority(body);
     await this.entrantRepository.updateById(entrant.id, {
       priority: {
