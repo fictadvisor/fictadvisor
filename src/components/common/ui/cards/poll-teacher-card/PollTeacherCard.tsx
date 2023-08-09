@@ -13,7 +13,6 @@ import styles from '@/components/common/ui/cards/poll-teacher-card/PollTeacherCa
 import { DivProps } from '@/components/common/ui/cards/types';
 import IconButton from '@/components/common/ui/icon-button-mui';
 import Tooltip from '@/components/common/ui/tooltip-mui';
-import { TooltipPosition } from '@/components/common/ui/tooltip-mui/types';
 import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
 import { TeacherRole } from '@/types/teacher';
 
@@ -82,11 +81,7 @@ export const PollTeacherCard: FC<PollTeacherCardProps> = ({
             />
             <div className={styles['poll-teacher-card-info']}>
               <h4 className={styles['poll-teacher-name']}>{name}</h4>
-              <Tooltip
-                text={description}
-                hasArrow={true}
-                position={TooltipPosition.RIGHT}
-              >
+              <Tooltip title={description} arrow={true} placement="right">
                 <div className={styles['poll-subject-name']}>{description}</div>
               </Tooltip>
             </div>

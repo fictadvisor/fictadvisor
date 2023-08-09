@@ -3,9 +3,7 @@ import cn from 'classnames';
 
 import { DivProps } from '@/components/common/ui/cards/types';
 import Tooltip from '@/components/common/ui/tooltip-mui';
-import { TooltipPosition } from '@/components/common/ui/tooltip-mui/types';
 
-// import Tooltip from '@/components/common/ui/tooltip-mui';
 import styles from './TeacherHeaderCard.module.scss';
 type TeacherHeaderCardProps = {
   name: string;
@@ -27,11 +25,7 @@ const TeacherHeaderCard: React.FC<TeacherHeaderCardProps> = ({
       <img src={url} alt="картинка викладача" />
       <div className={styles['header-lecturer-card-info']}>
         <h4 className={styles['card-name']}>{name}</h4>
-        <Tooltip
-          text={description}
-          hasArrow={true}
-          position={TooltipPosition.RIGHT}
-        >
+        <Tooltip title={description} arrow={true} placement={'right'}>
           <div className={styles['lecturer-description']}>{description}</div>
         </Tooltip>
       </div>
