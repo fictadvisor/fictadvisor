@@ -1,10 +1,13 @@
 import React, { FC, useCallback } from 'react';
+import { Box } from '@mui/material';
 import { AxiosError } from 'axios';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/router';
 
-import Button, { ButtonSize } from '@/components/common/ui/button';
-import { Checkbox, Input, InputType } from '@/components/common/ui/form';
+import Button from '@/components/common/ui/button-mui';
+import { ButtonSize } from '@/components/common/ui/button-mui/types';
+import { Input, InputType } from '@/components/common/ui/form';
+import Checkbox from '@/components/common/ui/form/checkbox';
 import { FieldSize } from '@/components/common/ui/form/common/types';
 import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown';
 import { RegisterFormFields } from '@/components/pages/register/register-page/components/register-form/types';
@@ -19,41 +22,53 @@ import AuthService from '@/lib/services/auth';
 import StorageUtil from '@/lib/utils/StorageUtil';
 
 import { initialValues } from './constants';
+import * as stylesMUI from './RegisterForm.styles';
 import { validationSchema } from './validation';
 
-import styles from '../left-block/LeftBlock.module.scss';
-
+import styles from './FormStyles.module.scss';
 const RegisterForm: FC<GetAllResponse> = ({ groups }) => {
   const router = useRouter();
   const toast = useToast();
 
+  interface MyAxiosErrorData {
+    error: string;
+  }
+
+  type MyAxiosError = AxiosError<MyAxiosErrorData>;
+
+  const errorMessages: { [key: string]: string } = {
+    AlreadyRegisteredException: 'Пошта або юзернейм вже зайняті',
+    InvalidTelegramCredentialsException: 'Як ти це зробив? :/',
+    InvalidBodyException: 'Некорректно введені дані',
+    default: 'Як ти це зробив? :/',
+    unknown: 'Невідома помилка',
+  } as const;
+
+  const getErrorMessage = (errorName: string): string => {
+    return errorMessages[errorName] || errorMessages.default;
+  };
+
   const handleSubmit = useCallback(
     async (data: RegisterFormFields) => {
       try {
-        const hasCaptain = await AuthAPI.groupHasCaptain(data.group);
-        if (data.isCaptain && hasCaptain) {
+        const { isCaptain, group, email } = data;
+        const hasCaptain = await AuthAPI.groupHasCaptain(group);
+
+        if (isCaptain && hasCaptain) {
           toast.error('В групі вже є староста');
-        } else if (!data.isCaptain && !hasCaptain) {
+        } else if (!isCaptain && !hasCaptain) {
           toast.error('Дочекайся, поки зареєструється староста');
         } else {
           await AuthService.register(transformData(data));
           StorageUtil.deleteTelegramInfo();
-          await router.push(`/register/email-verification?email=${data.email}`);
+          await router.push(`/register/email-verification?email=${email}`);
         }
       } catch (error) {
-        // TODO: refactor this shit
-        const errorName = (error as AxiosError<{ error: string }>).response
-          ?.data.error;
-
-        if (errorName === 'AlreadyRegisteredException') {
-          toast.error('Пошта або юзернейм вже зайняті');
-        } else if (errorName === 'InvalidTelegramCredentialsException') {
-          toast.error('Як ти це зробив? :/');
-        } else if (errorName === 'InvalidBodyException') {
-          toast.error('Некорректно введені дані');
-        } else {
-          toast.error('Як ти це зробив? :/');
-        }
+        const errorName = (error as MyAxiosError)?.response?.data?.error;
+        const errorMessage = errorName
+          ? getErrorMessage(errorName)
+          : errorMessages.unknown;
+        toast.error(errorMessage);
       }
     },
     [toast, router],
@@ -71,36 +86,27 @@ const RegisterForm: FC<GetAllResponse> = ({ groups }) => {
       {({ isValid }) => (
         <Form className={styles['form']}>
           <Input
-            className={styles['login-input']}
             label="Юзернейм"
-            placeholder="використовуй латиницю без пробілів"
+            placeholder="Використовуй латиницю без пробілів"
             name="username"
           />
           <Input
-            className={styles['login-input']}
             label="Прізвище"
-            placeholder="вводь справжнє прізвище для коректної інформації"
+            placeholder="Вводь справжнє прізвище для коректної інформації"
             name="lastName"
           />
           <Input
-            className={styles['login-input']}
             label="Ім'я"
-            placeholder="вводь справжнє ім'я для коректної інформації"
+            placeholder="Вводь справжнє ім'я для коректної інформації"
             name="firstName"
           />
           <Input
-            className={styles['login-input']}
             label="По батькові"
-            placeholder="вводь справжнє по батькові для коректної інформації"
+            placeholder="Вводь справжнє по батькові для коректної інформації"
             name="middleName"
           />
-          <Input
-            className={styles['login-input']}
-            label="Пошта"
-            placeholder="введи свою пошту"
-            name="email"
-          />
-          <div className={styles['one-line']}>
+          <Input label="Пошта" placeholder="example@gmail.com" name="email" />
+          <Box sx={stylesMUI.dropdownContainer}>
             <FormikDropdown
               size={FieldSize.LARGE}
               options={transformGroups(groups)}
@@ -108,35 +114,33 @@ const RegisterForm: FC<GetAllResponse> = ({ groups }) => {
               name="group"
               placeholder="вибери зі списку"
             />
-            <div className={styles['checkbox-container']}>
+            <Box sx={stylesMUI.checkboxContainer}>
               <Checkbox label="Я староста" name="isCaptain" />
-            </div>
-          </div>
+            </Box>
+          </Box>
           <Input
-            className={styles['login-input']}
             label="Пароль"
             type={InputType.PASSWORD}
-            placeholder="введи свій пароль"
+            placeholder="user2000"
             name="password"
           />
           <Input
-            className={styles['login-input']}
             label="Підтвердження пароля"
             type={InputType.PASSWORD}
-            placeholder="підтверди свій пароль"
+            placeholder="user2000"
             name="passwordConfirmation"
           />
           <Checkbox
             label={'Погоджуюсь на обробку персональних даних'}
             name={'agreement'}
+            sx={stylesMUI.checkbox}
           />
-
           <Button
             text="Зареєструватись"
             type="submit"
             size={ButtonSize.LARGE}
             disabled={!isValid}
-            className={styles['register-button']}
+            sx={stylesMUI.registerButton}
           />
         </Form>
       )}

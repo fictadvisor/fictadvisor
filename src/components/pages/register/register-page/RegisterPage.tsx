@@ -1,12 +1,15 @@
 import { FC } from 'react';
+import { Box } from '@mui/material';
 import Image from 'next/image';
 
+import Divider from '@/components/common/ui/divider';
 import { GetAllResponse } from '@/lib/api/group/types/GetAllResponse';
 
 import LeftBlock from './components/left-block';
 import RightBlock from './components/right-block';
+import * as styles from './RegisterPage.styles';
 
-import styles from './RegisterPage.module.scss';
+import imgStyles from './RegisterImage.module.scss';
 
 export interface RegisterPageProps {
   data: GetAllResponse | null;
@@ -14,21 +17,21 @@ export interface RegisterPageProps {
 
 const RegisterPage: FC<RegisterPageProps> = ({ data }) => {
   return (
-    <div className={styles['register-page']}>
+    <Box sx={styles.registerPage}>
       <Image
         quality={100}
-        className={styles['background-image']}
+        className={imgStyles['background-image']}
         src="/images/register-page/background.png"
         fill
         priority
         alt="дуже гарна картинка"
       />
-      <div className={styles['register-page__content']}>
+      <Box sx={styles.registerContent}>
         <LeftBlock groups={data?.groups || []} />
-        <hr className={styles['divider']} />
+        <Divider sx={styles.divider} />
         <RightBlock />
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 
