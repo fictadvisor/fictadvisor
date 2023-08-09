@@ -15,8 +15,8 @@ class ContractAPI {
     return data;
   }
 
-  async createContractById(entrantld: string) {
-    const { data } = await client.get(`/documents/contract/${entrantld}`);
+  async createContractById(entrantId: string) {
+    const { data } = await client.get(`/documents/contract/${entrantId}`);
     return data;
   }
 
@@ -50,6 +50,13 @@ class ContractAPI {
     await client.patch(
       '/entrants/priority/approve',
       body,
+      getAuthorizationHeader(),
+    );
+  }
+
+  async approvePriorityById(entrantId: string) {
+    await client.patch(
+      `/entrants/priority/approve/${entrantId}`,
       getAuthorizationHeader(),
     );
   }

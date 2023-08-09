@@ -60,11 +60,7 @@ export const PrioritiesSection: FC<PrioritiesSectionProps> = ({
 
   const handleApprove = async () => {
     try {
-      await ContractAPI.entrantPriorityApprove({
-        firstName: data.firstName,
-        middleName: data.middleName,
-        lastName: data.lastName,
-      });
+      await ContractAPI.approvePriorityById(data.id);
 
       setEntrantData(pr => {
         const newData = {
