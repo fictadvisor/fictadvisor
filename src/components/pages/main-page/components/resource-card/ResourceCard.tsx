@@ -1,8 +1,8 @@
 import React from 'react';
+import { Box, Typography } from '@mui/material';
 import Link from 'next/link';
 
-import styles from './ResourceCard.module.scss';
-
+import * as styles from './ResourceCard.styles';
 interface CardProps {
   text: string;
   image: string;
@@ -16,12 +16,12 @@ const ResourceCard: React.FC<CardProps> = ({
 }) => {
   return (
     <Link href={href}>
-      <div className={styles['card']}>
-        <div className={styles['card-content']}>
+      <Box sx={styles.card}>
+        <Box sx={styles.cardContent}>
           <img src={image} alt="student resource" />
-          <p>{text}</p>
-        </div>
-      </div>
+          <Typography sx={styles.text}>{text}</Typography>
+        </Box>
+      </Box>
     </Link>
   );
 };
