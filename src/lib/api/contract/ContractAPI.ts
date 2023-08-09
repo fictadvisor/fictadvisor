@@ -57,6 +57,7 @@ class ContractAPI {
   async approvePriorityById(entrantId: string) {
     await client.patch(
       `/entrants/priority/approve/${entrantId}`,
+      {},
       getAuthorizationHeader(),
     );
   }
