@@ -16,5 +16,5 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Base: Story = {
-  args: { text: 'Tooltip', children: <div>TooltipChildren</div> },
+  args: { title: 'Tooltip', children: <div>TooltipChildren</div> },
 };
