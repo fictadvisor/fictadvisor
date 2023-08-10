@@ -473,6 +473,7 @@ model Entrant {
   studyType          String              @default("") @map("study_type")
   studyForm          String              @default("") @map("study_form")
   paymentType        String              @default("") @map("payment_type")
+  benefit            Boolean             @default(false)
   entrantData        EntrantData?
   representativeData RepresentativeData?
   customerData       CustomerData?
