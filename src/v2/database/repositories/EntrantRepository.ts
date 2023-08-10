@@ -5,7 +5,7 @@ import { Prisma } from '@prisma/client';
 @Injectable()
 export class EntrantRepository {
 
-  private include: Prisma.EntrantInclude = {
+  private include = {
     entrantData: true,
     representativeData: true,
     customerData: true,

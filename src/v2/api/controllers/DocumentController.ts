@@ -117,9 +117,25 @@ export class DocumentController {
     NoPermissionException:
       You do not have permission to perform this action`,
   })
-  async getContract (
+  async sendContract (
     @Param('entrantId', EntrantByIdPipe) entrantId: string,
   ) {
     return this.documentService.getContract(entrantId);
+  }
+
+  @Get('/priority/:entrantId')
+  @ApiOkResponse()
+  @ApiBadRequestResponse({
+    description: `\n     
+    InvalidEntityIdException:
+      Entrant with such id is not found
+      
+    DataNotFoundException:
+      Data were not found`,
+  })
+  async sendPriority (
+    @Param('entrantId', EntrantByIdPipe) entrantId: string,
+  ) {
+    return this.documentService.getPriority(entrantId);
   }
 }

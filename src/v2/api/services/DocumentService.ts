@@ -74,7 +74,7 @@ export class DocumentService {
     });
   }
 
-  private async sendPriority (data: PriorityDTO) {
+  private async sendPriority (data: PriorityDTO, sendToEntrant: boolean) {
     const priorities = {};
     for (const num in data.priorities) {
       const program = data.priorities[num];
@@ -84,7 +84,8 @@ export class DocumentService {
     const day = data.day.padStart(2, '0');
     const priority = this.fileService.fillTemplate(`Пріоритетка_${data.specialty}.docx`, { ...data, day, ...priorities });
 
-    const emails = [data.email];
+    const emails = [];
+    if (sendToEntrant) emails.push(data.email);
     if (data.isToAdmission) emails.push(process.env.ADMISSION_EMAIL);
 
     await this.emailService.sendWithAttachments({
@@ -173,6 +174,26 @@ export class DocumentService {
     }, false);
   }
 
+  async getPriority (id: string) {
+    const entrant = await this.entrantRepository.findById(id);
+    if (!entrant?.priority) throw new DataNotFoundException();
+
+    const priorities = {};
+    entrant.priority.priorities.map(({ priority, program }) => {
+      priorities[priority] = program;
+    });
+    
+    await this.sendPriority({
+      firstName: entrant.firstName,
+      middleName: entrant.middleName,
+      lastName: entrant.lastName,
+      specialty: entrant.specialty,
+      day: entrant.priority.date.split('.')[0],
+      isToAdmission: true,
+      priorities,
+    } as PriorityDTO, false);
+  }
+
   private validatePrograms ({ specialty, priorities, isForcePushed }: PriorityDTO) {
     const programs = Object.values(priorities);
     const expected = EducationPrograms[specialty];
@@ -241,6 +262,6 @@ export class DocumentService {
       });
     }
 
-    await this.sendPriority(data);
+    await this.sendPriority(data, true);
   }
 }
