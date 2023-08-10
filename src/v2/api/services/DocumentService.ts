@@ -44,13 +44,14 @@ export class DocumentService {
     };
   }
 
-  private async sendContract (data: StudyContractDTO) {
+  private async sendContract (data: StudyContractDTO, sendToEntrant: boolean) {
     const obj = {
       entrant: this.formatPersonalData(data.entrant),
       representative: data.representative?.firstName ? this.formatPersonalData(data.representative) : {},
     };
 
-    const emails = [data.entrant.email];
+    const emails = [];
+    if (sendToEntrant) emails.push(data.entrant.email);
     if (data.meta.isToAdmission) emails.push(process.env.ADMISSION_EMAIL);
 
     const agreementName = `${data.meta.speciality}_${data.meta.studyType}_${data.meta.studyForm}.docx`;
@@ -117,7 +118,7 @@ export class DocumentService {
         ? data.representative
         : data.entrant;
 
-    await this.sendContract({ ...data, customer });
+    await this.sendContract({ ...data, customer }, true);
 
     await this.entrantRepository.updateById(dbEntrant.id, {
       studyType: data.meta.studyType,
@@ -169,7 +170,7 @@ export class DocumentService {
       },
       representative: entrant.representativeData,
       customer: entrant.customerData,
-    });
+    }, false);
   }
 
   private validatePrograms ({ specialty, priorities, isForcePushed }: PriorityDTO) {
