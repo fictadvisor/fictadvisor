@@ -20,6 +20,11 @@ class ContractAPI {
     return data;
   }
 
+  async sendPriorityOnEmail(entrantId: string) {
+    const { data } = await client.get(`/documents/priority/${entrantId}`);
+    return data;
+  }
+
   async approveContract(body: Fullname) {
     const { data } = await client.post(
       '/documents/generateContract',

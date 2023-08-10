@@ -17,6 +17,7 @@ import {
 } from '@/lib/api/contract/types/EntrantFullResponse';
 
 import * as styles from '../EntrantDashboardPage.styles';
+
 interface PersonalDataSectionProps {
   data: EntrantFuIlResponse;
   setEntrantData: React.Dispatch<
@@ -52,6 +53,8 @@ export const PersonalDataSection: FC<PersonalDataSectionProps> = ({
           representativeData: undefined,
           priority: undefined,
           contract: undefined,
+          lastName: 'NULL',
+          firstName: 'NULL',
         };
         return newData as EntrantFuIlResponse;
       });
@@ -61,6 +64,20 @@ export const PersonalDataSection: FC<PersonalDataSectionProps> = ({
   const createContract = async () => {
     try {
       await ContractAPI.createContractById(data.id);
+      toast.info('Договір було надіслано на пошту', '', 3000);
+    } catch (e) {
+      const error = (
+        e as { response: { data: { error: keyof typeof errorMapper } } }
+      ).response.data.error;
+
+      toast.error(errorMapper[error]);
+    }
+  };
+
+  const sendPriorityOnEmail = async () => {
+    try {
+      await ContractAPI.sendPriorityOnEmail(data.id);
+      toast.info('Пріоритетку було надіслано на пошту', '', 3000);
     } catch (e) {
       const error = (
         e as { response: { data: { error: keyof typeof errorMapper } } }
@@ -92,13 +109,13 @@ export const PersonalDataSection: FC<PersonalDataSectionProps> = ({
       <Typography variant={'body2Medium'}>
         Конкурсний бал: {data.competitivePoint}
       </Typography>
-      <Box sx={{ display: 'flex', gap: '20px' }}>
+      <Box sx={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
         <Button
           size={ButtonSize.SMALL}
           type={'button'}
           text="Видалити"
           onClick={handleDelete}
-          variant={ButtonVariant.OUTLINE}
+          variant={ButtonVariant.FILLED}
           sx={{
             width: 'fit-content',
           }}
@@ -111,6 +128,17 @@ export const PersonalDataSection: FC<PersonalDataSectionProps> = ({
           type={'button'}
           text="Відправити договір на пошту"
           onClick={createContract}
+          sx={{
+            width: 'fit-content',
+          }}
+          variant={ButtonVariant.OUTLINE}
+        />
+        <Button
+          variant={ButtonVariant.OUTLINE}
+          size={ButtonSize.SMALL}
+          type={'button'}
+          text="Відправити пріориитетку на пошту"
+          onClick={sendPriorityOnEmail}
           sx={{
             width: 'fit-content',
           }}
