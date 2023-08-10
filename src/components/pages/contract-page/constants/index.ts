@@ -1,5 +1,8 @@
 import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
-import { ExtendedContractBody } from '@/lib/api/contract/types/ContractBody';
+import {
+  ExtendedContractBody,
+  PassportType,
+} from '@/lib/api/contract/types/ContractBody';
 export const kyiv = 'м. Київ';
 
 export const REGIONS: DropDownOption[] = [
@@ -89,18 +92,15 @@ export const initialValues: ExtendedContractBody = {
     isForcePushed: false,
   },
   helper: {
-    entrantHasForeignPassport: false,
-    entrantHasOldPassport: false,
+    entrantPassportType: PassportType.ID,
     entrantHasNoCode: false,
     entrantHasNoMiddleName: false,
 
-    representativeHasForeignPassport: false,
-    representativeHasOldPassport: false,
+    representativePassportType: PassportType.ID,
     representativeHasNoCode: false,
     representativeHasNoMiddleName: false,
 
-    customerHasForeignPassport: false,
-    customerHasOldPassport: false,
+    customerPassportType: PassportType.ID,
     customerHasNoCode: false,
     customerHasNoMiddleName: false,
 

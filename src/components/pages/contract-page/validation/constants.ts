@@ -2,7 +2,10 @@ import * as yup from 'yup';
 import { TestConfig } from 'yup';
 
 import { kyiv } from '@/components/pages/contract-page/constants';
-import { ExtendedContractBody } from '@/lib/api/contract/types/ContractBody';
+import {
+  ExtendedContractBody,
+  PassportType,
+} from '@/lib/api/contract/types/ContractBody';
 export const secretString = /^4261$/;
 export const forcePushedRegexp = /^3259$/;
 
@@ -81,23 +84,17 @@ export const personSchema = (entity: string) => ({
     .matches(/(\d{5})/, 'Лише 5 цифр'),
   passportSeries: yup
     .string()
-    .when(
-      [
-        `$helper.${entity}HasForeignPassport`,
-        `$helper.${entity}HasOldPassport`,
-      ],
-      ([foreign, old], schema) => {
-        if (foreign)
-          return schema
-            .required("Обов'язкове поле")
-            .matches(/^[A-Z]{2}$/, '2 латиничні літери');
-        if (old)
-          return schema
-            .required("Обов'язкове поле")
-            .matches(/^[А-Я]{2}$/, '2 кириличні літери');
-        return schema.optional();
-      },
-    ),
+    .when([`$helper.${entity}PassportType`], ([type], schema) => {
+      if (type === PassportType.FOREIGN)
+        return schema
+          .required("Обов'язкове поле")
+          .matches(/^[A-Z]{2}$/, '2 латиничні літери верхнього регістру');
+      if (type === PassportType.OLD)
+        return schema
+          .required("Обов'язкове поле")
+          .matches(/^[А-Я]{2}$/, '2 кириличні літери верхнього регістру');
+      return schema.optional();
+    }),
 });
 
 export const isTheSameAsEntrant: TestConfig = {

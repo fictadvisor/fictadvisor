@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, SetStateAction, useState } from 'react';
 import { Box } from '@mui/material';
 import { AxiosError } from 'axios';
 
@@ -17,7 +17,9 @@ import { SecondStep } from './../steps/SecondStep';
 import { ThirdStep } from './../steps/ThirdStep';
 import { formWrapper } from './PersonalForm.styles';
 
-export const PersonalForm: FC = () => {
+export const PersonalForm: FC<{
+  setIsLoading: React.Dispatch<SetStateAction<boolean>>;
+}> = ({ setIsLoading }) => {
   const localStorageValues = getLocalStorage();
   const toast = useToast();
   const [data, setData] = useState(localStorageValues || initialValues);
@@ -37,6 +39,7 @@ export const PersonalForm: FC = () => {
     if (!final) setData(prevState => ({ ...prevState, ...data }));
 
     if (final) {
+      setIsLoading(true);
       try {
         await ContractAPI.createContract(
           prepareData(JSON.parse(JSON.stringify(data))),
@@ -64,6 +67,7 @@ export const PersonalForm: FC = () => {
           (error as AxiosError).message,
         );
       }
+      setIsLoading(false);
       return;
     }
 

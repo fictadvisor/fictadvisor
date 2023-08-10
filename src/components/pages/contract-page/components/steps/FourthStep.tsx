@@ -7,6 +7,7 @@ import { DividerTextAlign } from '@/components/common/ui/divider/types';
 import { Input } from '@/components/common/ui/form';
 import { FieldSize } from '@/components/common/ui/form/common/types';
 import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown';
+import FormikRadioGroup from '@/components/common/ui/form/with-formik/radio/FormikRadioGroup';
 import { Actions } from '@/components/pages/contract-page/components/Actions';
 import { kyiv } from '@/components/pages/contract-page/constants';
 import { REGIONS } from '@/components/pages/contract-page/constants';
@@ -17,8 +18,10 @@ import {
   customerValidation,
 } from '@/components/pages/contract-page/validation/customer';
 import useTabClose from '@/hooks/use-tab-close';
-import { ExtendedContractBody } from '@/lib/api/contract/types/ContractBody';
-import { PaymentTypeParam } from '@/types/contract';
+import {
+  ExtendedContractBody,
+  PassportType,
+} from '@/lib/api/contract/types/ContractBody';
 
 import { CheckBox } from '../../components/CheckBox';
 export interface ThirdStepProps {
@@ -54,7 +57,7 @@ export const FourthStep: FC<ThirdStepProps> = ({
         isForcePushed ? customerOptionalValidation : customerValidation
       }
     >
-      {({ values, setValues }) => (
+      {({ values }) => (
         <Form>
           <Typography variant="h4Bold">Інформація про замовника</Typography>
           <Box sx={stylesMui.item}>
@@ -115,45 +118,33 @@ export const FourthStep: FC<ThirdStepProps> = ({
               sx={stylesMui.divider}
             />
 
-            <CheckBox
-              name="helper.customerHasOldPassport"
-              label="Паспорт старого зразка"
-              onClick={() =>
-                setValues({
-                  ...values,
-                  helper: {
-                    ...values.helper,
-                    customerHasForeignPassport: false,
-                  },
-                })
-              }
+            <FormikRadioGroup
+              name="helper.customerPassportType"
+              options={[
+                {
+                  value: PassportType.ID,
+                  label: 'ID картка',
+                },
+                {
+                  value: PassportType.OLD,
+                  label: 'Паспорт старого зразка',
+                },
+                {
+                  value: PassportType.FOREIGN,
+                  label: 'Закордонний пасорт',
+                },
+              ]}
             />
 
-            <CheckBox
-              name="helper.customerHasForeignPassport"
-              label="Закордонний паспорт"
-              onClick={() =>
-                setValues({
-                  ...values,
-                  helper: {
-                    ...values.helper,
-                    customerHasOldPassport: false,
-                  },
-                })
-              }
-            />
-
-            {values?.helper?.customerHasForeignPassport ||
-            values?.helper?.customerHasOldPassport ? (
-              <Input name="customer.passportSeries" label="Серія паспорту" />
-            ) : (
-              <Input
-                name="customer.passportSeries"
-                label="Серія паспорту"
-                disabled
-                resetOnDisabled
-              />
-            )}
+            <Box sx={{ gap: '24px' }}>
+              {values?.helper?.customerPassportType !== PassportType.ID && (
+                <Input
+                  clearOnUnmount
+                  name="customer.passportSeries"
+                  label="Серія паспорту"
+                />
+              )}
+            </Box>
 
             <Input name="customer.passportNumber" label="Номер паспорту" />
           </Box>

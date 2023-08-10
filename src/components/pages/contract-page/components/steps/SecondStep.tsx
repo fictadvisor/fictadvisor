@@ -7,9 +7,9 @@ import { DividerTextAlign } from '@/components/common/ui/divider/types';
 import { Input } from '@/components/common/ui/form';
 import { FieldSize } from '@/components/common/ui/form/common/types';
 import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown';
+import FormikRadioGroup from '@/components/common/ui/form/with-formik/radio/FormikRadioGroup';
 import { Actions } from '@/components/pages/contract-page/components/Actions';
 import { CheckBox } from '@/components/pages/contract-page/components/CheckBox';
-import { CustomerCheckBox } from '@/components/pages/contract-page/components/CustomerCheckBox';
 import { REGIONS } from '@/components/pages/contract-page/constants';
 import { kyiv } from '@/components/pages/contract-page/constants';
 import * as stylesMui from '@/components/pages/contract-page/ContractPage.styles';
@@ -19,8 +19,10 @@ import {
   entrantValidationSchema,
 } from '@/components/pages/contract-page/validation/entrant';
 import useTabClose from '@/hooks/use-tab-close';
-import { ExtendedContractBody } from '@/lib/api/contract/types/ContractBody';
-import { PaymentTypeParam, StudyTypeParam } from '@/types/contract';
+import {
+  ExtendedContractBody,
+  PassportType,
+} from '@/lib/api/contract/types/ContractBody';
 export interface SecondStepProps {
   onNextStep: (data: ExtendedContractBody, final?: boolean) => void;
   onPrevStep: (data: ExtendedContractBody) => void;
@@ -56,7 +58,7 @@ export const SecondStep: FC<SecondStepProps> = ({
       }
       innerRef={form}
     >
-      {({ values, setValues }) => (
+      {({ values }) => (
         <Form>
           <Typography variant="h4Bold">Інформація про вступника</Typography>
           <Box sx={stylesMui.item}>
@@ -121,49 +123,37 @@ export const SecondStep: FC<SecondStepProps> = ({
               sx={stylesMui.divider}
             />
 
-            <CheckBox
-              name="helper.entrantHasOldPassport"
-              label="Паспорт старого зразка"
-              onClick={() =>
-                setValues({
-                  ...values,
-                  helper: {
-                    ...values.helper,
-                    entrantHasForeignPassport: false,
-                  },
-                })
-              }
-            />
-
-            <CheckBox
-              name="helper.entrantHasForeignPassport"
-              label="Закордонний паспорт"
-              onClick={() =>
-                setValues({
-                  ...values,
-                  helper: {
-                    ...values.helper,
-                    entrantHasOldPassport: false,
-                  },
-                })
-              }
+            <FormikRadioGroup
+              name="helper.entrantPassportType"
+              options={[
+                {
+                  value: PassportType.ID,
+                  label: 'ID картка',
+                },
+                {
+                  value: PassportType.OLD,
+                  label: 'Паспорт старого зразка',
+                },
+                {
+                  value: PassportType.FOREIGN,
+                  label: 'Закордонний пасорт',
+                },
+              ]}
             />
 
             <Box sx={{ gap: '24px' }}>
-              {values?.helper?.entrantHasForeignPassport ||
-              values?.helper?.entrantHasOldPassport ? (
-                <Input name="entrant.passportSeries" label="Серія паспорту" />
-              ) : (
+              {values?.helper?.entrantPassportType !== PassportType.ID && (
                 <Input
+                  clearOnUnmount
                   name="entrant.passportSeries"
                   label="Серія паспорту"
-                  disabled
-                  resetOnDisabled
                 />
               )}
-              <Input name="entrant.passportNumber" label={`Номер паспорту`} />
             </Box>
+
+            <Input name="entrant.passportNumber" label="Номер паспорту" />
           </Box>
+
           <Box sx={stylesMui.item}>
             <Input
               name="entrant.passportDate"
