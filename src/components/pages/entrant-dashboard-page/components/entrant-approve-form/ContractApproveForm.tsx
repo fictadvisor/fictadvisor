@@ -40,6 +40,7 @@ const ContractApproveForm: FC<ContractApproveFormProps> = ({
           firstName: data.firstName,
           middleName: data.middleName,
           lastName: data.lastName,
+          specialty: data.specialty,
         },
       };
       await contractAPI.createAdminContract(body);

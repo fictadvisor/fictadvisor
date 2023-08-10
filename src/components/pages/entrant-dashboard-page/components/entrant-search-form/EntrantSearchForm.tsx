@@ -7,11 +7,14 @@ import Button from '@/components/common/ui/button-mui';
 import Divider from '@/components/common/ui/divider';
 import { DividerTextAlign } from '@/components/common/ui/divider/types';
 import { Input } from '@/components/common/ui/form';
+import { FieldSize } from '@/components/common/ui/form/common/types';
+import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown';
+import { SPECIALITIES } from '@/components/pages/contract-admin-page/constants';
 import useTabClose from '@/hooks/use-tab-close';
 import useToast from '@/hooks/use-toast';
 import ContractAPI from '@/lib/api/contract/ContractAPI';
 import { EntrantFuIlResponse } from '@/lib/api/contract/types/EntrantFullResponse';
-import { Fullname } from '@/types/contract';
+import { EntrantBody } from '@/types/contract';
 
 import * as styles from '../../EntrantDashboardPage.styles';
 import { getLocalStorage, saveLocalStorage } from '../../utils/localStorage';
@@ -30,7 +33,7 @@ const errorMapper = {
 };
 const EntrantSearchForm: FC<EntrantSearchFormProps> = ({ setEntrantData }) => {
   const toast = useToast();
-  const handleSubmit = async (values: Fullname) => {
+  const handleSubmit = async (values: EntrantBody) => {
     try {
       if (values.middleName?.trim().length === 0) {
         values.middleName = undefined;
@@ -48,7 +51,7 @@ const EntrantSearchForm: FC<EntrantSearchFormProps> = ({ setEntrantData }) => {
     }
   };
 
-  const form = useRef<FormikProps<Fullname>>(null);
+  const form = useRef<FormikProps<EntrantBody>>(null);
 
   useTabClose(() => {
     saveLocalStorage(form?.current?.values ?? null);
@@ -82,6 +85,13 @@ const EntrantSearchForm: FC<EntrantSearchFormProps> = ({ setEntrantData }) => {
               name="middleName"
               placeholder={'Григорович'}
               label={`По-батькові`}
+            />
+            <FormikDropdown
+              size={FieldSize.LARGE}
+              options={SPECIALITIES}
+              label="Спеціальність"
+              name="specialty"
+              placeholder="виберіть зі списку"
             />
             <Button sx={styles.button} text="Знайти" type="submit" />
           </Box>

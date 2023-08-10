@@ -8,13 +8,15 @@ import Button from '@/components/common/ui/button-mui';
 import Divider from '@/components/common/ui/divider';
 import { DividerTextAlign } from '@/components/common/ui/divider/types';
 import { Input } from '@/components/common/ui/form';
+import { FieldSize } from '@/components/common/ui/form/common/types';
+import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown';
 import { checkError } from '@/components/pages/contract-admin-page/utils';
 import { validationSchema } from '@/components/pages/contract-admin-page/validation';
 import useToast from '@/hooks/use-toast';
 import contractAPI from '@/lib/api/contract/ContractAPI';
 import { AdminContractBody } from '@/lib/api/contract/types/AdminContractBody';
 
-import { initialValues } from './constants/index';
+import { initialValues, SPECIALITIES } from './constants/index';
 import * as styles from './ContractAdminPage.styles';
 
 const TOAST_TIMER = 4000;
@@ -74,6 +76,13 @@ const ContractAdminPage = () => {
                 <Input name="entrant.lastName" placeholder="Прізвище" />
                 <Input name="entrant.firstName" placeholder="Ім'я" />
                 <Input name="entrant.middleName" placeholder="По батькові" />
+                <FormikDropdown
+                  size={FieldSize.LARGE}
+                  options={SPECIALITIES}
+                  label="Спеціальність"
+                  name="entrant.specialty"
+                  placeholder="виберіть зі списку"
+                />
               </Box>
               <Button sx={styles.button} text="Відправити" type="submit" />
             </Box>

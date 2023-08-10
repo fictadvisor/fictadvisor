@@ -14,7 +14,7 @@ export const enum priorityState {
 }
 export interface EntrantFuIlResponse extends Fullname {
   id: string;
-  specialty: 121 | 123 | 126;
+  specialty: '121' | '123' | '126';
   competitivePoint: number;
   studyType: StudyTypeParam;
   studyForm: StudyFormParam;

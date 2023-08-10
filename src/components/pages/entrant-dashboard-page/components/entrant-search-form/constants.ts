@@ -1,7 +1,8 @@
-import { Fullname } from '@/types/contract';
+import { EntrantBody } from '@/types/contract';
 
-export const initialValues: Fullname = {
+export const initialValues: EntrantBody = {
   firstName: '',
   middleName: '',
   lastName: '',
+  specialty: '',
 };

@@ -5,7 +5,7 @@ import { EntrantFuIlResponse } from '@/lib/api/contract/types/EntrantFullRespons
 import { PriorityDataBody } from '@/lib/api/contract/types/PriorityDataBody';
 import { client } from '@/lib/api/instance';
 import { getAuthorizationHeader } from '@/lib/api/utils';
-import { Fullname } from '@/types/contract';
+import { EntrantBody, Fullname } from '@/types/contract';
 
 import { AdminContractBody } from './types/AdminContractBody';
 
@@ -84,7 +84,7 @@ class ContractAPI {
     return data;
   }
 
-  async getEntrantInfo(body: Fullname) {
+  async getEntrantInfo(body: EntrantBody) {
     const { data } = await client.get<EntrantFuIlResponse>('/entrants', {
       params: body,
       ...getAuthorizationHeader(),
