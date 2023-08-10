@@ -18,6 +18,9 @@ export const getLocalStorage = (): ExtendedContractBody | null => {
     parsedData.meta.isForcePushed = !!parsedData.meta.isForcePushed;
     parsedData.helper.hasCustomer = !!parsedData.helper.hasCustomer;
 
+    console.log(compareNestedKeys(parsedData, initialValues as never));
+    console.log(parsedData, initialValues);
+
     if (compareNestedKeys(parsedData, initialValues as never))
       return parsedData as ExtendedContractBody;
   }
@@ -48,8 +51,6 @@ function compareNestedKeys(
       if (!compareNestedKeys(value1, value2)) {
         return false;
       }
-    } else if (value1 !== value2) {
-      return false;
     }
   }
 
