@@ -39,12 +39,20 @@ export interface HelperData {
   representativeHasOldPassport: boolean;
   representativeHasNoCode: boolean;
   representativeHasNoMiddleName: boolean;
+
+  customerHasForeignPassport: boolean;
+  customerHasOldPassport: boolean;
+  customerHasNoCode: boolean;
+  customerHasNoMiddleName: boolean;
+
+  hasCustomer: boolean;
 }
 
 //kostili ebani
 export interface ExtendedContractBody {
   entrant: PersonalData;
   representative: PartialBy<PersonalData, 'email'>;
+  customer: PartialBy<PersonalData, 'email'>;
   meta: MetaContract;
   helper: HelperData;
 }

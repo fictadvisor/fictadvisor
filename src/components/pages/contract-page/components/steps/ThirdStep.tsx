@@ -15,10 +15,9 @@ import { saveLocalStorage } from '@/components/pages/contract-page/utils/localSt
 import {
   representativeOptionalValidation,
   representativeValidation,
-} from '@/components/pages/contract-page/validation';
+} from '@/components/pages/contract-page/validation/representative';
 import useTabClose from '@/hooks/use-tab-close';
 import { ExtendedContractBody } from '@/lib/api/contract/types/ContractBody';
-import { PaymentTypeParam } from '@/types/contract';
 
 import { CheckBox } from '../../components/CheckBox';
 export interface ThirdStepProps {
@@ -34,7 +33,7 @@ export const ThirdStep: FC<ThirdStepProps> = ({
   isForcePushed,
 }) => {
   const handleSubmit = (values: ExtendedContractBody) => {
-    onNextStep(values, true);
+    onNextStep(values, !values?.helper?.isAdult && !values.helper.hasCustomer);
   };
 
   const form = useRef<FormikProps<ExtendedContractBody>>(null);
@@ -47,9 +46,11 @@ export const ThirdStep: FC<ThirdStepProps> = ({
 
   return (
     <Formik
+      onSubmit={values => {
+        handleSubmit(values);
+      }}
       innerRef={form}
       initialValues={data}
-      onSubmit={handleSubmit}
       validationSchema={
         isForcePushed
           ? representativeOptionalValidation
@@ -239,7 +240,8 @@ export const ThirdStep: FC<ThirdStepProps> = ({
               placeholder="12345"
             />
           </Box>
-          {values.meta.isToAdmission && (
+
+          {values.meta.isToAdmission && !values.helper.hasCustomer && (
             <Box sx={stylesMui.item}>
               <Divider
                 textAlign={DividerTextAlign.LEFT}
@@ -255,23 +257,23 @@ export const ThirdStep: FC<ThirdStepProps> = ({
             </Box>
           )}
 
-          {(values?.meta?.isForcePushed ||
-            values.meta.paymentType === PaymentTypeParam.EVERY_MONTH) && (
-            <Box sx={stylesMui.item}>
-              <Input
-                name="helper.forcePushedNumber"
-                label="Код форс пушу"
-                placeholder="0000"
-              />
-            </Box>
-          )}
+          {values?.meta?.isForcePushed &&
+            !values.helper.isAdult &&
+            !values.helper.hasCustomer && (
+              <Box sx={stylesMui.item}>
+                <Input
+                  name="helper.forcePushedNumber"
+                  label="Код форс пушу"
+                  placeholder="0000"
+                />
+              </Box>
+            )}
 
           <Actions
             onPrevStep={() => {
               if (form.current) onPrevStep(form.current.values);
             }}
-            last={!values?.helper?.isAdult}
-            // isFormValid={touched && isValid}
+            last={!values?.helper?.isAdult && !values.helper.hasCustomer}
           />
         </Form>
       )}

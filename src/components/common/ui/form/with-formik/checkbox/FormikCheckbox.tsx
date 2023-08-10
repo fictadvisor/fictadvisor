@@ -1,11 +1,6 @@
 import React, { FC } from 'react';
-import {
-  Checkbox as MuiCheckbox,
-  FormControlLabel,
-  Typography,
-} from '@mui/material';
+import { Checkbox as MuiCheckbox } from '@mui/material';
 import { SxProps, Theme } from '@mui/material/styles';
-import { useField } from 'formik';
 
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 
@@ -14,7 +9,7 @@ import Icon from './components/Icon';
 import * as styles from './Checkbox.styles';
 import { CheckboxColor, CheckboxTextType } from './types';
 
-interface CheckboxProps {
+export interface CheckboxProps {
   label?: string;
   disabled?: boolean;
   sx?: SxProps<Theme>;
@@ -33,12 +28,12 @@ const FormikCheckbox: FC<CheckboxProps> = ({
 }) => {
   return (
     <MuiCheckbox
+      {...rest}
       onChange={onChange}
       checkedIcon={<CheckedIcon disabled={disabled} color={color} />}
       icon={<Icon disabled={disabled} color={color} />}
       disableRipple
       sx={mergeSx(styles.checkBox, sx)}
-      {...rest}
     />
   );
 };

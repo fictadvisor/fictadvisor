@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { ChangeEvent, FC, useEffect } from 'react';
 import { FormControlLabel, RadioGroup } from '@mui/material';
 import { RadioGroupProps } from '@mui/material/RadioGroup/RadioGroup';
 import { useField } from 'formik';
@@ -22,6 +22,7 @@ const FormikRadioGroup: FC<FormikRadioGroup> = ({
   options,
   name,
   clearValueOnUnmount = false,
+  onChange,
   ...props
 }: FormikRadioGroup) => {
   const [field, , helpers] = useField(name);
@@ -39,7 +40,15 @@ const FormikRadioGroup: FC<FormikRadioGroup> = ({
   }, []);
 
   return (
-    <RadioGroup {...field} {...props} sx={{ gap: '12px' }}>
+    <RadioGroup
+      {...field}
+      {...props}
+      onChange={(event: ChangeEvent<HTMLInputElement>, value: string) => {
+        if (onChange) onChange(event, value);
+        helpers.setValue(value);
+      }}
+      sx={{ gap: '12px' }}
+    >
       {options.map(option => (
         <FormControlLabel
           key={option.label}

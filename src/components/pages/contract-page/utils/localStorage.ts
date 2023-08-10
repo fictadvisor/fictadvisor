@@ -15,6 +15,7 @@ export const getLocalStorage = (): ExtendedContractBody | null => {
   if (data) {
     const parsedData: ExtendedContractBody = JSON.parse(data);
     parsedData.meta.isForcePushed = !!parsedData.meta.isForcePushed;
+    parsedData.helper.hasCustomer = !!parsedData.helper.hasCustomer;
     return parsedData;
   }
 

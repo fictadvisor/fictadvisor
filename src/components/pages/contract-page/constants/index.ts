@@ -64,6 +64,22 @@ export const initialValues: ExtendedContractBody = {
     email: '',
     index: '',
   },
+  customer: {
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    passportSeries: '',
+    passportNumber: '',
+    passportInstitute: '',
+    passportDate: '',
+    address: '',
+    settlement: '',
+    idCode: '',
+    region: '',
+    phoneNumber: '',
+    email: '',
+    index: '',
+  },
   meta: {
     studyType: '',
     studyForm: '',
@@ -78,14 +94,20 @@ export const initialValues: ExtendedContractBody = {
     entrantHasNoCode: false,
     entrantHasNoMiddleName: false,
 
-    isAdult: false,
-
-    secretNumber: '',
-    forcePushedNumber: '',
-
     representativeHasForeignPassport: false,
     representativeHasOldPassport: false,
     representativeHasNoCode: false,
     representativeHasNoMiddleName: false,
+
+    customerHasForeignPassport: false,
+    customerHasOldPassport: false,
+    customerHasNoCode: false,
+    customerHasNoMiddleName: false,
+
+    hasCustomer: false,
+    isAdult: false,
+
+    secretNumber: '',
+    forcePushedNumber: '',
   },
 };

@@ -3,10 +3,12 @@ import { Box, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
 import { Form, Formik, FormikProps } from 'formik';
 
+import Checkbox from '@/components/common/ui/form/checkbox';
 import FormikRadioGroup from '@/components/common/ui/form/with-formik/radio/FormikRadioGroup';
 import { CheckBox } from '@/components/pages/contract-page/components/CheckBox';
+import { CustomerCheckBox } from '@/components/pages/contract-page/components/CustomerCheckBox';
 import * as stylesMui from '@/components/pages/contract-page/ContractPage.styles';
-import { metaValidationSchema } from '@/components/pages/contract-page/validation';
+import { metaValidationSchema } from '@/components/pages/contract-page/validation/meta';
 import useTabClose from '@/hooks/use-tab-close';
 import { ExtendedContractBody } from '@/lib/api/contract/types/ContractBody';
 import {
@@ -21,11 +23,15 @@ export interface FirstStepProps {
   onNextStep: (data: ExtendedContractBody) => void;
   data: ExtendedContractBody;
   setIsForcePushed: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsAdult: React.Dispatch<React.SetStateAction<boolean>>;
+  setHasCustomer: React.Dispatch<React.SetStateAction<boolean>>;
 }
 export const FirstStep: FC<FirstStepProps> = ({
   onNextStep,
   data,
   setIsForcePushed,
+  setIsAdult,
+  setHasCustomer,
 }) => {
   const handleSubmit = (values: ExtendedContractBody) => {
     onNextStep(values);
@@ -50,7 +56,7 @@ export const FirstStep: FC<FirstStepProps> = ({
       onSubmit={handleSubmit}
       validationSchema={metaValidationSchema}
     >
-      {({ values }) => (
+      {({ values, setValues }) => (
         <Form>
           <Stack gap={'40px'}>
             <Box sx={stylesMui.item}>
@@ -81,13 +87,20 @@ export const FirstStep: FC<FirstStepProps> = ({
                       value: PaymentTypeParam.EVERY_SEMESTER,
                       label: 'Щосеместрово',
                     },
-
                     {
                       value: PaymentTypeParam.EVERY_YEAR,
                       label: 'Щороку',
                     },
                   ]}
                   clearValueOnUnmount
+                  onChange={(event, value) => {
+                    if (value === PaymentTypeParam.EVERY_MONTH) {
+                      setValues({
+                        ...values,
+                        meta: { ...values.meta, isToAdmission: true },
+                      });
+                    }
+                  }}
                 />
               </Box>
             )}
@@ -130,7 +143,11 @@ export const FirstStep: FC<FirstStepProps> = ({
                 />
               </Box>
               <Box sx={stylesMui.item}>
-                <CheckBox name="helper.isAdult" label="Є 18 років" />
+                <CheckBox
+                  name="helper.isAdult"
+                  label="Є 18 років"
+                  onClick={() => setIsAdult(!values.helper.isAdult)}
+                />
               </Box>
               <Box sx={stylesMui.item}>
                 <CheckBox
@@ -139,6 +156,14 @@ export const FirstStep: FC<FirstStepProps> = ({
                   onClick={handleCheck}
                 />
               </Box>
+              {values.meta.studyType === StudyTypeParam.CONTRACT && (
+                <Box sx={stylesMui.item}>
+                  <CustomerCheckBox
+                    setHasCustomer={setHasCustomer}
+                    prevCheckBoxState={values.helper.hasCustomer}
+                  />
+                </Box>
+              )}
             </Box>
 
             <Actions first />

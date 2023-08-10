@@ -8,36 +8,36 @@ import { Input } from '@/components/common/ui/form';
 import { FieldSize } from '@/components/common/ui/form/common/types';
 import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown';
 import { Actions } from '@/components/pages/contract-page/components/Actions';
-import { CheckBox } from '@/components/pages/contract-page/components/CheckBox';
-import { CustomerCheckBox } from '@/components/pages/contract-page/components/CustomerCheckBox';
-import { REGIONS } from '@/components/pages/contract-page/constants';
 import { kyiv } from '@/components/pages/contract-page/constants';
+import { REGIONS } from '@/components/pages/contract-page/constants';
 import * as stylesMui from '@/components/pages/contract-page/ContractPage.styles';
 import { saveLocalStorage } from '@/components/pages/contract-page/utils/localStorage';
 import {
-  entrantOptionalValidationSchema,
-  entrantValidationSchema,
-} from '@/components/pages/contract-page/validation/entrant';
+  customerOptionalValidation,
+  customerValidation,
+} from '@/components/pages/contract-page/validation/customer';
 import useTabClose from '@/hooks/use-tab-close';
 import { ExtendedContractBody } from '@/lib/api/contract/types/ContractBody';
-import { PaymentTypeParam, StudyTypeParam } from '@/types/contract';
-export interface SecondStepProps {
-  onNextStep: (data: ExtendedContractBody, final?: boolean) => void;
+import { PaymentTypeParam } from '@/types/contract';
+
+import { CheckBox } from '../../components/CheckBox';
+export interface ThirdStepProps {
+  onNextStep: (data: ExtendedContractBody, last: boolean) => void;
   onPrevStep: (data: ExtendedContractBody) => void;
   data: ExtendedContractBody;
-
   isForcePushed: boolean;
 }
-export const SecondStep: FC<SecondStepProps> = ({
+export const FourthStep: FC<ThirdStepProps> = ({
+  onPrevStep,
   onNextStep,
   data,
-  onPrevStep,
   isForcePushed,
 }) => {
-  const form = useRef<FormikProps<ExtendedContractBody>>(null);
   const handleSubmit = (values: ExtendedContractBody) => {
-    onNextStep(values, data?.helper?.isAdult && !data?.helper?.hasCustomer);
+    onNextStep(values, true);
   };
+
+  const form = useRef<FormikProps<ExtendedContractBody>>(null);
 
   useTabClose(() => {
     if (form?.current?.values) {
@@ -47,53 +47,47 @@ export const SecondStep: FC<SecondStepProps> = ({
 
   return (
     <Formik
+      innerRef={form}
       initialValues={data}
       onSubmit={handleSubmit}
       validationSchema={
-        isForcePushed
-          ? entrantOptionalValidationSchema
-          : entrantValidationSchema
+        isForcePushed ? customerOptionalValidation : customerValidation
       }
-      innerRef={form}
     >
       {({ values, setValues }) => (
         <Form>
-          <Typography variant="h4Bold">Інформація про вступника</Typography>
+          <Typography variant="h4Bold">Інформація про замовника</Typography>
           <Box sx={stylesMui.item}>
             <Divider
               textAlign={DividerTextAlign.LEFT}
-              text="Особисті дані вступника"
+              text="Особисті дані замовника"
               sx={stylesMui.divider}
             />
             <Input
-              name="entrant.lastName"
+              name="customer.lastName"
               placeholder="Шевченко"
-              label={`Прізвище`}
+              label="Прізвище"
             />
           </Box>
           <Box sx={stylesMui.item}>
-            <Input
-              name="entrant.firstName"
-              placeholder="Тарас"
-              label={`Ім’я`}
-            />
+            <Input name="customer.firstName" placeholder="Тарас" label="Ім’я" />
           </Box>
           <Box sx={stylesMui.item}>
             <CheckBox
-              name="helper.entrantHasNoMiddleName"
+              name="helper.customerHasNoMiddleName"
               label="Немає по-батькові"
             />
-            {values?.helper?.entrantHasNoMiddleName ? (
+            {values?.helper?.customerHasNoMiddleName ? (
               <Input
-                resetOnDisabled
-                name="entrant.middleName"
+                name="customer.middleName"
                 disabled={true}
+                resetOnDisabled
                 placeholder={'Григорович'}
                 label={`По-батькові`}
               />
             ) : (
               <Input
-                name="entrant.middleName"
+                name="customer.middleName"
                 disabled={false}
                 placeholder={'Григорович'}
                 label={`По-батькові`}
@@ -102,96 +96,95 @@ export const SecondStep: FC<SecondStepProps> = ({
           </Box>
           <Box sx={stylesMui.item}>
             <Input
-              name="entrant.phoneNumber"
-              placeholder="+380123456789"
-              label={`Номер телефону`}
+              name="customer.phoneNumber"
+              placeholder="+9970951234567"
+              label="Номер телефону"
             />
           </Box>
           <Box sx={stylesMui.item}>
             <Input
-              name="entrant.email"
+              name="customer.email"
               placeholder="smthcool@gmail.com"
-              label={`Електронна пошта`}
+              label="Електронна пошта"
             />
           </Box>
           <Box sx={stylesMui.item}>
             <Divider
               textAlign={DividerTextAlign.LEFT}
-              text="Паспортні дані вступника"
+              text="Паспортні дані замовника"
               sx={stylesMui.divider}
             />
 
             <CheckBox
-              name="helper.entrantHasOldPassport"
+              name="helper.customerHasOldPassport"
               label="Паспорт старого зразка"
               onClick={() =>
                 setValues({
                   ...values,
                   helper: {
                     ...values.helper,
-                    entrantHasForeignPassport: false,
+                    customerHasForeignPassport: false,
                   },
                 })
               }
             />
 
             <CheckBox
-              name="helper.entrantHasForeignPassport"
+              name="helper.customerHasForeignPassport"
               label="Закордонний паспорт"
               onClick={() =>
                 setValues({
                   ...values,
                   helper: {
                     ...values.helper,
-                    entrantHasOldPassport: false,
+                    customerHasOldPassport: false,
                   },
                 })
               }
             />
 
-            <Box sx={{ gap: '24px' }}>
-              {values?.helper?.entrantHasForeignPassport ||
-              values?.helper?.entrantHasOldPassport ? (
-                <Input name="entrant.passportSeries" label="Серія паспорту" />
-              ) : (
-                <Input
-                  name="entrant.passportSeries"
-                  label="Серія паспорту"
-                  disabled
-                  resetOnDisabled
-                />
-              )}
-              <Input name="entrant.passportNumber" label={`Номер паспорту`} />
-            </Box>
+            {values?.helper?.customerHasForeignPassport ||
+            values?.helper?.customerHasOldPassport ? (
+              <Input name="customer.passportSeries" label="Серія паспорту" />
+            ) : (
+              <Input
+                name="customer.passportSeries"
+                label="Серія паспорту"
+                disabled
+                resetOnDisabled
+              />
+            )}
+
+            <Input name="customer.passportNumber" label="Номер паспорту" />
           </Box>
           <Box sx={stylesMui.item}>
             <Input
-              name="entrant.passportDate"
-              label={`Дата видачі паспорту`}
+              name="customer.passportDate"
+              label="Дата видачі паспорту"
               placeholder="25.07.2017"
             />
           </Box>
           <Box sx={stylesMui.item}>
             <Input
-              name="entrant.passportInstitute"
-              label={`Орган видачі паспорту`}
+              name="customer.passportInstitute"
+              label="Орган видачі паспорту"
             />
           </Box>
           <Box sx={stylesMui.item}>
             <CheckBox
-              name="helper.entrantHasNoCode"
+              name="helper.customerHasNoCode"
               label="Відмова від РНОКПП"
             />
-            {values?.helper?.entrantHasNoCode ? (
+            {values?.helper?.customerHasNoCode ? (
               <Input
-                name="entrant.idCode"
+                name="customer.idCode"
                 disabled={true}
                 resetOnDisabled
                 label="Ідентифікаційний код"
               />
             ) : (
               <Input
-                name="entrant.idCode"
+                name="customer.idCode"
                 disabled={false}
                 label="Ідентифікаційний код"
               />
@@ -200,21 +193,21 @@ export const SecondStep: FC<SecondStepProps> = ({
           <Box sx={stylesMui.item}>
             <Divider
               textAlign={DividerTextAlign.LEFT}
-              text="Місце проживання вступника"
+              text="Місце проживання замовника"
               sx={stylesMui.divider}
             />
             <FormikDropdown
               size={FieldSize.LARGE}
               options={REGIONS}
               label="Регіон"
-              name="entrant.region"
+              name="customer.region"
               placeholder="виберіть зі списку"
             />
           </Box>
-          {values.entrant.region !== kyiv && (
+          {values.customer.region !== kyiv && (
             <Box sx={stylesMui.item}>
               <Input
-                name="entrant.settlement"
+                name="customer.settlement"
                 placeholder="с. Пуків/м. Київ"
                 label="Населений пункт"
               />
@@ -222,20 +215,20 @@ export const SecondStep: FC<SecondStepProps> = ({
           )}
           <Box sx={stylesMui.item}>
             <Input
-              name="entrant.address"
+              name="customer.address"
               label={`Адреса (зі скороченнями)`}
               placeholder="вул. Липова, буд.32 ,кв.1"
             />
           </Box>
           <Box sx={stylesMui.item}>
             <Input
-              name="entrant.index"
-              label={`Поштовий індекс`}
+              name="customer.index"
+              label="Поштовий індекс"
               placeholder="12345"
             />
           </Box>
 
-          {values.meta.isToAdmission && values?.helper?.isAdult && (
+          {values.meta.isToAdmission && (
             <Box sx={stylesMui.item}>
               <Divider
                 textAlign={DividerTextAlign.LEFT}
@@ -251,23 +244,21 @@ export const SecondStep: FC<SecondStepProps> = ({
             </Box>
           )}
 
-          {values?.helper?.isAdult &&
-            !values?.helper?.hasCustomer &&
-            values?.meta?.isForcePushed && (
-              <Box sx={stylesMui.item}>
-                <Input
-                  name="helper.forcePushedNumber"
-                  label="Код форс пушу"
-                  placeholder="0000"
-                />
-              </Box>
-            )}
+          {values?.meta?.isForcePushed && (
+            <Box sx={stylesMui.item}>
+              <Input
+                name="helper.forcePushedNumber"
+                label="Код форс пушу"
+                placeholder="0000"
+              />
+            </Box>
+          )}
 
           <Actions
             onPrevStep={() => {
               if (form.current) onPrevStep(form.current.values);
             }}
-            last={values?.helper?.isAdult && !values.helper.hasCustomer}
+            last
           />
         </Form>
       )}

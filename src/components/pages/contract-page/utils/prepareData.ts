@@ -8,13 +8,12 @@ import { PaymentTypeParam, StudyTypeParam } from '@/types/contract';
 export const prepareData = (
   initialData: ExtendedContractBody,
 ): ContractBody => {
-  delete (initialData as PartialBy<ExtendedContractBody, 'helper'>).helper;
-
-  const data = replaceApostrophes(initialData);
+  const data: ExtendedContractBody = replaceApostrophes(initialData);
 
   data.entrant = trimObject(data.entrant);
   data.meta = trimObject(data.meta);
   data.representative = trimObject(data.representative);
+  data.customer = trimObject(data.customer);
 
   if (data.entrant.middleName?.length === 0)
     data.entrant.middleName = undefined;
@@ -31,6 +30,13 @@ export const prepareData = (
   if (data.representative.email?.length === 0)
     data.representative.email = undefined;
 
+  if (data.customer.middleName?.length === 0)
+    data.customer.middleName = undefined;
+  if (data.customer.idCode?.length === 0) data.customer.idCode = undefined;
+  if (data.customer.passportSeries?.length === 0)
+    data.customer.passportSeries = undefined;
+  if (data.customer.email?.length === 0) data.customer.email = undefined;
+
   if (data.meta.paymentType?.length === 0) data.meta.paymentType = undefined;
 
   if (data.entrant.region === kyiv) {
@@ -43,18 +49,28 @@ export const prepareData = (
     data.representative.region = undefined;
   }
 
-  // if (data.meta.studyType === StudyTypeParam.CONTRACT) {
-  //   data.meta.paymentType = PaymentTypeParam.EVERY_SEMESTER;
-  // } else {
-  //   data.meta.paymentType = undefined;
-  // }
+  if (data.customer.region === kyiv) {
+    data.customer.settlement = kyiv;
+    data.customer.region = undefined;
+  }
+
+  if (!data.helper.hasCustomer)
+    delete (data as PartialBy<ExtendedContractBody, 'customer'>).customer;
+
+  if (data.helper.isAdult)
+    delete (data as PartialBy<ExtendedContractBody, 'representative'>)
+      .representative;
+
+  delete (data as PartialBy<ExtendedContractBody, 'helper'>).helper;
 
   console.log(data);
 
   return data;
 };
 
-const replaceApostrophes = (initialData: ContractBody): ContractBody => {
+const replaceApostrophes = (
+  initialData: ExtendedContractBody,
+): ExtendedContractBody => {
   return JSON.parse(JSON.stringify(initialData).replaceAll(/[`'’‘“”*]/g, '`'));
 };
 
