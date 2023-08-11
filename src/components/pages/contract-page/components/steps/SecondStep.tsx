@@ -225,21 +225,25 @@ export const SecondStep: FC<SecondStepProps> = ({
             />
           </Box>
 
-          {values.meta.isToAdmission && values?.helper?.isAdult && (
-            <Box sx={stylesMui.item}>
-              <Divider
-                textAlign={DividerTextAlign.LEFT}
-                text="Підтвердження даних"
-                sx={stylesMui.divider}
-              />
-              <Typography variant="h6Bold">Зверніться до оператора</Typography>
-              <Input
-                name="helper.secretNumber"
-                label="Секретний код"
-                placeholder="0000"
-              />
-            </Box>
-          )}
+          {values.meta.isToAdmission &&
+            values?.helper?.isAdult &&
+            !values?.helper.hasCustomer && (
+              <Box sx={stylesMui.item}>
+                <Divider
+                  textAlign={DividerTextAlign.LEFT}
+                  text="Підтвердження даних"
+                  sx={stylesMui.divider}
+                />
+                <Typography variant="h6Bold">
+                  Зверніться до оператора
+                </Typography>
+                <Input
+                  name="helper.secretNumber"
+                  label="Секретний код"
+                  placeholder="0000"
+                />
+              </Box>
+            )}
 
           {values?.helper?.isAdult &&
             !values?.helper?.hasCustomer &&
