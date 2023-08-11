@@ -11,12 +11,12 @@ import Input from '@/components/common/ui/form/input';
 import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown';
 import FormikRadioGroup from '@/components/common/ui/form/with-formik/radio/FormikRadioGroup';
 import { CheckBox } from '@/components/pages/contract-page/components/CheckBox';
-import * as stylesMui from '@/components/pages/contract-page/ContractPage.styles';
 import {
   initialValues,
   IPeduPrograms,
   ISTeduPrograms,
 } from '@/components/pages/priority-page/constants';
+import * as styles from '@/components/pages/priority-page/PriorityPage.styles';
 import {
   getLocalStorage,
   saveLocalStorage,
@@ -80,11 +80,11 @@ const PriorityPage: FC = () => {
       }
       onSubmit={handleFormSubmit}
     >
-      {({ values, isValid }) => (
+      {({ values }) => (
         <Form
           style={{ gap: '40px', paddingTop: '24px', paddingBottom: '50px' }}
         >
-          <Box sx={stylesMui.item}>
+          <Box sx={styles.item}>
             <Typography variant="h6Bold">Спеціальність</Typography>
             <FormikRadioGroup
               name="specialty"
@@ -100,9 +100,9 @@ const PriorityPage: FC = () => {
               ]}
             />
           </Box>
-          <Box sx={stylesMui.item}>
+          <Box sx={styles.item}>
             {values.specialty === '121' && (
-              <Box sx={stylesMui.item}>
+              <Box sx={styles.item}>
                 <Typography variant="h6Bold">Освітні програми</Typography>
                 <FormikDropdown
                   name="priorities.1"
@@ -123,7 +123,7 @@ const PriorityPage: FC = () => {
               </Box>
             )}
             {values.specialty === '126' && (
-              <Box sx={stylesMui.item}>
+              <Box sx={styles.item}>
                 <Typography variant="h6Bold">Освітні програми</Typography>
                 <FormikDropdown
                   options={ISTeduPrograms}
@@ -154,13 +154,13 @@ const PriorityPage: FC = () => {
           </Box>
           <Box sx={{ gap: '24px' }}>
             <Divider
-              sx={{ marginBottom: '12px' }}
+              sx={styles.divider}
               textAlign={DividerTextAlign.LEFT}
               text="Дані про вступника"
             />
-            <Input name="lastName" placeholder="Шевченко" label="Прізвище" />
-            <Input name="firstName" placeholder="Тарас" label="Ім'я" />
-            <Box sx={stylesMui.item}>
+            <Box sx={styles.item}>
+              <Input name="lastName" placeholder="Шевченко" label="Прізвище" />
+              <Input name="firstName" placeholder="Тарас" label="Ім'я" />
               <CheckBox name="noMiddleName" label="Немає по-батькові" />
               {values?.noMiddleName ? (
                 <Input
@@ -183,9 +183,9 @@ const PriorityPage: FC = () => {
           <Divider
             textAlign={DividerTextAlign.LEFT}
             text="Дата заповнення"
-            sx={{ marginBottom: '12px' }}
+            sx={styles.divider}
           />
-          <Box sx={stylesMui.item}>
+          <Box sx={styles.item}>
             <Input name="day" label="Число (день місяця)" placeholder="21" />
             <Input
               name="email"
@@ -198,11 +198,11 @@ const PriorityPage: FC = () => {
               label="Формую пріоритетку в корпусі"
             />
             {values.isToAdmission && (
-              <Box sx={stylesMui.item}>
+              <Box sx={styles.item}>
                 <Divider
                   textAlign={DividerTextAlign.LEFT}
                   text="Підтвердження даних"
-                  sx={{ marginBottom: '12px' }}
+                  sx={styles.divider}
                 />
                 <Typography variant="h6Bold">
                   Віддайте телефон оператору
@@ -215,7 +215,7 @@ const PriorityPage: FC = () => {
               </Box>
             )}
 
-            <Box sx={stylesMui.item}>
+            <Box sx={styles.item}>
               <CheckBox
                 name="isForcePushed"
                 label="Надіслати примусово (НЕ НАТИСКАТИ)"
@@ -225,7 +225,7 @@ const PriorityPage: FC = () => {
               />
             </Box>
             {values?.isForcePushed && (
-              <Box sx={stylesMui.item}>
+              <Box sx={styles.item}>
                 <Input
                   name="forcePushedNumber"
                   label="Код форс пушу"

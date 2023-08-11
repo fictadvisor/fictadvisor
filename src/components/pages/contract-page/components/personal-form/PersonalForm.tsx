@@ -16,7 +16,6 @@ import { FourthStep } from './../steps/FourthStep';
 import { SecondStep } from './../steps/SecondStep';
 import { ThirdStep } from './../steps/ThirdStep';
 import { formWrapper } from './PersonalForm.styles';
-
 export const PersonalForm: FC<{
   setIsLoading: React.Dispatch<SetStateAction<boolean>>;
 }> = ({ setIsLoading }) => {

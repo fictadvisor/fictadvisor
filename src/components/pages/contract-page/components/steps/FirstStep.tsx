@@ -3,7 +3,6 @@ import { Box, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
 import { Form, Formik, FormikProps } from 'formik';
 
-import Checkbox from '@/components/common/ui/form/checkbox';
 import FormikRadioGroup from '@/components/common/ui/form/with-formik/radio/FormikRadioGroup';
 import { CheckBox } from '@/components/pages/contract-page/components/CheckBox';
 import { CustomerCheckBox } from '@/components/pages/contract-page/components/CustomerCheckBox';
@@ -139,7 +138,7 @@ export const FirstStep: FC<FirstStepProps> = ({
               <Box sx={stylesMui.item}>
                 <CheckBox
                   name="meta.isToAdmission"
-                  label="Формую договір в корпусі"
+                  label="Формую договір в корпусі (*)"
                 />
               </Box>
               <Box sx={stylesMui.item}>
@@ -163,6 +162,22 @@ export const FirstStep: FC<FirstStepProps> = ({
                     prevCheckBoxState={values.helper.hasCustomer}
                   />
                 </Box>
+              )}
+            </Box>
+
+            <Box sx={stylesMui.item}>
+              <Typography fontSize={'11px'}>
+                *На момент формування пріоритетки/договору ви перебуваєте в
+                корпусі, щоб заповнення даних зміг перевірити один з
+                представників відбіркової комісії
+              </Typography>
+              {values.meta.studyType === StudyTypeParam.CONTRACT && (
+                <Typography fontSize={'11px'}>
+                  **Замовник - особа, яка оплачує контракт. За замовчуванням
+                  замовник вважається вступником, якщо вступник неповнолітній -
+                  замовником вважають законного представника. За бажанням, можна
+                  змінити замовника
+                </Typography>
               )}
             </Box>
 
