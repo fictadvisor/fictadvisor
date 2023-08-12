@@ -137,7 +137,7 @@ export const PersonalDataSection: FC<PersonalDataSectionProps> = ({
           variant={ButtonVariant.OUTLINE}
           size={ButtonSize.SMALL}
           type={'button'}
-          text="Відправити пріориитетку на пошту"
+          text="Відправити пріоритетку на пошту"
           onClick={sendPriorityOnEmail}
           sx={{
             width: 'fit-content',
