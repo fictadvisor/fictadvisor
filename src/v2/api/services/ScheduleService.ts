@@ -14,7 +14,7 @@ import { AttachLessonDTO } from '../dtos/AttachLessonDTO';
 import { InvalidDateException } from '../../utils/exceptions/InvalidDateException';
 import { ObjectIsRequiredException } from '../../utils/exceptions/ObjectIsRequiredException';
 import { DisciplineTeacherRoleRepository } from '../../database/repositories/DisciplineTeacherRoleRepository';
-import { filterAsync, find, some } from '../../utils/ArrayUtil';
+import { filterAsync, every, find, some } from '../../utils/ArrayUtil';
 import { DbDiscipline } from '../../database/entities/DbDiscipline';
 import { InvalidWeekException } from '../../utils/exceptions/InvalidWeekException';
 import { UserService } from './UserService';
@@ -357,5 +357,39 @@ export class ScheduleService {
       events: groupEvents,
       week,
     };
+  }
+
+  async deleteEvent (id: string): Promise<{ event: DbEvent, discipline?: DbDiscipline }> {
+    const event = await this.eventRepository.deleteById(id);
+    const lesson = event.lessons[0];
+
+    if (lesson) {
+      const target = await this.eventRepository.find({
+        lessons: {
+          some: {
+            disciplineTypeId: lesson.disciplineTypeId,
+          },
+        },
+      });
+
+      const discipline = await this.disciplineRepository.findById(lesson.disciplineType.disciplineId);
+
+      if (!target) {
+        for (const teacher of discipline.disciplineTeachers) {
+          if (every(teacher.roles, 'disciplineTypeId', lesson.disciplineTypeId)) {
+            await this.disciplineTeacherRepository.deleteById(teacher.id);
+          }
+        }
+        await this.disciplineRepository.updateById(discipline.id, {
+          disciplineTypes: {
+            delete: {
+              id: lesson.disciplineTypeId,
+            },
+          },
+        });
+      }
+      return { event, discipline };
+    }
+    return { event };
   }
 }

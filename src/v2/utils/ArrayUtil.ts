@@ -22,3 +22,7 @@ export function some<T, K extends keyof T> (objs: Array<T>, field: K, comp: any)
 export function find <T, K extends keyof T> (objs: Array<T>, field: K, comp: any): T | undefined {
   return objs.find((obj) => obj[field] === comp);
 }
+
+export function every <T, K extends keyof T> (objs: Array<T>, field: K, comp: any): boolean {
+  return objs.every((obj) => obj[field] === comp);
+}

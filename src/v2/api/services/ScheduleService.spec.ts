@@ -8,6 +8,8 @@ import { DateService } from '../../utils/date/DateService';
 import { ParserModule } from '../../utils/parser/ParserModule';
 import { DisciplineService } from './DisciplineService';
 import { DisciplineTeacherService } from './DisciplineTeacherService';
+import { UserService } from './UserService';
+import { InjectionToken } from '@nestjs/common';
 
 describe('ScheduleService', () => {
   let scheduleService: ScheduleService;
@@ -23,9 +25,12 @@ describe('ScheduleService', () => {
         ParserModule,
       ],
     }).useMocker((token) => {
-      if (token === DisciplineTeacherService) {
-        return {};
-      } else if (token === DisciplineService) {
+      const tokens: InjectionToken[] = [
+        DisciplineTeacherService,
+        DisciplineService,
+        UserService,
+      ];
+      if (tokens.includes(token)) {
         return {};
       }
     })
