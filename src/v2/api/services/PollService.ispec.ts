@@ -9,6 +9,7 @@ import { DbDiscipline } from 'src/v2/database/entities/DbDiscipline';
 import { DbQuestionWithRoles } from 'src/v2/database/entities/DbQuestionWithRoles';
 import { DbQuestionWithAnswers } from 'src/v2/database/entities/DbQuestionWithAnswers';
 import { CommentsSort } from '../dtos/CommentsQueryDTO';
+import { DataNotFoundException } from '../../utils/exceptions/DataNotFoundException';
 
 
 describe('PollService', () => {
@@ -491,13 +492,15 @@ describe('PollService', () => {
 
   describe('getQuestionsWithText', () => {
     it('should return all comments about teacher', async () => {
-      const { data: questions } = await pollService.getQuestionWithText(teacherLaborant.id);
-      expect(questions.length).not.toBe(0);
-      expect(questions.every((question) => question.type === QuestionType.TEXT)).toBe(true);
+      const questionComments = await pollService.getQuestionWithText(teacherLaborant.id);
+      expect(questionComments.length).not.toBe(0);
+      expect(questionComments.every(
+        (questionComment) => questionComment.type === QuestionType.TEXT
+      )).toBe(true);
     });
 
     it('should return specified comments with year, semester and subjectId', async () => {
-      const { data: questions } = await pollService.getQuestionWithText(
+      const questionComments = await pollService.getQuestionWithText(
         teacherLaborant.id,
         {
           subjectId: subject.id,
@@ -505,47 +508,49 @@ describe('PollService', () => {
           semester: 2,
         }
       );
-      expect(questions.length).toBe(1);
-      expect(questions.every((question) => question.type === QuestionType.TEXT)).toBe(true);
-      expect(questions[0].questionAnswers.length).toBe(1);
-      expect(questions[0].questionAnswers[0].disciplineTeacher.discipline.id === discipline1.id);
+      expect(questionComments.length).toBe(1);
+      expect(questionComments.every(
+        (questionComment) => questionComment.type === QuestionType.TEXT
+      )).toBe(true);
+      expect(questionComments[0].comments.data.length).toBe(1);
+      expect(questionComments[0].comments.data[0].disciplineTeacher.discipline.id === discipline1.id);
     });
 
     it('should return the newest and oldest comments', async () => {
-      const { data: questionsOldest } = await pollService.getQuestionWithText(
+      const questionCommentsOldest = await pollService.getQuestionWithText(
         teacherLecturer.id,
         {
           sortBy: CommentsSort.OLDEST,
         }
       );
-      const { data: questionsNewest } = await pollService.getQuestionWithText(
+      const questionCommentsNewest = await pollService.getQuestionWithText(
         teacherLecturer.id,
         {
           sortBy: CommentsSort.NEWEST,
         }
       );
-      expect(questionsOldest.length).toBe(1);
-      expect(questionsNewest.length).toBe(1);
-      expect(questionsOldest[0].type).toBe(QuestionType.TEXT);
-      expect(questionsNewest[0].type).toBe(QuestionType.TEXT);
-      expect(questionsOldest[0].questionAnswers).toStrictEqual(questionsNewest[0].questionAnswers.reverse());
+      expect(questionCommentsOldest.length).toBe(1);
+      expect(questionCommentsNewest.length).toBe(1);
+      expect(questionCommentsOldest[0].type).toBe(QuestionType.TEXT);
+      expect(questionCommentsNewest[0].type).toBe(QuestionType.TEXT);
+      expect(questionCommentsOldest[0].comments.data).toStrictEqual(questionCommentsNewest[0].comments.data.reverse());
     });
 
-    it('should return empty array because the teacher with the id not found', async () => {
-      const { data: questions } = await pollService.getQuestionWithText('e94f17b2-e6d9-4b10-bc38-a76d98061192');
-      expect(questions.length).toBe(0);
+    it('should return exception because the teacher with the id not found', async () => {
+      await expect(
+        pollService.getQuestionWithText('e94f17b2-e6d9-4b10-bc38-a76d98061192')
+      ).rejects.toThrow(DataNotFoundException);
     });
 
-    it('should return empty array of answers because data is wrong', async () => {
-      const questions = await pollService.getQuestionWithMarks(
+    it('should return exception because data is wrong', async () => {
+      await expect(pollService.getQuestionWithText(
         teacherLecturer.id,
         {
           subjectId: subject.id,
           semester: 1,
           year: 2021,
         }
-      );
-      expect(questions[0].questionAnswers.length).toBe(0);
+      )).rejects.toThrow(DataNotFoundException);
     });
   });
 

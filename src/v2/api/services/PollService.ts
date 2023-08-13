@@ -13,7 +13,6 @@ import { DateService } from '../../utils/date/DateService';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
 import { DbQuestionWithRoles } from '../../database/entities/DbQuestionWithRoles';
 import { QuestionAnswerRepository } from '../../database/repositories/QuestionAnswerRepository';
-import { DbQuestionWithDiscipline } from '../../database/entities/DbQuestionWithDiscipline';
 import { CommentsQueryDTO, CommentsSort, CommentsSortMapper } from '../dtos/CommentsQueryDTO';
 import { filterAsync } from '../../utils/ArrayUtil';
 import { DbDiscipline, DbDiscipline_DisciplineTeacher } from '../../database/entities/DbDiscipline';
@@ -22,6 +21,7 @@ import { PollDisciplineTeachersResponse } from '../responses/PollDisciplineTeach
 import { StudentRepository } from '../../database/repositories/StudentRepository';
 import { GroupRepository } from '../../database/repositories/GroupRepository';
 import { DatabaseUtils } from '../../database/DatabaseUtils';
+import { DataNotFoundException } from '../../utils/exceptions/DataNotFoundException';
 
 @Injectable()
 export class PollService {
@@ -49,7 +49,7 @@ export class PollService {
   async deleteById (id: string) {
     return  this.questionRepository.deleteById(id);
   }
-
+  
   async updateById (id: string, { roles, ...data }: UpdateQuestionWithRolesDTO) {
     const questionRoles = roles ? {
       deleteMany: {},
@@ -109,9 +109,9 @@ export class PollService {
 
   async getQuestionWithText (
     teacherId: string,
-    query: CommentsQueryDTO = {}
+    query: CommentsQueryDTO = {},
   ) {
-    const data = {
+    const questionsData = {
       where: {
         type: QuestionType.TEXT,
         questionAnswers: {
@@ -127,36 +127,58 @@ export class PollService {
           },
         },
       },
-      include: {
-        questionAnswers: {
-          where: {
-            disciplineTeacher: {
-              teacherId,
-              discipline: {
-                subjectId: query.subjectId,
-                year: query.year,
-                semester: query.semester,
-              },
-            },
+      include: undefined,
+    };
+    const questions = await this.questionRepository.findMany(questionsData);
+    if (questions.length === 0) {
+      throw new DataNotFoundException();
+    }
+
+    const commentsData = {
+      where: {
+        disciplineTeacher: {
+          teacherId,
+          discipline: {
+            subjectId: query.subjectId,
+            year: query.year,
+            semester: query.semester,
           },
-          orderBy: query.sortBy
-            ? CommentsSortMapper[query.sortBy]
-            : CommentsSortMapper[CommentsSort.NEWEST],
+        },
+        question: {
+          id: null,
+          type: QuestionType.TEXT,
+        },
+      },
+      orderBy: query.sortBy
+        ? CommentsSortMapper[query.sortBy]
+        : CommentsSortMapper[CommentsSort.NEWEST],
+      include: {
+        disciplineTeacher: {
           include: {
-            disciplineTeacher: {
+            discipline: {
               include: {
-                discipline: {
-                  include: {
-                    subject: true,
-                  },
-                },
+                subject: true,
               },
             },
           },
         },
       },
-    }; 
-    return DatabaseUtils.paginate<DbQuestionWithDiscipline>(this.questionRepository, query, data);
+    };
+
+    const result = [];
+    for (const question of questions) {
+      commentsData.where.question.id = question.id;
+      const comments = await DatabaseUtils.paginate(
+        this.questionAnswerRepository,
+        query,
+        commentsData,
+      );
+      result.push({
+        ...question,
+        comments,
+      });
+    }
+    return result;
   }
 
   async getQuestionById (id: string) {

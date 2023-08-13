@@ -10,10 +10,11 @@ import { DateModule } from '../utils/date/DateModule';
 import { ConfigurationModule } from './ConfigModule';
 import { SubjectByIdPipe } from '../api/pipes/SubjectByIdPipe';
 import { MapperModule } from './MapperModule';
+import { CommentsQueryPipe } from '../api/pipes/CommentsQueryPipe';
 
 @Module({
   controllers: [TeacherController, DisciplineTeacherController],
-  providers: [TeacherService, DisciplineTeacherService, TelegramAPI, SubjectByIdPipe],
+  providers: [TeacherService, DisciplineTeacherService, TelegramAPI, SubjectByIdPipe, CommentsQueryPipe],
   exports: [TeacherService, DisciplineTeacherService],
   imports: [PollModule, AccessModule, DateModule, ConfigurationModule, MapperModule],
 })

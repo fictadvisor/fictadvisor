@@ -34,8 +34,14 @@ export class QuestionAnswerRepository {
 
   findMany (args: Prisma.QuestionAnswerFindManyArgs) {
     return this.prisma.questionAnswer.findMany({
-      ...args,
       include: this.include,
+      ...args,
+    });
+  }
+
+  count (args: Prisma.QuestionAnswerCountArgs) {
+    return this.prisma.questionAnswer.count({
+      ...args,
     });
   }
 }

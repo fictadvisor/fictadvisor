@@ -15,27 +15,27 @@ class Comment {
     comment: string;
 }
 
-class Question {
+class QuestionComment {
+  @ApiProperty()
+    id: string;
+
   @ApiProperty()
     name: string;
-
-  @ApiProperty()
-    amount: number;
-
+  
   @ApiPropertyOptional({
     type: [Comment],
   })
     comments: Comment[];
-}
-
-export class PaginatedQuestionResponse {
-  @ApiProperty({
-    type: [Question],
-  })
-    questions: Question[];
   
   @ApiProperty()
     pagination: PaginationDataResponse;
+}
+
+export class PaginatedQuestionCommentsResponse {
+  @ApiProperty({
+    type: [QuestionComment],
+  })
+    questions: QuestionComment[];
 }
 
 

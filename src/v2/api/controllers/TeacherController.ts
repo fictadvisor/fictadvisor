@@ -30,13 +30,14 @@ import { SubjectsResponse } from '../responses/SubjectsResponse';
 import { DisciplineTeacherAndSubjectResponse } from '../responses/DisciplineTeacherAndSubjectResponse';
 import { ContactResponse } from '../responses/ContactResponse';
 import { MarksResponse } from '../responses/MarksResponse';
-import { PaginatedQuestionResponse } from '../responses/PaginatedQuestionResponse';
+import { PaginatedQuestionCommentsResponse } from '../responses/PaginatedQuestionCommentsResponse';
 import { TeacherWithSubjectResponse } from '../responses/TeacherWithSubjectResponse';
 import { TeacherWithContactAndRoleResponse } from '../responses/TeacherWithContactAndRoleResponse';
 import { ContactsResponse } from '../responses/ContactsResponse';
 import { CathedraByIdPipe } from '../pipes/CathedraByIdPipe';
 import { TeacherWithRolesAndContactsResponse } from '../responses/TeacherWithRolesAndContactsResponse';
 import { PaginatedTeachersResponse } from '../responses/PaginatedTeachersResponse';
+import { CommentsQueryPipe } from '../pipes/CommentsQueryPipe';
 
 @ApiTags('Teachers')
 @Controller({
@@ -405,22 +406,32 @@ export class TeacherController {
   }
 
   @ApiOkResponse({
-    type: PaginatedQuestionResponse,
+    type: PaginatedQuestionCommentsResponse,
   })
   @ApiBadRequestResponse({
-    description: 'InvalidQueryException',
+    description: `\n
+    InvalidEntityIdException
+      Teacher with such id is not found
+      Subject with such id is not found
+    
+    InvalidQueryException:
+      Year must be a number
+      Semester must be a number
+      SortBy must be an enum
+      Page must be a number
+      PageSize must be a number
+    
+    DataNotFoundException: 
+      Data was not found`,
   })
   @Get('/:teacherId/comments')
   async getComments (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
-    @Query() query: CommentsQueryDTO,
+    @Query(CommentsQueryPipe) query: CommentsQueryDTO,
   ) {
     this.teacherService.checkQueryDate(query);
     const questions = await this.pollService.getQuestionWithText(teacherId, query);
-    return {
-      ...this.questionMapper.getQuestionWithResponses(questions.data),
-      pagination: questions.pagination,
-    };
+    return this.questionMapper.getComments(questions);
   }
 
   @Access('teachers.$teacherId.cathedras.update')

@@ -45,58 +45,69 @@ export class DatabaseUtils {
     page = +page;
     pageSize = +pageSize;
 
-    const data = await repository.findMany({
+    const result = await repository.findMany({
       ...args,
       ...this.getPage({ page, pageSize }),
     });
-    const count = await repository.count({
+    const totalAmount = await repository.count({
       where: args.where,
     });    
-    
-    const totalPages = Math.ceil(count/pageSize)-1;
-    const pages = Math.ceil(data.length / pageSize);
+
+    const totalPages = Math.ceil(totalAmount/pageSize);
+    const pages = Math.ceil(result.length / pageSize);
 
     if (!pageSize) {
       return {
-        data,
+        data: result,
         pagination: {
+          amount: result.length,
+          totalAmount,
+          totalPages,
           pageSize,
           page,
-          totalPages,
           prevPageElems: 0,
           nextPageElems: 0,
         },
       };
     }
     if (page === 0) {
+      const data = result.slice(0, pageSize);
       return {
-        data: data.slice(0, pageSize),
+        data,
         pagination: {
+          amount: data.length,
+          totalAmount,
+          totalPages,
           pageSize,
           page,
-          totalPages,
           prevPageElems: 0,
           nextPageElems: data.slice(pageSize).length,
         },
       };
     } else if (pages === 2) {
+      const data = result.slice(pageSize);
       return {
-        data: data.slice(pageSize),
+        data,
         pagination: {
+          amount: data.length,
+          totalAmount,
+          totalPages,
           pageSize,
           page,
-          totalPages,
           prevPageElems: data.slice(0, pageSize).length,
           nextPageElems: 0,
         },
       };
     }
+    const data = result.slice(pageSize, pageSize*2);
     return {
-      data: data.slice(pageSize, pageSize*2),
+      data,
       pagination: {
+        amount: data.length,
+        totalAmount,
+        totalPages,
         pageSize,
         page,
-        totalPages,
         prevPageElems: data.slice(0, pageSize).length,
         nextPageElems: data.slice(pageSize*2).length,
       },

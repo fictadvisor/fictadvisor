@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { QuestionMapper } from './QuestionMapper';
 import { DbQuestionWithRoles } from '../database/entities/DbQuestionWithRoles';
-import { DbQuestionWithDiscipline } from '../database/entities/DbQuestionWithDiscipline';
+import { QuestionCommentData } from '../api/datas/QuestionCommentData';
 
 describe('QuestionMapper', () => {
   let questionMapper: QuestionMapper;
@@ -71,49 +71,73 @@ describe('QuestionMapper', () => {
     });
   });
 
-  describe('getQuestionWithResponses', () => {
+  describe('getComments', () => {
     it('should return mapped responses (if no answers, questions should be skipped)', () => {
       const questions = [
         {
+          id: 'question1Id',
           name: 'firstQuestion',
-          questionAnswers: [
-            {
-              value: 'firstValue',
-              disciplineTeacher: {
-                discipline: {
-                  semester: 1,
-                  year: 2,
-                  subject: {
-                    name: 'oneSubject',
+          comments: {
+            data: [
+              {
+                value: 'firstValue',
+                disciplineTeacher: {
+                  discipline: {
+                    semester: 1,
+                    year: 2,
+                    subject: {
+                      name: 'oneSubject',
+                    },
+                  },
+                },
+              }, {
+                value: 'secondValue',
+                disciplineTeacher: {
+                  discipline: {
+                    semester: 2,
+                    year: 3,
+                    subject: {
+                      name: 'anotherSubject',
+                    },
                   },
                 },
               },
-            }, {
-              value: 'secondValue',
-              disciplineTeacher: {
-                discipline: {
-                  semester: 2,
-                  year: 3,
-                  subject: {
-                    name: 'anotherSubject',
-                  },
-                },
-              },
+            ],
+            pagination: {
+              amount: 2,
+              totalAmount: 2, 
+              totalPages: 1,
+              pageSize: 10,
+              page: 0,
+              prevPageElems: 0,
+              nextPageElems: 0,
             },
-          ],
+          },
         }, {
+          id: 'question2Id',
           name: 'secondQuestion',
-          questionAnswers: [],
+          comments: {
+            data: [],
+            pagination: {
+              amount: 0,
+              totalAmount: 0, 
+              totalPages: 0,
+              pageSize: 10,
+              page: 0,
+              prevPageElems: 0,
+              nextPageElems: 0,
+            },
+          },
         },
-      ] as any as DbQuestionWithDiscipline[];
+      ] as any as QuestionCommentData[];
 
-      const result = questionMapper.getQuestionWithResponses(questions);
-
+      const result = questionMapper.getComments(questions);
+      
       expect(result).toStrictEqual({
         questions: [
           {
+            id: 'question1Id',
             name: 'firstQuestion',
-            amount: 2,
             comments: [
               {
                 discipline: 'oneSubject',
@@ -127,6 +151,28 @@ describe('QuestionMapper', () => {
                 comment: 'secondValue',
               },
             ],
+            pagination: {
+              amount: 2,
+              totalAmount: 2, 
+              totalPages: 1,
+              pageSize: 10,
+              page: 0,
+              prevPageElems: 0,
+              nextPageElems: 0,
+            },
+          }, {
+            id: 'question2Id',
+            name: 'secondQuestion',
+            comments: [],
+            pagination: {
+              amount: 0,
+              totalAmount: 0, 
+              totalPages: 0,
+              pageSize: 10,
+              page: 0,
+              prevPageElems: 0,
+              nextPageElems: 0,
+            },
           },
         ],
       });

@@ -1,7 +1,8 @@
-import { IsEnum, IsOptional } from 'class-validator';
-import { Type } from 'class-transformer';
-import { Prisma } from '@prisma/client';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { Prisma } from '@prisma/client';
+import { Type } from 'class-transformer';
+import { IsEnum, IsNumber, IsOptional } from 'class-validator';
+import { validationOptionsMsg } from './../../utils/GLOBALS';
 
 export enum CommentsSort {
   NEWEST = 'newest',
@@ -50,24 +51,37 @@ export class CommentsQueryDTO {
 
   @ApiPropertyOptional()
   @Type(() => Number)
+  @IsNumber({}, validationOptionsMsg('Year must be a number'))
   @IsOptional()
     year?: number;
 
   @ApiPropertyOptional()
   @Type(() => Number)
+  @IsNumber({}, validationOptionsMsg('Semester must be a number'))
   @IsOptional()
     semester?: number;
 
-  @ApiPropertyOptional()
-  @IsEnum(CommentsSort)
+  @ApiPropertyOptional({
+    enum: CommentsSort,
+    description: 'Ascending by default',
+  })
+  @IsEnum(CommentsSort, validationOptionsMsg('SortBy must be an enum'))
   @IsOptional()
     sortBy?: CommentsSort;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    description: 'Visualization parameter: access to parts of divided data',
+  })
+  @Type(() => Number)
+  @IsNumber({}, validationOptionsMsg('Page must be a nubmer'))
   @IsOptional()
     page?: number;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    description: 'Visualization parameter: Divide data by amount of subjects',
+  })
+  @Type(() => Number)
+  @IsNumber({}, validationOptionsMsg('PageSize must be a number'))
   @IsOptional()
     pageSize?: number;
 }

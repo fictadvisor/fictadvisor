@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { DbQuestionWithRoles } from '../database/entities/DbQuestionWithRoles';
 import { QuestionDisplay, QuestionRole, QuestionType } from '@prisma/client';
-import { DbQuestionWithDiscipline } from '../database/entities/DbQuestionWithDiscipline';
 import { DbDisciplineTeacherWithAnswers } from '../database/entities/DbDisciplineTeacherWithAnswers';
 import { DbQuestionWithAnswers } from '../database/entities/DbQuestionWithAnswers';
+import { QuestionCommentData } from '../api/datas/QuestionCommentData';
 
 @Injectable()
 export class QuestionMapper {
@@ -66,27 +66,34 @@ export class QuestionMapper {
     };
   }
 
-  getQuestionWithResponses (questions: DbQuestionWithDiscipline[]) {
-    const responses = {
-      questions: [],
-    };
-    for (const question of questions) {
-      if (question.questionAnswers.length === 0) continue;
-      responses.questions.push({
-        name: question.name,
-        amount: question.questionAnswers.length,
-        comments: [],
-      });
-      for (const answer of question.questionAnswers) {
-        responses.questions.at(-1).comments.push({
-          discipline: answer.disciplineTeacher.discipline.subject.name,
-          semester: answer.disciplineTeacher.discipline.semester,
-          year: answer.disciplineTeacher.discipline.year,
-          comment: answer.value,
+  getComments (questionComments: QuestionCommentData[]) {
+    const result = [];
+    for (const questionComment of questionComments) {
+      const question = {
+        id: questionComment.id,
+        name: questionComment.name,
+      };
+      
+      const comments = [];
+      for (const comment of questionComment.comments.data) {
+        comments.push({
+          comment: comment.value,
+          discipline: comment.disciplineTeacher.discipline.subject.name,
+          year: comment.disciplineTeacher.discipline.year,
+          semester: comment.disciplineTeacher.discipline.semester,
         });
       }
+
+      result.push({
+        ...question,
+        comments,
+        pagination: questionComment.comments.pagination,
+      });
     }
-    return responses;
+
+    return {
+      questions: result,
+    };
   }
 
   getSortedQuestionsWithAnswers (disciplineTeachers: DbDisciplineTeacherWithAnswers[]) {
