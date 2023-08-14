@@ -19,6 +19,8 @@ import { DbDiscipline } from '../../database/entities/DbDiscipline';
 import { InvalidWeekException } from '../../utils/exceptions/InvalidWeekException';
 import { UserService } from './UserService';
 import { InvalidDayException } from '../../utils/exceptions/InvalidDayException';
+import { EventFiltrationDTO } from '../dtos/EventFiltrationDTO';
+import { GeneralEventFiltrationDTO } from '../dtos/GeneralEventFiltrationDTO';
 
 
 @Injectable()
@@ -108,8 +110,28 @@ export class ScheduleService {
     return {
       events: result,
       week,
+      startTime: new Date(startOfWeek),
     };
   }
+
+  async getGeneralGroupEventsWrapper (
+    id: string,
+    week: number,
+    query: GeneralEventFiltrationDTO,
+  ) {
+    const result = await this.getGeneralGroupEvents(id, week);
+
+    if (query.addLecture || query.addLaboratory || query.addPractice) {
+      result.events = result.events.filter((event) =>
+        this.disciplineTypesFilter(event, query.addLecture, query.addLaboratory, query.addPractice)
+      );
+    } else {
+      result.events = [];
+    }
+
+    return result;
+  }
+
 
   async getGeneralGroupEventsByDay (id: string, day: number) {
     const week = await this.dateService.getCurrentWeek();
@@ -255,6 +277,22 @@ export class ScheduleService {
     return week >= startWeek && week <= endWeek;
   }
 
+  private disciplineTypesFilter (
+    event: DbEvent,
+    addLecture: boolean,
+    addLaboratory: boolean,
+    addPractice: boolean,
+    otherEvents?: boolean,
+  ) {
+    const disciplineTypes = event.lessons.map((lesson) => lesson.disciplineType.name);
+    return (
+      (addLecture && disciplineTypes.includes(DisciplineTypeEnum.LECTURE)) ||
+      (addLaboratory && disciplineTypes.includes(DisciplineTypeEnum.LABORATORY)) ||
+      (addPractice && disciplineTypes.includes(DisciplineTypeEnum.PRACTICE)) ||
+      (otherEvents && !disciplineTypes.length)
+    );
+  }
+
   async createGroupEvent (body: CreateEventDTO) {
     await this.checkEventDates(body.startTime, body.endTime);
     if (body.disciplineId && !body.disciplineType) throw new ObjectIsRequiredException('DisciplineType');
@@ -296,7 +334,11 @@ export class ScheduleService {
     };
   }
 
-  async getAllGroupEvents (groupId, week) {
+  async getAllGroupEvents (
+    groupId: string,
+    week: number,
+    query: EventFiltrationDTO,
+  ) {
     const { startOfWeek, endOfWeek } = week ? await this.dateService.getDatesOfWeek(week) : this.dateService.getDatesOfCurrentWeek();
     const events = await this.eventRepository.findMany({
       where: {
@@ -310,11 +352,14 @@ export class ScheduleService {
       },
     });
 
-    const result  = events
-      .filter((event) => {
-        const indexOfLesson = this.getIndexOfLesson(event.period, event.startTime, endOfWeek);
-        return indexOfLesson !== null;
-      });
+    const filteredEvents = events.filter((event) => {
+      const indexOfLesson = this.getIndexOfLesson(event.period, event.startTime, endOfWeek);
+      return indexOfLesson !== null;
+    });
+
+    const result = filteredEvents.filter((event) =>
+      this.disciplineTypesFilter(event, query.addLecture, query.addLaboratory, query.addPractice, query.otherEvents)
+    );
 
     for (const event of result) {
       if (event.period !== Period.NO_PERIOD) {
@@ -328,18 +373,19 @@ export class ScheduleService {
   async getGroupEvents (
     userId: string,
     groupId: string,
-    isOwnSelected: boolean,
     week: number,
+    query: EventFiltrationDTO,
   ) {
+    const { startOfWeek } = week ? await this.dateService.getDatesOfWeek(week) : this.dateService.getDatesOfCurrentWeek();
 
     const user = await this.userService.getUser(userId);
     if (user.group.id !== groupId) {
       return await this.getGeneralGroupEvents(groupId, week);
     }
 
-    const groupEvents = await this.getAllGroupEvents(groupId, week);
+    const groupEvents = await this.getAllGroupEvents(groupId, week, query);
 
-    if (isOwnSelected) {
+    if (query.isOwnSelected) {
       const userSelective = await this.userService.getSelectiveDisciplines(userId);
       await filterAsync(groupEvents, async (event) => {
         const lesson = event.lessons[0];
@@ -356,6 +402,7 @@ export class ScheduleService {
     return {
       events: groupEvents,
       week,
+      startTime: new Date(startOfWeek),
     };
   }
 

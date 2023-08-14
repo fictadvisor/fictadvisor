@@ -29,6 +29,8 @@ import { GroupByEventGuard } from '../../security/group-guard/GroupByEventGuard'
 import { ConvertToBooleanPipe } from '../pipes/ConvertToBooleanPipe';
 import { EventsResponse } from '../responses/EventsResponse';
 import { TelegramGuard } from '../../security/TelegramGuard';
+import { EventFiltrationDTO } from '../dtos/EventFiltrationDTO';
+import { GeneralEventFiltrationDTO } from '../dtos/GeneralEventFiltrationDTO';
 
 @ApiTags('Schedule')
 @Controller({
@@ -100,11 +102,17 @@ export class ScheduleController {
   async getGeneralEvents (
     @Param('groupId', GroupByIdPipe) id: string,
     @Query('week') week: number,
+    @Query() query: GeneralEventFiltrationDTO,
   ) {
-    const result = await this.scheduleService.getGeneralGroupEvents(id, week);
+    const result = await this.scheduleService.getGeneralGroupEventsWrapper(
+      id,
+      week,
+      query,
+    );
     return {
       events: this.scheduleMapper.getEvents(result.events),
       week: result.week,
+      startTime: result.startTime,
     };
   }
 
@@ -253,24 +261,26 @@ export class ScheduleController {
       You do not have permission to perform this action`,
   })
   @ApiQuery({
-    type: Boolean,
-    name: 'showOwnSelective',
-  })
-  @ApiQuery({
     type: Number,
     name: 'week',
     required: false,
   })
   async getGroupEvents (
-      @Request() req,
-      @Param('groupId', GroupByIdPipe) groupId: string,
-      @Query('showOwnSelective', ConvertToBooleanPipe) showOwnSelective,
-      @Query('week') week: number,
+    @Request() req,
+    @Param('groupId', GroupByIdPipe) groupId: string,
+    @Query('week') week: number,
+    @Query() query: EventFiltrationDTO,
   ) {
-    const result = await this.scheduleService.getGroupEvents(req.user.id, groupId, showOwnSelective, week);
+    const result = await this.scheduleService.getGroupEvents(
+      req.user.id,
+      groupId,
+      week,
+      query,
+    );
     return {
       events: this.scheduleMapper.getEvents(result.events),
       week: result.week,
+      startTime: result.startTime,
     };
   }
 

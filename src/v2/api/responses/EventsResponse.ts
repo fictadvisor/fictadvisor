@@ -11,4 +11,7 @@ export class EventsResponse {
     type: [MainEventInfoResponse],
   })
     events: MainEventInfoResponse[];
+
+  @ApiProperty()
+    startTime: Date;
 }
