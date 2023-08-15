@@ -1,8 +1,8 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { DateService } from '../../utils/date/DateService';
 import { ConvertToBooleanPipe } from '../pipes/ConvertToBooleanPipe';
-import { ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { SemestersResponse } from '../responses/SemesterResponse';
+import { ApiBadRequestResponse, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { CurrentSemester, SemestersResponse } from '../responses/SemesterResponse';
 
 @ApiTags('Dates')
 @Controller({
@@ -27,5 +27,18 @@ export class DateController {
     @Query('isFinished', ConvertToBooleanPipe) isFinished?
   ) {
     return { semesters: await this.dateService.getPreviousSemesters(isFinished as boolean) };
+  }
+
+  @Get('/current/semester')
+  @ApiOkResponse({
+    type: CurrentSemester,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    DataNotFoundException:
+      Data was not found`,
+  })
+  getCurrentSemester () {
+    return this.dateService.getCurrentSemester();
   }
 }

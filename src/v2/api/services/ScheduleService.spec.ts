@@ -90,22 +90,28 @@ describe('ScheduleService', () => {
         startOfWeek: new Date('2023-06-09 21:00:00.000'),
         endOfWeek: new Date('2023-06-18 21:00:00.000'),
       }));
+      jest.spyOn(scheduleService, 'setWeekTime').mockImplementation(async () => ({
+        startWeek: 1,
+        endWeek: 1,
+      }));
 
       const id = 'id';
       const week = 16;
       const result = await scheduleService.getGeneralGroupEvents(id, week);
-      expect(result).toStrictEqual([
-        {
-          id: 'id1',
-          period: Period.EVERY_FORTNIGHT,
-          startTime: new Date('2023-05-19 00:00:00.000'),
-        },
-        {
-          id: 'id3',
-          period: Period.EVERY_WEEK,
-          startTime: new Date('2023-05-26 00:00:00.000'),
-        },
-      ]);
+      expect(result).toStrictEqual({
+        events: [
+          {
+            id: 'id1',
+            period: Period.EVERY_FORTNIGHT,
+            startTime: new Date('2023-05-19 00:00:00.000'),
+          },
+          {
+            id: 'id3',
+            period: Period.EVERY_WEEK,
+            startTime: new Date('2023-05-26 00:00:00.000'),
+          }],
+        week: 16,
+      });
     });
   });
 });

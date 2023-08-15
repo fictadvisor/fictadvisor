@@ -153,7 +153,7 @@ export class ScheduleService {
     return { event, discipline };
   }
 
-  private async setWeekTime (event: DbEvent, week: number): Promise<{ startWeek: number, endWeek: number }> {
+  async setWeekTime (event: DbEvent, week: number): Promise<{ startWeek: number, endWeek: number }> {
     const { startDate } = await this.dateService.getCurrentSemester();
     const startWeek = Math.ceil((event.startTime.getTime() - startDate.getTime()) / WEEK);
     const endWeek = Math.ceil((event.endTime.getTime() - startDate.getTime()) / WEEK);

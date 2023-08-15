@@ -14,6 +14,11 @@ class Semester {
     endDate: Date;
 }
 
+export class CurrentSemester extends Semester {
+  @ApiProperty()
+    isFinished: boolean;
+}
+
 export class SemestersResponse {
   @ApiProperty({
     type: [Semester],
