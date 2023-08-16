@@ -480,6 +480,7 @@ model Entrant {
   priority           EntrantPriority?
   contract           Contract?
   competitivePoint   Float?              @map("competitive_point")
+  inOrder            Boolean             @default(false)
 
   @@map("entrants")
 }
