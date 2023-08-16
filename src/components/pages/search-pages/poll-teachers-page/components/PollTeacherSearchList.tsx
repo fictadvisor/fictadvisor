@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { Box, Typography, useMediaQuery } from '@mui/material';
+import List from '@mui/material/List';
 import Image from 'next/image';
 
 import { PollTeacherCard } from '@/components/common/ui/cards/poll-teacher-card';
@@ -49,7 +50,8 @@ const PollTeacherSearchList: FC<PollTeacherSearchListProps> = ({
           </Box>
         </Box>
       ) : (
-        <ul className={styles[`${className}-search-list`]}>
+        // <List sx={styles.list}>
+        <List sx={stylesMUI.searchList} style={styles}>
           {data &&
             data.teachers?.map(teacher => (
               <PollTeacherCard
@@ -62,7 +64,7 @@ const PollTeacherSearchList: FC<PollTeacherSearchListProps> = ({
                 id={teacher.disciplineTeacherId}
               />
             ))}
-        </ul>
+        </List>
       )}
     </>
   );

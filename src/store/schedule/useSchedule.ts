@@ -296,7 +296,7 @@ export const useSchedule = create<State & Action>((set, get) => {
         }));
 
         get().setChosenDay(
-            getFirstDayOfAWeek(get().semester as GetCurrentSemester, week),
+          getFirstDayOfAWeek(get().semester as GetCurrentSemester, week),
         );
       }, [router.isReady]);
     },

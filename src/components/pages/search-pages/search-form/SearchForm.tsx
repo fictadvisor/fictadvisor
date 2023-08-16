@@ -7,6 +7,7 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
 } from '@heroicons/react/24/outline';
+import { Box } from '@mui/material';
 import { Form, Formik, FormikProps, useFormikContext } from 'formik';
 
 import {
@@ -17,17 +18,17 @@ import {
 } from '@/components/common/ui/form';
 import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
 import {
-  IconButton,
   IconButtonColor,
   IconButtonShape,
   IconButtonSize,
 } from '@/components/common/ui/icon-button';
+import IconButton from '@/components/common/ui/icon-button-mui';
 import GroupAPI from '@/lib/api/group/GroupAPI';
 
+import * as stylesMUI from './SearchForm.styles';
 import { SearchFormFields } from './types';
 
 import styles from './SearchForm.module.scss';
-
 export interface SearchFormProps {
   onSubmit: (values: Partial<SearchFormFields>) => void;
   initialValues: SearchFormFields;
@@ -35,16 +36,11 @@ export interface SearchFormProps {
   searchPlaceholder: string;
   localStorageName?: string;
 }
-
-// TODO: refactor this shit
 const FormObserver = (props: { name?: string }) => {
   const { values } = useFormikContext();
-  useEffect(() => {
-    if (props.name) localStorage.setItem(props.name, JSON.stringify(values));
-  }, [values, props.name]);
+  localStorage.setItem(props.name || '', JSON.stringify(values));
   return null;
 };
-
 const SearchForm: FC<SearchFormProps> = ({
   onSubmit,
   initialValues,
@@ -100,22 +96,18 @@ const SearchForm: FC<SearchFormProps> = ({
             placeholder={searchPlaceholder}
             showRemark={false}
           />
-          <div className={styles['collapse-btn']}>
+          <Box sx={stylesMUI.collapseBtn}>
             <IconButton
-              className={styles['collapse-icon']}
-              type="button"
-              name="order"
-              size={IconButtonSize.LARGE}
+              sx={stylesMUI.collapseIcon}
               shape={IconButtonShape.SQUARE}
               color={IconButtonColor.SECONDARY}
               icon={collapsed ? <ChevronDownIcon /> : <ChevronUpIcon />}
               onClick={() => setCollapsed(pr => !pr)}
             />
-          </div>
-
+          </Box>
           {!collapsed && (
             <>
-              <div className={styles['dropdown-1']}>
+              <Box sx={stylesMUI.dropdown1}>
                 <Dropdown
                   placeholder="ІП-22"
                   label="Група"
@@ -124,8 +116,8 @@ const SearchForm: FC<SearchFormProps> = ({
                   value={values.group}
                   options={groups}
                 />
-              </div>
-              <div className={styles['dropdown-2']}>
+              </Box>
+              <Box sx={stylesMUI.dropdown2}>
                 <Dropdown
                   label="Сортувати за"
                   placeholder="Іменем"
@@ -134,14 +126,11 @@ const SearchForm: FC<SearchFormProps> = ({
                   value={values.sort}
                   options={filterDropDownOptions}
                 />
-              </div>
-              <div>
+              </Box>
+              <Box>
                 <IconButton
-                  className={styles['sort-icon']}
-                  type="button"
+                  sx={stylesMUI.sortIcon}
                   onClick={handleOrderChange}
-                  name="order"
-                  size={IconButtonSize.LARGE}
                   shape={IconButtonShape.SQUARE}
                   color={IconButtonColor.SECONDARY}
                   icon={
@@ -152,7 +141,7 @@ const SearchForm: FC<SearchFormProps> = ({
                     )
                   }
                 />
-              </div>
+              </Box>
             </>
           )}
         </Form>
