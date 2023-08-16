@@ -26,11 +26,11 @@ import { CreateEventDTO } from '../dtos/CreateEventDTO';
 import { EventResponse } from '../responses/EventResponse';
 import { EventByIdPipe } from '../pipes/EventByIdPipe';
 import { GroupByEventGuard } from '../../security/group-guard/GroupByEventGuard';
-import { ConvertToBooleanPipe } from '../pipes/ConvertToBooleanPipe';
 import { EventsResponse } from '../responses/EventsResponse';
 import { TelegramGuard } from '../../security/TelegramGuard';
 import { EventFiltrationDTO } from '../dtos/EventFiltrationDTO';
 import { GeneralEventFiltrationDTO } from '../dtos/GeneralEventFiltrationDTO';
+import { EventFiltrationPipe } from '../pipes/EventFiltrationPipe';
 
 @ApiTags('Schedule')
 @Controller({
@@ -102,7 +102,7 @@ export class ScheduleController {
   async getGeneralEvents (
     @Param('groupId', GroupByIdPipe) id: string,
     @Query('week') week: number,
-    @Query() query: GeneralEventFiltrationDTO,
+    @Query(EventFiltrationPipe) query: GeneralEventFiltrationDTO,
   ) {
     const result = await this.scheduleService.getGeneralGroupEventsWrapper(
       id,
@@ -269,7 +269,7 @@ export class ScheduleController {
     @Request() req,
     @Param('groupId', GroupByIdPipe) groupId: string,
     @Query('week') week: number,
-    @Query() query: EventFiltrationDTO,
+    @Query(EventFiltrationPipe) query: EventFiltrationDTO,
   ) {
     const result = await this.scheduleService.getGroupEvents(
       req.user.id,

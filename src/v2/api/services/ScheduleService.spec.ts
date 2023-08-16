@@ -111,6 +111,7 @@ describe('ScheduleService', () => {
             startTime: new Date('2023-05-26 00:00:00.000'),
           }],
         week: 16,
+        startTime: new Date('2023-06-09T21:00:00.000Z'),
       });
     });
   });

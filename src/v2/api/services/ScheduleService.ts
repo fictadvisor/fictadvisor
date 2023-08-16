@@ -121,13 +121,9 @@ export class ScheduleService {
   ) {
     const result = await this.getGeneralGroupEvents(id, week);
 
-    if (query.addLecture || query.addLaboratory || query.addPractice) {
-      result.events = result.events.filter((event) =>
-        this.disciplineTypesFilter(event, query.addLecture, query.addLaboratory, query.addPractice)
-      );
-    } else {
-      result.events = [];
-    }
+    result.events = result.events.filter((event) =>
+      this.disciplineTypesFilter(event, query.addLecture, query.addLaboratory, query.addPractice)
+    );
 
     return result;
   }
