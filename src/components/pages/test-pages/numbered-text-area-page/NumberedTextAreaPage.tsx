@@ -4,7 +4,7 @@ import { Form, Formik } from 'formik';
 import * as yup from 'yup';
 
 import Button from '@/components/common/ui/button-mui';
-import NumberedTextArea from '@/components/common/ui/form/numbered-text-area-mui';
+import FormikNumberedTextArea from '@/components/common/ui/form/with-formik/numbered-text-area/FormikNumberedTextArea';
 
 import * as styles from './TextAreaPage.styles';
 
@@ -20,13 +20,13 @@ const NumberedTextAreaPage: FC = () => {
       >
         {({ handleSubmit }) => (
           <Form style={styles.form}>
-            <NumberedTextArea name="t1" />
-            <NumberedTextArea
+            <FormikNumberedTextArea name="t1" />
+            <FormikNumberedTextArea
               name="t2"
               placeholder="Placeholder & error on empty"
               showRemark={true}
             />
-            <NumberedTextArea name="t3" disabled />
+            <FormikNumberedTextArea name="t3" disabled />
             <Button onClick={() => handleSubmit()} text="submit" />
           </Form>
         )}

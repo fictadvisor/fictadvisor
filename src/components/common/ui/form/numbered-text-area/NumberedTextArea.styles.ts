@@ -54,7 +54,6 @@ export const input: SxProps<Theme> = {
     cursor: 'auto',
     paddingRight: '8px',
     textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
     '::placeholder': {
       color: 'grey.500',
     },
