@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { MainEventInfoResponse } from './MainEventInfoResponse';
+import { GeneralEventInfoResponse, MainEventInfoResponse } from './MainEventInfoResponse';
 
 export class EventsResponse {
   @ApiProperty({
@@ -11,6 +11,21 @@ export class EventsResponse {
     type: [MainEventInfoResponse],
   })
     events: MainEventInfoResponse[];
+
+  @ApiProperty()
+    startTime: Date;
+}
+
+export class GeneralEventsResponse {
+  @ApiProperty({
+    minimum: 1,
+  })
+    week: number;
+
+  @ApiProperty({
+    type: [GeneralEventInfoResponse],
+  })
+    events: GeneralEventInfoResponse[];
 
   @ApiProperty()
     startTime: Date;

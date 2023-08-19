@@ -121,9 +121,11 @@ export class ScheduleService {
   ) {
     const result = await this.getGeneralGroupEvents(id, week);
 
-    result.events = result.events.filter((event) =>
-      this.disciplineTypesFilter(event, query.addLecture, query.addLaboratory, query.addPractice)
-    );
+    if (query.addLecture !== undefined || query.addPractice !== undefined || query.addLaboratory !== undefined) {
+      result.events = result.events.filter((event) =>
+        this.disciplineTypesFilter(event, query.addLecture, query.addLaboratory, query.addPractice)
+      );
+    }
 
     return result;
   }
@@ -285,7 +287,7 @@ export class ScheduleService {
       (addLecture && disciplineTypes.includes(DisciplineTypeEnum.LECTURE)) ||
       (addLaboratory && disciplineTypes.includes(DisciplineTypeEnum.LABORATORY)) ||
       (addPractice && disciplineTypes.includes(DisciplineTypeEnum.PRACTICE)) ||
-      (otherEvents && !disciplineTypes.length)
+      (otherEvents && (!disciplineTypes.length || disciplineTypes.includes(DisciplineTypeEnum.CONSULTATION) || disciplineTypes.includes(DisciplineTypeEnum.EXAM) || disciplineTypes.includes(DisciplineTypeEnum.WORKOUT)))
     );
   }
 
@@ -348,14 +350,16 @@ export class ScheduleService {
       },
     });
 
-    const filteredEvents = events.filter((event) => {
+    let result = events.filter((event) => {
       const indexOfLesson = this.getIndexOfLesson(event.period, event.startTime, endOfWeek);
       return indexOfLesson !== null;
     });
 
-    const result = filteredEvents.filter((event) =>
-      this.disciplineTypesFilter(event, query.addLecture, query.addLaboratory, query.addPractice, query.otherEvents)
-    );
+    if (query.addLecture !== undefined || query.addPractice !== undefined || query.addLaboratory !== undefined || query.otherEvents !== undefined) {
+      result = result.filter((event) =>
+        this.disciplineTypesFilter(event, query.addLecture, query.addLaboratory, query.addPractice, query.otherEvents)
+      );
+    }
 
     for (const event of result) {
       if (event.period !== Period.NO_PERIOD) {

@@ -11,3 +11,14 @@ export class DisciplineTypeResponse {
   })
     name: DisciplineTypeEnum;
 }
+
+export class GeneralDisciplineTypeResponse {
+  @ApiProperty()
+    id: string;
+  @ApiProperty()
+    disciplineId: string;
+  @ApiProperty({
+    enum: [DisciplineTypeEnum.LECTURE, DisciplineTypeEnum.PRACTICE, DisciplineTypeEnum.LABORATORY],
+  })
+    name: DisciplineTypeEnum;
+}

@@ -8,13 +8,15 @@ import { EventResponse } from '../api/responses/EventResponse';
 @Injectable()
 export class ScheduleMapper {
   getEvents (events: DbEvent[]) {
-    return events.map((event) => ({
-      id: event.id,
-      name: event.name,
-      startTime: event.startTime,
-      endTime: event.endTime,
-      disciplineType: event.lessons[0] ? event.lessons[0].disciplineType : null,
-    }));
+    return events
+      .map((event) => ({
+        id: event.id,
+        name: event.name,
+        startTime: event.startTime,
+        endTime: event.endTime,
+        disciplineType: event.lessons[0] ? event.lessons[0].disciplineType : null,
+      }))
+      .sort((firstEvent, secondEvent) => firstEvent.startTime.getTime() - secondEvent.startTime.getTime());
   }
 
   getEvent (event: DbEvent, discipline?: DbDiscipline): EventResponse {
