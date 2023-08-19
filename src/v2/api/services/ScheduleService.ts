@@ -1,15 +1,14 @@
-import { Injectable } from '@nestjs/common';
 import { CurrentSemester, DateService, DAY, FORTNITE, WEEK } from '../../utils/date/DateService';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { EventRepository } from '../../database/repositories/EventRepository';
 import { DbEvent } from '../../database/entities/DbEvent';
-import { Period, DisciplineTypeEnum } from '@prisma/client';
+import { Period, DisciplineTypeEnum, DisciplineType } from '@prisma/client';
 import { RozParser } from '../../utils/parser/RozParser';
 import { ScheduleParser } from '../../utils/parser/ScheduleParser';
 import { CreateEventDTO } from '../dtos/CreateEventDTO';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
 import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
 import { DisciplineTeacherService } from './DisciplineTeacherService';
-import { TeacherRoleAdapter } from '../../mappers/TeacherRoleAdapter';
 import { AttachLessonDTO } from '../dtos/AttachLessonDTO';
 import { InvalidDateException } from '../../utils/exceptions/InvalidDateException';
 import { ObjectIsRequiredException } from '../../utils/exceptions/ObjectIsRequiredException';
@@ -21,7 +20,8 @@ import { UserService } from './UserService';
 import { InvalidDayException } from '../../utils/exceptions/InvalidDayException';
 import { EventFiltrationDTO } from '../dtos/EventFiltrationDTO';
 import { GeneralEventFiltrationDTO } from '../dtos/GeneralEventFiltrationDTO';
-
+import { UpdateEventDTO } from '../dtos/UpdateEventDTO';
+import { TeacherRoleAdapter } from '../../mappers/TeacherRoleAdapter';
 
 @Injectable()
 export class ScheduleService {
@@ -297,7 +297,7 @@ export class ScheduleService {
       ? body.endTime
       : await this.getLastEndDate(body.endTime, body.period);
 
-    const endIndex  = await this.getEndIndex(body.startTime, body.endTime, body.period);
+    const endIndex = await this.getEndIndex(body.startTime, body.endTime, body.period);
     const eventInfo = [];
     for (let i = 0; i <= endIndex; i++) {
       eventInfo.push({ number: i });
@@ -434,5 +434,215 @@ export class ScheduleService {
       return { event, discipline };
     }
     return { event };
+  }
+
+  async updateEvent (eventId: string, body: UpdateEventDTO) {
+    let event = await this.eventRepository.findById(eventId);
+    const {
+      week,
+      name,
+      disciplineId,
+      type,
+      teachers,
+      startTime = event.startTime,
+      endTime = event.endTime,
+      period = event.period,
+      url,
+      disciplineInfo,
+      eventInfo,
+    } = body;
+
+    const eventInfoForUpdate = await this.getEventInfoForUpdate(period, startTime, endTime, week, eventInfo, event);
+
+    event = await this.eventRepository.updateById(eventId, {
+      name,
+      period,
+      startTime,
+      endTime,
+      url,
+      eventInfo: eventInfoForUpdate,
+    });
+
+    const lesson = event?.lessons[0];
+    if (!disciplineId && !type && !teachers && !disciplineInfo) return;
+    if ((!disciplineId || !type) && !lesson) throw new NotFoundException('disciplineType is not found');
+
+    const discipline = await this.updateDiscipline(
+      disciplineId,
+      lesson?.disciplineType.disciplineId,
+      type,
+      lesson?.disciplineType,
+      disciplineInfo,
+      teachers,
+    );
+
+    await this.eventRepository.updateById(eventId, {
+      lessons: {
+        deleteMany: {
+          eventId,
+        },
+        create: {
+          disciplineTypeId: find(discipline.disciplineTypes, 'name', type ?? lesson.disciplineType.name).id,
+        },
+      },
+    });
+  }
+
+  private async getEventInfoForUpdate (
+    period: Period,
+    startTime: Date,
+    endTime: Date,
+    week: number,
+    eventInfo: string,
+    event: DbEvent,
+  ) {
+    const data = {
+      update: undefined,
+      createMany: undefined,
+      deleteMany: undefined,
+    };
+
+    if (eventInfo) {
+
+      const { endOfWeek } = await this.dateService.getDatesOfWeek(week);
+      const indexOfLesson = this.getIndexOfLesson(period, startTime, endOfWeek);
+      if (indexOfLesson === null || indexOfLesson < 0 || indexOfLesson >= event.eventInfo.length) {
+        throw new InvalidWeekException();
+      }
+      data.update = {
+        where: {
+          eventId_number: {
+            eventId: event.id,
+            number: indexOfLesson,
+          },
+        },
+        data: {
+          description: eventInfo,
+        },
+      };
+    }
+
+    if (period === Period.NO_PERIOD) {
+      data.deleteMany = {
+        number: {
+          gte: 1,
+        },
+      };
+    } else {
+      const countOfWeek = Math.ceil((endTime.getTime() - startTime.getTime()) / WEEK);
+      const countOfPair = period === Period.EVERY_FORTNIGHT ? Math.floor(countOfWeek / 2) : countOfWeek;
+      const pairDifference = countOfPair - event.eventInfo.length;
+
+      if (pairDifference > 0) {
+        data.createMany = {
+          data: this.scheduleParser.getIndexesForEventInfo(event.eventInfo.length, event.eventInfo.length+pairDifference - 1),
+        };
+      } else if (pairDifference < 0) {
+        data.deleteMany = {
+          number: {
+            gte: countOfPair - 1,
+          },
+        };
+      }
+    }
+    return data;
+  }
+
+  async updateDiscipline (
+    newDisciplineId: string | undefined,
+    presentDisciplineId: string | undefined,
+    newType: DisciplineTypeEnum | undefined,
+    presentType: DisciplineType | undefined,
+    disciplineInfo: string | undefined,
+    teachers: string[] = [],
+  ) {
+    if (presentDisciplineId) {
+      await this.clearDiscipline(presentDisciplineId, presentType);
+    }
+
+    await this.prepareDiscipline(
+      newDisciplineId ?? presentDisciplineId,
+      newType ?? presentType.name,
+      teachers
+    );
+
+    return this.disciplineRepository.updateById(newDisciplineId ?? presentDisciplineId, {
+      description: disciplineInfo,
+    });
+  }
+
+  async clearDiscipline (
+    disciplineId: string,
+    type: DisciplineType,
+  ) {
+    const update = {
+      disciplineTypes: {
+        delete: undefined,
+      },
+      disciplineTeachers: {
+        deleteMany: {
+          OR: [],
+        },
+      },
+    };
+
+    const events = await this.eventRepository.count({
+      lessons: {
+        some: {
+          disciplineTypeId: type.id,
+        },
+      },
+    });
+
+    if (events === 1) {
+      const discipline = await this.disciplineRepository.findById(disciplineId);
+
+      update.disciplineTypes.delete = {
+        id: type.id,
+      };
+
+      discipline.disciplineTeachers.map(({ teacherId, disciplineId, roles }) => {
+        if (roles.length === 1 && roles.some((r) => r.role === TeacherRoleAdapter[type.name])) {
+          update.disciplineTeachers.deleteMany.OR.push({
+            teacherId,
+            disciplineId,
+          });
+        }
+      });
+
+      await this.disciplineRepository.updateById(disciplineId, update);
+    }
+  }
+
+  async prepareDiscipline (
+    disciplineId: string,
+    newType: DisciplineTypeEnum,
+    teachers: string[],
+  ) {
+    let discipline = await this.disciplineRepository.findById(disciplineId);
+
+    let disciplineType = find(discipline.disciplineTypes, 'name', newType);
+    if (!disciplineType) {
+      discipline = await this.disciplineRepository.updateById(disciplineId, {
+        disciplineTypes: {
+          create: {
+            name: newType,
+          },
+        },
+      });
+      disciplineType = find(discipline.disciplineTypes, 'name', newType);
+    }
+
+    for (const teacherId of teachers) {
+      const role = TeacherRoleAdapter[disciplineType.name];
+      const disciplineTeacher = await this.disciplineTeacherRepository.getOrCreate({ teacherId, disciplineId });
+      if (!some(disciplineTeacher.roles, 'role', role)) {
+        await this.disciplineTeacherRoleRepository.create({
+          disciplineTeacherId: disciplineTeacher.id,
+          disciplineTypeId: disciplineType.id,
+          role,
+        });
+      }
+    }
   }
 }

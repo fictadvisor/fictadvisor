@@ -88,4 +88,10 @@ export class EventRepository {
       where,
     });
   }
+
+  count (where: Prisma.EventWhereInput) {
+    return this.prisma.event.count({
+      where,
+    });
+  }
 }

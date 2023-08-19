@@ -22,7 +22,7 @@ export class DisciplineRepository {
     private prisma: PrismaService,
   ) {}
 
-  async findById (id: string) {
+  async findById (id: string): Promise<DbDiscipline> {
     return this.prisma.discipline.findUnique({
       where: {
         id,
@@ -60,7 +60,7 @@ export class DisciplineRepository {
     return discipline;
   }
 
-  async updateById (id: string, data: Prisma.DisciplineUncheckedUpdateInput) {
+  async updateById (id: string, data: Prisma.DisciplineUncheckedUpdateInput): Promise<DbDiscipline> {
     return this.prisma.discipline.update({
       where: {
         id,

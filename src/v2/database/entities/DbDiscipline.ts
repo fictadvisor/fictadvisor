@@ -16,6 +16,8 @@ export class DbDiscipline {
 
 export class DbDiscipline_DisciplineTeacher {
   id: string;
+  disciplineId: string;
+  teacherId: string;
   teacher: Teacher;
   roles: DisciplineTeacherRole[];
 }

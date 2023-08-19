@@ -3,7 +3,7 @@ import {
   Controller, Delete,
   Get,
   Param,
-  ParseIntPipe,
+  ParseIntPipe, Patch,
   Post,
   Query,
   Request, UseGuards,
@@ -24,13 +24,15 @@ import {
 } from '@nestjs/swagger';
 import { CreateEventDTO } from '../dtos/CreateEventDTO';
 import { EventResponse } from '../responses/EventResponse';
-import { EventByIdPipe } from '../pipes/EventByIdPipe';
 import { GroupByEventGuard } from '../../security/group-guard/GroupByEventGuard';
 import { EventsResponse } from '../responses/EventsResponse';
 import { TelegramGuard } from '../../security/TelegramGuard';
 import { EventFiltrationDTO } from '../dtos/EventFiltrationDTO';
 import { GeneralEventFiltrationDTO } from '../dtos/GeneralEventFiltrationDTO';
 import { EventFiltrationPipe } from '../pipes/EventFiltrationPipe';
+import { EventByIdPipe } from '../pipes/EventByIdPipe';
+import { UpdateEventDTO } from '../dtos/UpdateEventDTO';
+import { EventPipe } from '../pipes/EventPipe';
 
 @ApiTags('Schedule')
 @Controller({
@@ -157,6 +159,7 @@ export class ScheduleController {
   }
 
   @Access('groups.$groupId.events.get', GroupByEventGuard)
+  @ApiBearerAuth()
   @Get('/events/:eventId')
   @ApiOkResponse({
     type: EventResponse,
@@ -310,5 +313,66 @@ export class ScheduleController {
   ) {
     const result = await this.scheduleService.deleteEvent(id);
     return this.scheduleMapper.getEvent(result.event, result.discipline);
+  }
+
+  @Access('groups.$groupId.events.update')
+  @ApiBearerAuth()
+  @Patch('/events/:eventId')
+  @ApiOkResponse({
+    type: EventResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidBodyException:
+      Name is too short (min: 2)
+      Name is too long (max: 100)
+      Discipline type must be an enum
+      Teachers must be Array
+      Start time must be Date
+      End Time must be Date
+      Period must be an enum
+      Url must be a URL address
+      Discipline description is too long (max: 2000)
+      Event description is too long (max: 2000)
+    
+    ObjectIsRequiredException:
+      DisciplineType is required
+      Teachers is required
+      DisciplineId is required
+      
+    InvalidEntityIdException: 
+      Event with such id is not found
+      Teacher with such id is not found
+    
+    InvalidWeekException:
+      Week parameter is invalid
+    
+    NotFoundException:
+      Discipline is not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  async update (
+    @Param('eventId', EventByIdPipe) eventId: string,
+    @Body(EventPipe) body: UpdateEventDTO,
+  ) {
+    await this.scheduleService.updateEvent(eventId, body);
+
+    try {
+      const result = await this.scheduleService.getEvent(eventId, body.week);
+      return this.scheduleMapper.getEvent(result.event, result.discipline);
+    } catch (err) {
+      if (err.name === 'InvalidWeekException') {
+        return null;
+      }
+    }
   }
 }
