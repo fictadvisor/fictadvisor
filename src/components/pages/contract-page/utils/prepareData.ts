@@ -4,7 +4,7 @@ import {
   ExtendedContractBody,
 } from '@/lib/api/contract/types/ContractBody';
 import { PartialBy } from '@/lib/api/contract/types/utils';
-import { PaymentTypeParam, StudyTypeParam } from '@/types/contract';
+
 export const prepareData = (
   initialData: ExtendedContractBody,
 ): ContractBody => {

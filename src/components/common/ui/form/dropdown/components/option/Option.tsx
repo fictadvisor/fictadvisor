@@ -6,7 +6,7 @@ interface OptionProps extends HTMLProps<HTMLLIElement> {
   option: DropDownOption;
 }
 
-import Tag from '@/components/common/ui/tag-mui';
+import Tag from '@/components/common/ui/tag';
 
 const Option: FC<OptionProps> = ({ option, ...props }) => {
   if ('text' in option) {

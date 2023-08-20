@@ -1,4 +1,4 @@
-import { AlertType } from '@/components/common/ui/alert-mui/types';
+import { AlertType } from '@/components/common/ui/alert/types';
 
 export interface ToastState {
   open: boolean;

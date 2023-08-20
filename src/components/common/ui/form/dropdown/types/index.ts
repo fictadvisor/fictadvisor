@@ -1,5 +1,5 @@
 import { FieldSize } from '@/components/common/ui/form/common/types';
-import { TagProps } from '@/components/common/ui/tag-mui/types';
+import { TagProps } from '@/components/common/ui/tag/types';
 
 interface OptionBase {
   id: string;

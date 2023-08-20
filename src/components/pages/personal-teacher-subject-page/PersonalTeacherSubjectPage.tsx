@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
 import PersonalTeacherSubjectCard from '@/components/common/ui/cards/personal-teacher-subject-card';
-import Progress from '@/components/common/ui/progress-mui';
+import Progress from '@/components/common/ui/progress';
 import { TeachersPageTabs } from '@/components/pages/personal-teacher-page/PersonalTeacherPage';
 import PersonalSubjectTeacherTabs from '@/components/pages/personal-teacher-subject-page/personal-subject-teacher-tabs';
 import styles from '@/components/pages/personal-teacher-subject-page/PersonalTeacherSubjectPage.module.scss';

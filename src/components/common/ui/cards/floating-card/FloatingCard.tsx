@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
 import { Box, Typography } from '@mui/material';
 
-import Rating from '@/components/common/ui/rating-mui';
-import Tag from '@/components/common/ui/tag-mui';
-import { TagColor, TagSize } from '@/components/common/ui/tag-mui/types';
+import Rating from '@/components/common/ui/rating';
+import Tag from '@/components/common/ui/tag';
+import { TagColor, TagSize } from '@/components/common/ui/tag/types';
 import Contact from '@/components/pages/personal-teacher-page/contacts';
 import { Teacher, TeacherRole } from '@/types/teacher';
 

@@ -1,27 +1,28 @@
 import { FireIcon } from '@heroicons/react/24/outline';
-
-import { AcademicCap } from '@/components/common/icons/AcademicCap';
-import { Briefcase } from '@/components/common/icons/Briefcase';
-import { Clipboard } from '@/components/common/icons/Clipboard';
-import { Home } from '@/components/common/icons/Home';
-import { LockClosed } from '@/components/common/icons/LockClosed';
-import { Users } from '@/components/common/icons/Users';
+import {
+  AcademicCapIcon,
+  BriefcaseIcon,
+  ClipboardIcon,
+  HomeIcon,
+  LockClosedIcon,
+  UsersIcon,
+} from '@heroicons/react/24/outline';
 
 export const accountButtons = [
   {
     link: '/account?tab=general',
     text: 'Загальне',
-    icon: <AcademicCap />,
+    icon: <AcademicCapIcon />,
   },
   {
     link: '/account?tab=security',
     text: 'Безпека',
-    icon: <LockClosed />,
+    icon: <LockClosedIcon />,
   },
   {
     link: '/account?tab=group',
     text: 'Група',
-    icon: <Users />,
+    icon: <UsersIcon />,
   },
   {
     link: '/account?tab=selective',
@@ -34,21 +35,21 @@ export const mainLinks = [
   {
     link: '/',
     text: 'Головна',
-    icon: <Home />,
+    icon: <HomeIcon />,
   },
   {
     link: '/poll',
     text: 'Опитування',
-    icon: <Clipboard />,
+    icon: <ClipboardIcon />,
   },
   {
     link: '/teachers',
     text: 'Викладачі',
-    icon: <Briefcase />,
+    icon: <BriefcaseIcon />,
   },
   {
     link: '/subjects',
     text: 'Предмети',
-    icon: <AcademicCap />,
+    icon: <AcademicCapIcon />,
   },
 ];

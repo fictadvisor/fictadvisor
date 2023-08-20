@@ -31,6 +31,10 @@ export const supportLinks = [
     link: 'https://t.me/fict_robot',
     text: 'FICT robot',
   },
+  {
+    link: '/about',
+    text: 'Про нас',
+  },
 ];
 
 export const socialLinks = [

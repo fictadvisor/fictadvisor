@@ -5,11 +5,8 @@ import { AxiosError } from 'axios';
 import { useRouter } from 'next/router';
 
 import { CustomEnvelopeOpen } from '@/components/common/icons/CustomEnvelopeOpen';
-import Alert from '@/components/common/ui/alert-mui';
-import {
-  AlertType,
-  AlertVariant,
-} from '@/components/common/ui/alert-mui/types';
+import Alert from '@/components/common/ui/alert';
+import { AlertType, AlertVariant } from '@/components/common/ui/alert/types';
 import Button from '@/components/common/ui/button-mui';
 import {
   ButtonColor,

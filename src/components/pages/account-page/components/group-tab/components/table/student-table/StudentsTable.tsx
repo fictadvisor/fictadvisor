@@ -12,8 +12,8 @@ import {
   IconButton,
   IconButtonShape,
 } from '@/components/common/ui/icon-button';
-import Tag from '@/components/common/ui/tag-mui';
-import { TagSize, TagVariant } from '@/components/common/ui/tag-mui/types';
+import Tag from '@/components/common/ui/tag';
+import { TagSize, TagVariant } from '@/components/common/ui/tag/types';
 import roleNamesMapper from '@/components/pages/account-page/components/group-tab/components/table/constants';
 import EditingColumn from '@/components/pages/account-page/components/group-tab/components/table/student-table/components/EditingColumn';
 import { TextAreaPopup } from '@/components/pages/account-page/components/group-tab/components/text-area-popup';

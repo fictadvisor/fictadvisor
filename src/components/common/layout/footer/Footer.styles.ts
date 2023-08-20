@@ -145,7 +145,7 @@ export const socialMedia: SxProps<Theme> = {
   },
   marginTop: {
     desktop: '40px',
-    mobile: '20px',
+    mobile: '30px',
   },
   marginRight: {
     desktop: '156px',

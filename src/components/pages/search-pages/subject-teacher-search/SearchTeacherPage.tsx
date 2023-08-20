@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
 import { Breadcrumb } from '@/components/common/ui/breadcrumbs/types';
-import Progress from '@/components/common/ui/progress-mui';
+import Progress from '@/components/common/ui/progress';
 import { SubjectTeacherSearchList } from '@/components/pages/search-pages/subject-teacher-search/components/SubjectTeacherSearchList';
 import SubjectsAPI from '@/lib/api/subject/SubjectAPI';
 import { GetTeachersBySubjectResponse } from '@/lib/api/subject/types/GetTeachersBySubjectResponse';

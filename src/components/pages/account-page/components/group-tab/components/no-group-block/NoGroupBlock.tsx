@@ -3,12 +3,12 @@ import { useQuery } from 'react-query';
 import { AxiosError } from 'axios';
 import { Form, Formik } from 'formik';
 
-import Alert from '@/components/common/ui/alert-mui';
-import { AlertType } from '@/components/common/ui/alert-mui/types';
+import Alert from '@/components/common/ui/alert';
+import { AlertType } from '@/components/common/ui/alert/types';
 import Button, { ButtonSize } from '@/components/common/ui/button';
 import { Checkbox } from '@/components/common/ui/form';
 import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown';
-import Progress from '@/components/common/ui/progress-mui';
+import Progress from '@/components/common/ui/progress';
 import { transformGroups } from '@/components/pages/account-page/components/group-tab/components/no-group-block/utils';
 import { validationSchema } from '@/components/pages/account-page/components/group-tab/components/no-group-block/validation';
 import useAuthentication from '@/hooks/use-authentication';

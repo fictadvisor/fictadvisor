@@ -1,15 +1,15 @@
 import { FC } from 'react';
 import { useQuery } from 'react-query';
 import { Box } from '@mui/material';
-import RequestsTable from 'src/components/pages/account-page/components/group-tab/components/table/requests-table';
+
+import Progress from '@/components/common/ui/progress';
+import NoGroupBlock from '@/components/pages/account-page/components/group-tab/components/no-group-block';
+import RequestsTable from '@/components/pages/account-page/components/group-tab/components/table/requests-table';
+import StudentsTable from '@/components/pages/account-page/components/group-tab/components/table/student-table';
 import {
   transformRequestsData,
   transformStudentsData,
-} from 'src/components/pages/account-page/components/group-tab/components/table/utils';
-
-import Progress from '@/components/common/ui/progress-mui';
-import NoGroupBlock from '@/components/pages/account-page/components/group-tab/components/no-group-block';
-import StudentsTable from '@/components/pages/account-page/components/group-tab/components/table/student-table';
+} from '@/components/pages/account-page/components/group-tab/components/table/utils';
 import useAuthentication from '@/hooks/use-authentication';
 import GroupAPI from '@/lib/api/group/GroupAPI';
 import { PendingStudent } from '@/types/student';

@@ -1,4 +1,4 @@
-import { AlertType } from '@/components/common/ui/alert-mui/types';
+import { AlertType } from '@/components/common/ui/alert/types';
 
 import { useToastContext } from './toast-context';
 import { UseToastReturn } from './types';

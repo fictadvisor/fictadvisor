@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
-import Progress from '@/components/common/ui/progress-mui';
+import Progress from '@/components/common/ui/progress';
 import useAuthentication from '@/hooks/use-authentication';
 import useToast from '@/hooks/use-toast';
 import AuthAPI from '@/lib/api/auth/AuthAPI';

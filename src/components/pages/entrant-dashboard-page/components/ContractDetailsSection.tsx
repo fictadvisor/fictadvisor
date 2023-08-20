@@ -1,14 +1,3 @@
-import {
-  EntrantFuIlResponse,
-  priorityState,
-} from '@/lib/api/contract/types/EntrantFullResponse';
-interface ContractDetailsSectionProps {
-  data: EntrantFuIlResponse;
-  setEntrantData: React.Dispatch<
-    React.SetStateAction<EntrantFuIlResponse | null>
-  >;
-  cb: (action: Actions) => Promise<void>;
-}
 import React, { FC } from 'react';
 import { Box, Typography } from '@mui/material';
 
@@ -22,6 +11,15 @@ import { DividerTextAlign } from '@/components/common/ui/divider/types';
 import ContractApproveForm from '@/components/pages/entrant-dashboard-page/components/entrant-approve-form/ContractApproveForm';
 import * as styles from '@/components/pages/entrant-dashboard-page/EntrantDashboardPage.styles';
 import { Actions } from '@/lib/api/contract/types/DeleteEntrantDataBody';
+import { EntrantFuIlResponse } from '@/lib/api/contract/types/EntrantFullResponse';
+
+interface ContractDetailsSectionProps {
+  data: EntrantFuIlResponse;
+  setEntrantData: React.Dispatch<
+    React.SetStateAction<EntrantFuIlResponse | null>
+  >;
+  cb: (action: Actions) => Promise<void>;
+}
 export const ContractDetailsSection: FC<ContractDetailsSectionProps> = ({
   data,
   cb,
@@ -40,8 +38,6 @@ export const ContractDetailsSection: FC<ContractDetailsSectionProps> = ({
       });
     } catch (e) {}
   };
-
-  const handleContractApprove = () => {};
 
   return (
     <Box sx={styles.block}>

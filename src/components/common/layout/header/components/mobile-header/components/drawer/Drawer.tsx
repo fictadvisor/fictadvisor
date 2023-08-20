@@ -3,8 +3,8 @@ import { Box, Drawer as MuiDrawer, Link } from '@mui/material';
 import NextLink from 'next/link';
 
 import Divider from '@/components/common/ui/divider';
-import Tab from '@/components/common/ui/tab-mui/tab';
-import { TabTextPosition } from '@/components/common/ui/tab-mui/tab/types';
+import Tab from '@/components/common/ui/tab/tab';
+import { TabTextPosition } from '@/components/common/ui/tab/tab/types';
 
 import { accountButtons, mainLinks } from '../../../../constants';
 import { TransformedUser } from '../../../../types';

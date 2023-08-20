@@ -13,8 +13,6 @@ interface FormikRadioProps {
 }
 
 const FormikRadio: FC<FormikRadioProps> = ({
-  textType,
-  sx = {},
   disabled = false,
   state = FieldState.DEFAULT,
   ...rest

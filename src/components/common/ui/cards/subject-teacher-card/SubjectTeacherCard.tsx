@@ -4,8 +4,8 @@ import cn from 'classnames';
 
 import { CardRoles } from '@/components/common/ui/cards/card-roles';
 import { DivProps } from '@/components/common/ui/cards/types';
-import Rating from '@/components/common/ui/rating-mui';
-import { RatingVariant } from '@/components/common/ui/rating-mui/types';
+import Rating from '@/components/common/ui/rating';
+import { RatingVariant } from '@/components/common/ui/rating/types';
 import theme from '@/styles/theme';
 import { TeacherRole } from '@/types/teacher';
 

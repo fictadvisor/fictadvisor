@@ -1,8 +1,8 @@
 import { FC } from 'react';
 import cn from 'classnames';
 
-import Tag from '@/components/common/ui/tag-mui';
-import { TagColor, TagSize } from '@/components/common/ui/tag-mui/types';
+import Tag from '@/components/common/ui/tag';
+import { TagColor, TagSize } from '@/components/common/ui/tag/types';
 import { TeacherRole } from '@/types/teacher';
 
 import styles from './CardRoles.module.scss';

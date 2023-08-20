@@ -1,7 +1,7 @@
 import React from 'react';
+import { LockClosedIcon } from '@heroicons/react/24/outline';
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { LockClosed } from '@/components/common/icons/LockClosed';
 import Button from '@/components/common/ui/button-mui/Button';
 import Popup from '@/components/common/ui/pop-ups-mui/Popup';
 
@@ -24,7 +24,7 @@ export const Base: Story = {
     text: 'This will remove all data relating to Alex. This action cannot be reversed. Deleted data can not be recovered.',
     open: false,
     hasCross: false,
-    icon: <LockClosed />,
+    icon: <LockClosedIcon />,
     firstButton: <Button text="Delete" />,
     secondButton: <Button text="Post" />,
     onClose: () => {},

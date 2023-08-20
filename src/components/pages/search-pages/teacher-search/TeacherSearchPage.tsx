@@ -8,7 +8,7 @@ import {
   ButtonColor,
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
-import Progress from '@/components/common/ui/progress-mui';
+import Progress from '@/components/common/ui/progress';
 import { SearchFormProps } from '@/components/pages/search-pages/search-form/SearchForm';
 import { SearchFormFields } from '@/components/pages/search-pages/search-form/types';
 import {

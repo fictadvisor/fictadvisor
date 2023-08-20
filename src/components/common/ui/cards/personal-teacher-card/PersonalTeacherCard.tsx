@@ -4,9 +4,9 @@ import { Box, Typography } from '@mui/material';
 
 import Button from '@/components/common/ui/button-mui';
 import { ButtonVariant } from '@/components/common/ui/button-mui/types';
-import Rating from '@/components/common/ui/rating-mui';
-import Tag from '@/components/common/ui/tag-mui';
-import { TagColor, TagSize } from '@/components/common/ui/tag-mui/types';
+import Rating from '@/components/common/ui/rating';
+import Tag from '@/components/common/ui/tag';
+import { TagColor, TagSize } from '@/components/common/ui/tag/types';
 import { teacherContext } from '@/components/pages/personal-teacher-page/PersonalTeacherPage';
 import { Teacher, TeacherRole } from '@/types/teacher';
 

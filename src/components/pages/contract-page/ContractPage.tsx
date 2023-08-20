@@ -2,7 +2,7 @@ import { FC, useState } from 'react';
 import { Box } from '@mui/material';
 
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
-import Progress from '@/components/common/ui/progress-mui';
+import Progress from '@/components/common/ui/progress';
 import { PersonalForm } from '@/components/pages/contract-page/components/personal-form/PersonalForm';
 
 import * as styles from './ContractPage.styles';

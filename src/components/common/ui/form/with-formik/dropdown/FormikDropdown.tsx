@@ -32,7 +32,7 @@ const FormikDropdown: FC<FormikDropdownProps> = ({
         setValue('');
       }
     };
-  }, []);
+  });
 
   return (
     <Dropdown

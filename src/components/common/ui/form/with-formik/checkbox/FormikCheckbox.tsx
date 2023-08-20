@@ -23,7 +23,6 @@ const FormikCheckbox: FC<CheckboxProps> = ({
   sx = {},
   onChange,
   color = CheckboxColor.PRIMARY,
-  textType = CheckboxTextType.BODY1,
   ...rest
 }) => {
   return (

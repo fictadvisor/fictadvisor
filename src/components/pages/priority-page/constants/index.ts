@@ -1,8 +1,5 @@
 import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
-import {
-  ExtendedPriorityDataBody,
-  PriorityDataBody,
-} from '@/lib/api/contract/types/PriorityDataBody';
+import { ExtendedPriorityDataBody } from '@/lib/api/contract/types/PriorityDataBody';
 
 export const initialValues: ExtendedPriorityDataBody = {
   firstName: '',

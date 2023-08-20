@@ -2,11 +2,11 @@ import { FC, SyntheticEvent } from 'react';
 import { Box } from '@mui/material';
 import dynamic from 'next/dynamic';
 
-import Tab from '@/components/common/ui/tab-mui/tab';
-import { TabTextPosition } from '@/components/common/ui/tab-mui/tab/types';
-import TabContext from '@/components/common/ui/tab-mui/tab-context';
-import TabList from '@/components/common/ui/tab-mui/tab-list';
-import TabPanel from '@/components/common/ui/tab-mui/tab-panel';
+import Tab from '@/components/common/ui/tab/tab';
+import { TabTextPosition } from '@/components/common/ui/tab/tab/types';
+import TabContext from '@/components/common/ui/tab/tab-context';
+import TabList from '@/components/common/ui/tab/tab-list';
+import TabPanel from '@/components/common/ui/tab/tab-panel';
 import { TeachersPageTabs } from '@/components/pages/personal-teacher-page/PersonalTeacherPage';
 import { TeacherPageInfo } from '@/lib/services/teacher/types';
 

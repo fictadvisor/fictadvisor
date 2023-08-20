@@ -2,7 +2,7 @@ import React from 'react';
 import cn from 'classnames';
 
 import { DivProps } from '@/components/common/ui/cards/types';
-import Tooltip from '@/components/common/ui/tooltip-mui';
+import Tooltip from '@/components/common/ui/tooltip';
 
 import styles from './TeacherHeaderCard.module.scss';
 type TeacherHeaderCardProps = {

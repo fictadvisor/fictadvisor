@@ -9,11 +9,11 @@ import { Box } from '@mui/material';
 import { useRouter } from 'next/router';
 
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
-import Tab from '@/components/common/ui/tab-mui/tab';
-import { TabTextPosition } from '@/components/common/ui/tab-mui/tab/types';
-import TabContext from '@/components/common/ui/tab-mui/tab-context';
-import TabList from '@/components/common/ui/tab-mui/tab-list';
-import TabPanel from '@/components/common/ui/tab-mui/tab-panel';
+import Tab from '@/components/common/ui/tab/tab';
+import { TabTextPosition } from '@/components/common/ui/tab/tab/types';
+import TabContext from '@/components/common/ui/tab/tab-context';
+import TabList from '@/components/common/ui/tab/tab-list';
+import TabPanel from '@/components/common/ui/tab/tab-panel';
 import GeneralTab from '@/components/pages/account-page/components/general-tab';
 import GroupTab from '@/components/pages/account-page/components/group-tab';
 import SecurityTab from '@/components/pages/account-page/components/security-tab';

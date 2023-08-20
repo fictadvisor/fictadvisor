@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { AlertType } from '@/components/common/ui/alert-mui/types';
+import { AlertType } from '@/components/common/ui/alert/types';
 
 export interface AlertStore {
   color: AlertType;
