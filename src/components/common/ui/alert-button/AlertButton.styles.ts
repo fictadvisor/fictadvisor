@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { SxProps, Theme } from '@mui/material/styles';
 
-import getColors from '@/components/common/ui/alert-button-mui/utils/get-colors';
+import getColors from '@/components/common/ui/alert-button/utils/get-colors';
 
 import { AlertButtonState, AlertButtonVariant } from './types';
 

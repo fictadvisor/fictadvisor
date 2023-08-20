@@ -8,10 +8,8 @@ import { Moderator } from '@/components/common/icons/Moderator';
 import Button from '@/components/common/ui/button-mui';
 import Divider from '@/components/common/ui/divider';
 import { DividerTextAlign } from '@/components/common/ui/divider/types';
-import {
-  IconButton,
-  IconButtonShape,
-} from '@/components/common/ui/icon-button';
+import IconButton from '@/components/common/ui/icon-button-mui';
+import { IconButtonShape } from '@/components/common/ui/icon-button-mui/types';
 import Tag from '@/components/common/ui/tag';
 import { TagSize, TagVariant } from '@/components/common/ui/tag/types';
 import roleNamesMapper from '@/components/pages/account-page/components/group-tab/components/table/constants';

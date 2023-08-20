@@ -1,7 +1,7 @@
 import {
   AlertButtonState,
   AlertButtonVariant,
-} from '@/components/common/ui/alert-button-mui/types';
+} from '@/components/common/ui/alert-button/types';
 
 const buttonColorsMap = {
   [AlertButtonVariant.ERROR_FILL]: {

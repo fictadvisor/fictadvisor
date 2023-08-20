@@ -3,8 +3,8 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 import { Box, Grid, Typography, useMediaQuery } from '@mui/material';
 
 import { CustomCheck } from '@/components/common/icons/CustomCheck';
-import AlertButton from '@/components/common/ui/alert-button-mui/AlertButton';
-import { AlertButtonVariant } from '@/components/common/ui/alert-button-mui/types';
+import AlertButton from '@/components/common/ui/alert-button/AlertButton';
+import { AlertButtonVariant } from '@/components/common/ui/alert-button/types';
 import Divider from '@/components/common/ui/divider';
 import { DividerTextAlign } from '@/components/common/ui/divider/types';
 import useAuthentication from '@/hooks/use-authentication';

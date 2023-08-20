@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import AlertButton from '@/components/common/ui/alert-button-mui/AlertButton';
+import AlertButton from '@/components/common/ui/alert-button/AlertButton';
 
 const meta = {
   title: 'Ui Kit/Components/AlertButton',

@@ -2,7 +2,7 @@ import React, { FC, MouseEventHandler, ReactNode } from 'react';
 import { Box, Button } from '@mui/material';
 import { SxProps, Theme } from '@mui/material/styles';
 
-import * as styles from '@/components/common/ui/alert-button-mui/AlertButton.styles';
+import * as styles from '@/components/common/ui/alert-button/AlertButton.styles';
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 
 import { AlertButtonVariant } from './types';
