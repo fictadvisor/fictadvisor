@@ -21,7 +21,6 @@ import { PollDisciplineTeachersResponse } from '../responses/PollDisciplineTeach
 import { StudentRepository } from '../../database/repositories/StudentRepository';
 import { GroupRepository } from '../../database/repositories/GroupRepository';
 import { DatabaseUtils } from '../../database/DatabaseUtils';
-import { DataNotFoundException } from '../../utils/exceptions/DataNotFoundException';
 
 @Injectable()
 export class PollService {
@@ -130,9 +129,6 @@ export class PollService {
       include: undefined,
     };
     const questions = await this.questionRepository.findMany(questionsData);
-    if (questions.length === 0) {
-      throw new DataNotFoundException();
-    }
 
     const commentsData = {
       where: {

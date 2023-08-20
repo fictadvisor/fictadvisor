@@ -9,7 +9,6 @@ import { DbDiscipline } from 'src/v2/database/entities/DbDiscipline';
 import { DbQuestionWithRoles } from 'src/v2/database/entities/DbQuestionWithRoles';
 import { DbQuestionWithAnswers } from 'src/v2/database/entities/DbQuestionWithAnswers';
 import { CommentsSort } from '../dtos/CommentsQueryDTO';
-import { DataNotFoundException } from '../../utils/exceptions/DataNotFoundException';
 
 
 describe('PollService', () => {
@@ -534,23 +533,6 @@ describe('PollService', () => {
       expect(questionCommentsOldest[0].type).toBe(QuestionType.TEXT);
       expect(questionCommentsNewest[0].type).toBe(QuestionType.TEXT);
       expect(questionCommentsOldest[0].comments.data).toStrictEqual(questionCommentsNewest[0].comments.data.reverse());
-    });
-
-    it('should return exception because the teacher with the id not found', async () => {
-      await expect(
-        pollService.getQuestionWithText('e94f17b2-e6d9-4b10-bc38-a76d98061192')
-      ).rejects.toThrow(DataNotFoundException);
-    });
-
-    it('should return exception because data is wrong', async () => {
-      await expect(pollService.getQuestionWithText(
-        teacherLecturer.id,
-        {
-          subjectId: subject.id,
-          semester: 1,
-          year: 2021,
-        }
-      )).rejects.toThrow(DataNotFoundException);
     });
   });
 

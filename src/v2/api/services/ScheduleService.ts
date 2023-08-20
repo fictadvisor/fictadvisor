@@ -17,7 +17,6 @@ import { filterAsync, every, find, some } from '../../utils/ArrayUtil';
 import { DbDiscipline } from '../../database/entities/DbDiscipline';
 import { InvalidWeekException } from '../../utils/exceptions/InvalidWeekException';
 import { UserService } from './UserService';
-import { InvalidDayException } from '../../utils/exceptions/InvalidDayException';
 import { EventFiltrationDTO } from '../dtos/EventFiltrationDTO';
 import { GeneralEventFiltrationDTO } from '../dtos/GeneralEventFiltrationDTO';
 import { UpdateEventDTO } from '../dtos/UpdateEventDTO';
@@ -133,15 +132,9 @@ export class ScheduleService {
 
   async getGeneralGroupEventsByDay (id: string, day: number) {
     const week = await this.dateService.getCurrentWeek();
-    const currentSemester = await this.dateService.getCurrentSemester();
-    if (!this.isWeekValid(week, currentSemester)) {
-      throw new InvalidWeekException();
-    }
 
     day = day ? day : (await this.dateService.getCurrentDay()).day;
-    if (day < 1 || day > 6) {
-      throw new InvalidDayException();
-    }
+
     const { startOfDay } = await this.dateService.getSpecificDayInWeek(week, day);
 
     const result = await this.getGeneralGroupEvents(id, week);

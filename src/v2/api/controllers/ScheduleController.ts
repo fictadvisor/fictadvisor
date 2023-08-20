@@ -136,13 +136,7 @@ export class ScheduleController {
   @ApiBadRequestResponse({
     description: `\n
     InvalidGroupIdException: 
-      Group with such id is not found
-      
-    InvalidWeekException:
-      Week parameter is invalid
-      
-    InvalidDayException: 
-      Day parameter is invalid`,
+      Group with such id is not found`,
   })
   @ApiUnauthorizedResponse({
     description: `\n
@@ -419,6 +413,44 @@ export class ScheduleController {
     return {
       firstWeekEvents: this.scheduleMapper.getEvents(result.firstWeekEvents),
       secondWeekEvents: this.scheduleMapper.getEvents(result.secondWeekEvents),
+    };
+  }
+
+  @UseGuards(TelegramGuard)
+  @ApiBearerAuth()
+  @Get('/groups/:groupId/general/week')
+  @ApiOkResponse({
+    type: TelegramGeneralEventsResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidGroupIdException: 
+      Group with such id is not found
+      
+    DataNotFoundException: 
+      Data were not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @ApiQuery({
+    name: 'week',
+    required: false,
+  })
+  async getGeneralGroupEventsByWeek (
+      @Param('groupId', GroupByIdPipe) id: string,
+      @Query('week') week: number,
+  ) {
+    const result = await this.scheduleService.getGeneralGroupEvents(id, week);
+    return {
+      events: this.scheduleMapper.getEvents(result.events),
     };
   }
 }
