@@ -33,6 +33,7 @@ import { TelegramDTO } from '../dtos/TelegramDTO';
 import { UserService } from '../services/UserService';
 import { TelegramGuard } from '../../security/TelegramGuard';
 import { RegisterTelegramDTO } from '../dtos/RegisterTelegramDTO';
+import { OrdinaryStudentResponse } from '../responses/StudentResponse';
 
 @ApiTags('Auth')
 @Controller({
@@ -143,6 +144,28 @@ export class AuthController {
     return this.authService.refresh(req.user);
   }
 
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: AuthLoginResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorisedException:
+      Unauthorized
+      The password is incorrect`,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException:
+      User with such id is not found
+      
+    InvalidBodyException:
+      The password must be between 8 and 50 characters long, include at least 1 digit and 1 letter
+      Password is empty
+
+    PasswordRepeatException:
+      The passwords are the same`,
+  })
   @UseGuards(JwtGuard)
   @Put('/updatePassword')
   async updatePassword (
@@ -152,6 +175,15 @@ export class AuthController {
     return this.authService.updatePassword(body, req.user);
   }
 
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: OrdinaryStudentResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorisedException:
+      Unauthorized`,
+  })
   @UseGuards(JwtGuard)
   @Get('/me')
   getMe (
@@ -160,6 +192,21 @@ export class AuthController {
     return this.userService.getUser(req.user.id);
   }
 
+  @ApiOkResponse()
+  @ApiBadRequestResponse({
+    description: `\n
+    NotRegisteredException:
+      This email is not registered yet
+      
+    InvalidBodyException:
+      Email is not an email
+      Email is empty`,
+  })
+  @ApiTooManyRequestsResponse({
+    description: `\n
+    TooManyActionsException:
+      Too many actions. Try later`,
+  })
   @Post('/forgotPassword')
   async forgotPassword (
     @Body() body: ForgotPasswordDTO,
@@ -167,6 +214,16 @@ export class AuthController {
     return this.authService.forgotPassword(body.email);
   }
 
+  @ApiOkResponse()
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidResetTokenException:
+      Reset token is expired or invalid
+     
+    InvalidBodyException:
+      The password must be between 8 and 50 characters long, include at least 1 digit and 1 letter
+      Password is empty`,
+  })
   @Post('/resetPassword/:token')
   async resetPassword (
     @Param('token') token: string,
@@ -175,6 +232,20 @@ export class AuthController {
     return this.authService.resetPassword(token, body);
   }
 
+  @ApiOkResponse()
+  @ApiTooManyRequestsResponse({
+    description: `\n
+    TooManyActionsException:
+      Too many actions. Try later`,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    NotRegisteredException:
+      This email is not registered yet
+    
+    InvalidBodyException:
+      Email is not email`,
+  })
   @Post('/register/verifyEmail')
   requestEmailVerification (
     @Body() body: VerificationEmailDTO,

@@ -1,7 +1,9 @@
 import { IsEmail } from 'class-validator';
 import { validationOptionsMsg } from '../../utils/GLOBALS';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class VerificationEmailDTO {
-    @IsEmail({}, validationOptionsMsg('Email is not email'))
-      email: string;
+  @ApiProperty()
+  @IsEmail({}, validationOptionsMsg('Email is not email'))
+    email: string;
 }
