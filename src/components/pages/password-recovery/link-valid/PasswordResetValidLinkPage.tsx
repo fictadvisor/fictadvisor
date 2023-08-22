@@ -1,8 +1,8 @@
 import React from 'react';
+import { ShieldCheckIcon } from '@heroicons/react/24/outline';
 import { Box, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 
-import { CustomShield } from '@/components/common/icons/CustomShield';
 import Button from '@/components/common/ui/button-mui';
 import {
   ButtonColor,
@@ -20,7 +20,7 @@ const PasswordResetValidLinkPage = () => {
     <Box sx={styles.container}>
       <Box sx={styles.content}>
         <Box sx={styles.icon}>
-          <CustomShield />
+          <ShieldCheckIcon />
         </Box>
         <Typography sx={styles.title}>Пароль змінено</Typography>
         <Typography sx={styles.description}>

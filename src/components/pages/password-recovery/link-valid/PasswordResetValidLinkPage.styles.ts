@@ -23,6 +23,7 @@ export const content: SxProps<Theme> = {
 };
 
 export const icon: SxProps<Theme> = {
+  color: 'success.600',
   svg: {
     width: {
       mobile: '48px',
