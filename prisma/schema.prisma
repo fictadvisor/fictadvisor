@@ -474,6 +474,7 @@ model Entrant {
   studyForm          String              @default("") @map("study_form")
   paymentType        String              @default("") @map("payment_type")
   benefit            Boolean             @default(false)
+  group              String?
   entrantData        EntrantData?
   representativeData RepresentativeData?
   customerData       CustomerData?
@@ -583,7 +584,6 @@ model Contract {
   entrantId String  @unique @map("entrant_id")
   number    String
   date      String
-  group     String?
 
   @@map("contracts")
 }
