@@ -20,7 +20,6 @@ interface MetaContract {
   degree: string;
   programType: string;
   educationalProgram: string;
-
   speciality: string;
   studyType: string;
   studyForm: string;

@@ -9,19 +9,29 @@ export enum StudyFormParam {
 }
 
 export enum StudyDegree {
-  BACHELOR = 'Бакалавр',
-  MASTER = 'Магістр',
+  BACHELOR = 'BACHELOR',
+  MASTER = 'MASTER',
 }
 
 export enum EducationalProgramType {
-  PROFESSIONAL = 'Професійна',
-  SCIENTIFIC = 'Наукова',
+  PROFESSIONAL = 'PROFESSIONAL',
+  SCIENTIFIC = 'SCIENTIFIC',
 }
 
 export enum PaymentTypeParam {
   EVERY_YEAR = 'Щороку',
   EVERY_SEMESTER = 'Щосеместрово',
   EVERY_MONTH = 'Щомісяця',
+}
+
+export enum MasterEducationProgram {
+  CIS = 'CIS',
+  IS = 'IS',
+  CS = 'CS',
+  CSN = 'CSN',
+  IMST = 'IMST',
+  IIS = 'IIS',
+  ISRS = 'ISRS',
 }
 
 export interface Fullname {

@@ -12,6 +12,7 @@ import useTabClose from '@/hooks/use-tab-close';
 import { ExtendedContractBody } from '@/lib/api/contract/types/ContractBody';
 import {
   EducationalProgramType,
+  MasterEducationProgram,
   PaymentTypeParam,
   StudyDegree,
   StudyFormParam,
@@ -35,6 +36,29 @@ export const FirstStep: FC<FirstStepProps> = ({
   setHasCustomer,
 }) => {
   const handleSubmit = (values: ExtendedContractBody) => {
+    if (
+      values.meta.educationalProgram === MasterEducationProgram.CIS ||
+      values.meta.educationalProgram === MasterEducationProgram.CS ||
+      values.meta.educationalProgram === MasterEducationProgram.IS
+    ) {
+      values.meta.speciality = '121';
+    }
+    if (values.meta.educationalProgram === MasterEducationProgram.CSN) {
+      values.meta.speciality = '123';
+    }
+    if (
+      values.meta.educationalProgram === MasterEducationProgram.ISRS ||
+      values.meta.educationalProgram === MasterEducationProgram.IIS ||
+      values.meta.educationalProgram === MasterEducationProgram.IMST
+    ) {
+      values.meta.speciality = '126';
+    }
+    if (values.meta.degree === StudyDegree.MASTER) {
+      values.helper.isAdult = true;
+    }
+    if (values.meta.studyType === StudyTypeParam.BUDGET) {
+      values.helper.hasCustomer = false;
+    }
     onNextStep(values);
   };
 
@@ -242,18 +266,6 @@ export const FirstStep: FC<FirstStepProps> = ({
                     />
                   </Box>
                 )}
-                {/*<Box sx={stylesMui.item}>*/}
-                {/*  <Typography variant="h6Bold">*/}
-                {/*    Форма навчання (денна/заочна)*/}
-                {/*  </Typography>*/}
-                {/*  <FormikRadioGroup*/}
-                {/*    name="meta.studyForm"*/}
-                {/*    options={[*/}
-                {/*      { label: 'Денна', value: StudyFormParam.FULL_TIME },*/}
-                {/*      { label: 'Заочна', value: StudyFormParam.PART_TIME },*/}
-                {/*    ]}*/}
-                {/*  />*/}
-                {/*</Box>*/}
                 <Box sx={stylesMui.item}>
                   <Typography variant="h6Bold">
                     Тип освітньої програми
@@ -263,11 +275,11 @@ export const FirstStep: FC<FirstStepProps> = ({
                     options={[
                       {
                         value: EducationalProgramType.PROFESSIONAL,
-                        label: EducationalProgramType.PROFESSIONAL,
+                        label: 'Професійна',
                       },
                       {
                         value: EducationalProgramType.SCIENTIFIC,
-                        label: EducationalProgramType.SCIENTIFIC,
+                        label: 'Наукова',
                       },
                     ]}
                   />
@@ -280,22 +292,18 @@ export const FirstStep: FC<FirstStepProps> = ({
                       name="meta.educationalProgram"
                       options={[
                         {
-                          value:
-                            "121 Інженерія програмного забезпечення комп'ютерних та інформаційних систем — освітньо-наукова програма",
+                          value: MasterEducationProgram.CIS,
                           label:
-                            "121 Інженерія програмного забезпечення комп'ютерних та інформаційних систем — освітньо-наукова програма",
+                            "121 Інженерія програмного забезпечення комп'ютерних та інформаційних систем",
                         },
                         {
-                          value:
-                            '123 Комп`ютерні системи та мережі  — освітньо-наукова програма',
-                          label:
-                            '123 Комп`ютерні системи та мережі  — освітньо-наукова програма',
+                          value: MasterEducationProgram.CSN,
+                          label: "123 Комп'ютерні системи та мережі",
                         },
                         {
-                          value:
-                            '126 Інформаційні управляючі системи та технології— освітньо-наукова програма',
+                          value: MasterEducationProgram.IMST,
                           label:
-                            '126 Інформаційні управляючі системи та технології— освітньо-наукова програма',
+                            '126 Інформаційні управляючі системи та технології',
                         },
                       ]}
                     />
@@ -309,40 +317,32 @@ export const FirstStep: FC<FirstStepProps> = ({
                       name="meta.educationalProgram"
                       options={[
                         {
-                          value:
-                            '121 Інженерія програмного забезпечення інформаційних систем — освітньо-професійна програма',
+                          value: MasterEducationProgram.IS,
                           label:
-                            '121 Інженерія програмного забезпечення інформаційних систем — освітньо-професійна програма',
+                            '121 Інженерія програмного забезпечення інформаційних систем',
                         },
                         {
-                          value:
-                            "121 Інженерія програмного забезпечення комп'ютерних систем — освітньо-професійна програма",
+                          value: MasterEducationProgram.CS,
                           label:
-                            "121 Інженерія програмного забезпечення комп'ютерних систем — освітньо-професійна програма",
+                            "121 Інженерія програмного забезпечення комп'ютерних систем",
                         },
                         {
-                          value:
-                            "123 Комп'ютерні системи та мережі — освітньо-професійна програма",
-                          label:
-                            "123 Комп'ютерні системи та мережі — освітньо-професійна програма",
+                          value: MasterEducationProgram.CSN,
+                          label: "123 Комп'ютерні системи та мережі",
                         },
                         {
-                          value:
-                            '126 Інформаційні управляючі системи та технології — освітньо-професійна програма',
+                          value: MasterEducationProgram.IMST,
                           label:
-                            '126 Інформаційні управляючі системи та технології — освітньо-професійна програма',
+                            '126 Інформаційні управляючі системи та технології',
                         },
                         {
-                          value:
-                            '126 Інтегровані інформаційні системи — освітньо-професійна програма',
-                          label:
-                            '126 Інтегровані інформаційні системи — освітньо-професійна програма',
+                          value: MasterEducationProgram.IIS,
+                          label: '126 Інтегровані інформаційні системи',
                         },
                         {
-                          value:
-                            '126 Інформаційне забезпечення робототехнічних систем— освітньо-професійна програма',
+                          value: MasterEducationProgram.ISRS,
                           label:
-                            '126 Інформаційне забезпечення робототехнічних систем— освітньо-професійна програма',
+                            '126 Інформаційне забезпечення робототехнічних систем',
                         },
                       ]}
                     />
@@ -367,7 +367,6 @@ export const FirstStep: FC<FirstStepProps> = ({
                       label="Формую договір в корпусі (*)"
                     />
                   </Box>
-                  {(values.helper.isAdult = true)}
                   <Box sx={stylesMui.item}>
                     <CheckBox
                       name="meta.isForcePushed"

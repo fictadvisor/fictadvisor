@@ -4,6 +4,7 @@ import {
   ExtendedContractBody,
 } from '@/lib/api/contract/types/ContractBody';
 import { PartialBy } from '@/lib/api/contract/types/utils';
+import { StudyDegree } from '@/types/contract';
 
 export const prepareData = (
   initialData: ExtendedContractBody,
@@ -38,6 +39,11 @@ export const prepareData = (
   if (data.customer.email?.length === 0) data.customer.email = undefined;
 
   if (data.meta.paymentType?.length === 0) data.meta.paymentType = undefined;
+
+  if (data.meta.degree === StudyDegree.BACHELOR) {
+    data.meta.educationalProgram = '';
+    data.meta.programType = '';
+  }
 
   if (data.entrant.region === kyiv) {
     data.entrant.settlement = kyiv;
