@@ -54,15 +54,15 @@ export class DocumentService {
     if (sendToEntrant) emails.push(data.entrant.email);
     if (data.meta.isToAdmission) emails.push(process.env.ADMISSION_EMAIL);
 
-    const agreementName = `${data.meta.speciality}_${data.meta.studyType}_${data.meta.studyForm}.docx`;
+    const agreementName = `${data.meta.degree}_${data.meta.speciality}_${data.meta.educationalProgram}_${data.meta.programType}_${data.meta.studyForm}_${data.meta.studyType}.docx`;
     const agreement = this.fileService.fillTemplate(agreementName, obj);
 
-    const attachments = [{ name: 'Договір про навчання.docx', buffer: agreement, contentType: DOCX }];
+    const attachments = [{ name: `Договір | ${data.entrant.lastName} ${data.entrant.firstName} ${data.entrant.middleName}.docx`, buffer: agreement, contentType: DOCX }];
 
     if (data.meta.studyType === StudyTypeParam.CONTRACT) {
-      const paymentName = `${data.meta.speciality}_${data.meta.paymentType}_${data.meta.studyForm}.docx`;
+      const paymentName = `${data.meta.degree}_${data.meta.speciality}_${data.meta.programType}_${data.meta.studyForm}_${data.meta.paymentType}.docx`;
       const payment = this.fileService.fillTemplate(paymentName, { ...obj, customer: this.formatPersonalData(data.customer) });
-      attachments.push({ name: 'Договір про надання платної освітньої послуги.docx', buffer: payment, contentType: DOCX });
+      attachments.push({ name: `Оплата | ${data.entrant.lastName} ${data.entrant.firstName} ${data.entrant.middleName}`, buffer: payment, contentType: DOCX });
     }
 
     await this.emailService.sendWithAttachments({
@@ -93,7 +93,7 @@ export class DocumentService {
       subject: `Пріоритетка | ${data.lastName} ${data.firstName}`,
       message: 'Пріоритетку НЕ ТРЕБА друкувати чи доповнювати іншою інформацією. Якщо подаєте дистанційно, завантажте документ та підпишіть КЕПом вступника. Якщо виникають запитання, звертайтеся в чат в телеграмі:',
       link: 'https://t.me/abit_fict',
-      attachments: [{ name: 'Пріоритетка.docx', buffer: priority, contentType: DOCX }],
+      attachments: [{ name: `Пріоритетка | ${data.lastName} ${data.firstName} ${data.middleName}.docx`, buffer: priority, contentType: DOCX }],
     });
   }
 
@@ -122,6 +122,9 @@ export class DocumentService {
     await this.sendContract({ ...data, customer }, true);
 
     await this.entrantRepository.updateById(dbEntrant.id, {
+      degree: data.meta.degree,
+      educationalProgram: data.meta.educationalProgram,
+      programType: data.meta.programType,
       studyType: data.meta.studyType,
       studyForm: data.meta.studyForm,
       paymentType: data.meta.paymentType,
@@ -150,12 +153,15 @@ export class DocumentService {
     const entrant = await this.entrantRepository.findById(id);
     if (!entrant?.entrantData) throw new DataNotFoundException();
 
-    if (!entrant.studyForm || !entrant.studyType || entrant.paymentType === StudyTypeParam.CONTRACT && !entrant.customerData) {
+    if (!entrant.studyForm || !entrant.studyType || entrant.studyType === StudyTypeParam.CONTRACT && !entrant.customerData) {
       throw new NoPermissionException();
     }
 
     await this.sendContract({
       meta: {
+        degree: entrant.degree,
+        educationalProgram: entrant.educationalProgram,
+        programType: entrant.programType,
         speciality: entrant.specialty,
         studyType: entrant.studyType as StudyTypeParam,
         studyForm: entrant.studyForm as StudyFormParam,

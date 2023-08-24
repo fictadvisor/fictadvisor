@@ -3,8 +3,21 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, ValidateNested } from 'class-validator';
 import { validationOptionsMsg } from '../../utils/GLOBALS';
 import { Type } from 'class-transformer';
+import { EducationalDegree, EducationalProgramType } from '@prisma/client';
 
 class MetaContractDTO {
+  @ApiProperty()
+  @IsNotEmpty(validationOptionsMsg('Degree cannot be empty'))
+    degree: EducationalDegree;
+
+  @ApiProperty()
+  @IsOptional()
+    educationalProgram?: string;
+
+  @ApiProperty()
+  @IsOptional()
+    programType?: EducationalProgramType;
+
   @ApiProperty()
   @IsNotEmpty(validationOptionsMsg('Speciality cannot be empty'))
     speciality: string;
