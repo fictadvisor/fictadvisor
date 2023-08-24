@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, SyntheticEvent, useEffect } from 'react';
 import { NextRouter } from 'next/router';
 
-import { TeachersPageTabs } from '@/components/pages/personal-teacher-page/PersonalTeacherPage';
+import { TeachersPageTabs } from '@/components/pages/personal-teacher-page/utils';
 
 // TODO: refactor this hook
 export interface UseTabStateProps<T> {

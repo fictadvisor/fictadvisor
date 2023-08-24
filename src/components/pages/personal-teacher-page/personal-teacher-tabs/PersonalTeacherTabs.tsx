@@ -7,8 +7,9 @@ import { TabTextPosition } from '@/components/common/ui/tab/tab/types';
 import TabContext from '@/components/common/ui/tab/tab-context';
 import TabList from '@/components/common/ui/tab/tab-list';
 import TabPanel from '@/components/common/ui/tab/tab-panel';
-import { TeachersPageTabs } from '@/components/pages/personal-teacher-page/PersonalTeacherPage';
+import { TeachersPageTabs } from '@/components/pages/personal-teacher-page/utils';
 import { TeacherPageInfo } from '@/lib/services/teacher/types';
+import { Teacher } from '@/types/teacher';
 
 import * as stylesMUI from './PersonalTeacherTabs.styles';
 
@@ -39,12 +40,14 @@ const SubjectTab = dynamic(
 
 interface PersonalTeacherTabsProps {
   data: TeacherPageInfo;
+  teacher: Teacher;
   tabIndex: string;
   handleChange: (event: SyntheticEvent, value: TeachersPageTabs) => void;
 }
 
 const PersonalTeacherTabs: FC<PersonalTeacherTabsProps> = ({
   data,
+  teacher,
   tabIndex,
   handleChange,
 }) => {
@@ -74,13 +77,13 @@ const PersonalTeacherTabs: FC<PersonalTeacherTabsProps> = ({
         <Box sx={stylesMUI.tabPanelList}>
           <TabPanel value={TeachersPageTabs.GENERAL}>
             {data.hasEnoughMarks ? (
-              <GeneralTab marks={data.marks} roles={data.info.roles} />
+              <GeneralTab marks={data.marks} roles={teacher.roles} />
             ) : (
               <PollButtons text={data.marksText} buttonInfo={data.buttonInfo} />
             )}
           </TabPanel>
           <TabPanel value={TeachersPageTabs.SUBJECTS}>
-            <SubjectTab subjects={data.subjects} teacherId={data.info.id} />
+            <SubjectTab subjects={data.subjects} teacherId={teacher.id} />
           </TabPanel>
           <TabPanel value={TeachersPageTabs.COMMENTS}>
             {count === 0 ? (
@@ -89,7 +92,7 @@ const PersonalTeacherTabs: FC<PersonalTeacherTabsProps> = ({
                 buttonInfo={data.buttonInfo}
               />
             ) : (
-              <CommentTab teacherId={data.info.id} />
+              <CommentTab teacherId={teacher.id} />
             )}
           </TabPanel>
         </Box>

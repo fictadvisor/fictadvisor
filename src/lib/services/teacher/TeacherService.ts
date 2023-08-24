@@ -9,7 +9,6 @@ class TeacherService {
     teacherId: string,
     userId: string | undefined,
   ): Promise<TeacherPageInfo> {
-    const info = await TeacherAPI.get(teacherId);
     const { subjects } = await TeacherAPI.getTeacherSubjects(teacherId);
     const comments = await TeacherAPI.getTeacherComments(teacherId);
     const { marks } = await TeacherAPI.getTeacherMarks(teacherId);
@@ -46,7 +45,6 @@ class TeacherService {
     }
 
     return {
-      info,
       subjects,
       comments,
       marks,

@@ -1,11 +1,11 @@
 import {
   createContext,
   Dispatch,
+  FC,
   SetStateAction,
   useEffect,
   useState,
 } from 'react';
-import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
@@ -13,10 +13,12 @@ import PersonalTeacherCard from '@/components/common/ui/cards/personal-teacher-c
 import Progress from '@/components/common/ui/progress';
 import PersonalTeacherTabs from '@/components/pages/personal-teacher-page/personal-teacher-tabs';
 import styles from '@/components/pages/personal-teacher-page/PersonalTeacherPage.module.scss';
-import useAuthentication from '@/hooks/use-authentication';
+import {
+  PersonalTeacherPageProps,
+  TeachersPageTabs,
+} from '@/components/pages/personal-teacher-page/utils';
 import useTabState from '@/hooks/use-tab-state';
 import useToast from '@/hooks/use-toast';
-import TeacherService from '@/lib/services/teacher';
 import { Teacher } from '@/types/teacher';
 
 // TODO: move context to separate folder, move types to separate folder
@@ -32,25 +34,16 @@ export const teacherContext = createContext<TeacherContext>({
   teacher: {} as Teacher,
 });
 
-export enum TeachersPageTabs {
-  GENERAL = 'general',
-  SUBJECTS = 'subjects',
-  COMMENTS = 'reviews',
-}
-
-const PersonalTeacherPage = () => {
+const PersonalTeacherPage: FC<PersonalTeacherPageProps> = ({
+  isLoading,
+  isError,
+  data,
+  teacher,
+  query,
+  teacherId,
+}) => {
   const router = useRouter();
-  const { query, push } = router;
-  const teacherId = query.teacherId as string;
-  const { user } = useAuthentication();
-  const { isLoading, isError, data } = useQuery(
-    ['teacher', teacherId],
-    () => TeacherService.getTeacherPageInfo(teacherId, user?.id),
-    {
-      refetchOnWindowFocus: false,
-      retry: false,
-    },
-  );
+  const { push } = router;
   const toast = useToast();
   const [floatingCardShowed, setFloatingCardShowed] = useState(false);
 
@@ -69,12 +62,13 @@ const PersonalTeacherPage = () => {
   }, [isError, push, toast]);
 
   if (!data) return null;
-
-  const teacher = data?.info;
-
   return (
     <teacherContext.Provider
-      value={{ floatingCardShowed, setFloatingCardShowed, teacher }}
+      value={{
+        floatingCardShowed,
+        setFloatingCardShowed,
+        teacher,
+      }}
     >
       <div className={styles['personal-teacher-page']}>
         {isLoading ? (
@@ -101,13 +95,14 @@ const PersonalTeacherPage = () => {
                 ]}
               />
               <div className={styles['card-wrapper']}>
-                <PersonalTeacherCard {...data.info} />
+                <PersonalTeacherCard {...teacher} />
               </div>
               <div className={styles['tabs']}>
                 <PersonalTeacherTabs
                   data={data}
                   tabIndex={index}
                   handleChange={handleChange}
+                  teacher={teacher}
                 />
               </div>
             </div>
