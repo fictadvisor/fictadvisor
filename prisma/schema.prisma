@@ -463,25 +463,39 @@ model Queue {
   @@map("queues")
 }
 
+enum EducationalDegree {
+  BACHELOR
+  MASTER
+  PHILOSOPHY
+}
+
+enum EducationalProgramType {
+  PROFESSIONAL
+  SCIENTIFIC
+}
+
 model Entrant {
-  id                 String              @id @default(uuid())
-  firstName          String              @map("first_name")
-  middleName         String?             @map("middle_name")
-  lastName           String              @map("last_name")
+  id                 String                 @id @default(uuid())
+  firstName          String                 @map("first_name")
+  middleName         String?                @map("middle_name")
+  lastName           String                 @map("last_name")
   specialty          String?
+  degree             EducationalDegree      @default(BACHELOR)
   specialties        Specialty[]
-  studyType          String              @default("") @map("study_type")
-  studyForm          String              @default("") @map("study_form")
-  paymentType        String              @default("") @map("payment_type")
-  benefit            Boolean             @default(false)
+  educationalProgram String                 @default("") @map("educational_program")
+  programType        EducationalProgramType @default(PROFESSIONAL) @map("program_type")
+  studyType          String                 @default("") @map("study_type")
+  studyForm          String                 @default("") @map("study_form")
+  paymentType        String                 @default("") @map("payment_type")
+  benefit            Boolean                @default(false)
   group              String?
   entrantData        EntrantData?
   representativeData RepresentativeData?
   customerData       CustomerData?
   priority           EntrantPriority?
   contract           Contract?
-  competitivePoint   Float?              @map("competitive_point")
-  inOrder            Boolean             @default(false)
+  competitivePoint   Float?                 @map("competitive_point")
+  inOrder            Boolean                @default(false)
 
   @@map("entrants")
 }
