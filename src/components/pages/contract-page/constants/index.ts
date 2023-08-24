@@ -84,6 +84,10 @@ export const initialValues: ExtendedContractBody = {
     index: '',
   },
   meta: {
+    degree: '',
+    programType: '',
+    educationalProgram: '',
+
     studyType: '',
     studyForm: '',
     paymentType: '',

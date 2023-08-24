@@ -8,6 +8,16 @@ export enum StudyFormParam {
   PART_TIME = 'Заочна',
 }
 
+export enum StudyDegree {
+  BACHELOR = 'Бакалавр',
+  MASTER = 'Магістр',
+}
+
+export enum EducationalProgramType {
+  PROFESSIONAL = 'Професійна',
+  SCIENTIFIC = 'Наукова',
+}
+
 export enum PaymentTypeParam {
   EVERY_YEAR = 'Щороку',
   EVERY_SEMESTER = 'Щосеместрово',

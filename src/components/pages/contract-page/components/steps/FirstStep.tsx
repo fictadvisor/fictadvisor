@@ -11,7 +11,9 @@ import { metaValidationSchema } from '@/components/pages/contract-page/validatio
 import useTabClose from '@/hooks/use-tab-close';
 import { ExtendedContractBody } from '@/lib/api/contract/types/ContractBody';
 import {
+  EducationalProgramType,
   PaymentTypeParam,
+  StudyDegree,
   StudyFormParam,
   StudyTypeParam,
 } from '@/types/contract';
@@ -60,127 +62,345 @@ export const FirstStep: FC<FirstStepProps> = ({
           <Stack gap={'40px'}>
             <Box sx={stylesMui.item}>
               <Typography variant="h6Bold">
-                Форма навчання (бюджет/контракт)
+                На який освітній рівень вступаю (бакалавр/магістр)
               </Typography>
               <FormikRadioGroup
-                name="meta.studyType"
+                name="meta.degree"
                 options={[
-                  { label: 'Бюджет', value: StudyTypeParam.BUDGET },
-                  { label: 'Контракт', value: StudyTypeParam.CONTRACT },
-                ]}
-              />
-            </Box>
-            {values.meta.studyType === StudyTypeParam.CONTRACT && (
-              <Box sx={stylesMui.item}>
-                <Typography variant="h6Bold">
-                  Оплата(Щосеместрово/Щоквартально)
-                </Typography>
-                <FormikRadioGroup
-                  name="meta.paymentType"
-                  options={[
-                    {
-                      value: PaymentTypeParam.EVERY_MONTH,
-                      label: 'Щомісяця',
-                    },
-                    {
-                      value: PaymentTypeParam.EVERY_SEMESTER,
-                      label: 'Щосеместрово',
-                    },
-                    {
-                      value: PaymentTypeParam.EVERY_YEAR,
-                      label: 'Щороку',
-                    },
-                  ]}
-                  clearValueOnUnmount
-                  onChange={(event, value) => {
-                    if (value === PaymentTypeParam.EVERY_MONTH) {
-                      setValues({
-                        ...values,
-                        meta: { ...values.meta, isToAdmission: true },
-                      });
-                    }
-                  }}
-                />
-              </Box>
-            )}
-            <Box sx={stylesMui.item}>
-              <Typography variant="h6Bold">
-                Форма навчання (денна/заочна)
-              </Typography>
-              <FormikRadioGroup
-                name="meta.studyForm"
-                options={[
-                  { label: 'Денна', value: StudyFormParam.FULL_TIME },
-                  { label: 'Заочна', value: StudyFormParam.PART_TIME },
+                  { label: 'Бакалавр', value: StudyDegree.BACHELOR },
+                  { label: 'Магістр', value: StudyDegree.MASTER },
                 ]}
               />
             </Box>
 
-            <Box sx={stylesMui.item}>
-              <Typography variant="h6Bold">Спеціальність</Typography>
-              <FormikRadioGroup
-                name="meta.speciality"
-                options={[
-                  {
-                    value: '121',
-                    label: '121 Інженерія програмного забезпечення',
-                  },
-                  { value: '123', label: '123 Комп’ютерна інженерія' },
-                  {
-                    value: '126',
-                    label: '126 Інформаційні системи та технології',
-                  },
-                ]}
-              />
-            </Box>
-
-            <Box>
-              <Box sx={stylesMui.item}>
-                <CheckBox
-                  name="meta.isToAdmission"
-                  label="Формую договір в корпусі (*)"
-                />
-              </Box>
-              <Box sx={stylesMui.item}>
-                <CheckBox
-                  name="helper.isAdult"
-                  label="Є 18 років"
-                  onClick={() => setIsAdult(!values.helper.isAdult)}
-                />
-              </Box>
-              <Box sx={stylesMui.item}>
-                <CheckBox
-                  name="meta.isForcePushed"
-                  label="Надіслати примусово (НЕ НАТИСКАТИ)"
-                  onClick={handleCheck}
-                />
-              </Box>
-              {values.meta.studyType === StudyTypeParam.CONTRACT && (
+            {values.meta.degree === StudyDegree.BACHELOR ? (
+              <>
                 <Box sx={stylesMui.item}>
-                  <CustomerCheckBox
-                    setHasCustomer={setHasCustomer}
-                    prevCheckBoxState={values.helper.hasCustomer}
+                  <Typography variant="h6Bold">
+                    Форма навчання (бюджет/контракт)
+                  </Typography>
+                  <FormikRadioGroup
+                    name="meta.studyType"
+                    options={[
+                      { label: 'Бюджет', value: StudyTypeParam.BUDGET },
+                      { label: 'Контракт', value: StudyTypeParam.CONTRACT },
+                    ]}
                   />
                 </Box>
-              )}
-            </Box>
-
-            <Box sx={stylesMui.item}>
-              <Typography fontSize={'11px'}>
-                *На момент формування пріоритетки/договору ви перебуваєте в
-                корпусі, щоб заповнення даних зміг перевірити один з
-                представників відбіркової комісії
-              </Typography>
-              {values.meta.studyType === StudyTypeParam.CONTRACT && (
-                <Typography fontSize={'11px'}>
-                  **Замовник - особа, яка оплачує контракт. За замовчуванням
-                  замовник вважається вступником, якщо вступник неповнолітній -
-                  замовником вважають законного представника. За бажанням, можна
-                  змінити замовника
-                </Typography>
-              )}
-            </Box>
-
+                {values.meta.studyType === StudyTypeParam.CONTRACT && (
+                  <Box sx={stylesMui.item}>
+                    <Typography variant="h6Bold">
+                      Оплата(Щосеместрово/Щоквартально)
+                    </Typography>
+                    <FormikRadioGroup
+                      name="meta.paymentType"
+                      options={[
+                        {
+                          value: PaymentTypeParam.EVERY_MONTH,
+                          label: 'Щомісяця',
+                        },
+                        {
+                          value: PaymentTypeParam.EVERY_SEMESTER,
+                          label: 'Щосеместрово',
+                        },
+                        {
+                          value: PaymentTypeParam.EVERY_YEAR,
+                          label: 'Щороку',
+                        },
+                      ]}
+                      clearValueOnUnmount
+                      onChange={(event, value) => {
+                        if (value === PaymentTypeParam.EVERY_MONTH) {
+                          setValues({
+                            ...values,
+                            meta: { ...values.meta, isToAdmission: true },
+                          });
+                        }
+                      }}
+                    />
+                  </Box>
+                )}
+                <Box sx={stylesMui.item}>
+                  <Typography variant="h6Bold">
+                    Форма навчання (денна/заочна)
+                  </Typography>
+                  <FormikRadioGroup
+                    name="meta.studyForm"
+                    options={[
+                      { label: 'Денна', value: StudyFormParam.FULL_TIME },
+                      { label: 'Заочна', value: StudyFormParam.PART_TIME },
+                    ]}
+                  />
+                </Box>
+                <Box sx={stylesMui.item}>
+                  <Typography variant="h6Bold">Спеціальність</Typography>
+                  <FormikRadioGroup
+                    name="meta.speciality"
+                    options={[
+                      {
+                        value: '121',
+                        label: '121 Інженерія програмного забезпечення',
+                      },
+                      { value: '123', label: '123 Комп’ютерна інженерія' },
+                      {
+                        value: '126',
+                        label: '126 Інформаційні системи та технології',
+                      },
+                    ]}
+                  />
+                </Box>
+                <Box>
+                  <Box sx={stylesMui.item}>
+                    <CheckBox
+                      name="meta.isToAdmission"
+                      label="Формую договір в корпусі (*)"
+                    />
+                  </Box>
+                  <Box sx={stylesMui.item}>
+                    <CheckBox
+                      name="helper.isAdult"
+                      label="Є 18 років"
+                      onClick={() => setIsAdult(!values.helper.isAdult)}
+                    />
+                  </Box>
+                  <Box sx={stylesMui.item}>
+                    <CheckBox
+                      name="meta.isForcePushed"
+                      label="Надіслати примусово (НЕ НАТИСКАТИ)"
+                      onClick={handleCheck}
+                    />
+                  </Box>
+                  {values.meta.studyType === StudyTypeParam.CONTRACT && (
+                    <Box sx={stylesMui.item}>
+                      <CustomerCheckBox
+                        setHasCustomer={setHasCustomer}
+                        prevCheckBoxState={values.helper.hasCustomer}
+                      />
+                    </Box>
+                  )}
+                </Box>
+                <Box sx={stylesMui.item}>
+                  <Typography fontSize={'11px'}>
+                    *На момент формування пріоритетки/договору ви перебуваєте в
+                    корпусі, щоб заповнення даних зміг перевірити один з
+                    представників відбіркової комісії
+                  </Typography>
+                  {values.meta.studyType === StudyTypeParam.CONTRACT && (
+                    <Typography fontSize={'11px'}>
+                      **Замовник - особа, яка оплачує контракт. За замовчуванням
+                      замовник вважається вступником, якщо вступник
+                      неповнолітній - замовником вважають законного
+                      представника. За бажанням, можна змінити замовника
+                    </Typography>
+                  )}
+                </Box>
+              </>
+            ) : (
+              <>
+                <Box sx={stylesMui.item}>
+                  <Typography variant="h6Bold">
+                    Форма навчання (бюджет/контракт)
+                  </Typography>
+                  <FormikRadioGroup
+                    name="meta.studyType"
+                    options={[
+                      { label: 'Бюджет', value: StudyTypeParam.BUDGET },
+                      { label: 'Контракт', value: StudyTypeParam.CONTRACT },
+                    ]}
+                  />
+                </Box>
+                {values.meta.studyType === StudyTypeParam.CONTRACT && (
+                  <Box sx={stylesMui.item}>
+                    <Typography variant="h6Bold">
+                      Оплата(Щосеместрово/Щоквартально)
+                    </Typography>
+                    <FormikRadioGroup
+                      name="meta.paymentType"
+                      options={[
+                        {
+                          value: PaymentTypeParam.EVERY_MONTH,
+                          label: 'Щомісяця',
+                        },
+                        {
+                          value: PaymentTypeParam.EVERY_SEMESTER,
+                          label: 'Щосеместрово',
+                        },
+                        {
+                          value: PaymentTypeParam.EVERY_YEAR,
+                          label: 'Щороку',
+                        },
+                      ]}
+                      clearValueOnUnmount
+                      onChange={(event, value) => {
+                        if (value === PaymentTypeParam.EVERY_MONTH) {
+                          setValues({
+                            ...values,
+                            meta: { ...values.meta, isToAdmission: true },
+                          });
+                        }
+                      }}
+                    />
+                  </Box>
+                )}
+                {/*<Box sx={stylesMui.item}>*/}
+                {/*  <Typography variant="h6Bold">*/}
+                {/*    Форма навчання (денна/заочна)*/}
+                {/*  </Typography>*/}
+                {/*  <FormikRadioGroup*/}
+                {/*    name="meta.studyForm"*/}
+                {/*    options={[*/}
+                {/*      { label: 'Денна', value: StudyFormParam.FULL_TIME },*/}
+                {/*      { label: 'Заочна', value: StudyFormParam.PART_TIME },*/}
+                {/*    ]}*/}
+                {/*  />*/}
+                {/*</Box>*/}
+                <Box sx={stylesMui.item}>
+                  <Typography variant="h6Bold">
+                    Тип освітньої програми
+                  </Typography>
+                  <FormikRadioGroup
+                    name="meta.programType"
+                    options={[
+                      {
+                        value: EducationalProgramType.PROFESSIONAL,
+                        label: EducationalProgramType.PROFESSIONAL,
+                      },
+                      {
+                        value: EducationalProgramType.SCIENTIFIC,
+                        label: EducationalProgramType.SCIENTIFIC,
+                      },
+                    ]}
+                  />
+                </Box>
+                {values.meta.programType ===
+                  EducationalProgramType.SCIENTIFIC && (
+                  <Box sx={stylesMui.item}>
+                    <Typography variant="h6Bold">Освітня програма</Typography>
+                    <FormikRadioGroup
+                      name="meta.educationalProgram"
+                      options={[
+                        {
+                          value:
+                            "121 Інженерія програмного забезпечення комп'ютерних та інформаційних систем — освітньо-наукова програма",
+                          label:
+                            "121 Інженерія програмного забезпечення комп'ютерних та інформаційних систем — освітньо-наукова програма",
+                        },
+                        {
+                          value:
+                            '123 Комп`ютерні системи та мережі  — освітньо-наукова програма',
+                          label:
+                            '123 Комп`ютерні системи та мережі  — освітньо-наукова програма',
+                        },
+                        {
+                          value:
+                            '126 Інформаційні управляючі системи та технології— освітньо-наукова програма',
+                          label:
+                            '126 Інформаційні управляючі системи та технології— освітньо-наукова програма',
+                        },
+                      ]}
+                    />
+                  </Box>
+                )}
+                {values.meta.programType ===
+                  EducationalProgramType.PROFESSIONAL && (
+                  <Box sx={stylesMui.item}>
+                    <Typography variant="h6Bold">Освітня програма</Typography>
+                    <FormikRadioGroup
+                      name="meta.educationalProgram"
+                      options={[
+                        {
+                          value:
+                            '121 Інженерія програмного забезпечення інформаційних систем — освітньо-професійна програма',
+                          label:
+                            '121 Інженерія програмного забезпечення інформаційних систем — освітньо-професійна програма',
+                        },
+                        {
+                          value:
+                            "121 Інженерія програмного забезпечення комп'ютерних систем — освітньо-професійна програма",
+                          label:
+                            "121 Інженерія програмного забезпечення комп'ютерних систем — освітньо-професійна програма",
+                        },
+                        {
+                          value:
+                            "123 Комп'ютерні системи та мережі — освітньо-професійна програма",
+                          label:
+                            "123 Комп'ютерні системи та мережі — освітньо-професійна програма",
+                        },
+                        {
+                          value:
+                            '126 Інформаційні управляючі системи та технології — освітньо-професійна програма',
+                          label:
+                            '126 Інформаційні управляючі системи та технології — освітньо-професійна програма',
+                        },
+                        {
+                          value:
+                            '126 Інтегровані інформаційні системи — освітньо-професійна програма',
+                          label:
+                            '126 Інтегровані інформаційні системи — освітньо-професійна програма',
+                        },
+                        {
+                          value:
+                            '126 Інформаційне забезпечення робототехнічних систем— освітньо-професійна програма',
+                          label:
+                            '126 Інформаційне забезпечення робототехнічних систем— освітньо-професійна програма',
+                        },
+                      ]}
+                    />
+                  </Box>
+                )}
+                <Box sx={stylesMui.item}>
+                  <Typography variant="h6Bold">
+                    Форма навчання (денна/заочна)
+                  </Typography>
+                  <FormikRadioGroup
+                    name="meta.studyForm"
+                    options={[
+                      { label: 'Денна', value: StudyFormParam.FULL_TIME },
+                      { label: 'Заочна', value: StudyFormParam.PART_TIME },
+                    ]}
+                  />
+                </Box>
+                <Box>
+                  <Box sx={stylesMui.item}>
+                    <CheckBox
+                      name="meta.isToAdmission"
+                      label="Формую договір в корпусі (*)"
+                    />
+                  </Box>
+                  {(values.helper.isAdult = true)}
+                  <Box sx={stylesMui.item}>
+                    <CheckBox
+                      name="meta.isForcePushed"
+                      label="Надіслати примусово (НЕ НАТИСКАТИ)"
+                      onClick={handleCheck}
+                    />
+                  </Box>
+                  {values.meta.studyType === StudyTypeParam.CONTRACT && (
+                    <Box sx={stylesMui.item}>
+                      <CustomerCheckBox
+                        setHasCustomer={setHasCustomer}
+                        prevCheckBoxState={values.helper.hasCustomer}
+                      />
+                    </Box>
+                  )}
+                </Box>
+                <Box sx={stylesMui.item}>
+                  <Typography fontSize={'11px'}>
+                    *На момент формування пріоритетки/договору ви перебуваєте в
+                    корпусі, щоб заповнення даних зміг перевірити один з
+                    представників відбіркової комісії
+                  </Typography>
+                  {values.meta.studyType === StudyTypeParam.CONTRACT && (
+                    <Typography fontSize={'11px'}>
+                      **Замовник - особа, яка оплачує контракт. За замовчуванням
+                      замовник вважається вступником, якщо вступник
+                      неповнолітній - замовником вважають законного
+                      представника. За бажанням, можна змінити замовника
+                    </Typography>
+                  )}
+                </Box>
+              </>
+            )}
             <Actions first />
           </Stack>
         </Form>

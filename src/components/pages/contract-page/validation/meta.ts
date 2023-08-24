@@ -4,6 +4,10 @@ import { PaymentTypeParam } from '@/types/contract';
 
 export const metaValidationSchema = yup.object().shape({
   meta: yup.object().shape({
+    degree: yup.string().required(`Обов'язкове поле`),
+    programType: yup.string().required(`Обов'язкове поле`),
+    educationalProgram: yup.string().required(`Обов'язкове поле`),
+
     speciality: yup.string().required(`Обов'язкове поле`),
     studyType: yup.string().required(`Обов'язкове поле`),
     studyForm: yup.string().required(`Обов'язкове поле`),

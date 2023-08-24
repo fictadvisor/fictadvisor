@@ -10,6 +10,10 @@ import * as styles from './ContractPage.styles';
 const ContractPage: FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  if (isLoading) {
+    return <Progress />;
+  }
+
   return (
     <Box sx={styles.page}>
       <Breadcrumbs
@@ -20,11 +24,7 @@ const ContractPage: FC = () => {
         ]}
       />
       <Box sx={styles.form}>
-        {isLoading ? (
-          <Progress />
-        ) : (
-          <PersonalForm setIsLoading={setIsLoading} />
-        )}
+        <PersonalForm setIsLoading={setIsLoading} />
       </Box>
     </Box>
   );
