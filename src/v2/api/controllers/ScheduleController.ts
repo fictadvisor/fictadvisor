@@ -25,7 +25,12 @@ import {
 import { CreateEventDTO } from '../dtos/CreateEventDTO';
 import { EventResponse } from '../responses/EventResponse';
 import { GroupByEventGuard } from '../../security/group-guard/GroupByEventGuard';
-import { EventsResponse, GeneralEventsResponse } from '../responses/EventsResponse';
+import {
+  EventsResponse,
+  FortnightGeneralEventsResponse,
+  GeneralEventsResponse,
+  TelegramGeneralEventsResponse,
+} from '../responses/EventsResponse';
 import { TelegramGuard } from '../../security/TelegramGuard';
 import { EventFiltrationDTO } from '../dtos/EventFiltrationDTO';
 import { GeneralEventFiltrationDTO } from '../dtos/GeneralEventFiltrationDTO';
@@ -119,13 +124,14 @@ export class ScheduleController {
   }
 
   @UseGuards(TelegramGuard)
+  @ApiBearerAuth()
   @Get('/groups/:groupId/general/day')
   @ApiQuery({
     name: 'day',
     required: false,
   })
   @ApiOkResponse({
-    type: GeneralEventsResponse,
+    type: TelegramGeneralEventsResponse,
   })
   @ApiBadRequestResponse({
     description: `\n
@@ -223,7 +229,7 @@ export class ScheduleController {
       Date is not valid or does not belong to this semester
       
     DataNotFoundException:
-      Data was not found`,
+      Data were not found`,
   })
   @ApiUnauthorizedResponse({
     description: `\n
@@ -374,5 +380,45 @@ export class ScheduleController {
         return null;
       }
     }
+  }
+
+  @UseGuards(TelegramGuard)
+  @ApiBearerAuth()
+  @ApiQuery({
+    name: 'week',
+    required: false,
+  })
+  @ApiOkResponse({
+    type: FortnightGeneralEventsResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidGroupIdException:
+      Group with such id is not found
+      
+    DataNotFoundException:
+      Data were not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @Get('/groups/:groupId/general/fortnight')
+  async getGeneralFortnightEvents (
+    @Param('groupId', GroupByIdPipe) groupId: string,
+    @Query('week') week: number,
+  ) {
+    const result = await this.scheduleService.getGeneralFortnightEvents(groupId, week);
+
+    return {
+      firstWeekEvents: this.scheduleMapper.getEvents(result.firstWeekEvents),
+      secondWeekEvents: this.scheduleMapper.getEvents(result.secondWeekEvents),
+    };
   }
 }

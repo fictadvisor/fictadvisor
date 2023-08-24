@@ -649,4 +649,12 @@ export class ScheduleService {
       }
     }
   }
+
+  async getGeneralFortnightEvents (groupId: string, week: number) {
+    week = week || await this.dateService.getCurrentWeek();
+    const [firstWeek, secondWeek] = week % 2 === 0 ? [week-1, week] : [week, week+1];
+    const { events: firstWeekEvents } = await this.getGeneralGroupEvents(groupId, firstWeek);
+    const { events: secondWeekEvents } = await this.getGeneralGroupEvents(groupId, secondWeek);
+    return { firstWeekEvents, secondWeekEvents };
+  }
 }

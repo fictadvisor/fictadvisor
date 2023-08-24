@@ -30,3 +30,22 @@ export class GeneralEventsResponse {
   @ApiProperty()
     startTime: Date;
 }
+
+export class TelegramGeneralEventsResponse {
+  @ApiProperty({
+    type: [GeneralEventInfoResponse],
+  })
+    events: GeneralEventInfoResponse[];
+}
+
+export class FortnightGeneralEventsResponse {
+  @ApiProperty({
+    type: [GeneralEventInfoResponse],
+  })
+    firstWeekEvents: GeneralEventInfoResponse[];
+
+  @ApiProperty({
+    type: [GeneralEventInfoResponse],
+  })
+    secondWeekEvents: GeneralEventInfoResponse[];
+}
