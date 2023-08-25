@@ -190,7 +190,7 @@ export const SecondStep: FC<SecondStepProps> = ({
           <Box sx={stylesMui.item}>
             <Divider
               textAlign={DividerTextAlign.LEFT}
-              text="Місце проживання вступника"
+              text="Місце проживання вступника (реєстрації)"
               sx={stylesMui.divider}
             />
             <FormikDropdown

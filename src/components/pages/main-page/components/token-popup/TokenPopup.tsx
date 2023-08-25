@@ -36,7 +36,7 @@ const TokenPopup: FC<TokenPopupProps> = ({ token }) => {
         else await router.push('/register');
       }
     },
-    [toast, isLoggedIn, router],
+    [isLoggedIn, router],
   );
 
   useEffect(() => {
@@ -64,7 +64,7 @@ const TokenPopup: FC<TokenPopupProps> = ({ token }) => {
     } finally {
       setIsOpen(false);
     }
-  }, [toast, isLoggedIn, router, update, user.id]);
+  }, [isLoggedIn, router, update]);
 
   if (!isOpen) return null;
 
