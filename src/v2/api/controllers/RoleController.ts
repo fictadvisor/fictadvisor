@@ -5,8 +5,16 @@ import { CreateRoleWithGrantsDTO } from '../dtos/CreateRoleWithGrantsDTO';
 import { CreateGrantsDTO } from '../dtos/CreateGrantsDTO';
 import { RoleMapper } from '../../mappers/RoleMapper';
 import { Access } from '../../security/Access';
+import { ApiBearerAuth, ApiForbiddenResponse, ApiOkResponse, ApiTags, ApiBadRequestResponse, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import {
+  RoleResponse,
+  RolesResponse,
+  BaseRoleResponse,
+} from '../responses/RoleResponse';
+import { GrantResponse, MappedGrantsResponse } from '../responses/GrantResponse';
 import { PERMISSION } from '../../security/PERMISSION';
 
+@ApiTags('Roles')
 @Controller({
   version: '2',
   path: '/roles',
@@ -17,6 +25,9 @@ export class RoleController {
     private roleMapper: RoleMapper,
   ) {}
 
+  @ApiOkResponse({
+    type: RoleResponse,
+  })
   @Get('/:roleId')
   async getRole (
     @Param('roleId') roleId: string,
@@ -25,6 +36,9 @@ export class RoleController {
     return this.roleMapper.getRole(role);
   }
 
+  @ApiOkResponse({
+    type: RolesResponse,
+  })
   @Get()
   async getAll () {
     const roles = await this.roleService.getAll();
@@ -33,6 +47,33 @@ export class RoleController {
   }
 
   @Access(PERMISSION.ROLES_CREATE)
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: RoleResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n 
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException: 
+      parentId with such id is not found
+      
+    InvalidBodyException:
+      Name is not an enum
+      Name cat not be empty
+      Weight is not a number 
+      Weight can not be empty 
+      Permission can not be empty 
+      Set is not boolean`,
+  })
   @Post()
   async create (
     @Body() body: CreateRoleWithGrantsDTO,
@@ -43,6 +84,26 @@ export class RoleController {
   }
 
   @Access(PERMISSION.ROLES_$ROLEID_GRANTS_CREATE)
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: GrantResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n 
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidBodyException:
+      Permission can not be empty
+      Set is not a boolean`,
+  })
   @Post('/:roleId/grants')
   createGrants (
     @Body() body: CreateGrantsDTO,
@@ -51,6 +112,9 @@ export class RoleController {
     return this.roleService.createGrants(roleId, body.grants);
   }
 
+  @ApiOkResponse({
+    type: MappedGrantsResponse,
+  })
   @Get('/:roleId/grants')
   async getGrants (
     @Param('roleId') roleId: string,
@@ -61,6 +125,20 @@ export class RoleController {
   }
 
   @Access(PERMISSION.ROLES_$ROLEID_DELETE)
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: BaseRoleResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
   @Delete('/:roleId')
   async delete (
     @Param('roleId') roleId: string,
@@ -70,6 +148,26 @@ export class RoleController {
   }
 
   @Access(PERMISSION.ROLES_$ROLEID_UPDATE)
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: BaseRoleResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+     NoPermissionException:
+       You do not have permission to perform this action`,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidBodyException:
+      Name is not an enum
+      Weight is not a number`,
+  })
   @Patch('/:roleId')
   async update (
     @Param('roleId') roleId: string,
