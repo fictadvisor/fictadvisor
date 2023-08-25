@@ -1,4 +1,4 @@
-import React, { FC, useRef } from 'react';
+import React, { FC, useRef, useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
 import { Form, Formik, FormikProps } from 'formik';
@@ -7,7 +7,10 @@ import FormikRadioGroup from '@/components/common/ui/form/with-formik/radio/Form
 import { CheckBox } from '@/components/pages/contract-page/components/CheckBox';
 import { CustomerCheckBox } from '@/components/pages/contract-page/components/CustomerCheckBox';
 import * as stylesMui from '@/components/pages/contract-page/ContractPage.styles';
-import { metaValidationSchema } from '@/components/pages/contract-page/validation/meta';
+import {
+  masterMetaValidationSchema,
+  metaValidationSchema,
+} from '@/components/pages/contract-page/validation/meta';
 import useTabClose from '@/hooks/use-tab-close';
 import { ExtendedContractBody } from '@/lib/api/contract/types/ContractBody';
 import {
@@ -59,6 +62,11 @@ export const FirstStep: FC<FirstStepProps> = ({
     if (values.meta.studyType === StudyTypeParam.BUDGET) {
       values.helper.hasCustomer = false;
     }
+    if (values.meta.degree === StudyDegree.BACHELOR) {
+      values.meta.educationalProgram = '';
+      values.meta.programType = '';
+    }
+    console.log(values);
     onNextStep(values);
   };
 
@@ -74,12 +82,18 @@ export const FirstStep: FC<FirstStepProps> = ({
     setIsForcePushed(!form?.current?.values.meta.isForcePushed);
   };
 
+  const [degree, setDegree] = useState('');
+
   return (
     <Formik
       innerRef={form}
       initialValues={data}
       onSubmit={handleSubmit}
-      validationSchema={metaValidationSchema}
+      validationSchema={
+        degree === StudyDegree.BACHELOR
+          ? metaValidationSchema
+          : masterMetaValidationSchema
+      }
     >
       {({ values, setValues }) => (
         <Form>
@@ -94,6 +108,7 @@ export const FirstStep: FC<FirstStepProps> = ({
                   { label: 'Бакалавр', value: StudyDegree.BACHELOR },
                   { label: 'Магістр', value: StudyDegree.MASTER },
                 ]}
+                onClick={() => setDegree(values.meta.degree)}
               />
             </Box>
 
