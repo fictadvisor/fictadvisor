@@ -7,10 +7,7 @@ import FormikRadioGroup from '@/components/common/ui/form/with-formik/radio/Form
 import { CheckBox } from '@/components/pages/contract-page/components/CheckBox';
 import { CustomerCheckBox } from '@/components/pages/contract-page/components/CustomerCheckBox';
 import * as stylesMui from '@/components/pages/contract-page/ContractPage.styles';
-import {
-  masterMetaValidationSchema,
-  metaValidationSchema,
-} from '@/components/pages/contract-page/validation/meta';
+import { metaValidationSchema } from '@/components/pages/contract-page/validation/meta';
 import useTabClose from '@/hooks/use-tab-close';
 import { ExtendedContractBody } from '@/lib/api/contract/types/ContractBody';
 import {
@@ -82,18 +79,12 @@ export const FirstStep: FC<FirstStepProps> = ({
     setIsForcePushed(!form?.current?.values.meta.isForcePushed);
   };
 
-  const [degree, setDegree] = useState('');
-
   return (
     <Formik
       innerRef={form}
       initialValues={data}
       onSubmit={handleSubmit}
-      validationSchema={
-        degree === StudyDegree.BACHELOR
-          ? metaValidationSchema
-          : masterMetaValidationSchema
-      }
+      validationSchema={metaValidationSchema}
     >
       {({ values, setValues }) => (
         <Form>
@@ -108,7 +99,6 @@ export const FirstStep: FC<FirstStepProps> = ({
                   { label: 'Бакалавр', value: StudyDegree.BACHELOR },
                   { label: 'Магістр', value: StudyDegree.MASTER },
                 ]}
-                onClick={() => setDegree(values.meta.degree)}
               />
             </Box>
 

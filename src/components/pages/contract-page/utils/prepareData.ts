@@ -4,7 +4,7 @@ import {
   ExtendedContractBody,
 } from '@/lib/api/contract/types/ContractBody';
 import { PartialBy } from '@/lib/api/contract/types/utils';
-import { StudyDegree } from '@/types/contract';
+import { EducationalProgramType, StudyDegree } from '@/types/contract';
 
 export const prepareData = (
   initialData: ExtendedContractBody,
@@ -42,7 +42,7 @@ export const prepareData = (
 
   if (data.meta.degree === StudyDegree.BACHELOR) {
     data.meta.educationalProgram = '';
-    data.meta.programType = '';
+    data.meta.programType = EducationalProgramType.PROFESSIONAL;
   }
 
   if (data.entrant.region === kyiv) {
