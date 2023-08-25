@@ -5,7 +5,7 @@ import { PaymentTypeParam, StudyFormParam, StudyTypeParam } from '../dtos/StudyC
 import * as process from 'process';
 import { EmailService } from './EmailService';
 import { PriorityDTO } from '../dtos/PriorityDTO';
-import { EducationProgram, PriorityState } from '@prisma/client';
+import { EducationalDegree, EducationProgram, PriorityState } from '@prisma/client';
 import { InvalidEducationProgramsException } from '../../utils/exceptions/InvalidEducationProgramsException';
 import { EntrantRepository } from '../../database/repositories/EntrantRepository';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
@@ -65,11 +65,14 @@ export class DocumentService {
       attachments.push({ name: `Оплата | ${data.entrant.lastName} ${data.entrant.firstName} ${data.entrant.middleName}`, buffer: payment, contentType: DOCX });
     }
 
+    const admissionEmail = data.meta.degree === EducationalDegree.MASTER ? 'vstup.fiot.m@gmail.com' : 'vstup.fiot@gmail.com';
+    const link = data.meta.degree === EducationalDegree.MASTER ? 'https://t.me/fictmasterchat' : 'https://t.me/abit_fict';
+
     await this.emailService.sendWithAttachments({
       to: emails,
       subject: `Договори щодо вступу | ${data.entrant.lastName} ${data.entrant.firstName}`,
-      message: 'Договори НЕ ТРЕБА друкувати чи доповнювати іншою інформацією. Якщо подаєте дистанційно, завантажте документи та підпишіть КЕПом вступника та законного представника (замовника), якщо вступнику немає 18 років (деталі: https://pk.kpi.ua/originals/). Підписані КЕПом документи слід відправляти на пошту vstup.fiot@gmail.com. Якщо виникають запитання, звертайтеся в чат в телеграмі:',
-      link: 'https://t.me/abit_fict',
+      message: `Договори НЕ ТРЕБА друкувати чи доповнювати іншою інформацією. Якщо подаєте дистанційно, завантажте документи та підпишіть КЕПом вступника та законного представника (замовника), якщо вступнику немає 18 років (деталі: https://pk.kpi.ua/originals/). Підписані КЕПом документи слід відправляти на пошту ${admissionEmail}. Якщо виникають запитання, звертайтеся в чат в телеграмі:`,
+      link,
       attachments,
     });
   }
