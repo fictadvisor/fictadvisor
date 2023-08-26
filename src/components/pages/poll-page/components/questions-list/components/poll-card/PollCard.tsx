@@ -1,10 +1,7 @@
 import React from 'react';
 import cn from 'classnames';
 
-import {
-  CheckIcon,
-  DoubleCheck,
-} from '@/components/common/icons/card-icons/DoubleCheck';
+import { CheckIcon, DoubleCheck } from '@/components/common/icons/DoubleCheck';
 import { DivProps } from '@/components/common/ui/cards/types';
 
 import styles from './PollCard.module.scss';

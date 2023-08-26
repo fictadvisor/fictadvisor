@@ -1,7 +1,9 @@
 import React from 'react';
+import {
+  BarsArrowDownIcon,
+  BarsArrowUpIcon,
+} from '@heroicons/react/24/outline';
 
-import SortAscending from '@/components/common/icons/SortAscending';
-import SortDescending from '@/components/common/icons/SortDescending';
 import IconButton from '@/components/common/ui/icon-button-mui/IconButton';
 import {
   IconButtonColor,
@@ -19,7 +21,7 @@ const SortButton: React.FC<OrderedIconButtonProps> = ({
   disabled,
 }) => {
   const SortIcon =
-    order === IconButtonOrder.ASCENDING ? SortAscending : SortDescending;
+    order === IconButtonOrder.ASCENDING ? BarsArrowUpIcon : BarsArrowDownIcon;
 
   return (
     <IconButton
