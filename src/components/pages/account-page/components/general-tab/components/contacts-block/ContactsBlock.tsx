@@ -2,10 +2,11 @@ import React, { FC, useState } from 'react';
 import { useQuery } from 'react-query';
 import { PlusIcon } from '@heroicons/react/24/outline';
 
-import Button, {
+import Button from '@/components/common/ui/button';
+import {
   ButtonSize,
   ButtonVariant,
-} from '@/components/common/ui/button';
+} from '@/components/common/ui/button-mui/types';
 import ContactForm from '@/components/pages/account-page/components/general-tab/components/contacts-block/components/ContactForm';
 import ContactItem from '@/components/pages/account-page/components/general-tab/components/contacts-block/components/ContactItem';
 import useAuthentication from '@/hooks/use-authentication';

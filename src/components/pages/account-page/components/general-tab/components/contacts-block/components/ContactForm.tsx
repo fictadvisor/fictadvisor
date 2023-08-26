@@ -3,7 +3,11 @@ import { Form, Formik } from 'formik';
 import * as yup from 'yup';
 
 import { CustomCheck } from '@/components/common/icons/CustomCheck';
-import Button, { ButtonColor, ButtonSize } from '@/components/common/ui/button';
+import Button from '@/components/common/ui/button';
+import {
+  ButtonColor,
+  ButtonSize,
+} from '@/components/common/ui/button-mui/types';
 import { Input, InputSize } from '@/components/common/ui/form';
 import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown';
 import styles from '@/components/pages/account-page/components/general-tab/GeneralTab.module.scss';

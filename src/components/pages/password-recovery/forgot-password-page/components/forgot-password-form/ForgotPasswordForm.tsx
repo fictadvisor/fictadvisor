@@ -3,7 +3,8 @@ import { AxiosError } from 'axios';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/router';
 
-import Button, { ButtonSize } from '@/components/common/ui/button';
+import Button from '@/components/common/ui/button';
+import { ButtonSize } from '@/components/common/ui/button-mui/types';
 import { Input, InputSize, InputType } from '@/components/common/ui/form';
 import { initialValues } from '@/components/pages/password-recovery/forgot-password-page/components/forgot-password-form/constants';
 import { ForgotPasswordFormFields } from '@/components/pages/password-recovery/forgot-password-page/components/forgot-password-form/types';
