@@ -1,1 +1,1 @@
-export { default, SliderType } from './Slider';
+export { default } from './Slider';

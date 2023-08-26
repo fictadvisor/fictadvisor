@@ -1,11 +1,13 @@
 import { SxProps, Theme } from '@mui/material/styles';
 
-export const slider = (size: 'small' | 'medium'): SxProps<Theme> => ({
+import { SliderSize } from '@/components/common/ui/form/slider/types';
+
+export const slider = (size: SliderSize): SxProps<Theme> => ({
   color: 'backgroundDark.300',
-  ...(size === 'medium' && {
+  ...(size === SliderSize.MEDIUM && {
     height: '12px',
   }),
-  ...(size === 'small' && {
+  ...(size === SliderSize.SMALL && {
     height: '8px',
   }),
   '& .MuiSlider-track': {
@@ -22,21 +24,21 @@ export const slider = (size: 'small' | 'medium'): SxProps<Theme> => ({
 
   '& .MuiSlider-markLabel': {
     color: 'grey.700',
-    ...(size === 'medium' && {
+    ...(size === SliderSize.MEDIUM && {
       fontSize: '16px',
     }),
-    ...(size === 'small' && {
+    ...(size === SliderSize.SMALL && {
       fontSize: '14px',
     }),
     marginTop: '15px',
   },
 
   '& .MuiSlider-thumb': {
-    ...(size === 'medium' && {
+    ...(size === SliderSize.MEDIUM && {
       width: '24px',
       height: '24px',
     }),
-    ...(size === 'small' && {
+    ...(size === SliderSize.SMALL && {
       width: '20px',
       height: '20px',
     }),
