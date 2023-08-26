@@ -5,11 +5,12 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import CustomTelegram from '@/components/common/icons/CustomTelegram';
-import Button, {
+import Button from '@/components/common/ui/button';
+import {
   ButtonColor,
   ButtonSize,
   ButtonVariant,
-} from '@/components/common/ui/button';
+} from '@/components/common/ui/button-mui/types';
 import Divider from '@/components/common/ui/divider';
 import { DividerTextAlign } from '@/components/common/ui/divider/types';
 import LoginForm from '@/components/pages/login-page/components/login-form';

@@ -2,7 +2,8 @@ import { FC, useCallback } from 'react';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { useRouter } from 'next/router';
 
-import Button, { ButtonSize } from '@/components/common/ui/button';
+import Button from '@/components/common/ui/button';
+import { ButtonSize } from '@/components/common/ui/button-mui/types';
 import CustomLink from '@/components/common/ui/custom-link';
 import { CustomLinkType } from '@/components/common/ui/custom-link/types';
 import { Input, InputSize, InputType } from '@/components/common/ui/form';

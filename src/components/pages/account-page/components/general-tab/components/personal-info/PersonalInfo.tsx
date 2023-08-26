@@ -3,7 +3,8 @@ import { shallowEqual } from 'react-redux';
 import { Form, Formik } from 'formik';
 
 import { CustomCheck } from '@/components/common/icons/CustomCheck';
-import Button, { ButtonSize } from '@/components/common/ui/button';
+import Button from '@/components/common/ui/button';
+import { ButtonSize } from '@/components/common/ui/button-mui/types';
 import { Input } from '@/components/common/ui/form';
 import { PersonalInfoForm } from '@/components/pages/account-page/components/general-tab/components/personal-info/types';
 import { validationSchema } from '@/components/pages/account-page/components/general-tab/components/personal-info/validation';

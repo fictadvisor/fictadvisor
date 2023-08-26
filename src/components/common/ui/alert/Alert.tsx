@@ -4,7 +4,7 @@ import {
   ExclamationCircleIcon,
   ExclamationTriangleIcon,
   InformationCircleIcon,
-  XMarkIcon
+  XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { Alert as MuiAlert, AlertColor, Typography } from '@mui/material';
 import { SxProps, Theme } from '@mui/material/styles';

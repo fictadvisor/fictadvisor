@@ -1,23 +1,13 @@
 import React, { ReactNode } from 'react';
 import cn from 'classnames';
 
+import {
+  ButtonColor,
+  ButtonSize,
+  ButtonVariant,
+} from '@/components/common/ui/button-mui/types';
+
 import styles from './Button.module.scss';
-export enum ButtonSize {
-  LARGE = 'large',
-  MEDIUM = 'medium',
-  SMALL = 'small',
-}
-
-export enum ButtonColor {
-  PRIMARY = 'primary',
-  SECONDARY = 'secondary',
-}
-
-export enum ButtonVariant {
-  FILLED = 'filled',
-  OUTLINE = 'outline',
-  TEXT = 'text',
-}
 
 interface ButtonProps extends React.ComponentPropsWithoutRef<'button'> {
   text: string;

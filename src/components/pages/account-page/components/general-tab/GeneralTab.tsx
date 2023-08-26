@@ -2,10 +2,11 @@ import React, { FC } from 'react';
 import { useRouter } from 'next/router';
 
 import { TelegramForAccount } from '@/components/common/icons/TelegramForAccount';
-import Button, {
+import Button from '@/components/common/ui/button';
+import {
   ButtonSize,
   ButtonVariant,
-} from '@/components/common/ui/button';
+} from '@/components/common/ui/button-mui/types';
 import Divider from '@/components/common/ui/divider';
 import { DividerTextAlign } from '@/components/common/ui/divider/types';
 import ContactsBlock from '@/components/pages/account-page/components/general-tab/components/contacts-block/ContactsBlock';

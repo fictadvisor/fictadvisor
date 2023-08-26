@@ -2,7 +2,11 @@ import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import Button, { ButtonColor, ButtonSize } from '@/components/common/ui/button';
+import Button from '@/components/common/ui/button';
+import {
+  ButtonColor,
+  ButtonSize,
+} from '@/components/common/ui/button-mui/types';
 
 import styles from './NotFoundPage.module.scss';
 
