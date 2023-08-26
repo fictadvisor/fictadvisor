@@ -28,7 +28,7 @@ export class ScheduleMapper {
       startTime: event.startTime,
       endTime: event.endTime,
       url: event.url || null,
-      eventInfo: event.eventInfo[0].description || null,
+      eventInfo: event.eventInfo[0]?.description || null,
       disciplineInfo: discipline?.description || null,
       teachers: discipline?.disciplineTeachers
         .filter(({ roles }) => some(roles, 'role', TeacherRoleAdapter[disciplineType]))
