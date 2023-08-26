@@ -18,6 +18,13 @@ export class PermissionService {
           },
         },
       },
+      include: {
+        grants: {
+          orderBy: {
+            weight: 'desc',
+          },
+        },
+      },
     });
     return this.hasPermissionInRoles(roles, permission);
   }

@@ -6,7 +6,7 @@ export class VerifyCaptainDTO {
     id: string;
 
   @IsNumber()
-    telegramId: number;
+    telegramId: bigint;
 
   @IsNotEmpty(validationOptionsMsg('firstName can not be empty'))
     firstName: string;

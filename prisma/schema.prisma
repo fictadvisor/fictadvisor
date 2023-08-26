@@ -22,7 +22,7 @@ model User {
   username            String?
   avatar              String?
   password            String?
-  telegramId          Int?             @unique @map("telegram_id")
+  telegramId          BigInt?             @unique @map("telegram_id")
   student             Student?
   superhero           Superhero?
   questionAnswers     QuestionAnswer[]
@@ -289,6 +289,7 @@ model Grant {
   roleId     String  @map("role_id")
   permission String
   set        Boolean @default(true)
+  weight     Int     @default(1)
 
   @@map("grants")
 }

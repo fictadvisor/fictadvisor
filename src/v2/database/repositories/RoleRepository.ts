@@ -87,8 +87,8 @@ export class RoleRepository {
   
   findMany (args?: Prisma.RoleFindManyArgs) {
     return this.prisma.role.findMany({
-      ...args,
       include: this.include,
+      ...args,
     }) as unknown as Promise<DbRole[]>;
   }
 }

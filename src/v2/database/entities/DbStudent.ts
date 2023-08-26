@@ -19,7 +19,7 @@ export class DbStudent {
     email: string,
     username: string,
     avatar: string,
-    telegramId: number,
+    telegramId: bigint,
     password?: string,
     lastPasswordChanged?: Date,
     state: State,

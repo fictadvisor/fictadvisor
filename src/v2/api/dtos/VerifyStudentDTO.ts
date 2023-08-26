@@ -6,7 +6,7 @@ export class VerifyStudentDTO {
     id: string;
 
   @IsNumber()
-    telegramId: number;
+    telegramId: bigint;
 
   @IsNotEmpty(validationOptionsMsg('firstName can not be empty'))
     firstName: string;
@@ -21,5 +21,5 @@ export class VerifyStudentDTO {
     groupCode: string;
 
   @IsNumber()
-    captainTelegramId: number;
+    captainTelegramId: bigint;
 }
