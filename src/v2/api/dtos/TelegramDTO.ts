@@ -23,7 +23,7 @@ export class TelegramDTO {
   @IsOptional()
     last_name: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsOptional()
     photo_url: string;
 

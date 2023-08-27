@@ -8,6 +8,8 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
+import axios from 'axios';
+import * as process from 'process';
 
 export class InvalidBodyException extends HttpException {
   constructor (errors: string[]) {
@@ -19,7 +21,7 @@ export class InvalidBodyException extends HttpException {
 export class HttpExceptionFilter implements ExceptionFilter {
   constructor (private configService: ConfigService) {}
 
-  catch (exception: Error, host: ArgumentsHost) {
+  async catch (exception: Error, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const res = ctx.getResponse<Response>();
 
@@ -61,7 +63,13 @@ export class HttpExceptionFilter implements ExceptionFilter {
     }
 
     if (status === HttpStatus.INTERNAL_SERVER_ERROR) {
-
+      await axios.post(`${process.env.TELEGRAM_BOT_API_URL}/broadcast/sendMessage`, {
+        text: exception.stack,
+      }, {
+        headers: {
+          Authorization: `Bearer ${process.env.TELEGRAM_BOT_TOKEN}`,
+        },
+      });
       console.error(exception.stack);
     }
   }
