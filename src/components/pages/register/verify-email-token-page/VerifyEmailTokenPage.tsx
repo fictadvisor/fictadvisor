@@ -1,7 +1,9 @@
 import { useCallback, useEffect } from 'react';
+import { Box } from '@mui/material';
 import { useRouter } from 'next/router';
 
 import Progress from '@/components/common/ui/progress';
+import * as styles from '@/components/pages/register/verify-email-token-page/VerifyEmailTokenPage.styles';
 import useAuthentication from '@/hooks/use-authentication';
 import useToast from '@/hooks/use-toast';
 import AuthAPI from '@/lib/api/auth/AuthAPI';
@@ -41,16 +43,9 @@ const VerifyEmailTokenPage = () => {
   }, [loadData, token]);
 
   return (
-    <div
-      style={{
-        flexGrow: 1,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
+    <Box sx={styles.box}>
       <Progress />
-    </div>
+    </Box>
   );
 };
 
