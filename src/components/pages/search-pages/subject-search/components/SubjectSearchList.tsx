@@ -18,7 +18,7 @@ export const SubjectSearchList = ({ subjects }: GetListOfSubjectsResponse) => {
 
   useEffect(() => {
     if (!subjects.length) {
-      toast.error('Цього предмета не існує', '', TOAST_TIMER);
+      toast.error('Результатів за запитом не знайдено', '', TOAST_TIMER);
     }
   }, [subjects.length]);
 
