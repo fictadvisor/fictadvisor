@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { UserResponse } from './UserResponse';
 import { ExtendedGroupResponse, GroupResponse } from './GroupResponse';
 import { RoleWithStudentResponse } from './RoleWithStudentResponse';
@@ -47,8 +47,15 @@ export class OrdinaryStudentResponse extends BaseStudentResponse {
   @ApiProperty()
     telegramId?: number;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     type: ExtendedGroupResponse,
   })
     group: ExtendedGroupResponse;
+}
+
+export class StudentsResponse {
+  @ApiProperty({
+    type: [OrdinaryStudentResponse],
+  })
+    students: OrdinaryStudentResponse[];
 }

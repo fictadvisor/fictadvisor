@@ -28,6 +28,7 @@ import { ExtendDisciplineTeachersResponse } from '../responses/DisciplineTeacher
 import { ShortUsersResponse } from '../responses/UserResponse';
 import { QuerySemesterDTO } from '../dtos/QuerySemesterDTO';
 import { ShortDisciplinesResponse } from '../responses/DisciplineResponse';
+import { OrdinaryStudentResponse, StudentsResponse } from '../responses/StudentResponse';
 
 @ApiTags('Groups')
 @Controller({
@@ -301,7 +302,30 @@ export class GroupController {
   }
 
   @Access(PERMISSION.GROUPS_$GROUPID_STUDENTS_VERIFY)
+  @ApiBearerAuth()
   @Patch('/:groupId/verify/:userId')
+  @ApiOkResponse({
+    type: OrdinaryStudentResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException: 
+      Group with such id is not found
+      User with such id is not found
+      
+    InvalidBodyException:
+      State is not an enum`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
   async verifyStudent (
     @Param('groupId', GroupByIdPipe) groupId: string,
     @Param('userId', UserByIdPipe) userId: string,
@@ -312,7 +336,28 @@ export class GroupController {
   }
 
   @Access(PERMISSION.GROUPS_$GROUPID_ADMIN_SWITCH)
+  @ApiBearerAuth()
   @Patch('/:groupId/switch/:userId')
+  @ApiOkResponse()
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException: 
+      Group with such id is not found
+      User with such id is not found
+      
+    InvalidBodyException:
+      Role name can not be empty`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
   async moderatorSwitch (
     @Param('groupId', GroupByIdPipe) groupId: string,
     @Param('userId', UserByIdPipe) userId: string,
@@ -322,7 +367,25 @@ export class GroupController {
   }
 
   @Access(PERMISSION.GROUPS_$GROUPID_STUDENTS_REMOVE)
+  @ApiBearerAuth()
   @Delete('/:groupId/remove/:userId')
+  @ApiOkResponse()
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException: 
+      Group with such id is not found
+      User with such id is not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
   async removeStudent (
     @Param('groupId', GroupByIdPipe) groupId: string,
     @Param('userId', UserByIdPipe) userId: string,
@@ -332,7 +395,26 @@ export class GroupController {
   }
 
   @Access(PERMISSION.GROUPS_$GROUPID_STUDENTS_UNVERIFIED_GET)
+  @ApiBearerAuth()
   @Get('/:groupId/unverifiedStudents')
+  @ApiOkResponse({
+    type: StudentsResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException: 
+      Group with such id is not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
   async getUnverifiedStudents (
       @Param('groupId', GroupByIdPipe) groupId: string,
   ) {
