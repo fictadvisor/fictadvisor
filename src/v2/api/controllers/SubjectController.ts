@@ -3,6 +3,7 @@ import { SubjectService } from '../services/SubjectService';
 import { SubjectByIdPipe } from '../pipes/SubjectByIdPipe';
 import { QueryAllSubjectDTO } from '../dtos/QueryAllSubjectDTO';
 import { Access } from 'src/v2/security/Access';
+import { PERMISSION } from '../../security/PERMISSION';
 import { SubjectMapper } from '../../mappers/SubjectMapper';
 import { CreateSubjectDTO } from '../dtos/CreateSubjectDTO';
 import { UpdateSubjectDTO } from '../dtos/UpdateSubjectDTO';
@@ -72,7 +73,7 @@ export class SubjectController {
     return this.subjectService.getTeachers(subjectId);
   }
 
-  @Access('subjects.create')
+  @Access(PERMISSION.SUBJECTS_CREATE)
   @ApiBearerAuth()
   @ApiOkResponse({
     type: SubjectResponse,
@@ -96,7 +97,7 @@ export class SubjectController {
     return this.subjectMapper.getSubject(dbSubject);
   }
 
-  @Access('subjects.update')
+  @Access(PERMISSION.SUBJECTS_UPDATE)
   @ApiBearerAuth()
   @ApiOkResponse({
     type: SubjectResponse,
@@ -123,7 +124,7 @@ export class SubjectController {
     return this.subjectService.update(subjectId, body);
   }
 
-  @Access('subjects.delete')
+  @Access(PERMISSION.SUBJECTS_DELETE)
   @ApiBearerAuth()
   @ApiOkResponse()
   @ApiBadRequestResponse({

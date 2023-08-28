@@ -7,6 +7,7 @@ import { UpdateTeacherDTO } from '../dtos/UpdateTeacherDTO';
 import { CreateContactDTO } from '../dtos/CreateContactDTO';
 import { UpdateContactDTO } from '../dtos/UpdateContactDTO';
 import { Access } from 'src/v2/security/Access';
+import { PERMISSION } from '../../security/PERMISSION';
 import { TeacherByIdPipe } from '../pipes/TeacherByIdPipe';
 import { ContactByNamePipe } from '../pipes/ContactByNamePipe';
 import { SubjectByIdPipe } from '../pipes/SubjectByIdPipe';
@@ -20,7 +21,8 @@ import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiForbiddenResponse,
-  ApiOkResponse, ApiParam,
+  ApiOkResponse,
+  ApiParam,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
@@ -105,7 +107,7 @@ export class TeacherController {
     return { subjects };
   }
 
-  @Access('users.$userId.teachers.$teacherId.disciplines.get')
+  @Access(PERMISSION.USERS_$USERID_TEACHERS_$TEACHERID_DISCIPLINES_GET)
   @ApiBearerAuth()
   @ApiQuery({
     type: Boolean,
@@ -167,7 +169,7 @@ export class TeacherController {
     return this.teacherService.getTeacher(teacherId);
   }
 
-  @Access('teachers.create')
+  @Access(PERMISSION.TEACHERS_CREATE)
   @ApiBearerAuth()
   @ApiOkResponse({
     type: TeacherResponse,
@@ -199,7 +201,7 @@ export class TeacherController {
     return this.teacherMapper.getTeacher(dbTeacher);
   }
 
-  @Access('teachers.$teacherId.update')
+  @Access(PERMISSION.TEACHERS_$TEACHERID_UPDATE)
   @ApiBearerAuth()
   @ApiOkResponse({
     type: TeacherResponse,
@@ -233,7 +235,7 @@ export class TeacherController {
     return this.teacherMapper.getTeacher(dbTeacher);
   }
 
-  @Access('teachers.$teacherId.delete')
+  @Access(PERMISSION.TEACHERS_$TEACHERID_DELETE)
   @ApiBearerAuth()
   @ApiOkResponse()
   @ApiBadRequestResponse({
@@ -291,7 +293,7 @@ export class TeacherController {
     return this.teacherService.getContact(params.teacherId, params.name);
   }
 
-  @Access('teachers.$teacherId.contacts.create')
+  @Access(PERMISSION.TEACHERS_$TEACHERID_CONTACTS_CREATE)
   @ApiBearerAuth()
   @ApiOkResponse({
     type: ContactResponse,
@@ -321,7 +323,7 @@ export class TeacherController {
     return this.teacherService.createContact(teacherId, body);
   }
 
-  @Access('teachers.$teacherId.contacts.update')
+  @Access(PERMISSION.TEACHERS_$TEACHERID_CONTACTS_UPDATE)
   @ApiBearerAuth()
   @ApiParam({
     type: String,
@@ -358,7 +360,7 @@ export class TeacherController {
     return this.teacherService.updateContact(params.teacherId, params.name, body);
   }
 
-  @Access('teachers.$teacherId.contacts.delete')
+  @Access(PERMISSION.TEACHERS_$TEACHERID_CONTACTS_DELETE)
   @ApiBearerAuth()
   @ApiParam({
     type: String,
@@ -434,7 +436,7 @@ export class TeacherController {
     return this.questionMapper.getComments(questions);
   }
 
-  @Access('teachers.$teacherId.cathedras.update')
+  @Access(PERMISSION.TEACHERS_$TEACHERID_CATHEDRAS_UPDATE)
   @ApiBearerAuth()
   @Patch('/:teacherId/cathedra/:cathedraId')
   @ApiOkResponse({

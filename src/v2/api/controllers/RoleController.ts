@@ -5,6 +5,7 @@ import { CreateRoleWithGrantsDTO } from '../dtos/CreateRoleWithGrantsDTO';
 import { CreateGrantsDTO } from '../dtos/CreateGrantsDTO';
 import { RoleMapper } from '../../mappers/RoleMapper';
 import { Access } from '../../security/Access';
+import { PERMISSION } from '../../security/PERMISSION';
 
 @Controller({
   version: '2',
@@ -31,7 +32,7 @@ export class RoleController {
     return { roles: roleMap };
   }
 
-  @Access('roles.create')
+  @Access(PERMISSION.ROLES_CREATE)
   @Post()
   async create (
     @Body() body: CreateRoleWithGrantsDTO,
@@ -41,7 +42,7 @@ export class RoleController {
     return this.roleMapper.create(role);
   }
 
-  @Access('roles.$roleId.grants.create')
+  @Access(PERMISSION.ROLES_$ROLEID_GRANTS_CREATE)
   @Post('/:roleId/grants')
   createGrants (
     @Body() body: CreateGrantsDTO,
@@ -59,7 +60,7 @@ export class RoleController {
     return { grants: grantsMap };
   }
 
-  @Access('roles.$roleId.delete')
+  @Access(PERMISSION.ROLES_$ROLEID_DELETE)
   @Delete('/:roleId')
   async delete (
     @Param('roleId') roleId: string,
@@ -68,7 +69,7 @@ export class RoleController {
     return this.roleMapper.delete(role);
   }
 
-  @Access('roles.$roleId.update')
+  @Access(PERMISSION.ROLES_$ROLEID_UPDATE)
   @Patch('/:roleId')
   async update (
     @Param('roleId') roleId: string,

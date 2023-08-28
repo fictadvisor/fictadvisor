@@ -21,10 +21,10 @@ import { CreateContactDTO } from '../dtos/CreateContactDTO';
 import { UpdateContactDTO } from '../dtos/UpdateContactDTO';
 import { UpdateUserDTO } from '../dtos/UpdateUserDTO';
 import { UpdateStudentDTO } from '../dtos/UpdateStudentDTO';
-
 import { ContactByUserIdPipe } from '../pipes/ContactByUserIdPipe';
 import { GroupRequestDTO } from '../dtos/GroupRequestDTO';
 import { Access } from 'src/v2/security/Access';
+import { PERMISSION } from '../../security/PERMISSION';
 import { TelegramDTO } from '../dtos/TelegramDTO';
 import { UserMapper } from '../../mappers/UserMapper';
 import { AvatarValidationPipe } from '../pipes/AvatarValidationPipe';
@@ -33,7 +33,8 @@ import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiForbiddenResponse,
-  ApiOkResponse, ApiPayloadTooLargeResponse,
+  ApiOkResponse,
+  ApiPayloadTooLargeResponse,
   ApiTags,
   ApiUnsupportedMediaTypeResponse,
 } from '@nestjs/swagger';
@@ -60,8 +61,7 @@ export class UserController {
     private userService: UserService,
     private userMapper: UserMapper,
     private studentMapper: StudentMapper,
-  ) {
-  }
+  ) {}
 
   @UseGuards(TelegramGuard)
   @Patch('/:userId/verifyStudent')
@@ -81,7 +81,7 @@ export class UserController {
     return this.userService.updateSuperhero(userId, body);
   }
 
-  @Access('users.$userId.group.request')
+  @Access(PERMISSION.USERS_$USERID_GROUP_REQUEST)
   @Patch('/:userId/requestNewGroup')
   @ApiBearerAuth()
   @ApiOkResponse()
@@ -104,7 +104,7 @@ export class UserController {
     return this.userService.requestNewGroup(userId, body);
   }
 
-  @Access('users.$userId.superhero.create')
+  @Access(PERMISSION.USERS_$USERID_SUPERHERO_CREATE)
   @Post('/:userId/superhero')
   async createSuperhero (
     @Param('userId', UserByIdPipe) userId: string,
@@ -113,7 +113,7 @@ export class UserController {
     return this.userService.createSuperhero(userId, body);
   }
 
-  @Access('users.$userId.selective.get')
+  @Access(PERMISSION.USERS_$USERID_SELECTIVE_GET)
   @Get('/:userId/selective')
   async getSelective (
     @Param('userId', UserByIdPipe) userId: string,
@@ -122,7 +122,7 @@ export class UserController {
     return { disciplines: dbDisciplines.map((d) => d.id) };
   }
 
-  @Access('users.$userId.selective.get')
+  @Access(PERMISSION.USERS_$USERID_SELECTIVE_GET)
   @Get('/:userId/selectiveBySemesters')
   @ApiOkResponse({
     type: SelectiveBySemestersResponse,
@@ -158,7 +158,7 @@ export class UserController {
     return this.userService.removeRole(userId, roleId);
   }
 
-  @Access('users.delete')
+  @Access(PERMISSION.USERS_DELETE)
   @Delete('/:userId')
   deleteUser (
     @Param('userId', UserByIdPipe) userId: string,
@@ -166,7 +166,7 @@ export class UserController {
     return this.userService.deleteUser(userId);
   }
 
-  @Access('users.update')
+  @Access(PERMISSION.USERS_UPDATE)
   @Patch('/:userId')
   async updateUser (
     @Param('userId', UserByIdPipe) userId: string,
@@ -176,7 +176,7 @@ export class UserController {
     return this.userMapper.updateUser(user);
   }
 
-  @Access('users.$userId.contacts.get')
+  @Access(PERMISSION.USERS_$USERID_CONTACTS_GET)
   @Get('/:userId/contacts')
   async getContacts (
     @Param('userId', UserByIdPipe) userId: string,
@@ -185,7 +185,7 @@ export class UserController {
     return { contacts };
   }
 
-  @Access('users.$userId.contacts.create')
+  @Access(PERMISSION.USERS_$USERID_CONTACTS_CREATE)
   @Post('/:userId/contacts')
   createContact (
     @Param('userId', UserByIdPipe) userId: string,
@@ -194,7 +194,7 @@ export class UserController {
     return this.userService.createContact(userId, body);
   }
 
-  @Access('users.$userId.contacts.update')
+  @Access(PERMISSION.USERS_$USERID_CONTACTS_UPDATE)
   @Patch('/:userId/contacts/:name')
   updateContact (
     @Param(ContactByUserIdPipe) params,
@@ -203,7 +203,7 @@ export class UserController {
     return this.userService.updateContact(params.userId, params.name, body);
   }
 
-  @Access('users.$userId.contacts.delete')
+  @Access(PERMISSION.USERS_$USERID_CONTACTS_DELETE)
   @Delete('/:userId/contacts/:name')
   deleteContact (
     @Param(ContactByUserIdPipe) params,
@@ -211,7 +211,7 @@ export class UserController {
     return this.userService.deleteContact(params.userId, params.name);
   }
 
-  @Access('students.delete')
+  @Access(PERMISSION.STUDENTS_DELETE)
   @Delete('/:userId/student')
   deleteStudent (
     @Param('userId', UserByIdPipe) userId: string,
@@ -219,7 +219,7 @@ export class UserController {
     return this.userService.deleteStudent(userId);
   }
 
-  @Access('users.$userId.student.update')
+  @Access(PERMISSION.USERS_$USERID_STUDENT_UPDATE)
   @Patch('/:userId/student')
   updateStudent (
     @Param('userId', UserByIdPipe) userId: string,
@@ -236,7 +236,7 @@ export class UserController {
     return this.userService.getUser(userId);
   }
 
-  @Access('users.$userId.telegram.link')
+  @Access(PERMISSION.USERS_$USERID_TELEGRAM_LINK)
   @Post('/:userId/telegram')
   async linkTelegram (
     @Param('userId', UserByIdPipe) userId: string,
@@ -245,7 +245,7 @@ export class UserController {
     await this.userService.linkTelegram(userId, telegram);
   }
 
-  @Access('users.$userId.get')
+  @Access(PERMISSION.USERS_$USERID_GET)
   @Get('/:userId')
   getMe (
     @Param('userId', UserByIdPipe) userId: string,
@@ -253,7 +253,7 @@ export class UserController {
     return this.userService.getUser(userId);
   }
 
-  @Access('users.$userId.update')
+  @Access(PERMISSION.USERS_$USERID_UPDATE)
   @ApiBearerAuth()
   @Patch('/:userId/avatar')
   @ApiImplicitFile({
@@ -289,7 +289,7 @@ export class UserController {
     return this.userMapper.updateUser(user);
   }
 
-  @Access('users.$userId.selective.get')
+  @Access(PERMISSION.USERS_$USERID_SELECTIVE_GET)
   @Get('/:userId/selectiveDisciplines')
   @ApiOkResponse({
     type: RemainingSelectiveResponse,
@@ -309,7 +309,7 @@ export class UserController {
     return await this.userService.getRemainingSelective(userId, body);
   }
 
-  @Access('users.$userId.selectiveDisciplines')
+  @Access(PERMISSION.USERS_$USERID_SELECTIVE_DISCIPLINES)
   @ApiBearerAuth()
   @Post(':userId/selectiveDisciplines')
   @ApiOkResponse()
@@ -334,7 +334,7 @@ export class UserController {
     return this.userService.selectDisciplines(userId, body);
   }
 
-  @Access('admin.switch')
+  @Access(PERMISSION.ADMIN_SWITCH)
   @Patch('/:userId/group/:groupId')
   @ApiOkResponse({
     type: FullStudentResponse,
@@ -357,7 +357,7 @@ export class UserController {
     return this.studentMapper.updateStudent(student);
   }
 
-  @Access('users.$groupId.transfer')
+  @Access(PERMISSION.USERS_$GROUPID_TRANSFER)
   @Post('/:studentId/transfer')
   @ApiOkResponse()
   @ApiBadRequestResponse({

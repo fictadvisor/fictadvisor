@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Patch, Param, Post } from '@nestjs/commo
 import { PollService } from '../services/PollService';
 import { CreateQuestionWithRolesDTO } from '../dtos/CreateQuestionWithRolesDTO';
 import { Access } from 'src/v2/security/Access';
+import { PERMISSION } from '../../security/PERMISSION';
 import { QuestionByIdPipe } from '../pipes/QuestionByIdPipe';
 import { QuestionByRoleAndIdPipe } from '../pipes/QuestionByRoleAndIdPipe';
 import { UserByIdPipe } from '../pipes/UserByIdPipe';
@@ -31,7 +32,7 @@ export class PollController {
     private questionMapper: QuestionMapper,
   ) {}
 
-  @Access('questions.create')
+  @Access(PERMISSION.QUESTIONS_CREATE)
   @ApiBearerAuth()
   @Post('/questions')
   @ApiOkResponse({
@@ -55,7 +56,7 @@ export class PollController {
     return this.questionMapper.getQuestionWithRoles(question);
   }
 
-  @Access('users.$userId.poll.teachers.get')
+  @Access(PERMISSION.USERS_$USERID_POLL_TEACHERS_GET)
   @ApiBearerAuth()
   @Get('/teachers/:userId')
   @ApiOkResponse({
@@ -75,7 +76,7 @@ export class PollController {
     return this.pollService.getDisciplineTeachers(userId);
   }
 
-  @Access('questions.delete')
+  @Access(PERMISSION.QUESTIONS_DELETE)
   @ApiBearerAuth()
   @Delete('/questions/:questionId')
   @ApiOkResponse({
@@ -96,7 +97,7 @@ export class PollController {
     return this.questionMapper.getQuestionWithRoles(question);
   }
 
-  @Access('questions.update')
+  @Access(PERMISSION.QUESTIONS_UPDATE)
   @ApiBearerAuth()
   @Patch('/questions/:questionId')
   @ApiOkResponse({
@@ -133,7 +134,7 @@ export class PollController {
     return this.questionMapper.getQuestionWithRoles(question);
   }
 
-  @Access('questions.roles.give')
+  @Access(PERMISSION.QUESTIONS_ROLES_GIVE)
   @ApiBearerAuth()
   @Post('/questions/:questionId/roles')
   @ApiOkResponse({
@@ -158,7 +159,7 @@ export class PollController {
     return this.questionMapper.getQuestionWithRoles(question);
   }
 
-  @Access('question.roles.delete')
+  @Access(PERMISSION.QUESTIONS_ROLES_DELETE)
   @ApiBearerAuth()
   @Delete('/questions/:questionId/roles/:role')
   @ApiParam({

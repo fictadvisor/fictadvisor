@@ -3,6 +3,7 @@ import { DisciplineTeacherService } from '../services/DisciplineTeacherService';
 import { CreateAnswersDTO } from '../dtos/CreateAnswersDTO';
 import { GroupByDisciplineTeacherGuard } from 'src/v2/security/group-guard/GroupByDisciplineTeacherGuard';
 import { Access } from 'src/v2/security/Access';
+import { PERMISSION } from '../../security/PERMISSION';
 import { DisciplineTeacherByIdPipe } from '../pipes/DisciplineTeacherByIdPipe';
 import { TelegramGuard } from '../../security/TelegramGuard';
 import { ResponseDTO } from '../dtos/ResponseDTO';
@@ -47,7 +48,7 @@ export class DisciplineTeacherController {
       NoPermissionException: You do not have permission to perform this action
     `,
   })
-  @Access('groups.$groupId.questions.get', GroupByDisciplineTeacherGuard)
+  @Access(PERMISSION.GROUPS_$GROUPID_QUESTIONS_GET, GroupByDisciplineTeacherGuard)
   @Get('/:disciplineTeacherId/questions')
   getQuestions (
     @Request() req,
@@ -72,7 +73,7 @@ export class DisciplineTeacherController {
       AlreadyAnsweredException: This question is already answered    
     `,
   })
-  @Access('groups.$groupId.answers.send', GroupByDisciplineTeacherGuard)
+  @Access(PERMISSION.GROUPS_$GROUPID_ANSWERS_SEND, GroupByDisciplineTeacherGuard)
   @Post('/:disciplineTeacherId/answers')
   sendAnswers (
     @Param('disciplineTeacherId', DisciplineTeacherByIdPipe) disciplineTeacherId: string,
@@ -129,7 +130,7 @@ export class DisciplineTeacherController {
   @ApiBody({
     type: CreateDisciplineTeacherDTO,
   })
-  @Access('disciplineTeachers.create')
+  @Access(PERMISSION.DISCIPLINE_TEACHERS_CREATE)
   @Post()
   create (
     @Body('teacherId', TeacherByIdPipe) teacherId,
@@ -156,7 +157,7 @@ export class DisciplineTeacherController {
       InvalidBodyException: roles should not be empty
     `,
   })
-  @Access('disciplineTeachers.update')
+  @Access(PERMISSION.DISCIPLINE_TEACHERS_UPDATE)
   @Patch('/:disciplineTeacherId/')
   updateById (
     @Param('disciplineTeacherId', DisciplineTeacherByIdPipe) disciplineTeacherId: string,
@@ -183,7 +184,7 @@ export class DisciplineTeacherController {
       InvalidBodyException: roles should not be empty
     `,
   })
-  @Access('disciplineTeachers.update')
+  @Access(PERMISSION.DISCIPLINE_TEACHERS_UPDATE)
   @Patch()
   updateByTeacherAndDiscipline (
     @Query('teacherId', TeacherByIdPipe) teacherId : string,
@@ -204,7 +205,7 @@ export class DisciplineTeacherController {
       InvalidEntityIdException: disciplineTeacher with such id is not found\n
     `,
   })
-  @Access('disciplineTeachers.delete')
+  @Access(PERMISSION.DISCIPLINE_TEACHERS_DELETE)
   @Delete('/:disciplineTeacherId/')
   deleteById (
     @Param('disciplineTeacherId', DisciplineTeacherByIdPipe) disciplineTeacherId: string,
@@ -224,7 +225,7 @@ export class DisciplineTeacherController {
       InvalidEntityIdException: teacher with such id is not found\n
     `,
   })
-  @Access('disciplineTeachers.delete')
+  @Access(PERMISSION.DISCIPLINE_TEACHERS_DELETE)
   @Delete()
   deleteByTeacherAndDiscipline (
     @Query('teacherId', TeacherByIdPipe) teacherId: string,
@@ -245,7 +246,7 @@ export class DisciplineTeacherController {
       NotSelectedDisciplineException: Current discipline is not selected by this student
     `,
   })
-  @Access('groups.$groupId.disciplineTeachers.remove', GroupByDisciplineTeacherGuard)
+  @Access(PERMISSION.GROUPS_$GROUPID_DISCIPLINE_TEACHERS_REMOVE, GroupByDisciplineTeacherGuard)
   @Post('/:disciplineTeacherId/removeFromPoll')
   removeDisciplineTeacherFromPoll (
     @Param('disciplineTeacherId', DisciplineTeacherByIdPipe) disciplineTeacherId: string,

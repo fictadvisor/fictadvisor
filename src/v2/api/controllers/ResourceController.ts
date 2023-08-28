@@ -5,6 +5,7 @@ import { ResourceByIdPipe } from '../pipes/ResourceByIdPipe';
 import { CreateResourceDTO } from '../dtos/CreateResourceDTO';
 import { UpdateResourceDTO } from '../dtos/UpdateResourceDTO';
 import { Access } from 'src/v2/security/Access';
+import { PERMISSION } from '../../security/PERMISSION';
 import { ApiBadRequestResponse, ApiBearerAuth, ApiForbiddenResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { PaginatedResourcesResponse } from '../responses/PaginatedResourcesResponse';
 import { ResourceResponse } from '../responses/ResourceResponse';
@@ -74,7 +75,7 @@ export class ResourceController {
                   NoPermissionException:
                     You do not have permission to perform this action`,
   })
-  @Access('resources.create')
+  @Access(PERMISSION.RESOURCES_CREATE)
   @Post()
   create (
     @Body() body: CreateResourceDTO,
@@ -99,7 +100,7 @@ export class ResourceController {
                   NoPermissionException:
                     You do not have permission to perform this action`,
   })
-  @Access('resources.update')
+  @Access(PERMISSION.RESOURCES_UPDATE)
   @Patch('/:resourceId')
   async update (
     @Param('resourceId', ResourceByIdPipe) resourceId: string,
@@ -119,7 +120,7 @@ export class ResourceController {
                   NoPermissionException:
                     You do not have permission to perform this action`,
   })
-  @Access('resources.delete')
+  @Access(PERMISSION.RESOURCES_DELETE)
   @Delete('/:resourceId')
   delete (
     @Param('resourceId', ResourceByIdPipe) resourceId: string,

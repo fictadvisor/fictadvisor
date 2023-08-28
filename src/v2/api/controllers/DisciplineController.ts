@@ -3,6 +3,7 @@ import { DisciplineService } from '../services/DisciplineService';
 import { CreateDisciplineDTO } from '../dtos/CreateDisciplineDTO';
 import { GroupByDisciplineGuard } from '../../security/group-guard/GroupByDisciplineGuard';
 import { Access } from 'src/v2/security/Access';
+import { PERMISSION } from '../../security/PERMISSION';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -26,7 +27,7 @@ export class DisciplineController {
     private disciplineService: DisciplineService,
   ) {}
 
-  @Access('groups.$groupId.disciplines.create', GroupByDisciplineGuard)
+  @Access(PERMISSION.GROUPS_$GROUPID_DISCIPLINES_CREATE, GroupByDisciplineGuard)
   @Post()
   create (@Body() body: CreateDisciplineDTO) {
     return this.disciplineService.create(body);
@@ -41,7 +42,7 @@ export class DisciplineController {
   //   return this.disciplineService.makeSelective(req.user, disciplineId);
   // }
 
-  @Access('groups.$groupId.disciplines.teachers.get', GroupByDisciplineGuard)
+  @Access(PERMISSION.GROUPS_$GROUPID_DISCIPLINES_TEACHERS_GET, GroupByDisciplineGuard)
   @ApiBearerAuth()
   @ApiQuery({
     name: 'disciplineType',

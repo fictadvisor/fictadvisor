@@ -9,6 +9,7 @@ import { UserByIdPipe } from '../pipes/UserByIdPipe';
 import { QueryAllDTO } from '../../utils/QueryAllDTO';
 import { UpdateGroupDTO } from '../dtos/UpdateGroupDTO';
 import { Access } from 'src/v2/security/Access';
+import { PERMISSION } from '../../security/PERMISSION';
 import { StudentMapper } from '../../mappers/StudentMapper';
 import { AbsenceOfCaptainException } from '../../utils/exceptions/AbsenceOfCaptainException';
 import { GroupMapper } from '../../mappers/GroupMapper';
@@ -55,7 +56,7 @@ export class GroupController {
       NoPermissionException: You do not have permission to perform this action
     `,
   })
-  @Access('groups.create')
+  @Access(PERMISSION.GROUPS_CREATE)
   @Post()
   async create (@Body() body: CreateGroupDTO) {
     const group = await this.groupService.create(body.code);
@@ -114,7 +115,7 @@ export class GroupController {
       NoPermissionException: You do not have permission to perform this action
     `,
   })
-  @Access('groups.update')
+  @Access(PERMISSION.GROUPS_UPDATE)
   @Patch('/:groupId')
   async update (
     @Param('groupId', GroupByIdPipe) groupId: string,
@@ -136,7 +137,7 @@ export class GroupController {
       NoPermissionException: You do not have permission to perform this action
     `,
   })
-  @Access('groups.delete')
+  @Access(PERMISSION.GROUPS_DELETE)
   @Delete('/:groupId')
   async deleteGroup (
     @Param('groupId', GroupByIdPipe) groupId: string,
@@ -163,7 +164,7 @@ export class GroupController {
     NoPermissionException: 
       You do not have permission to perform this action`,
   })
-  @Access('groups.$groupId.students.get')
+  @Access(PERMISSION.GROUPS_$GROUPID_STUDENTS_GET)
   @Get('/:groupId/students')
   async getStudents (
     @Param('groupId', GroupByIdPipe) groupId: string,
@@ -192,7 +193,7 @@ export class GroupController {
     NoPermissionException: 
       You do not have permission to perform this action`,
   })
-  @Access('groups.$groupId.captain.get')
+  @Access(PERMISSION.GROUPS_$GROUPID_CAPTAIN_GET)
   @Get('/:groupId/captain')
   async getCaptain (
     @Param('groupId', GroupByIdPipe) groupId: string,
@@ -223,7 +224,7 @@ export class GroupController {
     NoPermissionException: 
       You do not have permission to perform this action`,
   })
-  @Access('groups.$groupId.disciplines.teachers.get')
+  @Access(PERMISSION.GROUPS_$GROUPID_DISCIPLINES_TEACHERS_GET)
   @Get('/:groupId/disciplineTeachers')
   async getDisciplineTeachers (
     @Param('groupId', GroupByIdPipe) groupId: string,
@@ -257,7 +258,7 @@ export class GroupController {
     NoPermissionException: 
       You do not have permission to perform this action`,
   })
-  @Access('groups.$groupId.disciplines.get')
+  @Access(PERMISSION.GROUPS_$GROUPID_DISCIPLINES_GET)
   @Get('/:groupId/disciplines')
   async getDiscipline (
     @Param('groupId', GroupByIdPipe) groupId: string,
@@ -290,7 +291,7 @@ export class GroupController {
     NoPermissionException: 
       You do not have permission to perform this action`,
   })
-  @Access('groups.$groupId.students.add')
+  @Access(PERMISSION.GROUPS_$GROUPID_STUDENTS_ADD)
   @Post('/:groupId/addEmails')
   async addUnregistered (
     @Param('groupId', GroupByIdPipe) groupId: string,
@@ -299,7 +300,7 @@ export class GroupController {
     return this.groupService.addUnregistered(groupId, body);
   }
 
-  @Access('groups.$groupId.students.verify')
+  @Access(PERMISSION.GROUPS_$GROUPID_STUDENTS_VERIFY)
   @Patch('/:groupId/verify/:userId')
   async verifyStudent (
     @Param('groupId', GroupByIdPipe) groupId: string,
@@ -310,7 +311,7 @@ export class GroupController {
     return this.studentMapper.getStudent(student);
   }
 
-  @Access('groups.$groupId.admin.switch')
+  @Access(PERMISSION.GROUPS_$GROUPID_ADMIN_SWITCH)
   @Patch('/:groupId/switch/:userId')
   async moderatorSwitch (
     @Param('groupId', GroupByIdPipe) groupId: string,
@@ -320,7 +321,7 @@ export class GroupController {
     return this.groupService.moderatorSwitch(groupId, userId, body);
   }
 
-  @Access('groups.$groupId.students.remove')
+  @Access(PERMISSION.GROUPS_$GROUPID_STUDENTS_REMOVE)
   @Delete('/:groupId/remove/:userId')
   async removeStudent (
     @Param('groupId', GroupByIdPipe) groupId: string,
@@ -330,7 +331,7 @@ export class GroupController {
     return this.groupService.removeStudent(groupId, userId, req.user);
   }
 
-  @Access('groups.$groupId.students.unverified.get')
+  @Access(PERMISSION.GROUPS_$GROUPID_STUDENTS_UNVERIFIED_GET)
   @Get('/:groupId/unverifiedStudents')
   async getUnverifiedStudents (
       @Param('groupId', GroupByIdPipe) groupId: string,

@@ -3,6 +3,7 @@ import { CreateContractDTO } from '../dtos/CreateContractDTO';
 import { Actions, EntrantService } from '../services/EntrantService';
 import { EntrantMapper } from '../../mappers/EntrantMapper';
 import { Access } from '../../security/Access';
+import { PERMISSION } from '../../security/PERMISSION';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth, ApiForbiddenResponse, ApiNotFoundResponse,
@@ -26,7 +27,7 @@ export class EntrantController {
     private readonly entrantMapper: EntrantMapper,
   ) {}
 
-  @Access('entrant.contract.create')
+  @Access(PERMISSION.ENTRANT_CONTRACT_CREATE)
   @ApiBearerAuth()
   @Post('/contract')
   @ApiOkResponse({
@@ -76,7 +77,7 @@ export class EntrantController {
     return  await this.entrantService.approveContract(body);
   }
 
-  @Access('admission.priorities.get')
+  @Access(PERMISSION.ADMISSION_PRIORITIES_GET)
   @Get('/priority')
   @ApiBearerAuth()
   @ApiOkResponse({
@@ -121,7 +122,7 @@ export class EntrantController {
     return this.entrantMapper.getEntrantWithPriority(entrant);
   }
 
-  @Access('admission.priorities.approve')
+  @Access(PERMISSION.ADMISSION_PRIORITIES_APPROVE)
   @ApiBearerAuth()
   @Patch('/priority/approve')
   @ApiOkResponse()
@@ -160,7 +161,7 @@ export class EntrantController {
     await this.entrantService.approvePriority(body);
   }
 
-  @Access('admission.priorities.approve')
+  @Access(PERMISSION.ADMISSION_PRIORITIES_APPROVE)
   @ApiBearerAuth()
   @Patch('/priority/approve/:entrantId')
   @ApiOkResponse()
@@ -199,7 +200,7 @@ export class EntrantController {
     await this.entrantService.approvePriorityById(entrantId);
   }
 
-  @Access('admission.delete')
+  @Access(PERMISSION.ADMISSION_DELETE)
   @ApiBearerAuth()
   @Delete('/data')
   @ApiOkResponse()
@@ -239,7 +240,7 @@ export class EntrantController {
     await this.entrantService.deleteEntrantByFullName(query);
   }
 
-  @Access('admission.get')
+  @Access(PERMISSION.ADMISSION_GET)
   @ApiBearerAuth()
   @Get()
   @ApiOkResponse({
@@ -280,7 +281,7 @@ export class EntrantController {
     return this.entrantMapper.getFullEntrant(entrant);
   }
 
-  @Access('admission.delete')
+  @Access(PERMISSION.ADMISSION_DELETE)
   @ApiBearerAuth()
   @Delete('/:entrantId')
   @ApiQuery({

@@ -3,6 +3,7 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { CreateCathedraDTO } from '../dtos/CreateCathedraDTO';
 import { CathedraService } from '../services/CathedraService';
 import { Access } from '../../security/Access';
+import { PERMISSION } from '../../security/PERMISSION';
 import { CathedraWithTeachersResponse } from '../responses/CathedraWithTeachersResponse';
 
 @ApiTags('Cathedra')
@@ -15,7 +16,7 @@ export class CathedraController {
     private cathedraService: CathedraService,
   ) {}
 
-  @Access('cathedras.create')
+  @Access(PERMISSION.CATHEDRAS_CREATE)
   @ApiBearerAuth()
   @Post()
   @ApiOkResponse({

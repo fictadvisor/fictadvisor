@@ -1,18 +1,22 @@
 import {
   Body,
-  Controller, Delete,
+  Controller,
+  Delete,
   Get,
   Param,
-  ParseIntPipe, Patch,
+  ParseIntPipe,
+  Patch,
   Post,
   Query,
-  Request, UseGuards,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import { ScheduleService } from '../services/ScheduleService';
 import { GroupByIdPipe } from '../pipes/GroupByIdPipe';
 import { DateService } from '../../utils/date/DateService';
 import { ScheduleMapper } from '../../mappers/ScheduleMapper';
 import { Access } from '../../security/Access';
+import { PERMISSION } from '../../security/PERMISSION';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -51,7 +55,7 @@ export class ScheduleController {
     private scheduleMapper: ScheduleMapper,
   ) {}
 
-  @Access('schedule.parse')
+  @Access(PERMISSION.SCHEDULE_PARSE)
   @ApiBearerAuth()
   @Post('/parse')
   @ApiOkResponse()
@@ -158,7 +162,7 @@ export class ScheduleController {
     };
   }
 
-  @Access('groups.$groupId.events.get', GroupByEventGuard)
+  @Access(PERMISSION.GROUPS_$GROUPID_EVENTS_GET, GroupByEventGuard)
   @ApiBearerAuth()
   @Get('/events/:eventId')
   @ApiOkResponse({
@@ -190,7 +194,7 @@ export class ScheduleController {
     return this.scheduleMapper.getEvent(result.event, result.discipline);
   }
 
-  @Access('groups.$groupId.events.create')
+  @Access(PERMISSION.GROUPS_$GROUPID_EVENTS_CREATE)
   @Post('/events')
   @ApiBearerAuth()
   @ApiOkResponse({
@@ -242,7 +246,7 @@ export class ScheduleController {
     return this.scheduleMapper.getEvent(result.event, result.discipline);
   }
 
-  @Access('groups.$groupId.events.get')
+  @Access(PERMISSION.GROUPS_$GROUPID_EVENTS_GET)
   @Get('/groups/:groupId/events')
   @ApiBearerAuth()
   @ApiOkResponse({
@@ -287,7 +291,7 @@ export class ScheduleController {
     };
   }
 
-  @Access('groups.$groupId.events.delete')
+  @Access(PERMISSION.GROUPS_$GROUPID_EVENTS_DELETE)
   @Delete('/events/:eventId')
   @ApiBearerAuth()
   @ApiOkResponse({
@@ -315,7 +319,7 @@ export class ScheduleController {
     return this.scheduleMapper.getEvent(result.event, result.discipline);
   }
 
-  @Access('groups.$groupId.events.update')
+  @Access(PERMISSION.GROUPS_$GROUPID_EVENTS_UPDATE)
   @ApiBearerAuth()
   @Patch('/events/:eventId')
   @ApiOkResponse({
