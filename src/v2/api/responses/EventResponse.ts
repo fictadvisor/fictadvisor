@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { DisciplineTypeEnum } from '@prisma/client';
+import { DisciplineTypeEnum, Period } from '@prisma/client';
 
 export class TeacherNamesResponse {
   @ApiProperty()
@@ -32,6 +32,11 @@ export class EventResponse {
 
   @ApiProperty()
     endTime: Date;
+
+  @ApiProperty({
+    enum: Period,
+  })
+    period: Period;
 
   @ApiProperty()
     url: string;

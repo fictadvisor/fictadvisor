@@ -1,4 +1,4 @@
-import { CurrentSemester, DateService, DAY, FORTNITE, WEEK } from '../../utils/date/DateService';
+import { DateService, DAY, FORTNITE, WEEK } from '../../utils/date/DateService';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { EventRepository } from '../../database/repositories/EventRepository';
 import { DbEvent } from '../../database/entities/DbEvent';
@@ -257,17 +257,6 @@ export class ScheduleService {
     };
   }
 
-  private isWeekValid (week: number, currentSemester: CurrentSemester): boolean {
-    const startWeek = Math.ceil(
-      (currentSemester.startDate.getTime() - currentSemester.endDate.getTime()) / WEEK
-    );
-    const endWeek = Math.ceil(
-      (currentSemester.endDate.getTime() - currentSemester.startDate.getTime()) / WEEK
-    );
-
-    return week >= startWeek && week <= endWeek;
-  }
-
   private disciplineTypesFilter (
     event: DbEvent,
     addLecture: boolean,
@@ -439,7 +428,7 @@ export class ScheduleService {
       week,
       name,
       disciplineId,
-      type,
+      disciplineType,
       teachers,
       startTime = event.startTime,
       endTime = event.endTime,
@@ -461,13 +450,13 @@ export class ScheduleService {
     });
 
     const lesson = event?.lessons[0];
-    if (!disciplineId && !type && !teachers && !disciplineInfo) return;
-    if ((!disciplineId || !type) && !lesson) throw new NotFoundException('disciplineType is not found');
+    if (!disciplineId && !disciplineType && !teachers && !disciplineInfo) return;
+    if ((!disciplineId || !disciplineType) && !lesson) throw new NotFoundException('disciplineType is not found');
 
     const discipline = await this.updateDiscipline(
       disciplineId,
       lesson?.disciplineType.disciplineId,
-      type,
+      disciplineType,
       lesson?.disciplineType,
       disciplineInfo,
       teachers,
@@ -479,7 +468,7 @@ export class ScheduleService {
           eventId,
         },
         create: {
-          disciplineTypeId: find(discipline.disciplineTypes, 'name', type ?? lesson.disciplineType.name).id,
+          disciplineTypeId: find(discipline.disciplineTypes, 'name', disciplineType ?? lesson.disciplineType.name).id,
         },
       },
     });

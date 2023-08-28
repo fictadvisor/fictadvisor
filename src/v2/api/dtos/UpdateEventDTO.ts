@@ -27,7 +27,7 @@ export class UpdateEventDTO {
   })
   @IsOptional()
   @IsEnum(DisciplineTypeEnum, validationOptionsMsg('Discipline type must be an enum'))
-    type?: DisciplineTypeEnum;
+    disciplineType?: DisciplineTypeEnum;
 
   @ApiPropertyOptional()
   @IsOptional()

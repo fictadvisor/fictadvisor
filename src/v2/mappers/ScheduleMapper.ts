@@ -27,6 +27,7 @@ export class ScheduleMapper {
       disciplineType: disciplineType || null,
       startTime: event.startTime,
       endTime: event.endTime,
+      period: event.period,
       url: event.url || null,
       eventInfo: event.eventInfo[0]?.description || null,
       disciplineInfo: discipline?.description || null,
