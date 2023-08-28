@@ -17,6 +17,7 @@ import useToast from '@/hooks/use-toast';
 import GroupAPI from '@/lib/api/group/GroupAPI';
 import { RequestNewGroupBody } from '@/lib/api/user/types/RequestNewGroupBody';
 import UserAPI from '@/lib/api/user/UserAPI';
+import getErrorMessage from '@/lib/utils/getErrorMessage';
 import { UserGroupState } from '@/types/user';
 
 import styles from './NoGroupBlock.module.scss';
@@ -33,14 +34,19 @@ const NoGroupBlock: FC = () => {
       await UserAPI.requestNewGroup(data, user.id);
       await update();
     } catch (error) {
-      // TODO: refactor this shit
-      const errorName = (error as AxiosError<{ error: string }>).response?.data
-        .error;
-      if (errorName === 'AlreadyRegisteredException') {
-        toast.error('В групі вже є староста');
-      } else {
-        toast.error('Як ти це зробив? :/');
-      }
+      const message = getErrorMessage(error);
+      message
+        ? toast.error(message)
+        : toast.error('Щось пішло не так, спробуй пізніше!');
+
+      // // TODO: refactor this shit
+      // const errorName = (error as AxiosError<{ error: string }>).response?.data
+      //   .error;
+      // if (errorName === 'AlreadyRegisteredException') {
+      //   toast.error('В групі вже є староста');
+      // } else {
+      //   toast.error('Як ти це зробив? :/');
+      // }
     }
   };
 

@@ -3,7 +3,7 @@ import { LockClosedIcon } from '@heroicons/react/24/outline';
 import type { Meta, StoryObj } from '@storybook/react';
 
 import Button from '@/components/common/ui/button-mui/Button';
-import Popup from '@/components/common/ui/pop-ups-mui/Popup';
+import Popup from '@/components/common/ui/pop-ups/Popup';
 
 const meta = {
   title: 'Ui Kit/Components/Popup',

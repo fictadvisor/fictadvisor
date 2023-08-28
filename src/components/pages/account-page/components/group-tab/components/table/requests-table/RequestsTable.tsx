@@ -10,6 +10,7 @@ import { DividerTextAlign } from '@/components/common/ui/divider/types';
 import useAuthentication from '@/hooks/use-authentication';
 import useToast from '@/hooks/use-toast';
 import GroupAPI from '@/lib/api/group/GroupAPI';
+import getErrorMessage from '@/lib/utils/getErrorMessage';
 import theme from '@/styles/theme';
 import { UserGroupState } from '@/types/user';
 
@@ -29,8 +30,11 @@ const RequestsTable: FC<RequestsTableProps> = ({ rows, refetch }) => {
           state: UserGroupState.APPROVED,
         });
       await refetch();
-    } catch (e) {
-      toast.error('Щось пішло не так, спробуй пізніше!', '', 3000);
+    } catch (error) {
+      const message = getErrorMessage(error);
+      message
+        ? toast.error(message, '', 3000)
+        : toast.error('Щось пішло не так, спробуй пізніше!');
     }
   };
 
@@ -41,8 +45,11 @@ const RequestsTable: FC<RequestsTableProps> = ({ rows, refetch }) => {
           state: UserGroupState.DECLINED,
         });
       await refetch();
-    } catch (e) {
-      toast.error('Щось пішло не так, спробуй пізніше!', '', 3000);
+    } catch (error) {
+      const message = getErrorMessage(error);
+      message
+        ? toast.error(message, '', 3000)
+        : toast.error('Щось пішло не так, спробуй пізніше!');
     }
   };
 

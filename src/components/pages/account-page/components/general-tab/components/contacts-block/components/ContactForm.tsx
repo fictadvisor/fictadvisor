@@ -15,6 +15,7 @@ import useAuthentication from '@/hooks/use-authentication';
 import useToast from '@/hooks/use-toast';
 import { AddContactBody } from '@/lib/api/user/types/AddContactBody';
 import UserAPI from '@/lib/api/user/UserAPI';
+import getErrorMessage from '@/lib/utils/getErrorMessage';
 import { ContactType } from '@/types/contact';
 
 interface ContactFormProps {
@@ -34,8 +35,11 @@ const ContactForm: FC<ContactFormProps> = ({ refetchContacts }) => {
       try {
         await UserAPI.addContact(user.id, data);
         void refetchContacts();
-      } catch (e) {
-        toast.error('Здається ти ввів неправильні значення!');
+      } catch (error) {
+        const message = getErrorMessage(error);
+        message
+          ? toast.error('Здається ти ввів неправильні значення!', message)
+          : toast.error('Щось пішло не так, спробуй пізніше!');
       }
     },
     [refetchContacts, toast, user.id],

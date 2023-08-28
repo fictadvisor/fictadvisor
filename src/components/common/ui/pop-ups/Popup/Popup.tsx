@@ -3,9 +3,9 @@ import { Box, Typography } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import { SxProps, Theme } from '@mui/material/styles';
 
-import PopupsActions from '@/components/common/ui/pop-ups-mui/PopupActions';
-import PopupsContent from '@/components/common/ui/pop-ups-mui/PopupContent';
-import PopupsTitle from '@/components/common/ui/pop-ups-mui/PopupTitle';
+import PopupsActions from '@/components/common/ui/pop-ups/PopupActions';
+import PopupsContent from '@/components/common/ui/pop-ups/PopupContent';
+import PopupsTitle from '@/components/common/ui/pop-ups/PopupTitle';
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 
 import * as styles from './Popup.styles';

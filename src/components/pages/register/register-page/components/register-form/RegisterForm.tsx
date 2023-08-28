@@ -1,6 +1,5 @@
 import React, { FC, useCallback } from 'react';
 import { Box } from '@mui/material';
-import { AxiosError } from 'axios';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/router';
 
@@ -19,6 +18,7 @@ import useToast from '@/hooks/use-toast';
 import AuthAPI from '@/lib/api/auth/AuthAPI';
 import { GetAllResponse } from '@/lib/api/group/types/GetAllResponse';
 import AuthService from '@/lib/services/auth';
+import getErrorMessage from '@/lib/utils/getErrorMessage';
 import StorageUtil from '@/lib/utils/StorageUtil';
 
 import { initialValues } from './constants';
@@ -30,23 +30,23 @@ const RegisterForm: FC<GetAllResponse> = ({ groups }) => {
   const router = useRouter();
   const toast = useToast();
 
-  interface MyAxiosErrorData {
-    error: string;
-  }
+  // interface MyAxiosErrorData {
+  //   error: string;
+  // }
+  //
+  // type MyAxiosError = AxiosError<MyAxiosErrorData>;
+  //
+  // const errorMessages: { [key: string]: string } = {
+  //   AlreadyRegisteredException: 'Пошта або юзернейм вже зайняті',
+  //   InvalidTelegramCredentialsException: 'Як ти це зробив? :/',
+  //   InvalidBodyException: 'Некорректно введені дані',
+  //   default: 'Як ти це зробив? :/',
+  //   unknown: 'Невідома помилка',
+  // } as const;
 
-  type MyAxiosError = AxiosError<MyAxiosErrorData>;
-
-  const errorMessages: { [key: string]: string } = {
-    AlreadyRegisteredException: 'Пошта або юзернейм вже зайняті',
-    InvalidTelegramCredentialsException: 'Як ти це зробив? :/',
-    InvalidBodyException: 'Некорректно введені дані',
-    default: 'Як ти це зробив? :/',
-    unknown: 'Невідома помилка',
-  } as const;
-
-  const getErrorMessage = (errorName: string): string => {
-    return errorMessages[errorName] || errorMessages.default;
-  };
+  // const getErrorMessage = (errorName: string): string => {
+  //   return errorMessages[errorName] || errorMessages.default;
+  // };
 
   const handleSubmit = useCallback(
     async (data: RegisterFormFields) => {
@@ -64,11 +64,15 @@ const RegisterForm: FC<GetAllResponse> = ({ groups }) => {
           await router.push(`/register/email-verification?email=${email}`);
         }
       } catch (error) {
-        const errorName = (error as MyAxiosError)?.response?.data?.error;
-        const errorMessage = errorName
-          ? getErrorMessage(errorName)
-          : errorMessages.unknown;
-        toast.error(errorMessage);
+        const message = getErrorMessage(error);
+        message
+          ? toast.error(message)
+          : toast.error('Щось пішло не так, спробуй пізніше!');
+        // const errorName = (error as MyAxiosError)?.response?.data?.error;
+        // const errorMessage = errorName
+        //   ? getErrorMessage(errorName)
+        //   : errorMessages.unknown;
+        // toast.error(errorMessage);
       }
     },
     [toast, router],

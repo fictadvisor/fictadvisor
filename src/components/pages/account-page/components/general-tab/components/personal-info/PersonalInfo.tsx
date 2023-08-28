@@ -11,6 +11,7 @@ import { validationSchema } from '@/components/pages/account-page/components/gen
 import useAuthentication from '@/hooks/use-authentication';
 import useToast from '@/hooks/use-toast';
 import UserAPI from '@/lib/api/user/UserAPI';
+import getErrorMessage from '@/lib/utils/getErrorMessage';
 
 import styles from '../../GeneralTab.module.scss';
 
@@ -37,8 +38,11 @@ const PersonalInfoBlock: FC = () => {
     try {
       await UserAPI.changeInfo(user.id, data);
       await update();
-    } catch (e) {
-      toast.error('Щось пішло не так, спробуй пізніше!');
+    } catch (error) {
+      const message = getErrorMessage(error);
+      message
+        ? toast.error(message)
+        : toast.error('Щось пішло не так, спробуй пізніше!');
     }
   };
 

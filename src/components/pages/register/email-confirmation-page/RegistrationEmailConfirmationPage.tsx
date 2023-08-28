@@ -1,6 +1,5 @@
 import { useCallback, useState } from 'react';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
-import { AxiosError } from 'axios';
 import { useRouter } from 'next/router';
 
 import { CustomEnvelopeOpen } from '@/components/common/icons/CustomEnvelopeOpen';
@@ -14,6 +13,7 @@ import {
 } from '@/components/common/ui/button-mui/types';
 import useToast from '@/hooks/use-toast';
 import AuthAPI from '@/lib/api/auth/AuthAPI';
+import getErrorMessage from '@/lib/utils/getErrorMessage';
 
 import styles from './RegistrationEmailConfirmationPage.module.scss';
 
@@ -34,21 +34,25 @@ const RegistrationEmailConfirmationPage = () => {
     try {
       await AuthAPI.verifyEmail({ email });
     } catch (error) {
-      // Temporary solution
-      const errorName = (error as AxiosError<{ error: string }>).response?.data
-        .error;
-      let errorMessage = '';
+      const message = getErrorMessage(error);
+      message
+        ? toast.error(message)
+        : toast.error('Щось пішло не так, спробуй пізніше!');
 
-      if (errorName === 'TooManyActionsException') {
-        setTries(prev => prev++);
-        errorMessage =
-          tries > 5
-            ? 'Да ти заєбав'
-            : 'Час для надсилання нового листа ще не сплив';
-      } else if (errorName === 'NotRegisteredException') {
-        errorMessage = 'Упс, реєструйся заново';
-      }
-      toast.error(errorMessage);
+      // // Todo refactor this shit
+      // const errorName = (error as AxiosError<{ error: string }>).response?.data
+      //   .error;
+      // let errorMessage = '';
+      //
+      // if (errorName === 'TooManyActionsException') {
+      //   setTries(prev => prev++);
+      //   errorMessage =
+      //     tries > 5
+      //       ? 'Да ти заєбав'
+      //       : 'Час для надсилання нового листа ще не сплив';
+      // } else if (errorName === 'NotRegisteredException') {
+      //   errorMessage = 'Упс, реєструйся заново';
+      // }
     }
   }, [toast, email, tries]);
 

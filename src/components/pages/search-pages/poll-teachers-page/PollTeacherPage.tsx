@@ -3,7 +3,7 @@ import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
-import Button from '@/components/common/ui/button/Button';
+import Button from '@/components/common/ui/button-mui';
 import {
   ButtonColor,
   ButtonVariant,
@@ -84,7 +84,7 @@ const PollTeacherPage: FC = () => {
 
           {data?.teachers.length === (curPage + 1) * PAGE_SIZE && (
             <Button
-              className={styles['load-btn']}
+              sx={{ width: '200px', alignSelf: 'center' }}
               text="Завантажити ще"
               variant={ButtonVariant.FILLED}
               color={ButtonColor.SECONDARY}
