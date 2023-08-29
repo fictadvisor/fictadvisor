@@ -1,5 +1,6 @@
 import React, { FC, SetStateAction, useState } from 'react';
 import { Box } from '@mui/material';
+import { AxiosError } from 'axios';
 
 import { initialValues } from '@/components/pages/contract-page/constants';
 import { getLocalStorage } from '@/components/pages/contract-page/utils/localStorage';
@@ -54,22 +55,9 @@ export const PersonalForm: FC<{
         const message = getErrorMessage(error);
         message
           ? toast.error(message)
-          : toast.error('Щось пішло не так, спробуй пізніше!');
-
-        // if (
-        //   (error as { response: AxiosError }).response.status === 500 ||
-        //   (error as { response: AxiosError }).response.status === 403
-        // ) {
-        //   toast.error(
-        //     `Внутрішня помилка сервера`,
-        //     'Зверніться до оператора або в чат абітурієнтів',
-        //   );
-        //   return;
-        // }
-        // toast.error(
-        //   `Трапилась помилка, перевірте усі дані та спробуйте ще раз`,
-        //   (error as AxiosError).message,
-        // );
+          : toast.error(
+              `Трапилась помилка, перевірте усі дані та спробуйте ще раз`,
+            );
       }
       setIsLoading(false);
       return;

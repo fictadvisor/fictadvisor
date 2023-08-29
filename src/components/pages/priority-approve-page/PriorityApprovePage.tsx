@@ -13,6 +13,7 @@ import * as styles from '@/components/pages/priority-approve-page/PriorityApprov
 import { checkError } from '@/components/pages/priority-approve-page/utils/checkError';
 import useToast from '@/hooks/use-toast';
 import contractAPI from '@/lib/api/contract/ContractAPI';
+import getErrorMessage from '@/lib/utils/getErrorMessage';
 import { Fullname } from '@/types/contract';
 
 const TOAST_TIMER = 4000;
@@ -27,13 +28,17 @@ const MyComponent = () => {
       const request = await contractAPI.getEntrantPriority(values);
       setData({ ...request });
       setStep(step + 1);
-    } catch (e) {
-      if (axios.isAxiosError(e)) {
-        const errorMessage = checkError(e.response?.data.error);
-        if (errorMessage) {
-          toast.error(errorMessage, '', TOAST_TIMER);
-        }
-      }
+    } catch (error) {
+      const message = getErrorMessage(error);
+      message
+        ? toast.error(message, '', TOAST_TIMER)
+        : toast.error('Щось пішло не так, спробуй пізніше!');
+      // if (axios.isAxiosError(e)) {
+      //   const errorMessage = checkError(e.response?.data.error);
+      //   if (errorMessage) {
+      //     toast.error(errorMessage, '', TOAST_TIMER);
+      //   }
+      // }
     }
   };
 

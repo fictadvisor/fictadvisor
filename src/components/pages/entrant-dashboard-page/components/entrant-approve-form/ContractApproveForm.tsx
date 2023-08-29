@@ -8,6 +8,7 @@ import useToast from '@/hooks/use-toast';
 import contractAPI from '@/lib/api/contract/ContractAPI';
 import { AdminContractBody } from '@/lib/api/contract/types/AdminContractBody';
 import { EntrantFuIlResponse } from '@/lib/api/contract/types/EntrantFullResponse';
+import getErrorMessage from '@/lib/utils/getErrorMessage';
 
 import { initialValues } from './constants';
 import { validationSchema } from './validation';
@@ -48,12 +49,16 @@ const ContractApproveForm: FC<ContractApproveFormProps> = ({
         const newData = { ...pr, contract: values };
         return newData as unknown as EntrantFuIlResponse;
       });
-    } catch (e) {
-      const error = (
-        e as { response: { data: { error: keyof typeof errorMapper } } }
-      ).response.data.error;
-
-      toast.error(errorMapper[error]);
+    } catch (error) {
+      const message = getErrorMessage(error);
+      message
+        ? toast.error(message)
+        : toast.error('Щось пішло не так, спробуй пізніше!');
+      // const error = (
+      //   e as { response: { data: { error: keyof typeof errorMapper } } }
+      // ).response.data.error;
+      //
+      // toast.error(errorMapper[error]);
     }
   };
 

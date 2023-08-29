@@ -30,24 +30,6 @@ const RegisterForm: FC<GetAllResponse> = ({ groups }) => {
   const router = useRouter();
   const toast = useToast();
 
-  // interface MyAxiosErrorData {
-  //   error: string;
-  // }
-  //
-  // type MyAxiosError = AxiosError<MyAxiosErrorData>;
-  //
-  // const errorMessages: { [key: string]: string } = {
-  //   AlreadyRegisteredException: 'Пошта або юзернейм вже зайняті',
-  //   InvalidTelegramCredentialsException: 'Як ти це зробив? :/',
-  //   InvalidBodyException: 'Некорректно введені дані',
-  //   default: 'Як ти це зробив? :/',
-  //   unknown: 'Невідома помилка',
-  // } as const;
-
-  // const getErrorMessage = (errorName: string): string => {
-  //   return errorMessages[errorName] || errorMessages.default;
-  // };
-
   const handleSubmit = useCallback(
     async (data: RegisterFormFields) => {
       try {
@@ -68,11 +50,6 @@ const RegisterForm: FC<GetAllResponse> = ({ groups }) => {
         message
           ? toast.error(message)
           : toast.error('Щось пішло не так, спробуй пізніше!');
-        // const errorName = (error as MyAxiosError)?.response?.data?.error;
-        // const errorMessage = errorName
-        //   ? getErrorMessage(errorName)
-        //   : errorMessages.unknown;
-        // toast.error(errorMessage);
       }
     },
     [toast, router],

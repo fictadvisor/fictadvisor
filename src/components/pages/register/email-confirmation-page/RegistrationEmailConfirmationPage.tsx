@@ -34,25 +34,11 @@ const RegistrationEmailConfirmationPage = () => {
     try {
       await AuthAPI.verifyEmail({ email });
     } catch (error) {
+      setTries(prev => prev++);
       const message = getErrorMessage(error);
       message
         ? toast.error(message)
         : toast.error('Щось пішло не так, спробуй пізніше!');
-
-      // // Todo refactor this shit
-      // const errorName = (error as AxiosError<{ error: string }>).response?.data
-      //   .error;
-      // let errorMessage = '';
-      //
-      // if (errorName === 'TooManyActionsException') {
-      //   setTries(prev => prev++);
-      //   errorMessage =
-      //     tries > 5
-      //       ? 'Да ти заєбав'
-      //       : 'Час для надсилання нового листа ще не сплив';
-      // } else if (errorName === 'NotRegisteredException') {
-      //   errorMessage = 'Упс, реєструйся заново';
-      // }
     }
   }, [toast, email, tries]);
 

@@ -52,18 +52,6 @@ const StudentsTable: React.FC<StudentsTableProps> = ({
       message
         ? toast.error(message, '', 3000)
         : toast.error('Щось пішло не так, спробуй пізніше!');
-      // let name;
-      // if (error instanceof AxiosError) name = error.response?.data.error;
-      //
-      // if (name === 'AlreadyRegisteredException') {
-      //   toast.error(
-      //     'Один або декілька користувачів з такою поштою вже зареєстровані!',
-      //     '',
-      //     3000,
-      //   );
-      // } else {
-      //   toast.error('Здається, ти ввів неправильні значення!', '', 3000);
-      // }
     }
   };
   return (

@@ -29,6 +29,7 @@ import useTabClose from '@/hooks/use-tab-close';
 import useToast from '@/hooks/use-toast';
 import ContractAPI from '@/lib/api/contract/ContractAPI';
 import { ExtendedPriorityDataBody } from '@/lib/api/contract/types/PriorityDataBody';
+import getErrorMessage from '@/lib/utils/getErrorMessage';
 
 import { prepareData } from './utils/prepareData';
 import { SuccessScreen } from './SuccessScreen';
@@ -46,18 +47,15 @@ const PriorityPage: FC = () => {
       await ContractAPI.createPriority(prepareData({ ...values }));
       setSubmited(true);
     } catch (error) {
-      if (
-        (error as { response: AxiosError }).response.status === 500 ||
-        (error as { response: AxiosError }).response.status === 403
-      ) {
-        toast.error(
-          `Внутрішня помилка сервера`,
-          'Зверніться до оператора або в чат абітурієнтів',
-        );
-        return;
-      }
-
-      toast.error(`Трапилась помилка, перевірте усі дані та спробуйте ще раз`);
+      const message = getErrorMessage(error);
+      message
+        ? toast.error(
+            `Внутрішня помилка сервера ${message}`,
+            'Зверніться до оператора або в чат абітурієнтів',
+          )
+        : toast.error(
+            'Трапилась помилка, перевірте усі дані та спробуйте ще раз',
+          );
     }
   };
 

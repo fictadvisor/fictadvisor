@@ -15,6 +15,7 @@ import { validationSchema } from '@/components/pages/contract-admin-page/validat
 import useToast from '@/hooks/use-toast';
 import contractAPI from '@/lib/api/contract/ContractAPI';
 import { AdminContractBody } from '@/lib/api/contract/types/AdminContractBody';
+import getErrorMessage from '@/lib/utils/getErrorMessage';
 
 import { initialValues, SPECIALITIES } from './constants/index';
 import * as styles from './ContractAdminPage.styles';
@@ -32,12 +33,16 @@ const ContractAdminPage = () => {
       toast.success('Договір створений', '', TOAST_TIMER);
       resetForm();
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const errorMessage = checkError(error.response?.data.error);
-        if (errorMessage) {
-          toast.error(errorMessage, '', TOAST_TIMER);
-        }
-      }
+      const message = getErrorMessage(error);
+      message
+        ? toast.error(message, '', TOAST_TIMER)
+        : toast.error('Щось пішло не так, спробуй пізніше!');
+      // if (axios.isAxiosError(error)) {
+      //   const errorMessage = checkError(error.response?.data.error);
+      //   if (errorMessage) {
+      //     toast.error(errorMessage, '', TOAST_TIMER);
+      //   }
+      // }
     }
   };
 

@@ -27,18 +27,6 @@ const ForgotPasswordForm: FC = () => {
       message
         ? toast.error(message, '', 3000)
         : toast.error('Щось пішло не так, спробуй пізніше!');
-      // let errorMessage = '';
-      // // TODO: remove as and create types
-      // const errorName = (error as AxiosError<{ error: string }>).response?.data
-      //   .error;
-
-      // if (errorName === 'InvalidBodyException') {
-      //   errorMessage = 'Невірно введено пошту для відновлення';
-      // } else if (errorName === 'NotRegisteredException') {
-      //   errorMessage = 'На цю пошту не зареєстровано користувача';
-      // }
-      //
-      // toast.error(errorMessage);
     }
   };
 

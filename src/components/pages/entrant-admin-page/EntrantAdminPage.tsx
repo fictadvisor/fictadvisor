@@ -23,6 +23,7 @@ import useTabClose from '@/hooks/use-tab-close';
 import useToast from '@/hooks/use-toast';
 import ContractAPI from '@/lib/api/contract/ContractAPI';
 import { DeleteEntrantBody } from '@/lib/api/contract/types/DeleteEntrantBody';
+import getErrorMessage from '@/lib/utils/getErrorMessage';
 
 import { prepareData } from './utils/prepareData';
 
@@ -37,11 +38,15 @@ const EntrantAdminPage: FC = () => {
         `${values.action} у ${values.firstName} ${values.lastName} ${values.middleName} видалено`,
       );
     } catch (error) {
-      if ((error as { response: AxiosError }).response.status === 500) {
-        toast.error(`Якась чухня з сервером`);
-        return;
-      }
-      toast.error(`Свят, введи ти дані нормально!`);
+      const message = getErrorMessage(error);
+      message
+        ? toast.error(message)
+        : toast.error(`Свят, введи ти дані нормально!`);
+      // if ((error as { response: AxiosError }).response.status === 500) {
+      //   toast.error(`Якась чухня з сервером`);
+      //   return;
+      // }
+      // toast.error(`Свят, введи ти дані нормально!`);
     }
   };
 

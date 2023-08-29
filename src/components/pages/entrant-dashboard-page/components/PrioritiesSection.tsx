@@ -16,6 +16,7 @@ import {
   EntrantFuIlResponse,
   priorityState,
 } from '@/lib/api/contract/types/EntrantFullResponse';
+import getErrorMessage from '@/lib/utils/getErrorMessage';
 
 interface PrioritiesSectionProps {
   data: EntrantFuIlResponse;
@@ -69,12 +70,16 @@ export const PrioritiesSection: FC<PrioritiesSectionProps> = ({
         };
         return newData as EntrantFuIlResponse;
       });
-    } catch (e) {
-      const error = (
-        e as { response: { data: { error: keyof typeof errorMapper } } }
-      ).response.data.error;
-
-      toast.error(errorMapper[error]);
+    } catch (error) {
+      const message = getErrorMessage(error);
+      message
+        ? toast.error(message)
+        : toast.error('Щось пішло не так, спробуй пізніше!');
+      // const error = (
+      //   e as { response: { data: { error: keyof typeof errorMapper } } }
+      // ).response.data.error;
+      //
+      // toast.error(errorMapper[error]);
     }
   };
 

@@ -17,6 +17,7 @@ import * as styles from '@/components/pages/password-recovery/email-confirmation
 import chooseMessageError from '@/components/pages/password-recovery/email-confirmation-page/utils/chooseMessageError';
 import useToast from '@/hooks/use-toast';
 import AuthAPI from '@/lib/api/auth/AuthAPI';
+import getErrorMessage from '@/lib/utils/getErrorMessage';
 
 const PasswordResetEmailConfirmationPage = () => {
   const router = useRouter();
@@ -34,9 +35,13 @@ const PasswordResetEmailConfirmationPage = () => {
     try {
       await AuthAPI.forgotPassword({ email });
     } catch (error) {
-      const errorName =
-        (error as AxiosError<{ error: string }>).response?.data.error || '';
-      toast.error(chooseMessageError(errorName, tries));
+      const message = getErrorMessage(error);
+      message
+        ? toast.error(message)
+        : toast.error('Щось пішло не так, спробуй пізніше!');
+      // const errorName =
+      //   (error as AxiosError<{ error: string }>).response?.data.error || '';
+      // toast.error(chooseMessageError(errorName, tries));
     }
   };
 
