@@ -35,7 +35,7 @@ import {
   ApiForbiddenResponse,
   ApiOkResponse,
   ApiPayloadTooLargeResponse,
-  ApiTags,
+  ApiTags, ApiUnauthorizedResponse,
   ApiUnsupportedMediaTypeResponse,
 } from '@nestjs/swagger';
 import { SelectiveBySemestersResponse } from '../responses/SelectiveBySemestersResponse';
@@ -373,6 +373,34 @@ export class UserController {
   })
   async transferRole (
     @Param('studentId', UserByIdPipe, StudentPipe) studentId: string,
+    @Body() { captainUserId }: TransferRoleDto,
+  ) {
+    await this.userService.transferRole(captainUserId, studentId);
+  }
+
+  @Access(PERMISSION.USERS_CAPTAIN_SWITCH)
+  @Post('/:studentId/switchCaptain')
+  @ApiOkResponse()
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException:
+      User with such id is not found
+      
+    InvalidBodyException:
+      Captain id cannot be empty`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  async switchCaptain (
+    @Param('studentId', UserByIdPipe) studentId: string,
     @Body() { captainUserId }: TransferRoleDto,
   ) {
     await this.userService.transferRole(captainUserId, studentId);

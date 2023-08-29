@@ -62,7 +62,7 @@ export class DocumentService {
     if (data.meta.studyType === StudyTypeParam.CONTRACT) {
       const paymentName = `${data.meta.degree}_${data.meta.speciality}_${data.meta.programType}_${data.meta.studyForm}_${data.meta.paymentType}.docx`;
       const payment = this.fileService.fillTemplate(paymentName, { ...obj, customer: this.formatPersonalData(data.customer) });
-      attachments.push({ name: `Оплата | ${data.entrant.lastName} ${data.entrant.firstName} ${data.entrant.middleName}`, buffer: payment, contentType: DOCX });
+      attachments.push({ name: `Оплата | ${data.entrant.lastName} ${data.entrant.firstName} ${data.entrant.middleName}.docx`, buffer: payment, contentType: DOCX });
     }
 
     const admissionEmail = data.meta.degree === EducationalDegree.MASTER ? 'vstup.fiot.m@gmail.com' : 'vstup.fiot@gmail.com';

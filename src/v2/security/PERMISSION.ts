@@ -74,6 +74,7 @@ export enum PERMISSION {
   USERS_$USERID_STUDENT_UPDATE = 'users.$userId.student.update',
   USERS_$USERID_TELEGRAM_LINK = 'users.$userId.telegram.link',
   USERS_$USERID_TEACHERS_$TEACHERID_DISCIPLINES_GET = 'users.$userId.teachers.$teacherId.disciplines.get',
+  USERS_CAPTAIN_SWITCH = 'users.captain.switch',
 
   TEACHERS_CREATE = 'teachers.create',
   TEACHERS_$TEACHERID_UPDATE = 'teachers.$teacherId.update',
