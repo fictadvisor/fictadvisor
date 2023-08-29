@@ -334,7 +334,7 @@ export class UserController {
     return this.userService.selectDisciplines(userId, body);
   }
 
-  @Access(PERMISSION.ADMIN_SWITCH)
+  @Access(PERMISSION.USERS_GROUPS_SWITCH)
   @Patch('/:userId/group/:groupId')
   @ApiOkResponse({
     type: FullStudentResponse,

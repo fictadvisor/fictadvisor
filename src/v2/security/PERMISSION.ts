@@ -1,6 +1,4 @@
 export enum PERMISSION {
-  ADMIN_SWITCH = 'admin.switch',
-
   ADMISSION_GET = 'admission.get',
   ADMISSION_DELETE = 'admission.delete',
   ADMISSION_PRIORITIES_GET = 'admission.priorities.get',
@@ -60,6 +58,7 @@ export enum PERMISSION {
 
   USERS_UPDATE = 'users.update',
   USERS_DELETE = 'users.delete',
+  USERS_GROUPS_SWITCH = 'users.groups.switch',
   USERS_$GROUPID_TRANSFER = 'users.$groupId.transfer',
   USERS_$USERID_GET = 'users.$userId.get',
   USERS_$USERID_UPDATE = 'users.$userId.update',
