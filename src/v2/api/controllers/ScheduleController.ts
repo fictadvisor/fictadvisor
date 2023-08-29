@@ -21,7 +21,7 @@ import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiForbiddenResponse,
-  ApiOkResponse,
+  ApiOkResponse, ApiParam,
   ApiQuery,
   ApiTags,
   ApiUnauthorizedResponse,
@@ -195,8 +195,13 @@ export class ScheduleController {
   }
 
   @Access(PERMISSION.GROUPS_$GROUPID_EVENTS_CREATE)
-  @Post('/events')
+  @Post('/groups/:groupId/events')
   @ApiBearerAuth()
+  @ApiParam({
+    name: 'groupId',
+    type: String,
+    required: true,
+  })
   @ApiOkResponse({
     type: EventResponse,
   })
@@ -292,8 +297,13 @@ export class ScheduleController {
   }
 
   @Access(PERMISSION.GROUPS_$GROUPID_EVENTS_DELETE)
-  @Delete('/events/:eventId')
+  @Delete('/groups/:groupId/events/:eventId')
   @ApiBearerAuth()
+  @ApiParam({
+    name: 'groupId',
+    type: String,
+    required: true,
+  })
   @ApiOkResponse({
     type: EventResponse,
   })
@@ -321,7 +331,12 @@ export class ScheduleController {
 
   @Access(PERMISSION.GROUPS_$GROUPID_EVENTS_UPDATE)
   @ApiBearerAuth()
-  @Patch('/events/:eventId')
+  @Patch('/groups/:groupId/events/:eventId')
+  @ApiParam({
+    name: 'groupId',
+    type: String,
+    required: true,
+  })
   @ApiOkResponse({
     type: EventResponse,
   })
