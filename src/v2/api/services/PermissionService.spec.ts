@@ -1,13 +1,15 @@
 import { PermissionService } from './PermissionService';
 import { RoleRepository } from '../../database/repositories/RoleRepository';
 import { Test } from '@nestjs/testing';
+import { UserRepository } from '../../database/repositories/UserRepository';
+import { PrismaService } from '../../database/PrismaService';
 
 describe('PermissionService', () => {
   let permissionService: PermissionService;
 
   beforeEach(async () => {
     const testingModule = await Test.createTestingModule({
-      providers: [PermissionService],
+      providers: [PermissionService, UserRepository, PrismaService],
     }).useMocker((token) => {
       if (token === RoleRepository) {
         return {};

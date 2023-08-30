@@ -13,6 +13,7 @@ import { DocumentModule } from '../modules/DocumentModule';
 import { EntrantModule } from '../modules/EntrantModule';
 import { AdmissionModule } from '../modules/AdmissionModule';
 import { TelegramGroupModule } from '../modules/TelegramGroupModule';
+import { PermissionModule } from '../modules/PermissionModule';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { TelegramGroupModule } from '../modules/TelegramGroupModule';
     EntrantModule,
     AdmissionModule,
     TelegramGroupModule,
+    PermissionModule,
   ],
 })
 export class ApiModule {}

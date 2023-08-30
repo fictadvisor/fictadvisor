@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { RoleRepository } from '../../database/repositories/RoleRepository';
 import { DbRole } from '../../database/entities/DbRole';
 import { Grant } from '@prisma/client';
+import { DataNotFoundException } from '../../utils/exceptions/DataNotFoundException';
+import { CheckPermissionsDTO } from '../dtos/CheckPermissionsDTO';
 
 @Injectable()
 export class PermissionService {
@@ -71,5 +73,37 @@ export class PermissionService {
 
     const grant = this.findGrantMatchesPermission(permission, grants);
     return !!grant?.set;
+  }
+
+  async checkPermissions (userId: string, body: CheckPermissionsDTO) {
+    const result = new Map<string, boolean>();
+
+    for (const permission of body.permissions) {
+      const valuesForPermission = body.values ?? {};
+      const newPermission = this.getCorrectPermission(permission, valuesForPermission);
+      const permissionCheckResult = await this.hasPermission(userId, newPermission);
+      result.set(permission, permissionCheckResult);
+    }
+
+    return result;
+  }
+
+  private getCorrectPermission (permission: string, values: object): string {
+    return permission
+      .split('.')
+      .map((part) => this.getPermissionPart(part, values))
+      .join('.');
+  }
+
+  private getPermissionPart (part: string, values: object): string {
+    if (!part.startsWith('$')) {
+      return part;
+    }
+
+    const newPart = values[part.slice(1)];
+    if (!newPart) {
+      throw new DataNotFoundException();
+    }
+    return newPart;
   }
 }
