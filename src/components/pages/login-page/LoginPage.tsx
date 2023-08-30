@@ -1,28 +1,27 @@
 import React from 'react';
+import { Box, Divider } from '@mui/material';
 import Image from 'next/image';
+import LoginFormBlock from 'src/components/pages/login-page/components/login-form-block';
+import LogoRegisterBlock from 'src/components/pages/login-page/components/logo-register-block';
 
-import LeftBlock from '@/components/pages/login-page/components/left-block';
-import RightBlock from '@/components/pages/login-page/components/right-block';
-
-import styles from './LoginPage.module.scss';
+import * as styles from './LoginPage.styles';
 
 const LoginPage = () => {
   return (
-    <div className={styles['login-page']}>
+    <Box sx={styles.loginPage}>
       <Image
         quality={100}
-        className={styles['background-image']}
         src="/images/login-page/login-background.png"
         fill
         priority
         alt="дуже гарна картинка"
       />
-      <div className={styles['login-page__content']}>
-        <LeftBlock />
-        <hr className={styles['divider']} />
-        <RightBlock />
-      </div>
-    </div>
+      <Box sx={styles.loginPageContent}>
+        <LogoRegisterBlock />
+        <Divider orientation="vertical" sx={styles.divider} />
+        <LoginFormBlock />
+      </Box>
+    </Box>
   );
 };
 

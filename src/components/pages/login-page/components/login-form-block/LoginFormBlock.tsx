@@ -1,25 +1,26 @@
 import React from 'react';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
+import { Box, Divider, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import LoginForm from 'src/components/pages/login-page/components/login-form-block/components/login-form';
 
 import CustomTelegram from '@/components/common/icons/CustomTelegram';
-import Button from '@/components/common/ui/button';
+import Button from '@/components/common/ui/button-mui';
 import {
   ButtonColor,
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
-import Divider from '@/components/common/ui/divider';
-import { DividerTextAlign } from '@/components/common/ui/divider/types';
-import LoginForm from '@/components/pages/login-page/components/login-form';
 import useAuthentication from '@/hooks/use-authentication';
 import AuthService from '@/lib/services/auth/AuthService';
 
-import styles from './RightBlock.module.scss';
+import * as sxStyles from './LoginFormBlock.styles';
 
-const RightBlock = () => {
+import styles from './LoginFormBlock.module.scss';
+
+const LoginFormBlock = () => {
   const router = useRouter();
   const redirect = router.query.redirect as string;
   const { update } = useAuthentication();
@@ -34,7 +35,7 @@ const RightBlock = () => {
   };
 
   return (
-    <div className={styles['right-block']}>
+    <Box sx={sxStyles.loginFormBlock}>
       <Link href="/" className={styles['mobile-login-logo']}>
         <Image
           src="/images/login-page/new-logo.png"
@@ -43,52 +44,42 @@ const RightBlock = () => {
           fill
         />
       </Link>
-      <h3 className={styles['register-header']}>З поверненням!</h3>
+      <Typography variant="h3SemiBold" sx={sxStyles.loginHeader}>
+        З поверненням!
+      </Typography>
       <Button
-        endIcon={
-          <div className="icon">
-            <CustomTelegram />
-          </div>
-        }
-        text="Увійти за допомогою"
-        size={ButtonSize.SMALL}
-        type="button"
-        onClick={handleClick}
-        className={styles['mobile-telegram-button']}
-      />
-      <Button
-        startIcon={
-          <div className="icon">
-            <CustomTelegram />
-          </div>
-        }
+        startIcon={<CustomTelegram />}
         text="Увійти за допомогою Telegram"
         size={ButtonSize.LARGE}
         type="button"
         onClick={handleClick}
-        className={styles['telegram-button']}
+        sx={sxStyles.telegramButton}
       />
-      <Divider text="або" textAlign={DividerTextAlign.CENTER} />
+      <Divider textAlign="center" sx={sxStyles.divider}>
+        або
+      </Divider>
       <LoginForm />
-      <p className={styles['mobile-text']}>Ти ще не з нами? </p>
+      <Typography sx={sxStyles.narrowScreenText}>Ти ще не з нами? </Typography>
       <Button
         text="Приєднатись!"
         size={ButtonSize.SMALL}
         color={ButtonColor.SECONDARY}
         variant={ButtonVariant.OUTLINE}
-        className={styles['register-mobile-button']}
+        sx={sxStyles.registerMobileButton}
         onClick={() => router.push('/register')}
       />
       <Button
-        className={styles['comeback-button']}
+        sx={sxStyles.comebackButton}
         text="Повернутись на головну"
-        startIcon={<ChevronLeftIcon className="icon" />}
+        startIcon={
+          <ChevronLeftIcon style={{ width: '18px', height: '18px' }} />
+        }
         variant={ButtonVariant.TEXT}
         size={ButtonSize.SMALL}
         onClick={() => router.push('/ ')}
       />
-    </div>
+    </Box>
   );
 };
 
-export default RightBlock;
+export default LoginFormBlock;
