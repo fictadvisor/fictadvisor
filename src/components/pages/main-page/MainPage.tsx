@@ -1,19 +1,21 @@
 import { FC } from 'react';
-import { isIOS, isSafari } from 'react-device-detect';
-import cn from 'classnames';
+import { Box, Typography, useMediaQuery } from '@mui/material';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import PageLayout from '@/components/common/layout/page-layout/PageLayout';
-import Button from '@/components/common/ui/button';
+import Button from '@/components/common/ui/button-mui';
 import {
   ButtonColor,
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
+import Divider from '@/components/common/ui/divider';
 import TokenPopup from '@/components/pages/main-page/components/token-popup';
+import * as stylesMUI from '@/components/pages/main-page/MainPage.styles';
 import useAuthentication from '@/hooks/use-authentication';
 import { GetStudentResourcesResponse } from '@/lib/api/student-resources/types/GetStudentResourcesResponse';
+import theme from '@/styles/theme';
 
 import BannerImage from '../../common/icons/BannerImage';
 
@@ -29,7 +31,10 @@ const MainPage: FC<MainPageProps> = ({ data }) => {
   const { query, isReady } = useRouter();
   const token = query.token as string;
   const { isLoggedIn } = useAuthentication();
-
+  const isDesktop = useMediaQuery(theme.breakpoints.up('desktop'));
+  const isTablet = useMediaQuery(
+    theme.breakpoints.between('tablet', 'desktop'),
+  );
   return (
     <PageLayout
       description="FICT Advisor - офіційний сайт Студради ФІОТ.
@@ -38,114 +43,83 @@ const MainPage: FC<MainPageProps> = ({ data }) => {
       набори в активне ком’юніті та багато інших цікавих інструментів."
       className={styles['main-page']}
     >
-      <div className={styles['main-page-content']}>
+      <Box sx={stylesMUI.mainPageContent}>
         {token && isReady && <TokenPopup token={token} />}
-        <div className={styles['header']}>
-          <div className={styles['header-info']}>
-            <div className={styles['header-info-content']}>
-              <h1 className={styles['title']}>Твій студентський портал</h1>
-              <p>
+        <Box sx={stylesMUI.infoSection}>
+          <Box sx={stylesMUI.infoSectionContent}>
+            <Box>
+              <Typography sx={stylesMUI.infoSectionTitle}>
+                Твій студентський портал
+              </Typography>
+              <Typography paragraph sx={stylesMUI.infoSectionParagraph}>
                 Зустрічай FICT Advisor — офіційний сайт Студради ФІОТ.
                 Опитування про викладачів, багатофункціональний розклад,
                 керування групою, набори в наше активне ком’юніті, розіграш шар
                 та інші інструменти — шукай саме тут!
-              </p>
-              <div className={styles['buttons']}>
-                <div className={styles['buttons-desk']}>
-                  {!isLoggedIn && (
-                    <>
-                      <Link href={'/contract'}>
-                        <Button
-                          text="Договір про навчання"
-                          disabled={false}
-                          color={ButtonColor.PRIMARY}
-                          variant={ButtonVariant.FILLED}
-                          size={ButtonSize.LARGE}
-                        />
-                      </Link>
-                      <hr className={styles['button-divider']} />
-                    </>
-                  )}
-                  <Link href={'/priority'}>
-                    <Button
-                      text={'Обрати пріоритет'}
-                      disabled={false}
-                      variant={ButtonVariant.OUTLINE}
-                      size={ButtonSize.LARGE}
-                    />
-                  </Link>
-                </div>
-                <div className={styles['buttons-tabl']}>
-                  {!isLoggedIn && (
-                    <>
-                      <Link href={'/contract'}>
-                        <Button
-                          text="Договір про навчання"
-                          disabled={false}
-                          color={ButtonColor.PRIMARY}
-                          variant={ButtonVariant.FILLED}
-                          size={ButtonSize.MEDIUM}
-                        />
-                      </Link>
-                      <hr className={styles['button-divider']} />
-                    </>
-                  )}
-                  <Link href={'/priority'}>
-                    <Button
-                      text={'Обрати пріоритет'}
-                      disabled={false}
-                      variant={ButtonVariant.OUTLINE}
-                      size={ButtonSize.MEDIUM}
-                    />
-                  </Link>
-                </div>
-                <div className={styles['buttons-mob']}>
-                  {!isLoggedIn && (
-                    <>
-                      <Link href={'/contract'}>
-                        <Button
-                          text="Договір про навчання"
-                          disabled={false}
-                          color={ButtonColor.PRIMARY}
-                          variant={ButtonVariant.FILLED}
-                          size={ButtonSize.SMALL}
-                        />
-                      </Link>
-                    </>
-                  )}
-                  <Link href={'/priority'}>
-                    <Button
-                      text={'Обрати пріоритет'}
-                      disabled={false}
-                      variant={ButtonVariant.OUTLINE}
-                      size={ButtonSize.SMALL}
-                    />
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            className={cn(styles['build-image'], {
-              [styles['animate']]: !isIOS && !isSafari,
-            })}
-          >
+              </Typography>
+              <Box
+                sx={
+                  isDesktop
+                    ? stylesMUI.buttonDesk
+                    : isTablet
+                    ? stylesMUI.buttonTab
+                    : stylesMUI.buttonMob
+                }
+              >
+                {!isLoggedIn && (
+                  <>
+                    <Link href={'/contract'}>
+                      <Button
+                        sx={stylesMUI.buttons}
+                        text="Договір про навчання"
+                        color={ButtonColor.PRIMARY}
+                        variant={ButtonVariant.FILLED}
+                        size={
+                          isDesktop
+                            ? ButtonSize.LARGE
+                            : isTablet
+                            ? ButtonSize.MEDIUM
+                            : ButtonSize.SMALL
+                        }
+                      />
+                    </Link>
+                    {isDesktop && <Divider sx={stylesMUI.buttonDivider} />}
+                  </>
+                )}
+                <Link href={'/priority'}>
+                  <Button
+                    sx={stylesMUI.buttons}
+                    text={'Обрати пріоритет'}
+                    variant={ButtonVariant.OUTLINE}
+                    size={
+                      isDesktop
+                        ? ButtonSize.LARGE
+                        : isTablet
+                        ? ButtonSize.MEDIUM
+                        : ButtonSize.SMALL
+                    }
+                  />
+                </Link>
+              </Box>
+            </Box>
+          </Box>
+          <Box sx={stylesMUI.infoSectionImage}>
             <BannerImage />
-          </div>
-        </div>
-        <div className={styles['resources']}>
-          <h3>Студентські ресурси</h3>
-          <div className={styles['resource-card-container']}>
-            <div className={styles['resources-cards']}>
+          </Box>
+        </Box>
+        <Box sx={stylesMUI.resourcesSection}>
+          <Typography sx={stylesMUI.resourcesSectionTitle}>
+            Студентські ресурси
+          </Typography>
+          <Box>
+            <Box sx={stylesMUI.resourcesSectionCards}>
               {data?.studentResources.map(({ name, id, icon, link }) => (
-                <div className={styles['card-holder']} key={id}>
-                  <ResourceCard text={name} image={icon} href={link} />
-                </div>
+                <ResourceCard key={id} text={name} image={icon} href={link} />
               ))}
-            </div>
-          </div>
-        </div>
-      </div>
+            </Box>
+          </Box>
+        </Box>
+      </Box>
     </PageLayout>
   );
 };

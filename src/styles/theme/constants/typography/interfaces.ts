@@ -5,6 +5,7 @@ import '@mui/material/styles';
 declare module '@mui/material/styles' {
   interface TypographyVariants {
     h2Bold: CSSProperties;
+    h3Bold: CSSProperties;
     h3SemiBold: CSSProperties;
     h4Medium: CSSProperties;
     h4Bold: CSSProperties;
@@ -20,6 +21,7 @@ declare module '@mui/material/styles' {
 
   interface TypographyVariantsOptions {
     h2Bold?: CSSProperties;
+    h3Bold?: CSSProperties;
     h3SemiBold?: CSSProperties;
     h4Medium?: CSSProperties;
     h4Bold?: CSSProperties;
@@ -37,6 +39,7 @@ declare module '@mui/material/styles' {
 declare module '@mui/material/Typography' {
   interface TypographyPropsVariantOverrides {
     h2Bold: true;
+    h3Bold: true;
     h3SemiBold: true;
     h4Medium: true;
     h4Bold: true;

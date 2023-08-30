@@ -138,6 +138,29 @@ $font-weight-bold: 700;
     }
 }
 
+@media only screen and (min-width: $breakpoint-tablet) and (max-width: $breakpoint-desktop) {
+    .header-info {
+        .title {
+            width: 100%;
+        }
+    }
+
+    .buttons {
+        .buttons-desk {
+            display: none;
+        }
+
+        .buttons-tabl {
+            display: flex;
+            gap: 20px;
+        }
+    }
+
+    .main-page {
+        background-size: cover;
+    }
+}
+
 @media only screen and (max-width: $breakpoint-tablet) {
     .build-image {
         right: -50px;
@@ -149,6 +172,51 @@ $font-weight-bold: 700;
 
     .resources-cards {
         gap: 0.5rem;
+    }
+}
+
+@media only screen and (min-width: $breakpoint-mobile-medium) and (max-width: $breakpoint-tablet) {
+    .header {
+        flex-direction: column-reverse;
+        align-items: flex-end;
+
+        .build-image {
+            width: 100%;
+
+            svg {
+                width: 80%;
+            }
+        }
+    }
+
+    .header-info {
+        width: 100%;
+        padding: 0 40px 0 50px;
+
+        .title {
+            width: 80%;
+            top: -50px;
+        }
+
+        p {
+            margin: 0 0 44px 0;
+            width: 100%;
+        }
+    }
+
+    .buttons {
+        .buttons-desk {
+            display: none;
+        }
+
+        .buttons-tabl {
+            display: flex;
+            gap: 20px;
+        }
+    }
+
+    .button-divider {
+        display: none;
     }
 }
 
@@ -222,73 +290,5 @@ $font-weight-bold: 700;
 @media only screen and (max-width: $breakpoint-mobile) {
     .build-image {
         right: -30px;
-    }
-}
-
-@media only screen and (min-width: $breakpoint-mobile-medium) and (max-width: $breakpoint-tablet) {
-    .header {
-        flex-direction: column-reverse;
-        align-items: flex-end;
-
-        .build-image {
-            width: 100%;
-
-            svg {
-                width: 80%;
-            }
-        }
-    }
-
-    .header-info {
-        width: 100%;
-        padding: 0 40px 0 50px;
-
-        .title {
-            width: 80%;
-            top: -50px;
-        }
-
-        p {
-            margin: 0 0 44px 0;
-            width: 100%;
-        }
-    }
-
-    .buttons {
-        .buttons-desk {
-            display: none;
-        }
-
-        .buttons-tabl {
-            display: flex;
-            gap: 20px;
-        }
-    }
-
-    .button-divider {
-        display: none;
-    }
-}
-
-@media only screen and (min-width: $breakpoint-tablet) and (max-width: $breakpoint-desktop) {
-    .header-info {
-        .title {
-            width: 100%;
-        }
-    }
-
-    .buttons {
-        .buttons-desk {
-            display: none;
-        }
-
-        .buttons-tabl {
-            display: flex;
-            gap: 20px;
-        }
-    }
-
-    .main-page {
-        background-size: cover;
     }
 }
