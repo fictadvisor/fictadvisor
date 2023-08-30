@@ -1,8 +1,9 @@
-import { FC, useContext, useEffect, useRef, useState } from 'react';
+import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import { Box, Typography } from '@mui/material';
 
 import Button from '@/components/common/ui/button';
+import { CardRoles } from '@/components/common/ui/cards/card-roles';
 import Rating from '@/components/common/ui/rating';
 import Tag from '@/components/common/ui/tag';
 import { TagColor, TagSize } from '@/components/common/ui/tag/types';
@@ -61,31 +62,7 @@ const PersonalTeacherSubjectCard: FC<TeacherWithSubject> = ({
         </Typography>
       </Box>
       <Box sx={styles.tags}>
-        {roles.includes(TeacherRole.LECTURER) && (
-          <Tag
-            sx={styles.tag}
-            color={TagColor.INDIGO}
-            size={TagSize.SMALL}
-            text="Лекції"
-          />
-        )}
-        {roles.includes(TeacherRole.PRACTICIAN) && (
-          <Tag
-            sx={styles.tag}
-            color={TagColor.ORANGE}
-            size={TagSize.SMALL}
-            text="Практики"
-          />
-        )}
-
-        {roles.includes(TeacherRole.LABORANT) && (
-          <Tag
-            sx={styles.tag}
-            color={TagColor.MINT}
-            size={TagSize.SMALL}
-            text="Лабораторні"
-          />
-        )}
+        <CardRoles roles={roles} />
       </Box>
 
       {contacts.length > 0 && (

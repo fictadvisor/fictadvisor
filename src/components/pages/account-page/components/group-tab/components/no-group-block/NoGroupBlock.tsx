@@ -52,7 +52,10 @@ const NoGroupBlock: FC = () => {
             <h4>{user.group.code}</h4>
           </div>
           <div className={styles['alert-desktop-pending']}>
-            <Alert title="Ваша заявка ще не прийнята, очікуйте підтвердження" />
+            <Alert
+              title="Ваша заявка ще не прийнята, очікуйте підтвердження"
+              type={AlertType.INFO}
+            />
           </div>
           <div className={styles['division']}>
             <div className={styles['white']}></div>
