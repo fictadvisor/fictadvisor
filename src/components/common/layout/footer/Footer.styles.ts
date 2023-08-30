@@ -6,12 +6,16 @@ export const footerContainer: SxProps<Theme> = theme => ({
     desktop: 'flex',
     mobile: 'grid',
   },
+  //backgroundColor: 'red',
   overflow: 'hidden',
-  width: '100%',
+  //
+  width: { mobile: '100%', mobileSemiMedium: '100%' },
+  paddingLeft: { mobile: '5%', mobileSemiMedium: '0%' },
   backgroundColor: alpha(theme.palette.grey[50], 0.62),
   height: {
     desktop: '300px',
-    mobile: '286px',
+    mobileSemiMedium: '286px',
+    mobile: '320px',
   },
 });
 
@@ -74,6 +78,7 @@ export const title: SxProps<Theme> = () => ({
   whiteSpace: 'nowrap',
   color: 'grey.500',
   width: '100%',
+  //  backgroundColor: 'black',
   textTransform: 'none !important',
   typography: {
     desktop: 'body2',
@@ -101,7 +106,8 @@ export const mainReferences: SxProps<Theme> = {
   },
   marginLeft: {
     desktop: '0px',
-    mobile: '15px',
+    mobileSemiMedium: '15px',
+    mobile: '0px',
   },
   marginRight: {
     desktop: '45px',
@@ -127,7 +133,7 @@ export const support: SxProps<Theme> = {
   },
   marginLeft: {
     desktop: '0',
-    mobile: '55px',
+    mobile: '45px',
   },
   gridRowStart: 1,
   gridColumnStart: 2,
@@ -152,7 +158,7 @@ export const socialMedia: SxProps<Theme> = {
   },
   marginLeft: {
     desktop: '0',
-    mobile: '55px',
+    mobile: '45px',
   },
   gridRowStart: 2,
   gridColumnStart: 2,
@@ -161,12 +167,13 @@ export const socialMedia: SxProps<Theme> = {
 };
 
 export const socialButtons: SxProps<Theme> = {
-  display: 'flex',
+  display: { desktop: 'flex', mobileSemiMedium: 'flex', mobile: 'grid' },
   typography: 'body1Bold',
   flexDirection: {
     desktop: 'column',
-    mobile: 'row',
+    mobileSemiMedium: 'row',
   },
+  gridTemplateColumns: '36px 36px 36px',
 };
 
 export const iconLink: SxProps<Theme> = {
