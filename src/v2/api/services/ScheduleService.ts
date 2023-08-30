@@ -1,5 +1,5 @@
 import { DateService, DAY, FORTNITE, WEEK } from '../../utils/date/DateService';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { EventRepository } from '../../database/repositories/EventRepository';
 import { DbEvent } from '../../database/entities/DbEvent';
 import { Period, DisciplineTypeEnum, DisciplineType } from '@prisma/client';
@@ -430,13 +430,28 @@ export class ScheduleService {
       disciplineId,
       disciplineType,
       teachers,
-      startTime = event.startTime,
-      endTime = event.endTime,
       period = event.period,
       url,
       disciplineInfo,
       eventInfo,
+      ...durationTime
     } = body;
+
+    let startTime = durationTime.startTime ?? event.startTime;
+    if (!durationTime.startTime && durationTime.changeStartDate) throw new ObjectIsRequiredException('startTime is required');
+    if (durationTime.startTime && !durationTime.changeStartDate) {
+      startTime = event.startTime;
+      startTime.setHours(durationTime.startTime.getHours());
+      startTime.setMinutes(durationTime.startTime.getMinutes());
+    }
+
+    let endTime = durationTime.endTime ?? event.endTime;
+    if (!durationTime.endTime && durationTime.changeEndDate) throw new ObjectIsRequiredException('endTime is required');
+    if (durationTime.endTime && !durationTime.changeEndDate) {
+      endTime = event.endTime;
+      endTime.setHours(durationTime.endTime.getHours());
+      endTime.setMinutes(durationTime.endTime.getMinutes());
+    }
 
     const eventInfoForUpdate = await this.getEventInfoForUpdate(period, startTime, endTime, week, eventInfo, event);
 
@@ -451,7 +466,7 @@ export class ScheduleService {
 
     const lesson = event?.lessons[0];
     if (!disciplineId && !disciplineType && !teachers && !disciplineInfo) return;
-    if ((!disciplineId || !disciplineType) && !lesson) throw new NotFoundException('disciplineType is not found');
+    if ((!disciplineId || !disciplineType) && !lesson) throw new ObjectIsRequiredException('disciplineType is required');
 
     const discipline = await this.updateDiscipline(
       disciplineId,

@@ -1,4 +1,4 @@
-import { IsArray, IsDate, IsEnum, IsNotEmpty, IsOptional, IsUrl, MaxLength, MinLength } from 'class-validator';
+import { IsArray, IsBoolean, IsDate, IsEnum, IsNotEmpty, IsOptional, IsUrl, MaxLength, MinLength } from 'class-validator';
 import { DisciplineTypeEnum, Period } from '@prisma/client';
 import { validationOptionsMsg } from '../../utils/GLOBALS';
 import { Type } from 'class-transformer';
@@ -42,9 +42,19 @@ export class UpdateEventDTO {
 
   @ApiPropertyOptional()
   @IsOptional()
+  @IsBoolean()
+    changeStartDate?: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional()
   @Type(() => Date)
   @IsDate(validationOptionsMsg('End time must be Date'))
     endTime?: Date;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+    changeEndDate?: boolean;
 
   @ApiPropertyOptional({
     enum: Period,

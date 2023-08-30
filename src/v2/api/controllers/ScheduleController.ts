@@ -195,7 +195,7 @@ export class ScheduleController {
   }
 
   @Access(PERMISSION.GROUPS_$GROUPID_EVENTS_CREATE)
-  @Post('/groups/:groupId/events')
+  @Post('/events')
   @ApiBearerAuth()
   @ApiParam({
     name: 'groupId',
@@ -348,7 +348,7 @@ export class ScheduleController {
       Discipline type must be an enum
       Teachers must be Array
       Start time must be Date
-      End Time must be Date
+      End time must be Date
       Period must be an enum
       Url must be a URL address
       Discipline description is too long (max: 2000)
@@ -358,17 +358,18 @@ export class ScheduleController {
       DisciplineType is required
       Teachers is required
       DisciplineId is required
+      startTime is required
+      endTime is required
       
     InvalidEntityIdException: 
       Event with such id is not found
       Teacher with such id is not found
+      Discipline with such id is not found
     
     InvalidWeekException:
-      Week parameter is invalid
-    
-    NotFoundException:
-      Discipline is not found`,
+      Week parameter is invalid`,
   })
+
   @ApiUnauthorizedResponse({
     description: `\n
     UnauthorizedException:
