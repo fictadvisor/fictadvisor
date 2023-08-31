@@ -438,17 +438,15 @@ export class ScheduleService {
     } = body;
 
     let startTime = durationTime.startTime ?? event.startTime;
-    if (!durationTime.startTime && durationTime.changeStartDate) throw new ObjectIsRequiredException('startTime is required');
+    if (!durationTime.startTime && durationTime.changeStartDate) throw new ObjectIsRequiredException('startTime');
     if (durationTime.startTime && !durationTime.changeStartDate) {
       startTime = event.startTime;
       startTime.setHours(durationTime.startTime.getHours());
       startTime.setMinutes(durationTime.startTime.getMinutes());
     }
 
-    let endTime = durationTime.endTime ?? event.endTime;
-    if (!durationTime.endTime && durationTime.changeEndDate) throw new ObjectIsRequiredException('endTime is required');
-    if (durationTime.endTime && !durationTime.changeEndDate) {
-      endTime = event.endTime;
+    const endTime = period === Period.NO_PERIOD ? durationTime.endTime : event.endTime;
+    if (durationTime.endTime && period !== Period.NO_PERIOD) {
       endTime.setHours(durationTime.endTime.getHours());
       endTime.setMinutes(durationTime.endTime.getMinutes());
     }
@@ -466,7 +464,7 @@ export class ScheduleService {
 
     const lesson = event?.lessons[0];
     if (!disciplineId && !disciplineType && !teachers && !disciplineInfo) return;
-    if ((!disciplineId || !disciplineType) && !lesson) throw new ObjectIsRequiredException('disciplineType is required');
+    if ((!disciplineId || !disciplineType) && !lesson) throw new ObjectIsRequiredException('disciplineType');
 
     const discipline = await this.updateDiscipline(
       disciplineId,
