@@ -10,7 +10,11 @@ const PrivacyPage = () => {
       <Typography variant="h4Bold">Політика конфіденційності</Typography>
       <Box sx={stylesMUI.privacyList}>
         <Box>
-          <Typography paragraph sx={stylesMUI.paragraph}>
+          <Typography
+            variant={'body1'}
+            paragraph
+            sx={stylesMUI.privacyListInfo}
+          >
             FICT Advisor – це інформаційна система Студради ФІОТ для студентів
             Факультету інформатики та обчислювальної техніки Національного
             технічного університету України “Київський політехнічний інститут
@@ -22,7 +26,11 @@ const PrivacyPage = () => {
         </Box>
         <Box>
           <Typography variant="h6Bold">Які дані ми збираємо?</Typography>
-          <Typography paragraph sx={stylesMUI.paragraph}>
+          <Typography
+            variant={'body1'}
+            paragraph
+            sx={stylesMUI.privacyListInfo}
+          >
             Згідно з законом України “Про захист персональних прав”,
             персональними даними вважаються такі дані, за допомогою яких можна
             однозначно ідентифікувати особу. Система збирає такі дані: прізвище,
@@ -33,7 +41,11 @@ const PrivacyPage = () => {
         </Box>
         <Box>
           <Typography variant="h6Bold">Як ми ці дані оброблюємо?</Typography>
-          <Typography paragraph sx={stylesMUI.paragraph}>
+          <Typography
+            variant={'body1'}
+            paragraph
+            sx={stylesMUI.privacyListInfo}
+          >
             Система є Open-Source проєктом, тому весь код знаходиться у
             публічному просторі за посиланням{' '}
             <Link href={'https://github.com/fictadvisor/'}>
@@ -47,10 +59,14 @@ const PrivacyPage = () => {
           </Typography>
         </Box>
         <Box>
-          <Typography variant="h6Bold">
+          <Typography variant="h6Bold" sx={stylesMUI.privacyListInfo}>
             Коли ми видаляємо персональні дані?
           </Typography>
-          <Typography paragraph sx={stylesMUI.paragraph}>
+          <Typography
+            variant={'body1'}
+            paragraph
+            sx={stylesMUI.privacyListInfo}
+          >
             Персональні дані користувача видаляються: після відрахування
             користувача з Факультету; за власним запитом користувача; після
             деактивації системи. Адміністрація Системи залишає за собою право
