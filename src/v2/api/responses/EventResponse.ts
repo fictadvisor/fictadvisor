@@ -22,6 +22,9 @@ export class EventResponse {
   @ApiProperty()
     name: string;
 
+  @ApiProperty()
+    disciplineId: string;
+
   @ApiProperty({
     enum: DisciplineTypeEnum,
   })

@@ -24,6 +24,7 @@ export class ScheduleMapper {
     return {
       id: event.id,
       name: event.name,
+      disciplineId: discipline?.id || null,
       disciplineType: disciplineType || null,
       startTime: event.startTime,
       endTime: event.endTime,
