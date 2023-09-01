@@ -212,8 +212,11 @@ export class GroupController {
   })
   @ApiBadRequestResponse({
     description: `\n
-    InvalidGroupIdException: 
-      Group with such id is not found`,
+    InvalidGroupIdException:
+      Group with such id is not found
+  
+    DataMissingException:
+      Data are missing`,
   })
   @ApiUnauthorizedResponse({
     description: `\n
@@ -229,8 +232,9 @@ export class GroupController {
   @Get('/:groupId/disciplineTeachers')
   async getDisciplineTeachers (
     @Param('groupId', GroupByIdPipe) groupId: string,
+    @Query() query?: QuerySemesterDTO,
   ) {
-    return this.groupService.getDisciplineTeachers(groupId);
+    return this.groupService.getDisciplineTeachers(groupId, query);
   }
 
   @ApiBearerAuth()
@@ -243,11 +247,7 @@ export class GroupController {
       Group with such id is not found
   
     DataMissingException:
-      Data are missing
-      
-    DataNotFoundException:
-      Data were not found
-    `,
+      Data are missing`,
   })
   @ApiUnauthorizedResponse({
     description: `\n

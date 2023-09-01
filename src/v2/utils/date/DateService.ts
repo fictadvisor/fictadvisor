@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
 import { DataNotFoundException } from '../exceptions/DataNotFoundException';
+import { DataMissingException } from '../exceptions/DataMissingException';
 
 export const MINUTE = 1000 * 60;
 export const HOUR = MINUTE * 60;
@@ -174,5 +175,11 @@ export class DateService {
     endOfDay.setHours(23, 59, 59, 999);
 
     return { startOfDay, endOfDay };
+  }
+
+  checkYearAndSemester (year, semester) {
+    if ((year && !semester) || (!year && semester)) {
+      throw new DataMissingException();
+    }
   }
 }
