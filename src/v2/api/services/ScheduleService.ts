@@ -461,7 +461,7 @@ export class ScheduleService {
 
     const endTime = period === Period.NO_PERIOD
       ? durationTime.endTime
-      : await this.getLastEndDate(durationTime.endTime, period);
+      : await this.getLastEndDate(durationTime.endTime ?? event.endTime, period);
 
     const eventInfoForUpdate = await this.getEventInfoForUpdate(period, startTime, endTime, week, eventInfo, event);
 

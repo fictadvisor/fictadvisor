@@ -264,6 +264,13 @@ export class UserService {
     return this.studentMapper.getStudent(student);
   }
 
+  async getUserByTelegramId (telegramId: bigint) {
+    return await this.studentRepository.find({
+      user: {
+        telegramId,
+      },
+    });
+  }
 
   async linkTelegram (userId, telegram: TelegramDTO) {
     if (!this.authService.isExchangeValid(telegram)) {

@@ -31,9 +31,10 @@ import { AvatarValidationPipe } from '../pipes/AvatarValidationPipe';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiBadRequestResponse,
+  ApiBasicAuth,
   ApiBearerAuth,
   ApiForbiddenResponse,
-  ApiOkResponse,
+  ApiOkResponse, ApiParam,
   ApiPayloadTooLargeResponse,
   ApiTags, ApiUnauthorizedResponse,
   ApiUnsupportedMediaTypeResponse,
@@ -44,12 +45,13 @@ import { RemainingSelectiveResponse } from '../responses/RemainingSelectiveRespo
 import { GroupByIdPipe } from '../pipes/GroupByIdPipe';
 import { StudentPipe } from '../pipes/StudentPipe';
 import { StudentMapper } from '../../mappers/StudentMapper';
-import { FullStudentResponse } from '../responses/StudentResponse';
+import { FullStudentResponse, OrdinaryStudentResponse } from '../responses/StudentResponse';
 import { UserResponse } from '../responses/UserResponse';
 import { ApiImplicitFile } from '@nestjs/swagger/dist/decorators/api-implicit-file.decorator';
 import { SelectiveDisciplinesPipe } from '../pipes/SelectiveDisciplinesPipe';
 import { AttachSelectiveDisciplinesDTO } from '../dtos/AttachSelectiveDisciplinesDTO';
 import { TransferRoleDto } from '../dtos/TransferRoleDto';
+import { UserByTelegramIdPipe } from '../pipes/UserByTelegramIdPipe';
 
 @ApiTags('User')
 @Controller({
@@ -234,6 +236,33 @@ export class UserController {
     @Param('userId', UserByIdPipe) userId: string,
   ) {
     return this.userService.getUser(userId);
+  }
+
+  @ApiBasicAuth()
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiOkResponse({
+    type: OrdinaryStudentResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException:
+      User with such id is not found`,
+  })
+  @ApiParam({
+    name: 'telegramId',
+    type: Number,
+  })
+  @UseGuards(TelegramGuard)
+  @Get('/telegramUser/:telegramId')
+  async getUserByTelegramId (
+      @Param('telegramId', UserByTelegramIdPipe) telegramId: bigint,
+  ) {
+    const student = await this.userService.getUserByTelegramId(telegramId);
+    return this.studentMapper.getStudent(student);
   }
 
   @Access(PERMISSION.USERS_$USERID_TELEGRAM_LINK)
