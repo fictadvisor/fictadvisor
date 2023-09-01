@@ -50,22 +50,22 @@ export class ScheduleService {
     }
   }
 
-  getIndexOfLesson (period, startTime, endOfWeek) {
-    const difference = endOfWeek.getTime() - startTime.getTime();
-    let index = difference / (1000 * 60 * 60 * 24 * 7);
-
-    if (period === Period.EVERY_WEEK) {
-      return +parseInt(String(index));
-    } else if (period === Period.EVERY_FORTNIGHT) {
-      index /= 2;
-      if (index % 1 <= 0.5) {
-        return +parseInt(String(index));
-      } else {
-        return null;
-      }
-    } else if (period === Period.NO_PERIOD) {
-      return 0;
+  async getIndexOfLesson (week, endOfWeek, event) {
+    const { startDate } = await this.dateService.getCurrentSemester();
+    const startWeek = Math.ceil((event.startTime.getTime() - startDate.getTime()) / WEEK);
+    const endWeek = Math.ceil((event.endTime.getTime() - startDate.getTime()) / WEEK);
+    const difference = endOfWeek.getTime() - event.startTime.getTime();
+    const index = Math.floor(difference / WEEK);
+    if (
+      week > endWeek || week < startWeek ||
+      (event.period === Period.EVERY_FORTNIGHT && startWeek % 2 !== week % 2)
+    ) {
+      return null;
     }
+    if (event.period === Period.EVERY_FORTNIGHT) {
+      return Math.ceil(index / 2);
+    }
+    return index;
   }
 
   async getGeneralGroupEvents (id: string, week: number) {
@@ -95,12 +95,10 @@ export class ScheduleService {
     }) as unknown as DbEvent[];
 
     week = week || await this.dateService.getCurrentWeek();
-
-    const result  = events
-      .filter((event) => {
-        const indexOfLesson = this.getIndexOfLesson(event.period, event.startTime, endOfWeek);
-        return indexOfLesson !== null;
-      });
+    const result  = await filterAsync(events, async (event) => {
+      const indexOfLesson = await this.getIndexOfLesson(week, endOfWeek, event);
+      return indexOfLesson !== null;
+    });
 
     for (const event of result) {
       await this.setWeekTime(event, week);
@@ -170,7 +168,6 @@ export class ScheduleService {
     const { startDate } = await this.dateService.getCurrentSemester();
     const startWeek = Math.ceil((event.startTime.getTime() - startDate.getTime()) / WEEK);
     const endWeek = Math.ceil((event.endTime.getTime() - startDate.getTime()) / WEEK);
-
     if (
       week > endWeek || week < startWeek ||
       (event.period === Period.EVERY_FORTNIGHT && startWeek % 2 !== week % 2)
@@ -332,8 +329,8 @@ export class ScheduleService {
       },
     });
 
-    let result = events.filter((event) => {
-      const indexOfLesson = this.getIndexOfLesson(event.period, event.startTime, endOfWeek);
+    let result = await filterAsync(events, async (event) => {
+      const indexOfLesson = await this.getIndexOfLesson(week, endOfWeek, event);
       return indexOfLesson !== null;
     });
 
@@ -508,7 +505,7 @@ export class ScheduleService {
     if (eventInfo) {
 
       const { endOfWeek } = await this.dateService.getDatesOfWeek(week);
-      const indexOfLesson = this.getIndexOfLesson(period, startTime, endOfWeek);
+      const indexOfLesson = await this.getIndexOfLesson(week, endOfWeek, event);
       if (indexOfLesson === null || indexOfLesson < 0 || indexOfLesson >= event.eventInfo.length) {
         throw new InvalidWeekException();
       }

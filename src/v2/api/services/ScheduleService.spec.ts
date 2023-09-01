@@ -42,25 +42,46 @@ describe('ScheduleService', () => {
   });
 
   describe('getIndexOfLesson', () => {
-    it('should return correct index when period is EVERY_WEEK', () => {
-      const period = Period.EVERY_WEEK;
-      const startTime = new Date('2023-05-19 00:00:00.000');
-      const endOfWeek = new Date('2023-05-28 21:00:00.000');
-      const result = scheduleService.getIndexOfLesson(period, startTime, endOfWeek);
-      expect(result).toEqual(1);
+    it('should return correct index when period is EVERY_WEEK', async () => {
+      jest.spyOn(dateService, 'getCurrentSemester').mockImplementation(() => ({
+        startDate: new Date('2023-02-05T21:00:00.000Z'),
+      } as any));
+      const event = {
+        period: Period.EVERY_WEEK,
+        startTime: new Date('2023-02-06T09:20:00.000Z'),
+        endTime: new Date('2023-06-05T10:55:00.000Z'),
+      };
+      const week = 1;
+      const endOfWeek = new Date('2023-02-12T23:59:59.999Z');
+      const result = await scheduleService.getIndexOfLesson(week, endOfWeek, event);
+      expect(result).toEqual(0);
     });
-    it('should return correct index when period is EVERY_FORTNIGHT', () => {
-      const period = Period.EVERY_FORTNIGHT;
-      const startTime = new Date('2023-05-19 00:00:00.000');
-      const endOfWeek = new Date('2023-06-18 21:00:00.000');
-      const result = scheduleService.getIndexOfLesson(period, startTime, endOfWeek);
-      expect(result).toEqual(2);
+    it('should return correct index when period is EVERY_FORTNIGHT', async () => {
+      jest.spyOn(dateService, 'getCurrentSemester').mockImplementation(() => ({
+        startDate: new Date('2023-02-05T21:00:00.000Z'),
+      } as any));
+      const event = {
+        period: Period.EVERY_WEEK,
+        startTime: new Date('2023-02-06T09:20:00.000Z'),
+        endTime: new Date('2023-06-05T10:55:00.000Z'),
+      };
+      const week = 1;
+      const endOfWeek = new Date('2023-02-12T23:59:59.999Z');
+      const result = await scheduleService.getIndexOfLesson(week, endOfWeek, event);
+      expect(result).toEqual(0);
     });
-    it('should return null when period is FORTNIGHT and lesson not happen this week', () => {
-      const period = Period.EVERY_FORTNIGHT;
-      const startTime = new Date('2023-05-19 00:00:00.000');
-      const endOfWeek = new Date('2023-06-25 21:00:00.000');
-      const result = scheduleService.getIndexOfLesson(period, startTime, endOfWeek);
+    it('should return null when period is FORTNIGHT and lesson not happen this week', async () => {
+      jest.spyOn(dateService, 'getCurrentSemester').mockImplementation(() => ({
+        startDate: new Date('2023-02-05T21:00:00.000Z'),
+      } as any));
+      const event = {
+        period: Period.EVERY_WEEK,
+        startTime: new Date('2023-02-15T09:20:00.000Z'),
+        endTime: new Date('2023-06-05T10:55:00.000Z'),
+      };
+      const week = 1;
+      const endOfWeek = new Date('2023-02-12T23:59:59.999Z');
+      const result = await scheduleService.getIndexOfLesson(week, endOfWeek, event);
       expect(result).toEqual(null);
     });
   });
@@ -73,16 +94,19 @@ describe('ScheduleService', () => {
             id: 'id1',
             period: Period.EVERY_FORTNIGHT,
             startTime: new Date('2023-05-19 00:00:00.000'),
+            endTime: new Date('2023-06-05T10:55:00.000Z'),
           },
           {
             id: 'id2',
             period: Period.EVERY_FORTNIGHT,
             startTime: new Date('2023-05-26 00:00:00.000'),
+            endTime: new Date('2023-06-05T10:55:00.000Z'),
           },
           {
             id: 'id3',
             period: Period.EVERY_WEEK,
             startTime: new Date('2023-05-26 00:00:00.000'),
+            endTime: new Date('2023-06-05T10:55:00.000Z'),
           },
         ] as any
       ));
@@ -101,14 +125,16 @@ describe('ScheduleService', () => {
       expect(result).toStrictEqual({
         events: [
           {
-            id: 'id1',
+            id: 'id2',
             period: Period.EVERY_FORTNIGHT,
-            startTime: new Date('2023-05-19 00:00:00.000'),
+            startTime: new Date('2023-05-26T00:00:00.000Z'),
+            endTime: new Date('2023-06-05T10:55:00.000Z'),
           },
           {
             id: 'id3',
             period: Period.EVERY_WEEK,
             startTime: new Date('2023-05-26 00:00:00.000'),
+            endTime: new Date('2023-06-05T10:55:00.000Z'),
           }],
         week: 16,
         startTime: new Date('2023-06-09T21:00:00.000Z'),
