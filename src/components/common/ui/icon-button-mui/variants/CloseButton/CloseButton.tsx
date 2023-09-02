@@ -13,8 +13,8 @@ const CloseButton: FC<VariantIconButtonProps> = ({
   size = IconButtonSize.LARGE,
   shape = IconButtonShape.SQUARE,
   color = IconButtonColor.TRANSPARENT,
-  onClick,
   disabled,
+  ...rest
 }) => {
   return (
     <IconButton
@@ -22,8 +22,8 @@ const CloseButton: FC<VariantIconButtonProps> = ({
       size={size}
       shape={shape}
       color={color}
-      onClick={onClick}
       disabled={disabled}
+      {...rest}
     />
   );
 };

@@ -15,6 +15,7 @@ const ArrowButton: React.FC<VariantIconButtonProps> = ({
   shape = IconButtonShape.SQUARE,
   color = IconButtonColor.SECONDARY,
   disabled,
+  ...rest
 }) => {
   return (
     <IconButton
@@ -25,6 +26,7 @@ const ArrowButton: React.FC<VariantIconButtonProps> = ({
       disabled={disabled}
       sx={styles.button(size)}
       iconSx={styles.iconStyles(size)}
+      {...rest}
     ></IconButton>
   );
 };
