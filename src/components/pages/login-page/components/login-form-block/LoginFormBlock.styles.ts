@@ -29,20 +29,6 @@ export const telegramButton: SxProps<Theme> = {
   },
 };
 
-// export const mobileTelegramButton: SxProps<Theme> = {
-//   display: 'none',
-//   margin: '0 0 16px 0',
-//   padding: '10px 12px',
-//   typography: theme.typography.body2Bold,
-//   whiteSpace: 'normal',
-//   borderRadius: '8px',
-//   gap: '10px',
-//
-//   [theme.breakpoints.down('mobileMedium')]: {
-//     display: 'flex',
-//   },
-// };
-
 export const registerMobileButton: SxProps<Theme> = {
   width: 'fit-content',
   display: 'none',
