@@ -268,7 +268,8 @@ export class AuthService {
   }
 
   async repeatEmailVerification (email: string) {
-    const obj = Object.values(this.verifyEmailTokens).find((t) => t.user.email === email);
+    const tokens = [...this.verifyEmailTokens.values()];
+    const obj = tokens.find((t) => t.user.email === email);
 
     if (!obj) {
       throw new NotRegisteredException();
