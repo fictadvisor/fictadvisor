@@ -6,9 +6,8 @@ export const footerContainer: SxProps<Theme> = theme => ({
     desktop: 'flex',
     mobile: 'grid',
   },
-  //backgroundColor: 'red',
   overflow: 'hidden',
-  //
+
   width: { mobile: '100%', mobileSemiMedium: '100%' },
   paddingLeft: { mobile: '5%', mobileSemiMedium: '0%' },
   backgroundColor: alpha(theme.palette.grey[50], 0.62),
@@ -78,7 +77,6 @@ export const title: SxProps<Theme> = () => ({
   whiteSpace: 'nowrap',
   color: 'grey.500',
   width: '100%',
-  //  backgroundColor: 'black',
   textTransform: 'none !important',
   typography: {
     desktop: 'body2',
@@ -193,3 +191,5 @@ export const button: SxProps<Theme> = {
   paddingLeft: '12px',
   typography: 'body1Medium',
 };
+
+//

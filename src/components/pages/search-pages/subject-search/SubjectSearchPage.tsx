@@ -19,10 +19,7 @@ import {
 import SubjectsAPI from '@/lib/api/subject/SubjectAPI';
 import { GetListOfSubjectsResponse } from '@/lib/api/subject/types/GetListOfSubjectsResponse';
 
-import {
-  SubjectInitialValues,
-  TeacherInitialValues,
-} from '../search-form/constants';
+import { SubjectInitialValues } from '../search-form/constants';
 import SearchForm from '../search-form/SearchForm';
 
 import { SubjectSearchList } from './components/SubjectSearchList';
@@ -31,7 +28,7 @@ import * as styles from './SubjectSearchPage.styles';
 const SubjectSearchPage = () => {
   const initialValues = localStorage.getItem('subjectForm')
     ? JSON.parse(localStorage.getItem('subjectForm') || '{}')
-    : '{тьфу}';
+    : SubjectInitialValues;
 
   const localStorageName = 'subjectForm';
 
@@ -66,7 +63,7 @@ const SubjectSearchPage = () => {
         searchPlaceholder="Оберіть предмет"
         filterDropDownOptions={filterOptions}
         onSubmit={submitHandler}
-        initialValues={SubjectInitialValues}
+        initialValues={initialValues}
         localStorageName={localStorageName}
       />
       {data && <SubjectSearchList subjects={data.subjects} />}
