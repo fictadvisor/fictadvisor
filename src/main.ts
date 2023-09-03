@@ -14,7 +14,7 @@ import { join } from 'path';
 };
 
 async function bootstrap () {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, { cors: true });
   const configService = app.get<ConfigService>(ConfigService);
   const port = configService.get<number>('port');
 
