@@ -201,6 +201,9 @@ export class AuthService {
     const user = await this.userRepository.find({
       telegramId: telegram.id,
     });
+    if (!user) {
+      throw new InvalidEntityIdException('user');
+    }
     return this.getTokens(user);
   }
 

@@ -52,8 +52,8 @@ export class AuthController {
   })
   @ApiUnauthorizedResponse({
     description: `\n
-                  UnauthorizedException:
-                    The email hasn't verified yet`,
+    UnauthorizedException:
+      The email hasn't verified yet`,
   })
   @UseGuards(LocalAuthGuard)
   @Post('/login')
@@ -74,39 +74,39 @@ export class AuthController {
   @ApiOkResponse()
   @ApiBadRequestResponse({
     description: `\n
-                  InvalidBodyException:
-                    Group id can not be empty
-                    First name is not correct (A-Я(укр.)\\-' ), or too short (min: 2), or too long (max: 40)
-                    First name is empty
-                    Middle name is not correct (A-Я(укр.)\\-' ), or too short (min: 2), or too long (max: 40)
-                    Last name is not correct (A-Я(укр.)\\-' ), or too short (min: 2), or too long (max: 40)
-                    Last name is empty
-                    Username is not correct (a-zA-Z0-9_), or too short (min: 2), or too long (max: 40)
-                    Username is empty
-                    Email is not an email
-                    Email is empty
-                    The password must be between 8 and 50 characters long, include at least 1 digit and 1 letter
-                    password is empty
-                    first_name can not be empty
-                    hash can not be empty
-                    photo_url can not be empty
-                    username can not be empty
+    InvalidBodyException:
+      Group id can not be empty
+      First name is not correct (A-Я(укр.)\\-' ), or too short (min: 2), or too long (max: 40)
+      First name is empty
+      Middle name is not correct (A-Я(укр.)\\-' ), or too short (min: 2), or too long (max: 40)
+      Last name is not correct (A-Я(укр.)\\-' ), or too short (min: 2), or too long (max: 40)
+      Last name is empty
+      Username is not correct (a-zA-Z0-9_), or too short (min: 2), or too long (max: 40)
+      Username is empty
+      Email is not an email
+      Email is empty
+      The password must be between 8 and 50 characters long, include at least 1 digit and 1 letter
+      password is empty
+      first_name can not be empty
+      hash can not be empty
+      photo_url can not be empty
+      username can not be empty
                   
-                  AlreadyRegisteredException:
-                    User is already registered
+    AlreadyRegisteredException:
+      User is already registered
 
-                  CaptainAlreadyRegisteredException:
-                    Captain of this group is already registered`,
+    CaptainAlreadyRegisteredException:
+      Captain of this group is already registered`,
   })
   @ApiUnauthorizedResponse({
     description: `\n
-                  InvalidTelegramCredentialsException:
-                    Your telegram hash is invalid`,
+    InvalidTelegramCredentialsException:
+      Your telegram hash is invalid`,
   })
   @ApiTooManyRequestsResponse({
     description: `\n
-                  TooManyActionsException:
-                    Too many actions. Try later`,
+    TooManyActionsException:
+      Too many actions. Try later`,
   })
   @Post('/register')
   async register (@Body() body: RegistrationDTO) {
@@ -118,16 +118,19 @@ export class AuthController {
   })
   @ApiBadRequestResponse({
     description: `\n
-                  InvalidBodyException:
-                    first_name can not be empty
-                    hash can not be empty
-                    photo_url can not be empty
-                    username can not be empty`,
+    InvalidBodyException:
+      first_name can not be empty
+      hash can not be empty
+      photo_url can not be empty
+      username can not be empty
+      
+    InvalidEntityIdException
+      User with such id is not found`,
   })
   @ApiUnauthorizedResponse({
     description: `\n
-                  InvalidTelegramCredentialsException:
-                    Your telegram hash is invalid`,
+    InvalidTelegramCredentialsException:
+      Your telegram hash is invalid`,
   })
   @Post('/loginTelegram')
   async loginTelegram (@Body() body: TelegramDTO) {
