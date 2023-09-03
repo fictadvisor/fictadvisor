@@ -7,7 +7,7 @@ export class EventFiltrationDTO extends GeneralEventFiltrationDTO {
     description: 'Visualization parameter: show selected disciplines',
   })
   @IsOptional()
-    isOwnSelected?: boolean;
+    showOwnSelective?: boolean;
 
   @ApiPropertyOptional({
     description: 'Visualization parameter: show other events',

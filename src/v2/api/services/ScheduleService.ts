@@ -362,11 +362,11 @@ export class ScheduleService {
       return await this.getGeneralGroupEvents(groupId, week);
     }
 
-    const groupEvents = await this.getAllGroupEvents(groupId, week, query);
+    let groupEvents = await this.getAllGroupEvents(groupId, week, query);
 
-    if (query.isOwnSelected) {
+    if (query.showOwnSelective) {
       const userSelective = await this.userService.getSelectiveDisciplines(userId);
-      await filterAsync(groupEvents, async (event) => {
+      groupEvents = await filterAsync(groupEvents, async (event) => {
         const lesson = event.lessons[0];
         const discipline = await this.disciplineRepository.findById(lesson.disciplineType.disciplineId);
 
