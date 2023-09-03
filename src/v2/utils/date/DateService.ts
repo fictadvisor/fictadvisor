@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
 import { DataNotFoundException } from '../exceptions/DataNotFoundException';
 import { DataMissingException } from '../exceptions/DataMissingException';
+import * as process from 'process';
 
 export const MINUTE = 1000 * 60;
 export const HOUR = MINUTE * 60;
@@ -25,6 +26,8 @@ export interface CurrentDay {
   week: number,
   day: number,
 }
+
+const TIME_DIFFERENCE = +process.env.TIME_DIFFERENCE;
 
 @Injectable()
 export class DateService {
@@ -129,6 +132,7 @@ export class DateService {
 
   getDatesOfCurrentWeek () {
     const currentDate = new Date();
+    currentDate.setHours(currentDate.getHours() + TIME_DIFFERENCE);
     currentDate.setHours(0, 0, 0, 0);
     const currentDay = currentDate.getDay() ? currentDate.getDay() : 7;
     const startOfWeek = new Date(currentDate.getTime() - (currentDay - 1) * DAY);
