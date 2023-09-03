@@ -6,6 +6,7 @@ import Divider from '@/components/common/ui/divider';
 import { DividerTextAlign } from '@/components/common/ui/divider/types';
 import { Input } from '@/components/common/ui/form';
 import { FieldSize } from '@/components/common/ui/form/common/types';
+import Checkbox from '@/components/common/ui/form/with-formik/checkbox';
 import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown';
 import FormikRadioGroup from '@/components/common/ui/form/with-formik/radio/FormikRadioGroup';
 import { Actions } from '@/components/pages/contract-page/components/Actions';
@@ -22,8 +23,6 @@ import {
   ExtendedContractBody,
   PassportType,
 } from '@/lib/api/contract/types/ContractBody';
-
-import { CheckBox } from '../../components/CheckBox';
 export interface ThirdStepProps {
   onNextStep: (data: ExtendedContractBody, last: boolean) => void;
   onPrevStep: (data: ExtendedContractBody) => void;
@@ -76,7 +75,7 @@ export const FourthStep: FC<ThirdStepProps> = ({
             <Input name="customer.firstName" placeholder="Тарас" label="Ім’я" />
           </Box>
           <Box sx={stylesMui.item}>
-            <CheckBox
+            <Checkbox
               name="helper.customerHasNoMiddleName"
               label="Немає по-батькові"
             />
@@ -162,7 +161,7 @@ export const FourthStep: FC<ThirdStepProps> = ({
             />
           </Box>
           <Box sx={stylesMui.item}>
-            <CheckBox
+            <Checkbox
               name="helper.customerHasNoCode"
               label="Відмова від РНОКПП"
             />

@@ -5,7 +5,7 @@ import { Form, Formik, FormikValues } from 'formik';
 
 import Button from '@/components/common/ui/button-mui';
 import { ButtonSize } from '@/components/common/ui/button-mui/types';
-import { Checkbox } from '@/components/common/ui/form';
+import Checkbox from '@/components/common/ui/form/with-formik/checkbox';
 import useAuthentication from '@/hooks/use-authentication';
 import UserAPI from '@/lib/api/user/UserAPI';
 

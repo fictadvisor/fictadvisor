@@ -1,3 +1,7 @@
+import { ReactNode } from 'react';
+import { Autocomplete } from '@mui/material';
+import { SxProps, Theme } from '@mui/material/styles';
+
 import { FieldSize } from '@/components/common/ui/form/common/types';
 import { TagProps } from '@/components/common/ui/tag/types';
 
@@ -26,6 +30,11 @@ export interface DropdownProps {
   disableClearable?: boolean;
   value: string;
   onChange: (value: string) => void;
+  onInputChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   touched?: boolean;
   error?: string;
+  icon?: ReactNode;
+  hasPopup?: boolean;
+  inputSx?: SxProps<Theme>;
+  dropdownSx?: SxProps<Theme>;
 }

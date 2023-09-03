@@ -8,9 +8,9 @@ import Divider from '@/components/common/ui/divider';
 import { DividerTextAlign } from '@/components/common/ui/divider/types';
 import { FieldSize } from '@/components/common/ui/form/common/types';
 import Input from '@/components/common/ui/form/input';
+import Checkbox from '@/components/common/ui/form/with-formik/checkbox';
 import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown';
 import FormikRadioGroup from '@/components/common/ui/form/with-formik/radio/FormikRadioGroup';
-import { CheckBox } from '@/components/pages/contract-page/components/CheckBox';
 import {
   initialValues,
   IPeduPrograms,
@@ -159,7 +159,7 @@ const PriorityPage: FC = () => {
             <Box sx={styles.item}>
               <Input name="lastName" placeholder="Шевченко" label="Прізвище" />
               <Input name="firstName" placeholder="Тарас" label="Ім'я" />
-              <CheckBox name="noMiddleName" label="Немає по-батькові" />
+              <Checkbox name="noMiddleName" label="Немає по-батькові" />
               {values?.noMiddleName ? (
                 <Input
                   resetOnDisabled
@@ -191,7 +191,7 @@ const PriorityPage: FC = () => {
               label="Електронна пошта вступника"
               clearOnUnmount
             />
-            <CheckBox
+            <Checkbox
               name="isToAdmission"
               label="Формую пріоритетку в корпусі"
             />
@@ -214,12 +214,10 @@ const PriorityPage: FC = () => {
             )}
 
             <Box sx={styles.item}>
-              <CheckBox
+              <Checkbox
                 name="isForcePushed"
                 label="Надіслати примусово (НЕ НАТИСКАТИ)"
-                onClick={() =>
-                  setIsForcePushed(!form?.current?.values.isForcePushed)
-                }
+                onChange={(_, checked) => setIsForcePushed(checked)}
               />
             </Box>
             {values?.isForcePushed && (

@@ -28,7 +28,7 @@ const Progress: FC<ProgressProps> = ({
         value={100}
         size={size}
         color={color}
-        sx={styles.progressBack}
+        sx={mergeSx(styles.progressBack, sx)}
         thickness={4.3}
       />
       <CircularProgress

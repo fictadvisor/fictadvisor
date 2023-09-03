@@ -1,6 +1,5 @@
 import { Fullname } from '@/types/contract';
-
-import { PartialBy } from './utils';
+import { PartialBy } from '@/types/utils/PartialBy';
 
 export interface PersonalData extends Fullname {
   passportSeries?: string;

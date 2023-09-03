@@ -6,8 +6,8 @@ import { useRouter } from 'next/router';
 import Button from '@/components/common/ui/button-mui';
 import { ButtonSize } from '@/components/common/ui/button-mui/types';
 import { Input, InputType } from '@/components/common/ui/form';
-import Checkbox from '@/components/common/ui/form/checkbox';
 import { FieldSize } from '@/components/common/ui/form/common/types';
+import Checkbox from '@/components/common/ui/form/with-formik/checkbox';
 import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown';
 import { RegisterFormFields } from '@/components/pages/register/register-page/components/register-form/types';
 import {

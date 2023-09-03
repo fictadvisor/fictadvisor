@@ -20,6 +20,10 @@ export const mainLinks = [
     link: '/subjects',
     text: 'Предмети',
   },
+  {
+    link: '/schedule',
+    text: 'Розклад',
+  },
 ];
 
 export const supportLinks = [

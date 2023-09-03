@@ -1,7 +1,9 @@
 import { AddStudentsByMailBody } from '@/lib/api/group/types/AddStudentsByMailBody';
 import { AddStudentsByMailResponse } from '@/lib/api/group/types/AddStudentsByMailResponse';
 import { GetAllResponse } from '@/lib/api/group/types/GetAllResponse';
+import { GetGroupDisciplines } from '@/lib/api/group/types/GetGroupDisciplines';
 import { GetGroupStudentResponse } from '@/lib/api/group/types/GetGroupStudentsResponse';
+import { GetDisciplinesWithTeachers } from '@/lib/api/group/types/GetGroupTeachers';
 import { GetPendingStudentsResponse } from '@/lib/api/group/types/GetPendingStudentsResponse';
 import { UpdateStudentRoleBody } from '@/lib/api/group/types/UpdateStudentRoleBody';
 import { VerifyStudentBody } from '@/lib/api/group/types/VerifyStudentBody';
@@ -69,6 +71,27 @@ class GroupAPI {
       body,
       getAuthorizationHeader(),
     );
+    return data;
+  }
+
+  async getDisciplines(groupId: string, semester?: string, year?: string) {
+    const { data } = await client.get<GetGroupDisciplines>(
+      `/groups/${groupId}/disciplines`,
+      {
+        params: { year, semester },
+        ...getAuthorizationHeader(),
+      },
+    );
+
+    return data;
+  }
+
+  async getDisciplineTeachers(groupId: string) {
+    const { data } = await client.get<GetDisciplinesWithTeachers>(
+      `/groups/${groupId}/disciplineTeachers`,
+      getAuthorizationHeader(),
+    );
+
     return data;
   }
 }

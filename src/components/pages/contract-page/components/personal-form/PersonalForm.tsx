@@ -34,7 +34,7 @@ export const PersonalForm: FC<{
   );
 
   const handleNextStep = async (data: ExtendedContractBody, final = false) => {
-    console.log(step);
+    console.log(data);
 
     if (!final) setData(prevState => ({ ...prevState, ...data }));
 

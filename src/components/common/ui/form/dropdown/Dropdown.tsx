@@ -1,7 +1,7 @@
 import { FC, SyntheticEvent } from 'react';
 import { useMemo, useState } from 'react';
 import { ChevronDownIcon } from '@heroicons/react/24/solid';
-import { Box, Typography } from '@mui/material';
+import { Box, InputAdornment, Typography } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 
@@ -28,9 +28,14 @@ const Dropdown: FC<DropdownProps> = ({
   isDisabled = false,
   disableClearable = false,
   onChange = () => {},
+  onInputChange = () => {},
   value,
   touched,
   error,
+  icon,
+  hasPopup = true,
+  inputSx,
+  dropdownSx,
 }) => {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -56,7 +61,7 @@ const Dropdown: FC<DropdownProps> = ({
         width: width || '100%',
       }}
     >
-      <Box sx={styles.dropdown}>
+      <Box sx={dropdownSx ?? styles.dropdown}>
         <Autocomplete
           disableClearable={disableClearable}
           value={selectedValue}
@@ -67,6 +72,9 @@ const Dropdown: FC<DropdownProps> = ({
           }}
           onBlur={() => {
             setIsFocused(false);
+            onInputChange({
+              target: { value: '' },
+            } as React.ChangeEvent<HTMLInputElement>);
           }}
           fullWidth
           disablePortal
@@ -76,9 +84,16 @@ const Dropdown: FC<DropdownProps> = ({
             <TextField
               {...params}
               label={label}
-              sx={styles.input(dropdownState, size)}
+              sx={inputSx ?? styles.input(dropdownState, size)}
               placeholder={placeholder}
               disabled={isDisabled}
+              onChange={onInputChange}
+              InputProps={{
+                ...params.InputProps,
+                startAdornment: (
+                  <InputAdornment position="start">{icon}</InputAdornment>
+                ),
+              }}
             />
           )}
           getOptionLabel={value => {
@@ -88,7 +103,9 @@ const Dropdown: FC<DropdownProps> = ({
             popper: popperProps,
           }}
           popupIcon={
-            <ChevronDownIcon width={24} height={24} strokeWidth={1.5} />
+            hasPopup && (
+              <ChevronDownIcon width={24} height={24} strokeWidth={1.5} />
+            )
           }
           noOptionsText={noOptionsText}
           renderOption={(props, option: DropDownOption) => (

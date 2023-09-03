@@ -69,7 +69,11 @@ const PersonalTeacherSubjectPage = () => {
     TeachersPageTabs.GENERAL,
   );
 
-  const handleChange = useTabState<TeachersPageTabs>({ tab, router, setIndex });
+  const handleChange = useTabState({
+    tab,
+    router,
+    setIndex,
+  });
 
   if (!teacherInfo) return null;
 
