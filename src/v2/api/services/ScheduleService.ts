@@ -14,7 +14,7 @@ import { InvalidDateException } from '../../utils/exceptions/InvalidDateExceptio
 import { ObjectIsRequiredException } from '../../utils/exceptions/ObjectIsRequiredException';
 import { DisciplineTeacherRoleRepository } from '../../database/repositories/DisciplineTeacherRoleRepository';
 import { filterAsync, every, find, some } from '../../utils/ArrayUtil';
-import { DbDiscipline } from '../../database/entities/DbDiscipline';
+import { DbDiscipline, DbDiscipline_DisciplineTeacher } from '../../database/entities/DbDiscipline';
 import { InvalidWeekException } from '../../utils/exceptions/InvalidWeekException';
 import { UserService } from './UserService';
 import { EventFiltrationDTO } from '../dtos/EventFiltrationDTO';
@@ -387,6 +387,14 @@ export class ScheduleService {
       startTime: new Date(startOfWeek),
     };
   }
+  
+  private async removeTeachers (teachers: DbDiscipline_DisciplineTeacher[], disciplineTypeId: string) {
+    for (const teacher of teachers) {
+      if (every(teacher.roles, 'disciplineTypeId', disciplineTypeId)) {
+        await this.disciplineTeacherRepository.deleteById(teacher.id);
+      }
+    }
+  }
 
   async deleteEvent (id: string): Promise<{ event: DbEvent, discipline?: DbDiscipline }> {
     const event = await this.eventRepository.deleteById(id);
@@ -404,11 +412,7 @@ export class ScheduleService {
       const discipline = await this.disciplineRepository.findById(lesson.disciplineType.disciplineId);
 
       if (!target) {
-        for (const teacher of discipline.disciplineTeachers) {
-          if (every(teacher.roles, 'disciplineTypeId', lesson.disciplineTypeId)) {
-            await this.disciplineTeacherRepository.deleteById(teacher.id);
-          }
-        }
+        await this.removeTeachers(discipline.disciplineTeachers, lesson.disciplineTypeId);
         await this.disciplineRepository.updateById(discipline.id, {
           disciplineTypes: {
             delete: {
@@ -631,6 +635,9 @@ export class ScheduleService {
       });
       disciplineType = find(discipline.disciplineTypes, 'name', newType);
     }
+
+    const removedTeachers = discipline.disciplineTeachers.filter(({ teacherId }) => !teachers.includes(teacherId));
+    await this.removeTeachers(removedTeachers, disciplineType.id);
 
     for (const teacherId of teachers) {
       const role = TeacherRoleAdapter[disciplineType.name];
