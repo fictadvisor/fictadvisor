@@ -156,7 +156,7 @@ export class ScheduleService {
       const { startWeek } = await this.setWeekTime(event, week);
 
       const eventInfoIndex = (week - startWeek) / (event.period === Period.EVERY_FORTNIGHT ? 2 : 1);
-      event.eventInfo[0] = event.eventInfo[eventInfoIndex];
+      event.eventInfo[0] = event.eventInfo.find((info) => info.number === eventInfoIndex);
     }
 
     const discipline = await this.getEventDiscipline(event.id);
@@ -459,11 +459,9 @@ export class ScheduleService {
       startTime.setMinutes(durationTime.startTime.getMinutes());
     }
 
-    const endTime = period === Period.NO_PERIOD ? durationTime.endTime : event.endTime;
-    if (durationTime.endTime && period !== Period.NO_PERIOD) {
-      endTime.setHours(durationTime.endTime.getHours());
-      endTime.setMinutes(durationTime.endTime.getMinutes());
-    }
+    const endTime = period === Period.NO_PERIOD
+      ? durationTime.endTime
+      : await this.getLastEndDate(durationTime.endTime, period);
 
     const eventInfoForUpdate = await this.getEventInfoForUpdate(period, startTime, endTime, week, eventInfo, event);
 
