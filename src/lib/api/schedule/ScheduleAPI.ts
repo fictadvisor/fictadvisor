@@ -26,7 +26,7 @@ class ScheduleAPI {
   async getEventsAuthorized(
     groupId: string,
     week: number,
-    isOwnSelected: boolean,
+    showOwnSelective: boolean,
     addLecture = true,
     addLaboratory = true,
     addPractice = true,
@@ -38,7 +38,7 @@ class ScheduleAPI {
         ...getAuthorizationHeader(),
         params: {
           week,
-          isOwnSelected,
+          showOwnSelective,
           addLecture,
           addLaboratory,
           addPractice,
