@@ -365,14 +365,27 @@ export class ScheduleService {
     let groupEvents = await this.getAllGroupEvents(groupId, week, query);
 
     if (query.showOwnSelective) {
-      const userSelective = await this.userService.getSelectiveDisciplines(userId);
-      groupEvents = await filterAsync(groupEvents, async (event) => {
-        const lesson = event.lessons[0];
-        const discipline = await this.disciplineRepository.findById(lesson.disciplineType.disciplineId);
+      const disciplines = await this.disciplineRepository.findMany({
+        where: {
+          groupId: user.group.id,
+          OR: [
+            {
+              isSelective: false,
+            }, {
+              selectiveDisciplines: {
+                some: {
+                  studentId: userId,
+                },
+              },
+            },
+          ],
+        },
+      });
 
-        if (!discipline.isSelective) return true;
-
-        return some(userSelective, 'id', lesson.disciplineType.disciplineId);
+      groupEvents = groupEvents.filter((event) => {
+        const disciplineId = event.lessons[0]?.disciplineType.disciplineId;
+        if (!disciplineId) return true;
+        return some(disciplines, 'id', disciplineId);
       });
     }
 

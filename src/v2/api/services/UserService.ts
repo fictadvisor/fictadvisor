@@ -255,6 +255,12 @@ export class UserService {
 
   async getUser (userId: string) {
     const student = await this.studentRepository.findById(userId);
+
+    if (!student) {
+      const caller = new Error().stack.split('\n')[2].trim();
+      console.log(userId, caller);
+    }
+
     return this.studentMapper.getStudent(student);
   }
 
