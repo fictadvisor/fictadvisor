@@ -31,6 +31,7 @@ import { ExcessiveSelectiveDisciplinesException } from '../../utils/exceptions/E
 import { checkIfArrayIsUnique } from '../../utils/ArrayUtil';
 import { AlreadySelectedException } from '../../utils/exceptions/AlreadySelectedException';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
+import { TelegramAPI } from '../../telegram/TelegramAPI';
 
 type SortedDisciplines = {
   year: number;
@@ -56,6 +57,7 @@ export class UserService {
     private studentMapper: StudentMapper,
     private disciplineMapper: DisciplineMapper,
     private dateService: DateService,
+    private telegramAPI: TelegramAPI,
   ) {}
 
   async createSuperhero (id: string, body: CreateSuperheroDTO) {
@@ -307,7 +309,7 @@ export class UserService {
       for (const parsedRow of selectiveFile.split(/\r\n/g)) {
         const [,, subjectName,, semester,,,,, studentName] = parsedRow.split(';');
         if (!studentName?.startsWith(name)) continue;
-        const { id: disciplineId } = await this.disciplineRepository.find({
+        const discipline = await this.disciplineRepository.find({
           group: {
             code,
           },
@@ -319,17 +321,22 @@ export class UserService {
           isSelective: true,
         });
 
+        if (!discipline) {
+          await this.telegramAPI.sendMessage(`Selective discipline is not found: group: ${code}; fullName: ${name}; subject: ${subjectName}`);
+          continue;
+        }
+
         await this.studentRepository.updateById(studentId, {
           selectiveDisciplines: {
             connectOrCreate: {
               where: {
                 disciplineId_studentId: {
-                  disciplineId,
+                  disciplineId: discipline.id,
                   studentId,
                 },
               },
               create: {
-                disciplineId,
+                disciplineId: discipline.id,
               },
             },
           },

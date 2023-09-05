@@ -20,6 +20,7 @@ import { AlreadySelectedException } from '../../utils/exceptions/AlreadySelected
 import { ExcessiveSelectiveDisciplinesException } from '../../utils/exceptions/ExcessiveSelectiveDisciplinesException';
 import { AlreadyRegisteredException } from '../../utils/exceptions/AlreadyRegisteredException';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
+import { TelegramAPI } from '../../telegram/TelegramAPI';
 
 describe('UserService', () => {
   let userService: UserService;
@@ -31,6 +32,7 @@ describe('UserService', () => {
       imports: [PrismaModule, MapperModule],
     }).useMocker((token) => {
       const tokens = [
+        TelegramAPI,
         StudentRepository,
         UserRepository,
         SuperheroRepository,

@@ -36,4 +36,10 @@ export class TelegramAPI {
   async verifyResponse (data:VerifyResponseDTO) {
     await this.client.post('/responses/broadcastPending', data);
   }
+
+  async sendMessage (text: string) {
+    await this.client.post('/broadcast/sendMessage', {
+      text,
+    });
+  }
 }
