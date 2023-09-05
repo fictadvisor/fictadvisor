@@ -159,6 +159,20 @@ export class UserService {
         groupId,
       },
     });
+
+    const studentSelective = await this.getSelective(studentId);
+    const newGroupSelective = await this.groupService.getSelectiveDisciplines(groupId);
+
+    await this.deleteStudentSelective(studentId);
+
+    for (const discipline of studentSelective) {
+      const exist = newGroupSelective.find((d) => d.subjectId === discipline.subjectId);
+
+      if (!exist) {
+        await this.createSelective(groupId, discipline);
+      }
+    }
+
     return this.studentRepository.updateById(studentId, {
       groupId,
       roles: {
@@ -172,6 +186,26 @@ export class UserService {
           roleId: nextRole.id,
         },
       },
+    });
+  }
+
+  async deleteStudentSelective (studentId: string) {
+    await this.studentRepository.updateById(studentId, {
+      selectiveDisciplines: {
+        deleteMany: {
+          studentId,
+        },
+      },
+    });
+  }
+
+  async createSelective (groupId: string, discipline: DbDiscipline) {
+    await this.disciplineRepository.create({
+      semester: discipline.semester,
+      year: discipline.year,
+      isSelective: true,
+      subjectId: discipline.subjectId,
+      groupId: groupId,
     });
   }
 
@@ -267,7 +301,7 @@ export class UserService {
   }
 
   async getUserByTelegramId (telegramId: bigint) {
-    return await this.studentRepository.find({
+    return this.studentRepository.find({
       user: {
         telegramId,
       },

@@ -111,6 +111,15 @@ export class GroupService {
     return this.disciplineMapper.getDisciplines(disciplines);
   }
 
+  async getSelectiveDisciplines (groupId: string) {
+    return this.disciplineRepository.findMany({
+      where: {
+        groupId,
+        isSelective: true,
+      },
+    });
+  }
+
   async addUnregistered (groupId: string, body: EmailDTO) {
     const users = [];
     for (const email of body.emails) {

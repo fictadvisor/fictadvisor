@@ -18,6 +18,14 @@ import { TelegramAPI } from '../telegram/TelegramAPI';
   controllers: [UserController, RoleController, GrantController],
   providers: [UserService, RoleService, GrantService, TelegramAPI],
   exports: [UserService, RoleService, GrantService],
-  imports: [ConfigurationModule, forwardRef(() => GroupModule), AccessModule, forwardRef(() => AuthModule), MapperModule, FileModule, DateModule],
+  imports: [
+    ConfigurationModule,
+    forwardRef(() => GroupModule),
+    AccessModule,
+    forwardRef(() => AuthModule),
+    MapperModule,
+    FileModule,
+    DateModule,
+  ],
 })
 export class UserModule {}
