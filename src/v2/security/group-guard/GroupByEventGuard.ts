@@ -2,6 +2,7 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Request } from 'express';
 import { GroupRepository } from '../../database/repositories/GroupRepository';
 import { RequestUtils } from '../../utils/RequestUtils';
+import { DataNotFoundException } from '../../utils/exceptions/DataNotFoundException';
 
 @Injectable()
 export class GroupByEventGuard implements CanActivate {
@@ -20,6 +21,7 @@ export class GroupByEventGuard implements CanActivate {
         },
       },
     });
+    if (!group) throw new DataNotFoundException();
     request.query.groupId = group.id;
     return true;
   }

@@ -513,7 +513,7 @@ export class ScheduleService {
       deleteMany: undefined,
     };
 
-    if (eventInfo) {
+    if (eventInfo !== undefined) {
 
       const { endOfWeek } = await this.dateService.getDatesOfWeek(week);
       const indexOfLesson = await this.getIndexOfLesson(week, endOfWeek, event);
