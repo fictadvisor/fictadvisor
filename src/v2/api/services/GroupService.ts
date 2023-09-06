@@ -26,25 +26,25 @@ const ROLE_LIST = [
     name: RoleName.CAPTAIN,
     weight: 100,
     grants: {
-      'groups.$groupId.*': true,
+      'groups.$groupId.*': { set: true, weight: 1 },
     },
   },
   {
     name: RoleName.MODERATOR,
     weight: 75,
     grants: {
-      'groups.$groupId.admin.switch': false,
-      'groups.$groupId.*': true,
+      'groups.$groupId.admin.switch': { set: false, weight: 2 },
+      'groups.$groupId.*': { set: true, weight: 1 },
     },
   },
   {
     name: RoleName.STUDENT,
     weight: 50,
     grants: {
-      'groups.$groupId.admin.switch': false,
-      'groups.$groupId.students.get': true,
-      'groups.$groupId.students.*': false,
-      'groups.$groupId.*': true,
+      'groups.$groupId.admin.switch': { set: false, weight: 2 },
+      'groups.$groupId.students.get': { set: true, weight: 4 },
+      'groups.$groupId.students.*': { set: false, weight: 3 },
+      'groups.$groupId.*': { set: true, weight: 1 },
     },
   },
 ];
@@ -265,9 +265,9 @@ export class GroupService {
   async addPermissions (groupId: string) {
     for (const { grants, ...roles } of ROLE_LIST) {
 
-      const grantList = Object.entries(grants).map(([permission, set]) => ({
+      const grantList = Object.entries(grants).map(([permission, description]) => ({
         permission: permission.replace('$groupId', groupId),
-        set,
+        ...description,
       }));
 
       await this.roleRepository.create({
