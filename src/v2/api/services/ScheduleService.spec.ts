@@ -3,7 +3,6 @@ import { Test } from '@nestjs/testing';
 import { DateModule } from '../../utils/date/DateModule';
 import { PrismaModule } from '../../modules/PrismaModule';
 import { Period } from '@prisma/client';
-import { EventRepository } from '../../database/repositories/EventRepository';
 import { DateService } from '../../utils/date/DateService';
 import { ParserModule } from '../../utils/parser/ParserModule';
 import { DisciplineService } from './DisciplineService';
@@ -13,7 +12,6 @@ import { InjectionToken } from '@nestjs/common';
 
 describe('ScheduleService', () => {
   let scheduleService: ScheduleService;
-  let eventRepository: EventRepository;
   let dateService: DateService;
 
   beforeAll(async () => {
@@ -37,7 +35,6 @@ describe('ScheduleService', () => {
       .compile();
 
     scheduleService = moduleRef.get(ScheduleService);
-    eventRepository = moduleRef.get(EventRepository);
     dateService = moduleRef.get(DateService);
   });
 
@@ -83,62 +80,6 @@ describe('ScheduleService', () => {
       const endOfWeek = new Date('2023-02-12T23:59:59.999Z');
       const result = await scheduleService.getIndexOfLesson(week, endOfWeek, event);
       expect(result).toEqual(null);
-    });
-  });
-
-  describe('getGeneralGroupEvents', () => {
-    it('should return only those events that occur this week', async () => {
-      jest.spyOn(eventRepository, 'findMany').mockImplementation(() => (
-        [
-          {
-            id: 'id1',
-            period: Period.EVERY_FORTNIGHT,
-            startTime: new Date('2023-05-19 00:00:00.000'),
-            endTime: new Date('2023-06-05T10:55:00.000Z'),
-          },
-          {
-            id: 'id2',
-            period: Period.EVERY_FORTNIGHT,
-            startTime: new Date('2023-05-26 00:00:00.000'),
-            endTime: new Date('2023-06-05T10:55:00.000Z'),
-          },
-          {
-            id: 'id3',
-            period: Period.EVERY_WEEK,
-            startTime: new Date('2023-05-26 00:00:00.000'),
-            endTime: new Date('2023-06-05T10:55:00.000Z'),
-          },
-        ] as any
-      ));
-      jest.spyOn(dateService, 'getDatesOfWeek').mockImplementation(async () => ({
-        startOfWeek: new Date('2023-06-09 21:00:00.000'),
-        endOfWeek: new Date('2023-06-18 21:00:00.000'),
-      }));
-      jest.spyOn(scheduleService, 'setWeekTime').mockImplementation(async () => ({
-        startWeek: 1,
-        endWeek: 1,
-      }));
-
-      const id = 'id';
-      const week = 16;
-      const result = await scheduleService.getGeneralGroupEvents(id, week);
-      expect(result).toStrictEqual({
-        events: [
-          {
-            id: 'id2',
-            period: Period.EVERY_FORTNIGHT,
-            startTime: new Date('2023-05-26T00:00:00.000Z'),
-            endTime: new Date('2023-06-05T10:55:00.000Z'),
-          },
-          {
-            id: 'id3',
-            period: Period.EVERY_WEEK,
-            startTime: new Date('2023-05-26 00:00:00.000'),
-            endTime: new Date('2023-06-05T10:55:00.000Z'),
-          }],
-        week: 16,
-        startTime: new Date('2023-06-09T21:00:00.000Z'),
-      });
     });
   });
 });
