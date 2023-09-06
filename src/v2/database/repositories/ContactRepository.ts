@@ -25,11 +25,11 @@ export class ContactRepository {
     });
   }
 
-  async getContact (entityId: string, name: string) {
+  async getContact (entityId: string, id: string) {
     return this.prisma.contact.findFirst({
       where: {
+        id,
         entityId,
-        name,
       },
       select: {
         id: true,
@@ -48,13 +48,13 @@ export class ContactRepository {
 
   async updateContact (
     entityId: string,
-    name: string,
+    id: string,
     data: UpdateContactData,
   ) {
     return this.prisma.contact.updateMany({
       where: {
+        id,
         entityId,
-        name,
       },
       data,
     });
@@ -62,12 +62,12 @@ export class ContactRepository {
 
   async deleteContact (
     entityId: string,
-    name: string,
+    id: string,
   ) {
     return this.prisma.contact.deleteMany({
       where: {
+        id,
         entityId,
-        name,
       },
     });
   }

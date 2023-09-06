@@ -269,13 +269,13 @@ export class UserService {
     });
   }
 
-  async updateContact (userId: string, name: string, data: UpdateContactDTO) {
-    await this.contactRepository.updateContact(userId, name, data);
-    return this.contactRepository.getContact(userId, name);
+  async updateContact (userId: string, contactId: string, data: UpdateContactDTO) {
+    await this.contactRepository.updateContact(userId, contactId, data);
+    return this.contactRepository.getContact(userId, contactId);
   }
 
-  async deleteContact (userId: string, name: string) {
-    await this.contactRepository.deleteContact(userId, name);
+  async deleteContact (userId: string, contactId: string) {
+    await this.contactRepository.deleteContact(userId, contactId);
   }
 
   async deleteStudent (userId: string) {

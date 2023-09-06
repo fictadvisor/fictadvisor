@@ -51,7 +51,7 @@ import { ApiImplicitFile } from '@nestjs/swagger/dist/decorators/api-implicit-fi
 import { SelectiveDisciplinesPipe } from '../pipes/SelectiveDisciplinesPipe';
 import { AttachSelectiveDisciplinesDTO } from '../dtos/AttachSelectiveDisciplinesDTO';
 import { UserByTelegramIdPipe } from '../pipes/UserByTelegramIdPipe';
-
+import { ContactResponse } from '../responses/ContactResponse';
 @ApiTags('User')
 @Controller({
   version: '2',
@@ -195,21 +195,80 @@ export class UserController {
     return this.userService.createContact(userId, body);
   }
 
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: ContactResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException:
+      User with such id is not found
+      Contact with such id is not found
+      
+    InvalidBodyException:
+      Display name is too long (max: 100)
+      Link is too long (max: 200)
+      Link contains wrong symbols (ASCII only)`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @ApiParam({
+    name: 'userId',
+    type: String,
+  })
+  @ApiParam({
+    name: 'contactId',
+    type: String,
+  })
   @Access(PERMISSION.USERS_$USERID_CONTACTS_UPDATE)
-  @Patch('/:userId/contacts/:name')
+  @Patch('/:userId/contacts/:contactId')
   updateContact (
     @Param(ContactByUserIdPipe) params,
     @Body() body: UpdateContactDTO,
   ) {
-    return this.userService.updateContact(params.userId, params.name, body);
+    return this.userService.updateContact(params.userId, params.contactId, body);
   }
 
+  @ApiBearerAuth()
+  @ApiOkResponse()
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException:
+      User with such id is not found
+      Contact with such id is not found`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @ApiParam({
+    name: 'userId',
+    type: String,
+  })
+  @ApiParam({
+    name: 'contactId',
+    type: String,
+  })
   @Access(PERMISSION.USERS_$USERID_CONTACTS_DELETE)
-  @Delete('/:userId/contacts/:name')
+  @Delete('/:userId/contacts/:contactId')
   deleteContact (
     @Param(ContactByUserIdPipe) params,
   ) {
-    return this.userService.deleteContact(params.userId, params.name);
+    return this.userService.deleteContact(params.userId, params.contactId);
   }
 
   @Access(PERMISSION.STUDENTS_DELETE)
