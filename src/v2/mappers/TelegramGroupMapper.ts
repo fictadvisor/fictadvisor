@@ -16,4 +16,13 @@ export class TelegramGroupMapper {
       telegramGroups: telegramGroups.map((telegramGroup) => this.getTelegramGroup(telegramGroup)),
     };
   }
+
+  getGroupsByTelegramId (telegramGroups: DbTelegramGroup[]) {
+    return {
+      telegramGroups: telegramGroups.map((telegramGroup) => ({
+        source: telegramGroup.source,
+        group: telegramGroup.group,
+      })),
+    };
+  }
 }

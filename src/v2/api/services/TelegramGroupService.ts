@@ -39,4 +39,8 @@ export class TelegramGroupService {
     }
     return telegramGroups;
   }
+
+  async getGroupByTelegramId (telegramId: bigint) {
+    return this.telegramGroupRepository.findByTelegramId(telegramId);
+  }
 }
