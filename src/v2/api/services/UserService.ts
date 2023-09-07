@@ -154,7 +154,7 @@ export class UserService {
   async changeGroup (studentId: string, groupId: string) {
     const prevRole = await this.getGroupRole(studentId);
     const nextRole = await this.roleRepository.find({
-      name: prevRole.name,
+      name: RoleName.STUDENT,
       groupRole: {
         groupId,
       },
@@ -291,13 +291,10 @@ export class UserService {
 
   async getUser (userId: string) {
     const student = await this.studentRepository.findById(userId);
+    if (student) return this.studentMapper.getStudent(student);
+    const caller = new Error().stack;
+    await this.telegramAPI.sendMessage(`getUser error:\n ${caller}`);
 
-    if (!student) {
-      const caller = new Error().stack.split('\n')[2].trim();
-      console.log(userId, caller);
-    }
-
-    return this.studentMapper.getStudent(student);
   }
 
   async getUserByTelegramId (telegramId: bigint) {

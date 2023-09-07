@@ -113,6 +113,7 @@ describe('PermissionService', () => {
       const userId = 'userWithAllGroupsPermissionsId';
       const values = {
         groupId: 'testGroupId',
+        userId,
       };
 
       const permissions: PERMISSION[] = [PERMISSION.USERS_$USERID_GET, PERMISSION.GROUPS_$GROUPID_CAPTAIN_GET];
@@ -130,6 +131,7 @@ describe('PermissionService', () => {
       const userId = 'blockedUserId';
       const values = {
         groupId: 'testGroupId',
+        userId,
       };
 
       const permissions: PERMISSION[] = [PERMISSION.USERS_$USERID_GET, PERMISSION.GROUPS_$GROUPID_CAPTAIN_GET];

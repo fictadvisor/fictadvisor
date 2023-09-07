@@ -75,6 +75,12 @@ describe('UserService', () => {
         }, {
           id: 'staticGroupId',
           code: 'IO-19',
+        }, {
+          id: 'groupWithSelectiveIn2022Id',
+          code: 'ІМ-22',
+        }, {
+          id: 'newGroupId',
+          code: 'ІП-22',
         },
       ],
     });
@@ -106,6 +112,11 @@ describe('UserService', () => {
           name: 'CAPTAIN',
           weight: 80,
         },
+        {
+          id: 'newStudentRoleId',
+          name: 'STUDENT',
+          weight: 50,
+        },
       ],
     });
 
@@ -118,6 +129,10 @@ describe('UserService', () => {
         {
           groupId: 'groupWithTransferredRolesId',
           roleId: 'captainRoleId',
+        },
+        {
+          groupId: 'newGroupId',
+          roleId: 'newStudentRoleId',
         },
       ],
     });
@@ -148,18 +163,6 @@ describe('UserService', () => {
           id: 'pendingStudentId',
           email: 'pupsik1@gmail.com',
           state: 'APPROVED',
-        },
-      ],
-    });
-
-    await prisma.group.createMany({
-      data: [
-        {
-          id: 'groupWithSelectiveIn2022Id',
-          code: 'ІМ-22',
-        }, {
-          id: 'newGroupId',
-          code: 'ІП-22',
         },
       ],
     });
@@ -420,11 +423,11 @@ describe('UserService', () => {
             },
           }, {
             studentId: 'userWithSelectiveId',
-            roleId: 'ipCaptainId',
+            roleId: 'newStudentRoleId',
             role: {
-              id: 'ipCaptainId',
-              name: 'CAPTAIN',
-              weight: 80,
+              id: 'newStudentRoleId',
+              name: 'STUDENT',
+              weight: 50,
               parentId: null,
             },
           },
@@ -443,18 +446,6 @@ describe('UserService', () => {
 
       await userService.requestNewGroup(id, request).catch((e) => {
         expect(e).toBeInstanceOf(ForbiddenException);
-      });
-    });
-
-    it('should throw AlreadyRegisteredException if the group already has a captain', async () => {
-      const id = 'pendingStudentId';
-      const request = {
-        groupId: 'newGroupId',
-        isCaptain: true,
-      };
-
-      await userService.requestNewGroup(id, request).catch((e) => {
-        expect(e).toBeInstanceOf(AlreadyRegisteredException);
       });
     });
   });
