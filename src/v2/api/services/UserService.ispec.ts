@@ -18,8 +18,6 @@ import { DateService } from '../../utils/date/DateService';
 import { NotBelongToGroupException } from '../../utils/exceptions/NotBelongToGroupException';
 import { AlreadySelectedException } from '../../utils/exceptions/AlreadySelectedException';
 import { ExcessiveSelectiveDisciplinesException } from '../../utils/exceptions/ExcessiveSelectiveDisciplinesException';
-import { AlreadyRegisteredException } from '../../utils/exceptions/AlreadyRegisteredException';
-import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
 import { TelegramAPI } from '../../telegram/TelegramAPI';
 
 describe('UserService', () => {
@@ -50,7 +48,6 @@ describe('UserService', () => {
 
     userService = moduleRef.get(UserService);
     prisma = moduleRef.get(PrismaService);
-
 
     await prisma.user.createMany({
       data: [
@@ -99,7 +96,6 @@ describe('UserService', () => {
         },
       ],
     });
-
 
     await prisma.role.createMany({
       data: [
@@ -318,6 +314,26 @@ describe('UserService', () => {
     });
   });
 
+  describe('getSelectiveBySemesters', () => {
+    it('should return correct object if student has selective in only one semester', async () => {
+      const userId = 'userWithSelectiveId';
+      const result = await userService.getSelectiveBySemesters(userId);
+      expect(result).toStrictEqual([
+        {
+          year: 2022,
+          semester: 1,
+          amount: 3,
+          disciplines: [],
+        }, {
+          year: 2022,
+          semester: 2,
+          amount: 1,
+          disciplines: ['selective2'],
+        },
+      ]);
+    });
+  });
+
   describe('getRemainingSelective', () => {
     it('should return empty obj for reason all needed disciplines taken', async () => {
       const remainingDisciplines = await userService.getRemainingSelective(
@@ -446,51 +462,6 @@ describe('UserService', () => {
 
       await userService.requestNewGroup(id, request).catch((e) => {
         expect(e).toBeInstanceOf(ForbiddenException);
-      });
-    });
-  });
-
-
-  describe('transferRole', () => {
-    it('should transfer role from captain to student', async () => {
-      const captainUserId = 'transferredCaptainId';
-      const studentId = 'transferredStudentId';
-
-      await userService.transferRole(captainUserId, studentId);
-
-      const captainUserRoles = await prisma.userRole.findMany({
-        where: {
-          studentId: captainUserId,
-        },
-      });
-
-      const studentUserRoles = await prisma.userRole.findMany({
-        where: {
-          studentId,
-        },
-      });
-
-      expect(captainUserRoles).toStrictEqual([
-        {
-          roleId: 'studentRoleId',
-          studentId: 'transferredCaptainId',
-        },
-      ]);
-
-      expect(studentUserRoles).toStrictEqual([
-        {
-          roleId: 'captainRoleId',
-          studentId: 'transferredStudentId',
-        },
-      ]);
-    });
-
-    it('should throw NoPermissionException if captain and student are not in the same group', async () => {
-      const captainUserId = 'transferredCaptainId';
-      const studentId = 'transferredStudentId';
-
-      await userService.transferRole(captainUserId, studentId).catch((e) => {
-        expect(e).toBeInstanceOf(NoPermissionException);
       });
     });
   });

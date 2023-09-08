@@ -32,6 +32,8 @@ export enum PERMISSION {
   GROUPS_$GROUPID_STUDENTS_REMOVE = 'groups.$groupId.students.remove',
   GROUPS_$GROUPID_STUDENTS_VERIFY = 'groups.$groupId.students.verify',
   GROUPS_$GROUPID_STUDENTS_UNVERIFIED_GET = 'groups.$groupId.students.unverified.get',
+  GROUPS_$GROUPID_TRANSFER = 'groups.$groupId.transfer',
+  GROUPS_CAPTAIN_SWITCH = 'groups.captain.switch',
 
   QUESTIONS_CREATE = 'questions.create',
   QUESTIONS_UPDATE = 'questions.update',
@@ -59,7 +61,6 @@ export enum PERMISSION {
   USERS_UPDATE = 'users.update',
   USERS_DELETE = 'users.delete',
   USERS_GROUPS_SWITCH = 'users.groups.switch',
-  USERS_$GROUPID_TRANSFER = 'users.$groupId.transfer',
   USERS_$USERID_GET = 'users.$userId.get',
   USERS_$USERID_UPDATE = 'users.$userId.update',
   USERS_$USERID_CONTACTS_CREATE = 'users.$userId.contacts.create',
@@ -74,7 +75,6 @@ export enum PERMISSION {
   USERS_$USERID_STUDENT_UPDATE = 'users.$userId.student.update',
   USERS_$USERID_TELEGRAM_LINK = 'users.$userId.telegram.link',
   USERS_$USERID_TEACHERS_$TEACHERID_DISCIPLINES_GET = 'users.$userId.teachers.$teacherId.disciplines.get',
-  USERS_CAPTAIN_SWITCH = 'users.captain.switch',
 
   TEACHERS_CREATE = 'teachers.create',
   TEACHERS_$TEACHERID_UPDATE = 'teachers.$teacherId.update',

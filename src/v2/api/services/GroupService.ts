@@ -20,6 +20,7 @@ import { StudentMapper } from '../../mappers/StudentMapper';
 import { DbGroup } from '../../database/entities/DbGroup';
 import { QuerySemesterDTO } from '../dtos/QuerySemesterDTO';
 import { DateService } from '../../utils/date/DateService';
+import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
 
 const ROLE_LIST = [
   {
@@ -284,4 +285,63 @@ export class GroupService {
     }
   }
 
+  async switchCaptain (groupId: string, studentId: string) {
+    const isStudentInGroup = await this.isStudentInGroup(groupId, studentId);
+    if (!isStudentInGroup) throw new NoPermissionException();
+    const { id: oldCaptainId } = await this.getCaptain(groupId);
+
+    const newCaptainRole = await this.roleRepository.find({
+      groupRole: {
+        groupId,
+      },
+      userRoles: {
+        some: {
+          studentId,
+        },
+      },
+    });
+
+    const oldCaptainRole = await this.roleRepository.find({
+      groupRole: {
+        groupId,
+      },
+      userRoles: {
+        some: {
+          studentId: oldCaptainId,
+        },
+      },
+    });
+
+    await this.roleRepository.updateById(newCaptainRole.id, {
+      userRoles: {
+        updateMany: {
+          where: {
+            studentId,
+          },
+          data: {
+            studentId: oldCaptainId,
+          },
+        },
+      },
+    });
+
+    await this.roleRepository.updateById(oldCaptainRole.id, {
+      userRoles: {
+        updateMany: {
+          where: {
+            studentId: oldCaptainId,
+          },
+          data: {
+            studentId,
+          },
+        },
+      },
+    });
+  }
+
+  private async isStudentInGroup (groupId: string, studentId: string) {
+    const student = await this.studentRepository.findById(studentId);
+    if (!student) throw new InvalidEntityIdException('User');
+    return student.groupId === groupId;
+  }
 }

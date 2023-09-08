@@ -29,6 +29,7 @@ import { ShortUsersResponse } from '../responses/UserResponse';
 import { QuerySemesterDTO } from '../dtos/QuerySemesterDTO';
 import { ShortDisciplinesResponse } from '../responses/DisciplineResponse';
 import { OrdinaryStudentResponse, StudentsResponse } from '../responses/StudentResponse';
+import { SwitchCaptainDTO } from '../dtos/SwitchCaptainDTO';
 
 @ApiTags('Groups')
 @Controller({
@@ -423,4 +424,57 @@ export class GroupController {
     return { students };
   }
 
+  @Access(PERMISSION.GROUPS_$GROUPID_TRANSFER)
+  @ApiBearerAuth()
+  @Post('/:groupId/transferCaptain')
+  @ApiOkResponse()
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException:
+      User with such id is not found
+      Group with such id is not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  async transferCaptain (
+    @Param('groupId', GroupByIdPipe) groupId: string,
+    @Body() { studentId }: SwitchCaptainDTO,
+  ) {
+    await this.groupService.switchCaptain(groupId, studentId);
+  }
+
+  @Access(PERMISSION.GROUPS_CAPTAIN_SWITCH)
+  @ApiBearerAuth()
+  @Post('/:groupId/switchCaptain')
+  @ApiOkResponse()
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException:
+      User with such id is not found
+      Group with such id is not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  async switchCaptain (
+    @Param('groupId', GroupByIdPipe) groupId: string,
+    @Body() { studentId }: SwitchCaptainDTO,
+  ) {
+    await this.groupService.switchCaptain(groupId, studentId);
+  }
 }

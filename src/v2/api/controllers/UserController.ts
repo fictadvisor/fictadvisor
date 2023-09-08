@@ -50,7 +50,6 @@ import { UserResponse } from '../responses/UserResponse';
 import { ApiImplicitFile } from '@nestjs/swagger/dist/decorators/api-implicit-file.decorator';
 import { SelectiveDisciplinesPipe } from '../pipes/SelectiveDisciplinesPipe';
 import { AttachSelectiveDisciplinesDTO } from '../dtos/AttachSelectiveDisciplinesDTO';
-import { TransferRoleDto } from '../dtos/TransferRoleDto';
 import { UserByTelegramIdPipe } from '../pipes/UserByTelegramIdPipe';
 
 @ApiTags('User')
@@ -384,54 +383,5 @@ export class UserController {
   ) {
     const student = await this.userService.changeGroup(userId, groupId);
     return this.studentMapper.updateStudent(student);
-  }
-
-  @Access(PERMISSION.USERS_$GROUPID_TRANSFER)
-  @Post('/:studentId/transfer')
-  @ApiOkResponse()
-  @ApiBadRequestResponse({
-    description: `
-                  InvalidEntityIdException: User with such id is not found
-                  InvalidBodyException: User id should not be empty
-                  InvalidBodyException: User id should be a string`,
-  })
-  @ApiForbiddenResponse({
-    description: `
-                  NotApprovedException: Student is not approved
-                  NoPermissionException: You do not have permission to perform this action`,
-  })
-  async transferRole (
-    @Param('studentId', UserByIdPipe, StudentPipe) studentId: string,
-    @Body() { captainUserId }: TransferRoleDto,
-  ) {
-    await this.userService.transferRole(captainUserId, studentId);
-  }
-
-  @Access(PERMISSION.USERS_CAPTAIN_SWITCH)
-  @Post('/:studentId/switchCaptain')
-  @ApiOkResponse()
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidEntityIdException:
-      User with such id is not found
-      
-    InvalidBodyException:
-      Captain id cannot be empty`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException:
-      You do not have permission to perform this action`,
-  })
-  async switchCaptain (
-    @Param('studentId', UserByIdPipe) studentId: string,
-    @Body() { captainUserId }: TransferRoleDto,
-  ) {
-    await this.userService.transferRole(captainUserId, studentId);
   }
 }
