@@ -19,7 +19,7 @@ import '@/styles/global-styles.scss';
 
 dayjs.extend(timezone);
 dayjs.extend(utc);
-dayjs.tz.setDefault('Europe/Kyiv');
+dayjs.tz.setDefault('Europe/Kiev');
 dayjs.locale({ ...uk, weekStart: 1 });
 
 const queryClient = new QueryClient();
