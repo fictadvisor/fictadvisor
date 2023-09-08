@@ -1,53 +1,57 @@
 import React from 'react';
-import { useMediaQuery } from '@mui/material';
-import cn from 'classnames';
+import { Avatar, Box, Typography, useMediaQuery } from '@mui/material';
 
-import styles from '@/components/common/ui/cards/teacher-card/TeacherCard.module.scss';
-import { DivProps } from '@/components/common/ui/cards/types';
+import { CardRoles } from '@/components/common/ui/cards/card-roles';
 import Rating from '@/components/common/ui/rating';
 import { RatingVariant } from '@/components/common/ui/rating/types';
 import theme from '@/styles/theme';
+import { TeacherRole } from '@/types/teacher';
+
+import * as styles from './TeacherCard.styles';
 
 type TeacherCardProps = {
   name: string;
-  avatar?: string;
   rating?: number;
+  roles?: TeacherRole[];
+  avatar?: string;
   disabled?: boolean;
-} & DivProps;
+  isSubjectCard?: boolean;
+};
 
 export const TeacherCard: React.FC<TeacherCardProps> = ({
   name,
+  roles = [],
   avatar,
   disabled,
   rating = 0,
-  ...rest
+  isSubjectCard = false,
 }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down('desktopSemiMedium'));
   return (
-    <div
-      className={cn(styles['teacher-card'], styles['teacher-card-effect'], {
-        [styles['card-disabled']]: disabled,
-      })}
-      {...rest}
+    <Box
+      sx={disabled ? styles.disabledCard : styles.teacherCard(isSubjectCard)}
     >
-      <div className={styles['teacher-card-shift']}>
-        <div className={styles['teacher-card-top-part']}>
-          <img
-            className={styles['teacher-card-avatar']}
+      <Box sx={styles.teacherCardShift(isSubjectCard)}>
+        <Box sx={styles.teacherCardTopPart}>
+          <Avatar
+            sx={styles.teacherCardAvatar(isSubjectCard)}
             src={avatar}
             alt="викладач"
           />
-          <div className={styles['teacher-card-top-part-rating']}>
+          <Box sx={styles.teacherCardTopPartRating}>
             {rating !== 0 && (
               <Rating
                 rating={rating}
                 variant={isMobile ? RatingVariant.SHORT : RatingVariant.LONG}
               />
             )}
-          </div>
-        </div>
-        <h4 className={styles['teacher-card-name']}>{name}</h4>
-      </div>
-    </div>
+          </Box>
+        </Box>
+        {isSubjectCard && <CardRoles roles={roles} />}
+        <Typography sx={styles.teacherCardName(isSubjectCard)}>
+          {name}
+        </Typography>
+      </Box>
+    </Box>
   );
 };

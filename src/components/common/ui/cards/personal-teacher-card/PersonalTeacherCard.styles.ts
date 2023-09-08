@@ -7,6 +7,7 @@ export const card: SxProps<Theme> = {
   width: '100%',
   gridTemplateRows: {
     mobile: 'auto 1fr auto auto auto',
+    mobileMedium: 'auto 0.5fr',
     desktopSemiMedium: 'auto 1fr 1fr auto auto',
   },
   gridTemplateColumns: {
@@ -46,7 +47,7 @@ export const image: SxProps<Theme> = {
   borderRadius: '50%',
 };
 
-export const nameAndRating = {
+export const nameAndRating = (isSubject: boolean): SxProps<Theme> => ({
   display: 'flex',
   minWidth: 'unset',
   width: {
@@ -66,12 +67,15 @@ export const nameAndRating = {
   padding: {
     mobile: '1px',
     desktopSemiMedium: '0 42px 24px 0',
+    ...(isSubject && {
+      desktopSemiMedium: '0 42px 0 0',
+    }),
   },
   gap: {
     mobile: '2px',
     mobileMedium: '8px',
   },
-};
+});
 
 export const name: SxProps<Theme> = {
   typography: {
@@ -80,7 +84,7 @@ export const name: SxProps<Theme> = {
   },
 };
 
-export const tags: SxProps<Theme> = {
+export const tags = (isSubject: boolean): SxProps<Theme> => ({
   gridColumnStart: {
     mobile: 1,
     mobileMedium: 2,
@@ -91,6 +95,10 @@ export const tags: SxProps<Theme> = {
   },
   gridRowStart: 2,
   gridRowEnd: 3,
+  ...(isSubject && {
+    gridRowStart: 3,
+    gridRowEnd: 4,
+  }),
   display: 'flex',
   flexDirection: 'row',
   height: 'fit-content',
@@ -104,7 +112,7 @@ export const tags: SxProps<Theme> = {
     mobileMedium: '14px 0 0 0',
     desktopSemiMedium: '0 42px 26px 0',
   },
-};
+});
 
 export const tag: SxProps<Theme> = {
   typography: 'body1',
@@ -176,38 +184,31 @@ export const contacts = (status: string) => ({
   gridColumnStart: 3,
   gridColumnEnd: 4,
   gridRowStart: 1,
-  ...(status === 'hidden' && {
-    position: 'relative',
-    width: 'fit-content',
-    gridRowEnd: 5,
-    height: '100%',
-    overflow: 'hidden',
-    padding: '12px 5% 12px 42px',
-    display: {
-      mobile: 'none',
-      desktopSemiMedium: 'flex',
-    },
-  }),
-  ...(status === 'shown' && {
-    width: 'fit-content',
-    height: 'fit-content',
-    paddingLeft: {
-      mobile: 'unset',
-      desktopSemiMedium: '42px',
-    },
-    borderRight: 'unset',
-    gridColumnStart: 1,
-    gridColumnEnd: 4,
-    gridRowStart: 5,
-    gridRowEnd: {
-      mobile: 6,
-      desktopSemiMedium: 4,
-    },
-    border: {
-      mobile: 'unset',
-      mobileMedium: 'none',
-    },
-  }),
+  gridRowEnd: 5,
+  position: 'relative',
+  paddingLeft: '42px',
+  width: 'fit-content',
+  [theme.breakpoints.down('desktopSemiMedium')]: {
+    ...(status === 'hidden' && {
+      height: '100%',
+      overflow: 'hidden',
+      padding: '12px 5% 12px 42px',
+      display: 'none',
+    }),
+    ...(status === 'shown' && {
+      height: 'fit-content',
+      paddingLeft: 'unset',
+      borderRight: 'unset',
+      gridColumnStart: 1,
+      gridColumnEnd: 4,
+      gridRowStart: 5,
+      gridRowEnd: 6,
+      border: {
+        mobile: 'unset',
+        mobileMedium: 'none',
+      },
+    }),
+  },
 });
 
 export const contactsItem: SxProps<Theme> = {
@@ -232,5 +233,30 @@ export const contactsItem: SxProps<Theme> = {
     width: '2px',
     backgroundColor: theme.palette.white['main'],
     color: theme.palette.white['main'],
+  },
+};
+
+export const subject: SxProps<Theme> = {
+  display: 'flex',
+  minWidth: 'unset',
+  width: '100%',
+  gridColumnStart: {
+    mobile: 1,
+    mobileMedium: 2,
+  },
+  gridColumnEnd: 3,
+  gridRowStart: 2,
+  gridRowEnd: 3,
+  flexDirection: 'column',
+  padding: {
+    mobile: '16px 42px 0 0',
+    desktopSemiMedium: '16px 42px 16px 0',
+  },
+};
+
+export const subjectName: SxProps<Theme> = {
+  typography: {
+    mobile: 'body2Bold',
+    desktopSemiMedium: 'h5Bold',
   },
 };

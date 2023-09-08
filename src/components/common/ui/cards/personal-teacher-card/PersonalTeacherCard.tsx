@@ -6,16 +6,29 @@ import Button from '@/components/common/ui/button-mui';
 import { ButtonVariant } from '@/components/common/ui/button-mui/types';
 import { CardRoles } from '@/components/common/ui/cards/card-roles';
 import Rating from '@/components/common/ui/rating';
-import Tag from '@/components/common/ui/tag';
-import { TagColor, TagSize } from '@/components/common/ui/tag/types';
-import { teacherContext } from '@/components/pages/personal-teacher-page/PersonalTeacherPage';
-import { Teacher, TeacherRole } from '@/types/teacher';
+import { teacherSubjectContext } from '@/components/pages/personal-teacher-subject-page/PersonalTeacherSubjectPage';
+import { Contact } from '@/types/contact';
+import { TeacherRole, TeacherSubject } from '@/types/teacher';
 
-import Contact from '../../../../pages/personal-teacher-page/contacts/Contact';
+import Contacts from '../../../../pages/personal-teacher-page/contacts/Contact';
 
 import * as styles from './PersonalTeacherCard.styles';
 
-const PersonalTeacherCard: FC<Teacher> = ({
+interface TeacherCard {
+  id: string;
+  roles: TeacherRole[];
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  avatar: string;
+  description: string;
+  rating: number;
+  contacts: Contact[];
+  subject?: TeacherSubject;
+  isSubjectCard?: boolean;
+}
+
+const PersonalTeacherCard: FC<TeacherCard> = ({
   roles,
   firstName,
   middleName,
@@ -24,10 +37,12 @@ const PersonalTeacherCard: FC<Teacher> = ({
   description,
   rating,
   contacts,
+  subject,
+  isSubjectCard = false,
 }) => {
   const [isContactsVisible, setContactsVisibility] = useState(false);
   const blockRef = useRef<HTMLDivElement>(null);
-  const { setFloatingCardShowed } = useContext(teacherContext);
+  const { setFloatingCardShowed } = useContext(teacherSubjectContext);
   const contactsStatus = isContactsVisible ? 'shown' : 'hidden';
   useEffect(() => {
     const handleScroll = () => {
@@ -48,17 +63,27 @@ const PersonalTeacherCard: FC<Teacher> = ({
       <Box sx={styles.photo}>
         <Box component="img" sx={styles.image} src={avatar} alt="photo" />
       </Box>
-      <Box sx={styles.nameAndRating}>
+      <Box sx={styles.nameAndRating(isSubjectCard)}>
         <Typography variant="h4" sx={styles.name}>
           {lastName + ' ' + firstName + ' ' + middleName}
         </Typography>
         {rating !== 0 && <Rating rating={rating / 20} />}
       </Box>
-
-      <Box sx={styles.tags}>
+      {subject && (
+        <Box sx={styles.subject}>
+          <Typography sx={styles.subjectName} variant="h5">
+            {subject.name}
+          </Typography>
+        </Box>
+      )}
+      <Box sx={styles.tags(isSubjectCard)}>
         <CardRoles roles={roles} />
       </Box>
-      <Box sx={styles.info}>{description}</Box>
+      {!isSubjectCard && (
+        <Box sx={styles.info}>
+          <Typography>{description}</Typography>
+        </Box>
+      )}
       {contacts.length !== 0 && (
         <Box sx={styles.contactsButton}>
           <Button
@@ -74,7 +99,7 @@ const PersonalTeacherCard: FC<Teacher> = ({
       <Box sx={styles.contacts(contactsStatus)}>
         {contacts.map((contact, index) => (
           <Box key={index} sx={styles.contactsItem}>
-            <Contact
+            <Contacts
               name={contact.name}
               displayName={contact.displayName}
               link={contact.link}

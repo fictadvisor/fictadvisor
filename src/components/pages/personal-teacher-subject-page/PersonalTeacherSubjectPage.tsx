@@ -9,7 +9,7 @@ import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
-import PersonalTeacherSubjectCard from '@/components/common/ui/cards/personal-teacher-subject-card';
+import PersonalTeacherCard from '@/components/common/ui/cards/personal-teacher-card';
 import Progress from '@/components/common/ui/progress';
 import { TeachersPageTabs } from '@/components/pages/personal-teacher-page/utils';
 import PersonalSubjectTeacherTabs from '@/components/pages/personal-teacher-subject-page/personal-subject-teacher-tabs';
@@ -112,7 +112,7 @@ const PersonalTeacherSubjectPage = () => {
                 ]}
               />
               <div className={styles['card-wrapper']}>
-                <PersonalTeacherSubjectCard {...teacher} />
+                <PersonalTeacherCard {...teacher} isSubjectCard={true} />
               </div>
               <div className={styles['tabs']}>
                 <PersonalSubjectTeacherTabs
