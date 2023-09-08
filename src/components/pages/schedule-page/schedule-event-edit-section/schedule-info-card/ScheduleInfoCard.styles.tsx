@@ -12,7 +12,9 @@ export const container = {
   display: 'flex',
   flexFlow: 'column nowrap',
   gap: '16px',
-  wordWrap: 'break-word',
+  '.MuiTypography-root': {
+    wordWrap: 'break-word',
+  },
 };
 
 export const titleContainer: SxProps<Theme> = {
