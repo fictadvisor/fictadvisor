@@ -12,6 +12,7 @@ export const container = {
   display: 'flex',
   flexFlow: 'column nowrap',
   gap: '16px',
+  wordWrap: 'break-word',
 };
 
 export const titleContainer: SxProps<Theme> = {
@@ -20,7 +21,6 @@ export const titleContainer: SxProps<Theme> = {
   alignItems: 'center',
   '& p.MuiTypography-root': {
     maxWidth: 'calc(100% - 90px)',
-    wordWrap: 'break-word',
   },
 };
 
@@ -46,8 +46,4 @@ export const infoContainer: SxProps<Theme> = {
     width: 'fit-content',
     height: 'fit-content',
   },
-};
-export const link: SxProps<Theme> = {
-  wordWrap: 'break-word',
-  maxWidth: '70%',
 };
