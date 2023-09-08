@@ -5,10 +5,7 @@ import Skeleton from '@mui/material/Skeleton';
 
 import Link from '@/components/common/ui/custom-link/CustomLink';
 import IconButton from '@/components/common/ui/icon-button-mui';
-import {
-  IconButtonColor,
-  IconButtonSize,
-} from '@/components/common/ui/icon-button-mui/types';
+import { IconButtonColor } from '@/components/common/ui/icon-button-mui/types';
 import { CloseButton } from '@/components/common/ui/icon-button-mui/variants';
 import { Tab, TabContext, TabList, TabPanel } from '@/components/common/ui/tab';
 import { TabTextPosition } from '@/components/common/ui/tab/tab/types';
@@ -31,7 +28,7 @@ const TagLabelMapper: Record<string, string> = {
   [TDiscipline.LABORATORY]: 'Лабораторна',
   [TDiscipline.CONSULTATION]: 'Консультація',
   [TDiscipline.PRACTICE]: 'Практика',
-  [TDiscipline.WORKOUT]: 'Тренування',
+  [TDiscipline.WORKOUT]: 'Відпрацювання',
   ['null']: 'Інша подія',
 };
 
@@ -69,7 +66,9 @@ const ScheduleInfoCard: FC<ScheduleInfoCardProps> = ({
         {loading ? (
           <Skeleton {...skeletonProps} width={350} height={50} />
         ) : (
-          <Typography variant="h5">{event?.name}</Typography>
+          <Typography variant="h5" paragraph>
+            {event?.name}
+          </Typography>
         )}
         <Box sx={{ display: 'flex' }}>
           {user.group?.role !== UserGroupRole.STUDENT && (
@@ -125,6 +124,7 @@ const ScheduleInfoCard: FC<ScheduleInfoCardProps> = ({
           <Skeleton {...skeletonProps} width={250} height={20} />
         ) : event?.url ? (
           <Link
+            sx={styles.link}
             href={event?.url as string}
             text={event?.url}
             target={'_blank'}

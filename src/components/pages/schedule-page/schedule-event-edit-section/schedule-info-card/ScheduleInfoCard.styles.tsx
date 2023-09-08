@@ -18,6 +18,10 @@ export const titleContainer: SxProps<Theme> = {
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
+  '& p.MuiTypography-root': {
+    maxWidth: 'calc(100% - 90px)',
+    wordWrap: 'break-word',
+  },
 };
 
 export const content: SxProps<Theme> = {
@@ -42,4 +46,8 @@ export const infoContainer: SxProps<Theme> = {
     width: 'fit-content',
     height: 'fit-content',
   },
+};
+export const link: SxProps<Theme> = {
+  wordWrap: 'break-word',
+  maxWidth: '70%',
 };

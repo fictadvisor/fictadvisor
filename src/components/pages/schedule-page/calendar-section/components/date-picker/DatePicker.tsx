@@ -19,7 +19,6 @@ export const DatePicker = () => {
       value={dayjs(chosenDay)}
       onChange={newValue => {
         if (newValue && semester) {
-          console.log(newValue.toDate());
           setChosenDay(newValue);
         }
       }}

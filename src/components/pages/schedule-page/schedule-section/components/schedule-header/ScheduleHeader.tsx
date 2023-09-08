@@ -62,11 +62,8 @@ const ScheduleHeader = () => {
 
   const updateWeek = (amount: number) => {
     const newWeek = week + amount;
-    console.log('newWeek', newWeek);
     if (newWeek < 1 || newWeek > MAX_WEEK_NUMBER) return;
-    console.log(
-      getLastDayOfAWeek(semester as GetCurrentSemester, newWeek).date(),
-    );
+
     setChosenDay(getLastDayOfAWeek(semester as GetCurrentSemester, newWeek));
   };
 

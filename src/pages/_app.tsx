@@ -4,25 +4,23 @@ import { ThemeProvider } from '@mui/system';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
+import uk from 'dayjs/locale/uk';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
-
-dayjs.extend(timezone);
-dayjs.extend(utc);
-
-dayjs.tz.setDefault('Europe/Kyiv');
-
 import { AppProps } from 'next/app';
 
 import AuthenticationProvider from '@/hooks/use-authentication/authentication-context';
 import ToastContextProvider from '@/hooks/use-toast/toast-context';
 import theme from '@/styles/theme';
 
-import 'dayjs/locale/uk';
-
 import '@/styles/reset.scss';
 import '@/styles/typography.scss';
 import '@/styles/global-styles.scss';
+
+dayjs.extend(timezone);
+dayjs.extend(utc);
+dayjs.tz.setDefault('Europe/Kyiv');
+dayjs.locale({ ...uk, weekStart: 1 });
 
 const queryClient = new QueryClient();
 
