@@ -13,6 +13,7 @@ export const content: SxProps<Theme> = {
   margin: { mobile: 'auto 30px' },
   maxWidth: '650px',
   height: 'fit-content',
+  zIndex: 11,
 };
 
 export const close: SxProps<Theme> = {

@@ -16,11 +16,10 @@ export const content: SxProps<Theme> = {
   maxWidth: '512px',
   height: 'fit-content',
   paddingTop: {
-    mobile: '103px',
-    mobileMedium: '206px',
+    mobile: '83px',
+    mobileMedium: '156px',
   },
   textAlign: 'center',
-  gap: '4px',
 };
 
 export const icon: SxProps<Theme> = {

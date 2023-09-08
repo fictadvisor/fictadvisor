@@ -12,6 +12,8 @@ type ErrorFromBackend = {
 const ErrorMapper: Record<string, string> = {
   NoPermissionException: 'У вас не вистачає прав на таку дію',
   UnauthorizedException: 'Ви не авторизовані, авторизуйтесь',
+  InvalidBodyException: 'Неправильно заповнені дані',
+  ObjectIsRequiredException: 'Неправильний тип дицсипліни чи дата початку',
 };
 
 export const useToastError = () => {

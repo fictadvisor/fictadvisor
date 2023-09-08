@@ -10,9 +10,11 @@ const timeTest: TestConfig = {
     const startTimeMs = new Date(startTime).getTime();
     const endTimeMs = new Date(endTime).getTime();
 
+    if (!startTime || !endTime) return true;
+
     return endTimeMs > startTimeMs;
   },
-  message: 'Подія не може починатися пізніше ніж закінчується',
+  message: 'Неправильни час',
 };
 
 const uniqueTeachersTest: TestConfig = {
@@ -22,7 +24,7 @@ const uniqueTeachersTest: TestConfig = {
   },
   message: 'Вчителі не можуть повторюватися',
 };
-export const editFormValidationSchema = yup.object().shape({
+export const formValidationSchema = yup.object().shape({
   name: yup
     .string()
     .required('Обовʼязкове поле')
@@ -31,23 +33,13 @@ export const editFormValidationSchema = yup.object().shape({
   startTime: yup.string().required('Обовʼязкове поле').test(timeTest),
   endTime: yup.string().required('Обовʼязкове поле'),
   teachers: yup.array().test(uniqueTeachersTest),
-  period: yup.string(),
-  url: yup.string(),
-  //eventInfo: yup.string().max(2000, 'Не довше 2000 символів'),
-  //disciplineInfo: yup.string().max(2000, 'Не довше 2000 символів'),
-});
+  eventInfo: yup.string().max(2000, 'Не довше 2000 символів'),
+  disciplineInfo: yup.string().max(2000, 'Не довше 2000 символів'),
+  period: yup.string().required("Обов'язкове поле"),
+  url: yup.string().url('Неправильне посилання'),
+  disciplineId: yup.string().when('disciplineType', ([type], schema) => {
+    console.log('from formik', type);
 
-export const addEventFormValidationSchema = yup.object().shape({
-  name: yup
-    .string()
-    .required('Обовʼязкове поле')
-    .min(2, 'Не коротше 2 символів')
-    .max(100, 'Не довше 100 символів'),
-  startTime: yup.string().required('Обовʼязкове поле').test(timeTest),
-  endTime: yup.string().required('Обовʼязкове поле').test(timeTest),
-  teachers: yup.array().test(uniqueTeachersTest),
-  period: yup.string(),
-  url: yup.string(),
-  //eventInfo: yup.string().max(2000, 'Не довше 2000 символів'),
-  //disciplineInfo: yup.string().max(2000, 'Не довше 2000 символів'),
+    return type ? schema.required("Обов'язкове поле") : schema.optional();
+  }),
 });

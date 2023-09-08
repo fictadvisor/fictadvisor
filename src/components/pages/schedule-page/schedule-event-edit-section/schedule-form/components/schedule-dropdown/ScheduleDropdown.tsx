@@ -33,6 +33,7 @@ export const ScheduleFormikDropdown: FC<FormikDropdownProps> = ({
       inputSx={styles.input()}
       onChange={onChange}
       label={''}
+      remarkSx={styles.remark}
     />
   );
 };
@@ -45,6 +46,7 @@ export const ScheduleDropdown: FC<DropdownProps> = props => {
       dropdownSx={styles.dropdown}
       inputSx={styles.input()}
       showRemark={false}
+      remarkSx={styles.remark}
     />
   );
 };

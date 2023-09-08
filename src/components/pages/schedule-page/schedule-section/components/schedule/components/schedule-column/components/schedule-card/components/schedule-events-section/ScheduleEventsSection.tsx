@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { ClickAwayListener } from '@mui/base';
 import { Box, Typography } from '@mui/material';
+import dayjs from 'dayjs';
 
 import { Event } from '@/types/schedule';
 
@@ -50,7 +51,7 @@ export const ScheduleEventsSection: FC<ScheduleEventsExpandedProps> = ({
   });
 
   const eventDay = new Date(events[0].startTime).getDate();
-  const eventMonth = monthMapper[new Date(events[0].startTime).getMonth()];
+  const eventMonth = monthMapper[dayjs(events[0].startTime).tz().month()];
 
   const height = '100%';
 
@@ -68,7 +69,7 @@ export const ScheduleEventsSection: FC<ScheduleEventsExpandedProps> = ({
         <Box sx={styles.eventsContainerGrid}>
           {events.map((event, index) => (
             <ScheduleEvent
-              minHeight="90px"
+              minHeight="50px"
               event={event}
               height={height}
               key={index}

@@ -57,50 +57,6 @@ const MainPage: FC<MainPageProps> = ({ data }) => {
                 керування групою, набори в наше активне ком’юніті, розіграш шар
                 та інші інструменти — шукай саме тут!
               </Typography>
-              <Box
-                sx={
-                  isDesktop
-                    ? stylesMUI.buttonDesk
-                    : isTablet
-                    ? stylesMUI.buttonTab
-                    : stylesMUI.buttonMob
-                }
-              >
-                {!isLoggedIn && (
-                  <>
-                    <Link href={'/contract'}>
-                      <Button
-                        sx={stylesMUI.buttons}
-                        text="Договір про навчання"
-                        color={ButtonColor.PRIMARY}
-                        variant={ButtonVariant.FILLED}
-                        size={
-                          isDesktop
-                            ? ButtonSize.LARGE
-                            : isTablet
-                            ? ButtonSize.MEDIUM
-                            : ButtonSize.SMALL
-                        }
-                      />
-                    </Link>
-                    {isDesktop && <Divider sx={stylesMUI.buttonDivider} />}
-                  </>
-                )}
-                <Link href={'/priority'}>
-                  <Button
-                    sx={stylesMUI.buttons}
-                    text={'Обрати пріоритет'}
-                    variant={ButtonVariant.OUTLINE}
-                    size={
-                      isDesktop
-                        ? ButtonSize.LARGE
-                        : isTablet
-                        ? ButtonSize.MEDIUM
-                        : ButtonSize.SMALL
-                    }
-                  />
-                </Link>
-              </Box>
             </Box>
           </Box>
           <Box sx={stylesMUI.infoSectionImage}>

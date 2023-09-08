@@ -1,16 +1,16 @@
+import dayjs, { Dayjs } from 'dayjs';
+const DayMs = 1000 * 60 * 60 * 24;
+const WeekMs = DayMs * 7;
+
 import { GetCurrentSemester } from '@/lib/api/dates/types/GetCurrentSemester';
 
 export const getLastDayOfAWeek = (
   semester: GetCurrentSemester,
   week: number,
-): Date => {
-  const startDate = new Date(semester.startDate);
+): Dayjs => {
+  const startDateMs = dayjs(semester.startDate).tz().valueOf();
 
-  const startWeekDate = new Date(startDate);
-  startWeekDate.setDate(startDate.getDate() + (1 - startDate.getDay()));
-
-  const lastDayOfWeek = new Date(startWeekDate);
-  lastDayOfWeek.setDate(startWeekDate.getDate() + (week - 1) * 7 + 6);
+  const lastDayOfWeek = dayjs(startDateMs + WeekMs * week - DayMs).tz();
 
   return lastDayOfWeek;
 };

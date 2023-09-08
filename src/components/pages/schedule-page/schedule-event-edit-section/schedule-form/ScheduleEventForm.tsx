@@ -1,4 +1,4 @@
-import React, { FC, Fragment, useRef, useState } from 'react';
+import React, { FC, Fragment, useState } from 'react';
 import {
   ArrowPathIcon,
   ArrowRightIcon,
@@ -6,14 +6,21 @@ import {
   LinkIcon,
   TrashIcon,
 } from '@heroicons/react/24/outline';
-import { Box, Typography } from '@mui/material';
-import { Form, Formik, FormikConfig, FormikProps } from 'formik';
+import { Box, Typography, useMediaQuery } from '@mui/material';
+import dayjs, { Dayjs } from 'dayjs';
+import { Form, Formik, FormikConfig } from 'formik';
 
 import Button from '@/components/common/ui/button-mui';
 import {
+  ButtonColor,
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
+import IconButton from '@/components/common/ui/icon-button-mui';
+import {
+  IconButtonColor,
+  IconButtonShape,
+} from '@/components/common/ui/icon-button-mui/types';
 import { Tab, TabContext, TabList, TabPanel } from '@/components/common/ui/tab';
 import { TabTextPosition } from '@/components/common/ui/tab/tab/types';
 import CalendarInput from '@/components/pages/schedule-page/schedule-event-edit-section/schedule-form/components/calendar-input';
@@ -22,6 +29,7 @@ import { getOptionsFromDate } from '@/components/pages/schedule-page/schedule-ev
 import { InfoCardTabs } from '@/components/pages/schedule-page/schedule-event-edit-section/types';
 import { SharedEventBody } from '@/lib/api/schedule/types/shared';
 import { useSchedule } from '@/store/schedule/useSchedule';
+import theme from '@/styles/theme';
 
 import CloseButton from '../../../../common/ui/icon-button-mui/variants/CloseButton/CloseButton';
 
@@ -51,10 +59,11 @@ export const ScheduleEventForm: FC<ScheduleEventFormProps> = ({
   isNewEvent = false,
 }) => {
   const chosenDay = useSchedule(state => state.chosenDay);
-  const [date, setDate] = useState<Date | null>(
-    !initialValues.startTime ? chosenDay : new Date(initialValues.startTime),
+  const [date, setDate] = useState<Dayjs | null>(
+    !initialValues.startTime ? null : dayjs(initialValues.startTime).tz(),
   );
   const [tabValue, setTabValue] = useState<InfoCardTabs>(InfoCardTabs.EVENT);
+  const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
 
   return (
     <Box sx={styles.container}>
@@ -129,17 +138,20 @@ export const ScheduleEventForm: FC<ScheduleEventFormProps> = ({
                     textPosition={TabTextPosition.CENTER}
                     value={InfoCardTabs.EVENT}
                   />
-                  <Tab
-                    disableRipple
-                    label="Про дисципліну"
-                    textPosition={TabTextPosition.CENTER}
-                    value={InfoCardTabs.DISCIPLINE}
-                  />
+                  {values.disciplineType && (
+                    <Tab
+                      disableRipple
+                      label="Про дисципліну"
+                      textPosition={TabTextPosition.CENTER}
+                      value={InfoCardTabs.DISCIPLINE}
+                    />
+                  )}
                 </TabList>
 
                 <TabPanel value={InfoCardTabs.EVENT}>
                   <TextArea name={'eventInfo'} />
                 </TabPanel>
+
                 <TabPanel value={InfoCardTabs.DISCIPLINE}>
                   <TextArea name={'disciplineInfo'} />
                 </TabPanel>
@@ -148,14 +160,26 @@ export const ScheduleEventForm: FC<ScheduleEventFormProps> = ({
 
             <Box sx={styles.buttonContainer(isNewEvent)}>
               {!isNewEvent && (
-                <Button
-                  sx={styles.btn}
-                  text="Видалити"
-                  endIcon={<TrashIcon width={22} height={22} />}
-                  variant={ButtonVariant.OUTLINE}
-                  size={ButtonSize.SMALL}
-                  onClick={onDeleteButtonClick}
-                />
+                <Fragment>
+                  {isMobile && (
+                    <IconButton
+                      color={IconButtonColor.PRIMARY}
+                      icon={<TrashIcon width={22} height={22} />}
+                      shape={IconButtonShape.CIRCLE}
+                      onClick={onDeleteButtonClick}
+                    />
+                  )}
+                  {!isMobile && (
+                    <Button
+                      sx={styles.btn}
+                      text="Видалити"
+                      endIcon={<TrashIcon width={22} height={22} />}
+                      variant={ButtonVariant.OUTLINE}
+                      size={ButtonSize.SMALL}
+                      onClick={onDeleteButtonClick}
+                    />
+                  )}
+                </Fragment>
               )}
               <Box sx={{ display: 'flex', gap: '8px' }}>
                 <Button
@@ -163,6 +187,7 @@ export const ScheduleEventForm: FC<ScheduleEventFormProps> = ({
                   text="Скасувати"
                   variant={ButtonVariant.OUTLINE}
                   size={ButtonSize.SMALL}
+                  color={ButtonColor.PRIMARY}
                   onClick={onCancelButtonClick}
                 />
                 <Button

@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Box, Typography } from '@mui/material';
 import Skeleton from '@mui/material/Skeleton';
+import dayjs from 'dayjs';
 
 import { GetEventBody } from '@/lib/api/schedule/types/GetEventBody';
 import { transformEvents } from '@/lib/api/schedule/utils/transformEvents';
@@ -49,8 +50,8 @@ const ScheduleSectionMobile = () => {
                   </Typography>
                   <Typography
                     sx={styles.date(
-                      currentTime.getDate() === day.day.getDate() &&
-                        currentTime.getMonth() === day.day.getMonth(),
+                      currentTime.date() === dayjs(day.day).tz().date() &&
+                        currentTime.month() === dayjs(day.day).tz().month(),
                     )}
                   >
                     {day.day.getDate()}

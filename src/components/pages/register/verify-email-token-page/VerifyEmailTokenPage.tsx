@@ -30,7 +30,6 @@ const VerifyEmailTokenPage = () => {
             'Лист реєстрації вже не дійсний',
             'Пройди реєстрацію знов!',
           );
-
           await router.push(`/register`);
         }
       }

@@ -3,6 +3,15 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { ThemeProvider } from '@mui/system';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
+
+dayjs.extend(timezone);
+dayjs.extend(utc);
+
+dayjs.tz.setDefault('Europe/Kyiv');
+
 import { AppProps } from 'next/app';
 
 import AuthenticationProvider from '@/hooks/use-authentication/authentication-context';

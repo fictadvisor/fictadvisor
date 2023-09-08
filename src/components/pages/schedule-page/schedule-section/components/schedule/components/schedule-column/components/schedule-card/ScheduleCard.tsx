@@ -1,5 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import { Box } from '@mui/material';
+import dayjs from 'dayjs';
 
 import { getStringTime } from '@/components/pages/schedule-page/utils/getStringTime';
 import { useSchedule } from '@/store/schedule/useSchedule';
@@ -33,7 +34,7 @@ const ScheduleCard: FC<ScheduleCardProps> = ({ event, onClick, week }) => {
     setHeight(calculateHeight(_event.startTime, _event.endTime));
     setStart(getStringTime(_event.startTime));
     setEnd(getStringTime(_event.endTime));
-    setIsPastEvent(currentTime >= new Date(_event.endTime));
+    setIsPastEvent(currentTime >= dayjs(_event.endTime).tz());
   }, [event]);
 
   return (

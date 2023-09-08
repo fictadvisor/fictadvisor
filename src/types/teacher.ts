@@ -4,6 +4,8 @@ export enum TeacherRole {
   LECTURER = 'LECTURER',
   LABORANT = 'LABORANT',
   PRACTICIAN = 'PRACTICIAN',
+  EXAMINER = 'EXAMINER',
+  OTHER = 'OTHER',
 }
 
 export interface TeacherSubject {

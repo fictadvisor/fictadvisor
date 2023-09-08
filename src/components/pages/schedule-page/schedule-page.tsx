@@ -23,7 +23,7 @@ import { SharedEventBody } from '@/lib/api/schedule/types/shared';
 
 import { initialValues } from './schedule-event-edit-section/schedule-form/constants';
 import { ScheduleEventForm } from './schedule-event-edit-section/schedule-form/ScheduleEventForm';
-import { addEventFormValidationSchema } from './schedule-event-edit-section/schedule-form/validation';
+import { formValidationSchema } from './schedule-event-edit-section/schedule-form/validation';
 import { makeNegativeValuesUndefined } from './utils/undefineNegativeValues';
 export interface SchedulePageProps {
   groups: Group[];
@@ -95,7 +95,7 @@ const SchedulePage: FC<SchedulePageProps> = ({ semester, groups }) => {
           onCloseButtonClick={closeForm}
           onCancelButtonClick={closeForm}
           initialValues={initialValues}
-          validationSchema={addEventFormValidationSchema}
+          validationSchema={formValidationSchema}
           onSubmit={handleFormSubmit}
           isNewEvent
         />

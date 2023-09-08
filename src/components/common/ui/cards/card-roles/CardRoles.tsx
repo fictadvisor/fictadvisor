@@ -16,12 +16,16 @@ const TagText: Record<TeacherRole, string> = {
   [TeacherRole.LABORANT]: 'Лабораторні',
   [TeacherRole.LECTURER]: 'Лекції',
   [TeacherRole.PRACTICIAN]: 'Практики',
+  [TeacherRole.EXAMINER]: 'Екзамени',
+  [TeacherRole.OTHER]: 'Інше',
 };
 
 const TagColors: Record<TeacherRole, TagColor> = {
   [TeacherRole.LABORANT]: TagColor.MINT,
   [TeacherRole.LECTURER]: TagColor.INDIGO,
   [TeacherRole.PRACTICIAN]: TagColor.ORANGE,
+  [TeacherRole.EXAMINER]: TagColor.VIOLET,
+  [TeacherRole.OTHER]: TagColor.PRIMARY,
 };
 
 export const CardRoles: FC<CardRolesProps> = ({ roles, className }) => {

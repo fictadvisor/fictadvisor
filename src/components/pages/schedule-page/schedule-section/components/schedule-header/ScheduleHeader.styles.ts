@@ -55,11 +55,18 @@ export const column: SxProps<Theme> = {
   padding: '0 8px',
 };
 
-export const dayNumber = (isCurDay: boolean): SxProps<Theme> => ({
+export const dayNumber = (
+  isCurDay: boolean,
+  isChosenDay: boolean,
+): SxProps<Theme> => ({
   height: '26px',
   borderRadius: '6px',
   padding: '3px 4px',
   color: 'grey.500',
+  ...(isChosenDay && {
+    backgroundColor: 'grey.200',
+    color: 'white',
+  }),
   ...(isCurDay && {
     backgroundColor: 'primary.400',
     color: 'white',

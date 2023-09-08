@@ -36,9 +36,9 @@ const Dropdown: FC<DropdownProps> = ({
   hasPopup = true,
   inputSx,
   dropdownSx,
+  remarkSx,
 }) => {
   const [isFocused, setIsFocused] = useState(false);
-
   const dropdownState = useMemo(() => {
     if (isDisabled) return FieldState.DISABLED;
     else if (touched && error) return FieldState.ERROR;
@@ -113,7 +113,10 @@ const Dropdown: FC<DropdownProps> = ({
           )}
         />
         {showRemark && (
-          <Typography sx={styles.remark(dropdownState, isFocused)} paragraph>
+          <Typography
+            sx={remarkSx ?? styles.remark(dropdownState, isFocused)}
+            paragraph
+          >
             {touched && error ? error : defaultRemark}
           </Typography>
         )}

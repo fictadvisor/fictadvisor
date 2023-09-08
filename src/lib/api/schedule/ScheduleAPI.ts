@@ -7,7 +7,6 @@ import { GetEventBody } from '@/lib/api/schedule/types/GetEventBody';
 import { PatchEventBody } from '@/lib/api/schedule/types/PatchEventBody';
 import { PostEventBody } from '@/lib/api/schedule/types/PostEventBody';
 import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
-import { GetTeachersResponse } from '@/lib/api/teacher/types/GetTeachersResponse';
 import { getAuthorizationHeader } from '@/lib/api/utils';
 class ScheduleAPI {
   async getEvents(
@@ -49,7 +48,6 @@ class ScheduleAPI {
     );
     return data;
   }
-
   async getEventInfo(
     eventId: string,
     week: number | string,

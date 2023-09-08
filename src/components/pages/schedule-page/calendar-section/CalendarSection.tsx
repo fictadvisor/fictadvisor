@@ -24,27 +24,32 @@ export const CalendarSection: FC<CalendarSectionProps> = ({ groups }) => {
   const { user } = useAuthentication();
   const groupId = useSchedule(state => state.groupId);
 
+  const validPrivilege =
+    user &&
+    (user.group?.role === UserGroupRole.CAPTAIN ||
+      user.group?.role === UserGroupRole.MODERATOR);
+
+  const showButton = validPrivilege && user.group?.id === groupId;
+
   return (
     <Box sx={styles.mainWrapper}>
       <Box sx={styles.sticky}>
         <Stack sx={styles.wrapper}>
-          {user &&
-            user.group?.role !== UserGroupRole.STUDENT &&
-            user.group?.id === groupId && (
-              <Button
-                text="Додати подію"
-                variant={ButtonVariant.OUTLINE}
-                sx={{ borderRadius: '8px', p: '8px' }}
-                startIcon={<PlusIcon />}
-                size={ButtonSize.MEDIUM}
-                onClick={() =>
-                  useSchedule.setState(state => ({
-                    isNewEventAdded: true,
-                    openedEvent: undefined,
-                  }))
-                }
-              />
-            )}
+          {showButton && (
+            <Button
+              text="Додати подію"
+              variant={ButtonVariant.OUTLINE}
+              sx={{ borderRadius: '8px', p: '8px' }}
+              startIcon={<PlusIcon />}
+              size={ButtonSize.MEDIUM}
+              onClick={() =>
+                useSchedule.setState(state => ({
+                  isNewEventAdded: true,
+                  openedEvent: undefined,
+                }))
+              }
+            />
+          )}
 
           <GroupsDropDown groups={groups} />
           <DatePicker />

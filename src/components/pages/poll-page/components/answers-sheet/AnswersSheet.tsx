@@ -90,13 +90,13 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
   const isMobile = useMediaQuery(theme.breakpoints.down('desktop'));
   const numberRowsTextArea = isMobile ? 8 : 4;
 
-  useEffect(() => {
-    for (const question of category.questions) {
-      if (question.type === QuestionType.SCALE) {
-        setInitialValues(prev => ({ ...prev, [question.id]: '1' }));
-      }
-    }
-  }, [category]);
+  // useEffect(() => {
+  //   for (const question of category.questions) {
+  //     if (question.type === QuestionType.SCALE) {
+  //       setInitialValues(prev => ({ ...prev, [question.id]: '1' }));
+  //     }
+  //   }
+  // }, []);
 
   const answer = (values: FormikValues) => {
     const resultAnswers = collectAnswers(answers, values);
@@ -239,14 +239,19 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
                         setIsSendingStatus(SendingStatus.LOADING);
                         try {
                           for (let i = 0; i < answers.length; i++) {
-                            answers[i].value = answers[i].value.trim();
-
+                            if (i == answers.length - 1) {
+                              answers[i].value = answers[i].value
+                                .toString()
+                                .trim();
+                            }
                             if (answers[i].value.length === 0) {
                               answers = answers.filter(
                                 item => item !== answers[i],
                               );
                             }
+                            answers[i].value = answers[i].value.toString();
                           }
+                          console.log(answers);
                           await PollAPI.createTeacherGrade(
                             { answers },
                             disciplineTeacherId,
@@ -255,10 +260,8 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
                         } catch (error) {
                           const message = getErrorMessage(error);
                           message
-                            ? toast.error('Помилка!', message)
-                            : toast.error(
-                                'Щось пішло не так, спробуй пізніше!',
-                              );
+                            ? toast.error(message)
+                            : toast.error('Помилка', 'Помилка на сервері');
                           setIsSendingStatus(SendingStatus.ERROR);
                         }
                       }

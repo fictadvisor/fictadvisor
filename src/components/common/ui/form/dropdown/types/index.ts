@@ -37,4 +37,5 @@ export interface DropdownProps {
   hasPopup?: boolean;
   inputSx?: SxProps<Theme>;
   dropdownSx?: SxProps<Theme>;
+  remarkSx?: SxProps<Theme>;
 }
