@@ -14,8 +14,6 @@ export const ButtonIcons = () => {
   const { user } = useAuthentication();
   const { groupId } = useSchedule(state => ({ groupId: state.groupId }));
 
-  console.log(user);
-
   const validPrivilege =
     user &&
     (user.group?.role === UserGroupRole.CAPTAIN ||

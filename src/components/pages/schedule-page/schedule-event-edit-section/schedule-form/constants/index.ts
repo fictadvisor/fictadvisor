@@ -31,7 +31,7 @@ export const eventTypeList: DropDownOption[] = [
   },
   {
     id: TDiscipline.WORKOUT,
-    text: 'Тренування',
+    text: 'Відпрацювання',
     color: TagColor.PRIMARY,
     size: TagSize.SMALL,
   },

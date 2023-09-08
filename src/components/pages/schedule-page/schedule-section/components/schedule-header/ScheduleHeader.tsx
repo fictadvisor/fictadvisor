@@ -62,11 +62,8 @@ const ScheduleHeader = () => {
 
   const updateWeek = (amount: number) => {
     const newWeek = week + amount;
-    console.log('newWeek', newWeek);
     if (newWeek < 1 || newWeek > MAX_WEEK_NUMBER) return;
-    console.log(
-      getLastDayOfAWeek(semester as GetCurrentSemester, newWeek).date(),
-    );
+
     setChosenDay(getLastDayOfAWeek(semester as GetCurrentSemester, newWeek));
   };
 
@@ -146,9 +143,7 @@ const ScheduleHeader = () => {
           <Box sx={styles.column} key={i}>
             <Typography
               sx={styles.dayName(
-                days[i]
-                  ? dayjs(days[i].day).date() === currentTime?.date()
-                  : false,
+                days[i] ? dayjs(days[i].day).isSame(currentTime) : false,
               )}
             >
               {dayName}
@@ -156,8 +151,8 @@ const ScheduleHeader = () => {
             {days[i] && (
               <Typography
                 sx={styles.dayNumber(
-                  dayjs(days[i].day).tz().date() === currentTime?.date(),
-                  dayjs(days[i].day).tz().date() === chosenDay?.date(),
+                  dayjs(days[i].day).tz().isSame(currentTime, 'day'),
+                  dayjs(days[i].day).tz().isSame(chosenDay, 'day'),
                 )}
               >
                 {days[i].day.getDate()}

@@ -9,7 +9,6 @@ export const prepareData = (
   const finalData: PatchEventBody = JSON.parse(JSON.stringify(dataFromForm));
   for (const _key in finalData) {
     const key = _key as keyof SharedEventBody;
-    console.log(dataFromForm[key], initialData[key]);
     if (
       JSON.stringify(dataFromForm[key]) === JSON.stringify(initialData[key]) &&
       key !== 'teachers' &&

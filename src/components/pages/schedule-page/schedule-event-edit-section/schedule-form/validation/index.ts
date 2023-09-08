@@ -38,8 +38,6 @@ export const formValidationSchema = yup.object().shape({
   period: yup.string().required("Обов'язкове поле"),
   url: yup.string().url('Неправильне посилання'),
   disciplineId: yup.string().when('disciplineType', ([type], schema) => {
-    console.log('from formik', type);
-
     return type ? schema.required("Обов'язкове поле") : schema.optional();
   }),
 });

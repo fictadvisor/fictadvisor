@@ -12,12 +12,18 @@ export const container = {
   display: 'flex',
   flexFlow: 'column nowrap',
   gap: '16px',
+  '.MuiTypography-root': {
+    wordWrap: 'break-word',
+  },
 };
 
 export const titleContainer: SxProps<Theme> = {
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
+  '& p.MuiTypography-root': {
+    maxWidth: 'calc(100% - 90px)',
+  },
 };
 
 export const content: SxProps<Theme> = {

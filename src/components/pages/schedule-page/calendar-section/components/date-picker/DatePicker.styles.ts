@@ -46,4 +46,9 @@ export const picker: SxProps<Theme> = {
       borderRadius: '6px',
     },
   },
+  '& .MuiPickersArrowSwitcher-root': {
+    '& .MuiButtonBase-root.Mui-disabled': {
+      color: 'grey.400',
+    },
+  },
 };

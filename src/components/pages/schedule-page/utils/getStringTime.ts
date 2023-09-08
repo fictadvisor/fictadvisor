@@ -1,10 +1,9 @@
 /**
  * @param time - time in ISOString format
  */
+import dayjs from 'dayjs';
 
 export const getStringTime = (time: string) => {
-  const now = new Date(time);
-  const hours = now.getHours().toString().padStart(2, '0'); // Ensure two-digit format
-  const minutes = now.getMinutes().toString().padStart(2, '0'); // Ensure two-digit format
-  return `${hours}:${minutes}`;
+  const date = dayjs(time).tz();
+  return date.format('HH:mm');
 };
