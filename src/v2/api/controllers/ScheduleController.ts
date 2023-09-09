@@ -158,7 +158,7 @@ export class ScheduleController {
   ) {
     const result = await this.scheduleService.getGeneralGroupEventsByDay(id, day);
     return {
-      events: this.scheduleMapper.getEvents(result.events),
+      events: this.scheduleMapper.getTelegramEvents(result.events),
     };
   }
 
@@ -428,8 +428,8 @@ export class ScheduleController {
     const result = await this.scheduleService.getGeneralFortnightEvents(groupId, week);
 
     return {
-      firstWeekEvents: this.scheduleMapper.getEvents(result.firstWeekEvents),
-      secondWeekEvents: this.scheduleMapper.getEvents(result.secondWeekEvents),
+      firstWeekEvents: this.scheduleMapper.getTelegramEvents(result.firstWeekEvents),
+      secondWeekEvents: this.scheduleMapper.getTelegramEvents(result.secondWeekEvents),
     };
   }
 
@@ -467,7 +467,7 @@ export class ScheduleController {
   ) {
     const result = await this.scheduleService.getGeneralGroupEvents(id, week);
     return {
-      events: this.scheduleMapper.getEvents(result.events),
+      events: this.scheduleMapper.getTelegramEvents(result.events),
     };
   }
 }

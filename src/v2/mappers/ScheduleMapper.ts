@@ -19,6 +19,19 @@ export class ScheduleMapper {
       .sort((firstEvent, secondEvent) => firstEvent.startTime.getTime() - secondEvent.startTime.getTime());
   }
 
+  getTelegramEvents (events: DbEvent[]) {
+    return events
+      .map((event) => ({
+        id: event.id,
+        name: event.name,
+        startTime: event.startTime,
+        endTime: event.endTime,
+        disciplineType: event.lessons[0] ? event.lessons[0].disciplineType : null,
+        url: event.url,
+      }))
+      .sort((firstEvent, secondEvent) => firstEvent.startTime.getTime() - secondEvent.startTime.getTime());
+  }
+
   getEvent (event: DbEvent, discipline?: DbDiscipline): EventResponse {
     const disciplineType = event.lessons[0]?.disciplineType.name;
     return {
