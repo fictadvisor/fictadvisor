@@ -9,14 +9,13 @@ import {
 import Divider from '@/components/common/ui/divider';
 import { DividerTextAlign } from '@/components/common/ui/divider/types';
 import * as styles from '@/components/pages/entrant-dashboard-page/EntrantDashboardPage.styles';
-import useToast from '@/hooks/use-toast';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import ContractAPI from '@/lib/api/contract/ContractAPI';
 import { Actions } from '@/lib/api/contract/types/DeleteEntrantDataBody';
 import {
   EntrantFuIlResponse,
   priorityState,
 } from '@/lib/api/contract/types/EntrantFullResponse';
-import getErrorMessage from '@/lib/utils/getErrorMessage';
 
 interface PrioritiesSectionProps {
   data: EntrantFuIlResponse;
@@ -45,7 +44,7 @@ export const PrioritiesSection: FC<PrioritiesSectionProps> = ({
   cb,
   setEntrantData,
 }) => {
-  const toast = useToast();
+  const { displayError } = useToastError();
   const handleDelete = async () => {
     try {
       await cb(Actions.PRIORITY);
@@ -71,15 +70,7 @@ export const PrioritiesSection: FC<PrioritiesSectionProps> = ({
         return newData as EntrantFuIlResponse;
       });
     } catch (error) {
-      const message = getErrorMessage(error);
-      message
-        ? toast.error(message)
-        : toast.error('Щось пішло не так, спробуй пізніше!');
-      // const error = (
-      //   e as { response: { data: { error: keyof typeof errorMapper } } }
-      // ).response.data.error;
-      //
-      // toast.error(errorMapper[error]);
+      displayError(error);
     }
   };
 

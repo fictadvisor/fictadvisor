@@ -4,11 +4,10 @@ import { Form, Formik } from 'formik';
 import Button from '@/components/common/ui/button-mui';
 import { ButtonSize } from '@/components/common/ui/button-mui/types';
 import { Input, InputSize } from '@/components/common/ui/form';
-import useToast from '@/hooks/use-toast';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import contractAPI from '@/lib/api/contract/ContractAPI';
 import { AdminContractBody } from '@/lib/api/contract/types/AdminContractBody';
 import { EntrantFuIlResponse } from '@/lib/api/contract/types/EntrantFullResponse';
-import getErrorMessage from '@/lib/utils/getErrorMessage';
 
 import { initialValues } from './constants';
 import { validationSchema } from './validation';
@@ -30,7 +29,7 @@ const ContractApproveForm: FC<ContractApproveFormProps> = ({
   data,
   setEntrantData,
 }) => {
-  const toast = useToast();
+  const { displayError } = useToastError();
   const handleSubmit = async (values: AdminContractBody['contract']) => {
     console.log('submitting');
 
@@ -50,15 +49,7 @@ const ContractApproveForm: FC<ContractApproveFormProps> = ({
         return newData as unknown as EntrantFuIlResponse;
       });
     } catch (error) {
-      const message = getErrorMessage(error);
-      message
-        ? toast.error(message)
-        : toast.error('Щось пішло не так, спробуй пізніше!');
-      // const error = (
-      //   e as { response: { data: { error: keyof typeof errorMapper } } }
-      // ).response.data.error;
-      //
-      // toast.error(errorMapper[error]);
+      displayError(error);
     }
   };
 

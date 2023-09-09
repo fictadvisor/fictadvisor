@@ -12,12 +12,13 @@ import {
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
 import useToast from '@/hooks/use-toast';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import AuthAPI from '@/lib/api/auth/AuthAPI';
-import getErrorMessage from '@/lib/utils/getErrorMessage';
 
 import styles from './RegistrationEmailConfirmationPage.module.scss';
 
 const RegistrationEmailConfirmationPage = () => {
+  const { displayError } = useToastError();
   const [tries, setTries] = useState(0);
 
   const router = useRouter();
@@ -35,10 +36,7 @@ const RegistrationEmailConfirmationPage = () => {
       await AuthAPI.verifyEmail({ email });
     } catch (error) {
       setTries(prev => prev++);
-      const message = getErrorMessage(error);
-      message
-        ? toast.error(message)
-        : toast.error('Щось пішло не так, спробуй пізніше!');
+      displayError(error);
     }
   }, [toast, email, tries]);
 

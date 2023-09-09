@@ -11,10 +11,9 @@ import { FieldSize } from '@/components/common/ui/form/common/types';
 import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown';
 import { SPECIALITIES } from '@/components/pages/contract-admin-page/constants';
 import useTabClose from '@/hooks/use-tab-close';
-import useToast from '@/hooks/use-toast';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import ContractAPI from '@/lib/api/contract/ContractAPI';
 import { EntrantFuIlResponse } from '@/lib/api/contract/types/EntrantFullResponse';
-import getErrorMessage from '@/lib/utils/getErrorMessage';
 import { EntrantBody } from '@/types/contract';
 
 import * as styles from '../../EntrantDashboardPage.styles';
@@ -33,7 +32,7 @@ const errorMapper = {
   NoPermissionException: 'У вас не має доступу до цього ресурсу',
 };
 const EntrantSearchForm: FC<EntrantSearchFormProps> = ({ setEntrantData }) => {
-  const toast = useToast();
+  const { displayError } = useToastError();
   const handleSubmit = async (values: EntrantBody) => {
     try {
       if (values.middleName?.trim().length === 0) {
@@ -44,15 +43,7 @@ const EntrantSearchForm: FC<EntrantSearchFormProps> = ({ setEntrantData }) => {
       saveLocalStorage(values);
       console.log(data);
     } catch (error) {
-      const message = getErrorMessage(error);
-      message
-        ? toast.error(message)
-        : toast.error('Щось пішло не так, спробуй пізніше!');
-      // const error = (
-      //   e as { response: { data: { error: keyof typeof errorMapper } } }
-      // ).response.data.error;
-      //
-      // toast.error(errorMapper[error]);
+      displayError(error);
     }
   };
 

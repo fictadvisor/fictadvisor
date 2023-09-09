@@ -12,31 +12,26 @@ import Progress from '@/components/common/ui/progress';
 import { transformGroups } from '@/components/pages/account-page/components/group-tab/components/no-group-block/utils';
 import { validationSchema } from '@/components/pages/account-page/components/group-tab/components/no-group-block/validation';
 import useAuthentication from '@/hooks/use-authentication';
-import useToast from '@/hooks/use-toast';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import GroupAPI from '@/lib/api/group/GroupAPI';
 import { RequestNewGroupBody } from '@/lib/api/user/types/RequestNewGroupBody';
 import UserAPI from '@/lib/api/user/UserAPI';
-import getErrorMessage from '@/lib/utils/getErrorMessage';
 import { UserGroupState } from '@/types/user';
 
 import styles from './NoGroupBlock.module.scss';
 
 const NoGroupBlock: FC = () => {
+  const { displayError } = useToastError();
   const { user, update } = useAuthentication();
   const { isLoading, data } = useQuery(['groups'], () => GroupAPI.getAll(), {
     refetchOnWindowFocus: false,
   });
-  const toast = useToast();
-
   const handleSubmitGroup = async (data: RequestNewGroupBody) => {
     try {
       await UserAPI.requestNewGroup(data, user.id);
       await update();
     } catch (error) {
-      const message = getErrorMessage(error);
-      message
-        ? toast.error(message)
-        : toast.error('Щось пішло не так, спробуй пізніше!');
+      displayError(error);
     }
   };
 

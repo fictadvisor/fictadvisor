@@ -9,8 +9,8 @@ import { PersonalInfoForm } from '@/components/pages/account-page/components/gen
 import { validationSchema } from '@/components/pages/account-page/components/general-tab/components/personal-info/validation';
 import useAuthentication from '@/hooks/use-authentication';
 import useToast from '@/hooks/use-toast';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import UserAPI from '@/lib/api/user/UserAPI';
-import getErrorMessage from '@/lib/utils/getErrorMessage';
 
 import styles from '../../GeneralTab.module.scss';
 
@@ -18,14 +18,13 @@ const objectsEqual = (obj1: object, obj2: object) => {
   return JSON.stringify(obj1) === JSON.stringify(obj2);
 };
 const PersonalInfoBlock: FC = () => {
+  const { displayError } = useToastError();
   const { user, update } = useAuthentication();
   const initialValues: PersonalInfoForm = {
     lastName: user.lastName,
     firstName: user.firstName,
     middleName: user.middleName,
   };
-
-  const toast = useToast();
 
   const handleSubmit = async (data: PersonalInfoForm) => {
     data.firstName = data.firstName.trim().replace('`', `'`).replace('ʼ', `'`);
@@ -41,10 +40,7 @@ const PersonalInfoBlock: FC = () => {
       await UserAPI.changeInfo(user.id, data);
       await update();
     } catch (error) {
-      const message = getErrorMessage(error);
-      message
-        ? toast.error(message)
-        : toast.error('Щось пішло не так, спробуй пізніше!');
+      displayError(error);
     }
   };
 

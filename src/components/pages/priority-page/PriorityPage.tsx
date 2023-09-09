@@ -1,6 +1,5 @@
 import React, { FC, useRef, useState } from 'react';
 import { Box, Typography } from '@mui/material';
-import { AxiosError } from 'axios';
 import { Form, Formik, FormikProps } from 'formik';
 
 import Button from '@/components/common/ui/button-mui';
@@ -27,9 +26,9 @@ import {
 } from '@/components/pages/priority-page/validation';
 import useTabClose from '@/hooks/use-tab-close';
 import useToast from '@/hooks/use-toast';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import ContractAPI from '@/lib/api/contract/ContractAPI';
 import { ExtendedPriorityDataBody } from '@/lib/api/contract/types/PriorityDataBody';
-import getErrorMessage from '@/lib/utils/getErrorMessage';
 
 import { prepareData } from './utils/prepareData';
 import { SuccessScreen } from './SuccessScreen';
@@ -39,23 +38,14 @@ const PriorityPage: FC = () => {
   const [isForcePushed, setIsForcePushed] = useState(
     getLocalStorage()?.isForcePushed,
   );
-
-  const toast = useToast();
+  const { displayError } = useToastError();
 
   const handleFormSubmit = async (values: ExtendedPriorityDataBody) => {
     try {
       await ContractAPI.createPriority(prepareData({ ...values }));
       setSubmited(true);
     } catch (error) {
-      const message = getErrorMessage(error);
-      message
-        ? toast.error(
-            `Внутрішня помилка сервера ${message}`,
-            'Зверніться до оператора або в чат абітурієнтів',
-          )
-        : toast.error(
-            'Трапилась помилка, перевірте усі дані та спробуйте ще раз',
-          );
+      displayError(error);
     }
   };
 

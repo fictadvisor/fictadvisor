@@ -9,13 +9,13 @@ import {
 import Divider from '@/components/common/ui/divider';
 import { DividerTextAlign } from '@/components/common/ui/divider/types';
 import useToast from '@/hooks/use-toast';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import ContractAPI from '@/lib/api/contract/ContractAPI';
 import { Actions } from '@/lib/api/contract/types/DeleteEntrantDataBody';
 import {
   EntrantFuIlResponse,
   priorityState,
 } from '@/lib/api/contract/types/EntrantFullResponse';
-import getErrorMessage from '@/lib/utils/getErrorMessage';
 
 import * as styles from '../EntrantDashboardPage.styles';
 
@@ -44,6 +44,7 @@ export const PersonalDataSection: FC<PersonalDataSectionProps> = ({
   setEntrantData,
 }) => {
   const toast = useToast();
+  const { displayError } = useToastError();
   const handleDelete = async () => {
     try {
       await cb(Actions.ENTRANT_DATA);
@@ -67,10 +68,7 @@ export const PersonalDataSection: FC<PersonalDataSectionProps> = ({
       await ContractAPI.createContractById(data.id);
       toast.info('Договір було надіслано на пошту', '', 3000);
     } catch (error) {
-      const message = getErrorMessage(error);
-      message
-        ? toast.error(message)
-        : toast.error('Щось пішло не так, спробуй пізніше!');
+      displayError(error);
     }
   };
 
@@ -79,15 +77,7 @@ export const PersonalDataSection: FC<PersonalDataSectionProps> = ({
       await ContractAPI.sendPriorityOnEmail(data.id);
       toast.info('Пріоритетку було надіслано на пошту', '', 3000);
     } catch (error) {
-      const message = getErrorMessage(error);
-      message
-        ? toast.error(message)
-        : toast.error('Щось пішло не так, спробуй пізніше!');
-      // const error = (
-      //   e as { response: { data: { error: keyof typeof errorMapper } } }
-      // ).response.data.error;
-      //
-      // toast.error(errorMapper[error]);
+      displayError(error);
     }
   };
 

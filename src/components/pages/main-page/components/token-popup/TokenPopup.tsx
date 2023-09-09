@@ -10,10 +10,10 @@ import {
 import Popup from '@/components/common/ui/pop-ups/Popup';
 import useAuthentication from '@/hooks/use-authentication';
 import useToast from '@/hooks/use-toast';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import AuthAPI from '@/lib/api/auth/AuthAPI';
 import UserAPI from '@/lib/api/user/UserAPI';
 import AuthService from '@/lib/services/auth';
-import getErrorMessage from '@/lib/utils/getErrorMessage';
 import StorageUtil from '@/lib/utils/StorageUtil';
 
 interface TokenPopupProps {
@@ -21,6 +21,7 @@ interface TokenPopupProps {
 }
 
 const TokenPopup: FC<TokenPopupProps> = ({ token }) => {
+  const { displayError } = useToastError();
   const router = useRouter();
   const { user, isLoggedIn, update } = useAuthentication();
   const [isOpen, setIsOpen] = useState(false);
@@ -62,14 +63,7 @@ const TokenPopup: FC<TokenPopupProps> = ({ token }) => {
         await router.push('/register');
       }
     } catch (error) {
-      const message = getErrorMessage(error);
-      message
-        ? toast.error(
-            'Не вдалось підключити Telegram, спробуй ще раз',
-            message,
-            3000,
-          )
-        : toast.error('Щось пішло не так, спробуй пізніше!');
+      displayError(error);
     } finally {
       setIsOpen(false);
     }

@@ -13,9 +13,9 @@ import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown';
 import styles from '@/components/pages/account-page/components/general-tab/GeneralTab.module.scss';
 import useAuthentication from '@/hooks/use-authentication';
 import useToast from '@/hooks/use-toast';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import { AddContactBody } from '@/lib/api/user/types/AddContactBody';
 import UserAPI from '@/lib/api/user/UserAPI';
-import getErrorMessage from '@/lib/utils/getErrorMessage';
 import { ContactType } from '@/types/contact';
 
 interface ContactFormProps {
@@ -25,6 +25,7 @@ interface ContactFormProps {
 const ContactForm: FC<ContactFormProps> = ({ refetchContacts }) => {
   const { user } = useAuthentication();
   const toast = useToast();
+  const { displayError } = useToastError();
   const options = Object.values(ContactType).map(contact => ({
     label: contact,
     id: contact,
@@ -36,10 +37,7 @@ const ContactForm: FC<ContactFormProps> = ({ refetchContacts }) => {
         await UserAPI.addContact(user.id, data);
         void refetchContacts();
       } catch (error) {
-        const message = getErrorMessage(error);
-        message
-          ? toast.error('Здається ти ввів неправильні значення!', message)
-          : toast.error('Щось пішло не так, спробуй пізніше!');
+        displayError(error);
       }
     },
     [refetchContacts, toast, user.id],

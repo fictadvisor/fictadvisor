@@ -1,6 +1,7 @@
 import { AxiosError } from 'axios';
 
 import useToast from '@/hooks/use-toast';
+import getErrorMessage from '@/lib/utils/getErrorMessage';
 
 type ErrorFromBackend = {
   error: string;
@@ -20,13 +21,7 @@ export const useToastError = () => {
   const toast = useToast();
 
   const displayError = (_e: unknown) => {
-    const error = _e as AxiosError<ErrorFromBackend>;
-    const data = error?.response?.data as ErrorFromBackend;
-
-    const errorMessage = ErrorMapper[data?.error]
-      ? ErrorMapper[data?.error]
-      : error.message;
-
+    const errorMessage = getErrorMessage(_e);
     toast.error('Трапилась помилка', `${errorMessage}`, 4000);
   };
 

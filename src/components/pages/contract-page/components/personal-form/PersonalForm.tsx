@@ -1,13 +1,12 @@
 import React, { FC, SetStateAction, useState } from 'react';
 import { Box } from '@mui/material';
-import { AxiosError } from 'axios';
 
 import { initialValues } from '@/components/pages/contract-page/constants';
 import { getLocalStorage } from '@/components/pages/contract-page/utils/localStorage';
 import useToast from '@/hooks/use-toast';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import ContractAPI from '@/lib/api/contract/ContractAPI';
 import { ExtendedContractBody } from '@/lib/api/contract/types/ContractBody';
-import getErrorMessage from '@/lib/utils/getErrorMessage';
 
 import { prepareData } from '../../utils/prepareData';
 import { PassFormAgain } from '../PassFormAgain';
@@ -20,6 +19,7 @@ import { formWrapper } from './PersonalForm.styles';
 export const PersonalForm: FC<{
   setIsLoading: React.Dispatch<SetStateAction<boolean>>;
 }> = ({ setIsLoading }) => {
+  const { displayError } = useToastError();
   const localStorageValues = getLocalStorage();
   const toast = useToast();
   const [data, setData] = useState(localStorageValues || initialValues);
@@ -34,8 +34,6 @@ export const PersonalForm: FC<{
   );
 
   const handleNextStep = async (data: ExtendedContractBody, final = false) => {
-    console.log(data);
-
     if (!final) setData(prevState => ({ ...prevState, ...data }));
 
     if (final) {
@@ -52,12 +50,7 @@ export const PersonalForm: FC<{
           `Ви успішно надіслали контракт, перевірте пошту ${data.entrant.email}`,
         );
       } catch (error) {
-        const message = getErrorMessage(error);
-        message
-          ? toast.error(message)
-          : toast.error(
-              `Трапилась помилка, перевірте усі дані та спробуйте ще раз`,
-            );
+        displayError(error);
       }
       setIsLoading(false);
       return;

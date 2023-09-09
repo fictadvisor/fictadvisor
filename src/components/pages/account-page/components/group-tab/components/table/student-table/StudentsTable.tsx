@@ -15,9 +15,8 @@ import roleNamesMapper from '@/components/pages/account-page/components/group-ta
 import EditingColumn from '@/components/pages/account-page/components/group-tab/components/table/student-table/components/EditingColumn';
 import { TextAreaPopup } from '@/components/pages/account-page/components/group-tab/components/text-area-popup';
 import useAuthentication from '@/hooks/use-authentication';
-import useToast from '@/hooks/use-toast';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import GroupAPI from '@/lib/api/group/GroupAPI';
-import getErrorMessage from '@/lib/utils/getErrorMessage';
 import theme from '@/styles/theme';
 import { UserGroupRole } from '@/types/user';
 
@@ -33,7 +32,7 @@ const StudentsTable: React.FC<StudentsTableProps> = ({
   const isMobile = useMediaQuery(theme.breakpoints.down('desktop'));
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const { user } = useAuthentication();
-  const toast = useToast();
+  const { displayError } = useToastError();
   const handleAddStudents = async (value: string) => {
     try {
       const emails = value
@@ -48,10 +47,7 @@ const StudentsTable: React.FC<StudentsTableProps> = ({
 
       await refetch();
     } catch (error) {
-      const message = getErrorMessage(error);
-      message
-        ? toast.error(message, '', 3000)
-        : toast.error('Щось пішло не так, спробуй пізніше!');
+      displayError(error);
     }
   };
   return (

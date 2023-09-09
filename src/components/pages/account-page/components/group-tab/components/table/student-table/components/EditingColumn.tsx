@@ -23,8 +23,8 @@ import roleNamesMapper from '@/components/pages/account-page/components/group-ta
 import MobileDropdown from '@/components/pages/account-page/components/group-tab/components/table/student-table/components/MobileDropdown';
 import UseAuthentication from '@/hooks/use-authentication/useAuthentication';
 import useToast from '@/hooks/use-toast';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import GroupAPI from '@/lib/api/group/GroupAPI';
-import getErrorMessage from '@/lib/utils/getErrorMessage';
 import theme from '@/styles/theme';
 import { UserGroupRole } from '@/types/user';
 
@@ -37,6 +37,7 @@ interface EditingColumnProps {
 
 const EditingColumn: FC<EditingColumnProps> = ({ student, refetch }) => {
   const { user } = UseAuthentication();
+  const { displayError } = useToastError();
   const [deletePopupOpen, setDeletePopupOpen] = useState(false);
   const [changePopupOpen, setChangePopupOpen] = useState(false);
 
@@ -50,10 +51,7 @@ const EditingColumn: FC<EditingColumnProps> = ({ student, refetch }) => {
 
       await refetch();
     } catch (error) {
-      const message = getErrorMessage(error);
-      message
-        ? toast.error(message, '', 3000)
-        : toast.error('Щось пішло не так, спробуй пізніше!');
+      displayError(error);
     }
   };
   const handleChangeStatus = async () => {
@@ -68,10 +66,7 @@ const EditingColumn: FC<EditingColumnProps> = ({ student, refetch }) => {
         });
       await refetch();
     } catch (error) {
-      const message = getErrorMessage(error);
-      message
-        ? toast.error(message, '', 3000)
-        : toast.error('Щось пішло не так, спробуй пізніше!');
+      displayError(error);
     }
   };
 

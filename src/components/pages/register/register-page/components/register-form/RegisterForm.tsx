@@ -15,10 +15,10 @@ import {
   transformGroups,
 } from '@/components/pages/register/register-page/components/register-form/utils';
 import useToast from '@/hooks/use-toast';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import AuthAPI from '@/lib/api/auth/AuthAPI';
 import { GetAllResponse } from '@/lib/api/group/types/GetAllResponse';
 import AuthService from '@/lib/services/auth';
-import getErrorMessage from '@/lib/utils/getErrorMessage';
 import StorageUtil from '@/lib/utils/StorageUtil';
 
 import { initialValues } from './constants';
@@ -27,6 +27,7 @@ import { validationSchema } from './validation';
 
 import styles from './FormStyles.module.scss';
 const RegisterForm: FC<GetAllResponse> = ({ groups }) => {
+  const { displayError } = useToastError();
   const router = useRouter();
   const toast = useToast();
 
@@ -46,10 +47,7 @@ const RegisterForm: FC<GetAllResponse> = ({ groups }) => {
           await router.push(`/register/email-verification?email=${email}`);
         }
       } catch (error) {
-        const message = getErrorMessage(error);
-        message
-          ? toast.error(message)
-          : toast.error('Щось пішло не так, спробуй пізніше!');
+        displayError(error);
       }
     },
     [toast, router],

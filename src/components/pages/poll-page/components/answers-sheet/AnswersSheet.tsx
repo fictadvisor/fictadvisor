@@ -1,7 +1,6 @@
-import React, { FormEvent, useEffect, useState } from 'react';
+import React, { FormEvent, useState } from 'react';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import { useMediaQuery } from '@mui/material';
-import { AxiosError } from 'axios';
 import { Form, Formik, FormikValues } from 'formik';
 import { useRouter } from 'next/router';
 
@@ -11,11 +10,10 @@ import RadioGroup from '@/components/common/ui/form/radio/RadioGroup';
 import { SliderSize } from '@/components/common/ui/form/slider/types';
 import FormikSlider from '@/components/common/ui/form/with-formik/slider';
 import Progress from '@/components/common/ui/progress';
-import useToast from '@/hooks/use-toast';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import PollAPI from '@/lib/api/poll/PollAPI';
-import getErrorMessage from '@/lib/utils/getErrorMessage';
 import theme from '@/styles/theme';
-import { Answer, Category, Question, QuestionType } from '@/types/poll';
+import { Answer, Category, Question } from '@/types/poll';
 
 import { SendingStatus } from '../poll-form/PollForm';
 
@@ -79,7 +77,7 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
   sendingStatus,
   setIsSendingStatus,
 }) => {
-  const toast = useToast();
+  const { displayError } = useToastError();
   // TODO: refactor this shit
   const [initialValues, setInitialValues] = useState<Record<string, string>>(
     {},
@@ -258,10 +256,7 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
                           );
                           setIsSendingStatus(SendingStatus.SUCCESS);
                         } catch (error) {
-                          const message = getErrorMessage(error);
-                          message
-                            ? toast.error(message)
-                            : toast.error('Помилка', 'Помилка на сервері');
+                          displayError(error);
                           setIsSendingStatus(SendingStatus.ERROR);
                         }
                       }

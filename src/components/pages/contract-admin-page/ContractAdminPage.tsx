@@ -13,16 +13,15 @@ import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown';
 import { checkError } from '@/components/pages/contract-admin-page/utils';
 import { validationSchema } from '@/components/pages/contract-admin-page/validation';
 import useToast from '@/hooks/use-toast';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import contractAPI from '@/lib/api/contract/ContractAPI';
 import { AdminContractBody } from '@/lib/api/contract/types/AdminContractBody';
-import getErrorMessage from '@/lib/utils/getErrorMessage';
 
 import { initialValues, SPECIALITIES } from './constants/index';
 import * as styles from './ContractAdminPage.styles';
 
-const TOAST_TIMER = 4000;
-
 const ContractAdminPage = () => {
+  const { displayError } = useToastError();
   const toast = useToast();
   const handleSubmit = async (
     values: AdminContractBody,
@@ -30,19 +29,10 @@ const ContractAdminPage = () => {
   ) => {
     try {
       await contractAPI.createAdminContract(values);
-      toast.success('Договір створений', '', TOAST_TIMER);
+      toast.success('Договір створений', '', 4000);
       resetForm();
     } catch (error) {
-      const message = getErrorMessage(error);
-      message
-        ? toast.error(message, '', TOAST_TIMER)
-        : toast.error('Щось пішло не так, спробуй пізніше!');
-      // if (axios.isAxiosError(error)) {
-      //   const errorMessage = checkError(error.response?.data.error);
-      //   if (errorMessage) {
-      //     toast.error(errorMessage, '', TOAST_TIMER);
-      //   }
-      // }
+      displayError(error);
     }
   };
 

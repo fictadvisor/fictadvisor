@@ -8,9 +8,8 @@ import { AlertButtonVariant } from '@/components/common/ui/alert-button/types';
 import Divider from '@/components/common/ui/divider';
 import { DividerTextAlign } from '@/components/common/ui/divider/types';
 import useAuthentication from '@/hooks/use-authentication';
-import useToast from '@/hooks/use-toast';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import GroupAPI from '@/lib/api/group/GroupAPI';
-import getErrorMessage from '@/lib/utils/getErrorMessage';
 import theme from '@/styles/theme';
 import { UserGroupState } from '@/types/user';
 
@@ -22,7 +21,7 @@ import * as styles from './RequestTable.styles';
 const RequestsTable: FC<RequestsTableProps> = ({ rows, refetch }) => {
   const { user } = useAuthentication();
   const isMobile = useMediaQuery(theme.breakpoints.down('desktop'));
-  const toast = useToast();
+  const { displayError } = useToastError();
   const handleApprove = async (userId: string) => {
     try {
       if (user.group)
@@ -31,10 +30,7 @@ const RequestsTable: FC<RequestsTableProps> = ({ rows, refetch }) => {
         });
       await refetch();
     } catch (error) {
-      const message = getErrorMessage(error);
-      message
-        ? toast.error(message, '', 3000)
-        : toast.error('Щось пішло не так, спробуй пізніше!');
+      displayError(error);
     }
   };
 
@@ -46,10 +42,7 @@ const RequestsTable: FC<RequestsTableProps> = ({ rows, refetch }) => {
         });
       await refetch();
     } catch (error) {
-      const message = getErrorMessage(error);
-      message
-        ? toast.error(message, '', 3000)
-        : toast.error('Щось пішло не так, спробуй пізніше!');
+      displayError(error);
     }
   };
 

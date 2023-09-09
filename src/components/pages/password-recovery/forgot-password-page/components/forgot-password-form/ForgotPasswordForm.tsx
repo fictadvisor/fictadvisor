@@ -9,12 +9,11 @@ import { initialValues } from '@/components/pages/password-recovery/forgot-passw
 import { ForgotPasswordFormFields } from '@/components/pages/password-recovery/forgot-password-page/components/forgot-password-form/types';
 import { validationSchema } from '@/components/pages/password-recovery/forgot-password-page/components/forgot-password-form/validation';
 import styles from '@/components/pages/password-recovery/forgot-password-page/ForgotPasswordPage.module.scss';
-import useToast from '@/hooks/use-toast';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import AuthAPI from '@/lib/api/auth/AuthAPI';
-import getErrorMessage from '@/lib/utils/getErrorMessage';
 
 const ForgotPasswordForm: FC = () => {
-  const toast = useToast();
+  const { displayError } = useToastError();
   const router = useRouter();
 
   const handleSubmit = async (values: ForgotPasswordFormFields) => {
@@ -23,10 +22,7 @@ const ForgotPasswordForm: FC = () => {
       await AuthAPI.forgotPassword({ email });
       await router.push(`/password-recovery/email-verification?email=${email}`);
     } catch (error) {
-      const message = getErrorMessage(error);
-      message
-        ? toast.error(message, '', 3000)
-        : toast.error('Щось пішло не так, спробуй пізніше!');
+      displayError(error);
     }
   };
 
