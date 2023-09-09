@@ -273,7 +273,7 @@ export class TeacherService {
 
     const { disciplineTeachers, ...teacher } = dbTeacher;
 
-    const roles = this.disciplineTeacherMapper.getRolesBySubject(disciplineTeachers as DbDisciplineTeacher[], subjectId);
+    const roles = this.disciplineTeacherMapper.getRolesBySubject(disciplineTeachers as unknown as DbDisciplineTeacher[], subjectId);
     const { disciplines, ...subject } = await this.subjectRepository.findById(subjectId);
     const contacts = await this.contactRepository.getAllContacts(teacherId);
     const data = {

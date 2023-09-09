@@ -9,6 +9,8 @@ export class DbStudent {
   groupId?: string;
   group?: Group;
   roles?: {
+    studentId: string,
+    roleId: string,
     role: Role
   }[];
   selectiveDisciplines?: (SelectiveDiscipline & {

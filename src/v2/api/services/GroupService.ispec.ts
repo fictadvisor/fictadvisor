@@ -138,11 +138,19 @@ describe('GroupService', () => {
         where: {
           studentId: 'oldCaptainId',
         },
+        select: {
+          roleId: true,
+          studentId: true,
+        },
       });
 
       const newCaptainRoles = await prisma.userRole.findMany({
         where: {
           studentId: 'newCaptainId',
+        },
+        select: {
+          roleId: true,
+          studentId: true,
         },
       });
 

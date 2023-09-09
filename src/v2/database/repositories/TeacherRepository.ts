@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../PrismaService';
+import { DbTeacher } from '../entities/DbTeacher';
 
 
 @Injectable()
@@ -30,7 +31,7 @@ export class TeacherRepository {
 
   async find (
     where: Prisma.TeacherWhereInput,
-  ) {
+  ): Promise<DbTeacher> {
     return this.prisma.teacher.findFirst({
       where,
       include: this.include,

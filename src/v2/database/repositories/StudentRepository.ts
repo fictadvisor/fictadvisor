@@ -50,7 +50,7 @@ export class StudentRepository {
     });
   }
 
-  update (args: Prisma.StudentUpdateArgs) {
+  update (args: Prisma.StudentUpdateArgs): Promise<DbStudent> {
     return this.prisma.student.update({
       ...args,
       include: this.include,

@@ -23,7 +23,7 @@ export class SubjectService {
   ) {}
 
   async getAll (body: QueryAllSubjectDTO) {
-    const search = DatabaseUtils.getSearch<Subject>(body, 'name');
+    const search = DatabaseUtils.getSearch(body, 'name');
     const sort = DatabaseUtils.getSort(body, 'name');
 
     const data: Prisma.SubjectFindManyArgs = {

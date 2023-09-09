@@ -22,12 +22,14 @@ model User {
   username            String?
   avatar              String?
   password            String?
-  telegramId          BigInt?             @unique @map("telegram_id")
+  telegramId          BigInt?          @unique @map("telegram_id")
   student             Student?
   superhero           Superhero?
   questionAnswers     QuestionAnswer[]
   lastPasswordChanged DateTime         @default(now())
   state               State            @default(PENDING)
+  createdAt           DateTime?        @default(now()) @map("created_at")
+  updatedAt           DateTime?        @default(now()) @updatedAt @map("updated_at")
 
   @@map("users")
 }
@@ -41,6 +43,8 @@ model Group {
   events           Event[]
   selectiveAmounts SelectiveAmount[]
   telegramGroups   TelegramGroup[]
+  createdAt        DateTime?         @default(now()) @map("created_at")
+  updatedAt        DateTime?         @default(now()) @updatedAt @map("updated_at")
 
   @@map("groups")
 }
@@ -56,16 +60,20 @@ model TelegramGroup {
   groupId    String         @map("group_id")
   telegramId BigInt         @map("telegram_id")
   source     TelegramSource
+  createdAt  DateTime?      @default(now()) @map("created_at")
+  updatedAt  DateTime?      @default(now()) @updatedAt @map("updated_at")
 
   @@id([groupId, telegramId])
   @@map("telegram_groups")
 }
 
 model GroupRole {
-  group   Group  @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  groupId String
-  role    Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
-  roleId  String @unique
+  group     Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId   String
+  role      Role      @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  roleId    String    @unique
+  createdAt DateTime? @default(now()) @map("created_at")
+  updatedAt DateTime? @default(now()) @updatedAt @map("updated_at")
 
   @@id([groupId, roleId])
   @@map("group_roles")
@@ -83,15 +91,19 @@ model Student {
   roles                     UserRole[]
   state                     State                      @default(PENDING)
   removedDisciplineTeachers RemovedDisciplineTeacher[]
+  createdAt                 DateTime?                  @default(now()) @map("created_at")
+  updatedAt                 DateTime?                  @default(now()) @updatedAt @map("updated_at")
 
   @@map("students")
 }
 
 model Superhero {
-  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String  @unique @map("user_id")
-  dorm   Boolean
-  state  State   @default(PENDING)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String    @unique @map("user_id")
+  dorm      Boolean
+  state     State     @default(PENDING)
+  createdAt DateTime? @default(now()) @map("created_at")
+  updatedAt DateTime? @default(now()) @updatedAt @map("updated_at")
 
   @@map("superheroes")
 }
@@ -100,6 +112,8 @@ model Subject {
   id          String       @id @default(uuid())
   name        String
   disciplines Discipline[]
+  createdAt   DateTime?    @default(now()) @map("created_at")
+  updatedAt   DateTime?    @default(now()) @updatedAt @map("updated_at")
 
   @@map("subjects")
 }
@@ -117,6 +131,8 @@ model Discipline {
   selectiveDisciplines SelectiveDiscipline[]
   disciplineTypes      DisciplineType[]
   disciplineTeachers   DisciplineTeacher[]
+  createdAt            DateTime?             @default(now()) @map("created_at")
+  updatedAt            DateTime?             @default(now()) @updatedAt @map("updated_at")
 
   @@map("disciplines")
 }
@@ -126,17 +142,21 @@ model SelectiveDiscipline {
   disciplineId String     @map("discipline_id")
   student      Student    @relation(fields: [studentId], references: [userId], onDelete: Cascade)
   studentId    String     @map("student_id")
+  createdAt    DateTime?  @default(now()) @map("created_at")
+  updatedAt    DateTime?  @default(now()) @updatedAt @map("updated_at")
 
   @@id([disciplineId, studentId])
   @@map("selective_disciplines")
 }
 
 model SelectiveAmount {
-  group    Group  @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  groupId  String @map("group_id")
-  year     Int
-  semester Int
-  amount   Int
+  group     Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId   String    @map("group_id")
+  year      Int
+  semester  Int
+  amount    Int
+  createdAt DateTime? @default(now()) @map("created_at")
+  updatedAt DateTime? @default(now()) @updatedAt @map("updated_at")
 
   @@id([groupId, year, semester])
   @@map("selective_amounts")
@@ -158,6 +178,8 @@ model DisciplineType {
   name                   DisciplineTypeEnum
   disciplineTeacherRoles DisciplineTeacherRole[]
   lessons                Lesson[]
+  createdAt              DateTime?               @default(now()) @map("created_at")
+  updatedAt              DateTime?               @default(now()) @updatedAt @map("updated_at")
 
   @@map("discipline_types")
 }
@@ -180,6 +202,8 @@ model Teacher {
   rating             Decimal               @default(0.00) @db.Decimal(5, 2)
   disciplineTeachers DisciplineTeacher[]
   cathedras          TeachersOnCathedras[]
+  createdAt          DateTime?             @default(now()) @map("created_at")
+  updatedAt          DateTime?             @default(now()) @updatedAt @map("updated_at")
 
   @@map("teachers")
 }
@@ -193,6 +217,8 @@ model DisciplineTeacher {
   roles                     DisciplineTeacherRole[]
   questionAnswers           QuestionAnswer[]
   removedDisciplineTeachers RemovedDisciplineTeacher[]
+  createdAt                 DateTime?                  @default(now()) @map("created_at")
+  updatedAt                 DateTime?                  @default(now()) @updatedAt @map("updated_at")
 
   @@map("discipline_teachers")
 }
@@ -223,6 +249,8 @@ model Question {
   display         QuestionDisplay  @default(RADAR)
   questionRoles   QuestionRole[]
   questionAnswers QuestionAnswer[]
+  createdAt       DateTime?        @default(now()) @map("created_at")
+  updatedAt       DateTime?        @default(now()) @updatedAt @map("updated_at")
 
   @@map("questions")
 }
@@ -233,6 +261,8 @@ model QuestionRole {
   questionId String      @map("question_id")
   isShown    Boolean     @map("is_shown")
   isRequired Boolean     @map("is_required")
+  createdAt  DateTime?   @default(now()) @map("created_at")
+  updatedAt  DateTime?   @default(now()) @updatedAt @map("updated_at")
 
   @@id([questionId, role])
   @@map("question_roles")
@@ -246,6 +276,8 @@ model QuestionAnswer {
   user                User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId              String            @map("user_id")
   value               String
+  createdAt           DateTime?         @default(now()) @map("created_at")
+  updatedAt           DateTime?         @default(now()) @updatedAt @map("updated_at")
 
   @@id([disciplineTeacherId, questionId, userId])
   @@map("question_answers")
@@ -269,27 +301,33 @@ model Role {
   parentId  String?
   parent    Role?      @relation("Inheritance", fields: [parentId], references: [id])
   children  Role[]     @relation("Inheritance")
+  createdAt DateTime?  @default(now()) @map("created_at")
+  updatedAt DateTime?  @default(now()) @updatedAt @map("updated_at")
 
   @@map("roles")
 }
 
 model UserRole {
-  student   Student @relation(fields: [studentId], references: [userId], onDelete: Cascade)
-  studentId String  @map("student_id")
-  role      Role    @relation(fields: [roleId], references: [id], onDelete: Cascade)
-  roleId    String  @map("role_id")
+  student   Student   @relation(fields: [studentId], references: [userId], onDelete: Cascade)
+  studentId String    @map("student_id")
+  role      Role      @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  roleId    String    @map("role_id")
+  createdAt DateTime? @default(now()) @map("created_at")
+  updatedAt DateTime? @default(now()) @updatedAt @map("updated_at")
 
   @@id([studentId, roleId])
   @@map("user_roles")
 }
 
 model Grant {
-  id         String  @id @default(uuid())
-  role       Role    @relation(fields: [roleId], references: [id], onDelete: Cascade)
-  roleId     String  @map("role_id")
+  id         String    @id @default(uuid())
+  role       Role      @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  roleId     String    @map("role_id")
   permission String
-  set        Boolean @default(true)
-  weight     Int     @default(1)
+  set        Boolean   @default(true)
+  weight     Int       @default(1)
+  createdAt  DateTime? @default(now()) @map("created_at")
+  updatedAt  DateTime? @default(now()) @updatedAt @map("updated_at")
 
   @@map("grants")
 }
@@ -306,6 +344,8 @@ model Contact {
   link        String?
   entityType  EntityType @map("entity_type")
   entityId    String     @map("entity_id")
+  createdAt   DateTime?  @default(now()) @map("created_at")
+  updatedAt   DateTime?  @default(now()) @updatedAt @map("updated_at")
 
   @@map("contacts")
 }
@@ -313,8 +353,10 @@ model Contact {
 model SemesterDate {
   year      Int
   semester  Int
-  startDate DateTime @map("start_date")
-  endDate   DateTime @default("2023-01-01T00:00:00.000Z") @map("end_date")
+  startDate DateTime  @map("start_date")
+  endDate   DateTime  @default("2023-01-01T00:00:00.000Z") @map("end_date")
+  createdAt DateTime? @default(now()) @map("created_at")
+  updatedAt DateTime? @default(now()) @updatedAt @map("updated_at")
 
   @@id([year, semester])
   @@map("semester_dates")
@@ -326,23 +368,29 @@ model DisciplineTeacherRole {
   disciplineType      DisciplineType    @relation(fields: [disciplineTypeId], references: [id], onDelete: Cascade)
   disciplineTypeId    String            @map("discipline_type_id")
   role                TeacherRole
+  createdAt           DateTime?         @default(now()) @map("created_at")
+  updatedAt           DateTime?         @default(now()) @updatedAt @map("updated_at")
 
   @@id([disciplineTeacherId, disciplineTypeId, role])
   @@map("discipline_teacher_roles")
 }
 
 model DateVar {
-  name String   @unique
-  date DateTime
+  name      String    @unique
+  date      DateTime
+  createdAt DateTime? @default(now()) @map("created_at")
+  updatedAt DateTime? @default(now()) @updatedAt @map("updated_at")
 
   @@map("date_vars")
 }
 
 model StudentResource {
-  id   String @id @default(uuid())
-  link String
-  name String
-  icon String
+  id        String    @id @default(uuid())
+  link      String
+  name      String
+  icon      String
+  createdAt DateTime? @default(now()) @map("created_at")
+  updatedAt DateTime? @default(now()) @updatedAt @map("updated_at")
 
   @@map("student_resources")
 }
@@ -364,15 +412,19 @@ model Event {
   groupId   String      @map("group_id")
   eventInfo EventInfo[]
   lessons   Lesson[]
+  createdAt DateTime?   @default(now()) @map("created_at")
+  updatedAt DateTime?   @default(now()) @updatedAt @map("updated_at")
 
   @@map("events")
 }
 
 model EventInfo {
-  event       Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  eventId     String  @map("event_id")
+  event       Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId     String    @map("event_id")
   number      Int
   description String?
+  createdAt   DateTime? @default(now()) @map("created_at")
+  updatedAt   DateTime? @default(now()) @updatedAt @map("updated_at")
 
   @@id([eventId, number])
   @@map("event_info")
@@ -383,6 +435,8 @@ model Lesson {
   eventId          String         @map("event_id")
   disciplineType   DisciplineType @relation(fields: [disciplineTypeId], references: [id], onDelete: Cascade)
   disciplineTypeId String         @map("discipline_type_id")
+  createdAt        DateTime?      @default(now()) @map("created_at")
+  updatedAt        DateTime?      @default(now()) @updatedAt @map("updated_at")
 
   @@id([eventId, disciplineTypeId])
   @@map("lessons")
@@ -393,6 +447,8 @@ model RemovedDisciplineTeacher {
   disciplineTeacherId String            @map("discipline_teacher_id")
   student             Student           @relation(fields: [studentId], references: [userId], onDelete: Cascade)
   disciplineTeacher   DisciplineTeacher @relation(fields: [disciplineTeacherId], references: [id], onDelete: Cascade)
+  createdAt           DateTime?         @default(now()) @map("created_at")
+  updatedAt           DateTime?         @default(now()) @updatedAt @map("updated_at")
 
   @@id([disciplineTeacherId, studentId])
   @@map("removed_discipline_teachers")
@@ -403,15 +459,19 @@ model Cathedra {
   name         String                @default("")
   abbreviation String
   teachers     TeachersOnCathedras[]
+  createdAt    DateTime?             @default(now()) @map("created_at")
+  updatedAt    DateTime?             @default(now()) @updatedAt @map("updated_at")
 
   @@map("cathedras")
 }
 
 model TeachersOnCathedras {
-  teacher    Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
-  teacherId  String   @map("teacher_id")
-  cathedra   Cathedra @relation(fields: [cathedraId], references: [id], onDelete: Cascade)
-  cathedraId String   @map("cathedra_id")
+  teacher    Teacher   @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  teacherId  String    @map("teacher_id")
+  cathedra   Cathedra  @relation(fields: [cathedraId], references: [id], onDelete: Cascade)
+  cathedraId String    @map("cathedra_id")
+  createdAt  DateTime? @default(now()) @map("created_at")
+  updatedAt  DateTime? @default(now()) @updatedAt @map("updated_at")
 
   @@id([teacherId, cathedraId])
   @@map("teachers_on_cathedras")
@@ -430,6 +490,8 @@ model QueueUser {
   isDorm         Boolean?        @map("is_dorm")
   printedEdbo    Boolean?        @map("printed_edbo")
   queuePositions QueuePosition[]
+  createdAt      DateTime?       @default(now()) @map("created_at")
+  updatedAt      DateTime?       @default(now()) @updatedAt @map("updated_at")
 
   @@map("queue_users")
 }
@@ -450,6 +512,8 @@ model QueuePosition {
   position             Int
   status               QueuePositionStatus @default(WAITING)
   lastNotifiedPosition Int                 @default(0) @map("last_notified_position")
+  createdAt            DateTime?           @default(now()) @map("created_at")
+  updatedAt            DateTime?           @default(now()) @updatedAt @map("updated_at")
 
   @@map("queue_positions")
 }
@@ -460,6 +524,8 @@ model Queue {
   active    Boolean
   open      Boolean         @default(false)
   positions QueuePosition[]
+  createdAt DateTime?       @default(now()) @map("created_at")
+  updatedAt DateTime?       @default(now()) @updatedAt @map("updated_at")
 
   @@map("queues")
 }
@@ -497,6 +563,8 @@ model Entrant {
   contract           Contract?
   competitivePoint   Float?                 @map("competitive_point")
   inOrder            Boolean                @default(false)
+  createdAt          DateTime?              @default(now()) @map("created_at")
+  updatedAt          DateTime?              @default(now()) @updatedAt @map("updated_at")
 
   @@map("entrants")
 }
@@ -507,6 +575,8 @@ model EntrantPriority {
   state      PriorityState
   date       String
   priorities Priority[]
+  createdAt  DateTime?     @default(now()) @map("created_at")
+  updatedAt  DateTime?     @default(now()) @updatedAt @map("updated_at")
 
   @@map("entrant_priorities")
 }
@@ -516,6 +586,8 @@ model Priority {
   entrantId String           @map("entrant_id")
   priority  Int
   program   EducationProgram
+  createdAt DateTime?        @default(now()) @map("created_at")
+  updatedAt DateTime?        @default(now()) @updatedAt @map("updated_at")
 
   @@id([entrantId, priority])
   @@map("priorities")
@@ -530,61 +602,67 @@ enum EducationProgram {
 }
 
 model EntrantData {
-  entrant           Entrant @relation(fields: [entrantId], references: [id], onDelete: Cascade)
-  entrantId         String  @unique @map("entrant_id")
-  passportSeries    String? @map("passport_series")
-  passportNumber    String  @map("passport_number")
-  passportInstitute String  @map("passport_institute")
-  passportDate      String  @map("passport_date")
+  entrant           Entrant   @relation(fields: [entrantId], references: [id], onDelete: Cascade)
+  entrantId         String    @unique @map("entrant_id")
+  passportSeries    String?   @map("passport_series")
+  passportNumber    String    @map("passport_number")
+  passportInstitute String    @map("passport_institute")
+  passportDate      String    @map("passport_date")
   region            String?
   settlement        String
   address           String
   index             String
-  idCode            String? @map("id_code")
-  phoneNumber       String  @map("phone_number")
+  idCode            String?   @map("id_code")
+  phoneNumber       String    @map("phone_number")
   email             String
+  createdAt         DateTime? @default(now()) @map("created_at")
+  updatedAt         DateTime? @default(now()) @updatedAt @map("updated_at")
 
   @@map("entrant_data")
 }
 
 model RepresentativeData {
-  entrant           Entrant @relation(fields: [entrantId], references: [id], onDelete: Cascade)
-  entrantId         String  @unique @map("entrant_id")
-  firstName         String  @map("first_name")
-  middleName        String? @map("middle_name")
-  lastName          String  @map("last_name")
-  passportSeries    String? @map("passport_series")
-  passportNumber    String  @map("passport_number")
-  passportInstitute String  @map("passport_institute")
-  passportDate      String  @map("passport_date")
+  entrant           Entrant   @relation(fields: [entrantId], references: [id], onDelete: Cascade)
+  entrantId         String    @unique @map("entrant_id")
+  firstName         String    @map("first_name")
+  middleName        String?   @map("middle_name")
+  lastName          String    @map("last_name")
+  passportSeries    String?   @map("passport_series")
+  passportNumber    String    @map("passport_number")
+  passportInstitute String    @map("passport_institute")
+  passportDate      String    @map("passport_date")
   region            String?
   settlement        String
   address           String
   index             String
-  idCode            String? @map("id_code")
-  phoneNumber       String  @map("phone_number")
+  idCode            String?   @map("id_code")
+  phoneNumber       String    @map("phone_number")
   email             String?
+  createdAt         DateTime? @default(now()) @map("created_at")
+  updatedAt         DateTime? @default(now()) @updatedAt @map("updated_at")
 
   @@map("representative_data")
 }
 
 model CustomerData {
-  entrant           Entrant @relation(fields: [entrantId], references: [id], onDelete: Cascade)
-  entrantId         String  @unique @map("entrant_id")
-  firstName         String  @map("first_name")
-  middleName        String? @map("middle_name")
-  lastName          String  @map("last_name")
-  passportSeries    String? @map("passport_series")
-  passportNumber    String  @map("passport_number")
-  passportInstitute String  @map("passport_institute")
-  passportDate      String  @map("passport_date")
+  entrant           Entrant   @relation(fields: [entrantId], references: [id], onDelete: Cascade)
+  entrantId         String    @unique @map("entrant_id")
+  firstName         String    @map("first_name")
+  middleName        String?   @map("middle_name")
+  lastName          String    @map("last_name")
+  passportSeries    String?   @map("passport_series")
+  passportNumber    String    @map("passport_number")
+  passportInstitute String    @map("passport_institute")
+  passportDate      String    @map("passport_date")
   region            String?
   settlement        String
   address           String
   index             String
-  idCode            String? @map("id_code")
-  phoneNumber       String  @map("phone_number")
+  idCode            String?   @map("id_code")
+  phoneNumber       String    @map("phone_number")
   email             String?
+  createdAt         DateTime? @default(now()) @map("created_at")
+  updatedAt         DateTime? @default(now()) @updatedAt @map("updated_at")
 
   @@map("customer_data")
 }
@@ -595,10 +673,12 @@ enum PriorityState {
 }
 
 model Contract {
-  entrant   Entrant @relation(fields: [entrantId], references: [id], onDelete: Cascade)
-  entrantId String  @unique @map("entrant_id")
+  entrant   Entrant   @relation(fields: [entrantId], references: [id], onDelete: Cascade)
+  entrantId String    @unique @map("entrant_id")
   number    String
   date      String
+  createdAt DateTime? @default(now()) @map("created_at")
+  updatedAt DateTime? @default(now()) @updatedAt @map("updated_at")
 
   @@map("contracts")
 }
@@ -614,15 +694,19 @@ model EdboBudget {
   specialty        String
   studyForm        StudyForm @map("study_form")
   competitivePoint Float     @map("competitive_point")
+  createdAt        DateTime? @default(now()) @map("created_at")
+  updatedAt        DateTime? @default(now()) @updatedAt @map("updated_at")
 
   @@map("edbo_budget")
 }
 
 model Specialty {
-  entrant   Entrant @relation(fields: [entrantId], references: [id], onDelete: Cascade)
-  entrantId String  @unique @map("entrant_id")
+  entrant   Entrant   @relation(fields: [entrantId], references: [id], onDelete: Cascade)
+  entrantId String    @unique @map("entrant_id")
   specialty String
   studyForm String
+  createdAt DateTime? @default(now()) @map("created_at")
+  updatedAt DateTime? @default(now()) @updatedAt @map("updated_at")
 
   @@id([entrantId, specialty])
   @@map("specialties")

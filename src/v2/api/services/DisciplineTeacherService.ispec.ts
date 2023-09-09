@@ -22,8 +22,8 @@ describe('DisciplineTeacherService', () => {
   let teacherService: TeacherService;
   let telegramApi: TelegramAPI;
   let prismaService: PrismaService;
-  let nonSelective20221: Omit<Discipline, 'description'>;
-  let selective20222: Omit<Discipline, 'description'>;
+  let nonSelective20221: Omit<Discipline, 'description' | 'createdAt' | 'updatedAt'>;
+  let selective20222: Omit<Discipline, 'description' | 'createdAt' | 'updatedAt'>;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({

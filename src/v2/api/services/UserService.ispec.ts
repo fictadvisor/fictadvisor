@@ -383,6 +383,10 @@ describe('UserService', () => {
         where: {
           studentId: 'userWithSelectiveId',
         },
+        select: {
+          studentId: true,
+          disciplineId: true,
+        },
       });
 
       expect(result).toStrictEqual([
@@ -422,7 +426,19 @@ describe('UserService', () => {
 
       const { group, roles } = await userService.changeGroup(studentId, groupId);
 
-      expect({ group, roles }).toStrictEqual({
+      expect({ group: {
+        id: group.id,
+        code: group.code,
+      }, roles: roles.map((r) => ({
+        studentId: r.studentId,
+        roleId: r.roleId,
+        role: {
+          id: r.role.id,
+          name: r.role.name,
+          weight: r.role.weight,
+          parentId: r.role.parentId,
+        },
+      })) }).toStrictEqual({
         group: {
           id: 'newGroupId',
           code: 'ІП-22',
