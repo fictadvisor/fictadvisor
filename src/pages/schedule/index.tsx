@@ -29,7 +29,6 @@ export const getServerSideProps: GetServerSideProps<
       },
     };
   } catch (error) {
-    console.error('Помилка їбана');
     return {
       props: {
         groups: [],
