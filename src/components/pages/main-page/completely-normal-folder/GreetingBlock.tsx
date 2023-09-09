@@ -8,7 +8,7 @@ const GreetingBlock = () => {
   const imgScr = '/images/main-page/avatars/';
 
   const avatars = [
-    '/images/main-page/avatars/stat.png',
+    '/images/main-page/avatars/stas.png',
     '/images/main-page/avatars/svyat.png',
     '/images/main-page/avatars/oleg.png',
     '/images/main-page/avatars/danya.png',

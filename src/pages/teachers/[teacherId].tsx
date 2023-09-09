@@ -32,7 +32,7 @@ export const getStaticProps: GetStaticProps<
       props: {
         info,
       },
-      revalidate: 60 * 60 * 24, // Revalidate every 24 hours
+      revalidate: 60 * 60 * 6, // Revalidate every 6 hours
     };
   } catch (error) {
     return { props: { info: undefined } };
