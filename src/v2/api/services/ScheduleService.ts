@@ -208,7 +208,7 @@ export class ScheduleService {
   private async getLastEndDate (indexEndDate: Date, period: Period) {
     const { endDate } = await this.dateService.getCurrentSemester();
 
-    const difference = Math.ceil((endDate.getTime() - indexEndDate.getTime()) / DAY);
+    const difference = Math.ceil((endDate.getTime() - FORTNITE - indexEndDate.getTime()) / DAY);
     const divider = period === Period.EVERY_FORTNIGHT ? 14 : 7;
     const count = Math.floor(difference / divider);
 

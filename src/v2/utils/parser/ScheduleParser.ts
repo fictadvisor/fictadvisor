@@ -205,7 +205,7 @@ export class ScheduleParser implements Parser {
         },
         eventInfo: {
           createMany: {
-            data: this.getIndexesForEventInfo(0, 7),
+            data: this.getIndexesForEventInfo(0, 8),
           },
         },
       });
@@ -218,7 +218,7 @@ export class ScheduleParser implements Parser {
         endTime: endOfEvent,
         eventInfo: {
           createMany: {
-            data: this.getIndexesForEventInfo(8, 15),
+            data: this.getIndexesForEventInfo(9, 17),
           },
         },
       });
