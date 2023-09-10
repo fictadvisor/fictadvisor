@@ -34,6 +34,8 @@ import { UserDTO } from '../dtos/UserDTO';
 import { RegisterTelegramDTO } from '../dtos/RegisterTelegramDTO';
 import { ConfigService } from '@nestjs/config';
 import { CaptainAlreadyRegisteredException } from '../../utils/exceptions/CaptainAlreadyRegisteredException';
+import { AbsenceOfCaptainException } from '../../utils/exceptions/AbsenceOfCaptainException';
+import { AbsenceOfCaptainTelegramException } from '../../utils/exceptions/AbsenceOfCaptainTelegramException';
 
 export const ONE_MINUTE = 1000 * 60;
 export const HOUR = ONE_MINUTE * 60;
@@ -159,9 +161,11 @@ export class AuthService {
       await this.telegramApi.verifyCaptain(data);
     } else {
       const cap = await this.groupService.getCaptain(groupId);
-      if (cap.telegramId) {
-        await this.telegramApi.verifyStudent({ captainTelegramId: cap.telegramId, ...data });
-      }
+      
+      if (!cap) throw new AbsenceOfCaptainException(); 
+      if (!cap.telegramId) throw new AbsenceOfCaptainTelegramException();
+      
+      await this.telegramApi.verifyStudent({ captainTelegramId: cap.telegramId, ...data });
     }
   }
 

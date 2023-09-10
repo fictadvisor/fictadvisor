@@ -87,16 +87,31 @@ export class UserController {
   @ApiBearerAuth()
   @ApiOkResponse()
   @ApiBadRequestResponse({
-    description: `Exceptions:\n
-                  InvalidEntityIdException: User with such id is not found
-                  AlreadyRegisteredException: User is already registered
-                  InvalidBodyException: Group id can not be empty
-                  InvalidBodyException: IsCaptain must be a boolean
-                  InvalidBodyException: IsCaptain can not be empty`,
+    description: `\n
+    InvalidEntityIdException:
+      User with such id is not found
+
+    AlreadyRegisteredException:
+      User is already registered
+
+    InvalidBodyException:
+      Group id can not be empty
+      IsCaptain must be a boolean
+      IsCaptain can not be empty
+    
+    AbsenceOfCaptainException:
+      Captain was not found
+    
+    AbsenceOfCaptainTelegramException:
+      Captain's telegramId was not found`,
   })
   @ApiForbiddenResponse({
-    description: `NoPermissionException:\n
-                  You do not have permission to perform this action`,
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action
+    
+    ForbiddenException:
+      Forbidden`,
   })
   requestNewGroup (
     @Param('userId', UserByIdPipe) userId: string,
