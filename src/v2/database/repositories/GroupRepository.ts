@@ -10,6 +10,7 @@ export class GroupRepository {
 
   private include = {
     selectiveAmounts: true,
+    telegramGroups: true,
   };
 
   async find (where: Prisma.GroupWhereInput) {

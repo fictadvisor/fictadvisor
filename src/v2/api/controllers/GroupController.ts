@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request, UseGuards } from '@nestjs/common';
 import { GroupService } from '../services/GroupService';
 import { CreateGroupDTO } from '../dtos/CreateGroupDTO';
 import { GroupByIdPipe } from '../pipes/GroupByIdPipe';
@@ -30,6 +30,8 @@ import { QuerySemesterDTO } from '../dtos/QuerySemesterDTO';
 import { ShortDisciplinesResponse } from '../responses/DisciplineResponse';
 import { OrdinaryStudentResponse, StudentsResponse } from '../responses/StudentResponse';
 import { SwitchCaptainDTO } from '../dtos/SwitchCaptainDTO';
+import { GroupsWithTelegramGroupsResponse } from '../responses/GroupsWithTelegramGroupsResponse';
+import { TelegramGuard } from '../../security/TelegramGuard';
 
 @ApiTags('Groups')
 @Controller({
@@ -83,6 +85,22 @@ export class GroupController {
       groups,
       pagination: groupsWithSelectiveAmounts.pagination,
     };
+  }
+
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: GroupsWithTelegramGroupsResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @UseGuards(TelegramGuard)
+  @Get('/telegramGroups')
+  async getGroupsWithTelegramGroups () {
+    const groups = await this.groupService.getGroupsWithTelegramGroups();
+    return this.groupMapper.getGroupsWithTelegramGroups(groups);
   }
 
   @ApiOkResponse({

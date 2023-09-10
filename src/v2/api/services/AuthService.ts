@@ -162,10 +162,10 @@ export class AuthService {
     } else {
       const cap = await this.groupService.getCaptain(groupId);
       
-      if (!cap) throw new AbsenceOfCaptainException(); 
-      if (!cap.telegramId) throw new AbsenceOfCaptainTelegramException();
-      
-      await this.telegramApi.verifyStudent({ captainTelegramId: cap.telegramId, ...data });
+      if (!cap) throw new AbsenceOfCaptainException();
+      if (cap.telegramId) {
+        await this.telegramApi.verifyStudent({ captainTelegramId: cap.telegramId, ...data });
+      }
     }
   }
 

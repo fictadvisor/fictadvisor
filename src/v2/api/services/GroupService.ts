@@ -344,4 +344,14 @@ export class GroupService {
     if (!student) throw new InvalidEntityIdException('User');
     return student.groupId === groupId;
   }
+
+  async getGroupsWithTelegramGroups () {
+    return this.groupRepository.findMany({
+      where: {
+        telegramGroups: {
+          some: {},
+        },
+      },
+    });
+  }
 }
