@@ -1,13 +1,13 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title: "[BUG] Що?Де?Коли?"
+title: "[BUG] "
 labels: bugfix
 assignees: ''
 
 ---
 
-Що?Де?Коли?
+**Preconditions:**
 
 **Steps to reproduce**
 1. Go to '...'
@@ -20,7 +20,7 @@ assignees: ''
 **Expected result:**
 
 **Environment:**
--deploy: dev/prod
+-deploy: 
 -url: 
--OS: Windows/Ios
+-OS: 
 -browser: Google Chrome 116.0.5845.141/...
