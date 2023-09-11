@@ -23,7 +23,7 @@ export class DisciplineRepository {
   ) {}
 
   async findById (id: string): Promise<DbDiscipline> {
-    return this.prisma.discipline.findUnique({
+    return this.prisma.discipline.findFirst({
       where: {
         id,
       },

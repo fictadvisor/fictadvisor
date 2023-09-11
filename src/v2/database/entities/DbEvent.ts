@@ -5,6 +5,8 @@ export class DbEvent {
   name: string;
   startTime: Date;
   endTime: Date;
+  createdAt: Date;
+  updatedAt: Date;
   period: Period;
   url: string;
   group: Group;
