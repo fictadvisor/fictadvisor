@@ -53,12 +53,14 @@ enum TelegramSource {
   GROUP
   CHANNEL
   PERSONAL_CHAT
+  CHAT_WITH_THREADS
 }
 
 model TelegramGroup {
   group      Group          @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId    String         @map("group_id")
   telegramId BigInt         @map("telegram_id")
+  threadId   BigInt?        @map("thread_id")
   source     TelegramSource
   createdAt  DateTime?      @default(now()) @map("created_at")
   updatedAt  DateTime?      @default(now()) @updatedAt @map("updated_at")

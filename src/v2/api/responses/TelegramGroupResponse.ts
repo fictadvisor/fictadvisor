@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { TelegramSource } from '@prisma/client';
 
 export class TelegramGroupResponse {
@@ -7,6 +7,9 @@ export class TelegramGroupResponse {
 
   @ApiProperty()
     telegramId: bigint;
+
+  @ApiPropertyOptional()
+    threadId?: bigint;
 
   @ApiProperty({
     enum: TelegramSource,

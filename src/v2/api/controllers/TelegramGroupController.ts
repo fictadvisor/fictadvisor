@@ -5,8 +5,7 @@ import {
   ApiTags,
   ApiCreatedResponse,
   ApiQuery,
-  ApiBasicAuth,
-  ApiForbiddenResponse,
+  ApiBearerAuth,
   ApiUnauthorizedResponse,
   ApiParam,
 } from '@nestjs/swagger';
@@ -31,7 +30,7 @@ export class TelegramGroupController {
     private telegramGroupMapper: TelegramGroupMapper,
   ) {}
 
-  @ApiBasicAuth()
+  @ApiBearerAuth()
   @ApiUnauthorizedResponse({
     description: `\n
     UnauthorizedException:
@@ -47,17 +46,16 @@ export class TelegramGroupController {
       TelegramId is not a number
       Source can not be empty
       Source is not an enum
+      ThreadId is not a number
+      
+    ObjectIsRequiredException
+      Thread ID is required
       
     AlreadyExistException:
       TelegramGroup already exist
       
     InvalidEntityIdException:
       Group with such id is not found`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException: 
-      You do not have permission to perform this action`,
   })
   @UseGuards(TelegramGuard)
   @Post('/:groupId')
@@ -69,7 +67,7 @@ export class TelegramGroupController {
     return this.telegramGroupMapper.getTelegramGroup(telegramGroup);
   }
 
-  @ApiBasicAuth()
+  @ApiBearerAuth()
   @ApiUnauthorizedResponse({
     description: `\n
     UnauthorizedException:
@@ -83,15 +81,11 @@ export class TelegramGroupController {
     InvalidBodyException:
       Source can not be empty
       Source is not an enum
+      ThreadId is not a number
     
     InvalidEntityIdException:
       TelegramGroup with such id is not found
       Group with such id is not found`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException: 
-      You do not have permission to perform this action`,
   })
   @ApiQuery({
     name: 'telegramId',
@@ -108,7 +102,7 @@ export class TelegramGroupController {
     return this.telegramGroupMapper.getTelegramGroup(telegramGroup);
   }
 
-  @ApiBasicAuth()
+  @ApiBearerAuth()
   @ApiUnauthorizedResponse({
     description: `\n
     UnauthorizedException:
@@ -120,11 +114,6 @@ export class TelegramGroupController {
     InvalidEntityIdException:
       TelegramGroup with such id is not found
       Group with such id is not found`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException: 
-      You do not have permission to perform this action`,
   })
   @ApiQuery({
     name: 'telegramId',
@@ -139,8 +128,14 @@ export class TelegramGroupController {
     await this.telegramGroupService.delete(telegramId, groupId);
   }
 
+  @ApiBearerAuth()
   @ApiOkResponse({
     type: TelegramGroupsResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
   })
   @ApiBadRequestResponse({
     description: `\n
@@ -150,6 +145,7 @@ export class TelegramGroupController {
     DataNotFoundException:
       Data were not found`,
   })
+  @UseGuards(TelegramGuard)
   @Get('/:groupId')
   async getTelegramGroups (
     @Param('groupId', GroupByIdPipe) groupId: string,
@@ -158,6 +154,7 @@ export class TelegramGroupController {
     return this.telegramGroupMapper.getTelegramGroups(telegramGroups);
   }
 
+  @ApiBearerAuth()
   @ApiOkResponse({
     type: TelegramGroupsByTelegramIdResponse,
   })
@@ -171,10 +168,13 @@ export class TelegramGroupController {
     InvalidEntityIdException:
       TelegramGroup with such id is not found`,
   })
-  @ApiParam({ name: 'telegramId', type: 'number' })
+  @ApiParam({
+    name: 'telegramId',
+    type: Number,
+  })
   @UseGuards(TelegramGuard)
   @Get('/telegram/:telegramId')
-  async getGroupByTelegramId (
+  async getGroupsByTelegramId (
     @Param('telegramId', TelegramGroupByIdPipe) telegramId: bigint,
   ) {
     const telegramGroups = await this.telegramGroupService.getGroupByTelegramId(telegramId);

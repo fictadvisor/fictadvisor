@@ -26,4 +26,4 @@ export class DbStudent {
     lastPasswordChanged?: Date,
     state: State,
   };
-};
+}

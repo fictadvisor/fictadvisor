@@ -3,11 +3,12 @@ import { DbTelegramGroup } from '../database/entities/DbTelegramGroup';
 
 @Injectable()
 export class TelegramGroupMapper {
-  getTelegramGroup ({ groupId, telegramId, source }: DbTelegramGroup) {
+  getTelegramGroup ({ groupId, telegramId, source, threadId }: DbTelegramGroup) {
     return {
       groupId,
       telegramId,
       source,
+      threadId,
     };
   }
 

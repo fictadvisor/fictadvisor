@@ -1,15 +1,21 @@
 import { Injectable } from '@nestjs/common';
+import { TelegramSource } from '@prisma/client';
 import { TelegramGroupRepository } from '../../database/repositories/TelegramGroupRepository';
 import { CreateTelegramGroupDTO } from '../dtos/CreateTelegramGroupDTO';
 import { UpdateTelegramGroupDTO } from '../dtos/UpdateTelegramGroupDTO';
 import { DataNotFoundException } from '../../utils/exceptions/DataNotFoundException';
 import { AlreadyExistException } from '../../utils/exceptions/AlreadyExistException';
+import { ObjectIsRequiredException } from '../../utils/exceptions/ObjectIsRequiredException';
 
 @Injectable()
 export class TelegramGroupService {
   constructor (private telegramGroupRepository: TelegramGroupRepository) {}
 
   async create (groupId: string, body: CreateTelegramGroupDTO) {
+    if (body.source === TelegramSource.CHAT_WITH_THREADS && !body.threadId) {
+      throw new ObjectIsRequiredException('Thread ID');
+    }
+
     const telegramGroup = await this.telegramGroupRepository.findUnique({
       telegramId: body.telegramId,
       groupId,
