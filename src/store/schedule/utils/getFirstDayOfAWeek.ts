@@ -4,13 +4,13 @@ const WeekMs = DayMs * 7;
 
 import { GetCurrentSemester } from '@/lib/api/dates/types/GetCurrentSemester';
 
-export const getLastDayOfAWeek = (
+export const getFirstDayOfAWeek = (
   semester: GetCurrentSemester,
   week: number,
 ): Dayjs => {
   const startDateMs = dayjs(semester.startDate).tz().valueOf();
 
-  const lastDayOfWeek = dayjs(startDateMs + WeekMs * week - DayMs).tz();
+  const lastDayOfWeek = dayjs(startDateMs + WeekMs * week - DayMs * 7).tz();
 
   return lastDayOfWeek;
 };

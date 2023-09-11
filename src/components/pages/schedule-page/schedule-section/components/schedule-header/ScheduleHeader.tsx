@@ -21,7 +21,7 @@ import { GetCurrentSemester } from '@/lib/api/dates/types/GetCurrentSemester';
 import { GetEventBody } from '@/lib/api/schedule/types/GetEventBody';
 import { transformEvents } from '@/lib/api/schedule/utils/transformEvents';
 import { useSchedule } from '@/store/schedule/useSchedule';
-import { getLastDayOfAWeek } from '@/store/schedule/utils/getLastDayOfAWeek';
+import { getFirstDayOfAWeek } from '@/store/schedule/utils/getFirstDayOfAWeek';
 
 import * as styles from './ScheduleHeader.styles';
 
@@ -64,7 +64,7 @@ const ScheduleHeader = () => {
     const newWeek = week + amount;
     if (newWeek < 1 || newWeek > MAX_WEEK_NUMBER) return;
 
-    setChosenDay(getLastDayOfAWeek(semester as GetCurrentSemester, newWeek));
+    setChosenDay(getFirstDayOfAWeek(semester as GetCurrentSemester, newWeek));
   };
 
   const month = useMemo(() => {

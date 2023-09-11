@@ -29,7 +29,7 @@ const CalendarInput: FC<CalendarInputProps> = ({ date, setDate }) => {
     <Box sx={styles.wrapper}>
       <DatePicker
         slotProps={{
-          textField: { sx: styles.input, placeholder: 'ДД.ММ.РРРР' },
+          textField: { sx: styles.input },
           popper: { sx: styles.calendar },
         }}
         slots={{ openPickerIcon: CalendarIcon }}

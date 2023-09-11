@@ -29,7 +29,7 @@ export const formValidationSchema = yup.object().shape({
     .string()
     .required('Обовʼязкове поле')
     .min(2, 'Не коротше 2 символів')
-    .max(100, 'Не довше 100 символів'),
+    .max(150, 'Не довше 150 символів'),
   startTime: yup.string().required('Обовʼязкове поле').test(timeTest),
   endTime: yup.string().required('Обовʼязкове поле'),
   teachers: yup.array().test(uniqueTeachersTest),
