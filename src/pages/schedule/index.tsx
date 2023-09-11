@@ -2,7 +2,7 @@ import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
 import SchedulePage, {
   SchedulePageProps,
-} from '@/components/pages/schedule-page/schedule-page';
+} from '@/components/pages/schedule-page/SchedulePage';
 import DatesAPI from '@/lib/api/dates/DatesAPI';
 import GroupAPI from '@/lib/api/group/GroupAPI';
 

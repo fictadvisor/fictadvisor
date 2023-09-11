@@ -11,6 +11,7 @@ import { Tab, TabContext, TabList, TabPanel } from '@/components/common/ui/tab';
 import { TabTextPosition } from '@/components/common/ui/tab/tab/types';
 import Tag from '@/components/common/ui/tag';
 import { TagColor } from '@/components/common/ui/tag/types';
+import TextWithLinks from '@/components/pages/schedule-page/schedule-event-edit-section/schedule-info-card/components/TextWithLinks';
 import { InfoCardTabs } from '@/components/pages/schedule-page/schedule-event-edit-section/types';
 import { getStringTime } from '@/components/pages/schedule-page/utils/getStringTime';
 import useAuthentication from '@/hooks/use-authentication';
@@ -154,18 +155,20 @@ const ScheduleInfoCard: FC<ScheduleInfoCardProps> = ({
             {loading ? (
               <Skeleton {...skeletonProps} width={400} height={25} />
             ) : (
-              <Typography sx={{ whiteSpace: 'pre-line' }}>
-                {event?.eventInfo ?? 'Інформація про подію відсутня'}
-              </Typography>
+              <TextWithLinks
+                infoText={event?.eventInfo}
+                defaultText="Інформація про подію відсутня"
+              />
             )}
           </TabPanel>
           <TabPanel value={InfoCardTabs.DISCIPLINE}>
             {loading ? (
               <Skeleton {...skeletonProps} width={400} height={25} />
             ) : (
-              <Typography sx={{ whiteSpace: 'pre-line' }}>
-                {event?.disciplineInfo ?? 'Інформація про дисципліну відсутня'}
-              </Typography>
+              <TextWithLinks
+                infoText={event?.disciplineInfo}
+                defaultText="Інформація про дисципліну відсутня"
+              />
             )}
           </TabPanel>
         </TabContext>

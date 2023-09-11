@@ -8,7 +8,7 @@ import { transformEvents } from '@/lib/api/schedule/utils/transformEvents';
 import { useSchedule } from '@/store/schedule/useSchedule';
 
 import ScheduleColumn from './components/schedule/components/schedule-column';
-import * as styles from './schedule-section.styles';
+import * as styles from './ScheduleSection.styles';
 
 const ScheduleSectionMobile = () => {
   const { events, week, disciplines, loading, currentTime } = useSchedule(

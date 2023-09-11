@@ -14,7 +14,7 @@ import { ButtonIcons } from './calendar-section/components/mobile/buttonIcons/Bu
 import { CalendarSectionMobile } from './calendar-section/components/mobile/CalendarSectionMobile';
 import { ScheduleSection } from './schedule-section/ScheduleSection';
 import ScheduleSectionMobile from './schedule-section/ScheduleSectionMobile';
-import * as styles from './schedule-page.styles';
+import * as styles from './SchedulePage.styles';
 const MAX_WEEK_NUMBER = 20;
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import ScheduleAPI from '@/lib/api/schedule/ScheduleAPI';
