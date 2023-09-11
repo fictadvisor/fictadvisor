@@ -9,8 +9,5 @@ export const getFirstDayOfAWeek = (
   week: number,
 ): Dayjs => {
   const startDateMs = dayjs(semester.startDate).tz().valueOf();
-
-  const lastDayOfWeek = dayjs(startDateMs + WeekMs * week - DayMs * 7).tz();
-
-  return lastDayOfWeek;
+  return dayjs(startDateMs + WeekMs * week - DayMs * 7).tz();
 };
