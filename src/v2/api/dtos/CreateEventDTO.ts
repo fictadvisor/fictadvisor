@@ -12,7 +12,7 @@ export class CreateEventDTO {
 
   @ApiProperty()
   @MinLength(2, validationOptionsMsg('Name is too short (min: 2)'))
-  @MaxLength(100, validationOptionsMsg('Name is too long (max: 100)'))
+  @MaxLength(150, validationOptionsMsg('Name is too long (max: 150)'))
   @IsNotEmpty(validationOptionsMsg('Name cannot be empty'))
     name: string;
 

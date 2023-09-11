@@ -27,7 +27,7 @@ export class UpdateEventDTO {
   @ApiPropertyOptional()
   @IsOptional()
   @MinLength(2, validationOptionsMsg('Name is too short (min: 2)'))
-  @MaxLength(100, validationOptionsMsg('Name is too long (max: 100)'))
+  @MaxLength(150, validationOptionsMsg('Name is too long (max: 150)'))
     name?: string;
 
   @ApiPropertyOptional()

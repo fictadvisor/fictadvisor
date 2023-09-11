@@ -210,7 +210,7 @@ export class ScheduleController {
     InvalidBodyException:
       Group id cannot be empty
       Name is too short (min: 2)
-      Name is too long (max: 100)
+      Name is too long (max: 150)
       Name cannot be empty
       Discipline type must be an enum
       Teachers must be Array
@@ -344,7 +344,7 @@ export class ScheduleController {
     description: `\n
     InvalidBodyException:
       Name is too short (min: 2)
-      Name is too long (max: 100)
+      Name is too long (max: 150)
       Discipline type must be an enum
       Teachers must be Array
       Start time must be Date
