@@ -1,10 +1,11 @@
-import React, { FC, Fragment, ReactNode, useMemo } from 'react';
+import React, { FC, ReactNode, useEffect, useMemo, useState } from 'react';
 import { Box, InputAdornment, TextField, Typography } from '@mui/material';
 import { TextFieldProps } from '@mui/material/TextField';
 import { useField } from 'formik';
 
 import * as styles from './ScheduleInput.styles';
 
+const DEBOUNCE_TIME = 100;
 export interface ScheduleInputProps extends TextFieldProps<'standard'> {
   placeholder?: string;
   isDisabled?: boolean;
@@ -18,14 +19,22 @@ const ScheduleInput: FC<ScheduleInputProps> = ({
   icon,
   name,
 }) => {
-  const [props, { touched, error }, { setValue, setTouched }] = useField(name);
-
+  const [{ value }, { touched, error }, { setValue }] = useField(name);
   const hasError = useMemo(() => touched && !!error, [touched, error]);
+  const [internalValue, setInternalValue] = useState(value);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setValue(internalValue);
+    }, DEBOUNCE_TIME);
+    return () => clearTimeout(timeout);
+  }, [internalValue]);
 
   return (
     <Box sx={{ width: '100%' }}>
       <TextField
-        {...props}
+        onChange={e => setInternalValue(e.target.value)}
+        value={internalValue}
         placeholder={placeholder}
         disabled={isDisabled}
         sx={styles.input(size)}

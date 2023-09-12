@@ -1,20 +1,30 @@
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { useField } from 'formik';
 
 import * as styles from './TextArea.styles';
+const DEBOUNCE_TIME = 100;
 
 interface ScheduleTextAreaProps extends TextFieldProps<'standard'> {
   name: string;
 }
+
 const TextArea: FC<ScheduleTextAreaProps> = ({ name, ...props }) => {
-  const [formikProps, { touched, error }, { setValue, setTouched }] =
-    useField(name);
+  const [{ value }, {}, { setValue }] = useField(name);
+  const [internalValue, setInternalValue] = useState(value);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setValue(internalValue);
+    }, DEBOUNCE_TIME);
+    return () => clearTimeout(timeout);
+  }, [internalValue]);
 
   return (
     <TextField
       {...props}
-      {...formikProps}
+      onChange={event => setInternalValue(event.target.value)}
+      value={internalValue}
       variant="standard"
       margin="normal"
       sx={styles.textArea}
