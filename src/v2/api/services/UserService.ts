@@ -334,6 +334,7 @@ export class UserService {
     const { firstName, lastName, group: { code } } = await this.studentRepository.findById(studentId);
     const name = `${lastName} ${firstName}`;
     const years = await this.dateService.getYears();
+    const missingDisciplines = [];
     for (const year of years) {
       const selectiveFile = this.fileService.getFileContent(`selective/${year}.csv`);
       for (const parsedRow of selectiveFile.split(/\r\n/g)) {
@@ -352,7 +353,7 @@ export class UserService {
         });
 
         if (!discipline) {
-          await this.telegramAPI.sendMessage(`Selective discipline is not found: group: ${code}; fullName: ${name}; subject: ${subjectName}`);
+          missingDisciplines.push(subjectName);
           continue;
         }
 
@@ -372,6 +373,9 @@ export class UserService {
           },
         });
       }
+    }
+    if (missingDisciplines.length) {
+      await this.telegramAPI.sendMessage(`There are missing disciplines for <b>${name}</b> in group <b>${code}</b>:\n  ${missingDisciplines.join('\n  ')}`);
     }
   }
 
@@ -425,11 +429,11 @@ export class UserService {
     disciplines: DbDiscipline[],
     groupId: string
   ) {
-    disciplines.map((discipline) => {
+    for (const discipline of disciplines) {
       if (discipline.groupId !== groupId) {
         throw new NotBelongToGroupException();
       }
-    });
+    }
   }
 
   async getSelectiveDisciplines (userId: string) {
