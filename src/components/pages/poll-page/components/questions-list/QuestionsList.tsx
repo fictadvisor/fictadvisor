@@ -1,10 +1,9 @@
 import React from 'react';
 
+import PollCard from '@/components/common/ui/cards/poll-card';
+import TeacherHeaderCard from '@/components/common/ui/cards/teacher-header-card';
 import { Category, PollTeacher } from '@/types/poll';
 import { TeacherSubject } from '@/types/teacher';
-
-import PollCard from './components/poll-card';
-import TeacherHeaderCard from './components/teacher-header-card';
 
 import styles from './QuestionsList.module.scss';
 

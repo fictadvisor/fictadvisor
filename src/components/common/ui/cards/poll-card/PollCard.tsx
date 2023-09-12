@@ -1,10 +1,10 @@
 import React from 'react';
-import cn from 'classnames';
+import { Box, SxProps, Theme, Typography } from '@mui/material';
 
 import { CheckIcon, DoubleCheck } from '@/components/common/icons/DoubleCheck';
-import { DivProps } from '@/components/common/ui/cards/types';
+import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 
-import styles from './PollCard.module.scss';
+import * as styles from './PollCard.styles';
 
 type PollCard = {
   questionNumber: number;
@@ -14,7 +14,9 @@ type PollCard = {
   disabled?: boolean;
   isComment?: boolean;
   isActive: boolean;
-} & DivProps;
+  sx?: SxProps<Theme>;
+  onClick?: () => void;
+};
 
 const PollCard: React.FC<PollCard> = ({
   questionNumber,
@@ -24,7 +26,7 @@ const PollCard: React.FC<PollCard> = ({
   disabled,
   isComment,
   isActive,
-  ...rest
+  sx = {},
 }) => {
   let isDoubleCheckIcon,
     showIcon = true;
@@ -35,29 +37,21 @@ const PollCard: React.FC<PollCard> = ({
   } else if (numberOfAnswered === 0) showIcon = false;
 
   return (
-    <div
-      className={cn(
-        styles['card'],
-        styles['poll-card-container'],
-        { [styles['poll-card-container-disabled']]: disabled },
-        { [styles['poll-card-container-active']]: isActive },
-      )}
-      {...rest}
-    >
-      <div className={styles['main-content']}>
-        <b>
+    <Box sx={mergeSx(styles.card(isActive, disabled), sx)}>
+      <Box>
+        <Typography variant="body1Bold">
           {questionNumber}. {question}
-        </b>
-        <p>
+        </Typography>
+        <Typography variant="body1" sx={styles.questionNumber(disabled)}>
           {isComment
             ? 'Відкрите запитання'
             : `${numberOfAnswered}/${numberOfQuestions} запитання`}
-        </p>
-      </div>
-      <div className="icon">
+        </Typography>
+      </Box>
+      <Box>
         {showIcon && (isDoubleCheckIcon ? <DoubleCheck /> : <CheckIcon />)}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 
