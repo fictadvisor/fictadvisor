@@ -35,7 +35,7 @@ export const SubjectTeacherSearchList: FC<SubjectTeacherSearchListProps> = ({
           </Typography>
         </Box>
       )}
-      <List className={styles[`subject-teacher-search-list`]}>
+      <List>
         {teachers &&
           teachers.map((teacher, index) => (
             <Link

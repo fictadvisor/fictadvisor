@@ -11,9 +11,7 @@ import { SubjectTeacherSearchList } from '@/components/pages/search-pages/subjec
 import SubjectsAPI from '@/lib/api/subject/SubjectAPI';
 import { GetTeachersBySubjectResponse } from '@/lib/api/subject/types/GetTeachersBySubjectResponse';
 
-import * as stylesMUI from './SearchTeacherPage.styles';
-
-import styles from './SearchTeacherPage.module.scss';
+import * as styles from './SearchTeacherPage.styles';
 
 const breadcrumbs: Breadcrumb[] = [
   {
@@ -41,14 +39,11 @@ const SearchTeacherPage: FC = () => {
   );
 
   return (
-    <Box sx={stylesMUI.layout}>
-      <Breadcrumbs
-        items={[...breadcrumbs, subject]}
-        sx={stylesMUI.breadcrumbs}
-      />
+    <Box sx={styles.layout}>
+      <Breadcrumbs items={[...breadcrumbs, subject]} sx={styles.breadcrumbs} />
       <Typography variant="h4">{data?.subjectName}</Typography>
       {isLoading && (
-        <Box sx={stylesMUI.pageLoader}>
+        <Box sx={styles.pageLoader}>
           <Progress />
         </Box>
       )}

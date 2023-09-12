@@ -25,10 +25,10 @@ import {
 import IconButton from '@/components/common/ui/icon-button-mui';
 import GroupAPI from '@/lib/api/group/GroupAPI';
 
-import * as stylesMUI from './SearchForm.styles';
+import * as styles from './SearchForm.styles';
 import { SearchFormFields } from './types';
 
-import styles from './SearchForm.module.scss';
+import stylesScss from './SearchForm.module.scss';
 export interface SearchFormProps {
   onSubmit: (values: Partial<SearchFormFields>) => void;
   initialValues: SearchFormFields;
@@ -85,20 +85,20 @@ const SearchForm: FC<SearchFormProps> = ({
       innerRef={formikRef}
     >
       {({ handleSubmit, values }) => (
-        <Form className={styles['form']}>
+        <Form className={stylesScss['form']}>
           <FormObserver name={localStorageName} />
           <Input
             onDeterredChange={handleSubmit}
-            className={styles['input']}
+            className={stylesScss['input']}
             size={InputSize.LARGE}
             type={InputType.SEARCH}
             name="search"
             placeholder={searchPlaceholder}
             showRemark={false}
           />
-          <Box sx={stylesMUI.collapseBtn}>
+          <Box sx={styles.collapseBtn}>
             <IconButton
-              sx={stylesMUI.collapseIcon}
+              sx={styles.collapseIcon}
               shape={IconButtonShape.SQUARE}
               color={IconButtonColor.SECONDARY}
               icon={collapsed ? <ChevronDownIcon /> : <ChevronUpIcon />}
@@ -107,7 +107,7 @@ const SearchForm: FC<SearchFormProps> = ({
           </Box>
           {!collapsed && (
             <>
-              <Box sx={stylesMUI.dropdown1}>
+              <Box sx={styles.dropdown1}>
                 <Dropdown
                   placeholder="ІП-22"
                   label="Група"
@@ -117,7 +117,7 @@ const SearchForm: FC<SearchFormProps> = ({
                   options={groups}
                 />
               </Box>
-              <Box sx={stylesMUI.dropdown2}>
+              <Box sx={styles.dropdown2}>
                 <Dropdown
                   label="Сортувати за"
                   placeholder="Іменем"
@@ -129,7 +129,7 @@ const SearchForm: FC<SearchFormProps> = ({
               </Box>
               <Box>
                 <IconButton
-                  sx={stylesMUI.sortIcon}
+                  sx={styles.sortIcon}
                   onClick={handleOrderChange}
                   shape={IconButtonShape.SQUARE}
                   color={IconButtonColor.SECONDARY}

@@ -28,21 +28,3 @@ export const collapseIcon: SxProps<Theme> = {
   display: { mobile: 'grid', tablet: 'block !important' },
   '& .svg': { width: { tablet: '70%' } },
 };
-
-/*
-.form {
-
-    .collapse-btn {
-        display: none;
-    }
-}
-
-
-@media screen and (max-width: $breakpoint-tablet) {
-
-    .collapse-btn {
-        display: block !important;
-        align-self: center;
-    }
-}
-* */

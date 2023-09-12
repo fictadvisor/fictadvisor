@@ -16,7 +16,7 @@ import useToast from '@/hooks/use-toast';
 import PollAPI from '@/lib/api/poll/PollAPI';
 import { PollTeachersResponse } from '@/lib/api/poll/types/PollTeachersResponse';
 
-import * as stylesMUI from './PollTeacherPage.styles';
+import * as styles from './PollTeacherPage.styles';
 
 const breadcrumbs = [
   {
@@ -65,23 +65,23 @@ const PollTeacherPage: FC = () => {
   }, [data]);
 
   return (
-    <Box sx={stylesMUI.layout}>
+    <Box sx={styles.layout}>
       {isLoggedIn && (
         <>
-          <Breadcrumbs items={breadcrumbs} sx={stylesMUI.breadcrumps} />
+          <Breadcrumbs items={breadcrumbs} sx={styles.breadcrumps} />
           {data && (
             <PollTeacherSearchList data={data} className="poll-teacher" />
           )}
           {isLoading ||
             (isFetching && (
-              <Box sx={stylesMUI.pageLoader}>
+              <Box sx={styles.pageLoader}>
                 <Progress />
               </Box>
             ))}
 
           {data?.teachers.length === (curPage + 1) * PAGE_SIZE && (
             <Button
-              sx={stylesMUI.loadBtn}
+              sx={styles.loadBtn}
               text="Завантажити ще"
               onClick={() => setCurPage(pr => pr + 1)}
             />

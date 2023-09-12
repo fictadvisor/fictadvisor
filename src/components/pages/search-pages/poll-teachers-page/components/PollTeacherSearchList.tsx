@@ -8,9 +8,9 @@ import useAuthentication from '@/hooks/use-authentication';
 import { PollTeachersResponse } from '@/lib/api/poll/types/PollTeachersResponse';
 import theme from '@/styles/theme';
 
-import * as stylesMUI from './PollTeacherSearchList.styles';
+import * as styles from './PollTeacherSearchList.styles';
 
-import styles from './PollTeacherSearchList.module.scss';
+import style from './PollTeacherSearchList.module.scss';
 
 interface PollTeacherSearchListProps {
   data: PollTeachersResponse;
@@ -28,12 +28,12 @@ const PollTeacherSearchList: FC<PollTeacherSearchListProps> = ({
   const groupName = user?.group?.code;
   return (
     <>
-      <Typography sx={stylesMUI.headText}>
+      <Typography sx={styles.headText}>
         Викладачі предметів групи {groupName}
       </Typography>
       {isCompleted ? (
-        <Box sx={stylesMUI.wrapper}>
-          <Box sx={stylesMUI.content}>
+        <Box sx={styles.wrapper}>
+          <Box sx={styles.content}>
             <Image
               src="/gifs/frog-complete.gif"
               alt="Frogs complete the poll"
@@ -41,7 +41,7 @@ const PollTeacherSearchList: FC<PollTeacherSearchListProps> = ({
               height={isMobile ? 125 : 200}
               quality={100}
             />
-            <Typography sx={stylesMUI.headText}>На цей семестр всьо</Typography>
+            <Typography sx={styles.headText}>На цей семестр всьо</Typography>
             <Typography variant="body2">
               Ти вже пройшов опитування за всіх викладачів, що викладали в тебе
               в цьому семестрі, дочекайся наступного семестру, аби знов залишити
@@ -50,8 +50,7 @@ const PollTeacherSearchList: FC<PollTeacherSearchListProps> = ({
           </Box>
         </Box>
       ) : (
-        // <List sx={styles.list}>
-        <List sx={stylesMUI.searchList} style={styles}>
+        <List sx={styles.searchList} style={style}>
           {data &&
             data.teachers?.map(teacher => (
               <PollTeacherCard

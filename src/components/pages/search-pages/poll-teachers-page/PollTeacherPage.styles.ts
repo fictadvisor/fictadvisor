@@ -8,8 +8,7 @@ export const layout: SxProps<Theme> = {
 };
 
 export const pageLoader: SxProps<Theme> = {
-  paddingTop: '30px',
-  paddingBottom: '30px',
+  padding: '30px 0',
   width: '100%',
   display: 'flex',
   justifyContent: 'center',
