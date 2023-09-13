@@ -14,7 +14,7 @@ const timeTest: TestConfig = {
 
     return endTimeMs > startTimeMs;
   },
-  message: 'Неправильни час',
+  message: 'Неправильний час',
 };
 
 const uniqueTeachersTest: TestConfig = {
