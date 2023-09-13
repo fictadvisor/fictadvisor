@@ -1,6 +1,5 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC } from 'react';
 
-import { LOCAL_STORAGE_SCHEDULE_KEY } from '@/components/pages/schedule-page/constants';
 import { useSchedule } from '@/store/schedule/useSchedule';
 import { Group } from '@/types/group';
 
@@ -14,12 +13,6 @@ export const GroupsDropDown: FC<DropDownSectionProps> = ({ groups }) => {
     groupId: state.groupId,
   }));
   const setGroupId = useSetGroupId();
-
-  useEffect(() => {
-    return () => {
-      localStorage.setItem(LOCAL_STORAGE_SCHEDULE_KEY, groupId);
-    };
-  }, [groupId]);
 
   return (
     <Dropdown
