@@ -79,7 +79,7 @@ export class TelegramGroupController {
   @ApiBadRequestResponse({
     description: `\n
     InvalidBodyException:
-      Source can not be empty
+      TelegramId is not a number
       Source is not an enum
       ThreadId is not a number
     
