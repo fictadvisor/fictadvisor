@@ -6,8 +6,12 @@ import { Access } from '../../security/Access';
 import { PERMISSION } from '../../security/PERMISSION';
 import {
   ApiBadRequestResponse,
-  ApiBearerAuth, ApiForbiddenResponse, ApiNotFoundResponse,
-  ApiOkResponse, ApiQuery, ApiTags,
+  ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiQuery,
+  ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { EntrantWithContractResponse } from '../responses/EntrantWithContractResponse';

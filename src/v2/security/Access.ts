@@ -1,11 +1,11 @@
 import { applyDecorators, UseGuards } from '@nestjs/common';
 import { JwtGuard } from 'src/v2/security/JwtGuard';
-import { Permission } from 'src/v2/security/permission-guard/Permission';
+import { Permissions } from 'src/v2/security/permission-guard/Permissions';
 import { PermissionGuard } from 'src/v2/security/permission-guard/PermissionGuard';
 
-export function Access (permission: string, ...guards: any[]) {
+export function Access (permissions: string | string[], ...guards: any[]) {
   return applyDecorators(
-    Permission(permission),
+    Permissions(permissions),
     UseGuards(JwtGuard, ...guards, PermissionGuard)
   );
 }
