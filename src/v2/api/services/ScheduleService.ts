@@ -540,8 +540,7 @@ export class ScheduleService {
         },
       };
     } else {
-      const countOfWeek = Math.ceil((endTime.getTime() - startTime.getTime()) / WEEK);
-      const countOfPair = period === Period.EVERY_FORTNIGHT ? Math.floor(countOfWeek / 2) : countOfWeek;
+      const countOfPair = await this.getEndIndex(startTime, endTime, period);
       const pairDifference = countOfPair - event.eventInfo.length;
 
       if (pairDifference > 0) {
@@ -551,7 +550,7 @@ export class ScheduleService {
       } else if (pairDifference < 0) {
         data.deleteMany = {
           number: {
-            gte: countOfPair - 1,
+            gt: countOfPair,
           },
         };
       }
