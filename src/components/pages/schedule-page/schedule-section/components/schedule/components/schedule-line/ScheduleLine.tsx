@@ -6,8 +6,6 @@ import { getStringTime } from '@/components/pages/schedule-page/utils/getStringT
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 import { useSchedule } from '@/store/schedule/useSchedule';
 
-import { calctulateTop } from '../schedule-column/components/schedule-card/utils/calculateTop';
-
 import * as styles from './ScheduleLine.styles';
 import { ScheduleLineVariant } from './types';
 
@@ -15,18 +13,19 @@ interface ScheduleLineProps {
   variant: ScheduleLineVariant;
   dashed?: boolean;
   sx?: SxProps<Theme>;
+  top: number;
 }
 
 const ScheduleLine: FC<ScheduleLineProps> = ({
   variant = ScheduleLineVariant.LONG,
   dashed = false,
   sx = {},
+  top,
 }) => {
   const time = useSchedule(state => state.currentTime);
 
-  const top = calctulateTop(time.toISOString());
-
-  const indent = (time.day() - 1) * 148;
+  const day = (time.day() + 6) % 7;
+  const indent = day * 148;
 
   return (
     <Box sx={mergeSx(styles.container(top), sx)}>

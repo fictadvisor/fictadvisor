@@ -15,7 +15,7 @@ export const wrapper = (
   },
   zIndex,
   borderRadius: '6px',
-  position: { tablet: 'absolute' },
+  position: { mobile: 'relative', tablet: 'absolute' },
   transform: { tablet: `translateY(calc(${top}px - 5px))` },
   transition: 'linear .1s all',
 });

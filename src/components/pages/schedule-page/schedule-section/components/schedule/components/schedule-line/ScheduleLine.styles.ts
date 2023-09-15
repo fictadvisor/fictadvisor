@@ -12,7 +12,8 @@ export const container = (top: number): SxProps<Theme> => ({
   alignItems: 'center',
   position: 'absolute',
   width: '100%',
-  top: top,
+  left: { mobile: -8, tablet: 0 },
+  top: { mobile: `calc(${top}% - 4px)`, tablet: top - 4 },
 });
 
 export const verticalDivider = (
@@ -20,10 +21,12 @@ export const verticalDivider = (
 ): SxProps<Theme> => ({
   height: '18px',
   backgroundColor: theme.palette.primary[600],
+  position: 'absolute',
 
   ...(variant === ScheduleLineVariant.LONG && {
     width: '18px',
     borderRadius: '50%',
+    overflow: 'hidden',
   }),
 
   ...(variant === ScheduleLineVariant.SHORT && {
@@ -41,8 +44,10 @@ export const horizontalDivider = (
   borderTopRightRadius: '2px',
 
   ...(variant === ScheduleLineVariant.LONG && {
-    border: `1px solid ${theme.palette.primary[600]}`,
-    width: '292px',
+    border: `2px solid ${theme.palette.primary[600]}`,
+    backgroundColor: 'primary.600',
+    height: '2px',
+    width: '100%',
   }),
 
   ...(variant === ScheduleLineVariant.SHORT && {
@@ -64,10 +69,14 @@ export const line = (
   variant: ScheduleLineVariant,
   indent: number,
 ): SxProps<Theme> => ({
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  ...(variant === ScheduleLineVariant.LONG && {
+    overflow: 'hidden',
+    width: '100%',
+  }),
   ...(variant === ScheduleLineVariant.SHORT && {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
     height: '4px',
     backgroundColor: 'primary.600',
     borderRadius: '2px',

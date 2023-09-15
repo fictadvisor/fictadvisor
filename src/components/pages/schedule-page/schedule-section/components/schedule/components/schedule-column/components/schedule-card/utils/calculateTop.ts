@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-export const calctulateTop = (startTime: string): number => {
+export const calculateTop = (startTime: string): number => {
   if (startTime) {
     const date = dayjs(startTime).tz();
     const minutes = date.hour() * 60 + date.minute() - 7 * 60;

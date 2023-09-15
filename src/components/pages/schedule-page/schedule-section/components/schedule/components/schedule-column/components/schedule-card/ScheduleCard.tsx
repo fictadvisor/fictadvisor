@@ -1,16 +1,20 @@
 import { FC, useEffect, useState } from 'react';
-import { Box } from '@mui/material';
+import { Box, useMediaQuery } from '@mui/material';
 import dayjs from 'dayjs';
 
+import { calculateScheduleLineTop } from '@/components/pages/schedule-page/schedule-section/components/schedule/components/schedule-column/components/schedule-card/utils/calculateScheduleLineTop';
+import ScheduleLine from '@/components/pages/schedule-page/schedule-section/components/schedule/components/schedule-line';
+import { ScheduleLineVariant } from '@/components/pages/schedule-page/schedule-section/components/schedule/components/schedule-line/types';
 import { getStringTime } from '@/components/pages/schedule-page/utils/getStringTime';
 import { useSchedule } from '@/store/schedule/useSchedule';
+import theme from '@/styles/theme';
 import { Event } from '@/types/schedule';
 
 import ScheduleEvent from './cards/ScheduleEvent';
 import ScheduleEvents from './cards/ScheduleEvents';
 import { ScheduleEventsSection } from './components/schedule-events-section/ScheduleEventsSection';
 import calculateHeight from './utils/calculateHeight';
-import { calctulateTop } from './utils/calculateTop';
+import { calculateTop } from './utils/calculateTop';
 import * as styles from './ScheduleCard.styles';
 
 interface ScheduleCardProps {
@@ -27,15 +31,30 @@ const ScheduleCard: FC<ScheduleCardProps> = ({ event, onClick, week }) => {
   const [end, setEnd] = useState('');
   const [areEventsOpen, setEventsOpen] = useState(false);
   const [isPastEvent, setIsPastEvent] = useState(false);
+  const [lineTop, setLineTop] = useState(0);
+  const [isCurEvent, setIsCurEvent] = useState(false);
 
   useEffect(() => {
     const _event = Array.isArray(event) ? event[0] : event;
-    setTop(calctulateTop(_event.startTime));
+    setTop(calculateTop(_event.startTime));
     setHeight(calculateHeight(_event.startTime, _event.endTime));
     setStart(getStringTime(_event.startTime));
     setEnd(getStringTime(_event.endTime));
-    setIsPastEvent(currentTime >= dayjs(_event.endTime).tz());
-  }, [event]);
+    setIsPastEvent(currentTime.valueOf() >= dayjs(_event.endTime).valueOf());
+    setLineTop(
+      calculateScheduleLineTop(
+        _event.startTime,
+        _event.endTime,
+        currentTime.toISOString(),
+      ),
+    );
+    setIsCurEvent(
+      currentTime.valueOf() >= dayjs(_event.startTime).valueOf() &&
+        currentTime.valueOf() <= dayjs(_event.endTime).valueOf(),
+    );
+  }, [currentTime, event]);
+
+  const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
 
   return (
     <Box sx={styles.wrapper(top, height, areEventsOpen ? 1 : 0)}>
@@ -67,6 +86,13 @@ const ScheduleCard: FC<ScheduleCardProps> = ({ event, onClick, week }) => {
           onClick={onClick}
           week={week}
           isPastEvent={isPastEvent}
+        />
+      )}
+      {isMobile && isCurEvent && (
+        <ScheduleLine
+          variant={ScheduleLineVariant.LONG}
+          dashed={false}
+          top={lineTop}
         />
       )}
     </Box>
