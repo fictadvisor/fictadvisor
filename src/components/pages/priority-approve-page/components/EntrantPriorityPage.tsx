@@ -31,7 +31,6 @@ interface EntrantPriorityPageProps {
 const TOAST_TIMER = 4000;
 
 const EntrantPriorityPage: FC<EntrantPriorityPageProps> = ({ data }) => {
-  console.log(data);
   const toast = useToast();
   const [buttonState, setButtonState] = useState(false);
   const [buttonText, setButtonText] = useState('Схвалити');

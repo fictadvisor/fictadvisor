@@ -2,7 +2,7 @@ import PageLayout from '@/components/common/layout/page-layout';
 import AccountPage from '@/components/pages/account-page';
 
 const Account = () => (
-  <PageLayout title="Персональний аккаунт FICT Advisor">
+  <PageLayout title="Персональний акаунт FICT Advisor">
     <AccountPage />
   </PageLayout>
 );

@@ -249,7 +249,6 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
                             }
                             answers[i].value = answers[i].value.toString();
                           }
-                          console.log(answers);
                           await PollAPI.createTeacherGrade(
                             { answers },
                             disciplineTeacherId,

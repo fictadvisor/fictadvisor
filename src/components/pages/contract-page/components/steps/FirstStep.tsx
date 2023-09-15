@@ -62,7 +62,6 @@ export const FirstStep: FC<FirstStepProps> = ({
       values.meta.educationalProgram = '';
       values.meta.programType = '';
     }
-    console.log(values);
     onNextStep(values);
   };
 

@@ -8,8 +8,6 @@ export const prepareData = (
   if (data.middleName.length === 0)
     delete (data as PartialBy<DeleteEntrantBody, 'middleName'>).middleName;
 
-  console.log(data);
-
   return data;
 };
 

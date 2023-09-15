@@ -41,7 +41,6 @@ const EntrantSearchForm: FC<EntrantSearchFormProps> = ({ setEntrantData }) => {
       const data = await ContractAPI.getEntrantInfo(values);
       setEntrantData(data);
       saveLocalStorage(values);
-      console.log(data);
     } catch (error) {
       displayError(error);
     }
