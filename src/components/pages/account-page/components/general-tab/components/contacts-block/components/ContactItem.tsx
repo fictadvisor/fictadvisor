@@ -1,8 +1,9 @@
 import React, { FC } from 'react';
 import { QueryObserverBaseResult } from 'react-query';
+import Link from 'next/link';
 
+import Input from '@/components/common/ui/form/input-mui';
 import { TrashBucketButton } from '@/components/common/ui/icon-button-mui/variants';
-import ImmutableInput from '@/components/common/ui/immutable-input';
 import { Contact } from '@/components/pages/account-page/components/general-tab/components/contacts-block/types';
 import useAuthentication from '@/hooks/use-authentication';
 import UserAPI from '@/lib/api/user/UserAPI';
@@ -25,12 +26,15 @@ const ContactItem: FC<ContactProps> = ({
 
   return (
     <div className={styles['contact-item']}>
-      <ImmutableInput
-        href={link}
-        name={name}
-        value={displayName}
-        label={name}
-      />
+      <Link href={link}>
+        <Input
+          readOnly
+          onChange={() => {}}
+          name={name}
+          value={displayName}
+          label={name}
+        />
+      </Link>
       <TrashBucketButton onClick={handleDeleteClick} />
     </div>
   );

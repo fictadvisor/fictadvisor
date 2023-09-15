@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
+import { DependencyList, useEffect } from 'react';
 
-const useTabClose = (cb: () => void) => {
+const useTabClose = (cb: () => void, deps: DependencyList = []) => {
   useEffect(() => {
     const handleTabClose = (event: BeforeUnloadEvent) => {
       event.preventDefault();
@@ -10,7 +10,7 @@ const useTabClose = (cb: () => void) => {
     return () => {
       window.removeEventListener('beforeunload', handleTabClose);
     };
-  }, []);
+  }, deps);
 };
 
 export default useTabClose;

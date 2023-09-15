@@ -9,7 +9,7 @@ import {
 import Divider from '@/components/common/ui/divider';
 import { DividerTextAlign } from '@/components/common/ui/divider/types';
 import * as styles from '@/components/pages/entrant-dashboard-page/EntrantDashboardPage.styles';
-import useToast from '@/hooks/use-toast';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import ContractAPI from '@/lib/api/contract/ContractAPI';
 import { Actions } from '@/lib/api/contract/types/DeleteEntrantDataBody';
 import {
@@ -44,7 +44,7 @@ export const PrioritiesSection: FC<PrioritiesSectionProps> = ({
   cb,
   setEntrantData,
 }) => {
-  const toast = useToast();
+  const { displayError } = useToastError();
   const handleDelete = async () => {
     try {
       await cb(Actions.PRIORITY);
@@ -69,12 +69,8 @@ export const PrioritiesSection: FC<PrioritiesSectionProps> = ({
         };
         return newData as EntrantFuIlResponse;
       });
-    } catch (e) {
-      const error = (
-        e as { response: { data: { error: keyof typeof errorMapper } } }
-      ).response.data.error;
-
-      toast.error(errorMapper[error]);
+    } catch (error) {
+      displayError(error);
     }
   };
 

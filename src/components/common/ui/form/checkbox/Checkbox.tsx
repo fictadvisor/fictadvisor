@@ -4,8 +4,8 @@ import {
   FormControlLabel,
   Typography,
 } from '@mui/material';
+import { CheckboxProps as MuiCheckboxProps } from '@mui/material';
 import { SxProps, Theme } from '@mui/material/styles';
-import { useField } from 'formik';
 
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 
@@ -14,24 +14,27 @@ import Icon from './components/Icon';
 import * as styles from './Checkbox.styles';
 import { CheckboxColor, CheckboxTextType } from './types';
 
-interface CheckboxProps {
+export interface CheckboxProps
+  extends Omit<MuiCheckboxProps, 'color' | 'checkedIcon' | 'disabled'> {
   label?: string;
-  disabled?: boolean;
   sx?: SxProps<Theme>;
-  name: string;
   color?: CheckboxColor;
   textType?: CheckboxTextType;
+  touched?: boolean;
+  error?: string;
+  disabled?: boolean;
 }
 
 const Checkbox: FC<CheckboxProps> = ({
   label,
-  disabled = false,
   sx = {},
-  name,
   color = CheckboxColor.PRIMARY,
   textType = CheckboxTextType.BODY1,
+  touched = false,
+  error,
+  disabled = false,
+  ...rest
 }) => {
-  const [field, { touched, error }] = useField(name);
   const checkboxColor = touched && error ? CheckboxColor.ERROR : color;
 
   return (
@@ -40,8 +43,7 @@ const Checkbox: FC<CheckboxProps> = ({
       disabled={disabled}
       control={
         <MuiCheckbox
-          {...field}
-          name={name}
+          {...rest}
           checkedIcon={
             <CheckedIcon disabled={disabled} color={checkboxColor} />
           }

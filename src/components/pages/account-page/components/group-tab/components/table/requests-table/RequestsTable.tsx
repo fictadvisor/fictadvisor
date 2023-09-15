@@ -8,7 +8,7 @@ import { AlertButtonVariant } from '@/components/common/ui/alert-button/types';
 import Divider from '@/components/common/ui/divider';
 import { DividerTextAlign } from '@/components/common/ui/divider/types';
 import useAuthentication from '@/hooks/use-authentication';
-import useToast from '@/hooks/use-toast';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import GroupAPI from '@/lib/api/group/GroupAPI';
 import theme from '@/styles/theme';
 import { UserGroupState } from '@/types/user';
@@ -21,7 +21,7 @@ import * as styles from './RequestTable.styles';
 const RequestsTable: FC<RequestsTableProps> = ({ rows, refetch }) => {
   const { user } = useAuthentication();
   const isMobile = useMediaQuery(theme.breakpoints.down('desktop'));
-  const toast = useToast();
+  const { displayError } = useToastError();
   const handleApprove = async (userId: string) => {
     try {
       if (user.group)
@@ -29,8 +29,8 @@ const RequestsTable: FC<RequestsTableProps> = ({ rows, refetch }) => {
           state: UserGroupState.APPROVED,
         });
       await refetch();
-    } catch (e) {
-      toast.error('Щось пішло не так, спробуй пізніше!', '', 3000);
+    } catch (error) {
+      displayError(error);
     }
   };
 
@@ -41,8 +41,8 @@ const RequestsTable: FC<RequestsTableProps> = ({ rows, refetch }) => {
           state: UserGroupState.DECLINED,
         });
       await refetch();
-    } catch (e) {
-      toast.error('Щось пішло не так, спробуй пізніше!', '', 3000);
+    } catch (error) {
+      displayError(error);
     }
   };
 

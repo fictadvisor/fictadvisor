@@ -171,7 +171,7 @@ const palette: PaletteOptions = {
     700: '#E9764F',
     800: '#FCA588',
     900: '#FFD1C1',
-    A100: '#FED6C8',
+    A100: '#FFE4DB',
   },
 };
 

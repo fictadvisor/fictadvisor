@@ -18,11 +18,12 @@ import {
   IconButtonColor,
   IconButtonShape,
 } from '@/components/common/ui/icon-button-mui/types';
-import Popup from '@/components/common/ui/pop-ups-mui/Popup';
+import Popup from '@/components/common/ui/pop-ups/Popup';
 import roleNamesMapper from '@/components/pages/account-page/components/group-tab/components/table/constants';
 import MobileDropdown from '@/components/pages/account-page/components/group-tab/components/table/student-table/components/MobileDropdown';
 import UseAuthentication from '@/hooks/use-authentication/useAuthentication';
 import useToast from '@/hooks/use-toast';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import GroupAPI from '@/lib/api/group/GroupAPI';
 import theme from '@/styles/theme';
 import { UserGroupRole } from '@/types/user';
@@ -36,6 +37,7 @@ interface EditingColumnProps {
 
 const EditingColumn: FC<EditingColumnProps> = ({ student, refetch }) => {
   const { user } = UseAuthentication();
+  const { displayError } = useToastError();
   const [deletePopupOpen, setDeletePopupOpen] = useState(false);
   const [changePopupOpen, setChangePopupOpen] = useState(false);
 
@@ -48,8 +50,8 @@ const EditingColumn: FC<EditingColumnProps> = ({ student, refetch }) => {
       if (user.group) await GroupAPI.removeStudent(user.group.id, student.id);
 
       await refetch();
-    } catch (e) {
-      toast.error('Щось пішло не так, спробуй пізніше!', '', 3000);
+    } catch (error) {
+      displayError(error);
     }
   };
   const handleChangeStatus = async () => {
@@ -63,8 +65,8 @@ const EditingColumn: FC<EditingColumnProps> = ({ student, refetch }) => {
               : UserGroupRole.MODERATOR,
         });
       await refetch();
-    } catch (e) {
-      toast.error('Щось пішло не так, спробуй пізніше!', '', 3000);
+    } catch (error) {
+      displayError(error);
     }
   };
 

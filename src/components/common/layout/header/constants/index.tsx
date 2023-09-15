@@ -1,4 +1,4 @@
-import { FireIcon } from '@heroicons/react/24/outline';
+import { CalendarIcon, FireIcon } from '@heroicons/react/24/outline';
 import {
   AcademicCapIcon,
   BriefcaseIcon,
@@ -51,5 +51,10 @@ export const mainLinks = [
     link: '/subjects',
     text: 'Предмети',
     icon: <AcademicCapIcon />,
+  },
+  {
+    link: '/schedule',
+    text: 'Розклад',
+    icon: <CalendarIcon />,
   },
 ];

@@ -33,7 +33,7 @@ export const TextAreaPopup: React.FC<TextAreaPopup> = ({
   return (
     <Backdrop
       open={true}
-      sx={{ zIndex: 2 }}
+      sx={{ zIndex: 11 }}
       ref={backDropRef}
       onClick={handleClick}
     >

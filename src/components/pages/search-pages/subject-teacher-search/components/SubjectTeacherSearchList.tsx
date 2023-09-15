@@ -3,7 +3,7 @@ import { Box, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { SubjectTeacherCard } from '@/components/common/ui/cards/subject-teacher-card';
+import { TeacherCard } from '@/components/common/ui/cards/teacher-card';
 import { Teacher } from '@/types/teacher';
 
 import * as stylesMUI from './SubjectTeacherSearchList.styles';
@@ -41,12 +41,13 @@ export const SubjectTeacherSearchList: FC<SubjectTeacherSearchListProps> = ({
               key={index}
               href={`/discipline?teacherId=${teacher.id}&subjectId=${subjectId}`}
             >
-              <SubjectTeacherCard
+              <TeacherCard
                 avatar={teacher.avatar}
                 key={teacher.id}
                 name={`${teacher.lastName} ${teacher.firstName} ${teacher.middleName}`}
                 roles={teacher.roles}
                 rating={teacher.rating / 20}
+                isSubjectCard={true}
               />
             </Link>
           ))}

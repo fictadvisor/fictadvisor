@@ -4,11 +4,11 @@ import {
   ExclamationCircleIcon,
   ExclamationTriangleIcon,
   InformationCircleIcon,
+  XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { Alert as MuiAlert, AlertColor, Typography } from '@mui/material';
 import { SxProps, Theme } from '@mui/material/styles';
 
-import { AlertXMark } from '@/components/common/icons/AlertXMark';
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 
 import * as styles from './Alert.styles';
@@ -47,8 +47,7 @@ const Alert: FC<AlertProps> = ({
       severity={type}
       variant={MUIVariant}
       iconMapping={AlertIconMap}
-      // TODO: wrap icon with button and get rid of onClick prop on svg
-      action={onClose && <AlertXMark onClick={onClose} />}
+      action={onClose && <XMarkIcon onClick={onClose} />}
       sx={mergeSx(styles.alert(type, variant), sx)}
     >
       <Typography variant="body2Medium">{title}</Typography>

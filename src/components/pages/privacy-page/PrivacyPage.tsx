@@ -1,15 +1,20 @@
 import React from 'react';
+import { Box, Typography } from '@mui/material';
 import Link from 'next/link';
 
-import styles from './PrivacyPage.module.scss';
+import * as stylesMUI from '@/components/pages/privacy-page/PrivacyPage.styles';
 
 const PrivacyPage = () => {
   return (
-    <div className={styles['privacy-content']}>
-      <h1 className={styles['h1-content']}>Політика конфіденційності</h1>
-      <div className={styles['privacy-list']}>
-        <div className={styles['privacy-list-item']}>
-          <p className={styles['body-primary']}>
+    <Box sx={stylesMUI.privacyContent}>
+      <Typography variant="h4Bold">Політика конфіденційності</Typography>
+      <Box sx={stylesMUI.privacyList}>
+        <Box>
+          <Typography
+            variant={'body1'}
+            paragraph
+            sx={stylesMUI.privacyListInfo}
+          >
             FICT Advisor – це інформаційна система Студради ФІОТ для студентів
             Факультету інформатики та обчислювальної техніки Національного
             технічного університету України “Київський політехнічний інститут
@@ -17,22 +22,30 @@ const PrivacyPage = () => {
             Системи є допомога студентам факультету, забезпечення якості вищої
             освіти, цифровізація та автоматизація внутрішніх та зовнішніх
             процесів Студради ФІОТ та її відділів.
-          </p>
-        </div>
-        <div className={styles['privacy-list-item']}>
-          <h6 className={styles['h6-content']}>Які дані ми збираємо?</h6>
-          <p className={styles['body-primary']}>
+          </Typography>
+        </Box>
+        <Box>
+          <Typography variant="h6Bold">Які дані ми збираємо?</Typography>
+          <Typography
+            variant={'body1'}
+            paragraph
+            sx={stylesMUI.privacyListInfo}
+          >
             Згідно з законом України “Про захист персональних прав”,
             персональними даними вважаються такі дані, за допомогою яких можна
             однозначно ідентифікувати особу. Система збирає такі дані: прізвище,
             ім’я, по батькові, академічна група. За запитом Адміністрації
             Системи персональні дані користувача можуть бути уточнені та
             відформатовані до одного виду.
-          </p>
-        </div>
-        <div className={styles['privacy-list-item']}>
-          <h6 className={styles['h6-content']}>Як ми ці дані оброблюємо?</h6>
-          <p className={styles['body-primary']}>
+          </Typography>
+        </Box>
+        <Box>
+          <Typography variant="h6Bold">Як ми ці дані оброблюємо?</Typography>
+          <Typography
+            variant={'body1'}
+            paragraph
+            sx={stylesMUI.privacyListInfo}
+          >
             Система є Open-Source проєктом, тому весь код знаходиться у
             публічному просторі за посиланням{' '}
             <Link href={'https://github.com/fictadvisor/'}>
@@ -43,22 +56,26 @@ const PrivacyPage = () => {
             контингент користувачів, який зареєстрований у Системі, відповідав
             контингенту Факультету, звідси результати опитувань та інших
             проведених подій будуть більш репрезентативними і достовірними.
-          </p>
-        </div>
-        <div className={styles['privacy-list-item']}>
-          <h6 className={styles['h6-content']}>
+          </Typography>
+        </Box>
+        <Box>
+          <Typography variant="h6Bold" sx={stylesMUI.privacyListInfo}>
             Коли ми видаляємо персональні дані?
-          </h6>
-          <p className={styles['body-primary']}>
+          </Typography>
+          <Typography
+            variant={'body1'}
+            paragraph
+            sx={stylesMUI.privacyListInfo}
+          >
             Персональні дані користувача видаляються: після відрахування
             користувача з Факультету; за власним запитом користувача; після
             деактивації системи. Адміністрація Системи залишає за собою право
             видалити акаунт та персональні дані користувача у випадках, коли дії
             користувача шкодять функціонуванню Системи.
-          </p>
-        </div>
-      </div>
-    </div>
+          </Typography>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

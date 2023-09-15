@@ -1,18 +1,18 @@
 import React, { FC } from 'react';
 import { useQuery } from 'react-query';
-import { AxiosError } from 'axios';
 import { Form, Formik } from 'formik';
 
 import Alert from '@/components/common/ui/alert';
 import { AlertType } from '@/components/common/ui/alert/types';
-import Button, { ButtonSize } from '@/components/common/ui/button';
-import { Checkbox } from '@/components/common/ui/form';
+import Button from '@/components/common/ui/button';
+import { ButtonSize } from '@/components/common/ui/button-mui/types';
+import Checkbox from '@/components/common/ui/form/with-formik/checkbox';
 import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown';
 import Progress from '@/components/common/ui/progress';
 import { transformGroups } from '@/components/pages/account-page/components/group-tab/components/no-group-block/utils';
 import { validationSchema } from '@/components/pages/account-page/components/group-tab/components/no-group-block/validation';
 import useAuthentication from '@/hooks/use-authentication';
-import useToast from '@/hooks/use-toast';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import GroupAPI from '@/lib/api/group/GroupAPI';
 import { RequestNewGroupBody } from '@/lib/api/user/types/RequestNewGroupBody';
 import UserAPI from '@/lib/api/user/UserAPI';
@@ -21,25 +21,17 @@ import { UserGroupState } from '@/types/user';
 import styles from './NoGroupBlock.module.scss';
 
 const NoGroupBlock: FC = () => {
+  const { displayError } = useToastError();
   const { user, update } = useAuthentication();
   const { isLoading, data } = useQuery(['groups'], () => GroupAPI.getAll(), {
     refetchOnWindowFocus: false,
   });
-  const toast = useToast();
-
   const handleSubmitGroup = async (data: RequestNewGroupBody) => {
     try {
       await UserAPI.requestNewGroup(data, user.id);
       await update();
     } catch (error) {
-      // TODO: refactor this shit
-      const errorName = (error as AxiosError<{ error: string }>).response?.data
-        .error;
-      if (errorName === 'AlreadyRegisteredException') {
-        toast.error('В групі вже є староста');
-      } else {
-        toast.error('Як ти це зробив? :/');
-      }
+      displayError(error);
     }
   };
 
@@ -55,7 +47,10 @@ const NoGroupBlock: FC = () => {
             <h4>{user.group.code}</h4>
           </div>
           <div className={styles['alert-desktop-pending']}>
-            <Alert title="Ваша заявка ще не прийнята, очікуйте підтвердження" />
+            <Alert
+              title="Ваша заявка ще не прийнята, очікуйте підтвердження"
+              type={AlertType.INFO}
+            />
           </div>
           <div className={styles['division']}>
             <div className={styles['white']}></div>

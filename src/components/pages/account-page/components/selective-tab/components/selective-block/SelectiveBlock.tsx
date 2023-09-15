@@ -1,7 +1,7 @@
 import { FC, useState } from 'react';
+import { PencilIcon } from '@heroicons/react/24/outline';
 import { Box, Typography } from '@mui/material';
 
-import PencilIcon from '@/components/common/icons/PencilIcon';
 import OpenedSelective from '@/components/pages/account-page/components/selective-tab/components/opened-selective';
 import { fillArray } from '@/components/pages/account-page/components/selective-tab/components/selective-block/utils';
 

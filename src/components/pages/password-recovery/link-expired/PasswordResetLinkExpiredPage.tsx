@@ -1,9 +1,8 @@
 import React from 'react';
-import { ChevronLeftIcon } from '@heroicons/react/24/outline';
+import { ChevronLeftIcon, ClockIcon } from '@heroicons/react/24/outline';
 import { Box, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 
-import { CustomClock } from '@/components/common/icons/CustomClock';
 import Button from '@/components/common/ui/button-mui';
 import {
   ButtonColor,
@@ -26,7 +25,7 @@ const PasswordResetLinkExpiredPage = () => {
     <Box sx={styles.container}>
       <Box sx={styles.content}>
         <Box sx={styles.icon}>
-          <CustomClock />
+          <ClockIcon />
         </Box>
         <Typography sx={styles.title}>Посилання більше не активне</Typography>
         <Typography sx={styles.description}>

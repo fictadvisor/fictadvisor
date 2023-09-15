@@ -55,7 +55,7 @@ const Toast: FC<ToastProps> = ({
         vertical: 'bottom',
         horizontal: 'right',
       }}
-      sx={styles.toast}
+      sx={styles.toast(open)}
     >
       <Box>
         <Alert

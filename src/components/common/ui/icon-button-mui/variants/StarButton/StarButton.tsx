@@ -14,6 +14,7 @@ const StarButton: React.FC<VariantIconButtonProps> = ({
   shape = IconButtonShape.CIRCLE,
   color = IconButtonColor.SUCCESS,
   disabled,
+  ...rest
 }) => {
   return (
     <IconButton
@@ -22,6 +23,7 @@ const StarButton: React.FC<VariantIconButtonProps> = ({
       shape={shape}
       color={color}
       disabled={disabled}
+      {...rest}
     />
   );
 };

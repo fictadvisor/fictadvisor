@@ -48,18 +48,19 @@ const PersonalTeacherPage: FC<PersonalTeacherPageProps> = ({
   const [floatingCardShowed, setFloatingCardShowed] = useState(false);
 
   const { tab } = query;
+
   const [index, setIndex] = useState<TeachersPageTabs>(
     TeachersPageTabs.GENERAL,
   );
 
-  const handleChange = useTabState<TeachersPageTabs>({ tab, router, setIndex });
+  const handleChange = useTabState({ tab, router, setIndex });
 
   useEffect(() => {
     if (isError) {
       toast.error('Куди ти лізеш, цієї людини не існує');
       void push('/teachers');
     }
-  }, [isError, push, toast]);
+  }, [isError, push]);
 
   if (!data) return null;
   return (

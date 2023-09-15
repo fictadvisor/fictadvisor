@@ -10,11 +10,11 @@ interface StyledTooltipProps extends TooltipProps {
 const Tooltip: FC<StyledTooltipProps> = ({ children, ...rest }) => {
   return (
     <MuiTooltip
-      {...rest}
       slotProps={{
         tooltip: { sx: styles.tooltip },
         arrow: { sx: styles.arrow },
       }}
+      {...rest}
     >
       {children}
     </MuiTooltip>

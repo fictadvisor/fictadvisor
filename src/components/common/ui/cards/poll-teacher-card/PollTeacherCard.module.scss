@@ -25,7 +25,7 @@
 .poll-teacher-card-avatar {
   box-sizing: content-box;
   margin-bottom: 12px;
-  outline: 2px solid $background-dark-35;
+  box-shadow: 0 0 0 2px $background-dark-35;
   border-radius: 100%;
   -webkit-border-radius: 100%;
   width: 64px;

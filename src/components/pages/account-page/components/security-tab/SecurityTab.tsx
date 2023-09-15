@@ -1,30 +1,27 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 
-import Button, {
+import Button from '@/components/common/ui/button';
+import {
   ButtonColor,
   ButtonSize,
   ButtonVariant,
-} from '@/components/common/ui/button';
-import ImmutableInput from '@/components/common/ui/immutable-input';
+} from '@/components/common/ui/button-mui/types';
+import Input from '@/components/common/ui/form/input-mui';
 import ChangePasswordForm from '@/components/pages/account-page/components/security-tab/components/change-password-form';
 import useAuthentication from '@/hooks/use-authentication';
 import AuthService from '@/lib/services/auth';
-import { hideAlert } from '@/redux/reducers/alert.reducer';
 
 import styles from './SecurityTab.module.scss';
 
 const SecurityTab = () => {
   const { replace, reload } = useRouter();
   const { user, update } = useAuthentication();
-  const dispatch = useDispatch();
   const handleLogout = async () => {
     await AuthService.logout();
     update();
     reload();
     await replace('/login');
-    dispatch(hideAlert());
   };
 
   return (
@@ -43,8 +40,13 @@ const SecurityTab = () => {
         <div className={styles['button']}></div>
       </div>
       <div className={styles['user-information']}>
-        <ImmutableInput label="Юзернейм" value={user.username} />
-        <ImmutableInput label="Пошта" value={user.email} />
+        <Input
+          readOnly
+          onChange={() => {}}
+          label="Юзернейм"
+          value={user.username}
+        />
+        <Input readOnly onChange={() => {}} label="Пошта" value={user.email} />
       </div>
       <div className={styles['division']}>
         <div className={styles['white']}></div>

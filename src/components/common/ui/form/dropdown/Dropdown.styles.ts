@@ -5,14 +5,14 @@ import {
   FieldState,
 } from '@/components/common/ui/form/common/types';
 
-const color = {
+export const color = {
   [FieldState.DEFAULT]: 'grey.600',
   [FieldState.DISABLED]: 'grey.400',
   [FieldState.ERROR]: 'error.500',
   [FieldState.SUCCESS]: 'success.600',
 };
 
-const inputHeight = {
+export const inputHeight = {
   [FieldSize.SMALL]: 40,
   [FieldSize.MEDIUM]: 46,
   [FieldSize.LARGE]: 52,
@@ -28,6 +28,9 @@ export const input = (
       display: 'flex',
       alignContent: 'center',
       paddingRight: '30px',
+      '& .MuiInputAdornment-root:not(:has(svg))': {
+        display: 'none',
+      },
     },
     '& .MuiInputBase-input,& label ,& label.Mui-focused,& svg': {
       color: 'grey.800',

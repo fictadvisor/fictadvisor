@@ -20,6 +20,7 @@ export const content: SxProps<Theme> = {
     mobileMedium: '206px',
   },
   textAlign: 'center',
+  gap: '4px',
 };
 
 export const icon: SxProps<Theme> = {

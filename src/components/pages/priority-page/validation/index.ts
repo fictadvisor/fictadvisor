@@ -1,6 +1,5 @@
 import * as yup from 'yup';
 import { TestConfig } from 'yup';
-
 const secretString = /^4261$/;
 const forcePushedRegexp = /^3259$/;
 

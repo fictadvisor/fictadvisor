@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { PlusIcon } from '@heroicons/react/24/solid';
 import { Box, Grid, Typography, useMediaQuery } from '@mui/material';
-import { AxiosError } from 'axios';
 
 import { Captain } from '@/components/common/icons/Captain';
 import { Moderator } from '@/components/common/icons/Moderator';
@@ -16,7 +15,7 @@ import roleNamesMapper from '@/components/pages/account-page/components/group-ta
 import EditingColumn from '@/components/pages/account-page/components/group-tab/components/table/student-table/components/EditingColumn';
 import { TextAreaPopup } from '@/components/pages/account-page/components/group-tab/components/text-area-popup';
 import useAuthentication from '@/hooks/use-authentication';
-import useToast from '@/hooks/use-toast';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import GroupAPI from '@/lib/api/group/GroupAPI';
 import theme from '@/styles/theme';
 import { UserGroupRole } from '@/types/user';
@@ -33,7 +32,7 @@ const StudentsTable: React.FC<StudentsTableProps> = ({
   const isMobile = useMediaQuery(theme.breakpoints.down('desktop'));
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const { user } = useAuthentication();
-  const toast = useToast();
+  const { displayError } = useToastError();
   const handleAddStudents = async (value: string) => {
     try {
       const emails = value
@@ -48,18 +47,7 @@ const StudentsTable: React.FC<StudentsTableProps> = ({
 
       await refetch();
     } catch (error) {
-      let name;
-      if (error instanceof AxiosError) name = error.response?.data.error;
-
-      if (name === 'AlreadyRegisteredException') {
-        toast.error(
-          'Один або декілька користувачів з такою поштою вже зареєстровані!',
-          '',
-          3000,
-        );
-      } else {
-        toast.error('Здається, ти ввів неправильні значення!', '', 3000);
-      }
+      displayError(error);
     }
   };
   return (

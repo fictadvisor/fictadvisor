@@ -29,12 +29,10 @@ class AuthAPI {
   }
 
   async refreshAccessToken(refreshToken: string) {
-    const { data } = await client.patch<RefreshAccessTokenResponse>(
+    const { data } = await client.post<RefreshAccessTokenResponse>(
       '/auth/refresh',
-      null,
-      {
-        headers: { Authorization: `Bearer ${refreshToken}` },
-      },
+      { accessToken: refreshToken },
+      getAuthorizationHeader(),
     );
     return data;
   }

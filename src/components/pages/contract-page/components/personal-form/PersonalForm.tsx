@@ -1,10 +1,10 @@
 import React, { FC, SetStateAction, useState } from 'react';
 import { Box } from '@mui/material';
-import { AxiosError } from 'axios';
 
 import { initialValues } from '@/components/pages/contract-page/constants';
 import { getLocalStorage } from '@/components/pages/contract-page/utils/localStorage';
 import useToast from '@/hooks/use-toast';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import ContractAPI from '@/lib/api/contract/ContractAPI';
 import { ExtendedContractBody } from '@/lib/api/contract/types/ContractBody';
 
@@ -19,6 +19,7 @@ import { formWrapper } from './PersonalForm.styles';
 export const PersonalForm: FC<{
   setIsLoading: React.Dispatch<SetStateAction<boolean>>;
 }> = ({ setIsLoading }) => {
+  const { displayError } = useToastError();
   const localStorageValues = getLocalStorage();
   const toast = useToast();
   const [data, setData] = useState(localStorageValues || initialValues);
@@ -33,8 +34,6 @@ export const PersonalForm: FC<{
   );
 
   const handleNextStep = async (data: ExtendedContractBody, final = false) => {
-    console.log(step);
-
     if (!final) setData(prevState => ({ ...prevState, ...data }));
 
     if (final) {
@@ -51,20 +50,7 @@ export const PersonalForm: FC<{
           `Ви успішно надіслали контракт, перевірте пошту ${data.entrant.email}`,
         );
       } catch (error) {
-        if (
-          (error as { response: AxiosError }).response.status === 500 ||
-          (error as { response: AxiosError }).response.status === 403
-        ) {
-          toast.error(
-            `Внутрішня помилка сервера`,
-            'Зверніться до оператора або в чат абітурієнтів',
-          );
-          return;
-        }
-        toast.error(
-          `Трапилась помилка, перевірте усі дані та спробуйте ще раз`,
-          (error as AxiosError).message,
-        );
+        displayError(error);
       }
       setIsLoading(false);
       return;

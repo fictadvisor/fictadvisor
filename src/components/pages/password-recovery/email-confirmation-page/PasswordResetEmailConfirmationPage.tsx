@@ -1,7 +1,6 @@
 import React from 'react';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import { Box, Typography } from '@mui/material';
-import { AxiosError } from 'axios';
 import { useRouter } from 'next/router';
 
 import { CustomEnvelopeOpen } from '@/components/common/icons/CustomEnvelopeOpen';
@@ -14,11 +13,11 @@ import {
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
 import * as styles from '@/components/pages/password-recovery/email-confirmation-page/PasswordResetEmailConfirmationPage.module';
-import chooseMessageError from '@/components/pages/password-recovery/email-confirmation-page/utils/chooseMessageError';
-import useToast from '@/hooks/use-toast';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import AuthAPI from '@/lib/api/auth/AuthAPI';
 
 const PasswordResetEmailConfirmationPage = () => {
+  const { displayError } = useToastError();
   const router = useRouter();
   const email = (router.query.email as string).toLowerCase();
   const emailText = email
@@ -28,15 +27,11 @@ const PasswordResetEmailConfirmationPage = () => {
     void router.push('/register');
   };
 
-  const tries = 0;
-  const toast = useToast();
   const handleSendAgain = async () => {
     try {
       await AuthAPI.forgotPassword({ email });
     } catch (error) {
-      const errorName =
-        (error as AxiosError<{ error: string }>).response?.data.error || '';
-      toast.error(chooseMessageError(errorName, tries));
+      displayError(error);
     }
   };
 

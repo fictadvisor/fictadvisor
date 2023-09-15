@@ -17,6 +17,7 @@
     "@heroicons/react": "^2.0.14",
     "@mui/lab": "^5.0.0-alpha.128",
     "@mui/material": "^5.11.14",
+    "@mui/x-date-pickers": "^6.8.0",
     "@reduxjs/toolkit": "^1.9.2",
     "@typescript-eslint/eslint-plugin": "^5.51.0",
     "axios": "^1.2.3",
@@ -24,6 +25,7 @@
     "babel-plugin-import": "^1.13.6",
     "chart.js": "^4.3.0",
     "classnames": "^2.3.2",
+    "dayjs": "^1.11.9",
     "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-simple-import-sort": "^10.0.0",
@@ -36,11 +38,11 @@
     "react-device-detect": "^2.2.3",
     "react-dom": "18.2.0",
     "react-query": "^3.39.2",
-    "react-redux": "^8.0.5",
     "react-select": "^5.7.0",
     "react-textarea-autosize": "^8.4.0",
     "sass": "^1.58.0",
-    "yup": "^1.0.0"
+    "yup": "^1.0.0",
+    "zustand": "^4.4.1"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^13.2.4",

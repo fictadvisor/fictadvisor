@@ -7,7 +7,7 @@ export const registerPage: SxProps<Theme> = {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  padding: '0 30px',
+  padding: '0 16px',
 
   backgroundSize: {
     mobile: '1200px 100%',

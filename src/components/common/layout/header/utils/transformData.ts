@@ -4,7 +4,7 @@ import { TransformedUser } from '../types';
 
 const roleMapper: Record<UserGroupRole, string> = {
   [UserGroupRole.CAPTAIN]: 'Староста',
-  [UserGroupRole.MODERATOR]: 'Зам. старости',
+  [UserGroupRole.MODERATOR]: 'Заст. старости',
   [UserGroupRole.STUDENT]: 'Студент',
 };
 

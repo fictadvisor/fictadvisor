@@ -5,7 +5,7 @@ import {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
-import Popup from '@/components/common/ui/pop-ups-mui/Popup';
+import Popup from '@/components/common/ui/pop-ups/Popup';
 
 interface skipTeacherPopupProps {
   setOpen: Dispatch<SetStateAction<boolean>>;

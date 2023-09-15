@@ -1,9 +1,10 @@
 import { FC, useState } from 'react';
+import { Bars3Icon } from '@heroicons/react/24/outline';
 import { AppBar, Box, Link } from '@mui/material';
 import Image from 'next/image';
 import NextLink from 'next/link';
 
-import { BurgerMenu } from '@/components/common/icons/BurgerMenu';
+// import { BurgerMenu } from '@/components/common/icons/BurgerMenu';
 import { TransformedUser } from '@/components/common/layout/header/types';
 import IconButton from '@/components/common/ui/icon-button-mui';
 import {
@@ -50,7 +51,7 @@ const MobileHeader: FC<MobileHeaderProps> = ({ isLoggedIn, user }) => {
           onClick={handleClick}
           size={IconButtonSize.NORMAL}
           color={IconButtonColor.TRANSPARENT}
-          icon={<BurgerMenu />}
+          icon={<Bars3Icon />}
         />
       )}
       <Drawer

@@ -1,39 +1,40 @@
-import React, { FC } from 'react';
-import { Checkbox as MuiCheckbox } from '@mui/material';
-import { SxProps, Theme } from '@mui/material/styles';
+import { FC } from 'react';
+import { Box } from '@mui/material';
+import { SxProps } from '@mui/material/styles';
+import { Theme } from '@mui/system';
+import { useField } from 'formik';
 
-import mergeSx from '@/lib/utils/MergeSxStylesUtil';
+import Checkbox from '@/components/common/ui/form/checkbox';
+import { CheckboxProps } from '@/components/common/ui/form/checkbox/Checkbox';
 
-import CheckedIcon from './components/CheckedIcon';
-import Icon from './components/Icon';
-import * as styles from './Checkbox.styles';
-import { CheckboxColor, CheckboxTextType } from './types';
-
-export interface CheckboxProps {
-  label?: string;
-  disabled?: boolean;
-  sx?: SxProps<Theme>;
-  color?: CheckboxColor;
-  textType?: CheckboxTextType;
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+export interface FormikCheckboxProps extends CheckboxProps {
+  name: string;
 }
 
-const FormikCheckbox: FC<CheckboxProps> = ({
-  disabled = false,
-  sx = {},
-  onChange,
-  color = CheckboxColor.PRIMARY,
-  ...rest
-}) => {
+const errorMessage: SxProps<Theme> = {
+  color: 'error.400',
+  fontSize: '11px',
+};
+const FormikCheckbox: FC<FormikCheckboxProps> = ({ name, ...rest }) => {
+  const [{ value }, { touched, error }, { setValue, setTouched }] =
+    useField(name);
+
   return (
-    <MuiCheckbox
-      {...rest}
-      onChange={onChange}
-      checkedIcon={<CheckedIcon disabled={disabled} color={color} />}
-      icon={<Icon disabled={disabled} color={color} />}
-      disableRipple
-      sx={mergeSx(styles.checkBox, sx)}
-    />
+    <Box>
+      <Checkbox
+        {...rest}
+        name={name}
+        checked={value}
+        touched={touched}
+        error={error}
+        onChange={(event, checked) => {
+          setTouched(true);
+          setValue(checked);
+          if (rest.onChange) rest.onChange(event, checked);
+        }}
+      />
+      {touched && error && <Box sx={errorMessage}>{error}</Box>}
+    </Box>
   );
 };
 

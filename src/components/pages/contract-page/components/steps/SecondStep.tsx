@@ -6,10 +6,10 @@ import Divider from '@/components/common/ui/divider';
 import { DividerTextAlign } from '@/components/common/ui/divider/types';
 import { Input } from '@/components/common/ui/form';
 import { FieldSize } from '@/components/common/ui/form/common/types';
+import Checkbox from '@/components/common/ui/form/with-formik/checkbox';
 import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown';
 import FormikRadioGroup from '@/components/common/ui/form/with-formik/radio/FormikRadioGroup';
 import { Actions } from '@/components/pages/contract-page/components/Actions';
-import { CheckBox } from '@/components/pages/contract-page/components/CheckBox';
 import { REGIONS } from '@/components/pages/contract-page/constants';
 import { kyiv } from '@/components/pages/contract-page/constants';
 import * as stylesMui from '@/components/pages/contract-page/ContractPage.styles';
@@ -81,7 +81,7 @@ export const SecondStep: FC<SecondStepProps> = ({
             />
           </Box>
           <Box sx={stylesMui.item}>
-            <CheckBox
+            <Checkbox
               name="helper.entrantHasNoMiddleName"
               label="Немає по-батькові"
             />
@@ -168,7 +168,7 @@ export const SecondStep: FC<SecondStepProps> = ({
             />
           </Box>
           <Box sx={stylesMui.item}>
-            <CheckBox
+            <Checkbox
               name="helper.entrantHasNoCode"
               label="Відмова від РНОКПП"
             />
@@ -190,7 +190,7 @@ export const SecondStep: FC<SecondStepProps> = ({
           <Box sx={stylesMui.item}>
             <Divider
               textAlign={DividerTextAlign.LEFT}
-              text="Місце проживання вступника"
+              text="Місце проживання вступника (реєстрації)"
               sx={stylesMui.divider}
             />
             <FormikDropdown

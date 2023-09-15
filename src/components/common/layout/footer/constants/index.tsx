@@ -1,3 +1,4 @@
+import { Discord } from '@/components/common/icons/Discord';
 import { GitHub } from '@/components/common/icons/GitHub';
 import { Instagram } from '@/components/common/icons/Instagram';
 import { Telegram } from '@/components/common/icons/Telegram';
@@ -19,6 +20,10 @@ export const mainLinks = [
   {
     link: '/subjects',
     text: 'Предмети',
+  },
+  {
+    link: '/schedule',
+    text: 'Розклад',
   },
 ];
 
@@ -57,5 +62,10 @@ export const socialLinks = [
     link: 'https://www.tiktok.com/@sr_fiot',
     text: 'TikTok',
     icon: <TikTok />,
+  },
+  {
+    link: 'https://discord.gg/kjca3XJfVj',
+    text: 'Discord',
+    icon: <Discord />,
   },
 ];

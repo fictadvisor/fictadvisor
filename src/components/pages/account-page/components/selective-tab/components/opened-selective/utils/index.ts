@@ -15,8 +15,10 @@ export const transformData = (data: {
 
 export const getInitialValues = (disciplines: UserRemainingSelective[]) => {
   const initialValues: FormikValues = {};
-  disciplines.forEach(
-    discipline => (initialValues[discipline.disciplineId] = false),
-  );
+  if (disciplines) {
+    disciplines.forEach(
+      discipline => (initialValues[discipline.disciplineId] = false),
+    );
+  }
   return initialValues;
 };

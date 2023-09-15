@@ -1,6 +1,5 @@
 import React, { FC, useRef, useState } from 'react';
 import { Box, Typography } from '@mui/material';
-import { AxiosError } from 'axios';
 import { Form, Formik, FormikProps } from 'formik';
 
 import Button from '@/components/common/ui/button-mui';
@@ -8,9 +7,9 @@ import Divider from '@/components/common/ui/divider';
 import { DividerTextAlign } from '@/components/common/ui/divider/types';
 import { FieldSize } from '@/components/common/ui/form/common/types';
 import Input from '@/components/common/ui/form/input';
+import Checkbox from '@/components/common/ui/form/with-formik/checkbox';
 import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown';
 import FormikRadioGroup from '@/components/common/ui/form/with-formik/radio/FormikRadioGroup';
-import { CheckBox } from '@/components/pages/contract-page/components/CheckBox';
 import {
   initialValues,
   IPeduPrograms,
@@ -27,6 +26,7 @@ import {
 } from '@/components/pages/priority-page/validation';
 import useTabClose from '@/hooks/use-tab-close';
 import useToast from '@/hooks/use-toast';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import ContractAPI from '@/lib/api/contract/ContractAPI';
 import { ExtendedPriorityDataBody } from '@/lib/api/contract/types/PriorityDataBody';
 
@@ -38,26 +38,14 @@ const PriorityPage: FC = () => {
   const [isForcePushed, setIsForcePushed] = useState(
     getLocalStorage()?.isForcePushed,
   );
-
-  const toast = useToast();
+  const { displayError } = useToastError();
 
   const handleFormSubmit = async (values: ExtendedPriorityDataBody) => {
     try {
       await ContractAPI.createPriority(prepareData({ ...values }));
       setSubmited(true);
     } catch (error) {
-      if (
-        (error as { response: AxiosError }).response.status === 500 ||
-        (error as { response: AxiosError }).response.status === 403
-      ) {
-        toast.error(
-          `Внутрішня помилка сервера`,
-          'Зверніться до оператора або в чат абітурієнтів',
-        );
-        return;
-      }
-
-      toast.error(`Трапилась помилка, перевірте усі дані та спробуйте ще раз`);
+      displayError(error);
     }
   };
 
@@ -161,7 +149,7 @@ const PriorityPage: FC = () => {
             <Box sx={styles.item}>
               <Input name="lastName" placeholder="Шевченко" label="Прізвище" />
               <Input name="firstName" placeholder="Тарас" label="Ім'я" />
-              <CheckBox name="noMiddleName" label="Немає по-батькові" />
+              <Checkbox name="noMiddleName" label="Немає по-батькові" />
               {values?.noMiddleName ? (
                 <Input
                   resetOnDisabled
@@ -193,7 +181,7 @@ const PriorityPage: FC = () => {
               label="Електронна пошта вступника"
               clearOnUnmount
             />
-            <CheckBox
+            <Checkbox
               name="isToAdmission"
               label="Формую пріоритетку в корпусі"
             />
@@ -216,12 +204,10 @@ const PriorityPage: FC = () => {
             )}
 
             <Box sx={styles.item}>
-              <CheckBox
+              <Checkbox
                 name="isForcePushed"
                 label="Надіслати примусово (НЕ НАТИСКАТИ)"
-                onClick={() =>
-                  setIsForcePushed(!form?.current?.values.isForcePushed)
-                }
+                onChange={(_, checked) => setIsForcePushed(checked)}
               />
             </Box>
             {values?.isForcePushed && (

@@ -1,38 +1,48 @@
+import React from 'react';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
-import Image from 'next/image';
+import { Box, Typography } from '@mui/material';
 import Link from 'next/link';
 
-import Button, { ButtonColor, ButtonSize } from '@/components/common/ui/button';
+import Button from '@/components/common/ui/button-mui';
+import {
+  ButtonColor,
+  ButtonSize,
+  ButtonVariant,
+} from '@/components/common/ui/button-mui/types';
 
-import styles from './NotFoundPage.module.scss';
+import * as styles from './NotFoundPage.styles';
 
 const NotFoundPage = () => (
-  <div className={styles['page-layout']}>
-    <div className={styles['page-content']}>
-      <h5 className={styles['not-found-text']}>
+  <Box sx={styles.pageLayout}>
+    <Box sx={styles.pageContent}>
+      <Typography sx={styles.notFoundText}>
         Упс! Сторінку не знайдено. Жабка з’їла твою сторінку
-      </h5>
-      <div className={styles['frog-image']}>
-        <Image src="/icons/404-page/404-frog.svg" alt="Це 404" fill />
-      </div>
-      <div className={styles['button']}>
-        <Link href={'/'}>
+      </Typography>
+      <Box sx={styles.frogImage}>
+        <img src="/icons/404-page/404-frog.svg" alt="Це 404" />
+      </Box>
+      <Box sx={styles.buttons}>
+        <Link href="/">
           <Button
-            text={'Повернутися на головну'}
+            text="Повернутися на головну"
+            variant={ButtonVariant.FILLED}
             size={ButtonSize.LARGE}
             color={ButtonColor.SECONDARY}
-            startIcon={<ChevronLeftIcon className={'icon'} />}
+            startIcon={<ChevronLeftIcon />}
+            sx={styles.button}
           />
         </Link>
-        <Link href={'https://t.me/fict_robot'}>
+        <Link href="https://t.me/fict_robot">
           <Button
-            text={"Зв'язатися з адміністратором"}
+            text="Зв'язатися з адміністратором"
+            variant={ButtonVariant.FILLED}
             size={ButtonSize.LARGE}
+            sx={styles.button}
           />
         </Link>
-      </div>
-    </div>
-  </div>
+      </Box>
+    </Box>
+  </Box>
 );
 
 export default NotFoundPage;

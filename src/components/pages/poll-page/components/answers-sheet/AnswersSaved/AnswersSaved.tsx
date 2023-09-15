@@ -2,7 +2,8 @@ import React from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 
-import Button, { ButtonVariant } from '@/components/common/ui/button/Button';
+import Button from '@/components/common/ui/button/Button';
+import { ButtonVariant } from '@/components/common/ui/button-mui/types';
 
 import styles from './AnswersSaved.module.scss';
 

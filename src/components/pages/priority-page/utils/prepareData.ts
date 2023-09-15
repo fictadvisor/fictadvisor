@@ -2,7 +2,7 @@ import {
   ExtendedPriorityDataBody,
   PriorityDataBody,
 } from '@/lib/api/contract/types/PriorityDataBody';
-import { PartialBy } from '@/lib/api/contract/types/utils';
+import { PartialBy } from '@/types/utils/PartialBy';
 
 export const prepareData = (
   intialData: ExtendedPriorityDataBody,
@@ -24,8 +24,6 @@ export const prepareData = (
   if (intialData.specialty === '121') intialData.priorities['3'] = undefined;
 
   const data = trimObject(replaceApostrophes(intialData));
-
-  console.log(data);
 
   return data;
 };

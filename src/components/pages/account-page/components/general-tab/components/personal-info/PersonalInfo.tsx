@@ -1,27 +1,30 @@
 import React, { FC } from 'react';
-import { shallowEqual } from 'react-redux';
 import { Form, Formik } from 'formik';
 
 import { CustomCheck } from '@/components/common/icons/CustomCheck';
-import Button, { ButtonSize } from '@/components/common/ui/button';
+import Button from '@/components/common/ui/button';
+import { ButtonSize } from '@/components/common/ui/button-mui/types';
 import { Input } from '@/components/common/ui/form';
 import { PersonalInfoForm } from '@/components/pages/account-page/components/general-tab/components/personal-info/types';
 import { validationSchema } from '@/components/pages/account-page/components/general-tab/components/personal-info/validation';
 import useAuthentication from '@/hooks/use-authentication';
 import useToast from '@/hooks/use-toast';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import UserAPI from '@/lib/api/user/UserAPI';
 
 import styles from '../../GeneralTab.module.scss';
 
+const objectsEqual = (obj1: object, obj2: object) => {
+  return JSON.stringify(obj1) === JSON.stringify(obj2);
+};
 const PersonalInfoBlock: FC = () => {
+  const { displayError } = useToastError();
   const { user, update } = useAuthentication();
   const initialValues: PersonalInfoForm = {
     lastName: user.lastName,
     firstName: user.firstName,
     middleName: user.middleName,
   };
-
-  const toast = useToast();
 
   const handleSubmit = async (data: PersonalInfoForm) => {
     data.firstName = data.firstName.trim().replace('`', `'`).replace('ʼ', `'`);
@@ -36,8 +39,8 @@ const PersonalInfoBlock: FC = () => {
     try {
       await UserAPI.changeInfo(user.id, data);
       await update();
-    } catch (e) {
-      toast.error('Щось пішло не так, спробуй пізніше!');
+    } catch (error) {
+      displayError(error);
     }
   };
 
@@ -68,7 +71,7 @@ const PersonalInfoBlock: FC = () => {
                 startIcon={<CustomCheck />}
                 size={ButtonSize.MEDIUM}
                 type="submit"
-                disabled={!isValid || shallowEqual(initialValues, values)}
+                disabled={!isValid || objectsEqual(initialValues, values)}
                 className={styles['change-password-button']}
               />
             </div>
@@ -78,7 +81,7 @@ const PersonalInfoBlock: FC = () => {
                 startIcon={<CustomCheck />}
                 size={ButtonSize.SMALL}
                 type="submit"
-                disabled={!isValid || shallowEqual(initialValues, values)}
+                disabled={!isValid || objectsEqual(initialValues, values)}
                 className={styles['change-password-button']}
               />
             </div>

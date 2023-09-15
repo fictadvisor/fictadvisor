@@ -1,6 +1,5 @@
 import React, { FC, useRef } from 'react';
 import { Box } from '@mui/material';
-import { AxiosError } from 'axios';
 import { Form, Formik, FormikProps } from 'formik';
 
 import Button from '@/components/common/ui/button-mui';
@@ -21,6 +20,7 @@ import {
 import { validationSchema } from '@/components/pages/entrant-admin-page/validation';
 import useTabClose from '@/hooks/use-tab-close';
 import useToast from '@/hooks/use-toast';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import ContractAPI from '@/lib/api/contract/ContractAPI';
 import { DeleteEntrantBody } from '@/lib/api/contract/types/DeleteEntrantBody';
 
@@ -29,7 +29,7 @@ import { prepareData } from './utils/prepareData';
 const EntrantAdminPage: FC = () => {
   const form = useRef<FormikProps<DeleteEntrantBody>>(null);
   const toast = useToast();
-
+  const { displayError } = useToastError();
   const handleFormSubmit = async (values: DeleteEntrantBody) => {
     try {
       await ContractAPI.deleteEntrant(prepareData(values));
@@ -37,11 +37,7 @@ const EntrantAdminPage: FC = () => {
         `${values.action} у ${values.firstName} ${values.lastName} ${values.middleName} видалено`,
       );
     } catch (error) {
-      if ((error as { response: AxiosError }).response.status === 500) {
-        toast.error(`Якась чухня з сервером`);
-        return;
-      }
-      toast.error(`Свят, введи ти дані нормально!`);
+      displayError(error);
     }
   };
 

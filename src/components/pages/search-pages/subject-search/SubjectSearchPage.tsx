@@ -26,6 +26,12 @@ import { SubjectSearchList } from './components/SubjectSearchList';
 import * as styles from './SubjectSearchPage.styles';
 
 const SubjectSearchPage = () => {
+  const initialValues = localStorage.getItem('subjectForm')
+    ? JSON.parse(localStorage.getItem('subjectForm') || '{}')
+    : SubjectInitialValues;
+
+  const localStorageName = 'subjectForm';
+
   const [queryObj, setQueryObj] =
     useState<SearchFormFields>(SubjectInitialValues);
   const [curPage, setCurPage] = useState(0);
@@ -57,7 +63,8 @@ const SubjectSearchPage = () => {
         searchPlaceholder="Оберіть предмет"
         filterDropDownOptions={filterOptions}
         onSubmit={submitHandler}
-        initialValues={SubjectInitialValues}
+        initialValues={initialValues}
+        localStorageName={localStorageName}
       />
       {data && <SubjectSearchList subjects={data.subjects} />}
       {isLoading ||

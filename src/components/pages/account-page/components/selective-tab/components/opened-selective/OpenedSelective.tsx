@@ -5,7 +5,7 @@ import { Form, Formik, FormikValues } from 'formik';
 
 import Button from '@/components/common/ui/button-mui';
 import { ButtonSize } from '@/components/common/ui/button-mui/types';
-import { Checkbox } from '@/components/common/ui/form';
+import Checkbox from '@/components/common/ui/form/with-formik/checkbox';
 import useAuthentication from '@/hooks/use-authentication';
 import UserAPI from '@/lib/api/user/UserAPI';
 
@@ -55,36 +55,47 @@ const OpenedSelective: FC<OpenedSelectiveProps> = ({
             variant="h6Bold"
             sx={styles.text}
           >{`${semesterMap[semester]} семестр ${year}`}</Typography>
-          <Typography variant="h6Bold" sx={styles.text}>
-            Обери {data.availableSelectiveAmount} предмети, які є твоїми
-            вибірковими на цей семестр
-          </Typography>
-          <Formik
-            initialValues={{ ...getInitialValues(data.remainingSelective) }}
-            onSubmit={handleSubmit}
-          >
-            {({ values }) => (
-              <Form>
-                <Box sx={styles.disciplines}>
-                  {data.remainingSelective.map(discipline => (
-                    <Checkbox
-                      key={discipline.disciplineId}
-                      name={discipline.disciplineId}
-                      label={discipline.subjectName}
-                      sx={styles.checkbox}
-                      disabled={checkDisabled(values, discipline.disciplineId)}
-                    />
-                  ))}
-                </Box>
-                <Button
-                  size={ButtonSize.SMALL}
-                  text="Зберегти"
-                  type="submit"
-                  sx={styles.button}
-                />
-              </Form>
-            )}
-          </Formik>
+          {data.remainingSelective ? (
+            <Typography variant="h6Bold" sx={styles.text}>
+              Обери {data.availableSelectiveAmount} предмети, які є твоїми
+              вибірковими на цей семестр
+            </Typography>
+          ) : (
+            <Typography variant="h6Bold" sx={styles.text}>
+              Наразі обирати предмети на цей семестр не можна.
+            </Typography>
+          )}
+          {data.remainingSelective && (
+            <Formik
+              initialValues={{ ...getInitialValues(data.remainingSelective) }}
+              onSubmit={handleSubmit}
+            >
+              {({ values }) => (
+                <Form>
+                  <Box sx={styles.disciplines}>
+                    {data.remainingSelective.map(discipline => (
+                      <Checkbox
+                        key={discipline.disciplineId}
+                        name={discipline.disciplineId}
+                        label={discipline.subjectName}
+                        sx={styles.checkbox}
+                        disabled={checkDisabled(
+                          values,
+                          discipline.disciplineId,
+                        )}
+                      />
+                    ))}
+                  </Box>
+                  <Button
+                    size={ButtonSize.SMALL}
+                    text="Зберегти"
+                    type="submit"
+                    sx={styles.button}
+                  />
+                </Form>
+              )}
+            </Formik>
+          )}
         </Box>
       )}
     </>

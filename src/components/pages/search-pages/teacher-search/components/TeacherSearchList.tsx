@@ -19,7 +19,7 @@ export const TeacherSearchList: FC<TeacherSearchListProps> = ({ teachers }) => {
 
   useEffect(() => {
     if (teachers.length === 0) {
-      toast.error('Цього викладача не існує', '', TOAST_TIMER);
+      toast.error('Результатів за запитом не знайдено', '', TOAST_TIMER);
     }
   }, [teachers.length]);
   return (

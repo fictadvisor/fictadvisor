@@ -9,6 +9,7 @@ import {
 import Divider from '@/components/common/ui/divider';
 import { DividerTextAlign } from '@/components/common/ui/divider/types';
 import useToast from '@/hooks/use-toast';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import ContractAPI from '@/lib/api/contract/ContractAPI';
 import { Actions } from '@/lib/api/contract/types/DeleteEntrantDataBody';
 import {
@@ -43,6 +44,7 @@ export const PersonalDataSection: FC<PersonalDataSectionProps> = ({
   setEntrantData,
 }) => {
   const toast = useToast();
+  const { displayError } = useToastError();
   const handleDelete = async () => {
     try {
       await cb(Actions.ENTRANT_DATA);
@@ -65,12 +67,8 @@ export const PersonalDataSection: FC<PersonalDataSectionProps> = ({
     try {
       await ContractAPI.createContractById(data.id);
       toast.info('Договір було надіслано на пошту', '', 3000);
-    } catch (e) {
-      const error = (
-        e as { response: { data: { error: keyof typeof errorMapper } } }
-      ).response.data.error;
-
-      toast.error(errorMapper[error]);
+    } catch (error) {
+      displayError(error);
     }
   };
 
@@ -78,12 +76,8 @@ export const PersonalDataSection: FC<PersonalDataSectionProps> = ({
     try {
       await ContractAPI.sendPriorityOnEmail(data.id);
       toast.info('Пріоритетку було надіслано на пошту', '', 3000);
-    } catch (e) {
-      const error = (
-        e as { response: { data: { error: keyof typeof errorMapper } } }
-      ).response.data.error;
-
-      toast.error(errorMapper[error]);
+    } catch (error) {
+      displayError(error);
     }
   };
 
