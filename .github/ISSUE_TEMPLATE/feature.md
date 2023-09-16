@@ -1,7 +1,7 @@
 ---
 name: Feature
 about: New feature on the front-end site
-title: ''
+title: "[FEATURE]"
 labels: feature
 assignees: ''
 
