@@ -7,46 +7,17 @@
     gap: 12px;
     margin-bottom: 34px;
     align-items: center;
-    .collapse-btn {
-        display: none;
-    }
-    .dropdown-1 {
-        width: 100%;
-    }
 
-    .dropdown-2 {
-        width: 100%;
-    }
-}
-
-.collapse-icon,.sort-icon{
-    height: 48px;
-    aspect-ratio: 1/1;
-    align-self: flex-start;
-    display: grid;
-    align-self: center;
 }
 
 
 @media screen and (max-width: $breakpoint-tablet) {
-
     .form {
         grid-template-columns: 35% 45% 10%;
         justify-items: center;
     }
-
     .input {
         grid-column: 1 / span 2;
-    }
-    .collapse-btn {
-        display: block !important;
-        align-self: center;
-    }
-    .sort-icon{
-        height: 36px;
-        svg{
-            width: 70%;
-        }
     }
 }
 

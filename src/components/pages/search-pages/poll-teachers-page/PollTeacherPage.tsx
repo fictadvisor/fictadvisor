@@ -1,5 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import { Box } from '@mui/material';
 import { useRouter } from 'next/router';
 
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
@@ -15,7 +16,7 @@ import useToast from '@/hooks/use-toast';
 import PollAPI from '@/lib/api/poll/PollAPI';
 import { PollTeachersResponse } from '@/lib/api/poll/types/PollTeachersResponse';
 
-import styles from './PollTeacherPage.module.scss';
+import * as styles from './PollTeacherPage.styles';
 
 const breadcrumbs = [
   {
@@ -64,36 +65,30 @@ const PollTeacherPage: FC = () => {
   }, [data]);
 
   return (
-    <div className={styles['layout']}>
+    <Box sx={styles.layout}>
       {isLoggedIn && (
         <>
-          <Breadcrumbs
-            items={breadcrumbs}
-            sx={{ margin: '16px 0px 16px 0px' }} //TODO move inline styles when refactor
-          />
-
+          <Breadcrumbs items={breadcrumbs} sx={styles.breadcrumps} />
           {data && (
             <PollTeacherSearchList data={data} className="poll-teacher" />
           )}
           {isLoading ||
             (isFetching && (
-              <div className={styles['page-loader']}>
+              <Box sx={styles.pageLoader}>
                 <Progress />
-              </div>
+              </Box>
             ))}
 
           {data?.teachers.length === (curPage + 1) * PAGE_SIZE && (
             <Button
-              sx={{ width: '200px', alignSelf: 'center' }}
+              sx={styles.loadBtn}
               text="Завантажити ще"
-              variant={ButtonVariant.FILLED}
-              color={ButtonColor.SECONDARY}
               onClick={() => setCurPage(pr => pr + 1)}
             />
           )}
         </>
       )}
-    </div>
+    </Box>
   );
 };
 

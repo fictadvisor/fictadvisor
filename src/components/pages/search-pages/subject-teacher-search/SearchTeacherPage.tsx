@@ -1,5 +1,7 @@
-import { FC, useMemo } from 'react';
+import React, { FC, useMemo } from 'react';
 import { useQuery } from 'react-query';
+import { Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { useRouter } from 'next/router';
 
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
@@ -9,7 +11,7 @@ import { SubjectTeacherSearchList } from '@/components/pages/search-pages/subjec
 import SubjectsAPI from '@/lib/api/subject/SubjectAPI';
 import { GetTeachersBySubjectResponse } from '@/lib/api/subject/types/GetTeachersBySubjectResponse';
 
-import styles from './SearchTeacherPage.module.scss';
+import * as styles from './SearchTeacherPage.styles';
 
 const breadcrumbs: Breadcrumb[] = [
   {
@@ -37,16 +39,13 @@ const SearchTeacherPage: FC = () => {
   );
 
   return (
-    <div className={styles['layout']}>
-      <Breadcrumbs
-        items={[...breadcrumbs, subject]}
-        sx={{ margin: '16px 0px 16px 0px' }} //TODO move inline styles when refactor
-      />
-      <h4 className={styles['subject-title']}>{data?.subjectName}</h4>
+    <Box sx={styles.layout}>
+      <Breadcrumbs items={[...breadcrumbs, subject]} sx={styles.breadcrumbs} />
+      <Typography variant="h4">{data?.subjectName}</Typography>
       {isLoading && (
-        <div className={styles['page-loader']}>
+        <Box sx={styles.pageLoader}>
           <Progress />
-        </div>
+        </Box>
       )}
       {data && !isLoading && (
         <SubjectTeacherSearchList
@@ -54,7 +53,7 @@ const SearchTeacherPage: FC = () => {
           subjectId={query.subjectId as string}
         />
       )}
-    </div>
+    </Box>
   );
 };
 
