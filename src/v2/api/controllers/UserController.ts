@@ -201,6 +201,35 @@ export class UserController {
     return { contacts };
   }
 
+  @ApiBearerAuth()
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @ApiOkResponse({
+    type: ContactResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException:
+      User with such id is not found
+      
+    InvalidBodyException:
+      Name is too long (max: 100)
+      Name can not be empty
+      Name is not correct (a-zA-Z0-9A-Я(укр.)\\\\-\\' )
+      Display name is too long (max: 100)
+      Display name can not be empty
+      Link is too long (max: 200)
+      Link contains wrong symbols (ASCII only)
+      Link is not a url`,
+  })
   @Access(PERMISSION.USERS_$USERID_CONTACTS_CREATE)
   @Post('/:userId/contacts')
   createContact (
@@ -228,7 +257,8 @@ export class UserController {
     InvalidBodyException:
       Display name is too long (max: 100)
       Link is too long (max: 200)
-      Link contains wrong symbols (ASCII only)`,
+      Link contains wrong symbols (ASCII only)
+      Link is not a url`,
   })
   @ApiForbiddenResponse({
     description: `\n

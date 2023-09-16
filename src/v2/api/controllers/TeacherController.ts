@@ -24,7 +24,7 @@ import {
   ApiOkResponse,
   ApiParam,
   ApiQuery,
-  ApiTags,
+  ApiTags, ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { TeacherResponse } from '../responses/TeacherResponse';
 import { TeacherRolesResponse } from '../responses/TeacherRolesResponse';
@@ -299,21 +299,29 @@ export class TeacherController {
     type: ContactResponse,
   })
   @ApiBadRequestResponse({
-    description: `InvalidEntityIdException:\n 
-                  teacher with such id is not found 
+    description: `\n 
+    InvalidEntityIdException:
+      teacher with such id is not found 
                   
-                  InvalidBodyException:\n 
-                  Name is too long (max: 100)
-                  Name can not be empty
-                  Name is not correct (a-zA-Z0-9A-Я(укр.)\\-' )
-                  Display name is too long (max: 100)
-                  Display name can not be empty
-                  Link is too long (max: 200)
-                  Link contains wrong symbols (ASCII only)`,
+    InvalidBodyException: 
+      Name is too long (max: 100)
+      Name can not be empty
+      Name is not correct (a-zA-Z0-9A-Я(укр.)\\-' )
+      Display name is too long (max: 100)
+      Display name can not be empty
+      Link is too long (max: 200)
+      Link contains wrong symbols (ASCII only)
+      Link is not a url`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
   })
   @ApiForbiddenResponse({
-    description: `NoPermissionException:\n
-                  You do not have permission to perform this action`,
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
   })
   @Post('/:teacherId/contacts')
   createContact (
@@ -337,20 +345,28 @@ export class TeacherController {
     type: ContactResponse,
   })
   @ApiBadRequestResponse({
-    description: `InvalidEntityIdException:\n  
-                  teacher with such id is not found
+    description: `\n
+    InvalidEntityIdException:  
+      teacher with such id is not found
                   
-                  InvalidContactNameException:\n  
-                  Contact with such name is not found
+    InvalidContactNameException:  
+      Contact with such name is not found
                   
-                  InvalidBodyException:\n  
-                  Display name is too long (max: 100)
-                  Link is too long (max: 200)
-                  Link contains wrong symbols (ASCII only)`,
+    InvalidBodyException:  
+      Display name is too long (max: 100)
+      Link is too long (max: 200)
+      Link contains wrong symbols (ASCII only)
+      Link is not a url`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
   })
   @ApiForbiddenResponse({
-    description: `NoPermissionException:\n
-                  You do not have permission to perform this action`,
+    description: `\n
+    NoPermissionException
+      You do not have permission to perform this action`,
   })
   @Patch('/:teacherId/contacts/:name')
   async updateContact (

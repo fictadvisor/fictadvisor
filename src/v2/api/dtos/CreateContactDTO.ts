@@ -1,4 +1,4 @@
-import { IsAscii, IsNotEmpty, IsOptional, Matches, MaxLength } from 'class-validator';
+import { IsAscii, IsNotEmpty, IsOptional, IsUrl, Matches, MaxLength } from 'class-validator';
 import {
   createRegex,
   ENG_REGEX,
@@ -27,6 +27,7 @@ export class CreateContactDTO {
     @ApiPropertyOptional()
     @MaxLength(200, validationOptionsMsg('Link is too long (max: 200)'))
     @IsAscii(validationOptionsMsg('Link contains wrong symbols (ASCII only)'))
+    @IsUrl({}, validationOptionsMsg('Link is not a url'))
     @IsOptional()
       link?: string;
 }
