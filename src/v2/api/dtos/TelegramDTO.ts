@@ -17,7 +17,7 @@ export class TelegramDTO {
 
   @ApiProperty()
   @IsNumber()
-    id: number;
+    id: bigint;
 
   @ApiPropertyOptional()
   @IsOptional()

@@ -28,7 +28,9 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "test:generate": "dotenv -e .testing.env -- prisma generate",
     "integration:full": "docker compose up -d && yarn test:migrate && yarn test:seed && yarn test:integration && docker compose down",
-    "generate:dev": "dotenv -e .development.env -- npx prisma generate"
+    "generate:dev": "dotenv -e .development.env -- npx prisma generate",
+    "migrate:sql": "dotenv -e .development.env -- npx prisma migrate dev --create-only --name",
+    "migrate:dev": "dotenv -e .development.env -- npx prisma migrate dev"
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^1.8.1",

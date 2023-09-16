@@ -1,4 +1,4 @@
-import { Discipline, Group, Role, SelectiveDiscipline, State } from '@prisma/client';
+import { Discipline, Group, Role, SelectiveDiscipline, State, User } from '@prisma/client';
 
 export class DbStudent {
   userId?: string;
@@ -16,14 +16,5 @@ export class DbStudent {
   selectiveDisciplines?: (SelectiveDiscipline & {
     discipline: Discipline,
   })[];
-  user?: {
-    id: string,
-    email: string,
-    username: string,
-    avatar: string,
-    telegramId: bigint,
-    password?: string,
-    lastPasswordChanged?: Date,
-    state: State,
-  };
+  user?: User;
 }

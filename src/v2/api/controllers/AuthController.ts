@@ -68,7 +68,7 @@ export class AuthController {
   async registerTelegram (
     @Body() body: RegisterTelegramDTO,
   ) {
-    this.authService.registerTelegram(body);
+    return this.authService.registerTelegram(body);
   }
 
   @ApiOkResponse()
@@ -278,18 +278,18 @@ export class AuthController {
   }
 
   @Get('/checkResetToken/:token')
-  checkResetToken (
+  async checkResetToken (
     @Param('token') token: string,
   ) {
-    const isAvailable = this.authService.checkResetToken(token);
+    const isAvailable = !!(await this.authService.checkResetToken(token));
     return { isAvailable };
   }
 
   @Get('/checkRegisterTelegram/:token')
-  checkRegisterTelegram (
+  async checkRegisterTelegram (
     @Param('token') token: string,
   ) {
-    const isRegistered = this.authService.checkTelegram(token);
+    const isRegistered = !!(await this.authService.checkTelegram(token));
     return { isRegistered };
   }
 }

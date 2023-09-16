@@ -713,3 +713,39 @@ model Specialty {
   @@id([entrantId, specialty])
   @@map("specialties")
 }
+
+model ResetPasswordToken {
+  token     String   @id @default(uuid())
+  email     String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("reset_password_tokens")
+}
+
+model RegisterTelegramToken {
+  token      String   @id @default(uuid())
+  telegramId BigInt   @map("telegram_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("register_password_tokens")
+}
+
+model VerifyEmailToken {
+  token      String   @id @default(uuid())
+  username   String
+  email      String
+  password   String
+  avatar     String?
+  telegramId BigInt?  @map("telegram_id")
+  isCaptain  Boolean  @map("is_captain")
+  groupId    String   @map("group_id")
+  middleName String?  @map("middle_name")
+  lastName   String   @map("last_name")
+  firstName  String   @map("first_name")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("verify_email_tokens")
+}

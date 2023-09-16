@@ -18,11 +18,11 @@ export class UserDTO {
 
   @ApiProperty()
   @Matches(
-    /^(?=.*[A-Za-z])(?=.*\d)[\w\W]+$/,
+    /^(?=.*[A-Za-z])(?=.*\d).+$/,
     validationOptionsMsg('The password must be between 8 and 50 characters long, include at least 1 digit and 1 letter'))
   @IsNotEmpty(validationOptionsMsg('password is empty'))
     password: string;
 
   avatar?: string;
-  telegramId?: number;
+  telegramId?: bigint;
 }

@@ -10,7 +10,6 @@ import { TelegramConfigService } from '../../config/TelegramConfigService';
 import { UserRepository } from '../../database/repositories/UserRepository';
 import { InvalidTelegramCredentialsException } from '../../utils/exceptions/InvalidTelegramCredentialsException';
 import { UpdatePasswordDTO } from '../dtos/UpdatePasswordDTO';
-import * as crypto from 'crypto';
 import { EmailService } from './EmailService';
 import { ResetPasswordDTO } from '../dtos/ResetPasswordDTO';
 import { InvalidResetTokenException } from '../../utils/exceptions/InvalidResetTokenException';
@@ -35,7 +34,7 @@ import { RegisterTelegramDTO } from '../dtos/RegisterTelegramDTO';
 import { ConfigService } from '@nestjs/config';
 import { CaptainAlreadyRegisteredException } from '../../utils/exceptions/CaptainAlreadyRegisteredException';
 import { AbsenceOfCaptainException } from '../../utils/exceptions/AbsenceOfCaptainException';
-import { AbsenceOfCaptainTelegramException } from '../../utils/exceptions/AbsenceOfCaptainTelegramException';
+import { PrismaService } from '../../database/PrismaService';
 
 export const ONE_MINUTE = 1000 * 60;
 export const HOUR = ONE_MINUTE * 60;
@@ -57,10 +56,6 @@ export const AVATARS = [
 @Injectable()
 export class AuthService {
 
-  private resetPasswordTokens: Map<string, { email: string, date: Date }> = new Map();
-  private verifyEmailTokens: Map<string, { date: Date, isCaptain: boolean, user: UserDTO & { student: any } }> = new Map();
-  private registerTelegramTokens: Map<string, number> = new Map();
-
   constructor (
     private roleRepository: RoleRepository,
     private jwtService: JwtService,
@@ -73,6 +68,7 @@ export class AuthService {
     private groupRepository: GroupRepository,
     private groupService: GroupService,
     private config: ConfigService,
+    private prisma: PrismaService,
   ) {}
 
   async validateUser (username: string, password: string) {
@@ -118,7 +114,7 @@ export class AuthService {
   async register (registrationDTO: RegistrationDTO) {
     const { telegram, student: { isCaptain, ...createStudent }, user } = registrationDTO;
 
-    if (await this.checkIfUserIsRegistered({ email: user.email, username: user.username })) {
+    if (await this.checkIfUserIsRegistered(user)) {
       throw new AlreadyRegisteredException();
     }
 
@@ -129,23 +125,22 @@ export class AuthService {
 
     if (telegram) {
       if (this.isExchangeValid(telegram)) {
-        Object.assign(user, {
-          telegramId: telegram.id,
-          avatar: telegram.photo_url,
-        });
+        user.avatar = telegram.photo_url;
+        user.telegramId = telegram.id;
       } else {
         throw new InvalidTelegramCredentialsException();
       }
     }
 
-    const userForDb = {
+    const tokenBody = {
       ...user,
       password: await this.hashPassword(user.password),
-      avatar: user.avatar ? user.avatar : AVATARS[Math.floor(Math.random() * AVATARS.length)],
-      student: createStudent,
+      avatar: user.avatar ?? AVATARS[Math.floor(Math.random() * AVATARS.length)],
+      ...createStudent,
+      isCaptain,
     };
 
-    await this.requestEmailVerification(userForDb, isCaptain);
+    await this.requestEmailVerification(tokenBody);
   }
 
   async verify (body: { id: string, telegramId: bigint }, { groupId, isCaptain, middleName, ...student }: StudentDTO) {
@@ -153,7 +148,7 @@ export class AuthService {
     const data = {
       id: body.id,
       telegramId: body?.telegramId ? body.telegramId : undefined,
-      middleName: middleName ? middleName : '',
+      middleName: middleName || '',
       ...student,
       groupCode: group.code,
     };
@@ -236,98 +231,105 @@ export class AuthService {
       throw new NotRegisteredException();
     }
 
-    const uuid = crypto.randomUUID();
-    for (const [token, value] of this.resetPasswordTokens.entries()) {
-      if (value.email === email) {
-        if (Date.now() - value.date.getTime() < ONE_MINUTE) {
-          throw new TooManyActionsException();
-        } else {
-          this.resetPasswordTokens.delete(token);
-        }
+    const repo = this.prisma.resetPasswordToken;
+
+    let token = await repo.findFirst({ where: { email } });
+    if (token) {
+      if (Date.now() - token.createdAt.getTime() < ONE_MINUTE) {
+        throw new TooManyActionsException();
+      } else {
+        await repo.delete({ where: { token: token.token } });
       }
     }
 
-    this.resetPasswordTokens.set(uuid, {
-      email,
-      date: new Date(),
+    token = await repo.create({
+      data: {
+        email,
+      },
     });
+
     await this.emailService.sendEmail({
       to: email,
       subject: 'Відновлення паролю на fictadvisor.com',
       message: 'Для відновлення паролю перейдіть за посиланням нижче. Посилання діє годину.',
-      link: `${this.config.get<string>('frontBaseUrl')}/password-recovery/${uuid}`,
+      link: `${this.config.get<string>('frontBaseUrl')}/password-recovery/${token.token}`,
     });
 
-    setTimeout(() => {
-      this.resetPasswordTokens.delete(uuid);
-    }, HOUR);
+    await new Promise((resolve) => {
+      setTimeout(() =>
+        resolve(
+          repo.deleteMany({ where: { token: token.token } })
+        ), HOUR
+      );
+    });
   }
 
   async resetPassword (token: string, { password }: ResetPasswordDTO) {
-    if (!this.resetPasswordTokens.has(token)) {
+    const resetToken = await this.prisma.resetPasswordToken.findFirst({ where: { token } });
+    if (!resetToken) {
       throw new InvalidResetTokenException();
     }
 
-    const email = this.resetPasswordTokens.get(token).email;
-    await this.setPassword({ email }, password);
-
-    this.resetPasswordTokens.delete(token);
+    await this.setPassword(resetToken, password);
+    await this.prisma.resetPasswordToken.delete({ where: { token } });
   }
 
   async repeatEmailVerification (email: string) {
-    const tokens = [...this.verifyEmailTokens.values()];
-    const obj = tokens.find((t) => t.user.email === email);
+    const token = await this.prisma.verifyEmailToken.findFirst({ where: { email } });
 
-    if (!obj) {
+    if (!token) {
       throw new NotRegisteredException();
     }
 
-    await this.requestEmailVerification(obj.user, obj.isCaptain);
+    await this.requestEmailVerification(token);
   }
 
-  async requestEmailVerification (user: UserDTO & { student: any }, isCaptain: boolean) {
-    for (const [token, value] of this.verifyEmailTokens.entries()) {
-      if (value.user.email === user.email) {
-        if (Date.now() - value.date.getTime() < ONE_MINUTE) {
-          throw new TooManyActionsException();
-        } else {
-          this.verifyEmailTokens.delete(token);
-        }
+  async requestEmailVerification (user: UserDTO & StudentDTO) {
+    const repo = this.prisma.verifyEmailToken;
+
+    let token = await repo.findFirst({ where: { email: user.email } });
+    if (token) {
+      if (Date.now() - token.createdAt.getTime() < ONE_MINUTE) {
+        throw new TooManyActionsException();
+      } else {
+        await repo.delete({ where: { token: token.token } });
       }
     }
 
-    const uuid = crypto.randomUUID();
-    this.verifyEmailTokens.set(uuid, {
-      date: new Date(),
-      isCaptain,
-      user,
+    token = await repo.create({
+      data: {
+        ...user,
+      },
     });
     await this.emailService.sendEmail({
       to: user.email,
       subject: 'Верифікація пошти на fictadvisor.com',
       message: 'Для верифікації пошти перейди за посиланням нижче. Посилання діє годину.',
-      link: `${this.config.get<string>('frontBaseUrl')}/register/email-verification/${uuid}`,
+      link: `${this.config.get<string>('frontBaseUrl')}/register/email-verification/${token.token}`,
     });
 
-    setTimeout(async () => {
-      this.verifyEmailTokens.delete(uuid);
-    }, HOUR);
+    await new Promise((resolve) => {
+      setTimeout(() =>
+        resolve(
+          repo.deleteMany({ where: { token: token.token } })
+        ), HOUR
+      );
+    });
   }
 
   async verifyEmail (token: string) {
-    if (!this.verifyEmailTokens.has(token)) {
+    const verifyToken = await this.prisma.verifyEmailToken.findFirst({ where: { token } });
+    if (!verifyToken) {
       throw new InvalidVerificationTokenException();
     }
-    const { user: { student, ...tokenUser }, isCaptain } = this.verifyEmailTokens.get(token);
+    const { email, telegramId, username, avatar, firstName, lastName, groupId, middleName, isCaptain, password } = verifyToken;
 
-
-    if (!(await this.isPseudoRegistered(tokenUser.email))) {
-      const telegram = tokenUser.telegramId ? {} : { telegramId: tokenUser.telegramId };
+    if (!(await this.isPseudoRegistered(email))) {
       const user = await this.userRepository.find({
         OR: [
-          { email: tokenUser.email },
-          { username: tokenUser.username },
-          { ...telegram },
+          { email },
+          { username },
+          { telegramId },
         ],
       });
       if (user) {
@@ -335,15 +337,25 @@ export class AuthService {
       }
     }
 
-    let user;
+    const tokenUser = {
+      email,
+      username,
+      telegramId,
+      avatar,
+      password,
+    };
+    const student = {
+      firstName,
+      middleName,
+      lastName,
+      groupId,
+    };
 
-    if (await this.isPseudoRegistered(tokenUser.email)) {
-      user = await this.pseudoRegister(tokenUser, isCaptain, student);
-    } else {
-      user = await this.trulyRegister(tokenUser, isCaptain, student);
-    }
+    const user = await this.isPseudoRegistered(email)
+      ? await this.pseudoRegister(tokenUser, student)
+      : await this.trulyRegister(tokenUser, isCaptain, student);
 
-    this.verifyEmailTokens.delete(token);
+    await this.prisma.verifyEmailToken.delete({ where: { token } });
 
     await this.roleRepository.create({
       name: RoleName.USER,
@@ -361,7 +373,7 @@ export class AuthService {
     return this.getTokens(user);
   }
 
-  async setPassword (search: UniqueUserDTO, password) {
+  async setPassword (search: UniqueUserDTO, password: string) {
     const hash = await this.hashPassword(password);
     return this.userRepository.updateMany({
       OR: [
@@ -394,7 +406,7 @@ export class AuthService {
         { username: query.username },
       ],
     });
-    return (user != null && user.password != null);
+    return !!user?.password;
   }
 
   async isPseudoRegistered (email: string) {
@@ -421,7 +433,7 @@ export class AuthService {
     return dbUser;
   }
 
-  async pseudoRegister (user: UserDTO, isCaptain:boolean, createStudent: Omit<StudentDTO, 'isCaptain'>) {
+  async pseudoRegister (user: UserDTO, createStudent: Omit<StudentDTO, 'isCaptain'>) {
     const dbUser = await this.userRepository.update(
       { email: user.email }, 
       {
@@ -439,27 +451,31 @@ export class AuthService {
     return !!captain;
   }
 
-  checkResetToken (token: string) {
-    return this.resetPasswordTokens.has(token);
+  async checkResetToken (token: string) {
+    return this.prisma.resetPasswordToken.findFirst({ where: { token } });
   }
 
-  registerTelegram (register: RegisterTelegramDTO) {
-    let telegramKey;
-    for (const [key, value] of this.registerTelegramTokens.entries()) {
-      if (value === register.telegramId) {
-        telegramKey = key;
-        break;
-      }
+  async registerTelegram (data: RegisterTelegramDTO) {
+    const repo = this.prisma.registerTelegramToken;
+
+    const token = await repo.findFirst({ where: { telegramId: data.telegramId } });
+    if (token) {
+      await repo.delete({ where: { token: token.token } });
     }
-    if (telegramKey) this.registerTelegramTokens.delete(telegramKey);
-    this.registerTelegramTokens.set(register.token, register.telegramId);
+    await repo.create({
+      data,
+    });
 
-    setTimeout(() => {
-      this.registerTelegramTokens.delete(register.token);
-    }, HOUR);
+    await new Promise((resolve) => {
+      setTimeout(() =>
+        resolve(
+          repo.deleteMany({ where: { token: data.token } })
+        ), HOUR
+      );
+    });
   }
 
-  checkTelegram (token: string) {
-    return this.registerTelegramTokens.has(token);
+  async checkTelegram (token: string) {
+    return this.prisma.registerTelegramToken.findFirst({ where: { token } });
   }
 }

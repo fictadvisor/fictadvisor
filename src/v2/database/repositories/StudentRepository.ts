@@ -32,7 +32,7 @@ export class StudentRepository {
     });
   }
 
-  find (where: Prisma.StudentWhereInput) {
+  find (where: Prisma.StudentWhereInput): Promise<DbStudent> {
     return this.prisma.student.findFirst({
       where,
       include: this.include,
