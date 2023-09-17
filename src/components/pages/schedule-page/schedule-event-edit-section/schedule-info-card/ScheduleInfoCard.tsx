@@ -25,7 +25,7 @@ import * as styles from './ScheduleInfoCard.styles';
 
 const TagLabelMapper: Record<string, string> = {
   [TDiscipline.LECTURE]: 'Лекція',
-  [TDiscipline.EXAM]: 'Екзмаен',
+  [TDiscipline.EXAM]: 'Екзамен',
   [TDiscipline.LABORATORY]: 'Лабораторна',
   [TDiscipline.CONSULTATION]: 'Консультація',
   [TDiscipline.PRACTICE]: 'Практика',

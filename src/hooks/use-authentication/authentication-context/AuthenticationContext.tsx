@@ -36,10 +36,11 @@ const AuthenticationProvider: FC<PropsWithChildren> = ({ children }) => {
   if (error && !isFetching) {
     const status = (error as AxiosError).response?.status;
     if (jwt && status === 401) {
-      AuthAPI.refreshAccessToken(jwt.refreshToken)
-        .then(({ accessToken }) =>
-          StorageUtil.setTokens(accessToken, jwt?.refreshToken),
-        )
+      AuthAPI.refreshAccessToken(jwt.accessToken)
+        .then(async ({ accessToken }) => {
+          StorageUtil.setTokens(accessToken, jwt?.refreshToken);
+          await refetch();
+        })
         .catch(async () => {
           StorageUtil.deleteTokens();
         });

@@ -1,40 +1,7 @@
 @import "src/styles/partials/typography-mixins";
 @import "src/styles/partials/breakpoints";
 
-.poll-teacher-search-list {
-  margin-top: 50px;
-  margin-bottom: 16px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  column-gap: 48px;
-  row-gap: 4rem;
-  grid-auto-rows: max-content !important;
-  align-items: center;
-}
-
-
-@media only screen and (min-width: $breakpoint-tablet) and (max-width: $breakpoint-desktop) {
-  .poll-teacher-search-list {
-    grid-template-columns: repeat(3, 1fr);
-    column-gap: 32px;
-  }
-}
-
-@media screen and (max-width: $breakpoint-tablet) {
-
-  .poll-teacher-search-list {
-    grid-template-columns: repeat(2, 1fr);
-    column-gap: 16px;
-  }
-
-}
-
-
 @media only screen and (max-width: $breakpoint-mobile-medium){
-  .poll-teacher-search-list {
-    grid-template-columns: repeat(1, 1fr);
-    margin-top: 40px;
-  }
   .form{
     column-gap: 15px;
   }

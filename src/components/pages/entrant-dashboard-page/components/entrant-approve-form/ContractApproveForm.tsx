@@ -31,8 +31,6 @@ const ContractApproveForm: FC<ContractApproveFormProps> = ({
 }) => {
   const { displayError } = useToastError();
   const handleSubmit = async (values: AdminContractBody['contract']) => {
-    console.log('submitting');
-
     try {
       const body: AdminContractBody = {
         contract: values,

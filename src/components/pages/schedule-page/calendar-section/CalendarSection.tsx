@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { PlusIcon } from '@heroicons/react/24/outline';
-import { Box, Stack } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 
 import Button from '@/components/common/ui/button-mui/Button';
 import {

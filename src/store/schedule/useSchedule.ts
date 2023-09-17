@@ -288,7 +288,6 @@ export const useSchedule = create<State & Action>((set, get) => {
         } else set(state => ({ groupId: urlGroup as string }));
 
         const isUsingSelective = user && user.group?.id === get().groupId;
-        console.log('isUsingSelective', isUsingSelective);
         set(state => ({
           isUsingSelective,
           checkboxes: isUsingSelective

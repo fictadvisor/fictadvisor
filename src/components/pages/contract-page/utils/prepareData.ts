@@ -69,8 +69,6 @@ export const prepareData = (
 
   delete (data as PartialBy<ExtendedContractBody, 'helper'>).helper;
 
-  console.log(data);
-
   return data;
 };
 

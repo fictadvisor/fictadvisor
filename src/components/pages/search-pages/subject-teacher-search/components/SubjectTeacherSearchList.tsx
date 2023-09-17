@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { Box, Typography } from '@mui/material';
+import List from '@mui/material/List';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -34,7 +35,7 @@ export const SubjectTeacherSearchList: FC<SubjectTeacherSearchListProps> = ({
           </Typography>
         </Box>
       )}
-      <ul className={styles[`subject-teacher-search-list`]}>
+      <List>
         {teachers &&
           teachers.map((teacher, index) => (
             <Link
@@ -51,7 +52,7 @@ export const SubjectTeacherSearchList: FC<SubjectTeacherSearchListProps> = ({
               />
             </Link>
           ))}
-      </ul>
+      </List>
     </>
   );
 };

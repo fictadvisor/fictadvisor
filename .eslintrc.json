@@ -31,6 +31,7 @@
     "react/display-name": "off",
     "@typescript-eslint/no-empty-function":"off",
     "simple-import-sort/exports": "error",
+    "react/no-unescaped-entities": "off",
     "@typescript-eslint/no-empty-interface": [
       "error",
       {
