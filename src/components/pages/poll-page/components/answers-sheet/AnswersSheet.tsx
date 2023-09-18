@@ -1,6 +1,6 @@
 import React, { FormEvent, useState } from 'react';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
-import { useMediaQuery } from '@mui/material';
+import { Box, useMediaQuery } from '@mui/material';
 import { Form, Formik, FormikValues } from 'formik';
 import { useRouter } from 'next/router';
 
@@ -133,7 +133,9 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
               setQuestionsListStatus(true);
             }}
           >
-            <ChevronLeftIcon style={{ height: '20px' }} />
+            <Box sx={sxStyles.chevronIcon}>
+              <ChevronLeftIcon style={{ height: '20px' }} />
+            </Box>
             <b>
               {current + 1} . {category.name}
             </b>

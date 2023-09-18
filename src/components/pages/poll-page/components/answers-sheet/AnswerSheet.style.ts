@@ -13,3 +13,14 @@ export const textArea: SxProps<Theme> = {
     },
   },
 };
+
+export const chevronIcon: SxProps<Theme> = {
+  position: 'absolute',
+  left: {
+    mobile: '4px',
+    mobileSemiMedium: '16px',
+  },
+  alignItems: 'center',
+  justifyContent: 'center',
+  height: '20px',
+};

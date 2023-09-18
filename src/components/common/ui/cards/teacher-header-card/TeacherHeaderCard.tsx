@@ -8,6 +8,7 @@ import {
   Typography,
   useMediaQuery,
 } from '@mui/material';
+import Link from 'next/link';
 
 import Tooltip from '@/components/common/ui/tooltip';
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
@@ -33,9 +34,11 @@ const TeacherHeaderCard: React.FC<TeacherHeaderCardProps> = ({
   return (
     <Box sx={mergeSx(styles.card, sx)}>
       {isMobile ? (
-        <Box sx={styles.chevronIcon}>
-          <ChevronLeftIcon />
-        </Box>
+        <Link href="/poll">
+          <Box sx={styles.chevronIcon}>
+            <ChevronLeftIcon />
+          </Box>
+        </Link>
       ) : (
         <Avatar src={url} alt="картинка викладача" sx={styles.avatar} />
       )}
