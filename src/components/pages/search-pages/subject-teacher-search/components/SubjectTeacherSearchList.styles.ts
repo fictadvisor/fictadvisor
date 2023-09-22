@@ -21,3 +21,19 @@ export const headText: SxProps<Theme> = {
     mobile: 'h6Bold',
   },
 };
+
+export const searchList: SxProps<Theme> = {
+  mt: { mobile: '58px', tablet: '65px' },
+  mb: '16px',
+  display: 'grid',
+  gridTemplateColumns: {
+    mobile: 'repeat(1, 1fr)',
+    mobileMedium: 'repeat(2, 1fr)',
+    tablet: 'repeat(3, 1fr)',
+    desktop: 'repeat(4, 1fr)',
+  },
+  rowGap: '4rem',
+  alignItems: 'stretch',
+  columnGap: '16px',
+  gridAutoColumns: 'max-content',
+};
