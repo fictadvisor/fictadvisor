@@ -33,6 +33,7 @@ import { SwitchCaptainDTO } from '../dtos/SwitchCaptainDTO';
 import { GroupsWithTelegramGroupsResponse } from '../responses/GroupsWithTelegramGroupsResponse';
 import { TelegramGuard } from '../../security/TelegramGuard';
 import { URLResponse } from '../responses/URLResponse';
+import { GroupStudentsQueryDTO } from '../dtos/GroupStudentsQueryDTO';
 
 @ApiTags('Groups')
 @Controller({
@@ -172,8 +173,12 @@ export class GroupController {
   })
   @ApiBadRequestResponse({
     description: `\n
-    InvalidGroupIdException: 
-      Group with such id is not found`,
+    InvalidEntityIdException: 
+      Group with such id is not found
+    
+    InvalidBodyException:
+      Wrong value for sort
+      Wrong value for order`,
   })
   @ApiUnauthorizedResponse({
     description: `\n
@@ -189,9 +194,10 @@ export class GroupController {
   @Get('/:groupId/students')
   async getStudents (
     @Param('groupId', GroupByIdPipe) groupId: string,
+    @Query() query: GroupStudentsQueryDTO,
   ) {
-    const students = await this.groupService.getStudents(groupId);
-
+    const students = await this.groupService.getStudents(groupId, query);
+    
     return { students };
   }
 

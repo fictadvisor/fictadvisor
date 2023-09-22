@@ -22,6 +22,8 @@ import { QuerySemesterDTO } from '../dtos/QuerySemesterDTO';
 import { DateService } from '../../utils/date/DateService';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
 import { FileService } from '../../utils/files/FileService';
+import { GroupStudentsQueryDTO, SortQGSParam } from '../dtos/GroupStudentsQueryDTO';
+import { OrderQAParam } from '../dtos/OrderQAParam';
 
 const ROLE_LIST = [
   {
@@ -251,8 +253,20 @@ export class GroupService {
     await this.groupRepository.deleteById(groupId);
   }
 
-  async getStudents (groupId: string) {
-    const students = await this.studentRepository.findMany({ where: { groupId, state: State.APPROVED } });
+  async getStudents (groupId: string, { sort, order }: GroupStudentsQueryDTO) {   
+    const orderBy = [];
+    if (sort) {
+      if (!order) order = OrderQAParam.ASC;
+      orderBy.push({ [sort]: order });
+      orderBy.push({ [SortQGSParam.LAST_NAME]: order });
+      orderBy.push({ [SortQGSParam.FIRST_NAME]: order });
+      orderBy.push({ [SortQGSParam.MIDDLE_NAME]: order });
+    }
+    
+    const students = await this.studentRepository.findMany({ 
+      where: { groupId, state: State.APPROVED },
+      orderBy, 
+    });
     return students.map((s) => this.studentMapper.getStudent(s));
   }
 
