@@ -70,14 +70,12 @@
 
 .contact-item{
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: center;
   gap: 2.5%;
   margin-bottom: 26px;
   a{
     flex-grow: 1;
-  }
-  button{
-    margin-top: 20px;
   }
 }
 
