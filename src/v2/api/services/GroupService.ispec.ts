@@ -14,6 +14,7 @@ import { InjectionToken } from '@nestjs/common';
 import { GroupRepository } from '../../database/repositories/GroupRepository';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
+import { FileService } from '../../utils/files/FileService';
 
 describe('GroupService', () => {
   let groupService: GroupService;
@@ -34,6 +35,7 @@ describe('GroupService', () => {
         DisciplineRepository,
         StudentMapper,
         DateService,
+        FileService,
       ] as InjectionToken[];
       if (tokens.includes(token)) {
         return {};

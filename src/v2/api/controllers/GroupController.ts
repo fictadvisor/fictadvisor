@@ -32,6 +32,7 @@ import { OrdinaryStudentResponse, StudentsResponse } from '../responses/StudentR
 import { SwitchCaptainDTO } from '../dtos/SwitchCaptainDTO';
 import { GroupsWithTelegramGroupsResponse } from '../responses/GroupsWithTelegramGroupsResponse';
 import { TelegramGuard } from '../../security/TelegramGuard';
+import { URLResponse } from '../responses/URLResponse';
 
 @ApiTags('Groups')
 @Controller({
@@ -494,5 +495,33 @@ export class GroupController {
     @Body() { studentId }: SwitchCaptainDTO,
   ) {
     await this.groupService.switchCaptain(groupId, studentId);
+  }
+
+  @Access(PERMISSION.GROUPS_$GROUPID_LIST_GET)
+  @ApiBearerAuth()
+  @Get('/:groupId/list')
+  @ApiOkResponse({
+    type: URLResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException: 
+      Group with such id is not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  async getGroupList (
+    @Param('groupId', GroupByIdPipe) groupId: string,
+  ) {
+    const url = await this.groupService.getGroupList(groupId);
+    return { url };
   }
 }

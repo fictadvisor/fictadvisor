@@ -21,6 +21,7 @@ import { DbGroup } from '../../database/entities/DbGroup';
 import { QuerySemesterDTO } from '../dtos/QuerySemesterDTO';
 import { DateService } from '../../utils/date/DateService';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
+import { FileService } from '../../utils/files/FileService';
 
 const ROLE_LIST = [
   {
@@ -63,6 +64,7 @@ export class GroupService {
     private disciplineRepository: DisciplineRepository,
     private studentMapper: StudentMapper,
     private dateService: DateService,
+    private fileService: FileService,
   ) {}
 
   async create (code: string): Promise<DbGroup>  {
@@ -353,5 +355,33 @@ export class GroupService {
         },
       },
     });
+  }
+
+  async getGroupList (groupId: string) {
+    const dbStudents = await this.studentRepository.findMany({
+      where: {
+        groupId,
+        state: State.APPROVED,
+      },
+      orderBy: [
+        { lastName: 'asc' },
+        { firstName: 'asc' },
+        { middleName: 'asc' },
+      ],
+    });
+
+    const students = [];
+
+    for (const dbStudent of dbStudents) {
+      students.push({
+        lastName: dbStudent.lastName,
+        firstName: dbStudent.firstName,
+        middleName: dbStudent.middleName,
+        email: dbStudent.user.email,
+        contacts: await this.userService.getContacts(dbStudent.userId),
+      });
+    }
+
+    return this.fileService.generateGroupList(students);
   }
 }
