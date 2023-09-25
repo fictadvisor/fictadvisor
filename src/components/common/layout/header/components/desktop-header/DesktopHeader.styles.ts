@@ -25,7 +25,7 @@ export const menu: SxProps<Theme> = {
   alignItems: 'center',
   textAlign: 'center',
   width: 'fit-content',
-  gap: '28px',
+  gap: '16px',
 };
 
 export const headerDesktopCard: SxProps<Theme> = {
