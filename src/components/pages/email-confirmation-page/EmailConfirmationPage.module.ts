@@ -72,7 +72,7 @@ export const email: SxProps<Theme> = {
   },
 };
 
-export const flex: SxProps<Theme> = {
+export const info: SxProps<Theme> = {
   display: {
     mobile: 'block',
     mobileMedium: 'flex',
@@ -111,7 +111,6 @@ export const arrow: SxProps<Theme> = {
     width: '20px',
     height: '20px',
   },
-
   marginTop: {
     mobile: '16px',
     mobileMedium: '38px',
