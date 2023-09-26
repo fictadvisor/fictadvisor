@@ -156,7 +156,7 @@ export class AuthService {
       await this.telegramApi.verifyCaptain(data);
     } else {
       const cap = await this.groupService.getCaptain(groupId);
-      
+
       if (!cap) throw new AbsenceOfCaptainException();
       if (cap.telegramId) {
         await this.telegramApi.verifyStudent({ captainTelegramId: cap.telegramId, ...data });
@@ -255,7 +255,7 @@ export class AuthService {
       link: `${this.config.get<string>('frontBaseUrl')}/password-recovery/${token.token}`,
     });
 
-    await new Promise((resolve) => {
+    new Promise((resolve) => {
       setTimeout(() =>
         resolve(
           repo.deleteMany({ where: { token: token.token } })
@@ -308,7 +308,7 @@ export class AuthService {
       link: `${this.config.get<string>('frontBaseUrl')}/register/email-verification/${token.token}`,
     });
 
-    await new Promise((resolve) => {
+    new Promise((resolve) => {
       setTimeout(() =>
         resolve(
           repo.deleteMany({ where: { token: token.token } })
@@ -382,7 +382,7 @@ export class AuthService {
         { telegramId: search.telegramId },
         { username: search.username },
       ],
-    }, 
+    },
     {
       password: hash,
       lastPasswordChanged: new Date(),
@@ -435,7 +435,7 @@ export class AuthService {
 
   async pseudoRegister (user: UserDTO, createStudent: Omit<StudentDTO, 'isCaptain'>) {
     const dbUser = await this.userRepository.update(
-      { email: user.email }, 
+      { email: user.email },
       {
         ...user,
         lastPasswordChanged: new Date(),
@@ -466,7 +466,7 @@ export class AuthService {
       data,
     });
 
-    await new Promise((resolve) => {
+    new Promise((resolve) => {
       setTimeout(() =>
         resolve(
           repo.deleteMany({ where: { token: data.token } })
