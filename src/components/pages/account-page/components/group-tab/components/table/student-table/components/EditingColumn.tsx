@@ -82,7 +82,10 @@ const EditingColumn: FC<EditingColumnProps> = ({ student, refetch }) => {
       <ArrowUpCircleIcon />
     );
 
-  if (user.group?.role === UserGroupRole.CAPTAIN) {
+  if (
+    user.group?.role === UserGroupRole.CAPTAIN &&
+    student.role !== UserGroupRole.CAPTAIN
+  ) {
     return (
       <>
         <Popup
@@ -90,12 +93,12 @@ const EditingColumn: FC<EditingColumnProps> = ({ student, refetch }) => {
           title={
             student.role === UserGroupRole.MODERATOR
               ? 'Зробити студентом'
-              : 'Зробити зам старостою'
+              : 'Зробити заст. старости'
           }
           text={`Ви дійсно бажаєте зробити користувача ${student.fullName} ${
             student.role === UserGroupRole.MODERATOR
               ? 'студентом'
-              : 'зам старостою'
+              : 'заст. старости'
           }?`}
           onClose={() => setChangePopupOpen(false)}
           firstButton={
