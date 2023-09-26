@@ -7,7 +7,6 @@ export const card: SxProps<Theme> = {
   width: '100%',
   gridTemplateRows: {
     mobile: 'auto 1fr auto auto auto',
-    mobileMedium: 'auto 0.5fr',
     desktopSemiMedium: 'auto 1fr 1fr auto auto',
   },
   gridTemplateColumns: {
