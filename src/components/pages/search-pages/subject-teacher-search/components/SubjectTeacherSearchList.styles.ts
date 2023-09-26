@@ -28,9 +28,9 @@ export const searchList: SxProps<Theme> = {
   display: 'grid',
   gridTemplateColumns: {
     mobile: 'repeat(1, 1fr)',
-    mobileMedium: 'repeat(2, 1fr)',
-    tablet: 'repeat(3, 1fr)',
-    desktop: 'repeat(4, 1fr)',
+    tablet: 'repeat(2, 1fr)',
+    desktop: 'repeat(3, 1fr)',
+    desktopSemiMedium: 'repeat(4, 1fr)',
   },
   rowGap: '4rem',
   alignItems: 'stretch',
