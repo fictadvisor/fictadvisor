@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Query } from '@nestjs/common';
+import { Body, Controller, Post, Query } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { CheckPermissionsDTO } from '../dtos/CheckPermissionsDTO';
 import { PermissionService } from '../services/PermissionService';
@@ -15,7 +15,7 @@ export class PermissionController {
       private permissionService: PermissionService,
   ) {}
 
-  @Get('/check')
+  @Post('/check')
   @ApiQuery({
     name: 'userId',
     required: true,
