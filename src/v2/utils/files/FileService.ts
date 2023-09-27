@@ -23,6 +23,21 @@ export class FileService {
     return resolve(process.env.BASE_URL, join(directory, fileName + extname(file.originalname)));
   }
 
+  getPathFromLink (link: string): string {
+    const url = new URL(link);
+    return url.pathname;
+  }
+
+  checkFileExist (path: string, isPrivate = true): boolean {
+    const filePath = join(__dirname, isPrivate ? 'private' : 'static', path);
+    return fs.existsSync(filePath);
+  }
+
+  async deleteFile (path: string, isPrivate = true) {
+    const filePath = join(__dirname, isPrivate ? 'private' : 'static', path);
+    await fs.promises.unlink(filePath);
+  }
+
   getFileContent (path: string, isPrivate = true) {
     const filePath = join(__dirname, isPrivate ? 'private' : 'static', path);
     return fs.readFileSync(filePath, 'utf-8');

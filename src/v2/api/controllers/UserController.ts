@@ -397,20 +397,26 @@ export class UserController {
   })
   @ApiBadRequestResponse({
     description: `\n
-                  InvalidEntityIdException: User with such id is not found\n
-                  DataNotFoundException: Data was not found`,
+    InvalidEntityIdException: 
+      User with such id is not found
+      
+    DataNotFoundException: 
+      Data was not found`,
   })
   @ApiUnsupportedMediaTypeResponse({
-    description: `InvalidExtensionException:\n
-                  File extension is wrong`,
+    description: `\n
+    InvalidExtensionException:
+      File extension is wrong`,
   })
   @ApiPayloadTooLargeResponse({
-    description: `TooLargeSizeException:\n
-                  The file size exceeds 1.5 MB`,
+    description: `\n
+    TooLargeSizeException:
+      The file size exceeds 1.5 MB`,
   })
   @ApiForbiddenResponse({
-    description: `NoPermissionException:\n
-                  You do not have permission to perform this action`,
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
   })
   @UseInterceptors(FileInterceptor('avatar'))
   async uploadAvatar (

@@ -383,6 +383,17 @@ export class UserService {
   }
 
   async updateAvatar (file: Express.Multer.File, userId: string) {
+    const { avatar } = await this.userRepository.findById(userId);
+    const oldPath = this.fileService.getPathFromLink(avatar);
+
+    const exist = this.fileService.checkFileExist(oldPath, false);
+    if (exist) {
+      const users = await this.userRepository.findMany({ avatar });
+      if (users.length === 1) {
+        await this.fileService.deleteFile(oldPath, false);
+      }
+    }
+
     const path = await this.fileService.saveByHash(file, 'avatars');
 
     return this.userRepository.updateById(userId, {

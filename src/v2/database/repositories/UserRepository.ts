@@ -37,6 +37,13 @@ export class UserRepository {
     });
   }
 
+  async findMany (where: Prisma.UserWhereInput): Promise<DbUser[]> {
+    return this.prisma.user.findMany({
+      where,
+      include: this.include,
+    });
+  }
+
   async delete (where: Prisma.UserWhereUniqueInput): Promise<DbUser> {
     return this.prisma.user.delete({
       where,
