@@ -1,6 +1,8 @@
 import React, { FC } from 'react';
 import NextLink from 'next/link';
 
+import { Discord } from '@/components/common/icons/Discord';
+import { Facebook } from '@/components/common/icons/Facebook';
 import { GitHub } from '@/components/common/icons/GitHub';
 import { Instagram } from '@/components/common/icons/Instagram';
 import { Mail } from '@/components/common/icons/Mail';
@@ -23,8 +25,8 @@ const contactIconsMap: Record<ContactType, React.ReactElement> = {
   [ContactType.MAIL]: <Mail />,
   [ContactType.GITHUB]: <GitHub />,
   [ContactType.INSTAGRAM]: <Instagram />,
-  [ContactType.DISCORD]: <Telegram />,
-  [ContactType.FACEBOOK]: <Telegram />,
+  [ContactType.DISCORD]: <Discord />,
+  [ContactType.FACEBOOK]: <Facebook />,
   [ContactType.TELEGRAM]: <Telegram />,
 };
 
