@@ -1,6 +1,8 @@
 import { SxProps } from '@mui/material/styles';
 import { Theme } from '@mui/system';
 
+import { block } from '@/components/pages/entrant-dashboard-page/EntrantDashboardPage.styles';
+
 export const button: SxProps<Theme> = {
   width: { mobile: 'min-content' },
   whiteSpace: 'nowrap',
@@ -18,3 +20,17 @@ export const dividerWrapper: SxProps<Theme> = {
 export const tag: SxProps<Theme> = {
   padding: '1px 3px',
 };
+
+export const iconButton = (isMobile: boolean) => ({
+  transform: !isMobile ? 'scale(1.41)' : 'scale(1)',
+  aspectRatio: '1/1',
+  alignSelf: 'center',
+});
+
+export const iconButtonSeparated = (isMobile: boolean) => ({
+  transform: !isMobile ? 'scale(1.41)' : 'scale(1)',
+  aspectRatio: '1/1',
+  alignSelf: 'right',
+  display: 'block',
+  margin: '10px',
+});

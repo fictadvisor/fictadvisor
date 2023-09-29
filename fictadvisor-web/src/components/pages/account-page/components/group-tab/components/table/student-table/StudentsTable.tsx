@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { BarsArrowDownIcon } from '@heroicons/react/24/outline';
 import { PlusIcon } from '@heroicons/react/24/solid';
 import { Avatar, Box, Grid, Typography, useMediaQuery } from '@mui/material';
 
@@ -7,6 +8,7 @@ import { Moderator } from '@/components/common/icons/Moderator';
 import Button from '@/components/common/ui/button-mui';
 import Divider from '@/components/common/ui/divider';
 import { DividerTextAlign } from '@/components/common/ui/divider/types';
+import { IconButtonColor } from '@/components/common/ui/icon-button';
 import IconButton from '@/components/common/ui/icon-button-mui';
 import { IconButtonShape } from '@/components/common/ui/icon-button-mui/types';
 import Tag from '@/components/common/ui/tag';
@@ -25,10 +27,12 @@ import * as gridStyles from '../grid.styles';
 import { StudentsTableProps } from '../types';
 
 import * as styles from './StudentsTable.styles';
+
 const StudentsTable: React.FC<StudentsTableProps> = ({
   permissions,
   rows,
   refetch,
+  onSortButtonClick,
 }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down('desktop'));
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -59,30 +63,38 @@ const StudentsTable: React.FC<StudentsTableProps> = ({
           closeFunction={() => setIsPopupOpen(false)}
         />
       )}
-      {permissions[PERMISSION.GROUPS_$GROUPID_STUDENTS_ADD] && (
-        <Box sx={styles.dividerWrapper}>
-          <Divider
-            text="Студенти"
-            textAlign={DividerTextAlign.LEFT}
-            sx={{ flexGrow: 1 }}
-          />
-          {isMobile ? (
-            <IconButton
-              icon={<PlusIcon />}
-              shape={IconButtonShape.SQUARE}
-              onClick={() => setIsPopupOpen(true)}
-            />
-          ) : (
-            <Button
-              sx={styles.button}
-              text={'Додати студента'}
-              startIcon={<PlusIcon className={'icon'} />}
-              onClick={() => setIsPopupOpen(true)}
-            />
-          )}
-        </Box>
-      )}
-
+      <Box sx={styles.dividerWrapper}>
+        <Divider
+          text="Студенти"
+          textAlign={DividerTextAlign.LEFT}
+          sx={{ flexGrow: 1 }}
+        />
+        <IconButton
+          sx={styles.iconButton(isMobile)}
+          shape={IconButtonShape.SQUARE}
+          icon={<BarsArrowDownIcon />}
+          color={IconButtonColor.SECONDARY}
+          onClick={onSortButtonClick}
+        />
+        {permissions[PERMISSION.GROUPS_$GROUPID_STUDENTS_ADD] && (
+          <>
+            {isMobile ? (
+              <IconButton
+                icon={<PlusIcon />}
+                shape={IconButtonShape.SQUARE}
+                onClick={() => setIsPopupOpen(true)}
+              />
+            ) : (
+              <Button
+                sx={styles.button}
+                text={'Додати студента'}
+                startIcon={<PlusIcon className={'icon'} />}
+                onClick={() => setIsPopupOpen(true)}
+              />
+            )}
+          </>
+        )}
+      </Box>
       <Grid container sx={gridStyles.studentsGrid}>
         {rows.map((row, index) => (
           <Grid container key={index} sx={gridStyles.row}>

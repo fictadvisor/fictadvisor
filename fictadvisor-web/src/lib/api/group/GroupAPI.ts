@@ -10,6 +10,7 @@ import { VerifyStudentBody } from '@/lib/api/group/types/VerifyStudentBody';
 import { getAuthorizationHeader } from '@/lib/api/utils';
 import { GroupStudent } from '@/types/student';
 
+import { Order } from '../../services/group/types/OrderEnum';
 import { client } from '../instance';
 
 class GroupAPI {
@@ -26,19 +27,28 @@ class GroupAPI {
     return res.data;
   }
 
-  async getGroupStudents(groupId: string) {
+  async getGroupStudents(groupId: string, order?: Order) {
+    const params = order ? { order, sort: 'lastName' } : {};
     const res = await client.get<GetGroupStudentResponse>(
       `/groups/${groupId}/students`,
-      getAuthorizationHeader(),
+      {
+        params,
+        ...getAuthorizationHeader(),
+      },
     );
     return res.data;
   }
 
-  async getRequestStudents(groupId: string) {
+  async getRequestStudents(groupId: string, order?: Order) {
+    const params = order ? { order, sort: 'lastName' } : {};
     const res = await client.get<GetPendingStudentsResponse>(
       `/groups/${groupId}/unverifiedStudents`,
-      getAuthorizationHeader(),
+      {
+        params,
+        ...getAuthorizationHeader(),
+      },
     );
+
     return res.data;
   }
 

@@ -10,3 +10,10 @@ export const progress: SxProps<Theme> = {
 export const group: SxProps<Theme> = {
   pb: '20px',
 };
+
+export const sortButton: SxProps<Theme> = {
+  display: 'flex',
+  justifyContent: 'flex-end',
+  alignItems: 'center',
+  mb: '20px',
+};
