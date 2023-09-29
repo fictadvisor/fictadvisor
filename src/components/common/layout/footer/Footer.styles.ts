@@ -13,7 +13,7 @@ export const footerContainer: SxProps<Theme> = theme => ({
   backgroundColor: alpha(theme.palette.grey[50], 0.62),
   height: {
     desktop: '300px',
-    mobileSemiMedium: '286px',
+    mobileSemiMedium: '320px',
     mobile: '320px',
   },
 });
@@ -28,7 +28,7 @@ export const footerLogoContainer: SxProps<Theme> = {
   },
   marginTop: {
     desktop: '40px',
-    mobile: '45px',
+    mobile: '0px',
   },
   marginLeft: {
     desktop: '80px',
@@ -149,7 +149,7 @@ export const socialMedia: SxProps<Theme> = {
   },
   marginTop: {
     desktop: '40px',
-    mobile: '30px',
+    mobile: '-45px',
   },
   marginRight: {
     desktop: '156px',
@@ -165,7 +165,7 @@ export const socialMedia: SxProps<Theme> = {
 };
 
 export const socialButtons: SxProps<Theme> = {
-  display: { desktop: 'flex', mobileSemiMedium: 'flex', mobile: 'grid' },
+  display: { desktop: 'flex', tablet: 'flex', mobile: 'grid' },
   typography: 'body1Bold',
   flexDirection: {
     desktop: 'column',
@@ -191,5 +191,3 @@ export const button: SxProps<Theme> = {
   paddingLeft: '12px',
   typography: 'body1Medium',
 };
-
-//
