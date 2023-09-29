@@ -1,3 +1,4 @@
+import { MouseEventHandler } from 'react';
 import { QueryObserverBaseResult } from 'react-query';
 
 import { PermissionResponse } from '@/lib/services/permisson/types';
@@ -24,4 +25,5 @@ export interface StudentsTableProps {
   permissions: PermissionResponse;
   rows: StudentsTableItem[];
   refetch: QueryObserverBaseResult['refetch'];
+  onSortButtonClick?: MouseEventHandler<HTMLButtonElement>;
 }
