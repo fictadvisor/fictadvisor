@@ -25,6 +25,7 @@ import { FileService } from '../../utils/files/FileService';
 import { GroupStudentsQueryDTO, SortQGSParam } from '../dtos/GroupStudentsQueryDTO';
 import { OrderQAParam } from '../dtos/OrderQAParam';
 import { StudentIsAlreadyCaptainException } from '../../utils/exceptions/StudentIsAlreadyCaptainException';
+import { NotApprovedException } from '../../utils/exceptions/NotApprovedException';
 
 const ROLE_LIST = [
   {
@@ -336,5 +337,27 @@ export class GroupService {
     }
 
     return this.fileService.generateGroupList(students);
+  }
+
+  async leaveGroup (groupId: string, studentId: string) {
+    const isStudentInGroup = await this.isStudentInGroup(groupId, studentId);
+    if (!isStudentInGroup) throw new NoPermissionException();
+
+    const student = await this.studentRepository.findById(studentId);
+    if (student.state !== State.APPROVED) throw new NotApprovedException();
+
+    const { id } = await this.userService.getGroupRole(studentId);
+    const updatedStudent = await this.studentRepository.updateById(studentId, {
+      state: State.DECLINED,
+      roles: {
+        delete: {
+          studentId_roleId: {
+            roleId: id,
+            studentId,
+          },
+        },
+      },
+    });
+    return this.studentMapper.getStudent(updatedStudent);
   }
 }

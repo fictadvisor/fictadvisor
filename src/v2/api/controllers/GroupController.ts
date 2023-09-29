@@ -14,13 +14,13 @@ import { StudentMapper } from '../../mappers/StudentMapper';
 import { AbsenceOfCaptainException } from '../../utils/exceptions/AbsenceOfCaptainException';
 import { GroupMapper } from '../../mappers/GroupMapper';
 import {
-  ApiTags,
+  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiForbiddenResponse,
-  ApiBadRequestResponse,
   ApiOkResponse,
-  ApiUnauthorizedResponse,
   ApiParam,
+  ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { GroupResponse, GroupsResponse } from '../responses/GroupResponse';
 import { GroupStudentsResponse } from '../responses/GroupStudentsResponse';
@@ -516,5 +516,44 @@ export class GroupController {
   ) {
     const url = await this.groupService.getGroupList(groupId);
     return { url };
+  }
+
+  @ApiBearerAuth()
+  @Patch('/:groupId/leave')
+  @ApiOkResponse({
+    type: OrdinaryStudentResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action
+      
+    NotApprovedException:
+      Student is not approved`,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException:
+      Group with such id is not found`,
+  })
+  @ApiParam({
+    name: 'groupId',
+    required: true,
+    description: 'Id of a group to leave',
+  })
+  @ApiEndpoint({
+    summary: 'Leave user from the group',
+    permissions: PERMISSION.GROUPS_$GROUPID_LEAVE,
+  })
+  async leaveGroup (
+      @Param('groupId', GroupByIdPipe) groupId: string,
+      @Request() req,
+  ) {
+    return this.groupService.leaveGroup(groupId, req.user.id);
   }
 }

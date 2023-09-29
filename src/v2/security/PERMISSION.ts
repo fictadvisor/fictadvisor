@@ -35,6 +35,7 @@ export enum PERMISSION {
   GROUPS_$GROUPID_TRANSFER = 'groups.$groupId.transfer',
   GROUPS_CAPTAIN_SWITCH = 'groups.captain.switch',
   GROUPS_$GROUPID_LIST_GET = 'groups.$groupId.list.get',
+  GROUPS_$GROUPID_LEAVE = 'groups.$groupId.leave',
 
   QUESTIONS_CREATE = 'questions.create',
   QUESTIONS_UPDATE = 'questions.update',
