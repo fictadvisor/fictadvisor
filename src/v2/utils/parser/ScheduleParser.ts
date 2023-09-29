@@ -3,14 +3,13 @@ import { Parser } from './Parser';
 import axios from 'axios';
 import { DisciplineTypeEnum, Period, TeacherRole } from '@prisma/client';
 import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
-import { DisciplineTeacherRoleRepository } from '../../database/repositories/DisciplineTeacherRoleRepository';
 import { GroupRepository } from '../../database/repositories/GroupRepository';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
 import { SubjectRepository } from '../../database/repositories/SubjectRepository';
 import { TeacherRepository } from '../../database/repositories/TeacherRepository';
 import { ScheduleDayType, ScheduleGroupType, SchedulePairType, ScheduleType } from './ScheduleParserTypes';
 import { EventRepository } from '../../database/repositories/EventRepository';
-import { DateService, DAY, HOUR, MINUTE, StudyingSemester, WEEK } from '../date/DateService';
+import { DateService, DAY, FORTNITE, HOUR, MINUTE, WEEK, StudyingSemester } from '../date/DateService';
 
 export const DAY_NUMBER = {
   'Пн': 1,
@@ -42,7 +41,6 @@ export class ScheduleParser implements Parser {
     private subjectRepository: SubjectRepository,
     private disciplineRepository: DisciplineRepository,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
-    private disciplineTeacherRoleRepository: DisciplineTeacherRoleRepository,
     private eventRepository: EventRepository,
     private dateService: DateService,
   ) {}
@@ -85,7 +83,7 @@ export class ScheduleParser implements Parser {
     }
   }
 
-  async parsePair (pair: SchedulePairType, groupId: string, period: StudyingSemester, isSelective: boolean, week, day) {
+  async parsePair (pair: SchedulePairType, groupId: string, period: StudyingSemester, isSelective: boolean, week: number, day: number) {
     const teacher = pair.teacherName ? await this.getTeacher(pair.teacherName) : null;
     const subject = await this.subjectRepository.getOrCreate(pair.name ?? '');
     const name = DISCIPLINE_TYPE[pair.tag] ?? DISCIPLINE_TYPE.lec;
@@ -191,6 +189,9 @@ export class ScheduleParser implements Parser {
       ],
     });
 
+    const weeksCountEveryFortnight = await this.getWeeksCount(endOfEvent, Period.EVERY_FORTNIGHT);
+    const weeksCountEveryWeek = await this.getWeeksCount(endOfEvent, Period.EVERY_WEEK);
+
     if (!event) {
       await this.eventRepository.create({
         name: pair.name,
@@ -205,7 +206,7 @@ export class ScheduleParser implements Parser {
         },
         eventInfo: {
           createMany: {
-            data: this.getIndexesForEventInfo(0, 8),
+            data: this.getIndexesForEventInfo(0, weeksCountEveryFortnight),
           },
         },
       });
@@ -218,11 +219,20 @@ export class ScheduleParser implements Parser {
         endTime: endOfEvent,
         eventInfo: {
           createMany: {
-            data: this.getIndexesForEventInfo(9, 17),
+            data: this.getIndexesForEventInfo(weeksCountEveryFortnight + 1, weeksCountEveryWeek),
           },
         },
       });
     }
+  }
+
+  async getWeeksCount (indexEndDate: Date, period: Period) {
+    const { endDate } = await this.dateService.getCurrentSemester();
+
+    const difference = Math.ceil((endDate.getTime() - FORTNITE - indexEndDate.getTime()) / DAY);
+    const divider = period === Period.EVERY_FORTNIGHT ? 14 : 7;
+
+    return Math.floor(difference / divider);
   }
 
   getIndexesForEventInfo (startIndex: number, endIndex: number) {
