@@ -62,6 +62,11 @@ export const input: SxProps<Theme> = {
 
 export const calendar: SxProps<Theme> = {
   color: 'white.main',
+  '& .MuiYearCalendar-root': {
+    '& .MuiPickersYear-yearButton': {
+      color: 'white',
+    },
+  },
   '& .MuiPickersLayout-contentWrapper': {
     backgroundColor: 'backgroundDark.100',
     border: '2px solid',
@@ -92,6 +97,16 @@ export const calendar: SxProps<Theme> = {
     height: '28px',
     '&:not(.Mui-selected):hover': {
       backgroundColor: 'grey.100',
+    },
+    '&.Mui-selected': {
+      backgroundColor: 'grey.200',
+    },
+    '&.MuiPickersDay-today': {
+      backgroundColor: 'primary.400',
+      border: 'none',
+      '&:hover': {
+        backgroundColor: 'primary.500',
+      },
     },
   },
   '& .MuiDayCalendar-weekContainer': {

@@ -30,6 +30,7 @@ export const picker: SxProps<Theme> = {
 
       '&.MuiPickersDay-today': {
         backgroundColor: 'primary.400',
+        border: 'none',
         '&:hover': {
           backgroundColor: 'primary.500',
         },
