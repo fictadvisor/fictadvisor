@@ -15,6 +15,7 @@ export const container = {
   '.MuiTypography-root': {
     wordWrap: 'break-word',
   },
+  '& a': { width: 'fit-content' },
 };
 
 export const titleContainer: SxProps<Theme> = {
