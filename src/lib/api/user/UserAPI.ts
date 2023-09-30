@@ -95,6 +95,52 @@ class UserAPI {
     );
     return data;
   }
+
+  async deleteUserRolesInfo(userId: string, roleId: string) {
+    const { data } = await client.delete(
+      `/users/${userId}/roles/${roleId}`,
+      getAuthorizationHeader(),
+    );
+    return data;
+  }
+
+  async deleteUserInfo(userId: string) {
+    const { data } = await client.delete(
+      `/users/${userId}`,
+      getAuthorizationHeader(),
+    );
+    return data;
+  }
+
+  async changeUserInfo(userId: string, body: ChangeInfoBody) {
+    const { data } = await client.patch(
+      `/users/${userId}`,
+      body,
+      getAuthorizationHeader(),
+    );
+    return data;
+  }
+
+  async getUserInfo(userId: string) {
+    const { data } = await client.get(
+      `/users/${userId}`,
+      getAuthorizationHeader(),
+    );
+    return data;
+  }
+
+  async changeUserContactInfo(
+    userId: string,
+    contactId: string,
+    body: ChangeInfoBody,
+  ) {
+    const { data } = await client.patch(
+      `/users/${userId}/contacts/${contactId}`,
+      body,
+      getAuthorizationHeader(),
+    );
+    return data;
+  }
 }
 
 export default new UserAPI();
