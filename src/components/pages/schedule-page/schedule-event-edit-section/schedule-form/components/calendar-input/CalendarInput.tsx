@@ -35,7 +35,7 @@ const CalendarInput: FC<CalendarInputProps> = ({ date, setDate }) => {
         slots={{ openPickerIcon: CalendarIcon }}
         sx={styles.datePicker}
         value={dayjs(date).tz()}
-        onChange={value => setDate(value ? value : null)}
+        onChange={value => setDate(value && value.valueOf() > 0 ? value : null)}
         minDate={dayjs(semester?.startDate).tz()}
         maxDate={dayjs(semester?.endDate).tz()}
         localeText={ukrainianLocale}
