@@ -3,10 +3,8 @@ import { Box, Typography } from '@mui/material';
 
 import { CardRoles } from '@/components/common/ui/cards/card-roles';
 import Rating from '@/components/common/ui/rating';
-import Tag from '@/components/common/ui/tag';
-import { TagColor, TagSize } from '@/components/common/ui/tag/types';
 import Contact from '@/components/pages/personal-teacher-page/contacts';
-import { Teacher, TeacherRole } from '@/types/teacher';
+import { Teacher } from '@/types/teacher';
 
 import * as styles from './FloatingCard.styles';
 

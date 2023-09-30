@@ -6,6 +6,7 @@ import Button from '@/components/common/ui/button-mui';
 import { ButtonVariant } from '@/components/common/ui/button-mui/types';
 import { CardRoles } from '@/components/common/ui/cards/card-roles';
 import Rating from '@/components/common/ui/rating';
+import { teacherContext } from '@/components/pages/personal-teacher-page/PersonalTeacherPage';
 import { teacherSubjectContext } from '@/components/pages/personal-teacher-subject-page/PersonalTeacherSubjectPage';
 import { Contact } from '@/types/contact';
 import { TeacherRole, TeacherSubject } from '@/types/teacher';
@@ -42,15 +43,18 @@ const PersonalTeacherCard: FC<TeacherCard> = ({
 }) => {
   const [isContactsVisible, setContactsVisibility] = useState(false);
   const blockRef = useRef<HTMLDivElement>(null);
-  const { setFloatingCardShowed } = useContext(teacherSubjectContext);
+  const { setFloatingCardShowed } = useContext(teacherContext);
+  const { setSubjectFloatingCardShowed } = useContext(teacherSubjectContext);
   const contactsStatus = isContactsVisible ? 'shown' : 'hidden';
   useEffect(() => {
     const handleScroll = () => {
       const bottom = blockRef.current?.getBoundingClientRect().bottom;
       if (Number(bottom) < 0) {
         setFloatingCardShowed(true);
+        setSubjectFloatingCardShowed(true);
       } else {
         setFloatingCardShowed(false);
+        setSubjectFloatingCardShowed(false);
       }
     };
     window.addEventListener('scroll', handleScroll);

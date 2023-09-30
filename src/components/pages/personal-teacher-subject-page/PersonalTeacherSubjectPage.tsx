@@ -22,14 +22,14 @@ import { TeacherWithSubject } from '@/types/teacher';
 
 // TODO: move context and types to separate folders
 export interface TeacherSubjectContext {
-  floatingCardShowed: boolean;
-  setFloatingCardShowed: Dispatch<SetStateAction<boolean>>;
+  subjectFloatingCardShowed: boolean;
+  setSubjectFloatingCardShowed: Dispatch<SetStateAction<boolean>>;
   teacher: TeacherWithSubject;
 }
 
 export const teacherSubjectContext = createContext<TeacherSubjectContext>({
-  floatingCardShowed: false,
-  setFloatingCardShowed: () => {},
+  subjectFloatingCardShowed: false,
+  setSubjectFloatingCardShowed: () => {},
   teacher: {} as TeacherWithSubject,
 });
 
@@ -40,7 +40,8 @@ const PersonalTeacherSubjectPage = () => {
   const teacherId = router.query.teacherId as string;
   const subjectId = router.query.subjectId as string;
   const { user } = useAuthentication();
-  const [floatingCardShowed, setFloatingCardShowed] = useState(false);
+  const [subjectFloatingCardShowed, setSubjectFloatingCardShowed] =
+    useState(false);
 
   const {
     isLoading,
@@ -81,7 +82,11 @@ const PersonalTeacherSubjectPage = () => {
 
   return (
     <teacherSubjectContext.Provider
-      value={{ floatingCardShowed, setFloatingCardShowed, teacher }}
+      value={{
+        subjectFloatingCardShowed,
+        setSubjectFloatingCardShowed,
+        teacher,
+      }}
     >
       <div className={styles['personal-teacher-page']}>
         {isLoading ? (
