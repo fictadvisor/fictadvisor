@@ -1,56 +1,56 @@
 import React from 'react';
+import { Box } from '@mui/material';
 
 import PollCard from '@/components/common/ui/cards/poll-card';
 import TeacherHeaderCard from '@/components/common/ui/cards/teacher-header-card';
-import { Category, PollTeacher } from '@/types/poll';
-import { TeacherSubject } from '@/types/teacher';
+import { GetTeacherQuestionsResponse } from '@/lib/api/poll/types/GetTeacherQuestionsResponse';
+import { usePollStore } from '@/store/poll-page/usePollStore';
 
-import styles from './QuestionsList.module.scss';
+import * as styles from './QuestionsList.styles';
 
 interface QuestionListProps {
-  categories: Category[];
-  teacher: PollTeacher;
-  subject: TeacherSubject;
+  data: GetTeacherQuestionsResponse;
   progress: number[];
-  current: number;
-  setCurrent: React.Dispatch<React.SetStateAction<number>>;
-  setQuestionsListStatus: React.Dispatch<React.SetStateAction<boolean>>;
 }
-
-const QuestionsList: React.FC<QuestionListProps> = ({
-  categories,
-  teacher,
-  subject,
-  progress,
-  current,
-  setCurrent,
-  setQuestionsListStatus,
-}) => {
+const QuestionsList: React.FC<QuestionListProps> = ({ data, progress }) => {
+  const { subject, teacher, categories } = data;
   const { lastName, firstName, middleName, avatar } = teacher;
+  const { currentCategory, setCurrentCategory, setQuestionsListOpened } =
+    usePollStore(state => ({
+      currentCategory: state.currentCategory,
+      setCurrentCategory: state.setCurrentCategory,
+      setQuestionsListOpened: state.setQuestionsListOpened,
+    }));
+
+  const handleClick = (id: number) => {
+    if (currentCategory !== id) setCurrentCategory(id);
+    setQuestionsListOpened(false);
+  };
 
   return (
-    <div className={styles.wrapper}>
+    <Box sx={styles.wrapper}>
       <TeacherHeaderCard
         name={`${lastName} ${firstName} ${middleName}`}
         description={subject.name}
         url={avatar || undefined}
       />
       {categories.map((category, id) => (
-        <PollCard
-          key={id}
-          numberOfQuestions={category.count}
-          isComment={category.questions[0].type === 'TEXT'}
-          questionNumber={1 + id}
-          question={category.name}
-          numberOfAnswered={progress[id]}
-          isActive={current === id}
-          onClick={() => {
-            if (current !== id) setCurrent(id);
-            setQuestionsListStatus(false);
-          }}
-        />
+        <Box key={id}>
+          <PollCard
+            key={id}
+            numberOfQuestions={category.count}
+            isComment={category.questions[0].type === 'TEXT'}
+            questionNumber={1 + id}
+            question={category.name}
+            numberOfAnswered={progress[id]}
+            isActive={currentCategory === id}
+            onClick={() => {
+              handleClick(id);
+            }}
+          />
+        </Box>
       ))}
-    </div>
+    </Box>
   );
 };
 

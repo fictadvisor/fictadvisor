@@ -1,14 +1,16 @@
 import React, { ChangeEvent, FC, useEffect } from 'react';
-import { FormControlLabel, RadioGroup } from '@mui/material';
+import { FormControlLabel, RadioGroup, SxProps, Theme } from '@mui/material';
 import { RadioGroupProps } from '@mui/material/RadioGroup/RadioGroup';
 import { useField } from 'formik';
 
 import FormikRadio from '@/components/common/ui/form/with-formik/radio/FormikRadio';
+import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 
 interface GroupOption {
   value: string;
   label: string;
   disabled?: boolean;
+  sx?: SxProps<Theme>;
 }
 
 interface FormikRadioGroup extends RadioGroupProps {
@@ -23,6 +25,7 @@ const FormikRadioGroup: FC<FormikRadioGroup> = ({
   name,
   clearValueOnUnmount = false,
   onChange,
+  sx = {},
   ...props
 }: FormikRadioGroup) => {
   const [field, , helpers] = useField(name);
@@ -47,7 +50,8 @@ const FormikRadioGroup: FC<FormikRadioGroup> = ({
         if (onChange) onChange(event, value);
         helpers.setValue(value);
       }}
-      sx={{ gap: '12px' }}
+      sx={mergeSx({ gap: '12px' }, sx)}
+      // sx={{ gap: '12px' }}
     >
       {options.map(option => (
         <FormControlLabel

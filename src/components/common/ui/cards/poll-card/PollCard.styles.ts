@@ -7,6 +7,8 @@ export const card = (
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
+  textTransform: 'none',
+  textAlign: 'start',
   backgroundColor: 'backgroundDark.100',
   padding: '8px 16px',
   width: '100%',
@@ -15,6 +17,8 @@ export const card = (
   borderTop: '1px solid #343434',
   cursor: 'pointer',
   color: 'grey.600',
+  borderRadius: '0px',
+  lineHeight: '19.6px',
   height: {
     tablet: '94px',
     mobile: '78px',
@@ -29,7 +33,7 @@ export const card = (
     borderRadius: '8px',
     backgroundColor: 'primary.50',
     '& svg': {
-      display: 'none',
+      opacity: '0',
     },
   },
   ...(isActive && {
@@ -37,7 +41,7 @@ export const card = (
     backgroundColor: 'primary.200',
     borderRadius: '8px',
     '& svg': {
-      display: 'none',
+      opacity: '0',
     },
   }),
   ...(disabled && {
@@ -45,10 +49,17 @@ export const card = (
     color: 'grey.300',
     backgroundColor: 'backgroundDark.100',
     '& svg': {
-      display: 'none',
+      opacity: '0',
     },
   }),
 });
+
+export const textWrapper: SxProps<Theme> = {
+  maxWidth: {
+    desktopSemiMedium: '356px',
+    mobile: '300px',
+  },
+};
 
 export const questionNumber = (disabled?: boolean): SxProps<Theme> => ({
   color: 'grey.500',

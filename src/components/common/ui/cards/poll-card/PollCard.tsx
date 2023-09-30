@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, SxProps, Theme, Typography } from '@mui/material';
+import { Box, Button, SxProps, Theme, Typography } from '@mui/material';
 
 import { CheckIcon, DoubleCheck } from '@/components/common/icons/DoubleCheck';
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
@@ -27,6 +27,7 @@ const PollCard: React.FC<PollCard> = ({
   isComment,
   isActive,
   sx = {},
+  onClick = () => {},
 }) => {
   let isDoubleCheckIcon,
     showIcon = true;
@@ -37,8 +38,8 @@ const PollCard: React.FC<PollCard> = ({
   } else if (numberOfAnswered === 0) showIcon = false;
 
   return (
-    <Box sx={mergeSx(styles.card(isActive, disabled), sx)}>
-      <Box>
+    <Button onClick={onClick} sx={mergeSx(styles.card(isActive, disabled), sx)}>
+      <Box sx={styles.textWrapper}>
         <Typography variant="body1Bold">
           {questionNumber}. {question}
         </Typography>
@@ -51,7 +52,7 @@ const PollCard: React.FC<PollCard> = ({
       <Box>
         {showIcon && (isDoubleCheckIcon ? <DoubleCheck /> : <CheckIcon />)}
       </Box>
-    </Box>
+    </Button>
   );
 };
 
