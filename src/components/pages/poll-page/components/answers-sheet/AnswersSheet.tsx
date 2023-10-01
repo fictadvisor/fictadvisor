@@ -86,10 +86,13 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
   const initialValues: Record<string, string> = useMemo(() => {
     return currentQuestions?.questions
       .filter(question => question.type === QuestionType.SCALE)
-      .reduce((initialVals, question) => {
-        initialVals[question.id] = '1';
-        return initialVals;
-      }, {} as Record<string, string>);
+      .reduce(
+        (initialVals, question) => {
+          initialVals[question.id] = '1';
+          return initialVals;
+        },
+        {} as Record<string, string>,
+      );
   }, []);
 
   const handleFormEvent = (

@@ -19,9 +19,8 @@ const VerifyEmailTokenPage = () => {
     async (token: string) => {
       if (router.isReady) {
         try {
-          const { accessToken, refreshToken } = await AuthAPI.verifyEmailToken(
-            token,
-          );
+          const { accessToken, refreshToken } =
+            await AuthAPI.verifyEmailToken(token);
           StorageUtil.setTokens(accessToken, refreshToken);
           update();
           await router.push(`/`);
