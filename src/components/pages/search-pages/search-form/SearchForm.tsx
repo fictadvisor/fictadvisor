@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { FC } from 'react';
 import { useQuery } from 'react-query';
 import {
@@ -20,7 +20,6 @@ import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
 import {
   IconButtonColor,
   IconButtonShape,
-  IconButtonSize,
 } from '@/components/common/ui/icon-button';
 import IconButton from '@/components/common/ui/icon-button-mui';
 import GroupAPI from '@/lib/api/group/GroupAPI';

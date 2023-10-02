@@ -1,7 +1,5 @@
 import { SxProps, Theme } from '@mui/material/styles';
 
-import theme from '@/styles/theme';
-
 export const dropdown1: SxProps<Theme> = {
   width: '100%',
 };
