@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { FC } from 'react';
 import { useQuery } from 'react-query';
 import {
@@ -7,7 +7,7 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
 } from '@heroicons/react/24/outline';
-import { Box } from '@mui/material';
+import { Box, useMediaQuery } from '@mui/material';
 import { Form, Formik, FormikProps, useFormikContext } from 'formik';
 
 import {
@@ -20,10 +20,10 @@ import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
 import {
   IconButtonColor,
   IconButtonShape,
-  IconButtonSize,
 } from '@/components/common/ui/icon-button';
 import IconButton from '@/components/common/ui/icon-button-mui';
 import GroupAPI from '@/lib/api/group/GroupAPI';
+import theme from '@/styles/theme';
 
 import * as styles from './SearchForm.styles';
 import { SearchFormFields } from './types';
@@ -48,6 +48,7 @@ const SearchForm: FC<SearchFormProps> = ({
   searchPlaceholder,
   localStorageName,
 }) => {
+  const isTablet = useMediaQuery(theme.breakpoints.down('tablet'));
   const [collapsed, setCollapsed] = useState(false);
   const { data: groupData } = useQuery('all-groups', GroupAPI.getAll, {
     staleTime: Infinity,
@@ -105,7 +106,7 @@ const SearchForm: FC<SearchFormProps> = ({
               onClick={() => setCollapsed(pr => !pr)}
             />
           </Box>
-          {!collapsed && (
+          {(!collapsed || (!isTablet && collapsed)) && (
             <>
               <Box sx={styles.dropdown1}>
                 <Dropdown

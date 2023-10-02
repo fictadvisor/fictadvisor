@@ -16,14 +16,12 @@ export const sortIcon: SxProps<Theme> = {
   height: '48px',
   aspectRatio: '1/1',
   alignSelf: 'center',
-  //alignSelf: 'flex-start',
   display: 'grid',
 };
 
 export const collapseIcon: SxProps<Theme> = {
   height: '48px',
   aspectRatio: '1/1',
-  //alignSelf: 'center',
   alignSelf: { mobile: 'flex-start', tablet: 'center' },
   display: { mobile: 'grid', tablet: 'block !important' },
   '& .svg': { width: { tablet: '70%' } },

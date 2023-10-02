@@ -11,10 +11,9 @@
 }
 
 
-@media screen and (max-width: $breakpoint-tablet) {
+@media screen and (max-width: $breakpoint-tablet)  {
     .form {
         grid-template-columns: 35% 45% 10%;
-        justify-items: center;
     }
     .input {
         grid-column: 1 / span 2;
