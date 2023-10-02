@@ -141,6 +141,47 @@ class UserAPI {
     );
     return data;
   }
+
+  async deleteUserStudent(userId: string) {
+    const { data } = await client.delete(
+      `/v2/users/${userId}/student`,
+      getAuthorizationHeader(),
+    );
+    return data;
+  }
+
+  async getUserTelegram(userId: string) {
+    const { data } = await client.get(
+      `/v2/users/${userId}/telegram`,
+      getAuthorizationHeader(),
+    );
+    return data;
+  }
+
+  async getTelegramUser(telegramId: string) {
+    const { data } = await client.get(
+      `/v2/users/telegramUser/${telegramId}`,
+      getAuthorizationHeader(),
+    );
+    return data;
+  }
+
+  async changeUserAvatar(userId: string, avatar: string) {
+    const { data } = await client.patch(
+      `/v2/users/${userId}/avatar`,
+      avatar,
+      getAuthorizationHeader(),
+    );
+    return data;
+  }
+
+  async changeUserGroup(userId: string, groupId: string) {
+    const { data } = await client.patch(
+      `/v2/users/${userId}/group/${groupId}`,
+      getAuthorizationHeader(),
+    );
+    return data;
+  }
 }
 
 export default new UserAPI();
