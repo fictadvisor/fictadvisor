@@ -4,7 +4,7 @@ import { DataNotFoundException } from '../../utils/exceptions/DataNotFoundExcept
 import { InvalidExtensionException } from '../../utils/exceptions/InvalidExtensionException';
 import { extname } from 'path';
 
-const AVATAR_MAX_SIZE = 1572864;
+const AVATAR_MAX_SIZE = 1048576;
 const AVATAR_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.webp'];
 
 @Injectable()
@@ -20,7 +20,7 @@ export class AvatarValidationPipe implements PipeTransform {
     }
 
     if (file.size > AVATAR_MAX_SIZE) {
-      throw new TooLargeSizeException('1.5 MB');
+      throw new TooLargeSizeException('1 MB');
     }
 
     return file;

@@ -411,7 +411,7 @@ export class UserController {
   @ApiPayloadTooLargeResponse({
     description: `\n
     TooLargeSizeException:
-      The file size exceeds 1.5 MB`,
+      The file size exceeds 1 MB`,
   })
   @ApiForbiddenResponse({
     description: `\n
