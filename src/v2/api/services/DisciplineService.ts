@@ -4,6 +4,7 @@ import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
 import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
 import { DisciplineTypeEnum } from '@prisma/client';
 import { TeacherRoleAdapter } from '../../mappers/TeacherRoleAdapter';
+import { CreateDisciplineDTO } from '../dtos/CreateDisciplineDTO';
 
 @Injectable()
 export class DisciplineService {
@@ -13,7 +14,7 @@ export class DisciplineService {
     private disciplineTeacherRepository: DisciplineTeacherRepository,
   ) {}
 
-  async create (data: { subjectId: string, groupId: string, year: number, semester: number }) {
+  async create (data: CreateDisciplineDTO) {
     return this.disciplineRepository.create(data);
   }
 

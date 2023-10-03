@@ -6,6 +6,7 @@ import { DisciplineTeacherResponse } from './DisciplineTeacherResponse';
 export class DisciplineTeachersResponse {
   @ApiProperty({
     type: [DisciplineTeacherResponse],
+    description: 'Array of discipline teacher objects',
   })
     teachers: DisciplineTeacherResponse[];
 }

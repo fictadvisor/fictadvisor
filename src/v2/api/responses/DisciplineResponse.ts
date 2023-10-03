@@ -2,26 +2,40 @@ import { ApiProperty } from '@nestjs/swagger';
 import { SubjectResponse } from './SubjectResponse';
 
 export class BaseDisciplineResponse {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Id of specified discipline',
+  })
     id: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Year number',
+  })
     year: number;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Whether discipline is selective or not',
+  })
     isSelective: boolean;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Semester number',
+  })
     semester: number;
 }
 export class DisciplineResponse extends BaseDisciplineResponse {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Bound subject id',
+  })
     subjectId: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Bound group id',
+  })
     groupId: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Some discipline description',
+  })
     description: string;
 }
 

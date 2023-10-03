@@ -9,6 +9,7 @@ import {
   ApiBearerAuth,
   ApiForbiddenResponse,
   ApiOkResponse,
+  ApiParam,
   ApiQuery,
   ApiTags,
   ApiUnauthorizedResponse,
@@ -16,6 +17,7 @@ import {
 import { DisciplineByIdPipe } from '../pipes/DisciplineByIdPipe';
 import { DisciplineTeachersResponse } from '../responses/DisciplineTeachersResponse';
 import { DisciplineTypeEnum } from '@prisma/client';
+import { DisciplineResponse } from '../responses/DisciplineResponse';
 
 @ApiTags('Discipline')
 @Controller({
@@ -27,28 +29,29 @@ export class DisciplineController {
     private disciplineService: DisciplineService,
   ) {}
 
-  @Access(PERMISSION.GROUPS_$GROUPID_DISCIPLINES_CREATE, GroupByDisciplineGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: DisciplineResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @Access(PERMISSION.GROUPS_$GROUPID_DISCIPLINES_CREATE)
   @Post()
-  create (@Body() body: CreateDisciplineDTO) {
+  create (
+    @Body() body: CreateDisciplineDTO,
+  ) {
     return this.disciplineService.create(body);
   }
 
-  // @UseGuards(JwtGuard, GroupByDisciplineGuard)
-  // @Post('/:disciplineId/selective')
-  // makeSelective (
-  //   @Param('disciplineId') disciplineId: string,
-  //   @Request() req,
-  // ) {
-  //   return this.disciplineService.makeSelective(req.user, disciplineId);
-  // }
-
-  @Access(PERMISSION.GROUPS_$GROUPID_DISCIPLINES_TEACHERS_GET, GroupByDisciplineGuard)
   @ApiBearerAuth()
-  @ApiQuery({
-    name: 'disciplineType',
-    enum: DisciplineTypeEnum,
-    required: false,
-  })
   @ApiOkResponse({
     type: DisciplineTeachersResponse,
   })
@@ -69,10 +72,22 @@ export class DisciplineController {
     NoPermissionException:
       You do not have permission to perform this action`,
   })
+  @ApiParam({
+    name: 'disciplineId',
+    required: true,
+    description: 'Id of certain discipline',
+  })
+  @ApiQuery({
+    name: 'disciplineType',
+    required: true,
+    enum: DisciplineTypeEnum,
+    description: 'Discipline type of some discipline',
+  })
+  @Access(PERMISSION.GROUPS_$GROUPID_DISCIPLINES_TEACHERS_GET, GroupByDisciplineGuard)
   @Get('/:disciplineId/teachers')
   async getAllByDiscipline (
     @Param('disciplineId', DisciplineByIdPipe) disciplineId: string,
-    @Query('disciplineType') disciplineType: DisciplineTypeEnum
+    @Query('disciplineType') disciplineType: DisciplineTypeEnum,
   ) {
     const teachers = await this.disciplineService.getTeachers(disciplineId, disciplineType);
     return { teachers };

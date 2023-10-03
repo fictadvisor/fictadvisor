@@ -2,25 +2,39 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { TeacherRole } from '@prisma/client';
 
 export class TeacherResponse {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Id of specified teacher',
+  })
     id: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Teacher\'s first name',
+  })
     firstName: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    description: 'Teacher\'s middle name',
+  })
     middleName?: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Teacher\'s last name',
+  })
     lastName: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    description: 'Some description of the teacher',
+  })
     description?: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    description: 'Link to teacher avatar image',
+  })
     avatar?: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Teacher rating according to the poll, updated at 00:00 (UTC)',
+  })
     rating: number;
 }
 
