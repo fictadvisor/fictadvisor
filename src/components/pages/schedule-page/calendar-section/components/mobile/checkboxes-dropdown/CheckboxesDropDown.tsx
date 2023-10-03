@@ -1,54 +1,30 @@
-import React, { useMemo } from 'react';
+import React, { SyntheticEvent, useMemo } from 'react';
 import { ChevronDownIcon } from '@heroicons/react/24/solid';
 import { Box } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 
 import Checkbox from '@/components/common/ui/form/checkbox/Checkbox';
-import { CheckboxColor } from '@/components/common/ui/form/checkbox/types';
 import {
   FieldSize,
   FieldState,
 } from '@/components/common/ui/form/common/types';
 import { popperProps } from '@/components/common/ui/form/dropdown/constants';
-import * as styles from '@/components/common/ui/form/dropdown/Dropdown.styles';
+import * as dropdownStyles from '@/components/common/ui/form/dropdown/Dropdown.styles';
 import Tag from '@/components/common/ui/tag';
-import { TagColor, TagSize } from '@/components/common/ui/tag/types';
+import { TagSize } from '@/components/common/ui/tag/types';
+import { CheckboxOption } from '@/components/pages/schedule-page/calendar-section/components/mobile/checkboxes-dropdown/types/CheckboxOption';
 import useAuthentication from '@/hooks/use-authentication';
 import MergeSx from '@/lib/utils/MergeSxStylesUtil';
 import { Checkboxes, useSchedule } from '@/store/schedule/useSchedule';
 
-const NegativeCheckboxes: Record<string, boolean> = {
-  addLecture: false,
-  addLaboratory: false,
-  addPractice: false,
-  otherEvents: false,
-  isSelective: false,
-};
-
-const TagLabelMapper: Record<string, string> = {
-  addLecture: 'Лекція',
-  addLaboratory: 'Лабораторна',
-  addPractice: 'Практика',
-  otherEvents: 'Інша події',
-  isSelective: 'Вибіркові',
-};
-
-const TagColorMapper: Record<string, TagColor> = {
-  addLecture: TagColor.INDIGO,
-  addLaboratory: TagColor.MINT,
-  addPractice: TagColor.ORANGE,
-  otherEvents: TagColor.VIOLET,
-  isSelective: TagColor.SECONDARY,
-};
-
-const CheckBoxColorMapper: Record<string, CheckboxColor> = {
-  addLecture: CheckboxColor.LECTURE,
-  addLaboratory: CheckboxColor.LAB,
-  addPractice: CheckboxColor.PRACTICE,
-  otherEvents: CheckboxColor.EVENT,
-  isSelective: CheckboxColor.PRIMARY,
-};
+import {
+  CheckBoxColorMapper,
+  NegativeCheckboxes,
+  TagColorMapper,
+  TagLabelMapper,
+} from './constants/CheckboxConstants';
+import * as styles from './CheckboxesDropDown.styles';
 
 export const CheckboxesDropdown = () => {
   const { user } = useAuthentication();
@@ -72,38 +48,36 @@ export const CheckboxesDropdown = () => {
             ? value !== 'isSelective' && value !== 'otherEvents'
             : true;
         }),
-    [groupId, checkboxes],
+    [checkboxes, user, groupId],
   );
 
+  const handleChange = async (
+    event: SyntheticEvent<Element, Event>,
+    value: CheckboxOption[],
+  ) => {
+    const selectedCheckboxes = Object.fromEntries(
+      value.map(option => [option.value, true]),
+    );
+    const newValues = {
+      ...NegativeCheckboxes,
+      ...selectedCheckboxes,
+    } as Checkboxes;
+
+    updateCheckboxes(newValues);
+  };
+
   return (
-    <Box
-      sx={{
-        width: '100%',
-      }}
-    >
-      <Box
-        sx={MergeSx(styles.dropdown, {
-          '& .MuiInputLabel-shrink': { transform: '' },
-        })}
-      >
+    <Box sx={styles.wrapper}>
+      <Box sx={MergeSx(dropdownStyles.dropdown, styles.inputLabel)}>
         <Autocomplete
           disableCloseOnSelect
-          onChange={async (event, value, reason, details) => {
-            const selectedCheckboxes = Object.fromEntries(
-              value.map(option => [option.value, true]),
-            );
-            const newValues = {
-              ...NegativeCheckboxes,
-              ...selectedCheckboxes,
-            } as Checkboxes;
-
-            updateCheckboxes(newValues);
-          }}
+          onChange={handleChange}
           options={options}
           value={options.filter(opt => opt.checked)}
           isOptionEqualToValue={(option, value) => {
             return option.value === value.value;
           }}
+          sx={styles.autocomplete}
           multiple
           fullWidth
           disablePortal
@@ -111,15 +85,10 @@ export const CheckboxesDropdown = () => {
             <TextField
               {...params}
               label={'Оберіть фільтри'}
-              sx={MergeSx(styles.input(FieldState.DEFAULT, FieldSize.MEDIUM), {
-                '& .MuiInputBase-root': {
-                  height: 'unset',
-                  WebkitTransform: 'unset',
-                },
-                '& .MuiFormLabel-root.MuiInputLabel-root': {
-                  top: 0,
-                },
-              })}
+              sx={MergeSx(
+                dropdownStyles.input(FieldState.DEFAULT, FieldSize.MEDIUM),
+                styles.input,
+              )}
             />
           )}
           popupIcon={
@@ -140,20 +109,18 @@ export const CheckboxesDropdown = () => {
           componentsProps={{
             popper: popperProps,
           }}
-          renderTags={(value, getTagProps, ownerState) => {
-            return value.map((option, index) => {
-              return (
-                <Tag
-                  text={option.label}
-                  {...getTagProps({ index })}
-                  key={index}
-                  size={TagSize.SMALL}
-                  sx={{ mr: '6px' }}
-                  color={TagColorMapper[option.value]}
-                />
-              );
-            });
-          }}
+          renderTags={(value, getTagProps) =>
+            value.map((option, index) => (
+              <Tag
+                text={option.label}
+                {...getTagProps({ index })}
+                key={index}
+                size={TagSize.SMALL}
+                sx={styles.tag}
+                color={TagColorMapper[option.value]}
+              />
+            ))
+          }
           limitTags={2}
         />
       </Box>
