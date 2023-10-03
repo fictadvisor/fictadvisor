@@ -18,39 +18,24 @@ import GeneralTab from '@/components/pages/account-page/components/general-tab';
 import GroupTab from '@/components/pages/account-page/components/group-tab';
 import SecurityTab from '@/components/pages/account-page/components/security-tab';
 import SelectiveTab from '@/components/pages/account-page/components/selective-tab';
+import {
+  AccountPagesMapper,
+  AccountPageTab,
+} from '@/components/pages/account-page/types';
 import useAuthentication from '@/hooks/use-authentication';
 
 import * as stylesMui from './AccountPage.styles';
 
-import styles from './AccountPage.module.scss';
-
-enum AccountPageTab {
-  GENERAL = 'general',
-  SECURITY = 'security',
-  GROUP = 'group',
-  SELECTIVE = 'selective',
-}
-
-const AccountPagesMapper = {
-  group: 'Група',
-  security: 'Безпека',
-  general: 'Загальне',
-  selective: 'Мої вибіркові',
-};
-
 const AccountPage = () => {
   const { replace, query, isReady } = useRouter();
-
+  const { isLoggedIn } = useAuthentication();
   const { tab } = query;
   const [index, setIndex] = useState<AccountPageTab>(AccountPageTab.GENERAL);
 
   useEffect(() => {
-    if (!isReady) {
-      return;
-    }
-    if (Object.values(AccountPageTab).includes(tab as AccountPageTab)) {
-      setIndex(tab as AccountPageTab);
-    } else {
+    if (!isReady) return;
+
+    if (!Object.values(AccountPageTab).includes(tab as AccountPageTab)) {
       void replace(
         { query: { ...query, tab: AccountPageTab.GENERAL } },
         undefined,
@@ -58,27 +43,29 @@ const AccountPage = () => {
           shallow: true,
         },
       );
+    } else {
+      setIndex(tab as AccountPageTab);
     }
   }, [tab, isReady, query, replace]);
 
-  const { isLoggedIn } = useAuthentication();
-
   useEffect(() => {
-    if (!isLoggedIn) {
-      void replace('/login?~account');
-    }
+    if (!isLoggedIn) void replace('/login?~account');
   }, [isLoggedIn, replace]);
 
   const handleChange = async (event: SyntheticEvent, value: AccountPageTab) => {
     await replace({ query: { ...query, tab: value } }, undefined, {
       shallow: true,
     });
+    console.log(value);
     setIndex(value);
   };
+  useEffect(() => {
+    console.log(index);
+  }, [index]);
 
   return (
     <>
-      <div className={styles['breadcrumb']}>
+      <Box sx={stylesMui.breadcrumb}>
         <Breadcrumbs
           items={[
             {
@@ -91,7 +78,7 @@ const AccountPage = () => {
             },
           ]}
         />
-      </div>
+      </Box>
       <Box sx={stylesMui.tabContext}>
         <TabContext value={index}>
           <TabList onChange={handleChange} sx={stylesMui.tabList}>

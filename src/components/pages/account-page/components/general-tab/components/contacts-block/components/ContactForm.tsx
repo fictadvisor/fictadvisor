@@ -1,6 +1,10 @@
 import React, { FC, useCallback } from 'react';
+import { Box } from '@mui/material';
 import { Form, Formik } from 'formik';
-import * as yup from 'yup';
+import {
+  initialValues,
+  validationSchema,
+} from 'src/components/pages/account-page/components/general-tab/components/contacts-block/validation';
 
 import { CustomCheck } from '@/components/common/icons/CustomCheck';
 import Button from '@/components/common/ui/button';
@@ -10,7 +14,7 @@ import {
 } from '@/components/common/ui/button-mui/types';
 import { Input, InputSize } from '@/components/common/ui/form';
 import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown';
-import styles from '@/components/pages/account-page/components/general-tab/GeneralTab.module.scss';
+import * as styles from '@/components/pages/account-page/components/general-tab/GeneralTab.styles';
 import useAuthentication from '@/hooks/use-authentication';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
@@ -44,21 +48,11 @@ const ContactForm: FC<ContactFormProps> = ({ refetchContacts }) => {
   );
 
   return (
-    <div className={styles['add-social-links-container']}>
+    <Box sx={styles.addSocialLinksContainer}>
       <Formik
         enableReinitialize
-        // TODO: move to constants folder
-        validationSchema={yup.object().shape({
-          displayName: yup.string().required(`Обов'язкове поле`),
-          link: yup.string().required(`Обов'язкове поле`),
-          name: yup.string().required(`Обов'язкове поле`),
-        })}
-        // TODO: move to constants folder
-        initialValues={{
-          name: ContactType.TELEGRAM,
-          link: '',
-          displayName: '',
-        }}
+        validationSchema={validationSchema}
+        initialValues={initialValues}
         validateOnChange
         onSubmit={handleSubmit}
       >
@@ -92,7 +86,7 @@ const ContactForm: FC<ContactFormProps> = ({ refetchContacts }) => {
           </Form>
         )}
       </Formik>
-    </div>
+    </Box>
   );
 };
 

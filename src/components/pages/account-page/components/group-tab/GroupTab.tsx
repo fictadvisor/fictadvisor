@@ -1,6 +1,6 @@
-import { FC } from 'react';
+import React, { FC } from 'react';
 import { useQuery } from 'react-query';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 import Progress from '@/components/common/ui/progress';
 import NoGroupBlock from '@/components/pages/account-page/components/group-tab/components/no-group-block';
@@ -15,21 +15,15 @@ import GroupAPI from '@/lib/api/group/GroupAPI';
 import { PendingStudent } from '@/types/student';
 import { User, UserGroupRole, UserGroupState } from '@/types/user';
 
-import styles from './GroupTab.module.scss';
+import * as styles from './GroupTab.styles';
 
 const getStudents = async (user: User) => {
-  const { students } = await GroupAPI.getGroupStudents(
-    user.group?.id as string,
-  );
-  let requests: PendingStudent[] = [];
-
-  if (user.group?.role !== UserGroupRole.STUDENT) {
-    const { students: pendingStudents } = await GroupAPI.getRequestStudents(
-      user.group?.id as string,
-    );
-
-    requests = pendingStudents;
-  }
+  const groupId = user.group?.id as string;
+  const isStudent = user.group?.role === UserGroupRole.STUDENT;
+  const { students } = await GroupAPI.getGroupStudents(groupId);
+  const requests: PendingStudent[] = isStudent
+    ? []
+    : (await GroupAPI.getRequestStudents(groupId)).students;
 
   return {
     students,
@@ -39,7 +33,6 @@ const getStudents = async (user: User) => {
 
 const GroupTab: FC = () => {
   const { user } = useAuthentication();
-
   const { data, isLoading, refetch } = useQuery(
     ['students'],
     () => getStudents(user),
@@ -48,17 +41,12 @@ const GroupTab: FC = () => {
       refetchOnWindowFocus: false,
     },
   );
+  const showRequests =
+    data?.requests?.length !== 0 && user?.group?.role !== UserGroupRole.STUDENT;
 
   if (isLoading)
     return (
-      <Box
-        sx={{
-          //TODO move inline styles when refactor
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
+      <Box sx={styles.progress}>
         <Progress />
       </Box>
     );
@@ -70,15 +58,13 @@ const GroupTab: FC = () => {
     return <NoGroupBlock />;
 
   if (!data || !user?.group || !user?.group.role) return null;
-
-  const showRequests =
-    data?.requests?.length !== 0 && user?.group?.role !== UserGroupRole.STUDENT;
-
   return (
-    <div className={styles['content']}>
-      <div className={styles['text-content']}>
-        <h4>Список групи {user.group.code}</h4>
-      </div>
+    <>
+      <Box>
+        <Typography sx={styles.group} variant="h4">
+          Список групи {user.group.code}
+        </Typography>
+      </Box>
       {showRequests && (
         <RequestsTable
           refetch={refetch}
@@ -92,7 +78,7 @@ const GroupTab: FC = () => {
           rows={transformStudentsData(data.students)}
         />
       }
-    </div>
+    </>
   );
 };
 

@@ -1,4 +1,5 @@
 import { AddContactBody } from '@/lib/api/user/types/AddContactBody';
+import { ChangeAvatarResponse } from '@/lib/api/user/types/ChangeAvatarResponse';
 import { ChangeInfoBody } from '@/lib/api/user/types/ChangeInfoBody';
 import { GetContactsResponse } from '@/lib/api/user/types/GetContactsResponse';
 import { GetSelectiveDisciplinesBySemesterResponse } from '@/lib/api/user/types/GetSelectiveDisciplinesBySemesterResponse';
@@ -46,9 +47,9 @@ class UserAPI {
     return data;
   }
 
-  async deleteContact(userId: string, contactName: string) {
+  async deleteContact(userId: string, id: string) {
     const { data } = await client.delete(
-      `/users/${userId}/contacts/${contactName}`,
+      `/users/${userId}/contacts/${id}`,
       getAuthorizationHeader(),
     );
     return data;
@@ -96,88 +97,10 @@ class UserAPI {
     return data;
   }
 
-  async deleteUserRolesInfo(userId: string, roleId: string) {
-    const { data } = await client.delete(
-      `/users/${userId}/roles/${roleId}`,
-      getAuthorizationHeader(),
-    );
-    return data;
-  }
-
-  async deleteUserInfo(userId: string) {
-    const { data } = await client.delete(
-      `/users/${userId}`,
-      getAuthorizationHeader(),
-    );
-    return data;
-  }
-
-  async changeUserInfo(userId: string, body: ChangeInfoBody) {
-    const { data } = await client.patch(
-      `/users/${userId}`,
+  async changeAvatar(userId: string, body: FormData) {
+    const { data } = await client.patch<ChangeAvatarResponse>(
+      `/users/${userId}/avatar`,
       body,
-      getAuthorizationHeader(),
-    );
-    return data;
-  }
-
-  async getUserInfo(userId: string) {
-    const { data } = await client.get(
-      `/users/${userId}`,
-      getAuthorizationHeader(),
-    );
-    return data;
-  }
-
-  async changeUserContactInfo(
-    userId: string,
-    contactId: string,
-    body: ChangeInfoBody,
-  ) {
-    const { data } = await client.patch(
-      `/users/${userId}/contacts/${contactId}`,
-      body,
-      getAuthorizationHeader(),
-    );
-    return data;
-  }
-
-  async deleteUserStudent(userId: string) {
-    const { data } = await client.delete(
-      `/v2/users/${userId}/student`,
-      getAuthorizationHeader(),
-    );
-    return data;
-  }
-
-  async getUserTelegram(userId: string) {
-    const { data } = await client.get(
-      `/v2/users/${userId}/telegram`,
-      getAuthorizationHeader(),
-    );
-    return data;
-  }
-
-  async getTelegramUser(telegramId: string) {
-    const { data } = await client.get(
-      `/v2/users/telegramUser/${telegramId}`,
-      getAuthorizationHeader(),
-    );
-    return data;
-  }
-
-  async changeUserAvatar(userId: string, avatar: string) {
-    const { data } = await client.patch(
-      `/v2/users/${userId}/avatar`,
-      avatar,
-      getAuthorizationHeader(),
-    );
-    return data;
-  }
-
-  async changeUserGroup(userId: string, groupId: string) {
-    const { data } = await client.patch(
-      `/v2/users/${userId}/group/${groupId}`,
       getAuthorizationHeader(),
     );
     return data;

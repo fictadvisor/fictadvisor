@@ -60,12 +60,12 @@ const RequestsTable: FC<RequestsTableProps> = ({ rows, refetch }) => {
               <Grid item desktop={6} mobile={7}>
                 <img width={48} height={48} src={row.imgSrc} alt="avatar" />
                 {!isMobile && (
-                  <Typography className="name">{row.fullName}</Typography>
+                  <Typography sx={styles.fullName}>{row.fullName}</Typography>
                 )}
                 {isMobile && (
                   <Box>
-                    <Typography className="name">{row.fullName}</Typography>
-                    <Typography className="email">{row.email}</Typography>
+                    <Typography sx={styles.fullName}>{row.fullName}</Typography>
+                    <Typography sx={styles.email}>{row.email}</Typography>
                   </Box>
                 )}
               </Grid>
@@ -73,7 +73,7 @@ const RequestsTable: FC<RequestsTableProps> = ({ rows, refetch }) => {
 
             <Grid item mobile={3} desktop={4}>
               {!isMobile && (
-                <Typography className="email">{row.email}</Typography>
+                <Typography sx={styles.email}>{row.email}</Typography>
               )}
             </Grid>
             <Grid item mobile={2} desktop={2} sx={styles.lastColumn}>

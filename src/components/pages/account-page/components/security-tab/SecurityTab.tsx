@@ -1,18 +1,21 @@
 import React from 'react';
+import { Box } from '@mui/material';
 import { useRouter } from 'next/router';
 
-import Button from '@/components/common/ui/button';
+import Button from '@/components/common/ui/button-mui';
 import {
   ButtonColor,
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
+import Divider from '@/components/common/ui/divider';
+import { DividerTextAlign } from '@/components/common/ui/divider/types';
 import Input from '@/components/common/ui/form/input-mui';
 import ChangePasswordForm from '@/components/pages/account-page/components/security-tab/components/change-password-form';
 import useAuthentication from '@/hooks/use-authentication';
 import AuthService from '@/lib/services/auth';
 
-import styles from './SecurityTab.module.scss';
+import * as styles from './SecurityTab.styles';
 
 const SecurityTab = () => {
   const { replace, reload } = useRouter();
@@ -23,23 +26,18 @@ const SecurityTab = () => {
     reload();
     await replace('/login');
   };
-
   return (
-    <div className={styles['container']}>
-      <div className={styles['division']}>
-        <h4 className={styles['division-text']}>Зміна паролю</h4>
-        <div className={styles['white']}></div>
-        <div className={styles['button']}></div>
-      </div>
-      <div className={styles['input-form']}>
+    <Box sx={styles.wrapper}>
+      <Box>
+        <Divider text={'Зміна паролю'} textAlign={DividerTextAlign.LEFT} />
         <ChangePasswordForm />
-      </div>
-      <div className={styles['division']}>
-        <h4 className={styles['division-text']}>Юзернейм і пошта</h4>
-        <div className={styles['white']}></div>
-        <div className={styles['button']}></div>
-      </div>
-      <div className={styles['user-information']}>
+      </Box>
+      <Divider
+        sx={styles.divider}
+        text={'Юзернейм і пошта'}
+        textAlign={DividerTextAlign.LEFT}
+      />
+      <Box sx={styles.userInformation}>
         <Input
           readOnly
           onChange={() => {}}
@@ -47,30 +45,17 @@ const SecurityTab = () => {
           value={user.username}
         />
         <Input readOnly onChange={() => {}} label="Пошта" value={user.email} />
-      </div>
-      <div className={styles['division']}>
-        <div className={styles['white']}></div>
-        <div className={styles['button']}></div>
-      </div>
-      <div className={styles['button-container']}>
-        <Button
-          text={'Вийти з акаунту'}
-          variant={ButtonVariant.FILLED}
-          color={ButtonColor.SECONDARY}
-          size={ButtonSize.MEDIUM}
-          onClick={handleLogout}
-        />
-      </div>
-      <div className={styles['button-container-mobile']}>
-        <Button
-          text={'Вийти з акаунту'}
-          variant={ButtonVariant.FILLED}
-          color={ButtonColor.SECONDARY}
-          size={ButtonSize.SMALL}
-          onClick={handleLogout}
-        />
-      </div>
-    </div>
+      </Box>
+      <Divider sx={styles.divider} />
+      <Button
+        sx={styles.exitButton}
+        text={'Вийти з акаунту'}
+        variant={ButtonVariant.FILLED}
+        color={ButtonColor.SECONDARY}
+        size={ButtonSize.MEDIUM}
+        onClick={handleLogout}
+      />
+    </Box>
   );
 };
 

@@ -14,3 +14,7 @@ export const dividerWrapper: SxProps<Theme> = {
   pb: '20px',
   typography: 'body1',
 };
+
+export const tag: SxProps<Theme> = {
+  padding: '1px 3px',
+};

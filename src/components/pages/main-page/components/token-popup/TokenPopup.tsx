@@ -75,7 +75,7 @@ const TokenPopup: FC<TokenPopupProps> = ({ token }) => {
     <Popup
       open={isOpen}
       title="Підключи Telegram"
-      text="Натисни, щоб підключити Telegram"
+      content="Натисни, щоб підключити Telegram"
       onClose={() => setIsOpen(false)}
       firstButton={
         <Button

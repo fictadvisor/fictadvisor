@@ -1,7 +1,3 @@
-export {
-  default as NumberedTextArea,
-  NumberedTextAreaSize,
-} from '../../../pages/account-page/components/group-tab/components/numbered-text-area';
 export { default as Checkbox } from './checkbox';
 export { default as Dropdown } from './dropdown';
 export { default as Input, InputSize, InputType } from './input';

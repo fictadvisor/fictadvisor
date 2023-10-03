@@ -17,7 +17,7 @@ interface PopupProps {
   hasCross?: boolean;
   icon?: ReactNode;
   title: string;
-  text: string;
+  content: string | ReactNode;
   firstButton: ReactNode;
   secondButton?: ReactNode;
   contentLeft?: boolean;
@@ -30,7 +30,7 @@ const Popup: FC<PopupProps> = ({
   hasCross = false,
   icon,
   title,
-  text,
+  content,
   firstButton,
   secondButton,
   contentLeft = false,
@@ -63,7 +63,7 @@ const Popup: FC<PopupProps> = ({
         </Typography>
       </PopupsTitle>
       <PopupsContent sx={styles.popupsContent(contentLeft)}>
-        {text}
+        {content}
       </PopupsContent>
       <PopupsActions>
         {firstButton}

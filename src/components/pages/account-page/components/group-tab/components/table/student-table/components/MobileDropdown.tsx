@@ -40,10 +40,6 @@ const MobileStudentsTableButtons: FC<MobileStudentTableButtonsProps> = ({
       ? roleNamesMapper[UserGroupRole.STUDENT]
       : roleNamesMapper[UserGroupRole.MODERATOR];
 
-  const isOnlyUserCaptain =
-    user.group?.role === UserGroupRole.CAPTAIN &&
-    student.role !== UserGroupRole.CAPTAIN;
-
   return (
     <ClickAwayListener onClickAway={() => setIsPopperOpen(false)}>
       <Box>
@@ -63,16 +59,18 @@ const MobileStudentsTableButtons: FC<MobileStudentTableButtonsProps> = ({
           anchorEl={EllipsisIconRef.current}
         >
           <Stack sx={styles.dropdown}>
-            {isOnlyUserCaptain && (
-              <Button
-                size={ButtonSize.SMALL}
-                text={buttonName}
-                variant={ButtonVariant.TEXT}
-                startIcon={arrowIcon}
-                onClick={() => setChangePopupOpen(true)}
-              />
-            )}
-            {(isOnlyUserCaptain ||
+            {user.group?.role === UserGroupRole.CAPTAIN &&
+              student.role == UserGroupRole.STUDENT && (
+                <Button
+                  size={ButtonSize.SMALL}
+                  text={buttonName}
+                  variant={ButtonVariant.TEXT}
+                  startIcon={arrowIcon}
+                  onClick={() => setChangePopupOpen(true)}
+                />
+              )}
+            {((user.group?.role === UserGroupRole.CAPTAIN &&
+              student.role !== UserGroupRole.CAPTAIN) ||
               (user.group?.role === UserGroupRole.MODERATOR &&
                 student.role == UserGroupRole.STUDENT)) && (
               <Button

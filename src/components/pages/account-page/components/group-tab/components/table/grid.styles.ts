@@ -6,11 +6,11 @@ export const studentsGrid: SxProps<Theme> = {
   borderRadius: '6px',
   border: '1px solid',
   borderColor: 'grey.200',
-  mb: '58px',
+  mb: '28px',
 };
 export const row: SxProps<Theme> = {
   p: '12px 16px',
-  height: { mobile: '60px', desktop: '72px' },
+  height: { mobile: '63px', desktop: '72px' },
   '&:not(&:last-child)': {
     borderBottom: '1px solid',
     borderColor: 'grey.200',
@@ -23,8 +23,14 @@ export const row: SxProps<Theme> = {
       gap: '8px',
     },
     '&:nth-of-type(1)': {
-      pr: '16px',
-      gap: '16px',
+      pr: {
+        mobile: '25px',
+        desktop: '16px',
+      },
+      gap: {
+        mobile: '8px',
+        desktop: '16px',
+      },
       '& img': {
         borderRadius: '50%',
         width: { mobile: '36px', desktop: '48px' },
@@ -40,6 +46,10 @@ export const row: SxProps<Theme> = {
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
+    paddingRight: {
+      mobile: '0',
+      desktop: '24px',
+    },
     '&.email': {
       typography: { mobile: 'overline', desktop: 'body2' },
       textTransform: 'none !important',

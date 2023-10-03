@@ -16,6 +16,10 @@ export const content: SxProps<Theme> = {
   zIndex: 11,
 };
 
+export const backDrop: SxProps<Theme> = {
+  zIndex: '11',
+};
+
 export const close: SxProps<Theme> = {
   position: 'absolute',
   top: '10px',

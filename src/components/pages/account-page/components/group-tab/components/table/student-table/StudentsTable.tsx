@@ -111,6 +111,7 @@ const StudentsTable: React.FC<StudentsTableProps> = ({
                     )
                   }
                   text=""
+                  sx={styles.tag}
                 />
               )}
               {row.role !== UserGroupRole.STUDENT && !isMobile && (

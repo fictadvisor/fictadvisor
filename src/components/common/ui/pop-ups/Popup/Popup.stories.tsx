@@ -21,7 +21,8 @@ type Story = StoryObj<typeof meta>;
 export const Base: Story = {
   args: {
     title: 'Application Received ',
-    text: 'This will remove all data relating to Alex. This action cannot be reversed. Deleted data can not be recovered.',
+    content:
+      'This will remove all data relating to Alex. This action cannot be reversed. Deleted data can not be recovered.',
     open: false,
     hasCross: false,
     icon: <LockClosedIcon />,

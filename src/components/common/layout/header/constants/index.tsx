@@ -10,22 +10,22 @@ import {
 
 export const accountButtons = [
   {
-    link: '/account?tab=general',
+    link: '/account?tab=GENERAL',
     text: 'Загальне',
     icon: <AcademicCapIcon />,
   },
   {
-    link: '/account?tab=security',
+    link: '/account?tab=SECURITY',
     text: 'Безпека',
     icon: <LockClosedIcon />,
   },
   {
-    link: '/account?tab=group',
+    link: '/account?tab=GROUP',
     text: 'Група',
     icon: <UsersIcon />,
   },
   {
-    link: '/account?tab=selective',
+    link: '/account?tab=SELECTIVE',
     text: 'Мої вибіркові',
     icon: <FireIcon />,
   },
