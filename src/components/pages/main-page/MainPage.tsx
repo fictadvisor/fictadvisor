@@ -11,6 +11,7 @@ import {
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
 import Divider from '@/components/common/ui/divider';
+import GreetingBlock from '@/components/pages/main-page/completely-normal-folder/GreetingBlock';
 import TokenPopup from '@/components/pages/main-page/components/token-popup';
 import * as stylesMUI from '@/components/pages/main-page/MainPage.styles';
 import useAuthentication from '@/hooks/use-authentication';
@@ -63,6 +64,7 @@ const MainPage: FC<MainPageProps> = ({ data }) => {
             <BannerImage />
           </Box>
         </Box>
+        <GreetingBlock />
         <Box sx={stylesMUI.resourcesSection}>
           <Typography sx={stylesMUI.resourcesSectionTitle}>
             Студентські ресурси
