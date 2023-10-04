@@ -453,7 +453,7 @@ export class ScheduleService {
 
     let startTime = durationTime.startTime ?? event.startTime;
     if (!durationTime.startTime && durationTime.changeStartDate) throw new ObjectIsRequiredException('startTime');
-    if (durationTime.startTime && !durationTime.changeStartDate) {
+    if (durationTime.startTime && !durationTime.changeStartDate && period !== Period.NO_PERIOD) {
       startTime = event.startTime;
       startTime.setHours(durationTime.startTime.getHours());
       startTime.setMinutes(durationTime.startTime.getMinutes());
