@@ -18,18 +18,20 @@ import vovka from '../../../../../public/images/main-page/avatars/vovka.png';
 import stylesCSS from './GreetingBlock.module.scss';
 
 const GreetingBlock = () => {
+  const imgScr = '/images/main-page/avatars/';
+
   const avatars = [
-    stas,
-    svyat,
-    oleg,
-    danya,
-    katya,
-    pasha,
-    dima,
-    illia,
-    vovka,
-    artem,
-    sasha,
+    'stas',
+    'svyat',
+    'oleg',
+    'danya',
+    'katya',
+    'pasha',
+    'dima',
+    'illia',
+    'vovka',
+    'artem',
+    'sasha',
   ];
   const names = [
     'Стасік',
@@ -74,7 +76,7 @@ const GreetingBlock = () => {
               className={stylesCSS['kitten-image']}
               width={200}
               height={200}
-              src={avatars[index]}
+              src={imgScr + avatars[index] + '.png'}
               alt={name}
             />
             <Typography sx={styles.kittenName}>{name}</Typography>
