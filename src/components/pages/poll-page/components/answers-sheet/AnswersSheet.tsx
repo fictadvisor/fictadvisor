@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 
 import Button from '@/components/common/ui/button-mui/Button';
 import Progress from '@/components/common/ui/progress';
+import * as sxStyles from '@/components/pages/poll-page/components/answers-sheet/AnswerSheet.style';
 import { createValidationSchema } from '@/components/pages/poll-page/components/answers-sheet/validation';
 import { SendingStatus } from '@/components/pages/poll-page/components/poll-form/types';
 import SingleQuestion from '@/components/pages/poll-page/components/single-question/SingleQuestion';
@@ -15,7 +16,6 @@ import getErrorMessage from '@/lib/utils/getErrorMessage';
 import { usePollStore } from '@/store/poll-page/usePollStore';
 import { Answer, Question, QuestionType } from '@/types/poll';
 
-import * as sxStyles from './AnswerSheet.style';
 import AnswersSaved from './AnswersSaved';
 
 import styles from './AnswersSheet.module.scss';

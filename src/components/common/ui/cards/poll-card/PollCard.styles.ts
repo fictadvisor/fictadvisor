@@ -7,8 +7,6 @@ export const card = (
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  textTransform: 'none',
-  textAlign: 'start',
   backgroundColor: 'backgroundDark.100',
   padding: '8px 16px',
   width: '100%',
@@ -17,8 +15,6 @@ export const card = (
   borderTop: '1px solid #343434',
   cursor: 'pointer',
   color: 'grey.600',
-  borderRadius: '0px',
-  lineHeight: '19.6px',
   height: {
     tablet: '94px',
     mobile: '78px',

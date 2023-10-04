@@ -1,5 +1,7 @@
 import { SxProps, Theme } from '@mui/material/styles';
 
+import theme from '@/styles/theme';
+
 export const menu: SxProps<Theme> = {
   display: 'flex',
   flexDirection: 'column',
@@ -11,6 +13,18 @@ export const menu: SxProps<Theme> = {
 };
 
 export const menuTab: SxProps<Theme> = {
+  maxWidth: {
+    mobile: '100%',
+  },
+};
+
+export const activeMenuTab: SxProps<Theme> = {
+  backgroundColor: 'backgroundDark.200',
+  border: {
+    mobile: `1px solid ${theme.palette.backgroundDark[200]}`,
+    desktopSemiMedium: `2px solid ${theme.palette.backgroundDark[200]}`,
+  },
+  color: 'inherit',
   maxWidth: {
     mobile: '100%',
   },
