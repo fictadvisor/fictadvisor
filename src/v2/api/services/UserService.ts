@@ -1,6 +1,6 @@
 import { ForbiddenException, forwardRef, Inject, Injectable } from '@nestjs/common';
 import { StudentRepository } from '../../database/repositories/StudentRepository';
-import { UpdateSuperheroData } from '../datas/UpdateSuperheroData';
+import { UpdateSuperheroDTO } from '../dtos/UpdateSuperheroDTO';
 import { SuperheroRepository } from '../../database/repositories/SuperheroRepository';
 import { UserRepository } from '../../database/repositories/UserRepository';
 import { RoleRepository } from '../../database/repositories/RoleRepository';
@@ -213,8 +213,8 @@ export class UserService {
     return this.studentMapper.updateStudent(student);
   }
 
-  async updateSuperhero (userId: string, data: UpdateSuperheroData) {
-    return this.superheroRepository.updateSuperhero(userId, data);
+  async updateSuperhero (userId: string, data: UpdateSuperheroDTO) {
+    return await this.superheroRepository.updateSuperhero(userId, data);
   }
 
   async requestNewGroup (id: string, { groupId, isCaptain }: GroupRequestDTO) {

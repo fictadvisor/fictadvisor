@@ -1,24 +1,38 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class PaginationDataResponse {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Amount number',
+  })
     amount: number;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Total amount number',
+  })
     totalAmount: number;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Total pages number',
+  })
     totalPages: number;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Page size number',
+  })
     pageSize: number;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Current page number',
+  })
     page: number;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Previous amount of page elements',
+  })
     prevPageElems: number;
   
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Next amount of page elements',
+  })
     nextPageElems: number;
 }

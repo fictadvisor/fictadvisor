@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../PrismaService';
-import { UpdateSuperheroData } from '../../api/datas/UpdateSuperheroData';
+import { UpdateSuperheroDTO } from '../../api/dtos/UpdateSuperheroDTO';
 
 @Injectable()
 export class SuperheroRepository {
@@ -8,7 +8,7 @@ export class SuperheroRepository {
     private prisma: PrismaService,
   ) {}
 
-  async updateSuperhero (userId: string, data: UpdateSuperheroData) {
+  async updateSuperhero (userId: string, data: UpdateSuperheroDTO) {
     return this.prisma.superhero.update({
       where: {
         userId,
@@ -17,12 +17,13 @@ export class SuperheroRepository {
       select: {
         userId: true,
         dorm: true,
+        state: true,
       },
     });
   }
 
   async createSuperhero (id, body) {
-    await this.prisma.superhero.create({
+    return this.prisma.superhero.create({
       data: {
         userId: id,
         ...body,

@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from '../services/UserService';
 import { TelegramGuard } from '../../security/TelegramGuard';
-import { ApproveDTO, ApproveStudentByTelegramDTO } from '../dtos/ApproveDTO';
+import { ApproveStudentByTelegramDTO } from '../dtos/ApproveDTO';
 import { GiveRoleDTO } from '../dtos/GiveRoleDTO';
 import { CreateSuperheroDTO } from '../dtos/CreateSuperheroDTO';
 import { UserByIdPipe } from '../pipes/UserByIdPipe';
@@ -45,13 +45,17 @@ import { RemainingSelectiveResponse } from '../responses/RemainingSelectiveRespo
 import { GroupByIdPipe } from '../pipes/GroupByIdPipe';
 import { StudentPipe } from '../pipes/StudentPipe';
 import { StudentMapper } from '../../mappers/StudentMapper';
-import { FullStudentResponse, OrdinaryStudentResponse } from '../responses/StudentResponse';
+import { FullStudentResponse, OrdinaryStudentResponse, StudentsResponse } from '../responses/StudentResponse';
 import { UserResponse } from '../responses/UserResponse';
 import { ApiImplicitFile } from '@nestjs/swagger/dist/decorators/api-implicit-file.decorator';
 import { SelectiveDisciplinesPipe } from '../pipes/SelectiveDisciplinesPipe';
 import { AttachSelectiveDisciplinesDTO } from '../dtos/AttachSelectiveDisciplinesDTO';
 import { UserByTelegramIdPipe } from '../pipes/UserByTelegramIdPipe';
 import { ContactResponse } from '../responses/ContactResponse';
+import { UpdateSuperheroDTO } from '../dtos/UpdateSuperheroDTO';
+import { DisciplineIdsResponse } from '../responses/DisciplineResponse';
+import { SuperheroResponse } from '../responses/SuperheroResponse';
+import { ApiEndpoint } from 'src/v2/utils/documentation/decorators';
 @ApiTags('User')
 @Controller({
   version: '2',
@@ -64,7 +68,44 @@ export class UserController {
     private studentMapper: StudentMapper,
   ) {}
 
-  @UseGuards(TelegramGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: StudentsResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException: 
+      User with such id is not found
+      
+    InvalidBodyException:
+      State is not an enum
+      isCaptain must be a boolean
+
+    AlreadyRegisteredException:
+      User is already registered
+    
+    InvalidEntityIdException:
+      User with such id is not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: 'Id of a user to verify',
+  })
+  @ApiEndpoint({
+    summary: 'Verify user to be a student',
+    guards: TelegramGuard,
+  })
   @Patch('/:userId/verifyStudent')
   async verify (
     @Param('userId', UserByIdPipe) userId: string,
@@ -73,17 +114,46 @@ export class UserController {
     return this.userService.verifyStudent(userId, isCaptain, state);
   }
 
-  @UseGuards(TelegramGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: SuperheroResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException: 
+      User with such id is not found
+
+    InvalidBodyException:
+      State is not an enum
+      Dorm is not a boolean`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: 'Id of a superhero to verify',
+  })
+  @ApiEndpoint({
+    summary: 'Verify student to be a superhero',
+    guards: TelegramGuard,
+  })
   @Patch('/:userId/verifySuperhero')
   verifySuperhero (
     @Param('userId', UserByIdPipe) userId: string,
-    @Body() body: ApproveDTO,
+    @Body() body: UpdateSuperheroDTO,
   ) {
     return this.userService.updateSuperhero(userId, body);
   }
 
-  @Access(PERMISSION.USERS_$USERID_GROUP_REQUEST)
-  @Patch('/:userId/requestNewGroup')
   @ApiBearerAuth()
   @ApiOkResponse()
   @ApiBadRequestResponse({
@@ -105,6 +175,11 @@ export class UserController {
     AbsenceOfCaptainTelegramException:
       Captain's telegramId was not found`,
   })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
   @ApiForbiddenResponse({
     description: `\n
     NoPermissionException:
@@ -113,6 +188,16 @@ export class UserController {
     ForbiddenException:
       Forbidden`,
   })
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: 'Id of a user to request to the group',
+  })
+  @ApiEndpoint({
+    summary: 'Request captain or admin to join the group',
+    permissions: PERMISSION.USERS_$USERID_GROUP_REQUEST,
+  })
+  @Patch('/:userId/requestNewGroup')
   requestNewGroup (
     @Param('userId', UserByIdPipe) userId: string,
     @Body() body: GroupRequestDTO,
@@ -120,16 +205,74 @@ export class UserController {
     return this.userService.requestNewGroup(userId, body);
   }
 
-  @Access(PERMISSION.USERS_$USERID_SUPERHERO_CREATE)
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: SuperheroResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException: 
+      User with such id is not found
+
+    InvalidBodyException:
+      Dorm is not a boolean`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: 'Id of a user which is going to be a superhero',
+  })
+  @ApiEndpoint({
+    summary: 'Create a new superhero',
+    permissions: PERMISSION.USERS_$USERID_SUPERHERO_CREATE,
+  })
   @Post('/:userId/superhero')
   async createSuperhero (
     @Param('userId', UserByIdPipe) userId: string,
     @Body() body: CreateSuperheroDTO,
   ) {
-    return this.userService.createSuperhero(userId, body);
+    const superhero = await this.userService.createSuperhero(userId, body);
+    return this.studentMapper.getSuperhero(superhero);
   }
 
-  @Access(PERMISSION.USERS_$USERID_SELECTIVE_GET)
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: DisciplineIdsResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException: 
+      User with such id is not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: 'Id of a user',
+  })
+  @ApiEndpoint({
+    summary: 'Get user\'s selective disciplines',
+    permissions: PERMISSION.USERS_$USERID_SELECTIVE_GET,
+  })
   @Get('/:userId/selective')
   async getSelective (
     @Param('userId', UserByIdPipe) userId: string,
@@ -138,19 +281,35 @@ export class UserController {
     return { disciplines: dbDisciplines.map((d) => d.id) };
   }
 
-  @Access(PERMISSION.USERS_$USERID_SELECTIVE_GET)
-  @Get('/:userId/selectiveBySemesters')
+  @ApiBearerAuth()
   @ApiOkResponse({
     type: SelectiveBySemestersResponse,
   })
   @ApiBadRequestResponse({
-    description: `InvalidEntityIdException:\n 
-                  User with such id is not found`,
+    description: `\n
+    InvalidEntityIdException: 
+      User with such id is not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
   })
   @ApiForbiddenResponse({
-    description: `NoPermissionException:\n
-                  You do not have permission to perform this action`,
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
   })
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: 'Id of a user',
+  })
+  @ApiEndpoint({
+    summary: 'Get user\'s selective disciplines by semesters',
+    permissions: PERMISSION.USERS_$USERID_SELECTIVE_GET,
+  })
+  @Get('/:userId/selectiveBySemesters')
   async getSelectiveBySemesters (
     @Param('userId', UserByIdPipe) userId: string,
   ) {

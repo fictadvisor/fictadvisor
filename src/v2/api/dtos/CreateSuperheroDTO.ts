@@ -1,7 +1,11 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean } from 'class-validator';
 import { validationOptionsMsg } from '../../utils/GLOBALS';
 
 export class CreateSuperheroDTO {
-  @IsBoolean(validationOptionsMsg('Dorm is not a number'))
+  @ApiProperty({
+    description: 'Whether the superhero is in dormintory or not',
+  })
+  @IsBoolean(validationOptionsMsg('Dorm is not a boolean'))
     dorm: boolean;
 }

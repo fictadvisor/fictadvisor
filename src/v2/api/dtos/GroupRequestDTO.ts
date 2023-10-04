@@ -3,11 +3,15 @@ import { validationOptionsMsg } from '../../utils/GLOBALS';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class GroupRequestDTO {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Group id',
+  })
   @IsNotEmpty(validationOptionsMsg('Group id can not be empty'))
     groupId: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Whether the student is captain or not',
+  })
   @IsBoolean(validationOptionsMsg('IsCaptain must be a boolean'))
   @IsNotEmpty(validationOptionsMsg('IsCaptain can not be empty'))
     isCaptain: boolean;

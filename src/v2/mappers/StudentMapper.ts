@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Role } from '@prisma/client';
+import { Role, Superhero } from '@prisma/client';
 import { DbStudent } from '../database/entities/DbStudent';
 
 @Injectable()
@@ -43,6 +43,14 @@ export class StudentMapper {
       group: student.group,
       roles: student.roles,
       state: student.state,
+    };
+  }
+
+  getSuperhero (superhero: Superhero) {
+    return {
+      userId: superhero.userId,
+      dorm: superhero.dorm,
+      state: superhero.state,
     };
   }
 }

@@ -52,3 +52,10 @@ export class ShortDisciplinesResponse {
   })
     disciplines: ShortDisciplineResponse[];
 }
+
+export class DisciplineIdsResponse {
+  @ApiProperty({
+    description: 'Ids of disciplines',
+  })
+    disciplines: string[];
+}
