@@ -1,18 +1,19 @@
 import { Box, Typography } from '@mui/material';
 import Image from 'next/image';
 
-import artem from '@/components/pages/main-page/completely-normal-folder/avatars/artem.png';
-import danya from '@/components/pages/main-page/completely-normal-folder/avatars/danya.png';
-import dima from '@/components/pages/main-page/completely-normal-folder/avatars/dima.png';
-import illia from '@/components/pages/main-page/completely-normal-folder/avatars/illia.png';
-import katya from '@/components/pages/main-page/completely-normal-folder/avatars/katya.png';
-import oleg from '@/components/pages/main-page/completely-normal-folder/avatars/oleg.png';
-import pasha from '@/components/pages/main-page/completely-normal-folder/avatars/pasha.png';
-import sasha from '@/components/pages/main-page/completely-normal-folder/avatars/sasha.png';
-import stas from '@/components/pages/main-page/completely-normal-folder/avatars/stas.png';
-import svyat from '@/components/pages/main-page/completely-normal-folder/avatars/svyat.png';
-import vovka from '@/components/pages/main-page/completely-normal-folder/avatars/vovka.png';
 import * as styles from '@/components/pages/main-page/completely-normal-folder/GreetingBlock.styles';
+
+import artem from '../../../../../public/images/main-page/avatars/artem.png';
+import danya from '../../../../../public/images/main-page/avatars/danya.png';
+import dima from '../../../../../public/images/main-page/avatars/dima.png';
+import illia from '../../../../../public/images/main-page/avatars/illia.png';
+import katya from '../../../../../public/images/main-page/avatars/katya.png';
+import oleg from '../../../../../public/images/main-page/avatars/oleg.png';
+import pasha from '../../../../../public/images/main-page/avatars/pasha.png';
+import sasha from '../../../../../public/images/main-page/avatars/sasha.png';
+import stas from '../../../../../public/images/main-page/avatars/stas.png';
+import svyat from '../../../../../public/images/main-page/avatars/svyat.png';
+import vovka from '../../../../../public/images/main-page/avatars/vovka.png';
 
 import stylesCSS from './GreetingBlock.module.scss';
 
