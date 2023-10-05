@@ -189,8 +189,8 @@ export class ScheduleParser implements Parser {
       ],
     });
 
-    const weeksCountEveryFortnight = await this.getWeeksCount(endOfEvent, Period.EVERY_FORTNIGHT);
-    const weeksCountEveryWeek = await this.getWeeksCount(endOfEvent, Period.EVERY_WEEK);
+    const weeksCountEveryFortnight = await this.getWeeksCount(startOfEvent, Period.EVERY_FORTNIGHT);
+    const weeksCountEveryWeek = await this.getWeeksCount(startOfEvent, Period.EVERY_WEEK);
 
     if (!event) {
       await this.eventRepository.create({
@@ -206,7 +206,7 @@ export class ScheduleParser implements Parser {
         },
         eventInfo: {
           createMany: {
-            data: this.getIndexesForEventInfo(0, weeksCountEveryFortnight),
+            data: this.getIndexesForEventInfo(0, weeksCountEveryFortnight - 1),
           },
         },
       });
@@ -219,17 +219,17 @@ export class ScheduleParser implements Parser {
         endTime: endOfEvent,
         eventInfo: {
           createMany: {
-            data: this.getIndexesForEventInfo(weeksCountEveryFortnight + 1, weeksCountEveryWeek),
+            data: this.getIndexesForEventInfo(weeksCountEveryFortnight, weeksCountEveryWeek),
           },
         },
       });
     }
   }
 
-  async getWeeksCount (indexEndDate: Date, period: Period) {
+  async getWeeksCount (indexStartDate: Date, period: Period) {
     const { endDate } = await this.dateService.getCurrentSemester();
 
-    const difference = Math.ceil((endDate.getTime() - FORTNITE - indexEndDate.getTime()) / DAY);
+    const difference = Math.ceil((endDate.getTime() - FORTNITE - indexStartDate.getTime()) / DAY);
     const divider = period === Period.EVERY_FORTNIGHT ? 14 : 7;
 
     return Math.floor(difference / divider);

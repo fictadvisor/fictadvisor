@@ -3,16 +3,15 @@ import { JSDOM } from 'jsdom';
 import { URLSearchParams } from 'node:url';
 import { Injectable } from '@nestjs/common';
 import { Parser } from './Parser';
-import { DisciplineTypeEnum, TeacherRole } from '@prisma/client';
+import { DisciplineTypeEnum, Period, TeacherRole } from '@prisma/client';
 import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
 import { DisciplineTeacherRoleRepository } from '../../database/repositories/DisciplineTeacherRoleRepository';
 import { GroupRepository } from '../../database/repositories/GroupRepository';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
 import { SubjectRepository } from '../../database/repositories/SubjectRepository';
 import { TeacherRepository } from '../../database/repositories/TeacherRepository';
-import { StudyingSemester } from '../date/DateService';
-import { ScheduleGroupType } from './ScheduleParserTypes';
-// import { ScheduleRepository } from '../../api/schedule/ScheduleRepository';
+import { StudyingSemester, DateService, DAY, HOUR, MINUTE, WEEK, FORTNITE } from '../date/DateService';
+import { EventRepository } from '../../database/repositories/EventRepository';
 
 export const DISCIPLINE_TYPE = {
   Лек: DisciplineTypeEnum.LECTURE,
@@ -49,6 +48,8 @@ export class RozParser implements Parser {
     private disciplineRepository: DisciplineRepository,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
     private disciplineTeacherRoleRepository: DisciplineTeacherRoleRepository,
+    private eventRepository: EventRepository,
+    private dateService: DateService,
   ) {}
 
   async parse (period: StudyingSemester, groupList: string[], page = 1) {
@@ -79,6 +80,14 @@ export class RozParser implements Parser {
 
     await this.parseWeek(0, code, dom, period);
     await this.parseWeek(1, code, dom, period);
+  }
+
+  async parseWeek (weekNumber, code, dom, period) {
+    const week = await this.parseHtmlWeek(weekNumber, code, dom);
+    const group = await this.groupRepository.getOrCreate(code);
+    for (const pair of week) {
+      await this.parsePair(pair, group.id, period);
+    }
   }
 
   async getGroupHashId (group) {
@@ -172,15 +181,7 @@ export class RozParser implements Parser {
     return pairs;
   }
 
-  async parseWeek (weekNumber, code, dom, period) {
-    const week = await this.parseHtmlWeek(weekNumber, code, dom);
-    const group = await this.groupRepository.getOrCreate(code);
-    for (const pair of week) {
-      await this.parsePair(pair, group.id, period);
-    }
-  }
-
-  async getTeacherFullInitials (lastName, firstName, middleName) {
+  async getTeacherFullInitials (lastName: string, firstName: string, middleName: string) {
     if (firstName.length <= 1 || middleName.length <= 1) {
       const teachers = await this.teacherRepository.findMany({
         where: { lastName, firstName: { startsWith: firstName }, middleName: { startsWith: middleName } },
@@ -198,23 +199,19 @@ export class RozParser implements Parser {
     return teacher;
   }
 
-  async parsePair (pair, groupId, period) {
+  async parsePair (pair, groupId: string, period: StudyingSemester) {
     const subject = await this.subjectRepository.getOrCreate(pair.name ?? '');
+    const name = DISCIPLINE_TYPE[pair.tag] ?? DISCIPLINE_TYPE.Лек;
+    const role = TEACHER_TYPE[pair.tag] ?? TEACHER_TYPE.Лек;
+
+    const week = pair.week;
+    const day = pair.day;
+    const { startDate: startOfSemester } = await this.dateService.getSemester(period);
     const [startHours, startMinutes] = pair.time
       .split(':')
       .map((s) => parseInt(s));
-    const endHours = startHours + 1;
-    const endMinutes = startMinutes + 35;
-
-    const name = DISCIPLINE_TYPE[pair.tag] ?? DISCIPLINE_TYPE.Лек;
-    const role = TEACHER_TYPE[pair.tag] ?? TEACHER_TYPE.Лек;
-    const startDate = this.createDate(
-      pair.day,
-      pair.week,
-      startHours,
-      startMinutes
-    );
-    const endDate = this.createDate(pair.day, pair.week, endHours, endMinutes);
+    const startOfEvent = new Date(startOfSemester.getTime()+week*WEEK+(day-1)*DAY+startHours*HOUR+startMinutes*MINUTE);
+    const endOfEvent = new Date(startOfEvent.getTime()+16*WEEK+HOUR+35*MINUTE);
 
     let discipline = await this.disciplineRepository.getOrCreate({
       subjectId: subject.id,
@@ -252,14 +249,80 @@ export class RozParser implements Parser {
       });
     }
 
-    // await this.scheduleRepository.getOrCreateSemesterLesson({
-    //   disciplineTypeId: disciplineType.id,
-    //   startDate,
-    //   endDate,
-    // });
+    const event = await this.eventRepository.find({
+      OR: [
+        {
+          startTime: startOfEvent,
+          groupId: groupId,
+          lessons: {
+            some: {
+              disciplineTypeId: disciplineType.id,
+            },
+          },
+        },
+        {
+          startTime: new Date(startOfEvent.getTime() - WEEK),
+          groupId: groupId,
+          lessons: {
+            some: {
+              disciplineTypeId: disciplineType.id,
+            },
+          },
+        },
+      ],
+    });
+
+    const weeksCountEveryFortnight = await this.getWeeksCount(startOfEvent, Period.EVERY_FORTNIGHT);
+    const weeksCountEveryWeek = await this.getWeeksCount(startOfEvent, Period.EVERY_WEEK);
+
+    if (!event) {
+      await this.eventRepository.create({
+        name: pair.name,
+        startTime: startOfEvent,
+        endTime: endOfEvent,
+        period: Period.EVERY_FORTNIGHT,
+        groupId: groupId,
+        lessons: {
+          create: {
+            disciplineTypeId: disciplineType.id,
+          },
+        },
+        eventInfo: {
+          createMany: {
+            data: this.getIndexesForEventInfo(0,  weeksCountEveryFortnight - 1),
+          },
+        },
+      });
+    } else if (
+      event.startTime.getTime() === startOfEvent.getTime() - WEEK &&
+      event.period === Period.EVERY_FORTNIGHT
+    ) {
+      await this.eventRepository.updateById(event.id, {
+        period: Period.EVERY_WEEK,
+        endTime: endOfEvent,
+        eventInfo: {
+          createMany: {
+            data: this.getIndexesForEventInfo(weeksCountEveryFortnight, weeksCountEveryWeek),
+          },
+        },
+      });
+    }
   }
 
-  createDate (day, week, hours, minutes): Date {
-    return new Date(1970, 0, day + week * 7, hours, minutes);
+  getIndexesForEventInfo (startIndex: number, endIndex: number) {
+    return Array.from({
+      length: endIndex - startIndex + 1,
+    }, (_, i) => ({
+      number: i + startIndex,
+    }));
+  }
+
+  async getWeeksCount (indexStartDate: Date, period: Period) {
+    const { endDate } = await this.dateService.getCurrentSemester();
+
+    const difference = Math.ceil((endDate.getTime() - FORTNITE - indexStartDate.getTime()) / DAY);
+    const divider = period === Period.EVERY_FORTNIGHT ? 14 : 7;
+
+    return Math.floor(difference / divider);
   }
 }
