@@ -15,6 +15,9 @@ export class TelegramGroupResponse {
     enum: TelegramSource,
   })
     source: TelegramSource;
+
+  @ApiProperty()
+    postInfo: boolean;
 }
 
 export class TelegramGroupsResponse {

@@ -5,5 +5,6 @@ export class DbTelegramGroup {
   telegramId: bigint;
   threadId?: bigint;
   source: TelegramSource;
+  postInfo: boolean;
   group: Group;
 }

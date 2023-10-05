@@ -22,6 +22,7 @@ export class GroupMapper {
           telegramId: telegramGroup.telegramId,
           threadId: telegramGroup.threadId,
           source: telegramGroup.source,
+          postInfo: telegramGroup.postInfo,
         })),
       })),
     };

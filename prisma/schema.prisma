@@ -62,6 +62,7 @@ model TelegramGroup {
   telegramId BigInt         @map("telegram_id")
   threadId   BigInt?        @map("thread_id")
   source     TelegramSource
+  postInfo   Boolean        @default(false) @map("post_info")
   createdAt  DateTime?      @default(now()) @map("created_at")
   updatedAt  DateTime?      @default(now()) @updatedAt @map("updated_at")
 

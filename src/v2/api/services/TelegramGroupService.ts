@@ -31,11 +31,23 @@ export class TelegramGroupService {
   }
 
   async update (telegramId: bigint, groupId: string, body: UpdateTelegramGroupDTO) {
+    await this.checkTelegramGroup(telegramId, groupId);
     return this.telegramGroupRepository.updateById(telegramId, groupId, body);
   }
 
   async delete (telegramId: bigint, groupId: string) {
+    await this.checkTelegramGroup(telegramId, groupId);
     return this.telegramGroupRepository.deleteById(telegramId, groupId);
+  }
+
+  async checkTelegramGroup (telegramId: bigint, groupId: string): Promise<void> {
+    const telegramGroup = await this.telegramGroupRepository.findUnique({
+      telegramId,
+      groupId,
+    });
+    if (!telegramGroup) {
+      throw new DataNotFoundException();
+    }
   }
 
   async getAll (groupId: string) {

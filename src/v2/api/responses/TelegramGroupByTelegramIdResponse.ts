@@ -12,6 +12,12 @@ export class TelegramGroupByTelegramIdResponse {
     type: GroupResponse,
   })
     group: GroupResponse;
+
+  @ApiProperty()
+    threadId: bigint;
+
+  @ApiProperty()
+    postInfo: boolean;
 }
 
 export class TelegramGroupsByTelegramIdResponse {

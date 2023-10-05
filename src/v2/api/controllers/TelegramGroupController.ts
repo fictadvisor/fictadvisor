@@ -47,8 +47,10 @@ export class TelegramGroupController {
       Source can not be empty
       Source is not an enum
       ThreadId is not a number
+      PostInfo can not be empty
+      PostInfo is not a boolean
       
-    ObjectIsRequiredException
+    ObjectIsRequiredException:
       Thread ID is required
       
     AlreadyExistException:
@@ -82,10 +84,14 @@ export class TelegramGroupController {
       TelegramId is not a number
       Source is not an enum
       ThreadId is not a number
+      PostInfo is not a boolean
     
     InvalidEntityIdException:
       TelegramGroup with such id is not found
-      Group with such id is not found`,
+      Group with such id is not found
+      
+      DataNotFoundException:
+      Data were not found`,
   })
   @ApiQuery({
     name: 'telegramId',
@@ -113,7 +119,10 @@ export class TelegramGroupController {
     description: `\n
     InvalidEntityIdException:
       TelegramGroup with such id is not found
-      Group with such id is not found`,
+      Group with such id is not found
+      
+    DataNotFoundException:
+      Data were not found`,
   })
   @ApiQuery({
     name: 'telegramId',

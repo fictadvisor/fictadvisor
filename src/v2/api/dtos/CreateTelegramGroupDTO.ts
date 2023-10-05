@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
+import { IsBoolean, IsEnum, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 import { validationOptionsMsg } from '../../utils/GLOBALS';
 import { TelegramSource } from '@prisma/client';
 
@@ -20,4 +20,9 @@ export class CreateTelegramGroupDTO {
   @IsNumber({}, validationOptionsMsg('ThreadId is not a number'))
   @IsOptional()
     threadId?: bigint;
+
+  @ApiProperty()
+  @IsNotEmpty(validationOptionsMsg('PostInfo can not be empty'))
+  @IsBoolean(validationOptionsMsg('PostInfo is not a boolean'))
+    postInfo: boolean;
 }

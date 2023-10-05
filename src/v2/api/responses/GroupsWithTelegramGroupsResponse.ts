@@ -8,6 +8,9 @@ export class TelegramGroups {
   @ApiProperty()
     threadId: bigint;
 
+  @ApiProperty()
+    postInfo: boolean;
+
   @ApiProperty({
     enum: TelegramSource,
   })
