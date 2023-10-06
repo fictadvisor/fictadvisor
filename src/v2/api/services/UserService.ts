@@ -10,7 +10,7 @@ import { CreateContactDTO } from '../dtos/CreateContactDTO';
 import { EntityType, RoleName, State } from '@prisma/client';
 import { UpdateContactDTO } from '../dtos/UpdateContactDTO';
 import { CreateSuperheroDTO } from '../dtos/CreateSuperheroDTO';
-import { AuthService } from './AuthService';
+import { AuthService, AVATARS } from './AuthService';
 import { GroupRequestDTO } from '../dtos/GroupRequestDTO';
 import { GroupService } from './GroupService';
 import { TelegramDTO } from '../dtos/TelegramDTO';
@@ -386,6 +386,27 @@ export class UserService {
     const { avatar } = await this.userRepository.findById(userId);
     const oldPath = this.fileService.getPathFromLink(avatar);
 
+    await this.deleteAvatarIfNotUsed(avatar, oldPath);
+
+    const path = await this.fileService.saveByHash(file, 'avatars');
+
+    return this.userRepository.updateById(userId, {
+      avatar: path,
+    });
+  }
+
+  async deleteAvatar (userId: string) {
+    const { avatar } = await this.userRepository.findById(userId);
+    const oldPath = this.fileService.getPathFromLink(avatar);
+
+    await this.deleteAvatarIfNotUsed(avatar, oldPath);
+
+    return this.userRepository.updateById(userId, {
+      avatar: AVATARS[Math.floor(Math.random() * AVATARS.length)],
+    });
+  }
+
+  private async deleteAvatarIfNotUsed (avatar: string, oldPath: string) {
     const exist = this.fileService.checkFileExist(oldPath, false);
     if (exist) {
       const users = await this.userRepository.findMany({ avatar });
@@ -393,12 +414,6 @@ export class UserService {
         await this.fileService.deleteFile(oldPath, false);
       }
     }
-
-    const path = await this.fileService.saveByHash(file, 'avatars');
-
-    return this.userRepository.updateById(userId, {
-      avatar: path,
-    });
   }
 
   async getRemainingSelective (userId, body: RemainingSelectiveDTO) {

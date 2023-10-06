@@ -3,7 +3,7 @@ import { User } from '@prisma/client';
 
 @Injectable()
 export class UserMapper {
-  updateUser (user: User) {
+  getUser (user: User) {
     return {
       id: user.id,
       email: user.email,

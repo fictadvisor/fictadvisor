@@ -189,7 +189,7 @@ export class UserController {
     @Body() body: UpdateUserDTO,
   ) {
     const user = await this.userService.updateUser(userId, body);
-    return this.userMapper.updateUser(user);
+    return this.userMapper.getUser(user);
   }
 
   @Access(PERMISSION.USERS_$USERID_CONTACTS_GET)
@@ -401,7 +401,12 @@ export class UserController {
       User with such id is not found
       
     DataNotFoundException: 
-      Data was not found`,
+      Data were not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
   })
   @ApiUnsupportedMediaTypeResponse({
     description: `\n
@@ -424,7 +429,35 @@ export class UserController {
     @UploadedFile(AvatarValidationPipe) file: Express.Multer.File,
   ) {
     const user = await this.userService.updateAvatar(file, userId);
-    return this.userMapper.updateUser(user);
+    return this.userMapper.getUser(user);
+  }
+
+  @Access(PERMISSION.USERS_$USERID_DELETE)
+  @ApiBearerAuth()
+  @Delete('/:userId/avatar')
+  @ApiOkResponse({
+    type: UserResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException: 
+      User with such id is not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  async deleteAvatar (
+    @Param('userId', UserByIdPipe) userId: string,
+  ) {
+    const user = await this.userService.deleteAvatar(userId);
+    return this.userMapper.getUser(user);
   }
 
   @Access(PERMISSION.USERS_$USERID_SELECTIVE_GET)

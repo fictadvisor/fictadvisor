@@ -64,6 +64,7 @@ export enum PERMISSION {
   USERS_GROUPS_SWITCH = 'users.groups.switch',
   USERS_$USERID_GET = 'users.$userId.get',
   USERS_$USERID_UPDATE = 'users.$userId.update',
+  USERS_$USERID_DELETE = 'users.$userId.delete',
   USERS_$USERID_CONTACTS_CREATE = 'users.$userId.contacts.create',
   USERS_$USERID_CONTACTS_UPDATE = 'users.$userId.contacts.update',
   USERS_$USERID_CONTACTS_GET = 'users.$userId.contacts.get',
