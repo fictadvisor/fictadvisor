@@ -329,7 +329,9 @@ export class AuthService {
         OR: [
           { email },
           { username },
-          { telegramId },
+          telegramId !== null
+            ? { telegramId }
+            : undefined,
         ],
       });
       if (user) {
