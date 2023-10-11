@@ -3,31 +3,45 @@ import { validationOptionsMsg } from '../../utils/GLOBALS';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class TelegramDTO {
-  @ApiProperty()
-  @IsNumber()
+  @ApiProperty({
+    description: 'Date of authorization',
+  })
+  @IsNumber({}, validationOptionsMsg('Auth date must be a number'))
     auth_date: number;
 
-  @ApiProperty()
-  @IsNotEmpty(validationOptionsMsg('first_name can not be empty'))
+  @ApiProperty({
+    description: 'User\'s telegram firstName',
+  })
+  @IsNotEmpty(validationOptionsMsg('First name cannot be empty'))
     first_name: string;
 
-  @ApiProperty()
-  @IsNotEmpty(validationOptionsMsg('hash can not be empty'))
+  @ApiProperty({
+    description: 'Telegram hash',
+  })
+  @IsNotEmpty(validationOptionsMsg('Hash cannot be empty'))
     hash: string;
 
-  @ApiProperty()
-  @IsNumber()
+  @ApiProperty({
+    description: 'User\'s telegram id',
+  })
+  @IsNumber({}, validationOptionsMsg('Telegram id must be a bigint'))
     id: bigint;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    description: 'User\'s telegram lastName',
+  })
   @IsOptional()
-    last_name: string;
+    last_name?: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    description: 'Link to user\'s telegram photo',
+  })
   @IsOptional()
-    photo_url: string;
+    photo_url?: string;
 
-  @ApiProperty()
-  @IsNotEmpty(validationOptionsMsg('username can not be empty'))
+  @ApiProperty({
+    description: 'User\'s telegram username',
+  })
+  @IsNotEmpty(validationOptionsMsg('Username cannot be empty'))
     username: string;
 }

@@ -78,7 +78,7 @@ export class AuthService {
       ],
     });
     if (!user) {
-      throw new InvalidEntityIdException('user');
+      throw new InvalidEntityIdException('User');
     }
 
     const isMatch = await this.checkPassword(password, user.password);
@@ -200,7 +200,7 @@ export class AuthService {
       telegramId: telegram.id,
     });
     if (!user) {
-      throw new InvalidEntityIdException('user');
+      throw new InvalidEntityIdException('User');
     }
     return this.getTokens(user);
   }

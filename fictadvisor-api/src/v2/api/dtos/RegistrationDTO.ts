@@ -5,17 +5,23 @@ import { UserDTO } from './UserDTO';
 import { StudentDTO } from './StudentDTO';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 export class RegistrationDTO {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Information about student',
+  })
   @ValidateNested()
   @Type(() => StudentDTO)
     student: StudentDTO;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'User\'s credentials',
+  })
   @ValidateNested()
   @Type(() => UserDTO)
     user: UserDTO;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    description: 'Information about user\'s telegram',
+  })
   @IsOptional()
     telegram?: TelegramDTO;
 }

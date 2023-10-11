@@ -11,12 +11,13 @@ import {
 } from '@nestjs/common';
 import {
   ApiTags,
-  ApiBasicAuth,
   ApiBearerAuth,
   ApiOkResponse,
   ApiBadRequestResponse,
   ApiUnauthorizedResponse,
-  ApiTooManyRequestsResponse, ApiParam,
+  ApiTooManyRequestsResponse,
+  ApiParam,
+  ApiBody,
 } from '@nestjs/swagger';
 import { AuthLoginResponse } from '../responses/AuthLoginResponse';
 import { AuthRefreshResponse } from '../responses/AuthRefreshResponse';
@@ -38,6 +39,7 @@ import { ApiEndpoint } from '../../utils/documentation/decorators';
 import { JWTTokensResponse } from '../responses/JWTTokensResponse';
 import { GroupByIdPipe } from '../pipes/GroupByIdPipe';
 import { IsAvailableResponse, IsRegisteredResponse } from '../responses/TokenResponse';
+import { LoginDTO } from '../dtos/LoginDTO';
 
 @ApiTags('Auth')
 @Controller({
@@ -50,16 +52,24 @@ export class AuthController {
     private userService: UserService,
   ) {}
 
-  @ApiBasicAuth()
+  @ApiBearerAuth()
   @ApiOkResponse({
     type: AuthLoginResponse,
   })
   @ApiUnauthorizedResponse({
     description: `\n
     UnauthorizedException:
+      Unauthorized
+    UnauthorizedException:
       The email hasn't verified yet`,
   })
-  @UseGuards(LocalAuthGuard)
+  @ApiBody({
+    type: LoginDTO,
+  })
+  @ApiEndpoint({
+    summary: 'Login to the user account',
+    guards: LocalAuthGuard,
+  })
   @Post('/login')
   async login (@Request() req) {
     return this.authService.login(req.user);
@@ -67,8 +77,19 @@ export class AuthController {
 
   @ApiBearerAuth()
   @ApiOkResponse()
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidBodyException:
+      Token cannot be empty
+      Telegram id cannot be empty`,
+  })
   @ApiEndpoint({
-    summary: 'Register new user throw the telegram',
+    summary: 'Register user\'s telegram account',
     guards: TelegramGuard,
   })
   @Post('/registerTelegram')
@@ -82,22 +103,25 @@ export class AuthController {
   @ApiBadRequestResponse({
     description: `\n
     InvalidBodyException:
-      Group id can not be empty
+      Group id cannot be empty
       First name is not correct (A-Я(укр.)\\-' ), or too short (min: 2), or too long (max: 40)
-      First name is empty
-      Middle name is not correct (A-Я(укр.)\\-' ), or too short (min: 2), or too long (max: 40)
+      First name cannot be empty
+      Middle name is not correct (A-Я(укр.)\\-' ), or too long (max: 40)
       Last name is not correct (A-Я(укр.)\\-' ), or too short (min: 2), or too long (max: 40)
-      Last name is empty
+      Last name cannot be empty
+      isCaptain must be a boolean
+      isCaptain cannot be empty
       Username is not correct (a-zA-Z0-9_), or too short (min: 2), or too long (max: 40)
-      Username is empty
+      Username cannot be empty
       Email is not an email
-      Email is empty
+      Email cannot be empty
       The password must be between 8 and 50 characters long, include at least 1 digit and 1 letter
-      password is empty
-      first_name can not be empty
-      hash can not be empty
-      photo_url can not be empty
-      username can not be empty
+      Password cannot be empty
+      Auth date must be a number
+      First name cannot be empty
+      Hash cannot be empty
+      Telegram id must be a bigint
+      Username cannot be empty
                   
     AlreadyRegisteredException:
       User is already registered
@@ -115,6 +139,9 @@ export class AuthController {
     TooManyActionsException:
       Too many actions. Try later`,
   })
+  @ApiEndpoint({
+    summary: 'Register new user',
+  })
   @Post('/register')
   async register (@Body() body: RegistrationDTO) {
     return this.authService.register(body);
@@ -126,10 +153,11 @@ export class AuthController {
   @ApiBadRequestResponse({
     description: `\n
     InvalidBodyException:
-      first_name can not be empty
-      hash can not be empty
-      photo_url can not be empty
-      username can not be empty
+      Auth date must be a number
+      First name cannot be empty
+      Hash cannot be empty
+      Telegram id must be a bigint
+      Username cannot be empty
       
     InvalidEntityIdException
       User with such id is not found`,
@@ -138,6 +166,9 @@ export class AuthController {
     description: `\n
     InvalidTelegramCredentialsException:
       Your telegram hash is invalid`,
+  })
+  @ApiEndpoint({
+    summary: 'Login with Telegram',
   })
   @Post('/loginTelegram')
   async loginTelegram (@Body() body: TelegramDTO) {
@@ -148,7 +179,15 @@ export class AuthController {
   @ApiOkResponse({
     type: AuthRefreshResponse,
   })
-  @UseGuards(JwtGuard)
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiEndpoint({
+    summary: 'Refresh access token',
+    guards: JwtGuard,
+  })
   @Post('/refresh')
   async refresh (@Request() req) {
     return this.authService.refresh(req.user);
@@ -171,12 +210,16 @@ export class AuthController {
       
     InvalidBodyException:
       The password must be between 8 and 50 characters long, include at least 1 digit and 1 letter
-      Password is empty
+      Old password cannot be empty
+      New password cannot be empty
 
     PasswordRepeatException:
       The passwords are the same`,
   })
-  @UseGuards(JwtGuard)
+  @ApiEndpoint({
+    summary: 'Change old password',
+    guards: JwtGuard,
+  })
   @Put('/updatePassword')
   async updatePassword (
     @Body() body: UpdatePasswordDTO,
