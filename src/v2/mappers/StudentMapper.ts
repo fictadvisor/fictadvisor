@@ -20,10 +20,12 @@ export class StudentMapper {
       avatar: student.user.avatar,
       telegramId: student.user.telegramId,
       group: !hasGroup ? undefined : {
-        ...student.group,
+        id: student.groupId,
+        code: student.group.code,
         state: student.state,
         role: this.getGroupRole(student.roles)?.name,
       },
+      state: student.user.state,
     };
   }
 

@@ -20,6 +20,7 @@ import {
   ApiBadRequestResponse,
   ApiOkResponse,
   ApiUnauthorizedResponse,
+  ApiParam,
 } from '@nestjs/swagger';
 import { GroupResponse, GroupsResponse } from '../responses/GroupResponse';
 import { GroupStudentsResponse } from '../responses/GroupStudentsResponse';
@@ -34,6 +35,7 @@ import { GroupsWithTelegramGroupsResponse } from '../responses/GroupsWithTelegra
 import { TelegramGuard } from '../../security/TelegramGuard';
 import { URLResponse } from '../responses/URLResponse';
 import { GroupStudentsQueryDTO } from '../dtos/GroupStudentsQueryDTO';
+import { ApiEndpoint } from '../../utils/documentation/decorators';
 
 @ApiTags('Groups')
 @Controller({
@@ -445,19 +447,21 @@ export class GroupController {
       @Param('groupId', GroupByIdPipe) groupId: string,
   ) {
     const students = await this.groupService.getUnverifiedStudents(groupId);
-
     return { students };
   }
 
-  @Access(PERMISSION.GROUPS_$GROUPID_TRANSFER)
   @ApiBearerAuth()
-  @Post('/:groupId/transferCaptain')
-  @ApiOkResponse()
+  @ApiOkResponse({
+    type: OrdinaryStudentResponse,
+  })
   @ApiBadRequestResponse({
     description: `\n
     InvalidEntityIdException:
       User with such id is not found
-      Group with such id is not found`,
+      Group with such id is not found
+      
+    StudentIsAlreadyCaptainException:
+      The student is already the captain of the group`,
   })
   @ApiUnauthorizedResponse({
     description: `\n
@@ -469,38 +473,21 @@ export class GroupController {
     NoPermissionException:
       You do not have permission to perform this action`,
   })
-  async transferCaptain (
-    @Param('groupId', GroupByIdPipe) groupId: string,
-    @Body() { studentId }: SwitchCaptainDTO,
-  ) {
-    await this.groupService.switchCaptain(groupId, studentId);
-  }
-
-  @Access(PERMISSION.GROUPS_CAPTAIN_SWITCH)
-  @ApiBearerAuth()
+  @ApiParam({
+    name: 'groupId',
+    required: true,
+    description: 'Id of a group',
+  })
+  @ApiEndpoint({
+    summary: 'Make a student a captain',
+    permissions: [PERMISSION.GROUPS_CAPTAIN_SWITCH, PERMISSION.GROUPS_$GROUPID_TRANSFER],
+  })
   @Post('/:groupId/switchCaptain')
-  @ApiOkResponse()
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidEntityIdException:
-      User with such id is not found
-      Group with such id is not found`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException:
-      You do not have permission to perform this action`,
-  })
   async switchCaptain (
     @Param('groupId', GroupByIdPipe) groupId: string,
     @Body() { studentId }: SwitchCaptainDTO,
   ) {
-    await this.groupService.switchCaptain(groupId, studentId);
+    return this.groupService.switchCaptain(groupId, studentId);
   }
 
   @Access(PERMISSION.GROUPS_$GROUPID_LIST_GET)

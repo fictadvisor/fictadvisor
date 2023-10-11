@@ -150,6 +150,33 @@ export class UserService {
     });
   }
 
+  async changeGroupRole (studentId: string, name: RoleName) {
+    const userRole = await this.getGroupRoleDB(studentId);
+
+    const groupRole = await this.roleRepository.find({
+      groupRole: {
+        groupId: userRole.groupId,
+      },
+      name,
+    });
+
+    await this.studentRepository.updateById(studentId, {
+      roles: {
+        update: {
+          where: {
+            studentId_roleId: {
+              roleId: userRole.id,
+              studentId,
+            },
+          },
+          data: {
+            roleId: groupRole.id,
+          },
+        },
+      },
+    });
+  }
+
   async changeGroup (studentId: string, groupId: string) {
     const prevRole = await this.getGroupRole(studentId);
     const nextRole = await this.roleRepository.find({
@@ -293,7 +320,6 @@ export class UserService {
     if (student) return this.studentMapper.getStudent(student);
     const caller = new Error().stack;
     await this.telegramAPI.sendMessage(`getUser error:\n ${caller}`);
-
   }
 
   async getUserByTelegramId (telegramId: bigint) {

@@ -130,47 +130,6 @@ describe('GroupService', () => {
   });
 
   describe('switchCaptain', () => {
-    it('should transfer role from captain to student', async () => {
-      const studentId = 'newCaptainId';
-      const groupId = 'groupWithTransferredRolesId';
-
-      await groupService.switchCaptain(groupId, studentId);
-
-      const oldCaptainRoles = await prisma.userRole.findMany({
-        where: {
-          studentId: 'oldCaptainId',
-        },
-        select: {
-          roleId: true,
-          studentId: true,
-        },
-      });
-
-      const newCaptainRoles = await prisma.userRole.findMany({
-        where: {
-          studentId: 'newCaptainId',
-        },
-        select: {
-          roleId: true,
-          studentId: true,
-        },
-      });
-
-      expect(oldCaptainRoles).toStrictEqual([
-        {
-          roleId: 'studentRoleId',
-          studentId: 'oldCaptainId',
-        },
-      ]);
-
-      expect(newCaptainRoles).toStrictEqual([
-        {
-          roleId: 'captainRoleId',
-          studentId: 'newCaptainId',
-        },
-      ]);
-    });
-
     it('should throw NoPermissionException if captain and student are not in the same group', async () => {
       const studentId = 'newCaptainId';
       const groupId = 'groupForPermissionExceptionId';

@@ -24,6 +24,7 @@ import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityId
 import { FileService } from '../../utils/files/FileService';
 import { GroupStudentsQueryDTO, SortQGSParam } from '../dtos/GroupStudentsQueryDTO';
 import { OrderQAParam } from '../dtos/OrderQAParam';
+import { StudentIsAlreadyCaptainException } from '../../utils/exceptions/StudentIsAlreadyCaptainException';
 
 const ROLE_LIST = [
   {
@@ -185,29 +186,7 @@ export class GroupService {
       throw new NoPermissionException();
     }
 
-    const groupRole = await this.roleRepository.find({
-      groupRole: {
-        groupId,
-      },
-      name: roleName,
-    });
-    const userRole = await this.userService.getGroupRoleDB(userId);
-
-    await this.studentRepository.updateById(userId, {
-      roles: {
-        update: {
-          where: {
-            studentId_roleId: {
-              roleId: userRole.id,
-              studentId: userId,
-            },
-          },
-          data: {
-            roleId: groupRole.id,
-          },
-        },
-      },
-    });
+    await this.userService.changeGroupRole(userId, roleName);
   }
 
   async removeStudent (groupId: string, userId: string, reqUser: User) {
@@ -304,55 +283,15 @@ export class GroupService {
   async switchCaptain (groupId: string, studentId: string) {
     const isStudentInGroup = await this.isStudentInGroup(groupId, studentId);
     if (!isStudentInGroup) throw new NoPermissionException();
-    const { id: oldCaptainId } = await this.getCaptain(groupId);
+    const oldCaptain = await this.getCaptain(groupId);
 
-    const newCaptainRole = await this.roleRepository.find({
-      groupRole: {
-        groupId,
-      },
-      userRoles: {
-        some: {
-          studentId,
-        },
-      },
-    });
+    if (oldCaptain) {
+      if (oldCaptain.id === studentId) throw new StudentIsAlreadyCaptainException();
+      await this.userService.changeGroupRole(oldCaptain.id, RoleName.STUDENT);
+    }
 
-    const oldCaptainRole = await this.roleRepository.find({
-      groupRole: {
-        groupId,
-      },
-      userRoles: {
-        some: {
-          studentId: oldCaptainId,
-        },
-      },
-    });
-
-    await this.roleRepository.updateById(newCaptainRole.id, {
-      userRoles: {
-        updateMany: {
-          where: {
-            studentId,
-          },
-          data: {
-            studentId: oldCaptainId,
-          },
-        },
-      },
-    });
-
-    await this.roleRepository.updateById(oldCaptainRole.id, {
-      userRoles: {
-        updateMany: {
-          where: {
-            studentId: oldCaptainId,
-          },
-          data: {
-            studentId,
-          },
-        },
-      },
-    });
+    await this.userService.changeGroupRole(studentId, RoleName.CAPTAIN);
+    return this.userService.getUser(studentId);
   }
 
   private async isStudentInGroup (groupId: string, studentId: string) {
