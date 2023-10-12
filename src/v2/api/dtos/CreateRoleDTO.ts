@@ -5,15 +5,15 @@ import { validationOptionsMsg } from '../../utils/GLOBALS';
 
 export class CreateRoleDTO {
   @ApiProperty({
+    description: 'The name of role',
     enum: RoleName,
-    description: 'Type of a role',
   })
   @IsEnum(RoleName, validationOptionsMsg('Name is not an enum'))
   @IsNotEmpty(validationOptionsMsg('Name can not be empty'))
     name: RoleName;
 
   @ApiProperty({
-    description: 'Type of a role access',
+    description: 'The priority or importance of the role',
   })
   @IsNumber({}, validationOptionsMsg('Weight is not a number'))
   @IsNotEmpty(validationOptionsMsg('Weight can not be empty'))

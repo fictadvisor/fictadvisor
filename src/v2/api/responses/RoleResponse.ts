@@ -4,34 +4,39 @@ import { RoleName } from '@prisma/client';
 
 export class BaseRoleResponse {
   @ApiProperty({
-    description: 'Id of a user role',
+    description: 'The id of a role',
   })
     id: string;
 
   @ApiProperty({
+    description: 'The name of the role',
     enum: RoleName,
-    description: 'Type of a role',
   })
     name: RoleName;
 
   @ApiProperty({
-    description: 'Type of a role access',
+    description: 'The priority or importance of the role',
   })
     weight: number;
+
+  @ApiProperty({
+    description: 'Brief information about a specific role',
+  })
+    displayName: string;
 }
 
 export class RoleResponse extends BaseRoleResponse {
   @ApiProperty({
+    description: 'An array of permissions granted to a role',
     type: [MappedGrant],
-    description: 'List of permissions for roles',
   })
     grants: MappedGrant[];
 }
 
 export class RolesResponse {
   @ApiProperty({
+    description: 'An array of information about the role',
     type: [RoleResponse],
-    description: 'List of users roles',
   })
     roles: RoleResponse[];
 }

@@ -5,17 +5,23 @@ import { validationOptionsMsg } from '../../utils/GLOBALS';
 
 export class UpdateRoleDTO {
   @ApiPropertyOptional({
+    description: 'The name of the role',
     enum: RoleName,
-    description: 'Type of a role',
   })
   @IsEnum(RoleName, validationOptionsMsg('Name is not an enum'))
   @IsOptional()
     name?: RoleName;
 
   @ApiPropertyOptional({
-    description: 'Type of a role access',
+    description: 'The priority or importance of the role',
   })
   @IsNumber({}, validationOptionsMsg('Weight is not a number'))
   @IsOptional()
     weight?: number;
+
+  @ApiPropertyOptional({
+    description: 'Brief information about a specific role',
+  })
+  @IsOptional()
+    displayName?: string;
 }

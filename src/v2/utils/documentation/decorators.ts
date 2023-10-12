@@ -19,8 +19,11 @@ export function ApiEndpoint ({ summary, permissions, guards }: ApiEndpointParams
     guards = typeof guards === 'function' ? [guards] : guards;
   }
 
-  return applyDecorators(
-    ApiOperation({ summary, description }),
-    Access(permissions ?? [], ...guards ?? []),
-  );
+  const decorators = [ApiOperation({ summary, description })];
+
+  if (permissions || guards) {
+    decorators.push(Access(permissions ?? [], ...guards ?? []));
+  }
+
+  return applyDecorators(...decorators);
 }

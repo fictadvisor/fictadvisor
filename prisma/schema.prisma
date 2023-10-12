@@ -295,17 +295,18 @@ enum RoleName {
 }
 
 model Role {
-  id        String     @id @default(uuid())
-  name      RoleName
-  weight    Int
-  userRoles UserRole[]
-  grants    Grant[]
-  groupRole GroupRole?
-  parentId  String?
-  parent    Role?      @relation("Inheritance", fields: [parentId], references: [id])
-  children  Role[]     @relation("Inheritance")
-  createdAt DateTime?  @default(now()) @map("created_at")
-  updatedAt DateTime?  @default(now()) @updatedAt @map("updated_at")
+  id          String     @id @default(uuid())
+  name        RoleName
+  weight      Int
+  userRoles   UserRole[]
+  grants      Grant[]
+  groupRole   GroupRole?
+  parentId    String?
+  parent      Role?      @relation("Inheritance", fields: [parentId], references: [id])
+  children    Role[]     @relation("Inheritance")
+  createdAt   DateTime?  @default(now()) @map("created_at")
+  updatedAt   DateTime?  @default(now()) @updatedAt @map("updated_at")
+  displayName String?    @map("display_name")
 
   @@map("roles")
 }

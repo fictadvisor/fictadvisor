@@ -14,6 +14,7 @@ export class RoleMapper {
       name: role.name,
       weight: role.weight,
       grants,
+      displayName: role.displayName,
     };
   }
 
@@ -22,6 +23,7 @@ export class RoleMapper {
       id: role.id,
       name: role.name,
       weight: role.weight,
+      displayName: role.displayName,
     };
   }
 
@@ -30,6 +32,7 @@ export class RoleMapper {
       id: role.id,
       name: role.name,
       weight: role.weight,
+      displayName: role.displayName,
     };
   }
 
@@ -44,6 +47,7 @@ export class RoleMapper {
       name: role.name,
       weight: role.weight,
       grants,
+      displayName: role.displayName,
     };
   }
 

@@ -40,10 +40,10 @@ export class RoleController {
   @ApiParam({
     name: 'roleId',
     required: true,
-    description: 'Id of a user role',
+    description: 'Id of a role to get information about it',
   })
   @ApiEndpoint({
-    summary: 'Request role by id',
+    summary: 'Get information about the specific role by id',
   })
   @Get('/:roleId')
   async getRole (
@@ -57,7 +57,7 @@ export class RoleController {
     type: RolesResponse,
   })
   @ApiEndpoint({
-    summary: 'Get all roles',
+    summary: 'Get information about each role',
   })
   @Get()
   async getAll () {
@@ -83,24 +83,24 @@ export class RoleController {
   @ApiBadRequestResponse({
     description: `\n
     InvalidEntityIdException: 
-      parentId with such id is not found
+      ParentId with such id is not found
       
     InvalidBodyException:
       Name is not an enum
-      Name cat not be empty
+      Name cannot be empty
       Weight is not a number 
-      Weight can not be empty 
-      Permission can not be empty 
+      Weight cannot be empty 
+      Permission cannot be empty 
       Set is not boolean`,
   })
   @ApiEndpoint({
-    summary: 'Create role',
+    summary: 'Create an information about the role',
     permissions: PERMISSION.ROLES_CREATE,
   })
   @Post()
   async create (
     @Body() body: CreateRoleWithGrantsDTO,
-    @Request() req
+    @Request() req,
   ) {
     const role = await this.roleService.createRole(body, req.user.id);
     return this.roleMapper.create(role);
@@ -124,7 +124,7 @@ export class RoleController {
   @ApiBadRequestResponse({
     description: `\n
     InvalidBodyException:
-      Permission can not be empty
+      Permission cannot be empty
       Set is not a boolean`,
   })
   @Post('/:roleId/grants')
@@ -164,10 +164,10 @@ export class RoleController {
   @ApiParam({
     name: 'roleId',
     required: true,
-    description: 'Id of a user role',
+    description: 'Id of a role to delete it',
   })
   @ApiEndpoint({
-    summary: 'Delete role by id',
+    summary: 'Delete the role',
     permissions: PERMISSION.ROLES_$ROLEID_DELETE,
   })
   @Delete('/:roleId')
@@ -201,11 +201,11 @@ export class RoleController {
   @ApiParam({
     name: 'roleId',
     required: true,
-    description: 'Id of a user role',
+    description: 'Id of a role to update it',
   })
   @ApiEndpoint({
-    summary: 'Update role by id',
-    permissions: PERMISSION.ROLES_$ROLEID_UPDATE,
+    summary: 'Update the role',
+    permissions: PERMISSION.ROLES_$ROLEID_DELETE,
   })
   @Patch('/:roleId')
   async update (

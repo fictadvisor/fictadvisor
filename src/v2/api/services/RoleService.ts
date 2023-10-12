@@ -35,7 +35,7 @@ export class RoleService {
     });
   }
 
-  private getUserHigherRoles (userId, weight) {
+  private getUserHigherRoles (userId: string, weight: number) {
     return this.roleRepository.findMany({
       where: {
         userRoles: {
@@ -95,7 +95,7 @@ export class RoleService {
 
     const parent = await this.roleRepository.findById(role.parentId);
     if (!parent) {
-      throw new InvalidEntityIdException('parentId');
+      throw new InvalidEntityIdException('ParentId');
     }
     if (parent.weight > role.weight) {
       throw new NoPermissionException();

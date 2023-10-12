@@ -1,13 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class MappedGrant {
-  @ApiProperty({ description: 'Id of a permission' })
+  @ApiProperty({
+    description: 'The id of grant',
+  })
     id: string;
 
-  @ApiProperty({ description: 'Permission accessibility' })
+  @ApiProperty({
+    description: 'Established right or not',
+  })
     set: boolean;
 
-  @ApiProperty({ description: 'Type of a permission' })
+  @ApiProperty({
+    description: 'A string that specifies the permission itself',
+  })
     permission: string;
 }
 
