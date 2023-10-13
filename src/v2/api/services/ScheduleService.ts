@@ -21,6 +21,8 @@ import { EventFiltrationDTO } from '../dtos/EventFiltrationDTO';
 import { GeneralEventFiltrationDTO } from '../dtos/GeneralEventFiltrationDTO';
 import { UpdateEventDTO } from '../dtos/UpdateEventDTO';
 import { TeacherRoleAdapter } from '../../mappers/TeacherRoleAdapter';
+import { StudentRepository } from '../../database/repositories/StudentRepository';
+import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
 
 @Injectable()
 export class ScheduleService {
@@ -35,6 +37,7 @@ export class ScheduleService {
     private rozParser: RozParser,
     private scheduleParser: ScheduleParser,
     private userService: UserService,
+    private studentRepository: StudentRepository,
   ) {}
 
   async parse (parserType, page, period, groups) {
@@ -128,17 +131,17 @@ export class ScheduleService {
   }
 
 
-  async getGeneralGroupEventsByDay (id: string, day: number) {
+  async getGroupEventsByDay (groupId: string, day: number, userId: string) {
     const week = await this.dateService.getCurrentWeek();
 
     day = day ? day : (await this.dateService.getCurrentDay()).day;
 
     const { startOfDay } = await this.dateService.getSpecificDayInWeek(week, day);
 
-    const result = await this.getGeneralGroupEvents(id, week);
+    const events  = await this.getGroupEventsForTelegram(groupId, week, userId);
 
     return {
-      events: result.events.filter((event) => {
+      events: events.filter((event) => {
         const startTime = new Date(event.startTime);
         startTime.setHours(0, 0, 0, 0);
         return (startOfDay.getTime() - startTime.getTime()) % WEEK === 0;
@@ -365,28 +368,7 @@ export class ScheduleService {
     let groupEvents = await this.getAllGroupEvents(groupId, week, query);
 
     if (query.showOwnSelective) {
-      const disciplines = await this.disciplineRepository.findMany({
-        where: {
-          groupId: user.group.id,
-          OR: [
-            {
-              isSelective: false,
-            }, {
-              selectiveDisciplines: {
-                some: {
-                  studentId: userId,
-                },
-              },
-            },
-          ],
-        },
-      });
-
-      groupEvents = groupEvents.filter((event) => {
-        const disciplineId = event.lessons[0]?.disciplineType.disciplineId;
-        if (!disciplineId) return true;
-        return some(disciplines, 'id', disciplineId);
-      });
+      groupEvents = await this.filtrateOwnSelective(groupId, userId, groupEvents);
     }
 
     week = week || await this.dateService.getCurrentWeek();
@@ -397,7 +379,32 @@ export class ScheduleService {
       startTime: new Date(startOfWeek),
     };
   }
-  
+
+  private async filtrateOwnSelective (groupId: string, userId: string, events: DbEvent[]) {
+    const disciplines = await this.disciplineRepository.findMany({
+      where: {
+        groupId: groupId,
+        OR: [
+          {
+            isSelective: false,
+          }, {
+            selectiveDisciplines: {
+              some: {
+                studentId: userId,
+              },
+            },
+          },
+        ],
+      },
+    });
+
+    return events.filter((event) => {
+      const disciplineId = event.lessons[0]?.disciplineType.disciplineId;
+      if (!disciplineId) return true;
+      return some(disciplines, 'id', disciplineId);
+    });
+  }
+
   private async removeTeachers (teachers: DbDiscipline_DisciplineTeacher[], disciplineTypeId: string) {
     for (const teacher of teachers) {
       if (every(teacher.roles, 'disciplineTypeId', disciplineTypeId)) {
@@ -659,11 +666,34 @@ export class ScheduleService {
     }
   }
 
-  async getGeneralFortnightEvents (groupId: string, week: number) {
+  async getFortnightEvents (groupId: string, week: number, userId: string) {
     week = week || await this.dateService.getCurrentWeek();
     const [firstWeek, secondWeek] = week % 2 === 0 ? [week-1, week] : [week, week+1];
-    const { events: firstWeekEvents } = await this.getGeneralGroupEvents(groupId, firstWeek);
-    const { events: secondWeekEvents } = await this.getGeneralGroupEvents(groupId, secondWeek);
+    const firstWeekEvents = await this.getGroupEventsForTelegram(groupId, firstWeek, userId);
+    const secondWeekEvents = await this.getGroupEventsForTelegram(groupId, secondWeek, userId);
     return { firstWeekEvents, secondWeekEvents };
+  }
+
+  async getGroupEventsForTelegram (groupId: string, week: number, userId: string) {
+    const student = userId
+      ? await this.studentRepository.findById(userId)
+      : undefined;
+
+    if (student && student.groupId !== groupId) throw new NoPermissionException();
+
+
+    week = week || await this.dateService.getCurrentWeek();
+    const eventFiltration = {
+      addLecture: true,
+      addPractice: true,
+      addLaboratory: true,
+      otherEvents: true,
+    };
+
+    const events = await this.getAllGroupEvents(groupId, week, eventFiltration);
+
+    return userId
+      ? await this.filtrateOwnSelective(groupId, userId, events)
+      : events;
   }
 }

@@ -2,12 +2,17 @@ import { ApiProperty } from '@nestjs/swagger';
 import { DisciplineTypeEnum } from '@prisma/client';
 
 export class DisciplineTypeResponse {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Discipline type id',
+  })
     id: string;
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Discipline\'s id',
+  })
     disciplineId: string;
   @ApiProperty({
     enum: DisciplineTypeEnum,
+    description: 'Discipline type',
   })
     name: DisciplineTypeEnum;
 }

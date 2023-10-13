@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { GeneralEventInfoResponse, MainEventInfoResponse } from './MainEventInfoResponse';
-import { TelegramGeneralEventInfoResponse } from './TelegramGeneralEventInfoResponse';
+import { TelegramEventInfoResponse } from './TelegramGeneralEventInfoResponse';
 
 export class EventsResponse {
   @ApiProperty({
@@ -32,21 +32,24 @@ export class GeneralEventsResponse {
     startTime: Date;
 }
 
-export class TelegramGeneralEventsResponse {
+export class TelegramEventsResponse {
   @ApiProperty({
-    type: [TelegramGeneralEventInfoResponse],
+    type: [TelegramEventInfoResponse],
+    description: 'Return all events',
   })
-    events: TelegramGeneralEventInfoResponse[];
+    events: TelegramEventInfoResponse[];
 }
 
-export class FortnightGeneralEventsResponse {
+export class FortnightEventsResponse {
   @ApiProperty({
-    type: [TelegramGeneralEventInfoResponse],
+    type: [TelegramEventInfoResponse],
+    description: 'Return all events of first week',
   })
-    firstWeekEvents: TelegramGeneralEventInfoResponse[];
+    firstWeekEvents: TelegramEventInfoResponse[];
 
   @ApiProperty({
-    type: [TelegramGeneralEventInfoResponse],
+    type: [TelegramEventInfoResponse],
+    description: 'Return all events of second week',
   })
-    secondWeekEvents: TelegramGeneralEventInfoResponse[];
+    secondWeekEvents: TelegramEventInfoResponse[];
 }

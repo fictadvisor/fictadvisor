@@ -4,6 +4,7 @@ import { DbDiscipline } from '../database/entities/DbDiscipline';
 import { TeacherRoleAdapter } from './TeacherRoleAdapter';
 import { some } from '../utils/ArrayUtil';
 import { EventResponse } from '../api/responses/EventResponse';
+import { DisciplineType } from '@prisma/client';
 
 @Injectable()
 export class ScheduleMapper {
@@ -14,7 +15,7 @@ export class ScheduleMapper {
         name: event.name,
         startTime: event.startTime,
         endTime: event.endTime,
-        disciplineType: event.lessons[0] ? event.lessons[0].disciplineType : null,
+        disciplineType: this.getDisciplineType(event.lessons[0]?.disciplineType),
       }))
       .sort((firstEvent, secondEvent) => firstEvent.startTime.getTime() - secondEvent.startTime.getTime());
   }
@@ -26,7 +27,7 @@ export class ScheduleMapper {
         name: event.name,
         startTime: event.startTime,
         endTime: event.endTime,
-        disciplineType: event.lessons[0] ? event.lessons[0].disciplineType : null,
+        disciplineType: this.getDisciplineType(event.lessons[0]?.disciplineType),
         url: event.url,
       }))
       .sort((firstEvent, secondEvent) => firstEvent.startTime.getTime() - secondEvent.startTime.getTime());
@@ -53,6 +54,15 @@ export class ScheduleMapper {
           middleName: teacher.middleName,
           lastName: teacher.lastName,
         })) || null,
+    };
+  }
+
+  private getDisciplineType (disciplineType: DisciplineType) {
+    if (!disciplineType) return null;
+    return {
+      id: disciplineType.id,
+      disciplineId: disciplineType.disciplineId,
+      name: disciplineType.name,
     };
   }
 }

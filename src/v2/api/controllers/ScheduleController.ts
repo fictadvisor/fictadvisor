@@ -9,7 +9,6 @@ import {
   Post,
   Query,
   Request,
-  UseGuards,
 } from '@nestjs/common';
 import { ScheduleService } from '../services/ScheduleService';
 import { GroupByIdPipe } from '../pipes/GroupByIdPipe';
@@ -32,9 +31,9 @@ import { EventResponse } from '../responses/EventResponse';
 import { GroupByEventGuard } from '../../security/group-guard/GroupByEventGuard';
 import {
   EventsResponse,
-  FortnightGeneralEventsResponse,
+  FortnightEventsResponse,
   GeneralEventsResponse,
-  TelegramGeneralEventsResponse,
+  TelegramEventsResponse,
 } from '../responses/EventsResponse';
 import { TelegramGuard } from '../../security/TelegramGuard';
 import { EventFiltrationDTO } from '../dtos/EventFiltrationDTO';
@@ -43,6 +42,8 @@ import { EventFiltrationPipe } from '../pipes/EventFiltrationPipe';
 import { EventByIdPipe } from '../pipes/EventByIdPipe';
 import { UpdateEventDTO } from '../dtos/UpdateEventDTO';
 import { EventPipe } from '../pipes/EventPipe';
+import { UserByIdPipe } from '../pipes/UserByIdPipe';
+import { ApiEndpoint } from '../../utils/documentation/decorators';
 
 @ApiTags('Schedule')
 @Controller({
@@ -128,15 +129,10 @@ export class ScheduleController {
     };
   }
 
-  @UseGuards(TelegramGuard)
   @ApiBearerAuth()
-  @Get('/groups/:groupId/general/day')
-  @ApiQuery({
-    name: 'day',
-    required: false,
-  })
+  @Get('/groups/:groupId/day')
   @ApiOkResponse({
-    type: TelegramGeneralEventsResponse,
+    type: TelegramEventsResponse,
   })
   @ApiBadRequestResponse({
     description: `\n
@@ -153,11 +149,31 @@ export class ScheduleController {
     NoPermissionException:
       You do not have permission to perform this action`,
   })
-  async getGeneralGroupEventsByDay (
-    @Param('groupId', GroupByIdPipe) id: string,
+  @ApiParam({
+    name: 'groupId',
+    required: true,
+    description: 'Id of a group which event you want to get',
+  })
+  @ApiQuery({
+    name: 'day',
+    required: false,
+    description: 'Day of a week which event you want to get',
+  })
+  @ApiQuery({
+    name: 'userId',
+    required: false,
+    description: 'Id of a user which event you want to get',
+  })
+  @ApiEndpoint({
+    summary: 'Get day events for telegram',
+    guards: TelegramGuard,
+  })
+  async getGroupEventsByDay (
+    @Param('groupId', GroupByIdPipe) groupId: string,
     @Query('day') day: number,
+    @Query('userId', UserByIdPipe) userId: string,
   ) {
-    const result = await this.scheduleService.getGeneralGroupEventsByDay(id, day);
+    const result = await this.scheduleService.getGroupEventsByDay(groupId, day, userId);
     return {
       events: this.scheduleMapper.getTelegramEvents(result.events),
     };
@@ -394,14 +410,9 @@ export class ScheduleController {
     }
   }
 
-  @UseGuards(TelegramGuard)
   @ApiBearerAuth()
-  @ApiQuery({
-    name: 'week',
-    required: false,
-  })
   @ApiOkResponse({
-    type: FortnightGeneralEventsResponse,
+    type: FortnightEventsResponse,
   })
   @ApiBadRequestResponse({
     description: `\n
@@ -421,12 +432,32 @@ export class ScheduleController {
     NoPermissionException:
       You do not have permission to perform this action`,
   })
-  @Get('/groups/:groupId/general/fortnight')
-  async getGeneralFortnightEvents (
+  @ApiParam({
+    name: 'groupId',
+    required: true,
+    description: 'Id of a group which event you want to get',
+  })
+  @ApiQuery({
+    name: 'week',
+    required: false,
+    description: 'Number of week which event you want to get',
+  })
+  @ApiQuery({
+    name: 'userId',
+    required: false,
+    description: 'Id of a user which event you want to get',
+  })
+  @ApiEndpoint({
+    summary: 'Get fortnight events for telegram',
+    guards: TelegramGuard,
+  })
+  @Get('/groups/:groupId/fortnight')
+  async getFortnightEvents (
     @Param('groupId', GroupByIdPipe) groupId: string,
     @Query('week') week: number,
+    @Query('userId', UserByIdPipe) userId: string,
   ) {
-    const result = await this.scheduleService.getGeneralFortnightEvents(groupId, week);
+    const result = await this.scheduleService.getFortnightEvents(groupId, week, userId);
 
     return {
       firstWeekEvents: this.scheduleMapper.getTelegramEvents(result.firstWeekEvents),
@@ -434,11 +465,10 @@ export class ScheduleController {
     };
   }
 
-  @UseGuards(TelegramGuard)
   @ApiBearerAuth()
-  @Get('/groups/:groupId/general/week')
+  @Get('/groups/:groupId/week')
   @ApiOkResponse({
-    type: TelegramGeneralEventsResponse,
+    type: TelegramEventsResponse,
   })
   @ApiBadRequestResponse({
     description: `\n
@@ -458,17 +488,33 @@ export class ScheduleController {
     NoPermissionException:
       You do not have permission to perform this action`,
   })
+  @ApiParam({
+    name: 'groupId',
+    required: true,
+    description: 'Id of a group which event you want to get',
+  })
   @ApiQuery({
     name: 'week',
     required: false,
+    description: 'Number of week which event you want to get',
   })
-  async getGeneralGroupEventsByWeek (
-      @Param('groupId', GroupByIdPipe) id: string,
-      @Query('week') week: number,
+  @ApiQuery({
+    name: 'userId',
+    required: false,
+    description: 'Id of a user which event you want to get',
+  })
+  @ApiEndpoint({
+    summary: 'Get week events for telegram',
+    guards: TelegramGuard,
+  })
+  async getGroupEventsByWeek (
+    @Param('groupId', GroupByIdPipe) groupId: string,
+    @Query('week') week: number,
+    @Query('userId', UserByIdPipe) userId: string,
   ) {
-    const result = await this.scheduleService.getGeneralGroupEvents(id, week);
+    const result = await this.scheduleService.getGroupEventsForTelegram(groupId, week, userId);
     return {
-      events: this.scheduleMapper.getTelegramEvents(result.events),
+      events: this.scheduleMapper.getTelegramEvents(result),
     };
   }
 }
