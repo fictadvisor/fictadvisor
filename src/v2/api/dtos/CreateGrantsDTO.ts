@@ -4,12 +4,13 @@ import { validationOptionsMsg } from '../../utils/GLOBALS';
 import { Type } from 'class-transformer';
 
 export class CreateGrantDTO {
-  @ApiProperty()
+  @ApiProperty({ description: 'Type of a permission' })
   @IsNotEmpty(validationOptionsMsg('Permission can not be empty'))
     permission: string;
 
   @ApiPropertyOptional({
     default: true,
+    description: 'Permission accessibility',
   })
   @IsBoolean(validationOptionsMsg('Set is not a boolean'))
   @IsOptional()

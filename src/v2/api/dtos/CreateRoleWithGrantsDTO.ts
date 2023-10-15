@@ -7,13 +7,14 @@ import { CreateGrantDTO } from './CreateGrantsDTO';
 export class CreateRoleWithGrantsDTO extends CreateRoleDTO {
   @ApiPropertyOptional({
     type: [CreateGrantDTO],
+    description: 'List of permissions for roles',
   })
   @ValidateNested({ each: true })
   @Type(() => CreateGrantDTO)
   @IsOptional()
     grants?: CreateGrantDTO[];
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ description: 'Id of a parent permission' })
   @IsUUID()
   @IsOptional()
     parentId?: string;

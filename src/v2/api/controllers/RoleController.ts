@@ -5,7 +5,15 @@ import { CreateRoleWithGrantsDTO } from '../dtos/CreateRoleWithGrantsDTO';
 import { CreateGrantsDTO } from '../dtos/CreateGrantsDTO';
 import { RoleMapper } from '../../mappers/RoleMapper';
 import { Access } from '../../security/Access';
-import { ApiBearerAuth, ApiForbiddenResponse, ApiOkResponse, ApiTags, ApiBadRequestResponse, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiOkResponse,
+  ApiTags,
+  ApiBadRequestResponse,
+  ApiUnauthorizedResponse,
+  ApiParam,
+} from '@nestjs/swagger';
 import {
   RoleResponse,
   RolesResponse,
@@ -13,6 +21,7 @@ import {
 } from '../responses/RoleResponse';
 import { GrantResponse, MappedGrantsResponse } from '../responses/GrantResponse';
 import { PERMISSION } from '../../security/PERMISSION';
+import { ApiEndpoint } from '../../utils/documentation/decorators';
 
 @ApiTags('Roles')
 @Controller({
@@ -28,6 +37,14 @@ export class RoleController {
   @ApiOkResponse({
     type: RoleResponse,
   })
+  @ApiParam({
+    name: 'roleId',
+    required: true,
+    description: 'Id of a user role',
+  })
+  @ApiEndpoint({
+    summary: 'Request role by id',
+  })
   @Get('/:roleId')
   async getRole (
     @Param('roleId') roleId: string,
@@ -39,6 +56,9 @@ export class RoleController {
   @ApiOkResponse({
     type: RolesResponse,
   })
+  @ApiEndpoint({
+    summary: 'Get all roles',
+  })
   @Get()
   async getAll () {
     const roles = await this.roleService.getAll();
@@ -46,7 +66,6 @@ export class RoleController {
     return { roles: roleMap };
   }
 
-  @Access(PERMISSION.ROLES_CREATE)
   @ApiBearerAuth()
   @ApiOkResponse({
     type: RoleResponse,
@@ -73,6 +92,10 @@ export class RoleController {
       Weight can not be empty 
       Permission can not be empty 
       Set is not boolean`,
+  })
+  @ApiEndpoint({
+    summary: 'Create role',
+    permissions: PERMISSION.ROLES_CREATE,
   })
   @Post()
   async create (
@@ -124,7 +147,6 @@ export class RoleController {
     return { grants: grantsMap };
   }
 
-  @Access(PERMISSION.ROLES_$ROLEID_DELETE)
   @ApiBearerAuth()
   @ApiOkResponse({
     type: BaseRoleResponse,
@@ -139,6 +161,15 @@ export class RoleController {
     NoPermissionException:
       You do not have permission to perform this action`,
   })
+  @ApiParam({
+    name: 'roleId',
+    required: true,
+    description: 'Id of a user role',
+  })
+  @ApiEndpoint({
+    summary: 'Delete role by id',
+    permissions: PERMISSION.ROLES_$ROLEID_DELETE,
+  })
   @Delete('/:roleId')
   async delete (
     @Param('roleId') roleId: string,
@@ -147,7 +178,6 @@ export class RoleController {
     return this.roleMapper.delete(role);
   }
 
-  @Access(PERMISSION.ROLES_$ROLEID_UPDATE)
   @ApiBearerAuth()
   @ApiOkResponse({
     type: BaseRoleResponse,
@@ -167,6 +197,15 @@ export class RoleController {
     InvalidBodyException:
       Name is not an enum
       Weight is not a number`,
+  })
+  @ApiParam({
+    name: 'roleId',
+    required: true,
+    description: 'Id of a user role',
+  })
+  @ApiEndpoint({
+    summary: 'Update role by id',
+    permissions: PERMISSION.ROLES_$ROLEID_UPDATE,
   })
   @Patch('/:roleId')
   async update (
