@@ -1,7 +1,6 @@
 import { Body, Controller, Delete, Get, Patch, Param, Post } from '@nestjs/common';
 import { PollService } from '../services/PollService';
 import { CreateQuestionWithRolesDTO } from '../dtos/CreateQuestionWithRolesDTO';
-import { Access } from 'src/v2/security/Access';
 import { PERMISSION } from '../../security/PERMISSION';
 import { QuestionByIdPipe } from '../pipes/QuestionByIdPipe';
 import { QuestionByRoleAndIdPipe } from '../pipes/QuestionByRoleAndIdPipe';
@@ -13,6 +12,7 @@ import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiForbiddenResponse,
+  ApiUnauthorizedResponse,
   ApiOkResponse,
   ApiParam,
   ApiTags,
@@ -20,6 +20,7 @@ import {
 import { QuestionWithRolesResponse } from '../responses/QuestionWithRolesResponse';
 import { PollDisciplineTeachersResponse } from '../responses/PollDisciplineTeachersResponse';
 import { TeacherRole } from '@prisma/client';
+import { ApiEndpoint } from 'src/v2/utils/documentation/decorators';
 
 @ApiTags('Poll')
 @Controller({
@@ -32,23 +33,33 @@ export class PollController {
     private questionMapper: QuestionMapper,
   ) {}
 
-  @Access(PERMISSION.QUESTIONS_CREATE)
   @ApiBearerAuth()
-  @Post('/questions')
   @ApiOkResponse({
     type: QuestionWithRolesResponse,
   })
   @ApiBadRequestResponse({
-    description: `InvalidBodyException:\n
-                  Visibility parameter is not a boolean
-                  Visibility parameter can not be empty
-                  Requirement parameter is not a boolean
-                  Requirement parameter can not be empty`,
+    description: `\n
+    InvalidBodyException:
+      Visibility must be boolean
+      Visibility cannot be empty
+      Requirement must be boolean
+      Requirement cannot be empty`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
   })
   @ApiForbiddenResponse({
-    description: `NoPermissionException:\n
-                  You do not have permission to perform this action`,
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
   })
+  @ApiEndpoint({
+    summary: 'Create a new question',
+    permissions: PERMISSION.QUESTIONS_CREATE,
+  })
+  @Post('/questions')
   async create (
     @Body() body : CreateQuestionWithRolesDTO,
   ) {
@@ -56,40 +67,71 @@ export class PollController {
     return this.questionMapper.getQuestionWithRoles(question);
   }
 
-  @Access(PERMISSION.USERS_$USERID_POLL_TEACHERS_GET)
   @ApiBearerAuth()
-  @Get('/teachers/:userId')
   @ApiOkResponse({
     type: PollDisciplineTeachersResponse,
   })
   @ApiBadRequestResponse({
-    description: `InvalidEntityIdException:\n 
-                  User with such id is not found`,
+    description: `\n
+    InvalidEntityIdException:
+      User with such id is not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
   })
   @ApiForbiddenResponse({
-    description: `NoPermissionException:\n
-                  You do not have permission to perform this action`,
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
   })
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: 'Id of user`s role to get teacher of his discipline',
+  })
+  @ApiEndpoint({
+    summary: 'Get teachers that were polled by the user',
+    permissions: PERMISSION.USERS_$USERID_POLL_TEACHERS_GET,
+  })
+  @Get('/teachers/:userId')
   async getPollDisciplineTeachers (
     @Param('userId', UserByIdPipe) userId: string,
   ): Promise<PollDisciplineTeachersResponse> {
     return this.pollService.getDisciplineTeachers(userId);
   }
 
-  @Access(PERMISSION.QUESTIONS_DELETE)
+
   @ApiBearerAuth()
-  @Delete('/questions/:questionId')
   @ApiOkResponse({
     type: QuestionWithRolesResponse,
   })
   @ApiBadRequestResponse({
-    description: `InvalidEntityIdException:\n
-                  Question with such id is not found`,
+    description: `\n
+    InvalidEntityIdException:
+      Question with such id is not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
   })
   @ApiForbiddenResponse({
-    description: `NoPermissionException:\n
-                  You do not have permission to perform this action`,
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
   })
+  @ApiParam({
+    name: 'questionId',
+    required: true,
+    description: 'Id of question you want to delete',
+  })
+  @ApiEndpoint({
+    summary: 'Delete question by Id',
+    permissions: PERMISSION.QUESTIONS_DELETE,
+  })
+  @Delete('/questions/:questionId')
   async delete (
     @Param('questionId', QuestionByIdPipe) questionId: string,
   ) {
@@ -97,20 +139,39 @@ export class PollController {
     return this.questionMapper.getQuestionWithRoles(question);
   }
 
-  @Access(PERMISSION.QUESTIONS_UPDATE)
+
   @ApiBearerAuth()
-  @Patch('/questions/:questionId')
   @ApiOkResponse({
     type: QuestionWithRolesResponse,
   })
   @ApiBadRequestResponse({
-    description: `InvalidBodyException:Type is not an enum
-                  InvalidEntityIdException: Question with such id is not found`,
+    description: `\n
+    InvalidBodyException:
+      Type must be enum
+
+    InvalidEntityIdException:
+      Question with such id is not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
   })
   @ApiForbiddenResponse({
-    description: `NoPermissionException:\n
-                  You do not have permission to perform this action`,
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
   })
+  @ApiParam({
+    name: 'questionId',
+    required: true,
+    description: 'Id of question you want to update',
+  })
+  @ApiEndpoint({
+    summary: 'Request to update information about the question',
+    permissions: PERMISSION.QUESTIONS_UPDATE,
+  })
+  @Patch('/questions/:questionId')
   async update (
     @Param('questionId', QuestionByIdPipe) questionId: string,
     @Body() body: UpdateQuestionWithRolesDTO,
@@ -119,14 +180,23 @@ export class PollController {
     return this.questionMapper.getQuestionWithRoles(question);
   }
 
-  @Get('/questions/:questionId')
   @ApiOkResponse({
     type: QuestionWithRolesResponse,
   })
   @ApiBadRequestResponse({
-    description: `InvalidEntityIdException:\n
-                  question with such id is not found`,
+    description: `\n
+    InvalidEntityIdException:
+      Question with such id is not found`,
   })
+  @ApiParam({
+    name: 'questionId', 
+    required: true,
+    description: 'Id of question you want to get',
+  })
+  @ApiEndpoint({
+    summary: 'Request to get a question by ID',
+  })
+  @Get('/questions/:questionId')
   async getQuestion (
     @Param('questionId', QuestionByIdPipe) questionId: string,
   ) {
@@ -134,23 +204,41 @@ export class PollController {
     return this.questionMapper.getQuestionWithRoles(question);
   }
 
-  @Access(PERMISSION.QUESTIONS_ROLES_GIVE)
   @ApiBearerAuth()
-  @Post('/questions/:questionId/roles')
   @ApiOkResponse({
     type: QuestionWithRolesResponse,
   })
   @ApiBadRequestResponse({
-    description: `InvalidBodyException: Role can not be empty
-                  InvalidBodyException: Visibility parameter is not a boolean
-                  InvalidBodyException: Visibility parameter can not be empty
-                  InvalidBodyException: Requirement parameter is not a boolean
-                  InvalidEntityIdException: question with such id is not found`,
+    description: `\n
+    InvalidBodyException: 
+      Role cannot be empty
+      Visibility must be boolean
+      Visibility cannot be empty
+      Requirement must be boolean
+
+    InvalidEntityIdException:
+      Question with such id is not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
   })
   @ApiForbiddenResponse({
-    description: `NoPermissionException:\n
-                  You do not have permission to perform this action`,
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
   })
+  @ApiParam({
+    name: 'questionId',
+    required: true,
+    description: 'Id of the question to which you want to attach the role',
+  })
+  @ApiEndpoint({
+    summary: 'Give the role to the question by id',
+    permissions: PERMISSION.QUESTIONS_ROLES_GIVE,
+  })
+  @Post('/questions/:questionId/roles')
   async giveRole (
     @Param('questionId', QuestionByIdPipe) questionId: string,
     @Body() body: CreateQuestionRoleDTO,
@@ -159,36 +247,47 @@ export class PollController {
     return this.questionMapper.getQuestionWithRoles(question);
   }
 
-  @Access(PERMISSION.QUESTIONS_ROLES_DELETE)
   @ApiBearerAuth()
-  @Delete('/questions/:questionId/roles/:role')
+  @ApiOkResponse({
+    type: QuestionWithRolesResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException:
+      Question with such id is not found
+      QuestionRole was not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
   @ApiParam({
     name: 'role',
     enum: [TeacherRole.LECTURER, TeacherRole.LABORANT, TeacherRole.PRACTICIAN],
     required: true,
+    description: 'Question`s role, that you want to delete',
   })
   @ApiParam({
     name: 'questionId',
     type: String,
     required: true,
+    description: 'Id of question, where you want to delete role',
   })
-  @ApiOkResponse({
-    type: QuestionWithRolesResponse,
+  @ApiEndpoint({
+    summary: 'Request to delete attached role in question',
+    permissions: PERMISSION.QUESTIONS_ROLES_DELETE,
   })
-  @ApiBadRequestResponse({
-    description: `InvalidEntityIdException:\n
-                  Question with such id is not found
-                  QuestionRole is not found`,
-  })
-  @ApiForbiddenResponse({
-    description: `NoPermissionException:\n
-                  You do not have permission to perform this action`,
-  })
+  @Delete('/questions/:questionId/roles/:role')
   async deleteRole (
     @Param(QuestionByRoleAndIdPipe) params,
   ) {
     const question = await this.pollService.deleteRole(params.questionId, params.role);
     return this.questionMapper.getQuestionWithRoles(question);
   }
-
 }

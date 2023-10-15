@@ -9,6 +9,7 @@ export class UpdateQuestionWithRolesDTO extends UpdateQuestionDTO {
 	@Type(() => CreateQuestionRoleDTO)
 	@ApiProperty({
 	  type: [CreateQuestionRoleDTO],
+	  description: 'Id of question with role to update',
 	})
 	  roles?: CreateQuestionRoleDTO[];
 }
