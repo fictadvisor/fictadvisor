@@ -1,12 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CathedraResponse {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'The id of the cathedra',
+  })
     id: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'The name of the cathedra',
+  })
     name: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'The abbreviation of the cathedra',
+  })
     abbreviation: string;
 }

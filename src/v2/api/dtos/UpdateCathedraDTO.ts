@@ -1,23 +1,25 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, Matches, MaxLength, MinLength } from 'class-validator';
 import { createRegex, UKR_REGEX, UKRSPEC_REGEX, validationOptionsMsg } from '../../utils/GLOBALS';
 
-export class CreateCathedraDTO {
+export class UpdateCathedraDTO {
   @ApiPropertyOptional({
-    description: 'The name of the cathedra',
+    description: 'The updated name of the cathedra',
   })
+  @IsOptional()
   @MinLength(5, validationOptionsMsg('Cathedra name is too short (min: 5)'))
   @MaxLength(40, validationOptionsMsg('Cathedra name is too long (max: 40)'))
-  @IsOptional()
+  @IsNotEmpty(validationOptionsMsg('Cathedra name can not be empty'))
   @Matches(
     createRegex(UKR_REGEX, UKRSPEC_REGEX),
     validationOptionsMsg('Cathedra name is incorrect (A-Я(укр.)\\-\' )'),
   )
     name?: string;
 
-  @ApiProperty({
-    description: 'The abbreviation of the cathedra',
+  @ApiPropertyOptional({
+    description: 'The updated abbreviation of the cathedra',
   })
+  @IsOptional()
   @MinLength(2, validationOptionsMsg('Abbreviation is too short (min: 2)'))
   @MaxLength(6, validationOptionsMsg('Abbreviation is too long (max: 6)'))
   @IsNotEmpty(validationOptionsMsg('Abbreviation can not be empty'))
@@ -25,5 +27,5 @@ export class CreateCathedraDTO {
     createRegex(UKR_REGEX, UKRSPEC_REGEX),
     validationOptionsMsg('Abbreviation is incorrect (A-Я(укр.)\\-\' )'),
   )
-    abbreviation: string;
+    abbreviation?: string;
 }

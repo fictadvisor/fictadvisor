@@ -11,7 +11,7 @@ export class CathedraByIdPipe implements PipeTransform {
   async transform (cathedraId: string) {
     const cathedra = await this.cathedraRepository.findById(cathedraId);
     if (!cathedra) {
-      throw new InvalidEntityIdException('cathedra'); 
+      throw new InvalidEntityIdException('Cathedra');
     }
     return cathedraId;
   }

@@ -461,7 +461,7 @@ export class TeacherController {
   @ApiBadRequestResponse({
     description: `InvalidEntityIdException:\n
                   teacher with such id is not found
-                  cathedra with such id is not found`,
+                  Cathedra with such id is not found`,
   })
   @ApiForbiddenResponse({
     description: `NoPermissionException:\n

@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
 import { CathedraRepository } from '../../database/repositories/CathedraRepository';
+import { CreateCathedraDTO } from '../dtos/CreateCathedraDTO';
+import { UpdateCathedraDTO } from '../dtos/UpdateCathedraDTO';
+import { DbCathedra } from '../../database/entities/DbCathedra';
 
 @Injectable()
 export class CathedraService {
@@ -8,7 +10,11 @@ export class CathedraService {
     private cathedraRepository: CathedraRepository,
   ) {}
 
-  async create (body: Prisma.CathedraUncheckedCreateInput) {
+  async create (body: CreateCathedraDTO): Promise<DbCathedra> {
     return this.cathedraRepository.create(body);
+  }
+
+  async update (cathedraId: string, body: UpdateCathedraDTO): Promise<DbCathedra>  {
+    return this.cathedraRepository.updateById(cathedraId, body);
   }
 }

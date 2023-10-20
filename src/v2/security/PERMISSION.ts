@@ -5,6 +5,7 @@ export enum PERMISSION {
   ADMISSION_PRIORITIES_APPROVE = 'admission.priorities.approve',
 
   CATHEDRAS_CREATE = 'cathedras.create',
+  CATHEDRAS_UPDATE = 'cathedras.update',
 
   DISCIPLINE_TEACHERS_CREATE = 'disciplineTeachers.create',
   DISCIPLINE_TEACHERS_UPDATE = 'disciplineTeachers.update',

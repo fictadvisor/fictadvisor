@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../PrismaService';
 import { Prisma } from '@prisma/client';
+import { PrismaService } from '../PrismaService';
+import { DbCathedra } from '../entities/DbCathedra';
 
 @Injectable()
 export class CathedraRepository {
@@ -9,19 +10,31 @@ export class CathedraRepository {
   ) {}
 
   private include = {
-    teachers: true,
+    teachers: {
+      include: {
+        teacher: true,
+      },
+    },
   };
 
-  async create (data: Prisma.CathedraUncheckedCreateInput) {
+  async create (data: Prisma.CathedraCreateInput): Promise<DbCathedra> {
     return this.prisma.cathedra.create({
       data,
       include: this.include,
     });
   }
 
-  async findById (id: string) {
+  async findById (id: string): Promise<DbCathedra> {
     return this.prisma.cathedra.findFirst({
       where: { id },
+      include: this.include,
+    });
+  }
+
+  async updateById (id: string, data: Prisma.CathedraUpdateInput): Promise<DbCathedra> {
+    return this.prisma.cathedra.update({
+      where: { id },
+      data,
       include: this.include,
     });
   }

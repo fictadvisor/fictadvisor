@@ -12,6 +12,7 @@ import { ScheduleMapper } from '../mappers/ScheduleMapper';
 import { GroupMapper } from '../mappers/GroupMapper';
 import { EntrantMapper } from '../mappers/EntrantMapper';
 import { TelegramGroupMapper } from '../mappers/TelegramGroupMapper';
+import { CathedraMapper } from '../mappers/CathedraMapper';
 
 @Module({
   providers: [
@@ -28,6 +29,7 @@ import { TelegramGroupMapper } from '../mappers/TelegramGroupMapper';
     ScheduleMapper,
     GroupMapper,
     TelegramGroupMapper,
+    CathedraMapper,
   ],
   exports: [
     DisciplineMapper,
@@ -43,6 +45,7 @@ import { TelegramGroupMapper } from '../mappers/TelegramGroupMapper';
     ScheduleMapper,
     GroupMapper,
     TelegramGroupMapper,
+    CathedraMapper,
   ],
 })
 export class MapperModule {}
