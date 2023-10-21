@@ -3,10 +3,13 @@ import { QueryObserverBaseResult } from 'react-query';
 import {
   ArrowDownCircleIcon,
   ArrowUpCircleIcon,
+  CheckCircleIcon,
   TrashIcon,
 } from '@heroicons/react/24/outline';
 import { useMediaQuery } from '@mui/material';
 
+import AlertButton from '@/components/common/ui/alert-button';
+import { AlertButtonVariant } from '@/components/common/ui/alert-button/types';
 import Button from '@/components/common/ui/button-mui';
 import {
   ButtonColor,
@@ -87,14 +90,14 @@ const EditingColumn: FC<EditingColumnProps> = ({ student, refetch }) => {
     return (
       <>
         <Popup
-          hasCross
+          icon={<CheckCircleIcon />}
           open={changePopupOpen}
           title={
             student.role === UserGroupRole.MODERATOR
               ? 'Зробити студентом'
               : 'Зробити заст. старости'
           }
-          content={`Ви дійсно бажаєте зробити користувача ${student.fullName} ${
+          content={`Ти дійсно бажаєш зробити ${student.fullName} ${
             student.role === UserGroupRole.MODERATOR
               ? 'студентом'
               : 'заст. старости'
@@ -120,26 +123,24 @@ const EditingColumn: FC<EditingColumnProps> = ({ student, refetch }) => {
           }
         />
         <Popup
+          icon={<TrashIcon />}
           open={deletePopupOpen}
-          hasCross
           title="Видалити користувача"
-          content={`Чи дійсно ви бажаєте видалити користувача ${student.fullName}? Якщо ви випадково видалите користувача, йому треба буде відправити повторний запит до групи.`}
+          content={`Чи дійсно ти бажаєш видалити користувача ${student.fullName}? Якщо ти випадково видалиш користувача, йому треба буде відправити повторний запит до групи.`}
           onClose={() => setDeletePopupOpen(false)}
           firstButton={
             <Button
               size={ButtonSize.SMALL}
               text="Скасувати"
               color={ButtonColor.PRIMARY}
-              variant={ButtonVariant.OUTLINE}
+              variant={ButtonVariant.TEXT}
               onClick={() => setDeletePopupOpen(false)}
             />
           }
           secondButton={
-            <Button
-              size={ButtonSize.SMALL}
-              text="Так"
-              color={ButtonColor.PRIMARY}
-              variant={ButtonVariant.FILLED}
+            <AlertButton
+              text="Видалити"
+              variant={AlertButtonVariant.ERROR_OUTLINE}
               onClick={handleDelete}
             />
           }

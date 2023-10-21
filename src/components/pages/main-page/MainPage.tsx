@@ -64,7 +64,6 @@ const MainPage: FC<MainPageProps> = ({ data }) => {
             <BannerImage />
           </Box>
         </Box>
-        <GreetingBlock />
         <Box sx={stylesMUI.resourcesSection}>
           <Typography sx={stylesMUI.resourcesSectionTitle}>
             Студентські ресурси

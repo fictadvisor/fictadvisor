@@ -81,7 +81,7 @@ const ChangePasswordForm = () => {
             <Input
               sx={styles.input}
               label="Підтвердження паролю"
-              placeholder="підтверди новий пароль"
+              placeholder="підтвердь новий пароль"
               type={InputType.PASSWORD}
               name="confirmationPassword"
               disabled={!!errors.oldPassword || !!errors.newPassword}

@@ -44,7 +44,9 @@ const RegisterForm: FC<GetAllResponse> = ({ groups }) => {
         } else {
           await AuthService.register(transformData(data));
           StorageUtil.deleteTelegramInfo();
-          await router.push(`/register/email-verification?email=${email}`);
+          await router.push(
+            `/register/email-verification?email=${encodeURIComponent(email)}`,
+          );
         }
       } catch (error) {
         displayError(error);

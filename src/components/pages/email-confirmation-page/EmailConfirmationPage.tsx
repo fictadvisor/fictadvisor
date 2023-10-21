@@ -28,7 +28,7 @@ const EmailConfirmationPage: FC<EmailConfirmationPageProps> = ({
 }) => {
   const { displayError } = useToastError();
   const router = useRouter();
-  const email = String(router.query.email).toLowerCase();
+  const email = decodeURIComponent(String(router.query.email)).toLowerCase();
   const emailText =
     apiMethodName === 'forgotPassword'
       ? `Ми надіслали листа для зміни пароля на адресу ${email}`

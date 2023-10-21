@@ -50,3 +50,10 @@ export const infoContainer: SxProps<Theme> = {
     height: 'fit-content',
   },
 };
+
+export const linkContainer: SxProps<Theme> = {
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  maxWidth: '255px',
+};

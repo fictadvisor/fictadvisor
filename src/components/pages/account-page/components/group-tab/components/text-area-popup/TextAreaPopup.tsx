@@ -45,7 +45,7 @@ export const TextAreaPopup: React.FC<TextAreaPopup> = ({
         />
         <Typography sx={styles.title}>Додати студента</Typography>
         <Typography sx={styles.description}>
-          Ти можеш додати декількох студентів одразу, ввівши їх електронні
+          Ти можеш додати декількох студентів одразу, ввівши їхні електронні
           адреси через Enter або кому. Також, якщо скопіювати весь рядок
           електронних пошт з таблиці, вони зручно сформуються в один список.
         </Typography>

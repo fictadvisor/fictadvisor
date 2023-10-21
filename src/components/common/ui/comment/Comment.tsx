@@ -17,7 +17,7 @@ const Comment: FC<CommentProps> = ({ comment, semester, year }) => {
     <Box sx={styles.wrapper}>
       <Typography sx={styles.text}>{comment}</Typography>
       <Typography sx={styles.date}>
-        {semesterMap[semester]} семестр {year}
+        {semesterMap[semester]} семестр {year} - {year + 1}
       </Typography>
     </Box>
   );

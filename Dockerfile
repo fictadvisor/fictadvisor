@@ -8,6 +8,10 @@ WORKDIR /app
 
 COPY . ./
 
+ARG NODE_ENV=${NODE_ENV}
+RUN if [ $NODE_ENV = "development" ]; then \
+    cp /app/.env.development /app/.env.production; fi
+
 RUN yarn install --prod && yarn build
 
 ###################

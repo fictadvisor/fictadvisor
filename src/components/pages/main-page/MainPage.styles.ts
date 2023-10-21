@@ -119,14 +119,12 @@ export const infoSectionImage: SxProps<Theme> = {
     },
     color: theme.palette.grey['300'],
     clipPath:
-      'polygon(58% -10%, 100% 30%, 100% 96%, 88% 96%, 75% 100%, 0% 90%, 2% 75%, 4% 72%, 4% 50%)',
+      'polygon(59% -10%, 100% 30%, 100% 96%, 88% 105%, 60% 110%, 0% 100%, -2% 75%, 0% 68%, 2% 50%)',
     transition: 'color 225ms cubic-bezier(0.37, 0, 0.63, 1)',
-    ...((!isSafari || !isIOS) && {
-      '&:hover': {
-        color: theme.palette.white.main,
-        filter: 'url("#filter_neon")',
-      },
-    }),
+    '&:hover': {
+      color: theme.palette.white.main,
+      filter: 'url("#filter_neon")',
+    },
   },
 };
 

@@ -8,6 +8,7 @@ const config: StorybookConfig = {
     '@storybook/addon-onboarding',
     '@storybook/addon-interactions',
   ],
+  staticDirs:[{from:'../public/icons', to: '/icons' }],
   framework: {
     name: '@storybook/nextjs',
     options: {},

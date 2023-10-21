@@ -20,7 +20,11 @@ const ForgotPasswordForm: FC = () => {
     try {
       const email = values.email.toLowerCase();
       await AuthAPI.forgotPassword({ email });
-      await router.push(`/password-recovery/email-verification?email=${email}`);
+      await router.push(
+        `/password-recovery/email-verification?email=${encodeURIComponent(
+          email,
+        )}`,
+      );
     } catch (error) {
       displayError(error);
     }

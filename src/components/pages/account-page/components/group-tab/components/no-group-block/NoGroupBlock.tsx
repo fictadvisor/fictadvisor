@@ -1,12 +1,14 @@
 import React, { FC } from 'react';
 import { useQuery } from 'react-query';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, useMediaQuery } from '@mui/material';
 import { Form, Formik } from 'formik';
 
 import Alert from '@/components/common/ui/alert';
 import { AlertType } from '@/components/common/ui/alert/types';
 import Button from '@/components/common/ui/button-mui';
 import { ButtonSize } from '@/components/common/ui/button-mui/types';
+import Divider from '@/components/common/ui/divider';
+import { DividerTextAlign } from '@/components/common/ui/divider/types';
 import Checkbox from '@/components/common/ui/form/with-formik/checkbox';
 import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown';
 import Progress from '@/components/common/ui/progress';
@@ -17,11 +19,13 @@ import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import GroupAPI from '@/lib/api/group/GroupAPI';
 import { RequestNewGroupBody } from '@/lib/api/user/types/RequestNewGroupBody';
 import UserAPI from '@/lib/api/user/UserAPI';
+import theme from '@/styles/theme';
 import { UserGroupState } from '@/types/user';
 
 import * as muiStyles from './NoGroupBlock.styles';
 
 const NoGroupBlock: FC = () => {
+  const isTablet = useMediaQuery(theme.breakpoints.down('mobileMedium'));
   const { displayError } = useToastError();
   const { user, update } = useAuthentication();
   const { isLoading, data } = useQuery(['groups'], () => GroupAPI.getAll(), {
@@ -51,27 +55,31 @@ const NoGroupBlock: FC = () => {
           </Box>
           <Box sx={muiStyles.alertDesktopPending}>
             <Alert
-              title="Ваша заявка ще не прийнята, очікуйте підтвердження"
+              title="Твоя заявка ще не прийнята, очікуй підтвердження"
               type={AlertType.INFO}
             />
           </Box>
           <Box>
-            <Box sx={muiStyles.divisionWhite} />
-            <Typography variant="h4">Або виберіть іншу групу</Typography>
-            <Box sx={muiStyles.divisionWhite} />
+            <Divider
+              sx={muiStyles.divider}
+              text="Або обери іншу групу"
+              textAlign={
+                isTablet ? DividerTextAlign.LEFT : DividerTextAlign.CENTER
+              }
+            />
           </Box>
         </>
       ) : (
         <>
           <Box sx={muiStyles.alertDesktop}>
             <Alert
-              title={'Ваша заявка відхилена'}
+              title={'Твоя заявка відхилена'}
               type={AlertType.ERROR}
-              description={'Оберіть іншу групу нижче та надішліть новий запит'}
+              description={'Обери іншу групу нижче та надішли новий запит'}
             />
           </Box>
           <Box sx={muiStyles.alertMobile}>
-            <Alert title={'Ваша заявка відхилена'} type={AlertType.ERROR} />
+            <Alert title={'Твоя заявка відхилена'} type={AlertType.ERROR} />
           </Box>
         </>
       )}

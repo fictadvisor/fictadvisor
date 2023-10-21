@@ -1,4 +1,5 @@
 import { FC, useCallback } from 'react';
+import { isAxiosError } from 'axios';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { useRouter } from 'next/router';
 
@@ -13,6 +14,7 @@ import { validationSchema } from '@/components/pages/login-page/components/login
 import styles from '@/components/pages/login-page/components/login-form-block/LoginFormBlock.module.scss';
 import useAuthentication from '@/hooks/use-authentication';
 import AuthService from '@/lib/services/auth';
+import getErrorMessage from '@/lib/utils/getErrorMessage';
 
 import * as sxStyles from './LoginForm.styles';
 
@@ -32,11 +34,18 @@ const LoginForm: FC = () => {
         await AuthService.login(data);
         await update();
         await push(redirect ? redirect.replace('~', '/') : '/');
-      } catch (e) {
-        setErrors({
-          username: 'Користувача з таким паролем та поштою не знайдено',
-          password: 'Користувача з таким паролем та поштою не знайдено',
-        });
+      } catch (error: unknown) {
+        const message = getErrorMessage(error);
+        if (message === 'The password is incorrect') {
+          setErrors({
+            password: 'Неправильний пароль',
+          });
+        } else {
+          setErrors({
+            username: 'Користувача з таким паролем та поштою не знайдено',
+            password: 'Користувача з таким паролем та поштою не знайдено',
+          });
+        }
       }
     },
     [push, redirect, update],

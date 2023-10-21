@@ -23,4 +23,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
+          build-args:
+            NODE_ENV=${{ github.ref_name == 'master' && 'production' || 'development' }}
           tags: fictadvisor/fictadvisor-web

@@ -24,4 +24,6 @@ jobs:
         with:
           context: .
           push: true
+          build-args:
+            NODE_ENV=${{ github.ref_name == 'master' && 'production' || 'development' }}
           tags: fictadvisor/fictadvisor-web:${{ github.ref_name }}

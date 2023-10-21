@@ -4,23 +4,21 @@ import { SxProps } from '@mui/system';
 import theme from '@/styles/theme';
 
 export const content: SxProps<Theme> = {
+  paddingBottom: {
+    mobile: '36px',
+    mobileMedium: '363px',
+  },
   width: {
     mobile: '100%;',
     mobileMedium: 'fit-content',
   },
 };
 
-export const division: SxProps<Theme> = {
-  display: 'flex',
-  margin: '16px 0 24px 0',
-  alignItems: 'center',
+export const divider: SxProps<Theme> = {
+  typography: theme.typography.body1,
+  padding: '16px 0 12px',
 };
 
-export const divisionWhite: SxProps<Theme> = {
-  flexGrow: '1',
-  backgroundColor: 'white',
-  height: '1px',
-};
 export const textContent: SxProps<Theme> = {
   typography: theme.typography.h4Bold,
   marginBottom: '24px',
@@ -36,6 +34,7 @@ export const alertDesktopPending: SxProps<Theme> = {
   width: 'fit-content',
 };
 export const alertMobile: SxProps<Theme> = {
+  marginBottom: '20px',
   display: {
     mobile: 'flex',
     mobileMedium: 'none',
@@ -43,22 +42,9 @@ export const alertMobile: SxProps<Theme> = {
 };
 
 export const alertDesktop: SxProps<Theme> = {
-  display: 'none',
-};
-
-export const alert: SxProps<Theme> = {
-  marginBottom: '20px',
-
-  textWrap: {
-    mobile: 'normal',
-    desktop: 'auto',
-  },
-  height: {
-    mobile: 'fit-content',
-    desktop: 'auto',
-  },
+  marginBottom: '16px',
   display: {
     mobile: 'none',
-    mobileMedium: 'auto',
+    mobileMedium: 'flex',
   },
 };

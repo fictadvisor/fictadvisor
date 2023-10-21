@@ -125,6 +125,7 @@ const ScheduleInfoCard: FC<ScheduleInfoCardProps> = ({
           <Skeleton {...skeletonProps} width={250} height={20} />
         ) : event?.url ? (
           <Link
+            sx={styles.linkContainer}
             href={event?.url as string}
             text={event?.url}
             target={'_blank'}
