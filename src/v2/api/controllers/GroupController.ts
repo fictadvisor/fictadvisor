@@ -101,7 +101,7 @@ export class GroupController {
       Unauthorized`,
   })
   @UseGuards(TelegramGuard)
-  @Get('/telegramGroups')
+  @Get('/telegram/groups')
   async getGroupsWithTelegramGroups () {
     const groups = await this.groupService.getGroupsWithTelegramGroups();
     return this.groupMapper.getGroupsWithTelegramGroups(groups);
