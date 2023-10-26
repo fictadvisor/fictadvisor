@@ -29,7 +29,7 @@ const DesktopHeader: FC<DesktopHeaderProps> = ({ isLoggedIn, user }) => {
     <AppBar sx={styles.headerContainer}>
       <Link href="/" component={NextLink} sx={styles.logoContainer}>
         <Image
-          src={'/icons/fly-logo.svg'}
+          src={'/icons/halloween-logo.svg'}
           alt="FA logo"
           width={197}
           height={28}

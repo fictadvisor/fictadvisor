@@ -104,12 +104,14 @@ const RegisterForm: FC<GetAllResponse> = ({ groups }) => {
             type={InputType.PASSWORD}
             placeholder="user2000"
             name="password"
+            maxLength={32}
           />
           <Input
             label="Підтвердження пароля"
             type={InputType.PASSWORD}
             placeholder="user2000"
             name="passwordConfirmation"
+            maxLength={32}
           />
           <Checkbox
             label={'Погоджуюсь на обробку персональних даних'}
