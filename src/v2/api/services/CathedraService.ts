@@ -3,6 +3,8 @@ import { CathedraRepository } from '../../database/repositories/CathedraReposito
 import { CreateCathedraDTO } from '../dtos/CreateCathedraDTO';
 import { UpdateCathedraDTO } from '../dtos/UpdateCathedraDTO';
 import { DbCathedra } from '../../database/entities/DbCathedra';
+import { QueryAllDTO } from '../../utils/QueryAllDTO';
+import { DatabaseUtils } from '../../database/DatabaseUtils';
 
 @Injectable()
 export class CathedraService {
@@ -20,5 +22,18 @@ export class CathedraService {
 
   async delete (id: string): Promise<DbCathedra> {
     return this.cathedraRepository.deleteById(id);
+  }
+
+  async getAll (body: QueryAllDTO) {
+    const search = DatabaseUtils.getSearch(body, 'name', 'abbreviation');
+    const sort = DatabaseUtils.getSort(body, 'name');
+
+    const data = {
+      ...sort,
+      where: {
+        ...search,
+      },
+    };
+    return await DatabaseUtils.paginate<DbCathedra>(this.cathedraRepository, body, data);
   }
 }

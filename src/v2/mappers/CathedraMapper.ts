@@ -1,6 +1,7 @@
 import { DbCathedra } from '../database/entities/DbCathedra';
 import { CathedraWithTeachersResponse } from '../api/responses/CathedraWithTeachersResponse';
 import { CathedraResponse } from '../api/responses/CathedraResponse';
+import { CathedraWithNumberOfTeachersResponse } from '../api/responses/CathedraWithNumberOfTeachersResponse';
 
 export class CathedraMapper {
   getCathedra (cathedra: DbCathedra): CathedraResponse {
@@ -24,5 +25,14 @@ export class CathedraMapper {
         rating: t.rating.toNumber(),
       })),
     };
+  }
+
+  getCathedraWithNumberOfTeachers (cathedras: DbCathedra[]): CathedraWithNumberOfTeachersResponse[] {
+    return cathedras.map((cathedra) => ({
+      id: cathedra.id,
+      name: cathedra.name,
+      abbreviation: cathedra.abbreviation,
+      teachers: cathedra.teachers.length,
+    }));
   }
 }

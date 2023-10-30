@@ -8,7 +8,7 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
-import { Body, Controller, Delete, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Param, Patch, Post, Get, Query } from '@nestjs/common';
 import { PERMISSION } from '../../security/PERMISSION';
 import { CathedraService } from '../services/CathedraService';
 import { CathedraMapper } from '../../mappers/CathedraMapper';
@@ -17,6 +17,9 @@ import { CreateCathedraDTO } from '../dtos/CreateCathedraDTO';
 import { UpdateCathedraDTO } from '../dtos/UpdateCathedraDTO';
 import { CathedraResponse } from '../responses/CathedraResponse';
 import { CathedraWithTeachersResponse } from '../responses/CathedraWithTeachersResponse';
+import { QueryAllCathedrasDTO } from '../dtos/QueryAllCathedrasDTO';
+import { PaginatedCathedrasWithTeachersResponse } from '../responses/PaginatedCathedrasWithTeachersResponse';
+
 
 @ApiTags('Cathedra')
 @Controller({
@@ -28,6 +31,38 @@ export class CathedraController {
     private cathedraService: CathedraService,
     private cathedraMapper: CathedraMapper,
   ) {}
+
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: PaginatedCathedrasWithTeachersResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidQueryException:
+      Page must be a number
+      PageSize must be a number
+      Wrong value for order`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiEndpoint({
+    summary: 'Get all cathedras',
+    permissions: PERMISSION.CATHEDRAS_CREATE,
+  })
+  @Get()
+  async getAll (
+    @Query() query: QueryAllCathedrasDTO,
+  ) {
+    const cathedras = await this.cathedraService.getAll(query);
+    const cathedrasWithTeachers = this.cathedraMapper.getCathedraWithNumberOfTeachers(cathedras.data);
+    return {
+      cathedras: cathedrasWithTeachers,
+      pagination: cathedras.pagination,
+    };
+  }
 
   @ApiBearerAuth()
   @ApiOkResponse({

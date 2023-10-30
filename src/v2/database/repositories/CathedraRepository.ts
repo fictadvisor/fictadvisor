@@ -39,6 +39,19 @@ export class CathedraRepository {
     });
   }
 
+  async findMany (data: Prisma.CathedraFindManyArgs) {
+    return this.prisma.cathedra.findMany({
+      include: this.include,
+      ...data,
+    });
+  }
+
+  async count (data: Prisma.CathedraCountArgs) {
+    return this.prisma.cathedra.count(
+      data,
+    );
+  }
+
   async deleteById (id: string): Promise<DbCathedra> {
     return this.prisma.cathedra.delete({
       where: { id },
