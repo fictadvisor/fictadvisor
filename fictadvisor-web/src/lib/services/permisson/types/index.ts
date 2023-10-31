@@ -1,6 +1,8 @@
-export enum PERMISSION {
-  ADMIN_SWITCH = 'admin.switch',
+import { Group } from '@/types/group';
+import { Teacher } from '@/types/teacher';
+import { User, UserGroupRole } from '@/types/user';
 
+export enum PERMISSION {
   ADMISSION_GET = 'admission.get',
   ADMISSION_DELETE = 'admission.delete',
   ADMISSION_PRIORITIES_GET = 'admission.priorities.get',
@@ -34,6 +36,10 @@ export enum PERMISSION {
   GROUPS_$GROUPID_STUDENTS_REMOVE = 'groups.$groupId.students.remove',
   GROUPS_$GROUPID_STUDENTS_VERIFY = 'groups.$groupId.students.verify',
   GROUPS_$GROUPID_STUDENTS_UNVERIFIED_GET = 'groups.$groupId.students.unverified.get',
+  GROUPS_$GROUPID_TRANSFER = 'groups.$groupId.transfer',
+  GROUPS_CAPTAIN_SWITCH = 'groups.captain.switch',
+  GROUPS_$GROUPID_LIST_GET = 'groups.$groupId.list.get',
+  GROUPS_$GROUPID_LEAVE = 'groups.$groupId.leave',
 
   QUESTIONS_CREATE = 'questions.create',
   QUESTIONS_UPDATE = 'questions.update',
@@ -60,9 +66,10 @@ export enum PERMISSION {
 
   USERS_UPDATE = 'users.update',
   USERS_DELETE = 'users.delete',
-  USERS_$GROUPID_TRANSFER = 'users.$groupId.transfer',
+  USERS_GROUPS_SWITCH = 'users.groups.switch',
   USERS_$USERID_GET = 'users.$userId.get',
   USERS_$USERID_UPDATE = 'users.$userId.update',
+  USERS_$USERID_DELETE = 'users.$userId.delete',
   USERS_$USERID_CONTACTS_CREATE = 'users.$userId.contacts.create',
   USERS_$USERID_CONTACTS_UPDATE = 'users.$userId.contacts.update',
   USERS_$USERID_CONTACTS_GET = 'users.$userId.contacts.get',
@@ -84,3 +91,14 @@ export enum PERMISSION {
   TEACHERS_$TEACHERID_CONTACTS_UPDATE = 'teachers.$teacherId.contacts.update',
   TEACHERS_$TEACHERID_CONTACTS_DELETE = 'teachers.$teacherId.contacts.delete',
 }
+
+export interface PermissionData {
+  userId?: User['id'];
+  groupId?: Group['id'];
+  roleId?: UserGroupRole;
+  teacherId?: Teacher['id'];
+}
+
+export type PermissionResponse = {
+  [key in PERMISSION]: boolean;
+};

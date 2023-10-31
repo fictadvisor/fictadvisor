@@ -27,6 +27,7 @@ import MobileDropdown from '@/components/pages/account-page/components/group-tab
 import UseAuthentication from '@/hooks/use-authentication/useAuthentication';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import GroupAPI from '@/lib/api/group/GroupAPI';
+import { PERMISSION, PermissionResponse } from '@/lib/services/permisson/types';
 import theme from '@/styles/theme';
 import { UserGroupRole } from '@/types/user';
 
@@ -34,10 +35,15 @@ import { StudentsTableItem } from '../../types';
 
 interface EditingColumnProps {
   student: StudentsTableItem;
+  permissions: PermissionResponse;
   refetch: QueryObserverBaseResult['refetch'];
 }
 
-const EditingColumn: FC<EditingColumnProps> = ({ student, refetch }) => {
+const EditingColumn: FC<EditingColumnProps> = ({
+  student,
+  permissions,
+  refetch,
+}) => {
   const { user } = UseAuthentication();
   const { displayError } = useToastError();
   const [deletePopupOpen, setDeletePopupOpen] = useState(false);
@@ -71,6 +77,14 @@ const EditingColumn: FC<EditingColumnProps> = ({ student, refetch }) => {
     }
   };
 
+  const deletePrivilege =
+    (permissions[PERMISSION.GROUPS_$GROUPID_STUDENTS_REMOVE] &&
+      !permissions[PERMISSION.GROUPS_$GROUPID_ADMIN_SWITCH] &&
+      student.role === UserGroupRole.STUDENT) ||
+    (permissions[PERMISSION.GROUPS_$GROUPID_STUDENTS_REMOVE] &&
+      permissions[PERMISSION.GROUPS_$GROUPID_ADMIN_SWITCH] &&
+      student.role !== UserGroupRole.CAPTAIN);
+
   const buttonText =
     student.role === UserGroupRole.MODERATOR
       ? roleNamesMapper[UserGroupRole.STUDENT]
@@ -83,149 +97,97 @@ const EditingColumn: FC<EditingColumnProps> = ({ student, refetch }) => {
       <ArrowUpCircleIcon />
     );
 
-  if (
-    user.group?.role === UserGroupRole.CAPTAIN &&
-    student.role !== UserGroupRole.CAPTAIN
-  ) {
-    return (
-      <>
-        <Popup
-          icon={<CheckCircleIcon />}
-          open={changePopupOpen}
-          title={
-            student.role === UserGroupRole.MODERATOR
-              ? 'Зробити студентом'
-              : 'Зробити заст. старости'
-          }
-          content={`Ти дійсно бажаєш зробити ${student.fullName} ${
-            student.role === UserGroupRole.MODERATOR
-              ? 'студентом'
-              : 'заст. старости'
-          }?`}
-          onClose={() => setChangePopupOpen(false)}
-          firstButton={
-            <Button
-              size={ButtonSize.SMALL}
-              text="Скасувати"
-              color={ButtonColor.PRIMARY}
-              variant={ButtonVariant.OUTLINE}
-              onClick={() => setChangePopupOpen(false)}
-            />
-          }
-          secondButton={
-            <Button
-              size={ButtonSize.SMALL}
-              text="Так"
-              color={ButtonColor.PRIMARY}
-              variant={ButtonVariant.FILLED}
-              onClick={handleChangeStatus}
-            />
-          }
-        />
-        <Popup
-          icon={<TrashIcon />}
-          open={deletePopupOpen}
-          title="Видалити користувача"
-          content={`Чи дійсно ти бажаєш видалити користувача ${student.fullName}? Якщо ти випадково видалиш користувача, йому треба буде відправити повторний запит до групи.`}
-          onClose={() => setDeletePopupOpen(false)}
-          firstButton={
-            <Button
-              size={ButtonSize.SMALL}
-              text="Скасувати"
-              color={ButtonColor.PRIMARY}
-              variant={ButtonVariant.TEXT}
-              onClick={() => setDeletePopupOpen(false)}
-            />
-          }
-          secondButton={
-            <AlertButton
-              text="Видалити"
-              variant={AlertButtonVariant.ERROR_OUTLINE}
-              onClick={handleDelete}
-            />
-          }
-        />
-        {(student.role === UserGroupRole.STUDENT ||
-          student.role === UserGroupRole.MODERATOR) &&
-          !isMobile && (
-            <Button
-              text={buttonText}
-              sx={{ width: 'fit-content', whiteSpace: 'nowrap' }}
-              size={ButtonSize.SMALL}
-              variant={ButtonVariant.OUTLINE}
-              startIcon={buttonIcon}
-              onClick={() => setChangePopupOpen(true)}
-            />
-          )}
-        {isMobile ? (
-          <MobileDropdown
-            arrowIcon={buttonIcon}
-            setDeletePopupOpen={setDeletePopupOpen}
-            setChangePopupOpen={setChangePopupOpen}
-            student={student}
+  return (
+    <>
+      <Popup
+        icon={<CheckCircleIcon />}
+        open={changePopupOpen}
+        title={
+          student.role === UserGroupRole.MODERATOR
+            ? 'Зробити студентом'
+            : 'Зробити заст. старости'
+        }
+        content={`Ти дійсно бажаєш зробити ${student.fullName} ${
+          student.role === UserGroupRole.MODERATOR
+            ? 'студентом'
+            : 'заст. старости'
+        }?`}
+        onClose={() => setChangePopupOpen(false)}
+        firstButton={
+          <Button
+            size={ButtonSize.SMALL}
+            text="Скасувати"
+            color={ButtonColor.PRIMARY}
+            variant={ButtonVariant.OUTLINE}
+            onClick={() => setChangePopupOpen(false)}
           />
-        ) : (
+        }
+        secondButton={
+          <Button
+            size={ButtonSize.SMALL}
+            text="Так"
+            color={ButtonColor.PRIMARY}
+            variant={ButtonVariant.FILLED}
+            onClick={handleChangeStatus}
+          />
+        }
+      />
+      <Popup
+        icon={<TrashIcon />}
+        open={deletePopupOpen}
+        title="Видалити користувача"
+        content={`Чи дійсно ти бажаєш видалити користувача ${student.fullName}? Якщо ти випадково видалиш користувача, йому треба буде відправити повторний запит до групи.`}
+        onClose={() => setDeletePopupOpen(false)}
+        firstButton={
+          <Button
+            size={ButtonSize.SMALL}
+            text="Скасувати"
+            color={ButtonColor.PRIMARY}
+            variant={ButtonVariant.TEXT}
+            onClick={() => setDeletePopupOpen(false)}
+          />
+        }
+        secondButton={
+          <AlertButton
+            text="Видалити"
+            variant={AlertButtonVariant.ERROR_OUTLINE}
+            onClick={handleDelete}
+          />
+        }
+      />
+      {(student.role === UserGroupRole.STUDENT ||
+        student.role === UserGroupRole.MODERATOR) &&
+        !isMobile &&
+        permissions[PERMISSION.GROUPS_$GROUPID_ADMIN_SWITCH] && (
+          <Button
+            text={buttonText}
+            sx={{ width: 'fit-content', whiteSpace: 'nowrap' }}
+            size={ButtonSize.SMALL}
+            variant={ButtonVariant.OUTLINE}
+            startIcon={buttonIcon}
+            onClick={() => setChangePopupOpen(true)}
+          />
+        )}
+      {isMobile ? (
+        <MobileDropdown
+          arrowIcon={buttonIcon}
+          setDeletePopupOpen={setDeletePopupOpen}
+          setChangePopupOpen={setChangePopupOpen}
+          permissions={permissions}
+          student={student}
+        />
+      ) : (
+        deletePrivilege && (
           <IconButton
             onClick={() => setDeletePopupOpen(true)}
             icon={<TrashIcon />}
             shape={IconButtonShape.CIRCLE}
             color={IconButtonColor.ERROR}
           />
-        )}
-      </>
-    );
-  }
-
-  if (
-    user.group?.role === UserGroupRole.MODERATOR &&
-    student.role === UserGroupRole.STUDENT
-  ) {
-    return (
-      <>
-        <Popup
-          open={deletePopupOpen}
-          hasCross
-          title="Видалити користувача"
-          content={`Чи дійсно ти бажаєш видалити користувача ${student.fullName}? Якщо ти випадково видалиш користувача, йому треба буде відправити повторний запит до групи.`}
-          onClose={() => setDeletePopupOpen(false)}
-          firstButton={
-            <Button
-              size={ButtonSize.SMALL}
-              text="Скасувати"
-              color={ButtonColor.PRIMARY}
-              variant={ButtonVariant.OUTLINE}
-              onClick={() => setDeletePopupOpen(false)}
-            />
-          }
-          secondButton={
-            <Button
-              size={ButtonSize.SMALL}
-              text="Так"
-              color={ButtonColor.PRIMARY}
-              variant={ButtonVariant.FILLED}
-              onClick={handleDelete}
-            />
-          }
-        />
-        {isMobile ? (
-          <MobileDropdown
-            arrowIcon={buttonIcon}
-            setDeletePopupOpen={setDeletePopupOpen}
-            setChangePopupOpen={setChangePopupOpen}
-            student={student}
-          />
-        ) : (
-          <IconButton
-            onClick={() => setDeletePopupOpen(true)}
-            icon={<TrashIcon />}
-            shape={IconButtonShape.CIRCLE}
-            color={IconButtonColor.SECONDARY}
-          />
-        )}
-      </>
-    );
-  }
-  return <Fragment></Fragment>;
+        )
+      )}
+    </>
+  );
 };
 
 export default EditingColumn;

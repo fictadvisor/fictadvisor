@@ -1,19 +1,19 @@
-import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
+import { AxiosResponse } from 'axios';
 
-import { PERMISSION } from './types';
+import { client } from '@/lib/api/instance';
+import { User } from '@/types/user';
 
-const MIN_MARKS_LENGTH = 8;
+import createPermissionRequest from './utils/createPermissionRequest';
+import { PermissionData, PermissionResponse } from './types';
 
 class PermissionService {
-  async getPermisson(
-    permissions: PERMISSION[],
-    userId: string | undefined,
-    groupId: string | undefined,
-    $roleId: string | undefined,
-    $teacherId: string | undefined,
-  ): Promise<boolean> {
-    const hasPermission = true;
-    return hasPermission;
+  async getPermissionList(userId: User['id'], values: PermissionData) {
+    const body = createPermissionRequest(values);
+    const response: AxiosResponse<PermissionResponse> = await client.post(
+      `/permissions/check?userId=${userId}`,
+      body,
+    );
+    return response.data;
   }
 }
 
