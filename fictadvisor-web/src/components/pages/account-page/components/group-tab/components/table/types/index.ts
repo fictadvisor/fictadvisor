@@ -1,5 +1,6 @@
 import { QueryObserverBaseResult } from 'react-query';
 
+import { PermissionResponse } from '@/lib/services/permisson/types';
 import { UserGroupRole } from '@/types/user';
 
 export interface RequestsTableItem {
@@ -20,6 +21,7 @@ export interface RequestsTableProps {
 
 export interface StudentsTableProps {
   role: UserGroupRole;
+  permissions: PermissionResponse;
   rows: StudentsTableItem[];
   refetch: QueryObserverBaseResult['refetch'];
 }

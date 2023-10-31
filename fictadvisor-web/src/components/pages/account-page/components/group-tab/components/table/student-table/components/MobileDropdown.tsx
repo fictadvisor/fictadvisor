@@ -12,7 +12,7 @@ import {
 import IconButton from '@/components/common/ui/icon-button-mui/IconButton';
 import { IconButtonColor } from '@/components/common/ui/icon-button-mui/types';
 import roleNamesMapper from '@/components/pages/account-page/components/group-tab/components/table/constants';
-import useAuthentication from '@/hooks/use-authentication';
+import { PERMISSION, PermissionResponse } from '@/lib/services/permisson/types';
 import { UserGroupRole } from '@/types/user';
 
 import { StudentsTableItem } from '../../types';
@@ -23,6 +23,7 @@ export interface MobileStudentTableButtonsProps {
   setDeletePopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setChangePopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
   student: StudentsTableItem;
+  permissions: PermissionResponse;
   arrowIcon: ReactNode;
 }
 
@@ -30,16 +31,21 @@ const MobileStudentsTableButtons: FC<MobileStudentTableButtonsProps> = ({
   setDeletePopupOpen,
   setChangePopupOpen,
   student,
+  permissions,
   arrowIcon,
 }) => {
-  const { user } = useAuthentication();
   const [isPopperOpen, setIsPopperOpen] = useState<boolean>(false);
   const EllipsisIconRef = useRef<HTMLButtonElement>(null);
   const buttonName =
     student.role === UserGroupRole.MODERATOR
       ? roleNamesMapper[UserGroupRole.STUDENT]
       : roleNamesMapper[UserGroupRole.MODERATOR];
-
+  const emptyList =
+    (!permissions[PERMISSION.GROUPS_$GROUPID_STUDENTS_REMOVE] &&
+      !permissions[PERMISSION.GROUPS_$GROUPID_ADMIN_SWITCH]) ||
+    (permissions[PERMISSION.GROUPS_$GROUPID_STUDENTS_REMOVE] &&
+      !permissions[PERMISSION.GROUPS_$GROUPID_ADMIN_SWITCH] &&
+      student.role !== UserGroupRole.STUDENT);
   return (
     <ClickAwayListener onClickAway={() => setIsPopperOpen(false)}>
       <Box>
@@ -48,20 +54,16 @@ const MobileStudentsTableButtons: FC<MobileStudentTableButtonsProps> = ({
           icon={<EllipsisVerticalIcon className={'icon'} />}
           color={IconButtonColor.TRANSPARENT}
           onClick={() => setIsPopperOpen(pr => !pr)}
-          disabled={
-            user.group?.role === UserGroupRole.STUDENT ||
-            student.role === UserGroupRole.CAPTAIN
-          }
-        ></IconButton>
+          disabled={emptyList || student.role === UserGroupRole.CAPTAIN}
+        />
         <Popper
           open={isPopperOpen}
           placement={'bottom-end'}
           anchorEl={EllipsisIconRef.current}
         >
           <Stack sx={styles.dropdown}>
-            {user.group?.role === UserGroupRole.CAPTAIN &&
-              (student.role === UserGroupRole.STUDENT ||
-                student.role === UserGroupRole.MODERATOR) && (
+            {permissions[PERMISSION.GROUPS_$GROUPID_ADMIN_SWITCH] &&
+              student.role !== UserGroupRole.CAPTAIN && (
                 <Button
                   size={ButtonSize.SMALL}
                   text={buttonName}
@@ -70,10 +72,7 @@ const MobileStudentsTableButtons: FC<MobileStudentTableButtonsProps> = ({
                   onClick={() => setChangePopupOpen(true)}
                 />
               )}
-            {((user.group?.role === UserGroupRole.CAPTAIN &&
-              student.role !== UserGroupRole.CAPTAIN) ||
-              (user.group?.role === UserGroupRole.MODERATOR &&
-                student.role == UserGroupRole.STUDENT)) && (
+            {!emptyList && (
               <Button
                 size={ButtonSize.SMALL}
                 text={'Видалити'}

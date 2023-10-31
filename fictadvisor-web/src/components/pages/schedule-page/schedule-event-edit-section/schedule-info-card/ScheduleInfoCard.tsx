@@ -1,4 +1,5 @@
 import React, { FC, useState } from 'react';
+import { useQuery } from 'react-query';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { Box, Typography } from '@mui/material';
 import Skeleton from '@mui/material/Skeleton';
@@ -16,8 +17,9 @@ import { InfoCardTabs } from '@/components/pages/schedule-page/schedule-event-ed
 import { getStringTime } from '@/components/pages/schedule-page/utils/getStringTime';
 import useAuthentication from '@/hooks/use-authentication';
 import { DetailedEventBody } from '@/lib/api/schedule/types/DetailedEventBody';
+import PermissionService from '@/lib/services/permisson/PermissionService';
+import { PERMISSION, PermissionData } from '@/lib/services/permisson/types';
 import { TDiscipline } from '@/types/schedule';
-import { UserGroupRole } from '@/types/user';
 
 import { skeletonProps } from '../utils/skeletonProps';
 
@@ -59,6 +61,23 @@ const ScheduleInfoCard: FC<ScheduleInfoCardProps> = ({
   const [tabValue, setTabValue] = useState<InfoCardTabs>(InfoCardTabs.EVENT);
   const { user } = useAuthentication();
 
+  const permissionValues: PermissionData = {
+    groupId: user.group?.id,
+  };
+
+  const { data } = useQuery(
+    [],
+    () => PermissionService.getPermissionList(user.id, permissionValues),
+    {
+      retry: false,
+      refetchOnWindowFocus: false,
+    },
+  );
+
+  const validPrivilege =
+    data?.[PERMISSION.GROUPS_$GROUPID_EVENTS_DELETE] &&
+    data?.[PERMISSION.GROUPS_$GROUPID_EVENTS_UPDATE];
+
   if (!event) return null;
 
   return (
@@ -72,7 +91,7 @@ const ScheduleInfoCard: FC<ScheduleInfoCardProps> = ({
           </Typography>
         )}
         <Box sx={{ display: 'flex' }}>
-          {user.group?.role !== UserGroupRole.STUDENT && (
+          {validPrivilege && (
             <IconButton
               color={IconButtonColor.TRANSPARENT}
               icon={<PencilSquareIcon width={36} height={36} />}

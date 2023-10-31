@@ -17,6 +17,7 @@ import { TextAreaPopup } from '@/components/pages/account-page/components/group-
 import useAuthentication from '@/hooks/use-authentication';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import GroupAPI from '@/lib/api/group/GroupAPI';
+import { PERMISSION } from '@/lib/services/permisson/types';
 import theme from '@/styles/theme';
 import { UserGroupRole } from '@/types/user';
 
@@ -25,7 +26,7 @@ import { StudentsTableProps } from '../types';
 
 import * as styles from './StudentsTable.styles';
 const StudentsTable: React.FC<StudentsTableProps> = ({
-  role,
+  permissions,
   rows,
   refetch,
 }) => {
@@ -58,7 +59,7 @@ const StudentsTable: React.FC<StudentsTableProps> = ({
           closeFunction={() => setIsPopupOpen(false)}
         />
       )}
-      {role !== UserGroupRole.STUDENT && (
+      {permissions[PERMISSION.GROUPS_$GROUPID_STUDENTS_ADD] && (
         <Box sx={styles.dividerWrapper}>
           <Divider
             text="Студенти"
@@ -129,7 +130,13 @@ const StudentsTable: React.FC<StudentsTableProps> = ({
               )}
             </Grid>
             <Grid item mobile={2} desktop={3}>
-              {<EditingColumn student={row} refetch={refetch} />}
+              {
+                <EditingColumn
+                  student={row}
+                  permissions={permissions}
+                  refetch={refetch}
+                />
+              }
             </Grid>
           </Grid>
         ))}
