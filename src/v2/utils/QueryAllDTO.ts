@@ -2,29 +2,38 @@ import { IsIn, IsNumberString, IsOptional } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class QueryAllDTO {
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    description: 'Number of the page',
+  })
   @IsNumberString({}, {
     message: 'Page must be a number',
   })
   @IsOptional()
     page?: number;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    description: 'Amount of the elements in the page',
+  })
   @IsNumberString({}, {
     message: 'PageSize must be a number',
   })
   @IsOptional()
     pageSize?: number;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    description: 'Symbols that should be in a filter',
+  })
   @IsOptional()
     search?: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    description: 'Sorting parameter',
+  })
   @IsOptional()
     sort?: string;
 
   @ApiPropertyOptional({
+    description: 'Sorting order',
     enum: ['asc', 'desc'],
   })
   @IsIn(['asc', 'desc'], {

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request } from '@nestjs/common';
 import { GroupService } from '../services/GroupService';
 import { CreateGroupDTO } from '../dtos/CreateGroupDTO';
 import { GroupByIdPipe } from '../pipes/GroupByIdPipe';
@@ -54,17 +54,25 @@ export class GroupController {
     type: GroupResponse,
   })
   @ApiBadRequestResponse({
-    description: `
-      InvalidBodyException: Proper name is expected
-      InvalidBodyException: Code can not be empty
-    `,
+    description: `\n
+    InvalidBodyException: 
+      Proper name is expected
+      Code can not be empty`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
   })
   @ApiForbiddenResponse({
-    description: `
-      NoPermissionException: You do not have permission to perform this action
-    `,
+    description: `\n
+    NoPermissionException: 
+      You do not have permission to perform this action`,
   })
-  @Access(PERMISSION.GROUPS_CREATE)
+  @ApiEndpoint({
+    summary: 'Create a new group',
+    permissions: PERMISSION.GROUPS_CREATE,
+  })
   @Post()
   async create (@Body() body: CreateGroupDTO) {
     const group = await this.groupService.create(body.code);
@@ -75,11 +83,14 @@ export class GroupController {
     type: GroupsResponse,
   })
   @ApiBadRequestResponse({
-    description: `
-      InvalidBodyException: Page must be a number
-      InvalidBodyException: PageSize must be a number
-      InvalidBodyException: Wrong value for order
-    `,
+    description: `\n
+    InvalidBodyException: 
+      Page must be a number
+      PageSize must be a number
+      Wrong value for order`,
+  })
+  @ApiEndpoint({
+    summary: 'Get all groups with selected filter',
   })
   @Get()
   async getAll (@Query() body: QueryAllDTO) {
@@ -100,8 +111,11 @@ export class GroupController {
     UnauthorizedException:
       Unauthorized`,
   })
-  @UseGuards(TelegramGuard)
-  @Get('/telegram/groups')
+  @ApiEndpoint({
+    summary: 'Get all groups with telegram groups',
+    guards: TelegramGuard,
+  })
+  @Get('/telegramGroups')
   async getGroupsWithTelegramGroups () {
     const groups = await this.groupService.getGroupsWithTelegramGroups();
     return this.groupMapper.getGroupsWithTelegramGroups(groups);
@@ -111,9 +125,17 @@ export class GroupController {
     type: GroupResponse,
   })
   @ApiBadRequestResponse({
-    description: `
-      InvalidEntityIdException: Group with such id is not found
-    `,
+    description: `\n
+    InvalidEntityIdException: 
+      Group with such id is not found`,
+  })
+  @ApiParam({
+    name: 'groupId',
+    required: true,
+    description: 'Id of the group to get',
+  })
+  @ApiEndpoint({
+    summary: 'Get group with selected id',
   })
   @Get('/:groupId')
   async get (
@@ -128,18 +150,33 @@ export class GroupController {
     type: GroupResponse,
   })
   @ApiBadRequestResponse({
-    description: `
-      InvalidEntityIdException: Group with such id is not found
-      InvalidBodyException: Proper name is expected
-      InvalidBodyException: Code can not be empty
-    `,
+    description: `\n
+    InvalidEntityIdException: 
+      Group with such id is not found
+        
+    InvalidBodyException: 
+      Proper name is expected
+      Code can not be empty`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
   })
   @ApiForbiddenResponse({
-    description: `
-      NoPermissionException: You do not have permission to perform this action
-    `,
+    description: `\n
+    NoPermissionException: 
+      You do not have permission to perform this action`,
   })
-  @Access(PERMISSION.GROUPS_UPDATE)
+  @ApiParam({
+    name: 'groupId',
+    required: true,
+    description: 'Id of the group to update',
+  })
+  @ApiEndpoint({
+    summary: 'Update group with selected id',
+    permissions: PERMISSION.GROUPS_UPDATE,
+  })
   @Patch('/:groupId')
   async update (
     @Param('groupId', GroupByIdPipe) groupId: string,

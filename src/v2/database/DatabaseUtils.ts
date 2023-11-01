@@ -28,12 +28,12 @@ export class DatabaseUtils {
     if (page === 0) {
       return {
         skip: 0,
-        take: pageSize*2,
+        take: pageSize * 2,
       };
     }
     return {
-      skip: (page-1)*pageSize,
-      take: pageSize*3,
+      skip: (page - 1) * pageSize,
+      take: pageSize * 3,
     };
   }
 
