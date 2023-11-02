@@ -19,7 +19,7 @@ export class ContactByUserIdPipe implements PipeTransform {
       throw new InvalidEntityIdException('User');
     }
 
-    const contact = this.contactRepository.getContact(userId, contactId);
+    const contact = await this.contactRepository.getContact(userId, contactId);
     if (!contact) {
       throw new InvalidEntityIdException('Contact');
     }

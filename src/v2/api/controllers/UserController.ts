@@ -56,6 +56,7 @@ import { UpdateSuperheroDTO } from '../dtos/UpdateSuperheroDTO';
 import { DisciplineIdsResponse } from '../responses/DisciplineResponse';
 import { SuperheroResponse } from '../responses/SuperheroResponse';
 import { ApiEndpoint } from 'src/v2/utils/documentation/decorators';
+
 @ApiTags('User')
 @Controller({
   version: '2',
@@ -508,16 +509,6 @@ export class UserController {
   }
 
   @ApiBearerAuth()
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException:
-      You do not have permission to perform this action`,
-  })
   @ApiOkResponse({
     type: ContactResponse,
   })
@@ -529,14 +520,32 @@ export class UserController {
     InvalidBodyException:
       Name is too long (max: 100)
       Name can not be empty
-      Name is not correct (a-zA-Z0-9A-Я(укр.)\\\\-\\' )
+      Name is not correct (a-zA-Z0-9A-Я(укр.)\\-' )
       Display name is too long (max: 100)
       Display name can not be empty
       Link is too long (max: 200)
       Link contains wrong symbols (ASCII only)
       Link is not a url`,
   })
-  @Access(PERMISSION.USERS_$USERID_CONTACTS_CREATE)
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: 'Id of a user to create contact',
+  })
+  @ApiEndpoint({
+    summary: 'Request captain or admin to create a contact',
+    //permissions: PERMISSION.USERS_$USERID_CONTACTS_CREATE,
+  })
   @Post('/:userId/contacts')
   createContact (
     @Param('userId', UserByIdPipe) userId: string,
@@ -574,15 +583,20 @@ export class UserController {
   @ApiParam({
     name: 'userId',
     type: String,
+    description: 'Id of a user to update contact',
   })
   @ApiParam({
     name: 'contactId',
     type: String,
+    description: 'Id of contact to be updated',
   })
-  @Access(PERMISSION.USERS_$USERID_CONTACTS_UPDATE)
+  @ApiEndpoint({
+    summary: 'Request captain or admin to update the contact',
+    permissions: PERMISSION.USERS_$USERID_CONTACTS_UPDATE,
+  })
   @Patch('/:userId/contacts/:contactId')
   updateContact (
-    @Param(ContactByUserIdPipe) params,
+    @Param(ContactByUserIdPipe) params : { userId: string, contactId: string },
     @Body() body: UpdateContactDTO,
   ) {
     return this.userService.updateContact(params.userId, params.contactId, body);
@@ -609,20 +623,50 @@ export class UserController {
   @ApiParam({
     name: 'userId',
     type: String,
+    description: 'Id of a user to delete contact',
   })
   @ApiParam({
     name: 'contactId',
     type: String,
+    description: 'Id of a contact to delete',
   })
-  @Access(PERMISSION.USERS_$USERID_CONTACTS_DELETE)
+  @ApiEndpoint({
+    summary: 'Request captain or admin to delete the contact',
+    permissions: PERMISSION.USERS_$USERID_CONTACTS_DELETE,
+  })
   @Delete('/:userId/contacts/:contactId')
   deleteContact (
-    @Param(ContactByUserIdPipe) params,
+    @Param(ContactByUserIdPipe) params: { userId: string, contactId: string },
   ) {
     return this.userService.deleteContact(params.userId, params.contactId);
   }
 
-  @Access(PERMISSION.STUDENTS_DELETE)
+  @ApiBearerAuth()
+  @ApiOkResponse()
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException:
+      User with such id is not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: 'Id of a user to delete',
+  })
+  @ApiEndpoint({
+    summary: 'Request captain or admin to delete a student',
+    permissions: PERMISSION.STUDENTS_DELETE,
+  })
   @Delete('/:userId/student')
   deleteStudent (
     @Param('userId', UserByIdPipe) userId: string,
@@ -630,7 +674,44 @@ export class UserController {
     return this.userService.deleteStudent(userId);
   }
 
-  @Access(PERMISSION.USERS_$USERID_STUDENT_UPDATE)
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: OrdinaryStudentResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException:
+      User with such id is not found
+      
+    InvalidBodyException:
+      First name is not correct (A-Я(укр.)\\-' )
+      First name is too short (min 2)
+      First name is too long (max 40)
+      Last name is not correct (A-Я(укр.)\\-' )
+      Last name is too short (min 2)
+      Last name is too long (max 40)
+      Middle name is not correct (A-Я(укр.)\\-' )
+      Middle name is too long (max 40)`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: 'Id of a user to update',
+  })
+  @ApiEndpoint({
+    summary: 'Request to update a student',
+    permissions: PERMISSION.USERS_$USERID_STUDENT_UPDATE,
+  })
   @Patch('/:userId/student')
   updateStudent (
     @Param('userId', UserByIdPipe) userId: string,
@@ -639,7 +720,29 @@ export class UserController {
     return this.userService.updateStudent(userId, body);
   }
 
+  @ApiBearerAuth()
   @UseGuards(TelegramGuard)
+  @ApiOkResponse({
+    type: OrdinaryStudentResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException:
+      User with such id is not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: 'Id of a user to get',
+  })
+  @ApiEndpoint({
+    summary: 'Get user by id',
+  })
   @Get('/:userId/telegram')
   getUserForTelegram (
     @Param('userId', UserByIdPipe) userId: string,
@@ -668,7 +771,7 @@ export class UserController {
   @UseGuards(TelegramGuard)
   @Get('/telegramUser/:telegramId')
   async getUserByTelegramId (
-      @Param('telegramId', UserByTelegramIdPipe) telegramId: bigint,
+    @Param('telegramId', UserByTelegramIdPipe) telegramId: bigint,
   ) {
     const student = await this.userService.getUserByTelegramId(telegramId);
     return this.studentMapper.getStudent(student);

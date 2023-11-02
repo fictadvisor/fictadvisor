@@ -2,12 +2,12 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class ContactResponse {
   @ApiProperty({
-    description: 'Contact id',
+    description: 'Id of a contact',
   })
     id: string;
 
   @ApiProperty({
-    description: 'Contact name',
+    description: 'Name of a contact',
   })
     name: string;
 
@@ -17,7 +17,8 @@ export class ContactResponse {
     displayName: string;
 
   @ApiProperty({
-    description: 'Contact link',
+    description: 'Link of a contact',
+    default: null,
   })
     link: string;
 }
