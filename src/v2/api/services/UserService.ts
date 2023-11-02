@@ -31,6 +31,7 @@ import { ExcessiveSelectiveDisciplinesException } from '../../utils/exceptions/E
 import { checkIfArrayIsUnique } from '../../utils/ArrayUtil';
 import { AlreadySelectedException } from '../../utils/exceptions/AlreadySelectedException';
 import { TelegramAPI } from '../../telegram/TelegramAPI';
+import { DuplicateTelegramIdException } from '../../utils/exceptions/DuplicateTelegramIdException';
 
 type SortedDisciplines = {
   year: number;
@@ -330,11 +331,18 @@ export class UserService {
     });
   }
 
-  async linkTelegram (userId, telegram: TelegramDTO) {
+  async linkTelegram (userId: string, telegram: TelegramDTO) {
     if (!this.authService.isExchangeValid(telegram)) {
       throw new InvalidTelegramCredentialsException();
     }
+
+    const userWithTelegramId = await this.userRepository.find({ telegramId: telegram.id });
+
+    if (userWithTelegramId) {
+      throw new DuplicateTelegramIdException();
+    }
     await this.userRepository.updateById(userId, { telegramId: telegram.id });
+
   }
 
   async verifyStudent (userId: string, isCaptain: boolean, state: State) {
