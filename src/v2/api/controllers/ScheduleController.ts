@@ -8,7 +8,7 @@ import {
   Patch,
   Post,
   Query,
-  Request,
+  Request, UseGuards,
 } from '@nestjs/common';
 import { ScheduleService } from '../services/ScheduleService';
 import { GroupByIdPipe } from '../pipes/GroupByIdPipe';
@@ -130,6 +130,7 @@ export class ScheduleController {
   }
 
   @ApiBearerAuth()
+  @UseGuards(TelegramGuard)
   @Get('/groups/:groupId/day')
   @ApiOkResponse({
     type: TelegramEventsResponse,
@@ -166,7 +167,6 @@ export class ScheduleController {
   })
   @ApiEndpoint({
     summary: 'Get day events for telegram',
-    guards: TelegramGuard,
   })
   async getGroupEventsByDay (
     @Param('groupId', GroupByIdPipe) groupId: string,
@@ -411,6 +411,7 @@ export class ScheduleController {
   }
 
   @ApiBearerAuth()
+  @UseGuards(TelegramGuard)
   @ApiOkResponse({
     type: FortnightEventsResponse,
   })
@@ -449,7 +450,6 @@ export class ScheduleController {
   })
   @ApiEndpoint({
     summary: 'Get fortnight events for telegram',
-    guards: TelegramGuard,
   })
   @Get('/groups/:groupId/fortnight')
   async getFortnightEvents (
@@ -466,6 +466,7 @@ export class ScheduleController {
   }
 
   @ApiBearerAuth()
+  @UseGuards(TelegramGuard)
   @Get('/groups/:groupId/week')
   @ApiOkResponse({
     type: TelegramEventsResponse,
@@ -505,7 +506,6 @@ export class ScheduleController {
   })
   @ApiEndpoint({
     summary: 'Get week events for telegram',
-    guards: TelegramGuard,
   })
   async getGroupEventsByWeek (
     @Param('groupId', GroupByIdPipe) groupId: string,

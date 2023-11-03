@@ -69,6 +69,7 @@ export class UserController {
   ) {}
 
   @ApiBearerAuth()
+  @UseGuards(TelegramGuard)
   @ApiOkResponse({
     type: StudentsResponse,
   })
@@ -104,7 +105,6 @@ export class UserController {
   })
   @ApiEndpoint({
     summary: 'Verify user to be a student',
-    guards: TelegramGuard,
   })
   @Patch('/:userId/verifyStudent')
   async verify (

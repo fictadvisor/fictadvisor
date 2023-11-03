@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request, UseGuards } from '@nestjs/common';
 import { GroupService } from '../services/GroupService';
 import { CreateGroupDTO } from '../dtos/CreateGroupDTO';
 import { GroupByIdPipe } from '../pipes/GroupByIdPipe';
@@ -103,6 +103,7 @@ export class GroupController {
   }
 
   @ApiBearerAuth()
+  @UseGuards(TelegramGuard)
   @ApiOkResponse({
     type: GroupsWithTelegramGroupsResponse,
   })
@@ -113,7 +114,6 @@ export class GroupController {
   })
   @ApiEndpoint({
     summary: 'Get all groups with telegram groups',
-    guards: TelegramGuard,
   })
   @Get('/telegramGroups')
   async getGroupsWithTelegramGroups () {
