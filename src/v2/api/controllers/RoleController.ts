@@ -205,7 +205,7 @@ export class RoleController {
   })
   @ApiEndpoint({
     summary: 'Update the role',
-    permissions: PERMISSION.ROLES_$ROLEID_DELETE,
+    permissions: PERMISSION.ROLES_$ROLEID_UPDATE,
   })
   @Patch('/:roleId')
   async update (

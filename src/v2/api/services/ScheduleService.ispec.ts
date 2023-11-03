@@ -59,15 +59,36 @@ describe('ScheduleService', () => {
       },
     });
 
+    await prisma.cathedra.createMany({
+      data: [
+        {
+          id: 'ipiCathedraId',
+          abbreviation: 'ІПІ',
+          name: 'Кафедра інформатики та програмної інженерії',
+          createdAt: new Date('2023-10-20 06:21:33.294'),
+          updatedAt: new Date('2023-10-20 06:21:33.294'),
+        },
+        {
+          id: 'istCathedraId',
+          abbreviation: 'ІСТ',
+          name: 'Кафедра інформаційних систем та технологій',
+          createdAt: new Date('2023-09-09 20:26:19.138'),
+          updatedAt: new Date('2023-10-20 06:43:01.835'),
+        },
+      ],
+    });
+
     await prisma.group.createMany({
       data: [
         {
           id: 'group',
           code: 'AA-12',
+          cathedraId: 'ipiCathedraId',
         },
         {
           id: 'anotherGroup',
           code: 'AA-11',
+          cathedraId: 'istCathedraId',
         },
       ],
     });
@@ -664,6 +685,7 @@ describe('ScheduleService', () => {
           ],
           lessons: [],
           group: {
+            cathedraId: 'ipiCathedraId',
             code: 'AA-12',
             createdAt: expect.any(Date),
             id: 'group',
@@ -718,6 +740,7 @@ describe('ScheduleService', () => {
           updatedAt: expect.any(Date),
         }],
         group: {
+          cathedraId: 'ipiCathedraId',
           code: 'AA-12',
           createdAt: expect.any(Date),
           id: 'group',
@@ -792,6 +815,7 @@ describe('ScheduleService', () => {
           updatedAt: expect.any(Date),
         }],
         group: {
+          cathedraId: 'ipiCathedraId',
           code: 'AA-12',
           createdAt: expect.any(Date),
           id: 'group',
@@ -851,6 +875,7 @@ describe('ScheduleService', () => {
         groupId: 'group',
         period: Period.NO_PERIOD,
         group: {
+          cathedraId: 'ipiCathedraId',
           code: 'AA-12',
           createdAt: expect.any(Date),
           id: 'group',
@@ -886,6 +911,7 @@ describe('ScheduleService', () => {
         groupId: 'anotherGroup',
         period: Period.EVERY_WEEK,
         group: {
+          cathedraId: 'istCathedraId',
           code: 'AA-11',
           createdAt: expect.any(Date),
           id: 'anotherGroup',
@@ -927,6 +953,7 @@ describe('ScheduleService', () => {
         groupId: 'group',
         period: Period.EVERY_FORTNIGHT,
         group: {
+          cathedraId: 'ipiCathedraId',
           code: 'AA-12',
           createdAt: expect.any(Date),
           id: 'group',
@@ -959,6 +986,7 @@ describe('ScheduleService', () => {
         description: '',
         disciplineTeachers: [],
         group: {
+          cathedraId: 'ipiCathedraId',
           code: 'AA-12',
           createdAt: expect.any(Date),
           id: 'group',
@@ -998,6 +1026,7 @@ describe('ScheduleService', () => {
         groupId: 'anotherGroup',
         period: Period.EVERY_FORTNIGHT,
         group: {
+          cathedraId: 'istCathedraId',
           code: 'AA-11',
           createdAt: expect.any(Date),
           id: 'anotherGroup',
@@ -1031,6 +1060,7 @@ describe('ScheduleService', () => {
         description: '',
         disciplineTeachers: [],
         group: {
+          cathedraId: 'ipiCathedraId',
           code: 'AA-12',
           createdAt: expect.any(Date),
           id: 'group',
