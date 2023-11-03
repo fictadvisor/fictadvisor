@@ -66,11 +66,9 @@ export class UserService {
 
   async getSelective (studentId: string) {
     return this.disciplineRepository.findMany({
-      where: {
-        selectiveDisciplines: {
-          some: {
-            studentId,
-          },
+      selectiveDisciplines: {
+        some: {
+          studentId,
         },
       },
     });
@@ -470,13 +468,12 @@ export class UserService {
     }
 
     const disciplines = (await this.disciplineRepository.findMany({
-      where: {
-        semester: body.semester,
-        year: body.year,
-        isSelective: true,
-        groupId: group.id,
-      },
-    })).map(({ id, subject: { name } }) => ({ disciplineId: id, subjectName: name }));
+      semester: body.semester,
+      year: body.year,
+      isSelective: true,
+      groupId: group.id,
+    }))
+      .map(({ id, subject: { name } }) => ({ disciplineId: id, subjectName: name }));
 
     const remainingSelective = disciplines.filter((selectiveDisc) =>
       !semesterSelective.some((requiredSemeDisc) => requiredSemeDisc.id === selectiveDisc.disciplineId));
@@ -501,11 +498,9 @@ export class UserService {
 
   async getSelectiveDisciplines (userId: string) {
     return this.disciplineRepository.findMany({
-      where: {
-        selectiveDisciplines: {
-          some: {
-            studentId: userId,
-          },
+      selectiveDisciplines: {
+        some: {
+          studentId: userId,
         },
       },
     });
@@ -548,15 +543,10 @@ export class UserService {
     userId: string,
     disciplineIds: string[]
   ) {
-    await this.studentRepository.update({
-      where: {
-        userId: userId,
-      },
-      data: {
-        selectiveDisciplines: {
-          createMany: {
-            data: disciplineIds.map((disciplineId) => ({ disciplineId })),
-          },
+    await this.studentRepository.updateById(userId, {
+      selectiveDisciplines: {
+        createMany: {
+          data: disciplineIds.map((disciplineId) => ({ disciplineId })),
         },
       },
     });

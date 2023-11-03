@@ -45,41 +45,18 @@ export class EventRepository {
     }) as unknown as Promise<DbEvent[]>;
   }
 
-  update (args: Prisma.EventUpdateArgs) {
+  updateById (id: string, data: Prisma.EventUncheckedUpdateInput): Promise<DbEvent> {
     return this.prisma.event.update({
-      ...args,
-      include: this.include,
-    });
-  }
-
-  updateById (id: string, data: Prisma.EventUncheckedUpdateInput) {
-    return this.update({
-      where: {
-        id,
-      },
+      where: { id },
       data,
-    });
-  }
-
-  updateMany (where: Prisma.EventWhereInput, data: Prisma.EventUncheckedUpdateManyInput) {
-    return this.prisma.event.updateMany({
-      where,
-      data,
-    });
-  }
-
-  delete (args: Prisma.EventDeleteArgs) {
-    return this.prisma.event.delete({
-      ...args,
       include: this.include,
     });
   }
   
-  deleteById (id: string) {
-    return this.delete({
-      where: {
-        id,
-      },
+  deleteById (id: string): Promise<DbEvent> {
+    return this.prisma.event.delete({
+      where: { id },
+      include: this.include,
     });
   }
 

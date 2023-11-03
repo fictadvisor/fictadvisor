@@ -43,26 +43,19 @@ export class StudentRepository {
     return this.find({ userId });
   }
 
-  findMany (data: Prisma.StudentFindManyArgs) {
+  findMany (where: Prisma.StudentWhereInput, orderBy?: Prisma.StudentOrderByWithRelationInput[]): Promise<DbStudent[]> {
     return this.prisma.student.findMany({
-      ...data,
-      include: this.include,
-    });
-  }
-
-  update (args: Prisma.StudentUpdateArgs): Promise<DbStudent> {
-    return this.prisma.student.update({
-      ...args,
+      where,
+      orderBy,
       include: this.include,
     });
   }
 
   async updateById (userId: string, data: Prisma.StudentUncheckedUpdateInput) {
-    return this.update({
-      where: {
-        userId,
-      },
+    return this.prisma.student.update({
+      where: { userId },
       data,
+      include: this.include,
     });
   }
 

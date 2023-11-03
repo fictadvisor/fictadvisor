@@ -38,9 +38,9 @@ export class DisciplineRepository {
     });
   }
 
-  async findMany (data: Prisma.DisciplineFindManyArgs) {
+  async findMany (where: Prisma.DisciplineWhereInput): Promise<DbDiscipline[]> {
     return this.prisma.discipline.findMany({
-      ...data,
+      where,
       include: this.include,
     });
   }

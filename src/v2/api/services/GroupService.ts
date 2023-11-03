@@ -1,5 +1,5 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { RoleName, State, User } from '@prisma/client';
+import { Prisma, RoleName, State, User } from '@prisma/client';
 import { DisciplineMapper } from '../../mappers/DisciplineMapper';
 import { GroupRepository } from '../../database/repositories/GroupRepository';
 import { StudentRepository } from '../../database/repositories/StudentRepository';
@@ -96,34 +96,28 @@ export class GroupService {
 
   async getDisciplineTeachers (groupId: string, { year, semester }: QuerySemesterDTO) {
     this.dateService.checkYearAndSemester(year, semester);
-    const disciplines = await this.disciplineRepository.findMany({
-      where: {
-        groupId,
-        semester,
-        year,
-      },
+    const disciplines = await this.disciplineRepository.findMany({ 
+      groupId,
+      semester, 
+      year,
     });
     return this.disciplineMapper.getDisciplinesWithTeachers(disciplines);
   }
 
   async getDisciplines (groupId: string, { year, semester }: QuerySemesterDTO) {
     this.dateService.checkYearAndSemester(year, semester);
-    const disciplines = await this.disciplineRepository.findMany({ 
-      where: {
-        groupId,
-        semester,
-        year,
-      },
+    const disciplines = await this.disciplineRepository.findMany({
+      groupId,
+      semester,
+      year,
     });
     return this.disciplineMapper.getDisciplines(disciplines);
   }
 
   async getSelectiveDisciplines (groupId: string) {
     return this.disciplineRepository.findMany({
-      where: {
-        groupId,
-        isSelective: true,
-      },
+      groupId,
+      isSelective: true,
     });
   }
 
@@ -234,7 +228,7 @@ export class GroupService {
   }
 
   async getStudents (groupId: string, { sort, order }: GroupStudentsQueryDTO) {   
-    const orderBy = [];
+    const orderBy: Prisma.StudentOrderByWithRelationInput[] = [];
     if (sort) {
       if (!order) order = OrderQAParam.ASC;
       orderBy.push({ [sort]: order });
@@ -244,9 +238,9 @@ export class GroupService {
     }
     
     const students = await this.studentRepository.findMany({ 
-      where: { groupId, state: State.APPROVED },
-      orderBy, 
-    });
+      groupId,
+      state: State.APPROVED,
+    }, orderBy);
     return students.map((s) => this.studentMapper.getStudent(s));
   }
 
@@ -255,7 +249,7 @@ export class GroupService {
   }
 
   async getUnverifiedStudents (groupId: string) {
-    const students = await this.studentRepository.findMany({ where: { groupId, state: State.PENDING } });
+    const students = await this.studentRepository.findMany({ groupId, state: State.PENDING });
     return students.map((s) => this.studentMapper.getStudent(s, false));
   }
 
@@ -303,26 +297,21 @@ export class GroupService {
 
   async getGroupsWithTelegramGroups () {
     return this.groupRepository.findMany({
-      where: {
-        telegramGroups: {
-          some: {},
-        },
+      telegramGroups: {
+        some: {},
       },
     });
   }
 
   async getGroupList (groupId: string) {
     const dbStudents = await this.studentRepository.findMany({
-      where: {
-        groupId,
-        state: State.APPROVED,
-      },
-      orderBy: [
-        { lastName: 'asc' },
-        { firstName: 'asc' },
-        { middleName: 'asc' },
-      ],
-    });
+      groupId,
+      state: State.APPROVED,
+    }, [
+      { lastName: 'asc' },
+      { firstName: 'asc' },
+      { middleName: 'asc' },
+    ]);
 
     const students = [];
 
