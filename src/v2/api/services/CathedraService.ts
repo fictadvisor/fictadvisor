@@ -14,7 +14,11 @@ export class CathedraService {
     return this.cathedraRepository.create(body);
   }
 
-  async update (cathedraId: string, body: UpdateCathedraDTO): Promise<DbCathedra>  {
-    return this.cathedraRepository.updateById(cathedraId, body);
+  async update (id: string, body: UpdateCathedraDTO): Promise<DbCathedra>  {
+    return this.cathedraRepository.updateById(id, body);
+  }
+
+  async delete (id: string): Promise<DbCathedra> {
+    return this.cathedraRepository.deleteById(id);
   }
 }

@@ -38,4 +38,11 @@ export class CathedraRepository {
       include: this.include,
     });
   }
+
+  async deleteById (id: string): Promise<DbCathedra> {
+    return this.prisma.cathedra.delete({
+      where: { id },
+      include: this.include,
+    });
+  }
 }

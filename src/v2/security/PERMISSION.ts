@@ -6,6 +6,7 @@ export enum PERMISSION {
 
   CATHEDRAS_CREATE = 'cathedras.create',
   CATHEDRAS_UPDATE = 'cathedras.update',
+  CATHEDRAS_DELETE = 'cathedras.delete',
 
   DISCIPLINE_TEACHERS_CREATE = 'disciplineTeachers.create',
   DISCIPLINE_TEACHERS_UPDATE = 'disciplineTeachers.update',

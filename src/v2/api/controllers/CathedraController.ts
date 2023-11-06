@@ -8,7 +8,7 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
-import { Body, Controller, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Param, Patch, Post } from '@nestjs/common';
 import { PERMISSION } from '../../security/PERMISSION';
 import { CathedraService } from '../services/CathedraService';
 import { CathedraMapper } from '../../mappers/CathedraMapper';
@@ -108,6 +108,42 @@ export class CathedraController {
     @Body() body: UpdateCathedraDTO,
   ): Promise<CathedraWithTeachersResponse> {
     const cathedra = await this.cathedraService.update(cathedraId, body);
+    return this.cathedraMapper.getCathedraWithTeachers(cathedra);
+  }
+
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: CathedraWithTeachersResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException:
+      Cathedra with such id is not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @ApiParam({
+    name: 'cathedraId',
+    required: true,
+    description: 'Id of a cathedra to delete',
+  })
+  @ApiEndpoint({
+    summary: 'Delete cathedra with selected id',
+    permissions: PERMISSION.CATHEDRAS_DELETE,
+  })
+  @Delete('/:cathedraId')
+  async delete (
+    @Param('cathedraId', CathedraByIdPipe) cathedraId: string,
+  ): Promise<CathedraWithTeachersResponse> {
+    const cathedra = await this.cathedraService.delete(cathedraId);
     return this.cathedraMapper.getCathedraWithTeachers(cathedra);
   }
 }
