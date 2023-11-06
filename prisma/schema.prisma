@@ -35,18 +35,20 @@ model User {
 }
 
 model Group {
-  id               String            @id @default(uuid())
-  code             String
-  students         Student[]
-  disciplines      Discipline[]
-  groupRoles       GroupRole[]
-  events           Event[]
-  selectiveAmounts SelectiveAmount[]
-  telegramGroups   TelegramGroup[]
-  cathedra         Cathedra?         @relation(fields: [cathedraId], references: [id], onDelete: Cascade)
-  cathedraId       String?           @map("cathedra_id")
-  createdAt        DateTime?         @default(now()) @map("created_at")
-  updatedAt        DateTime?         @default(now()) @updatedAt @map("updated_at")
+  id                   String               @id @default(uuid())
+  code                 String
+  students             Student[]
+  disciplines          Discipline[]
+  groupRoles           GroupRole[]
+  events               Event[]
+  selectiveAmounts     SelectiveAmount[]
+  telegramGroups       TelegramGroup[]
+  educationalProgram   EducationalPrograms? @relation(fields: [educationalProgramId], references: [id], onDelete: Cascade)
+  educationalProgramId String?              @map("educational_program_id")
+  cathedra             Cathedra?            @relation(fields: [cathedraId], references: [id], onDelete: Cascade)
+  cathedraId           String?              @map("cathedra_id")
+  createdAt            DateTime?            @default(now()) @map("created_at")
+  updatedAt            DateTime?            @default(now()) @updatedAt @map("updated_at")
 
   @@map("groups")
 }
@@ -606,6 +608,15 @@ enum EducationProgram {
   IIS
   ISRS
   IMST
+}
+
+model EducationalPrograms {
+  id           String           @id @default(uuid())
+  name         String
+  abbreviation EducationProgram
+  groups       Group[]
+
+  @@map("educational_programs")
 }
 
 model EntrantData {

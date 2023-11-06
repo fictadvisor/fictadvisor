@@ -8,7 +8,7 @@ import { DateModule } from '../../utils/date/DateModule';
 import { ParserModule } from '../../utils/parser/ParserModule';
 import { InjectionToken } from '@nestjs/common';
 import { DisciplineService } from './DisciplineService';
-import { DisciplineTypeEnum, Period } from '@prisma/client';
+import { DisciplineTypeEnum, Period, EducationProgram } from '@prisma/client';
 import { AuthService } from './AuthService';
 import { GroupService } from './GroupService';
 import { FileService } from '../../utils/files/FileService';
@@ -59,6 +59,21 @@ describe('ScheduleService', () => {
       },
     });
 
+    await prisma.educationalPrograms.createMany({
+      data: [
+        {
+          id: 'issEducationalProgramId',
+          name: 'Інтегровані інформаційні системи',
+          abbreviation: EducationProgram.IIS,
+        },
+        {
+          id: 'isrsEducationalProgramId',
+          name: 'Інформаційне забезпечення робототехнічних систем',
+          abbreviation: EducationProgram.ISRS,
+        },
+      ],
+    });
+
     await prisma.cathedra.createMany({
       data: [
         {
@@ -83,11 +98,13 @@ describe('ScheduleService', () => {
         {
           id: 'group',
           code: 'AA-12',
+          educationalProgramId: 'issEducationalProgramId',
           cathedraId: 'ipiCathedraId',
         },
         {
           id: 'anotherGroup',
           code: 'AA-11',
+          educationalProgramId: 'isrsEducationalProgramId',
           cathedraId: 'istCathedraId',
         },
       ],
@@ -688,6 +705,7 @@ describe('ScheduleService', () => {
             cathedraId: 'ipiCathedraId',
             code: 'AA-12',
             createdAt: expect.any(Date),
+            educationalProgramId: 'issEducationalProgramId',
             id: 'group',
             updatedAt: expect.any(Date),
           },
@@ -743,6 +761,7 @@ describe('ScheduleService', () => {
           cathedraId: 'ipiCathedraId',
           code: 'AA-12',
           createdAt: expect.any(Date),
+          educationalProgramId: 'issEducationalProgramId',
           id: 'group',
           updatedAt: expect.any(Date),
         },
@@ -818,6 +837,7 @@ describe('ScheduleService', () => {
           cathedraId: 'ipiCathedraId',
           code: 'AA-12',
           createdAt: expect.any(Date),
+          educationalProgramId: 'issEducationalProgramId',
           id: 'group',
           updatedAt: expect.any(Date),
         },
@@ -878,6 +898,7 @@ describe('ScheduleService', () => {
           cathedraId: 'ipiCathedraId',
           code: 'AA-12',
           createdAt: expect.any(Date),
+          educationalProgramId: 'issEducationalProgramId',
           id: 'group',
           updatedAt: expect.any(Date),
         },
@@ -914,6 +935,7 @@ describe('ScheduleService', () => {
           cathedraId: 'istCathedraId',
           code: 'AA-11',
           createdAt: expect.any(Date),
+          educationalProgramId: 'isrsEducationalProgramId',
           id: 'anotherGroup',
           updatedAt: expect.any(Date),
         },
@@ -956,6 +978,7 @@ describe('ScheduleService', () => {
           cathedraId: 'ipiCathedraId',
           code: 'AA-12',
           createdAt: expect.any(Date),
+          educationalProgramId: 'issEducationalProgramId',
           id: 'group',
           updatedAt: expect.any(Date),
         },
@@ -989,6 +1012,7 @@ describe('ScheduleService', () => {
           cathedraId: 'ipiCathedraId',
           code: 'AA-12',
           createdAt: expect.any(Date),
+          educationalProgramId: 'issEducationalProgramId',
           id: 'group',
           updatedAt: expect.any(Date),
         },
@@ -1029,6 +1053,7 @@ describe('ScheduleService', () => {
           cathedraId: 'istCathedraId',
           code: 'AA-11',
           createdAt: expect.any(Date),
+          educationalProgramId: 'isrsEducationalProgramId',
           id: 'anotherGroup',
           updatedAt: expect.any(Date),
         },
@@ -1063,6 +1088,7 @@ describe('ScheduleService', () => {
           cathedraId: 'ipiCathedraId',
           code: 'AA-12',
           createdAt: expect.any(Date),
+          educationalProgramId: 'issEducationalProgramId',
           id: 'group',
           updatedAt: expect.any(Date),
         },
