@@ -10,7 +10,9 @@ import {
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateContactDTO {
-    @ApiProperty()
+    @ApiProperty({
+      description: 'Contact name',
+    })
     @MaxLength(100, validationOptionsMsg('Name is too long (max: 100)'))
     @IsNotEmpty(validationOptionsMsg('Name can not be empty'))
     @Matches(
@@ -19,12 +21,16 @@ export class CreateContactDTO {
     )
       name: string;
 
-    @ApiProperty()
+    @ApiProperty({
+      description: 'DisplayName of the contact',
+    })
     @MaxLength(100, validationOptionsMsg('Display name is too long (max: 100)'))
     @IsNotEmpty(validationOptionsMsg('Display name can not be empty'))
       displayName: string;
 
-    @ApiPropertyOptional()
+    @ApiPropertyOptional({
+      description: 'Link to the contact',
+    })
     @MaxLength(200, validationOptionsMsg('Link is too long (max: 200)'))
     @IsAscii(validationOptionsMsg('Link contains wrong symbols (ASCII only)'))
     @IsUrl({}, validationOptionsMsg('Link is not a url'))

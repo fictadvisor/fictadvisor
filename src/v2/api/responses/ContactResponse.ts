@@ -1,16 +1,31 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class ContactResponse {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Contact id',
+  })
     id: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Contact name',
+  })
     name: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Display name of the contact',
+  })
     displayName: string;
 
-  @ApiPropertyOptional()
-    link?: string;
+  @ApiProperty({
+    description: 'Contact link',
+  })
+    link: string;
 }
 
+export class ContactsResponse {
+  @ApiProperty({
+    description: 'List of contacts',
+    type: [ContactResponse],
+  })
+    contacts: ContactResponse[];
+}

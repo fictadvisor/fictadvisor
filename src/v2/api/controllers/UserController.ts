@@ -46,12 +46,12 @@ import { GroupByIdPipe } from '../pipes/GroupByIdPipe';
 import { StudentPipe } from '../pipes/StudentPipe';
 import { StudentMapper } from '../../mappers/StudentMapper';
 import { FullStudentResponse, OrdinaryStudentResponse, StudentsResponse } from '../responses/StudentResponse';
-import { UserResponse } from '../responses/UserResponse';
+import { FullUserResponse, UserResponse } from '../responses/UserResponse';
 import { ApiImplicitFile } from '@nestjs/swagger/dist/decorators/api-implicit-file.decorator';
 import { SelectiveDisciplinesPipe } from '../pipes/SelectiveDisciplinesPipe';
 import { AttachSelectiveDisciplinesDTO } from '../dtos/AttachSelectiveDisciplinesDTO';
 import { UserByTelegramIdPipe } from '../pipes/UserByTelegramIdPipe';
-import { ContactResponse } from '../responses/ContactResponse';
+import { ContactResponse, ContactsResponse } from '../responses/ContactResponse';
 import { UpdateSuperheroDTO } from '../dtos/UpdateSuperheroDTO';
 import { DisciplineIdsResponse } from '../responses/DisciplineResponse';
 import { SuperheroResponse } from '../responses/SuperheroResponse';
@@ -316,7 +316,35 @@ export class UserController {
     return { selective: await this.userService.getSelectiveBySemesters(userId) };
   }
 
-  @UseGuards()
+  @ApiBearerAuth()
+  @ApiOkResponse()
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidBodyException: 
+      Role id cannot be empty
+    
+    InvalidEntityIdException:
+      User with such id is not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: 'Id of a user',
+  })
+  @ApiEndpoint({
+    summary: 'Give role to student',
+    guards: TelegramGuard,
+  })
   @Post('/:userId/roles')
   giveRole (
     @Param('userId', UserByIdPipe) userId: string,
@@ -325,6 +353,37 @@ export class UserController {
     return this.userService.giveRole(userId, roleId);
   }
 
+  @ApiBearerAuth()
+  @ApiOkResponse()
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException:
+      User with such id is not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: 'Id of a user',
+  })
+  @ApiParam({
+    name: 'roleId',
+    required: true,
+    description: 'Role of a user',
+  })
+  @ApiEndpoint({
+    summary: 'Remove student\'s role',
+    guards: TelegramGuard,
+  })
   @Delete('/:userId/roles/:roleId')
   removeRole (
     @Param('userId', UserByIdPipe) userId: string,
@@ -333,7 +392,32 @@ export class UserController {
     return this.userService.removeRole(userId, roleId);
   }
 
-  @Access(PERMISSION.USERS_DELETE)
+  @ApiBearerAuth()
+  @ApiOkResponse()
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException:
+      User with such id is not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: 'Id of a user',
+  })
+  @ApiEndpoint({
+    summary: 'Remove user',
+    permissions: PERMISSION.USERS_DELETE,
+  })
   @Delete('/:userId')
   deleteUser (
     @Param('userId', UserByIdPipe) userId: string,
@@ -341,7 +425,43 @@ export class UserController {
     return this.userService.deleteUser(userId);
   }
 
-  @Access(PERMISSION.USERS_UPDATE)
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: UserResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidBodyException: 
+      Username is not correct (a-zA-Z0-9_)
+      State is not an enum
+      Avatar link is too long (max: 400)
+      Email is not an email
+      Username is too short (min: 2)
+      Username is too long (max: 40)
+      Email's format is not right
+
+    InvalidEntityIdException:
+      User with such id is not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: 'Id of a user',
+  })
+  @ApiEndpoint({
+    summary: 'Update user',
+    permissions: PERMISSION.USERS_UPDATE,
+  })
   @Patch('/:userId')
   async updateUser (
     @Param('userId', UserByIdPipe) userId: string,
@@ -351,7 +471,34 @@ export class UserController {
     return this.userMapper.getUser(user);
   }
 
-  @Access(PERMISSION.USERS_$USERID_CONTACTS_GET)
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: ContactsResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException:
+      User with such id is not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: 'Id of a user',
+  })
+  @ApiEndpoint({
+    summary: 'Return user\'s contacts',
+    permissions: PERMISSION.USERS_$USERID_CONTACTS_GET,
+  })
   @Get('/:userId/contacts')
   async getContacts (
     @Param('userId', UserByIdPipe) userId: string,
@@ -536,7 +683,34 @@ export class UserController {
     await this.userService.linkTelegram(userId, telegram);
   }
 
-  @Access(PERMISSION.USERS_$USERID_GET)
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: FullUserResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException:
+      User with such id is not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: 'Id of a user',
+  })
+  @ApiEndpoint({
+    summary: 'Return user\'s data',
+    permissions: PERMISSION.USERS_$USERID_GET,
+  })
   @Get('/:userId')
   getMe (
     @Param('userId', UserByIdPipe) userId: string,
