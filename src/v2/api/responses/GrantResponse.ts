@@ -18,11 +18,16 @@ export class MappedGrant {
 }
 
 export class MappedGrantsResponse {
-  @ApiProperty({ type: [MappedGrant] })
+  @ApiProperty({ 
+    type: [MappedGrant],
+    description: 'An array of mapped grants to the role',
+  })
     grants: MappedGrant[];
 }
 
 export class GrantResponse {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Number of grants of the role',
+  })
     count: number;
 }

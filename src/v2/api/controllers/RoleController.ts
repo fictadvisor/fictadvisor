@@ -4,7 +4,6 @@ import { UpdateRoleDTO } from '../dtos/UpdateRoleDTO';
 import { CreateRoleWithGrantsDTO } from '../dtos/CreateRoleWithGrantsDTO';
 import { CreateGrantsDTO } from '../dtos/CreateGrantsDTO';
 import { RoleMapper } from '../../mappers/RoleMapper';
-import { Access } from '../../security/Access';
 import {
   ApiBearerAuth,
   ApiForbiddenResponse,
@@ -40,7 +39,7 @@ export class RoleController {
   @ApiParam({
     name: 'roleId',
     required: true,
-    description: 'Id of a role to get information about it',
+    description: 'Id of the role to get information about it',
   })
   @ApiEndpoint({
     summary: 'Get information about the specific role by id',
@@ -70,16 +69,6 @@ export class RoleController {
   @ApiOkResponse({
     type: RoleResponse,
   })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n 
-    NoPermissionException:
-      You do not have permission to perform this action`,
-  })
   @ApiBadRequestResponse({
     description: `\n
     InvalidEntityIdException: 
@@ -92,6 +81,16 @@ export class RoleController {
       Weight cannot be empty 
       Permission cannot be empty 
       Set is not boolean`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n 
+    NoPermissionException:
+      You do not have permission to perform this action`,
   })
   @ApiEndpoint({
     summary: 'Create an information about the role',
@@ -106,10 +105,15 @@ export class RoleController {
     return this.roleMapper.create(role);
   }
 
-  @Access(PERMISSION.ROLES_$ROLEID_GRANTS_CREATE)
   @ApiBearerAuth()
   @ApiOkResponse({
     type: GrantResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidBodyException:
+      Permission cannot be empty
+      Set is not a boolean`,
   })
   @ApiUnauthorizedResponse({
     description: `\n
@@ -121,11 +125,14 @@ export class RoleController {
     NoPermissionException:
       You do not have permission to perform this action`,
   })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidBodyException:
-      Permission cannot be empty
-      Set is not a boolean`,
+  @ApiParam({
+    name: 'roleId',
+    required: true,
+    description: 'Id of the role to which you want to give grants',
+  })
+  @ApiEndpoint({
+    summary: 'Give grants to the role by id',
+    permissions: PERMISSION.ROLES_$ROLEID_GRANTS_CREATE,
   })
   @Post('/:roleId/grants')
   createGrants (
@@ -137,6 +144,14 @@ export class RoleController {
 
   @ApiOkResponse({
     type: MappedGrantsResponse,
+  })
+  @ApiParam({
+    name: 'roleId',
+    required: true,
+    description: 'Id of the role, which grants you want to get',
+  })
+  @ApiEndpoint({
+    summary: 'Get grants of the role by id',
   })
   @Get('/:roleId/grants')
   async getGrants (
@@ -164,10 +179,10 @@ export class RoleController {
   @ApiParam({
     name: 'roleId',
     required: true,
-    description: 'Id of a role to delete it',
+    description: 'Id of the role to delete it',
   })
   @ApiEndpoint({
-    summary: 'Delete the role',
+    summary: 'Delete the role by id',
     permissions: PERMISSION.ROLES_$ROLEID_DELETE,
   })
   @Delete('/:roleId')
@@ -182,6 +197,12 @@ export class RoleController {
   @ApiOkResponse({
     type: BaseRoleResponse,
   })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidBodyException:
+      Name is not an enum
+      Weight is not a number`,
+  })
   @ApiUnauthorizedResponse({
     description: `\n
     UnauthorizedException:
@@ -192,16 +213,10 @@ export class RoleController {
      NoPermissionException:
        You do not have permission to perform this action`,
   })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidBodyException:
-      Name is not an enum
-      Weight is not a number`,
-  })
   @ApiParam({
     name: 'roleId',
     required: true,
-    description: 'Id of a role to update it',
+    description: 'Id of the role to update it',
   })
   @ApiEndpoint({
     summary: 'Update the role',

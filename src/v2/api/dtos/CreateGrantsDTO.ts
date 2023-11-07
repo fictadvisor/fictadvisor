@@ -22,6 +22,7 @@ export class CreateGrantDTO {
 export class CreateGrantsDTO {
   @ApiPropertyOptional({
     type: [CreateGrantDTO],
+    description: 'An array of grants of the role',
   })
   @Type(() => CreateGrantDTO)
   @ValidateNested({ each: true })
