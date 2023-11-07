@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Patch, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch, Param, Post, Query } from '@nestjs/common';
 import { PollService } from '../services/PollService';
 import { CreateQuestionWithRolesDTO } from '../dtos/CreateQuestionWithRolesDTO';
 import { PERMISSION } from '../../security/PERMISSION';
@@ -21,6 +21,7 @@ import { QuestionWithRolesResponse } from '../responses/QuestionWithRolesRespons
 import { PollDisciplineTeachersResponse } from '../responses/PollDisciplineTeachersResponse';
 import { TeacherRole } from '@prisma/client';
 import { ApiEndpoint } from 'src/v2/utils/documentation/decorators';
+import { QueryAllDisciplineTeacherForPollDTO } from '../dtos/QueryAllDisciplineTeacherForPollDTO';
 
 @ApiTags('Poll')
 @Controller({
@@ -73,6 +74,10 @@ export class PollController {
   })
   @ApiBadRequestResponse({
     description: `\n
+    InvalidBodyException:
+      Sort must be an enum
+      Wrong value for order
+    
     InvalidEntityIdException:
       User with such id is not found`,
   })
@@ -98,8 +103,9 @@ export class PollController {
   @Get('/teachers/:userId')
   async getPollDisciplineTeachers (
     @Param('userId', UserByIdPipe) userId: string,
+    @Query() query: QueryAllDisciplineTeacherForPollDTO,
   ): Promise<PollDisciplineTeachersResponse> {
-    return this.pollService.getDisciplineTeachers(userId);
+    return this.pollService.getDisciplineTeachers(userId, query);
   }
 
 

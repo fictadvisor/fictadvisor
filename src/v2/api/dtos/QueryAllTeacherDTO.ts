@@ -1,7 +1,8 @@
-import { IsIn, IsNumberString, IsOptional } from 'class-validator';
+import { IsEnum, IsIn, IsNumberString, IsOptional } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { SortQATParam } from './SortQATParam';
 import { OrderQAParam } from './OrderQAParam';
+import { validationOptionsMsg } from '../../utils/GLOBALS';
 
 export class QueryAllTeacherDTO {
   @ApiPropertyOptional({
@@ -31,8 +32,9 @@ export class QueryAllTeacherDTO {
   @ApiPropertyOptional({
     enum: SortQATParam,
   })
+  @IsEnum(SortQATParam, validationOptionsMsg('Sort must be an enum'))
   @IsOptional()
-    sort?: string;
+    sort?: SortQATParam;
 
   @ApiPropertyOptional({
     enum: OrderQAParam,

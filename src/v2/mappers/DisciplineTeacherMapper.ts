@@ -43,4 +43,16 @@ export class DisciplineTeacherMapper {
 
     return Array.from(roles);
   }
+
+  getDisciplineTeachers (disciplineTeachers: DbDisciplineTeacher[]) {
+    return disciplineTeachers.map((disciplineTeacher) => ({
+      disciplineTeacherId: disciplineTeacher.id,
+      roles: disciplineTeacher.roles.map((r) => r.role),
+      firstName: disciplineTeacher.teacher.firstName,
+      middleName: disciplineTeacher.teacher.middleName,
+      lastName: disciplineTeacher.teacher.lastName,
+      avatar: disciplineTeacher.teacher.avatar,
+      subject: disciplineTeacher.discipline.subject,
+    }));
+  }
 }

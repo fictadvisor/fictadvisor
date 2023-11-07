@@ -4,7 +4,6 @@ import { DateModule } from '../../utils/date/DateModule';
 import { MapperModule } from '../../modules/MapperModule';
 import { PrismaModule } from '../../modules/PrismaModule';
 import { PollService } from './PollService';
-import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
 import { DbDiscipline } from 'src/v2/database/entities/DbDiscipline';
 import { DbQuestionWithRoles } from 'src/v2/database/entities/DbQuestionWithRoles';
 import { DbQuestionWithAnswers } from 'src/v2/database/entities/DbQuestionWithAnswers';
@@ -538,19 +537,13 @@ describe('PollService', () => {
 
   describe('getDisciplineTeachers', () => {
     it('should return disciplines of questions for which user haven\'t answered yet', async () => {
-      const { hasSelectedInLastSemester, teachers } = await pollService.getDisciplineTeachers(user.id);
+      const { hasSelectedInLastSemester, teachers } = await pollService.getDisciplineTeachers(user.id, {});
       expect(teachers.length).toBe(1);
       expect(teachers[0].disciplineTeacherId === discipline3.disciplineTeachers[0].id);
     });
 
-    it('should return an error because user doesn\'t have permissions', async () => {
-      await expect(
-        pollService.getDisciplineTeachers(userPending.id)
-      ).rejects.toThrow(NoPermissionException);
-    });
-
     it('should not contain rejected discipline teacher', async () => {
-      const obj = await pollService.getDisciplineTeachers(user.id);
+      const obj = await pollService.getDisciplineTeachers(user.id, {});
 
       const result = obj.teachers.find((t) => t.disciplineTeacherId === discipline1.disciplineTeachers[3].id);
 

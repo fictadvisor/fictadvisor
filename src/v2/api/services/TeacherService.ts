@@ -14,7 +14,6 @@ import { SubjectRepository } from '../../database/repositories/SubjectRepository
 import { TeacherMapper } from '../../mappers/TeacherMapper';
 import { PollService } from './PollService';
 import { ResponseQueryDTO } from '../dtos/ResponseQueryDTO';
-import { SearchDTO } from '../../utils/QueryAllDTO';
 import { filterAsync } from '../../utils/ArrayUtil';
 import { DbDisciplineTeacher } from '../../database/entities/DbDisciplineTeacher';
 import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
@@ -40,15 +39,12 @@ export class TeacherService {
   ) {}
 
   async getAll (body: QueryAllTeacherDTO) {
-    const searchedNames = body.search ? body.search.split(/\s+/g) : [];
-    const search = {
-      AND: searchedNames.map((search) => ({
-        ...DatabaseUtils.getSearch({ search } as SearchDTO,
-          SortQATParam.FIRST_NAME.toString(),
-          SortQATParam.LAST_NAME.toString(),
-          SortQATParam.MIDDLE_NAME.toString()),
-      })),
-    };
+    const search = DatabaseUtils.getSearch(
+      body,
+      SortQATParam.FIRST_NAME.toString(),
+      SortQATParam.LAST_NAME.toString(),
+      SortQATParam.MIDDLE_NAME.toString(),
+    );
     const sort = this.teacherMapper.getSortedTeacher(body);
 
     const data: Prisma.TeacherFindManyArgs = {

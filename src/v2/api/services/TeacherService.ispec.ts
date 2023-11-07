@@ -11,6 +11,7 @@ import { QueryAllTeacherDTO } from '../dtos/QueryAllTeacherDTO';
 import { TelegramConfigService } from 'src/v2/config/TelegramConfigService';
 import { ConfigService } from '@nestjs/config';
 import { InvalidEntityIdException } from 'src/v2/utils/exceptions/InvalidEntityIdException';
+import { SortQATParam } from '../dtos/SortQATParam';
 
 
 describe('TeacherService', () => {
@@ -148,7 +149,7 @@ describe('TeacherService', () => {
 
     it('should sort in ascend order by lastName', async () => {
       const query: QueryAllTeacherDTO = {
-        sort: 'lastName',
+        sort: SortQATParam.LAST_NAME,
         order: 'asc',
       };
 
@@ -164,7 +165,7 @@ describe('TeacherService', () => {
 
     it('should sort in descend order by lastName', async () => {
       const query: QueryAllTeacherDTO = {
-        sort: 'lastName',
+        sort: SortQATParam.LAST_NAME,
         order: 'desc',
       };
 

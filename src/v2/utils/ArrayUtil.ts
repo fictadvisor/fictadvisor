@@ -7,7 +7,7 @@ export async function filterAsync<T> (array: T[], callback: (item: T) => Promise
   return array.filter((item, i) => booleans[i]);
 }
 
-export async function mapAsync<T> (array: T[], callback: (item: T) => Promise<object>) {
+export async function mapAsync<T, V = object> (array: T[], callback: (item: T) => Promise<V>): Promise<V[]> {
   const arr = [];
   for (const item of array) {
     arr.push(await callback(item));

@@ -1,33 +1,31 @@
 import { Injectable } from '@nestjs/common';
 import { CreateQuestionWithRolesDTO } from '../dtos/CreateQuestionWithRolesDTO';
 import { QuestionRepository } from '../../database/repositories/QuestionRepository';
-import { QuestionType, SemesterDate, State, TeacherRole } from '@prisma/client';
+import { QuestionType, SemesterDate, TeacherRole, Prisma } from '@prisma/client';
 import { UpdateQuestionWithRolesDTO } from '../dtos/UpdateQuestionWithRolesDTO';
 import { ResponseData } from '../datas/ResponseData';
 import { CreateQuestionRoleDTO } from '../dtos/CreateQuestionRoleDTO';
 import { DbQuestionWithAnswers } from '../../database/entities/DbQuestionWithAnswers';
-import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
 import { UserRepository } from '../../database/repositories/UserRepository';
-import { DisciplineMapper } from '../../mappers/DisciplineMapper';
 import { DateService } from '../../utils/date/DateService';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
 import { DbQuestionWithRoles } from '../../database/entities/DbQuestionWithRoles';
 import { QuestionAnswerRepository } from '../../database/repositories/QuestionAnswerRepository';
 import { CommentsQueryDTO, CommentsSort, CommentsSortMapper } from '../dtos/CommentsQueryDTO';
-import { filterAsync } from '../../utils/ArrayUtil';
-import { DbDiscipline, DbDiscipline_DisciplineTeacher } from '../../database/entities/DbDiscipline';
 import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
-import { PollDisciplineTeachersResponse } from '../responses/PollDisciplineTeachersResponse';
 import { StudentRepository } from '../../database/repositories/StudentRepository';
 import { GroupRepository } from '../../database/repositories/GroupRepository';
 import { DatabaseUtils } from '../../database/DatabaseUtils';
+import { SortQATParam } from '../dtos/SortQATParam';
+import { QueryAllDisciplineTeacherForPollDTO } from '../dtos/QueryAllDisciplineTeacherForPollDTO';
+import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
 
 @Injectable()
 export class PollService {
   constructor (
     private questionRepository: QuestionRepository,
     private userRepository: UserRepository,
-    private disciplineMapper: DisciplineMapper,
+    private disciplineTeacherMapper: DisciplineTeacherMapper,
     private dateService: DateService,
     private disciplineRepository: DisciplineRepository,
     private questionAnswerRepository: QuestionAnswerRepository,
@@ -221,54 +219,78 @@ export class PollService {
     return !!group;
   }
 
-  async getDisciplineTeachers (userId: string): Promise<PollDisciplineTeachersResponse> {
-    const user = await this.userRepository.findById(userId);
-    if (user.state !== State.APPROVED) {
-      throw new NoPermissionException();
-    }
+  async getDisciplineTeachers (userId: string, query: QueryAllDisciplineTeacherForPollDTO) {
+    const semesters = await this.dateService.getPreviousSemesters(true);
 
-    const { isFinished, semesters } = await this.dateService.getAllPreviousSemesters();
+    const disciplineWhere: Prisma.DisciplineWhereInput[] = [];
 
-    let disciplines: DbDiscipline[] = [];
-
-    for (const semester of semesters) {
-      const mandatoryDisciplines = await this.getSemesterMandatoryDisciplines(semester, userId);
-      const selectiveDisciplines = await this.getSemesterSelectiveDisciplines(semester, userId);
-      disciplines.push(...mandatoryDisciplines, ...selectiveDisciplines);
-    }
-
-    const hasSelective = await this.checkDoesUserHaveSelectiveDisciplines(userId, isFinished ? semesters[0] : semesters[1]);
-    const hasSelectedInLastSemester = hasSelective
-      ? !!((await this.getSelectedInSemester(isFinished ? semesters[0] : semesters[1], userId)).length)
-      : true;
-
-    disciplines = disciplines.filter((discipline) => {
-      return this.dateService.isPreviousSemester(
-        { isFinished, ...semesters[0] },
-        { semester: discipline.semester, year: discipline.year }
-      );
-    });
-
-    const answers = await this.questionAnswerRepository.findMany({ where: { userId } });
-
-    for (const discipline of disciplines) {
-      discipline.disciplineTeachers = await filterAsync<DbDiscipline_DisciplineTeacher>(discipline.disciplineTeachers, async (teacher) => {
-        const hasAnyAnswer = (answer) => teacher.id === answer.disciplineTeacherId;
-        const isRemoved = await this.disciplineTeacherRepository.find({
-          id: teacher.id,
-          removedDisciplineTeachers: {
+    for (const s of semesters) {
+      const selected = await this.getSelectedInSemester(s, userId);
+      const part: Prisma.DisciplineWhereInput = {
+        semester: s.semester,
+        year: s.year,
+        isSelective: false,
+        group: {
+          students: {
             some: {
-              studentId: userId,
+              userId,
             },
           },
-        });
-        return !answers.some(hasAnyAnswer) && !isRemoved;
-      });
+        },
+      };
+
+      disciplineWhere.push({ ...part });
+
+      if (selected) part.selectiveDisciplines = { some: { studentId: userId } };
+      disciplineWhere.push({ ...part, isSelective: true });
     }
 
+    const { sort = 'lastName', order = 'asc' } = query;
+    const search = DatabaseUtils.getSearch(
+      query,
+      SortQATParam.FIRST_NAME.toString(),
+      SortQATParam.LAST_NAME.toString(),
+      SortQATParam.MIDDLE_NAME.toString(),
+    );
+
+    const disciplineTeachers = await this.disciplineTeacherRepository.findMany({
+      where: {
+        teacher: {
+          ...search,
+        },
+        discipline: {
+          is: {
+            OR: disciplineWhere,
+          },
+        },
+        removedDisciplineTeachers: {
+          every: {
+            studentId: {
+              not: userId,
+            },
+          },
+        },
+        questionAnswers: {
+          every: {
+            userId: {
+              not: userId,
+            },
+          },
+        },
+      },
+      orderBy: {
+        teacher: {
+          [sort]: order,
+        },
+      },
+    });
+
+    const hasSelective = await this.checkDoesUserHaveSelectiveDisciplines(userId, semesters[0]);
+    const hasSelectedInLastSemester = !hasSelective && (await this.getSelectedInSemester(semesters[0], userId)).length;
+
     return {
-      hasSelectedInLastSemester: hasSelectedInLastSemester,
-      teachers: this.disciplineMapper.getDisciplineTeachers(disciplines),
+      hasSelectedInLastSemester: !!hasSelectedInLastSemester,
+      teachers: this.disciplineTeacherMapper.getDisciplineTeachers(disciplineTeachers),
     };
   }
 
@@ -282,46 +304,6 @@ export class PollService {
             studentId,
           },
         },
-      },
-    });
-  }
-
-  private async getSemesterSelectiveDisciplines (semester: SemesterDate, studentId: string) {
-    const selected = await this.getSelectedInSemester(semester, studentId);
-
-    if (selected.length) {
-      return selected;
-    } else {
-      return this.disciplineRepository.findMany({
-        where: {
-          semester: semester.semester,
-          year: semester.year,
-          group: {
-            students: {
-              some: {
-                userId: studentId,
-              },
-            },
-          },
-          isSelective: true,
-        },
-      });
-    }
-  }
-
-  private async getSemesterMandatoryDisciplines (semester: SemesterDate, userId: string) {
-    return this.disciplineRepository.findMany({
-      where: {
-        semester: semester.semester,
-        year: semester.year,
-        group: {
-          students: {
-            some: {
-              userId,
-            },
-          },
-        },
-        isSelective: false,
       },
     });
   }

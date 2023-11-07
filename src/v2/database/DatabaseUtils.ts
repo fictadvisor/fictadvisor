@@ -8,15 +8,17 @@ export class WhereUnique<T> {
 }
 
 export class DatabaseUtils {
-
   static getSearch<T> ({ search }: SearchDTO, ...fields: (keyof T)[]): Search<T> | object {
     if (!search) return {};
+    const searchedNames = search.split(/\s+/g);
     return {
-      OR: fields.map((field) => ({
-        [field]: {
-          contains: search,
-          mode: 'insensitive',
-        },
+      AND: searchedNames.map((search) => ({
+        OR: fields.map((field) => ({
+          [field]: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        })),
       })),
     };
   }
