@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsBoolean, IsNotEmpty, IsOptional, ValidateNested } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, ValidateNested } from 'class-validator';
 import { validationOptionsMsg } from '../../utils/GLOBALS';
 import { Type } from 'class-transformer';
 
@@ -17,6 +17,14 @@ export class CreateGrantDTO {
   @IsBoolean(validationOptionsMsg('Set is not a boolean'))
   @IsOptional()
     set?: boolean;
+
+  @ApiProperty({
+    description: 'The priority or importance of the grant',
+    default: 1,
+  })
+  @IsNumber({}, validationOptionsMsg('Weight is not a number'))
+  @IsNotEmpty(validationOptionsMsg('Weight cannot be empty'))
+    weight: number;
 }
 
 export class CreateGrantsDTO {

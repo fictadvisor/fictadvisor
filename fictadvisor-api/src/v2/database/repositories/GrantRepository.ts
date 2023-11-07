@@ -33,6 +33,15 @@ export class GrantRepository {
     });
   }
 
+  async findMany (args?: Prisma.GrantFindManyArgs) {
+    return this.prisma.grant.findMany({
+      include: {
+        role: true,
+      },
+      ...args,
+    });
+  }
+
   async findById (id: string) {
     return this.prisma.grant.findFirst({
       where: {
@@ -84,5 +93,11 @@ export class GrantRepository {
         role: true,
       },
     });
+  }
+
+  async count (data: Prisma.GrantCountArgs) {
+    return this.prisma.grant.count(
+      data,
+    );
   }
 }

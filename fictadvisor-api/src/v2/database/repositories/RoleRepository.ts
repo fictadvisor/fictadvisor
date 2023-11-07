@@ -91,4 +91,10 @@ export class RoleRepository {
       ...args,
     }) as unknown as Promise<DbRole[]>;
   }
+
+  async count (data: Prisma.RoleCountArgs) {
+    return this.prisma.role.count(
+      data,
+    );
+  }
 }

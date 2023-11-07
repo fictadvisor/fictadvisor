@@ -20,10 +20,4 @@ export class CreateRoleWithGrantsDTO extends CreateRoleDTO {
   @IsUUID()
   @IsOptional()
     parentId?: string;
-
-  @ApiPropertyOptional({
-    description: 'Brief information about a specific role',
-  })
-  @IsOptional()
-    displayName?: string;
 }

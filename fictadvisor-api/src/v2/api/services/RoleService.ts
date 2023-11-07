@@ -8,6 +8,12 @@ import { CreateGrantDTO } from '../dtos/CreateGrantsDTO';
 import { PermissionService } from './PermissionService';
 import { DbRole } from '../../database/entities/DbRole';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
+import { DatabaseUtils } from '../../database/DatabaseUtils';
+import { Grant, Prisma } from '@prisma/client';
+import { QueryAllRolesDTO } from '../dtos/QueryAllRolesDTO';
+import { CreateRoleDTO } from '../dtos/CreateRoleDTO';
+import { QueryAllGrantsDTO } from '../dtos/QueryAllGrantsDTO';
+import { UpdateGrantDTO } from '../dtos/UpdateGrantDTO';
 
 @Injectable()
 export class RoleService {
@@ -17,13 +23,8 @@ export class RoleService {
     public permissionService: PermissionService,
   ) {}
 
-  async createRole ({ grants = [], ...data }: CreateRoleWithGrantsDTO, userId: string) {
+  async createRoleWithGrants ({ grants = [], ...data }: CreateRoleWithGrantsDTO, userId: string) {
     const userRoles = await this.getUserHigherRoles(userId, data.weight);
-
-    const hasCreateRolesPermission = await this.permissionService.hasPermissionInRoles(userRoles, 'roles.create');
-    if (!hasCreateRolesPermission) {
-      throw new NoPermissionException();
-    }
 
     await this.checkRole(userRoles, { ...data, grants });
 
@@ -33,6 +34,10 @@ export class RoleService {
         create: grants,
       },
     });
+  }
+
+  async createRole (data: CreateRoleDTO) {
+    return this.roleRepository.create(data);
   }
 
   private getUserHigherRoles (userId: string, weight: number) {
@@ -50,16 +55,11 @@ export class RoleService {
     });
   }
 
-  async createGrants (roleId: string, grants: CreateGrantDTO[]) {
-    const createGrants = grants.map((g) => ({ roleId, ...g }));
-    return this.grantRepository.createMany(createGrants);
-  }
-
   delete (id: string) {
     return this.roleRepository.deleteById(id);
   }
 
-  update (id: string, body: UpdateRoleDTO) {
+  async update (id: string, body: UpdateRoleDTO) {
     return this.roleRepository.updateById(id, body);
   }
 
@@ -67,13 +67,90 @@ export class RoleService {
     return this.roleRepository.findById(roleId);
   }
 
-  getAll () {
-    return this.roleRepository.findMany();
+  async getAll (query: QueryAllRolesDTO) {
+    const search = DatabaseUtils.getSearch(query, 'displayName');
+    const sort = DatabaseUtils.getSort(query, 'displayName');
+
+    const data: Prisma.RoleFindManyArgs = {
+      where: {
+        ...search,
+        name: query.name,
+        groupRole: query.groupId ? {
+          groupId: query.groupId,
+        } : undefined,
+      },
+      ...sort,
+    };
+    const roles = await DatabaseUtils.paginate<DbRole>(this.roleRepository, query, data);
+
+    return {
+      data: roles.data,
+      pagination: roles.pagination,
+    };
   }
 
-  async getGrants (roleId: string) {
-    const role = await this.roleRepository.findById(roleId);
-    return role.grants;
+  async getGrants (roleId: string, query: QueryAllGrantsDTO) {
+    const search = DatabaseUtils.getSearch(query, 'permission');
+    const sort = DatabaseUtils.getSort(query, 'permission');
+
+    const data: Prisma.GrantFindManyArgs = {
+      where: {
+        ...search,
+        set: query.set,
+        roleId,
+      },
+      ...sort,
+    };
+    const grants = await DatabaseUtils.paginate<Grant>(this.grantRepository, query, data);
+
+    return {
+      data: grants.data,
+      pagination: grants.pagination,
+    };
+  }
+
+  async createGrants (roleId: string, grants: CreateGrantDTO[]) {
+    const createGrants = grants.map((g) => ({ roleId, ...g }));
+    for (const grant of createGrants) {
+      await this.updateHigherGrants(roleId, grant.weight);
+    }
+
+    return this.grantRepository.createMany(createGrants);
+  }
+
+  async createGrant (roleId: string, body: CreateGrantDTO) {
+    const grant = { ...body, roleId };
+    await this.updateHigherGrants(roleId, body.weight);
+
+    return this.grantRepository.create(grant);
+  }
+
+  async updateGrant (roleId: string, grantId: string, body: UpdateGrantDTO) {
+    await this.updateHigherGrants(roleId, body.weight);
+    return this.grantRepository.updateById(grantId, body);
+  }
+
+  private async updateHigherGrants (roleId: string, weight: number) {
+    const higherGrants = await this.grantRepository.findMany({
+      where: {
+        roleId,
+        weight: {
+          gte: weight,
+        },
+      },
+      orderBy: {
+        weight: 'asc',
+      },
+    });
+
+    let prev = weight;
+    for (let i = 0; i < higherGrants.length; i++) {
+      const grant = higherGrants[i];
+      if (prev !== grant.weight) break;
+      grant.weight++;
+      prev = grant.weight;
+      await this.grantRepository.updateById(grant.id, grant);
+    }
   }
 
   private async canCreateGrants (userRoles: DbRole[], grants: CreateGrantDTO[]) {
@@ -103,4 +180,5 @@ export class RoleService {
 
     await this.checkRole(userRoles, parent);
   }
+
 }

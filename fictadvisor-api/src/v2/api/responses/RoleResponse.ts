@@ -32,11 +32,3 @@ export class RoleResponse extends BaseRoleResponse {
   })
     grants: MappedGrant[];
 }
-
-export class RolesResponse {
-  @ApiProperty({
-    description: 'An array of information about the role',
-    type: [RoleResponse],
-  })
-    roles: RoleResponse[];
-}

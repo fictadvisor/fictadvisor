@@ -3,18 +3,13 @@ import { DbGrant } from '../database/entities/DbGrant';
 
 @Injectable()
 export class GrantMapper {
-  update (grant: DbGrant) {
+
+  getMappedGrant (grant: DbGrant) {
     return {
       id: grant.id,
       permission: grant.permission,
       set: grant.set,
-    };
-  }
-  delete (grant: DbGrant) {
-    return {
-      id: grant.id,
-      permission: grant.permission,
-      set: grant.set,
+      weight: grant.weight,
     };
   }
 }

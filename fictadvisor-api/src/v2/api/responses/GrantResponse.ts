@@ -8,6 +8,7 @@ export class MappedGrant {
 
   @ApiProperty({
     description: 'Established right or not',
+    default: true,
   })
     set: boolean;
 
@@ -15,14 +16,12 @@ export class MappedGrant {
     description: 'A string that specifies the permission itself',
   })
     permission: string;
-}
 
-export class MappedGrantsResponse {
-  @ApiProperty({ 
-    type: [MappedGrant],
-    description: 'An array of mapped grants to the role',
+  @ApiProperty({
+    description: 'The priority or importance of the grant',
+    default: 1,
   })
-    grants: MappedGrant[];
+    weight: number;
 }
 
 export class GrantResponse {

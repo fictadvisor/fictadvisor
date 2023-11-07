@@ -21,14 +21,13 @@ describe('RoleService', () => {
     roleRepository = testingModule.get(RoleRepository);
   });
 
-  describe('createRole', () => {
+  describe('createRoleWithGrants', () => {
     const rolesWithCreatePermission = [{
       grants: [{
         permission: 'roles.create',
         set: true,
       }],
     }] as DbRole[];
-    const noRoles = [] as DbRole[];
 
     it('should throw an exception because user does not have permission to create roles with some grants', async function () {
       jest.spyOn(roleService as any, 'getUserHigherRoles').mockImplementation(async (_: string) => rolesWithCreatePermission);
@@ -41,17 +40,7 @@ describe('RoleService', () => {
       const userId = '';
 
       expect.assertions(1);
-      roleService.createRole(data, userId)
-        .catch((e) => expect(e).toBeInstanceOf(NoPermissionException));
-    });
-
-    it('should throw an exception if user does not have permission to create roles', async function () {
-      jest.spyOn(roleService as any, 'getUserHigherRoles').mockImplementation(async (_: string) => noRoles);
-      const data = {} as any;
-      const userId = '';
-
-      expect.assertions(1);
-      roleService.createRole(data, userId)
+      roleService.createRoleWithGrants(data, userId)
         .catch((e) => expect(e).toBeInstanceOf(NoPermissionException));
     });
 
@@ -71,7 +60,7 @@ describe('RoleService', () => {
       const userId = '';
 
       expect.assertions(1);
-      roleService.createRole(data, userId)
+      roleService.createRoleWithGrants(data, userId)
         .catch((e) => expect(e).toBeInstanceOf(NoPermissionException));
     });
 
@@ -86,7 +75,7 @@ describe('RoleService', () => {
       } as CreateRoleWithGrantsDTO;
       const userId = '';
 
-      await roleService.createRole(data, userId);
+      await roleService.createRoleWithGrants(data, userId);
 
       expect(mock.mock.calls.length).toBe(1);
     });
