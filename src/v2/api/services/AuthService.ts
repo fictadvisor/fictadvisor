@@ -21,7 +21,6 @@ import { GroupRepository } from '../../database/repositories/GroupRepository';
 import bcrypt from 'bcrypt';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
 import { UniqueUserDTO } from '../dtos/UniqueUserDTO';
-import { IdentityQueryDTO } from '../dtos/IdentityQueryDTO';
 import { AlreadyRegisteredException } from '../../utils/exceptions/AlreadyRegisteredException';
 import { NotRegisteredException } from '../../utils/exceptions/NotRegisteredException';
 import { PasswordRepeatException } from '../../utils/exceptions/PasswordRepeatException';
@@ -401,7 +400,7 @@ export class AuthService {
     return bcrypt.compare(password, hash);
   }
 
-  async checkIfUserIsRegistered (query: IdentityQueryDTO) {
+  async checkIfUserIsRegistered (query: { email?: string, username?: string }) {
     const user = await this.userRepository.find({
       OR: [
         { email: query.email },

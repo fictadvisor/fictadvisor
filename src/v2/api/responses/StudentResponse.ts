@@ -75,7 +75,7 @@ export class OrdinaryStudentResponse extends BaseStudentResponse {
 
   @ApiProperty({
     type: ExtendedGroupResponse,
-    description: 'Group where the student is in',
+    description: 'Group to which the student belongs',
   })
     group: ExtendedGroupResponse;
   

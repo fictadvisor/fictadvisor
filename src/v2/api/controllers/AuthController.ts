@@ -16,7 +16,7 @@ import {
   ApiOkResponse,
   ApiBadRequestResponse,
   ApiUnauthorizedResponse,
-  ApiTooManyRequestsResponse,
+  ApiTooManyRequestsResponse, ApiParam,
 } from '@nestjs/swagger';
 import { AuthLoginResponse } from '../responses/AuthLoginResponse';
 import { AuthRefreshResponse } from '../responses/AuthRefreshResponse';
@@ -34,6 +34,8 @@ import { UserService } from '../services/UserService';
 import { TelegramGuard } from '../../security/TelegramGuard';
 import { RegisterTelegramDTO } from '../dtos/RegisterTelegramDTO';
 import { OrdinaryStudentResponse } from '../responses/StudentResponse';
+import { ApiEndpoint } from '../../utils/documentation/decorators';
+import { JWTTokensResponse } from '../responses/JWTTokensResponse';
 
 @ApiTags('Auth')
 @Controller({
@@ -188,6 +190,9 @@ export class AuthController {
       Unauthorized`,
   })
   @UseGuards(JwtGuard)
+  @ApiEndpoint({
+    summary: 'Get information about the current user based on JWT authorization',
+  })
   @Get('/me')
   getMe (
     @Request() req,
@@ -210,6 +215,9 @@ export class AuthController {
     TooManyActionsException:
       Too many actions. Try later`,
   })
+  @ApiEndpoint({
+    summary: 'Request a password reset procedure based on the email address provided',
+  })
   @Post('/forgotPassword')
   async forgotPassword (
     @Body() body: ForgotPasswordDTO,
@@ -226,6 +234,14 @@ export class AuthController {
     InvalidBodyException:
       The password must be between 8 and 50 characters long, include at least 1 digit and 1 letter
       Password is empty`,
+  })
+  @ApiParam({
+    name: 'token',
+    required: true,
+    description: 'A password reset token that is generated and sent to the user\'s email address.',
+  })
+  @ApiEndpoint({
+    summary: 'Set a new password using a valid password reset token',
   })
   @Post('/resetPassword/:token')
   async resetPassword (
@@ -247,7 +263,11 @@ export class AuthController {
       This email is not registered yet
     
     InvalidBodyException:
-      Email is not email`,
+      Email is not email
+      Email is empty`,
+  })
+  @ApiEndpoint({
+    summary: 'Resend the email confirmation request for a user who has not completed the registration process yet',
   })
   @Post('/register/verifyEmail')
   requestEmailVerification (
@@ -256,6 +276,22 @@ export class AuthController {
     return this.authService.repeatEmailVerification(body.email);
   }
 
+  @ApiOkResponse({
+    type: JWTTokensResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidVerificationTokenException:
+      Verification token is expired or invalid`,
+  })
+  @ApiParam({
+    name: 'token',
+    required: true,
+    description: 'A verification token that is generated and sent to the user\'s email address.',
+  })
+  @ApiEndpoint({
+    summary: 'Verify the user\'s email address during the completion of registration in the system using token',
+  })
   @Post('/register/verifyEmail/:token')
   verifyEmail (
     @Param('token') token: string,
@@ -263,6 +299,20 @@ export class AuthController {
     return this.authService.verifyEmail(token);
   }
 
+  @ApiOkResponse({
+    type: Boolean,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidBodyException:
+      Username is not correct (a-zA-Z0-9_), or too short (min: 2), or too long (max: 40)
+      Username is empty
+      Email is not an email
+      Email is empty`,
+  })
+  @ApiEndpoint({
+    summary: 'Check whether the user is registered in the system by email and/or username',
+  })
   @Get('/verifyIsRegistered')
   verifyExistsByUnique (
     @Query() query: IdentityQueryDTO,
