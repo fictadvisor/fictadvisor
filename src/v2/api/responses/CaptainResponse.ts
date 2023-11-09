@@ -2,29 +2,44 @@ import { ApiProperty } from '@nestjs/swagger';
 import { State } from '@prisma/client';
 
 export class CaptainResponse {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Id of a specific captain',
+  })
     id: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Email of a specific captain',
+  })
     email: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Username of a specific captain',
+  })
     username: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Link to the captain\'s avatar image',
+  })
     avatar: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Password of a specific captain',
+  })
     password: string;
 
-  @ApiProperty()
-    telegramId?: number;
+  @ApiProperty({
+    description: 'Captain\'s telegram id',
+  })
+    telegramId: number;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Date when the recent password change',
+  })
     lastPasswordChanged: string;
 
   @ApiProperty({
     enum: State,
+    description: 'State whether captain is verified',
   })
     state: State;
 }

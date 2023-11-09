@@ -12,25 +12,35 @@ export class DisciplineTeachersResponse {
 }
 
 export class ExtendDisciplineTeachersResponse {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Id of the discipline extended with teachers',
+  })
     id: string;
 
   @ApiProperty({
     type: SubjectResponse,
+    description: 'Subject of a discipline',
   })
     subject: SubjectResponse;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Year for which disciplines where selected',
+  })
     year: number;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Semester for which disciplines where selected',
+  })
     semester: number;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Discipline can be selected',
+  })
     isSelective: boolean;
 
   @ApiProperty({
     type: [ExtendTeacherResponse],
+    description: 'List of teachers of the specific discipline',
   })
     teachers: ExtendTeacherResponse[];
 }

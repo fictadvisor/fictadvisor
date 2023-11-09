@@ -189,16 +189,29 @@ export class GroupController {
   @ApiBearerAuth()
   @ApiOkResponse()
   @ApiBadRequestResponse({
-    description: `
-      InvalidEntityIdException: Group with such id is not found
-    `,
+    description: `\n
+    InvalidEntityIdException: 
+      Group with such id is not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
   })
   @ApiForbiddenResponse({
-    description: `
-      NoPermissionException: You do not have permission to perform this action
-    `,
+    description: `\n
+    NoPermissionException: 
+      You do not have permission to perform this action`,
   })
-  @Access(PERMISSION.GROUPS_DELETE)
+  @ApiParam({
+    name: 'groupId',
+    required: true,
+    description: 'Id of the group to delete',
+  })
+  @ApiEndpoint({
+    summary: 'Delete group by id',
+    permissions: PERMISSION.GROUPS_DELETE,
+  })
   @Delete('/:groupId')
   async deleteGroup (
     @Param('groupId', GroupByIdPipe) groupId: string,
@@ -229,14 +242,21 @@ export class GroupController {
     NoPermissionException: 
       You do not have permission to perform this action`,
   })
-  @Access(PERMISSION.GROUPS_$GROUPID_STUDENTS_GET)
+  @ApiParam({
+    name: 'groupId',
+    required: true,
+    description: 'Id of student\'s group',
+  })
+  @ApiEndpoint({
+    summary: 'Get students by group id',
+    permissions: PERMISSION.GROUPS_$GROUPID_STUDENTS_GET,
+  })
   @Get('/:groupId/students')
   async getStudents (
     @Param('groupId', GroupByIdPipe) groupId: string,
     @Query() query: GroupStudentsQueryDTO,
   ) {
     const students = await this.groupService.getStudents(groupId, query);
-    
     return { students };
   }
 
@@ -247,7 +267,10 @@ export class GroupController {
   @ApiBadRequestResponse({
     description: `\n
     InvalidGroupIdException: 
-      Group with such id is not found`,
+      Group with such id is not found
+      
+    AbsenceOfCaptainException:
+      Captain was not found`,
   })
   @ApiUnauthorizedResponse({
     description: `\n
@@ -259,7 +282,15 @@ export class GroupController {
     NoPermissionException: 
       You do not have permission to perform this action`,
   })
-  @Access(PERMISSION.GROUPS_$GROUPID_CAPTAIN_GET)
+  @ApiParam({
+    name: 'groupId',
+    required: true,
+    description: 'Id of the group to get the captain from',
+  })
+  @ApiEndpoint({
+    summary: 'Get captain by group id',
+    permissions: PERMISSION.GROUPS_$GROUPID_CAPTAIN_GET,
+  })
   @Get('/:groupId/captain')
   async getCaptain (
     @Param('groupId', GroupByIdPipe) groupId: string,
@@ -279,7 +310,7 @@ export class GroupController {
     description: `\n
     InvalidGroupIdException:
       Group with such id is not found
-  
+      
     DataMissingException:
       Data are missing`,
   })
@@ -293,7 +324,15 @@ export class GroupController {
     NoPermissionException: 
       You do not have permission to perform this action`,
   })
-  @Access(PERMISSION.GROUPS_$GROUPID_DISCIPLINES_TEACHERS_GET)
+  @ApiParam({
+    name: 'groupId',
+    required: true,
+    description: 'Id of the group to get the discipline teachers from',
+  })
+  @ApiEndpoint({
+    summary: 'Request teachers of disciplines by group\'s id',
+    permissions: PERMISSION.GROUPS_$GROUPID_DISCIPLINES_TEACHERS_GET,
+  })
   @Get('/:groupId/disciplineTeachers')
   async getDisciplineTeachers (
     @Param('groupId', GroupByIdPipe) groupId: string,
@@ -324,7 +363,15 @@ export class GroupController {
     NoPermissionException: 
       You do not have permission to perform this action`,
   })
-  @Access(PERMISSION.GROUPS_$GROUPID_DISCIPLINES_GET)
+  @ApiParam({
+    name: 'groupId',
+    required: true,
+    description: 'Id of the group to get the disciplines from',
+  })
+  @ApiEndpoint({
+    summary: 'Request disciplines by group\'s id',
+    permissions: PERMISSION.GROUPS_$GROUPID_DISCIPLINES_GET,
+  })
   @Get('/:groupId/disciplines')
   async getDiscipline (
     @Param('groupId', GroupByIdPipe) groupId: string,

@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { TeacherRole } from '@prisma/client';
 
 export class TeacherResponse {
@@ -12,25 +12,25 @@ export class TeacherResponse {
   })
     firstName: string;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     description: 'Teacher\'s middle name',
   })
-    middleName?: string;
+    middleName: string;
 
   @ApiProperty({
     description: 'Teacher\'s last name',
   })
     lastName: string;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     description: 'Some description of the teacher',
   })
-    description?: string;
+    description: string;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     description: 'Link to teacher avatar image',
   })
-    avatar?: string;
+    avatar: string;
 
   @ApiProperty({
     description: 'Teacher rating according to the poll, updated at 00:00 (UTC)',
@@ -39,12 +39,15 @@ export class TeacherResponse {
 }
 
 export class ExtendTeacherResponse extends TeacherResponse {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Teacher\'s id',
+  })
     disciplineTeacherId: string;
 
   @ApiProperty({
     type: [TeacherRole],
     enum: TeacherRole,
+    description: 'List of teacher\'s roles',
   })
     roles: TeacherRole[];
 }

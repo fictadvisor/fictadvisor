@@ -42,6 +42,7 @@ export class DisciplineResponse extends BaseDisciplineResponse {
 export class ShortDisciplineResponse extends BaseDisciplineResponse {
   @ApiProperty({
     type: SubjectResponse,
+    description: 'Subject of a specific discipline',
   })
     subject: SubjectResponse;
 }
@@ -49,6 +50,7 @@ export class ShortDisciplineResponse extends BaseDisciplineResponse {
 export class ShortDisciplinesResponse {
   @ApiProperty({
     type: [ShortDisciplineResponse],
+    description: 'List of disciplines',
   })
     disciplines: ShortDisciplineResponse[];
 }

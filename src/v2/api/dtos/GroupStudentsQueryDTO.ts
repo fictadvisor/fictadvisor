@@ -12,6 +12,8 @@ export enum SortQGSParam {
 export class GroupStudentsQueryDTO {
   @ApiPropertyOptional({
     enum: SortQGSParam,
+    description: 'Sort by option',
+    default: null,
   })
   @IsEnum(SortQGSParam, validationOptionsMsg('Wrong value for sort'))
   @IsOptional()
@@ -19,7 +21,8 @@ export class GroupStudentsQueryDTO {
   
   @ApiPropertyOptional({
     enum: OrderQAParam,
-    description: 'Ascending by default',
+    description: 'Get result in ascending or descending order',
+    default: OrderQAParam.ASC,
   })
   @IsIn(['asc', 'desc'], validationOptionsMsg('Wrong value for order'))
   @IsOptional()

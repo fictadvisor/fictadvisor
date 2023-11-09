@@ -1,9 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class SubjectResponse {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Id of a specific subject',
+  })
     id: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Name of a specific subject',
+  })
     name: string;
 }
