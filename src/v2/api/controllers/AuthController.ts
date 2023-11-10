@@ -36,6 +36,8 @@ import { RegisterTelegramDTO } from '../dtos/RegisterTelegramDTO';
 import { OrdinaryStudentResponse } from '../responses/StudentResponse';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
 import { JWTTokensResponse } from '../responses/JWTTokensResponse';
+import { GroupByIdPipe } from '../pipes/GroupByIdPipe';
+import { IsAvailableResponse, IsRegisteredResponse } from '../responses/TokenResponse';
 
 @ApiTags('Auth')
 @Controller({
@@ -320,25 +322,63 @@ export class AuthController {
     return this.authService.checkIfUserIsRegistered(query);
   }
 
+  @ApiOkResponse({
+    type: Boolean,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException:
+      Group with such id is not found`,
+  })
+  @ApiParam({
+    name: 'groupId',
+    required: true,
+    description: 'Id of the group for which the check',
+  })
+  @ApiEndpoint({
+    summary: 'Check if the group has a captain',
+  })
   @Get('/checkCaptain/:groupId')
   checkCaptain (
-    @Param('groupId') groupId: string,
-  ) {
+    @Param('groupId', GroupByIdPipe) groupId: string,
+  ): Promise<boolean> {
     return this.authService.checkCaptain(groupId);
   }
 
+  @ApiOkResponse({
+    type: IsAvailableResponse,
+  })
+  @ApiParam({
+    name: 'token',
+    required: true,
+    description: 'The reset token to be checked for availability',
+  })
+  @ApiEndpoint({
+    summary: 'Check if reset token is available',
+  })
   @Get('/checkResetToken/:token')
   async checkResetToken (
     @Param('token') token: string,
-  ) {
+  ): Promise<IsAvailableResponse> {
     const isAvailable = !!(await this.authService.checkResetToken(token));
     return { isAvailable };
   }
 
+  @ApiOkResponse({
+    type: IsRegisteredResponse,
+  })
+  @ApiParam({
+    name: 'token',
+    required: true,
+    description: 'The token used to check the Telegram registration status',
+  })
+  @ApiEndpoint({
+    summary: 'Check telegram registration status by a token',
+  })
   @Get('/checkRegisterTelegram/:token')
   async checkRegisterTelegram (
     @Param('token') token: string,
-  ) {
+  ): Promise<IsRegisteredResponse> {
     const isRegistered = !!(await this.authService.checkTelegram(token));
     return { isRegistered };
   }
