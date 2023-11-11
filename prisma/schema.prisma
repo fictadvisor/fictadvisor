@@ -612,6 +612,8 @@ enum EducationProgram {
 
 model EducationalPrograms {
   id           String           @id @default(uuid())
+  speciality   Speciality       @relation(fields: [specialityId], references: [id], onDelete: Cascade)
+  specialityId String           @map("speciality_id")
   name         String
   abbreviation EducationProgram
   groups       Group[]
@@ -764,4 +766,22 @@ model VerifyEmailToken {
   updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("verify_email_tokens")
+}
+
+enum AbbreviationOfSpeciality {
+  SE
+  CE
+  IST
+}
+
+model Speciality {
+  id                  String                   @id @default(uuid())
+  code                String
+  abbreviation        AbbreviationOfSpeciality
+  name                String?
+  createdAt           DateTime                 @default(now()) @map("created_at")
+  updatedAt           DateTime                 @default(now()) @updatedAt @map("updated_at")
+  educationalPrograms EducationalPrograms[]
+
+  @@map("specialities")
 }

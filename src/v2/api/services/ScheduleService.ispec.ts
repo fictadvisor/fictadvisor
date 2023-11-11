@@ -8,7 +8,7 @@ import { DateModule } from '../../utils/date/DateModule';
 import { ParserModule } from '../../utils/parser/ParserModule';
 import { InjectionToken } from '@nestjs/common';
 import { DisciplineService } from './DisciplineService';
-import { DisciplineTypeEnum, Period, EducationProgram } from '@prisma/client';
+import { DisciplineTypeEnum, Period, EducationProgram, AbbreviationOfSpeciality } from '@prisma/client';
 import { AuthService } from './AuthService';
 import { GroupService } from './GroupService';
 import { FileService } from '../../utils/files/FileService';
@@ -59,17 +59,28 @@ describe('ScheduleService', () => {
       },
     });
 
+    await prisma.speciality.create({
+      data: {
+        id: 'specialityId1',
+        code: '126',
+        abbreviation: AbbreviationOfSpeciality.IST,
+        name: 'Інформаційні системи та технології',
+      },
+    });
+
     await prisma.educationalPrograms.createMany({
       data: [
         {
           id: 'issEducationalProgramId',
           name: 'Інтегровані інформаційні системи',
           abbreviation: EducationProgram.IIS,
+          specialityId: 'specialityId1',
         },
         {
           id: 'isrsEducationalProgramId',
           name: 'Інформаційне забезпечення робототехнічних систем',
           abbreviation: EducationProgram.ISRS,
+          specialityId: 'specialityId1',
         },
       ],
     });
