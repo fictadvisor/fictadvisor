@@ -249,8 +249,8 @@ export class AuthService {
 
     await this.emailService.sendEmail({
       to: email,
-      subject: 'Відновлення паролю на fictadvisor.com',
-      message: 'Для відновлення паролю перейдіть за посиланням нижче. Посилання діє годину.',
+      subject: 'Відновлення пароля на fictadvisor.com',
+      message: 'Для відновлення пароля перейдіть за посиланням нижче. Посилання діє годину.',
       link: `${this.config.get<string>('frontBaseUrl')}/password-recovery/${token.token}`,
     });
 
