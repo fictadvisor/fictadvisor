@@ -3,7 +3,6 @@ import {
   ApiBadRequestResponse,
   ApiOkResponse,
   ApiTags,
-  ApiCreatedResponse,
   ApiQuery,
   ApiBearerAuth,
   ApiUnauthorizedResponse,
@@ -32,12 +31,7 @@ export class TelegramGroupController {
   ) {}
 
   @ApiBearerAuth()
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiCreatedResponse({
+  @ApiOkResponse({
     type: TelegramGroupResponse,
   })
   @ApiBadRequestResponse({
@@ -60,6 +54,16 @@ export class TelegramGroupController {
     InvalidEntityIdException:
       Group with such id is not found`,
   })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiParam({
+    name: 'groupId',
+    required: true,
+    description: 'University group id to which to add telegram group',
+  })
   @ApiEndpoint({
     summary: 'Create telegram group',
     guards: TelegramGuard,
@@ -74,11 +78,6 @@ export class TelegramGroupController {
   }
 
   @ApiBearerAuth()
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
   @ApiOkResponse({
     type: TelegramGroupResponse,
   })
@@ -94,12 +93,24 @@ export class TelegramGroupController {
       TelegramGroup with such id is not found
       Group with such id is not found
       
-      DataNotFoundException:
+    DataNotFoundException:
       Data were not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
   })
   @ApiQuery({
     name: 'telegramId',
     type: Number,
+    required: true,
+    description: 'Id of telegram group to update',
+  })
+  @ApiQuery({
+    name: 'groupId',
+    required: true,
+    description: 'University group id to which telegram group is connected',
   })
   @ApiEndpoint({
     summary: 'Update telegram group',
@@ -116,12 +127,9 @@ export class TelegramGroupController {
   }
 
   @ApiBearerAuth()
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
+  @ApiOkResponse({
+    type: TelegramGroupResponse,
   })
-  @ApiOkResponse()
   @ApiBadRequestResponse({
     description: `\n
     InvalidEntityIdException:
@@ -131,9 +139,21 @@ export class TelegramGroupController {
     DataNotFoundException:
       Data were not found`,
   })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
   @ApiQuery({
     name: 'telegramId',
     type: Number,
+    required: true,
+    description: 'Id of telegram group to delete',
+  })
+  @ApiQuery({
+    name: 'groupId',
+    required: true,
+    description: 'University group id to which telegram group is connected',
   })
   @ApiEndpoint({
     summary: 'Delete telegram group',
@@ -144,17 +164,13 @@ export class TelegramGroupController {
     @Query('telegramId', TelegramGroupByIdPipe) telegramId: bigint,
     @Query('groupId', GroupByIdPipe) groupId: string,
   ) {
-    await this.telegramGroupService.delete(telegramId, groupId);
+    const telegramGroup = await this.telegramGroupService.delete(telegramId, groupId);
+    return this.telegramGroupMapper.getTelegramGroup(telegramGroup);
   }
 
   @ApiBearerAuth()
   @ApiOkResponse({
     type: TelegramGroupsResponse,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
   })
   @ApiBadRequestResponse({
     description: `\n
@@ -164,8 +180,18 @@ export class TelegramGroupController {
     DataNotFoundException:
       Data were not found`,
   })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiParam({
+    name: 'groupId',
+    required: true,
+    description: 'Id of university group from which to get telegram groups',
+  })
   @ApiEndpoint({
-    summary: 'Get all telegram groups',
+    summary: 'Get telegram groups connected to university group',
     guards: TelegramGuard,
   })
   @Get('/:groupId')
@@ -180,19 +206,21 @@ export class TelegramGroupController {
   @ApiOkResponse({
     type: TelegramGroupsByTelegramIdResponse,
   })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
   @ApiBadRequestResponse({
     description: `\n
     InvalidEntityIdException:
       TelegramGroup with such id is not found`,
   })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
   @ApiParam({
     name: 'telegramId',
     type: Number,
+    required: true,
+    description: 'Id of the telegram group to get information',
   })
   @ApiEndpoint({
     summary: 'Get telegram group',

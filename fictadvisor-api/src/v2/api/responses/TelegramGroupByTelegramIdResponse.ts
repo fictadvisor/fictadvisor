@@ -5,18 +5,24 @@ import { GroupResponse } from './GroupResponse';
 export class TelegramGroupByTelegramIdResponse {
   @ApiProperty({
     enum: TelegramSource,
+    description: 'Type of telegram chat',
   })
     source: TelegramSource;
 
   @ApiProperty({
     type: GroupResponse,
+    description: 'List of group\'s data',
   })
     group: GroupResponse;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Thread id',
+  })
     threadId: bigint;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Whether to write messages about classes',
+  })
     postInfo: boolean;
 }
 

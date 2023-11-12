@@ -2,10 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class CheckPermissionsResponse {
     @ApiProperty({
-      type: 'object',
-      additionalProperties: {
-        type: 'boolean',
-      },
+      description: 'Permissions with statuses',
     })
-      result: Map<string, boolean>;
+      additionalProp: boolean;
 }

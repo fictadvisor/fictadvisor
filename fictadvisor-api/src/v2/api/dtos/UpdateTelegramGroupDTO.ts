@@ -4,24 +4,31 @@ import { validationOptionsMsg } from '../../utils/GLOBALS';
 import { TelegramSource } from '@prisma/client';
 
 export class UpdateTelegramGroupDTO {
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    description: 'Telegram chat id',
+  })
   @IsNumber({}, validationOptionsMsg('TelegramId is not a number'))
   @IsOptional()
     telegramId?: bigint;
 
   @ApiPropertyOptional({
     enum: TelegramSource,
+    description: 'Type of telegram chat',
   })
   @IsEnum(TelegramSource, validationOptionsMsg('Source is not an enum'))
   @IsOptional()
     source?: TelegramSource;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    description: 'Thread id',
+  })
   @IsNumber({}, validationOptionsMsg('ThreadId is not a number'))
   @IsOptional()
     threadId?: bigint;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    description: 'Whether to write messages about classes',
+  })
   @IsOptional()
   @IsBoolean(validationOptionsMsg('PostInfo is not a boolean'))
     postInfo?: boolean;

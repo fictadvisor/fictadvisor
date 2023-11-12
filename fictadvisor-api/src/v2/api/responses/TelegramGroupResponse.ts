@@ -2,21 +2,30 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { TelegramSource } from '@prisma/client';
 
 export class TelegramGroupResponse {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Group id',
+  })
     groupId: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Telegram chat id',
+  })
     telegramId: bigint;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    description: 'Thread id',
+  })
     threadId?: bigint;
 
   @ApiProperty({
     enum: TelegramSource,
+    description: 'Type of telegram chat',
   })
     source: TelegramSource;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Whether to write messages about classes ',
+  })
     postInfo: boolean;
 }
 
