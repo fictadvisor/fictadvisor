@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiOkResponse,
@@ -18,6 +18,7 @@ import { GroupByIdPipe } from '../pipes/GroupByIdPipe';
 import { TelegramGroupResponse, TelegramGroupsResponse } from '../responses/TelegramGroupResponse';
 import { TelegramGroupsByTelegramIdResponse } from '../responses/TelegramGroupByTelegramIdResponse';
 import { TelegramGuard } from '../../security/TelegramGuard';
+import { ApiEndpoint } from '../../utils/documentation/decorators';
 
 @ApiTags('TelegramGroup')
 @Controller({
@@ -59,7 +60,10 @@ export class TelegramGroupController {
     InvalidEntityIdException:
       Group with such id is not found`,
   })
-  @UseGuards(TelegramGuard)
+  @ApiEndpoint({
+    summary: 'Create telegram group',
+    guards: TelegramGuard,
+  })
   @Post('/:groupId')
   async create (
     @Param('groupId', GroupByIdPipe) groupId: string,
@@ -97,7 +101,10 @@ export class TelegramGroupController {
     name: 'telegramId',
     type: Number,
   })
-  @UseGuards(TelegramGuard)
+  @ApiEndpoint({
+    summary: 'Update telegram group',
+    guards: TelegramGuard,
+  })
   @Patch()
   async update (
     @Query('telegramId', TelegramGroupByIdPipe) telegramId: bigint,
@@ -128,7 +135,10 @@ export class TelegramGroupController {
     name: 'telegramId',
     type: Number,
   })
-  @UseGuards(TelegramGuard)
+  @ApiEndpoint({
+    summary: 'Delete telegram group',
+    guards: TelegramGuard,
+  })
   @Delete()
   async delete (
     @Query('telegramId', TelegramGroupByIdPipe) telegramId: bigint,
@@ -154,7 +164,10 @@ export class TelegramGroupController {
     DataNotFoundException:
       Data were not found`,
   })
-  @UseGuards(TelegramGuard)
+  @ApiEndpoint({
+    summary: 'Get all telegram groups',
+    guards: TelegramGuard,
+  })
   @Get('/:groupId')
   async getTelegramGroups (
     @Param('groupId', GroupByIdPipe) groupId: string,
@@ -181,7 +194,10 @@ export class TelegramGroupController {
     name: 'telegramId',
     type: Number,
   })
-  @UseGuards(TelegramGuard)
+  @ApiEndpoint({
+    summary: 'Get telegram group',
+    guards: TelegramGuard,
+  })
   @Get('/telegram/:telegramId')
   async getGroupsByTelegramId (
     @Param('telegramId', TelegramGroupByIdPipe) telegramId: bigint,

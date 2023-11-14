@@ -1,7 +1,9 @@
-import { applyDecorators } from '@nestjs/common';
+import { applyDecorators, UseGuards } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { PERMISSION } from '../../security/PERMISSION';
-import { Access } from '../../security/Access';
+import { JwtGuard } from '../../security/JwtGuard';
+import { PermissionGuard } from '../../security/permission-guard/PermissionGuard';
+import { Permissions } from '../../security/permission-guard/Permissions';
 
 export class ApiEndpointParams {
   summary: string;
@@ -21,8 +23,15 @@ export function ApiEndpoint ({ summary, permissions, guards }: ApiEndpointParams
 
   const decorators = [ApiOperation({ summary, description })];
 
-  if (permissions || guards) {
-    decorators.push(Access(permissions ?? [], ...guards ?? []));
+  if (permissions) {
+    decorators.push(
+      Permissions(permissions),
+      UseGuards(JwtGuard, PermissionGuard),
+    );
+  }
+
+  if (guards) {
+    decorators.push(UseGuards(...guards));
   }
 
   return applyDecorators(...decorators);

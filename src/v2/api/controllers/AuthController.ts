@@ -67,7 +67,10 @@ export class AuthController {
 
   @ApiBearerAuth()
   @ApiOkResponse()
-  @UseGuards(TelegramGuard)
+  @ApiEndpoint({
+    summary: 'Register new user throw the telegram',
+    guards: TelegramGuard,
+  })
   @Post('/registerTelegram')
   async registerTelegram (
     @Body() body: RegisterTelegramDTO,

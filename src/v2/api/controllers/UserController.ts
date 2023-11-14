@@ -8,7 +8,6 @@ import {
   Post,
   Query,
   UploadedFile,
-  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from '../services/UserService';
@@ -70,7 +69,6 @@ export class UserController {
   ) {}
 
   @ApiBearerAuth()
-  @UseGuards(TelegramGuard)
   @ApiOkResponse({
     type: StudentsResponse,
   })
@@ -106,6 +104,7 @@ export class UserController {
   })
   @ApiEndpoint({
     summary: 'Verify user to be a student',
+    guards: TelegramGuard,
   })
   @Patch('/:userId/verifyStudent')
   async verify (
@@ -721,7 +720,6 @@ export class UserController {
   }
 
   @ApiBearerAuth()
-  @UseGuards(TelegramGuard)
   @ApiOkResponse({
     type: OrdinaryStudentResponse,
   })
@@ -742,6 +740,7 @@ export class UserController {
   })
   @ApiEndpoint({
     summary: 'Get user by id',
+    guards: TelegramGuard,
   })
   @Get('/:userId/telegram')
   getUserForTelegram (
@@ -768,7 +767,10 @@ export class UserController {
     name: 'telegramId',
     type: Number,
   })
-  @UseGuards(TelegramGuard)
+  @ApiEndpoint({
+    summary: 'Get user',
+    guards: TelegramGuard,
+  })
   @Get('/telegramUser/:telegramId')
   async getUserByTelegramId (
     @Param('telegramId', UserByTelegramIdPipe) telegramId: bigint,
