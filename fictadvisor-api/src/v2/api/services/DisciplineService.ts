@@ -5,6 +5,7 @@ import { DisciplineTeacherRepository } from '../../database/repositories/Discipl
 import { DisciplineTypeEnum } from '@prisma/client';
 import { TeacherRoleAdapter } from '../../mappers/TeacherRoleAdapter';
 import { CreateDisciplineDTO } from '../dtos/CreateDisciplineDTO';
+import { DbDiscipline } from '../../database/entities/DbDiscipline';
 
 @Injectable()
 export class DisciplineService {
@@ -37,5 +38,9 @@ export class DisciplineService {
       },
     });
     return this.disciplineTeacherMapper.getDisciplineTeachersWithTeacherParams(disciplineTeachers);
+  }
+
+  async deleteDiscipline (disciplineId: string): Promise<DbDiscipline> {
+    return this.disciplineRepository.deleteById(disciplineId);
   }
 }

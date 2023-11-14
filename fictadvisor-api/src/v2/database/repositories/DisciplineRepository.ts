@@ -38,6 +38,15 @@ export class DisciplineRepository {
     });
   }
 
+  async deleteById (id: string): Promise<DbDiscipline> {
+    return this.prisma.discipline.delete({
+      where: {
+        id,
+      },
+      include: this.include,
+    });
+  }
+
   async findMany (where: Prisma.DisciplineWhereInput): Promise<DbDiscipline[]> {
     return this.prisma.discipline.findMany({
       where,

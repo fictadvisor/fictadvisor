@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
 import { DisciplineService } from '../services/DisciplineService';
 import { CreateDisciplineDTO } from '../dtos/CreateDisciplineDTO';
 import { GroupByDisciplineGuard } from '../../security/group-guard/GroupByDisciplineGuard';
@@ -15,9 +15,11 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { DisciplineByIdPipe } from '../pipes/DisciplineByIdPipe';
-import { DisciplineTeachersResponse } from '../responses/DisciplineTeachersResponse';
+import { DisciplineTeachersResponse, ExtendDisciplineTeachersResponse } from '../responses/DisciplineTeachersResponse';
 import { DisciplineTypeEnum } from '@prisma/client';
 import { DisciplineResponse } from '../responses/DisciplineResponse';
+import { DisciplineMapper } from '../../mappers/DisciplineMapper';
+import { ApiEndpoint } from '../../utils/documentation/decorators';
 
 @ApiTags('Discipline')
 @Controller({
@@ -27,6 +29,7 @@ import { DisciplineResponse } from '../responses/DisciplineResponse';
 export class DisciplineController {
   constructor (
     private disciplineService: DisciplineService,
+    private disciplineMapper: DisciplineMapper,
   ) {}
 
   @ApiBearerAuth()
@@ -91,5 +94,41 @@ export class DisciplineController {
   ) {
     const teachers = await this.disciplineService.getTeachers(disciplineId, disciplineType);
     return { teachers };
+  }
+
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: ExtendDisciplineTeachersResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException:
+      Discipline with such id is not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @ApiParam({
+    name: 'disciplineId',
+    required: true,
+    description: 'Id of a discipline to delete',
+  })
+  @ApiEndpoint({
+    summary: 'Delete discipline by id',
+    permissions: PERMISSION.DISCIPLINE_DELETE,
+  })
+  @Delete('/:disciplineId')
+  async delete (
+    @Param('disciplineId', DisciplineByIdPipe) disciplineId: string,
+  ): Promise<ExtendDisciplineTeachersResponse> {
+    const discipline = await this.disciplineService.deleteDiscipline(disciplineId);
+    return this.disciplineMapper.getDisciplineWithTeachers(discipline);
   }
 }

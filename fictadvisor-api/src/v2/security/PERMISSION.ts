@@ -11,6 +11,7 @@ export enum PERMISSION {
   DISCIPLINE_TEACHERS_CREATE = 'disciplineTeachers.create',
   DISCIPLINE_TEACHERS_UPDATE = 'disciplineTeachers.update',
   DISCIPLINE_TEACHERS_DELETE = 'disciplineTeachers.delete',
+  DISCIPLINE_DELETE = 'discipline.delete',
 
   ENTRANT_CONTRACT_CREATE = 'entrant.contract.create',
 

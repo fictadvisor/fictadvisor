@@ -1,11 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { DbDiscipline } from '../database/entities/DbDiscipline';
 import { SelectiveAmount } from '@prisma/client';
+import { ExtendDisciplineTeachersResponse } from '../api/responses/DisciplineTeachersResponse';
 
 @Injectable()
 export class DisciplineMapper {
   getDisciplinesWithTeachers (disciplines: DbDiscipline[]) {
-    return disciplines.map((discipline) => ({
+    return disciplines.map((discipline) => this.getDisciplineWithTeachers(discipline));
+  }
+
+  getDisciplineWithTeachers (discipline: DbDiscipline): ExtendDisciplineTeachersResponse {
+    return {
       id: discipline.id,
       subject: discipline.subject,
       year: discipline.year,
@@ -17,7 +22,7 @@ export class DisciplineMapper {
         rating: disciplineTeacher.teacher.rating.toNumber(),
         roles: disciplineTeacher.roles.map((r) => r.role),
       })),
-    }));
+    };
   }
 
   getDisciplines (disciplines: DbDiscipline[]) {
