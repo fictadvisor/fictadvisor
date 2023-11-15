@@ -66,3 +66,57 @@ export class CreateEventDTO {
   @IsOptional()
     eventInfo?: string;
 }
+
+export class CreateSimpleTelegramEvent {
+  @ApiProperty({
+    description: 'Id of a group',
+  })
+  @IsNotEmpty(validationOptionsMsg('Group id cannot be empty'))
+  @IsUUID(undefined, validationOptionsMsg('Group id must be in UUID format'))
+    groupId: string;
+  
+  @ApiProperty({
+    description: 'Name of the event',
+  })
+  @IsNotEmpty(validationOptionsMsg('Name cannot be empty'))
+  @MinLength(2, validationOptionsMsg('Name is too short (min: 2)'))
+  @MaxLength(150, validationOptionsMsg('Name is too long (max: 150)'))
+    name: string;
+  
+  @ApiProperty({
+    description: 'Start time of the event',
+  })
+  @IsNotEmpty(validationOptionsMsg('Start time cannot be empty'))
+  @Type(() => Date)
+  @IsDate(validationOptionsMsg('Start time must be Date'))
+    startTime: Date;
+  
+  @ApiProperty({
+    description: 'End time of the event',
+  })
+  @IsNotEmpty(validationOptionsMsg('End time cannot be empty'))
+  @Type(() => Date)
+  @IsDate(validationOptionsMsg('End time must be Date'))
+    endTime: Date;
+  
+  @ApiProperty({
+    description: 'Event\'s period',
+  })
+  @IsNotEmpty(validationOptionsMsg('Period cannot be empty'))
+  @IsEnum(Period, validationOptionsMsg('Period must be an enum'))
+    period: Period;
+  
+  @ApiPropertyOptional({
+    description: 'Attached link to the event',
+  })
+  @IsOptional()
+  @IsUrl(undefined, validationOptionsMsg('Url must be a URL address'))
+    url?: string;
+  
+  @ApiPropertyOptional({
+    description: 'Description of the event',
+  })
+  @IsOptional()
+  @MaxLength(2000, validationOptionsMsg('Event description is too long (max: 2000)'))
+    eventInfo?: string;
+}

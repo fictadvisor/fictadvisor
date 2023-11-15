@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { DisciplineTypeResponse, GeneralDisciplineTypeResponse } from './DisciplineTypeResponse';
 
-export class MainEventInfoResponse {
+export class SimpleEventInfoResponse {
   @ApiProperty({
     description: 'Event\'s id',
   })
@@ -21,7 +21,9 @@ export class MainEventInfoResponse {
     description: 'End time of event',
   })
     endTime: Date;
+}
 
+export class MainEventInfoResponse extends SimpleEventInfoResponse {
   @ApiProperty({
     type: DisciplineTypeResponse,
     description: 'Type of event',
@@ -29,19 +31,7 @@ export class MainEventInfoResponse {
     disciplineType: DisciplineTypeResponse;
 }
 
-export class GeneralEventInfoResponse {
-  @ApiProperty()
-    id: string;
-
-  @ApiProperty()
-    name: string;
-
-  @ApiProperty()
-    startTime: Date;
-
-  @ApiProperty()
-    endTime: Date;
-
+export class GeneralEventInfoResponse extends SimpleEventInfoResponse {
   @ApiProperty({
     type: GeneralDisciplineTypeResponse,
   })

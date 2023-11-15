@@ -5,6 +5,7 @@ import { TeacherRoleAdapter } from './TeacherRoleAdapter';
 import { some } from '../utils/ArrayUtil';
 import { EventResponse } from '../api/responses/EventResponse';
 import { DisciplineType } from '@prisma/client';
+import { SimpleTelegramEventInfoResponse, TelegramEventInfoResponse } from '../api/responses/TelegramGeneralEventInfoResponse';
 
 @Injectable()
 export class ScheduleMapper {
@@ -20,15 +21,11 @@ export class ScheduleMapper {
       .sort((firstEvent, secondEvent) => firstEvent.startTime.getTime() - secondEvent.startTime.getTime());
   }
 
-  getTelegramEvents (events: DbEvent[]) {
+  getTelegramEvents (events: DbEvent[]): TelegramEventInfoResponse[] {
     return events
       .map((event) => ({
-        id: event.id,
-        name: event.name,
-        startTime: event.startTime,
-        endTime: event.endTime,
+        ...this.getSimpleTelegramEvent(event),
         disciplineType: this.getDisciplineType(event.lessons[0]?.disciplineType),
-        url: event.url,
       }))
       .sort((firstEvent, secondEvent) => firstEvent.startTime.getTime() - secondEvent.startTime.getTime());
   }
@@ -54,6 +51,17 @@ export class ScheduleMapper {
           middleName: teacher.middleName,
           lastName: teacher.lastName,
         })) || null,
+    };
+  }
+
+  getSimpleTelegramEvent (event: DbEvent): SimpleTelegramEventInfoResponse {
+    return {
+      id: event.id,
+      name: event.name,
+      startTime: event.startTime,
+      endTime: event.endTime,
+      url: event.url,
+      eventInfo: event.eventInfo[0].description,
     };
   }
 

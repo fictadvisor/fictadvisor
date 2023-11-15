@@ -26,7 +26,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { CreateEventDTO } from '../dtos/CreateEventDTO';
+import { CreateEventDTO, CreateSimpleTelegramEvent } from '../dtos/CreateEventDTO';
 import { EventResponse } from '../responses/EventResponse';
 import { GroupByEventGuard } from '../../security/group-guard/GroupByEventGuard';
 import {
@@ -44,6 +44,7 @@ import { UpdateEventDTO } from '../dtos/UpdateEventDTO';
 import { EventPipe } from '../pipes/EventPipe';
 import { UserByIdPipe } from '../pipes/UserByIdPipe';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
+import { SimpleTelegramEventInfoResponse } from '../responses/TelegramGeneralEventInfoResponse';
 
 @ApiTags('Schedule')
 @Controller({
@@ -516,5 +517,57 @@ export class ScheduleController {
     return {
       events: this.scheduleMapper.getTelegramEvents(result),
     };
+  }
+
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: SimpleTelegramEventInfoResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidBodyException:
+      Group id cannot be empty
+      Group id must be in UUID format
+      Name is too short (min: 2)
+      Name is too long (max: 150)
+      Name cannot be empty
+      Start time cannot be empty
+      Start time must be Date
+      End time cannot be empty
+      End Time must be Date
+      Period cannot be empty
+      Period must be an enum
+      Url must be a URL address
+      Event description is too long (max: 2000)
+      
+    InvalidDateException:
+      Date is not valid or does not belong to this semester
+      
+    DataNotFoundException:
+      Data were not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @ApiEndpoint({
+    summary: 'Creates simple event without labs, practices and lectures',
+    guards: TelegramGuard,
+  })
+  @Post('/events/simple')
+  async createSimpleTelegramEvent (
+    @Body() body: CreateSimpleTelegramEvent,
+  ) {
+    const result = await this.scheduleService.createGroupEvent({
+      ...body,
+      teachers: [],
+    });
+    return this.scheduleMapper.getSimpleTelegramEvent(result.event);
   }
 }
