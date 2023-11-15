@@ -296,11 +296,13 @@ export class PollService {
 
   private async getSelectedInSemester (semester: SemesterDate, studentId: string) {
     return this.disciplineRepository.findMany({
-      semester: semester.semester,
-      year: semester.year,
-      selectiveDisciplines: {
-        some: {
-          studentId,
+      where: {
+        semester: semester.semester,
+        year: semester.year,
+        selectiveDisciplines: {
+          some: {
+            studentId,
+          },
         },
       },
     });

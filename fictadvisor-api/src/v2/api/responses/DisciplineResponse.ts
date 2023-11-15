@@ -1,5 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { SubjectResponse } from './SubjectResponse';
+import { GroupResponse } from './GroupResponse';
+import { ShortTeacherResponse } from './TeacherResponse';
+import { PaginationDataResponse } from './PaginationDataResponse';
 
 export class BaseDisciplineResponse {
   @ApiProperty({
@@ -22,6 +25,40 @@ export class BaseDisciplineResponse {
   })
     semester: number;
 }
+
+export class DisciplineAdminResponse extends BaseDisciplineResponse {
+  @ApiProperty({
+    description: 'Name of discipline',
+  })
+    name: string;
+
+  @ApiProperty({
+    description: 'Group associated with the discipline',
+    type: GroupResponse,
+  })
+    group: GroupResponse;
+
+  @ApiProperty({
+    description: 'Teachers associated with the discipline',
+    type: [ShortTeacherResponse],
+  })
+    teachers: ShortTeacherResponse[];
+}
+
+export class DisciplinesResponse {
+  @ApiProperty({
+    type: [DisciplineAdminResponse],
+    description: 'List of discipline\'s data',
+  })
+    disciplines: DisciplineAdminResponse[];
+
+  @ApiProperty({
+    description: 'Pagination info',
+    type: PaginationDataResponse,
+  })
+    pagination: PaginationDataResponse;
+}
+
 export class DisciplineResponse extends BaseDisciplineResponse {
   @ApiProperty({
     description: 'Bound subject id',

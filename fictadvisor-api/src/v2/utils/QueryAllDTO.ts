@@ -1,5 +1,6 @@
-import { IsIn, IsNumberString, IsOptional } from 'class-validator';
+import { IsIn, IsNumberString, IsOptional, IsString } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { validationOptionsMsg } from './GLOBALS';
 
 export class QueryAllDTO {
   @ApiPropertyOptional({
@@ -24,6 +25,7 @@ export class QueryAllDTO {
     description: 'Symbols that should be in a filter',
   })
   @IsOptional()
+  @IsString()
     search?: string;
 
   @ApiPropertyOptional({
@@ -36,9 +38,7 @@ export class QueryAllDTO {
     description: 'Sorting order',
     enum: ['asc', 'desc'],
   })
-  @IsIn(['asc', 'desc'], {
-    message: 'Wrong value for order',
-  })
+  @IsIn(['asc', 'desc'], validationOptionsMsg('Wrong value for order'))
   @IsOptional()
     order?: 'asc' | 'desc';
 }

@@ -5,7 +5,11 @@ import { DisciplineTeacherRepository } from '../../database/repositories/Discipl
 import { DisciplineTypeEnum } from '@prisma/client';
 import { TeacherRoleAdapter } from '../../mappers/TeacherRoleAdapter';
 import { CreateDisciplineDTO } from '../dtos/CreateDisciplineDTO';
+import { QueryAllDisciplinesDTO } from '../dtos/QueryAllDisciplinesDTO';
+import { QuerySemesterDTO } from '../dtos/QuerySemesterDTO';
+import { DatabaseUtils } from '../../database/DatabaseUtils';
 import { DbDiscipline } from '../../database/entities/DbDiscipline';
+import { PaginatedData } from '../datas/PaginatedData';
 
 @Injectable()
 export class DisciplineService {
@@ -15,12 +19,67 @@ export class DisciplineService {
     private disciplineTeacherRepository: DisciplineTeacherRepository,
   ) {}
 
+  private DisciplineSearching = {
+    name: (search: string) => ({
+      subject: DatabaseUtils.getSearch({ search }, 'name'),
+    }),
+    groups: (ids: string[]) => ({
+      group: {
+        OR: ids?.map((id) => DatabaseUtils.getStrictSearch(id, 'id')),
+      },
+    }),
+    semesters: (semesters: QuerySemesterDTO[]) => ({
+      OR: semesters?.map(({ semester, year }) => ({
+        ...DatabaseUtils.getStrictSearch(semester, 'semester'),
+        ...DatabaseUtils.getStrictSearch(year, 'year'),
+      })),
+    }),
+    teachers: (ids: string[]) => ({
+      disciplineTeachers: {
+        some: {
+          OR: ids?.map((id) => DatabaseUtils.getStrictSearch(id, 'teacherId')),
+        },
+      },
+    }),
+  };
+
+  private DisciplineSorting = {
+    name: (order = 'asc') => ({ subject: { name: order } }),
+    group: (order = 'asc') => ({ group: { code: order } }),
+    semester: (order = 'desc') => ([{ year: order }, { semester: order }]),
+  };
+
   async create (data: CreateDisciplineDTO) {
     return this.disciplineRepository.create(data);
   }
 
   async get (id: string) {
     return this.disciplineRepository.findById(id);
+  }
+
+  async getAll (body: QueryAllDisciplinesDTO): Promise<PaginatedData<DbDiscipline>> {
+    const {
+      sort: sortBy = 'name',
+      search: name,
+      groups,
+      semesters,
+      teachers,
+      order,
+    } = body;
+
+    const sort = this.DisciplineSorting[sortBy](order);
+    const data = {
+      where: {
+        AND: [
+          this.DisciplineSearching.name(name),
+          this.DisciplineSearching.groups(groups),
+          this.DisciplineSearching.semesters(semesters),
+          this.DisciplineSearching.teachers(teachers),
+        ],
+      },
+      orderBy: sort,
+    };
+    return DatabaseUtils.paginate(this.disciplineRepository, body, data);
   }
 
   async getTeachers (disciplineId: string, disciplineType: DisciplineTypeEnum) {

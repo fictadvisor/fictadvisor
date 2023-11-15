@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { DbDiscipline } from '../database/entities/DbDiscipline';
 import { SelectiveAmount } from '@prisma/client';
 import { ExtendDisciplineTeachersResponse } from '../api/responses/DisciplineTeachersResponse';
+import { DisciplineAdminResponse } from '../api/responses/DisciplineResponse';
 
 @Injectable()
 export class DisciplineMapper {
@@ -32,6 +33,26 @@ export class DisciplineMapper {
       year: d.year,
       semester: d.semester,
       isSelective: d.isSelective,
+    }));
+  }
+
+  getDisciplinesForAdmin (disciplines: DbDiscipline[]): DisciplineAdminResponse[] {
+    return disciplines.map((d) => ({
+      id: d.id,
+      name: d.subject.name,
+      year: d.year,
+      semester: d.semester,
+      isSelective: d.isSelective,
+      group: {
+        id: d.group.id,
+        code: d.group.code,
+      },
+      teachers: d.disciplineTeachers.map((disciplineTeacher) => ({
+        id: disciplineTeacher.teacherId,
+        lastName: disciplineTeacher.teacher.lastName,
+        firstName: disciplineTeacher.teacher.firstName,
+        middleName: disciplineTeacher.teacher.middleName,
+      })),
     }));
   }
 

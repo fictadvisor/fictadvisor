@@ -17,9 +17,11 @@ import {
 import { DisciplineByIdPipe } from '../pipes/DisciplineByIdPipe';
 import { DisciplineTeachersResponse, ExtendDisciplineTeachersResponse } from '../responses/DisciplineTeachersResponse';
 import { DisciplineTypeEnum } from '@prisma/client';
-import { DisciplineResponse } from '../responses/DisciplineResponse';
-import { DisciplineMapper } from '../../mappers/DisciplineMapper';
+import { DisciplineResponse, DisciplinesResponse } from '../responses/DisciplineResponse';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
+import { QueryAllDisciplinesDTO } from '../dtos/QueryAllDisciplinesDTO';
+import { QueryAllDisciplinesPipe } from '../pipes/QueryAllDisciplinesPipe';
+import { DisciplineMapper } from '../../mappers/DisciplineMapper';
 
 @ApiTags('Discipline')
 @Controller({
@@ -54,6 +56,36 @@ export class DisciplineController {
     return this.disciplineService.create(body);
   }
 
+  @ApiOkResponse({
+    type: DisciplinesResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidBodyException: 
+      Page must be a number
+      PageSize must be a number
+      Wrong value for order
+      Wrong value for sort
+      
+    InvalidEntityIdException:
+      Group with such id is not found
+      Teacher with such id is not found`,
+  })
+  @ApiEndpoint({
+    summary: 'Get all disciplines with selected filters',
+  })
+  @Get()
+  async getAll (
+    @Query(QueryAllDisciplinesPipe) body: QueryAllDisciplinesDTO,
+  ): Promise<DisciplinesResponse> {
+    const disciplinesWithSelectiveAmounts = await this.disciplineService.getAll(body);
+    const disciplines = this.disciplineMapper.getDisciplinesForAdmin(disciplinesWithSelectiveAmounts.data);
+    return {
+      disciplines,
+      pagination: disciplinesWithSelectiveAmounts.pagination,
+    };
+  }
+
   @ApiBearerAuth()
   @ApiOkResponse({
     type: DisciplineTeachersResponse,
@@ -62,6 +94,7 @@ export class DisciplineController {
     description: `\n
     InvalidQueryException:
       Type of discipline must be a field of enum
+      
     InvalidDisciplineIdException:
       Discipline with such id is not found`,
   })
