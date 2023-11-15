@@ -11,13 +11,14 @@ import { ConfigurationModule } from './ConfigModule';
 import { SubjectByIdPipe } from '../api/pipes/SubjectByIdPipe';
 import { MapperModule } from './MapperModule';
 import { CommentsQueryPipe } from '../api/pipes/CommentsQueryPipe';
+import { TeacherByIdPipe } from '../api/pipes/TeacherByIdPipe';
 import { GroupByIdPipe } from '../api/pipes/GroupByIdPipe';
 import { CathedraByIdPipe } from '../api/pipes/CathedraByIdPipe';
 
 @Module({
   controllers: [TeacherController, DisciplineTeacherController],
-  providers: [TeacherService, DisciplineTeacherService, TelegramAPI, SubjectByIdPipe, CommentsQueryPipe, GroupByIdPipe, CathedraByIdPipe],
-  exports: [TeacherService, DisciplineTeacherService],
+  providers: [TeacherService, DisciplineTeacherService, TelegramAPI, SubjectByIdPipe, CommentsQueryPipe, GroupByIdPipe, CathedraByIdPipe, TeacherByIdPipe],
+  exports: [TeacherService, DisciplineTeacherService, TeacherByIdPipe],
   imports: [PollModule, AccessModule, DateModule, ConfigurationModule, MapperModule],
 })
 export class TeacherModule {}

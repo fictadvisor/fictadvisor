@@ -96,10 +96,12 @@ export class GroupService {
 
   async getDisciplineTeachers (groupId: string, { year, semester }: QuerySemesterDTO) {
     this.dateService.checkYearAndSemester(year, semester);
-    const disciplines = await this.disciplineRepository.findMany({ 
-      groupId,
-      semester, 
-      year,
+    const disciplines = await this.disciplineRepository.findMany({
+      where: {
+        groupId,
+        semester,
+        year,
+      },
     });
     return this.disciplineMapper.getDisciplinesWithTeachers(disciplines);
   }
@@ -107,17 +109,21 @@ export class GroupService {
   async getDisciplines (groupId: string, { year, semester }: QuerySemesterDTO) {
     this.dateService.checkYearAndSemester(year, semester);
     const disciplines = await this.disciplineRepository.findMany({
-      groupId,
-      semester,
-      year,
+      where: {
+        groupId,
+        semester,
+        year,
+      },
     });
     return this.disciplineMapper.getDisciplines(disciplines);
   }
 
   async getSelectiveDisciplines (groupId: string) {
     return this.disciplineRepository.findMany({
-      groupId,
-      isSelective: true,
+      where: {
+        groupId,
+        isSelective: true,
+      },
     });
   }
 

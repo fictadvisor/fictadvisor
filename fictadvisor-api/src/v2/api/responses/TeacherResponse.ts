@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { TeacherRole } from '@prisma/client';
 
-export class TeacherResponse {
+export class ShortTeacherResponse {
   @ApiProperty({
     description: 'Id of specified teacher',
   })
@@ -21,7 +21,9 @@ export class TeacherResponse {
     description: 'Teacher\'s last name',
   })
     lastName: string;
+}
 
+export class TeacherResponse extends ShortTeacherResponse {
   @ApiProperty({
     description: 'Some description of the teacher',
   })

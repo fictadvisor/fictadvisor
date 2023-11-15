@@ -47,11 +47,11 @@ export class DisciplineRepository {
     });
   }
 
-  async findMany (where: Prisma.DisciplineWhereInput): Promise<DbDiscipline[]> {
+  async findMany (args: Prisma.DisciplineFindManyArgs): Promise<DbDiscipline[]> {
     return this.prisma.discipline.findMany({
-      where,
+      ...args,
       include: this.include,
-    });
+    }) as unknown as Promise<DbDiscipline[]>;
   }
 
   async create (data: Prisma.DisciplineUncheckedCreateInput) {
@@ -81,5 +81,9 @@ export class DisciplineRepository {
 
   async updateMany (where: Prisma.DisciplineWhereInput, data: Prisma.DisciplineUncheckedUpdateManyInput) {
     return this.prisma.discipline.updateMany({ where, data });
+  }
+
+  async count (data: Prisma.DisciplineCountArgs): Promise<number> {
+    return this.prisma.discipline.count(data);
   }
 }

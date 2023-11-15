@@ -381,18 +381,20 @@ export class ScheduleService {
 
   private async filtrateOwnSelective (groupId: string, userId: string, events: DbEvent[]) {
     const disciplines = await this.disciplineRepository.findMany({
-      groupId: groupId,
-      OR: [
-        {
-          isSelective: false,
-        }, {
-          selectiveDisciplines: {
-            some: {
-              studentId: userId,
+      where: {
+        groupId: groupId,
+        OR: [
+          {
+            isSelective: false,
+          }, {
+            selectiveDisciplines: {
+              some: {
+                studentId: userId,
+              },
             },
           },
-        },
-      ],
+        ],
+      },
     });
 
     return events.filter((event) => {
