@@ -14,7 +14,7 @@ export class GroupMapper {
     return groups.map((group) => this.getGroup(group));
   }
 
-  getGroupsWithTelegramGroups (groups: DbGroup[]) {
+  getGroupsWithTelegramGroups (groups) {
     return {
       groups: groups.map((group) => ({
         id: group.id,

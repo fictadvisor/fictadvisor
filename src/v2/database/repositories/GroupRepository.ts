@@ -29,9 +29,9 @@ export class GroupRepository {
     });
   }
 
-  async findMany (where: Prisma.GroupWhereInput) {
+  async findMany (args: Prisma.GroupFindManyArgs) {
     return this.prisma.group.findMany({
-      where,
+      ...args,
       include: this.include,
     });
   }

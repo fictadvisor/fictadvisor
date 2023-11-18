@@ -297,8 +297,10 @@ export class GroupService {
 
   async getGroupsWithTelegramGroups () {
     return this.groupRepository.findMany({
-      telegramGroups: {
-        some: {},
+      where: {
+        telegramGroups: {
+          some: {},
+        },
       },
     });
   }
