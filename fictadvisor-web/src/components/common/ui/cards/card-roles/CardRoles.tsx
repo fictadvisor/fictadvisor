@@ -28,7 +28,7 @@ export interface CardRolesProps {
   cathedras: TeacherCathedra[];
 }
 
-const TagText: Record<TeacherRole, string> = {
+export const TagText: Record<TeacherRole, string> = {
   [TeacherRole.LABORANT]: 'Лабораторні',
   [TeacherRole.LECTURER]: 'Лекції',
   [TeacherRole.PRACTICIAN]: 'Практики',
@@ -36,7 +36,7 @@ const TagText: Record<TeacherRole, string> = {
   [TeacherRole.OTHER]: 'Інше',
 };
 
-const RoleColors: Record<TeacherRole, TagColor> = {
+export const RoleColors: Record<TeacherRole, TagColor> = {
   [TeacherRole.LABORANT]: TagColor.MINT,
   [TeacherRole.LECTURER]: TagColor.INDIGO,
   [TeacherRole.PRACTICIAN]: TagColor.ORANGE,
@@ -44,7 +44,7 @@ const RoleColors: Record<TeacherRole, TagColor> = {
   [TeacherRole.OTHER]: TagColor.PRIMARY,
 };
 
-const CathedraColors: Record<string, TagColor> = {
+export const CathedraColors: Record<string, TagColor> = {
   ['ІПІ']: TagColor.VIOLET,
   ['ІСТ']: TagColor.MINT,
   ['ОТ']: TagColor.ORANGE,

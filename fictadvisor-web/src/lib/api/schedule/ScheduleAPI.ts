@@ -104,7 +104,7 @@ class ScheduleAPI {
     semester: GetCurrentSemester,
   ): Promise<getDisciplinesAndTeachers> {
     const [teachers, disciplines] = await Promise.all([
-      TeacherAPI.getAll(),
+      TeacherAPI.getAdminAll(),
       GroupAPI.getDisciplines(groupId, semester.semester, semester.year),
     ]);
     return {
