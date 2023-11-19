@@ -58,7 +58,7 @@ export enum PERMISSION {
 
   SCHEDULE_PARSE = 'schedule.parse',
 
-  STUDENTS_DELETE = 'students.delete',
+  STUDENTS_DELETE = 'students.$studentId.delete',
 
   SUBJECTS_CREATE = 'subjects.create',
   SUBJECTS_UPDATE = 'subjects.update',
