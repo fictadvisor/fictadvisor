@@ -25,7 +25,7 @@ jobs:
         uses: ./.github/actions/install
       - name: Start PostgreSQL Database
         run: |
-          docker-compose up -d
+          docker-compose up -d && sleep 5s
       - name: Start migration
         run: npm run test:migrate
       - name: Start generating
