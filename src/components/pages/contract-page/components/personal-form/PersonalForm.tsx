@@ -47,7 +47,7 @@ export const PersonalForm: FC<{
         setSubmitted(true);
 
         toast.success(
-          `Ви успішно надіслали контракт, перевірте пошту ${data.entrant.email}`,
+          `Ти успішно надіслав контракт, перевір пошту ${data.entrant.email}`,
         );
       } catch (error) {
         displayError(error);

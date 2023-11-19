@@ -23,7 +23,7 @@ const Footer: FC = () => {
       <Box sx={styles.footerLogoContainer}>
         <Link href="/" component={NextLink} sx={styles.footerLogo}>
           <Image
-            src={'/icons/halloween-logo.svg'}
+            src={'/icons/logo.svg'}
             alt="FA logo"
             width={197}
             height={28}

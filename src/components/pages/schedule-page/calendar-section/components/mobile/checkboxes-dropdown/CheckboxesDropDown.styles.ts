@@ -12,6 +12,9 @@ export const autocomplete: SxProps<Theme> = {
   '& .Mui-focused': {
     paddingTop: '15px',
   },
+  '& .MuiOutlinedInput-root .MuiAutocomplete-input': {
+    padding: '0 14px 0 5px',
+  },
 };
 
 export const input: SxProps<Theme> = {
@@ -27,4 +30,4 @@ export const input: SxProps<Theme> = {
   },
 };
 
-export const tag: SxProps<Theme> = { mr: '6px' };
+export const tag: SxProps<Theme> = { m: '3px' };

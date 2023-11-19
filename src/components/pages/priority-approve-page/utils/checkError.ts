@@ -3,7 +3,7 @@ const errors = {
   DataNotFoundException: 'Дані не знайдено',
   AlreadyExistException: 'Контракт вже існує',
   UnauthorizedException: 'Користувач не авторизований',
-  NoPermissionException: 'У вас немає дозволу на виконання цієї дії',
+  NoPermissionException: 'У тебе немає дозволу на виконання цієї дії',
 };
 
 export const checkError = (requestError: string) => {

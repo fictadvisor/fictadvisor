@@ -11,8 +11,8 @@ export const handleFileSelect = (
 ) => {
   if (!isValidFile(file)) {
     toast.error(
-      'Неправильне розширення файлу файлу',
-      'Підтримуванні розширення: .png, .jpg, .jpeg, .webp',
+      'Invalid file extension',
+      'Supported file extensions: .png, .jpg, .jpeg, .webp',
       4000,
     );
     return;

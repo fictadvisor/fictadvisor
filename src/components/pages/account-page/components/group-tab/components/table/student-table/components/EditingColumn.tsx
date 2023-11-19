@@ -145,16 +145,18 @@ const EditingColumn: FC<EditingColumnProps> = ({ student, refetch }) => {
             />
           }
         />
-        {student.role === UserGroupRole.STUDENT && !isMobile && (
-          <Button
-            text={buttonText}
-            sx={{ width: 'fit-content', whiteSpace: 'nowrap' }}
-            size={ButtonSize.SMALL}
-            variant={ButtonVariant.OUTLINE}
-            startIcon={buttonIcon}
-            onClick={() => setChangePopupOpen(true)}
-          />
-        )}
+        {(student.role === UserGroupRole.STUDENT ||
+          student.role === UserGroupRole.MODERATOR) &&
+          !isMobile && (
+            <Button
+              text={buttonText}
+              sx={{ width: 'fit-content', whiteSpace: 'nowrap' }}
+              size={ButtonSize.SMALL}
+              variant={ButtonVariant.OUTLINE}
+              startIcon={buttonIcon}
+              onClick={() => setChangePopupOpen(true)}
+            />
+          )}
         {isMobile ? (
           <MobileDropdown
             arrowIcon={buttonIcon}
@@ -184,7 +186,7 @@ const EditingColumn: FC<EditingColumnProps> = ({ student, refetch }) => {
           open={deletePopupOpen}
           hasCross
           title="Видалити користувача"
-          content={`Чи дійсно ви бажаєте видалити користувача ${student.fullName}? Якщо ви випадково видалите користувача, йому треба буде відправити повторний запит до групи.`}
+          content={`Чи дійсно ти бажаєш видалити користувача ${student.fullName}? Якщо ти випадково видалиш користувача, йому треба буде відправити повторний запит до групи.`}
           onClose={() => setDeletePopupOpen(false)}
           firstButton={
             <Button

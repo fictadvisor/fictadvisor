@@ -4,7 +4,6 @@ import { AppBar, Box, Link } from '@mui/material';
 import Image from 'next/image';
 import NextLink from 'next/link';
 
-// import { BurgerMenu } from '@/components/common/icons/BurgerMenu';
 import { TransformedUser } from '@/components/common/layout/header/types';
 import IconButton from '@/components/common/ui/icon-button-mui';
 import {
@@ -30,12 +29,7 @@ const MobileHeader: FC<MobileHeaderProps> = ({ isLoggedIn, user }) => {
   return (
     <AppBar sx={styles.headerContainer(isOpened)}>
       <Link href="/" component={NextLink} sx={styles.headerLogo}>
-        <Image
-          src={'/icons/halloween-logo.svg'}
-          alt="FA logo"
-          width={197}
-          height={28}
-        />
+        <Image src={'/icons/logo.svg'} alt="FA logo" width={197} height={28} />
       </Link>
       {isOpened ? (
         <Box sx={styles.iconButton}>

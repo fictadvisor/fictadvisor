@@ -1,11 +1,16 @@
 import { AddContactBody } from '@/lib/api/user/types/AddContactBody';
 import { ChangeAvatarResponse } from '@/lib/api/user/types/ChangeAvatarResponse';
 import { ChangeInfoBody } from '@/lib/api/user/types/ChangeInfoBody';
+import { ChangeRoleBody } from '@/lib/api/user/types/ChangeRoleBody';
 import { GetContactsResponse } from '@/lib/api/user/types/GetContactsResponse';
 import { GetSelectiveDisciplinesBySemesterResponse } from '@/lib/api/user/types/GetSelectiveDisciplinesBySemesterResponse';
 import { GetSelectiveDisciplinesResponse } from '@/lib/api/user/types/GetSelectiveDisciplinesResponse';
+import { GetSelectiveResponse } from '@/lib/api/user/types/GetSelectiveResponse';
 import { PostSelectiveDisciplinesBody } from '@/lib/api/user/types/PostSelectiveDisciplinesBody';
+import { PostSuperheroBody } from '@/lib/api/user/types/PostSuperheroBody';
 import { RequestNewGroupBody } from '@/lib/api/user/types/RequestNewGroupBody';
+import { VerifyStudentBody } from '@/lib/api/user/types/VerifyStudentBody';
+import { VerifySuperheroBody } from '@/lib/api/user/types/VerifySuperheroBody';
 import { getAuthorizationHeader } from '@/lib/api/utils';
 import { TelegramUser } from '@/types/telegram';
 
@@ -100,6 +105,50 @@ class UserAPI {
   async changeAvatar(userId: string, body: FormData) {
     const { data } = await client.patch<ChangeAvatarResponse>(
       `/users/${userId}/avatar`,
+      body,
+      getAuthorizationHeader(),
+    );
+    return data;
+  }
+
+  async setRole(userId: string, body: ChangeRoleBody) {
+    const { data } = await client.post(
+      `/users/${userId}/roles`,
+      body,
+      getAuthorizationHeader(),
+    );
+    return data;
+  }
+
+  async getSelective(userId: string) {
+    const { data } = await client.get<GetSelectiveResponse>(
+      `/users/${userId}/selective`,
+      getAuthorizationHeader(),
+    );
+    return data;
+  }
+
+  async postSuperhero(userId: string, body: PostSuperheroBody) {
+    const { data } = await client.post(
+      `/users/${userId}/superhero`,
+      body,
+      getAuthorizationHeader(),
+    );
+    return data;
+  }
+
+  async verifySuperhero(userId: string, body: VerifySuperheroBody) {
+    const { data } = await client.patch(
+      `/users/${userId}/verifySuperhero`,
+      body,
+      getAuthorizationHeader(),
+    );
+    return data;
+  }
+
+  async verifyStudent(userId: string, body: VerifyStudentBody) {
+    const { data } = await client.patch(
+      `/users/${userId}/verifyStudent`,
       body,
       getAuthorizationHeader(),
     );

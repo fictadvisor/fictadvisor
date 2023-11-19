@@ -4,7 +4,10 @@ import { ContactType } from '@/types/contact';
 
 export const validationSchema = yup.object().shape({
   displayName: yup.string().required(`Обов'язкове поле`),
-  link: yup.string().required(`Обов'язкове поле`),
+  link: yup
+    .string()
+    .required(`Обов'язкове поле`)
+    .url('Неправильний формат посилання'),
   name: yup.string().required(`Обов'язкове поле`),
 });
 

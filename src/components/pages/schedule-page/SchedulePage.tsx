@@ -78,7 +78,11 @@ const SchedulePage: FC<SchedulePageProps> = ({ semester, groups }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
 
   return (
-    <PageLayout title={'Розклад'}>
+    <PageLayout
+      title={'Розклад'}
+      description="FICT Advisor представляє оновлений розклад занять для студентів ФІОТу КПІ. Переглядай та фільтруй
+       пари, переходь до конференцій, додавай власні та змінюй вже наявні події."
+    >
       <Box sx={styles.schedulePage}>
         {isMobile ? (
           <CalendarSectionMobile groups={groups} />

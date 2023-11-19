@@ -13,8 +13,8 @@ export const TagLabelMapper: Record<string, string> = {
   addLecture: 'Лекція',
   addLaboratory: 'Лабораторна',
   addPractice: 'Практика',
-  otherEvents: 'Інша події',
-  isSelective: 'Вибіркові',
+  otherEvents: 'Інша подія',
+  isSelective: 'Мої вибіркові',
 };
 
 export const TagColorMapper: Record<string, TagColor> = {

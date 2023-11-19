@@ -30,7 +30,7 @@ interface PersonalDataSectionProps {
 const errorMapper = {
   InvalidEntityIdException: 'Користувача з таким id не існує',
   DataNotFoundException: 'Даних не знайдено',
-  NoPermissionException: 'У вас не має прав виконувати цю дію',
+  NoPermissionException: 'У тебе не має прав виконувати цю дію',
 };
 
 const specialtyMapper = {

@@ -31,8 +31,8 @@ const EmailConfirmationPage: FC<EmailConfirmationPageProps> = ({
   const email = decodeURIComponent(String(router.query.email)).toLowerCase();
   const emailText =
     apiMethodName === 'forgotPassword'
-      ? `Ми надіслали листа для зміни пароля на адресу ${email}`
-      : `Ми надіслали листа для підтвердження на адресу ${email}`;
+      ? `Ми надіслали лист для зміни пароля на адресу ${email}`
+      : `Ми надіслали лист для підтвердження на адресу ${email}`;
   const returnRegister = () => {
     void router.push(
       apiMethodName === 'forgotPassword' ? '/login' : '/register',
@@ -64,7 +64,7 @@ const EmailConfirmationPage: FC<EmailConfirmationPageProps> = ({
         <Typography sx={styles.title}>Перевір свою пошту</Typography>
         <Typography sx={styles.description}>{emailText}</Typography>
         <Box sx={styles.info}>
-          <Typography sx={styles.question}>Не отримав листа?</Typography>
+          <Typography sx={styles.question}>Не отримав лист?</Typography>
           <Button
             text="Надіслати повторно"
             variant={ButtonVariant.TEXT}
@@ -75,7 +75,11 @@ const EmailConfirmationPage: FC<EmailConfirmationPageProps> = ({
           />
         </Box>
         <Alert
-          title="Лист реєстрації діє 1 годину"
+          title={
+            apiMethodName === 'forgotPassword'
+              ? 'Лист для зміни пароля діє 1 годину'
+              : 'Лист реєстрації діє 1 годину'
+          }
           type={AlertType.INFO}
           variant={AlertVariant.DARKER}
         />

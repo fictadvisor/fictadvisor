@@ -11,8 +11,8 @@ type ErrorFromBackend = {
 };
 
 const ErrorMapper: Record<string, string> = {
-  NoPermissionException: 'У вас не вистачає прав на таку дію',
-  UnauthorizedException: 'Ви не авторизовані, авторизуйтесь',
+  NoPermissionException: 'У тебе не вистачає прав на таку дію',
+  UnauthorizedException: 'Ти не авторизований, авторизуйся',
   InvalidBodyException: 'Неправильно заповнені дані',
   ObjectIsRequiredException: 'Неправильний тип дицсипліни чи дата початку',
 };

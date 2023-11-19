@@ -43,10 +43,10 @@ export const SubjectSearchList = ({ subjects }: GetListOfSubjectsResponse) => {
                 (subject.amount === 1
                   ? 'викладач'
                   : subject.amount === 2 ||
-                    subject.amount === 3 ||
-                    subject.amount === 4
-                  ? 'викладачі'
-                  : 'викладачів')
+                      subject.amount === 3 ||
+                      subject.amount === 4
+                    ? 'викладачі'
+                    : 'викладачів')
               }`}
             />
           </Box>

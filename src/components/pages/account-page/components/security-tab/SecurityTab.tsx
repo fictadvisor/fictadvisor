@@ -29,7 +29,7 @@ const SecurityTab = () => {
   return (
     <Box sx={styles.wrapper}>
       <Box>
-        <Divider text={'Зміна паролю'} textAlign={DividerTextAlign.LEFT} />
+        <Divider text={'Зміна пароля'} textAlign={DividerTextAlign.LEFT} />
         <ChangePasswordForm />
       </Box>
       <Divider

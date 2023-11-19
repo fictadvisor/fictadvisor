@@ -28,8 +28,8 @@ interface EntrantSearchFormProps {
 
 const errorMapper = {
   DataNotFoundException: 'Даних про вступника не було знайдено у базі даних',
-  UnauthorizedException: 'Ви не зареєстровані',
-  NoPermissionException: 'У вас не має доступу до цього ресурсу',
+  UnauthorizedException: 'Ти не зареєстрований',
+  NoPermissionException: 'У тебе не має доступу до цього ресурсу',
 };
 const EntrantSearchForm: FC<EntrantSearchFormProps> = ({ setEntrantData }) => {
   const { displayError } = useToastError();

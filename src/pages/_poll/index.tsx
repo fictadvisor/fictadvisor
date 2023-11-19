@@ -1,8 +1,8 @@
 import PageLayout from '@/components/common/layout/page-layout';
-import PollPageFailed from '@/components/pages/poll-fucked-page';
+import PollTeacherPage from '@/components/pages/search-pages/poll-teachers-page';
 const PollTeacher = () => (
   <PageLayout title="Опитування викладачів | FICT Advisor">
-    <PollPageFailed />
+    <PollTeacherPage />
   </PageLayout>
 );
 export default PollTeacher;

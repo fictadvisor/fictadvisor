@@ -24,7 +24,7 @@ const ForgotPasswordPage = () => {
         </Box>
         <Typography sx={styles.title}>Забув пароль?</Typography>
         <Typography sx={styles.text}>
-          Ми надішлемо на введену пошту лист для зміни паролю
+          Ми надішлемо на введену пошту лист для зміни пароля
         </Typography>
         <Box sx={styles.form}>
           <ForgotPasswordForm />

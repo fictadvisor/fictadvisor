@@ -39,8 +39,8 @@ export const alert = (
     borderColor: getColor(color, AlertVariant.OUTLINED),
   }),
 
-  '.MuiAlert-icon, .MuiAlert-action': {
-    color: 'grey.800',
+  '.MuiAlert-icon': {
+    color: 'theme.palette.grey[800]',
     margin: '4px 0 0 0',
     padding: '0',
     svg: {
@@ -49,9 +49,16 @@ export const alert = (
       height: '16px',
     },
   },
-
   '.MuiAlert-action': {
     cursor: 'pointer',
+    color: 'theme.palette.grey[800]',
+    margin: '0',
+    padding: '0',
+    svg: {
+      strokeWidth: '1.5px',
+      width: '16px',
+      height: '16px',
+    },
   },
 
   '.MuiAlert-message': {

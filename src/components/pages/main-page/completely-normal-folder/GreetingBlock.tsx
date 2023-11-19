@@ -5,7 +5,7 @@ import * as styles from '@/components/pages/main-page/completely-normal-folder/G
 import stylesCSS from './GreetingBlock.module.scss';
 
 const GreetingBlock = () => {
-  const imgScr = '/images/main-page/avatars/';
+  const imgScr = '/images/admin-default/avatars/';
 
   const avatars = [
     '/images/main-page/avatars/stas.png',

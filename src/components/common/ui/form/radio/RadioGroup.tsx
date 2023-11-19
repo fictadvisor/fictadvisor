@@ -1,4 +1,4 @@
-import React, { FC, FormEvent } from 'react';
+import React, { FC } from 'react';
 import { Box, SxProps, Theme } from '@mui/material';
 import { useField } from 'formik';
 

@@ -5,7 +5,7 @@ import typography from '@/styles/theme/constants/typography';
 export const iconButton: SxProps<Theme> = {
   position: 'absolute',
   right: 8,
-  top: 16,
+  top: 8,
   color: 'grey.800',
 };
 

@@ -70,7 +70,7 @@ const AvatarDropzone: FC<AvatarDropzoneProps> = ({ setFile, setAvatarURL }) => {
       {isMobile ? (
         <>
           <Button
-            text={'Обрати файл'}
+            text={'Обери файл'}
             size={ButtonSize.MEDIUM}
             variant={ButtonVariant.FILLED}
             sx={styles.button}
@@ -93,10 +93,10 @@ const AvatarDropzone: FC<AvatarDropzoneProps> = ({ setFile, setAvatarURL }) => {
           onDrop={handleDropOrFileChange}
         >
           <ArrowDownTrayIcon />
-          <Typography variant="h6Bold">Перетягніть сюди</Typography>
+          <Typography variant="h6Bold">Перетягни сюди</Typography>
           <Typography variant="body2Medium">або</Typography>
           <Button
-            text={'Обрати файл'}
+            text={'Обери файл'}
             size={ButtonSize.MEDIUM}
             variant={ButtonVariant.FILLED}
             sx={styles.button}

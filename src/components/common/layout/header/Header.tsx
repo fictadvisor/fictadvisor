@@ -13,7 +13,7 @@ const MobileHeader = dynamic(() => import('./components/mobile-header'));
 const Header: FC = () => {
   const { isLoggedIn, user } = useAuthentication();
   const transformedUser = transformData(user);
-  const isMobile = useMediaQuery(theme.breakpoints.down('desktopSemiMedium'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('desktopMedium'));
 
   return (
     <>

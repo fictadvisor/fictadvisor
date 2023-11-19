@@ -15,8 +15,8 @@ import { validationSchema } from './validation';
 const errorMapper = {
   InvalidBodyException: 'Неправильно введені дані',
   DataNotFoundException: 'Даних не було знайдено',
-  UnauthorizedException: 'Ви не зареєстровані',
-  NoPermissionException: 'У вас не має доступу до цього ресурсу',
+  UnauthorizedException: 'Ти не зареєстрований',
+  NoPermissionException: 'У тебе не має доступу до цього ресурсу',
 };
 interface ContractApproveFormProps {
   data: EntrantFuIlResponse;
