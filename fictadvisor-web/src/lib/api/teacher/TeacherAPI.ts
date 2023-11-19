@@ -1,6 +1,6 @@
 import { CommentsAdminSearchFormFields } from '@/components/pages/admin/admin-comments/components/admin-comments-search/types/AdminCommentsSearch';
+import { AdminSearchFormFields } from '@/components/pages/admin/admin-teachers/search-teacher-admin-page/types';
 import { Complaint } from '@/components/pages/personal-teacher-page/personal-teacher-tabs/components/complaint-popup/types';
-import { SearchFormFields } from '@/components/pages/search-pages/search-form/types';
 import { ChangeCommentBody } from '@/lib/api/teacher/types/ChangeCommentBody';
 import { DeleteCommentBody } from '@/lib/api/teacher/types/DeleteCommentBody';
 import { GetCommentsWithPaginationResponse } from '@/lib/api/teacher/types/GetCommentsWithPaginationResponse';
@@ -14,6 +14,11 @@ import { Teacher, TeacherWithSubject } from '@/types/teacher';
 
 import { client } from '../instance';
 
+import { CreateContactsBody } from './types/CreateContactsBody';
+import { CreateTeacherBody } from './types/CreateTeacherBody';
+import { EditContactsBody } from './types/EditContactsBody';
+import { EditPersonalInfoBody } from './types/EditPersonalInfoBody';
+
 class TeacherAPI {
   async get(teacherId: string): Promise<Teacher> {
     const { data } = await client.get(
@@ -23,18 +28,8 @@ class TeacherAPI {
     return data;
   }
 
-  async getAll(params: Partial<SearchFormFields> = {}, pageSize?: number) {
-    const { data } = await client.get<GetTeachersResponse>('/teachers', {
-      params: {
-        ...params,
-        pageSize,
-      },
-    });
-    return data;
-  }
-
-  async getPage(
-    params: Partial<SearchFormFields> = {},
+  async getAdminAll(
+    params: Partial<AdminSearchFormFields> = {},
     pageSize?: number,
     page?: number,
   ) {
@@ -58,6 +53,28 @@ class TeacherAPI {
   async getTeacherSubject(teacherId: string, subjectId: string) {
     const { data } = await client.get<TeacherWithSubject>(
       `/teachers/${teacherId}/subjects/${subjectId}`,
+    );
+    return data;
+  }
+
+  async create(body: CreateTeacherBody) {
+    const { data } = await client.post<Omit<Teacher, 'contacts'>>(
+      `/teachers`,
+      body,
+      getAuthorizationHeader(),
+    );
+    return data;
+  }
+
+  async delete(teacherId: string) {
+    await client.delete(`/teachers/${teacherId}`, getAuthorizationHeader());
+  }
+
+  async editPersonalInfo(teacherId: string, body: EditPersonalInfoBody) {
+    const { data } = await client.patch(
+      `/teachers/${teacherId}`,
+      body,
+      getAuthorizationHeader(),
     );
     return data;
   }
@@ -124,7 +141,7 @@ class TeacherAPI {
   async deleteComment(body: DeleteCommentBody, disciplineTeacherId: string) {
     const { data } = await client.delete(
       `/disciplineTeachers/${disciplineTeacherId}/comments`,
-      { data: body },
+      { data: body, ...getAuthorizationHeader() },
     );
     return data;
   }
@@ -133,6 +150,45 @@ class TeacherAPI {
     const { data } = await client.patch(
       `/disciplineTeachers/${disciplineTeacherId}/comments`,
       body,
+      getAuthorizationHeader(),
+    );
+    return data;
+  }
+
+  async createTeacherContacts(teacherId: string, body: CreateContactsBody) {
+    const { data } = await client.post(
+      `/teachers/${teacherId}/contacts`,
+      body,
+      getAuthorizationHeader(),
+    );
+    return data;
+  }
+
+  async editTeacherContacts(
+    teacherId: string,
+    name: string,
+    body: EditContactsBody,
+  ) {
+    const { data } = await client.patch(
+      `/teachers/${teacherId}/contacts/${name}`,
+      body,
+      getAuthorizationHeader(),
+    );
+    return data;
+  }
+
+  async editTeacherCathedra(teacherId: string, cathedraId: string) {
+    const { data } = await client.patch(
+      `/teachers/${teacherId}/cathedra/${cathedraId}`,
+      null,
+      getAuthorizationHeader(),
+    );
+    return data;
+  }
+
+  async deleteTeacherCathedra(teacherId: string, cathedraId: string) {
+    const { data } = await client.delete(
+      `/teachers/${teacherId}/cathedra/${cathedraId}`,
       getAuthorizationHeader(),
     );
     return data;

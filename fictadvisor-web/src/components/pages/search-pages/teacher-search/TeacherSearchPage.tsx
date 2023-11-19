@@ -53,13 +53,13 @@ export const TeacherSearchPage = () => {
       'lecturers',
       () => {
         if (reloadTeachers) {
-          return TeacherAPI.getAll(queryObj, PAGE_SIZE * (curPage + 1));
+          return TeacherAPI.getAdminAll(queryObj, PAGE_SIZE * (curPage + 1));
         } else {
           setLoadedTeachers([
             ...(loadedTeachers ?? []),
             ...(data ? data.teachers : []),
           ]);
-          return TeacherAPI.getPage(queryObj, PAGE_SIZE, curPage);
+          return TeacherAPI.getAdminAll(queryObj, PAGE_SIZE, curPage + 1);
         }
       },
       {
