@@ -80,6 +80,8 @@ describe('QuestionMapper', () => {
           comments: {
             data: [
               {
+                disciplineTeacherId: 'firstDisciplineTeacherId',
+                userId: 'firstUserId',
                 value: 'firstValue',
                 disciplineTeacher: {
                   discipline: {
@@ -91,6 +93,8 @@ describe('QuestionMapper', () => {
                   },
                 },
               }, {
+                disciplineTeacherId: 'secondDisciplineTeacherId',
+                userId: 'secondUserId',
                 value: 'secondValue',
                 disciplineTeacher: {
                   discipline: {
@@ -140,11 +144,15 @@ describe('QuestionMapper', () => {
             name: 'firstQuestion',
             comments: [
               {
+                disciplineTeacherId: 'firstDisciplineTeacherId',
+                userId: 'firstUserId',
                 discipline: 'oneSubject',
                 semester: 1,
                 year: 2,
                 comment: 'firstValue',
               }, {
+                disciplineTeacherId: 'secondDisciplineTeacherId',
+                userId: 'secondUserId',
                 discipline: 'anotherSubject',
                 semester: 2,
                 year: 3,

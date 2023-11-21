@@ -45,17 +45,23 @@ export const CommentsSortMapper: { [key in CommentsSort]: Prisma.Enumerable<Pris
 };
 
 export class CommentsQueryDTO {
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    description: 'Subject id',
+  })
   @IsOptional()
     subjectId?: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    description: 'Academic year',
+  })
   @Type(() => Number)
   @IsNumber({}, validationOptionsMsg('Year must be a number'))
   @IsOptional()
     year?: number;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    description: 'Number of semester',
+  })
   @Type(() => Number)
   @IsNumber({}, validationOptionsMsg('Semester must be a number'))
   @IsOptional()

@@ -39,6 +39,7 @@ import { CathedraByIdPipe } from '../pipes/CathedraByIdPipe';
 import { TeacherWithRolesAndContactsResponse } from '../responses/TeacherWithRolesAndContactsResponse';
 import { PaginatedTeachersResponse } from '../responses/PaginatedTeachersResponse';
 import { CommentsQueryPipe } from '../pipes/CommentsQueryPipe';
+import { ApiEndpoint } from '../../utils/documentation/decorators';
 
 @ApiTags('Teachers')
 @Controller({
@@ -440,6 +441,14 @@ export class TeacherController {
     
     DataNotFoundException: 
       Data was not found`,
+  })
+  @ApiParam({
+    name: 'teacherId',
+    required: true,
+    description: 'Id of the teacher to get comments',
+  })
+  @ApiEndpoint({
+    summary: 'Get question answers with TEXT type (comments)',
   })
   @Get('/:teacherId/comments')
   async getComments (

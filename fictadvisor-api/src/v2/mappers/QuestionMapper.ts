@@ -77,6 +77,8 @@ export class QuestionMapper {
       const comments = [];
       for (const comment of questionComment.comments.data) {
         comments.push({
+          disciplineTeacherId: comment.disciplineTeacherId,
+          userId: comment.userId,
           comment: comment.value,
           discipline: comment.disciplineTeacher.discipline.subject.name,
           year: comment.disciplineTeacher.discipline.year,
