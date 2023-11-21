@@ -1,10 +1,14 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { Box } from '@mui/material';
 import { useMediaQuery } from '@mui/material';
 
 import PageLayout from '@/components/common/layout/page-layout/PageLayout';
 import ScheduleEventEdit from '@/components/pages/schedule-page/schedule-event-edit-section/ScheduleEventEdit';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import { GetCurrentSemester } from '@/lib/api/dates/types/GetCurrentSemester';
+import ScheduleAPI from '@/lib/api/schedule/ScheduleAPI';
+import { PostEventBody } from '@/lib/api/schedule/types/PostEventBody';
+import { SharedEventBody } from '@/lib/api/schedule/types/shared';
 import { useSchedule } from '@/store/schedule/useSchedule';
 import theme from '@/styles/theme';
 import { Group } from '@/types/group';
@@ -12,19 +16,13 @@ import { Group } from '@/types/group';
 import { CalendarSection } from './calendar-section/CalendarSection';
 import { ButtonIcons } from './calendar-section/components/mobile/buttonIcons/ButtonIcons';
 import { CalendarSectionMobile } from './calendar-section/components/mobile/CalendarSectionMobile';
-import { ScheduleSection } from './schedule-section/ScheduleSection';
-import ScheduleSectionMobile from './schedule-section/ScheduleSectionMobile';
-import * as styles from './SchedulePage.styles';
-const MAX_WEEK_NUMBER = 20;
-import { useToastError } from '@/hooks/use-toast-error/useToastError';
-import ScheduleAPI from '@/lib/api/schedule/ScheduleAPI';
-import { PostEventBody } from '@/lib/api/schedule/types/PostEventBody';
-import { SharedEventBody } from '@/lib/api/schedule/types/shared';
-
 import { initialValues } from './schedule-event-edit-section/schedule-form/constants';
 import { ScheduleEventForm } from './schedule-event-edit-section/schedule-form/ScheduleEventForm';
 import { formValidationSchema } from './schedule-event-edit-section/schedule-form/validation';
+import { ScheduleSection } from './schedule-section/ScheduleSection';
+import ScheduleSectionMobile from './schedule-section/ScheduleSectionMobile';
 import { makeNegativeValuesUndefined } from './utils/undefineNegativeValues';
+import * as styles from './SchedulePage.styles';
 export interface SchedulePageProps {
   groups: Group[];
   semester: GetCurrentSemester | null;
@@ -54,7 +52,14 @@ const SchedulePage: FC<SchedulePageProps> = ({ semester, groups }) => {
     state.isNewEventAdded,
   ]);
 
+  const getEvents = async () => {
+    await handleWeekChange();
+  };
+
   useInitialise(semester, groups);
+  useEffect(() => {
+    getEvents();
+  }, []);
   const { displayError } = useToastError();
   const closeForm = () => {
     useSchedule.setState({ isNewEventAdded: false });
