@@ -4,10 +4,11 @@ import { Theme } from '@mui/system';
 export const buttonIcons: SxProps<Theme> = {
   position: 'fixed',
   right: '10%',
-  top: '70vh',
+  bottom: '32px',
   display: 'flex',
   flexDirection: 'column',
-  height: 'fit-content',
+  height: '93px',
+  justifyContent: 'space-between',
   gap: '10px',
   zIndex: 11,
 };
