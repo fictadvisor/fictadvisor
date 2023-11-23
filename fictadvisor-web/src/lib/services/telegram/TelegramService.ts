@@ -4,28 +4,37 @@ import AuthAPI from '@/lib/api/auth/AuthAPI';
 import StorageUtil from '@/lib/utils/StorageUtil';
 import { TelegramUser } from '@/types/telegram';
 
+declare global {
+  interface Window {
+    Telegram: {
+      Login: {
+        auth: (
+          botId: string,
+          requestAccess: boolean,
+        ) => Promise<TelegramUser | null>;
+      };
+    };
+  }
+}
+
 class TelegramService {
-  private static openAuthenticationDialog() {
+  private static async openAuthenticationDialog(): Promise<TelegramUser | null> {
+    const Telegram = window.Telegram;
+    const botId = process.env.NEXT_PUBLIC_BOT_ID || '';
+    const requestAccess = true;
+
     return new Promise((resolve, reject) => {
-      try {
-        // TODO: refactor whole service
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        const Telegram = window.Telegram;
-        Telegram.Login.auth(
-          { bot_id: process.env.NEXT_PUBLIC_BOT_ID, request_access: true },
-          // TODO: rewrite whole service
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          data => {
-            return data
-              ? resolve(data)
-              : reject(new Error('Failed to authenticate'));
-          },
-        );
-      } catch (e) {
-        reject(e);
-      }
+      Telegram.Login.auth(botId, requestAccess)
+        .then(data => {
+          if (data) {
+            resolve(data);
+          } else {
+            reject(new Error('Failed to authenticate'));
+          }
+        })
+        .catch(error => {
+          reject(error);
+        });
     });
   }
 
