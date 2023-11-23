@@ -60,7 +60,8 @@ const MobileStudentsTableButtons: FC<MobileStudentTableButtonsProps> = ({
         >
           <Stack sx={styles.dropdown}>
             {user.group?.role === UserGroupRole.CAPTAIN &&
-              student.role == UserGroupRole.STUDENT && (
+              (student.role === UserGroupRole.STUDENT ||
+                student.role === UserGroupRole.MODERATOR) && (
                 <Button
                   size={ButtonSize.SMALL}
                   text={buttonName}
