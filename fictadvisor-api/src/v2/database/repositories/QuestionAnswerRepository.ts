@@ -44,4 +44,12 @@ export class QuestionAnswerRepository {
       ...args,
     });
   }
+
+  update (where: Prisma.QuestionAnswerWhereUniqueInput, data: Prisma.QuestionAnswerUncheckedUpdateInput) {
+    return this.prisma.questionAnswer.update({
+      where,
+      data,
+      include: this.include,
+    });
+  }
 }
