@@ -34,6 +34,7 @@ import theme from '@/styles/theme';
 import CloseButton from '../../../../common/ui/icon-button-mui/variants/CloseButton/CloseButton';
 
 import { ScheduleFormikDropdown } from './components/schedule-dropdown/ScheduleDropdown';
+import TimeScheduleDropdown from './components/schedule-dropdown/TimeScheduleDropdown';
 import Input from './components/schedule-input';
 import TextArea from './components/text-area';
 import { eventTypeList, periodOptions } from './constants';
@@ -64,7 +65,6 @@ export const ScheduleEventForm: FC<ScheduleEventFormProps> = ({
   );
   const [tabValue, setTabValue] = useState<InfoCardTabs>(InfoCardTabs.EVENT);
   const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
-
   return (
     <Box sx={styles.container}>
       <Formik
@@ -98,19 +98,21 @@ export const ScheduleEventForm: FC<ScheduleEventFormProps> = ({
                 <Fragment>
                   <Typography variant="body1Medium">Час</Typography>
                   <Box sx={styles.timeInputs}>
-                    <ScheduleFormikDropdown
+                    <TimeScheduleDropdown
                       disableClearable
                       name={'startTime'}
                       options={getOptionsFromDate(date)}
                       placeholder={'Оберіть час'}
                       icon={<ClockIcon width={22} height={22} />}
+                      date={date}
                     />
-                    <ScheduleFormikDropdown
+                    <TimeScheduleDropdown
                       disableClearable
                       name={'endTime'}
                       options={getOptionsFromDate(date)}
                       placeholder={'Оберіть час'}
                       icon={<ArrowRightIcon width={22} height={22} />}
+                      date={date}
                     />
                   </Box>
                 </Fragment>
