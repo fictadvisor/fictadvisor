@@ -39,7 +39,6 @@ export class RoleController {
     private grantMapper: GrantMapper,
   ) {}
 
-
   @ApiOkResponse({
     type: RolesResponse,
   })

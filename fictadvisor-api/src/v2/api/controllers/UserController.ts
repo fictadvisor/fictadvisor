@@ -1,15 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Query,
-  UploadedFile,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { UserService } from '../services/UserService';
 import { TelegramGuard } from '../../security/TelegramGuard';
 import { ApproveStudentByTelegramDTO } from '../dtos/ApproveDTO';
@@ -33,9 +22,11 @@ import {
   ApiBasicAuth,
   ApiBearerAuth,
   ApiForbiddenResponse,
-  ApiOkResponse, ApiParam,
+  ApiOkResponse,
+  ApiParam,
   ApiPayloadTooLargeResponse,
-  ApiTags, ApiUnauthorizedResponse,
+  ApiTags,
+  ApiUnauthorizedResponse,
   ApiUnsupportedMediaTypeResponse,
 } from '@nestjs/swagger';
 import { SelectiveBySemestersResponse } from '../responses/SelectiveBySemestersResponse';
@@ -55,6 +46,8 @@ import { UpdateSuperheroDTO } from '../dtos/UpdateSuperheroDTO';
 import { DisciplineIdsResponse } from '../responses/DisciplineResponse';
 import { SuperheroResponse } from '../responses/SuperheroResponse';
 import { ApiEndpoint } from 'src/v2/utils/documentation/decorators';
+import { UsersResponse } from '../responses/UsersResponse';
+import { QueryAllUsersDTO } from '../dtos/QueryAllUsersDTO';
 
 @ApiTags('User')
 @Controller({
@@ -390,6 +383,45 @@ export class UserController {
     @Param('roleId') roleId: string,
   ) {
     return this.userService.removeRole(userId, roleId);
+  }
+
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: UsersResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidQueryException:
+      Page must be a number
+      PageSize must be a number
+      Wrong value for order
+      Sort must be an enum
+      Each state element must be enum value`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @ApiEndpoint({
+    summary: 'Get all users for admin',
+    permissions: PERMISSION.USERS_GET,
+  })
+  @Get()
+  async getAll (
+    @Query() query: QueryAllUsersDTO,
+  ) {
+    const users = await this.userService.getAll(query);
+    const data = this.userMapper.getAll(users.data);
+    return {
+      data,
+      pagination: users.pagination,
+    };
   }
 
   @ApiBearerAuth()
