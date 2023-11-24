@@ -4,6 +4,7 @@ import { QuestionDisplay, QuestionRole, QuestionType } from '@prisma/client';
 import { DbDisciplineTeacherWithAnswers } from '../database/entities/DbDisciplineTeacherWithAnswers';
 import { DbQuestionWithAnswers } from '../database/entities/DbQuestionWithAnswers';
 import { QuestionCommentData } from '../api/datas/QuestionCommentData';
+import { DbQuestionAnswer } from '../database/entities/DbQuestionAnswer';
 
 @Injectable()
 export class QuestionMapper {
@@ -145,5 +146,16 @@ export class QuestionMapper {
       }
       return table;
     }
+  }
+
+  getUpdatedComment (updatedComment: DbQuestionAnswer) {
+    return {
+      disciplineTeacherId: updatedComment.disciplineTeacherId,
+      questionId: updatedComment.questionId,
+      userId: updatedComment.userId,
+      comment: updatedComment.value,
+      semester: updatedComment.disciplineTeacher.discipline.semester,
+      year: updatedComment.disciplineTeacher.discipline.year,
+    };
   }
 }

@@ -23,6 +23,9 @@ import { QuestionMapper } from '../../mappers/QuestionMapper';
 import { DbQuestionWithRoles } from '../../database/entities/DbQuestionWithRoles';
 import { NotSelectedDisciplineException } from '../../utils/exceptions/NotSelectedDisciplineException';
 import { IsRemovedDisciplineTeacherException } from '../../utils/exceptions/IsRemovedDisciplineTeacherException';
+import { UpdateCommentDTO } from '../dtos/UpdateCommentDTO';
+import { QuestionRepository } from '../../database/repositories/QuestionRepository';
+import { InvalidTypeException } from '../../utils/exceptions/InvalidTypeException';
 
 @Injectable()
 export class DisciplineTeacherService {
@@ -36,6 +39,7 @@ export class DisciplineTeacherService {
     private telegramApi: TelegramAPI,
     private userRepository: UserRepository,
     private questionMapper: QuestionMapper,
+    private questionRepository: QuestionRepository,
   ) {}
 
   async getQuestions (disciplineTeacherId: string, userId: string) {
@@ -336,6 +340,35 @@ export class DisciplineTeacherService {
           studentId: userId,
         },
       },
+    });
+  }
+
+  async validateUpdateCommentBody (body: UpdateCommentDTO) {
+    const user = await this.userRepository.findById(body.userId);
+    if (!user) {
+      throw new InvalidEntityIdException('User');
+    }
+
+    const question = await this.questionRepository.findById(body.questionId);
+    if (!question) {
+      throw new InvalidEntityIdException('Question');
+    }
+    if (question.type !== QuestionType.TEXT) {
+      throw new InvalidTypeException('Question');
+    }
+  }
+
+  async updateComment (disciplineTeacherId: string, body: UpdateCommentDTO) {
+    await this.validateUpdateCommentBody(body);
+    return this.questionAnswerRepository.update({
+      disciplineTeacherId_questionId_userId: {
+        disciplineTeacherId: disciplineTeacherId,
+        userId: body.userId,
+        questionId: body.questionId,
+      },
+    },
+    {
+      value: body.comment,
     });
   }
 }
