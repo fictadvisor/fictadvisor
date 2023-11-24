@@ -37,11 +37,11 @@ export class UserRepository {
     });
   }
 
-  async findMany (where: Prisma.UserWhereInput): Promise<DbUser[]> {
+  findMany (args?: Prisma.UserFindManyArgs): Promise<DbUser[]> {
     return this.prisma.user.findMany({
-      where,
+      ...args,
       include: this.include,
-    });
+    }) as unknown as Promise<DbUser[]>;
   }
 
   async delete (where: Prisma.UserWhereUniqueInput): Promise<DbUser> {
@@ -79,5 +79,9 @@ export class UserRepository {
       where,
       data,
     });
+  }
+
+  async count (data: Prisma.UserCountArgs) {
+    return this.prisma.user.count(data);
   }
 }
