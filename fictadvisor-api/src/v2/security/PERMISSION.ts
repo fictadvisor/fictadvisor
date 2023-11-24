@@ -91,6 +91,7 @@ export enum PERMISSION {
   TEACHERS_$TEACHERID_UPDATE = 'teachers.$teacherId.update',
   TEACHERS_$TEACHERID_DELETE = 'teachers.$teacherId.delete',
   TEACHERS_$TEACHERID_CATHEDRAS_UPDATE = 'teachers.$teacherId.cathedras.update',
+  TEACHERS_$TEACHERID_CATHEDRAS_DELETE = 'teachers.$teacherId.cathedras.delete',
   TEACHERS_$TEACHERID_CONTACTS_CREATE = 'teachers.$teacherId.contacts.create',
   TEACHERS_$TEACHERID_CONTACTS_UPDATE = 'teachers.$teacherId.contacts.update',
   TEACHERS_$TEACHERID_CONTACTS_DELETE = 'teachers.$teacherId.contacts.delete',

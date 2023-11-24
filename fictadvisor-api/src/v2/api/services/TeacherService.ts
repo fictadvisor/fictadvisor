@@ -138,6 +138,21 @@ export class TeacherService {
     return this.getTeacher(teacherId);
   }
 
+  async disconnectTeacherFromCathedra (teacherId: string, cathedraId: string) {
+    await this.teacherRepository.updateById(teacherId, {
+      cathedras: {
+        delete: {
+          teacherId_cathedraId: {
+            teacherId,
+            cathedraId,
+          },
+        },
+      },
+    });
+
+    return this.getTeacher(teacherId);
+  }
+
   async getUserDisciplineTeachers (teacherId: string, userId: string, notAnswered: boolean) {
     const disciplineTeachers = await this.disciplineTeacherRepository.findMany({
       where: {
