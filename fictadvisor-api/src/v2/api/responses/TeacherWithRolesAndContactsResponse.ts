@@ -4,22 +4,34 @@ import { TeacherRole } from '@prisma/client';
 import { ContactResponse } from './ContactResponse';
 
 export class TeacherWithRolesAndContactsResponse {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Teacher\'s id',
+  })
     id: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Teacher\'s first name',
+  })
     firstName: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Teacher\'s middle name',
+  })
     middleName: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Teacher\'s last name',
+  })
     lastName: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Teacher\'s description',
+  })
     description: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Teacher\'s avatar URL',
+  })
     avatar: string;
 
   @ApiProperty({

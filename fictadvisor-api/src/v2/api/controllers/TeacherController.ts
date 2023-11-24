@@ -508,4 +508,46 @@ export class TeacherController {
   ) {
     return this.teacherService.connectTeacherWithCathedra(teacherId, cathedraId);
   }
+
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: TeacherWithRolesAndContactsResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException:
+      teacher with such id is not found
+      Cathedra with such id is not found`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n 
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiParam({
+    name: 'teacherId',
+    required: true,
+    description: 'Id of a teacher to verify',
+  })
+  @ApiParam({
+    name: 'cathedraId',
+    required: true,
+    description: 'Id of a cathedra to verify',
+  })
+  @ApiEndpoint({
+    summary: 'Remove the teacher from the cathedra',
+    permissions: PERMISSION.TEACHERS_$TEACHERID_CATHEDRAS_DELETE,
+  })
+  @Delete('/:teacherId/cathedra/:cathedraId')
+  async disconnectCathedra (
+      @Param('teacherId', TeacherByIdPipe) teacherId: string,
+      @Param('cathedraId', CathedraByIdPipe) cathedraId: string,
+  ) {
+    return this.teacherService.disconnectTeacherFromCathedra(teacherId, cathedraId);
+  }
 }
