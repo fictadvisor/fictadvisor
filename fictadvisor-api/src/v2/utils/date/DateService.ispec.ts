@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing';
-import { DateService, CurrentSemester } from './DateService';
+import { DateService } from './DateService';
 import { PrismaModule } from '../../modules/PrismaModule';
 import { DataNotFoundException } from '../exceptions/DataNotFoundException';
 

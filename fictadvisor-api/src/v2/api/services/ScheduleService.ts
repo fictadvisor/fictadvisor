@@ -131,10 +131,9 @@ export class ScheduleService {
   }
 
 
-  async getGroupEventsByDay (groupId: string, day: number, userId: string) {
-    const week = await this.dateService.getCurrentWeek();
-
-    day = day ? day : (await this.dateService.getCurrentDay()).day;
+  async getGroupEventsByDay (groupId: string, day: number, week: number, userId: string) {
+    week = week || await this.dateService.getCurrentWeek();
+    day = day || (await this.dateService.getCurrentDay()).day;
 
     const { startOfDay } = await this.dateService.getSpecificDayInWeek(week, day);
 

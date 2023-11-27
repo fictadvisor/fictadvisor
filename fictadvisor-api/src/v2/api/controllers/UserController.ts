@@ -543,7 +543,7 @@ export class UserController {
   })
   @ApiEndpoint({
     summary: 'Request captain or admin to create a contact',
-    //permissions: PERMISSION.USERS_$USERID_CONTACTS_CREATE,
+    permissions: PERMISSION.USERS_$USERID_CONTACTS_CREATE,
   })
   @Post('/:userId/contacts')
   createContact (

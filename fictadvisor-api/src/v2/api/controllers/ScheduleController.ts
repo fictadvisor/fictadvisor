@@ -161,6 +161,11 @@ export class ScheduleController {
     description: 'Day of a week which event you want to get',
   })
   @ApiQuery({
+    name: 'week',
+    required: false,
+    description: 'Week in which event you want to get',
+  })
+  @ApiQuery({
     name: 'userId',
     required: false,
     description: 'Id of a user which event you want to get',
@@ -172,9 +177,10 @@ export class ScheduleController {
   async getGroupEventsByDay (
     @Param('groupId', GroupByIdPipe) groupId: string,
     @Query('day') day: number,
+    @Query('week') week: number,
     @Query('userId', UserByIdPipe) userId: string,
   ) {
-    const result = await this.scheduleService.getGroupEventsByDay(groupId, day, userId);
+    const result = await this.scheduleService.getGroupEventsByDay(groupId, day, week, userId);
     return {
       events: this.scheduleMapper.getTelegramEvents(result.events),
     };
