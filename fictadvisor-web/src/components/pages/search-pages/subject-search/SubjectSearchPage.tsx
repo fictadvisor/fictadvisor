@@ -18,6 +18,7 @@ import {
 } from '@/components/pages/search-pages/subject-search/constants';
 import SubjectsAPI from '@/lib/api/subject/SubjectAPI';
 import { GetListOfSubjectsResponse } from '@/lib/api/subject/types/GetListOfSubjectsResponse';
+import { Subject } from '@/types/subject';
 
 import { SubjectInitialValues } from '../search-form/constants';
 import SearchForm from '../search-form/SearchForm';
@@ -37,24 +38,37 @@ const SubjectSearchPage = () => {
   const [curPage, setCurPage] = useState(0);
 
   const submitHandler: SearchFormProps['onSubmit'] = useCallback(query => {
+    setReloadSubjects(true);
+    setLoadedSubjects([]);
     setQueryObj(prev => ({ ...prev, ...query }));
-    setCurPage(0);
   }, []);
 
   const downloadHandler = () => {
+    setReloadSubjects(false);
     setCurPage(prev => prev + 1);
   };
-
+  const [loadedSubjects, setLoadedSubjects] = useState<Subject[]>([]);
+  const [reloadSubjects, setReloadSubjects] = useState(true);
   const { data, isLoading, refetch, isFetching } =
     useQuery<GetListOfSubjectsResponse>(
       'subjects',
-      () => SubjectsAPI.getAll(queryObj, PAGE_SIZE * (curPage + 1)),
+      () => {
+        if (reloadSubjects) {
+          return SubjectsAPI.getAll(queryObj, PAGE_SIZE * (curPage + 1));
+        } else {
+          setLoadedSubjects([
+            ...(loadedSubjects ?? []),
+            ...(data?.subjects ?? []),
+          ]);
+          return SubjectsAPI.getPage(queryObj, PAGE_SIZE, curPage + 1);
+        }
+      },
       { keepPreviousData: true, refetchOnWindowFocus: false },
     );
 
   useEffect(() => {
     void refetch();
-  }, [queryObj, curPage, refetch]);
+  }, [queryObj, curPage, refetch, reloadSubjects]);
 
   return (
     <Box sx={styles.layout}>
@@ -66,14 +80,19 @@ const SubjectSearchPage = () => {
         initialValues={initialValues}
         localStorageName={localStorageName}
       />
-      {data && <SubjectSearchList subjects={data.subjects} />}
+      {data && (
+        <SubjectSearchList
+          subjects={[...(loadedSubjects ?? []), ...data.subjects]}
+        />
+      )}
       {isLoading ||
         (isFetching && (
           <Box sx={styles.pageLoader}>
             <Progress />
           </Box>
         ))}
-      {data?.subjects?.length === (curPage + 1) * PAGE_SIZE && (
+      {(data?.subjects?.length ?? 0) + loadedSubjects.length ===
+        (curPage + 1) * PAGE_SIZE && (
         <Button
           sx={styles.loadBtn}
           text="Завантажити ще"

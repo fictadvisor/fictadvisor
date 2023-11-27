@@ -28,6 +28,21 @@ class TeacherAPI {
     return data;
   }
 
+  async getPage(
+    params: Partial<SearchFormFields> = {},
+    pageSize?: number,
+    page?: number,
+  ) {
+    const { data } = await client.get<GetTeachersResponse>('/teachers', {
+      params: {
+        ...params,
+        pageSize,
+        page,
+      },
+    });
+    return data;
+  }
+
   async getTeacherSubjects(teacherId: string) {
     const { data } = await client.get<GetTeacherSubjectsResponse>(
       `/teachers/${teacherId}/subjects`,

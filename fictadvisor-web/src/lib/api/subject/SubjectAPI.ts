@@ -27,6 +27,21 @@ class SubjectsAPI {
     });
     return data;
   }
+
+  async getPage(
+    params: Partial<SearchFormFields> = {},
+    pageSize?: number,
+    page?: number,
+  ) {
+    const { data } = await client.get<GetListOfSubjectsResponse>('/subjects', {
+      params: {
+        ...params,
+        pageSize,
+        page,
+      },
+    });
+    return data;
+  }
 }
 
 export default new SubjectsAPI();
