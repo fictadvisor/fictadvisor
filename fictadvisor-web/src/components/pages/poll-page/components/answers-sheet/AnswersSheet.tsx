@@ -106,17 +106,6 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
     }
   };
 
-  const handleSubmit = (value: Record<string, string>) => {
-    updateAnswer(value);
-    if (!isTheLast) {
-      setCurrentCategory(currentCategory + 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
-    }
-    setIsSendingStatus(SendingStatus.LOADING);
-    sendData();
-  };
-
   const updateAnswer = (values: FormikValues) => {
     const resultAnswers = setCollectAnswers(answers, values);
     setAnswers(resultAnswers);
@@ -126,6 +115,17 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
       temp[currentCategory] = count;
       return temp;
     });
+  };
+
+  const handleSubmit = (value: Record<string, string>) => {
+    updateAnswer(value);
+    if (!isTheLast) {
+      setCurrentCategory(currentCategory + 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    setIsSendingStatus(SendingStatus.LOADING);
+    sendData();
   };
 
   const sendData = async () => {
