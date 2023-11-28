@@ -23,6 +23,28 @@ export class DatabaseUtils {
     };
   }
 
+  static getStrictSearch (search: string | number, field: string) {
+    if (!search) return {};
+    return {
+      [field]: search,
+    };
+  }
+
+  static getSearchByArray (searches: string[] | object[], ...fields: string[]) {
+    if (!searches) return {};
+    const OR = [];
+
+    for (const search of searches) {
+      const element = {};
+      for (const field of fields) {
+        element[field] = search[field] ?? search;
+      }
+      OR.push(element);
+    }
+
+    return { OR };
+  }
+
   protected static getPage ({ page = 0, pageSize }: PageDTO): Page | object {
     page = +page;
     pageSize = +pageSize;

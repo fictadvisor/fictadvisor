@@ -55,4 +55,19 @@ export class StudentMapper {
       state: superhero.state,
     };
   }
+
+  getStudents (students: DbStudent[]) {
+    return students.map((s) => ({
+      id: s.userId,
+      lastname: s.lastName,
+      firstName: s.firstName,
+      middleName: s.middleName,
+      state: s.state,
+      role: this.getGroupRole(s.roles)?.name ?? null,
+      group: {
+        groupId: s.groupId,
+        code: s.group.code,
+      },
+    }));
+  }
 }

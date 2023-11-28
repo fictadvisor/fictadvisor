@@ -43,12 +43,11 @@ export class StudentRepository {
     return this.find({ userId });
   }
 
-  findMany (where: Prisma.StudentWhereInput, orderBy?: Prisma.StudentOrderByWithRelationInput[]): Promise<DbStudent[]> {
+  findMany (args: Prisma.StudentFindManyArgs): Promise<DbStudent[]> {
     return this.prisma.student.findMany({
-      where,
-      orderBy,
+      ...args,
       include: this.include,
-    });
+    })as unknown as Promise<DbStudent[]>;
   }
 
   async updateById (userId: string, data: Prisma.StudentUncheckedUpdateInput) {
@@ -72,5 +71,9 @@ export class StudentRepository {
         userId,
       },
     });
+  }
+
+  async count (data: Prisma.StudentCountArgs) {
+    return this.prisma.student.count(data);
   }
 }

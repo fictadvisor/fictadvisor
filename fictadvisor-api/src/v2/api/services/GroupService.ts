@@ -22,10 +22,10 @@ import { QuerySemesterDTO } from '../dtos/QuerySemesterDTO';
 import { DateService } from '../../utils/date/DateService';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
 import { FileService } from '../../utils/files/FileService';
-import { GroupStudentsQueryDTO, SortQGSParam } from '../dtos/GroupStudentsQueryDTO';
 import { OrderQAParam } from '../dtos/OrderQAParam';
 import { StudentIsAlreadyCaptainException } from '../../utils/exceptions/StudentIsAlreadyCaptainException';
 import { NotApprovedException } from '../../utils/exceptions/NotApprovedException';
+import { GroupStudentsQueryDTO, SortQGSParam } from '../dtos/GroupStudentsQueryDTO';
 
 const ROLE_LIST = [
   {
@@ -236,11 +236,14 @@ export class GroupService {
       orderBy.push({ [SortQGSParam.FIRST_NAME]: order });
       orderBy.push({ [SortQGSParam.MIDDLE_NAME]: order });
     }
-    
-    const students = await this.studentRepository.findMany({ 
-      groupId,
-      state: State.APPROVED,
-    }, orderBy);
+
+    const students = await this.studentRepository.findMany({
+      where: {
+        groupId,
+        state: State.APPROVED,
+      },
+      orderBy,
+    });
     return students.map((s) => this.studentMapper.getStudent(s));
   }
 
@@ -249,7 +252,12 @@ export class GroupService {
   }
 
   async getUnverifiedStudents (groupId: string) {
-    const students = await this.studentRepository.findMany({ groupId, state: State.PENDING });
+    const students = await this.studentRepository.findMany({
+      where: {
+        groupId,
+        state: State.PENDING,
+      },
+    });
     return students.map((s) => this.studentMapper.getStudent(s, false));
   }
 
@@ -307,13 +315,16 @@ export class GroupService {
 
   async getGroupList (groupId: string) {
     const dbStudents = await this.studentRepository.findMany({
-      groupId,
-      state: State.APPROVED,
-    }, [
-      { lastName: 'asc' },
-      { firstName: 'asc' },
-      { middleName: 'asc' },
-    ]);
+      where: {
+        groupId,
+        state: State.APPROVED,
+      },
+      orderBy: [
+        { lastName: 'asc' },
+        { firstName: 'asc' },
+        { middleName: 'asc' },
+      ],
+    });
 
     const students = [];
 

@@ -14,6 +14,7 @@ import { EntrantModule } from '../modules/EntrantModule';
 import { AdmissionModule } from '../modules/AdmissionModule';
 import { TelegramGroupModule } from '../modules/TelegramGroupModule';
 import { PermissionModule } from '../modules/PermissionModule';
+import { StudentModule } from '../modules/StudentModule';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { PermissionModule } from '../modules/PermissionModule';
     AdmissionModule,
     TelegramGroupModule,
     PermissionModule,
+    StudentModule,
   ],
 })
 export class ApiModule {}

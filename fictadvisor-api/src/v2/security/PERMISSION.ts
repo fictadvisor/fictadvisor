@@ -62,6 +62,7 @@ export enum PERMISSION {
   SCHEDULE_PARSE = 'schedule.parse',
 
   STUDENTS_DELETE = 'students.delete',
+  STUDENTS_GET = 'students.get',
 
   SUBJECTS_CREATE = 'subjects.create',
   SUBJECTS_UPDATE = 'subjects.update',

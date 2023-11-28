@@ -3,6 +3,7 @@ import { UserResponse } from './UserResponse';
 import { ExtendedGroupResponse, GroupResponse } from './GroupResponse';
 import { RoleWithStudentResponse } from './RoleWithStudentResponse';
 import { State } from '@prisma/client';
+import { GroupRoles } from '../dtos/QueryAllStudentDTO';
 
 export class BaseStudentResponse {
   @ApiProperty({
@@ -19,6 +20,39 @@ export class BaseStudentResponse {
     description: 'Student\'s lastName',
   })
     lastName: string;
+}
+
+export class SimpleStudentResponse extends BaseStudentResponse {
+  @ApiProperty({
+    description: 'Student\'s id',
+  })
+    id: string;
+
+  @ApiProperty({
+    description: 'Student\'s state',
+    enum: State,
+  })
+    state: State;
+
+  @ApiProperty({
+    description: 'Student\'s group role',
+    enum: GroupRoles,
+  })
+    role: string;
+
+  @ApiProperty({
+    type: GroupResponse,
+    description: 'Student\'s group',
+  })
+    group: GroupResponse;
+}
+
+export class SimpleStudentsResponse {
+  @ApiProperty({
+    type: [SimpleStudentResponse],
+    description: 'All students',
+  })
+    students: SimpleStudentResponse[];
 }
 
 export class FullStudentResponse extends BaseStudentResponse {

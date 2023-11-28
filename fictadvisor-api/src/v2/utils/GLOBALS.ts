@@ -11,6 +11,6 @@ export function createRegex (...regexes: string[]) {
   return new RegExp('^[' + regexes.join('') + ']+$');
 }
 
-export function validationOptionsMsg (message:string): ValidationOptions {
-  return { message };
+export function validationOptionsMsg (message:string, each?: boolean): ValidationOptions {
+  return { message, each };
 }
