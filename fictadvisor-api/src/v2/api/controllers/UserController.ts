@@ -48,7 +48,7 @@ import { FullStudentResponse, OrdinaryStudentResponse, StudentsResponse } from '
 import { FullUserResponse, UserResponse } from '../responses/UserResponse';
 import { ApiImplicitFile } from '@nestjs/swagger/dist/decorators/api-implicit-file.decorator';
 import { SelectiveDisciplinesPipe } from '../pipes/SelectiveDisciplinesPipe';
-import { AttachSelectiveDisciplinesDTO } from '../dtos/AttachSelectiveDisciplinesDTO';
+import { SelectiveDisciplinesDTO } from '../dtos/SelectiveDisciplinesDTO';
 import { UserByTelegramIdPipe } from '../pipes/UserByTelegramIdPipe';
 import { ContactResponse, ContactsResponse } from '../responses/ContactResponse';
 import { UpdateSuperheroDTO } from '../dtos/UpdateSuperheroDTO';
@@ -898,19 +898,33 @@ export class UserController {
     return this.userMapper.getUser(user);
   }
 
-  @Access(PERMISSION.USERS_$USERID_SELECTIVE_GET)
-  @Get('/:userId/selectiveDisciplines')
+  @ApiBearerAuth()
   @ApiOkResponse({
     type: RemainingSelectiveResponse,
   })
-  @ApiBadRequestResponse({
-    description: `InvalidEntityIdException:\n 
-                  User with such id is not found`,
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
   })
   @ApiForbiddenResponse({
-    description: `NoPermissionException:\n
-                  You do not have permission to perform this action`,
+    description: `\n 
+    NoPermissionException:
+      You do not have permission to perform this action`,
   })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException: 
+      User with such id is not found
+      
+    DataNotFoundException: 
+      Data were not found`,
+  })
+  @ApiEndpoint({
+    summary: 'Get all selective disciplines available to the user from the whole list',
+    permissions: PERMISSION.USERS_$USERID_SELECTIVE_GET,
+  })
+  @Get('/:userId/selectiveDisciplines')
   async getRemainingSelective (
     @Param('userId', UserByIdPipe) userId: string,
     @Query() body: RemainingSelectiveDTO,
@@ -918,29 +932,92 @@ export class UserController {
     return await this.userService.getRemainingSelective(userId, body);
   }
 
-  @Access(PERMISSION.USERS_$USERID_SELECTIVE_DISCIPLINES)
   @ApiBearerAuth()
-  @Post(':userId/selectiveDisciplines')
   @ApiOkResponse()
-  @ApiBadRequestResponse({
-    description: `Exceptions:\n
-                  InvalidEntityIdException: User with such id is not found
-                  InvalidEntityIdException: Discipline with such id is not found
-                  NotSelectiveException: This discipline is not selective
-                  AlreadySelectedException: You have already selected this disciplines
-                  NotBelongToGroupException: Discipline does not belong to this group
-                  ExcessiveSelectiveDisciplinesException: There are excessive selective disciplines in the request`,
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
   })
   @ApiForbiddenResponse({
-    description: `Exceptions:\n
-                  NotApprovedException: Student is not approved
-                  NoPermissionException: You do not have permission to perform this action`,
+    description: `\n 
+    NoPermissionException:
+      You do not have permission to perform this action
+      
+    NotApprovedException: 
+      Student is not approved`,
   })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException: 
+      User with such id is not found
+      Discipline with such id is not found
+      
+    InvalidBodyException:
+      This discipline is not selective
+      Discipline does not belong to this group
+      Current discipline is not selected by this student
+      You have already selected these disciplines
+      There are excessive selective disciplines in the request`,
+  })
+  @ApiEndpoint({
+    summary: 'Attach selective disciplines to the student',
+    permissions: PERMISSION.USERS_$USERID_SELECTIVE_DISCIPLINES,
+  })
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: 'Id of the user to attach selective disciplines',
+  })
+  @Post(':userId/selectiveDisciplines')
   async attachSelectiveDisciplines (
     @Param('userId', UserByIdPipe, StudentPipe) userId: string,
-    @Body(SelectiveDisciplinesPipe) body: AttachSelectiveDisciplinesDTO,
+    @Body(SelectiveDisciplinesPipe) body: SelectiveDisciplinesDTO,
   ) {
     return this.userService.selectDisciplines(userId, body);
+  }
+
+  @ApiBearerAuth()
+  @ApiOkResponse()
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n 
+    NoPermissionException:
+      You do not have permission to perform this action
+      
+    NotApprovedException: 
+      Student is not approved`,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException: 
+      User with such id is not found
+      Discipline with such id is not found
+      
+    InvalidBodyException:
+      This discipline is not selective
+      Discipline does not belong to this group
+      Current discipline is not selected by this student`,
+  })
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: 'Id of the user to detach selective disciplines',
+  })
+  @ApiEndpoint({
+    summary: 'Detach selective disciplines from the student',
+    permissions: PERMISSION.USERS_$USERID_SELECTIVE_DISCIPLINES,
+  })
+  @Delete(':userId/selectiveDisciplines')
+  async detachSelectiveDisciplines (
+    @Param('userId', UserByIdPipe, StudentPipe) userId: string,
+    @Body(SelectiveDisciplinesPipe) body: SelectiveDisciplinesDTO,
+  ) {
+    return this.userService.deselectDisciplines(userId, body);
   }
 
   @Access(PERMISSION.USERS_GROUPS_SWITCH)

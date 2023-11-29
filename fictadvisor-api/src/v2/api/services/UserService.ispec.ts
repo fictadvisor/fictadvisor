@@ -19,6 +19,7 @@ import { NotBelongToGroupException } from '../../utils/exceptions/NotBelongToGro
 import { AlreadySelectedException } from '../../utils/exceptions/AlreadySelectedException';
 import { ExcessiveSelectiveDisciplinesException } from '../../utils/exceptions/ExcessiveSelectiveDisciplinesException';
 import { TelegramAPI } from '../../telegram/TelegramAPI';
+import { NotSelectedDisciplineException } from '../../utils/exceptions/NotSelectedDisciplineException';
 
 describe('UserService', () => {
   let userService: UserService;
@@ -78,6 +79,9 @@ describe('UserService', () => {
         }, {
           id: 'newGroupId',
           code: 'ІП-22',
+        }, {
+          id: 'groupWithoutSelectiveId',
+          code: 'ІС-22',
         },
       ],
     });
@@ -159,6 +163,10 @@ describe('UserService', () => {
           id: 'pendingStudentId',
           email: 'pupsik1@gmail.com',
           state: 'APPROVED',
+        }, {
+          id: 'userWithoutSelective',
+          email: 'kroshka@gmail.com',
+          state: 'APPROVED',
         },
       ],
     });
@@ -173,6 +181,11 @@ describe('UserService', () => {
           userId: 'pendingStudentId',
           groupId: 'groupWithSelectiveIn2022Id',
           state: 'PENDING',
+        },
+        {
+          userId: 'userWithoutSelective',
+          groupId: 'groupWithoutSelectiveId',
+          state: 'APPROVED',
         },
       ],
     });
@@ -230,6 +243,9 @@ describe('UserService', () => {
         }, {
           id: 'selectiveSubjectOfNewGroupId',
           name: 'selective3',
+        }, {
+          id: 'notSelectedSubjectId',
+          name: 'selective4',
         },
       ],
     });
@@ -261,6 +277,14 @@ describe('UserService', () => {
           id: 'excessiveSelectiveDisciplineId',
           subjectId: 'selectiveSubject1Id',
           groupId: 'groupWithSelectiveIn2022Id',
+          year: 2022,
+          semester: 2,
+          isSelective: true,
+        },
+        {
+          id: 'nonSelectedDisciplineId',
+          subjectId: 'notSelectedSubjectId',
+          groupId: 'groupWithoutSelectiveId',
           year: 2022,
           semester: 2,
           isSelective: true,
@@ -400,22 +424,57 @@ describe('UserService', () => {
       ]);
     });
 
-    it('should throw NotBelongToGroupException if discipline do not belong to users group',  async () => {
+    it('should throw NotBelongToGroupException if the discipline does not belong to the user\'s group',  async () => {
       await expect(
         userService.selectDisciplines('userWithSelectiveId', { disciplines: ['selectiveDisciplineOfNewGroupId'] })
       ).rejects.toThrow(NotBelongToGroupException);
     });
 
-    it('should throw AlreadySelectedException if user have already selected this discipline', async () => {
+    it('should throw AlreadySelectedException if the user has already selected this discipline', async () => {
       await expect(
         userService.selectDisciplines('userWithSelectiveId', { disciplines: ['selectiveDiscipline1Id'] })
       ).rejects.toThrow(AlreadySelectedException);
     });
 
-    it('should throw ExcessiveSelectiveDisciplinesException if selected disciplines more than selective amount', async () => {
+    it('should throw ExcessiveSelectiveDisciplinesException if selected disciplines are more than selective amount', async () => {
       await expect(
         userService.selectDisciplines('userWithSelectiveId', { disciplines: ['excessiveSelectiveDisciplineId'] })
       ).rejects.toThrow(ExcessiveSelectiveDisciplinesException);
+    });
+  });
+
+  describe('deselectDisciplines', () => {
+    it('should disconnect selective disciplines from the student', async () => {
+      await userService.deselectDisciplines('userWithSelectiveId', { disciplines: ['selectiveDiscipline1Id'] });
+
+      const result = await prisma.selectiveDiscipline.findMany({
+        where: {
+          studentId: 'userWithSelectiveId',
+        },
+        select: {
+          studentId: true,
+          disciplineId: true,
+        },
+      });
+
+      expect(result).toStrictEqual([
+        {
+          disciplineId: 'selectiveDiscipline2Id',
+          studentId: 'userWithSelectiveId',
+        },
+      ]);
+    });
+
+    it('should throw NotBelongToGroupException if discipline does not belong to the user\'s group', async () => {
+      await expect(
+        userService.deselectDisciplines('userWithSelectiveId', { disciplines: ['selectiveDisciplineOfNewGroupId'] })
+      ).rejects.toThrow(NotBelongToGroupException);
+    });
+
+    it('should throw NotSelectedDisciplineException if the user has not selected this discipline', async () => {
+      await expect(
+        userService.deselectDisciplines('userWithoutSelective', { disciplines: ['nonSelectedDisciplineId'] })
+      ).rejects.toThrow(NotSelectedDisciplineException);
     });
   });
 
