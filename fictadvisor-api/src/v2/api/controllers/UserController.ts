@@ -542,7 +542,7 @@ export class UserController {
     description: 'Id of a user to create contact',
   })
   @ApiEndpoint({
-    summary: 'Request captain or admin to create a contact',
+    summary: 'Create contact for a user',
     permissions: PERMISSION.USERS_$USERID_CONTACTS_CREATE,
   })
   @Post('/:userId/contacts')
@@ -590,7 +590,7 @@ export class UserController {
     description: 'Id of contact to be updated',
   })
   @ApiEndpoint({
-    summary: 'Request captain or admin to update the contact',
+    summary: 'Update user\'s contact by contact\'s id',
     permissions: PERMISSION.USERS_$USERID_CONTACTS_UPDATE,
   })
   @Patch('/:userId/contacts/:contactId')
@@ -630,7 +630,7 @@ export class UserController {
     description: 'Id of a contact to delete',
   })
   @ApiEndpoint({
-    summary: 'Request captain or admin to delete the contact',
+    summary: 'Delete user\'s contact by contact\'s id',
     permissions: PERMISSION.USERS_$USERID_CONTACTS_DELETE,
   })
   @Delete('/:userId/contacts/:contactId')
@@ -663,7 +663,7 @@ export class UserController {
     description: 'Id of a user to delete',
   })
   @ApiEndpoint({
-    summary: 'Request captain or admin to delete a student',
+    summary: 'Delete student by user\'s id',
     permissions: PERMISSION.STUDENTS_DELETE,
   })
   @Delete('/:userId/student')
@@ -708,7 +708,7 @@ export class UserController {
     description: 'Id of a user to update',
   })
   @ApiEndpoint({
-    summary: 'Request to update a student',
+    summary: 'Update student by user\'s id',
     permissions: PERMISSION.USERS_$USERID_STUDENT_UPDATE,
   })
   @Patch('/:userId/student')
