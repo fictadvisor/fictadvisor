@@ -57,7 +57,7 @@ export const label = (state: InputState): SxProps<Theme> => ({
 export const remark = (state: InputState): SxProps<Theme> => ({
   margin: '2px 8px 0 16px',
   '&.MuiFormHelperText-root': {
-    textTransform: 'lowercase',
+    textTransform: 'none',
   },
 
   ...(state === InputState.ERROR && {

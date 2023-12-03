@@ -58,6 +58,7 @@ const ChangePasswordForm = () => {
               type={InputType.PASSWORD}
               name="oldPassword"
               isSuccessOnDefault={true}
+              showRemark={true}
             />
             {errors.oldPassword === 'Введений пароль недійсний' && (
               <Typography variant="body2">
@@ -77,6 +78,7 @@ const ChangePasswordForm = () => {
               name="newPassword"
               disabled={!!errors.oldPassword}
               isSuccessOnDefault={true}
+              showRemark={true}
             />
             <Input
               sx={styles.input}
@@ -86,6 +88,7 @@ const ChangePasswordForm = () => {
               name="confirmationPassword"
               disabled={!!errors.oldPassword || !!errors.newPassword}
               isSuccessOnDefault={true}
+              showRemark={true}
             />
             <Box sx={styles.confirmButton}>
               <Button

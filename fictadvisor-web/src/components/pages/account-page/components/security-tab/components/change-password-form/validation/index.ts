@@ -11,9 +11,11 @@ export const validationSchema = yup.object().shape({
   newPassword: yup
     .string()
     .required(`Обов'язкове поле`)
+    .min(8, 'Не коротше 8 символів')
+    .max(32, 'Не довше 32 символів')
     .matches(
-      /^(?=.*[A-Za-z])(?=.*\d)[\w\W]+$/,
-      'Мінімум одна латинська літера та одна цифра',
+      /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[\w\W]+$/,
+      'Мінімум одна велика латинська літера, одна цифра та один спеціальний символ',
     ),
   confirmationPassword: yup
     .string()
