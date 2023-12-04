@@ -116,3 +116,10 @@ export const calendar: SxProps<Theme> = {
     },
   },
 };
+
+export const remark: SxProps<Theme> = {
+  pl: '16px',
+  fontSize: '11px',
+  color: 'error.500',
+  mb: '0px',
+};
