@@ -61,7 +61,7 @@ export class ScheduleMapper {
       startTime: event.startTime,
       endTime: event.endTime,
       url: event.url,
-      eventInfo: event.eventInfo[0].description,
+      eventInfo: event.eventInfo[0]?.description || null,
     };
   }
 
