@@ -2,6 +2,7 @@ import { SxProps } from '@mui/material/styles';
 import { Theme } from '@mui/system';
 
 export const schedulePage: SxProps<Theme> = {
+  zIndex: 1,
   display: 'flex',
   flexDirection: { mobile: 'column', tablet: 'row' },
   alignItems: { mobile: 'stretch', tablet: 'center' },
