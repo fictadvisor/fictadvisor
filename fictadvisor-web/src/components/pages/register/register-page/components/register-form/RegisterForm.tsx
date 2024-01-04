@@ -1,7 +1,7 @@
 import React, { FC, useCallback } from 'react';
 import { Box } from '@mui/material';
 import { Form, Formik } from 'formik';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 import Button from '@/components/common/ui/button-mui';
 import { ButtonSize } from '@/components/common/ui/button-mui/types';

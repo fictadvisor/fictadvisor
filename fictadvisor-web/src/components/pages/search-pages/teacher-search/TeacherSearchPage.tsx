@@ -1,3 +1,4 @@
+'use client';
 import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Box } from '@mui/material';

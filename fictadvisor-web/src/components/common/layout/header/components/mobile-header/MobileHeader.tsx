@@ -1,3 +1,5 @@
+'use client';
+
 import { FC, useState } from 'react';
 import { Bars3Icon } from '@heroicons/react/24/outline';
 import { AppBar, Box, Link } from '@mui/material';

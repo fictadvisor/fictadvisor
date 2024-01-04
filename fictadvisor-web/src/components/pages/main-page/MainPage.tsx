@@ -1,22 +1,13 @@
+'use client';
+
 import { FC } from 'react';
-import { Box, Typography, useMediaQuery } from '@mui/material';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { Box, Typography } from '@mui/material';
+import { useSearchParams } from 'next/navigation';
 
 import PageLayout from '@/components/common/layout/page-layout/PageLayout';
-import Button from '@/components/common/ui/button-mui';
-import {
-  ButtonColor,
-  ButtonSize,
-  ButtonVariant,
-} from '@/components/common/ui/button-mui/types';
-import Divider from '@/components/common/ui/divider';
-import GreetingBlock from '@/components/pages/main-page/completely-normal-folder/GreetingBlock';
 import TokenPopup from '@/components/pages/main-page/components/token-popup';
 import * as stylesMUI from '@/components/pages/main-page/MainPage.styles';
-import useAuthentication from '@/hooks/use-authentication';
 import { GetStudentResourcesResponse } from '@/lib/api/student-resources/types/GetStudentResourcesResponse';
-import theme from '@/styles/theme';
 
 import BannerImage from '../../common/icons/BannerImage';
 
@@ -29,13 +20,8 @@ export interface MainPageProps {
 }
 
 const MainPage: FC<MainPageProps> = ({ data }) => {
-  const { query, isReady } = useRouter();
-  const token = query.token as string;
-  const { isLoggedIn } = useAuthentication();
-  const isDesktop = useMediaQuery(theme.breakpoints.up('desktop'));
-  const isTablet = useMediaQuery(
-    theme.breakpoints.between('tablet', 'desktop'),
-  );
+  const searchParams = useSearchParams();
+  const token = searchParams?.get('token');
   return (
     <PageLayout
       description="FICT Advisor - офіційний сайт Студради ФІОТ.
@@ -45,7 +31,7 @@ const MainPage: FC<MainPageProps> = ({ data }) => {
       className={styles['main-page']}
     >
       <Box sx={stylesMUI.mainPageContent}>
-        {token && isReady && <TokenPopup token={token} />}
+        {token && <TokenPopup token={token} />}
         <Box sx={stylesMUI.infoSection}>
           <Box sx={stylesMUI.infoSectionContent}>
             <Box>

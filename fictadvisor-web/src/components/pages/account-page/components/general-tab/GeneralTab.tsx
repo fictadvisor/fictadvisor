@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
 import { PencilIcon } from '@heroicons/react/24/outline';
 import { Avatar, Box, useMediaQuery } from '@mui/material';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 import { TelegramForAccount } from '@/components/common/icons/TelegramForAccount';
 import Button from '@/components/common/ui/button-mui';

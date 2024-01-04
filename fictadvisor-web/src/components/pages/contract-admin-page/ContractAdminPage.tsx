@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { Box } from '@mui/material';
 import { Form, Formik, FormikHelpers } from 'formik';
@@ -40,7 +42,7 @@ const ContractAdminPage = () => {
         sx={styles.breadcrumbs}
         items={[
           { label: 'Головна', href: '/' },
-          { label: 'Договір про навчання', href: '/contract-admin' },
+          { label: 'Договір про навчання', href: '/_contract-admin' },
         ]}
       />
       <Formik

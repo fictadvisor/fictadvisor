@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import Masonry from '@mui/lab/Masonry';
 import { Box } from '@mui/material';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 import { SubjectCard } from '@/components/common/ui/cards/subject-card';
 import { breakpoints } from '@/components/pages/search-pages/subject-search/components/constants/breakpoints';

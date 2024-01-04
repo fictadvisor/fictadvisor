@@ -1,8 +1,8 @@
+'use client';
 import React, { FC, useMemo } from 'react';
 import { useQuery } from 'react-query';
 import { Typography } from '@mui/material';
 import { Box } from '@mui/material';
-import { useRouter } from 'next/router';
 
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
 import { Breadcrumb } from '@/components/common/ui/breadcrumbs/types';
@@ -24,13 +24,15 @@ const breadcrumbs: Breadcrumb[] = [
   },
 ];
 
-const SearchTeacherPage: FC = () => {
-  const { query, isReady } = useRouter();
+interface SearchTeacherPageProps {
+  subjectId: string;
+}
 
+const SearchTeacherPage: FC<SearchTeacherPageProps> = ({ subjectId }) => {
   const { data, isLoading } = useQuery<GetTeachersBySubjectResponse>(
-    ['teacher-by-subject', query.subjectId],
-    () => SubjectsAPI.getTeachersBySubject(query.subjectId as string),
-    { enabled: isReady, staleTime: Infinity },
+    ['teacher-by-subject', subjectId],
+    () => SubjectsAPI.getTeachersBySubject(subjectId),
+    { staleTime: Infinity },
   );
 
   const subject: Breadcrumb = useMemo(
@@ -50,7 +52,7 @@ const SearchTeacherPage: FC = () => {
       {data && !isLoading && (
         <SubjectTeacherSearchList
           teachers={data.teachers}
-          subjectId={query.subjectId as string}
+          subjectId={subjectId}
         />
       )}
     </Box>

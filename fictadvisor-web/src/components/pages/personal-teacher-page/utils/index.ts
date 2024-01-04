@@ -1,6 +1,3 @@
-import { NextParsedUrlQuery } from 'next/dist/server/request-meta';
-import { NextRouter } from 'next/router';
-
 import { TeacherPageInfo } from '@/lib/services/teacher/types';
 import { Teacher } from '@/types/teacher';
 
@@ -11,11 +8,10 @@ export enum TeachersPageTabs {
 }
 
 export interface PersonalTeacherPageProps {
-  isLoading: boolean;
-  isError: boolean;
+  isLoading?: boolean;
+  isError?: boolean;
   teacher: Teacher;
-  data: TeacherPageInfo | undefined;
-  query: NextParsedUrlQuery;
+  data?: TeacherPageInfo | undefined;
   teacherId: string;
-  router: NextRouter;
+  info?: Teacher;
 }

@@ -1,14 +1,18 @@
+'use client';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Box } from '@mui/material';
-import { useRouter } from 'next/router';
+import {
+  ReadonlyURLSearchParams,
+  useRouter,
+  useSearchParams,
+} from 'next/navigation';
 
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
 import Progress from '@/components/common/ui/progress';
 import useAuthentication from '@/hooks/use-authentication';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import PollAPI from '@/lib/api/poll/PollAPI';
-import { usePollStore } from '@/store/poll-page/usePollStore';
 
 import PollForm from './components/poll-form';
 import * as styles from './PollPage.styles';
@@ -17,7 +21,8 @@ const PollPage = () => {
   const { user, isLoggedIn } = useAuthentication();
   const { displayError } = useToastError();
   const router = useRouter();
-  const disciplineTeacherId = router.query.disciplineTeacherId as string;
+  const query = useSearchParams() as ReadonlyURLSearchParams;
+  const disciplineTeacherId = query.get('disciplineTeacherId') as string;
   const {
     error,
     isSuccess: isSuccessFetching,

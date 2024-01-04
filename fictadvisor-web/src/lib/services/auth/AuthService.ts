@@ -1,4 +1,4 @@
-import { NextRouter } from 'next/router';
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
 import AuthAPI from '@/lib/api/auth/AuthAPI';
 import { AuthBody } from '@/lib/api/auth/types/AuthBody';
@@ -33,7 +33,7 @@ class AuthService {
     } else await AuthAPI.register(data);
   }
 
-  static async redirectToRegisterBot(router: NextRouter) {
+  static async redirectToRegisterBot(router: AppRouterInstance) {
     const botUrl = `https://t.me/${process.env.NEXT_PUBLIC_BOT_NAME}?start=start`;
     await router.push(botUrl);
   }

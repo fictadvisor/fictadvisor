@@ -1,8 +1,10 @@
+'use client';
+
 import { FC } from 'react';
 import { AppBar, Link, Toolbar } from '@mui/material';
 import Image from 'next/image';
 import NextLink from 'next/link';
-import { useRouter } from 'next/router';
+import { usePathname } from 'next/navigation';
 
 import Button from '@/components/common/ui/button-mui';
 import {
@@ -23,8 +25,7 @@ interface DesktopHeaderProps {
 }
 
 const DesktopHeader: FC<DesktopHeaderProps> = ({ isLoggedIn, user }) => {
-  const router = useRouter();
-
+  const pathname = usePathname() as string;
   return (
     <AppBar sx={styles.headerContainer}>
       <Link href="/" component={NextLink} sx={styles.logoContainer}>
@@ -39,7 +40,7 @@ const DesktopHeader: FC<DesktopHeaderProps> = ({ isLoggedIn, user }) => {
             underline="none"
           >
             <Button
-              sx={styles.button(router.pathname, record.link)}
+              sx={styles.button(pathname, record.link)}
               text={record.text}
               size={ButtonSize.MEDIUM}
               variant={ButtonVariant.TEXT}

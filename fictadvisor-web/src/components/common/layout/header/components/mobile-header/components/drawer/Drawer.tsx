@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Box, Drawer as MuiDrawer, Link } from '@mui/material';
 import NextLink from 'next/link';
-import { useRouter } from 'next/router';
+import { usePathname } from 'next/navigation';
 
 import Divider from '@/components/common/ui/divider';
 import Tab from '@/components/common/ui/tab/tab';
@@ -26,8 +26,7 @@ const Drawer: FC<DrawerProps> = ({
   handleClick,
   user,
 }) => {
-  const router = useRouter();
-
+  const pathname = usePathname();
   return (
     <MuiDrawer
       anchor="top"
@@ -62,7 +61,7 @@ const Drawer: FC<DrawerProps> = ({
                   textPosition={TabTextPosition.LEFT}
                   icon={button.icon}
                   sx={
-                    router.asPath === button.link
+                    pathname === button.link
                       ? styles.activeMenuTab
                       : styles.menuTab
                   }
@@ -88,9 +87,7 @@ const Drawer: FC<DrawerProps> = ({
             <Tab
               label={data.text}
               sx={
-                router.pathname === data.link
-                  ? styles.activeMenuTab
-                  : styles.menuTab
+                pathname === data.link ? styles.activeMenuTab : styles.menuTab
               }
               textPosition={TabTextPosition.LEFT}
               icon={data.icon}

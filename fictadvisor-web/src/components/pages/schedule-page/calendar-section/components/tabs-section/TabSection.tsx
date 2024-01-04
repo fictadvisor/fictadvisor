@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import { TabPanel } from '@mui/lab';
 import { Box } from '@mui/material';
-import { useRouter } from 'next/router';
+import {
+  ReadonlyURLSearchParams,
+  useRouter,
+  useSearchParams,
+} from 'next/navigation';
 
 import { Dropdown } from '@/components/common/ui/form';
 import Tab from '@/components/common/ui/tab/tab';
@@ -19,14 +23,15 @@ export enum CalendarPageTabs {
 
 export const TabSection = () => {
   const router = useRouter();
-  const { query } = router;
-  const { tab } = query;
+  const query = useSearchParams() as ReadonlyURLSearchParams;
+  const tab = query.get('tab') as string;
 
   const [index, setIndex] = useState(CalendarPageTabs.STUDENT);
   const handleChange = useTabState({
     tab,
     router,
     setIndex,
+    query,
   });
 
   return (
