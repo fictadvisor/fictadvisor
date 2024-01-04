@@ -48,6 +48,7 @@ import { SuperheroResponse } from '../responses/SuperheroResponse';
 import { ApiEndpoint } from 'src/v2/utils/documentation/decorators';
 import { UsersResponse } from '../responses/UsersResponse';
 import { QueryAllUsersDTO } from '../dtos/QueryAllUsersDTO';
+import { UserByAdminDTO } from '../dtos/UserDTO';
 
 @ApiTags('User')
 @Controller({
@@ -60,6 +61,43 @@ export class UserController {
     private userMapper: UserMapper,
     private studentMapper: StudentMapper,
   ) {}
+
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: UserResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidBodyException:
+      Username is not correct (a-zA-Z0-9_), or too short (min: 2), or too long (max: 40)
+      Username cannot be empty
+      Email is not an email
+      Email cannot be empty
+      State value is not in enum
+      State cannot be empty
+
+    AlreadyRegisteredException:
+      User is already registered`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @ApiEndpoint({
+    summary: 'Create a new user by admin',
+    permissions: PERMISSION.USERS_CREATE,
+  })
+  @Post('/createUser')
+  async createUser (@Body() body: UserByAdminDTO) {
+    const user = await this.userService.createUserByAdmin(body);
+    return this.userMapper.getUser(user);
+  }
 
   @ApiBearerAuth()
   @ApiOkResponse({

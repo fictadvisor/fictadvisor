@@ -25,10 +25,10 @@ export class UserResponse extends ShortUserResponse {
   })
     telegramId?: number;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'User\'s avatar link',
   })
-    avatar: string;
+    avatar?: string;
 
   @ApiProperty({
     description: 'User\'s state',

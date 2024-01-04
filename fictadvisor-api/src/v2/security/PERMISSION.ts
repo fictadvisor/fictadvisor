@@ -70,6 +70,7 @@ export enum PERMISSION {
   SUBJECTS_UPDATE = 'subjects.update',
   SUBJECTS_DELETE = 'subjects.delete',
 
+  USERS_CREATE = 'users.create',
   USERS_GET = 'users.get',
   USERS_UPDATE = 'users.update',
   USERS_DELETE = 'users.delete',
