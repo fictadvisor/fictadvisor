@@ -32,6 +32,7 @@ import { checkIfArrayIsUnique } from '../../utils/ArrayUtil';
 import { AlreadySelectedException } from '../../utils/exceptions/AlreadySelectedException';
 import { TelegramAPI } from '../../telegram/TelegramAPI';
 import { DuplicateTelegramIdException } from '../../utils/exceptions/DuplicateTelegramIdException';
+import { UserByAdminDTO } from '../dtos/UserDTO';
 import { NotSelectedDisciplineException } from '../../utils/exceptions/NotSelectedDisciplineException';
 import { DataNotFoundException } from '../../utils/exceptions/DataNotFoundException';
 import { QueryAllUsersDTO } from '../dtos/QueryAllUsersDTO';
@@ -64,6 +65,13 @@ export class UserService {
     private dateService: DateService,
     private telegramAPI: TelegramAPI,
   ) {}
+
+  async createUserByAdmin (data: UserByAdminDTO) {
+    if (await this.authService.checkIfUserIsRegistered(data)) {
+      throw new AlreadyRegisteredException();
+    }
+    return this.userRepository.create(data);
+  }
 
   async createSuperhero (id: string, body: CreateSuperheroDTO) {
     return this.superheroRepository.createSuperhero(id, body);
