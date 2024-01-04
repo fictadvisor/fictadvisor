@@ -1,0 +1,32 @@
+@import "src/styles/partials/utils";
+@import "src/styles/partials/breakpoints";
+@import "src/styles/partials/typography-mixins";
+
+.form{
+  margin-top: 16px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  @include flex-center;
+}
+
+.mobile-login-logo{
+  width: calc(100% - 150px);
+  min-width: 200px;
+  aspect-ratio: 7.1/1;
+  display: none;
+  margin: 6vh 4vh;
+  position:relative;
+}
+
+@media screen and (max-width: $breakpoint-desktop-semi-medium) {
+  .mobile-login-logo {
+    display: flex;
+  }
+}
+
+@media screen and (max-width: $breakpoint-mobile-medium){
+  .mobile-login-logo {
+    margin: 2vh 4vh;
+  }
+}

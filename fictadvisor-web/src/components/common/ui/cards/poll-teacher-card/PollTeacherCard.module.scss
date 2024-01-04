@@ -1,0 +1,83 @@
+@import 'src/styles/partials/theme';
+@import 'src/styles/partials/typography-mixins';
+@import 'src/styles/partials/utils';
+
+.poll-teacher-card {
+  height: 85%;
+  padding: 16px;
+  background-color: $background-dark-35;
+  border-radius: 6px;
+  width: 100%;
+  min-width: fit-content;
+  border: 1px solid transparent;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 8px;
+  position: relative;
+}
+
+.poll-teacher-card-roles {
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.poll-teacher-card-avatar {
+  box-sizing: content-box;
+  margin-bottom: 12px;
+  box-shadow: 0 0 0 2px $background-dark-35;
+  border-radius: 100%;
+  -webkit-border-radius: 100%;
+  width: 64px;
+  height: 64px;
+}
+
+.poll-teacher-card-shift {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  top: -50px;
+}
+
+.poll-subject-name {
+  display: inline-block;
+  @include body-primary;
+  height: 39.2px;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  color: $gray-500;
+}
+
+.poll-teacher-name {
+  @include body-secondary--bold;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  padding-left: 1px;
+}
+
+.poll-teacher-card-info{
+  flex-grow: 1;
+  display: flex;
+  gap: 2px;
+  height: 88px;
+  margin-bottom: 12px;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.card-disabled {
+  .poll-teacher-card-avatar {
+    border-color: #4b4b4b;
+  }
+  border-color: transparent;
+  background-color: $background-dark-100;
+  pointer-events: none;
+  * {
+    color: #a3a3a3 !important;
+  }
+}
+

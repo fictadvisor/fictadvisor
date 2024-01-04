@@ -1,0 +1,19 @@
+@import "src/styles/partials/utils";
+@import "src/styles/partials/breakpoints";
+
+.mobile-register-logo-container {
+  @include flex-center;
+  position: relative;
+  margin: 8vh 4vh;
+  display: none;
+  width: calc(100% - 40px);
+  min-width: 200px;
+  aspect-ratio: 7.1/1;
+  justify-content: center;
+}
+
+@media screen and (max-width: $breakpoint-desktop-semi-medium) {
+  .mobile-register-logo-container {
+    display: flex;
+  }
+}

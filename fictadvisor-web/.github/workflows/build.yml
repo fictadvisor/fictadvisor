@@ -1,0 +1,28 @@
+name: Build
+
+on:
+  pull_request:
+    branches:
+      - 'dev'
+      - 'master'
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+
+      - name: Build and push app Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          build-args:
+            NODE_ENV=${{ github.ref_name == 'master' && 'production' || 'development' }}
+          tags: fictadvisor/fictadvisor-web

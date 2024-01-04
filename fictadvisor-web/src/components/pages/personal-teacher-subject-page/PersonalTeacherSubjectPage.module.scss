@@ -1,0 +1,70 @@
+@import "../../../styles/partials/utils";
+@import "../../../styles/partials/theme";
+@import "../../../styles/partials/typography-mixins";
+
+.personal-teacher-page{
+  display: flex;
+  min-height: calc(100vh - 64px - 300px);
+  width: 100%;
+}
+.personal-teacher-page-content {
+  display: flex;
+  flex-direction: column;
+  padding-left: 60px;
+  padding-right: 60px;
+  width: 100%;
+}
+.tabs{
+  width: 100%;
+}
+
+.card-wrapper{
+box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  background: $background-dark-10;
+  outline: solid 1px $background-dark-50;
+  gap: 15px;
+  border-radius: 4px;
+}
+.breadcrumbs{
+  padding-top: 16px;
+  padding-bottom: 24px;
+}
+.loader{
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media screen and (max-width: 768px){
+  .personal-teacher-page-content{
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .card-wrapper{
+  }
+  .breadcrumbs{
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+}
+
+@media screen and (max-width: 480px){
+  .personal-teacher-page-content{
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .card-wrapper{
+  }
+  .tabs-wrapper{
+    max-width: 100px;
+  }
+  .breadcrumbs{
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+}
