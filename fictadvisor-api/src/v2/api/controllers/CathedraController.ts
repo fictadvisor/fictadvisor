@@ -32,7 +32,6 @@ export class CathedraController {
     private cathedraMapper: CathedraMapper,
   ) {}
 
-  @ApiBearerAuth()
   @ApiOkResponse({
     type: PaginatedCathedrasWithTeachersResponse,
   })
@@ -43,14 +42,8 @@ export class CathedraController {
       PageSize must be a number
       Wrong value for order`,
   })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
   @ApiEndpoint({
     summary: 'Get all cathedras',
-    permissions: PERMISSION.CATHEDRAS_CREATE,
   })
   @Get()
   async getAll (
