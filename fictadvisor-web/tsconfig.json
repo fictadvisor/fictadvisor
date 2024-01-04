@@ -20,9 +20,18 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "NextLink": ["next/link"],
-      "@/*": ["./src/*"]
-    }
+      "NextLink": [
+        "next/link"
+      ],
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
     "next-env.d.ts",
@@ -30,6 +39,7 @@
     "**/*.tsx",
     "src/lib/component",
     "mui.d.ts",
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

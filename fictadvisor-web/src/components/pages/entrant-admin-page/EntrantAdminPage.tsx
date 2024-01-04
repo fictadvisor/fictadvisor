@@ -1,6 +1,8 @@
+'use client';
 import React, { FC, useRef } from 'react';
 import { Box } from '@mui/material';
 import { Form, Formik, FormikProps } from 'formik';
+import { useRouter } from 'next/navigation';
 
 import Button from '@/components/common/ui/button-mui';
 import Divider from '@/components/common/ui/divider';
@@ -18,6 +20,7 @@ import {
   saveLocalStorage,
 } from '@/components/pages/entrant-admin-page/utils/localStorage';
 import { validationSchema } from '@/components/pages/entrant-admin-page/validation';
+import useAuthentication from '@/hooks/use-authentication';
 import useTabClose from '@/hooks/use-tab-close';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
@@ -27,6 +30,10 @@ import { DeleteEntrantBody } from '@/lib/api/contract/types/DeleteEntrantBody';
 import { prepareData } from './utils/prepareData';
 
 const EntrantAdminPage: FC = () => {
+  const { isLoggedIn } = useAuthentication();
+  const router = useRouter();
+
+  if (!isLoggedIn) router.push('/login');
   const form = useRef<FormikProps<DeleteEntrantBody>>(null);
   const toast = useToast();
   const { displayError } = useToastError();

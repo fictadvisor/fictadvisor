@@ -1,3 +1,5 @@
+'use client';
+
 import { useAuthenticationContext } from '@/hooks/use-authentication/authentication-context';
 import { UseAuthenticationReturn } from '@/hooks/use-authentication/types';
 

@@ -2,7 +2,11 @@ import React from 'react';
 import { useQuery } from 'react-query';
 import { ChevronLeftIcon, FingerPrintIcon } from '@heroicons/react/24/outline';
 import { Box, Typography } from '@mui/material';
-import { useRouter } from 'next/router';
+import {
+  ReadonlyURLSearchParams,
+  useRouter,
+  useSearchParams,
+} from 'next/navigation';
 
 import Button from '@/components/common/ui/button-mui';
 import {
@@ -16,8 +20,8 @@ import AuthAPI from '@/lib/api/auth/AuthAPI';
 
 const CreatePasswordPage = () => {
   const router = useRouter();
-
-  const token = router.query.token as string;
+  const searchParams = useSearchParams() as ReadonlyURLSearchParams;
+  const token = searchParams.get('token') as string;
   const returnAuth = () => {
     void router.push('/login');
   };

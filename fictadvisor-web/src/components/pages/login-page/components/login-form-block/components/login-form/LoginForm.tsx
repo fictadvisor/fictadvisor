@@ -1,7 +1,8 @@
+'use client';
+
 import { FC, useCallback } from 'react';
-import { isAxiosError } from 'axios';
 import { Form, Formik, FormikHelpers } from 'formik';
-import { useRouter } from 'next/router';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import Button from '@/components/common/ui/button-mui';
 import { ButtonSize } from '@/components/common/ui/button-mui/types';
@@ -19,9 +20,10 @@ import getErrorMessage from '@/lib/utils/getErrorMessage';
 import * as sxStyles from './LoginForm.styles';
 
 const LoginForm: FC = () => {
-  const { push, query } = useRouter();
+  const { push } = useRouter();
+  const searchParams = useSearchParams();
   const { update } = useAuthentication();
-  const redirect = query.redirect as string;
+  const redirect = searchParams?.get('redirect') as string;
 
   const handleSubmit = useCallback(
     async (
@@ -33,7 +35,7 @@ const LoginForm: FC = () => {
           data.username = data.username.toLowerCase();
         await AuthService.login(data);
         await update();
-        await push(redirect ? redirect.replace('~', '/') : '/');
+        push(redirect ? redirect.replace('~', '/') : '/');
       } catch (error: unknown) {
         const message = getErrorMessage(error);
         if (message === 'The password is incorrect') {

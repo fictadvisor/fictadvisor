@@ -1,7 +1,8 @@
+'use client';
 import React from 'react';
 import { Box, Typography, useMediaQuery } from '@mui/material';
 import { Form, Formik } from 'formik';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 import { CustomCheck } from '@/components/common/icons/CustomCheck';
 import Button from '@/components/common/ui/button-mui';
@@ -34,7 +35,7 @@ const ChangePasswordForm = () => {
       });
       StorageUtil.setTokens(accessToken, refreshToken);
       toast.success('Пароль успішно змінено');
-      router.reload();
+      window.location.reload();
     } catch (error) {
       displayError(error);
     }

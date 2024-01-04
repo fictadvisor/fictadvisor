@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { Form, Formik } from 'formik';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 import Button from '@/components/common/ui/button';
 import { ButtonSize } from '@/components/common/ui/button-mui/types';

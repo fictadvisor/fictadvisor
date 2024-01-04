@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { AxiosError } from 'axios';
 import dayjs, { Dayjs } from 'dayjs';
-import { useRouter } from 'next/router';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { create } from 'zustand';
 
 import {
@@ -253,6 +253,7 @@ export const useSchedule = create<State & Action>((set, get) => {
     useInitialise(semester, groups) {
       const { user } = useAuthentication();
       const router = useRouter();
+      const searchParams = useSearchParams();
       const toast = useToast();
 
       useEffect(() => {
@@ -264,10 +265,10 @@ export const useSchedule = create<State & Action>((set, get) => {
       });
 
       useEffect(() => {
-        if (!router.isReady || !semester) return;
+        if (!semester) return;
         useSchedule.setState(state => ({ semester: semester }));
-
-        const { group: urlGroup, week: urlWeek } = router.query;
+        const urlGroup = searchParams?.get('group') as string;
+        const urlWeek = searchParams?.get('week') as string;
         const isGroupValid = groups.some(_group => _group.id === urlGroup);
         const isWeekValid =
           urlWeek && +urlWeek > 0 && +urlWeek < MAX_WEEK_NUMBER;
@@ -297,7 +298,7 @@ export const useSchedule = create<State & Action>((set, get) => {
         get().setChosenDay(
           getFirstDayOfAWeek(get().semester as GetCurrentSemester, week),
         );
-      }, [router.isReady]);
+      }, [router]);
     },
   };
 });

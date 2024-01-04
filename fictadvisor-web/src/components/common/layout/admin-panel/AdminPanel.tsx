@@ -1,14 +1,14 @@
+'use client';
 import { Box, Drawer, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { usePathname } from 'next/navigation';
 
 import * as styles from './AdminPanel.styles';
 import { adminPanelTabs } from './constants';
 
 const AdminPanel = () => {
-  const router = useRouter();
-
+  const pathname = usePathname() as string;
   return (
     <Drawer anchor="left" variant="permanent" sx={styles.drawer}>
       <Link href="/">
@@ -26,7 +26,7 @@ const AdminPanel = () => {
         {adminPanelTabs.map((tab, index) => {
           return typeof tab !== 'string' ? (
             <Link href={tab.link}>
-              <Box sx={styles.tab(index, tab.link, router.pathname)}>
+              <Box sx={styles.tab(index, tab.link, pathname)}>
                 <Box sx={styles.tabIcon}>{tab.icon}</Box>
                 <Typography sx={styles.tabText}>{tab.text}</Typography>
               </Box>

@@ -1,7 +1,11 @@
 import React, { FC } from 'react';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import { Box, Typography } from '@mui/material';
-import { useRouter } from 'next/router';
+import {
+  ReadonlyURLSearchParams,
+  useRouter,
+  useSearchParams,
+} from 'next/navigation';
 
 import { CustomEnvelopeOpen } from '@/components/common/icons/CustomEnvelopeOpen';
 import Alert from '@/components/common/ui/alert';
@@ -28,7 +32,10 @@ const EmailConfirmationPage: FC<EmailConfirmationPageProps> = ({
 }) => {
   const { displayError } = useToastError();
   const router = useRouter();
-  const email = decodeURIComponent(String(router.query.email)).toLowerCase();
+  const searchParams = useSearchParams() as ReadonlyURLSearchParams;
+  const email = decodeURIComponent(
+    String(searchParams.get('email')),
+  ).toLowerCase();
   const emailText =
     apiMethodName === 'forgotPassword'
       ? `Ми надіслали лист для зміни пароля на адресу ${email}`
@@ -48,9 +55,6 @@ const EmailConfirmationPage: FC<EmailConfirmationPageProps> = ({
       message
         ? toast.error(message)
         : toast.error('Щось пішло не так, спробуй пізніше!');
-      // const errorName =
-      //   (error as AxiosError<{ error: string }>).response?.data.error || '';
-      // toast.error(chooseMessageError(errorName, tries));
       displayError(error);
     }
   };

@@ -1,14 +1,11 @@
+'use client';
 import { FC, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Box } from '@mui/material';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
 import Button from '@/components/common/ui/button-mui';
-import {
-  ButtonColor,
-  ButtonVariant,
-} from '@/components/common/ui/button-mui/types';
 import Progress from '@/components/common/ui/progress';
 import PollTeacherSearchList from '@/components/pages/search-pages/poll-teachers-page/components/PollTeacherSearchList';
 import useAuthentication from '@/hooks/use-authentication';

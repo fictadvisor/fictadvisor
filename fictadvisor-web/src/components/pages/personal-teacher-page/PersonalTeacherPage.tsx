@@ -1,3 +1,4 @@
+'use client';
 import {
   createContext,
   Dispatch,
@@ -6,7 +7,8 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { useRouter } from 'next/router';
+import { ReadonlyURLSearchParams, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
 import PersonalTeacherCard from '@/components/common/ui/cards/personal-teacher-card';
@@ -17,8 +19,11 @@ import {
   PersonalTeacherPageProps,
   TeachersPageTabs,
 } from '@/components/pages/personal-teacher-page/utils';
+import useAuthentication from '@/hooks/use-authentication';
 import useTabState from '@/hooks/use-tab-state';
 import useToast from '@/hooks/use-toast';
+import TeacherService from '@/lib/services/teacher/TeacherService';
+import { TeacherPageInfo } from '@/lib/services/teacher/types';
 import { Teacher } from '@/types/teacher';
 
 // TODO: move context to separate folder, move types to separate folder
@@ -37,23 +42,34 @@ export const teacherContext = createContext<TeacherContext>({
 const PersonalTeacherPage: FC<PersonalTeacherPageProps> = ({
   isLoading,
   isError,
-  data,
   teacher,
-  query,
   teacherId,
 }) => {
+  const query = useSearchParams() as ReadonlyURLSearchParams;
   const router = useRouter();
+
+  const { user } = useAuthentication();
+  const [data, setData] = useState<TeacherPageInfo>();
+  const getData = async () => {
+    return await TeacherService.getTeacherPageInfo(teacherId, user?.id);
+  };
+  useEffect(() => {
+    getData().then(res => {
+      setData(res);
+    });
+  }, []);
+
   const { push } = router;
   const toast = useToast();
   const [floatingCardShowed, setFloatingCardShowed] = useState(false);
 
-  const { tab } = query;
+  const tab = query.get('tab') as string;
 
   const [index, setIndex] = useState<TeachersPageTabs>(
     TeachersPageTabs.GENERAL,
   );
 
-  const handleChange = useTabState({ tab, router, setIndex });
+  const handleChange = useTabState({ tab, router, setIndex, query });
 
   useEffect(() => {
     if (isError) {
@@ -63,6 +79,10 @@ const PersonalTeacherPage: FC<PersonalTeacherPageProps> = ({
   }, [isError, push]);
 
   if (!data) return null;
+  if (!teacher) {
+    router.push('/teachers');
+    return null;
+  }
   return (
     <teacherContext.Provider
       value={{

@@ -1,4 +1,5 @@
-import { isIOS, isSafari } from 'react-device-detect';
+'use client';
+
 import { SxProps, Theme } from '@mui/material/styles';
 
 import theme from '@/styles/theme';

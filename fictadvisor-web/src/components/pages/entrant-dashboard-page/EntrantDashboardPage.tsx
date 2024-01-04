@@ -1,5 +1,7 @@
+'use client';
 import React, { useState } from 'react';
 import { Box, Divider } from '@mui/material';
+import { useRouter } from 'next/navigation';
 
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
 import { ContractDetailsSection } from '@/components/pages/entrant-dashboard-page/components/ContractDetailsSection';
@@ -7,6 +9,7 @@ import { ContractPersonalDetailsSection } from '@/components/pages/entrant-dashb
 import { PersonalDataSection } from '@/components/pages/entrant-dashboard-page/components/PersonalDataSection';
 import { PrioritiesSection } from '@/components/pages/entrant-dashboard-page/components/PrioritiesSection';
 import * as styles from '@/components/pages/entrant-dashboard-page/EntrantDashboardPage.styles';
+import useAuthentication from '@/hooks/use-authentication';
 import useToast from '@/hooks/use-toast';
 import ContractAPI from '@/lib/api/contract/ContractAPI';
 import { Actions } from '@/lib/api/contract/types/DeleteEntrantDataBody';
@@ -22,7 +25,10 @@ const EntrantDashboardPage = () => {
   const [entrantData, setEntrantData] = useState<EntrantFuIlResponse | null>(
     null,
   );
+  const { isLoggedIn } = useAuthentication();
+  const router = useRouter();
 
+  if (!isLoggedIn) router.push('/login');
   const toast = useToast();
 
   const handleDelete = async (action: Actions) => {

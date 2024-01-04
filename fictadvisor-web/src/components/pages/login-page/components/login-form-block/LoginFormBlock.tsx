@@ -1,10 +1,11 @@
+'use client';
+
 import React from 'react';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import { Box, Divider, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import LoginForm from 'src/components/pages/login-page/components/login-form-block/components/login-form';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import CustomTelegram from '@/components/common/icons/CustomTelegram';
 import Button from '@/components/common/ui/button-mui';
@@ -13,6 +14,7 @@ import {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
+import LoginForm from '@/components/pages/login-page/components/login-form-block/components/login-form';
 import useAuthentication from '@/hooks/use-authentication';
 import AuthService from '@/lib/services/auth/AuthService';
 
@@ -22,7 +24,9 @@ import styles from './LoginFormBlock.module.scss';
 
 const LoginFormBlock = () => {
   const router = useRouter();
-  const redirect = router.query.redirect as string;
+  const searchParams = useSearchParams();
+  const redirect = searchParams?.get('redirect');
+  // const redirect = router.query.redirect as string;
   const { update } = useAuthentication();
   const handleClick = async () => {
     const isSuccess = await AuthService.loginTelegram();

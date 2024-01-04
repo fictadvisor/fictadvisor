@@ -12,6 +12,7 @@ ARG NODE_ENV=${NODE_ENV}
 RUN if [ $NODE_ENV = "development" ]; then \
     cp /app/.env.development /app/.env.production; fi
 
+ENV NODE_ENV="production"
 RUN yarn install --prod && yarn build
 
 ###################

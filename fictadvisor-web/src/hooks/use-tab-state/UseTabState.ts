@@ -1,43 +1,43 @@
+'use client';
 import { Dispatch, SetStateAction, SyntheticEvent, useEffect } from 'react';
-import { NextRouter } from 'next/router';
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import { ReadonlyURLSearchParams } from 'next/navigation';
 
 import { TeachersPageTabs } from '@/components/pages/personal-teacher-page/utils';
 
 // TODO: refactor this hook
 export interface UseTabStateProps<T> {
   tab?: string | string[];
-  router: NextRouter;
+  router: AppRouterInstance;
   setIndex: Dispatch<SetStateAction<T>>;
+  query: ReadonlyURLSearchParams;
 }
 
 const useTabState = <T extends string>({
   tab,
   router,
   setIndex,
+  query,
 }: UseTabStateProps<T>) => {
-  const { replace, query, isReady } = router;
+  const { replace } = router;
   useEffect(() => {
-    if (!isReady) {
-      return;
-    }
-
     if (Object.values(TeachersPageTabs).includes(tab as TeachersPageTabs)) {
       setIndex(tab as T);
     } else {
-      void replace(
+      /*void replace(
         { query: { ...query, tab: TeachersPageTabs.GENERAL } },
         undefined,
         {
           shallow: true,
         },
-      );
+      );*/
     }
-  }, [tab, isReady, replace, query]);
+  }, [tab, replace, query]);
 
   return async (event: SyntheticEvent, value: T) => {
-    await replace({ query: { ...query, tab: value } }, undefined, {
+    /*await replace({ query: { ...query, tab: value } }, undefined, {
       shallow: true,
-    });
+    });*/
     setIndex(value as T);
   };
 };

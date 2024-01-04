@@ -1,6 +1,5 @@
 import React, { Dispatch, FC, SetStateAction, useState } from 'react';
 import { Avatar, Box, useMediaQuery } from '@mui/material';
-import { useRouter } from 'next/router';
 
 import Button from '@/components/common/ui/button-mui';
 import {
@@ -30,7 +29,6 @@ const ChangeAvatarWindow: FC<ChangeAvatarWindowProps> = ({
   const [avatarURL, setAvatarURL] = useState('');
   const toast = useToast();
   const toastError = useToastError();
-  const router = useRouter();
   const isMobile = useMediaQuery(theme.breakpoints.down('mobileMedium'));
   const buttonSize = isMobile ? ButtonSize.SMALL : ButtonSize.MEDIUM;
 
@@ -43,7 +41,7 @@ const ChangeAvatarWindow: FC<ChangeAvatarWindowProps> = ({
         await userAPI.changeAvatar(userId, formData);
         toast.success('Аватарка успішно змінена!', '', 1000);
         setTimeout(() => {
-          router.reload();
+          window.location.reload();
         }, 1000);
       } catch (error) {
         toastError.displayError(error);

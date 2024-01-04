@@ -1,3 +1,4 @@
+'use client';
 import { SxProps, Theme } from '@mui/material/styles';
 
 import { EclipseSize, EclipseType } from '@/components/pages/about-page/types';

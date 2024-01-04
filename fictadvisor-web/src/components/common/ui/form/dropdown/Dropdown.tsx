@@ -1,3 +1,4 @@
+'use client';
 import { FC, SyntheticEvent } from 'react';
 import { useMemo, useState } from 'react';
 import { ChevronDownIcon } from '@heroicons/react/24/solid';

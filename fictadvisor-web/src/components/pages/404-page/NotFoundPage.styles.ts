@@ -1,3 +1,5 @@
+'use client';
+
 import { SxProps } from '@mui/material/styles';
 import { Theme } from '@mui/system';
 

@@ -1,6 +1,11 @@
+'use client';
 import { useCallback, useEffect } from 'react';
 import { Box } from '@mui/material';
-import { useRouter } from 'next/router';
+import {
+  ReadonlyURLSearchParams,
+  useRouter,
+  useSearchParams,
+} from 'next/navigation';
 
 import Progress from '@/components/common/ui/progress';
 import * as styles from '@/components/pages/register/verify-email-token-page/VerifyEmailTokenPage.styles';
@@ -11,26 +16,25 @@ import StorageUtil from '@/lib/utils/StorageUtil';
 
 const VerifyEmailTokenPage = () => {
   const router = useRouter();
-  const token = router.query.token as string;
+  const query = useSearchParams() as ReadonlyURLSearchParams;
+  const token = query.get('token') as string;
   const toast = useToast();
   const { update } = useAuthentication();
 
   const loadData = useCallback(
     async (token: string) => {
-      if (router.isReady) {
-        try {
-          const { accessToken, refreshToken } =
-            await AuthAPI.verifyEmailToken(token);
-          StorageUtil.setTokens(accessToken, refreshToken);
-          update();
-          await router.push(`/`);
-        } catch (e) {
-          toast.error(
-            'Лист реєстрації вже не дійсний',
-            'Пройди реєстрацію знов!',
-          );
-          await router.push(`/register`);
-        }
+      try {
+        const { accessToken, refreshToken } =
+          await AuthAPI.verifyEmailToken(token);
+        StorageUtil.setTokens(accessToken, refreshToken);
+        update();
+        await router.push(`/`);
+      } catch (e) {
+        toast.error(
+          'Лист реєстрації вже не дійсний',
+          'Пройди реєстрацію знов!',
+        );
+        await router.push(`/register`);
       }
     },
     [toast, router, update],
