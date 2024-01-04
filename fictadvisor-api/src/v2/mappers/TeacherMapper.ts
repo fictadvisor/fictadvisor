@@ -2,9 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { DbTeacher } from '../database/entities/DbTeacher';
 import { TeacherRole } from '@prisma/client';
 import { OrderQAParam } from '../api/dtos/OrderQAParam';
-import { Sort } from '../utils/QueryAllDTO';
+import { Sort, SortDTO } from '../utils/QueryAllDTO';
 import { SortQATParam } from '../api/dtos/SortQATParam';
-import { SortDTO } from '../utils/QueryAllDTO';
 
 @Injectable()
 export class TeacherMapper {
@@ -17,19 +16,25 @@ export class TeacherMapper {
       description: teacher.description,
       avatar: teacher.avatar,
       rating: teacher.rating.toNumber(),
+      cathedra: this.getTeacherCathedras(teacher),
+      roles: this.getRoles(teacher),
     };
   }
 
   getTeachers (teachers: DbTeacher[]) {
-    return teachers.map(this.getTeacher);
+    return teachers.map((teacher) => this.getTeacher(teacher));
   }
 
   getRoles (teacher: DbTeacher): Set<TeacherRole> {
-    const roles = [];
+    const roles: TeacherRole[] = [];
     for (const dt of teacher.disciplineTeachers) {
       roles.push(...dt.roles.map((r) => r.role));
     }
     return new Set(roles);
+  }
+
+  private getTeacherCathedras (teacher: DbTeacher) : string[] {
+    return teacher.cathedras?.map((cathedra) => cathedra.cathedra.abbreviation);
   }
 
   getSortedTeacher ({ sort, order }: SortDTO): Sort | object {

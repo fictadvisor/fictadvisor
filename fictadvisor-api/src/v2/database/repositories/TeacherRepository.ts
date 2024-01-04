@@ -11,7 +11,11 @@ export class TeacherRepository {
   ) {}
 
   private include = {
-    cathedras: true,
+    cathedras: {
+      include: {
+        cathedra: true,
+      },
+    },
     disciplineTeachers: {
       include: {
         discipline: true,

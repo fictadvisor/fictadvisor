@@ -24,9 +24,9 @@ import {
   ApiOkResponse,
   ApiParam,
   ApiQuery,
-  ApiTags, ApiUnauthorizedResponse,
+  ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { TeacherResponse } from '../responses/TeacherResponse';
 import { TeacherRolesResponse } from '../responses/TeacherRolesResponse';
 import { SubjectsResponse } from '../responses/SubjectsResponse';
 import { DisciplineTeacherAndSubjectResponse } from '../responses/DisciplineTeacherAndSubjectResponse';
@@ -40,6 +40,8 @@ import { TeacherWithRolesAndContactsResponse } from '../responses/TeacherWithRol
 import { PaginatedTeachersResponse } from '../responses/PaginatedTeachersResponse';
 import { CommentsQueryPipe } from '../pipes/CommentsQueryPipe';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
+import { TeacherWithCathedrasResponse } from '../responses/TeacherResponse';
+import { AllTeachersPipe } from '../pipes/AllTeachersPipe';
 
 @ApiTags('Teachers')
 @Controller({
@@ -55,18 +57,30 @@ export class TeacherController {
     private disciplineTeacherMapper: DisciplineTeacherMapper,
   ) {}
 
-  @Get()
   @ApiOkResponse({
     type: PaginatedTeachersResponse,
   })
   @ApiBadRequestResponse({
-    description: `InvalidQueryException:\n
-                  Page must be a number
-                  PageSize must be a number
-                  Wrong value for order`,
+    description: `\n
+    InvalidBodyException:
+      Page must be a number
+      PageSize must be a number
+      Wrong value for order
+      Sort must be an enum
+      Cathedras must be an array
+      Each element of roles should be an enum
+      Roles must be an array
+      
+    InvalidEntityException:
+      Group with such id is not found
+      Cathedra with such id is not found`,
   })
+  @ApiEndpoint({
+    summary: 'Get all teachers',
+  })
+  @Get()
   async getAll (
-    @Query() query: QueryAllTeacherDTO,
+    @Query(AllTeachersPipe) query: QueryAllTeacherDTO,
   ) {
     const teachers = await this.teacherService.getAll(query);
     return {
@@ -169,29 +183,34 @@ export class TeacherController {
     return this.teacherService.getTeacher(teacherId);
   }
 
-  @Access(PERMISSION.TEACHERS_CREATE)
   @ApiBearerAuth()
   @ApiOkResponse({
-    type: TeacherResponse,
+    type: TeacherWithCathedrasResponse,
   })
   @ApiBadRequestResponse({
-    description: `InvalidBodyException:\n
-                  First name is too short (min: 2
-                  First name is too long (max: 40)
-                  First name can not be empty
-                  First name is incorrect (A-Я(укр.)\\\\-\\' )')
-                  Middle name is too short (min: 2
-                  Middle name is too long (max: 40)
-                  Middle name is incorrect (A-Я(укр.)\\\\-\\' )')
-                  Last name is too short (min: 2
-                  Last name is too long (max: 40)
-                  Last name can not be empty
-                  Last name is incorrect (A-Я(укр.)\\\\-\\' )')
-                  Description is too long (max: 400)`,
+    description: `\n
+    InvalidBodyException:
+      First name is too short (min: 2)
+      First name is too long (max: 40)
+      First name can not be empty
+      First name is incorrect (A-Я(укр.)\\-' ))
+      Middle name is too short (min: 2)
+      Middle name is too long (max: 40)
+      Middle name is incorrect (A-Я(укр.)\\-' ))
+      Last name is too short (min: 2)
+      Last name is too long (max: 40)
+      Last name can not be empty
+      Last name is incorrect (A-Я(укр.)\\-' ))
+      Description is too long (max: 400)`,
   })
   @ApiForbiddenResponse({
-    description: `NoPermissionException:\n
-                  You do not have permission to perform this action`,
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @ApiEndpoint({
+    summary: 'Create a teacher',
+    permissions: PERMISSION.TEACHERS_CREATE,
   })
   @Post()
   async create (
@@ -204,27 +223,35 @@ export class TeacherController {
   @Access(PERMISSION.TEACHERS_$TEACHERID_UPDATE)
   @ApiBearerAuth()
   @ApiOkResponse({
-    type: TeacherResponse,
+    type: TeacherWithCathedrasResponse,
   })
   @ApiBadRequestResponse({
-    description: `InvalidEntityIdException:\n 
-                  teacher with such id is not found
+    description: `\n
+    InvalidEntityIdException:
+      Teacher with such id is not found
                   
-                  InvalidBodyException:\n
-                  First name is too short (min: 2
-                  First name is too long (max: 40)
-                  First name is incorrect (A-Я(укр.)\\\\-\\' )')
-                  Middle name is too long (max: 40)
-                  Middle name is too short (min: 2
-                  Middle name is incorrect (A-Я(укр.)\\\\-\\' )')
-                  Last name is too short (min: 2
-                  Last name is too long (max: 40)
-                  Last name is incorrect (A-Я(укр.)\\\\-\\' )')
-                  Description is too long (max: 400)`,
+    InvalidBodyException:
+      First name is too short (min: 2)
+      First name is too long (max: 40)
+      First name can not be empty
+      First name is incorrect (A-Я(укр.)\\-' ))
+      Middle name is too short (min: 2)
+      Middle name is too long (max: 40)
+      Middle name is incorrect (A-Я(укр.)\\-' ))
+      Last name is too short (min: 2)
+      Last name is too long (max: 40)
+      Last name can not be empty
+      Last name is incorrect (A-Я(укр.)\\-' ))
+      Description is too long (max: 400)`,
   })
   @ApiForbiddenResponse({
-    description: `NoPermissionException:\n
-                  You do not have permission to perform this action`,
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @ApiEndpoint({
+    summary: 'Update a teacher',
+    permissions: PERMISSION.TEACHERS_$TEACHERID_UPDATE,
   })
   @Patch('/:teacherId')
   async update (

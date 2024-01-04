@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateContactDTO } from '../dtos/CreateContactDTO';
-import { EntityType, QuestionDisplay, Prisma } from '@prisma/client';
+import { EntityType, QuestionDisplay, Prisma, TeacherRole } from '@prisma/client';
 import { TeacherRepository } from '../../database/repositories/TeacherRepository';
 import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
 import { UpdateContactDTO } from '../dtos/UpdateContactDTO';
@@ -19,7 +19,6 @@ import { DbDisciplineTeacher } from '../../database/entities/DbDisciplineTeacher
 import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
 import { DateService } from '../../utils/date/DateService';
 import { DbTeacher } from 'src/v2/database/entities/DbTeacher';
-import { SortQATParam } from '../dtos/SortQATParam';
 import { QuestionMapper } from '../../mappers/QuestionMapper';
 import { Cron } from '@nestjs/schedule';
 
@@ -39,30 +38,52 @@ export class TeacherService {
   ) {}
 
   async getAll (body: QueryAllTeacherDTO) {
-    const search = DatabaseUtils.getSearch(
-      body,
-      SortQATParam.FIRST_NAME.toString(),
-      SortQATParam.LAST_NAME.toString(),
-      SortQATParam.MIDDLE_NAME.toString(),
-    );
+    const search = {
+      AND: [
+        this.getSearchForTeachers.fullName(body.search),
+        body.groupId?.length ? this.getSearchForTeachers.group(body.groupId) : {},
+        body.cathedrasId?.length ? this.getSearchForTeachers.cathedras(body.cathedrasId) : {},
+        body.roles?.length ? this.getSearchForTeachers.roles(body.roles) : {},
+      ],
+    };
+
     const sort = this.teacherMapper.getSortedTeacher(body);
 
     const data: Prisma.TeacherFindManyArgs = {
       where: {
         ...search,
-        disciplineTeachers: body.group ?  {
-          some: {
-            discipline: {
-              groupId: body.group,
-            },
-          },
-        } : undefined,
       },
       ...sort,
     };
 
     return await DatabaseUtils.paginate<DbTeacher>(this.teacherRepository, body, data);
   }
+
+  private getSearchForTeachers = {
+    fullName: (search: string) => (DatabaseUtils.getSearch({ search }, 'firstName', 'lastName', 'middleName')),
+    group: (groupId: string) => ({
+      disciplineTeachers: {
+        some: {
+          discipline: DatabaseUtils.getStrictSearch(groupId, 'groupId'),
+        },
+      },
+    }),
+    cathedras: (cathedrasId: string[]) => ({
+      cathedras: {
+        some: DatabaseUtils.getSearchByArray(cathedrasId, 'cathedraId'),
+      },
+    }),
+    roles: (roles: TeacherRole[]) => ({
+      disciplineTeachers: {
+        some: {
+          roles: {
+            some: DatabaseUtils.getSearchByArray(roles, 'role'),
+          },
+        },
+      },
+    }),
+  };
+
   getRating (marks) {
     if (!marks.length || marks[0].amount < 8) {
       return 0;

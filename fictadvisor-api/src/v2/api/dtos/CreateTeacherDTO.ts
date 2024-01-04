@@ -3,7 +3,9 @@ import { createRegex, UKR_REGEX, UKRSPEC_REGEX, validationOptionsMsg } from '../
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateTeacherDTO {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Teacher`s first name',
+  })
   @MinLength(2, validationOptionsMsg('First name is too short (min: 2)'))
   @MaxLength(40, validationOptionsMsg('First name is too long (max: 40)'))
   @IsNotEmpty(validationOptionsMsg('First name can not be empty'))
@@ -13,7 +15,9 @@ export class CreateTeacherDTO {
   )
     firstName: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    description: 'Teacher`s middle name',
+  })
   @MinLength(2, validationOptionsMsg('Middle name is too short (min: 2)'))
   @MaxLength(40, validationOptionsMsg('Middle name is too long (max: 40)'))
   @Matches(
@@ -23,7 +27,9 @@ export class CreateTeacherDTO {
   @IsOptional()
     middleName?: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Teacher`s last name',
+  })
   @MinLength(2, validationOptionsMsg('Last name is too short (min: 2)'))
   @MaxLength(40, validationOptionsMsg('Last name is too long (max: 40)'))
   @IsNotEmpty(validationOptionsMsg('Last name can not be empty'))
@@ -33,12 +39,16 @@ export class CreateTeacherDTO {
   )
     lastName: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    description: 'Teacher`s description',
+  })
   @MaxLength(400, validationOptionsMsg('Description is too long (max: 400)'))
   @IsOptional()
     description?: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    description: 'Teacher`s avatar',
+  })
   @IsOptional()
     avatar?: string;
 }

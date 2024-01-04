@@ -1,28 +1,11 @@
-import { IsEnum, IsIn, IsNumberString, IsOptional } from 'class-validator';
+import { IsArray, IsEnum, IsOptional } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { SortQATParam } from './SortQATParam';
-import { OrderQAParam } from './OrderQAParam';
 import { validationOptionsMsg } from '../../utils/GLOBALS';
+import { QueryAllDTO } from '../../utils/QueryAllDTO';
+import { TeacherRole } from '@prisma/client';
 
-export class QueryAllTeacherDTO {
-  @ApiPropertyOptional({
-    description: 'Visualization parameter: access to parts of divided data',
-  })
-  @IsNumberString({}, {
-    message: 'page must be a number',
-  })
-  @IsOptional()
-    page?: number;
-
-  @ApiPropertyOptional({
-    description: 'Visualization parameter: Divide data by amount of subjects',
-  })
-  @IsNumberString({}, {
-    message: 'pageSize must be a number',
-  })
-  @IsOptional()
-    pageSize?: number;
-
+export class QueryAllTeacherDTO extends QueryAllDTO {
   @ApiPropertyOptional({
     description: 'Accepts teacher full name',
   })
@@ -37,18 +20,25 @@ export class QueryAllTeacherDTO {
     sort?: SortQATParam;
 
   @ApiPropertyOptional({
-    enum: OrderQAParam,
-    description: 'Ascending by default',
-  })
-  @IsIn(['asc', 'desc'], {
-    message: 'wrong value for order',
-  })
-  @IsOptional()
-    order?: 'asc' | 'desc';
-
-  @ApiPropertyOptional({
     description: 'GroupId',
   })
   @IsOptional()
-    group?: string;
+    groupId?: string;
+
+  @ApiPropertyOptional({
+    description: 'Teacher\'s cathedras',
+  })
+  @IsArray(validationOptionsMsg('Cathedras must be an array'))
+  @IsOptional()
+    cathedrasId?: string[];
+
+  @ApiPropertyOptional({
+    description: 'Teacher\'s roles',
+    type: [TeacherRole],
+    enum: TeacherRole,
+  })
+  @IsEnum(TeacherRole, validationOptionsMsg('Each element of roles should be an enum', true))
+  @IsArray(validationOptionsMsg('Roles must be an array'))
+  @IsOptional()
+    roles?: TeacherRole[];
 }

@@ -130,7 +130,7 @@ describe('TeacherService', () => {
 
     it('should return specific group teachers', async () => {
       const query: QueryAllTeacherDTO = {
-        group: 'group3',
+        groupId: 'group3',
       };
       const { data: teachers } = await teacherService.getAll(query);
 

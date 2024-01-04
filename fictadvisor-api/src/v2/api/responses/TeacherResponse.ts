@@ -38,11 +38,25 @@ export class TeacherResponse {
     rating: number;
 }
 
-export class ExtendTeacherResponse extends TeacherResponse {
+export class TeacherWithDisciplinesResponse extends TeacherResponse {
   @ApiProperty({
     description: 'Teacher\'s id',
   })
     disciplineTeacherId: string;
+
+  @ApiProperty({
+    type: [TeacherRole],
+    enum: TeacherRole,
+    description: 'List of teacher\'s roles',
+  })
+    roles: TeacherRole[];
+}
+
+export class TeacherWithCathedrasResponse extends TeacherResponse {
+  @ApiProperty({
+    description: 'Teacher\'s cathedras',
+  })
+    cathedras: string[];
 
   @ApiProperty({
     type: [TeacherRole],
