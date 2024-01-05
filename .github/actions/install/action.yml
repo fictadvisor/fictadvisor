@@ -8,6 +8,9 @@ runs:
       uses: actions/setup-node@v3
       with:
         node-version: '18.x'
+    - name: Install Yarn
+      shell: bash
+      run: npm install -g yarn
     - name: Install dependencies
       shell: bash
-      run: npm install
+      run: npx yarn

@@ -1,7 +1,7 @@
 class AttachmentData {
   name: string;
   contentType: string;
-  buffer: ArrayBuffer;
+  buffer: Buffer;
 }
 
 export class EmailOptionsData {

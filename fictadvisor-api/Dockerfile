@@ -35,3 +35,4 @@ RUN apk --no-cache add -U \
 COPY --from=build /app/dist/ ./
 
 CMD [ "dumb-init", "node", "index.js" ]
+

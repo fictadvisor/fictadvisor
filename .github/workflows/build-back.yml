@@ -1,7 +1,9 @@
-name: Build
+name: Build Back-end
 
 on:
   pull_request:
+    paths:
+      - 'fictadvisor-api/**'
 
 jobs:
   test:
@@ -12,7 +14,7 @@ jobs:
       - name: Install Node and dependencies
         uses: ./.github/actions/install
       - name: Run tests
-        run: npm run test:unit
+        run: npx turbo test:unit
   integration-test:
     runs-on: ubuntu-latest
     steps:
@@ -22,13 +24,13 @@ jobs:
         uses: ./.github/actions/install
       - name: Start PostgreSQL Database
         run: |
-          docker-compose up -d && sleep 5s
+          docker-compose -f fictadvisor-api/docker-compose.yml up -d && sleep 5s
       - name: Start migration
-        run: npm run test:migrate
+        run: npx turbo test:migrate
       - name: Start seeding
-        run: npm run test:seed
+        run: npx turbo test:seed
       - name: Run integration tests
-        run: npm run test:integration
+        run: npx turbo test:integration
   build:
     runs-on: ubuntu-20.04
     steps:

@@ -1,10 +1,12 @@
-name: Deployment
+name: Deploy Back-end
 
 on:
   push:
     branches:
       - 'dev'
       - 'master'
+    paths:
+      - 'fictadvisor-api/**'
 
 jobs:
   test:
@@ -15,7 +17,7 @@ jobs:
       - name: Install Node and dependencies
         uses: ./.github/actions/install
       - name: Run tests
-        run: npm run test:unit
+        run: npx turbo test:unit
   integration-test:
     runs-on: ubuntu-latest
     steps:
@@ -25,15 +27,13 @@ jobs:
         uses: ./.github/actions/install
       - name: Start PostgreSQL Database
         run: |
-          docker-compose up -d && sleep 5s
+          docker-compose -f fictadvisor-api/docker-compose.yml up -d && sleep 5s
       - name: Start migration
-        run: npm run test:migrate
-      - name: Start generating
-        run: npm run test:generate
+        run: npx turbo test:migrate
       - name: Start seeding
-        run: npm run test:seed
+        run: npx turbo test:seed
       - name: Run integration tests
-        run: npm run test:integration
+        run: npx turbo test:integration
   build:
     needs: [test, integration-test]
     runs-on: ubuntu-20.04
@@ -50,6 +50,6 @@ jobs:
       - name: Build and push app Docker image
         uses: docker/build-push-action@v2
         with:
-          context: .
+          context: ./fictadvisor-api
           push: true
           tags: fictadvisor/fictadvisor-api:${{ github.ref_name }}

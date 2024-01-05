@@ -1,0 +1,124 @@
+version: '3'
+
+networks:
+  fictadvisor:
+    external: true
+  fictadvisor-dev:
+    external: true
+
+services:
+  fictadvisor-api-dev:
+    image: fictadvisor/fictadvisor-api:dev
+    container_name: fictadvisor-api-dev
+    restart: unless-stopped
+    volumes:
+      - ~/static/fictadvisor-api-dev:/app/static
+      - ~/private:/app/private
+    depends_on:
+      - postgres-db-dev
+      - watchtower
+    networks:
+      - fictadvisor-dev
+    ports:
+      - "4001:80"
+    env_file:
+      - ~/deployment/env/fictadvisor-api-dev.env
+
+  fictadvisor-api:
+    image: fictadvisor/fictadvisor-api:master
+    container_name: fictadvisor-api
+    restart: unless-stopped
+    volumes:
+      - ~/static/fictadvisor-api:/app/static
+      - ~/private:/app/private
+    depends_on:
+      - postgres-db
+      - watchtower
+    networks:
+      - fictadvisor
+    ports:
+      - "3001:80"
+    env_file:
+      - ~/deployment/env/fictadvisor-api.env
+
+  fictadvisor-web-dev:
+    image: fictadvisor/fictadvisor-web:dev
+    container_name: fictadvisor-web-dev
+    restart: unless-stopped
+    depends_on:
+      - fictadvisor-api-dev
+    networks:
+      - fictadvisor-dev
+    ports:
+      - "4000:80"
+
+  fictadvisor-web:
+    image: fictadvisor/fictadvisor-web:master
+    container_name: fictadvisor-web
+    restart: unless-stopped
+    depends_on:
+      - fictadvisor-api
+    networks:
+      - fictadvisor
+    ports:
+      - "3000:80"
+
+  fictadvisor-bot-dev:
+    image: fictadvisor/fictadvisor-bot:dev
+    container_name: fictadvisor-bot-dev
+    restart: unless-stopped
+    depends_on:
+      - fictadvisor-api-dev
+    networks:
+      - fictadvisor-dev
+    ports:
+      - "4002:8000"
+    env_file:
+      - ~/deployment/env/fictadvisor-bot-dev.env
+
+  fictadvisor-bot:
+    image: fictadvisor/fictadvisor-bot:master
+    container_name: fictadvisor-bot
+    restart: unless-stopped
+    depends_on:
+      - fictadvisor-api
+    networks:
+      - fictadvisor
+    ports:
+      - "3002:8000"
+    env_file:
+      - ~/deployment/env/fictadvisor-bot.env
+
+  postgres-db-dev:
+    image: postgres:15
+    container_name: postgres-db-dev
+    volumes:
+      - ~/deployment/development/postgres-db/data:/var/lib/postgresql/data
+    ports:
+      - "4003:5432"
+    networks:
+      - fictadvisor-dev
+    env_file:
+      - ~/deployment/env/postgres-dev.env
+
+  postgres-db:
+    image: postgres:15
+    container_name: postgres-db
+    volumes:
+      - ~/postgres/data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - fictadvisor
+    env_file:
+      - ~/deployment/env/postgres.env
+
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command:
+      - "--cleanup"
+      - "-i"
+      - "60"

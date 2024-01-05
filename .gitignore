@@ -1,0 +1,5 @@
+/node_modules/
+.idea
+.turbo
+/env/postgres-dev.env
+/env/postgres.env
