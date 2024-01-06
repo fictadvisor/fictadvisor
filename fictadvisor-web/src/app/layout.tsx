@@ -16,17 +16,11 @@ import Script from 'next/script';
 import AuthenticationProvider from '@/hooks/use-authentication/authentication-context';
 import ToastContextProvider from '@/hooks/use-toast/toast-context';
 import theme from '@/styles/theme';
+import { manrope } from '@/styles/theme/constants/typography/typography';
 
 import '@/styles/reset.scss';
 import '@/styles/typography.scss';
 import '@/styles/global-styles.scss';
-
-const manrope = Manrope({
-  subsets: ['cyrillic', 'latin'],
-  style: 'normal',
-  display: 'swap',
-  weight: ['200', '300', '400', '500', '600', '700', '800'],
-});
 
 dayjs.extend(timezone);
 dayjs.extend(utc);
@@ -65,14 +59,12 @@ export default function RootLayout({
           content="M93dY9EuPcQ5AzSYwxc6_el0GwZp_XlDHBhphP6z-7g"
         />
       </Head>
-      <body>
+      <body className={manrope.className} style={manrope.style}>
         <ThemeProvider theme={theme}>
           <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={'uk'}>
             <QueryClientProvider client={queryClient}>
               <AuthenticationProvider>
-                <ToastContextProvider>
-                  <main className={manrope.className}>{children}</main>
-                </ToastContextProvider>
+                <ToastContextProvider>{children}</ToastContextProvider>
               </AuthenticationProvider>
             </QueryClientProvider>
           </LocalizationProvider>
