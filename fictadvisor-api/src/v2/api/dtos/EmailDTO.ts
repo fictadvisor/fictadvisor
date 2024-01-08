@@ -8,7 +8,9 @@ import { validationOptionsMsg } from '../../utils/GLOBALS';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class EmailDTO {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Emails for adding students to group',
+  })
   @ArrayMinSize(1, validationOptionsMsg('Email cannot be empty'))
   @ArrayMaxSize(50, validationOptionsMsg('Email cannot be empty'))
   @ArrayUnique({}, validationOptionsMsg('There are duplicate emails'))
