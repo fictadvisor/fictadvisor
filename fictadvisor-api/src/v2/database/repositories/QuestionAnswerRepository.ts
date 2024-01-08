@@ -52,4 +52,10 @@ export class QuestionAnswerRepository {
       include: this.include,
     });
   }
+
+  delete (args: Prisma.QuestionAnswerDeleteArgs) {
+    return this.prisma.questionAnswer.delete({
+      ...args,
+    });
+  }
 }

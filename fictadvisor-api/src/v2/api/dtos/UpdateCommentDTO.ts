@@ -1,20 +1,9 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { validationOptionsMsg } from '../../utils/GLOBALS';
+import { DeleteCommentDTO } from './DeleteCommentDTO';
 
-export class UpdateCommentDTO {
-  @ApiProperty({
-    description: 'User\'s ID who provided the answer.',
-  })
-  @IsNotEmpty(validationOptionsMsg('UserId should not be empty'))
-    userId: string;
-
-  @ApiProperty({
-    description: 'Question id',
-  })
-  @IsNotEmpty(validationOptionsMsg('QuestionId should not be empty'))
-    questionId: string;
-
+export class UpdateCommentDTO extends DeleteCommentDTO {
   @ApiProperty({
     description: 'New comment value',
   })
