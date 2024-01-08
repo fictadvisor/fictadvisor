@@ -44,4 +44,5 @@ export class TelegramDTO {
   })
   @IsNotEmpty(validationOptionsMsg('Username cannot be empty'))
     username: string;
+
 }

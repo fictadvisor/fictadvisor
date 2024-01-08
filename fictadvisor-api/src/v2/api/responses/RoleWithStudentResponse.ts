@@ -15,13 +15,18 @@ class RoleResponse {
 }
 
 export class RoleWithStudentResponse {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Student\'s id',
+  })
     studentId: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Role id of a student',
+  })
     roleId: string;
 
   @ApiProperty({
+    description: 'Student\'s role',
     type: RoleResponse,
   })
     role: RoleResponse;
