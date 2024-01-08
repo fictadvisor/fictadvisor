@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-class RoleResponse {
+class StudentRoleResponse {
   @ApiProperty()
     id: string;
 
@@ -12,6 +12,9 @@ class RoleResponse {
 
   @ApiProperty()
     parentId?: string;
+
+  @ApiProperty()
+    displayName?: string;
 }
 
 export class RoleWithStudentResponse {
@@ -27,7 +30,7 @@ export class RoleWithStudentResponse {
 
   @ApiProperty({
     description: 'Student\'s role',
-    type: RoleResponse,
+    type: StudentRoleResponse,
   })
-    role: RoleResponse;
+    role: StudentRoleResponse;
 }

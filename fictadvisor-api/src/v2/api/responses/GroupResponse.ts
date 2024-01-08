@@ -41,3 +41,15 @@ export class GroupsResponse {
   })
     pagination: PaginationDataResponse;
 }
+
+export class FullGroupResponse extends GroupResponse {
+  @ApiProperty({
+    description: 'Id of the educational program',
+  })
+    educationalProgramId: string;
+
+  @ApiProperty({
+    description: 'Id of the cathedra',
+  })
+    cathedraId: string;
+}

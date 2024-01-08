@@ -5,16 +5,20 @@ import { TeacherRole } from '@prisma/client';
 
 export class TeacherWithContactAndRoleResponse extends TeacherResponse {
   @ApiProperty({
+    description: 'List of teacher roles',
     type: [TeacherRole],
     enum: TeacherRole,
   })
     roles: TeacherRole[];
 
   @ApiProperty({
+    description: 'List of contacts',
     type: [ContactResponse],
   })
     contacts: ContactResponse[];
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Rating of a specific teacher',
+  })
     rating: number;
 }

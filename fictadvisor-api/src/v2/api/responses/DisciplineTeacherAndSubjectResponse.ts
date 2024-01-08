@@ -1,9 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class DisciplineTeacherAndSubjectResponse {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Id of a specific discipline',
+  })
     disciplineTeacherId: string;
   
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Name of a specific subject',
+  })
     subjectName: string;
 }

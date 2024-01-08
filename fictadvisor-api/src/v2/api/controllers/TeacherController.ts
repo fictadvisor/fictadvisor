@@ -94,8 +94,17 @@ export class TeacherController {
     type: TeacherRolesResponse,
   })
   @ApiBadRequestResponse({
-    description: `InvalidEntityId:\n
-                  teacher with such id is not found`,
+    description: `\n
+    InvalidEntityId:
+      Teacher with such id is not found`,
+  })
+  @ApiParam({
+    name: 'teacherId',
+    required: true,
+    description: 'Id of certain teacher',
+  })
+  @ApiEndpoint({
+    summary: 'Receive roles by teacher',
   })
   @Get('/:teacherId/roles')
   async getTeacherRoles (
@@ -110,8 +119,17 @@ export class TeacherController {
     type: SubjectsResponse,
   })
   @ApiBadRequestResponse({
-    description: `InvalidEntityId:\n
-                  teacher with such id is not found`,
+    description: `\n
+    InvalidEntityId:
+      Teacher with such id is not found`,
+  })
+  @ApiParam({
+    name: 'teacherId',
+    required: true,
+    description: 'Id of certain teacher',
+  })
+  @ApiEndpoint({
+    summary: 'Receive subjects by teacher',
   })
   @Get('/:teacherId/subjects')
   async getSubjects (
@@ -122,27 +140,44 @@ export class TeacherController {
     return { subjects };
   }
 
-  @Access(PERMISSION.USERS_$USERID_TEACHERS_$TEACHERID_DISCIPLINES_GET)
   @ApiBearerAuth()
-  @ApiQuery({
-    type: Boolean,
-    name: 'notAnswered',
-  })
-  @ApiQuery({
-    type: String,
-    name: 'userId',
-  })
   @ApiOkResponse({
     type: DisciplineTeacherAndSubjectResponse,
   })
   @ApiBadRequestResponse({
-    description: `InvalidEntityIdException:\n 
-                  teacher with such id is not found
-                  user with such id is not found`,
+    description: `\n
+    InvalidEntityIdException: 
+      Teacher with such id is not found
+      User with such id is not found`,
   })
   @ApiForbiddenResponse({
-    description: `NoPermissionException:\n
-                  You do not have permission to perform this action`,
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiParam({
+    name: 'teacherId',
+    required: true,
+    description: 'Id of certain teacher',
+  })
+  @ApiQuery({
+    name: 'notAnswered',
+    type: Boolean,
+    description: 'Answer result',
+  })
+  @ApiQuery({
+    name: 'userId',
+    type: String,
+    description: 'Id of certain user',
+  })
+  @ApiEndpoint({
+    summary: 'Receive disciplines by teacher',
+    permissions: PERMISSION.USERS_$USERID_TEACHERS_$TEACHERID_DISCIPLINES_GET,
   })
   @Get('/:teacherId/disciplines')
   async getDisciplines (
@@ -158,9 +193,23 @@ export class TeacherController {
     type: TeacherWithSubjectResponse,
   })
   @ApiBadRequestResponse({
-    description: `InvalidEntityIdException:\n
-                  teacher with such id is not found
-                  subject with such id is not found`,
+    description: `\n
+    InvalidEntityIdException:
+      Teacher with such id is not found
+      Subject with such id is not found`,
+  })
+  @ApiParam({
+    name: 'teacherId',
+    required: true,
+    description: 'Id of certain teacher',
+  })
+  @ApiParam({
+    name: 'subjectId',
+    required: true,
+    description: 'Id of certain subject',
+  })
+  @ApiEndpoint({
+    summary: 'Receive a certain subject by teacher',
   })
   @Get('/:teacherId/subjects/:subjectId')
   async getSubject (
@@ -174,8 +223,17 @@ export class TeacherController {
     type: TeacherWithContactAndRoleResponse,
   })
   @ApiBadRequestResponse({
-    description: `InvalidEntityIdException:\n 
-                  teacher with such id is not found`,
+    description: `\n
+    InvalidEntityIdException: 
+      Teacher with such id is not found`,
+  })
+  @ApiParam({
+    name: 'teacherId',
+    required: true,
+    description: 'Id of certain teacher',
+  })
+  @ApiEndpoint({
+    summary: 'Receive a certain teacher',
   })
   @Get('/:teacherId')
   getTeacher (
