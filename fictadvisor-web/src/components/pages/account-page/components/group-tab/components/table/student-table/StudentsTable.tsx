@@ -1,4 +1,8 @@
 import React, { useState } from 'react';
+import {
+  BarsArrowDownIcon,
+  BarsArrowUpIcon,
+} from '@heroicons/react/24/outline';
 import { PlusIcon } from '@heroicons/react/24/solid';
 import { Avatar, Box, Grid, Typography, useMediaQuery } from '@mui/material';
 
@@ -7,6 +11,7 @@ import { Moderator } from '@/components/common/icons/Moderator';
 import Button from '@/components/common/ui/button-mui';
 import Divider from '@/components/common/ui/divider';
 import { DividerTextAlign } from '@/components/common/ui/divider/types';
+import { IconButtonColor } from '@/components/common/ui/icon-button';
 import IconButton from '@/components/common/ui/icon-button-mui';
 import { IconButtonShape } from '@/components/common/ui/icon-button-mui/types';
 import Tag from '@/components/common/ui/tag';
@@ -29,6 +34,7 @@ const StudentsTable: React.FC<StudentsTableProps> = ({
   rows,
   refetch,
 }) => {
+  const [isSorted, setIsSorted] = useState(false);
   const isMobile = useMediaQuery(theme.breakpoints.down('desktop'));
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const { user } = useAuthentication();
@@ -65,6 +71,16 @@ const StudentsTable: React.FC<StudentsTableProps> = ({
             textAlign={DividerTextAlign.LEFT}
             sx={{ flexGrow: 1 }}
           />
+          <IconButton
+            sx={styles.iconButton(isMobile)}
+            shape={IconButtonShape.SQUARE}
+            icon={isSorted ? <BarsArrowDownIcon /> : <BarsArrowUpIcon />}
+            color={IconButtonColor.SECONDARY}
+            onClick={() => {
+              setIsSorted(!isSorted);
+              refetch();
+            }}
+          />
           {isMobile ? (
             <IconButton
               icon={<PlusIcon />}
@@ -83,7 +99,10 @@ const StudentsTable: React.FC<StudentsTableProps> = ({
       )}
 
       <Grid container sx={gridStyles.studentsGrid}>
-        {rows.map((row, index) => (
+        {(isSorted
+          ? rows.sort((a, b) => b.fullName.localeCompare(a.fullName))
+          : rows.sort((a, b) => a.fullName.localeCompare(b.fullName))
+        ).map((row, index) => (
           <Grid container key={index} sx={gridStyles.row}>
             {row.imgSrc && (
               <Grid item desktop={4} mobile={9}>

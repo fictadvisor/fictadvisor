@@ -18,3 +18,9 @@ export const dividerWrapper: SxProps<Theme> = {
 export const tag: SxProps<Theme> = {
   padding: '1px 3px',
 };
+
+export const iconButton = (isMobile: boolean) => ({
+  transform: !isMobile ? 'scale(1.41)' : 'scale(1)',
+  aspectRatio: '1/1',
+  alignSelf: 'center',
+});
