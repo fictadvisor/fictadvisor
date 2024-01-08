@@ -36,14 +36,29 @@ export class StudentMapper {
       lastName: student.lastName,
       user: {
         id: student.user.id,
-        username: student.user.username,
         email: student.user.email,
+        username: student.user.username,
         telegramId: student.user.telegramId,
         avatar: student.user.avatar,
         state: student.user.state,
       },
-      group: student.group,
-      roles: student.roles,
+      group: {
+        id: student.group.id,
+        code: student.group.code,
+        educationalProgramId: student.group.educationalProgramId,
+        cathedraId: student.group.cathedraId,
+      },
+      roles: student.roles.map((r) => ({
+        studentId: r.studentId,
+        roleId: r.roleId,
+        role: {
+          id: r.role.id,
+          name: r.role.name,
+          weight: r.role.weight,
+          parentId: r.role.parentId,
+          displayName: r.role.displayName,
+        },
+      })),
       state: student.state,
     };
   }

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { UserResponse } from './UserResponse';
-import { ExtendedGroupResponse, GroupResponse } from './GroupResponse';
+import { ExtendedGroupResponse, GroupResponse, FullGroupResponse } from './GroupResponse';
 import { RoleWithStudentResponse } from './RoleWithStudentResponse';
 import { State } from '@prisma/client';
 import { GroupRoles } from '../dtos/QueryAllStudentDTO';
@@ -63,10 +63,10 @@ export class FullStudentResponse extends BaseStudentResponse {
     user: UserResponse;
 
   @ApiProperty({
-    type: GroupResponse,
+    type: FullGroupResponse,
     description: 'Group data',
   })
-    group: GroupResponse;
+    group: FullGroupResponse;
 
   @ApiProperty({
     type: [RoleWithStudentResponse],
