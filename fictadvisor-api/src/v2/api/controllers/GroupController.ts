@@ -478,9 +478,7 @@ export class GroupController {
     return this.groupService.moderatorSwitch(groupId, userId, body);
   }
 
-  @Access(PERMISSION.GROUPS_$GROUPID_STUDENTS_REMOVE)
   @ApiBearerAuth()
-  @Delete('/:groupId/remove/:userId')
   @ApiOkResponse()
   @ApiBadRequestResponse({
     description: `\n
@@ -498,6 +496,21 @@ export class GroupController {
     NoPermissionException:
       You do not have permission to perform this action`,
   })
+  @ApiParam({
+    name: 'groupId',
+    required: true,
+    description: 'Id of a group',
+  })
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: 'Id of a user to remove',
+  })
+  @ApiEndpoint({
+    summary: 'Remove a student from a group',
+    permissions: PERMISSION.GROUPS_$GROUPID_STUDENTS_REMOVE,
+  })
+  @Delete('/:groupId/remove/:userId')
   async removeStudent (
     @Param('groupId', GroupByIdPipe) groupId: string,
     @Param('userId', UserByIdPipe) userId: string,
@@ -506,9 +519,7 @@ export class GroupController {
     return this.groupService.removeStudent(groupId, userId, req.user);
   }
 
-  @Access(PERMISSION.GROUPS_$GROUPID_STUDENTS_UNVERIFIED_GET)
   @ApiBearerAuth()
-  @Get('/:groupId/unverifiedStudents')
   @ApiOkResponse({
     type: StudentsResponse,
   })
@@ -527,6 +538,16 @@ export class GroupController {
     NoPermissionException:
       You do not have permission to perform this action`,
   })
+  @ApiParam({
+    name: 'groupId',
+    required: true,
+    description: 'Id of a group',
+  })
+  @ApiEndpoint({
+    summary: 'Get unverified students of the group',
+    permissions: PERMISSION.GROUPS_$GROUPID_STUDENTS_UNVERIFIED_GET,
+  })
+  @Get('/:groupId/unverifiedStudents')
   async getUnverifiedStudents (
       @Param('groupId', GroupByIdPipe) groupId: string,
   ) {
@@ -574,9 +595,7 @@ export class GroupController {
     return this.groupService.switchCaptain(groupId, studentId);
   }
 
-  @Access(PERMISSION.GROUPS_$GROUPID_LIST_GET)
   @ApiBearerAuth()
-  @Get('/:groupId/list')
   @ApiOkResponse({
     type: URLResponse,
   })
@@ -595,6 +614,16 @@ export class GroupController {
     NoPermissionException:
       You do not have permission to perform this action`,
   })
+  @ApiParam({
+    name: 'groupId',
+    required: true,
+    description: 'Id of a group',
+  })
+  @ApiEndpoint({
+    summary: 'Get a group\'s list',
+    permissions: PERMISSION.GROUPS_$GROUPID_LIST_GET,
+  })
+  @Get('/:groupId/list')
   async getGroupList (
     @Param('groupId', GroupByIdPipe) groupId: string,
   ) {
