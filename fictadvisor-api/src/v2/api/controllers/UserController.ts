@@ -11,7 +11,6 @@ import { UpdateUserDTO } from '../dtos/UpdateUserDTO';
 import { UpdateStudentDTO } from '../dtos/UpdateStudentDTO';
 import { ContactByUserIdPipe } from '../pipes/ContactByUserIdPipe';
 import { GroupRequestDTO } from '../dtos/GroupRequestDTO';
-import { Access } from 'src/v2/security/Access';
 import { PERMISSION } from '../../security/PERMISSION';
 import { TelegramDTO } from '../dtos/TelegramDTO';
 import { UserMapper } from '../../mappers/UserMapper';
@@ -21,6 +20,7 @@ import {
   ApiBadRequestResponse,
   ApiBasicAuth,
   ApiBearerAuth,
+  ApiConflictResponse,
   ApiForbiddenResponse,
   ApiOkResponse,
   ApiParam,
@@ -811,7 +811,50 @@ export class UserController {
     return this.studentMapper.getStudent(student);
   }
 
-  @Access(PERMISSION.USERS_$USERID_TELEGRAM_LINK)
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: OrdinaryStudentResponse,
+    description: 'Added user\'s telegram link',
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException:
+      User with such id is not found`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action
+      
+    InvalidBodyException:
+      Auth date must be a number
+      First name cannot be empty
+      Hash cannot be empty
+      Telegram id must be a bigint
+      Username cannot be empty`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized
+      
+    InvalidTelegramCredentialsException:
+      Your telegram hash is invalid`,
+  })
+  @ApiConflictResponse({
+    description: `\n
+    DuplicateTelegramIdException:
+      A user with the same Telegram ID already exists`,
+  })
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: 'Id of a user',
+  })
+  @ApiEndpoint({
+    summary: 'Adds user\'s telegram',
+    permissions: PERMISSION.USERS_$USERID_TELEGRAM_LINK,
+  })
   @Post('/:userId/telegram')
   async linkTelegram (
     @Param('userId', UserByIdPipe) userId: string,
@@ -855,15 +898,14 @@ export class UserController {
     return this.userService.getUser(userId);
   }
 
-  @Access(PERMISSION.USERS_$USERID_UPDATE)
   @ApiBearerAuth()
-  @Patch('/:userId/avatar')
   @ApiImplicitFile({
     name: 'avatar',
     required: true,
   })
   @ApiOkResponse({
     type: UserResponse,
+    description: 'Uploaded user\'s avatar',
   })
   @ApiBadRequestResponse({
     description: `\n
@@ -893,7 +935,17 @@ export class UserController {
     NoPermissionException:
       You do not have permission to perform this action`,
   })
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: 'Id of a user',
+  })
   @UseInterceptors(FileInterceptor('avatar'))
+  @ApiEndpoint({
+    summary: 'Uploads user\'s avatar',
+    permissions: PERMISSION.USERS_$USERID_UPDATE,
+  })
+  @Patch('/:userId/avatar')
   async uploadAvatar (
     @Param('userId', UserByIdPipe) userId: string,
     @UploadedFile(AvatarValidationPipe) file: Express.Multer.File,
@@ -902,11 +954,10 @@ export class UserController {
     return this.userMapper.getUser(user);
   }
 
-  @Access(PERMISSION.USERS_$USERID_DELETE)
   @ApiBearerAuth()
-  @Delete('/:userId/avatar')
   @ApiOkResponse({
     type: UserResponse,
+    description: 'Deleted user\'s avatar',
   })
   @ApiBadRequestResponse({
     description: `\n
@@ -923,6 +974,16 @@ export class UserController {
     NoPermissionException:
       You do not have permission to perform this action`,
   })
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: 'Id of a user',
+  })
+  @ApiEndpoint({
+    summary: 'Deletes user\'s avatar',
+    permissions: PERMISSION.USERS_$USERID_DELETE,
+  })
+  @Delete('/:userId/avatar')
   async deleteAvatar (
     @Param('userId', UserByIdPipe) userId: string,
   ) {
@@ -1052,21 +1113,47 @@ export class UserController {
     return this.userService.deselectDisciplines(userId, body);
   }
 
-  @Access(PERMISSION.USERS_GROUPS_SWITCH)
-  @Patch('/:userId/group/:groupId')
+  @ApiBearerAuth()
   @ApiOkResponse({
     type: FullStudentResponse,
+    description: 'Changed user\'s group',
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
   })
   @ApiBadRequestResponse({
-    description: `Exceptions:\n
-                  InvalidEntityIdException: User with such id is not found
-                  InvalidEntityIdException: Group with such id is not found`,
+    description: `\n
+    InvalidEntityIdException: 
+      User with such id is not found
+      
+    InvalidEntityIdException: 
+      Group with such id is not found`,
   })
   @ApiForbiddenResponse({
-    description: `Exceptions:\n
-                  NotApprovedException: Student is not approved
-                  NoPermissionException: You do not have permission to perform this action`,
+    description: `\n
+    NotApprovedException: 
+      Student is not approved
+      
+    NoPermissionException: 
+      You do not have permission to perform this action`,
   })
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: 'Id of a user',
+  })
+  @ApiParam({
+    name: 'groupId',
+    required: true,
+    description: 'Id of a group',
+  })
+  @ApiEndpoint({
+    summary: 'Changes user\'s group',
+    permissions: PERMISSION.USERS_GROUPS_SWITCH,
+  })
+  @Patch('/:userId/group/:groupId')
   async changeGroup (
     @Param('userId', UserByIdPipe, StudentPipe) userId: string,
     @Param('groupId', GroupByIdPipe) groupId: string,
