@@ -8,7 +8,6 @@ import { RoleDTO } from '../dtos/RoleDTO';
 import { UserByIdPipe } from '../pipes/UserByIdPipe';
 import { QueryAllDTO } from '../../utils/QueryAllDTO';
 import { UpdateGroupDTO } from '../dtos/UpdateGroupDTO';
-import { Access } from 'src/v2/security/Access';
 import { PERMISSION } from '../../security/PERMISSION';
 import { StudentMapper } from '../../mappers/StudentMapper';
 import { AbsenceOfCaptainException } from '../../utils/exceptions/AbsenceOfCaptainException';
@@ -404,18 +403,24 @@ export class GroupController {
     NoPermissionException: 
       You do not have permission to perform this action`,
   })
-  @Access(PERMISSION.GROUPS_$GROUPID_STUDENTS_ADD)
+  @ApiParam({
+    name: 'groupId',
+    required: true,
+    description: 'Id of the group to add emails of students',
+  })
+  @ApiEndpoint({
+    summary: 'Add emails of students to group',
+    permissions: PERMISSION.GROUPS_$GROUPID_STUDENTS_ADD,
+  })
   @Post('/:groupId/addEmails')
   async addUnregistered (
     @Param('groupId', GroupByIdPipe) groupId: string,
-    @Body() body: EmailDTO
+    @Body() body: EmailDTO,
   ) {
     return this.groupService.addUnregistered(groupId, body);
   }
 
-  @Access(PERMISSION.GROUPS_$GROUPID_STUDENTS_VERIFY)
   @ApiBearerAuth()
-  @Patch('/:groupId/verify/:userId')
   @ApiOkResponse({
     type: OrdinaryStudentResponse,
   })
@@ -438,18 +443,31 @@ export class GroupController {
     NoPermissionException:
       You do not have permission to perform this action`,
   })
+  @ApiParam({
+    name: 'groupId',
+    required: true,
+    description: 'Id of the group to verify user from',
+  })
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: 'Id of the user to verify',
+  })
+  @ApiEndpoint({
+    summary: 'Verify student state',
+    permissions: PERMISSION.GROUPS_$GROUPID_STUDENTS_VERIFY,
+  })
+  @Patch('/:groupId/verify/:userId')
   async verifyStudent (
     @Param('groupId', GroupByIdPipe) groupId: string,
     @Param('userId', UserByIdPipe) userId: string,
-    @Body() body : ApproveDTO
+    @Body() body : ApproveDTO,
   ) {
     const student = await this.groupService.verifyStudent(groupId, userId, body);
     return this.studentMapper.getStudent(student);
   }
 
-  @Access(PERMISSION.GROUPS_$GROUPID_ADMIN_SWITCH)
   @ApiBearerAuth()
-  @Patch('/:groupId/switch/:userId')
   @ApiOkResponse()
   @ApiBadRequestResponse({
     description: `\n
@@ -470,10 +488,25 @@ export class GroupController {
     NoPermissionException:
       You do not have permission to perform this action`,
   })
+  @ApiParam({
+    name: 'groupId',
+    required: true,
+    description: 'Id of the group to switch user role from',
+  })
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: 'Id of the user to switch role',
+  })
+  @ApiEndpoint({
+    summary: 'Switch user role',
+    permissions: PERMISSION.GROUPS_$GROUPID_ADMIN_SWITCH,
+  })
+  @Patch('/:groupId/switch/:userId')
   async moderatorSwitch (
     @Param('groupId', GroupByIdPipe) groupId: string,
     @Param('userId', UserByIdPipe) userId: string,
-    @Body() body: RoleDTO
+    @Body() body: RoleDTO,
   ) {
     return this.groupService.moderatorSwitch(groupId, userId, body);
   }
