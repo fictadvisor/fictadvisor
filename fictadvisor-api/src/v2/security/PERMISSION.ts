@@ -58,6 +58,7 @@ export enum PERMISSION {
   ROLES_$ROLEID_GRANT_UPDATE = 'roles.grant.update',
 
   COMMENTS_UPDATE = 'comments.update',
+  COMMENTS_DELETE = 'comments.delete',
 
   GRANTS_DELETE = 'grants.delete',
 

@@ -26,6 +26,7 @@ import { IsRemovedDisciplineTeacherException } from '../../utils/exceptions/IsRe
 import { UpdateCommentDTO } from '../dtos/UpdateCommentDTO';
 import { QuestionRepository } from '../../database/repositories/QuestionRepository';
 import { InvalidTypeException } from '../../utils/exceptions/InvalidTypeException';
+import { DeleteCommentDTO } from '../dtos/DeleteCommentDTO';
 
 @Injectable()
 export class DisciplineTeacherService {
@@ -343,7 +344,7 @@ export class DisciplineTeacherService {
     });
   }
 
-  async validateUpdateCommentBody (body: UpdateCommentDTO) {
+  async validateCommentBody (body: UpdateCommentDTO | DeleteCommentDTO) {
     const user = await this.userRepository.findById(body.userId);
     if (!user) {
       throw new InvalidEntityIdException('User');
@@ -359,7 +360,7 @@ export class DisciplineTeacherService {
   }
 
   async updateComment (disciplineTeacherId: string, body: UpdateCommentDTO) {
-    await this.validateUpdateCommentBody(body);
+    await this.validateCommentBody(body);
     return this.questionAnswerRepository.update({
       disciplineTeacherId_questionId_userId: {
         disciplineTeacherId: disciplineTeacherId,
@@ -369,6 +370,19 @@ export class DisciplineTeacherService {
     },
     {
       value: body.comment,
+    });
+  }
+
+  async deleteComment (disciplineTeacherId: string, body: DeleteCommentDTO) {
+    await this.validateCommentBody(body);
+    return this.questionAnswerRepository.delete({
+      where: {
+        disciplineTeacherId_questionId_userId: {
+          disciplineTeacherId, 
+          questionId: body.questionId, 
+          userId: body.userId,
+        },
+      },
     });
   }
 }
