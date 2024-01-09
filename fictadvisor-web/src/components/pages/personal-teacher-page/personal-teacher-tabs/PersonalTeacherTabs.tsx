@@ -1,10 +1,14 @@
-import { FC, SyntheticEvent } from 'react';
-import { ChartBarIcon } from '@heroicons/react/24/outline';
-import { BookOpenIcon } from '@heroicons/react/24/outline';
-import { ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
+import { FC, SyntheticEvent, useState } from 'react';
+import { FaceFrownIcon } from '@heroicons/react/24/outline';
 import { Box } from '@mui/material';
 import dynamic from 'next/dynamic';
 
+import Button from '@/components/common/ui/button';
+import {
+  ButtonColor,
+  ButtonSize,
+  ButtonVariant,
+} from '@/components/common/ui/button-mui/types';
 import Tab from '@/components/common/ui/tab/tab';
 import { TabTextPosition } from '@/components/common/ui/tab/tab/types';
 import TabContext from '@/components/common/ui/tab/tab-context';
@@ -14,6 +18,7 @@ import { TeachersPageTabs } from '@/components/pages/personal-teacher-page/utils
 import { TeacherPageInfo } from '@/lib/services/teacher/types';
 import { Teacher } from '@/types/teacher';
 
+import ComplaintPopup from './components/complaint-popup';
 import * as stylesMUI from './PersonalTeacherTabs.styles';
 
 const CommentTab = dynamic(
@@ -55,31 +60,45 @@ const PersonalTeacherTabs: FC<PersonalTeacherTabsProps> = ({
   handleChange,
 }) => {
   const count = data.comments.questions[0]?.comments.length ?? 0;
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <Box>
       <TabContext value={tabIndex}>
-        <TabList id="lol" onChange={handleChange} sx={stylesMUI.tabList}>
-          <Tab
-            icon={<ChartBarIcon />}
-            label="Загальне"
-            textPosition={TabTextPosition.CENTER}
-            value={TeachersPageTabs.GENERAL}
-          />
-          <Tab
-            icon={<BookOpenIcon />}
-            label="Предмети"
-            textPosition={TabTextPosition.CENTER}
-            value={TeachersPageTabs.SUBJECTS}
-          />
-          <Tab
-            icon={<ChatBubbleLeftRightIcon />}
-            label="Відгуки"
-            count={count}
-            textPosition={TabTextPosition.CENTER}
-            value={TeachersPageTabs.COMMENTS}
-          />
-        </TabList>
-
+        <Box sx={stylesMUI.tabListWrapper}>
+          <TabList id="lol" onChange={handleChange} sx={stylesMUI.tabList}>
+            <Tab
+              label="Загальне"
+              textPosition={TabTextPosition.CENTER}
+              value={TeachersPageTabs.GENERAL}
+            />
+            <Tab
+              label="Предмети"
+              textPosition={TabTextPosition.CENTER}
+              value={TeachersPageTabs.SUBJECTS}
+            />
+            <Tab
+              label="Відгуки"
+              count={count}
+              textPosition={TabTextPosition.CENTER}
+              value={TeachersPageTabs.COMMENTS}
+            />
+          </TabList>
+          <Box>
+            <Button
+              color={ButtonColor.SECONDARY}
+              variant={ButtonVariant.FILLED}
+              size={ButtonSize.SMALL}
+              text={'Лишити скаргу'}
+              onClick={() => setIsOpen(true)}
+              startIcon={<FaceFrownIcon width={24} height={24} />}
+            ></Button>
+          </Box>
+        </Box>
+        <ComplaintPopup
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          teacherId={teacher.id}
+        />
         <Box sx={stylesMUI.tabPanelList}>
           <TabPanel value={TeachersPageTabs.GENERAL}>
             {data.hasEnoughMarks ? (

@@ -1,3 +1,4 @@
+import { Complaint } from '@/components/pages/personal-teacher-page/personal-teacher-tabs/components/complaint-popup/types';
 import { SearchFormFields } from '@/components/pages/search-pages/search-form/types';
 import { GetTeacherCommentsResponse } from '@/lib/api/teacher/types/GetTeacherCommentsResponse';
 import { GetTeacherDisciplinesResponse } from '@/lib/api/teacher/types/GetTeacherDisciplinesResponse';
@@ -119,6 +120,14 @@ class TeacherAPI {
     await client.post(
       `/disciplineTeachers/${teacherId}/removeFromPoll`,
       {},
+      getAuthorizationHeader(),
+    );
+  }
+
+  async postTeacherComplaint(teacherId: string, complaint: Complaint) {
+    return await client.post<Complaint>(
+      `/teachers/${teacherId}/sendComplaint`,
+      complaint,
       getAuthorizationHeader(),
     );
   }

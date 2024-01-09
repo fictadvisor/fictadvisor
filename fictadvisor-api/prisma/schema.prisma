@@ -47,6 +47,7 @@ model Group {
   educationalProgramId String?              @map("educational_program_id")
   cathedra             Cathedra?            @relation(fields: [cathedraId], references: [id], onDelete: Cascade)
   cathedraId           String?              @map("cathedra_id")
+  complaints           Complaint[]
   createdAt            DateTime?            @default(now()) @map("created_at")
   updatedAt            DateTime?            @default(now()) @updatedAt @map("updated_at")
 
@@ -209,6 +210,7 @@ model Teacher {
   rating             Decimal               @default(0.00) @db.Decimal(5, 2)
   disciplineTeachers DisciplineTeacher[]
   cathedras          TeachersOnCathedras[]
+  complaints         Complaint[]
   createdAt          DateTime?             @default(now()) @map("created_at")
   updatedAt          DateTime?             @default(now()) @updatedAt @map("updated_at")
 
@@ -784,4 +786,18 @@ model Speciality {
   educationalPrograms EducationalPrograms[]
 
   @@map("specialities")
+}
+
+model Complaint {
+  id        String   @id @default(uuid())
+  fullName  String?  @map("full_name")
+  groupId   String?  @map("group_id")
+  group     Group?   @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  teacherId String   @map("teacher_id")
+  teacher   Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("complaints")
 }

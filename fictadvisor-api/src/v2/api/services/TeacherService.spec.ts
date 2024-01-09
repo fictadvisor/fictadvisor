@@ -11,6 +11,9 @@ import { PrismaModule } from '../../modules/PrismaModule';
 import { MapperModule } from '../../modules/MapperModule';
 import { QuestionDisplay } from '@prisma/client';
 import { DateModule } from '../../utils/date/DateModule';
+import { TelegramAPI } from '../../telegram/TelegramAPI';
+import { TelegramConfigService } from '../../config/TelegramConfigService';
+import { ConfigService } from '@nestjs/config';
 
 describe('TeacherService', () => {
   let teacherService: TeacherService;
@@ -18,7 +21,7 @@ describe('TeacherService', () => {
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
-      providers: [TeacherService],
+      providers: [TeacherService, TelegramAPI, TelegramConfigService, ConfigService],
       imports: [
         TeacherModule,
         PollModule,

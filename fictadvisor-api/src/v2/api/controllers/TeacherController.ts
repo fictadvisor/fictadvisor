@@ -42,6 +42,7 @@ import { CommentsQueryPipe } from '../pipes/CommentsQueryPipe';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
 import { TeacherWithCathedrasResponse } from '../responses/TeacherResponse';
 import { AllTeachersPipe } from '../pipes/AllTeachersPipe';
+import { ComplaintDTO } from '../dtos/ComplaintDTO';
 
 @ApiTags('Teachers')
 @Controller({
@@ -549,5 +550,38 @@ export class TeacherController {
       @Param('cathedraId', CathedraByIdPipe) cathedraId: string,
   ) {
     return this.teacherService.disconnectTeacherFromCathedra(teacherId, cathedraId);
+  }
+
+  @ApiOkResponse()
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidBodyException: 
+      Full name is too short (min: 5)
+      Full name is too long (max: 50)
+      Title can not be empty
+      Title is too short (min: 5)
+      Title is too long (max: 100)
+      Message can not be empty
+      Message is too short (min: 10)
+      Message is too long (max: 3500)
+     
+    InvalidEntityException:
+      Group with such id is not found
+      Teacher with such id is not found`,
+  })
+  @ApiParam({
+    name: 'teacherId',
+    required: true,
+    description: 'Id of the teacher to send complaint',
+  })
+  @ApiEndpoint({
+    summary: 'Send a complaint to the teacher',
+  })
+  @Post('/:teacherId/sendComplaint')
+  sendComplaint (
+    @Param('teacherId', TeacherByIdPipe) teacherId: string,
+    @Body() body: ComplaintDTO,
+  ) {
+    return this.teacherService.sendComplaint(teacherId, body);
   }
 }

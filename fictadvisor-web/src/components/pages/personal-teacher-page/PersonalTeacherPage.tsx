@@ -76,7 +76,7 @@ const PersonalTeacherPage: FC<PersonalTeacherPageProps> = ({
       toast.error('Куди ти лізеш, цієї людини не існує');
       void push('/teachers');
     }
-  }, [isError, push]);
+  }, [isError, push, toast]);
 
   if (!data) return null;
   if (!teacher) {
