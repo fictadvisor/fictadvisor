@@ -1,6 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { QuestionRepository } from '../../database/repositories/QuestionRepository';
-import { QuestionType, SemesterDate, TeacherRole, Prisma } from '@prisma/client';
+import {
+  QuestionType,
+  SemesterDate,
+  TeacherRole,
+  Prisma,
+} from '@prisma/client';
+import { UpdateQuestionWithRolesDTO } from '../dtos/UpdateQuestionWithRolesDTO';
 import { ResponseData } from '../datas/ResponseData';
 import { CreateQuestionRoleDTO } from '../dtos/CreateQuestionRoleDTO';
 import { DbQuestionWithAnswers } from '../../database/entities/DbQuestionWithAnswers';
@@ -8,7 +14,11 @@ import { DateService } from '../../utils/date/DateService';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
 import { DbQuestionWithRoles } from '../../database/entities/DbQuestionWithRoles';
 import { QuestionAnswerRepository } from '../../database/repositories/QuestionAnswerRepository';
-import { CommentsQueryDTO, CommentsSort, CommentsSortMapper } from '../dtos/CommentsQueryDTO';
+import {
+  CommentsQueryDTO,
+  CommentsSort,
+  CommentsSortMapper,
+} from '../dtos/CommentsQueryDTO';
 import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
 import { GroupRepository } from '../../database/repositories/GroupRepository';
 import { DatabaseUtils } from '../../database/DatabaseUtils';
@@ -24,7 +34,7 @@ import { OrderQAParam } from '../dtos/OrderQAParam';
 
 @Injectable()
 export class PollService {
-  constructor (
+  constructor(
     private questionRepository: QuestionRepository,
     private disciplineTeacherMapper: DisciplineTeacherMapper,
     private dateService: DateService,
@@ -38,11 +48,15 @@ export class PollService {
     const search = {
       AND: [
         this.getSearchForQuestions.questionText(query.search),
-        query.types?.length ? this.getSearchForQuestions.questionTypes(query.types) : {},
+        query.types?.length
+          ? this.getSearchForQuestions.questionTypes(query.types)
+          : {},
       ],
     };
 
-    const sort = query.sort ? this.getSortedQuestions(query) : { orderBy: { order: 'asc' } };
+    const sort = query.sort
+      ? this.getSortedQuestions(query)
+      : { orderBy: { order: 'asc' } };
 
     const data: Prisma.QuestionFindManyArgs = {
       where: {
@@ -55,7 +69,7 @@ export class PollService {
   }
 
   private getSearchForQuestions = {
-    questionText: (search: string) => (DatabaseUtils.getSearch({ search }, 'text')),
+    questionText: (search: string) => DatabaseUtils.getSearch({ search }, 'text'),
     questionTypes: (questionTypes: QuestionType[]) => ({
       OR: questionTypes.map((questionType) => ({ type: questionType })),
     }),
@@ -101,13 +115,16 @@ export class PollService {
   }
 
   async getQuestionWithMarks (teacherId: string, data?: ResponseData): Promise<DbQuestionWithAnswers[]> {
-    return await this.questionRepository.findMany({
+    return (await this.questionRepository.findMany({
       where: {
-        OR: [{
-          type: QuestionType.TOGGLE,
-        }, {
-          type: QuestionType.SCALE,
-        }],
+        OR: [
+          {
+            type: QuestionType.TOGGLE,
+          },
+          {
+            type: QuestionType.SCALE,
+          },
+        ],
       },
       include: {
         questionAnswers: {
@@ -121,13 +138,10 @@ export class PollService {
           },
         },
       },
-    }) as unknown as Promise<DbQuestionWithAnswers[]>;
+    })) as unknown as Promise<DbQuestionWithAnswers[]>;
   }
 
-  async getQuestionWithText (
-    teacherId: string,
-    query: CommentsQueryDTO = {},
-  ) {
+  async getQuestionWithText (teacherId: string, query: CommentsQueryDTO = {}) {
     const questionsData = {
       where: {
         type: QuestionType.TEXT,
@@ -185,7 +199,7 @@ export class PollService {
       const comments = await DatabaseUtils.paginate(
         this.questionAnswerRepository,
         query,
-        commentsData,
+        commentsData
       );
       result.push({
         ...question,
@@ -265,19 +279,28 @@ export class PollService {
       disciplineWhere.push({ ...part, isSelective: true });
     }
 
-    const { sort = 'lastName', order = 'asc' } = query;
+    const { sort = 'lastName', order = 'asc', roles = [] } = query;
     const search = DatabaseUtils.getSearch(
       query,
       SortQATParam.FIRST_NAME.toString(),
       SortQATParam.LAST_NAME.toString(),
-      SortQATParam.MIDDLE_NAME.toString(),
+      SortQATParam.MIDDLE_NAME.toString()
     );
+    const roleFilter =
+      roles?.length > 0
+        ? {
+            roles: {
+              some: DatabaseUtils.getSearchByArray(roles, 'role'),
+            },
+          }
+        : {};
 
     const disciplineTeachers = await this.disciplineTeacherRepository.findMany({
       where: {
         teacher: {
           ...search,
         },
+        ...roleFilter,
         discipline: {
           is: {
             OR: disciplineWhere,
@@ -310,7 +333,8 @@ export class PollService {
 
     return {
       hasSelectedInLastSemester: !!hasSelectedInLastSemester,
-      teachers: this.disciplineTeacherMapper.getDisciplineTeachers(disciplineTeachers),
+      teachers:
+        this.disciplineTeacherMapper.getDisciplineTeachers(disciplineTeachers),
     };
   }
 

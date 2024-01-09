@@ -1,0 +1,25 @@
+@import 'src/styles/partials/breakpoints';
+
+.form {
+  display: grid;
+  grid-template-columns: 35% 15% 15% 5%;
+  grid-template-rows: 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+@media screen and (max-width: $breakpoint-tablet) {
+  .form {
+    grid-template-columns: 40% 40% 10%;
+  }
+  .input {
+    grid-column: 1 / span 2;
+  }
+}
+
+@media only screen and (max-width: $breakpoint-mobile) {
+  .form {
+    column-gap: 15px;
+    margin-bottom: 24px;
+  }
+}

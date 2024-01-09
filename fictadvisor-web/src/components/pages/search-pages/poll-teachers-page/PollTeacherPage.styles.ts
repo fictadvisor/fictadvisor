@@ -4,7 +4,11 @@ export const layout: SxProps<Theme> = {
   width: '100%',
   display: 'flex',
   flexDirection: 'column',
-  padding: '0px 80px 32px 80px',
+  padding: {
+    mobile: '0px 16px 32px 16px',
+    tablet: '0px 40px 32px 32px',
+    laptop: '0px 80px 32px 80px',
+  },
 };
 
 export const pageLoader: SxProps<Theme> = {

@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { Dispatch, FC, SetStateAction, useCallback } from 'react';
 import { Box, Typography, useMediaQuery } from '@mui/material';
 import List from '@mui/material/List';
 import Image from 'next/image';
@@ -8,6 +8,10 @@ import useAuthentication from '@/hooks/use-authentication';
 import { PollTeachersResponse } from '@/lib/api/poll/types/PollTeachersResponse';
 import theme from '@/styles/theme';
 
+import PollSearchForm from '../../poll-search-form';
+import { PollSearchFormFields } from '../../poll-search-form/types';
+import { SearchFormProps } from '../../search-form/SearchForm';
+
 import * as styles from './PollTeacherSearchList.styles';
 
 import style from './PollTeacherSearchList.module.scss';
@@ -15,14 +19,26 @@ import style from './PollTeacherSearchList.module.scss';
 interface PollTeacherSearchListProps {
   data: PollTeachersResponse;
   className: string;
+  setQueryObj: Dispatch<SetStateAction<PollSearchFormFields>>;
+  initialValues: PollSearchFormFields;
+  localStorageName: string;
+  setCurPage: Dispatch<SetStateAction<number>>;
 }
 
 const PollTeacherSearchList: FC<PollTeacherSearchListProps> = ({
   data,
-  className,
+  setQueryObj,
+  initialValues,
+  localStorageName,
+  setCurPage,
 }) => {
-  const { user } = useAuthentication();
   const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
+
+  const submitHandler: SearchFormProps['onSubmit'] = useCallback(query => {
+    setQueryObj(prev => ({ ...prev, ...query }));
+    setCurPage(0);
+  }, []);
+  const { user } = useAuthentication();
 
   const isCompleted = data.teachers?.length === 0;
   const groupName = user?.group?.code;
@@ -31,6 +47,12 @@ const PollTeacherSearchList: FC<PollTeacherSearchListProps> = ({
       <Typography sx={styles.headText}>
         Викладачі предметів групи {groupName}
       </Typography>
+      <PollSearchForm
+        searchPlaceholder="Обери викладача"
+        onSubmit={submitHandler}
+        initialValues={initialValues}
+        localStorageName={localStorageName}
+      />
       {isCompleted ? (
         <Box sx={styles.wrapper}>
           <Box sx={styles.content}>

@@ -1,8 +1,10 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEnum, IsIn, IsOptional } from 'class-validator';
+import { IsEnum, IsIn, IsOptional, IsArray } from 'class-validator';
+import { Transform } from 'class-transformer';
 import { SortQATParam } from './SortQATParam';
 import { OrderQAParam } from './OrderQAParam';
 import { validationOptionsMsg } from '../../utils/GLOBALS';
+import { TeacherRole } from '@prisma/client';
 
 export class QueryAllDisciplineTeacherForPollDTO {
   @ApiPropertyOptional({
@@ -28,4 +30,15 @@ export class QueryAllDisciplineTeacherForPollDTO {
   @IsIn(['asc', 'desc'], validationOptionsMsg('Wrong value for order'))
   @IsOptional()
     order?: 'asc' | 'desc';
+
+  @ApiPropertyOptional({
+    description: 'Teacher\'s roles',
+    type: [TeacherRole],
+    enum: TeacherRole,
+  })
+  @Transform(({ value }) => Array.isArray(value) ? value : Array(value))
+  @IsEnum(TeacherRole, validationOptionsMsg('Each element of roles should be an enum', true))
+  @IsArray(validationOptionsMsg('Roles must be an array'))
+  @IsOptional()
+    roles?: TeacherRole[];
 }

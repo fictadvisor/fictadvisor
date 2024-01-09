@@ -20,7 +20,7 @@ const CheckboxesDropdown: FC<CheckboxesDropdownProps> = ({
   selected,
   size = FieldSize.SMALL,
   label = '',
-  width = 200,
+  width = 150,
   handleChange,
   dropdownSx = {},
   menuSx = {},
@@ -30,9 +30,7 @@ const CheckboxesDropdown: FC<CheckboxesDropdownProps> = ({
 
   return (
     <FormControl sx={styles.formControl}>
-      <InputLabel shrink={true} sx={styles.label}>
-        {label}
-      </InputLabel>
+      <InputLabel sx={styles.label}>{label}</InputLabel>
       <Select
         sx={MergeSx(styles.select, dropdownSx)}
         multiple
@@ -55,10 +53,11 @@ const CheckboxesDropdown: FC<CheckboxesDropdownProps> = ({
         IconComponent={props => (
           <ChevronDownIcon
             {...props}
-            width={16}
-            height={16}
+            width={24}
+            height={24}
             strokeWidth={1.5}
             fill="white"
+            style={{ top: '10px', right: '15px', zIndex: '2' }}
           />
         )}
         {...props}
@@ -67,7 +66,7 @@ const CheckboxesDropdown: FC<CheckboxesDropdownProps> = ({
           <MenuItem key={index} value={option.value}>
             <Checkbox
               checked={selectedValues.includes(option.value)}
-              label={option.value}
+              label={option.label}
             />
           </MenuItem>
         ))}
