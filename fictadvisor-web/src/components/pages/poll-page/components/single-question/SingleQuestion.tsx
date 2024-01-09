@@ -17,8 +17,8 @@ interface QuestionProps {
 }
 
 const optionsRadioGroup = [
-  { value: '1', label: 'так' },
-  { value: '0', label: 'ні' },
+  { value: '1', label: 'Так' },
+  { value: '0', label: 'Ні' },
 ];
 
 const QuestionToggle: FC<QuestionProps> = ({ question, ...rest }) => {

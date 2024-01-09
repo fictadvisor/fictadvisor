@@ -20,9 +20,16 @@ export const successWrapper: SxProps<Theme> = {
   minHeight: 'calc(100vh)',
 };
 
-export const wrapperBox = (
+export const questionListWrapperBox = (
   isMobile: boolean,
   isQuestionsListOpened: boolean,
 ) => ({
   display: !isMobile || isQuestionsListOpened ? 'block' : 'none',
+});
+
+export const answersSheetWrapperBox = (
+  isMobile: boolean,
+  isQuestionsListOpened: boolean,
+) => ({
+  display: isMobile && isQuestionsListOpened ? 'none' : 'block',
 });

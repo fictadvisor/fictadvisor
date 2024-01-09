@@ -14,6 +14,7 @@ import * as styles from './PollForm.styles';
 
 interface PollFormProps {
   data: GetTeacherQuestionsResponse;
+  disciplineTeacherId: string;
 }
 
 const validateResults = (answers: Answer[], questions: Question[]) => {
@@ -37,7 +38,7 @@ const getAllQuestionsArray = (categories: Category[]): Question[] => {
   return questions;
 };
 
-const PollForm: FC<PollFormProps> = ({ data }) => {
+const PollForm: FC<PollFormProps> = ({ data, disciplineTeacherId }) => {
   const {
     setIsValid,
     answers,
@@ -75,15 +76,16 @@ const PollForm: FC<PollFormProps> = ({ data }) => {
           : styles.wrapper
       }
     >
-      <Box sx={styles.wrapperBox(isMobile, isQuestionsListOpened)}>
+      <Box sx={styles.questionListWrapperBox(isMobile, isQuestionsListOpened)}>
         {sendingStatus !== SendingStatus.SUCCESS && (
           <QuestionsList data={data} progress={progress} />
         )}
       </Box>
-      <Box>
+      <Box sx={styles.answersSheetWrapperBox(isMobile, isQuestionsListOpened)}>
         <AnswersSheet
           setProgress={setProgress}
           isTheLast={currentCategory === categories.length - 1}
+          disciplineTeacherId={disciplineTeacherId}
         />
       </Box>
     </Box>
