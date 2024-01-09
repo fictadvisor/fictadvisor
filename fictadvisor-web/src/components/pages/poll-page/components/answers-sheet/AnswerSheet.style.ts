@@ -55,6 +55,7 @@ export const chevronIcon: SxProps<Theme> = {
   justifyContent: 'center',
   alignItems: 'center',
   cursor: 'pointer',
+  marginRight: '8px',
 };
 
 export const loaderWrapper: SxProps<Theme> = {
@@ -106,6 +107,7 @@ export const button: SxProps<Theme> = {
 
 export const questionName: SxProps<Theme> = {
   margin: '0 auto',
+  paddingRight: '8px',
   width: 'fit-content',
   typography: theme.typography.body1Bold,
 };

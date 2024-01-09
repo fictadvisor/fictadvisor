@@ -2,11 +2,6 @@ import React, { FormEvent, useMemo } from 'react';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import { Box, Typography } from '@mui/material';
 import { Form, Formik, FormikValues } from 'formik';
-import {
-  ReadonlyURLSearchParams,
-  useRouter,
-  useSearchParams,
-} from 'next/navigation';
 
 import Button from '@/components/common/ui/button-mui/Button';
 import Progress from '@/components/common/ui/progress';
@@ -27,6 +22,7 @@ import styles from './AnswersSheet.module.scss';
 interface AnswersSheetProps {
   setProgress: React.Dispatch<React.SetStateAction<number[]>>;
   isTheLast: boolean;
+  disciplineTeacherId: string;
 }
 
 const getProgress = (answers: Answer[], questions: Question[]) => {
@@ -61,6 +57,7 @@ const setCollectAnswers = (answers: Answer[], values: FormikValues) => {
 const AnswersSheet: React.FC<AnswersSheetProps> = ({
   setProgress,
   isTheLast,
+  disciplineTeacherId,
 }) => {
   const {
     setCurrentCategory,
@@ -84,8 +81,6 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
     setQuestionsListOpened: state.setQuestionsListOpened,
   }));
   const toast = useToast();
-  const query = useSearchParams() as ReadonlyURLSearchParams;
-  const disciplineTeacherId = query.get('disciplineTeacherId') as string;
 
   const initialValues: Record<string, string> = useMemo(() => {
     return currentQuestions?.questions

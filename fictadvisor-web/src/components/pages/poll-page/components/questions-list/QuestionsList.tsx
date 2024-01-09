@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box } from '@mui/material';
 
 import PollCard from '@/components/common/ui/cards/poll-card';
@@ -21,6 +21,9 @@ const QuestionsList: React.FC<QuestionListProps> = ({ data, progress }) => {
       setCurrentCategory: state.setCurrentCategory,
       setQuestionsListOpened: state.setQuestionsListOpened,
     }));
+  useEffect(() => {
+    setCurrentCategory(0);
+  }, []);
 
   const handleClick = (id: number) => {
     if (currentCategory !== id) setCurrentCategory(id);

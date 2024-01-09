@@ -38,7 +38,6 @@ export const label = (state: TextAreaState): SxProps<Theme> => ({
 export const errorRemark: SxProps<Theme> = {
   margin: '2px 8px 0 16px',
   color: 'error.500',
-  typography: 'overline',
   minHeight: '20px',
 };
 

@@ -6,7 +6,7 @@ export const pollPage: SxProps<Theme> = {
   width: '100%',
   display: 'flex',
   justifyContent: 'center',
-  alignItems: 'center',
+  alignItems: 'flex-start',
   flexGrow: 1,
 };
 
