@@ -1,3 +1,4 @@
+import { PollSearchFormFields } from '@/components/pages/search-pages/poll-search-form/types';
 import { CreateTeacherGradeBody } from '@/lib/api/poll/types/CreateTeacherGradeBody';
 import { GetTeacherQuestionsResponse } from '@/lib/api/poll/types/GetTeacherQuestionsResponse';
 import { PollTeachersResponse } from '@/lib/api/poll/types/PollTeachersResponse';
@@ -26,12 +27,17 @@ class PollAPI {
     return data;
   }
 
-  async getUserTeachers(userId: string) {
+  async getUserTeachers(
+    userId: string,
+    params: Partial<PollSearchFormFields> = {},
+  ) {
     const { data } = await client.get<PollTeachersResponse>(
       `/poll/teachers/${userId}`,
-      getAuthorizationHeader(),
+      {
+        params,
+        ...getAuthorizationHeader(),
+      },
     );
-
     return data;
   }
 }

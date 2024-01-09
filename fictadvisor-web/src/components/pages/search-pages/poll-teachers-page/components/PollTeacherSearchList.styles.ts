@@ -1,16 +1,29 @@
 import { SxProps, Theme } from '@mui/material/styles';
 
 export const searchList: SxProps<Theme> = {
-  marginTop: { mobileMedium: '40px', desktopLarge: '50px' },
+  marginTop: {
+    mobile: '30px',
+    mobileMedium: '40px',
+    desktopLarge: '50px',
+  },
   marginBottom: '16px',
   display: 'grid',
   gridTemplateColumns: {
-    mobile: 'repeat(4, 1fr)',
-    tablet: 'repeat(2, 1fr)',
-    desktop: 'repeat(3, 1fr)',
+    mobile: 'repeat(1, 1fr)',
+    mobileMedium: 'repeat(2, 1fr)',
+    tablet: 'repeat(3, 1fr)',
+    desktop: 'repeat(4, 1fr)',
   },
-  columnGap: { mobile: '48px', tablet: '16px', desktop: '32px' },
-  rowGap: '4rem',
+  columnGap: {
+    mobile: '16px',
+    tablet: '24px',
+    desktop: '32px',
+  },
+  rowGap: {
+    mobile: '1rem',
+    tablet: '3rem',
+    desktop: '4rem',
+  },
   gridAutoRows: 'max-content !important',
   alignItems: 'center',
 };
@@ -30,6 +43,11 @@ export const content: SxProps<Theme> = {
 };
 
 export const headText: SxProps<Theme> = {
+  marginBottom: {
+    desctop: '48px',
+    tablet: '32px',
+    mobile: '16px',
+  },
   typography: {
     tablet: 'h4Bold',
     mobile: 'h6Bold',

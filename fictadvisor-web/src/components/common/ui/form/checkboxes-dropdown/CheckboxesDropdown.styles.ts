@@ -8,17 +8,23 @@ export const wrapper: SxProps<Theme> = {
 };
 
 export const label: SxProps<Theme> = {
-  overflow: 'hidden',
   padding: '2px 8px',
-  maxWidth: '78%',
+  maxWidth: '60%',
+  top: '-5px',
   background: `linear-gradient(180deg, rgba(30, 30, 30, 0) 50%, ${theme.palette.backgroundDark[100]} 49.95%)`,
-  color: 'grey.400',
+  color: 'grey',
   '&.Mui-focused': {
-    color: 'white.main',
+    color: 'grey.600',
+  },
+  '&.MuiInputLabel-shrink': {
+    color: 'grey.600',
+    top: '0',
+    maxWidth: '80%',
   },
 };
 
 export const formControl: SxProps<Theme> = {
+  width: '100%',
   fieldset: { border: 'none' },
   '&.MuiFormLabel-root ': {
     color: 'white',
@@ -29,7 +35,12 @@ export const select: SxProps<Theme> = {
   border: '2px solid',
   borderColor: 'grey.400',
   borderRadius: '8px',
+  justifyContent: 'space-between',
+  padding: '0px 8px',
   '&.Mui-focused': {
+    borderColor: 'grey.600',
+  },
+  '&:hover': {
     borderColor: 'white.main',
   },
   transition: 'all 0.2s ease-in-out',
@@ -38,9 +49,7 @@ export const select: SxProps<Theme> = {
 export const input: SxProps<Theme> = {
   borderRadius: '8px',
   border: '2px solid white',
-
   transition: 'all 0.2s ease-in-out',
-  width: '100%',
   display: 'flex',
   alignItems: 'center',
   gap: '8px',
@@ -52,15 +61,14 @@ export const input: SxProps<Theme> = {
 export const tag: SxProps<Theme> = { m: '3px' };
 
 export const paperProps = (width: number): SxProps<Theme> => ({
-  width,
   marginTop: '8px',
-  backgroundColor: 'transparent',
+  backgroundColor: 'backgroundDark.100',
   p: '2px 0',
   maxHeight: '144px',
   boxShadow: 'none',
   borderRadius: '8px',
   border: '2px solid',
-  borderColor: '#FFFFFF',
+  borderColor: 'grey.600',
   li: {
     '&.Mui-selected': {
       '&:hover': {
@@ -69,7 +77,10 @@ export const paperProps = (width: number): SxProps<Theme> => ({
       backgroundColor: 'backgroundDark.400',
     },
     minHeight: '36px !important',
-    p: '6px 8px 6px 26px',
+    '&:hover': {
+      backgroundColor: 'backgroundDark.400',
+    },
+    p: '6px 8px 6px 16px',
   },
 });
 
@@ -78,11 +89,12 @@ export const selectedItems = (size: FieldSize, width: number) => ({
     padding: '8px 12px',
   }),
   ...(size === FieldSize.MEDIUM && {
-    padding: '11px 12px',
+    padding: '12px 12px',
   }),
   ...(size === FieldSize.LARGE && {
     padding: '14px 16px',
   }),
   color: theme.palette.white.main,
-  width,
+  width: '80%',
+  paddingRight: '30px',
 });
