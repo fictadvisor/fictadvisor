@@ -150,7 +150,11 @@ export class RoleController {
       Name is not an enum
       Name cannot be empty
       Weight is not a number 
-      Weight cannot be empty`,
+      Weight cannot be empty
+      Weight must be more than 0
+      Weight must be less than 5000
+      Display name length must be more than 3
+      Display name length must be less than 32`,
   })
   @ApiEndpoint({
     summary: 'Create an information about the role',
@@ -183,6 +187,10 @@ export class RoleController {
     InvalidBodyException:
       Name is not an enum
       Weight is not a number
+      Weight must be more than 0
+      Weight must be less than 5000
+      Display name length must be more than 3
+      Display name length must be less than 32
       
     InvalidEntityIdException:
       Role with such id is not found`,
