@@ -462,8 +462,8 @@ export class UserService {
     const selective = await this.getSelective(user.id);
     const semesterSelective = selective.filter((x) => x.year === body.year && x.semester === body.semester);
 
-    const { semesters } = await this.dateService.getAllPreviousSemesters();
-    if (!semesters.some((s) => s.year === body.year && s.semester === body.semester)) {
+    const semester = await this.dateService.getSemester({ year: body.year, semester: body.semester });
+    if (!semester) {
       return {};
     }
 
