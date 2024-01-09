@@ -1,7 +1,6 @@
 import { SxProps, Theme } from '@mui/material/styles';
 
 export const tabList: SxProps<Theme> = {
-  paddingTop: '24px',
   '.MuiTabs-flexContainer': {
     gap: '8px',
     overflow: 'scroll',
@@ -15,6 +14,17 @@ export const tabList: SxProps<Theme> = {
     },
   },
   width: '100%',
+  justifyContent: 'center',
+  alignItems: 'center',
+};
+
+export const tabListWrapper: SxProps<Theme> = {
+  paddingTop: '24px',
+  display: 'flex',
+  justifyContent: 'space-between',
+  flexDirection: { mobile: 'column-reverse', tablet: 'row' },
+  alignItems: { mobile: 'start', tablet: 'center' },
+  gap: '16px',
 };
 
 export const tabPanelList: SxProps<Theme> = {

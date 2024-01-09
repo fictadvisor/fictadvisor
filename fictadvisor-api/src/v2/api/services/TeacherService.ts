@@ -21,6 +21,9 @@ import { DateService } from '../../utils/date/DateService';
 import { DbTeacher } from 'src/v2/database/entities/DbTeacher';
 import { QuestionMapper } from '../../mappers/QuestionMapper';
 import { Cron } from '@nestjs/schedule';
+import { ComplaintDTO } from '../dtos/ComplaintDTO';
+import { TelegramAPI } from '../../telegram/TelegramAPI';
+import { GroupRepository } from '../../database/repositories/GroupRepository';
 
 @Injectable()
 export class TeacherService {
@@ -35,6 +38,8 @@ export class TeacherService {
     private disciplineTeacherMapper: DisciplineTeacherMapper,
     private dateService: DateService,
     private questionMapper: QuestionMapper,
+    private readonly telegramAPI: TelegramAPI,
+    private readonly groupRepository: GroupRepository,
   ) {}
 
   async getAll (body: QueryAllTeacherDTO) {
@@ -321,5 +326,32 @@ export class TeacherService {
       contacts,
       rating,
     };
+  }
+
+  async sendComplaint (teacherId: string, body: ComplaintDTO) {
+    const { fullName = 'не вказано', groupId, title, message } = body;
+
+    const code = groupId
+      ? (await this.groupRepository.findById(groupId))?.code
+      : 'не вказано';
+    if (!code) throw new InvalidEntityIdException('Group');
+
+    const { lastName, firstName, middleName } = await this.teacherRepository.findById(teacherId);
+
+    await this.teacherRepository.updateById(teacherId, {
+      complaints: {
+        create: body,
+      },
+    });
+
+    const text = 
+      '<b>Скарга на викладача:</b>\n\n' +
+      `<b>Викладач:</b> ${lastName} ${firstName} ${middleName}\n` +
+      `<b>Студент:</b> ${fullName}\n` +
+      `<b>Група:</b> ${code}\n\n` +
+      `${title}\n\n` +
+      `${message}`;
+
+    await this.telegramAPI.sendMessage(text);
   }
 }

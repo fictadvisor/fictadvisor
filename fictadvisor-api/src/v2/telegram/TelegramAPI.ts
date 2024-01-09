@@ -40,6 +40,10 @@ export class TelegramAPI {
   async sendMessage (text: string) {
     await this.client.post('/broadcast/sendMessage', {
       text,
+    }, {
+      params: {
+        parse_mode: 'HTML',
+      },
     });
   }
 }
