@@ -8,5 +8,5 @@ export class DbRole {
   grants: Grant[];
   userRoles: UserRole[];
   groupRole: GroupRole;
-  displayName?: string;
+  displayName: string;
 }
