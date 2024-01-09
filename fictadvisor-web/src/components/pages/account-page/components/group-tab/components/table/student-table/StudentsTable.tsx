@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
-import {
-  BarsArrowDownIcon,
-  BarsArrowUpIcon,
-} from '@heroicons/react/24/outline';
+import { BarsArrowDownIcon } from '@heroicons/react/24/outline';
 import { PlusIcon } from '@heroicons/react/24/solid';
 import { Avatar, Box, Grid, Typography, useMediaQuery } from '@mui/material';
 
@@ -29,12 +26,13 @@ import * as gridStyles from '../grid.styles';
 import { StudentsTableProps } from '../types';
 
 import * as styles from './StudentsTable.styles';
+
 const StudentsTable: React.FC<StudentsTableProps> = ({
   role,
   rows,
   refetch,
+  onSortButtonClick,
 }) => {
-  const [isSorted, setIsSorted] = useState(false);
   const isMobile = useMediaQuery(theme.breakpoints.down('desktop'));
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const { user } = useAuthentication();
@@ -74,12 +72,9 @@ const StudentsTable: React.FC<StudentsTableProps> = ({
           <IconButton
             sx={styles.iconButton(isMobile)}
             shape={IconButtonShape.SQUARE}
-            icon={isSorted ? <BarsArrowDownIcon /> : <BarsArrowUpIcon />}
+            icon={<BarsArrowDownIcon />}
             color={IconButtonColor.SECONDARY}
-            onClick={() => {
-              setIsSorted(!isSorted);
-              refetch();
-            }}
+            onClick={onSortButtonClick}
           />
           {isMobile ? (
             <IconButton
@@ -99,10 +94,7 @@ const StudentsTable: React.FC<StudentsTableProps> = ({
       )}
 
       <Grid container sx={gridStyles.studentsGrid}>
-        {(isSorted
-          ? rows.sort((a, b) => b.fullName.localeCompare(a.fullName))
-          : rows.sort((a, b) => a.fullName.localeCompare(b.fullName))
-        ).map((row, index) => (
+        {rows.map((row, index) => (
           <Grid container key={index} sx={gridStyles.row}>
             {row.imgSrc && (
               <Grid item desktop={4} mobile={9}>

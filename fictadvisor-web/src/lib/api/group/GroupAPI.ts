@@ -26,10 +26,14 @@ class GroupAPI {
     return res.data;
   }
 
-  async getGroupStudents(groupId: string) {
+  async getGroupStudents(groupId: string, order?: string) {
+    const params = order ? { order, sort: 'lastName' } : {};
     const res = await client.get<GetGroupStudentResponse>(
       `/groups/${groupId}/students`,
-      getAuthorizationHeader(),
+      {
+        params,
+        ...getAuthorizationHeader(),
+      },
     );
     return res.data;
   }

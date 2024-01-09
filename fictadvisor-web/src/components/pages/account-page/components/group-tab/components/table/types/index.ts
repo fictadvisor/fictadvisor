@@ -1,3 +1,4 @@
+import { MouseEventHandler } from 'react';
 import { QueryObserverBaseResult } from 'react-query';
 
 import { UserGroupRole } from '@/types/user';
@@ -22,4 +23,5 @@ export interface StudentsTableProps {
   role: UserGroupRole;
   rows: StudentsTableItem[];
   refetch: QueryObserverBaseResult['refetch'];
+  onSortButtonClick?: MouseEventHandler<HTMLButtonElement>;
 }
