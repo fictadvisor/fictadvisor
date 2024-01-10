@@ -1,19 +1,15 @@
-import { SxProps, Theme } from '@mui/material';
-
-import { Checkboxes } from '@/store/schedule/useSchedule';
+import { AutocompleteProps } from '@mui/material';
 
 import { FieldSize } from '../../common/types';
 
-import { CheckboxOption } from './CheckboxOption';
+type TCheckboxesAutocomplete<T> = Omit<
+  AutocompleteProps<T, true, undefined, undefined>,
+  'size' | 'renderInput'
+>;
 
-export interface CheckboxesDropdownProps {
-  options: CheckboxOption[];
-  updateCheckboxes: (checkboxes: Checkboxes) => void;
+export interface CheckboxesDropdownProps<T> extends TCheckboxesAutocomplete<T> {
+  placeholder?: string;
   size?: FieldSize;
-  placeholder: string;
-  noOptionsText?: string;
-  disableClearable?: boolean;
-  sx?: SxProps<Theme>;
-  inputSx?: SxProps<Theme>;
-  dropdownSx?: SxProps<Theme>;
+  inputSx?: Record<string, string | object>;
+  dropdownSx?: Record<string, string | object>;
 }

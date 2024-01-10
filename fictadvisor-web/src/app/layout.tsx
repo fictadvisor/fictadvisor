@@ -9,7 +9,6 @@ import dayjs from 'dayjs';
 import uk from 'dayjs/locale/uk';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
-import { Manrope } from 'next/font/google';
 import Head from 'next/head';
 import Script from 'next/script';
 
