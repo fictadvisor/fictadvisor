@@ -141,6 +141,7 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
         disciplineTeacherId,
       );
       setIsSendingStatus(SendingStatus.SUCCESS);
+      setAnswers([]);
     } catch (error) {
       const message = getErrorMessage(error);
       const errorMessage =
