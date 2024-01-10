@@ -354,6 +354,11 @@ export class GroupService {
     const student = await this.studentRepository.findById(studentId);
     if (student.state !== State.APPROVED) throw new NotApprovedException();
 
+    const captain = await this.getCaptain(groupId);
+    if (captain.id === studentId) throw new NoPermissionException();
+
+    await this.userService.deleteStudentSelective(studentId);
+
     const { id } = await this.userService.getGroupRole(studentId);
     const updatedStudent = await this.studentRepository.updateById(studentId, {
       state: State.DECLINED,

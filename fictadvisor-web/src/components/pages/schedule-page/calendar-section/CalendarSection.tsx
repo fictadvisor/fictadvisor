@@ -27,12 +27,12 @@ export const CalendarSection: FC<CalendarSectionProps> = ({ groups }) => {
   const groupId = useSchedule(state => state.groupId);
 
   const permissionValues: PermissionData = {
-    groupId: user.group?.id,
+    groupId: user?.group?.id,
   };
 
   const { data } = useQuery(
     [],
-    () => PermissionService.getPermissionList(user.id, permissionValues),
+    () => PermissionService.getPermissionList(user?.id, permissionValues),
     {
       retry: false,
       refetchOnWindowFocus: false,
