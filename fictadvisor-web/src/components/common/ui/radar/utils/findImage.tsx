@@ -74,15 +74,16 @@ const getBackgroundImage = (
       case 11:
         return <Lect11Desktop />;
       case 12:
-        if (TeacherRole.LABORANT in roles) {
-          return <Lab12Desktop />;
+        if (roles.includes(TeacherRole.PRACTICIAN)) {
+          return <Pract12Desktop />;
         }
-        return <Pract12Desktop />;
+        return <Lab12Desktop />;
       case 13:
-        if (TeacherRole.LABORANT in roles) {
+        if (labels[3].includes('лабораторних')) {
           return <LectLab13Desktop />;
+        } else {
+          return <LectPract13Desktop />;
         }
-        return <LectPract13Desktop />;
       case 15:
         return <LectPractLab15Desktop />;
     }
