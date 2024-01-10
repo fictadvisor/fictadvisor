@@ -10,6 +10,7 @@ import { UpdateStudentRoleBody } from '@/lib/api/group/types/UpdateStudentRoleBo
 import { VerifyStudentBody } from '@/lib/api/group/types/VerifyStudentBody';
 import { getAuthorizationHeader } from '@/lib/api/utils';
 import { GroupStudent } from '@/types/student';
+import { User } from '@/types/user';
 
 import { Order } from '../../services/group/types/OrderEnum';
 import { client } from '../instance';
@@ -121,6 +122,15 @@ class GroupAPI {
       getAuthorizationHeader(),
     );
 
+    return data;
+  }
+
+  async leaveGroup(groupId: string) {
+    const { data } = await client.patch<User>(
+      `/groups/${groupId}/leave`,
+      {},
+      getAuthorizationHeader(),
+    );
     return data;
   }
 }
