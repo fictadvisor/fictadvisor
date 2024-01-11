@@ -230,7 +230,7 @@ export class GroupService {
 
   async deleteGroup (groupId: string) {
     await this.roleRepository.deleteMany({ groupRole: { groupId } });
-    await this.groupRepository.deleteById(groupId);
+    return this.groupRepository.deleteById(groupId);
   }
 
   async getStudents (groupId: string, { sort, order }: GroupStudentsQueryDTO) {   
