@@ -61,7 +61,7 @@ const GeneralTab: FC<GeneralTabProps> = ({ marks, roles }) => {
         Кількість респондентів: {updatedMarks[0].amount}
       </Typography>
       <Box sx={styles.radarWrapper}>
-        <Radar marks={radarMarks} roles={roles} />
+        <Radar marks={radarMarks} />
       </Box>
       {isMobile && (
         <List sx={styles.list}>
