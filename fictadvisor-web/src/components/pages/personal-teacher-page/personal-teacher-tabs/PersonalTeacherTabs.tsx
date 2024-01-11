@@ -1,4 +1,7 @@
 import { FC, SyntheticEvent } from 'react';
+import { ChartBarIcon } from '@heroicons/react/24/outline';
+import { BookOpenIcon } from '@heroicons/react/24/outline';
+import { ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
 import { Box } from '@mui/material';
 import dynamic from 'next/dynamic';
 
@@ -57,16 +60,19 @@ const PersonalTeacherTabs: FC<PersonalTeacherTabsProps> = ({
       <TabContext value={tabIndex}>
         <TabList id="lol" onChange={handleChange} sx={stylesMUI.tabList}>
           <Tab
+            icon={<ChartBarIcon />}
             label="Загальне"
             textPosition={TabTextPosition.CENTER}
             value={TeachersPageTabs.GENERAL}
           />
           <Tab
+            icon={<BookOpenIcon />}
             label="Предмети"
             textPosition={TabTextPosition.CENTER}
             value={TeachersPageTabs.SUBJECTS}
           />
           <Tab
+            icon={<ChatBubbleLeftRightIcon />}
             label="Відгуки"
             count={count}
             textPosition={TabTextPosition.CENTER}
