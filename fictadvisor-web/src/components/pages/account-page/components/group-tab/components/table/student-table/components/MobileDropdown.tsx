@@ -57,6 +57,7 @@ const MobileStudentsTableButtons: FC<MobileStudentTableButtonsProps> = ({
           disabled={emptyList || student.role === UserGroupRole.CAPTAIN}
         />
         <Popper
+          style={{ zIndex: '5' }}
           open={isPopperOpen}
           placement={'bottom-end'}
           anchorEl={EllipsisIconRef.current}
