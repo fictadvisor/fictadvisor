@@ -1,12 +1,10 @@
 import { Body, Controller, Delete, Get, Patch, Param, Post, Query } from '@nestjs/common';
 import { PollService } from '../services/PollService';
-import { CreateQuestionWithRolesDTO } from '../dtos/CreateQuestionWithRolesDTO';
 import { PERMISSION } from '../../security/PERMISSION';
 import { QuestionByIdPipe } from '../pipes/QuestionByIdPipe';
 import { QuestionByRoleAndIdPipe } from '../pipes/QuestionByRoleAndIdPipe';
 import { UserByIdPipe } from '../pipes/UserByIdPipe';
 import { QuestionMapper } from '../../mappers/QuestionMapper';
-import { UpdateQuestionWithRolesDTO } from '../dtos/UpdateQuestionWithRolesDTO';
 import { CreateQuestionRoleDTO } from '../dtos/CreateQuestionRoleDTO';
 import {
   ApiBadRequestResponse,
@@ -22,6 +20,10 @@ import { PollDisciplineTeachersResponse } from '../responses/PollDisciplineTeach
 import { TeacherRole } from '@prisma/client';
 import { ApiEndpoint } from 'src/v2/utils/documentation/decorators';
 import { QueryAllDisciplineTeacherForPollDTO } from '../dtos/QueryAllDisciplineTeacherForPollDTO';
+import { QueryAllQuestionDTO } from '../dtos/QueryAllQuestionDTO';
+import { CreateQuestionDTO } from '../dtos/CreateQuestionDTO';
+import { UpdateQuestionDTO } from '../dtos/UpdateQuestionDTO';
+import { QuestionResponse, PaginatedQuestionsResponse } from '../responses/QuestionResponse';
 
 @ApiTags('Poll')
 @Controller({
@@ -34,17 +36,58 @@ export class PollController {
     private questionMapper: QuestionMapper,
   ) {}
 
-  @ApiBearerAuth()
   @ApiOkResponse({
-    type: QuestionWithRolesResponse,
+    type: PaginatedQuestionsResponse,
   })
   @ApiBadRequestResponse({
     description: `\n
     InvalidBodyException:
-      Visibility must be boolean
-      Visibility cannot be empty
-      Requirement must be boolean
-      Requirement cannot be empty`,
+      Page must be a number
+      PageSize must be a number
+      Sort must be an enum
+      Wrong value for order
+      Each answer type should be an enum
+      Answer types must be an array`,
+  })
+  @ApiEndpoint({
+    summary: 'Get all questions',
+  })
+  @Get('/questions')
+  async getAll (
+    @Query() query: QueryAllQuestionDTO,
+  ) {
+    const questions = await this.pollService.getAll(query);
+    return {
+      questions: this.questionMapper.getQuestions(questions.data),
+      pagination: questions.pagination,
+    };
+  }
+
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: QuestionResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidBodyException:
+      Order is too short (min: 1)
+      Order is too long (max: 50)
+      Order cannot be empty
+      Name is too short (min: 5)
+      Name is too long (max: 50)
+      Name cannot be empty
+      Text is too short (min: 5)
+      Text is too long (max: 250)
+      Text cannot be empty
+      Category is too short (min: 5)
+      Category is too long (max: 50)
+      Category cannot be empty
+      Description is too long (max: 2000)
+      Criteria is too long (max: 2000)
+      Type must be an enum
+      Display must be an enum
+      Requirement parameter cannot be empty
+      Requirement parameter must be a boolean`,
   })
   @ApiUnauthorizedResponse({
     description: `\n
@@ -62,10 +105,10 @@ export class PollController {
   })
   @Post('/questions')
   async create (
-    @Body() body : CreateQuestionWithRolesDTO,
+    @Body() body: CreateQuestionDTO,
   ) {
     const question = await this.pollService.create(body);
-    return this.questionMapper.getQuestionWithRoles(question);
+    return this.questionMapper.getQuestion(question);
   }
 
   @ApiBearerAuth()
@@ -111,7 +154,7 @@ export class PollController {
 
   @ApiBearerAuth()
   @ApiOkResponse({
-    type: QuestionWithRolesResponse,
+    type: QuestionResponse,
   })
   @ApiBadRequestResponse({
     description: `\n
@@ -142,18 +185,35 @@ export class PollController {
     @Param('questionId', QuestionByIdPipe) questionId: string,
   ) {
     const question = await this.pollService.deleteById(questionId);
-    return this.questionMapper.getQuestionWithRoles(question);
+    return this.questionMapper.getQuestion(question);
   }
 
 
   @ApiBearerAuth()
   @ApiOkResponse({
-    type: QuestionWithRolesResponse,
+    type: QuestionResponse,
   })
   @ApiBadRequestResponse({
     description: `\n
     InvalidBodyException:
-      Type must be enum
+      Order is too short (min: 1)
+      Order is too long (max: 50)
+      Order cannot be empty
+      Name is too short (min: 5)
+      Name is too long (max: 50)
+      Name cannot be empty
+      Text is too short (min: 5)
+      Text is too long (max: 250)
+      Text cannot be empty
+      Category is too short (min: 5)
+      Category is too long (max: 50)
+      Category cannot be empty
+      Description is too long (max: 2000)
+      Criteria is too long (max: 2000)
+      Type must be an enum
+      Display must be an enum
+      Requirement parameter cannot be empty
+      Requirement parameter must be a boolean
 
     InvalidEntityIdException:
       Question with such id is not found`,
@@ -180,10 +240,10 @@ export class PollController {
   @Patch('/questions/:questionId')
   async update (
     @Param('questionId', QuestionByIdPipe) questionId: string,
-    @Body() body: UpdateQuestionWithRolesDTO,
+    @Body() body: UpdateQuestionDTO,
   ) {
     const question = await this.pollService.updateById(questionId, body);
-    return this.questionMapper.getQuestionWithRoles(question);
+    return this.questionMapper.getQuestion(question);
   }
 
   @ApiOkResponse({
@@ -195,7 +255,7 @@ export class PollController {
       Question with such id is not found`,
   })
   @ApiParam({
-    name: 'questionId', 
+    name: 'questionId',
     required: true,
     description: 'Id of question you want to get',
   })
