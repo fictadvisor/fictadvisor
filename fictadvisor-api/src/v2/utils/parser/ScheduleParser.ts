@@ -10,6 +10,8 @@ import { TeacherRepository } from '../../database/repositories/TeacherRepository
 import { ScheduleDayType, ScheduleGroupType, SchedulePairType, ScheduleType } from './ScheduleParserTypes';
 import { EventRepository } from '../../database/repositories/EventRepository';
 import { DateService, DAY, FORTNITE, HOUR, MINUTE, WEEK, StudyingSemester } from '../date/DateService';
+import { weeksPerEvent } from '../../api/services/ScheduleService';
+import { DateUtils } from '../date/DateUtils';
 
 export const DAY_NUMBER = {
   'Пн': 1,
@@ -43,6 +45,7 @@ export class ScheduleParser implements Parser {
     private disciplineTeacherRepository: DisciplineTeacherRepository,
     private eventRepository: EventRepository,
     private dateService: DateService,
+    private dateUtils: DateUtils,
   ) {}
 
   async parse (period: StudyingSemester, groupList: string[]) {
@@ -94,7 +97,7 @@ export class ScheduleParser implements Parser {
       .split('.')
       .map((number) => +number);
     const startOfEvent = new Date(startOfSemester.getTime()+week*WEEK+(day-1)*DAY+hours*HOUR+minutes*MINUTE);
-    const endOfEvent = new Date(startOfEvent.getTime()+16*WEEK+HOUR+35*MINUTE);
+    const endOfEvent = new Date(startOfEvent.getTime()+HOUR+35*MINUTE);
 
     let discipline =
       await this.disciplineRepository.find({
@@ -189,24 +192,17 @@ export class ScheduleParser implements Parser {
       ],
     });
 
-    const weeksCountEveryFortnight = await this.getWeeksCount(startOfEvent, Period.EVERY_FORTNIGHT);
-    const weeksCountEveryWeek = await this.getWeeksCount(startOfEvent, Period.EVERY_WEEK);
-
     if (!event) {
       await this.eventRepository.create({
         name: pair.name,
         startTime: startOfEvent,
         endTime: endOfEvent,
         period: Period.EVERY_FORTNIGHT,
+        eventsAmount: await this.getEventsAmount(Period.EVERY_FORTNIGHT),
         groupId: groupId,
         lessons: {
           create: {
             disciplineTypeId: disciplineType.id,
-          },
-        },
-        eventInfo: {
-          createMany: {
-            data: this.getIndexesForEventInfo(0, weeksCountEveryFortnight - 1),
           },
         },
       });
@@ -216,31 +212,15 @@ export class ScheduleParser implements Parser {
     ) {
       await this.eventRepository.updateById(event.id, {
         period: Period.EVERY_WEEK,
-        endTime: endOfEvent,
-        eventInfo: {
-          createMany: {
-            data: this.getIndexesForEventInfo(weeksCountEveryFortnight, weeksCountEveryWeek),
-          },
-        },
+        eventsAmount: await this.getEventsAmount(Period.EVERY_WEEK),
       });
     }
   }
 
-  async getWeeksCount (indexStartDate: Date, period: Period) {
-    const { endDate } = await this.dateService.getCurrentSemester();
-
-    const difference = Math.ceil((endDate.getTime() - FORTNITE - indexStartDate.getTime()) / DAY);
-    const divider = period === Period.EVERY_FORTNIGHT ? 14 : 7;
-
-    return Math.floor(difference / divider);
-  }
-
-  getIndexesForEventInfo (startIndex: number, endIndex: number) {
-    return Array.from({
-      length: endIndex - startIndex + 1,
-    }, (_, i) => ({
-      number: i + startIndex,
-    }));
+  async getEventsAmount (period: Period) {
+    const { startDate, endDate } = await this.dateService.getCurrentSemester();
+    const lastWeek = this.dateUtils.getCeiledDifference(startDate, new Date(endDate.getTime() - FORTNITE), WEEK);
+    return lastWeek / weeksPerEvent[period];
   }
 
   async getTeacher (teacherName: string) {

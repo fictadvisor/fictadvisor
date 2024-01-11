@@ -12,6 +12,8 @@ import { SubjectRepository } from '../../database/repositories/SubjectRepository
 import { TeacherRepository } from '../../database/repositories/TeacherRepository';
 import { StudyingSemester, DateService, DAY, HOUR, MINUTE, WEEK, FORTNITE } from '../date/DateService';
 import { EventRepository } from '../../database/repositories/EventRepository';
+import { DateUtils } from '../date/DateUtils';
+import { weeksPerEvent } from '../../api/services/ScheduleService';
 
 export const DISCIPLINE_TYPE = {
   Лек: DisciplineTypeEnum.LECTURE,
@@ -50,6 +52,7 @@ export class RozParser implements Parser {
     private disciplineTeacherRoleRepository: DisciplineTeacherRoleRepository,
     private eventRepository: EventRepository,
     private dateService: DateService,
+    private dateUtils: DateUtils,
   ) {}
 
   async parse (period: StudyingSemester, groupList: string[], page = 1) {
@@ -211,7 +214,7 @@ export class RozParser implements Parser {
       .split(':')
       .map((s) => parseInt(s));
     const startOfEvent = new Date(startOfSemester.getTime()+week*WEEK+(day-1)*DAY+startHours*HOUR+startMinutes*MINUTE);
-    const endOfEvent = new Date(startOfEvent.getTime()+16*WEEK+HOUR+35*MINUTE);
+    const endOfEvent = new Date(startOfEvent.getTime()+HOUR+35*MINUTE);
 
     let discipline = await this.disciplineRepository.getOrCreate({
       subjectId: subject.id,
@@ -272,24 +275,17 @@ export class RozParser implements Parser {
       ],
     });
 
-    const weeksCountEveryFortnight = await this.getWeeksCount(startOfEvent, Period.EVERY_FORTNIGHT);
-    const weeksCountEveryWeek = await this.getWeeksCount(startOfEvent, Period.EVERY_WEEK);
-
     if (!event) {
       await this.eventRepository.create({
         name: pair.name,
         startTime: startOfEvent,
         endTime: endOfEvent,
         period: Period.EVERY_FORTNIGHT,
+        eventsAmount: await this.getEventsAmount(Period.EVERY_FORTNIGHT),
         groupId: groupId,
         lessons: {
           create: {
             disciplineTypeId: disciplineType.id,
-          },
-        },
-        eventInfo: {
-          createMany: {
-            data: this.getIndexesForEventInfo(0,  weeksCountEveryFortnight - 1),
           },
         },
       });
@@ -299,30 +295,14 @@ export class RozParser implements Parser {
     ) {
       await this.eventRepository.updateById(event.id, {
         period: Period.EVERY_WEEK,
-        endTime: endOfEvent,
-        eventInfo: {
-          createMany: {
-            data: this.getIndexesForEventInfo(weeksCountEveryFortnight, weeksCountEveryWeek),
-          },
-        },
+        eventsAmount: await this.getEventsAmount(Period.EVERY_WEEK),
       });
     }
   }
-
-  getIndexesForEventInfo (startIndex: number, endIndex: number) {
-    return Array.from({
-      length: endIndex - startIndex + 1,
-    }, (_, i) => ({
-      number: i + startIndex,
-    }));
-  }
-
-  async getWeeksCount (indexStartDate: Date, period: Period) {
-    const { endDate } = await this.dateService.getCurrentSemester();
-
-    const difference = Math.ceil((endDate.getTime() - FORTNITE - indexStartDate.getTime()) / DAY);
-    const divider = period === Period.EVERY_FORTNIGHT ? 14 : 7;
-
-    return Math.floor(difference / divider);
+  
+  async getEventsAmount (period: Period) {
+    const { startDate, endDate } = await this.dateService.getCurrentSemester();
+    const lastWeek = this.dateUtils.getCeiledDifference(startDate, new Date(endDate.getTime() - FORTNITE), WEEK);
+    return lastWeek / weeksPerEvent[period];
   }
 }

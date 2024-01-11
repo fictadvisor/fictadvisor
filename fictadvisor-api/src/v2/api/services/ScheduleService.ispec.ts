@@ -19,6 +19,7 @@ import { TelegramAPI } from '../../telegram/TelegramAPI';
 import { CreateEventDTO } from '../dtos/CreateEventDTO';
 import { ObjectIsRequiredException } from '../../utils/exceptions/ObjectIsRequiredException';
 
+
 describe('ScheduleService', () => {
   let scheduleService: ScheduleService;
   let prisma: PrismaService;
@@ -249,30 +250,42 @@ describe('ScheduleService', () => {
           name: 'name1',
           groupId: 'group',
           period: Period.EVERY_FORTNIGHT,
+          eventsAmount: 9,
+          teacherForceChanges: false,
+          isCustom: false,
           startTime: new Date('2022-09-05T08:30:00'),
-          endTime: new Date('2023-01-23T10:00:00'),
+          endTime: new Date('2022-09-05T10:00:00'),
         },
         {
           id: 'practice-event-1st-semester-every-week-09-12',
           name: 'name2',
           groupId: 'group',
           period: Period.EVERY_WEEK,
+          eventsAmount: 18,
+          teacherForceChanges: false,
+          isCustom: false,
           startTime: new Date('2022-09-12T08:30:00'),
-          endTime: new Date('2022-10-03T10:00:00'),
+          endTime: new Date('2022-09-12T10:00:00'),
         },
         {
           id: 'workout-event-1st-semester-every-fortnight-09-12',
           name: 'name3',
           groupId: 'group',
           period: Period.EVERY_FORTNIGHT,
+          eventsAmount: 9,
+          teacherForceChanges: false,
+          isCustom: false,
           startTime: new Date('2022-09-12T08:30:00'),
-          endTime: new Date('2022-10-03T10:00:00'),
+          endTime: new Date('2022-09-12T10:00:00'),
         },
         {
           id: 'some-event-1st-semester-no-period-09-12',
           name: 'name4',
           groupId: 'group',
           period: Period.NO_PERIOD,
+          eventsAmount: 1,
+          teacherForceChanges: false,
+          isCustom: false,
           startTime: new Date('2022-09-12T08:30:00'),
           endTime: new Date('2022-09-12T10:00:00'),
         },
@@ -281,8 +294,11 @@ describe('ScheduleService', () => {
           name: 'name5',
           groupId: 'group',
           period: Period.EVERY_WEEK,
+          eventsAmount: 18,
+          teacherForceChanges: false,
+          isCustom: false,
           startTime: new Date('2023-02-05T08:00:00'),
-          endTime: new Date('2023-06-26T10:00:00'),
+          endTime: new Date('2023-02-05T10:00:00'),
         },
 
         {
@@ -290,24 +306,33 @@ describe('ScheduleService', () => {
           name: 'name6',
           groupId: 'group',
           period: Period.EVERY_WEEK,
+          eventsAmount: 18,
+          teacherForceChanges: false,
+          isCustom: false,
           startTime: new Date('2022-09-05T08:30:00'),
-          endTime: new Date('2023-01-23T10:00:00'),
+          endTime: new Date('2022-09-05T10:00:00'),
         },
         {
           id: 'selective-practice-event-1st-semester-every-week-09-12',
           name: 'name7',
           groupId: 'group',
           period: Period.EVERY_WEEK,
+          eventsAmount: 18,
+          teacherForceChanges: false,
+          isCustom: false,
           startTime: new Date('2022-09-12T08:30:00'),
-          endTime: new Date('2022-10-03T10:00:00'),
+          endTime: new Date('2022-09-12T10:00:00'),
         },
         {
           id: 'selective-workout-event-1st-semester-every-fortnight-09-12',
           name: 'name8',
           groupId: 'group',
           period: Period.EVERY_FORTNIGHT,
+          eventsAmount: 9,
+          teacherForceChanges: false,
+          isCustom: false,
           startTime: new Date('2022-09-12T08:30:00'),
-          endTime: new Date('2022-10-03T10:00:00'),
+          endTime: new Date('2022-09-12T10:00:00'),
         },
 
         {
@@ -315,40 +340,55 @@ describe('ScheduleService', () => {
           name: 'name9',
           groupId: 'anotherGroup',
           period: Period.EVERY_WEEK,
+          eventsAmount: 18,
+          teacherForceChanges: false,
+          isCustom: false,
           startTime: new Date('2022-09-05T08:30:00'),
-          endTime: new Date('2023-01-23T10:00:00'),
+          endTime: new Date('2022-09-05T10:00:00'),
         },
         {
           id: 'anotherGroup-selective-practice-event-1st-semester-every-week-09-12',
           name: 'name10',
           groupId: 'anotherGroup',
           period: Period.EVERY_WEEK,
+          eventsAmount: 18,
+          teacherForceChanges: false,
+          isCustom: false,
           startTime: new Date('2022-09-12T08:30:00'),
-          endTime: new Date('2022-10-03T10:00:00'),
+          endTime: new Date('2022-09-12T10:00:00'),
         },
         {
           id: 'anotherGroup-selective-workout-event-1st-semester-every-fortnight-09-12',
           name: 'name11',
           groupId: 'anotherGroup',
           period: Period.EVERY_FORTNIGHT,
+          eventsAmount: 9,
+          teacherForceChanges: false,
+          isCustom: false,
           startTime: new Date('2022-09-12T08:30:00'),
-          endTime: new Date('2022-10-03T10:00:00'),
+          endTime: new Date('2022-09-12T10:00:00'),
         },
         {
           id: 'anotherGroup-selective-workout-event-1st-semester-every-fortnight-10-12',
           name: 'name12',
           groupId: 'anotherGroup',
           period: Period.EVERY_FORTNIGHT,
+          eventsAmount: 9,
+          teacherForceChanges: false,
+          isCustom: false,
           startTime: new Date('2022-10-12T08:30:00'),
-          endTime: new Date('2022-11-03T10:00:00'),
+          endTime: new Date('2022-10-12T10:00:00'),
         },
         {
           id: 'anotherGroup-workout-event-1st-semester-every-fortnight-11-12',
           name: 'name13',
           groupId: 'anotherGroup',
           period: Period.EVERY_FORTNIGHT,
+          eventsAmount: 9,
+          teacherForceChanges: false,
+          isCustom: false,
           startTime: new Date('2022-11-12T08:30:00'),
-          endTime: new Date('2022-12-03T10:00:00'),
+          endTime: new Date('2022-11-12T10:00:00'),
         },
       ],
     });
@@ -488,12 +528,18 @@ describe('ScheduleService', () => {
         startTime: event.startTime,
         endTime: event.endTime,
         period: event.period,
+        eventsAmount: event.eventsAmount,
+        teacherForceChanges: event.teacherForceChanges,
+        isCustom: event.isCustom,
       }).toStrictEqual({
         id: 'lecture-event-1st-semester-every-fortnight-09-05',
         groupId: 'group',
         startTime: new Date('2022-09-05T08:30:00'),
         endTime: new Date('2022-09-05T10:00:00'),
         period: Period.EVERY_FORTNIGHT,
+        eventsAmount: 9,
+        teacherForceChanges: false,
+        isCustom: false,
       });
     });
 
@@ -540,12 +586,18 @@ describe('ScheduleService', () => {
         endTime: event.endTime,
         period: event.period,
         groupId: event.groupId,
+        eventsAmount: event.eventsAmount,
+        teacherForceChanges: event.teacherForceChanges,
+        isCustom: event.isCustom,
       }).toStrictEqual({
         id: 'lecture-event-1st-semester-every-fortnight-09-05',
         startTime: new Date('2022-09-19T08:30:00'),
         endTime: new Date('2022-09-19T10:00:00'),
         period: Period.EVERY_FORTNIGHT,
         groupId: 'group',
+        eventsAmount: 9,
+        teacherForceChanges: false,
+        isCustom: false,
       });
 
       expect(event.eventInfo[0].number).toBe(1);
@@ -554,19 +606,25 @@ describe('ScheduleService', () => {
 
     it('should return all information about event and discipline without period', async () => {
       jest.useFakeTimers().setSystemTime(new Date('2022-09-12T00:01:00'));
-      const { event, discipline } = await scheduleService.getEvent('some-event-1st-semester-no-period-09-12', 10);
+      const { event, discipline } = await scheduleService.getEvent('some-event-1st-semester-no-period-09-12', 2);
       expect({
         id: event.id,
         startTime: event.startTime,
         endTime: event.endTime,
         period: event.period,
         groupId: event.groupId,
+        eventsAmount: event.eventsAmount,
+        teacherForceChanges: event.teacherForceChanges,
+        isCustom: event.isCustom,
       }).toStrictEqual({
         id: 'some-event-1st-semester-no-period-09-12',
         startTime: new Date('2022-09-12T08:30:00'),
         endTime: new Date('2022-09-12T10:00:00'),
         period: Period.NO_PERIOD,
         groupId: 'group',
+        eventsAmount: 1,
+        teacherForceChanges: false,
+        isCustom: false,
       });
 
       expect(event.eventInfo[0].number).toBe(0);
@@ -575,7 +633,7 @@ describe('ScheduleService', () => {
 
     it('should return event and discipline information for no period even if date is wrong', async () => {
       jest.useFakeTimers().setSystemTime(new Date('1488-01-01T00:00:00'));
-      const { event } = await scheduleService.getEvent('some-event-1st-semester-no-period-09-12', 1);
+      const { event } = await scheduleService.getEvent('some-event-1st-semester-no-period-09-12', 2);
       expect(event.id).toBe('some-event-1st-semester-no-period-09-12');
     });
 
@@ -682,10 +740,12 @@ describe('ScheduleService', () => {
 
   describe('createGroupEvent', () => {
     it('should create an event without a discipline', async () => {
-      const createEventDTO: CreateEventDTO = {
+      const createEventDTO = {
         groupId: 'group',
         name: 'name3',
         period: Period.NO_PERIOD,
+        eventsAmount: 1,
+        teacherForceChanges: false,
         startTime: new Date('2022-09-12T08:30:00'),
         endTime: new Date('2022-09-12T10:00:00'),
         eventInfo: 'Description of the event',
@@ -700,6 +760,9 @@ describe('ScheduleService', () => {
           period: createEventDTO.period,
           startTime: createEventDTO.startTime,
           endTime: createEventDTO.endTime,
+          eventsAmount: createEventDTO.eventsAmount,
+          teacherForceChanges: createEventDTO.teacherForceChanges,
+          isCustom: true,
           createdAt: expect.any(Date),
           updatedAt: expect.any(Date),
           eventInfo: [
@@ -798,7 +861,7 @@ describe('ScheduleService', () => {
       const disciplineTeachers = discipline.disciplineTeachers.map((dt) => {
         return { ...dt, teacher: { ...dt.teacher, rating: dt.teacher.rating.toNumber() } };
       });
-      expect(eventInfo.length).toBe(18);
+      expect(eventInfo.length).toBe(1);
       expect({ ...discipline, disciplineTeachers }).toStrictEqual(attachedDiscipline);
     });
 
@@ -876,7 +939,7 @@ describe('ScheduleService', () => {
       });
 
       expect(discipline.description).toBe(attachedDiscipline.description);
-      expect(eventInfo.length).toBe(9);
+      expect(eventInfo.length).toBe(1);
       expect({ ...discipline, disciplineTeachers }).toStrictEqual(attachedDiscipline);
     });
 
@@ -904,6 +967,9 @@ describe('ScheduleService', () => {
         id: 'some-event-1st-semester-no-period-09-12',
         name: 'name4',
         groupId: 'group',
+        eventsAmount: 1,
+        teacherForceChanges: false,
+        isCustom: false,
         period: Period.NO_PERIOD,
         group: {
           cathedraId: 'ipiCathedraId',
@@ -942,6 +1008,9 @@ describe('ScheduleService', () => {
         name: 'name10',
         groupId: 'anotherGroup',
         period: Period.EVERY_WEEK,
+        eventsAmount: 18,
+        teacherForceChanges: false,
+        isCustom: false,
         group: {
           cathedraId: 'istCathedraId',
           code: 'AA-11',
@@ -951,7 +1020,7 @@ describe('ScheduleService', () => {
           updatedAt: expect.any(Date),
         },
         startTime: new Date('2022-09-12T08:30:00'),
-        endTime: new Date('2022-10-03T10:00:00'),
+        endTime: new Date('2022-09-12T10:00:00'),
         createdAt: expect.any(Date),
         updatedAt: expect.any(Date),
         lessons: [
@@ -984,6 +1053,9 @@ describe('ScheduleService', () => {
         id: 'lecture-event-1st-semester-every-fortnight-09-05',
         name: 'name1',
         groupId: 'group',
+        eventsAmount: 9,
+        teacherForceChanges: false,
+        isCustom: false,
         period: Period.EVERY_FORTNIGHT,
         group: {
           cathedraId: 'ipiCathedraId',
@@ -994,7 +1066,7 @@ describe('ScheduleService', () => {
           updatedAt: expect.any(Date),
         },
         startTime: new Date('2022-09-05T08:30:00.000Z'),
-        endTime: new Date('2023-01-23T10:00:00.000Z'),
+        endTime: new Date('2022-09-05T10:00:00.000Z'),
         createdAt: expect.any(Date),
         updatedAt: expect.any(Date),
         lessons: [
@@ -1060,6 +1132,9 @@ describe('ScheduleService', () => {
         name: 'name13',
         groupId: 'anotherGroup',
         period: Period.EVERY_FORTNIGHT,
+        eventsAmount: 9,
+        teacherForceChanges: false,
+        isCustom: false,
         group: {
           cathedraId: 'istCathedraId',
           code: 'AA-11',
@@ -1069,7 +1144,7 @@ describe('ScheduleService', () => {
           updatedAt: expect.any(Date),
         },
         startTime: new Date('2022-11-12T08:30:00.000Z'),
-        endTime: new Date('2022-12-03T10:00:00.000Z'),
+        endTime: new Date('2022-11-12T10:00:00.000Z'),
         createdAt: expect.any(Date),
         updatedAt: expect.any(Date),
         lessons: [

@@ -1,4 +1,4 @@
-import { DateService, DAY, FORTNITE, WEEK } from '../../utils/date/DateService';
+import { DateService, FORTNITE, WEEK } from '../../utils/date/DateService';
 import { Injectable } from '@nestjs/common';
 import { EventRepository } from '../../database/repositories/EventRepository';
 import { DbEvent } from '../../database/entities/DbEvent';
@@ -8,7 +8,6 @@ import { ScheduleParser } from '../../utils/parser/ScheduleParser';
 import { CreateEventDTO } from '../dtos/CreateEventDTO';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
 import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
-import { DisciplineTeacherService } from './DisciplineTeacherService';
 import { AttachLessonDTO } from '../dtos/AttachLessonDTO';
 import { InvalidDateException } from '../../utils/exceptions/InvalidDateException';
 import { ObjectIsRequiredException } from '../../utils/exceptions/ObjectIsRequiredException';
@@ -23,13 +22,19 @@ import { UpdateEventDTO } from '../dtos/UpdateEventDTO';
 import { TeacherRoleAdapter } from '../../mappers/TeacherRoleAdapter';
 import { StudentRepository } from '../../database/repositories/StudentRepository';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
+import { DateUtils } from '../../utils/date/DateUtils';
+
+export const weeksPerEvent = {
+  EVERY_WEEK: WEEK / WEEK,
+  EVERY_FORTNIGHT: FORTNITE / WEEK,
+  NO_PERIOD: 1,
+};
 
 @Injectable()
 export class ScheduleService {
 
   constructor (
     private dateService: DateService,
-    private disciplineTeacherService: DisciplineTeacherService,
     private eventRepository: EventRepository,
     private disciplineRepository: DisciplineRepository,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
@@ -38,6 +43,7 @@ export class ScheduleService {
     private scheduleParser: ScheduleParser,
     private userService: UserService,
     private studentRepository: StudentRepository,
+    private dateUtils: DateUtils,
   ) {}
 
   async parse (parserType, page, period, groups) {
@@ -53,22 +59,13 @@ export class ScheduleService {
     }
   }
 
-  async getIndexOfLesson (week, endOfWeek, event) {
+  async getIndexOfLesson (week: number, event) {
     const { startDate } = await this.dateService.getCurrentSemester();
-    const startWeek = Math.ceil((event.startTime.getTime() - startDate.getTime()) / WEEK);
-    const endWeek = Math.ceil((event.endTime.getTime() - startDate.getTime()) / WEEK);
-    const difference = endOfWeek.getTime() - event.startTime.getTime();
-    const index = Math.floor(difference / WEEK);
-    if (
-      week > endWeek || week < startWeek ||
-      (event.period === Period.EVERY_FORTNIGHT && startWeek % 2 !== week % 2)
-    ) {
-      return null;
-    }
-    if (event.period === Period.EVERY_FORTNIGHT) {
-      return Math.ceil(index / 2);
-    }
-    return index;
+    const startWeek = this.dateUtils.getCeiledDifference(startDate, event.startTime, WEEK);
+    if (event.period === Period.NO_PERIOD && week - startWeek !== 0) return null;
+    const index = (week - startWeek) / weeksPerEvent[event.period];
+    if (index < 0 || index % 1 !== 0) return null;
+    else return index;
   }
 
   async getGeneralGroupEvents (id: string, week: number) {
@@ -99,7 +96,7 @@ export class ScheduleService {
 
     week = week || await this.dateService.getCurrentWeek();
     const result  = await filterAsync(events, async (event) => {
-      const indexOfLesson = await this.getIndexOfLesson(week, endOfWeek, event);
+      const indexOfLesson = await this.getIndexOfLesson(week, event);
       return indexOfLesson !== null;
     });
 
@@ -154,33 +151,27 @@ export class ScheduleService {
     }
 
     const event = await this.eventRepository.findById(id);
-    if (event.period !== Period.NO_PERIOD) {
-      const { startWeek } = await this.setWeekTime(event, week);
 
-      const eventInfoIndex = (week - startWeek) / (event.period === Period.EVERY_FORTNIGHT ? 2 : 1);
-      event.eventInfo[0] = event.eventInfo.find((info) => info.number === eventInfoIndex);
+    if (event.period === Period.NO_PERIOD) {
+      const discipline = await this.getEventDiscipline(event.id);
+      return { event, discipline };
     }
+    const index = await this.getIndexOfLesson(week, event);
 
+    if (index === null)  throw new InvalidWeekException();
+
+    await this.setWeekTime(event, week);
+    event.eventInfo[0] = event.eventInfo.find((info) => info.number === index) ?? null;
     const discipline = await this.getEventDiscipline(event.id);
-
     return { event, discipline };
   }
 
-  async setWeekTime (event: DbEvent, week: number): Promise<{ startWeek: number, endWeek: number }> {
+  async setWeekTime (event: DbEvent, week: number): Promise<{ startWeek: number }> {
     const { startDate } = await this.dateService.getCurrentSemester();
-    const startWeek = Math.ceil((event.startTime.getTime() - startDate.getTime()) / WEEK);
-    const endWeek = Math.ceil((event.endTime.getTime() - startDate.getTime()) / WEEK);
-    if (
-      week > endWeek || week < startWeek ||
-      (event.period === Period.EVERY_FORTNIGHT && startWeek % 2 !== week % 2)
-    ) {
-      throw new InvalidWeekException();
-    }
-
+    const startWeek = this.dateUtils.getCeiledDifference(startDate, event.startTime, WEEK);
     event.startTime.setDate(event.startTime.getDate() + (week - startWeek) * 7);
-    event.endTime.setDate(event.endTime.getDate() - (endWeek - week) * 7);
-
-    return { startWeek, endWeek };
+    event.endTime.setDate(event.endTime.getDate() + (week - startWeek) * 7);
+    return { startWeek };
   }
 
   private async getEventDiscipline (eventId: string) {
@@ -200,22 +191,6 @@ export class ScheduleService {
   private async checkEventDates (startTime: Date, endTime: Date) {
     const { startDate, endDate } = await this.dateService.getCurrentSemester();
     if (startTime > endTime || startDate > startTime || endTime > endDate) throw new InvalidDateException();
-  }
-
-  private async getEndIndex (startEventDate: Date, endEventDate: Date, period: Period) {
-    const divider = period === Period.EVERY_FORTNIGHT ? FORTNITE : WEEK;
-    return Math.ceil((endEventDate.getTime() - startEventDate.getTime()) / divider) - 1;
-  }
-
-  private async getLastEndDate (indexEndDate: Date, period: Period) {
-    const { endDate } = await this.dateService.getCurrentSemester();
-
-    const difference = Math.ceil((endDate.getTime() - FORTNITE - indexEndDate.getTime()) / DAY);
-    const divider = period === Period.EVERY_FORTNIGHT ? 14 : 7;
-    const count = Math.floor(difference / divider);
-
-    const lastEndDate = indexEndDate.setDate(indexEndDate.getDate() + count * divider);
-    return new Date(lastEndDate);
   }
 
   private async attachLesson (eventId: string, data: AttachLessonDTO): Promise<{ event: DbEvent, discipline: DbDiscipline }> {
@@ -272,20 +247,46 @@ export class ScheduleService {
     );
   }
 
+  async validateTeacherDiscipline (teacherId: string, disciplineId: string) {
+    const disciplineTeacher = await this.disciplineTeacherRepository.findMany({
+      where: {
+        teacherId,
+        disciplineId,
+      },
+    });
+    return !!disciplineTeacher.length;
+  }
+
+  async validateTeachersDiscipline (teachers: string[], disciplineId : string) {
+    for (const teacherId of teachers) {
+      const hasDiscipline = await this.validateTeacherDiscipline(teacherId, disciplineId);
+      if (!hasDiscipline) return true;
+    }
+    return false;
+  }
+
+  async calculateEventsAmount (startOfEvent: Date, eventPeriod: string) {
+    const { endDate } = await this.dateService.getCurrentSemester();
+    const endSemester = new Date(endDate.getTime() - FORTNITE);
+    if (startOfEvent > endSemester || eventPeriod === Period.NO_PERIOD) {
+      return 1;
+    }
+    const eventWeeks = this.dateUtils.getCeiledDifference(startOfEvent, endSemester, WEEK);
+    return Math.ceil(eventWeeks / weeksPerEvent[eventPeriod]);
+  }
+
   async createGroupEvent (body: CreateEventDTO) {
     await this.checkEventDates(body.startTime, body.endTime);
     if (body.disciplineId && !body.disciplineType) throw new ObjectIsRequiredException('DisciplineType');
 
-    const endTime = body.period === Period.NO_PERIOD
-      ? body.endTime
-      : await this.getLastEndDate(body.endTime, body.period);
+    const eventsAmount = await this.calculateEventsAmount(body.startTime, body.period);
+    const teacherForceChanges = await this.validateTeachersDiscipline(body.teachers, body.disciplineId);
 
-    const endIndex = await this.getEndIndex(body.startTime, body.endTime, body.period);
     const eventInfo = [];
-    for (let i = 0; i <= endIndex; i++) {
-      eventInfo.push({ number: i });
+    if (body.eventInfo) {
+      eventInfo.push({ number: 0 });
+      eventInfo[0].description = body.eventInfo;
     }
-    eventInfo[0].description = body.eventInfo;
 
     const event = await this.eventRepository.create({
       groupId: body.groupId,
@@ -293,7 +294,10 @@ export class ScheduleService {
       period: body.period,
       startTime: body.startTime,
       url: body.url,
-      endTime,
+      eventsAmount,
+      isCustom: true,
+      teacherForceChanges,
+      endTime: body.endTime,
       eventInfo: {
         createMany: { data: eventInfo },
       },
@@ -332,7 +336,7 @@ export class ScheduleService {
     });
 
     let result = await filterAsync(events, async (event) => {
-      const indexOfLesson = await this.getIndexOfLesson(week, endOfWeek, event);
+      const indexOfLesson = await this.getIndexOfLesson(week, event);
       return indexOfLesson !== null;
     });
 
@@ -442,6 +446,56 @@ export class ScheduleService {
     return { event };
   }
 
+  async checkEventInfo (eventId: string, index: number) {
+    const data = await this.eventRepository.find({
+      id: eventId,
+    });
+    if (data.eventInfo) {
+      for (const eventInfo of data.eventInfo) {
+        if (eventInfo.number === index) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  async createOrUpdateEventInfo (eventInfo: string, eventId: string, index: number) {
+    const hasEventInfo = await this.checkEventInfo(eventId, index);
+    if (hasEventInfo) {
+      return this.eventRepository.updateById(eventId, {
+        eventInfo: {
+          update: {
+            where: { eventId_number: { eventId, number: index } },
+            data: {
+              description: eventInfo,
+            },
+          },
+        },
+      });
+    }
+    return this.eventRepository.updateById(eventId, {
+      eventInfo: {
+        create: {
+          number: index,
+          description: eventInfo,
+        },
+      },
+    });
+  }
+
+  async deleteEventInfo (eventId: string, index: number) {
+    const hasEventInfo = await this.checkEventInfo(eventId, index);
+    if (hasEventInfo) {
+      return this.eventRepository.updateById(eventId, {
+        eventInfo: {
+          delete: {
+            eventId_number: { eventId, number: index },
+          },
+        },
+      });
+    }
+  }
   async updateEvent (eventId: string, body: UpdateEventDTO) {
     let event = await this.eventRepository.findById(eventId);
     const {
@@ -454,6 +508,7 @@ export class ScheduleService {
       url,
       disciplineInfo,
       eventInfo,
+      endTime,
       ...durationTime
     } = body;
 
@@ -465,19 +520,35 @@ export class ScheduleService {
       startTime.setMinutes(durationTime.startTime.getMinutes());
     }
 
-    const endTime = period === Period.NO_PERIOD
-      ? durationTime.endTime
-      : await this.getLastEndDate(durationTime.endTime ?? event.endTime, period);
+    const eventsAmount = await this.calculateEventsAmount(startTime, period);
 
-    const eventInfoForUpdate = await this.getEventInfoForUpdate(period, startTime, endTime, week, eventInfo, event);
+    let teacherForceChanges = false;
+
+    if (event.teacherForceChanges) {
+      teacherForceChanges = true;
+    }
+
+    if (teachers && disciplineId && !event.teacherForceChanges) {
+      teacherForceChanges = await this.validateTeachersDiscipline(teachers, disciplineId);
+    }
+
+    const index = await this.getIndexOfLesson(week, event);
+    if (index === null) throw new InvalidWeekException();
+
+    if (eventInfo) {
+      await this.createOrUpdateEventInfo(eventInfo, eventId, index);
+    } else if (eventInfo === '' || eventInfo === null) {
+      await this.deleteEventInfo(eventId, index);
+    }
 
     event = await this.eventRepository.updateById(eventId, {
       name,
       period,
       startTime,
       endTime,
+      eventsAmount,
+      teacherForceChanges,
       url,
-      eventInfo: eventInfoForUpdate,
     });
 
     const lesson = event?.lessons[0];
@@ -503,65 +574,6 @@ export class ScheduleService {
         },
       },
     });
-  }
-
-  private async getEventInfoForUpdate (
-    period: Period,
-    startTime: Date,
-    endTime: Date,
-    week: number,
-    eventInfo: string,
-    event: DbEvent,
-  ) {
-    const data = {
-      update: undefined,
-      createMany: undefined,
-      deleteMany: undefined,
-    };
-
-    if (eventInfo !== undefined) {
-
-      const { endOfWeek } = await this.dateService.getDatesOfWeek(week);
-      const indexOfLesson = await this.getIndexOfLesson(week, endOfWeek, event);
-      if (indexOfLesson === null || indexOfLesson < 0 || indexOfLesson >= event.eventInfo.length) {
-        throw new InvalidWeekException();
-      }
-      data.update = {
-        where: {
-          eventId_number: {
-            eventId: event.id,
-            number: indexOfLesson,
-          },
-        },
-        data: {
-          description: eventInfo,
-        },
-      };
-    }
-
-    if (period === Period.NO_PERIOD) {
-      data.deleteMany = {
-        number: {
-          gte: 1,
-        },
-      };
-    } else {
-      const countOfPair = await this.getEndIndex(startTime, endTime, period);
-      const pairDifference = countOfPair - event.eventInfo.length;
-
-      if (pairDifference > 0) {
-        data.createMany = {
-          data: this.scheduleParser.getIndexesForEventInfo(event.eventInfo.length, event.eventInfo.length+pairDifference - 1),
-        };
-      } else if (pairDifference < 0) {
-        data.deleteMany = {
-          number: {
-            gt: countOfPair,
-          },
-        };
-      }
-    }
-    return data;
   }
 
   async updateDiscipline (

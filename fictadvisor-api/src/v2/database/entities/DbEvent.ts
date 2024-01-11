@@ -12,6 +12,9 @@ export class DbEvent {
   group: Group;
   groupId: string;
   eventInfo: EventInfo[];
+  eventsAmount: number;
+  teacherForceChanges: boolean;
+  isCustom: boolean;
   lessons: {
     eventId: string;
     disciplineTypeId: string;

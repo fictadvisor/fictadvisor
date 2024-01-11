@@ -54,7 +54,6 @@ import { SimpleTelegramEventInfoResponse } from '../responses/TelegramGeneralEve
 export class ScheduleController {
   constructor (
     private scheduleService: ScheduleService,
-    private dateService: DateService,
     private scheduleMapper: ScheduleMapper,
   ) {}
 

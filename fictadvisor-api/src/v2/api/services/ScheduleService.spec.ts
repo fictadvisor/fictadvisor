@@ -47,10 +47,10 @@ describe('ScheduleService', () => {
         period: Period.EVERY_WEEK,
         startTime: new Date('2023-02-06T09:20:00.000Z'),
         endTime: new Date('2023-06-05T10:55:00.000Z'),
+        eventsAmount: 18,
       };
       const week = 1;
-      const endOfWeek = new Date('2023-02-12T23:59:59.999Z');
-      const result = await scheduleService.getIndexOfLesson(week, endOfWeek, event);
+      const result = await scheduleService.getIndexOfLesson(week, event);
       expect(result).toEqual(0);
     });
     it('should return correct index when period is EVERY_FORTNIGHT', async () => {
@@ -61,10 +61,10 @@ describe('ScheduleService', () => {
         period: Period.EVERY_WEEK,
         startTime: new Date('2023-02-06T09:20:00.000Z'),
         endTime: new Date('2023-06-05T10:55:00.000Z'),
+        eventsAmount: 18,
       };
       const week = 1;
-      const endOfWeek = new Date('2023-02-12T23:59:59.999Z');
-      const result = await scheduleService.getIndexOfLesson(week, endOfWeek, event);
+      const result = await scheduleService.getIndexOfLesson(week, event);
       expect(result).toEqual(0);
     });
     it('should return null when period is FORTNIGHT and lesson not happen this week', async () => {
@@ -75,10 +75,10 @@ describe('ScheduleService', () => {
         period: Period.EVERY_WEEK,
         startTime: new Date('2023-02-15T09:20:00.000Z'),
         endTime: new Date('2023-06-05T10:55:00.000Z'),
+        eventsAmount: 18,
       };
       const week = 1;
-      const endOfWeek = new Date('2023-02-12T23:59:59.999Z');
-      const result = await scheduleService.getIndexOfLesson(week, endOfWeek, event);
+      const result = await scheduleService.getIndexOfLesson(week, event);
       expect(result).toEqual(null);
     });
   });
