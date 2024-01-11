@@ -1,18 +1,16 @@
-// TODO: find types from library
-interface TooltipContext {
-  dataIndex: number;
-  formattedValue: string;
-}
+import { ChartData } from 'chart.js';
 
-const getData = (grades: number[], names: string[]) => {
-  const labels = new Array(grades.length).fill('');
+const getData = (
+  isMobile: boolean,
+  grades: number[],
+  names: string[],
+): ChartData<'radar'> => {
+  const labels = isMobile ? names.map((_, i) => `${i + 1}`) : names;
   const formattedValues = grades.map(x => Math.round(x));
   return {
     labels: labels,
     datasets: [
       {
-        color: 'white',
-        label: 'Оцінка(у %)',
         data: formattedValues,
         //TODO: replace with theme
         backgroundColor: 'rgba(188, 61, 61, 0.54)',
@@ -23,17 +21,7 @@ const getData = (grades: number[], names: string[]) => {
         pointBackgroundColor: '#212121',
         pointBorderWidth: 1,
         borderWidth: 1,
-        pointRadius: 3,
-        lineTension: 0,
-        tooltip: {
-          callbacks: {
-            label: (context: TooltipContext) => {
-              return (
-                names[context.dataIndex] + ': ' + context.formattedValue + '%'
-              );
-            },
-          },
-        },
+        pointRadius: 4,
       },
     ],
   };

@@ -15,15 +15,15 @@ export const background: SxProps<Theme> = {
     marginBottom: '3px',
     position: 'relative',
     zIndex: '1',
-    width: `calc(76% + 60px)`,
-    height: `calc(76% + 60px)`,
-    maxWidth: { mobile: '455px', desktopSemiMedium: '510px' },
-    maxHeight: { mobile: '455px', desktopSemiMedium: '510px' },
     boxSizing: 'border-box',
 
     canvas: {
-      width: '100% !important',
-      height: '100% !important',
+      width: {
+        mobile: '90vw !important',
+        tablet: 'calc(100vw - 120px) !important',
+        desktop: '1000px !important',
+        desktopSemiMedium: '1200px !important',
+      },
     },
   },
 
