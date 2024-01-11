@@ -1,6 +1,6 @@
 'use client';
 
-import { SyntheticEvent, useEffect, useState } from 'react';
+import { SyntheticEvent, useCallback, useEffect, useState } from 'react';
 import {
   AcademicCapIcon,
   FireIcon,
@@ -10,6 +10,7 @@ import {
 import { Box } from '@mui/material';
 import {
   ReadonlyURLSearchParams,
+  usePathname,
   useRouter,
   useSearchParams,
 } from 'next/navigation';
@@ -29,41 +30,35 @@ import {
   AccountPageTab,
 } from '@/components/pages/account-page/types';
 import useAuthentication from '@/hooks/use-authentication';
+import createQueryString from '@/utils/createQueryString';
 
 import * as stylesMui from './AccountPage.styles';
 
 const AccountPage = () => {
-  const { replace } = useRouter();
+  const { replace, push } = useRouter();
+  const pathname = usePathname() as string;
   const { isLoggedIn } = useAuthentication();
   const searchParams = useSearchParams() as ReadonlyURLSearchParams;
   const tab = searchParams.get('tab') as string;
   const [index, setIndex] = useState<AccountPageTab>(AccountPageTab.GENERAL);
-
-  /*useEffect(() => {
-    if (!isReady) return;
-
+  useEffect(() => {
     if (!Object.values(AccountPageTab).includes(tab as AccountPageTab)) {
-      void replace(
-        { query: { ...query, tab: AccountPageTab.GENERAL } },
-        undefined,
-        {
-          shallow: true,
-        },
+      push(
+        pathname +
+          createQueryString('tab', AccountPageTab.GENERAL, searchParams),
       );
     } else {
       setIndex(tab as AccountPageTab);
     }
-  }, [tab, isReady, query, replace]);*/
+  }, [tab, searchParams, replace]);
 
   useEffect(() => {
     if (!isLoggedIn) void replace('/login?~account');
   }, [isLoggedIn, replace]);
 
   const handleChange = async (event: SyntheticEvent, value: AccountPageTab) => {
-    /* await replace({ query: { ...query, tab: value } }, undefined, {
-      shallow: true,
-    });*/
-    // console.log(value);
+    push(pathname + createQueryString('tab', value, searchParams));
+
     setIndex(value);
   };
 
