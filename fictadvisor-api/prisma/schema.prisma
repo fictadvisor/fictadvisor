@@ -412,18 +412,21 @@ enum Period {
 }
 
 model Event {
-  id        String      @id @default(uuid())
-  name      String
-  startTime DateTime    @map("start_time")
-  endTime   DateTime    @map("end_time")
-  period    Period
-  url       String?
-  group     Group       @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  groupId   String      @map("group_id")
-  eventInfo EventInfo[]
-  lessons   Lesson[]
-  createdAt DateTime?   @default(now()) @map("created_at")
-  updatedAt DateTime?   @default(now()) @updatedAt @map("updated_at")
+  id                  String      @id @default(uuid())
+  name                String
+  startTime           DateTime    @map("start_time")
+  endTime             DateTime    @map("end_time")
+  period              Period
+  url                 String?
+  group               Group       @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId             String      @map("group_id")
+  eventsAmount        Int         @default(1) @map("events_amount")
+  teacherForceChanges Boolean     @default(false) @map("teacher_force_changes")
+  isCustom            Boolean     @default(false) @map("is_custom")
+  eventInfo           EventInfo[]
+  lessons             Lesson[]
+  createdAt           DateTime?   @default(now()) @map("created_at")
+  updatedAt           DateTime?   @default(now()) @updatedAt @map("updated_at")
 
   @@map("events")
 }
