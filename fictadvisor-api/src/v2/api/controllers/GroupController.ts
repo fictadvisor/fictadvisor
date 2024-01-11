@@ -186,7 +186,9 @@ export class GroupController {
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse()
+  @ApiOkResponse({
+    type: GroupResponse,
+  })
   @ApiBadRequestResponse({
     description: `\n
     InvalidEntityIdException: 
@@ -215,7 +217,8 @@ export class GroupController {
   async deleteGroup (
     @Param('groupId', GroupByIdPipe) groupId: string,
   ) {
-    return this.groupService.deleteGroup(groupId);
+    const group = await this.groupService.deleteGroup(groupId);
+    return this.groupMapper.getGroup(group);
   }
 
   @ApiBearerAuth()
