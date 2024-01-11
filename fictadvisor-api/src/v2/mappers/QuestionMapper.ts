@@ -5,12 +5,14 @@ import { DbDisciplineTeacherWithAnswers } from '../database/entities/DbDisciplin
 import { DbQuestionWithAnswers } from '../database/entities/DbQuestionWithAnswers';
 import { QuestionCommentData } from '../api/datas/QuestionCommentData';
 import { DbQuestionAnswer } from '../database/entities/DbQuestionAnswer';
+import { DbQuestion } from '../database/entities/DbQuestion';
 
 @Injectable()
 export class QuestionMapper {
-  private getQuestion (question: DbQuestionWithRoles) {
+  getQuestion (question: DbQuestion) {
     return {
       id: question.id,
+      order: question.order,
       category: question.category,
       name: question.name,
       description: question.description,
@@ -20,6 +22,14 @@ export class QuestionMapper {
       type: question.type,
       display: question.display,
     };
+  }
+
+  getQuestions (questions: DbQuestion[]) {
+    const result = [];
+    for (const question of questions) {
+      result.push(this.getQuestion(question));
+    }
+    return result;
   }
 
   sortByCategories (questions: DbQuestionWithRoles[]) {
@@ -74,7 +84,7 @@ export class QuestionMapper {
         id: questionComment.id,
         name: questionComment.name,
       };
-      
+
       const comments = [];
       for (const comment of questionComment.comments.data) {
         comments.push({

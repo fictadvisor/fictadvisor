@@ -16,9 +16,6 @@ export class QuestionRepository {
     return this.prisma.question.findMany({
       include: this.include,
       ...data,
-      orderBy: {
-        order: 'asc',
-      },
     });
   }
 

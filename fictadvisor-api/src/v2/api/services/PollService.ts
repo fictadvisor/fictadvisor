@@ -1,62 +1,82 @@
 import { Injectable } from '@nestjs/common';
-import { CreateQuestionWithRolesDTO } from '../dtos/CreateQuestionWithRolesDTO';
 import { QuestionRepository } from '../../database/repositories/QuestionRepository';
 import { QuestionType, SemesterDate, TeacherRole, Prisma } from '@prisma/client';
-import { UpdateQuestionWithRolesDTO } from '../dtos/UpdateQuestionWithRolesDTO';
 import { ResponseData } from '../datas/ResponseData';
 import { CreateQuestionRoleDTO } from '../dtos/CreateQuestionRoleDTO';
 import { DbQuestionWithAnswers } from '../../database/entities/DbQuestionWithAnswers';
-import { UserRepository } from '../../database/repositories/UserRepository';
 import { DateService } from '../../utils/date/DateService';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
 import { DbQuestionWithRoles } from '../../database/entities/DbQuestionWithRoles';
 import { QuestionAnswerRepository } from '../../database/repositories/QuestionAnswerRepository';
 import { CommentsQueryDTO, CommentsSort, CommentsSortMapper } from '../dtos/CommentsQueryDTO';
 import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
-import { StudentRepository } from '../../database/repositories/StudentRepository';
 import { GroupRepository } from '../../database/repositories/GroupRepository';
 import { DatabaseUtils } from '../../database/DatabaseUtils';
 import { SortQATParam } from '../dtos/SortQATParam';
 import { QueryAllDisciplineTeacherForPollDTO } from '../dtos/QueryAllDisciplineTeacherForPollDTO';
 import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
+import { QueryAllQuestionDTO } from '../dtos/QueryAllQuestionDTO';
+import { DbQuestion } from '../../database/entities/DbQuestion';
+import { CreateQuestionDTO } from '../dtos/CreateQuestionDTO';
+import { UpdateQuestionDTO } from '../dtos/UpdateQuestionDTO';
+import { SortDTO } from '../../utils/QueryAllDTO';
+import { OrderQAParam } from '../dtos/OrderQAParam';
 
 @Injectable()
 export class PollService {
   constructor (
     private questionRepository: QuestionRepository,
-    private userRepository: UserRepository,
     private disciplineTeacherMapper: DisciplineTeacherMapper,
     private dateService: DateService,
     private disciplineRepository: DisciplineRepository,
     private questionAnswerRepository: QuestionAnswerRepository,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
-    private studentRepository: StudentRepository,
     private groupRepository: GroupRepository,
   ) {}
 
-  async create ({ roles, ...data }: CreateQuestionWithRolesDTO) {
-    return this.questionRepository.create({
-      ...data,
-      questionRoles: {
-        create: roles,
+  async getAll (query: QueryAllQuestionDTO) {
+    const search = {
+      AND: [
+        this.getSearchForQuestions.questionText(query.search),
+        query.types?.length ? this.getSearchForQuestions.questionTypes(query.types) : {},
+      ],
+    };
+
+    const sort = query.sort ? this.getSortedQuestions(query) : { orderBy: { order: 'asc' } };
+
+    const data: Prisma.QuestionFindManyArgs = {
+      where: {
+        ...search,
       },
-    });
+      ...sort,
+    };
+
+    return await DatabaseUtils.paginate<DbQuestion>(this.questionRepository, query, data);
+  }
+
+  private getSearchForQuestions = {
+    questionText: (search: string) => (DatabaseUtils.getSearch({ search }, 'text')),
+    questionTypes: (questionTypes: QuestionType[]) => ({
+      OR: questionTypes.map((questionType) => ({ type: questionType })),
+    }),
+  };
+
+  getSortedQuestions ({ sort, order }: SortDTO): object {
+    if (!order) order = OrderQAParam.ASC;
+    const orderBy = [{ [sort]: order }];
+    return { orderBy };
+  }
+
+  async create (data: CreateQuestionDTO) {
+    return this.questionRepository.create(data);
   }
 
   async deleteById (id: string) {
-    return  this.questionRepository.deleteById(id);
+    return this.questionRepository.deleteById(id);
   }
-  
-  async updateById (id: string, { roles, ...data }: UpdateQuestionWithRolesDTO) {
-    const questionRoles = roles ? {
-      deleteMany: {},
-      create: roles,
-    } : {};
-    return this.questionRepository.updateById(id, {
-      ...data,
-      questionRoles,
-    });
 
+  async updateById (id: string, data: UpdateQuestionDTO) {
+    return this.questionRepository.updateById(id, data);
   }
 
   async getQuestions (roles: TeacherRole[], disciplineRoles: TeacherRole[]) {
