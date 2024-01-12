@@ -47,7 +47,7 @@ export const TeacherCard: React.FC<TeacherCardProps> = ({
             )}
           </Box>
         </Box>
-        {isSubjectCard && <CardRoles roles={roles} />}
+        <CardRoles roles={roles} />
         <Typography sx={styles.teacherCardName(isSubjectCard)}>
           {name}
         </Typography>

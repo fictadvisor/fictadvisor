@@ -1,14 +1,9 @@
 import { SxProps, Theme } from '@mui/material/styles';
 
 export const teacherCard = (isSubject: boolean): SxProps<Theme> => ({
-  ...(isSubject && {
-    maxHeight: '132px',
-  }),
-  ...(!isSubject && {
-    height: '104px',
-  }),
+  height: '140px',
   padding: '12px',
-  backgroundColor: 'backgroundDark.300',
+  backgroundColor: 'backgroundDark.200',
   borderRadius: '6px',
   width: '100%',
   minWidth: 'fit-content',
@@ -52,10 +47,11 @@ export const teacherCardShift = (isSubject: boolean): SxProps<Theme> => ({
   display: 'flex',
   flexDirection: 'column',
   position: 'relative',
-  top: '-50px',
-  ...(!isSubject && {
-    gap: '8px',
-  }),
+  top: '-44px',
+  gap: {
+    mobileMedium: '12px',
+    mobile: '8px',
+  },
 });
 
 export const teacherCardTopPart: SxProps<Theme> = {
@@ -72,9 +68,6 @@ export const teacherCardAvatar = (isSubject: boolean): SxProps<Theme> => ({
   boxShadow: '0 0 0 2px backgroundDark.300',
   borderRadius: '100%',
   WebkitBorderRadius: '100%',
-  ...(isSubject && {
-    marginBottom: '12px',
-  }),
 });
 
 export const teacherCardTopPartRating: SxProps<Theme> = {
@@ -84,7 +77,7 @@ export const teacherCardTopPartRating: SxProps<Theme> = {
 
 export const teacherCardName = (isSubject: boolean): SxProps<Theme> => ({
   typography: {
-    desktopSemiMedium: 'body2Bold',
+    mobileMedium: 'body2Bold',
     mobile: isSubject ? 'body2Bold' : 'body1Bold',
   },
   display: '-webkit-box',
@@ -94,9 +87,6 @@ export const teacherCardName = (isSubject: boolean): SxProps<Theme> => ({
     mobile: 3,
     desktopSemiMedium: 2,
   },
-  ...(isSubject && {
-    marginTop: '12px',
-  }),
 });
 
 export const teacherCardRoles: SxProps<Theme> = {
