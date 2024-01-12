@@ -1,5 +1,6 @@
 import { AddStudentsByMailBody } from '@/lib/api/group/types/AddStudentsByMailBody';
 import { AddStudentsByMailResponse } from '@/lib/api/group/types/AddStudentsByMailResponse';
+import { ExportGroupStudents } from '@/lib/api/group/types/ExportGroupStudents';
 import { GetAllResponse } from '@/lib/api/group/types/GetAllResponse';
 import { GetGroupDisciplines } from '@/lib/api/group/types/GetGroupDisciplines';
 import { GetGroupStudentResponse } from '@/lib/api/group/types/GetGroupStudentsResponse';
@@ -99,6 +100,24 @@ class GroupAPI {
   async getDisciplineTeachers(groupId: string) {
     const { data } = await client.get<GetDisciplinesWithTeachers>(
       `/groups/${groupId}/disciplineTeachers`,
+      getAuthorizationHeader(),
+    );
+
+    return data;
+  }
+
+  async getGroupList(groupId: string) {
+    const { data } = await client.get<GetGroupStudentResponse>(
+      `/groups/${groupId}/list`,
+      getAuthorizationHeader(),
+    );
+
+    return data;
+  }
+
+  async getGroupListUrl(groupId: string) {
+    const { data } = await client.get<ExportGroupStudents>(
+      `/groups/${groupId}/list`,
       getAuthorizationHeader(),
     );
 

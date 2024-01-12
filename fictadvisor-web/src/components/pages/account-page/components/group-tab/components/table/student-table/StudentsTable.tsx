@@ -11,8 +11,10 @@ import { DividerTextAlign } from '@/components/common/ui/divider/types';
 import { IconButtonColor } from '@/components/common/ui/icon-button';
 import IconButton from '@/components/common/ui/icon-button-mui';
 import { IconButtonShape } from '@/components/common/ui/icon-button-mui/types';
+import { IconButtonSize } from '@/components/common/ui/icon-button-mui/types';
 import Tag from '@/components/common/ui/tag';
 import { TagSize, TagVariant } from '@/components/common/ui/tag/types';
+import Tooltip from '@/components/common/ui/tooltip';
 import roleNamesMapper from '@/components/pages/account-page/components/group-tab/components/table/constants';
 import EditingColumn from '@/components/pages/account-page/components/group-tab/components/table/student-table/components/EditingColumn';
 import { TextAreaPopup } from '@/components/pages/account-page/components/group-tab/components/text-area-popup';
@@ -23,6 +25,7 @@ import { PERMISSION } from '@/lib/services/permisson/types';
 import theme from '@/styles/theme';
 import { UserGroupRole } from '@/types/user';
 
+import ExportButton from '../../../../../../../common/ui/icon-button-mui/variants/ExportButton/ExportButton';
 import * as gridStyles from '../grid.styles';
 import { StudentsTableProps } from '../types';
 
@@ -38,6 +41,7 @@ const StudentsTable: React.FC<StudentsTableProps> = ({
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const { user } = useAuthentication();
   const { displayError } = useToastError();
+
   const handleAddStudents = async (value: string) => {
     try {
       const emails = value
@@ -55,6 +59,21 @@ const StudentsTable: React.FC<StudentsTableProps> = ({
       displayError(error);
     }
   };
+
+  const handleExport = async () => {
+    try {
+      if (user.group?.id) {
+        const linkResponse = await GroupAPI.getGroupListUrl(user.group?.id);
+
+        if (linkResponse.url) {
+          window.open(linkResponse.url);
+        }
+      }
+    } catch (error) {
+      displayError(error);
+    }
+  };
+
   return (
     <>
       {isPopupOpen && (
@@ -91,6 +110,25 @@ const StudentsTable: React.FC<StudentsTableProps> = ({
                 startIcon={<PlusIcon className={'icon'} />}
                 onClick={() => setIsPopupOpen(true)}
               />
+            )}
+          </>
+        )}
+        {permissions[PERMISSION.GROUPS_$GROUPID_LIST_GET] && (
+          <>
+            {isMobile ? (
+              <ExportButton
+                size={IconButtonSize.NORMAL}
+                onClick={handleExport}
+              />
+            ) : (
+              <Tooltip title="Список студентів у форматі CSV">
+                <Box>
+                  <ExportButton
+                    size={IconButtonSize.LARGE}
+                    onClick={handleExport}
+                  />
+                </Box>
+              </Tooltip>
             )}
           </>
         )}
