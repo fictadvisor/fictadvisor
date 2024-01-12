@@ -31,6 +31,7 @@ export const TeacherSearchList: FC<TeacherSearchListProps> = ({ teachers }) => {
             key={teacher.id}
             name={`${teacher.lastName} ${teacher.firstName} ${teacher.middleName}`}
             rating={teacher.rating / 20}
+            roles={teacher.roles}
           />
         </Link>
       ))}

@@ -1,4 +1,9 @@
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
+import {
+  BeakerIcon,
+  BookOpenIcon,
+  WrenchIcon,
+} from '@heroicons/react/24/outline';
 import cn from 'classnames';
 
 import Tag from '@/components/common/ui/tag';
@@ -10,6 +15,7 @@ import styles from './CardRoles.module.scss';
 export interface CardRolesProps {
   roles: TeacherRole[];
   className?: string;
+  isDesktop?: boolean;
 }
 
 const TagText: Record<TeacherRole, string> = {
@@ -28,13 +34,29 @@ const TagColors: Record<TeacherRole, TagColor> = {
   [TeacherRole.OTHER]: TagColor.PRIMARY,
 };
 
-export const CardRoles: FC<CardRolesProps> = ({ roles, className }) => {
+const TagIcons: Record<TeacherRole, ReactNode> = {
+  [TeacherRole.LABORANT]: <BeakerIcon />,
+  [TeacherRole.LECTURER]: <BookOpenIcon />,
+  [TeacherRole.PRACTICIAN]: <WrenchIcon />,
+  [TeacherRole.EXAMINER]: null,
+  [TeacherRole.OTHER]: null,
+};
+
+export const CardRoles: FC<CardRolesProps> = ({
+  roles,
+  className,
+  isDesktop,
+}) => {
   return (
     <div className={cn(styles['card-roles'], className)}>
       {roles.map(role => (
         <Tag
+          sx={{
+            display: ['EXAMINER', 'OTHER'].includes(role) ? 'none' : 'flex',
+          }}
           size={TagSize.SMALL}
-          text={TagText[role]}
+          text={isDesktop ? TagText[role] : ''}
+          icon={isDesktop ? null : TagIcons[role]}
           color={TagColors[role]}
           key={Math.random()}
         />
