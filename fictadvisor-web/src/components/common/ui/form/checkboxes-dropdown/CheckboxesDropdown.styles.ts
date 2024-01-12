@@ -19,7 +19,6 @@ export const autocomplete: SxProps<Theme> = {
 
 export const input: SxProps<Theme> = {
   '& .MuiInputBase-root': {
-    height: '100%',
     WebkitTransform: 'unset',
   },
   '& .MuiFormLabel-root.MuiInputLabel-root': {
