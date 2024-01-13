@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsArray, IsEnum, IsNotEmpty, IsOptional, MaxLength } from 'class-validator';
-import { DisciplineTypeEnum } from '@prisma/client';
 import { validationOptionsMsg } from '../../utils/GLOBALS';
+import { EventTypeEnum } from './EventTypeEnum';
 
 export class AttachLessonDTO {
   @ApiProperty()
@@ -14,11 +14,11 @@ export class AttachLessonDTO {
     teachers: string[];
 
   @ApiProperty({
-    enum: DisciplineTypeEnum,
+    enum: EventTypeEnum,
   })
-  @IsEnum(DisciplineTypeEnum, validationOptionsMsg('Discipline type must be an enum'))
+  @IsEnum(EventTypeEnum, validationOptionsMsg('Event type must be an enum'))
   @IsNotEmpty()
-    disciplineType: DisciplineTypeEnum;
+    eventType: EventTypeEnum;
 
   @ApiPropertyOptional()
   @MaxLength(2000, validationOptionsMsg('Discipline description is too long (max: 2000)'))

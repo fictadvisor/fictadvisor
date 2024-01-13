@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { DisciplineTypeEnum } from '@prisma/client';
+import { EventTypeEnum } from '../dtos/EventTypeEnum';
 
 export class DisciplineTypeResponse {
   @ApiProperty({
@@ -11,10 +11,10 @@ export class DisciplineTypeResponse {
   })
     disciplineId: string;
   @ApiProperty({
-    enum: DisciplineTypeEnum,
-    description: 'Discipline type',
+    enum: EventTypeEnum,
+    description: 'Event type',
   })
-    name: DisciplineTypeEnum;
+    name: EventTypeEnum;
 }
 
 export class GeneralDisciplineTypeResponse {
@@ -23,7 +23,7 @@ export class GeneralDisciplineTypeResponse {
   @ApiProperty()
     disciplineId: string;
   @ApiProperty({
-    enum: [DisciplineTypeEnum.LECTURE, DisciplineTypeEnum.PRACTICE, DisciplineTypeEnum.LABORATORY],
+    enum: [EventTypeEnum.LECTURE, EventTypeEnum.PRACTICE, EventTypeEnum.LABORATORY],
   })
-    name: DisciplineTypeEnum;
+    name: EventTypeEnum;
 }

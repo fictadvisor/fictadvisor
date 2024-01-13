@@ -2,7 +2,7 @@ import { DateService, FORTNITE, WEEK } from '../../utils/date/DateService';
 import { Injectable } from '@nestjs/common';
 import { EventRepository } from '../../database/repositories/EventRepository';
 import { DbEvent } from '../../database/entities/DbEvent';
-import { Period, DisciplineTypeEnum, DisciplineType } from '@prisma/client';
+import { DisciplineType, DisciplineTypeEnum, Period } from '@prisma/client';
 import { RozParser } from '../../utils/parser/RozParser';
 import { ScheduleParser } from '../../utils/parser/ScheduleParser';
 import { CreateEventDTO } from '../dtos/CreateEventDTO';
@@ -12,7 +12,7 @@ import { AttachLessonDTO } from '../dtos/AttachLessonDTO';
 import { InvalidDateException } from '../../utils/exceptions/InvalidDateException';
 import { ObjectIsRequiredException } from '../../utils/exceptions/ObjectIsRequiredException';
 import { DisciplineTeacherRoleRepository } from '../../database/repositories/DisciplineTeacherRoleRepository';
-import { filterAsync, every, find, some } from '../../utils/ArrayUtil';
+import { every, filterAsync, find, some } from '../../utils/ArrayUtil';
 import { DbDiscipline, DbDiscipline_DisciplineTeacher } from '../../database/entities/DbDiscipline';
 import { InvalidWeekException } from '../../utils/exceptions/InvalidWeekException';
 import { UserService } from './UserService';
@@ -23,12 +23,14 @@ import { TeacherRoleAdapter } from '../../mappers/TeacherRoleAdapter';
 import { StudentRepository } from '../../database/repositories/StudentRepository';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
 import { DateUtils } from '../../utils/date/DateUtils';
+import { EventTypeEnum } from '../dtos/EventTypeEnum';
 
 export const weeksPerEvent = {
   EVERY_WEEK: WEEK / WEEK,
   EVERY_FORTNIGHT: FORTNITE / WEEK,
   NO_PERIOD: 1,
 };
+
 
 @Injectable()
 export class ScheduleService {
@@ -83,7 +85,7 @@ export class ScheduleService {
           some: {
             disciplineType: {
               name: {
-                in: [DisciplineTypeEnum.PRACTICE, DisciplineTypeEnum.LECTURE, DisciplineTypeEnum.LABORATORY],
+                in: [EventTypeEnum.PRACTICE, EventTypeEnum.LECTURE, EventTypeEnum.LABORATORY],
               },
             },
           },
@@ -195,20 +197,20 @@ export class ScheduleService {
 
   private async attachLesson (eventId: string, data: AttachLessonDTO): Promise<{ event: DbEvent, discipline: DbDiscipline }> {
     let discipline = await this.disciplineRepository.findById(data.disciplineId);
-    if (!some(discipline.disciplineTypes, 'name', data.disciplineType)) {
+    if (!some(discipline.disciplineTypes, 'name', data.eventType)) {
       discipline = await this.disciplineRepository.updateById(discipline.id, {
         disciplineTypes: {
           create: {
-            name: data.disciplineType,
+            name: data.eventType as DisciplineTypeEnum ?? null,
           },
         },
       });
     }
 
-    const { id } = find(discipline.disciplineTypes, 'name', data.disciplineType);
+    const { id } = find(discipline.disciplineTypes, 'name', data.eventType);
 
     for (const teacherId of data.teachers) {
-      const role = TeacherRoleAdapter[data.disciplineType];
+      const role = TeacherRoleAdapter[data.eventType];
       const disciplineTeacher = await this.disciplineTeacherRepository.getOrCreate({ teacherId, disciplineId: discipline.id });
       if (!some(disciplineTeacher.roles, 'role', role)) {
         await this.disciplineTeacherRoleRepository.create({
@@ -240,10 +242,14 @@ export class ScheduleService {
   ) {
     const disciplineTypes = event.lessons.map((lesson) => lesson.disciplineType.name);
     return (
-      (addLecture && disciplineTypes.includes(DisciplineTypeEnum.LECTURE)) ||
-      (addLaboratory && disciplineTypes.includes(DisciplineTypeEnum.LABORATORY)) ||
-      (addPractice && disciplineTypes.includes(DisciplineTypeEnum.PRACTICE)) ||
-      (otherEvents && (!disciplineTypes.length || disciplineTypes.includes(DisciplineTypeEnum.CONSULTATION) || disciplineTypes.includes(DisciplineTypeEnum.EXAM) || disciplineTypes.includes(DisciplineTypeEnum.WORKOUT)))
+      (addLecture && disciplineTypes.includes(EventTypeEnum.LECTURE)) ||
+      (addLaboratory && disciplineTypes.includes(EventTypeEnum.LABORATORY)) ||
+      (addPractice && disciplineTypes.includes(EventTypeEnum.PRACTICE)) ||
+      (otherEvents && (!disciplineTypes.length ||
+        disciplineTypes.includes(EventTypeEnum.CONSULTATION) ||
+        disciplineTypes.includes(EventTypeEnum.EXAM) ||
+        disciplineTypes.includes(EventTypeEnum.WORKOUT))
+      )
     );
   }
 
@@ -277,7 +283,7 @@ export class ScheduleService {
 
   async createGroupEvent (body: CreateEventDTO) {
     await this.checkEventDates(body.startTime, body.endTime);
-    if (body.disciplineId && !body.disciplineType) throw new ObjectIsRequiredException('DisciplineType');
+    if (body.disciplineId && !body.eventType) throw new ObjectIsRequiredException('DisciplineType');
 
     const eventsAmount = await this.calculateEventsAmount(body.startTime, body.period);
     const teacherForceChanges = await this.validateTeachersDiscipline(body.teachers, body.disciplineId);
@@ -502,7 +508,7 @@ export class ScheduleService {
       week,
       name,
       disciplineId,
-      disciplineType,
+      eventType,
       teachers,
       period = event.period,
       url,
@@ -552,13 +558,13 @@ export class ScheduleService {
     });
 
     const lesson = event?.lessons[0];
-    if (!disciplineId && !disciplineType && !teachers && !disciplineInfo) return;
-    if ((!disciplineId || !disciplineType) && !lesson) throw new ObjectIsRequiredException('disciplineType');
+    if (!disciplineId && !eventType && !teachers && !disciplineInfo) return;
+    if ((!disciplineId || !eventType) && !lesson) throw new ObjectIsRequiredException('disciplineType');
 
     const discipline = await this.updateDiscipline(
       disciplineId,
       lesson?.disciplineType.disciplineId,
-      disciplineType,
+      eventType,
       lesson?.disciplineType,
       disciplineInfo,
       teachers,
@@ -570,7 +576,7 @@ export class ScheduleService {
           eventId,
         },
         create: {
-          disciplineTypeId: find(discipline.disciplineTypes, 'name', disciplineType ?? lesson.disciplineType.name).id,
+          disciplineTypeId: find(discipline.disciplineTypes, 'name', eventType ?? lesson.disciplineType.name).id,
         },
       },
     });
@@ -579,7 +585,7 @@ export class ScheduleService {
   async updateDiscipline (
     newDisciplineId: string | undefined,
     presentDisciplineId: string | undefined,
-    newType: DisciplineTypeEnum | undefined,
+    newType: EventTypeEnum | undefined,
     presentType: DisciplineType | undefined,
     disciplineInfo: string | undefined,
     teachers: string[] = [],
@@ -590,7 +596,7 @@ export class ScheduleService {
 
     await this.prepareDiscipline(
       newDisciplineId ?? presentDisciplineId,
-      newType ?? presentType.name,
+      newType ?? (presentType.name as EventTypeEnum ?? EventTypeEnum.OTHER),
       teachers
     );
 
@@ -644,7 +650,7 @@ export class ScheduleService {
 
   async prepareDiscipline (
     disciplineId: string,
-    newType: DisciplineTypeEnum,
+    newType: EventTypeEnum,
     teachers: string[],
   ) {
     let discipline = await this.disciplineRepository.findById(disciplineId);
@@ -654,7 +660,7 @@ export class ScheduleService {
       discipline = await this.disciplineRepository.updateById(disciplineId, {
         disciplineTypes: {
           create: {
-            name: newType,
+            name: newType as DisciplineTypeEnum ?? null,
           },
         },
       });

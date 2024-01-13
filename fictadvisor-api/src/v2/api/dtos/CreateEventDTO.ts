@@ -1,7 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsArray, IsDate, IsEnum, IsNotEmpty, IsOptional, IsUrl, IsUUID, MaxLength, MinLength } from 'class-validator';
 import { validationOptionsMsg } from '../../utils/GLOBALS';
-import { DisciplineTypeEnum, Period } from '@prisma/client';
+import { Period } from '@prisma/client';
+import { EventTypeEnum } from './EventTypeEnum';
 import { Type } from 'class-transformer';
 
 export class CreateEventDTO {
@@ -21,11 +22,11 @@ export class CreateEventDTO {
     disciplineId?: string;
 
   @ApiPropertyOptional({
-    enum: DisciplineTypeEnum,
+    enum: EventTypeEnum,
   })
   @IsOptional()
-  @IsEnum(DisciplineTypeEnum, validationOptionsMsg('Discipline type must be an enum'))
-    disciplineType?: DisciplineTypeEnum;
+  @IsEnum(EventTypeEnum, validationOptionsMsg('Event type must be an enum'))
+    eventType?: EventTypeEnum;
 
   @ApiPropertyOptional()
   @IsArray(validationOptionsMsg('Teachers must be Array'))
