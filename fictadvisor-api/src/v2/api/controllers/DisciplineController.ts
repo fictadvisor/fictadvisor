@@ -16,12 +16,12 @@ import {
 } from '@nestjs/swagger';
 import { DisciplineByIdPipe } from '../pipes/DisciplineByIdPipe';
 import { DisciplineTeachersResponse, ExtendDisciplineTeachersResponse } from '../responses/DisciplineTeachersResponse';
-import { DisciplineTypeEnum } from '@prisma/client';
 import { DisciplineResponse, DisciplinesResponse } from '../responses/DisciplineResponse';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
 import { QueryAllDisciplinesDTO } from '../dtos/QueryAllDisciplinesDTO';
 import { QueryAllDisciplinesPipe } from '../pipes/QueryAllDisciplinesPipe';
 import { DisciplineMapper } from '../../mappers/DisciplineMapper';
+import { DisciplineTypeEnum } from '@prisma/client';
 
 @ApiTags('Discipline')
 @Controller({

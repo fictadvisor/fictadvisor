@@ -6,6 +6,7 @@ import { some } from '../utils/ArrayUtil';
 import { EventResponse } from '../api/responses/EventResponse';
 import { DisciplineType } from '@prisma/client';
 import { SimpleTelegramEventInfoResponse, TelegramEventInfoResponse } from '../api/responses/TelegramGeneralEventInfoResponse';
+import { EventTypeEnum } from '../api/dtos/EventTypeEnum';
 
 @Injectable()
 export class ScheduleMapper {
@@ -25,7 +26,7 @@ export class ScheduleMapper {
     return events
       .map((event) => ({
         ...this.getSimpleTelegramEvent(event),
-        disciplineType: this.getDisciplineType(event.lessons[0]?.disciplineType),
+        eventType: this.getDisciplineType(event.lessons[0]?.disciplineType),
       }))
       .sort((firstEvent, secondEvent) => firstEvent.startTime.getTime() - secondEvent.startTime.getTime());
   }
@@ -36,7 +37,7 @@ export class ScheduleMapper {
       id: event.id,
       name: event.name,
       disciplineId: discipline?.id || null,
-      disciplineType: disciplineType || null,
+      eventType: disciplineType as EventTypeEnum ?? EventTypeEnum.OTHER,
       startTime: event.startTime,
       endTime: event.endTime,
       period: event.period,
@@ -66,11 +67,10 @@ export class ScheduleMapper {
   }
 
   private getDisciplineType (disciplineType: DisciplineType) {
-    if (!disciplineType) return null;
     return {
-      id: disciplineType.id,
-      disciplineId: disciplineType.disciplineId,
-      name: disciplineType.name,
+      id: disciplineType?.id ?? null,
+      disciplineId: disciplineType?.disciplineId ?? null,
+      name: disciplineType?.name as EventTypeEnum ?? EventTypeEnum.OTHER,
     };
   }
 }

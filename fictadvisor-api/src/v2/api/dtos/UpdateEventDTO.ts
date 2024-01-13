@@ -10,10 +10,11 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { DisciplineTypeEnum, Period } from '@prisma/client';
+import { Period } from '@prisma/client';
 import { validationOptionsMsg } from '../../utils/GLOBALS';
 import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { EventTypeEnum } from './EventTypeEnum';
 
 export class UpdateEventDTO {
 
@@ -35,11 +36,11 @@ export class UpdateEventDTO {
     disciplineId?: string;
 
   @ApiPropertyOptional({
-    enum: DisciplineTypeEnum,
+    enum: EventTypeEnum,
   })
   @IsOptional()
-  @IsEnum(DisciplineTypeEnum, validationOptionsMsg('Discipline type must be an enum'))
-    disciplineType?: DisciplineTypeEnum;
+  @IsEnum(EventTypeEnum, validationOptionsMsg('Event type must be an enum'))
+    eventType?: EventTypeEnum;
 
   @ApiPropertyOptional()
   @IsOptional()

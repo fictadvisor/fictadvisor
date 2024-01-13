@@ -8,7 +8,7 @@ import { DateModule } from '../../utils/date/DateModule';
 import { ParserModule } from '../../utils/parser/ParserModule';
 import { InjectionToken } from '@nestjs/common';
 import { DisciplineService } from './DisciplineService';
-import { DisciplineTypeEnum, Period, EducationProgram, AbbreviationOfSpeciality } from '@prisma/client';
+import { AbbreviationOfSpeciality, DisciplineTypeEnum, EducationProgram, Period } from '@prisma/client';
 import { AuthService } from './AuthService';
 import { GroupService } from './GroupService';
 import { FileService } from '../../utils/files/FileService';
@@ -18,6 +18,7 @@ import { InvalidWeekException } from '../../utils/exceptions/InvalidWeekExceptio
 import { TelegramAPI } from '../../telegram/TelegramAPI';
 import { CreateEventDTO } from '../dtos/CreateEventDTO';
 import { ObjectIsRequiredException } from '../../utils/exceptions/ObjectIsRequiredException';
+import { EventTypeEnum } from '../dtos/EventTypeEnum';
 
 
 describe('ScheduleService', () => {
@@ -799,7 +800,7 @@ describe('ScheduleService', () => {
         endTime: new Date('2022-09-12T10:00:00'),
         eventInfo: 'Description of the event',
         disciplineId: 'nonSelectedDiscipline',
-        disciplineType: 'LECTURE',
+        eventType: EventTypeEnum.LECTURE,
         teachers: ['deletedTeacherId'],
       };
 
@@ -875,7 +876,7 @@ describe('ScheduleService', () => {
         endTime: new Date('2022-09-12T10:00:00'),
         eventInfo: 'Description of the event',
         disciplineId: 'nonSelectedDiscipline',
-        disciplineType: 'LECTURE',
+        eventType: EventTypeEnum.LECTURE,
         teachers: ['deletedTeacherId'],
       };
 

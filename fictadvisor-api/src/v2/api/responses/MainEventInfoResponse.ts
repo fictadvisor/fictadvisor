@@ -28,7 +28,7 @@ export class MainEventInfoResponse extends SimpleEventInfoResponse {
     type: DisciplineTypeResponse,
     description: 'Type of event',
   })
-    disciplineType: DisciplineTypeResponse;
+    eventType: DisciplineTypeResponse;
 }
 
 export class GeneralEventInfoResponse extends SimpleEventInfoResponse {
