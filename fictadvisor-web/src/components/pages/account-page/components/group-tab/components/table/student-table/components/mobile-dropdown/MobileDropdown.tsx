@@ -1,5 +1,9 @@
 import React, { FC, ReactNode, useRef, useState } from 'react';
-import { EllipsisVerticalIcon, TrashIcon } from '@heroicons/react/24/outline';
+import {
+  ArrowsUpDownIcon,
+  EllipsisVerticalIcon,
+  TrashIcon,
+} from '@heroicons/react/24/outline';
 import { ClickAwayListener, Popper } from '@mui/base';
 import { Box } from '@mui/material';
 import { Stack } from '@mui/system';
@@ -15,13 +19,14 @@ import roleNamesMapper from '@/components/pages/account-page/components/group-ta
 import { PERMISSION, PermissionResponse } from '@/lib/services/permisson/types';
 import { UserGroupRole } from '@/types/user';
 
-import { StudentsTableItem } from '../../types';
+import { StudentsTableItem } from '../../../types';
 
 import * as styles from './MobileDropdown.style';
 
 export interface MobileStudentTableButtonsProps {
   setDeletePopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setChangePopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setTransferCaptainPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
   student: StudentsTableItem;
   permissions: PermissionResponse;
   arrowIcon: ReactNode;
@@ -30,6 +35,7 @@ export interface MobileStudentTableButtonsProps {
 const MobileStudentsTableButtons: FC<MobileStudentTableButtonsProps> = ({
   setDeletePopupOpen,
   setChangePopupOpen,
+  setTransferCaptainPopupOpen,
   student,
   permissions,
   arrowIcon,
@@ -54,7 +60,6 @@ const MobileStudentsTableButtons: FC<MobileStudentTableButtonsProps> = ({
           icon={<EllipsisVerticalIcon className={'icon'} />}
           color={IconButtonColor.TRANSPARENT}
           onClick={() => setIsPopperOpen(pr => !pr)}
-          disabled={emptyList || student.role === UserGroupRole.CAPTAIN}
         />
         <Popper
           style={{ zIndex: '5' }}
@@ -73,13 +78,22 @@ const MobileStudentsTableButtons: FC<MobileStudentTableButtonsProps> = ({
                   onClick={() => setChangePopupOpen(true)}
                 />
               )}
-            {!emptyList && (
+            {!emptyList && student.role !== UserGroupRole.CAPTAIN && (
               <Button
                 size={ButtonSize.SMALL}
                 text={'Видалити'}
                 variant={ButtonVariant.TEXT}
                 startIcon={<TrashIcon />}
                 onClick={() => setDeletePopupOpen(true)}
+              />
+            )}
+            {student.role === UserGroupRole.CAPTAIN && (
+              <Button
+                size={ButtonSize.SMALL}
+                text="Передати старосту"
+                variant={ButtonVariant.TEXT}
+                startIcon={<ArrowsUpDownIcon />}
+                onClick={() => setTransferCaptainPopupOpen(true)}
               />
             )}
           </Stack>
