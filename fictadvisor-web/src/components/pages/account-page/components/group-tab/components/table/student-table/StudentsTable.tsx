@@ -16,7 +16,7 @@ import Tag from '@/components/common/ui/tag';
 import { TagSize, TagVariant } from '@/components/common/ui/tag/types';
 import Tooltip from '@/components/common/ui/tooltip';
 import roleNamesMapper from '@/components/pages/account-page/components/group-tab/components/table/constants';
-import EditingColumn from '@/components/pages/account-page/components/group-tab/components/table/student-table/components/EditingColumn';
+import EditingColumn from '@/components/pages/account-page/components/group-tab/components/table/student-table/components/editing-column/EditingColumn';
 import { TextAreaPopup } from '@/components/pages/account-page/components/group-tab/components/text-area-popup';
 import useAuthentication from '@/hooks/use-authentication';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
@@ -185,6 +185,7 @@ const StudentsTable: React.FC<StudentsTableProps> = ({
                   student={row}
                   permissions={permissions}
                   refetch={refetch}
+                  rows={rows}
                 />
               }
             </Grid>

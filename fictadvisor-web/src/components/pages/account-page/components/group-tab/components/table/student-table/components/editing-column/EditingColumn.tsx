@@ -2,12 +2,15 @@ import React, { FC, Fragment, useState } from 'react';
 import { QueryObserverBaseResult } from 'react-query';
 import {
   ArrowDownCircleIcon,
+  ArrowsUpDownIcon,
   ArrowUpCircleIcon,
   CheckCircleIcon,
   TrashIcon,
 } from '@heroicons/react/24/outline';
-import { useMediaQuery } from '@mui/material';
+import { Avatar, Box, Grid, Typography, useMediaQuery } from '@mui/material';
 
+import { Captain } from '@/components/common/icons/Captain';
+import { Moderator } from '@/components/common/icons/Moderator';
 import AlertButton from '@/components/common/ui/alert-button';
 import { AlertButtonVariant } from '@/components/common/ui/alert-button/types';
 import Button from '@/components/common/ui/button-mui';
@@ -22,31 +25,43 @@ import {
   IconButtonShape,
 } from '@/components/common/ui/icon-button-mui/types';
 import Popup from '@/components/common/ui/pop-ups/Popup';
+import Tag from '@/components/common/ui/tag';
+import { TagSize, TagVariant } from '@/components/common/ui/tag/types';
 import roleNamesMapper from '@/components/pages/account-page/components/group-tab/components/table/constants';
-import MobileDropdown from '@/components/pages/account-page/components/group-tab/components/table/student-table/components/MobileDropdown';
+import * as gridStyles from '@/components/pages/account-page/components/group-tab/components/table/grid.styles';
+import TransferCaptainPopup from '@/components/pages/account-page/components/group-tab/components/table/student-table/components/editing-column/TransferCaptainPopup';
+import MobileDropdown from '@/components/pages/account-page/components/group-tab/components/table/student-table/components/mobile-dropdown/MobileDropdown';
 import UseAuthentication from '@/hooks/use-authentication/useAuthentication';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import GroupAPI from '@/lib/api/group/GroupAPI';
 import { PERMISSION, PermissionResponse } from '@/lib/services/permisson/types';
+import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 import theme from '@/styles/theme';
 import { UserGroupRole } from '@/types/user';
 
-import { StudentsTableItem } from '../../types';
+import { StudentsTableItem } from '../../../types';
+
+import * as styles from './EditingColumn.styles';
 
 interface EditingColumnProps {
   student: StudentsTableItem;
   permissions: PermissionResponse;
   refetch: QueryObserverBaseResult['refetch'];
+  rows: StudentsTableItem[];
 }
 
 const EditingColumn: FC<EditingColumnProps> = ({
   student,
   permissions,
   refetch,
+  rows,
 }) => {
   const { user } = UseAuthentication();
   const { displayError } = useToastError();
   const [deletePopupOpen, setDeletePopupOpen] = useState(false);
+  const [transferCaptainPopupOpen, setTransferCaptainPopupOpen] =
+    useState(false);
+  const [newCaptain, setNewCaptain] = useState('');
   const [changePopupOpen, setChangePopupOpen] = useState(false);
 
   const isMobile = useMediaQuery(theme.breakpoints.down('desktop'));
@@ -77,6 +92,20 @@ const EditingColumn: FC<EditingColumnProps> = ({
     }
   };
 
+  const handleChangeCaptain = async () => {
+    try {
+      setTransferCaptainPopupOpen(false);
+      if (user.group)
+        await GroupAPI.updateCaptain(user?.group?.id, {
+          studentId: newCaptain,
+        });
+      setNewCaptain('');
+      await refetch();
+    } catch (error) {
+      displayError(error);
+    }
+  };
+
   const deletePrivilege =
     (permissions[PERMISSION.GROUPS_$GROUPID_STUDENTS_REMOVE] &&
       !permissions[PERMISSION.GROUPS_$GROUPID_ADMIN_SWITCH] &&
@@ -85,17 +114,21 @@ const EditingColumn: FC<EditingColumnProps> = ({
       permissions[PERMISSION.GROUPS_$GROUPID_ADMIN_SWITCH] &&
       student.role !== UserGroupRole.CAPTAIN);
 
-  const buttonText =
-    student.role === UserGroupRole.MODERATOR
-      ? roleNamesMapper[UserGroupRole.STUDENT]
-      : roleNamesMapper[UserGroupRole.MODERATOR];
+  let buttonText = roleNamesMapper[UserGroupRole.MODERATOR];
 
-  const buttonIcon =
-    student.role === UserGroupRole.MODERATOR ? (
-      <ArrowDownCircleIcon />
-    ) : (
-      <ArrowUpCircleIcon />
-    );
+  if (student.role === UserGroupRole.MODERATOR) {
+    buttonText = roleNamesMapper[UserGroupRole.STUDENT];
+  } else if (student.role === UserGroupRole.CAPTAIN) {
+    buttonText = 'Передати старосту';
+  }
+
+  let buttonIcon = <ArrowUpCircleIcon />;
+
+  if (student.role === UserGroupRole.MODERATOR) {
+    buttonIcon = <ArrowDownCircleIcon />;
+  } else if (student.role === UserGroupRole.CAPTAIN) {
+    buttonIcon = <ArrowsUpDownIcon />;
+  }
 
   return (
     <>
@@ -133,6 +166,47 @@ const EditingColumn: FC<EditingColumnProps> = ({
         }
       />
       <Popup
+        hasCross={true}
+        open={transferCaptainPopupOpen}
+        title="Передати права старости"
+        content={
+          <TransferCaptainPopup
+            rows={rows}
+            newCaptain={newCaptain}
+            setNewCaptain={setNewCaptain}
+          />
+        }
+        onClose={() => {
+          setTransferCaptainPopupOpen(false);
+          setNewCaptain('');
+        }}
+        firstButton={
+          <Button
+            size={ButtonSize.SMALL}
+            text="Скасувати"
+            color={ButtonColor.SECONDARY}
+            variant={ButtonVariant.OUTLINE}
+            onClick={() => {
+              setTransferCaptainPopupOpen(false);
+              setNewCaptain('');
+            }}
+            sx={styles.canselButton}
+          />
+        }
+        secondButton={
+          <Button
+            size={ButtonSize.SMALL}
+            startIcon={<ArrowsUpDownIcon />}
+            text="Змінити"
+            color={ButtonColor.PRIMARY}
+            variant={ButtonVariant.FILLED}
+            onClick={handleChangeCaptain}
+            sx={styles.transferButton}
+          />
+        }
+        sx={styles.transferCaptainPopup}
+      />
+      <Popup
         icon={<TrashIcon />}
         open={deletePopupOpen}
         title="Видалити користувача"
@@ -155,24 +229,26 @@ const EditingColumn: FC<EditingColumnProps> = ({
           />
         }
       />
-      {(student.role === UserGroupRole.STUDENT ||
-        student.role === UserGroupRole.MODERATOR) &&
-        !isMobile &&
-        permissions[PERMISSION.GROUPS_$GROUPID_ADMIN_SWITCH] && (
-          <Button
-            text={buttonText}
-            sx={{ width: 'fit-content', whiteSpace: 'nowrap' }}
-            size={ButtonSize.SMALL}
-            variant={ButtonVariant.OUTLINE}
-            startIcon={buttonIcon}
-            onClick={() => setChangePopupOpen(true)}
-          />
-        )}
+      {!isMobile && permissions[PERMISSION.GROUPS_$GROUPID_ADMIN_SWITCH] && (
+        <Button
+          text={buttonText}
+          sx={{ width: 'fit-content', whiteSpace: 'nowrap' }}
+          size={ButtonSize.SMALL}
+          variant={ButtonVariant.OUTLINE}
+          startIcon={buttonIcon}
+          onClick={() =>
+            student.role === UserGroupRole.CAPTAIN
+              ? setTransferCaptainPopupOpen(true)
+              : setChangePopupOpen(true)
+          }
+        />
+      )}
       {isMobile ? (
         <MobileDropdown
           arrowIcon={buttonIcon}
           setDeletePopupOpen={setDeletePopupOpen}
           setChangePopupOpen={setChangePopupOpen}
+          setTransferCaptainPopupOpen={setTransferCaptainPopupOpen}
           permissions={permissions}
           student={student}
         />

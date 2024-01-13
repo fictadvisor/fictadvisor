@@ -6,6 +6,7 @@ import { GetGroupDisciplines } from '@/lib/api/group/types/GetGroupDisciplines';
 import { GetGroupStudentResponse } from '@/lib/api/group/types/GetGroupStudentsResponse';
 import { GetDisciplinesWithTeachers } from '@/lib/api/group/types/GetGroupTeachers';
 import { GetPendingStudentsResponse } from '@/lib/api/group/types/GetPendingStudentsResponse';
+import { UpdateCaptainBody } from '@/lib/api/group/types/UpdateCaptainBody';
 import { UpdateStudentRoleBody } from '@/lib/api/group/types/UpdateStudentRoleBody';
 import { VerifyStudentBody } from '@/lib/api/group/types/VerifyStudentBody';
 import { getAuthorizationHeader } from '@/lib/api/utils';
@@ -68,6 +69,14 @@ class GroupAPI {
   ) {
     await client.patch(
       `/groups/${groupId}/switch/${studentId}`,
+      body,
+      getAuthorizationHeader(),
+    );
+  }
+
+  async updateCaptain(groupId: string, body: UpdateCaptainBody) {
+    await client.post(
+      `/groups/${groupId}/switchCaptain`,
       body,
       getAuthorizationHeader(),
     );
