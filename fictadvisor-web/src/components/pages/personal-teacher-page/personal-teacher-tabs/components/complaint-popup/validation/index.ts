@@ -4,19 +4,19 @@ export const validationSchema = yup.object().shape({
   fullName: yup
     .string()
     .optional()
-    .min(5, 'Full Name should be at least 5 characters')
-    .max(50, 'Full Name should be at most 50 characters'),
+    .min(5, 'ПІБ занадто коротке (мінімум: 5 символів)')
+    .max(50, 'ПІБ занадто довге (максимум: 50 символів)'),
   groupId: yup.string().optional(),
   title: yup
     .string()
-    .required('Title is required')
-    .min(5, 'Title should be at least 5 characters')
-    .max(100, 'Title should be at most 100 characters'),
+    .required('Заголовок не може бути порожнім')
+    .min(5, 'Заголовок занадто короткий (мінімум: 5 символів)')
+    .max(100, 'Заголовок занадто довгий (максимум: 100 символів)'),
   message: yup
     .string()
-    .required('Message is required')
-    .min(10, 'Message should be at least 10 characters')
-    .max(3500, 'Message should be at most 3500 characters'),
+    .required('Скарга не може бути порожньою')
+    .min(10, 'Скарга занадто коротка (мінімум: 10 символів)')
+    .max(3500, 'Скарга занадто довга (максимум: 3500 символів)'),
 });
 
 export const initialValues = {
