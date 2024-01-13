@@ -1,5 +1,10 @@
 import { FC, SyntheticEvent, useState } from 'react';
-import { FaceFrownIcon } from '@heroicons/react/24/outline';
+import {
+  BookOpenIcon,
+  ChartBarIcon,
+  ChatBubbleLeftRightIcon,
+  FaceFrownIcon,
+} from '@heroicons/react/24/outline';
 import { Box } from '@mui/material';
 import dynamic from 'next/dynamic';
 
@@ -60,23 +65,26 @@ const PersonalTeacherTabs: FC<PersonalTeacherTabsProps> = ({
   handleChange,
 }) => {
   const count = data.comments.questions[0]?.comments.length ?? 0;
-  const [isOpen, setIsOpen] = useState(false);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
   return (
     <Box>
       <TabContext value={tabIndex}>
         <Box sx={stylesMUI.tabListWrapper}>
           <TabList id="lol" onChange={handleChange} sx={stylesMUI.tabList}>
             <Tab
+              icon={<ChartBarIcon />}
               label="Загальне"
               textPosition={TabTextPosition.CENTER}
               value={TeachersPageTabs.GENERAL}
             />
             <Tab
+              icon={<BookOpenIcon />}
               label="Предмети"
               textPosition={TabTextPosition.CENTER}
               value={TeachersPageTabs.SUBJECTS}
             />
             <Tab
+              icon={<ChatBubbleLeftRightIcon />}
               label="Відгуки"
               count={count}
               textPosition={TabTextPosition.CENTER}
@@ -89,14 +97,14 @@ const PersonalTeacherTabs: FC<PersonalTeacherTabsProps> = ({
               variant={ButtonVariant.FILLED}
               size={ButtonSize.SMALL}
               text={'Лишити скаргу'}
-              onClick={() => setIsOpen(true)}
+              onClick={() => setIsPopupOpen(true)}
               startIcon={<FaceFrownIcon width={24} height={24} />}
             ></Button>
           </Box>
         </Box>
         <ComplaintPopup
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
+          isPopupOpen={isPopupOpen}
+          setIsPopupOpen={setIsPopupOpen}
           teacherId={teacher.id}
         />
         <Box sx={stylesMUI.tabPanelList}>

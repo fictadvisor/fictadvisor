@@ -1,5 +1,5 @@
 import { Dispatch, FC, SetStateAction } from 'react';
-import { Box } from '@mui/material';
+import { Box, useMediaQuery } from '@mui/material';
 import { Form, Formik } from 'formik';
 
 import Button from '@/components/common/ui/button';
@@ -12,6 +12,7 @@ import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
 import { convertEmptyStringToUndefined } from '@/lib/utils/convertEmptyStringToUndefined';
+import theme from '@/styles/theme';
 
 import ComplaintPopupContent from './components/ComplaintPopupContent';
 import * as styles from './ComplaintPopup.styles';
@@ -19,41 +20,32 @@ import { Complaint } from './types';
 import { initialValues, validationSchema } from './validation';
 
 interface ComplaintPopupProps {
-  isOpen: boolean;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  isPopupOpen: boolean;
+  setIsPopupOpen: Dispatch<SetStateAction<boolean>>;
   teacherId: string;
 }
 
 const ComplaintPopup: FC<ComplaintPopupProps> = ({
-  isOpen,
-  setIsOpen,
+  isPopupOpen,
+  setIsPopupOpen,
   teacherId,
 }) => {
   const { displayError } = useToastError();
   const toast = useToast();
+  const isTablet = useMediaQuery(theme.breakpoints.down('tablet'));
 
   const handleSubmit = async (data: Complaint) => {
-    const { fullName, groupId, message, title } = data;
-    const complaint: Complaint = {
-      message,
-      title,
-      fullName: undefined,
-      groupId: undefined,
-    };
-    if (fullName) complaint.fullName = fullName;
-    if (groupId) complaint.groupId = groupId;
-
     try {
       await TeacherAPI.postTeacherComplaint(
         teacherId,
-        convertEmptyStringToUndefined(complaint),
+        convertEmptyStringToUndefined(data),
       );
       toast.success(
         'Скарга надіслана',
         'Ми успішно отримали скаргу на викладача та вже працюємо над нею',
         5000,
       );
-      setIsOpen(false);
+      setIsPopupOpen(false);
     } catch (error) {
       displayError(error);
     }
@@ -61,38 +53,44 @@ const ComplaintPopup: FC<ComplaintPopupProps> = ({
 
   return (
     <Formik
-      enableReinitialize={true}
+      enableReinitialize
       validationSchema={validationSchema}
       initialValues={initialValues}
-      validateOnChange={true}
+      validateOnChange
       onSubmit={handleSubmit}
     >
-      {({}) => (
+      {({ handleSubmit, resetForm }) => (
         <Form>
           <Popup
             sx={styles.popup}
-            open={isOpen}
+            open={isPopupOpen}
             content={<ComplaintPopupContent />}
-            title={'Лишити скаргу на викладача'}
+            title="Лишити скаргу на викладача"
             firstButton={
-              <Box>
+              <Box sx={{ marginTop: '18px', marginBottom: '30px' }}>
                 <Button
                   text="Скасувати"
-                  size={ButtonSize.MEDIUM}
+                  size={isTablet ? ButtonSize.SMALL : ButtonSize.MEDIUM}
                   variant={ButtonVariant.OUTLINE}
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => {
+                    resetForm();
+                    setIsPopupOpen(false);
+                  }}
                 />
               </Box>
             }
-            hasCross={true}
-            onClose={() => setIsOpen(false)}
+            hasCross
+            onClose={() => {
+              resetForm();
+              setIsPopupOpen(false);
+            }}
             secondButton={
-              <Box>
+              <Box sx={{ marginTop: '18px', marginBottom: '30px' }}>
                 <Button
-                  size={ButtonSize.MEDIUM}
+                  size={isTablet ? ButtonSize.SMALL : ButtonSize.MEDIUM}
                   variant={ButtonVariant.FILLED}
                   text="Лишити скаргу"
-                  type="submit"
+                  onClick={() => handleSubmit()}
                 />
               </Box>
             }

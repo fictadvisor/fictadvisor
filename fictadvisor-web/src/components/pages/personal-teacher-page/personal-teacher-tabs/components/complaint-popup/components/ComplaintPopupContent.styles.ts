@@ -13,7 +13,7 @@ export const subtitleWrapper: SxProps<Theme> = {
   display: 'flex',
   justifyContent: 'center',
   textAlign: 'center',
-  marginBottom: '16px',
+  marginBottom: '18px',
 };
 
 export const subtitle: SxProps<Theme> = {
@@ -24,6 +24,7 @@ export const subtitle: SxProps<Theme> = {
 export const inputsWrapper: SxProps<Theme> = {
   maxWidth: '480px',
   display: 'flex',
-  gap: '16px',
   flexDirection: 'column',
+  textAlign: 'start',
+  marginBottom: '-20px',
 };
