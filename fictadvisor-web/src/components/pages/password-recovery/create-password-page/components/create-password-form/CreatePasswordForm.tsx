@@ -13,10 +13,10 @@ import { ButtonSize } from '@/components/common/ui/button-mui/types';
 import { Input, InputSize, InputType } from '@/components/common/ui/form';
 import { initialValues } from '@/components/pages/password-recovery/create-password-page/components/create-password-form/constants';
 import { CreatePasswordFormFields } from '@/components/pages/password-recovery/create-password-page/components/create-password-form/types';
-import { validationSchema } from '@/components/pages/password-recovery/create-password-page/components/create-password-form/validation';
 import styles from '@/components/pages/password-recovery/create-password-page/CreatePasswordPage.module.scss';
 import useToast from '@/hooks/use-toast';
 import AuthAPI from '@/lib/api/auth/AuthAPI';
+import { passwordValidationSchema } from '@/lib/validation/passwordValidationSchema';
 
 const CreatePasswordForm: FC = () => {
   const { push } = useRouter();
@@ -44,7 +44,7 @@ const CreatePasswordForm: FC = () => {
     <Formik
       initialValues={initialValues}
       onSubmit={handleSubmit}
-      validationSchema={validationSchema}
+      validationSchema={passwordValidationSchema}
       validateOnMount
       validateOnChange
     >

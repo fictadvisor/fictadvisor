@@ -15,12 +15,12 @@ import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import AuthAPI from '@/lib/api/auth/AuthAPI';
 import StorageUtil from '@/lib/utils/StorageUtil';
+import { passwordValidationSchema } from '@/lib/validation/passwordValidationSchema';
 import theme from '@/styles/theme';
 
 import * as styles from './ChangePasswordForm.styles';
 import { initialValues } from './constants';
 import { ChangePasswordFormFields } from './types';
-import { validationSchema } from './validation';
 
 const ChangePasswordForm = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('desktop'));
@@ -44,7 +44,7 @@ const ChangePasswordForm = () => {
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={validationSchema}
+      validationSchema={passwordValidationSchema}
       onSubmit={handleSubmit}
       validateOnMount
       validateOnChange

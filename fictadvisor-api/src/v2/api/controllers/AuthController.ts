@@ -115,7 +115,7 @@ export class AuthController {
       Username cannot be empty
       Email is not an email
       Email cannot be empty
-      The password must be between 8 and 50 characters long, include at least 1 digit and 1 letter
+      The password must be between 6 and 32 characters long, include at least 1 digit and 1 latin letter
       Password cannot be empty
       Auth date must be a number
       First name cannot be empty
@@ -209,7 +209,7 @@ export class AuthController {
       User with such id is not found
       
     InvalidBodyException:
-      The password must be between 8 and 50 characters long, include at least 1 digit and 1 letter
+      The password must be between 6 and 32 characters long, include at least 1 digit and 1 latin letter
       Old password cannot be empty
       New password cannot be empty
 
@@ -280,7 +280,7 @@ export class AuthController {
       Reset token is expired or invalid
      
     InvalidBodyException:
-      The password must be between 8 and 50 characters long, include at least 1 digit and 1 letter
+      The password must be between 6 and 32 characters long, include at least 1 digit and 1 latin letter
       Password is empty`,
   })
   @ApiParam({

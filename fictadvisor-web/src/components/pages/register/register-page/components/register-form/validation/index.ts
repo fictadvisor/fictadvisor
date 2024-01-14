@@ -1,6 +1,8 @@
 import * as yup from 'yup';
 
-export const validationSchema = yup.object().shape({
+import { passwordValidationSchema } from '@/lib/validation/passwordValidationSchema';
+
+export const validationSchema = passwordValidationSchema.shape({
   username: yup
     .string()
     .required(`Обов'язкове поле`)
@@ -38,19 +40,5 @@ export const validationSchema = yup.object().shape({
     .required(`Обов'язкове поле`)
     .email('Це не схоже на поштову адресу'),
   group: yup.string().required(`Обов'язкове поле`),
-  password: yup
-    .string()
-    .required(`Обов'язкове поле`)
-    .min(8, 'Не коротше 8 символів')
-    .max(32, 'Не довше 32 символів')
-    .matches(
-      /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[\w\W]+$/,
-      'Мінімум одна велика латинська літера, одна цифра та один спеціальний символ',
-    ),
-  passwordConfirmation: yup
-    .string()
-    .nullable()
-    .oneOf([yup.ref('password'), null], 'Паролі не збігаються')
-    .required(`Обов'язкове поле`),
   agreement: yup.boolean().isTrue(''),
 });
