@@ -23,8 +23,8 @@ export class UserDTO {
     description: 'User\'s password to access account',
   })
   @Matches(
-    /^(?=.*[A-Za-z])(?=.*\d).+$/,
-    validationOptionsMsg('The password must be between 8 and 50 characters long, include at least 1 digit and 1 letter'))
+    new RegExp(/^(?=.*[A-Za-z])(?=.*\d).{6,32}$/),
+    validationOptionsMsg('The password must be between 6 and 32 characters long, include at least 1 digit and 1 latin letter'))
   @IsNotEmpty(validationOptionsMsg('Password cannot be empty'))
     password: string;
 

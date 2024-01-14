@@ -7,8 +7,8 @@ export class ResetPasswordDTO {
     description: 'The new password the user wants to set for his account',
   })
   @Matches(
-    /^(?=.*[A-Za-z])(?=.*\d)[\w\W]+$/,
-    validationOptionsMsg('The password must be between 8 and 50 characters long, include at least 1 digit and 1 letter'))
+    new RegExp(/^(?=.*[A-Za-z])(?=.*\d).{6,32}$/),
+    validationOptionsMsg('The password must be between 6 and 32 characters long, include at least 1 digit and 1 latin letter'))
   @IsNotEmpty(validationOptionsMsg('Password is empty'))
     password: string;
 }

@@ -80,7 +80,7 @@ class AuthAPI {
   }
 
   async checkResetToken(token: string) {
-    const { data } = await client.get(`auth/checkResetToken/${token}`);
+    const { data } = await client.get('auth/checkResetToken/' + token);
     return data;
   }
 
