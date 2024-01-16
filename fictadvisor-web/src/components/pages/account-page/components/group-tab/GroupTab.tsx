@@ -51,7 +51,7 @@ const GroupTab: FC = () => {
 
   const handleSortButtonClick = async () => {
     setOrder(
-      order == GroupService.Order.ascending
+      order === GroupService.Order.ascending
         ? GroupService.Order.descending
         : GroupService.Order.ascending,
     );
@@ -108,6 +108,7 @@ const GroupTab: FC = () => {
         role={user.group.role}
         rows={transformStudentsData(data.students)}
         onSortButtonClick={handleSortButtonClick}
+        order={order}
       />
       <Popup
         icon={<ArrowRightStartOnRectangleIcon />}
