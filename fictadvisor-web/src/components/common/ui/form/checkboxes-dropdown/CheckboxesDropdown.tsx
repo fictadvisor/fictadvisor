@@ -1,83 +1,78 @@
-'use client';
-
 import React, { FC } from 'react';
 import { ChevronDownIcon } from '@heroicons/react/24/solid';
-import { AutocompleteRenderInputParams, Box, TextField } from '@mui/material';
-import Autocomplete from '@mui/material/Autocomplete';
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  Select,
+} from '@mui/material';
 
 import Checkbox from '@/components/common/ui/form/checkbox';
-import {
-  FieldSize,
-  FieldState,
-} from '@/components/common/ui/form/common/types';
-import { popperProps } from '@/components/common/ui/form/dropdown/constants';
-import * as dropdownStyles from '@/components/common/ui/form/dropdown/Dropdown.styles';
+import { FieldSize } from '@/components/common/ui/form/common/types';
 import MergeSx from '@/lib/utils/MergeSxStylesUtil';
 
 import { CheckboxesDropdownProps } from './types/CheckboxesDropdown';
 import * as styles from './CheckboxesDropdown.styles';
 
 const CheckboxesDropdown: FC<CheckboxesDropdownProps> = ({
+  values,
+  selected,
   size = FieldSize.SMALL,
   label = '',
-  inputSx = {},
+  width = 200,
+  handleChange,
   dropdownSx = {},
-  placeholder = '',
+  menuSx = {},
   ...props
 }) => {
+  const selectedValues = selected.map(subject => subject.value) as string[];
+
   return (
-    <Box
-      sx={MergeSx(
-        dropdownSx,
-        MergeSx(dropdownStyles.dropdown, styles.inputLabel),
-      )}
-    >
-      <Autocomplete
-        {...props}
-        disableCloseOnSelect
-        sx={styles.autocomplete}
+    <FormControl sx={styles.formControl}>
+      <InputLabel shrink={true} sx={styles.label}>
+        {label}
+      </InputLabel>
+      <Select
+        sx={MergeSx(styles.select, dropdownSx)}
         multiple
-        disablePortal
-        getOptionLabel={option => option.label}
-        renderInput={(params: AutocompleteRenderInputParams) => (
-          <TextField
-            {...params}
-            placeholder={placeholder}
-            autoComplete="off"
-            label={label}
-            InputLabelProps={{ shrink: true }}
-            name="autocomplete"
-            sx={MergeSx(
-              inputSx,
-              MergeSx(
-                dropdownStyles.input(FieldState.DEFAULT, size),
-                styles.input,
-              ),
-            )}
+        // @ts-expect-error MUI type is not support arrays
+        value={selectedValues}
+        onChange={handleChange}
+        input={<OutlinedInput sx={styles.input} />}
+        renderValue={checked => {
+          const selectedSubjects = values.filter(option =>
+            checked.includes(option.value),
+          );
+          return selectedSubjects.map(option => option.label).join(', ');
+        }}
+        MenuProps={{
+          PaperProps: { sx: MergeSx(styles.paperProps(width), menuSx) },
+        }}
+        SelectDisplayProps={{
+          style: styles.selectedItems(size, width),
+        }}
+        IconComponent={props => (
+          <ChevronDownIcon
+            {...props}
+            width={16}
+            height={16}
+            strokeWidth={1.5}
+            fill="white"
           />
         )}
-        renderOption={(props, option, { selected }) => {
-          console.log(selected);
-          return (
-            <li {...props}>
-              <Checkbox label={option.label} checked={selected} />
-            </li>
-          );
-        }}
-        renderTags={(value, getTagProps) =>
-          value.map((option, index) => (
-            <Box {...getTagProps({ index })} key={index}>
-              {option.value}
-            </Box>
-          ))
-        }
-        isOptionEqualToValue={(option, value) => option.label === value.label}
-        popupIcon={<ChevronDownIcon width={24} height={24} strokeWidth={1.5} />}
-        componentsProps={{
-          popper: popperProps,
-        }}
-      />
-    </Box>
+        {...props}
+      >
+        {values.map((option, index) => (
+          <MenuItem key={index} value={option.value}>
+            <Checkbox
+              checked={selectedValues.includes(option.value)}
+              label={option.value}
+            />
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
   );
 };
 
