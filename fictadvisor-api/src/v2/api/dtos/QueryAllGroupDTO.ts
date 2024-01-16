@@ -1,8 +1,8 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsArray, IsEnum, IsIn, IsNumber, IsOptional, Max, Min } from 'class-validator';
-import { validationOptionsMsg } from '../../../v2/utils/GLOBALS';
-import { QueryAllDTO } from '../../../v2/utils/QueryAllDTO';
+import { validationOptionsMsg } from '../../utils/GLOBALS';
+import { QueryAllDTO } from '../../utils/QueryAllDTO';
 import { OrderQAParam } from './OrderQAParam';
 import { SortQAGroupParam } from './SortQAGroupParam';
 

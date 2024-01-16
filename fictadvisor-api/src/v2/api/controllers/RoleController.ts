@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Request,
+} from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -20,12 +30,12 @@ import { GrantsResponse } from '../responses/GrantsResponse';
 import { QueryAllRolesDTO } from '../dtos/QueryAllRolesDTO';
 import { CreateRoleDTO } from '../dtos/CreateRoleDTO';
 import { QueryAllGrantsDTO } from '../dtos/QueryAllGrantsDTO';
-import { UpdateGrantDTO } from '../dtos/UpdateGrantDTO';
 import { UpdateRoleDTO } from '../dtos/UpdateRoleDTO';
 import { CreateRoleWithGrantsDTO } from '../dtos/CreateRoleWithGrantsDTO';
-import { CreateGrantDTO, CreateGrantsDTO } from '../dtos/CreateGrantsDTO';
+import { CreateGrantDTO, CreateGrantsDTO } from '../dtos/CreateGrantDTO';
 import { RoleByIdPipe } from '../pipes/RoleByIdPipe';
 import { GrantByIdPipe } from '../pipes/GrantByIdPipe';
+import { UpdateGrantDTO } from '../dtos/UpdateGrantDTO';
 
 @ApiTags('Roles')
 @Controller({
@@ -55,9 +65,7 @@ export class RoleController {
     summary: 'Get information about each role',
   })
   @Get()
-  async getAll (
-    @Query() query: QueryAllRolesDTO,
-  ) {
+  async getAll (@Query() query: QueryAllRolesDTO) {
     const roles = await this.roleService.getAll(query);
     const data = this.roleMapper.getAll(roles.data);
     return {
@@ -83,9 +91,7 @@ export class RoleController {
     summary: 'Get information about the specific role by id',
   })
   @Get('/:roleId')
-  async get (
-    @Param('roleId', RoleByIdPipe) roleId: string,
-  ) {
+  async get (@Param('roleId', RoleByIdPipe) roleId: string) {
     const role = await this.roleService.get(roleId);
     return this.roleMapper.getRole(role);
   }
@@ -124,7 +130,7 @@ export class RoleController {
   @Post('/grants')
   async createWithGrants (
     @Body() body: CreateRoleWithGrantsDTO,
-    @Request() req,
+    @Request() req
   ) {
     const role = await this.roleService.createRoleWithGrants(body, req.user.id);
     return this.roleMapper.createWithGrants(role);
@@ -157,13 +163,11 @@ export class RoleController {
       Display name length must be less than 32`,
   })
   @ApiEndpoint({
-    summary: 'Create an information about the role',
+    summary: 'Create the role',
     permissions: PERMISSION.ROLES_CREATE,
   })
   @Post()
-  async create (
-    @Body() body: CreateRoleDTO,
-  ) {
+  async create (@Body() body: CreateRoleDTO) {
     const role = await this.roleService.createRole(body);
     return this.roleMapper.create(role);
   }
@@ -207,7 +211,7 @@ export class RoleController {
   @Patch('/:roleId')
   async update (
     @Param('roleId', RoleByIdPipe) roleId: string,
-    @Body() body: UpdateRoleDTO,
+    @Body() body: UpdateRoleDTO
   ) {
     const role = await this.roleService.update(roleId, body);
     return this.roleMapper.update(role);
@@ -242,9 +246,7 @@ export class RoleController {
     permissions: PERMISSION.ROLES_$ROLEID_DELETE,
   })
   @Delete('/:roleId')
-  async delete (
-    @Param('roleId', RoleByIdPipe) roleId: string,
-  ) {
+  async delete (@Param('roleId', RoleByIdPipe) roleId: string) {
     const role = await this.roleService.delete(roleId);
     return this.roleMapper.delete(role);
   }
@@ -259,6 +261,7 @@ export class RoleController {
       PageSize must be a number
       Wrong value for order
       Sort must be an enum
+      Set must be an boolean
       
     InvalidEntityIdException:
       Role with such id is not found`,
@@ -272,16 +275,96 @@ export class RoleController {
     summary: 'Get grants of the role by id',
   })
   @Get('/:roleId/grants')
-  async getGrants (
+  async getAllGrants (
     @Param('roleId', RoleByIdPipe) roleId: string,
     @Query() query: QueryAllGrantsDTO,
-  ) {
-    const grants = await this.roleService.getGrants(roleId, query);
-    const mappedGrants = this.roleMapper.getGrants(grants.data);
+  ): Promise<GrantsResponse> {
+    const grants = await this.roleService.getAllGrants(roleId, query);
     return {
-      grants: mappedGrants,
+      grants: this.roleMapper.getGrants(grants.data),
       pagination: grants.pagination,
     };
+  }
+
+  @ApiOkResponse({
+    type: MappedGrant,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException:
+      Role with such id is not found
+      Grant with such id is not found
+      
+    NotBelongException
+      This grant does not belong to this role`,
+  })
+  @ApiParam({
+    name: 'roleId',
+    required: true,
+    description: 'Id of the role, which grants you want to get',
+  })
+  @ApiParam({
+    name: 'grantId',
+    required: true,
+    description: 'Id of the certain grant',
+  })
+  @ApiEndpoint({
+    summary: 'Get the grant by roleId and grantId',
+  })
+  @Get('/:roleId/grants/:grantId')
+  async getGrant (
+    @Param('roleId', RoleByIdPipe) roleId: string,
+    @Param('grantId', GrantByIdPipe) grantId: string,
+  ): Promise<MappedGrant> {
+    const grant = await this.roleService.getGrant(roleId, grantId);
+    return this.grantMapper.getMappedGrant(grant);
+  }
+
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: MappedGrant,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n 
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidBodyException:
+      Permission cannot be empty
+      Permission can not be less then 3 chars
+      Permission can not be longer then 200 chars
+      Set is not a boolean
+      Weight must be a number
+      Weight cannot be empty
+      Weight can not be less then 1
+      Weight can not be bigger then 5000
+      
+    InvalidEntityIdException:
+      Role with such id is not found`,
+  })
+  @ApiParam({
+    name: 'roleId',
+    required: true,
+    description: 'Id of certain role',
+  })
+  @ApiEndpoint({
+    summary: 'Create grant for certain role',
+    permissions: PERMISSION.ROLES_$ROLEID_GRANT_CREATE,
+  })
+  @Post('/:roleId/grant')
+  async createGrant (
+    @Body() body: CreateGrantDTO,
+    @Param('roleId', RoleByIdPipe) roleId: string,
+  ): Promise<MappedGrant> {
+    const grant = await this.roleService.createGrant(roleId, body);
+    return this.grantMapper.getMappedGrant(grant);
   }
 
   @ApiBearerAuth()
@@ -313,8 +396,8 @@ export class RoleController {
     description: 'Id of certain role',
   })
   @ApiEndpoint({
-    summary: 'Give grants to the role by id',
-    permissions: PERMISSION.ROLES_GRANTS_CREATE,
+    summary: 'Create grants to the role by id',
+    permissions: PERMISSION.ROLES_$ROLEID_GRANTS_CREATE,
   })
   @Post('/:roleId/grants')
   async createGrants (
@@ -328,42 +411,54 @@ export class RoleController {
   @ApiOkResponse({
     type: MappedGrant,
   })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException:
+      Role with such id is not found
+      Grant with such id is not found
+      
+    InvalidBodyException:
+      Permission can not be less then 3 chars
+      Permission can not be longer then 200 chars
+      Set must be boolean
+      Weight must be a number
+      Weight can not be less then 1
+      Weight can not be bigger then 5000
+      
+    NotBelongException
+      This grant does not belong to this role`,
+  })
   @ApiUnauthorizedResponse({
     description: `\n
     UnauthorizedException:
       Unauthorized`,
   })
   @ApiForbiddenResponse({
-    description: `\n 
+    description: `\n
     NoPermissionException:
       You do not have permission to perform this action`,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidBodyException:
-      Permission cannot be empty
-      Set is not a boolean
-      Weight must be a number
-      Weight cannot be empty
-      
-    InvalidEntityIdException:
-      Role with such id is not found`,
   })
   @ApiParam({
     name: 'roleId',
     required: true,
     description: 'Id of certain role',
   })
-  @ApiEndpoint({
-    summary: 'Create grant for certain role',
-    permissions: PERMISSION.ROLES_$ROLEID_GRANT_CREATE,
+  @ApiParam({
+    name: 'grantId',
+    required: true,
+    description: 'Id of certain grant',
   })
-  @Post('/:roleId/grant')
-  async createGrant (
-    @Body() body: CreateGrantDTO,
+  @ApiEndpoint({
+    summary: 'Update certain grant',
+    permissions: PERMISSION.ROLES_$ROLEID_GRANTS_UPDATE,
+  })
+  @Patch('/:roleId/grants/:grantId')
+  async updateGrant (
     @Param('roleId', RoleByIdPipe) roleId: string,
-  ) {
-    const grant = await this.roleService.createGrant(roleId, body);
+    @Param('grantId', GrantByIdPipe) grantId: string,
+    @Body() body: UpdateGrantDTO,
+  ): Promise<MappedGrant> {
+    const grant = await this.roleService.updateGrant(roleId, grantId, body);
     return this.grantMapper.getMappedGrant(grant);
   }
 
@@ -373,13 +468,12 @@ export class RoleController {
   })
   @ApiBadRequestResponse({
     description: `\n
-    InvalidGrantIdException:
-      Grant with such id is not found
+    InvalidEntityIdException:
       Role with such id is not found
+      Grant with such id is not found
       
-    InvalidBodyException:
-      Set must be boolean,
-      Weight must be a number`,
+    NotBelongException
+      This grant does not belong to this role`,
   })
   @ApiUnauthorizedResponse({
     description: `\n
@@ -394,7 +488,7 @@ export class RoleController {
   @ApiParam({
     name: 'roleId',
     required: true,
-    description: 'Id of the role to update it',
+    description: 'Id of certain role',
   })
   @ApiParam({
     name: 'grantId',
@@ -402,16 +496,15 @@ export class RoleController {
     description: 'Id of certain grant',
   })
   @ApiEndpoint({
-    summary: 'Update certain grant',
-    permissions: PERMISSION.ROLES_$ROLEID_GRANT_UPDATE,
+    summary: 'Delete certain grant',
+    permissions: PERMISSION.ROLES_$ROLEID_GRANTS_DELETE,
   })
-  @Patch('/:roleId/grant/:grantId')
-  async updateGrant (
-    @Param('grantId', GrantByIdPipe) grantId: string,
+  @Delete('/:roleId/grants/:grantId')
+  async deleteGrant (
     @Param('roleId', RoleByIdPipe) roleId: string,
-    @Body() body: UpdateGrantDTO,
-  ) {
-    const grant = await this.roleService.updateGrant(roleId, grantId, body);
+    @Param('grantId', GrantByIdPipe) grantId: string,
+  ): Promise<MappedGrant> {
+    const grant = await this.roleService.deleteGrant(roleId, grantId);
     return this.grantMapper.getMappedGrant(grant);
   }
 }

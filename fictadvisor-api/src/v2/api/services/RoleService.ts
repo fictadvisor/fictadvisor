@@ -4,7 +4,7 @@ import { GrantRepository } from '../../database/repositories/GrantRepository';
 import { UpdateRoleDTO } from '../dtos/UpdateRoleDTO';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
 import { CreateRoleWithGrantsDTO } from '../dtos/CreateRoleWithGrantsDTO';
-import { CreateGrantDTO } from '../dtos/CreateGrantsDTO';
+import { CreateGrantDTO } from '../dtos/CreateGrantDTO';
 import { PermissionService } from './PermissionService';
 import { DbRole } from '../../database/entities/DbRole';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
@@ -14,6 +14,8 @@ import { QueryAllRolesDTO } from '../dtos/QueryAllRolesDTO';
 import { CreateRoleDTO } from '../dtos/CreateRoleDTO';
 import { QueryAllGrantsDTO } from '../dtos/QueryAllGrantsDTO';
 import { UpdateGrantDTO } from '../dtos/UpdateGrantDTO';
+import { mapAsync } from '../../utils/ArrayUtil';
+import { NotBelongException } from '../../utils/exceptions/NotBelongException';
 
 @Injectable()
 export class RoleService {
@@ -81,15 +83,11 @@ export class RoleService {
       },
       ...sort,
     };
-    const roles = await DatabaseUtils.paginate<DbRole>(this.roleRepository, query, data);
 
-    return {
-      data: roles.data,
-      pagination: roles.pagination,
-    };
+    return DatabaseUtils.paginate<DbRole>(this.roleRepository, query, data);
   }
 
-  async getGrants (roleId: string, query: QueryAllGrantsDTO) {
+  async getAllGrants (roleId: string, query: QueryAllGrantsDTO) {
     const search = DatabaseUtils.getSearch(query, 'permission');
     const sort = DatabaseUtils.getSort(query, 'permission');
 
@@ -101,56 +99,69 @@ export class RoleService {
       },
       ...sort,
     };
-    const grants = await DatabaseUtils.paginate<Grant>(this.grantRepository, query, data);
 
-    return {
-      data: grants.data,
-      pagination: grants.pagination,
-    };
+    return DatabaseUtils.paginate<Grant>(this.grantRepository, query, data);
+  }
+
+  async getGrant (roleId: string, grantId: string) {
+    await this.checkGrantBelonging(roleId, grantId);
+    return this.grantRepository.findById(grantId);
   }
 
   async createGrants (roleId: string, grants: CreateGrantDTO[]) {
     const createGrants = grants.map((g) => ({ roleId, ...g }));
-    for (const grant of createGrants) {
-      await this.updateHigherGrants(roleId, grant.weight);
-    }
+    const createdGrants = await this.grantRepository.createMany(createGrants);
 
-    return this.grantRepository.createMany(createGrants);
+    await this.reorderGrants(roleId);
+    return createdGrants;
   }
 
   async createGrant (roleId: string, body: CreateGrantDTO) {
-    const grant = { ...body, roleId };
-    await this.updateHigherGrants(roleId, body.weight);
+    const grant = await this.grantRepository.create({ ...body, roleId });
 
-    return this.grantRepository.create(grant);
+    await this.reorderGrants(roleId);
+    return grant;
   }
 
-  async updateGrant (roleId: string, grantId: string, body: UpdateGrantDTO) {
-    await this.updateHigherGrants(roleId, body.weight);
-    return this.grantRepository.updateById(grantId, body);
+  async updateGrant (roleId: string, grantId: string, body: UpdateGrantDTO,) {
+    await this.checkGrantBelonging(roleId, grantId);
+    const grant = await this.grantRepository.updateById(grantId, body);
+
+    await this.reorderGrants(roleId);
+    return grant;
   }
 
-  private async updateHigherGrants (roleId: string, weight: number) {
-    const higherGrants = await this.grantRepository.findMany({
-      where: {
-        roleId,
-        weight: {
-          gte: weight,
-        },
-      },
-      orderBy: {
-        weight: 'asc',
-      },
+  async deleteGrant (roleId: string, grantId: string) {
+    await this.checkGrantBelonging(roleId, grantId);
+    const grant = await this.grantRepository.deleteById(grantId);
+
+    await this.reorderGrants(roleId);
+    return grant;
+  }
+
+  private async checkGrantBelonging (roleId: string, grantId: string) {
+    const grant = await this.grantRepository.findById(grantId);
+    if (grant.roleId !== roleId) {
+      throw new NotBelongException('grant', 'role');
+    }
+  }
+
+  private async reorderGrants (roleId: string) {
+    const grants = await this.grantRepository.findMany({
+      where: { roleId },
+      orderBy:
+          [
+            { weight: 'asc' },
+            { updatedAt: 'desc' },
+          ],
     });
 
-    let prev = weight;
-    for (let i = 0; i < higherGrants.length; i++) {
-      const grant = higherGrants[i];
-      if (prev !== grant.weight) break;
-      grant.weight++;
-      prev = grant.weight;
-      await this.grantRepository.updateById(grant.id, grant);
-    }
+    const toUpdate = grants.map((gr, index) => ({ ...gr, index: index + 1 }))
+      .filter((gr) => gr.weight !== gr.index);
+
+    await mapAsync(toUpdate, async (gr) => {
+      await this.grantRepository.update({ id: gr.id }, { weight: gr.index });
+    });
   }
 
   private async canCreateGrants (userRoles: DbRole[], grants: CreateGrantDTO[]) {
@@ -162,7 +173,6 @@ export class RoleService {
   }
 
   private async checkRole (userRoles: DbRole[], role: CreateRoleWithGrantsDTO) {
-
     const canCreateGrants = await this.canCreateGrants(userRoles, role.grants);
     if (!canCreateGrants) {
       throw new NoPermissionException();
@@ -180,5 +190,4 @@ export class RoleService {
 
     await this.checkRole(userRoles, parent);
   }
-
 }
