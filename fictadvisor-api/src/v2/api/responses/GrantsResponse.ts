@@ -7,7 +7,7 @@ export class GrantsResponse {
       type: [MappedGrant],
       description: 'An array of mapped grants to the role',
     })
-      data: MappedGrant[];
+      grants: MappedGrant[];
 
     @ApiProperty({
       description: 'Pagination properties',

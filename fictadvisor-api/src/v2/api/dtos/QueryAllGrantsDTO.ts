@@ -3,21 +3,23 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { QueryAllDTO } from '../../utils/QueryAllDTO';
 import { validationOptionsMsg } from '../../utils/GLOBALS';
 import { SortQAGParam } from './SortQAGParam';
+import { Transform } from 'class-transformer';
 
 export class QueryAllGrantsDTO extends QueryAllDTO {
   @ApiPropertyOptional({
     enum: SortQAGParam,
     description: 'Sorting by field',
-    default: 'permission',
+    default: SortQAGParam.PERMISSION,
   })
   @IsEnum(SortQAGParam, validationOptionsMsg('Sort must be an enum'))
   @IsOptional()
     sort?: SortQAGParam;
 
   @ApiPropertyOptional({
-    description: 'Set value for grants',
+    description: 'Is permission set',
   })
   @IsOptional()
-  @IsBoolean()
+  @Transform(({ value }) => value === 'true')
+  @IsBoolean(validationOptionsMsg('Set must be an boolean'))
     set?: boolean;
 }
