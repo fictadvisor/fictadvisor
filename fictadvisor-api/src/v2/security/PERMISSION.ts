@@ -54,15 +54,14 @@ export enum PERMISSION {
   ROLES_CREATE = 'roles.create',
   ROLES_$ROLEID_UPDATE = 'roles.update',
   ROLES_$ROLEID_DELETE = 'roles.delete',
-  ROLES_GRANTS_CREATE = 'roles.grants.create',
-  ROLES_$ROLEID_GRANT_CREATE = 'roles.grant.create',
-  ROLES_$ROLEID_GRANT_UPDATE = 'roles.grant.update',
+  ROLES_$ROLEID_GRANTS_CREATE = 'roles.$roleId.grants.create',
+  ROLES_$ROLEID_GRANT_CREATE = 'roles.$roleId.grant.create',
+  ROLES_$ROLEID_GRANTS_UPDATE = 'roles.$roleId.grants.update',
+  ROLES_$ROLEID_GRANTS_DELETE = 'roles.$roleId.grants.delete',
 
   COMMENTS_GET = 'comments.get',
   COMMENTS_UPDATE = 'comments.update',
   COMMENTS_DELETE = 'comments.delete',
-
-  GRANTS_DELETE = 'grants.delete',
 
   SCHEDULE_PARSE = 'schedule.parse',
 

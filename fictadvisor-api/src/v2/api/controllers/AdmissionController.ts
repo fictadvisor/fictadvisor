@@ -6,7 +6,9 @@ import { UpdateQueueUserDTO } from '../dtos/UpdateQueueUserDTO';
 import { CreateEntrantDTO } from '../dtos/CreateEntrantDTO';
 import { Page } from '../../utils/QueryAllDTO';
 import { AdmissionService } from '../services/AdmissionService';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Admission')
 @Controller({
   version: '2',
   path: '/admission',
