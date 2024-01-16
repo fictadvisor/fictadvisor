@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { BarsArrowDownIcon } from '@heroicons/react/24/outline';
+import {
+  BarsArrowDownIcon,
+  BarsArrowUpIcon,
+} from '@heroicons/react/24/outline';
 import { PlusIcon } from '@heroicons/react/24/solid';
 import { Avatar, Box, Grid, Typography, useMediaQuery } from '@mui/material';
 
@@ -21,6 +24,7 @@ import { TextAreaPopup } from '@/components/pages/account-page/components/group-
 import useAuthentication from '@/hooks/use-authentication';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import GroupAPI from '@/lib/api/group/GroupAPI';
+import GroupService from '@/lib/services/group/GroupService';
 import { PERMISSION } from '@/lib/services/permisson/types';
 import theme from '@/styles/theme';
 import { UserGroupRole } from '@/types/user';
@@ -36,6 +40,7 @@ const StudentsTable: React.FC<StudentsTableProps> = ({
   rows,
   refetch,
   onSortButtonClick,
+  order,
 }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down('desktop'));
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -88,13 +93,6 @@ const StudentsTable: React.FC<StudentsTableProps> = ({
           textAlign={DividerTextAlign.LEFT}
           sx={{ flexGrow: 1 }}
         />
-        <IconButton
-          sx={styles.iconButton(isMobile)}
-          shape={IconButtonShape.SQUARE}
-          icon={<BarsArrowDownIcon />}
-          color={IconButtonColor.SECONDARY}
-          onClick={onSortButtonClick}
-        />
         {permissions[PERMISSION.GROUPS_$GROUPID_STUDENTS_ADD] && (
           <>
             {isMobile ? (
@@ -113,6 +111,19 @@ const StudentsTable: React.FC<StudentsTableProps> = ({
             )}
           </>
         )}
+        <IconButton
+          sx={styles.iconButton(isMobile)}
+          shape={IconButtonShape.SQUARE}
+          icon={
+            order === GroupService.Order.ascending ? (
+              <BarsArrowDownIcon />
+            ) : (
+              <BarsArrowUpIcon />
+            )
+          }
+          color={IconButtonColor.SECONDARY}
+          onClick={onSortButtonClick}
+        />
         {permissions[PERMISSION.GROUPS_$GROUPID_LIST_GET] && (
           <>
             {isMobile ? (
@@ -124,7 +135,8 @@ const StudentsTable: React.FC<StudentsTableProps> = ({
               <Tooltip title="Список студентів у форматі CSV">
                 <Box>
                   <ExportButton
-                    size={IconButtonSize.LARGE}
+                    sx={styles.iconButtonSeparated(isMobile)}
+                    size={IconButtonSize.NORMAL}
                     onClick={handleExport}
                   />
                 </Box>
