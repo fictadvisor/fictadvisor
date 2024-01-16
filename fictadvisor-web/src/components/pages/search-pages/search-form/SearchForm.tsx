@@ -8,6 +8,7 @@ import {
   ChevronUpIcon,
 } from '@heroicons/react/24/outline';
 import { Box, useMediaQuery } from '@mui/material';
+import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
 import { Form, Formik, FormikProps, useFormikContext } from 'formik';
 
 import {
@@ -16,12 +17,17 @@ import {
   InputSize,
   InputType,
 } from '@/components/common/ui/form';
+import CheckboxesDropdown from '@/components/common/ui/form/checkboxes-dropdown/CheckboxesDropdown';
+import { CheckboxesDropdownOption } from '@/components/common/ui/form/checkboxes-dropdown/types/CheckboxesDropdown';
+import { FieldSize } from '@/components/common/ui/form/common/types';
 import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
 import {
   IconButtonColor,
   IconButtonShape,
 } from '@/components/common/ui/icon-button';
 import IconButton from '@/components/common/ui/icon-button-mui';
+import { roleOptions } from '@/components/pages/search-pages/teacher-search/constants';
+import CathedraAPI from '@/lib/api/cathera/CathedraAPI';
 import GroupAPI from '@/lib/api/group/GroupAPI';
 import theme from '@/styles/theme';
 
@@ -35,37 +41,74 @@ export interface SearchFormProps {
   filterDropDownOptions: DropDownOption[];
   searchPlaceholder: string;
   localStorageName?: string;
+  isSubject?: boolean;
 }
 const FormObserver = (props: { name?: string }) => {
   const { values } = useFormikContext();
   localStorage.setItem(props.name || '', JSON.stringify(values));
   return null;
 };
+
 const SearchForm: FC<SearchFormProps> = ({
   onSubmit,
   initialValues,
   filterDropDownOptions,
   searchPlaceholder,
   localStorageName,
+  isSubject = false,
 }) => {
   const isTablet = useMediaQuery(theme.breakpoints.down('tablet'));
   const [collapsed, setCollapsed] = useState(false);
-  const { data: groupData } = useQuery('all-groups', GroupAPI.getAll, {
+
+  const { data: groupData } = useQuery('all-teacher', GroupAPI.getAll, {
+    staleTime: Infinity,
+  });
+
+  const { data: cathedraData } = useQuery('all-cathedra', CathedraAPI.getAll, {
     staleTime: Infinity,
   });
 
   const groups: DropDownOption[] = useMemo(
-    () => groupData?.groups.map(({ code, id }) => ({ label: code, id })) || [],
+    () =>
+      groupData?.groups.map(({ code, id }) => ({
+        label: code,
+        id,
+      })) || [],
     [groupData?.groups],
+  );
+
+  const cathedras: CheckboxesDropdownOption[] = useMemo(
+    () =>
+      cathedraData?.cathedras.map(({ abbreviation, id }) => ({
+        label: abbreviation,
+        value: id,
+      })) || [],
+    [cathedraData?.cathedras],
   );
 
   // This is a temporary solution. It will be removed when we rewrite input component to be used without formik and get rid of formik in this case
   const formikRef = useRef<FormikProps<SearchFormFields>>(null);
 
-  const handleGroupChange = useCallback((group: string) => {
-    formikRef.current?.setFieldValue('group', group);
+  const handleGroupChange = useCallback((groupId: string) => {
+    formikRef.current?.setFieldValue('groupId', groupId);
     formikRef.current?.handleSubmit();
   }, []);
+
+  const handleRoleChange = useCallback(
+    (event: SelectChangeEvent<string | []>) => {
+      formikRef.current?.setFieldValue('roles', event.target.value);
+      formikRef.current?.handleSubmit();
+    },
+    [],
+  );
+
+  const handleCathedraChange = useCallback(
+    (event: SelectChangeEvent<string | []>) => {
+      formikRef.current?.setFieldValue('cathedrasId', event.target.value);
+      formikRef.current?.handleSubmit();
+    },
+    [],
+  );
 
   const handleSortChange = useCallback((sort: string) => {
     formikRef.current?.setFieldValue('sort', sort);
@@ -108,17 +151,41 @@ const SearchForm: FC<SearchFormProps> = ({
           </Box>
           {(!collapsed || (!isTablet && collapsed)) && (
             <>
-              <Box sx={styles.dropdown1}>
+              <Box className={stylesScss['dropdown1']}>
                 <Dropdown
                   placeholder="ІП-22"
                   label="Група"
                   onChange={handleGroupChange}
                   showRemark={false}
-                  value={values.group}
+                  value={values.groupId}
                   options={groups}
                 />
               </Box>
-              <Box sx={styles.dropdown2}>
+              {!isSubject && (
+                <Box className={stylesScss['dropdown3']}>
+                  <CheckboxesDropdown
+                    label="Викладає"
+                    size={FieldSize.MEDIUM}
+                    handleChange={handleRoleChange}
+                    values={roleOptions}
+                    selected={values.roles.map(role => ({
+                      label: '',
+                      value: role,
+                    }))}
+                  />
+                  <CheckboxesDropdown
+                    label="Кафедри"
+                    size={FieldSize.MEDIUM}
+                    handleChange={handleCathedraChange}
+                    values={cathedras}
+                    selected={values.cathedrasId.map(cathedra => ({
+                      label: '',
+                      value: cathedra,
+                    }))}
+                  />
+                </Box>
+              )}
+              <Box sx={styles.dropdown2(isSubject)}>
                 <Dropdown
                   label="Сортувати за"
                   placeholder="Іменем"
@@ -126,7 +193,6 @@ const SearchForm: FC<SearchFormProps> = ({
                   showRemark={false}
                   value={values.sort}
                   options={filterDropDownOptions}
-                  disableClearable
                 />
               </Box>
               <Box>

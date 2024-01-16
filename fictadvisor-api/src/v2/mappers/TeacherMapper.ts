@@ -15,8 +15,8 @@ export class TeacherMapper {
       lastName: teacher.lastName,
       description: teacher.description,
       avatar: teacher.avatar,
-      rating: teacher.rating.toNumber(),
-      cathedra: this.getTeacherCathedras(teacher),
+      rating: +teacher.rating,
+      cathedras: this.getCathedras(teacher),
       roles: this.getRoles(teacher),
     };
   }
@@ -25,16 +25,21 @@ export class TeacherMapper {
     return teachers.map((teacher) => this.getTeacher(teacher));
   }
 
-  getRoles (teacher: DbTeacher): Set<TeacherRole> {
+  getRoles (teacher: DbTeacher): TeacherRole[] {
     const roles: TeacherRole[] = [];
     for (const dt of teacher.disciplineTeachers) {
-      roles.push(...dt.roles.map((r) => r.role));
+      roles.push(...dt.roles.map(({ role }) => role));
     }
-    return new Set(roles);
+
+    return [...new Set(roles)];
   }
 
-  private getTeacherCathedras (teacher: DbTeacher) : string[] {
-    return teacher.cathedras?.map((cathedra) => cathedra.cathedra.abbreviation);
+  private getCathedras (teacher: DbTeacher) {
+    return teacher.cathedras?.map(({ cathedra: { id, name, abbreviation } }) => ({
+      id,
+      name,
+      abbreviation,
+    }));
   }
 
   getSortedTeacher ({ sort, order }: SortDTO): Sort | object {
@@ -47,13 +52,5 @@ export class TeacherMapper {
     orderBy.push({ [SortQATParam.MIDDLE_NAME]: order });
 
     return { orderBy };
-  }
-
-  getTeacherWithRoles (dbTeacher: DbTeacher) {
-    const { disciplineTeachers, ...teacher } = dbTeacher;
-    return {
-      ...teacher,
-      roles: this.getRoles(dbTeacher),
-    };
   }
 }

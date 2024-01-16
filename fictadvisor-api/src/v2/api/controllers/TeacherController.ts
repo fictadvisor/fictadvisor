@@ -33,16 +33,15 @@ import { DisciplineTeacherAndSubjectResponse } from '../responses/DisciplineTeac
 import { ContactResponse, ContactsResponse } from '../responses/ContactResponse';
 import { MarksResponse } from '../responses/MarksResponse';
 import { PaginatedQuestionCommentsResponse } from '../responses/PaginatedQuestionCommentsResponse';
-import { TeacherWithSubjectResponse } from '../responses/TeacherWithSubjectResponse';
-import { TeacherWithContactAndRoleResponse } from '../responses/TeacherWithContactAndRoleResponse';
+import { TeacherWithContactsResponse } from '../responses/TeacherWithContactsResponse';
 import { CathedraByIdPipe } from '../pipes/CathedraByIdPipe';
-import { TeacherWithRolesAndContactsResponse } from '../responses/TeacherWithRolesAndContactsResponse';
+import { TeacherWithContactsFullResponse } from '../responses/TeacherWithContactsFullResponse';
 import { PaginatedTeachersResponse } from '../responses/PaginatedTeachersResponse';
 import { CommentsQueryPipe } from '../pipes/CommentsQueryPipe';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
-import { TeacherWithCathedrasResponse } from '../responses/TeacherResponse';
 import { AllTeachersPipe } from '../pipes/AllTeachersPipe';
 import { ComplaintDTO } from '../dtos/ComplaintDTO';
+import { TeacherWithRolesAndCathedrasResponse } from '../responses/TeacherWithRolesAndCathedrasResponse';
 
 @ApiTags('Teachers')
 @Controller({
@@ -82,7 +81,7 @@ export class TeacherController {
   @Get()
   async getAll (
     @Query(AllTeachersPipe) query: QueryAllTeacherDTO,
-  ) {
+  ): Promise<PaginatedTeachersResponse> {
     const teachers = await this.teacherService.getAll(query);
     return {
       teachers: this.teacherMapper.getTeachers(teachers.data),
@@ -190,7 +189,7 @@ export class TeacherController {
   }
 
   @ApiOkResponse({
-    type: TeacherWithSubjectResponse,
+    type: TeacherWithContactsFullResponse,
   })
   @ApiBadRequestResponse({
     description: `\n
@@ -215,12 +214,12 @@ export class TeacherController {
   async getSubject (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
     @Param('subjectId', SubjectByIdPipe) subjectId: string,
-  ) {
+  ): Promise<TeacherWithContactsFullResponse> {
     return this.teacherService.getTeacherSubject(teacherId, subjectId);
   }
 
   @ApiOkResponse({
-    type: TeacherWithContactAndRoleResponse,
+    type: TeacherWithContactsResponse,
   })
   @ApiBadRequestResponse({
     description: `\n
@@ -236,15 +235,19 @@ export class TeacherController {
     summary: 'Receive a certain teacher',
   })
   @Get('/:teacherId')
-  getTeacher (
+  async getTeacher (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
-  ) {
-    return this.teacherService.getTeacher(teacherId);
+  ): Promise<TeacherWithContactsResponse> {
+    const { dbTeacher, contacts } = await this.teacherService.getTeacher(teacherId);
+    return {
+      ...this.teacherMapper.getTeacher(dbTeacher),
+      contacts,
+    };
   }
 
   @ApiBearerAuth()
   @ApiOkResponse({
-    type: TeacherWithCathedrasResponse,
+    type: TeacherWithRolesAndCathedrasResponse,
   })
   @ApiBadRequestResponse({
     description: `\n
@@ -282,7 +285,7 @@ export class TeacherController {
   @Access(PERMISSION.TEACHERS_$TEACHERID_UPDATE)
   @ApiBearerAuth()
   @ApiOkResponse({
-    type: TeacherWithCathedrasResponse,
+    type: TeacherWithRolesAndCathedrasResponse,
   })
   @ApiBadRequestResponse({
     description: `\n
@@ -550,7 +553,7 @@ export class TeacherController {
   @ApiBearerAuth()
   @Patch('/:teacherId/cathedra/:cathedraId')
   @ApiOkResponse({
-    type: TeacherWithRolesAndContactsResponse,
+    type: TeacherWithContactsFullResponse,
   })
   @ApiBadRequestResponse({
     description: `InvalidEntityIdException:\n
@@ -570,7 +573,7 @@ export class TeacherController {
 
   @ApiBearerAuth()
   @ApiOkResponse({
-    type: TeacherWithRolesAndContactsResponse,
+    type: TeacherWithContactsFullResponse,
   })
   @ApiBadRequestResponse({
     description: `\n

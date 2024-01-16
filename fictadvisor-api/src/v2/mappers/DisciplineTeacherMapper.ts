@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { DbDisciplineTeacher } from '../database/entities/DbDisciplineTeacher';
-import { TeacherRole } from '@prisma/client';
+import { Subject, TeacherRole } from '@prisma/client';
+import { DisciplineTeacherFullResponse } from '../api/responses/DisciplineTeacherResponse';
+import { SubjectResponse } from '../api/responses/SubjectResponse';
 
 @Injectable()
 export class DisciplineTeacherMapper {
@@ -44,15 +46,34 @@ export class DisciplineTeacherMapper {
     return Array.from(roles);
   }
 
-  getDisciplineTeachers (disciplineTeachers: DbDisciplineTeacher[]) {
-    return disciplineTeachers.map((disciplineTeacher) => ({
-      disciplineTeacherId: disciplineTeacher.id,
-      roles: disciplineTeacher.roles.map((r) => r.role),
-      firstName: disciplineTeacher.teacher.firstName,
-      middleName: disciplineTeacher.teacher.middleName,
-      lastName: disciplineTeacher.teacher.lastName,
-      avatar: disciplineTeacher.teacher.avatar,
-      subject: disciplineTeacher.discipline.subject,
-    }));
+  getDisciplineTeachers (disciplineTeachers: DbDisciplineTeacher[]): DisciplineTeacherFullResponse[] {
+    return disciplineTeachers.map((disciplineTeacher) => {
+      const { teacher, discipline: { subject } } = disciplineTeacher;
+
+      return {
+        id: teacher.id,
+        firstName: teacher.firstName,
+        middleName: teacher.middleName,
+        lastName: teacher.lastName,
+        description: teacher.description,
+        avatar: teacher.avatar,
+        rating: +teacher.rating,
+        disciplineTeacherId: disciplineTeacher.id,
+        roles: disciplineTeacher.roles.map((r) => r.role),
+        subject: this.getSubject(subject),
+        cathedras: teacher.cathedras.map(({ cathedra: { id, name, abbreviation } }) => ({
+          id,
+          name,
+          abbreviation,
+        })),
+      };
+    });
+  }
+
+  getSubject (subject: Subject): SubjectResponse {
+    return {
+      id: subject.id,
+      name: subject.name,
+    };
   }
 }

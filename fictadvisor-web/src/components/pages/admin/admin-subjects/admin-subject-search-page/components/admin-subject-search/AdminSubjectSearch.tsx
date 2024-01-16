@@ -27,13 +27,27 @@ const AdminSubjectSearch: FC<AdminSubjectSearchProps> = ({ onSubmit }) => {
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
   const [values, setValues] = useState<SearchFormFields>(SubjectInitialValues);
   const handleSubmit = () => {
-    setValues({ search, order, sort: 'name', group: '' });
+    setValues({
+      search,
+      order,
+      sort: 'name',
+      groupId: '',
+      roles: [],
+      cathedrasId: [],
+    });
     onSubmit(values);
   };
 
   const handleSortButtonClick = () => {
     setOrder(order === 'asc' ? 'desc' : 'asc');
-    setValues({ search, order, sort: 'name', group: '' });
+    setValues({
+      search,
+      order,
+      sort: 'name',
+      groupId: '',
+      roles: [],
+      cathedrasId: [],
+    });
     onSubmit(values);
   };
 

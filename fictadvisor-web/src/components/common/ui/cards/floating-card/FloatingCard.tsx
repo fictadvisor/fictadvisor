@@ -22,6 +22,7 @@ const FloatingCard: FC<FloatingCardProps> = ({
   contacts,
   subjectName,
   rating,
+  cathedras,
 }) => {
   return (
     <Box sx={styles.card}>
@@ -34,7 +35,7 @@ const FloatingCard: FC<FloatingCardProps> = ({
           >{`${lastName} ${firstName} ${middleName}`}</Typography>
           {rating !== 0 && <Rating sx={styles.rating} rating={rating / 20} />}
           <Box sx={styles.tags}>
-            <CardRoles roles={roles} />
+            <CardRoles roles={roles} cathedras={cathedras} />
           </Box>
         </Box>
       </Box>

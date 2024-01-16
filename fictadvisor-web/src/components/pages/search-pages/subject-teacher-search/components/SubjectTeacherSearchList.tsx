@@ -48,6 +48,7 @@ export const SubjectTeacherSearchList: FC<SubjectTeacherSearchListProps> = ({
                 roles={teacher.roles}
                 rating={teacher.rating / 20}
                 isSubjectCard
+                cathedras={teacher.cathedras}
               />
             </Link>
           ))}

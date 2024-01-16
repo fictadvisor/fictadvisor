@@ -1,12 +1,28 @@
 @import 'src/styles/partials/utils';
+@import 'src/styles/partials/breakpoints';
 
 .card-roles {
   @include flex-center;
   flex-wrap: nowrap;
   overflow: hidden;
-  gap: 4px;
+  gap: 6px;
   justify-content: flex-start;
   svg {
     width: 20px;
+  }
+  p {
+    line-height: 18px;
+  }
+}
+
+@media screen and (min-width: $breakpoint-mobile-medium) and (max-width: $breakpoint-tablet) {
+  .card-roles {
+    flex-wrap: wrap;
+  }
+}
+
+@media screen and (min-width: $breakpoint-mobile-medium) {
+  .extra {
+    display: none;
   }
 }

@@ -8,6 +8,12 @@ export enum TeacherRole {
   OTHER = 'OTHER',
 }
 
+export interface TeacherCathedra {
+  id: string;
+  name: string;
+  abbreviation: string;
+}
+
 export interface TeacherSubject {
   id: string;
   name: string;
@@ -28,6 +34,7 @@ export interface Teacher {
   description: string;
   rating: number;
   contacts: Contact[];
+  cathedras: TeacherCathedra[];
 }
 
 export interface DisciplineTeacher extends Teacher {

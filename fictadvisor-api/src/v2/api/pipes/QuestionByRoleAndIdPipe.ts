@@ -9,7 +9,7 @@ export class QuestionByRoleAndIdPipe implements PipeTransform {
     private questionRepository: QuestionRepository,
   ) {}
 
-  async transform (params: {questionId: string, role: TeacherRole}) {
+  async transform (params: { questionId: string, role: TeacherRole }) {
     const { questionId, role } = params;
     const question = await this.questionRepository.findById(questionId);
     if (!question) {

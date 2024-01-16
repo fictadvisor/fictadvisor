@@ -819,6 +819,7 @@ describe('ScheduleService', () => {
             updatedAt: expect.any(Date),
           }],
           teacher: {
+            cathedras: [],
             avatar: null,
             createdAt: expect.any(Date),
             description: null,
@@ -895,6 +896,7 @@ describe('ScheduleService', () => {
             updatedAt: expect.any(Date),
           }],
           teacher: {
+            cathedras: [],
             avatar: null,
             createdAt: expect.any(Date),
             description: null,

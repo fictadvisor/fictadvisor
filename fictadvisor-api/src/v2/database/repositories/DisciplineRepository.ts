@@ -12,7 +12,15 @@ export class DisciplineRepository {
     disciplineTypes: true,
     disciplineTeachers: {
       include: {
-        teacher: true,
+        teacher: {
+          include: {
+            cathedras: {
+              include: {
+                cathedra: true,
+              },
+            },
+          },
+        },
         roles: true,
       },
     },

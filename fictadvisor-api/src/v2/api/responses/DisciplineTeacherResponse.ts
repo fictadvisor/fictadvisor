@@ -1,16 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { TeacherResponse } from './TeacherResponse';
-import { TeacherRole } from '@prisma/client';
+import { TeacherWithRolesAndCathedrasResponse } from './TeacherWithRolesAndCathedrasResponse';
+import { TeacherFullResponse } from './TeacherFullResponse';
 
-export class DisciplineTeacherResponse extends TeacherResponse {
+export class DisciplineTeacherResponse extends TeacherWithRolesAndCathedrasResponse {
   @ApiProperty({
     description: 'Id of specified discipline teacher',
   })
     disciplineTeacherId: string;
+}
+
+export class DisciplineTeacherFullResponse extends TeacherFullResponse {
   @ApiProperty({
-    type: [TeacherRole],
-    enum: TeacherRole,
-    description: 'The specified teacher roles in discipline',
+    description: 'Id of specified discipline teacher',
   })
-    roles: TeacherRole[];
+    disciplineTeacherId: string;
 }

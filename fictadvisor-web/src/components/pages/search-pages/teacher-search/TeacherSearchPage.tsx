@@ -28,9 +28,11 @@ import { TeacherSearchList } from './components/TeacherSearchList';
 import * as styles from './TeacherSearchPage.styles';
 
 export const TeacherSearchPage = () => {
-  const initialValues = localStorage.getItem('teachersForm')
-    ? JSON.parse(localStorage.getItem('teachersForm') || '{}')
-    : TeacherInitialValues;
+  const parsedData = JSON.parse(localStorage.getItem('teachersForm') || '{}');
+  const initialValues =
+    parsedData.length === Object.keys(TeacherInitialValues).length
+      ? parsedData
+      : TeacherInitialValues;
   const localStorageName = 'teachersForm';
   const [queryObj, setQueryObj] = useState<SearchFormFields>(initialValues);
   const [curPage, setCurPage] = useState(0);

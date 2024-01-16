@@ -1,6 +1,6 @@
 import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
-import { Box, Typography, useMediaQuery } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 import Button from '@/components/common/ui/button-mui';
 import { ButtonVariant } from '@/components/common/ui/button-mui/types';
@@ -8,9 +8,8 @@ import { CardRoles } from '@/components/common/ui/cards/card-roles';
 import Rating from '@/components/common/ui/rating';
 import { teacherContext } from '@/components/pages/personal-teacher-page/PersonalTeacherPage';
 import { teacherSubjectContext } from '@/components/pages/personal-teacher-subject-page/PersonalTeacherSubjectPage';
-import theme from '@/styles/theme';
 import { Contact } from '@/types/contact';
-import { TeacherRole, TeacherSubject } from '@/types/teacher';
+import { TeacherCathedra, TeacherRole, TeacherSubject } from '@/types/teacher';
 
 import Contacts from '../../../../pages/personal-teacher-page/contacts/Contact';
 
@@ -26,6 +25,7 @@ interface TeacherCard {
   description: string;
   rating: number;
   contacts: Contact[];
+  cathedras: TeacherCathedra[];
   subject?: TeacherSubject;
   isSubjectCard?: boolean;
 }
@@ -39,6 +39,7 @@ const PersonalTeacherCard: FC<TeacherCard> = ({
   description,
   rating,
   contacts,
+  cathedras,
   subject,
   isSubjectCard = false,
 }) => {
@@ -46,7 +47,6 @@ const PersonalTeacherCard: FC<TeacherCard> = ({
   const blockRef = useRef<HTMLDivElement>(null);
   const { setFloatingCardShowed } = useContext(teacherContext);
   const { setSubjectFloatingCardShowed } = useContext(teacherSubjectContext);
-  const isDesktop = useMediaQuery(theme.breakpoints.up('mobileMedium'));
   const contactsStatus = isContactsVisible ? 'shown' : 'hidden';
   useEffect(() => {
     const handleScroll = () => {
@@ -83,7 +83,7 @@ const PersonalTeacherCard: FC<TeacherCard> = ({
         </Box>
       )}
       <Box sx={styles.tags(isSubjectCard)}>
-        <CardRoles roles={roles} isDesktop={isDesktop} />
+        <CardRoles roles={roles} cathedras={cathedras} isPersonalPage={true} />
       </Box>
       {!isSubjectCard && (
         <Box sx={styles.info}>

@@ -12,7 +12,7 @@ export class DbTeacher {
     cathedra: Cathedra,
   })[];
   rating: Decimal;
-  disciplineTeachers: {
+  disciplineTeachers?: {
     id: string,
     teacherId: string,
     disciplineId: string,

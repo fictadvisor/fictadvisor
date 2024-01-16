@@ -24,9 +24,7 @@ export class TeacherRepository {
     },
   };
 
-  async findMany (
-    data: Prisma.TeacherFindManyArgs,
-  ) {
+  async findMany (data: Prisma.TeacherFindManyArgs) {
     return this.prisma.teacher.findMany({
       include: this.include,
       ...data,
