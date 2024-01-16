@@ -1,3 +1,4 @@
+import { GrantsSearchFormFields } from '@/components/pages/admin/admin-grants/common/types/GrantsSearchFormFields';
 import { RolesSearchFormFields } from '@/components/pages/admin/admin-roles/common/types/HeaderRolesSearch';
 import { getAuthorizationHeader } from '@/lib/api/utils';
 import { convertEmptyStringToUndefined } from '@/lib/utils/convertEmptyStringToUndefined';

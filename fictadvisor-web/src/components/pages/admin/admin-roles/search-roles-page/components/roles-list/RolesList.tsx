@@ -112,7 +112,7 @@ const RolesList: FC<RolesListProps> = ({
               <TableCell align="right" sx={styles.actionsWrapper}>
                 <Box sx={styles.actions}>
                   <Link
-                    href="/admin/grants"
+                    href={`/admin/roles/${role.id}/grants`}
                     component={NextLink}
                     underline="none"
                     color="inherit"

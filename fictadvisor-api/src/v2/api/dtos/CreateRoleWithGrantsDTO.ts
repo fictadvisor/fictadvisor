@@ -2,7 +2,7 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsUUID, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { CreateRoleDTO } from './CreateRoleDTO';
-import { CreateGrantDTO } from './CreateGrantsDTO';
+import { CreateGrantDTO } from './CreateGrantDTO';
 
 export class CreateRoleWithGrantsDTO extends CreateRoleDTO {
   @ApiPropertyOptional({

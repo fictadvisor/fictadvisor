@@ -126,7 +126,7 @@ const EditRolesPage: FC<EditRolesPageProps> = ({ role }) => {
         </Box>
         <Box sx={{ maxWidth: '149px' }}>
           <Link
-            href="/admin/grants"
+            href={`/admin/roles/${role.id}/grants`}
             component={NextLink}
             underline="none"
             color="inherit"
