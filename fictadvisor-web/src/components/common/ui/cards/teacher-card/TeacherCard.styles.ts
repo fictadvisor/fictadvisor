@@ -43,7 +43,7 @@ export const disabledCard: SxProps<Theme> = {
   color: 'grey.500',
 };
 
-export const teacherCardShift = (isSubject: boolean): SxProps<Theme> => ({
+export const teacherCardShift: SxProps<Theme> = {
   display: 'flex',
   flexDirection: 'column',
   position: 'relative',
@@ -52,7 +52,7 @@ export const teacherCardShift = (isSubject: boolean): SxProps<Theme> => ({
     mobileMedium: '12px',
     mobile: '8px',
   },
-});
+};
 
 export const teacherCardTopPart: SxProps<Theme> = {
   display: 'flex',
@@ -61,14 +61,14 @@ export const teacherCardTopPart: SxProps<Theme> = {
   position: 'relative',
 };
 
-export const teacherCardAvatar = (isSubject: boolean): SxProps<Theme> => ({
+export const teacherCardAvatar: SxProps<Theme> = {
   boxSizing: 'content-box',
   width: '64px',
   height: '64px',
   boxShadow: '0 0 0 2px backgroundDark.300',
   borderRadius: '100%',
   WebkitBorderRadius: '100%',
-});
+};
 
 export const teacherCardTopPartRating: SxProps<Theme> = {
   position: 'relative',

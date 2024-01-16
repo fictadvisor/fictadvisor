@@ -15,7 +15,15 @@ export class DisciplineTeacherRepository {
       },
     },
     roles: true,
-    teacher: true,
+    teacher: {
+      include: {
+        cathedras: {
+          include: {
+            cathedra: true,
+          },
+        },
+      },
+    },
   };
 
   constructor (
@@ -31,14 +39,14 @@ export class DisciplineTeacherRepository {
     });
   }
 
-  async create (data: Prisma.DisciplineTeacherUncheckedCreateInput) {
+  async create (data: Prisma.DisciplineTeacherUncheckedCreateInput): Promise<DbDisciplineTeacher> {
     return this.prisma.disciplineTeacher.create({
       data,
       include: this.include,
     });
   }
 
-  async updateById (id: string, data: Prisma.DisciplineTeacherUncheckedUpdateInput) {
+  async updateById (id: string, data: Prisma.DisciplineTeacherUncheckedUpdateInput): Promise<DbDisciplineTeacher> {
     return this.prisma.disciplineTeacher.update({
       where: {
         id,
@@ -48,14 +56,14 @@ export class DisciplineTeacherRepository {
     });
   }
 
-  async find (where: Prisma.DisciplineTeacherWhereInput) {
+  async find (where: Prisma.DisciplineTeacherWhereInput): Promise<DbDisciplineTeacher> {
     return this.prisma.disciplineTeacher.findFirst({
       where,
       include: this.include,
     });
   }
 
-  async getOrCreate (data: { teacherId: string, disciplineId: string }) {
+  async getOrCreate (data: { teacherId: string, disciplineId: string }): Promise<DbDisciplineTeacher> {
     let disciplineTeacher = await this.find(data);
     if (!disciplineTeacher) {
       disciplineTeacher = await this.create(data);
@@ -63,7 +71,7 @@ export class DisciplineTeacherRepository {
     return disciplineTeacher;
   }
 
-  async deleteById (id: string) {
+  async deleteById (id: string): Promise<DbDisciplineTeacher> {
     return this.prisma.disciplineTeacher.delete({
       where: {
         id,
@@ -72,7 +80,7 @@ export class DisciplineTeacherRepository {
     });
   }
 
-  findMany (data: Prisma.DisciplineTeacherFindManyArgs): any {
+  async findMany (data: Prisma.DisciplineTeacherFindManyArgs): Promise<DbDisciplineTeacher[]> {
     return this.prisma.disciplineTeacher.findMany({
       ...data,
       include: this.include,

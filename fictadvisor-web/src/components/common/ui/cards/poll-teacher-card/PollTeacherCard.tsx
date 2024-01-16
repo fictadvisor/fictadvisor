@@ -15,7 +15,7 @@ import { DivProps } from '@/components/common/ui/cards/types';
 import IconButton from '@/components/common/ui/icon-button-mui';
 import Tooltip from '@/components/common/ui/tooltip';
 import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
-import { TeacherRole } from '@/types/teacher';
+import { TeacherCathedra, TeacherRole } from '@/types/teacher';
 
 import { IconButtonColor } from '../../icon-button-mui/types';
 
@@ -30,6 +30,7 @@ type PollTeacherCardProps = {
   avatar?: string;
   disabled?: boolean;
   href?: string;
+  cathedras: TeacherCathedra[];
 } & DivProps;
 
 export const PollTeacherCard: FC<PollTeacherCardProps> = ({
@@ -39,6 +40,7 @@ export const PollTeacherCard: FC<PollTeacherCardProps> = ({
   roles = [],
   avatar,
   disabled,
+  cathedras,
   href = '/',
   ...rest
 }) => {
@@ -79,6 +81,7 @@ export const PollTeacherCard: FC<PollTeacherCardProps> = ({
             <CardRoles
               roles={roles}
               className={styles['poll-teacher-card-roles']}
+              cathedras={cathedras}
             />
             <div className={styles['poll-teacher-card-info']}>
               <h4 className={styles['poll-teacher-name']}>{name}</h4>

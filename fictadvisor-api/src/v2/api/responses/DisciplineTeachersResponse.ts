@@ -1,17 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { SubjectResponse } from './SubjectResponse';
-import { TeacherWithDisciplinesResponse } from './TeacherResponse';
 import { DisciplineTeacherResponse } from './DisciplineTeacherResponse';
 
 export class DisciplineTeachersResponse {
   @ApiProperty({
     type: [DisciplineTeacherResponse],
-    description: 'Array of discipline teacher objects',
+    description: 'List of teachers of the specific discipline',
   })
     teachers: DisciplineTeacherResponse[];
 }
 
-export class ExtendDisciplineTeachersResponse {
+export class ExtendDisciplineTeachersResponse extends DisciplineTeachersResponse {
   @ApiProperty({
     description: 'Id of the discipline extended with teachers',
   })
@@ -37,10 +36,4 @@ export class ExtendDisciplineTeachersResponse {
     description: 'Discipline can be selected',
   })
     isSelective: boolean;
-
-  @ApiProperty({
-    type: [TeacherWithDisciplinesResponse],
-    description: 'List of teachers of the specific discipline',
-  })
-    teachers: TeacherWithDisciplinesResponse[];
 }

@@ -151,7 +151,6 @@ export class PollController {
     return this.pollService.getDisciplineTeachers(userId, query);
   }
 
-
   @ApiBearerAuth()
   @ApiOkResponse({
     type: QuestionResponse,
@@ -351,7 +350,7 @@ export class PollController {
   })
   @Delete('/questions/:questionId/roles/:role')
   async deleteRole (
-    @Param(QuestionByRoleAndIdPipe) params,
+    @Param(QuestionByRoleAndIdPipe) params: { questionId: string, role: TeacherRole },
   ) {
     const question = await this.pollService.deleteRole(params.questionId, params.role);
     return this.questionMapper.getQuestionWithRoles(question);

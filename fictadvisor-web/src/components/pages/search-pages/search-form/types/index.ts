@@ -1,6 +1,10 @@
+import { TeacherRole } from '@/types/teacher';
+
 export interface SearchFormFields {
   search: string;
   order: 'asc' | 'desc';
   sort: string;
-  group: string;
+  groupId: string;
+  roles: TeacherRole[];
+  cathedrasId: [];
 }

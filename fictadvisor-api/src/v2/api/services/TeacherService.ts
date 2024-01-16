@@ -24,6 +24,7 @@ import { Cron } from '@nestjs/schedule';
 import { ComplaintDTO } from '../dtos/ComplaintDTO';
 import { TelegramAPI } from '../../telegram/TelegramAPI';
 import { GroupRepository } from '../../database/repositories/GroupRepository';
+import { TeacherWithContactsFullResponse } from '../responses/TeacherWithContactsFullResponse';
 
 @Injectable()
 export class TeacherService {
@@ -120,15 +121,11 @@ export class TeacherService {
 
   async getTeacher (id: string) {
     const dbTeacher = await this.teacherRepository.findById(id);
-    const { disciplineTeachers, rating, ...teacher } = dbTeacher;
-    const roles = this.teacherMapper.getRoles(dbTeacher);
     const contacts = await this.contactRepository.getAllContacts(id);
 
     return {
-      ...teacher,
-      roles,
+      dbTeacher,
       contacts,
-      rating: rating.toNumber(),
     };
   }
 
@@ -292,7 +289,7 @@ export class TeacherService {
     );
   }
 
-  async getTeacherSubject (teacherId: string, subjectId: string) {
+  async getTeacherSubject (teacherId: string, subjectId: string): Promise<TeacherWithContactsFullResponse> {
     const dbTeacher = await this.teacherRepository.find({
       id: teacherId,
       disciplineTeachers: {
@@ -305,26 +302,20 @@ export class TeacherService {
     });
 
     if (!dbTeacher) {
-      throw new InvalidEntityIdException('subject');
+      throw new InvalidEntityIdException('Subject');
     }
 
-    const { disciplineTeachers, ...teacher } = dbTeacher;
+    const { disciplineTeachers } = dbTeacher;
 
     const roles = this.disciplineTeacherMapper.getRolesBySubject(disciplineTeachers as unknown as DbDisciplineTeacher[], subjectId);
-    const { disciplines, ...subject } = await this.subjectRepository.findById(subjectId);
+    const subject = await this.subjectRepository.findById(subjectId);
     const contacts = await this.contactRepository.getAllContacts(teacherId);
-    const data = {
-      subjectId,
-    };
-    const marks = await this.getMarks(teacherId, data);
-    const rating = this.getRating(marks);
 
     return {
-      ...teacher,
-      subject,
+      ...this.teacherMapper.getTeacher(dbTeacher),
+      subject: this.disciplineTeacherMapper.getSubject(subject),
       roles,
       contacts,
-      rating,
     };
   }
 

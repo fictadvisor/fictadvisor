@@ -3,9 +3,12 @@ import { DbDiscipline } from '../database/entities/DbDiscipline';
 import { SelectiveAmount } from '@prisma/client';
 import { ExtendDisciplineTeachersResponse } from '../api/responses/DisciplineTeachersResponse';
 import { DisciplineAdminResponse } from '../api/responses/DisciplineResponse';
+import { TeacherMapper } from './TeacherMapper';
 
 @Injectable()
 export class DisciplineMapper {
+  constructor (private teacherMapper: TeacherMapper) {}
+
   getDisciplinesWithTeachers (disciplines: DbDiscipline[]) {
     return disciplines.map((discipline) => this.getDisciplineWithTeachers(discipline));
   }
@@ -13,15 +16,16 @@ export class DisciplineMapper {
   getDisciplineWithTeachers (discipline: DbDiscipline): ExtendDisciplineTeachersResponse {
     return {
       id: discipline.id,
-      subject: discipline.subject,
+      subject: {
+        id: discipline.subject.id,
+        name: discipline.subject.name,
+      },
       year: discipline.year,
       semester: discipline.semester,
       isSelective: discipline.isSelective,
-      teachers: discipline.disciplineTeachers.map((disciplineTeacher) => ({
+      teachers: discipline.disciplineTeachers?.map((disciplineTeacher) => ({
         disciplineTeacherId: disciplineTeacher.id,
-        ...disciplineTeacher.teacher,
-        rating: disciplineTeacher.teacher.rating.toNumber(),
-        roles: disciplineTeacher.roles.map((r) => r.role),
+        ...this.teacherMapper.getTeacher({ ...disciplineTeacher.teacher, disciplineTeachers: [] }),
       })),
     };
   }

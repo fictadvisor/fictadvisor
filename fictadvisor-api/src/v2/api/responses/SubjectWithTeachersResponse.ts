@@ -1,13 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { TeacherWithRatingAndRolesResponse } from './TeacherWithRatingAndRolesResponse';
+import { TeacherWithRolesAndCathedrasResponse } from './TeacherWithRolesAndCathedrasResponse';
 
 export class SubjectWithTeachersResponse {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'The name of the selected subject',
+  })
     subjectName: string;
 
   @ApiProperty({
-    type: [TeacherWithRatingAndRolesResponse],
+    type: [TeacherWithRolesAndCathedrasResponse],
+    description: 'Teachers connected to the selected subject',
   })
-    teachers: TeacherWithRatingAndRolesResponse[];
+    teachers: TeacherWithRolesAndCathedrasResponse[];
 
 }

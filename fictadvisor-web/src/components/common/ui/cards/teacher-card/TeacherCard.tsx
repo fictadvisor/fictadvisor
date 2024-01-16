@@ -5,13 +5,14 @@ import { CardRoles } from '@/components/common/ui/cards/card-roles';
 import Rating from '@/components/common/ui/rating';
 import { RatingVariant } from '@/components/common/ui/rating/types';
 import theme from '@/styles/theme';
-import { TeacherRole } from '@/types/teacher';
+import { TeacherCathedra, TeacherRole } from '@/types/teacher';
 
 import * as styles from './TeacherCard.styles';
 
 type TeacherCardProps = {
   name: string;
   rating?: number;
+  cathedras?: TeacherCathedra[];
   roles?: TeacherRole[];
   avatar?: string;
   disabled?: boolean;
@@ -24,6 +25,7 @@ export const TeacherCard: React.FC<TeacherCardProps> = ({
   avatar,
   disabled,
   rating = 0,
+  cathedras = [],
   isSubjectCard = false,
 }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down('desktopSemiMedium'));
@@ -31,13 +33,9 @@ export const TeacherCard: React.FC<TeacherCardProps> = ({
     <Box
       sx={disabled ? styles.disabledCard : styles.teacherCard(isSubjectCard)}
     >
-      <Box sx={styles.teacherCardShift(isSubjectCard)}>
+      <Box sx={styles.teacherCardShift}>
         <Box sx={styles.teacherCardTopPart}>
-          <Avatar
-            sx={styles.teacherCardAvatar(isSubjectCard)}
-            src={avatar}
-            alt="викладач"
-          />
+          <Avatar sx={styles.teacherCardAvatar} src={avatar} alt="викладач" />
           <Box sx={styles.teacherCardTopPartRating}>
             {rating !== 0 && (
               <Rating
@@ -47,7 +45,11 @@ export const TeacherCard: React.FC<TeacherCardProps> = ({
             )}
           </Box>
         </Box>
-        <CardRoles roles={roles} />
+        <CardRoles
+          roles={roles}
+          cathedras={cathedras}
+          isTeachersPage={!isSubjectCard}
+        />
         <Typography sx={styles.teacherCardName(isSubjectCard)}>
           {name}
         </Typography>

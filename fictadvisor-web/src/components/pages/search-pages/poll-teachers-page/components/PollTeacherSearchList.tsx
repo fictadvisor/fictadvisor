@@ -83,6 +83,7 @@ const PollTeacherSearchList: FC<PollTeacherSearchListProps> = ({
                 roles={teacher.roles}
                 href={`/poll/${teacher.disciplineTeacherId}`}
                 id={teacher.disciplineTeacherId}
+                cathedras={teacher.cathedras}
               />
             ))}
         </List>

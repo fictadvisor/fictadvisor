@@ -11,6 +11,7 @@ import { TeacherService } from './TeacherService';
 import { DbTeacher } from '../../database/entities/DbTeacher';
 import { QuestionMapper } from '../../mappers/QuestionMapper';
 import { DbDisciplineTeacherWithAnswers } from '../../database/entities/DbDisciplineTeacherWithAnswers';
+import { SubjectWithTeachersResponse } from '../responses/SubjectWithTeachersResponse';
 
 @Injectable()
 export class SubjectService {
@@ -71,7 +72,7 @@ export class SubjectService {
     return await this.subjectRepository.findById(id);
   }
 
-  async getTeachers (id: string) {
+  async getTeachers (id: string): Promise<SubjectWithTeachersResponse> {
     const { name: subjectName } = await this.subjectRepository.findById(id);
 
     const dbTeachers = await this.teacherRepository.findMany({
@@ -107,6 +108,11 @@ export class SubjectService {
             },
           },
         },
+        cathedras: {
+          include: {
+            cathedra: true,
+          },
+        },
       },
     });
 
@@ -117,7 +123,7 @@ export class SubjectService {
       const marks = this.questionMapper.getMarks(sortedQuestionsWithAnswers);
 
       teachers.push({
-        ...this.teacherMapper.getTeacherWithRoles(dbTeacher as DbTeacher),
+        ...this.teacherMapper.getTeacher(dbTeacher as DbTeacher),
         rating: this.teacherService.getRating(marks),
       });
     }

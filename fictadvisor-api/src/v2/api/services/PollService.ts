@@ -6,7 +6,6 @@ import {
   TeacherRole,
   Prisma,
 } from '@prisma/client';
-import { UpdateQuestionWithRolesDTO } from '../dtos/UpdateQuestionWithRolesDTO';
 import { ResponseData } from '../datas/ResponseData';
 import { CreateQuestionRoleDTO } from '../dtos/CreateQuestionRoleDTO';
 import { DbQuestionWithAnswers } from '../../database/entities/DbQuestionWithAnswers';
@@ -25,6 +24,7 @@ import { DatabaseUtils } from '../../database/DatabaseUtils';
 import { SortQATParam } from '../dtos/SortQATParam';
 import { QueryAllDisciplineTeacherForPollDTO } from '../dtos/QueryAllDisciplineTeacherForPollDTO';
 import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
+import { PollDisciplineTeachersResponse } from '../responses/PollDisciplineTeachersResponse';
 import { QueryAllQuestionDTO } from '../dtos/QueryAllQuestionDTO';
 import { DbQuestion } from '../../database/entities/DbQuestion';
 import { CreateQuestionDTO } from '../dtos/CreateQuestionDTO';
@@ -34,7 +34,7 @@ import { OrderQAParam } from '../dtos/OrderQAParam';
 
 @Injectable()
 export class PollService {
-  constructor(
+  constructor (
     private questionRepository: QuestionRepository,
     private disciplineTeacherMapper: DisciplineTeacherMapper,
     private dateService: DateService,
@@ -199,7 +199,7 @@ export class PollService {
       const comments = await DatabaseUtils.paginate(
         this.questionAnswerRepository,
         query,
-        commentsData
+        commentsData,
       );
       result.push({
         ...question,
@@ -253,7 +253,10 @@ export class PollService {
     return !!group;
   }
 
-  async getDisciplineTeachers (userId: string, query: QueryAllDisciplineTeacherForPollDTO) {
+  async getDisciplineTeachers (
+    userId: string,
+    query: QueryAllDisciplineTeacherForPollDTO,
+  ): Promise<PollDisciplineTeachersResponse> {
     const semesters = await this.dateService.getPreviousSemesters(true);
 
     const disciplineWhere: Prisma.DisciplineWhereInput[] = [];
@@ -284,15 +287,15 @@ export class PollService {
       query,
       SortQATParam.FIRST_NAME.toString(),
       SortQATParam.LAST_NAME.toString(),
-      SortQATParam.MIDDLE_NAME.toString()
+      SortQATParam.MIDDLE_NAME.toString(),
     );
     const roleFilter =
       roles?.length > 0
         ? {
-            roles: {
-              some: DatabaseUtils.getSearchByArray(roles, 'role'),
-            },
-          }
+          roles: {
+            some: DatabaseUtils.getSearchByArray(roles, 'role'),
+          },
+        }
         : {};
 
     const disciplineTeachers = await this.disciplineTeacherRepository.findMany({
@@ -333,8 +336,7 @@ export class PollService {
 
     return {
       hasSelectedInLastSemester: !!hasSelectedInLastSemester,
-      teachers:
-        this.disciplineTeacherMapper.getDisciplineTeachers(disciplineTeachers),
+      teachers: this.disciplineTeacherMapper.getDisciplineTeachers(disciplineTeachers),
     };
   }
 

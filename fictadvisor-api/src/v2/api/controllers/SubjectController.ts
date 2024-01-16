@@ -17,6 +17,7 @@ import {
 import { SubjectResponse } from '../responses/SubjectResponse';
 import { SubjectWithTeachersResponse } from '../responses/SubjectWithTeachersResponse';
 import { PaginatedSubjectsResponse } from '../responses/PaginatedSubjectsResponse';
+import { ApiEndpoint } from '../../utils/documentation/decorators';
 
 @ApiTags('Subjects')
 @Controller({
@@ -58,18 +59,22 @@ export class SubjectController {
     const dbSubject = await this.subjectService.get(subjectId);
     return this.subjectMapper.getSubject(dbSubject);
   }
-  
-  @Get('/:subjectId/teachers')
+
   @ApiOkResponse({
     type: SubjectWithTeachersResponse,
   })
   @ApiBadRequestResponse({
-    description: `InvalidEntityIdException:\n
-                  subject with such id is not found`,
+    description: `\n
+    InvalidEntityIdException:
+      Subject with such id is not found`,
   })
+  @ApiEndpoint({
+    summary: 'Get teachers connected to the selected subject',
+  })
+  @Get('/:subjectId/teachers')
   getTeachers (
     @Param('subjectId', SubjectByIdPipe) subjectId: string,
-  ) {
+  ): Promise<SubjectWithTeachersResponse> {
     return this.subjectService.getTeachers(subjectId);
   }
 

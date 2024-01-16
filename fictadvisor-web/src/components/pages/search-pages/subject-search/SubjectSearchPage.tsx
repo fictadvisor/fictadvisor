@@ -84,6 +84,7 @@ const SubjectSearchPage = () => {
         onSubmit={submitHandler}
         initialValues={initialValues}
         localStorageName={localStorageName}
+        isSubject={true}
       />
       {data && (
         <SubjectSearchList
