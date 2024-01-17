@@ -74,15 +74,30 @@ export class StudentMapper {
   getStudents (students: DbStudent[]) {
     return students.map((s) => ({
       id: s.userId,
-      lastname: s.lastName,
+      lastName: s.lastName,
       firstName: s.firstName,
       middleName: s.middleName,
       state: s.state,
-      role: this.getGroupRole(s.roles)?.name ?? null,
       group: {
-        groupId: s.groupId,
+        id: s.groupId,
         code: s.group.code,
+        role: this.getGroupRole(s.roles)?.name ?? null,
       },
     }));
+  }
+
+  getSimpleStudent (s: DbStudent) {
+    return {
+      id: s.userId,
+      lastName: s.lastName,
+      firstName: s.firstName,
+      middleName: s.middleName,
+      state: s.state,
+      group: {
+        id: s.groupId,
+        code: s.group.code,
+        role: this.getGroupRole(s.roles)?.name ?? null,
+      },
+    };
   }
 }

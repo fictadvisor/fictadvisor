@@ -1,6 +1,8 @@
-import { IsOptional, Matches, MaxLength, MinLength } from 'class-validator';
+import { IsEnum, IsOptional, IsUUID, Matches, MaxLength, MinLength } from 'class-validator';
 import { createRegex, UKR_REGEX, UKRSPEC_REGEX, validationOptionsMsg } from '../../utils/GLOBALS';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { GroupRoles } from './QueryAllStudentDTO';
+import { RoleName } from '@prisma/client';
 
 export class UpdateStudentDTO {
   @ApiPropertyOptional({
@@ -37,4 +39,21 @@ export class UpdateStudentDTO {
   @MaxLength(40, validationOptionsMsg('Middle name is too long (max 40)'))
   @IsOptional()
     middleName?: string;
+}
+
+export class UpdateStudentWithRolesDTO extends UpdateStudentDTO {
+  @ApiPropertyOptional({
+    enum: GroupRoles,
+    description: 'Student roles',
+  })
+  @IsEnum(GroupRoles, validationOptionsMsg('Role name should be an enum'))
+  @IsOptional()
+    roleName?: RoleName;
+
+  @ApiPropertyOptional({
+    description: 'Student\'s group',
+  })
+  @IsUUID(undefined, validationOptionsMsg('Group id should be UUID'))
+  @IsOptional()
+    groupId?: string;
 }

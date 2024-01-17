@@ -118,7 +118,7 @@ export class GroupService {
     return this.disciplineMapper.getDisciplines(disciplines);
   }
 
-  async getSelectiveDisciplines (groupId: string) {
+  getSelectiveDisciplines (groupId: string) {
     return this.disciplineRepository.findMany({
       where: {
         groupId,

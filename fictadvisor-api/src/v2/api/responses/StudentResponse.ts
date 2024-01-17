@@ -127,3 +127,11 @@ export class StudentsResponse {
   })
     students: OrdinaryStudentResponse[];
 }
+
+export class FullStudentsResponse {
+  @ApiProperty({
+    type: [FullStudentResponse],
+    description: 'List of student\'s data',
+  })
+    students: FullStudentResponse[];
+}

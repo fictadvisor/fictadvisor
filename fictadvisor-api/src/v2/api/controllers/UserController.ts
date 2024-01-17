@@ -33,7 +33,7 @@ import { SelectiveBySemestersResponse } from '../responses/SelectiveBySemestersR
 import { RemainingSelectiveDTO } from '../dtos/RemainingSelectiveDTO';
 import { RemainingSelectiveResponse } from '../responses/RemainingSelectiveResponse';
 import { GroupByIdPipe } from '../pipes/GroupByIdPipe';
-import { StudentPipe } from '../pipes/StudentPipe';
+import { ApprovedStudentPipe } from '../pipes/ApprovedStudentPipe';
 import { StudentMapper } from '../../mappers/StudentMapper';
 import { FullStudentResponse, OrdinaryStudentResponse, StudentsResponse } from '../responses/StudentResponse';
 import { FullUserResponse, UserResponse } from '../responses/UserResponse';
@@ -711,39 +711,6 @@ export class UserController {
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse()
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidEntityIdException:
-      User with such id is not found`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException:
-      You do not have permission to perform this action`,
-  })
-  @ApiParam({
-    name: 'userId',
-    required: true,
-    description: 'Id of a user to delete',
-  })
-  @ApiEndpoint({
-    summary: 'Delete student by user\'s id',
-    permissions: PERMISSION.STUDENTS_DELETE,
-  })
-  @Delete('/:userId/student')
-  deleteStudent (
-    @Param('userId', UserByIdPipe) userId: string,
-  ) {
-    return this.userService.deleteStudent(userId);
-  }
-
-  @ApiBearerAuth()
   @ApiOkResponse({
     type: OrdinaryStudentResponse,
   })
@@ -1056,11 +1023,11 @@ export class UserController {
     permissions: PERMISSION.USERS_$USERID_SELECTIVE_GET,
   })
   @Get('/:userId/selectiveDisciplines')
-  async getRemainingSelective (
+  getRemainingSelective (
     @Param('userId', UserByIdPipe) userId: string,
-    @Query() body: RemainingSelectiveDTO,
+    @Query() query: RemainingSelectiveDTO,
   ) {
-    return await this.userService.getRemainingSelective(userId, body);
+    return this.userService.getRemainingSelectiveForSemester(userId, query);
   }
 
   @ApiBearerAuth()
@@ -1102,7 +1069,7 @@ export class UserController {
   })
   @Post(':userId/selectiveDisciplines')
   async attachSelectiveDisciplines (
-    @Param('userId', UserByIdPipe, StudentPipe) userId: string,
+    @Param('userId', UserByIdPipe, ApprovedStudentPipe) userId: string,
     @Body(SelectiveDisciplinesPipe) body: SelectiveDisciplinesDTO,
   ) {
     return this.userService.selectDisciplines(userId, body);
@@ -1145,7 +1112,7 @@ export class UserController {
   })
   @Delete(':userId/selectiveDisciplines')
   async detachSelectiveDisciplines (
-    @Param('userId', UserByIdPipe, StudentPipe) userId: string,
+    @Param('userId', UserByIdPipe, ApprovedStudentPipe) userId: string,
     @Body(SelectiveDisciplinesPipe) body: SelectiveDisciplinesDTO,
   ) {
     return this.userService.deselectDisciplines(userId, body);
@@ -1193,7 +1160,7 @@ export class UserController {
   })
   @Patch('/:userId/group/:groupId')
   async changeGroup (
-    @Param('userId', UserByIdPipe, StudentPipe) userId: string,
+    @Param('userId', UserByIdPipe, ApprovedStudentPipe) userId: string,
     @Param('groupId', GroupByIdPipe) groupId: string,
   ) {
     const student = await this.userService.changeGroup(userId, groupId);

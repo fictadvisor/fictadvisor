@@ -16,6 +16,8 @@ import { User } from '@/types/user';
 import { Order } from '../../services/group/types/OrderEnum';
 import { client } from '../instance';
 
+import { GetSelectiveResponse } from './types/GetSelectiveResponse';
+
 class GroupAPI {
   async addStudentsByMail(groupId: string, body: AddStudentsByMailBody) {
     return await client.post<AddStudentsByMailResponse>(
@@ -138,6 +140,14 @@ class GroupAPI {
     const { data } = await client.patch<User>(
       `/groups/${groupId}/leave`,
       {},
+      getAuthorizationHeader(),
+    );
+    return data;
+  }
+
+  async getSelectives(groupId: string) {
+    const { data } = await client.get<GetSelectiveResponse[]>(
+      `/groups/${groupId}/selective`,
       getAuthorizationHeader(),
     );
     return data;
