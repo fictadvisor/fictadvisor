@@ -2,8 +2,9 @@ import {
   Subject,
   Group,
   DisciplineType,
-  DisciplineTeacherRole,
   Teacher,
+  DisciplineTeacherRole,
+  SelectiveAmount,
   Cathedra,
   TeachersOnCathedras,
 } from '@prisma/client';
@@ -17,7 +18,9 @@ export class DbDiscipline {
   isSelective: boolean;
   description: string;
   subject: Subject;
-  group: Group;
+  group: Group & {
+    selectiveAmounts: SelectiveAmount[]
+  };
   disciplineTypes: DisciplineType[];
   disciplineTeachers: DbDiscipline_DisciplineTeacher[];
 }
