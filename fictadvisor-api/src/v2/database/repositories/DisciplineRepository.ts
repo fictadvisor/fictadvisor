@@ -8,7 +8,11 @@ export class DisciplineRepository {
 
   private include = {
     subject: true,
-    group: true,
+    group: {
+      include: {
+        selectiveAmounts: true,
+      },
+    },
     disciplineTypes: true,
     disciplineTeachers: {
       include: {

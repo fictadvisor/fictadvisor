@@ -3,6 +3,7 @@ import { SubjectResponse } from './SubjectResponse';
 import { GroupResponse } from './GroupResponse';
 import { ShortTeacherResponse } from './TeacherResponse';
 import { PaginationDataResponse } from './PaginationDataResponse';
+import { SemesterResponse } from './SemesterResponse';
 
 export class BaseDisciplineResponse {
   @ApiProperty({
@@ -97,4 +98,26 @@ export class DisciplineIdsResponse {
     description: 'Ids of disciplines',
   })
     disciplines: string[];
+}
+
+export class BaseSelectiveDisciplineResponse extends SubjectResponse {
+  @ApiProperty({
+    description: 'Id of a specific discipline',
+  })
+    id: string;
+}
+
+export class SelectiveDisciplinesResponse extends SemesterResponse {
+  @ApiProperty({
+    description: 'Selective disciplines for selected semester',
+    type: [BaseSelectiveDisciplineResponse],
+  })
+    disciplines: BaseSelectiveDisciplineResponse[];
+}
+
+export class SelectiveDisciplinesWithAmountsResponse extends SelectiveDisciplinesResponse {
+  @ApiProperty({
+    description: 'Amount of selective disciplines for semester',
+  })
+    amount: number;
 }

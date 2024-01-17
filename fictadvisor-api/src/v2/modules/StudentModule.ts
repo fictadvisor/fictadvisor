@@ -6,11 +6,19 @@ import { PrismaModule } from './PrismaModule';
 import { AllStudentsPipe } from '../api/pipes/AllStudentsPipe';
 import { GroupByIdPipe } from '../api/pipes/GroupByIdPipe';
 import { PermissionModule } from './PermissionModule';
+import { UserModule } from './UserModule';
+import { GroupModule } from './GroupModule';
 
 @Module({
   controllers: [StudentController],
   providers: [StudentService, AllStudentsPipe, GroupByIdPipe],
-  imports: [MapperModule, PrismaModule, PermissionModule],
+  imports: [
+    MapperModule,
+    PrismaModule,
+    PermissionModule,
+    UserModule,
+    GroupModule,
+  ],
   exports: [StudentService],
 })
 export class StudentModule {}
