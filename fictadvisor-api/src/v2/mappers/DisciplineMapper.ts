@@ -94,4 +94,27 @@ export class DisciplineMapper {
       };
     });
   }
+
+  getSelective (disciplines: DbDiscipline[], withAmount = false) {
+    const result = [];
+    disciplines.forEach((discipline) => {
+      if (!result.some(({ semester, year }) => semester === discipline.semester && year === discipline.year)) {
+        const amount = withAmount
+          ? discipline.group.selectiveAmounts.find((amount) =>
+            amount.semester === discipline.semester && amount.year === discipline.year
+          )?.amount
+          : undefined;
+
+        result.push({
+          year: discipline.year,
+          semester: discipline.semester,
+          amount,
+          selective: disciplines
+            .filter(({ year, semester }) => year === discipline.year && semester === discipline.semester)
+            .map((d) => ({ id: d.id, name: d.subject.name })),
+        });
+      }
+    });
+    return result;
+  }
 }

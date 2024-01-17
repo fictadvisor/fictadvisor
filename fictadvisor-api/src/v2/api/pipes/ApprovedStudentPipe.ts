@@ -4,12 +4,12 @@ import { State } from '@prisma/client';
 import { NotApprovedException } from '../../utils/exceptions/NotApprovedException';
 
 @Injectable()
-export class StudentPipe implements PipeTransform {
+export class ApprovedStudentPipe implements PipeTransform {
   constructor (
     private studentRepository: StudentRepository,
   ) {}
 
-  async transform (userId) {
+  async transform (userId: string) {
 
     const student = await this.studentRepository.findById(userId);
 

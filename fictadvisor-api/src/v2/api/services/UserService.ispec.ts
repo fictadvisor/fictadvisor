@@ -15,7 +15,7 @@ import { ForbiddenException, InjectionToken } from '@nestjs/common';
 import { PrismaModule } from '../../modules/PrismaModule';
 import { MapperModule } from '../../modules/MapperModule';
 import { DateService } from '../../utils/date/DateService';
-import { NotBelongToGroupException } from '../../utils/exceptions/NotBelongToGroupException';
+import { NotBelongException } from '../../utils/exceptions/NotBelongException';
 import { AlreadySelectedException } from '../../utils/exceptions/AlreadySelectedException';
 import { ExcessiveSelectiveDisciplinesException } from '../../utils/exceptions/ExcessiveSelectiveDisciplinesException';
 import { TelegramAPI } from '../../telegram/TelegramAPI';
@@ -358,9 +358,9 @@ describe('UserService', () => {
     });
   });
 
-  describe('getRemainingSelective', () => {
+  describe('getRemainingSelectiveForSemester', () => {
     it('should return empty obj for reason all needed disciplines taken', async () => {
-      const remainingDisciplines = await userService.getRemainingSelective(
+      const remainingDisciplines = await userService.getRemainingSelectiveForSemester(
         'userWithSelectiveId',
         { year: 2022, semester: 2 }
       );
@@ -369,7 +369,7 @@ describe('UserService', () => {
     });
 
     it('should return empty obj for incorrect date', async () => {
-      const remainingDisciplines = await userService.getRemainingSelective(
+      const remainingDisciplines = await userService.getRemainingSelectiveForSemester(
         'userWithSelectiveId',
         { year: 2000, semester: 2 }
       );
@@ -378,7 +378,7 @@ describe('UserService', () => {
     });
 
     it('should return correct remaining disciplines', async () => {
-      const remainingDisciplines = await userService.getRemainingSelective(
+      const remainingDisciplines = await userService.getRemainingSelectiveForSemester(
         'userWithSelectiveId',
         { year: 2022, semester: 1 }
       );
@@ -424,10 +424,10 @@ describe('UserService', () => {
       ]);
     });
 
-    it('should throw NotBelongToGroupException if the discipline does not belong to the user\'s group',  async () => {
+    it('should throw NotBelongException if the discipline does not belong to the user\'s group',  async () => {
       await expect(
         userService.selectDisciplines('userWithSelectiveId', { disciplines: ['selectiveDisciplineOfNewGroupId'] })
-      ).rejects.toThrow(NotBelongToGroupException);
+      ).rejects.toThrow(NotBelongException);
     });
 
     it('should throw AlreadySelectedException if the user has already selected this discipline', async () => {
@@ -465,10 +465,10 @@ describe('UserService', () => {
       ]);
     });
 
-    it('should throw NotBelongToGroupException if discipline does not belong to the user\'s group', async () => {
+    it('should throw NotBelongException if discipline does not belong to the user\'s group', async () => {
       await expect(
         userService.deselectDisciplines('userWithSelectiveId', { disciplines: ['selectiveDisciplineOfNewGroupId'] })
-      ).rejects.toThrow(NotBelongToGroupException);
+      ).rejects.toThrow(NotBelongException);
     });
 
     it('should throw NotSelectedDisciplineException if the user has not selected this discipline', async () => {
