@@ -27,7 +27,7 @@ import { CaptainResponse } from '../responses/CaptainResponse';
 import { ExtendDisciplineTeachersResponse } from '../responses/DisciplineTeachersResponse';
 import { ShortUsersResponse } from '../responses/UserResponse';
 import { QuerySemesterDTO } from '../dtos/QuerySemesterDTO';
-import { ShortDisciplinesResponse } from '../responses/DisciplineResponse';
+import { SelectiveDisciplinesWithAmountsResponse, ShortDisciplinesResponse } from '../responses/DisciplineResponse';
 import { OrdinaryStudentResponse, StudentsResponse } from '../responses/StudentResponse';
 import { SwitchCaptainDTO } from '../dtos/SwitchCaptainDTO';
 import { GroupsWithTelegramGroupsResponse } from '../responses/GroupsWithTelegramGroupsResponse';
@@ -35,6 +35,7 @@ import { TelegramGuard } from '../../security/TelegramGuard';
 import { URLResponse } from '../responses/URLResponse';
 import { GroupStudentsQueryDTO } from '../dtos/GroupStudentsQueryDTO';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
+import { DisciplineMapper } from '../../mappers/DisciplineMapper';
 
 @ApiTags('Groups')
 @Controller({
@@ -46,6 +47,7 @@ export class GroupController {
     private groupService: GroupService,
     private studentMapper: StudentMapper,
     private groupMapper: GroupMapper,
+    private disciplineMapper: DisciplineMapper,
   ) {}
 
   @ApiBearerAuth()
@@ -704,5 +706,44 @@ export class GroupController {
       @Request() req,
   ) {
     return this.groupService.leaveGroup(groupId, req.user.id);
+  }
+
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: [SelectiveDisciplinesWithAmountsResponse],
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidGroupIdException:
+      Group with such id is not found
+  
+    DataMissingException:
+      Data are missing`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException: 
+      You do not have permission to perform this action`,
+  })
+  @ApiParam({
+    name: 'groupId',
+    required: true,
+    description: 'Id of the group to get the selective disciplines from',
+  })
+  @ApiEndpoint({
+    summary: 'Request selective disciplines by group\'s id',
+    permissions: PERMISSION.GROUPS_$GROUPID_SELECTIVE_GET,
+  })
+  @Get('/:groupId/selective')
+  async getSelective (
+      @Param('groupId', GroupByIdPipe) groupId: string,
+  ) {
+    const disciplines = await this.groupService.getSelectiveDisciplines(groupId);
+    return this.disciplineMapper.getSelective(disciplines, true);
   }
 }

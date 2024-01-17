@@ -23,6 +23,7 @@ export enum PERMISSION {
   GROUPS_$GROUPID_CAPTAIN_GET = 'groups.$groupId.captain.get',
   GROUPS_$GROUPID_DISCIPLINES_CREATE = 'groups.$groupId.disciplines.create',
   GROUPS_$GROUPID_DISCIPLINES_GET = 'groups.$groupId.disciplines.get',
+  GROUPS_$GROUPID_SELECTIVE_GET = 'groups.$groupId.selective.get',
   GROUPS_$GROUPID_DISCIPLINES_TEACHERS_GET = 'groups.$groupId.disciplines.teachers.get',
   GROUPS_$GROUPID_DISCIPLINE_TEACHERS_REMOVE = 'groups.$groupId.disciplineTeachers.remove',
   GROUPS_$GROUPID_EVENTS_CREATE = 'groups.$groupId.events.create',
@@ -64,8 +65,11 @@ export enum PERMISSION {
 
   SCHEDULE_PARSE = 'schedule.parse',
 
-  STUDENTS_DELETE = 'students.delete',
+  STUDENTS_$STUDENTID_DELETE = 'students.$studentId.delete',
   STUDENTS_GET = 'students.get',
+  STUDENTS_$STUDENTID_UPDATE = 'students.$studentId.update',
+  STUDENTS_CREATE = 'students.create',
+  STUDENTS_$STUDENTID_GET = 'students.$studentId.get',
 
   SUBJECTS_CREATE = 'subjects.create',
   SUBJECTS_UPDATE = 'subjects.update',

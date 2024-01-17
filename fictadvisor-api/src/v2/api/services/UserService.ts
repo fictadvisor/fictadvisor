@@ -26,7 +26,7 @@ import { RemainingSelectiveDTO } from '../dtos/RemainingSelectiveDTO';
 import { DateService } from '../../utils/date/DateService';
 import { SelectiveDisciplinesDTO } from '../dtos/SelectiveDisciplinesDTO';
 import { DbDiscipline } from '../../database/entities/DbDiscipline';
-import { NotBelongToGroupException } from '../../utils/exceptions/NotBelongToGroupException';
+import { NotBelongException } from '../../utils/exceptions/NotBelongException';
 import { ExcessiveSelectiveDisciplinesException } from '../../utils/exceptions/ExcessiveSelectiveDisciplinesException';
 import { checkIfArrayIsUnique } from '../../utils/ArrayUtil';
 import { AlreadySelectedException } from '../../utils/exceptions/AlreadySelectedException';
@@ -34,7 +34,6 @@ import { TelegramAPI } from '../../telegram/TelegramAPI';
 import { DuplicateTelegramIdException } from '../../utils/exceptions/DuplicateTelegramIdException';
 import { UserByAdminDTO } from '../dtos/UserDTO';
 import { NotSelectedDisciplineException } from '../../utils/exceptions/NotSelectedDisciplineException';
-import { DataNotFoundException } from '../../utils/exceptions/DataNotFoundException';
 import { QueryAllUsersDTO } from '../dtos/QueryAllUsersDTO';
 import { DatabaseUtils } from '../../database/DatabaseUtils';
 import { DbUser } from '../../database/entities/DbUser';
@@ -319,10 +318,6 @@ export class UserService {
     await this.contactRepository.deleteContact(userId, contactId);
   }
 
-  async deleteStudent (userId: string) {
-    await this.studentRepository.deleteById(userId);
-  }
-
   async addGroupRole (userId: string, isCaptain: boolean) {
     const roleName = isCaptain ? RoleName.CAPTAIN : RoleName.STUDENT;
     const { group } = await this.studentRepository.findById(userId);
@@ -463,53 +458,74 @@ export class UserService {
     }
   }
 
-  async getRemainingSelective (userId: string, body: RemainingSelectiveDTO) {
-    const user = await this.getUser(userId);
-    const group = await this.groupService.get(user.group.id);
-
-    const selective = await this.getSelective(user.id);
-    const semesterSelective = selective.filter((x) => x.year === body.year && x.semester === body.semester);
-
-    const semester = await this.dateService.getSemester({ year: body.year, semester: body.semester });
+  async getRemainingSelectiveForSemester (userId: string, query: RemainingSelectiveDTO) {
+    const semester = await this.dateService.getSemester({ year: query.year, semester: query.semester });
     if (!semester) {
       return {};
     }
 
-    const semesterAmount = group.selectiveAmounts.find((x) => x.semester === body.semester && x.year === body.year);
-    if (!semesterAmount) {
-      throw new DataNotFoundException();
-    }
-    const availableSelectiveAmount = semesterAmount.amount - semesterSelective.length;
+    const remainingSelective = await this.getRemainingSelective(userId);
+    const result = remainingSelective.find(({ year, semester }) => year === query.year && semester === query.semester);
+    return result.availableSelectiveAmount > 0 ? result : {};
+  }
+  async getRemainingSelective (userId: string) {
+    const user = await this.getUser(userId);
+    const group = await this.groupService.get(user.group.id);
 
-    if (availableSelectiveAmount <= 0) {
-      return {};
-    }
+    const selective = await this.getSelective(user.id);
 
     const disciplines = (await this.disciplineRepository.findMany({
       where: {
-        semester: body.semester,
-        year: body.year,
         isSelective: true,
         groupId: group.id,
+        id: {
+          notIn: selective.map((s) => s.id),
+        },
       },
-    }))
-      .map(({ id, subject: { name } }) => ({ disciplineId: id, subjectName: name }));
+    }));
 
-    const remainingSelective = disciplines.filter((selectiveDisc) =>
-      !semesterSelective.some((requiredSemeDisc) => requiredSemeDisc.id === selectiveDisc.disciplineId));
+    const semesters = this.getUniqueSemesters(disciplines);
+    const result = [];
 
-    return {
-      ...body,
-      availableSelectiveAmount,
-      remainingSelective,
-    };
+    semesters.forEach((s) => {
+      const semesterAmount = group.selectiveAmounts.find((x) => x.semester === s.semester && x.year === s.year);
+
+      const userSemesterSelective = selective.filter(({ year, semester }) => year === s.year && semester === s.semester);
+      const availableSelectiveAmount = semesterAmount.amount - userSemesterSelective.length;
+
+      const remainingSelective = disciplines
+        .filter((selectiveDisc) => selectiveDisc.year === s.year && selectiveDisc.semester === s.semester)
+        .map(({ id, subject: { name } }) => ({
+          disciplineId: id,
+          subjectName: name,
+        }));
+
+      result.push({
+        ...s,
+        availableSelectiveAmount,
+        remainingSelective,
+      });
+    });
+
+    return result;
+  }
+
+  getUniqueSemesters (selective: DbDiscipline[]) {
+    const allSemesters = [];
+    selective.forEach((discipline) => {
+      if (!allSemesters.some(({ semester, year }) => semester === discipline.semester && year === discipline.year)) {
+        allSemesters.push({ semester: discipline.semester, year: discipline.year });
+      }
+    });
+
+    return allSemesters;
   }
 
   private async checkDisciplinesBelongToGroup (disciplineIds: string[], groupId: string) {
     for (const disciplineId of disciplineIds) {
       const discipline = await this.disciplineRepository.findById(disciplineId);
       if (discipline.groupId !== groupId) {
-        throw new NotBelongToGroupException();
+        throw new NotBelongException('discipline', 'group');
       }
     }
   }

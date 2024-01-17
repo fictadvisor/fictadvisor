@@ -227,7 +227,7 @@ export class AuthService {
 
   async forgotPassword (email: string) {
     if (!await this.checkIfUserIsRegistered({ email })) {
-      throw new NotRegisteredException();
+      throw new NotRegisteredException('email');
     }
 
     const repo = this.prisma.resetPasswordToken;
@@ -277,7 +277,7 @@ export class AuthService {
     const token = await this.prisma.verifyEmailToken.findFirst({ where: { email } });
 
     if (!token) {
-      throw new NotRegisteredException();
+      throw new NotRegisteredException('email');
     }
 
     await this.requestEmailVerification(token);
