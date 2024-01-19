@@ -40,3 +40,7 @@ export interface UserRemainingSelective {
   disciplineId: string;
   subjectName: string;
 }
+
+export interface UserAdmin extends Omit<User, 'firstName' | 'lastName'> {
+  state: UserGroupState;
+}
