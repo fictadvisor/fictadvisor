@@ -1,6 +1,6 @@
+import { UserSearchFormFields } from '@/components/pages/admin/admin-user/search-user-page/types/HeaderUserSearch';
 import { AddContactBody } from '@/lib/api/user/types/AddContactBody';
 import { ChangeAvatarResponse } from '@/lib/api/user/types/ChangeAvatarResponse';
-import { ChangeInfoBody } from '@/lib/api/user/types/ChangeInfoBody';
 import { ChangeRoleBody } from '@/lib/api/user/types/ChangeRoleBody';
 import { GetContactsResponse } from '@/lib/api/user/types/GetContactsResponse';
 import { GetSelectiveDisciplinesBySemesterResponse } from '@/lib/api/user/types/GetSelectiveDisciplinesBySemesterResponse';
@@ -13,10 +13,66 @@ import { VerifyStudentBody } from '@/lib/api/user/types/VerifyStudentBody';
 import { VerifySuperheroBody } from '@/lib/api/user/types/VerifySuperheroBody';
 import { getAuthorizationHeader } from '@/lib/api/utils';
 import { TelegramUser } from '@/types/telegram';
+import { UserAdmin } from '@/types/user';
 
 import { client } from '../instance';
 
+import { ChangeInfoBody } from './types/ChangeInfoBody';
+import { ChangeUserBody } from './types/ChangeUserBody';
+import { CreateUserBody } from './types/CreateUserBody';
+import { GetAllResponse } from './types/GetAllResponse';
+
 class UserAPI {
+  async getAll(
+    page: number,
+    params: Partial<UserSearchFormFields> = {},
+    pageSize?: number,
+  ): Promise<GetAllResponse> {
+    const { data } = await client.get(`/users`, {
+      params: {
+        ...params,
+        page,
+        pageSize,
+      },
+      ...getAuthorizationHeader(),
+    });
+    return data;
+  }
+
+  async getUser(userId: string): Promise<UserAdmin> {
+    const { data } = await client.get(
+      `/users/${userId}`,
+      getAuthorizationHeader(),
+    );
+    return data;
+  }
+
+  async delete(userId: string) {
+    const { data } = await client.delete(
+      `/users/${userId}`,
+      getAuthorizationHeader(),
+    );
+    return data;
+  }
+
+  async create(body: CreateUserBody) {
+    const { data } = await client.post(
+      `/users/createUser`,
+      body,
+      getAuthorizationHeader(),
+    );
+    return data;
+  }
+
+  async editUser(userId: string, body: ChangeUserBody) {
+    const { data } = await client.patch(
+      `/users/${userId}`,
+      body,
+      getAuthorizationHeader(),
+    );
+    return data;
+  }
+
   async changeInfo(userId: string, body: ChangeInfoBody) {
     const { data } = await client.patch(
       `/users/${userId}/student`,
