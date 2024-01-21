@@ -1,4 +1,74 @@
-<p>{{message}}</p>
-<p>
-    <a href="{{ link }}">{{ link }}</a>
-</p>
+<style>
+    body {
+        background-image: linear-gradient(#1e1e1e,#1e1e1e) !important;
+        font-family: 'Manrope', sans-serif;
+        font-size: 20px;
+        color: #ffffff;
+        text-align: center;
+        height: 40vh;
+        position: relative;
+    }
+
+    img {
+        position: absolute;
+        transform: translateX(-50%);
+        width: 300px;
+        height: 30px;
+    }
+
+    .image {
+        padding-top: 30px;
+    }
+
+    a {
+        color: #ffffff;
+        text-decoration: none;
+    }
+
+    button {
+        border-radius: 8px;
+        border-color: #FF5B5B;
+        background-color: #FF5B5B;
+        width: 120px;
+        height: 50px;
+        font-weight: bold;
+        color: white;
+        margin-bottom: 15px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .text-wrapper {
+        margin: 60px 0 30px 0;
+        background: #fff linear-gradient(#1E1E1E,#1E1E1E) !important;
+        color: #000 !important;
+    }
+
+    .text-coloring {
+        background: #fff !important;
+        mix-blend-mode: screen !important;
+    }
+
+    .text-inverse {
+        background: #fff !important;
+        mix-blend-mode: difference !important;
+        text-decoration: none;
+    }
+</style>
+<body>
+<div class="image">
+<img src="https://api.fictadvisor.com/public/logo.png" alt="logo">
+</div>
+<div class="text-wrapper">
+    <div class="text-coloring">
+        <div class="text-inverse">
+            {{message}}
+        </div>
+    </div>
+</div>
+<div>
+    <a href="{{ link }}">
+        <button type="submit">Натисни</button>
+    </a>
+</div>
+</body>

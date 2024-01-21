@@ -250,7 +250,7 @@ export class AuthService {
     await this.emailService.sendEmail({
       to: email,
       subject: 'Відновлення пароля на fictadvisor.com',
-      message: 'Для відновлення пароля перейдіть за посиланням нижче. Посилання діє годину.',
+      message: 'Для відновлення пароля натисни на кнопку нижче. Посилання діє годину.',
       link: `${this.config.get<string>('frontBaseUrl')}/password-recovery/${token.token}`,
     });
 
@@ -303,7 +303,7 @@ export class AuthService {
     await this.emailService.sendEmail({
       to: user.email,
       subject: 'Верифікація пошти на fictadvisor.com',
-      message: 'Для верифікації пошти перейди за посиланням нижче. Посилання діє годину.',
+      message: 'Для верифікації пошти натисни на кнопку нижче. Посилання діє годину.',
       link: `${this.config.get<string>('frontBaseUrl')}/register/email-verification/${token.token}`,
     });
 
