@@ -12,6 +12,7 @@ import utc from 'dayjs/plugin/utc';
 import Head from 'next/head';
 import Script from 'next/script';
 
+import Init from '@/app/init';
 import AuthenticationProvider from '@/hooks/use-authentication/authentication-context';
 import ToastContextProvider from '@/hooks/use-toast/toast-context';
 import theme from '@/styles/theme';
@@ -47,18 +48,18 @@ export default function RootLayout({
             gtag("config", ${process.env.GTM});`}
         </Script>
         <script async src="https://telegram.org/js/telegram-widget.js" />
-        <link rel="icon" href="/favicon.ico" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link
+        {/*        <link
           href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap"
           rel="stylesheet"
-        />
+        />*/}
         <meta
           name="google-site-verification"
           content="M93dY9EuPcQ5AzSYwxc6_el0GwZp_XlDHBhphP6z-7g"
         />
       </Head>
       <body className={manrope.className} style={manrope.style}>
+        <Init />
         <ThemeProvider theme={theme}>
           <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={'uk'}>
             <QueryClientProvider client={queryClient}>

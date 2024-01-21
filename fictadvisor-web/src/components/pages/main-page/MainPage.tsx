@@ -24,10 +24,10 @@ const MainPage: FC<MainPageProps> = ({ data }) => {
   const token = searchParams?.get('token');
   return (
     <PageLayout
-      description="FICT Advisor - офіційний сайт Студради ФІОТ.
+      /*description="FICT Advisor - офіційний сайт Студради ФІОТ.
      Зустрічай твій студентський портал, який надає багато корисних інструментів для студентів.
      Тут ти знайдеш опитування про викладачів, багатофункціональний розклад, можливість керувати групою,
-      набори в активне ком’юніті та багато інших цікавих інструментів."
+      набори в активне ком’юніті та багато інших цікавих інструментів."*/
       className={styles['main-page']}
     >
       <Box sx={stylesMUI.mainPageContent}>
