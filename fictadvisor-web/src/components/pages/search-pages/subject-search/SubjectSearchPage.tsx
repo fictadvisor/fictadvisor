@@ -55,7 +55,11 @@ const SubjectSearchPage = () => {
       'subjects',
       () => {
         if (reloadSubjects) {
-          return SubjectsAPI.getAll(queryObj, PAGE_SIZE * (curPage + 1));
+          return SubjectsAPI.getAll(
+            queryObj,
+            PAGE_SIZE * (curPage + 1),
+            curPage,
+          );
         } else {
           setLoadedSubjects([
             ...(loadedSubjects ?? []),

@@ -1,7 +1,7 @@
-import { Meta } from '@/types/api';
+import { Pagination } from '@/types/api';
 import { Subject } from '@/types/subject';
 
 export interface GetListOfSubjectsResponse {
   subjects: Subject[];
-  meta?: Meta;
+  pagination?: Pagination;
 }
