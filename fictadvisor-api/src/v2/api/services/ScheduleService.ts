@@ -97,7 +97,7 @@ export class ScheduleService {
     }) as unknown as DbEvent[];
 
     week = week || await this.dateService.getCurrentWeek();
-    const result  = await filterAsync(events, async (event) => {
+    const result = await filterAsync(events, async (event) => {
       const indexOfLesson = await this.getIndexOfLesson(week, event);
       return indexOfLesson !== null;
     });
@@ -136,7 +136,7 @@ export class ScheduleService {
 
     const { startOfDay } = await this.dateService.getSpecificDayInWeek(week, day);
 
-    const events  = await this.getGroupEventsForTelegram(groupId, week, userId);
+    const events = await this.getGroupEventsForTelegram(groupId, week, userId);
 
     return {
       events: events.filter((event) => {
@@ -147,28 +147,29 @@ export class ScheduleService {
     };
   }
 
-  async getEvent (id: string, week: number): Promise<{ event: DbEvent, discipline: DbDiscipline }> {
-    if (!week) {
-      throw new InvalidWeekException();
-    }
+  async getEventInfos (id: string, week: number): Promise<{ event: DbEvent, discipline: DbDiscipline, index?: number }> {
+    if (!week) throw new InvalidWeekException();
 
     const event = await this.eventRepository.findById(id);
+    const discipline = await this.getEventDiscipline(event.id);
 
-    if (event.period === Period.NO_PERIOD) {
-      const discipline = await this.getEventDiscipline(event.id);
-      return { event, discipline };
-    }
+    if (event.period === Period.NO_PERIOD) return { event, discipline };
+
     const index = await this.getIndexOfLesson(week, event);
-
-    if (index === null)  throw new InvalidWeekException();
+    if (index === null) throw new InvalidWeekException();
 
     await this.setWeekTime(event, week);
+    return { event, discipline, index };
+  }
+
+  async getEvent (id: string, week: number): Promise<{ event: DbEvent, discipline: DbDiscipline }> {
+    const { event, discipline, index } = await this.getEventInfos(id, week);
+    if (event.period === Period.NO_PERIOD) return { event, discipline };
     event.eventInfo[0] = event.eventInfo.find((info) => info.number === index) ?? null;
-    const discipline = await this.getEventDiscipline(event.id);
     return { event, discipline };
   }
 
-  async setWeekTime (event: DbEvent, week: number): Promise<{ startWeek: number }> {
+  private async setWeekTime (event: DbEvent, week: number): Promise<{ startWeek: number }> {
     const { startDate } = await this.dateService.getCurrentSemester();
     const startWeek = this.dateUtils.getCeiledDifference(startDate, event.startTime, WEEK);
     event.startTime.setDate(event.startTime.getDate() + (week - startWeek) * 7);
@@ -452,7 +453,7 @@ export class ScheduleService {
     return { event };
   }
 
-  async checkEventInfo (eventId: string, index: number) {
+  private async checkEventInfo (eventId: string, index: number) {
     const data = await this.eventRepository.find({
       id: eventId,
     });
@@ -466,7 +467,7 @@ export class ScheduleService {
     return false;
   }
 
-  async createOrUpdateEventInfo (eventInfo: string, eventId: string, index: number) {
+  private async createOrUpdateEventInfo (eventInfo: string, eventId: string, index: number) {
     const hasEventInfo = await this.checkEventInfo(eventId, index);
     if (hasEventInfo) {
       return this.eventRepository.updateById(eventId, {
@@ -490,7 +491,7 @@ export class ScheduleService {
     });
   }
 
-  async deleteEventInfo (eventId: string, index: number) {
+  private async deleteEventInfo (eventId: string, index: number) {
     const hasEventInfo = await this.checkEventInfo(eventId, index);
     if (hasEventInfo) {
       return this.eventRepository.updateById(eventId, {
@@ -502,6 +503,7 @@ export class ScheduleService {
       });
     }
   }
+
   async updateEvent (eventId: string, body: UpdateEventDTO) {
     let event = await this.eventRepository.findById(eventId);
     const {
@@ -541,11 +543,8 @@ export class ScheduleService {
     const index = await this.getIndexOfLesson(week, event);
     if (index === null) throw new InvalidWeekException();
 
-    if (eventInfo) {
-      await this.createOrUpdateEventInfo(eventInfo, eventId, index);
-    } else if (eventInfo === '' || eventInfo === null) {
-      await this.deleteEventInfo(eventId, index);
-    }
+    if (eventInfo) await this.createOrUpdateEventInfo(eventInfo, eventId, index);
+    else if (eventInfo === '' || eventInfo === null) await this.deleteEventInfo(eventId, index);
 
     event = await this.eventRepository.updateById(eventId, {
       name,
