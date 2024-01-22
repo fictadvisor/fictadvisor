@@ -1,20 +1,13 @@
-'use client';
-
 import React from 'react';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import { ThemeProvider } from '@mui/system';
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import uk from 'dayjs/locale/uk';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
+import { Metadata } from 'next';
 import Head from 'next/head';
 import Script from 'next/script';
 
-import AuthenticationProvider from '@/hooks/use-authentication/authentication-context';
-import ToastContextProvider from '@/hooks/use-toast/toast-context';
-import theme from '@/styles/theme';
+import { ClientWrap } from '@/app/ClientWrap';
 import { manrope } from '@/styles/theme/constants/typography/typography';
 
 import '@/styles/reset.scss';
@@ -25,8 +18,28 @@ dayjs.extend(timezone);
 dayjs.extend(utc);
 dayjs.tz.setDefault('Europe/Kiev');
 dayjs.locale({ ...uk, weekStart: 1 });
-const queryClient = new QueryClient();
 
+export const metadata: Metadata = {
+  title: 'PWA with Next 13',
+  description: 'PWA application with Next 13',
+  generator: 'Next.js',
+  manifest: '/manifest.json',
+  keywords: ['nextjs', 'nextjs13', 'next13', 'pwa', 'next-pwa'],
+  themeColor: [{ media: '(prefers-color-scheme: dark)', color: '#fff' }],
+  authors: [
+    { name: 'Rajesh Prajapati' },
+    {
+      name: 'Rajesh Prajapati',
+      url: 'https://www.linkedin.com/in/raazeshp96/',
+    },
+  ],
+  viewport:
+    'minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover',
+  icons: [
+    { rel: 'apple-touch-icon', url: 'icons/icon-128x128.png' },
+    { rel: 'icon', url: 'icons/icon-128x128.png' },
+  ],
+};
 export default function RootLayout({
   children,
 }: {
@@ -59,15 +72,7 @@ export default function RootLayout({
         />
       </Head>
       <body className={manrope.className} style={manrope.style}>
-        <ThemeProvider theme={theme}>
-          <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={'uk'}>
-            <QueryClientProvider client={queryClient}>
-              <AuthenticationProvider>
-                <ToastContextProvider>{children}</ToastContextProvider>
-              </AuthenticationProvider>
-            </QueryClientProvider>
-          </LocalizationProvider>
-        </ThemeProvider>
+        <ClientWrap>{children}</ClientWrap>
       </body>
     </html>
   );
