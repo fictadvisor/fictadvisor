@@ -26,4 +26,16 @@ export class CreateCathedraDTO {
     validationOptionsMsg('Abbreviation is incorrect (A-Я(укр.)\\-\' )'),
   )
     abbreviation: string;
+
+  @ApiPropertyOptional({
+    description: 'The name of the faculty/institute',
+  })
+  @MinLength(1, validationOptionsMsg('Division name is too short (min: 1)'))
+  @MaxLength(10, validationOptionsMsg('Division name is too long (max: 10)'))
+  @IsOptional()
+  @Matches(
+    createRegex(UKR_REGEX, UKRSPEC_REGEX),
+    validationOptionsMsg('Cathedra name is incorrect (A-Я(укр.)\\-\' )'),
+  )
+    division?: string;
 }

@@ -61,10 +61,11 @@ export class DisciplineTeacherMapper {
         disciplineTeacherId: disciplineTeacher.id,
         roles: disciplineTeacher.roles.map((r) => r.role),
         subject: this.getSubject(subject),
-        cathedras: teacher.cathedras.map(({ cathedra: { id, name, abbreviation } }) => ({
+        cathedras: teacher.cathedras.map(({ cathedra: { id, name, abbreviation, division } }) => ({
           id,
           name,
           abbreviation,
+          division,
         })),
       };
     });

@@ -35,10 +35,11 @@ export class TeacherMapper {
   }
 
   private getCathedras (teacher: DbTeacher) {
-    return teacher.cathedras?.map(({ cathedra: { id, name, abbreviation } }) => ({
+    return teacher.cathedras?.map(({ cathedra: { id, name, abbreviation, division } }) => ({
       id,
       name,
       abbreviation,
+      division,
     }));
   }
 

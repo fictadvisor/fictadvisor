@@ -15,4 +15,9 @@ export class CathedraResponse {
     description: 'The abbreviation of the cathedra',
   })
     abbreviation: string;
+
+  @ApiProperty({
+    description: 'The name of the faculty/institute',
+  })
+    division: string;
 }

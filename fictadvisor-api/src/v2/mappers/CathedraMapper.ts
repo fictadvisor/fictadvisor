@@ -9,6 +9,7 @@ export class CathedraMapper {
       id: cathedra.id,
       name: cathedra.name,
       abbreviation: cathedra.abbreviation,
+      division: cathedra.division,
     };
   }
   getCathedraWithTeachers (cathedra: DbCathedra): CathedraWithTeachersResponse {
@@ -29,9 +30,7 @@ export class CathedraMapper {
 
   getCathedraWithNumberOfTeachers (cathedras: DbCathedra[]): CathedraWithNumberOfTeachersResponse[] {
     return cathedras.map((cathedra) => ({
-      id: cathedra.id,
-      name: cathedra.name,
-      abbreviation: cathedra.abbreviation,
+      ...this.getCathedra(cathedra),
       teachers: cathedra.teachers.length,
     }));
   }
