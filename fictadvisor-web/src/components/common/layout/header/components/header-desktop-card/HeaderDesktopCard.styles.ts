@@ -1,3 +1,4 @@
+'use client';
 import { SxProps, Theme } from '@mui/material/styles';
 
 export const container: SxProps<Theme> = {

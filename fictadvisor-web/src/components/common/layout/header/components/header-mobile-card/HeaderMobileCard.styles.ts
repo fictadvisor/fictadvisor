@@ -1,3 +1,4 @@
+'use client';
 import { SxProps, Theme } from '@mui/material';
 
 export const headerCardContainer: SxProps<Theme> = {
