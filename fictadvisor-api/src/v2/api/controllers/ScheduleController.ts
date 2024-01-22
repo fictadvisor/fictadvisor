@@ -12,7 +12,6 @@ import {
 } from '@nestjs/common';
 import { ScheduleService } from '../services/ScheduleService';
 import { GroupByIdPipe } from '../pipes/GroupByIdPipe';
-import { DateService } from '../../utils/date/DateService';
 import { ScheduleMapper } from '../../mappers/ScheduleMapper';
 import { Access } from '../../security/Access';
 import { PERMISSION } from '../../security/PERMISSION';
@@ -45,6 +44,7 @@ import { EventPipe } from '../pipes/EventPipe';
 import { UserByIdPipe } from '../pipes/UserByIdPipe';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
 import { SimpleTelegramEventInfoResponse } from '../responses/TelegramGeneralEventInfoResponse';
+import { EventInfoResponse } from '../responses/EventInfoResponse';
 
 @ApiTags('Schedule')
 @Controller({
@@ -217,6 +217,45 @@ export class ScheduleController {
     return this.scheduleMapper.getEvent(result.event, result.discipline);
   }
 
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: EventInfoResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException: 
+      Event with such id is not found
+      
+    InvalidWeekException:
+      Week parameter is invalid`,
+  })
+  @ApiParam({
+    name: 'eventId',
+    description: 'Id of the certain event',
+    required: true,
+  })
+  @ApiParam({
+    name: 'groupId',
+    description: 'Id of the group',
+    required: true,
+  })
+  @ApiQuery({
+    name: 'week',
+    description: 'Week of the event',
+    required: true,
+  })
+  @ApiEndpoint({
+    summary: 'Get the information about event and all its pairs',
+  })
+  @Get('/groups/:groupId/events/:eventId')
+  async getEventInfos (
+    @Param('eventId', EventByIdPipe) id: string,
+    @Query('week') week: number,
+  ) {
+    const result = await this.scheduleService.getEventInfos(id, week);
+    return this.scheduleMapper.getEventInfos(result.event);
+  }
+
   @Access(PERMISSION.GROUPS_$GROUPID_EVENTS_CREATE)
   @Post('/events')
   @ApiBearerAuth()
@@ -352,14 +391,7 @@ export class ScheduleController {
     return this.scheduleMapper.getEvent(result.event, result.discipline);
   }
 
-  @Access(PERMISSION.GROUPS_$GROUPID_EVENTS_UPDATE)
   @ApiBearerAuth()
-  @Patch('/groups/:groupId/events/:eventId')
-  @ApiParam({
-    name: 'groupId',
-    type: String,
-    required: true,
-  })
   @ApiOkResponse({
     type: EventResponse,
   })
@@ -389,7 +421,6 @@ export class ScheduleController {
     InvalidWeekException:
       Week parameter is invalid`,
   })
-
   @ApiUnauthorizedResponse({
     description: `\n
     UnauthorizedException:
@@ -400,6 +431,22 @@ export class ScheduleController {
     NoPermissionException:
       You do not have permission to perform this action`,
   })
+  @ApiParam({
+    name: 'groupId',
+    description: 'Id of the certain group',
+    required: true,
+  })
+  @ApiParam({
+    name: 'eventId',
+    description: 'Id of the certain event',
+    required: true,
+  })
+  @ApiEndpoint({
+    summary: 'Update the certain event',
+    permissions: PERMISSION.GROUPS_$GROUPID_EVENTS_UPDATE,
+    guards: TelegramGuard,
+  })
+  @Patch('/groups/:groupId/events/:eventId')
   async update (
     @Param('eventId', EventByIdPipe) eventId: string,
     @Body(EventPipe) body: UpdateEventDTO,
