@@ -7,6 +7,7 @@ import { EventResponse } from '../api/responses/EventResponse';
 import { DisciplineType } from '@prisma/client';
 import { SimpleTelegramEventInfoResponse, TelegramEventInfoResponse } from '../api/responses/TelegramGeneralEventInfoResponse';
 import { EventTypeEnum } from '../api/dtos/EventTypeEnum';
+import { EventInfoResponse } from '../api/responses/EventInfoResponse';
 
 @Injectable()
 export class ScheduleMapper {
@@ -52,6 +53,23 @@ export class ScheduleMapper {
           middleName: teacher.middleName,
           lastName: teacher.lastName,
         })) || null,
+    };
+  }
+
+  getEventInfos (event: DbEvent): EventInfoResponse {
+    const disciplineType = event.lessons[0]?.disciplineType.name;
+    return {
+      period: event.period,
+      startTime: event.startTime,
+      endTime: event.endTime,
+      url: event.url,
+      name: event.name,
+      type: disciplineType as EventTypeEnum ?? EventTypeEnum.OTHER,
+      eventInfos: event.eventInfo
+        .map((info) => ({
+          number: info.number,
+          eventInfo: info.description,
+        })),
     };
   }
 

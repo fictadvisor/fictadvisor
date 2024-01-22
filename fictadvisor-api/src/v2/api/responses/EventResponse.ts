@@ -3,56 +3,83 @@ import { Period } from '@prisma/client';
 import { EventTypeEnum } from '../dtos/EventTypeEnum';
 
 export class TeacherNamesResponse {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Teacher id',
+  })
     id: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Teacher\'s name',
+  })
     firstName: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Teacher\'s middle name',
+  })
     middleName: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Teacher\'s last name',
+  })
     lastName: string;
 }
 
 export class EventResponse {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Event ID',
+  })
     id: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Event name',
+  })
     name: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Id of the discipline associated with the event',
+  })
     disciplineId: string;
 
   @ApiProperty({
     enum: EventTypeEnum,
+    description: 'Event discipline type',
   })
     eventType: EventTypeEnum;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Event start time',
+  })
     startTime: Date;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Event end time',
+  })
     endTime: Date;
 
   @ApiProperty({
     enum: Period,
+    description: 'The period during which the event occurs',
   })
     period: Period;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'The URL associated with the event',
+  })
     url: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Event information',
+  })
     eventInfo: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Information about the discipline',
+  })
     disciplineInfo: string;
 
   @ApiProperty({
     type: [TeacherNamesResponse],
+    description: 'An array of teachers linked to the event',
   })
     teachers: TeacherNamesResponse[];
 }
