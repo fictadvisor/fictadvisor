@@ -11,11 +11,11 @@ import CustomLink from '@/components/common/ui/custom-link';
 import { CustomLinkType } from '@/components/common/ui/custom-link/types';
 import { InputType } from '@/components/common/ui/form/input-mui/types';
 import Input from '@/components/common/ui/form/with-formik/input';
+import { changePasswordValidationSchema } from '@/components/pages/password-recovery/validation/changePasswordValidationSchema';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import AuthAPI from '@/lib/api/auth/AuthAPI';
 import StorageUtil from '@/lib/utils/StorageUtil';
-import { passwordValidationSchema } from '@/lib/validation/passwordValidationSchema';
 import theme from '@/styles/theme';
 
 import * as styles from './ChangePasswordForm.styles';
@@ -44,7 +44,7 @@ const ChangePasswordForm = () => {
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={passwordValidationSchema}
+      validationSchema={changePasswordValidationSchema}
       onSubmit={handleSubmit}
       validateOnMount
       validateOnChange

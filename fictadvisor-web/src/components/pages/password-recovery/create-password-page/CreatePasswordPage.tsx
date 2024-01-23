@@ -1,12 +1,8 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { useQuery } from 'react-query';
 import { ChevronLeftIcon, FingerPrintIcon } from '@heroicons/react/24/outline';
 import { Box, Typography } from '@mui/material';
-import {
-  ReadonlyURLSearchParams,
-  useRouter,
-  useSearchParams,
-} from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 import Button from '@/components/common/ui/button-mui';
 import {
@@ -18,10 +14,12 @@ import CreatePasswordForm from '@/components/pages/password-recovery/create-pass
 import * as styles from '@/components/pages/password-recovery/create-password-page/CreatePasswordPage.styles';
 import AuthAPI from '@/lib/api/auth/AuthAPI';
 
-const CreatePasswordPage = () => {
+interface CreatePasswordPageProps {
+  token: string;
+}
+
+const CreatePasswordPage: FC<CreatePasswordPageProps> = ({ token }) => {
   const router = useRouter();
-  const searchParams = useSearchParams() as ReadonlyURLSearchParams;
-  const token = searchParams.get('token') as string;
   const returnAuth = () => {
     void router.push('/login');
   };
@@ -51,7 +49,7 @@ const CreatePasswordPage = () => {
             </Box>
             <Typography sx={styles.title}>Вигадай новий пароль</Typography>
             <Box sx={styles.form}>
-              <CreatePasswordForm />
+              <CreatePasswordForm token={token} />
             </Box>
             <Button
               text="Повернутись до авторизації"
