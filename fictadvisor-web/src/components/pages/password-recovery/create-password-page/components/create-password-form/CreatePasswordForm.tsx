@@ -2,11 +2,7 @@
 import React, { FC } from 'react';
 import { AxiosError } from 'axios';
 import { Form, Formik } from 'formik';
-import {
-  ReadonlyURLSearchParams,
-  useRouter,
-  useSearchParams,
-} from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 import Button from '@/components/common/ui/button';
 import { ButtonSize } from '@/components/common/ui/button-mui/types';
@@ -14,14 +10,16 @@ import { Input, InputSize, InputType } from '@/components/common/ui/form';
 import { initialValues } from '@/components/pages/password-recovery/create-password-page/components/create-password-form/constants';
 import { CreatePasswordFormFields } from '@/components/pages/password-recovery/create-password-page/components/create-password-form/types';
 import styles from '@/components/pages/password-recovery/create-password-page/CreatePasswordPage.module.scss';
+import { createPasswordValidationSchema } from '@/components/pages/password-recovery/validation/createPasswordValidationSchema';
 import useToast from '@/hooks/use-toast';
 import AuthAPI from '@/lib/api/auth/AuthAPI';
-import { passwordValidationSchema } from '@/lib/validation/passwordValidationSchema';
 
-const CreatePasswordForm: FC = () => {
+interface CreatePasswordFormProps {
+  token: string;
+}
+
+const CreatePasswordForm: FC<CreatePasswordFormProps> = ({ token }) => {
   const { push } = useRouter();
-  const query = useSearchParams() as ReadonlyURLSearchParams;
-  const token = query.get('token') as string;
   const toast = useToast();
   const handleSubmit = async (data: CreatePasswordFormFields) => {
     try {
@@ -44,7 +42,7 @@ const CreatePasswordForm: FC = () => {
     <Formik
       initialValues={initialValues}
       onSubmit={handleSubmit}
-      validationSchema={passwordValidationSchema}
+      validationSchema={createPasswordValidationSchema}
       validateOnMount
       validateOnChange
     >
