@@ -15,7 +15,7 @@ import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import AuthAPI from '@/lib/api/auth/AuthAPI';
 import StorageUtil from '@/lib/utils/StorageUtil';
-import { passwordValidationSchema } from '@/lib/validation/passwordValidationSchema';
+import { changePasswordValidationSchema } from '@/lib/validation/changePasswordValidationSchema';
 import theme from '@/styles/theme';
 
 import * as styles from './ChangePasswordForm.styles';
@@ -44,7 +44,7 @@ const ChangePasswordForm = () => {
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={passwordValidationSchema}
+      validationSchema={changePasswordValidationSchema}
       onSubmit={handleSubmit}
       validateOnMount
       validateOnChange

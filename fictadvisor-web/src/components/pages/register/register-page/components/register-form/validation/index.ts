@@ -1,8 +1,8 @@
 import * as yup from 'yup';
 
-import { passwordValidationSchema } from '@/lib/validation/passwordValidationSchema';
+import { changePasswordValidationSchema } from '@/lib/validation/changePasswordValidationSchema';
 
-export const validationSchema = passwordValidationSchema.shape({
+export const validationSchema = changePasswordValidationSchema.shape({
   username: yup
     .string()
     .required(`Обов'язкове поле`)
