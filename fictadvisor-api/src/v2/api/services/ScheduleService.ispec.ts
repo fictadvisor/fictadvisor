@@ -820,6 +820,9 @@ describe('ScheduleService', () => {
           }],
           teacher: {
             cathedras: [],
+            academicStatus: null,
+            position: null,
+            scientificDegree: null,
             avatar: null,
             createdAt: expect.any(Date),
             description: null,
@@ -897,6 +900,9 @@ describe('ScheduleService', () => {
           }],
           teacher: {
             cathedras: [],
+            academicStatus: null,
+            position: null,
+            scientificDegree: null,
             avatar: null,
             createdAt: expect.any(Date),
             description: null,

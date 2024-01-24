@@ -208,6 +208,9 @@ model Teacher {
   description        String?
   avatar             String?
   rating             Decimal               @default(0.00) @db.Decimal(5, 2)
+  academicStatus     AcademicStatus?       @map("academic_status")
+  scientificDegree   ScientificDegree?     @map("scientific_degree")
+  position           Position?
   disciplineTeachers DisciplineTeacher[]
   cathedras          TeachersOnCathedras[]
   complaints         Complaint[]
@@ -215,6 +218,29 @@ model Teacher {
   updatedAt          DateTime?             @default(now()) @updatedAt @map("updated_at")
 
   @@map("teachers")
+}
+
+enum AcademicStatus {
+  DOCENT
+  PROFESSOR
+  SENIOR_RESEARCH_ASSISTANT
+}
+
+enum ScientificDegree {
+  CANDIDATE
+  DOCTOR
+}
+
+enum Position {
+  ASSOCIATE_PROFESSOR
+  DEPARTMENT_CHAIR
+  PROFESSOR
+  RESEARCH_ASSISTANT
+  SENIOR_RESEARCH_ASSISTANT
+  SENIOR_LECTURER
+  ASSISTANT
+  LEADING_RESEARCHER
+  LECTURER
 }
 
 model DisciplineTeacher {
