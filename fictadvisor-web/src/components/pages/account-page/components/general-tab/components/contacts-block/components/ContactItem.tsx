@@ -14,13 +14,14 @@ interface ContactProps extends Contact {
 }
 const ContactItem: FC<ContactProps> = ({
   refetchContacts,
+  id,
   link,
   name,
   displayName,
 }) => {
   const { user } = useAuthentication();
   const handleDeleteClick = async () => {
-    await UserAPI.deleteContact(user.id, name);
+    await UserAPI.deleteContact(user.id, id);
     refetchContacts();
   };
 
