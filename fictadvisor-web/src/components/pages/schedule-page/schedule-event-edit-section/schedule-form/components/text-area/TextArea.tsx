@@ -1,4 +1,5 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
+import { Box, Typography } from '@mui/material';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { useField } from 'formik';
 
@@ -10,7 +11,8 @@ interface ScheduleTextAreaProps extends TextFieldProps<'standard'> {
 }
 
 const TextArea: FC<ScheduleTextAreaProps> = ({ name, ...props }) => {
-  const [{ value }, {}, { setValue }] = useField(name);
+  const [{ value }, { touched, error }, { setValue }] = useField(name);
+  const hasError = useMemo(() => touched && !!error, [touched, error]);
   const [internalValue, setInternalValue] = useState(value);
 
   useEffect(() => {
@@ -21,19 +23,22 @@ const TextArea: FC<ScheduleTextAreaProps> = ({ name, ...props }) => {
   }, [internalValue]);
 
   return (
-    <TextField
-      {...props}
-      onChange={event => setInternalValue(event.target.value)}
-      value={internalValue}
-      variant="standard"
-      margin="normal"
-      sx={styles.textArea}
-      multiline
-      rows={3}
-      InputProps={{
-        disableUnderline: true,
-      }}
-    />
+    <Box sx={{ width: '100%' }}>
+      <TextField
+        {...props}
+        onChange={event => setInternalValue(event.target.value)}
+        value={internalValue}
+        variant="standard"
+        margin="normal"
+        sx={styles.textArea}
+        multiline
+        rows={3}
+        InputProps={{
+          disableUnderline: true,
+        }}
+      />
+      {hasError && <Typography sx={styles.error}>{error}</Typography>}
+    </Box>
   );
 };
 
