@@ -1,8 +1,8 @@
 import * as yup from 'yup';
 
-import { changePasswordValidationSchema } from '@/components/pages/password-recovery/validation/changePasswordValidationSchema';
+import { passwordSchema } from '@/lib/validation/schemas';
 
-export const validationSchema = changePasswordValidationSchema.shape({
+export const validationSchema = yup.object().shape({
   username: yup
     .string()
     .required(`Обов'язкове поле`)
@@ -41,4 +41,8 @@ export const validationSchema = changePasswordValidationSchema.shape({
     .email('Це не схоже на поштову адресу'),
   group: yup.string().required(`Обов'язкове поле`),
   agreement: yup.boolean().isTrue(''),
+  password: passwordSchema,
+  passwordConfirmation: passwordSchema
+    .nullable()
+    .oneOf([yup.ref('password'), null], 'Паролі не збігаються'),
 });
