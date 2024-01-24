@@ -14,3 +14,9 @@ export const textArea: SxProps<Theme> = {
   },
   width: '100%',
 };
+
+export const error: SxProps<Theme> = {
+  fontSize: '11px',
+  color: 'error.500',
+  pl: '16px',
+};
