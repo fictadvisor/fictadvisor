@@ -34,7 +34,10 @@ const ComplaintPopup: FC<ComplaintPopupProps> = ({
   const toast = useToast();
   const isTablet = useMediaQuery(theme.breakpoints.down('tablet'));
 
-  const handleSubmit = async (data: Complaint) => {
+  const handleSubmit = async (
+    data: Complaint,
+    reset: { resetForm: () => void },
+  ) => {
     try {
       await TeacherAPI.postTeacherComplaint(
         teacherId,
@@ -45,6 +48,7 @@ const ComplaintPopup: FC<ComplaintPopupProps> = ({
         'Ми успішно отримали скаргу на викладача та вже працюємо над нею',
         5000,
       );
+      reset.resetForm();
       setIsPopupOpen(false);
     } catch (error) {
       displayError(error);
