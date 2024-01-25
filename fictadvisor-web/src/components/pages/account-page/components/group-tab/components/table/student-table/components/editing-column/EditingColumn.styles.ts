@@ -94,7 +94,11 @@ export const canselButton: SxProps<Theme> = {
 
 export const transferButton: SxProps<Theme> = {
   border: 'none',
-  width: 'fit-content',
+  width: '127px',
   p: '6px 12px',
   marginLeft: '0px !important',
+  marginRight: '18px',
+  typography: 'body1Bold',
+  borderRadius: '6px',
+  gap: '6px',
 };
