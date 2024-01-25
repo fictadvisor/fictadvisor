@@ -12,6 +12,7 @@ export const prepareData = (
     if (
       JSON.stringify(dataFromForm[key]) === JSON.stringify(initialData[key]) &&
       key !== 'teachers' &&
+      key !== 'disciplineId' &&
       key !== 'startTime' &&
       key !== 'endTime'
     ) {

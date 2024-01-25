@@ -6,6 +6,7 @@ export interface DetailedEventBody extends Omit<Event, 'disciplineType'> {
   eventInfo?: string;
   disciplineType: TDiscipline | string;
   disciplineInfo?: string;
+  disciplineId: string;
   period: TEventPeriod | string;
   teachers: {
     id: string;
