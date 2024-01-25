@@ -43,5 +43,5 @@ export const drawer: SxProps<Theme> = {
     color: 'unset',
     boxShadow: 'unset',
   },
-  zIndex: 2,
+  zIndex: 11,
 };
