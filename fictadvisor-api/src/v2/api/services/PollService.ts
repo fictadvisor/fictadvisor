@@ -332,7 +332,7 @@ export class PollService {
     });
 
     const hasSelective = await this.checkDoesUserHaveSelectiveDisciplines(userId, semesters[0]);
-    const hasSelectedInLastSemester = !hasSelective && (await this.getSelectedInSemester(semesters[0], userId)).length;
+    const hasSelectedInLastSemester = hasSelective && (await this.getSelectedInSemester(semesters[0], userId)).length;
 
     return {
       hasSelectedInLastSemester: !!hasSelectedInLastSemester,
