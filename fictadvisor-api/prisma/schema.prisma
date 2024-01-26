@@ -831,3 +831,12 @@ model Complaint {
 
   @@map("complaints")
 }
+
+model PageText {
+  key     String  @unique
+  value   String
+  link    String?
+  isShown Boolean @default(true) @map("is_shown")
+
+  @@map("page_texts")
+}
