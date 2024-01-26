@@ -3,7 +3,7 @@
 
 
 * {
-  font-family: 'Manrope', sans-serif;
+  //font-family: 'Manrope', sans-serif;
 }
 
 html, body {
@@ -76,7 +76,7 @@ select:-webkit-autofill:focus {
   @include body-secondary;
   -webkit-text-fill-color: $gray-600;
   -webkit-box-shadow: 0 0 0 1000px $background-dark-0 inset !important;
-  font-family: 'Manrope', sans-serif;
+  //font-family: 'Manrope', sans-serif;
   transition: all 0s 50000s;
   background-clip: content-box !important;
 }
