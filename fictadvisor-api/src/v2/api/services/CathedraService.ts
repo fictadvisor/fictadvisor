@@ -3,8 +3,8 @@ import { CathedraRepository } from '../../database/repositories/CathedraReposito
 import { CreateCathedraDTO } from '../dtos/CreateCathedraDTO';
 import { UpdateCathedraDTO } from '../dtos/UpdateCathedraDTO';
 import { DbCathedra } from '../../database/entities/DbCathedra';
-import { QueryAllDTO } from '../../utils/QueryAllDTO';
 import { DatabaseUtils } from '../../database/DatabaseUtils';
+import { QueryAllCathedrasDTO, SortQACParam } from '../dtos/QueryAllCathedrasDTO';
 
 @Injectable()
 export class CathedraService {
@@ -12,28 +12,74 @@ export class CathedraService {
     private cathedraRepository: CathedraRepository,
   ) {}
 
-  async create (body: CreateCathedraDTO): Promise<DbCathedra> {
-    return this.cathedraRepository.create(body);
+  create (body: CreateCathedraDTO): Promise<DbCathedra> {
+    const { teachers, ...data } = body;
+    return this.cathedraRepository.create({
+      ...data,
+      teachers: {
+        createMany: {
+          data: teachers?.map((teacherId) => ({ teacherId })) || [],
+        },
+      },
+    });
   }
 
   async update (id: string, body: UpdateCathedraDTO): Promise<DbCathedra>  {
-    return this.cathedraRepository.updateById(id, body);
+    const { addTeachers, deleteTeachers, ...data } = body;
+    return this.cathedraRepository.updateById(id, {
+      ...data,
+      teachers: {
+        deleteMany: {
+          teacherId: {
+            in: deleteTeachers || [],
+          },
+        },
+        createMany: {
+          data: addTeachers?.map((teacherId) => ({ teacherId })) || [],
+        },
+      },
+    });
   }
 
   async delete (id: string): Promise<DbCathedra> {
     return this.cathedraRepository.deleteById(id);
   }
 
-  async getAll (body: QueryAllDTO) {
-    const search = DatabaseUtils.getSearch(body, 'name', 'abbreviation');
-    const sort = DatabaseUtils.getSort(body, 'name');
+  async getAll (query: QueryAllCathedrasDTO) {
+    const search = {
+      AND: [
+        this.getCathedraSearch.name(query.search),
+        this.getCathedraSearch.abbreviation(query.abbreviation),
+        this.getCathedraSearch.divisions(query.divisions),
+      ],
+    };
+
+    const sort = query.sort === SortQACParam.TEACHERS ? {
+      orderBy: {
+        teachers: {
+          _count: query?.order || 'asc',
+        },
+      },
+    } : DatabaseUtils.getSort(query, SortQACParam.NAME);
 
     const data = {
       ...sort,
-      where: {
-        ...search,
-      },
+      where: search,
     };
-    return await DatabaseUtils.paginate<DbCathedra>(this.cathedraRepository, body, data);
+
+    return await DatabaseUtils.paginate<DbCathedra>(this.cathedraRepository, query, data);
+  }
+
+  private getCathedraSearch = {
+    name: (search: string) => DatabaseUtils.getSearch({ search }, 'name'),
+    abbreviation: (search: string) => DatabaseUtils.getSearch({ search }, 'abbreviation'),
+    divisions: (divisions: string[]) => DatabaseUtils.getSearchByArray(divisions, 'division'),
+  };
+
+  async getAllDivisions () {
+    const cathedras = await this.cathedraRepository.findMany({
+      distinct: ['division'],
+    });
+    return { divisions: cathedras.map((cathedra) => cathedra.division) };
   }
 }
