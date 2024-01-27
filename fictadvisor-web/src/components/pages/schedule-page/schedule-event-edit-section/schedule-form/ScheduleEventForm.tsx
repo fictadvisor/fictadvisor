@@ -85,13 +85,11 @@ export const ScheduleEventForm: FC<ScheduleEventFormProps> = ({
             <Box sx={styles.content}>
               <Typography variant="body1Medium">Тип</Typography>
               <ScheduleFormikDropdown
-                name={'disciplineType'}
+                name="eventType"
                 options={eventTypeList}
                 placeholder={'Оберіть тип події'}
               />
-              {values.disciplineType && (
-                <DisciplineRelatedFields values={values} />
-              )}
+              {values.eventType && <DisciplineRelatedFields values={values} />}
               <Typography variant="body1Medium">Дата початку</Typography>
               <CalendarInput date={date} setDate={setDate} />
               {date && (
@@ -140,7 +138,7 @@ export const ScheduleEventForm: FC<ScheduleEventFormProps> = ({
                     textPosition={TabTextPosition.CENTER}
                     value={InfoCardTabs.EVENT}
                   />
-                  {values.disciplineType && (
+                  {values.eventType && (
                     <Tab
                       disableRipple
                       label="Про дисципліну"
