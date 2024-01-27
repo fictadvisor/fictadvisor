@@ -115,12 +115,14 @@ describe('ScheduleService', () => {
           code: 'AA-12',
           educationalProgramId: 'issEducationalProgramId',
           cathedraId: 'ipiCathedraId',
+          admissionYear: 2022,
         },
         {
           id: 'anotherGroup',
           code: 'AA-11',
           educationalProgramId: 'isrsEducationalProgramId',
           cathedraId: 'istCathedraId',
+          admissionYear: 2022,
         },
       ],
     });
@@ -784,6 +786,7 @@ describe('ScheduleService', () => {
             createdAt: expect.any(Date),
             educationalProgramId: 'issEducationalProgramId',
             id: 'group',
+            admissionYear: 2022,
             updatedAt: expect.any(Date),
           },
           id: result.event.id,
@@ -844,6 +847,7 @@ describe('ScheduleService', () => {
           createdAt: expect.any(Date),
           educationalProgramId: 'issEducationalProgramId',
           id: 'group',
+          admissionYear: 2022,
           updatedAt: expect.any(Date),
           selectiveAmounts: [],
         },
@@ -924,6 +928,7 @@ describe('ScheduleService', () => {
           code: 'AA-12',
           createdAt: expect.any(Date),
           educationalProgramId: 'issEducationalProgramId',
+          admissionYear: 2022,
           id: 'group',
           updatedAt: expect.any(Date),
           selectiveAmounts: [],
@@ -990,6 +995,7 @@ describe('ScheduleService', () => {
           createdAt: expect.any(Date),
           educationalProgramId: 'issEducationalProgramId',
           id: 'group',
+          admissionYear: 2022,
           updatedAt: expect.any(Date),
         },
         eventInfo: [
@@ -1030,6 +1036,7 @@ describe('ScheduleService', () => {
           createdAt: expect.any(Date),
           educationalProgramId: 'isrsEducationalProgramId',
           id: 'anotherGroup',
+          admissionYear: 2022,
           updatedAt: expect.any(Date),
         },
         startTime: new Date('2022-09-12T08:30:00'),
@@ -1076,6 +1083,7 @@ describe('ScheduleService', () => {
           createdAt: expect.any(Date),
           educationalProgramId: 'issEducationalProgramId',
           id: 'group',
+          admissionYear: 2022,
           updatedAt: expect.any(Date),
         },
         startTime: new Date('2022-09-05T08:30:00.000Z'),
@@ -1110,6 +1118,7 @@ describe('ScheduleService', () => {
           createdAt: expect.any(Date),
           educationalProgramId: 'issEducationalProgramId',
           id: 'group',
+          admissionYear: 2022,
           updatedAt: expect.any(Date),
           selectiveAmounts: [],
         },
@@ -1155,6 +1164,7 @@ describe('ScheduleService', () => {
           createdAt: expect.any(Date),
           educationalProgramId: 'isrsEducationalProgramId',
           id: 'anotherGroup',
+          admissionYear: 2022,
           updatedAt: expect.any(Date),
         },
         startTime: new Date('2022-11-12T08:30:00.000Z'),
@@ -1190,6 +1200,7 @@ describe('ScheduleService', () => {
           createdAt: expect.any(Date),
           educationalProgramId: 'issEducationalProgramId',
           id: 'group',
+          admissionYear: 2022,
           updatedAt: expect.any(Date),
           selectiveAmounts: [],
         },
@@ -1237,5 +1248,8 @@ describe('ScheduleService', () => {
     await prisma.selectiveDiscipline.deleteMany();
     await prisma.eventInfo.deleteMany();
     await prisma.teacher.deleteMany();
+    await prisma.speciality.deleteMany();
+    await prisma.educationalPrograms.deleteMany();
+    await prisma.cathedra.deleteMany();
   });
 });

@@ -17,7 +17,7 @@ import {
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import AuthAPI from '@/lib/api/auth/AuthAPI';
-import { GetAllResponse } from '@/lib/api/group/types/GetAllResponse';
+import { GetAllGroupsResponse } from '@/lib/api/group/types/GetAllGroupsResponse';
 import AuthService from '@/lib/services/auth';
 import StorageUtil from '@/lib/utils/StorageUtil';
 
@@ -26,7 +26,9 @@ import * as stylesMUI from './RegisterForm.styles';
 import { validationSchema } from './validation';
 
 import styles from './FormStyles.module.scss';
-const RegisterForm: FC<GetAllResponse> = ({ groups }) => {
+const RegisterForm: FC<Omit<GetAllGroupsResponse, 'pagination'>> = ({
+  groups,
+}) => {
   const { displayError } = useToastError();
   const router = useRouter();
   const toast = useToast();

@@ -9,6 +9,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { Box, useMediaQuery } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
+import { isAxiosError } from 'axios';
 import { Form, Formik, FormikProps, useFormikContext } from 'formik';
 
 import {
@@ -27,6 +28,7 @@ import {
 } from '@/components/common/ui/icon-button';
 import IconButton from '@/components/common/ui/icon-button-mui';
 import { roleOptions } from '@/components/pages/search-pages/teacher-search/constants';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import CathedraAPI from '@/lib/api/cathera/CathedraAPI';
 import GroupAPI from '@/lib/api/group/GroupAPI';
 import theme from '@/styles/theme';
@@ -60,8 +62,16 @@ const SearchForm: FC<SearchFormProps> = ({
   const isTablet = useMediaQuery(theme.breakpoints.down('tablet'));
   const [collapsed, setCollapsed] = useState(false);
 
-  const { data: groupData } = useQuery('all-teacher', GroupAPI.getAll, {
+  const toastError = useToastError();
+  const { data: groupData } = useQuery(['groups'], () => GroupAPI.getAll(), {
+    keepPreviousData: true,
+    refetchOnWindowFocus: false,
     staleTime: Infinity,
+    onError: error => {
+      if (isAxiosError(error)) {
+        toastError.displayError(error.response?.data.message);
+      }
+    },
   });
 
   const { data: cathedraData } = useQuery('all-cathedra', CathedraAPI.getAll, {

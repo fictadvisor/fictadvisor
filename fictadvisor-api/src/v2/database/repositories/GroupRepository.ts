@@ -11,6 +11,21 @@ export class GroupRepository {
   private include = {
     selectiveAmounts: true,
     telegramGroups: true,
+    cathedra: true,
+    educationalProgram: {
+      include: {
+        speciality: true,
+      },
+    },
+    students: {
+      include: {
+        roles: {
+          include: {
+            role: true,
+          },
+        },
+      },
+    },
   };
 
   async find (where: Prisma.GroupWhereInput) {

@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { State, RoleName } from '@prisma/client';
-import { PaginationDataResponse } from './PaginationDataResponse';
 
 export class GroupResponse {
   @ApiProperty({
@@ -26,20 +25,6 @@ export class ExtendedGroupResponse extends GroupResponse {
     description: 'User\'s role in the group',
   })
     role: RoleName;
-}
-
-export class GroupsResponse {
-  @ApiProperty({
-    type: [GroupResponse],
-    description: 'List of group\'s data',
-  })
-    groups: GroupResponse[];
-
-  @ApiProperty({
-    type: PaginationDataResponse,
-    description: 'Pagination info',
-  })
-    pagination: PaginationDataResponse;
 }
 
 export class FullGroupResponse extends GroupResponse {

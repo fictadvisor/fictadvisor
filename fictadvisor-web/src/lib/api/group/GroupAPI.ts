@@ -1,7 +1,11 @@
+import {
+  GroupCreateBody,
+  GroupEditBody,
+  GroupsSearchFormFields,
+} from '@/components/pages/admin/admin-groups/common/types';
 import { AddStudentsByMailBody } from '@/lib/api/group/types/AddStudentsByMailBody';
 import { AddStudentsByMailResponse } from '@/lib/api/group/types/AddStudentsByMailResponse';
 import { ExportGroupStudents } from '@/lib/api/group/types/ExportGroupStudents';
-import { GetAllResponse } from '@/lib/api/group/types/GetAllResponse';
 import { GetGroupDisciplines } from '@/lib/api/group/types/GetGroupDisciplines';
 import { GetGroupStudentResponse } from '@/lib/api/group/types/GetGroupStudentsResponse';
 import { GetDisciplinesWithTeachers } from '@/lib/api/group/types/GetGroupTeachers';
@@ -10,12 +14,14 @@ import { UpdateCaptainBody } from '@/lib/api/group/types/UpdateCaptainBody';
 import { UpdateStudentRoleBody } from '@/lib/api/group/types/UpdateStudentRoleBody';
 import { VerifyStudentBody } from '@/lib/api/group/types/VerifyStudentBody';
 import { getAuthorizationHeader } from '@/lib/api/utils';
+import { Group } from '@/types/group';
 import { GroupStudent } from '@/types/student';
 import { User } from '@/types/user';
 
 import { Order } from '../../services/group/types/OrderEnum';
 import { client } from '../instance';
 
+import { GetAllGroupsResponse } from './types/GetAllGroupsResponse';
 import { GetSelectiveResponse } from './types/GetSelectiveResponse';
 
 class GroupAPI {
@@ -27,17 +33,71 @@ class GroupAPI {
     );
   }
 
-  async getAll() {
-    const res = await client.get<GetAllResponse>('/groups');
-    return res.data;
+  async get(groupId: string): Promise<Group> {
+    const { data } = await client.get<Group>(
+      `/groups/${groupId}`,
+      getAuthorizationHeader(),
+    );
+    return data;
   }
 
-  async getGroupStudents(groupId: string, order?: Order) {
-    const params = order ? { order, sort: 'lastName' } : {};
+  async getAll(
+    page?: number,
+    params?: Partial<GroupsSearchFormFields>,
+    pageSize?: number,
+  ): Promise<GetAllGroupsResponse> {
+    const { data } = await client.get<GetAllGroupsResponse>(`/groups`, {
+      params: {
+        ...params,
+        page,
+        pageSize,
+      },
+      ...getAuthorizationHeader(),
+    });
+    return data;
+  }
+
+  async create(body: GroupCreateBody): Promise<Group> {
+    const { data } = await client.post<Group>(
+      `/groups`,
+      body,
+      getAuthorizationHeader(),
+    );
+    return data;
+  }
+
+  async editGroup(
+    body: Partial<GroupEditBody>,
+    groupId: string,
+  ): Promise<Group> {
+    const { data } = await client.patch<Group>(
+      `/groups/${groupId}`,
+      body,
+      getAuthorizationHeader(),
+    );
+    return data;
+  }
+
+  async delete(groupId: string): Promise<Group> {
+    const { data } = await client.delete<Group>(
+      `/groups/${groupId}`,
+      getAuthorizationHeader(),
+    );
+    return data;
+  }
+
+  async getGroupStudents(
+    groupId: string,
+    order?: Order,
+    sort?: 'lastName' | 'firstName' | 'middleName',
+  ) {
     const res = await client.get<GetGroupStudentResponse>(
       `/groups/${groupId}/students`,
       {
-        params,
+        params: {
+          order,
+          sort,
+        },
         ...getAuthorizationHeader(),
       },
     );
