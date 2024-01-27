@@ -48,8 +48,15 @@ export class TeacherService {
       AND: [
         this.getSearchForTeachers.fullName(body.search),
         body.groupId?.length ? this.getSearchForTeachers.group(body.groupId) : {},
-        body.cathedrasId?.length ? this.getSearchForTeachers.cathedras(body.cathedrasId) : {},
         body.roles?.length ? this.getSearchForTeachers.roles(body.roles) : {},
+        {
+          OR: [
+            body.notInDepartments ? {
+              NOT: this.getSearchForTeachers.cathedras(body.cathedrasId),
+            } : {},
+            body.cathedrasId?.length ? this.getSearchForTeachers.cathedras(body.cathedrasId) : {},
+          ],
+        },
       ],
     };
 
