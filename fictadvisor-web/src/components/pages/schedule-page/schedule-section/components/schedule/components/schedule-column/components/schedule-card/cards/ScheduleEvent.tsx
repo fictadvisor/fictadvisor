@@ -28,12 +28,7 @@ const ScheduleEvent: FC<ScheduleEventProps> = ({
 }) => {
   return (
     <Button
-      sx={styles.card(
-        event.disciplineType ? event.disciplineType.name : null,
-        height,
-        minHeight,
-        isPastEvent,
-      )}
+      sx={styles.card(event.eventType, height, minHeight, isPastEvent)}
       disableRipple
       onClick={() => onClick(event, week)}
     >

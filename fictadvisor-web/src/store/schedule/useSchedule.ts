@@ -17,7 +17,7 @@ import { getCurrentWeek } from '@/store/schedule/utils/getCurrentWeek';
 import { getFirstDayOfAWeek } from '@/store/schedule/utils/getFirstDayOfAWeek';
 import { getWeekByDate } from '@/store/schedule/utils/getWeekByDate';
 import { Group } from '@/types/group';
-import { Event, TDiscipline } from '@/types/schedule';
+import { Event, TEvent } from '@/types/schedule';
 
 import { findFirstOf5 } from './utils/findFirstOf5';
 import { setUrlParams } from './utils/setUrlParams';
@@ -48,22 +48,17 @@ const checkboxesInitialValuesNotAuth: Checkboxes = {
   isSelective: false,
 };
 
-const CheckboxesMapper: Record<string, (TDiscipline | null)[]> = {
-  addLecture: [TDiscipline.LECTURE],
-  addLaboratory: [TDiscipline.LABORATORY],
-  addPractice: [TDiscipline.PRACTICE],
-  otherEvents: [
-    TDiscipline.CONSULTATION,
-    TDiscipline.EXAM,
-    TDiscipline.WORKOUT,
-    null,
-  ],
+const CheckboxesMapper: Record<string, (TEvent | null)[]> = {
+  addLecture: [TEvent.LECTURE],
+  addLaboratory: [TEvent.LABORATORY],
+  addPractice: [TEvent.PRACTICE],
+  otherEvents: [TEvent.CONSULTATION, TEvent.EXAM, TEvent.WORKOUT, null],
 };
 
 type State = {
   checkboxes: Checkboxes;
   semester?: GetCurrentSemester;
-  disciplineTypes: (TDiscipline | null)[];
+  eventTypes: (TEvent | null)[];
   week: number;
   groupId: string;
   eventsBody: GetEventBody[];
@@ -99,13 +94,13 @@ export const useSchedule = create<State & Action>((set, get) => {
     isLoading: false,
     currentTime: dayjs().tz(),
     isNewEventAdded: false,
-    disciplineTypes: [
-      TDiscipline.LECTURE,
-      TDiscipline.PRACTICE,
-      TDiscipline.LABORATORY,
-      TDiscipline.EXAM,
-      TDiscipline.CONSULTATION,
-      TDiscipline.WORKOUT,
+    eventTypes: [
+      TEvent.LECTURE,
+      TEvent.PRACTICE,
+      TEvent.LABORATORY,
+      TEvent.EXAM,
+      TEvent.CONSULTATION,
+      TEvent.WORKOUT,
       null,
     ],
     week: 1,
@@ -182,10 +177,10 @@ export const useSchedule = create<State & Action>((set, get) => {
     },
 
     updateCheckboxes(checkboxes) {
-      const _disciplineTypes: (TDiscipline | null)[] = [];
+      const _eventTypes: (TEvent | null)[] = [];
       for (const [key, value] of Object.entries(checkboxes)) {
         if (value && key !== 'isSelective') {
-          _disciplineTypes.push(...CheckboxesMapper[key]);
+          _eventTypes.push(...CheckboxesMapper[key]);
         }
       }
 
@@ -194,7 +189,7 @@ export const useSchedule = create<State & Action>((set, get) => {
 
       set(_ => ({
         checkboxes,
-        disciplineTypes: _disciplineTypes,
+        eventTypes: _eventTypes,
       }));
 
       if (selectiveChanged) {

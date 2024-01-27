@@ -1,6 +1,6 @@
 import { SxProps, Theme } from '@mui/material/styles';
 
-import { TDiscipline } from '@/types/schedule';
+import { TEvent } from '@/types/schedule';
 
 const otherSubjects = (isPastEvent: boolean): SxProps<Theme> => ({
   backgroundColor: 'violet.100',
@@ -55,7 +55,7 @@ const trim4lines = {
   lineHeight: 1.3,
 };
 const subjectColors = (
-  disciplineType: TDiscipline | null,
+  eventType: TEvent | null,
   isPastEvent: boolean,
 ): SxProps<Theme> => ({
   '& .MuiTypography-body1': {
@@ -63,7 +63,7 @@ const subjectColors = (
     typography: 'body1Medium',
     ...trim4lines,
   },
-  ...(disciplineType === 'LECTURE' && {
+  ...(eventType === 'LECTURE' && {
     backgroundColor: 'indigo.100',
     borderColor: 'indigo.700',
     '& .MuiTypography-body2': {
@@ -108,7 +108,7 @@ const subjectColors = (
       },
     }),
   }),
-  ...(disciplineType === 'PRACTICE' && {
+  ...(eventType === 'PRACTICE' && {
     backgroundColor: 'orange.100',
     borderColor: 'orange.500',
     '& .MuiTypography-body2': {
@@ -152,7 +152,7 @@ const subjectColors = (
       },
     }),
   }),
-  ...(disciplineType === 'LABORATORY' && {
+  ...(eventType === 'LABORATORY' && {
     backgroundColor: 'mint.100',
     borderColor: 'mint.600',
     '& .MuiTypography-body2': {
@@ -196,9 +196,9 @@ const subjectColors = (
       },
     }),
   }),
-  ...(disciplineType !== 'LABORATORY' &&
-    disciplineType !== 'PRACTICE' &&
-    disciplineType !== 'LECTURE' && {
+  ...(eventType !== 'LABORATORY' &&
+    eventType !== 'PRACTICE' &&
+    eventType !== 'LECTURE' && {
       ...otherSubjects(isPastEvent),
     }),
 });
@@ -218,7 +218,7 @@ export const wrapper: SxProps<Theme> = {
 };
 
 export const card = (
-  disciplineType: TDiscipline | null,
+  eventType: TEvent | null,
   height: string | number,
   minHeight = 'unset',
   isPastEvent: boolean,
@@ -250,7 +250,7 @@ export const card = (
   outlineColor: { mobile: 'transparent', tablet: '#1E1E1E' },
   overflow: 'hidden',
 
-  ...subjectColors(disciplineType, isPastEvent),
+  ...subjectColors(eventType, isPastEvent),
 });
 
 export const packedCard = (

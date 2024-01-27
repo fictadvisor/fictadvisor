@@ -1,4 +1,4 @@
-export enum TDiscipline {
+export enum TEvent {
   LECTURE = 'LECTURE',
   PRACTICE = 'PRACTICE',
   LABORATORY = 'LABORATORY',
@@ -12,11 +12,7 @@ export interface Event {
   name: string;
   startTime: string;
   endTime: string;
-  disciplineType: {
-    id: string;
-    disciplineId: string;
-    name: TDiscipline;
-  } | null;
+  eventType: TEvent | null;
 }
 
 export enum TEventPeriod {

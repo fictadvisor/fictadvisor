@@ -19,7 +19,7 @@ const Schedule = () => {
     state => ({
       events: state.eventsBody,
       week: state.week,
-      disciplines: state.disciplineTypes,
+      disciplines: state.eventTypes,
       loading: state.isLoading,
       currentTime: state.currentTime.toISOString(),
     }),
@@ -31,11 +31,7 @@ const Schedule = () => {
       JSON.stringify(events[week - 1]),
     );
     _eventsWeek.events = _eventsWeek.events.filter(event => {
-      return disciplines.some(
-        discipline =>
-          discipline === event.disciplineType ||
-          discipline === event?.disciplineType?.name,
-      );
+      return disciplines.some(discipline => discipline === event.eventType);
     });
     return _eventsWeek;
   }, [disciplines, events, week]);

@@ -19,29 +19,29 @@ import useAuthentication from '@/hooks/use-authentication';
 import { DetailedEventBody } from '@/lib/api/schedule/types/DetailedEventBody';
 import PermissionService from '@/lib/services/permisson/PermissionService';
 import { PERMISSION, PermissionData } from '@/lib/services/permisson/types';
-import { TDiscipline } from '@/types/schedule';
+import { TEvent } from '@/types/schedule';
 
 import { skeletonProps } from '../utils/skeletonProps';
 
 import * as styles from './ScheduleInfoCard.styles';
 
 const TagLabelMapper: Record<string, string> = {
-  [TDiscipline.LECTURE]: 'Лекція',
-  [TDiscipline.EXAM]: 'Екзамен',
-  [TDiscipline.LABORATORY]: 'Лабораторна',
-  [TDiscipline.CONSULTATION]: 'Консультація',
-  [TDiscipline.PRACTICE]: 'Практика',
-  [TDiscipline.WORKOUT]: 'Відпрацювання',
+  [TEvent.LECTURE]: 'Лекція',
+  [TEvent.EXAM]: 'Екзамен',
+  [TEvent.LABORATORY]: 'Лабораторна',
+  [TEvent.CONSULTATION]: 'Консультація',
+  [TEvent.PRACTICE]: 'Практика',
+  [TEvent.WORKOUT]: 'Відпрацювання',
   ['null']: 'Інша подія',
 };
 
 const TagColorMapper: Record<string, TagColor> = {
-  [TDiscipline.LECTURE]: TagColor.INDIGO,
-  [TDiscipline.EXAM]: TagColor.VIOLET,
-  [TDiscipline.LABORATORY]: TagColor.MINT,
-  [TDiscipline.CONSULTATION]: TagColor.VIOLET,
-  [TDiscipline.PRACTICE]: TagColor.ORANGE,
-  [TDiscipline.WORKOUT]: TagColor.VIOLET,
+  [TEvent.LECTURE]: TagColor.INDIGO,
+  [TEvent.EXAM]: TagColor.VIOLET,
+  [TEvent.LABORATORY]: TagColor.MINT,
+  [TEvent.CONSULTATION]: TagColor.VIOLET,
+  [TEvent.PRACTICE]: TagColor.ORANGE,
+  [TEvent.WORKOUT]: TagColor.VIOLET,
   ['null']: TagColor.VIOLET,
 };
 
@@ -107,8 +107,8 @@ const ScheduleInfoCard: FC<ScheduleInfoCardProps> = ({
           <Skeleton {...skeletonProps} width={100} height={25} />
         ) : (
           <Tag
-            text={TagLabelMapper[event.disciplineType]}
-            color={TagColorMapper[event.disciplineType]}
+            text={TagLabelMapper[event.eventType]}
+            color={TagColorMapper[event.eventType]}
           />
         )}
         <Typography variant="body1Medium">Викладач</Typography>

@@ -36,12 +36,7 @@ const ScheduleEvent: FC<ScheduleEventsProps> = ({
           <Button
             key={event.id}
             sx={mergeSx(
-              styles.card(
-                event.disciplineType ? event.disciplineType.name : null,
-                eventHeight,
-                'unset',
-                isPastEvent,
-              ),
+              styles.card(event.eventType, eventHeight, 'unset', isPastEvent),
               styles.packedCard(top, width, left),
             )}
             disableRipple

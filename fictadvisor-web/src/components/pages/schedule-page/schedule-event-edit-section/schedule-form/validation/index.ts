@@ -37,7 +37,7 @@ export const formValidationSchema = yup.object().shape({
   disciplineInfo: yup.string().max(2000, 'Не довше 2000 символів'),
   period: yup.string().required("Обов'язкове поле"),
   url: yup.string().url('Неправильне посилання'),
-  disciplineId: yup.string().when('disciplineType', ([type], schema) => {
+  disciplineId: yup.string().when('eventType', ([type], schema) => {
     return type ? schema.required("Обов'язкове поле") : schema.optional();
   }),
 });

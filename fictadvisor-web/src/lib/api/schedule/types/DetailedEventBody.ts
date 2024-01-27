@@ -1,10 +1,10 @@
-import { Event, TDiscipline } from '@/types/schedule';
+import { Event, TEvent } from '@/types/schedule';
 import { TEventPeriod } from '@/types/schedule';
 
-export interface DetailedEventBody extends Omit<Event, 'disciplineType'> {
+export interface DetailedEventBody extends Omit<Event, 'eventType'> {
   url?: string;
   eventInfo?: string;
-  disciplineType: TDiscipline | string;
+  eventType: TEvent | string;
   disciplineInfo?: string;
   disciplineId: string;
   period: TEventPeriod | string;
