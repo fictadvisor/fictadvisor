@@ -1,6 +1,7 @@
 import React, { FC, useState } from 'react';
 import { Box, CardHeader, Stack } from '@mui/material';
 import { isAxiosError } from 'axios';
+import { useRouter } from 'next/navigation';
 
 import Button from '@/components/common/ui/button-mui';
 import {
@@ -9,20 +10,26 @@ import {
 } from '@/components/common/ui/button-mui/types';
 import { InputSize, InputType } from '@/components/common/ui/form';
 import Input from '@/components/common/ui/form/input-mui';
+import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import SubjectAPI from '@/lib/api/subject/SubjectAPI';
 
 import * as styles from './AdminSubjectCreatePage.styles';
 
 const AdminSubjectCreatePage: FC = () => {
-  const toast = useToastError();
+  const toast = useToast();
+  const toastError = useToastError();
+  const router = useRouter();
+
   const [subject, setSubject] = useState<string>('');
   const handleSubjectCreation = async () => {
     try {
       await SubjectAPI.createSubject(subject);
+      toast.success('Предмет успішно створений!', '', 4000);
+      router.replace('/admin/subjects');
     } catch (e) {
       if (isAxiosError(e)) {
-        toast.displayError(e);
+        toastError.displayError(e);
       }
     }
   };

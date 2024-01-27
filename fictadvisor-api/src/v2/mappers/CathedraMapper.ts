@@ -2,6 +2,7 @@ import { DbCathedra } from '../database/entities/DbCathedra';
 import { CathedraWithTeachersResponse } from '../api/responses/CathedraWithTeachersResponse';
 import { CathedraResponse } from '../api/responses/CathedraResponse';
 import { CathedraWithNumberOfTeachersResponse } from '../api/responses/CathedraWithNumberOfTeachersResponse';
+import { TeacherResponse } from '../api/responses/TeacherResponse';
 
 export class CathedraMapper {
   getCathedra (cathedra: DbCathedra): CathedraResponse {
@@ -12,19 +13,28 @@ export class CathedraMapper {
       division: cathedra.division,
     };
   }
+
+  getTeachersFromCathedras (cathedras: DbCathedra[]): TeacherResponse[] {
+    return cathedras.flatMap((cathedra) => this.getTeachers(cathedra));
+  }
+
+  getTeachers (cathedra: DbCathedra) {
+    return cathedra.teachers.map(({ teacher }) => ({
+      id: teacher.id,
+      firstName: teacher.firstName,
+      middleName: teacher.middleName,
+      lastName: teacher.lastName,
+      description: teacher.description,
+      avatar: teacher.avatar,
+      rating: teacher.rating.toNumber(),
+    }));
+  }
+
   getCathedraWithTeachers (cathedra: DbCathedra): CathedraWithTeachersResponse {
     const cathedraResponse = this.getCathedra(cathedra);
     return {
       ...cathedraResponse,
-      teachers: cathedra.teachers.map(({ teacher: t }) => ({
-        id: t.id,
-        firstName: t.firstName,
-        middleName: t.middleName,
-        lastName: t.lastName,
-        description: t.description,
-        avatar: t.avatar,
-        rating: t.rating.toNumber(),
-      })),
+      teachers: this.getTeachers(cathedra),
     };
   }
 
