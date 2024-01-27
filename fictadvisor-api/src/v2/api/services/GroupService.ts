@@ -4,7 +4,7 @@ import { DisciplineMapper } from '../../mappers/DisciplineMapper';
 import { GroupRepository } from '../../database/repositories/GroupRepository';
 import { StudentRepository } from '../../database/repositories/StudentRepository';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
-import { QueryAllDTO } from '../../utils/QueryAllDTO';
+import { SortDTO } from '../../utils/QueryAllDTO';
 import { UserRepository } from '../../database/repositories/UserRepository';
 import { EmailDTO } from '../dtos/EmailDTO';
 import { ApproveDTO } from '../dtos/ApproveDTO';
@@ -26,6 +26,9 @@ import { OrderQAParam } from '../dtos/OrderQAParam';
 import { StudentIsAlreadyCaptainException } from '../../utils/exceptions/StudentIsAlreadyCaptainException';
 import { NotApprovedException } from '../../utils/exceptions/NotApprovedException';
 import { GroupStudentsQueryDTO, SortQGSParam } from '../dtos/GroupStudentsQueryDTO';
+import { QueryAllGroupDTO } from '../dtos/QueryAllGroupDTO';
+import { CreateGroupDTO } from '../dtos/CreateGroupDTO';
+import { SortQAGroupParam } from '../dtos/SortQAGroupParam';
 
 const ROLE_LIST = [
   {
@@ -74,23 +77,104 @@ export class GroupService {
     private fileService: FileService,
   ) {}
 
-  async create (code: string): Promise<DbGroup>  {
-    const group = await this.groupRepository.create({ code });
+  async create ({ code, eduProgramId, cathedraId, admissionYear }: CreateGroupDTO): Promise<DbGroup>  {
+    const group = await this.groupRepository.create({
+      code,
+      cathedraId,
+      educationalProgramId: eduProgramId,
+      admissionYear,
+    });
     await this.addPermissions(group.id);
     return group;
   }
 
-  async getAll (body: QueryAllDTO) {
-    const search = DatabaseUtils.getSearch(body, 'code');
-    const sort = DatabaseUtils.getSort(body, 'code');
+  async getAll (query: QueryAllGroupDTO) {
+    if (query.sort === SortQAGroupParam.CAPTAIN) {
+      return this.getAllByCaptain(query);
+    }
 
-    const data = {
+    const data: Prisma.GroupFindManyArgs = {
       where: {
-        ...search,
+        AND: [
+          this.GroupSearching.code(query.search),
+          this.GroupSearching.specialities(query.specialities),
+          this.GroupSearching.cathedras(query.cathedras),
+          this.GroupSearching.courses(query.courses),
+        ],
       },
-      ...sort,
+      orderBy: this.getGroupSorting(query),
     };
-    return DatabaseUtils.paginate(this.groupRepository, body, data);
+    return DatabaseUtils.paginate(this.groupRepository, query, data);
+  }
+
+  private getAllByCaptain (query: QueryAllGroupDTO) {
+    const data: Prisma.StudentFindManyArgs = {
+      where: {
+        group: {
+          AND: [
+            this.GroupSearching.code(query.search),
+            this.GroupSearching.specialities(query.specialities),
+            this.GroupSearching.cathedras(query.cathedras),
+            this.GroupSearching.courses(query.courses),
+          ],
+        },
+        roles: {
+          some: {
+            role: {
+              name: RoleName.CAPTAIN,
+            },
+          },
+        },
+      },
+
+      orderBy: {
+        lastName: query.order ?? 'asc',
+      },
+    };
+
+    return DatabaseUtils.paginate(this.studentRepository, query, data);
+  }
+
+  private GroupSearching = {
+    code: (search: string) => DatabaseUtils.getSearch({ search }, 'code'),
+    specialities: (specialities: string[]) => {
+      if (!specialities?.length) return {};
+      return {
+        educationalProgram: {
+          speciality: {
+            id: {
+              in: specialities,
+            },
+          },
+        },
+      };
+    },
+    cathedras: (cathedras: string[]) => ({
+      cathedra: {
+        id: {
+          in: cathedras,
+        },
+      },
+    }),
+    courses: (courses: number[]) => {
+      const courseDate = new Date();
+      courseDate.setMonth(courseDate.getMonth()+4);
+      const courseYear = courseDate.getFullYear();
+
+      return {
+        admissionYear: {
+          in: courses?.map((course) => courseYear-course),
+        },
+      };
+    },
+  };
+
+  private getGroupSorting ({ sort, order }: SortDTO) {
+    order = order ?? 'asc'; 
+
+    if (sort === SortQAGroupParam.CODE) return { code: order };
+    if (sort === SortQAGroupParam.ADMISSION) return { admissionYear: order };
+    return { code: order };
   }
 
   async get (id: string) {
@@ -183,7 +267,7 @@ export class GroupService {
     await this.userService.giveRole(userId, role.id);
   }
 
-  async moderatorSwitch (groupId: string, userId: string, { roleName }: RoleDTO) {
+  async switchModerator (groupId: string, userId: string, { roleName }: RoleDTO) {
     const user = await this.userRepository.findById(userId);
 
     if (user.student.groupId !== groupId) {
@@ -233,6 +317,13 @@ export class GroupService {
 
   async deleteGroup (groupId: string) {
     await this.roleRepository.deleteMany({ groupRole: { groupId } });
+    await this.studentRepository.updateMany({
+      group: {
+        id: groupId,
+      },
+    }, {
+      state: State.DECLINED,
+    });
     return this.groupRepository.deleteById(groupId);
   }
 
@@ -256,8 +347,30 @@ export class GroupService {
     return students.map((s) => this.studentMapper.getStudent(s));
   }
 
-  async updateGroup (groupId: string, body: UpdateGroupDTO) {
-    return this.groupRepository.updateById(groupId, body);
+  async updateGroup (groupId: string, { 
+    code, 
+    eduProgramId, 
+    cathedraId, 
+    admissionYear, 
+    captainId, 
+    moderatorIds,
+  }: UpdateGroupDTO) {
+    if (captainId) {
+      await this.switchCaptain(groupId, captainId);
+    }
+    
+    if (moderatorIds?.length > 0) {
+      await this.switchModerators(groupId, moderatorIds);
+    }
+
+    const group = await this.groupRepository.updateById(groupId, {
+      code,
+      cathedraId,
+      educationalProgramId: eduProgramId,
+      admissionYear,
+    });
+
+    return group;
   }
 
   async getUnverifiedStudents (groupId: string) {
@@ -304,6 +417,34 @@ export class GroupService {
 
     await this.userService.changeGroupRole(studentId, RoleName.CAPTAIN);
     return this.userService.getUser(studentId);
+  }
+
+  async switchModerators (groupId: string, studentIds: string[]) {
+    const students = await this.studentRepository.findMany({
+      where: {
+        groupId,
+      },
+    });
+
+    const oldModerators = students.filter(
+      (student) => student.roles.find(({ role }) => role.name === RoleName.MODERATOR)
+    );
+
+    const newModerators = students.filter(
+      (student) => studentIds.find((id) => id === student.userId)
+    );
+
+    if (newModerators.length !== studentIds.length) {
+      throw new NoPermissionException();
+    }
+
+    for (const oldModerator of oldModerators) {
+      await this.userService.changeGroupRole(oldModerator.userId, RoleName.STUDENT);
+    }
+
+    for (const studentId of studentIds) {
+      await this.userService.changeGroupRole(studentId, RoleName.MODERATOR);
+    }
   }
 
   private async isStudentInGroup (groupId: string, studentId: string) {

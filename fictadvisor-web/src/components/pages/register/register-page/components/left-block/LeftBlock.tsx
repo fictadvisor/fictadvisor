@@ -14,7 +14,7 @@ import {
 import Divider from '@/components/common/ui/divider';
 import { DividerTextAlign } from '@/components/common/ui/divider/types';
 import RegisterForm from '@/components/pages/register/register-page/components/register-form';
-import { GetAllResponse } from '@/lib/api/group/types/GetAllResponse';
+import { GetAllGroupsResponse } from '@/lib/api/group/types/GetAllGroupsResponse';
 import AuthService from '@/lib/services/auth/AuthService';
 import StorageUtil from '@/lib/utils/StorageUtil';
 
@@ -22,7 +22,9 @@ import * as stylesMUI from './LeftBlock.styles';
 
 import styles from './Link.module.scss';
 
-const LeftBlock: FC<GetAllResponse> = ({ groups }) => {
+const LeftBlock: FC<Omit<GetAllGroupsResponse, 'pagination'>> = ({
+  groups,
+}) => {
   const router = useRouter();
   const hasTelegram = !!StorageUtil.getTelegramInfo();
   const handleClick = async () => {

@@ -1,4 +1,4 @@
-import { Discipline, Group, Role, SelectiveDiscipline, State, User } from '@prisma/client';
+import { Cathedra, Discipline, EducationalPrograms, Group, Role, SelectiveDiscipline, Speciality, State, User } from '@prisma/client';
 
 export class DbStudent {
   userId?: string;
@@ -7,7 +7,12 @@ export class DbStudent {
   lastName: string;
   state: State;
   groupId?: string;
-  group?: Group;
+  group?: Group & {
+    cathedra?: Cathedra;
+    educationalProgram?: {
+      speciality: Speciality,
+    } & EducationalPrograms
+  };
   roles?: {
     studentId: string,
     roleId: string,

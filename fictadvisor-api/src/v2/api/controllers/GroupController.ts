@@ -6,7 +6,6 @@ import { EmailDTO } from '../dtos/EmailDTO';
 import { ApproveDTO } from '../dtos/ApproveDTO';
 import { RoleDTO } from '../dtos/RoleDTO';
 import { UserByIdPipe } from '../pipes/UserByIdPipe';
-import { QueryAllDTO } from '../../utils/QueryAllDTO';
 import { UpdateGroupDTO } from '../dtos/UpdateGroupDTO';
 import { PERMISSION } from '../../security/PERMISSION';
 import { StudentMapper } from '../../mappers/StudentMapper';
@@ -21,7 +20,6 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { GroupResponse, GroupsResponse } from '../responses/GroupResponse';
 import { GroupStudentsResponse } from '../responses/GroupStudentsResponse';
 import { CaptainResponse } from '../responses/CaptainResponse';
 import { ExtendDisciplineTeachersResponse } from '../responses/DisciplineTeachersResponse';
@@ -36,6 +34,10 @@ import { URLResponse } from '../responses/URLResponse';
 import { GroupStudentsQueryDTO } from '../dtos/GroupStudentsQueryDTO';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
 import { DisciplineMapper } from '../../mappers/DisciplineMapper';
+import { QueryAllGroupDTO } from '../dtos/QueryAllGroupDTO';
+import { SortQAGroupParam } from '../dtos/SortQAGroupParam';
+import { MappedGroupResponse } from '../responses/MappedGroupResponse';
+import { PaginatedGroupsResponse } from '../responses/PaginatedGroupsResponse';
 
 @ApiTags('Groups')
 @Controller({
@@ -52,13 +54,17 @@ export class GroupController {
 
   @ApiBearerAuth()
   @ApiOkResponse({
-    type: GroupResponse,
+    type: MappedGroupResponse,
   })
   @ApiBadRequestResponse({
     description: `\n
     InvalidBodyException: 
       Proper name is expected
-      Code can not be empty`,
+      Code can not be empty
+      Educational program id cannot be empty
+      Cathedra id cannot be empty
+      Admission year must be a number
+      Admission year cannot be empty`,
   })
   @ApiUnauthorizedResponse({
     description: `\n
@@ -75,28 +81,37 @@ export class GroupController {
     permissions: PERMISSION.GROUPS_CREATE,
   })
   @Post()
-  async create (@Body() body: CreateGroupDTO) {
-    const group = await this.groupService.create(body.code);
+  async create (@Body() data: CreateGroupDTO): Promise<MappedGroupResponse> {
+    const group = await this.groupService.create(data);
     return this.groupMapper.getGroup(group);
   }
 
   @ApiOkResponse({
-    type: GroupsResponse,
+    type: PaginatedGroupsResponse,
   })
   @ApiBadRequestResponse({
     description: `\n
     InvalidBodyException: 
+      Specialties must be an array
+      Cathedras must be an array
+      Courses must be an array
+      Min course value is 1
+      Max course value is 4
+      Cathedras must be an array
+      Wrong value for order
       Page must be a number
-      PageSize must be a number
-      Wrong value for order`,
+      PageSize must be a number`,
   })
   @ApiEndpoint({
     summary: 'Get all groups with selected filter',
   })
   @Get()
-  async getAll (@Query() body: QueryAllDTO) {
-    const groupsWithSelectiveAmounts = await this.groupService.getAll(body);
-    const groups = this.groupMapper.getGroups(groupsWithSelectiveAmounts.data);
+  async getAll (@Query() query: QueryAllGroupDTO): Promise<PaginatedGroupsResponse> {
+    const groupsWithSelectiveAmounts = await this.groupService.getAll(query);
+    const groups = this.groupMapper.getGroups(
+      groupsWithSelectiveAmounts.data, 
+      query.sort === SortQAGroupParam.CAPTAIN
+    );
     return {
       groups,
       pagination: groupsWithSelectiveAmounts.pagination,
@@ -123,7 +138,7 @@ export class GroupController {
   }
 
   @ApiOkResponse({
-    type: GroupResponse,
+    type: MappedGroupResponse,
   })
   @ApiBadRequestResponse({
     description: `\n
@@ -141,14 +156,14 @@ export class GroupController {
   @Get('/:groupId')
   async get (
     @Param('groupId', GroupByIdPipe) groupId: string
-  ) {
+  ): Promise<MappedGroupResponse> {
     const group = await this.groupService.get(groupId);
     return this.groupMapper.getGroup(group);
   }
 
   @ApiBearerAuth()
   @ApiOkResponse({
-    type: GroupResponse,
+    type: MappedGroupResponse,
   })
   @ApiBadRequestResponse({
     description: `\n
@@ -157,7 +172,8 @@ export class GroupController {
         
     InvalidBodyException: 
       Proper name is expected
-      Code can not be empty`,
+      Code can not be empty
+      Admission year must be a number`,
   })
   @ApiUnauthorizedResponse({
     description: `\n
@@ -181,15 +197,15 @@ export class GroupController {
   @Patch('/:groupId')
   async update (
     @Param('groupId', GroupByIdPipe) groupId: string,
-    @Body() body: UpdateGroupDTO,
-  ) {
-    const group = await this.groupService.updateGroup(groupId, body);
+    @Body() data: UpdateGroupDTO,
+  ): Promise<MappedGroupResponse> {
+    const group = await this.groupService.updateGroup(groupId, data);
     return this.groupMapper.getGroup(group);
   }
 
   @ApiBearerAuth()
   @ApiOkResponse({
-    type: GroupResponse,
+    type: MappedGroupResponse,
   })
   @ApiBadRequestResponse({
     description: `\n
@@ -218,7 +234,7 @@ export class GroupController {
   @Delete('/:groupId')
   async deleteGroup (
     @Param('groupId', GroupByIdPipe) groupId: string,
-  ) {
+  ): Promise<MappedGroupResponse> {
     const group = await this.groupService.deleteGroup(groupId);
     return this.groupMapper.getGroup(group);
   }
@@ -508,12 +524,12 @@ export class GroupController {
     permissions: PERMISSION.GROUPS_$GROUPID_ADMIN_SWITCH,
   })
   @Patch('/:groupId/switch/:userId')
-  async moderatorSwitch (
+  async switchModerator (
     @Param('groupId', GroupByIdPipe) groupId: string,
     @Param('userId', UserByIdPipe) userId: string,
     @Body() body: RoleDTO,
   ) {
-    return this.groupService.moderatorSwitch(groupId, userId, body);
+    return this.groupService.switchModerator(groupId, userId, body);
   }
 
   @ApiBearerAuth()

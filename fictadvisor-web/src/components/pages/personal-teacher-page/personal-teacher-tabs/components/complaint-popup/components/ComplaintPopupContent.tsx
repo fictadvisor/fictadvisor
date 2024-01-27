@@ -1,21 +1,30 @@
 import { FC } from 'react';
 import { useQuery } from 'react-query';
 import { Box, Typography } from '@mui/material';
+import { isAxiosError } from 'axios';
 
 import { Input, InputSize } from '@/components/common/ui/form';
 import { FieldSize } from '@/components/common/ui/form/common/types';
 import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown/FormikDropdown';
 import FormikTextArea from '@/components/common/ui/form/with-formik/text-area';
 import PopupContent from '@/components/common/ui/pop-ups/PopupContent';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import GroupAPI from '@/lib/api/group/GroupAPI';
 
 import * as styles from './ComplaintPopupContent.styles';
 
 const ComplaintPopupContent: FC = () => {
-  const { data: groupData } = useQuery('all-groups', GroupAPI.getAll, {
+  const toastError = useToastError();
+  const { data: groupData } = useQuery(['groups'], () => GroupAPI.getAll(), {
+    keepPreviousData: true,
+    refetchOnWindowFocus: false,
     staleTime: Infinity,
+    onError: error => {
+      if (isAxiosError(error)) {
+        toastError.displayError(error.response?.data.message);
+      }
+    },
   });
-
   if (!groupData) return;
 
   return (
