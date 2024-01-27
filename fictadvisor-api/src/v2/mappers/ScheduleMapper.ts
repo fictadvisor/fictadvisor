@@ -5,7 +5,10 @@ import { TeacherRoleAdapter } from './TeacherRoleAdapter';
 import { some } from '../utils/ArrayUtil';
 import { EventResponse } from '../api/responses/EventResponse';
 import { DisciplineType } from '@prisma/client';
-import { SimpleTelegramEventInfoResponse, TelegramEventInfoResponse } from '../api/responses/TelegramGeneralEventInfoResponse';
+import {
+  SimpleTelegramEventInfoResponse,
+  TelegramEventInfoResponse,
+} from '../api/responses/TelegramGeneralEventInfoResponse';
 import { EventTypeEnum } from '../api/dtos/EventTypeEnum';
 import { EventInfoResponse } from '../api/responses/EventInfoResponse';
 
@@ -18,7 +21,7 @@ export class ScheduleMapper {
         name: event.name,
         startTime: event.startTime,
         endTime: event.endTime,
-        disciplineType: this.getDisciplineType(event.lessons[0]?.disciplineType),
+        eventType: this.getEventType(event.lessons[0]?.disciplineType),
       }))
       .sort((firstEvent, secondEvent) => firstEvent.startTime.getTime() - secondEvent.startTime.getTime());
   }
@@ -27,18 +30,18 @@ export class ScheduleMapper {
     return events
       .map((event) => ({
         ...this.getSimpleTelegramEvent(event),
-        eventType: this.getDisciplineType(event.lessons[0]?.disciplineType),
+        eventType: this.getEventType(event.lessons[0]?.disciplineType),
       }))
       .sort((firstEvent, secondEvent) => firstEvent.startTime.getTime() - secondEvent.startTime.getTime());
   }
 
   getEvent (event: DbEvent, discipline?: DbDiscipline): EventResponse {
-    const disciplineType = event.lessons[0]?.disciplineType.name;
+    const disciplineType = this.getEventType(event.lessons[0]?.disciplineType);
     return {
       id: event.id,
       name: event.name,
       disciplineId: discipline?.id || null,
-      eventType: disciplineType as EventTypeEnum ?? EventTypeEnum.OTHER,
+      eventType: disciplineType,
       startTime: event.startTime,
       endTime: event.endTime,
       period: event.period,
@@ -57,14 +60,13 @@ export class ScheduleMapper {
   }
 
   getEventInfos (event: DbEvent): EventInfoResponse {
-    const disciplineType = event.lessons[0]?.disciplineType.name;
     return {
       period: event.period,
       startTime: event.startTime,
       endTime: event.endTime,
       url: event.url,
       name: event.name,
-      type: disciplineType as EventTypeEnum ?? EventTypeEnum.OTHER,
+      type: this.getEventType(event.lessons[0]?.disciplineType),
       eventInfos: event.eventInfo
         .map((info) => ({
           number: info.number,
@@ -88,7 +90,11 @@ export class ScheduleMapper {
     return {
       id: disciplineType?.id ?? null,
       disciplineId: disciplineType?.disciplineId ?? null,
-      name: disciplineType?.name as EventTypeEnum ?? EventTypeEnum.OTHER,
+      name: this.getEventType(disciplineType),
     };
+  }
+
+  private getEventType (disciplineType: DisciplineType) {
+    return disciplineType?.name as EventTypeEnum ?? EventTypeEnum.OTHER;
   }
 }

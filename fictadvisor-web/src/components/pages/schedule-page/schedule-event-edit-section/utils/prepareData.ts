@@ -20,7 +20,7 @@ export const prepareData = (
     }
   }
 
-  if (finalData.disciplineType?.length === 0) finalData.disciplineType = null;
+  if (finalData.eventType?.length === 0) finalData.eventType = null;
 
   finalData.changeStartDate =
     new Date(initialData.startTime as string).toDateString() !==

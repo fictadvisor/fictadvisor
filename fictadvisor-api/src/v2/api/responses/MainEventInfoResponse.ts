@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { DisciplineTypeResponse, GeneralDisciplineTypeResponse } from './DisciplineTypeResponse';
+import { EventTypeEnum } from '../dtos/EventTypeEnum';
 
 export class SimpleEventInfoResponse {
   @ApiProperty({
@@ -25,15 +25,16 @@ export class SimpleEventInfoResponse {
 
 export class MainEventInfoResponse extends SimpleEventInfoResponse {
   @ApiProperty({
-    type: DisciplineTypeResponse,
+    enum: EventTypeEnum,
     description: 'Type of event',
   })
-    eventType: DisciplineTypeResponse;
+    eventType: EventTypeEnum;
 }
 
 export class GeneralEventInfoResponse extends SimpleEventInfoResponse {
   @ApiProperty({
-    type: GeneralDisciplineTypeResponse,
+    enum: [EventTypeEnum.LECTURE, EventTypeEnum.PRACTICE, EventTypeEnum.LABORATORY],
+    description: 'General event type',
   })
-    disciplineType: GeneralDisciplineTypeResponse;
+    eventType: EventTypeEnum;
 }

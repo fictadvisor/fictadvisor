@@ -80,7 +80,7 @@ class ScheduleAPI {
   ): Promise<DetailedEventBody> {
     const { data } = await client.post<DetailedEventBody>(
       `schedule/events`,
-      body,
+      { ...body, groupId },
       getAuthorizationHeader(),
     );
     return data;
