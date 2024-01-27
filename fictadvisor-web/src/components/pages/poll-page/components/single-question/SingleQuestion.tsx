@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
 import { Box, Typography, useMediaQuery } from '@mui/material';
 
-import { TextArea } from '@/components/common/ui/form';
 import { SliderSize } from '@/components/common/ui/form/slider/types';
 import FormikRadioGroup from '@/components/common/ui/form/with-formik/radio/FormikRadioGroup';
 import FormikSlider from '@/components/common/ui/form/with-formik/slider';
+import FormikTextArea from '@/components/common/ui/form/with-formik/text-area';
 import theme from '@/styles/theme';
 import { Question, QuestionType } from '@/types/poll';
 
@@ -70,7 +70,7 @@ const SingleQuestion: FC<QuestionProps> = ({ id, question, count }) => {
         <QuestionToggle question={question} id={id} />
       )}
       {question.type === QuestionType.TEXT && (
-        <TextArea
+        <FormikTextArea
           showRemark
           rowsNumber={numberRowsTextArea}
           name={question.id}
