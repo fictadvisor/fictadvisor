@@ -7,7 +7,16 @@ import { DbStudent } from '../entities/DbStudent';
 export class StudentRepository {
 
   private include = {
-    group: true,
+    group: {
+      include: {
+        cathedra: true,
+        educationalProgram: {
+          include: {
+            speciality: true,
+          },
+        },
+      }
+    },
     roles: {
       include: {
         role: true,
@@ -56,6 +65,10 @@ export class StudentRepository {
       data,
       include: this.include,
     });
+  }
+
+  async updateMany (where: Prisma.StudentWhereInput, data: Prisma.StudentUncheckedUpdateManyInput) {
+    return this.prisma.student.updateMany({ where, data });
   }
 
   async delete (args: Prisma.StudentDeleteArgs) {

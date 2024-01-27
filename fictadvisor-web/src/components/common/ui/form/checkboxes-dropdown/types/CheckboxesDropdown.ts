@@ -11,7 +11,7 @@ export interface CheckboxesDropdownOption {
 }
 
 export interface CheckboxesDropdownProps
-  extends Omit<SelectProps, 'size' | 'renderValue'> {
+  extends Omit<SelectProps, 'size' | 'renderValue' | 'variant'> {
   values: CheckboxesDropdownOption[];
   selected: CheckboxesDropdownOption[];
   handleChange: (event: SelectChangeEvent, child: ReactNode) => void;
