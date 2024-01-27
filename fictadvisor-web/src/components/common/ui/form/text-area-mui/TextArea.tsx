@@ -1,13 +1,12 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import {
   FormControl,
   FormHelperText,
   InputLabel,
   OutlinedInput,
 } from '@mui/material';
-import { SxProps, Theme } from '@mui/material/styles';
-import { useField } from 'formik';
 
+import { TextAreaProps } from '@/components/common/ui/form/with-formik/text-area/types';
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 
 import * as styles from './TextArea.styles';
@@ -15,18 +14,8 @@ import { TextAreaSize, TextAreaState } from './types';
 
 const MAX_LENGTH = 4000;
 
-interface TextAreaProps {
-  name: string;
-  placeholder?: string;
-  label?: string;
-  size?: TextAreaSize;
-  disabled?: boolean;
-  showRemark?: boolean;
-  rowsNumber?: number;
-  sx?: SxProps<Theme>;
-}
 const TextArea: React.FC<TextAreaProps> = ({
-  name,
+  value,
   placeholder,
   label,
   size = TextAreaSize.MEDIUM,
@@ -34,10 +23,15 @@ const TextArea: React.FC<TextAreaProps> = ({
   showRemark = false,
   rowsNumber = 4,
   sx = {},
+  touched,
+  error,
+  onChange = () => {},
 }) => {
-  const [field, { touched, error }] = useField(name);
-
   const state = touched && error ? TextAreaState.ERROR : TextAreaState.DEFAULT;
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    onChange(event.target.value);
+  };
 
   return (
     <FormControl
@@ -52,13 +46,14 @@ const TextArea: React.FC<TextAreaProps> = ({
       )}
 
       <OutlinedInput
-        {...field}
+        value={value}
         sx={styles.input(state, size)}
         multiline
         rows={rowsNumber}
         inputProps={{ maxLength: MAX_LENGTH }}
         color="warning"
         placeholder={placeholder}
+        onChange={handleChange}
       />
       {showRemark && (
         <FormHelperText sx={styles.errorRemark}>
