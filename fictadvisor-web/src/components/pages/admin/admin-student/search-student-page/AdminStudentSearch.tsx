@@ -3,7 +3,7 @@ import React, { FC, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Box } from '@mui/material';
 
-import { GetAllResponse } from '@/lib/api/group/types/GetAllResponse';
+import { GetAllGroupsResponse } from '@/lib/api/group/types/GetAllGroupsResponse';
 import StudentAPI from '@/lib/api/student/StudentAPI';
 
 import { StudentSearchFormFields } from '../common/types/StudentSearch';
@@ -15,7 +15,7 @@ import { StudentInitialValues } from './constants/StudentInitialValues';
 import * as styles from './AdminStudentSearch.styles';
 
 export interface AdminStudentSearchPageProps {
-  dataGroups: GetAllResponse | null;
+  dataGroups: GetAllGroupsResponse | null;
 }
 
 const AdminStudentSearch: FC<AdminStudentSearchPageProps> = ({

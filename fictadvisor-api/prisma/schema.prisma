@@ -37,6 +37,7 @@ model User {
 model Group {
   id                   String               @id @default(uuid())
   code                 String
+  admissionYear        Int                  @default(dbgenerated("EXTRACT(YEAR FROM CURRENT_DATE)")) @map("admission_year")
   students             Student[]
   disciplines          Discipline[]
   groupRoles           GroupRole[]
@@ -93,8 +94,9 @@ model Student {
   firstName                 String?                    @default("") @map("first_name")
   middleName                String?                    @default("") @map("middle_name")
   lastName                  String?                    @default("") @map("last_name")
-  groupId                   String                     @map("group_id")
-  group                     Group                      @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  admissionYear             Int                        @default(dbgenerated("EXTRACT(YEAR FROM CURRENT_DATE)")) @map("admission_year")
+  groupId                   String?                    @map("group_id")
+  group                     Group?                     @relation(fields: [groupId], references: [id], onDelete: SetNull)
   selectiveDisciplines      SelectiveDiscipline[]
   roles                     UserRole[]
   state                     State                      @default(PENDING)

@@ -7,6 +7,11 @@ import { GroupRoles } from '../dtos/QueryAllStudentDTO';
 
 export class BaseStudentResponse {
   @ApiProperty({
+    description: 'Student\'s id',
+  })
+    id: string;
+
+  @ApiProperty({
     description: 'Student\'s firstName',
   })
     firstName: string;
@@ -20,20 +25,15 @@ export class BaseStudentResponse {
     description: 'Student\'s lastName',
   })
     lastName: string;
-}
-
-export class SimpleStudentResponse extends BaseStudentResponse {
-  @ApiProperty({
-    description: 'Student\'s id',
-  })
-    id: string;
 
   @ApiProperty({
     description: 'Student\'s state',
     enum: State,
   })
     state: State;
+}
 
+export class SimpleStudentResponse extends BaseStudentResponse {
   @ApiProperty({
     description: 'Student\'s group role',
     enum: GroupRoles,
@@ -55,7 +55,22 @@ export class SimpleStudentsResponse {
     students: SimpleStudentResponse[];
 }
 
-export class FullStudentResponse extends BaseStudentResponse {
+export class FullStudentResponse {
+  @ApiProperty({
+    description: 'Student\'s firstName',
+  })
+    firstName: string;
+
+  @ApiProperty({
+    description: 'Student\'s middleName',
+  })
+    middleName: string;
+
+  @ApiProperty({
+    description: 'Student\'s lastName',
+  })
+    lastName: string;
+
   @ApiProperty({
     type: UserResponse,
     description: 'User data',
@@ -83,11 +98,6 @@ export class FullStudentResponse extends BaseStudentResponse {
 
 export class OrdinaryStudentResponse extends BaseStudentResponse {
   @ApiProperty({
-    description: 'Id of a specific student\'s',
-  })
-    id: string;
-
-  @ApiProperty({
     description: 'Username string',
   })
     username: string;
@@ -112,12 +122,6 @@ export class OrdinaryStudentResponse extends BaseStudentResponse {
     description: 'Group to which the student belongs',
   })
     group: ExtendedGroupResponse;
-  
-  @ApiProperty({
-    enum: State,
-    description: 'State for the student',
-  })
-    state: State;
 }
 
 export class StudentsResponse {

@@ -4,7 +4,7 @@ import { Box } from '@mui/material';
 import Image from 'next/image';
 
 import Divider from '@/components/common/ui/divider';
-import { GetAllResponse } from '@/lib/api/group/types/GetAllResponse';
+import { GetAllGroupsResponse } from '@/lib/api/group/types/GetAllGroupsResponse';
 
 import LeftBlock from './components/left-block';
 import RightBlock from './components/right-block';
@@ -13,7 +13,7 @@ import * as styles from './RegisterPage.styles';
 import imgStyles from './RegisterImage.module.scss';
 
 export interface RegisterPageProps {
-  data: GetAllResponse | null;
+  data: GetAllGroupsResponse | null;
 }
 
 const RegisterPage: FC<RegisterPageProps> = ({ data }) => {
