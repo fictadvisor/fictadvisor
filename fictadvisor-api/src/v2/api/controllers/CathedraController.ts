@@ -19,7 +19,8 @@ import { CathedraResponse } from '../responses/CathedraResponse';
 import { CathedraWithTeachersResponse } from '../responses/CathedraWithTeachersResponse';
 import { QueryAllCathedrasDTO } from '../dtos/QueryAllCathedrasDTO';
 import { PaginatedCathedrasWithTeachersResponse } from '../responses/PaginatedCathedrasWithTeachersResponse';
-
+import { CathedraTeachersPipe } from '../pipes/CathedraTeachersPipe';
+import { CathedrasDivisionsResponse } from '../responses/CathedrasDivisionsResponse';
 
 @ApiTags('Cathedra')
 @Controller({
@@ -40,7 +41,9 @@ export class CathedraController {
     InvalidQueryException:
       Page must be a number
       PageSize must be a number
-      Wrong value for order`,
+      Wrong value for order
+      Faculties must be an array
+      Sort must be an enum`,
   })
   @ApiEndpoint({
     summary: 'Get all cathedras',
@@ -64,13 +67,20 @@ export class CathedraController {
   @ApiBadRequestResponse({
     description: `\n
     InvalidBodyException: 
-      Cathedra name is too short (min: 5)
-      Cathedra name is too long (max: 40)
+      Cathedra name is too short (min: 3)
+      Cathedra name is too long (max: 150)
       Cathedra name is incorrect (A-Я(укр.)\\-' )
-      Abbreviation is too short (min: 2)
-      Abbreviation is too long (max: 6)
+      Abbreviation is too short (min: 1)
+      Abbreviation is too long (max: 10)
       Abbreviation can not be empty
-      Abbreviation is incorrect (A-Я(укр.)\\-' )`,
+      Abbreviation is incorrect (A-Я(укр.)\\-' )
+      Division name is too short (min: 1)
+      Division name is too long (max: 10)
+      Cathedra name is incorrect (A-Я(укр.)\\\\-\\' )
+      Teachers must be an array
+      
+    InvalidEntityIdException:
+      Teacher with such id is not found`,
   })
   @ApiUnauthorizedResponse({
     description: `\n
@@ -87,9 +97,9 @@ export class CathedraController {
     permissions: PERMISSION.CATHEDRAS_CREATE,
   })
   @Post()
-  async create (@Body() body: CreateCathedraDTO): Promise<CathedraResponse> {
+  async create (@Body(CathedraTeachersPipe) body: CreateCathedraDTO): Promise<CathedraResponse> {
     const cathedra = await this.cathedraService.create(body);
-    return this.cathedraMapper.getCathedra(cathedra);
+    return this.cathedraMapper.getCathedraWithTeachers(cathedra);
   }
 
   @ApiBearerAuth()
@@ -99,14 +109,18 @@ export class CathedraController {
   @ApiBadRequestResponse({
     description: `\n
     InvalidBodyException:
-      Cathedra name is too short (min: 5)
-      Cathedra name is too long (max: 40)
-      Cathedra name can not be empty
+      Cathedra name is too short (min: 3)
+      Cathedra name is too long (max: 150)
       Cathedra name is incorrect (A-Я(укр.)\\-' )
-      Abbreviation is too short (min: 2)
-      Abbreviation is too long (max: 6)
+      Abbreviation is too short (min: 1)
+      Abbreviation is too long (max: 10)
       Abbreviation can not be empty
       Abbreviation is incorrect (A-Я(укр.)\\-' )
+      Division name is too short (min: 1)
+      Division name is too long (max: 10)
+      Cathedra name is incorrect (A-Я(укр.)\\\\-\\' )
+      Teachers to delete must be an array
+      Teachers to add must be an array
       
     InvalidEntityIdException:
       Cathedra with such id is not found`,
@@ -173,5 +187,16 @@ export class CathedraController {
   ): Promise<CathedraWithTeachersResponse> {
     const cathedra = await this.cathedraService.delete(cathedraId);
     return this.cathedraMapper.getCathedraWithTeachers(cathedra);
+  }
+
+  @ApiOkResponse({
+    type: CathedrasDivisionsResponse,
+  })
+  @ApiEndpoint({
+    summary: 'Get all divisions',
+  })
+  @Get('/divisions')
+  getAllDivisions (): Promise<CathedrasDivisionsResponse> {
+    return this.cathedraService.getAllDivisions();
   }
 }

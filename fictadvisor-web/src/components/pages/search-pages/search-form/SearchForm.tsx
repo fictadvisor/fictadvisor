@@ -74,9 +74,13 @@ const SearchForm: FC<SearchFormProps> = ({
     },
   });
 
-  const { data: cathedraData } = useQuery('all-cathedra', CathedraAPI.getAll, {
-    staleTime: Infinity,
-  });
+  const { data: cathedraData } = useQuery(
+    'all-cathedra',
+    () => CathedraAPI.getAll(),
+    {
+      staleTime: Infinity,
+    },
+  );
 
   const groups: DropDownOption[] = useMemo(
     () =>
