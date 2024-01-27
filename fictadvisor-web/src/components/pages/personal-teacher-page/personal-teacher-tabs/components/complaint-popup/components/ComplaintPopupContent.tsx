@@ -2,9 +2,10 @@ import { FC } from 'react';
 import { useQuery } from 'react-query';
 import { Box, Typography } from '@mui/material';
 
-import { Input, InputSize, TextArea } from '@/components/common/ui/form';
+import { Input, InputSize } from '@/components/common/ui/form';
 import { FieldSize } from '@/components/common/ui/form/common/types';
 import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown/FormikDropdown';
+import FormikTextArea from '@/components/common/ui/form/with-formik/text-area';
 import PopupContent from '@/components/common/ui/pop-ups/PopupContent';
 import GroupAPI from '@/lib/api/group/GroupAPI';
 
@@ -57,7 +58,7 @@ const ComplaintPopupContent: FC = () => {
           placeholder="Заголовок до скарги"
         />
       </Box>
-      <TextArea
+      <FormikTextArea
         label="Текст скарги"
         name="message"
         placeholder="Опишіть свою скаргу"
