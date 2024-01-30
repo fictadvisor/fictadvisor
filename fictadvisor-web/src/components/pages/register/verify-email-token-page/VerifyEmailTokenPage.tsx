@@ -1,11 +1,7 @@
 'use client';
 import { useCallback, useEffect } from 'react';
 import { Box } from '@mui/material';
-import {
-  ReadonlyURLSearchParams,
-  useRouter,
-  useSearchParams,
-} from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 import Progress from '@/components/common/ui/progress';
 import * as styles from '@/components/pages/register/verify-email-token-page/VerifyEmailTokenPage.styles';
@@ -16,10 +12,12 @@ import StorageUtil from '@/lib/utils/StorageUtil';
 
 const VerifyEmailTokenPage = () => {
   const router = useRouter();
-  const query = useSearchParams() as ReadonlyURLSearchParams;
-  const token = query.get('token') as string;
+  const pathName = usePathname();
+
   const toast = useToast();
   const { update } = useAuthentication();
+
+  const token = pathName.split('/').pop() ?? '';
 
   const loadData = useCallback(
     async (token: string) => {
