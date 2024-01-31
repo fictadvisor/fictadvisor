@@ -4,31 +4,39 @@ import { TelegramEventInfoResponse } from './TelegramGeneralEventInfoResponse';
 
 export class EventsResponse {
   @ApiProperty({
+    description: 'Week number',
     minimum: 1,
   })
     week: number;
 
   @ApiProperty({
+    description: 'List of events',
     type: [MainEventInfoResponse],
   })
     events: MainEventInfoResponse[];
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Start time of the event',
+  })
     startTime: Date;
 }
 
 export class GeneralEventsResponse {
   @ApiProperty({
+    description: 'Week number',
     minimum: 1,
   })
     week: number;
 
   @ApiProperty({
+    description: 'List of events',
     type: [GeneralEventInfoResponse],
   })
     events: GeneralEventInfoResponse[];
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Start time of the event',
+  })
     startTime: Date;
 }
 

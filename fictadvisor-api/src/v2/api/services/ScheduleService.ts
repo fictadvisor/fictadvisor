@@ -365,14 +365,16 @@ export class ScheduleService {
   ) {
     const { startOfWeek } = week ? await this.dateService.getDatesOfWeek(week) : this.dateService.getDatesOfCurrentWeek();
 
-    const user = await this.userService.getUser(userId);
-    if (user.group.id !== groupId) {
-      return await this.getGeneralGroupEvents(groupId, week);
+    if (userId) {
+      const user = await this.userService.getUser(userId);
+      if (user.group.id !== groupId) {
+        return await this.getGeneralGroupEvents(groupId, week);
+      }
     }
 
     let groupEvents = await this.getAllGroupEvents(groupId, week, query);
 
-    if (query.showOwnSelective) {
+    if (userId && query.showOwnSelective) {
       groupEvents = await this.filtrateOwnSelective(groupId, userId, groupEvents);
     }
 
@@ -681,15 +683,15 @@ export class ScheduleService {
     }
   }
 
-  async getFortnightEvents (groupId: string, week: number, userId: string) {
+  async getFortnightEvents (groupId: string, week: number, userId: string, query: EventFiltrationDTO) {
     week = week || await this.dateService.getCurrentWeek();
     const [firstWeek, secondWeek] = week % 2 === 0 ? [week-1, week] : [week, week+1];
-    const firstWeekEvents = await this.getGroupEventsForTelegram(groupId, firstWeek, userId);
-    const secondWeekEvents = await this.getGroupEventsForTelegram(groupId, secondWeek, userId);
+    const firstWeekEvents = await this.getGroupEventsForTelegram(groupId, firstWeek, userId, query);
+    const secondWeekEvents = await this.getGroupEventsForTelegram(groupId, secondWeek, userId, query);
     return { firstWeekEvents, secondWeekEvents };
   }
 
-  async getGroupEventsForTelegram (groupId: string, week: number, userId: string) {
+  async getGroupEventsForTelegram (groupId: string, week: number, userId: string, query?: EventFiltrationDTO) {
     const student = userId
       ? await this.studentRepository.findById(userId)
       : undefined;
@@ -698,7 +700,7 @@ export class ScheduleService {
 
 
     week = week || await this.dateService.getCurrentWeek();
-    const eventFiltration = {
+    const eventFiltration = query || {
       addLecture: true,
       addPractice: true,
       addLaboratory: true,
@@ -710,5 +712,23 @@ export class ScheduleService {
     return userId
       ? await this.filtrateOwnSelective(groupId, userId, events)
       : events;
+  }
+
+  async getMonthEvents (groupId: string, userId: string, query: EventFiltrationDTO) {
+    const { startOfMonth, endOfMonth } = await this.dateService.getDatesOfMonth();
+    const startWeek = await this.dateService.getWeekByDate(startOfMonth);
+    const endWeek = await this.dateService.getWeekByDate(endOfMonth);
+    let events = [];
+    for (let week = startWeek; week <= endWeek; week++) {
+      const weekEvents = await this.getGroupEventsForTelegram(groupId, week, userId, query);
+      events = events.concat(weekEvents);
+    }
+
+    events = events.filter((event) => {
+      const startTime = new Date(event.startTime);
+      return (startTime.getTime() - startOfMonth.getTime() >= 0) && (endOfMonth.getTime() - startTime.getTime() >= 0);
+    });
+
+    return events;
   }
 }

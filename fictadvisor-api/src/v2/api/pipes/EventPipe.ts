@@ -16,7 +16,7 @@ export class EventPipe implements PipeTransform<UpdateEventDTO, Promise<UpdateEv
     if (body.disciplineId) {
       const discipline = await this.disciplineRepository.findById(body.disciplineId);
       if (!discipline) {
-        throw new InvalidEntityIdException('discipline');
+        throw new InvalidEntityIdException('Discipline');
       }
     }
 
@@ -31,7 +31,7 @@ export class EventPipe implements PipeTransform<UpdateEventDTO, Promise<UpdateEv
   private async teacherByIdPipe (teacherId: string) {
     const teacher = await this.teacherRepository.findById(teacherId);
     if (!teacher) {
-      throw new InvalidEntityIdException('teacher');
+      throw new InvalidEntityIdException('Teacher');
     }
   }
 }
