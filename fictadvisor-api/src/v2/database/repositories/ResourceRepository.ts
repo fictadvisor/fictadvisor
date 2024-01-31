@@ -1,10 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { StudentResource } from '@prisma/client';
-import { QueryAllDTO } from 'src/v2/utils/QueryAllDTO';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../PrismaService';
-import { DatabaseUtils } from '../DatabaseUtils';
-import { CreateResourceData } from '../../api/datas/CreateResourceData';
-import { UpdateResourceData } from '../../api/datas/UpdateResourceData';
 
 @Injectable()
 export class ResourceRepository {
@@ -12,65 +8,50 @@ export class ResourceRepository {
     private prisma: PrismaService,
   ) {}
 
-  async getAll (body: QueryAllDTO) {
-    const search = DatabaseUtils.getSearch<StudentResource>(body, 'name', 'link', 'imageLink');
-    const sort = DatabaseUtils.getSort(body, 'name');
-
-    const data = {
-      ...sort,
-      where: {
-        ...search,
-      },
-    };
-    return await DatabaseUtils.paginate<StudentResource>(this.prisma.studentResource, body, data);
+  async findMany (args: Prisma.StudentResourceFindManyArgs) {
+    return this.prisma.studentResource.findMany(args);
   }
 
-  get (id: string) {
+  async find (where: Prisma.StudentResourceWhereInput) {
+    return this.prisma.studentResource.findFirst({
+      where,
+    });
+  }
+
+  async findById (id: string) {
     return this.prisma.studentResource.findUnique({
       where: {
         id,
       },
-      select: {
-        id: true,
-        imageLink: true,
-        link: true,
-        name: true,
-      },
     });
   }
 
-  async create (data: CreateResourceData) {
+  async create (data: Prisma.StudentResourceCreateInput) {
     return this.prisma.studentResource.create({
       data,
-      select: {
-        id: true,
-        imageLink: true,
-        link: true,
-        name: true,     
-      },
     });
   }
 
-  async update (id: string, data: UpdateResourceData) {
+  async updateById (id: string, data: Prisma.StudentResourceUncheckedUpdateInput) {
     return this.prisma.studentResource.update({
       where: {
         id,
       },
       data,
-      select: {
-        id: true,
-        name: true,
-        link: true,
-        imageLink: true,
-      },
     });
   }
 
-  async delete (id: string) {
+  async deleteById (id: string) {
     return this.prisma.studentResource.delete({
       where: {
         id,
       },
     });
+  }
+
+  async count (data: Prisma.StudentResourceCountArgs) {
+    return this.prisma.studentResource.count(
+      data,
+    );
   }
 }

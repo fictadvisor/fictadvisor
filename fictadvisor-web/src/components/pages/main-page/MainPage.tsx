@@ -7,7 +7,7 @@ import { useSearchParams } from 'next/navigation';
 import PageLayout from '@/components/common/layout/page-layout/PageLayout';
 import TokenPopup from '@/components/pages/main-page/components/token-popup';
 import * as stylesMUI from '@/components/pages/main-page/MainPage.styles';
-import { GetStudentResourcesResponse } from '@/lib/api/student-resources/types/GetStudentResourcesResponse';
+import { StudentResource } from '@/lib/api/student-resources/types/GetStudentResourcesResponse';
 
 import BannerImage from '../../common/icons/BannerImage';
 
@@ -16,7 +16,7 @@ import ResourceCard from './components/resource-card/ResourceCard';
 import styles from './MainPage.module.scss';
 
 export interface MainPageProps {
-  data: GetStudentResourcesResponse | null;
+  data: StudentResource[] | null;
 }
 
 const MainPage: FC<MainPageProps> = ({ data }) => {
@@ -56,8 +56,13 @@ const MainPage: FC<MainPageProps> = ({ data }) => {
           </Typography>
           <Box>
             <Box sx={stylesMUI.resourcesSectionCards}>
-              {data?.studentResources.map(({ name, id, icon, link }) => (
-                <ResourceCard key={id} text={name} image={icon} href={link} />
+              {data?.map(({ name, id, imageLink, link }) => (
+                <ResourceCard
+                  key={id}
+                  text={name}
+                  image={imageLink}
+                  href={link}
+                />
               ))}
             </Box>
           </Box>

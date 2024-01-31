@@ -9,9 +9,9 @@ export class ResourceByIdPipe implements PipeTransform {
   ) {}
 
   async transform (value: string): Promise<string> {
-    const resource = await this.resourceRepository.get(value);
+    const resource = await this.resourceRepository.findById(value);
     if (!resource) {
-      throw new InvalidEntityIdException('resource');
+      throw new InvalidEntityIdException('Resource');
     }
     return value;
   }

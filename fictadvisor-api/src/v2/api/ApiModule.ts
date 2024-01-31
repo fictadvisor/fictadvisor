@@ -15,6 +15,7 @@ import { AdmissionModule } from '../modules/AdmissionModule';
 import { TelegramGroupModule } from '../modules/TelegramGroupModule';
 import { PermissionModule } from '../modules/PermissionModule';
 import { StudentModule } from '../modules/StudentModule';
+import { PageTextModule } from '../modules/PageTextModule';
 import { EduProgramModule } from '../modules/EduProgramModule';
 import { SpecialityModule } from '../modules/SpecialityModule';
 
@@ -36,6 +37,7 @@ import { SpecialityModule } from '../modules/SpecialityModule';
     TelegramGroupModule,
     PermissionModule,
     StudentModule,
+    PageTextModule,
     EduProgramModule,
     SpecialityModule,
   ],

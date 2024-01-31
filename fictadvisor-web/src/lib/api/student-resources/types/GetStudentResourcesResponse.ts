@@ -1,5 +1,5 @@
 export interface StudentResource {
-  icon: string;
+  imageLink: string;
   id: string;
   name: string;
   link: string;
