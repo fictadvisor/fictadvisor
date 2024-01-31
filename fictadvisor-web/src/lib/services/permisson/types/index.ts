@@ -9,10 +9,13 @@ export enum PERMISSION {
   ADMISSION_PRIORITIES_APPROVE = 'admission.priorities.approve',
 
   CATHEDRAS_CREATE = 'cathedras.create',
+  CATHEDRAS_UPDATE = 'cathedras.update',
+  CATHEDRAS_DELETE = 'cathedras.delete',
 
   DISCIPLINE_TEACHERS_CREATE = 'disciplineTeachers.create',
   DISCIPLINE_TEACHERS_UPDATE = 'disciplineTeachers.update',
   DISCIPLINE_TEACHERS_DELETE = 'disciplineTeachers.delete',
+  DISCIPLINE_DELETE = 'discipline.delete',
 
   ENTRANT_CONTRACT_CREATE = 'entrant.contract.create',
 
@@ -24,6 +27,7 @@ export enum PERMISSION {
   GROUPS_$GROUPID_CAPTAIN_GET = 'groups.$groupId.captain.get',
   GROUPS_$GROUPID_DISCIPLINES_CREATE = 'groups.$groupId.disciplines.create',
   GROUPS_$GROUPID_DISCIPLINES_GET = 'groups.$groupId.disciplines.get',
+  GROUPS_$GROUPID_SELECTIVE_GET = 'groups.$groupId.selective.get',
   GROUPS_$GROUPID_DISCIPLINES_TEACHERS_GET = 'groups.$groupId.disciplines.teachers.get',
   GROUPS_$GROUPID_DISCIPLINE_TEACHERS_REMOVE = 'groups.$groupId.disciplineTeachers.remove',
   GROUPS_$GROUPID_EVENTS_CREATE = 'groups.$groupId.events.create',
@@ -52,18 +56,32 @@ export enum PERMISSION {
   RESOURCES_DELETE = 'resources.delete',
 
   ROLES_CREATE = 'roles.create',
-  ROLES_$ROLEID_UPDATE = 'roles.$roleId.update',
-  ROLES_$ROLEID_DELETE = 'roles.$roleId.delete',
-  ROLES_$ROLEID_GRANTS_CREATE = 'roles.$roleId.grants.create',
+  ROLES_$ROLEID_UPDATE = 'roles.update',
+  ROLES_$ROLEID_DELETE = 'roles.delete',
+  ROLES_GRANTS_CREATE = 'roles.grants.create',
+  ROLES_$ROLEID_GRANT_CREATE = 'roles.grant.create',
+  ROLES_$ROLEID_GRANT_UPDATE = 'roles.grant.update',
+
+  COMMENTS_GET = 'comments.get',
+  COMMENTS_UPDATE = 'comments.update',
+  COMMENTS_DELETE = 'comments.delete',
+
+  GRANTS_DELETE = 'grants.delete',
 
   SCHEDULE_PARSE = 'schedule.parse',
 
-  STUDENTS_DELETE = 'students.$studentId.delete',
+  STUDENTS_$STUDENTID_DELETE = 'students.$studentId.delete',
+  STUDENTS_GET = 'students.get',
+  STUDENTS_$STUDENTID_UPDATE = 'students.$studentId.update',
+  STUDENTS_CREATE = 'students.create',
+  STUDENTS_$STUDENTID_GET = 'students.$studentId.get',
 
   SUBJECTS_CREATE = 'subjects.create',
   SUBJECTS_UPDATE = 'subjects.update',
   SUBJECTS_DELETE = 'subjects.delete',
 
+  USERS_CREATE = 'users.create',
+  USERS_GET = 'users.get',
   USERS_UPDATE = 'users.update',
   USERS_DELETE = 'users.delete',
   USERS_GROUPS_SWITCH = 'users.groups.switch',
@@ -87,9 +105,14 @@ export enum PERMISSION {
   TEACHERS_$TEACHERID_UPDATE = 'teachers.$teacherId.update',
   TEACHERS_$TEACHERID_DELETE = 'teachers.$teacherId.delete',
   TEACHERS_$TEACHERID_CATHEDRAS_UPDATE = 'teachers.$teacherId.cathedras.update',
+  TEACHERS_$TEACHERID_CATHEDRAS_DELETE = 'teachers.$teacherId.cathedras.delete',
   TEACHERS_$TEACHERID_CONTACTS_CREATE = 'teachers.$teacherId.contacts.create',
   TEACHERS_$TEACHERID_CONTACTS_UPDATE = 'teachers.$teacherId.contacts.update',
   TEACHERS_$TEACHERID_CONTACTS_DELETE = 'teachers.$teacherId.contacts.delete',
+
+  PAGE_TEXTS_GET = 'pages.get',
+  PAGE_TEXTS_CREATE = 'pages.create',
+  PAGE_TEXTS_UPDATE = 'pages.update',
 }
 
 export interface PermissionData {

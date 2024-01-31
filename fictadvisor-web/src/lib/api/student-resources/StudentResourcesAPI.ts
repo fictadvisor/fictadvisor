@@ -1,10 +1,16 @@
 import { client } from '@/lib/api/instance';
-import { GetStudentResourcesResponse } from '@/lib/api/student-resources/types/GetStudentResourcesResponse';
+import { getAuthorizationHeader } from '@/lib/api/utils';
 
 class StudentResourcesAPI {
+  async editStudentResources(data: object[]) {
+    return await client.patch(
+      '/studentResources',
+      { resources: data },
+      getAuthorizationHeader(),
+    );
+  }
   async getAll() {
-    const { data } =
-      await client.get<GetStudentResourcesResponse>('/studentResources');
+    const { data } = await client.get('/studentResources');
     return data;
   }
 }
