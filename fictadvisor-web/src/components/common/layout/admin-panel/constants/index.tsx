@@ -62,6 +62,11 @@ export const adminPanelTabs = [
     text: 'Розклад',
     icon: <CalendarIcon />,
   },
+  {
+    link: BASE_URL + '/main',
+    text: 'Головна сторінка',
+    icon: <HomeIcon />,
+  },
   'Опитування',
   {
     link: BASE_URL + '/questions',
