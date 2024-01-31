@@ -22,6 +22,10 @@ export class PermissionGuard implements CanActivate {
     const permissions = this.getPermissions(context);
 
     for (const permission of permissions) {
+      if (user == null) {
+        return true;
+      }
+
       const hasPermission = await this.permissionService.hasPermission(user.id, permission);
       if (hasPermission) return true;
     }

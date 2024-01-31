@@ -25,7 +25,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { CreateEventDTO, CreateSimpleTelegramEvent } from '../dtos/CreateEventDTO';
+import { CreateEventDTO } from '../dtos/CreateEventDTO';
 import { EventResponse } from '../responses/EventResponse';
 import { GroupByEventGuard } from '../../security/group-guard/GroupByEventGuard';
 import {
@@ -43,7 +43,6 @@ import { UpdateEventDTO } from '../dtos/UpdateEventDTO';
 import { EventPipe } from '../pipes/EventPipe';
 import { UserByIdPipe } from '../pipes/UserByIdPipe';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
-import { SimpleTelegramEventInfoResponse } from '../responses/TelegramGeneralEventInfoResponse';
 import { EventInfoResponse } from '../responses/EventInfoResponse';
 
 @ApiTags('Schedule')
@@ -256,14 +255,7 @@ export class ScheduleController {
     return this.scheduleMapper.getEventInfos(result.event);
   }
 
-  @Access(PERMISSION.GROUPS_$GROUPID_EVENTS_CREATE)
-  @Post('/events')
   @ApiBearerAuth()
-  @ApiParam({
-    name: 'groupId',
-    type: String,
-    required: true,
-  })
   @ApiOkResponse({
     type: EventResponse,
   })
@@ -274,7 +266,7 @@ export class ScheduleController {
       Name is too short (min: 2)
       Name is too long (max: 150)
       Name cannot be empty
-      Discipline type must be an enum
+      Event type must be an enum
       Teachers must be Array
       Teachers cannot be empty (empty array is required)
       Start time cannot be empty
@@ -306,6 +298,12 @@ export class ScheduleController {
     NoPermissionException:
       You do not have permission to perform this action`,
   })
+  @ApiEndpoint({
+    summary: 'Create an event',
+    permissions: PERMISSION.GROUPS_$GROUPID_EVENTS_CREATE,
+    guards: TelegramGuard,
+  })
+  @Post('/events')
   async createEvent (
     @Body() body: CreateEventDTO,
   ) {
@@ -313,8 +311,6 @@ export class ScheduleController {
     return this.scheduleMapper.getEvent(result.event, result.discipline);
   }
 
-  @Access(PERMISSION.GROUPS_$GROUPID_EVENTS_GET)
-  @Get('/groups/:groupId/events')
   @ApiBearerAuth()
   @ApiOkResponse({
     type: EventsResponse,
@@ -334,11 +330,24 @@ export class ScheduleController {
     NoPermissionException:
       You do not have permission to perform this action`,
   })
+  @ApiParam({
+    name: 'groupId',
+    description: 'Id of the group',
+    type: String,
+    required: true,
+  })
   @ApiQuery({
-    type: Number,
     name: 'week',
+    description: 'Week number',
+    type: Number,
     required: false,
   })
+  @ApiEndpoint({
+    summary: 'Get events by group',
+    permissions: PERMISSION.GROUPS_$GROUPID_EVENTS_GET,
+    guards: TelegramGuard,
+  })
+  @Get('/groups/:groupId/events')
   async getGroupEvents (
     @Request() req,
     @Param('groupId', GroupByIdPipe) groupId: string,
@@ -346,7 +355,7 @@ export class ScheduleController {
     @Query(EventFiltrationPipe) query: EventFiltrationDTO,
   ) {
     const result = await this.scheduleService.getGroupEvents(
-      req.user.id,
+      req.user?.id ?? null,
       groupId,
       week,
       query,
@@ -358,14 +367,7 @@ export class ScheduleController {
     };
   }
 
-  @Access(PERMISSION.GROUPS_$GROUPID_EVENTS_DELETE)
-  @Delete('/groups/:groupId/events/:eventId')
   @ApiBearerAuth()
-  @ApiParam({
-    name: 'groupId',
-    type: String,
-    required: true,
-  })
   @ApiOkResponse({
     type: EventResponse,
   })
@@ -384,10 +386,28 @@ export class ScheduleController {
     NoPermissionException:
       You do not have permission to perform this action`,
   })
+  @ApiParam({
+    name: 'groupId',
+    description: 'Id of the group',
+    type: String,
+    required: true,
+  })
+  @ApiParam({
+    name: 'eventId',
+    description: 'Id of the event',
+    type: String,
+    required: true,
+  })
+  @ApiEndpoint({
+    summary: 'Delete a specific event by group',
+    permissions: PERMISSION.GROUPS_$GROUPID_EVENTS_DELETE,
+    guards: TelegramGuard,
+  })
+  @Delete('/groups/:groupId/events/:eventId')
   async deleteEvent (
-    @Param('eventId', EventByIdPipe) id: string,
+    @Param('eventId', EventByIdPipe) eventId: string,
   ) {
-    const result = await this.scheduleService.deleteEvent(id);
+    const result = await this.scheduleService.deleteEvent(eventId);
     return this.scheduleMapper.getEvent(result.event, result.discipline);
   }
 
@@ -434,11 +454,13 @@ export class ScheduleController {
   @ApiParam({
     name: 'groupId',
     description: 'Id of the certain group',
+    type: String,
     required: true,
   })
   @ApiParam({
     name: 'eventId',
     description: 'Id of the certain event',
+    type: String,
     required: true,
   })
   @ApiEndpoint({
@@ -451,15 +473,8 @@ export class ScheduleController {
     @Body(EventPipe) body: UpdateEventDTO,
   ) {
     await this.scheduleService.updateEvent(eventId, body);
-
-    try {
-      const result = await this.scheduleService.getEvent(eventId, body.week);
-      return this.scheduleMapper.getEvent(result.event, result.discipline);
-    } catch (err) {
-      if (err.name === 'InvalidWeekException') {
-        return null;
-      }
-    }
+    const result = await this.scheduleService.getEvent(eventId, body.week);
+    return this.scheduleMapper.getEvent(result.event, result.discipline);
   }
 
   @ApiBearerAuth()
@@ -486,18 +501,21 @@ export class ScheduleController {
   })
   @ApiParam({
     name: 'groupId',
-    required: true,
     description: 'Id of a group which event you want to get',
+    type: String,
+    required: true,
   })
   @ApiQuery({
     name: 'week',
-    required: false,
     description: 'Number of week which event you want to get',
+    type: Number,
+    required: false,
   })
   @ApiQuery({
     name: 'userId',
-    required: false,
     description: 'Id of a user which event you want to get',
+    type: String,
+    required: false,
   })
   @ApiEndpoint({
     summary: 'Get fortnight events for telegram',
@@ -508,8 +526,9 @@ export class ScheduleController {
     @Param('groupId', GroupByIdPipe) groupId: string,
     @Query('week') week: number,
     @Query('userId', UserByIdPipe) userId: string,
+    @Query(EventFiltrationPipe) query: EventFiltrationDTO,
   ) {
-    const result = await this.scheduleService.getFortnightEvents(groupId, week, userId);
+    const result = await this.scheduleService.getFortnightEvents(groupId, week, userId, query);
 
     return {
       firstWeekEvents: this.scheduleMapper.getTelegramEvents(result.firstWeekEvents),
@@ -518,7 +537,6 @@ export class ScheduleController {
   }
 
   @ApiBearerAuth()
-  @Get('/groups/:groupId/week')
   @ApiOkResponse({
     type: TelegramEventsResponse,
   })
@@ -542,29 +560,34 @@ export class ScheduleController {
   })
   @ApiParam({
     name: 'groupId',
-    required: true,
     description: 'Id of a group which event you want to get',
+    type: String,
+    required: true,
   })
   @ApiQuery({
     name: 'week',
-    required: false,
     description: 'Number of week which event you want to get',
+    type: Number,
+    required: false,
   })
   @ApiQuery({
     name: 'userId',
-    required: false,
     description: 'Id of a user which event you want to get',
+    type: String,
+    required: false,
   })
   @ApiEndpoint({
     summary: 'Get week events for telegram',
     guards: TelegramGuard,
   })
+  @Get('/groups/:groupId/week')
   async getGroupEventsByWeek (
     @Param('groupId', GroupByIdPipe) groupId: string,
     @Query('week') week: number,
     @Query('userId', UserByIdPipe) userId: string,
+    @Query(EventFiltrationPipe) query: EventFiltrationDTO,
   ) {
-    const result = await this.scheduleService.getGroupEventsForTelegram(groupId, week, userId);
+    const result = await this.scheduleService.getGroupEventsForTelegram(groupId, week, userId, query);
     return {
       events: this.scheduleMapper.getTelegramEvents(result),
     };
@@ -572,29 +595,14 @@ export class ScheduleController {
 
   @ApiBearerAuth()
   @ApiOkResponse({
-    type: SimpleTelegramEventInfoResponse,
+    type: TelegramEventsResponse,
   })
   @ApiBadRequestResponse({
     description: `\n
-    InvalidBodyException:
-      Group id cannot be empty
-      Group id must be in UUID format
-      Name is too short (min: 2)
-      Name is too long (max: 150)
-      Name cannot be empty
-      Start time cannot be empty
-      Start time must be Date
-      End time cannot be empty
-      End Time must be Date
-      Period cannot be empty
-      Period must be an enum
-      Url must be a URL address
-      Event description is too long (max: 2000)
+    InvalidGroupIdException: 
+      Group with such id is not found
       
-    InvalidDateException:
-      Date is not valid or does not belong to this semester
-      
-    DataNotFoundException:
+    DataNotFoundException: 
       Data were not found`,
   })
   @ApiUnauthorizedResponse({
@@ -607,18 +615,31 @@ export class ScheduleController {
     NoPermissionException:
       You do not have permission to perform this action`,
   })
+  @ApiParam({
+    name: 'groupId',
+    description: 'Id of a group which event you want to get',
+    type: String,
+    required: true,
+  })
+  @ApiQuery({
+    name: 'userId',
+    description: 'Id of a user which event you want to get',
+    type: String,
+    required: false,
+  })
   @ApiEndpoint({
-    summary: 'Creates simple event without labs, practices and lectures',
+    summary: 'Get month events for telegram',
     guards: TelegramGuard,
   })
-  @Post('/events/simple')
-  async createSimpleTelegramEvent (
-    @Body() body: CreateSimpleTelegramEvent,
+  @Get('/groups/:groupId/month')
+  async getGroupEventsByMonth (
+    @Param('groupId', GroupByIdPipe) groupId: string,
+    @Query('userId', UserByIdPipe) userId: string,
+    @Query(EventFiltrationPipe) query: EventFiltrationDTO,
   ) {
-    const result = await this.scheduleService.createGroupEvent({
-      ...body,
-      teachers: [],
-    });
-    return this.scheduleMapper.getSimpleTelegramEvent(result.event);
+    const result = await this.scheduleService.getMonthEvents(groupId, userId, query);
+    return {
+      events: this.scheduleMapper.getTelegramEvents(result),
+    };
   }
 }
