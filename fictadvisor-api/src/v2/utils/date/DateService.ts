@@ -149,6 +149,20 @@ export class DateService {
     return { startOfWeek, endOfWeek };
   }
 
+  async getDatesOfMonth () {
+    const currentDate = new Date();
+    const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+    const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1, 0, 0, 0, -1);
+    return { startOfMonth, endOfMonth };
+  }
+
+  async getWeekByDate (date) {
+    const { startDate } = await this.getCurrentSemester();
+    const difference = date.getTime() - startDate.getTime();
+    const week = Math.ceil(difference / WEEK);
+    return week;
+  }
+
   async isPreviousSemesterToCurrent (semester: number, year: number) {
     const curSemester = await this.getCurrentSemester();
 

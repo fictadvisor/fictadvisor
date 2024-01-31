@@ -4,6 +4,9 @@ import { PERMISSION } from '../../security/PERMISSION';
 import { JwtGuard } from '../../security/JwtGuard';
 import { PermissionGuard } from '../../security/permission-guard/PermissionGuard';
 import { Permissions } from '../../security/permission-guard/Permissions';
+import { MultipleAccesses } from 'src/v2/security/multiple-access-guard/MultipleAccesses';
+import { TelegramGuard } from 'src/v2/security/TelegramGuard';
+import { MultipleAccessGuard } from 'src/v2/security/multiple-access-guard/MultipleAccessGuard';
 
 export class ApiEndpointParams {
   summary: string;
@@ -22,6 +25,17 @@ export function ApiEndpoint ({ summary, permissions, guards }: ApiEndpointParams
   }
 
   const decorators = [ApiOperation({ summary, description })];
+
+  if (permissions && guards?.map((g) => g.name).includes('TelegramGuard')) {
+    const accessGuards = [JwtGuard, TelegramGuard];
+    const filteredGuards = guards.filter((g) => g.name != 'TelegramGuard');
+    decorators.push(
+      Permissions(permissions),
+      MultipleAccesses(...accessGuards),
+      UseGuards(MultipleAccessGuard, PermissionGuard, ...filteredGuards),
+    );
+    return applyDecorators(...decorators);
+  }
 
   if (permissions) {
     decorators.push(
