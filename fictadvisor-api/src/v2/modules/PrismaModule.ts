@@ -19,6 +19,7 @@ import { EventRepository } from '../database/repositories/EventRepository';
 import { CathedraRepository } from '../database/repositories/CathedraRepository';
 import { EntrantRepository } from '../database/repositories/EntrantRepository';
 import { TelegramGroupRepository } from '../database/repositories/TelegramGroupRepository';
+import { PageTextRepository } from '../database/repositories/PageTextRepository';
 import { EduProgramRepository } from '../database/repositories/EduProgramRepository';
 import { SpecialityRepository } from '../database/repositories/SpecialityRepository';
 
@@ -46,6 +47,7 @@ import { SpecialityRepository } from '../database/repositories/SpecialityReposit
     CathedraRepository,
     EntrantRepository,
     TelegramGroupRepository,
+    PageTextRepository,
     EduProgramRepository,
     SpecialityRepository,
   ],
@@ -71,6 +73,7 @@ import { SpecialityRepository } from '../database/repositories/SpecialityReposit
     CathedraRepository,
     EntrantRepository,
     TelegramGroupRepository,
+    PageTextRepository,
     EduProgramRepository,
     SpecialityRepository,
   ],

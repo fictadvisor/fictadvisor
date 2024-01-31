@@ -25,14 +25,16 @@ const AdminPanel = () => {
       <Box sx={styles.tabList}>
         {adminPanelTabs.map((tab, index) => {
           return typeof tab !== 'string' ? (
-            <Link href={tab.link}>
+            <Link href={tab.link} key={index}>
               <Box sx={styles.tab(index, tab.link, pathname)}>
                 <Box sx={styles.tabIcon}>{tab.icon}</Box>
                 <Typography sx={styles.tabText}>{tab.text}</Typography>
               </Box>
             </Link>
           ) : (
-            <Typography sx={styles.pollPartHeader}>{tab}</Typography>
+            <Typography sx={styles.pollPartHeader} key={index}>
+              {tab}
+            </Typography>
           );
         })}
       </Box>

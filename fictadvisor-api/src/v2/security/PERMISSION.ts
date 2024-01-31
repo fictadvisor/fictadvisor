@@ -104,4 +104,8 @@ export enum PERMISSION {
   TEACHERS_$TEACHERID_CONTACTS_CREATE = 'teachers.$teacherId.contacts.create',
   TEACHERS_$TEACHERID_CONTACTS_UPDATE = 'teachers.$teacherId.contacts.update',
   TEACHERS_$TEACHERID_CONTACTS_DELETE = 'teachers.$teacherId.contacts.delete',
+
+  PAGE_TEXTS_GET = 'pages.get',
+  PAGE_TEXTS_CREATE = 'pages.create',
+  PAGE_TEXTS_UPDATE = 'pages.update',
 }
