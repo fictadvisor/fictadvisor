@@ -20,6 +20,7 @@ const ScheduleTime = () => {
     21,
     22,
     23,
+    '00',
   ];
 
   return (
