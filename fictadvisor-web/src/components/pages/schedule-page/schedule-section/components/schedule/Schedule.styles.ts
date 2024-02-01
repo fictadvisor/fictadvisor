@@ -5,7 +5,7 @@ export const layout: SxProps<Theme> = {
   flexDirection: 'row',
   backgroundColor: 'transparent',
   width: '1082px',
-  height: '1354px',
+  height: '1438px',
   marginLeft: '27px',
   // overflow: 'hidden',
 };
@@ -13,7 +13,7 @@ export const layout: SxProps<Theme> = {
 export const schedule: SxProps<Theme> = {
   position: 'relative',
   width: '1049px',
-  height: '1344px',
+  height: '1428px',
   backgroundImage: 'url("/icons/schedule-page/grid-pattern.svg")',
 };
 
