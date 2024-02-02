@@ -27,4 +27,11 @@ export const inputsWrapper: SxProps<Theme> = {
   flexDirection: 'column',
   textAlign: 'start',
   marginBottom: '-20px',
+  '.MuiInputLabel-shrink': {
+    padding: '1.5px 12px',
+    color: 'grey.800',
+    typography: 'body2Medium',
+    top: '-4px',
+    left: '-8px',
+  },
 };
