@@ -66,7 +66,7 @@ export class ScheduleService {
     const startWeek = this.dateUtils.getCeiledDifference(startDate, event.startTime, WEEK);
     if (event.period === Period.NO_PERIOD && week - startWeek !== 0) return null;
     const index = (week - startWeek) / weeksPerEvent[event.period];
-    if (index < 0 || index % 1 !== 0) return null;
+    if (index < 0 || index % 1 !== 0 || index >= event.eventsAmount) return null;
     else return index;
   }
 
@@ -75,9 +75,6 @@ export class ScheduleService {
     const events = await this.eventRepository.findMany({
       where: {
         groupId: id,
-        endTime: {
-          gte: startOfWeek,
-        },
         startTime: {
           lte: endOfWeek,
         },
@@ -329,13 +326,10 @@ export class ScheduleService {
     week: number,
     query: EventFiltrationDTO,
   ) {
-    const { startOfWeek, endOfWeek } = week ? await this.dateService.getDatesOfWeek(week) : this.dateService.getDatesOfCurrentWeek();
+    const { endOfWeek } = week ? await this.dateService.getDatesOfWeek(week) : this.dateService.getDatesOfCurrentWeek();
     const events = await this.eventRepository.findMany({
       where: {
         groupId,
-        endTime: {
-          gte: startOfWeek,
-        },
         startTime: {
           lte: endOfWeek,
         },
@@ -546,11 +540,15 @@ export class ScheduleService {
     if (eventInfo) await this.createOrUpdateEventInfo(eventInfo, eventId, index);
     else if (eventInfo === '' || eventInfo === null) await this.deleteEventInfo(eventId, index);
 
+    event.endTime = new Date(startTime);
+    event.endTime.setHours(endTime.getHours());
+    event.endTime.setMinutes(endTime.getMinutes());
+
     event = await this.eventRepository.updateById(eventId, {
       name,
       period,
       startTime,
-      endTime,
+      endTime: event.endTime,
       eventsAmount,
       teacherForceChanges,
       url,
