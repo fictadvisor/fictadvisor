@@ -63,11 +63,11 @@ export class ScheduleService {
 
   async getIndexOfLesson (week: number, event) {
     const { startDate } = await this.dateService.getCurrentSemester();
-    const startWeek = this.dateUtils.getCeiledDifference(startDate, event.startTime, WEEK);
+    const startWeek = Math.ceil((event.startTime.getTime() - startDate.getTime()) / WEEK);
     if (event.period === Period.NO_PERIOD && week - startWeek !== 0) return null;
     const index = (week - startWeek) / weeksPerEvent[event.period];
     if (index < 0 || index % 1 !== 0 || index >= event.eventsAmount) return null;
-    else return index;
+    return index;
   }
 
   async getGeneralGroupEvents (id: string, week: number) {
@@ -338,6 +338,7 @@ export class ScheduleService {
 
     let result = await filterAsync(events, async (event) => {
       const indexOfLesson = await this.getIndexOfLesson(week, event);
+      if (week === 3 && indexOfLesson !== null) console.log(event.name);
       return indexOfLesson !== null;
     });
 
