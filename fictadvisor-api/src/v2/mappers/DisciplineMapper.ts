@@ -3,11 +3,10 @@ import { DbDiscipline } from '../database/entities/DbDiscipline';
 import { SelectiveAmount } from '@prisma/client';
 import { ExtendDisciplineTeachersResponse } from '../api/responses/DisciplineTeachersResponse';
 import { DisciplineAdminResponse } from '../api/responses/DisciplineResponse';
-import { TeacherMapper } from './TeacherMapper';
+import { DbDisciplineTeacher } from '../database/entities/DbDisciplineTeacher';
 
 @Injectable()
 export class DisciplineMapper {
-  constructor (private teacherMapper: TeacherMapper) {}
 
   getDisciplinesWithTeachers (disciplines: DbDiscipline[]) {
     return disciplines.map((discipline) => this.getDisciplineWithTeachers(discipline));
@@ -23,11 +22,32 @@ export class DisciplineMapper {
       year: discipline.year,
       semester: discipline.semester,
       isSelective: discipline.isSelective,
-      teachers: discipline.disciplineTeachers?.map((disciplineTeacher) => ({
-        disciplineTeacherId: disciplineTeacher.id,
-        ...this.teacherMapper.getTeacher({ ...disciplineTeacher.teacher, disciplineTeachers: [] }),
-      })),
+      teachers: this.getDisciplineTeachers(discipline.disciplineTeachers),
     };
+  }
+
+  getDisciplineTeachers (disciplineTeachers: DbDisciplineTeacher[]) {
+    return disciplineTeachers.map((disciplineTeacher) => {
+      const { teacher } = disciplineTeacher;
+
+      return {
+        id: teacher.id,
+        firstName: teacher.firstName,
+        middleName: teacher.middleName,
+        lastName: teacher.lastName,
+        description: teacher.description,
+        avatar: teacher.avatar,
+        rating: +teacher.rating,
+        disciplineTeacherId: disciplineTeacher.id,
+        roles: disciplineTeacher.roles.map((r) => r.role),
+        cathedras: teacher.cathedras.map(({ cathedra: { id, name, abbreviation, division } }) => ({
+          id,
+          name,
+          abbreviation,
+          division,
+        })),
+      };
+    });
   }
 
   getDisciplines (disciplines: DbDiscipline[]) {
