@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import { AxiosError } from 'axios';
 import dayjs, { Dayjs } from 'dayjs';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { create } from 'zustand';
 
@@ -85,6 +87,10 @@ type Action = {
   updateCheckboxes: (checkboxes: Checkboxes) => void;
   useInitialise: (semester: GetCurrentSemester | null, groups: Group[]) => void;
 };
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('+03:00');
 
 export const useSchedule = create<State & Action>((set, get) => {
   return {
