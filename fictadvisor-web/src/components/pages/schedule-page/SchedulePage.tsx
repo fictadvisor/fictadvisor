@@ -31,10 +31,6 @@ export interface SchedulePageProps {
 
 /*
  * TODO:
- * [x] Make schedule responsive for tablet users
- * [x] Make red button show current time, but not chosen day
- * [x] Merge all prs into schedule to work on 1 repo
- * [x] Start developing side panel
  * [] Optimise components for mobile and for desktop using dynamic imports
  * [] Add global state for maximum week number
  * */
