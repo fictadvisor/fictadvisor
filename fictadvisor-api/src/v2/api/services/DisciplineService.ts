@@ -3,13 +3,14 @@ import { DisciplineRepository } from '../../database/repositories/DisciplineRepo
 import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
 import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
 import { DisciplineTypeEnum } from '@prisma/client';
-import { TeacherRoleAdapter } from '../../mappers/TeacherRoleAdapter';
+import { TeacherRoleAdapter, TeacherTypeAdapter } from '../../mappers/TeacherRoleAdapter';
 import { CreateDisciplineDTO } from '../dtos/CreateDisciplineDTO';
 import { QueryAllDisciplinesDTO } from '../dtos/QueryAllDisciplinesDTO';
 import { QuerySemesterDTO } from '../dtos/QuerySemesterDTO';
 import { DatabaseUtils } from '../../database/DatabaseUtils';
 import { DbDiscipline } from '../../database/entities/DbDiscipline';
 import { PaginatedData } from '../datas/PaginatedData';
+import { DisciplineTeacherService } from './DisciplineTeacherService';
 
 @Injectable()
 export class DisciplineService {
@@ -17,6 +18,7 @@ export class DisciplineService {
     private disciplineRepository: DisciplineRepository,
     private disciplineTeacherMapper: DisciplineTeacherMapper,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
+    private disciplineTeacherService: DisciplineTeacherService,
   ) {}
 
   private DisciplineSearching = {
@@ -49,8 +51,37 @@ export class DisciplineService {
     semester: (order = 'desc') => ([{ year: order }, { semester: order }]),
   };
 
-  async create (data: CreateDisciplineDTO) {
-    return this.disciplineRepository.create(data);
+  async create (body: CreateDisciplineDTO) {
+    const { teachers, ...data } = body;
+
+    const roleNames = [];
+    teachers.forEach((t) => {
+      roleNames.push(...t.roleNames);
+    });
+
+    const disciplineTypes = roleNames.map((roleName) => ({
+      name: TeacherTypeAdapter[roleName],
+    }));
+
+    const discipline = await this.disciplineRepository.create({
+      ...data,
+      disciplineTypes: {
+        createMany: {
+          data: disciplineTypes,
+          skipDuplicates: true,
+        },
+      },
+    });
+
+    for (const teacher of teachers) {
+      await this.disciplineTeacherService.create(
+        teacher.teacherId,
+        discipline.id,
+        teacher.roleNames
+      );
+    }
+
+    return this.disciplineRepository.findById(discipline.id);
   }
 
   async get (id: string) {

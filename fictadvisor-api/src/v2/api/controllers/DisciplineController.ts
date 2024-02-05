@@ -16,7 +16,7 @@ import {
 } from '@nestjs/swagger';
 import { DisciplineByIdPipe } from '../pipes/DisciplineByIdPipe';
 import { DisciplineTeachersResponse, ExtendDisciplineTeachersResponse } from '../responses/DisciplineTeachersResponse';
-import { DisciplineResponse, DisciplinesResponse } from '../responses/DisciplineResponse';
+import { DisciplinesResponse } from '../responses/DisciplineResponse';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
 import { QueryAllDisciplinesDTO } from '../dtos/QueryAllDisciplinesDTO';
 import { QueryAllDisciplinesPipe } from '../pipes/QueryAllDisciplinesPipe';
@@ -36,7 +36,7 @@ export class DisciplineController {
 
   @ApiBearerAuth()
   @ApiOkResponse({
-    type: DisciplineResponse,
+    type: ExtendDisciplineTeachersResponse,
   })
   @ApiUnauthorizedResponse({
     description: `\n
@@ -48,12 +48,16 @@ export class DisciplineController {
     NoPermissionException:
       You do not have permission to perform this action`,
   })
-  @Access(PERMISSION.GROUPS_$GROUPID_DISCIPLINES_CREATE)
   @Post()
-  create (
+  @ApiEndpoint({
+    summary: 'Create new discipline',
+    permissions: PERMISSION.GROUPS_$GROUPID_DISCIPLINES_CREATE,
+  })
+  async create (
     @Body() body: CreateDisciplineDTO,
   ) {
-    return this.disciplineService.create(body);
+    const discipline = await this.disciplineService.create(body);
+    return this.disciplineMapper.getDisciplineWithTeachers(discipline);
   }
 
   @ApiOkResponse({
