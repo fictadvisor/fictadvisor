@@ -94,7 +94,9 @@ const ScheduleHeader = () => {
   return (
     <Box sx={styles.wrapper}>
       <Box sx={styles.date}>
-        {month && <Typography sx={styles.month}>{month}</Typography>}
+        {month && !loading && (
+          <Typography sx={styles.month}>{month}</Typography>
+        )}
         {loading && (
           <Skeleton
             width={140}
@@ -146,7 +148,7 @@ const ScheduleHeader = () => {
             >
               {dayName}
             </Typography>
-            {days[i] && (
+            {days[i] && !loading && (
               <Typography
                 sx={styles.dayNumber(
                   dayjs(days[i].day).tz().isSame(currentTime, 'day'),
