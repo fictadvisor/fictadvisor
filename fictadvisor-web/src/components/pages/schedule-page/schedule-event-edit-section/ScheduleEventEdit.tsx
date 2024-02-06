@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useMemo, useState } from 'react';
 import { useQuery } from 'react-query';
-import dayjs from 'dayjs';
+import moment from 'moment';
 
 import { formValidationSchema } from '@/components/pages/schedule-page/schedule-event-edit-section/schedule-form/validation';
 import ScheduleInfoCard from '@/components/pages/schedule-page/schedule-event-edit-section/schedule-info-card';
@@ -31,7 +31,7 @@ export const ScheduleEventEdit = () => {
     () =>
       getWeekByDate(
         semester as GetCurrentSemester,
-        dayjs(openedEvent?.startTime as string).tz(),
+        moment(openedEvent?.startTime as string),
       ),
     [openedEvent],
   );

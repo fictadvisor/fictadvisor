@@ -1,13 +1,13 @@
-import dayjs, { Dayjs } from 'dayjs';
+import moment, { Moment } from 'moment';
 
 import { GetCurrentSemester } from '@/lib/api/dates/types/GetCurrentSemester';
 const WeekMs = 1000 * 60 * 60 * 24 * 7;
 export const getWeekByDate = (
   semester: GetCurrentSemester,
-  date: Dayjs,
+  date: Moment,
 ): number => {
-  const startTimeMs = dayjs(semester.startDate).tz().valueOf();
-  const thisDateMs = date.tz().valueOf();
+  const startTimeMs = moment(semester.startDate).valueOf();
+  const thisDateMs = date.valueOf();
 
   const delta = thisDateMs - startTimeMs;
   const decimalWeek = delta / WeekMs;

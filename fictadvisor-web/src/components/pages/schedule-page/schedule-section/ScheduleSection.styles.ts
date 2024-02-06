@@ -6,7 +6,7 @@ export const scheduleSection: SxProps<Theme> = {
   flexDirection: 'column',
   margin: '6px',
   width: '75%',
-  overflow: 'scroll',
+  overflow: 'auto',
   height: `calc(100vh - ${100}px)`,
   position: 'relative',
 };
