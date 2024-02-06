@@ -24,7 +24,7 @@ export const TeacherSearchList: FC<TeacherSearchListProps> = ({ teachers }) => {
   }, [teachers.length]);
   return (
     <Box sx={styles.teacherSearchList}>
-      {teachers?.map((teacher, index) => (
+      {teachers.map((teacher, index) => (
         <Link key={index} href={`/teachers/${teacher.id}`}>
           <TeacherCard
             avatar={teacher.avatar}
