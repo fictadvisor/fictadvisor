@@ -1,6 +1,6 @@
 import React, { FC, useEffect } from 'react';
-import dayjs from 'dayjs';
 import { useField } from 'formik';
+import moment, { Moment } from 'moment';
 
 import Dropdown from '@/components/common/ui/form/dropdown';
 import { FormikDropdownProps } from '@/components/common/ui/form/with-formik/dropdown/FormikDropdown';
@@ -10,7 +10,7 @@ import { getDateWithTimeSet } from '../../utils/getDateWithTimeSet';
 import * as styles from './ScheduleDropdown.styles';
 
 interface TimeScheduleDropdownProps extends FormikDropdownProps {
-  date: dayjs.Dayjs;
+  date: Moment;
 }
 
 const TimeScheduleDropdown: FC<TimeScheduleDropdownProps> = ({

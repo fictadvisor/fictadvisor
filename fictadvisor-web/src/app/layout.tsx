@@ -1,14 +1,10 @@
 'use client';
 
-import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ThemeProvider } from '@mui/system';
 import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import dayjs from 'dayjs';
-import uk from 'dayjs/locale/uk';
-import timezone from 'dayjs/plugin/timezone';
-import utc from 'dayjs/plugin/utc';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import moment from 'moment';
 import Head from 'next/head';
 import Script from 'next/script';
 
@@ -17,14 +13,21 @@ import ToastContextProvider from '@/hooks/use-toast/toast-context';
 import theme from '@/styles/theme';
 import { manrope } from '@/styles/theme/constants/typography/typography';
 
+import 'moment/locale/uk';
+import 'moment-timezone';
+
 import '@/styles/reset.scss';
 import '@/styles/typography.scss';
 import '@/styles/global-styles.scss';
 
-dayjs.extend(timezone);
-dayjs.extend(utc);
-dayjs.tz.setDefault('Europe/Kiev');
-dayjs.locale({ ...uk, weekStart: 1 });
+moment.tz.setDefault('Europe/Kiev');
+moment.tz.setDefault('uk');
+moment.updateLocale('uk', {
+  week: {
+    dow: 1,
+  },
+});
+
 const queryClient = new QueryClient();
 
 export default function RootLayout({
@@ -60,7 +63,7 @@ export default function RootLayout({
       <body className={manrope.className} style={manrope.style}>
         <Script async src="https://telegram.org/js/telegram-widget.js" />
         <ThemeProvider theme={theme}>
-          <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={'uk'}>
+          <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale="uk">
             <QueryClientProvider client={queryClient}>
               <AuthenticationProvider>
                 <ToastContextProvider>{children}</ToastContextProvider>

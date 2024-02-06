@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { ClickAwayListener } from '@mui/base';
 import { Box, Typography } from '@mui/material';
-import dayjs from 'dayjs';
+import moment from 'moment';
 
 import { Event } from '@/types/schedule';
 
@@ -51,7 +51,7 @@ export const ScheduleEventsSection: FC<ScheduleEventsExpandedProps> = ({
   });
 
   const eventDay = new Date(events[0].startTime).getDate();
-  const eventMonth = monthMapper[dayjs(events[0].startTime).tz().month()];
+  const eventMonth = monthMapper[moment(events[0].startTime).month()];
 
   const height = '100%';
 

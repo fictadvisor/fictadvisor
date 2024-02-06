@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import { Box, useMediaQuery } from '@mui/material';
-import dayjs from 'dayjs';
+import moment from 'moment';
 
 import { calculateScheduleLineTop } from '@/components/pages/schedule-page/schedule-section/components/schedule/components/schedule-column/components/schedule-card/utils/calculateScheduleLineTop';
 import ScheduleLine from '@/components/pages/schedule-page/schedule-section/components/schedule/components/schedule-line';
@@ -40,7 +40,7 @@ const ScheduleCard: FC<ScheduleCardProps> = ({ event, onClick, week }) => {
     setHeight(calculateHeight(_event.startTime, _event.endTime));
     setStart(getStringTime(_event.startTime));
     setEnd(getStringTime(_event.endTime));
-    setIsPastEvent(currentTime.valueOf() >= dayjs(_event.endTime).valueOf());
+    setIsPastEvent(currentTime.valueOf() >= moment(_event.endTime).valueOf());
     setLineTop(
       calculateScheduleLineTop(
         _event.startTime,
@@ -49,8 +49,8 @@ const ScheduleCard: FC<ScheduleCardProps> = ({ event, onClick, week }) => {
       ),
     );
     setIsCurEvent(
-      currentTime.valueOf() >= dayjs(_event.startTime).valueOf() &&
-        currentTime.valueOf() <= dayjs(_event.endTime).valueOf(),
+      currentTime.valueOf() >= moment(_event.startTime).valueOf() &&
+        currentTime.valueOf() <= moment(_event.endTime).valueOf(),
     );
   }, [currentTime, event]);
 

@@ -1,8 +1,6 @@
 import { useEffect } from 'react';
 import { AxiosError } from 'axios';
-import dayjs, { Dayjs } from 'dayjs';
-import timezone from 'dayjs/plugin/timezone';
-import utc from 'dayjs/plugin/utc';
+import moment, { Moment } from 'moment';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { create } from 'zustand';
 
@@ -66,8 +64,8 @@ type State = {
   eventsBody: GetEventBody[];
   isNewEventAdded: boolean;
   openedEvent?: Event;
-  currentTime: Dayjs;
-  chosenDay: Dayjs | null;
+  currentTime: Moment;
+  chosenDay: Moment | null;
   isLoading: boolean;
   error: null | AxiosError;
   isUsingSelective: boolean;
@@ -80,17 +78,13 @@ type Action = {
   handleWeekChange: () => Promise<void>;
 
   setIsNewEventAdded: (isAdded: boolean) => void;
-  setDate: (newDate: Dayjs) => void;
-  setChosenDay: (newDate: Dayjs) => void;
+  setDate: (newDate: Moment) => void;
+  setChosenDay: (newDate: Moment) => void;
   loadNext5: (startWeek: number) => Promise<void>;
   setError: (_: AxiosError | null) => void;
   updateCheckboxes: (checkboxes: Checkboxes) => void;
   useInitialise: (semester: GetCurrentSemester | null, groups: Group[]) => void;
 };
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.tz.setDefault('+03:00');
 
 export const useSchedule = create<State & Action>((set, get) => {
   return {
@@ -98,7 +92,7 @@ export const useSchedule = create<State & Action>((set, get) => {
     checkboxes: checkboxesInitialValues,
     error: null,
     isLoading: false,
-    currentTime: dayjs().tz(),
+    currentTime: moment(),
     isNewEventAdded: false,
     eventTypes: [
       TEvent.LECTURE,
@@ -238,12 +232,12 @@ export const useSchedule = create<State & Action>((set, get) => {
         isNewEventAdded: isAdded,
       }));
     },
-    setDate(newDate: Dayjs) {
+    setDate(newDate: Moment) {
       set(_ => ({
         currentTime: newDate,
       }));
     },
-    setChosenDay(newDate: Dayjs) {
+    setChosenDay(newDate: Moment) {
       set(_ => ({
         chosenDay: newDate,
       }));
@@ -259,7 +253,7 @@ export const useSchedule = create<State & Action>((set, get) => {
 
       useEffect(() => {
         const interval = setInterval(() => {
-          get().setDate(dayjs().tz());
+          get().setDate(moment());
         }, 1000 * 60);
 
         return () => clearInterval(interval);

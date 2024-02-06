@@ -1,9 +1,9 @@
 /**
  * @param time - time in ISOString format
  */
-import dayjs from 'dayjs';
+import moment from 'moment';
 
 export const getStringTime = (time: string) => {
-  const date = dayjs(time).tz();
+  const date = moment(time);
   return date.format('HH:mm');
 };

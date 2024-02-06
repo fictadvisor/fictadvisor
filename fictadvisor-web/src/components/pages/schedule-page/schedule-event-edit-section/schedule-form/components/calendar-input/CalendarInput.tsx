@@ -3,8 +3,8 @@ import { CalendarIcon as CalendarIconMUI } from '@heroicons/react/24/outline';
 import { Box, Typography } from '@mui/material';
 import { ukUA } from '@mui/x-date-pickers';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import dayjs, { Dayjs } from 'dayjs';
 import { useField } from 'formik';
+import moment, { Moment } from 'moment';
 
 import { useSchedule } from '@/store/schedule/useSchedule';
 
@@ -17,8 +17,8 @@ ukrainianLocale.fieldDayPlaceholder = () => 'ДД';
 ukrainianLocale.fieldYearPlaceholder = params => 'Р'.repeat(params.digitAmount);
 
 interface CalendarInputProps {
-  date: Dayjs | null;
-  setDate: Dispatch<Dayjs | null>;
+  date: Moment | null;
+  setDate: Dispatch<Moment | null>;
 }
 const CalendarIcon = () => {
   return <CalendarIconMUI height={24} width={24} />;
@@ -29,7 +29,7 @@ const CalendarInput: FC<CalendarInputProps> = ({ date, setDate }) => {
     useField('startTime');
   const [, , { setTouched: setTouchedEndTime }] = useField('endTime');
 
-  const onChange = (value: dayjs.Dayjs | null) => {
+  const onChange = (value: Moment | null) => {
     if (!date) {
       setTouchedStartTime(false);
       setTouchedEndTime(false);
@@ -47,10 +47,10 @@ const CalendarInput: FC<CalendarInputProps> = ({ date, setDate }) => {
         }}
         slots={{ openPickerIcon: CalendarIcon }}
         sx={styles.datePicker}
-        value={dayjs(date).tz()}
+        value={moment(date)}
         onChange={onChange}
-        minDate={dayjs(semester?.startDate).tz()}
-        maxDate={dayjs(semester?.endDate).tz()}
+        minDate={moment(semester?.startDate)}
+        maxDate={moment(semester?.endDate)}
         localeText={ukrainianLocale}
         dayOfWeekFormatter={day => {
           return day.charAt(0).toUpperCase() + day.slice(1);
