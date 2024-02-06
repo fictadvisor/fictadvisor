@@ -19,6 +19,7 @@ import {
 } from '@/components/pages/search-pages/teacher-search/constants';
 import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
 import { GetTeachersResponse } from '@/lib/api/teacher/types/GetTeachersResponse';
+import { Pagination } from '@/types/api';
 import { Teacher } from '@/types/teacher';
 
 import { TeacherInitialValues } from '../search-form/constants';
@@ -61,7 +62,10 @@ export const TeacherSearchPage = () => {
           return TeacherAPI.getPage(queryObj, PAGE_SIZE, curPage + 1);
         }
       },
-      { keepPreviousData: true, refetchOnWindowFocus: false },
+      {
+        keepPreviousData: true,
+        refetchOnWindowFocus: false,
+      },
     );
 
   const downloadHandler = () => {
@@ -70,7 +74,7 @@ export const TeacherSearchPage = () => {
   };
 
   useEffect(() => {
-    void refetch();
+    refetch();
   }, [queryObj, curPage, refetch, reloadTeachers]);
 
   return (
@@ -83,9 +87,12 @@ export const TeacherSearchPage = () => {
         initialValues={initialValues}
         localStorageName={localStorageName}
       />
-      {data && (
+      {(data as GetTeachersResponse) && (
         <TeacherSearchList
-          teachers={[...(loadedTeachers ?? []), ...data.teachers]}
+          teachers={[
+            ...(loadedTeachers ?? []),
+            ...(data as GetTeachersResponse).teachers,
+          ]}
         />
       )}
       {isLoading ||
@@ -94,13 +101,15 @@ export const TeacherSearchPage = () => {
             <Progress />
           </Box>
         ))}
-      <Button
-        sx={styles.loadBtn}
-        text="Завантажити ще"
-        variant={ButtonVariant.FILLED}
-        color={ButtonColor.SECONDARY}
-        onClick={downloadHandler}
-      />{' '}
+      {!isLoading && (data?.pagination as Pagination).amount >= 20 && (
+        <Button
+          sx={styles.loadBtn}
+          text="Завантажити ще"
+          variant={ButtonVariant.FILLED}
+          color={ButtonColor.SECONDARY}
+          onClick={downloadHandler}
+        />
+      )}{' '}
     </Box>
   );
 };
