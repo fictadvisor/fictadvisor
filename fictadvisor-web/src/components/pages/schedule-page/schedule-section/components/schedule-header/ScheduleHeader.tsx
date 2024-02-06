@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { Box, Typography } from '@mui/material';
 import Skeleton from '@mui/material/Skeleton';
-import dayjs from 'dayjs';
+import moment from 'moment';
 
 import Button from '@/components/common/ui/button-mui';
 import {
@@ -82,13 +82,9 @@ const ScheduleHeader = () => {
   }, [eventsBody, week]);
 
   const handleClick = () => {
-    if (
-      dayjs(semester?.endDate as string)
-        .tz()
-        .valueOf() > currentTime.valueOf()
-    )
+    if (moment(semester?.endDate as string).valueOf() > currentTime.valueOf())
       setChosenDay(currentTime);
-    else setChosenDay(dayjs(semester?.endDate as string).tz());
+    else setChosenDay(moment(semester?.endDate as string));
   };
 
   return (
@@ -143,7 +139,7 @@ const ScheduleHeader = () => {
           <Box sx={styles.column} key={i}>
             <Typography
               sx={styles.dayName(
-                days[i] ? dayjs(days[i].day).isSame(currentTime) : false,
+                days[i] ? moment(days[i].day).isSame(currentTime) : false,
               )}
             >
               {dayName}
@@ -151,8 +147,8 @@ const ScheduleHeader = () => {
             {days[i] && !loading && (
               <Typography
                 sx={styles.dayNumber(
-                  dayjs(days[i].day).tz().isSame(currentTime, 'day'),
-                  dayjs(days[i].day).tz().isSame(chosenDay, 'day'),
+                  moment(days[i].day).isSame(currentTime, 'day'),
+                  moment(days[i].day).isSame(chosenDay, 'day'),
                 )}
               >
                 {days[i].day.getDate()}

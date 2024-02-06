@@ -1,5 +1,5 @@
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import dayjs from 'dayjs';
+import moment from 'moment';
 
 import { useSchedule } from '@/store/schedule/useSchedule';
 
@@ -16,7 +16,7 @@ export const DatePicker = () => {
 
   return (
     <DateCalendar
-      value={dayjs(chosenDay)}
+      value={moment(chosenDay)}
       onChange={newValue => {
         if (newValue && semester) {
           setChosenDay(newValue);
@@ -28,8 +28,8 @@ export const DatePicker = () => {
       dayOfWeekFormatter={day => {
         return day.charAt(0).toUpperCase() + day.slice(1);
       }}
-      minDate={dayjs(semester?.startDate)}
-      maxDate={dayjs(semester?.endDate)}
+      minDate={moment(semester?.startDate)}
+      maxDate={moment(semester?.endDate)}
     />
   );
 };

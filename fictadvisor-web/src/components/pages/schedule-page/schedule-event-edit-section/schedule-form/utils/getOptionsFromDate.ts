@@ -1,4 +1,4 @@
-import { Dayjs } from 'dayjs';
+import { Moment } from 'moment';
 
 import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
 
@@ -6,7 +6,7 @@ import { getStringTime } from '../../../utils/getStringTime';
 const MinuteMs = 1000 * 60;
 const HourMs = MinuteMs * 60;
 
-export const getOptionsFromDate = (date: Dayjs) => {
+export const getOptionsFromDate = (date: Moment) => {
   const startOfDayMs = date.startOf('day').valueOf();
 
   const startStudyTime = HourMs * 7 + startOfDayMs;

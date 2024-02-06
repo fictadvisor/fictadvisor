@@ -7,8 +7,8 @@ import {
   TrashIcon,
 } from '@heroicons/react/24/outline';
 import { Box, Typography, useMediaQuery } from '@mui/material';
-import dayjs, { Dayjs } from 'dayjs';
 import { Form, Formik, FormikConfig } from 'formik';
+import moment, { Moment } from 'moment';
 
 import Button from '@/components/common/ui/button-mui';
 import {
@@ -60,8 +60,8 @@ export const ScheduleEventForm: FC<ScheduleEventFormProps> = ({
   isNewEvent = false,
 }) => {
   const chosenDay = useSchedule(state => state.chosenDay);
-  const [date, setDate] = useState<Dayjs | null>(
-    !initialValues.startTime ? null : dayjs(initialValues.startTime).tz(),
+  const [date, setDate] = useState<Moment | null>(
+    !initialValues.startTime ? null : moment(initialValues.startTime),
   );
   const [tabValue, setTabValue] = useState<InfoCardTabs>(InfoCardTabs.EVENT);
   const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));

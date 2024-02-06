@@ -262,7 +262,7 @@ export class TeacherService {
         mark,
       });
     }
-    return marks;
+    return marks.sort((a, b) => b.amount - a.amount);
   }
 
   checkQueryDate ({ semester, year }: ResponseQueryDTO) {
