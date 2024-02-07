@@ -70,6 +70,7 @@ export const row = (isSelected: boolean) => ({
     },
   },
   '& .MuiTypography-root': {
+    padding: 0,
     '&.email': {
       textAlign: 'left',
     },
