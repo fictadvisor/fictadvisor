@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { Box, Drawer as MuiDrawer, Link } from '@mui/material';
+import { useSearchParams } from 'next/dist/client/components/navigation';
 import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -26,7 +27,9 @@ const Drawer: FC<DrawerProps> = ({
   handleClick,
   user,
 }) => {
-  const pathname = usePathname();
+  const params = useSearchParams().toString();
+  const pathname = `${usePathname()}${params ? `?${params}` : ''}`;
+
   return (
     <MuiDrawer
       anchor="top"
