@@ -27,7 +27,7 @@ export const TEACHER_TYPE = {
   Лаб: TeacherRole.LABORANT,
 };
 
-const SEMESTER = 1;
+const SEMESTER = 2;
 
 const VIEW_SCHEDULE_PARAMS = new URLSearchParams({
   __EVENTVALIDATION:
@@ -235,7 +235,8 @@ export class RozParser implements Parser {
 
     const disciplineType = discipline.disciplineTypes.find((type) => type.name === name);
 
-    const teachers = pair.teachers ? pair.teachers : [{ lastName: '', firstName: '', middleName: '' }];
+    pair.teacher = pair.teacher ? pair.teacher : { lastName: '', firstName: '', middleName: '' };
+    const teachers = pair.teachers ?? [pair.teacher];
     for (const { lastName, firstName, middleName } of teachers) {
       const teacher = await this.getTeacherFullInitials(lastName, firstName, middleName);
 
