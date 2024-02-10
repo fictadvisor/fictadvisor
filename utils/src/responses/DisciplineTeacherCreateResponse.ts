@@ -36,19 +36,6 @@ class Discipline extends DisciplineResponse {
     disciplineTypes: DisciplineType[];
 }
 
-class DisciplineTeacherRole {
-  @ApiProperty()
-    disciplineTeacherId: string;
-
-  @ApiProperty()
-    disciplineTypeId: string;
-
-  @ApiProperty({
-    enum: TeacherRole,
-  })
-    role: TeacherRole;
-}
-
 export class DisciplineTeacherCreateResponse {
   @ApiProperty()
     id: string;
@@ -70,7 +57,8 @@ export class DisciplineTeacherCreateResponse {
     teacher: TeacherResponse;
 
   @ApiProperty({
-    type: [DisciplineTeacherRole],
+    enum: TeacherRole,
+    type: [TeacherRole],
   })
-    roles: DisciplineTeacherRole[];
+    roles: TeacherRole[];
 }

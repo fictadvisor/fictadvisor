@@ -1,4 +1,6 @@
-import { DisciplineTypeEnum, TeacherRole } from '@prisma/client';
+import { DisciplineTypeEnum } from '@prisma/client';
+import { TeacherRole } from '@fictadvisor/utils/enums';
+import { DbDisciplineTeacherRole } from '../database/entities/DbDisciplineTeacherRole';
 
 export const TeacherRoleAdapter: {[key in keyof typeof DisciplineTypeEnum]?: TeacherRole | never} = {
   [DisciplineTypeEnum.LECTURE]: TeacherRole.LECTURER,
@@ -8,6 +10,9 @@ export const TeacherRoleAdapter: {[key in keyof typeof DisciplineTypeEnum]?: Tea
   [DisciplineTypeEnum.CONSULTATION]: TeacherRole.OTHER,
   [DisciplineTypeEnum.WORKOUT]: TeacherRole.OTHER,
 };
+
+export const getTeacherRoles = (disciplineTeacherRoles: DbDisciplineTeacherRole[]) =>
+  disciplineTeacherRoles.map(({ disciplineType }) => TeacherRoleAdapter[disciplineType.name]);
 
 export const TeacherTypeAdapter: {[key in keyof typeof TeacherRole]?: DisciplineTypeEnum | never} = {
   [TeacherRole.LECTURER]: DisciplineTypeEnum.LECTURE,

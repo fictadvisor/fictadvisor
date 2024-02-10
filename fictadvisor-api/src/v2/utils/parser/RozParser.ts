@@ -2,7 +2,7 @@ import axios from 'axios';
 import { JSDOM } from 'jsdom';
 import { Injectable } from '@nestjs/common';
 import { Parser } from './Parser';
-import { DisciplineTypeEnum, TeacherRole } from '@prisma/client';
+import { DisciplineTypeEnum } from '@prisma/client';
 import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
 import { DisciplineTeacherRoleRepository } from '../../database/repositories/DisciplineTeacherRoleRepository';
 import { GroupRepository } from '../../database/repositories/GroupRepository';
@@ -25,6 +25,7 @@ import { ExtendedSchedulePair } from './ScheduleParserTypes';
 import { DbDiscipline } from '../../database/entities/DbDiscipline';
 import { DbDisciplineType } from '../../database/entities/DbDisciplineType';
 import { GeneralParser } from './GeneralParser';
+import { TeacherRole } from '@fictadvisor/utils/enums';
 
 const DISCIPLINE_TYPE = {
   Лек: DisciplineTypeEnum.LECTURE,
@@ -207,7 +208,7 @@ export class RozParser implements Parser {
 
     const disciplineType = discipline.disciplineTypes.find((type) => type.name === name);
 
-    await this.handleTeachers(pair, discipline, role, disciplineType);
+    await this.handleTeachers(pair, discipline, disciplineType);
 
     await this.generalParser.handleEvent(pair, startOfEvent, endOfEvent, groupId, disciplineType.id);
   }
@@ -242,7 +243,6 @@ export class RozParser implements Parser {
   async handleTeachers (
     pair: ExtendedSchedulePair,
     discipline: DbDiscipline,
-    role: TeacherRole,
     disciplineType: DbDisciplineType,
   ) {
     pair.teacher = pair.teacher ? pair.teacher : { lastName: '', firstName: '', middleName: '' };
@@ -257,7 +257,6 @@ export class RozParser implements Parser {
       });
 
       await this.disciplineTeacherRoleRepository.getOrCreate({
-        role,
         disciplineTeacherId: disciplineTeacher.id,
         disciplineTypeId: disciplineType.id,
       });

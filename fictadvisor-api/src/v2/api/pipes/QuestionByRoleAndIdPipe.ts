@@ -1,7 +1,8 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
 import { QuestionRepository } from '../../database/repositories/QuestionRepository';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
-import { TeacherRole } from '@prisma/client';
+import { TeacherRole } from '@fictadvisor/utils/enums';
+import { TeacherTypeAdapter } from '../../mappers/TeacherRoleAdapter';
 
 @Injectable()
 export class QuestionByRoleAndIdPipe implements PipeTransform {
@@ -15,7 +16,7 @@ export class QuestionByRoleAndIdPipe implements PipeTransform {
     if (!question) {
       throw new InvalidEntityIdException('question');
     }
-    if (!question.questionRoles.some((r) => r.role === role)) {
+    if (!question.questionRoles.some((questionRole) => questionRole.role === TeacherTypeAdapter[role])) {
       throw new InvalidEntityIdException('questionRole');
     }
     return params;
