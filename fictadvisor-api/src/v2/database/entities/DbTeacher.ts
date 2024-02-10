@@ -1,4 +1,4 @@
-import { Discipline, DisciplineTeacherRole, Cathedra, TeachersOnCathedras } from '@prisma/client';
+import { Discipline, Cathedra, TeachersOnCathedras, DisciplineType } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime';
 
 export class DbTeacher {
@@ -16,7 +16,6 @@ export class DbTeacher {
     id: string,
     teacherId: string,
     disciplineId: string,
-    discipline: Discipline,
-    roles: DisciplineTeacherRole[];
+    discipline: Discipline & { disciplineTypes: DisciplineType[] };
   }[];
 }

@@ -4,6 +4,7 @@ import { TeacherRole } from '@prisma/client';
 import { OrderQAParam } from '../api/dtos/OrderQAParam';
 import { Sort, SortDTO } from '../utils/QueryAllDTO';
 import { SortQATParam } from '../api/dtos/SortQATParam';
+import { TeacherRoleAdapter } from './TeacherRoleAdapter';
 
 @Injectable()
 export class TeacherMapper {
@@ -27,8 +28,10 @@ export class TeacherMapper {
 
   getRoles (teacher: DbTeacher): TeacherRole[] {
     const roles: TeacherRole[] = [];
-    for (const dt of teacher.disciplineTeachers) {
-      roles.push(...dt.roles.map(({ role }) => role));
+    
+    for (const { discipline } of teacher.disciplineTeachers) {
+      const disciplineRoles = discipline.disciplineTypes.map(({ name }) => TeacherRoleAdapter[name]);
+      roles.push(...disciplineRoles);
     }
 
     return [...new Set(roles)];

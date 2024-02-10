@@ -2,7 +2,6 @@ import {
   Group,
   Subject,
   DisciplineType,
-  DisciplineTeacherRole,
   Discipline,
   Teacher,
   Cathedra,
@@ -23,5 +22,4 @@ export class DbDisciplineTeacher {
     subject?: Subject,
     disciplineTypes?: DisciplineType[],
   };
-  roles?: DisciplineTeacherRole[];
 }

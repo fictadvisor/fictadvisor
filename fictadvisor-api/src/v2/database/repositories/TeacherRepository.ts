@@ -18,8 +18,11 @@ export class TeacherRepository {
     },
     disciplineTeachers: {
       include: {
-        discipline: true,
-        roles: true,
+        discipline: {
+          include: {
+            disciplineTypes: true,
+          },
+        },
       },
     },
   };
@@ -40,7 +43,7 @@ export class TeacherRepository {
     });
   }
 
-  async findById (id: string) {
+  async findById (id: string): Promise<DbTeacher> {
     return this.prisma.teacher.findUnique({
       where: {
         id,
@@ -51,7 +54,7 @@ export class TeacherRepository {
 
   async create (
     data: Prisma.TeacherUncheckedCreateInput,
-  ) {
+  ): Promise<DbTeacher> {
     return this.prisma.teacher.create({
       data,
       include: this.include,
@@ -60,7 +63,7 @@ export class TeacherRepository {
 
   async getOrCreate (
     data: {lastName: string, firstName: string, middleName: string},
-  ) {
+  ): Promise<DbTeacher> {
     let teacher = await this.find(data);
 
     if (!teacher) {
@@ -69,7 +72,7 @@ export class TeacherRepository {
     return teacher;
   }
 
-  async update (where: Prisma.TeacherWhereUniqueInput, data: Prisma.TeacherUncheckedUpdateInput) {
+  async update (where: Prisma.TeacherWhereUniqueInput, data: Prisma.TeacherUncheckedUpdateInput): Promise<DbTeacher> {
     return this.prisma.teacher.update({
       where,
       data,
@@ -77,7 +80,7 @@ export class TeacherRepository {
     });
   }
 
-  async updateById (id: string, data: Prisma.TeacherUncheckedUpdateInput) {
+  async updateById (id: string, data: Prisma.TeacherUncheckedUpdateInput): Promise<DbTeacher> {
     return this.prisma.teacher.update({
       where: {
         id,
@@ -87,16 +90,14 @@ export class TeacherRepository {
     });
   }
 
-  async delete (where: Prisma.TeacherWhereUniqueInput) {
+  async delete (where: Prisma.TeacherWhereUniqueInput): Promise<DbTeacher> {
     return this.prisma.teacher.delete({
       where,
       include: this.include,
     });
   }
 
-  async deleteById (
-    id: string,
-  ) {
+  async deleteById (id: string): Promise<DbTeacher> {
     return this.prisma.teacher.delete({
       where: {
         id,
@@ -105,7 +106,7 @@ export class TeacherRepository {
     });
   }
 
-  async count (data: Prisma.TeacherCountArgs) {
+  async count (data: Prisma.TeacherCountArgs): Promise<number> {
     return this.prisma.teacher.count(
       data,
     );

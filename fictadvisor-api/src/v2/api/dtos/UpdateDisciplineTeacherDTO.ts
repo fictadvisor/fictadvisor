@@ -4,7 +4,8 @@ import { IsArray, IsEnum, IsNotEmpty } from 'class-validator';
 
 export class UpdateDisciplineTeacherDTO {
   @ApiProperty({
-    enum: [TeacherRole],
+    enum: TeacherRole,
+    type: [TeacherRole],
   })
   @IsNotEmpty()
   @IsArray()

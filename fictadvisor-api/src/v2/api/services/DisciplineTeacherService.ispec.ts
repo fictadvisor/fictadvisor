@@ -217,22 +217,6 @@ describe('DisciplineTeacherService', () => {
       },
     });
 
-    await prismaService.disciplineTeacherRole.createMany({
-      data: [{
-        disciplineTeacherId: 'lecturerForNonSelective20221Id',
-        disciplineTypeId: 'ec7866e2-a426-4e1b-b76c-1ce68fdb46a1',
-        role: 'LECTURER',
-      }, {
-        disciplineTeacherId: 'removedId1',
-        disciplineTypeId: 'ec7866e2-a426-4e1b-b76c-1ce68fdb46a1',
-        role: 'LECTURER',
-      }, {
-        disciplineTeacherId: 'lecturerForNonSelective20222Id',
-        disciplineTypeId: 'f3717ce9-cd52-4c40-889a-094a9b6a01de',
-        role: 'LECTURER',
-      }],
-    });
-
     await prismaService.question.createMany({
       data: [
         {
@@ -615,7 +599,6 @@ describe('DisciplineTeacherService', () => {
     await prismaService.teacher.deleteMany();
     await prismaService.disciplineType.deleteMany();
     await prismaService.disciplineTeacher.deleteMany();
-    await prismaService.disciplineTeacherRole.deleteMany();
     await prismaService.question.deleteMany();
     await prismaService.questionRole.deleteMany();
     await prismaService.questionAnswer.deleteMany();

@@ -14,7 +14,6 @@ export class DisciplineTeacherRepository {
         disciplineTypes: true,
       },
     },
-    roles: true,
     teacher: {
       include: {
         cathedras: {

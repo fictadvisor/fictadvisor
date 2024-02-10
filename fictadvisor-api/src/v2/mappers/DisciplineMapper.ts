@@ -4,6 +4,7 @@ import { SelectiveAmount } from '@prisma/client';
 import { ExtendDisciplineTeachersResponse } from '../api/responses/DisciplineTeachersResponse';
 import { DisciplineAdminResponse } from '../api/responses/DisciplineResponse';
 import { DbDisciplineTeacher } from '../database/entities/DbDisciplineTeacher';
+import { TeacherRoleAdapter } from './TeacherRoleAdapter';
 
 @Injectable()
 export class DisciplineMapper {
@@ -28,7 +29,7 @@ export class DisciplineMapper {
 
   getDisciplineTeachers (disciplineTeachers: DbDisciplineTeacher[]) {
     return disciplineTeachers.map((disciplineTeacher) => {
-      const { teacher } = disciplineTeacher;
+      const { teacher, discipline: { disciplineTypes } } = disciplineTeacher;
 
       return {
         id: teacher.id,
@@ -39,7 +40,7 @@ export class DisciplineMapper {
         avatar: teacher.avatar,
         rating: +teacher.rating,
         disciplineTeacherId: disciplineTeacher.id,
-        roles: disciplineTeacher.roles.map((r) => r.role),
+        roles: disciplineTypes.map(({ name }) => TeacherRoleAdapter[name]),
         cathedras: teacher.cathedras.map(({ cathedra: { id, name, abbreviation, division } }) => ({
           id,
           name,

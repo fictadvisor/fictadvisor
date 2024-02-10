@@ -5,7 +5,6 @@ import { Injectable } from '@nestjs/common';
 import { Parser } from './Parser';
 import { DisciplineTypeEnum, Period, TeacherRole } from '@prisma/client';
 import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
-import { DisciplineTeacherRoleRepository } from '../../database/repositories/DisciplineTeacherRoleRepository';
 import { GroupRepository } from '../../database/repositories/GroupRepository';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
 import { SubjectRepository } from '../../database/repositories/SubjectRepository';
@@ -49,7 +48,6 @@ export class RozParser implements Parser {
     private subjectRepository: SubjectRepository,
     private disciplineRepository: DisciplineRepository,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
-    private disciplineTeacherRoleRepository: DisciplineTeacherRoleRepository,
     private eventRepository: EventRepository,
     private dateService: DateService,
     private dateUtils: DateUtils,
@@ -245,12 +243,6 @@ export class RozParser implements Parser {
           teacherId: teacher.id,
           disciplineId: discipline.id,
         });
-
-      await this.disciplineTeacherRoleRepository.getOrCreate({
-        role,
-        disciplineTeacherId: disciplineTeacher.id,
-        disciplineTypeId: disciplineType.id,
-      });
     }
 
     const event = await this.eventRepository.find({

@@ -816,13 +816,7 @@ describe('ScheduleService', () => {
           createdAt: expect.any(Date),
           disciplineId: 'nonSelectedDiscipline',
           id: 'deletedDisciplineTeacherId',
-          roles: [{
-            createdAt: expect.any(Date),
-            disciplineTeacherId: 'deletedDisciplineTeacherId',
-            disciplineTypeId: 'nonSelectedDiscipline-lecture',
-            role: 'LECTURER',
-            updatedAt: expect.any(Date),
-          }],
+          roles: ['LECTURER'],
           teacher: {
             cathedras: [],
             academicStatus: null,
@@ -898,13 +892,7 @@ describe('ScheduleService', () => {
           createdAt: expect.any(Date),
           disciplineId: 'nonSelectedDiscipline',
           id: 'deletedDisciplineTeacherId',
-          roles: [{
-            createdAt: expect.any(Date),
-            disciplineTeacherId: 'deletedDisciplineTeacherId',
-            disciplineTypeId: 'nonSelectedDiscipline-lecture',
-            role: 'LECTURER',
-            updatedAt: expect.any(Date),
-          }],
+          roles: ['LECTURER'],
           teacher: {
             cathedras: [],
             academicStatus: null,

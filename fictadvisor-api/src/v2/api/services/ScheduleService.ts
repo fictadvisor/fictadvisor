@@ -11,7 +11,6 @@ import { DisciplineTeacherRepository } from '../../database/repositories/Discipl
 import { AttachLessonDTO } from '../dtos/AttachLessonDTO';
 import { InvalidDateException } from '../../utils/exceptions/InvalidDateException';
 import { ObjectIsRequiredException } from '../../utils/exceptions/ObjectIsRequiredException';
-import { DisciplineTeacherRoleRepository } from '../../database/repositories/DisciplineTeacherRoleRepository';
 import { every, filterAsync, find, some } from '../../utils/ArrayUtil';
 import { DbDiscipline, DbDiscipline_DisciplineTeacher } from '../../database/entities/DbDiscipline';
 import { InvalidWeekException } from '../../utils/exceptions/InvalidWeekException';
@@ -24,6 +23,7 @@ import { StudentRepository } from '../../database/repositories/StudentRepository
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
 import { DateUtils } from '../../utils/date/DateUtils';
 import { EventTypeEnum } from '../dtos/EventTypeEnum';
+import { DisciplineTeacherMapper } from 'src/v2/mappers/DisciplineTeacherMapper';
 
 export const weeksPerEvent = {
   EVERY_WEEK: WEEK / WEEK,
@@ -40,12 +40,12 @@ export class ScheduleService {
     private eventRepository: EventRepository,
     private disciplineRepository: DisciplineRepository,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
-    private disciplineTeacherRoleRepository: DisciplineTeacherRoleRepository,
     private rozParser: RozParser,
     private scheduleParser: ScheduleParser,
     private userService: UserService,
     private studentRepository: StudentRepository,
     private dateUtils: DateUtils,
+    private disciplineTeacherMapper: DisciplineTeacherMapper,
   ) {}
 
   async parse (parserType, page, period, groups) {
@@ -208,15 +208,7 @@ export class ScheduleService {
     const { id } = find(discipline.disciplineTypes, 'name', data.eventType);
 
     for (const teacherId of data.teachers) {
-      const role = TeacherRoleAdapter[data.eventType];
-      const disciplineTeacher = await this.disciplineTeacherRepository.getOrCreate({ teacherId, disciplineId: discipline.id });
-      if (!some(disciplineTeacher.roles, 'role', role)) {
-        await this.disciplineTeacherRoleRepository.create({
-          disciplineTeacherId: disciplineTeacher.id,
-          disciplineTypeId: id,
-          role,
-        });
-      }
+      await this.disciplineTeacherRepository.getOrCreate({ teacherId, disciplineId: discipline.id });
     }
 
     return {
@@ -317,7 +309,9 @@ export class ScheduleService {
 
     return {
       event: { ...result.event, endTime: body.endTime },
-      discipline: result.discipline,
+      discipline: { 
+        ...result.discipline,
+        disciplineTeachers: this.disciplineTeacherMapper.getDisciplineTeachersWithRoles(result.discipline.disciplineTeachers) },
     };
   }
 
@@ -669,15 +663,7 @@ export class ScheduleService {
     await this.removeTeachers(removedTeachers, disciplineType.id);
 
     for (const teacherId of teachers) {
-      const role = TeacherRoleAdapter[disciplineType.name];
-      const disciplineTeacher = await this.disciplineTeacherRepository.getOrCreate({ teacherId, disciplineId });
-      if (!some(disciplineTeacher.roles, 'role', role)) {
-        await this.disciplineTeacherRoleRepository.create({
-          disciplineTeacherId: disciplineTeacher.id,
-          disciplineTypeId: disciplineType.id,
-          role,
-        });
-      }
+      await this.disciplineTeacherRepository.getOrCreate({ teacherId, disciplineId });
     }
   }
 
