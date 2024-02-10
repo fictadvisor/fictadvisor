@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
@@ -294,13 +294,13 @@ model Question {
 }
 
 model QuestionRole {
-  role       TeacherRole
-  question   Question    @relation(fields: [questionId], references: [id], onDelete: Cascade)
-  questionId String      @map("question_id")
-  isShown    Boolean     @map("is_shown")
-  isRequired Boolean     @map("is_required")
-  createdAt  DateTime?   @default(now()) @map("created_at")
-  updatedAt  DateTime?   @default(now()) @updatedAt @map("updated_at")
+  role       DisciplineTypeEnum
+  question   Question           @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  questionId String             @map("question_id")
+  isShown    Boolean            @map("is_shown")
+  isRequired Boolean            @map("is_required")
+  createdAt  DateTime           @default(now()) @map("created_at")
+  updatedAt  DateTime           @default(now()) @updatedAt @map("updated_at")
 
   @@id([questionId, role])
   @@map("question_roles")
@@ -406,11 +406,10 @@ model DisciplineTeacherRole {
   disciplineTeacherId String            @map("discipline_teacher_id")
   disciplineType      DisciplineType    @relation(fields: [disciplineTypeId], references: [id], onDelete: Cascade)
   disciplineTypeId    String            @map("discipline_type_id")
-  role                TeacherRole
   createdAt           DateTime?         @default(now()) @map("created_at")
   updatedAt           DateTime?         @default(now()) @updatedAt @map("updated_at")
 
-  @@id([disciplineTeacherId, disciplineTypeId, role])
+  @@id([disciplineTeacherId, disciplineTypeId])
   @@map("discipline_teacher_roles")
 }
 

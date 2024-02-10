@@ -3,6 +3,7 @@ import { DbDisciplineTeacher } from '../database/entities/DbDisciplineTeacher';
 import { Subject } from '@prisma/client';
 import { DisciplineTeacherFullResponse, SubjectResponse } from '@fictadvisor/utils/responses';
 import { TeacherRole, AcademicStatus, ScientificDegree, Position } from '@fictadvisor/utils/enums';
+import { getTeacherRoles, TeacherRoleAdapter } from './TeacherRoleAdapter';
 
 @Injectable()
 export class DisciplineTeacherMapper {
@@ -17,7 +18,7 @@ export class DisciplineTeacherMapper {
     return {
       disciplineTeacherId: disciplineTeacher.id,
       ...disciplineTeacher.teacher,
-      roles: disciplineTeacher.roles.map((r) => (r.role)),
+      roles: getTeacherRoles(disciplineTeacher.roles),
       rating: disciplineTeacher.teacher.rating.toNumber(),
     };
   }
@@ -28,8 +29,10 @@ export class DisciplineTeacherMapper {
 
   getRoles (disciplineTeachers: DbDisciplineTeacher[]): TeacherRole[] {
     const roles = new Set<TeacherRole>();
-    for (const dt of disciplineTeachers) {
-      dt.roles.forEach((r) => roles.add(r.role));
+    for (const disciplineTeacher of disciplineTeachers) {
+      for (const { disciplineType } of disciplineTeacher.roles) {
+        roles.add(TeacherRoleAdapter[disciplineType.name]);
+      }
     }
 
     return Array.from(roles);
@@ -37,9 +40,11 @@ export class DisciplineTeacherMapper {
 
   getRolesBySubject (disciplineTeachers: DbDisciplineTeacher[], subjectId: string): TeacherRole[] {
     const roles = new Set<TeacherRole>();
-    for (const dt of disciplineTeachers) {
-      if (dt.discipline.subjectId === subjectId) {
-        dt.roles.forEach((r) => roles.add(r.role));
+    for (const disciplineTeacher of disciplineTeachers) {
+      if (disciplineTeacher.discipline.subjectId === subjectId) {
+        for (const { disciplineType } of disciplineTeacher.roles) {
+          roles.add(TeacherRoleAdapter[disciplineType.name]);
+        }
       }
     }
 
@@ -62,7 +67,7 @@ export class DisciplineTeacherMapper {
         position: teacher.position as Position,
         rating: +teacher.rating,
         disciplineTeacherId: disciplineTeacher.id,
-        roles: disciplineTeacher.roles.map((r) => r.role),
+        roles: getTeacherRoles(disciplineTeacher.roles),
         subject: this.getSubject(subject),
         cathedras: teacher.cathedras.map(({ cathedra: { id, name, abbreviation, division } }) => ({
           id,

@@ -12,7 +12,7 @@ import { DatabaseUtils } from '../../database/DatabaseUtils';
 import { DbDiscipline } from '../../database/entities/DbDiscipline';
 import { PaginatedData } from '../datas/PaginatedData';
 import { DisciplineTypeEnum } from '@prisma/client';
-import { TeacherRoleAdapter, TeacherTypeAdapter } from '../../mappers/TeacherRoleAdapter';
+import { TeacherTypeAdapter } from '../../mappers/TeacherRoleAdapter';
 
 @Injectable()
 export class DisciplineService {
@@ -55,11 +55,7 @@ export class DisciplineService {
 
   async create (body: CreateDisciplineDTO) {
     const { teachers, ...data } = body;
-
-    const roleNames = [];
-    teachers.forEach((t) => {
-      roleNames.push(...t.roleNames);
-    });
+    const roleNames = teachers.flatMap((teacher) => teacher.roleNames);
 
     const disciplineTypes = roleNames.map((roleName) => ({
       name: TeacherTypeAdapter[roleName],
@@ -116,12 +112,13 @@ export class DisciplineService {
   }
 
   async getTeachers (disciplineId: string, disciplineType: DisciplineTypeEnum) {
-    const role = TeacherRoleAdapter[disciplineType];
     const disciplineTeachers = await this.disciplineTeacherRepository.findMany({
       where: {
         roles: {
           some: {
-            role,
+            disciplineType: {
+              name: disciplineType,
+            },
           },
         },
         discipline: {

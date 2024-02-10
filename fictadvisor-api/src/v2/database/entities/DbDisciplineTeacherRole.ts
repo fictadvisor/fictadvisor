@@ -1,9 +1,9 @@
-import { TeacherRole } from '@fictadvisor/utils/enums';
+import { DbDisciplineType } from './DbDisciplineType';
 
 export class DbDisciplineTeacherRole {
   disciplineTeacherId: string;
   disciplineTypeId: string;
-  role: TeacherRole;
-  createdAt: Date | null;
-  updatedAt: Date | null;
+  disciplineType: DbDisciplineType;
+  createdAt: Date;
+  updatedAt: Date;
 }

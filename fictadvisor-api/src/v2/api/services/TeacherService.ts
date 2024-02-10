@@ -26,7 +26,9 @@ import { GroupRepository } from '../../database/repositories/GroupRepository';
 import { ContactRepository } from '../../database/repositories/ContactRepository';
 import { InvalidQueryException } from '../../utils/exceptions/InvalidQueryException';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
-import { EntityType, QuestionDisplay, Prisma, TeacherRole } from '@prisma/client';
+import { EntityType, QuestionDisplay, Prisma } from '@prisma/client';
+import { TeacherRole } from '@fictadvisor/utils/enums';
+import { TeacherTypeAdapter } from '../../mappers/TeacherRoleAdapter';
 
 @Injectable()
 export class TeacherService {
@@ -92,7 +94,9 @@ export class TeacherService {
       disciplineTeachers: {
         some: {
           roles: {
-            some: DatabaseUtils.getSearchByArray(roles, 'role'),
+            some: {
+              disciplineType: DatabaseUtils.getSearchByArray(roles.map((role) => TeacherTypeAdapter[role]), 'name'),
+            },
           },
         },
       },

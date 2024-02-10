@@ -12,7 +12,6 @@ import { DateUtils } from '../../utils/date/DateUtils';
 import { every, filterAsync, find, some } from '../../utils/ArrayUtil';
 import { RozParser } from '../../utils/parser/RozParser';
 import { CampusParser } from '../../utils/parser/CampusParser';
-import { TeacherRoleAdapter } from '../../mappers/TeacherRoleAdapter';
 import { UserService } from './UserService';
 import { DbEvent } from '../../database/entities/DbEvent';
 import { DbDiscipline, DbDiscipline_DisciplineTeacher } from '../../database/entities/DbDiscipline';
@@ -212,13 +211,11 @@ export class ScheduleService {
     const { id } = find(discipline.disciplineTypes, 'name', data.eventType);
 
     for (const teacherId of data.teachers) {
-      const role = TeacherRoleAdapter[data.eventType];
       const disciplineTeacher = await this.disciplineTeacherRepository.getOrCreate({ teacherId, disciplineId: discipline.id });
-      if (!some(disciplineTeacher.roles, 'role', role)) {
+      if (!some(disciplineTeacher.roles.map(({ disciplineType }) => disciplineType), 'name', data.eventType)) {
         await this.disciplineTeacherRoleRepository.create({
           disciplineTeacherId: disciplineTeacher.id,
           disciplineTypeId: id,
-          role,
         });
       }
     }
@@ -244,13 +241,13 @@ export class ScheduleService {
   ) {
     const disciplineTypes = event.lessons.map((lesson) => lesson.disciplineType.name);
     return (
-      (addLecture && disciplineTypes.includes(EventTypeEnum.LECTURE)) ||
-      (addLaboratory && disciplineTypes.includes(EventTypeEnum.LABORATORY)) ||
-      (addPractice && disciplineTypes.includes(EventTypeEnum.PRACTICE)) ||
+      (addLecture && disciplineTypes.includes(EventTypeEnum.LECTURE as any)) ||
+      (addLaboratory && disciplineTypes.includes(EventTypeEnum.LABORATORY as any)) ||
+      (addPractice && disciplineTypes.includes(EventTypeEnum.PRACTICE as any)) ||
       (otherEvents && (!disciplineTypes.length ||
-        disciplineTypes.includes(EventTypeEnum.CONSULTATION) ||
-        disciplineTypes.includes(EventTypeEnum.EXAM) ||
-        disciplineTypes.includes(EventTypeEnum.WORKOUT))
+        disciplineTypes.includes(EventTypeEnum.CONSULTATION as any) ||
+        disciplineTypes.includes(EventTypeEnum.EXAM as any) ||
+        disciplineTypes.includes(EventTypeEnum.WORKOUT as any))
       )
     );
   }
@@ -612,7 +609,7 @@ export class ScheduleService {
 
     await this.prepareDiscipline(
       newDisciplineId ?? presentDisciplineId,
-      newType ?? (presentType.name as EventTypeEnum ?? EventTypeEnum.OTHER),
+      newType ?? (presentType.name as unknown as EventTypeEnum ?? EventTypeEnum.OTHER),
       teachers
     );
 
@@ -652,7 +649,7 @@ export class ScheduleService {
       };
 
       discipline.disciplineTeachers.map(({ teacherId, disciplineId, roles }) => {
-        if (roles.length === 1 && roles[0].role === TeacherRoleAdapter[type.name]) {
+        if (roles.length === 1 && roles[0].disciplineType.name === type.name) {
           update.disciplineTeachers.deleteMany.OR.push({
             teacherId,
             disciplineId,
@@ -702,13 +699,11 @@ export class ScheduleService {
     await this.removeTeachers(removedTeachers, disciplineType.id);
 
     for (const teacherId of teachers) {
-      const role = TeacherRoleAdapter[disciplineType.name];
       const disciplineTeacher = await this.disciplineTeacherRepository.getOrCreate({ teacherId, disciplineId });
-      if (!some(disciplineTeacher.roles, 'role', role)) {
+      if (!some(disciplineTeacher.roles.map(({ disciplineType }) => disciplineType), 'name', disciplineType.name)) {
         await this.disciplineTeacherRoleRepository.create({
           disciplineTeacherId: disciplineTeacher.id,
           disciplineTypeId: disciplineType.id,
-          role,
         });
       }
     }
