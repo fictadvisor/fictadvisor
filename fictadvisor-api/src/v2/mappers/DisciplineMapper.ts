@@ -8,6 +8,7 @@ import {
 } from '@fictadvisor/utils/responses';
 import { AcademicStatus, ScientificDegree, Position } from '@fictadvisor/utils/enums';
 import { DbDisciplineTeacher } from '../database/entities/DbDisciplineTeacher';
+import { getTeacherRoles } from './TeacherRoleAdapter';
 
 @Injectable()
 export class DisciplineMapper {
@@ -50,7 +51,7 @@ export class DisciplineMapper {
         position: teacher.position as Position,
         rating: +teacher.rating,
         disciplineTeacherId: disciplineTeacher.id,
-        roles: disciplineTeacher.roles.map((r) => r.role),
+        roles: getTeacherRoles(disciplineTeacher.roles),
         cathedras: teacher.cathedras.map(({ cathedra: { id, name, abbreviation, division } }) => ({
           id,
           name,
@@ -126,7 +127,7 @@ export class DisciplineMapper {
     });
   }
 
-  getSelectiveDisciplines (disciplines: DbDiscipline[], withAmount = false): 
+  getSelectiveDisciplines (disciplines: DbDiscipline[], withAmount = false):
     SelectiveDisciplinesWithAmountResponse[] | SelectiveDisciplinesResponse[] {
     const result = [];
     disciplines.forEach((discipline) => {

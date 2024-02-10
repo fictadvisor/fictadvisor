@@ -3,6 +3,7 @@ import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiBody,
+  ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiOkResponse,
   ApiParam,
@@ -227,27 +228,31 @@ export class DisciplineTeacherController {
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({
+  @ApiCreatedResponse({
     type: DisciplineTeacherCreateResponse,
   })
   @ApiForbiddenResponse({
     description: `
-      NoPermissionException: You do not have permission to perform this action
+    NoPermissionException:
+      You do not have permission to perform this action
     `,
   })
   @ApiBadRequestResponse({
     description: `
-      InvalidEntityIdException: discipline with such id is not found\n
-      InvalidEntityIdException: teacher with such id is not found\n
-      InvalidBodyException: each value in roles must be one of the following values: LECTURER, LABORANT, PRACTICIAN\n
-      InvalidBodyException: roles must be an array\n
-      InvalidBodyException: roles should not be empty
-    `,
+    InvalidEntityIdException:
+      discipline with such id is not found
+      teacher with such id is not found
+      each value in roles must be one of the following values: LECTURER, LABORANT, PRACTICIAN
+      roles must be an array
+      roles should not be empty`,
   })
   @ApiBody({
     type: CreateDisciplineTeacherDTO,
   })
-  @Access(PERMISSION.DISCIPLINE_TEACHERS_CREATE)
+  @ApiEndpoint({
+    summary: 'Create disciplineTeacher with roles',
+    permissions: PERMISSION.DISCIPLINE_TEACHERS_CREATE,
+  })
   @Post()
   create (
     @Body('teacherId', TeacherByIdPipe) teacherId: string,
@@ -263,18 +268,21 @@ export class DisciplineTeacherController {
   })
   @ApiForbiddenResponse({
     description: `
-      NoPermissionException: You do not have permission to perform this action
-    `,
+    NoPermissionException:
+      You do not have permission to perform this action`,
   })
   @ApiBadRequestResponse({
     description: `
-      InvalidEntityIdException: disciplineTeacher with such id is not found\n
-      InvalidBodyException: each value in roles must be one of the following values: LECTURER, LABORANT, PRACTICIAN\n
-      InvalidBodyException: roles must be an array\n
-      InvalidBodyException: roles should not be empty
-    `,
+    InvalidEntityIdException:
+      disciplineTeacher with such id is not found
+      each value in roles must be one of the following values: LECTURER, LABORANT, PRACTICIAN
+      roles must be an array
+      roles should not be empty`,
   })
-  @Access(PERMISSION.DISCIPLINE_TEACHERS_UPDATE)
+  @ApiEndpoint({
+    summary: 'Update disciplineTeacher with its id',
+    permissions: PERMISSION.DISCIPLINE_TEACHERS_UPDATE,
+  })
   @Patch('/:disciplineTeacherId')
   updateById (
     @Param('disciplineTeacherId', DisciplineTeacherByIdPipe) disciplineTeacherId: string,
@@ -289,19 +297,22 @@ export class DisciplineTeacherController {
   })
   @ApiForbiddenResponse({
     description: `
-      NoPermissionException: You do not have permission to perform this action
-    `,
+    NoPermissionException:
+      You do not have permission to perform this action`,
   })
   @ApiBadRequestResponse({
     description: `
-      InvalidEntityIdException: discipline with such id is not found\n
-      InvalidEntityIdException: teacher with such id is not found\n
-      InvalidBodyException: each value in roles must be one of the following values: LECTURER, LABORANT, PRACTICIAN\n
-      InvalidBodyException: roles must be an array\n
-      InvalidBodyException: roles should not be empty
-    `,
+    InvalidEntityIdException: 
+      discipline with such id is not found
+      teacher with such id is not found
+      each value in roles must be one of the following values: LECTURER, LABORANT, PRACTICIAN
+      roles must be an array
+      roles should not be empty`,
   })
-  @Access(PERMISSION.DISCIPLINE_TEACHERS_UPDATE)
+  @ApiEndpoint({
+    summary: 'Update disciplineTeacher with teacherId and disciplineId',
+    permissions: PERMISSION.DISCIPLINE_TEACHERS_UPDATE,
+  })
   @Patch()
   updateByTeacherAndDiscipline (
     @Query('teacherId', TeacherByIdPipe) teacherId : string,

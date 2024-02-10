@@ -4,7 +4,8 @@ import { TeacherRole } from '../enums/db/TeacherRoleEnum';
 
 export class UpdateDisciplineTeacherDTO {
   @ApiProperty({
-    enum: [TeacherRole],
+    enum: TeacherRole,
+    type: [TeacherRole],
   })
   @IsNotEmpty()
   @IsArray()
