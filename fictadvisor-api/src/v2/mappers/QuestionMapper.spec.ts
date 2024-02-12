@@ -135,7 +135,7 @@ describe('QuestionMapper', () => {
         },
       ] as any as QuestionCommentData[];
 
-      const result = questionMapper.getComments(questions);
+      const result = questionMapper.getQuestionComments(questions);
       
       expect(result).toStrictEqual({
         questions: [

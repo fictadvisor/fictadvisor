@@ -1,6 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { ShortTeacherResponse } from './TeacherResponse';
+import { SubjectResponse } from './SubjectResponse';
 
-export class UpdatedCommentResponse {
+export class CommentResponse {
   @ApiProperty({
     description: 'Discipline teacher id',
   })
@@ -17,7 +19,7 @@ export class UpdatedCommentResponse {
     userId: string;
 
   @ApiProperty({
-    description: 'Updated comment',
+    description: 'Comment',
   })
     comment: string;
 
@@ -30,4 +32,14 @@ export class UpdatedCommentResponse {
     description: 'Academic year',
   })
     year: number;
+
+  @ApiProperty({
+    description: 'The teacher to whom the comment was written',
+  })
+    teacher: ShortTeacherResponse;
+
+  @ApiProperty({
+    description: 'The subject on which the comment is written',
+  })
+    subject: SubjectResponse;
 }

@@ -70,6 +70,7 @@ export class DisciplineController {
       PageSize must be a number
       Wrong value for order
       Wrong value for sort
+      Each value of semesters must be an studying semester
       
     InvalidEntityIdException:
       Group with such id is not found

@@ -1,5 +1,9 @@
+import { CommentsAdminSearchFormFields } from '@/components/pages/admin/admin-comments/components/admin-comments-search/types/AdminCommentsSearch';
 import { Complaint } from '@/components/pages/personal-teacher-page/personal-teacher-tabs/components/complaint-popup/types';
 import { SearchFormFields } from '@/components/pages/search-pages/search-form/types';
+import { ChangeCommentBody } from '@/lib/api/teacher/types/ChangeCommentBody';
+import { DeleteCommentBody } from '@/lib/api/teacher/types/DeleteCommentBody';
+import { GetCommentsWithPaginationResponse } from '@/lib/api/teacher/types/GetCommentsWithPaginationResponse';
 import { GetTeacherCommentsResponse } from '@/lib/api/teacher/types/GetTeacherCommentsResponse';
 import { GetTeacherDisciplinesResponse } from '@/lib/api/teacher/types/GetTeacherDisciplinesResponse';
 import { GetTeacherMarksResponse } from '@/lib/api/teacher/types/GetTeacherMarksResponse';
@@ -94,6 +98,42 @@ class TeacherAPI {
           sortBy,
         },
       },
+    );
+    return data;
+  }
+
+  async getComments(
+    page: number,
+    params: Partial<CommentsAdminSearchFormFields> = {},
+    pageSize?: number,
+  ) {
+    const { data } = await client.get<GetCommentsWithPaginationResponse>(
+      '/disciplineTeachers/comments',
+      {
+        params: {
+          ...params,
+          page,
+          pageSize,
+        },
+        ...getAuthorizationHeader(),
+      },
+    );
+    return data;
+  }
+
+  async deleteComment(body: DeleteCommentBody, disciplineTeacherId: string) {
+    const { data } = await client.delete(
+      `/disciplineTeachers/${disciplineTeacherId}/comments`,
+      { data: body },
+    );
+    return data;
+  }
+
+  async updateComment(body: ChangeCommentBody, disciplineTeacherId: string) {
+    const { data } = await client.patch(
+      `/disciplineTeachers/${disciplineTeacherId}/comments`,
+      body,
+      getAuthorizationHeader(),
     );
     return data;
   }
