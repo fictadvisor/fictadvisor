@@ -5,6 +5,7 @@ import { DbDisciplineTeacherWithAnswers } from '../database/entities/DbDisciplin
 import { DbQuestionWithAnswers } from '../database/entities/DbQuestionWithAnswers';
 import { QuestionCommentData } from '../api/datas/QuestionCommentData';
 import { DbQuestionAnswer } from '../database/entities/DbQuestionAnswer';
+import { CommentResponse } from '../api/responses/CommentResponse';
 import { DbQuestion } from '../database/entities/DbQuestion';
 
 @Injectable()
@@ -77,7 +78,7 @@ export class QuestionMapper {
     };
   }
 
-  getComments (questionComments: QuestionCommentData[]) {
+  getQuestionComments (questionComments: QuestionCommentData[]) {
     const result = [];
     for (const questionComment of questionComments) {
       const question = {
@@ -158,14 +159,29 @@ export class QuestionMapper {
     }
   }
 
-  getUpdatedComment (updatedComment: DbQuestionAnswer) {
+  getComment (comment: DbQuestionAnswer): CommentResponse {
+    const { disciplineTeacher: { teacher, discipline } } = comment;
     return {
-      disciplineTeacherId: updatedComment.disciplineTeacherId,
-      questionId: updatedComment.questionId,
-      userId: updatedComment.userId,
-      comment: updatedComment.value,
-      semester: updatedComment.disciplineTeacher.discipline.semester,
-      year: updatedComment.disciplineTeacher.discipline.year,
+      disciplineTeacherId: comment.disciplineTeacherId,
+      questionId: comment.questionId,
+      userId: comment.userId,
+      comment: comment.value,
+      semester: discipline.semester,
+      year: discipline.year,
+      teacher: {
+        id: teacher.id,
+        lastName: teacher.lastName,
+        firstName: teacher.firstName,
+        middleName: teacher.middleName,
+      },
+      subject: {
+        id: discipline.subjectId,
+        name: discipline.subject.name,
+      },
     };
+  }
+
+  getComments (comments: DbQuestionAnswer[]) {
+    return comments.map(this.getComment);
   }
 }

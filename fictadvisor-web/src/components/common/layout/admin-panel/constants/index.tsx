@@ -70,7 +70,7 @@ export const adminPanelTabs = [
     icon: <PencilSquareIcon />,
   },
   {
-    link: BASE_URL + '/',
+    link: BASE_URL + '/comments',
     text: 'База відповідей',
     icon: <ClipboardDocumentListIcon />,
   },

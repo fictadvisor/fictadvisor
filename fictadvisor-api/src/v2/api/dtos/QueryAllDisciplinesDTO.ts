@@ -16,9 +16,7 @@ export class QueryAllDisciplinesDTO extends QueryAllDTO {
     description: 'Array of studying semesters',
   })
   @IsOptional()
-  @ValidateNested({
-    each: true,
-  })
+  @ValidateNested(validationOptionsMsg('Each value of semesters must be an studying semester', true))
   @Type(() => QuerySemesterDTO)
     semesters?: QuerySemesterDTO[];
 

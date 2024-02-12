@@ -3,6 +3,7 @@ import { GroupRoles, QueryAllStudentDTO } from '../dtos/QueryAllStudentDTO';
 import { Prisma, RoleName, SelectiveDiscipline, State } from '@prisma/client';
 import { DatabaseUtils } from '../../database/DatabaseUtils';
 import { StudentRepository } from '../../database/repositories/StudentRepository';
+import { SortQGSParam } from '../dtos/GroupStudentsQueryDTO';
 import { UpdateStudentWithRolesDTO } from '../dtos/UpdateStudentDTO';
 import { GroupRepository } from '../../database/repositories/GroupRepository';
 import { GroupService } from './GroupService';
@@ -34,7 +35,7 @@ export class StudentService {
   ) {}
 
   async getAll (query: QueryAllStudentDTO) {
-    const { sort = 'lastName', order = 'asc' } = query;
+    const { sort = SortQGSParam.LAST_NAME, order = 'asc' } = query;
 
     const search = {
       AND: [
@@ -88,7 +89,7 @@ export class StudentService {
     }
 
     return this.studentRepository.create({
-      ...data, 
+      ...data,
       groupId,
       state: State.APPROVED,
       userId: user.id,
@@ -197,7 +198,7 @@ export class StudentService {
             studentId: id,
           }
           )),
-        }, 
+        },
         createMany: {
           data: connectedSelective.map((disciplineId) => ({ disciplineId })),
         },

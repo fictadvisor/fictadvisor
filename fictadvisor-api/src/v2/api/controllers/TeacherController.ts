@@ -546,7 +546,7 @@ export class TeacherController {
   ) {
     this.teacherService.checkQueryDate(query);
     const questions = await this.pollService.getQuestionWithText(teacherId, query);
-    return this.questionMapper.getComments(questions);
+    return this.questionMapper.getQuestionComments(questions);
   }
 
   @Access(PERMISSION.TEACHERS_$TEACHERID_CATHEDRAS_UPDATE)

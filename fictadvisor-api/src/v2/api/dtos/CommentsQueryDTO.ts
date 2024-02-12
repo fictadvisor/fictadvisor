@@ -2,7 +2,7 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
 import { Type } from 'class-transformer';
 import { IsEnum, IsNumber, IsOptional } from 'class-validator';
-import { validationOptionsMsg } from './../../utils/GLOBALS';
+import { validationOptionsMsg } from '../../utils/GLOBALS';
 
 export enum CommentsSort {
   NEWEST = 'newest',
