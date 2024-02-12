@@ -3,7 +3,7 @@ import { DisciplineTeacherRepository } from '../../database/repositories/Discipl
 import { PollService } from './PollService';
 import { CreateAnswerDTO, CreateAnswersDTO } from '../dtos/CreateAnswersDTO';
 import { QuestionAnswerRepository } from '../../database/repositories/QuestionAnswerRepository';
-import { Discipline, QuestionType, State, TeacherRole } from '@prisma/client';
+import { Discipline, Prisma, QuestionType, State, TeacherRole } from '@prisma/client';
 import { AlreadyAnsweredException } from '../../utils/exceptions/AlreadyAnsweredException';
 import { NotEnoughAnswersException } from '../../utils/exceptions/NotEnoughAnswersException';
 import { ExcessiveAnswerException } from '../../utils/exceptions/ExcessiveAnswerException';
@@ -23,10 +23,12 @@ import { QuestionMapper } from '../../mappers/QuestionMapper';
 import { DbQuestionWithRoles } from '../../database/entities/DbQuestionWithRoles';
 import { NotSelectedDisciplineException } from '../../utils/exceptions/NotSelectedDisciplineException';
 import { IsRemovedDisciplineTeacherException } from '../../utils/exceptions/IsRemovedDisciplineTeacherException';
-import { UpdateCommentDTO } from '../dtos/UpdateCommentDTO';
-import { QuestionRepository } from '../../database/repositories/QuestionRepository';
-import { InvalidTypeException } from '../../utils/exceptions/InvalidTypeException';
-import { DeleteCommentDTO } from '../dtos/DeleteCommentDTO';
+import { DbDiscipline } from '../../database/entities/DbDiscipline';
+import { DbQuestionAnswer } from '../../database/entities/DbQuestionAnswer';
+import { QueryAllCommentsDTO, SortCommentsEnum } from '../dtos/QueryAllCommentsDTO';
+import { QuerySemesterDTO } from '../dtos/QuerySemesterDTO';
+import { DatabaseUtils } from '../../database/DatabaseUtils';
+import { PaginatedData } from '../datas/PaginatedData';
 
 @Injectable()
 export class DisciplineTeacherService {
@@ -40,7 +42,6 @@ export class DisciplineTeacherService {
     private telegramApi: TelegramAPI,
     private userRepository: UserRepository,
     private questionMapper: QuestionMapper,
-    private questionRepository: QuestionRepository,
   ) {}
 
   async getQuestions (disciplineTeacherId: string, userId: string) {
@@ -158,7 +159,7 @@ export class DisciplineTeacherService {
     }
   }
 
-  async checkIsRemoved (disciplineTeacherId, userId) {
+  async checkIsRemoved (disciplineTeacherId: string, userId: string) {
     const isRemoved = await this.disciplineTeacherRepository.find({
       id: disciplineTeacherId,
       removedDisciplineTeachers: {
@@ -191,7 +192,7 @@ export class DisciplineTeacherService {
 
   async getPollTimeBorders () {
     const { year, semester, isFinished } = await this.dateService.getCurrentSemester();
-    let startPollName, endPollName;
+    let startPollName: string, endPollName: string;
     if (isFinished) {
       startPollName = `START_POLL_${year}_${semester}`;
       endPollName = `END_POLL_${year}_${semester}`;
@@ -231,41 +232,35 @@ export class DisciplineTeacherService {
   }
 
   async create (teacherId: string, disciplineId: string, roles: TeacherRole[]) {
-    let discipline = await this.disciplineRepository.findById(disciplineId);
-    const dbRoles = [];
-    for (const role of roles) {
-      if (!discipline.disciplineTypes.some((type) => type.name === TeacherTypeAdapter[role])) {
-        discipline = await this.disciplineRepository.updateById(discipline.id, {
-          disciplineTypes: {
-            create: {
-              name: TeacherTypeAdapter[role],
-            },
-          },
-        });
-      }
+    const discipline = await this.disciplineRepository.findById(disciplineId);
+    const dbRoles = await this.getDbRoles(discipline, roles);
 
-      const disciplineType = discipline.disciplineTypes.find((dt) => dt.name === TeacherTypeAdapter[role]);
-
-      dbRoles.push({
-        role,
-        disciplineTypeId: disciplineType.id,
-      });
-    }
     return this.disciplineTeacherRepository.create({
-      teacherId: teacherId,
-      disciplineId: disciplineId,
+      teacherId,
+      disciplineId,
       roles: { create: dbRoles },
     });
   }
 
   async updateById (disciplineTeacherId: string, roles: TeacherRole[]) {
-    let discipline = await this.disciplineRepository.find({
+    const discipline = await this.disciplineRepository.find({
       disciplineTeachers: {
         some: {
           id: disciplineTeacherId,
         },
       },
     });
+    const dbRoles = await this.getDbRoles(discipline, roles);
+
+    return this.disciplineTeacherRepository.updateById(disciplineTeacherId, {
+      roles: {
+        deleteMany: {},
+        create: dbRoles,
+      },
+    });
+  }
+
+  private async getDbRoles (discipline: DbDiscipline, roles: TeacherRole[]) {
     const dbRoles = [];
     for (const role of roles) {
       if (!discipline.disciplineTypes.some((type) => type.name === TeacherTypeAdapter[role])) {
@@ -285,12 +280,8 @@ export class DisciplineTeacherService {
         disciplineTypeId: disciplineType.id,
       });
     }
-    return this.disciplineTeacherRepository.updateById(disciplineTeacherId, {
-      roles: {
-        deleteMany: {},
-        create: dbRoles,
-      },
-    });
+
+    return dbRoles;
   }
 
   async updateByTeacherAndDiscipline (teacherId: string, disciplineId: string, roles: TeacherRole[]) {
@@ -344,45 +335,61 @@ export class DisciplineTeacherService {
     });
   }
 
-  async validateCommentBody (body: UpdateCommentDTO | DeleteCommentDTO) {
-    const user = await this.userRepository.findById(body.userId);
-    if (!user) {
-      throw new InvalidEntityIdException('User');
-    }
+  async getAllComments (query: QueryAllCommentsDTO): Promise<PaginatedData<DbQuestionAnswer>> {
+    const { sort = SortCommentsEnum.SUBJECT, order } = query;
 
-    const question = await this.questionRepository.findById(body.questionId);
-    if (!question) {
-      throw new InvalidEntityIdException('Question');
-    }
-    if (question.type !== QuestionType.TEXT) {
-      throw new InvalidTypeException('Question');
-    }
+    const where = {
+      AND: [
+        { question: { type: QuestionType.TEXT } },
+        this.CommentsSearching.semesters(query.semesters),
+        this.CommentsSearching.comment(query.search),
+      ],
+    };
+    const orderBy = this.CommentsSorting[sort](order);
+
+    const data: Prisma.QuestionAnswerFindManyArgs = {
+      where,
+      orderBy,
+    };
+
+    return DatabaseUtils.paginate(this.questionAnswerRepository, query, data);
   }
 
-  async updateComment (disciplineTeacherId: string, body: UpdateCommentDTO) {
-    await this.validateCommentBody(body);
-    return this.questionAnswerRepository.update({
-      disciplineTeacherId_questionId_userId: {
-        disciplineTeacherId: disciplineTeacherId,
-        userId: body.userId,
-        questionId: body.questionId,
-      },
-    },
-    {
-      value: body.comment,
-    });
+  private CommentsSearching = {
+    semesters: (semesters: QuerySemesterDTO[]) => ({
+      disciplineTeacher: { discipline: DatabaseUtils.getSearchByArray(semesters, 'year', 'semester') },
+    }),
+    comment: (comment: string) => (DatabaseUtils.getSearch({ search: comment }, 'value')),
+  };
+
+  private CommentsSorting = {
+    subject: (order = 'asc') => ({
+      disciplineTeacher: { discipline: { subject: { name: order } } },
+    }),
+    teacher: (order = 'asc') => ([
+      { disciplineTeacher: { teacher: { lastName: order } } },
+      { disciplineTeacher: { teacher: { firstName: order } } },
+      { disciplineTeacher: { teacher: { middleName: order } } },
+    ]),
+    semester: (order = 'desc') => ([
+      { disciplineTeacher: { discipline: { year: order } } },
+      { disciplineTeacher: { discipline: { semester: order } } },
+    ]),
+  };
+
+  async updateComment (
+    disciplineTeacherId_questionId_userId: Prisma.QuestionAnswerDisciplineTeacherIdQuestionIdUserIdCompoundUniqueInput,
+    value: string,
+  ): Promise<DbQuestionAnswer> {
+    return this.questionAnswerRepository.update(
+      { disciplineTeacherId_questionId_userId },
+      { value },
+    );
   }
 
-  async deleteComment (disciplineTeacherId: string, body: DeleteCommentDTO) {
-    await this.validateCommentBody(body);
-    return this.questionAnswerRepository.delete({
-      where: {
-        disciplineTeacherId_questionId_userId: {
-          disciplineTeacherId, 
-          questionId: body.questionId, 
-          userId: body.userId,
-        },
-      },
-    });
+  async deleteQuestionAnswer (
+    disciplineTeacherId_questionId_userId: Prisma.QuestionAnswerDisciplineTeacherIdQuestionIdUserIdCompoundUniqueInput,
+  ): Promise<DbQuestionAnswer> {
+    return this.questionAnswerRepository.delete({ disciplineTeacherId_questionId_userId });
   }
 }

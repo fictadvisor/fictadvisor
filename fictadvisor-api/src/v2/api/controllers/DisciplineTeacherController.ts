@@ -16,19 +16,25 @@ import {
   ApiBearerAuth,
   ApiBody,
   ApiForbiddenResponse,
-  ApiOkResponse, ApiParam,
-  ApiTags, ApiUnauthorizedResponse,
+  ApiOkResponse,
+  ApiParam,
+  ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { DisciplineTeacherQuestionsResponse } from '../responses/DisciplineTeacherQuestionsResponse';
 import { QuestionAnswerResponse } from '../responses/QuestionAnswerResponse';
 import { DisciplineTeacherCreateResponse } from '../responses/DisciplineTeacherCreateResponse';
 import { CreateDisciplineTeacherDTO } from '../dtos/CreateDisciplineTeacherDTO';
 import { UpdateCommentDTO } from '../dtos/UpdateCommentDTO';
-import { UpdatedCommentResponse } from '../responses/UpdatedCommentResponse';
+import { CommentResponse } from '../responses/CommentResponse';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
 import { QuestionMapper } from '../../mappers/QuestionMapper';
 import { DeleteCommentDTO } from '../dtos/DeleteCommentDTO';
-import { DeleteCommentResponse } from '../responses/DeleteCommentResponse';
+import { UserByIdPipe } from '../pipes/UserByIdPipe';
+import { QuestionByIdPipe } from '../pipes/QuestionByIdPipe';
+import { CommentByQuestionIdPipe } from '../pipes/CommentByQuestionIdPipe';
+import { QueryAllCommentsDTO } from '../dtos/QueryAllCommentsDTO';
+import { PaginatedCommentsResponse } from '../responses/PaginatedCommentsResponse';
 
 @ApiTags('DisciplineTeacher')
 @Controller({
@@ -140,8 +146,8 @@ export class DisciplineTeacherController {
   @Access(PERMISSION.DISCIPLINE_TEACHERS_CREATE)
   @Post()
   create (
-    @Body('teacherId', TeacherByIdPipe) teacherId,
-    @Body('disciplineId', DisciplineByIdPipe) disciplineId,
+    @Body('teacherId', TeacherByIdPipe) teacherId: string,
+    @Body('disciplineId', DisciplineByIdPipe) disciplineId: string,
     @Body() body: UpdateDisciplineTeacherDTO,
   ) {
     return this.disciplineTeacherService.create(teacherId, disciplineId, body.roles);
@@ -264,7 +270,46 @@ export class DisciplineTeacherController {
 
   @ApiBearerAuth()
   @ApiOkResponse({
-    type: UpdatedCommentResponse,
+    type: PaginatedCommentsResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidBodyException: 
+      Page must be a number
+      PageSize must be a number
+      Sort must be an enum
+      Wrong value for order
+      Each value of semesters must be an studying semester`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @ApiEndpoint({
+    summary: 'Gel all question answers with TEXT type (comments)',
+    permissions: PERMISSION.COMMENTS_GET,
+  })
+  @Get('/comments')
+  async getAllComments (
+    @Query() query: QueryAllCommentsDTO,
+  ): Promise<PaginatedCommentsResponse> {
+    const commentsWithPagination = await this.disciplineTeacherService.getAllComments(query);
+    const comments = this.questionMapper.getComments(commentsWithPagination.data);
+    return {
+      comments,
+      pagination: commentsWithPagination.pagination,
+    };
+  }
+
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: CommentResponse,
   })
   @ApiBadRequestResponse({
     description: `\n
@@ -280,7 +325,9 @@ export class DisciplineTeacherController {
       UserId should not be empty
       QuestionId should not be empty
       Comment should not be empty
-      Comment must be a string`,
+      Comment must be a string
+      Comment is too short (min: 4)
+      Comment is too long (max: 4000)`,
   })
   @ApiUnauthorizedResponse({
     description: `\n
@@ -298,21 +345,23 @@ export class DisciplineTeacherController {
     description: 'Discipline teacher id',
   })
   @ApiEndpoint({
-    summary: 'Update question answers with TEXT type (comments)',
+    summary: 'Update question answer with TEXT type (comment)',
     permissions: PERMISSION.COMMENTS_UPDATE,
   })
-  @Patch('/:disciplineTeacherId/comment')
+  @Patch('/:disciplineTeacherId/comments')
   async updateComment (
     @Param('disciplineTeacherId', DisciplineTeacherByIdPipe) disciplineTeacherId: string,
     @Body() body: UpdateCommentDTO,
-  ) {
-    const updatedComment = await this.disciplineTeacherService.updateComment(disciplineTeacherId, body);
-    return this.questionMapper.getUpdatedComment(updatedComment);
+    @Body('userId', UserByIdPipe) userId: string,
+    @Body('questionId', QuestionByIdPipe, CommentByQuestionIdPipe) questionId: string,
+  ): Promise<CommentResponse> {
+    const comment = await this.disciplineTeacherService.updateComment({ disciplineTeacherId, userId, questionId }, body.comment);
+    return this.questionMapper.getComment(comment);
   }
 
   @ApiBearerAuth()
   @ApiOkResponse({
-    type: DeleteCommentResponse,
+    type: CommentResponse,
   })
   @ApiBadRequestResponse({
     description: `\n
@@ -329,8 +378,9 @@ export class DisciplineTeacherController {
       QuestionId should not be empty`,
   })
   @ApiForbiddenResponse({
-    description: `
-      NoPermissionException: You do not have permission to perform this action`,
+    description: `\n
+    NoPermissionException: 
+      You do not have permission to perform this action`,
   })
   @ApiUnauthorizedResponse({
     description: `\n
@@ -348,14 +398,17 @@ export class DisciplineTeacherController {
     description: 'Discipline teacher id',
   })
   @ApiEndpoint({
-    summary: 'Delete question answers with TEXT type (comments)',
+    summary: 'Delete question answer with TEXT type (comment)',
     permissions: PERMISSION.COMMENTS_DELETE,
   })
-  @Delete('/:disciplineTeacherId/comment')
+  @Delete('/:disciplineTeacherId/comments')
   async deleteComment (
     @Param('disciplineTeacherId', DisciplineTeacherByIdPipe) disciplineTeacherId: string,
-    @Body() body: DeleteCommentDTO
-  ) {
-    return await this.disciplineTeacherService.deleteComment(disciplineTeacherId, body);
+    @Body() body: DeleteCommentDTO,
+    @Body('userId', UserByIdPipe) userId: string,
+    @Body('questionId', QuestionByIdPipe, CommentByQuestionIdPipe) questionId: string,
+  ): Promise<CommentResponse> {
+    const comment = await this.disciplineTeacherService.deleteQuestionAnswer({ disciplineTeacherId, userId, questionId });
+    return this.questionMapper.getComment(comment);
   }
 }

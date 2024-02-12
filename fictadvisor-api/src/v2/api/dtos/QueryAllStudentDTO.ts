@@ -24,7 +24,7 @@ export class QueryAllStudentDTO extends QueryAllDTO {
     default: SortQGSParam.LAST_NAME,
   })
   @IsOptional()
-  @IsEnum(SortQGSParam, validationOptionsMsg('Sort should be an enum'))
+  @IsEnum(SortQGSParam, validationOptionsMsg('Sort must be an enum'))
     sort?: string;
 
   @ApiPropertyOptional({
@@ -37,8 +37,8 @@ export class QueryAllStudentDTO extends QueryAllDTO {
   @ApiPropertyOptional({
     description: 'Array of groups ids',
   })
-  @IsArray(validationOptionsMsg('Groups should be an array'))
-  @IsOptional(validationOptionsMsg('Groups should be an array'))
+  @IsArray(validationOptionsMsg('Groups must be an array'))
+  @IsOptional()
     groups?: string[];
 
   @ApiPropertyOptional({
@@ -46,8 +46,8 @@ export class QueryAllStudentDTO extends QueryAllDTO {
     enum: GroupRoles,
     type: [GroupRoles],
   })
-  @IsArray(validationOptionsMsg('Roles should be an array'))
-  @IsEnum(GroupRoles, validationOptionsMsg('Each element of roles should be an enum', true))
+  @IsArray(validationOptionsMsg('Roles must be an array'))
+  @IsEnum(GroupRoles, validationOptionsMsg('Each element of roles must be an enum', true))
   @IsOptional()
     roles?: string[];
 
@@ -56,8 +56,8 @@ export class QueryAllStudentDTO extends QueryAllDTO {
     enum: State,
     type: [State],
   })
-  @IsArray(validationOptionsMsg('States should be an array'))
-  @IsEnum(State, validationOptionsMsg('Each element of states should be an enum', true))
+  @IsArray(validationOptionsMsg('States must be an array'))
+  @IsEnum(State, validationOptionsMsg('Each element of states must be an enum', true))
   @IsOptional()
     states?: string[];
 }
