@@ -23,34 +23,35 @@ html {
   stroke-width: 1.5;
 }
 
-*{
-  scrollbar-color: $white $background-dark-100;
+* {
   scrollbar-width: thin;
-  &:hover, &:focus{
+}
+
+body {
+  scrollbar-color: $white $background-dark-100;
+  &:hover, &:focus {
     scrollbar-color: $black $background-dark-200;
   }
+  &::selection {
+    background-color: $gray-200;
+  }
 }
-*::selection{
-  background-color: $gray-200;
-}
-::-webkit-scrollbar{
+
+body::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
-::-webkit-scrollbar-thumb{
+
+body::-webkit-scrollbar-thumb {
   background-clip: padding-box;
   transition: all 0.2s ease-in-out;
   background-color: $gray-400;
-  &:hover{
+  &:hover {
     background-color: $background-dark-200;
   }
 }
 
-::-webkit-scrollbar-corner {
-  background: rgba(0,0,0,0);
-}
-
-::-webkit-scrollbar-corner {
+body::-webkit-scrollbar-corner {
   background: transparent;
 }
 
