@@ -52,7 +52,7 @@ const CreatePasswordForm: FC<CreatePasswordFormProps> = ({ token }) => {
             className={styles['input']}
             isSuccessOnDefault={true}
             label="Новий пароль"
-            placeholder="user2000"
+            placeholder="Новий пароль"
             size={InputSize.LARGE}
             type={InputType.PASSWORD}
             name="password"
@@ -61,7 +61,7 @@ const CreatePasswordForm: FC<CreatePasswordFormProps> = ({ token }) => {
             className={styles['input']}
             isSuccessOnDefault={true}
             label="Підтверди пароль"
-            placeholder="input"
+            placeholder="Підтверди пароль"
             size={InputSize.LARGE}
             type={InputType.PASSWORD}
             name="confirmPassword"
