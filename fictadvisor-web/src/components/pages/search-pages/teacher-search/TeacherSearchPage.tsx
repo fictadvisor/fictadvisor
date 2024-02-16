@@ -59,7 +59,7 @@ export const TeacherSearchPage = () => {
             ...(loadedTeachers ?? []),
             ...(data ? data.teachers : []),
           ]);
-          return TeacherAPI.getPage(queryObj, PAGE_SIZE, curPage + 1);
+          return TeacherAPI.getPage(queryObj, PAGE_SIZE, curPage);
         }
       },
       {
