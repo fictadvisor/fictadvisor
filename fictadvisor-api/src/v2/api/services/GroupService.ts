@@ -47,6 +47,9 @@ const ROLE_LIST = [
     name: RoleName.STUDENT,
     weight: 50,
     grants: {
+      'groups.$groupId.events.create': { set: false, weight: 5 },
+      'groups.$groupId.events.update': { set: false, weight: 5 },
+      'groups.$groupId.events.delete': { set: false, weight: 5 },
       'groups.$groupId.admin.switch': { set: false, weight: 2 },
       'groups.$groupId.students.get': { set: true, weight: 4 },
       'groups.$groupId.students.*': { set: false, weight: 3 },
