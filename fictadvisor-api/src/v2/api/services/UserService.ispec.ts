@@ -20,6 +20,8 @@ import { AlreadySelectedException } from '../../utils/exceptions/AlreadySelected
 import { ExcessiveSelectiveDisciplinesException } from '../../utils/exceptions/ExcessiveSelectiveDisciplinesException';
 import { TelegramAPI } from '../../telegram/TelegramAPI';
 import { NotSelectedDisciplineException } from '../../utils/exceptions/NotSelectedDisciplineException';
+import { DisciplineTeacherService } from './DisciplineTeacherService';
+import { PollService } from './PollService';
 
 describe('UserService', () => {
   let userService: UserService;
@@ -27,7 +29,7 @@ describe('UserService', () => {
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
-      providers: [UserService, PrismaService, GroupService, DateService],
+      providers: [UserService, PrismaService, GroupService, DateService, PollService],
       imports: [PrismaModule, MapperModule],
     }).useMocker((token) => {
       const tokens = [
@@ -41,6 +43,8 @@ describe('UserService', () => {
         FileService,
         StudentMapper,
         DisciplineMapper,
+        DisciplineTeacherService,
+        PollService,
       ] as InjectionToken[];
       if (tokens.includes(token)) {
         return {};

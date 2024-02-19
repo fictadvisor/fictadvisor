@@ -13,6 +13,8 @@ import { MapperModule } from './MapperModule';
 import { FileModule } from '../utils/files/FileModule';
 import { DateModule } from '../utils/date/DateModule';
 import { TelegramAPI } from '../telegram/TelegramAPI';
+import { TeacherModule } from './TeacherModule';
+import { PollModule } from './PollModule';
 
 @Module({
   controllers: [UserController, RoleController, GrantController],
@@ -26,6 +28,8 @@ import { TelegramAPI } from '../telegram/TelegramAPI';
     MapperModule,
     FileModule,
     DateModule,
+    TeacherModule,
+    PollModule,
   ],
 })
 export class UserModule {}
