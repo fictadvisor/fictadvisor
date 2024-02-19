@@ -37,6 +37,8 @@ import { NotSelectedDisciplineException } from '../../utils/exceptions/NotSelect
 import { QueryAllUsersDTO } from '../dtos/QueryAllUsersDTO';
 import { DatabaseUtils } from '../../database/DatabaseUtils';
 import { DbUser } from '../../database/entities/DbUser';
+import { DisciplineTeacherService } from './DisciplineTeacherService';
+import { PollService } from './PollService';
 
 type SortedDisciplines = {
   year: number;
@@ -63,6 +65,8 @@ export class UserService {
     private disciplineMapper: DisciplineMapper,
     private dateService: DateService,
     private telegramAPI: TelegramAPI,
+    private disciplineTeacherService: DisciplineTeacherService,
+    private pollService: PollService,
   ) {}
 
   async createUserByAdmin (data: UserByAdminDTO) {
@@ -212,7 +216,7 @@ export class UserService {
       }
     }
 
-    return this.studentRepository.updateById(studentId, {
+    const result = await this.studentRepository.updateById(studentId, {
       groupId,
       roles: {
         delete: {
@@ -226,6 +230,14 @@ export class UserService {
         },
       },
     });
+
+    const { teachers } = await this.pollService.getDisciplineTeachers(studentId, {});
+
+    for (const { disciplineTeacherId } of teachers) {
+      await this.disciplineTeacherService.removeFromPoll(disciplineTeacherId, studentId);
+    }
+
+    return result;
   }
 
   async deleteStudentSelective (studentId: string) {
