@@ -19,6 +19,7 @@ import { TelegramAPI } from '../../telegram/TelegramAPI';
 import { CreateEventDTO } from '../dtos/CreateEventDTO';
 import { ObjectIsRequiredException } from '../../utils/exceptions/ObjectIsRequiredException';
 import { EventTypeEnum } from '../dtos/EventTypeEnum';
+import { PollService } from './PollService';
 
 
 describe('ScheduleService', () => {
@@ -42,6 +43,7 @@ describe('ScheduleService', () => {
         DisciplineTeacherService,
         DisciplineService,
         TelegramAPI,
+        PollService,
       ];
       if (!token) {
         return;
