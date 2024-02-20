@@ -205,9 +205,18 @@ export class DateService {
     const [hours, minutes] = pairTime
       .split('.')
       .map((number) => +number);
+    const minutesAfterHour = 35;
     const startOfEvent = new Date(startOfSemester.getTime()+week*WEEK+(day-1)*DAY+hours*HOUR+minutes*MINUTE);
-    const endOfEvent = new Date(startOfEvent.getTime()+HOUR+35*MINUTE);
+    const endOfEvent = new Date(startOfEvent.getTime()+HOUR+minutesAfterHour*MINUTE);
 
+    return { startOfEvent, endOfEvent };
+  }
+
+  getEventTimeRozKpi (startOfSemester: Date, week: number, day: number, time: string) {
+    const [startHours, startMinutes] = time.split(':').map((s) => parseInt(s));
+    const minutesAfterHour = 35;
+    const startOfEvent = new Date(startOfSemester.getTime()+ week * WEEK + (day - 1) * DAY + startHours * HOUR + startMinutes * MINUTE);
+    const endOfEvent = new Date(startOfEvent.getTime() + HOUR + minutesAfterHour * MINUTE);
     return { startOfEvent, endOfEvent };
   }
 }
