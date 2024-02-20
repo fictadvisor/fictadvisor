@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { JSDOM } from 'jsdom';
-import { URLSearchParams } from 'node:url';
 import { Injectable } from '@nestjs/common';
 import { Parser } from './Parser';
 import { DisciplineTypeEnum, Period, TeacherRole } from '@prisma/client';
@@ -9,43 +8,41 @@ import { DisciplineTeacherRoleRepository } from '../../database/repositories/Dis
 import { GroupRepository } from '../../database/repositories/GroupRepository';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
 import { SubjectRepository } from '../../database/repositories/SubjectRepository';
-import { TeacherRepository } from '../../database/repositories/TeacherRepository';
-import { StudyingSemester, DateService, DAY, HOUR, MINUTE, WEEK, FORTNITE } from '../date/DateService';
+import { DateService, DAY, FORTNITE, HOUR, MINUTE, StudyingSemester, WEEK } from '../date/DateService';
 import { EventRepository } from '../../database/repositories/EventRepository';
 import { DateUtils } from '../date/DateUtils';
 import { weeksPerEvent } from '../../api/services/ScheduleService';
+import {
+  DOMAIN_EXTRACTION_REGEX,
+  getSchedulesParams,
+  GOOGLE_MAPS_URL,
+  GROUP_CODE_REGEX,
+  GROUP_SELECTION_URL,
+  SCHEDULE_GROUP_SELECTION_URL,
+  SCHEDULE_SELECTION_FORM_SELECTOR,
+  VIEW_SCHEDULE_PARAMS,
+  VIEW_SCHEDULE_URL_BASE,
+  WEEK_TAGS,
+} from './RozParams';
+import { TeacherService } from '../../api/services/TeacherService';
 
-export const DISCIPLINE_TYPE = {
+const DISCIPLINE_TYPE = {
   Лек: DisciplineTypeEnum.LECTURE,
   Прак: DisciplineTypeEnum.PRACTICE,
   Лаб: DisciplineTypeEnum.LABORATORY,
 };
 
-export const TEACHER_TYPE = {
+const TEACHER_TYPE = {
   Лек: TeacherRole.LECTURER,
   Прак: TeacherRole.PRACTICIAN,
   Лаб: TeacherRole.LABORANT,
-};
-
-const SEMESTER = 2;
-
-const VIEW_SCHEDULE_PARAMS = new URLSearchParams({
-  __EVENTVALIDATION:
-    '/wEdAAEAAAD/////AQAAAAAAAAAPAQAAAAYAAAAIsA3rWl3AM+6E94I5ke7WZqDu1maj7tZmCwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANqZqakPTbOP2+koNozn1gOvqUEW',
-  __EVENTTARGET: '',
-  ctl00$MainContent$ddlSemesterType: SEMESTER.toString(),
-});
-
-const WEEK_TAGS = {
-  0: 'ctl00_MainContent_FirstScheduleTable',
-  1: 'ctl00_MainContent_SecondScheduleTable',
 };
 
 @Injectable()
 export class RozParser implements Parser {
   constructor (
     private groupRepository: GroupRepository,
-    private teacherRepository: TeacherRepository,
+    private teacherService: TeacherService,
     private subjectRepository: SubjectRepository,
     private disciplineRepository: DisciplineRepository,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
@@ -56,60 +53,58 @@ export class RozParser implements Parser {
   ) {}
 
   async parse (period: StudyingSemester, groupList: string[], page = 1) {
-    let filtered = (await axios.post('http://epi.kpi.ua/Schedules/ScheduleGroupSelection.aspx/GetGroups', {
-      count: 10,
+    const groupsPerPage = 40;
+    const groupSelectionCount = 10;
+
+    let filtered = (await axios.post(GROUP_SELECTION_URL, {
+      count: groupSelectionCount,
       prefixText: 'і',
     })).data.d
-      .filter((name: string) => /І[МПКАСОВТ]-([зпв]|зп)?\d\d(мн|мп|ф)?і?/.test(name));
+      .filter((name: string) => GROUP_CODE_REGEX.test(name));
 
     filtered = groupList.length
-      ? filtered.filter((group) => groupList.includes(group))
-      : filtered.slice((page - 1) * 40, page * 40);
+      ? filtered.filter((group: string) => groupList.includes(group))
+      : filtered.slice((page - 1) * groupsPerPage, page * groupsPerPage);
 
+    const excludeGroupSuffix = 'ф';
     for (const group of filtered) {
-      if (group.endsWith('ф')) continue;
+      if (group.endsWith(excludeGroupSuffix)) continue;
       await this.parseGroupSchedule(group, period);
     }
   }
 
-  async parseGroupSchedule (code, period) {
-    const groupHashId = await this.getGroupHashId(code);
-    const url = `http://epi.kpi.ua/Schedules/ViewSchedule.aspx?g=${groupHashId}`;
+  async parseGroupSchedule (groupCode: string, period: StudyingSemester) {
+    const groupHashId = await this.getGroupHashId(groupCode);
+    const url = `${VIEW_SCHEDULE_URL_BASE}${groupHashId}`;
 
     const response = await axios.post(url, VIEW_SCHEDULE_PARAMS);
 
     await new Promise((res) => setTimeout(() => (res('')), 3000));
     const dom = new JSDOM(response.data);
 
-    await this.parseWeek(0, code, dom, period);
-    await this.parseWeek(1, code, dom, period);
+    await this.parseWeek(0, groupCode, dom, period);
+    await this.parseWeek(1, groupCode, dom, period);
   }
 
-  async parseWeek (weekNumber, code, dom, period) {
-    const week = await this.parseHtmlWeek(weekNumber, code, dom);
-    const group = await this.groupRepository.getOrCreate(code);
+  async parseWeek (weekNumber: number, groupCode: string, dom: JSDOM, period: StudyingSemester) {
+    const week = await this.parseHtmlWeek(weekNumber, groupCode, dom);
+    const group = await this.groupRepository.getOrCreate(groupCode);
     for (const pair of week) {
       await this.parsePair(pair, group.id, period);
     }
   }
 
-  async getGroupHashId (group) {
-    const SCHEDULE_GROUP_SELECTION_PARAMS = new URLSearchParams({
-      __EVENTVALIDATION:
-        '/wEdAAEAAAD/////AQAAAAAAAAAPAQAAAAUAAAAIsA3rWl3AM+6E94I5Tu9cRJoVjv0LAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHfLZVQO6kVoZVPGurJN4JJIAuaU',
-      __EVENTTARGET: '',
-      ctl00$MainContent$ctl00$txtboxGroup: group,
-      ctl00$MainContent$ctl00$btnShowSchedule: 'Розклад занять',
-    });
-    const url = 'http://epi.kpi.ua/Schedules/ScheduleGroupSelection.aspx';
-    const response = await axios.post(url, SCHEDULE_GROUP_SELECTION_PARAMS);
+  async getGroupHashId (group: string) {
+    const params = getSchedulesParams(group);
+
+    const response = await axios.post(SCHEDULE_GROUP_SELECTION_URL, params);
     const dom = new JSDOM(response.data);
 
-    const form = dom.window.document.querySelector('form[name=\'aspnetForm\']');
+    const form = dom.window.document.querySelector(SCHEDULE_SELECTION_FORM_SELECTOR);
     return form.getAttribute('action').split('?g=')[1];
   }
 
-  async parseHtmlWeek (week, group, dom) {
+  async parseHtmlWeek (week: number, group: string, dom) {
     const pairs = [];
     const table = dom.window.document.getElementById(WEEK_TAGS[week]);
 
@@ -152,24 +147,26 @@ export class RozParser implements Parser {
         let linksCounter = 0;
 
         // Filter junk
-        const domainRegex = /^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:/\n?]+)/igm;
-        const teacherLinks = Object.values(td.childNodes).filter((n: any) => !(n instanceof dom.window.HTMLBRElement || n instanceof dom.window.Text || n instanceof dom.window.HTMLSpanElement || n.href.match(domainRegex)?.includes('http://maps.google.com')));
+        const teacherLinks = Object.values(td.childNodes).filter((n: any) => !(n instanceof dom.window.HTMLBRElement
+          || n instanceof dom.window.Text
+          || n instanceof dom.window.HTMLSpanElement
+          || n.href.match(DOMAIN_EXTRACTION_REGEX)?.includes(GOOGLE_MAPS_URL)));
 
         for (let k = 0; k < teacherLinks.length; k++) {
           const anchor = teacherLinks[k] as HTMLAnchorElement;
           const teacherString = anchor.getAttribute('title').split(' ');
-          const parseTeacherName = (str) => ({
+
+          const parseTeacherName = (str: string[]) => ({
             lastName: str[str.length - 1 - 2].replace('.', '') ?? '',
             firstName: str[str.length - 1 - 1].replace('.', '') ?? '',
-            middleName: str[str.length - 1 - 0].replace('.', '') ?? '',
+            middleName: str[str.length - 1].replace('.', '') ?? '',
           });
           // Previous and last teacher bind to the last discipline
           if (teacherLinks.length > localRowPairs.length && k === teacherLinks.length - 1 - 1) {
             const nextAnchor = teacherLinks[k + 1] as HTMLAnchorElement;
             const mainTeacher = parseTeacherName(teacherString);
             const secondaryTeacher = parseTeacherName(nextAnchor.getAttribute('title').split(' '));
-            const teachers = [mainTeacher, secondaryTeacher];
-            localRowPairs[linksCounter].teachers = teachers;
+            localRowPairs[linksCounter].teachers = [mainTeacher, secondaryTeacher];
             // Force loop finish
             k += 1;
             continue;
@@ -184,24 +181,6 @@ export class RozParser implements Parser {
     return pairs;
   }
 
-  async getTeacherFullInitials (lastName: string, firstName: string, middleName: string) {
-    if (firstName.length <= 1 || middleName.length <= 1) {
-      const teachers = await this.teacherRepository.findMany({
-        where: { lastName, firstName: { startsWith: firstName }, middleName: { startsWith: middleName } },
-      });
-
-      if (teachers.length === 1) return teachers[0];
-    }
-
-    // If several teachers with same initials or if there is no such teacher at all
-    const teacher = await this.teacherRepository.getOrCreate({
-      lastName,
-      firstName,
-      middleName,
-    });
-    return teacher;
-  }
-
   async parsePair (pair, groupId: string, period: StudyingSemester) {
     const subject = await this.subjectRepository.getOrCreate(pair.name ?? '');
     const name = DISCIPLINE_TYPE[pair.tag] ?? DISCIPLINE_TYPE.Лек;
@@ -212,9 +191,10 @@ export class RozParser implements Parser {
     const { startDate: startOfSemester } = await this.dateService.getSemester(period);
     const [startHours, startMinutes] = pair.time
       .split(':')
-      .map((s) => parseInt(s));
+      .map((s: string) => parseInt(s));
+    const MINUTES_AFTER_HOUR = 35;
     const startOfEvent = new Date(startOfSemester.getTime()+week*WEEK+(day-1)*DAY+startHours*HOUR+startMinutes*MINUTE);
-    const endOfEvent = new Date(startOfEvent.getTime()+HOUR+35*MINUTE);
+    const endOfEvent = new Date(startOfEvent.getTime()+HOUR+MINUTES_AFTER_HOUR*MINUTE);
 
     let discipline = await this.disciplineRepository.getOrCreate({
       subjectId: subject.id,
@@ -238,13 +218,12 @@ export class RozParser implements Parser {
     pair.teacher = pair.teacher ? pair.teacher : { lastName: '', firstName: '', middleName: '' };
     const teachers = pair.teachers ?? [pair.teacher];
     for (const { lastName, firstName, middleName } of teachers) {
-      const teacher = await this.getTeacherFullInitials(lastName, firstName, middleName);
+      const teacher = await this.teacherService.getTeacherFullInitials(lastName, firstName, middleName);
 
-      const disciplineTeacher =
-        await this.disciplineTeacherRepository.getOrCreate({
-          teacherId: teacher.id,
-          disciplineId: discipline.id,
-        });
+      const disciplineTeacher = await this.disciplineTeacherRepository.getOrCreate({
+        teacherId: teacher.id,
+        disciplineId: discipline.id,
+      });
 
       await this.disciplineTeacherRoleRepository.getOrCreate({
         role,

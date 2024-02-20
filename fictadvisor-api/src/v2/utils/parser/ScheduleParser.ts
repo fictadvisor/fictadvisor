@@ -6,12 +6,12 @@ import { DisciplineTeacherRepository } from '../../database/repositories/Discipl
 import { GroupRepository } from '../../database/repositories/GroupRepository';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
 import { SubjectRepository } from '../../database/repositories/SubjectRepository';
-import { TeacherRepository } from '../../database/repositories/TeacherRepository';
 import { ScheduleDayType, ScheduleGroupType, SchedulePairType, ScheduleType } from './ScheduleParserTypes';
 import { EventRepository } from '../../database/repositories/EventRepository';
 import { DateService, DAY, FORTNITE, HOUR, MINUTE, WEEK, StudyingSemester } from '../date/DateService';
 import { weeksPerEvent } from '../../api/services/ScheduleService';
 import { DateUtils } from '../date/DateUtils';
+import { TeacherService } from '../../api/services/TeacherService';
 
 export const DAY_NUMBER = {
   'Пн': 1,
@@ -39,7 +39,7 @@ export const TEACHER_TYPE = {
 export class ScheduleParser implements Parser {
   constructor (
     private groupRepository: GroupRepository,
-    private teacherRepository: TeacherRepository,
+    private teacherService: TeacherService,
     private subjectRepository: SubjectRepository,
     private disciplineRepository: DisciplineRepository,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
@@ -230,19 +230,6 @@ export class ScheduleParser implements Parser {
     firstName = firstName.trim().replace('.', '');
     middleName = middleName.trim().replace('.', '');
 
-    if (firstName.length <= 1 || middleName.length <= 1) {
-      const teachers = await this.teacherRepository.findMany({
-        where: { lastName, firstName: { startsWith: firstName }, middleName: { startsWith: middleName } },
-      });
-
-      if (teachers.length === 1) return teachers[0];
-    }
-
-    // If several teachers with same initials or if there is no such teacher at all
-    return await this.teacherRepository.getOrCreate({
-      lastName,
-      firstName,
-      middleName,
-    });
+    return await this.teacherService.getTeacherFullInitials(lastName, firstName, middleName);
   }
 }
