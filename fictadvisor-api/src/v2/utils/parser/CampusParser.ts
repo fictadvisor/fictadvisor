@@ -1,21 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { Parser } from './Parser';
 import axios from 'axios';
-import { DisciplineTypeEnum, Period, TeacherRole } from '@prisma/client';
+import { DisciplineTypeEnum, TeacherRole } from '@prisma/client';
 import { ScheduleDayType, ScheduleGroupType, SchedulePairType, ScheduleType } from './ScheduleParserTypes';
-import { DateService, FORTNITE, WEEK, StudyingSemester } from '../date/DateService';
-import { weeksPerEvent } from '../../api/services/ScheduleService';
-import { DateUtils } from '../date/DateUtils';
+import { DateService, StudyingSemester } from '../date/DateService';
 import { DbSubject } from '../../database/entities/DbSubject';
 import { DbDiscipline } from '../../database/entities/DbDiscipline';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
 import { DbTeacher } from '../../database/entities/DbTeacher';
 import { DbDisciplineType } from '../../database/entities/DbDisciplineType';
 import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
-import { EventRepository } from '../../database/repositories/EventRepository';
-import { TeacherRepository } from '../../database/repositories/TeacherRepository';
 import { SubjectRepository } from '../../database/repositories/SubjectRepository';
 import { GroupRepository } from '../../database/repositories/GroupRepository';
+import { GeneralParser } from './GeneralParser';
 
 export const DAY_NUMBER = {
   'Пн': 1,
@@ -45,11 +42,9 @@ export class CampusParser implements Parser {
     private groupRepository: GroupRepository,
     private subjectRepository: SubjectRepository,
     private disciplineRepository: DisciplineRepository,
-    private eventRepository: EventRepository,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
-    private teacherRepository: TeacherRepository,
     private dateService: DateService,
-    private dateUtils: DateUtils,
+    private generalParser: GeneralParser,
   ) {}
 
   async parse (period: StudyingSemester, groupList: string[]) {
@@ -100,19 +95,9 @@ export class CampusParser implements Parser {
 
     const disciplineType = discipline.disciplineTypes.find((type) => type.name === name);
 
-    if (teacher) {
-      await this.createOrUpdateDisciplineTeacher(teacher, discipline, role, disciplineType);
-    }
-    const event = await this.findEvent(startOfEvent, groupId, disciplineType.id);
+    if (teacher) await this.createOrUpdateDisciplineTeacher(teacher, discipline, role, disciplineType);
 
-    if (!event) {
-      await this.createEvent(pair.name, startOfEvent, endOfEvent, groupId, disciplineType.id, Period.EVERY_FORTNIGHT);
-    } else if (
-      event.startTime.getTime() === startOfEvent.getTime() - WEEK &&
-      event.period === Period.EVERY_FORTNIGHT
-    ) {
-      await this.updateEventPeriod(Period.EVERY_WEEK, event.id);
-    }
+    await this.generalParser.handleEvent(pair, startOfEvent, endOfEvent, groupId, disciplineType.id);
   }
 
   async initializeData (pair: SchedulePairType) {
@@ -131,19 +116,7 @@ export class CampusParser implements Parser {
     firstName = firstName.trim().replace('.', '');
     middleName = middleName.trim().replace('.', '');
 
-    if (firstName.length <= 1 || middleName.length <= 1) {
-      const teachers = await this.teacherRepository.findMany({
-        where: { lastName, firstName: { startsWith: firstName }, middleName: { startsWith: middleName } },
-      });
-
-      if (teachers.length === 1) return teachers[0];
-    }
-
-    return await this.teacherRepository.getOrCreate({
-      lastName,
-      firstName,
-      middleName,
-    });
+    return await this.generalParser.getTeacherFullInitials(lastName, firstName, middleName);
   }
 
   async getOrCreateDiscipline (subject: DbSubject, groupId: string, period: StudyingSemester, name: DisciplineTypeEnum, isSelective: boolean) {
@@ -160,11 +133,7 @@ export class CampusParser implements Parser {
         groupId,
         year: period.year,
         semester: period.semester,
-        disciplineTypes: {
-          create: {
-            name,
-          },
-        },
+        disciplineTypes: { create: { name } },
         isSelective,
       });
     } else {
@@ -224,59 +193,5 @@ export class CampusParser implements Parser {
         },
       });
     }
-  }
-
-  async findEvent (startOfEvent: Date, groupId: string, disciplineTypeId: string) {
-    return this.eventRepository.find({
-      OR: [
-        {
-          startTime: startOfEvent,
-          groupId: groupId,
-          lessons: {
-            some: {
-              disciplineTypeId,
-            },
-          },
-        },
-        {
-          startTime: new Date(startOfEvent.getTime() - WEEK),
-          groupId: groupId,
-          lessons: {
-            some: {
-              disciplineTypeId,
-            },
-          },
-        },
-      ],
-    });
-  }
-
-  async createEvent (name: string, startOfEvent: Date, endOfEvent: Date, groupId: string, disciplineTypeId: string, period: Period) {
-    await this.eventRepository.create({
-      name,
-      startTime: startOfEvent,
-      endTime: endOfEvent,
-      period,
-      eventsAmount: await this.getEventsAmount(period),
-      groupId: groupId,
-      lessons: {
-        create: {
-          disciplineTypeId,
-        },
-      },
-    });
-  }
-
-  async updateEventPeriod (period: Period, eventId: string) {
-    await this.eventRepository.updateById(eventId, {
-      period,
-      eventsAmount: await this.getEventsAmount(period),
-    });
-  }
-
-  async getEventsAmount (period: Period) {
-    const { startDate, endDate } = await this.dateService.getCurrentSemester();
-    const lastWeek = this.dateUtils.getCeiledDifference(startDate, new Date(endDate.getTime() - FORTNITE), WEEK);
-    return lastWeek / weeksPerEvent[period];
   }
 }
