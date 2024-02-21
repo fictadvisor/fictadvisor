@@ -28,3 +28,14 @@ export const inputsWrapper: SxProps<Theme> = {
   textAlign: 'start',
   marginBottom: '-20px',
 };
+
+export const groupDropdownWrapper: SxProps<Theme> = {
+  marginTop: '8px',
+  marginBottom: '20px',
+  '.MuiFormLabel-root': {
+    color: 'inherit !important',
+    padding: '1.5px 8px !important',
+    top: '-3px',
+    left: '-4px',
+  },
+};
