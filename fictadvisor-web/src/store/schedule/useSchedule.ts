@@ -52,7 +52,13 @@ const CheckboxesMapper: Record<string, (TEvent | null)[]> = {
   addLecture: [TEvent.LECTURE],
   addLaboratory: [TEvent.LABORATORY],
   addPractice: [TEvent.PRACTICE],
-  otherEvents: [TEvent.CONSULTATION, TEvent.EXAM, TEvent.WORKOUT, null],
+  otherEvents: [
+    TEvent.CONSULTATION,
+    TEvent.EXAM,
+    TEvent.WORKOUT,
+    TEvent.OTHER,
+    null,
+  ],
 };
 
 type State = {
@@ -101,6 +107,7 @@ export const useSchedule = create<State & Action>((set, get) => {
       TEvent.EXAM,
       TEvent.CONSULTATION,
       TEvent.WORKOUT,
+      TEvent.OTHER,
       null,
     ],
     week: 1,
