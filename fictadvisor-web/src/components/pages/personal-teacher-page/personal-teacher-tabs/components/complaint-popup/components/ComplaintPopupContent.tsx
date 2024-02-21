@@ -43,7 +43,7 @@ const ComplaintPopupContent: FC = () => {
           name="fullName"
           placeholder="ПІБ (не обов’язково)"
         />
-        <Box sx={{ marginTop: '8px', marginBottom: '20px' }}>
+        <Box sx={styles.groupDropdownWrapper}>
           <FormikDropdown
             name="groupId"
             options={
