@@ -30,9 +30,11 @@ const Schedule = () => {
     const _eventsWeek: GetEventBody = JSON.parse(
       JSON.stringify(events[week - 1]),
     );
-    _eventsWeek.events = _eventsWeek.events.filter(event => {
-      return disciplines.some(discipline => discipline === event.eventType);
-    });
+
+    _eventsWeek.events = _eventsWeek.events.filter(event =>
+      disciplines.some(discipline => discipline === event.eventType),
+    );
+
     return _eventsWeek;
   }, [disciplines, events, week]);
 
@@ -43,7 +45,6 @@ const Schedule = () => {
     : false;
 
   const top = calculateTop(currentTime);
-
   return (
     <Box sx={styles.layout}>
       <ScheduleTime />
