@@ -5,6 +5,7 @@ export enum TEvent {
   CONSULTATION = 'CONSULTATION',
   WORKOUT = 'WORKOUT',
   EXAM = 'EXAM',
+  OTHER = 'OTHER',
 }
 
 export interface Event {
