@@ -6,6 +6,7 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableHead,
   TableRow,
   Typography,
 } from '@mui/material';
@@ -60,7 +61,7 @@ const CommentsTable: FC<AnswersAdminTableProps> = ({
 
   return (
     <Table>
-      <thead>
+      <TableHead>
         <TableRow>
           <TableCell sx={mergeSx(styles.headItem, { minWidth: '45px' })}>
             <Typography>Відгук</Typography>
@@ -76,7 +77,7 @@ const CommentsTable: FC<AnswersAdminTableProps> = ({
           </TableCell>
           <TableCell sx={styles.headItem} />
         </TableRow>
-      </thead>
+      </TableHead>
       <TableBody>
         {isLoading && (
           <>
