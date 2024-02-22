@@ -50,10 +50,9 @@ const OpenedSelective: FC<OpenedSelectiveProps> = ({
     <>
       {data && (
         <Box sx={styles.wrapper}>
-          <Typography
-            variant="h6"
-            sx={styles.text}
-          >{`${semesterMap[semester]} семестр ${year}`}</Typography>
+          <Typography variant="h6" sx={styles.text}>{`${
+            semesterMap[semester]
+          } семестр ${year}-${year + 1} `}</Typography>
           {data.remainingSelective ? (
             <Typography variant="h6Bold" sx={styles.text}>
               Обери {data.availableSelectiveAmount} предмети, які є твоїми
