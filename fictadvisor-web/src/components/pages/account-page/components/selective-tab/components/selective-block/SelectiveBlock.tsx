@@ -60,7 +60,9 @@ const SelectiveBlock: FC<SelectiveBlockProps> = ({
       ) : (
         <Box sx={styles.wrapper}>
           <Box sx={styles.cardHeader}>
-            <Typography variant="h6">{`${semesterMap[semester]} семестр ${year}`}</Typography>
+            <Typography variant="h6">{`${
+              semesterMap[semester]
+            } семестр ${year}-${year + 1}`}</Typography>
             {!isAllChosen && <PencilIcon onClick={handleIconClick} />}
           </Box>
           <Box sx={styles.disciplines}>
