@@ -10,6 +10,9 @@ interface SubjectTeacherPage {
 }
 export const metadata: Metadata = {
   title: 'Предмет',
+  openGraph: {
+    title: 'Предмет',
+  },
 };
 const SubjectPage: FC<SubjectTeacherPage> = ({ params }) => {
   return (

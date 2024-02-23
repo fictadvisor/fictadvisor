@@ -6,6 +6,13 @@ import StudentResourcesAPI from '@/lib/api/student-resources/StudentResourcesAPI
 
 export const metadata: Metadata = {
   title: 'FICT Advisor',
+  description:
+    'Зустрічай FICT Advisor — офіційний сайт Студради ФІОТ. Опитування про викладачів, багатофункціональний розклад, керування групою, набори в наше активне ком’юніті, розіграш шар та інші інструменти — шукай саме тут!',
+  openGraph: {
+    title: 'FICT Advisor',
+    description:
+      'Зустрічай FICT Advisor — офіційний сайт Студради ФІОТ. Опитування про викладачів, багатофункціональний розклад, керування групою, набори в наше активне ком’юніті, розіграш шар та інші інструменти — шукай саме тут!',
+  },
 };
 
 export default async function Main() {

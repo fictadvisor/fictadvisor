@@ -5,6 +5,9 @@ import PersonalTeacherSubjectPage from '@/components/pages/personal-teacher-subj
 
 export const metadata: Metadata = {
   title: 'Дисципліна',
+  openGraph: {
+    title: 'Дисципліна',
+  },
 };
 const PersonalTeacherSubject = () => (
   <PageLayout>
