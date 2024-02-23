@@ -4,6 +4,9 @@ import PageLayout from '@/components/common/layout/page-layout';
 import AboutPage from '@/components/pages/about-page';
 export const metadata: Metadata = {
   title: 'Про нас | FICT Advisor',
+  openGraph: {
+    title: 'Про нас | FICT Advisor',
+  },
 };
 const About = () => (
   <PageLayout>

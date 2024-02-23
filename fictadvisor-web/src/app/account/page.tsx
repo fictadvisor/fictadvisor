@@ -5,6 +5,9 @@ import AccountPage from '@/components/pages/account-page';
 
 export const metadata: Metadata = {
   title: 'Персональний акаунт FICT Advisor',
+  openGraph: {
+    title: 'Персональний акаунт FICT Advisor',
+  },
 };
 const Account = () => (
   <PageLayout>
