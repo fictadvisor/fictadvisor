@@ -5,6 +5,9 @@ import EntrantAdminPage from '@/components/pages/entrant-admin-page';
 
 export const metadata: Metadata = {
   title: 'Менеджент вступника | FICT Advisor',
+  openGraph: {
+    title: 'Менеджент вступника | FICT Advisor',
+  },
 };
 export default function EntrantAdmin() {
   return (

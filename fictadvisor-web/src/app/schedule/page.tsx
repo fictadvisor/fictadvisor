@@ -7,6 +7,9 @@ import { Group } from '@/types/group';
 
 export const metadata: Metadata = {
   title: 'Розклад',
+  openGraph: {
+    title: 'Розклад',
+  },
 };
 
 export const dynamic = 'force-dynamic';
