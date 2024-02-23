@@ -26,23 +26,23 @@ import { skeletonProps } from '../utils/skeletonProps';
 import * as styles from './ScheduleInfoCard.styles';
 
 const TagLabelMapper: Record<string, string> = {
-  [TEvent.LECTURE]: 'Лекція',
-  [TEvent.EXAM]: 'Екзамен',
   [TEvent.LABORATORY]: 'Лабораторна',
-  [TEvent.CONSULTATION]: 'Консультація',
-  [TEvent.PRACTICE]: 'Практика',
+  [TEvent.EXAM]: 'Екзамен',
   [TEvent.WORKOUT]: 'Відпрацювання',
-  ['null']: 'Інша подія',
+  [TEvent.PRACTICE]: 'Практика',
+  [TEvent.LECTURE]: 'Лекція',
+  [TEvent.CONSULTATION]: 'Консультація',
+  [TEvent.OTHER]: 'Інша подія',
 };
 
 const TagColorMapper: Record<string, TagColor> = {
-  [TEvent.LECTURE]: TagColor.INDIGO,
-  [TEvent.EXAM]: TagColor.VIOLET,
   [TEvent.LABORATORY]: TagColor.MINT,
-  [TEvent.CONSULTATION]: TagColor.VIOLET,
+  [TEvent.EXAM]: TagColor.VIOLET,
+  [TEvent.WORKOUT]: TagColor.PRIMARY,
   [TEvent.PRACTICE]: TagColor.ORANGE,
-  [TEvent.WORKOUT]: TagColor.VIOLET,
-  ['null']: TagColor.VIOLET,
+  [TEvent.LECTURE]: TagColor.INDIGO,
+  [TEvent.CONSULTATION]: TagColor.SUCCESS,
+  [TEvent.OTHER]: TagColor.SECONDARY,
 };
 
 interface ScheduleInfoCardProps {
