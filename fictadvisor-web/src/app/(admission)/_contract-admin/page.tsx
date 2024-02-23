@@ -5,6 +5,9 @@ import ContractAdminPage from '@/components/pages/contract-admin-page/ContractAd
 
 export const metadata: Metadata = {
   title: 'Договори | FICT Advisor',
+  openGraph: {
+    title: 'Договори | FICT Advisor',
+  },
 };
 
 const ContractAdminSubmission = () => {

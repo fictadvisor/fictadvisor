@@ -6,6 +6,9 @@ import type { RegisterPageProps } from '@/components/pages/register/register-pag
 import GroupAPI from '@/lib/api/group/GroupAPI';
 export const metadata: Metadata = {
   title: 'Реєстрація у FICT Advisor',
+  openGraph: {
+    title: 'Реєстрація у FICT Advisor',
+  },
 };
 export default async function Register() {
   let data: RegisterPageProps['data'];
