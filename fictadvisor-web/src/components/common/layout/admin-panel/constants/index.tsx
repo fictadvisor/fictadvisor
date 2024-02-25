@@ -22,7 +22,6 @@ export const adminPanelTabs = [
     text: 'Ролі',
     icon: <Captain />,
   },
-
   {
     link: BASE_URL + '/users',
     text: 'Користувачі',
@@ -59,13 +58,13 @@ export const adminPanelTabs = [
     icon: <AcademicCapIcon />,
   },
   {
-    link: BASE_URL + '/',
+    link: BASE_URL + '/schedule',
     text: 'Розклад',
     icon: <CalendarIcon />,
   },
   'Опитування',
   {
-    link: BASE_URL + '/',
+    link: BASE_URL + '/questions',
     text: 'База питань',
     icon: <PencilSquareIcon />,
   },
@@ -75,7 +74,7 @@ export const adminPanelTabs = [
     icon: <ClipboardDocumentListIcon />,
   },
   {
-    link: BASE_URL + '/',
+    link: BASE_URL + '/main',
     text: 'Головна сторінка',
     icon: <HomeIcon />,
   },
