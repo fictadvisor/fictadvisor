@@ -65,6 +65,7 @@ export const ScheduleEventForm: FC<ScheduleEventFormProps> = ({
   );
   const [tabValue, setTabValue] = useState<InfoCardTabs>(InfoCardTabs.EVENT);
   const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
+
   return (
     <Box sx={styles.container}>
       <Formik
