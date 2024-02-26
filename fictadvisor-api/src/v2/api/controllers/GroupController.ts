@@ -38,6 +38,9 @@ import { QueryAllGroupDTO } from '../dtos/QueryAllGroupDTO';
 import { SortQAGroupParam } from '../dtos/SortQAGroupParam';
 import { MappedGroupResponse } from '../responses/MappedGroupResponse';
 import { PaginatedGroupsResponse } from '../responses/PaginatedGroupsResponse';
+import { UserService } from '../services/UserService';
+import { StudentOfGroupPipe } from '../pipes/StudentOfGroupPipe';
+import { StudentOfGroupDTO } from '../dtos/StudentOfGroupDTO';
 
 @ApiTags('Groups')
 @Controller({
@@ -47,6 +50,7 @@ import { PaginatedGroupsResponse } from '../responses/PaginatedGroupsResponse';
 export class GroupController {
   constructor (
     private groupService: GroupService,
+    private userService: UserService,
     private studentMapper: StudentMapper,
     private groupMapper: GroupMapper,
     private disciplineMapper: DisciplineMapper,
@@ -480,8 +484,7 @@ export class GroupController {
   })
   @Patch('/:groupId/verify/:userId')
   async verifyStudent (
-    @Param('groupId', GroupByIdPipe) groupId: string,
-    @Param('userId', UserByIdPipe) userId: string,
+    @Param(StudentOfGroupPipe) { userId, groupId }: StudentOfGroupDTO,
     @Body() body : ApproveDTO,
   ) {
     const student = await this.groupService.verifyStudent(groupId, userId, body);
@@ -524,12 +527,11 @@ export class GroupController {
     permissions: PERMISSION.GROUPS_$GROUPID_ADMIN_SWITCH,
   })
   @Patch('/:groupId/switch/:userId')
-  async switchModerator (
-    @Param('groupId', GroupByIdPipe) groupId: string,
-    @Param('userId', UserByIdPipe) userId: string,
-    @Body() body: RoleDTO,
+  async switchRole (
+    @Param(StudentOfGroupPipe) { userId }: StudentOfGroupDTO,
+    @Body() { roleName }: RoleDTO,
   ) {
-    return this.groupService.switchModerator(groupId, userId, body);
+    return this.userService.changeGroupRole(userId, roleName);
   }
 
   @ApiBearerAuth()

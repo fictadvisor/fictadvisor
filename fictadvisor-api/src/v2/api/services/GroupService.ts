@@ -149,14 +149,19 @@ export class GroupService {
         },
       };
     },
-    cathedras: (cathedras: string[]) => ({
-      cathedra: {
-        id: {
-          in: cathedras,
+    cathedras: (cathedras: string[]) => {
+      if (!cathedras?.length) return {};
+      return {
+        cathedra: {
+          id: {
+            in: cathedras,
+          },
         },
-      },
-    }),
+      };
+    },
     courses: (courses: number[]) => {
+      if (!courses?.length) return {};
+
       const courseDate = new Date();
       courseDate.setMonth(courseDate.getMonth()+4);
       const courseYear = courseDate.getFullYear();
@@ -240,12 +245,7 @@ export class GroupService {
   }
 
   async verifyStudent (groupId: string, userId: string, data: ApproveDTO) {
-    const user = await this.userRepository.findById(userId);
-    if (user.student.groupId !== groupId) {
-      throw new NoPermissionException();
-    }
-
-    const verifiedStudent = await this.studentRepository.updateById(user.id, { state: data.state });
+    const verifiedStudent = await this.studentRepository.updateById(userId, { state: data.state });
 
     if (data.state === State.APPROVED) {
       await this.addGroupRole(groupId, userId, RoleName.STUDENT);
@@ -265,16 +265,6 @@ export class GroupService {
       },
     });
     await this.userService.giveRole(userId, role.id);
-  }
-
-  async switchModerator (groupId: string, userId: string, { roleName }: RoleDTO) {
-    const user = await this.userRepository.findById(userId);
-
-    if (user.student.groupId !== groupId) {
-      throw new NoPermissionException();
-    }
-
-    await this.userService.changeGroupRole(userId, roleName);
   }
 
   async removeStudent (groupId: string, userId: string, reqUser: User) {
@@ -435,7 +425,7 @@ export class GroupService {
     );
 
     if (newModerators.length !== studentIds.length) {
-      throw new NoPermissionException();
+      throw new InvalidEntityIdException('Student');
     }
 
     for (const oldModerator of oldModerators) {

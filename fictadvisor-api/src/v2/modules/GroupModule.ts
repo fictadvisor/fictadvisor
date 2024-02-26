@@ -9,10 +9,11 @@ import { MapperModule } from './MapperModule';
 import { DateModule } from '../utils/date/DateModule';
 import { ConfigurationModule } from './ConfigModule';
 import { FileService } from '../utils/files/FileService';
+import { StudentOfGroupPipe } from '../api/pipes/StudentOfGroupPipe';
 
 @Module({
   controllers: [GroupController],
-  providers: [GroupService, GroupByIdPipe, FileService],
+  providers: [GroupService, GroupByIdPipe, StudentOfGroupPipe, FileService],
   exports: [GroupService, GroupByIdPipe],
   imports: [PrismaModule, UserModule, AccessModule, MapperModule, DateModule, ConfigurationModule],
 })
