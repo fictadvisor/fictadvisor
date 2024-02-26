@@ -14,7 +14,7 @@ export const wrapper: SxProps<Theme> = {
 
 export const label = (state: InputState): SxProps<Theme> => ({
   overflow: 'hidden',
-  padding: '2px 8px',
+  padding: '0px 6px',
   maxWidth: '78%',
   background: `linear-gradient(180deg, rgba(30, 30, 30, 0) 50%, ${theme.palette.backgroundDark[100]} 49.95%)`,
 
@@ -46,6 +46,7 @@ export const label = (state: InputState): SxProps<Theme> => ({
     color: theme.palette.grey[800],
     '&.Mui-focused': {
       color: theme.palette.grey[800],
+      padding: '2px 5px',
     },
   }),
 
@@ -90,8 +91,9 @@ export const input = (state: InputState, size: InputSize): SxProps<Theme> => ({
   }),
 
   ...(size === InputSize.MEDIUM && {
-    padding: '13px 12px',
+    padding: '13px 19px',
     typography: theme.typography.body1,
+    color: theme.palette.grey[800],
   }),
 
   ...(state === InputState.READONLY && {
