@@ -11,7 +11,6 @@ export const button = (
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  borderRadius: '4px',
   color: 'grey.800',
   textTransform: 'none',
   fontWeight: '700',
@@ -23,16 +22,20 @@ export const button = (
   ...(size === ButtonSize.SMALL && {
     padding: '6px 12px',
     fontSize: '14px',
+    borderRadius: '6px',
   }),
   ...(size === ButtonSize.MEDIUM && {
     padding: '12px 24px',
     fontSize: '18px',
+    borderRadius: '8px',
   }),
   ...(size === ButtonSize.LARGE && {
     padding: '16px 32px',
     fontSize: '18px',
+    borderRadius: '8px',
   }),
   ...(variant !== ButtonVariant.TEXT && {
+    borderRadius: '8px',
     border: `2px solid`,
     backgroundColor: getColors(color, variant, ButtonState.DEFAULT)
       .backgroundColor,
@@ -66,6 +69,7 @@ export const button = (
     backgroundColor: 'transparent',
     border: `1px  solid`,
     borderColor: 'transparent',
+    borderRadius: '2px',
     '&:hover': {
       backgroundColor: 'transparent',
       textDecoration: 'underline 1px',
