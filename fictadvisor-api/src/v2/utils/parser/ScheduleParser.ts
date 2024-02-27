@@ -90,7 +90,6 @@ export class ScheduleParser implements Parser {
     const teacher = pair.teacherName ? await this.getTeacher(pair.teacherName) : null;
     const subject = await this.subjectRepository.getOrCreate(pair.name ?? '');
     const name = DISCIPLINE_TYPE[pair.tag] ?? DISCIPLINE_TYPE.lec;
-    const role = TEACHER_TYPE[pair.tag] ?? TEACHER_TYPE.lec;
 
     const { startDate: startOfSemester } = await this.dateService.getSemester(period);
     const [hours, minutes] = pair.time
@@ -151,21 +150,6 @@ export class ScheduleParser implements Parser {
         await this.disciplineTeacherRepository.create({
           teacherId: teacher.id,
           disciplineId: discipline.id,
-          roles: {
-            create: {
-              role,
-              disciplineTypeId: disciplineType.id,
-            },
-          },
-        });
-      } else if (!disciplineTeacher.roles.some((r) => r.role === role)) {
-        await this.disciplineTeacherRepository.updateById(disciplineTeacher.id, {
-          roles: {
-            create: {
-              role,
-              disciplineTypeId: disciplineType.id,
-            },
-          },
         });
       }
     }

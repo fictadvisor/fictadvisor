@@ -88,7 +88,11 @@ export class SubjectService {
       include: {
         disciplineTeachers: {
           include: {
-            roles: true,
+            discipline: {
+              include: {
+                disciplineTypes: true,
+              },
+            },
             questionAnswers: {
               where: {
                 disciplineTeacher: {

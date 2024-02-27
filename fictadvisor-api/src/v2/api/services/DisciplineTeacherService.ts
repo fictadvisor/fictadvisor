@@ -29,6 +29,7 @@ import { QueryAllCommentsDTO, SortCommentsEnum } from '../dtos/QueryAllCommentsD
 import { QuerySemesterDTO } from '../dtos/QuerySemesterDTO';
 import { DatabaseUtils } from '../../database/DatabaseUtils';
 import { PaginatedData } from '../datas/PaginatedData';
+import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
 
 @Injectable()
 export class DisciplineTeacherService {
@@ -36,6 +37,7 @@ export class DisciplineTeacherService {
     private dateService: DateService,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
     private disciplineRepository: DisciplineRepository,
+    private disciplineTeacherMapper: DisciplineTeacherMapper,
     private studentRepository: StudentRepository,
     private pollService: PollService,
     private questionAnswerRepository: QuestionAnswerRepository,
@@ -233,13 +235,15 @@ export class DisciplineTeacherService {
 
   async create (teacherId: string, disciplineId: string, roles: TeacherRole[]) {
     const discipline = await this.disciplineRepository.findById(disciplineId);
-    const dbRoles = await this.getDbRoles(discipline, roles);
+    
+    await this.createDisciplineTypesIfNotExist(discipline, roles);
 
-    return this.disciplineTeacherRepository.create({
-      teacherId,
-      disciplineId,
-      roles: { create: dbRoles },
+    const disciplineTeacher = await this.disciplineTeacherRepository.create({
+      teacherId: teacherId,
+      disciplineId: disciplineId,
     });
+    
+    return this.disciplineTeacherMapper.getDisciplineTeacherWithRoles(disciplineTeacher);
   }
 
   async updateById (disciplineTeacherId: string, roles: TeacherRole[]) {
@@ -250,18 +254,15 @@ export class DisciplineTeacherService {
         },
       },
     });
-    const dbRoles = await this.getDbRoles(discipline, roles);
 
-    return this.disciplineTeacherRepository.updateById(disciplineTeacherId, {
-      roles: {
-        deleteMany: {},
-        create: dbRoles,
-      },
-    });
+    await this.createDisciplineTypesIfNotExist(discipline, roles);
+
+    const disciplineTeacher = await this.disciplineTeacherRepository.findById(disciplineTeacherId);
+
+    return this.disciplineTeacherMapper.getDisciplineTeacherWithRoles(disciplineTeacher);
   }
 
-  private async getDbRoles (discipline: DbDiscipline, roles: TeacherRole[]) {
-    const dbRoles = [];
+  private async createDisciplineTypesIfNotExist (discipline: DbDiscipline, roles: TeacherRole[]) {
     for (const role of roles) {
       if (!discipline.disciplineTypes.some((type) => type.name === TeacherTypeAdapter[role])) {
         discipline = await this.disciplineRepository.updateById(discipline.id, {
@@ -272,16 +273,7 @@ export class DisciplineTeacherService {
           },
         });
       }
-
-      const disciplineType = discipline.disciplineTypes.find((dt) => dt.name === TeacherTypeAdapter[role]);
-
-      dbRoles.push({
-        role,
-        disciplineTypeId: disciplineType.id,
-      });
     }
-
-    return dbRoles;
   }
 
   async updateByTeacherAndDiscipline (teacherId: string, disciplineId: string, roles: TeacherRole[]) {

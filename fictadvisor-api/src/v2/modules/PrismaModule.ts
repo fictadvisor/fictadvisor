@@ -4,7 +4,6 @@ import { DisciplineRepository } from '../database/repositories/DisciplineReposit
 import { DisciplineTeacherRepository } from '../database/repositories/DisciplineTeacherRepository';
 import { TeacherRepository } from '../database/repositories/TeacherRepository';
 import { GroupRepository } from '../database/repositories/GroupRepository';
-import { DisciplineTeacherRoleRepository } from '../database/repositories/DisciplineTeacherRoleRepository';
 import { SubjectRepository } from '../database/repositories/SubjectRepository';
 import { RoleRepository } from '../database/repositories/RoleRepository';
 import { GrantRepository } from '../database/repositories/GrantRepository';
@@ -28,7 +27,6 @@ import { SpecialityRepository } from '../database/repositories/SpecialityReposit
     PrismaService,
     DisciplineRepository,
     DisciplineTeacherRepository,
-    DisciplineTeacherRoleRepository,
     EntrantRepository,
     TeacherRepository,
     GroupRepository,
@@ -53,7 +51,6 @@ import { SpecialityRepository } from '../database/repositories/SpecialityReposit
     PrismaService,
     DisciplineRepository,
     DisciplineTeacherRepository,
-    DisciplineTeacherRoleRepository,
     EntrantRepository,
     TeacherRepository,
     GroupRepository,
