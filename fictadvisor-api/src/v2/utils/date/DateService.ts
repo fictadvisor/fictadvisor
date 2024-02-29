@@ -200,4 +200,14 @@ export class DateService {
       throw new DataMissingException();
     }
   }
+
+  async getEventTime (pairTime: string, startOfSemester: Date, week: number, day: number) {
+    const [hours, minutes] = pairTime
+      .split('.')
+      .map((number) => +number);
+    const startOfEvent = new Date(startOfSemester.getTime()+week*WEEK+(day-1)*DAY+hours*HOUR+minutes*MINUTE);
+    const endOfEvent = new Date(startOfEvent.getTime()+HOUR+35*MINUTE);
+
+    return { startOfEvent, endOfEvent };
+  }
 }

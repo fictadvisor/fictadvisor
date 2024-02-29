@@ -56,31 +56,46 @@ export class ScheduleController {
     private scheduleMapper: ScheduleMapper,
   ) {}
 
-  @Access(PERMISSION.SCHEDULE_PARSE)
   @ApiBearerAuth()
-  @Post('/parse')
   @ApiOkResponse()
   @ApiUnauthorizedResponse({
     description: `\n
     UnauthorizedException:
       Unauthorized`,
   })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
   @ApiQuery({
     name: 'parser',
-    enum: ['schedule', 'rozkpi'],
+    enum: ['campus', 'rozkpi'],
   })
   @ApiQuery({
     name: 'semester',
     enum: [1, 2],
+    description: 'Semester number',
   })
   @ApiQuery({
     name: 'page',
     required: false,
+    description: 'Page number for rozkpi parser',
+  })
+  @ApiQuery({
+    name: 'year',
+    description: 'Academic year',
   })
   @ApiQuery({
     name: 'groups',
     required: false,
+    description: 'Names of academic groups',
   })
+  @ApiEndpoint({
+    summary: 'Parse lessons',
+    permissions: PERMISSION.SCHEDULE_PARSE,
+  })
+  @Post('/parse')
   async parse (
     @Query('parser') parser: string,
     @Query('page') page: string,
