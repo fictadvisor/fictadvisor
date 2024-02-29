@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DbTeacher } from '../database/entities/DbTeacher';
+import { DbTeacher } from '../../../../types/DbTeacher';
 import { TeacherRole } from '@prisma/client';
 import { OrderQAParam } from '../api/dtos/OrderQAParam';
 import { Sort, SortDTO } from '../utils/QueryAllDTO';

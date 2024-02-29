@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../PrismaService';
-import { DbCathedra } from '../entities/DbCathedra';
+import { DbCathedra } from '../../../../../types/DbCathedra';
 
 @Injectable()
 export class CathedraRepository {

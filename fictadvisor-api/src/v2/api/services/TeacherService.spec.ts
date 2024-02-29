@@ -5,7 +5,7 @@ import { ConfigurationModule } from '../../modules/ConfigModule';
 import Configuration from '../../config/Configuration';
 import { PollModule } from '../../modules/PollModule';
 import { PollService } from './PollService';
-import { DbQuestionWithAnswers } from '../../database/entities/DbQuestionWithAnswers';
+import { DbQuestionWithAnswers } from '../../../../../types/DbQuestionWithAnswers';
 import { ResponseQueryDTO } from '../dtos/ResponseQueryDTO';
 import { PrismaModule } from '../../modules/PrismaModule';
 import { MapperModule } from '../../modules/MapperModule';

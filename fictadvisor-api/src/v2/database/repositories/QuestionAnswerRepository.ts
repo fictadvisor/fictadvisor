@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../PrismaService';
 import { CreateAnswerData } from '../../api/datas/CreateAnswerData';
 import { Prisma } from '@prisma/client';
-import { DbQuestionAnswer } from '../entities/DbQuestionAnswer';
+import { DbQuestionAnswer } from '../../../../../types/DbQuestionAnswer';
 
 @Injectable()
 export class QuestionAnswerRepository {

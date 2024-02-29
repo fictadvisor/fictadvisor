@@ -8,7 +8,7 @@ import { CreateDisciplineDTO } from '../dtos/CreateDisciplineDTO';
 import { QueryAllDisciplinesDTO } from '../dtos/QueryAllDisciplinesDTO';
 import { QuerySemesterDTO } from '../dtos/QuerySemesterDTO';
 import { DatabaseUtils } from '../../database/DatabaseUtils';
-import { DbDiscipline } from '../../database/entities/DbDiscipline';
+import { DbDiscipline } from '../../../../../types/DbDiscipline';
 import { PaginatedData } from '../datas/PaginatedData';
 import { DisciplineTeacherService } from './DisciplineTeacherService';
 

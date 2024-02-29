@@ -1,7 +1,7 @@
 import { DateService, FORTNITE, WEEK } from '../../utils/date/DateService';
 import { Injectable } from '@nestjs/common';
 import { EventRepository } from '../../database/repositories/EventRepository';
-import { DbEvent } from '../../database/entities/DbEvent';
+import { DbEvent } from '../../../../../types/DbEvent';
 import { DisciplineType, DisciplineTypeEnum, Period } from '@prisma/client';
 import { RozParser } from '../../utils/parser/RozParser';
 import { CampusParser } from '../../utils/parser/CampusParser';
@@ -13,7 +13,7 @@ import { InvalidDateException } from '../../utils/exceptions/InvalidDateExceptio
 import { ObjectIsRequiredException } from '../../utils/exceptions/ObjectIsRequiredException';
 import { DisciplineTeacherRoleRepository } from '../../database/repositories/DisciplineTeacherRoleRepository';
 import { every, filterAsync, find, some } from '../../utils/ArrayUtil';
-import { DbDiscipline, DbDiscipline_DisciplineTeacher } from '../../database/entities/DbDiscipline';
+import { DbDiscipline, DbDiscipline_DisciplineTeacher } from '../../../../../types/DbDiscipline';
 import { InvalidWeekException } from '../../utils/exceptions/InvalidWeekException';
 import { UserService } from './UserService';
 import { EventFiltrationDTO } from '../dtos/EventFiltrationDTO';

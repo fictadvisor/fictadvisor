@@ -3,7 +3,7 @@ import { Test } from '@nestjs/testing';
 import { PrismaModule } from '../../modules/PrismaModule';
 import { PermissionService } from './PermissionService';
 import { RoleRepository } from '../../database/repositories/RoleRepository';
-import { DbRole } from '../../database/entities/DbRole';
+import { DbRole } from '../../../../../types/DbRole';
 import { CreateRoleWithGrantsDTO } from '../dtos/CreateRoleWithGrantsDTO';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
 

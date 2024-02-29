@@ -17,7 +17,7 @@ import { AVATARS } from './AuthService';
 import { AlreadyRegisteredException } from '../../utils/exceptions/AlreadyRegisteredException';
 import { DatabaseUtils } from '../../database/DatabaseUtils';
 import { StudentMapper } from '../../mappers/StudentMapper';
-import { DbGroup } from '../../database/entities/DbGroup';
+import { DbGroup } from '../../../../../types/DbGroup';
 import { QuerySemesterDTO } from '../dtos/QuerySemesterDTO';
 import { DateService } from '../../utils/date/DateService';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';

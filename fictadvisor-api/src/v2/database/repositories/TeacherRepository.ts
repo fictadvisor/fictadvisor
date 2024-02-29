@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../PrismaService';
-import { DbTeacher } from '../entities/DbTeacher';
+import { DbTeacher } from '../../../../../types/DbTeacher';
 
 
 @Injectable()

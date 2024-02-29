@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DbSubject } from '../database/entities/DbSubject';
+import { DbSubject } from '../../../../types/DbSubject';
 
 @Injectable()
 export class SubjectMapper {
