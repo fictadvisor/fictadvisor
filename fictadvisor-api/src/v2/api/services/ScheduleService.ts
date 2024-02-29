@@ -4,7 +4,7 @@ import { EventRepository } from '../../database/repositories/EventRepository';
 import { DbEvent } from '../../database/entities/DbEvent';
 import { DisciplineType, DisciplineTypeEnum, Period } from '@prisma/client';
 import { RozParser } from '../../utils/parser/RozParser';
-import { ScheduleParser } from '../../utils/parser/ScheduleParser';
+import { CampusParser } from '../../utils/parser/CampusParser';
 import { CreateEventDTO } from '../dtos/CreateEventDTO';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
 import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
@@ -31,7 +31,6 @@ export const weeksPerEvent = {
   NO_PERIOD: 1,
 };
 
-
 @Injectable()
 export class ScheduleService {
 
@@ -42,23 +41,24 @@ export class ScheduleService {
     private disciplineTeacherRepository: DisciplineTeacherRepository,
     private disciplineTeacherRoleRepository: DisciplineTeacherRoleRepository,
     private rozParser: RozParser,
-    private scheduleParser: ScheduleParser,
     private userService: UserService,
     private studentRepository: StudentRepository,
     private dateUtils: DateUtils,
+    private campusParser: CampusParser,
   ) {}
+
+  private parserTypes =  {
+    rozkpi: async (period, groupList, page) => {
+      await this.rozParser.parse(period, groupList, page);
+    },
+    campus: async (period, groupList) => {
+      await this.campusParser.parse(period, groupList);
+    },
+  };
 
   async parse (parserType, page, period, groups) {
     const groupList = groups ? groups.trim().split(';') : [];
-
-    switch (parserType) {
-    case 'rozkpi':
-      await this.rozParser.parse(period, groupList, page);
-      break;
-    case 'schedule':
-      await this.scheduleParser.parse(period, groupList);
-      break;
-    }
+    await this.parserTypes[parserType](period, groupList, page);
   }
 
   async getIndexOfLesson (week: number, event) {
