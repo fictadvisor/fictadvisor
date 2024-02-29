@@ -15,7 +15,7 @@ export class StudentRepository {
             speciality: true,
           },
         },
-      }
+      },
     },
     roles: {
       include: {

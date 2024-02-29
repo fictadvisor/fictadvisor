@@ -24,11 +24,11 @@ export class TeacherRepository {
     },
   };
 
-  async findMany (data: Prisma.TeacherFindManyArgs) {
+  async findMany (data: Prisma.TeacherFindManyArgs): Promise<DbTeacher[]> {
     return this.prisma.teacher.findMany({
       include: this.include,
       ...data,
-    });
+    }) as Promise<DbTeacher[]>;
   }
 
   async find (
@@ -61,10 +61,9 @@ export class TeacherRepository {
   async getOrCreate (
     data: {lastName: string, firstName: string, middleName: string},
   ) {
-    let teacher = await this.find(data);
-
+    const teacher = await this.find(data);
     if (!teacher) {
-      teacher = await this.create(data);
+      return this.create(data);
     }
     return teacher;
   }
