@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-import { ScheduleParser } from './ScheduleParser';
+import { CampusParser } from './CampusParser';
 import { RozParser } from './RozParser';
 import { PrismaModule } from '../../modules/PrismaModule';
 import { DateModule } from '../date/DateModule';
 
 @Module({
-  providers: [ScheduleParser, RozParser],
-  exports: [ScheduleParser, RozParser],
+  providers: [CampusParser, RozParser],
+  exports: [CampusParser, RozParser],
   imports: [PrismaModule, DateModule],
 })
 export class ParserModule {}
