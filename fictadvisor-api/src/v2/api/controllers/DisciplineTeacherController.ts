@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request, UseGuards } from '@nestjs/common';
 import { DisciplineTeacherService } from '../services/DisciplineTeacherService';
-import { CreateAnswersDTO } from '../dtos/CreateAnswersDTO';
+import { CreateAnswersDTO, CreateAnswersWithUserIdDTO } from '../dtos/CreateAnswersDTO';
 import { GroupByDisciplineTeacherGuard } from 'src/v2/security/group-guard/GroupByDisciplineTeacherGuard';
 import { Access } from 'src/v2/security/Access';
 import { PERMISSION } from '../../security/PERMISSION';
@@ -52,48 +52,147 @@ export class DisciplineTeacherController {
     type: DisciplineTeacherQuestionsResponse,
   })
   @ApiBadRequestResponse({
-    description: `
-      InvalidEntityIdException: disciplineTeacher with such id is not found
-    `,
+    description: `\n
+    InvalidEntityIdException: 
+      DisciplineTeacher with such id is not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
   })
   @ApiForbiddenResponse({
-    description: `
-      NoPermissionException: You do not have permission to perform this action
-    `,
+    description: `\n
+    NoPermissionException: 
+      You do not have permission to perform this action`,
   })
-  @Access(PERMISSION.GROUPS_$GROUPID_QUESTIONS_GET, GroupByDisciplineTeacherGuard)
+  @ApiEndpoint({
+    summary: 'Get user\'s questions by disciplineTeacherId',
+    permissions: PERMISSION.GROUPS_$GROUPID_QUESTIONS_GET,
+    guards: GroupByDisciplineTeacherGuard,
+  })
   @Get('/:disciplineTeacherId/questions')
   getQuestions (
     @Request() req,
     @Param('disciplineTeacherId', DisciplineTeacherByIdPipe) disciplineTeacherId: string,
-  ) {
+  ): Promise<DisciplineTeacherQuestionsResponse> {
     return this.disciplineTeacherService.getQuestions(disciplineTeacherId, req.user.id);
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse()
-  @ApiForbiddenResponse({
-    description: `
-      NoPermissionException: You do not have permission to perform this action
-    `,
+  @ApiOkResponse({
+    type: DisciplineTeacherQuestionsResponse,
   })
   @ApiBadRequestResponse({
-    description: `
-      InvalidBodyException: Question id can not be empty\n
-      InvalidBodyException: Value can not be empty\n
-      ExcessiveAnswerException: There are excessive answers in the request\n
-      NotEnoughAnswersException: There are not enough answers\n
-      AlreadyAnsweredException: This question is already answered    
-    `,
+    description: `\n
+    InvalidEntityIdException: 
+      DisciplineTeacher with such id is not found`,
   })
-  @Access(PERMISSION.GROUPS_$GROUPID_ANSWERS_SEND, GroupByDisciplineTeacherGuard)
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException: 
+      You do not have permission to perform this action`,
+  })
+  @ApiEndpoint({
+    summary: 'Get user\'s questions by disciplineTeacherId by telegram',
+    guards: [GroupByDisciplineTeacherGuard, TelegramGuard],
+  })
+  @Get('/:disciplineTeacherId/questions/telegram')
+  getQuestionsByTelegram (
+    @Param('disciplineTeacherId', DisciplineTeacherByIdPipe) disciplineTeacherId: string,
+    @Query('userId', UserByIdPipe) userId: string,
+  ): Promise<DisciplineTeacherQuestionsResponse> {
+    return this.disciplineTeacherService.getQuestions(disciplineTeacherId, userId);
+  }
+
+  @ApiBearerAuth()
+  @ApiOkResponse()
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidBodyException: 
+      Question id can not be empty
+      Value can not be empty
+      
+    ExcessiveAnswerException: 
+      There are excessive answers in the request
+      
+    NotEnoughAnswersException: 
+      There are not enough answers
+      
+    AlreadyAnsweredException: 
+      This question is already answered`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException: 
+      You do not have permission to perform this action`,
+  })
+  @ApiEndpoint({
+    summary: 'Send question`s answers by user and disciplineTeacherId',
+    permissions: PERMISSION.GROUPS_$GROUPID_ANSWERS_SEND,
+    guards: GroupByDisciplineTeacherGuard,
+  })
   @Post('/:disciplineTeacherId/answers')
   sendAnswers (
     @Param('disciplineTeacherId', DisciplineTeacherByIdPipe) disciplineTeacherId: string,
     @Request() req,
     @Body(QuestionAnswersValidationPipe) body: CreateAnswersDTO,
-  ) {
+  ): Promise<void> {
     return this.disciplineTeacherService.sendAnswers(disciplineTeacherId, body, req.user.id);
+  }
+
+  @ApiBearerAuth()
+  @ApiOkResponse()
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidBodyException: 
+      Question id cannot be empty
+      Value cannot be empty
+      UserId cannot be empty
+      
+    InvalidEntityIdException:
+      User with such id is not found
+      
+    ExcessiveAnswerException: 
+      There are excessive answers in the request
+      
+    NotEnoughAnswersException: 
+      There are not enough answers
+      
+    AlreadyAnsweredException: 
+      This question is already answered`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException: 
+      You do not have permission to perform this action`,
+  })
+  @ApiEndpoint({
+    summary: 'Send question`s answers by user and disciplineTeacherId',
+    guards: [GroupByDisciplineTeacherGuard, TelegramGuard],
+  })
+  @Post('/:disciplineTeacherId/answers/telegram')
+  sendAnswersByTelegram (
+    @Param('disciplineTeacherId', DisciplineTeacherByIdPipe) disciplineTeacherId: string,
+    @Body(QuestionAnswersValidationPipe) body: CreateAnswersWithUserIdDTO,
+    @Body('userId', UserByIdPipe) userId: string,
+  ): Promise<void> {
+    return this.disciplineTeacherService.sendAnswers(disciplineTeacherId, body, userId);
   }
 
   @ApiBearerAuth()

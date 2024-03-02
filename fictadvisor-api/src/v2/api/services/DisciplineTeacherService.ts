@@ -109,7 +109,7 @@ export class DisciplineTeacherService {
     const questions = await this.getUniqueQuestions(id);
     const categories = this.questionMapper.sortByCategories(questions);
     return {
-      teacher,
+      teacher: { ...teacher, rating: +teacher.rating },
       subject: discipline.subject,
       categories,
     };
