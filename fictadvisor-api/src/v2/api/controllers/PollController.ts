@@ -24,6 +24,7 @@ import { QueryAllQuestionDTO } from '../dtos/QueryAllQuestionDTO';
 import { CreateQuestionDTO } from '../dtos/CreateQuestionDTO';
 import { UpdateQuestionDTO } from '../dtos/UpdateQuestionDTO';
 import { QuestionResponse, PaginatedQuestionsResponse } from '../responses/QuestionResponse';
+import { TelegramGuard } from '../../security/TelegramGuard';
 
 @ApiTags('Poll')
 @Controller({
@@ -142,6 +143,7 @@ export class PollController {
   @ApiEndpoint({
     summary: 'Get teachers that were polled by the user',
     permissions: PERMISSION.USERS_$USERID_POLL_TEACHERS_GET,
+    guards: TelegramGuard,
   })
   @Get('/teachers/:userId')
   async getPollDisciplineTeachers (
@@ -186,7 +188,6 @@ export class PollController {
     const question = await this.pollService.deleteById(questionId);
     return this.questionMapper.getQuestion(question);
   }
-
 
   @ApiBearerAuth()
   @ApiOkResponse({
