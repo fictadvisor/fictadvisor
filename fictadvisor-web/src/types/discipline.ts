@@ -8,3 +8,23 @@ export interface Discipline {
     name: string;
   };
 }
+
+export interface AdminDiscipline {
+  id: string;
+  year: number;
+  isSelective: boolean;
+  semester: number;
+  name: string;
+  group: {
+    id: string;
+    code: string;
+  };
+  teachers: [
+    {
+      id: string;
+      firstName: string;
+      middleName: string;
+      lastName: string;
+    },
+  ];
+}
