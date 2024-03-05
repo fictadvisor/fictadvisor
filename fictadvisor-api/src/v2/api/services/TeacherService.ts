@@ -345,4 +345,20 @@ export class TeacherService {
 
     await this.telegramAPI.sendMessage(text);
   }
+
+  async getTeacherFullInitials (lastName: string, firstName: string, middleName: string) {
+    if (firstName.length <= 1 || middleName.length <= 1) {
+      const teachers = await this.teacherRepository.findMany({
+        where: { lastName, firstName: { startsWith: firstName }, middleName: { startsWith: middleName } },
+      });
+
+      if (teachers.length === 1) return teachers[0];
+    }
+
+    return await this.teacherRepository.getOrCreate({
+      lastName,
+      firstName,
+      middleName,
+    });
+  }
 }
