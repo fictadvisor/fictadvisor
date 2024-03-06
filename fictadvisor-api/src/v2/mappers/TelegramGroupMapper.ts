@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DbTelegramGroup } from '../../../../types/DbTelegramGroup';
+import { DbTelegramGroup } from '../../../../utils/types/DbTelegramGroup';
 
 @Injectable()
 export class TelegramGroupMapper {

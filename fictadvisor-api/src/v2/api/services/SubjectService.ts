@@ -8,9 +8,9 @@ import { DatabaseUtils } from '../../database/DatabaseUtils';
 import { UpdateSubjectDTO } from '../dtos/UpdateSubjectDTO';
 import { TeacherMapper } from '../../mappers/TeacherMapper';
 import { TeacherService } from './TeacherService';
-import { DbTeacher } from '../../../../../types/DbTeacher';
+import { DbTeacher } from '@fictadvisor/utils/types/DbTeacher';
 import { QuestionMapper } from '../../mappers/QuestionMapper';
-import { DbDisciplineTeacherWithAnswers } from '../../../../../types/DbDisciplineTeacherWithAnswers';
+import { DbDisciplineTeacherWithAnswers } from '@fictadvisor/utils/types/DbDisciplineTeacherWithAnswers';
 import { SubjectWithTeachersResponse } from '../responses/SubjectWithTeachersResponse';
 
 @Injectable()

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { DbEvent } from '../../../../types/DbEvent';
-import { DbDiscipline } from '../../../../types/DbDiscipline';
+import { DbEvent } from '../../../../utils/types/DbEvent';
+import { DbDiscipline } from '../../../../utils/types/DbDiscipline';
 import { TeacherRoleAdapter } from './TeacherRoleAdapter';
 import { some } from '../utils/ArrayUtil';
 import { EventResponse } from '../api/responses/EventResponse';

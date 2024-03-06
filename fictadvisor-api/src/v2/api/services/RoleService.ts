@@ -6,7 +6,7 @@ import { NoPermissionException } from '../../utils/exceptions/NoPermissionExcept
 import { CreateRoleWithGrantsDTO } from '../dtos/CreateRoleWithGrantsDTO';
 import { CreateGrantDTO } from '../dtos/CreateGrantsDTO';
 import { PermissionService } from './PermissionService';
-import { DbRole } from '../../../../../types/DbRole';
+import { DbRole } from '@fictadvisor/utils/types/DbRole';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
 import { DatabaseUtils } from '../../database/DatabaseUtils';
 import { Grant, Prisma } from '@prisma/client';

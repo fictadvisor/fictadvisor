@@ -18,7 +18,7 @@ import { UpdateStudentSelectiveDTO } from '../dtos/UpdateStudentSelectiveDTO';
 import { NotBelongException } from '../../utils/exceptions/NotBelongException';
 import { ExcessiveSelectiveDisciplinesException } from '../../utils/exceptions/ExcessiveSelectiveDisciplinesException';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
-import { DbDiscipline } from '../../../../../types/DbDiscipline';
+import { DbDiscipline } from '@fictadvisor/utils/types/DbDiscipline';
 import { StudyingSemester } from '../../utils/date/DateService';
 import { AlreadySelectedException } from '../../utils/exceptions/AlreadySelectedException';
 

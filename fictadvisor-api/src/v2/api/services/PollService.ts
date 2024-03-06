@@ -8,10 +8,10 @@ import {
 } from '@prisma/client';
 import { ResponseData } from '../datas/ResponseData';
 import { CreateQuestionRoleDTO } from '../dtos/CreateQuestionRoleDTO';
-import { DbQuestionWithAnswers } from '../../../../../types/DbQuestionWithAnswers';
+import { DbQuestionWithAnswers } from '@fictadvisor/utils/types/DbQuestionWithAnswers';
 import { DateService } from '../../utils/date/DateService';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
-import { DbQuestionWithRoles } from '../../../../../types/DbQuestionWithRoles';
+import { DbQuestionWithRoles } from '@fictadvisor/utils/types/DbQuestionWithRoles';
 import { QuestionAnswerRepository } from '../../database/repositories/QuestionAnswerRepository';
 import {
   CommentsQueryDTO,
@@ -26,7 +26,7 @@ import { QueryAllDisciplineTeacherForPollDTO } from '../dtos/QueryAllDisciplineT
 import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
 import { PollDisciplineTeachersResponse } from '../responses/PollDisciplineTeachersResponse';
 import { QueryAllQuestionDTO } from '../dtos/QueryAllQuestionDTO';
-import { DbQuestion } from '../../../../../types/DbQuestion';
+import { DbQuestion } from '@fictadvisor/utils/types/DbQuestion';
 import { CreateQuestionDTO } from '../dtos/CreateQuestionDTO';
 import { UpdateQuestionDTO } from '../dtos/UpdateQuestionDTO';
 import { SortDTO } from '../../utils/QueryAllDTO';

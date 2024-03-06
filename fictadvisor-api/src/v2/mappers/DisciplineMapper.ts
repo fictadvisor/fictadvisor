@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { DbDiscipline } from '../../../../types/DbDiscipline';
+import { DbDiscipline } from '../../../../utils/types/DbDiscipline';
 import { SelectiveAmount } from '@prisma/client';
 import { ExtendDisciplineTeachersResponse } from '../api/responses/DisciplineTeachersResponse';
 import { DisciplineAdminResponse } from '../api/responses/DisciplineResponse';
-import { DbDisciplineTeacher } from '../../../../types/DbDisciplineTeacher';
+import { DbDisciplineTeacher } from '../../../../utils/types/DbDisciplineTeacher';
 
 @Injectable()
 export class DisciplineMapper {

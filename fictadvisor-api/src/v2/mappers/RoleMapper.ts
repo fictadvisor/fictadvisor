@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Grant } from '@prisma/client';
-import { DbRole } from '../../../../types/DbRole';
+import { DbRole } from '../../../../utils/types/DbRole';
 @Injectable()
 export class RoleMapper {
   create (role: DbRole) {

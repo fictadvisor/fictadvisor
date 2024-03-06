@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CathedraRepository } from '../../database/repositories/CathedraRepository';
 import { CreateCathedraDTO } from '../dtos/CreateCathedraDTO';
 import { UpdateCathedraDTO } from '../dtos/UpdateCathedraDTO';
-import { DbCathedra } from '../../../../../types/DbCathedra';
+import { DbCathedra } from '@fictadvisor/utils/types/DbCathedra';
 import { QueryAllDTO } from '../../utils/QueryAllDTO';
 import { DatabaseUtils } from '../../database/DatabaseUtils';
 

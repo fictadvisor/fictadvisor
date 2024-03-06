@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../PrismaService';
-import { DbTeacher } from '../../../../../types/DbTeacher';
+import { DbTeacher } from '@fictadvisor/utils/types/DbTeacher';
 
 
 @Injectable()

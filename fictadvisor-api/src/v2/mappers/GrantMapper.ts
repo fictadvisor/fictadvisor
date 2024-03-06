@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DbGrant } from '../../../../types/DbGrant';
+import { DbGrant } from '../../../../utils/types/DbGrant';
 
 @Injectable()
 export class GrantMapper {

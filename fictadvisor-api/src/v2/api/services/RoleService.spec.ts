@@ -3,7 +3,7 @@ import { Test } from '@nestjs/testing';
 import { PrismaModule } from '../../modules/PrismaModule';
 import { PermissionService } from './PermissionService';
 import { RoleRepository } from '../../database/repositories/RoleRepository';
-import { DbRole } from '../../../../../types/DbRole';
+import { DbRole } from '@fictadvisor/utils/types/DbRole';
 import { CreateRoleWithGrantsDTO } from '../dtos/CreateRoleWithGrantsDTO';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
 
@@ -30,6 +30,7 @@ describe('RoleService', () => {
     }] as DbRole[];
 
     it('should throw an exception because user does not have permission to create roles with some grants', async function () {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       jest.spyOn(roleService as any, 'getUserHigherRoles').mockImplementation(async (_: string) => rolesWithCreatePermission);
       const data = {
         grants: [{

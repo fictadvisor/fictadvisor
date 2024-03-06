@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { DbGroup } from '../../../../types/DbGroup';
+import { DbGroup } from '../../../../utils/types/DbGroup';
 import { RoleName } from '@prisma/client';
 import { MappedGroupResponse } from '../api/responses/MappedGroupResponse';
-import { DbStudent } from '../../../../types/DbStudent';
+import { DbStudent } from '../../../../utils/types/DbStudent';
 
 @Injectable()
 export class GroupMapper {

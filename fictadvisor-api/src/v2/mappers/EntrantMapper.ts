@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DbEntrant } from '../../../../types/DbEntrant';
+import { DbEntrant } from '../../../../utils/types/DbEntrant';
 
 @Injectable()
 export class EntrantMapper {

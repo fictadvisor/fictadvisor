@@ -1,4 +1,4 @@
-import { DbCathedra } from '../../../../types/DbCathedra';
+import { DbCathedra } from '../../../../utils/types/DbCathedra';
 import { CathedraWithTeachersResponse } from '../api/responses/CathedraWithTeachersResponse';
 import { CathedraResponse } from '../api/responses/CathedraResponse';
 import { CathedraWithNumberOfTeachersResponse } from '../api/responses/CathedraWithNumberOfTeachersResponse';

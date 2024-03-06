@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { DbQuestionWithRoles } from '../../../../types/DbQuestionWithRoles';
+import { DbQuestionWithRoles } from '../../../../utils/types/DbQuestionWithRoles';
 import { QuestionDisplay, QuestionRole, QuestionType } from '@prisma/client';
-import { DbDisciplineTeacherWithAnswers } from '../../../../types/DbDisciplineTeacherWithAnswers';
-import { DbQuestionWithAnswers } from '../../../../types/DbQuestionWithAnswers';
+import { DbDisciplineTeacherWithAnswers } from '../../../../utils/types/DbDisciplineTeacherWithAnswers';
+import { DbQuestionWithAnswers } from '../../../../utils/types/DbQuestionWithAnswers';
 import { QuestionCommentData } from '../api/datas/QuestionCommentData';
-import { DbQuestionAnswer } from '../../../../types/DbQuestionAnswer';
-import { DbQuestion } from '../../../../types/DbQuestion';
+import { DbQuestionAnswer } from '../../../../utils/types/DbQuestionAnswer';
+import { DbQuestion } from '../../../../utils/types/DbQuestion';
 import { CommentResponse } from '../api/responses/CommentResponse';
 
 

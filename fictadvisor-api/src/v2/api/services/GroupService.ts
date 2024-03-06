@@ -9,7 +9,6 @@ import { UserRepository } from '../../database/repositories/UserRepository';
 import { EmailDTO } from '../dtos/EmailDTO';
 import { ApproveDTO } from '../dtos/ApproveDTO';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
-import { RoleDTO } from '../dtos/RoleDTO';
 import { UpdateGroupDTO } from '../dtos/UpdateGroupDTO';
 import { UserService } from './UserService';
 import { RoleRepository } from '../../database/repositories/RoleRepository';
@@ -17,7 +16,7 @@ import { AVATARS } from './AuthService';
 import { AlreadyRegisteredException } from '../../utils/exceptions/AlreadyRegisteredException';
 import { DatabaseUtils } from '../../database/DatabaseUtils';
 import { StudentMapper } from '../../mappers/StudentMapper';
-import { DbGroup } from '../../../../../types/DbGroup';
+import { DbGroup } from '@fictadvisor/utils/types/DbGroup';
 import { QuerySemesterDTO } from '../dtos/QuerySemesterDTO';
 import { DateService } from '../../utils/date/DateService';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
@@ -353,14 +352,12 @@ export class GroupService {
       await this.switchModerators(groupId, moderatorIds);
     }
 
-    const group = await this.groupRepository.updateById(groupId, {
+    return await this.groupRepository.updateById(groupId, {
       code,
       cathedraId,
       educationalProgramId: eduProgramId,
       admissionYear,
     });
-
-    return group;
   }
 
   async getUnverifiedStudents (groupId: string) {

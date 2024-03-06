@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { RoleRepository } from '../../database/repositories/RoleRepository';
-import { DbRole } from '../../../../../types/DbRole';
+import { DbRole } from '@fictadvisor/utils/types/DbRole';
 import { Grant } from '@prisma/client';
 import { DataNotFoundException } from '../../utils/exceptions/DataNotFoundException';
 import { CheckPermissionsDTO } from '../dtos/CheckPermissionsDTO';
