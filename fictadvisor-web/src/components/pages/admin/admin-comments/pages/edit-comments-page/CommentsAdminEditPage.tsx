@@ -12,6 +12,7 @@ import {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
+import DeletePopup from '@/components/common/ui/delete-popup';
 import TextArea from '@/components/common/ui/form/text-area-mui';
 import { createValidationSchema } from '@/components/pages/admin/admin-comments/pages/edit-comments-page/types/validation';
 import useToast from '@/hooks/use-toast';
@@ -32,6 +33,7 @@ const CommentsAdminEditPage: FC<CommentsAdminEditPageProps> = ({ comment }) => {
   const toast = useToast();
   const toastError = useToastError();
   const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleDelete = async (
     data: DeleteCommentBody,
@@ -100,11 +102,18 @@ const CommentsAdminEditPage: FC<CommentsAdminEditPageProps> = ({ comment }) => {
                 color={ButtonColor.SECONDARY}
                 startIcon={<TrashIcon />}
                 text="Видалити"
-                onClick={() =>
-                  handleDelete(comment, comment.disciplineTeacherId)
-                }
+                onClick={() => setIsOpen(true)}
                 sx={styles.button}
               />
+              {isOpen && (
+                <DeletePopup
+                  setPopupOpen={setIsOpen}
+                  handleDeleteSubmit={() =>
+                    handleDelete(comment, comment.disciplineTeacherId)
+                  }
+                  name="цей коментар"
+                />
+              )}
               <Button
                 size={ButtonSize.MEDIUM}
                 text="Зберегти"

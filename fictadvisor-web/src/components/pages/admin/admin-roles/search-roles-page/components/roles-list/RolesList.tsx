@@ -1,8 +1,7 @@
 'use client';
 import React, { FC } from 'react';
 import { QueryObserverBaseResult } from 'react-query';
-import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { Box, Link, TableHead, Typography } from '@mui/material';
+import { TableHead, Typography } from '@mui/material';
 import {
   Paper,
   Table,
@@ -13,16 +12,7 @@ import {
   TableRow,
 } from '@mui/material';
 import { isAxiosError } from 'axios';
-import NextLink from 'next/link';
 
-import Button from '@/components/common/ui/button';
-import {
-  ButtonSize,
-  ButtonVariant,
-} from '@/components/common/ui/button-mui/types';
-import { IconButtonShape } from '@/components/common/ui/icon-button';
-import IconButton from '@/components/common/ui/icon-button-mui';
-import { IconButtonColor } from '@/components/common/ui/icon-button-mui/types';
 import Tag from '@/components/common/ui/tag';
 import { TagSize } from '@/components/common/ui/tag/types';
 import useToast from '@/hooks/use-toast';
@@ -35,6 +25,7 @@ import {
   TagTextMapper,
 } from '../../../common/constants/RolesSearchConstants';
 
+import TableActions from './components/table-actions';
 import * as styles from './RolesList.styles';
 
 interface RolesListProps {
@@ -110,40 +101,7 @@ const RolesList: FC<RolesListProps> = ({
                 <Typography variant="body2">{role.weight}</Typography>
               </TableCell>
               <TableCell align="right" sx={styles.actionsWrapper}>
-                <Box sx={styles.actions}>
-                  <Link
-                    href={`/admin/roles/${role.id}/grants`}
-                    component={NextLink}
-                    underline="none"
-                    color="inherit"
-                  >
-                    <Button
-                      size={ButtonSize.SMALL}
-                      variant={ButtonVariant.FILLED}
-                      text="Права"
-                    />
-                  </Link>
-                  <Link
-                    href={`/admin/roles/edit/${role.id}`}
-                    component={NextLink}
-                    underline="none"
-                    color="inherit"
-                  >
-                    <Button
-                      size={ButtonSize.SMALL}
-                      startIcon={<PencilSquareIcon width={24} height={24} />}
-                      variant={ButtonVariant.OUTLINE}
-                      text="Редагувати"
-                    />
-                  </Link>
-                  <IconButton
-                    icon={<TrashIcon width={24} height={24} />}
-                    sx={styles.trashIcon}
-                    color={IconButtonColor.SECONDARY}
-                    shape={IconButtonShape.CIRCLE}
-                    onClick={() => handleDelete(role.id)}
-                  />
-                </Box>
+                <TableActions handleDelete={handleDelete} role={role} />
               </TableCell>
             </TableRow>
           ))}

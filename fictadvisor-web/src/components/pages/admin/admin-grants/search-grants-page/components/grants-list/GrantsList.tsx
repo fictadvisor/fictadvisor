@@ -1,8 +1,7 @@
 'use client';
 import React, { FC } from 'react';
 import { QueryObserverBaseResult } from 'react-query';
-import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { Box, Link, TableHead, Typography } from '@mui/material';
+import { TableHead, Typography } from '@mui/material';
 import {
   Paper,
   Table,
@@ -12,22 +11,13 @@ import {
   TablePagination,
   TableRow,
 } from '@mui/material';
-import { isAxiosError } from 'axios';
-import NextLink from 'next/link';
 
-import Button from '@/components/common/ui/button';
-import {
-  ButtonSize,
-  ButtonVariant,
-} from '@/components/common/ui/button-mui/types';
-import { IconButtonShape } from '@/components/common/ui/icon-button';
-import IconButton from '@/components/common/ui/icon-button-mui';
-import { IconButtonColor } from '@/components/common/ui/icon-button-mui/types';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import GrantsAPI from '@/lib/api/grants/GrantsAPI';
 import { Grant } from '@/types/role';
 
+import TableActions from './components/table-actions';
 import * as styles from './GrantsList.styles';
 
 interface GrantsListProps {
@@ -66,9 +56,7 @@ const GrantsList: FC<GrantsListProps> = ({
       await refetch();
       toast.success('Право видалено успішно');
     } catch (e) {
-      if (isAxiosError(e)) {
-        toastError.displayError(e);
-      }
+      toastError.displayError(e);
     }
   };
 
@@ -100,28 +88,11 @@ const GrantsList: FC<GrantsListProps> = ({
                   </Typography>
                 </TableCell>
                 <TableCell align="right" sx={styles.actionsWrapper}>
-                  <Box sx={styles.actions}>
-                    <Link
-                      href={`/admin/roles/${roleId}/grants/edit/${grant.id}`}
-                      component={NextLink}
-                      underline="none"
-                      color="inherit"
-                    >
-                      <Button
-                        size={ButtonSize.SMALL}
-                        startIcon={<PencilSquareIcon width={24} height={24} />}
-                        variant={ButtonVariant.OUTLINE}
-                        text="Редагувати"
-                      />
-                    </Link>
-                    <IconButton
-                      icon={<TrashIcon width={24} height={24} />}
-                      sx={styles.trashIcon}
-                      color={IconButtonColor.SECONDARY}
-                      shape={IconButtonShape.CIRCLE}
-                      onClick={() => handleDelete(grant.id)}
-                    />
-                  </Box>
+                  <TableActions
+                    grant={grant}
+                    roleId={roleId}
+                    handleDelete={handleDelete}
+                  />
                 </TableCell>
               </TableRow>
             ))}

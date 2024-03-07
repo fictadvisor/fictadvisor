@@ -11,6 +11,7 @@ import {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
+import DeletePopup from '@/components/common/ui/delete-popup';
 import { InputSize, InputType } from '@/components/common/ui/form';
 import { FieldSize } from '@/components/common/ui/form/common/types';
 import Dropdown from '@/components/common/ui/form/dropdown';
@@ -37,6 +38,7 @@ const AdminDepartmentsEditPage: FC<AdminDepartmentsEditProps> = ({
   const [abbreviation, setAbbreviation] = useState<string>(
     department.abbreviation,
   );
+  const [isOpen, setIsOpen] = useState(false);
   const [division, setDivision] = useState<string>(department.division);
   const [left, setLeft] = useState<Teacher[]>([]);
   const [right, setRight] = useState<Teacher[]>([]);
@@ -111,9 +113,17 @@ const AdminDepartmentsEditPage: FC<AdminDepartmentsEditProps> = ({
             color={ButtonColor.SECONDARY}
             startIcon={<TrashIcon />}
             text="Видалити"
-            onClick={() => handleDelete(department.id)}
+            onClick={() => setIsOpen(true)}
             sx={styles.button}
           />
+
+          {isOpen && (
+            <DeletePopup
+              setPopupOpen={setIsOpen}
+              handleDeleteSubmit={() => handleDelete(department.id)}
+              name={`Департамент ${department.name}`}
+            />
+          )}
           <Button
             size={ButtonSize.MEDIUM}
             text="Зберегти"

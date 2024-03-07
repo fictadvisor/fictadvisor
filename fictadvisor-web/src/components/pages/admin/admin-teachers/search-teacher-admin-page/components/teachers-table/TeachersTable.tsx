@@ -1,5 +1,4 @@
 import React, { FC } from 'react';
-import { PencilSquareIcon } from '@heroicons/react/24/solid';
 import {
   Avatar,
   Stack,
@@ -11,22 +10,17 @@ import {
   Typography,
 } from '@mui/material';
 
-import Button from '@/components/common/ui/button-mui';
-import {
-  ButtonSize,
-  ButtonVariant,
-} from '@/components/common/ui/button-mui/types';
 import {
   CathedraColors,
   RoleColors,
   TagText,
 } from '@/components/common/ui/cards/card-roles/CardRoles';
-import { TrashBucketButton } from '@/components/common/ui/icon-button-mui/variants';
 import Tag from '@/components/common/ui/tag';
 import { TagSize, TagVariant } from '@/components/common/ui/tag/types';
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 import { Teacher } from '@/types/teacher';
 
+import TableActions from './components/table-actions';
 import TeachersSkeleton from './components/teachers-skeleton';
 import * as styles from './TeachersTable.styles';
 
@@ -102,19 +96,7 @@ const TeachersTable: FC<TeachersAdminSearchProps> = ({
                 </Stack>
               </TableCell>
               <TableCell sx={styles.bodyItem}>
-                <Stack sx={styles.tableColumn}>
-                  <Button
-                    href={`/admin/teachers/edit/${teacher.id}`}
-                    text="Редагувати"
-                    variant={ButtonVariant.OUTLINE}
-                    startIcon={<PencilSquareIcon />}
-                    size={ButtonSize.SMALL}
-                    sx={styles.button}
-                  />
-                  <TrashBucketButton
-                    onClick={() => deleteTeacher(teacher.id)}
-                  />
-                </Stack>
+                <TableActions teacher={teacher} deleteTeacher={deleteTeacher} />
               </TableCell>
             </TableRow>
           ))}

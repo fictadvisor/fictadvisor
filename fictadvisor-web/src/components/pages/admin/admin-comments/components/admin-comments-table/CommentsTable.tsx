@@ -1,6 +1,5 @@
 import React, { FC } from 'react';
 import { QueryObserverBaseResult } from 'react-query';
-import { PencilSquareIcon } from '@heroicons/react/24/solid';
 import {
   Stack,
   Table,
@@ -10,14 +9,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { isAxiosError } from 'axios';
 
-import Button from '@/components/common/ui/button-mui';
-import {
-  ButtonSize,
-  ButtonVariant,
-} from '@/components/common/ui/button-mui/types';
-import { TrashBucketButton } from '@/components/common/ui/icon-button-mui/variants';
 import CommentsSkeleton from '@/components/pages/admin/admin-comments/components/admin-comments-table/components/comments-skeleton';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
@@ -26,6 +18,7 @@ import { DeleteCommentBody } from '@/lib/api/teacher/types/DeleteCommentBody';
 import { Comment } from '@/lib/api/teacher/types/GetCommentsWithPaginationResponse';
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 
+import TableActions from './components/table-actions';
 import * as styles from './CommentsTable.styles';
 
 interface AnswersAdminTableProps {
@@ -114,23 +107,7 @@ const CommentsTable: FC<AnswersAdminTableProps> = ({
                 </Stack>
               </TableCell>
               <TableCell sx={styles.bodyItem}>
-                <Stack sx={styles.buttonsColumn}>
-                  <Button
-                    href={`/admin/comments/edit/${encodeURIComponent(
-                      JSON.stringify(comment),
-                    )}`}
-                    text="Редагувати"
-                    variant={ButtonVariant.OUTLINE}
-                    startIcon={<PencilSquareIcon />}
-                    size={ButtonSize.SMALL}
-                    sx={styles.button}
-                  />
-                  <TrashBucketButton
-                    onClick={() =>
-                      handleDelete(comment, comment.disciplineTeacherId)
-                    }
-                  />
-                </Stack>
+                <TableActions handleDelete={handleDelete} comment={comment} />
               </TableCell>
             </TableRow>
           ))}

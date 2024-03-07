@@ -2,7 +2,6 @@
 import React, { FC, useCallback, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Box, TablePagination } from '@mui/material';
-import { isAxiosError } from 'axios';
 
 import CommentsAdminSearch from '@/components/pages/admin/admin-comments/components/admin-comments-search';
 import CommentsTable from '@/components/pages/admin/admin-comments/components/admin-comments-table';
