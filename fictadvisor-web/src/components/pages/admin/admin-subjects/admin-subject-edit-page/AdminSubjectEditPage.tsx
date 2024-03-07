@@ -1,7 +1,6 @@
 import React, { FC, useState } from 'react';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Box, CardHeader, Stack } from '@mui/material';
-import { isAxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
 
 import Button from '@/components/common/ui/button-mui';
@@ -10,6 +9,7 @@ import {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
+import DeletePopup from '@/components/common/ui/delete-popup';
 import { InputSize, InputType } from '@/components/common/ui/form';
 import Input from '@/components/common/ui/form/input-mui';
 import useToast from '@/hooks/use-toast';
@@ -23,19 +23,19 @@ interface AdminSubjectEditPageProps {
 }
 const AdminSubjectEditPage: FC<AdminSubjectEditPageProps> = ({ subject }) => {
   const toast = useToast();
-  const toastError = useToastError();
+  const { displayError } = useToastError();
   const router = useRouter();
 
   const [subjectName, setSubjectName] = useState<string>(subject.name);
+  const [isOpen, setIsOpen] = useState(false);
+
   const handleDelete = async (subjectId: string) => {
     try {
       await SubjectAPI.delete(subjectId);
       toast.success('Предмет успішно видалено!', '', 4000);
       router.replace('/admin/subjects');
     } catch (e) {
-      if (isAxiosError(e)) {
-        toastError.displayError(e);
-      }
+      displayError(e);
     }
   };
   const handleEdit = async () => {
@@ -44,9 +44,7 @@ const AdminSubjectEditPage: FC<AdminSubjectEditPageProps> = ({ subject }) => {
       toast.success('Предмет успішно змінений!', '', 4000);
       router.replace('/admin/subjects');
     } catch (e) {
-      if (isAxiosError(e)) {
-        toastError.displayError(e);
-      }
+      displayError(e);
     }
   };
   return (
@@ -71,9 +69,16 @@ const AdminSubjectEditPage: FC<AdminSubjectEditPageProps> = ({ subject }) => {
             color={ButtonColor.SECONDARY}
             startIcon={<TrashIcon />}
             text="Видалити"
-            onClick={() => handleDelete(subject.id)}
+            onClick={() => setIsOpen(true)}
             sx={styles.button}
           />
+          {isOpen && (
+            <DeletePopup
+              setPopupOpen={setIsOpen}
+              handleDeleteSubmit={() => handleDelete(subject.id)}
+              name={`предмет ${subject.name}`}
+            />
+          )}
           <Button
             size={ButtonSize.MEDIUM}
             text="Зберегти"

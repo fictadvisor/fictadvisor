@@ -11,6 +11,7 @@ import {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
+import DeletePopup from '@/components/common/ui/delete-popup';
 import { InputSize, InputType } from '@/components/common/ui/form';
 import Input from '@/components/common/ui/form/input-mui';
 import useToast from '@/hooks/use-toast';
@@ -28,6 +29,8 @@ const EditGrantsPage: FC<EditGrantsPageProps> = ({ grant, roleId }) => {
   const [permission, setPermission] = useState<string>(grant.permission);
   const [weight, setWeight] = useState<string>(grant.weight.toString());
   const [set, setSet] = useState<boolean>(grant.set);
+  const [isOpen, setIsOpen] = useState(false);
+
   const toast = useToast();
   const { displayError } = useToastError();
   const router = useRouter();
@@ -77,9 +80,16 @@ const EditGrantsPage: FC<EditGrantsPageProps> = ({ grant, roleId }) => {
             color={ButtonColor.SECONDARY}
             startIcon={<TrashIcon />}
             text="Видалити"
-            onClick={() => handleDelete(grant.id)}
+            onClick={() => setIsOpen(true)}
             sx={styles.button}
           />
+          {isOpen && (
+            <DeletePopup
+              setPopupOpen={setIsOpen}
+              handleDeleteSubmit={() => handleDelete(grant.id)}
+              name={`Право ${grant.permission}`}
+            />
+          )}
           <Button
             size={ButtonSize.MEDIUM}
             text="Зберегти"

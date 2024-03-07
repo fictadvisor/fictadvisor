@@ -11,6 +11,7 @@ import {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
+import DeletePopup from '@/components/common/ui/delete-popup';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import DisciplineAPI from '@/lib/api/discipline/DisciplineAPI';
@@ -31,6 +32,7 @@ const DisciplinesEditPage: FC<DisciplinesAdminEditPageProps> = ({
   const toast = useToast();
   const toastError = useToastError();
   const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleDelete = (disciplineId: string) => {
     try {
@@ -107,8 +109,15 @@ const DisciplinesEditPage: FC<DisciplinesAdminEditPageProps> = ({
             color={ButtonColor.SECONDARY}
             startIcon={<TrashIcon />}
             text="Видалити"
-            onClick={() => handleDelete(discipline.id)}
+            onClick={() => setIsOpen(true)}
           />
+          {isOpen && (
+            <DeletePopup
+              setPopupOpen={setIsOpen}
+              handleDeleteSubmit={() => handleDelete(discipline.id)}
+              name={`дисципліну ${discipline.name}`}
+            />
+          )}
           <Button
             sx={styles.button}
             size={ButtonSize.MEDIUM}
