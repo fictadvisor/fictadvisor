@@ -1,5 +1,5 @@
 'use client';
-import type { FC } from 'react';
+import { type FC, useState } from 'react';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Box, Stack, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
@@ -12,6 +12,7 @@ import {
 } from '@/components/common/ui/button-mui/types';
 import { Teacher } from '@/types/teacher';
 
+import DeletePopup from './../../../common/components/delete-popup/DeletePopup';
 import * as styles from './HeaderEdit.styles';
 
 interface HeaderEditProps {
@@ -26,6 +27,8 @@ const HeaderEdit: FC<HeaderEditProps> = ({
   handleDeleteSubmit,
 }) => {
   const router = useRouter();
+
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <Box sx={styles.header}>
@@ -50,7 +53,7 @@ const HeaderEdit: FC<HeaderEditProps> = ({
           color={ButtonColor.SECONDARY}
           startIcon={<TrashIcon />}
           text="Видалити"
-          onClick={handleDeleteSubmit}
+          onClick={() => setIsOpen(true)}
         />
         <Button
           type="submit"
@@ -59,6 +62,13 @@ const HeaderEdit: FC<HeaderEditProps> = ({
           text="Зберегти"
           onClick={handleEditSubmit}
         />
+        {isOpen && (
+          <DeletePopup
+            setPopupOpen={setIsOpen}
+            handleDeleteSubmit={handleDeleteSubmit}
+            name={`викладача ${teacher?.lastName} ${teacher?.firstName} ${teacher?.middleName}`}
+          />
+        )}
       </Stack>
     </Box>
   );
