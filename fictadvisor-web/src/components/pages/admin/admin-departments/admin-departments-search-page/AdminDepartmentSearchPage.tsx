@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import { Box, TablePagination } from '@mui/material';
-import { isAxiosError } from 'axios';
 
 import AdminDepartmentsSearch from '@/components/pages/admin/admin-departments/admin-departments-search-page/components/admin-departments-search/AdminDepartmentsSearch';
 import { AdminDepartmentSearchFields } from '@/components/pages/admin/admin-departments/admin-departments-search-page/components/admin-departments-search/types';
@@ -19,7 +18,7 @@ const AdminDepartmentSearchPage = () => {
   const [params, setParams] = useState<AdminDepartmentSearchFields>(
     AdminDepartmentsInitialValues,
   );
-  const toast = useToastError();
+  const { displayError } = useToastError();
   const { data, isLoading, refetch } = useQuery(
     [curPage, 'teachers', pageSize],
     () => CathedraAPI.getAll(params, pageSize, curPage),
@@ -30,9 +29,7 @@ const AdminDepartmentSearchPage = () => {
         setCount(data?.pagination?.totalAmount || 0);
       },
       onError: error => {
-        if (isAxiosError(error)) {
-          toast.displayError(error.response?.data.message);
-        }
+        displayError(error);
       },
     },
   );

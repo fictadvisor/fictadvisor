@@ -1,5 +1,4 @@
 import React, { FC } from 'react';
-import { PencilSquareIcon } from '@heroicons/react/24/solid';
 import {
   Stack,
   Table,
@@ -10,18 +9,13 @@ import {
   Typography,
 } from '@mui/material';
 
-import Button from '@/components/common/ui/button-mui';
-import {
-  ButtonSize,
-  ButtonVariant,
-} from '@/components/common/ui/button-mui/types';
 import { CathedraColors } from '@/components/common/ui/cards/card-roles/CardRoles';
-import { TrashBucketButton } from '@/components/common/ui/icon-button-mui/variants';
 import Tag from '@/components/common/ui/tag';
 import { TagSize, TagVariant } from '@/components/common/ui/tag/types';
 import { Group } from '@/types/group';
 
 import mergeSx from './../../../../../../../lib/utils/MergeSxStylesUtil';
+import TableActions from './components/table-actions';
 import * as styles from './GroupsTable.styles';
 
 interface GroupsTableProps {
@@ -83,17 +77,7 @@ const GroupsTable: FC<GroupsTableProps> = ({ groups, deleteGroup }) => {
                   '.MuiStack-root': { justifyContent: 'end' },
                 })}
               >
-                <Stack sx={styles.tableColumn}>
-                  <Button
-                    href={`/admin/groups/edit/${group.id}`}
-                    text="Редагувати"
-                    variant={ButtonVariant.OUTLINE}
-                    startIcon={<PencilSquareIcon />}
-                    size={ButtonSize.SMALL}
-                    sx={styles.button}
-                  />
-                  <TrashBucketButton onClick={() => deleteGroup(group.id)} />
-                </Stack>
+                <TableActions group={group} deleteGroup={deleteGroup} />
               </TableCell>
             </TableRow>
           ))}

@@ -1,23 +1,13 @@
 import React, { FC } from 'react';
 import { QueryObserverBaseResult } from 'react-query';
-import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { Box, Table, TableCell, TableHead, TableRow } from '@mui/material';
+import { Table, TableCell, TableHead, TableRow } from '@mui/material';
 import { isAxiosError } from 'axios';
 
-import Button from '@/components/common/ui/button-mui';
-import {
-  ButtonSize,
-  ButtonVariant,
-} from '@/components/common/ui/button-mui/types';
-import IconButton from '@/components/common/ui/icon-button-mui';
-import {
-  IconButtonColor,
-  IconButtonShape,
-} from '@/components/common/ui/icon-button-mui/types';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import SubjectAPI from '@/lib/api/subject/SubjectAPI';
 import { Subject } from '@/types/subject';
 
+import TableActions from './components/table-actions';
 import * as styles from './AdminSubjectTable.styles';
 
 interface SubjectsAdminSearchProps {
@@ -53,22 +43,7 @@ const AdminSubjectTable: FC<SubjectsAdminSearchProps> = ({
           <TableRow key={index}>
             <TableCell sx={styles.tableBodyItem}>{subject.name}</TableCell>
             <TableCell sx={styles.tableBodyItem}>
-              <Box sx={styles.buttonSection}>
-                <Button
-                  text="Редагувати"
-                  sx={styles.editButton}
-                  size={ButtonSize.SMALL}
-                  variant={ButtonVariant.OUTLINE}
-                  startIcon={<PencilSquareIcon />}
-                  href={`/admin/subjects/edit/${subject.id}`}
-                />
-                <IconButton
-                  onClick={() => handleDelete(subject.id)}
-                  icon={<TrashIcon />}
-                  shape={IconButtonShape.CIRCLE}
-                  color={IconButtonColor.ERROR}
-                />
-              </Box>
+              <TableActions subject={subject} handleDelete={handleDelete} />
             </TableCell>
           </TableRow>
         ))}
