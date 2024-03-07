@@ -32,7 +32,11 @@ export const formValidationSchema = yup.object().shape({
     .max(150, 'Не довше 150 символів'),
   startTime: yup.string().required('Обовʼязкове поле').test(timeTest),
   endTime: yup.string().required('Обовʼязкове поле'),
-  teachers: yup.array().test(uniqueTeachersTest),
+  teachers: yup
+    .array()
+    .min(1, 'Додайте хоча б одного вчителя')
+    .of(yup.string().required('Викладач обовʼязковий'))
+    .test(uniqueTeachersTest),
   eventInfo: yup.string().max(2000, 'Не довше 2000 символів'),
   disciplineInfo: yup.string().max(2000, 'Не довше 2000 символів'),
   period: yup.string().required("Обов'язкове поле"),
