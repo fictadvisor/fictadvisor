@@ -57,6 +57,8 @@ const SchedulePage: FC<SchedulePageProps> = ({ semester, groups }) => {
   };
 
   const handleFormSubmit = async (values: SharedEventBody) => {
+    await formValidationSchema.validate(values, { abortEarly: false });
+
     const finalValues: PostEventBody = makeNegativeValuesUndefined(values);
     finalValues.groupId = groupId;
     try {
