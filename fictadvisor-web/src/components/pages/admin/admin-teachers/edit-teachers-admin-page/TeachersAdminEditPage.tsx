@@ -1,18 +1,15 @@
 'use client';
 import React, { FC, useState } from 'react';
-import { useQuery } from 'react-query';
-import { Box, Divider, SelectChangeEvent } from '@mui/material';
+import { Box, Divider } from '@mui/material';
 import { isAxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
 
 import { CheckboxesDropdownOption } from '@/components/common/ui/form/checkboxes-dropdown/types/CheckboxesDropdown';
-import Progress from '@/components/common/ui/progress';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
-import CathedraAPI from '@/lib/api/cathedras/CathedraAPI';
 import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
 import { Contact } from '@/types/contact';
-import { Teacher, TeacherCathedra } from '@/types/teacher';
+import { Teacher } from '@/types/teacher';
 
 import TeacherContactsInputs from '../common/components/teacher-contacts-inputs';
 import TeacherPersonalInputs from '../common/components/teacher-personal-inputs';
@@ -43,7 +40,6 @@ const TeachersAdminEditPage: FC<TeachersAdminEditPageProps> = ({ teacher }) => {
   const toast = useToast();
   const toastError = useToastError();
   const router = useRouter();
-
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo>(initialValues);
   const [selectedTeacherCathedras, setSelectedTeacherCathedras] = useState<
     CheckboxesDropdownOption[]
@@ -51,6 +47,7 @@ const TeachersAdminEditPage: FC<TeachersAdminEditPageProps> = ({ teacher }) => {
   const [changedContacts, setChangedContacts] = useState<Contact[]>([]);
 
   const [changedComments, setChangedComments] = useState<EditedComment[]>([]);
+  console.log(personalInfo);
 
   const handleEditSubmit = async () => {
     try {
