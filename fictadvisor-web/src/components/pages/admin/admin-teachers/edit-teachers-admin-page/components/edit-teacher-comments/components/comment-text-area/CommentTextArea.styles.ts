@@ -10,7 +10,6 @@ export const textArea: SxProps<Theme> = {
   typography: 'body1Medium',
   backgroundColor: 'backgroundDark.100',
   margin: '0 auto',
-  maxWidth: '1033px',
   width: '100%',
   '& .MuiInputLabel-shrink': { transform: '' },
   '&.MuiFormControl-root': {
@@ -36,7 +35,6 @@ export const trashIcon: SxProps<Theme> = {
 };
 
 export const text: SxProps<Theme> = {
-  maxWidth: '1033px',
   width: '100%',
   margin: '0 auto',
   textAlign: 'end',

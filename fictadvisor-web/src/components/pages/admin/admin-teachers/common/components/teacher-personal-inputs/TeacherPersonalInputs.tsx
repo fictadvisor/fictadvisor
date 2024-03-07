@@ -2,7 +2,8 @@
 import type { FC } from 'react';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
-import { Avatar, SelectChangeEvent, Stack } from '@mui/material';
+import { PencilIcon } from '@heroicons/react/24/outline';
+import { Avatar, Box, SelectChangeEvent, Stack } from '@mui/material';
 import { isAxiosError } from 'axios';
 
 import CheckboxesDropdown from '@/components/common/ui/form/checkboxes-dropdown/CheckboxesDropdown';
@@ -18,6 +19,7 @@ import { TeacherCathedra } from '@/types/teacher';
 
 import { PersonalInfo } from '../../../create-teacher-admin-page/types';
 
+import ChangeAvatar from './components/change-avatar-window/ChangeAvatar';
 import * as styles from './TeacherPersonalInputs.styles';
 
 interface TeacherPersonalInputsProps {
@@ -42,6 +44,9 @@ const TeacherPersonalInputs: FC<TeacherPersonalInputsProps> = ({
   const [description, setDescription] = useState<string>(
     personalInfo.description,
   );
+  const [avatarUrl, setAvatarUrl] = useState<string>(personalInfo.avatar);
+
+  const [popupOpen, setPopupOpen] = useState(false);
 
   const { data: cathedrasData, isLoading } = useQuery(
     'cathedras',
@@ -62,13 +67,14 @@ const TeacherPersonalInputs: FC<TeacherPersonalInputsProps> = ({
         lastName,
         middleName,
         description,
+        avatar: avatarUrl,
       }));
     }, 200);
 
     return () => {
       clearTimeout(timer);
     };
-  }, [firstName, lastName, middleName, description]);
+  }, [firstName, lastName, middleName, description, avatarUrl]);
 
   if (!cathedrasData || isLoading) return <Progress />;
 
@@ -130,7 +136,24 @@ const TeacherPersonalInputs: FC<TeacherPersonalInputsProps> = ({
             label="Кафедри"
           />
         </Stack>
-        <Avatar src={personalInfo.avatar} sx={{ width: 160, height: 160 }} />
+
+        <Box sx={styles.avatarInfo}>
+          <Box onClick={() => setPopupOpen(true)} sx={styles.avatar}>
+            <Avatar
+              src={personalInfo.avatar}
+              sx={{ width: 160, height: 160 }}
+            />
+            <Box>
+              <PencilIcon />
+            </Box>
+          </Box>
+        </Box>
+        {popupOpen && (
+          <ChangeAvatar
+            setPopupOpen={setPopupOpen}
+            setAvatarUrl={setAvatarUrl}
+          />
+        )}
       </Stack>
       <TextArea
         label="Опис викладача"
