@@ -41,7 +41,7 @@ const HeaderEdit: FC<HeaderEditProps> = ({
           size={ButtonSize.MEDIUM}
           color={ButtonColor.SECONDARY}
           text="Скасувати"
-          onClick={() => router.push('admin/teachers')}
+          onClick={() => router.push('/admin/teachers')}
         />
         <Button
           sx={styles.button}
