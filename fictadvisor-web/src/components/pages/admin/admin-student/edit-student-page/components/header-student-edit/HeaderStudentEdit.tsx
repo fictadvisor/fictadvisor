@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Box, CardHeader, Stack } from '@mui/material';
 
@@ -8,6 +8,7 @@ import {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
+import DeletePopup from '@/components/common/ui/delete-popup';
 import { GroupStudent } from '@/types/student';
 
 import * as styles from './HeaderStudentEdit.styles';
@@ -21,6 +22,8 @@ const HeaderStudentEdit: FC<HeaderStudentEditProps> = ({
   student,
   handleDelete,
 }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <Box sx={styles.header}>
       <CardHeader
@@ -42,9 +45,16 @@ const HeaderStudentEdit: FC<HeaderStudentEditProps> = ({
           color={ButtonColor.SECONDARY}
           startIcon={<TrashIcon />}
           text="Видалити"
-          onClick={() => handleDelete(student.id)}
+          onClick={() => setIsOpen(true)}
           sx={styles.button}
         />
+        {isOpen && (
+          <DeletePopup
+            setPopupOpen={setIsOpen}
+            handleDeleteSubmit={() => handleDelete(student.id)}
+            name={`студента ${student?.lastName} ${student?.firstName} ${student?.middleName}`}
+          />
+        )}
         <Button
           size={ButtonSize.MEDIUM}
           text="Зберегти"
