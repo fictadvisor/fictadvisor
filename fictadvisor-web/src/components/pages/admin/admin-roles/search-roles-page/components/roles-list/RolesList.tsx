@@ -75,7 +75,7 @@ const RolesList: FC<RolesListProps> = ({
       toast.success('Роль видалено успішно');
     } catch (e) {
       if (isAxiosError(e)) {
-        toastError.displayError(e.response?.data.message);
+        toastError.displayError(e);
       }
     }
   };

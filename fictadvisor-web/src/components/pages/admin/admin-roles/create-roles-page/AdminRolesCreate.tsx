@@ -36,7 +36,7 @@ const AdminRolesCreate: FC = () => {
       router.replace('/admin/roles');
     } catch (e) {
       if (isAxiosError(e)) {
-        toastError.displayError(e.response?.data.message);
+        toastError.displayError(e);
       }
     }
   };

@@ -36,7 +36,7 @@ const DisciplinesTable: FC<DisciplinesAdminSearchProps> = ({ disciplines }) => {
       await DisciplineAPI.deleteDiscipline(id);
     } catch (e) {
       if (isAxiosError(e)) {
-        toast.displayError(e.response?.data.message);
+        toast.displayError(e);
       }
     }
   };

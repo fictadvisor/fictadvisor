@@ -46,22 +46,14 @@ const GroupInfoInputs: FC<GroupInfoInputsProps> = ({
     'eduprograms',
     () => EduprogramAPI.getAll(),
     {
-      onError: error => {
-        if (isAxiosError(error)) {
-          toastError.displayError(error.response?.data.message);
-        }
-      },
+      onError: error => toastError.displayError(error),
     },
   );
   const { data: cathedrasData, isLoading } = useQuery(
     'cathedras',
     () => CathedraAPI.getAll(),
     {
-      onError: error => {
-        if (isAxiosError(error)) {
-          toastError.displayError(error.response?.data.message);
-        }
-      },
+      onError: error => toastError.displayError(error),
     },
   );
 

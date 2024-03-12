@@ -69,11 +69,7 @@ const DisciplinesAdminCreatePage: FC = () => {
 
   const data: InputData = {
     semesterData: useQuery('semester', () => DatesAPI.getDates(), {
-      onError: error => {
-        if (isAxiosError(error)) {
-          toastError.displayError(error.response?.data.message);
-        }
-      },
+      onError: error => toastError.displayError(error),
       onSuccess(data) {
         semesters.current = data.semesters.map(semester => ({
           id: `${semester.year.toString()} ${semester.semester.toString()}`,
@@ -84,11 +80,7 @@ const DisciplinesAdminCreatePage: FC = () => {
       },
     }),
     groupsData: useQuery('group', () => GroupAPI.getAll(), {
-      onError: error => {
-        if (isAxiosError(error)) {
-          toastError.displayError(error.response?.data.message);
-        }
-      },
+      onError: error => toastError.displayError(error),
       onSuccess(data) {
         groups.current = data.groups.map((group: Group) => ({
           id: group.id,
@@ -97,11 +89,7 @@ const DisciplinesAdminCreatePage: FC = () => {
       },
     }),
     subjectsData: useQuery('subject', () => SubjectAPI.getAll(), {
-      onError: error => {
-        if (isAxiosError(error)) {
-          toastError.displayError(error.response?.data.message);
-        }
-      },
+      onError: error => toastError.displayError(error),
       onSuccess(data) {
         subjects.current = data.subjects.map(subject => ({
           id: subject.id,
@@ -110,11 +98,7 @@ const DisciplinesAdminCreatePage: FC = () => {
       },
     }),
     teachersData: useQuery('teacher', () => TeacherAPI.getAdminAll(), {
-      onError: error => {
-        if (isAxiosError(error)) {
-          toastError.displayError(error.response?.data.message);
-        }
-      },
+      onError: error => toastError.displayError(error),
       onSuccess(data) {
         teachers.current = data.teachers
           .map(teacher => ({

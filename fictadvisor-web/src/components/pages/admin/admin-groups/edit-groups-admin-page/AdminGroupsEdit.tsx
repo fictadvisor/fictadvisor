@@ -44,7 +44,7 @@ const AdminGroupsEdit: FC<AdminGroupsEditProps> = ({ group }) => {
       router.replace('/admin/groups');
     } catch (e) {
       if (isAxiosError(e)) {
-        toastError.displayError(e.response?.data.message);
+        toastError.displayError(e);
       }
     }
   };
@@ -56,7 +56,7 @@ const AdminGroupsEdit: FC<AdminGroupsEditProps> = ({ group }) => {
       router.replace('/admin/groups');
     } catch (e) {
       if (isAxiosError(e)) {
-        toastError.displayError(e.response?.data.message);
+        toastError.displayError(e);
       }
     }
   };

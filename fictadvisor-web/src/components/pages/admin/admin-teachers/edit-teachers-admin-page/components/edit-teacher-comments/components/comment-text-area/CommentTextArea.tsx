@@ -49,7 +49,7 @@ const CommentTextArea: FC<CommentTextAreaProps> = ({
       toast.success('Коментар успішно видалений!', '', 4000);
     } catch (e) {
       if (isAxiosError(e)) {
-        toastError.displayError(e.response?.data.message);
+        toastError.displayError(e);
       }
     }
   };

@@ -32,11 +32,7 @@ const TeachersAdminPage: FC = () => {
       onSuccess: data => {
         setCount(data?.pagination?.totalAmount || 0);
       },
-      onError: error => {
-        if (isAxiosError(error)) {
-          toastError.displayError(error.response?.data.message);
-        }
-      },
+      onError: error => toastError.displayError(error),
     },
   );
 
@@ -64,7 +60,7 @@ const TeachersAdminPage: FC = () => {
       toast.success('Викладач успішно видалений!', '', 4000);
     } catch (e) {
       if (isAxiosError(e)) {
-        toastError.displayError(e.response?.data.message);
+        toastError.displayError(e);
       }
     }
   };
