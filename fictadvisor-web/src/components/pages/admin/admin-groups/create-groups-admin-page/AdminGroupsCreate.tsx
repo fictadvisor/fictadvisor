@@ -39,7 +39,7 @@ const AdminGroupsCreate: FC = () => {
       router.replace('/admin/groups');
     } catch (e) {
       if (isAxiosError(e)) {
-        toastError.displayError(e.response?.data.message);
+        toastError.displayError(e);
       }
     }
   };
@@ -49,9 +49,7 @@ const AdminGroupsCreate: FC = () => {
     () => EduprogramAPI.getAll(),
     {
       onError: error => {
-        if (isAxiosError(error)) {
-          toastError.displayError(error.response?.data.message);
-        }
+        toastError.displayError(error);
       },
     },
   );
@@ -60,9 +58,7 @@ const AdminGroupsCreate: FC = () => {
     () => CathedraAPI.getAll(),
     {
       onError: error => {
-        if (isAxiosError(error)) {
-          toastError.displayError(error.response?.data.message);
-        }
+        toastError.displayError(error);
       },
     },
   );

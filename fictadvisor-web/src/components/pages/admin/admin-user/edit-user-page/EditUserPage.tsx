@@ -40,7 +40,7 @@ const EditUserPage: FC<EditUserPageProps> = ({ user }) => {
       router.replace('/admin/users');
     } catch (e) {
       if (isAxiosError(e)) {
-        toastError.displayError(e.response?.data.message);
+        toastError.displayError(e);
       }
     }
   };
@@ -54,7 +54,7 @@ const EditUserPage: FC<EditUserPageProps> = ({ user }) => {
       toast.success('Користувач успішно змінений!', '', 4000);
     } catch (e) {
       if (isAxiosError(e)) {
-        toastError.displayError(e.response?.data.message);
+        toastError.displayError(e);
       }
     }
   };

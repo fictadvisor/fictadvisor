@@ -39,7 +39,7 @@ const DisciplinesEditPage: FC<DisciplinesAdminEditPageProps> = ({
       router.push('/admin/disciplines');
     } catch (e) {
       if (isAxiosError(e)) {
-        toastError.displayError(e.response?.data.message);
+        toastError.displayError(e);
       }
     }
   };
@@ -80,7 +80,7 @@ const DisciplinesEditPage: FC<DisciplinesAdminEditPageProps> = ({
       }
     } catch (e) {
       if (isAxiosError(e)) {
-        toastError.displayError(e.response?.data.message);
+        toastError.displayError(e);
       }
     }
   };

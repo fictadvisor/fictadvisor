@@ -88,7 +88,7 @@ const TeachersAdminEditPage: FC<TeachersAdminEditPageProps> = ({ teacher }) => {
       router.replace('/admin/teachers');
     } catch (e) {
       if (isAxiosError(e)) {
-        toastError.displayError(e.response?.data.message);
+        toastError.displayError(e);
       }
     }
   };
@@ -100,7 +100,7 @@ const TeachersAdminEditPage: FC<TeachersAdminEditPageProps> = ({ teacher }) => {
       router.replace('/admin/teachers');
     } catch (e) {
       if (isAxiosError(e)) {
-        toastError.displayError(e.response?.data.message);
+        toastError.displayError(e);
       }
     }
   };

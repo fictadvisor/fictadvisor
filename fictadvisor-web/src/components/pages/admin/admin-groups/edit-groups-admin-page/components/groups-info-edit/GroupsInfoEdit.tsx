@@ -46,7 +46,7 @@ const GroupsInfoEdit: FC<GroupsInfoEditProps> = ({
     {
       onSettled(data, error) {
         if (isAxiosError(error)) {
-          toastError.displayError(error.response?.data.message);
+          toastError.displayError(error);
         } else {
           if (data) setModeratorIds(extractModeratorsIds(data.students));
         }

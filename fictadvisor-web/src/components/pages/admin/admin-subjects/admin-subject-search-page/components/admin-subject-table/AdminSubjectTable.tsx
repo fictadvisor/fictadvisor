@@ -37,7 +37,7 @@ const AdminSubjectTable: FC<SubjectsAdminSearchProps> = ({
       await refetch();
     } catch (e) {
       if (isAxiosError(e)) {
-        toast.displayError(e.response?.data.message);
+        toast.displayError(e);
       }
     }
   };

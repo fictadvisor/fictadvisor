@@ -41,7 +41,7 @@ const EditRolesPage: FC<EditRolesPageProps> = ({ role }) => {
       router.replace('/admin/roles');
     } catch (e) {
       if (isAxiosError(e)) {
-        toastError.displayError(e.response?.data.message);
+        toastError.displayError(e);
       }
     }
   };
@@ -58,7 +58,7 @@ const EditRolesPage: FC<EditRolesPageProps> = ({ role }) => {
       toast.success('Роль успішно змінена!', '', 4000);
     } catch (e) {
       if (isAxiosError(e)) {
-        toastError.displayError(e.response?.data.message);
+        toastError.displayError(e);
       }
     }
   };

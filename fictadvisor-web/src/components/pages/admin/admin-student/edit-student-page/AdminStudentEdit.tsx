@@ -59,7 +59,7 @@ const AdminStudentEdit: FC<AdminStudentEditProps> = ({
       router.replace('/admin/students');
     } catch (e) {
       if (isAxiosError(e)) {
-        displayError(e.response?.data.message);
+        displayError(e);
       }
     }
   };
@@ -80,7 +80,7 @@ const AdminStudentEdit: FC<AdminStudentEditProps> = ({
     } catch (error) {
       displayError(error);
       if (isAxiosError(error)) {
-        displayError(error.response?.data.message);
+        displayError(error);
       }
     }
   };
