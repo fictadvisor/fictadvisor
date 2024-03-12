@@ -29,7 +29,7 @@ const AdminSubjectSearchPage = () => {
       },
       onError: error => {
         if (isAxiosError(error)) {
-          toast.displayError(error.response?.data.message);
+          toast.displayError(error);
         }
       },
     },

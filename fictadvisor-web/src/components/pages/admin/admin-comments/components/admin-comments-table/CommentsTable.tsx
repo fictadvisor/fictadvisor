@@ -53,9 +53,7 @@ const CommentsTable: FC<AnswersAdminTableProps> = ({
       await refetch();
       toast.success('Відгук видалено успішно');
     } catch (e) {
-      if (isAxiosError(e)) {
-        toastError.displayError(e.response?.data.message);
-      }
+      toastError.displayError(e);
     }
   };
 

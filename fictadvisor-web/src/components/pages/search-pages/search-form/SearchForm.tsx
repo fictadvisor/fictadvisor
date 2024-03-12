@@ -69,7 +69,7 @@ const SearchForm: FC<SearchFormProps> = ({
     staleTime: Infinity,
     onError: error => {
       if (isAxiosError(error)) {
-        toastError.displayError(error.response?.data.message);
+        toastError.displayError(error);
       }
     },
   });

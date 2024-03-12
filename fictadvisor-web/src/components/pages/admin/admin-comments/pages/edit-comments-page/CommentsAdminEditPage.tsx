@@ -42,9 +42,7 @@ const CommentsAdminEditPage: FC<CommentsAdminEditPageProps> = ({ comment }) => {
       toast.success('Відгук успішно видалений!', '', 4000);
       router.replace('/admin/comments');
     } catch (e) {
-      if (isAxiosError(e)) {
-        toastError.displayError(e.response?.data.message);
-      }
+      toastError.displayError(e);
     }
   };
 

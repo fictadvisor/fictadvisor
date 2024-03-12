@@ -29,11 +29,7 @@ const CommentsAdminPage: FC = () => {
       onSuccess: data => {
         setCount(data?.pagination?.totalAmount || 0);
       },
-      onError: error => {
-        if (isAxiosError(error)) {
-          toast.displayError(error.response?.data.message);
-        }
-      },
+      onError: error => toast.displayError(error),
     },
   );
 

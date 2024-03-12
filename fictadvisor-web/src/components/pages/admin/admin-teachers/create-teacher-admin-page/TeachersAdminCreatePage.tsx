@@ -47,9 +47,7 @@ const TeachersAdminEditPage: FC = () => {
       toast.success('Викладач успішно створений!', '', 4000);
       router.replace('/admin/teachers');
     } catch (e) {
-      if (isAxiosError(e)) {
-        toastError.displayError(e.response?.data.message);
-      }
+      toastError.displayError(e);
     }
   };
 
