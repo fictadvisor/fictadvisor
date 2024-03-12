@@ -27,7 +27,7 @@ const AdminSubjectEditPage: FC<AdminSubjectEditPageProps> = ({ subject }) => {
       await SubjectAPI.delete(subjectId);
     } catch (e) {
       if (isAxiosError(e)) {
-        toast.displayError(e.response?.data.message);
+        toast.displayError(e);
       }
     }
   };
@@ -36,7 +36,7 @@ const AdminSubjectEditPage: FC<AdminSubjectEditPageProps> = ({ subject }) => {
       await SubjectAPI.editSubject(subject.id, subjectName);
     } catch (e) {
       if (isAxiosError(e)) {
-        toast.displayError(e.response?.data.message);
+        toast.displayError(e);
       }
     }
   };

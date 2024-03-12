@@ -22,7 +22,7 @@ const AdminSubjectCreatePage: FC = () => {
       await SubjectAPI.createSubject(subject);
     } catch (e) {
       if (isAxiosError(e)) {
-        toast.displayError(e.response?.data.message);
+        toast.displayError(e);
       }
     }
   };

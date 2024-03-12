@@ -76,11 +76,7 @@ const GroupsAdminSearch: FC<GroupsAdminSearchProps> = ({ setParams }) => {
     {
       keepPreviousData: true,
       refetchOnWindowFocus: false,
-      onError: error => {
-        if (isAxiosError(error)) {
-          toastError.displayError(error.response?.data.message);
-        }
-      },
+      onError: error => toastError.displayError(error),
     },
   );
   const { data: specialitiesData, isLoading: isLoadingSpecialities } = useQuery(
@@ -89,11 +85,7 @@ const GroupsAdminSearch: FC<GroupsAdminSearchProps> = ({ setParams }) => {
     {
       keepPreviousData: true,
       refetchOnWindowFocus: false,
-      onError: error => {
-        if (isAxiosError(error)) {
-          toastError.displayError(error.response?.data.message);
-        }
-      },
+      onError: error => toastError.displayError(error),
     },
   );
 

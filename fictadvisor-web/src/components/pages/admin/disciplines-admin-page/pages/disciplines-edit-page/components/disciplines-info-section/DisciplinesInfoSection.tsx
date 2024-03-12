@@ -78,11 +78,7 @@ const DisciplinesInfoSection: FC<DisciplinesInfoSectionProps> = ({
     'semester',
     () => DatesAPI.getDates(),
     {
-      onError: error => {
-        if (isAxiosError(error)) {
-          toastError.displayError(error.response?.data.message);
-        }
-      },
+      onError: error => toastError.displayError(error),
       onSuccess(data) {
         setSemesters(
           data.semesters.map(semester => ({
@@ -103,7 +99,7 @@ const DisciplinesInfoSection: FC<DisciplinesInfoSectionProps> = ({
   const { data: groupsData } = useQuery('group', () => GroupAPI.getAll(), {
     onError: error => {
       if (isAxiosError(error)) {
-        toastError.displayError(error.response?.data.message);
+        toastError.displayError(error);
       }
     },
     onSuccess(data) {
@@ -122,11 +118,7 @@ const DisciplinesInfoSection: FC<DisciplinesInfoSectionProps> = ({
     'subject',
     () => SubjectAPI.getAll(),
     {
-      onError: error => {
-        if (isAxiosError(error)) {
-          toastError.displayError(error.response?.data.message);
-        }
-      },
+      onError: error => toastError.displayError(error),
       onSuccess(data) {
         setSubjects(
           data.subjects.map(subject => ({
@@ -144,11 +136,7 @@ const DisciplinesInfoSection: FC<DisciplinesInfoSectionProps> = ({
     'teacher',
     () => TeacherAPI.getAdminAll(),
     {
-      onError: error => {
-        if (isAxiosError(error)) {
-          toastError.displayError(error.response?.data.message);
-        }
-      },
+      onError: error => toastError.displayError(error),
       onSuccess(data) {
         setTeachers(
           data.teachers
@@ -165,11 +153,7 @@ const DisciplinesInfoSection: FC<DisciplinesInfoSectionProps> = ({
     'allDisciplineTeachers',
     () => DisciplineAPI.getAllDisciplineTeachers(discipline.id),
     {
-      onError: error => {
-        if (isAxiosError(error)) {
-          toastError.displayError(error.response?.data.message);
-        }
-      },
+      onError: error => toastError.displayError(error),
       onSuccess(data) {
         if (!disciplineTeachers) {
           setDisciplineTeachers(

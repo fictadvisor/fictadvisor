@@ -40,7 +40,7 @@ const AdminStudentCreate: FC = () => {
       } catch (error) {
         displayError(error);
         if (isAxiosError(error)) {
-          displayError(error.response?.data.message);
+          displayError(error);
         }
       }
     },
