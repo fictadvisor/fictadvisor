@@ -54,7 +54,7 @@ export const eventTypeList: DropDownOption[] = [
     size: TagSize.SMALL,
   },
   {
-    id: '',
+    id: TEvent.OTHER,
     text: 'Інша подія',
     color: TagColor.SECONDARY,
     size: TagSize.SMALL,
