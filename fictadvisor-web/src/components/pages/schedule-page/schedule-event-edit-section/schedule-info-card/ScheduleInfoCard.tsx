@@ -60,6 +60,9 @@ const ScheduleInfoCard: FC<ScheduleInfoCardProps> = ({
 }) => {
   const [tabValue, setTabValue] = useState<InfoCardTabs>(InfoCardTabs.EVENT);
   const { user } = useAuthentication();
+  const isDisciplineRelatedType = (eventType: string | TEvent | undefined) => {
+    return eventType !== TEvent.OTHER;
+  };
 
   const permissionValues: PermissionData = {
     groupId: user.group?.id,
@@ -111,25 +114,31 @@ const ScheduleInfoCard: FC<ScheduleInfoCardProps> = ({
             color={TagColorMapper[event.eventType]}
           />
         )}
-        <Typography variant="body1Medium">Викладач</Typography>
-        <Box sx={styles.teachersContainer}>
-          {loading ? (
-            <Skeleton {...skeletonProps} width={200} height={45} />
-          ) : !event!.teachers || event!.teachers.length === 0 ? (
-            <Typography variant="body1Medium">
-              Інформація про викладачів відсутня
-            </Typography>
-          ) : (
-            event?.teachers.map(teacher => (
-              <Link
-                key={teacher.id}
-                href={`/teachers/${teacher.id}`}
-                text={`${teacher.firstName} ${teacher.middleName} ${teacher.lastName}`}
-                target={'_blank'}
-              />
-            ))
-          )}
-        </Box>
+        {isDisciplineRelatedType(event.eventType) ? (
+          <>
+            <Typography variant="body1Medium">Викладач</Typography>
+            <Box sx={styles.teachersContainer}>
+              {loading ? (
+                <Skeleton {...skeletonProps} width={200} height={45} />
+              ) : !event!.teachers || event!.teachers.length === 0 ? (
+                <Typography variant="body1Medium">
+                  Інформація про викладачів відсутня
+                </Typography>
+              ) : (
+                event?.teachers.map(teacher => (
+                  <Link
+                    key={teacher.id}
+                    href={`/teachers/${teacher.id}`}
+                    text={`${teacher.firstName} ${teacher.middleName} ${teacher.lastName}`}
+                    target={'_blank'}
+                  />
+                ))
+              )}
+            </Box>
+          </>
+        ) : (
+          ''
+        )}
         <Typography variant="body1Medium">Час</Typography>
         {loading ? (
           <Skeleton {...skeletonProps} width={50} height={25} />
@@ -163,12 +172,16 @@ const ScheduleInfoCard: FC<ScheduleInfoCardProps> = ({
               textPosition={TabTextPosition.CENTER}
               value={InfoCardTabs.EVENT}
             />
-            <Tab
-              disableRipple
-              label="Про дисципліну"
-              textPosition={TabTextPosition.CENTER}
-              value={InfoCardTabs.DISCIPLINE}
-            />
+            {isDisciplineRelatedType(event.eventType) ? (
+              <Tab
+                disableRipple
+                label="Про дисципліну"
+                textPosition={TabTextPosition.CENTER}
+                value={InfoCardTabs.DISCIPLINE}
+              />
+            ) : (
+              ''
+            )}
           </TabList>
 
           <TabPanel value={InfoCardTabs.EVENT}>
