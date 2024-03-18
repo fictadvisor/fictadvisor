@@ -30,6 +30,7 @@ import { InfoCardTabs } from '@/components/pages/schedule-page/schedule-event-ed
 import { SharedEventBody } from '@/lib/api/schedule/types/shared';
 import { useSchedule } from '@/store/schedule/useSchedule';
 import theme from '@/styles/theme';
+import { TEvent } from '@/types/schedule';
 
 import CloseButton from '../../../../common/ui/icon-button-mui/variants/CloseButton/CloseButton';
 
@@ -65,6 +66,9 @@ export const ScheduleEventForm: FC<ScheduleEventFormProps> = ({
   );
   const [tabValue, setTabValue] = useState<InfoCardTabs>(InfoCardTabs.EVENT);
   const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
+  const isDisciplineRelatedType = (eventType: string) => {
+    return eventType !== TEvent.OTHER;
+  };
 
   return (
     <Box sx={styles.container}>
@@ -90,7 +94,9 @@ export const ScheduleEventForm: FC<ScheduleEventFormProps> = ({
                 options={eventTypeList}
                 placeholder={'Оберіть тип події'}
               />
-              {values.eventType && <DisciplineRelatedFields values={values} />}
+              {isDisciplineRelatedType(values.eventType) && (
+                <DisciplineRelatedFields values={values} />
+              )}
               <Typography variant="body1Medium">Дата початку</Typography>
               <CalendarInput date={date} setDate={setDate} />
               {date && (
@@ -139,7 +145,7 @@ export const ScheduleEventForm: FC<ScheduleEventFormProps> = ({
                     textPosition={TabTextPosition.CENTER}
                     value={InfoCardTabs.EVENT}
                   />
-                  {values.eventType && (
+                  {isDisciplineRelatedType(values.eventType) && (
                     <Tab
                       disableRipple
                       label="Про дисципліну"
