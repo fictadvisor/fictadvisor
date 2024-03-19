@@ -426,7 +426,7 @@ model StudentResource {
   id        String    @id @default(uuid())
   link      String
   name      String
-  icon      String
+  imageLink String    @map("image_link")
   createdAt DateTime? @default(now()) @map("created_at")
   updatedAt DateTime? @default(now()) @updatedAt @map("updated_at")
 
