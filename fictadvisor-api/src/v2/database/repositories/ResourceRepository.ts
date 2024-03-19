@@ -13,7 +13,7 @@ export class ResourceRepository {
   ) {}
 
   async getAll (body: QueryAllDTO) {
-    const search = DatabaseUtils.getSearch<StudentResource>(body, 'name', 'link', 'icon');
+    const search = DatabaseUtils.getSearch<StudentResource>(body, 'name', 'link', 'imageLink');
     const sort = DatabaseUtils.getSort(body, 'name');
 
     const data = {
@@ -32,7 +32,7 @@ export class ResourceRepository {
       },
       select: {
         id: true,
-        icon: true,
+        imageLink: true,
         link: true,
         name: true,
       },
@@ -44,7 +44,7 @@ export class ResourceRepository {
       data,
       select: {
         id: true,
-        icon: true,
+        imageLink: true,
         link: true,
         name: true,     
       },
@@ -61,7 +61,7 @@ export class ResourceRepository {
         id: true,
         name: true,
         link: true,
-        icon: true,
+        imageLink: true,
       },
     });
   }

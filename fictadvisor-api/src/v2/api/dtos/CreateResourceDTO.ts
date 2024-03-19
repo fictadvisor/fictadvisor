@@ -15,5 +15,5 @@ export class CreateResourceDTO {
 
   @ApiProperty()
   @IsNotEmpty(validationOptionsMsg('Icon can not be empty'))
-    icon: string;
+    imageLink: string;
 }
