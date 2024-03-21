@@ -12,7 +12,8 @@ import {
 } from '@/components/common/ui/button-mui/types';
 import { Teacher } from '@/types/teacher';
 
-import DeletePopup from './../../../common/components/delete-popup/DeletePopup';
+import DeletePopup from '../../../../../../common/ui/delete-popup/DeletePopup';
+
 import * as styles from './HeaderEdit.styles';
 
 interface HeaderEditProps {

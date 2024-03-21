@@ -9,6 +9,7 @@ import {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
+import DeletePopup from '@/components/common/ui/delete-popup';
 import { InputSize, InputType } from '@/components/common/ui/form';
 import Input from '@/components/common/ui/form/input-mui';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
@@ -22,6 +23,8 @@ interface AdminSubjectEditPageProps {
 const AdminSubjectEditPage: FC<AdminSubjectEditPageProps> = ({ subject }) => {
   const [subjectName, setSubjectName] = useState<string>(subject.name);
   const toast = useToastError();
+  const [isOpen, setIsOpen] = useState(false);
+
   const handleDelete = async (subjectId: string) => {
     try {
       await SubjectAPI.delete(subjectId);
@@ -62,9 +65,16 @@ const AdminSubjectEditPage: FC<AdminSubjectEditPageProps> = ({ subject }) => {
             color={ButtonColor.SECONDARY}
             startIcon={<TrashIcon />}
             text="Видалити"
-            onClick={() => handleDelete(subject.id)}
+            onClick={() => setIsOpen(true)}
             sx={styles.button}
           />
+          {isOpen && (
+            <DeletePopup
+              setPopupOpen={setIsOpen}
+              handleDeleteSubmit={() => handleDelete(subject.id)}
+              name={`предмет ${subject.name}`}
+            />
+          )}
           <Button
             size={ButtonSize.MEDIUM}
             text="Зберегти"

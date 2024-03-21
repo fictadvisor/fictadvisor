@@ -21,6 +21,8 @@ import { DeleteCommentBody } from '@/lib/api/teacher/types/DeleteCommentBody';
 import { Comment } from '@/lib/api/teacher/types/GetCommentsWithPaginationResponse';
 import getErrorMessage from '@/lib/utils/getErrorMessage';
 
+import DeletePopup from '../../../../../common/ui/delete-popup';
+
 import * as styles from './CommentsAdminEditPage.styles';
 
 interface CommentsAdminEditPageProps {
@@ -32,6 +34,7 @@ const CommentsAdminEditPage: FC<CommentsAdminEditPageProps> = ({ comment }) => {
   const toast = useToast();
   const toastError = useToastError();
   const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleDelete = async (
     data: DeleteCommentBody,
@@ -100,11 +103,18 @@ const CommentsAdminEditPage: FC<CommentsAdminEditPageProps> = ({ comment }) => {
                 color={ButtonColor.SECONDARY}
                 startIcon={<TrashIcon />}
                 text="Видалити"
-                onClick={() =>
-                  handleDelete(comment, comment.disciplineTeacherId)
-                }
+                onClick={() => setIsOpen(true)}
                 sx={styles.button}
               />
+              {isOpen && (
+                <DeletePopup
+                  setPopupOpen={setIsOpen}
+                  handleDeleteSubmit={() =>
+                    handleDelete(comment, comment.disciplineTeacherId)
+                  }
+                  name={`цей коментар`}
+                />
+              )}
               <Button
                 size={ButtonSize.MEDIUM}
                 text="Зберегти"

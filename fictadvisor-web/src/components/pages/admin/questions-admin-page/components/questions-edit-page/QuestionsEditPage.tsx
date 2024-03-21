@@ -12,6 +12,7 @@ import {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
+import DeletePopup from '@/components/common/ui/delete-popup';
 import useToast from '@/hooks/use-toast';
 import QuestionAPI from '@/lib/api/questions/QuestionAPI';
 
@@ -34,6 +35,7 @@ const QuestionsAdminEditPage: FC<QuestionsAdminEditPageProps> = ({
   const [body, setBody] = useState<AdminQuestion>();
   const toast = useToast();
   const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleChanges = (values: AdminQuestion) => {
     setBody(prevValues => {
@@ -93,8 +95,15 @@ const QuestionsAdminEditPage: FC<QuestionsAdminEditPageProps> = ({
             color={ButtonColor.SECONDARY}
             startIcon={<TrashIcon />}
             text="Видалити"
-            onClick={() => deleteQuestion(data?.id as string)}
+            onClick={() => setIsOpen(true)}
           />
+          {isOpen && (
+            <DeletePopup
+              setPopupOpen={setIsOpen}
+              handleDeleteSubmit={() => deleteQuestion(data?.id as string)}
+              name={`питання ${data?.name}`}
+            />
+          )}
           <Button
             type="submit"
             sx={styles.button}

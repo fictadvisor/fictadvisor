@@ -1,7 +1,5 @@
 import React, { FC } from 'react';
-import { PencilSquareIcon } from '@heroicons/react/24/solid';
 import {
-  Stack,
   Table,
   TableBody,
   TableCell,
@@ -10,12 +8,6 @@ import {
 } from '@mui/material';
 import { isAxiosError } from 'axios';
 
-import Button from '@/components/common/ui/button-mui';
-import {
-  ButtonSize,
-  ButtonVariant,
-} from '@/components/common/ui/button-mui/types';
-import { TrashBucketButton } from '@/components/common/ui/icon-button-mui/variants';
 import useToast from '@/hooks/use-toast';
 import QuestionAPI from '@/lib/api/questions/QuestionAPI';
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
@@ -23,6 +15,7 @@ import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 import { typesOptions } from '../../../../constants';
 import { AdminQuestion } from '../../../../types';
 
+import TableActions from './components/table-actions';
 import * as styles from './QuestionsTable.styles';
 
 interface QuestionAdminSearchProps {
@@ -65,19 +58,10 @@ const QuestionsTable: FC<QuestionAdminSearchProps> = ({ questions }) => {
                 {typesOptions.find(x => x.id == question.type)?.label}
               </TableCell>
               <TableCell sx={styles.bodyItem}>
-                <Stack sx={styles.tableColumn}>
-                  <Button
-                    href={`/admin/questions/edit/${question.id}`}
-                    text="Редагувати"
-                    variant={ButtonVariant.OUTLINE}
-                    startIcon={<PencilSquareIcon />}
-                    size={ButtonSize.SMALL}
-                    sx={styles.button}
-                  />
-                  <TrashBucketButton
-                    onClick={() => deleteQuestion(question.id as string)}
-                  />
-                </Stack>
+                <TableActions
+                  question={question}
+                  deleteQuestion={deleteQuestion}
+                />
               </TableCell>
             </TableRow>
           ))}

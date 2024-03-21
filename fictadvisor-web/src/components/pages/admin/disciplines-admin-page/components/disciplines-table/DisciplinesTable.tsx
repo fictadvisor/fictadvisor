@@ -1,5 +1,4 @@
 import React, { FC } from 'react';
-import { PencilSquareIcon } from '@heroicons/react/24/solid';
 import {
   Stack,
   Table,
@@ -11,17 +10,12 @@ import {
 } from '@mui/material';
 import { isAxiosError } from 'axios';
 
-import Button from '@/components/common/ui/button-mui';
-import {
-  ButtonSize,
-  ButtonVariant,
-} from '@/components/common/ui/button-mui/types';
-import { TrashBucketButton } from '@/components/common/ui/icon-button-mui/variants';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import DisciplineAPI from '@/lib/api/discipline/DisciplineAPI';
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 import { AdminDiscipline } from '@/types/discipline';
 
+import TableActions from './components/table-actions';
 import * as styles from './DisciplinesTable.styles';
 
 interface DisciplinesAdminSearchProps {
@@ -84,19 +78,10 @@ const DisciplinesTable: FC<DisciplinesAdminSearchProps> = ({ disciplines }) => {
                 </Stack>
               </TableCell>
               <TableCell sx={styles.bodyItem}>
-                <Stack sx={styles.tableColumn} justifyContent="right">
-                  <Button
-                    href={`/admin/disciplines/edit/${discipline.id}`}
-                    text="Редагувати"
-                    variant={ButtonVariant.OUTLINE}
-                    startIcon={<PencilSquareIcon />}
-                    size={ButtonSize.SMALL}
-                    sx={styles.button}
-                  />
-                  <TrashBucketButton
-                    onClick={() => deleteDiscipline(discipline.id)}
-                  />
-                </Stack>
+                <TableActions
+                  discipline={discipline}
+                  deleteDiscipline={deleteDiscipline}
+                />
               </TableCell>
             </TableRow>
           ))}

@@ -1,31 +1,20 @@
 'use client';
-import React, { FC, ReactNode, useState } from 'react';
+import React, { FC } from 'react';
 import { QueryObserverBaseResult } from 'react-query';
-import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { Avatar, Box, Link, TableHead, Typography } from '@mui/material';
+import { Avatar, Box, TableHead, Typography } from '@mui/material';
 import {
   Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
-  TableFooter,
   TablePagination,
   TableRow,
 } from '@mui/material';
 import { isAxiosError } from 'axios';
-import NextLink from 'next/link';
 
-import Button from '@/components/common/ui/button';
-import {
-  ButtonSize,
-  ButtonVariant,
-} from '@/components/common/ui/button-mui/types';
-import { IconButtonShape } from '@/components/common/ui/icon-button';
-import IconButton from '@/components/common/ui/icon-button-mui';
-import { IconButtonColor } from '@/components/common/ui/icon-button-mui/types';
 import Tag from '@/components/common/ui/tag';
-import { TagColor, TagSize } from '@/components/common/ui/tag/types';
+import { TagSize } from '@/components/common/ui/tag/types';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import UserAPI from '@/lib/api/user/UserAPI';
@@ -36,6 +25,7 @@ import {
   TagTextMapper,
 } from '../../constants/UserSearchConstants';
 
+import TableActions from './components/table-actions';
 import * as styles from './UsersList.styles';
 
 interface UsersListProps {
@@ -114,28 +104,7 @@ const UsersList: FC<UsersListProps> = ({
                 />
               </TableCell>
               <TableCell align="right" sx={styles.actionsWrapper}>
-                <Box sx={styles.actions}>
-                  <Link
-                    href={`/admin/users/edit/${user.id}`}
-                    component={NextLink}
-                    underline="none"
-                    color="inherit"
-                  >
-                    <Button
-                      size={ButtonSize.SMALL}
-                      startIcon={<PencilSquareIcon width={24} height={24} />}
-                      variant={ButtonVariant.OUTLINE}
-                      text="Редагувати"
-                    />
-                  </Link>
-                  <IconButton
-                    icon={<TrashIcon width={24} height={24} />}
-                    sx={styles.trashIcon}
-                    color={IconButtonColor.SECONDARY}
-                    shape={IconButtonShape.CIRCLE}
-                    onClick={() => handleDelete(user.id)}
-                  />
-                </Box>
+                <TableActions user={user} handleDelete={handleDelete} />
               </TableCell>
             </TableRow>
           ))}

@@ -11,6 +11,7 @@ import {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
+import DeletePopup from '@/components/common/ui/delete-popup';
 import { Dropdown, InputSize, InputType } from '@/components/common/ui/form';
 import { FieldSize } from '@/components/common/ui/form/common/types';
 import Input from '@/components/common/ui/form/input-mui';
@@ -32,6 +33,7 @@ const EditUserPage: FC<EditUserPageProps> = ({ user }) => {
   const toast = useToast();
   const toastError = useToastError();
   const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleDelete = async (userId: string) => {
     try {
@@ -80,9 +82,16 @@ const EditUserPage: FC<EditUserPageProps> = ({ user }) => {
             color={ButtonColor.SECONDARY}
             startIcon={<TrashIcon />}
             text="Видалити"
-            onClick={() => handleDelete(user.id)}
+            onClick={() => setIsOpen(true)}
             sx={styles.button}
           />
+          {isOpen && (
+            <DeletePopup
+              setPopupOpen={setIsOpen}
+              handleDeleteSubmit={() => handleDelete(user.id)}
+              name={`користувача ${user.username}`}
+            />
+          )}
           <Button
             size={ButtonSize.MEDIUM}
             text="Зберегти"

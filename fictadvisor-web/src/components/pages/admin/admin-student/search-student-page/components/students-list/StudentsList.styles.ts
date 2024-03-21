@@ -22,19 +22,7 @@ export const tableContainer: SxProps<Theme> = {
 export const table: SxProps<Theme> = {
   minWidth: '992px',
 };
-
-export const trashIcon: SxProps<Theme> = {
-  padding: '6px',
-  borderRadius: '50%',
-};
 export const actionsWrapper: SxProps<Theme> = {
   padding: '0 16px 0  0',
   width: '214px',
-};
-export const actions: SxProps<Theme> = {
-  display: 'flex',
-  gap: '8px',
-  alignItems: 'center',
-  flexDirection: 'row',
-  justifyContent: 'end',
 };

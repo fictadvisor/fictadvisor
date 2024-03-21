@@ -20,7 +20,7 @@ const DisciplinesAdminPage: FC = () => {
   const [params, setParams] =
     useState<DisciplinesAdminSearchFormFields>(initialValues);
   const toast = useToastError();
-  const { data, isLoading, refetch } = useQuery(
+  const { data, refetch } = useQuery(
     [curPage, 'disciplines', pageSize],
     () => DisciplineApi.getPageDisciplines(params, pageSize, curPage),
     {

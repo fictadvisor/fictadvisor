@@ -9,22 +9,25 @@ import {
 } from '@/components/common/ui/button-mui/types';
 import DeletePopup from '@/components/common/ui/delete-popup';
 import { TrashBucketButton } from '@/components/common/ui/icon-button-mui/variants';
-import { Teacher } from '@/types/teacher';
+import { AdminDiscipline } from '@/types/discipline';
 
 import * as styles from './TableActions.styles';
 
 interface TableActionsProps {
-  teacher: Teacher;
-  deleteTeacher: (id: string) => Promise<void>;
+  discipline: AdminDiscipline;
+  deleteDiscipline: (id: string) => Promise<void>;
 }
 
-const TableActions: FC<TableActionsProps> = ({ teacher, deleteTeacher }) => {
+const TableActions: FC<TableActionsProps> = ({
+  discipline,
+  deleteDiscipline,
+}) => {
   const [popupOpen, setPopupOpen] = useState(false);
 
   return (
-    <Stack sx={styles.tableColumn}>
+    <Stack sx={styles.tableColumn} justifyContent="right">
       <Button
-        href={`/admin/teachers/edit/${teacher.id}`}
+        href={`/admin/disciplines/edit/${discipline.id}`}
         text="Редагувати"
         variant={ButtonVariant.OUTLINE}
         startIcon={<PencilSquareIcon />}
@@ -35,8 +38,8 @@ const TableActions: FC<TableActionsProps> = ({ teacher, deleteTeacher }) => {
       {popupOpen && (
         <DeletePopup
           setPopupOpen={setPopupOpen}
-          handleDeleteSubmit={() => deleteTeacher(teacher.id)}
-          name={`викладача ${teacher.lastName} ${teacher.firstName[0]}. ${teacher.middleName[0]}.`}
+          handleDeleteSubmit={() => deleteDiscipline(discipline.id)}
+          name={`дисципліну ${discipline.name}`}
         />
       )}
     </Stack>

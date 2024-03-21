@@ -1,5 +1,4 @@
-import React, { FC, useState } from 'react';
-import { PencilSquareIcon } from '@heroicons/react/24/solid';
+import React, { FC } from 'react';
 import {
   Avatar,
   Stack,
@@ -11,23 +10,15 @@ import {
   Typography,
 } from '@mui/material';
 
-import Button from '@/components/common/ui/button-mui';
-import {
-  ButtonSize,
-  ButtonVariant,
-} from '@/components/common/ui/button-mui/types';
 import {
   CathedraColors,
   RoleColors,
   TagText,
 } from '@/components/common/ui/cards/card-roles/CardRoles';
-import { TrashBucketButton } from '@/components/common/ui/icon-button-mui/variants';
 import Tag from '@/components/common/ui/tag';
 import { TagSize, TagVariant } from '@/components/common/ui/tag/types';
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 import { Teacher } from '@/types/teacher';
-
-import DeletePopup from '../../../common/components/delete-popup';
 
 import TableActions from './components/table-actions';
 import TeachersSkeleton from './components/teachers-skeleton';
