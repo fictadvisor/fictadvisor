@@ -7,7 +7,7 @@ import { UpdateTeacherDTO } from '../dtos/UpdateTeacherDTO';
 import { CreateContactDTO } from '../dtos/CreateContactDTO';
 import { UpdateContactDTO } from '../dtos/UpdateContactDTO';
 import { Access } from 'src/v2/security/Access';
-import { PERMISSION } from '../../security/PERMISSION';
+import { PERMISSION } from '@fictadvisor/utils/security';
 import { TeacherByIdPipe } from '../pipes/TeacherByIdPipe';
 import { ContactByNamePipe } from '../pipes/ContactByNamePipe';
 import { SubjectByIdPipe } from '../pipes/SubjectByIdPipe';

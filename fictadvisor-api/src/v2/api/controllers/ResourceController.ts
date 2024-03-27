@@ -3,7 +3,7 @@ import { ResourceService } from '../services/ResourceService';
 import { ResourceByIdPipe } from '../pipes/ResourceByIdPipe';
 import { CreateResourceDTO } from '../dtos/CreateResourceDTO';
 import { UpdateResourceDTO } from '../dtos/UpdateResourceDTO';
-import { PERMISSION } from '../../security/PERMISSION';
+import { PERMISSION } from '@fictadvisor/utils/security';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,

@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Patch, Param, Post, Query } from '@nestjs/common';
 import { PollService } from '../services/PollService';
-import { PERMISSION } from '../../security/PERMISSION';
+import { PERMISSION } from '@fictadvisor/utils/security';
 import { QuestionByIdPipe } from '../pipes/QuestionByIdPipe';
 import { QuestionByRoleAndIdPipe } from '../pipes/QuestionByRoleAndIdPipe';
 import { UserByIdPipe } from '../pipes/UserByIdPipe';

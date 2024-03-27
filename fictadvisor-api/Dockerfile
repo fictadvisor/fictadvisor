@@ -2,22 +2,37 @@
 # BUILD FOR PRODUCTION
 ###################
 
-FROM node:18-alpine3.17 as build
+FROM node:18-alpine3.17 as pruner
 
 WORKDIR /app
 
-COPY . ./
+COPY . .
 
-RUN yarn install --prod && \
-    yarn add @vercel/ncc && \
-    yarn ncc build src/main.ts -o dist && \
-    mv dist/client/* dist && \
-    mkdir dist/static && \
-    mkdir dist/private && \
-    mkdir dist/swagger && \
-    cp node_modules/swagger-ui-dist/swagger-ui* dist/swagger && \
-    mkdir -p dist/email/templates && \
-    cp email/templates/template.hbs dist/email/templates
+RUN npm i -g turbo && \
+    turbo prune api --docker
+
+
+FROM node:18-alpine3.17 as builder
+
+WORKDIR /app
+
+COPY --from=pruner ./app/out/full/ ./
+COPY --from=pruner ./app/out/yarn.lock ./
+
+RUN npm install && \
+    npx prisma generate --schema ./fictadvisor-api/prisma/schema.prisma && \
+    npx turbo build --filter api && \
+    npm prune --prod && \
+    rm -rf ./fictadvisor-api/src && \
+    rm -rf ./fictadvisor-api/prisma && \
+    rm -rf ./utils/src && \
+    mv ./fictadvisor-api/dist/* ./fictadvisor-api && \
+    rm -rf dist && \
+    mv -T fictadvisor-api/src fictadvisor-api/dist && \
+    mv ./fictadvisor-api/email . && \
+    mkdir ./static && \
+    mkdir ./private
+
 
 ###################
 # PRODUCTION
@@ -32,7 +47,7 @@ RUN apk --no-cache add -U \
     nodejs~18 \
     dumb-init
 
-COPY --from=build /app/dist/ ./
+COPY --from=builder /app ./
 
-CMD [ "dumb-init", "node", "index.js" ]
+CMD [ "dumb-init", "node", "./fictadvisor-api/dist/main.js" ]
 

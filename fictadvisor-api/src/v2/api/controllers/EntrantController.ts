@@ -3,7 +3,7 @@ import { CreateContractDTO } from '../dtos/CreateContractDTO';
 import { Actions, EntrantService } from '../services/EntrantService';
 import { EntrantMapper } from '../../mappers/EntrantMapper';
 import { Access } from '../../security/Access';
-import { PERMISSION } from '../../security/PERMISSION';
+import { PERMISSION } from '@fictadvisor/utils/security';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Express } from 'express';
 import { createHash } from 'crypto';
-import { join, extname } from 'path';
+import { join, extname, resolve as pathResolve } from 'path';
 import { resolve } from 'url';
 import PizZip from 'pizzip';
 import Docxtemplater from 'docxtemplater';
@@ -16,7 +16,7 @@ import { MINUTE } from '../date/DateService';
 export class FileService {
   async saveByHash (file: Express.Multer.File, directory: string) {
     const fileName = createHash('md5').update(file.buffer).digest('hex');
-    const filePath = join(__dirname, 'static', directory, fileName + extname(file.originalname));
+    const filePath = join(pathResolve(), 'static', directory, fileName + extname(file.originalname));
 
     await fs.promises.writeFile(filePath, file.buffer);
 
@@ -29,22 +29,22 @@ export class FileService {
   }
 
   checkFileExist (path: string, isPrivate = true): boolean {
-    const filePath = join(__dirname, isPrivate ? 'private' : 'static', path);
+    const filePath = join(pathResolve(), isPrivate ? 'private' : 'static', path);
     return fs.existsSync(filePath);
   }
 
   async deleteFile (path: string, isPrivate = true) {
-    const filePath = join(__dirname, isPrivate ? 'private' : 'static', path);
+    const filePath = join(pathResolve(), isPrivate ? 'private' : 'static', path);
     await fs.promises.unlink(filePath);
   }
 
   getFileContent (path: string, isPrivate = true) {
-    const filePath = join(__dirname, isPrivate ? 'private' : 'static', path);
+    const filePath = join(pathResolve(), isPrivate ? 'private' : 'static', path);
     return fs.readFileSync(filePath, 'utf-8');
   }
 
   fillTemplate (fileName: string, data: object) {
-    const path = join(__dirname, 'private/templates', fileName);
+    const path = join(pathResolve(), 'private/templates', fileName);
     const zip = new PizZip(fs.readFileSync(path, 'binary'));
 
     const doc = new Docxtemplater(zip, {
@@ -62,7 +62,7 @@ export class FileService {
 
   generateGroupList (students: StudentWithContactsData[]) {
     const fileName = `${v4()}.csv`;
-    const path = join(__dirname, 'static', 'lists', fileName);
+    const path = join(pathResolve(), 'static', 'lists', fileName);
 
     let result = 'lastName,firstName,middleName,email,telegram,github,instagram,facebook,twitter,discord,youtube,mail';
     for (const student of students) {

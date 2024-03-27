@@ -1,6 +1,6 @@
 import { applyDecorators, UseGuards } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
-import { PERMISSION } from '../../security/PERMISSION';
+import { PERMISSION } from '@fictadvisor/utils/security';
 import { JwtGuard } from '../../security/JwtGuard';
 import { PermissionGuard } from '../../security/permission-guard/PermissionGuard';
 import { Permissions } from '../../security/permission-guard/Permissions';

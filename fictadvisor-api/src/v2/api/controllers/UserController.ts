@@ -11,7 +11,7 @@ import { UpdateUserDTO } from '../dtos/UpdateUserDTO';
 import { UpdateStudentDTO } from '../dtos/UpdateStudentDTO';
 import { ContactByUserIdPipe } from '../pipes/ContactByUserIdPipe';
 import { GroupRequestDTO } from '../dtos/GroupRequestDTO';
-import { PERMISSION } from '../../security/PERMISSION';
+import { PERMISSION } from '@fictadvisor/utils/security';
 import { TelegramDTO } from '../dtos/TelegramDTO';
 import { UserMapper } from '../../mappers/UserMapper';
 import { AvatarValidationPipe } from '../pipes/AvatarValidationPipe';

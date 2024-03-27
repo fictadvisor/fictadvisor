@@ -3,7 +3,7 @@ import { SubjectService } from '../services/SubjectService';
 import { SubjectByIdPipe } from '../pipes/SubjectByIdPipe';
 import { QueryAllSubjectDTO } from '../dtos/QueryAllSubjectDTO';
 import { Access } from 'src/v2/security/Access';
-import { PERMISSION } from '../../security/PERMISSION';
+import { PERMISSION } from '@fictadvisor/utils/security';
 import { SubjectMapper } from '../../mappers/SubjectMapper';
 import { CreateSubjectDTO } from '../dtos/CreateSubjectDTO';
 import { UpdateSubjectDTO } from '../dtos/UpdateSubjectDTO';
