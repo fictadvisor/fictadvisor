@@ -1,4 +1,5 @@
 import React, { FC, ReactNode, useRef, useState } from 'react';
+import { PERMISSION } from '@fictadvisor/utils/security';
 import {
   ArrowsUpDownIcon,
   EllipsisVerticalIcon,
@@ -16,7 +17,7 @@ import {
 import IconButton from '@/components/common/ui/icon-button-mui/IconButton';
 import { IconButtonColor } from '@/components/common/ui/icon-button-mui/types';
 import roleNamesMapper from '@/components/pages/account-page/components/group-tab/components/table/constants';
-import { PERMISSION, PermissionResponse } from '@/lib/services/permisson/types';
+import { PermissionResponse } from '@/lib/services/permisson/types';
 import { UserGroupRole } from '@/types/user';
 
 import { StudentsTableItem } from '../../../types';

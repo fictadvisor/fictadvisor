@@ -46,5 +46,6 @@ jobs:
       - name: Build and push app Docker image
         uses: docker/build-push-action@v2
         with:
-          context: ./fictadvisor-api
+          context: .
+          file: ./fictadvisor-api/Dockerfile
           tags: fictadvisor/fictadvisor-api

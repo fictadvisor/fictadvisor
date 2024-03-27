@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Patch, Post, Query } from '@nestjs/common';
-import { PERMISSION } from '../../security/PERMISSION';
+import { PERMISSION } from '@fictadvisor/utils/security';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,

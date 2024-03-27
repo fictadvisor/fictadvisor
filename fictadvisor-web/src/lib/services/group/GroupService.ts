@@ -1,6 +1,8 @@
+import { PERMISSION } from '@fictadvisor/utils/security';
+
 import GroupAPI from '@/lib/api/group/GroupAPI';
 import PermissionService from '@/lib/services/permisson/PermissionService';
-import { PERMISSION, PermissionData } from '@/lib/services/permisson/types';
+import { PermissionData } from '@/lib/services/permisson/types';
 import { PendingStudent } from '@/types/student';
 import { User } from '@/types/user';
 import { UserGroupRole } from '@/types/user';

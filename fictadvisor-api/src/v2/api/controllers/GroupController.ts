@@ -7,7 +7,7 @@ import { ApproveDTO } from '../dtos/ApproveDTO';
 import { RoleDTO } from '../dtos/RoleDTO';
 import { UserByIdPipe } from '../pipes/UserByIdPipe';
 import { UpdateGroupDTO } from '../dtos/UpdateGroupDTO';
-import { PERMISSION } from '../../security/PERMISSION';
+import { PERMISSION } from '@fictadvisor/utils/security';
 import { StudentMapper } from '../../mappers/StudentMapper';
 import { AbsenceOfCaptainException } from '../../utils/exceptions/AbsenceOfCaptainException';
 import { GroupMapper } from '../../mappers/GroupMapper';

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { PERMISSION } from '@fictadvisor/utils/security';
 import {
   BarsArrowDownIcon,
   BarsArrowUpIcon,
@@ -25,7 +26,6 @@ import useAuthentication from '@/hooks/use-authentication';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import GroupAPI from '@/lib/api/group/GroupAPI';
 import GroupService from '@/lib/services/group/GroupService';
-import { PERMISSION } from '@/lib/services/permisson/types';
 import theme from '@/styles/theme';
 import { UserGroupRole } from '@/types/user';
 

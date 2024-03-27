@@ -6,7 +6,7 @@ import { HttpExceptionFilter, validationExceptionFactory } from './v2/security/e
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { applyStaticMiddleware } from './v2/utils/StaticUtil';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { join } from 'path';
+import { join, resolve } from 'path';
 
 (BigInt.prototype as any).toJSON = function () {
   const int = Number.parseInt(this.toString());
@@ -46,13 +46,7 @@ async function bootstrap () {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  if (process.env.NODE_ENV === 'production') {
-    app.useStaticAssets(join(__dirname, '/swagger'), {
-      prefix: '/api',
-    });
-  }
-
-  app.useStaticAssets(join(__dirname, '/static/'));
+  app.useStaticAssets(join(resolve(), '/static/'));
 
   await app.listen(port);
 

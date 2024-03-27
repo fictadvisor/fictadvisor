@@ -21,7 +21,7 @@ import {
 import { RoleService } from '../services/RoleService';
 import { GrantMapper } from '../../mappers/GrantMapper';
 import { RoleMapper } from '../../mappers/RoleMapper';
-import { PERMISSION } from '../../security/PERMISSION';
+import { PERMISSION } from '@fictadvisor/utils/security';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
 import { BaseRoleResponse, RoleResponse } from '../responses/RoleResponse';
 import { RolesResponse } from '../responses/RolesResponse';

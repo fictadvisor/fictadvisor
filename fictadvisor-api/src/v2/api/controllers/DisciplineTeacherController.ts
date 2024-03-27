@@ -3,7 +3,7 @@ import { DisciplineTeacherService } from '../services/DisciplineTeacherService';
 import { CreateAnswersDTO, CreateAnswersWithUserIdDTO } from '../dtos/CreateAnswersDTO';
 import { GroupByDisciplineTeacherGuard } from 'src/v2/security/group-guard/GroupByDisciplineTeacherGuard';
 import { Access } from 'src/v2/security/Access';
-import { PERMISSION } from '../../security/PERMISSION';
+import { PERMISSION } from '@fictadvisor/utils/security';
 import { DisciplineTeacherByIdPipe } from '../pipes/DisciplineTeacherByIdPipe';
 import { TelegramGuard } from '../../security/TelegramGuard';
 import { ResponseDTO } from '../dtos/ResponseDTO';

@@ -3,7 +3,7 @@ import { DisciplineService } from '../services/DisciplineService';
 import { CreateDisciplineDTO } from '../dtos/CreateDisciplineDTO';
 import { GroupByDisciplineGuard } from '../../security/group-guard/GroupByDisciplineGuard';
 import { Access } from 'src/v2/security/Access';
-import { PERMISSION } from '../../security/PERMISSION';
+import { PERMISSION } from '@fictadvisor/utils/security';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
