@@ -14,7 +14,7 @@ import { ScheduleService } from '../services/ScheduleService';
 import { GroupByIdPipe } from '../pipes/GroupByIdPipe';
 import { ScheduleMapper } from '../../mappers/ScheduleMapper';
 import { Access } from '../../security/Access';
-import { PERMISSION } from '../../security/PERMISSION';
+import { PERMISSION } from '@fictadvisor/utils/security';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,

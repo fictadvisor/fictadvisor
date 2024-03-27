@@ -1,5 +1,6 @@
 import React, { FC, useState } from 'react';
 import { useQuery } from 'react-query';
+import { PERMISSION } from '@fictadvisor/utils/security';
 import { ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/outline';
 import { Box, Typography, useMediaQuery } from '@mui/material';
 
@@ -24,7 +25,6 @@ import useAuthentication from '@/hooks/use-authentication';
 import groupAPI from '@/lib/api/group/GroupAPI';
 import GroupService from '@/lib/services/group/GroupService';
 import { Order } from '@/lib/services/group/types/OrderEnum';
-import { PERMISSION } from '@/lib/services/permisson/types';
 import theme from '@/styles/theme';
 import { UserGroupState } from '@/types/user';
 

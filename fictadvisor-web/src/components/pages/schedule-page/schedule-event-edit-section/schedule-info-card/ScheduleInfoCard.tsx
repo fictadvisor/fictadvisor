@@ -1,5 +1,6 @@
 import React, { FC, useState } from 'react';
 import { useQuery } from 'react-query';
+import { PERMISSION } from '@fictadvisor/utils/security';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { Box, Typography } from '@mui/material';
 import Skeleton from '@mui/material/Skeleton';
@@ -18,7 +19,7 @@ import { getStringTime } from '@/components/pages/schedule-page/utils/getStringT
 import useAuthentication from '@/hooks/use-authentication';
 import { DetailedEventBody } from '@/lib/api/schedule/types/DetailedEventBody';
 import PermissionService from '@/lib/services/permisson/PermissionService';
-import { PERMISSION, PermissionData } from '@/lib/services/permisson/types';
+import { PermissionData } from '@/lib/services/permisson/types';
 import { TEvent } from '@/types/schedule';
 
 import { skeletonProps } from '../utils/skeletonProps';

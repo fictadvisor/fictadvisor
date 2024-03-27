@@ -1,5 +1,6 @@
 import React, { FC, Fragment, useState } from 'react';
 import { QueryObserverBaseResult } from 'react-query';
+import { PERMISSION } from '@fictadvisor/utils/security';
 import {
   ArrowDownCircleIcon,
   ArrowsUpDownIcon,
@@ -34,7 +35,7 @@ import MobileDropdown from '@/components/pages/account-page/components/group-tab
 import UseAuthentication from '@/hooks/use-authentication/useAuthentication';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import GroupAPI from '@/lib/api/group/GroupAPI';
-import { PERMISSION, PermissionResponse } from '@/lib/services/permisson/types';
+import { PermissionResponse } from '@/lib/services/permisson/types';
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 import theme from '@/styles/theme';
 import { UserGroupRole } from '@/types/user';

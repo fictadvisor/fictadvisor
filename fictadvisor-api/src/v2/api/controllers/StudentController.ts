@@ -11,7 +11,7 @@ import { StudentMapper } from '../../mappers/StudentMapper';
 import { StudentService } from '../services/StudentService';
 import { AllStudentsPipe } from '../pipes/AllStudentsPipe';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
-import { PERMISSION } from '../../security/PERMISSION';
+import { PERMISSION } from '@fictadvisor/utils/security';
 import {
   FullStudentResponse,
   SimpleStudentResponse,

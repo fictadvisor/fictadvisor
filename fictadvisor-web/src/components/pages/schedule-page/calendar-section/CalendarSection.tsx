@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import { useQuery } from 'react-query';
+import { PERMISSION } from '@fictadvisor/utils/security';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { Box, Stack } from '@mui/material';
 
@@ -11,7 +12,7 @@ import {
 import { GroupsDropDown } from '@/components/pages/schedule-page/calendar-section/components/groups-dropdown/GroupsDropDown';
 import useAuthentication from '@/hooks/use-authentication';
 import PermissionService from '@/lib/services/permisson/PermissionService';
-import { PERMISSION, PermissionData } from '@/lib/services/permisson/types';
+import { PermissionData } from '@/lib/services/permisson/types';
 import { useSchedule } from '@/store/schedule/useSchedule';
 import { Group } from '@/types/group';
 
