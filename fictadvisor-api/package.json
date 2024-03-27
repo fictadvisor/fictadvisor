@@ -5,6 +5,7 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
+  "packageManager": "yarn@1.0.0",
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
   },
@@ -33,6 +34,7 @@
     "migrate:dev": "dotenv -e .development.env -- npx prisma migrate dev"
   },
   "dependencies": {
+    "@fictadvisor/utils": "*",
     "@nestjs-modules/mailer": "^1.8.1",
     "@nestjs/common": "^9.2.1",
     "@nestjs/config": "^2.2.0",

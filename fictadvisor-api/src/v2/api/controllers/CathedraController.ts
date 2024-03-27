@@ -9,7 +9,7 @@ import {
 } from '@nestjs/swagger';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
 import { Body, Controller, Delete, Param, Patch, Post, Get, Query } from '@nestjs/common';
-import { PERMISSION } from '../../security/PERMISSION';
+import { PERMISSION } from '@fictadvisor/utils/security';
 import { CathedraService } from '../services/CathedraService';
 import { CathedraMapper } from '../../mappers/CathedraMapper';
 import { CathedraByIdPipe } from '../pipes/CathedraByIdPipe';

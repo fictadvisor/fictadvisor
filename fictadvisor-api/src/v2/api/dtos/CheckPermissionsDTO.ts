@@ -1,6 +1,6 @@
 import { IsArray, IsEnum, IsObject, IsOptional } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { PERMISSION } from '../../security/PERMISSION';
+import { PERMISSION } from '@fictadvisor/utils/security';
 
 export class CheckPermissionsDTO {
     @ApiProperty({

@@ -1,4 +1,6 @@
-import { PERMISSION, PermissionData } from '../types';
+import { PERMISSION } from '@fictadvisor/utils/security';
+
+import { PermissionData } from '../types';
 
 const createPermissionRequest = (values: PermissionData) => {
   const permissions: PERMISSION[] = [];

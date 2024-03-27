@@ -2,6 +2,7 @@
   "name": "@fictadvisor/frontend",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "yarn@1.0.0",
   "scripts": {
     "lint": "next lint",
     "dev": "next dev -p 3000",
@@ -12,6 +13,7 @@
     "build-sb": "storybook build"
   },
   "dependencies": {
+    "@fictadvisor/utils": "*",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@heroicons/react": "^2.0.18",

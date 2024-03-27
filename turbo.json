@@ -4,14 +4,25 @@
   "pipeline": {
     "build": {
       "outputs": ["dist/**", ".next/**"],
-      "cache": true
+      "cache": true,
+      "dependsOn": ["^build"]
     },
     "lint": {
       "dependsOn": ["^lint"]
     },
-    "test:unit": {},
     "test:migrate": {},
-    "test:integration": {},
-    "test:seed": {}
+    "test:seed": {},
+    "test:unit": {
+      "dependsOn": ["^build"]
+    },
+    "test:integration": {
+      "dependsOn": ["^build"]
+    },
+    "start:dev": {
+      "dependsOn": ["^build"]
+    },
+    "dev": {
+      "dependsOn": ["^build"]
+    }
   }
 }
