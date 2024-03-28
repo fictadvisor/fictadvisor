@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, Matches, MaxLength, MinLength } from 'class-validator';
+import { IsArray, IsNotEmpty, IsOptional, Matches, MaxLength, MinLength } from 'class-validator';
 import { createRegex, UKR_REGEX, UKRSPEC_REGEX, validationOptionsMsg } from '../../utils/GLOBALS';
 
 export class UpdateCathedraDTO {
@@ -7,8 +7,8 @@ export class UpdateCathedraDTO {
     description: 'The updated name of the cathedra',
   })
   @IsOptional()
-  @MinLength(5, validationOptionsMsg('Cathedra name is too short (min: 5)'))
-  @MaxLength(40, validationOptionsMsg('Cathedra name is too long (max: 40)'))
+  @MinLength(3, validationOptionsMsg('Cathedra name is too short (min: 3)'))
+  @MaxLength(150, validationOptionsMsg('Cathedra name is too long (max: 150)'))
   @IsNotEmpty(validationOptionsMsg('Cathedra name can not be empty'))
   @Matches(
     createRegex(UKR_REGEX, UKRSPEC_REGEX),
@@ -20,8 +20,8 @@ export class UpdateCathedraDTO {
     description: 'The updated abbreviation of the cathedra',
   })
   @IsOptional()
-  @MinLength(2, validationOptionsMsg('Abbreviation is too short (min: 2)'))
-  @MaxLength(6, validationOptionsMsg('Abbreviation is too long (max: 6)'))
+  @MinLength(1, validationOptionsMsg('Abbreviation is too short (min: 1)'))
+  @MaxLength(10, validationOptionsMsg('Abbreviation is too long (max: 10)'))
   @IsNotEmpty(validationOptionsMsg('Abbreviation can not be empty'))
   @Matches(
     createRegex(UKR_REGEX, UKRSPEC_REGEX),
@@ -37,7 +37,21 @@ export class UpdateCathedraDTO {
   @IsOptional()
   @Matches(
     createRegex(UKR_REGEX, UKRSPEC_REGEX),
-    validationOptionsMsg('Cathedra name is incorrect (A-Я(укр.)\\-\' )'),
+    validationOptionsMsg('Division name is incorrect (A-Я(укр.)\\-\' )'),
   )
     division?: string;
+
+  @ApiPropertyOptional({
+    description: 'Array of teacher ids to delete',
+  })
+  @IsArray(validationOptionsMsg('Teachers to delete must be an array'))
+  @IsOptional()
+    deleteTeachers?: string[];
+
+  @ApiPropertyOptional({
+    description: 'Array of teacher ids to add',
+  })
+  @IsArray(validationOptionsMsg('Teachers to add must be an array'))
+  @IsOptional()
+    addTeachers?: string[];
 }
