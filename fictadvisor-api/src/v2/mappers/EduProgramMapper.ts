@@ -1,5 +1,5 @@
 import { EduProgramResponse, EduProgramResponses } from '../api/responses/EduProgramResponse';
-import { DbEducationalProgram } from '../database/entities/DbEducationalProgram';
+import { DbEducationalProgram } from '../../../../utils/types/DbEducationalProgram';
 
 export class EduProgramMapper {
   getAll (programs: DbEducationalProgram[]): EduProgramResponses {

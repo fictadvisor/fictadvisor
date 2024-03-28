@@ -4,9 +4,9 @@ import { DateModule } from '../../utils/date/DateModule';
 import { MapperModule } from '../../modules/MapperModule';
 import { PrismaModule } from '../../modules/PrismaModule';
 import { PollService } from './PollService';
-import { DbDiscipline } from 'src/v2/database/entities/DbDiscipline';
-import { DbQuestionWithRoles } from 'src/v2/database/entities/DbQuestionWithRoles';
-import { DbQuestionWithAnswers } from 'src/v2/database/entities/DbQuestionWithAnswers';
+import { DbDiscipline } from 'types/DbDiscipline';
+import { DbQuestionWithRoles } from 'types/DbQuestionWithRoles';
+import { DbQuestionWithAnswers } from 'types/DbQuestionWithAnswers';
 import { CommentsSort } from '../dtos/CommentsQueryDTO';
 
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DbDisciplineTeacher } from '../database/entities/DbDisciplineTeacher';
+import { DbDisciplineTeacher } from '../../../../utils/types/DbDisciplineTeacher';
 import { Subject, TeacherRole } from '@prisma/client';
 import { DisciplineTeacherFullResponse } from '../api/responses/DisciplineTeacherResponse';
 import { SubjectResponse } from '../api/responses/SubjectResponse';

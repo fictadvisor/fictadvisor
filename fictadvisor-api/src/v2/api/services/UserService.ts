@@ -25,7 +25,7 @@ import { DisciplineMapper } from '../../mappers/DisciplineMapper';
 import { RemainingSelectiveDTO } from '../dtos/RemainingSelectiveDTO';
 import { DateService } from '../../utils/date/DateService';
 import { SelectiveDisciplinesDTO } from '../dtos/SelectiveDisciplinesDTO';
-import { DbDiscipline } from '../../database/entities/DbDiscipline';
+import { DbDiscipline } from '@fictadvisor/utils/types/DbDiscipline';
 import { NotBelongException } from '../../utils/exceptions/NotBelongException';
 import { ExcessiveSelectiveDisciplinesException } from '../../utils/exceptions/ExcessiveSelectiveDisciplinesException';
 import { checkIfArrayIsUnique } from '../../utils/ArrayUtil';
@@ -36,7 +36,7 @@ import { UserByAdminDTO } from '../dtos/UserDTO';
 import { NotSelectedDisciplineException } from '../../utils/exceptions/NotSelectedDisciplineException';
 import { QueryAllUsersDTO } from '../dtos/QueryAllUsersDTO';
 import { DatabaseUtils } from '../../database/DatabaseUtils';
-import { DbUser } from '../../database/entities/DbUser';
+import { DbUser } from '@fictadvisor/utils/types/DbUser';
 import { DisciplineTeacherService } from './DisciplineTeacherService';
 import { PollService } from './PollService';
 

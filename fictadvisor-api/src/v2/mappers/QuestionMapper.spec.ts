@@ -1,6 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { QuestionMapper } from './QuestionMapper';
-import { DbQuestionWithRoles } from '../database/entities/DbQuestionWithRoles';
+import { DbQuestionWithRoles } from '../../../../utils/types/DbQuestionWithRoles';
 import { QuestionCommentData } from '../api/datas/QuestionCommentData';
 
 describe('QuestionMapper', () => {

@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { DbQuestionWithRoles } from '../database/entities/DbQuestionWithRoles';
+import { DbQuestionWithRoles } from '../../../../utils/types/DbQuestionWithRoles';
 import { QuestionDisplay, QuestionRole, QuestionType } from '@prisma/client';
-import { DbDisciplineTeacherWithAnswers } from '../database/entities/DbDisciplineTeacherWithAnswers';
-import { DbQuestionWithAnswers } from '../database/entities/DbQuestionWithAnswers';
+import { DbDisciplineTeacherWithAnswers } from '../../../../utils/types/DbDisciplineTeacherWithAnswers';
+import { DbQuestionWithAnswers } from '../../../../utils/types/DbQuestionWithAnswers';
 import { QuestionCommentData } from '../api/datas/QuestionCommentData';
-import { DbQuestionAnswer } from '../database/entities/DbQuestionAnswer';
+import { DbQuestionAnswer } from '../../../../utils/types/DbQuestionAnswer';
+import { DbQuestion } from '../../../../utils/types/DbQuestion';
 import { CommentResponse } from '../api/responses/CommentResponse';
-import { DbQuestion } from '../database/entities/DbQuestion';
+
 
 @Injectable()
 export class QuestionMapper {

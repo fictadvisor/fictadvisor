@@ -6,11 +6,11 @@ import { ScheduleDayType, ScheduleGroupType, SchedulePairType, ScheduleType } fr
 import { DateService, FORTNITE, WEEK, StudyingSemester } from '../date/DateService';
 import { weeksPerEvent } from '../../api/services/ScheduleService';
 import { DateUtils } from '../date/DateUtils';
-import { DbSubject } from '../../database/entities/DbSubject';
-import { DbDiscipline } from '../../database/entities/DbDiscipline';
+import { DbSubject } from '@fictadvisor/utils/types/DbSubject';
+import { DbDiscipline } from '@fictadvisor/utils/types/DbDiscipline';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
-import { DbTeacher } from '../../database/entities/DbTeacher';
-import { DbDisciplineType } from '../../database/entities/DbDisciplineType';
+import { DbTeacher } from '@fictadvisor/utils/types/DbTeacher';
+import { DbDisciplineType } from '@fictadvisor/utils/types/DbDisciplineType';
 import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
 import { EventRepository } from '../../database/repositories/EventRepository';
 import { TeacherRepository } from '../../database/repositories/TeacherRepository';

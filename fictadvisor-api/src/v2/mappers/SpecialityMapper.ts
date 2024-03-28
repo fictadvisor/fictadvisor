@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { SpecialityResponse, SpecialityResponses } from '../api/responses/SpecialityResponse';
-import { DbSpeciality } from '../database/entities/DbSpeciality';
+import { DbSpeciality } from '../../../../utils/types/DbSpeciality';
 
 @Injectable()
 export class SpecialityMapper {

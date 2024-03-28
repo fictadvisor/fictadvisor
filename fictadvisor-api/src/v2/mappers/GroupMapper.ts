@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { DbGroup } from '../../../../utils/types/DbGroup';
 import { RoleName } from '@prisma/client';
 import { MappedGroupResponse } from '../api/responses/MappedGroupResponse';
-import { DbGroup } from '../database/entities/DbGroup';
-import { DbStudent } from '../database/entities/DbStudent';
+import { DbStudent } from '../../../../utils/types/DbStudent';
 
 @Injectable()
 export class GroupMapper {
@@ -69,12 +69,12 @@ export class GroupMapper {
       },
     };
   }
-  
+
   getGroups (groups: DbGroup[] | DbStudent[], byCaptain=false) {
     if (byCaptain) return groups.map((captain) =>  this.getGroupByCaptain(captain));
     return groups.map((group) =>  this.getGroup(group));
   }
-  
+
   getGroupsByCaptain (captains: DbStudent[]) {
     return captains.map((captain) =>  this.getGroupByCaptain(captain));
   }
