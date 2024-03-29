@@ -1,5 +1,5 @@
 const config = {
-  service: 'FICT Advisor',
+  service: 'FICE Advisor',
 };
 
 export default config;

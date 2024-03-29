@@ -78,7 +78,7 @@ const SchedulePage: FC<SchedulePageProps> = ({ semester, groups }) => {
   return (
     <PageLayout
       title={'Розклад'}
-      description="FICT Advisor представляє оновлений розклад занять для студентів ФІОТу КПІ. Переглядай та фільтруй
+      description="FICE Advisor представляє оновлений розклад занять для студентів ФІОТу КПІ. Переглядай та фільтруй
        пари, переходь до конференцій, додавай власні та змінюй вже наявні події."
     >
       <Box sx={styles.schedulePage}>

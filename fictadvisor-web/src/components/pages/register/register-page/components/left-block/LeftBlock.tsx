@@ -36,7 +36,7 @@ const LeftBlock: FC<Omit<GetAllGroupsResponse, 'pagination'>> = ({
       <Link href="/" className={styles['mobile-register-logo-container']}>
         <Image
           src="/images/login-page/new-logo.png"
-          alt="fict advisor logo"
+          alt="fice advisor logo"
           fill
         />
       </Link>

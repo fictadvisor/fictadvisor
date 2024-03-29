@@ -4,9 +4,9 @@ import PageLayout from '@/components/common/layout/page-layout';
 import AccountPage from '@/components/pages/account-page';
 
 export const metadata: Metadata = {
-  title: 'Персональний акаунт FICT Advisor',
+  title: 'Персональний акаунт FICE Advisor',
   openGraph: {
-    title: 'Персональний акаунт FICT Advisor',
+    title: 'Персональний акаунт FICE Advisor',
   },
 };
 const Account = () => (
