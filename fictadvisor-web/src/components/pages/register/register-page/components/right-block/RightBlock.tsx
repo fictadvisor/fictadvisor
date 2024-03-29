@@ -18,7 +18,7 @@ const RightBlock = () => {
         <Image
           className={styles['login-logo']}
           src="/images/login-page/new-logo.png"
-          alt="fict advisor logo"
+          alt="fice advisor logo"
           priority
           width={394}
           height={70}

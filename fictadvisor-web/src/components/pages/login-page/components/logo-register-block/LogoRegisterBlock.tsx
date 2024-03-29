@@ -18,7 +18,7 @@ const LogoRegisterBlock = () => {
         <Image
           style={{ margin: 0, padding: '8px' }}
           src="/images/login-page/new-logo.png"
-          alt="fict advisor logo"
+          alt="fice advisor logo"
           priority
           width={410}
           height={72}
