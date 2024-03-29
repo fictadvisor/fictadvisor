@@ -4,9 +4,9 @@ import { Metadata } from 'next';
 import PageLayout from '@/components/common/layout/page-layout';
 import LoginPage from '@/components/pages/login-page';
 export const metadata: Metadata = {
-  title: 'Авторизація у FICT Advisor',
+  title: 'Авторизація у FICE Advisor',
   openGraph: {
-    title: 'Авторизація у FICT Advisor',
+    title: 'Авторизація у FICE Advisor',
   },
 };
 const Login: FC = () => {

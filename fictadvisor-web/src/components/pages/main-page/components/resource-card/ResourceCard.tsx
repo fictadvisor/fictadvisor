@@ -10,7 +10,7 @@ interface CardProps {
 }
 
 const ResourceCard: React.FC<CardProps> = ({
-  text = 'FICT Time',
+  text = 'FICE Time',
   image,
   href,
 }) => {

@@ -43,7 +43,7 @@ const LoginFormBlock = () => {
       <Link href="/" className={styles['mobile-login-logo']}>
         <Image
           src="/images/login-page/new-logo.png"
-          alt="fict advisor logo"
+          alt="fice advisor logo"
           priority
           fill
         />
