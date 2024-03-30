@@ -28,7 +28,7 @@ export function ApiEndpoint ({ summary, permissions, guards }: ApiEndpointParams
 
   if (permissions && guards?.map((g) => g.name).includes('TelegramGuard')) {
     const accessGuards = [JwtGuard, TelegramGuard];
-    const filteredGuards = guards.filter((g) => g.name != 'TelegramGuard');
+    const filteredGuards = guards.filter((g) => g.name !== 'TelegramGuard');
     decorators.push(
       Permissions(permissions),
       MultipleAccesses(...accessGuards),

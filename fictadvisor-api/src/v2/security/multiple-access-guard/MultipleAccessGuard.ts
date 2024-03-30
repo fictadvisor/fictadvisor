@@ -10,7 +10,7 @@ export class MultipleAccessGuard implements CanActivate {
 
   async canActivate (context: ExecutionContext) {
     const accessGuards = this.reflector.get('multipleAccesses', context.getHandler());
-    const guards = accessGuards.map((guard) => this.moduleRef.get(guard));
+    const guards = accessGuards.map((guard) => this.moduleRef.get(guard, { strict: false }));
 
     for (let i = 0; i < guards.length; i++) {
       let status;
