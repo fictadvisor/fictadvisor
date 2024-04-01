@@ -8,10 +8,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { isAxiosError } from 'axios';
 
-import { useToastError } from '@/hooks/use-toast-error/useToastError';
-import DisciplineAPI from '@/lib/api/discipline/DisciplineAPI';
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 import { AdminDiscipline } from '@/types/discipline';
 
@@ -20,21 +17,13 @@ import * as styles from './DisciplinesTable.styles';
 
 interface DisciplinesAdminSearchProps {
   disciplines?: AdminDiscipline[];
+  deleteDiscipline: (id: string) => Promise<void>;
 }
 
-const DisciplinesTable: FC<DisciplinesAdminSearchProps> = ({ disciplines }) => {
-  const toast = useToastError();
-
-  const deleteDiscipline = async (id: string) => {
-    try {
-      await DisciplineAPI.deleteDiscipline(id);
-    } catch (e) {
-      if (isAxiosError(e)) {
-        toast.displayError(e);
-      }
-    }
-  };
-
+const DisciplinesTable: FC<DisciplinesAdminSearchProps> = ({
+  disciplines,
+  deleteDiscipline,
+}) => {
   return (
     <Table>
       <TableHead>
@@ -46,8 +35,8 @@ const DisciplinesTable: FC<DisciplinesAdminSearchProps> = ({ disciplines }) => {
       </TableHead>
       <TableBody>
         {disciplines &&
-          disciplines.map((discipline, index) => (
-            <TableRow key={index}>
+          disciplines.map(discipline => (
+            <TableRow key={discipline.id}>
               <TableCell sx={styles.nameBodyItem}>
                 <Stack sx={styles.tableColumn}>
                   <Typography>{discipline.name}</Typography>

@@ -148,20 +148,18 @@ const StudentsTable: React.FC<StudentsTableProps> = ({
       <Grid container sx={gridStyles.studentsGrid}>
         {rows.map((row, index) => (
           <Grid container key={index} sx={gridStyles.row}>
-            {row.imgSrc && (
-              <Grid item desktop={4} mobile={9}>
-                <Avatar src={row.imgSrc} alt="avatar" />
-                {!isMobile && (
+            <Grid item desktop={4} mobile={9}>
+              <Avatar src={row.imgSrc} alt="avatar" />
+              {!isMobile && (
+                <Typography className="name">{row.fullName}</Typography>
+              )}
+              {isMobile && (
+                <Box>
                   <Typography className="name">{row.fullName}</Typography>
-                )}
-                {isMobile && (
-                  <Box>
-                    <Typography className="name">{row.fullName}</Typography>
-                    <Typography className="email">{row.email}</Typography>
-                  </Box>
-                )}
-              </Grid>
-            )}
+                  <Typography className="email">{row.email}</Typography>
+                </Box>
+              )}
+            </Grid>
             <Grid item desktop={2} mobile={1}>
               {row.role !== UserGroupRole.STUDENT && isMobile && (
                 <Tag

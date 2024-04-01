@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { FC, useCallback, useEffect } from 'react';
 import Masonry from '@mui/lab/Masonry';
 import { Box } from '@mui/material';
 import { useRouter } from 'next/navigation';
@@ -12,7 +12,9 @@ import * as styles from './SubjectSearchList.styles';
 
 const TOAST_TIMER = 4000;
 
-export const SubjectSearchList = ({ subjects }: GetListOfSubjectsResponse) => {
+export const SubjectSearchList: FC<{
+  subjects: GetListOfSubjectsResponse['subjects'];
+}> = ({ subjects }) => {
   const router = useRouter();
   const toast = useToast();
 

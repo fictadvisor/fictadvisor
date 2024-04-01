@@ -78,8 +78,10 @@ const CommentsTable: FC<AnswersAdminTableProps> = ({
           </>
         )}
         {comments &&
-          comments.map((comment, index) => (
-            <TableRow key={index}>
+          comments.map(comment => (
+            <TableRow
+              key={`${comment.userId} ${comment.disciplineTeacherId} ${comment.questionId}`}
+            >
               <TableCell sx={styles.commentItem}>
                 <Stack sx={styles.tableColumn}>
                   <Typography>{comment.comment}</Typography>

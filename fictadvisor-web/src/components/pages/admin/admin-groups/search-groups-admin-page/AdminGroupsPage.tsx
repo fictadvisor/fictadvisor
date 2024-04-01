@@ -2,7 +2,6 @@
 import React, { FC, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Box, TablePagination } from '@mui/material';
-import { isAxiosError } from 'axios';
 
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
@@ -28,9 +27,7 @@ const AdminGroupsPage: FC = () => {
     {
       keepPreviousData: true,
       refetchOnWindowFocus: false,
-      onSuccess: data => {
-        setCount(data?.pagination?.totalAmount || 0);
-      },
+      onSuccess: data => setCount(data.pagination.totalAmount),
       onError: error => toastError.displayError(error),
     },
   );
@@ -48,9 +45,7 @@ const AdminGroupsPage: FC = () => {
       refetch();
       toast.success('Група успішно видалена!', '', 4000);
     } catch (e) {
-      if (isAxiosError(e)) {
-        toastError.displayError(e);
-      }
+      toastError.displayError(e);
     }
   };
 

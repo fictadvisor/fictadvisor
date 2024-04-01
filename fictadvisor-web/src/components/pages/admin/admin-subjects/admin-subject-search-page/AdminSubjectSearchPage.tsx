@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import { Box, TablePagination } from '@mui/material';
-import { isAxiosError } from 'axios';
 
 import AdminSubjectSearch from '@/components/pages/admin/admin-subjects/admin-subject-search-page/components/admin-subject-search';
 import AdminSubjectTable from '@/components/pages/admin/admin-subjects/admin-subject-search-page/components/admin-subject-table';
 import { SubjectInitialValues } from '@/components/pages/search-pages/search-form/constants';
 import { SearchFormFields } from '@/components/pages/search-pages/search-form/types';
+import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import subjectAPI from '@/lib/api/subject/SubjectAPI';
+import SubjectAPI from '@/lib/api/subject/SubjectAPI';
 
 import * as styles from './AdminSubjectSearchPage.styles';
 
@@ -17,21 +18,17 @@ const AdminSubjectSearchPage = () => {
   const [pageSize, setPageSize] = useState(10);
   const [curPage, setCurPage] = useState(0);
   const [params, setParams] = useState<SearchFormFields>(SubjectInitialValues);
-  const toast = useToastError();
-  const { data, isLoading, refetch } = useQuery(
-    [curPage, 'subjects', pageSize],
+  const { displayError } = useToastError();
+  const toast = useToast();
+
+  const { data, isSuccess, refetch } = useQuery(
+    ['subjects', curPage, pageSize],
     () => subjectAPI.getAll(params, pageSize, curPage),
     {
       keepPreviousData: true,
       refetchOnWindowFocus: false,
-      onSuccess: data => {
-        setCount(data?.pagination?.totalAmount || 0);
-      },
-      onError: error => {
-        if (isAxiosError(error)) {
-          toast.displayError(error);
-        }
-      },
+      onSuccess: data => setCount(data.pagination.totalAmount),
+      onError: error => displayError(error),
     },
   );
 
@@ -52,14 +49,25 @@ const AdminSubjectSearchPage = () => {
     setCurPage(0);
   };
 
+  const handleDelete = async (subjectId: string) => {
+    try {
+      await SubjectAPI.delete(subjectId);
+      await refetch();
+      toast.success('Предмет успішно видалений', '', 4000);
+    } catch (e) {
+      displayError(e);
+    }
+  };
+
   return (
     <Box sx={styles.page}>
       <AdminSubjectSearch onSubmit={handleSearch} />
-      <AdminSubjectTable
-        subjects={data?.subjects}
-        isLoading={isLoading}
-        refetch={refetch}
-      />
+      {isSuccess && (
+        <AdminSubjectTable
+          subjects={data.subjects}
+          handleDelete={handleDelete}
+        />
+      )}
       <TablePagination
         page={curPage}
         count={count}
