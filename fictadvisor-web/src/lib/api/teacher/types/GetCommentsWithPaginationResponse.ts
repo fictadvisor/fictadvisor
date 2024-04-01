@@ -14,5 +14,5 @@ export interface Comment {
 
 export interface GetCommentsWithPaginationResponse {
   comments: Comment[];
-  pagination?: Pagination;
+  pagination: Pagination;
 }

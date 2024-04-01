@@ -25,9 +25,7 @@ const CommentsAdminPage: FC = () => {
     {
       keepPreviousData: true,
       refetchOnWindowFocus: false,
-      onSuccess: data => {
-        setCount(data?.pagination?.totalAmount || 0);
-      },
+      onSuccess: data => setCount(data.pagination.totalAmount),
       onError: error => toast.displayError(error),
     },
   );
