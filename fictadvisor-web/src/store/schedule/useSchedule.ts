@@ -18,6 +18,7 @@ import { getFirstDayOfAWeek } from '@/store/schedule/utils/getFirstDayOfAWeek';
 import { getWeekByDate } from '@/store/schedule/utils/getWeekByDate';
 import { Group } from '@/types/group';
 import { Event, TEvent } from '@/types/schedule';
+import { UserGroupState } from '@/types/user';
 
 import { findFirstOf5 } from './utils/findFirstOf5';
 import { setUrlParams } from './utils/setUrlParams';
@@ -227,7 +228,10 @@ export const useSchedule = create<State & Action>((set, get) => {
           eventsBody: [],
         }));
 
-        const isUsingSelective = user && user.group?.id === id;
+        const isUsingSelective =
+          user &&
+          user.group?.id === id &&
+          user.group?.state === UserGroupState.APPROVED;
         set(state => ({ isUsingSelective }));
         setUrlParams('group', id);
         localStorage.setItem(LOCAL_STORAGE_SCHEDULE_KEY, id);
