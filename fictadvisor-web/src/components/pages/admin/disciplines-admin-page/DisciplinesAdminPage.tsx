@@ -2,10 +2,11 @@
 import React, { FC, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Box, TablePagination } from '@mui/material';
-import { isAxiosError } from 'axios';
 
+import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import DisciplineApi from '@/lib/api/discipline/DisciplineAPI';
+import DisciplineAPI from '@/lib/api/discipline/DisciplineAPI';
 
 import { initialValues } from './components/disciplines-admin-search/constants';
 import DisciplinesAdminSearch from './components/disciplines-admin-search/DisciplinesAdminSearch';
@@ -19,21 +20,16 @@ const DisciplinesAdminPage: FC = () => {
   const [curPage, setCurPage] = useState(0);
   const [params, setParams] =
     useState<DisciplinesAdminSearchFormFields>(initialValues);
-  const toast = useToastError();
+  const { displayError } = useToastError();
+  const toast = useToast();
   const { data, refetch } = useQuery(
-    [curPage, 'disciplines', pageSize],
+    ['disciplines', curPage, pageSize],
     () => DisciplineApi.getPageDisciplines(params, pageSize, curPage),
     {
       keepPreviousData: true,
       refetchOnWindowFocus: false,
-      onSuccess: data => {
-        setCount(data?.pagination?.totalAmount || 0);
-      },
-      onError: error => {
-        if (isAxiosError(error)) {
-          toast.displayError(error);
-        }
-      },
+      onSuccess: data => setCount(data?.pagination?.totalAmount || 0),
+      onError: error => displayError(error),
     },
   );
 
@@ -55,10 +51,23 @@ const DisciplinesAdminPage: FC = () => {
     setCurPage(0);
   };
 
+  const deleteDiscipline = async (id: string) => {
+    try {
+      await DisciplineAPI.deleteDiscipline(id);
+      toast.success('Дисципліна успішно видалена', '', 4000);
+      refetch();
+    } catch (e) {
+      displayError(e);
+    }
+  };
+
   return (
     <Box sx={{ p: '20px 16px 0 16px' }}>
       <DisciplinesAdminSearch onSubmit={handleChange} />
-      <DisciplinesTable disciplines={data?.disciplines} />
+      <DisciplinesTable
+        disciplines={data?.disciplines}
+        deleteDiscipline={deleteDiscipline}
+      />
       <TablePagination
         sx={styles.pagination}
         count={count}

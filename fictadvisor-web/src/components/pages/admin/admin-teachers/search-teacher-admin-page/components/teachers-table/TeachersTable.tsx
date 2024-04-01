@@ -56,8 +56,8 @@ const TeachersTable: FC<TeachersAdminSearchProps> = ({
           </>
         )}
         {teachers &&
-          teachers.map((teacher, index) => (
-            <TableRow key={index}>
+          teachers.map(teacher => (
+            <TableRow key={teacher.id}>
               <TableCell sx={styles.bodyItem}>
                 <Stack sx={styles.tableColumn}>
                   <Avatar src={teacher.avatar} sx={{ width: 36, height: 36 }} />

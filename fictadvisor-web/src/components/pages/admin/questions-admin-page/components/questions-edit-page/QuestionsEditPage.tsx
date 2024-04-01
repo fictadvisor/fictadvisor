@@ -14,6 +14,7 @@ import {
 } from '@/components/common/ui/button-mui/types';
 import DeletePopup from '@/components/common/ui/delete-popup';
 import useToast from '@/hooks/use-toast';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import QuestionAPI from '@/lib/api/questions/QuestionAPI';
 
 import { AdminQuestion } from '../../types';
@@ -34,6 +35,7 @@ const QuestionsAdminEditPage: FC<QuestionsAdminEditPageProps> = ({
 
   const [body, setBody] = useState<AdminQuestion>();
   const toast = useToast();
+  const { displayError } = useToastError();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -52,9 +54,7 @@ const QuestionsAdminEditPage: FC<QuestionsAdminEditPageProps> = ({
       toast.success('Питання успішно видалено', '', 4000);
       router.push('/admin/questions');
     } catch (e) {
-      if (isAxiosError(e)) {
-        toast.error(e.response?.data.messages[0]);
-      }
+      displayError(e);
     }
   };
 
@@ -67,9 +67,7 @@ const QuestionsAdminEditPage: FC<QuestionsAdminEditPageProps> = ({
       toast.success('Питання успішно оновлено', '', 4000);
       router.push('/admin/questions');
     } catch (error) {
-      if (isAxiosError(error)) {
-        toast.error(error.response?.data.messages[0], '', 4000);
-      }
+      displayError(error);
     }
   };
 

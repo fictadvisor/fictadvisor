@@ -38,8 +38,8 @@ const GroupsTable: FC<GroupsTableProps> = ({ groups, deleteGroup }) => {
       </TableHead>
       <TableBody>
         {groups &&
-          groups.map((group, index) => (
-            <TableRow key={index}>
+          groups.map(group => (
+            <TableRow key={group.id}>
               <TableCell sx={styles.bodyItem}>
                 <Stack sx={styles.tableColumn}>
                   <Typography>{group.code}</Typography>

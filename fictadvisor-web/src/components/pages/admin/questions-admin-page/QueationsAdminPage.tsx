@@ -2,8 +2,8 @@
 import React, { FC, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Box, TablePagination } from '@mui/material';
-import { isAxiosError } from 'axios';
 
+import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import QuestionAPI from '@/lib/api/questions/QuestionAPI';
 
@@ -18,22 +18,16 @@ const QuestionsAdminPage: FC = () => {
   const [pageSize, setPageSize] = useState(10);
   const [curPage, setCurPage] = useState(0);
   const [params, setParams] = useState<QuestionSearchFormFields>(initialValues);
-  const toast = useToastError();
-  const { data, refetch } = useQuery(
-    [curPage, 'questions', pageSize],
+  const { displayError } = useToastError();
+  const toast = useToast();
+  const { data, isSuccess, refetch } = useQuery(
+    ['questions', curPage, params, pageSize],
     () => QuestionAPI.getPageQuestions(params, pageSize, curPage),
     {
       keepPreviousData: true,
       refetchOnWindowFocus: false,
-      onSuccess: data => {
-        setCount(data?.pagination?.totalAmount || 0);
-        console.log(data);
-      },
-      onError: error => {
-        if (isAxiosError(error)) {
-          toast.displayError(error);
-        }
-      },
+      onSuccess: data => setCount(data?.pagination?.totalAmount || 0),
+      onError: error => displayError(error),
     },
   );
 
@@ -45,7 +39,6 @@ const QuestionsAdminPage: FC = () => {
       }
       return prevValues;
     });
-    refetch();
   };
 
   const handleRowsPerPageChange = (
@@ -55,18 +48,35 @@ const QuestionsAdminPage: FC = () => {
     setCurPage(0);
   };
 
+  const deleteQuestion = async (id: string) => {
+    try {
+      await QuestionAPI.deleteQuestion(id);
+      toast.success('Питання успішно видалено', '', 4000);
+      refetch();
+    } catch (e) {
+      displayError(e);
+    }
+  };
+
   return (
     <Box sx={{ p: '20px 16px 0 16px' }}>
       <QuestionsAdminSearch onSubmit={handleChange} />
-      <QuestionsTable questions={data?.questions} />
-      <TablePagination
-        sx={styles.pagination}
-        count={count}
-        page={curPage}
-        rowsPerPage={pageSize}
-        onPageChange={(e, page) => setCurPage(page)}
-        onRowsPerPageChange={e => handleRowsPerPageChange(e)}
-      />
+      {isSuccess && (
+        <>
+          <QuestionsTable
+            questions={data.questions}
+            deleteQuestion={deleteQuestion}
+          />
+          <TablePagination
+            sx={styles.pagination}
+            count={count}
+            page={curPage}
+            rowsPerPage={pageSize}
+            onPageChange={(e, page) => setCurPage(page)}
+            onRowsPerPageChange={e => handleRowsPerPageChange(e)}
+          />
+        </>
+      )}
     </Box>
   );
 };
