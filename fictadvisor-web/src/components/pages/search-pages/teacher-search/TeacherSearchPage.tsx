@@ -38,44 +38,28 @@ export const TeacherSearchPage = () => {
   const [queryObj, setQueryObj] = useState<SearchFormFields>(initialValues);
   const [curPage, setCurPage] = useState(0);
 
-  const [reloadTeachers, setReloadTeachers] = useState(true);
   const submitHandler: SearchFormProps['onSubmit'] = useCallback(query => {
-    setReloadTeachers(true);
-    setLoadedTeachers([]);
-    setQueryObj(prev => ({ ...prev, ...query }));
+    setQueryObj(prev => {
+      if (prev === query) return prev;
+      else {
+        setLoadedTeachers([]);
+        return { ...prev, ...query };
+      }
+    });
   }, []);
 
   const [loadedTeachers, setLoadedTeachers] = useState<Omit<Teacher, 'role'>[]>(
     [],
   );
-  const { data, isLoading, refetch, isFetching } =
-    useQuery<GetTeachersResponse>(
-      'lecturers',
-      () => {
-        if (reloadTeachers) {
-          return TeacherAPI.getAdminAll(queryObj, PAGE_SIZE * (curPage + 1));
-        } else {
-          setLoadedTeachers([
-            ...(loadedTeachers ?? []),
-            ...(data ? data.teachers : []),
-          ]);
-          return TeacherAPI.getAdminAll(queryObj, PAGE_SIZE, curPage + 1);
-        }
-      },
-      {
-        keepPreviousData: true,
-        refetchOnWindowFocus: false,
-      },
-    );
-
-  const downloadHandler = () => {
-    setReloadTeachers(false);
-    setCurPage(pr => pr + 1);
-  };
-
-  useEffect(() => {
-    refetch();
-  }, [queryObj, curPage, refetch, reloadTeachers]);
+  const { data, isLoading, isFetching } = useQuery<GetTeachersResponse>(
+    ['lecturers', curPage, queryObj],
+    () => TeacherAPI.getAdminAll(queryObj, PAGE_SIZE, curPage),
+    {
+      onSuccess: data => setLoadedTeachers(prev => [...prev, ...data.teachers]),
+      keepPreviousData: true,
+      refetchOnWindowFocus: false,
+    },
+  );
 
   return (
     <Box sx={styles.layout}>
@@ -88,12 +72,7 @@ export const TeacherSearchPage = () => {
         localStorageName={localStorageName}
       />
       {(data as GetTeachersResponse) && (
-        <TeacherSearchList
-          teachers={[
-            ...(loadedTeachers ?? []),
-            ...(data as GetTeachersResponse).teachers,
-          ]}
-        />
+        <TeacherSearchList teachers={loadedTeachers} />
       )}
       {isLoading ||
         (isFetching && (
@@ -107,9 +86,9 @@ export const TeacherSearchPage = () => {
           text="Завантажити ще"
           variant={ButtonVariant.FILLED}
           color={ButtonColor.SECONDARY}
-          onClick={downloadHandler}
+          onClick={() => setCurPage(pr => pr + 1)}
         />
-      )}{' '}
+      )}
     </Box>
   );
 };
