@@ -22,7 +22,7 @@ import * as styles from './AdminGroupsCreate.styles';
 
 const AdminGroupsCreate: FC = () => {
   const toast = useToast();
-  const toastError = useToastError();
+  const { displayError } = useToastError();
   const router = useRouter();
 
   const [code, setCode] = useState<string>('');
@@ -34,13 +34,11 @@ const AdminGroupsCreate: FC = () => {
 
   const handleCreateSubmit = async () => {
     try {
-      GroupAPI.create({ code, eduProgramId, cathedraId, admissionYear });
+      await GroupAPI.create({ code, eduProgramId, cathedraId, admissionYear });
       toast.success('Група успішно створена!', '', 4000);
       router.replace('/admin/groups');
     } catch (e) {
-      if (isAxiosError(e)) {
-        toastError.displayError(e);
-      }
+      displayError(e);
     }
   };
 
@@ -49,7 +47,7 @@ const AdminGroupsCreate: FC = () => {
     () => EduprogramAPI.getAll(),
     {
       onError: error => {
-        toastError.displayError(error);
+        displayError(error);
       },
     },
   );
@@ -58,7 +56,7 @@ const AdminGroupsCreate: FC = () => {
     () => CathedraAPI.getAll(),
     {
       onError: error => {
-        toastError.displayError(error);
+        displayError(error);
       },
     },
   );

@@ -70,6 +70,7 @@ export enum PERMISSION {
   STUDENTS_$STUDENTID_UPDATE = 'students.$studentId.update',
   STUDENTS_CREATE = 'students.create',
   STUDENTS_$STUDENTID_GET = 'students.$studentId.get',
+  STUDENTS_$STUDENTID_SELECTIVE_GET = 'students.$studentId.selective.get',
 
   SUBJECTS_CREATE = 'subjects.create',
   SUBJECTS_UPDATE = 'subjects.update',

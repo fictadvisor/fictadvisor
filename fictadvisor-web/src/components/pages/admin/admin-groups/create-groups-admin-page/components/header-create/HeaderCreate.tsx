@@ -29,7 +29,7 @@ const HeaderCreate: FC<HeaderCreateProps> = ({ handleCreateSubmit }) => {
           size={ButtonSize.MEDIUM}
           color={ButtonColor.SECONDARY}
           text="Скасувати"
-          onClick={() => router.push('admin/groups')}
+          onClick={() => router.push('/admin/groups')}
         />
         <Button
           type="submit"

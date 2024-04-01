@@ -11,7 +11,6 @@ import {
   TablePagination,
   TableRow,
 } from '@mui/material';
-import { isAxiosError } from 'axios';
 
 import Tag from '@/components/common/ui/tag';
 import { TagSize } from '@/components/common/ui/tag/types';
@@ -50,7 +49,7 @@ const UsersList: FC<UsersListProps> = ({
   const handleChangePage = (event: unknown, newPage: number) => {
     setCurPage(newPage);
   };
-  const toastError = useToastError();
+  const { displayError } = useToastError();
   const toast = useToast();
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -65,9 +64,7 @@ const UsersList: FC<UsersListProps> = ({
       await refetch();
       toast.success('Користувача видалено успішно');
     } catch (e) {
-      if (isAxiosError(e)) {
-        toastError.displayError(e);
-      }
+      displayError(e);
     }
   };
 

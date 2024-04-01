@@ -6,10 +6,7 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material';
-import { isAxiosError } from 'axios';
 
-import useToast from '@/hooks/use-toast';
-import QuestionAPI from '@/lib/api/questions/QuestionAPI';
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 
 import { typesOptions } from '../../../../constants';
@@ -20,22 +17,13 @@ import * as styles from './QuestionsTable.styles';
 
 interface QuestionAdminSearchProps {
   questions?: AdminQuestion[];
+  deleteQuestion: (id: string) => Promise<void>;
 }
 
-const QuestionsTable: FC<QuestionAdminSearchProps> = ({ questions }) => {
-  const toast = useToast();
-
-  const deleteQuestion = async (id: string) => {
-    try {
-      await QuestionAPI.deleteQuestion(id);
-      toast.success('Питання успішно видалено', '', 4000);
-    } catch (e) {
-      if (isAxiosError(e)) {
-        toast.error(e.response?.data.messages[0]);
-      }
-    }
-  };
-
+const QuestionsTable: FC<QuestionAdminSearchProps> = ({
+  questions,
+  deleteQuestion,
+}) => {
   return (
     <Table>
       <TableHead>
@@ -49,8 +37,8 @@ const QuestionsTable: FC<QuestionAdminSearchProps> = ({ questions }) => {
       </TableHead>
       <TableBody>
         {questions &&
-          questions.map((question, index) => (
-            <TableRow key={index}>
+          questions.map(question => (
+            <TableRow key={question.id}>
               <TableCell sx={styles.bodyItem}>{question.order}</TableCell>
               <TableCell sx={styles.bodyItem}>{question.text}</TableCell>
               <TableCell sx={styles.bodyItem}>{question.category}</TableCell>

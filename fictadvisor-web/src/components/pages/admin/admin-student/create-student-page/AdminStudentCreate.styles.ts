@@ -13,8 +13,8 @@ export const body: SxProps<Theme> = {
   flexDirection: 'column',
   maxWidth: '657px',
   width: '100%',
-  padding: '24px 0px',
-  margin: '24px 16px',
+  padding: '0 0 24px',
+  margin: '0 16px 24px 16px',
 };
 
 export const divider: SxProps<Theme> = {

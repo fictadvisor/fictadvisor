@@ -295,7 +295,7 @@ export class StudentController {
   })
   @ApiEndpoint({
     summary: 'Get user\'s selective disciplines',
-    permissions: PERMISSION.USERS_$USERID_SELECTIVE_GET,
+    permissions: PERMISSION.STUDENTS_$STUDENTID_SELECTIVE_GET,
   })
   @Get('/:studentId/selective')
   async getSelective (
@@ -304,6 +304,7 @@ export class StudentController {
     const dbDisciplines = await this.userService.getSelective(studentId);
     return this.disciplineMapper.getSelective(dbDisciplines);
   }
+  
   @ApiBearerAuth()
   @ApiOkResponse({
     type: [RemainingSelectiveResponse],
@@ -328,7 +329,7 @@ export class StudentController {
   })
   @ApiEndpoint({
     summary: 'Get all selective disciplines available to the user from the whole list',
-    permissions: PERMISSION.USERS_$USERID_SELECTIVE_GET,
+    permissions: PERMISSION.STUDENTS_$STUDENTID_SELECTIVE_GET,
   })
   @Get('/:studentId/remainingSelective')
   async getRemainingSelective (
