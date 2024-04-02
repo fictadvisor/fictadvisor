@@ -81,6 +81,10 @@ export class AuthService {
       throw new InvalidEntityIdException('User');
     }
 
+    if (!user.password || !password) {
+      throw new UnauthorizedException('Use forgot password to get access to your account');
+    }
+
     const isMatch = await this.checkPassword(password, user.password);
     if (!isMatch) {
       throw new UnauthorizedException('The password is incorrect');
