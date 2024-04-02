@@ -44,3 +44,12 @@ export interface UserRemainingSelective {
 export interface UserAdmin extends Omit<User, 'firstName' | 'lastName'> {
   state: UserGroupState;
 }
+
+export interface SimplifiedUser {
+  id: string;
+  email: string;
+  username: string;
+  telegramId?: number;
+  avatar?: string;
+  state: UserGroupState;
+}

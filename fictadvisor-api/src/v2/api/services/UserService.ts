@@ -39,6 +39,7 @@ import { DatabaseUtils } from '../../database/DatabaseUtils';
 import { DbUser } from '../../database/entities/DbUser';
 import { DisciplineTeacherService } from './DisciplineTeacherService';
 import { PollService } from './PollService';
+import { DbStudent } from '../../database/entities/DbStudent';
 
 type SortedDisciplines = {
   year: number;
@@ -339,8 +340,10 @@ export class UserService {
   async getUser (userId: string) {
     const student = await this.studentRepository.findById(userId);
     if (student) return this.studentMapper.getStudent(student);
-    const caller = new Error().stack;
-    await this.telegramAPI.sendMessage(`getUser error:\n ${caller}`);
+  }
+
+  async getSimplifiedUser (userId: string) {
+    return this.userRepository.findById(userId);
   }
 
   async getUserByTelegramId (telegramId: bigint) {

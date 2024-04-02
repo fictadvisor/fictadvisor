@@ -13,7 +13,7 @@ import { VerifyStudentBody } from '@/lib/api/user/types/VerifyStudentBody';
 import { VerifySuperheroBody } from '@/lib/api/user/types/VerifySuperheroBody';
 import { getAuthorizationHeader } from '@/lib/api/utils';
 import { TelegramUser } from '@/types/telegram';
-import { UserAdmin } from '@/types/user';
+import { SimplifiedUser, UserAdmin } from '@/types/user';
 
 import { client } from '../instance';
 
@@ -39,7 +39,7 @@ class UserAPI {
     return data;
   }
 
-  async getUser(userId: string): Promise<UserAdmin> {
+  async getUser(userId: string): Promise<SimplifiedUser> {
     const { data } = await client.get(
       `/users/${userId}`,
       getAuthorizationHeader(),
