@@ -2,7 +2,7 @@
 import React, { FC } from 'react';
 import { useQuery } from 'react-query';
 
-import AdminPanelLayout from '@/components/common/layout/admin-panel-layout/AdminPanelLayout';
+import Progress from '@/components/common/ui/progress/Progress';
 import EditRolesPage from '@/components/pages/admin/admin-roles/edit-roles-page';
 import RoleAPI from '@/lib/api/role/RoleAPI';
 
@@ -13,14 +13,17 @@ interface AdminRolesEditProps {
 }
 
 const AdminRolesEdit: FC<AdminRolesEditProps> = ({ params }) => {
-  const { data: role, isSuccess } = useQuery('getRole', () =>
-    RoleAPI.getById(params.roleId),
-  );
-  return (
-    <AdminPanelLayout>
-      {isSuccess && <EditRolesPage role={role} />}
-    </AdminPanelLayout>
-  );
+  const {
+    data: role,
+    isSuccess,
+    isLoading,
+  } = useQuery('getRole', () => RoleAPI.getById(params.roleId));
+
+  if (isLoading) return <Progress />;
+
+  if (!isSuccess) return <>Something went wrong with the admin role edit</>;
+
+  return <EditRolesPage role={role} />;
 };
 
 export default AdminRolesEdit;
