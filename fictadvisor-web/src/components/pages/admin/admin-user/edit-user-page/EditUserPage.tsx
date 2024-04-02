@@ -18,13 +18,13 @@ import Input from '@/components/common/ui/form/input-mui';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import UserAPI from '@/lib/api/user/UserAPI';
-import { UserAdmin, UserGroupState } from '@/types/user';
+import { SimplifiedUser, UserAdmin, UserGroupState } from '@/types/user';
 
 import { UserStateOptions } from '../constants/UserStateOptions';
 
 import * as styles from './EditUserPage.styles';
 interface EditUserPageProps {
-  user: UserAdmin;
+  user: SimplifiedUser;
 }
 const EditUserPage: FC<EditUserPageProps> = ({ user }) => {
   const [username, setUsername] = useState<string>(user.username);

@@ -870,7 +870,7 @@ export class UserController {
 
   @ApiBearerAuth()
   @ApiOkResponse({
-    type: FullUserResponse,
+    type: UserResponse,
   })
   @ApiBadRequestResponse({
     description: `\n
@@ -900,7 +900,7 @@ export class UserController {
   getMe (
     @Param('userId', UserByIdPipe) userId: string,
   ) {
-    return this.userService.getUser(userId);
+    return this.userService.getSimplifiedUser(userId);
   }
 
   @ApiBearerAuth()
