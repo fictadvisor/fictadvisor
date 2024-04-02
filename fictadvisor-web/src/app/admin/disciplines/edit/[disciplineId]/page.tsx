@@ -2,7 +2,7 @@
 import React, { FC } from 'react';
 import { useQuery } from 'react-query';
 
-import AdminPanelLayout from '@/components/common/layout/admin-panel-layout/AdminPanelLayout';
+import Progress from '@/components/common/ui/progress';
 import DisciplinesEditPage from '@/components/pages/admin/disciplines-admin-page/pages/disciplines-edit-page/DisciplinesAdminEditPage';
 import DisciplineAPI from '@/lib/api/discipline/DisciplineAPI';
 
@@ -13,19 +13,22 @@ interface AdminDisciplineEditProps {
 }
 
 const DisciplinesAdminEdit: FC<AdminDisciplineEditProps> = ({ params }) => {
-  const { data: disciplines } = useQuery('discipline', () =>
-    DisciplineAPI.getAllDisciplines(),
-  );
+  const {
+    data: disciplines,
+    isSuccess,
+    isLoading,
+  } = useQuery('discipline', () => DisciplineAPI.getAllDisciplines());
 
-  const discipline = disciplines?.disciplines.filter(
-    discipline => discipline.id == params.disciplineId,
-  )[0];
+  if (isLoading) return <Progress />;
 
-  return (
-    <AdminPanelLayout>
-      {discipline && <DisciplinesEditPage discipline={discipline} />}
-    </AdminPanelLayout>
-  );
+  const discipline = disciplines?.disciplines.find(discipline => {
+    return discipline.id === params.disciplineId;
+  });
+
+  if (!isSuccess || !discipline)
+    return <>Something went wrong with the admin discipline edit</>;
+
+  return <DisciplinesEditPage discipline={discipline} />;
 };
 
 export default DisciplinesAdminEdit;
