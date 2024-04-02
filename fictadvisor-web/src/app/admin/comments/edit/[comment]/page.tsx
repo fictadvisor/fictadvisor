@@ -1,6 +1,5 @@
 import React, { FC } from 'react';
 
-import AdminPanelLayout from '@/components/common/layout/admin-panel-layout/AdminPanelLayout';
 import CommentsAdminEditPage from '@/components/pages/admin/admin-comments/pages/edit-comments-page';
 
 interface AdminCommentEditProps {
@@ -11,11 +10,7 @@ interface AdminCommentEditProps {
 
 const AdminCommentEdit: FC<AdminCommentEditProps> = ({ params }) => {
   const comment = JSON.parse(decodeURIComponent(params.comment));
-  return (
-    <AdminPanelLayout>
-      <CommentsAdminEditPage comment={comment} />
-    </AdminPanelLayout>
-  );
+  return <CommentsAdminEditPage comment={comment} />;
 };
 
 export default AdminCommentEdit;
