@@ -2,8 +2,9 @@
 import React, { FC } from 'react';
 import { useQuery } from 'react-query';
 
-import Progress from '@/components/common/ui/progress/Progress';
-import AdminGroupsEdit from '@/components/pages/admin/admin-groups/edit-groups-admin-page/AdminGroupsEdit';
+import LoadPage from '@/components/common/ui/load-page/LoadPage';
+import AdminGroupsEdit from '@/components/pages/admin/admin-groups/edit-groups/AdminGroupsEdit';
+import { useQueryAdminOptions } from '@/components/pages/admin/common/constants';
 import GroupAPI from '@/lib/api/group/GroupAPI';
 
 interface AdminGroupEditBodyPageProps {
@@ -18,11 +19,18 @@ const AdminGroupEditBodyPage: FC<AdminGroupEditBodyPageProps> = ({
     data: group,
     isSuccess,
     isLoading,
-  } = useQuery('getAdminGroup', () => GroupAPI.get(params.groupId));
+  } = useQuery(
+    ['getAdminGroup', params.groupId],
+    () => GroupAPI.get(params.groupId),
+    useQueryAdminOptions,
+  );
 
-  if (isLoading) return <Progress />;
+  if (isLoading) return <LoadPage />;
 
-  if (!isSuccess) return <>Something went wrong with the admin user edit</>;
+  if (!isSuccess)
+    throw new Error(
+      `An error has occurred while editing ${params.groupId} group`,
+    );
 
   return <AdminGroupsEdit group={group} />;
 };

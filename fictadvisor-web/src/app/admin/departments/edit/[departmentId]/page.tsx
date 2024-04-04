@@ -2,9 +2,10 @@
 import React, { FC } from 'react';
 import { useQuery } from 'react-query';
 
-import Progress from '@/components/common/ui/progress/Progress';
-import AdminDepartmentsEditPage from '@/components/pages/admin/admin-departments/admin-departments-edit-page/AdminDepartmentsEditPage';
-import CathedraAPI from '@/lib/api/cathera/CathedraAPI';
+import LoadPage from '@/components/common/ui/load-page';
+import EditDepartmentsAdminPage from '@/components/pages/admin/admin-departments/edit-departments/EditDepartmentsAdminPage';
+import { useQueryAdminOptions } from '@/components/pages/admin/common/constants';
+import CathedraAPI from '@/lib/api/cathedras/CathedraAPI';
 
 interface AdminDepartmentEditProps {
   params: {
@@ -12,20 +13,18 @@ interface AdminDepartmentEditProps {
   };
 }
 const Page: FC<AdminDepartmentEditProps> = ({ params }) => {
-  const { data, isSuccess, isLoading } = useQuery('department', () =>
-    CathedraAPI.getAll(),
+  const { data: department, isLoading } = useQuery(
+    ['departmentById', params.departmentId],
+    () => CathedraAPI.getDepartmentById(params.departmentId),
+    useQueryAdminOptions,
   );
 
-  if (isLoading) return <Progress />;
+  if (isLoading) return <LoadPage />;
 
-  const department = data?.cathedras.find(cathedra => {
-    return cathedra.id === params.departmentId;
-  });
+  if (!department)
+    throw new Error('Something went wrong in department edit page');
 
-  if (!isSuccess || !department)
-    return <>Something went wrong with the admin department edit</>;
-
-  return <AdminDepartmentsEditPage department={department} />;
+  return <EditDepartmentsAdminPage department={department.data} />;
 };
 
 export default Page;

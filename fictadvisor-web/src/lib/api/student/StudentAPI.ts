@@ -1,5 +1,7 @@
-import { StudentEdit } from '@/components/pages/admin/admin-student/common/types/StudentEdit';
-import { StudentSearchFormFields } from '@/components/pages/admin/admin-student/common/types/StudentSearch';
+import {
+  StudentEdit,
+  StudentSearchFormFields,
+} from '@/components/pages/admin/admin-student/common/types';
 import { client } from '@/lib/api/instance';
 import { getAuthorizationHeader } from '@/lib/api/utils';
 import { GroupStudent } from '@/types/student';

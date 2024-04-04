@@ -1,10 +1,10 @@
 'use client';
 import React from 'react';
 
-import AdminSubjectCreatePage from '@/components/pages/admin/admin-subjects/admin-subject-create-page';
+import CreateSubjectAdminPage from '@/components/pages/admin/admin-subjects/create-subject/CreateSubjectAdminPage';
 
 const AdminSubjectCreate = () => {
-  return <AdminSubjectCreatePage />;
+  return <CreateSubjectAdminPage />;
 };
 
 export default AdminSubjectCreate;

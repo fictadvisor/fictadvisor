@@ -1,7 +1,7 @@
 import React from 'react';
 
-import GroupsAdminPage from '@/components/pages/admin/admin-groups/search-groups-admin-page/AdminGroupsPage';
+import SearchGroupsAdminPage from '@/components/pages/admin/admin-groups/search-groups/SearchGroupsAdminPage';
 
 export default async function GroupsAdmin() {
-  return <GroupsAdminPage />;
+  return <SearchGroupsAdminPage />;
 }

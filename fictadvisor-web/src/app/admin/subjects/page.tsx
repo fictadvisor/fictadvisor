@@ -1,10 +1,10 @@
 'use client';
 import React from 'react';
 
-import AdminSubjectSearchPage from '@/components/pages/admin/admin-subjects/admin-subject-search-page';
+import SearchSubjectAdminPage from '@/components/pages/admin/admin-subjects/search-subject/SearchSubjectAdminPage';
 
 const AdminSubjectSearch = () => {
-  return <AdminSubjectSearchPage />;
+  return <SearchSubjectAdminPage />;
 };
 
 export default AdminSubjectSearch;

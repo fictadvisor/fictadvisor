@@ -1,10 +1,10 @@
 'use client';
 import React from 'react';
 
-import DisciplinesAdminPage from '@/components/pages/admin/disciplines-admin-page/DisciplinesAdminPage';
+import SearchDisciplinesAdminPage from '@/components/pages/admin/admin-disciplines/search-disciplines';
 
 const DisciplinesAdminSearch = () => {
-  return <DisciplinesAdminPage />;
+  return <SearchDisciplinesAdminPage />;
 };
 
 export default DisciplinesAdminSearch;

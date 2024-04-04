@@ -1,9 +1,9 @@
 import React from 'react';
 
-import AdminUserSearch from '@/components/pages/admin/admin-user/search-user-page';
+import SearchUserAdminPage from '@/components/pages/admin/admin-user/search-user';
 
 const Page = () => {
-  return <AdminUserSearch />;
+  return <SearchUserAdminPage />;
 };
 
 export default Page;

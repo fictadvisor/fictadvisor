@@ -2,8 +2,9 @@
 import React, { FC } from 'react';
 import { useQuery } from 'react-query';
 
-import Progress from '@/components/common/ui/progress/Progress';
-import AdminSubjectEditPage from '@/components/pages/admin/admin-subjects/admin-subject-edit-page';
+import LoadPage from '@/components/common/ui/load-page/LoadPage';
+import EditSubjectAdminPage from '@/components/pages/admin/admin-subjects/edit-subject/EditSubjectAdminPage';
+import { useQueryAdminOptions } from '@/components/pages/admin/common/constants';
 import SubjectAPI from '@/lib/api/subject/SubjectAPI';
 
 interface AdminSubjectEditProps {
@@ -16,13 +17,18 @@ const AdminSubjectEdit: FC<AdminSubjectEditProps> = ({ params }) => {
     data: subject,
     isSuccess,
     isLoading,
-  } = useQuery('subject', () => SubjectAPI.getSubject(params.subjectId));
+  } = useQuery(
+    ['subject', params.subjectId],
+    () => SubjectAPI.getSubject(params.subjectId),
+    useQueryAdminOptions,
+  );
 
-  if (isLoading) return <Progress />;
+  if (isLoading) return <LoadPage />;
 
-  if (!isSuccess) return <>Something went wrong with the admin subject edit</>;
+  if (!isSuccess)
+    throw new Error(`An error has occurred while fetching subjects`);
 
-  return <AdminSubjectEditPage subject={subject} />;
+  return <EditSubjectAdminPage subject={subject} />;
 };
 
 export default AdminSubjectEdit;

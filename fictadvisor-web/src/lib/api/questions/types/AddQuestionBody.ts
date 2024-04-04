@@ -1,4 +1,4 @@
-import { AdminQuestionDisplay } from '@/components/pages/admin/questions-admin-page/types';
+import { AdminQuestionDisplay } from '@/components/pages/admin/admin-questions/common/types';
 import { QuestionType } from '@/types/poll';
 
 export interface AddQuestionBody {

@@ -2,8 +2,9 @@
 import React, { FC } from 'react';
 import { useQuery } from 'react-query';
 
-import Progress from '@/components/common/ui/progress';
-import TeachersAdminEditPage from '@/components/pages/admin/admin-teachers/edit-teachers-admin-page/TeachersAdminEditPage';
+import LoadPage from '@/components/common/ui/load-page/LoadPage';
+import EditTeachersAdminPage from '@/components/pages/admin/admin-teachers/edit-teachers/EditTeachersAdminPage';
+import { useQueryAdminOptions } from '@/components/pages/admin/common/constants';
 import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
 
 interface PageProps {
@@ -17,13 +18,17 @@ const Edit: FC<PageProps> = ({ params }) => {
     data: teacher,
     isSuccess,
     isLoading,
-  } = useQuery('teacher', () => TeacherAPI.get(params.teacherId));
+  } = useQuery(
+    ['teacher', params.teacherId],
+    () => TeacherAPI.get(params.teacherId),
+    useQueryAdminOptions,
+  );
 
-  if (isLoading) return <Progress />;
+  if (isLoading) return <LoadPage />;
 
-  if (!isSuccess) return <>Something went wrong with the admin teacher edit</>;
+  if (!isSuccess) throw new Error('Something went wrong in teacher edit page');
 
-  return <TeachersAdminEditPage teacher={teacher} />;
+  return <EditTeachersAdminPage teacher={teacher} />;
 };
 
 export default Edit;

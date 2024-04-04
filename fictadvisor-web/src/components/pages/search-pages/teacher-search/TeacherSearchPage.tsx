@@ -71,8 +71,11 @@ export const TeacherSearchPage = () => {
         initialValues={initialValues}
         localStorageName={localStorageName}
       />
-      {(data as GetTeachersResponse) && (
-        <TeacherSearchList teachers={loadedTeachers} />
+      {data && (
+        <TeacherSearchList
+          teachers={loadedTeachers}
+          pagination={data.pagination}
+        />
       )}
       {isLoading ||
         (isFetching && (

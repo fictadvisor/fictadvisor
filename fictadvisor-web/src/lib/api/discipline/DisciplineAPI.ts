@@ -1,4 +1,5 @@
-import { DisciplinesAdminSearchFormFields } from '@/components/pages/admin/disciplines-admin-page/components/disciplines-admin-search/types';
+import { DisciplinesAdminSearchFormFields } from '@/components/pages/admin/admin-disciplines/search-disciplines/types';
+import { AdminDiscipline } from '@/types/discipline';
 
 import { client } from '../instance';
 import { getAuthorizationHeader } from '../utils';
@@ -31,6 +32,14 @@ class DisciplineAPI {
       getAuthorizationHeader(),
     );
     return res.data;
+  }
+
+  async getDisciplinesById(disciplineId: string) {
+    const { data } = await client.get<AdminDiscipline>(
+      `/disciplines/${disciplineId}`,
+      getAuthorizationHeader(),
+    );
+    return data;
   }
 
   async addDiscipline(body: AddDiscipline) {

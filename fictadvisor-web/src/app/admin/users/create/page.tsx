@@ -1,9 +1,9 @@
 import React from 'react';
 
-import AdminUserCreate from '@/components/pages/admin/admin-user/create-user-page';
+import CreateUserAdminPage from '@/components/pages/admin/admin-user/create-user';
 
 const Create = () => {
-  return <AdminUserCreate />;
+  return <CreateUserAdminPage />;
 };
 
 export default Create;

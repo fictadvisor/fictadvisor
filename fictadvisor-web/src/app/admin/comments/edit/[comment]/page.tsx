@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-import CommentsAdminEditPage from '@/components/pages/admin/admin-comments/pages/edit-comments-page';
+import CommentsEditAdminPage from '@/components/pages/admin/admin-comments/edit-comments/CommentsEditAdminPage';
 
 interface AdminCommentEditProps {
   params: {
@@ -10,7 +10,7 @@ interface AdminCommentEditProps {
 
 const AdminCommentEdit: FC<AdminCommentEditProps> = ({ params }) => {
   const comment = JSON.parse(decodeURIComponent(params.comment));
-  return <CommentsAdminEditPage comment={comment} />;
+  return <CommentsEditAdminPage comment={comment} />;
 };
 
 export default AdminCommentEdit;

@@ -7,6 +7,7 @@ export const wrapper: SxProps<Theme> = {
   flexDirection: 'column',
   gap: '10px',
   mb: '12px',
+  width: '100%',
 };
 
 export const subtitle: SxProps<Theme> = {

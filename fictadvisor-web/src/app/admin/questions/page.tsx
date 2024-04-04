@@ -1,9 +1,9 @@
 import React from 'react';
 
-import QuestionsAdminPage from '@/components/pages/admin/questions-admin-page/QueationsAdminPage';
+import SearchQuestionsAdminPage from '@/components/pages/admin/admin-questions/search-questions';
 
 const Page = () => {
-  return <QuestionsAdminPage />;
+  return <SearchQuestionsAdminPage />;
 };
 
 export default Page;
