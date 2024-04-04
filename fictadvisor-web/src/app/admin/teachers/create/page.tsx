@@ -1,9 +1,9 @@
 import React from 'react';
 
-import TeachersAdminCreatePage from '@/components/pages/admin/admin-teachers/create-teacher-admin-page';
+import CreateTeachersAdminPage from '@/components/pages/admin/admin-teachers/create-teacher';
 
 const Create = () => {
-  return <TeachersAdminCreatePage />;
+  return <CreateTeachersAdminPage />;
 };
 
 export default Create;

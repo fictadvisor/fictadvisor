@@ -2,8 +2,9 @@
 import React, { FC } from 'react';
 import { useQuery } from 'react-query';
 
-import Progress from '@/components/common/ui/progress/Progress';
-import AdminStudentEdit from '@/components/pages/admin/admin-student/edit-student-page';
+import LoadPage from '@/components/common/ui/load-page/LoadPage';
+import AdminStudentEdit from '@/components/pages/admin/admin-student/edit-student/AdminStudentEdit';
+import { useQueryAdminOptions } from '@/components/pages/admin/common/constants';
 import StudentAPI from '@/lib/api/student/StudentAPI';
 
 interface AdminStudentEditPageProps {
@@ -13,17 +14,21 @@ interface AdminStudentEditPageProps {
 }
 const AdminStudentEditPage: FC<AdminStudentEditPageProps> = ({ params }) => {
   const { data: student, isLoading: isLoadingStudent } = useQuery(
-    'getStudent',
+    ['getStudent', params.studentId],
     () => StudentAPI.getStudent(params.studentId),
+    useQueryAdminOptions,
   );
 
   const { data: selectives, isLoading: isLoadingSelective } = useQuery(
-    'getStudentSelective',
+    ['getStudentSelective', params.studentId],
     () => StudentAPI.getSelective(params.studentId),
+    useQueryAdminOptions,
   );
   const { data: remainingSelectives, isLoading: isLoadingRemainingSelectives } =
-    useQuery('getStudentRemainingSelective', () =>
-      StudentAPI.getRemainingSelective(params.studentId),
+    useQuery(
+      ['getStudentRemainingSelective', params.studentId],
+      () => StudentAPI.getRemainingSelective(params.studentId),
+      useQueryAdminOptions,
     );
 
   const isSuccess = student && selectives && remainingSelectives;
@@ -31,9 +36,9 @@ const AdminStudentEditPage: FC<AdminStudentEditPageProps> = ({ params }) => {
   const isLoading =
     isLoadingSelective || isLoadingRemainingSelectives || isLoadingStudent;
 
-  if (isLoading) return <Progress />;
+  if (isLoading) return <LoadPage />;
 
-  if (!isSuccess) return <>Something went wrong with the admin role edit</>;
+  if (!isSuccess) throw new Error('Something went wrong in student edit page');
 
   return (
     <AdminStudentEdit

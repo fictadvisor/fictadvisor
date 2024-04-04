@@ -2,8 +2,9 @@
 import React, { FC } from 'react';
 import { useQuery } from 'react-query';
 
-import Progress from '@/components/common/ui/progress/Progress';
-import EditRolesPage from '@/components/pages/admin/admin-roles/edit-roles-page';
+import LoadPage from '@/components/common/ui/load-page/LoadPage';
+import EditRolesAdminPage from '@/components/pages/admin/admin-roles/edit-roles/EditRolesAdminPage';
+import { useQueryAdminOptions } from '@/components/pages/admin/common/constants';
 import RoleAPI from '@/lib/api/role/RoleAPI';
 
 interface AdminRolesEditProps {
@@ -17,13 +18,20 @@ const AdminRolesEdit: FC<AdminRolesEditProps> = ({ params }) => {
     data: role,
     isSuccess,
     isLoading,
-  } = useQuery('getRole', () => RoleAPI.getById(params.roleId));
+  } = useQuery(
+    ['getRole', params.roleId],
+    () => RoleAPI.getById(params.roleId),
+    useQueryAdminOptions,
+  );
 
-  if (isLoading) return <Progress />;
+  if (isLoading) return <LoadPage />;
 
-  if (!isSuccess) return <>Something went wrong with the admin role edit</>;
+  if (!isSuccess)
+    throw new Error(
+      `An error has occurred while editing ${params.roleId} role`,
+    );
 
-  return <EditRolesPage role={role} />;
+  return <EditRolesAdminPage role={role} />;
 };
 
 export default AdminRolesEdit;

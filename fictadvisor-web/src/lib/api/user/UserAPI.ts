@@ -1,4 +1,4 @@
-import { UserSearchFormFields } from '@/components/pages/admin/admin-user/search-user-page/types/HeaderUserSearch';
+import { UserSearchFormFields } from '@/components/pages/admin/admin-user/search-user/types';
 import { AddContactBody } from '@/lib/api/user/types/AddContactBody';
 import { ChangeAvatarResponse } from '@/lib/api/user/types/ChangeAvatarResponse';
 import { ChangeRoleBody } from '@/lib/api/user/types/ChangeRoleBody';
@@ -13,7 +13,7 @@ import { VerifyStudentBody } from '@/lib/api/user/types/VerifyStudentBody';
 import { VerifySuperheroBody } from '@/lib/api/user/types/VerifySuperheroBody';
 import { getAuthorizationHeader } from '@/lib/api/utils';
 import { TelegramUser } from '@/types/telegram';
-import { SimplifiedUser, UserAdmin } from '@/types/user';
+import { SimplifiedUser } from '@/types/user';
 
 import { client } from '../instance';
 

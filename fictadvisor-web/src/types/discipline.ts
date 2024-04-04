@@ -1,3 +1,5 @@
+import { Teacher } from './teacher';
+
 export interface Discipline {
   id: string;
   year: number;
@@ -14,17 +16,17 @@ export interface AdminDiscipline {
   year: number;
   isSelective: boolean;
   semester: number;
-  name: string;
+  subject: {
+    id: string;
+    name: string;
+  };
   group: {
     id: string;
     code: string;
   };
-  teachers: [
-    {
-      id: string;
-      firstName: string;
-      middleName: string;
-      lastName: string;
-    },
-  ];
+  teachers: DisciplineTeacher[];
+}
+
+interface DisciplineTeacher extends Omit<Teacher, 'contacts'> {
+  disciplineTeacherId: string;
 }

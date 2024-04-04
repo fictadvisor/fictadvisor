@@ -1,10 +1,10 @@
 'use client';
 import React from 'react';
 
-import AdminDepartmentSearchPage from '@/components/pages/admin/admin-departments/admin-departments-search-page/AdminDepartmentSearchPage';
+import SearchDepartmentsAdminPage from '@/components/pages/admin/admin-departments/search-departments/SearchDepartmentsAdminPage';
 
 const Page = () => {
-  return <AdminDepartmentSearchPage />;
+  return <SearchDepartmentsAdminPage />;
 };
 
 export default Page;

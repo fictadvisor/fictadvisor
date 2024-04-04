@@ -1,9 +1,9 @@
 import React from 'react';
 
-import CommentsAdminPage from '@/components/pages/admin/admin-comments';
+import SeacrhCommentsAdminPage from '@/components/pages/admin/admin-comments/search-comments/SeacrhCommentsAdminPage';
 
 const Page = () => {
-  return <CommentsAdminPage />;
+  return <SeacrhCommentsAdminPage />;
 };
 
 export default Page;

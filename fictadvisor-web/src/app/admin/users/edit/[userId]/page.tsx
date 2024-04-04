@@ -2,8 +2,9 @@
 import React, { FC } from 'react';
 import { useQuery } from 'react-query';
 
-import Progress from '@/components/common/ui/progress';
-import EditUserPage from '@/components/pages/admin/admin-user/edit-user-page';
+import LoadPage from '@/components/common/ui/load-page';
+import EditUserPage from '@/components/pages/admin/admin-user/edit-user';
+import { useQueryAdminOptions } from '@/components/pages/admin/common/constants';
 import UserAPI from '@/lib/api/user/UserAPI';
 
 interface AdminUserEditProps {
@@ -17,11 +18,15 @@ const AdminUserEdit: FC<AdminUserEditProps> = ({ params }) => {
     data: user,
     isSuccess,
     isLoading,
-  } = useQuery('getUser', () => UserAPI.getUser(params.userId));
+  } = useQuery(
+    ['getUser', params.userId],
+    () => UserAPI.getUser(params.userId),
+    useQueryAdminOptions,
+  );
 
-  if (isLoading) return <Progress />;
+  if (isLoading) return <LoadPage />;
 
-  if (!isSuccess) return <>Something went wrong with the admin user edit</>;
+  if (!isSuccess) throw new Error('Something went wrong in user edit page');
 
   return <EditUserPage user={user} />;
 };
