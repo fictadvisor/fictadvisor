@@ -842,3 +842,36 @@ model PageText {
 
   @@map("page_texts")
 }
+
+model Faq {
+  id         String          @id @default(uuid())
+  question   String
+  answer     String
+  categories FaqToCategory[]
+  createdAt  DateTime?       @default(now()) @map("created_at")
+  updatedAt  DateTime?       @default(now()) @updatedAt @map("updated_at")
+
+  @@map("faq")
+}
+
+model FaqCategory {
+  id        String          @id @default(uuid())
+  name      String
+  faqs      FaqToCategory[]
+  createdAt DateTime?       @default(now()) @map("created_at")
+  updatedAt DateTime?       @default(now()) @updatedAt @map("updated_at")
+
+  @@map("faq_category")
+}
+
+model FaqToCategory {
+  faq        Faq         @relation(fields: [faqId], references: [id], onDelete: Cascade)
+  faqId      String      @map("faq_id")
+  category   FaqCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId String      @map("category_id")
+  createdAt  DateTime?   @default(now()) @map("created_at")
+  updatedAt  DateTime?   @default(now()) @updatedAt @map("updated_at")
+
+  @@id([faqId, categoryId])
+  @@map("faq_to_category")
+}
