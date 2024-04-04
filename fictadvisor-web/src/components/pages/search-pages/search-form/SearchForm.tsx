@@ -29,7 +29,7 @@ import {
 import IconButton from '@/components/common/ui/icon-button-mui';
 import { roleOptions } from '@/components/pages/search-pages/teacher-search/constants';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
-import CathedraAPI from '@/lib/api/cathera/CathedraAPI';
+import CathedraAPI from '@/lib/api/cathedras/CathedraAPI';
 import GroupAPI from '@/lib/api/group/GroupAPI';
 import theme from '@/styles/theme';
 

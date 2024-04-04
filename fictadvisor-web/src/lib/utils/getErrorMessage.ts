@@ -11,6 +11,8 @@ const getErrorMessage = (error: unknown) => {
     } else if (axiosError.message) {
       message = axiosError.message;
     }
+  } else if (error instanceof Error) {
+    message = error.message;
   }
   return message;
 };

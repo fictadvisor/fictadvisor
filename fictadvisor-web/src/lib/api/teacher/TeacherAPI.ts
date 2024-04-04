@@ -1,5 +1,5 @@
-import { CommentsAdminSearchFormFields } from '@/components/pages/admin/admin-comments/components/admin-comments-search/types/AdminCommentsSearch';
-import { AdminSearchFormFields } from '@/components/pages/admin/admin-teachers/search-teacher-admin-page/types';
+import { CommentsAdminSearchFormFields } from '@/components/pages/admin/admin-comments/common/types';
+import { AdminSearchFormFields } from '@/components/pages/admin/admin-teachers/search-teachers/types';
 import { Complaint } from '@/components/pages/personal-teacher-page/personal-teacher-tabs/components/complaint-popup/types';
 import { ChangeCommentBody } from '@/lib/api/teacher/types/ChangeCommentBody';
 import { DeleteCommentBody } from '@/lib/api/teacher/types/DeleteCommentBody';

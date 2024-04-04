@@ -1,5 +1,7 @@
-import { QuestionSearchFormFields } from '@/components/pages/admin/questions-admin-page/types';
-import { AdminQuestion } from '@/components/pages/admin/questions-admin-page/types';
+import {
+  AdminQuestion,
+  QuestionSearchFormFields,
+} from '@/components/pages/admin/admin-questions/common/types';
 
 import { client } from '../instance';
 import { getAuthorizationHeader } from '../utils';

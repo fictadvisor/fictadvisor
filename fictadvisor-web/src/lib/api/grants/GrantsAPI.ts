@@ -1,4 +1,4 @@
-import { GrantsSearchFormFields } from '@/components/pages/admin/admin-grants/common/types/GrantsSearchFormFields';
+import { GrantsSearchFormFields } from '@/components/pages/admin/admin-grants/common/types';
 import { getAuthorizationHeader } from '@/lib/api/utils';
 import { Grant } from '@/types/role';
 

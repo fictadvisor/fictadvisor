@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-import QuestionsEditPage from '@/components/pages/admin/questions-admin-page/components/questions-edit-page';
+import EditQuestionsAdminPage from '@/components/pages/admin/admin-questions/edit-questions/EditQuestionsAdminPage';
 
 interface PageProps {
   params: {
@@ -9,7 +9,7 @@ interface PageProps {
 }
 
 const Edit: FC<PageProps> = ({ params }) => {
-  return <QuestionsEditPage questionId={params.questionId} />;
+  return <EditQuestionsAdminPage questionId={params.questionId} />;
 };
 
 export default Edit;

@@ -1,10 +1,10 @@
 'use client';
 import React from 'react';
 
-import DisciplinesAdminCreatePage from '@/components/pages/admin/disciplines-admin-page/pages/disciplines-create-page/DisciplinesAdminCreatePage';
+import CreateDisciplinesAdminPage from '@/components/pages/admin/admin-disciplines/create-disciplines';
 
 const AdminSubjectCreate = () => {
-  return <DisciplinesAdminCreatePage />;
+  return <CreateDisciplinesAdminPage />;
 };
 
 export default AdminSubjectCreate;

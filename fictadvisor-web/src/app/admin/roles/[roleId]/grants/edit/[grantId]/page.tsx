@@ -2,8 +2,9 @@
 import React, { FC } from 'react';
 import { useQuery } from 'react-query';
 
-import Progress from '@/components/common/ui/progress';
-import EditGrantsPage from '@/components/pages/admin/admin-grants/edit-grants-page';
+import LoadPage from '@/components/common/ui/load-page/LoadPage';
+import EditGrantsAdminPage from '@/components/pages/admin/admin-grants/edit-grants/EditGrantsAdminPage';
+import { useQueryAdminOptions } from '@/components/pages/admin/common/constants';
 import GrantsAPI from '@/lib/api/grants/GrantsAPI';
 
 interface AdminGrantsEditProps {
@@ -18,15 +19,20 @@ const AdminGrantsEdit: FC<AdminGrantsEditProps> = ({ params }) => {
     data: grant,
     isSuccess,
     isLoading,
-  } = useQuery('getGrantById', () =>
-    GrantsAPI.getByGrantId(params.roleId, params.grantId),
+  } = useQuery(
+    ['getGrantById', params.roleId, params.grantId],
+    () => GrantsAPI.getByGrantId(params.roleId, params.grantId),
+    useQueryAdminOptions,
   );
 
-  if (isLoading) return <Progress />;
+  if (isLoading) return <LoadPage />;
 
-  if (!isSuccess) return <>Something went wrong with the admin grant edit</>;
+  if (!isSuccess)
+    throw new Error(
+      `An error has occurred while editing ${params.grantId} grant`,
+    );
 
-  return <EditGrantsPage grant={grant} roleId={params.roleId} />;
+  return <EditGrantsAdminPage grant={grant} roleId={params.roleId} />;
 };
 
 export default AdminGrantsEdit;

@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { PencilIcon } from '@heroicons/react/24/outline';
 import { Avatar, Box, SelectChangeEvent, Stack } from '@mui/material';
-import { isAxiosError } from 'axios';
 
 import CheckboxesDropdown from '@/components/common/ui/form/checkboxes-dropdown/CheckboxesDropdown';
 import { CheckboxesDropdownOption } from '@/components/common/ui/form/checkboxes-dropdown/types/CheckboxesDropdown';
@@ -13,11 +12,11 @@ import Input from '@/components/common/ui/form/input-mui';
 import { InputSize } from '@/components/common/ui/form/input-mui/types';
 import TextArea from '@/components/common/ui/form/text-area-mui';
 import Progress from '@/components/common/ui/progress';
-import { useToastError } from '@/hooks/use-toast-error/useToastError';
+import { useQueryAdminOptions } from '@/components/pages/admin/common/constants';
 import CathedraAPI from '@/lib/api/cathedras/CathedraAPI';
 import { TeacherCathedra } from '@/types/teacher';
 
-import { PersonalInfo } from '../../../create-teacher-admin-page/types';
+import { PersonalInfo } from '../../types';
 
 import ChangeAvatar from './components/change-avatar-window/ChangeAvatar';
 import * as styles from './TeacherPersonalInputs.styles';
@@ -37,7 +36,6 @@ const TeacherPersonalInputs: FC<TeacherPersonalInputsProps> = ({
   selectedCathedras,
   setSelectedCathedras,
 }) => {
-  const toast = useToastError();
   const [firstName, setFirstName] = useState<string>(personalInfo.firstName);
   const [lastName, setLastName] = useState<string>(personalInfo.lastName);
   const [middleName, setMiddleName] = useState<string>(personalInfo.middleName);
@@ -49,15 +47,9 @@ const TeacherPersonalInputs: FC<TeacherPersonalInputsProps> = ({
   const [popupOpen, setPopupOpen] = useState(false);
 
   const { data: cathedrasData, isLoading } = useQuery(
-    'cathedras',
+    ['cathedras'],
     () => CathedraAPI.getAll(),
-    {
-      onError: error => {
-        if (isAxiosError(error)) {
-          toast.displayError(error);
-        }
-      },
-    },
+    useQueryAdminOptions,
   );
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -76,7 +68,10 @@ const TeacherPersonalInputs: FC<TeacherPersonalInputsProps> = ({
     };
   }, [firstName, lastName, middleName, description, avatarUrl]);
 
-  if (!cathedrasData || isLoading) return <Progress />;
+  if (isLoading) return <Progress />;
+
+  if (!cathedrasData)
+    throw new Error('an error occurred while loading cathedras');
 
   const cathedrasOptions = cathedrasData.cathedras.map(
     (cathedra: TeacherCathedra) => ({

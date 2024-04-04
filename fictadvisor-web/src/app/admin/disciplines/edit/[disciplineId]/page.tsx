@@ -2,8 +2,9 @@
 import React, { FC } from 'react';
 import { useQuery } from 'react-query';
 
-import Progress from '@/components/common/ui/progress';
-import DisciplinesEditPage from '@/components/pages/admin/disciplines-admin-page/pages/disciplines-edit-page/DisciplinesAdminEditPage';
+import LoadPage from '@/components/common/ui/load-page/LoadPage';
+import EditDisciplinesAdminPage from '@/components/pages/admin/admin-disciplines/edit-disciplines/EditDisciplinesAdminPage';
+import { useQueryAdminOptions } from '@/components/pages/admin/common/constants';
 import DisciplineAPI from '@/lib/api/discipline/DisciplineAPI';
 
 interface AdminDisciplineEditProps {
@@ -14,21 +15,23 @@ interface AdminDisciplineEditProps {
 
 const DisciplinesAdminEdit: FC<AdminDisciplineEditProps> = ({ params }) => {
   const {
-    data: disciplines,
+    data: discipline,
     isSuccess,
     isLoading,
-  } = useQuery('discipline', () => DisciplineAPI.getAllDisciplines());
+  } = useQuery(
+    ['discipline', params.disciplineId],
+    () => DisciplineAPI.getDisciplinesById(params.disciplineId),
+    useQueryAdminOptions,
+  );
 
-  if (isLoading) return <Progress />;
+  if (isLoading) return <LoadPage />;
 
-  const discipline = disciplines?.disciplines.find(discipline => {
-    return discipline.id === params.disciplineId;
-  });
+  if (!isSuccess)
+    throw new Error(
+      `An error has occurred while editing ${params.disciplineId} discipline`,
+    );
 
-  if (!isSuccess || !discipline)
-    return <>Something went wrong with the admin discipline edit</>;
-
-  return <DisciplinesEditPage discipline={discipline} />;
+  return <EditDisciplinesAdminPage discipline={discipline} />;
 };
 
 export default DisciplinesAdminEdit;

@@ -18,7 +18,7 @@ const AdminPanelAccessLayout = ({
   const { user } = useAuthentication();
 
   const { data, isLoading } = useQuery(
-    [],
+    [permission],
     () => PermissionService.getAdminAccess(user.id, [permission]),
     {
       retry: false,
