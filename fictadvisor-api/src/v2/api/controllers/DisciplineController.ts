@@ -169,4 +169,26 @@ export class DisciplineController {
     const discipline = await this.disciplineService.deleteDiscipline(disciplineId);
     return this.disciplineMapper.getDisciplineWithTeachers(discipline);
   }
+
+  @ApiOkResponse({
+    type: ExtendDisciplineTeachersResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException:
+      Discipline with such id is not found`,
+  })
+  @ApiParam({
+    name: 'disciplineId',
+    required: true,
+    description: 'Id of a discipline to get',
+  })
+  @ApiEndpoint({
+    summary: 'Get discipline by id',
+  })
+  @Get(':disciplineId')
+  async getById (@Param('disciplineId', DisciplineByIdPipe) disciplineId: string) {
+    const discipline = await this.disciplineService.get(disciplineId);
+    return this.disciplineMapper.getDisciplineWithTeachers(discipline);
+  }
 }

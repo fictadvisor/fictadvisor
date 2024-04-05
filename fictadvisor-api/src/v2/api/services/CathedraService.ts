@@ -82,4 +82,8 @@ export class CathedraService {
     });
     return { divisions: cathedras.map((cathedra) => cathedra.division) };
   }
+
+  async getById (cathedraId: string) {
+    return this.cathedraRepository.findById(cathedraId);
+  }
 }
