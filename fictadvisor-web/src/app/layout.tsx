@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ThemeProvider } from '@mui/system';
 import { LocalizationProvider } from '@mui/x-date-pickers';
@@ -35,6 +36,14 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('/service-worker.js')
+        .then(registration => console.log('scope is: ', registration.scope));
+    }
+  }, []);
+
   return (
     <html>
       <Head>
