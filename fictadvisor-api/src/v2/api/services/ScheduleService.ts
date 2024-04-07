@@ -27,6 +27,7 @@ import { InvalidDateException } from '../../utils/exceptions/InvalidDateExceptio
 import { ObjectIsRequiredException } from '../../utils/exceptions/ObjectIsRequiredException';
 import { InvalidWeekException } from '../../utils/exceptions/InvalidWeekException';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
+import { DateTime } from 'luxon';
 
 export const weeksPerEvent = {
   EVERY_WEEK: WEEK / WEEK,
@@ -172,8 +173,8 @@ export class ScheduleService {
   private async setWeekTime (event: DbEvent, week: number): Promise<{ startWeek: number }> {
     const { startDate } = await this.dateService.getCurrentSemester();
     const startWeek = this.dateUtils.getCeiledDifference(startDate, event.startTime, WEEK);
-    event.startTime.setDate(event.startTime.getDate() + (week - startWeek) * 7);
-    event.endTime.setDate(event.endTime.getDate() + (week - startWeek) * 7);
+    event.startTime = DateTime.fromJSDate(event.startTime).setZone('Europe/Kyiv').plus({ weeks: week - startWeek }).toJSDate();
+    event.endTime = DateTime.fromJSDate(event.endTime).setZone('Europe/Kyiv').plus({ weeks: week - startWeek }).toJSDate();
     return { startWeek };
   }
 
