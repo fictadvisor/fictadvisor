@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
 import { DataNotFoundException } from '../exceptions/DataNotFoundException';
 import { DataMissingException } from '../exceptions/DataMissingException';
-import * as process from 'process';
+import { DateTime } from 'luxon';
 
 export const MINUTE = 1000 * 60;
 export const HOUR = MINUTE * 60;
@@ -26,8 +26,6 @@ export interface CurrentDay {
   week: number,
   day: number,
 }
-
-const TIME_DIFFERENCE = +process.env.TIME_DIFFERENCE;
 
 @Injectable()
 export class DateService {
@@ -131,36 +129,38 @@ export class DateService {
   }
 
   getDatesOfCurrentWeek () {
-    const currentDate = new Date();
-    currentDate.setHours(currentDate.getHours() + TIME_DIFFERENCE);
-    currentDate.setHours(0, 0, 0, 0);
-    const currentDay = currentDate.getDay() ? currentDate.getDay() : 7;
-    const startOfWeek = new Date(currentDate.getTime() - (currentDay - 1) * DAY);
-    const endOfWeek = new Date(startOfWeek.getTime() + DAY * 7);
-    return { startOfWeek, endOfWeek };
+    const currentDate = DateTime.now();
+
+    return {
+      startOfWeek: currentDate.startOf('week').toJSDate(),
+      endOfWeek: currentDate.endOf('week').toJSDate(),
+    };
   }
 
-  async getDatesOfWeek (week) {
-    const { startOfWeek, endOfWeek } = this.getDatesOfCurrentWeek();
+  async getDatesOfWeek (week: number) {
     const currentWeek = await this.getCurrentWeek();
     const difference = week - currentWeek;
-    startOfWeek.setDate(startOfWeek.getDate() + difference * 7);
-    endOfWeek.setDate(endOfWeek.getDate() + difference * 7);
-    return { startOfWeek, endOfWeek };
+    const { startOfWeek, endOfWeek } = this.getDatesOfCurrentWeek();
+
+    return {
+      startOfWeek: DateTime.fromJSDate(startOfWeek).plus({ week: difference }).toJSDate(),
+      endOfWeek: DateTime.fromJSDate(endOfWeek).plus({ week: difference }).toJSDate(),
+    };
   }
 
   async getDatesOfMonth () {
-    const currentDate = new Date();
-    const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-    const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1, 0, 0, 0, -1);
-    return { startOfMonth, endOfMonth };
+    const currentDate = DateTime.now();
+
+    return {
+      startOfMonth: currentDate.startOf('month').toJSDate(),
+      endOfMonth: currentDate.endOf('month').toJSDate(),
+    };
   }
 
-  async getWeekByDate (date) {
+  async getWeekByDate (date: Date) {
     const { startDate } = await this.getCurrentSemester();
     const difference = date.getTime() - startDate.getTime();
-    const week = Math.ceil(difference / WEEK);
-    return week;
+    return Math.ceil(difference / WEEK);
   }
 
   async isPreviousSemesterToCurrent (semester: number, year: number) {
@@ -175,27 +175,23 @@ export class DateService {
     return curSem.isFinished ? comp <= cur : comp < cur;
   }
 
-  getPreviousSemester (semester, year) {
+  getPreviousSemester (semester: number, year: number) {
     return semester === 1
       ? { semester: 2, year: year - 1 }
       : { semester: 1, year };
   }
 
-  async getSpecificDayInWeek (week, dayOfWeek) {
+  async getSpecificDayInWeek (week: number, dayOfWeek: number) {
     const { startOfWeek } = await this.getDatesOfWeek(week);
-    const differenceInDays = dayOfWeek - 1;
+    const day = DateTime.fromJSDate(startOfWeek).plus({ days: dayOfWeek - 1 });
 
-    const startOfDay = new Date(startOfWeek);
-    startOfDay.setDate(startOfWeek.getDate() + differenceInDays);
-    startOfDay.setHours(0, 0, 0, 0);
-
-    const endOfDay = new Date(startOfDay);
-    endOfDay.setHours(23, 59, 59, 999);
-
-    return { startOfDay, endOfDay };
+    return {
+      startOfDay: day.startOf('day').toJSDate(),
+      endOfDay: day.endOf('day').toJSDate(),
+    };
   }
 
-  checkYearAndSemester (year, semester) {
+  checkYearAndSemester (year: number, semester: number) {
     if ((year && !semester) || (!year && semester)) {
       throw new DataMissingException();
     }

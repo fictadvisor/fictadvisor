@@ -67,7 +67,7 @@ describe('DateService', () => {
 
       expect(result).toStrictEqual({
         startOfWeek: new Date('2023-05-29T00:00:00'),
-        endOfWeek: new Date('2023-06-05T00:00:00'),
+        endOfWeek: new Date('2023-06-04T23:59:59.999Z'),
       });
     });
   });
@@ -84,7 +84,7 @@ describe('DateService', () => {
 
       expect(result).toStrictEqual({
         startOfWeek: new Date('2023-05-15T00:00:00'),
-        endOfWeek: new Date('2023-05-22T00:00:00'),
+        endOfWeek: new Date('2023-05-21T23:59:59.999Z'),
       });
     });
   });
