@@ -481,6 +481,7 @@ export class ScheduleController {
   @ApiEndpoint({
     summary: 'Update the certain event',
     permissions: PERMISSION.GROUPS_$GROUPID_EVENTS_UPDATE,
+    guards: TelegramGuard,
   })
   @Patch('/groups/:groupId/events/:eventId')
   async update (
