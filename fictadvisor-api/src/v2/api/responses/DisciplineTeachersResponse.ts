@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { SubjectResponse } from './SubjectResponse';
 import { DisciplineTeacherResponse } from './DisciplineTeacherResponse';
+import { GroupResponse } from './GroupResponse';
 
 export class DisciplineTeachersResponse {
   @ApiProperty({
@@ -36,4 +37,9 @@ export class ExtendDisciplineTeachersResponse extends DisciplineTeachersResponse
     description: 'Discipline can be selected',
   })
     isSelective: boolean;
+  
+  @ApiProperty({
+    description: 'Disciplines group',
+  })
+    group: GroupResponse;
 }

@@ -102,28 +102,6 @@ export class CathedraController {
     return this.cathedraMapper.getCathedraWithTeachers(cathedra);
   }
 
-  @ApiOkResponse({
-    type: CathedraWithTeachersResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidEntityIdException:
-      Cathedra with such id is not found`,
-  })
-  @ApiParam({
-    name: 'cathedraId',
-    required: true,
-    description: 'Id of a cathedra to get',
-  })
-  @ApiEndpoint({
-    summary: 'Get cathedra by id',
-  })
-  @Get(':cathedraId')
-  async getById (@Param('cathedraId', CathedraByIdPipe) cathedraId: string) {
-    const cathedra = await this.cathedraService.getById(cathedraId);
-    return this.cathedraMapper.getCathedraWithTeachers(cathedra);
-  }
-
   @ApiBearerAuth()
   @ApiOkResponse({
     type: CathedraWithTeachersResponse,
@@ -220,5 +198,27 @@ export class CathedraController {
   @Get('/divisions')
   getAllDivisions (): Promise<CathedrasDivisionsResponse> {
     return this.cathedraService.getAllDivisions();
+  }
+
+  @ApiOkResponse({
+    type: CathedraWithTeachersResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException:
+      Cathedra with such id is not found`,
+  })
+  @ApiParam({
+    name: 'cathedraId',
+    required: true,
+    description: 'Id of a cathedra to get',
+  })
+  @ApiEndpoint({
+    summary: 'Get cathedra by id',
+  })
+  @Get(':cathedraId')
+  async getById (@Param('cathedraId', CathedraByIdPipe) cathedraId: string) {
+    const cathedra = await this.cathedraService.getById(cathedraId);
+    return this.cathedraMapper.getCathedraWithTeachers(cathedra);
   }
 }

@@ -19,6 +19,10 @@ export class DisciplineMapper {
         id: discipline.subject.id,
         name: discipline.subject.name,
       },
+      group: {
+        id: discipline.group.id,
+        code: discipline.group.code,
+      },
       year: discipline.year,
       semester: discipline.semester,
       isSelective: discipline.isSelective,
