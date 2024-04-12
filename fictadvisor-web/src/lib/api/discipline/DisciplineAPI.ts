@@ -1,4 +1,5 @@
-import { DisciplinesAdminSearchFormFields } from '@/components/pages/admin/admin-disciplines/search-disciplines/types';
+import { DisciplinesAdminSearchFormFields } from 'src/app/admin/disciplines/search/types';
+
 import { AdminDiscipline } from '@/types/discipline';
 
 import { client } from '../instance';

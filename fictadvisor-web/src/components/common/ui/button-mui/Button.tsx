@@ -1,3 +1,5 @@
+'use client';
+
 import React, { FC, MouseEventHandler, ReactNode } from 'react';
 import { Box, Button as MuiButton } from '@mui/material';
 import { SxProps, Theme } from '@mui/material/styles';

@@ -1,6 +1,7 @@
-import { CommentsAdminSearchFormFields } from '@/components/pages/admin/admin-comments/common/types';
-import { AdminSearchFormFields } from '@/components/pages/admin/admin-teachers/search-teachers/types';
-import { Complaint } from '@/components/pages/personal-teacher-page/personal-teacher-tabs/components/complaint-popup/types';
+import { AdminSearchFormFields } from 'src/app/admin/teachers/search/types';
+
+import { Complaint } from '@/app/(search-pages)/teachers/[teacherId]/personal-teacher-tabs/components/complaint-popup/types';
+import { CommentsAdminSearchFormFields } from '@/app/admin/comments/common/types';
 import { ChangeCommentBody } from '@/lib/api/teacher/types/ChangeCommentBody';
 import { DeleteCommentBody } from '@/lib/api/teacher/types/DeleteCommentBody';
 import { GetCommentsWithPaginationResponse } from '@/lib/api/teacher/types/GetCommentsWithPaginationResponse';
