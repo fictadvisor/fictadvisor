@@ -1,4 +1,4 @@
-import { AdminQuestion } from '@/components/pages/admin/admin-questions/common/types';
+import { AdminQuestion } from '@/app/admin/questions/common/types';
 import { Pagination } from '@/types/api';
 
 export interface GetAllQuestionsResponse {

@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
 import { Box, Typography } from '@mui/material';
+import Contact from 'src/app/(search-pages)/teachers/[teacherId]/contacts';
 
 import { CardRoles } from '@/components/common/ui/cards/card-roles';
 import Rating from '@/components/common/ui/rating';
-import Contact from '@/components/pages/personal-teacher-page/contacts';
 import { Teacher } from '@/types/teacher';
 
 import * as styles from './FloatingCard.styles';

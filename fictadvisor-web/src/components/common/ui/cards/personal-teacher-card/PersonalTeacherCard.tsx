@@ -2,16 +2,15 @@ import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import { Box, Typography } from '@mui/material';
 
+import Contacts from '@/app/(search-pages)/teachers/[teacherId]/contacts/Contact';
+import { teacherContext } from '@/app/(search-pages)/teachers/[teacherId]/utils';
+import teacherSubjectContext from '@/app/discipline/utils/teacherSubjectContext';
 import Button from '@/components/common/ui/button-mui';
 import { ButtonVariant } from '@/components/common/ui/button-mui/types';
 import { CardRoles } from '@/components/common/ui/cards/card-roles';
 import Rating from '@/components/common/ui/rating';
-import { teacherContext } from '@/components/pages/personal-teacher-page/PersonalTeacherPage';
-import { teacherSubjectContext } from '@/components/pages/personal-teacher-subject-page/PersonalTeacherSubjectPage';
 import { Contact } from '@/types/contact';
 import { TeacherCathedra, TeacherRole, TeacherSubject } from '@/types/teacher';
-
-import Contacts from '../../../../pages/personal-teacher-page/contacts/Contact';
 
 import * as styles from './PersonalTeacherCard.styles';
 

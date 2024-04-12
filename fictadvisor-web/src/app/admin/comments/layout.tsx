@@ -1,5 +1,3 @@
-'use client';
-
 import { PERMISSION } from '@fictadvisor/utils/security';
 
 import AdminPanelAccessLayout from '@/components/common/layout/admin-panel-access-layout/AdminPanelAccessLayout';

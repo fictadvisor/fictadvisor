@@ -1,10 +1,11 @@
 'use client';
+
+import EmailConfirmationPage from '@/app/_сomponents/email-confirmation-page/EmailConfirmationPage';
 import PageLayout from '@/components/common/layout/page-layout';
-import PasswordResetEmailConfirmationPage from '@/components/pages/password-recovery/email-confirmation-page';
 
 const PasswordResetEmailConfirmation = () => (
   <PageLayout hasHeader={false} hasFooter={false} robots="noindex">
-    <PasswordResetEmailConfirmationPage />
+    <EmailConfirmationPage apiMethodName="forgotPassword" />
   </PageLayout>
 );
 

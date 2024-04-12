@@ -1,4 +1,5 @@
-import { UserSearchFormFields } from '@/components/pages/admin/admin-user/search-user/types';
+import { UserSearchFormFields } from 'src/app/admin/users/search/types';
+
 import { AddContactBody } from '@/lib/api/user/types/AddContactBody';
 import { ChangeAvatarResponse } from '@/lib/api/user/types/ChangeAvatarResponse';
 import { ChangeRoleBody } from '@/lib/api/user/types/ChangeRoleBody';
