@@ -2,7 +2,7 @@ import {
   GroupCreateBody,
   GroupEditBody,
   GroupsSearchFormFields,
-} from '@/components/pages/admin/admin-groups/common/types';
+} from '@/app/admin/groups/common/types';
 import { AddStudentsByMailBody } from '@/lib/api/group/types/AddStudentsByMailBody';
 import { AddStudentsByMailResponse } from '@/lib/api/group/types/AddStudentsByMailResponse';
 import { ExportGroupStudents } from '@/lib/api/group/types/ExportGroupStudents';

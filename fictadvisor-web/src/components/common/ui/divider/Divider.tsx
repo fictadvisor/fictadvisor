@@ -1,3 +1,5 @@
+'use client';
+
 import React, { FC } from 'react';
 import { Divider as MuiDivider } from '@mui/material';
 import { SxProps, Theme } from '@mui/material/styles';

@@ -1,4 +1,4 @@
-import { RolesSearchFormFields } from '@/components/pages/admin/admin-roles/common/types';
+import { RolesSearchFormFields } from '@/app/admin/roles/common/types';
 import { getAuthorizationHeader } from '@/lib/api/utils';
 import { convertEmptyStringToUndefined } from '@/lib/utils/convertEmptyStringToUndefined';
 import { Role } from '@/types/role';

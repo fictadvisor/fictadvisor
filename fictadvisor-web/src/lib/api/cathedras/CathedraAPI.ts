@@ -1,4 +1,4 @@
-import { SearchFormFields } from '@/components/pages/search-pages/search-form/types';
+import { SearchFormFields } from '@/app/(search-pages)/search-form/types';
 import { client } from '@/lib/api/instance';
 import { getAuthorizationHeader } from '@/lib/api/utils';
 import { Cathedra } from '@/types/cathedra';

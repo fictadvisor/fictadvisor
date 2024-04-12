@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-import { SendingStatus } from '@/components/pages/poll-page/components/poll-form/types';
+import { SendingStatus } from '@/app/(search-pages)/poll/[disciplineTeacherId]/components/poll-form/types';
 import { Answer, QuestionDisplay, QuestionType } from '@/types/poll';
 import { Category } from '@/types/poll';
 type Action = {
