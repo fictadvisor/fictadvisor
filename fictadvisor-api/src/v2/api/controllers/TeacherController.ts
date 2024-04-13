@@ -263,7 +263,13 @@ export class TeacherController {
       Last name is too long (max: 40)
       Last name can not be empty
       Last name is incorrect (A-Я(укр.)\\-' ))
-      Description is too long (max: 400)`,
+      Description is too long (max: 400)
+      Academic status cannot be empty
+      Academic status must be enum
+      Scientific degree can not be empty
+      Scientific degree must be an enum
+      Position cannot be empty
+      Position must be an enum`,
   })
   @ApiForbiddenResponse({
     description: `\n
@@ -304,7 +310,10 @@ export class TeacherController {
       Last name is too long (max: 40)
       Last name can not be empty
       Last name is incorrect (A-Я(укр.)\\-' ))
-      Description is too long (max: 400)`,
+      Description is too long (max: 400)
+      Academic status must be enum
+      Scientific degree must be an enum
+      Position must be an enum`,
   })
   @ApiForbiddenResponse({
     description: `\n

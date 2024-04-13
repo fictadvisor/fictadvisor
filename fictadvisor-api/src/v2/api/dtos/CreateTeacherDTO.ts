@@ -1,6 +1,7 @@
-import { IsNotEmpty, IsOptional, Matches, MaxLength, MinLength } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional, Matches, MaxLength, MinLength } from 'class-validator';
 import { createRegex, UKR_REGEX, UKRSPEC_REGEX, validationOptionsMsg } from '../../utils/GLOBALS';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { AcademicStatus, Position, ScientificDegree } from '@prisma/client';
 
 export class CreateTeacherDTO {
   @ApiProperty({
@@ -51,4 +52,28 @@ export class CreateTeacherDTO {
   })
   @IsOptional()
     avatar?: string;
+
+  @ApiProperty({
+    description: 'Academic status of the teacher',
+    enum: AcademicStatus,
+  })
+  @IsEnum(AcademicStatus, validationOptionsMsg('Academic status must be enum'))
+  @IsNotEmpty(validationOptionsMsg('Academic status cannot be empty'))
+    academicStatus: AcademicStatus;
+
+  @ApiProperty({
+    description: 'Scientific degree of the teacher',
+    enum: ScientificDegree,
+  })
+  @IsEnum(ScientificDegree, validationOptionsMsg('Scientific degree must be an enum'))
+  @IsNotEmpty(validationOptionsMsg('Scientific degree can not be empty'))
+    scientificDegree: ScientificDegree;
+
+  @ApiProperty({
+    description: 'Position of the teacher',
+    enum: Position,
+  })
+  @IsEnum(Position, validationOptionsMsg('Position must be an enum'))
+  @IsNotEmpty(validationOptionsMsg('Position cannot be empty'))
+    position: Position;
 }
