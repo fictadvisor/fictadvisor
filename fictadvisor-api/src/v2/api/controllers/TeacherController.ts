@@ -282,7 +282,6 @@ export class TeacherController {
     return this.teacherMapper.getTeacher(dbTeacher);
   }
 
-  @Access(PERMISSION.TEACHERS_$TEACHERID_UPDATE)
   @ApiBearerAuth()
   @ApiOkResponse({
     type: TeacherWithRolesAndCathedrasResponse,
@@ -324,16 +323,31 @@ export class TeacherController {
     return this.teacherMapper.getTeacher(dbTeacher);
   }
 
-  @Access(PERMISSION.TEACHERS_$TEACHERID_DELETE)
   @ApiBearerAuth()
   @ApiOkResponse()
   @ApiBadRequestResponse({
-    description: `InvalidEntityIdException:\n  
-                  teacher with such id is not found`,
+    description: `\n
+    InvalidEntityIdException: 
+      teacher with such id is not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
   })
   @ApiForbiddenResponse({
-    description: `NoPermissionException:\n
-                  You do not have permission to perform this action`,
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @ApiParam({
+    name: 'teacherId',
+    required: true,
+    description: 'Id of certain teacher',
+  })
+  @ApiEndpoint({
+    summary: 'Delete the teacher',
+    permissions: PERMISSION.TEACHERS_$TEACHERID_DELETE,
   })
   @Delete('/:teacherId')
   async delete (
@@ -346,8 +360,17 @@ export class TeacherController {
     type: ContactsResponse,
   })
   @ApiBadRequestResponse({
-    description: `InvalidEntityIdException:\n  
-                  teacher with such id is not found`,
+    description: `\n
+    InvalidEntityIdException:
+      teacher with such id is not found`,
+  })
+  @ApiParam({
+    name: 'teacherId',
+    required: true,
+    description: 'Id of certain teacher',
+  })
+  @ApiEndpoint({
+    summary: 'Receive teacher\'s contacts',
   })
   @Get('/:teacherId/contacts')
   async getAllContacts (
@@ -357,23 +380,29 @@ export class TeacherController {
     return { contacts };
   }
 
-  @ApiParam({
-    type: String,
-    name: 'teacherId',
-  })
-  @ApiParam({
-    type: String,
-    name: 'name',
-  })
   @ApiOkResponse({
     type: ContactResponse,
   })
   @ApiBadRequestResponse({
-    description: `InvalidEntityIdException:\n  
-                  teacher with such id is not found
+    description: `\n
+    InvalidEntityIdException:
+      Teacher with such id is not found
                   
-                  InvalidContactNameException:\n 
-                  Contact with such name is not found`,
+    InvalidContactNameException: 
+      Contact with such name is not found`,
+  })
+  @ApiParam({
+    name: 'teacherId',
+    required: true,
+    description: 'Id of certain teacher',
+  })
+  @ApiParam({
+    name: 'name',
+    required: true,
+    description: 'Id of certain teacher\'s contact',
+  })
+  @ApiEndpoint({
+    summary: 'Receive teacher with certain contact id',
   })
   @Get('/:teacherId/contacts/:name')
   getContact (
@@ -382,7 +411,6 @@ export class TeacherController {
     return this.teacherService.getContact(params.teacherId, params.name);
   }
 
-  @Access(PERMISSION.TEACHERS_$TEACHERID_CONTACTS_CREATE)
   @ApiBearerAuth()
   @ApiOkResponse({
     type: ContactResponse,
@@ -412,6 +440,15 @@ export class TeacherController {
     NoPermissionException:
       You do not have permission to perform this action`,
   })
+  @ApiParam({
+    name: 'teacherId',
+    required: true,
+    description: 'Id of certain teacher',
+  })
+  @ApiEndpoint({
+    summary: 'Add teacher\'s contact',
+    permissions: PERMISSION.TEACHERS_$TEACHERID_CONTACTS_CREATE,
+  })
   @Post('/:teacherId/contacts')
   createContact (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
@@ -420,16 +457,7 @@ export class TeacherController {
     return this.teacherService.createContact(teacherId, body);
   }
 
-  @Access(PERMISSION.TEACHERS_$TEACHERID_CONTACTS_UPDATE)
   @ApiBearerAuth()
-  @ApiParam({
-    type: String,
-    name: 'teacherId',
-  })
-  @ApiParam({
-    type: String,
-    name: 'name',
-  })
   @ApiOkResponse({
     type: ContactResponse,
   })
@@ -457,6 +485,20 @@ export class TeacherController {
     NoPermissionException
       You do not have permission to perform this action`,
   })
+  @ApiParam({
+    name: 'teacherId',
+    required: true,
+    description: 'Id of certain teacher',
+  })
+  @ApiParam({
+    name: 'name',
+    required: true,
+    description: 'Id of certain teacher\'s contact',
+  })
+  @ApiEndpoint({
+    summary: 'Update certain teacher\'s contact',
+    permissions: PERMISSION.TEACHERS_$TEACHERID_CONTACTS_UPDATE,
+  })
   @Patch('/:teacherId/contacts/:name')
   async updateContact (
     @Param(ContactByNamePipe) params: {teacherId: string, name: string},
@@ -465,27 +507,39 @@ export class TeacherController {
     return this.teacherService.updateContact(params.teacherId, params.name, body);
   }
 
-  @Access(PERMISSION.TEACHERS_$TEACHERID_CONTACTS_DELETE)
   @ApiBearerAuth()
-  @ApiParam({
-    type: String,
-    name: 'teacherId',
-  })
-  @ApiParam({
-    type: String,
-    name: 'name',
-  })
   @ApiOkResponse()
   @ApiBadRequestResponse({
-    description: `InvalidEntityIdException:\n  
-                  teacher with such id is not found
+    description: `\n
+    InvalidEntityIdException:  
+      teacher with such id is not found
                   
-                  InvalidContactNameException:\n  
-                  Contact with such name is not found`,
+    InvalidContactNameException: 
+      Contact with such name is not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
   })
   @ApiForbiddenResponse({
-    description: `NoPermissionException:\n
-                  You do not have permission to perform this action`,
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @ApiParam({
+    name: 'teacherId',
+    required: true,
+    description: 'Id of certain teacher',
+  })
+  @ApiParam({
+    name: 'name',
+    required: true,
+    description: 'Id of certain teacher\'s contact',
+  })
+  @ApiEndpoint({
+    summary: 'Delete teacher\'s contact',
+    permissions: PERMISSION.TEACHERS_$TEACHERID_CONTACTS_DELETE,
   })
   @Delete('/:teacherId/contacts/:name')
   async deleteContact (
