@@ -26,6 +26,9 @@ export class CathedraMapper {
       lastName: teacher.lastName,
       description: teacher.description,
       avatar: teacher.avatar,
+      academicStatus: teacher.academicStatus,
+      scientificDegree: teacher.scientificDegree,
+      position: teacher.position,
       rating: teacher.rating.toNumber(),
     }));
   }

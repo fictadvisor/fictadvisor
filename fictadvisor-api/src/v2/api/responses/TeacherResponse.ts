@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { AcademicStatus, Position, ScientificDegree } from '@prisma/client';
 
 export class ShortTeacherResponse {
   @ApiProperty({
@@ -32,6 +33,25 @@ export class TeacherResponse extends ShortTeacherResponse {
     description: 'Link to teacher avatar image',
   })
     avatar: string;
+
+
+  @ApiProperty({
+    description: 'Academic status of the teacher',
+    enum: AcademicStatus,
+  })
+    academicStatus: AcademicStatus;
+
+  @ApiProperty({
+    description: 'Scientific degree of the teacher',
+    enum: ScientificDegree,
+  })
+    scientificDegree: ScientificDegree;
+
+  @ApiProperty({
+    description: 'Position of the teacher',
+    enum: Position,
+  })
+    position: Position;
 
   @ApiProperty({
     description: 'Teacher rating according to the poll, updated at 00:00 (UTC)',
