@@ -3,12 +3,8 @@ import { Metadata } from 'next';
 
 import PageLayout from '@/components/common/layout/page-layout';
 import LoginPage from '@/components/pages/login-page';
-export const metadata: Metadata = {
-  title: 'Авторизація у FICE Advisor',
-  openGraph: {
-    title: 'Авторизація у FICE Advisor',
-  },
-};
+import loginMetadata from '@/lib/metadata/login';
+export const metadata: Metadata = loginMetadata;
 const Login: FC = () => {
   return (
     <PageLayout hasHeader={false} hasFooter={false}>

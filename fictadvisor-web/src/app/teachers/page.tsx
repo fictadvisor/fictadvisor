@@ -3,17 +3,9 @@ import { Metadata } from 'next';
 
 import PageLayout from '@/components/common/layout/page-layout/PageLayout';
 import TeacherSearchPage from '@/components/pages/search-pages/teacher-search';
+import teachersMetadata from '@/lib/metadata/teachers';
 
-export const metadata: Metadata = {
-  title: 'Викладачі',
-  description:
-    'Тут ти знайдеш інформацію про викладачів, яка допоможе тобі знайти викладача для твоїх потреб. Ця сторінка пропонує широкі можливості пошуку та фільтрації, щоб забезпечити точні й зручні результати.',
-  openGraph: {
-    title: 'Викладачі',
-    description:
-      'Тут ти знайдеш інформацію про викладачів, яка допоможе тобі знайти викладача для твоїх потреб. Ця сторінка пропонує широкі можливості пошуку та фільтрації, щоб забезпечити точні й зручні результати.',
-  },
-};
+export const metadata: Metadata = teachersMetadata;
 const TeacherPage: FC = () => {
   return (
     <PageLayout>
