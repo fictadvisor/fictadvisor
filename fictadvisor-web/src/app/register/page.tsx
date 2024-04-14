@@ -4,12 +4,8 @@ import PageLayout from '@/components/common/layout/page-layout/PageLayout';
 import RegisterPage from '@/components/pages/register/register-page';
 import type { RegisterPageProps } from '@/components/pages/register/register-page/RegisterPage';
 import GroupAPI from '@/lib/api/group/GroupAPI';
-export const metadata: Metadata = {
-  title: 'Реєстрація у FICE Advisor',
-  openGraph: {
-    title: 'Реєстрація у FICE Advisor',
-  },
-};
+import registerMetadata from '@/lib/metadata/register';
+export const metadata: Metadata = registerMetadata;
 export default async function Register() {
   let data: RegisterPageProps['data'];
   try {
