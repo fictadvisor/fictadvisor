@@ -458,14 +458,7 @@ export class ScheduleService {
     const data = await this.eventRepository.find({
       id: eventId,
     });
-    if (data.eventInfo) {
-      for (const eventInfo of data.eventInfo) {
-        if (eventInfo.number === index) {
-          return true;
-        }
-      }
-    }
-    return false;
+    return data.eventInfo && some(data.eventInfo, 'number', index);
   }
 
   private async createOrUpdateEventInfo (eventInfo: string, eventId: string, index: number) {
@@ -474,7 +467,12 @@ export class ScheduleService {
       return this.eventRepository.updateById(eventId, {
         eventInfo: {
           update: {
-            where: { eventId_number: { eventId, number: index } },
+            where: {
+              eventId_number: {
+                eventId,
+                number: index,
+              },
+            },
             data: {
               description: eventInfo,
             },
@@ -640,7 +638,7 @@ export class ScheduleService {
       };
 
       discipline.disciplineTeachers.map(({ teacherId, disciplineId, roles }) => {
-        if (roles.length === 1 && roles.some((r) => r.role === TeacherRoleAdapter[type.name])) {
+        if (roles.length === 1 && roles[0].role === TeacherRoleAdapter[type.name]) {
           update.disciplineTeachers.deleteMany.OR.push({
             teacherId,
             disciplineId,
@@ -670,6 +668,21 @@ export class ScheduleService {
       });
       disciplineType = find(discipline.disciplineTypes, 'name', newType);
     }
+
+    await this.disciplineRepository.updateById(disciplineId, {
+      disciplineTypes: {
+        update: {
+          where: {
+            id: disciplineType.id,
+          },
+          data: {
+            disciplineTeacherRoles: {
+              deleteMany: {},
+            },
+          },
+        },
+      },
+    });
 
     const removedTeachers = discipline.disciplineTeachers.filter(({ teacherId }) => !teachers.includes(teacherId));
     await this.removeTeachers(removedTeachers, disciplineType.id);
