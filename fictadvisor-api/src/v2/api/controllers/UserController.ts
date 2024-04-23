@@ -55,6 +55,7 @@ import { UserByTelegramIdPipe } from '../pipes/UserByTelegramIdPipe';
 import { UserMapper } from '../../mappers/UserMapper';
 import { StudentMapper } from '../../mappers/StudentMapper';
 import { UserService } from '../services/UserService';
+import { StudentByIdPipe } from '../pipes/StudentByIdPipe';
 
 @ApiTags('User')
 @Controller({
@@ -1062,7 +1063,9 @@ export class UserController {
       Discipline does not belong to this group
       Current discipline is not selected by this student
       You have already selected these disciplines
-      There are excessive selective disciplines in the request`,
+      There are excessive selective disciplines in the request
+      Array of discipline ids cannot be empty
+      Array of discipline ids must contain only string values`,
   })
   @ApiEndpoint({
     summary: 'Attach selective disciplines to the student',
@@ -1075,7 +1078,7 @@ export class UserController {
   })
   @Post(':userId/selectiveDisciplines')
   async attachSelectiveDisciplines (
-    @Param('userId', UserByIdPipe, ApprovedStudentPipe) userId: string,
+    @Param('userId', StudentByIdPipe, ApprovedStudentPipe) userId: string,
     @Body(SelectiveDisciplinesPipe) body: SelectiveDisciplinesDTO,
   ) {
     return this.userService.selectDisciplines(userId, body);
