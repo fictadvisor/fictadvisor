@@ -30,4 +30,7 @@ export const disciplineTeacherInitialValues = {
   cathedras: [],
   disciplineTeacherId: '',
   subject: { id: '', name: '' },
+  academicStatus: '',
+  scientificDegree: '',
+  position: '',
 };

@@ -130,7 +130,7 @@ export const info: SxProps<Theme> = {
     mobile: 4,
     desktopSemiMedium: 3,
   },
-  gridRowStart: 3,
+  gridRowStart: 4,
   gridRowEnd: 4,
   padding: {
     mobile: 'unset',
@@ -147,11 +147,41 @@ export const info: SxProps<Theme> = {
   },
 };
 
+export const scienceInfo = (isSubject: boolean): SxProps<Theme> => ({
+  maxWidth: {
+    mobile: '90%',
+    desktopSemiMedium: '700px',
+  },
+  gridColumnStart: {
+    mobile: 1,
+    desktopSemiMedium: 2,
+  },
+  gridColumnEnd: {
+    mobile: 4,
+    desktopSemiMedium: 3,
+  },
+  gridRowStart: isSubject ? 4 : 3,
+  gridRowEnd: isSubject ? 5 : 4,
+  padding: {
+    mobile: 'unset',
+    mobileMedium: '0 unset 0 0',
+    desktopSemiMedium: '0 42px 0 0',
+  },
+  marginTop: {
+    mobile: '8px',
+    desktopSemiMedium: 0,
+  },
+  typography: {
+    mobile: 'overline',
+    desktopSemiMedium: 'body1',
+  },
+});
+
 export const contactsButton: SxProps<Theme> = {
   gridColumnStart: 1,
   gridColumnEnd: 4,
-  gridRowStart: 4,
-  gridRowEnd: 5,
+  gridRowStart: 5,
+  gridRowEnd: 6,
   button: {
     color: 'grey.600',
     width: 'fit-content',
