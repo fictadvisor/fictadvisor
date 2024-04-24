@@ -16,6 +16,14 @@ import { ButtonVariant } from '@/components/common/ui/button-mui/types';
 import { CardRoles } from '@/components/common/ui/cards/card-roles';
 import Rating from '@/components/common/ui/rating';
 import { ContactType } from '@/types/contact';
+import { Contact } from '@/types/contact';
+import {
+  TeacherAcademicStatus,
+  TeacherCathedra,
+  TeacherPosition,
+  TeacherScientificDegree,
+  TeacherSubject,
+} from '@/types/teacher';
 
 import * as styles from './PersonalTeacherCard.styles';
 
@@ -30,7 +38,10 @@ interface TeacherCard {
   rating: number;
   contacts: ContactResponse[];
   cathedras: CathedraResponse[];
-  subject?: SubjectResponse;
+  subject?: TeacherSubject;
+  academicStatus: string;
+  scientificDegree: string;
+  position: string;
   isSubjectCard?: boolean;
 }
 
@@ -45,6 +56,9 @@ const PersonalTeacherCard: FC<TeacherCard> = ({
   contacts,
   cathedras,
   subject,
+  academicStatus,
+  scientificDegree,
+  position,
   isSubjectCard = false,
 }) => {
   const [isContactsVisible, setContactsVisibility] = useState(false);
@@ -52,6 +66,12 @@ const PersonalTeacherCard: FC<TeacherCard> = ({
   const { setFloatingCardShowed } = useContext(teacherContext);
   const { setSubjectFloatingCardShowed } = useContext(teacherSubjectContext);
   const contactsStatus = isContactsVisible ? 'shown' : 'hidden';
+  const scientificFields = [
+    TeacherAcademicStatus[academicStatus],
+    TeacherScientificDegree[scientificDegree],
+    TeacherPosition[position],
+  ];
+  console.log(scientificFields);
   useEffect(() => {
     const handleScroll = () => {
       const bottom = blockRef.current?.getBoundingClientRect().bottom;
@@ -94,9 +114,14 @@ const PersonalTeacherCard: FC<TeacherCard> = ({
       <Box sx={styles.tags(isSubjectCard)}>
         <CardRoles roles={roles} cathedras={cathedras} isPersonalPage={true} />
       </Box>
+      <Box sx={styles.scienceInfo(isSubjectCard)}>
+        <Typography textTransform="none">
+          {scientificFields.filter(field => field !== undefined).join(', ')}
+        </Typography>
+      </Box>
       {!isSubjectCard && (
         <Box sx={styles.info}>
-          <Typography>{description}</Typography>
+          <Typography textTransform="none">{description}</Typography>
         </Box>
       )}
       {contacts.length !== 0 && (
