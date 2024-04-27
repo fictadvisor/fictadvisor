@@ -46,7 +46,6 @@ export class PageTextController {
   })
   @ApiEndpoint({
     summary: 'Get all texts for page',
-    permissions: PERMISSION.PAGE_TEXTS_GET,
   })
   @Get()
   async getAll (
