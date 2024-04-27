@@ -207,6 +207,7 @@ const SearchForm: FC<SearchFormProps> = ({
                   showRemark={false}
                   value={values.sort}
                   options={filterDropDownOptions}
+                  disableClearable={true}
                 />
               </Box>
               <Box>

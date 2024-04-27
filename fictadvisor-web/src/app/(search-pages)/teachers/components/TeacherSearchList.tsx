@@ -10,18 +10,24 @@ import * as styles from './TeacherSearchList.styles';
 
 interface TeacherSearchListProps
   extends HTMLProps<HTMLDivElement>,
-    GetTeachersResponse {}
+    GetTeachersResponse {
+  isFetching: boolean;
+}
 
 const TOAST_TIMER = 4000;
 
-export const TeacherSearchList: FC<TeacherSearchListProps> = ({ teachers }) => {
+export const TeacherSearchList: FC<TeacherSearchListProps> = ({
+  teachers,
+  isFetching,
+}) => {
   const toast = useToast();
 
   useEffect(() => {
-    if (teachers.length === 0) {
+    if (teachers.length === 0 && !isFetching) {
       toast.error('Результатів за запитом не знайдено', '', TOAST_TIMER);
     }
-  }, [teachers.length]);
+  }, [isFetching]);
+
   return (
     <Box sx={styles.teacherSearchList}>
       {teachers.map((teacher, index) => (
