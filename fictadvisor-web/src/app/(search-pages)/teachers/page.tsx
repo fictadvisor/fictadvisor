@@ -75,6 +75,7 @@ const TeacherPage: FC = () => {
         <TeacherSearchList
           teachers={loadedTeachers}
           pagination={data.pagination}
+          isFetching={isFetching}
         />
       )}
       {isLoading ||
