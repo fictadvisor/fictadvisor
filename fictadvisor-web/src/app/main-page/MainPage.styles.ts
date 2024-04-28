@@ -108,10 +108,11 @@ export const infoSectionImage: SxProps<Theme> = {
     desktopLarge: '13px',
   },
   svg: {
+    overflowX: 'hidden',
     width: {
       mobile: '100%',
       mobileMedium: '80%',
-      desktop: 'auto',
+      desktop: '100%',
     },
     height: {
       mobile: 'auto',
@@ -148,43 +149,23 @@ export const buttons: SxProps<Theme> = {
     desktop: '12px 24px',
   },
 };
-export const buttonDesk: SxProps<Theme> = {
+
+export const buttonSection: SxProps<Theme> = {
   width: 'max-content',
-  display: {
-    mobile: 'none',
-    desktop: 'flex',
-  },
+  display: 'flex',
+  flexDirection: 'row',
   gap: '20px',
 };
 
-export const buttonTab: SxProps<Theme> = {
+export const buttonDivider: SxProps<Theme> = {
+  width: '1px',
+  border: '1px solid',
+  borderColor: theme.palette.backgroundDark[400],
   display: {
     mobile: 'none',
     tablet: 'flex',
-    desktop: 'none',
+    desktop: 'flex',
   },
-  a: {
-    margin: '0 20px 0 0',
-  },
-};
-
-export const buttonMob: SxProps<Theme> = {
-  typography: theme.typography.body1Bold,
-  gap: '14px',
-  width: '100%',
-  display: {
-    mobile: 'flex',
-    tablet: 'none',
-  },
-  flexDirection: {
-    mobile: 'column',
-    mobileMedium: 'row',
-  },
-};
-
-export const buttonDivider: SxProps<Theme> = {
-  border: '1px solid',
-  borderColor: theme.palette.backgroundDark[400],
 };
 
 export const resourcesSection: SxProps<Theme> = {
