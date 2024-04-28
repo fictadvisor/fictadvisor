@@ -1,4 +1,5 @@
 import React, { FC, useState } from 'react';
+import { TeacherWithRolesAndCathedrasResponse } from '@fictadvisor/utils/responses';
 import {
   Box,
   Table,
@@ -10,24 +11,24 @@ import {
 } from '@mui/material';
 
 import Checkbox from '@/components/common/ui/form/checkbox';
-import { Teacher } from '@/types/teacher';
 
 import * as styles from './SideList.styles';
 
 interface SideListProps {
-  teachers: Teacher[];
+  teachers: TeacherWithRolesAndCathedrasResponse[];
   title: string;
-  checked: Teacher[];
-  onCheck: (newChecked: Teacher[]) => void;
+  checked: TeacherWithRolesAndCathedrasResponse[];
+  onCheck: (newChecked: TeacherWithRolesAndCathedrasResponse[]) => void;
 }
 const SideList: FC<SideListProps> = ({ teachers, title, checked, onCheck }) => {
-  const [sideChecked, setSideChecked] = useState<Teacher[]>(checked);
-  const [curPage, setCurPage] = useState(0);
+  const [sideChecked, setSideChecked] =
+    useState<TeacherWithRolesAndCathedrasResponse[]>(checked);
+  const [currPage, setCurrPage] = useState(0);
 
-  const firstItem = curPage * 5;
+  const firstItem = currPage * 5;
   const lastItem = firstItem + 5;
   const currentItems = teachers.slice(firstItem, lastItem);
-  const handleToggle = (value: Teacher) => () => {
+  const handleToggle = (value: TeacherWithRolesAndCathedrasResponse) => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
 
@@ -46,7 +47,7 @@ const SideList: FC<SideListProps> = ({ teachers, title, checked, onCheck }) => {
         <TableHead>
           <Typography sx={styles.listHeading}>{`${title}`}</Typography>
         </TableHead>
-        {currentItems.map((teacher: Teacher) => {
+        {currentItems.map((teacher: TeacherWithRolesAndCathedrasResponse) => {
           return (
             <TableRow
               onClick={handleToggle(teacher)}
@@ -79,9 +80,9 @@ const SideList: FC<SideListProps> = ({ teachers, title, checked, onCheck }) => {
           <TablePagination
             sx={styles.pagination}
             count={teachers.length}
-            page={curPage}
+            page={currPage}
             rowsPerPage={5}
-            onPageChange={(e, page) => setCurPage(page)}
+            onPageChange={(e, page) => setCurrPage(page)}
           />
         </TableRow>
       </Table>

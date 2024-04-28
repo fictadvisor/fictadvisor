@@ -19,12 +19,17 @@ import UserAPI from '@/lib/api/user/UserAPI';
 const Page = () => {
   const [queryObj, setQueryObj] =
     useState<UserSearchFormFields>(UserInitialValues);
-  const [curPage, setCurPage] = useState(0);
+  const [currPage, setCurrPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
 
   const { data, refetch, isLoading } = useQuery(
-    ['users', curPage, pageSize, queryObj],
-    async () => await UserAPI.getAll(curPage, queryObj, pageSize),
+    ['users', currPage, pageSize, queryObj],
+    async () =>
+      await UserAPI.getAll({
+        ...queryObj,
+        page: currPage,
+        pageSize,
+      }),
     useQueryAdminOptions,
   );
 
@@ -39,8 +44,8 @@ const Page = () => {
     <Box sx={stylesAdmin.wrapper}>
       <HeaderUserSearch onSubmit={submitHandler} />
       <UsersList
-        curPage={curPage}
-        setCurPage={setCurPage}
+        currPage={currPage}
+        setCurrPage={setCurrPage}
         users={data.data}
         pageSize={pageSize}
         setPageSize={setPageSize}

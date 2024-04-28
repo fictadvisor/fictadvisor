@@ -1,4 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
+import { PriorityState } from '@fictadvisor/utils/enums';
+import { FullNameWithSpecialtyDTO } from '@fictadvisor/utils/requests';
+import { Priorities } from '@fictadvisor/utils/responses';
 import { Box, Typography } from '@mui/material';
 
 import { getPriorityName } from '@/app/(admission)/(main)/_priority-approve/utils/getPriorityName';
@@ -11,12 +14,6 @@ import contractAPI from '@/lib/api/contract/ContractAPI';
 
 import * as styles from '../PriorityApprovePage.styles';
 
-interface Priorities {
-  1: string;
-  2: string;
-  3?: string;
-}
-
 interface EntrantPriorityPageProps {
   data: {
     firstName: string;
@@ -24,7 +21,7 @@ interface EntrantPriorityPageProps {
     lastName: string;
     priorities: Priorities;
     specialty: string;
-    state: string;
+    state: PriorityState;
   };
 }
 
@@ -50,10 +47,11 @@ const EntrantPriorityPage: FC<EntrantPriorityPageProps> = ({ data }) => {
   }, []);
 
   const handleClick = async () => {
-    const body = {
+    const body: FullNameWithSpecialtyDTO = {
       firstName: data.firstName,
       middleName: data.middleName,
       lastName: data.lastName,
+      specialty: data.specialty,
     };
     await contractAPI.entrantPriorityApprove(body);
     toast.success('Пріорітет схвалено', '', TOAST_TIMER);

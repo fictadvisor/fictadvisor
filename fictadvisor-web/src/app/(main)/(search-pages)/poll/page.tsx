@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import { QueryAllDisciplineTeacherForPollDTO } from '@fictadvisor/utils/requests';
+import { PollDisciplineTeachersResponse } from '@fictadvisor/utils/responses';
 import { Box } from '@mui/material';
 import { useRouter } from 'next/navigation';
 
 import { PollTeacherInitialValues } from '@/app/(main)/(search-pages)/poll/components/poll-search-form/constants';
-import { PollSearchFormFields } from '@/app/(main)/(search-pages)/poll/components/poll-search-form/types';
 import PollTeacherSearchList from '@/app/(main)/(search-pages)/poll/components/poll-teacher-search-list/PollTeacherSearchList';
 import * as styles from '@/app/(main)/(search-pages)/poll/PollTeacherPage.styles';
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
@@ -15,7 +16,6 @@ import Progress from '@/components/common/ui/progress';
 import useAuthentication from '@/hooks/use-authentication';
 import useToast from '@/hooks/use-toast';
 import PollAPI from '@/lib/api/poll/PollAPI';
-import { PollTeachersResponse } from '@/lib/api/poll/types/PollTeachersResponse';
 
 const breadcrumbs = [
   {
@@ -36,12 +36,12 @@ const PollTeacher = () => {
   const { user, isLoggedIn } = useAuthentication();
   const toast = useToast();
   const localStorageName = 'teachersPollForm';
-  const initialValues: PollSearchFormFields = localStorage.getItem(
-    localStorageName,
-  )
-    ? JSON.parse(localStorage.getItem(localStorageName) || '{}')
-    : PollTeacherInitialValues;
-  const [queryObj, setQueryObj] = useState<PollSearchFormFields>(initialValues);
+  const initialValues: QueryAllDisciplineTeacherForPollDTO =
+    localStorage.getItem(localStorageName)
+      ? JSON.parse(localStorage.getItem(localStorageName) || '{}')
+      : PollTeacherInitialValues;
+  const [queryObj, setQueryObj] =
+    useState<QueryAllDisciplineTeacherForPollDTO>(initialValues);
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -51,7 +51,7 @@ const PollTeacher = () => {
   }, [isLoggedIn, push, replace]);
 
   const { data, isLoading, isFetching, refetch } =
-    useQuery<PollTeachersResponse>(
+    useQuery<PollDisciplineTeachersResponse>(
       'pollTeachersByUserId',
       () => PollAPI.getUserTeachers(user.id, queryObj),
       {

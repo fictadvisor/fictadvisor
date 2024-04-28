@@ -1,11 +1,4 @@
 import { Body, Controller, Delete, Get, Patch, Param, Post, Query } from '@nestjs/common';
-import { PollService } from '../services/PollService';
-import { PERMISSION } from '@fictadvisor/utils/security';
-import { QuestionByIdPipe } from '../pipes/QuestionByIdPipe';
-import { QuestionByRoleAndIdPipe } from '../pipes/QuestionByRoleAndIdPipe';
-import { UserByIdPipe } from '../pipes/UserByIdPipe';
-import { QuestionMapper } from '../../mappers/QuestionMapper';
-import { CreateQuestionRoleDTO } from '../dtos/CreateQuestionRoleDTO';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -15,16 +8,28 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { QuestionWithRolesResponse } from '../responses/QuestionWithRolesResponse';
-import { PollDisciplineTeachersResponse } from '../responses/PollDisciplineTeachersResponse';
-import { TeacherRole } from '@prisma/client';
+import {
+  CreateQuestionRoleDTO,
+  QueryAllDisciplineTeacherForPollDTO,
+  QueryAllQuestionDTO,
+  CreateQuestionDTO,
+  UpdateQuestionDTO,
+} from '@fictadvisor/utils/requests';
+import {
+  QuestionWithRolesResponse,
+  PollDisciplineTeachersResponse,
+  QuestionResponse,
+  PaginatedQuestionsResponse,
+} from '@fictadvisor/utils/responses';
+import { PERMISSION } from '@fictadvisor/utils/security';
 import { ApiEndpoint } from 'src/v2/utils/documentation/decorators';
-import { QueryAllDisciplineTeacherForPollDTO } from '../dtos/QueryAllDisciplineTeacherForPollDTO';
-import { QueryAllQuestionDTO } from '../dtos/QueryAllQuestionDTO';
-import { CreateQuestionDTO } from '../dtos/CreateQuestionDTO';
-import { UpdateQuestionDTO } from '../dtos/UpdateQuestionDTO';
-import { QuestionResponse, PaginatedQuestionsResponse } from '../responses/QuestionResponse';
 import { TelegramGuard } from '../../security/TelegramGuard';
+import { QuestionByIdPipe } from '../pipes/QuestionByIdPipe';
+import { QuestionByRoleAndIdPipe } from '../pipes/QuestionByRoleAndIdPipe';
+import { UserByIdPipe } from '../pipes/UserByIdPipe';
+import { QuestionMapper } from '../../mappers/QuestionMapper';
+import { PollService } from '../services/PollService';
+import { TeacherRole } from '@prisma/client';
 
 @ApiTags('Poll')
 @Controller({

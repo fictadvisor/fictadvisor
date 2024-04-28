@@ -1,29 +1,32 @@
-import { DateService, FORTNITE, WEEK } from '../../utils/date/DateService';
 import { Injectable } from '@nestjs/common';
-import { EventRepository } from '../../database/repositories/EventRepository';
-import { DbEvent } from '../../database/entities/DbEvent';
-import { DisciplineType, DisciplineTypeEnum, Period } from '@prisma/client';
+import {
+  CreateEventDTO,
+  AttachLessonDTO,
+  EventFiltrationDTO,
+  GeneralEventFiltrationDTO,
+  UpdateEventDTO,
+} from '@fictadvisor/utils/requests';
+import { EventTypeEnum } from '@fictadvisor/utils/enums';
+import { DateService, FORTNITE, WEEK } from '../../utils/date/DateService';
+import { DateUtils } from '../../utils/date/DateUtils';
+import { every, filterAsync, find, some } from '../../utils/ArrayUtil';
 import { RozParser } from '../../utils/parser/RozParser';
 import { CampusParser } from '../../utils/parser/CampusParser';
-import { CreateEventDTO } from '../dtos/CreateEventDTO';
+import { TeacherRoleAdapter } from '../../mappers/TeacherRoleAdapter';
+import { UserService } from './UserService';
+import { DbEvent } from '../../database/entities/DbEvent';
+import { DbDiscipline, DbDiscipline_DisciplineTeacher } from '../../database/entities/DbDiscipline';
+import { DbDisciplineType } from '../../database/entities/DbDisciplineType';
+import { DisciplineTypeEnum, Period } from '@prisma/client';
+import { EventRepository } from '../../database/repositories/EventRepository';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
 import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
-import { AttachLessonDTO } from '../dtos/AttachLessonDTO';
+import { DisciplineTeacherRoleRepository } from '../../database/repositories/DisciplineTeacherRoleRepository';
+import { StudentRepository } from '../../database/repositories/StudentRepository';
 import { InvalidDateException } from '../../utils/exceptions/InvalidDateException';
 import { ObjectIsRequiredException } from '../../utils/exceptions/ObjectIsRequiredException';
-import { DisciplineTeacherRoleRepository } from '../../database/repositories/DisciplineTeacherRoleRepository';
-import { every, filterAsync, find, some } from '../../utils/ArrayUtil';
-import { DbDiscipline, DbDiscipline_DisciplineTeacher } from '../../database/entities/DbDiscipline';
 import { InvalidWeekException } from '../../utils/exceptions/InvalidWeekException';
-import { UserService } from './UserService';
-import { EventFiltrationDTO } from '../dtos/EventFiltrationDTO';
-import { GeneralEventFiltrationDTO } from '../dtos/GeneralEventFiltrationDTO';
-import { UpdateEventDTO } from '../dtos/UpdateEventDTO';
-import { TeacherRoleAdapter } from '../../mappers/TeacherRoleAdapter';
-import { StudentRepository } from '../../database/repositories/StudentRepository';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
-import { DateUtils } from '../../utils/date/DateUtils';
-import { EventTypeEnum } from '../dtos/EventTypeEnum';
 
 export const weeksPerEvent = {
   EVERY_WEEK: WEEK / WEEK,
@@ -316,7 +319,7 @@ export class ScheduleService {
     const result = await this.attachLesson(event.id, body as AttachLessonDTO);
 
     return {
-      event: { ...result.event, endTime: body.endTime },
+      event: { ...result.event, endTime: body.endTime } as DbEvent,
       discipline: result.discipline,
     };
   }
@@ -342,9 +345,9 @@ export class ScheduleService {
       return indexOfLesson !== null;
     });
 
-    if (query.addLecture !== undefined || query.addPractice !== undefined || query.addLaboratory !== undefined || query.otherEvents !== undefined) {
+    if (query.addLecture !== undefined || query.addPractice !== undefined || query.addLaboratory !== undefined || query.addOtherEvents !== undefined) {
       result = result.filter((event) =>
-        this.disciplineTypesFilter(event, query.addLecture, query.addLaboratory, query.addPractice, query.otherEvents)
+        this.disciplineTypesFilter(event, query.addLecture, query.addLaboratory, query.addPractice, query.addOtherEvents)
       );
     }
 
@@ -586,7 +589,7 @@ export class ScheduleService {
     newDisciplineId: string | undefined,
     presentDisciplineId: string | undefined,
     newType: EventTypeEnum | undefined,
-    presentType: DisciplineType | undefined,
+    presentType: DbDisciplineType | undefined,
     disciplineInfo: string | undefined,
     teachers: string[] = [],
   ) {
@@ -607,7 +610,7 @@ export class ScheduleService {
 
   async clearDiscipline (
     disciplineId: string,
-    type: DisciplineType,
+    type: DbDisciplineType,
   ) {
     const update = {
       disciplineTypes: {

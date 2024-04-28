@@ -1,18 +1,19 @@
 import React from 'react';
+import { TeacherRole } from '@fictadvisor/utils/enums';
+import { CathedraResponse } from '@fictadvisor/utils/responses';
 import { Avatar, Box, Typography, useMediaQuery } from '@mui/material';
 
 import { CardRoles } from '@/components/common/ui/cards/card-roles';
 import Rating from '@/components/common/ui/rating';
 import { RatingVariant } from '@/components/common/ui/rating/types';
 import theme from '@/styles/theme';
-import { TeacherCathedra, TeacherRole } from '@/types/teacher';
 
 import * as styles from './TeacherCard.styles';
 
 type TeacherCardProps = {
   name: string;
   rating?: number;
-  cathedras?: TeacherCathedra[];
+  cathedras?: CathedraResponse[];
   roles?: TeacherRole[];
   avatar?: string;
   disabled?: boolean;

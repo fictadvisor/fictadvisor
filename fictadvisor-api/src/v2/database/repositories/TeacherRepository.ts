@@ -28,7 +28,7 @@ export class TeacherRepository {
     return this.prisma.teacher.findMany({
       include: this.include,
       ...data,
-    }) as Promise<DbTeacher[]>;
+    }) as any as DbTeacher[];
   }
 
   async find (
@@ -37,7 +37,7 @@ export class TeacherRepository {
     return this.prisma.teacher.findFirst({
       where,
       include: this.include,
-    });
+    }) as any as DbTeacher;
   }
 
   async findById (id: string) {
@@ -46,7 +46,7 @@ export class TeacherRepository {
         id,
       },
       include: this.include,
-    });
+    }) as any as DbTeacher;
   }
 
   async create (
@@ -55,7 +55,7 @@ export class TeacherRepository {
     return this.prisma.teacher.create({
       data,
       include: this.include,
-    });
+    }) as any as DbTeacher;
   }
 
   async getOrCreate (
@@ -73,7 +73,7 @@ export class TeacherRepository {
       where,
       data,
       include: this.include,
-    });
+    }) as any as DbTeacher;
   }
 
   async updateById (id: string, data: Prisma.TeacherUncheckedUpdateInput) {
@@ -83,14 +83,14 @@ export class TeacherRepository {
       },
       data,
       include: this.include,
-    });
+    }) as any as DbTeacher;
   }
 
   async delete (where: Prisma.TeacherWhereUniqueInput) {
     return this.prisma.teacher.delete({
       where,
       include: this.include,
-    });
+    }) as any as DbTeacher;
   }
 
   async deleteById (
@@ -101,7 +101,7 @@ export class TeacherRepository {
         id,
       },
       include: this.include,
-    });
+    }) as any as DbTeacher;
   }
 
   async count (data: Prisma.TeacherCountArgs) {

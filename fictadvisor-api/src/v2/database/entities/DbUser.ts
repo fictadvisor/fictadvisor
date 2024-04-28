@@ -1,4 +1,5 @@
-import { Group, State, Student } from '@prisma/client';
+import { Group, Student } from '@prisma/client';
+import { State } from '@fictadvisor/utils/enums';
 
 export class DbUser {
   id: string;

@@ -1,12 +1,14 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
-import { CreateQueueDTO } from '../dtos/CreateQueueDTO';
-import { UpdateQueueDTO } from '../dtos/UpdateQueueDTO';
-import { CreateQueueUserDTO } from '../dtos/CreateQueueUserDTO';
-import { UpdateQueueUserDTO } from '../dtos/UpdateQueueUserDTO';
-import { CreateEntrantDTO } from '../dtos/CreateEntrantDTO';
-import { Page } from '../../utils/QueryAllDTO';
-import { AdmissionService } from '../services/AdmissionService';
 import { ApiTags } from '@nestjs/swagger';
+import {
+  CreateQueueDTO,
+  UpdateQueueDTO,
+  CreateQueueUserDTO,
+  UpdateQueueUserDTO,
+  CreateEntrantDTO,
+  Page,
+} from '@fictadvisor/utils/requests';
+import { AdmissionService } from '../services/AdmissionService';
 
 @ApiTags('Admission')
 @Controller({

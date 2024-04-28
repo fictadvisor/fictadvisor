@@ -1,7 +1,11 @@
 'use client';
-import type { FC } from 'react';
+import React, { FC } from 'react';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import {
+  CreateTeacherDTO,
+  UpdateTeacherDTO,
+} from '@fictadvisor/utils/requests';
 import { PencilIcon } from '@heroicons/react/24/outline';
 import { Avatar, Box, SelectChangeEvent, Stack } from '@mui/material';
 
@@ -16,14 +20,14 @@ import Progress from '@/components/common/ui/progress';
 import CathedraAPI from '@/lib/api/cathedras/CathedraAPI';
 import { TeacherCathedra } from '@/types/teacher';
 
-import { PersonalInfo } from '../../types';
-
 import ChangeAvatar from './components/change-avatar-window/ChangeAvatar';
 import * as styles from './TeacherPersonalInputs.styles';
 
 interface TeacherPersonalInputsProps {
-  personalInfo: PersonalInfo;
-  setPersonalInfo: React.Dispatch<React.SetStateAction<PersonalInfo>>;
+  personalInfo: CreateTeacherDTO | UpdateTeacherDTO;
+  setPersonalInfo: React.Dispatch<
+    React.SetStateAction<CreateTeacherDTO | UpdateTeacherDTO>
+  >;
   selectedCathedras: CheckboxesDropdownOption[];
   setSelectedCathedras: React.Dispatch<
     React.SetStateAction<CheckboxesDropdownOption[]>
@@ -36,13 +40,17 @@ const TeacherPersonalInputs: FC<TeacherPersonalInputsProps> = ({
   selectedCathedras,
   setSelectedCathedras,
 }) => {
-  const [firstName, setFirstName] = useState<string>(personalInfo.firstName);
-  const [lastName, setLastName] = useState<string>(personalInfo.lastName);
-  const [middleName, setMiddleName] = useState<string>(personalInfo.middleName);
-  const [description, setDescription] = useState<string>(
-    personalInfo.description,
+  const [firstName, setFirstName] = useState<string>(personalInfo.firstName!);
+  const [lastName, setLastName] = useState<string>(personalInfo.lastName!);
+  const [middleName, setMiddleName] = useState<string>(
+    personalInfo.middleName as string,
   );
-  const [avatarUrl, setAvatarUrl] = useState<string>(personalInfo.avatar);
+  const [description, setDescription] = useState<string>(
+    personalInfo.description as string,
+  );
+  const [avatarUrl, setAvatarUrl] = useState<string>(
+    personalInfo.avatar as string,
+  );
 
   const [popupOpen, setPopupOpen] = useState(false);
 

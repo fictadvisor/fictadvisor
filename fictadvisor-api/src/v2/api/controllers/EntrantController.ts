@@ -1,9 +1,4 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
-import { CreateContractDTO } from '../dtos/CreateContractDTO';
-import { Actions, EntrantService } from '../services/EntrantService';
-import { EntrantMapper } from '../../mappers/EntrantMapper';
-import { Access } from '../../security/Access';
-import { PERMISSION } from '@fictadvisor/utils/security';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -14,11 +9,21 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { EntrantWithContractResponse } from '../responses/EntrantWithContractResponse';
-import { EntrantWithPriorityResponse } from '../responses/EntrantWithPriorityResponse';
-import { EntrantFullResponse } from '../responses/EntrantFullResponse';
-import { DeleteEntrantDataQueryDTO } from '../dtos/DeleteEntrantDataQueryDTO';
-import { FullNameWithSpecialtyDTO } from  '../dtos/FullNameWithSpecialtyDTO';
+import {
+  CreateContractDTO,
+  DeleteEntrantDataQueryDTO,
+  FullNameWithSpecialtyDTO,
+} from '@fictadvisor/utils/requests';
+import {
+  EntrantWithContractResponse,
+  EntrantWithPriorityResponse,
+  EntrantFullResponse,
+} from '@fictadvisor/utils/responses';
+import { PERMISSION } from '@fictadvisor/utils/security';
+import { Actions } from '@fictadvisor/utils/enums';
+import { Access } from '../../security/Access';
+import { EntrantMapper } from '../../mappers/EntrantMapper';
+import { EntrantService } from '../services/EntrantService';
 
 @ApiTags('Entrants')
 @Controller({

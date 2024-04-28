@@ -1,11 +1,9 @@
-import { Pagination } from '@/types/api';
-import { Teacher, TeacherComment, TeacherQuestion } from '@/types/teacher';
+import {
+  CreateTeacherDTO,
+  UpdateTeacherDTO,
+} from '@fictadvisor/utils/requests';
 
-export interface PersonalInfo
-  extends Pick<
-    Teacher,
-    'firstName' | 'middleName' | 'lastName' | 'avatar' | 'description'
-  > {}
+import { TeacherComment } from '@/types/teacher';
 
 export interface TeacherCommentAdmin extends TeacherComment {
   disciplineTeacherId: string;
@@ -13,8 +11,4 @@ export interface TeacherCommentAdmin extends TeacherComment {
   questionId: string;
 }
 
-export interface TeacherQuestionAdmin extends TeacherQuestion {
-  id: string;
-  comments: TeacherCommentAdmin[];
-  pagination: Pagination;
-}
+export type PersonalInfo = CreateTeacherDTO | UpdateTeacherDTO;

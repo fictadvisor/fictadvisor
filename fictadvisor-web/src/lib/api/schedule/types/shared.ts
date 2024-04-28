@@ -1,7 +1,7 @@
-import { DetailedEventBody } from '@/lib/api/schedule/types/DetailedEventBody';
+import { EventResponse } from '@/lib/api/schedule/types/EventResponse';
 
 export interface SharedEventBody
-  extends Omit<DetailedEventBody, 'teachers' | 'id'> {
+  extends Omit<EventResponse, 'teachers' | 'id'> {
   teachers: string[];
   disciplineId: string;
 }

@@ -1,8 +1,8 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
-import { GroupByIdPipe } from './GroupByIdPipe';
-import { QueryAllTeacherDTO } from '../dtos/QueryAllTeacherDTO';
-import { CathedraByIdPipe } from './CathedraByIdPipe';
+import { QueryAllTeacherDTO } from '@fictadvisor/utils/requests';
 import { mapAsync } from '../../utils/ArrayUtil';
+import { GroupByIdPipe } from './GroupByIdPipe';
+import { CathedraByIdPipe } from './CathedraByIdPipe';
 
 @Injectable()
 export class AllTeachersPipe implements PipeTransform<QueryAllTeacherDTO, Promise<QueryAllTeacherDTO>> {

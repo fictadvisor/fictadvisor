@@ -1,3 +1,5 @@
+import { EducationProgram } from '@fictadvisor/utils/enums';
+
 import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
 import { ExtendedPriorityDataBody } from '@/lib/api/contract/types/PriorityDataBody';
 
@@ -19,13 +21,7 @@ export const initialValues: ExtendedPriorityDataBody = {
   isForcePushed: false,
   forcePushedNumber: '',
 };
-export enum EducationProgram {
-  CSSE = 'CSSE',
-  ISSE = 'ISSE',
-  IIS = 'IIS',
-  ISRS = 'ISRS',
-  IMST = 'IMST',
-}
+
 export const IPeduPrograms: DropDownOption[] = [
   {
     label: "Інженерія програмного забезпечення комп'ютерних систем",

@@ -1,6 +1,7 @@
+import { PaymentTypeParam } from '@fictadvisor/utils/enums';
 import * as yup from 'yup';
 
-import { PaymentTypeParam, StudyDegree } from '@/types/contract';
+import { StudyDegree } from '@/types/contract';
 
 export const metaValidationSchema = yup.object().shape({
   meta: yup.object().shape({

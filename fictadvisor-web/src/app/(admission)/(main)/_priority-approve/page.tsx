@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { FullNameWithSpecialtyDTO } from '@fictadvisor/utils/requests';
 import { Box } from '@mui/material';
 import {
   expectedValues,
@@ -13,14 +14,13 @@ import * as styles from '@/app/(admission)/(main)/_priority-approve/PriorityAppr
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import contractAPI from '@/lib/api/contract/ContractAPI';
-import { Fullname } from '@/types/contract';
 
 const PriorityApprove = () => {
   const [step, setStep] = useState(0);
   const [data, setData] = useState(expectedValues);
   const { displayError } = useToastError();
 
-  const handleChange = async (values: Fullname) => {
+  const handleChange = async (values: FullNameWithSpecialtyDTO) => {
     try {
       const request = await contractAPI.getEntrantPriority(values);
       setData({ ...request });

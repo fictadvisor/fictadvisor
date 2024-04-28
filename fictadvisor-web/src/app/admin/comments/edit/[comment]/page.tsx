@@ -1,6 +1,7 @@
 'use client';
 
 import React, { FC, useState } from 'react';
+import { DeleteCommentDTO } from '@fictadvisor/utils/requests';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Box, CardHeader, Stack } from '@mui/material';
 import { Form, Formik } from 'formik';
@@ -19,7 +20,6 @@ import DeletePopup from '@/components/common/ui/delete-popup';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
-import { DeleteCommentBody } from '@/lib/api/teacher/types/DeleteCommentBody';
 
 import TextArea from '../../../../../components/common/ui/form/text-area-mui';
 
@@ -39,11 +39,11 @@ const AdminCommentEdit: FC<AdminCommentEditProps> = ({ params }) => {
   const router = useRouter();
 
   const handleDelete = async (
-    data: DeleteCommentBody,
+    data: DeleteCommentDTO,
     disciplineTeacherId: string,
   ) => {
     try {
-      await TeacherAPI.deleteComment(data, disciplineTeacherId);
+      await TeacherAPI.deleteComment(disciplineTeacherId, data);
       toast.success('Відгук успішно видалений!', '', 4000);
       router.replace('/admin/comments');
     } catch (e) {
@@ -53,14 +53,11 @@ const AdminCommentEdit: FC<AdminCommentEditProps> = ({ params }) => {
 
   const handleEdit = async () => {
     try {
-      await TeacherAPI.updateComment(
-        {
-          userId: comment.userId,
-          questionId: comment.questionId,
-          comment: answer,
-        },
-        comment.disciplineTeacherId,
-      );
+      await TeacherAPI.updateComment(comment.disciplineTeacherId, {
+        userId: comment.userId,
+        questionId: comment.questionId,
+        comment: answer,
+      });
       toast.success('Відгук успішно змінений!', '', 4000);
       router.replace('/admin/comments');
     } catch (e) {

@@ -6,25 +6,27 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { QueryAllStudentDTO } from '../dtos/QueryAllStudentDTO';
-import { StudentMapper } from '../../mappers/StudentMapper';
-import { StudentService } from '../services/StudentService';
-import { AllStudentsPipe } from '../pipes/AllStudentsPipe';
-import { ApiEndpoint } from '../../utils/documentation/decorators';
-import { PERMISSION } from '@fictadvisor/utils/security';
+import {
+  QueryAllStudentDTO,
+  CreateStudentWithRolesDTO,
+  UpdateStudentWithRolesDTO,
+  UpdateStudentSelectivesDTO,
+} from '@fictadvisor/utils/requests';
 import {
   FullStudentResponse,
   SimpleStudentResponse,
   SimpleStudentsResponse,
-} from '../responses/StudentResponse';
+  SelectiveDisciplinesResponse,
+  RemainingSelectivesResponse,
+} from '@fictadvisor/utils/responses';
+import { PERMISSION } from '@fictadvisor/utils/security';
+import { ApiEndpoint } from '../../utils/documentation/decorators';
+import { AllStudentsPipe } from '../pipes/AllStudentsPipe';
 import { StudentByIdPipe } from '../pipes/StudentByIdPipe';
-import { UpdateStudentWithRolesDTO } from '../dtos/UpdateStudentDTO';
-import { CreateStudentWithRolesDTO } from '../dtos/CreateStudentDTO';
-import { UpdateStudentSelectiveDTO } from '../dtos/UpdateStudentSelectiveDTO';
-import { SelectiveDisciplinesResponse } from '../responses/DisciplineResponse';
-import { UserService } from '../services/UserService';
+import { StudentMapper } from '../../mappers/StudentMapper';
 import { DisciplineMapper } from '../../mappers/DisciplineMapper';
-import { RemainingSelectiveResponse } from '../responses/RemainingSelectiveResponse';
+import { StudentService } from '../services/StudentService';
+import { UserService } from '../services/UserService';
 
 @ApiTags('Students')
 @Controller({
@@ -76,7 +78,7 @@ export class StudentController {
   @Get()
   async getAll (
     @Query(AllStudentsPipe) query: QueryAllStudentDTO,
-  ) {
+  ): Promise<SimpleStudentsResponse> {
     const studentsWithPagination = await this.studentService.getAll(query);
     const students = this.studentMapper.getStudents(studentsWithPagination.data);
     return {
@@ -260,12 +262,12 @@ export class StudentController {
     summary: 'Update student\'s selective disciplines',
     permissions: PERMISSION.STUDENTS_$STUDENTID_UPDATE,
   })
-  @Patch('/:studentId/selective')
-  async updateStudentSelective (
+  @Patch('/:studentId/selectiveDisciplines')
+  async updateStudentSelectives (
     @Param('studentId', StudentByIdPipe) studentId: string,
-    @Body() body: UpdateStudentSelectiveDTO
+    @Body() body: UpdateStudentSelectivesDTO
   ) {
-    const student = await this.studentService.updateStudentSelective(studentId, body);
+    const student = await this.studentService.updateStudentSelectives(studentId, body);
     return this.studentMapper.getStudent(student);
   }
 
@@ -297,17 +299,17 @@ export class StudentController {
     summary: 'Get user\'s selective disciplines',
     permissions: PERMISSION.STUDENTS_$STUDENTID_SELECTIVE_GET,
   })
-  @Get('/:studentId/selective')
-  async getSelective (
+  @Get('/:studentId/selectiveDisciplines')
+  async getSelectiveDisciplines (
     @Param('studentId', StudentByIdPipe) studentId: string,
-  ) {
-    const dbDisciplines = await this.userService.getSelective(studentId);
-    return this.disciplineMapper.getSelective(dbDisciplines);
+  ): Promise<SelectiveDisciplinesResponse[]> {
+    const dbDisciplines = await this.userService.getSelectiveDisciplines(studentId);
+    return this.disciplineMapper.getSelectiveDisciplines(dbDisciplines);
   }
   
   @ApiBearerAuth()
   @ApiOkResponse({
-    type: [RemainingSelectiveResponse],
+    type: [RemainingSelectivesResponse],
   })
   @ApiUnauthorizedResponse({
     description: `\n
@@ -331,11 +333,11 @@ export class StudentController {
     summary: 'Get all selective disciplines available to the user from the whole list',
     permissions: PERMISSION.STUDENTS_$STUDENTID_SELECTIVE_GET,
   })
-  @Get('/:studentId/remainingSelective')
-  async getRemainingSelective (
+  @Get('/:studentId/remainingSelectives')
+  async getRemainingSelectives (
       @Param('studentId', StudentByIdPipe) studentId: string,
-  ) {
-    return await this.userService.getRemainingSelective(studentId);
+  ): Promise<RemainingSelectivesResponse[]> {
+    return await this.userService.getRemainingSelectives(studentId);
   }
 
   @ApiBearerAuth()
@@ -369,7 +371,7 @@ export class StudentController {
   @Get('/:studentId')
   async getStudent (
     @Param('studentId', StudentByIdPipe) studentId: string,
-  ) {
+  ): Promise<SimpleStudentResponse> {
     const student = await this.studentService.getStudent(studentId);
     return this.studentMapper.getSimpleStudent(student);
   }

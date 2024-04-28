@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { FC } from 'react';
+import { SortQAUParam, State } from '@fictadvisor/utils/enums';
 import {
   BarsArrowDownIcon,
   BarsArrowUpIcon,
@@ -20,7 +21,6 @@ import {
   IconButtonColor,
   IconButtonSize,
 } from '@/components/common/ui/icon-button-mui/types';
-import { UserGroupState } from '@/types/user';
 
 import { sortOptions, stateOptions, UserInitialValues } from '../../constants';
 import { HeaderUserSearchProps } from '../../types';
@@ -30,7 +30,7 @@ import * as styles from './HeaderUserSearch.styles';
 const HeaderUserSearch: FC<HeaderUserSearchProps> = ({ onSubmit }) => {
   const [search, setSearch] = useState<string>('');
   const [sortBy, setSortBy] = useState<string>('username');
-  const [userState, setUserState] = useState<UserGroupState[]>([]);
+  const [userState, setUserState] = useState<State[]>([]);
   const [order, setOrder] = useState<'asc' | 'desc'>('desc');
   const [values, setValues] = useState(UserInitialValues);
 
@@ -44,11 +44,11 @@ const HeaderUserSearch: FC<HeaderUserSearchProps> = ({ onSubmit }) => {
   };
   const handleSortByChange = (value: string) => {
     setSortBy(value);
-    setValues(values => ({ ...values, sort: value as 'username' | 'email' }));
+    setValues(values => ({ ...values, sort: value as SortQAUParam }));
   };
 
   const handleStateChange = (event: SelectChangeEvent) => {
-    const value = event.target.value as unknown as UserGroupState[];
+    const value = event.target.value as unknown as State[];
     setUserState(value);
     setValues(values => ({ ...values, state: value }));
   };

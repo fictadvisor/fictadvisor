@@ -1,4 +1,4 @@
-import { TeacherRole } from '@/types/teacher';
+import { TeacherRole } from '@fictadvisor/utils/enums';
 
 export interface SearchFormFields {
   search: string;

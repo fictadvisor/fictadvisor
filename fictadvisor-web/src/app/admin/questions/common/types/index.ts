@@ -1,11 +1,4 @@
-import { QuestionType } from '@/types/poll';
-
-export interface QuestionSearchFormFields {
-  search: string;
-  order: 'asc' | 'desc';
-  sort: 'text' | 'order' | 'category';
-  types: [QuestionType];
-}
+import { QuestionDisplay, QuestionType } from '@fictadvisor/utils/enums';
 
 export interface AdminQuestion {
   id?: string;
@@ -17,12 +10,5 @@ export interface AdminQuestion {
   text: string;
   type: QuestionType;
   description?: string;
-  display: AdminQuestionDisplay;
-}
-
-export enum AdminQuestionDisplay {
-  AMOUNT = 'AMOUNT',
-  RADAR = 'RADAR',
-  CIRCLE = 'CIRCLE',
-  TEXT = 'TEXT',
+  display: QuestionDisplay;
 }

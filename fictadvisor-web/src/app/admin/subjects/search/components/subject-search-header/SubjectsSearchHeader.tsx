@@ -1,4 +1,5 @@
 import React, { FC, useEffect, useState } from 'react';
+import { SortQASParam } from '@fictadvisor/utils/enums';
 import {
   BarsArrowDownIcon,
   BarsArrowUpIcon,
@@ -30,11 +31,9 @@ const SubjectsSearchHeader: FC<SubjectsSearchHeaderProps> = ({ onSubmit }) => {
     setValues({
       search,
       order,
-      sort: 'name',
+      sort: SortQASParam.NAME,
       groupId: '',
-      roles: [],
-      cathedrasId: [],
-    });
+    } as SearchFormFields);
     onSubmit(values);
   };
 
@@ -43,11 +42,9 @@ const SubjectsSearchHeader: FC<SubjectsSearchHeaderProps> = ({ onSubmit }) => {
     setValues({
       search,
       order,
-      sort: 'name',
+      sort: SortQASParam.NAME,
       groupId: '',
-      roles: [],
-      cathedrasId: [],
-    });
+    } as SearchFormFields);
     onSubmit(values);
   };
 

@@ -5,7 +5,7 @@ import { DbDisciplineTeacherWithAnswers } from '../database/entities/DbDisciplin
 import { DbQuestionWithAnswers } from '../database/entities/DbQuestionWithAnswers';
 import { QuestionCommentData } from '../api/datas/QuestionCommentData';
 import { DbQuestionAnswer } from '../database/entities/DbQuestionAnswer';
-import { CommentResponse } from '../api/responses/CommentResponse';
+import { CommentResponse } from '@fictadvisor/utils/responses';
 import { DbQuestion } from '../database/entities/DbQuestion';
 
 @Injectable()

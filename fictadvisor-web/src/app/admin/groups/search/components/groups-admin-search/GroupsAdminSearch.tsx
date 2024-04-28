@@ -1,6 +1,7 @@
 'use client';
 import React, { FC, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import { QueryAllGroupsDTO } from '@fictadvisor/utils/requests';
 import {
   BarsArrowDownIcon,
   BarsArrowUpIcon,
@@ -13,7 +14,6 @@ import {
   courseOptions,
   sortOptions,
 } from '@/app/admin/groups/common/constants';
-import { GroupsSearchFormFields } from '@/app/admin/groups/common/types';
 import Button from '@/components/common/ui/button-mui';
 import { ButtonSize } from '@/components/common/ui/button-mui/types';
 import { Dropdown, InputSize, InputType } from '@/components/common/ui/form';
@@ -32,7 +32,7 @@ import CathedraAPI from '@/lib/api/cathedras/CathedraAPI';
 import SpecialitiesAPI from '@/lib/api/specialities/SpecialitiesAPI';
 
 interface GroupsAdminSearchProps {
-  setParams: React.Dispatch<React.SetStateAction<GroupsSearchFormFields>>;
+  setParams: React.Dispatch<React.SetStateAction<QueryAllGroupsDTO>>;
 }
 
 const GroupsAdminSearch: FC<GroupsAdminSearchProps> = ({ setParams }) => {
@@ -72,7 +72,7 @@ const GroupsAdminSearch: FC<GroupsAdminSearchProps> = ({ setParams }) => {
             cathedras: newCathedras,
             specialities: newSpecialities,
             courses: newCourses,
-          }) as GroupsSearchFormFields,
+          }) as QueryAllGroupsDTO,
       );
     }, 200);
 

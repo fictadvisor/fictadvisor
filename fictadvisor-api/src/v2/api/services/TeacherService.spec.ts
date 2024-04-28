@@ -1,19 +1,19 @@
 import { Test } from '@nestjs/testing';
-import { TeacherService } from './TeacherService';
-import { TeacherModule } from '../../modules/TeacherModule';
-import { ConfigurationModule } from '../../modules/ConfigModule';
+import { ConfigService } from '@nestjs/config';
+import { ResponseQueryDTO } from '@fictadvisor/utils/requests';
+import { TelegramAPI } from '../../telegram/TelegramAPI';
 import Configuration from '../../config/Configuration';
+import { ConfigurationModule } from '../../modules/ConfigModule';
+import { TeacherModule } from '../../modules/TeacherModule';
 import { PollModule } from '../../modules/PollModule';
-import { PollService } from './PollService';
-import { DbQuestionWithAnswers } from '../../database/entities/DbQuestionWithAnswers';
-import { ResponseQueryDTO } from '../dtos/ResponseQueryDTO';
 import { PrismaModule } from '../../modules/PrismaModule';
 import { MapperModule } from '../../modules/MapperModule';
-import { QuestionDisplay } from '@prisma/client';
 import { DateModule } from '../../utils/date/DateModule';
-import { TelegramAPI } from '../../telegram/TelegramAPI';
 import { TelegramConfigService } from '../../config/TelegramConfigService';
-import { ConfigService } from '@nestjs/config';
+import { TeacherService } from './TeacherService';
+import { PollService } from './PollService';
+import { DbQuestionWithAnswers } from '../../database/entities/DbQuestionWithAnswers';
+import { QuestionDisplay } from '@prisma/client';
 
 describe('TeacherService', () => {
   let teacherService: TeacherService;

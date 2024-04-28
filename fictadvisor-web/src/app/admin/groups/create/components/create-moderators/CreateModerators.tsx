@@ -1,4 +1,5 @@
 import React, { Dispatch, FC, SetStateAction, useState } from 'react';
+import { OrdinaryStudentResponse } from '@fictadvisor/utils/responses';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { Box } from '@mui/material';
 
@@ -11,13 +12,12 @@ import {
 import { Dropdown } from '@/components/common/ui/form';
 import { FieldSize } from '@/components/common/ui/form/common/types';
 import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
-import { GroupStudent } from '@/types/student';
 
 import ModeratorDropdown from './components/moderator-dropdowns/ModeratorDropdown';
 import * as styles from './CreateModerators.styles';
 
 interface EditModeratorsProps {
-  students: GroupStudent[];
+  students: OrdinaryStudentResponse[];
   moderatorIds: string[];
   setModeratorIds: Dispatch<SetStateAction<string[]>>;
 }

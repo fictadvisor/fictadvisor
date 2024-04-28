@@ -1,22 +1,31 @@
-import { GetCurrentSemester } from '@/lib/api/dates/types/GetCurrentSemester';
+import {
+  EventFiltrationDTO,
+  GeneralEventFiltrationDTO,
+} from '@fictadvisor/utils/requests';
+import { CurrentSemester } from '@fictadvisor/utils/responses';
+
 import GroupAPI from '@/lib/api/group/GroupAPI';
 import { client } from '@/lib/api/instance';
-import { DetailedEventBody } from '@/lib/api/schedule/types/DetailedEventBody';
+import { CreateEventDTO } from '@/lib/api/schedule/types/CreateEventDTO';
+import { EventResponse } from '@/lib/api/schedule/types/EventResponse';
+import { EventsResponse } from '@/lib/api/schedule/types/EventsResponse';
+import { GeneralEventsResponse } from '@/lib/api/schedule/types/GeneralEventsResponse';
 import { getDisciplinesAndTeachers } from '@/lib/api/schedule/types/getDisciplinesAndTeachers';
-import { GetEventBody } from '@/lib/api/schedule/types/GetEventBody';
-import { PatchEventBody } from '@/lib/api/schedule/types/PatchEventBody';
-import { PostEventBody } from '@/lib/api/schedule/types/PostEventBody';
+import { UpdateEventDTO } from '@/lib/api/schedule/types/UpdateEventDTO';
 import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
 import { getAuthorizationHeader } from '@/lib/api/utils';
+
 class ScheduleAPI {
   async getEvents(
     groupId: string,
     week: number,
-    addLecture = true,
-    addLaboratory = true,
-    addPractice = true,
+    {
+      addLecture = true,
+      addLaboratory = true,
+      addPractice = true,
+    }: GeneralEventFiltrationDTO = {},
   ) {
-    const { data } = await client.get<GetEventBody>(
+    const { data } = await client.get<GeneralEventsResponse>(
       `schedule/groups/${groupId}/general`,
       { params: { week, addLecture, addLaboratory, addPractice } },
     );
@@ -26,13 +35,15 @@ class ScheduleAPI {
   async getEventsAuthorized(
     groupId: string,
     week: number,
-    showOwnSelective: boolean,
-    addLecture = true,
-    addLaboratory = true,
-    addPractice = true,
-    otherEvents = true,
-  ): Promise<GetEventBody> {
-    const { data } = await client.get<GetEventBody>(
+    {
+      showOwnSelective,
+      addLecture = true,
+      addLaboratory = true,
+      addPractice = true,
+      addOtherEvents = true,
+    }: EventFiltrationDTO = {},
+  ): Promise<EventsResponse> {
+    const { data } = await client.get<EventsResponse>(
       `schedule/groups/${groupId}/events`,
       {
         ...getAuthorizationHeader(),
@@ -42,17 +53,14 @@ class ScheduleAPI {
           addLecture,
           addLaboratory,
           addPractice,
-          otherEvents,
+          addOtherEvents,
         },
       },
     );
     return data;
   }
-  async getEventInfo(
-    eventId: string,
-    week: number | string,
-  ): Promise<DetailedEventBody> {
-    const { data } = await client.get<DetailedEventBody>(
+  async getEventInfo(eventId: string, week: number): Promise<EventResponse> {
+    const { data } = await client.get<EventResponse>(
       `schedule/events/${eventId}`,
       {
         ...getAuthorizationHeader(),
@@ -66,32 +74,29 @@ class ScheduleAPI {
   async deleteEventById(
     groupId: string,
     eventId: string,
-  ): Promise<DetailedEventBody> {
-    const { data } = await client.delete<DetailedEventBody>(
+  ): Promise<EventResponse> {
+    const { data } = await client.delete<EventResponse>(
       `schedule/groups/${groupId}/events/${eventId}`,
       getAuthorizationHeader(),
     );
     return data;
   }
 
-  async addEvent(
-    body: PostEventBody,
-    groupId: string,
-  ): Promise<DetailedEventBody> {
-    const { data } = await client.post<DetailedEventBody>(
+  async addEvent(body: CreateEventDTO): Promise<EventResponse> {
+    const { data } = await client.post<EventResponse>(
       `schedule/events`,
-      { ...body, groupId },
+      body,
       getAuthorizationHeader(),
     );
     return data;
   }
 
   async editEvent(
-    body: PatchEventBody,
     groupId: string,
     eventId: string,
-  ): Promise<DetailedEventBody> {
-    const { data } = await client.patch<DetailedEventBody>(
+    body: UpdateEventDTO,
+  ): Promise<EventResponse> {
+    const { data } = await client.patch<EventResponse>(
       `schedule/groups/${groupId}/events/${eventId}`,
       body,
       getAuthorizationHeader(),
@@ -101,11 +106,11 @@ class ScheduleAPI {
 
   async getDisciplinesAndTeachers(
     groupId: string,
-    semester: GetCurrentSemester,
+    semester: CurrentSemester,
   ): Promise<getDisciplinesAndTeachers> {
     const [teachers, disciplines] = await Promise.all([
-      TeacherAPI.getAdminAll(),
-      GroupAPI.getDisciplines(groupId, semester.semester, semester.year),
+      TeacherAPI.getAll(),
+      GroupAPI.getDisciplines(groupId, semester),
     ]);
     return {
       teachers,

@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
+import { Actions } from '@fictadvisor/utils/enums';
+import { EntrantFullResponse } from '@fictadvisor/utils/responses';
 import { Box, Divider } from '@mui/material';
 import { useRouter } from 'next/navigation';
 
@@ -14,8 +16,6 @@ import Breadcrumbs from '@/components/common/ui/breadcrumbs';
 import useAuthentication from '@/hooks/use-authentication';
 import useToast from '@/hooks/use-toast';
 import ContractAPI from '@/lib/api/contract/ContractAPI';
-import { Actions } from '@/lib/api/contract/types/DeleteEntrantDataBody';
-import { EntrantFuIlResponse } from '@/lib/api/contract/types/EntrantFullResponse';
 
 const errorMapper = {
   DataNotFoundException: 'Даних про вступника не було знайдено у базі даних',
@@ -24,7 +24,7 @@ const errorMapper = {
 };
 
 const DeleteEntrantAdmin = () => {
-  const [entrantData, setEntrantData] = useState<EntrantFuIlResponse | null>(
+  const [entrantData, setEntrantData] = useState<EntrantFullResponse | null>(
     null,
   );
   const { isLoggedIn } = useAuthentication();
@@ -37,10 +37,7 @@ const DeleteEntrantAdmin = () => {
     if (!entrantData) return;
 
     try {
-      await ContractAPI.deleteEntrantData({
-        entrantId: entrantData?.id,
-        action,
-      });
+      await ContractAPI.deleteEntrantData(entrantData?.id, action);
     } catch (e) {
       const error = (
         e as { response: { data: { error: keyof typeof errorMapper } } }

@@ -10,11 +10,11 @@ import * as styles from './CreateSelective.styles';
 
 interface CreateSelectiveProps {
   groupId: string;
-  setConnectedSelective: React.Dispatch<React.SetStateAction<string[]>>;
+  setConnectedSelectives: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 const CreateSelective: FC<CreateSelectiveProps> = ({
-  setConnectedSelective,
+  setConnectedSelectives,
   groupId,
 }) => {
   const { data: remainingSelectives } = useQuery(
@@ -31,7 +31,7 @@ const CreateSelective: FC<CreateSelectiveProps> = ({
             </Typography>
             <Dropdowns
               remainingSelective={remainingSelective}
-              setConnectedSelective={setConnectedSelective}
+              setConnectedSelectives={setConnectedSelectives}
             />
           </Box>
         ))

@@ -1,4 +1,6 @@
 import React, { FC, useState } from 'react';
+import { QuestionDisplay, TeacherRole } from '@fictadvisor/utils/enums';
+import { MarkResponse } from '@fictadvisor/utils/responses';
 import { ChevronUpIcon } from '@heroicons/react/24/outline';
 import { Box, Typography, useMediaQuery } from '@mui/material';
 import Collapse from '@mui/material/Collapse';
@@ -12,17 +14,12 @@ import ColumnChart from '@/components/common/ui/column-chart';
 import LineGraph from '@/components/common/ui/line-graph';
 import Radar from '@/components/common/ui/radar';
 import theme from '@/styles/theme';
-import {
-  TeacherAmountMark,
-  TeacherMarkType,
-  TeacherRadarCircleMark,
-  TeacherRole,
-} from '@/types/teacher';
+import { TeacherAmountMark, TeacherRadarCircleMark } from '@/types/teacher';
 
 import * as styles from './GeneralTab.styles';
 
 interface GeneralTabProps {
-  marks: (TeacherRadarCircleMark | TeacherAmountMark)[];
+  marks: MarkResponse[];
   roles: TeacherRole[];
 }
 
@@ -40,16 +37,16 @@ const GeneralTab: FC<GeneralTabProps> = ({ marks, roles }) => {
   const updatedMarks = Object.values(marks);
 
   const radarMarks = updatedMarks?.filter(
-    mark => mark.type === TeacherMarkType.RADAR,
+    mark => mark.type === QuestionDisplay.RADAR,
   ) as TeacherRadarCircleMark[];
 
   const circleMarks = updatedMarks?.filter(
-    mark => mark.type === TeacherMarkType.CIRCLE,
+    mark => mark.type === QuestionDisplay.CIRCLE,
   ) as TeacherRadarCircleMark[];
 
   const columnMarks = updatedMarks?.filter(
-    mark => mark.type === TeacherMarkType.AMOUNT,
-  ) as TeacherAmountMark[];
+    mark => mark.type === QuestionDisplay.AMOUNT,
+  ) as unknown as TeacherAmountMark[];
 
   const maxValue = Math.max(
     ...columnMarks.map(mark => Math.max(...Object.values(mark.mark))),

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../PrismaService';
-import { UpdateSuperheroDTO } from '../../api/dtos/UpdateSuperheroDTO';
+import { UpdateSuperheroDTO } from '@fictadvisor/utils/requests';
 
 @Injectable()
 export class SuperheroRepository {

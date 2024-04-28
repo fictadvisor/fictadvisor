@@ -11,7 +11,6 @@ import {
 } from '@/components/common/ui/button-mui/types';
 import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
 import { SharedEventBody } from '@/lib/api/schedule/types/shared';
-import { useSchedule } from '@/store/schedule/useSchedule';
 
 import { ScheduleDropdown } from '../schedule-dropdown/ScheduleDropdown';
 

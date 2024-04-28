@@ -1,6 +1,6 @@
-import { ContractAdminBody } from '@/lib/api/contract/types/AdminContractBody';
+import { Contract } from '@fictadvisor/utils/requests';
 
-export const initialValues: ContractAdminBody = {
+export const initialValues: Contract = {
   number: '',
   date: '',
 };

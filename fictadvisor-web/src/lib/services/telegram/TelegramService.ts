@@ -1,3 +1,4 @@
+import { TelegramDTO } from '@fictadvisor/utils/requests';
 import * as process from 'process';
 
 import AuthAPI from '@/lib/api/auth/AuthAPI';
@@ -30,7 +31,7 @@ class TelegramService {
   static async login(): Promise<boolean> {
     try {
       const data =
-        (await TelegramService.openAuthenticationDialog()) as TelegramUser;
+        (await TelegramService.openAuthenticationDialog()) as TelegramDTO;
       const { accessToken, refreshToken } = await AuthAPI.authTelegram(data);
       StorageUtil.setTokens(accessToken, refreshToken);
       return true;

@@ -1,16 +1,28 @@
+import {
+  QueryAllResourcesDTO,
+  UpdateResourcesDTO,
+} from '@fictadvisor/utils/requests';
+import {
+  ResourceResponse,
+  ResourcesResponse,
+} from '@fictadvisor/utils/responses';
+
 import { client } from '@/lib/api/instance';
 import { getAuthorizationHeader } from '@/lib/api/utils';
 
 class StudentResourcesAPI {
-  async editStudentResources(data: object[]) {
-    return await client.patch(
+  async editStudentResources(body: UpdateResourcesDTO) {
+    const { data } = await client.patch<ResourcesResponse>(
       '/studentResources',
-      { resources: data },
+      body,
       getAuthorizationHeader(),
     );
+    return data;
   }
-  async getAll() {
-    const { data } = await client.get('/studentResources');
+  async getAll(params: QueryAllResourcesDTO = {}) {
+    const { data } = await client.get<ResourceResponse[]>('/studentResources', {
+      params,
+    });
     return data;
   }
 }

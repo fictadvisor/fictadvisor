@@ -1,9 +1,11 @@
+import { SortQASParam, SortQATParam } from '@fictadvisor/utils/enums';
+
 import { SearchFormFields } from './types';
 
 export const TeacherInitialValues: SearchFormFields = {
   search: '',
   order: 'asc',
-  sort: 'lastName',
+  sort: SortQATParam.LAST_NAME,
   groupId: '',
   roles: [],
   cathedrasId: [],
@@ -12,7 +14,7 @@ export const TeacherInitialValues: SearchFormFields = {
 export const SubjectInitialValues: SearchFormFields = {
   search: '',
   order: 'asc',
-  sort: 'name',
+  sort: SortQASParam.NAME,
   groupId: '',
   roles: [],
   cathedrasId: [],

@@ -1,5 +1,6 @@
 'use client';
 import React, { useState } from 'react';
+import { TeacherRole } from '@fictadvisor/utils/enums';
 import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { Box, SelectChangeEvent, Stack, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
@@ -31,7 +32,7 @@ import {
 import LoadPage from '@/components/common/ui/load-page';
 import useToast from '@/hooks/use-toast';
 import DisciplineAPI from '@/lib/api/discipline/DisciplineAPI';
-import { DisciplineTeacher, TeacherRole } from '@/types/teacher';
+import { DisciplineTeacher } from '@/types/teacher';
 
 const AdminSubjectCreate = () => {
   const [semesterId, setSemesterId] = useState<string>('');

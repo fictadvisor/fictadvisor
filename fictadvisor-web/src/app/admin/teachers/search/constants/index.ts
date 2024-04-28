@@ -1,10 +1,9 @@
-import { TeacherRole } from '@/types/teacher';
+import { SortQATParam, TeacherRole } from '@fictadvisor/utils/enums';
+import { QueryAllTeacherDTO } from '@fictadvisor/utils/requests';
 
-import { AdminSearchFormFields } from '../types';
-
-export const initialValues: AdminSearchFormFields = {
+export const initialValues: QueryAllTeacherDTO = {
   search: '',
-  sort: 'lastName',
+  sort: SortQATParam.LAST_NAME,
   order: 'asc',
   cathedrasId: [],
   roles: [],

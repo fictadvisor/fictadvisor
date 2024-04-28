@@ -1,8 +1,9 @@
-import { StudentSearchFormFields } from '@/app/admin/students/common/types';
+import { GroupRoles, SortQGSParam } from '@fictadvisor/utils/enums';
+import { QueryAllStudentDTO } from '@fictadvisor/utils/requests';
+
 import { CheckboxOption } from '@/components/common/ui/form/checkboxes-dropdown/types/CheckboxOption';
 import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
 import { TagColor } from '@/components/common/ui/tag/types';
-import { UserGroupRole } from '@/types/user';
 
 export const sortOptions: DropDownOption[] = [
   { id: 'firstName', label: "За ім'ям" },
@@ -10,15 +11,15 @@ export const sortOptions: DropDownOption[] = [
   { id: 'lastName', label: 'За прізвищем' },
 ];
 export const roleOptions: CheckboxOption[] = [
-  { value: UserGroupRole.CAPTAIN, label: 'Староста' },
-  { value: UserGroupRole.MODERATOR, label: 'Заст. старости' },
-  { value: UserGroupRole.STUDENT, label: 'Студент' },
+  { value: GroupRoles.CAPTAIN, label: 'Староста' },
+  { value: GroupRoles.MODERATOR, label: 'Заст. старости' },
+  { value: GroupRoles.STUDENT, label: 'Студент' },
 ];
 
-export const StudentInitialValues: StudentSearchFormFields = {
+export const StudentInitialValues: QueryAllStudentDTO = {
   search: '',
   order: 'asc',
-  sort: 'firstName',
+  sort: SortQGSParam.FIRST_NAME,
   groups: [],
   roles: [],
 };

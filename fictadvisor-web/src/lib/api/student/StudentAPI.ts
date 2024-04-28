@@ -1,37 +1,31 @@
 import {
-  StudentEdit,
-  StudentSearchFormFields,
-} from '@/app/admin/students/common/types';
+  CreateStudentWithRolesDTO,
+  QueryAllStudentDTO,
+  UpdateStudentSelectivesDTO,
+  UpdateStudentWithRolesDTO,
+} from '@fictadvisor/utils/requests';
+import {
+  FullStudentResponse,
+  RemainingSelectivesResponse,
+  SelectiveDisciplinesResponse,
+  SimpleStudentResponse,
+  SimpleStudentsResponse,
+} from '@fictadvisor/utils/responses';
+
 import { client } from '@/lib/api/instance';
 import { getAuthorizationHeader } from '@/lib/api/utils';
-import { GroupStudent } from '@/types/student';
-
-import { CreateStudentBody } from './types/CreateStudentBody';
-import { CreateStudentResponse } from './types/CreateStudentResponse';
-import { EditSelectiveBody } from './types/EditSelectiveBody';
-import { GetAllResponse } from './types/GetAllResponse';
-import { GetRemainingSelectivesResponse } from './types/GetRemainingSelectivesResponse';
-import { GetSelectivesResponse } from './types/GetSelectivesResponse';
 
 class StudentAPI {
-  async getAll(
-    page: number,
-    params: Partial<StudentSearchFormFields> = {},
-    pageSize?: number,
-  ): Promise<GetAllResponse> {
-    const { data } = await client.get(`/students`, {
-      params: {
-        ...params,
-        page,
-        pageSize,
-      },
+  async getAll(params: QueryAllStudentDTO): Promise<SimpleStudentsResponse> {
+    const { data } = await client.get<SimpleStudentsResponse>(`/students`, {
+      params,
       ...getAuthorizationHeader(),
     });
     return data;
   }
 
-  async getStudent(studentId: string): Promise<GroupStudent> {
-    const { data } = await client.get(
+  async getStudent(studentId: string): Promise<SimpleStudentResponse> {
+    const { data } = await client.get<SimpleStudentResponse>(
       `/students/${studentId}`,
       getAuthorizationHeader(),
     );
@@ -46,8 +40,8 @@ class StudentAPI {
     return data;
   }
 
-  async create(body: CreateStudentBody) {
-    const { data } = await client.post<CreateStudentResponse>(
+  async create(body: CreateStudentWithRolesDTO) {
+    const { data } = await client.post<FullStudentResponse>(
       `/students`,
       body,
       getAuthorizationHeader(),
@@ -55,8 +49,8 @@ class StudentAPI {
     return data;
   }
 
-  async editStudent(studentId: string, body: StudentEdit) {
-    const { data } = await client.patch(
+  async editStudent(studentId: string, body: UpdateStudentWithRolesDTO) {
+    const { data } = await client.patch<FullStudentResponse>(
       `/students/${studentId}`,
       body,
       getAuthorizationHeader(),
@@ -64,37 +58,30 @@ class StudentAPI {
     return data;
   }
 
-  async editSelective(studentId: string, body: EditSelectiveBody) {
-    const { data } = await client.patch(
-      `/students/${studentId}/selective`,
+  async editSelectives(studentId: string, body: UpdateStudentSelectivesDTO) {
+    const { data } = await client.patch<FullStudentResponse>(
+      `/students/${studentId}/selectiveDisciplines`,
       body,
       getAuthorizationHeader(),
     );
     return data;
   }
 
-  async addSelective(studentId: string, body: EditSelectiveBody) {
-    const { data } = await client.patch(
-      `/students/${studentId}/selective`,
-      body,
-      getAuthorizationHeader(),
-    );
-    return data;
-  }
-
-  async getSelective(studentId: string): Promise<GetSelectivesResponse[]> {
-    const { data } = await client.get(
-      `/students/${studentId}/selective`,
-      getAuthorizationHeader(),
-    );
-    return data;
-  }
-
-  async getRemainingSelective(
+  async getSelectives(
     studentId: string,
-  ): Promise<GetRemainingSelectivesResponse[]> {
-    const { data } = await client.get(
-      `/students/${studentId}/remainingSelective`,
+  ): Promise<SelectiveDisciplinesResponse[]> {
+    const { data } = await client.get<SelectiveDisciplinesResponse[]>(
+      `/students/${studentId}/selectiveDisciplines`,
+      getAuthorizationHeader(),
+    );
+    return data;
+  }
+
+  async getRemainingSelectives(
+    studentId: string,
+  ): Promise<RemainingSelectivesResponse[]> {
+    const { data } = await client.get<RemainingSelectivesResponse[]>(
+      `/students/${studentId}/remainingSelectives`,
       getAuthorizationHeader(),
     );
     return data;

@@ -2,6 +2,7 @@
 
 import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import { TeacherWithContactsResponse } from '@fictadvisor/utils/responses';
 import {
   ReadonlyURLSearchParams,
   useRouter,
@@ -17,7 +18,6 @@ import useToast from '@/hooks/use-toast';
 import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
 import TeacherService from '@/lib/services/teacher/TeacherService';
 import { TeacherPageInfo } from '@/lib/services/teacher/types';
-import { Teacher } from '@/types/teacher';
 
 import PersonalTeacherTabs from './personal-teacher-tabs';
 import { teacherContext, TeachersPageTabs } from './utils';
@@ -34,7 +34,7 @@ interface PersonalTeacherProps {
 export interface TeacherContext {
   floatingCardShowed: boolean;
   setFloatingCardShowed: Dispatch<SetStateAction<boolean>>;
-  teacher: Teacher;
+  teacher: TeacherWithContactsResponse;
 }
 
 const PersonalTeacher: FC<PersonalTeacherProps> = ({ params }) => {

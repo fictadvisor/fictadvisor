@@ -1,21 +1,21 @@
-import { DisciplineTeacherService } from './DisciplineTeacherService';
-import { PrismaModule } from '../../modules/PrismaModule';
 import { Test } from '@nestjs/testing';
-import { CreateAnswersDTO } from '../dtos/CreateAnswersDTO';
+import { CreateAnswersDTO } from '@fictadvisor/utils/requests';
+import { PrismaModule } from '../../modules/PrismaModule';
+import { MapperModule } from '../../modules/MapperModule';
+import { TelegramAPI } from '../../telegram/TelegramAPI';
+import { TelegramConfigService } from '../../config/TelegramConfigService';
+import { DisciplineTeacherService } from './DisciplineTeacherService';
 import { DateService } from '../../utils/date/DateService';
 import { PollService } from './PollService';
-import { TelegramAPI } from '../../telegram/TelegramAPI';
-import { MapperModule } from '../../modules/MapperModule';
-import { TelegramConfigService } from '../../config/TelegramConfigService';
-import { Discipline, QuestionType, State, TeacherRole } from '@prisma/client';
+import { TeacherService } from './TeacherService';
+import { PrismaService } from '../../database/PrismaService';
 import { ExcessiveAnswerException } from '../../utils/exceptions/ExcessiveAnswerException';
 import { NotEnoughAnswersException } from '../../utils/exceptions/NotEnoughAnswersException';
 import { AlreadyAnsweredException } from '../../utils/exceptions/AlreadyAnsweredException';
 import { WrongTimeException } from '../../utils/exceptions/WrongTimeException';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
-import { TeacherService } from './TeacherService';
-import { PrismaService } from '../../database/PrismaService';
 import { IsRemovedDisciplineTeacherException } from '../../utils/exceptions/IsRemovedDisciplineTeacherException';
+import { Discipline, QuestionType, State, TeacherRole } from '@prisma/client';
 
 describe('DisciplineTeacherService', () => {
   let disciplineTeacherService: DisciplineTeacherService;

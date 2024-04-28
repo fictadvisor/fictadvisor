@@ -42,7 +42,7 @@ const ScheduleColumn: FC<ScheduleColumnProps> = ({ day }) => {
           event={event}
           onClick={handleClick}
           key={i}
-          week={day.week}
+          week={String(day.week)}
         />
       ))}
     </Box>

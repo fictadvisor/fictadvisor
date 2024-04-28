@@ -1,5 +1,8 @@
 'use client';
 import { type FC, useEffect, useState } from 'react';
+import { TeacherRole } from '@fictadvisor/utils/enums';
+import { CreateDisciplineDTO } from '@fictadvisor/utils/requests';
+import { ExtendedDisciplineTeachersResponse } from '@fictadvisor/utils/responses';
 import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { Box, Typography } from '@mui/material';
 
@@ -18,15 +21,13 @@ import {
   IconButtonShape,
 } from '@/components/common/ui/icon-button';
 import LoadPage from '@/components/common/ui/load-page';
-import AddDiscipline from '@/lib/api/discipline/types/AddDiscipline';
-import { AdminDiscipline } from '@/types/discipline';
 
 import DisciplineTeacherChange from './discipline-teacher-change/DisciplineTeacherChange';
 import * as styles from './DisciplinesInfoSection.styles';
 
 interface DisciplinesInfoSectionProps {
-  discipline: AdminDiscipline;
-  setBody: React.Dispatch<React.SetStateAction<AddDiscipline>>;
+  discipline: ExtendedDisciplineTeachersResponse;
+  setBody: React.Dispatch<React.SetStateAction<CreateDisciplineDTO>>;
 }
 
 const DisciplinesInfoSection: FC<DisciplinesInfoSectionProps> = ({
@@ -56,7 +57,7 @@ const DisciplinesInfoSection: FC<DisciplinesInfoSectionProps> = ({
       subjectId,
       teachers: disciplineTeachers.map(teacher => ({
         teacherId: teacher.teacherId,
-        roleNames: teacher.roles,
+        roleNames: teacher.roles as TeacherRole[],
       })),
     });
   }, [semesterId, groupId, subjectId, disciplineTeachers]);

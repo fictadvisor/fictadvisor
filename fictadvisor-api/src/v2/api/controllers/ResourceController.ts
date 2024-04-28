@@ -1,9 +1,4 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
-import { ResourceService } from '../services/ResourceService';
-import { ResourceByIdPipe } from '../pipes/ResourceByIdPipe';
-import { CreateResourceDTO } from '../dtos/CreateResourceDTO';
-import { UpdateResourceDTO } from '../dtos/UpdateResourceDTO';
-import { PERMISSION } from '@fictadvisor/utils/security';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -12,12 +7,18 @@ import {
   ApiParam,
   ApiTags, ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { ResourceResponse } from '../responses/ResourceResponse';
-import { ResourceMapper } from '../../mappers/ResourceMapper';
-import { ResourcesResponse } from '../responses/ResourcesResponse';
-import { UpdateResourcesDTO } from '../dtos/UpdateResourcesDTO';
-import { QueryAllResourcesDTO } from '../dtos/QueryAllResourcesDTO';
+import {
+  CreateResourceDTO,
+  UpdateResourceDTO,
+  UpdateResourcesDTO,
+  QueryAllResourcesDTO,
+} from '@fictadvisor/utils/requests';
+import { ResourceResponse, ResourcesResponse } from '@fictadvisor/utils/responses';
+import { PERMISSION } from '@fictadvisor/utils/security';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
+import { ResourceByIdPipe } from '../pipes/ResourceByIdPipe';
+import { ResourceMapper } from '../../mappers/ResourceMapper';
+import { ResourceService } from '../services/ResourceService';
 
 @ApiTags('Resource')
 @Controller({

@@ -1,4 +1,6 @@
 import { FC, ReactNode } from 'react';
+import { TeacherRole } from '@fictadvisor/utils/enums';
+import { CathedraResponse } from '@fictadvisor/utils/responses';
 import {
   BeakerIcon,
   BookOpenIcon,
@@ -14,7 +16,6 @@ import {
   TagVariant,
 } from '@/components/common/ui/tag/types';
 import theme from '@/styles/theme';
-import { TeacherCathedra, TeacherRole } from '@/types/teacher';
 
 import * as stylesMui from './CardRoles.styles';
 
@@ -25,7 +26,7 @@ export interface CardRolesProps {
   className?: string;
   isTeachersPage?: boolean;
   isPersonalPage?: boolean;
-  cathedras: TeacherCathedra[];
+  cathedras: CathedraResponse[];
 }
 
 export const TagText: Record<TeacherRole, string> = {

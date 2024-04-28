@@ -1,6 +1,7 @@
 'use client';
 import React, { FC, useState } from 'react';
 import { useQuery } from 'react-query';
+import { State } from '@fictadvisor/utils/enums';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Avatar, Box, CardHeader, Stack } from '@mui/material';
 import { isAxiosError } from 'axios';
@@ -24,7 +25,6 @@ import LoadPage from '@/components/common/ui/load-page';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import UserAPI from '@/lib/api/user/UserAPI';
-import { UserGroupState } from '@/types/user';
 
 interface AdminUserEditProps {
   params: {
@@ -47,7 +47,7 @@ const AdminUserEdit: FC<AdminUserEditProps> = ({ params }) => {
 
   const [username, setUsername] = useState<string>(user.username);
   const [email, setEmail] = useState<string>(user.email);
-  const [userState, setUserState] = useState<UserGroupState>(user.state);
+  const [userState, setUserState] = useState<State>(user.state);
   const toast = useToast();
   const toastError = useToastError();
   const router = useRouter();
@@ -147,7 +147,7 @@ const AdminUserEdit: FC<AdminUserEditProps> = ({ params }) => {
             size={FieldSize.MEDIUM}
             options={UserStateOptions}
             showRemark={false}
-            onChange={(value: string) => setUserState(value as UserGroupState)}
+            onChange={(value: string) => setUserState(value as State)}
             value={userState}
             label="Стан користувача"
           />
