@@ -1,21 +1,23 @@
 import { Injectable } from '@nestjs/common';
+import {
+  UpdateRoleDTO,
+  CreateRoleWithGrantsDTO,
+  CreateGrantDTO,
+  QueryAllRolesDTO,
+  CreateRoleDTO,
+  QueryAllGrantsDTO,
+  UpdateGrantDTO,
+} from '@fictadvisor/utils/requests';
+import { mapAsync } from '../../utils/ArrayUtil';
+import { DatabaseUtils } from '../../database/DatabaseUtils';
+import { DbRole } from '../../database/entities/DbRole';
+import { PermissionService } from './PermissionService';
 import { RoleRepository } from '../../database/repositories/RoleRepository';
 import { GrantRepository } from '../../database/repositories/GrantRepository';
-import { UpdateRoleDTO } from '../dtos/UpdateRoleDTO';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
-import { CreateRoleWithGrantsDTO } from '../dtos/CreateRoleWithGrantsDTO';
-import { CreateGrantDTO } from '../dtos/CreateGrantDTO';
-import { PermissionService } from './PermissionService';
-import { DbRole } from '../../database/entities/DbRole';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
-import { DatabaseUtils } from '../../database/DatabaseUtils';
-import { Grant, Prisma } from '@prisma/client';
-import { QueryAllRolesDTO } from '../dtos/QueryAllRolesDTO';
-import { CreateRoleDTO } from '../dtos/CreateRoleDTO';
-import { QueryAllGrantsDTO } from '../dtos/QueryAllGrantsDTO';
-import { UpdateGrantDTO } from '../dtos/UpdateGrantDTO';
-import { mapAsync } from '../../utils/ArrayUtil';
 import { NotBelongException } from '../../utils/exceptions/NotBelongException';
+import { Grant, Prisma } from '@prisma/client';
 
 @Injectable()
 export class RoleService {

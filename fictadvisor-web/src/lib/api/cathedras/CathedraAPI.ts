@@ -1,73 +1,52 @@
-import { SearchFormFields } from '@/app/(main)/(search-pages)/search-form/types';
-import { client } from '@/lib/api/instance';
-import { getAuthorizationHeader } from '@/lib/api/utils';
-import { Cathedra } from '@/types/cathedra';
-
 import {
-  AllCathedrasResponse,
-  CathedraTeachersResponse,
-  DivisionsResponse,
-} from './types/AllCathedrasResponse';
+  CreateCathedraDTO,
+  QueryAllCathedrasDTO,
+  QueryAllTeacherDTO,
+  UpdateCathedraDTO,
+} from '@fictadvisor/utils/requests';
+import {
+  CathedraResponse,
+  CathedrasDivisionsResponse,
+  CathedraWithTeachersResponse,
+  PaginatedCathedrasWithTeachersResponse,
+  PaginatedTeachersResponse,
+} from '@fictadvisor/utils/responses';
+
+import { getAuthorizationHeader } from '@/lib/api/utils';
+
+import { client } from '../instance';
 
 class CathedraAPI {
-  async getAll(
-    params: Partial<SearchFormFields> = {},
-    pageSize?: number,
-    page?: number,
-  ) {
-    const { data } = await client.get<AllCathedrasResponse>('/cathedras', {
-      params: {
-        ...params,
-        pageSize,
-        page,
+  async getAll(params: QueryAllCathedrasDTO = {}) {
+    const { data } = await client.get<PaginatedCathedrasWithTeachersResponse>(
+      '/cathedras',
+      {
+        params,
       },
-    });
+    );
     return data;
   }
 
   async getDepartmentById(cathedraId: string) {
-    const data = client.get<Cathedra>(
+    const data = client.get<CathedraWithTeachersResponse>(
       `/cathedras/${cathedraId}`,
       getAuthorizationHeader(),
     );
     return data;
   }
 
-  async createDepartment(
-    name: string,
-    abbreviation: string,
-    division: string,
-    teachers?: string[],
-  ) {
-    return await client.post<Cathedra>(
+  async createDepartment(body: CreateCathedraDTO) {
+    return await client.post<CathedraResponse>(
       '/cathedras',
-      {
-        name,
-        abbreviation,
-        division,
-        teachers,
-      },
+      body,
       getAuthorizationHeader(),
     );
   }
 
-  async editDepartment(
-    cathedraId: string,
-    name: string,
-    abbreviation: string,
-    division: string,
-    deleteTeachers: string[],
-    addTeachers: string[],
-  ) {
-    await client.patch<Cathedra>(
+  async editDepartment(cathedraId: string, body: UpdateCathedraDTO) {
+    await client.patch<CathedraWithTeachersResponse>(
       `/cathedras/${cathedraId}`,
-      {
-        name,
-        abbreviation,
-        division,
-        deleteTeachers,
-        addTeachers,
-      },
+      body,
       getAuthorizationHeader(),
     );
   }
@@ -76,25 +55,15 @@ class CathedraAPI {
     await client.delete(`/cathedras/${cathedraId}`, getAuthorizationHeader());
   }
 
-  async getDepartmentTeachers(
-    cathedraId: string,
-    notInDepartment: boolean,
-    pageSize?: number,
-    page?: number,
-  ) {
-    const { data } = await client.get<CathedraTeachersResponse>(`/teachers`, {
-      params: {
-        pageSize,
-        page,
-        notInDepartments: notInDepartment,
-        cathedrasId: [cathedraId],
-      },
+  async getDepartmentTeachers(params: QueryAllTeacherDTO = {}) {
+    const { data } = await client.get<PaginatedTeachersResponse>(`/teachers`, {
+      params,
     });
     return data;
   }
 
   async getDivisions() {
-    const { data } = await client.get<DivisionsResponse>(
+    const { data } = await client.get<CathedrasDivisionsResponse>(
       '/cathedras/divisions',
       getAuthorizationHeader(),
     );

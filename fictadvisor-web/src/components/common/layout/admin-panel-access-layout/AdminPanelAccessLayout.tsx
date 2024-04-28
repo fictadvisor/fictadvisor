@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation';
 
 import Progress from '@/components/common/ui/progress';
 import useAuthentication from '@/hooks/use-authentication';
-import PermissionService from '@/lib/services/permisson/PermissionService';
+import PermissionService from '@/lib/services/permission/PermissionService';
 
 const AdminPanelAccessLayout = ({
   children,

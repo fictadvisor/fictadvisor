@@ -1,9 +1,9 @@
-import { UserGroupRole } from '@/types/user';
+import { GroupRoles } from '@fictadvisor/utils/enums';
 
-const roleNamesMapper: Record<UserGroupRole, string> = {
-  [UserGroupRole.CAPTAIN]: 'Староста',
-  [UserGroupRole.MODERATOR]: 'Заст. старости',
-  [UserGroupRole.STUDENT]: 'Студент',
+const roleNamesMapper: Record<string, string> = {
+  [GroupRoles.CAPTAIN]: 'Староста',
+  [GroupRoles.MODERATOR]: 'Заст. старости',
+  [GroupRoles.STUDENT]: 'Студент',
 };
 
 export default roleNamesMapper;

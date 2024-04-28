@@ -1,22 +1,23 @@
 import React, { FC, useEffect, useState } from 'react';
+import { CreateContactDTO } from '@fictadvisor/utils/requests';
 import { Stack } from '@mui/material';
 
 import Input from '@/components/common/ui/form/input-mui';
 import { InputSize } from '@/components/common/ui/form/input-mui/types';
-import { Contact } from '@/types/contact';
+import { ContactType } from '@/types/contact';
 
 import { ContactPlaceholder } from '../constants/ContactPlaceholder';
 
 import * as styles from './ContactInput.styles';
 
 interface ContactInputProps {
-  contact: Omit<Contact, 'id'>;
-  setNewContacts: React.Dispatch<React.SetStateAction<Contact[]>>;
+  contact: Omit<CreateContactDTO, 'id'>;
+  setNewContacts: React.Dispatch<React.SetStateAction<CreateContactDTO[]>>;
 }
 
 const ContactInput: FC<ContactInputProps> = ({ contact, setNewContacts }) => {
   const [displayName, setDisplayName] = useState<string>(contact.displayName);
-  const [link, setLink] = useState<string>(contact.link);
+  const [link, setLink] = useState<string>(contact.link as string);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -27,7 +28,10 @@ const ContactInput: FC<ContactInputProps> = ({ contact, setNewContacts }) => {
             c.name === contact.name ? { ...c, displayName, link } : c,
           );
         }
-        return [...prev, { displayName, link, name: contact.name } as Contact];
+        return [
+          ...prev,
+          { displayName, link, name: contact.name } as CreateContactDTO,
+        ];
       });
       setNewContacts(prev => {
         const foundContact = prev.find(c => c.name === contact.name);
@@ -52,7 +56,7 @@ const ContactInput: FC<ContactInputProps> = ({ contact, setNewContacts }) => {
       <Input
         size={InputSize.MEDIUM}
         sx={styles.input}
-        label={ContactPlaceholder[contact.name]}
+        label={ContactPlaceholder[contact.name as ContactType]}
         value={displayName}
         onChange={setDisplayName}
       />

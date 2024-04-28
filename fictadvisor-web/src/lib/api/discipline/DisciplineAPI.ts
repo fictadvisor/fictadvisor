@@ -1,96 +1,80 @@
-import { DisciplinesAdminSearchFormFields } from 'src/app/admin/disciplines/search/types';
-
-import { AdminDiscipline } from '@/types/discipline';
+import {
+  CreateDisciplineDTO,
+  CreateDisciplineTeacherDTO,
+  QueryAllDisciplinesDTO,
+  UpdateDisciplineTeacherDTO,
+} from '@fictadvisor/utils/requests';
+import {
+  DisciplinesResponse,
+  DisciplineTeacherCreateResponse,
+  DisciplineTeachersResponse,
+  ExtendedDisciplineTeachersResponse,
+} from '@fictadvisor/utils/responses';
 
 import { client } from '../instance';
 import { getAuthorizationHeader } from '../utils';
 
-import AddDiscipline from './types/AddDiscipline';
-import AddDisciplineTeacher from './types/AddDisciplineTeacher';
-import GetAllDisciplines from './types/GetAllDisciplines';
-import GetAllDisciplineTeachers from './types/GetAllDisciplineTeachers';
-import UpdateDisciplineTeacher from './types/UpdateDisciplineTeacher';
-
 class DisciplineAPI {
-  async getPageDisciplines(
-    params: Partial<DisciplinesAdminSearchFormFields> = {},
-    pageSize?: number,
-    page?: number,
-  ) {
-    const res = await client.get<GetAllDisciplines>('/disciplines', {
-      params: {
-        ...params,
-        pageSize,
-        page,
-      },
+  async getPageDisciplines(params: QueryAllDisciplinesDTO = {}) {
+    const { data } = await client.get<DisciplinesResponse>('/disciplines', {
+      params,
     });
-    return res.data;
-  }
-
-  async getAllDisciplines() {
-    const res = await client.get<GetAllDisciplines>(
-      '/disciplines',
-      getAuthorizationHeader(),
-    );
-    return res.data;
+    return data;
   }
 
   async getDisciplinesById(disciplineId: string) {
-    const { data } = await client.get<AdminDiscipline>(
+    const { data } = await client.get<ExtendedDisciplineTeachersResponse>(
       `/disciplines/${disciplineId}`,
       getAuthorizationHeader(),
     );
     return data;
   }
 
-  async addDiscipline(body: AddDiscipline) {
-    return await client.post<AddDiscipline>(
+  async addDiscipline(body: CreateDisciplineDTO) {
+    return await client.post<ExtendedDisciplineTeachersResponse>(
       `/disciplines`,
       body,
       getAuthorizationHeader(),
     );
   }
 
-  async deleteDiscipline(disciplineId: string) {
-    return await client.delete(
+  async deleteDiscipline(disciplineId: string): Promise<void> {
+    await client.delete(
       `/disciplines/${disciplineId}`,
       getAuthorizationHeader(),
     );
   }
 
   async getAllDisciplineTeachers(disciplineId: string) {
-    const res = await client.get<GetAllDisciplineTeachers>(
+    const { data } = await client.get<DisciplineTeachersResponse>(
       `/disciplines/${disciplineId}/teachers`,
       getAuthorizationHeader(),
     );
-    return res.data;
+    return data;
   }
 
-  async addDisciplineTeacher(body: AddDisciplineTeacher) {
-    const res = await client.post<AddDisciplineTeacher>(
+  async addDisciplineTeacher(body: CreateDisciplineTeacherDTO) {
+    const { data } = await client.post<DisciplineTeacherCreateResponse>(
       `/disciplineTeachers`,
       body,
       getAuthorizationHeader(),
     );
-    return res.data;
+    return data;
   }
 
   async updateDisciplineTeacher(
     disciplineTeacherId: string,
-    body: UpdateDisciplineTeacher,
+    body: UpdateDisciplineTeacherDTO,
   ) {
-    const res = await client.patch<UpdateDisciplineTeacher>(
+    const { data } = await client.patch<DisciplineTeacherCreateResponse>(
       `/disciplineTeachers/${disciplineTeacherId}`,
       body,
     );
-    return res.data;
+    return data;
   }
 
-  async deleteDisciplineTeachers(disciplineTeacherId: string) {
-    const res = await client.delete(
-      `/disciplineTeachers/${disciplineTeacherId}`,
-    );
-    return res.data;
+  async deleteDisciplineTeachers(disciplineTeacherId: string): Promise<void> {
+    await client.delete(`/disciplineTeachers/${disciplineTeacherId}`);
   }
 }
 

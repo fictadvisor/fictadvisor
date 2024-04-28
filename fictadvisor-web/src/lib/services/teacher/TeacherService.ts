@@ -60,9 +60,13 @@ class TeacherService {
     subjectId: string,
     userId: string | undefined,
   ): Promise<TeacherSubjectPageInfo> {
-    const info = await TeacherAPI.getTeacherSubject(teacherId, subjectId);
-    const comments = await TeacherAPI.getTeacherComments(teacherId, subjectId);
-    const { marks } = await TeacherAPI.getTeacherMarks(teacherId, subjectId);
+    const info = await TeacherAPI.getTeacherWithSubject(teacherId, subjectId);
+    const comments = await TeacherAPI.getTeacherComments(teacherId, {
+      subjectId,
+    });
+    const { marks } = await TeacherAPI.getTeacherMarks(teacherId, {
+      subjectId,
+    });
     const hasEnoughMarks = marks[0]?.amount >= MIN_MARKS_LENGTH;
     const marksAmount = marks[0]?.amount ?? 0;
 

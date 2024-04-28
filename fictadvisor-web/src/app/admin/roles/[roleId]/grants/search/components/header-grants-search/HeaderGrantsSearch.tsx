@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { FC } from 'react';
+import { SortQAGrantsParam } from '@fictadvisor/utils/enums';
 import {
   BarsArrowDownIcon,
   BarsArrowUpIcon,
@@ -15,7 +16,6 @@ import {
 } from '@/app/admin/roles/[roleId]/grants/common/constants';
 import {
   GrantSet,
-  GrantSort,
   GrantsSearchFormFields,
 } from '@/app/admin/roles/[roleId]/grants/common/types';
 import Button from '@/components/common/ui/button-mui';
@@ -40,7 +40,9 @@ const HeaderGrantsSearch: FC<HeaderGrantsSearchProps> = ({
   roleId,
 }) => {
   const [search, setSearch] = useState<string>('');
-  const [sort, setSort] = useState<string>('permission');
+  const [sort, setSort] = useState<SortQAGrantsParam>(
+    SortQAGrantsParam.PERMISSION,
+  );
   const [grantSet, setGrantSet] = useState<GrantSet>('' as GrantSet);
   const [order, setOrder] = useState<'asc' | 'desc'>('desc');
   const [values, setValues] = useState(GrantsInitialValues);
@@ -54,10 +56,10 @@ const HeaderGrantsSearch: FC<HeaderGrantsSearchProps> = ({
     setValues(values => ({ ...values, order: order }));
   };
   const handleSortChange = (value: string) => {
-    setSort(value);
+    setSort(value as SortQAGrantsParam);
     setValues(values => ({
       ...values,
-      sort: value as GrantSort,
+      sort: value as SortQAGrantsParam,
     }));
   };
 

@@ -1,39 +1,41 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { JwtPayload } from '../../security/JwtPayload';
-import { SecurityConfigService } from '../../config/SecurityConfigService';
-import { State, User, RoleName } from '@prisma/client';
-import { TokensDTO } from '../dtos/TokensDTO';
-import { RegistrationDTO } from '../dtos/RegistrationDTO';
+import { ConfigService } from '@nestjs/config';
+import {
+  TokensDTO,
+  RegistrationDTO,
+  UpdatePasswordDTO,
+  ResetPasswordDTO,
+  UniqueUserDTO,
+  TelegramDTO,
+  StudentDTO,
+  UserDTO,
+  RegisterTelegramDTO,
+} from '@fictadvisor/utils/requests';
 import { createHash, createHmac } from 'crypto';
+import bcrypt from 'bcrypt';
+import { JwtPayload } from '../../security/JwtPayload';
+import { TelegramAPI } from '../../telegram/TelegramAPI';
+import { SecurityConfigService } from '../../config/SecurityConfigService';
 import { TelegramConfigService } from '../../config/TelegramConfigService';
-import { UserRepository } from '../../database/repositories/UserRepository';
-import { InvalidTelegramCredentialsException } from '../../utils/exceptions/InvalidTelegramCredentialsException';
-import { UpdatePasswordDTO } from '../dtos/UpdatePasswordDTO';
 import { EmailService } from './EmailService';
-import { ResetPasswordDTO } from '../dtos/ResetPasswordDTO';
+import { GroupService } from './GroupService';
+import { PrismaService } from '../../database/PrismaService';
+import { UserRepository } from '../../database/repositories/UserRepository';
+import { RoleRepository } from '../../database/repositories/RoleRepository';
+import { StudentRepository } from '../../database/repositories/StudentRepository';
+import { GroupRepository } from '../../database/repositories/GroupRepository';
+import { InvalidTelegramCredentialsException } from '../../utils/exceptions/InvalidTelegramCredentialsException';
 import { InvalidResetTokenException } from '../../utils/exceptions/InvalidResetTokenException';
 import { TooManyActionsException } from '../../utils/exceptions/TooManyActionsException';
 import { InvalidVerificationTokenException } from 'src/v2/utils/exceptions/InvalidVerificationTokenException';
-import { TelegramAPI } from '../../telegram/TelegramAPI';
-import { StudentRepository } from '../../database/repositories/StudentRepository';
-import { GroupRepository } from '../../database/repositories/GroupRepository';
-import bcrypt from 'bcrypt';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
-import { UniqueUserDTO } from '../dtos/UniqueUserDTO';
 import { AlreadyRegisteredException } from '../../utils/exceptions/AlreadyRegisteredException';
 import { NotRegisteredException } from '../../utils/exceptions/NotRegisteredException';
 import { PasswordRepeatException } from '../../utils/exceptions/PasswordRepeatException';
-import { GroupService } from './GroupService';
-import { RoleRepository } from '../../database/repositories/RoleRepository';
-import { TelegramDTO } from '../dtos/TelegramDTO';
-import { StudentDTO } from '../dtos/StudentDTO';
-import { UserDTO } from '../dtos/UserDTO';
-import { RegisterTelegramDTO } from '../dtos/RegisterTelegramDTO';
-import { ConfigService } from '@nestjs/config';
 import { CaptainAlreadyRegisteredException } from '../../utils/exceptions/CaptainAlreadyRegisteredException';
 import { AbsenceOfCaptainException } from '../../utils/exceptions/AbsenceOfCaptainException';
-import { PrismaService } from '../../database/PrismaService';
+import { State, User, RoleName } from '@prisma/client';
 
 export const ONE_MINUTE = 1000 * 60;
 export const HOUR = ONE_MINUTE * 60;

@@ -1,17 +1,20 @@
-import { DeleteEntrantBody } from '@/lib/api/contract/types/DeleteEntrantBody';
+import { DeleteEntrantDataQueryDTO } from '@fictadvisor/utils/requests';
+
 import { PartialBy } from '@/types/utils/PartialBy';
+
 export const prepareData = (
-  intialData: DeleteEntrantBody,
-): DeleteEntrantBody => {
+  intialData: DeleteEntrantDataQueryDTO,
+): DeleteEntrantDataQueryDTO => {
   const data = trimObject(replaceApostrophes(intialData));
 
   if (data.middleName.length === 0)
-    delete (data as PartialBy<DeleteEntrantBody, 'middleName'>).middleName;
+    delete (data as PartialBy<DeleteEntrantDataQueryDTO, 'middleName'>)
+      .middleName;
 
   return data;
 };
 
-const replaceApostrophes = (initialData: DeleteEntrantBody) => {
+const replaceApostrophes = (initialData: DeleteEntrantDataQueryDTO) => {
   return JSON.parse(JSON.stringify(initialData).replaceAll(/[`'’‘“”*]/g, '`'));
 };
 

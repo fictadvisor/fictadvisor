@@ -1,6 +1,6 @@
+import { GroupRoles } from '@fictadvisor/utils/enums';
+import { CreateStudentWithRolesDTO } from '@fictadvisor/utils/requests';
 import * as yup from 'yup';
-
-import { UserGroupRole } from '@/types/user';
 
 export const validationSchema = yup.object().shape({
   firstName: yup
@@ -39,11 +39,11 @@ export const validationSchema = yup.object().shape({
   groupId: yup.string().required(`Обов'язкове поле`),
 });
 
-export const initialValues = {
+export const initialValues: CreateStudentWithRolesDTO = {
   firstName: '',
   middleName: '',
   username: '',
   lastName: '',
-  roleName: '' as UserGroupRole,
+  roleName: '' as keyof typeof GroupRoles,
   groupId: '',
 };

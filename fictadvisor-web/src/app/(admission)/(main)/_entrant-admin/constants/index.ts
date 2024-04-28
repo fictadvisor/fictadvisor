@@ -1,27 +1,26 @@
-import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
-import {
-  DeleteEntrantBody,
-  EntrantDeleteOptions,
-} from '@/lib/api/contract/types/DeleteEntrantBody';
+import { EntrantActions } from '@fictadvisor/utils/enums';
+import { DeleteEntrantDataQueryDTO } from '@fictadvisor/utils/requests';
 
-export const initialValues: DeleteEntrantBody = {
+import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
+
+export const initialValues: DeleteEntrantDataQueryDTO = {
   firstName: '',
   lastName: '',
   middleName: '',
-
-  action: EntrantDeleteOptions.CONTRACT,
+  specialty: '',
+  action: EntrantActions.CONTRACT,
 };
 export const EntrantActionsOptions: DropDownOption[] = [
   {
     label: 'Видалити абітурієнта',
-    id: EntrantDeleteOptions.ENTRANT,
+    id: EntrantActions.ENTRANT,
   },
   {
     label: 'Видалити пріоритет',
-    id: EntrantDeleteOptions.PRIORITY,
+    id: EntrantActions.PRIORITY,
   },
   {
     label: 'Видалити договір',
-    id: EntrantDeleteOptions.CONTRACT,
+    id: EntrantActions.CONTRACT,
   },
 ];

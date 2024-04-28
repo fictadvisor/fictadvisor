@@ -1,5 +1,7 @@
 'use client';
 import React, { FC, useEffect, useState } from 'react';
+import { QuestionType, SortQAQParam } from '@fictadvisor/utils/enums';
+import { QueryAllQuestionDTO } from '@fictadvisor/utils/requests';
 import {
   BarsArrowDownIcon,
   BarsArrowUpIcon,
@@ -12,7 +14,6 @@ import {
   sortOptions,
   typesOptions,
 } from '@/app/admin/questions/common/constants';
-import { QuestionSearchFormFields } from '@/app/admin/questions/common/types';
 import Button from '@/components/common/ui/button-mui';
 import { ButtonSize } from '@/components/common/ui/button-mui/types';
 import { Dropdown, InputSize, InputType } from '@/components/common/ui/form';
@@ -23,17 +24,18 @@ import {
 } from '@/components/common/ui/icon-button';
 import IconButton from '@/components/common/ui/icon-button-mui';
 import { IconButtonSize } from '@/components/common/ui/icon-button-mui/types';
-import { QuestionType } from '@/types/poll';
 
 interface QuestionAdminSearchProps {
-  onSubmit: (values: QuestionSearchFormFields) => void;
+  onSubmit: (values: QueryAllQuestionDTO) => void;
 }
 
 const QuestionsAdminSearch: FC<QuestionAdminSearchProps> = ({ onSubmit }) => {
-  const [values, setValues] = useState<QuestionSearchFormFields>(initialValues);
+  const [values, setValues] = useState<QueryAllQuestionDTO>(initialValues);
   const [search, setSearch] = useState<string>('');
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
-  const [sortBy, setSortBy] = useState<'text' | 'order' | 'category'>('text');
+  const [sortBy, setSortBy] = useState<SortQAQParam>(
+    SortQAQParam.QUESTION_TEXT,
+  );
   const [type, setType] = useState<QuestionType>(QuestionType.SCALE);
 
   const handleFormSubmit = () => {
@@ -86,9 +88,7 @@ const QuestionsAdminSearch: FC<QuestionAdminSearchProps> = ({ onSubmit }) => {
           width="188px"
           value={sortBy}
           options={sortOptions}
-          onChange={option =>
-            setSortBy(option as 'text' | 'order' | 'category')
-          }
+          onChange={option => setSortBy(option as SortQAQParam)}
           disableClearable
           showRemark={false}
         />

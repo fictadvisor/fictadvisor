@@ -1,7 +1,7 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
-import { TeacherRole } from '@prisma/client';
-import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
 import { QuestionRepository } from '../../database/repositories/QuestionRepository';
+import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
+import { TeacherRole } from '@prisma/client';
 
 @Injectable()
 export class QuestionByRoleAndIdPipe implements PipeTransform {

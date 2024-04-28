@@ -1,4 +1,5 @@
 import React, { FC, useCallback } from 'react';
+import { CreateContactDTO } from '@fictadvisor/utils/requests';
 import { Box } from '@mui/material';
 import { Form, Formik } from 'formik';
 
@@ -18,7 +19,6 @@ import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown';
 import useAuthentication from '@/hooks/use-authentication';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
-import { AddContactBody } from '@/lib/api/user/types/AddContactBody';
 import UserAPI from '@/lib/api/user/UserAPI';
 import { ContactType } from '@/types/contact';
 
@@ -36,7 +36,7 @@ const ContactForm: FC<ContactFormProps> = ({ refetchContacts }) => {
   }));
 
   const handleSubmit = useCallback(
-    async (data: AddContactBody) => {
+    async (data: CreateContactDTO) => {
       try {
         await UserAPI.addContact(user.id, data);
         void refetchContacts();

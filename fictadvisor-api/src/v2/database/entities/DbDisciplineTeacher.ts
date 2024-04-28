@@ -1,13 +1,13 @@
 import {
-  Group,
-  Subject,
-  DisciplineType,
-  DisciplineTeacherRole,
-  Discipline,
   Teacher,
   Cathedra,
   TeachersOnCathedras,
 } from '@prisma/client';
+import { DbDisciplineTeacherRole } from './DbDisciplineTeacherRole';
+import { DbDisciplineType } from './DbDisciplineType';
+import { DbGroup } from './DbGroup';
+import { DbSubject } from './DbSubject';
+import { DbDiscipline } from './DbDiscipline';
 
 export class DbDisciplineTeacher {
   id: string;
@@ -18,10 +18,10 @@ export class DbDisciplineTeacher {
       cathedra: Cathedra,
     })[],
   };
-  discipline?: Discipline & {
-    group?: Group,
-    subject?: Subject,
-    disciplineTypes?: DisciplineType[],
+  discipline?: DbDiscipline & {
+    group?: DbGroup,
+    subject?: DbSubject,
+    disciplineTypes?: DbDisciplineType[],
   };
-  roles?: DisciplineTeacherRole[];
+  roles?: DbDisciplineTeacherRole[];
 }

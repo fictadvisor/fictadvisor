@@ -1,5 +1,6 @@
 'use client';
 import React, { useState } from 'react';
+import { TeacherWithRolesAndCathedrasResponse } from '@fictadvisor/utils/responses';
 import { Box, CardHeader, Stack } from '@mui/material';
 import { useRouter } from 'next/navigation';
 
@@ -16,7 +17,6 @@ import Input from '@/components/common/ui/form/input-mui';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import CathedraAPI from '@/lib/api/cathedras/CathedraAPI';
-import { Teacher } from '@/types/teacher';
 
 const Page = () => {
   const toast = useToast();
@@ -26,17 +26,19 @@ const Page = () => {
   const [name, setName] = useState<string>('');
   const [abbreviation, setAbbreviation] = useState<string>('');
   const [division, setDivision] = useState<string>('');
-  const [left, setLeft] = useState<Teacher[]>([]);
-  const [right, setRight] = useState<Teacher[]>([]);
+  const [left, setLeft] = useState<TeacherWithRolesAndCathedrasResponse[]>([]);
+  const [right, setRight] = useState<TeacherWithRolesAndCathedrasResponse[]>(
+    [],
+  );
 
   const handleSubjectCreation = async () => {
     try {
-      await CathedraAPI.createDepartment(
+      await CathedraAPI.createDepartment({
         name,
         abbreviation,
         division,
-        right.map(teacher => teacher.id),
-      );
+        teachers: right.map(teacher => teacher.id),
+      });
       toast.success('Кафедра успішно створена!', '', 4000);
       router.replace('/admin/departments');
     } catch (e) {

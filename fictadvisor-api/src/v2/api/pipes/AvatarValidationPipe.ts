@@ -1,8 +1,8 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
+import { extname } from 'path';
 import { TooLargeSizeException } from '../../utils/exceptions/TooLargeSizeException';
 import { DataNotFoundException } from '../../utils/exceptions/DataNotFoundException';
 import { InvalidExtensionException } from '../../utils/exceptions/InvalidExtensionException';
-import { extname } from 'path';
 
 const AVATAR_MAX_SIZE = 1048576;
 const AVATAR_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.webp'];

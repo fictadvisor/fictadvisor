@@ -1,5 +1,9 @@
 'use client';
 import { FC } from 'react';
+import {
+  CurrentSemester,
+  MappedGroupResponse,
+} from '@fictadvisor/utils/responses';
 import { Box } from '@mui/material';
 import { useMediaQuery } from '@mui/material';
 
@@ -14,18 +18,16 @@ import { ScheduleSection } from '@/app/(main)/schedule/schedule-page/schedule-se
 import ScheduleSectionMobile from '@/app/(main)/schedule/schedule-page/schedule-section/ScheduleSectionMobile';
 import { makeNegativeValuesUndefined } from '@/app/(main)/schedule/schedule-page/utils/undefineNegativeValues';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
-import { GetCurrentSemester } from '@/lib/api/dates/types/GetCurrentSemester';
 import ScheduleAPI from '@/lib/api/schedule/ScheduleAPI';
-import { PostEventBody } from '@/lib/api/schedule/types/PostEventBody';
+import { CreateEventDTO } from '@/lib/api/schedule/types/CreateEventDTO';
 import { SharedEventBody } from '@/lib/api/schedule/types/shared';
 import { useSchedule } from '@/store/schedule/useSchedule';
 import theme from '@/styles/theme';
-import { Group } from '@/types/group';
 
 import * as styles from './SchedulePage.styles';
 export interface SchedulePageProps {
-  groups: Group[];
-  semester: GetCurrentSemester | null;
+  groups: MappedGroupResponse[];
+  semester: CurrentSemester | null;
 }
 
 /*
@@ -58,10 +60,10 @@ const SchedulePage: FC<SchedulePageProps> = ({ semester, groups }) => {
   const handleFormSubmit = async (values: SharedEventBody) => {
     await formValidationSchema.validate(values, { abortEarly: false });
 
-    const finalValues: PostEventBody = makeNegativeValuesUndefined(values);
+    const finalValues: CreateEventDTO = makeNegativeValuesUndefined(values);
     finalValues.groupId = groupId;
     try {
-      await ScheduleAPI.addEvent(finalValues, groupId);
+      await ScheduleAPI.addEvent({ ...finalValues, groupId });
       useSchedule.setState(state => ({
         eventsBody: [],
         isNewEventAdded: false,

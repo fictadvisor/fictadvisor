@@ -1,4 +1,5 @@
 import React, { FC, useState } from 'react';
+import { MappedGroupResponse } from '@fictadvisor/utils/responses';
 import { PencilSquareIcon } from '@heroicons/react/24/solid';
 import { Stack } from '@mui/material';
 
@@ -9,10 +10,9 @@ import {
 } from '@/components/common/ui/button-mui/types';
 import DeletePopup from '@/components/common/ui/delete-popup';
 import { TrashBucketButton } from '@/components/common/ui/icon-button-mui/variants';
-import { Group } from '@/types/group';
 
 interface TableActionsProps {
-  group: Group;
+  group: MappedGroupResponse;
   deleteGroup: (id: string) => Promise<void>;
 }
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';

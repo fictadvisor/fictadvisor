@@ -8,7 +8,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN npm i -g turbo && \
+RUN npm i -g turbo@^1.11.3 && \
     turbo prune api --docker
 
 

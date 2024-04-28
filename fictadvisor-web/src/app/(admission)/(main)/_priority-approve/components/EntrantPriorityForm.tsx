@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import { FullNameWithSpecialtyDTO } from '@fictadvisor/utils/requests';
 import { Box } from '@mui/material';
 import { Form, Formik } from 'formik';
 
@@ -7,17 +8,12 @@ import Button from '@/components/common/ui/button-mui';
 import Divider from '@/components/common/ui/divider';
 import { DividerTextAlign } from '@/components/common/ui/divider/types';
 import { Input } from '@/components/common/ui/form';
-import { Fullname } from '@/types/contract';
 
 import * as styles from '../PriorityApprovePage.styles';
 
 interface EntrantPriorityFormProps {
-  submit: (values: Fullname) => Promise<void>;
-  initValues: {
-    firstName: string;
-    middleName: string;
-    lastName: string;
-  };
+  submit: (values: FullNameWithSpecialtyDTO) => Promise<void>;
+  initValues: FullNameWithSpecialtyDTO;
 }
 
 const EntrantPriorityForm: FC<EntrantPriorityFormProps> = ({

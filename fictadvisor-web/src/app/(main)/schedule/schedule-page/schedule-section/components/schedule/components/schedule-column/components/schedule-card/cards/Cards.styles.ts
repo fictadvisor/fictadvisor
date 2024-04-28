@@ -1,6 +1,5 @@
+import { EventTypeEnum } from '@fictadvisor/utils/enums';
 import { SxProps, Theme } from '@mui/material/styles';
-
-import { TEvent } from '@/types/schedule';
 
 const otherSubjects = (isPastEvent: boolean): SxProps<Theme> => ({
   backgroundColor: 'violet.100',
@@ -55,7 +54,7 @@ const trim4lines = {
   lineHeight: 1.3,
 };
 const subjectColors = (
-  eventType: TEvent | null,
+  eventType: EventTypeEnum | null,
   isPastEvent: boolean,
 ): SxProps<Theme> => ({
   '& .MuiTypography-body1': {
@@ -218,7 +217,7 @@ export const wrapper: SxProps<Theme> = {
 };
 
 export const card = (
-  eventType: TEvent | null,
+  eventType: EventTypeEnum | null,
   height: string | number,
   minHeight = 'unset',
   isPastEvent: boolean,

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { UpdateGrantDTO } from '@fictadvisor/utils/requests';
 import { PrismaService } from '../PrismaService';
-import { UpdateGrantDTO } from '../../api/dtos/UpdateGrantDTO';
 import { Prisma } from '@prisma/client';
 
 @Injectable()

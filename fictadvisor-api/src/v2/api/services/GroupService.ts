@@ -1,34 +1,38 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { Prisma, RoleName, State, User } from '@prisma/client';
+import {
+  SortDTO,
+  EmailDTO,
+  ApproveDTO,
+  UpdateGroupDTO,
+  QuerySemesterDTO,
+  GroupStudentsQueryDTO,
+  QueryAllGroupsDTO,
+  CreateGroupDTO,
+} from '@fictadvisor/utils/requests';
+import {
+  OrderQAParam,
+  SortQGSParam,
+  SortQAGroupsParam,
+} from '@fictadvisor/utils/enums';
+import { DatabaseUtils } from '../../database/DatabaseUtils';
+import { DbGroup } from '../../database/entities/DbGroup';
 import { DisciplineMapper } from '../../mappers/DisciplineMapper';
+import { StudentMapper } from '../../mappers/StudentMapper';
+import { UserService } from './UserService';
+import { DateService } from '../../utils/date/DateService';
+import { FileService } from '../../utils/files/FileService';
 import { GroupRepository } from '../../database/repositories/GroupRepository';
 import { StudentRepository } from '../../database/repositories/StudentRepository';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
-import { SortDTO } from '../../utils/QueryAllDTO';
 import { UserRepository } from '../../database/repositories/UserRepository';
-import { EmailDTO } from '../dtos/EmailDTO';
-import { ApproveDTO } from '../dtos/ApproveDTO';
-import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
-import { RoleDTO } from '../dtos/RoleDTO';
-import { UpdateGroupDTO } from '../dtos/UpdateGroupDTO';
-import { UserService } from './UserService';
-import { RoleRepository } from '../../database/repositories/RoleRepository';
-import { AVATARS } from './AuthService';
 import { AlreadyRegisteredException } from '../../utils/exceptions/AlreadyRegisteredException';
-import { DatabaseUtils } from '../../database/DatabaseUtils';
-import { StudentMapper } from '../../mappers/StudentMapper';
-import { DbGroup } from '../../database/entities/DbGroup';
-import { QuerySemesterDTO } from '../dtos/QuerySemesterDTO';
-import { DateService } from '../../utils/date/DateService';
+import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
+import { RoleRepository } from '../../database/repositories/RoleRepository';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
-import { FileService } from '../../utils/files/FileService';
-import { OrderQAParam } from '../dtos/OrderQAParam';
 import { StudentIsAlreadyCaptainException } from '../../utils/exceptions/StudentIsAlreadyCaptainException';
 import { NotApprovedException } from '../../utils/exceptions/NotApprovedException';
-import { GroupStudentsQueryDTO, SortQGSParam } from '../dtos/GroupStudentsQueryDTO';
-import { QueryAllGroupDTO } from '../dtos/QueryAllGroupDTO';
-import { CreateGroupDTO } from '../dtos/CreateGroupDTO';
-import { SortQAGroupParam } from '../dtos/SortQAGroupParam';
+import { AVATARS } from './AuthService';
+import { Prisma, RoleName, State, User } from '@prisma/client';
 
 const ROLE_LIST = [
   {
@@ -88,8 +92,8 @@ export class GroupService {
     return group;
   }
 
-  async getAll (query: QueryAllGroupDTO) {
-    if (query.sort === SortQAGroupParam.CAPTAIN) {
+  async getAll (query: QueryAllGroupsDTO) {
+    if (query.sort === SortQAGroupsParam.CAPTAIN) {
       return this.getAllByCaptain(query);
     }
 
@@ -107,7 +111,7 @@ export class GroupService {
     return DatabaseUtils.paginate(this.groupRepository, query, data);
   }
 
-  private getAllByCaptain (query: QueryAllGroupDTO) {
+  private getAllByCaptain (query: QueryAllGroupsDTO) {
     const data: Prisma.StudentFindManyArgs = {
       where: {
         group: {
@@ -177,8 +181,8 @@ export class GroupService {
   private getGroupSorting ({ sort, order }: SortDTO) {
     order = order ?? 'asc'; 
 
-    if (sort === SortQAGroupParam.CODE) return { code: order };
-    if (sort === SortQAGroupParam.ADMISSION) return { admissionYear: order };
+    if (sort === SortQAGroupsParam.CODE) return { code: order };
+    if (sort === SortQAGroupsParam.ADMISSION) return { admissionYear: order };
     return { code: order };
   }
 
@@ -491,7 +495,7 @@ export class GroupService {
     const captain = await this.getCaptain(groupId);
     if (captain.id === studentId) throw new NoPermissionException();
 
-    await this.userService.deleteStudentSelective(studentId);
+    await this.userService.deleteStudentSelectives(studentId);
 
     const { id } = await this.userService.getGroupRole(studentId);
     const updatedStudent = await this.studentRepository.updateById(studentId, {

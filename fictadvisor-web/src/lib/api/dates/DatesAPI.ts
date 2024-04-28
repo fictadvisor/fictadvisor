@@ -1,9 +1,13 @@
-import { GetCurrentSemester } from '@/lib/api/dates/types/GetCurrentSemester';
-import { GetDates } from '@/lib/api/dates/types/GetDates';
+import {
+  CurrentSemester,
+  SemestersResponse,
+} from '@fictadvisor/utils/responses';
+
 import { client } from '@/lib/api/instance';
+
 class DatesAPI {
   async getDates(isFinished = false) {
-    const { data } = await client.get<GetDates>(`dates/semesters`, {
+    const { data } = await client.get<SemestersResponse>(`dates/semesters`, {
       params: {
         isFinished,
       },
@@ -13,7 +17,7 @@ class DatesAPI {
   }
 
   async getCurrentSemester() {
-    const { data } = await client.get<GetCurrentSemester>(
+    const { data } = await client.get<CurrentSemester>(
       'dates/current/semester',
     );
     return data;

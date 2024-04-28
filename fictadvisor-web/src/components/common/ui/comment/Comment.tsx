@@ -5,7 +5,7 @@ import { TeacherComment } from '@/types/teacher';
 
 import * as styles from './Comment.styles';
 
-interface CommentProps extends Omit<TeacherComment, 'discipline'> {}
+export interface CommentProps extends Omit<TeacherComment, 'discipline'> {}
 
 const semesterMap = {
   1: 'I',

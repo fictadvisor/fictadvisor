@@ -21,12 +21,12 @@ import * as styles from './Dropdowns.styles';
 const Dropdowns: FC<DropdownsProps> = ({
   currentSelective,
   remainingSelective,
-  setConnectedSelective,
-  setDisconnectedSelective,
-  connectedSelective,
+  setConnectedSelectives,
+  setDisconnectedSelectives,
+  connectedSelectives,
 }) => {
   const [selectiveOptions, setSelectiveOptions] = useState<DropDownOption[]>(
-    transformSelectives(remainingSelective.remainingSelective),
+    transformSelectives(remainingSelective.remainingSelectives),
   );
   const [availableAmount, setAvailableAmount] = useState(
     remainingSelective.availableSelectiveAmount,
@@ -34,15 +34,15 @@ const Dropdowns: FC<DropdownsProps> = ({
   const [isAddingSelective, setIsAddingSelective] = useState(false);
   const [pickedSelectives, setPickedSelectives] = useState<
     Array<{ id: string; name: string }>
-  >(currentSelective?.selective || []);
+  >(currentSelective?.disciplines || []);
 
   const editSelective = (newValue: string, oldValue: DropDownOption) => {
-    setConnectedSelective(prev => [
+    setConnectedSelectives(prev => [
       ...prev.filter(selective => selective !== oldValue.id),
       newValue,
     ]);
-    setDisconnectedSelective(prev => {
-      if (connectedSelective.includes(oldValue.id)) {
+    setDisconnectedSelectives(prev => {
+      if (connectedSelectives.includes(oldValue.id)) {
         return prev;
       } else {
         return [
@@ -60,10 +60,10 @@ const Dropdowns: FC<DropdownsProps> = ({
 
   const handleSelectiveAdd = (newValue: string) => {
     setPickedSelectives(selectives => {
-      const newSelective = remainingSelective.remainingSelective.find(
+      const newSelective = remainingSelective.remainingSelectives.find(
         discipline => discipline.disciplineId === newValue,
       );
-      const oldSelective = currentSelective?.selective.find(
+      const oldSelective = currentSelective?.disciplines.find(
         discipline => discipline.id === newValue,
       );
       return newSelective
@@ -73,10 +73,10 @@ const Dropdowns: FC<DropdownsProps> = ({
           ]
         : [...selectives, { id: oldSelective!.id, name: oldSelective!.name }];
     });
-    setDisconnectedSelective(prev =>
+    setDisconnectedSelectives(prev =>
       prev.filter(selective => selective !== newValue),
     );
-    setConnectedSelective(prev => [...prev, newValue]);
+    setConnectedSelectives(prev => [...prev, newValue]);
     setSelectiveOptions(options =>
       options.filter(selective => selective.id !== newValue),
     );
@@ -88,11 +88,11 @@ const Dropdowns: FC<DropdownsProps> = ({
     setPickedSelectives(selectives =>
       selectives.filter(selective => selective.id !== value.id),
     );
-    setConnectedSelective(selectives =>
+    setConnectedSelectives(selectives =>
       selectives.filter(selective => selective !== value.id),
     );
-    setDisconnectedSelective(prev =>
-      connectedSelective.includes(value.id) ? prev : [...prev, value.id],
+    setDisconnectedSelectives(prev =>
+      connectedSelectives.includes(value.id) ? prev : [...prev, value.id],
     );
     setSelectiveOptions(options => [...options, value]);
     setAvailableAmount(prev => prev + 1);

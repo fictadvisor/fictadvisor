@@ -1,4 +1,5 @@
 import React, { FC, useState } from 'react';
+import { SimpleStudentResponse } from '@fictadvisor/utils/responses';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Box, CardHeader, Stack } from '@mui/material';
 
@@ -10,10 +11,9 @@ import {
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
 import DeletePopup from '@/components/common/ui/delete-popup';
-import { GroupStudent } from '@/types/student';
 
 interface HeaderStudentEditProps {
-  student: GroupStudent;
+  student: SimpleStudentResponse;
   handleDelete: (userId: string) => Promise<void>;
 }
 

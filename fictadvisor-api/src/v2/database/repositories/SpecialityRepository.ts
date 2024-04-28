@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../PrismaService';
+import { DbSpeciality } from '../entities/DbSpeciality';
 
 @Injectable()
 export class SpecialityRepository {
@@ -12,10 +13,10 @@ export class SpecialityRepository {
     private readonly prisma: PrismaService,
   ) {}
 
-  findMany (args?: Prisma.SpecialityFindManyArgs) {
+  async findMany (args?: Prisma.SpecialityFindManyArgs) {
     return this.prisma.speciality.findMany({
       include: this.include,
       ...args,
-    });
+    }) as any as DbSpeciality[];
   }
 }

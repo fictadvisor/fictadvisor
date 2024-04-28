@@ -1,14 +1,16 @@
-import { kyiv } from '@/app/(admission)/_contract/constants';
 import {
-  ContractBody,
-  ExtendedContractBody,
-} from '@/lib/api/contract/types/ContractBody';
-import { EducationalProgramType, StudyDegree } from '@/types/contract';
+  EducationalDegree,
+  EducationalProgramType,
+} from '@fictadvisor/utils/enums';
+import { StudyContractDTO } from '@fictadvisor/utils/requests';
+
+import { kyiv } from '@/app/(admission)/_contract/constants';
+import { ExtendedContractBody } from '@/lib/api/contract/types/ContractBody';
 import { PartialBy } from '@/types/utils/PartialBy';
 
 export const prepareData = (
   initialData: ExtendedContractBody,
-): ContractBody => {
+): StudyContractDTO => {
   const data: ExtendedContractBody = replaceApostrophes(initialData);
 
   data.entrant = trimObject(data.entrant);
@@ -40,7 +42,7 @@ export const prepareData = (
 
   if (data.meta.paymentType?.length === 0) data.meta.paymentType = undefined;
 
-  if (data.meta.degree === StudyDegree.BACHELOR) {
+  if (data.meta.degree === EducationalDegree.BACHELOR) {
     data.meta.educationalProgram = '';
     data.meta.programType = EducationalProgramType.PROFESSIONAL;
   }
@@ -69,7 +71,7 @@ export const prepareData = (
 
   delete (data as PartialBy<ExtendedContractBody, 'helper'>).helper;
 
-  return data;
+  return data as StudyContractDTO;
 };
 
 const replaceApostrophes = (

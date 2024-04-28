@@ -1,45 +1,48 @@
 import { ForbiddenException, forwardRef, Inject, Injectable } from '@nestjs/common';
+import {
+  UpdateSuperheroDTO,
+  UpdateUserDTO,
+  CreateContactDTO,
+  UpdateContactDTO,
+  CreateSuperheroDTO,
+  GroupRequestDTO,
+  TelegramDTO,
+  RemainingSelectivesDTO,
+  SelectiveDisciplinesDTO,
+  CreateUserDTO,
+  QueryAllUsersDTO,
+} from '@fictadvisor/utils/requests';
+import { RemainingSelectivesResponse } from '@fictadvisor/utils/responses';
+import { checkIfArrayIsUnique } from '../../utils/ArrayUtil';
+import { DatabaseUtils } from '../../database/DatabaseUtils';
+import { TelegramAPI } from '../../telegram/TelegramAPI';
+import { StudentMapper } from '../../mappers/StudentMapper';
+import { DisciplineMapper } from '../../mappers/DisciplineMapper';
+import { AuthService, AVATARS } from './AuthService';
+import { GroupService } from './GroupService';
+import { FileService } from '../../utils/files/FileService';
+import { PollService } from './PollService';
+import { DisciplineTeacherService } from './DisciplineTeacherService';
+import { DateService } from '../../utils/date/DateService';
+import { DbDiscipline } from '../../database/entities/DbDiscipline';
+import { DbUser } from '../../database/entities/DbUser';
+import { DbStudent } from '../../database/entities/DbStudent';
+import { UpdateStudentData } from '../datas/UpdateStudentData';
 import { StudentRepository } from '../../database/repositories/StudentRepository';
-import { UpdateSuperheroDTO } from '../dtos/UpdateSuperheroDTO';
 import { SuperheroRepository } from '../../database/repositories/SuperheroRepository';
 import { UserRepository } from '../../database/repositories/UserRepository';
 import { RoleRepository } from '../../database/repositories/RoleRepository';
 import { ContactRepository } from '../../database/repositories/ContactRepository';
-import { UpdateUserDTO } from '../dtos/UpdateUserDTO';
-import { CreateContactDTO } from '../dtos/CreateContactDTO';
-import { EntityType, Prisma, RoleName, State } from '@prisma/client';
-import { UpdateContactDTO } from '../dtos/UpdateContactDTO';
-import { CreateSuperheroDTO } from '../dtos/CreateSuperheroDTO';
-import { AuthService, AVATARS } from './AuthService';
-import { GroupRequestDTO } from '../dtos/GroupRequestDTO';
-import { GroupService } from './GroupService';
-import { TelegramDTO } from '../dtos/TelegramDTO';
-import { InvalidTelegramCredentialsException } from '../../utils/exceptions/InvalidTelegramCredentialsException';
-import { UpdateStudentData } from '../datas/UpdateStudentData';
-import { AlreadyRegisteredException } from '../../utils/exceptions/AlreadyRegisteredException';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
 import { GroupRepository } from '../../database/repositories/GroupRepository';
-import { StudentMapper } from '../../mappers/StudentMapper';
-import { FileService } from '../../utils/files/FileService';
-import { DisciplineMapper } from '../../mappers/DisciplineMapper';
-import { RemainingSelectiveDTO } from '../dtos/RemainingSelectiveDTO';
-import { DateService } from '../../utils/date/DateService';
-import { SelectiveDisciplinesDTO } from '../dtos/SelectiveDisciplinesDTO';
-import { DbDiscipline } from '../../database/entities/DbDiscipline';
+import { InvalidTelegramCredentialsException } from '../../utils/exceptions/InvalidTelegramCredentialsException';
+import { AlreadyRegisteredException } from '../../utils/exceptions/AlreadyRegisteredException';
 import { NotBelongException } from '../../utils/exceptions/NotBelongException';
 import { ExcessiveSelectiveDisciplinesException } from '../../utils/exceptions/ExcessiveSelectiveDisciplinesException';
-import { checkIfArrayIsUnique } from '../../utils/ArrayUtil';
 import { AlreadySelectedException } from '../../utils/exceptions/AlreadySelectedException';
-import { TelegramAPI } from '../../telegram/TelegramAPI';
 import { DuplicateTelegramIdException } from '../../utils/exceptions/DuplicateTelegramIdException';
-import { UserByAdminDTO } from '../dtos/UserDTO';
 import { NotSelectedDisciplineException } from '../../utils/exceptions/NotSelectedDisciplineException';
-import { QueryAllUsersDTO } from '../dtos/QueryAllUsersDTO';
-import { DatabaseUtils } from '../../database/DatabaseUtils';
-import { DbUser } from '../../database/entities/DbUser';
-import { DisciplineTeacherService } from './DisciplineTeacherService';
-import { PollService } from './PollService';
-import { DbStudent } from '../../database/entities/DbStudent';
+import { EntityType, Prisma, RoleName, State } from '@prisma/client';
 
 type SortedDisciplines = {
   year: number;
@@ -70,7 +73,7 @@ export class UserService {
     private pollService: PollService,
   ) {}
 
-  async createUserByAdmin (data: UserByAdminDTO) {
+  async createUserByAdmin (data: CreateUserDTO) {
     if (await this.authService.checkIfUserIsRegistered(data)) {
       throw new AlreadyRegisteredException();
     }
@@ -81,20 +84,8 @@ export class UserService {
     return this.superheroRepository.createSuperhero(id, body);
   }
 
-  async getSelective (studentId: string) {
-    return this.disciplineRepository.findMany({
-      where: {
-        selectiveDisciplines: {
-          some: {
-            studentId,
-          },
-        },
-      },
-    });
-  }
-
-  async getSelectiveBySemesters (userId: string) {
-    const selectiveByUser = await this.getSelective(userId);
+  async getSelectivesBySemesters (userId: string) {
+    const selectiveByUser = await this.getSelectiveDisciplines(userId);
     const { selectiveAmounts } = await this.groupRepository.find({
       students: {
         some: {
@@ -102,7 +93,7 @@ export class UserService {
         },
       },
     });
-    return this.disciplineMapper.getSelectiveWithAmount(selectiveByUser, selectiveAmounts);
+    return this.disciplineMapper.getSelectivesWithAmount(selectiveByUser, selectiveAmounts);
   }
 
   async giveRole (studentId: string, roleId: string) {
@@ -204,10 +195,10 @@ export class UserService {
       },
     });
 
-    const studentSelective = await this.getSelective(studentId);
+    const studentSelective = await this.getSelectiveDisciplines(studentId);
     const newGroupSelective = await this.groupService.getSelectiveDisciplines(groupId);
 
-    await this.deleteStudentSelective(studentId);
+    await this.deleteStudentSelectives(studentId);
 
     for (const discipline of studentSelective) {
       const exist = newGroupSelective.find((d) => d.subjectId === discipline.subjectId);
@@ -241,7 +232,7 @@ export class UserService {
     return result;
   }
 
-  async deleteStudentSelective (studentId: string) {
+  async deleteStudentSelectives (studentId: string) {
     await this.studentRepository.updateById(studentId, {
       selectiveDisciplines: {
         deleteMany: {
@@ -263,7 +254,7 @@ export class UserService {
 
   async updateStudent (userId: string, data: UpdateStudentData) {
     const student = await this.studentRepository.updateById(userId, data);
-    return this.studentMapper.updateStudent(student);
+    return this.studentMapper.updateStudent(student as unknown as DbStudent);
   }
 
   async updateSuperhero (userId: string, data: UpdateSuperheroDTO) {
@@ -473,21 +464,21 @@ export class UserService {
     }
   }
 
-  async getRemainingSelectiveForSemester (userId: string, query: RemainingSelectiveDTO) {
+  async getRemainingSelectivesForSemester (userId: string, query: RemainingSelectivesDTO) {
     const semester = await this.dateService.getSemester({ year: query.year, semester: query.semester });
     if (!semester) {
       return {};
     }
 
-    const remainingSelective = await this.getRemainingSelective(userId);
-    const result = remainingSelective.find(({ year, semester }) => year === query.year && semester === query.semester);
+    const remainingSelectives = await this.getRemainingSelectives(userId);
+    const result = remainingSelectives.find(({ year, semester }) => year === query.year && semester === query.semester);
     return result.availableSelectiveAmount > 0 ? result : {};
   }
-  async getRemainingSelective (userId: string) {
+  async getRemainingSelectives (userId: string): Promise<RemainingSelectivesResponse[]> {
     const user = await this.getUser(userId);
     const group = await this.groupService.get(user.group.id);
 
-    const selective = await this.getSelective(user.id);
+    const selective = await this.getSelectiveDisciplines(user.id);
 
     const disciplines = (await this.disciplineRepository.findMany({
       where: {
@@ -500,15 +491,15 @@ export class UserService {
     }));
 
     const semesters = this.getUniqueSemesters(disciplines);
-    const result = [];
+    const result: RemainingSelectivesResponse[] = [];
 
     semesters.forEach((s) => {
       const semesterAmount = group.selectiveAmounts.find((x) => x.semester === s.semester && x.year === s.year);
 
-      const userSemesterSelective = selective.filter(({ year, semester }) => year === s.year && semester === s.semester);
-      const availableSelectiveAmount = semesterAmount.amount - userSemesterSelective.length;
+      const userSemesterSelectives = selective.filter(({ year, semester }) => year === s.year && semester === s.semester);
+      const availableSelectiveAmount = semesterAmount.amount - userSemesterSelectives.length;
 
-      const remainingSelective = disciplines
+      const remainingSelectives = disciplines
         .filter((selectiveDisc) => selectiveDisc.year === s.year && selectiveDisc.semester === s.semester)
         .map(({ id, subject: { name } }) => ({
           disciplineId: id,
@@ -518,7 +509,7 @@ export class UserService {
       result.push({
         ...s,
         availableSelectiveAmount,
-        remainingSelective,
+        remainingSelectives,
       });
     });
 

@@ -40,11 +40,11 @@ const SelectiveTab: FC = () => {
       )}
       {data ? (
         <>
-          {data.selective.map((selective, index) => (
+          {data.selectives.map((selective, index) => (
             <SelectiveBlock
               key={index}
               userId={user.id}
-              semester={selective.semester}
+              semester={selective.semester as 1 | 2}
               year={selective.year}
               disciplines={selective.disciplines}
               disciplinesNumber={selective.amount}

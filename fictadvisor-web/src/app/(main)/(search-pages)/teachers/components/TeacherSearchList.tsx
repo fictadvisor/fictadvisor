@@ -1,16 +1,16 @@
 import { FC, HTMLProps, useEffect } from 'react';
+import { PaginatedTeachersResponse } from '@fictadvisor/utils/responses';
 import { Box } from '@mui/material';
 import Link from 'next/link';
 
 import { TeacherCard } from '@/components/common/ui/cards/teacher-card';
 import useToast from '@/hooks/use-toast';
-import { GetTeachersResponse } from '@/lib/api/teacher/types/GetTeachersResponse';
 
 import * as styles from './TeacherSearchList.styles';
 
 interface TeacherSearchListProps
   extends HTMLProps<HTMLDivElement>,
-    GetTeachersResponse {
+    PaginatedTeachersResponse {
   isFetching: boolean;
 }
 

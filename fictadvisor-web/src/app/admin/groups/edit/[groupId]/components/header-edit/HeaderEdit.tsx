@@ -1,5 +1,6 @@
 'use client';
 import { type FC, useState } from 'react';
+import { MappedGroupResponse } from '@fictadvisor/utils/responses';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Box, Stack, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
@@ -12,12 +13,11 @@ import {
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
 import DeletePopup from '@/components/common/ui/delete-popup';
-import { Group } from '@/types/group';
 
 import * as styles from './HeaderEdit.styles';
 
 interface HeaderEditProps {
-  group: Group;
+  group: MappedGroupResponse;
   handleEditSubmit: () => void;
   handleDeleteSubmit: () => void;
 }

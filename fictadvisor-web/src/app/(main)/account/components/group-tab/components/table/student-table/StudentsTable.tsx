@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { GroupRoles } from '@fictadvisor/utils/enums';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import {
   BarsArrowDownIcon,
@@ -28,7 +29,6 @@ import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import GroupAPI from '@/lib/api/group/GroupAPI';
 import GroupService from '@/lib/services/group/GroupService';
 import theme from '@/styles/theme';
-import { UserGroupRole } from '@/types/user';
 
 import * as gridStyles from '../grid.styles';
 import { StudentsTableProps } from '../types';
@@ -161,11 +161,11 @@ const StudentsTable: React.FC<StudentsTableProps> = ({
               )}
             </Grid>
             <Grid item desktop={2} mobile={1}>
-              {row.role !== UserGroupRole.STUDENT && isMobile && (
+              {row.role !== GroupRoles.STUDENT && isMobile && (
                 <Tag
                   size={TagSize.SMALL}
                   icon={
-                    row.role === UserGroupRole.CAPTAIN ? (
+                    row.role === GroupRoles.CAPTAIN ? (
                       <Captain />
                     ) : (
                       <Moderator />
@@ -175,7 +175,7 @@ const StudentsTable: React.FC<StudentsTableProps> = ({
                   sx={styles.tag}
                 />
               )}
-              {row.role !== UserGroupRole.STUDENT && !isMobile && (
+              {row.role !== GroupRoles.STUDENT && !isMobile && (
                 <Tag
                   text={roleNamesMapper[row.role]}
                   variant={TagVariant.DARKER}

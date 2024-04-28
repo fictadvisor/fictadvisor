@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
+import { DisciplineTeacherQuestionsResponse } from '@fictadvisor/utils/responses';
 import { Box } from '@mui/material';
 
 import PollCard from '@/components/common/ui/cards/poll-card';
 import TeacherHeaderCard from '@/components/common/ui/cards/teacher-header-card';
-import { GetTeacherQuestionsResponse } from '@/lib/api/poll/types/GetTeacherQuestionsResponse';
 import { usePollStore } from '@/store/poll-page/usePollStore';
 
 import * as styles from './QuestionsList.styles';
 
 interface QuestionListProps {
-  data: GetTeacherQuestionsResponse;
+  data: DisciplineTeacherQuestionsResponse;
   progress: number[];
 }
 const QuestionsList: React.FC<QuestionListProps> = ({ data, progress }) => {

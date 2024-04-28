@@ -1,9 +1,8 @@
 import { Dispatch, SetStateAction } from 'react';
-
-import { TeacherWithSubject } from '@/types/teacher';
+import { TeacherWithContactsFullResponse } from '@fictadvisor/utils/responses';
 
 export interface TeacherSubjectContext {
   subjectFloatingCardShowed: boolean;
   setSubjectFloatingCardShowed: Dispatch<SetStateAction<boolean>>;
-  teacher: TeacherWithSubject;
+  teacher: TeacherWithContactsFullResponse;
 }

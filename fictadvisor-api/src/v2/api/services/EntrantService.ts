@@ -1,22 +1,18 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateContractDTO } from '../dtos/CreateContractDTO';
-import { EntrantRepository } from '../../database/repositories/EntrantRepository';
-import { AlreadyExistException } from '../../utils/exceptions/AlreadyExistException';
-import { FullNameDTO } from '../dtos/FullNameDTO';
-import { DataNotFoundException } from '../../utils/exceptions/DataNotFoundException';
-import { PriorityState } from '@prisma/client';
+import {
+  CreateContractDTO,
+  FullNameDTO,
+  DeleteEntrantDataQueryDTO,
+  FullNameWithSpecialtyDTO,
+} from '@fictadvisor/utils/requests';
+import { EntrantActions, Actions } from '@fictadvisor/utils/enums';
 import { AdmissionAPI } from '../../telegram/AdmissionAPI';
 import { EntrantMapper } from '../../mappers/EntrantMapper';
-import { DeleteEntrantDataQueryDTO, EntrantActions } from '../dtos/DeleteEntrantDataQueryDTO';
+import { EntrantRepository } from '../../database/repositories/EntrantRepository';
+import { AlreadyExistException } from '../../utils/exceptions/AlreadyExistException';
+import { DataNotFoundException } from '../../utils/exceptions/DataNotFoundException';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
-import { FullNameWithSpecialtyDTO } from '../dtos/FullNameWithSpecialtyDTO';
-
-export enum Actions {
-  PRIORITY = 'пріоритет',
-  CONTRACT = 'договір',
-  ENTRANT = 'вступник',
-  ENTRANT_DATA = 'дані',
-}
+import { PriorityState } from '@prisma/client';
 
 @Injectable()
 export class EntrantService {

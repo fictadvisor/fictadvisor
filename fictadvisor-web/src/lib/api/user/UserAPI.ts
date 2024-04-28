@@ -1,72 +1,67 @@
-import { UserSearchFormFields } from 'src/app/admin/users/search/types';
+import {
+  ApproveStudentByTelegramDTO,
+  CreateContactDTO,
+  CreateSuperheroDTO,
+  CreateUserDTO,
+  GiveRoleDTO,
+  GroupRequestDTO,
+  QueryAllUsersDTO,
+  RemainingSelectivesDTO,
+  SelectiveDisciplinesDTO,
+  TelegramDTO,
+  UpdateStudentDTO,
+  UpdateSuperheroDTO,
+  UpdateUserDTO,
+} from '@fictadvisor/utils/requests';
+import {
+  ContactResponse,
+  ContactsResponse,
+  DisciplineIdsResponse,
+  FullStudentResponse,
+  OrdinaryStudentResponse,
+  RemainingSelectivesResponse,
+  SelectivesBySemestersResponse,
+  SuperheroResponse,
+  UserResponse,
+  UsersResponse,
+} from '@fictadvisor/utils/responses';
 
-import { AddContactBody } from '@/lib/api/user/types/AddContactBody';
-import { ChangeAvatarResponse } from '@/lib/api/user/types/ChangeAvatarResponse';
-import { ChangeRoleBody } from '@/lib/api/user/types/ChangeRoleBody';
-import { GetContactsResponse } from '@/lib/api/user/types/GetContactsResponse';
-import { GetSelectiveDisciplinesBySemesterResponse } from '@/lib/api/user/types/GetSelectiveDisciplinesBySemesterResponse';
-import { GetSelectiveDisciplinesResponse } from '@/lib/api/user/types/GetSelectiveDisciplinesResponse';
-import { GetSelectiveResponse } from '@/lib/api/user/types/GetSelectiveResponse';
-import { PostSelectiveDisciplinesBody } from '@/lib/api/user/types/PostSelectiveDisciplinesBody';
-import { PostSuperheroBody } from '@/lib/api/user/types/PostSuperheroBody';
-import { RequestNewGroupBody } from '@/lib/api/user/types/RequestNewGroupBody';
-import { VerifyStudentBody } from '@/lib/api/user/types/VerifyStudentBody';
-import { VerifySuperheroBody } from '@/lib/api/user/types/VerifySuperheroBody';
 import { getAuthorizationHeader } from '@/lib/api/utils';
-import { TelegramUser } from '@/types/telegram';
-import { SimplifiedUser } from '@/types/user';
 
 import { client } from '../instance';
 
-import { ChangeInfoBody } from './types/ChangeInfoBody';
-import { ChangeUserBody } from './types/ChangeUserBody';
-import { CreateUserBody } from './types/CreateUserBody';
-import { GetAllResponse } from './types/GetAllResponse';
-
 class UserAPI {
-  async getAll(
-    page: number,
-    params: Partial<UserSearchFormFields> = {},
-    pageSize?: number,
-  ): Promise<GetAllResponse> {
-    const { data } = await client.get(`/users`, {
-      params: {
-        ...params,
-        page,
-        pageSize,
-      },
+  async getAll(params: QueryAllUsersDTO = {}): Promise<UsersResponse> {
+    const { data } = await client.get<UsersResponse>(`/users`, {
+      params,
       ...getAuthorizationHeader(),
     });
     return data;
   }
 
-  async getUser(userId: string): Promise<SimplifiedUser> {
-    const { data } = await client.get(
+  async getUser(userId: string): Promise<UserResponse> {
+    const { data } = await client.get<UserResponse>(
       `/users/${userId}`,
       getAuthorizationHeader(),
     );
     return data;
   }
 
-  async delete(userId: string) {
-    const { data } = await client.delete(
-      `/users/${userId}`,
-      getAuthorizationHeader(),
-    );
-    return data;
+  async delete(userId: string): Promise<void> {
+    await client.delete(`/users/${userId}`, getAuthorizationHeader());
   }
 
-  async create(body: CreateUserBody) {
-    const { data } = await client.post(
-      `/users/createUser`,
+  async create(body: CreateUserDTO) {
+    const { data } = await client.post<UserResponse>(
+      `/users`,
       body,
       getAuthorizationHeader(),
     );
     return data;
   }
 
-  async editUser(userId: string, body: ChangeUserBody) {
-    const { data } = await client.patch(
+  async editUser(userId: string, body: UpdateUserDTO) {
+    const { data } = await client.patch<UserResponse>(
       `/users/${userId}`,
       body,
       getAuthorizationHeader(),
@@ -74,8 +69,8 @@ class UserAPI {
     return data;
   }
 
-  async changeInfo(userId: string, body: ChangeInfoBody) {
-    const { data } = await client.patch(
+  async changeInfo(userId: string, body: UpdateStudentDTO) {
+    const { data } = await client.patch<OrdinaryStudentResponse>(
       `/users/${userId}/student`,
       body,
       getAuthorizationHeader(),
@@ -83,8 +78,8 @@ class UserAPI {
     return data;
   }
 
-  async linkTelegram(userId: string, body: TelegramUser) {
-    const { data } = await client.post(
+  async linkTelegram(userId: string, body: TelegramDTO) {
+    const { data } = await client.post<OrdinaryStudentResponse>(
       `/users/${userId}/telegram`,
       body,
       getAuthorizationHeader(),
@@ -92,8 +87,8 @@ class UserAPI {
     return data;
   }
 
-  async addContact(userId: string, body: AddContactBody) {
-    const { data } = await client.post(
+  async addContact(userId: string, body: CreateContactDTO) {
+    const { data } = await client.post<ContactResponse>(
       `/users/${userId}/contacts`,
       body,
       getAuthorizationHeader(),
@@ -101,66 +96,61 @@ class UserAPI {
     return data;
   }
 
-  async getContacts(userId: string): Promise<GetContactsResponse> {
-    const { data } = await client.get(
+  async getContacts(userId: string): Promise<ContactsResponse> {
+    const { data } = await client.get<ContactsResponse>(
       `/users/${userId}/contacts`,
       getAuthorizationHeader(),
     );
     return data;
   }
 
-  async deleteContact(userId: string, id: string) {
-    const { data } = await client.delete(
-      `/users/${userId}/contacts/${id}`,
+  async deleteContact(userId: string, contactId: string): Promise<void> {
+    await client.delete(
+      `/users/${userId}/contacts/${contactId}`,
       getAuthorizationHeader(),
     );
-    return data;
   }
 
-  async requestNewGroup(body: RequestNewGroupBody, userId: string) {
-    const { data } = await client.patch(
+  async requestNewGroup(userId: string, body: GroupRequestDTO): Promise<void> {
+    await client.patch(
       `/users/${userId}/requestNewGroup`,
       body,
       getAuthorizationHeader(),
     );
-    return data;
   }
 
   async getSelectiveDisciplinesBySemester(userId: string) {
-    const { data } =
-      await client.get<GetSelectiveDisciplinesBySemesterResponse>(
-        `/users/${userId}/selectiveBySemesters`,
-        getAuthorizationHeader(),
-      );
+    const { data } = await client.get<SelectivesBySemestersResponse>(
+      `/users/${userId}/selectiveBySemesters`,
+      getAuthorizationHeader(),
+    );
     return data;
   }
 
   async postSelectiveDisciplines(
     userId: string,
-    body: PostSelectiveDisciplinesBody,
-  ) {
-    const { data } = await client.post(
+    body: SelectiveDisciplinesDTO,
+  ): Promise<void> {
+    await client.post(
       `/users/${userId}/selectiveDisciplines`,
       body,
       getAuthorizationHeader(),
     );
-    return data;
   }
 
   async getSelectiveDisciplines(
     userId: string,
-    year: number,
-    semester: number,
+    params: RemainingSelectivesDTO,
   ) {
-    const { data } = await client.get<GetSelectiveDisciplinesResponse>(
-      `/users/${userId}/selectiveDisciplines?`,
-      { ...getAuthorizationHeader(), params: { year, semester } },
+    const { data } = await client.get<RemainingSelectivesResponse>(
+      `/users/${userId}/remainingSelectives`,
+      { ...getAuthorizationHeader(), params },
     );
     return data;
   }
 
   async changeAvatar(userId: string, body: FormData) {
-    const { data } = await client.patch<ChangeAvatarResponse>(
+    const { data } = await client.patch<UserResponse>(
       `/users/${userId}/avatar`,
       body,
       getAuthorizationHeader(),
@@ -168,25 +158,20 @@ class UserAPI {
     return data;
   }
 
-  async setRole(userId: string, body: ChangeRoleBody) {
-    const { data } = await client.post(
-      `/users/${userId}/roles`,
-      body,
-      getAuthorizationHeader(),
-    );
-    return data;
+  async setRole(userId: string, body: GiveRoleDTO): Promise<void> {
+    await client.post(`/users/${userId}/roles`, body, getAuthorizationHeader());
   }
 
   async getSelective(userId: string) {
-    const { data } = await client.get<GetSelectiveResponse>(
-      `/users/${userId}/selective`,
+    const { data } = await client.get<DisciplineIdsResponse>(
+      `/users/${userId}/selectiveDisciplines`,
       getAuthorizationHeader(),
     );
     return data;
   }
 
-  async postSuperhero(userId: string, body: PostSuperheroBody) {
-    const { data } = await client.post(
+  async postSuperhero(userId: string, body: CreateSuperheroDTO) {
+    const { data } = await client.post<SuperheroResponse>(
       `/users/${userId}/superhero`,
       body,
       getAuthorizationHeader(),
@@ -194,8 +179,8 @@ class UserAPI {
     return data;
   }
 
-  async verifySuperhero(userId: string, body: VerifySuperheroBody) {
-    const { data } = await client.patch(
+  async verifySuperhero(userId: string, body: UpdateSuperheroDTO) {
+    const { data } = await client.patch<SuperheroResponse>(
       `/users/${userId}/verifySuperhero`,
       body,
       getAuthorizationHeader(),
@@ -203,8 +188,8 @@ class UserAPI {
     return data;
   }
 
-  async verifyStudent(userId: string, body: VerifyStudentBody) {
-    const { data } = await client.patch(
+  async verifyStudent(userId: string, body: ApproveStudentByTelegramDTO) {
+    const { data } = await client.patch<FullStudentResponse>(
       `/users/${userId}/verifyStudent`,
       body,
       getAuthorizationHeader(),

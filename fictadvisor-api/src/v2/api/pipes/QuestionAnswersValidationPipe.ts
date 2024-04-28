@@ -1,9 +1,9 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
-import { CreateAnswersDTO, CreateAnswerDTO } from '../dtos/CreateAnswersDTO';
+import { CreateAnswersDTO, CreateAnswerDTO } from '@fictadvisor/utils/requests';
 import { QuestionRepository } from '../../database/repositories/QuestionRepository';
-import { QuestionType } from '@prisma/client';
 import { InvalidValueException } from '../../utils/exceptions/InvalidValueException';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
+import { QuestionType } from '@prisma/client';
 
 @Injectable()
 export class QuestionAnswersValidationPipe implements PipeTransform {

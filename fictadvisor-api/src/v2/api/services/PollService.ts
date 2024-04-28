@@ -1,36 +1,38 @@
 import { Injectable } from '@nestjs/common';
+import {
+  CreateQuestionRoleDTO,
+  CommentsQueryDTO,
+  QueryAllDisciplineTeacherForPollDTO,
+  QueryAllQuestionDTO,
+  CreateQuestionDTO,
+  UpdateQuestionDTO,
+  SortDTO,
+} from '@fictadvisor/utils/requests';
+import { PollDisciplineTeachersResponse } from '@fictadvisor/utils/responses';
+import { CommentsSortOrder } from '@fictadvisor/utils/enums';
+import {
+  SortQATParam,
+  OrderQAParam,
+} from '@fictadvisor/utils/enums';
+import { DatabaseUtils } from '../../database/DatabaseUtils';
+import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
+import { CommentsSortMapper } from '../../mappers/CommentsSortMapper';
+import { DateService } from '../../utils/date/DateService';
+import { DbQuestionWithAnswers } from '../../database/entities/DbQuestionWithAnswers';
+import { DbQuestionWithRoles } from '../../database/entities/DbQuestionWithRoles';
+import { DbQuestion } from '../../database/entities/DbQuestion';
+import { ResponseData } from '../datas/ResponseData';
 import { QuestionRepository } from '../../database/repositories/QuestionRepository';
+import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
+import { QuestionAnswerRepository } from '../../database/repositories/QuestionAnswerRepository';
+import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
+import { GroupRepository } from '../../database/repositories/GroupRepository';
 import {
   QuestionType,
   SemesterDate,
   TeacherRole,
   Prisma,
 } from '@prisma/client';
-import { ResponseData } from '../datas/ResponseData';
-import { CreateQuestionRoleDTO } from '../dtos/CreateQuestionRoleDTO';
-import { DbQuestionWithAnswers } from '../../database/entities/DbQuestionWithAnswers';
-import { DateService } from '../../utils/date/DateService';
-import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
-import { DbQuestionWithRoles } from '../../database/entities/DbQuestionWithRoles';
-import { QuestionAnswerRepository } from '../../database/repositories/QuestionAnswerRepository';
-import {
-  CommentsQueryDTO,
-  CommentsSort,
-  CommentsSortMapper,
-} from '../dtos/CommentsQueryDTO';
-import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
-import { GroupRepository } from '../../database/repositories/GroupRepository';
-import { DatabaseUtils } from '../../database/DatabaseUtils';
-import { SortQATParam } from '../dtos/SortQATParam';
-import { QueryAllDisciplineTeacherForPollDTO } from '../dtos/QueryAllDisciplineTeacherForPollDTO';
-import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
-import { PollDisciplineTeachersResponse } from '../responses/PollDisciplineTeachersResponse';
-import { QueryAllQuestionDTO } from '../dtos/QueryAllQuestionDTO';
-import { DbQuestion } from '../../database/entities/DbQuestion';
-import { CreateQuestionDTO } from '../dtos/CreateQuestionDTO';
-import { UpdateQuestionDTO } from '../dtos/UpdateQuestionDTO';
-import { SortDTO } from '../../utils/QueryAllDTO';
-import { OrderQAParam } from '../dtos/OrderQAParam';
 
 @Injectable()
 export class PollService {
@@ -179,7 +181,7 @@ export class PollService {
       },
       orderBy: query.sortBy
         ? CommentsSortMapper[query.sortBy]
-        : CommentsSortMapper[CommentsSort.NEWEST],
+        : CommentsSortMapper[CommentsSortOrder.NEWEST],
       include: {
         disciplineTeacher: {
           include: {

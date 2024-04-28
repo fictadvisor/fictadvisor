@@ -1,8 +1,8 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
-import { UpdateEventDTO } from '../dtos/UpdateEventDTO';
+import { UpdateEventDTO } from '@fictadvisor/utils/requests';
 import { TeacherRepository } from '../../database/repositories/TeacherRepository';
-import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
+import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
 
 @Injectable()
 export class EventPipe implements PipeTransform<UpdateEventDTO, Promise<UpdateEventDTO>> {

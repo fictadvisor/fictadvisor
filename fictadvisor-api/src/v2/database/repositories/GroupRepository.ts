@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../PrismaService';
 import { Prisma } from '@prisma/client';
+import { DbGroup } from '../entities/DbGroup';
 
 @Injectable()
 export class GroupRepository {
@@ -41,7 +42,7 @@ export class GroupRepository {
         id,
       },
       include: this.include,
-    });
+    }) as any as DbGroup;
   }
 
   async findMany (args: Prisma.GroupFindManyArgs) {
@@ -59,11 +60,11 @@ export class GroupRepository {
     return group;
   }
 
-  async create (data: Prisma.GroupUncheckedCreateInput) {
+  async create (data: Prisma.GroupUncheckedCreateInput) : Promise<DbGroup> {
     return this.prisma.group.create({
       data,
       include: this.include,
-    });
+    }) as any as DbGroup;
   }
 
   async updateById (id: string, data: Prisma.GroupUncheckedUpdateInput) {
@@ -73,7 +74,7 @@ export class GroupRepository {
       },
       data,
       include: this.include,
-    });
+    }) as any as DbGroup;
   }
 
   async deleteById (id: string) {
@@ -82,7 +83,7 @@ export class GroupRepository {
         id,
       },
       include: this.include,
-    });
+    }) as any as DbGroup;
   }
 
   async count (data: Prisma.GroupCountArgs) {

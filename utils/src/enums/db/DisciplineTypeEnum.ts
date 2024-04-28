@@ -1,0 +1,8 @@
+export enum DisciplineTypeEnum {
+  LECTURE = 'LECTURE',
+  PRACTICE = 'PRACTICE',
+  LABORATORY = 'LABORATORY',
+  CONSULTATION = 'CONSULTATION',
+  WORKOUT = 'WORKOUT',
+  EXAM = 'EXAM',
+}

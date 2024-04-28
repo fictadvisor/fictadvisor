@@ -1,16 +1,4 @@
-import { Teacher } from '@/types/teacher';
-
-export enum QuestionType {
-  TOGGLE = 'TOGGLE',
-  TEXT = 'TEXT',
-  SCALE = 'SCALE',
-}
-
-export enum QuestionDisplay {
-  AMOUNT = 'AMOUNT',
-  PERCENT = 'PERCENT',
-  TEXT = 'TEXT',
-}
+import { QuestionDisplay, QuestionType } from '@fictadvisor/utils/enums';
 
 export interface Question {
   id: string;
@@ -27,8 +15,6 @@ export interface Answer {
   questionId: string;
   value: string;
 }
-
-export type PollTeacher = Omit<Teacher, 'roles'>;
 
 export interface Category {
   name: string;

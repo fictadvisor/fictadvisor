@@ -1,27 +1,27 @@
-import { UserService } from './UserService';
-import { PrismaService } from '../../database/PrismaService';
 import { Test } from '@nestjs/testing';
+import { ForbiddenException, InjectionToken } from '@nestjs/common';
+import { TelegramAPI } from '../../telegram/TelegramAPI';
+import { PrismaModule } from '../../modules/PrismaModule';
+import { MapperModule } from '../../modules/MapperModule';
+import { StudentMapper } from '../../mappers/StudentMapper';
+import { DisciplineMapper } from '../../mappers/DisciplineMapper';
+import { UserService } from './UserService';
+import { AuthService } from './AuthService';
+import { GroupService } from './GroupService';
+import { DateService } from '../../utils/date/DateService';
+import { DisciplineTeacherService } from './DisciplineTeacherService';
+import { PollService } from './PollService';
+import { FileService } from '../../utils/files/FileService';
+import { PrismaService } from '../../database/PrismaService';
 import { StudentRepository } from '../../database/repositories/StudentRepository';
 import { UserRepository } from '../../database/repositories/UserRepository';
 import { SuperheroRepository } from '../../database/repositories/SuperheroRepository';
 import { ContactRepository } from '../../database/repositories/ContactRepository';
 import { RoleRepository } from '../../database/repositories/RoleRepository';
-import { AuthService } from './AuthService';
-import { FileService } from '../../utils/files/FileService';
-import { GroupService } from './GroupService';
-import { StudentMapper } from '../../mappers/StudentMapper';
-import { DisciplineMapper } from '../../mappers/DisciplineMapper';
-import { ForbiddenException, InjectionToken } from '@nestjs/common';
-import { PrismaModule } from '../../modules/PrismaModule';
-import { MapperModule } from '../../modules/MapperModule';
-import { DateService } from '../../utils/date/DateService';
 import { NotBelongException } from '../../utils/exceptions/NotBelongException';
 import { AlreadySelectedException } from '../../utils/exceptions/AlreadySelectedException';
 import { ExcessiveSelectiveDisciplinesException } from '../../utils/exceptions/ExcessiveSelectiveDisciplinesException';
-import { TelegramAPI } from '../../telegram/TelegramAPI';
 import { NotSelectedDisciplineException } from '../../utils/exceptions/NotSelectedDisciplineException';
-import { DisciplineTeacherService } from './DisciplineTeacherService';
-import { PollService } from './PollService';
 
 describe('UserService', () => {
   let userService: UserService;
@@ -325,7 +325,7 @@ describe('UserService', () => {
   describe('getSelectiveBySemesters', () => {
     it('should return correct object if student has selective in only one semester', async () => {
       const userId = 'userWithSelectiveId';
-      const result = await userService.getSelectiveBySemesters(userId);
+      const result = await userService.getSelectivesBySemesters(userId);
       expect(result).toStrictEqual([
         {
           year: 2022,
@@ -345,7 +345,7 @@ describe('UserService', () => {
   describe('getSelectiveBySemesters', () => {
     it('should return correct object if student has selective in only one semester', async () => {
       const userId = 'userWithSelectiveId';
-      const result = await userService.getSelectiveBySemesters(userId);
+      const result = await userService.getSelectivesBySemesters(userId);
       expect(result).toStrictEqual([
         {
           year: 2022,
@@ -364,7 +364,7 @@ describe('UserService', () => {
 
   describe('getRemainingSelectiveForSemester', () => {
     it('should return empty obj for reason all needed disciplines taken', async () => {
-      const remainingDisciplines = await userService.getRemainingSelectiveForSemester(
+      const remainingDisciplines = await userService.getRemainingSelectivesForSemester(
         'userWithSelectiveId',
         { year: 2022, semester: 2 }
       );
@@ -373,7 +373,7 @@ describe('UserService', () => {
     });
 
     it('should return empty obj for incorrect date', async () => {
-      const remainingDisciplines = await userService.getRemainingSelectiveForSemester(
+      const remainingDisciplines = await userService.getRemainingSelectivesForSemester(
         'userWithSelectiveId',
         { year: 2000, semester: 2 }
       );
@@ -382,7 +382,7 @@ describe('UserService', () => {
     });
 
     it('should return correct remaining disciplines', async () => {
-      const remainingDisciplines = await userService.getRemainingSelectiveForSemester(
+      const remainingDisciplines = await userService.getRemainingSelectivesForSemester(
         'userWithSelectiveId',
         { year: 2022, semester: 1 }
       );
@@ -391,7 +391,7 @@ describe('UserService', () => {
         availableSelectiveAmount: 3,
         year: 2022,
         semester: 1,
-        remainingSelective: [
+        remainingSelectives: [
           {
             disciplineId: 'selectiveDiscipline1Id',
             subjectName: 'selective1',

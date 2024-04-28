@@ -1,4 +1,5 @@
-import { Group, TelegramSource } from '@prisma/client';
+import { TelegramSource } from '@fictadvisor/utils/enums';
+import { DbGroup } from './DbGroup';
 
 export class DbTelegramGroup {
   groupId: string;
@@ -6,5 +7,7 @@ export class DbTelegramGroup {
   threadId?: bigint;
   source: TelegramSource;
   postInfo: boolean;
-  group: Group;
+  createdAt: Date | null;
+  updatedAt: Date | null;
+  group: DbGroup;
 }

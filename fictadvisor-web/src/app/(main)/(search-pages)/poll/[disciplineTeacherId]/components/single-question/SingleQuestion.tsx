@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import { QuestionType } from '@fictadvisor/utils/enums';
 import { Box, Typography, useMediaQuery } from '@mui/material';
 
 import { SliderSize } from '@/components/common/ui/form/slider/types';
@@ -6,7 +7,7 @@ import FormikRadioGroup from '@/components/common/ui/form/with-formik/radio/Form
 import FormikSlider from '@/components/common/ui/form/with-formik/slider';
 import FormikTextArea from '@/components/common/ui/form/with-formik/text-area';
 import theme from '@/styles/theme';
-import { Question, QuestionType } from '@/types/poll';
+import { Question } from '@/types/poll';
 
 import * as styles from './SingleQuestion.style';
 

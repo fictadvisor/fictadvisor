@@ -1,17 +1,17 @@
+import { Test } from '@nestjs/testing';
+import { QueryAllTeacherDTO } from '@fictadvisor/utils/requests';
+import { SortQATParam } from '@fictadvisor/utils/enums';
+import { TelegramAPI } from 'src/v2/telegram/TelegramAPI';
+import { MapperModule } from '../../modules/MapperModule';
+import { PrismaModule } from '../../modules/PrismaModule';
+import { DateService } from 'src/v2/utils/date/DateService';
 import { TeacherService } from './TeacherService';
 import { DisciplineTeacherService } from './DisciplineTeacherService';
 import { PollService } from './PollService';
-import { DateService } from 'src/v2/utils/date/DateService';
-import { TelegramAPI } from 'src/v2/telegram/TelegramAPI';
-import { Test } from '@nestjs/testing';
-import { MapperModule } from '../../modules/MapperModule';
-import { PrismaModule } from '../../modules/PrismaModule';
 import { PrismaService } from 'src/v2/database/PrismaService';
-import { QueryAllTeacherDTO } from '../dtos/QueryAllTeacherDTO';
 import { TelegramConfigService } from 'src/v2/config/TelegramConfigService';
 import { ConfigService } from '@nestjs/config';
 import { InvalidEntityIdException } from 'src/v2/utils/exceptions/InvalidEntityIdException';
-import { SortQATParam } from '../dtos/SortQATParam';
 
 
 describe('TeacherService', () => {
