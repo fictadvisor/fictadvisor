@@ -1,4 +1,5 @@
 import { FC, useCallback, useEffect } from 'react';
+import { SubjectCountResponse } from '@fictadvisor/utils/responses';
 import Masonry from '@mui/lab/Masonry';
 import { Box } from '@mui/material';
 import { useRouter } from 'next/navigation';
@@ -6,14 +7,13 @@ import { useRouter } from 'next/navigation';
 import { breakpoints } from '@/app/(main)/(search-pages)/subjects/components/constants/breakpoints';
 import { SubjectCard } from '@/components/common/ui/cards/subject-card';
 import useToast from '@/hooks/use-toast';
-import { GetListOfSubjectsResponse } from '@/lib/api/subject/types/GetListOfSubjectsResponse';
 
 import * as styles from './SubjectSearchList.styles';
 
 const TOAST_TIMER = 4000;
 
 export const SubjectSearchList: FC<{
-  subjects: GetListOfSubjectsResponse['subjects'];
+  subjects: SubjectCountResponse[];
 }> = ({ subjects }) => {
   const router = useRouter();
   const toast = useToast();

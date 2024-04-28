@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
+import { GroupRoles } from '@fictadvisor/utils/enums';
 import { ArrowUpIcon, PlusIcon } from '@heroicons/react/24/solid';
 import { Box } from '@mui/material';
 
 import ButtonIcon from '@/components/common/ui/icon-button-mui/IconButton';
 import useAuthentication from '@/hooks/use-authentication';
 import { useSchedule } from '@/store/schedule/useSchedule';
-import { UserGroupRole } from '@/types/user';
 
 import * as styles from './buttonIcons.styles';
 
@@ -16,8 +16,8 @@ export const ButtonIcons = () => {
 
   const validPrivilege =
     user &&
-    (user.group?.role === UserGroupRole.CAPTAIN ||
-      user.group?.role === UserGroupRole.MODERATOR);
+    (user.group?.role === GroupRoles.CAPTAIN ||
+      user.group?.role === GroupRoles.MODERATOR);
 
   const showButton = validPrivilege && user.group?.id === groupId;
 

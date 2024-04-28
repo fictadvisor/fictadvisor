@@ -1,7 +1,9 @@
-import { GetTeacherCommentsResponse } from '@/lib/api/teacher/types/GetTeacherCommentsResponse';
-import { GetTeacherMarksResponse } from '@/lib/api/teacher/types/GetTeacherMarksResponse';
-import { GetTeacherSubjectsResponse } from '@/lib/api/teacher/types/GetTeacherSubjectsResponse';
-import { TeacherWithSubject } from '@/types/teacher';
+import {
+  MarkResponse,
+  PaginatedQuestionCommentsResponse,
+  SubjectResponse,
+  TeacherWithContactsFullResponse,
+} from '@fictadvisor/utils/responses';
 
 export interface TeacherButtonInfo {
   text: string;
@@ -9,9 +11,9 @@ export interface TeacherButtonInfo {
 }
 
 export interface TeacherPageInfo {
-  subjects: GetTeacherSubjectsResponse['subjects'];
-  comments: GetTeacherCommentsResponse;
-  marks: GetTeacherMarksResponse['marks'];
+  subjects: SubjectResponse[];
+  comments: PaginatedQuestionCommentsResponse;
+  marks: MarkResponse[];
   hasEnoughMarks: boolean;
   marksText: string;
   commentText: string;
@@ -19,9 +21,9 @@ export interface TeacherPageInfo {
 }
 
 export interface TeacherSubjectPageInfo {
-  info: TeacherWithSubject;
-  comments: GetTeacherCommentsResponse;
-  marks: GetTeacherMarksResponse['marks'];
+  info: TeacherWithContactsFullResponse;
+  comments: PaginatedQuestionCommentsResponse;
+  marks: MarkResponse[];
   marksText: string;
   commentText: string;
   hasEnoughMarks: boolean;

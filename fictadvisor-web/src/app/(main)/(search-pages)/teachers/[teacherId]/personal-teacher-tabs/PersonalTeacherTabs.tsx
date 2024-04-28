@@ -1,4 +1,5 @@
 import { FC, SyntheticEvent, useState } from 'react';
+import { TeacherWithContactsResponse } from '@fictadvisor/utils/responses';
 import {
   BookOpenIcon,
   ChartBarIcon,
@@ -21,7 +22,6 @@ import TabContext from '@/components/common/ui/tab/tab-context';
 import TabList from '@/components/common/ui/tab/tab-list';
 import TabPanel from '@/components/common/ui/tab/tab-panel';
 import { TeacherPageInfo } from '@/lib/services/teacher/types';
-import { Teacher } from '@/types/teacher';
 
 import ComplaintPopup from './components/complaint-popup';
 import * as stylesMUI from './PersonalTeacherTabs.styles';
@@ -53,7 +53,7 @@ const SubjectTab = dynamic(
 
 interface PersonalTeacherTabsProps {
   data: TeacherPageInfo;
-  teacher: Teacher;
+  teacher: TeacherWithContactsResponse;
   tabIndex: string;
   handleChange: (event: SyntheticEvent, value: TeachersPageTabs) => void;
 }

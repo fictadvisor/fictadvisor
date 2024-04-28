@@ -1,5 +1,11 @@
 'use client';
 import React, { FC, useEffect, useMemo, useState } from 'react';
+import { CommentsSortBy } from '@fictadvisor/utils/enums';
+import { QueryAllCommentsDTO } from '@fictadvisor/utils/requests';
+import {
+  SemestersResponse,
+  StudyingSemester,
+} from '@fictadvisor/utils/responses';
 import {
   BarsArrowDownIcon,
   BarsArrowUpIcon,
@@ -11,7 +17,6 @@ import {
   initialValues,
   sortOptions,
 } from '@/app/admin/comments/common/constants';
-import { CommentsAdminSearchFormFields } from '@/app/admin/comments/common/types';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import { Dropdown, InputSize, InputType } from '@/components/common/ui/form';
 import CheckboxesDropdown from '@/components/common/ui/form/checkboxes-dropdown/CheckboxesDropdown';
@@ -23,12 +28,10 @@ import {
 } from '@/components/common/ui/icon-button';
 import IconButton from '@/components/common/ui/icon-button-mui';
 import { IconButtonSize } from '@/components/common/ui/icon-button-mui/types';
-import { GetDates } from '@/lib/api/dates/types/GetDates';
-import { Semester } from '@/types/dates';
 
 interface AdminCommentsSearch {
-  onSubmit: (values: CommentsAdminSearchFormFields) => void;
-  dates: GetDates;
+  onSubmit: (values: QueryAllCommentsDTO) => void;
+  dates: SemestersResponse;
 }
 
 const AnswersAdminSearch: FC<AdminCommentsSearch> = ({ onSubmit, dates }) => {
@@ -36,8 +39,7 @@ const AnswersAdminSearch: FC<AdminCommentsSearch> = ({ onSubmit, dates }) => {
   const [sortBy, setSortBy] = useState<string>('username');
   const [semesters, setSemesters] = useState<typeof semestersOptions>([]);
   const [order, setOrder] = useState<'asc' | 'desc'>('desc');
-  const [values, setValues] =
-    useState<CommentsAdminSearchFormFields>(initialValues);
+  const [values, setValues] = useState<QueryAllCommentsDTO>(initialValues);
 
   const semestersOptions = useMemo(
     () =>
@@ -50,7 +52,7 @@ const AnswersAdminSearch: FC<AdminCommentsSearch> = ({ onSubmit, dates }) => {
 
   const handleSearchChange = (value: string) => {
     setSearch(value);
-    setValues((values: CommentsAdminSearchFormFields) => ({
+    setValues((values: QueryAllCommentsDTO) => ({
       ...values,
       search: value,
     }));
@@ -58,7 +60,7 @@ const AnswersAdminSearch: FC<AdminCommentsSearch> = ({ onSubmit, dates }) => {
 
   const handleOrderChange = () => {
     setOrder(order => (order === 'asc' ? 'desc' : 'asc'));
-    setValues((values: CommentsAdminSearchFormFields) => ({
+    setValues((values: QueryAllCommentsDTO) => ({
       ...values,
       order: order,
     }));
@@ -66,16 +68,18 @@ const AnswersAdminSearch: FC<AdminCommentsSearch> = ({ onSubmit, dates }) => {
 
   const handleSortByChange = (value: string) => {
     setSortBy(value);
-    setValues((values: CommentsAdminSearchFormFields) => ({
+    setValues((values: QueryAllCommentsDTO) => ({
       ...values,
-      sort: value as 'teacher' | 'semester' | 'subject',
+      sort: value as CommentsSortBy,
     }));
   };
 
   const handleSemestersChange = (event: SelectChangeEvent) => {
-    const value = (event.target.value as unknown as Semester[]).filter(Boolean);
+    const value = (event.target.value as unknown as StudyingSemester[]).filter(
+      Boolean,
+    );
     const selectedSemestersOptions = value.reduce(
-      (acc: typeof semestersOptions, semester: Semester) => {
+      (acc: typeof semestersOptions, semester: StudyingSemester) => {
         const semesterOption = semestersOptions.find(
           ({ value }) =>
             value.year === semester.year &&
@@ -87,7 +91,7 @@ const AnswersAdminSearch: FC<AdminCommentsSearch> = ({ onSubmit, dates }) => {
       [],
     );
     setSemesters(selectedSemestersOptions);
-    setValues((values: CommentsAdminSearchFormFields) => ({
+    setValues((values: QueryAllCommentsDTO) => ({
       ...values,
       semesters: value,
     }));

@@ -40,14 +40,14 @@ export class DisciplineRepository {
         id,
       },
       include: this.include,
-    });
+    }) as any as DbDiscipline;
   }
 
   async find (where: Prisma.DisciplineWhereInput): Promise<DbDiscipline> {
     return this.prisma.discipline.findFirst({
       where,
       include: this.include,
-    });
+    }) as any as DbDiscipline;
   }
 
   async deleteById (id: string): Promise<DbDiscipline> {
@@ -56,27 +56,27 @@ export class DisciplineRepository {
         id,
       },
       include: this.include,
-    });
+    }) as any as DbDiscipline;
   }
 
   async findMany (args: Prisma.DisciplineFindManyArgs): Promise<DbDiscipline[]> {
     return this.prisma.discipline.findMany({
       ...args,
       include: this.include,
-    }) as unknown as Promise<DbDiscipline[]>;
+    }) as unknown as DbDiscipline[];
   }
 
   async create (data: Prisma.DisciplineUncheckedCreateInput) {
     return this.prisma.discipline.create({
       data,
       include: this.include,
-    });
+    }) as any as DbDiscipline;
   }
 
   async getOrCreate (data: { subjectId: string, groupId: string, year: number, isSelective?: boolean, semester: number }) {
     let discipline = await this.find(data);
     if (!discipline) {
-      discipline = await this.create(data);
+      discipline = await this.create(data) as DbDiscipline;
     }
     return discipline;
   }
@@ -88,11 +88,14 @@ export class DisciplineRepository {
       },
       data,
       include: this.include,
-    });
+    }) as any as DbDiscipline;
   }
 
   async updateMany (where: Prisma.DisciplineWhereInput, data: Prisma.DisciplineUncheckedUpdateManyInput) {
-    return this.prisma.discipline.updateMany({ where, data });
+    return this.prisma.discipline.updateMany({
+      where,
+      data,
+    }) as any as DbDiscipline[];
   }
 
   async count (data: Prisma.DisciplineCountArgs): Promise<number> {

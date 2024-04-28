@@ -1,4 +1,4 @@
-import { ReadonlyURLSearchParams, useSearchParams } from 'next/navigation';
+import { ReadonlyURLSearchParams } from 'next/navigation';
 
 const createQueryString = (
   name: string,

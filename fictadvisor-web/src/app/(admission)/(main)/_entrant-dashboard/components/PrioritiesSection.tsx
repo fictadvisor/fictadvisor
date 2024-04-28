@@ -1,4 +1,6 @@
 import React, { FC } from 'react';
+import { Actions, PriorityState } from '@fictadvisor/utils/enums';
+import { EntrantFullResponse } from '@fictadvisor/utils/responses';
 import { Box, Typography } from '@mui/material';
 
 import * as styles from '@/app/(admission)/(main)/_entrant-dashboard/EntrantDashboardPage.styles';
@@ -11,16 +13,11 @@ import Divider from '@/components/common/ui/divider';
 import { DividerTextAlign } from '@/components/common/ui/divider/types';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import ContractAPI from '@/lib/api/contract/ContractAPI';
-import { Actions } from '@/lib/api/contract/types/DeleteEntrantDataBody';
-import {
-  EntrantFuIlResponse,
-  priorityState,
-} from '@/lib/api/contract/types/EntrantFullResponse';
 
 interface PrioritiesSectionProps {
-  data: EntrantFuIlResponse;
+  data: EntrantFullResponse;
   setEntrantData: React.Dispatch<
-    React.SetStateAction<EntrantFuIlResponse | null>
+    React.SetStateAction<EntrantFullResponse | null>
   >;
   cb: (action: Actions) => Promise<void>;
 }
@@ -53,7 +50,7 @@ export const PrioritiesSection: FC<PrioritiesSectionProps> = ({
           ...pr,
           priority: undefined,
         };
-        return newData as EntrantFuIlResponse;
+        return newData as unknown as EntrantFullResponse;
       });
     } catch (e) {}
   };
@@ -65,9 +62,9 @@ export const PrioritiesSection: FC<PrioritiesSectionProps> = ({
       setEntrantData(pr => {
         const newData = {
           ...pr,
-          priority: { ...pr?.priority, state: priorityState.APPROVED },
+          priority: { ...pr?.priority, state: PriorityState.APPROVED },
         };
-        return newData as EntrantFuIlResponse;
+        return newData as EntrantFullResponse;
       });
     } catch (error) {
       displayError(error);
@@ -101,13 +98,13 @@ export const PrioritiesSection: FC<PrioritiesSectionProps> = ({
             sx={{
               width: 'fit-content',
             }}
-            disabled={data.priority?.state === priorityState.APPROVED}
+            disabled={data.priority?.state === PriorityState.APPROVED}
           />
           <Button
             size={ButtonSize.SMALL}
             type={'button'}
             text={
-              data.priority?.state === priorityState.APPROVED
+              data.priority?.state === PriorityState.APPROVED
                 ? 'Схвалено'
                 : 'Схвалити'
             }
@@ -115,7 +112,7 @@ export const PrioritiesSection: FC<PrioritiesSectionProps> = ({
             sx={{
               width: 'fit-content',
             }}
-            disabled={data.priority?.state === priorityState.APPROVED}
+            disabled={data.priority?.state === PriorityState.APPROVED}
           />
         </Box>
       )}

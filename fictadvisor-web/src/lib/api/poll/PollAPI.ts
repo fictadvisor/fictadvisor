@@ -1,14 +1,19 @@
-import { PollSearchFormFields } from '@/app/(main)/(search-pages)/poll/components/poll-search-form/types';
-import { CreateTeacherGradeBody } from '@/lib/api/poll/types/CreateTeacherGradeBody';
-import { GetTeacherQuestionsResponse } from '@/lib/api/poll/types/GetTeacherQuestionsResponse';
-import { PollTeachersResponse } from '@/lib/api/poll/types/PollTeachersResponse';
+import {
+  CreateAnswersDTO,
+  QueryAllDisciplineTeacherForPollDTO,
+} from '@fictadvisor/utils/requests';
+import {
+  DisciplineTeacherQuestionsResponse,
+  PollDisciplineTeachersResponse,
+} from '@fictadvisor/utils/responses';
+
 import { getAuthorizationHeader } from '@/lib/api/utils';
 
 import { client } from '../instance';
 
 class PollAPI {
   async getTeacherQuestions(disciplineTeacherId: string) {
-    const { data } = await client.get<GetTeacherQuestionsResponse>(
+    const { data } = await client.get<DisciplineTeacherQuestionsResponse>(
       `/disciplineTeachers/${disciplineTeacherId}/questions`,
       getAuthorizationHeader(),
     );
@@ -16,22 +21,21 @@ class PollAPI {
   }
 
   async createTeacherGrade(
-    body: CreateTeacherGradeBody,
     disciplineTeacherId: string,
-  ) {
-    const { data } = await client.post(
+    body: CreateAnswersDTO,
+  ): Promise<void> {
+    await client.post(
       `/disciplineTeachers/${disciplineTeacherId}/answers`,
       body,
       getAuthorizationHeader(),
     );
-    return data;
   }
 
   async getUserTeachers(
     userId: string,
-    params: Partial<PollSearchFormFields> = {},
+    params: QueryAllDisciplineTeacherForPollDTO = {},
   ) {
-    const { data } = await client.get<PollTeachersResponse>(
+    const { data } = await client.get<PollDisciplineTeachersResponse>(
       `/poll/teachers/${userId}`,
       {
         params,

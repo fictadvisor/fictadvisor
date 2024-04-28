@@ -1,3 +1,4 @@
+import { CreateContactDTO } from '@fictadvisor/utils/requests';
 import * as yup from 'yup';
 
 import { ContactType } from '@/types/contact';
@@ -11,7 +12,7 @@ export const validationSchema = yup.object().shape({
   name: yup.string().required(`Обов'язкове поле`),
 });
 
-export const initialValues = {
+export const initialValues: CreateContactDTO = {
   name: ContactType.TELEGRAM,
   link: '',
   displayName: '',

@@ -1,6 +1,7 @@
 'use client';
 import React, { FC, useState } from 'react';
 import { useQuery } from 'react-query';
+import { UpdateStudentWithRolesDTO } from '@fictadvisor/utils/requests';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { Box, Divider } from '@mui/material';
 import { Form, Formik } from 'formik';
@@ -8,7 +9,6 @@ import { useRouter } from 'next/navigation';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
-import { StudentEdit } from '@/app/admin/students/common/types';
 import { deleteCommonValues } from '@/app/admin/students/common/utils/deleteCommonValues';
 import * as styles from '@/app/admin/students/edit/[studentId]/AdminStudentEdit.styles';
 import EditSelective from '@/app/admin/students/edit/[studentId]/components/edit-selective';
@@ -40,13 +40,13 @@ const AdminStudentEditPage: FC<AdminStudentEditPageProps> = ({ params }) => {
 
   const { data: selectives, isLoading: isLoadingSelective } = useQuery(
     ['getStudentSelective', params.studentId],
-    () => StudentAPI.getSelective(params.studentId),
+    () => StudentAPI.getSelectives(params.studentId),
     useQueryAdminOptions,
   );
   const { data: remainingSelectives, isLoading: isLoadingRemainingSelectives } =
     useQuery(
       ['getStudentRemainingSelective', params.studentId],
-      () => StudentAPI.getRemainingSelective(params.studentId),
+      () => StudentAPI.getRemainingSelectives(params.studentId),
       useQueryAdminOptions,
     );
 
@@ -57,17 +57,17 @@ const AdminStudentEditPage: FC<AdminStudentEditPageProps> = ({ params }) => {
 
   if (!isSuccess) throw new Error('Something went wrong in student edit page');
 
-  const initialValues = {
+  const initialValues: UpdateStudentWithRolesDTO = {
     firstName: student.firstName,
     middleName: student.middleName,
     lastName: student.lastName,
     groupId: student.group.id,
-    roleName: student.group.role,
+    roleName: student.role,
   };
-  const [connectedSelective, setConnectedSelective] = useState<string[]>([]);
-  const [disconnectedSelective, setDisconnectedSelective] = useState<string[]>(
-    [],
-  );
+  const [connectedSelectives, setConnectedSelectives] = useState<string[]>([]);
+  const [disconnectedSelectives, setDisconnectedSelectives] = useState<
+    string[]
+  >([]);
   const toast = useToast();
   const { displayError } = useToastError();
   const router = useRouter();
@@ -82,19 +82,19 @@ const AdminStudentEditPage: FC<AdminStudentEditPageProps> = ({ params }) => {
     }
   };
 
-  const handleSubmit = async (data: StudentEdit) => {
+  const handleSubmit = async (data: UpdateStudentWithRolesDTO) => {
     try {
-      data.middleName = data.middleName ? data.middleName : undefined;
-      deleteCommonValues(connectedSelective, disconnectedSelective);
+      data.middleName = data.middleName || undefined;
+      deleteCommonValues(connectedSelectives, disconnectedSelectives);
 
       await StudentAPI.editStudent(student.id, data);
-      await StudentAPI.editSelective(student.id, {
-        connectedSelective,
-        disconnectedSelective,
+      await StudentAPI.editSelectives(student.id, {
+        connectedSelectives,
+        disconnectedSelectives,
       });
       toast.success('Студент успішно змінений!', '', 4000);
-      setConnectedSelective([]);
-      setDisconnectedSelective([]);
+      setConnectedSelectives([]);
+      setDisconnectedSelectives([]);
       router.replace('/admin/students');
     } catch (error) {
       displayError(error);
@@ -130,11 +130,11 @@ const AdminStudentEditPage: FC<AdminStudentEditPageProps> = ({ params }) => {
             </Box>
             <Divider sx={stylesAdmin.dividerHor} />
             <EditSelective
-              connectedSelective={connectedSelective}
+              connectedSelectives={connectedSelectives}
               selectives={selectives}
               remainingSelectives={remainingSelectives}
-              setDisconnectedSelective={setDisconnectedSelective}
-              setConnectedSelective={setConnectedSelective}
+              setDisconnectedSelectives={setDisconnectedSelectives}
+              setConnectedSelectives={setConnectedSelectives}
             />
           </Box>
         </Form>

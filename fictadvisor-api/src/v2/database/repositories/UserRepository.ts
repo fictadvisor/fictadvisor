@@ -20,21 +20,21 @@ export class UserRepository {
     return this.prisma.user.create({
       data,
       include: this.include,
-    });
+    }) as any as DbUser;
   }
 
   async find (where: Prisma.UserWhereInput): Promise<DbUser> {
     return this.prisma.user.findFirst({
       where,
       include: this.include,
-    });
+    }) as any as DbUser;
   }
 
   async findById (id: string): Promise<DbUser> {
     return this.prisma.user.findFirst({
       where: { id },
       include: this.include,
-    });
+    }) as any as DbUser;
   }
 
   findMany (args?: Prisma.UserFindManyArgs): Promise<DbUser[]> {
@@ -48,14 +48,14 @@ export class UserRepository {
     return this.prisma.user.delete({
       where,
       include: this.include,
-    });
+    }) as any as DbUser;
   }
 
   async deleteById (id: string): Promise<DbUser> {
     return this.prisma.user.delete({
       where: { id },
       include: this.include,
-    });
+    }) as any as DbUser;
   }
 
   async update (where: Prisma.UserWhereUniqueInput, data: Prisma.UserUncheckedUpdateInput): Promise<DbUser> {
@@ -63,7 +63,7 @@ export class UserRepository {
       where,
       data,
       include: this.include,
-    });
+    }) as any as DbUser;
   }
 
   async updateById (id: string, data: Prisma.UserUncheckedUpdateInput): Promise<DbUser> {
@@ -71,7 +71,7 @@ export class UserRepository {
       where: { id },
       data,
       include: this.include,
-    });
+    }) as any as DbUser;
   }
 
   async updateMany (where: Prisma.UserWhereInput, data: Prisma.UserUncheckedUpdateInput) {

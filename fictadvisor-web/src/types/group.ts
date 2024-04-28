@@ -1,4 +1,4 @@
-import { UserGroupState } from './user';
+import { State } from '@fictadvisor/utils/enums';
 
 export interface Group {
   id: string;
@@ -16,7 +16,7 @@ export interface Group {
     firstName: string;
     middleName: string;
     lastName: string;
-    state: UserGroupState;
+    state: State;
   };
   speciality: { id: string; code: string; abbreviation: string; name: string };
 }

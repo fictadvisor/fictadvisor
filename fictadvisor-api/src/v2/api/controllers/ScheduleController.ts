@@ -10,11 +10,6 @@ import {
   Query,
   Request,
 } from '@nestjs/common';
-import { ScheduleService } from '../services/ScheduleService';
-import { GroupByIdPipe } from '../pipes/GroupByIdPipe';
-import { ScheduleMapper } from '../../mappers/ScheduleMapper';
-import { Access } from '../../security/Access';
-import { PERMISSION } from '@fictadvisor/utils/security';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -25,25 +20,32 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { CreateEventDTO } from '../dtos/CreateEventDTO';
-import { EventResponse } from '../responses/EventResponse';
-import { GroupByEventGuard } from '../../security/group-guard/GroupByEventGuard';
 import {
+  CreateEventDTO,
+  EventFiltrationDTO,
+  GeneralEventFiltrationDTO,
+  UpdateEventDTO,
+} from '@fictadvisor/utils/requests';
+import {
+  EventResponse,
   EventsResponse,
   FortnightEventsResponse,
   GeneralEventsResponse,
   TelegramEventsResponse,
-} from '../responses/EventsResponse';
+  EventInfoResponse,
+} from '@fictadvisor/utils/responses';
+import { PERMISSION } from '@fictadvisor/utils/security';
+import { Access } from '../../security/Access';
+import { ApiEndpoint } from '../../utils/documentation/decorators';
 import { TelegramGuard } from '../../security/TelegramGuard';
-import { EventFiltrationDTO } from '../dtos/EventFiltrationDTO';
-import { GeneralEventFiltrationDTO } from '../dtos/GeneralEventFiltrationDTO';
+import { GroupByEventGuard } from '../../security/group-guard/GroupByEventGuard';
+import { GroupByIdPipe } from '../pipes/GroupByIdPipe';
 import { EventFiltrationPipe } from '../pipes/EventFiltrationPipe';
 import { EventByIdPipe } from '../pipes/EventByIdPipe';
-import { UpdateEventDTO } from '../dtos/UpdateEventDTO';
 import { EventPipe } from '../pipes/EventPipe';
 import { UserByIdPipe } from '../pipes/UserByIdPipe';
-import { ApiEndpoint } from '../../utils/documentation/decorators';
-import { EventInfoResponse } from '../responses/EventInfoResponse';
+import { ScheduleMapper } from '../../mappers/ScheduleMapper';
+import { ScheduleService } from '../services/ScheduleService';
 
 @ApiTags('Schedule')
 @Controller({
@@ -368,7 +370,7 @@ export class ScheduleController {
     @Param('groupId', GroupByIdPipe) groupId: string,
     @Query('week') week: number,
     @Query(EventFiltrationPipe) query: EventFiltrationDTO,
-  ) {
+  ): Promise<EventsResponse> {
     const result = await this.scheduleService.getGroupEvents(
       req.user?.id ?? null,
       groupId,

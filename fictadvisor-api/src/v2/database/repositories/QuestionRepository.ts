@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../PrismaService';
 import { Prisma } from '@prisma/client';
+import { DbQuestionWithRoles } from '../entities/DbQuestionWithRoles';
 
 @Injectable()
 export class QuestionRepository {
@@ -16,7 +17,7 @@ export class QuestionRepository {
     return this.prisma.question.findMany({
       include: this.include,
       ...data,
-    });
+    }) as any as DbQuestionWithRoles[];
   }
 
   async findById (id: string) {
@@ -25,14 +26,14 @@ export class QuestionRepository {
         id,
       },
       include: this.include,
-    });
+    }) as any as DbQuestionWithRoles;
   }
 
   async create (data: Prisma.QuestionUncheckedCreateInput) {
     return this.prisma.question.create({
       data,
       include: this.include,
-    });
+    }) as any as DbQuestionWithRoles;
   }
 
   async deleteById (id: string) {
@@ -41,7 +42,7 @@ export class QuestionRepository {
         id,
       },
       include: this.include,
-    });
+    }) as any as DbQuestionWithRoles;
   }
 
   async updateById (id: string, data: Prisma.QuestionUncheckedUpdateInput) {
@@ -51,7 +52,7 @@ export class QuestionRepository {
       },
       data,
       include: this.include,
-    });
+    }) as any as DbQuestionWithRoles;
   }
 
   async count (data: Prisma.QuestionCountArgs) {

@@ -1,4 +1,5 @@
 import React, { FC, Fragment, useState } from 'react';
+import { EventTypeEnum } from '@fictadvisor/utils/enums';
 import {
   ArrowPathIcon,
   ArrowRightIcon,
@@ -31,7 +32,6 @@ import { TabTextPosition } from '@/components/common/ui/tab/tab/types';
 import { SharedEventBody } from '@/lib/api/schedule/types/shared';
 import { useSchedule } from '@/store/schedule/useSchedule';
 import theme from '@/styles/theme';
-import { TEvent } from '@/types/schedule';
 
 import { ScheduleFormikDropdown } from './components/schedule-dropdown/ScheduleDropdown';
 import TimeScheduleDropdown from './components/schedule-dropdown/TimeScheduleDropdown';
@@ -66,7 +66,7 @@ export const ScheduleEventForm: FC<ScheduleEventFormProps> = ({
   const [tabValue, setTabValue] = useState<InfoCardTabs>(InfoCardTabs.EVENT);
   const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
   const isDisciplineRelatedType = (eventType: string) => {
-    return eventType !== TEvent.OTHER;
+    return eventType !== EventTypeEnum.OTHER;
   };
 
   return (

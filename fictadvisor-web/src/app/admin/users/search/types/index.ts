@@ -1,10 +1,10 @@
-import { UserGroupState } from '@/types/user';
+import { SortQAUParam, State } from '@fictadvisor/utils/enums';
 
 export interface UserSearchFormFields {
   search: string;
   order: 'asc' | 'desc';
-  sort: 'username' | 'email';
-  state: UserGroupState[];
+  sort: SortQAUParam;
+  state: State[];
 }
 
 export interface HeaderUserSearchProps {

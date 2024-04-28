@@ -1,7 +1,7 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
+import { QueryAllDisciplinesDTO } from '@fictadvisor/utils/requests';
 import { GroupByIdPipe } from './GroupByIdPipe';
 import { TeacherByIdPipe } from './TeacherByIdPipe';
-import { QueryAllDisciplinesDTO } from '../dtos/QueryAllDisciplinesDTO';
 
 @Injectable()
 export class QueryAllDisciplinesPipe implements PipeTransform<QueryAllDisciplinesDTO, Promise<QueryAllDisciplinesDTO>> {

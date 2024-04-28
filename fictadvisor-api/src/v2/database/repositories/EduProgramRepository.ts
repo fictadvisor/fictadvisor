@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../PrismaService';
+import { DbEducationalProgram } from '../entities/DbEducationalProgram';
 
 @Injectable()
 export class EduProgramRepository {
@@ -17,6 +18,6 @@ export class EduProgramRepository {
     return this.prisma.educationalPrograms.findMany({
       include: this.include,
       ...args,
-    });
+    }) as any as Promise<DbEducationalProgram[]>;
   }
 }

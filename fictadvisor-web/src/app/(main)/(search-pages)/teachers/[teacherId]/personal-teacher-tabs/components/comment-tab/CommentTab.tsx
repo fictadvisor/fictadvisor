@@ -1,10 +1,12 @@
 import { FC, useContext, useState } from 'react';
 import { useQuery } from 'react-query';
+import { CommentsSortOrder } from '@fictadvisor/utils/enums';
 import { Box } from '@mui/material';
 
 import teacherSubjectContext from '@/app/(main)/discipline/utils/teacherSubjectContext';
 import FloatingCard from '@/components/common/ui/cards/floating-card';
 import Comment from '@/components/common/ui/comment';
+import { CommentProps } from '@/components/common/ui/comment/Comment';
 import { Dropdown } from '@/components/common/ui/form';
 import { FieldSize } from '@/components/common/ui/form/common/types';
 import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
@@ -29,17 +31,16 @@ const CommentTab: FC<TeacherTabProps> = ({ teacherId, subjectId }) => {
     teacher: teacherSubject,
     subjectFloatingCardShowed: teacherSubjectFloatingShowed,
   } = useContext(teacherSubjectContext);
-  const [sort, setSort] = useState('newest');
+  const [sortBy, setSortBy] = useState<CommentsSortOrder>(
+    CommentsSortOrder.NEWEST,
+  );
   const { data } = useQuery(
-    ['teacherInfo', teacherId, subjectId, sort],
+    ['teacherInfo', teacherId, subjectId, sortBy],
     () =>
-      TeacherAPI.getTeacherComments(
-        teacherId,
+      TeacherAPI.getTeacherComments(teacherId, {
         subjectId,
-        undefined,
-        undefined,
-        sort,
-      ),
+        sortBy,
+      }),
     {
       refetchOnWindowFocus: false,
       retry: false,
@@ -53,7 +54,7 @@ const CommentTab: FC<TeacherTabProps> = ({ teacherId, subjectId }) => {
     teacherFloatingShowed || teacherSubjectFloatingShowed;
 
   const onSortChange = (sort: string) => {
-    setSort(sort);
+    setSortBy(sort as CommentsSortOrder);
   };
 
   return (
@@ -67,7 +68,7 @@ const CommentTab: FC<TeacherTabProps> = ({ teacherId, subjectId }) => {
             options={sortInfo}
             showRemark={false}
             onChange={onSortChange}
-            value={sort}
+            value={sortBy}
             label=""
           />
         </Box>
@@ -75,7 +76,7 @@ const CommentTab: FC<TeacherTabProps> = ({ teacherId, subjectId }) => {
         {data?.questions?.map(
           question =>
             question?.comments?.map((comment, index) => (
-              <Comment key={index} {...comment} />
+              <Comment key={index} {...(comment as CommentProps)} />
             )),
         )}
       </Box>

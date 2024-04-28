@@ -6,7 +6,7 @@ import { ScheduleLineVariant } from '@/app/(main)/schedule/schedule-page/schedul
 import ScheduleTime from '@/app/(main)/schedule/schedule-page/schedule-section/components/schedule/components/schedule-time';
 import { areDatesInSameWeek } from '@/app/(main)/schedule/schedule-page/utils/areDatesInSameWeek';
 import Progress from '@/components/common/ui/progress';
-import { GetEventBody } from '@/lib/api/schedule/types/GetEventBody';
+import { EventsResponse } from '@/lib/api/schedule/types/EventsResponse';
 import { transformEvents } from '@/lib/api/schedule/utils/transformEvents';
 import { useSchedule } from '@/store/schedule/useSchedule';
 
@@ -27,7 +27,7 @@ const Schedule = () => {
 
   const eventsPerWeek = useMemo(() => {
     if (!events[week - 1]) return null;
-    const _eventsWeek: GetEventBody = JSON.parse(
+    const _eventsWeek: EventsResponse = JSON.parse(
       JSON.stringify(events[week - 1]),
     );
 
@@ -41,7 +41,7 @@ const Schedule = () => {
   const eventsTime = eventsPerWeek?.startTime;
 
   const isCurWeek = eventsTime
-    ? areDatesInSameWeek(eventsTime, currentTime)
+    ? areDatesInSameWeek(eventsTime as unknown as string, currentTime)
     : false;
 
   const top = calculateTop(currentTime);

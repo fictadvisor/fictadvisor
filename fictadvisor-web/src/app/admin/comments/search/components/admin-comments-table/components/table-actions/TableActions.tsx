@@ -1,4 +1,6 @@
 import React, { FC, useState } from 'react';
+import { DeleteCommentDTO } from '@fictadvisor/utils/requests';
+import { CommentResponse } from '@fictadvisor/utils/responses';
 import { PencilSquareIcon } from '@heroicons/react/24/solid';
 import { Stack } from '@mui/material';
 
@@ -9,15 +11,13 @@ import {
 } from '@/components/common/ui/button-mui/types';
 import DeletePopup from '@/components/common/ui/delete-popup';
 import { TrashBucketButton } from '@/components/common/ui/icon-button-mui/variants';
-import { DeleteCommentBody } from '@/lib/api/teacher/types/DeleteCommentBody';
-import { Comment } from '@/lib/api/teacher/types/GetCommentsWithPaginationResponse';
 
 import * as styles from './TableActions.styles';
 
 interface TableActionsProps {
-  comment: Comment;
+  comment: CommentResponse;
   handleDelete: (
-    data: DeleteCommentBody,
+    data: DeleteCommentDTO,
     disciplineTeacherId: string,
   ) => Promise<void>;
 }

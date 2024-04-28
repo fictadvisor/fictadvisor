@@ -1,8 +1,8 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
 import { TeacherService } from '../services/TeacherService';
+import { TeacherRepository } from 'src/v2/database/repositories/TeacherRepository';
 import { InvalidEntityIdException } from 'src/v2/utils/exceptions/InvalidEntityIdException';
 import { InvalidContactNameException } from 'src/v2/utils/exceptions/InvalidContactNameException';
-import { TeacherRepository } from 'src/v2/database/repositories/TeacherRepository';
 
 @Injectable()
 export class ContactByNamePipe implements PipeTransform {

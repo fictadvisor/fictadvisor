@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { DbEntrant } from '../entities/DbEntrant';
 import { PrismaService } from '../PrismaService';
 import { Prisma } from '@prisma/client';
 
@@ -21,37 +22,37 @@ export class EntrantRepository {
     private readonly prisma: PrismaService,
   ) {}
 
-  findById (id: string) {
+  async findById (id: string) {
     return this.prisma.entrant.findFirst({
       where: {
         id,
       },
       include: this.include,
-    });
+    }) as any as DbEntrant;
   }
 
-  find (where: Prisma.EntrantWhereInput) {
+  async find (where: Prisma.EntrantWhereInput) {
     return this.prisma.entrant.findFirst({
       where,
       include: this.include,
-    });
+    }) as any as DbEntrant;
   }
 
-  create (data: Prisma.EntrantUncheckedCreateInput) {
+  async create (data: Prisma.EntrantUncheckedCreateInput) {
     return this.prisma.entrant.create({
       data,
       include: this.include,
-    });
+    }) as any as DbEntrant;
   }
 
-  updateById (id: string, data: Prisma.EntrantUncheckedUpdateInput) {
+  async updateById (id: string, data: Prisma.EntrantUncheckedUpdateInput) {
     return this.prisma.entrant.update({
       where: {
         id,
       },
       data,
       include: this.include,
-    });
+    }) as any as DbEntrant;
   }
 
   async getOrCreate (data: { firstName: string, middleName?: string, lastName: string, specialty: string }) {
@@ -59,7 +60,7 @@ export class EntrantRepository {
     if (!entrant) {
       entrant = await this.create(data);
     }
-    return entrant;
+    return entrant as any as DbEntrant;
   }
 
   async deleteById (id: string) {
@@ -67,6 +68,6 @@ export class EntrantRepository {
       where: {
         id,
       },
-    });
+    }) as any as DbEntrant;
   }
 }

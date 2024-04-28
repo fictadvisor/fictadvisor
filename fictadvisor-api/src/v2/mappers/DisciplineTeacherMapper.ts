@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { DbDisciplineTeacher } from '../database/entities/DbDisciplineTeacher';
-import { Subject, TeacherRole } from '@prisma/client';
-import { DisciplineTeacherFullResponse } from '../api/responses/DisciplineTeacherResponse';
-import { SubjectResponse } from '../api/responses/SubjectResponse';
+import { Subject } from '@prisma/client';
+import { DisciplineTeacherFullResponse, SubjectResponse } from '@fictadvisor/utils/responses';
+import { TeacherRole, AcademicStatus, ScientificDegree, Position } from '@fictadvisor/utils/enums';
 
 @Injectable()
 export class DisciplineTeacherMapper {
@@ -57,9 +57,9 @@ export class DisciplineTeacherMapper {
         lastName: teacher.lastName,
         description: teacher.description,
         avatar: teacher.avatar,
-        academicStatus: teacher.academicStatus,
-        scientificDegree: teacher.scientificDegree,
-        position: teacher.position,
+        academicStatus: teacher.academicStatus as AcademicStatus,
+        scientificDegree: teacher.scientificDegree as ScientificDegree,
+        position: teacher.position as Position,
         rating: +teacher.rating,
         disciplineTeacherId: disciplineTeacher.id,
         roles: disciplineTeacher.roles.map((r) => r.role),

@@ -1,15 +1,16 @@
-import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
+import { SortQACParam } from '@fictadvisor/utils/enums';
+import { QueryAllCathedrasDTO } from '@fictadvisor/utils/requests';
 
-import { AdminDepartmentSearchFields } from '../types';
+import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
 
 export const AdminDepartmentsSortOptions: DropDownOption[] = [
   { id: 'name', label: 'Іменем' },
   { id: 'teachers', label: 'Кількістю Вчителів' },
 ];
 
-export const AdminDepartmentsInitialValues: AdminDepartmentSearchFields = {
+export const AdminDepartmentsInitialValues: QueryAllCathedrasDTO = {
   search: '',
   order: 'asc',
-  sort: 'name',
+  sort: SortQACParam.NAME,
   divisions: [],
 };

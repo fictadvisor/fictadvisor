@@ -1,4 +1,5 @@
 import React, { FC, useState } from 'react';
+import { SubjectCountResponse } from '@fictadvisor/utils/responses';
 import { PencilSquareIcon } from '@heroicons/react/24/solid';
 import { Box } from '@mui/material';
 
@@ -10,10 +11,9 @@ import {
 } from '@/components/common/ui/button-mui/types';
 import DeletePopup from '@/components/common/ui/delete-popup';
 import { TrashBucketButton } from '@/components/common/ui/icon-button-mui/variants';
-import { Subject } from '@/types/subject';
 
 interface TableActionsProps {
-  subject: Subject;
+  subject: SubjectCountResponse;
   handleDelete: (id: string) => Promise<void>;
 }
 

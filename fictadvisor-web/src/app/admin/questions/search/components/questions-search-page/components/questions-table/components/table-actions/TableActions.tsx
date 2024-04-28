@@ -1,9 +1,9 @@
 import React, { FC, useState } from 'react';
+import { QuestionResponse } from '@fictadvisor/utils/responses';
 import { PencilSquareIcon } from '@heroicons/react/24/solid';
 import { Stack } from '@mui/material';
 
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
-import { AdminQuestion } from '@/app/admin/questions/common/types';
 import Button from '@/components/common/ui/button-mui';
 import {
   ButtonSize,
@@ -13,7 +13,7 @@ import DeletePopup from '@/components/common/ui/delete-popup';
 import { TrashBucketButton } from '@/components/common/ui/icon-button-mui/variants';
 
 interface TableActionsProps {
-  question: AdminQuestion;
+  question: QuestionResponse;
   deleteQuestion: (id: string) => Promise<void>;
 }
 
@@ -34,7 +34,7 @@ const TableActions: FC<TableActionsProps> = ({ question, deleteQuestion }) => {
       {popupOpen && (
         <DeletePopup
           setPopupOpen={setPopupOpen}
-          handleDeleteSubmit={() => deleteQuestion(question.id as string)}
+          handleDeleteSubmit={() => deleteQuestion(question.id)}
           name={`питання ${question.name}`}
         />
       )}

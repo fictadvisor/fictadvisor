@@ -1,16 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { FileService } from '../../utils/files/FileService';
-import { PersonalDataDTO, StudyContractDTO } from '../dtos/StudyContractDTO';
-import { PaymentTypeParam, StudyFormParam, StudyTypeParam } from '../dtos/StudyContractParams';
+import {
+  PersonalDataDTO,
+  StudyContractDTO,
+  PriorityDTO,
+} from '@fictadvisor/utils/requests';
+import { PaymentTypeParam, StudyFormParam, StudyTypeParam } from '@fictadvisor/utils/enums';
 import * as process from 'process';
+import { FileService } from '../../utils/files/FileService';
 import { EmailService } from './EmailService';
-import { PriorityDTO } from '../dtos/PriorityDTO';
-import { EducationalDegree, EducationProgram, PriorityState } from '@prisma/client';
-import { InvalidEducationProgramsException } from '../../utils/exceptions/InvalidEducationProgramsException';
 import { EntrantRepository } from '../../database/repositories/EntrantRepository';
+import { InvalidEducationProgramsException } from '../../utils/exceptions/InvalidEducationProgramsException';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
 import { DataNotFoundException } from '../../utils/exceptions/DataNotFoundException';
 import { ObjectIsRequiredException } from '../../utils/exceptions/ObjectIsRequiredException';
+import { EducationalDegree, EducationProgram, PriorityState } from '@prisma/client';
 
 const DOCX = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
 

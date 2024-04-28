@@ -1,47 +1,45 @@
-import { RolesSearchFormFields } from '@/app/admin/roles/common/types';
+import {
+  CreateRoleDTO,
+  QueryAllRolesDTO,
+  UpdateRoleDTO,
+} from '@fictadvisor/utils/requests';
+import {
+  BaseRoleResponse,
+  RoleResponse,
+  RolesResponse,
+} from '@fictadvisor/utils/responses';
+
 import { getAuthorizationHeader } from '@/lib/api/utils';
 import { convertEmptyStringToUndefined } from '@/lib/utils/convertEmptyStringToUndefined';
-import { Role } from '@/types/role';
 
 import { client } from '../instance';
 
-import { CreateRoleBody } from './types/CreateRoleBody';
-import { GetAllRolesResponse } from './types/GetAllResponse';
-
 class RoleAPI {
-  async getAll(
-    page: number,
-    params: Partial<RolesSearchFormFields> = {},
-    pageSize?: number,
-  ): Promise<GetAllRolesResponse> {
-    const { data } = await client.get(`/roles`, {
-      params: {
-        ...convertEmptyStringToUndefined(params),
-        page,
-        pageSize,
-      },
+  async getAll(params: QueryAllRolesDTO = {}): Promise<RolesResponse> {
+    const { data } = await client.get<RolesResponse>(`/roles`, {
+      params: convertEmptyStringToUndefined(params),
       ...getAuthorizationHeader(),
     });
     return data;
   }
 
-  async getById(roleId: string): Promise<Role> {
-    const { data } = await client.get(`/roles/${roleId}`, {
+  async getById(roleId: string): Promise<RoleResponse> {
+    const { data } = await client.get<RoleResponse>(`/roles/${roleId}`, {
       ...getAuthorizationHeader(),
     });
     return data;
   }
 
   async delete(roleId: string) {
-    const { data } = await client.delete(
+    const { data } = await client.delete<BaseRoleResponse>(
       `/roles/${roleId}`,
       getAuthorizationHeader(),
     );
     return data;
   }
 
-  async create(body: CreateRoleBody) {
-    const { data } = await client.post(
+  async create(body: CreateRoleDTO) {
+    const { data } = await client.post<BaseRoleResponse>(
       '/roles',
       body,
       getAuthorizationHeader(),
@@ -49,8 +47,8 @@ class RoleAPI {
     return data;
   }
 
-  async edit(body: Partial<CreateRoleBody>, roleId: string) {
-    const { data } = await client.patch(
+  async edit(roleId: string, body: UpdateRoleDTO) {
+    const { data } = await client.patch<BaseRoleResponse>(
       `/roles/${roleId}`,
       body,
       getAuthorizationHeader(),

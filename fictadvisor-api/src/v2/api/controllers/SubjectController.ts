@@ -1,12 +1,4 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
-import { SubjectService } from '../services/SubjectService';
-import { SubjectByIdPipe } from '../pipes/SubjectByIdPipe';
-import { QueryAllSubjectDTO } from '../dtos/QueryAllSubjectDTO';
-import { Access } from 'src/v2/security/Access';
-import { PERMISSION } from '@fictadvisor/utils/security';
-import { SubjectMapper } from '../../mappers/SubjectMapper';
-import { CreateSubjectDTO } from '../dtos/CreateSubjectDTO';
-import { UpdateSubjectDTO } from '../dtos/UpdateSubjectDTO';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -14,10 +6,22 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { SubjectResponse } from '../responses/SubjectResponse';
-import { SubjectWithTeachersResponse } from '../responses/SubjectWithTeachersResponse';
-import { PaginatedSubjectsResponse } from '../responses/PaginatedSubjectsResponse';
+import {
+  QueryAllSubjectDTO,
+  CreateSubjectDTO,
+  UpdateSubjectDTO,
+} from '@fictadvisor/utils/requests';
+import {
+  SubjectResponse,
+  SubjectWithTeachersResponse,
+  PaginatedSubjectsResponse,
+} from '@fictadvisor/utils/responses';
+import { PERMISSION } from '@fictadvisor/utils/security';
+import { Access } from 'src/v2/security/Access';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
+import { SubjectByIdPipe } from '../pipes/SubjectByIdPipe';
+import { SubjectMapper } from '../../mappers/SubjectMapper';
+import { SubjectService } from '../services/SubjectService';
 
 @ApiTags('Subjects')
 @Controller({
@@ -55,7 +59,7 @@ export class SubjectController {
   @Get('/:subjectId')
   async get (
     @Param('subjectId', SubjectByIdPipe) subjectId: string,
-  ) {
+  ): Promise<SubjectResponse> {
     const dbSubject = await this.subjectService.get(subjectId);
     return this.subjectMapper.getSubject(dbSubject);
   }
@@ -97,7 +101,7 @@ export class SubjectController {
   @Post()
   async create (
     @Body() body: CreateSubjectDTO,
-  ) {
+  ): Promise<SubjectResponse> {
     const dbSubject = await this.subjectService.create(body);
     return this.subjectMapper.getSubject(dbSubject);
   }

@@ -1,17 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { SubjectRepository } from '../../database/repositories/SubjectRepository';
-import { QueryAllSubjectDTO } from '../dtos/QueryAllSubjectDTO';
-import { CreateSubjectDTO } from '../dtos/CreateSubjectDTO';
-import { TeacherRepository } from '../../database/repositories/TeacherRepository';
-import { Prisma, QuestionType, Subject } from '@prisma/client';
+import {
+  QueryAllSubjectDTO,
+  CreateSubjectDTO,
+  UpdateSubjectDTO,
+} from '@fictadvisor/utils/requests';
+import { SubjectWithTeachersResponse } from '@fictadvisor/utils/responses';
 import { DatabaseUtils } from '../../database/DatabaseUtils';
-import { UpdateSubjectDTO } from '../dtos/UpdateSubjectDTO';
 import { TeacherMapper } from '../../mappers/TeacherMapper';
+import { QuestionMapper } from '../../mappers/QuestionMapper';
 import { TeacherService } from './TeacherService';
 import { DbTeacher } from '../../database/entities/DbTeacher';
-import { QuestionMapper } from '../../mappers/QuestionMapper';
 import { DbDisciplineTeacherWithAnswers } from '../../database/entities/DbDisciplineTeacherWithAnswers';
-import { SubjectWithTeachersResponse } from '../responses/SubjectWithTeachersResponse';
+import { SubjectRepository } from '../../database/repositories/SubjectRepository';
+import { TeacherRepository } from '../../database/repositories/TeacherRepository';
+import { Prisma, QuestionType, Subject } from '@prisma/client';
 
 @Injectable()
 export class SubjectService {
@@ -30,9 +32,9 @@ export class SubjectService {
     const data: Prisma.SubjectFindManyArgs = {
       where: {
         ...search,
-        disciplines: body.group ? {
+        disciplines: body.groupId ? {
           some: {
-            groupId: body.group,
+            groupId: body.groupId,
           },
         } : undefined,
       },

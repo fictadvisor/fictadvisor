@@ -1,4 +1,6 @@
 import React, { FC } from 'react';
+import { CreateContractDTO } from '@fictadvisor/utils/requests';
+import { EntrantFullResponse } from '@fictadvisor/utils/responses';
 import { Form, Formik } from 'formik';
 
 import Button from '@/components/common/ui/button-mui';
@@ -6,8 +8,6 @@ import { ButtonSize } from '@/components/common/ui/button-mui/types';
 import { Input, InputSize } from '@/components/common/ui/form';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import contractAPI from '@/lib/api/contract/ContractAPI';
-import { AdminContractBody } from '@/lib/api/contract/types/AdminContractBody';
-import { EntrantFuIlResponse } from '@/lib/api/contract/types/EntrantFullResponse';
 
 import { initialValues } from './constants';
 import { validationSchema } from './validation';
@@ -19,9 +19,9 @@ const errorMapper = {
   NoPermissionException: 'У тебе не має доступу до цього ресурсу',
 };
 interface ContractApproveFormProps {
-  data: EntrantFuIlResponse;
+  data: EntrantFullResponse;
   setEntrantData: React.Dispatch<
-    React.SetStateAction<EntrantFuIlResponse | null>
+    React.SetStateAction<EntrantFullResponse | null>
   >;
 }
 
@@ -30,9 +30,9 @@ const ContractApproveForm: FC<ContractApproveFormProps> = ({
   setEntrantData,
 }) => {
   const { displayError } = useToastError();
-  const handleSubmit = async (values: AdminContractBody['contract']) => {
+  const handleSubmit = async (values: CreateContractDTO['contract']) => {
     try {
-      const body: AdminContractBody = {
+      const body: CreateContractDTO = {
         contract: values,
         entrant: {
           firstName: data.firstName,
@@ -44,7 +44,7 @@ const ContractApproveForm: FC<ContractApproveFormProps> = ({
       await contractAPI.createAdminContract(body);
       setEntrantData(pr => {
         const newData = { ...pr, contract: values };
-        return newData as unknown as EntrantFuIlResponse;
+        return newData as EntrantFullResponse;
       });
     } catch (error) {
       displayError(error);

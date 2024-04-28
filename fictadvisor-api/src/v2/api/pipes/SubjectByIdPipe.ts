@@ -1,6 +1,6 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
-import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
 import { SubjectRepository } from '../../database/repositories/SubjectRepository';
+import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
 
 @Injectable()
 export class SubjectByIdPipe implements PipeTransform<string, Promise<string>> {

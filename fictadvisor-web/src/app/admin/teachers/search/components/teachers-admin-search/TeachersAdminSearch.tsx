@@ -1,6 +1,8 @@
 'use client';
 import React, { FC, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import { TeacherRole } from '@fictadvisor/utils/enums';
+import { QueryAllTeacherDTO } from '@fictadvisor/utils/requests';
 import {
   BarsArrowDownIcon,
   BarsArrowUpIcon,
@@ -27,14 +29,13 @@ import Progress from '@/components/common/ui/progress/Progress';
 import CathedraAPI from '@/lib/api/cathedras/CathedraAPI';
 
 import { initialValues, teacherRoles } from '../../constants';
-import { AdminSearchFormFields } from '../../types';
 
 interface TeachersAdminSearchProps {
-  onSubmit: (values: AdminSearchFormFields) => void;
+  onSubmit: (values: QueryAllTeacherDTO) => void;
 }
 
 const TeachersAdminSearch: FC<TeachersAdminSearchProps> = ({ onSubmit }) => {
-  const [values, setValues] = useState<AdminSearchFormFields>(initialValues);
+  const [values, setValues] = useState<QueryAllTeacherDTO>(initialValues);
   const [search, setSearch] = useState<string>('');
   const [cathedrasId, setCathedrasId] = useState<CheckboxesDropdownOption[]>(
     [],
@@ -44,7 +45,9 @@ const TeachersAdminSearch: FC<TeachersAdminSearchProps> = ({ onSubmit }) => {
 
   const handleFormSubmit = () => {
     const newCathedrasId = cathedrasId.map(cathedra => cathedra.id) as string[];
-    const newRoles = roles.map(role => role.id) as string[];
+    // Failed Logic!!!
+    const newRoles = roles.map(role => role.id) as TeacherRole[];
+    // as TeacherRole[] temporary kostil!!!
     setValues({
       ...values,
       search,

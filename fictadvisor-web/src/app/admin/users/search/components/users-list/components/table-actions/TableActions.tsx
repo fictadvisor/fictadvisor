@@ -1,4 +1,5 @@
 import React, { FC, useState } from 'react';
+import { UserForGetAllResponse } from '@fictadvisor/utils/responses';
 import { PencilSquareIcon } from '@heroicons/react/24/solid';
 import { Box, Link } from '@mui/material';
 import NextLink from 'next/link';
@@ -10,10 +11,9 @@ import {
 } from '@/components/common/ui/button-mui/types';
 import DeletePopup from '@/components/common/ui/delete-popup';
 import { TrashBucketButton } from '@/components/common/ui/icon-button-mui/variants';
-import { UserAdmin } from '@/types/user';
 
 interface TableActionsProps {
-  user: UserAdmin;
+  user: UserForGetAllResponse;
   handleDelete: (id: string) => Promise<void>;
 }
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';

@@ -1,16 +1,16 @@
-import { SubjectService } from './SubjectService';
 import { Test } from '@nestjs/testing';
+import { ConfigService } from '@nestjs/config';
+import { QueryAllSubjectDTO } from '@fictadvisor/utils/requests';
+import { TelegramAPI } from '../../telegram/TelegramAPI';
 import { MapperModule } from '../../modules/MapperModule';
 import { PrismaModule } from '../../modules/PrismaModule';
-import { QueryAllSubjectDTO } from '../dtos/QueryAllSubjectDTO';
+import { SubjectService } from './SubjectService';
 import { PrismaService } from '../../database/PrismaService';
 import { TeacherService } from './TeacherService';
-import { DisciplineTeacherService } from './DisciplineTeacherService';
 import { PollService } from './PollService';
-import { TelegramAPI } from '../../telegram/TelegramAPI';
 import { DateService } from '../../utils/date/DateService';
+import { DisciplineTeacherService } from './DisciplineTeacherService';
 import { TelegramConfigService } from '../../config/TelegramConfigService';
-import { ConfigService } from '@nestjs/config';
 
 describe('SubjectService', () => {
   let subjectService: SubjectService;
@@ -121,7 +121,7 @@ describe('SubjectService', () => {
     });
     it('should return specific group subjects', async () => {
       const query: QueryAllSubjectDTO = {
-        group: '87e204ea-4243-4633-b69d-014613bac02g',
+        groupId: '87e204ea-4243-4633-b69d-014613bac02g',
       };
       const { data: subjects } = await subjectService.getAll(query);
       expect(subjects.length).toEqual(3);

@@ -1,8 +1,11 @@
 import { DbCathedra } from '../database/entities/DbCathedra';
-import { CathedraWithTeachersResponse } from '../api/responses/CathedraWithTeachersResponse';
-import { CathedraResponse } from '../api/responses/CathedraResponse';
-import { CathedraWithNumberOfTeachersResponse } from '../api/responses/CathedraWithNumberOfTeachersResponse';
-import { TeacherResponse } from '../api/responses/TeacherResponse';
+import {
+  CathedraWithTeachersResponse,
+  CathedraResponse,
+  CathedraWithNumberOfTeachersResponse,
+  TeacherResponse,
+} from '@fictadvisor/utils/responses';
+import { AcademicStatus, ScientificDegree, Position } from '@fictadvisor/utils/enums';
 
 export class CathedraMapper {
   getCathedra (cathedra: DbCathedra): CathedraResponse {
@@ -26,9 +29,9 @@ export class CathedraMapper {
       lastName: teacher.lastName,
       description: teacher.description,
       avatar: teacher.avatar,
-      academicStatus: teacher.academicStatus,
-      scientificDegree: teacher.scientificDegree,
-      position: teacher.position,
+      academicStatus: teacher.academicStatus as AcademicStatus,
+      scientificDegree: teacher.scientificDegree as ScientificDegree,
+      position: teacher.position as Position,
       rating: teacher.rating.toNumber(),
     }));
   }

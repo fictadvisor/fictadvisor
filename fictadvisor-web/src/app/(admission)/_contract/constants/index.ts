@@ -1,3 +1,11 @@
+import {
+  EducationalDegree,
+  EducationalProgramType,
+  PaymentTypeParam,
+  StudyFormParam,
+  StudyTypeParam,
+} from '@fictadvisor/utils/enums';
+
 import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
 import {
   ExtendedContractBody,
@@ -84,13 +92,13 @@ export const initialValues: ExtendedContractBody = {
     index: '',
   },
   meta: {
-    degree: '',
-    programType: '',
+    degree: '' as EducationalDegree,
+    programType: '' as EducationalProgramType,
     educationalProgram: '',
 
-    studyType: '',
-    studyForm: '',
-    paymentType: '',
+    studyType: '' as StudyTypeParam,
+    studyForm: '' as StudyFormParam,
+    paymentType: '' as PaymentTypeParam,
     speciality: '',
     isToAdmission: false,
     isForcePushed: false,

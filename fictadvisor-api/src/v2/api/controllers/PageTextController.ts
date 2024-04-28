@@ -1,5 +1,4 @@
 import { Body, Controller, Get, Patch, Post, Query } from '@nestjs/common';
-import { PERMISSION } from '@fictadvisor/utils/security';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -8,13 +7,15 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { PageTextResponse } from '../responses/PageTextResponse';
-import { PageTextsResponse } from '../responses/PageTextsResponse';
-import { PageTextService } from '../services/PageTextService';
-import { CreatePageTextDTO } from '../dtos/CreatePageTextDTO';
-import { UpdatePageTextsDTO } from '../dtos/UpdatePageTextsDTO';
-import { QueryAllPageTextsDTO } from '../dtos/QueryAllPageTextsDTO';
+import {
+  CreatePageTextDTO,
+  UpdatePageTextsDTO,
+  QueryAllPageTextsDTO,
+} from '@fictadvisor/utils/requests';
+import { PageTextResponse, PageTextsResponse } from '@fictadvisor/utils/responses';
+import { PERMISSION } from '@fictadvisor/utils/security';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
+import { PageTextService } from '../services/PageTextService';
 
 @ApiTags('PageText')
 @Controller({
@@ -49,9 +50,9 @@ export class PageTextController {
   })
   @Get()
   async getAll (
-    @Query() body: QueryAllPageTextsDTO,
+    @Query() query: QueryAllPageTextsDTO,
   ) {
-    return this.pageTextService.getAll(body);
+    return this.pageTextService.getAll(query);
   }
 
   @ApiBearerAuth()

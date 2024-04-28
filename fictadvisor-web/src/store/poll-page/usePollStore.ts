@@ -1,8 +1,10 @@
+import { QuestionDisplay, QuestionType } from '@fictadvisor/utils/enums';
 import { create } from 'zustand';
 
 import { SendingStatus } from '@/app/(main)/(search-pages)/poll/[disciplineTeacherId]/components/poll-form/types';
-import { Answer, QuestionDisplay, QuestionType } from '@/types/poll';
+import { Answer } from '@/types/poll';
 import { Category } from '@/types/poll';
+
 type Action = {
   setIsValid: (newValue: boolean) => void;
   setQuestionsListOpened: (newValue: boolean) => void;

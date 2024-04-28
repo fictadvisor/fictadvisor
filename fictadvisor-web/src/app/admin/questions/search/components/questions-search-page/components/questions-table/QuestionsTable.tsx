@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import { QuestionResponse } from '@fictadvisor/utils/responses';
 import {
   Table,
   TableBody,
@@ -9,13 +10,12 @@ import {
 
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import { typesOptions } from '@/app/admin/questions/common/constants';
-import { AdminQuestion } from '@/app/admin/questions/common/types';
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 
 import TableActions from './components/table-actions';
 
 interface QuestionAdminSearchProps {
-  questions?: AdminQuestion[];
+  questions?: QuestionResponse[];
   deleteQuestion: (id: string) => Promise<void>;
 }
 

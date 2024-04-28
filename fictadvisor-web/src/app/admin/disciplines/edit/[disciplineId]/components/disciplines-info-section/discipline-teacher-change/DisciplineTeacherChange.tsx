@@ -1,5 +1,6 @@
 'use client';
 import { Dispatch, type FC, SetStateAction, useState } from 'react';
+import { TeacherRole } from '@fictadvisor/utils/enums';
 import { SelectChangeEvent } from '@mui/material';
 
 import { Dropdown } from '@/components/common/ui/form';
@@ -7,7 +8,6 @@ import CheckboxesDropdown from '@/components/common/ui/form/checkboxes-dropdown/
 import { CheckboxesDropdownOption } from '@/components/common/ui/form/checkboxes-dropdown/types/CheckboxesDropdown';
 import { FieldSize } from '@/components/common/ui/form/common/types';
 import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
-import { TeacherRole } from '@/types/teacher';
 
 import * as styles from './DisciplineTeacherChange.styles';
 

@@ -1,7 +1,9 @@
+import { DisciplineTypeEnum } from '@fictadvisor/utils/enums';
+
 export class DbDisciplineType {
   id: string;
-  disciplineId: string;
+  disciplineId: DisciplineTypeEnum;
   name: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Date | null;
+  updatedAt: Date | null;
 }

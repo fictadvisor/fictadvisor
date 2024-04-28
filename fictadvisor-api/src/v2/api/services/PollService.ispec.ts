@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing';
-import { Group, PrismaClient, QuestionDisplay, QuestionType, State, Subject, Teacher, TeacherRole, User } from '@prisma/client';
+import { CommentsSortOrder } from '@fictadvisor/utils/enums';
 import { DateModule } from '../../utils/date/DateModule';
 import { MapperModule } from '../../modules/MapperModule';
 import { PrismaModule } from '../../modules/PrismaModule';
@@ -7,7 +7,7 @@ import { PollService } from './PollService';
 import { DbDiscipline } from 'src/v2/database/entities/DbDiscipline';
 import { DbQuestionWithRoles } from 'src/v2/database/entities/DbQuestionWithRoles';
 import { DbQuestionWithAnswers } from 'src/v2/database/entities/DbQuestionWithAnswers';
-import { CommentsSort } from '../dtos/CommentsQueryDTO';
+import { Group, PrismaClient, QuestionDisplay, QuestionType, State, Subject, Teacher, TeacherRole, User } from '@prisma/client';
 
 
 describe('PollService', () => {
@@ -236,7 +236,7 @@ describe('PollService', () => {
         questionAnswers: true,
         questionRoles: true,
       },
-    });
+    }) as any as DbQuestionWithRoles & DbQuestionWithAnswers;
 
     questionMark2 = await prisma.question.create({
       data: {
@@ -273,7 +273,7 @@ describe('PollService', () => {
         questionAnswers: true,
         questionRoles: true,
       },
-    });
+    }) as any as DbQuestionWithRoles & DbQuestionWithAnswers;
 
     questionText = await prisma.question.create({
       data: {
@@ -316,7 +316,7 @@ describe('PollService', () => {
         questionAnswers: true,
         questionRoles: true,
       },
-    });
+    }) as any as DbQuestionWithRoles & DbQuestionWithAnswers;
   });
 
 
@@ -518,13 +518,13 @@ describe('PollService', () => {
       const questionCommentsOldest = await pollService.getQuestionWithText(
         teacherLecturer.id,
         {
-          sortBy: CommentsSort.OLDEST,
+          sortBy: CommentsSortOrder.OLDEST,
         }
       );
       const questionCommentsNewest = await pollService.getQuestionWithText(
         teacherLecturer.id,
         {
-          sortBy: CommentsSort.NEWEST,
+          sortBy: CommentsSortOrder.NEWEST,
         }
       );
       expect(questionCommentsOldest.length).toBe(1);

@@ -1,8 +1,7 @@
+import { LoginDTO, RegistrationDTO } from '@fictadvisor/utils/requests';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
 import AuthAPI from '@/lib/api/auth/AuthAPI';
-import { AuthBody } from '@/lib/api/auth/types/AuthBody';
-import { RegisterBody } from '@/lib/api/auth/types/RegisterBody';
 import TelegramService from '@/lib/services/telegram';
 import StorageUtil from '@/lib/utils/StorageUtil';
 
@@ -12,7 +11,7 @@ class AuthService {
     StorageUtil.deleteTelegramInfo();
   }
 
-  static async login(data: AuthBody) {
+  static async login(data: LoginDTO) {
     const tokens = await AuthAPI.auth(data);
     StorageUtil.setTokens(tokens.accessToken, tokens.refreshToken);
   }
@@ -21,7 +20,7 @@ class AuthService {
     return await TelegramService.login();
   }
 
-  static async register(data: RegisterBody) {
+  static async register(data: RegistrationDTO) {
     const telegramInfo = StorageUtil.getTelegramInfo();
     StorageUtil.deleteTelegramInfo();
     if (telegramInfo) {

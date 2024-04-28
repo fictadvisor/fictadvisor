@@ -1,6 +1,7 @@
 'use client';
 import React, { FC, useState } from 'react';
 import { useQuery } from 'react-query';
+import { CreateDisciplineDTO } from '@fictadvisor/utils/requests';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Box, Stack, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
@@ -20,7 +21,6 @@ import LoadPage from '@/components/common/ui/load-page/LoadPage';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import DisciplineAPI from '@/lib/api/discipline/DisciplineAPI';
-import AddDiscipline from '@/lib/api/discipline/types/AddDiscipline';
 
 interface AdminDisciplineEditProps {
   params: {
@@ -44,7 +44,9 @@ const DisciplinesAdminEdit: FC<AdminDisciplineEditProps> = ({ params }) => {
       `An error has occurred while editing ${params.disciplineId} discipline`,
     );
 
-  const [body, setBody] = useState<AddDiscipline>({} as AddDiscipline);
+  const [body, setBody] = useState<CreateDisciplineDTO>(
+    {} as CreateDisciplineDTO,
+  );
   const toast = useToast();
   const { displayError } = useToastError();
   const router = useRouter();
@@ -78,7 +80,7 @@ const DisciplinesAdminEdit: FC<AdminDisciplineEditProps> = ({ params }) => {
     try {
       if (isValuesSet()) {
         DisciplineAPI.deleteDiscipline(disciplineId).then(() =>
-          DisciplineAPI.addDiscipline(body as AddDiscipline),
+          DisciplineAPI.addDiscipline(body),
         );
         toast.success('Дисципліна успішно змінена!', '', 4000);
         router.push('/admin/disciplines');

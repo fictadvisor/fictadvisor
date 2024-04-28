@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import { TeacherWithRolesAndCathedrasResponse } from '@fictadvisor/utils/responses';
 import {
   Avatar,
   Stack,
@@ -19,12 +20,11 @@ import {
 import Tag from '@/components/common/ui/tag';
 import { TagSize, TagVariant } from '@/components/common/ui/tag/types';
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
-import { Teacher } from '@/types/teacher';
 
 import TableActions from './components/table-actions';
 
 interface TeachersAdminSearchProps {
-  teachers: Teacher[];
+  teachers: TeacherWithRolesAndCathedrasResponse[];
   deleteTeacher: (id: string) => Promise<void>;
 }
 

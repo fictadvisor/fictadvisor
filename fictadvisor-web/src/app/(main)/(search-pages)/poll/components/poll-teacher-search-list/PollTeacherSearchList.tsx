@@ -1,13 +1,13 @@
 import { Dispatch, FC, SetStateAction, useCallback } from 'react';
+import { QueryAllDisciplineTeacherForPollDTO } from '@fictadvisor/utils/requests';
+import { PollDisciplineTeachersResponse } from '@fictadvisor/utils/responses';
 import { Box, Typography, useMediaQuery } from '@mui/material';
 import List from '@mui/material/List';
 import Image from 'next/image';
 
-import { PollSearchFormFields } from '@/app/(main)/(search-pages)/poll/components/poll-search-form/types';
 import { SearchFormProps } from '@/app/(main)/(search-pages)/search-form/SearchForm';
 import { PollTeacherCard } from '@/components/common/ui/cards/poll-teacher-card';
 import useAuthentication from '@/hooks/use-authentication';
-import { PollTeachersResponse } from '@/lib/api/poll/types/PollTeachersResponse';
 import theme from '@/styles/theme';
 
 import PollSearchForm from '../poll-search-form';
@@ -17,10 +17,10 @@ import * as styles from './PollTeacherSearchList.styles';
 import style from './PollTeacherSearchList.module.scss';
 
 interface PollTeacherSearchListProps {
-  data: PollTeachersResponse;
+  data: PollDisciplineTeachersResponse;
   className: string;
-  setQueryObj: Dispatch<SetStateAction<PollSearchFormFields>>;
-  initialValues: PollSearchFormFields;
+  setQueryObj: Dispatch<SetStateAction<QueryAllDisciplineTeacherForPollDTO>>;
+  initialValues: QueryAllDisciplineTeacherForPollDTO;
   localStorageName: string;
   setCurPage: Dispatch<SetStateAction<number>>;
 }
@@ -35,7 +35,9 @@ const PollTeacherSearchList: FC<PollTeacherSearchListProps> = ({
   const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
 
   const submitHandler: SearchFormProps['onSubmit'] = useCallback(query => {
-    setQueryObj(prev => ({ ...prev, ...query }));
+    setQueryObj(
+      prev => ({ ...prev, ...query }) as QueryAllDisciplineTeacherForPollDTO,
+    );
     setCurPage(0);
   }, []);
   const { user } = useAuthentication();

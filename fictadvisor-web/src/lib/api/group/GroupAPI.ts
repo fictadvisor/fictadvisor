@@ -1,64 +1,60 @@
 import {
-  GroupCreateBody,
-  GroupEditBody,
-  GroupsSearchFormFields,
-} from '@/app/admin/groups/common/types';
-import { AddStudentsByMailBody } from '@/lib/api/group/types/AddStudentsByMailBody';
-import { AddStudentsByMailResponse } from '@/lib/api/group/types/AddStudentsByMailResponse';
-import { ExportGroupStudents } from '@/lib/api/group/types/ExportGroupStudents';
-import { GetGroupDisciplines } from '@/lib/api/group/types/GetGroupDisciplines';
-import { GetGroupStudentResponse } from '@/lib/api/group/types/GetGroupStudentsResponse';
-import { GetDisciplinesWithTeachers } from '@/lib/api/group/types/GetGroupTeachers';
-import { GetPendingStudentsResponse } from '@/lib/api/group/types/GetPendingStudentsResponse';
-import { UpdateCaptainBody } from '@/lib/api/group/types/UpdateCaptainBody';
-import { UpdateStudentRoleBody } from '@/lib/api/group/types/UpdateStudentRoleBody';
-import { VerifyStudentBody } from '@/lib/api/group/types/VerifyStudentBody';
+  ApproveDTO,
+  CreateGroupDTO,
+  EmailDTO,
+  GroupStudentsQueryDTO,
+  QueryAllGroupsDTO,
+  QuerySemesterDTO,
+  RoleDTO,
+  SwitchCaptainDTO,
+  UpdateGroupDTO,
+} from '@fictadvisor/utils/requests';
+import {
+  ExtendedDisciplineTeachersResponse,
+  GroupStudentsResponse,
+  MappedGroupResponse,
+  OrdinaryStudentResponse,
+  PaginatedGroupsResponse,
+  SelectiveDisciplinesWithAmountResponse,
+  ShortDisciplinesResponse,
+  ShortUsersResponse,
+  StudentsResponse,
+  URLResponse,
+} from '@fictadvisor/utils/responses';
+
 import { getAuthorizationHeader } from '@/lib/api/utils';
-import { Group } from '@/types/group';
-import { GroupStudent } from '@/types/student';
-import { User } from '@/types/user';
 
 import { Order } from '../../services/group/types/OrderEnum';
 import { client } from '../instance';
 
-import { GetAllGroupsResponse } from './types/GetAllGroupsResponse';
-import { GetSelectiveResponse } from './types/GetSelectiveResponse';
-
 class GroupAPI {
-  async addStudentsByMail(groupId: string, body: AddStudentsByMailBody) {
-    return await client.post<AddStudentsByMailResponse>(
+  async addStudentsByMail(groupId: string, body: EmailDTO) {
+    const { data } = await client.post<ShortUsersResponse>(
       `/groups/${groupId}/addEmails`,
       body,
       getAuthorizationHeader(),
     );
+    return data;
   }
 
-  async get(groupId: string): Promise<Group> {
-    const { data } = await client.get<Group>(
+  async get(groupId: string) {
+    const { data } = await client.get<MappedGroupResponse>(
       `/groups/${groupId}`,
       getAuthorizationHeader(),
     );
     return data;
   }
 
-  async getAll(
-    page?: number,
-    params?: Partial<GroupsSearchFormFields>,
-    pageSize?: number,
-  ): Promise<GetAllGroupsResponse> {
-    const { data } = await client.get<GetAllGroupsResponse>(`/groups`, {
-      params: {
-        ...params,
-        page,
-        pageSize,
-      },
+  async getAll(params: QueryAllGroupsDTO = {}) {
+    const { data } = await client.get<PaginatedGroupsResponse>(`/groups`, {
+      params,
       ...getAuthorizationHeader(),
     });
     return data;
   }
 
-  async create(body: GroupCreateBody): Promise<Group> {
-    const { data } = await client.post<Group>(
+  async create(body: CreateGroupDTO) {
+    const { data } = await client.post<MappedGroupResponse>(
       `/groups`,
       body,
       getAuthorizationHeader(),
@@ -66,11 +62,9 @@ class GroupAPI {
     return data;
   }
 
-  async editGroup(
-    body: Partial<GroupEditBody>,
-    groupId: string,
-  ): Promise<Group> {
-    const { data } = await client.patch<Group>(
+  // HERE I STOPPED
+  async editGroup(groupId: string, body: UpdateGroupDTO) {
+    const { data } = await client.patch<MappedGroupResponse>(
       `/groups/${groupId}`,
       body,
       getAuthorizationHeader(),
@@ -78,35 +72,28 @@ class GroupAPI {
     return data;
   }
 
-  async delete(groupId: string): Promise<Group> {
-    const { data } = await client.delete<Group>(
+  async delete(groupId: string) {
+    const { data } = await client.delete<MappedGroupResponse>(
       `/groups/${groupId}`,
       getAuthorizationHeader(),
     );
     return data;
   }
 
-  async getGroupStudents(
-    groupId: string,
-    order?: Order,
-    sort?: 'lastName' | 'firstName' | 'middleName',
-  ) {
-    const res = await client.get<GetGroupStudentResponse>(
+  async getGroupStudents(groupId: string, params: GroupStudentsQueryDTO = {}) {
+    const { data } = await client.get<GroupStudentsResponse>(
       `/groups/${groupId}/students`,
       {
-        params: {
-          order,
-          sort,
-        },
+        params,
         ...getAuthorizationHeader(),
       },
     );
-    return res.data;
+    return data;
   }
 
   async getRequestStudents(groupId: string, order?: Order) {
     const params = order ? { order, sort: 'lastName' } : {};
-    const res = await client.get<GetPendingStudentsResponse>(
+    const { data } = await client.get<StudentsResponse>(
       `/groups/${groupId}/unverifiedStudents`,
       {
         params,
@@ -114,10 +101,10 @@ class GroupAPI {
       },
     );
 
-    return res.data;
+    return data;
   }
 
-  async removeStudent(groupId: string, studentId: string) {
+  async removeStudent(groupId: string, studentId: string): Promise<void> {
     await client.delete(
       `/groups/${groupId}/remove/${studentId}`,
       getAuthorizationHeader(),
@@ -127,8 +114,8 @@ class GroupAPI {
   async updateStudentRole(
     groupId: string,
     studentId: string,
-    body: UpdateStudentRoleBody,
-  ) {
+    body: RoleDTO,
+  ): Promise<void> {
     await client.patch(
       `/groups/${groupId}/switch/${studentId}`,
       body,
@@ -136,20 +123,17 @@ class GroupAPI {
     );
   }
 
-  async updateCaptain(groupId: string, body: UpdateCaptainBody) {
-    await client.post(
+  async updateCaptain(groupId: string, body: SwitchCaptainDTO) {
+    const { data } = await client.post<OrdinaryStudentResponse>(
       `/groups/${groupId}/switchCaptain`,
       body,
       getAuthorizationHeader(),
     );
+    return data;
   }
 
-  async verifyStudent(
-    groupId: string,
-    userId: string,
-    body: VerifyStudentBody,
-  ) {
-    const { data } = await client.patch<GroupStudent>(
+  async verifyStudent(groupId: string, userId: string, body: ApproveDTO) {
+    const { data } = await client.patch<OrdinaryStudentResponse>(
       `/groups/${groupId}/verify/${userId}`,
       body,
       getAuthorizationHeader(),
@@ -157,11 +141,11 @@ class GroupAPI {
     return data;
   }
 
-  async getDisciplines(groupId: string, semester?: string, year?: string) {
-    const { data } = await client.get<GetGroupDisciplines>(
+  async getDisciplines(groupId: string, params: QuerySemesterDTO) {
+    const { data } = await client.get<ShortDisciplinesResponse>(
       `/groups/${groupId}/disciplines`,
       {
-        params: { year, semester },
+        params,
         ...getAuthorizationHeader(),
       },
     );
@@ -170,7 +154,7 @@ class GroupAPI {
   }
 
   async getDisciplineTeachers(groupId: string) {
-    const { data } = await client.get<GetDisciplinesWithTeachers>(
+    const { data } = await client.get<ExtendedDisciplineTeachersResponse>(
       `/groups/${groupId}/disciplineTeachers`,
       getAuthorizationHeader(),
     );
@@ -178,17 +162,8 @@ class GroupAPI {
     return data;
   }
 
-  async getGroupList(groupId: string) {
-    const { data } = await client.get<GetGroupStudentResponse>(
-      `/groups/${groupId}/list`,
-      getAuthorizationHeader(),
-    );
-
-    return data;
-  }
-
   async getGroupListUrl(groupId: string) {
-    const { data } = await client.get<ExportGroupStudents>(
+    const { data } = await client.get<URLResponse>(
       `/groups/${groupId}/list`,
       getAuthorizationHeader(),
     );
@@ -197,7 +172,7 @@ class GroupAPI {
   }
 
   async leaveGroup(groupId: string) {
-    const { data } = await client.patch<User>(
+    const { data } = await client.patch<OrdinaryStudentResponse>(
       `/groups/${groupId}/leave`,
       {},
       getAuthorizationHeader(),
@@ -206,8 +181,8 @@ class GroupAPI {
   }
 
   async getSelectives(groupId: string) {
-    const { data } = await client.get<GetSelectiveResponse[]>(
-      `/groups/${groupId}/selective`,
+    const { data } = await client.get<SelectiveDisciplinesWithAmountResponse[]>(
+      `/groups/${groupId}/selectiveDisciplines`,
       getAuthorizationHeader(),
     );
     return data;

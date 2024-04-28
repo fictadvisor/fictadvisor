@@ -1,6 +1,7 @@
-import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
+import { SortQAGroupsParam } from '@fictadvisor/utils/enums';
+import { QueryAllGroupsDTO } from '@fictadvisor/utils/requests';
 
-import { GroupsSearchFormFields } from '../types';
+import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
 
 export const sortOptions: DropDownOption[] = [
   { id: 'code', label: 'За назвою' },
@@ -8,10 +9,10 @@ export const sortOptions: DropDownOption[] = [
   { id: 'captain', label: "За ім'ям старости" },
 ];
 
-export const initialValues: GroupsSearchFormFields = {
+export const initialValues: QueryAllGroupsDTO = {
   search: '',
   order: 'asc',
-  sort: 'code',
+  sort: SortQAGroupsParam.CODE,
   cathedras: [],
   specialities: [],
   courses: [],

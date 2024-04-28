@@ -1,7 +1,7 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
+import { CommentsQueryDTO } from '@fictadvisor/utils/requests';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
 import { SubjectRepository } from '../../database/repositories/SubjectRepository';
-import { CommentsQueryDTO } from '../dtos/CommentsQueryDTO';
 
 @Injectable()
 export class CommentsQueryPipe implements PipeTransform {

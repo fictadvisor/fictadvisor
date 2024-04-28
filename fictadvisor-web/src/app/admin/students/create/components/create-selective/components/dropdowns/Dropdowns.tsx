@@ -1,4 +1,5 @@
 import React, { FC, useState } from 'react';
+import { SelectiveDisciplinesWithAmountResponse } from '@fictadvisor/utils/responses';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { Box } from '@mui/material';
 
@@ -18,24 +19,16 @@ import SelectiveDropdown from './components/SelectiveDropdown';
 import * as styles from './Dropdowns.styles';
 
 interface DropdownsProps {
-  remainingSelective: {
-    year: number;
-    semester: 1 | 2;
-    selective: Array<{
-      id: string;
-      name: string;
-    }>;
-    amount: number;
-  };
-  setConnectedSelective: React.Dispatch<React.SetStateAction<string[]>>;
+  remainingSelective: SelectiveDisciplinesWithAmountResponse;
+  setConnectedSelectives: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 const Dropdowns: FC<DropdownsProps> = ({
   remainingSelective,
-  setConnectedSelective,
+  setConnectedSelectives,
 }) => {
   const [selectiveOptions, setSelectiveOptions] = useState<DropDownOption[]>(
-    transformSelectivesDefault(remainingSelective.selective),
+    transformSelectivesDefault(remainingSelective.disciplines),
   );
 
   const [pickedSelectives, setPickedSelectives] = useState<
@@ -51,7 +44,7 @@ const Dropdowns: FC<DropdownsProps> = ({
     setPickedSelectives(prev => {
       return prev.filter(selective => selective.id !== currentDiscipline.id);
     });
-    setConnectedSelective(prev => {
+    setConnectedSelectives(prev => {
       return prev.filter(selective => selective !== currentDiscipline.id);
     });
     setSelectiveOptions(options => [...options, currentDiscipline]);
@@ -59,7 +52,7 @@ const Dropdowns: FC<DropdownsProps> = ({
   }
 
   const editSelective = (newValue: string, oldValue: DropDownOption) => {
-    setConnectedSelective(prev => [
+    setConnectedSelectives(prev => [
       ...prev.filter(selective => selective !== oldValue.id),
       newValue,
     ]);
@@ -71,11 +64,11 @@ const Dropdowns: FC<DropdownsProps> = ({
   };
 
   const handleSelectiveAdd = (newValue: string) => {
-    const newSelective = remainingSelective.selective.find(
+    const newSelective = remainingSelective.disciplines.find(
       discipline => discipline.id === newValue,
     );
     setPickedSelectives(selectives => [...selectives, newSelective!]);
-    setConnectedSelective(prev => {
+    setConnectedSelectives(prev => {
       return [...prev, newValue];
     });
     setSelectiveOptions(options =>

@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { CathedraRepository } from '../../database/repositories/CathedraRepository';
-import { CreateCathedraDTO } from '../dtos/CreateCathedraDTO';
-import { UpdateCathedraDTO } from '../dtos/UpdateCathedraDTO';
-import { DbCathedra } from '../../database/entities/DbCathedra';
+import {
+  CreateCathedraDTO,
+  UpdateCathedraDTO,
+  QueryAllCathedrasDTO,
+} from '@fictadvisor/utils/requests';
+import { SortQACParam } from '@fictadvisor/utils/enums';
 import { DatabaseUtils } from '../../database/DatabaseUtils';
-import { QueryAllCathedrasDTO, SortQACParam } from '../dtos/QueryAllCathedrasDTO';
+import { DbCathedra } from '../../database/entities/DbCathedra';
+import { CathedraRepository } from '../../database/repositories/CathedraRepository';
 
 @Injectable()
 export class CathedraService {

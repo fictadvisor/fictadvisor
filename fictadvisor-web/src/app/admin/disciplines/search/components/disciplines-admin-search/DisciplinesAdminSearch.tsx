@@ -1,5 +1,7 @@
 'use client';
 import React, { FC, useEffect, useState } from 'react';
+import { QueryAllDisciplinesDTO } from '@fictadvisor/utils/requests';
+import { SemesterResponse } from '@fictadvisor/utils/responses';
 import {
   BarsArrowDownIcon,
   BarsArrowUpIcon,
@@ -25,22 +27,21 @@ import { IconButtonSize } from '@/components/common/ui/icon-button-mui/types';
 import Progress from '@/components/common/ui/progress/Progress';
 
 import { initialValues, sortOptions } from '../../constants';
-import { DisciplinesAdminSearchFormFields, Semester } from '../../types';
 
 import * as styles from './DisciplinesAdminSearch.styles';
 
 interface DisciplinesAdminSearchProps {
-  setParams: React.Dispatch<
-    React.SetStateAction<DisciplinesAdminSearchFormFields>
-  >;
+  setParams: React.Dispatch<React.SetStateAction<QueryAllDisciplinesDTO>>;
 }
 
 const DisciplinesAdminSearch: FC<DisciplinesAdminSearchProps> = ({
   setParams,
 }) => {
-  const [search, setSearch] = useState<string>(initialValues.search);
-  const [sortBy, setSortBy] = useState<string>(initialValues.sort);
-  const [order, setOrder] = useState<'asc' | 'desc'>(initialValues.order);
+  const [search, setSearch] = useState<string>(initialValues.search as string);
+  const [sortBy, setSortBy] = useState<string>(initialValues.sort as string);
+  const [order, setOrder] = useState<'asc' | 'desc'>(
+    initialValues.order as 'asc' | 'desc',
+  );
   const [groups, setGroups] = useState<CheckboxesDropdownOption[]>([]);
   const [semesters, setSemesters] = useState<CheckboxesDropdownOption[]>([]);
   const [teachers, setTeachers] = useState<CheckboxesDropdownOption[]>([]);
@@ -108,7 +109,7 @@ const DisciplinesAdminSearch: FC<DisciplinesAdminSearchProps> = ({
     const newSemestersFilter = semesters.map(semester => ({
       semester: parseInt(semester.value.split(' ')[1]),
       year: parseInt(semester.value.split(' ')[0]),
-    })) as Semester[];
+    })) as SemesterResponse[];
     setParams(prev => ({
       ...prev,
       semesters: newSemestersFilter,

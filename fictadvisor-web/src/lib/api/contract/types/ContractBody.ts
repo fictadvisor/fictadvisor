@@ -1,3 +1,11 @@
+import {
+  EducationalDegree,
+  EducationalProgramType,
+  PaymentTypeParam,
+  StudyFormParam,
+  StudyTypeParam,
+} from '@fictadvisor/utils/enums';
+
 import { Fullname } from '@/types/contract';
 import { PartialBy } from '@/types/utils/PartialBy';
 
@@ -16,13 +24,13 @@ export interface PersonalData extends Fullname {
 }
 
 interface MetaContract {
-  degree: string;
-  programType: string;
+  degree: EducationalDegree;
+  programType: EducationalProgramType;
   educationalProgram: string;
   speciality: string;
-  studyType: string;
-  studyForm: string;
-  paymentType?: string;
+  studyType: StudyTypeParam;
+  studyForm: StudyFormParam;
+  paymentType?: PaymentTypeParam;
   isToAdmission: boolean;
   isForcePushed: boolean;
 }
@@ -61,5 +69,3 @@ export interface ExtendedContractBody {
   meta: MetaContract;
   helper: HelperData;
 }
-
-export type ContractBody = Omit<ExtendedContractBody, 'helper'>;

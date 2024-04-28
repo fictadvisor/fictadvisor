@@ -1,13 +1,13 @@
+import { SortQATParam, TeacherRole } from '@fictadvisor/utils/enums';
+import { QueryAllDisciplineTeacherForPollDTO } from '@fictadvisor/utils/requests';
+
 import { CheckboxOption } from '@/components/common/ui/form/checkboxes-dropdown/types/CheckboxOption';
 import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
-import { TeacherRole } from '@/types/teacher';
 
-import { PollSearchFormFields } from './types';
-
-export const PollTeacherInitialValues: PollSearchFormFields = {
+export const PollTeacherInitialValues: QueryAllDisciplineTeacherForPollDTO = {
   search: '',
   order: 'asc',
-  sort: 'lastName',
+  sort: SortQATParam.LAST_NAME,
   roles: [],
 };
 

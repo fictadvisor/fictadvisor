@@ -1,36 +1,39 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import { QueryAllDisciplinesDTO } from '@fictadvisor/utils/requests';
 import { Box, TablePagination } from '@mui/material';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import DisciplinesTable from '@/app/admin/disciplines/search/components/disciplines-table';
 import { initialValues } from '@/app/admin/disciplines/search/constants';
-import { DisciplinesAdminSearchFormFields } from '@/app/admin/disciplines/search/types';
 import LoadPage from '@/components/common/ui/load-page';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
-import DisciplineApi from '@/lib/api/discipline/DisciplineAPI';
 import DisciplineAPI from '@/lib/api/discipline/DisciplineAPI';
 
 import DisciplinesAdminSearch from './search/components/disciplines-admin-search';
 
 const DisciplinesAdminSearchPage = () => {
   const [pageSize, setPageSize] = useState(10);
-  const [curPage, setCurPage] = useState(0);
-  const [params, setParams] =
-    useState<DisciplinesAdminSearchFormFields>(initialValues);
+  const [currPage, setCurrPage] = useState(0);
+  const [params, setParams] = useState<QueryAllDisciplinesDTO>(initialValues);
   const { displayError } = useToastError();
   const toast = useToast();
   const { data, refetch, isLoading } = useQuery(
-    ['disciplines', params, curPage, pageSize],
-    () => DisciplineApi.getPageDisciplines(params, pageSize, curPage),
+    ['disciplines', params, currPage, pageSize],
+    () =>
+      DisciplineAPI.getPageDisciplines({
+        ...params,
+        pageSize,
+        page: currPage,
+      }),
     useQueryAdminOptions,
   );
 
   useEffect(() => {
-    setCurPage(0);
+    setCurrPage(0);
   }, [params]);
 
   if (isLoading) return <LoadPage />;
@@ -41,7 +44,7 @@ const DisciplinesAdminSearchPage = () => {
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setPageSize(Number(event.target.value));
-    setCurPage(0);
+    setCurrPage(0);
   };
   const deleteDiscipline = async (id: string) => {
     try {
@@ -63,9 +66,9 @@ const DisciplinesAdminSearchPage = () => {
       <TablePagination
         sx={stylesAdmin.pagination}
         count={data.pagination.totalAmount}
-        page={curPage}
+        page={currPage}
         rowsPerPage={pageSize}
-        onPageChange={(e, page) => setCurPage(page)}
+        onPageChange={(e, page) => setCurrPage(page)}
         onRowsPerPageChange={handleRowsPerPageChange}
       />
     </Box>

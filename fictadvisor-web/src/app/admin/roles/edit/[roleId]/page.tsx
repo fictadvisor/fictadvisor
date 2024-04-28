@@ -1,6 +1,7 @@
 'use client';
 import React, { FC, useState } from 'react';
 import { useQuery } from 'react-query';
+import { RoleName } from '@fictadvisor/utils/enums';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Box, CardHeader, Link, Stack } from '@mui/material';
 import NextLink from 'next/link';
@@ -24,7 +25,6 @@ import LoadPage from '@/components/common/ui/load-page/LoadPage';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import RoleAPI from '@/lib/api/role/RoleAPI';
-import { RoleName } from '@/types/role';
 
 interface AdminRolesEditProps {
   params: {
@@ -67,14 +67,11 @@ const AdminRolesEdit: FC<AdminRolesEditProps> = ({ params }) => {
   };
   const handleEdit = async () => {
     try {
-      await RoleAPI.edit(
-        {
-          displayName,
-          weight: parseInt(weight),
-          name,
-        },
-        role.id,
-      );
+      await RoleAPI.edit(role.id, {
+        displayName,
+        weight: parseInt(weight),
+        name,
+      });
       toast.success('Роль успішно змінена!', '', 4000);
     } catch (e) {
       displayError(e);

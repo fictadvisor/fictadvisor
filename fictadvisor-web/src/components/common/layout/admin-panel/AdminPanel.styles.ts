@@ -1,7 +1,6 @@
 import { SxProps, Theme } from '@mui/material/styles';
 import { alpha } from '@mui/system';
 
-import { BASE_URL } from '@/components/common/layout/admin-panel/constants';
 import theme from '@/styles/theme';
 
 export const drawer: SxProps<Theme> = {

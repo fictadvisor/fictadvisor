@@ -1,17 +1,16 @@
 import type { FC } from 'react';
-import { PlusIcon } from '@heroicons/react/24/outline';
-import { Box, Stack } from '@mui/material';
+import { MappedGroupResponse } from '@fictadvisor/utils/responses';
+import { Box } from '@mui/material';
 
 import { GroupsDropDown } from '@/app/(main)/schedule/schedule-page/calendar-section/components/groups-dropdown/GroupsDropDown';
 import { CheckboxesDropdown } from '@/app/(main)/schedule/schedule-page/calendar-section/components/mobile/checkboxes-dropdown/CheckboxesDropDown';
-import { Group } from '@/types/group';
 
 import { CheckBoxSection } from '../checkboxes-section/CheckBoxSection';
 
 import { WeekArrows } from './weekArrows/WeekArrows';
 import * as styles from './CalendarSectionMobile.styles';
 export interface CalendarSectionMobileProps {
-  groups: Group[];
+  groups: MappedGroupResponse[];
 }
 export const CalendarSectionMobile: FC<CalendarSectionMobileProps> = ({
   groups,

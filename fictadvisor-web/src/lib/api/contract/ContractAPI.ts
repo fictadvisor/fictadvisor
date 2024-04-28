@@ -1,57 +1,53 @@
-import { ContractBody } from '@/lib/api/contract/types/ContractBody';
-import { DeleteEntrantBody } from '@/lib/api/contract/types/DeleteEntrantBody';
-import { DeleteEntrantDataBody } from '@/lib/api/contract/types/DeleteEntrantDataBody';
-import { EntrantFuIlResponse } from '@/lib/api/contract/types/EntrantFullResponse';
-import { PriorityDataBody } from '@/lib/api/contract/types/PriorityDataBody';
+import { Actions } from '@fictadvisor/utils/enums';
+import {
+  CreateContractDTO,
+  DeleteEntrantDataQueryDTO,
+  FullNameWithSpecialtyDTO,
+  PriorityDTO,
+  StudyContractDTO,
+} from '@fictadvisor/utils/requests';
+import {
+  EntrantFullResponse,
+  EntrantWithContractResponse,
+  EntrantWithPriorityResponse,
+} from '@fictadvisor/utils/responses';
+
 import { client } from '@/lib/api/instance';
 import { getAuthorizationHeader } from '@/lib/api/utils';
-import { EntrantBody, Fullname } from '@/types/contract';
-
-import { AdminContractBody } from './types/AdminContractBody';
 
 class ContractAPI {
-  async createContract(body: ContractBody) {
-    const { data } = await client.post('/documents/contract', body);
-    return data;
+  async createContract(body: StudyContractDTO): Promise<void> {
+    await client.post('/documents/contract', body);
   }
 
-  async createContractById(entrantId: string) {
-    const { data } = await client.get(`/documents/contract/${entrantId}`);
-    return data;
+  async createContractById(entrantId: string): Promise<void> {
+    await client.get(`/documents/contract/${entrantId}`);
   }
 
-  async sendPriorityOnEmail(entrantId: string) {
-    const { data } = await client.get(`/documents/priority/${entrantId}`);
-    return data;
+  async sendPriorityOnEmail(entrantId: string): Promise<void> {
+    await client.get(`/documents/priority/${entrantId}`);
   }
 
-  async approveContract(body: Fullname) {
-    const { data } = await client.post(
-      '/documents/generateContract',
-      body,
-      getAuthorizationHeader(),
-    );
-    return data;
-  }
-
-  async createAdminContract(body: AdminContractBody) {
-    const { data } = await client.post(
+  async createAdminContract(body: CreateContractDTO): Promise<void> {
+    await client.post<EntrantWithContractResponse>(
       '/entrants/contract',
       body,
       getAuthorizationHeader(),
     );
+  }
+
+  async getEntrantPriority(params: FullNameWithSpecialtyDTO) {
+    const { data } = await client.get<EntrantWithPriorityResponse>(
+      `/entrants/priority`,
+      {
+        params,
+        ...getAuthorizationHeader(),
+      },
+    );
     return data;
   }
 
-  async getEntrantPriority(body: Fullname) {
-    const data = await client.get(`/entrants/priority`, {
-      params: body,
-      ...getAuthorizationHeader(),
-    });
-    return data.data;
-  }
-
-  async entrantPriorityApprove(body: Fullname) {
+  async entrantPriorityApprove(body: FullNameWithSpecialtyDTO): Promise<void> {
     await client.patch(
       '/entrants/priority/approve',
       body,
@@ -59,7 +55,7 @@ class ContractAPI {
     );
   }
 
-  async approvePriorityById(entrantId: string) {
+  async approvePriorityById(entrantId: string): Promise<void> {
     await client.patch(
       `/entrants/priority/approve/${entrantId}`,
       {},
@@ -67,30 +63,26 @@ class ContractAPI {
     );
   }
 
-  async createPriority(body: PriorityDataBody) {
-    const { data } = await client.post('/documents/priority', body);
-    return data;
+  async createPriority(body: PriorityDTO): Promise<void> {
+    await client.post('/documents/priority', body);
   }
 
-  async deleteEntrant(body: DeleteEntrantBody) {
-    const { data } = await client.delete('/entrants/data', {
-      params: body,
+  async deleteEntrant(params: DeleteEntrantDataQueryDTO): Promise<void> {
+    await client.delete('/entrants/data', {
+      params,
       ...getAuthorizationHeader(),
     });
-    return data;
   }
 
-  async deleteEntrantData(body: DeleteEntrantDataBody) {
-    const { data } = await client.delete(`/entrants/${body.entrantId}`, {
-      params: { action: body.action },
+  async deleteEntrantData(entrantId: string, action: Actions): Promise<void> {
+    await client.delete(`/entrants/${entrantId}`, {
+      params: { action },
       ...getAuthorizationHeader(),
     });
-
-    return data;
   }
 
-  async getEntrantInfo(body: EntrantBody) {
-    const { data } = await client.get<EntrantFuIlResponse>('/entrants', {
+  async getEntrantInfo(body: FullNameWithSpecialtyDTO) {
+    const { data } = await client.get<EntrantFullResponse>('/entrants', {
       params: body,
       ...getAuthorizationHeader(),
     });
