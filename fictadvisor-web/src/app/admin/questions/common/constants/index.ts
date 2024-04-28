@@ -1,12 +1,16 @@
-import { QuestionType } from '@/types/poll';
+import {
+  QuestionDisplay,
+  QuestionType,
+  SortQAQParam,
+} from '@fictadvisor/utils/enums';
+import { QueryAllQuestionDTO } from '@fictadvisor/utils/requests';
 
 import { AdminQuestion } from '../types';
-import { AdminQuestionDisplay, QuestionSearchFormFields } from '../types';
 
-export const initialValues: QuestionSearchFormFields = {
+export const initialValues: QueryAllQuestionDTO = {
   search: '',
   order: 'asc',
-  sort: 'text',
+  sort: SortQAQParam.QUESTION_TEXT,
   types: [QuestionType.SCALE],
 };
 
@@ -17,7 +21,7 @@ export const initialQuestionInfoValues: AdminQuestion = {
   isRequired: false,
   text: '',
   type: QuestionType.SCALE,
-  display: AdminQuestionDisplay.AMOUNT,
+  display: QuestionDisplay.AMOUNT,
   description: '',
   category: '',
   criteria: '',
@@ -36,8 +40,8 @@ export const sortOptions = [
 ];
 
 export const displayOptions = [
-  { id: AdminQuestionDisplay.AMOUNT, label: 'Кількість' },
-  { id: AdminQuestionDisplay.CIRCLE, label: 'Коло' },
-  { id: AdminQuestionDisplay.TEXT, label: 'Текст' },
-  { id: AdminQuestionDisplay.RADAR, label: 'Радар' },
+  { id: QuestionDisplay.AMOUNT, label: 'Кількість' },
+  { id: QuestionDisplay.CIRCLE, label: 'Коло' },
+  { id: QuestionDisplay.TEXT, label: 'Текст' },
+  { id: QuestionDisplay.RADAR, label: 'Радар' },
 ];

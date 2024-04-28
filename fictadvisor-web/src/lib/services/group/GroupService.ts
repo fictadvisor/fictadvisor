@@ -1,13 +1,14 @@
+import { GroupRoles } from '@fictadvisor/utils/enums';
+import { PermissionValuesDTO } from '@fictadvisor/utils/requests';
+import { OrdinaryStudentResponse } from '@fictadvisor/utils/responses';
 import { PERMISSION } from '@fictadvisor/utils/security';
 
 import GroupAPI from '@/lib/api/group/GroupAPI';
-import PermissionService from '@/lib/services/permisson/PermissionService';
-import { PermissionData } from '@/lib/services/permisson/types';
-import { PendingStudent } from '@/types/student';
+import PermissionService from '@/lib/services/permission/PermissionService';
 import { User } from '@/types/user';
-import { UserGroupRole } from '@/types/user';
 
 import { Order } from './types/OrderEnum';
+
 class GroupService {
   Order;
   constructor() {
@@ -15,9 +16,9 @@ class GroupService {
   }
   async getStudents(user: User, order: Order) {
     const groupId = user.group?.id as string;
-    const isStudent = user.group?.role === UserGroupRole.STUDENT;
-    const { students } = await GroupAPI.getGroupStudents(groupId, order);
-    const requests: PendingStudent[] = isStudent
+    const isStudent = user.group?.role === GroupRoles.STUDENT;
+    const { students } = await GroupAPI.getGroupStudents(groupId, { order });
+    const requests: OrdinaryStudentResponse[] = isStudent
       ? []
       : (await GroupAPI.getRequestStudents(groupId)).students;
     return {
@@ -27,15 +28,15 @@ class GroupService {
   }
   getGroupData = async (user: User, order: Order) => {
     const groupId = user.group?.id as string;
-    const permissionValues: PermissionData = {
+    const permissionValues: PermissionValuesDTO = {
       groupId: groupId,
     };
     const permissions = await PermissionService.getPermissionList(
       user.id,
       permissionValues,
     );
-    const { students } = await GroupAPI.getGroupStudents(groupId, order);
-    const requests: PendingStudent[] = !permissions[
+    const { students } = await GroupAPI.getGroupStudents(groupId, { order });
+    const requests: OrdinaryStudentResponse[] = !permissions[
       PERMISSION.GROUPS_$GROUPID_STUDENTS_UNVERIFIED_GET
     ]
       ? []

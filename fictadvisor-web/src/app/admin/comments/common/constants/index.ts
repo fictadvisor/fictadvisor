@@ -1,11 +1,12 @@
+import { CommentsSortBy } from '@fictadvisor/utils/enums';
+import { QueryAllCommentsDTO } from '@fictadvisor/utils/requests';
+
 import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
 
-import { CommentsAdminSearchFormFields } from '../types';
-
-export const initialValues: CommentsAdminSearchFormFields = {
+export const initialValues: QueryAllCommentsDTO = {
   search: '',
   order: 'asc',
-  sort: 'teacher',
+  sort: CommentsSortBy.TEACHER,
   semesters: [],
 };
 

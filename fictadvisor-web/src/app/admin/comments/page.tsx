@@ -2,10 +2,10 @@
 
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
+import { QueryAllCommentsDTO } from '@fictadvisor/utils/requests';
 import { Box, TablePagination } from '@mui/material';
 
 import { initialValues } from '@/app/admin/comments/common/constants';
-import { CommentsAdminSearchFormFields } from '@/app/admin/comments/common/types';
 import AdminCommentsSearch from '@/app/admin/comments/search/components/admin-comments-search/AdminCommentsSearch';
 import CommentsTable from '@/app/admin/comments/search/components/admin-comments-table';
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
@@ -16,17 +16,21 @@ import TeacherApi from '@/lib/api/teacher/TeacherAPI';
 
 const Page = () => {
   const [pageSize, setPageSize] = useState(10);
-  const [curPage, setCurPage] = useState(0);
-  const [queryObj, setQueryObj] =
-    useState<CommentsAdminSearchFormFields>(initialValues);
+  const [currPage, setCurrPage] = useState(0);
+  const [queryObj, setQueryObj] = useState<QueryAllCommentsDTO>(initialValues);
 
   const {
     data: commentsData,
     isLoading,
     refetch,
   } = useQuery(
-    ['comments', curPage, pageSize, queryObj],
-    async () => await TeacherApi.getComments(curPage, queryObj, pageSize),
+    ['comments', currPage, pageSize, queryObj],
+    async () =>
+      await TeacherApi.getComments({
+        ...queryObj,
+        pageSize,
+        page: currPage,
+      }),
     useQueryAdminOptions,
   );
 
@@ -40,14 +44,14 @@ const Page = () => {
 
   if (!commentsData || !dates) throw new Error(`An error has occurred`);
 
-  const submitHandler = (query: CommentsAdminSearchFormFields) =>
+  const submitHandler = (query: QueryAllCommentsDTO) =>
     setQueryObj(prev => ({ ...prev, ...query }));
 
   const handleRowsPerPageChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setPageSize(Number(event.target.value));
-    setCurPage(0);
+    setCurrPage(0);
   };
 
   return (
@@ -57,9 +61,9 @@ const Page = () => {
       <TablePagination
         sx={stylesAdmin.pagination}
         count={commentsData.pagination.totalAmount}
-        page={curPage}
+        page={currPage}
         rowsPerPage={pageSize}
-        onPageChange={(e, page) => setCurPage(page)}
+        onPageChange={(e, page) => setCurrPage(page)}
         onRowsPerPageChange={handleRowsPerPageChange}
       />
     </Box>

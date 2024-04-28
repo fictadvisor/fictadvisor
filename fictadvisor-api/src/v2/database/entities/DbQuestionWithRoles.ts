@@ -1,14 +1,6 @@
-import { QuestionRole, QuestionType } from '@prisma/client';
-export class DbQuestionWithRoles {
-  id: string;
-  category: string;
-  name: string;
-  order: number;
-  description?: string;
-  text: string;
-  isRequired: boolean;
-  criteria?: string;
-  type: QuestionType;
-  display: string;
+import { QuestionRole } from '@prisma/client';
+import { DbQuestion } from './DbQuestion';
+
+export class DbQuestionWithRoles extends DbQuestion {
   questionRoles: QuestionRole[];
 }

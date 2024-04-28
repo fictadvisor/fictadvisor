@@ -1,16 +1,4 @@
-export enum RoleName {
-  CAPTAIN = 'CAPTAIN',
-  MODERATOR = 'MODERATOR',
-  STUDENT = 'STUDENT',
-  USER = 'USER',
-  ADMIN = 'ADMIN',
-}
-
-export enum RoleState {
-  APPROVED = 'APPROVED',
-  DECLINED = 'DECLINED',
-  PENDING = 'PENDING',
-}
+import { RoleName } from '@fictadvisor/utils/enums';
 
 export interface Role {
   id: string;

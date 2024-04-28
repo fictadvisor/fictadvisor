@@ -1,12 +1,12 @@
 'use client';
 
 import React, { useCallback, useState } from 'react';
+import { CreateStudentWithRolesDTO } from '@fictadvisor/utils/requests';
 import { Box, Divider, Typography } from '@mui/material';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/navigation';
 
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
-import { StudentCreate } from '@/app/admin/students/common/types';
 import * as styles from '@/app/admin/students/create/AdminStudentCreate.styles';
 import CreateSelective from '@/app/admin/students/create/components/create-selective';
 import CreateStudentInputs from '@/app/admin/students/create/components/create-student-inputs';
@@ -21,21 +21,21 @@ import StudentAPI from '@/lib/api/student/StudentAPI';
 import UserAPI from '@/lib/api/user/UserAPI';
 
 const AdminCreateStudentPage = () => {
-  const [connectedSelective, setConnectedSelective] = useState<string[]>([]);
+  const [connectedSelectives, setConnectedSelectives] = useState<string[]>([]);
 
   const toast = useToast();
   const { displayError } = useToastError();
   const router = useRouter();
 
   const handleSubmit = useCallback(
-    async (data: StudentCreate) => {
+    async (data: CreateStudentWithRolesDTO) => {
       try {
         const response = await StudentAPI.create(data);
-        if (connectedSelective.length) {
-          await UserAPI.postSelectiveDisciplines(response.id, {
-            disciplines: connectedSelective,
+        if (connectedSelectives.length) {
+          await UserAPI.postSelectiveDisciplines(response.user.id, {
+            disciplines: connectedSelectives,
           });
-          setConnectedSelective([]);
+          setConnectedSelectives([]);
         }
         toast.success('Студент успішно створений!', '', 4000);
         router.replace('/admin/students');
@@ -43,7 +43,7 @@ const AdminCreateStudentPage = () => {
         displayError(error);
       }
     },
-    [connectedSelective, toast, router],
+    [connectedSelectives, toast, router],
   );
 
   return (
@@ -65,7 +65,7 @@ const AdminCreateStudentPage = () => {
               {values.groupId ? (
                 <CreateSelective
                   groupId={values.groupId}
-                  setConnectedSelective={setConnectedSelective}
+                  setConnectedSelectives={setConnectedSelectives}
                 />
               ) : (
                 <Typography variant="body1">Спочатку обери групу</Typography>

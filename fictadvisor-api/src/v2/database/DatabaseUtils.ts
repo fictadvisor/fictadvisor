@@ -1,5 +1,5 @@
 import { PaginatedData } from '../api/datas/PaginatedData';
-import { Page, PageDTO, Search, SearchDTO, Sort, SortDTO } from '../utils/QueryAllDTO';
+import { Page, PageDTO, Search, SearchDTO, Sort, SortDTO } from '@fictadvisor/utils/requests';
 
 export class WhereUnique<T> {
   OR: {

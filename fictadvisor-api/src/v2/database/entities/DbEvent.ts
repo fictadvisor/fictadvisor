@@ -1,4 +1,6 @@
-import { DisciplineType, EventInfo, Group, Period } from '@prisma/client';
+import { EventInfo, Group } from '@prisma/client';
+import { Period } from '@fictadvisor/utils/enums';
+import { DbDisciplineType } from './DbDisciplineType';
 
 export class DbEvent {
   id: string;
@@ -18,6 +20,6 @@ export class DbEvent {
   lessons: {
     eventId: string;
     disciplineTypeId: string;
-    disciplineType: DisciplineType;
+    disciplineType: DbDisciplineType;
   }[];
 }

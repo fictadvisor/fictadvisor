@@ -1,8 +1,8 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { DateService } from '../../utils/date/DateService';
-import { ConvertToBooleanPipe } from '../pipes/ConvertToBooleanPipe';
 import { ApiBadRequestResponse, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { CurrentSemester, SemestersResponse } from '../responses/SemesterResponse';
+import { CurrentSemester, SemestersResponse } from '@fictadvisor/utils/responses';
+import { ConvertToBooleanPipe } from '../pipes/ConvertToBooleanPipe';
+import { DateService } from '../../utils/date/DateService';
 
 @ApiTags('Dates')
 @Controller({

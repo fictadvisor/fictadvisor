@@ -1,6 +1,6 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
-import { InvalidEntityIdException } from 'src/v2/utils/exceptions/InvalidEntityIdException';
 import { GrantRepository } from '../../database/repositories/GrantRepository';
+import { InvalidEntityIdException } from 'src/v2/utils/exceptions/InvalidEntityIdException';
 
 @Injectable()
 export class GrantByIdPipe implements PipeTransform<string, Promise<string>> {

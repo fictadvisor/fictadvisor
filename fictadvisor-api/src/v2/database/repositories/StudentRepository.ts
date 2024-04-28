@@ -38,25 +38,25 @@ export class StudentRepository {
     return this.prisma.student.create({
       data,
       include: this.include,
-    });
+    }) as any as DbStudent;
   }
 
-  find (where: Prisma.StudentWhereInput): Promise<DbStudent> {
+  async find (where: Prisma.StudentWhereInput): Promise<DbStudent> {
     return this.prisma.student.findFirst({
       where,
       include: this.include,
-    });
+    }) as any as DbStudent;
   }
 
-  findById (userId: string): Promise<DbStudent> {
+  async findById (userId: string): Promise<DbStudent> {
     return this.find({ userId });
   }
 
-  findMany (args: Prisma.StudentFindManyArgs): Promise<DbStudent[]> {
+  async findMany (args: Prisma.StudentFindManyArgs): Promise<DbStudent[]> {
     return this.prisma.student.findMany({
       ...args,
       include: this.include,
-    })as unknown as Promise<DbStudent[]>;
+    }) as unknown as DbStudent[];
   }
 
   async updateById (userId: string, data: Prisma.StudentUncheckedUpdateInput) {
@@ -64,11 +64,14 @@ export class StudentRepository {
       where: { userId },
       data,
       include: this.include,
-    });
+    }) as any as DbStudent;
   }
 
   async updateMany (where: Prisma.StudentWhereInput, data: Prisma.StudentUncheckedUpdateManyInput) {
-    return this.prisma.student.updateMany({ where, data });
+    return this.prisma.student.updateMany({
+      where,
+      data,
+    }) as any as DbStudent[];
   }
 
   async delete (args: Prisma.StudentDeleteArgs) {

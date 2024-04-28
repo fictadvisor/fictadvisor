@@ -1,4 +1,13 @@
-export function getSemesterText(selective: { semester: 1 | 2; year: number }) {
-  const semester = selective.semester === 1 ? 'I' : 'II';
-  return `${semester} семестр ${selective.year}`;
+import {
+  RemainingSelectivesResponse,
+  SelectiveDisciplinesWithAmountResponse,
+} from '@fictadvisor/utils/responses';
+
+export function getSemesterText(
+  selectives:
+    | RemainingSelectivesResponse
+    | SelectiveDisciplinesWithAmountResponse,
+) {
+  const semester = selectives.semester === 1 ? 'I' : 'II';
+  return `${semester} семестр ${selectives.year}`;
 }

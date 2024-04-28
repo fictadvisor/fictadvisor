@@ -1,6 +1,7 @@
 'use client';
 import React, { FC } from 'react';
 import { QueryObserverBaseResult } from 'react-query';
+import { UserForGetAllResponse } from '@fictadvisor/utils/responses';
 import { Avatar, Box, TableHead, Typography } from '@mui/material';
 import {
   Paper,
@@ -18,7 +19,6 @@ import { TagSize } from '@/components/common/ui/tag/types';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import UserAPI from '@/lib/api/user/UserAPI';
-import { UserAdmin } from '@/types/user';
 
 import { TagColorMapper, TagTextMapper } from '../../constants';
 
@@ -26,9 +26,9 @@ import TableActions from './components/table-actions';
 import * as styles from './UsersList.styles';
 
 interface UsersListProps {
-  curPage: number;
-  setCurPage: React.Dispatch<React.SetStateAction<number>>;
-  users: UserAdmin[];
+  currPage: number;
+  setCurrPage: React.Dispatch<React.SetStateAction<number>>;
+  users: UserForGetAllResponse[];
   pageSize: number;
   setPageSize: React.Dispatch<React.SetStateAction<number>>;
   totalCount: number;
@@ -36,8 +36,8 @@ interface UsersListProps {
 }
 
 const UsersList: FC<UsersListProps> = ({
-  curPage,
-  setCurPage,
+  currPage,
+  setCurrPage,
   users,
   pageSize,
   setPageSize,
@@ -45,7 +45,7 @@ const UsersList: FC<UsersListProps> = ({
   refetch,
 }) => {
   const handleChangePage = (event: unknown, newPage: number) => {
-    setCurPage(newPage);
+    setCurrPage(newPage);
   };
   const { displayError } = useToastError();
   const toast = useToast();
@@ -53,7 +53,7 @@ const UsersList: FC<UsersListProps> = ({
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setPageSize(parseInt(event.target.value, 10));
-    setCurPage(0);
+    setCurrPage(0);
   };
 
   const handleDelete = async (userId: string) => {
@@ -110,7 +110,7 @@ const UsersList: FC<UsersListProps> = ({
         component="div"
         count={totalCount}
         rowsPerPage={pageSize}
-        page={curPage}
+        page={currPage}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />

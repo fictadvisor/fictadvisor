@@ -1,5 +1,7 @@
 import React, { FC } from 'react';
 import { useQuery } from 'react-query';
+import { State } from '@fictadvisor/utils/enums';
+import { GroupRequestDTO } from '@fictadvisor/utils/requests';
 import { Box, Typography, useMediaQuery } from '@mui/material';
 import { Form, Formik } from 'formik';
 
@@ -17,10 +19,8 @@ import Progress from '@/components/common/ui/progress';
 import useAuthentication from '@/hooks/use-authentication';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import GroupAPI from '@/lib/api/group/GroupAPI';
-import { RequestNewGroupBody } from '@/lib/api/user/types/RequestNewGroupBody';
 import UserAPI from '@/lib/api/user/UserAPI';
 import theme from '@/styles/theme';
-import { UserGroupState } from '@/types/user';
 
 import * as muiStyles from './NoGroupBlock.styles';
 
@@ -31,9 +31,9 @@ const NoGroupBlock: FC = () => {
   const { isLoading, data } = useQuery(['groups'], () => GroupAPI.getAll(), {
     refetchOnWindowFocus: false,
   });
-  const handleSubmitGroup = async (data: RequestNewGroupBody) => {
+  const handleSubmitGroup = async (data: GroupRequestDTO) => {
     try {
-      await UserAPI.requestNewGroup(data, user.id);
+      await UserAPI.requestNewGroup(user.id, data);
       await update();
     } catch (error) {
       displayError(error);
@@ -46,7 +46,7 @@ const NoGroupBlock: FC = () => {
 
   return (
     <Box sx={muiStyles.content}>
-      {user.group?.state === UserGroupState.PENDING ? (
+      {user.group?.state === State.PENDING ? (
         <>
           <Box>
             <Typography sx={muiStyles.textContent} variant="h4">

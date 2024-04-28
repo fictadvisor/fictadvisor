@@ -1,4 +1,10 @@
 import React, { FC, useContext, useEffect, useRef, useState } from 'react';
+import { TeacherRole } from '@fictadvisor/utils/enums';
+import {
+  CathedraResponse,
+  ContactResponse,
+  SubjectResponse,
+} from '@fictadvisor/utils/responses';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import { Box, Typography } from '@mui/material';
 
@@ -9,8 +15,7 @@ import Button from '@/components/common/ui/button-mui';
 import { ButtonVariant } from '@/components/common/ui/button-mui/types';
 import { CardRoles } from '@/components/common/ui/cards/card-roles';
 import Rating from '@/components/common/ui/rating';
-import { Contact } from '@/types/contact';
-import { TeacherCathedra, TeacherRole, TeacherSubject } from '@/types/teacher';
+import { ContactType } from '@/types/contact';
 
 import * as styles from './PersonalTeacherCard.styles';
 
@@ -23,9 +28,9 @@ interface TeacherCard {
   avatar: string;
   description: string;
   rating: number;
-  contacts: Contact[];
-  cathedras: TeacherCathedra[];
-  subject?: TeacherSubject;
+  contacts: ContactResponse[];
+  cathedras: CathedraResponse[];
+  subject?: SubjectResponse;
   isSubjectCard?: boolean;
 }
 
@@ -105,7 +110,7 @@ const PersonalTeacherCard: FC<TeacherCard> = ({
         {contacts.map((contact, index) => (
           <Box key={index} sx={styles.contactsItem}>
             <Contacts
-              name={contact.name}
+              name={contact.name as ContactType}
               displayName={contact.displayName}
               link={contact.link}
             />

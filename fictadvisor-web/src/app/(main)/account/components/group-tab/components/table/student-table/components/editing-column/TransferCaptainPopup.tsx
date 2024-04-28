@@ -1,4 +1,5 @@
 import React, { FC, SetStateAction } from 'react';
+import { GroupRoles } from '@fictadvisor/utils/enums';
 import { Avatar, Box, Grid, Typography, useMediaQuery } from '@mui/material';
 
 import * as gridStyles from '@/app/(main)/account/components/group-tab/components/table/grid.styles';
@@ -6,8 +7,6 @@ import * as styles from '@/app/(main)/account/components/group-tab/components/ta
 import { StudentsTableItem } from '@/app/(main)/account/components/group-tab/components/table/types';
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 import theme from '@/styles/theme';
-import { UserGroupRole } from '@/types/user';
-
 interface TransferCaptainPopupProps {
   rows: StudentsTableItem[];
   newCaptain: string;
@@ -27,7 +26,7 @@ const TransferCaptainPopup: FC<TransferCaptainPopupProps> = ({
       <Box sx={styles.gridWrapper}>
         <Grid container sx={mergeSx(gridStyles.studentsGrid, { mb: 0 })}>
           {rows
-            .filter(row => row.role !== UserGroupRole.CAPTAIN)
+            .filter(row => row.role !== GroupRoles.CAPTAIN)
             .map((row, index) => (
               <Grid
                 container

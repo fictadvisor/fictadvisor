@@ -1,34 +1,39 @@
 import { Injectable } from '@nestjs/common';
-import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
+import {
+  CreateAnswerDTO,
+  CreateAnswersDTO,
+  ResponseDTO,
+  QueryAllCommentsDTO,
+  QuerySemesterDTO,
+} from '@fictadvisor/utils/requests';
+import { DisciplineTeacherQuestionsResponse } from '@fictadvisor/utils/responses';
+import { CommentsSortBy } from '@fictadvisor/utils/enums';
+import { TelegramAPI } from '../../telegram/TelegramAPI';
+import { checkIfArrayIsUnique } from '../../utils/ArrayUtil';
+import { DbQuestionWithRoles } from '../../database/entities/DbQuestionWithRoles';
+import { DbDiscipline } from '../../database/entities/DbDiscipline';
+import { DbQuestionAnswer } from '../../database/entities/DbQuestionAnswer';
+import { DatabaseUtils } from '../../database/DatabaseUtils';
+import { PaginatedData } from '../datas/PaginatedData';
+import { TeacherTypeAdapter } from '../../mappers/TeacherRoleAdapter';
+import { QuestionMapper } from '../../mappers/QuestionMapper';
 import { PollService } from './PollService';
-import { CreateAnswerDTO, CreateAnswersDTO } from '../dtos/CreateAnswersDTO';
+import { DateService } from '../../utils/date/DateService';
+import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
 import { QuestionAnswerRepository } from '../../database/repositories/QuestionAnswerRepository';
-import { Discipline, Prisma, QuestionType, State, TeacherRole } from '@prisma/client';
+import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
+import { StudentRepository } from '../../database/repositories/StudentRepository';
+import { UserRepository } from '../../database/repositories/UserRepository';
+import { WrongTimeException } from '../../utils/exceptions/WrongTimeException';
 import { AlreadyAnsweredException } from '../../utils/exceptions/AlreadyAnsweredException';
 import { NotEnoughAnswersException } from '../../utils/exceptions/NotEnoughAnswersException';
 import { ExcessiveAnswerException } from '../../utils/exceptions/ExcessiveAnswerException';
-import { DateService } from '../../utils/date/DateService';
-import { WrongTimeException } from '../../utils/exceptions/WrongTimeException';
-import { TelegramAPI } from '../../telegram/TelegramAPI';
-import { ResponseDTO } from '../dtos/ResponseDTO';
-import { checkIfArrayIsUnique } from '../../utils/ArrayUtil';
 import { AnswerInDatabasePermissionException } from '../../utils/exceptions/AnswerInDatabasePermissionException';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
-import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
-import { StudentRepository } from '../../database/repositories/StudentRepository';
-import { TeacherTypeAdapter } from '../../mappers/TeacherRoleAdapter';
-import { UserRepository } from '../../database/repositories/UserRepository';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
-import { QuestionMapper } from '../../mappers/QuestionMapper';
-import { DbQuestionWithRoles } from '../../database/entities/DbQuestionWithRoles';
 import { NotSelectedDisciplineException } from '../../utils/exceptions/NotSelectedDisciplineException';
 import { IsRemovedDisciplineTeacherException } from '../../utils/exceptions/IsRemovedDisciplineTeacherException';
-import { DbDiscipline } from '../../database/entities/DbDiscipline';
-import { DbQuestionAnswer } from '../../database/entities/DbQuestionAnswer';
-import { QueryAllCommentsDTO, SortCommentsEnum } from '../dtos/QueryAllCommentsDTO';
-import { QuerySemesterDTO } from '../dtos/QuerySemesterDTO';
-import { DatabaseUtils } from '../../database/DatabaseUtils';
-import { PaginatedData } from '../datas/PaginatedData';
+import { Prisma, QuestionType, State, TeacherRole } from '@prisma/client';
 
 @Injectable()
 export class DisciplineTeacherService {
@@ -48,7 +53,7 @@ export class DisciplineTeacherService {
     await this.checkAnswerInDatabase(disciplineTeacherId, userId);
     await this.checkSendingTime();
 
-    return this.getCategories(disciplineTeacherId);
+    return this.getCategories(disciplineTeacherId) as unknown as DisciplineTeacherQuestionsResponse;
   }
 
   async sendAnswers (disciplineTeacherId: string, { answers }: CreateAnswersDTO, userId: string) {
@@ -307,7 +312,7 @@ export class DisciplineTeacherService {
     await this.disciplineTeacherRepository.deleteById(disciplineTeacher.id);
   }
 
-  async isNotSelectedByUser (userId: string, { id, year, semester, isSelective }: Discipline) {
+  async isNotSelectedByUser (userId: string, { id, year, semester, isSelective }: DbDiscipline) {
     if (!isSelective) return false;
 
     const { selectiveDisciplines } = await this.studentRepository.findById(userId);
@@ -336,7 +341,7 @@ export class DisciplineTeacherService {
   }
 
   async getAllComments (query: QueryAllCommentsDTO): Promise<PaginatedData<DbQuestionAnswer>> {
-    const { sort = SortCommentsEnum.SUBJECT, order } = query;
+    const { sort = CommentsSortBy.SUBJECT, order } = query;
 
     const where = {
       AND: [
@@ -350,7 +355,7 @@ export class DisciplineTeacherService {
     const data: Prisma.QuestionAnswerFindManyArgs = {
       where,
       orderBy,
-    };
+    } as Prisma.QuestionAnswerFindManyArgs;
 
     return DatabaseUtils.paginate(this.questionAnswerRepository, query, data);
   }

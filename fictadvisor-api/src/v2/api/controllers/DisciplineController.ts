@@ -1,9 +1,4 @@
 import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
-import { DisciplineService } from '../services/DisciplineService';
-import { CreateDisciplineDTO } from '../dtos/CreateDisciplineDTO';
-import { GroupByDisciplineGuard } from '../../security/group-guard/GroupByDisciplineGuard';
-import { Access } from 'src/v2/security/Access';
-import { PERMISSION } from '@fictadvisor/utils/security';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -14,11 +9,21 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { DisciplineByIdPipe } from '../pipes/DisciplineByIdPipe';
-import { DisciplineTeachersResponse, ExtendDisciplineTeachersResponse } from '../responses/DisciplineTeachersResponse';
-import { DisciplinesResponse } from '../responses/DisciplineResponse';
+import {
+  CreateDisciplineDTO,
+  QueryAllDisciplinesDTO,
+} from '@fictadvisor/utils/requests';
+import {
+  DisciplineTeachersResponse,
+  ExtendedDisciplineTeachersResponse,
+  DisciplinesResponse,
+} from '@fictadvisor/utils/responses';
+import { PERMISSION } from '@fictadvisor/utils/security';
+import { DisciplineService } from '../services/DisciplineService';
+import { Access } from 'src/v2/security/Access';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
-import { QueryAllDisciplinesDTO } from '../dtos/QueryAllDisciplinesDTO';
+import { GroupByDisciplineGuard } from '../../security/group-guard/GroupByDisciplineGuard';
+import { DisciplineByIdPipe } from '../pipes/DisciplineByIdPipe';
 import { QueryAllDisciplinesPipe } from '../pipes/QueryAllDisciplinesPipe';
 import { DisciplineMapper } from '../../mappers/DisciplineMapper';
 import { DisciplineTypeEnum } from '@prisma/client';
@@ -36,7 +41,7 @@ export class DisciplineController {
 
   @ApiBearerAuth()
   @ApiOkResponse({
-    type: ExtendDisciplineTeachersResponse,
+    type: ExtendedDisciplineTeachersResponse,
   })
   @ApiUnauthorizedResponse({
     description: `\n
@@ -136,7 +141,7 @@ export class DisciplineController {
 
   @ApiBearerAuth()
   @ApiOkResponse({
-    type: ExtendDisciplineTeachersResponse,
+    type: ExtendedDisciplineTeachersResponse,
   })
   @ApiBadRequestResponse({
     description: `\n
@@ -165,13 +170,13 @@ export class DisciplineController {
   @Delete('/:disciplineId')
   async delete (
     @Param('disciplineId', DisciplineByIdPipe) disciplineId: string,
-  ): Promise<ExtendDisciplineTeachersResponse> {
+  ): Promise<ExtendedDisciplineTeachersResponse> {
     const discipline = await this.disciplineService.deleteDiscipline(disciplineId);
     return this.disciplineMapper.getDisciplineWithTeachers(discipline);
   }
 
   @ApiOkResponse({
-    type: ExtendDisciplineTeachersResponse,
+    type: ExtendedDisciplineTeachersResponse,
   })
   @ApiBadRequestResponse({
     description: `\n

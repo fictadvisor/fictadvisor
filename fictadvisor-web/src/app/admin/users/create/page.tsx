@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { State } from '@fictadvisor/utils/enums';
 import { Avatar, Box, CardHeader, Stack } from '@mui/material';
 import { useRouter } from 'next/navigation';
 
@@ -18,14 +19,11 @@ import Input from '@/components/common/ui/form/input-mui';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import UserAPI from '@/lib/api/user/UserAPI';
-import { UserGroupState } from '@/types/user';
 
 const Create = () => {
   const [username, setUsername] = useState<string>('');
   const [email, setEmail] = useState<string>('');
-  const [userState, setUserState] = useState<UserGroupState>(
-    '' as UserGroupState,
-  );
+  const [userState, setUserState] = useState<State>('' as State);
   const toast = useToast();
   const { displayError } = useToastError();
   const router = useRouter();
@@ -84,7 +82,7 @@ const Create = () => {
             size={FieldSize.MEDIUM}
             options={UserStateOptions}
             showRemark={false}
-            onChange={(value: string) => setUserState(value as UserGroupState)}
+            onChange={(value: string) => setUserState(value as State)}
             value={userState}
             label="Стан користувача"
           />

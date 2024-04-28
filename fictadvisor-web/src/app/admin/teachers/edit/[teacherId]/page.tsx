@@ -1,6 +1,10 @@
 'use client';
 import React, { FC, useState } from 'react';
 import { useQuery } from 'react-query';
+import {
+  CreateContactDTO,
+  UpdateTeacherDTO,
+} from '@fictadvisor/utils/requests';
 import { Box, Divider } from '@mui/material';
 import { useRouter } from 'next/navigation';
 
@@ -8,7 +12,6 @@ import { useQueryAdminOptions } from '@/app/admin/common/constants';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import TeacherContactsInputs from '@/app/admin/teachers/common/components/teacher-contacts-inputs';
 import TeacherPersonalInputs from '@/app/admin/teachers/common/components/teacher-personal-inputs';
-import { PersonalInfo } from '@/app/admin/teachers/common/types';
 import EditTeacherComments from '@/app/admin/teachers/edit/[teacherId]/components/edit-teacher-comments';
 import HeaderEdit from '@/app/admin/teachers/edit/[teacherId]/components/header-edit';
 import { EditedComment } from '@/app/admin/teachers/edit/[teacherId]/types';
@@ -17,7 +20,6 @@ import LoadPage from '@/components/common/ui/load-page/LoadPage';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
-import { Contact } from '@/types/contact';
 
 interface PageProps {
   params: {
@@ -53,11 +55,14 @@ const Edit: FC<PageProps> = ({ params }) => {
   const toast = useToast();
   const { displayError } = useToastError();
   const router = useRouter();
-  const [personalInfo, setPersonalInfo] = useState<PersonalInfo>(initialValues);
+  const [personalInfo, setPersonalInfo] =
+    useState<UpdateTeacherDTO>(initialValues);
   const [selectedTeacherCathedras, setSelectedTeacherCathedras] = useState<
     CheckboxesDropdownOption[]
   >(initialTeacherCathedras);
-  const [changedContacts, setChangedContacts] = useState<Contact[]>([]);
+  const [changedContacts, setChangedContacts] = useState<CreateContactDTO[]>(
+    [],
+  );
 
   const [changedComments, setChangedComments] = useState<EditedComment[]>([]);
 
@@ -86,14 +91,11 @@ const Edit: FC<PageProps> = ({ params }) => {
       }
 
       for (const comment of changedComments) {
-        await TeacherAPI.updateComment(
-          {
-            userId: comment.userId,
-            questionId: comment.questionId,
-            comment: comment.comment,
-          },
-          comment.disciplineTeacherId,
-        );
+        await TeacherAPI.updateComment(comment.disciplineTeacherId, {
+          userId: comment.userId,
+          questionId: comment.questionId,
+          comment: comment.comment,
+        });
       }
 
       toast.success('Викладач успішно змінений!', '', 4000);

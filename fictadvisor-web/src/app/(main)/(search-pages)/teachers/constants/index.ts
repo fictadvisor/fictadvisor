@@ -1,7 +1,8 @@
+import { TeacherRole } from '@fictadvisor/utils/enums';
+
 import { Breadcrumb } from '@/components/common/ui/breadcrumbs/types';
 import { CheckboxesDropdownOption } from '@/components/common/ui/form/checkboxes-dropdown/types/CheckboxesDropdown';
 import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
-import { TeacherRole } from '@/types/teacher';
 
 export const filterOptions: DropDownOption[] = [
   { id: 'firstName', label: 'Іменем' },

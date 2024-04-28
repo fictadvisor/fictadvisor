@@ -1,11 +1,11 @@
-import { PrismaModule } from '../../modules/PrismaModule';
 import { Test } from '@nestjs/testing';
+import { PERMISSION } from '@fictadvisor/utils/security';
+import { PrismaModule } from '../../modules/PrismaModule';
 import { MapperModule } from '../../modules/MapperModule';
-import { State } from '@prisma/client';
 import { PrismaService } from '../../database/PrismaService';
 import { PermissionService } from './PermissionService';
-import { PERMISSION } from '@fictadvisor/utils/security';
 import { DataNotFoundException } from '../../utils/exceptions/DataNotFoundException';
+import { State } from '@prisma/client';
 
 describe('PermissionService', () => {
   let prismaService: PrismaService;

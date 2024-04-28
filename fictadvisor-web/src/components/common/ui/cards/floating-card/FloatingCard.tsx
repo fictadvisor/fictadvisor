@@ -1,14 +1,15 @@
 import React, { FC } from 'react';
+import { TeacherWithContactsResponse } from '@fictadvisor/utils/responses';
 import { Box, Typography } from '@mui/material';
 import Contact from 'src/app/(main)/(search-pages)/teachers/[teacherId]/contacts';
 
 import { CardRoles } from '@/components/common/ui/cards/card-roles';
 import Rating from '@/components/common/ui/rating';
-import { Teacher } from '@/types/teacher';
+import { ContactType } from '@/types/contact';
 
 import * as styles from './FloatingCard.styles';
 
-interface FloatingCardProps extends Teacher {
+interface FloatingCardProps extends TeacherWithContactsResponse {
   subjectName?: string;
 }
 
@@ -48,12 +49,12 @@ const FloatingCard: FC<FloatingCardProps> = ({
 
       {description && <Box>{description}</Box>}
 
-      {contacts.length > 0 && (
+      {contacts && contacts.length > 0 && (
         <Box sx={styles.contacts}>
           {contacts?.map((contact, index) => (
             <Contact
               key={index}
-              name={contact.name}
+              name={contact.name as ContactType}
               displayName={contact.displayName}
               link={contact.link}
             />

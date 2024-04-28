@@ -1,5 +1,6 @@
 import React, { FC, Fragment, useState } from 'react';
 import { QueryObserverBaseResult } from 'react-query';
+import { GroupRoles } from '@fictadvisor/utils/enums';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import {
   ArrowDownCircleIcon,
@@ -35,10 +36,9 @@ import { TagSize, TagVariant } from '@/components/common/ui/tag/types';
 import UseAuthentication from '@/hooks/use-authentication/useAuthentication';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import GroupAPI from '@/lib/api/group/GroupAPI';
-import { PermissionResponse } from '@/lib/services/permisson/types';
+import { PermissionResponse } from '@/lib/services/permission/types';
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 import theme from '@/styles/theme';
-import { UserGroupRole } from '@/types/user';
 
 import { StudentsTableItem } from '../../../types';
 
@@ -83,9 +83,9 @@ const EditingColumn: FC<EditingColumnProps> = ({
       if (user.group)
         await GroupAPI.updateStudentRole(user?.group?.id, student.id, {
           roleName:
-            student.role === UserGroupRole.MODERATOR
-              ? UserGroupRole.STUDENT
-              : UserGroupRole.MODERATOR,
+            student.role === GroupRoles.MODERATOR
+              ? GroupRoles.STUDENT
+              : GroupRoles.MODERATOR,
         });
       await refetch();
     } catch (error) {
@@ -110,24 +110,24 @@ const EditingColumn: FC<EditingColumnProps> = ({
   const deletePrivilege =
     (permissions[PERMISSION.GROUPS_$GROUPID_STUDENTS_REMOVE] &&
       !permissions[PERMISSION.GROUPS_$GROUPID_ADMIN_SWITCH] &&
-      student.role === UserGroupRole.STUDENT) ||
+      student.role === GroupRoles.STUDENT) ||
     (permissions[PERMISSION.GROUPS_$GROUPID_STUDENTS_REMOVE] &&
       permissions[PERMISSION.GROUPS_$GROUPID_ADMIN_SWITCH] &&
-      student.role !== UserGroupRole.CAPTAIN);
+      student.role !== GroupRoles.CAPTAIN);
 
-  let buttonText = roleNamesMapper[UserGroupRole.MODERATOR];
+  let buttonText = roleNamesMapper[GroupRoles.MODERATOR];
 
-  if (student.role === UserGroupRole.MODERATOR) {
-    buttonText = roleNamesMapper[UserGroupRole.STUDENT];
-  } else if (student.role === UserGroupRole.CAPTAIN) {
+  if (student.role === GroupRoles.MODERATOR) {
+    buttonText = roleNamesMapper[GroupRoles.STUDENT];
+  } else if (student.role === GroupRoles.CAPTAIN) {
     buttonText = 'Передати старосту';
   }
 
   let buttonIcon = <ArrowUpCircleIcon />;
 
-  if (student.role === UserGroupRole.MODERATOR) {
+  if (student.role === GroupRoles.MODERATOR) {
     buttonIcon = <ArrowDownCircleIcon />;
-  } else if (student.role === UserGroupRole.CAPTAIN) {
+  } else if (student.role === GroupRoles.CAPTAIN) {
     buttonIcon = <ArrowsUpDownIcon />;
   }
 
@@ -137,14 +137,12 @@ const EditingColumn: FC<EditingColumnProps> = ({
         icon={<CheckCircleIcon />}
         open={changePopupOpen}
         title={
-          student.role === UserGroupRole.MODERATOR
+          student.role === GroupRoles.MODERATOR
             ? 'Зробити студентом'
             : 'Зробити заст. старости'
         }
         content={`Ти дійсно бажаєш зробити ${student.fullName} ${
-          student.role === UserGroupRole.MODERATOR
-            ? 'студентом'
-            : 'заст. старости'
+          student.role === GroupRoles.MODERATOR ? 'студентом' : 'заст. старости'
         }?`}
         onClose={() => setChangePopupOpen(false)}
         firstButton={
@@ -238,7 +236,7 @@ const EditingColumn: FC<EditingColumnProps> = ({
           variant={ButtonVariant.OUTLINE}
           startIcon={buttonIcon}
           onClick={() =>
-            student.role === UserGroupRole.CAPTAIN
+            student.role === GroupRoles.CAPTAIN
               ? setTransferCaptainPopupOpen(true)
               : setChangePopupOpen(true)
           }

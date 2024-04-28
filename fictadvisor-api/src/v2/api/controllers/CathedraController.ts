@@ -1,3 +1,4 @@
+import { Body, Controller, Delete, Param, Patch, Post, Get, Query } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -7,20 +8,23 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { ApiEndpoint } from '../../utils/documentation/decorators';
-import { Body, Controller, Delete, Param, Patch, Post, Get, Query } from '@nestjs/common';
+import {
+  CreateCathedraDTO,
+  UpdateCathedraDTO,
+  QueryAllCathedrasDTO,
+} from '@fictadvisor/utils/requests';
+import {
+  CathedraResponse,
+  CathedraWithTeachersResponse,
+  PaginatedCathedrasWithTeachersResponse,
+  CathedrasDivisionsResponse,
+} from '@fictadvisor/utils/responses';
 import { PERMISSION } from '@fictadvisor/utils/security';
-import { CathedraService } from '../services/CathedraService';
-import { CathedraMapper } from '../../mappers/CathedraMapper';
+import { ApiEndpoint } from '../../utils/documentation/decorators';
 import { CathedraByIdPipe } from '../pipes/CathedraByIdPipe';
-import { CreateCathedraDTO } from '../dtos/CreateCathedraDTO';
-import { UpdateCathedraDTO } from '../dtos/UpdateCathedraDTO';
-import { CathedraResponse } from '../responses/CathedraResponse';
-import { CathedraWithTeachersResponse } from '../responses/CathedraWithTeachersResponse';
-import { QueryAllCathedrasDTO } from '../dtos/QueryAllCathedrasDTO';
-import { PaginatedCathedrasWithTeachersResponse } from '../responses/PaginatedCathedrasWithTeachersResponse';
 import { CathedraTeachersPipe } from '../pipes/CathedraTeachersPipe';
-import { CathedrasDivisionsResponse } from '../responses/CathedrasDivisionsResponse';
+import { CathedraMapper } from '../../mappers/CathedraMapper';
+import { CathedraService } from '../services/CathedraService';
 
 @ApiTags('Cathedra')
 @Controller({

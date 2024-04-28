@@ -1,19 +1,22 @@
 'use client';
 
 import React, { useState } from 'react';
+import {
+  CreateContactDTO,
+  CreateTeacherDTO,
+} from '@fictadvisor/utils/requests';
 import { Box, Divider } from '@mui/material';
 import { useRouter } from 'next/navigation';
 
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import TeacherContactsInputs from '@/app/admin/teachers/common/components/teacher-contacts-inputs';
 import TeacherPersonalInfo from '@/app/admin/teachers/common/components/teacher-personal-inputs/TeacherPersonalInputs';
+import { PersonalInfo } from '@/app/admin/teachers/common/types';
 import HeaderCreate from '@/app/admin/teachers/create/components/header-create';
-import { PersonalInfo } from '@/app/admin/teachers/create/types';
 import { CheckboxesDropdownOption } from '@/components/common/ui/form/checkboxes-dropdown/types/CheckboxesDropdown';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
-import { Contact } from '@/types/contact';
 
 const Create = () => {
   const toast = useToast();
@@ -27,11 +30,13 @@ const Create = () => {
     CheckboxesDropdownOption[]
   >([]);
 
-  const [createContacts, setCreateContacts] = useState<Contact[]>([]);
+  const [createContacts, setCreateContacts] = useState<CreateContactDTO[]>([]);
 
   const handleEditSubmit = async () => {
     try {
-      const createdTeacher = await TeacherAPI.create(personalInfo);
+      const createdTeacher = await TeacherAPI.create(
+        personalInfo as CreateTeacherDTO,
+      );
 
       for (const contact of createContacts) {
         await TeacherAPI.createTeacherContacts(createdTeacher.id, contact);

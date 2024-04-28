@@ -7,19 +7,9 @@ import { Mail } from '@/components/common/icons/Mail';
 import { Telegram } from '@/components/common/icons/Telegram';
 import { Twitter } from '@/components/common/icons/Twitter';
 import { YouTube } from '@/components/common/icons/YouTube';
+import { ContactType } from '@/types/contact';
 
 import styles from './Contact.module.scss';
-
-export enum ContactType {
-  YOUTUBE = 'YOUTUBE',
-  DISCORD = 'DISCORD',
-  TELEGRAM = 'TELEGRAM',
-  INSTAGRAM = 'INSTAGRAM',
-  FACEBOOK = 'FACEBOOK',
-  GITHUB = 'GITHUB',
-  TWITTER = 'TWITTER',
-  MAIL = 'MAIL',
-}
 
 export interface ContactProps {
   name: ContactType;

@@ -1,12 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
+import { CreateQuestionDTO } from '@fictadvisor/utils/requests';
 import { Box, Stack, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
 
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import QuestionInfo from '@/app/admin/questions/common/components/question-info';
-import { AdminQuestion } from '@/app/admin/questions/common/types';
 import * as styles from '@/app/admin/questions/create/CreateQuestionsAdminPage.styles';
 import Button from '@/components/common/ui/button-mui';
 import {
@@ -18,12 +18,12 @@ import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import QuestionAPI from '@/lib/api/questions/QuestionAPI';
 
 const Page = () => {
-  const [body, setBody] = useState<AdminQuestion>();
+  const [body, setBody] = useState<CreateQuestionDTO>({} as CreateQuestionDTO);
   const toast = useToast();
   const { displayError } = useToastError();
   const router = useRouter();
 
-  const handleChanges = (values: AdminQuestion) => {
+  const handleChanges = (values: CreateQuestionDTO) => {
     setBody(prevValues => {
       if (JSON.stringify(values) !== JSON.stringify(prevValues)) {
         return values;
@@ -34,7 +34,7 @@ const Page = () => {
 
   const addQuestion = async () => {
     try {
-      await QuestionAPI.addQuestion(body as AdminQuestion);
+      await QuestionAPI.addQuestion(body);
       toast.success('Питання успішно додано', '', 4000);
       router.push('/admin/questions');
     } catch (error) {

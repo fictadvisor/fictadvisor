@@ -1,10 +1,5 @@
-export interface TextsProperties {
-  key: string;
-  value: string;
-  link: string | null;
-  isShown: boolean;
-}
+import { UpdatePageTextDTO } from '@fictadvisor/utils/requests';
 
 export interface NewPageTexts {
-  [key: string]: TextsProperties;
+  [key: string]: UpdatePageTextDTO;
 }

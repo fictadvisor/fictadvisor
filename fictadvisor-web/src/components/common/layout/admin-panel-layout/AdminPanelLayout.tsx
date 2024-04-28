@@ -1,15 +1,11 @@
 'use client';
 
 import React, { ReactNode } from 'react';
-import { useQuery } from 'react-query';
 import { Box } from '@mui/material';
 import { redirect } from 'next/navigation';
 
 import AdminPanel from '@/components/common/layout/admin-panel/AdminPanel';
 import useAuthentication from '@/hooks/use-authentication';
-import AuthAPI from '@/lib/api/auth/AuthAPI';
-import PermissionService from '@/lib/services/permisson/PermissionService';
-import { PermissionData } from '@/lib/services/permisson/types';
 
 import * as styles from './AdminPanelLayout.styles';
 

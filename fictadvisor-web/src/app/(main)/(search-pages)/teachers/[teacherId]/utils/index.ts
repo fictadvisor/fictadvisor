@@ -1,8 +1,8 @@
 import { createContext } from 'react';
+import { TeacherWithContactsResponse } from '@fictadvisor/utils/responses';
 
 import { TeacherContext } from '@/app/(main)/(search-pages)/teachers/[teacherId]/page';
 import { TeacherPageInfo } from '@/lib/services/teacher/types';
-import { Teacher } from '@/types/teacher';
 
 export enum TeachersPageTabs {
   GENERAL = 'general',
@@ -13,14 +13,14 @@ export enum TeachersPageTabs {
 export interface PersonalTeacherPageProps {
   isLoading?: boolean;
   isError?: boolean;
-  teacher: Teacher;
+  teacher: TeacherWithContactsResponse;
   data?: TeacherPageInfo | undefined;
   teacherId: string;
-  info?: Teacher;
+  info?: TeacherWithContactsResponse;
 }
 
 export const teacherContext = createContext<TeacherContext>({
   floatingCardShowed: false,
   setFloatingCardShowed: () => {},
-  teacher: {} as Teacher,
+  teacher: {} as TeacherWithContactsResponse,
 });

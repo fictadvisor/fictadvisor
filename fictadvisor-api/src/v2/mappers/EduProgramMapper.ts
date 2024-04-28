@@ -1,8 +1,8 @@
-import { EduProgramResponse, EduProgramResponses } from '../api/responses/EduProgramResponse';
+import { EduProgramResponse, EduProgramsResponse } from '@fictadvisor/utils/responses';
 import { DbEducationalProgram } from '../database/entities/DbEducationalProgram';
 
 export class EduProgramMapper {
-  getAll (programs: DbEducationalProgram[]): EduProgramResponses {
+  getAll (programs: DbEducationalProgram[]): EduProgramsResponse {
     return {
       programs: programs.map((program) => this.get(program)),
     };

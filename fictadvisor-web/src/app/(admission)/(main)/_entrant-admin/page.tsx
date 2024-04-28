@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useRef } from 'react';
+import { DeleteEntrantDataQueryDTO } from '@fictadvisor/utils/requests';
 import { Box } from '@mui/material';
 import { Form, Formik, FormikProps } from 'formik';
 import { useRouter } from 'next/navigation';
@@ -27,17 +28,16 @@ import useTabClose from '@/hooks/use-tab-close';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import ContractAPI from '@/lib/api/contract/ContractAPI';
-import { DeleteEntrantBody } from '@/lib/api/contract/types/DeleteEntrantBody';
 
 const EntrantAdmin = () => {
   const { isLoggedIn } = useAuthentication();
   const router = useRouter();
 
   if (!isLoggedIn) router.push('/login');
-  const form = useRef<FormikProps<DeleteEntrantBody>>(null);
+  const form = useRef<FormikProps<DeleteEntrantDataQueryDTO>>(null);
   const toast = useToast();
   const { displayError } = useToastError();
-  const handleFormSubmit = async (values: DeleteEntrantBody) => {
+  const handleFormSubmit = async (values: DeleteEntrantDataQueryDTO) => {
     try {
       await ContractAPI.deleteEntrant(prepareData(values));
       toast.success(

@@ -1,14 +1,5 @@
-import { RoleName } from '@/types/role';
-
-export interface RolesSearchFormFields {
-  search: string;
-  order: 'asc' | 'desc';
-  sort: RolesSort;
-  name: RoleName;
-}
+import { QueryAllRolesDTO } from '@fictadvisor/utils/requests';
 
 export interface HeaderRolesSearchProps {
-  onSubmit: (values: Partial<RolesSearchFormFields>) => void;
+  onSubmit: (values: QueryAllRolesDTO) => void;
 }
-
-export type RolesSort = 'displayName' | 'weight' | 'createdAt' | 'id';

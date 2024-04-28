@@ -1,4 +1,6 @@
-import { User, UserGroupRole } from '@/types/user';
+import { GroupRoles } from '@fictadvisor/utils/enums';
+
+import { User } from '@/types/user';
 
 export interface PendingStudent extends Omit<User, 'group'> {
   group: {
@@ -11,6 +13,6 @@ export interface GroupStudent extends Omit<User, 'group'> {
   group: {
     id: string;
     code: string;
-    role: UserGroupRole;
+    role: keyof typeof GroupRoles;
   };
 }

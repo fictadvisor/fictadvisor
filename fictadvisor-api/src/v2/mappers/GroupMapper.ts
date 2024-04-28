@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { MappedGroupResponse } from '@fictadvisor/utils/responses';
 import { RoleName } from '@prisma/client';
-import { MappedGroupResponse } from '../api/responses/MappedGroupResponse';
 import { DbGroup } from '../database/entities/DbGroup';
 import { DbStudent } from '../database/entities/DbStudent';
 

@@ -2,6 +2,8 @@
 import { useEffect, useState } from 'react';
 import { FC } from 'react';
 import { useQuery } from 'react-query';
+import { GroupRoles, SortQGSParam } from '@fictadvisor/utils/enums';
+import { QueryAllStudentDTO } from '@fictadvisor/utils/requests';
 import {
   BarsArrowDownIcon,
   BarsArrowUpIcon,
@@ -10,7 +12,6 @@ import { Box, Divider, SelectChangeEvent } from '@mui/material';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
-import { StudentSearchFormFields } from '@/app/admin/students/common/types';
 import { transformGroupsMulti } from '@/app/admin/students/common/utils/transformToOptions';
 import Button from '@/components/common/ui/button-mui';
 import { ButtonSize } from '@/components/common/ui/button-mui/types';
@@ -26,7 +27,6 @@ import {
 } from '@/components/common/ui/icon-button-mui/types';
 import Progress from '@/components/common/ui/progress/Progress';
 import GroupAPI from '@/lib/api/group/GroupAPI';
-import { UserGroupRole } from '@/types/user';
 
 import {
   roleOptions,
@@ -37,14 +37,14 @@ import {
 import * as styles from './HeaderStudentSearch.styles';
 
 export interface HeaderStudentSearchProps {
-  onSubmit: (values: Partial<StudentSearchFormFields>) => void;
+  onSubmit: (values: QueryAllStudentDTO) => void;
 }
 
 const HeaderStudentSearch: FC<HeaderStudentSearchProps> = ({ onSubmit }) => {
   const [search, setSearch] = useState<string>('');
-  const [sortBy, setSortBy] = useState<string>('firstName');
+  const [sortBy, setSortBy] = useState<SortQGSParam>(SortQGSParam.FIRST_NAME);
   const [group, setGroup] = useState<string[]>([]);
-  const [roles, setRoles] = useState<UserGroupRole[]>([]);
+  const [roles, setRoles] = useState<(keyof typeof GroupRoles)[]>([]);
   const [order, setOrder] = useState<'asc' | 'desc'>('desc');
   const [values, setValues] = useState(StudentInitialValues);
 
@@ -71,15 +71,15 @@ const HeaderStudentSearch: FC<HeaderStudentSearchProps> = ({ onSubmit }) => {
     setValues(values => ({ ...values, order: order }));
   };
   const handleSortByChange = (value: string) => {
-    setSortBy(value);
+    setSortBy(value as SortQGSParam);
     setValues(values => ({
       ...values,
-      sort: value as 'lastName' | 'firstName' | 'middleName',
+      sort: value as SortQGSParam,
     }));
   };
 
   const handleRoleChange = (event: SelectChangeEvent) => {
-    const value = event.target.value as unknown as UserGroupRole[];
+    const value = event.target.value as unknown as (keyof typeof GroupRoles)[];
     setRoles(value);
     setValues(values => ({ ...values, roles: value }));
   };

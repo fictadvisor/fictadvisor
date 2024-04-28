@@ -1,7 +1,8 @@
-import { ContactType } from '@/app/(main)/discipline/contacts';
-import { Contact } from '@/types/contact';
+import { CreateContactDTO } from '@fictadvisor/utils/requests';
 
-export const createContacts = (contacts: Contact[]) => {
+import { ContactType } from '@/types/contact';
+
+export const createContacts = (contacts: CreateContactDTO[]) => {
   const allContacts = [
     {
       name: ContactType.MAIL,

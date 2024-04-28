@@ -1,21 +1,20 @@
 'use client';
 import type { FC } from 'react';
 import { useQuery } from 'react-query';
+import { TeacherWithContactsResponse } from '@fictadvisor/utils/responses';
 import { Stack, Typography } from '@mui/material';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
+import { EditedComment } from '@/app/admin/teachers/edit/[teacherId]/types';
 import Progress from '@/components/common/ui/progress';
 import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
-import { Teacher } from '@/types/teacher';
-
-import { EditedComment } from '../../types';
 
 import CommentTextArea from './components/comment-text-area';
 import { extractTeacherComments } from './utils/extractTeacherComments';
 import * as styles from './EditTeacherComments.styles';
 
 interface EditTeacherCommentsProps {
-  teacher: Teacher;
+  teacher: TeacherWithContactsResponse;
   setChangedComments: React.Dispatch<React.SetStateAction<EditedComment[]>>;
 }
 

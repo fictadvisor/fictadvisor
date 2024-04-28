@@ -1,8 +1,8 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
-import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
-import { StudentOfGroupDTO } from '../dtos/StudentOfGroupDTO';
+import { StudentOfGroupDTO } from '@fictadvisor/utils/requests';
 import { UserRepository } from '../../database/repositories/UserRepository';
 import { GroupRepository } from '../../database/repositories/GroupRepository';
+import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
 
 @Injectable()
 export class StudentOfGroupPipe implements PipeTransform<StudentOfGroupDTO, Promise<StudentOfGroupDTO>> {

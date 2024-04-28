@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
+import { QueryAllSubjectDTO } from '@fictadvisor/utils/requests';
 import { Box, TablePagination } from '@mui/material';
 
 import { SubjectInitialValues } from '@/app/(main)/(search-pages)/search-form/constants';
@@ -17,14 +18,19 @@ import SubjectAPI from '@/lib/api/subject/SubjectAPI';
 
 const AdminSubjectSearch = () => {
   const [pageSize, setPageSize] = useState(10);
-  const [curPage, setCurPage] = useState(0);
+  const [currPage, setCurrPage] = useState(0);
   const [params, setParams] = useState<SearchFormFields>(SubjectInitialValues);
   const { displayError } = useToastError();
   const toast = useToast();
 
   const { data, refetch, isLoading } = useQuery(
-    ['subjects', curPage, pageSize, params],
-    () => subjectAPI.getAll(params, pageSize, curPage),
+    ['subjects', currPage, pageSize, params],
+    () =>
+      subjectAPI.getAll({
+        ...params,
+        pageSize,
+        page: currPage,
+      } as QueryAllSubjectDTO),
     useQueryAdminOptions,
   );
 
@@ -35,7 +41,7 @@ const AdminSubjectSearch = () => {
   const handleSearch = (values: SearchFormFields) => {
     setParams(prevValues => {
       if (JSON.stringify(values) !== JSON.stringify(prevValues)) {
-        setCurPage(0);
+        setCurrPage(0);
         return values;
       }
       return prevValues;
@@ -45,7 +51,7 @@ const AdminSubjectSearch = () => {
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setPageSize(Number(event.target.value));
-    setCurPage(0);
+    setCurrPage(0);
   };
 
   const handleDelete = async (subjectId: string) => {
@@ -62,9 +68,9 @@ const AdminSubjectSearch = () => {
       <SubjectsSearchHeader onSubmit={handleSearch} />
       <AdminSubjectTable subjects={data.subjects} handleDelete={handleDelete} />
       <TablePagination
-        page={curPage}
+        page={currPage}
         count={data.pagination.totalAmount}
-        onPageChange={(e, page) => setCurPage(page)}
+        onPageChange={(e, page) => setCurrPage(page)}
         rowsPerPage={pageSize}
         onRowsPerPageChange={handleRowsPerPageChange}
         sx={stylesAdmin.pagination}

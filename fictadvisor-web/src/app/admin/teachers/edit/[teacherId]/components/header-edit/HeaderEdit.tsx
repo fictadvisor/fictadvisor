@@ -1,5 +1,6 @@
 'use client';
 import { type FC, useState } from 'react';
+import { TeacherWithContactsResponse } from '@fictadvisor/utils/responses';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Box, Stack, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
@@ -12,12 +13,11 @@ import {
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
 import DeletePopup from '@/components/common/ui/delete-popup';
-import { Teacher } from '@/types/teacher';
 
 import * as styles from './HeaderEdit.styles';
 
 interface HeaderEditProps {
-  teacher: Teacher;
+  teacher: TeacherWithContactsResponse;
   handleEditSubmit: () => void;
   handleDeleteSubmit: () => void;
 }

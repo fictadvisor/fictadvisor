@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { TelegramSource } from '@prisma/client';
+import {
+  CreateTelegramGroupDTO,
+  UpdateTelegramGroupDTO,
+} from '@fictadvisor/utils/requests';
 import { TelegramGroupRepository } from '../../database/repositories/TelegramGroupRepository';
-import { CreateTelegramGroupDTO } from '../dtos/CreateTelegramGroupDTO';
-import { UpdateTelegramGroupDTO } from '../dtos/UpdateTelegramGroupDTO';
 import { DataNotFoundException } from '../../utils/exceptions/DataNotFoundException';
 import { AlreadyExistException } from '../../utils/exceptions/AlreadyExistException';
 import { ObjectIsRequiredException } from '../../utils/exceptions/ObjectIsRequiredException';
+import { TelegramSource } from '@prisma/client';
 
 @Injectable()
 export class TelegramGroupService {

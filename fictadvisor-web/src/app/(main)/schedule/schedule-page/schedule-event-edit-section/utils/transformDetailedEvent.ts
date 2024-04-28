@@ -1,8 +1,8 @@
-import { DetailedEventBody } from '@/lib/api/schedule/types/DetailedEventBody';
+import { EventResponse } from '@/lib/api/schedule/types/EventResponse';
 import { SharedEventBody } from '@/lib/api/schedule/types/shared';
 
 export const transformDetailedEvent = (
-  event: DetailedEventBody,
+  event: EventResponse,
 ): SharedEventBody => {
   const resultedEvent: SharedEventBody = JSON.parse(JSON.stringify(event));
 
@@ -10,8 +10,14 @@ export const transformDetailedEvent = (
     ? event.teachers.map(teacher => teacher.id)
     : [];
   if (!resultedEvent.url) resultedEvent.url = '';
-  if (!resultedEvent.disciplineInfo) resultedEvent.disciplineInfo = undefined;
-  if (!resultedEvent.eventInfo) resultedEvent.eventInfo = undefined;
+  if (!resultedEvent.disciplineInfo) {
+    // @ts-expect-error Kostili
+    resultedEvent.disciplineInfo = undefined;
+  }
+  if (!resultedEvent.eventInfo) {
+    // @ts-expect-error Kostili
+    resultedEvent.eventInfo = undefined;
+  }
 
   return resultedEvent;
 };

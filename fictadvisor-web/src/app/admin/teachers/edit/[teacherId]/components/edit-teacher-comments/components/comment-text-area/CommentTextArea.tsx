@@ -4,6 +4,7 @@ import {
   RefetchOptions,
   RefetchQueryFilters,
 } from 'react-query';
+import { PaginatedQuestionCommentsResponse } from '@fictadvisor/utils/responses';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Stack, Typography } from '@mui/material';
 
@@ -15,7 +16,6 @@ import { IconButtonColor } from '@/components/common/ui/icon-button-mui/types';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
-import { GetTeacherCommentsResponse } from '@/lib/api/teacher/types/GetTeacherCommentsResponse';
 
 import { EditedComment } from '../../../../types';
 
@@ -26,7 +26,7 @@ interface CommentTextAreaProps {
   setChangedComments: React.Dispatch<React.SetStateAction<EditedComment[]>>;
   refetch: <TPageData>(
     options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined,
-  ) => Promise<QueryObserverResult<GetTeacherCommentsResponse, unknown>>;
+  ) => Promise<QueryObserverResult<PaginatedQuestionCommentsResponse, unknown>>;
 }
 const CommentTextArea: FC<CommentTextAreaProps> = ({
   comment,
@@ -37,13 +37,10 @@ const CommentTextArea: FC<CommentTextAreaProps> = ({
   const toastError = useToastError();
   const handleDeleteSubmit = async () => {
     try {
-      await TeacherAPI.deleteComment(
-        {
-          userId: comment.userId,
-          questionId: comment.questionId,
-        },
-        comment.disciplineTeacherId,
-      );
+      await TeacherAPI.deleteComment(comment.disciplineTeacherId, {
+        userId: comment.userId,
+        questionId: comment.questionId,
+      });
       refetch();
       toast.success('Коментар успішно видалений!', '', 4000);
     } catch (e) {

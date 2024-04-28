@@ -1,11 +1,11 @@
 import React, { FC, useState } from 'react';
 import { useQuery } from 'react-query';
+import { ContactResponse } from '@fictadvisor/utils/responses';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { Box, useMediaQuery } from '@mui/material';
 
 import ContactForm from '@/app/(main)/account/components/general-tab/components/contacts-block/components/ContactForm';
 import ContactItem from '@/app/(main)/account/components/general-tab/components/contacts-block/components/ContactItem';
-import { Contact } from '@/app/(main)/account/components/general-tab/components/contacts-block/types';
 import Button from '@/components/common/ui/button-mui';
 import {
   ButtonSize,
@@ -33,7 +33,7 @@ const ContactsBlock: FC = () => {
   return (
     <>
       <Box sx={styles.contactItemContainer}>
-        {contacts?.map((contact: Contact, index) => (
+        {contacts?.map((contact: ContactResponse, index) => (
           <ContactItem key={index} refetchContacts={refetch} {...contact} />
         ))}
       </Box>

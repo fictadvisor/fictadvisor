@@ -1,10 +1,10 @@
 import { Body, Controller, Post, Query } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { CheckPermissionsDTO } from '../dtos/CheckPermissionsDTO';
-import { PermissionService } from '../services/PermissionService';
-import { CheckPermissionsResponse } from '../responses/CheckPermissionsResponse';
-import { UserByIdPipe } from '../pipes/UserByIdPipe';
+import { CheckPermissionsDTO } from '@fictadvisor/utils/requests';
+import { CheckPermissionsResponse } from '@fictadvisor/utils/responses';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
+import { UserByIdPipe } from '../pipes/UserByIdPipe';
+import { PermissionService } from '../services/PermissionService';
 
 @ApiTags('Permission')
 @Controller({

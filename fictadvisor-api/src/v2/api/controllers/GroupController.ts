@@ -1,16 +1,4 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request } from '@nestjs/common';
-import { GroupService } from '../services/GroupService';
-import { CreateGroupDTO } from '../dtos/CreateGroupDTO';
-import { GroupByIdPipe } from '../pipes/GroupByIdPipe';
-import { EmailDTO } from '../dtos/EmailDTO';
-import { ApproveDTO } from '../dtos/ApproveDTO';
-import { RoleDTO } from '../dtos/RoleDTO';
-import { UserByIdPipe } from '../pipes/UserByIdPipe';
-import { UpdateGroupDTO } from '../dtos/UpdateGroupDTO';
-import { PERMISSION } from '@fictadvisor/utils/security';
-import { StudentMapper } from '../../mappers/StudentMapper';
-import { AbsenceOfCaptainException } from '../../utils/exceptions/AbsenceOfCaptainException';
-import { GroupMapper } from '../../mappers/GroupMapper';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -20,27 +8,45 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { GroupStudentsResponse } from '../responses/GroupStudentsResponse';
-import { CaptainResponse } from '../responses/CaptainResponse';
-import { ExtendDisciplineTeachersResponse } from '../responses/DisciplineTeachersResponse';
-import { ShortUsersResponse } from '../responses/UserResponse';
-import { QuerySemesterDTO } from '../dtos/QuerySemesterDTO';
-import { SelectiveDisciplinesWithAmountsResponse, ShortDisciplinesResponse } from '../responses/DisciplineResponse';
-import { OrdinaryStudentResponse, StudentsResponse } from '../responses/StudentResponse';
-import { SwitchCaptainDTO } from '../dtos/SwitchCaptainDTO';
-import { GroupsWithTelegramGroupsResponse } from '../responses/GroupsWithTelegramGroupsResponse';
-import { TelegramGuard } from '../../security/TelegramGuard';
-import { URLResponse } from '../responses/URLResponse';
-import { GroupStudentsQueryDTO } from '../dtos/GroupStudentsQueryDTO';
+import {
+  CreateGroupDTO,
+  EmailDTO,
+  ApproveDTO,
+  RoleDTO,
+  UpdateGroupDTO,
+  QuerySemesterDTO,
+  SwitchCaptainDTO,
+  GroupStudentsQueryDTO,
+  QueryAllGroupsDTO,
+  StudentOfGroupDTO,
+} from '@fictadvisor/utils/requests';
+import {
+  GroupStudentsResponse,
+  CaptainResponse,
+  ExtendedDisciplineTeachersResponse,
+  ShortUsersResponse,
+  SelectiveDisciplinesWithAmountResponse,
+  ShortDisciplinesResponse,
+  OrdinaryStudentResponse,
+  StudentsResponse,
+  GroupsWithTelegramGroupsResponse,
+  URLResponse,
+  MappedGroupResponse,
+  PaginatedGroupsResponse,
+} from '@fictadvisor/utils/responses';
+import { PERMISSION } from '@fictadvisor/utils/security';
+import { SortQAGroupsParam } from '@fictadvisor/utils/enums';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
-import { DisciplineMapper } from '../../mappers/DisciplineMapper';
-import { QueryAllGroupDTO } from '../dtos/QueryAllGroupDTO';
-import { SortQAGroupParam } from '../dtos/SortQAGroupParam';
-import { MappedGroupResponse } from '../responses/MappedGroupResponse';
-import { PaginatedGroupsResponse } from '../responses/PaginatedGroupsResponse';
-import { UserService } from '../services/UserService';
+import { TelegramGuard } from '../../security/TelegramGuard';
+import { GroupByIdPipe } from '../pipes/GroupByIdPipe';
+import { UserByIdPipe } from '../pipes/UserByIdPipe';
 import { StudentOfGroupPipe } from '../pipes/StudentOfGroupPipe';
-import { StudentOfGroupDTO } from '../dtos/StudentOfGroupDTO';
+import { StudentMapper } from '../../mappers/StudentMapper';
+import { GroupMapper } from '../../mappers/GroupMapper';
+import { DisciplineMapper } from '../../mappers/DisciplineMapper';
+import { GroupService } from '../services/GroupService';
+import { UserService } from '../services/UserService';
+import { AbsenceOfCaptainException } from '../../utils/exceptions/AbsenceOfCaptainException';
 
 @ApiTags('Groups')
 @Controller({
@@ -110,11 +116,11 @@ export class GroupController {
     summary: 'Get all groups with selected filter',
   })
   @Get()
-  async getAll (@Query() query: QueryAllGroupDTO): Promise<PaginatedGroupsResponse> {
+  async getAll (@Query() query: QueryAllGroupsDTO): Promise<PaginatedGroupsResponse> {
     const groupsWithSelectiveAmounts = await this.groupService.getAll(query);
     const groups = this.groupMapper.getGroups(
       groupsWithSelectiveAmounts.data, 
-      query.sort === SortQAGroupParam.CAPTAIN
+      query.sort === SortQAGroupsParam.CAPTAIN
     );
     return {
       groups,
@@ -328,7 +334,7 @@ export class GroupController {
 
   @ApiBearerAuth()
   @ApiOkResponse({
-    type: [ExtendDisciplineTeachersResponse],
+    type: [ExtendedDisciplineTeachersResponse],
   })
   @ApiBadRequestResponse({
     description: `\n
@@ -728,7 +734,7 @@ export class GroupController {
 
   @ApiBearerAuth()
   @ApiOkResponse({
-    type: [SelectiveDisciplinesWithAmountsResponse],
+    type: [SelectiveDisciplinesWithAmountResponse],
   })
   @ApiBadRequestResponse({
     description: `\n
@@ -757,11 +763,11 @@ export class GroupController {
     summary: 'Request selective disciplines by group\'s id',
     permissions: PERMISSION.GROUPS_$GROUPID_SELECTIVE_GET,
   })
-  @Get('/:groupId/selective')
-  async getSelective (
+  @Get('/:groupId/selectiveDisciplines')
+  async getSelectives (
       @Param('groupId', GroupByIdPipe) groupId: string,
   ) {
     const disciplines = await this.groupService.getSelectiveDisciplines(groupId);
-    return this.disciplineMapper.getSelective(disciplines, true);
+    return this.disciplineMapper.getSelectiveDisciplines(disciplines, true);
   }
 }

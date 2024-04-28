@@ -2,11 +2,11 @@
 
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
+import { QueryAllStudentDTO } from '@fictadvisor/utils/requests';
 import { Box } from '@mui/material';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
-import { StudentSearchFormFields } from '@/app/admin/students/common/types';
 import HeaderUserSearch, {
   HeaderStudentSearchProps,
 } from '@/app/admin/students/search/components/header-student-search/HeaderStudentSearch';
@@ -17,13 +17,18 @@ import StudentAPI from '@/lib/api/student/StudentAPI';
 
 const AdminStudentSearchPage = () => {
   const [queryObj, setQueryObj] =
-    useState<StudentSearchFormFields>(StudentInitialValues);
-  const [curPage, setCurPage] = useState(0);
+    useState<QueryAllStudentDTO>(StudentInitialValues);
+  const [currPage, setCurrPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
 
   const { data, refetch, isLoading } = useQuery(
-    ['students', curPage, pageSize, queryObj],
-    async () => await StudentAPI.getAll(curPage, queryObj, pageSize),
+    ['students', currPage, pageSize, queryObj],
+    async () =>
+      await StudentAPI.getAll({
+        ...queryObj,
+        pageSize,
+        page: currPage,
+      }),
     useQueryAdminOptions,
   );
 
@@ -37,8 +42,8 @@ const AdminStudentSearchPage = () => {
     <Box sx={stylesAdmin.wrapper}>
       <HeaderUserSearch onSubmit={submitHandler} />
       <StudentsList
-        curPage={curPage}
-        setCurPage={setCurPage}
+        currPage={currPage}
+        setCurrPage={setCurrPage}
         students={data.students}
         pageSize={pageSize}
         setPageSize={setPageSize}

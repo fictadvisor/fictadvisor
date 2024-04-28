@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { DbEvent } from '../database/entities/DbEvent';
-import { DbDiscipline } from '../database/entities/DbDiscipline';
-import { TeacherRoleAdapter } from './TeacherRoleAdapter';
-import { some } from '../utils/ArrayUtil';
-import { EventResponse } from '../api/responses/EventResponse';
-import { DisciplineType } from '@prisma/client';
 import {
+  EventResponse,
   SimpleTelegramEventInfoResponse,
   TelegramEventInfoResponse,
-} from '../api/responses/TelegramGeneralEventInfoResponse';
-import { EventTypeEnum } from '../api/dtos/EventTypeEnum';
-import { EventInfoResponse } from '../api/responses/EventInfoResponse';
+  EventInfoResponse,
+} from '@fictadvisor/utils/responses';
+import { EventTypeEnum } from '@fictadvisor/utils/enums';
+import { some } from '../utils/ArrayUtil';
+import { DbEvent } from '../database/entities/DbEvent';
+import { DbDiscipline } from '../database/entities/DbDiscipline';
+import { DbDisciplineType } from '../database/entities/DbDisciplineType';
+import { TeacherRoleAdapter } from './TeacherRoleAdapter';
 
 @Injectable()
 export class ScheduleMapper {
@@ -86,7 +86,7 @@ export class ScheduleMapper {
     };
   }
 
-  private getDisciplineType (disciplineType: DisciplineType) {
+  private getDisciplineType (disciplineType: DbDisciplineType) {
     return {
       id: disciplineType?.id ?? null,
       disciplineId: disciplineType?.disciplineId ?? null,
@@ -94,7 +94,7 @@ export class ScheduleMapper {
     };
   }
 
-  private getEventType (disciplineType: DisciplineType) {
+  private getEventType (disciplineType: DbDisciplineType) {
     return disciplineType?.name as EventTypeEnum ?? EventTypeEnum.OTHER;
   }
 }

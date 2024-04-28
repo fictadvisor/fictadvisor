@@ -31,7 +31,7 @@ const OpenedSelective: FC<OpenedSelectiveProps> = ({
   const { user } = useAuthentication();
   const { data } = useQuery(
     ['openedSelective', user.id, semester, year],
-    () => UserAPI.getSelectiveDisciplines(user.id, year, semester),
+    () => UserAPI.getSelectiveDisciplines(user.id, { year, semester }),
     { refetchOnWindowFocus: false },
   );
 
@@ -53,7 +53,7 @@ const OpenedSelective: FC<OpenedSelectiveProps> = ({
           <Typography variant="h6" sx={styles.text}>{`${
             semesterMap[semester]
           } семестр ${year}-${year + 1} `}</Typography>
-          {data.remainingSelective ? (
+          {data.remainingSelectives ? (
             <Typography variant="h6Bold" sx={styles.text}>
               Обери {data.availableSelectiveAmount} предмети, які є твоїми
               вибірковими на цей семестр
@@ -63,15 +63,15 @@ const OpenedSelective: FC<OpenedSelectiveProps> = ({
               Наразі обирати предмети на цей семестр не можна.
             </Typography>
           )}
-          {data.remainingSelective && (
+          {data.remainingSelectives && (
             <Formik
-              initialValues={{ ...getInitialValues(data.remainingSelective) }}
+              initialValues={{ ...getInitialValues(data.remainingSelectives) }}
               onSubmit={handleSubmit}
             >
               {({ values }) => (
                 <Form>
                   <Box sx={styles.disciplines}>
-                    {data.remainingSelective.map(discipline => (
+                    {data.remainingSelectives.map(discipline => (
                       <Checkbox
                         key={discipline.disciplineId}
                         name={discipline.disciplineId}

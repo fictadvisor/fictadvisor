@@ -2,6 +2,8 @@
 
 import { FC, useCallback, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import { QueryAllSubjectDTO } from '@fictadvisor/utils/requests';
+import { PaginatedSubjectsResponse } from '@fictadvisor/utils/responses';
 import { Box } from '@mui/material';
 
 import { SubjectInitialValues } from '@/app/(main)/(search-pages)/search-form/constants';
@@ -24,7 +26,6 @@ import {
 } from '@/components/common/ui/button-mui/types';
 import Progress from '@/components/common/ui/progress';
 import SubjectsAPI from '@/lib/api/subject/SubjectAPI';
-import { GetListOfSubjectsResponse } from '@/lib/api/subject/types/GetListOfSubjectsResponse';
 import { Subject } from '@/types/subject';
 
 const SubjectsPage: FC = () => {
@@ -36,7 +37,7 @@ const SubjectsPage: FC = () => {
 
   const [queryObj, setQueryObj] =
     useState<SearchFormFields>(SubjectInitialValues);
-  const [curPage, setCurPage] = useState(0);
+  const [currPage, setCurrPage] = useState(0);
 
   const submitHandler: SearchFormProps['onSubmit'] = useCallback(query => {
     setReloadSubjects(true);
@@ -46,26 +47,30 @@ const SubjectsPage: FC = () => {
 
   const downloadHandler = () => {
     setReloadSubjects(false);
-    setCurPage(prev => prev + 1);
+    setCurrPage(prev => prev + 1);
   };
   const [loadedSubjects, setLoadedSubjects] = useState<Subject[]>([]);
   const [reloadSubjects, setReloadSubjects] = useState(true);
   const { data, isLoading, refetch, isFetching } =
-    useQuery<GetListOfSubjectsResponse>(
+    useQuery<PaginatedSubjectsResponse>(
       'subjects',
       () => {
         if (reloadSubjects) {
-          return SubjectsAPI.getAll(
-            queryObj,
-            PAGE_SIZE * (curPage + 1),
-            curPage,
-          );
+          return SubjectsAPI.getAll({
+            ...queryObj,
+            pageSize: PAGE_SIZE * (currPage + 1),
+            page: currPage,
+          } as QueryAllSubjectDTO);
         } else {
           setLoadedSubjects([
             ...(loadedSubjects ?? []),
             ...(data?.subjects ?? []),
           ]);
-          return SubjectsAPI.getPage(queryObj, PAGE_SIZE, curPage + 1);
+          return SubjectsAPI.getAll({
+            ...queryObj,
+            pageSize: PAGE_SIZE,
+            page: currPage + 1,
+          } as QueryAllSubjectDTO);
         }
       },
       { keepPreviousData: true, refetchOnWindowFocus: false },
@@ -73,7 +78,7 @@ const SubjectsPage: FC = () => {
 
   useEffect(() => {
     void refetch();
-  }, [queryObj, curPage, refetch, reloadSubjects]);
+  }, [queryObj, currPage, refetch, reloadSubjects]);
 
   return (
     <Box sx={styles.layout}>
@@ -98,7 +103,7 @@ const SubjectsPage: FC = () => {
           </Box>
         ))}
       {(data?.subjects?.length ?? 0) + loadedSubjects.length ===
-        (curPage + 1) * PAGE_SIZE && (
+        (currPage + 1) * PAGE_SIZE && (
         <Button
           sx={styles.loadBtn}
           text="Завантажити ще"

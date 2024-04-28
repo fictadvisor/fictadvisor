@@ -1,13 +1,13 @@
 import { FC } from 'react';
+import { SubjectsResponse } from '@fictadvisor/utils/responses';
 import { Box } from '@mui/material';
 import Link from 'next/link';
 
 import { SubjectCard } from '@/components/common/ui/cards/subject-card';
-import { GetTeacherSubjectsResponse } from '@/lib/api/teacher/types/GetTeacherSubjectsResponse';
 
 import * as styles from './SubjectTab.styles';
 
-interface SubjectTabProps extends GetTeacherSubjectsResponse {
+interface SubjectTabProps extends SubjectsResponse {
   teacherId: string;
 }
 

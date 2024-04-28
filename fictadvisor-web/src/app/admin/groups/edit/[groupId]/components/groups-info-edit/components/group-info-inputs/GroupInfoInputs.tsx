@@ -2,11 +2,12 @@
 import type { FC } from 'react';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import { UpdateGroupDTO } from '@fictadvisor/utils/requests';
+import { OrdinaryStudentResponse } from '@fictadvisor/utils/responses';
 import { Box } from '@mui/material';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
-import { GroupEditBody } from '@/app/admin/groups/common/types';
 import { getYearOptions } from '@/app/admin/groups/common/utils/getYearOptions';
 import { Dropdown } from '@/components/common/ui/form';
 import { FieldSize } from '@/components/common/ui/form/common/types';
@@ -15,14 +16,13 @@ import { InputSize } from '@/components/common/ui/form/input-mui/types';
 import Progress from '@/components/common/ui/progress';
 import CathedraAPI from '@/lib/api/cathedras/CathedraAPI';
 import EduprogramAPI from '@/lib/api/eduprogram/EduprogramAPI';
-import { GroupStudent } from '@/types/student';
 
 import * as styles from './GroupInfoInputs.styles';
 
 interface GroupInfoInputsProps {
-  groupInfo: GroupEditBody;
-  students: GroupStudent[];
-  setGroupInfo: React.Dispatch<React.SetStateAction<GroupEditBody>>;
+  groupInfo: UpdateGroupDTO;
+  students: OrdinaryStudentResponse[];
+  setGroupInfo: React.Dispatch<React.SetStateAction<UpdateGroupDTO>>;
 }
 
 const GroupInfoInputs: FC<GroupInfoInputsProps> = ({
@@ -30,16 +30,20 @@ const GroupInfoInputs: FC<GroupInfoInputsProps> = ({
   setGroupInfo,
   students,
 }) => {
-  const [code, setCode] = useState<string>(groupInfo.code);
+  const [code, setCode] = useState<string>(groupInfo.code as string);
   const [admissionYear, setAdmissionYear] = useState<number>(
-    groupInfo.admissionYear,
+    groupInfo.admissionYear as number,
   );
   const [eduProgramId, setEduProgramId] = useState<string>(
-    groupInfo.eduProgramId,
+    groupInfo.eduProgramId as string,
   );
-  const [cathedraId, setCathedraId] = useState<string>(groupInfo.cathedraId);
+  const [cathedraId, setCathedraId] = useState<string>(
+    groupInfo.cathedraId as string,
+  );
 
-  const [captainId, setCaptainId] = useState<string>(groupInfo.captainId);
+  const [captainId, setCaptainId] = useState<string>(
+    groupInfo.captainId as string,
+  );
 
   const { data: eduprogramsData, isLoading: isLoadingEduprograms } = useQuery(
     ['eduprograms'],

@@ -1,6 +1,6 @@
-import { EntrantBody } from '@/types/contract';
+import { FullNameWithSpecialtyDTO } from '@fictadvisor/utils/requests';
 
-export const initialValues: EntrantBody = {
+export const initialValues: FullNameWithSpecialtyDTO = {
   firstName: '',
   middleName: '',
   lastName: '',

@@ -1,25 +1,30 @@
 import { Test } from '@nestjs/testing';
+import { InjectionToken } from '@nestjs/common';
+import { CreateEventDTO } from '@fictadvisor/utils/requests';
+import {
+  EventTypeEnum,
+  AbbreviationOfSpeciality,
+  DisciplineTypeEnum,
+  EducationProgram,
+  Period,
+} from '@fictadvisor/utils/enums';
+import { TelegramAPI } from '../../telegram/TelegramAPI';
 import { PrismaModule } from '../../modules/PrismaModule';
-import { PrismaService } from '../../database/PrismaService';
+import { DateModule } from '../../utils/date/DateModule';
+import { MapperModule } from '../../modules/MapperModule';
 import { ScheduleService } from './ScheduleService';
+import { ParserModule } from '../../utils/parser/ParserModule';
+import { PrismaService } from '../../database/PrismaService';
 import { DisciplineTeacherService } from './DisciplineTeacherService';
 import { UserService } from './UserService';
-import { DateModule } from '../../utils/date/DateModule';
-import { ParserModule } from '../../utils/parser/ParserModule';
-import { InjectionToken } from '@nestjs/common';
 import { DisciplineService } from './DisciplineService';
-import { AbbreviationOfSpeciality, DisciplineTypeEnum, EducationProgram, Period } from '@prisma/client';
 import { AuthService } from './AuthService';
 import { GroupService } from './GroupService';
 import { FileService } from '../../utils/files/FileService';
-import { MapperModule } from '../../modules/MapperModule';
+import { PollService } from './PollService';
 import { DataNotFoundException } from '../../utils/exceptions/DataNotFoundException';
 import { InvalidWeekException } from '../../utils/exceptions/InvalidWeekException';
-import { TelegramAPI } from '../../telegram/TelegramAPI';
-import { CreateEventDTO } from '../dtos/CreateEventDTO';
 import { ObjectIsRequiredException } from '../../utils/exceptions/ObjectIsRequiredException';
-import { EventTypeEnum } from '../dtos/EventTypeEnum';
-import { PollService } from './PollService';
 
 
 describe('ScheduleService', () => {
@@ -671,7 +676,7 @@ describe('ScheduleService', () => {
         addPractice: false,
         addLaboratory: false,
         showOwnSelective: false,
-        otherEvents: true,
+        addOtherEvents: true,
       });
       expect(
         events.every((event) =>
@@ -730,7 +735,7 @@ describe('ScheduleService', () => {
         addPractice: false,
         addLaboratory: false,
         showOwnSelective: true,
-        otherEvents: true,
+        addOtherEvents: true,
       });
 
       expect(events.every(

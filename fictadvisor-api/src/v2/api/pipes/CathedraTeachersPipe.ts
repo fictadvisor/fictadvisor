@@ -1,5 +1,5 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
-import { CreateCathedraDTO } from '../dtos/CreateCathedraDTO';
+import { CreateCathedraDTO } from '@fictadvisor/utils/requests';
 import { mapAsync } from '../../utils/ArrayUtil';
 import { TeacherByIdPipe } from './TeacherByIdPipe';
 

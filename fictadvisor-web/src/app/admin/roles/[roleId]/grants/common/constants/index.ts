@@ -1,3 +1,5 @@
+import { SortQAGrantsParam } from '@fictadvisor/utils/enums';
+
 import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
 
 import { GrantSet, GrantsSearchFormFields } from '../types';
@@ -16,6 +18,6 @@ export const GrantsOptions: DropDownOption[] = [
 export const GrantsInitialValues: GrantsSearchFormFields = {
   search: '',
   order: 'asc',
-  sort: 'permission',
+  sort: SortQAGrantsParam.PERMISSION,
   set: '' as GrantSet,
 };

@@ -1,4 +1,5 @@
 import React, { FC, useState } from 'react';
+import { OrdinaryStudentResponse } from '@fictadvisor/utils/responses';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Box } from '@mui/material';
 
@@ -9,12 +10,11 @@ import {
   IconButton,
   IconButtonColor,
 } from '@/components/common/ui/icon-button';
-import { GroupStudent } from '@/types/student';
 
 import * as styles from './ModeratorDropdown.styles';
 
 interface ModeratorDropdownProps {
-  moderator: GroupStudent;
+  moderator: OrdinaryStudentResponse;
   options: DropDownOption[];
   handleModeratorRemove: (value: DropDownOption) => void;
   handleModeratorChange: (newValue: string, oldValue: DropDownOption) => void;

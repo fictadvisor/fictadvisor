@@ -1,5 +1,5 @@
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
-import { ModuleRef, Reflector } from "@nestjs/core";
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
+import { ModuleRef, Reflector } from '@nestjs/core';
 
 @Injectable()
 export class MultipleAccessGuard implements CanActivate {

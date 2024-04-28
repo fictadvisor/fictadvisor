@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
+import { QueryAllTeacherDTO } from '@fictadvisor/utils/requests';
 import { Box, TablePagination } from '@mui/material';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
@@ -9,7 +10,6 @@ import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import TeachersAdminSearch from '@/app/admin/teachers/search/components/teachers-admin-search';
 import TeachersTable from '@/app/admin/teachers/search/components/teachers-table';
 import { initialValues } from '@/app/admin/teachers/search/constants';
-import { AdminSearchFormFields } from '@/app/admin/teachers/search/types';
 import LoadPage from '@/components/common/ui/load-page';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
@@ -18,14 +18,19 @@ import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
 
 const Page = () => {
   const [pageSize, setPageSize] = useState(10);
-  const [curPage, setCurPage] = useState(0);
-  const [params, setParams] = useState<AdminSearchFormFields>(initialValues);
+  const [currPage, setCurrPage] = useState(0);
+  const [params, setParams] = useState<QueryAllTeacherDTO>(initialValues);
   const { displayError } = useToastError();
   const toast = useToast();
 
   const { data, isLoading, refetch } = useQuery(
-    ['teachers', curPage, pageSize, params],
-    () => teachersApi.getAdminAll(params, pageSize, curPage),
+    ['teachers', currPage, pageSize, params],
+    () =>
+      teachersApi.getAll({
+        ...params,
+        pageSize,
+        page: currPage,
+      }),
     useQueryAdminOptions,
   );
 
@@ -43,10 +48,10 @@ const Page = () => {
     }
   };
 
-  const handleChange = (values: AdminSearchFormFields) => {
+  const handleChange = (values: QueryAllTeacherDTO) => {
     setParams(prevValues => {
       if (JSON.stringify(values) !== JSON.stringify(prevValues)) {
-        setCurPage(0);
+        setCurrPage(0);
         return values;
       }
       return prevValues;
@@ -57,7 +62,7 @@ const Page = () => {
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setPageSize(Number(event.target.value));
-    setCurPage(0);
+    setCurrPage(0);
   };
   return (
     <Box sx={{ p: '20px 16px 0 16px' }}>
@@ -66,9 +71,9 @@ const Page = () => {
       <TablePagination
         sx={stylesAdmin.pagination}
         count={data.pagination.totalAmount}
-        page={curPage}
+        page={currPage}
         rowsPerPage={pageSize}
-        onPageChange={(e, page) => setCurPage(page)}
+        onPageChange={(e, page) => setCurrPage(page)}
         onRowsPerPageChange={e => handleRowsPerPageChange(e)}
       />
     </Box>

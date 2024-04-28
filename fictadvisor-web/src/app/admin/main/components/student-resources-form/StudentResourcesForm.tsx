@@ -5,31 +5,27 @@ import {
   useRef,
   useState,
 } from 'react';
+import { ResourceResponse } from '@fictadvisor/utils/responses';
 import { Box } from '@mui/material';
 
 import * as styles from '@/app/admin/main/components/student-resources-form/StudentResourcesForm.styles';
 import Input from '@/components/common/ui/form/input-mui';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import StudentResourcesAPI from '@/lib/api/student-resources/StudentResourcesAPI';
-import {
-  GetStudentResourcesResponse,
-  StudentResource,
-} from '@/lib/api/student-resources/types/GetStudentResourcesResponse';
 
 const StudentResourcesForm = forwardRef((props, ref) => {
   const formRef = useRef(null);
   const { displayError } = useToastError();
-  const [studentResources, setStudentResources] = useState<StudentResource[]>(
+  const [studentResources, setStudentResources] = useState<ResourceResponse[]>(
     [],
   );
   const [changedStudentResources, setChangedStudentResources] = useState<{
-    [key: string]: StudentResource;
+    [key: string]: ResourceResponse;
   }>({});
   const getStudentResources = async () => {
     try {
-      const data: GetStudentResourcesResponse =
-        await StudentResourcesAPI.getAll();
-      const studentResources: StudentResource[] = Object.values(data);
+      const data: ResourceResponse[] = await StudentResourcesAPI.getAll();
+      const studentResources: ResourceResponse[] = Object.values(data);
       setStudentResources(studentResources);
     } catch (error) {
       displayError(error);
@@ -38,7 +34,7 @@ const StudentResourcesForm = forwardRef((props, ref) => {
   useEffect(() => {
     if (studentResources?.length) {
       const newStudentResources = studentResources.reduce(
-        (acc: { [key: string]: StudentResource }, item: StudentResource) => {
+        (acc: { [key: string]: ResourceResponse }, item: ResourceResponse) => {
           acc[item.id] = item;
           return acc;
         },
@@ -63,13 +59,11 @@ const StudentResourcesForm = forwardRef((props, ref) => {
 
   const studentResourceSubmit = async () => {
     try {
-      const transformedStudentResources = Object.values(
-        changedStudentResources,
-      );
-      await StudentResourcesAPI.editStudentResources(
-        transformedStudentResources,
-      );
-      return transformedStudentResources;
+      const resources = Object.values(changedStudentResources);
+      await StudentResourcesAPI.editStudentResources({
+        resources,
+      });
+      return resources;
     } catch (error) {
       throw error;
     }
@@ -81,7 +75,7 @@ const StudentResourcesForm = forwardRef((props, ref) => {
   return (
     <form ref={formRef}>
       <Box sx={styles.resourcesWrapper}>
-        {studentResources?.map((el: StudentResource) => {
+        {studentResources?.map((el: ResourceResponse) => {
           return (
             <Box key={el.id} sx={styles.miniInputsWrapper}>
               <Input

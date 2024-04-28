@@ -1,34 +1,28 @@
-import { GrantsSearchFormFields } from '@/app/admin/roles/[roleId]/grants/common/types';
+import {
+  CreateGrantDTO,
+  QueryAllGrantsDTO,
+  UpdateGrantDTO,
+} from '@fictadvisor/utils/requests';
+import { GrantsResponse, MappedGrant } from '@fictadvisor/utils/responses';
+
+import { GrantSet } from '@/app/admin/roles/[roleId]/grants/common/types';
 import { getAuthorizationHeader } from '@/lib/api/utils';
-import { Grant } from '@/types/role';
 
 import { client } from '../instance';
-
-import { CreateGrantBody } from './types/CreateGrantBody';
-import { GetAllGrantsResponse } from './types/GetAllGrantsResponse';
 
 class GrantsAPI {
   async getAllByRoleId(
     roleId: string,
-    params: Partial<GrantsSearchFormFields> = {},
-    page?: number,
-    pageSize?: number,
+    params: QueryAllGrantsDTO = {},
+    grantSet?: GrantSet,
   ) {
-    const set =
-      params.set === 'given'
-        ? false
-        : params.set === 'taken'
-          ? true
-          : undefined;
-    const { data } = await client.get<GetAllGrantsResponse>(
+    const set = grantSet && grantSet === 'taken';
+    const { data } = await client.get<GrantsResponse>(
       `/roles/${roleId}/grants`,
-
       {
         params: {
           ...params,
-          set: set,
-          page,
-          pageSize,
+          set,
         },
         ...getAuthorizationHeader(),
       },
@@ -37,7 +31,7 @@ class GrantsAPI {
   }
 
   async getByGrantId(roleId: string, grantId: string) {
-    const { data } = await client.get<Grant>(
+    const { data } = await client.get<MappedGrant>(
       `/roles/${roleId}/grants/${grantId}`,
       getAuthorizationHeader(),
     );
@@ -45,15 +39,15 @@ class GrantsAPI {
   }
 
   async delete(roleId: string, grantId: string) {
-    const { data } = await client.delete(
+    const { data } = await client.delete<MappedGrant>(
       `/roles/${roleId}/grants/${grantId}`,
       getAuthorizationHeader(),
     );
     return data;
   }
 
-  async edit(roleId: string, grantId: string, body: Partial<CreateGrantBody>) {
-    const { data } = await client.patch(
+  async edit(roleId: string, grantId: string, body: UpdateGrantDTO) {
+    const { data } = await client.patch<MappedGrant>(
       `/roles/${roleId}/grants/${grantId}`,
       body,
       getAuthorizationHeader(),
@@ -61,8 +55,8 @@ class GrantsAPI {
     return data;
   }
 
-  async create(roleId: string, body: CreateGrantBody) {
-    const { data } = await client.post(
+  async create(roleId: string, body: CreateGrantDTO) {
+    const { data } = await client.post<MappedGrant>(
       `/roles/${roleId}/grant`,
       body,
       getAuthorizationHeader(),

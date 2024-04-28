@@ -1,16 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
+import {
+  CreateDisciplineDTO,
+  QueryAllDisciplinesDTO,
+  QuerySemesterDTO,
+} from '@fictadvisor/utils/requests';
 import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
+import { DisciplineTeacherService } from './DisciplineTeacherService';
+import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
 import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
-import { DisciplineTypeEnum } from '@prisma/client';
-import { TeacherRoleAdapter, TeacherTypeAdapter } from '../../mappers/TeacherRoleAdapter';
-import { CreateDisciplineDTO } from '../dtos/CreateDisciplineDTO';
-import { QueryAllDisciplinesDTO } from '../dtos/QueryAllDisciplinesDTO';
-import { QuerySemesterDTO } from '../dtos/QuerySemesterDTO';
 import { DatabaseUtils } from '../../database/DatabaseUtils';
 import { DbDiscipline } from '../../database/entities/DbDiscipline';
 import { PaginatedData } from '../datas/PaginatedData';
-import { DisciplineTeacherService } from './DisciplineTeacherService';
+import { DisciplineTypeEnum } from '@prisma/client';
+import { TeacherRoleAdapter, TeacherTypeAdapter } from '../../mappers/TeacherRoleAdapter';
 
 @Injectable()
 export class DisciplineService {

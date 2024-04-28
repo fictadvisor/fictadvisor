@@ -1,27 +1,29 @@
 import React, { FC } from 'react';
+import {
+  RemainingSelectivesResponse,
+  SelectiveDisciplinesResponse,
+} from '@fictadvisor/utils/responses';
 import { Box, Typography } from '@mui/material';
 
 import { getSemesterText } from '@/app/admin/students/common/utils/getSemesterText';
-import { GetRemainingSelectivesResponse } from '@/lib/api/student/types/GetRemainingSelectivesResponse';
-import { GetSelectivesResponse } from '@/lib/api/student/types/GetSelectivesResponse';
 
 import Dropdowns from './components/dropdowns';
 import * as styles from './EditSelective.styles';
 
 interface EditSelectiveProps {
-  selectives: GetSelectivesResponse[];
-  remainingSelectives: GetRemainingSelectivesResponse[];
-  setDisconnectedSelective: React.Dispatch<React.SetStateAction<string[]>>;
-  setConnectedSelective: React.Dispatch<React.SetStateAction<string[]>>;
-  connectedSelective: string[];
+  selectives: SelectiveDisciplinesResponse[];
+  remainingSelectives: RemainingSelectivesResponse[];
+  setDisconnectedSelectives: React.Dispatch<React.SetStateAction<string[]>>;
+  setConnectedSelectives: React.Dispatch<React.SetStateAction<string[]>>;
+  connectedSelectives: string[];
 }
 
 const EditSelective: FC<EditSelectiveProps> = ({
   selectives,
   remainingSelectives,
-  setConnectedSelective,
-  setDisconnectedSelective,
-  connectedSelective,
+  setConnectedSelectives,
+  setDisconnectedSelectives,
+  connectedSelectives,
 }) => {
   return (
     <Box sx={styles.selectivesWrapper}>
@@ -39,9 +41,9 @@ const EditSelective: FC<EditSelectiveProps> = ({
                   selective.year === remainingSelective.year,
               )}
               remainingSelective={remainingSelective}
-              setDisconnectedSelective={setDisconnectedSelective}
-              setConnectedSelective={setConnectedSelective}
-              connectedSelective={connectedSelective}
+              setDisconnectedSelectives={setDisconnectedSelectives}
+              setConnectedSelectives={setConnectedSelectives}
+              connectedSelectives={connectedSelectives}
             />
           </Box>
         ))

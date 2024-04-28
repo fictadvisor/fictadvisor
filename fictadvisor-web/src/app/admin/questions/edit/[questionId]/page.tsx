@@ -2,6 +2,7 @@
 
 import React, { FC, useState } from 'react';
 import { useQuery } from 'react-query';
+import { UpdateQuestionDTO } from '@fictadvisor/utils/requests';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Box, Stack, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
@@ -9,7 +10,6 @@ import { useRouter } from 'next/navigation';
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import QuestionInfo from '@/app/admin/questions/common/components/question-info';
-import { AdminQuestion } from '@/app/admin/questions/common/types';
 import Button from '@/components/common/ui/button-mui';
 import {
   ButtonColor,
@@ -35,7 +35,7 @@ const Edit: FC<PageProps> = ({ params }) => {
     useQueryAdminOptions,
   );
 
-  const [body, setBody] = useState<AdminQuestion>();
+  const [body, setBody] = useState<UpdateQuestionDTO>({});
   const toast = useToast();
   const { displayError } = useToastError();
   const router = useRouter();
@@ -45,7 +45,7 @@ const Edit: FC<PageProps> = ({ params }) => {
 
   if (!data) throw new Error('Something went wrong in');
 
-  const handleChanges = (values: AdminQuestion) => {
+  const handleChanges = (values: UpdateQuestionDTO) => {
     setBody(prevValues =>
       JSON.stringify(values) !== JSON.stringify(prevValues)
         ? values
@@ -65,10 +65,7 @@ const Edit: FC<PageProps> = ({ params }) => {
 
   const updateQuestion = async () => {
     try {
-      await QuestionAPI.updateQuestion(
-        data.id as string,
-        body as AdminQuestion,
-      );
+      await QuestionAPI.updateQuestion(data.id, body);
       toast.success('Питання успішно оновлено', '', 4000);
       router.push('/admin/questions');
     } catch (error) {

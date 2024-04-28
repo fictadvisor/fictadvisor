@@ -1,17 +1,17 @@
 import { FC } from 'react';
+import { TeacherWithRolesAndCathedrasResponse } from '@fictadvisor/utils/responses';
 import { Box, Typography } from '@mui/material';
 import List from '@mui/material/List';
 import Image from 'next/image';
 import Link from 'next/link';
 
 import { TeacherCard } from '@/components/common/ui/cards/teacher-card';
-import { Teacher } from '@/types/teacher';
 
 import * as styles from './SubjectTeacherSearchList.styles';
 
 export interface SubjectTeacherSearchListProps {
   subjectId: string;
-  teachers: Omit<Teacher, 'contacts'>[];
+  teachers: TeacherWithRolesAndCathedrasResponse[];
 }
 
 export const SubjectTeacherSearchList: FC<SubjectTeacherSearchListProps> = ({

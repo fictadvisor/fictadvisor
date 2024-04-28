@@ -1,4 +1,6 @@
 import { FC, useState } from 'react';
+import { TeacherRole } from '@fictadvisor/utils/enums';
+import { CathedraResponse } from '@fictadvisor/utils/responses';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import cn from 'classnames';
 import Link from 'next/link';
@@ -15,7 +17,6 @@ import { DivProps } from '@/components/common/ui/cards/types';
 import IconButton from '@/components/common/ui/icon-button-mui';
 import Tooltip from '@/components/common/ui/tooltip';
 import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
-import { TeacherCathedra, TeacherRole } from '@/types/teacher';
 
 import { IconButtonColor } from '../../icon-button-mui/types';
 
@@ -30,7 +31,7 @@ type PollTeacherCardProps = {
   avatar?: string;
   disabled?: boolean;
   href?: string;
-  cathedras: TeacherCathedra[];
+  cathedras: CathedraResponse[];
 } & DivProps;
 
 export const PollTeacherCard: FC<PollTeacherCardProps> = ({

@@ -1,9 +1,14 @@
 import { Injectable } from '@nestjs/common';
+import { Sort, SortDTO } from '@fictadvisor/utils/requests';
+import {
+  TeacherRole,
+  OrderQAParam,
+  SortQATParam,
+  AcademicStatus,
+  ScientificDegree,
+  Position,
+} from '@fictadvisor/utils/enums';
 import { DbTeacher } from '../database/entities/DbTeacher';
-import { TeacherRole } from '@prisma/client';
-import { OrderQAParam } from '../api/dtos/OrderQAParam';
-import { Sort, SortDTO } from '../utils/QueryAllDTO';
-import { SortQATParam } from '../api/dtos/SortQATParam';
 
 @Injectable()
 export class TeacherMapper {
@@ -15,9 +20,9 @@ export class TeacherMapper {
       lastName: teacher.lastName,
       description: teacher.description,
       avatar: teacher.avatar,
-      academicStatus: teacher.academicStatus,
-      scientificDegree: teacher.scientificDegree,
-      position: teacher.position,
+      academicStatus: teacher.academicStatus as AcademicStatus,
+      scientificDegree: teacher.scientificDegree as ScientificDegree,
+      position: teacher.position as Position,
       rating: +teacher.rating,
       cathedras: this.getCathedras(teacher),
       roles: this.getRoles(teacher),

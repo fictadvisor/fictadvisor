@@ -1,26 +1,28 @@
 import { Injectable } from '@nestjs/common';
-import { GroupRoles, QueryAllStudentDTO } from '../dtos/QueryAllStudentDTO';
-import { Prisma, RoleName, SelectiveDiscipline, State } from '@prisma/client';
+import {
+  QueryAllStudentDTO,
+  UpdateStudentWithRolesDTO,
+  CreateStudentWithRolesDTO,
+  UpdateStudentSelectivesDTO,
+} from '@fictadvisor/utils/requests';
+import { GroupRoles, SortQGSParam } from '@fictadvisor/utils/enums';
 import { DatabaseUtils } from '../../database/DatabaseUtils';
-import { StudentRepository } from '../../database/repositories/StudentRepository';
-import { SortQGSParam } from '../dtos/GroupStudentsQueryDTO';
-import { UpdateStudentWithRolesDTO } from '../dtos/UpdateStudentDTO';
-import { GroupRepository } from '../../database/repositories/GroupRepository';
+import { StudyingSemester } from '../../utils/date/DateService';
 import { GroupService } from './GroupService';
-import { RoleRepository } from '../../database/repositories/RoleRepository';
-import { CreateStudentWithRolesDTO } from '../dtos/CreateStudentDTO';
-import { UserRepository } from '../../database/repositories/UserRepository';
-import { NotRegisteredException } from '../../utils/exceptions/NotRegisteredException';
 import { UserService } from './UserService';
+import { DbDiscipline } from '../../database/entities/DbDiscipline';
+import { StudentRepository } from '../../database/repositories/StudentRepository';
+import { GroupRepository } from '../../database/repositories/GroupRepository';
+import { RoleRepository } from '../../database/repositories/RoleRepository';
+import { UserRepository } from '../../database/repositories/UserRepository';
+import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
+import { NotRegisteredException } from '../../utils/exceptions/NotRegisteredException';
 import { AlreadyExistException } from '../../utils/exceptions/AlreadyExistException';
 import { CaptainCanNotLeaveException } from '../../utils/exceptions/CaptainCanNotLeaveException';
-import { UpdateStudentSelectiveDTO } from '../dtos/UpdateStudentSelectiveDTO';
 import { NotBelongException } from '../../utils/exceptions/NotBelongException';
 import { ExcessiveSelectiveDisciplinesException } from '../../utils/exceptions/ExcessiveSelectiveDisciplinesException';
-import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
-import { DbDiscipline } from '../../database/entities/DbDiscipline';
-import { StudyingSemester } from '../../utils/date/DateService';
 import { AlreadySelectedException } from '../../utils/exceptions/AlreadySelectedException';
+import { Prisma, RoleName, SelectiveDiscipline, State } from '@prisma/client';
 
 @Injectable()
 export class StudentService {
@@ -175,32 +177,32 @@ export class StudentService {
     });
   }
 
-  async updateStudentSelective (id: string, body: UpdateStudentSelectiveDTO) {
+  async updateStudentSelectives (id: string, body: UpdateStudentSelectivesDTO) {
     const student = await this.studentRepository.findById(id);
-    const { connectedSelective = [], disconnectedSelective = [] } = body;
+    const { connectedSelectives = [], disconnectedSelectives = [] } = body;
     const selectiveDisciplines = student.selectiveDisciplines
       .map((discipline) => discipline.discipline) as any as DbDiscipline[];
 
-    await this.checkDisconnectedSelective(student.selectiveDisciplines, disconnectedSelective);
-    await this.checkConnectedSelective(student.groupId, connectedSelective, selectiveDisciplines);
+    await this.checkDisconnectedSelectives(student.selectiveDisciplines, disconnectedSelectives);
+    await this.checkConnectedSelectives(student.groupId, connectedSelectives, selectiveDisciplines);
     await this.checkSelectiveAmount(
       student.groupId,
       selectiveDisciplines,
-      connectedSelective,
-      disconnectedSelective
+      connectedSelectives,
+      disconnectedSelectives
     );
 
     return this.studentRepository.updateById(id, {
       selectiveDisciplines: {
         deleteMany: {
-          OR: disconnectedSelective.map((disciplineId) => ({
+          OR: disconnectedSelectives.map((disciplineId) => ({
             disciplineId,
             studentId: id,
           }
           )),
         },
         createMany: {
-          data: connectedSelective.map((disciplineId) => ({ disciplineId })),
+          data: connectedSelectives.map((disciplineId) => ({ disciplineId })),
         },
       },
     });
@@ -208,30 +210,30 @@ export class StudentService {
 
   private async checkSelectiveAmount (
     groupId: string,
-    studentSelective: DbDiscipline[],
+    studentSelectives: DbDiscipline[],
     connectedSelectiveIds: string[],
     disconnectedSelectiveIds: string[],
   ) {
     const group = await this.groupRepository.findById(groupId);
 
-    const connectedSelective = await this.disciplineRepository.findMany({
+    const connectedSelectives = await this.disciplineRepository.findMany({
       where: {
         OR: connectedSelectiveIds.map((id) => ({ id })),
       },
     });
 
-    const disconnectedSelective = await this.disciplineRepository.findMany({
+    const disconnectedSelectives = await this.disciplineRepository.findMany({
       where: {
         OR: disconnectedSelectiveIds.map((id) => ({ id })),
       },
     });
 
-    const uniqueSemesters = this.userService.getUniqueSemesters(connectedSelective);
+    const uniqueSemesters = this.userService.getUniqueSemesters(connectedSelectives);
 
     for (const uniqueSemester of uniqueSemesters) {
-      const connectedAmount = this.getAmount(connectedSelective, uniqueSemester);
-      const disconnectedAmount = this.getAmount(disconnectedSelective, uniqueSemester);
-      const studentAmount = this.getAmount(studentSelective, uniqueSemester);
+      const connectedAmount = this.getAmount(connectedSelectives, uniqueSemester);
+      const disconnectedAmount = this.getAmount(disconnectedSelectives, uniqueSemester);
+      const studentAmount = this.getAmount(studentSelectives, uniqueSemester);
       const { amount } = group.selectiveAmounts
         .find(({ year, semester }) => uniqueSemester.year === year && uniqueSemester.semester === semester);
 
@@ -246,34 +248,34 @@ export class StudentService {
       .filter((discipline) => discipline.year === year && discipline.semester === semester)
       .length;
   }
-  private async checkDisconnectedSelective (
-    selectedSelective: SelectiveDiscipline[],
-    disconnectedSelective: string[]
+  private async checkDisconnectedSelectives (
+    selectedSelectives: SelectiveDiscipline[],
+    disconnectedSelectives: string[]
   ) {
-    disconnectedSelective.forEach((disciplineId) => {
-      if (!selectedSelective.some((selective) => selective.disciplineId === disciplineId)) {
+    disconnectedSelectives.forEach((disciplineId) => {
+      if (!selectedSelectives.some((selective) => selective.disciplineId === disciplineId)) {
         throw new NotBelongException('selective', 'student');
       }
     });
   }
 
-  private async checkConnectedSelective (
+  private async checkConnectedSelectives (
     groupId: string,
-    connectedSelective: string[],
-    studentSelective: DbDiscipline[]
+    connectedSelectives: string[],
+    studentSelectives: DbDiscipline[]
   ) {
-    const groupSelective = await this.disciplineRepository.findMany({
+    const groupSelectives = await this.disciplineRepository.findMany({
       where: {
         groupId,
         isSelective: true,
       },
     });
 
-    connectedSelective.forEach((disciplineId) => {
-      if (!groupSelective.some((discipline) => disciplineId === discipline.id)) {
+    connectedSelectives.forEach((disciplineId) => {
+      if (!groupSelectives.some((discipline) => disciplineId === discipline.id)) {
         throw new NotBelongException('discipline', 'group');
       }
-      if (studentSelective.some((discipline) => discipline.id === disciplineId)) {
+      if (studentSelectives.some((discipline) => discipline.id === disciplineId)) {
         throw new AlreadySelectedException();
       }
     });

@@ -1,20 +1,27 @@
-import { SearchFormFields } from '@/app/(main)/(search-pages)/search-form/types';
-import { GetListOfSubjectsResponse } from '@/lib/api/subject/types/GetListOfSubjectsResponse';
-import { GetTeachersBySubjectResponse } from '@/lib/api/subject/types/GetTeachersBySubjectResponse';
+import {
+  CreateSubjectDTO,
+  QueryAllSubjectDTO,
+  UpdateSubjectDTO,
+} from '@fictadvisor/utils/requests';
+import {
+  PaginatedSubjectsResponse,
+  SubjectResponse,
+  SubjectWithTeachersResponse,
+} from '@fictadvisor/utils/responses';
+
 import { getAuthorizationHeader } from '@/lib/api/utils';
-import { Subject } from '@/types/subject';
 
 import { client } from '../instance';
 
 class SubjectsAPI {
   async getTeachersBySubject(disciplineId: string) {
-    const { data } = await client.get<GetTeachersBySubjectResponse>(
+    const { data } = await client.get<SubjectWithTeachersResponse>(
       `subjects/${disciplineId}/teachers`,
     );
     return data;
   }
   async getSubject(subjectId: string) {
-    const { data } = await client.get<Subject>(
+    const { data } = await client.get<SubjectResponse>(
       `subjects/${subjectId}`,
       getAuthorizationHeader(),
     );
@@ -22,52 +29,37 @@ class SubjectsAPI {
   }
 
   async createSubject(name: string) {
-    return await client.post<Subject>(
+    const body: CreateSubjectDTO = {
+      name,
+    };
+    const { data } = await client.post<SubjectResponse>(
       `/subjects`,
-      { name: name },
+      body,
       getAuthorizationHeader(),
     );
+    return data;
   }
 
   async editSubject(id: string, name: string) {
-    await client.patch<Subject>(
+    const body: UpdateSubjectDTO = {
+      name,
+    };
+    const { data } = await client.patch<SubjectResponse>(
       `/subjects/${id}`,
-      { name: name },
+      body,
       getAuthorizationHeader(),
     );
+    return data;
   }
 
-  async getAll(
-    params: Partial<SearchFormFields> = {},
-    pageSize?: number,
-    page?: number,
-  ) {
-    const { data } = await client.get<GetListOfSubjectsResponse>('/subjects', {
-      params: {
-        ...params,
-        pageSize,
-        page,
-      },
+  async getAll(params: QueryAllSubjectDTO = {}) {
+    const { data } = await client.get<PaginatedSubjectsResponse>('/subjects', {
+      params,
     });
     return data;
   }
 
-  async getPage(
-    params: Partial<SearchFormFields> = {},
-    pageSize?: number,
-    page?: number,
-  ) {
-    const { data } = await client.get<GetListOfSubjectsResponse>('/subjects', {
-      params: {
-        ...params,
-        pageSize,
-        page,
-      },
-    });
-    return data;
-  }
-
-  async delete(subjectId: string) {
+  async delete(subjectId: string): Promise<void> {
     await client.delete(`/subjects/${subjectId}`, getAuthorizationHeader());
   }
 }

@@ -1,6 +1,7 @@
 'use client';
 import React, { FC } from 'react';
 import { QueryObserverBaseResult } from 'react-query';
+import { MappedGrant } from '@fictadvisor/utils/responses';
 import { TableHead, Typography } from '@mui/material';
 import {
   Paper,
@@ -16,14 +17,13 @@ import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import GrantsAPI from '@/lib/api/grants/GrantsAPI';
-import { Grant } from '@/types/role';
 
 import TableActions from './components/table-actions';
 
 interface GrantsListProps {
-  curPage: number;
-  setCurPage: React.Dispatch<React.SetStateAction<number>>;
-  grants: Grant[];
+  currPage: number;
+  setCurrPage: React.Dispatch<React.SetStateAction<number>>;
+  grants: MappedGrant[];
   pageSize: number;
   setPageSize: React.Dispatch<React.SetStateAction<number>>;
   totalCount: number;
@@ -32,8 +32,8 @@ interface GrantsListProps {
 }
 
 const GrantsList: FC<GrantsListProps> = ({
-  curPage,
-  setCurPage,
+  currPage,
+  setCurrPage,
   grants,
   pageSize,
   setPageSize,
@@ -47,7 +47,7 @@ const GrantsList: FC<GrantsListProps> = ({
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setPageSize(parseInt(event.target.value, 10));
-    setCurPage(0);
+    setCurrPage(0);
   };
 
   const handleDelete = async (grantId: string) => {
@@ -61,7 +61,7 @@ const GrantsList: FC<GrantsListProps> = ({
   };
 
   const handleChangePage = (_event: unknown, newPage: number) => {
-    setCurPage(newPage);
+    setCurrPage(newPage);
   };
   return (
     <TableContainer component={Paper} sx={stylesAdmin.tableContainer}>
@@ -103,7 +103,7 @@ const GrantsList: FC<GrantsListProps> = ({
         component="div"
         count={totalCount}
         rowsPerPage={pageSize}
-        page={curPage}
+        page={currPage}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />

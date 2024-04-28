@@ -1,4 +1,5 @@
 import React, { FC, useState } from 'react';
+import { MappedGrant } from '@fictadvisor/utils/responses';
 import { PencilSquareIcon } from '@heroicons/react/24/solid';
 import { Box, Link } from '@mui/material';
 import NextLink from 'next/link';
@@ -11,10 +12,9 @@ import {
 } from '@/components/common/ui/button-mui/types';
 import DeletePopup from '@/components/common/ui/delete-popup';
 import { TrashBucketButton } from '@/components/common/ui/icon-button-mui/variants';
-import { Grant } from '@/types/role';
 
 interface TableActionsProps {
-  grant: Grant;
+  grant: MappedGrant;
   handleDelete: (id: string) => Promise<void>;
   roleId: string;
 }

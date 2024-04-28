@@ -1,16 +1,4 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request, UseGuards } from '@nestjs/common';
-import { DisciplineTeacherService } from '../services/DisciplineTeacherService';
-import { CreateAnswersDTO, CreateAnswersWithUserIdDTO } from '../dtos/CreateAnswersDTO';
-import { GroupByDisciplineTeacherGuard } from 'src/v2/security/group-guard/GroupByDisciplineTeacherGuard';
-import { Access } from 'src/v2/security/Access';
-import { PERMISSION } from '@fictadvisor/utils/security';
-import { DisciplineTeacherByIdPipe } from '../pipes/DisciplineTeacherByIdPipe';
-import { TelegramGuard } from '../../security/TelegramGuard';
-import { ResponseDTO } from '../dtos/ResponseDTO';
-import { TeacherByIdPipe } from '../pipes/TeacherByIdPipe';
-import { DisciplineByIdPipe } from '../pipes/DisciplineByIdPipe';
-import { UpdateDisciplineTeacherDTO } from '../dtos/UpdateDisciplineTeacherDTO';
-import { QuestionAnswersValidationPipe } from '../pipes/QuestionAnswersValidationPipe';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -21,20 +9,37 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { DisciplineTeacherQuestionsResponse } from '../responses/DisciplineTeacherQuestionsResponse';
-import { QuestionAnswerResponse } from '../responses/QuestionAnswerResponse';
-import { DisciplineTeacherCreateResponse } from '../responses/DisciplineTeacherCreateResponse';
-import { CreateDisciplineTeacherDTO } from '../dtos/CreateDisciplineTeacherDTO';
-import { UpdateCommentDTO } from '../dtos/UpdateCommentDTO';
-import { CommentResponse } from '../responses/CommentResponse';
+import {
+  CreateAnswersDTO,
+  CreateAnswersWithUserIdDTO,
+  ResponseDTO,
+  UpdateDisciplineTeacherDTO,
+  CreateDisciplineTeacherDTO,
+  UpdateCommentDTO,
+  DeleteCommentDTO,
+  QueryAllCommentsDTO,
+} from '@fictadvisor/utils/requests';
+import {
+  DisciplineTeacherQuestionsResponse,
+  QuestionAnswerResponse,
+  DisciplineTeacherCreateResponse,
+  CommentResponse,
+  PaginatedCommentsResponse,
+} from '@fictadvisor/utils/responses';
+import { PERMISSION } from '@fictadvisor/utils/security';
+import { Access } from 'src/v2/security/Access';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
-import { QuestionMapper } from '../../mappers/QuestionMapper';
-import { DeleteCommentDTO } from '../dtos/DeleteCommentDTO';
+import { TelegramGuard } from '../../security/TelegramGuard';
+import { GroupByDisciplineTeacherGuard } from 'src/v2/security/group-guard/GroupByDisciplineTeacherGuard';
+import { DisciplineTeacherByIdPipe } from '../pipes/DisciplineTeacherByIdPipe';
+import { TeacherByIdPipe } from '../pipes/TeacherByIdPipe';
+import { DisciplineByIdPipe } from '../pipes/DisciplineByIdPipe';
+import { QuestionAnswersValidationPipe } from '../pipes/QuestionAnswersValidationPipe';
 import { UserByIdPipe } from '../pipes/UserByIdPipe';
 import { QuestionByIdPipe } from '../pipes/QuestionByIdPipe';
 import { CommentByQuestionIdPipe } from '../pipes/CommentByQuestionIdPipe';
-import { QueryAllCommentsDTO } from '../dtos/QueryAllCommentsDTO';
-import { PaginatedCommentsResponse } from '../responses/PaginatedCommentsResponse';
+import { QuestionMapper } from '../../mappers/QuestionMapper';
+import { DisciplineTeacherService } from '../services/DisciplineTeacherService';
 
 @ApiTags('DisciplineTeacher')
 @Controller({
@@ -270,7 +275,7 @@ export class DisciplineTeacherController {
     `,
   })
   @Access(PERMISSION.DISCIPLINE_TEACHERS_UPDATE)
-  @Patch('/:disciplineTeacherId/')
+  @Patch('/:disciplineTeacherId')
   updateById (
     @Param('disciplineTeacherId', DisciplineTeacherByIdPipe) disciplineTeacherId: string,
     @Body() body: UpdateDisciplineTeacherDTO,
@@ -318,7 +323,7 @@ export class DisciplineTeacherController {
     `,
   })
   @Access(PERMISSION.DISCIPLINE_TEACHERS_DELETE)
-  @Delete('/:disciplineTeacherId/')
+  @Delete('/:disciplineTeacherId')
   deleteById (
     @Param('disciplineTeacherId', DisciplineTeacherByIdPipe) disciplineTeacherId: string,
   ) {

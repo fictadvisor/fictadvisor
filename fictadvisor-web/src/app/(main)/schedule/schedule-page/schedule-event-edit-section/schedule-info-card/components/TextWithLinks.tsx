@@ -2,7 +2,6 @@ import React, { FC } from 'react';
 import { Typography } from '@mui/material';
 
 import Link from '@/components/common/ui/custom-link/CustomLink';
-import theme from '@/styles/theme';
 
 interface EventDisciplineLinkProps {
   infoText?: string;

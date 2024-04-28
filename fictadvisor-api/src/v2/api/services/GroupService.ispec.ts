@@ -1,20 +1,20 @@
-import { UserService } from './UserService';
-import { PrismaService } from '../../database/PrismaService';
 import { Test } from '@nestjs/testing';
-import { GroupService } from './GroupService';
-import { DateService } from '../../utils/date/DateService';
+import { InjectionToken } from '@nestjs/common';
 import { PrismaModule } from '../../modules/PrismaModule';
 import { MapperModule } from '../../modules/MapperModule';
+import { StudentMapper } from '../../mappers/StudentMapper';
+import { DisciplineMapper } from '../../mappers/DisciplineMapper';
+import { UserService } from './UserService';
+import { PrismaService } from '../../database/PrismaService';
+import { GroupService } from './GroupService';
+import { DateService } from '../../utils/date/DateService';
+import { FileService } from '../../utils/files/FileService';
 import { StudentRepository } from '../../database/repositories/StudentRepository';
 import { UserRepository } from '../../database/repositories/UserRepository';
 import { RoleRepository } from '../../database/repositories/RoleRepository';
-import { StudentMapper } from '../../mappers/StudentMapper';
-import { DisciplineMapper } from '../../mappers/DisciplineMapper';
-import { InjectionToken } from '@nestjs/common';
 import { GroupRepository } from '../../database/repositories/GroupRepository';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
-import { FileService } from '../../utils/files/FileService';
 
 describe('GroupService', () => {
   let groupService: GroupService;

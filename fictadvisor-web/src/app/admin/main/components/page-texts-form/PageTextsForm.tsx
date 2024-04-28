@@ -5,6 +5,7 @@ import React, {
   useState,
 } from 'react';
 import { useQuery } from 'react-query';
+import { UpdatePageTextDTO } from '@fictadvisor/utils/requests';
 import { Box, Typography } from '@mui/material';
 
 import * as styles from '@/app/admin/main/components/page-texts-form/PageTextsForm.styles';
@@ -14,7 +15,7 @@ import { SwitchLabelPlacement } from '@/components/common/ui/form/switch/types';
 import TextArea from '@/components/common/ui/form/text-area-mui';
 import PageTextsAPI from '@/lib/api/page-texts/PageTextsAPI';
 
-import { NewPageTexts, TextsProperties } from './types/PageTextsInterfaces';
+import { NewPageTexts } from './types/PageTextsInterfaces';
 
 const pageTextsKeys = [
   'mainpage_title',
@@ -29,14 +30,14 @@ const PageTextsForm = forwardRef((props, ref) => {
 
   const data = useQuery(
     pageTextsKeys,
-    () => PageTextsAPI.getAll(pageTextsKeys),
+    () => PageTextsAPI.getAll({ keys: pageTextsKeys }),
     {
       onSuccess: data => {
         if (Array.isArray(data)) {
           const newPageTexts = data.reduce(
             (
-              acc: { [key: string]: TextsProperties },
-              item: TextsProperties,
+              acc: { [key: string]: UpdatePageTextDTO },
+              item: UpdatePageTextDTO,
             ) => {
               acc[item.key] = item;
               return acc;
@@ -80,9 +81,9 @@ const PageTextsForm = forwardRef((props, ref) => {
 
   const pageTextSubmit = async () => {
     try {
-      const transformedFormValue = Object.values(formValue);
-      await PageTextsAPI.editPageTexts(transformedFormValue);
-      return transformedFormValue;
+      const pageTexts = Object.values(formValue);
+      await PageTextsAPI.editPageTexts({ pageTexts });
+      return pageTexts;
     } catch (error) {
       throw error;
     }
@@ -101,7 +102,7 @@ const PageTextsForm = forwardRef((props, ref) => {
               sx={styles.input}
               label="Заголовок"
               name="mainpage_title"
-              value={formValue['mainpage_title'].value}
+              value={formValue['mainpage_title'].value as string}
               onChange={(value: string) =>
                 handleInputChange('mainpage_title', value)
               }
@@ -109,7 +110,7 @@ const PageTextsForm = forwardRef((props, ref) => {
             <TextArea
               sx={styles.textArea}
               label="Опис під заголовком"
-              value={formValue['mainpage_description'].value}
+              value={formValue['mainpage_description'].value as string}
               onChange={(value: string) =>
                 handleInputChange('mainpage_description', value)
               }
@@ -123,7 +124,7 @@ const PageTextsForm = forwardRef((props, ref) => {
                 sx={styles.miniInput}
                 label="Праймері"
                 name="mainpage_primary"
-                value={formValue['mainpage_primary'].value}
+                value={formValue['mainpage_primary'].value as string}
                 onChange={(value: string) =>
                   handleInputChange('mainpage_primary', value)
                 }
@@ -152,7 +153,7 @@ const PageTextsForm = forwardRef((props, ref) => {
                 sx={styles.miniInput}
                 label="Секондарі"
                 name="mainpage_secondary"
-                value={formValue['mainpage_secondary'].value}
+                value={formValue['mainpage_secondary'].value as string}
                 onChange={(value: string) =>
                   handleInputChange('mainpage_secondary', value)
                 }
@@ -184,7 +185,9 @@ const PageTextsForm = forwardRef((props, ref) => {
               sx={styles.input}
               label="Заголовок"
               name="mainpage_studentresources_title"
-              value={formValue['mainpage_studentresources_title'].value}
+              value={
+                formValue['mainpage_studentresources_title'].value as string
+              }
               onChange={(value: string) =>
                 handleInputChange('mainpage_studentresources_title', value)
               }

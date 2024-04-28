@@ -1,5 +1,7 @@
 import React, { FC, useState } from 'react';
 import { useQuery } from 'react-query';
+import { EventTypeEnum } from '@fictadvisor/utils/enums';
+import { PermissionValuesDTO } from '@fictadvisor/utils/requests';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { Box, Typography } from '@mui/material';
@@ -17,40 +19,38 @@ import { TabTextPosition } from '@/components/common/ui/tab/tab/types';
 import Tag from '@/components/common/ui/tag';
 import { TagColor } from '@/components/common/ui/tag/types';
 import useAuthentication from '@/hooks/use-authentication';
-import { DetailedEventBody } from '@/lib/api/schedule/types/DetailedEventBody';
-import PermissionService from '@/lib/services/permisson/PermissionService';
-import { PermissionData } from '@/lib/services/permisson/types';
-import { TEvent } from '@/types/schedule';
+import { EventResponse } from '@/lib/api/schedule/types/EventResponse';
+import PermissionService from '@/lib/services/permission/PermissionService';
 
 import { skeletonProps } from '../utils/skeletonProps';
 
 import * as styles from './ScheduleInfoCard.styles';
 
 const TagLabelMapper: Record<string, string> = {
-  [TEvent.LABORATORY]: 'Лабораторна',
-  [TEvent.EXAM]: 'Екзамен',
-  [TEvent.WORKOUT]: 'Відпрацювання',
-  [TEvent.PRACTICE]: 'Практика',
-  [TEvent.LECTURE]: 'Лекція',
-  [TEvent.CONSULTATION]: 'Консультація',
-  [TEvent.OTHER]: 'Інша подія',
+  [EventTypeEnum.LABORATORY]: 'Лабораторна',
+  [EventTypeEnum.EXAM]: 'Екзамен',
+  [EventTypeEnum.WORKOUT]: 'Відпрацювання',
+  [EventTypeEnum.PRACTICE]: 'Практика',
+  [EventTypeEnum.LECTURE]: 'Лекція',
+  [EventTypeEnum.CONSULTATION]: 'Консультація',
+  [EventTypeEnum.OTHER]: 'Інша подія',
 };
 
 const TagColorMapper: Record<string, TagColor> = {
-  [TEvent.LABORATORY]: TagColor.MINT,
-  [TEvent.EXAM]: TagColor.VIOLET,
-  [TEvent.WORKOUT]: TagColor.PRIMARY,
-  [TEvent.PRACTICE]: TagColor.ORANGE,
-  [TEvent.LECTURE]: TagColor.INDIGO,
-  [TEvent.CONSULTATION]: TagColor.SUCCESS,
-  [TEvent.OTHER]: TagColor.SECONDARY,
+  [EventTypeEnum.LABORATORY]: TagColor.MINT,
+  [EventTypeEnum.EXAM]: TagColor.VIOLET,
+  [EventTypeEnum.WORKOUT]: TagColor.PRIMARY,
+  [EventTypeEnum.PRACTICE]: TagColor.ORANGE,
+  [EventTypeEnum.LECTURE]: TagColor.INDIGO,
+  [EventTypeEnum.CONSULTATION]: TagColor.SUCCESS,
+  [EventTypeEnum.OTHER]: TagColor.SECONDARY,
 };
 
 interface ScheduleInfoCardProps {
   onEventEditButtonClick: () => void;
   onCloseButtonClick: () => void;
   loading: boolean;
-  event?: DetailedEventBody;
+  event?: EventResponse;
 }
 
 const ScheduleInfoCard: FC<ScheduleInfoCardProps> = ({
@@ -61,11 +61,13 @@ const ScheduleInfoCard: FC<ScheduleInfoCardProps> = ({
 }) => {
   const [tabValue, setTabValue] = useState<InfoCardTabs>(InfoCardTabs.EVENT);
   const { user } = useAuthentication();
-  const isDisciplineRelatedType = (eventType: string | TEvent | undefined) => {
-    return eventType !== TEvent.OTHER;
+  const isDisciplineRelatedType = (
+    eventType: string | EventTypeEnum | undefined,
+  ) => {
+    return eventType !== EventTypeEnum.OTHER;
   };
 
-  const permissionValues: PermissionData = {
+  const permissionValues: PermissionValuesDTO = {
     groupId: user.group?.id,
   };
 

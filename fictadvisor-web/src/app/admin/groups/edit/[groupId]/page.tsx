@@ -1,11 +1,11 @@
 'use client';
 import React, { FC, useState } from 'react';
 import { useQuery } from 'react-query';
+import { UpdateGroupDTO } from '@fictadvisor/utils/requests';
 import { Box } from '@mui/material';
 import { useRouter } from 'next/navigation';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
-import { GroupEditBody } from '@/app/admin/groups/common/types';
 import GroupsInfoEdit from '@/app/admin/groups/edit/[groupId]/components/groups-info-edit';
 import HeaderEdit from '@/app/admin/groups/edit/[groupId]/components/header-edit';
 import LoadPage from '@/components/common/ui/load-page/LoadPage';
@@ -37,7 +37,7 @@ const AdminGroupEditBodyPage: FC<AdminGroupEditBodyPageProps> = ({
       `An error has occurred while editing ${params.groupId} group`,
     );
 
-  const initialValues: GroupEditBody = {
+  const initialValues: UpdateGroupDTO = {
     code: group.code,
     admissionYear: group.admissionYear,
     captainId: group.captain.id,
@@ -48,15 +48,15 @@ const AdminGroupEditBodyPage: FC<AdminGroupEditBodyPageProps> = ({
   const toast = useToast();
   const { displayError } = useToastError();
   const router = useRouter();
-  const [groupInfo, setGroupInfo] = useState<GroupEditBody>(initialValues);
+  const [groupInfo, setGroupInfo] = useState<UpdateGroupDTO>(initialValues);
 
   const handleEditSubmit = async () => {
     try {
-      const body: Partial<GroupEditBody> = getChangedValues(
+      const body: Partial<UpdateGroupDTO> = getChangedValues(
         groupInfo,
         initialValues,
       );
-      await GroupAPI.editGroup(body, group.id);
+      await GroupAPI.editGroup(group.id, body);
       toast.success('Група успішно змінена!', '', 4000);
       router.replace('/admin/groups');
     } catch (e) {

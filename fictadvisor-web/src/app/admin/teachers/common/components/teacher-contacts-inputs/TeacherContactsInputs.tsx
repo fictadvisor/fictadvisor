@@ -1,16 +1,15 @@
 'use client';
 import type { FC } from 'react';
+import { CreateContactDTO } from '@fictadvisor/utils/requests';
 import { Box, Stack, Typography } from '@mui/material';
-
-import { Contact } from '@/types/contact';
 
 import ContactInput from './components/contact-input/ContactInput';
 import { createContacts } from './components/utils/CreateContacts';
 import * as styles from './TeacherContactsInputs.styles';
 
 interface TeacherContactsInputsProps {
-  contacts?: Contact[];
-  setNewContacts: React.Dispatch<React.SetStateAction<Contact[]>>;
+  contacts?: CreateContactDTO[];
+  setNewContacts: React.Dispatch<React.SetStateAction<CreateContactDTO[]>>;
 }
 
 const TeacherContactsInputs: FC<TeacherContactsInputsProps> = ({

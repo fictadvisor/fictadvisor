@@ -1,5 +1,5 @@
-import { EduProgramRepository } from '../../database/repositories/EduProgramRepository';
 import { Injectable } from '@nestjs/common';
+import { EduProgramRepository } from '../../database/repositories/EduProgramRepository';
 
 @Injectable()
 export class EduProgramService {

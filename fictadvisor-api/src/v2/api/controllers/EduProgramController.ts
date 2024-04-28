@@ -1,8 +1,8 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { EduProgramMapper } from '../../mappers/EduProgramMapper';
+import { EduProgramsResponse } from '@fictadvisor/utils/responses';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
-import { EduProgramResponses } from '../responses/EduProgramResponse';
+import { EduProgramMapper } from '../../mappers/EduProgramMapper';
 import { EduProgramService } from '../services/EduProgramService';
 
 @ApiTags('Eduprogram')
@@ -17,13 +17,13 @@ export class EduProgramController {
   ) {}
 
   @ApiOkResponse({
-    type: EduProgramResponses,
+    type: EduProgramsResponse,
   })
   @ApiEndpoint({
     summary: 'Get all education programs',
   })
   @Get()
-  async getAll (): Promise<EduProgramResponses> {
+  async getAll (): Promise<EduProgramsResponse> {
     const programs = await this.eduProgramService.getAll();
     return this.eduProgramMapper.getAll(programs);
   }

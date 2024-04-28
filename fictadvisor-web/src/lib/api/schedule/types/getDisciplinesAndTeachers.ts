@@ -1,6 +1,9 @@
-import { GetGroupDisciplines } from '@/lib/api/group/types/GetGroupDisciplines';
-import { GetTeachersResponse } from '@/lib/api/teacher/types/GetTeachersResponse';
+import {
+  PaginatedTeachersResponse,
+  ShortDisciplinesResponse,
+} from '@fictadvisor/utils/responses';
+
 export interface getDisciplinesAndTeachers {
-  disciplines: GetGroupDisciplines;
-  teachers: GetTeachersResponse;
+  disciplines: ShortDisciplinesResponse;
+  teachers: PaginatedTeachersResponse;
 }

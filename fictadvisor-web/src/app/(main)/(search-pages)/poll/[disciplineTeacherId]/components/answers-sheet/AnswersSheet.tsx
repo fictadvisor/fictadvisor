@@ -1,4 +1,5 @@
 import React, { FormEvent, useMemo } from 'react';
+import { QuestionType } from '@fictadvisor/utils/enums';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import { Box, Typography } from '@mui/material';
 import { Form, Formik, FormikValues } from 'formik';
@@ -13,7 +14,7 @@ import useToast from '@/hooks/use-toast';
 import PollAPI from '@/lib/api/poll/PollAPI';
 import getErrorMessage from '@/lib/utils/getErrorMessage';
 import { usePollStore } from '@/store/poll-page/usePollStore';
-import { Answer, Question, QuestionType } from '@/types/poll';
+import { Answer, Question } from '@/types/poll';
 
 import AnswersSaved from './AnswersSaved';
 
@@ -136,10 +137,9 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
         }))
         .filter(answer => !!answer.value);
 
-      await PollAPI.createTeacherGrade(
-        { answers: formattedAnswers },
-        disciplineTeacherId,
-      );
+      await PollAPI.createTeacherGrade(disciplineTeacherId, {
+        answers: formattedAnswers,
+      });
       setIsSendingStatus(SendingStatus.SUCCESS);
       setAnswers([]);
     } catch (error) {

@@ -1,4 +1,9 @@
 import { useEffect } from 'react';
+import { EventTypeEnum, State as StateEnum } from '@fictadvisor/utils/enums';
+import {
+  CurrentSemester,
+  MappedGroupResponse,
+} from '@fictadvisor/utils/responses';
 import { AxiosError } from 'axios';
 import moment, { Moment } from 'moment';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -10,15 +15,12 @@ import {
 } from '@/app/(main)/schedule/schedule-page/constants';
 import useAuthentication from '@/hooks/use-authentication';
 import useToast from '@/hooks/use-toast';
-import { GetCurrentSemester } from '@/lib/api/dates/types/GetCurrentSemester';
 import ScheduleAPI from '@/lib/api/schedule/ScheduleAPI';
-import { GetEventBody } from '@/lib/api/schedule/types/GetEventBody';
+import { EventsResponse } from '@/lib/api/schedule/types/EventsResponse';
 import { getCurrentWeek } from '@/store/schedule/utils/getCurrentWeek';
 import { getFirstDayOfAWeek } from '@/store/schedule/utils/getFirstDayOfAWeek';
 import { getWeekByDate } from '@/store/schedule/utils/getWeekByDate';
-import { Group } from '@/types/group';
-import { Event, TEvent } from '@/types/schedule';
-import { UserGroupState } from '@/types/user';
+import { Event } from '@/types/schedule';
 
 import { findFirstOf5 } from './utils/findFirstOf5';
 import { setUrlParams } from './utils/setUrlParams';
@@ -49,26 +51,26 @@ const checkboxesInitialValuesNotAuth: Checkboxes = {
   isSelective: false,
 };
 
-const CheckboxesMapper: Record<string, (TEvent | null)[]> = {
-  addLecture: [TEvent.LECTURE],
-  addLaboratory: [TEvent.LABORATORY],
-  addPractice: [TEvent.PRACTICE],
+const CheckboxesMapper: Record<string, (EventTypeEnum | null)[]> = {
+  addLecture: [EventTypeEnum.LECTURE],
+  addLaboratory: [EventTypeEnum.LABORATORY],
+  addPractice: [EventTypeEnum.PRACTICE],
   otherEvents: [
-    TEvent.CONSULTATION,
-    TEvent.EXAM,
-    TEvent.WORKOUT,
-    TEvent.OTHER,
+    EventTypeEnum.CONSULTATION,
+    EventTypeEnum.EXAM,
+    EventTypeEnum.WORKOUT,
+    EventTypeEnum.OTHER,
     null,
   ],
 };
 
 type State = {
   checkboxes: Checkboxes;
-  semester?: GetCurrentSemester;
-  eventTypes: (TEvent | null)[];
+  semester?: CurrentSemester;
+  eventTypes: (EventTypeEnum | null)[];
   week: number;
   groupId: string;
-  eventsBody: GetEventBody[];
+  eventsBody: EventsResponse[];
   isNewEventAdded: boolean;
   openedEvent?: Event;
   currentTime: Moment;
@@ -90,7 +92,10 @@ type Action = {
   loadNext5: (startWeek: number) => Promise<void>;
   setError: (_: AxiosError | null) => void;
   updateCheckboxes: (checkboxes: Checkboxes) => void;
-  useInitialise: (semester: GetCurrentSemester | null, groups: Group[]) => void;
+  useInitialise: (
+    semester: CurrentSemester | null,
+    groups: MappedGroupResponse[],
+  ) => void;
 };
 
 export const useSchedule = create<State & Action>((set, get) => {
@@ -102,13 +107,13 @@ export const useSchedule = create<State & Action>((set, get) => {
     currentTime: moment(),
     isNewEventAdded: false,
     eventTypes: [
-      TEvent.LECTURE,
-      TEvent.PRACTICE,
-      TEvent.LABORATORY,
-      TEvent.EXAM,
-      TEvent.CONSULTATION,
-      TEvent.WORKOUT,
-      TEvent.OTHER,
+      EventTypeEnum.LECTURE,
+      EventTypeEnum.PRACTICE,
+      EventTypeEnum.LABORATORY,
+      EventTypeEnum.EXAM,
+      EventTypeEnum.CONSULTATION,
+      EventTypeEnum.WORKOUT,
+      EventTypeEnum.OTHER,
       null,
     ],
     week: 1,
@@ -132,15 +137,25 @@ export const useSchedule = create<State & Action>((set, get) => {
     },
     loadNext5Auth: async (week: number) => {
       set(state => ({ isLoading: true }));
-      const selective = !!get().checkboxes.isSelective;
+      const showOwnSelective = !!get().checkboxes.isSelective;
 
       try {
         const [r1, r2, r3, r4, r5] = await Promise.all([
-          ScheduleAPI.getEventsAuthorized(get().groupId, week, selective),
-          ScheduleAPI.getEventsAuthorized(get().groupId, week + 1, selective),
-          ScheduleAPI.getEventsAuthorized(get().groupId, week + 2, selective),
-          ScheduleAPI.getEventsAuthorized(get().groupId, week + 3, selective),
-          ScheduleAPI.getEventsAuthorized(get().groupId, week + 4, selective),
+          ScheduleAPI.getEventsAuthorized(get().groupId, week, {
+            showOwnSelective,
+          }),
+          ScheduleAPI.getEventsAuthorized(get().groupId, week + 1, {
+            showOwnSelective,
+          }),
+          ScheduleAPI.getEventsAuthorized(get().groupId, week + 2, {
+            showOwnSelective,
+          }),
+          ScheduleAPI.getEventsAuthorized(get().groupId, week + 3, {
+            showOwnSelective,
+          }),
+          ScheduleAPI.getEventsAuthorized(get().groupId, week + 4, {
+            showOwnSelective,
+          }),
         ]);
 
         const eventsBody = [...get().eventsBody];
@@ -185,7 +200,7 @@ export const useSchedule = create<State & Action>((set, get) => {
     },
 
     updateCheckboxes(checkboxes) {
-      const _eventTypes: (TEvent | null)[] = [];
+      const _eventTypes: (EventTypeEnum | null)[] = [];
       for (const [key, value] of Object.entries(checkboxes)) {
         if (value && key !== 'isSelective') {
           _eventTypes.push(...CheckboxesMapper[key]);
@@ -231,7 +246,7 @@ export const useSchedule = create<State & Action>((set, get) => {
         const isUsingSelective =
           user &&
           user.group?.id === id &&
-          user.group?.state === UserGroupState.APPROVED;
+          user.group?.state === StateEnum.APPROVED;
         set(state => ({ isUsingSelective }));
         setUrlParams('group', id);
         localStorage.setItem(LOCAL_STORAGE_SCHEDULE_KEY, id);
@@ -252,9 +267,7 @@ export const useSchedule = create<State & Action>((set, get) => {
       set(_ => ({
         chosenDay: newDate,
       }));
-      get().setWeek(
-        getWeekByDate(get().semester as GetCurrentSemester, newDate),
-      );
+      get().setWeek(getWeekByDate(get().semester as CurrentSemester, newDate));
     },
     useInitialise(semester, groups) {
       const { user } = useAuthentication();
@@ -302,7 +315,7 @@ export const useSchedule = create<State & Action>((set, get) => {
         }));
         get().updateCheckboxes(get().checkboxes);
         get().setChosenDay(
-          getFirstDayOfAWeek(get().semester as GetCurrentSemester, week),
+          getFirstDayOfAWeek(get().semester as CurrentSemester, week),
         );
       }, [router]);
     },

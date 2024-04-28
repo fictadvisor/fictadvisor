@@ -1,11 +1,10 @@
+import { SelectiveDisciplinesDTO } from '@fictadvisor/utils/requests';
+import { RemainingSelective } from '@fictadvisor/utils/responses';
 import { FormikValues } from 'formik';
-
-import { PostSelectiveDisciplinesBody } from '@/lib/api/user/types/PostSelectiveDisciplinesBody';
-import { UserRemainingSelective } from '@/types/user';
 
 export const transformData = (data: {
   [key: string]: boolean;
-}): PostSelectiveDisciplinesBody => {
+}): SelectiveDisciplinesDTO => {
   const newData = [];
   for (const discipline in data) {
     if (data[discipline]) newData.push(discipline);
@@ -13,7 +12,7 @@ export const transformData = (data: {
   return { disciplines: newData };
 };
 
-export const getInitialValues = (disciplines: UserRemainingSelective[]) => {
+export const getInitialValues = (disciplines: RemainingSelective[]) => {
   const initialValues: FormikValues = {};
   if (disciplines) {
     disciplines.forEach(

@@ -3,7 +3,6 @@ import { useQuery } from 'react-query';
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
 import { CheckboxesDropdownOption } from '@/components/common/ui/form/checkboxes-dropdown/types/CheckboxesDropdown';
 import DatesAPI from '@/lib/api/dates/DatesAPI';
-import DisciplineAPI from '@/lib/api/discipline/DisciplineAPI';
 import GroupAPI from '@/lib/api/group/GroupAPI';
 import SubjectAPI from '@/lib/api/subject/SubjectAPI';
 import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
@@ -36,7 +35,7 @@ export function useDisciplines() {
   );
   const { data: teachersData, isLoading: isLoadingTeachers } = useQuery(
     ['teachers'],
-    () => TeacherAPI.getAdminAll(),
+    () => TeacherAPI.getAll(),
     useQueryAdminOptions,
   );
 

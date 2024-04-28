@@ -1,5 +1,7 @@
 import React, { Dispatch, FC, SetStateAction } from 'react';
 import { useRef } from 'react';
+import { FullNameWithSpecialtyDTO } from '@fictadvisor/utils/requests';
+import { EntrantFullResponse } from '@fictadvisor/utils/responses';
 import { Box } from '@mui/material';
 import { Form, Formik, FormikProps } from 'formik';
 
@@ -13,8 +15,6 @@ import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown';
 import useTabClose from '@/hooks/use-tab-close';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import ContractAPI from '@/lib/api/contract/ContractAPI';
-import { EntrantFuIlResponse } from '@/lib/api/contract/types/EntrantFullResponse';
-import { EntrantBody } from '@/types/contract';
 
 import * as styles from '../../EntrantDashboardPage.styles';
 import { getLocalStorage, saveLocalStorage } from '../../utils/localStorage';
@@ -23,7 +23,7 @@ import { initialValues } from './constants';
 import { validationSchema } from './validation';
 
 interface EntrantSearchFormProps {
-  setEntrantData: Dispatch<SetStateAction<EntrantFuIlResponse | null>>;
+  setEntrantData: Dispatch<SetStateAction<EntrantFullResponse | null>>;
 }
 
 const errorMapper = {
@@ -33,7 +33,7 @@ const errorMapper = {
 };
 const EntrantSearchForm: FC<EntrantSearchFormProps> = ({ setEntrantData }) => {
   const { displayError } = useToastError();
-  const handleSubmit = async (values: EntrantBody) => {
+  const handleSubmit = async (values: FullNameWithSpecialtyDTO) => {
     try {
       if (values.middleName?.trim().length === 0) {
         values.middleName = undefined;
@@ -46,7 +46,7 @@ const EntrantSearchForm: FC<EntrantSearchFormProps> = ({ setEntrantData }) => {
     }
   };
 
-  const form = useRef<FormikProps<EntrantBody>>(null);
+  const form = useRef<FormikProps<FullNameWithSpecialtyDTO>>(null);
 
   useTabClose(() => {
     saveLocalStorage(form?.current?.values ?? null);

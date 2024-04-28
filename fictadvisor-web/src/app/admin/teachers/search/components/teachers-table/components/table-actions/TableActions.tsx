@@ -1,4 +1,5 @@
 import React, { FC, useState } from 'react';
+import { TeacherWithRolesAndCathedrasResponse } from '@fictadvisor/utils/responses';
 import { PencilSquareIcon } from '@heroicons/react/24/solid';
 import { Stack } from '@mui/material';
 
@@ -10,10 +11,9 @@ import {
 } from '@/components/common/ui/button-mui/types';
 import DeletePopup from '@/components/common/ui/delete-popup';
 import { TrashBucketButton } from '@/components/common/ui/icon-button-mui/variants';
-import { Teacher } from '@/types/teacher';
 
 interface TableActionsProps {
-  teacher: Teacher;
+  teacher: TeacherWithRolesAndCathedrasResponse;
   deleteTeacher: (id: string) => Promise<void>;
 }
 

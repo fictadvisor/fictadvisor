@@ -1,10 +1,10 @@
-import type { DeleteEntrantBody } from '@/lib/api/contract/types/DeleteEntrantBody';
+import { DeleteEntrantDataQueryDTO } from '@fictadvisor/utils/requests';
 
-export const saveLocalStorage = (data: DeleteEntrantBody | null) => {
+export const saveLocalStorage = (data: DeleteEntrantDataQueryDTO | null) => {
   localStorage.setItem('deleteEntrantData', JSON.stringify(data));
 };
 
-export const getLocalStorage = (): DeleteEntrantBody | null => {
+export const getLocalStorage = (): DeleteEntrantDataQueryDTO | null => {
   const data = localStorage.getItem('deleteEntrantData');
 
   if (data) return JSON.parse(data);

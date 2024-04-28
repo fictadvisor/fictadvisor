@@ -1,4 +1,6 @@
 import React, { FC } from 'react';
+import { Actions, PriorityState } from '@fictadvisor/utils/enums';
+import { EntrantFullResponse } from '@fictadvisor/utils/responses';
 import { Box, Typography } from '@mui/material';
 
 import Button from '@/components/common/ui/button-mui';
@@ -11,18 +13,13 @@ import { DividerTextAlign } from '@/components/common/ui/divider/types';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import ContractAPI from '@/lib/api/contract/ContractAPI';
-import { Actions } from '@/lib/api/contract/types/DeleteEntrantDataBody';
-import {
-  EntrantFuIlResponse,
-  priorityState,
-} from '@/lib/api/contract/types/EntrantFullResponse';
 
 import * as styles from '../EntrantDashboardPage.styles';
 
 interface PersonalDataSectionProps {
-  data: EntrantFuIlResponse;
+  data: EntrantFullResponse;
   setEntrantData: React.Dispatch<
-    React.SetStateAction<EntrantFuIlResponse | null>
+    React.SetStateAction<EntrantFullResponse | null>
   >;
   cb: (action: Actions) => Promise<void>;
 }
@@ -33,7 +30,7 @@ const errorMapper = {
   NoPermissionException: 'У тебе не має прав виконувати цю дію',
 };
 
-const specialtyMapper = {
+const specialtyMapper: { [index: string]: string } = {
   '121': '121 Інженерія програмного забезпечення',
   '126': '126 Інформаційні системи та технології',
   '123': "123 Комп'ютерна інженерія",
@@ -58,7 +55,7 @@ export const PersonalDataSection: FC<PersonalDataSectionProps> = ({
           lastName: 'NULL',
           firstName: 'NULL',
         };
-        return newData as EntrantFuIlResponse;
+        return newData as unknown as EntrantFullResponse;
       });
     } catch (e) {}
   };
@@ -114,7 +111,7 @@ export const PersonalDataSection: FC<PersonalDataSectionProps> = ({
             width: 'fit-content',
           }}
           disabled={
-            data?.priority?.state === priorityState.APPROVED || !!data?.contract
+            data?.priority?.state === PriorityState.APPROVED || !!data?.contract
           }
         />
         <Button

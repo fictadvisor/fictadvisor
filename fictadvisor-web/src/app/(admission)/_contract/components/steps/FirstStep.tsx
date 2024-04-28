@@ -1,4 +1,10 @@
 import React, { FC, useRef } from 'react';
+import {
+  EducationalProgramType,
+  PaymentTypeParam,
+  StudyFormParam,
+  StudyTypeParam,
+} from '@fictadvisor/utils/enums';
 import { Box, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
 import { Form, Formik, FormikProps } from 'formik';
@@ -9,14 +15,7 @@ import Checkbox from '@/components/common/ui/form/with-formik/checkbox';
 import FormikRadioGroup from '@/components/common/ui/form/with-formik/radio/FormikRadioGroup';
 import useTabClose from '@/hooks/use-tab-close';
 import { ExtendedContractBody } from '@/lib/api/contract/types/ContractBody';
-import {
-  EducationalProgramType,
-  MasterEducationProgram,
-  PaymentTypeParam,
-  StudyDegree,
-  StudyFormParam,
-  StudyTypeParam,
-} from '@/types/contract';
+import { MasterEducationProgram, StudyDegree } from '@/types/contract';
 
 import { saveLocalStorage } from '../../utils/localStorage';
 import { Actions } from '../Actions';
@@ -60,7 +59,7 @@ export const FirstStep: FC<FirstStepProps> = ({
     }
     if (values.meta.degree === StudyDegree.BACHELOR) {
       values.meta.educationalProgram = '';
-      values.meta.programType = '';
+      values.meta.programType = '' as EducationalProgramType;
     }
     onNextStep(values);
   };

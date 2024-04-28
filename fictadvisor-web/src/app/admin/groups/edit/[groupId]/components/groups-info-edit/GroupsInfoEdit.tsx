@@ -2,9 +2,9 @@
 import type { FC } from 'react';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import { UpdateGroupDTO } from '@fictadvisor/utils/requests';
 import { Stack } from '@mui/material';
 
-import { GroupEditBody } from '@/app/admin/groups/common/types';
 import { extractModeratorsIds } from '@/app/admin/groups/common/utils/extractModeratorsIds';
 import Progress from '@/components/common/ui/progress';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
@@ -15,8 +15,8 @@ import GroupInfoInputs from './components/group-info-inputs/GroupInfoInputs';
 
 interface GroupsInfoEditProps {
   groupId: string;
-  groupInfo: GroupEditBody;
-  setGroupInfo: React.Dispatch<React.SetStateAction<GroupEditBody>>;
+  groupInfo: UpdateGroupDTO;
+  setGroupInfo: React.Dispatch<React.SetStateAction<UpdateGroupDTO>>;
 }
 
 const GroupsInfoEdit: FC<GroupsInfoEditProps> = ({
@@ -27,7 +27,7 @@ const GroupsInfoEdit: FC<GroupsInfoEditProps> = ({
   const toastError = useToastError();
 
   const [moderatorIds, setModeratorIds] = useState<string[]>(
-    groupInfo.moderatorIds,
+    groupInfo.moderatorIds as string[],
   );
 
   useEffect(() => {

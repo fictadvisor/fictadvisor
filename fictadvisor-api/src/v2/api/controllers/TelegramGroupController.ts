@@ -8,16 +8,21 @@ import {
   ApiUnauthorizedResponse,
   ApiParam,
 } from '@nestjs/swagger';
-import { TelegramGroupService } from '../services/TelegramGroupService';
-import { TelegramGroupMapper } from '../../mappers/TelegramGroupMapper';
-import { CreateTelegramGroupDTO } from '../dtos/CreateTelegramGroupDTO';
-import { UpdateTelegramGroupDTO } from '../dtos/UpdateTelegramGroupDTO';
+import {
+  CreateTelegramGroupDTO,
+  UpdateTelegramGroupDTO,
+} from '@fictadvisor/utils/requests';
+import {
+  TelegramGroupResponse,
+  TelegramGroupsResponse,
+  TelegramGroupsByTelegramIdResponse,
+} from '@fictadvisor/utils/responses';
+import { ApiEndpoint } from '../../utils/documentation/decorators';
+import { TelegramGuard } from '../../security/TelegramGuard';
 import { TelegramGroupByIdPipe } from '../pipes/TelegramGroupByIdPipe';
 import { GroupByIdPipe } from '../pipes/GroupByIdPipe';
-import { TelegramGroupResponse, TelegramGroupsResponse } from '../responses/TelegramGroupResponse';
-import { TelegramGroupsByTelegramIdResponse } from '../responses/TelegramGroupByTelegramIdResponse';
-import { TelegramGuard } from '../../security/TelegramGuard';
-import { ApiEndpoint } from '../../utils/documentation/decorators';
+import { TelegramGroupMapper } from '../../mappers/TelegramGroupMapper';
+import { TelegramGroupService } from '../services/TelegramGroupService';
 
 @ApiTags('TelegramGroup')
 @Controller({

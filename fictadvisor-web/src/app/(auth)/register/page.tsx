@@ -1,3 +1,4 @@
+import { PaginatedGroupsResponse } from '@fictadvisor/utils/responses';
 import { Box } from '@mui/material';
 import { Metadata } from 'next';
 import Image from 'next/image';
@@ -8,12 +9,11 @@ import imgStyles from '@/app/(auth)/register/RegisterImage.module.scss';
 import * as styles from '@/app/(auth)/register/RegisterPage.styles';
 import Divider from '@/components/common/ui/divider';
 import GroupAPI from '@/lib/api/group/GroupAPI';
-import { GetAllGroupsResponse } from '@/lib/api/group/types/GetAllGroupsResponse';
 import registerMetadata from '@/lib/metadata/register';
 export const metadata: Metadata = registerMetadata;
 
 export interface RegisterPageProps {
-  data: GetAllGroupsResponse | null;
+  data: PaginatedGroupsResponse | null;
 }
 
 export default async function Register() {

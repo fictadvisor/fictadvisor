@@ -1,5 +1,7 @@
 import React, { FC } from 'react';
 import { QueryObserverBaseResult } from 'react-query';
+import { DeleteCommentDTO } from '@fictadvisor/utils/requests';
+import { CommentResponse } from '@fictadvisor/utils/responses';
 import {
   Stack,
   Table,
@@ -13,15 +15,13 @@ import {
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
-import { DeleteCommentBody } from '@/lib/api/teacher/types/DeleteCommentBody';
-import { Comment } from '@/lib/api/teacher/types/GetCommentsWithPaginationResponse';
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 
 import TableActions from './components/table-actions';
 import * as styles from './CommentsTable.styles';
 
 interface AnswersAdminTableProps {
-  comments?: Comment[];
+  comments?: CommentResponse[];
   refetch: QueryObserverBaseResult['refetch'];
 }
 
@@ -30,11 +30,11 @@ const CommentsTable: FC<AnswersAdminTableProps> = ({ comments, refetch }) => {
   const toast = useToast();
 
   const handleDelete = async (
-    data: DeleteCommentBody,
+    data: DeleteCommentDTO,
     disciplineTeacherId: string,
   ) => {
     try {
-      await TeacherAPI.deleteComment(data, disciplineTeacherId);
+      await TeacherAPI.deleteComment(disciplineTeacherId, data);
       await refetch();
       toast.success('Відгук видалено успішно');
     } catch (e) {

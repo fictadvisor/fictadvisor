@@ -1,5 +1,7 @@
 import type { FC } from 'react';
 import { useQuery } from 'react-query';
+import { PermissionValuesDTO } from '@fictadvisor/utils/requests';
+import { MappedGroupResponse } from '@fictadvisor/utils/responses';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { Box, Stack } from '@mui/material';
@@ -11,23 +13,21 @@ import {
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
 import useAuthentication from '@/hooks/use-authentication';
-import PermissionService from '@/lib/services/permisson/PermissionService';
-import { PermissionData } from '@/lib/services/permisson/types';
+import PermissionService from '@/lib/services/permission/PermissionService';
 import { useSchedule } from '@/store/schedule/useSchedule';
-import { Group } from '@/types/group';
 
 import { CheckBoxSection } from './components/checkboxes-section/CheckBoxSection';
 import { DatePicker } from './components/date-picker/DatePicker';
 import * as styles from './CalendarSection.styles';
 
 export interface CalendarSectionProps {
-  groups: Group[];
+  groups: MappedGroupResponse[];
 }
 export const CalendarSection: FC<CalendarSectionProps> = ({ groups }) => {
   const { user } = useAuthentication();
   const groupId = useSchedule(state => state.groupId);
 
-  const permissionValues: PermissionData = {
+  const permissionValues: PermissionValuesDTO = {
     groupId: user?.group?.id,
   };
 

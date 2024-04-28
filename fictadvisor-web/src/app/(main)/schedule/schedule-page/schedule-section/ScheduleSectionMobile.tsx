@@ -3,7 +3,7 @@ import { Box, Typography } from '@mui/material';
 import Skeleton from '@mui/material/Skeleton';
 import moment from 'moment';
 
-import { GetEventBody } from '@/lib/api/schedule/types/GetEventBody';
+import { EventsResponse } from '@/lib/api/schedule/types/EventsResponse';
 import { transformEvents } from '@/lib/api/schedule/utils/transformEvents';
 import { useSchedule } from '@/store/schedule/useSchedule';
 
@@ -24,7 +24,7 @@ const ScheduleSectionMobile = () => {
 
   const eventsPerWeek = useMemo(() => {
     if (!events[week - 1]) return null;
-    const _eventsWeek: GetEventBody = JSON.parse(
+    const _eventsWeek: EventsResponse = JSON.parse(
       JSON.stringify(events[week - 1]),
     );
     _eventsWeek.events = _eventsWeek.events.filter(event => {

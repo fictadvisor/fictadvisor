@@ -36,14 +36,14 @@ export class DisciplineTeacherRepository {
         id,
       },
       include: this.include,
-    });
+    }) as any as DbDisciplineTeacher;
   }
 
   async create (data: Prisma.DisciplineTeacherUncheckedCreateInput): Promise<DbDisciplineTeacher> {
     return this.prisma.disciplineTeacher.create({
       data,
       include: this.include,
-    });
+    }) as any as DbDisciplineTeacher;
   }
 
   async updateById (id: string, data: Prisma.DisciplineTeacherUncheckedUpdateInput): Promise<DbDisciplineTeacher> {
@@ -53,14 +53,14 @@ export class DisciplineTeacherRepository {
       },
       data,
       include: this.include,
-    });
+    }) as any as DbDisciplineTeacher;
   }
 
   async find (where: Prisma.DisciplineTeacherWhereInput): Promise<DbDisciplineTeacher> {
     return this.prisma.disciplineTeacher.findFirst({
       where,
       include: this.include,
-    });
+    }) as any as DbDisciplineTeacher;
   }
 
   async getOrCreate (data: { teacherId: string, disciplineId: string }): Promise<DbDisciplineTeacher> {
@@ -77,13 +77,13 @@ export class DisciplineTeacherRepository {
         id,
       },
       include: this.include,
-    });
+    }) as any as DbDisciplineTeacher;
   }
 
   async findMany (data: Prisma.DisciplineTeacherFindManyArgs): Promise<DbDisciplineTeacher[]> {
     return this.prisma.disciplineTeacher.findMany({
       ...data,
       include: this.include,
-    });
+    }) as any as DbDisciplineTeacher[];
   }
 }

@@ -1,9 +1,9 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
-import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
-import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
-import { NotSelectiveException } from '../../utils/exceptions/NotSelectiveException';
-import { SelectiveDisciplinesDTO } from '../dtos/SelectiveDisciplinesDTO';
+import { SelectiveDisciplinesDTO } from '@fictadvisor/utils/requests';
 import { mapAsync } from '../../utils/ArrayUtil';
+import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
+import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
+import { NotSelectiveException } from '../../utils/exceptions/NotSelectiveException';
 
 @Injectable()
 export class SelectiveDisciplinesPipe implements PipeTransform {

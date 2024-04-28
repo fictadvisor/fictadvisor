@@ -1,60 +1,59 @@
 import {
-  AdminQuestion,
-  QuestionSearchFormFields,
-} from '@/app/admin/questions/common/types';
+  CreateQuestionDTO,
+  QueryAllQuestionDTO,
+  UpdateQuestionDTO,
+} from '@fictadvisor/utils/requests';
+import {
+  PaginatedQuestionsResponse,
+  QuestionResponse,
+  QuestionWithRolesResponse,
+} from '@fictadvisor/utils/responses';
 
 import { client } from '../instance';
 import { getAuthorizationHeader } from '../utils';
 
-import { AddQuestionBody } from './types/AddQuestionBody';
-import { GetAllQuestionsResponse } from './types/GetAllQuestionsResponse';
-import { UpdateQuestionBody } from './types/UpdateQuestionBody';
-
 class QuestionAPI {
-  async getAllQuestions() {
-    const res = await client.get<GetAllQuestionsResponse>('/poll/questions');
-    return res.data;
-  }
-
-  async getPageQuestions(
-    params: Partial<QuestionSearchFormFields>,
-    pageSize?: number,
-    page?: number,
-  ) {
-    const res = await client.get<GetAllQuestionsResponse>('/poll/questions', {
-      params: {
-        ...params,
-        pageSize,
-        page,
+  async getPageQuestions(params: QueryAllQuestionDTO = {}) {
+    const { data } = await client.get<PaginatedQuestionsResponse>(
+      '/poll/questions',
+      {
+        params,
       },
-    });
-    return res.data;
+    );
+    return data;
   }
 
-  async addQuestion(body: AddQuestionBody) {
-    return await client.post('/poll/questions', body, getAuthorizationHeader());
+  async addQuestion(body: CreateQuestionDTO) {
+    const { data } = await client.post<QuestionResponse>(
+      '/poll/questions',
+      body,
+      getAuthorizationHeader(),
+    );
+    return data;
   }
 
   async getQuestion(questionId: string) {
-    const res = await client.get<AdminQuestion>(
+    const { data } = await client.get<QuestionWithRolesResponse>(
       `/poll/questions/${questionId}`,
     );
-    return res.data;
+    return data;
   }
 
-  async updateQuestion(questionId: string, body: UpdateQuestionBody) {
-    return await client.patch(
+  async updateQuestion(questionId: string, body: UpdateQuestionDTO) {
+    const { data } = await client.patch<QuestionResponse>(
       `/poll/questions/${questionId}`,
       body,
       getAuthorizationHeader(),
     );
+    return data;
   }
 
   async deleteQuestion(questionId: string) {
-    await client.delete(
+    const { data } = await client.delete<QuestionResponse>(
       `/poll/questions/${questionId}`,
       getAuthorizationHeader(),
     );
+    return data;
   }
 }
 

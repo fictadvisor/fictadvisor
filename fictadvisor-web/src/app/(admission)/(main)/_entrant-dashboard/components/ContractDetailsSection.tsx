@@ -1,4 +1,6 @@
 import React, { FC } from 'react';
+import { Actions } from '@fictadvisor/utils/enums';
+import { EntrantFullResponse } from '@fictadvisor/utils/responses';
 import { Box, Typography } from '@mui/material';
 
 import ContractApproveForm from '@/app/(admission)/(main)/_entrant-dashboard/components/entrant-approve-form/ContractApproveForm';
@@ -10,13 +12,11 @@ import {
 } from '@/components/common/ui/button-mui/types';
 import Divider from '@/components/common/ui/divider';
 import { DividerTextAlign } from '@/components/common/ui/divider/types';
-import { Actions } from '@/lib/api/contract/types/DeleteEntrantDataBody';
-import { EntrantFuIlResponse } from '@/lib/api/contract/types/EntrantFullResponse';
 
 interface ContractDetailsSectionProps {
-  data: EntrantFuIlResponse;
+  data: EntrantFullResponse;
   setEntrantData: React.Dispatch<
-    React.SetStateAction<EntrantFuIlResponse | null>
+    React.SetStateAction<EntrantFullResponse | null>
   >;
   cb: (action: Actions) => Promise<void>;
 }
@@ -34,7 +34,7 @@ export const ContractDetailsSection: FC<ContractDetailsSectionProps> = ({
           contract: undefined,
         };
 
-        return newData as EntrantFuIlResponse;
+        return newData as unknown as EntrantFullResponse;
       });
     } catch (e) {}
   };

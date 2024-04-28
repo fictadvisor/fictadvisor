@@ -1,16 +1,16 @@
-import { EntrantBody, Fullname } from '@/types/contract';
+import { FullNameWithSpecialtyDTO } from '@fictadvisor/utils/requests';
 
-export const saveLocalStorage = (data: Fullname | null) => {
+export const saveLocalStorage = (data: FullNameWithSpecialtyDTO | null) => {
   localStorage.setItem('entrantAdminPageData', JSON.stringify(data));
 };
 
-export const getLocalStorage = (): EntrantBody | null => {
+export const getLocalStorage = (): FullNameWithSpecialtyDTO | null => {
   const data = localStorage.getItem('entrantAdminPageData');
 
   let parsedData;
   if (data) {
     parsedData = JSON.parse(data);
-    return parsedData as EntrantBody;
+    return parsedData as FullNameWithSpecialtyDTO;
   }
 
   return null;

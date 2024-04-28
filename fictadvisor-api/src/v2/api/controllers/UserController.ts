@@ -1,20 +1,4 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
-import { UserService } from '../services/UserService';
-import { TelegramGuard } from '../../security/TelegramGuard';
-import { ApproveStudentByTelegramDTO } from '../dtos/ApproveDTO';
-import { GiveRoleDTO } from '../dtos/GiveRoleDTO';
-import { CreateSuperheroDTO } from '../dtos/CreateSuperheroDTO';
-import { UserByIdPipe } from '../pipes/UserByIdPipe';
-import { CreateContactDTO } from '../dtos/CreateContactDTO';
-import { UpdateContactDTO } from '../dtos/UpdateContactDTO';
-import { UpdateUserDTO } from '../dtos/UpdateUserDTO';
-import { UpdateStudentDTO } from '../dtos/UpdateStudentDTO';
-import { ContactByUserIdPipe } from '../pipes/ContactByUserIdPipe';
-import { GroupRequestDTO } from '../dtos/GroupRequestDTO';
-import { PERMISSION } from '@fictadvisor/utils/security';
-import { TelegramDTO } from '../dtos/TelegramDTO';
-import { UserMapper } from '../../mappers/UserMapper';
-import { AvatarValidationPipe } from '../pipes/AvatarValidationPipe';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiBadRequestResponse,
@@ -29,26 +13,48 @@ import {
   ApiUnauthorizedResponse,
   ApiUnsupportedMediaTypeResponse,
 } from '@nestjs/swagger';
-import { SelectiveBySemestersResponse } from '../responses/SelectiveBySemestersResponse';
-import { RemainingSelectiveDTO } from '../dtos/RemainingSelectiveDTO';
-import { RemainingSelectiveResponse } from '../responses/RemainingSelectiveResponse';
+import { ApiImplicitFile } from '@nestjs/swagger/dist/decorators/api-implicit-file.decorator';
+import {
+  ApproveStudentByTelegramDTO,
+  GiveRoleDTO,
+  CreateSuperheroDTO,
+  CreateContactDTO,
+  UpdateContactDTO,
+  UpdateUserDTO,
+  UpdateStudentDTO,
+  GroupRequestDTO,
+  TelegramDTO,
+  RemainingSelectivesDTO,
+  SelectiveDisciplinesDTO,
+  UpdateSuperheroDTO,
+  QueryAllUsersDTO,
+  CreateUserDTO,
+} from '@fictadvisor/utils/requests';
+import {
+  SelectivesBySemestersResponse,
+  RemainingSelectivesResponse,
+  FullStudentResponse,
+  OrdinaryStudentResponse,
+  UserResponse,
+  UsersResponse,
+  ContactResponse,
+  ContactsResponse,
+  DisciplineIdsResponse,
+  SuperheroResponse,
+} from '@fictadvisor/utils/responses';
+import { PERMISSION } from '@fictadvisor/utils/security';
+import { ApiEndpoint } from 'src/v2/utils/documentation/decorators';
+import { TelegramGuard } from '../../security/TelegramGuard';
+import { UserByIdPipe } from '../pipes/UserByIdPipe';
+import { ContactByUserIdPipe } from '../pipes/ContactByUserIdPipe';
+import { AvatarValidationPipe } from '../pipes/AvatarValidationPipe';
 import { GroupByIdPipe } from '../pipes/GroupByIdPipe';
 import { ApprovedStudentPipe } from '../pipes/ApprovedStudentPipe';
-import { StudentMapper } from '../../mappers/StudentMapper';
-import { FullStudentResponse, OrdinaryStudentResponse, StudentsResponse } from '../responses/StudentResponse';
-import { FullUserResponse, UserResponse } from '../responses/UserResponse';
-import { ApiImplicitFile } from '@nestjs/swagger/dist/decorators/api-implicit-file.decorator';
 import { SelectiveDisciplinesPipe } from '../pipes/SelectiveDisciplinesPipe';
-import { SelectiveDisciplinesDTO } from '../dtos/SelectiveDisciplinesDTO';
 import { UserByTelegramIdPipe } from '../pipes/UserByTelegramIdPipe';
-import { ContactResponse, ContactsResponse } from '../responses/ContactResponse';
-import { UpdateSuperheroDTO } from '../dtos/UpdateSuperheroDTO';
-import { DisciplineIdsResponse } from '../responses/DisciplineResponse';
-import { SuperheroResponse } from '../responses/SuperheroResponse';
-import { ApiEndpoint } from 'src/v2/utils/documentation/decorators';
-import { UsersResponse } from '../responses/UsersResponse';
-import { QueryAllUsersDTO } from '../dtos/QueryAllUsersDTO';
-import { UserByAdminDTO } from '../dtos/UserDTO';
+import { UserMapper } from '../../mappers/UserMapper';
+import { StudentMapper } from '../../mappers/StudentMapper';
+import { UserService } from '../services/UserService';
 
 @ApiTags('User')
 @Controller({
@@ -93,15 +99,15 @@ export class UserController {
     summary: 'Create a new user by admin',
     permissions: PERMISSION.USERS_CREATE,
   })
-  @Post('/createUser')
-  async createUser (@Body() body: UserByAdminDTO) {
+  @Post()
+  async createUser (@Body() body: CreateUserDTO) {
     const user = await this.userService.createUserByAdmin(body);
     return this.userMapper.getUser(user);
   }
 
   @ApiBearerAuth()
   @ApiOkResponse({
-    type: StudentsResponse,
+    type: FullStudentResponse,
   })
   @ApiBadRequestResponse({
     description: `\n
@@ -304,17 +310,17 @@ export class UserController {
     summary: 'Get user\'s selective disciplines',
     permissions: PERMISSION.USERS_$USERID_SELECTIVE_GET,
   })
-  @Get('/:userId/selective')
-  async getSelective (
+  @Get('/:userId/selectiveDisciplines')
+  async getSelectiveDisciplines (
     @Param('userId', UserByIdPipe) userId: string,
   ) {
-    const dbDisciplines = await this.userService.getSelective(userId);
+    const dbDisciplines = await this.userService.getSelectiveDisciplines(userId);
     return { disciplines: dbDisciplines.map((d) => d.id) };
   }
 
   @ApiBearerAuth()
   @ApiOkResponse({
-    type: SelectiveBySemestersResponse,
+    type: SelectivesBySemestersResponse,
   })
   @ApiBadRequestResponse({
     description: `\n
@@ -341,10 +347,10 @@ export class UserController {
     permissions: PERMISSION.USERS_$USERID_SELECTIVE_GET,
   })
   @Get('/:userId/selectiveBySemesters')
-  async getSelectiveBySemesters (
+  async getSelectivesBySemesters (
     @Param('userId', UserByIdPipe) userId: string,
   ) {
-    return { selective: await this.userService.getSelectiveBySemesters(userId) };
+    return { selectives: await this.userService.getSelectivesBySemesters(userId) };
   }
 
   @ApiBearerAuth()
@@ -453,7 +459,7 @@ export class UserController {
   @Get()
   async getAll (
     @Query() query: QueryAllUsersDTO,
-  ) {
+  ): Promise<UsersResponse> {
     const users = await this.userService.getAll(query);
     const data = this.userMapper.getAll(users.data);
     return {
@@ -998,7 +1004,7 @@ export class UserController {
 
   @ApiBearerAuth()
   @ApiOkResponse({
-    type: RemainingSelectiveResponse,
+    type: RemainingSelectivesResponse,
   })
   @ApiUnauthorizedResponse({
     description: `\n
@@ -1022,12 +1028,12 @@ export class UserController {
     summary: 'Get all selective disciplines available to the user from the whole list',
     permissions: PERMISSION.USERS_$USERID_SELECTIVE_GET,
   })
-  @Get('/:userId/selectiveDisciplines')
-  getRemainingSelective (
+  @Get('/:userId/remainingSelectives')
+  getRemainingSelectives (
     @Param('userId', UserByIdPipe) userId: string,
-    @Query() query: RemainingSelectiveDTO,
+    @Query() query: RemainingSelectivesDTO,
   ) {
-    return this.userService.getRemainingSelectiveForSemester(userId, query);
+    return this.userService.getRemainingSelectivesForSemester(userId, query);
   }
 
   @ApiBearerAuth()

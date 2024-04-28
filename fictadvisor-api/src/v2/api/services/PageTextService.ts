@@ -1,10 +1,13 @@
-import { PageTextRepository } from '../../database/repositories/PageTextRepository';
-import { PageText } from '@prisma/client';
-import { CreatePageTextDTO } from '../dtos/CreatePageTextDTO';
-import { UpdatePageTextDTO, UpdatePageTextsDTO } from '../dtos/UpdatePageTextsDTO';
 import { Injectable } from '@nestjs/common';
+import {
+  CreatePageTextDTO,
+  UpdatePageTextDTO,
+  UpdatePageTextsDTO,
+  QueryAllPageTextsDTO,
+} from '@fictadvisor/utils/requests';
+import { PageTextRepository } from '../../database/repositories/PageTextRepository';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
-import { QueryAllPageTextsDTO } from '../dtos/QueryAllPageTextsDTO';
+import { PageText } from '@prisma/client';
 
 @Injectable()
 export class PageTextService {

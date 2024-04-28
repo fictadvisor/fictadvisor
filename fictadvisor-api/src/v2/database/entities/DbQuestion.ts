@@ -1,4 +1,4 @@
-import { QuestionType } from '@prisma/client';
+import { QuestionType } from '@fictadvisor/utils/enums';
 
 export class DbQuestion {
   id: string;

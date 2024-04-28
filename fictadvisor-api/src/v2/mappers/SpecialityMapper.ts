@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { SpecialityResponse, SpecialityResponses } from '../api/responses/SpecialityResponse';
+import { SpecialityResponse, SpecialitiesResponse } from '@fictadvisor/utils/responses';
 import { DbSpeciality } from '../database/entities/DbSpeciality';
 
 @Injectable()
 export class SpecialityMapper {
-  getAll (specialities: DbSpeciality[]): SpecialityResponses {
+  getAll (specialities: DbSpeciality[]): SpecialitiesResponse {
     return {
       specialities: specialities.map((speciality) => this.get(speciality)),
     };

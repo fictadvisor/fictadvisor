@@ -1,8 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { DbDiscipline } from '../database/entities/DbDiscipline';
 import { SelectiveAmount } from '@prisma/client';
-import { ExtendDisciplineTeachersResponse } from '../api/responses/DisciplineTeachersResponse';
-import { DisciplineAdminResponse } from '../api/responses/DisciplineResponse';
+import {
+  ExtendedDisciplineTeachersResponse,
+  DisciplineAdminResponse,
+  SelectiveDisciplinesWithAmountResponse, SelectiveDisciplinesResponse,
+} from '@fictadvisor/utils/responses';
+import { AcademicStatus, ScientificDegree, Position } from '@fictadvisor/utils/enums';
 import { DbDisciplineTeacher } from '../database/entities/DbDisciplineTeacher';
 
 @Injectable()
@@ -12,7 +16,7 @@ export class DisciplineMapper {
     return disciplines.map((discipline) => this.getDisciplineWithTeachers(discipline));
   }
 
-  getDisciplineWithTeachers (discipline: DbDiscipline): ExtendDisciplineTeachersResponse {
+  getDisciplineWithTeachers (discipline: DbDiscipline): ExtendedDisciplineTeachersResponse {
     return {
       id: discipline.id,
       subject: {
@@ -41,9 +45,9 @@ export class DisciplineMapper {
         lastName: teacher.lastName,
         description: teacher.description,
         avatar: teacher.avatar,
-        academicStatus: teacher.academicStatus,
-        scientificDegree: teacher.scientificDegree,
-        position: teacher.position,
+        academicStatus: teacher.academicStatus as AcademicStatus,
+        scientificDegree: teacher.scientificDegree as ScientificDegree,
+        position: teacher.position as Position,
         rating: +teacher.rating,
         disciplineTeacherId: disciplineTeacher.id,
         roles: disciplineTeacher.roles.map((r) => r.role),
@@ -106,7 +110,7 @@ export class DisciplineMapper {
     return periods;
   }
 
-  getSelectiveWithAmount (disciplines: DbDiscipline[], amounts: SelectiveAmount[]) {
+  getSelectivesWithAmount (disciplines: DbDiscipline[], amounts: SelectiveAmount[]) {
     return amounts.map(({ year, semester, amount }) => {
       const names = [];
       disciplines.map((discipline) => {
@@ -122,7 +126,8 @@ export class DisciplineMapper {
     });
   }
 
-  getSelective (disciplines: DbDiscipline[], withAmount = false) {
+  getSelectiveDisciplines (disciplines: DbDiscipline[], withAmount = false): 
+    SelectiveDisciplinesWithAmountResponse[] | SelectiveDisciplinesResponse[] {
     const result = [];
     disciplines.forEach((discipline) => {
       if (!result.some(({ semester, year }) => semester === discipline.semester && year === discipline.year)) {
@@ -136,7 +141,7 @@ export class DisciplineMapper {
           year: discipline.year,
           semester: discipline.semester,
           amount,
-          selective: disciplines
+          disciplines: disciplines
             .filter(({ year, semester }) => year === discipline.year && semester === discipline.semester)
             .map((d) => ({ id: d.id, name: d.subject.name })),
         });

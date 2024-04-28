@@ -1,22 +1,4 @@
 import { Body, Controller, Delete, Get, Param, Post, Query, Patch } from '@nestjs/common';
-import { TeacherService } from '../services/TeacherService';
-import { TeacherMapper } from '../../mappers/TeacherMapper';
-import { QueryAllTeacherDTO } from '../dtos/QueryAllTeacherDTO';
-import { CreateTeacherDTO } from '../dtos/CreateTeacherDTO';
-import { UpdateTeacherDTO } from '../dtos/UpdateTeacherDTO';
-import { CreateContactDTO } from '../dtos/CreateContactDTO';
-import { UpdateContactDTO } from '../dtos/UpdateContactDTO';
-import { Access } from 'src/v2/security/Access';
-import { PERMISSION } from '@fictadvisor/utils/security';
-import { TeacherByIdPipe } from '../pipes/TeacherByIdPipe';
-import { ContactByNamePipe } from '../pipes/ContactByNamePipe';
-import { SubjectByIdPipe } from '../pipes/SubjectByIdPipe';
-import { ResponseQueryDTO } from '../dtos/ResponseQueryDTO';
-import { PollService } from '../services/PollService';
-import { QuestionMapper } from '../../mappers/QuestionMapper';
-import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
-import { UserByIdPipe } from '../pipes/UserByIdPipe';
-import { CommentsQueryDTO } from '../dtos/CommentsQueryDTO';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -27,21 +9,44 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { TeacherRolesResponse } from '../responses/TeacherRolesResponse';
-import { SubjectsResponse } from '../responses/SubjectsResponse';
-import { DisciplineTeacherAndSubjectResponse } from '../responses/DisciplineTeacherAndSubjectResponse';
-import { ContactResponse, ContactsResponse } from '../responses/ContactResponse';
-import { MarksResponse } from '../responses/MarksResponse';
-import { PaginatedQuestionCommentsResponse } from '../responses/PaginatedQuestionCommentsResponse';
-import { TeacherWithContactsResponse } from '../responses/TeacherWithContactsResponse';
-import { CathedraByIdPipe } from '../pipes/CathedraByIdPipe';
-import { TeacherWithContactsFullResponse } from '../responses/TeacherWithContactsFullResponse';
-import { PaginatedTeachersResponse } from '../responses/PaginatedTeachersResponse';
-import { CommentsQueryPipe } from '../pipes/CommentsQueryPipe';
+import {
+  QueryAllTeacherDTO,
+  CreateTeacherDTO,
+  UpdateTeacherDTO,
+  CreateContactDTO,
+  UpdateContactDTO,
+  ResponseQueryDTO,
+  CommentsQueryDTO,
+  ComplaintDTO,
+} from '@fictadvisor/utils/requests';
+import {
+  TeacherRolesResponse,
+  SubjectsResponse,
+  DisciplineTeacherAndSubjectResponse,
+  ContactResponse,
+  ContactsResponse,
+  MarksResponse,
+  PaginatedQuestionCommentsResponse,
+  TeacherWithContactsResponse,
+  TeacherWithContactsFullResponse,
+  PaginatedTeachersResponse,
+  TeacherWithRolesAndCathedrasResponse,
+} from '@fictadvisor/utils/responses';
+import { PERMISSION } from '@fictadvisor/utils/security';
+import { Access } from 'src/v2/security/Access';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
+import { TeacherByIdPipe } from '../pipes/TeacherByIdPipe';
+import { ContactByNamePipe } from '../pipes/ContactByNamePipe';
+import { SubjectByIdPipe } from '../pipes/SubjectByIdPipe';
+import { UserByIdPipe } from '../pipes/UserByIdPipe';
+import { CathedraByIdPipe } from '../pipes/CathedraByIdPipe';
+import { CommentsQueryPipe } from '../pipes/CommentsQueryPipe';
 import { AllTeachersPipe } from '../pipes/AllTeachersPipe';
-import { ComplaintDTO } from '../dtos/ComplaintDTO';
-import { TeacherWithRolesAndCathedrasResponse } from '../responses/TeacherWithRolesAndCathedrasResponse';
+import { TeacherMapper } from '../../mappers/TeacherMapper';
+import { QuestionMapper } from '../../mappers/QuestionMapper';
+import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
+import { TeacherService } from '../services/TeacherService';
+import { PollService } from '../services/PollService';
 
 @ApiTags('Teachers')
 @Controller({
@@ -141,7 +146,7 @@ export class TeacherController {
 
   @ApiBearerAuth()
   @ApiOkResponse({
-    type: DisciplineTeacherAndSubjectResponse,
+    type: [DisciplineTeacherAndSubjectResponse],
   })
   @ApiBadRequestResponse({
     description: `\n
@@ -183,7 +188,7 @@ export class TeacherController {
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
     @Query('notAnswered') notAnswered: boolean,
     @Query('userId', UserByIdPipe) userId: string,
-  ) {
+  ): Promise<DisciplineTeacherAndSubjectResponse[]> {
     const disciplineTeachers = await this.teacherService.getUserDisciplineTeachers(teacherId, userId, notAnswered);
     return this.disciplineTeacherMapper.getDisciplines(disciplineTeachers);
   }

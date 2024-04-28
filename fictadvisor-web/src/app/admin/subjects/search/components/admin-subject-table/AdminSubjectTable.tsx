@@ -1,13 +1,13 @@
 import React, { FC } from 'react';
+import { SubjectCountResponse } from '@fictadvisor/utils/responses';
 import { Table, TableCell, TableHead, TableRow } from '@mui/material';
 
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
-import { Subject } from '@/types/subject';
 
 import TableActions from './components/table-actions';
 
 interface SubjectsAdminSearchProps {
-  subjects: Subject[];
+  subjects: SubjectCountResponse[];
   handleDelete: (subjectId: string) => Promise<void>;
 }
 const AdminSubjectTable: FC<SubjectsAdminSearchProps> = ({

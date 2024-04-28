@@ -1,24 +1,25 @@
+import {
+  QueryAllPageTextsDTO,
+  UpdatePageTextsDTO,
+} from '@fictadvisor/utils/requests';
+import { PageTextsResponse } from '@fictadvisor/utils/responses';
+
 import { client } from '@/lib/api/instance';
-import { GetPageTextsResponse } from '@/lib/api/page-texts/types/GetPageTextsResponse';
 import { getAuthorizationHeader } from '@/lib/api/utils';
 
 class PageTextsAPI {
-  async editPageTexts(data: object[]) {
-    return await client.patch(
+  async editPageTexts(body: UpdatePageTextsDTO) {
+    return await client.patch<PageTextsResponse>(
       '/pageTexts',
-      { pageTexts: data },
+      body,
       getAuthorizationHeader(),
     );
   }
-  async getAll(keys: string[]) {
-    let query = '';
-    keys.forEach((key, index) => {
-      query += `keys[${index}]=${key}&`;
+  async getAll(params: QueryAllPageTextsDTO) {
+    const { data } = await client.get<PageTextsResponse>(`/pageTexts`, {
+      params,
+      ...getAuthorizationHeader(),
     });
-    const { data } = await client.get<GetPageTextsResponse>(
-      `/pageTexts?${query}`,
-      getAuthorizationHeader(),
-    );
     return data;
   }
 }

@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState } from 'react';
 import { FC } from 'react';
+import { QueryAllDisciplineTeacherForPollDTO } from '@fictadvisor/utils/requests';
 import {
   BarsArrowDownIcon,
   BarsArrowUpIcon,
@@ -26,12 +27,12 @@ import theme from '@/styles/theme';
 
 import { filterOptions, teachersRoles } from './constants';
 import * as styles from './PollSearchForm.styles';
-import { PollSearchFormFields } from './types';
 
 import stylesScss from './PollSearchForm.module.scss';
+
 export interface PollSearchFormProps {
-  onSubmit: (values: Partial<PollSearchFormFields>) => void;
-  initialValues: PollSearchFormFields;
+  onSubmit: (values: QueryAllDisciplineTeacherForPollDTO) => void;
+  initialValues: QueryAllDisciplineTeacherForPollDTO;
   searchPlaceholder: string;
   localStorageName?: string;
 }
@@ -49,7 +50,8 @@ const PollSearchForm: FC<PollSearchFormProps> = ({
   const isTablet = useMediaQuery(theme.breakpoints.down('tablet'));
   const [collapsed, setCollapsed] = useState(false);
 
-  const formikRef = useRef<FormikProps<PollSearchFormFields>>(null);
+  const formikRef =
+    useRef<FormikProps<QueryAllDisciplineTeacherForPollDTO>>(null);
 
   const handleTeacherRoleChange = useCallback((teacherRole: string) => {
     formikRef.current?.setFieldValue('roles', teacherRole);
@@ -99,7 +101,7 @@ const PollSearchForm: FC<PollSearchFormProps> = ({
             <>
               <Box sx={styles.dropdown}>
                 <CheckboxesDropdown
-                  selected={values.roles.map(role => ({
+                  selected={values.roles!.map(role => ({
                     value: role,
                     label: role,
                   }))}
@@ -117,7 +119,7 @@ const PollSearchForm: FC<PollSearchFormProps> = ({
                   placeholder="Іменем"
                   onChange={handleSortChange}
                   showRemark={false}
-                  value={values.sort}
+                  value={values.sort!}
                   options={filterOptions}
                   disableClearable
                 />

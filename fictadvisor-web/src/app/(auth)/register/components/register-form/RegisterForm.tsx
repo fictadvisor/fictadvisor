@@ -1,4 +1,5 @@
 import React, { FC, useCallback } from 'react';
+import { PaginatedGroupsResponse } from '@fictadvisor/utils/responses';
 import { Box } from '@mui/material';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/navigation';
@@ -17,7 +18,6 @@ import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import AuthAPI from '@/lib/api/auth/AuthAPI';
-import { GetAllGroupsResponse } from '@/lib/api/group/types/GetAllGroupsResponse';
 import AuthService from '@/lib/services/auth';
 import StorageUtil from '@/lib/utils/StorageUtil';
 
@@ -26,7 +26,8 @@ import * as stylesMUI from './RegisterForm.styles';
 import { validationSchema } from './validation';
 
 import styles from './FormStyles.module.scss';
-const RegisterForm: FC<Omit<GetAllGroupsResponse, 'pagination'>> = ({
+
+const RegisterForm: FC<Omit<PaginatedGroupsResponse, 'pagination'>> = ({
   groups,
 }) => {
   const { displayError } = useToastError();

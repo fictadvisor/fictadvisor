@@ -1,7 +1,8 @@
-import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
-import { AdminContractBody } from '@/lib/api/contract/types/AdminContractBody';
+import { CreateContractDTO } from '@fictadvisor/utils/requests';
 
-export const initialValues: AdminContractBody = {
+import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
+
+export const initialValues: CreateContractDTO = {
   entrant: {
     firstName: '',
     middleName: '',

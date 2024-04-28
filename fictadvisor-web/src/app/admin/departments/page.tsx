@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
+import { QueryAllCathedrasDTO } from '@fictadvisor/utils/requests';
 import { Box, TablePagination } from '@mui/material';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
@@ -8,7 +9,6 @@ import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import AdminDepartmentsSearch from '@/app/admin/departments/search/components/admin-departments-search';
 import AdminDepartmentsTable from '@/app/admin/departments/search/components/admin-departments-table';
 import { AdminDepartmentsInitialValues } from '@/app/admin/departments/search/constants';
-import { AdminDepartmentSearchFields } from '@/app/admin/departments/search/types';
 import LoadPage from '@/components/common/ui/load-page';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
@@ -16,15 +16,20 @@ import CathedraAPI from '@/lib/api/cathedras/CathedraAPI';
 
 const Page = () => {
   const [pageSize, setPageSize] = useState(10);
-  const [curPage, setCurPage] = useState(0);
-  const [params, setParams] = useState<AdminDepartmentSearchFields>(
+  const [currPage, setCurrPage] = useState(0);
+  const [params, setParams] = useState<QueryAllCathedrasDTO>(
     AdminDepartmentsInitialValues,
   );
   const { displayError } = useToastError();
   const toast = useToast();
   const { data, refetch, isLoading } = useQuery(
-    ['teachers', params, curPage, pageSize],
-    () => CathedraAPI.getAll(params, pageSize, curPage),
+    ['teachers', params, currPage, pageSize],
+    () =>
+      CathedraAPI.getAll({
+        ...params,
+        pageSize,
+        page: currPage,
+      }),
     useQueryAdminOptions,
   );
 
@@ -39,10 +44,10 @@ const Page = () => {
   if (!data || !cathedrasData)
     throw new Error('Something went wrong loading cathedras');
 
-  const handleChange = (values: AdminDepartmentSearchFields) => {
+  const handleChange = (values: QueryAllCathedrasDTO) => {
     setParams(prevValues => {
       if (JSON.stringify(values) !== JSON.stringify(prevValues)) {
-        setCurPage(0);
+        setCurrPage(0);
         return values;
       }
       return prevValues;
@@ -53,7 +58,7 @@ const Page = () => {
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setPageSize(Number(event.target.value));
-    setCurPage(0);
+    setCurrPage(0);
   };
 
   const handleDelete = async (departmentId: string) => {
@@ -77,9 +82,9 @@ const Page = () => {
         handleDelete={handleDelete}
       />
       <TablePagination
-        page={curPage}
+        page={currPage}
         count={data.pagination.totalAmount}
-        onPageChange={(e, page) => setCurPage(page)}
+        onPageChange={(e, page) => setCurrPage(page)}
         rowsPerPage={pageSize}
         onRowsPerPageChange={e => handleRowsPerPageChange(e)}
         sx={stylesAdmin.pagination}

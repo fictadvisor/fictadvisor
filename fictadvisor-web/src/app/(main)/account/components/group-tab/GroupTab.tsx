@@ -1,5 +1,6 @@
 import React, { FC, useState } from 'react';
 import { useQuery } from 'react-query';
+import { GroupRoles, State } from '@fictadvisor/utils/enums';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import { ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/outline';
 import { Box, Typography, useMediaQuery } from '@mui/material';
@@ -26,7 +27,6 @@ import groupAPI from '@/lib/api/group/GroupAPI';
 import GroupService from '@/lib/services/group/GroupService';
 import { Order } from '@/lib/services/group/types/OrderEnum';
 import theme from '@/styles/theme';
-import { UserGroupState } from '@/types/user';
 
 import * as styles from './GroupTab.styles';
 
@@ -73,8 +73,8 @@ const GroupTab: FC = () => {
     );
 
   if (
-    user?.group?.state === UserGroupState.DECLINED ||
-    user?.group?.state === UserGroupState.PENDING
+    user?.group?.state === State.DECLINED ||
+    user?.group?.state === State.PENDING
   )
     return <NoGroupBlock />;
 
@@ -105,7 +105,7 @@ const GroupTab: FC = () => {
       <StudentsTable
         refetch={refetch}
         permissions={data.permissions}
-        role={user.group.role}
+        role={user.group.role as keyof typeof GroupRoles}
         rows={transformStudentsData(data.students)}
         onSortButtonClick={handleSortButtonClick}
         order={order}

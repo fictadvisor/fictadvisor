@@ -1,65 +1,66 @@
-import { AdminSearchFormFields } from 'src/app/admin/teachers/search/types';
+import {
+  CommentsQueryDTO,
+  ComplaintDTO,
+  CreateContactDTO,
+  CreateTeacherDTO,
+  DeleteCommentDTO,
+  QueryAllCommentsDTO,
+  QueryAllTeacherDTO,
+  ResponseQueryDTO,
+  UpdateCommentDTO,
+  UpdateContactDTO,
+  UpdateTeacherDTO,
+} from '@fictadvisor/utils/requests';
+import {
+  CommentResponse,
+  ContactResponse,
+  DisciplineTeacherAndSubjectResponse,
+  MarksResponse,
+  PaginatedCommentsResponse,
+  PaginatedQuestionCommentsResponse,
+  PaginatedTeachersResponse,
+  SubjectsResponse,
+  TeacherWithContactsFullResponse,
+  TeacherWithContactsResponse,
+  TeacherWithRolesAndCathedrasResponse,
+} from '@fictadvisor/utils/responses';
 
-import { Complaint } from '@/app/(main)/(search-pages)/teachers/[teacherId]/personal-teacher-tabs/components/complaint-popup/types';
-import { CommentsAdminSearchFormFields } from '@/app/admin/comments/common/types';
-import { ChangeCommentBody } from '@/lib/api/teacher/types/ChangeCommentBody';
-import { DeleteCommentBody } from '@/lib/api/teacher/types/DeleteCommentBody';
-import { GetCommentsWithPaginationResponse } from '@/lib/api/teacher/types/GetCommentsWithPaginationResponse';
-import { GetTeacherCommentsResponse } from '@/lib/api/teacher/types/GetTeacherCommentsResponse';
-import { GetTeacherDisciplinesResponse } from '@/lib/api/teacher/types/GetTeacherDisciplinesResponse';
-import { GetTeacherMarksResponse } from '@/lib/api/teacher/types/GetTeacherMarksResponse';
-import { GetTeachersResponse } from '@/lib/api/teacher/types/GetTeachersResponse';
-import { GetTeacherSubjectsResponse } from '@/lib/api/teacher/types/GetTeacherSubjectsResponse';
 import { getAuthorizationHeader } from '@/lib/api/utils';
-import { Teacher, TeacherWithSubject } from '@/types/teacher';
 
 import { client } from '../instance';
 
-import { CreateContactsBody } from './types/CreateContactsBody';
-import { CreateTeacherBody } from './types/CreateTeacherBody';
-import { EditContactsBody } from './types/EditContactsBody';
-import { EditPersonalInfoBody } from './types/EditPersonalInfoBody';
-
 class TeacherAPI {
-  async get(teacherId: string): Promise<Teacher> {
-    const { data } = await client.get(
+  async get(teacherId: string): Promise<TeacherWithContactsResponse> {
+    const { data } = await client.get<TeacherWithContactsResponse>(
       `/teachers/${teacherId}`,
       getAuthorizationHeader(),
     );
     return data;
   }
 
-  async getAdminAll(
-    params: Partial<AdminSearchFormFields> = {},
-    pageSize?: number,
-    page?: number,
-  ) {
-    const { data } = await client.get<GetTeachersResponse>('/teachers', {
-      params: {
-        ...params,
-        pageSize,
-        page,
-      },
+  async getAll(params: QueryAllTeacherDTO = {}) {
+    const { data } = await client.get<PaginatedTeachersResponse>('/teachers', {
+      params,
     });
     return data;
   }
 
   async getTeacherSubjects(teacherId: string) {
-    const { data } = await client.get<GetTeacherSubjectsResponse>(
+    const { data } = await client.get<SubjectsResponse>(
       `/teachers/${teacherId}/subjects`,
     );
     return data;
   }
 
-  async getTeacherSubject(teacherId: string, subjectId: string) {
-    const { data } = await client.get<TeacherWithSubject>(
+  async getTeacherWithSubject(teacherId: string, subjectId: string) {
+    const { data } = await client.get<TeacherWithContactsFullResponse>(
       `/teachers/${teacherId}/subjects/${subjectId}`,
     );
     return data;
   }
 
-  async create(body: CreateTeacherBody) {
-    const { data } = await client.post<Omit<Teacher, 'contacts'>>(
+  async create(body: CreateTeacherDTO) {
+    const { data } = await client.post<TeacherWithRolesAndCathedrasResponse>(
       `/teachers`,
       body,
       getAuthorizationHeader(),
@@ -67,12 +68,12 @@ class TeacherAPI {
     return data;
   }
 
-  async delete(teacherId: string) {
+  async delete(teacherId: string): Promise<void> {
     await client.delete(`/teachers/${teacherId}`, getAuthorizationHeader());
   }
 
-  async editPersonalInfo(teacherId: string, body: EditPersonalInfoBody) {
-    const { data } = await client.patch(
+  async editPersonalInfo(teacherId: string, body: UpdateTeacherDTO) {
+    const { data } = await client.patch<TeacherWithRolesAndCathedrasResponse>(
       `/teachers/${teacherId}`,
       body,
       getAuthorizationHeader(),
@@ -80,75 +81,47 @@ class TeacherAPI {
     return data;
   }
 
-  async getTeacherMarks(
-    teacherId: string,
-    subjectId?: string,
-    semester?: number,
-    year?: number,
-  ) {
-    const { data } = await client.get<GetTeacherMarksResponse>(
+  async getTeacherMarks(teacherId: string, params: ResponseQueryDTO = {}) {
+    const { data } = await client.get<MarksResponse>(
       `/teachers/${teacherId}/marks`,
       {
-        params: {
-          semester,
-          subjectId,
-          year,
-        },
+        params,
       },
     );
     return data;
   }
 
-  async getTeacherComments(
-    teacherId: string,
-    subjectId?: string,
-    semester?: number,
-    year?: number,
-    sortBy?: string,
-  ) {
-    const { data } = await client.get<GetTeacherCommentsResponse>(
+  async getTeacherComments(teacherId: string, params: CommentsQueryDTO = {}) {
+    const { data } = await client.get<PaginatedQuestionCommentsResponse>(
       `/teachers/${teacherId}/comments`,
       {
-        params: {
-          semester,
-          subjectId,
-          year,
-          sortBy,
-        },
+        params,
       },
     );
     return data;
   }
 
-  async getComments(
-    page: number,
-    params: Partial<CommentsAdminSearchFormFields> = {},
-    pageSize?: number,
-  ) {
-    const { data } = await client.get<GetCommentsWithPaginationResponse>(
+  async getComments(params: QueryAllCommentsDTO) {
+    const { data } = await client.get<PaginatedCommentsResponse>(
       '/disciplineTeachers/comments',
       {
-        params: {
-          ...params,
-          page,
-          pageSize,
-        },
+        params,
         ...getAuthorizationHeader(),
       },
     );
     return data;
   }
 
-  async deleteComment(body: DeleteCommentBody, disciplineTeacherId: string) {
-    const { data } = await client.delete(
+  async deleteComment(disciplineTeacherId: string, body: DeleteCommentDTO) {
+    const { data } = await client.delete<CommentResponse>(
       `/disciplineTeachers/${disciplineTeacherId}/comments`,
       { data: body, ...getAuthorizationHeader() },
     );
     return data;
   }
 
-  async updateComment(body: ChangeCommentBody, disciplineTeacherId: string) {
-    const { data } = await client.patch(
+  async updateComment(disciplineTeacherId: string, body: UpdateCommentDTO) {
+    const { data } = await client.patch<CommentResponse>(
       `/disciplineTeachers/${disciplineTeacherId}/comments`,
       body,
       getAuthorizationHeader(),
@@ -156,8 +129,8 @@ class TeacherAPI {
     return data;
   }
 
-  async createTeacherContacts(teacherId: string, body: CreateContactsBody) {
-    const { data } = await client.post(
+  async createTeacherContacts(teacherId: string, body: CreateContactDTO) {
+    const { data } = await client.post<ContactResponse>(
       `/teachers/${teacherId}/contacts`,
       body,
       getAuthorizationHeader(),
@@ -168,9 +141,9 @@ class TeacherAPI {
   async editTeacherContacts(
     teacherId: string,
     name: string,
-    body: EditContactsBody,
+    body: UpdateContactDTO,
   ) {
-    const { data } = await client.patch(
+    const { data } = await client.patch<ContactResponse>(
       `/teachers/${teacherId}/contacts/${name}`,
       body,
       getAuthorizationHeader(),
@@ -179,16 +152,16 @@ class TeacherAPI {
   }
 
   async editTeacherCathedra(teacherId: string, cathedraId: string) {
-    const { data } = await client.patch(
+    const { data } = await client.patch<TeacherWithContactsFullResponse>(
       `/teachers/${teacherId}/cathedra/${cathedraId}`,
-      null,
+      {},
       getAuthorizationHeader(),
     );
     return data;
   }
 
   async deleteTeacherCathedra(teacherId: string, cathedraId: string) {
-    const { data } = await client.delete(
+    const { data } = await client.delete<TeacherWithContactsFullResponse>(
       `/teachers/${teacherId}/cathedra/${cathedraId}`,
       getAuthorizationHeader(),
     );
@@ -200,7 +173,7 @@ class TeacherAPI {
     notAnswered?: boolean,
     userId?: string,
   ) {
-    const { data } = await client.get<GetTeacherDisciplinesResponse>(
+    const { data } = await client.get<DisciplineTeacherAndSubjectResponse[]>(
       `/teachers/${teacherId}/disciplines`,
       {
         ...getAuthorizationHeader(),
@@ -221,8 +194,8 @@ class TeacherAPI {
     );
   }
 
-  async postTeacherComplaint(teacherId: string, complaint: Complaint) {
-    return await client.post<Complaint>(
+  async postTeacherComplaint(teacherId: string, complaint: ComplaintDTO) {
+    return await client.post(
       `/teachers/${teacherId}/sendComplaint`,
       complaint,
       getAuthorizationHeader(),

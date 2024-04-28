@@ -37,7 +37,7 @@ const CreatePassword: FC<TokenParams> = ({ params }) => {
     },
   );
   if (!isFetching) {
-    if (!data.isAvailable) {
+    if (!data?.isAvailable) {
       void router.push('/password-recovery/invalid');
     }
   }
@@ -45,7 +45,7 @@ const CreatePassword: FC<TokenParams> = ({ params }) => {
   return (
     <Box sx={styles.container}>
       <Box sx={styles.content}>
-        {isFetching || !data.isAvailable ? (
+        {isFetching || !data?.isAvailable ? (
           <Progress />
         ) : (
           <>

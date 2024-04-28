@@ -15,18 +15,18 @@ export class RoleRepository {
     userRoles: true,
   };
 
-  create (data: Prisma.RoleUncheckedCreateInput) {
+  async create (data: Prisma.RoleUncheckedCreateInput) {
     return this.prisma.role.create({
       data,
       include: this.include,
-    });
+    }) as any as DbRole;
   }
 
   async delete (where: Prisma.RoleWhereUniqueInput) {
     return this.prisma.role.delete({
       where,
       include: this.include,
-    });
+    }) as any as DbRole;
   }
 
   async deleteById (id:string) {
@@ -35,13 +35,13 @@ export class RoleRepository {
         id,
       },
       include: this.include,
-    });
+    }) as any as DbRole;
   }
 
   async deleteMany (where: Prisma.RoleWhereInput) {
     return this.prisma.role.deleteMany({
       where,
-    });
+    }) as any as DbRole[];
   }
   
   async update (where: Prisma.RoleWhereUniqueInput, data: Prisma.RoleUncheckedUpdateInput) {
@@ -49,7 +49,7 @@ export class RoleRepository {
       where,
       data,
       include: this.include,
-    });
+    }) as any as DbRole;
   }
   
   async updateById (id: string, data: Prisma.RoleUncheckedUpdateInput) {
@@ -59,37 +59,37 @@ export class RoleRepository {
       },
       data,
       include: this.include,
-    });
+    }) as any as DbRole;
   }
 
   async updateMany (where: Prisma.RoleWhereInput, data: Prisma.RoleUncheckedUpdateInput) {
     return this.prisma.role.updateMany({
       where,
       data,
-    });
+    }) as any as DbRole[];
   }
 
-  find (where: Prisma.RoleWhereInput) {
+  async find (where: Prisma.RoleWhereInput) {
     return this.prisma.role.findFirst({
       where,
       include: this.include,
-    });
+    }) as any as DbRole;
   }
 
-  findById (id: string): Promise<DbRole> {
+  async findById (id: string): Promise<DbRole> {
     return this.prisma.role.findFirst({
       where: {
         id,
       },
       include: this.include,
-    });
+    }) as any as DbRole;
   }
   
-  findMany (args?: Prisma.RoleFindManyArgs) {
+  async findMany (args?: Prisma.RoleFindManyArgs) {
     return this.prisma.role.findMany({
       include: this.include,
       ...args,
-    }) as unknown as Promise<DbRole[]>;
+    }) as any as DbRole[];
   }
 
   async count (data: Prisma.RoleCountArgs) {

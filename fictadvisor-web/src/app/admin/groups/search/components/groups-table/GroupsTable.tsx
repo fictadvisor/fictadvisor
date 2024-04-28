@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import { MappedGroupResponse } from '@fictadvisor/utils/responses';
 import {
   Stack,
   Table,
@@ -14,12 +15,11 @@ import { CathedraColors } from '@/components/common/ui/cards/card-roles/CardRole
 import Tag from '@/components/common/ui/tag';
 import { TagSize, TagVariant } from '@/components/common/ui/tag/types';
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
-import { Group } from '@/types/group';
 
 import TableActions from './components/table-actions';
 
 interface GroupsTableProps {
-  groups: Group[];
+  groups: MappedGroupResponse[];
   deleteGroup: (id: string) => Promise<void>;
 }
 

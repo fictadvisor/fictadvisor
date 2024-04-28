@@ -1,4 +1,6 @@
 import React, { FC, useEffect, useState } from 'react';
+import { SortQACParam } from '@fictadvisor/utils/enums';
+import { QueryAllCathedrasDTO } from '@fictadvisor/utils/requests';
 import {
   BarsArrowDownIcon,
   BarsArrowUpIcon,
@@ -26,10 +28,9 @@ import {
   AdminDepartmentsInitialValues,
   AdminDepartmentsSortOptions,
 } from '../../constants';
-import { AdminDepartmentSearchFields } from '../../types';
 
 interface AdminDepartmentSearchProps {
-  onSubmit: (values: AdminDepartmentSearchFields) => void;
+  onSubmit: (values: QueryAllCathedrasDTO) => void;
   cathedras: Cathedra[];
 }
 
@@ -37,16 +38,16 @@ const AdminDepartmentsSearch: FC<AdminDepartmentSearchProps> = ({
   onSubmit,
   cathedras,
 }) => {
-  const [values, setValues] = useState<AdminDepartmentSearchFields>(
+  const [values, setValues] = useState<QueryAllCathedrasDTO>(
     AdminDepartmentsInitialValues,
   );
   const [search, setSearch] = useState<string>('');
-  const [sort, setSort] = useState<string>('name');
+  const [sort, setSort] = useState<SortQACParam>(SortQACParam.NAME);
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
   const [divisions, setDivisions] = useState<CheckboxesDropdownOption[]>([]);
 
   const handleFormSubmit = () => {
-    const newFaculties = divisions.map(division => division.id) as string[];
+    const newFaculties = divisions.map(division => division.id!);
     setValues({
       ...values,
       search,
@@ -73,7 +74,7 @@ const AdminDepartmentsSearch: FC<AdminDepartmentSearchProps> = ({
   };
 
   const handleSortChange = (value: string) => {
-    setSort(value);
+    setSort(value as SortQACParam);
   };
 
   const handleFacultiesChange = (event: SelectChangeEvent) => {

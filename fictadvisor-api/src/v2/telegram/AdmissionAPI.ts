@@ -1,6 +1,6 @@
 import axios from 'axios';
 import * as process from 'process';
-import { EntrantWithContractResponse } from '../api/responses/EntrantWithContractResponse';
+import { EntrantWithContractResponse } from '@fictadvisor/utils/responses';
 
 const ADMISSION_BOT_API = process.env.ADMISSION_BOT_API;
 const ADMISSION_BOT_TOKEN = process.env.ADMISSION_BOT_TOKEN;

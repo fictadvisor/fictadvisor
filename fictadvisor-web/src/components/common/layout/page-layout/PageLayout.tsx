@@ -2,9 +2,6 @@ import React, { ReactNode } from 'react';
 import Head from 'next/head';
 import Script from 'next/script';
 
-import AdminPanelLayout from '@/components/common/layout/admin-panel-layout/AdminPanelLayout';
-import config from '@/config';
-
 import Footer from '../footer/Footer';
 import Header from '../header/Header';
 

@@ -1,8 +1,8 @@
+import { QueryAllDisciplinesDTO } from '@fictadvisor/utils/requests';
+
 import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
 
-import { DisciplinesAdminSearchFormFields } from '../types';
-
-export const initialValues: DisciplinesAdminSearchFormFields = {
+export const initialValues: QueryAllDisciplinesDTO = {
   search: '',
   sort: 'name',
   order: 'desc',
@@ -16,8 +16,6 @@ export const sortOptions: DropDownOption[] = [
   { id: 'semester', label: 'За роком і семестром' },
   { id: 'group', label: 'За групою' },
 ];
-
-export const semesterValues = [1, 2];
 
 export const disciplineTeacherInitialValues = {
   id: '',

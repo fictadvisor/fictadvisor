@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import { DisciplineAdminResponse } from '@fictadvisor/utils/responses';
 import {
   Stack,
   Table,
@@ -11,12 +12,11 @@ import {
 
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
-import { AdminDiscipline } from '@/types/discipline';
 
 import TableActions from './components/table-actions';
 
 interface DisciplinesAdminSearchProps {
-  disciplines: AdminDiscipline[];
+  disciplines: DisciplineAdminResponse[];
   deleteDiscipline: (id: string) => Promise<void>;
 }
 
@@ -38,7 +38,7 @@ const DisciplinesTable: FC<DisciplinesAdminSearchProps> = ({
           <TableRow key={discipline.id}>
             <TableCell sx={mergeSx(stylesAdmin.bodyItem, { width: '45%' })}>
               <Stack sx={stylesAdmin.tableColumn}>
-                <Typography>{discipline.subject.name}</Typography>
+                <Typography>{discipline.name}</Typography>
               </Stack>
             </TableCell>
             <TableCell sx={stylesAdmin.bodyItem}>

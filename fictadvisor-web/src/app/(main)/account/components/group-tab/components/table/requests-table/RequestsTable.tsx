@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import { State } from '@fictadvisor/utils/enums';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { Box, Grid, Typography, useMediaQuery } from '@mui/material';
 
@@ -11,7 +12,6 @@ import useAuthentication from '@/hooks/use-authentication';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import GroupAPI from '@/lib/api/group/GroupAPI';
 import theme from '@/styles/theme';
-import { UserGroupState } from '@/types/user';
 
 import * as gridStyles from '../grid.styles';
 import { RequestsTableProps } from '../types';
@@ -25,8 +25,8 @@ const RequestsTable: FC<RequestsTableProps> = ({ rows, refetch }) => {
   const handleApprove = async (userId: string) => {
     try {
       if (user.group)
-        await GroupAPI.verifyStudent(user.group?.id, userId, {
-          state: UserGroupState.APPROVED,
+        await GroupAPI.verifyStudent(user.group.id, userId, {
+          state: State.APPROVED,
         });
       await refetch();
     } catch (error) {
@@ -38,7 +38,7 @@ const RequestsTable: FC<RequestsTableProps> = ({ rows, refetch }) => {
     try {
       if (user.group)
         await GroupAPI.verifyStudent(user.group?.id as string, userId, {
-          state: UserGroupState.DECLINED,
+          state: State.DECLINED,
         });
       await refetch();
     } catch (error) {

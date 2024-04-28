@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useMemo, useState } from 'react';
 import { useQuery } from 'react-query';
+import { CurrentSemester } from '@fictadvisor/utils/responses';
 import moment from 'moment';
 
 import { formValidationSchema } from '@/app/(main)/schedule/schedule-page/schedule-event-edit-section/schedule-form/validation';
@@ -8,9 +9,8 @@ import { prepareData } from '@/app/(main)/schedule/schedule-page/schedule-event-
 import { transformDetailedEvent } from '@/app/(main)/schedule/schedule-page/schedule-event-edit-section/utils/transformDetailedEvent';
 import useAuthentication from '@/hooks/use-authentication';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
-import { GetCurrentSemester } from '@/lib/api/dates/types/GetCurrentSemester';
 import ScheduleAPI from '@/lib/api/schedule/ScheduleAPI';
-import { DetailedEventBody } from '@/lib/api/schedule/types/DetailedEventBody';
+import { EventResponse } from '@/lib/api/schedule/types/EventResponse';
 import { SharedEventBody } from '@/lib/api/schedule/types/shared';
 import { useSchedule } from '@/store/schedule/useSchedule';
 import { getWeekByDate } from '@/store/schedule/utils/getWeekByDate';
@@ -30,7 +30,7 @@ export const ScheduleEventEdit = () => {
   const week = useMemo(
     () =>
       getWeekByDate(
-        semester as GetCurrentSemester,
+        semester as CurrentSemester,
         moment(openedEvent?.startTime as string),
       ),
     [openedEvent],
@@ -51,9 +51,9 @@ export const ScheduleEventEdit = () => {
     },
   );
 
-  const [detailedEvent, setDetailedEvent] = useState<
-    undefined | DetailedEventBody
-  >(data);
+  const [detailedEvent, setDetailedEvent] = useState<undefined | EventResponse>(
+    data,
+  );
 
   const { user } = useAuthentication();
 
@@ -65,15 +65,15 @@ export const ScheduleEventEdit = () => {
   const handleEventEdited = async (values: SharedEventBody) => {
     const body = prepareData(
       values,
-      transformDetailedEvent(detailedEvent as DetailedEventBody),
+      transformDetailedEvent(detailedEvent as EventResponse),
       week,
     );
 
     try {
       const data = await ScheduleAPI.editEvent(
-        body,
         user.group?.id as string,
         openedEvent?.id as string,
+        body,
       );
       setDetailedEvent(data);
       setIsEditOpen(false);

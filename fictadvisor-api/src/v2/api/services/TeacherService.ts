@@ -1,30 +1,32 @@
 import { Injectable } from '@nestjs/common';
-import { CreateContactDTO } from '../dtos/CreateContactDTO';
-import { EntityType, QuestionDisplay, Prisma, TeacherRole } from '@prisma/client';
+import { Cron } from '@nestjs/schedule';
+import {
+  CreateContactDTO,
+  UpdateContactDTO,
+  QueryAllTeacherDTO,
+  ResponseQueryDTO,
+  ComplaintDTO,
+} from '@fictadvisor/utils/requests';
+import { TeacherWithContactsFullResponse } from '@fictadvisor/utils/responses';
+import { DatabaseUtils } from '../../database/DatabaseUtils';
+import { filterAsync } from '../../utils/ArrayUtil';
+import { TelegramAPI } from '../../telegram/TelegramAPI';
+import { TeacherMapper } from '../../mappers/TeacherMapper';
+import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
+import { QuestionMapper } from '../../mappers/QuestionMapper';
+import { PollService } from './PollService';
+import { DateService } from '../../utils/date/DateService';
+import { DisciplineTeacherService } from './DisciplineTeacherService';
+import { DbDisciplineTeacher } from '../../database/entities/DbDisciplineTeacher';
+import { DbTeacher } from 'src/v2/database/entities/DbTeacher';
 import { TeacherRepository } from '../../database/repositories/TeacherRepository';
 import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
-import { UpdateContactDTO } from '../dtos/UpdateContactDTO';
-import { ContactRepository } from '../../database/repositories/ContactRepository';
-import { DatabaseUtils } from '../../database/DatabaseUtils';
-import { DisciplineTeacherService } from './DisciplineTeacherService';
-import { InvalidQueryException } from '../../utils/exceptions/InvalidQueryException';
-import { QueryAllTeacherDTO } from '../dtos/QueryAllTeacherDTO';
-import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
 import { SubjectRepository } from '../../database/repositories/SubjectRepository';
-import { TeacherMapper } from '../../mappers/TeacherMapper';
-import { PollService } from './PollService';
-import { ResponseQueryDTO } from '../dtos/ResponseQueryDTO';
-import { filterAsync } from '../../utils/ArrayUtil';
-import { DbDisciplineTeacher } from '../../database/entities/DbDisciplineTeacher';
-import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
-import { DateService } from '../../utils/date/DateService';
-import { DbTeacher } from 'src/v2/database/entities/DbTeacher';
-import { QuestionMapper } from '../../mappers/QuestionMapper';
-import { Cron } from '@nestjs/schedule';
-import { ComplaintDTO } from '../dtos/ComplaintDTO';
-import { TelegramAPI } from '../../telegram/TelegramAPI';
 import { GroupRepository } from '../../database/repositories/GroupRepository';
-import { TeacherWithContactsFullResponse } from '../responses/TeacherWithContactsFullResponse';
+import { ContactRepository } from '../../database/repositories/ContactRepository';
+import { InvalidQueryException } from '../../utils/exceptions/InvalidQueryException';
+import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
+import { EntityType, QuestionDisplay, Prisma, TeacherRole } from '@prisma/client';
 
 @Injectable()
 export class TeacherService {
@@ -314,7 +316,7 @@ export class TeacherService {
 
     const { disciplineTeachers } = dbTeacher;
 
-    const roles = this.disciplineTeacherMapper.getRolesBySubject(disciplineTeachers as unknown as DbDisciplineTeacher[], subjectId);
+    const roles = this.disciplineTeacherMapper.getRolesBySubject(disciplineTeachers, subjectId);
     const subject = await this.subjectRepository.findById(subjectId);
     const contacts = await this.contactRepository.getAllContacts(teacherId);
 
@@ -342,7 +344,7 @@ export class TeacherService {
       },
     });
 
-    const text = 
+    const text =
       '<b>Скарга на викладача:</b>\n\n' +
       `<b>Викладач:</b> ${lastName} ${firstName} ${middleName}\n` +
       `<b>Студент:</b> ${fullName}\n` +

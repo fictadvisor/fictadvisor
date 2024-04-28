@@ -1,3 +1,5 @@
+import { PriorityDTO } from '@fictadvisor/utils/requests';
+
 import {
   ExtendedPriorityDataBody,
   PriorityDataBody,
@@ -6,7 +8,7 @@ import { PartialBy } from '@/types/utils/PartialBy';
 
 export const prepareData = (
   intialData: ExtendedPriorityDataBody,
-): PriorityDataBody => {
+): PriorityDTO => {
   delete (intialData as PartialBy<ExtendedPriorityDataBody, 'secretNumber'>)
     .secretNumber;
 

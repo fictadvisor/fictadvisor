@@ -1,11 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { CreateResourceDTO } from '../dtos/CreateResourceDTO';
-import { UpdateResourceDTO } from '../dtos/UpdateResourceDTO';
+import {
+  CreateResourceDTO,
+  UpdateResourceDTO,
+  UpdateResourcesDTO,
+  UpdateResourcesDTOItem,
+  QueryAllResourcesDTO,
+} from '@fictadvisor/utils/requests';
 import { ResourceRepository } from '../../database/repositories/ResourceRepository';
-import { StudentResource } from '@prisma/client';
-import { UpdateResourcesDTO, UpdateResourcesDTOItem } from '../dtos/UpdateResourcesDTO';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
-import { QueryAllResourcesDTO } from '../dtos/QueryAllResourcesDTO';
+import { StudentResource } from '@prisma/client';
 
 @Injectable()
 export class ResourceService {

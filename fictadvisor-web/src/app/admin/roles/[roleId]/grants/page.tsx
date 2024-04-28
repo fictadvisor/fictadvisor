@@ -23,12 +23,22 @@ interface AdminGrantsEditProps {
 const AdminGrantsEdit: FC<AdminGrantsEditProps> = ({ params }) => {
   const [queryObj, setQueryObj] =
     useState<GrantsSearchFormFields>(GrantsInitialValues);
-  const [curPage, setCurPage] = useState(0);
+  const [currPage, setCurrPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
 
   const { data, refetch, isLoading } = useQuery(
-    ['allGrantsByRoleId', curPage, pageSize, queryObj, params.roleId],
-    () => GrantsAPI.getAllByRoleId(params.roleId, queryObj, curPage, pageSize),
+    ['allGrantsByRoleId', currPage, pageSize, queryObj, params.roleId],
+    () =>
+      GrantsAPI.getAllByRoleId(
+        params.roleId,
+        {
+          ...queryObj,
+          page: currPage,
+          pageSize,
+          set: undefined,
+        },
+        queryObj.set,
+      ),
     useQueryAdminOptions,
   );
 
@@ -43,8 +53,8 @@ const AdminGrantsEdit: FC<AdminGrantsEditProps> = ({ params }) => {
     <Box sx={stylesAdmin.wrapper}>
       <HeaderGrantsSearch onSubmit={submitHandler} roleId={params.roleId} />
       <GrantsList
-        curPage={curPage}
-        setCurPage={setCurPage}
+        currPage={currPage}
+        setCurrPage={setCurrPage}
         grants={data.grants}
         pageSize={pageSize}
         setPageSize={setPageSize}

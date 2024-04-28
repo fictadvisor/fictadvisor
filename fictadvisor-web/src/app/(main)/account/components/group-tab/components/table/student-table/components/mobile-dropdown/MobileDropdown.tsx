@@ -1,4 +1,5 @@
 import React, { FC, ReactNode, useRef, useState } from 'react';
+import { GroupRoles } from '@fictadvisor/utils/enums';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import {
   ArrowsUpDownIcon,
@@ -17,8 +18,7 @@ import {
 } from '@/components/common/ui/button-mui/types';
 import IconButton from '@/components/common/ui/icon-button-mui/IconButton';
 import { IconButtonColor } from '@/components/common/ui/icon-button-mui/types';
-import { PermissionResponse } from '@/lib/services/permisson/types';
-import { UserGroupRole } from '@/types/user';
+import { PermissionResponse } from '@/lib/services/permission/types';
 
 import { StudentsTableItem } from '../../../types';
 
@@ -44,15 +44,15 @@ const MobileStudentsTableButtons: FC<MobileStudentTableButtonsProps> = ({
   const [isPopperOpen, setIsPopperOpen] = useState<boolean>(false);
   const EllipsisIconRef = useRef<HTMLButtonElement>(null);
   const buttonName =
-    student.role === UserGroupRole.MODERATOR
-      ? roleNamesMapper[UserGroupRole.STUDENT]
-      : roleNamesMapper[UserGroupRole.MODERATOR];
+    student.role === GroupRoles.MODERATOR
+      ? roleNamesMapper[GroupRoles.STUDENT]
+      : roleNamesMapper[GroupRoles.MODERATOR];
   const emptyList =
     (!permissions[PERMISSION.GROUPS_$GROUPID_STUDENTS_REMOVE] &&
       !permissions[PERMISSION.GROUPS_$GROUPID_ADMIN_SWITCH]) ||
     (permissions[PERMISSION.GROUPS_$GROUPID_STUDENTS_REMOVE] &&
       !permissions[PERMISSION.GROUPS_$GROUPID_ADMIN_SWITCH] &&
-      student.role !== UserGroupRole.STUDENT);
+      student.role !== GroupRoles.STUDENT);
   return (
     <ClickAwayListener onClickAway={() => setIsPopperOpen(false)}>
       <Box>
@@ -70,7 +70,7 @@ const MobileStudentsTableButtons: FC<MobileStudentTableButtonsProps> = ({
         >
           <Stack sx={styles.dropdown}>
             {permissions[PERMISSION.GROUPS_$GROUPID_ADMIN_SWITCH] &&
-              student.role !== UserGroupRole.CAPTAIN && (
+              student.role !== GroupRoles.CAPTAIN && (
                 <Button
                   size={ButtonSize.SMALL}
                   text={buttonName}
@@ -79,7 +79,7 @@ const MobileStudentsTableButtons: FC<MobileStudentTableButtonsProps> = ({
                   onClick={() => setChangePopupOpen(true)}
                 />
               )}
-            {!emptyList && student.role !== UserGroupRole.CAPTAIN && (
+            {!emptyList && student.role !== GroupRoles.CAPTAIN && (
               <Button
                 size={ButtonSize.SMALL}
                 text={'Видалити'}
@@ -88,7 +88,7 @@ const MobileStudentsTableButtons: FC<MobileStudentTableButtonsProps> = ({
                 onClick={() => setDeletePopupOpen(true)}
               />
             )}
-            {student.role === UserGroupRole.CAPTAIN && (
+            {student.role === GroupRoles.CAPTAIN && (
               <Button
                 size={ButtonSize.SMALL}
                 text="Передати старосту"

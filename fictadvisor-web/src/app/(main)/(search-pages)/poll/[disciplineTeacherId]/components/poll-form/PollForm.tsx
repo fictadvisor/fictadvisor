@@ -1,11 +1,15 @@
 import { FC, useEffect, useState } from 'react';
+import {
+  CategoryResponse,
+  DisciplineTeacherQuestionsResponse,
+  QuestionResponse,
+} from '@fictadvisor/utils/responses';
 import { Box, useMediaQuery } from '@mui/material';
 
 import { SendingStatus } from '@/app/(main)/(search-pages)/poll/[disciplineTeacherId]/components/poll-form/types';
-import { GetTeacherQuestionsResponse } from '@/lib/api/poll/types/GetTeacherQuestionsResponse';
 import { usePollStore } from '@/store/poll-page/usePollStore';
 import theme from '@/styles/theme';
-import { Answer, Category, Question } from '@/types/poll';
+import { Answer, Category } from '@/types/poll';
 
 import AnswersSheet from '../answers-sheet/AnswersSheet';
 import QuestionsList from '../questions-list/QuestionsList';
@@ -13,11 +17,11 @@ import QuestionsList from '../questions-list/QuestionsList';
 import * as styles from './PollForm.styles';
 
 interface PollFormProps {
-  data: GetTeacherQuestionsResponse;
+  data: DisciplineTeacherQuestionsResponse;
   disciplineTeacherId: string;
 }
 
-const validateResults = (answers: Answer[], questions: Question[]) => {
+const validateResults = (answers: Answer[], questions: QuestionResponse[]) => {
   for (const question of questions) {
     if (
       question.isRequired &&
@@ -29,8 +33,10 @@ const validateResults = (answers: Answer[], questions: Question[]) => {
   return true;
 };
 
-const getAllQuestionsArray = (categories: Category[]): Question[] => {
-  const questions = categories.reduce<Question[]>(
+const getAllQuestionsArray = (
+  categories: CategoryResponse[],
+): QuestionResponse[] => {
+  const questions = categories.reduce<QuestionResponse[]>(
     (acc, { questions }) => [...acc, ...questions],
     [],
   );
@@ -50,7 +56,7 @@ const PollForm: FC<PollFormProps> = ({ data, disciplineTeacherId }) => {
   } = usePollStore();
   const { categories } = data;
   const isMobile = useMediaQuery(theme.breakpoints.down('desktop'));
-  const [questionsArray, setQuestionsArray] = useState<Question[]>([]);
+  const [questionsArray, setQuestionsArray] = useState<QuestionResponse[]>([]);
   const [progress, setProgress] = useState<number[]>(
     Array(categories.length).fill(0),
   );
@@ -64,7 +70,7 @@ const PollForm: FC<PollFormProps> = ({ data, disciplineTeacherId }) => {
   }, [categories]);
 
   useEffect(() => {
-    setCurrentQuestions(categories[currentCategory]);
+    setCurrentQuestions(categories[currentCategory] as Category);
     setIsValid(validateResults(answers, questionsArray));
   }, [currentCategory, categories, answers, questionsArray]);
 

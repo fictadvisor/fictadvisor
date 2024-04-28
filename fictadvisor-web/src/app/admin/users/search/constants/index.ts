@@ -1,7 +1,8 @@
+import { SortQAUParam, State } from '@fictadvisor/utils/enums';
+
 import { CheckboxOption } from '@/components/common/ui/form/checkboxes-dropdown/types/CheckboxOption';
 import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
 import { TagColor } from '@/components/common/ui/tag/types';
-import { UserGroupState } from '@/types/user';
 
 import { UserSearchFormFields } from '../types';
 
@@ -10,9 +11,9 @@ export const sortOptions: DropDownOption[] = [
   { id: 'email', label: 'За поштою' },
 ];
 export const stateOptions: CheckboxOption[] = [
-  { value: UserGroupState.APPROVED, label: 'Верифікований' },
-  { value: UserGroupState.DECLINED, label: 'Не верифікований' },
-  { value: UserGroupState.PENDING, label: 'В очікуванні' },
+  { value: State.APPROVED, label: 'Верифікований' },
+  { value: State.DECLINED, label: 'Не верифікований' },
+  { value: State.PENDING, label: 'В очікуванні' },
 ];
 
 export const TagColorMapper: Record<string, TagColor> = {
@@ -29,6 +30,6 @@ export const TagTextMapper: Record<string, string> = {
 export const UserInitialValues: UserSearchFormFields = {
   search: '',
   order: 'asc',
-  sort: 'username',
+  sort: SortQAUParam.USERNAME,
   state: [],
 };

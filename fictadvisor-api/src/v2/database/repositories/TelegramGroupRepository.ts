@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../PrismaService';
+import { DbTelegramGroup } from '../entities/DbTelegramGroup';
 
 @Injectable()
 export class TelegramGroupRepository {
@@ -14,7 +15,7 @@ export class TelegramGroupRepository {
     return this.prisma.telegramGroup.create({
       data,
       include: this.include,
-    });
+    }) as any as DbTelegramGroup;
   }
 
   async findUnique (groupId_telegramId: Prisma.TelegramGroupGroupIdTelegramIdCompoundUniqueInput) {
@@ -23,7 +24,7 @@ export class TelegramGroupRepository {
         groupId_telegramId,
       },
       include: this.include,
-    });
+    }) as any as DbTelegramGroup;
   }
 
   async updateById (telegramId: bigint, groupId: string, data: Prisma.TelegramGroupUpdateInput) {
@@ -36,7 +37,7 @@ export class TelegramGroupRepository {
       },
       data,
       include: this.include,
-    });
+    }) as any as DbTelegramGroup;
   }
 
   async deleteById (telegramId: bigint, groupId: string) {
@@ -48,7 +49,7 @@ export class TelegramGroupRepository {
         },
       },
       include: this.include,
-    });
+    }) as any as DbTelegramGroup;
   }
 
   async findByGroupId (groupId: string) {
@@ -57,7 +58,7 @@ export class TelegramGroupRepository {
         groupId,
       },
       include: this.include,
-    });
+    }) as any as DbTelegramGroup[];
   }
 
   async findByTelegramId (telegramId: bigint) {
@@ -66,6 +67,6 @@ export class TelegramGroupRepository {
         telegramId,
       },
       include: this.include,
-    });
+    }) as any as DbTelegramGroup[];
   }
 }

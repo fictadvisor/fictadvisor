@@ -1,6 +1,7 @@
 'use client';
 
 import React, { FC } from 'react';
+import { PaginatedGroupsResponse } from '@fictadvisor/utils/responses';
 import { Box, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -16,7 +17,6 @@ import {
 } from '@/components/common/ui/button-mui/types';
 import Divider from '@/components/common/ui/divider';
 import { DividerTextAlign } from '@/components/common/ui/divider/types';
-import { GetAllGroupsResponse } from '@/lib/api/group/types/GetAllGroupsResponse';
 import AuthService from '@/lib/services/auth/AuthService';
 import StorageUtil from '@/lib/utils/StorageUtil';
 
@@ -24,7 +24,7 @@ import * as stylesMUI from './LeftBlock.styles';
 
 import styles from './Link.module.scss';
 
-const LeftBlock: FC<Omit<GetAllGroupsResponse, 'pagination'>> = ({
+const LeftBlock: FC<Omit<PaginatedGroupsResponse, 'pagination'>> = ({
   groups,
 }) => {
   const router = useRouter();

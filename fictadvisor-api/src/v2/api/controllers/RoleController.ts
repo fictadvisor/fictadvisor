@@ -18,24 +18,31 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { RoleService } from '../services/RoleService';
-import { GrantMapper } from '../../mappers/GrantMapper';
-import { RoleMapper } from '../../mappers/RoleMapper';
+import {
+  QueryAllRolesDTO,
+  CreateRoleDTO,
+  QueryAllGrantsDTO,
+  UpdateRoleDTO,
+  CreateRoleWithGrantsDTO,
+  CreateGrantDTO,
+  CreateGrantsDTO,
+  UpdateGrantDTO,
+} from '@fictadvisor/utils/requests';
+import {
+  BaseRoleResponse,
+  RoleResponse,
+  RolesResponse,
+  GrantResponse,
+  MappedGrant,
+  GrantsResponse,
+} from '@fictadvisor/utils/responses';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
-import { BaseRoleResponse, RoleResponse } from '../responses/RoleResponse';
-import { RolesResponse } from '../responses/RolesResponse';
-import { GrantResponse, MappedGrant } from '../responses/GrantResponse';
-import { GrantsResponse } from '../responses/GrantsResponse';
-import { QueryAllRolesDTO } from '../dtos/QueryAllRolesDTO';
-import { CreateRoleDTO } from '../dtos/CreateRoleDTO';
-import { QueryAllGrantsDTO } from '../dtos/QueryAllGrantsDTO';
-import { UpdateRoleDTO } from '../dtos/UpdateRoleDTO';
-import { CreateRoleWithGrantsDTO } from '../dtos/CreateRoleWithGrantsDTO';
-import { CreateGrantDTO, CreateGrantsDTO } from '../dtos/CreateGrantDTO';
 import { RoleByIdPipe } from '../pipes/RoleByIdPipe';
 import { GrantByIdPipe } from '../pipes/GrantByIdPipe';
-import { UpdateGrantDTO } from '../dtos/UpdateGrantDTO';
+import { GrantMapper } from '../../mappers/GrantMapper';
+import { RoleMapper } from '../../mappers/RoleMapper';
+import { RoleService } from '../services/RoleService';
 
 @ApiTags('Roles')
 @Controller({

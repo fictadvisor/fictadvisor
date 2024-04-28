@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { CreateContractDTO } from '@fictadvisor/utils/requests';
 import { Box } from '@mui/material';
 import { Form, Formik, FormikHelpers } from 'formik';
 import {
@@ -20,14 +21,13 @@ import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import contractAPI from '@/lib/api/contract/ContractAPI';
-import { AdminContractBody } from '@/lib/api/contract/types/AdminContractBody';
 
 const ContractAdminSubmission = () => {
   const { displayError } = useToastError();
   const toast = useToast();
   const handleSubmit = async (
-    values: AdminContractBody,
-    { resetForm }: FormikHelpers<AdminContractBody>,
+    values: CreateContractDTO,
+    { resetForm }: FormikHelpers<CreateContractDTO>,
   ) => {
     try {
       await contractAPI.createAdminContract(values);

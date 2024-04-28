@@ -1,10 +1,10 @@
-import { RoleService } from './RoleService';
 import { Test } from '@nestjs/testing';
+import { CreateRoleWithGrantsDTO } from '@fictadvisor/utils/requests';
+import { DbRole } from '../../database/entities/DbRole';
 import { PrismaModule } from '../../modules/PrismaModule';
+import { RoleService } from './RoleService';
 import { PermissionService } from './PermissionService';
 import { RoleRepository } from '../../database/repositories/RoleRepository';
-import { DbRole } from '../../database/entities/DbRole';
-import { CreateRoleWithGrantsDTO } from '../dtos/CreateRoleWithGrantsDTO';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
 
 describe('RoleService', () => {

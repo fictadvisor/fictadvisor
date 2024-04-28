@@ -1,8 +1,8 @@
-import { PermissionService } from './PermissionService';
-import { RoleRepository } from '../../database/repositories/RoleRepository';
 import { Test } from '@nestjs/testing';
-import { UserRepository } from '../../database/repositories/UserRepository';
+import { PermissionService } from './PermissionService';
 import { PrismaService } from '../../database/PrismaService';
+import { RoleRepository } from '../../database/repositories/RoleRepository';
+import { UserRepository } from '../../database/repositories/UserRepository';
 
 describe('PermissionService', () => {
   let permissionService: PermissionService;

@@ -19,27 +19,33 @@ import {
   ApiParam,
   ApiBody,
 } from '@nestjs/swagger';
-import { AuthLoginResponse } from '../responses/AuthLoginResponse';
-import { AuthRefreshResponse } from '../responses/AuthRefreshResponse';
-import { LocalAuthGuard } from '../../security/LocalGuard';
-import { AuthService } from '../services/AuthService';
-import { RegistrationDTO } from '../dtos/RegistrationDTO';
-import { JwtGuard } from '../../security/JwtGuard';
-import { ForgotPasswordDTO } from '../dtos/ForgotPasswordDTO';
-import { ResetPasswordDTO } from '../dtos/ResetPasswordDTO';
-import { UpdatePasswordDTO } from '../dtos/UpdatePasswordDTO';
-import { VerificationEmailDTO } from '../dtos/VerificationEmailDTO';
-import { IdentityQueryDTO } from '../dtos/IdentityQueryDTO';
-import { TelegramDTO } from '../dtos/TelegramDTO';
-import { UserService } from '../services/UserService';
-import { TelegramGuard } from '../../security/TelegramGuard';
-import { RegisterTelegramDTO } from '../dtos/RegisterTelegramDTO';
-import { OrdinaryStudentResponse } from '../responses/StudentResponse';
+import {
+  RegistrationDTO,
+  ForgotPasswordDTO,
+  ResetPasswordDTO,
+  UpdatePasswordDTO,
+  VerificationEmailDTO,
+  IdentityQueryDTO,
+  TelegramDTO,
+  RegisterTelegramDTO,
+  LoginDTO,
+} from '@fictadvisor/utils/requests';
+import {
+  AuthLoginResponse,
+  AuthRefreshResponse,
+  OrdinaryStudentResponse,
+  JWTTokensResponse,
+  IsAvailableResponse,
+  TelegramRegistrationResponse,
+  ResetPasswordResponse,
+} from '@fictadvisor/utils/responses';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
-import { JWTTokensResponse } from '../responses/JWTTokensResponse';
+import { LocalAuthGuard } from '../../security/LocalGuard';
+import { JwtGuard } from '../../security/JwtGuard';
+import { TelegramGuard } from '../../security/TelegramGuard';
 import { GroupByIdPipe } from '../pipes/GroupByIdPipe';
-import { IsAvailableResponse, IsRegisteredResponse } from '../responses/TokenResponse';
-import { LoginDTO } from '../dtos/LoginDTO';
+import { AuthService } from '../services/AuthService';
+import { UserService } from '../services/UserService';
 
 @ApiTags('Auth')
 @Controller({
@@ -273,7 +279,9 @@ export class AuthController {
     return this.authService.forgotPassword(body.email);
   }
 
-  @ApiOkResponse()
+  @ApiOkResponse({
+    type: ResetPasswordResponse,
+  })
   @ApiBadRequestResponse({
     description: `\n
     InvalidResetTokenException:
@@ -411,7 +419,7 @@ export class AuthController {
   }
 
   @ApiOkResponse({
-    type: IsRegisteredResponse,
+    type: TelegramRegistrationResponse,
   })
   @ApiParam({
     name: 'token',
@@ -424,7 +432,7 @@ export class AuthController {
   @Get('/checkRegisterTelegram/:token')
   async checkRegisterTelegram (
     @Param('token') token: string,
-  ): Promise<IsRegisteredResponse> {
+  ): Promise<TelegramRegistrationResponse> {
     const isRegistered = !!(await this.authService.checkTelegram(token));
     return { isRegistered };
   }

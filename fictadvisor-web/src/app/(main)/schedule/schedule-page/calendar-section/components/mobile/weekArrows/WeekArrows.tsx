@@ -17,6 +17,8 @@ const monthMapper = [
   'Грудень',
 ];
 
+import { CurrentSemester } from '@fictadvisor/utils/responses';
+
 import { MAX_WEEK_NUMBER } from '@/app/(main)/schedule/schedule-page/constants';
 import {
   IconButtonColor,
@@ -24,8 +26,7 @@ import {
 } from '@/components/common/ui/icon-button';
 import IconButton from '@/components/common/ui/icon-button-mui';
 import { IconButtonSize } from '@/components/common/ui/icon-button-mui/types';
-import { GetCurrentSemester } from '@/lib/api/dates/types/GetCurrentSemester';
-import { GetEventBody } from '@/lib/api/schedule/types/GetEventBody';
+import { EventsResponse } from '@/lib/api/schedule/types/EventsResponse';
 import { transformEvents } from '@/lib/api/schedule/utils/transformEvents';
 import { useSchedule } from '@/store/schedule/useSchedule';
 import { getFirstDayOfAWeek } from '@/store/schedule/utils/getFirstDayOfAWeek';
@@ -44,14 +45,14 @@ export const WeekArrows = () => {
   const updateWeek = (amount: number) => {
     const newWeek = week + amount;
     if (newWeek < 1 || newWeek > MAX_WEEK_NUMBER) return;
-    setChosenDay(getFirstDayOfAWeek(semester as GetCurrentSemester, newWeek));
+    setChosenDay(getFirstDayOfAWeek(semester as CurrentSemester, newWeek));
   };
 
   const month = useMemo(() => {
     if (!eventsBody[week - 1]) return null;
     return monthMapper[
       transformEvents(
-        eventsBody[week - 1] as GetEventBody,
+        eventsBody[week - 1] as EventsResponse,
       ).days[0].day.getMonth()
     ];
   }, [eventsBody, week]);

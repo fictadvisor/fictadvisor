@@ -1,6 +1,7 @@
 'use client';
 import React, { FC, useState } from 'react';
 import { useQuery } from 'react-query';
+import { TeacherWithRolesAndCathedrasResponse } from '@fictadvisor/utils/responses';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Box, CardHeader, Divider, Stack } from '@mui/material';
 import { useRouter } from 'next/navigation';
@@ -22,7 +23,6 @@ import LoadPage from '@/components/common/ui/load-page';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import CathedraAPI from '@/lib/api/cathedras/CathedraAPI';
-import { Teacher } from '@/types/teacher';
 
 import Dropdown from '../../../../../components/common/ui/form/dropdown';
 
@@ -51,8 +51,10 @@ const Page: FC<AdminDepartmentEditProps> = ({ params }) => {
   );
   const [isOpen, setIsOpen] = useState(false);
   const [division, setDivision] = useState<string>(department.data.division);
-  const [left, setLeft] = useState<Teacher[]>([]);
-  const [right, setRight] = useState<Teacher[]>([]);
+  const [left, setLeft] = useState<TeacherWithRolesAndCathedrasResponse[]>([]);
+  const [right, setRight] = useState<TeacherWithRolesAndCathedrasResponse[]>(
+    [],
+  );
 
   const { data: divisionData, isLoading: isLoadingDivisions } = useQuery(
     ['divisions', department.data.id],
@@ -62,7 +64,11 @@ const Page: FC<AdminDepartmentEditProps> = ({ params }) => {
 
   const { data: inDepartmentData, isLoading: isLoadingDepartment } = useQuery(
     ['inDepartment', department.data.id, false],
-    () => CathedraAPI.getDepartmentTeachers(department.data.id, false),
+    () =>
+      CathedraAPI.getDepartmentTeachers({
+        cathedrasId: [department.data.id],
+        notInDepartments: false,
+      }),
     useQueryAdminOptions,
   );
 
@@ -78,16 +84,17 @@ const Page: FC<AdminDepartmentEditProps> = ({ params }) => {
 
   const handleEdit = async () => {
     try {
-      const toDelete = inDepartmentData.teachers.map(teacher => teacher.id);
-      const toAdd = right.map(teacher => teacher.id);
-      await CathedraAPI.editDepartment(
-        department.data.id,
+      const deleteTeachers = inDepartmentData.teachers.map(
+        teacher => teacher.id,
+      );
+      const addTeachers = right.map(teacher => teacher.id);
+      await CathedraAPI.editDepartment(department.data.id, {
         name,
         abbreviation,
         division,
-        toDelete,
-        toAdd,
-      );
+        deleteTeachers,
+        addTeachers,
+      });
       toast.success('Кафедра успішно змінена!', '', 4000);
       router.replace('/admin/departments');
     } catch (e) {

@@ -1,12 +1,8 @@
-import { Contact } from '@/types/contact';
-
-export enum TeacherRole {
-  LECTURER = 'LECTURER',
-  LABORANT = 'LABORANT',
-  PRACTICIAN = 'PRACTICIAN',
-  EXAMINER = 'EXAMINER',
-  OTHER = 'OTHER',
-}
+import { QuestionDisplay, TeacherRole } from '@fictadvisor/utils/enums';
+import {
+  CathedraResponse,
+  ContactResponse,
+} from '@fictadvisor/utils/responses';
 
 export interface TeacherCathedra {
   id: string;
@@ -19,22 +15,17 @@ export interface TeacherSubject {
   name: string;
 }
 
-export interface TeacherDiscipline {
-  disciplineTeacherId: string;
-  subjectName: string;
-}
-
-export interface Teacher {
+export class Teacher {
   id: string;
-  roles: TeacherRole[];
   firstName: string;
   middleName: string;
   lastName: string;
   avatar: string;
   description: string;
   rating: number;
-  contacts: Contact[];
-  cathedras: TeacherCathedra[];
+  roles: TeacherRole[];
+  contacts: ContactResponse[];
+  cathedras: CathedraResponse[];
 }
 
 export interface DisciplineTeacher extends Teacher {
@@ -42,20 +33,10 @@ export interface DisciplineTeacher extends Teacher {
   subject: TeacherSubject;
 }
 
-export interface TeacherWithSubject extends Teacher {
-  subject: TeacherSubject;
-}
-
-export enum TeacherMarkType {
-  RADAR = 'RADAR',
-  CIRCLE = 'CIRCLE',
-  AMOUNT = 'AMOUNT',
-}
-
 export interface TeacherAmountMark {
   name: string;
   amount: number;
-  type: TeacherMarkType.AMOUNT;
+  type: QuestionDisplay.AMOUNT;
   mark: {
     [key: number]: number;
   };
@@ -64,7 +45,7 @@ export interface TeacherAmountMark {
 export interface TeacherRadarCircleMark {
   name: string;
   amount: number;
-  type: TeacherMarkType.RADAR | TeacherMarkType.CIRCLE;
+  type: QuestionDisplay.RADAR | QuestionDisplay.CIRCLE;
   mark: number;
 }
 

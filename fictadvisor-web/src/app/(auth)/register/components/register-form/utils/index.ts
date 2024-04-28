@@ -1,11 +1,12 @@
+import { RegistrationDTO } from '@fictadvisor/utils/requests';
+import { MappedGroupResponse } from '@fictadvisor/utils/responses';
+
 import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
-import { RegisterBody } from '@/lib/api/auth/types/RegisterBody';
-import { Group } from '@/types/group';
 
 import { RegisterFormFields } from '../types';
 
-export const transformData = (data: RegisterFormFields): RegisterBody => {
-  const transformedData: RegisterBody = {
+export const transformData = (data: RegisterFormFields): RegistrationDTO => {
+  const transformedData: RegistrationDTO = {
     student: {
       groupId: data.group.trim(),
       // TODO: refactor this
@@ -24,7 +25,9 @@ export const transformData = (data: RegisterFormFields): RegisterBody => {
   return transformedData;
 };
 
-export const transformGroups = (data: Group[]): DropDownOption[] =>
+export const transformGroups = (
+  data: MappedGroupResponse[],
+): DropDownOption[] =>
   data.map(({ code, id }) => ({
     label: code,
     id,

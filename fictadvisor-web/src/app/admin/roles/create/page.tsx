@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { RoleName } from '@fictadvisor/utils/enums';
 import { Box, CardHeader, Stack } from '@mui/material';
 import { useRouter } from 'next/navigation';
 
@@ -18,7 +19,6 @@ import Input from '@/components/common/ui/form/input-mui';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import RoleAPI from '@/lib/api/role/RoleAPI';
-import { RoleName } from '@/types/role';
 
 const Create = () => {
   const [displayName, setDisplayName] = useState<string>('');

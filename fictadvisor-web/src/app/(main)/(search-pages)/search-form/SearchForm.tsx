@@ -51,6 +51,10 @@ const FormObserver = (props: { name?: string }) => {
   return null;
 };
 
+// Important!!! SearchForm is currently used for searching both subjects and teachers.
+// But, the thing is SubjectAPI and TeacherAPI have different getAll query parameters and since now
+// one QueryAllDTO is a subset of another it is tolerable. However, in the future, that might
+// change, so I think this component needs refactoring
 const SearchForm: FC<SearchFormProps> = ({
   onSubmit,
   initialValues,

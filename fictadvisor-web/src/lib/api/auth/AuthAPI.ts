@@ -1,17 +1,23 @@
-import { AuthBody } from '@/lib/api/auth/types/AuthBody';
-import { ChangePasswordBody } from '@/lib/api/auth/types/ChangePasswordBody';
-import { CheckRegisterTelegramResponse } from '@/lib/api/auth/types/CheckRegisterTelegramResponse';
-import { ForgotPasswordBody } from '@/lib/api/auth/types/ForgotPasswordBody';
-import { RefreshAccessTokenResponse } from '@/lib/api/auth/types/RefreshAccesTokenResponse';
-import { RegisterBody } from '@/lib/api/auth/types/RegisterBody';
-import { ResetPasswordBody } from '@/lib/api/auth/types/ResetPasswordBody';
-import { ResetPasswordResponse } from '@/lib/api/auth/types/ResetPasswordResponse';
-import { VerifyEmailBody } from '@/lib/api/auth/types/VerifyEmailBody';
+import {
+  ForgotPasswordDTO,
+  LoginDTO,
+  RegistrationDTO,
+  ResetPasswordDTO,
+  TelegramDTO,
+  UpdatePasswordDTO,
+  VerificationEmailDTO,
+} from '@fictadvisor/utils/requests';
+import {
+  AuthRefreshResponse,
+  IsAvailableResponse,
+  OrdinaryStudentResponse,
+  ResetPasswordResponse,
+  TelegramRegistrationResponse,
+} from '@fictadvisor/utils/responses';
+
 import { getAuthorizationHeader } from '@/lib/api/utils';
 import StorageUtil from '@/lib/utils/StorageUtil';
-import { TelegramUser } from '@/types/telegram';
 import { Tokens } from '@/types/tokens';
-import { User } from '@/types/user';
 
 import { client } from '../instance';
 
@@ -21,7 +27,7 @@ class AuthAPI {
     return data;
   }
 
-  async resetPassword(resetToken: string, body: ResetPasswordBody) {
+  async resetPassword(resetToken: string, body: ResetPasswordDTO) {
     const { data } = await client.post<ResetPasswordResponse>(
       `/auth/resetPassword/${resetToken}`,
       body,
@@ -30,7 +36,7 @@ class AuthAPI {
   }
 
   async refreshAccessToken(accessToken: string) {
-    const { data } = await client.post<RefreshAccessTokenResponse>(
+    const { data } = await client.post<AuthRefreshResponse>(
       '/auth/refresh',
       { accessToken },
       {
@@ -42,7 +48,7 @@ class AuthAPI {
     return data;
   }
 
-  async changePassword(body: ChangePasswordBody) {
+  async changePassword(body: UpdatePasswordDTO) {
     const { data } = await client.put<Tokens>(
       '/auth/updatePassword',
       body,
@@ -52,41 +58,41 @@ class AuthAPI {
   }
 
   async getMe() {
-    const { data } = await client.get<User>(
+    const { data } = await client.get<OrdinaryStudentResponse>(
       `/auth/me`,
       getAuthorizationHeader(),
     );
     return data;
   }
 
-  async authTelegram(body: TelegramUser) {
+  async authTelegram(body: TelegramDTO) {
     const { data } = await client.post<Tokens>('/auth/loginTelegram', body);
     return data;
   }
 
-  async auth(body: AuthBody) {
+  async auth(body: LoginDTO) {
     const { data } = await client.post<Tokens>('/auth/login', body);
     return data;
   }
 
-  async register(body: RegisterBody) {
+  async register(body: RegistrationDTO) {
     const { data } = await client.post<Tokens>('/auth/register', body);
     return data;
   }
 
-  async forgotPassword(body: ForgotPasswordBody) {
-    const { data } = await client.post('/auth/forgotPassword', body);
-    return data;
+  async forgotPassword(body: ForgotPasswordDTO): Promise<void> {
+    await client.post('/auth/forgotPassword', body);
   }
 
   async checkResetToken(token: string) {
-    const { data } = await client.get('auth/checkResetToken/' + token);
+    const { data } = await client.get<IsAvailableResponse>(
+      'auth/checkResetToken/' + token,
+    );
     return data;
   }
 
-  async verifyEmail(body: VerifyEmailBody) {
-    const { data } = await client.post('/auth/register/verifyEmail', body);
-    return data;
+  async verifyEmail(body: VerificationEmailDTO): Promise<void> {
+    await client.post('/auth/register/verifyEmail', body);
   }
 
   async verifyEmailToken(token: string) {
@@ -97,7 +103,7 @@ class AuthAPI {
   }
 
   async checkRegisterTelegram(token: string) {
-    const { data } = await client.get<CheckRegisterTelegramResponse>(
+    const { data } = await client.get<TelegramRegistrationResponse>(
       `/auth/checkRegisterTelegram/${token}`,
     );
     return data;

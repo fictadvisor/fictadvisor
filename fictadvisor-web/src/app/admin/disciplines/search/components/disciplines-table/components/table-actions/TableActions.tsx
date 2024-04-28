@@ -1,4 +1,5 @@
 import React, { FC, useState } from 'react';
+import { DisciplineAdminResponse } from '@fictadvisor/utils/responses';
 import { PencilSquareIcon } from '@heroicons/react/24/solid';
 import { Stack } from '@mui/material';
 
@@ -10,10 +11,9 @@ import {
 } from '@/components/common/ui/button-mui/types';
 import DeletePopup from '@/components/common/ui/delete-popup';
 import { TrashBucketButton } from '@/components/common/ui/icon-button-mui/variants';
-import { AdminDiscipline } from '@/types/discipline';
 
 interface TableActionsProps {
-  discipline: AdminDiscipline;
+  discipline: DisciplineAdminResponse;
   deleteDiscipline: (id: string) => Promise<void>;
 }
 
@@ -38,7 +38,7 @@ const TableActions: FC<TableActionsProps> = ({
         <DeletePopup
           setPopupOpen={setPopupOpen}
           handleDeleteSubmit={() => deleteDiscipline(discipline.id)}
-          name={`дисципліну ${discipline.subject.name}`}
+          name={`дисципліну ${discipline.name}`}
         />
       )}
     </Stack>

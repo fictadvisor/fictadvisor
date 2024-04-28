@@ -1,6 +1,7 @@
 'use client';
 import React, { FC } from 'react';
 import { QueryObserverBaseResult } from 'react-query';
+import { SimpleStudentResponse } from '@fictadvisor/utils/responses';
 import { TableHead, Typography } from '@mui/material';
 import {
   Paper,
@@ -12,7 +13,6 @@ import {
   TablePagination,
   TableRow,
 } from '@mui/material';
-import { isAxiosError } from 'axios';
 
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import Tag from '@/components/common/ui/tag';
@@ -20,16 +20,15 @@ import { TagSize } from '@/components/common/ui/tag/types';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import StudentAPI from '@/lib/api/student/StudentAPI';
-import { GroupStudent } from '@/types/student';
 
 import { TagColorMapper, TagTextMapper } from '../../constants';
 
 import TableActions from './components/table-actions';
 
 interface StudentsListProps {
-  curPage: number;
-  setCurPage: React.Dispatch<React.SetStateAction<number>>;
-  students: GroupStudent[];
+  currPage: number;
+  setCurrPage: React.Dispatch<React.SetStateAction<number>>;
+  students: SimpleStudentResponse[];
   pageSize: number;
   setPageSize: React.Dispatch<React.SetStateAction<number>>;
   totalCount: number;
@@ -37,8 +36,8 @@ interface StudentsListProps {
 }
 
 const StudentsList: FC<StudentsListProps> = ({
-  curPage,
-  setCurPage,
+  currPage,
+  setCurrPage,
   students,
   pageSize,
   setPageSize,
@@ -52,11 +51,11 @@ const StudentsList: FC<StudentsListProps> = ({
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setPageSize(parseInt(event.target.value, 10));
-    setCurPage(0);
+    setCurrPage(0);
   };
 
   const handleChangePage = (_event: unknown, newPage: number) => {
-    setCurPage(newPage);
+    setCurrPage(newPage);
   };
   const handleDelete = async (userId: string) => {
     try {
@@ -88,9 +87,9 @@ const StudentsList: FC<StudentsListProps> = ({
               <TableCell align="left">{student.group.code}</TableCell>
               <TableCell align="left">
                 <Tag
-                  text={TagTextMapper[student.group.role]}
+                  text={TagTextMapper[student.role]}
                   size={TagSize.SMALL}
-                  color={TagColorMapper[student.group.role]}
+                  color={TagColorMapper[student.role]}
                 />
               </TableCell>
               <TableCell align="right" sx={stylesAdmin.actionsWrapper}>
@@ -106,7 +105,7 @@ const StudentsList: FC<StudentsListProps> = ({
         component="div"
         count={totalCount}
         rowsPerPage={pageSize}
-        page={curPage}
+        page={currPage}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />

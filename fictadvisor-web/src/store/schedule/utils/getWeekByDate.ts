@@ -1,9 +1,9 @@
+import { CurrentSemester } from '@fictadvisor/utils/responses';
 import moment, { Moment } from 'moment';
 
-import { GetCurrentSemester } from '@/lib/api/dates/types/GetCurrentSemester';
 const WeekMs = 1000 * 60 * 60 * 24 * 7;
 export const getWeekByDate = (
-  semester: GetCurrentSemester,
+  semester: CurrentSemester,
   date: Moment,
 ): number => {
   const startTimeMs = moment(semester.startDate).valueOf();

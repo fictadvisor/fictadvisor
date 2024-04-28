@@ -1,7 +1,8 @@
+import { QuestionType } from '@fictadvisor/utils/enums';
 import * as yup from 'yup';
 import { AnyObject } from 'yup';
 
-import { Category, Question, QuestionType } from '@/types/poll';
+import { Category, Question } from '@/types/poll';
 
 export const createValidationSchema = (currentQuestions: Category) => {
   const validationSchemaObject: Record<

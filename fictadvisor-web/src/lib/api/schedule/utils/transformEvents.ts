@@ -1,7 +1,5 @@
-import {
-  GetEventBody,
-  GetEventTransformedBody,
-} from '@/lib/api/schedule/types/GetEventBody';
+import { EventsResponse } from '@/lib/api/schedule/types/EventsResponse';
+import { GetEventTransformedBody } from '@/lib/api/schedule/types/GetEventBody';
 import { Event } from '@/types/schedule';
 
 const MS_IN_DAY = 1000 * 60 * 60 * 24;
@@ -10,7 +8,7 @@ export function transformEvents({
   events,
   week,
   startTime,
-}: GetEventBody): GetEventTransformedBody {
+}: EventsResponse): GetEventTransformedBody {
   const firstDayDate = new Date(startTime);
   const firstDayDateMs = firstDayDate.getTime();
 
@@ -54,13 +52,14 @@ export function transformEvents({
     ) {
       //push this event to repeated events
       const _events = groupedEvents.find(
-        _events => _events[0].startTime === event.startTime,
+        _events =>
+          _events[0].startTime === (event.startTime as unknown as string),
       );
 
-      if (_events) _events.push(event);
-      else groupedEvents.push([event]);
+      if (_events) _events.push(event as unknown as Event);
+      else groupedEvents.push([event] as unknown as Event[]);
     } else {
-      allEvents.push(event);
+      allEvents.push(event as unknown as Event);
     }
   }
 

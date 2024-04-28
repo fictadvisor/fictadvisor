@@ -1,15 +1,17 @@
 import { BadRequestException, Injectable, OnModuleInit } from '@nestjs/common';
 import { PrismaService } from '../../database/PrismaService';
-import { CreateQueueDTO } from '../dtos/CreateQueueDTO';
+import {
+  CreateQueueDTO,
+  UpdateQueueDTO,
+  CreateQueueUserDTO,
+  UpdateQueueUserDTO,
+  CreateEntrantDTO,
+  Page,
+} from '@fictadvisor/utils/requests';
+import { mapAsync } from '../../utils/ArrayUtil';
+import { AdmissionAPI } from '../../telegram/AdmissionAPI';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
 import { Queue, QueuePosition, QueuePositionStatus, QueueUser } from '@prisma/client';
-import { UpdateQueueDTO } from '../dtos/UpdateQueueDTO';
-import { Page } from '../../utils/QueryAllDTO';
-import { mapAsync } from '../../utils/ArrayUtil';
-import { CreateQueueUserDTO } from '../dtos/CreateQueueUserDTO';
-import { UpdateQueueUserDTO } from '../dtos/UpdateQueueUserDTO';
-import { CreateEntrantDTO } from '../dtos/CreateEntrantDTO';
-import { AdmissionAPI } from '../../telegram/AdmissionAPI';
 
 interface IMessageData {
   queue: string;

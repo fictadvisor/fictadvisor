@@ -1,6 +1,7 @@
 'use client';
 import type { FC } from 'react';
 import { useEffect, useState } from 'react';
+import { QuestionDisplay, QuestionType } from '@fictadvisor/utils/enums';
 import {
   Divider,
   FormControlLabel,
@@ -15,14 +16,13 @@ import Input from '@/components/common/ui/form/input-mui';
 import { InputSize } from '@/components/common/ui/form/input-mui/types';
 import { TextAreaSize } from '@/components/common/ui/form/text-area-mui/types';
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
-import { QuestionType } from '@/types/poll';
 
 import {
   displayOptions,
   initialQuestionInfoValues,
   typesOptions,
 } from '../../constants';
-import { AdminQuestion, AdminQuestionDisplay } from '../../types';
+import { AdminQuestion } from '../../types';
 
 import * as styles from './QuestionInfo.styles';
 
@@ -152,7 +152,7 @@ const QuestionInfo: FC<QuestionInfoProps> = ({ question, handleChanges }) => {
         onChange={id =>
           setQuestionInfo(prev => ({
             ...prev,
-            display: id as AdminQuestionDisplay,
+            display: id as QuestionDisplay,
           }))
         }
         disableClearable

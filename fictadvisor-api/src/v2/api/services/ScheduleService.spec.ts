@@ -1,14 +1,14 @@
-import { ScheduleService } from './ScheduleService';
 import { Test } from '@nestjs/testing';
+import { InjectionToken } from '@nestjs/common';
 import { DateModule } from '../../utils/date/DateModule';
 import { PrismaModule } from '../../modules/PrismaModule';
-import { Period } from '@prisma/client';
-import { DateService } from '../../utils/date/DateService';
+import { ScheduleService } from './ScheduleService';
 import { ParserModule } from '../../utils/parser/ParserModule';
+import { DateService } from '../../utils/date/DateService';
 import { DisciplineService } from './DisciplineService';
 import { DisciplineTeacherService } from './DisciplineTeacherService';
 import { UserService } from './UserService';
-import { InjectionToken } from '@nestjs/common';
+import { Period } from '@prisma/client';
 
 describe('ScheduleService', () => {
   let scheduleService: ScheduleService;

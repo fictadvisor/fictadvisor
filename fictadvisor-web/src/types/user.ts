@@ -1,20 +1,10 @@
-export enum UserGroupRole {
-  CAPTAIN = 'CAPTAIN',
-  MODERATOR = 'MODERATOR',
-  STUDENT = 'STUDENT',
-}
-
-export enum UserGroupState {
-  APPROVED = 'APPROVED',
-  DECLINED = 'DECLINED',
-  PENDING = 'PENDING',
-}
+import { RoleName, State } from '@fictadvisor/utils/enums';
 
 export interface UserGroup {
   id: string;
   code: string;
-  role?: UserGroupRole;
-  state: UserGroupState;
+  role?: RoleName;
+  state: State;
 }
 
 export interface User {
@@ -29,20 +19,9 @@ export interface User {
   avatar: string;
 }
 
-export interface UserSelective {
-  semester: 1 | 2;
-  year: number;
-  disciplines: string[];
-  amount: number;
-}
-
 export interface UserRemainingSelective {
   disciplineId: string;
   subjectName: string;
-}
-
-export interface UserAdmin extends Omit<User, 'firstName' | 'lastName'> {
-  state: UserGroupState;
 }
 
 export interface SimplifiedUser {
@@ -51,5 +30,5 @@ export interface SimplifiedUser {
   username: string;
   telegramId?: number;
   avatar?: string;
-  state: UserGroupState;
+  state: State;
 }

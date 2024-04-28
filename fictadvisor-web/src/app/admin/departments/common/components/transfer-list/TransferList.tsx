@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { FC, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import { TeacherWithRolesAndCathedrasResponse } from '@fictadvisor/utils/responses';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import Grid from '@mui/material/Grid';
 
@@ -19,16 +20,15 @@ import { IconButtonColor } from '@/components/common/ui/icon-button-mui/types';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import CathedraAPI from '@/lib/api/cathedras/CathedraAPI';
 import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
-import { Teacher } from '@/types/teacher';
 
 import * as styles from './TransferList.styles';
 
 interface TransferListProps {
   cathedraId: string;
-  rightList: Teacher[];
-  leftList: Teacher[];
-  onRightListChange: (list: Teacher[]) => void;
-  onLeftListChange: (list: Teacher[]) => void;
+  rightList: TeacherWithRolesAndCathedrasResponse[];
+  leftList: TeacherWithRolesAndCathedrasResponse[];
+  onRightListChange: (list: TeacherWithRolesAndCathedrasResponse[]) => void;
+  onLeftListChange: (list: TeacherWithRolesAndCathedrasResponse[]) => void;
   count?: number;
   page?: number;
 }
@@ -41,9 +41,13 @@ const TransferList: FC<TransferListProps> = ({
   onLeftListChange,
 }) => {
   const toast = useToastError();
-  const [checked, setChecked] = useState<Teacher[]>([]);
-  const [left, setLeft] = useState<Teacher[]>(leftList);
-  const [right, setRight] = useState<Teacher[]>(rightList);
+  const [checked, setChecked] = useState<
+    TeacherWithRolesAndCathedrasResponse[]
+  >([]);
+  const [left, setLeft] =
+    useState<TeacherWithRolesAndCathedrasResponse[]>(leftList);
+  const [right, setRight] =
+    useState<TeacherWithRolesAndCathedrasResponse[]>(rightList);
   const leftChecked = intersection(checked, left);
   const rightChecked = intersection(checked, right);
 
@@ -54,7 +58,11 @@ const TransferList: FC<TransferListProps> = ({
 
   useQuery(
     ['notInDepartment', cathedraId, true],
-    () => CathedraAPI.getDepartmentTeachers(cathedraId, true),
+    () =>
+      CathedraAPI.getDepartmentTeachers({
+        cathedrasId: [cathedraId],
+        notInDepartments: true,
+      }),
     {
       ...useQueryAdminOptions,
       onSuccess: data => setLeft(data.teachers),
@@ -64,7 +72,11 @@ const TransferList: FC<TransferListProps> = ({
 
   useQuery(
     ['inDepartment', cathedraId, false],
-    () => CathedraAPI.getDepartmentTeachers(cathedraId, false),
+    () =>
+      CathedraAPI.getDepartmentTeachers({
+        cathedrasId: [cathedraId],
+        notInDepartments: false,
+      }),
     {
       ...useQueryAdminOptions,
       onSuccess: data => setRight(data.teachers),
@@ -72,7 +84,7 @@ const TransferList: FC<TransferListProps> = ({
     },
   );
 
-  useQuery(['teachers'], () => TeacherAPI.getAdminAll({}), {
+  useQuery(['teachers'], () => TeacherAPI.getAll(), {
     ...useQueryAdminOptions,
     onSuccess: data => (!cathedraId ? setLeft(data.teachers) : null),
     onError: error => toast.displayError(error),

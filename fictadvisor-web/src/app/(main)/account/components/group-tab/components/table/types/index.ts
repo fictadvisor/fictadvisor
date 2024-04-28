@@ -1,9 +1,9 @@
 import { MouseEventHandler } from 'react';
 import { QueryObserverBaseResult } from 'react-query';
+import { GroupRoles } from '@fictadvisor/utils/enums';
 
 import { Order } from '@/lib/services/group/types/OrderEnum';
-import { PermissionResponse } from '@/lib/services/permisson/types';
-import { UserGroupRole } from '@/types/user';
+import { PermissionResponse } from '@/lib/services/permission/types';
 
 export interface RequestsTableItem {
   imgSrc?: string;
@@ -13,7 +13,7 @@ export interface RequestsTableItem {
 }
 
 export interface StudentsTableItem extends RequestsTableItem {
-  role: UserGroupRole;
+  role: keyof typeof GroupRoles;
 }
 
 export interface RequestsTableProps {
@@ -22,7 +22,7 @@ export interface RequestsTableProps {
 }
 
 export interface StudentsTableProps {
-  role: UserGroupRole;
+  role: keyof typeof GroupRoles;
   permissions: PermissionResponse;
   rows: StudentsTableItem[];
   refetch: QueryObserverBaseResult['refetch'];

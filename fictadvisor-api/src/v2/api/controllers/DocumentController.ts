@@ -1,3 +1,4 @@
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiForbiddenResponse,
@@ -5,11 +6,9 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { DocumentService } from '../services/DocumentService';
-import { StudyContractDTO } from '../dtos/StudyContractDTO';
-import { PriorityDTO } from '../dtos/PriorityDTO';
+import { StudyContractDTO, PriorityDTO } from '@fictadvisor/utils/requests';
 import { EntrantByIdPipe } from '../pipes/EntrantByIdPipe';
+import { DocumentService } from '../services/DocumentService';
 
 @ApiTags('Document')
 @Controller({

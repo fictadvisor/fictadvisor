@@ -1,8 +1,8 @@
+import { RoleName, SortQARParam } from '@fictadvisor/utils/enums';
+import { QueryAllRolesDTO } from '@fictadvisor/utils/requests';
+
 import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
 import { TagColor } from '@/components/common/ui/tag/types';
-import { RoleName } from '@/types/role';
-
-import { RolesSearchFormFields } from '../types';
 
 export const sortOptions: DropDownOption[] = [
   { id: 'displayName', label: 'За назвою' },
@@ -19,10 +19,10 @@ export const RoleNameOptions: DropDownOption[] = [
   { id: RoleName.USER, label: 'Користувач' },
 ];
 
-export const RolesInitialValues: RolesSearchFormFields = {
+export const RolesInitialValues: QueryAllRolesDTO = {
   search: '',
   order: 'asc',
-  sort: 'displayName',
+  sort: SortQARParam.DISPLAYNAME,
   name: '' as RoleName,
 };
 

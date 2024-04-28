@@ -1,12 +1,12 @@
-import { PatchEventBody } from '@/lib/api/schedule/types/PatchEventBody';
 import { SharedEventBody } from '@/lib/api/schedule/types/shared';
+import { UpdateEventDTO } from '@/lib/api/schedule/types/UpdateEventDTO';
 
 export const prepareData = (
   dataFromForm: Partial<SharedEventBody>,
   initialData: Partial<SharedEventBody>,
   week: number,
-): PatchEventBody => {
-  const finalData: PatchEventBody = JSON.parse(JSON.stringify(dataFromForm));
+): UpdateEventDTO => {
+  const finalData: UpdateEventDTO = JSON.parse(JSON.stringify(dataFromForm));
   for (const _key in finalData) {
     const key = _key as keyof SharedEventBody;
     if (
@@ -20,7 +20,7 @@ export const prepareData = (
     }
   }
 
-  if (finalData.eventType?.length === 0) finalData.eventType = null;
+  if (finalData.eventType?.length === 0) finalData.eventType = undefined;
 
   finalData.changeStartDate =
     new Date(initialData.startTime as string).toDateString() !==

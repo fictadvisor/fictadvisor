@@ -2,6 +2,11 @@
 
 import { FC, useCallback, useState } from 'react';
 import { useQuery } from 'react-query';
+import { QueryAllTeacherDTO } from '@fictadvisor/utils/requests';
+import {
+  PaginatedTeachersResponse,
+  TeacherWithRolesAndCathedrasResponse,
+} from '@fictadvisor/utils/responses';
 import { Box } from '@mui/material';
 
 import { TeacherInitialValues } from '@/app/(main)/(search-pages)/search-form/constants';
@@ -24,9 +29,7 @@ import {
 } from '@/components/common/ui/button-mui/types';
 import Progress from '@/components/common/ui/progress';
 import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
-import { GetTeachersResponse } from '@/lib/api/teacher/types/GetTeachersResponse';
 import { Pagination } from '@/types/api';
-import { Teacher } from '@/types/teacher';
 
 const TeacherPage: FC = () => {
   const parsedData = JSON.parse(localStorage.getItem('teachersForm') || '{}');
@@ -36,7 +39,7 @@ const TeacherPage: FC = () => {
       : TeacherInitialValues;
   const localStorageName = 'teachersForm';
   const [queryObj, setQueryObj] = useState<SearchFormFields>(initialValues);
-  const [curPage, setCurPage] = useState(0);
+  const [currPage, setCurrPage] = useState(0);
 
   const submitHandler: SearchFormProps['onSubmit'] = useCallback(query => {
     setQueryObj(prev => {
@@ -48,12 +51,17 @@ const TeacherPage: FC = () => {
     });
   }, []);
 
-  const [loadedTeachers, setLoadedTeachers] = useState<Omit<Teacher, 'role'>[]>(
-    [],
-  );
-  const { data, isLoading, isFetching } = useQuery<GetTeachersResponse>(
-    ['lecturers', curPage, queryObj],
-    () => TeacherAPI.getAdminAll(queryObj, PAGE_SIZE, curPage),
+  const [loadedTeachers, setLoadedTeachers] = useState<
+    TeacherWithRolesAndCathedrasResponse[]
+  >([]);
+  const { data, isLoading, isFetching } = useQuery<PaginatedTeachersResponse>(
+    ['lecturers', currPage, queryObj],
+    () =>
+      TeacherAPI.getAll({
+        ...queryObj,
+        pageSize: PAGE_SIZE,
+        page: currPage,
+      } as QueryAllTeacherDTO),
     {
       onSuccess: data => setLoadedTeachers(prev => [...prev, ...data.teachers]),
       keepPreviousData: true,
@@ -90,7 +98,7 @@ const TeacherPage: FC = () => {
           text="Завантажити ще"
           variant={ButtonVariant.FILLED}
           color={ButtonColor.SECONDARY}
-          onClick={() => setCurPage(pr => pr + 1)}
+          onClick={() => setCurrPage(pr => pr + 1)}
         />
       )}
     </Box>

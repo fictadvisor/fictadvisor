@@ -1,14 +1,17 @@
-import { TeacherCommentAdmin } from '@/app/admin/teachers/common/types';
-import { GetTeacherCommentsResponse } from '@/lib/api/teacher/types/GetTeacherCommentsResponse';
+import { PaginatedQuestionCommentsResponse } from '@fictadvisor/utils/responses';
 
-export const extractTeacherComments = (data: GetTeacherCommentsResponse) => {
+import { TeacherCommentAdmin } from '@/app/admin/teachers/common/types';
+
+export const extractTeacherComments = (
+  data: PaginatedQuestionCommentsResponse,
+) => {
   const allComments: TeacherCommentAdmin[] = [];
 
   data.questions.forEach(question => {
     question.comments.forEach(comment => {
       allComments.push({
         discipline: comment.discipline,
-        semester: comment.semester,
+        semester: comment.semester as 1 | 2,
         year: comment.year,
         comment: comment.comment,
         userId: comment.userId,

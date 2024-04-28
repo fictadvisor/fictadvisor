@@ -1,9 +1,12 @@
+import {
+  PaginatedTeachersResponse,
+  ShortDisciplinesResponse,
+} from '@fictadvisor/utils/responses';
+
 import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
-import { GetGroupDisciplines } from '@/lib/api/group/types/GetGroupDisciplines';
-import { GetTeachersResponse } from '@/lib/api/teacher/types/GetTeachersResponse';
 
 export const getTeacherOptions = (
-  data: GetTeachersResponse,
+  data: PaginatedTeachersResponse,
 ): DropDownOption[] => {
   return data.teachers.map(teacher => ({
     id: teacher.id,
@@ -12,7 +15,7 @@ export const getTeacherOptions = (
 };
 
 export const getDisciplineOptions = (
-  data: GetGroupDisciplines,
+  data: ShortDisciplinesResponse,
 ): DropDownOption[] => {
   return data.disciplines.map(discipline => ({
     id: discipline.id,

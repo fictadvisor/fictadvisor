@@ -2,12 +2,12 @@
 
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
+import { QueryAllQuestionDTO } from '@fictadvisor/utils/requests';
 import { Box, TablePagination } from '@mui/material';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import { initialValues } from '@/app/admin/questions/common/constants';
-import { QuestionSearchFormFields } from '@/app/admin/questions/common/types';
 import QuestionsAdminSearch from '@/app/admin/questions/search/components/questions-search-page';
 import QuestionsTable from '@/app/admin/questions/search/components/questions-search-page/components/questions-table';
 import LoadPage from '@/components/common/ui/load-page';
@@ -17,13 +17,18 @@ import QuestionAPI from '@/lib/api/questions/QuestionAPI';
 
 const Page = () => {
   const [pageSize, setPageSize] = useState(10);
-  const [curPage, setCurPage] = useState(0);
-  const [params, setParams] = useState<QuestionSearchFormFields>(initialValues);
+  const [currPage, setCurrPage] = useState(0);
+  const [params, setParams] = useState<QueryAllQuestionDTO>(initialValues);
   const { displayError } = useToastError();
   const toast = useToast();
   const { data, refetch, isLoading } = useQuery(
-    ['questions', curPage, params, pageSize],
-    () => QuestionAPI.getPageQuestions(params, pageSize, curPage),
+    ['questions', currPage, params, pageSize],
+    () =>
+      QuestionAPI.getPageQuestions({
+        ...params,
+        pageSize,
+        page: currPage,
+      }),
     useQueryAdminOptions,
   );
 
@@ -31,10 +36,10 @@ const Page = () => {
 
   if (!data) throw new Error('error loading data');
 
-  const handleChange = (values: QuestionSearchFormFields) => {
+  const handleChange = (values: QueryAllQuestionDTO) => {
     setParams(prevValues => {
       if (JSON.stringify(values) !== JSON.stringify(prevValues)) {
-        setCurPage(0);
+        setCurrPage(0);
         return values;
       }
       return prevValues;
@@ -45,7 +50,7 @@ const Page = () => {
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setPageSize(Number(event.target.value));
-    setCurPage(0);
+    setCurrPage(0);
   };
 
   const deleteQuestion = async (id: string) => {
@@ -67,9 +72,9 @@ const Page = () => {
       <TablePagination
         sx={stylesAdmin.pagination}
         count={data.pagination.totalAmount}
-        page={curPage}
+        page={currPage}
         rowsPerPage={pageSize}
-        onPageChange={(e, page) => setCurPage(page)}
+        onPageChange={(e, page) => setCurrPage(page)}
         onRowsPerPageChange={handleRowsPerPageChange}
       />
     </Box>

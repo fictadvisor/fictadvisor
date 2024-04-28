@@ -1,4 +1,5 @@
 import React from 'react';
+import { ResourceResponse } from '@fictadvisor/utils/responses';
 import { Box, Typography } from '@mui/material';
 import { Metadata } from 'next';
 import { headers } from 'next/headers';
@@ -18,14 +19,13 @@ import {
 } from '@/components/common/ui/button-mui/types';
 import PageTextsAPI from '@/lib/api/page-texts/PageTextsAPI';
 import StudentResourcesAPI from '@/lib/api/student-resources/StudentResourcesAPI';
-import { StudentResource } from '@/lib/api/student-resources/types/GetStudentResourcesResponse';
 import mainMetadata from '@/lib/metadata/main';
 
 export const metadata: Metadata = mainMetadata;
 
 export default async function Main() {
   const studentResources = await StudentResourcesAPI.getAll();
-  const pageTextsResponse = await PageTextsAPI.getAll(pageTextsKeys);
+  const pageTextsResponse = await PageTextsAPI.getAll({ keys: pageTextsKeys });
   let pageTexts: NewPageTexts = {};
 
   if (Array.isArray(pageTextsResponse)) {
@@ -91,7 +91,7 @@ export default async function Main() {
           <Box>
             <Box sx={stylesMUI.resourcesSectionCards}>
               {studentResources?.map(
-                ({ name, id, imageLink, link }: StudentResource) => (
+                ({ name, id, imageLink, link }: ResourceResponse) => (
                   <ResourceCard
                     key={id}
                     text={name}

@@ -1,4 +1,7 @@
-import { Cathedra, EducationalPrograms, Role, SelectiveAmount, Speciality, Student, TelegramGroup, UserRole } from '@prisma/client';
+import { Cathedra, EducationalPrograms, SelectiveAmount, Student, TelegramGroup, UserRole } from '@prisma/client';
+import { DbRole } from './DbRole';
+import { DbSpeciality } from './DbSpeciality';
+import { DbStudent } from './DbStudent';
 
 export class DbGroup {
   id: string;
@@ -8,12 +11,12 @@ export class DbGroup {
   telegramGroups: TelegramGroup[];
   cathedra?: Cathedra;
   educationalProgram?: {
-    speciality: Speciality,
+    speciality: DbSpeciality,
   } & EducationalPrograms;
   students: ({
     roles?: ({
-      role: Role,
+      role: DbRole,
     } & UserRole)[]
-  } & Student)[];
+  } & DbStudent)[];
 }
 
