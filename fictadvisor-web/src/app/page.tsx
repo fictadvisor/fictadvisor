@@ -1,29 +1,37 @@
+import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { Metadata } from 'next';
 
+import { NewPageTexts } from '@/app/admin/main/components/page-texts-form/types/PageTextsInterfaces';
 import ResourceCard from '@/app/main-page/components/resource-card/ResourceCard';
 import TokenPopup from '@/app/main-page/components/token-popup/TokenPopup';
+import pageTextsKeys from '@/app/main-page/constants/MainPageConstants';
 import styles from '@/app/main-page/MainPage.module.scss';
 import * as stylesMUI from '@/app/main-page/MainPage.styles';
 import BannerImage from '@/components/common/icons/BannerImage';
 import PageLayout from '@/components/common/layout/page-layout';
+import Button from '@/components/common/ui/button-mui';
+import {
+  ButtonSize,
+  ButtonVariant,
+} from '@/components/common/ui/button-mui/types';
+import PageTextsAPI from '@/lib/api/page-texts/PageTextsAPI';
 import StudentResourcesAPI from '@/lib/api/student-resources/StudentResourcesAPI';
-import { GetStudentResourcesResponse } from '@/lib/api/student-resources/types/GetStudentResourcesResponse';
+import { StudentResource } from '@/lib/api/student-resources/types/GetStudentResourcesResponse';
 import mainMetadata from '@/lib/metadata/main';
 
 export const metadata: Metadata = mainMetadata;
 
-export interface MainPageProps {
-  data: GetStudentResourcesResponse | null;
-}
-
 export default async function Main() {
-  let data: MainPageProps['data'];
+  const studentResources = await StudentResourcesAPI.getAll();
+  const pageTextsResponse = await PageTextsAPI.getAll(pageTextsKeys);
+  let pageTexts: NewPageTexts = {};
 
-  try {
-    data = await StudentResourcesAPI.getAll();
-  } catch (error: unknown) {
-    data = null;
+  if (Array.isArray(pageTextsResponse)) {
+    pageTexts = pageTextsResponse.reduce((acc, item) => {
+      acc[item.key] = item;
+      return acc;
+    }, {});
   }
 
   return (
@@ -32,16 +40,41 @@ export default async function Main() {
         <TokenPopup />
         <Box sx={stylesMUI.infoSection}>
           <Box sx={stylesMUI.infoSectionContent}>
-            <Box>
-              <Typography sx={stylesMUI.infoSectionTitle}>
-                Твій студентський портал
-              </Typography>
-              <Typography paragraph sx={stylesMUI.infoSectionParagraph}>
-                Зустрічай FICE Advisor — офіційний сайт Студради ФІОТ.
-                Опитування про викладачів, багатофункціональний розклад,
-                керування групою, набори в наше активне ком’юніті, розіграш шар
-                та інші інструменти — шукай саме тут!
-              </Typography>
+            <Typography sx={stylesMUI.infoSectionTitle}>
+              {pageTexts['mainpage_title'].value}
+            </Typography>
+            <Typography paragraph sx={stylesMUI.infoSectionParagraph}>
+              {pageTexts['mainpage_description'].value}
+            </Typography>
+            <Box sx={stylesMUI.buttonSection}>
+              <Box>
+                <Button
+                  sx={stylesMUI.buttons}
+                  size={ButtonSize.MEDIUM}
+                  text={pageTexts['mainpage_primary'].value}
+                  href={
+                    pageTexts['mainpage_primary'].link
+                      ? pageTexts['mainpage_primary'].link
+                      : ''
+                  }
+                  disabled={!pageTexts['mainpage_primary'].isShown}
+                />
+              </Box>
+              <Box sx={stylesMUI.buttonDivider}></Box>
+              <Box>
+                <Button
+                  sx={stylesMUI.buttons}
+                  size={ButtonSize.MEDIUM}
+                  text={pageTexts['mainpage_secondary'].value}
+                  href={
+                    pageTexts['mainpage_secondary'].link
+                      ? pageTexts['mainpage_secondary'].link
+                      : ''
+                  }
+                  disabled={!pageTexts['mainpage_secondary'].isShown}
+                  variant={ButtonVariant.OUTLINE}
+                />
+              </Box>
             </Box>
           </Box>
           <Box sx={stylesMUI.infoSectionImage}>
@@ -50,18 +83,20 @@ export default async function Main() {
         </Box>
         <Box sx={stylesMUI.resourcesSection}>
           <Typography sx={stylesMUI.resourcesSectionTitle}>
-            Студентські ресурси
+            {pageTexts['mainpage_studentresources_title'].value}
           </Typography>
           <Box>
             <Box sx={stylesMUI.resourcesSectionCards}>
-              {data?.studentResources?.map(({ name, id, imageLink, link }) => (
-                <ResourceCard
-                  key={id}
-                  text={name}
-                  image={imageLink}
-                  href={link}
-                />
-              ))}
+              {studentResources?.map(
+                ({ name, id, imageLink, link }: StudentResource) => (
+                  <ResourceCard
+                    key={id}
+                    text={name}
+                    image={imageLink}
+                    href={link}
+                  />
+                ),
+              )}
             </Box>
           </Box>
         </Box>

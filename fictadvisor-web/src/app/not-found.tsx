@@ -12,13 +12,9 @@ import {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
+import notFoundMetadata from '@/lib/metadata/not-found';
 
-export const metadata: Metadata = {
-  title: 'Сторінку не знайдено',
-  openGraph: {
-    title: 'Сторінку не знайдено',
-  },
-};
+export const metadata: Metadata = notFoundMetadata;
 
 export default function NotFound() {
   return (
