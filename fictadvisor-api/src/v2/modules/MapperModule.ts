@@ -14,6 +14,7 @@ import { EntrantMapper } from '../mappers/EntrantMapper';
 import { TelegramGroupMapper } from '../mappers/TelegramGroupMapper';
 import { CathedraMapper } from '../mappers/CathedraMapper';
 import { ResourceMapper } from '../mappers/ResourceMapper';
+import { DisciplineResourceMapper } from '../mappers/DisciplineResourceMapper';
 
 @Module({
   providers: [
@@ -32,6 +33,7 @@ import { ResourceMapper } from '../mappers/ResourceMapper';
     TelegramGroupMapper,
     CathedraMapper,
     ResourceMapper,
+    DisciplineResourceMapper,
   ],
   exports: [
     DisciplineMapper,
@@ -49,6 +51,7 @@ import { ResourceMapper } from '../mappers/ResourceMapper';
     TelegramGroupMapper,
     CathedraMapper,
     ResourceMapper,
+    DisciplineResourceMapper,
   ],
 })
 export class MapperModule {}

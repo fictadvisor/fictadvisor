@@ -123,6 +123,7 @@ model Subject {
   id          String       @id @default(uuid())
   name        String
   disciplines Discipline[]
+  resources   Resource[]
   createdAt   DateTime?    @default(now()) @map("created_at")
   updatedAt   DateTime?    @default(now()) @updatedAt @map("updated_at")
 
@@ -217,6 +218,7 @@ model Teacher {
   disciplineTeachers DisciplineTeacher[]
   cathedras          TeachersOnCathedras[]
   complaints         Complaint[]
+  resources          Resource[]
   createdAt          DateTime?             @default(now()) @map("created_at")
   updatedAt          DateTime?             @default(now()) @updatedAt @map("updated_at")
 
@@ -841,4 +843,44 @@ model PageText {
   isShown Boolean @default(true) @map("is_shown")
 
   @@map("page_texts")
+}
+
+model Resource {
+  id          String                  @id @default(uuid())
+  name        String  
+  description String? 
+  link        String
+  subjectId   String                  @map("subject_id")
+  subject     Subject                 @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  teacherId   String                  @map("teacher_id")
+  teacher     Teacher                 @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  categories  ResourcesOnCategories[]
+  year        Int
+  semester    Int
+  createdAt   DateTime?               @default(now()) @map("created_at")
+  updatedAt   DateTime?               @default(now()) @updatedAt @map("updated_at")
+
+  @@map("resources")
+}
+
+model ResourceCategory {
+  id        String                  @id @default(uuid())
+  name      String
+  resources ResourcesOnCategories[]
+  createdAt DateTime?               @default(now()) @map("created_at")
+  updatedAt DateTime?               @default(now()) @updatedAt @map("updated_at")
+
+  @@map("resource_categories")
+}
+
+model ResourcesOnCategories {
+  resourceId String           @map("resource_id")
+  resource   Resource         @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  categoryId String           @map("category_id")
+  category   ResourceCategory @relation(fields: [categoryId], references: [id])
+  createdAt  DateTime?        @default(now()) @map("created_at")
+  updatedAt  DateTime?        @default(now()) @updatedAt @map("updated_at")
+
+  @@id([resourceId, categoryId])
+  @@map("resources_on_categories")
 }
