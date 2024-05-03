@@ -1,4 +1,4 @@
-import { ContactType } from '@/app/discipline/contacts';
+import { ContactType } from '@/app/(main)/discipline/contacts';
 
 export const ContactPlaceholder: Record<ContactType, string> = {
   [ContactType.MAIL]: 'Пошта',

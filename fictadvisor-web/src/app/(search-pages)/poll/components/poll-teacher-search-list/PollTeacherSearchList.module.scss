@@ -1,8 +1,0 @@
-@import "../../../../../styles/partials/typography-mixins";
-@import "../../../../../styles/partials/breakpoints";
-
-@media only screen and (max-width: $breakpoint-mobile-medium){
-  .form{
-    column-gap: 15px;
-  }
-}

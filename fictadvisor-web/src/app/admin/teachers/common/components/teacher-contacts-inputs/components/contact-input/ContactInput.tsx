@@ -1,7 +1,6 @@
 import React, { FC, useEffect, useState } from 'react';
 import { Stack } from '@mui/material';
 
-import { ContactType } from '@/app/discipline/contacts';
 import Input from '@/components/common/ui/form/input-mui';
 import { InputSize } from '@/components/common/ui/form/input-mui/types';
 import { Contact } from '@/types/contact';

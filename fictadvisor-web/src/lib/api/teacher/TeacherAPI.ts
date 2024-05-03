@@ -1,6 +1,6 @@
 import { AdminSearchFormFields } from 'src/app/admin/teachers/search/types';
 
-import { Complaint } from '@/app/(search-pages)/teachers/[teacherId]/personal-teacher-tabs/components/complaint-popup/types';
+import { Complaint } from '@/app/(main)/(search-pages)/teachers/[teacherId]/personal-teacher-tabs/components/complaint-popup/types';
 import { CommentsAdminSearchFormFields } from '@/app/admin/comments/common/types';
 import { ChangeCommentBody } from '@/lib/api/teacher/types/ChangeCommentBody';
 import { DeleteCommentBody } from '@/lib/api/teacher/types/DeleteCommentBody';

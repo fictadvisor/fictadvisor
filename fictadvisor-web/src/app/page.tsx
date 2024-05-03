@@ -2,12 +2,12 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { Metadata } from 'next';
 
+import ResourceCard from '@/app/(main)/main-page/components/resource-card/ResourceCard';
+import TokenPopup from '@/app/(main)/main-page/components/token-popup/TokenPopup';
+import pageTextsKeys from '@/app/(main)/main-page/constants/MainPageConstants';
+import styles from '@/app/(main)/main-page/MainPage.module.scss';
+import * as stylesMUI from '@/app/(main)/main-page/MainPage.styles';
 import { NewPageTexts } from '@/app/admin/main/components/page-texts-form/types/PageTextsInterfaces';
-import ResourceCard from '@/app/main-page/components/resource-card/ResourceCard';
-import TokenPopup from '@/app/main-page/components/token-popup/TokenPopup';
-import pageTextsKeys from '@/app/main-page/constants/MainPageConstants';
-import styles from '@/app/main-page/MainPage.module.scss';
-import * as stylesMUI from '@/app/main-page/MainPage.styles';
 import BannerImage from '@/components/common/icons/BannerImage';
 import PageLayout from '@/components/common/layout/page-layout';
 import Button from '@/components/common/ui/button-mui';
