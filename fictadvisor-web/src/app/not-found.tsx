@@ -4,7 +4,7 @@ import { Box, Typography } from '@mui/material';
 import { Metadata } from 'next';
 import Link from 'next/link';
 
-import * as styles from '@/app/404-page/NotFoundPage.styles';
+import * as styles from '@/app/(main)/404-page/NotFoundPage.styles';
 import PageLayout from '@/components/common/layout/page-layout';
 import Button from '@/components/common/ui/button-mui';
 import {

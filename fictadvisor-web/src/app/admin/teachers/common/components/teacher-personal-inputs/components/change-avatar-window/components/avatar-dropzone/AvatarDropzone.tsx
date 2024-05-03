@@ -10,7 +10,7 @@ import React, {
 import { ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 import { Box, Typography, useMediaQuery } from '@mui/material';
 
-import { handleFileSelect } from '@/app/account/components/general-tab/components/change-avatar-window/components/avatar-dropzone/utils/handleFileSelect';
+import { handleFileSelect } from '@/app/(main)/account/components/general-tab/components/change-avatar-window/components/avatar-dropzone/utils/handleFileSelect';
 import Button from '@/components/common/ui/button-mui';
 import {
   ButtonSize,

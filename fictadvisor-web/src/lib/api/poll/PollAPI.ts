@@ -1,4 +1,4 @@
-import { PollSearchFormFields } from '@/app/(search-pages)/poll/components/poll-search-form/types';
+import { PollSearchFormFields } from '@/app/(main)/(search-pages)/poll/components/poll-search-form/types';
 import { CreateTeacherGradeBody } from '@/lib/api/poll/types/CreateTeacherGradeBody';
 import { GetTeacherQuestionsResponse } from '@/lib/api/poll/types/GetTeacherQuestionsResponse';
 import { PollTeachersResponse } from '@/lib/api/poll/types/PollTeachersResponse';

@@ -1,4 +1,4 @@
-import { ContactType } from '@/app/discipline/contacts';
+import { ContactType } from '@/app/(main)/discipline/contacts';
 import { Contact } from '@/types/contact';
 
 export const createContacts = (contacts: Contact[]) => {

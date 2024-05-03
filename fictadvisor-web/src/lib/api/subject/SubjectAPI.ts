@@ -1,4 +1,4 @@
-import { SearchFormFields } from '@/app/(search-pages)/search-form/types';
+import { SearchFormFields } from '@/app/(main)/(search-pages)/search-form/types';
 import { GetListOfSubjectsResponse } from '@/lib/api/subject/types/GetListOfSubjectsResponse';
 import { GetTeachersBySubjectResponse } from '@/lib/api/subject/types/GetTeachersBySubjectResponse';
 import { getAuthorizationHeader } from '@/lib/api/utils';

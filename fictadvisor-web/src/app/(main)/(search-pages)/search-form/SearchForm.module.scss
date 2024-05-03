@@ -1,0 +1,50 @@
+@import 'src/styles/partials/breakpoints';
+
+.form {
+  display: grid;
+  grid-template-columns: 40% 12% 23% 15% 5%;
+  grid-template-rows: 1fr;
+  gap: 12px;
+  margin-bottom: 34px;
+  align-items: center;
+}
+
+.dropdown3 {
+  display: grid;
+  grid-template-columns: 48% 48%;
+  gap: 12px;
+  justify-content: center;
+}
+
+@media screen and (max-width: $breakpoint-desktop-semi-medium) {
+  .form {
+    grid-template-columns: 40% 20% 30%;
+  }
+  .dropdown3 {
+    display: grid;
+    grid-row: 1;
+    grid-column: 3;
+  }
+}
+
+@media screen and (max-width: $breakpoint-tablet) {
+  .form {
+    grid-template-columns: 35% 45% 11%;
+  }
+  .input {
+    grid-column: 1 / span 2;
+  }
+  .dropdown3 {
+    grid-row: 3;
+    grid-column: span 3;
+    justify-content: start;
+  }
+}
+
+@media only screen and (max-width: $breakpoint-mobile-medium) {
+  .form {
+    column-gap: 12px;
+    margin-bottom: 24px;
+    grid-template-columns: 35% 45% 13%;
+  }
+}

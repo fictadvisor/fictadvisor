@@ -5,8 +5,8 @@ import {
 } from '@heroicons/react/24/outline';
 import { Box } from '@mui/material';
 
-import { SubjectInitialValues } from '@/app/(search-pages)/search-form/constants';
-import { SearchFormFields } from '@/app/(search-pages)/search-form/types';
+import { SubjectInitialValues } from '@/app/(main)/(search-pages)/search-form/constants';
+import { SearchFormFields } from '@/app/(main)/(search-pages)/search-form/types';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import Button from '@/components/common/ui/button-mui';
 import { ButtonSize } from '@/components/common/ui/button-mui/types';

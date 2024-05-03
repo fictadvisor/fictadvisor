@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Typography, useMediaQuery } from '@mui/material';
 import Image from 'next/image';
 
-import * as stylesMUI from '@/app/(search-pages)/poll/components/poll-teacher-search-list/PollTeacherSearchList.styles';
+import * as stylesMUI from '@/app/(main)/(search-pages)/poll/components/poll-teacher-search-list/PollTeacherSearchList.styles';
 import Button from '@/components/common/ui/button-mui';
 import {
   ButtonSize,
