@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { Box, Typography } from '@mui/material';
-import Contact from 'src/app/(search-pages)/teachers/[teacherId]/contacts';
+import Contact from 'src/app/(main)/(search-pages)/teachers/[teacherId]/contacts';
 
 import { CardRoles } from '@/components/common/ui/cards/card-roles';
 import Rating from '@/components/common/ui/rating';

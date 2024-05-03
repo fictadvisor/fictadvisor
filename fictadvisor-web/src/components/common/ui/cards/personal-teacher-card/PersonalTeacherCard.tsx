@@ -2,9 +2,9 @@ import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import { Box, Typography } from '@mui/material';
 
-import Contacts from '@/app/(search-pages)/teachers/[teacherId]/contacts/Contact';
-import { teacherContext } from '@/app/(search-pages)/teachers/[teacherId]/utils';
-import teacherSubjectContext from '@/app/discipline/utils/teacherSubjectContext';
+import Contacts from '@/app/(main)/(search-pages)/teachers/[teacherId]/contacts/Contact';
+import { teacherContext } from '@/app/(main)/(search-pages)/teachers/[teacherId]/utils';
+import teacherSubjectContext from '@/app/(main)/discipline/utils/teacherSubjectContext';
 import Button from '@/components/common/ui/button-mui';
 import { ButtonVariant } from '@/components/common/ui/button-mui/types';
 import { CardRoles } from '@/components/common/ui/cards/card-roles';

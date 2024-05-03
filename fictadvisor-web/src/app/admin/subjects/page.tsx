@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import { Box, TablePagination } from '@mui/material';
 
-import { SubjectInitialValues } from '@/app/(search-pages)/search-form/constants';
-import { SearchFormFields } from '@/app/(search-pages)/search-form/types';
+import { SubjectInitialValues } from '@/app/(main)/(search-pages)/search-form/constants';
+import { SearchFormFields } from '@/app/(main)/(search-pages)/search-form/types';
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import AdminSubjectTable from '@/app/admin/subjects/search/components/admin-subject-table';
