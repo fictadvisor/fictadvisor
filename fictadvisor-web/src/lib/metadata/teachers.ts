@@ -10,6 +10,7 @@ const teachersMetadata: Metadata = {
   openGraph: {
     title,
     description,
+    images: '/opengraph-images/lecture.jpg',
   },
 };
 export default teachersMetadata;
