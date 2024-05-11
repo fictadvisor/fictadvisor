@@ -10,6 +10,7 @@ const subjectsMetadata: Metadata = {
   openGraph: {
     title,
     description,
+    images: '/opengraph-images/subjects.jpg',
   },
 };
 export default subjectsMetadata;
