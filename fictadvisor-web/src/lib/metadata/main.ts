@@ -10,6 +10,7 @@ const mainMetadata: Metadata = {
   openGraph: {
     title,
     description,
+    images: '/opengraph-images/main.jpg',
   },
 };
 export default mainMetadata;
