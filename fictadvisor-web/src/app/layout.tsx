@@ -1,17 +1,10 @@
-'use client';
-
-import { useEffect } from 'react';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import { ThemeProvider } from '@mui/system';
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import moment from 'moment';
+import { Metadata } from 'next';
 import Head from 'next/head';
+import { headers } from 'next/headers';
 import Script from 'next/script';
 
-import AuthenticationProvider from '@/hooks/use-authentication/authentication-context';
-import ToastContextProvider from '@/hooks/use-toast/toast-context';
-import theme from '@/styles/theme';
+import Providers from '@/components/common/layout/providers';
 import { manrope } from '@/styles/theme/constants/typography/typography';
 
 import 'moment/locale/uk';
@@ -29,21 +22,17 @@ moment.updateLocale('uk', {
   },
 });
 
-const queryClient = new QueryClient();
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    metadataBase: new URL(`https://${headers().get('host')}`),
+  };
+}
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  useEffect(() => {
-    if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
-      navigator.serviceWorker
-        .register('/service-worker.js')
-        .then(registration => console.log('scope is: ', registration.scope));
-    }
-  }, []);
-
   return (
     <html>
       <Head>
@@ -71,15 +60,7 @@ export default function RootLayout({
       </Head>
       <body className={manrope.className} style={manrope.style}>
         <Script async src="https://telegram.org/js/telegram-widget.js" />
-        <ThemeProvider theme={theme}>
-          <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale="uk">
-            <QueryClientProvider client={queryClient}>
-              <AuthenticationProvider>
-                <ToastContextProvider>{children}</ToastContextProvider>
-              </AuthenticationProvider>
-            </QueryClientProvider>
-          </LocalizationProvider>
-        </ThemeProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

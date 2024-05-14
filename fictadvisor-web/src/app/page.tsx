@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { Metadata } from 'next';
+import { headers } from 'next/headers';
 
 import ResourceCard from '@/app/(main)/main-page/components/resource-card/ResourceCard';
 import TokenPopup from '@/app/(main)/main-page/components/token-popup/TokenPopup';
@@ -33,6 +34,8 @@ export default async function Main() {
       return acc;
     }, {});
   }
+
+  console.log(headers().get('host'));
 
   return (
     <PageLayout className={styles['main-page']}>
