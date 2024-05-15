@@ -33,8 +33,8 @@ export const supportLinks = [
     text: 'Конфіденційність',
   },
   {
-    link: 'https://t.me/fict_robot',
-    text: 'FICT robot',
+    link: 'https://t.me/fice_robot',
+    text: 'FICE robot',
   },
   {
     link: '/about',
