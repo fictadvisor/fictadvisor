@@ -1,6 +1,5 @@
 import moment from 'moment';
 import { Metadata } from 'next';
-import Head from 'next/head';
 import { headers } from 'next/headers';
 import Script from 'next/script';
 
@@ -25,6 +24,12 @@ moment.updateLocale('uk', {
 export async function generateMetadata(): Promise<Metadata> {
   return {
     metadataBase: new URL(`https://${headers().get('host')}`),
+    icons: [
+      {
+        url: '/favicon.ico',
+        type: 'image/png',
+      },
+    ],
   };
 }
 
@@ -35,7 +40,7 @@ export default function RootLayout({
 }) {
   return (
     <html>
-      <Head>
+      <head>
         <Script
           strategy="afterInteractive"
           src={`https://www.googletagmanager.com/gtag/js?id=${process.env.GTM}`}
@@ -47,19 +52,14 @@ export default function RootLayout({
 
             gtag("config", ${process.env.GTM});`}
         </Script>
-        <link rel="icon" href="/favicon.ico" />
+        <script async src="https://telegram.org/js/telegram-widget.js" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap"
-          rel="stylesheet"
-        />
         <meta
           name="google-site-verification"
           content="M93dY9EuPcQ5AzSYwxc6_el0GwZp_XlDHBhphP6z-7g"
         />
-      </Head>
+      </head>
       <body className={manrope.className} style={manrope.style}>
-        <Script async src="https://telegram.org/js/telegram-widget.js" />
         <Providers>{children}</Providers>
       </body>
     </html>
