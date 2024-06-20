@@ -36,7 +36,7 @@ import { PERMISSION } from '@fictadvisor/utils/security';
 import { Access } from 'src/v2/security/Access';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
 import { TeacherByIdPipe } from '../pipes/TeacherByIdPipe';
-import { ContactByNamePipe } from '../pipes/ContactByNamePipe';
+import { ContactByIdPipe } from '../pipes/ContactByIdPipe';
 import { SubjectByIdPipe } from '../pipes/SubjectByIdPipe';
 import { UserByIdPipe } from '../pipes/UserByIdPipe';
 import { CathedraByIdPipe } from '../pipes/CathedraByIdPipe';
@@ -401,9 +401,7 @@ export class TeacherController {
     description: `\n
     InvalidEntityIdException:
       Teacher with such id is not found
-                  
-    InvalidContactNameException: 
-      Contact with such name is not found`,
+      Contact with such id is not found`,
   })
   @ApiParam({
     name: 'teacherId',
@@ -411,18 +409,18 @@ export class TeacherController {
     description: 'Id of certain teacher',
   })
   @ApiParam({
-    name: 'name',
+    name: 'contactId',
     required: true,
     description: 'Id of certain teacher\'s contact',
   })
   @ApiEndpoint({
     summary: 'Receive teacher with certain contact id',
   })
-  @Get('/:teacherId/contacts/:name')
+  @Get('/:teacherId/contacts/:contactId')
   getContact (
-    @Param(ContactByNamePipe) params: {teacherId: string, name: string},
+    @Param(ContactByIdPipe) params: {teacherId: string, contactId: string},
   ) {
-    return this.teacherService.getContact(params.teacherId, params.name);
+    return this.teacherService.getContact(params.teacherId, params.contactId);
   }
 
   @ApiBearerAuth()
@@ -432,8 +430,8 @@ export class TeacherController {
   @ApiBadRequestResponse({
     description: `\n 
     InvalidEntityIdException:
-      teacher with such id is not found 
-                  
+      Teacher with such id is not found 
+
     InvalidBodyException: 
       Name is too long (max: 100)
       Name can not be empty
@@ -478,12 +476,12 @@ export class TeacherController {
   @ApiBadRequestResponse({
     description: `\n
     InvalidEntityIdException:  
-      teacher with such id is not found
-                  
-    InvalidContactNameException:  
-      Contact with such name is not found
-                  
+      Teacher with such id is not found
+      Contact with such id is not found
+
     InvalidBodyException:  
+      Name is too long (max: 100)Name is too long (max: 100)
+      Name is not correct (a-zA-Z0-9A-Я(укр.)\\\\-\\' )
       Display name is too long (max: 100)
       Link is too long (max: 200)
       Link contains wrong symbols (ASCII only)
@@ -505,7 +503,7 @@ export class TeacherController {
     description: 'Id of certain teacher',
   })
   @ApiParam({
-    name: 'name',
+    name: 'contactId',
     required: true,
     description: 'Id of certain teacher\'s contact',
   })
@@ -513,12 +511,12 @@ export class TeacherController {
     summary: 'Update certain teacher\'s contact',
     permissions: PERMISSION.TEACHERS_$TEACHERID_CONTACTS_UPDATE,
   })
-  @Patch('/:teacherId/contacts/:name')
+  @Patch('/:teacherId/contacts/:contactId')
   async updateContact (
-    @Param(ContactByNamePipe) params: {teacherId: string, name: string},
+    @Param(ContactByIdPipe) params: {teacherId: string, contactId: string},
     @Body() body: UpdateContactDTO,
   ) {
-    return this.teacherService.updateContact(params.teacherId, params.name, body);
+    return this.teacherService.updateContact(params.teacherId, params.contactId, body);
   }
 
   @ApiBearerAuth()
@@ -526,10 +524,8 @@ export class TeacherController {
   @ApiBadRequestResponse({
     description: `\n
     InvalidEntityIdException:  
-      teacher with such id is not found
-                  
-    InvalidContactNameException: 
-      Contact with such name is not found`,
+      Teacher with such id is not found
+      Contact with such id is not found`,
   })
   @ApiUnauthorizedResponse({
     description: `\n
@@ -547,7 +543,7 @@ export class TeacherController {
     description: 'Id of certain teacher',
   })
   @ApiParam({
-    name: 'name',
+    name: 'contactId',
     required: true,
     description: 'Id of certain teacher\'s contact',
   })
@@ -555,11 +551,11 @@ export class TeacherController {
     summary: 'Delete teacher\'s contact',
     permissions: PERMISSION.TEACHERS_$TEACHERID_CONTACTS_DELETE,
   })
-  @Delete('/:teacherId/contacts/:name')
+  @Delete('/:teacherId/contacts/:contactId')
   async deleteContact (
-    @Param(ContactByNamePipe) params: {teacherId: string, name: string},
+    @Param(ContactByIdPipe) params: {teacherId: string, contactId: string},
   ) {
-    return this.teacherService.deleteContact(params.teacherId, params.name);
+    return this.teacherService.deleteContact(params.teacherId, params.contactId);
   }
 
   @ApiOkResponse({

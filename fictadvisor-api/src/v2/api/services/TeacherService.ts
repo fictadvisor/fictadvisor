@@ -226,8 +226,8 @@ export class TeacherService {
     return this.contactRepository.getAllContacts(entityId);
   }
 
-  async getContact (teacherId: string, name: string) {
-    const contact = await this.contactRepository.getContact(teacherId, name);
+  async getContact (teacherId: string, contactId: string) {
+    const contact = await this.contactRepository.getContact(teacherId, contactId);
     return {
       name: contact.name,
       displayName: contact.displayName,
@@ -243,14 +243,14 @@ export class TeacherService {
     });
   }
 
-  async updateContact (entityId: string, name: string, body: UpdateContactDTO) {
-    await this.contactRepository.updateContact(entityId, name, body);
-    return this.contactRepository.getContact(entityId, name);
+  async updateContact (entityId: string, contactId: string, body: UpdateContactDTO) {
+    await this.contactRepository.updateContact(entityId, contactId, body);
+    return this.contactRepository.getContact(entityId, contactId);
   }
 
-  async deleteContact (entityId: string, name: string) {
+  async deleteContact (entityId: string, contactId: string) {
     await this.contactRepository.deleteContact(
-      entityId, name,
+      entityId, contactId,
     );
   }
 
