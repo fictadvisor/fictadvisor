@@ -36,7 +36,11 @@ export const TeacherCard: React.FC<TeacherCardProps> = ({
     >
       <Box sx={styles.teacherCardShift}>
         <Box sx={styles.teacherCardTopPart}>
-          <Avatar sx={styles.teacherCardAvatar} src={avatar} alt="викладач" />
+          <Avatar
+            sx={styles.teacherCardAvatar}
+            src={avatar || '/images/default-avatar.jpeg'}
+            alt="викладач"
+          />
           <Box sx={styles.teacherCardTopPartRating}>
             {rating !== 0 && (
               <Rating
