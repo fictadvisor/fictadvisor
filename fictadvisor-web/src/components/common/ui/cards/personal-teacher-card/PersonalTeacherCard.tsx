@@ -15,8 +15,7 @@ import Button from '@/components/common/ui/button-mui';
 import { ButtonVariant } from '@/components/common/ui/button-mui/types';
 import { CardRoles } from '@/components/common/ui/cards/card-roles';
 import Rating from '@/components/common/ui/rating';
-import { ContactType } from '@/types/contact';
-import { Contact } from '@/types/contact';
+import { Contact, ContactType } from '@/types/contact';
 import {
   TeacherAcademicStatus,
   TeacherCathedra,
