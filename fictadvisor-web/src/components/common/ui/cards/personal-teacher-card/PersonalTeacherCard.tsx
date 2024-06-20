@@ -90,7 +90,12 @@ const PersonalTeacherCard: FC<TeacherCard> = ({
   return (
     <Box ref={blockRef} sx={styles.card}>
       <Box sx={styles.photo}>
-        <Box component="img" sx={styles.image} src={avatar} alt="photo" />
+        <Box
+          component="img"
+          sx={styles.image}
+          src={avatar || '/images/default-avatar.jpeg'}
+          alt="photo"
+        />
       </Box>
       <Box sx={styles.nameAndRating(isSubjectCard)}>
         <Typography variant="h4" sx={styles.name}>
