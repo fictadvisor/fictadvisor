@@ -73,7 +73,7 @@ export class DisciplineTeacherController {
   })
   @ApiEndpoint({
     summary: 'Get user\'s questions by disciplineTeacherId',
-    permissions: PERMISSION.GROUPS_$GROUPID_QUESTIONS_GET,
+    permissions: PERMISSION.DISCIPLINE_TEACHERS_$DISCIPLINE_TEACHERID_QUESTIONS_GET,
     guards: GroupByDisciplineTeacherGuard,
   })
   @Get('/:disciplineTeacherId/questions')
@@ -144,7 +144,7 @@ export class DisciplineTeacherController {
   })
   @ApiEndpoint({
     summary: 'Send question`s answers by user and disciplineTeacherId',
-    permissions: PERMISSION.GROUPS_$GROUPID_ANSWERS_SEND,
+    permissions: PERMISSION.DISCIPLINE_TEACHERS_$DISCIPLINE_TEACHERID_ANSWERS_SEND,
     guards: GroupByDisciplineTeacherGuard,
   })
   @Post('/:disciplineTeacherId/answers')
