@@ -449,6 +449,7 @@ export class ScheduleController {
     ObjectIsRequiredException:
       DisciplineType is required
       StartTime is required
+      EndTime is required
       
     InvalidEntityIdException: 
       Event with such id is not found
