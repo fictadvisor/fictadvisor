@@ -255,7 +255,7 @@ export class ScheduleService {
     );
   }
 
-  async validateTeacherDiscipline (teacherId: string, disciplineId: string) {
+  private async validateTeacherDiscipline (teacherId: string, disciplineId: string) {
     const disciplineTeacher = await this.disciplineTeacherRepository.findMany({
       where: {
         teacherId,
@@ -265,7 +265,7 @@ export class ScheduleService {
     return !!disciplineTeacher.length;
   }
 
-  async validateTeachersDiscipline (teachers: string[], disciplineId : string) {
+  private async validateTeachersDiscipline (teachers: string[], disciplineId : string) {
     for (const teacherId of teachers) {
       const hasDiscipline = await this.validateTeacherDiscipline(teacherId, disciplineId);
       if (!hasDiscipline) return true;
@@ -273,7 +273,7 @@ export class ScheduleService {
     return false;
   }
 
-  async calculateEventsAmount (startOfEvent: Date, eventPeriod: string) {
+  private async calculateEventsAmount (startOfEvent: Date, eventPeriod: string) {
     const { endDate } = await this.dateService.getCurrentSemester();
     const endSemester = new Date(endDate.getTime() - FORTNITE);
     if (startOfEvent > endSemester || eventPeriod === Period.NO_PERIOD) {
@@ -515,45 +515,27 @@ export class ScheduleService {
       url,
       disciplineInfo,
       eventInfo,
-      endTime,
-      ...durationTime
     } = body;
 
-    let startTime = durationTime.startTime ?? event.startTime;
-    if (!durationTime.startTime && durationTime.changeStartDate) throw new ObjectIsRequiredException('startTime');
-    if (durationTime.startTime && !durationTime.changeStartDate && period !== Period.NO_PERIOD) {
-      startTime = event.startTime;
-      startTime.setHours(durationTime.startTime.getHours());
-      startTime.setMinutes(durationTime.startTime.getMinutes());
-    }
+    const { startTime, endTime } = this.getNewDateTime(event, body);
 
     const eventsAmount = await this.calculateEventsAmount(startTime, period);
 
-    let teacherForceChanges = false;
-
-    if (event.teacherForceChanges) {
-      teacherForceChanges = true;
-    }
-
-    if (teachers && disciplineId && !event.teacherForceChanges) {
-      teacherForceChanges = await this.validateTeachersDiscipline(teachers, disciplineId);
-    }
+    const teacherForceChanges = teachers && disciplineId && !event.teacherForceChanges ?
+      await this.validateTeachersDiscipline(teachers, disciplineId) :
+      event.teacherForceChanges;
 
     const index = await this.getIndexOfLesson(week, event);
     if (index === null) throw new InvalidWeekException();
 
     if (eventInfo) await this.createOrUpdateEventInfo(eventInfo, eventId, index);
-    else if (eventInfo === '' || eventInfo === null) await this.deleteEventInfo(eventId, index);
-
-    event.endTime = new Date(startTime);
-    event.endTime.setHours(endTime.getHours());
-    event.endTime.setMinutes(endTime.getMinutes());
+    else if (eventInfo !== undefined) await this.deleteEventInfo(eventId, index);
 
     event = await this.eventRepository.updateById(eventId, {
       name,
       period,
       startTime,
-      endTime: event.endTime,
+      endTime,
       eventsAmount,
       teacherForceChanges,
       url,
@@ -584,7 +566,39 @@ export class ScheduleService {
     });
   }
 
-  async updateDiscipline (
+  private getNewDateTime (event: DbEvent, {
+    startTime,
+    endTime,
+    changeStartDate,
+    changeEndDate,
+    period,
+  }: UpdateEventDTO) {
+    if (!startTime && changeStartDate) throw new ObjectIsRequiredException('startTime');
+    if (!endTime && changeEndDate) throw new ObjectIsRequiredException('endTime');
+
+    const result = {
+      startTime: startTime ?? event.startTime,
+      endTime: endTime ?? event.endTime,
+    };
+
+    if (period !== Period.NO_PERIOD) {
+      if (startTime && !changeStartDate) {
+        result.startTime = new Date(
+          event.startTime.setHours(startTime.getHours(), startTime.getMinutes())
+        );
+      }
+
+      if (endTime && !changeEndDate) {
+        result.endTime = new Date(
+          event.endTime.setHours(endTime.getHours(), endTime.getMinutes())
+        );
+      }
+    }
+
+    return result;
+  }
+
+  private async updateDiscipline (
     newDisciplineId: string | undefined,
     presentDisciplineId: string | undefined,
     newType: EventTypeEnum | undefined,
@@ -607,7 +621,7 @@ export class ScheduleService {
     });
   }
 
-  async clearDiscipline (
+  private async clearDiscipline (
     disciplineId: string,
     type: DbDisciplineType,
   ) {
@@ -650,7 +664,7 @@ export class ScheduleService {
     }
   }
 
-  async prepareDiscipline (
+  private async prepareDiscipline (
     disciplineId: string,
     newType: EventTypeEnum,
     teachers: string[],
