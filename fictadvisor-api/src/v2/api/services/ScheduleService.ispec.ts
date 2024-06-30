@@ -400,6 +400,17 @@ describe('ScheduleService', () => {
           startTime: new Date('2022-11-12T08:30:00'),
           endTime: new Date('2022-11-12T10:00:00'),
         },
+        {
+          id: 'some-event-2st-semester-no-period-02-05',
+          name: 'name14',
+          groupId: 'group',
+          period: Period.NO_PERIOD,
+          eventsAmount: 1,
+          teacherForceChanges: false,
+          isCustom: false,
+          startTime: new Date('2023-02-05T08:30:00'),
+          endTime: new Date('2023-02-05T10:00:00'),
+        },
       ],
     });
 
@@ -980,6 +991,235 @@ describe('ScheduleService', () => {
       };
 
       await expect(scheduleService.createGroupEvent(createEventDTO)).rejects.toThrow(ObjectIsRequiredException);
+    });
+  });
+
+  describe('updateEvent', () => {
+    it('should throw an ObjectIsRequiredException if changeStartDate/changeEndDate is true, but startTime/endTime is not provided', async () => {
+      jest.useFakeTimers().setSystemTime(new Date('2024-06-25T21:32:26.231Z'));
+      const eventId = 'practice-event-1st-semester-every-week-09-12';
+      let data: any = {
+        week: 1,
+        changeStartDate: true,
+      };
+
+      await expect(scheduleService.updateEvent(eventId, data)).rejects.toThrow(
+        new ObjectIsRequiredException('startTime')
+      );
+
+      data = {
+        week: 1,
+        changeEndDate: true,
+      };
+
+      await expect(scheduleService.updateEvent(eventId, data)).rejects.toThrow(
+        new ObjectIsRequiredException('endTime')
+      );
+    });
+
+    it('should change time without date', async () => {
+      jest.useFakeTimers().setSystemTime(new Date('2023-02-05T08:00:00'));
+      const eventId = 'event-2st-semester-every-week-02-05';
+      const time = {
+        startTime: new Date('2023-02-08T11:19:00'),
+        endTime: new Date('2023-02-08T12:19:00'),
+      };
+      const data = {
+        week: 1,
+        changeStartDate: false,
+        startTime: time.startTime,
+        endTime: time.endTime,
+        period: Period.EVERY_WEEK,
+      };
+      await scheduleService.updateEvent(eventId, data);
+      const { event } = await scheduleService.getEvent(eventId, 1);
+
+      for (const t in time) {
+        expect(event[t].getHours()).toEqual(time[t].getHours());
+        expect(event[t].getMinutes()).toEqual(time[t].getMinutes());
+
+        expect(event[t].getDate()).not.toEqual(time[t].getDate());
+      }
+    });
+
+    it('should delete eventInfo', async () => {
+      jest.useFakeTimers().setSystemTime(new Date('2023-02-17T08:30:00'));
+      const eventId = 'some-event-2st-semester-no-period-02-05';
+      const data = {
+        week: 1,
+        eventInfo: '',
+      };
+
+      await scheduleService.updateEvent(eventId, data);
+
+      const expectedEvent = {
+        id: 'some-event-2st-semester-no-period-02-05',
+        name: 'name14',
+        startTime: new Date('2023-02-05T08:30:00.000Z'),
+        endTime: new Date('2023-02-05T10:00:00.000Z'),
+        period: 'NO_PERIOD',
+        url: null,
+        groupId: 'group',
+        eventsAmount: 1,
+        teacherForceChanges: false,
+        isCustom: false,
+        createdAt: expect.any(Date),
+        updatedAt: expect.any(Date),
+        group: {
+          id: 'group',
+          code: 'AA-12',
+          admissionYear: 2022,
+          educationalProgramId: 'issEducationalProgramId',
+          cathedraId: 'ipiCathedraId',
+          createdAt: expect.any(Date),
+          updatedAt: expect.any(Date),
+        },
+        eventInfo: [],
+        lessons: [],
+      };
+
+      const { event } = await scheduleService.getEvent(eventId, data.week);
+      expect(event).toStrictEqual(expectedEvent);
+    });
+
+    it('should update an event without discipline', async () => {
+      jest.useFakeTimers().setSystemTime(new Date('2023-02-20T08:30:00'));
+      const eventId = 'some-event-2st-semester-no-period-02-05';
+      const data = {
+        week: 1,
+        name: 'some name',
+        period: Period.EVERY_WEEK,
+        url: 'https://kvdkpsldv.com',
+        eventInfo: 'info dsk wds',
+        startTime: new Date('2023-02-06T08:30:00'),
+        endTime: new Date('2023-02-06T10:00:00'),
+        changeStartDate: true,
+        changeEndDate: true,
+      };
+
+      const expectedEvent = {
+        id: 'some-event-2st-semester-no-period-02-05',
+        name: 'some name',
+        startTime: new Date('2023-02-06T08:30:00.000Z'),
+        endTime: new Date('2023-02-06T10:00:00.000Z'),
+        period: 'EVERY_WEEK',
+        url: 'https://kvdkpsldv.com',
+        groupId: 'group',
+        eventsAmount: 18,
+        teacherForceChanges: false,
+        isCustom: false,
+        createdAt: expect.any(Date),
+        updatedAt: expect.any(Date),
+        group: {
+          id: 'group',
+          code: 'AA-12',
+          admissionYear: 2022,
+          educationalProgramId: 'issEducationalProgramId',
+          cathedraId: 'ipiCathedraId',
+          createdAt: expect.any(Date),
+          updatedAt: expect.any(Date),
+        },
+        eventInfo: [
+          {
+            eventId: 'some-event-2st-semester-no-period-02-05',
+            number: 0,
+            description: 'info dsk wds',
+            createdAt: expect.any(Date),
+            updatedAt: expect.any(Date),
+          },
+        ],
+        lessons: [],
+      };
+
+      await scheduleService.updateEvent(eventId, data);
+      const { event } = await scheduleService.getEvent(eventId, data.week);
+
+      expect(event).toStrictEqual(expectedEvent);
+    });
+
+    it('should throw an ObjectIsRequiredException if lesson and disciplineId or eventType is not provided', async () => {
+      jest.useFakeTimers().setSystemTime(new Date('2022-09-17T08:30:00'));
+      const eventId = 'some-event-1st-semester-no-period-09-12';
+      const data = {
+        week: 2,
+        disciplineInfo: 'vef',
+      };
+
+      await expect(scheduleService.updateEvent(eventId, data)).rejects.toThrow(
+        new ObjectIsRequiredException('disciplineType')
+      );
+    });
+
+    it('should update an event with discipline', async () => {
+      jest.useFakeTimers().setSystemTime(new Date('2023-02-20T08:30:00'));
+      const eventId = 'some-event-2st-semester-no-period-02-05';
+      const data = {
+        week: 1,
+        name: 'some name',
+        period: Period.EVERY_FORTNIGHT,
+        url: 'https://ngfbd.com',
+        eventInfo: 'info dsk wds',
+        startTime: new Date('2023-02-07T09:30:00'),
+        endTime: new Date('2023-02-07T11:00:00'),
+        changeStartDate: true,
+        changeEndDate: true,
+        disciplineId: 'nonSelectedDiscipline',
+        eventType: EventTypeEnum.LECTURE,
+        teachers: ['deletedTeacherId'],
+      };
+
+      const expectedEvent = {
+        id: 'some-event-2st-semester-no-period-02-05',
+        name: 'some name',
+        startTime: new Date('2023-02-07T09:30:00.000Z'),
+        endTime: new Date('2023-02-07T11:00:00.000Z'),
+        period: Period.EVERY_FORTNIGHT,
+        url: 'https://ngfbd.com',
+        groupId: 'group',
+        eventsAmount: 9,
+        teacherForceChanges: false,
+        isCustom: false,
+        createdAt: expect.any(Date),
+        updatedAt: expect.any(Date),
+        group: {
+          id: 'group',
+          code: 'AA-12',
+          admissionYear: 2022,
+          educationalProgramId: 'issEducationalProgramId',
+          cathedraId: 'ipiCathedraId',
+          createdAt: expect.any(Date),
+          updatedAt: expect.any(Date),
+        },
+        eventInfo: [
+          {
+            eventId: 'some-event-2st-semester-no-period-02-05',
+            number: 0,
+            description: 'info dsk wds',
+            createdAt: expect.any(Date),
+            updatedAt: expect.any(Date),
+          },
+        ],
+        lessons: [
+          {
+            eventId: 'some-event-2st-semester-no-period-02-05',
+            disciplineTypeId: 'nonSelectedDiscipline-lecture',
+            createdAt: expect.any(Date),
+            updatedAt: expect.any(Date),
+            disciplineType: {
+              id: 'nonSelectedDiscipline-lecture',
+              disciplineId: 'nonSelectedDiscipline',
+              name: EventTypeEnum.LECTURE,
+              createdAt: expect.any(Date),
+              updatedAt: expect.any(Date),
+            },
+          },
+        ],
+      };
+
+      await scheduleService.updateEvent(eventId, data);
+      const { event } = await scheduleService.getEvent(eventId, data.week);
+
+      expect(event).toStrictEqual(expectedEvent);
     });
   });
 
