@@ -50,20 +50,6 @@ const AdminStudentEditPage: FC<AdminStudentEditPageProps> = ({ params }) => {
       useQueryAdminOptions,
     );
 
-  const isSuccess = student && selectives && remainingSelectives;
-
-  const isLoading =
-    isLoadingSelective || isLoadingRemainingSelectives || isLoadingStudent;
-
-  if (!isSuccess) throw new Error('Something went wrong in student edit page');
-
-  const initialValues: UpdateStudentWithRolesDTO = {
-    firstName: student.firstName,
-    middleName: student.middleName,
-    lastName: student.lastName,
-    groupId: student.group.id,
-    roleName: student.role,
-  };
   const [connectedSelectives, setConnectedSelectives] = useState<string[]>([]);
   const [disconnectedSelectives, setDisconnectedSelectives] = useState<
     string[]
@@ -80,6 +66,23 @@ const AdminStudentEditPage: FC<AdminStudentEditPageProps> = ({ params }) => {
     } catch (e) {
       displayError(e);
     }
+  };
+
+  const isLoading =
+    isLoadingSelective || isLoadingRemainingSelectives || isLoadingStudent;
+
+  if (isLoading) return <LoadPage />;
+
+  const isSuccess = student && selectives && remainingSelectives;
+
+  if (!isSuccess) throw new Error('Something went wrong in student edit page');
+
+  const initialValues: UpdateStudentWithRolesDTO = {
+    firstName: student.firstName,
+    middleName: student.middleName,
+    lastName: student.lastName,
+    groupId: student.group.id,
+    roleName: student.role,
   };
 
   const handleSubmit = async (data: UpdateStudentWithRolesDTO) => {
@@ -100,8 +103,6 @@ const AdminStudentEditPage: FC<AdminStudentEditPageProps> = ({ params }) => {
       displayError(error);
     }
   };
-
-  if (isLoading) return <LoadPage />;
 
   return (
     <Formik
