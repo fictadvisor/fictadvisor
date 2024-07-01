@@ -1,5 +1,6 @@
 export * from './OrderQAParam';
 export * from './SortQACParam';
+export * from './SortQAFAQParam';
 export * from './SortQAGrantsParam';
 export * from './SortQAGroupsParam';
 export * from './SortQAQParam';

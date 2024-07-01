@@ -22,6 +22,10 @@ export enum PERMISSION {
 	CATHEDRAS_UPDATE = 'cathedras.update',
 	CATHEDRAS_DELETE = 'cathedras.delete',
 
+	COMMENTS_GET = 'comments.get',
+	COMMENTS_UPDATE = 'comments.update',
+	COMMENTS_DELETE = 'comments.delete',
+
 	DISCIPLINE_TEACHERS_CREATE = 'disciplineTeachers.create',
 	DISCIPLINE_TEACHERS_UPDATE = 'disciplineTeachers.update',
 	DISCIPLINE_TEACHERS_DELETE = 'disciplineTeachers.delete',
@@ -29,6 +33,16 @@ export enum PERMISSION {
 	DISCIPLINE_UPDATE = 'discipline.update',
 
 	ENTRANT_CONTRACT_CREATE = 'entrant.contract.create',
+
+	FACULTY_EVENTS_CREATE = 'facultyEvents.create',
+
+	FAQS_CREATE = 'faqs.create',
+	FAQS_UPDATE = 'faqs.update',
+	FAQS_DELETE = 'faqs.delete',
+
+	FAQS_CATEGORIES_CREATE = 'faqs.categories.create',
+	FAQS_CATEGORIES_UPDATE = 'faqs.categories.update',
+	FAQS_CATEGORIES_DELETE = 'faqs.categories.delete',
 
 	GROUPS_CREATE = 'groups.create',
 	GROUPS_UPDATE = 'groups.update',
@@ -73,10 +87,6 @@ export enum PERMISSION {
 	ROLES_$ROLEID_GRANT_CREATE = 'roles.$roleId.grant.create',
 	ROLES_$ROLEID_GRANTS_UPDATE = 'roles.$roleId.grants.update',
 	ROLES_$ROLEID_GRANTS_DELETE = 'roles.$roleId.grants.delete',
-
-	COMMENTS_GET = 'comments.get',
-	COMMENTS_UPDATE = 'comments.update',
-	COMMENTS_DELETE = 'comments.delete',
 
 	SCHEDULE_PARSE = 'schedule.parse',
 
@@ -123,6 +133,4 @@ export enum PERMISSION {
 
 	PAGE_TEXTS_CREATE = 'pages.create',
 	PAGE_TEXTS_UPDATE = 'pages.update',
-
-	FACULTY_EVENTS_CREATE = 'facultyEvents.create'
 }

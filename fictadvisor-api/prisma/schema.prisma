@@ -512,6 +512,33 @@ model TeachersOnCathedras {
   @@map("teachers_on_cathedras")
 }
 
+model FAQ {
+  id           String                @id @default(uuid())
+  text         String
+  answer       String
+  categories   FAQToCategory[]
+
+  @@map("faqs")
+}
+
+model FAQCategory {
+  id           String                @id @default(uuid())
+  name         String
+  faqs         FAQToCategory[]
+
+  @@map("faq_categories")
+}
+
+model FAQToCategory {
+  faqId        String                @map("faq_id")
+  faq          FAQ                   @relation(fields: [faqId], references: [id], onDelete: Cascade)
+  categoryId   String                @map("category_id")
+  category     FAQCategory           @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([faqId, categoryId])
+  @@map("faqs_to_categories")
+}
+
 model QueueUser {
   id             Int             @id @default(autoincrement())
   username       String?
