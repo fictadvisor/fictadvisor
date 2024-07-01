@@ -12,6 +12,7 @@ export * from './CreateDisciplineTeacherDTO';
 export * from './CreateDisciplineTypeDTO';
 export * from './CreateEntrantDTO';
 export * from './CreateEventDTO';
+export * from './CreateFAQDTO';
 export * from './CreateGrantDTO';
 export * from './CreateGroupDTO';
 export * from './CreatePageTextDTO';
@@ -79,6 +80,7 @@ export * from './UpdateContactDTO';
 export * from './UpdateDisciplineDTO';
 export * from './UpdateDisciplineTeacherDTO';
 export * from './UpdateEventDTO';
+export * from './UpdateFAQDTO'
 export * from './UpdateGrantDTO';
 export * from './UpdateGroupDTO';
 export * from './UpdatePageTextsDTO';
