@@ -1,5 +1,6 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { Box, Divider, SxProps, Theme } from '@mui/material';
+import moment from 'moment';
 
 import { getStringTime } from '@/app/(main)/schedule/schedule-page/utils/getStringTime';
 import Tooltip from '@/components/common/ui/tooltip';
@@ -23,9 +24,17 @@ const ScheduleLine: FC<ScheduleLineProps> = ({
   top,
 }) => {
   const time = useSchedule(state => state.currentTime);
-
+  const updatedTime = useSchedule(state => state.updatedTime);
   const day = (time.day() + 6) % 7;
   const indent = day * 148;
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      updatedTime(moment());
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [updatedTime]);
 
   return (
     <Box sx={mergeSx(styles.container(top), sx)}>
