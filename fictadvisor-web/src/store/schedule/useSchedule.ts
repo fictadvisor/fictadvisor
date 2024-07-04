@@ -96,6 +96,7 @@ type Action = {
     semester: CurrentSemester | null,
     groups: MappedGroupResponse[],
   ) => void;
+  updatedTime: (updatedTime: Moment) => void;
 };
 
 export const useSchedule = create<State & Action>((set, get) => {
@@ -319,5 +320,6 @@ export const useSchedule = create<State & Action>((set, get) => {
         );
       }, [router]);
     },
+    updatedTime: updatedTime => set({ currentTime: updatedTime }),
   };
 });
