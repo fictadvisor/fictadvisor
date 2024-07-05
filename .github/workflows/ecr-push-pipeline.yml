@@ -65,10 +65,6 @@ jobs:
 
       - name: Build, tag, and push the image to Amazon ECR
         id: build-image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
-          IMAGE_TAG: ${{ steps.get-commit-hash.outputs.commit-hash }}-${{ steps.get-timestamp.outputs.timestamp }}
         run: |
-          docker build -t ${{ secrets.AWS_URI }}:$IMAGE_TAG -f ./fictadvisor-api/Dockerfile .
-          docker push ${{ secrets.AWS_URI }}:$IMAGE_TAG
+          docker build -t ${{ secrets.AWS_URI }} -f ./fictadvisor-api/Dockerfile .
+          docker push ${{ secrets.AWS_URI }}
