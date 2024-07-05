@@ -71,5 +71,5 @@ jobs:
           REPOSITORY_URL: ${{ secrets.AWS_URI }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t $REPOSITORY_URL:$IMAGE_TAG .
+          docker build -t $REPOSITORY_URL:$IMAGE_TAG -f ./fictadvisor-api/Dockerfile .
           docker push $REPOSITORY_URL:$IMAGE_TAG
