@@ -1,4 +1,4 @@
-name: CI/CD Pipeline back-end, building and pushing to ECR
+name: Pipeline ECR
 
 on:
   push:
