@@ -4,3 +4,4 @@
 /env/postgres-dev.env
 /env/postgres.env
 ./out
+.DS_Store
