@@ -6,6 +6,7 @@ on:
       - 'aws'
     paths:
       - 'fictadvisor-api/**'
+  workflow_dispatch:
 
 jobs:
   test:
