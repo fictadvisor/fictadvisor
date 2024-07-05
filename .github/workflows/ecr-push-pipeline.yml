@@ -57,11 +57,15 @@ jobs:
         with:
           registry-type: public
 
-      - name: Build, tag, and push docker image to Amazon ECR Public
+      - name: Build and push app Docker image
+        uses: docker/build-push-action@v6
         env:
-          REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
           REPOSITORY_URL: ${{ secrets.AWS_URI }}
           IMAGE_TAG: ${{ github.sha }}
-        run: |
-          docker build -t $REPOSITORY_URL:$IMAGE_TAG -f ./fictadvisor-api/Dockerfile .
-          docker push $REPOSITORY_URL:$IMAGE_TAG
+        with:
+          context: .
+          file: ./fictadvisor-api/Dockerfile
+          push: true
+          tags: $REPOSITORY_URL:$IMAGE_TAG
+          cache-from: type=gha,scope=${{ github.ref_name }}-image
+          cache-to: type=gha,mode=max,scope=${{ github.ref_name }}-image
