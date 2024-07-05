@@ -1,13 +1,6 @@
 name: PushECR Backend
 
-on:
-  push:
-    branches:
-      - 'aws'
-    paths:
-      - 'fictadvisor-api/**'
-  workflow_dispatch:
-  pull_request:
+on: ["push"]
 
 jobs:
   test:
