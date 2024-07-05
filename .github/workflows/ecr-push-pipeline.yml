@@ -1,4 +1,4 @@
-name: Pipeline ECR
+name: Pipeline-ECR Backend
 
 on:
   push:
