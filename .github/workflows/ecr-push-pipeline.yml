@@ -1,4 +1,4 @@
-name: Pipeline-ECR Backend
+name: PushECR Backend
 
 on:
   push:
