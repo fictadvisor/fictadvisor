@@ -45,7 +45,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set current date as env variable
-        run: echo "NOW=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+        run: echo "NOW=$(date +'%d-%m-%Y')" >> $GITHUB_ENV
       
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
