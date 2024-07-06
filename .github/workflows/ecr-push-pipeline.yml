@@ -67,7 +67,7 @@ jobs:
         env:
           REPOSITORY_URL: ${{ secrets.AWS_URI }}
         run: |
-          docker build
+          docker build \
             -t $REPOSITORY_URL:$NOW \
             --file ./fictadvisor-api/Dockerfile .
           docker push $REPOSITORY_URL:$NOW
