@@ -66,10 +66,9 @@ jobs:
       - name: Build, tag, and push docker image to Amazon ECR Public
         env:
           REPOSITORY_URL: ${{ secrets.AWS_URI }}
-          IMAGE_TAG: $NOW
         run: |
           docker buildx create --use
           docker buildx build --push \
-            -t $REPOSITORY_URL:$IMAGE_TAG \
+            -t $REPOSITORY_URL:$NOW \
             --file ./fictadvisor-api/Dockerfile \
             .
