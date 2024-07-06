@@ -43,7 +43,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        
+
+      - name: Set current date as env variable
+        run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+      
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
         
@@ -63,10 +66,10 @@ jobs:
       - name: Build, tag, and push docker image to Amazon ECR Public
         env:
           REPOSITORY_URL: ${{ secrets.AWS_URI }}
-          IMAGE_TAG: ${{ github.sha }}
+          IMAGE_TAG: $NOW
         run: |
           docker buildx create --use
           docker buildx build --push \
-            -t $REPOSITORY_URL:$IMAGE_TAG \
+            -t $REPOSITORY_URL:$IMAFE_TAG \
             --file ./fictadvisor-api/Dockerfile \
             .
