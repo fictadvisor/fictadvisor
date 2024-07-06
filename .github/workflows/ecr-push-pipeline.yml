@@ -58,7 +58,7 @@ jobs:
         id: login-ecr-public
         uses: aws-actions/amazon-ecr-login@v2
         with:
-          registry-type: public
+          registry-type: private
 
       - name: Build, tag, and push docker image to Amazon ECR Public
         env:
@@ -68,7 +68,5 @@ jobs:
           docker buildx create --use
           docker buildx build --push \
             -t $REPOSITORY_URL:$IMAGE_TAG \
-            --cache-to type=gha,mode=max,scope=${{ github.ref_name }}-image \
-            --cache-from type=gha,scope=${{ github.ref_name }}-image \
             --file ./fictadvisor-api/Dockerfile \
             .
