@@ -119,11 +119,6 @@ export class DisciplineService {
     const role = TeacherRoleAdapter[disciplineType];
     const disciplineTeachers = await this.disciplineTeacherRepository.findMany({
       where: {
-        roles: {
-          some: {
-            role,
-          },
-        },
         discipline: {
           id: disciplineId,
         },

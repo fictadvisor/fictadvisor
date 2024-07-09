@@ -29,7 +29,7 @@ import { QuestionByRoleAndIdPipe } from '../pipes/QuestionByRoleAndIdPipe';
 import { UserByIdPipe } from '../pipes/UserByIdPipe';
 import { QuestionMapper } from '../../mappers/QuestionMapper';
 import { PollService } from '../services/PollService';
-import { TeacherRole } from '@prisma/client';
+import { TeacherRole } from '@fictadvisor/utils';
 
 @ApiTags('Poll')
 @Controller({

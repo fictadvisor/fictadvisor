@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../PrismaService';
-import { TeacherRole } from '@prisma/client';
+import { TeacherRole } from '@fictadvisor/utils';
 import { CreateDisciplineTeacherRoleData } from '../../api/datas/CreateDisciplineTeacherRoleData';
 
 @Injectable()
@@ -15,7 +15,7 @@ export class DisciplineTeacherRoleRepository {
     });
   }
 
-  async create (data: { role: TeacherRole; disciplineTeacherId: string; disciplineTypeId: string }) {
+  async create (data: { disciplineTeacherId: string; disciplineTypeId: string }) {
     return this.prisma.disciplineTeacherRole.create({
       data,
     });

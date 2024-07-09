@@ -10,7 +10,6 @@ import { some } from '../utils/ArrayUtil';
 import { DbEvent } from '../database/entities/DbEvent';
 import { DbDiscipline } from '../database/entities/DbDiscipline';
 import { DbDisciplineType } from '../database/entities/DbDisciplineType';
-import { TeacherRoleAdapter } from './TeacherRoleAdapter';
 
 @Injectable()
 export class ScheduleMapper {
@@ -49,7 +48,7 @@ export class ScheduleMapper {
       eventInfo: event.eventInfo[0]?.description || null,
       disciplineInfo: discipline?.description || null,
       teachers: discipline?.disciplineTeachers
-        .filter(({ roles }) => some(roles, 'role', TeacherRoleAdapter[disciplineType]))
+        .filter(({ roles }) => some(roles.map((role) => role.disciplineType), 'name', disciplineType))
         .map(({ teacher }) => ({
           id: teacher.id,
           firstName: teacher.firstName,

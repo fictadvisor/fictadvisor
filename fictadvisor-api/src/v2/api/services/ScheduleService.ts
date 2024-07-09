@@ -212,13 +212,11 @@ export class ScheduleService {
     const { id } = find(discipline.disciplineTypes, 'name', data.eventType);
 
     for (const teacherId of data.teachers) {
-      const role = TeacherRoleAdapter[data.eventType];
       const disciplineTeacher = await this.disciplineTeacherRepository.getOrCreate({ teacherId, disciplineId: discipline.id });
-      if (!some(disciplineTeacher.roles, 'role', role)) {
+      if (!some(disciplineTeacher.roles.map((r) => r.disciplineType), 'name', data.eventType)) {
         await this.disciplineTeacherRoleRepository.create({
           disciplineTeacherId: disciplineTeacher.id,
           disciplineTypeId: id,
-          role,
         });
       }
     }
@@ -652,7 +650,7 @@ export class ScheduleService {
       };
 
       discipline.disciplineTeachers.map(({ teacherId, disciplineId, roles }) => {
-        if (roles.length === 1 && roles[0].role === TeacherRoleAdapter[type.name]) {
+        if (roles.length === 1 && roles[0].disciplineType.name === type.name) {
           update.disciplineTeachers.deleteMany.OR.push({
             teacherId,
             disciplineId,
@@ -702,13 +700,11 @@ export class ScheduleService {
     await this.removeTeachers(removedTeachers, disciplineType.id);
 
     for (const teacherId of teachers) {
-      const role = TeacherRoleAdapter[disciplineType.name];
       const disciplineTeacher = await this.disciplineTeacherRepository.getOrCreate({ teacherId, disciplineId });
-      if (!some(disciplineTeacher.roles, 'role', role)) {
+      if (!some(disciplineTeacher.roles.map((r) => r.disciplineType), 'name', disciplineType.name)) {
         await this.disciplineTeacherRoleRepository.create({
           disciplineTeacherId: disciplineTeacher.id,
           disciplineTypeId: disciplineType.id,
-          role,
         });
       }
     }

@@ -2,7 +2,7 @@ import axios from 'axios';
 import { JSDOM } from 'jsdom';
 import { Injectable } from '@nestjs/common';
 import { Parser } from './Parser';
-import { DisciplineTypeEnum, TeacherRole } from '@prisma/client';
+import { DisciplineTypeEnum } from '@prisma/client';
 import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
 import { DisciplineTeacherRoleRepository } from '../../database/repositories/DisciplineTeacherRoleRepository';
 import { GroupRepository } from '../../database/repositories/GroupRepository';
@@ -25,6 +25,7 @@ import { ExtendedSchedulePair } from './ScheduleParserTypes';
 import { DbDiscipline } from '../../database/entities/DbDiscipline';
 import { DbDisciplineType } from '../../database/entities/DbDisciplineType';
 import { GeneralParser } from './GeneralParser';
+import { TeacherRole } from '@fictadvisor/utils';
 
 const DISCIPLINE_TYPE = {
   Лек: DisciplineTypeEnum.LECTURE,

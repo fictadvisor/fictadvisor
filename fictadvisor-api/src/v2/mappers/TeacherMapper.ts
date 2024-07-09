@@ -9,6 +9,7 @@ import {
   Position,
 } from '@fictadvisor/utils/enums';
 import { DbTeacher } from '../database/entities/DbTeacher';
+import { TeacherRoleAdapter } from './TeacherRoleAdapter';
 
 @Injectable()
 export class TeacherMapper {
@@ -36,7 +37,7 @@ export class TeacherMapper {
   getRoles (teacher: DbTeacher): TeacherRole[] {
     const roles: TeacherRole[] = [];
     for (const dt of teacher.disciplineTeachers) {
-      roles.push(...dt.roles.map(({ role }) => role));
+      roles.push(...dt.roles.map(({ disciplineType }) => TeacherRoleAdapter[disciplineType.name]));
     }
 
     return [...new Set(roles)];

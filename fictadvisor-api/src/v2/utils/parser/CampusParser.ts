@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Parser } from './Parser';
 import axios from 'axios';
-import { DisciplineTypeEnum, TeacherRole } from '@prisma/client';
+import { DisciplineTypeEnum } from '@prisma/client';
 import { ScheduleDayType, ScheduleGroupType, SchedulePairType, ScheduleType } from './ScheduleParserTypes';
 import { DateService, StudyingSemester } from '../date/DateService';
 import { DbSubject } from '../../database/entities/DbSubject';
@@ -13,6 +13,8 @@ import { DisciplineTeacherRepository } from '../../database/repositories/Discipl
 import { SubjectRepository } from '../../database/repositories/SubjectRepository';
 import { GroupRepository } from '../../database/repositories/GroupRepository';
 import { GeneralParser } from './GeneralParser';
+import { TeacherRole } from '@fictadvisor/utils';
+import { TeacherRoleAdapter } from '../../mappers/TeacherRoleAdapter';
 
 export const DAY_NUMBER = {
   'Пн': 1,
@@ -178,16 +180,14 @@ export class CampusParser implements Parser {
         disciplineId: discipline.id,
         roles: {
           create: {
-            role,
             disciplineTypeId: disciplineType.id,
           },
         },
       });
-    } else if (!disciplineTeacher.roles.some((r) => r.role === role)) {
+    } else if (!disciplineTeacher.roles.some((r) => r.disciplineType.name === TeacherRoleAdapter[role])) {
       await this.disciplineTeacherRepository.updateById(disciplineTeacher.id, {
         roles: {
           create: {
-            role,
             disciplineTypeId: disciplineType.id,
           },
         },

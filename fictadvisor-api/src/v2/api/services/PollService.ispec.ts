@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing';
-import { CommentsSortOrder } from '@fictadvisor/utils/enums';
+import { CommentsSortOrder, TeacherRole } from '@fictadvisor/utils/enums';
 import { DateModule } from '../../utils/date/DateModule';
 import { MapperModule } from '../../modules/MapperModule';
 import { PrismaModule } from '../../modules/PrismaModule';
@@ -7,7 +7,8 @@ import { PollService } from './PollService';
 import { DbDiscipline } from 'src/v2/database/entities/DbDiscipline';
 import { DbQuestionWithRoles } from 'src/v2/database/entities/DbQuestionWithRoles';
 import { DbQuestionWithAnswers } from 'src/v2/database/entities/DbQuestionWithAnswers';
-import { Group, PrismaClient, QuestionDisplay, QuestionType, State, Subject, Teacher, TeacherRole, User } from '@prisma/client';
+import { Group, PrismaClient, QuestionDisplay, QuestionType, State, Subject, Teacher, User } from '@prisma/client';
+import { DisciplineTypeEnum } from '@fictadvisor/utils';
 
 
 describe('PollService', () => {
@@ -212,9 +213,9 @@ describe('PollService', () => {
         order: 1,
         questionRoles: {
           createMany: { data: [
-            { role: TeacherRole.LABORANT, isRequired: false, isShown: false },
-            { role: TeacherRole.LECTURER, isRequired: true, isShown: false },
-            { role: TeacherRole.PRACTICIAN, isRequired: true, isShown: true },
+            { role: DisciplineTypeEnum.LABORATORY, isRequired: false, isShown: false },
+            { role: DisciplineTypeEnum.LECTURE, isRequired: true, isShown: false },
+            { role: DisciplineTypeEnum.PRACTICE, isRequired: true, isShown: true },
           ] },
         },
         questionAnswers: {
@@ -249,9 +250,9 @@ describe('PollService', () => {
         order: 2,
         questionRoles: {
           createMany: { data: [
-            { role: TeacherRole.LABORANT, isRequired: true, isShown: true },
-            { role: TeacherRole.LECTURER, isRequired: true, isShown: true },
-            { role: TeacherRole.PRACTICIAN, isRequired: true, isShown: true },
+            { role: DisciplineTypeEnum.LABORATORY, isRequired: true, isShown: true },
+            { role: DisciplineTypeEnum.LECTURE, isRequired: true, isShown: true },
+            { role: DisciplineTypeEnum.PRACTICE, isRequired: true, isShown: true },
           ] },
         },
         questionAnswers: {
@@ -287,9 +288,9 @@ describe('PollService', () => {
         order: 4,
         questionRoles: { createMany: {
           data: [
-            { role: TeacherRole.LABORANT, isRequired: false, isShown: true },
-            { role: TeacherRole.LECTURER, isRequired: false, isShown: true },
-            { role: TeacherRole.PRACTICIAN, isRequired: false, isShown: true },
+            { role: DisciplineTypeEnum.LABORATORY, isRequired: false, isShown: true },
+            { role: DisciplineTypeEnum.LECTURE, isRequired: false, isShown: true },
+            { role: DisciplineTypeEnum.PRACTICE, isRequired: false, isShown: true },
           ],
         } },
         questionAnswers: { createMany: {

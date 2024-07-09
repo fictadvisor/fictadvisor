@@ -15,7 +15,7 @@ import { DbDiscipline } from '../../database/entities/DbDiscipline';
 import { DbQuestionAnswer } from '../../database/entities/DbQuestionAnswer';
 import { DatabaseUtils } from '../../database/DatabaseUtils';
 import { PaginatedData } from '../datas/PaginatedData';
-import { TeacherTypeAdapter } from '../../mappers/TeacherRoleAdapter';
+import { TeacherRoleAdapter, TeacherTypeAdapter } from '../../mappers/TeacherRoleAdapter';
 import { QuestionMapper } from '../../mappers/QuestionMapper';
 import { PollService } from './PollService';
 import { DateService } from '../../utils/date/DateService';
@@ -33,7 +33,8 @@ import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityId
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
 import { NotSelectedDisciplineException } from '../../utils/exceptions/NotSelectedDisciplineException';
 import { IsRemovedDisciplineTeacherException } from '../../utils/exceptions/IsRemovedDisciplineTeacherException';
-import { Prisma, QuestionType, State, TeacherRole } from '@prisma/client';
+import { Prisma, QuestionType, State } from '@prisma/client';
+import { TeacherRole } from '@fictadvisor/utils';
 
 @Injectable()
 export class DisciplineTeacherService {
@@ -131,11 +132,11 @@ export class DisciplineTeacherService {
 
     const teacherRoles = disciplineTeachers
       .find((dt) => dt.id === id)
-      .roles.map((r) => r.role);
+      .roles.map((r) => TeacherRoleAdapter[r.disciplineType.name]);
 
     const disciplineRoles = new Set<TeacherRole>();
     for (const dt of disciplineTeachers) {
-      dt.roles.forEach((r) => disciplineRoles.add(r.role));
+      dt.roles.forEach((r) => disciplineRoles.add(TeacherRoleAdapter[r.disciplineType.name]));
     }
 
     return this.pollService.getQuestions(teacherRoles, Array.from(disciplineRoles));

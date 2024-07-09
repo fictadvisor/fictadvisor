@@ -13,6 +13,7 @@ import { CommentsSortOrder } from '@fictadvisor/utils/enums';
 import {
   SortQATParam,
   OrderQAParam,
+  TeacherRole,
 } from '@fictadvisor/utils/enums';
 import { DatabaseUtils } from '../../database/DatabaseUtils';
 import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
@@ -30,9 +31,9 @@ import { GroupRepository } from '../../database/repositories/GroupRepository';
 import {
   QuestionType,
   SemesterDate,
-  TeacherRole,
   Prisma,
 } from '@prisma/client';
+import { TeacherTypeAdapter } from '../../mappers/TeacherRoleAdapter';
 
 @Injectable()
 export class PollService {
@@ -102,13 +103,13 @@ export class PollService {
           some: {
             isShown: true,
             role: {
-              in: roles,
+              in: roles.map((role) => TeacherTypeAdapter[role]),
             },
           },
           none: {
             isRequired: true,
             role: {
-              notIn: disciplineRoles,
+              notIn: disciplineRoles.map((role) => TeacherTypeAdapter[role]),
             },
           },
         },
@@ -220,6 +221,7 @@ export class PollService {
       questionRoles: {
         create: {
           ...data,
+          role: TeacherTypeAdapter[data.role],
         },
       },
     });
@@ -231,7 +233,7 @@ export class PollService {
         delete: {
           questionId_role: {
             questionId: questionId,
-            role: role,
+            role: TeacherTypeAdapter[role],
           },
         },
       },

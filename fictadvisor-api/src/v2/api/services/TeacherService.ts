@@ -26,7 +26,8 @@ import { GroupRepository } from '../../database/repositories/GroupRepository';
 import { ContactRepository } from '../../database/repositories/ContactRepository';
 import { InvalidQueryException } from '../../utils/exceptions/InvalidQueryException';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
-import { EntityType, QuestionDisplay, Prisma, TeacherRole } from '@prisma/client';
+import { EntityType, QuestionDisplay, Prisma } from '@prisma/client';
+import { TeacherRole } from '@fictadvisor/utils';
 
 @Injectable()
 export class TeacherService {

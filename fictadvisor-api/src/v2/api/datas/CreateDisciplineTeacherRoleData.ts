@@ -1,4 +1,4 @@
-import { TeacherRole } from '@prisma/client';
+import { TeacherRole } from '@fictadvisor/utils';
 
 export interface CreateDisciplineTeacherRoleData {
   role: TeacherRole,

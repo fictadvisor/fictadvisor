@@ -1,4 +1,5 @@
-import { DisciplineTypeEnum, TeacherRole } from '@prisma/client';
+import { DisciplineTypeEnum } from '@prisma/client';
+import { TeacherRole } from '@fictadvisor/utils';
 
 export const TeacherRoleAdapter: {[key in keyof typeof DisciplineTypeEnum]?: TeacherRole | never} = {
   [DisciplineTypeEnum.LECTURE]: TeacherRole.LECTURER,
