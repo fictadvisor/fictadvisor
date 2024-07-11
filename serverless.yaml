@@ -1,0 +1,44 @@
+org: fictadvisor
+app: fictadvisor-backend
+service: fictadvisor
+
+useDotenv: true
+
+package:
+  include:
+    - "!fictadvisor-web/**"
+    - "node_modules/**"
+    - '!node_modules/.prisma/client/libquery_engine-*'
+    - 'node_modules/.prisma/client/libquery_engine-rhel-*'
+    - '!node_modules/prisma/libquery_engine-*'
+    - '!node_modules/@prisma/engines/**'
+    - '!node_modules/.cache/prisma/**'  # only required for Windows
+    - '!node_modules/aws-sdk/**'
+    - '!node_modules/admission-api/**'
+    - '!node_modules/*turbo*/**'
+    - '!node_modules/@nestjs/cli/**'
+    - '!fictadvisor-api/node_modules/.prisma/client/libquery_engine-*'
+    - 'fictadvisor-api/node_modules/.prisma/client/libquery_engine-rhel-*'
+    - '!fictadvisor-api/node_modules/prisma/libquery_engine-*'
+    - '!fictadvisor-api/node_modules/@prisma/engines/**'
+    - '!fictadvisor-api/node_modules/.cache/prisma/**'  # only required for Windows
+    - 'node_modules/@css-inline/**'
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  timeout: 30
+  stage: ${opt:stage, 'dev'}
+  environment:
+    DATABASE_URL: ${env:DATABASE_URL}
+
+functions:
+  main:
+    handler: fictadvisor-api/dist/src/serverless.handler
+    events:
+      - http:
+          method: ANY
+          path: /
+      - http:
+          method: ANY
+          path: '{proxy+}'

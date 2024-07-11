@@ -13,7 +13,7 @@ import {
   RegisterTelegramDTO,
 } from '@fictadvisor/utils/requests';
 import { createHash, createHmac } from 'crypto';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { JwtPayload } from '../../security/JwtPayload';
 import { TelegramAPI } from '../../telegram/TelegramAPI';
 import { SecurityConfigService } from '../../config/SecurityConfigService';
