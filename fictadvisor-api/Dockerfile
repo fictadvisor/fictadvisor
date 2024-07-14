@@ -30,8 +30,6 @@ RUN npm install && \
     rm -rf dist && \
     mv -T fictadvisor-api/src fictadvisor-api/dist && \
     mv ./fictadvisor-api/email . && \
-    mkdir ./static && \
-    mkdir ./private
 
 
 ###################
