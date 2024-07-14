@@ -29,7 +29,7 @@ RUN npm install && \
     mv ./fictadvisor-api/dist/* ./fictadvisor-api && \
     rm -rf dist && \
     mv -T fictadvisor-api/src fictadvisor-api/dist && \
-    mv ./fictadvisor-api/email . && \
+    mv ./fictadvisor-api/email .
 
 
 ###################
