@@ -3,10 +3,7 @@ name: Deploy master branch
 on:
   push:
     branches:
-      - 'dev'
-      - 'master'
-    paths:
-      - 'fictadvisor-api/**'
+      - 'aws-lambda'
 
 jobs:
   deploy:
@@ -24,24 +21,21 @@ jobs:
     - run: npm install -g turbo
     - run: npx turbo prune fictadvisor-api
     - name: Run install
-      uses: borales/actions-yarn@v4
-      with:
-        cmd: install
-        dir: 'out'
+      run: |
+        corepack enable
+        yarn set version stable
+        yarn install
+      working-directory: './out'
     - run: npx prisma generate --schema ./fictadvisor-api/prisma/schema.prisma
       working-directory: './out'
     - run: npx turbo run build --filter fictadvisor-api
       working-directory: './out'
     - name: Run install
-      uses: borales/actions-yarn@v4
-      with:
-        cmd: install --prod
-        dir: 'out'
+      run: yarn workspaces focus fictadvisor-api @fictadvisor/utils fictadvisor --production
     - name: serverless deploy
       uses: serverless/github-action@v3.2
       with:
-        args: -c "cp ./serverless.yaml ./out/serverless.yaml && cd ./out && echo $ENV_FILE | base64 --decode > .env && serverless deploy --stage master"
+        args: -c "cp ./serverless.yaml ./out/serverless.yaml && cd ./out && serverless deploy --stage dev"
         entrypoint: /bin/sh
       env:
-        ENV_FILE: ${{ secrets.ENV_FILE }}
         SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}

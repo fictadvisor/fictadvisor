@@ -30,7 +30,25 @@ provider:
   timeout: 30
   stage: ${opt:stage, 'dev'}
   environment:
-    DATABASE_URL: ${env:DATABASE_URL}
+    SECRET: ${param:SECRET}
+    DATABASE_URL: ${param:DATABASE_URL}
+
+    FRONT_BASE_URL: ${param:FRONT_BASE_URL}
+    BASE_URL: ${param:BASE_URL}
+
+    TELEGRAM_BOT_API_URL: ${param:TELEGRAM_BOT_API_URL}
+    TELEGRAM_BOT_TOKEN: ${param:TELEGRAM_BOT_TOKEN}
+
+    SMTP_HOST: ${param:SMTP_HOST}
+    SMTP_USERNAME: ${param:SMTP_USERNAME}
+    SMTP_PASSWORD: ${param:SMTP_PASSWORD}
+
+    ADMISSION_BOT_API: ${param:ADMISSION_BOT_API}
+    ADMISSION_BOT_TOKEN: ${param:ADMISSION_BOT_TOKEN}
+    ADMISSION_EMAIL: ${param:ADMISSION_EMAIL}
+
+    TZ: ${param:TZ,'UTC'}
+    TIME_DIFFERENCE: ${param:TIME_DIFFERENCE,'3'}
 
 functions:
   main:

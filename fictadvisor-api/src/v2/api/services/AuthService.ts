@@ -13,7 +13,7 @@ import {
   RegisterTelegramDTO,
 } from '@fictadvisor/utils/requests';
 import { createHash, createHmac } from 'crypto';
-import bcrypt from 'bcryptjs';
+import * as bcrypt from 'bcryptjs';
 import { JwtPayload } from '../../security/JwtPayload';
 import { TelegramAPI } from '../../telegram/TelegramAPI';
 import { SecurityConfigService } from '../../config/SecurityConfigService';
@@ -403,7 +403,8 @@ export class AuthService {
   }
 
   async checkPassword (password: string, hash: string) {
-    return bcrypt.compare(password, hash);
+    console.log(bcrypt)
+    return await bcrypt.compare(password, hash);
   }
 
   async checkIfUserIsRegistered (query: { email?: string, username?: string }) {
