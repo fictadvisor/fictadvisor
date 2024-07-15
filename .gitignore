@@ -4,3 +4,14 @@
 /env/postgres-dev.env
 /env/postgres.env
 ./out
+out
+.yarn/cache/
+**/.turbo/*
+.env
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
