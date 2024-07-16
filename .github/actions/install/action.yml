@@ -8,9 +8,12 @@ runs:
       uses: actions/setup-node@v3
       with:
         node-version: '18.x'
-    - name: Install Yarn
+    - name: Install dependencies
       shell: bash
-      run: npm install -g yarn
+      run: |
+        corepack enable
+        yarn set version stable
+        yarn workspaces focus --all
     - name: Install dependencies
       shell: bash
       run: npx yarn

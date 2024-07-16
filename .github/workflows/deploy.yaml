@@ -3,7 +3,18 @@ name: Deploy master branch
 on:
   push:
     branches:
-      - 'aws-lambda'
+      - 'dev'
+      - 'master'
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: Deployment stage
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - master
 
 jobs:
   deploy:
@@ -18,24 +29,37 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm install -g turbo
-    - run: npx turbo prune fictadvisor-api
-    - name: Run install
+    - name: Install turbo
+      run: npm install -g turbo
+    - name: Prune api project with turbo
+      run: npx turbo prune fictadvisor-api
+    - name: Cache Yarn
+      uses: actions/cache@v4
+      with:
+        path: |
+          node_modules
+          .yarn/cache
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-
+    - name: Install dependencies
       run: |
         corepack enable
         yarn set version stable
-        yarn install
+        yarn workspaces focus --all
       working-directory: './out'
-    - run: npx prisma generate --schema ./fictadvisor-api/prisma/schema.prisma
+    - name: Generate Prisma
+      run: npx prisma generate --schema ./admission-api/prisma/schema.prisma
       working-directory: './out'
-    - run: npx turbo run build --filter fictadvisor-api
+    - name: Build api with turbo
+      run: npx turbo run build --filter fictadvisor-api
       working-directory: './out'
-    - name: Run install
-      run: yarn workspaces focus fictadvisor-api @fictadvisor/utils fictadvisor --production
+    - name: Install production dependencies
+      run: yarn workspaces focus --all --production
     - name: serverless deploy
       uses: serverless/github-action@v3.2
       with:
-        args: -c "cp ./serverless.yaml ./out/serverless.yaml && cd ./out && serverless deploy --stage dev"
+        args: -c "cp ./serverless.yaml ./out/serverless.yaml && cd ./out && serverless deploy --stage ${{ inputs.stage || github.ref_name }}"
         entrypoint: /bin/sh
       env:
         SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
