@@ -403,8 +403,7 @@ export class AuthService {
   }
 
   async checkPassword (password: string, hash: string) {
-    console.log(bcrypt)
-    return await bcrypt.compare(password, hash);
+    return bcrypt.compare(password, hash);
   }
 
   async checkIfUserIsRegistered (query: { email?: string, username?: string }) {

@@ -49,7 +49,7 @@ jobs:
         yarn workspaces focus --all
       working-directory: './out'
     - name: Generate Prisma
-      run: npx prisma generate --schema ./admission-api/prisma/schema.prisma
+      run: npx prisma generate --schema ./fictadvisor-api/prisma/schema.prisma
       working-directory: './out'
     - name: Build api with turbo
       run: npx turbo run build --filter fictadvisor-api

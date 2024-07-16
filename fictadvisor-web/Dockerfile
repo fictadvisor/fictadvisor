@@ -8,7 +8,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN npm i -g turbo@^1.11.3 && \
+RUN npm i -g turbo@^2.0.5 && \
     turbo prune @fictadvisor/frontend --docker
 
 
