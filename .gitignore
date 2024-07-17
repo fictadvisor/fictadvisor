@@ -3,5 +3,13 @@
 .turbo
 /env/postgres-dev.env
 /env/postgres.env
-./out
+out
 .DS_Store
+.env
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

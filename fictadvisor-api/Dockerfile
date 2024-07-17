@@ -8,8 +8,8 @@ WORKDIR /app
 
 COPY . .
 
-RUN npm i -g turbo@^1.11.3 && \
-    turbo prune api --docker
+RUN npm i -g turbo@^2.0.5 && \
+    turbo prune fictadvisor-api --docker
 
 
 FROM node:18-alpine3.17 as builder
@@ -21,7 +21,7 @@ COPY --from=pruner ./app/out/yarn.lock ./
 
 RUN npm install && \
     npx prisma generate --schema ./fictadvisor-api/prisma/schema.prisma && \
-    npx turbo build --filter api && \
+    npx turbo build --filter fictadvisor-api && \
     npm prune --prod && \
     rm -rf ./fictadvisor-api/src && \
     rm -rf ./fictadvisor-api/prisma && \

@@ -73,11 +73,10 @@ const CommentTab: FC<TeacherTabProps> = ({ teacherId, subjectId }) => {
           />
         </Box>
 
-        {data?.questions?.map(
-          question =>
-            question?.comments?.map((comment, index) => (
-              <Comment key={index} {...(comment as CommentProps)} />
-            )),
+        {data?.questions?.map(question =>
+          question?.comments?.map((comment, index) => (
+            <Comment key={index} {...(comment as CommentProps)} />
+          )),
         )}
       </Box>
       {teacherSubject && floatingCardShowed && (
