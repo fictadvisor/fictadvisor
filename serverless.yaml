@@ -23,6 +23,7 @@ package:
     - '!fictadvisor-api/node_modules/@prisma/engines/**'
     - '!fictadvisor-api/node_modules/.cache/prisma/**'  # only required for Windows
     - 'node_modules/@css-inline/**'
+    - '!.yarn/**'
 
 provider:
   name: aws
