@@ -78,6 +78,13 @@ export class UpdateEventDTO {
     endTime?: Date;
 
   @ApiPropertyOptional({
+    description: 'Indicator of whether the event end date has been changed',
+  })
+  @IsOptional()
+  @IsBoolean()
+    changeEndDate?: boolean;
+
+  @ApiPropertyOptional({
     enum: Period,
     description: 'The period during which the event occurs.\n',
   })

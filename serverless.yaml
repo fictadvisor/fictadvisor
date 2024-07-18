@@ -1,0 +1,63 @@
+org: fictadvisor
+app: fictadvisor-backend
+service: fictadvisor
+
+useDotenv: true
+
+package:
+  include:
+    - "!fictadvisor-web/**"
+    - "node_modules/**"
+    - '!node_modules/.prisma/client/libquery_engine-*'
+    - 'node_modules/.prisma/client/libquery_engine-rhel-*'
+    - '!node_modules/prisma/libquery_engine-*'
+    - '!node_modules/@prisma/engines/**'
+    - '!node_modules/.cache/prisma/**'  # only required for Windows
+    - '!node_modules/aws-sdk/**'
+    - '!node_modules/admission-api/**'
+    - '!node_modules/*turbo*/**'
+    - '!node_modules/@nestjs/cli/**'
+    - '!fictadvisor-api/node_modules/.prisma/client/libquery_engine-*'
+    - 'fictadvisor-api/node_modules/.prisma/client/libquery_engine-rhel-*'
+    - '!fictadvisor-api/node_modules/prisma/libquery_engine-*'
+    - '!fictadvisor-api/node_modules/@prisma/engines/**'
+    - '!fictadvisor-api/node_modules/.cache/prisma/**'  # only required for Windows
+    - 'node_modules/@css-inline/**'
+    - '!.yarn/**'
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  timeout: 30
+  stage: ${opt:stage, 'dev'}
+  environment:
+    SECRET: ${param:SECRET}
+    DATABASE_URL: ${param:DATABASE_URL}
+
+    FRONT_BASE_URL: ${param:FRONT_BASE_URL}
+    BASE_URL: ${param:BASE_URL}
+
+    TELEGRAM_BOT_API_URL: ${param:TELEGRAM_BOT_API_URL}
+    TELEGRAM_BOT_TOKEN: ${param:TELEGRAM_BOT_TOKEN}
+
+    SMTP_HOST: ${param:SMTP_HOST}
+    SMTP_USERNAME: ${param:SMTP_USERNAME}
+    SMTP_PASSWORD: ${param:SMTP_PASSWORD}
+
+    ADMISSION_BOT_API: ${param:ADMISSION_BOT_API}
+    ADMISSION_BOT_TOKEN: ${param:ADMISSION_BOT_TOKEN}
+    ADMISSION_EMAIL: ${param:ADMISSION_EMAIL}
+
+    TZ: ${param:TZ,'UTC'}
+    TIME_DIFFERENCE: ${param:TIME_DIFFERENCE,'3'}
+
+functions:
+  main:
+    handler: fictadvisor-api/dist/src/serverless.handler
+    events:
+      - http:
+          method: ANY
+          path: /
+      - http:
+          method: ANY
+          path: '{proxy+}'

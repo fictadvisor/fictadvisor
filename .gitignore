@@ -3,10 +3,8 @@
 .turbo
 /env/postgres-dev.env
 /env/postgres.env
-./out
 out
-.yarn/cache/
-**/.turbo/*
+.DS_Store
 .env
 .pnp.*
 .yarn/*
