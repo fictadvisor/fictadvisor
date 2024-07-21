@@ -32,20 +32,23 @@ export function ApiEndpoint ({ summary, permissions, guards }: ApiEndpointParams
     decorators.push(
       Permissions(permissions),
       MultipleAccesses(...accessGuards),
-      UseGuards(MultipleAccessGuard, PermissionGuard, ...filteredGuards),
+      UseGuards(MultipleAccessGuard, ...filteredGuards, PermissionGuard),
     );
     return applyDecorators(...decorators);
   }
-
-  if (permissions) {
-    decorators.push(
-      Permissions(permissions),
-      UseGuards(JwtGuard, PermissionGuard),
-    );
-  }
-
+  
   if (guards) {
     decorators.push(UseGuards(...guards));
+  }
+
+  if (permissions) {
+    decorators.unshift(
+      Permissions(permissions),
+      UseGuards(JwtGuard),
+    );
+    decorators.push(
+      UseGuards(PermissionGuard),
+    );
   }
 
   return applyDecorators(...decorators);
