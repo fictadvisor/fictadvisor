@@ -33,6 +33,7 @@ export enum PERMISSION {
 	GROUPS_UPDATE = 'groups.update',
 	GROUPS_DELETE = 'groups.delete',
 	GROUPS_$GROUPID_ADMIN_SWITCH = 'groups.$groupId.admin.switch',
+	GROUPS_$GROUPID_ANSWERS_SEND = 'groups.$groupId.answers.send',
 	GROUPS_$GROUPID_CAPTAIN_GET = 'groups.$groupId.captain.get',
 	GROUPS_$GROUPID_DISCIPLINES_CREATE = 'groups.$groupId.disciplines.create',
 	GROUPS_$GROUPID_DISCIPLINES_GET = 'groups.$groupId.disciplines.get',
@@ -43,6 +44,7 @@ export enum PERMISSION {
 	GROUPS_$GROUPID_EVENTS_GET = 'groups.$groupId.events.get',
 	GROUPS_$GROUPID_EVENTS_UPDATE = 'groups.$groupId.events.update',
 	GROUPS_$GROUPID_EVENTS_DELETE = 'groups.$groupId.events.delete',
+	GROUPS_$GROUPID_QUESTIONS_GET = 'groups.$groupId.questions.get',
 	GROUPS_$GROUPID_STUDENTS_ADD = 'groups.$groupId.students.add',
 	GROUPS_$GROUPID_STUDENTS_GET = 'groups.$groupId.students.get',
 	GROUPS_$GROUPID_STUDENTS_REMOVE = 'groups.$groupId.students.remove',
@@ -52,9 +54,6 @@ export enum PERMISSION {
 	GROUPS_CAPTAIN_SWITCH = 'groups.captain.switch',
 	GROUPS_$GROUPID_LIST_GET = 'groups.$groupId.list.get',
 	GROUPS_$GROUPID_LEAVE = 'groups.$groupId.leave',
-
-	DISCIPLINE_TEACHERS_$DISCIPLINE_TEACHERID_QUESTIONS_GET = 'disciplineTeachers.$disciplineTeacherId.questions.get',
-  	DISCIPLINE_TEACHERS_$DISCIPLINE_TEACHERID_ANSWERS_SEND = 'disciplineTeachers.$disciplineTeacherId.answers.send',
 
 	QUESTIONS_CREATE = 'questions.create',
 	QUESTIONS_UPDATE = 'questions.update',
