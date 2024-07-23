@@ -29,10 +29,6 @@ import SubjectsAPI from '@/lib/api/subject/SubjectAPI';
 import { Subject } from '@/types/subject';
 
 const SubjectsPage: FC = () => {
-  const initialValues = localStorage.getItem('subjectForm')
-    ? JSON.parse(localStorage.getItem('subjectForm') || '{}')
-    : SubjectInitialValues;
-
   const localStorageName = 'subjectForm';
 
   const [queryObj, setQueryObj] =
@@ -84,10 +80,11 @@ const SubjectsPage: FC = () => {
     <Box sx={styles.layout}>
       <Breadcrumbs items={breadcrumbs} sx={styles.breadcrumbs} />
       <SearchForm
+        initialValues={SubjectInitialValues}
         searchPlaceholder="Оберіть предмет"
         filterDropDownOptions={filterOptions}
         onSubmit={submitHandler}
-        initialValues={initialValues}
+        setQueryObj={setQueryObj}
         localStorageName={localStorageName}
         isSubject={true}
       />

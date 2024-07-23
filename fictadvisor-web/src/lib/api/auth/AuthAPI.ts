@@ -57,11 +57,10 @@ class AuthAPI {
     return data;
   }
 
-  async getMe() {
-    const { data } = await client.get<OrdinaryStudentResponse>(
-      `/auth/me`,
-      getAuthorizationHeader(),
-    );
+  async getMe(accessToken?: string) {
+    const { data } = await client.get<OrdinaryStudentResponse>(`/auth/me`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
     return data;
   }
 

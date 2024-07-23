@@ -18,7 +18,6 @@ class PageTextsAPI {
   async getAll(params: QueryAllPageTextsDTO) {
     const { data } = await client.get<PageTextsResponse>(`/pageTexts`, {
       params,
-      ...getAuthorizationHeader(),
     });
     return data;
   }

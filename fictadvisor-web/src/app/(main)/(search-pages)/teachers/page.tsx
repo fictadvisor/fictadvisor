@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, useCallback, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { QueryAllTeacherDTO } from '@fictadvisor/utils/requests';
 import {
@@ -32,20 +32,15 @@ import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
 import { Pagination } from '@/types/api';
 
 const TeacherPage: FC = () => {
-  const parsedData = JSON.parse(localStorage.getItem('teachersForm') || '{}');
-  const initialValues =
-    parsedData.length === Object.keys(TeacherInitialValues).length
-      ? parsedData
-      : TeacherInitialValues;
   const localStorageName = 'teachersForm';
-  const [queryObj, setQueryObj] = useState<SearchFormFields>(initialValues);
+  const [queryObj, setQueryObj] =
+    useState<SearchFormFields>(TeacherInitialValues);
   const [currPage, setCurrPage] = useState(0);
 
   const submitHandler: SearchFormProps['onSubmit'] = useCallback(query => {
     setQueryObj(prev => {
       if (prev === query) return prev;
       else {
-        setLoadedTeachers([]);
         return { ...prev, ...query };
       }
     });
@@ -63,20 +58,22 @@ const TeacherPage: FC = () => {
         page: currPage,
       } as QueryAllTeacherDTO),
     {
-      onSuccess: data => setLoadedTeachers(prev => [...prev, ...data.teachers]),
+      onSuccess: data => {
+        setLoadedTeachers(data.teachers);
+      },
       keepPreviousData: true,
       refetchOnWindowFocus: false,
     },
   );
-
   return (
     <Box sx={styles.layout}>
       <Breadcrumbs items={breadcrumbs} sx={styles.breadcrumbs} />
       <SearchForm
+        initialValues={TeacherInitialValues}
         searchPlaceholder="Оберіть викладача"
         filterDropDownOptions={filterOptions}
         onSubmit={submitHandler}
-        initialValues={initialValues}
+        setQueryObj={setQueryObj}
         localStorageName={localStorageName}
       />
       {data && (
