@@ -115,27 +115,28 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
       temp[currentCategory] = count;
       return temp;
     });
+    return resultAnswers;
   };
 
   const handleSubmit = (value: Record<string, string>) => {
-    updateAnswer(value);
+    const answers = updateAnswer(value);
     if (!isTheLast) {
       setCurrentCategory(currentCategory + 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
     setIsSendingStatus(SendingStatus.LOADING);
-    sendData();
+    sendData(answers);
   };
 
-  const sendData = async () => {
+  const sendData = async (answers: Answer[]) => {
     try {
       const formattedAnswers = answers
         .map(answer => ({
           ...answer,
           value: answer.value.toString().trim(),
         }))
-        .filter(answer => !!answer.value);
+        .filter(answer => answer.value);
 
       await PollAPI.createTeacherGrade(disciplineTeacherId, {
         answers: formattedAnswers,
