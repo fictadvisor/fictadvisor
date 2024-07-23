@@ -34,14 +34,20 @@ const PollTeacher = () => {
   const [curPage, setCurPage] = useState(0);
   const { push, replace } = useRouter();
   const { user, isLoggedIn } = useAuthentication();
-  const toast = useToast();
   const localStorageName = 'teachersPollForm';
-  const initialValues: QueryAllDisciplineTeacherForPollDTO =
-    localStorage.getItem(localStorageName)
-      ? JSON.parse(localStorage.getItem(localStorageName) || '{}')
-      : PollTeacherInitialValues;
-  const [queryObj, setQueryObj] =
-    useState<QueryAllDisciplineTeacherForPollDTO>(initialValues);
+
+  const toast = useToast();
+  const [queryObj, setQueryObj] = useState<QueryAllDisciplineTeacherForPollDTO>(
+    PollTeacherInitialValues,
+  );
+
+  useEffect(() => {
+    setQueryObj(
+      localStorage.getItem(localStorageName)
+        ? JSON.parse(localStorage.getItem(localStorageName) || '{}')
+        : PollTeacherInitialValues,
+    );
+  }, []);
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -86,7 +92,7 @@ const PollTeacher = () => {
               data={data}
               className="poll-teacher"
               setQueryObj={setQueryObj}
-              initialValues={initialValues}
+              initialValues={PollTeacherInitialValues}
               localStorageName={localStorageName}
               setCurPage={setCurPage}
             />

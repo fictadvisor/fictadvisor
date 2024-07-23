@@ -23,8 +23,14 @@ import mainMetadata from '@/lib/metadata/main';
 export const metadata: Metadata = mainMetadata;
 
 export default async function Main() {
-  const studentResources = await StudentResourcesAPI.getAll();
-  const pageTextsResponse = await PageTextsAPI.getAll({ keys: pageTextsKeys });
+  const studentResourcesPromise = StudentResourcesAPI.getAll();
+  const pageTextsResponsePromise = PageTextsAPI.getAll({ keys: pageTextsKeys });
+
+  const [studentResources, pageTextsResponse] = await Promise.all([
+    studentResourcesPromise,
+    pageTextsResponsePromise,
+  ]);
+
   let pageTexts: NewPageTexts = {};
 
   if (Array.isArray(pageTextsResponse)) {

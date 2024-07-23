@@ -1,4 +1,13 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  use,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { FC } from 'react';
 import { useQuery } from 'react-query';
 import {
@@ -39,15 +48,20 @@ import { SearchFormFields } from './types';
 import stylesScss from './SearchForm.module.scss';
 export interface SearchFormProps {
   onSubmit: (values: Partial<SearchFormFields>) => void;
-  initialValues: SearchFormFields;
+  setQueryObj: Dispatch<SetStateAction<SearchFormFields>>;
   filterDropDownOptions: DropDownOption[];
   searchPlaceholder: string;
-  localStorageName?: string;
+  localStorageName: string;
   isSubject?: boolean;
+  initialValues: SearchFormFields;
 }
-const FormObserver = (props: { name?: string }) => {
-  const { values } = useFormikContext();
-  localStorage.setItem(props.name || '', JSON.stringify(values));
+const FormObserver = ({ name }: { name: string }) => {
+  const { values, dirty } = useFormikContext();
+  useEffect(() => {
+    if (localStorage && dirty) {
+      localStorage.setItem(name || '', JSON.stringify(values));
+    }
+  }, [values, name]);
   return null;
 };
 
@@ -57,10 +71,11 @@ const FormObserver = (props: { name?: string }) => {
 // change, so I think this component needs refactoring
 const SearchForm: FC<SearchFormProps> = ({
   onSubmit,
-  initialValues,
+  setQueryObj,
   filterDropDownOptions,
   searchPlaceholder,
   localStorageName,
+  initialValues,
   isSubject = false,
 }) => {
   const isTablet = useMediaQuery(theme.breakpoints.down('tablet'));
@@ -138,6 +153,16 @@ const SearchForm: FC<SearchFormProps> = ({
     formikRef.current?.setFieldValue('order', order === 'asc' ? 'desc' : 'asc');
     formikRef.current?.handleSubmit();
   }, []);
+
+  useEffect(() => {
+    const parsedData = JSON.parse(
+      localStorage.getItem(localStorageName) || '{}',
+    );
+    if (Object.keys(parsedData).length) {
+      formikRef.current?.setValues(parsedData);
+      setQueryObj(parsedData);
+    }
+  }, [localStorageName]);
 
   return (
     <Formik

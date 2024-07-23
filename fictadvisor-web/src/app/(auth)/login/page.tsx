@@ -1,12 +1,15 @@
 import React, { FC } from 'react';
 import { Box, Divider } from '@mui/material';
 import { Metadata } from 'next';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
+const LoginFormBlock = dynamic(() => import('./components/login-form-block'), {
+  ssr: false,
+});
 
 import * as styles from '@/app/(auth)/login/LoginPage.styles';
 import loginMetadata from '@/lib/metadata/login';
 
-import LoginFormBlock from './components/login-form-block';
 import LogoRegisterBlock from './components/logo-register-block';
 export const metadata: Metadata = loginMetadata;
 const Login: FC = () => {

@@ -1,7 +1,9 @@
-'use client';
-
-import EmailConfirmationPage from '@/app/_сomponents/email-confirmation-page/EmailConfirmationPage';
-
+import dynamic from 'next/dynamic';
+const EmailConfirmationPage = dynamic(
+  () =>
+    import('@/app/_сomponents/email-confirmation-page/EmailConfirmationPage'),
+  { ssr: false },
+);
 const RegistrationEmailConfirmation = () => (
   <EmailConfirmationPage apiMethodName="verifyEmail" />
 );

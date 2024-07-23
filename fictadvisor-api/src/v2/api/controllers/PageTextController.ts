@@ -35,16 +35,6 @@ export class PageTextController {
     InvalidQueryException:
       Keys can not be empty`,
   })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException:
-      You do not have permission to perform this action`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
   @ApiEndpoint({
     summary: 'Get all texts for page',
   })
