@@ -4,12 +4,11 @@ import React, {
   FC,
   PropsWithChildren,
   useContext,
-  useEffect,
   useMemo,
   useState,
 } from 'react';
 import { useQuery } from 'react-query';
-import { AxiosError } from 'axios';
+import { AxiosError, isAxiosError } from 'axios';
 
 import AuthAPI from '@/lib/api/auth/AuthAPI';
 import StorageUtil from '@/lib/utils/StorageUtil';
@@ -27,33 +26,30 @@ export const useAuthenticationContext = () => useContext(authenticationContext);
 const AuthenticationProvider: FC<PropsWithChildren> = ({ children }) => {
   const [jwt, setJwt] = useState(StorageUtil.getTokens());
 
-  const { error, data, refetch } = useQuery(
+  const { error, isFetched, isError, data, refetch } = useQuery(
     ['oauth', jwt?.accessToken, jwt?.refreshToken],
-    () => AuthAPI.getMe(jwt?.accessToken),
+    () => AuthAPI.getMe(),
     {
-      enabled: !!jwt,
       retry: false,
       refetchOnWindowFocus: false,
     },
   );
 
-  useEffect(() => {
-    if (error) {
-      const status = (error as AxiosError).response?.status;
-      if (jwt && status === 401) {
-        AuthAPI.refreshAccessToken(jwt.accessToken)
-          .then(async ({ accessToken }) => {
-            StorageUtil.setTokens(accessToken, jwt?.refreshToken);
-            await refetch();
-          })
-          .catch(async () => {
-            StorageUtil.deleteTokens();
-          });
-      } else {
-        StorageUtil.deleteTokens();
-      }
+  if (error) {
+    const status = (error as AxiosError).response?.status;
+    if (jwt && status === 401) {
+      AuthAPI.refreshAccessToken(jwt.accessToken)
+        .then(async ({ accessToken }) => {
+          StorageUtil.setTokens(accessToken, jwt?.refreshToken);
+          await refetch();
+        })
+        .catch(async () => {
+          StorageUtil.deleteTokens();
+        });
+    } else {
+      StorageUtil.deleteTokens();
     }
-  }, [error]);
+  }
   const context: AuthenticationContext = useMemo(
     () => ({
       user: data as User,
@@ -67,7 +63,7 @@ const AuthenticationProvider: FC<PropsWithChildren> = ({ children }) => {
 
   return (
     <authenticationContext.Provider value={context}>
-      {children}
+      {(isFetched || isError) && children}
     </authenticationContext.Provider>
   );
 };
