@@ -4,6 +4,7 @@ import React, {
   FC,
   PropsWithChildren,
   useContext,
+  useEffect,
   useMemo,
   useState,
 } from 'react';
@@ -26,30 +27,33 @@ export const useAuthenticationContext = () => useContext(authenticationContext);
 const AuthenticationProvider: FC<PropsWithChildren> = ({ children }) => {
   const [jwt, setJwt] = useState(StorageUtil.getTokens());
 
-  const { error, isFetching, isFetched, isError, data, refetch } = useQuery(
+  const { error, data, refetch } = useQuery(
     ['oauth', jwt?.accessToken, jwt?.refreshToken],
-    () => AuthAPI.getMe(),
+    () => AuthAPI.getMe(jwt?.accessToken),
     {
+      enabled: !!jwt,
       retry: false,
       refetchOnWindowFocus: false,
     },
   );
 
-  if (error && !isFetching) {
-    const status = (error as AxiosError).response?.status;
-    if (jwt && status === 401) {
-      AuthAPI.refreshAccessToken(jwt.accessToken)
-        .then(async ({ accessToken }) => {
-          StorageUtil.setTokens(accessToken, jwt?.refreshToken);
-          await refetch();
-        })
-        .catch(async () => {
-          StorageUtil.deleteTokens();
-        });
-    } else {
-      StorageUtil.deleteTokens();
+  useEffect(() => {
+    if (error) {
+      const status = (error as AxiosError).response?.status;
+      if (jwt && status === 401) {
+        AuthAPI.refreshAccessToken(jwt.accessToken)
+          .then(async ({ accessToken }) => {
+            StorageUtil.setTokens(accessToken, jwt?.refreshToken);
+            await refetch();
+          })
+          .catch(async () => {
+            StorageUtil.deleteTokens();
+          });
+      } else {
+        StorageUtil.deleteTokens();
+      }
     }
-  }
+  }, [error]);
   const context: AuthenticationContext = useMemo(
     () => ({
       user: data as User,
@@ -63,7 +67,7 @@ const AuthenticationProvider: FC<PropsWithChildren> = ({ children }) => {
 
   return (
     <authenticationContext.Provider value={context}>
-      {(isFetched || isError) && children}
+      {children}
     </authenticationContext.Provider>
   );
 };
