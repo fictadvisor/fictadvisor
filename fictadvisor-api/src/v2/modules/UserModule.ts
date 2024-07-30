@@ -13,6 +13,7 @@ import { DateModule } from '../utils/date/DateModule';
 import { TelegramAPI } from '../telegram/TelegramAPI';
 import { TeacherModule } from './TeacherModule';
 import { PollModule } from './PollModule';
+import { GoogleModule } from '../google/GoogleModule';
 
 @Module({
   controllers: [UserController, RoleController],
@@ -23,6 +24,7 @@ import { PollModule } from './PollModule';
     forwardRef(() => GroupModule),
     AccessModule,
     forwardRef(() => AuthModule),
+    GoogleModule,
     MapperModule,
     FileModule,
     DateModule,

@@ -11,6 +11,7 @@ import { UserModule } from './UserModule';
 import { AccessModule } from 'src/v2/modules/AccessModule';
 import { LocalStrategy } from 'src/v2/security/LocalStrategy';
 import { LocalAuthGuard } from 'src/v2/security/LocalGuard';
+import { GoogleModule } from '../google/GoogleModule';
 
 
 @Module({
@@ -25,6 +26,7 @@ import { LocalAuthGuard } from 'src/v2/security/LocalGuard';
     GroupModule,
     UserModule,
     AccessModule,
+    GoogleModule,
   ],
 })
 export class AuthModule {}

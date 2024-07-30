@@ -20,6 +20,11 @@ export default () => ({
     apiUrl: process.env.TELEGRAM_BOT_API_URL,
     botToken: process.env.TELEGRAM_BOT_TOKEN,
   },
+  google: {
+    clientId: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    frontRedirectUrl: process.env.GOOGLE_FRONT_REDIRECT_URI ?? process.env.FRONT_BASE_URL,
+  },
   static: {
     servePath: '/static',
     dir: process.env.STATIC_DIR,

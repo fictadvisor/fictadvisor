@@ -36,6 +36,10 @@ import { PasswordRepeatException } from '../../utils/exceptions/PasswordRepeatEx
 import { CaptainAlreadyRegisteredException } from '../../utils/exceptions/CaptainAlreadyRegisteredException';
 import { AbsenceOfCaptainException } from '../../utils/exceptions/AbsenceOfCaptainException';
 import { State, User, RoleName } from '@prisma/client';
+import { GoogleAuthService } from '../../google/GoogleAuthService';
+import { InvalidGoogleTokenException } from '../../utils/exceptions/InvalidGoogleTokenException';
+import { DuplicateGoogleIdException } from '../../utils/exceptions/DuplicateGoogleIdException';
+import { GoogleEmailNotVerifiedException } from '../../utils/exceptions/GoogleEmailNotVerifiedException';
 
 export const ONE_MINUTE = 1000 * 60;
 export const HOUR = ONE_MINUTE * 60;
@@ -70,6 +74,7 @@ export class AuthService {
     private groupService: GroupService,
     private config: ConfigService,
     private prisma: PrismaService,
+    private googleAuthService: GoogleAuthService,
   ) {}
 
   async validateUser (username: string, password: string) {
@@ -117,7 +122,12 @@ export class AuthService {
   }
 
   async register (registrationDTO: RegistrationDTO) {
-    const { telegram, student: { isCaptain, ...createStudent }, user } = registrationDTO;
+    const {
+      telegram,
+      googleIdToken,
+      student: { isCaptain, ...createStudent },
+      user,
+    } = registrationDTO;
 
     if (await this.checkIfUserIsRegistered(user)) {
       throw new AlreadyRegisteredException();
@@ -137,6 +147,25 @@ export class AuthService {
       }
     }
 
+    if (googleIdToken) {
+      if (!(await this.googleAuthService.isIdTokenValid(googleIdToken))) {
+        throw new InvalidGoogleTokenException();
+      }
+      const { sub, email_verified, picture } = this.googleAuthService.getUserPayload(googleIdToken);
+
+      if (!email_verified) {
+        throw new GoogleEmailNotVerifiedException();
+      }
+
+      const sameGoogleAccount = await this.userRepository.find({ googleId: sub });
+      if (sameGoogleAccount) {
+        throw new DuplicateGoogleIdException();
+      }
+
+      user.avatar = user.avatar ?? picture;
+      user.googleId = sub;
+    }
+
     const tokenBody = {
       ...user,
       password: await this.hashPassword(user.password),
@@ -145,6 +174,7 @@ export class AuthService {
       isCaptain,
     };
 
+    console.log(tokenBody);
     await this.requestEmailVerification(tokenBody);
   }
 
@@ -208,6 +238,20 @@ export class AuthService {
     if (!user) {
       throw new InvalidEntityIdException('User');
     }
+    return this.getTokens(user);
+  }
+
+  async loginGoogle(idToken: string) {
+    if (!(await this.googleAuthService.isIdTokenValid(idToken))) {
+      throw new InvalidGoogleTokenException();
+    }
+
+    const { sub: googleId } = this.googleAuthService.getUserPayload(idToken);
+    const user = await this.userRepository.find({ googleId });
+    if (!user) {
+      throw new InvalidEntityIdException('User');
+    }
+
     return this.getTokens(user);
   }
 
@@ -327,7 +371,7 @@ export class AuthService {
     if (!verifyToken) {
       throw new InvalidVerificationTokenException();
     }
-    const { email, telegramId, username, avatar, firstName, lastName, groupId, middleName, isCaptain, password } = verifyToken;
+    const { email, telegramId, googleId, username, avatar, firstName, lastName, groupId, middleName, isCaptain, password } = verifyToken;
 
     if (!(await this.isPseudoRegistered(email))) {
       const user = await this.userRepository.find({
@@ -336,6 +380,9 @@ export class AuthService {
           { username },
           telegramId !== null
             ? { telegramId }
+            : undefined,
+          googleId != null
+            ? { googleId }
             : undefined,
         ],
       });
@@ -348,6 +395,7 @@ export class AuthService {
       email,
       username,
       telegramId,
+      googleId,
       avatar,
       password,
     };

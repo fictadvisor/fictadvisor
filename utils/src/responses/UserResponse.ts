@@ -26,6 +26,11 @@ export class UserResponse extends ShortUserResponse {
     telegramId?: number;
 
   @ApiPropertyOptional({
+    description: 'User\'s google account id',
+  })
+    googleId?: string;
+
+  @ApiPropertyOptional({
     description: 'User\'s avatar link',
   })
     avatar?: string;

@@ -6,6 +6,7 @@ export class DbUser {
   username: string | null;
   email: string;
   telegramId: bigint | null;
+  googleId: string | null;
   avatar: string | null;
   state: State;
   password: string | null;

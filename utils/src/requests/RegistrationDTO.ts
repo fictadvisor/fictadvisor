@@ -1,9 +1,10 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, ValidateNested } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { TelegramDTO } from './TelegramDTO';
 import { UserDTO } from './UserDTO';
 import { StudentDTO } from './StudentDTO';
+import { validationOptionsMsg } from '../ValidationUtil';
 
 export class RegistrationDTO {
   @ApiProperty({
@@ -25,4 +26,12 @@ export class RegistrationDTO {
   })
   @IsOptional()
     telegram?: TelegramDTO;
+
+  @ApiPropertyOptional({
+    description: 'User\'s google id token',
+  })
+  @IsOptional()
+  @IsString(validationOptionsMsg('The google id token must be a string'))
+  @IsNotEmpty(validationOptionsMsg('The google id token cannot be empty'))
+    googleIdToken?: string;
 }

@@ -43,6 +43,10 @@ import { AlreadySelectedException } from '../../utils/exceptions/AlreadySelected
 import { DuplicateTelegramIdException } from '../../utils/exceptions/DuplicateTelegramIdException';
 import { NotSelectedDisciplineException } from '../../utils/exceptions/NotSelectedDisciplineException';
 import { EntityType, Prisma, RoleName, State } from '@prisma/client';
+import { GoogleAuthService } from '../../google/GoogleAuthService';
+import { GoogleEmailNotVerifiedException } from '../../utils/exceptions/GoogleEmailNotVerifiedException';
+import { InvalidGoogleTokenException } from '../../utils/exceptions/InvalidGoogleTokenException';
+import { DuplicateGoogleIdException } from '../../utils/exceptions/DuplicateGoogleIdException';
 
 type SortedDisciplines = {
   year: number;
@@ -62,6 +66,7 @@ export class UserService {
     private groupRepository: GroupRepository,
     @Inject(forwardRef(() => AuthService))
     private authService: AuthService,
+    private googleAuthService: GoogleAuthService,
     private fileService: FileService,
     @Inject(forwardRef(() => GroupService))
     private groupService: GroupService,
@@ -357,6 +362,34 @@ export class UserService {
     }
     await this.userRepository.updateById(userId, { telegramId: telegram.id });
 
+  }
+
+  async linkGoogle(userId: string, idToken: string) : Promise<void> {
+    if (!(await this.googleAuthService.isIdTokenValid(idToken))) {
+      throw new InvalidGoogleTokenException();
+    }
+
+    const googleUser = this.googleAuthService.getUserPayload(idToken);
+
+    if (!googleUser.email_verified) {
+      throw new GoogleEmailNotVerifiedException();
+    }
+
+    const sameGoogleAccount = await this.userRepository.find({ googleId: googleUser.sub });
+    if (sameGoogleAccount) {
+      throw new DuplicateGoogleIdException();
+    }
+
+    const user = await this.userRepository.findById(userId);
+    if (user.googleId) {
+      await this.userRepository.updateById(userId, {
+        googleUser: {
+          delete: true,
+        },
+      });
+    }
+
+    await this.userRepository.updateById(userId, { googleId: googleUser.sub });
   }
 
   async verifyStudent (userId: string, isCaptain: boolean, state: State) {
