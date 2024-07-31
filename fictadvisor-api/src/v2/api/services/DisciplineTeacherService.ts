@@ -7,7 +7,7 @@ import {
   QuerySemesterDTO,
 } from '@fictadvisor/utils/requests';
 import { DisciplineTeacherQuestionsResponse } from '@fictadvisor/utils/responses';
-import { CommentsSortBy } from '@fictadvisor/utils/enums';
+import { CommentsSortBy, DisciplineTypeEnum, TeacherRole } from '@fictadvisor/utils/enums';
 import { TelegramAPI } from '../../telegram/TelegramAPI';
 import { checkIfArrayIsUnique } from '../../utils/ArrayUtil';
 import { DbQuestionWithRoles } from '../../database/entities/DbQuestionWithRoles';
@@ -33,7 +33,7 @@ import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityId
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
 import { NotSelectedDisciplineException } from '../../utils/exceptions/NotSelectedDisciplineException';
 import { IsRemovedDisciplineTeacherException } from '../../utils/exceptions/IsRemovedDisciplineTeacherException';
-import { Prisma, QuestionType, State, TeacherRole } from '@prisma/client';
+import { Prisma, QuestionType, State } from '@prisma/client';
 
 @Injectable()
 export class DisciplineTeacherService {
@@ -130,12 +130,14 @@ export class DisciplineTeacherService {
     });
 
     const teacherRoles = disciplineTeachers
-      .find((dt) => dt.id === id)
-      .roles.map((r) => r.role);
+      .find((disciplineTeacher) => disciplineTeacher.id === id)
+      .roles.map(({ disciplineType }) => disciplineType.name);
 
-    const disciplineRoles = new Set<TeacherRole>();
-    for (const dt of disciplineTeachers) {
-      dt.roles.forEach((r) => disciplineRoles.add(r.role));
+    const disciplineRoles = new Set<DisciplineTypeEnum>();
+    for (const { roles } of disciplineTeachers) {
+      for (const { disciplineType } of roles) {
+        disciplineRoles.add(disciplineType.name);
+      }
     }
 
     return this.pollService.getQuestions(teacherRoles, Array.from(disciplineRoles));
@@ -278,11 +280,10 @@ export class DisciplineTeacherService {
         });
       }
 
-      const disciplineType = discipline.disciplineTypes.find((dt) => dt.name === TeacherTypeAdapter[role]);
+      const { id } = discipline.disciplineTypes.find((dt) => dt.name === TeacherTypeAdapter[role]);
 
       dbRoles.push({
-        role,
-        disciplineTypeId: disciplineType.id,
+        disciplineTypeId: id,
       });
     }
 

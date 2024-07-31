@@ -25,7 +25,11 @@ export class DisciplineRepository {
             },
           },
         },
-        roles: true,
+        roles: {
+          include: {
+            disciplineType: true,
+          },
+        },
       },
     },
   };

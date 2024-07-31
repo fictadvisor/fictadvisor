@@ -15,7 +15,8 @@ import { AlreadyAnsweredException } from '../../utils/exceptions/AlreadyAnswered
 import { WrongTimeException } from '../../utils/exceptions/WrongTimeException';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
 import { IsRemovedDisciplineTeacherException } from '../../utils/exceptions/IsRemovedDisciplineTeacherException';
-import { Discipline, QuestionType, State, TeacherRole } from '@prisma/client';
+import { Discipline, QuestionType, State } from '@prisma/client';
+import { DisciplineTypeEnum } from '@fictadvisor/utils';
 
 describe('DisciplineTeacherService', () => {
   let disciplineTeacherService: DisciplineTeacherService;
@@ -130,7 +131,7 @@ describe('DisciplineTeacherService', () => {
           semester: 1,
           year: 2022,
           isSelective: true,
-        }, 
+        },
         selective20222,
       ],
     });
@@ -221,15 +222,12 @@ describe('DisciplineTeacherService', () => {
       data: [{
         disciplineTeacherId: 'lecturerForNonSelective20221Id',
         disciplineTypeId: 'ec7866e2-a426-4e1b-b76c-1ce68fdb46a1',
-        role: 'LECTURER',
       }, {
         disciplineTeacherId: 'removedId1',
         disciplineTypeId: 'ec7866e2-a426-4e1b-b76c-1ce68fdb46a1',
-        role: 'LECTURER',
       }, {
         disciplineTeacherId: 'lecturerForNonSelective20222Id',
         disciplineTypeId: 'f3717ce9-cd52-4c40-889a-094a9b6a01de',
-        role: 'LECTURER',
       }],
     });
 
@@ -277,25 +275,25 @@ describe('DisciplineTeacherService', () => {
     await prismaService.questionRole.createMany({
       data: [
         {
-          role: TeacherRole.LECTURER,
+          role: DisciplineTypeEnum.LECTURE,
           questionId: 'lecturerQuestionId1',
           isShown: true,
           isRequired: true,
         },
         {
-          role: TeacherRole.LECTURER,
+          role: DisciplineTypeEnum.LECTURE,
           questionId: 'lecturerQuestionId2',
           isShown: true,
           isRequired: true,
         },
         {
-          role: TeacherRole.PRACTICIAN,
+          role: DisciplineTypeEnum.PRACTICE,
           questionId: 'practicianQuestionId',
           isShown: true,
           isRequired: false,
         },
         {
-          role: TeacherRole.LECTURER,
+          role: DisciplineTypeEnum.LECTURE,
           questionId: 'lecturerQuestionId3',
           isShown: true,
           isRequired: false,

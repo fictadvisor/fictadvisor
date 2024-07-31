@@ -9,7 +9,7 @@ import {
   SortDTO,
 } from '@fictadvisor/utils/requests';
 import { PollDisciplineTeachersResponse } from '@fictadvisor/utils/responses';
-import { CommentsSortOrder } from '@fictadvisor/utils/enums';
+import { CommentsSortOrder, DisciplineTypeEnum, TeacherRole } from '@fictadvisor/utils/enums';
 import {
   SortQATParam,
   OrderQAParam,
@@ -30,9 +30,9 @@ import { GroupRepository } from '../../database/repositories/GroupRepository';
 import {
   QuestionType,
   SemesterDate,
-  TeacherRole,
   Prisma,
 } from '@prisma/client';
+import { TeacherTypeAdapter } from '../../mappers/TeacherRoleAdapter';
 
 @Injectable()
 export class PollService {
@@ -95,7 +95,7 @@ export class PollService {
     return this.questionRepository.updateById(id, data);
   }
 
-  async getQuestions (roles: TeacherRole[], disciplineRoles: TeacherRole[]) {
+  async getQuestions (roles: DisciplineTypeEnum[], disciplineRoles: DisciplineTypeEnum[]) {
     return this.questionRepository.findMany({
       where: {
         questionRoles: {
@@ -220,6 +220,7 @@ export class PollService {
       questionRoles: {
         create: {
           ...data,
+          role: TeacherTypeAdapter[data.role],
         },
       },
     });
@@ -231,7 +232,7 @@ export class PollService {
         delete: {
           questionId_role: {
             questionId: questionId,
-            role: role,
+            role: TeacherTypeAdapter[role],
           },
         },
       },
@@ -295,7 +296,9 @@ export class PollService {
       roles?.length > 0
         ? {
           roles: {
-            some: DatabaseUtils.getSearchByArray(roles, 'role'),
+            some: {
+              disciplineType: DatabaseUtils.getSearchByArray(roles.map((role) => TeacherTypeAdapter[role]), 'name'),
+            },
           },
         }
         : {};

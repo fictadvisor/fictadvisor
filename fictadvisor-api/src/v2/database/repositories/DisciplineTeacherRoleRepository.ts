@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../PrismaService';
-import { TeacherRole } from '@prisma/client';
 import { CreateDisciplineTeacherRoleData } from '../../api/datas/CreateDisciplineTeacherRoleData';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class DisciplineTeacherRoleRepository {
@@ -9,15 +9,21 @@ export class DisciplineTeacherRoleRepository {
     private prisma: PrismaService,
   ) {}
 
+  private include: Prisma.DisciplineTeacherRoleInclude = {
+    disciplineType: true,
+  };
+
   async find (data: CreateDisciplineTeacherRoleData) {
     return this.prisma.disciplineTeacherRole.findFirst({
       where: data,
+      include: this.include,
     });
   }
 
-  async create (data: { role: TeacherRole; disciplineTeacherId: string; disciplineTypeId: string }) {
+  async create (data: { disciplineTeacherId: string; disciplineTypeId: string }) {
     return this.prisma.disciplineTeacherRole.create({
       data,
+      include: this.include,
     });
   }
 
