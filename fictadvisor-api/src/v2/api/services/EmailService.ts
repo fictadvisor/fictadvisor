@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
-import path from 'path';
+import { resolve } from 'path';
 import { EmailOptionsData } from '../datas/EmailData';
 
 @Injectable()
@@ -11,7 +11,7 @@ export class EmailService {
     await this.mailerService.sendMail({
       to,
       subject,
-      template: path.resolve('./email/templates/template.hbs'), // src/v2/email/templates/template.hbs
+      template: resolve('./email/templates/template.hbs'), // src/v2/email/templates/template.hbs
       context: {
         // filling curly brackets confirmation.hbs with content
         message,
@@ -24,7 +24,7 @@ export class EmailService {
     await this.mailerService.sendMail({
       to,
       subject,
-      template: path.resolve('./email/templates/template.hbs'),
+      template: resolve('./email/templates/template.hbs'),
       context: {
         message,
         link,
