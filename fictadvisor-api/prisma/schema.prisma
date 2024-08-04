@@ -48,6 +48,15 @@ model GoogleUser {
   @@map("google_users")
 }
 
+model GoogleStateToken {
+  token     String    @id @default(uuid())
+  userId    String    @unique @map("user_id")
+  createdAt DateTime? @default(now()) @map("created_at")
+  updatedAt DateTime? @default(now()) @updatedAt @map("updated_at")
+
+  @@map("google_state_tokens")
+}
+
 model Group {
   id                   String               @id @default(uuid())
   code                 String

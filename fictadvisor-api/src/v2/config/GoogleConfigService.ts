@@ -13,7 +13,11 @@ export class GoogleConfigService {
     return this.configService.get<string>('google.clientSecret');
   }
 
-  get frontRedirectUrl(): string {
-    return this.configService.get<string>('google.frontRedirectUrl');
+  get calendarRedirectUrl(): string {
+    return this.configService.get<string>('frontBaseUrl') + '/schedule';
+  }
+
+  get calendarCallbackUri() {
+    return this.configService.get<string>('baseUrl') + '/v2/google/callback/calendar';
   }
 }

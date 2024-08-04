@@ -36,7 +36,7 @@ import { PasswordRepeatException } from '../../utils/exceptions/PasswordRepeatEx
 import { CaptainAlreadyRegisteredException } from '../../utils/exceptions/CaptainAlreadyRegisteredException';
 import { AbsenceOfCaptainException } from '../../utils/exceptions/AbsenceOfCaptainException';
 import { State, User, RoleName } from '@prisma/client';
-import { GoogleAuthService } from '../../google/GoogleAuthService';
+import { GoogleAuthService } from '../../google/services/GoogleAuthService';
 import { InvalidGoogleTokenException } from '../../utils/exceptions/InvalidGoogleTokenException';
 import { DuplicateGoogleIdException } from '../../utils/exceptions/DuplicateGoogleIdException';
 import { GoogleEmailNotVerifiedException } from '../../utils/exceptions/GoogleEmailNotVerifiedException';
@@ -174,7 +174,6 @@ export class AuthService {
       isCaptain,
     };
 
-    console.log(tokenBody);
     await this.requestEmailVerification(tokenBody);
   }
 
@@ -462,6 +461,17 @@ export class AuthService {
       ],
     });
     return !!user?.password;
+  }
+
+  async isGoogleRegistered(idToken: string): Promise<boolean> {
+    if(!(await this.googleAuthService.isIdTokenValid(idToken))) {
+      throw new InvalidGoogleTokenException();
+    }
+
+    const { sub: googleId } = this.googleAuthService.getUserPayload(idToken);
+    const user = await this.userRepository.find({ googleId });
+
+    return !!user;
   }
 
   async isPseudoRegistered (email: string) {

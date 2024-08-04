@@ -39,6 +39,7 @@ import {
   IsAvailableResponse,
   TelegramRegistrationResponse,
   ResetPasswordResponse,
+  IsRegisteredResponse,
 } from '@fictadvisor/utils/responses';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
 import { LocalAuthGuard } from '../../security/LocalGuard';
@@ -475,6 +476,30 @@ export class AuthController {
     @Param('token') token: string,
   ): Promise<TelegramRegistrationResponse> {
     const isRegistered = !!(await this.authService.checkTelegram(token));
+    return { isRegistered };
+  }
+
+  @ApiOkResponse({
+    type: IsRegisteredResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    InvalidGoogleTokenException:
+      The google id token is invalid`,
+  })
+  @ApiParam({
+    name: 'googleIdToken',
+    required: true,
+    description: 'The token used to check the Google registration status',
+  })
+  @ApiEndpoint({
+    summary: 'Check google registration status by a google id token',
+  })
+  @Get('/checkRegisterGoogle/:googleIdToken')
+  async checkRegisterGoogle (
+    @Param('googleIdToken') idToken: string,
+  ): Promise<IsRegisteredResponse> {
+    const isRegistered = await this.authService.isGoogleRegistered(idToken);
     return { isRegistered };
   }
 }

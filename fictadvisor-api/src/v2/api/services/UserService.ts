@@ -43,7 +43,7 @@ import { AlreadySelectedException } from '../../utils/exceptions/AlreadySelected
 import { DuplicateTelegramIdException } from '../../utils/exceptions/DuplicateTelegramIdException';
 import { NotSelectedDisciplineException } from '../../utils/exceptions/NotSelectedDisciplineException';
 import { EntityType, Prisma, RoleName, State } from '@prisma/client';
-import { GoogleAuthService } from '../../google/GoogleAuthService';
+import { GoogleAuthService } from '../../google/services/GoogleAuthService';
 import { GoogleEmailNotVerifiedException } from '../../utils/exceptions/GoogleEmailNotVerifiedException';
 import { InvalidGoogleTokenException } from '../../utils/exceptions/InvalidGoogleTokenException';
 import { DuplicateGoogleIdException } from '../../utils/exceptions/DuplicateGoogleIdException';
