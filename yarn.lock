@@ -873,6 +873,11 @@
 "@bcoe/v8-coverage@^0.2.3":
   version "0.2.3"
 
+"@codegenie/serverless-express@^4.12.5":
+  version "4.14.1"
+  resolved "https://registry.npmjs.org/@codegenie/serverless-express/-/serverless-express-4.14.1.tgz"
+  integrity sha512-B90/1OmA9mf9bEJnplLj7FGf+N2v2ikB68c/9W9uXmCa4ep/V00ymCiivwGLyeuzQRW33tcj4+KxZ2utfmu39Q==
+
 "@colors/colors@1.5.0":
   version "1.5.0"
 
@@ -1314,19 +1319,6 @@
 
 "@lukeed/csprng@^1.0.0":
   version "1.1.0"
-
-"@mapbox/node-pre-gyp@^1.0.11":
-  version "1.0.11"
-  dependencies:
-    detect-libc "^2.0.0"
-    https-proxy-agent "^5.0.0"
-    make-dir "^3.1.0"
-    node-fetch "^2.6.7"
-    nopt "^5.0.0"
-    npmlog "^5.0.1"
-    rimraf "^3.0.2"
-    semver "^7.3.5"
-    tar "^6.1.11"
 
 "@mdx-js/react@^2.1.5":
   version "2.3.0"
@@ -2594,6 +2586,11 @@
   dependencies:
     "@babel/types" "^7.20.7"
 
+"@types/bcryptjs@^2.4.6":
+  version "2.4.6"
+  resolved "https://registry.npmjs.org/@types/bcryptjs/-/bcryptjs-2.4.6.tgz"
+  integrity sha512-9xlo6R2qDs5uixm0bcIqCeMCE6HiQsIyel9KQySStiyqNl2tnj2mP3DX1Nf56MD6KMenNNlBBsy3LJ7gUEQPXQ==
+
 "@types/body-parser@*":
   version "1.19.5"
   dependencies:
@@ -3051,6 +3048,13 @@
 "@ungap/structured-clone@^1.2.0":
   version "1.2.0"
 
+"@vendia/serverless-express@^4.12.6":
+  version "4.12.6"
+  resolved "https://registry.npmjs.org/@vendia/serverless-express/-/serverless-express-4.12.6.tgz"
+  integrity sha512-ePsIPk3VQwgm5nh/JGBtTKQs5ZOF7REjHxC+PKk/CHvhlKQkJuUU365uPOlxuLJhC+BAefDznDRReWxpnKjmYg==
+  dependencies:
+    "@codegenie/serverless-express" "^4.12.5"
+
 "@webassemblyjs/ast@^1.11.5", "@webassemblyjs/ast@^1.12.1", "@webassemblyjs/ast@1.12.1":
   version "1.12.1"
   dependencies:
@@ -3173,9 +3177,6 @@ abab@^2.0.6:
 
 abbrev@^2.0.0:
   version "2.0.0"
-
-abbrev@1:
-  version "1.1.1"
 
 abort-controller@^3.0.0:
   version "3.0.0"
@@ -3337,15 +3338,6 @@ app-root-path@^3.1.0:
 
 append-field@^1.0.0:
   version "1.0.0"
-
-"aproba@^1.0.3 || ^2.0.0":
-  version "2.0.0"
-
-are-we-there-yet@^2.0.0:
-  version "2.0.0"
-  dependencies:
-    delegates "^1.0.0"
-    readable-stream "^3.6.0"
 
 arg@^4.1.0:
   version "4.1.3"
@@ -3612,6 +3604,11 @@ balanced-match@^1.0.0:
 
 base64-js@^1.3.1:
   version "1.5.1"
+
+bcryptjs@^2.4.3:
+  version "2.4.3"
+  resolved "https://registry.npmjs.org/bcryptjs/-/bcryptjs-2.4.3.tgz"
+  integrity sha512-V/Hy/X9Vt7f3BbPJEi8BdVFMByHi+jNXrYkW3huaybV/kQ0KJg0Y6PkEMbn+zeT+i+SiKZ/HMqJGIIt4LZDqNQ==
 
 better-opn@^3.0.2:
   version "3.0.2"
@@ -4071,9 +4068,6 @@ color-string@^1.9.0:
     color-name "^1.0.0"
     simple-swizzle "^0.2.2"
 
-color-support@^1.1.2:
-  version "1.1.3"
-
 color@^4.2.3:
   version "4.2.3"
   dependencies:
@@ -4159,9 +4153,6 @@ consola@^3.2.3:
 
 console-browserify@^1.2.0:
   version "1.2.0"
-
-console-control-strings@^1.0.0, console-control-strings@^1.1.0:
-  version "1.1.0"
 
 constantinople@^4.0.1:
   version "4.0.1"
@@ -4485,9 +4476,6 @@ del@^6.0.0:
     slash "^3.0.0"
 
 delayed-stream@~1.0.0:
-  version "1.0.0"
-
-delegates@^1.0.0:
   version "1.0.0"
 
 depd@2.0.0:
@@ -5338,6 +5326,48 @@ fd-slicer@~1.1.0:
 fetch-retry@^5.0.2:
   version "5.0.6"
 
+"fictadvisor-api@file:/Users/ilyafoxsis/Programming/fa/fictadvisor/fictadvisor-api":
+  version "0.0.1"
+  resolved "file:fictadvisor-api"
+  dependencies:
+    "@fictadvisor/utils" "*"
+    "@nestjs-modules/mailer" "^1.8.1"
+    "@nestjs/common" "^9.2.1"
+    "@nestjs/config" "^2.2.0"
+    "@nestjs/core" "^9.2.1"
+    "@nestjs/jwt" "^10.0.3"
+    "@nestjs/passport" "^9.0.0"
+    "@nestjs/platform-express" "^9.2.1"
+    "@nestjs/schedule" "^3.0.1"
+    "@nestjs/swagger" "^6.3.0"
+    "@nestjs/typeorm" "^9.0.1"
+    "@prisma/client" "4.16.2"
+    "@types/bcryptjs" "^2.4.6"
+    "@types/jsdom" "^21.1.0"
+    "@types/nodemailer" "^6.4.7"
+    "@types/passport-local" "^1.0.34"
+    "@vendia/serverless-express" "^4.12.6"
+    axios "^1.2.1"
+    bcryptjs "^2.4.3"
+    class-transformer "^0.5.1"
+    class-validator "^0.14.0"
+    cross-env "^7.0.3"
+    docxtemplater "^3.37.12"
+    dotenv-cli "^7.2.1"
+    handlebars "^4.7.7"
+    jsdom "^22.0.0"
+    luxon "^3.4.4"
+    nodemailer "^6.9.0"
+    passport "^0.6.0"
+    passport-jwt "^4.0.0"
+    passport-local "^1.0.0"
+    pizzip "^3.1.4"
+    prisma "4.16.2"
+    reflect-metadata "^0.1.13"
+    rimraf "^5.0.1"
+    rxjs "^7.6.0"
+    uuid "^9.0.0"
+
 figures@^3.0.0:
   version "3.2.0"
   dependencies:
@@ -5567,19 +5597,6 @@ function.prototype.name@^1.1.5, function.prototype.name@^1.1.6:
 
 functions-have-names@^1.2.3:
   version "1.2.3"
-
-gauge@^3.0.0:
-  version "3.0.2"
-  dependencies:
-    aproba "^1.0.3 || ^2.0.0"
-    color-support "^1.1.2"
-    console-control-strings "^1.0.0"
-    has-unicode "^2.0.1"
-    object-assign "^4.1.1"
-    signal-exit "^3.0.0"
-    string-width "^4.2.3"
-    strip-ansi "^6.0.1"
-    wide-align "^1.1.2"
 
 gensync@^1.0.0-beta.2:
   version "1.0.0-beta.2"
@@ -5812,9 +5829,6 @@ has-tostringtag@^1.0.0:
   dependencies:
     has-symbols "^1.0.2"
 
-has-unicode@^2.0.1:
-  version "2.0.1"
-
 hash-base@^3.0.0:
   version "3.1.0"
   dependencies:
@@ -5960,7 +5974,7 @@ https-proxy-agent@^4.0.0:
     agent-base "5"
     debug "4"
 
-https-proxy-agent@^5.0.0, https-proxy-agent@^5.0.1:
+https-proxy-agent@^5.0.1:
   version "5.0.1"
   dependencies:
     agent-base "6"
@@ -7045,8 +7059,13 @@ lru-cache@^6.0.0:
 "lru-cache@^9.1.1 || ^10.0.0":
   version "10.1.0"
 
-luxon@^3.0.2, luxon@^3.4.4, luxon@~3.3.0:
+luxon@^3.0.2, luxon@~3.3.0:
   version "3.3.0"
+
+luxon@^3.4.4:
+  version "3.5.0"
+  resolved "https://registry.npmjs.org/luxon/-/luxon-3.5.0.tgz"
+  integrity sha512-rh+Zjr6DNfUYR3bPwJEnuwDdqMbxZW7LOQfUN4B54+Cl+0o5zaU9RJ6bcidfDtC1cWCZXQ+nvX8bf6bAji37QQ==
 
 lz-string@^1.5.0:
   version "1.5.0"
@@ -7090,7 +7109,7 @@ make-dir@^2.0.0, make-dir@^2.1.0:
     pify "^4.0.1"
     semver "^5.6.0"
 
-make-dir@^3.0.2, make-dir@^3.1.0:
+make-dir@^3.0.2:
   version "3.1.0"
   dependencies:
     semver "^6.0.0"
@@ -7669,9 +7688,6 @@ node-abi@^3.3.0:
 node-abort-controller@^3.0.1:
   version "3.1.1"
 
-node-addon-api@^5.0.0:
-  version "5.1.0"
-
 node-addon-api@^6.1.0:
   version "6.1.0"
 
@@ -7688,7 +7704,7 @@ node-emoji@1.11.0:
 node-fetch-native@^1.6.1:
   version "1.6.1"
 
-node-fetch@^2.0.0, node-fetch@^2.6.0, node-fetch@^2.6.1, node-fetch@^2.6.7:
+node-fetch@^2.0.0, node-fetch@^2.6.0, node-fetch@^2.6.1:
   version "2.7.0"
   dependencies:
     whatwg-url "^5.0.0"
@@ -7731,11 +7747,6 @@ node-releases@^2.0.14:
 nodemailer@^6.9.0, nodemailer@^6.9.2, nodemailer@>=6.4.6, nodemailer@6.9.8:
   version "6.9.8"
 
-nopt@^5.0.0:
-  version "5.0.0"
-  dependencies:
-    abbrev "1"
-
 nopt@^7.2.0:
   version "7.2.0"
   dependencies:
@@ -7766,14 +7777,6 @@ npm-run-path@^5.1.0:
   version "5.2.0"
   dependencies:
     path-key "^4.0.0"
-
-npmlog@^5.0.1:
-  version "5.0.1"
-  dependencies:
-    are-we-there-yet "^2.0.0"
-    console-control-strings "^1.1.0"
-    gauge "^3.0.0"
-    set-blocking "^2.0.0"
 
 nth-check@^2.0.1:
   version "2.1.1"
@@ -9166,9 +9169,6 @@ serve-static@1.15.0:
     parseurl "~1.3.3"
     send "0.18.0"
 
-set-blocking@^2.0.0:
-  version "2.0.0"
-
 set-function-length@^1.1.1:
   version "1.1.1"
   dependencies:
@@ -9420,7 +9420,7 @@ string-length@^4.0.1:
     is-fullwidth-code-point "^3.0.0"
     strip-ansi "^6.0.1"
 
-"string-width@^1.0.2 || 2 || 3 || 4", string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
+string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
   version "4.2.3"
   dependencies:
     emoji-regex "^8.0.0"
@@ -9621,7 +9621,7 @@ tar-stream@^3.1.5:
     fast-fifo "^1.2.0"
     streamx "^2.15.0"
 
-tar@^6.1.11, tar@^6.2.0:
+tar@^6.2.0:
   version "6.2.0"
   dependencies:
     chownr "^2.0.0"
@@ -9857,18 +9857,22 @@ tunnel-agent@^0.6.0:
   dependencies:
     safe-buffer "^5.0.1"
 
-turbo-darwin-arm64@1.11.3:
-  version "1.11.3"
+turbo-darwin-arm64@2.0.11:
+  version "2.0.11"
+  resolved "https://registry.npmjs.org/turbo-darwin-arm64/-/turbo-darwin-arm64-2.0.11.tgz"
+  integrity sha512-K/YW+hWzRQ/wGmtffxllH4M1tgy8OlwgXODrIiAGzkSpZl9+pIsem/F86UULlhsIeavBYK/LS5+dzV3DPMjJ9w==
 
 turbo@^2.0.7:
-  version "1.11.3"
+  version "2.0.11"
+  resolved "https://registry.npmjs.org/turbo/-/turbo-2.0.11.tgz"
+  integrity sha512-imDlFFAvitbCm1JtDFJ6eG882qwxHUmVT2noPb3p2jq5o5DuXOchMbkVS9kUeC3/4WpY5N0GBZ3RvqNyjHZw1Q==
   optionalDependencies:
-    turbo-darwin-64 "1.11.3"
-    turbo-darwin-arm64 "1.11.3"
-    turbo-linux-64 "1.11.3"
-    turbo-linux-arm64 "1.11.3"
-    turbo-windows-64 "1.11.3"
-    turbo-windows-arm64 "1.11.3"
+    turbo-darwin-64 "2.0.11"
+    turbo-darwin-arm64 "2.0.11"
+    turbo-linux-64 "2.0.11"
+    turbo-linux-arm64 "2.0.11"
+    turbo-windows-64 "2.0.11"
+    turbo-windows-arm64 "2.0.11"
 
 tween-functions@^1.2.0:
   version "1.2.0"
@@ -10372,11 +10376,6 @@ which@^2.0.1:
   version "2.0.2"
   dependencies:
     isexe "^2.0.0"
-
-wide-align@^1.1.2:
-  version "1.1.5"
-  dependencies:
-    string-width "^1.0.2 || 2 || 3 || 4"
 
 windows-release@^4.0.0:
   version "4.0.0"
