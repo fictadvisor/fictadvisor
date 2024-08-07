@@ -30,6 +30,7 @@ export * from './GrantsResponse';
 export * from './GroupResponse';
 export * from './GroupStudentsResponse';
 export * from './GroupsWithTelegramGroupsResponse';
+export * from './HasCalendarResponse';
 export * from './IsRegisteredResponse';
 export * from './JWTTokensResponse';
 export * from './MainEventInfoResponse';

@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { GoogleConfigService } from '../../config/GoogleConfigService';
-import { AuthTokenResponse } from '../types/responses/AuthTokenResponse';
-import { AccessTokenInfoResponse } from '../types/responses/AccessTokenInfoResponse';
-import { RefreshTokenResponse } from '../types/responses/RefreshTokenResponse';
+import { AuthTokenResponse } from '../types/auth/AuthTokenResponse';
+import { AccessTokenInfoResponse } from '../types/auth/AccessTokenInfoResponse';
+import { RefreshTokenResponse } from '../types/auth/RefreshTokenResponse';
 
 
 const TOKENINFO_URL = 'https://oauth2.googleapis.com/tokeninfo';

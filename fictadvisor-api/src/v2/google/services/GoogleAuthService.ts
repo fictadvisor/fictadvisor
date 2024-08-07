@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { createCipheriv, createDecipheriv, randomBytes, scryptSync } from 'crypto';
 import { GoogleConfigService } from '../../config/GoogleConfigService';
 import { UserRepository } from '../../database/repositories/UserRepository';
-import { GoogleUserPayload } from '../types/GoogleUserPayload';
+import { GoogleUserPayload } from '../types/auth/GoogleUserPayload';
 import { DbUser } from '../../database/entities/DbUser';
 import { PrismaService } from '../../database/PrismaService';
 import { GoogleAuthError } from '@fictadvisor/utils/enums';
 import { GoogleAuthAPI } from '../apis/GoogleAuthAPI';
 import { SecurityConfigService } from '../../config/SecurityConfigService';
-import { AuthTokenResponse } from '../types/responses/AuthTokenResponse';
+import { AuthTokenResponse } from '../types/auth/AuthTokenResponse';
 import { GoogleUserRepository } from '../../database/repositories/GoogleUserRepository';
 import { Exception } from 'handlebars';
 import { GoogleNotLinkedException } from '../../utils/exceptions/GoogleNotLinkedException';
@@ -107,7 +107,8 @@ export class GoogleAuthService {
       return e.response.data.error;
     }
 
-    const { access_token, refresh_token, id_token, scope } = tokenResponse;
+    const { refresh_token, id_token, scope } = tokenResponse;
+    if (!refresh_token) return;
     const { sub, email_verified } = this.getUserPayload(id_token);
 
     if (!email_verified) return GoogleAuthError.EMAIL_NOT_VERIFIED;
@@ -124,7 +125,7 @@ export class GoogleAuthService {
       return GoogleAuthError.ACCESS_DENIED;
     }
 
-    await this.saveTokens(user, access_token, refresh_token);
+    await this.saveRefreshToken(user, refresh_token);
   }
 
   checkGrantedScopes(grantedScopes: string[], requiredScopes: string[]): boolean {
@@ -135,22 +136,21 @@ export class GoogleAuthService {
     return scopeSet.size === 0;
   }
 
-  async saveTokens(user: DbUser, accessToken: string, refreshToken: string): Promise<void> {
+  async saveRefreshToken(user: DbUser, refreshToken: string): Promise<void> {
     const { id, googleId } = user;
 
-    accessToken = this.encryptToken(accessToken);
     refreshToken = this.encryptToken(refreshToken);
 
     if (googleId) {
       const googleUser = await this.googleUserRepository.findById(googleId);
       if (googleUser) {
-        await this.googleUserRepository.updateById(googleId, { accessToken, refreshToken });
+        await this.googleUserRepository.updateById(googleId, { refreshToken });
       } else {
-        await this.googleUserRepository.create({ googleId, accessToken, refreshToken });
+        await this.googleUserRepository.create({ googleId, refreshToken });
       }
     } else {
       await this.userRepository.updateById(id, { googleId });
-      await this.googleUserRepository.create({ googleId, accessToken, refreshToken });
+      await this.googleUserRepository.create({ googleId, refreshToken });
     }
   }
 
@@ -158,28 +158,15 @@ export class GoogleAuthService {
     const googleUser = await this.googleUserRepository.findById(googleId);
     if (!googleUser) return null;
 
-    let { accessToken, refreshToken } = googleUser;
-    try {
-      accessToken = this.decryptToken(accessToken);
-      const { expires_in } = await this.authAPI.getAccessTokenInfo(accessToken);
-      const secondsToLive = isNaN(+expires_in) ? undefined : +expires_in;
+    let { refreshToken } = googleUser;
+    refreshToken = this.decryptToken(refreshToken);
 
-      if (!secondsToLive || secondsToLive <= 60) {
-        throw new Exception('Have to refresh the token');
-      }
-    } catch (e) {
-        refreshToken = this.decryptToken(refreshToken);
-        accessToken = await this.refreshAccessToken(googleId, refreshToken);
-    }
-
-    return accessToken;
+    return await this.refreshAccessToken(googleId, refreshToken);
   }
 
   async refreshAccessToken(googleId: string, refreshToken: string): Promise<string | null> {
     try {
       const { access_token } = await this.authAPI.refreshAccessToken(refreshToken);
-      const accessTokenEnc = this.encryptToken(access_token);
-      await this.googleUserRepository.updateById(googleId, { accessToken: accessTokenEnc });
 
       return access_token;
     } catch (e) {
@@ -189,18 +176,15 @@ export class GoogleAuthService {
     }
   }
 
-  async checkUserCalendarPermissions(user: DbUser): Promise<boolean> {
-    if (!user.googleId)
+  async checkUserCalendarPermissions(googleId: string): Promise<boolean> {
+    if (!googleId)
       throw new GoogleNotLinkedException();
 
     try {
-      const accessToken = await this.getAccessToken(user.googleId);
+      const accessToken = await this.getAccessToken(googleId);
       if (!accessToken) return false;
 
-      const { scope } = await this.authAPI.getAccessTokenInfo(accessToken);
-      const grantedScopes = scope.split(' ');
-
-      if (!this.checkGrantedScopes(grantedScopes, CALENDAR_SCOPES)) {
+      if (!(await this.hasCalendarPermissions(accessToken))) {
         return false;
       }
     } catch (e) {
@@ -210,10 +194,15 @@ export class GoogleAuthService {
     return true;
   }
 
-  getAuthHeader(accessToken: string) {
-    return {
-      'Authorization': `Bearer ${accessToken}`,
-    };
+  async hasCalendarPermissions(accessToken: string): Promise<boolean> {
+    try {
+      const { scope } = await this.authAPI.getAccessTokenInfo(accessToken);
+      const grantedScopes = scope.split(' ');
+
+      return this.checkGrantedScopes(grantedScopes, CALENDAR_SCOPES);
+    } catch (e) {
+      return false;
+    }
   }
 
 

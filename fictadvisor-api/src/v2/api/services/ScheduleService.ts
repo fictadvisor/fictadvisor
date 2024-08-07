@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { DisciplineTypeEnum, Period } from '@prisma/client';
+import { DateTime } from 'luxon';
 import {
   CreateEventDTO,
   AttachLessonDTO,
@@ -17,7 +19,6 @@ import { UserService } from './UserService';
 import { DbEvent } from '../../database/entities/DbEvent';
 import { DbDiscipline, DbDiscipline_DisciplineTeacher } from '../../database/entities/DbDiscipline';
 import { DbDisciplineType } from '../../database/entities/DbDisciplineType';
-import { DisciplineTypeEnum, Period } from '@prisma/client';
 import { EventRepository } from '../../database/repositories/EventRepository';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
 import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
@@ -27,7 +28,7 @@ import { InvalidDateException } from '../../utils/exceptions/InvalidDateExceptio
 import { ObjectIsRequiredException } from '../../utils/exceptions/ObjectIsRequiredException';
 import { InvalidWeekException } from '../../utils/exceptions/InvalidWeekException';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
-import { DateTime } from 'luxon';
+import { GoogleCalendarService } from '../../google/services/GoogleCalendarService';
 
 export const weeksPerEvent = {
   EVERY_WEEK: WEEK / WEEK,
@@ -49,6 +50,7 @@ export class ScheduleService {
     private studentRepository: StudentRepository,
     private dateUtils: DateUtils,
     private campusParser: CampusParser,
+    private googleCalendarService: GoogleCalendarService,
   ) {}
 
   private parserTypes =  {
@@ -761,5 +763,9 @@ export class ScheduleService {
     });
 
     return events;
+  }
+
+  async moveToGoogleCalendar(userId: string, calendarName?: string): Promise<void> {
+    return await this.googleCalendarService.moveCalendar(userId, calendarName);
   }
 }
