@@ -14,7 +14,7 @@ export const createValidationSchema = (currentQuestions: Category) => {
     if (question.type === QuestionType.TEXT) {
       validationSchemaObject[question.id] = yup
         .string()
-        .min(4, 'Текст повинен містити не менше 4 символів');
+        .min(20, 'Текст повинен містити не менше 20 символів');
     }
   });
 

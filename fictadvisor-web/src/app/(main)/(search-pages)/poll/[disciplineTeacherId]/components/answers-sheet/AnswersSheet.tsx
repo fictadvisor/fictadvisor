@@ -147,7 +147,7 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
       const message = getErrorMessage(error);
       const errorMessage =
         message === 'Value is wrong'
-          ? 'Текст повинен містити не менше 4 символів'
+          ? 'Текст повинен містити не менше 20 символів'
           : message || 'Щось пішло не так, спробуй пізніше!';
       toast.error('Помилка!', errorMessage);
       setIsSendingStatus(SendingStatus.ERROR);
