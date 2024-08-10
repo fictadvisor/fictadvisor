@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
@@ -24,6 +24,8 @@ model User {
   avatar              String?
   password            String?
   telegramId          BigInt?          @unique @map("telegram_id")
+  googleId            String?          @unique @map("google_id")
+  googleUser          GoogleUser?
   student             Student?
   superhero           Superhero?
   questionAnswers     QuestionAnswer[]
@@ -33,6 +35,26 @@ model User {
   updatedAt           DateTime?        @default(now()) @updatedAt @map("updated_at")
 
   @@map("users")
+}
+
+model GoogleUser {
+  googleId     String    @unique @map("google_id")
+  user         User      @relation(fields: [googleId], references: [googleId], onDelete: Cascade)
+  calendarId   String?   @map("calendar_id")
+  refreshToken String?   @map("refresh_token")
+  createdAt    DateTime? @default(now()) @map("created_at")
+  updatedAt    DateTime? @default(now()) @updatedAt @map("updated_at")
+
+  @@map("google_users")
+}
+
+model GoogleStateToken {
+  token     String    @id @default(uuid())
+  userId    String    @unique @map("user_id")
+  createdAt DateTime? @default(now()) @map("created_at")
+  updatedAt DateTime? @default(now()) @updatedAt @map("updated_at")
+
+  @@map("google_state_tokens")
 }
 
 model Group {
@@ -792,6 +814,7 @@ model VerifyEmailToken {
   password   String
   avatar     String?
   telegramId BigInt?  @map("telegram_id")
+  googleId   String?  @map("google_id")
   isCaptain  Boolean  @map("is_captain")
   groupId    String   @map("group_id")
   middleName String?  @map("middle_name")

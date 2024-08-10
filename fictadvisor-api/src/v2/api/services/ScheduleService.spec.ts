@@ -9,6 +9,7 @@ import { DisciplineService } from './DisciplineService';
 import { DisciplineTeacherService } from './DisciplineTeacherService';
 import { UserService } from './UserService';
 import { Period } from '@prisma/client';
+import { GoogleCalendarService } from '../../google/services/GoogleCalendarService';
 
 describe('ScheduleService', () => {
   let scheduleService: ScheduleService;
@@ -28,6 +29,13 @@ describe('ScheduleService', () => {
         DisciplineService,
         UserService,
       ];
+      if (token === GoogleCalendarService) {
+        return {
+          handleEventCreate: () => {},
+          handleEventUpdate: () => {},
+          handleEventDelete: () => {},
+        };
+      }
       if (tokens.includes(token)) {
         return {};
       }

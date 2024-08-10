@@ -25,6 +25,9 @@ import { PollService } from './PollService';
 import { DataNotFoundException } from '../../utils/exceptions/DataNotFoundException';
 import { InvalidWeekException } from '../../utils/exceptions/InvalidWeekException';
 import { ObjectIsRequiredException } from '../../utils/exceptions/ObjectIsRequiredException';
+import { GoogleAuthService } from '../../google/services/GoogleAuthService';
+import { GoogleCalendarService } from '../../google/services/GoogleCalendarService';
+
 
 
 describe('ScheduleService', () => {
@@ -49,9 +52,17 @@ describe('ScheduleService', () => {
         DisciplineService,
         TelegramAPI,
         PollService,
+        GoogleAuthService,
       ];
       if (!token) {
         return;
+      }
+      if (token === GoogleCalendarService) {
+        return {
+          handleEventCreate: () => {},
+          handleEventUpdate: () => {},
+          handleEventDelete: () => {},
+        };
       }
       if (tokens.includes(token)) {
         return {};

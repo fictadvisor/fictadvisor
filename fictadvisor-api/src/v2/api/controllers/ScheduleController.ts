@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
-  ApiBearerAuth,
+  ApiBearerAuth, ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiOkResponse,
   ApiParam,
@@ -46,6 +46,7 @@ import { EventPipe } from '../pipes/EventPipe';
 import { UserByIdPipe } from '../pipes/UserByIdPipe';
 import { ScheduleMapper } from '../../mappers/ScheduleMapper';
 import { ScheduleService } from '../services/ScheduleService';
+import { JwtGuard } from '../../security/JwtGuard';
 
 @ApiTags('Schedule')
 @Controller({
@@ -660,5 +661,35 @@ export class ScheduleController {
     return {
       events: this.scheduleMapper.getTelegramEvents(result),
     };
+  }
+
+  @ApiBearerAuth()
+  @ApiCreatedResponse()
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized
+      There is no google account linked to the user`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoGoogleGrantException:
+      User has not granted the required Google account permissions`,
+  })
+  @ApiQuery({
+    name: 'name',
+    required: false,
+    description: 'The name of the calendar',
+  })
+  @ApiEndpoint({
+    summary: 'Moves FA calendar to the user\'s linked google calendar',
+    guards: JwtGuard,
+  })
+  @Post('/google/move')
+  async moveToGoogleCalendar (
+    @Request() req,
+    @Query('name') calendarName?,
+  ): Promise<void> {
+    return await this.scheduleService.moveToGoogleCalendar(req.user.id, calendarName);
   }
 }

@@ -12,6 +12,7 @@ export class UserMapper {
       username: user.username,
       avatar: user.avatar,
       telegramId: user.telegramId,
+      googleId: user.googleId,
       state: user.state,
     };
   }

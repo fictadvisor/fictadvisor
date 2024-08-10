@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { DisciplineTypeEnum, Period } from '@prisma/client';
+import { DateTime } from 'luxon';
 import {
   CreateEventDTO,
   AttachLessonDTO,
@@ -17,7 +19,6 @@ import { UserService } from './UserService';
 import { DbEvent } from '../../database/entities/DbEvent';
 import { DbDiscipline, DbDiscipline_DisciplineTeacher } from '../../database/entities/DbDiscipline';
 import { DbDisciplineType } from '../../database/entities/DbDisciplineType';
-import { DisciplineTypeEnum, Period } from '@prisma/client';
 import { EventRepository } from '../../database/repositories/EventRepository';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
 import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
@@ -27,7 +28,7 @@ import { InvalidDateException } from '../../utils/exceptions/InvalidDateExceptio
 import { ObjectIsRequiredException } from '../../utils/exceptions/ObjectIsRequiredException';
 import { InvalidWeekException } from '../../utils/exceptions/InvalidWeekException';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
-import { DateTime } from 'luxon';
+import { GoogleCalendarService } from '../../google/services/GoogleCalendarService';
 
 export const weeksPerEvent = {
   EVERY_WEEK: WEEK / WEEK,
@@ -49,6 +50,7 @@ export class ScheduleService {
     private studentRepository: StudentRepository,
     private dateUtils: DateUtils,
     private campusParser: CampusParser,
+    private googleCalendarService: GoogleCalendarService,
   ) {}
 
   private parserTypes =  {
@@ -312,6 +314,7 @@ export class ScheduleService {
     });
 
     if (!body.disciplineId) {
+      this.googleCalendarService.handleEventCreate(event.id);
       return {
         event: { ...event, endTime: body.endTime },
       };
@@ -319,6 +322,7 @@ export class ScheduleService {
 
     const result = await this.attachLesson(event.id, body as AttachLessonDTO);
 
+    this.googleCalendarService.handleEventCreate(event.id);
     return {
       event: { ...result.event, endTime: body.endTime } as DbEvent,
       discipline: result.discipline,
@@ -425,6 +429,7 @@ export class ScheduleService {
   }
 
   async deleteEvent (id: string): Promise<{ event: DbEvent, discipline?: DbDiscipline }> {
+    await this.googleCalendarService.handleEventDelete(id);
     const event = await this.eventRepository.deleteById(id);
     const lesson = event.lessons[0];
 
@@ -542,8 +547,14 @@ export class ScheduleService {
     });
 
     const lesson = event?.lessons[0];
-    if (!disciplineId && !eventType && !teachers && !disciplineInfo) return;
-    if ((!disciplineId || !eventType) && !lesson) throw new ObjectIsRequiredException('disciplineType');
+    if (!disciplineId && !eventType && !teachers && !disciplineInfo) {
+      this.googleCalendarService.handleEventUpdate(eventId);
+      return;
+    }
+    if ((!disciplineId || !eventType) && !lesson) {
+      this.googleCalendarService.handleEventUpdate(eventId);
+      throw new ObjectIsRequiredException('disciplineType');
+    }
 
     const discipline = await this.updateDiscipline(
       disciplineId,
@@ -564,6 +575,8 @@ export class ScheduleService {
         },
       },
     });
+
+    this.googleCalendarService.handleEventUpdate(eventId);
   }
 
   private getNewDateTime (event: DbEvent, {
@@ -761,5 +774,9 @@ export class ScheduleService {
     });
 
     return events;
+  }
+
+  async moveToGoogleCalendar (userId: string, calendarName?: string): Promise<void> {
+    await this.googleCalendarService.moveCalendar(userId, calendarName);
   }
 }
