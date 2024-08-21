@@ -27,7 +27,7 @@ jobs:
         uses: ./.github/actions/install
       - name: Start PostgreSQL Database
         run: |
-          docker-compose -f fictadvisor-api/docker-compose.yml up -d && sleep 5s
+          docker compose -f fictadvisor-api/docker-compose.yml up -d && sleep 5s
       - name: Start migration
         run: npx turbo test:migrate
       - name: Start seeding
