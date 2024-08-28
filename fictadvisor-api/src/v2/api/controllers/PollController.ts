@@ -29,7 +29,7 @@ import { QuestionByRoleAndIdPipe } from '../pipes/QuestionByRoleAndIdPipe';
 import { UserByIdPipe } from '../pipes/UserByIdPipe';
 import { QuestionMapper } from '../../mappers/QuestionMapper';
 import { PollService } from '../services/PollService';
-import { TeacherRole } from '@fictadvisor/utils/enums';
+import { DisciplineTypeEnum } from '@fictadvisor/utils';
 
 @ApiTags('Poll')
 @Controller({
@@ -339,8 +339,8 @@ export class PollController {
       You do not have permission to perform this action`,
   })
   @ApiParam({
-    name: 'role',
-    enum: [TeacherRole.LECTURER, TeacherRole.LABORANT, TeacherRole.PRACTICIAN],
+    name: 'disciplineType',
+    enum: DisciplineTypeEnum,
     required: true,
     description: 'Question`s role, that you want to delete',
   })
@@ -356,9 +356,9 @@ export class PollController {
   })
   @Delete('/questions/:questionId/roles/:role')
   async deleteRole (
-    @Param(QuestionByRoleAndIdPipe) params: { questionId: string, role: TeacherRole },
+    @Param(QuestionByRoleAndIdPipe) params: { questionId: string, disciplineType: DisciplineTypeEnum },
   ) {
-    const question = await this.pollService.deleteRole(params.questionId, params.role);
+    const question = await this.pollService.deleteRole(params.questionId, params.disciplineType);
     return this.questionMapper.getQuestionWithRoles(question);
   }
 }

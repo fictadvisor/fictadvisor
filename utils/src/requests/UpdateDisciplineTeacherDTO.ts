@@ -1,14 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsEnum, IsNotEmpty } from 'class-validator';
-import { TeacherRole } from '../enums/db/TeacherRoleEnum';
+import { DisciplineTypeEnum } from '../enums';
+import { validationOptionsMsg } from '../ValidationUtil';
 
 export class UpdateDisciplineTeacherDTO {
   @ApiProperty({
-    enum: TeacherRole,
-    type: [TeacherRole],
+    description: 'Array of discipline types of discipline teacher',
+    enum: DisciplineTypeEnum,
+    type: [DisciplineTypeEnum],
   })
-  @IsNotEmpty()
-  @IsArray()
-  @IsEnum(TeacherRole, { each: true })
-    roles: TeacherRole[];
+  @IsNotEmpty(validationOptionsMsg('Discipline types can not be empty'))
+  @IsArray(validationOptionsMsg('Discipline types must be an array'))
+  @IsEnum(DisciplineTypeEnum, validationOptionsMsg('Each discipline type in array must be an enum', true))
+    disciplineTypes: DisciplineTypeEnum[];
 }

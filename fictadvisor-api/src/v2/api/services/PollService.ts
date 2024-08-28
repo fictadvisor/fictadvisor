@@ -9,8 +9,9 @@ import {
   SortDTO,
 } from '@fictadvisor/utils/requests';
 import { PollDisciplineTeachersResponse } from '@fictadvisor/utils/responses';
-import { CommentsSortOrder, DisciplineTypeEnum, TeacherRole } from '@fictadvisor/utils/enums';
 import {
+  CommentsSortOrder,
+  DisciplineTypeEnum,
   SortQATParam,
   OrderQAParam,
 } from '@fictadvisor/utils/enums';
@@ -32,7 +33,6 @@ import {
   SemesterDate,
   Prisma,
 } from '@prisma/client';
-import { TeacherTypeAdapter } from '../../mappers/TeacherRoleAdapter';
 
 @Injectable()
 export class PollService {
@@ -95,14 +95,14 @@ export class PollService {
     return this.questionRepository.updateById(id, data);
   }
 
-  async getQuestions (roles: DisciplineTypeEnum[], disciplineRoles: DisciplineTypeEnum[]) {
+  async getQuestions (disciplineTypes: DisciplineTypeEnum[], disciplineRoles: DisciplineTypeEnum[]) {
     return this.questionRepository.findMany({
       where: {
         questionRoles: {
           some: {
             isShown: true,
             role: {
-              in: roles,
+              in: disciplineTypes,
             },
           },
           none: {
@@ -218,21 +218,18 @@ export class PollService {
   async giveRole (data: CreateQuestionRoleDTO, questionId: string) {
     return await this.questionRepository.updateById(questionId, {
       questionRoles: {
-        create: {
-          ...data,
-          role: TeacherTypeAdapter[data.role],
-        },
+        create: data,
       },
     });
   }
 
-  async deleteRole (questionId: string, role: TeacherRole) {
+  async deleteRole (questionId: string, role: DisciplineTypeEnum) {
     return this.questionRepository.updateById(questionId, {
       questionRoles: {
         delete: {
           questionId_role: {
             questionId: questionId,
-            role: TeacherTypeAdapter[role],
+            role,
           },
         },
       },
@@ -285,7 +282,7 @@ export class PollService {
       disciplineWhere.push({ ...part, isSelective: true });
     }
 
-    const { sort = 'lastName', order = 'asc', roles = [] } = query;
+    const { sort = 'lastName', order = 'asc', disciplineTypes = [] } = query;
     const search = DatabaseUtils.getSearch(
       query,
       SortQATParam.FIRST_NAME.toString(),
@@ -293,11 +290,11 @@ export class PollService {
       SortQATParam.MIDDLE_NAME.toString(),
     );
     const roleFilter =
-      roles?.length > 0
+      disciplineTypes?.length > 0
         ? {
           roles: {
             some: {
-              disciplineType: DatabaseUtils.getSearchByArray(roles.map((role) => TeacherTypeAdapter[role]), 'name'),
+              disciplineType: DatabaseUtils.getSearchByArray(disciplineTypes, 'name'),
             },
           },
         }
