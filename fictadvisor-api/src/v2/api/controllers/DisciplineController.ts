@@ -18,7 +18,6 @@ import {
   ExtendedDisciplineTeachersResponse,
   DisciplinesResponse,
 } from '@fictadvisor/utils/responses';
-import { DisciplineTypeEnum } from '@fictadvisor/utils/enums';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import { DisciplineService } from '../services/DisciplineService';
 import { Access } from 'src/v2/security/Access';
@@ -27,6 +26,7 @@ import { GroupByDisciplineGuard } from '../../security/group-guard/GroupByDiscip
 import { DisciplineByIdPipe } from '../pipes/DisciplineByIdPipe';
 import { QueryAllDisciplinesPipe } from '../pipes/QueryAllDisciplinesPipe';
 import { DisciplineMapper } from '../../mappers/DisciplineMapper';
+import { DisciplineTypeEnum } from '@prisma/client';
 
 @ApiTags('Discipline')
 @Controller({

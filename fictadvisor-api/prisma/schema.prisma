@@ -195,6 +195,14 @@ model DisciplineType {
   @@map("discipline_types")
 }
 
+enum TeacherRole {
+  LECTURER
+  LABORANT
+  PRACTICIAN
+  EXAMINER
+  OTHER
+}
+
 model Teacher {
   id                 String                @id @default(uuid())
   firstName          String                @map("first_name")

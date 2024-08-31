@@ -27,7 +27,8 @@ import { ContactRepository } from '../../database/repositories/ContactRepository
 import { InvalidQueryException } from '../../utils/exceptions/InvalidQueryException';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
 import { EntityType, QuestionDisplay, Prisma } from '@prisma/client';
-import { DisciplineTypeEnum } from '@fictadvisor/utils/enums';
+import { TeacherRole } from '@fictadvisor/utils/enums';
+import { TeacherTypeAdapter } from '../../mappers/TeacherRoleAdapter';
 
 @Injectable()
 export class TeacherService {
@@ -51,7 +52,7 @@ export class TeacherService {
       AND: [
         this.getSearchForTeachers.fullName(body.search),
         body.groupId?.length ? this.getSearchForTeachers.group(body.groupId) : {},
-        body.disciplineTypes?.length ? this.getSearchForTeachers.disciplineTypes(body.disciplineTypes) : {},
+        body.roles?.length ? this.getSearchForTeachers.roles(body.roles) : {},
         {
           OR: [
             body.notInDepartments ? {
@@ -89,12 +90,12 @@ export class TeacherService {
         some: DatabaseUtils.getSearchByArray(cathedrasId, 'cathedraId'),
       },
     }),
-    disciplineTypes: (disciplineTypes: DisciplineTypeEnum[]) => ({
+    roles: (roles: TeacherRole[]) => ({
       disciplineTeachers: {
         some: {
           roles: {
             some: {
-              disciplineType: DatabaseUtils.getSearchByArray(disciplineTypes, 'name'),
+              disciplineType: DatabaseUtils.getSearchByArray(roles.map((role) => TeacherTypeAdapter[role]), 'name'),
             },
           },
         },
@@ -319,14 +320,14 @@ export class TeacherService {
 
     const { disciplineTeachers } = dbTeacher;
 
-    const disciplineTypes = this.disciplineTeacherMapper.getRolesBySubject(disciplineTeachers, subjectId);
+    const roles = this.disciplineTeacherMapper.getRolesBySubject(disciplineTeachers, subjectId);
     const subject = await this.subjectRepository.findById(subjectId);
     const contacts = await this.contactRepository.getAllContacts(teacherId);
 
     return {
       ...this.teacherMapper.getTeacher(dbTeacher),
       subject: this.disciplineTeacherMapper.getSubject(subject),
-      disciplineTypes,
+      roles,
       contacts,
     };
   }

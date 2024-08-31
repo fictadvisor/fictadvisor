@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { Sort, SortDTO } from '@fictadvisor/utils/requests';
 import {
+  TeacherRole,
   OrderQAParam,
   SortQATParam,
   AcademicStatus,
   ScientificDegree,
   Position,
-  DisciplineTypeEnum,
 } from '@fictadvisor/utils/enums';
 import { DbTeacher } from '../database/entities/DbTeacher';
-import { DbDisciplineTeacherRole } from '../database/entities/DbDisciplineTeacherRole';
+import { getTeacherRoles } from './TeacherRoleAdapter';
 
 @Injectable()
 export class TeacherMapper {
@@ -26,7 +26,7 @@ export class TeacherMapper {
       position: teacher.position as Position,
       rating: +teacher.rating,
       cathedras: this.getCathedras(teacher),
-      disciplineTypes: this.getRoles(teacher),
+      roles: this.getRoles(teacher),
     };
   }
 
@@ -34,13 +34,13 @@ export class TeacherMapper {
     return teachers.map((teacher) => this.getTeacher(teacher));
   }
 
-  getRoles (teacher: DbTeacher): DisciplineTypeEnum[] {
-    const disciplineTypes: DisciplineTypeEnum[] = [];
+  getRoles (teacher: DbTeacher): TeacherRole[] {
+    const roles: TeacherRole[] = [];
     for (const disciplineTeacher of teacher.disciplineTeachers) {
-      disciplineTypes.push(...disciplineTeacher.roles.map((role: DbDisciplineTeacherRole) => role.disciplineType.name));
+      roles.push(...getTeacherRoles(disciplineTeacher.roles));
     }
 
-    return [...new Set(disciplineTypes)];
+    return [...new Set(roles)];
   }
 
   private getCathedras (teacher: DbTeacher) {

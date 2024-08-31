@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing';
-import { CommentsSortOrder, DisciplineTypeEnum } from '@fictadvisor/utils/enums';
+import { CommentsSortOrder, DisciplineTypeEnum, TeacherRole } from '@fictadvisor/utils/enums';
 import { DateModule } from '../../utils/date/DateModule';
 import { MapperModule } from '../../modules/MapperModule';
 import { PrismaModule } from '../../modules/PrismaModule';

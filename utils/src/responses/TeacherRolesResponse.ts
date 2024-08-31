@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { DisciplineTypeEnum } from '../enums';
+import { TeacherRole } from '../enums/db/TeacherRoleEnum';
 
 export class TeacherRolesResponse {
   @ApiProperty({
     description: 'List of teacher roles',
-    type: [DisciplineTypeEnum],
-    enum: DisciplineTypeEnum,
+    type: [TeacherRole],
+    enum: TeacherRole,
   })
-    disciplineTypes: DisciplineTypeEnum[];
+    roles: TeacherRole[];
 }

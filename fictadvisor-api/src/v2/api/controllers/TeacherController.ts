@@ -114,9 +114,9 @@ export class TeacherController {
   async getTeacherRoles (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
   ) {
-    const disciplineTypes = await this.teacherService.getTeacherRoles(teacherId);
+    const roles = await this.teacherService.getTeacherRoles(teacherId);
 
-    return { disciplineTypes };
+    return { roles };
   }
 
   @ApiOkResponse({

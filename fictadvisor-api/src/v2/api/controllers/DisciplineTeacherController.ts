@@ -240,17 +240,17 @@ export class DisciplineTeacherController {
   @ApiBadRequestResponse({
     description: `
     InvalidEntityIdException:
-      Discipline with such id is not found
-      Teacher with such id is not found
-      Each discipline type in array should be an enum
-      Discipline types should be an array
-      Discipline types can not be empty`,
+      discipline with such id is not found
+      teacher with such id is not found
+      each value in roles must be one of the following values: LECTURER, LABORANT, PRACTICIAN
+      roles must be an array
+      roles should not be empty`,
   })
   @ApiBody({
     type: CreateDisciplineTeacherDTO,
   })
   @ApiEndpoint({
-    summary: 'Create disciplineTeacher with discipline types',
+    summary: 'Create disciplineTeacher with roles',
     permissions: PERMISSION.DISCIPLINE_TEACHERS_CREATE,
   })
   @Post()
@@ -259,7 +259,7 @@ export class DisciplineTeacherController {
     @Body('disciplineId', DisciplineByIdPipe) disciplineId: string,
     @Body() body: UpdateDisciplineTeacherDTO,
   ) {
-    return this.disciplineTeacherService.create(teacherId, disciplineId, body.disciplineTypes);
+    return this.disciplineTeacherService.create(teacherId, disciplineId, body.roles);
   }
 
   @ApiBearerAuth()
@@ -274,10 +274,10 @@ export class DisciplineTeacherController {
   @ApiBadRequestResponse({
     description: `
     InvalidEntityIdException:
-      DisciplineTeacher with such id is not found
-      Each discipline type in array should be an enum
-      Discipline types should be an array
-      Discipline types can not be empty`,
+      disciplineTeacher with such id is not found
+      each value in roles must be one of the following values: LECTURER, LABORANT, PRACTICIAN
+      roles must be an array
+      roles should not be empty`,
   })
   @ApiEndpoint({
     summary: 'Update disciplineTeacher with its id',
@@ -288,7 +288,7 @@ export class DisciplineTeacherController {
     @Param('disciplineTeacherId', DisciplineTeacherByIdPipe) disciplineTeacherId: string,
     @Body() body: UpdateDisciplineTeacherDTO,
   ) {
-    return this.disciplineTeacherService.updateById(disciplineTeacherId, body.disciplineTypes);
+    return this.disciplineTeacherService.updateById(disciplineTeacherId, body.roles);
   }
 
   @ApiBearerAuth()
@@ -303,11 +303,11 @@ export class DisciplineTeacherController {
   @ApiBadRequestResponse({
     description: `
     InvalidEntityIdException: 
-      Discipline with such id is not found
-      Teacher with such id is not found
-      Each discipline type in array should be an enum
-      Discipline types should be an array
-      Discipline types can not be empty`,
+      discipline with such id is not found
+      teacher with such id is not found
+      each value in roles must be one of the following values: LECTURER, LABORANT, PRACTICIAN
+      roles must be an array
+      roles should not be empty`,
   })
   @ApiEndpoint({
     summary: 'Update disciplineTeacher with teacherId and disciplineId',
@@ -319,7 +319,7 @@ export class DisciplineTeacherController {
     @Query('disciplineId', DisciplineByIdPipe) disciplineId : string,
     @Body() body: UpdateDisciplineTeacherDTO,
   ) {
-    return this.disciplineTeacherService.updateByTeacherAndDiscipline(teacherId, disciplineId, body.disciplineTypes);
+    return this.disciplineTeacherService.updateByTeacherAndDiscipline(teacherId, disciplineId, body.roles);
   }
 
   @ApiBearerAuth()

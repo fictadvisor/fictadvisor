@@ -11,7 +11,8 @@ import { DisciplineTeacherRepository } from '../../database/repositories/Discipl
 import { DatabaseUtils } from '../../database/DatabaseUtils';
 import { DbDiscipline } from '../../database/entities/DbDiscipline';
 import { PaginatedData } from '../datas/PaginatedData';
-import { DisciplineTypeEnum } from '@fictadvisor/utils/enums';
+import { DisciplineTypeEnum } from '@prisma/client';
+import { TeacherTypeAdapter } from '../../mappers/TeacherRoleAdapter';
 
 @Injectable()
 export class DisciplineService {
@@ -54,8 +55,11 @@ export class DisciplineService {
 
   async create (body: CreateDisciplineDTO) {
     const { teachers, ...data } = body;
-    const disciplineTypes = teachers.flatMap((teacher) =>
-      teacher.disciplineTypes.map((disciplineType) => ({ name: disciplineType })));
+    const roleNames = teachers.flatMap((teacher) => teacher.roleNames);
+
+    const disciplineTypes = roleNames.map((roleName) => ({
+      name: TeacherTypeAdapter[roleName],
+    }));
 
     const discipline = await this.disciplineRepository.create({
       ...data,
@@ -71,7 +75,7 @@ export class DisciplineService {
       await this.disciplineTeacherService.create(
         teacher.teacherId,
         discipline.id,
-        teacher.disciplineTypes
+        teacher.roleNames
       );
     }
 

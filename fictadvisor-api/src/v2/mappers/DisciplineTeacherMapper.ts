@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { DbDisciplineTeacher } from '../database/entities/DbDisciplineTeacher';
 import { Subject } from '@prisma/client';
 import { DisciplineTeacherFullResponse, SubjectResponse } from '@fictadvisor/utils/responses';
-import { AcademicStatus, ScientificDegree, Position, DisciplineTypeEnum } from '@fictadvisor/utils/enums';
+import { TeacherRole, AcademicStatus, ScientificDegree, Position } from '@fictadvisor/utils/enums';
+import { getTeacherRoles, TeacherRoleAdapter } from './TeacherRoleAdapter';
 
 @Injectable()
 export class DisciplineTeacherMapper {
@@ -17,7 +18,7 @@ export class DisciplineTeacherMapper {
     return {
       disciplineTeacherId: disciplineTeacher.id,
       ...disciplineTeacher.teacher,
-      disciplineTypes: disciplineTeacher.roles.map(({ disciplineType }) => disciplineType.name),
+      roles: getTeacherRoles(disciplineTeacher.roles),
       rating: disciplineTeacher.teacher.rating.toNumber(),
     };
   }
@@ -26,28 +27,28 @@ export class DisciplineTeacherMapper {
     return disciplineTeachers.map(this.getDisciplineTeacherWithTeacherParams);
   }
 
-  getRoles (disciplineTeachers: DbDisciplineTeacher[]): DisciplineTypeEnum[] {
-    const disciplineTypes = new Set<DisciplineTypeEnum>();
+  getRoles (disciplineTeachers: DbDisciplineTeacher[]): TeacherRole[] {
+    const roles = new Set<TeacherRole>();
     for (const disciplineTeacher of disciplineTeachers) {
       for (const { disciplineType } of disciplineTeacher.roles) {
-        disciplineTypes.add(disciplineType.name);
+        roles.add(TeacherRoleAdapter[disciplineType.name]);
       }
     }
 
-    return Array.from(disciplineTypes);
+    return Array.from(roles);
   }
 
-  getRolesBySubject (disciplineTeachers: DbDisciplineTeacher[], subjectId: string): DisciplineTypeEnum[] {
-    const disciplineTypes = new Set<DisciplineTypeEnum>();
+  getRolesBySubject (disciplineTeachers: DbDisciplineTeacher[], subjectId: string): TeacherRole[] {
+    const roles = new Set<TeacherRole>();
     for (const disciplineTeacher of disciplineTeachers) {
       if (disciplineTeacher.discipline.subjectId === subjectId) {
         for (const { disciplineType } of disciplineTeacher.roles) {
-          disciplineTypes.add(disciplineType.name);
+          roles.add(TeacherRoleAdapter[disciplineType.name]);
         }
       }
     }
 
-    return Array.from(disciplineTypes);
+    return Array.from(roles);
   }
 
   getDisciplineTeachers (disciplineTeachers: DbDisciplineTeacher[]): DisciplineTeacherFullResponse[] {
@@ -66,7 +67,7 @@ export class DisciplineTeacherMapper {
         position: teacher.position as Position,
         rating: +teacher.rating,
         disciplineTeacherId: disciplineTeacher.id,
-        disciplineTypes: disciplineTeacher.roles.map(({ disciplineType }) => disciplineType.name),
+        roles: getTeacherRoles(disciplineTeacher.roles),
         subject: this.getSubject(subject),
         cathedras: teacher.cathedras.map(({ cathedra: { id, name, abbreviation, division } }) => ({
           id,

@@ -1,12 +1,10 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsArray, IsBoolean, IsEnum, IsOptional } from 'class-validator';
+import { IsArray, IsBoolean, IsBooleanString, IsEnum, IsOptional } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { validationOptionsMsg } from '../ValidationUtil';
 import { QueryAllDTO } from './QueryAllDTO';
-import {
-  SortQATParam,
-  DisciplineTypeEnum,
-} from '../enums';
+import { SortQATParam } from '../enums/params/SortQATParam';
+import { TeacherRole } from '../enums/db/TeacherRoleEnum';
 
 export class QueryAllTeacherDTO extends QueryAllDTO {
   @ApiPropertyOptional({
@@ -36,14 +34,14 @@ export class QueryAllTeacherDTO extends QueryAllDTO {
     cathedrasId?: string[];
 
   @ApiPropertyOptional({
-    description: 'Teacher\'s discipline types',
-    type: [DisciplineTypeEnum],
-    enum: DisciplineTypeEnum,
+    description: 'Teacher\'s roles',
+    type: [TeacherRole],
+    enum: TeacherRole,
   })
-  @IsEnum(DisciplineTypeEnum, validationOptionsMsg('Each element of discipline types should be an enum', true))
-  @IsArray(validationOptionsMsg('Discipline types must be an array'))
+  @IsEnum(TeacherRole, validationOptionsMsg('Each element of roles should be an enum', true))
+  @IsArray(validationOptionsMsg('Roles must be an array'))
   @IsOptional()
-    disciplineTypes?: DisciplineTypeEnum[];
+    roles?: TeacherRole[];
 
   @ApiPropertyOptional({
     description: 'Option to select teachers that are not from provided cathedra',

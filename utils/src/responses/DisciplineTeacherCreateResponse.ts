@@ -3,12 +3,13 @@ import { DisciplineResponse } from './DisciplineResponse';
 import { GroupResponse } from './GroupResponse';
 import { SubjectResponse } from './SubjectResponse';
 import { TeacherResponse } from './TeacherResponse';
-import { DisciplineTypeEnum } from '../enums';
+import { DisciplineTypeEnum } from '../enums/db/DisciplineTypeEnum';
+import { TeacherRole } from '../enums/db/TeacherRoleEnum';
 
 class DisciplineType {
   @ApiProperty()
     id: string;
-
+  
   @ApiProperty()
     disciplineId: string;
 
@@ -56,8 +57,8 @@ export class DisciplineTeacherCreateResponse {
     teacher: TeacherResponse;
 
   @ApiProperty({
-    enum: DisciplineTypeEnum,
-    type: [DisciplineTypeEnum],
+    enum: TeacherRole,
+    type: [TeacherRole],
   })
-    disciplineTypes: DisciplineTypeEnum[];
+    roles: TeacherRole[];
 }

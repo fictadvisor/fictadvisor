@@ -10,6 +10,7 @@ export * from './QuestionTypeEnum';
 export * from './QueuePositionStatusEnum';
 export * from './RoleNameEnum';
 export * from './StateEnum';
+export * from './TeacherRoleEnum';
 export * from './TelegramSourceEnum';
 export * from './ScientificDegreeEnum';
 export * from './AcademicStatusEnum';

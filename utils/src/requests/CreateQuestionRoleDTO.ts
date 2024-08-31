@@ -1,16 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsEnum, IsNotEmpty } from 'class-validator';
 import { validationOptionsMsg } from '../ValidationUtil';
-import { DisciplineTypeEnum } from '../enums';
+import { TeacherRole } from '../enums/db/TeacherRoleEnum';
 
 export class CreateQuestionRoleDTO {
   @ApiProperty({
-    enum: DisciplineTypeEnum,
+    enum: TeacherRole,
     description: 'An enum of teacher roles\'s',
   })
-  @IsEnum(DisciplineTypeEnum)
+  @IsEnum(TeacherRole)
   @IsNotEmpty(validationOptionsMsg('Role cannot be empty'))
-    role: DisciplineTypeEnum;
+    role: TeacherRole;
 
   @ApiProperty({
     description: 'Shows whether the teacher was selected last semester',
