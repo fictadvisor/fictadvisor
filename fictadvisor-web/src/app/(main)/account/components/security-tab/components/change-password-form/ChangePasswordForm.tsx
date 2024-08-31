@@ -15,6 +15,7 @@ import Input from '@/components/common/ui/form/with-formik/input';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import AuthAPI from '@/lib/api/auth/AuthAPI';
+import { logout, setAuthTokens } from '@/lib/api/auth/ServerAuthApi';
 import StorageUtil from '@/lib/utils/StorageUtil';
 import theme from '@/styles/theme';
 
@@ -24,18 +25,17 @@ import { ChangePasswordFormFields } from './types';
 
 const ChangePasswordForm = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('desktop'));
-  const router = useRouter();
   const toast = useToast();
   const { displayError } = useToastError();
   const handleSubmit = async (data: ChangePasswordFormFields) => {
     try {
-      const { accessToken, refreshToken } = await AuthAPI.changePassword({
+      const tokens = await AuthAPI.changePassword({
         oldPassword: data.oldPassword,
         newPassword: data.newPassword,
       });
-      StorageUtil.setTokens(accessToken, refreshToken);
+      await logout();
+      await setAuthTokens(tokens);
       toast.success('Пароль успішно змінено');
-      window.location.reload();
     } catch (error) {
       displayError(error);
     }
@@ -49,7 +49,7 @@ const ChangePasswordForm = () => {
       validateOnMount
       validateOnChange
     >
-      {({ isValid, errors }) => (
+      {({ isValid, errors, isSubmitting }) => (
         <Box sx={styles.formContainer}>
           <Form>
             <Input
@@ -97,7 +97,7 @@ const ChangePasswordForm = () => {
                 startIcon={<CustomCheck />}
                 size={isMobile ? ButtonSize.SMALL : ButtonSize.MEDIUM}
                 type="submit"
-                disabled={!isValid}
+                disabled={!isValid || isSubmitting}
                 sx={styles.changePasswordButton}
               />
             </Box>

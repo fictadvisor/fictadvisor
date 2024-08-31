@@ -7,8 +7,8 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
-import AuthenticationProvider from '@/hooks/use-authentication/authentication-context';
 import ToastContextProvider from '@/hooks/use-toast/toast-context';
+import AuthenticationProvider from '@/lib/providers/authentication/AuthenticationProvider';
 import theme from '@/styles/theme';
 
 interface ProvidersProps {

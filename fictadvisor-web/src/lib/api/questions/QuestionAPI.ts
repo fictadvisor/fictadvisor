@@ -10,8 +10,6 @@ import {
 } from '@fictadvisor/utils/responses';
 
 import { client } from '../instance';
-import { getAuthorizationHeader } from '../utils';
-
 class QuestionAPI {
   async getPageQuestions(params: QueryAllQuestionDTO = {}) {
     const { data } = await client.get<PaginatedQuestionsResponse>(
@@ -27,7 +25,6 @@ class QuestionAPI {
     const { data } = await client.post<QuestionResponse>(
       '/poll/questions',
       body,
-      getAuthorizationHeader(),
     );
     return data;
   }
@@ -43,7 +40,6 @@ class QuestionAPI {
     const { data } = await client.patch<QuestionResponse>(
       `/poll/questions/${questionId}`,
       body,
-      getAuthorizationHeader(),
     );
     return data;
   }
@@ -51,7 +47,6 @@ class QuestionAPI {
   async deleteQuestion(questionId: string) {
     const { data } = await client.delete<QuestionResponse>(
       `/poll/questions/${questionId}`,
-      getAuthorizationHeader(),
     );
     return data;
   }

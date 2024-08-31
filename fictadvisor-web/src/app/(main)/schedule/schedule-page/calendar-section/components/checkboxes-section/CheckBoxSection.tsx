@@ -3,7 +3,7 @@ import { Stack } from '@mui/system';
 
 import Checkbox from '@/components/common/ui/form/checkbox';
 import { CheckboxColor } from '@/components/common/ui/form/checkbox/types';
-import useAuthentication from '@/hooks/use-authentication';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 import { useSchedule } from '@/store/schedule/useSchedule';
 
 import * as styles from './CheckBoxSection.styles';

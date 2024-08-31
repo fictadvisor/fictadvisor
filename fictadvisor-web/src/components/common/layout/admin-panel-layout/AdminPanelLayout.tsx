@@ -5,7 +5,7 @@ import { Box } from '@mui/material';
 import { redirect } from 'next/navigation';
 
 import AdminPanel from '@/components/common/layout/admin-panel/AdminPanel';
-import useAuthentication from '@/hooks/use-authentication';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 
 import * as styles from './AdminPanelLayout.styles';
 

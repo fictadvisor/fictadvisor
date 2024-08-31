@@ -11,30 +11,30 @@ import {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
+import Progress from '@/components/common/ui/progress';
+import { ProgressSize } from '@/components/common/ui/progress/types';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 
 import { mainLinks } from '../../constants';
-import { TransformedUser } from '../../types';
+import { transformUserData } from '../../utils/transformData';
 import AuthenticationButtons from '../authentication-buttons';
 import HeaderDesktopCard from '../header-desktop-card';
 
 import * as styles from './DesktopHeader.styles';
 
-interface DesktopHeaderProps {
-  isLoggedIn: boolean;
-  user: TransformedUser;
-}
-
-const DesktopHeader: FC<DesktopHeaderProps> = ({ isLoggedIn, user }) => {
+const DesktopHeader: FC = () => {
   const pathname = usePathname() as string;
+  const { user, isLoading } = useAuthentication();
+
   return (
     <AppBar sx={styles.headerContainer}>
       <Link href="/" component={NextLink} sx={styles.logoContainer}>
         <Image src={'/icons/logo.svg'} alt="FA logo" width={197} height={28} />
       </Link>
       <Toolbar sx={styles.menu}>
-        {mainLinks.map((record, index) => (
+        {mainLinks.map(record => (
           <Link
-            key={index}
+            key={record.link}
             component={NextLink}
             href={record.link}
             underline="none"
@@ -49,14 +49,16 @@ const DesktopHeader: FC<DesktopHeaderProps> = ({ isLoggedIn, user }) => {
         ))}
       </Toolbar>
       <Toolbar>
-        {isLoggedIn ? (
+        {isLoading ? (
+          <Progress size={ProgressSize.SMALL} sx={{ padding: '12px' }} />
+        ) : user ? (
           <Link
             sx={styles.headerDesktopCard}
             component={NextLink}
             href="/account"
             underline="none"
           >
-            <HeaderDesktopCard {...user} />
+            <HeaderDesktopCard {...transformUserData(user)} />
           </Link>
         ) : (
           <AuthenticationButtons />

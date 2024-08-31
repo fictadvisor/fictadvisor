@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
-  ApiBearerAuth,
+  ApiCookieAuth,
   ApiForbiddenResponse,
   ApiOkResponse,
   ApiParam,
@@ -103,7 +103,7 @@ export class RoleController {
     return this.roleMapper.getRole(role);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: RoleResponse,
   })
@@ -143,7 +143,7 @@ export class RoleController {
     return this.roleMapper.createWithGrants(role);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: BaseRoleResponse,
   })
@@ -179,7 +179,7 @@ export class RoleController {
     return this.roleMapper.create(role);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: BaseRoleResponse,
   })
@@ -224,7 +224,7 @@ export class RoleController {
     return this.roleMapper.update(role);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: BaseRoleResponse,
   })
@@ -327,7 +327,7 @@ export class RoleController {
     return this.grantMapper.getMappedGrant(grant);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: MappedGrant,
   })
@@ -374,7 +374,7 @@ export class RoleController {
     return this.grantMapper.getMappedGrant(grant);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: GrantResponse,
   })
@@ -414,7 +414,7 @@ export class RoleController {
     return this.roleService.createGrants(roleId, body.grants);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: MappedGrant,
   })
@@ -469,7 +469,7 @@ export class RoleController {
     return this.grantMapper.getMappedGrant(grant);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: MappedGrant,
   })

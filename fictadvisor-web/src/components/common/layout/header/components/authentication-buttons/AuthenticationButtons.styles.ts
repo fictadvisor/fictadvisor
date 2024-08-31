@@ -24,16 +24,10 @@ export const authenticationButtons: SxProps<Theme> = {
 
 export const registerButton: SxProps<Theme> = {
   width: '100%',
-  maxWidth: {
-    desktopSemiMedium: 'unset',
-    mobile: '328px',
-  },
+  maxWidth: '328px',
 };
 
 export const loginButton: SxProps<Theme> = {
   width: '100%',
-  maxWidth: {
-    desktopSemiMedium: 'unset',
-    mobile: '328px',
-  },
+  maxWidth: '328px',
 };
