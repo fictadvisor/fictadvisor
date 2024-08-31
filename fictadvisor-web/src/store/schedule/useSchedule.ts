@@ -13,7 +13,7 @@ import {
   LOCAL_STORAGE_SCHEDULE_KEY,
   MAX_WEEK_NUMBER,
 } from '@/app/(main)/schedule/schedule-page/constants';
-import useAuthentication from '@/hooks/use-authentication';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 import useToast from '@/hooks/use-toast';
 import ScheduleAPI from '@/lib/api/schedule/ScheduleAPI';
 import { EventsResponse } from '@/lib/api/schedule/types/EventsResponse';
@@ -248,7 +248,7 @@ export const useSchedule = create<State & Action>((set, get) => {
           user &&
           user.group?.id === id &&
           user.group?.state === StateEnum.APPROVED;
-        set(state => ({ isUsingSelective }));
+        set(() => ({ isUsingSelective: !!isUsingSelective }));
         setUrlParams('group', id);
         localStorage.setItem(LOCAL_STORAGE_SCHEDULE_KEY, id);
         get().handleWeekChange();
@@ -309,7 +309,7 @@ export const useSchedule = create<State & Action>((set, get) => {
 
         const isUsingSelective = user && user.group?.id === get().groupId;
         set(state => ({
-          isUsingSelective,
+          isUsingSelective: !!isUsingSelective,
           checkboxes: isUsingSelective
             ? checkboxesInitialValues
             : checkboxesInitialValuesNotAuth,

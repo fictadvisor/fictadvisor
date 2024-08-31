@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Patch, Post, Query } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
-  ApiBearerAuth,
+  ApiCookieAuth,
   ApiForbiddenResponse,
   ApiOkResponse,
   ApiTags,
@@ -45,7 +45,7 @@ export class PageTextController {
     return this.pageTextService.getAll(query);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: PageTextResponse,
   })
@@ -76,7 +76,7 @@ export class PageTextController {
     return this.pageTextService.create(body);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: PageTextsResponse,
   })

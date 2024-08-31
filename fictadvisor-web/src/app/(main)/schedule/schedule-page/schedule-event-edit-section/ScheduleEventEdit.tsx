@@ -7,7 +7,7 @@ import { formValidationSchema } from '@/app/(main)/schedule/schedule-page/schedu
 import ScheduleInfoCard from '@/app/(main)/schedule/schedule-page/schedule-event-edit-section/schedule-info-card';
 import { prepareData } from '@/app/(main)/schedule/schedule-page/schedule-event-edit-section/utils/prepareData';
 import { transformDetailedEvent } from '@/app/(main)/schedule/schedule-page/schedule-event-edit-section/utils/transformDetailedEvent';
-import useAuthentication from '@/hooks/use-authentication';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import ScheduleAPI from '@/lib/api/schedule/ScheduleAPI';
 import { EventResponse } from '@/lib/api/schedule/types/EventResponse';
@@ -73,7 +73,7 @@ export const ScheduleEventEdit = () => {
 
     try {
       const data = await ScheduleAPI.editEvent(
-        user.group?.id as string,
+        user?.group?.id as string,
         openedEvent?.id as string,
         body,
       );
@@ -89,7 +89,7 @@ export const ScheduleEventEdit = () => {
   const handleEventDelete = async () => {
     try {
       const data = await ScheduleAPI.deleteEventById(
-        user.group?.id as string,
+        user?.group?.id as string,
         openedEvent?.id as string,
       );
       setIsEditOpen(false);

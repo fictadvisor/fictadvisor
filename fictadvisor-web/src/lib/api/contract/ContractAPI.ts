@@ -13,7 +13,6 @@ import {
 } from '@fictadvisor/utils/responses';
 
 import { client } from '@/lib/api/instance';
-import { getAuthorizationHeader } from '@/lib/api/utils';
 
 class ContractAPI {
   async createContract(body: StudyContractDTO): Promise<void> {
@@ -29,11 +28,7 @@ class ContractAPI {
   }
 
   async createAdminContract(body: CreateContractDTO): Promise<void> {
-    await client.post<EntrantWithContractResponse>(
-      '/entrants/contract',
-      body,
-      getAuthorizationHeader(),
-    );
+    await client.post<EntrantWithContractResponse>('/entrants/contract', body);
   }
 
   async getEntrantPriority(params: FullNameWithSpecialtyDTO) {
@@ -41,26 +36,17 @@ class ContractAPI {
       `/entrants/priority`,
       {
         params,
-        ...getAuthorizationHeader(),
       },
     );
     return data;
   }
 
   async entrantPriorityApprove(body: FullNameWithSpecialtyDTO): Promise<void> {
-    await client.patch(
-      '/entrants/priority/approve',
-      body,
-      getAuthorizationHeader(),
-    );
+    await client.patch('/entrants/priority/approve', body);
   }
 
   async approvePriorityById(entrantId: string): Promise<void> {
-    await client.patch(
-      `/entrants/priority/approve/${entrantId}`,
-      {},
-      getAuthorizationHeader(),
-    );
+    await client.patch(`/entrants/priority/approve/${entrantId}`, {});
   }
 
   async createPriority(body: PriorityDTO): Promise<void> {
@@ -70,21 +56,18 @@ class ContractAPI {
   async deleteEntrant(params: DeleteEntrantDataQueryDTO): Promise<void> {
     await client.delete('/entrants/data', {
       params,
-      ...getAuthorizationHeader(),
     });
   }
 
   async deleteEntrantData(entrantId: string, action: Actions): Promise<void> {
     await client.delete(`/entrants/${entrantId}`, {
       params: { action },
-      ...getAuthorizationHeader(),
     });
   }
 
   async getEntrantInfo(body: FullNameWithSpecialtyDTO) {
     const { data } = await client.get<EntrantFullResponse>('/entrants', {
       params: body,
-      ...getAuthorizationHeader(),
     });
     return data;
   }

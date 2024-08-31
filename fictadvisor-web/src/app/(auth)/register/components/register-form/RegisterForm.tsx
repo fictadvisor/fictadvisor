@@ -1,6 +1,7 @@
-import React, { FC, useCallback } from 'react';
-import { PaginatedGroupsResponse } from '@fictadvisor/utils/responses';
+'use client';
+import React, { FC } from 'react';
 import { Box } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/navigation';
 
@@ -18,7 +19,7 @@ import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import AuthAPI from '@/lib/api/auth/AuthAPI';
-import AuthService from '@/lib/services/auth';
+import GroupAPI from '@/lib/api/group/GroupAPI';
 import StorageUtil from '@/lib/utils/StorageUtil';
 
 import { initialValues } from './constants';
@@ -27,36 +28,41 @@ import { validationSchema } from './validation';
 
 import styles from './FormStyles.module.scss';
 
-const RegisterForm: FC<Omit<PaginatedGroupsResponse, 'pagination'>> = ({
-  groups,
-}) => {
+export const RegisterForm: FC = () => {
+  const { data } = useQuery({
+    queryKey: ['groups'],
+    queryFn: () => GroupAPI.getAll(),
+    refetchOnWindowFocus: false,
+  });
+
   const { displayError } = useToastError();
   const router = useRouter();
   const toast = useToast();
 
-  const handleSubmit = useCallback(
-    async (data: RegisterFormFields) => {
-      try {
-        const { isCaptain, group, email } = data;
-        const hasCaptain = await AuthAPI.groupHasCaptain(group);
+  const handleSubmit = async (data: RegisterFormFields) => {
+    try {
+      const { isCaptain, group, email } = data;
+      const hasCaptain = await AuthAPI.groupHasCaptain(group);
 
-        if (isCaptain && hasCaptain) {
-          toast.error('В групі вже є староста');
-        } else if (!isCaptain && !hasCaptain) {
-          toast.error('Дочекайся, поки зареєструється староста');
-        } else {
-          await AuthService.register(transformData(data));
-          StorageUtil.deleteTelegramInfo();
-          await router.push(
-            `/register/email-verification?email=${encodeURIComponent(email)}`,
-          );
-        }
-      } catch (error) {
-        displayError(error);
+      if (isCaptain && hasCaptain) {
+        toast.error('В групі вже є староста');
+      } else if (!isCaptain && !hasCaptain) {
+        toast.error('Дочекайся, поки зареєструється староста');
+      } else {
+        const telegramInfo = StorageUtil.getTelegramInfo();
+        StorageUtil.deleteTelegramInfo();
+        await AuthAPI.register({
+          ...transformData(data),
+          ...(telegramInfo && { telegram: telegramInfo.telegram }),
+        });
+        router.push(
+          `/register/email-verification?email=${encodeURIComponent(email)}`,
+        );
       }
-    },
-    [toast, router],
-  );
+    } catch (error) {
+      displayError(error);
+    }
+  };
 
   return (
     <Formik
@@ -67,7 +73,7 @@ const RegisterForm: FC<Omit<PaginatedGroupsResponse, 'pagination'>> = ({
       enableReinitialize
       validationSchema={validationSchema}
     >
-      {({ isValid }) => (
+      {({ isValid, isSubmitting }) => (
         <Form className={styles['form']}>
           <Input
             label="Юзернейм"
@@ -93,7 +99,7 @@ const RegisterForm: FC<Omit<PaginatedGroupsResponse, 'pagination'>> = ({
           <Box sx={stylesMUI.dropdownContainer}>
             <FormikDropdown
               size={FieldSize.LARGE}
-              options={transformGroups(groups)}
+              options={transformGroups(data?.groups || [])}
               label="Група"
               name="group"
               placeholder="вибери зі списку"
@@ -123,7 +129,7 @@ const RegisterForm: FC<Omit<PaginatedGroupsResponse, 'pagination'>> = ({
             text="Зареєструватись"
             type="submit"
             size={ButtonSize.LARGE}
-            disabled={!isValid}
+            disabled={!isValid || isSubmitting}
             sx={stylesMUI.registerButton}
           />
         </Form>
@@ -131,5 +137,3 @@ const RegisterForm: FC<Omit<PaginatedGroupsResponse, 'pagination'>> = ({
     </Formik>
   );
 };
-
-export default RegisterForm;

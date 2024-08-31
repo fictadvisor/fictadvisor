@@ -18,7 +18,7 @@ import { Tab, TabContext, TabList, TabPanel } from '@/components/common/ui/tab';
 import { TabTextPosition } from '@/components/common/ui/tab/tab/types';
 import Tag from '@/components/common/ui/tag';
 import { TagColor } from '@/components/common/ui/tag/types';
-import useAuthentication from '@/hooks/use-authentication';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 import { EventResponse } from '@/lib/api/schedule/types/EventResponse';
 import PermissionService from '@/lib/services/permission/PermissionService';
 
@@ -61,6 +61,7 @@ const ScheduleInfoCard = ({
 }: ScheduleInfoCardProps) => {
   const [tabValue, setTabValue] = useState<InfoCardTabs>(InfoCardTabs.EVENT);
   const { user } = useAuthentication();
+
   const isDisciplineRelatedType = (
     eventType: string | EventTypeEnum | undefined,
   ) => {
@@ -68,16 +69,16 @@ const ScheduleInfoCard = ({
   };
 
   const permissionValues: PermissionValuesDTO = {
-    groupId: user.group?.id,
+    groupId: user?.group?.id,
   };
 
   const { data } = useQuery({
-    queryKey: [user.id, permissionValues],
+    queryKey: [user, permissionValues],
     queryFn: () =>
-      PermissionService.getPermissionList(user.id, permissionValues),
+      PermissionService.getPermissionList(user!.id, permissionValues),
     retry: false,
     refetchOnWindowFocus: false,
-    enabled: !!user.id,
+    enabled: !!user,
   });
 
   const validPrivilege =

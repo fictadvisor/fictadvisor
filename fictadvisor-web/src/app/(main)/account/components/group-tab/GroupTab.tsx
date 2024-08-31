@@ -4,6 +4,7 @@ import { PERMISSION } from '@fictadvisor/utils/security';
 import { ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/outline';
 import { Box, Typography, useMediaQuery } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 
 import NoGroupBlock from '@/app/(main)/account/components/group-tab/components/no-group-block';
 import RequestsTable from '@/app/(main)/account/components/group-tab/components/table/requests-table';
@@ -22,7 +23,7 @@ import {
 } from '@/components/common/ui/button-mui/types';
 import Popup from '@/components/common/ui/pop-ups/Popup';
 import Progress from '@/components/common/ui/progress';
-import useAuthentication from '@/hooks/use-authentication';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 import groupAPI from '@/lib/api/group/GroupAPI';
 import GroupService from '@/lib/services/group/GroupService';
 import { Order } from '@/lib/services/group/types/OrderEnum';
@@ -33,9 +34,11 @@ import * as styles from './GroupTab.styles';
 const GroupTab = () => {
   const [order, setOrder] = useState(Order.ascending);
   const { user } = useAuthentication();
+  const { refresh } = useRouter();
+
   const { data, isLoading, refetch } = useQuery({
     queryKey: ['students', user, order],
-    queryFn: () => GroupService.getGroupData(user, order),
+    queryFn: () => GroupService.getGroupData(user!, order),
     retry: false,
     refetchOnWindowFocus: false,
     enabled: !!user,
@@ -61,7 +64,7 @@ const GroupTab = () => {
     if (user?.group) {
       await groupAPI.leaveGroup(user.group.id);
     }
-    window.location.reload();
+    refresh();
   };
 
   if (isLoading)

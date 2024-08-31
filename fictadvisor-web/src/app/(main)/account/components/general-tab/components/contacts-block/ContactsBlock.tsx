@@ -11,7 +11,7 @@ import {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
-import useAuthentication from '@/hooks/use-authentication';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 import UserAPI from '@/lib/api/user/UserAPI';
 import theme from '@/styles/theme';
 
@@ -19,7 +19,8 @@ import * as styles from './ContactsBlock.styles';
 
 const ContactsBlock: FC = () => {
   const [isOpened, setIsOpened] = useState(false);
-  const { user } = useAuthentication();
+  const { user: userNotNull } = useAuthentication();
+  const user = userNotNull!;
   const isMobile = useMediaQuery(theme.breakpoints.down('desktopSemiMedium'));
 
   const { data, refetch } = useQuery({

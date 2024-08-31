@@ -8,14 +8,12 @@ import {
 } from '@fictadvisor/utils/responses';
 
 import { client } from '@/lib/api/instance';
-import { getAuthorizationHeader } from '@/lib/api/utils';
 
 class StudentResourcesAPI {
   async editStudentResources(body: UpdateResourcesDTO) {
     const { data } = await client.patch<ResourcesResponse>(
       '/studentResources',
       body,
-      getAuthorizationHeader(),
     );
     return data;
   }

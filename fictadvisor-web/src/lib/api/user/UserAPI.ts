@@ -26,46 +26,32 @@ import {
   UsersResponse,
 } from '@fictadvisor/utils/responses';
 
-import { getAuthorizationHeader } from '@/lib/api/utils';
-
 import { client } from '../instance';
 
 class UserAPI {
   async getAll(params: QueryAllUsersDTO = {}): Promise<UsersResponse> {
     const { data } = await client.get<UsersResponse>(`/users`, {
       params,
-      ...getAuthorizationHeader(),
     });
     return data;
   }
 
   async getUser(userId: string): Promise<UserResponse> {
-    const { data } = await client.get<UserResponse>(
-      `/users/${userId}`,
-      getAuthorizationHeader(),
-    );
+    const { data } = await client.get<UserResponse>(`/users/${userId}`);
     return data;
   }
 
   async delete(userId: string): Promise<void> {
-    await client.delete(`/users/${userId}`, getAuthorizationHeader());
+    await client.delete(`/users/${userId}`);
   }
 
   async create(body: CreateUserDTO) {
-    const { data } = await client.post<UserResponse>(
-      `/users`,
-      body,
-      getAuthorizationHeader(),
-    );
+    const { data } = await client.post<UserResponse>(`/users`, body);
     return data;
   }
 
   async editUser(userId: string, body: UpdateUserDTO) {
-    const { data } = await client.patch<UserResponse>(
-      `/users/${userId}`,
-      body,
-      getAuthorizationHeader(),
-    );
+    const { data } = await client.patch<UserResponse>(`/users/${userId}`, body);
     return data;
   }
 
@@ -73,7 +59,6 @@ class UserAPI {
     const { data } = await client.patch<OrdinaryStudentResponse>(
       `/users/${userId}/student`,
       body,
-      getAuthorizationHeader(),
     );
     return data;
   }
@@ -82,7 +67,6 @@ class UserAPI {
     const { data } = await client.post<OrdinaryStudentResponse>(
       `/users/${userId}/telegram`,
       body,
-      getAuthorizationHeader(),
     );
     return data;
   }
@@ -91,7 +75,6 @@ class UserAPI {
     const { data } = await client.post<ContactResponse>(
       `/users/${userId}/contacts`,
       body,
-      getAuthorizationHeader(),
     );
     return data;
   }
@@ -99,30 +82,21 @@ class UserAPI {
   async getContacts(userId: string): Promise<ContactsResponse> {
     const { data } = await client.get<ContactsResponse>(
       `/users/${userId}/contacts`,
-      getAuthorizationHeader(),
     );
     return data;
   }
 
   async deleteContact(userId: string, contactId: string): Promise<void> {
-    await client.delete(
-      `/users/${userId}/contacts/${contactId}`,
-      getAuthorizationHeader(),
-    );
+    await client.delete(`/users/${userId}/contacts/${contactId}`);
   }
 
   async requestNewGroup(userId: string, body: GroupRequestDTO): Promise<void> {
-    await client.patch(
-      `/users/${userId}/requestNewGroup`,
-      body,
-      getAuthorizationHeader(),
-    );
+    await client.patch(`/users/${userId}/requestNewGroup`, body);
   }
 
   async getSelectiveDisciplinesBySemester(userId: string) {
     const { data } = await client.get<SelectivesBySemestersResponse>(
       `/users/${userId}/selectiveBySemesters`,
-      getAuthorizationHeader(),
     );
     return data;
   }
@@ -131,11 +105,7 @@ class UserAPI {
     userId: string,
     body: SelectiveDisciplinesDTO,
   ): Promise<void> {
-    await client.post(
-      `/users/${userId}/selectiveDisciplines`,
-      body,
-      getAuthorizationHeader(),
-    );
+    await client.post(`/users/${userId}/selectiveDisciplines`, body);
   }
 
   async getSelectiveDisciplines(
@@ -144,7 +114,7 @@ class UserAPI {
   ) {
     const { data } = await client.get<RemainingSelectivesResponse>(
       `/users/${userId}/remainingSelectives`,
-      { ...getAuthorizationHeader(), params },
+      { params },
     );
     return data;
   }
@@ -153,23 +123,17 @@ class UserAPI {
     const { data } = await client.patch<UserResponse>(
       `/users/${userId}/avatar`,
       body,
-      getAuthorizationHeader(),
     );
     return data;
   }
 
   async setRole(userId: string, body: GiveRoleDTO): Promise<void> {
-    await client.patch(
-      `/users/${userId}/roles}`,
-      body,
-      getAuthorizationHeader(),
-    );
+    await client.patch(`/users/${userId}/roles`, body);
   }
 
   async getSelective(userId: string) {
     const { data } = await client.get<DisciplineIdsResponse>(
       `/users/${userId}/selectiveDisciplines`,
-      getAuthorizationHeader(),
     );
     return data;
   }
@@ -178,7 +142,6 @@ class UserAPI {
     const { data } = await client.post<SuperheroResponse>(
       `/users/${userId}/superhero`,
       body,
-      getAuthorizationHeader(),
     );
     return data;
   }
@@ -187,7 +150,6 @@ class UserAPI {
     const { data } = await client.patch<SuperheroResponse>(
       `/users/${userId}/verifySuperhero`,
       body,
-      getAuthorizationHeader(),
     );
     return data;
   }
@@ -196,7 +158,6 @@ class UserAPI {
     const { data } = await client.patch<FullStudentResponse>(
       `/users/${userId}/verifyStudent`,
       body,
-      getAuthorizationHeader(),
     );
     return data;
   }

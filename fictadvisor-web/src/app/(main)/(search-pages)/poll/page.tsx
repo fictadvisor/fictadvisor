@@ -12,7 +12,7 @@ import * as styles from '@/app/(main)/(search-pages)/poll/PollTeacherPage.styles
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
 import Button from '@/components/common/ui/button-mui';
 import Progress from '@/components/common/ui/progress';
-import useAuthentication from '@/hooks/use-authentication';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 import useToast from '@/hooks/use-toast';
 import PollAPI from '@/lib/api/poll/PollAPI';
 
@@ -31,8 +31,8 @@ const PAGE_SIZE = 20;
 
 const PollTeacher = () => {
   const [curPage, setCurPage] = useState(0);
-  const { push, replace } = useRouter();
-  const { user, isLoggedIn } = useAuthentication();
+  const { replace } = useRouter();
+  const { user, isLoading: isLoadingUser } = useAuthentication();
   const localStorageName = 'teachersPollForm';
 
   const toast = useToast();
@@ -48,25 +48,16 @@ const PollTeacher = () => {
     );
   }, []);
 
-  useEffect(() => {
-    if (!isLoggedIn) {
-      toast.error('Для проходження опитування потрібно авторизуватися');
-      void replace('/login?redirect=~poll');
-    }
-  }, [isLoggedIn, push, replace]);
-
-  const { data, isLoading, isFetching, refetch } = useQuery({
-    queryKey: ['pollTeachersByUserId', user.id, queryObj],
-    queryFn: () => PollAPI.getUserTeachers(user.id, queryObj),
-    placeholderData: (previousData, previousQuery) => previousData,
+  const { data, isLoading } = useQuery({
+    queryKey: ['pollTeachersByUserId', user, queryObj],
+    queryFn: () => PollAPI.getUserTeachers(user!.id, queryObj),
     refetchOnWindowFocus: false,
-    enabled: user?.id != null,
+    enabled: !!user,
+    placeholderData: (previousData, previousQuery) => previousData,
   });
 
   useEffect(() => {
-    if (!data) return;
-
-    if (!data.hasSelectedInLastSemester) {
+    if (data && !data.hasSelectedInLastSemester) {
       toast.warning(
         'Ти ще не обрав вибіркові на цей семестр!',
         'Обери свої вибіркові в профілі у вкладці "Мої вибіркові".',
@@ -74,13 +65,22 @@ const PollTeacher = () => {
     }
   }, [data]);
 
-  useEffect(() => {
-    void refetch();
-  }, [queryObj]);
+  if (!user && !isLoadingUser) {
+    toast.error('Для проходження опитування потрібно авторизуватися');
+    replace('/login?redirect=~poll');
+  }
+
+  if (isLoading) {
+    return (
+      <Box sx={styles.pageLoader}>
+        <Progress />
+      </Box>
+    );
+  }
 
   return (
     <Box sx={styles.layout}>
-      {isLoggedIn && (
+      {
         <>
           <Breadcrumbs items={breadcrumbs} sx={styles.breadcrumps} />
           {data && (
@@ -93,12 +93,6 @@ const PollTeacher = () => {
               setCurPage={setCurPage}
             />
           )}
-          {isLoading ||
-            (isFetching && (
-              <Box sx={styles.pageLoader}>
-                <Progress />
-              </Box>
-            ))}
           {data?.teachers.length === (curPage + 1) * PAGE_SIZE && (
             <Button
               sx={styles.loadBtn}
@@ -107,7 +101,7 @@ const PollTeacher = () => {
             />
           )}
         </>
-      )}
+      }
     </Box>
   );
 };

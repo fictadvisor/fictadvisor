@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
-  ApiBearerAuth,
+  ApiCookieAuth,
   ApiForbiddenResponse,
   ApiOkResponse,
   ApiParam,
@@ -40,7 +40,7 @@ export class DisciplineController {
     private disciplineMapper: DisciplineMapper,
   ) {}
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: ExtendedDisciplineTeachersResponse,
   })
@@ -97,7 +97,7 @@ export class DisciplineController {
     };
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: DisciplineTeachersResponse,
   })
@@ -140,7 +140,7 @@ export class DisciplineController {
     return { teachers };
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: ExtendedDisciplineTeachersResponse,
   })
@@ -198,7 +198,7 @@ export class DisciplineController {
     return this.disciplineMapper.getDisciplineWithTeachers(discipline);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: ExtendedDisciplineTeachersResponse,
   })

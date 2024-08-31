@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
-  ApiBearerAuth,
+  ApiCookieAuth,
   ApiForbiddenResponse,
   ApiOkResponse,
   ApiParam,
@@ -62,7 +62,7 @@ export class GroupController {
     private disciplineMapper: DisciplineMapper,
   ) {}
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: MappedGroupResponse,
   })
@@ -128,7 +128,7 @@ export class GroupController {
     };
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: GroupsWithTelegramGroupsResponse,
   })
@@ -171,7 +171,7 @@ export class GroupController {
     return this.groupMapper.getGroup(group);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: MappedGroupResponse,
   })
@@ -213,7 +213,7 @@ export class GroupController {
     return this.groupMapper.getGroup(group);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: MappedGroupResponse,
   })
@@ -249,7 +249,7 @@ export class GroupController {
     return this.groupMapper.getGroup(group);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: GroupStudentsResponse,
   })
@@ -290,7 +290,7 @@ export class GroupController {
     return { students };
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: CaptainResponse,
   })
@@ -332,7 +332,7 @@ export class GroupController {
     return captain;
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: [ExtendedDisciplineTeachersResponse],
   })
@@ -371,7 +371,7 @@ export class GroupController {
     return this.groupService.getDisciplineTeachers(groupId, query);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: ShortDisciplinesResponse,
   })
@@ -411,7 +411,7 @@ export class GroupController {
     return { disciplines };
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: ShortUsersResponse,
   })
@@ -451,7 +451,7 @@ export class GroupController {
     return this.groupService.addUnregistered(groupId, body);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: OrdinaryStudentResponse,
   })
@@ -497,7 +497,7 @@ export class GroupController {
     return this.studentMapper.getStudent(student);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse()
   @ApiBadRequestResponse({
     description: `\n
@@ -540,7 +540,7 @@ export class GroupController {
     return this.userService.changeGroupRole(userId, roleName);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse()
   @ApiBadRequestResponse({
     description: `\n
@@ -581,7 +581,7 @@ export class GroupController {
     return this.groupService.removeStudent(groupId, userId, req.user);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: StudentsResponse,
   })
@@ -617,7 +617,7 @@ export class GroupController {
     return { students };
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: OrdinaryStudentResponse,
   })
@@ -657,7 +657,7 @@ export class GroupController {
     return this.groupService.switchCaptain(groupId, studentId);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: URLResponse,
   })
@@ -693,7 +693,7 @@ export class GroupController {
     return { url };
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @Patch('/:groupId/leave')
   @ApiOkResponse({
     type: OrdinaryStudentResponse,
@@ -732,7 +732,7 @@ export class GroupController {
     return this.groupService.leaveGroup(groupId, req.user.id);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: [SelectiveDisciplinesWithAmountResponse],
   })

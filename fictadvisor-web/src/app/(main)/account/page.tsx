@@ -1,13 +1,9 @@
-import { Suspense } from 'react';
+import dynamic from 'next/dynamic';
 
-import AccountPage from './AccountPage';
+const AccountPage = dynamic(() => import('./AccountPage'), { ssr: false });
 
 const Page = () => {
-  return (
-    <Suspense>
-      <AccountPage />
-    </Suspense>
-  );
+  return <AccountPage />;
 };
 
 export default Page;
