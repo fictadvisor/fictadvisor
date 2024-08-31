@@ -9,7 +9,7 @@ import PollForm from '@/app/(main)/(search-pages)/poll/[disciplineTeacherId]/com
 import * as styles from '@/app/(main)/(search-pages)/poll/[disciplineTeacherId]/PollPage.styles';
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
 import Progress from '@/components/common/ui/progress';
-import useAuthentication from '@/hooks/use-authentication';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import PollAPI from '@/lib/api/poll/PollAPI';
 
@@ -22,7 +22,7 @@ interface PollParams {
 const Poll: FC<PollParams> = ({ params }) => {
   const disciplineTeacherId = params.disciplineTeacherId;
   const [isLoading, setIsLoading] = useState(true);
-  const { user, isLoggedIn } = useAuthentication();
+  const { user } = useAuthentication();
   const { displayError } = useToastError();
   const router = useRouter();
   const {
@@ -40,11 +40,11 @@ const Poll: FC<PollParams> = ({ params }) => {
   });
 
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (!user) {
       displayError(error);
       void router.replace('login/?redirect=~poll');
     }
-  }, [isLoggedIn, router]);
+  }, [user, router]);
 
   if (error && !isLoading) {
     displayError(error);

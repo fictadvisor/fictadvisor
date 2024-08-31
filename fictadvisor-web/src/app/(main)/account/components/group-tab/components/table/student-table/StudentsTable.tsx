@@ -24,7 +24,7 @@ import ExportButton from '@/components/common/ui/icon-button-mui/variants/Export
 import Tag from '@/components/common/ui/tag';
 import { TagSize, TagVariant } from '@/components/common/ui/tag/types';
 import Tooltip from '@/components/common/ui/tooltip';
-import useAuthentication from '@/hooks/use-authentication';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import GroupAPI from '@/lib/api/group/GroupAPI';
 import GroupService from '@/lib/services/group/GroupService';
@@ -44,7 +44,8 @@ const StudentsTable: React.FC<StudentsTableProps> = ({
 }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down('desktop'));
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const { user } = useAuthentication();
+  const { user: userNotNull } = useAuthentication();
+  const user = userNotNull!;
   const { displayError } = useToastError();
 
   const handleAddStudents = async (value: string) => {

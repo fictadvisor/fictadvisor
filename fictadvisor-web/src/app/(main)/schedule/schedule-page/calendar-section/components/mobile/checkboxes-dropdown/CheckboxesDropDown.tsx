@@ -14,7 +14,7 @@ import { popperProps } from '@/components/common/ui/form/dropdown/constants';
 import * as dropdownStyles from '@/components/common/ui/form/dropdown/Dropdown.styles';
 import Tag from '@/components/common/ui/tag';
 import { TagSize } from '@/components/common/ui/tag/types';
-import useAuthentication from '@/hooks/use-authentication';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 import MergeSx from '@/lib/utils/MergeSxStylesUtil';
 import { Checkboxes, useSchedule } from '@/store/schedule/useSchedule';
 

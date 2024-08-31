@@ -16,7 +16,7 @@ import { DividerTextAlign } from '@/components/common/ui/divider/types';
 import Checkbox from '@/components/common/ui/form/with-formik/checkbox';
 import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown';
 import Progress from '@/components/common/ui/progress';
-import useAuthentication from '@/hooks/use-authentication';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import GroupAPI from '@/lib/api/group/GroupAPI';
 import UserAPI from '@/lib/api/user/UserAPI';
@@ -27,7 +27,8 @@ import * as muiStyles from './NoGroupBlock.styles';
 const NoGroupBlock = () => {
   const isTablet = useMediaQuery(theme.breakpoints.down('mobileMedium'));
   const { displayError } = useToastError();
-  const { user, update } = useAuthentication();
+  const { user: userNotNull } = useAuthentication();
+  const user = userNotNull!;
   const { isLoading, data } = useQuery({
     queryKey: ['groups'],
     queryFn: () => GroupAPI.getAll(),
@@ -36,7 +37,6 @@ const NoGroupBlock = () => {
   const handleSubmitGroup = async (data: GroupRequestDTO) => {
     try {
       await UserAPI.requestNewGroup(user.id, data);
-      await update();
     } catch (error) {
       displayError(error);
     }

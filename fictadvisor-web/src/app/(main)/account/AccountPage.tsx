@@ -10,6 +10,7 @@ import {
 import { Box } from '@mui/material';
 import {
   ReadonlyURLSearchParams,
+  redirect,
   usePathname,
   useRouter,
   useSearchParams,
@@ -25,9 +26,10 @@ import GroupTab from '@/app/(main)/account/components/group-tab';
 import SecurityTab from '@/app/(main)/account/components/security-tab';
 import SelectiveTab from '@/app/(main)/account/components/selective-tab';
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
+import LoadPage from '@/components/common/ui/load-page/LoadPage';
 import { TabTextPosition } from '@/components/common/ui/tab/tab/types';
-import useAuthentication from '@/hooks/use-authentication';
-import createQueryString from '@/utils/createQueryString';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
+import createQueryString from '@/lib/utils/createQueryString';
 
 import Tab from '../../../components/common/ui/tab/tab';
 import TabContext from '../../../components/common/ui/tab/tab-context';
@@ -37,8 +39,8 @@ import TabPanel from '../../../components/common/ui/tab/tab-panel';
 const AccountPage = () => {
   const { replace, push } = useRouter();
   const pathname = usePathname() as string;
-  const { isLoggedIn } = useAuthentication();
   const searchParams = useSearchParams() as ReadonlyURLSearchParams;
+  const { isLoading, user } = useAuthentication();
   const tab = searchParams.get('tab') as string;
   const [index, setIndex] = useState<AccountPageTab>(AccountPageTab.GENERAL);
   useEffect(() => {
@@ -52,15 +54,17 @@ const AccountPage = () => {
     }
   }, [tab, searchParams, replace]);
 
-  useEffect(() => {
-    if (!isLoggedIn) void replace('/login?~account');
-  }, [isLoggedIn, replace]);
-
   const handleChange = async (event: SyntheticEvent, value: AccountPageTab) => {
     push(pathname + createQueryString('tab', value, searchParams));
 
     setIndex(value);
   };
+
+  useEffect(() => {
+    if (!isLoading && !user) redirect('/login?~account');
+  }, [user, isLoading]);
+
+  if (isLoading) return <LoadPage />;
 
   return (
     <>
@@ -106,7 +110,7 @@ const AccountPage = () => {
               textPosition={TabTextPosition.LEFT}
             />
           </TabList>
-          {isLoggedIn && (
+          {user && (
             <Box sx={stylesMui.tabPanelsList}>
               <TabPanel sx={stylesMui.tabPanel} value={AccountPageTab.GENERAL}>
                 <GeneralTab />

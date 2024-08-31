@@ -12,8 +12,6 @@ import {
   PaginatedTeachersResponse,
 } from '@fictadvisor/utils/responses';
 
-import { getAuthorizationHeader } from '@/lib/api/utils';
-
 import { client } from '../instance';
 
 class CathedraAPI {
@@ -30,29 +28,23 @@ class CathedraAPI {
   async getDepartmentById(cathedraId: string) {
     const data = client.get<CathedraWithTeachersResponse>(
       `/cathedras/${cathedraId}`,
-      getAuthorizationHeader(),
     );
     return data;
   }
 
   async createDepartment(body: CreateCathedraDTO) {
-    return await client.post<CathedraResponse>(
-      '/cathedras',
-      body,
-      getAuthorizationHeader(),
-    );
+    return await client.post<CathedraResponse>('/cathedras', body);
   }
 
   async editDepartment(cathedraId: string, body: UpdateCathedraDTO) {
     await client.patch<CathedraWithTeachersResponse>(
       `/cathedras/${cathedraId}`,
       body,
-      getAuthorizationHeader(),
     );
   }
 
   async deleteDepartment(cathedraId: string) {
-    await client.delete(`/cathedras/${cathedraId}`, getAuthorizationHeader());
+    await client.delete(`/cathedras/${cathedraId}`);
   }
 
   async getDepartmentTeachers(params: QueryAllTeacherDTO = {}) {
@@ -65,7 +57,6 @@ class CathedraAPI {
   async getDivisions() {
     const { data } = await client.get<CathedrasDivisionsResponse>(
       '/cathedras/divisions',
-      getAuthorizationHeader(),
     );
     return data;
   }

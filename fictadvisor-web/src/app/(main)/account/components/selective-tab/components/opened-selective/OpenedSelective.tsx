@@ -6,7 +6,8 @@ import { Form, Formik, FormikValues } from 'formik';
 import Button from '@/components/common/ui/button-mui';
 import { ButtonSize } from '@/components/common/ui/button-mui/types';
 import Checkbox from '@/components/common/ui/form/with-formik/checkbox';
-import useAuthentication from '@/hooks/use-authentication';
+import LoadPage from '@/components/common/ui/load-page/LoadPage';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 import UserAPI from '@/lib/api/user/UserAPI';
 
 import * as styles from './OpenedSelective.styles';
@@ -29,15 +30,16 @@ const OpenedSelective: FC<OpenedSelectiveProps> = ({
   onSubmit,
 }) => {
   const { user } = useAuthentication();
-  const { data } = useQuery({
-    queryKey: ['openedSelective', user.id, semester, year],
-    queryFn: () => UserAPI.getSelectiveDisciplines(user.id, { year, semester }),
+  const { data, isLoading } = useQuery({
+    queryKey: ['openedSelective', user, semester, year],
+    queryFn: () =>
+      UserAPI.getSelectiveDisciplines(user!.id, { year, semester }),
     refetchOnWindowFocus: false,
-    enabled: !!user.id,
+    enabled: !!user,
   });
 
   const handleSubmit = async (data: { [key: string]: boolean }) => {
-    await UserAPI.postSelectiveDisciplines(user.id, transformData(data));
+    await UserAPI.postSelectiveDisciplines(user!.id, transformData(data));
     onSubmit();
   };
 
@@ -47,14 +49,18 @@ const OpenedSelective: FC<OpenedSelectiveProps> = ({
     return numberOfChecked >= Number(data?.availableSelectiveAmount);
   };
 
+  if (isLoading) {
+    return <LoadPage />;
+  }
+
   return (
     <>
-      {data && (
+      {
         <Box sx={styles.wrapper}>
           <Typography variant="h6" sx={styles.text}>{`${
             semesterMap[semester]
           } семестр ${year}-${year + 1} `}</Typography>
-          {data.remainingSelectives ? (
+          {data?.remainingSelectives ? (
             <Typography variant="h6Bold" sx={styles.text}>
               Обери {data.availableSelectiveAmount} предмети, які є твоїми
               вибірковими на цей семестр
@@ -64,7 +70,7 @@ const OpenedSelective: FC<OpenedSelectiveProps> = ({
               Наразі обирати предмети на цей семестр не можна.
             </Typography>
           )}
-          {data.remainingSelectives && (
+          {data?.remainingSelectives && (
             <Formik
               initialValues={{ ...getInitialValues(data.remainingSelectives) }}
               onSubmit={handleSubmit}
@@ -96,7 +102,7 @@ const OpenedSelective: FC<OpenedSelectiveProps> = ({
             </Formik>
           )}
         </Box>
-      )}
+      }
     </>
   );
 };

@@ -4,7 +4,7 @@ import {
   ApiOkResponse,
   ApiTags,
   ApiQuery,
-  ApiBearerAuth,
+  ApiCookieAuth,
   ApiUnauthorizedResponse,
   ApiParam,
 } from '@nestjs/swagger';
@@ -35,7 +35,7 @@ export class TelegramGroupController {
     private telegramGroupMapper: TelegramGroupMapper,
   ) {}
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: TelegramGroupResponse,
   })
@@ -82,7 +82,7 @@ export class TelegramGroupController {
     return this.telegramGroupMapper.getTelegramGroup(telegramGroup);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: TelegramGroupResponse,
   })
@@ -131,7 +131,7 @@ export class TelegramGroupController {
     return this.telegramGroupMapper.getTelegramGroup(telegramGroup);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: TelegramGroupResponse,
   })
@@ -173,7 +173,7 @@ export class TelegramGroupController {
     return this.telegramGroupMapper.getTelegramGroup(telegramGroup);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: TelegramGroupsResponse,
   })
@@ -207,7 +207,7 @@ export class TelegramGroupController {
     return this.telegramGroupMapper.getTelegramGroups(telegramGroups);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: TelegramGroupsByTelegramIdResponse,
   })
