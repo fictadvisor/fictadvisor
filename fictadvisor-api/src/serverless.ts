@@ -40,7 +40,7 @@ async function bootstrap () {
     .setDescription('Here is FICT ADVISOR API documentation')
     .setVersion('2.0.4')
     .addTag('api')
-    .addBearerAuth()
+    .addCookieAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

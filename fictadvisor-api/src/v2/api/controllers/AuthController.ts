@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import {
   ApiTags,
-  ApiBearerAuth,
+  ApiCookieAuth,
   ApiOkResponse,
   ApiBadRequestResponse,
   ApiUnauthorizedResponse,
@@ -46,6 +46,7 @@ import { TelegramGuard } from '../../security/TelegramGuard';
 import { GroupByIdPipe } from '../pipes/GroupByIdPipe';
 import { AuthService } from '../services/AuthService';
 import { UserService } from '../services/UserService';
+import { RefreshGuard } from '../../security/RefreshGuard';
 
 @ApiTags('Auth')
 @Controller({
@@ -58,7 +59,7 @@ export class AuthController {
     private userService: UserService,
   ) {}
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: AuthLoginResponse,
   })
@@ -81,7 +82,7 @@ export class AuthController {
     return this.authService.login(req.user);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse()
   @ApiUnauthorizedResponse({
     description: `\n
@@ -182,7 +183,7 @@ export class AuthController {
     return this.authService.loginTelegram(body);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: AuthRefreshResponse,
   })
@@ -193,14 +194,14 @@ export class AuthController {
   })
   @ApiEndpoint({
     summary: 'Refresh access token',
-    guards: JwtGuard,
+    guards: RefreshGuard,
   })
   @Post('/refresh')
   async refresh (@Request() req) {
     return this.authService.refresh(req.user);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: AuthLoginResponse,
   })
@@ -235,7 +236,7 @@ export class AuthController {
     return this.authService.updatePassword(body, req.user);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: OrdinaryStudentResponse,
   })

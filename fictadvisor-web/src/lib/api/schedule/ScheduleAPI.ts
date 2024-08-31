@@ -13,7 +13,6 @@ import { GeneralEventsResponse } from '@/lib/api/schedule/types/GeneralEventsRes
 import { getDisciplinesAndTeachers } from '@/lib/api/schedule/types/getDisciplinesAndTeachers';
 import { UpdateEventDTO } from '@/lib/api/schedule/types/UpdateEventDTO';
 import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
-import { getAuthorizationHeader } from '@/lib/api/utils';
 
 class ScheduleAPI {
   async getEvents(
@@ -46,7 +45,6 @@ class ScheduleAPI {
     const { data } = await client.get<EventsResponse>(
       `schedule/groups/${groupId}/events`,
       {
-        ...getAuthorizationHeader(),
         params: {
           week,
           showOwnSelective,
@@ -63,7 +61,6 @@ class ScheduleAPI {
     const { data } = await client.get<EventResponse>(
       `schedule/events/${eventId}`,
       {
-        ...getAuthorizationHeader(),
         params: { week },
       },
     );
@@ -77,17 +74,12 @@ class ScheduleAPI {
   ): Promise<EventResponse> {
     const { data } = await client.delete<EventResponse>(
       `schedule/groups/${groupId}/events/${eventId}`,
-      getAuthorizationHeader(),
     );
     return data;
   }
 
   async addEvent(body: CreateEventDTO): Promise<EventResponse> {
-    const { data } = await client.post<EventResponse>(
-      `schedule/events`,
-      body,
-      getAuthorizationHeader(),
-    );
+    const { data } = await client.post<EventResponse>(`schedule/events`, body);
     return data;
   }
 
@@ -99,7 +91,6 @@ class ScheduleAPI {
     const { data } = await client.patch<EventResponse>(
       `schedule/groups/${groupId}/events/${eventId}`,
       body,
-      getAuthorizationHeader(),
     );
     return data;
   }

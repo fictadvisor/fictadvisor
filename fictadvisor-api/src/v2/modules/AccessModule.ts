@@ -28,9 +28,9 @@ import { MultipleAccessGuard } from '../security/multiple-access-guard/MultipleA
     MultipleAccessGuard,
   ],
   exports: [
-    PermissionGuard, 
-    JwtGuard, 
-    GroupByDisciplineGuard, 
+    PermissionGuard,
+    JwtGuard,
+    GroupByDisciplineGuard,
     GroupByDisciplineTeacherGuard,
     GroupByEventGuard,
     JwtStrategy,

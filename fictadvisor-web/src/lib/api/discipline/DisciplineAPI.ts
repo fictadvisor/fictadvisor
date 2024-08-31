@@ -12,8 +12,6 @@ import {
 } from '@fictadvisor/utils/responses';
 
 import { client } from '../instance';
-import { getAuthorizationHeader } from '../utils';
-
 class DisciplineAPI {
   async getPageDisciplines(params: QueryAllDisciplinesDTO = {}) {
     const { data } = await client.get<DisciplinesResponse>('/disciplines', {
@@ -25,7 +23,6 @@ class DisciplineAPI {
   async getDisciplinesById(disciplineId: string) {
     const { data } = await client.get<ExtendedDisciplineTeachersResponse>(
       `/disciplines/${disciplineId}`,
-      getAuthorizationHeader(),
     );
     return data;
   }
@@ -34,21 +31,16 @@ class DisciplineAPI {
     return await client.post<ExtendedDisciplineTeachersResponse>(
       `/disciplines`,
       body,
-      getAuthorizationHeader(),
     );
   }
 
   async deleteDiscipline(disciplineId: string): Promise<void> {
-    await client.delete(
-      `/disciplines/${disciplineId}`,
-      getAuthorizationHeader(),
-    );
+    await client.delete(`/disciplines/${disciplineId}`);
   }
 
   async getAllDisciplineTeachers(disciplineId: string) {
     const { data } = await client.get<DisciplineTeachersResponse>(
       `/disciplines/${disciplineId}/teachers`,
-      getAuthorizationHeader(),
     );
     return data;
   }
@@ -57,7 +49,6 @@ class DisciplineAPI {
     const { data } = await client.post<DisciplineTeacherCreateResponse>(
       `/disciplineTeachers`,
       body,
-      getAuthorizationHeader(),
     );
     return data;
   }

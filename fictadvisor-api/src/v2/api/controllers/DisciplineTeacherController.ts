@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
-  ApiBearerAuth,
+  ApiCookieAuth,
   ApiBody,
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -53,7 +53,7 @@ export class DisciplineTeacherController {
     private questionMapper: QuestionMapper,
   ) {}
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: DisciplineTeacherQuestionsResponse,
   })
@@ -85,7 +85,7 @@ export class DisciplineTeacherController {
     return this.disciplineTeacherService.getQuestions(disciplineTeacherId, req.user.id);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: DisciplineTeacherQuestionsResponse,
   })
@@ -116,7 +116,7 @@ export class DisciplineTeacherController {
     return this.disciplineTeacherService.getQuestions(disciplineTeacherId, userId);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse()
   @ApiBadRequestResponse({
     description: `\n
@@ -157,7 +157,7 @@ export class DisciplineTeacherController {
     return this.disciplineTeacherService.sendAnswers(disciplineTeacherId, body, req.user.id);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse()
   @ApiBadRequestResponse({
     description: `\n
@@ -201,7 +201,7 @@ export class DisciplineTeacherController {
     return this.disciplineTeacherService.sendAnswers(disciplineTeacherId, body, userId);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: QuestionAnswerResponse,
   })
@@ -227,7 +227,7 @@ export class DisciplineTeacherController {
     return this.disciplineTeacherService.sendResponse(disciplineTeacherId, body);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiCreatedResponse({
     type: DisciplineTeacherCreateResponse,
   })
@@ -262,7 +262,7 @@ export class DisciplineTeacherController {
     return this.disciplineTeacherService.create(teacherId, disciplineId, body.roles);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: DisciplineTeacherCreateResponse,
   })
@@ -291,7 +291,7 @@ export class DisciplineTeacherController {
     return this.disciplineTeacherService.updateById(disciplineTeacherId, body.roles);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: DisciplineTeacherCreateResponse,
   })
@@ -322,7 +322,7 @@ export class DisciplineTeacherController {
     return this.disciplineTeacherService.updateByTeacherAndDiscipline(teacherId, disciplineId, body.roles);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiForbiddenResponse({
     description: `
       NoPermissionException: You do not have permission to perform this action
@@ -341,7 +341,7 @@ export class DisciplineTeacherController {
     return this.disciplineTeacherService.deleteById(disciplineTeacherId);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiForbiddenResponse({
     description: `
       NoPermissionException: You do not have permission to perform this action
@@ -362,7 +362,7 @@ export class DisciplineTeacherController {
     return this.disciplineTeacherService.deleteByTeacherAndDiscipline(teacherId, disciplineId);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse()
   @ApiForbiddenResponse({
     description: `
@@ -383,7 +383,7 @@ export class DisciplineTeacherController {
     return this.disciplineTeacherService.removeFromPoll(disciplineTeacherId, req.user.id);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: PaginatedCommentsResponse,
   })
@@ -422,7 +422,7 @@ export class DisciplineTeacherController {
     };
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: CommentResponse,
   })
@@ -474,7 +474,7 @@ export class DisciplineTeacherController {
     return this.questionMapper.getComment(comment);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: CommentResponse,
   })

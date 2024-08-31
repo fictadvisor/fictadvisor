@@ -7,7 +7,7 @@ import Image from 'next/image';
 
 import { SearchFormProps } from '@/app/(main)/(search-pages)/search-form/SearchForm';
 import { PollTeacherCard } from '@/components/common/ui/cards/poll-teacher-card';
-import useAuthentication from '@/hooks/use-authentication';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 import theme from '@/styles/theme';
 
 import PollSearchForm from '../poll-search-form';

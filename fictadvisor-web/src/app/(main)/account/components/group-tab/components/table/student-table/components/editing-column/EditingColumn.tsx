@@ -31,13 +31,10 @@ import {
   IconButtonShape,
 } from '@/components/common/ui/icon-button-mui/types';
 import Popup from '@/components/common/ui/pop-ups/Popup';
-import Tag from '@/components/common/ui/tag';
-import { TagSize, TagVariant } from '@/components/common/ui/tag/types';
-import UseAuthentication from '@/hooks/use-authentication/useAuthentication';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import GroupAPI from '@/lib/api/group/GroupAPI';
 import { PermissionResponse } from '@/lib/services/permission/types';
-import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 import theme from '@/styles/theme';
 
 import { StudentsTableItem } from '../../../types';
@@ -57,7 +54,8 @@ const EditingColumn: FC<EditingColumnProps> = ({
   refetch,
   rows,
 }) => {
-  const { user } = UseAuthentication();
+  const { user: userNotNull } = useAuthentication();
+  const user = userNotNull!;
   const { displayError } = useToastError();
   const [deletePopupOpen, setDeletePopupOpen] = useState(false);
   const [transferCaptainPopupOpen, setTransferCaptainPopupOpen] =

@@ -9,7 +9,6 @@ import {
   RolesResponse,
 } from '@fictadvisor/utils/responses';
 
-import { getAuthorizationHeader } from '@/lib/api/utils';
 import { convertEmptyStringToUndefined } from '@/lib/utils/convertEmptyStringToUndefined';
 
 import { client } from '../instance';
@@ -18,32 +17,22 @@ class RoleAPI {
   async getAll(params: QueryAllRolesDTO = {}): Promise<RolesResponse> {
     const { data } = await client.get<RolesResponse>(`/roles`, {
       params: convertEmptyStringToUndefined(params),
-      ...getAuthorizationHeader(),
     });
     return data;
   }
 
   async getById(roleId: string): Promise<RoleResponse> {
-    const { data } = await client.get<RoleResponse>(`/roles/${roleId}`, {
-      ...getAuthorizationHeader(),
-    });
+    const { data } = await client.get<RoleResponse>(`/roles/${roleId}`, {});
     return data;
   }
 
   async delete(roleId: string) {
-    const { data } = await client.delete<BaseRoleResponse>(
-      `/roles/${roleId}`,
-      getAuthorizationHeader(),
-    );
+    const { data } = await client.delete<BaseRoleResponse>(`/roles/${roleId}`);
     return data;
   }
 
   async create(body: CreateRoleDTO) {
-    const { data } = await client.post<BaseRoleResponse>(
-      '/roles',
-      body,
-      getAuthorizationHeader(),
-    );
+    const { data } = await client.post<BaseRoleResponse>('/roles', body);
     return data;
   }
 
@@ -51,7 +40,6 @@ class RoleAPI {
     const { data } = await client.patch<BaseRoleResponse>(
       `/roles/${roleId}`,
       body,
-      getAuthorizationHeader(),
     );
     return data;
   }

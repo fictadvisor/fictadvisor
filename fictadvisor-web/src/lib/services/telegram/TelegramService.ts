@@ -2,6 +2,7 @@ import { TelegramDTO } from '@fictadvisor/utils/requests';
 import * as process from 'process';
 
 import AuthAPI from '@/lib/api/auth/AuthAPI';
+import { setAuthTokens } from '@/lib/api/auth/ServerAuthApi';
 import StorageUtil from '@/lib/utils/StorageUtil';
 import { TelegramUser } from '@/types/telegram';
 
@@ -32,8 +33,8 @@ class TelegramService {
     try {
       const data =
         (await TelegramService.openAuthenticationDialog()) as TelegramDTO;
-      const { accessToken, refreshToken } = await AuthAPI.authTelegram(data);
-      StorageUtil.setTokens(accessToken, refreshToken);
+      const tokens = await AuthAPI.authTelegram(data);
+      await setAuthTokens(tokens);
       return true;
     } catch (e) {
       return false;
@@ -49,6 +50,11 @@ class TelegramService {
         (await TelegramService.openAuthenticationDialog()) as TelegramUser;
       StorageUtil.setTelegramInfo({ telegram: data });
     }
+  }
+
+  static async redirectToRegisterBot() {
+    const botUrl = `https://t.me/${process.env.NEXT_PUBLIC_BOT_NAME}?start=start`;
+    window.open(botUrl, '_blank');
   }
 }
 export default TelegramService;

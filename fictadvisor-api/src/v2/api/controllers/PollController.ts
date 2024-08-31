@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Patch, Param, Post, Query } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
-  ApiBearerAuth,
+  ApiCookieAuth,
   ApiForbiddenResponse,
   ApiUnauthorizedResponse,
   ApiOkResponse,
@@ -69,7 +69,7 @@ export class PollController {
     };
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: QuestionResponse,
   })
@@ -117,7 +117,7 @@ export class PollController {
     return this.questionMapper.getQuestion(question);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: PollDisciplineTeachersResponse,
   })
@@ -158,7 +158,7 @@ export class PollController {
     return this.pollService.getDisciplineTeachers(userId, query);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: QuestionResponse,
   })
@@ -194,7 +194,7 @@ export class PollController {
     return this.questionMapper.getQuestion(question);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: QuestionResponse,
   })
@@ -275,7 +275,7 @@ export class PollController {
     return this.questionMapper.getQuestionWithRoles(question);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: QuestionWithRolesResponse,
   })
@@ -318,7 +318,7 @@ export class PollController {
     return this.questionMapper.getQuestionWithRoles(question);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: QuestionWithRolesResponse,
   })

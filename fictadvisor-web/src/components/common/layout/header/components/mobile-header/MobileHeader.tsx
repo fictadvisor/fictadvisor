@@ -17,11 +17,7 @@ import { CloseButton } from '@/components/common/ui/icon-button-mui/variants';
 import Drawer from './components/drawer/Drawer';
 import * as styles from './MobileHeader.styles';
 
-interface MobileHeaderProps {
-  isLoggedIn: boolean;
-  user: TransformedUser;
-}
-const MobileHeader: FC<MobileHeaderProps> = ({ isLoggedIn, user }) => {
+const MobileHeader: FC = () => {
   const [isOpened, setIsOpened] = useState(false);
 
   const handleClick = () => {
@@ -50,12 +46,7 @@ const MobileHeader: FC<MobileHeaderProps> = ({ isLoggedIn, user }) => {
           icon={<Bars3Icon />}
         />
       )}
-      <Drawer
-        isLoggedIn={isLoggedIn}
-        isOpened={isOpened}
-        handleClick={handleClick}
-        user={user}
-      />
+      <Drawer isOpened={isOpened} handleClick={handleClick} />
     </AppBar>
   );
 };

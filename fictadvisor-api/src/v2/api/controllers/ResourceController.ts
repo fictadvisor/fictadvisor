@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
-  ApiBearerAuth,
+  ApiCookieAuth,
   ApiForbiddenResponse,
   ApiOkResponse,
   ApiParam,
@@ -74,7 +74,7 @@ export class ResourceController {
     return this.resourceService.get(resourceId);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: ResourceResponse,
   })
@@ -108,7 +108,7 @@ export class ResourceController {
     return this.resourceService.create(body);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: ResourceResponse,
   })
@@ -150,7 +150,7 @@ export class ResourceController {
     return this.resourceMapper.getResource(updResource);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: ResourcesResponse,
   })
@@ -186,7 +186,7 @@ export class ResourceController {
     return this.resourceMapper.getResources(updResources);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiBadRequestResponse({
     description: `\n
     InvalidEntityId:

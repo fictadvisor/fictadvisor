@@ -1,8 +1,7 @@
 import { applyDecorators, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiConflictResponse,
+  ApiConflictResponse, ApiCookieAuth,
   ApiForbiddenResponse,
   ApiOkResponse,
   ApiOperation,
@@ -56,7 +55,7 @@ function addDocumentationDecorators (summary: string, description: string, docum
 
   const decorators = [
     ApiOperation({ summary, description }),
-    ...(documentation?.isAuth ? [ApiBearerAuth()] : []),
+    ...(documentation?.isAuth ? [ApiCookieAuth()] : []),
   ];
 
   decorators.push(

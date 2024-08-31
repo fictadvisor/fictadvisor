@@ -1,45 +1,60 @@
 'use client';
 import { useEffect } from 'react';
 import { Box } from '@mui/material';
-import { usePathname, useRouter } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
+import { useRouter } from 'next/navigation';
 
 import * as styles from '@/app/(auth)/register/email-verification/[token]/VerifyEmailTokenPage.styles';
 import Progress from '@/components/common/ui/progress';
-import useAuthentication from '@/hooks/use-authentication';
 import useToast from '@/hooks/use-toast';
 import AuthAPI from '@/lib/api/auth/AuthAPI';
-import StorageUtil from '@/lib/utils/StorageUtil';
-
-const VerifyEmailTokenPage = () => {
+import { setAuthTokens } from '@/lib/api/auth/ServerAuthApi';
+interface VerifyEmailTokenPageProps {
+  params: {
+    token: string;
+  };
+}
+const VerifyEmailTokenPage = ({
+  params: { token },
+}: VerifyEmailTokenPageProps) => {
   const router = useRouter();
-  const pathName = usePathname();
 
   const toast = useToast();
-  const { update, isLoggedIn } = useAuthentication();
 
-  const token = pathName.split('/').pop() ?? '';
+  const { data, error } = useQuery({
+    queryKey: ['verifyEmailToken', token],
+    queryFn: () => AuthAPI.verifyEmailToken(token),
+    retry: 2,
+  });
 
-  const loadData = async (token: string): Promise<void> => {
-    if (isLoggedIn) {
-      router.push(`/`);
-      return;
-    }
-
-    try {
-      const { accessToken, refreshToken } =
-        await AuthAPI.verifyEmailToken(token);
-      StorageUtil.setTokens(accessToken, refreshToken);
-      await update();
-      router.push(`/`);
-    } catch (e) {
+  if (error) {
+    if (
+      isAxiosError(error) &&
+      error.response?.data.error === 'AlreadyRegisteredException'
+    ) {
+      toast.error('Цей токен вже активований', 'Увійди у свій акаунт');
+      router.push(`/login`);
+    } else {
       toast.error('Лист реєстрації вже не дійсний', 'Пройди реєстрацію знов!');
       router.push(`/register`);
     }
-  };
+  }
 
   useEffect(() => {
-    void loadData(token);
-  }, []);
+    if (data) {
+      setAuthTokens(data)
+        .then(() => {
+          toast.success('Ваш аккаунт успішно активовано');
+        })
+        .catch(() => {
+          toast.error('Помилка при активації аккаунта');
+        })
+        .finally(() => {
+          router.push('/');
+        });
+    }
+  }, [data]);
 
   return (
     <Box sx={styles.box}>

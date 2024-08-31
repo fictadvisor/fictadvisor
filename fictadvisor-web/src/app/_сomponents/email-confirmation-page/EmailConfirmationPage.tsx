@@ -17,10 +17,8 @@ import {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
-import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import AuthAPI from '@/lib/api/auth/AuthAPI';
-import getErrorMessage from '@/lib/utils/getErrorMessage';
 
 import * as styles from './EmailConfirmationPage.module';
 
@@ -47,15 +45,10 @@ const EmailConfirmationPage: FC<EmailConfirmationPageProps> = ({
     );
   };
 
-  const toast = useToast();
   const handleSendAgain = async () => {
     try {
       await AuthAPI[apiMethodName]({ email });
     } catch (error) {
-      const message = getErrorMessage(error);
-      message
-        ? toast.error(message)
-        : toast.error('Щось пішло не так, спробуй пізніше!');
       displayError(error);
     }
   };

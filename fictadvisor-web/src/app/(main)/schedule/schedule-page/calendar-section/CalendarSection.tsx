@@ -12,7 +12,7 @@ import {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
-import useAuthentication from '@/hooks/use-authentication';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 import PermissionService from '@/lib/services/permission/PermissionService';
 import { useSchedule } from '@/store/schedule/useSchedule';
 
@@ -32,12 +32,12 @@ export const CalendarSection: FC<CalendarSectionProps> = ({ groups }) => {
   };
 
   const { data } = useQuery({
-    queryKey: [user?.id, permissionValues],
+    queryKey: [user, permissionValues],
     queryFn: () =>
-      PermissionService.getPermissionList(user?.id, permissionValues),
+      PermissionService.getPermissionList(user!.id, permissionValues),
     retry: false,
     refetchOnWindowFocus: false,
-    enabled: !!user?.id,
+    enabled: !!user,
   });
 
   const showButton = data?.[PERMISSION.GROUPS_$GROUPID_EVENTS_CREATE];

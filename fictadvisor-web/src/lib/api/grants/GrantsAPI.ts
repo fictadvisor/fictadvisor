@@ -6,7 +6,6 @@ import {
 import { GrantsResponse, MappedGrant } from '@fictadvisor/utils/responses';
 
 import { GrantSet } from '@/app/admin/roles/[roleId]/grants/common/types';
-import { getAuthorizationHeader } from '@/lib/api/utils';
 
 import { client } from '../instance';
 
@@ -24,7 +23,6 @@ class GrantsAPI {
           ...params,
           set,
         },
-        ...getAuthorizationHeader(),
       },
     );
     return data;
@@ -33,7 +31,6 @@ class GrantsAPI {
   async getByGrantId(roleId: string, grantId: string) {
     const { data } = await client.get<MappedGrant>(
       `/roles/${roleId}/grants/${grantId}`,
-      getAuthorizationHeader(),
     );
     return data;
   }
@@ -41,7 +38,6 @@ class GrantsAPI {
   async delete(roleId: string, grantId: string) {
     const { data } = await client.delete<MappedGrant>(
       `/roles/${roleId}/grants/${grantId}`,
-      getAuthorizationHeader(),
     );
     return data;
   }
@@ -50,7 +46,6 @@ class GrantsAPI {
     const { data } = await client.patch<MappedGrant>(
       `/roles/${roleId}/grants/${grantId}`,
       body,
-      getAuthorizationHeader(),
     );
     return data;
   }
@@ -59,7 +54,6 @@ class GrantsAPI {
     const { data } = await client.post<MappedGrant>(
       `/roles/${roleId}/grant`,
       body,
-      getAuthorizationHeader(),
     );
     return data;
   }

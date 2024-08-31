@@ -8,19 +8,20 @@ import { CustomCheck } from '@/components/common/icons/CustomCheck';
 import Button from '@/components/common/ui/button-mui';
 import { ButtonSize } from '@/components/common/ui/button-mui/types';
 import Input from '@/components/common/ui/form/with-formik/input';
-import useAuthentication from '@/hooks/use-authentication';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
+import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import UserAPI from '@/lib/api/user/UserAPI';
 import theme from '@/styles/theme';
 
 import * as styles from './PersonalInfo.styles';
 
-const objectsEqual = (obj1: object, obj2: object) => {
-  return JSON.stringify(obj1) === JSON.stringify(obj2);
-};
 const PersonalInfoBlock: FC = () => {
-  const { user, update } = useAuthentication();
+  const { user: userNotNull } = useAuthentication();
+  const user = userNotNull!;
   const { displayError } = useToastError();
+  const { success } = useToast();
+
   const isMobile = useMediaQuery(theme.breakpoints.down('desktopSemiMedium'));
 
   const initialValues: PersonalInfoForm = {
@@ -38,7 +39,7 @@ const PersonalInfoBlock: FC = () => {
 
     try {
       await UserAPI.changeInfo(user.id, data);
-      await update();
+      success('Інформацію успішно змінено');
     } catch (error) {
       displayError(error);
     }
@@ -51,7 +52,7 @@ const PersonalInfoBlock: FC = () => {
         onSubmit={handleSubmit}
         validationSchema={validationSchema}
       >
-        {({ isValid, values }) => (
+        {({ isValid, dirty, isSubmitting }) => (
           <Form>
             <Input sx={styles.input} label="Прізвище" name="lastName" />
             <Input sx={styles.input} label="Ім'я" name="firstName" />
@@ -63,7 +64,7 @@ const PersonalInfoBlock: FC = () => {
                 size={isMobile ? ButtonSize.SMALL : ButtonSize.MEDIUM}
                 type="submit"
                 sx={isMobile ? styles.buttonPadding : {}}
-                disabled={!isValid || objectsEqual(initialValues, values)}
+                disabled={!isValid || !dirty || isSubmitting}
               />
             </Box>
           </Form>
