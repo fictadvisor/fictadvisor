@@ -78,7 +78,7 @@ export function transformEvents({
     const event: Event = Array.isArray(_event) ? _event[0] : _event;
 
     const eventMs = new Date(event.startTime).getTime() - firstDayDateMs;
-    const dateIndex = Math.floor((eventMs / MS_IN_WEEK) * 7);
+    const dateIndex = Math.floor((eventMs / MS_IN_WEEK) * 7) % 7;
     resultedData.days[dateIndex].events.push(_event);
   }
 
