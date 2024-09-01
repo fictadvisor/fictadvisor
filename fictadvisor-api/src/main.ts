@@ -14,13 +14,19 @@ import { join, resolve } from 'path';
 };
 
 async function bootstrap () {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule, { cors: true });
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get<ConfigService>(ConfigService);
   const port = configService.get<number>('port');
-
+  const isProduction = process.env.NODE_ENV === 'production';
+  
   applyStaticMiddleware(app);
 
-  app.enableCors();
+  app.enableCors({
+    origin: isProduction
+      ? [configService.get<string>('frontBaseUrl')]
+      : ['http://localhost:3000'],
+    credentials: true,
+  });
 
   app.useGlobalFilters(new HttpExceptionFilter(configService));
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
