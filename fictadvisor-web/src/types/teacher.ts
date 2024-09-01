@@ -1,4 +1,4 @@
-import { QuestionDisplay, TeacherRole } from '@fictadvisor/utils/enums';
+import { DisciplineTypeEnum, QuestionDisplay } from '@fictadvisor/utils/enums';
 import {
   CathedraResponse,
   ContactResponse,
@@ -53,7 +53,7 @@ export interface Teacher {
   avatar: string;
   description: string;
   rating: number;
-  roles: TeacherRole[];
+  disciplineTypes: DisciplineTypeEnum[];
   contacts: Contact[];
   cathedras: TeacherCathedra[];
   academicStatus: string;

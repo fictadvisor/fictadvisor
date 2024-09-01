@@ -5,7 +5,6 @@ import {
 } from '@fictadvisor/utils/requests';
 import {
   PaginatedQuestionsResponse,
-  QuestionWithCategoriesAndRolesResponse,
   QuestionWithCategoryResponse,
 } from '@fictadvisor/utils/responses';
 
@@ -30,7 +29,7 @@ class QuestionAPI {
   }
 
   async getQuestion(questionId: string) {
-    const { data } = await client.get<QuestionWithCategoriesAndRolesResponse>(
+    const { data } = await client.get<QuestionWithCategoryResponse>(
       `/poll/questions/${questionId}`,
     );
     return data;

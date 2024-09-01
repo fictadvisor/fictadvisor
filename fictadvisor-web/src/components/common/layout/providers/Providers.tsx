@@ -32,8 +32,8 @@ const Providers: FC<ProvidersProps> = ({ children }) => {
         <QueryClientProvider client={queryClient}>
           <AuthenticationProvider>
             <ToastContextProvider>{children}</ToastContextProvider>
+            <ReactQueryDevtools />
           </AuthenticationProvider>
-          <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </LocalizationProvider>
     </ThemeProvider>

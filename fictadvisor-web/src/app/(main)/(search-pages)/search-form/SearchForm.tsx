@@ -21,7 +21,6 @@ import { useQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { Form, Formik, FormikProps, useFormikContext } from 'formik';
 
-import { roleOptions } from '@/app/(main)/(search-pages)/teachers/constants';
 import {
   Dropdown,
   Input,
@@ -41,6 +40,8 @@ import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import CathedraAPI from '@/lib/api/cathedras/CathedraAPI';
 import GroupAPI from '@/lib/api/group/GroupAPI';
 import theme from '@/styles/theme';
+
+import { disciplineTypes } from '../poll/components/poll-search-form/constants';
 
 import * as styles from './SearchForm.styles';
 import { SearchFormFields } from './types';
@@ -213,10 +214,10 @@ const SearchForm: FC<SearchFormProps> = ({
                     label="Викладає"
                     size={FieldSize.MEDIUM}
                     handleChange={handleRoleChange}
-                    values={roleOptions}
-                    selected={values.roles.map(role => ({
+                    values={disciplineTypes}
+                    selected={values.disciplineTypes.map(disciplineType => ({
                       label: '',
-                      value: role,
+                      value: disciplineType,
                     }))}
                   />
                   <CheckboxesDropdown

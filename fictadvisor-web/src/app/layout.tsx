@@ -39,7 +39,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html>
+    <html suppressHydrationWarning>
       <head>
         <Script
           strategy="afterInteractive"

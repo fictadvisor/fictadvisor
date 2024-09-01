@@ -27,9 +27,8 @@ import { ContactRepository } from '../../database/repositories/ContactRepository
 import { InvalidQueryException } from '../../utils/exceptions/InvalidQueryException';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
 import { EntityType, QuestionDisplay, Prisma } from '@prisma/client';
-import { TeacherRole } from '@fictadvisor/utils/enums';
-import { TeacherTypeAdapter } from '../../mappers/TeacherRoleAdapter';
 import { SubjectMapper } from '../../mappers/SubjectMapper';
+import { DisciplineTypeEnum } from '@fictadvisor/utils/enums';
 
 @Injectable()
 export class TeacherService {
@@ -54,7 +53,7 @@ export class TeacherService {
       AND: [
         this.getSearchForTeachers.fullName(body.search),
         body.groupId?.length ? this.getSearchForTeachers.group(body.groupId) : {},
-        body.roles?.length ? this.getSearchForTeachers.roles(body.roles) : {},
+        body.disciplineTypes?.length ? this.getSearchForTeachers.disciplineTypes(body.disciplineTypes) : {},
         {
           OR: [
             body.notInDepartments ? {
@@ -92,12 +91,12 @@ export class TeacherService {
         some: DatabaseUtils.getSearchByArray(cathedrasId, 'cathedraId'),
       },
     }),
-    roles: (roles: TeacherRole[]) => ({
+    disciplineTypes: (disciplineTypes: DisciplineTypeEnum[]) => ({
       disciplineTeachers: {
         some: {
           roles: {
             some: {
-              disciplineType: DatabaseUtils.getSearchByArray(roles.map((role) => TeacherTypeAdapter[role]), 'name'),
+              disciplineType: DatabaseUtils.getSearchByArray(disciplineTypes, 'name'),
             },
           },
         },
@@ -322,14 +321,14 @@ export class TeacherService {
 
     const { disciplineTeachers } = dbTeacher;
 
-    const roles = this.disciplineTeacherMapper.getRolesBySubject(disciplineTeachers, subjectId);
+    const disciplineTypes = this.disciplineTeacherMapper.getRolesBySubject(disciplineTeachers, subjectId);
     const subject = await this.subjectRepository.findById(subjectId);
     const contacts = await this.contactRepository.getAllContacts(teacherId);
 
     return {
       ...this.teacherMapper.getTeacherWithRolesAndCathedras(dbTeacher),
       subject: this.subjectMapper.getSubject(subject),
-      roles,
+      disciplineTypes,
       contacts,
     };
   }
@@ -351,12 +350,12 @@ export class TeacherService {
     });
 
     const text =
-      '<b>Скарга на викладача:</b>\n\n' +
-      `<b>Викладач:</b> ${lastName} ${firstName} ${middleName}\n` +
-      `<b>Студент:</b> ${fullName}\n` +
-      `<b>Група:</b> ${code}\n\n` +
-      `${title}\n\n` +
-      `${message}`;
+    '<b>Скарга на викладача:</b>\n\n' +
+    `<b>Викладач:</b> ${lastName} ${firstName} ${middleName}\n` +
+    `<b>Студент:</b> ${fullName}\n` +
+    `<b>Група:</b> ${code}\n\n` +
+    `${title}\n\n` +
+    `${message}`;
 
     await this.telegramAPI.sendMessage(text);
   }

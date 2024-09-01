@@ -13,8 +13,8 @@ export const TeacherDocumentationGetAll: ApiDocumentationParams = {
       Wrong value for order
       Sort must be an enum
       Cathedras must be an array
-      Each element of roles should be an enum
-      Roles must be an array
+      Each element of discipline types should be an enum
+      Discipline types must be an array
       
     InvalidEntityException:
       Group with such id is not found
