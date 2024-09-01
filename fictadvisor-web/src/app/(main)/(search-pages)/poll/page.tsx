@@ -48,12 +48,18 @@ const PollTeacher = () => {
     );
   }, []);
 
+  useEffect(() => {
+    if (!user && !isLoadingUser) {
+      toast.error('Для проходження опитування потрібно авторизуватися');
+      void replace('/login?redirect=~poll');
+    }
+  }, [user, replace]);
+
   const { data, isLoading } = useQuery({
-    queryKey: ['pollTeachersByUserId', user, queryObj],
+    queryKey: ['pollTeachersByUserId', queryObj, user],
     queryFn: () => PollAPI.getUserTeachers(user!.id, queryObj),
     refetchOnWindowFocus: false,
     enabled: !!user,
-    placeholderData: (previousData, previousQuery) => previousData,
   });
 
   useEffect(() => {
@@ -65,18 +71,12 @@ const PollTeacher = () => {
     }
   }, [data]);
 
-  if (!user && !isLoadingUser) {
-    toast.error('Для проходження опитування потрібно авторизуватися');
-    replace('/login?redirect=~poll');
-  }
-
-  if (isLoading) {
+  if (isLoading || isLoadingUser)
     return (
       <Box sx={styles.pageLoader}>
         <Progress />
       </Box>
     );
-  }
 
   return (
     <Box sx={styles.layout}>

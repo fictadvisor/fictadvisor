@@ -1,12 +1,13 @@
 import React from 'react';
-import { TeacherRole } from '@fictadvisor/utils/enums';
+import { DisciplineTypeEnum } from '@fictadvisor/utils/enums';
 import { CathedraResponse } from '@fictadvisor/utils/responses';
 import { Avatar, Box, Typography, useMediaQuery } from '@mui/material';
 
-import { CardRoles } from '@/components/common/ui/cards/card-roles';
 import Rating from '@/components/common/ui/rating';
 import { RatingVariant } from '@/components/common/ui/rating/types';
 import theme from '@/styles/theme';
+
+import { CardDisciplineTypes } from '../card-discipline-types/CardDisciplineTypes';
 
 import * as styles from './TeacherCard.styles';
 
@@ -14,7 +15,7 @@ type TeacherCardProps = {
   name: string;
   rating?: number;
   cathedras?: CathedraResponse[];
-  roles?: TeacherRole[];
+  disciplineTypes?: DisciplineTypeEnum[];
   avatar?: string;
   disabled?: boolean;
   isSubjectCard?: boolean;
@@ -22,7 +23,7 @@ type TeacherCardProps = {
 
 export const TeacherCard: React.FC<TeacherCardProps> = ({
   name,
-  roles = [],
+  disciplineTypes = [],
   avatar,
   disabled,
   rating = 0,
@@ -50,8 +51,9 @@ export const TeacherCard: React.FC<TeacherCardProps> = ({
             )}
           </Box>
         </Box>
-        <CardRoles
-          roles={roles}
+
+        <CardDisciplineTypes
+          disciplineTypes={disciplineTypes}
           cathedras={cathedras}
           isTeachersPage={!isSubjectCard}
         />

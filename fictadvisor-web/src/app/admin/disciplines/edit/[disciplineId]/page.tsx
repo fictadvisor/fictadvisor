@@ -31,7 +31,7 @@ interface AdminDisciplineEditProps {
 const DisciplinesAdminEdit: FC<AdminDisciplineEditProps> = ({ params }) => {
   const {
     data: discipline,
-    isSuccess,
+    isError,
     isLoading,
   } = useQuery({
     queryKey: ['discipline', params.disciplineId],
@@ -39,7 +39,7 @@ const DisciplinesAdminEdit: FC<AdminDisciplineEditProps> = ({ params }) => {
     ...useQueryAdminOptions,
   });
 
-  if (!isSuccess)
+  if (isError)
     throw new Error(
       `An error has occurred while editing ${params.disciplineId} discipline`,
     );
@@ -66,7 +66,7 @@ const DisciplinesAdminEdit: FC<AdminDisciplineEditProps> = ({ params }) => {
     let isTeacherSet = true;
     if (body && body.teachers) {
       body.teachers.forEach(teacher => {
-        if (!teacher.teacherId || !teacher.roleNames.length) {
+        if (!teacher.teacherId || !teacher.disciplineTypes.length) {
           isTeacherSet = false;
         }
       });
@@ -95,50 +95,54 @@ const DisciplinesAdminEdit: FC<AdminDisciplineEditProps> = ({ params }) => {
   if (isLoading) return <LoadPage />;
 
   return (
-    <Box sx={{ p: '16px' }}>
-      <Box sx={stylesAdmin.header}>
-        <Box sx={stylesAdmin.editName}>
-          <Typography variant="h5">Редагування</Typography>
-          <Typography sx={stylesAdmin.name}>
-            Дисципліна {discipline.subject.name}
-          </Typography>
+    <>
+      {discipline && (
+        <Box sx={{ p: '16px' }}>
+          <Box sx={stylesAdmin.header}>
+            <Box sx={stylesAdmin.editName}>
+              <Typography variant="h5">Редагування</Typography>
+              <Typography sx={stylesAdmin.name}>
+                Дисципліна {discipline.subject.name}
+              </Typography>
+            </Box>
+            <Stack flexDirection="row" gap="8px">
+              <Button
+                sx={styles.button}
+                size={ButtonSize.MEDIUM}
+                color={ButtonColor.SECONDARY}
+                text="Скасувати"
+                href="/admin/disciplines"
+              />
+              <Button
+                sx={styles.button}
+                size={ButtonSize.MEDIUM}
+                variant={ButtonVariant.OUTLINE}
+                color={ButtonColor.SECONDARY}
+                startIcon={<TrashIcon />}
+                text="Видалити"
+                onClick={() => setIsOpen(true)}
+              />
+              {isOpen && (
+                <DeletePopup
+                  setPopupOpen={setIsOpen}
+                  handleDeleteSubmit={() => handleDelete(discipline.id)}
+                  name={`дисципліну ${discipline.subject.name}`}
+                />
+              )}
+              <Button
+                sx={styles.button}
+                size={ButtonSize.MEDIUM}
+                text="Зберегти"
+                onClick={() => handleEdit(discipline.id)}
+              />
+            </Stack>
+          </Box>
+          <Stack flexDirection="column" gap="10px">
+            <DisciplinesInfoSection discipline={discipline} setBody={setBody} />
+          </Stack>
         </Box>
-        <Stack flexDirection="row" gap="8px">
-          <Button
-            sx={styles.button}
-            size={ButtonSize.MEDIUM}
-            color={ButtonColor.SECONDARY}
-            text="Скасувати"
-            href="/admin/disciplines"
-          />
-          <Button
-            sx={styles.button}
-            size={ButtonSize.MEDIUM}
-            variant={ButtonVariant.OUTLINE}
-            color={ButtonColor.SECONDARY}
-            startIcon={<TrashIcon />}
-            text="Видалити"
-            onClick={() => setIsOpen(true)}
-          />
-          {isOpen && (
-            <DeletePopup
-              setPopupOpen={setIsOpen}
-              handleDeleteSubmit={() => handleDelete(discipline.id)}
-              name={`дисципліну ${discipline.subject.name}`}
-            />
-          )}
-          <Button
-            sx={styles.button}
-            size={ButtonSize.MEDIUM}
-            text="Зберегти"
-            onClick={() => handleEdit(discipline.id)}
-          />
-        </Stack>
-      </Box>
-      <Stack flexDirection="column" gap="10px">
-        <DisciplinesInfoSection discipline={discipline} setBody={setBody} />
-      </Stack>
-    </Box>
+      )}
+    </>
   );
 };
 

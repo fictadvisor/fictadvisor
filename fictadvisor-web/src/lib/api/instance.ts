@@ -27,7 +27,6 @@ client.interceptors.response.use(
     return Promise.reject(error);
   },
 );
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const cookiesInterceptor = async (req: any) => {
   if (isServer) {

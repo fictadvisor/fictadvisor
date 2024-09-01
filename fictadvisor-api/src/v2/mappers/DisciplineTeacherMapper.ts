@@ -5,8 +5,7 @@ import {
   DisciplineTeacherExtendedResponse,
   DisciplineTeacherFullResponse,
 } from '@fictadvisor/utils/responses';
-import { TeacherRole, AcademicStatus, ScientificDegree, Position } from '@fictadvisor/utils/enums';
-import { getTeacherRoles, TeacherRoleAdapter } from './TeacherRoleAdapter';
+import { AcademicStatus, ScientificDegree, Position, DisciplineTypeEnum } from '@fictadvisor/utils/enums';
 import { QuestionAnswerResponse } from '@fictadvisor/utils';
 import { DbQuestionAnswer } from '../database/entities/DbQuestionAnswer';
 import { QuestionMapper } from './QuestionMapper';
@@ -14,14 +13,15 @@ import { TeacherMapper } from './TeacherMapper';
 import { DisciplineMapper } from './DisciplineMapper';
 import { SubjectMapper } from './SubjectMapper';
 import { DbDisciplineTeacherRole } from '../database/entities/DbDisciplineTeacherRole';
+import { DbDisciplineType } from '../database/entities/DbDisciplineType';
 
 @Injectable()
 export class DisciplineTeacherMapper {
   constructor (
-      private questionMapper: QuestionMapper,
-      private teacherMapper: TeacherMapper,
-      private disciplineMapper: DisciplineMapper,
-      private subjectMapper: SubjectMapper,
+    private questionMapper: QuestionMapper,
+    private teacherMapper: TeacherMapper,
+    private disciplineMapper: DisciplineMapper,
+    private subjectMapper: SubjectMapper,
   ) {}
 
   getDisciplinesTeacherAndSubject (disciplineTeachers: DbDisciplineTeacher[]): DisciplineTeacherAndSubjectResponse[] {
@@ -31,11 +31,15 @@ export class DisciplineTeacherMapper {
     }));
   }
 
+  private getDisciplineTypes (disciplineTeacher: DbDisciplineTeacher) {
+    return disciplineTeacher.roles.map((role: DbDisciplineTeacherRole) => role.disciplineType.name);
+  }
+
   private getDisciplineTeacherWithTeacherParams (disciplineTeacher: DbDisciplineTeacher) {
     return {
       disciplineTeacherId: disciplineTeacher.id,
       ...disciplineTeacher.teacher,
-      roles: getTeacherRoles(disciplineTeacher.roles),
+      disciplineTypes: this.getDisciplineTypes(disciplineTeacher),
       rating: disciplineTeacher.teacher.rating.toNumber(),
     };
   }
@@ -44,17 +48,17 @@ export class DisciplineTeacherMapper {
     return disciplineTeachers.map(this.getDisciplineTeacherWithTeacherParams);
   }
 
-  getRolesBySubject (disciplineTeachers: DbDisciplineTeacher[], subjectId: string): TeacherRole[] {
-    const roles = new Set<TeacherRole>();
+  getRolesBySubject (disciplineTeachers: DbDisciplineTeacher[], subjectId: string): DisciplineTypeEnum[] {
+    const disciplineTypes = new Set<DisciplineTypeEnum>();
     for (const disciplineTeacher of disciplineTeachers) {
       if (disciplineTeacher.discipline.subjectId === subjectId) {
         for (const { disciplineType } of disciplineTeacher.roles) {
-          roles.add(TeacherRoleAdapter[disciplineType.name]);
+          disciplineTypes.add(disciplineType.name);
         }
       }
     }
 
-    return Array.from(roles);
+    return Array.from(disciplineTypes);
   }
 
   getDisciplineTeachersFull (disciplineTeachers: DbDisciplineTeacher[]): DisciplineTeacherFullResponse[] {
@@ -73,7 +77,7 @@ export class DisciplineTeacherMapper {
         position: teacher.position as Position,
         rating: +teacher.rating,
         disciplineTeacherId: disciplineTeacher.id,
-        roles: getTeacherRoles(disciplineTeacher.roles),
+        disciplineTypes: this.getDisciplineTypes(disciplineTeacher),
         subject: this.subjectMapper.getSubject(subject),
         cathedras: teacher.cathedras.map(({ cathedra: { id, name, abbreviation, division } }) => ({
           id,
@@ -109,7 +113,7 @@ export class DisciplineTeacherMapper {
       disciplineId: disciplineTeacher.disciplineId,
       discipline: this.disciplineMapper.getExtendedDiscipline(disciplineTeacher.discipline),
       teacher: this.teacherMapper.getTeacher(disciplineTeacher.teacher),
-      roles: disciplineTeacher.roles.map((role: DbDisciplineTeacherRole) => TeacherRoleAdapter[role.disciplineType.name]),
+      disciplineTypes: disciplineTeacher.discipline.disciplineTypes.map((disciplineType: DbDisciplineType) => disciplineType.name),
     };
   }
 }

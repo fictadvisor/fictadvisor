@@ -1,5 +1,5 @@
 import { FC, ReactNode } from 'react';
-import { TeacherRole } from '@fictadvisor/utils/enums';
+import { DisciplineTypeEnum } from '@fictadvisor/utils/enums';
 import { CathedraResponse } from '@fictadvisor/utils/responses';
 import {
   BeakerIcon,
@@ -17,32 +17,34 @@ import {
 } from '@/components/common/ui/tag/types';
 import theme from '@/styles/theme';
 
-import * as stylesMui from './CardRoles.styles';
+import * as stylesMui from './CardDisciplineTypes.styles';
 
-import styles from './CardRoles.module.scss';
+import styles from './CardDisciplineTypes.module.scss';
 
-export interface CardRolesProps {
-  roles: TeacherRole[];
+export interface CardDisciplineTypesProps {
+  disciplineTypes: DisciplineTypeEnum[];
   className?: string;
   isTeachersPage?: boolean;
   isPersonalPage?: boolean;
   cathedras: CathedraResponse[];
 }
 
-export const TagText: Record<TeacherRole, string> = {
-  [TeacherRole.LABORANT]: 'Лабораторні',
-  [TeacherRole.LECTURER]: 'Лекції',
-  [TeacherRole.PRACTICIAN]: 'Практики',
-  [TeacherRole.EXAMINER]: 'Екзамени',
-  [TeacherRole.OTHER]: 'Інше',
+export const TagText: Record<DisciplineTypeEnum, string> = {
+  [DisciplineTypeEnum.LABORATORY]: 'Лабораторні',
+  [DisciplineTypeEnum.LECTURE]: 'Лекції',
+  [DisciplineTypeEnum.PRACTICE]: 'Практики',
+  [DisciplineTypeEnum.EXAM]: 'Екзамени',
+  [DisciplineTypeEnum.CONSULTATION]: 'Консультації',
+  [DisciplineTypeEnum.WORKOUT]: 'Відпрацювання',
 };
 
-export const RoleColors: Record<TeacherRole, TagColor> = {
-  [TeacherRole.LABORANT]: TagColor.MINT,
-  [TeacherRole.LECTURER]: TagColor.INDIGO,
-  [TeacherRole.PRACTICIAN]: TagColor.ORANGE,
-  [TeacherRole.EXAMINER]: TagColor.VIOLET,
-  [TeacherRole.OTHER]: TagColor.PRIMARY,
+export const RoleColors: Record<DisciplineTypeEnum, TagColor> = {
+  [DisciplineTypeEnum.LABORATORY]: TagColor.MINT,
+  [DisciplineTypeEnum.LECTURE]: TagColor.INDIGO,
+  [DisciplineTypeEnum.PRACTICE]: TagColor.ORANGE,
+  [DisciplineTypeEnum.EXAM]: TagColor.VIOLET,
+  [DisciplineTypeEnum.CONSULTATION]: TagColor.PRIMARY,
+  [DisciplineTypeEnum.WORKOUT]: TagColor.PRIMARY,
 };
 
 export const CathedraColors: Record<string, TagColor> = {
@@ -51,16 +53,17 @@ export const CathedraColors: Record<string, TagColor> = {
   ['ОТ']: TagColor.ORANGE,
 };
 
-const TagIcons: Record<TeacherRole, ReactNode> = {
-  [TeacherRole.LABORANT]: <BeakerIcon />,
-  [TeacherRole.LECTURER]: <BookOpenIcon />,
-  [TeacherRole.PRACTICIAN]: <WrenchIcon />,
-  [TeacherRole.EXAMINER]: null,
-  [TeacherRole.OTHER]: null,
+const TagIcons: Record<DisciplineTypeEnum, ReactNode> = {
+  [DisciplineTypeEnum.LABORATORY]: <BeakerIcon />,
+  [DisciplineTypeEnum.LECTURE]: <BookOpenIcon />,
+  [DisciplineTypeEnum.PRACTICE]: <WrenchIcon />,
+  [DisciplineTypeEnum.EXAM]: null,
+  [DisciplineTypeEnum.CONSULTATION]: null,
+  [DisciplineTypeEnum.WORKOUT]: null,
 };
 
-export const CardRoles: FC<CardRolesProps> = ({
-  roles,
+export const CardDisciplineTypes: FC<CardDisciplineTypesProps> = ({
+  disciplineTypes,
   className,
   isTeachersPage = false,
   cathedras,
@@ -68,10 +71,12 @@ export const CardRoles: FC<CardRolesProps> = ({
 }) => {
   const isMobileMedium = useMediaQuery(theme.breakpoints.down('mobileMedium'));
   const place =
-    isTeachersPage && isMobileMedium ? 3 - cathedras.length : roles.length;
-  const extra = roles.length - place;
+    isTeachersPage && isMobileMedium
+      ? 3 - cathedras.length
+      : disciplineTypes.length;
+  const extra = disciplineTypes.length - place;
   return (
-    <div className={cn(styles['card-roles'], className)}>
+    <div className={cn(styles['card-disciplineTypes'], className)}>
       {cathedras.map(cathedra => (
         <Tag
           size={TagSize.SMALL}
@@ -81,7 +86,7 @@ export const CardRoles: FC<CardRolesProps> = ({
           key={cathedra.id}
         />
       ))}
-      {roles.slice(0, place).map(role => (
+      {disciplineTypes.slice(0, place).map(role => (
         <Tag
           sx={{
             display: ['EXAMINER', 'OTHER'].includes(role) ? 'none' : 'flex',
