@@ -13,7 +13,6 @@ import {
 } from '@fictadvisor/utils/responses';
 import { AcademicStatus, ScientificDegree, Position } from '@fictadvisor/utils/enums';
 import { DbDisciplineTeacher } from '../database/entities/DbDisciplineTeacher';
-import { getTeacherRoles } from './TeacherRoleAdapter';
 import { GroupMapper } from './GroupMapper';
 import { SubjectMapper } from './SubjectMapper';
 import { DbDisciplineType } from '../database/entities/DbDisciplineType';
@@ -21,8 +20,8 @@ import { DbDisciplineType } from '../database/entities/DbDisciplineType';
 @Injectable()
 export class DisciplineMapper {
   constructor (
-    private groupMapper: GroupMapper,
-    private subjectMapper: SubjectMapper,
+        private groupMapper: GroupMapper,
+        private subjectMapper: SubjectMapper,
   ) {}
 
   getDiscipline (discipline: Discipline): DisciplineResponse {
@@ -98,7 +97,7 @@ export class DisciplineMapper {
         position: teacher.position as Position,
         rating: +teacher.rating,
         disciplineTeacherId: disciplineTeacher.id,
-        roles: getTeacherRoles(disciplineTeacher.roles),
+        disciplineTypes: disciplineTeacher.roles.map(({ disciplineType }) => disciplineType.name),
         cathedras: teacher.cathedras.map(({ cathedra: { id, name, abbreviation, division } }) => ({
           id,
           name,
@@ -199,3 +198,4 @@ export class DisciplineMapper {
     return result;
   }
 }
+

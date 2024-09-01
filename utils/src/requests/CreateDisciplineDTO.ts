@@ -2,7 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsArray, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsUUID, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { validationOptionsMsg } from '../ValidationUtil';
-import { TeacherRole } from '../enums/db/TeacherRoleEnum';
+import { DisciplineTypeEnum } from '../enums';
 
 class Discipline_DisciplineTeacher {
   @ApiProperty({
@@ -13,13 +13,13 @@ class Discipline_DisciplineTeacher {
     teacherId: string;
 
   @ApiProperty({
-    description: 'Array of role names of discipline teacher',
-    type: [TeacherRole],
-    enum: TeacherRole,
+    description: 'Array of discipline types of discipline teacher',
+    type: [DisciplineTypeEnum],
+    enum: DisciplineTypeEnum,
   })
-  @IsEnum(TeacherRole, validationOptionsMsg('Each role name in array should be an enum', true))
-  @IsArray(validationOptionsMsg('Role names should be an array'))
-    roleNames: TeacherRole[];
+  @IsEnum(DisciplineTypeEnum, validationOptionsMsg('Each discipline type in array should be an enum', true))
+  @IsArray(validationOptionsMsg('Discipline types should be an array'))
+    disciplineTypes: DisciplineTypeEnum[];
 }
 
 export class CreateDisciplineDTO {

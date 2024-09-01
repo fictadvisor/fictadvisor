@@ -110,7 +110,10 @@ const PersonalTeacherTabs: FC<PersonalTeacherTabsProps> = ({
         <Box sx={stylesMUI.tabPanelList}>
           <TabPanel value={TeachersPageTabs.GENERAL}>
             {data.hasEnoughMarks ? (
-              <GeneralTab marks={data.marks} roles={teacher.roles} />
+              <GeneralTab
+                marks={data.marks}
+                disciplineTypes={teacher.disciplineTypes}
+              />
             ) : (
               <PollButtons text={data.marksText} buttonInfo={data.buttonInfo} />
             )}
