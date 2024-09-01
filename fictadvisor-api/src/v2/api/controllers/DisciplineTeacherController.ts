@@ -127,7 +127,7 @@ export class DisciplineTeacherController {
     @Body('disciplineId', DisciplineByIdPipe) disciplineId: string,
     @Body() body: CreateDisciplineTeacherDTO,
   ): Promise<DisciplineTeacherExtendedResponse> {
-    const result = await this.disciplineTeacherService.create(teacherId, disciplineId, body.roles);
+    const result = await this.disciplineTeacherService.create(teacherId, disciplineId, body.disciplineTypes);
     return this.disciplineTeacherMapper.getDisciplineTeacherExtended(result);
   }
 
@@ -141,7 +141,7 @@ export class DisciplineTeacherController {
     @Param('disciplineTeacherId', DisciplineTeacherByIdPipe) disciplineTeacherId: string,
     @Body() body: UpdateDisciplineTeacherDTO,
   ): Promise<DisciplineTeacherExtendedResponse> {
-    const result = await this.disciplineTeacherService.updateById(disciplineTeacherId, body.roles);
+    const result = await this.disciplineTeacherService.updateById(disciplineTeacherId, body.disciplineTypes);
     return this.disciplineTeacherMapper.getDisciplineTeacherExtended(result);
   }
 
@@ -156,7 +156,7 @@ export class DisciplineTeacherController {
     @Query('disciplineId', DisciplineByIdPipe) disciplineId : string,
     @Body() body: UpdateDisciplineTeacherDTO,
   ): Promise<DisciplineTeacherExtendedResponse> {
-    const result = await this.disciplineTeacherService.updateByTeacherAndDiscipline(teacherId, disciplineId, body.roles);
+    const result = await this.disciplineTeacherService.updateByTeacherAndDiscipline(teacherId, disciplineId, body.disciplineTypes);
     return this.disciplineTeacherMapper.getDisciplineTeacherExtended(result);
   }
 

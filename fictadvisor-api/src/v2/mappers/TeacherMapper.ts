@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { Sort, SortDTO } from '@fictadvisor/utils/requests';
 import {
-  TeacherRole,
   OrderQAParam,
   SortQATParam,
   AcademicStatus,
   ScientificDegree,
   Position,
+  DisciplineTypeEnum,
 } from '@fictadvisor/utils/enums';
 import { DbTeacher } from '../database/entities/DbTeacher';
-import { getTeacherRoles } from './TeacherRoleAdapter';
-import { TeacherResponse, TeacherWithRolesAndCathedrasResponse } from '@fictadvisor/utils';
+import { TeacherResponse, TeacherWithRolesAndCathedrasResponse } from '@fictadvisor/utils/responses';
 import { Teacher } from '@prisma/client';
+import { DbDisciplineTeacherRole } from '../database/entities/DbDisciplineTeacherRole';
 
 @Injectable()
 export class TeacherMapper {
@@ -43,7 +43,7 @@ export class TeacherMapper {
       position: teacher.position as Position,
       rating: +teacher.rating,
       cathedras: this.getCathedras(teacher),
-      roles: this.getTeacherRoles(teacher),
+      disciplineTypes: this.getTeacherRoles(teacher),
     };
   }
 
@@ -51,13 +51,13 @@ export class TeacherMapper {
     return teachers.map((teacher) => this.getTeacherWithRolesAndCathedras(teacher));
   }
 
-  getTeacherRoles (teacher: DbTeacher): TeacherRole[] {
-    const roles: TeacherRole[] = [];
+  getTeacherRoles (teacher: DbTeacher): DisciplineTypeEnum[] {
+    const disciplineTypes: DisciplineTypeEnum[] = [];
     for (const disciplineTeacher of teacher.disciplineTeachers) {
-      roles.push(...getTeacherRoles(disciplineTeacher.roles));
+      disciplineTypes.push(...disciplineTeacher.roles.map((role: DbDisciplineTeacherRole) => role.disciplineType.name));
     }
 
-    return [...new Set(roles)];
+    return [...new Set(disciplineTypes)];
   }
 
   private getCathedras (teacher: DbTeacher) {

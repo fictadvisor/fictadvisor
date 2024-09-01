@@ -19,7 +19,7 @@ export const sortOptions: DropDownOption[] = [
 
 export const disciplineTeacherInitialValues = {
   id: '',
-  roles: [],
+  disciplineTypes: [],
   firstName: '',
   middleName: '',
   lastName: '',
