@@ -45,7 +45,7 @@ export const SubjectTeacherSearchList: FC<SubjectTeacherSearchListProps> = ({
                 avatar={teacher.avatar}
                 key={teacher.id}
                 name={`${teacher.lastName} ${teacher.firstName} ${teacher.middleName}`}
-                roles={teacher.roles}
+                disciplineTypes={teacher.disciplineTypes}
                 rating={teacher.rating / 20}
                 isSubjectCard
                 cathedras={teacher.cathedras}

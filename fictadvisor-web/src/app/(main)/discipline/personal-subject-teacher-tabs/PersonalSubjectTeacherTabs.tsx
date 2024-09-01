@@ -62,7 +62,10 @@ const PersonalSubjectTeacherTabs: FC<PersonalSubjectTeacherProps> = ({
         <Box sx={styles.tabPanelList}>
           <TabPanel value={TeachersPageTabs.GENERAL}>
             {data.hasEnoughMarks ? (
-              <GeneralTab marks={data.marks} roles={data.info.roles} />
+              <GeneralTab
+                marks={data.marks}
+                disciplineTypes={data.info.disciplineTypes}
+              />
             ) : (
               data.buttonInfo.map((button, index) => (
                 <PollButtons
