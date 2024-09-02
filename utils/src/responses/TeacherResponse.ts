@@ -21,6 +21,11 @@ export class ShortTeacherResponse {
     description: 'Teacher\'s last name',
   })
     lastName: string;
+
+  @ApiProperty({
+    description: 'Teacher\'s slug',
+  })
+    slug: string;
 }
 
 export class TeacherResponse extends ShortTeacherResponse {
@@ -33,7 +38,6 @@ export class TeacherResponse extends ShortTeacherResponse {
     description: 'Link to teacher avatar image',
   })
     avatar: string;
-
 
   @ApiProperty({
     description: 'Academic status of the teacher',

@@ -14,6 +14,7 @@ export class DbTeacher {
   firstName: string;
   middleName?: string;
   lastName: string;
+  slug: string;
   description?: string;
   avatar?: string;
   scientificDegree: ScientificDegree;

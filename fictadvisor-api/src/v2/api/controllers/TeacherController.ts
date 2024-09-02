@@ -47,6 +47,7 @@ import { QuestionMapper } from '../../mappers/QuestionMapper';
 import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
 import { TeacherService } from '../services/TeacherService';
 import { PollService } from '../services/PollService';
+import { TeacherBySlugPipe } from '../pipes/TeacherBySlugPipe';
 
 @ApiTags('Teachers')
 @Controller({
@@ -228,22 +229,22 @@ export class TeacherController {
   })
   @ApiBadRequestResponse({
     description: `\n
-    InvalidEntityIdException: 
-      Teacher with such id is not found`,
+    InvalidEntitySlugException: 
+      Teacher with such slug is not found`,
   })
   @ApiParam({
-    name: 'teacherId',
+    name: 'slug',
     required: true,
-    description: 'Id of certain teacher',
+    description: 'Slug of certain teacher',
   })
   @ApiEndpoint({
-    summary: 'Receive a certain teacher',
+    summary: 'Receive a certain teacher by slug',
   })
-  @Get('/:teacherId')
+  @Get('/:slug')
   async getTeacher (
-    @Param('teacherId', TeacherByIdPipe) teacherId: string,
+    @Param('slug', TeacherBySlugPipe) slug: string,
   ): Promise<TeacherWithContactsResponse> {
-    const { dbTeacher, contacts } = await this.teacherService.getTeacher(teacherId);
+    const { dbTeacher, contacts } = await this.teacherService.getTeacher(slug);
     return {
       ...this.teacherMapper.getTeacher(dbTeacher),
       contacts,
