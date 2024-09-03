@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useQuery } from 'react-query';
 import { Box } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
@@ -22,16 +22,16 @@ const Page = () => {
   const [currPage, setCurrPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
 
-  const { data, refetch, isLoading } = useQuery(
-    ['users', currPage, pageSize, queryObj],
-    async () =>
+  const { data, isLoading } = useQuery({
+    queryKey: ['users', currPage, pageSize, queryObj],
+    queryFn: async () =>
       await UserAPI.getAll({
         ...queryObj,
         page: currPage,
         pageSize,
       }),
-    useQueryAdminOptions,
-  );
+    ...useQueryAdminOptions,
+  });
 
   if (isLoading) return <LoadPage />;
 
@@ -50,7 +50,6 @@ const Page = () => {
         pageSize={pageSize}
         setPageSize={setPageSize}
         totalCount={data.pagination.totalAmount}
-        refetch={refetch}
       />
     </Box>
   );

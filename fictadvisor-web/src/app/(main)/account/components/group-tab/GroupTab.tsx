@@ -33,14 +33,12 @@ import * as styles from './GroupTab.styles';
 const GroupTab: FC = () => {
   const [order, setOrder] = useState(Order.ascending);
   const { user } = useAuthentication();
-  const { data, isLoading, refetch } = useQuery(
-    ['students'],
-    () => GroupService.getGroupData(user, order),
-    {
-      retry: false,
-      refetchOnWindowFocus: false,
-    },
-  );
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ['students'],
+    queryFn: () => GroupService.getGroupData(user, order),
+    retry: false,
+    refetchOnWindowFocus: false
+  });
   const [leavePopupOpen, setLeavePopupOpen] = useState(false);
 
   const showRequests =

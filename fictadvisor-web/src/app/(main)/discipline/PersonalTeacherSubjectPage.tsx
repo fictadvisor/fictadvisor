@@ -35,20 +35,20 @@ const PersonalTeacherSubjectPage = () => {
     isLoading,
     isError,
     data: teacherInfo,
-  } = useQuery(
-    ['teacher', teacherId, subjectId],
-    () =>
+  } = useQuery({
+    queryKey: ['teacher', teacherId, subjectId],
+
+    queryFn: () =>
       TeacherService.getTeacherSubjectPageInfo(
         teacherId ?? '',
         subjectId ?? '',
         user?.id,
       ),
-    {
-      enabled: !!teacherId && !!subjectId && !!user?.id,
-      refetchOnWindowFocus: false,
-      retry: false,
-    },
-  );
+
+    enabled: !!teacherId && !!subjectId && !!user?.id,
+    refetchOnWindowFocus: false,
+    retry: false
+  });
   const toast = useToast();
 
   useEffect(() => {

@@ -30,16 +30,14 @@ const Poll: FC<PollParams> = ({ params }) => {
     isSuccess: isSuccessFetching,
     data,
     isLoading: isQuestionsLoading,
-  } = useQuery(
-    ['pollQuestions', disciplineTeacherId],
-    async () => await PollAPI.getTeacherQuestions(disciplineTeacherId),
-    {
-      retry: false,
-      enabled: Boolean(user),
-      refetchOnWindowFocus: false,
-      keepPreviousData: false,
-    },
-  );
+  } = useQuery({
+    queryKey: ['pollQuestions', disciplineTeacherId],
+    queryFn: async () => await PollAPI.getTeacherQuestions(disciplineTeacherId),
+    retry: false,
+    enabled: Boolean(user),
+    refetchOnWindowFocus: false,
+    keepPreviousData: false
+  });
 
   useEffect(() => {
     if (!isLoggedIn) {

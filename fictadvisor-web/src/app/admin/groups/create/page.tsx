@@ -32,16 +32,16 @@ const AdminCreateStudentPage = () => {
   const [eduProgramId, setEduProgramId] = useState<string>('');
   const [cathedraId, setCathedraId] = useState<string>('');
 
-  const { data: eduprogramsData, isLoading: isLoadingEduprograms } = useQuery(
-    ['eduprograms'],
-    () => EduprogramAPI.getAll(),
-    useQueryAdminOptions,
-  );
-  const { data: cathedrasData, isLoading: isLoadingCathedras } = useQuery(
-    ['cathedras'],
-    () => CathedraAPI.getAll(),
-    useQueryAdminOptions,
-  );
+  const { data: eduprogramsData, isLoading: isLoadingEduprograms } = useQuery({
+    queryKey: ['eduprograms'],
+    queryFn: () => EduprogramAPI.getAll(),
+    ...useQueryAdminOptions
+  });
+  const { data: cathedrasData, isLoading: isLoadingCathedras } = useQuery({
+    queryKey: ['cathedras'],
+    queryFn: () => CathedraAPI.getAll(),
+    ...useQueryAdminOptions
+  });
 
   if (isLoadingCathedras || isLoadingEduprograms) return <Progress />;
 

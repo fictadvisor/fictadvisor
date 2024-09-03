@@ -82,24 +82,26 @@ const SearchForm: FC<SearchFormProps> = ({
   const [collapsed, setCollapsed] = useState(false);
 
   const toastError = useToastError();
-  const { data: groupData } = useQuery(['groups'], () => GroupAPI.getAll(), {
+  const { data: groupData } = useQuery({
+    queryKey: ['groups'],
+    queryFn: () => GroupAPI.getAll(),
     keepPreviousData: true,
     refetchOnWindowFocus: false,
     staleTime: Infinity,
+
     onError: error => {
       if (isAxiosError(error)) {
         toastError.displayError(error);
       }
-    },
+    }
   });
 
-  const { data: cathedraData } = useQuery(
-    'all-cathedra',
-    () => CathedraAPI.getAll(),
-    {
-      staleTime: Infinity,
-    },
-  );
+  const { data: cathedraData } = useQuery({
+    queryKey: 'all-cathedra',
+    queryFn: () => CathedraAPI.getAll()
+  }, {
+    staleTime: Infinity,
+  });
 
   const groups: DropDownOption[] = useMemo(
     () =>

@@ -22,11 +22,10 @@ const ContactsBlock: FC = () => {
   const { user } = useAuthentication();
   const isMobile = useMediaQuery(theme.breakpoints.down('desktopSemiMedium'));
 
-  const { data, refetch } = useQuery(
-    'contacts',
-    () => UserAPI.getContacts(user.id),
-    { refetchOnWindowFocus: false },
-  );
+  const { data, refetch } = useQuery({
+    queryKey: 'contacts',
+    queryFn: () => UserAPI.getContacts(user.id)
+  }, { refetchOnWindowFocus: false });
   const contacts = data?.contacts || [];
   const handleClick = () => setIsOpened(!isOpened);
 

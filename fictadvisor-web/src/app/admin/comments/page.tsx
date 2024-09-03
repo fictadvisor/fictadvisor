@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useQuery } from 'react-query';
 import { QueryAllCommentsDTO } from '@fictadvisor/utils/requests';
 import { Box, TablePagination } from '@mui/material';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { initialValues } from '@/app/admin/comments/common/constants';
 import AdminCommentsSearch from '@/app/admin/comments/search/components/admin-comments-search/AdminCommentsSearch';
@@ -18,27 +18,26 @@ const Page = () => {
   const [pageSize, setPageSize] = useState(10);
   const [currPage, setCurrPage] = useState(0);
   const [queryObj, setQueryObj] = useState<QueryAllCommentsDTO>(initialValues);
+  const qc = useQueryClient();
 
-  const {
-    data: commentsData,
-    isLoading,
-    refetch,
-  } = useQuery(
-    ['comments', currPage, pageSize, queryObj],
-    async () =>
+  const { data: commentsData, isLoading } = useQuery({
+    queryKey: ['comments', currPage, pageSize, queryObj],
+
+    queryFn: async () =>
       await TeacherApi.getComments({
         ...queryObj,
         pageSize,
         page: currPage,
       }),
-    useQueryAdminOptions,
-  );
 
-  const { data: dates, isLoading: isLoadingDates } = useQuery(
-    ['dates', false],
-    async () => await DatesAPI.getDates(false),
-    useQueryAdminOptions,
-  );
+    ...useQueryAdminOptions,
+  });
+
+  const { data: dates, isLoading: isLoadingDates } = useQuery({
+    queryKey: ['dates', false],
+    queryFn: async () => await DatesAPI.getDates(false),
+    ...useQueryAdminOptions,
+  });
 
   if (isLoading || isLoadingDates) return <LoadPage />;
 
@@ -52,6 +51,12 @@ const Page = () => {
   ) => {
     setPageSize(Number(event.target.value));
     setCurrPage(0);
+  };
+
+  const refetch = async () => {
+    await qc.refetchQueries({
+      queryKey: ['comments', currPage, pageSize, queryObj],
+    });
   };
 
   return (

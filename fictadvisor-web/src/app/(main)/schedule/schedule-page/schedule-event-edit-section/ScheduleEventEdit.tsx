@@ -36,20 +36,21 @@ export const ScheduleEventEdit = () => {
     [openedEvent],
   );
 
-  const { isLoading, data } = useQuery(
-    ['event', openedEvent?.id, week],
-    () => ScheduleAPI.getEventInfo(openedEvent?.id as string, week),
-    {
-      onSuccess: data => {
-        setDetailedEvent(data);
-      },
-      onError: err => {
-        displayError(err);
-        useSchedule.setState(state => ({ openedEvent: undefined }));
-      },
-      retry: false,
+  const { isLoading, data } = useQuery({
+    queryKey: ['event', openedEvent?.id, week],
+    queryFn: () => ScheduleAPI.getEventInfo(openedEvent?.id as string, week),
+
+    onSuccess: data => {
+      setDetailedEvent(data);
     },
-  );
+
+    onError: err => {
+      displayError(err);
+      useSchedule.setState(state => ({ openedEvent: undefined }));
+    },
+
+    retry: false
+  });
 
   const [detailedEvent, setDetailedEvent] = useState<undefined | EventResponse>(
     data,

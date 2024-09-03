@@ -49,22 +49,23 @@ const TeacherPage: FC = () => {
   const [loadedTeachers, setLoadedTeachers] = useState<
     TeacherWithRolesAndCathedrasResponse[]
   >([]);
-  const { data, isLoading, isFetching } = useQuery<PaginatedTeachersResponse>(
-    ['lecturers', currPage, queryObj],
-    () =>
+  const { data, isLoading, isFetching } = useQuery({
+    queryKey: ['lecturers', currPage, queryObj],
+
+    queryFn: () =>
       TeacherAPI.getAll({
         ...queryObj,
         pageSize: PAGE_SIZE,
         page: currPage,
       } as QueryAllTeacherDTO),
-    {
-      onSuccess: data => {
-        setLoadedTeachers(data.teachers);
-      },
-      keepPreviousData: true,
-      refetchOnWindowFocus: false,
+
+    onSuccess: data => {
+      setLoadedTeachers(data.teachers);
     },
-  );
+
+    keepPreviousData: true,
+    refetchOnWindowFocus: false
+  });
   return (
     <Box sx={styles.layout}>
       <Breadcrumbs items={breadcrumbs} sx={styles.breadcrumbs} />

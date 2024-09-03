@@ -48,9 +48,10 @@ const SubjectsPage: FC = () => {
   const [loadedSubjects, setLoadedSubjects] = useState<Subject[]>([]);
   const [reloadSubjects, setReloadSubjects] = useState(true);
   const { data, isLoading, refetch, isFetching } =
-    useQuery<PaginatedSubjectsResponse>(
-      'subjects',
-      () => {
+    useQuery({
+      queryKey: 'subjects',
+
+      queryFn: () => {
         if (reloadSubjects) {
           return SubjectsAPI.getAll({
             ...queryObj,
@@ -68,9 +69,8 @@ const SubjectsPage: FC = () => {
             page: currPage + 1,
           } as QueryAllSubjectDTO);
         }
-      },
-      { keepPreviousData: true, refetchOnWindowFocus: false },
-    );
+      }
+    }, { keepPreviousData: true, refetchOnWindowFocus: false });
 
   useEffect(() => {
     void refetch();

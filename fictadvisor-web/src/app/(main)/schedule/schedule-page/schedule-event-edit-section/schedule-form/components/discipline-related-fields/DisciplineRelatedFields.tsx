@@ -29,17 +29,17 @@ export const DisciplineRelatedFields: FC<DisciplineRelatedFieldsProps> = ({
   const semester = useSchedule(state => state.semester);
   const { displayError } = useToastError();
 
-  const { isLoading, data } = useQuery(
-    'dataAboutGroup',
-    () =>
+  const { isLoading, data } = useQuery({
+    queryKey: 'dataAboutGroup',
+
+    queryFn: () =>
       ScheduleAPI.getDisciplinesAndTeachers(
         groupId,
         semester as CurrentSemester,
-      ),
-    {
-      onError: err => displayError(err),
-    },
-  );
+      )
+  }, {
+    onError: err => displayError(err),
+  });
 
   return (
     <Fragment>

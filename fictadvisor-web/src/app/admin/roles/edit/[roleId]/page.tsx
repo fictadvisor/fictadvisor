@@ -1,9 +1,9 @@
 'use client';
 import React, { FC, useState } from 'react';
-import { useQuery } from 'react-query';
 import { RoleName } from '@fictadvisor/utils/enums';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Box, CardHeader, Link, Stack } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -37,11 +37,11 @@ const AdminRolesEdit: FC<AdminRolesEditProps> = ({ params }) => {
     data: role,
     isSuccess,
     isLoading,
-  } = useQuery(
-    ['getRole', params.roleId],
-    () => RoleAPI.getById(params.roleId),
-    useQueryAdminOptions,
-  );
+  } = useQuery({
+    queryKey: ['getRole', params.roleId],
+    queryFn: () => RoleAPI.getById(params.roleId),
+    ...useQueryAdminOptions,
+  });
 
   if (!isSuccess)
     throw new Error(

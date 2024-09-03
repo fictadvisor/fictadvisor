@@ -29,11 +29,11 @@ const OpenedSelective: FC<OpenedSelectiveProps> = ({
   onSubmit,
 }) => {
   const { user } = useAuthentication();
-  const { data } = useQuery(
-    ['openedSelective', user.id, semester, year],
-    () => UserAPI.getSelectiveDisciplines(user.id, { year, semester }),
-    { refetchOnWindowFocus: false },
-  );
+  const { data } = useQuery({
+    queryKey: ['openedSelective', user.id, semester, year],
+    queryFn: () => UserAPI.getSelectiveDisciplines(user.id, { year, semester }),
+    refetchOnWindowFocus: false
+  });
 
   const handleSubmit = async (data: { [key: string]: boolean }) => {
     await UserAPI.postSelectiveDisciplines(user.id, transformData(data));

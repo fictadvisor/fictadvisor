@@ -1,8 +1,8 @@
 'use client';
 import React, { useState } from 'react';
-import { useQuery } from 'react-query';
 import { QueryAllCathedrasDTO } from '@fictadvisor/utils/requests';
 import { Box, TablePagination } from '@mui/material';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
@@ -15,6 +15,8 @@ import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import CathedraAPI from '@/lib/api/cathedras/CathedraAPI';
 
 const Page = () => {
+  const qc = useQueryClient();
+
   const [pageSize, setPageSize] = useState(10);
   const [currPage, setCurrPage] = useState(0);
   const [params, setParams] = useState<QueryAllCathedrasDTO>(
@@ -22,22 +24,24 @@ const Page = () => {
   );
   const { displayError } = useToastError();
   const toast = useToast();
-  const { data, refetch, isLoading } = useQuery(
-    ['teachers', params, currPage, pageSize],
-    () =>
+  const { data, isLoading } = useQuery({
+    queryKey: ['teachers', params, currPage, pageSize],
+
+    queryFn: () =>
       CathedraAPI.getAll({
         ...params,
         pageSize,
         page: currPage,
       }),
-    useQueryAdminOptions,
-  );
 
-  const { data: cathedrasData, isLoading: isLoadingCathedras } = useQuery(
-    ['cathedras'],
-    () => CathedraAPI.getAll(),
-    useQueryAdminOptions,
-  );
+    ...useQueryAdminOptions,
+  });
+
+  const { data: cathedrasData, isLoading: isLoadingCathedras } = useQuery({
+    queryKey: ['cathedras'],
+    queryFn: () => CathedraAPI.getAll(),
+    ...useQueryAdminOptions,
+  });
 
   if (isLoading || isLoadingCathedras) return <LoadPage />;
 
@@ -64,7 +68,9 @@ const Page = () => {
   const handleDelete = async (departmentId: string) => {
     try {
       await CathedraAPI.deleteDepartment(departmentId);
-      await refetch();
+      await qc.refetchQueries({
+        queryKey: ['teachers', params, currPage, pageSize],
+      });
       toast.success('Факультет успішно видалений!', '', 4000);
     } catch (e) {
       displayError(e);

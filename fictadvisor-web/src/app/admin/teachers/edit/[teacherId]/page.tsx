@@ -1,11 +1,11 @@
 'use client';
 import React, { FC, useState } from 'react';
-import { useQuery } from 'react-query';
 import {
   CreateContactDTO,
   UpdateTeacherDTO,
 } from '@fictadvisor/utils/requests';
 import { Box, Divider } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
@@ -32,11 +32,11 @@ const Edit: FC<PageProps> = ({ params }) => {
     data: teacher,
     isSuccess,
     isLoading,
-  } = useQuery(
-    ['teacher', params.teacherId],
-    () => TeacherAPI.get(params.teacherId),
-    useQueryAdminOptions,
-  );
+  } = useQuery({
+    queryKey: ['teacher', params.teacherId],
+    queryFn: () => TeacherAPI.get(params.teacherId),
+    ...useQueryAdminOptions,
+  });
 
   if (!isSuccess) throw new Error('Something went wrong in teacher edit page');
 

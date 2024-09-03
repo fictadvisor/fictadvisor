@@ -26,11 +26,11 @@ const EditTeacherComments: FC<EditTeacherCommentsProps> = ({
     data: commentsData,
     refetch,
     isLoading,
-  } = useQuery(
-    ['teachersComments', teacher.id],
-    () => TeacherAPI.getTeacherComments(teacher.id),
-    useQueryAdminOptions,
-  );
+  } = useQuery({
+    queryKey: ['teachersComments', teacher.id],
+    queryFn: () => TeacherAPI.getTeacherComments(teacher.id),
+    ...useQueryAdminOptions
+  });
 
   if (isLoading) return <Progress />;
 

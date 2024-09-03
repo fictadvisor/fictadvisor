@@ -37,19 +37,10 @@ const GroupsInfoEdit: FC<GroupsInfoEditProps> = ({
     }));
   }, [moderatorIds]);
 
-  const { data: studentsData, isLoading: isLoadingStudents } = useQuery(
-    ['studentsByGroupId', groupId],
-    () => GroupAPI.getGroupStudents(groupId),
-    {
-      onSettled(data, error) {
-        if (error) {
-          toastError.displayError(error);
-        } else {
-          if (data) setModeratorIds(extractModeratorsIds(data.students));
-        }
-      },
-    },
-  );
+  const { data: studentsData, isLoading: isLoadingStudents } = useQuery({
+    queryKey: ['studentsByGroupId', groupId],
+    queryFn: () => GroupAPI.getGroupStudents(groupId)
+  });
 
   if (isLoadingStudents || !studentsData) return <Progress />;
 

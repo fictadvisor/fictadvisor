@@ -1,6 +1,5 @@
 'use client';
 import React, { FC } from 'react';
-import { QueryObserverBaseResult } from 'react-query';
 import { MappedGrant } from '@fictadvisor/utils/responses';
 import { TableHead, Typography } from '@mui/material';
 import {
@@ -12,6 +11,7 @@ import {
   TablePagination,
   TableRow,
 } from '@mui/material';
+import { useQueryClient } from '@tanstack/react-query';
 
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import useToast from '@/hooks/use-toast';
@@ -27,7 +27,6 @@ interface GrantsListProps {
   pageSize: number;
   setPageSize: React.Dispatch<React.SetStateAction<number>>;
   totalCount: number;
-  refetch: QueryObserverBaseResult['refetch'];
   roleId: string;
 }
 
@@ -38,9 +37,9 @@ const GrantsList: FC<GrantsListProps> = ({
   pageSize,
   setPageSize,
   totalCount,
-  refetch,
   roleId,
 }) => {
+  const qc = useQueryClient();
   const toastError = useToastError();
   const toast = useToast();
   const handleChangeRowsPerPage = (
@@ -53,7 +52,9 @@ const GrantsList: FC<GrantsListProps> = ({
   const handleDelete = async (grantId: string) => {
     try {
       await GrantsAPI.delete(roleId, grantId);
-      await refetch();
+      await qc.refetchQueries({
+        queryKey: ['allGrantsByRoleId', currPage, pageSize],
+      });
       toast.success('Право видалено успішно');
     } catch (e) {
       toastError.displayError(e);

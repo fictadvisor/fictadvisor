@@ -12,6 +12,7 @@ import {
   TablePagination,
   TableRow,
 } from '@mui/material';
+import { useQueryClient } from '@tanstack/react-query';
 
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import Tag from '@/components/common/ui/tag';
@@ -32,7 +33,6 @@ interface UsersListProps {
   pageSize: number;
   setPageSize: React.Dispatch<React.SetStateAction<number>>;
   totalCount: number;
-  refetch: QueryObserverBaseResult['refetch'];
 }
 
 const UsersList: FC<UsersListProps> = ({
@@ -42,8 +42,9 @@ const UsersList: FC<UsersListProps> = ({
   pageSize,
   setPageSize,
   totalCount,
-  refetch,
 }) => {
+  const qc = useQueryClient();
+
   const handleChangePage = (event: unknown, newPage: number) => {
     setCurrPage(newPage);
   };
@@ -59,7 +60,7 @@ const UsersList: FC<UsersListProps> = ({
   const handleDelete = async (userId: string) => {
     try {
       await UserAPI.delete(userId);
-      await refetch();
+      await qc.refetchQueries({ queryKey: ['users', currPage, pageSize] });
       toast.success('Користувача видалено успішно');
     } catch (e) {
       displayError(e);

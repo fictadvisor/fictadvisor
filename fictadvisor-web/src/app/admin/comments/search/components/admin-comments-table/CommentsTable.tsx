@@ -1,5 +1,4 @@
 import React, { FC } from 'react';
-import { QueryObserverBaseResult } from 'react-query';
 import { DeleteCommentDTO } from '@fictadvisor/utils/requests';
 import { CommentResponse } from '@fictadvisor/utils/responses';
 import {
@@ -22,7 +21,7 @@ import * as styles from './CommentsTable.styles';
 
 interface AnswersAdminTableProps {
   comments?: CommentResponse[];
-  refetch: QueryObserverBaseResult['refetch'];
+  refetch: () => Promise<void>;
 }
 
 const CommentsTable: FC<AnswersAdminTableProps> = ({ comments, refetch }) => {

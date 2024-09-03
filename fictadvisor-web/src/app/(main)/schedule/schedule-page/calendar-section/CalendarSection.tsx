@@ -31,14 +31,12 @@ export const CalendarSection: FC<CalendarSectionProps> = ({ groups }) => {
     groupId: user?.group?.id,
   };
 
-  const { data } = useQuery(
-    [],
-    () => PermissionService.getPermissionList(user?.id, permissionValues),
-    {
-      retry: false,
-      refetchOnWindowFocus: false,
-    },
-  );
+  const { data } = useQuery({
+    queryKey: [],
+    queryFn: () => PermissionService.getPermissionList(user?.id, permissionValues),
+    retry: false,
+    refetchOnWindowFocus: false
+  });
 
   const showButton = data?.[PERMISSION.GROUPS_$GROUPID_EVENTS_CREATE];
 

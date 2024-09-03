@@ -1,9 +1,9 @@
 'use client';
 import React, { FC, useState } from 'react';
-import { useQuery } from 'react-query';
 import { State } from '@fictadvisor/utils/enums';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Avatar, Box, CardHeader, Stack } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
 
@@ -37,11 +37,11 @@ const AdminUserEdit: FC<AdminUserEditProps> = ({ params }) => {
     data: user,
     isSuccess,
     isLoading,
-  } = useQuery(
-    ['getUser', params.userId],
-    () => UserAPI.getUser(params.userId),
-    useQueryAdminOptions,
-  );
+  } = useQuery({
+    queryKey: ['getUser', params.userId],
+    queryFn: async () => await UserAPI.getUser(params.userId),
+    ...useQueryAdminOptions,
+  });
 
   if (!isSuccess) throw new Error('Something went wrong in user edit page');
 

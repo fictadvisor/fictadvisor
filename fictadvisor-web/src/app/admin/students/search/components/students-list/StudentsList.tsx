@@ -1,6 +1,5 @@
 'use client';
 import React, { FC } from 'react';
-import { QueryObserverBaseResult } from 'react-query';
 import { SimpleStudentResponse } from '@fictadvisor/utils/responses';
 import { TableHead, Typography } from '@mui/material';
 import {
@@ -13,6 +12,7 @@ import {
   TablePagination,
   TableRow,
 } from '@mui/material';
+import { useQueryClient } from '@tanstack/react-query';
 
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import Tag from '@/components/common/ui/tag';
@@ -32,7 +32,6 @@ interface StudentsListProps {
   pageSize: number;
   setPageSize: React.Dispatch<React.SetStateAction<number>>;
   totalCount: number;
-  refetch: QueryObserverBaseResult['refetch'];
 }
 
 const StudentsList: FC<StudentsListProps> = ({
@@ -42,10 +41,10 @@ const StudentsList: FC<StudentsListProps> = ({
   pageSize,
   setPageSize,
   totalCount,
-  refetch,
 }) => {
   const { displayError } = useToastError();
   const toast = useToast();
+  const qc = useQueryClient();
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -60,7 +59,9 @@ const StudentsList: FC<StudentsListProps> = ({
   const handleDelete = async (userId: string) => {
     try {
       await StudentAPI.delete(userId);
-      await refetch();
+      await qc.refetchQueries({
+        queryKey: ['students', currPage, pageSize],
+      });
       toast.success('Студента видалено успішно');
     } catch (e) {
       displayError(e);

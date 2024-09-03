@@ -1,7 +1,7 @@
 'use client';
 import React, { FC, useState } from 'react';
-import { useQuery } from 'react-query';
 import { Box } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
@@ -26,9 +26,16 @@ const AdminGrantsEdit: FC<AdminGrantsEditProps> = ({ params }) => {
   const [currPage, setCurrPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
 
-  const { data, refetch, isLoading } = useQuery(
-    ['allGrantsByRoleId', currPage, pageSize, queryObj, params.roleId],
-    () =>
+  const { data, isLoading } = useQuery({
+    queryKey: [
+      'allGrantsByRoleId',
+      currPage,
+      pageSize,
+      queryObj,
+      params.roleId,
+    ],
+
+    queryFn: () =>
       GrantsAPI.getAllByRoleId(
         params.roleId,
         {
@@ -39,8 +46,9 @@ const AdminGrantsEdit: FC<AdminGrantsEditProps> = ({ params }) => {
         },
         queryObj.set,
       ),
-    useQueryAdminOptions,
-  );
+
+    ...useQueryAdminOptions,
+  });
 
   if (isLoading) return <LoadPage />;
 
@@ -59,7 +67,6 @@ const AdminGrantsEdit: FC<AdminGrantsEditProps> = ({ params }) => {
         pageSize={pageSize}
         setPageSize={setPageSize}
         totalCount={data.pagination.totalAmount}
-        refetch={refetch}
         roleId={params.roleId}
       />
     </Box>

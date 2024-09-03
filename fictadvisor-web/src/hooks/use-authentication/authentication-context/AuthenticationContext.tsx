@@ -7,8 +7,8 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { useQuery } from 'react-query';
-import { AxiosError, isAxiosError } from 'axios';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 
 import AuthAPI from '@/lib/api/auth/AuthAPI';
 import StorageUtil from '@/lib/utils/StorageUtil';
@@ -25,15 +25,14 @@ export const useAuthenticationContext = () => useContext(authenticationContext);
 
 const AuthenticationProvider: FC<PropsWithChildren> = ({ children }) => {
   const [jwt, setJwt] = useState(StorageUtil.getTokens());
+  const qc = useQueryClient();
 
-  const { error, isFetched, isError, data, refetch } = useQuery(
-    ['oauth', jwt?.accessToken, jwt?.refreshToken],
-    () => AuthAPI.getMe(),
-    {
-      retry: false,
-      refetchOnWindowFocus: false,
-    },
-  );
+  const { error, isFetched, isError, data } = useQuery({
+    queryKey: ['oauth', jwt?.accessToken, jwt?.refreshToken],
+    queryFn: () => AuthAPI.getMe(),
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
 
   if (error) {
     const status = (error as AxiosError).response?.status;
@@ -41,7 +40,9 @@ const AuthenticationProvider: FC<PropsWithChildren> = ({ children }) => {
       AuthAPI.refreshAccessToken(jwt.accessToken)
         .then(async ({ accessToken }) => {
           StorageUtil.setTokens(accessToken, jwt?.refreshToken);
-          await refetch();
+          await qc.refetchQueries({
+            queryKey: ['oauth', jwt?.accessToken, jwt?.refreshToken],
+          });
         })
         .catch(async () => {
           StorageUtil.deleteTokens();
@@ -55,10 +56,12 @@ const AuthenticationProvider: FC<PropsWithChildren> = ({ children }) => {
       user: data as User,
       update: async () => {
         setJwt(StorageUtil.getTokens());
-        await refetch();
+        await qc.refetchQueries({
+          queryKey: ['oauth', jwt?.accessToken, jwt?.refreshToken],
+        });
       },
     }),
-    [data, refetch],
+    [data, qc],
   );
 
   return (

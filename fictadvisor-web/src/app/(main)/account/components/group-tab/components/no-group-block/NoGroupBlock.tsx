@@ -28,8 +28,10 @@ const NoGroupBlock: FC = () => {
   const isTablet = useMediaQuery(theme.breakpoints.down('mobileMedium'));
   const { displayError } = useToastError();
   const { user, update } = useAuthentication();
-  const { isLoading, data } = useQuery(['groups'], () => GroupAPI.getAll(), {
-    refetchOnWindowFocus: false,
+  const { isLoading, data } = useQuery({
+    queryKey: ['groups'],
+    queryFn: () => GroupAPI.getAll(),
+    refetchOnWindowFocus: false
   });
   const handleSubmitGroup = async (data: GroupRequestDTO) => {
     try {

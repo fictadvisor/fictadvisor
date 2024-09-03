@@ -54,11 +54,11 @@ const TeacherPersonalInputs: FC<TeacherPersonalInputsProps> = ({
 
   const [popupOpen, setPopupOpen] = useState(false);
 
-  const { data: cathedrasData, isLoading } = useQuery(
-    ['cathedras'],
-    () => CathedraAPI.getAll(),
-    useQueryAdminOptions,
-  );
+  const { data: cathedrasData, isLoading } = useQuery({
+    queryKey: ['cathedras'],
+    queryFn: () => CathedraAPI.getAll(),
+    ...useQueryAdminOptions
+  });
   useEffect(() => {
     const timer = setTimeout(() => {
       setPersonalInfo(prev => ({

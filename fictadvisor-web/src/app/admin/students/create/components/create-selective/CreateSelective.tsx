@@ -17,10 +17,10 @@ const CreateSelective: FC<CreateSelectiveProps> = ({
   setConnectedSelectives,
   groupId,
 }) => {
-  const { data: remainingSelectives } = useQuery(
-    ['getRemainingSelectiveByGroupId', groupId],
-    () => GroupAPI.getSelectives(groupId),
-  );
+  const { data: remainingSelectives } = useQuery({
+    queryKey: ['getRemainingSelectiveByGroupId', groupId],
+    queryFn: () => GroupAPI.getSelectives(groupId)
+  });
   return (
     <>
       {remainingSelectives ? (

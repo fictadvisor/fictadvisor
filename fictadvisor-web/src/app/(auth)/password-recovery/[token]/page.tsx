@@ -29,13 +29,12 @@ const CreatePassword: FC<TokenParams> = ({ params }) => {
     void router.push('/login');
   };
 
-  const { data, isFetching } = useQuery(
-    'createPassword',
-    () => AuthAPI.checkResetToken(token),
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  const { data, isFetching } = useQuery({
+    queryKey: 'createPassword',
+    queryFn: () => AuthAPI.checkResetToken(token)
+  }, {
+    refetchOnWindowFocus: false,
+  });
   if (!isFetching) {
     if (!data?.isAvailable) {
       void router.push('/password-recovery/invalid');

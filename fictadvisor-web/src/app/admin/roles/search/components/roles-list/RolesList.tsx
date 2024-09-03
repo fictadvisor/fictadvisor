@@ -1,6 +1,5 @@
 'use client';
 import React, { FC } from 'react';
-import { QueryObserverBaseResult } from 'react-query';
 import { RoleResponse } from '@fictadvisor/utils/responses';
 import { TableHead, Typography } from '@mui/material';
 import {
@@ -12,6 +11,7 @@ import {
   TablePagination,
   TableRow,
 } from '@mui/material';
+import { useQueryClient } from '@tanstack/react-query';
 
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import {
@@ -33,7 +33,6 @@ interface RolesListProps {
   pageSize: number;
   setPageSize: React.Dispatch<React.SetStateAction<number>>;
   totalCount: number;
-  refetch: QueryObserverBaseResult['refetch'];
 }
 
 const RolesList: FC<RolesListProps> = ({
@@ -43,8 +42,8 @@ const RolesList: FC<RolesListProps> = ({
   pageSize,
   setPageSize,
   totalCount,
-  refetch,
 }) => {
+  const qc = useQueryClient();
   const handleChangePage = (event: unknown, newPage: number) => {
     setCurrPage(newPage);
   };
@@ -60,7 +59,7 @@ const RolesList: FC<RolesListProps> = ({
   const handleDelete = async (userId: string) => {
     try {
       await RoleAPI.delete(userId);
-      await refetch();
+      await qc.refetchQueries({ queryKey: ['roles', currPage, pageSize] });
       toast.success('Роль видалено успішно');
     } catch (e) {
       displayError(e);

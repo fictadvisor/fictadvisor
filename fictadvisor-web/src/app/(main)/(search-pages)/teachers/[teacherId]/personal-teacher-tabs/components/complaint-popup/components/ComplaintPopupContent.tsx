@@ -16,15 +16,18 @@ import { groupDropdownWrapper } from './ComplaintPopupContent.styles';
 
 const ComplaintPopupContent: FC = () => {
   const toastError = useToastError();
-  const { data: groupData } = useQuery(['groups'], () => GroupAPI.getAll(), {
+  const { data: groupData } = useQuery({
+    queryKey: ['groups'],
+    queryFn: () => GroupAPI.getAll(),
     keepPreviousData: true,
     refetchOnWindowFocus: false,
     staleTime: Infinity,
+
     onError: error => {
       if (isAxiosError(error)) {
         toastError.displayError(error);
       }
-    },
+    }
   });
   if (!groupData) return;
 

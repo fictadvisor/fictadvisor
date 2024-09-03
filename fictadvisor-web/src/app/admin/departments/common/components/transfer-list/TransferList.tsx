@@ -56,38 +56,40 @@ const TransferList: FC<TransferListProps> = ({
     onLeftListChange(left);
   }, [right, left]);
 
-  useQuery(
-    ['notInDepartment', cathedraId, true],
-    () =>
+  useQuery({
+    queryKey: ['notInDepartment', cathedraId, true],
+
+    queryFn: () =>
       CathedraAPI.getDepartmentTeachers({
         cathedrasId: [cathedraId],
         notInDepartments: true,
       }),
-    {
-      ...useQueryAdminOptions,
-      onSuccess: data => setLeft(data.teachers),
-      onError: () => (!left ? setLeft([]) : null),
-    },
-  );
 
-  useQuery(
-    ['inDepartment', cathedraId, false],
-    () =>
+    ...useQueryAdminOptions,
+    onSuccess: data => setLeft(data.teachers),
+    onError: () => (!left ? setLeft([]) : null)
+  });
+
+  useQuery({
+    queryKey: ['inDepartment', cathedraId, false],
+
+    queryFn: () =>
       CathedraAPI.getDepartmentTeachers({
         cathedrasId: [cathedraId],
         notInDepartments: false,
       }),
-    {
-      ...useQueryAdminOptions,
-      onSuccess: data => setRight(data.teachers),
-      onError: () => setRight([]),
-    },
-  );
 
-  useQuery(['teachers'], () => TeacherAPI.getAll(), {
+    ...useQueryAdminOptions,
+    onSuccess: data => setRight(data.teachers),
+    onError: () => setRight([])
+  });
+
+  useQuery({
+    queryKey: ['teachers'],
+    queryFn: () => TeacherAPI.getAll(),
     ...useQueryAdminOptions,
     onSuccess: data => (!cathedraId ? setLeft(data.teachers) : null),
-    onError: error => toast.displayError(error),
+    onError: error => toast.displayError(error)
   });
 
   const handleCheckedRight = () => {

@@ -1,7 +1,7 @@
 'use client';
 
-import { useQuery } from 'react-query';
 import { PERMISSION } from '@fictadvisor/utils/security';
+import { useQuery } from '@tanstack/react-query';
 import { redirect } from 'next/navigation';
 
 import Progress from '@/components/common/ui/progress';
@@ -17,14 +17,12 @@ const AdminPanelAccessLayout = ({
 }) => {
   const { user } = useAuthentication();
 
-  const { data, isLoading } = useQuery(
-    [permission],
-    () => PermissionService.getAdminAccess(user.id, [permission]),
-    {
-      retry: false,
-      refetchOnWindowFocus: false,
-    },
-  );
+  const { data, isLoading } = useQuery({
+    queryKey: [permission],
+    queryFn: () => PermissionService.getAdminAccess(user.id, [permission]),
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
   if (isLoading) return <Progress />;
 
   if (data && !data[permission]) redirect('/');

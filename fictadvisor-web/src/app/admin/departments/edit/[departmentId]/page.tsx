@@ -1,9 +1,9 @@
 'use client';
 import React, { FC, useState } from 'react';
-import { useQuery } from 'react-query';
 import { TeacherWithRolesAndCathedrasResponse } from '@fictadvisor/utils/responses';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Box, CardHeader, Divider, Stack } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
@@ -33,11 +33,11 @@ interface AdminDepartmentEditProps {
 }
 
 const Page: FC<AdminDepartmentEditProps> = ({ params }) => {
-  const { data: department, isLoading } = useQuery(
-    ['departmentById', params.departmentId],
-    () => CathedraAPI.getDepartmentById(params.departmentId),
-    useQueryAdminOptions,
-  );
+  const { data: department, isLoading } = useQuery({
+    queryKey: ['departmentById', params.departmentId],
+    queryFn: () => CathedraAPI.getDepartmentById(params.departmentId),
+    ...useQueryAdminOptions,
+  });
 
   if (!department)
     throw new Error('Something went wrong in department edit page');
@@ -56,21 +56,23 @@ const Page: FC<AdminDepartmentEditProps> = ({ params }) => {
     [],
   );
 
-  const { data: divisionData, isLoading: isLoadingDivisions } = useQuery(
-    ['divisions', department.data.id],
-    () => CathedraAPI.getDivisions(),
-    useQueryAdminOptions,
-  );
+  const { data: divisionData, isLoading: isLoadingDivisions } = useQuery({
+    queryKey: ['divisions', department.data.id],
+    queryFn: () => CathedraAPI.getDivisions(),
+    ...useQueryAdminOptions,
+  });
 
-  const { data: inDepartmentData, isLoading: isLoadingDepartment } = useQuery(
-    ['inDepartment', department.data.id, false],
-    () =>
+  const { data: inDepartmentData, isLoading: isLoadingDepartment } = useQuery({
+    queryKey: ['inDepartment', department.data.id, false],
+
+    queryFn: () =>
       CathedraAPI.getDepartmentTeachers({
         cathedrasId: [department.data.id],
         notInDepartments: false,
       }),
-    useQueryAdminOptions,
-  );
+
+    ...useQueryAdminOptions,
+  });
 
   if (isLoadingDivisions || isLoadingDepartment) return <LoadPage />;
 

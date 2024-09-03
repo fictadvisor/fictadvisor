@@ -39,7 +39,10 @@ export interface TeacherContext {
 
 const PersonalTeacher: FC<PersonalTeacherProps> = ({ params }) => {
   const teacherId = params.teacherId;
-  const teacher = useQuery(['teacher'], () => TeacherAPI.get(teacherId)).data;
+  const teacher = useQuery({
+    queryKey: ['teacher'],
+    queryFn: () => TeacherAPI.get(teacherId)
+  }).data;
   const isLoading = undefined;
   const isError = undefined;
 

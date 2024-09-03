@@ -45,16 +45,16 @@ const GroupInfoInputs: FC<GroupInfoInputsProps> = ({
     groupInfo.captainId as string,
   );
 
-  const { data: eduprogramsData, isLoading: isLoadingEduprograms } = useQuery(
-    ['eduprograms'],
-    () => EduprogramAPI.getAll(),
-    useQueryAdminOptions,
-  );
-  const { data: cathedrasData, isLoading } = useQuery(
-    ['cathedras'],
-    () => CathedraAPI.getAll(),
-    useQueryAdminOptions,
-  );
+  const { data: eduprogramsData, isLoading: isLoadingEduprograms } = useQuery({
+    queryKey: ['eduprograms'],
+    queryFn: () => EduprogramAPI.getAll(),
+    ...useQueryAdminOptions
+  });
+  const { data: cathedrasData, isLoading } = useQuery({
+    queryKey: ['cathedras'],
+    queryFn: () => CathedraAPI.getAll(),
+    ...useQueryAdminOptions
+  });
 
   useEffect(() => {
     const timer = setTimeout(() => {

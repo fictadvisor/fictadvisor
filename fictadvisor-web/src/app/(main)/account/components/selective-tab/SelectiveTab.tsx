@@ -12,13 +12,11 @@ import * as styles from './SelectiveTab.styles';
 const SelectiveTab: FC = () => {
   const { user } = useAuthentication();
 
-  const { data, refetch, isLoading } = useQuery(
-    ['selectiveDisciplines', user.id],
-    () => UserAPI.getSelectiveDisciplinesBySemester(user.id),
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  const { data, refetch, isLoading } = useQuery({
+    queryKey: ['selectiveDisciplines', user.id],
+    queryFn: () => UserAPI.getSelectiveDisciplinesBySemester(user.id),
+    refetchOnWindowFocus: false
+  });
 
   const [openedBlocksNum, setOpenedBlockNum] = useState(0);
 

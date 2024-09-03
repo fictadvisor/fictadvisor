@@ -13,11 +13,11 @@ import GroupAPI from '@/lib/api/group/GroupAPI';
 import * as styles from './CreateStudentInputs.styles';
 
 const CreateStudentInputs: FC = () => {
-  const { data: dataGroups } = useQuery(
-    ['groups'],
-    () => GroupAPI.getAll(),
-    useQueryAdminOptions,
-  );
+  const { data: dataGroups } = useQuery({
+    queryKey: ['groups'],
+    queryFn: () => GroupAPI.getAll(),
+    ...useQueryAdminOptions
+  });
 
   const groupsOptions = transformGroupsDefault(dataGroups?.groups || []);
 

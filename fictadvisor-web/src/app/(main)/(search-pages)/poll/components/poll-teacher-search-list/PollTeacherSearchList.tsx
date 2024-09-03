@@ -36,7 +36,10 @@ const PollTeacherSearchList: FC<PollTeacherSearchListProps> = ({
 
   const submitHandler: SearchFormProps['onSubmit'] = useCallback(query => {
     setQueryObj(
-      prev => ({ ...prev, ...query }) as QueryAllDisciplineTeacherForPollDTO,
+      prev => (({
+        ...prev,
+        ...query
+      }) as QueryAllDisciplineTeacherForPollDTO),
     );
     setCurPage(0);
   }, []);

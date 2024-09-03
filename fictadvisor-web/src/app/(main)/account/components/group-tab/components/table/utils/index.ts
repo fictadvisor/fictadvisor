@@ -9,13 +9,13 @@ export const transformStudentsData = (
 ): StudentsTableItem[] =>
   data.map(
     dataItem =>
-      ({
+      (({
         imgSrc: dataItem.avatar,
         fullName: `${dataItem.lastName} ${dataItem.firstName} ${dataItem.middleName}`,
         role: dataItem.group.role,
         email: dataItem.email,
-        id: dataItem.id,
-      }) as StudentsTableItem,
+        id: dataItem.id
+      }) as StudentsTableItem),
   );
 
 export const transformRequestsData = (

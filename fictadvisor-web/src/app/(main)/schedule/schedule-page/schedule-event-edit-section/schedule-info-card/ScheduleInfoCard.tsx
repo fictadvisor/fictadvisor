@@ -71,14 +71,12 @@ const ScheduleInfoCard: FC<ScheduleInfoCardProps> = ({
     groupId: user.group?.id,
   };
 
-  const { data } = useQuery(
-    [],
-    () => PermissionService.getPermissionList(user.id, permissionValues),
-    {
-      retry: false,
-      refetchOnWindowFocus: false,
-    },
-  );
+  const { data } = useQuery({
+    queryKey: [],
+    queryFn: () => PermissionService.getPermissionList(user.id, permissionValues),
+    retry: false,
+    refetchOnWindowFocus: false
+  });
 
   const validPrivilege =
     data?.[PERMISSION.GROUPS_$GROUPID_EVENTS_DELETE] &&

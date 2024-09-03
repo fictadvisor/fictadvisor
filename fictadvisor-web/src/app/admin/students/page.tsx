@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useQuery } from 'react-query';
 import { QueryAllStudentDTO } from '@fictadvisor/utils/requests';
 import { Box } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
@@ -21,16 +21,18 @@ const AdminStudentSearchPage = () => {
   const [currPage, setCurrPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
 
-  const { data, refetch, isLoading } = useQuery(
-    ['students', currPage, pageSize, queryObj],
-    async () =>
+  const { data, isLoading } = useQuery({
+    queryKey: ['students', currPage, pageSize, queryObj],
+
+    queryFn: async () =>
       await StudentAPI.getAll({
         ...queryObj,
         pageSize,
         page: currPage,
       }),
-    useQueryAdminOptions,
-  );
+
+    ...useQueryAdminOptions,
+  });
 
   if (isLoading) return <LoadPage />;
 
@@ -48,7 +50,6 @@ const AdminStudentSearchPage = () => {
         pageSize={pageSize}
         setPageSize={setPageSize}
         totalCount={data.pagination.totalAmount}
-        refetch={refetch}
       />
     </Box>
   );

@@ -34,18 +34,18 @@ const CommentTab: FC<TeacherTabProps> = ({ teacherId, subjectId }) => {
   const [sortBy, setSortBy] = useState<CommentsSortOrder>(
     CommentsSortOrder.NEWEST,
   );
-  const { data } = useQuery(
-    ['teacherInfo', teacherId, subjectId, sortBy],
-    () =>
+  const { data } = useQuery({
+    queryKey: ['teacherInfo', teacherId, subjectId, sortBy],
+
+    queryFn: () =>
       TeacherAPI.getTeacherComments(teacherId, {
         subjectId,
         sortBy,
       }),
-    {
-      refetchOnWindowFocus: false,
-      retry: false,
-    },
-  );
+
+    refetchOnWindowFocus: false,
+    retry: false
+  });
 
   const teacher = teacherContextTeacher.id
     ? teacherContextTeacher
