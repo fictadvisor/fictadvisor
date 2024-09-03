@@ -36,6 +36,10 @@ export class FileService {
     return url;
   }
 
+  private formatLink (path: string) {
+    return path.replaceAll('\\', '/');
+  }
+
   getPathFromLink (link: string): string {
     const url = new URL(link);
     const pathParts = url.pathname.split('/').slice(2);
@@ -52,7 +56,7 @@ export class FileService {
   }
 
   async getFileContent (path: string, isPrivate = true, encoding: BufferEncoding = 'utf-8') {
-    const filePath = join(isPrivate ? 'private' : 'static', path);
+    const filePath = this.formatLink(join(isPrivate ? 'private' : 'static', path));
     const [file] = await this.storage.file(filePath).download();
 
     return file.toString(encoding);
