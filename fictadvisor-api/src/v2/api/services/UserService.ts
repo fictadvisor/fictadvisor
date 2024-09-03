@@ -387,7 +387,7 @@ export class UserService {
     const years = await this.dateService.getYears();
     const missingDisciplines = [];
     for (const year of years) {
-      const selectiveFile = this.fileService.getFileContent(`selective/${year}.csv`);
+      const selectiveFile = await this.fileService.getFileContent(`selective/${year}.csv`);
       for (const parsedRow of selectiveFile.split(/\r\n/g)) {
         const [,, subjectName,, semester,,,,, studentName] = parsedRow.split(';');
         if (!studentName?.startsWith(name)) continue;
@@ -455,11 +455,11 @@ export class UserService {
   }
 
   private async deleteAvatarIfNotUsed (avatar: string, oldPath: string) {
-    const exist = this.fileService.checkFileExist(oldPath, false);
+    const exist = await this.fileService.checkFileExist(oldPath);
     if (exist) {
       const users = await this.userRepository.findMany({ where: { avatar } });
       if (users.length === 1) {
-        await this.fileService.deleteFile(oldPath, false);
+        await this.fileService.deleteFile(oldPath);
       }
     }
   }

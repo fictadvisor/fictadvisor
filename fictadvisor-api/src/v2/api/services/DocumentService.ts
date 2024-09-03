@@ -58,13 +58,13 @@ export class DocumentService {
     if (data.meta.isToAdmission) emails.push(process.env.ADMISSION_EMAIL);
 
     const agreementName = `${data.meta.degree}_${data.meta.speciality}_${data.meta.educationalProgram}_${data.meta.programType}_${data.meta.studyForm}_${data.meta.studyType}.docx`;
-    const agreement = this.fileService.fillTemplate(agreementName, obj);
+    const agreement = await this.fileService.fillTemplate(agreementName, obj);
 
     const attachments = [{ name: `Договір | ${data.entrant.lastName} ${data.entrant.firstName} ${data.entrant.middleName}.docx`, buffer: agreement, contentType: DOCX }];
 
     if (data.meta.studyType === StudyTypeParam.CONTRACT) {
       const paymentName = `${data.meta.degree}_${data.meta.speciality}_${data.meta.programType}_${data.meta.studyForm}_${data.meta.paymentType}.docx`;
-      const payment = this.fileService.fillTemplate(paymentName, { ...obj, customer: this.formatPersonalData(data.customer) });
+      const payment = await this.fileService.fillTemplate(paymentName, { ...obj, customer: this.formatPersonalData(data.customer) });
       attachments.push({ name: `Оплата | ${data.entrant.lastName} ${data.entrant.firstName} ${data.entrant.middleName}.docx`, buffer: payment, contentType: DOCX });
     }
 
@@ -88,7 +88,7 @@ export class DocumentService {
     }
 
     const day = data.day.padStart(2, '0');
-    const priority = this.fileService.fillTemplate(`Пріоритетка_${data.specialty}.docx`, { ...data, day, ...priorities });
+    const priority = await this.fileService.fillTemplate(`Пріоритетка_${data.specialty}.docx`, { ...data, day, ...priorities });
 
     const emails = [];
     if (sendToEntrant) emails.push(data.email);
@@ -194,7 +194,7 @@ export class DocumentService {
     entrant.priority.priorities.map(({ priority, program }) => {
       priorities[priority] = program;
     });
-    
+
     await this.sendPriority({
       firstName: entrant.firstName,
       middleName: entrant.middleName,
