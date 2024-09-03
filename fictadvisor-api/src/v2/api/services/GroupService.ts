@@ -1,19 +1,15 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import {
-  SortDTO,
-  EmailDTO,
   ApproveDTO,
-  UpdateGroupDTO,
-  QuerySemesterDTO,
+  CreateGroupDTO,
+  EmailDTO,
   GroupStudentsQueryDTO,
   QueryAllGroupsDTO,
-  CreateGroupDTO,
+  QuerySemesterDTO,
+  SortDTO,
+  UpdateGroupDTO,
 } from '@fictadvisor/utils/requests';
-import {
-  OrderQAParam,
-  SortQGSParam,
-  SortQAGroupsParam,
-} from '@fictadvisor/utils/enums';
+import { OrderQAParam, SortQAGroupsParam, SortQGSParam } from '@fictadvisor/utils/enums';
 import { DatabaseUtils } from '../../database/DatabaseUtils';
 import { DbGroup } from '../../database/entities/DbGroup';
 import { DisciplineMapper } from '../../mappers/DisciplineMapper';
@@ -179,7 +175,7 @@ export class GroupService {
   };
 
   private getGroupSorting ({ sort, order }: SortDTO) {
-    order = order ?? 'asc'; 
+    order = order ?? 'asc';
 
     if (sort === SortQAGroupsParam.CODE) return { code: order };
     if (sort === SortQAGroupsParam.ADMISSION) return { admissionYear: order };
@@ -321,7 +317,7 @@ export class GroupService {
     return this.groupRepository.deleteById(groupId);
   }
 
-  async getStudents (groupId: string, { sort, order }: GroupStudentsQueryDTO) {   
+  async getStudents (groupId: string, { sort, order }: GroupStudentsQueryDTO) {
     const orderBy: Prisma.StudentOrderByWithRelationInput[] = [];
     if (sort) {
       if (!order) order = OrderQAParam.ASC;
@@ -341,30 +337,28 @@ export class GroupService {
     return students.map((s) => this.studentMapper.getStudent(s));
   }
 
-  async updateGroup (groupId: string, { 
-    code, 
-    eduProgramId, 
-    cathedraId, 
-    admissionYear, 
-    captainId, 
+  async updateGroup (groupId: string, {
+    code,
+    eduProgramId,
+    cathedraId,
+    admissionYear,
+    captainId,
     moderatorIds,
   }: UpdateGroupDTO) {
     if (captainId) {
       await this.switchCaptain(groupId, captainId);
     }
-    
+
     if (moderatorIds?.length > 0) {
       await this.switchModerators(groupId, moderatorIds);
     }
 
-    const group = await this.groupRepository.updateById(groupId, {
+    return this.groupRepository.updateById(groupId, {
       code,
       cathedraId,
       educationalProgramId: eduProgramId,
       admissionYear,
     });
-
-    return group;
   }
 
   async getUnverifiedStudents (groupId: string) {
@@ -482,7 +476,7 @@ export class GroupService {
       });
     }
 
-    return this.fileService.generateGroupList(students);
+    return this.fileService.generateGroupList(students, groupId);
   }
 
   async leaveGroup (groupId: string, studentId: string) {

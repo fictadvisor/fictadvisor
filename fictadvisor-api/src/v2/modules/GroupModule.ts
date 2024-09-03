@@ -8,13 +8,21 @@ import { AccessModule } from './AccessModule';
 import { MapperModule } from './MapperModule';
 import { DateModule } from '../utils/date/DateModule';
 import { ConfigurationModule } from './ConfigModule';
-import { FileService } from '../utils/files/FileService';
 import { StudentOfGroupPipe } from '../api/pipes/StudentOfGroupPipe';
+import { FileModule } from '../utils/files/FileModule';
 
 @Module({
   controllers: [GroupController],
-  providers: [GroupService, GroupByIdPipe, StudentOfGroupPipe, FileService],
+  providers: [GroupService, GroupByIdPipe, StudentOfGroupPipe],
   exports: [GroupService, GroupByIdPipe],
-  imports: [PrismaModule, UserModule, AccessModule, MapperModule, DateModule, ConfigurationModule],
+  imports: [
+    PrismaModule,
+    UserModule,
+    AccessModule,
+    MapperModule,
+    DateModule,
+    ConfigurationModule,
+    FileModule,
+  ],
 })
 export class GroupModule {}
