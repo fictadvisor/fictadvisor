@@ -1,5 +1,5 @@
 'use client';
-import { FC, SyntheticEvent } from 'react';
+import { FC, memo, SyntheticEvent } from 'react';
 import { useMemo, useState } from 'react';
 import { ChevronDownIcon } from '@heroicons/react/24/solid';
 import { Box, InputAdornment, Typography } from '@mui/material';
@@ -16,7 +16,7 @@ import Option from './components/option';
 import * as styles from './Dropdown.styles';
 import { DropDownOption, DropdownProps } from './types';
 
-const Dropdown: FC<DropdownProps> = ({
+const Dropdown: FC<DropdownProps> = memo(function Dropdown({
   options,
   width,
   defaultRemark,
@@ -29,7 +29,6 @@ const Dropdown: FC<DropdownProps> = ({
   isDisabled = false,
   disableClearable = false,
   onChange = () => {},
-  onInputChange = () => {},
   value,
   touched,
   error,
@@ -38,7 +37,7 @@ const Dropdown: FC<DropdownProps> = ({
   inputSx,
   dropdownSx,
   remarkSx,
-}) => {
+}: DropdownProps) {
   const [isFocused, setIsFocused] = useState(false);
   const dropdownState = useMemo(() => {
     if (isDisabled) return FieldState.DISABLED;
@@ -73,9 +72,6 @@ const Dropdown: FC<DropdownProps> = ({
           }}
           onBlur={() => {
             setIsFocused(false);
-            onInputChange({
-              target: { value: '' },
-            } as React.ChangeEvent<HTMLInputElement>);
           }}
           fullWidth
           disablePortal
@@ -88,7 +84,6 @@ const Dropdown: FC<DropdownProps> = ({
               sx={inputSx ?? styles.input(dropdownState, size)}
               placeholder={placeholder}
               disabled={isDisabled}
-              onChange={onInputChange}
               InputProps={{
                 ...params.InputProps,
                 startAdornment: (
@@ -124,6 +119,6 @@ const Dropdown: FC<DropdownProps> = ({
       </Box>
     </Box>
   );
-};
+});
 
 export default Dropdown;
