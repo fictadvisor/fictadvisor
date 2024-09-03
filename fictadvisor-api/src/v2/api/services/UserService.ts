@@ -388,8 +388,9 @@ export class UserService {
     const missingDisciplines = [];
     for (const year of years) {
       const selectiveFile = await this.fileService.getFileContent(`selective/${year}.csv`);
-      for (const parsedRow of selectiveFile.split(/\r\n/g)) {
-        const [,, subjectName,, semester,,,,, studentName] = parsedRow.split(';');
+      selectiveFile.replaceAll(';', ',');
+      for (const parsedRow of selectiveFile.split('\n')) {
+        const [,, subjectName,, semester,,,,, studentName] = parsedRow.split(',');
         if (!studentName?.startsWith(name)) continue;
         const discipline = await this.disciplineRepository.find({
           group: {
