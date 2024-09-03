@@ -57,6 +57,8 @@
     "cross-env": "^7.0.3",
     "docxtemplater": "^3.37.12",
     "dotenv-cli": "^7.2.1",
+    "firebase": "^10.13.1",
+    "firebase-admin": "^12.4.0",
     "handlebars": "^4.7.7",
     "jsdom": "^22.0.0",
     "luxon": "^3.4.4",
