@@ -1,4 +1,5 @@
-import React, { FC } from 'react';
+'use client';
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { MappedGroupResponse } from '@fictadvisor/utils/responses';
 
 import { Dropdown } from '@/components/common/ui/form';
@@ -15,23 +16,30 @@ export const GroupsDropDown: FC<DropDownSectionProps> = ({ groups }) => {
   }));
   const setGroupId = useSetGroupId();
 
+  const memoGroups = useMemo(
+    () =>
+      groups.map(group => ({
+        id: group.id,
+        label: group.code,
+      })),
+    [groups.length],
+  );
+
+  const onChangeMemo = useCallback(
+    (id: string) => {
+      useSchedule.setState(state => ({ isNewEventAdded: false }));
+      setGroupId(id);
+    },
+    [setGroupId],
+  );
+
   return (
     <Dropdown
-      options={
-        groups
-          ? groups?.map(group => ({
-              id: group.id,
-              label: group.code,
-            }))
-          : []
-      }
+      options={memoGroups}
       label="Група"
       placeholder="Оберіть групу"
       showRemark={false}
-      onChange={id => {
-        useSchedule.setState(state => ({ isNewEventAdded: false }));
-        setGroupId(id);
-      }}
+      onChange={onChangeMemo}
       value={groupId}
       disableClearable
     />
