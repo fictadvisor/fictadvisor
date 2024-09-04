@@ -40,7 +40,6 @@
     "react-chartjs-2": "^5.2.0",
     "react-device-detect": "^2.2.3",
     "react-dom": "^18.2.0",
-    "react-query": "^3.39.3",
     "react-redux": "^8.1.2",
     "react-select": "^5.7.4",
     "react-textarea-autosize": "^8.5.3",
