@@ -1,9 +1,9 @@
 'use client';
 import type { FC } from 'react';
 import { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
 import { UpdateGroupDTO } from '@fictadvisor/utils/requests';
 import { Stack } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 
 import { extractModeratorsIds } from '@/app/admin/groups/common/utils/extractModeratorsIds';
 import Progress from '@/components/common/ui/progress';
@@ -39,7 +39,7 @@ const GroupsInfoEdit: FC<GroupsInfoEditProps> = ({
 
   const { data: studentsData, isLoading: isLoadingStudents } = useQuery({
     queryKey: ['studentsByGroupId', groupId],
-    queryFn: () => GroupAPI.getGroupStudents(groupId)
+    queryFn: () => GroupAPI.getGroupStudents(groupId),
   });
 
   if (isLoadingStudents || !studentsData) return <Progress />;

@@ -1,13 +1,13 @@
 'use client';
 
 import { FC, useCallback, useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
 import { QueryAllTeacherDTO } from '@fictadvisor/utils/requests';
 import {
   PaginatedTeachersResponse,
   TeacherWithRolesAndCathedrasResponse,
 } from '@fictadvisor/utils/responses';
 import { Box } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 
 import { TeacherInitialValues } from '@/app/(main)/(search-pages)/search-form/constants';
 import SearchForm, {
@@ -49,7 +49,7 @@ const TeacherPage: FC = () => {
   const [loadedTeachers, setLoadedTeachers] = useState<
     TeacherWithRolesAndCathedrasResponse[]
   >([]);
-  const { data, isLoading, isFetching } = useQuery({
+  const { data, isLoading, isFetching, isSuccess } = useQuery({
     queryKey: ['lecturers', currPage, queryObj],
 
     queryFn: () =>
@@ -59,13 +59,16 @@ const TeacherPage: FC = () => {
         page: currPage,
       } as QueryAllTeacherDTO),
 
-    onSuccess: data => {
-      setLoadedTeachers(data.teachers);
-    },
-
-    keepPreviousData: true,
-    refetchOnWindowFocus: false
+    placeholderData: (previousData, previousQuery) => previousData,
+    refetchOnWindowFocus: false,
   });
+
+  useEffect(() => {
+    if (isSuccess) {
+      setLoadedTeachers(data.teachers);
+    }
+  }, [data]);
+
   return (
     <Box sx={styles.layout}>
       <Breadcrumbs items={breadcrumbs} sx={styles.breadcrumbs} />

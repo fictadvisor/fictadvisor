@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import {
   ReadonlyURLSearchParams,
   useRouter,
@@ -36,7 +36,7 @@ const PersonalTeacherSubjectPage = () => {
     isError,
     data: teacherInfo,
   } = useQuery({
-    queryKey: ['teacher', teacherId, subjectId],
+    queryKey: ['teacher', teacherId, subjectId, user?.id],
 
     queryFn: () =>
       TeacherService.getTeacherSubjectPageInfo(
@@ -47,7 +47,7 @@ const PersonalTeacherSubjectPage = () => {
 
     enabled: !!teacherId && !!subjectId && !!user?.id,
     refetchOnWindowFocus: false,
-    retry: false
+    retry: false,
   });
   const toast = useToast();
 

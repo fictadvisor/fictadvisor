@@ -13,7 +13,7 @@ interface SelectiveBlockProps {
   year: number;
   disciplines: string[];
   disciplinesNumber: number;
-  refetch: () => void;
+  refetch: () => Promise<void>;
   onOpenBlock: (num: number) => void;
 }
 

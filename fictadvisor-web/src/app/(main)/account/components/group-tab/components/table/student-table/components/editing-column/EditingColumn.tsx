@@ -1,5 +1,4 @@
 import React, { FC, Fragment, useState } from 'react';
-import { QueryObserverBaseResult } from 'react-query';
 import { GroupRoles } from '@fictadvisor/utils/enums';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import {
@@ -47,7 +46,7 @@ import * as styles from './EditingColumn.styles';
 interface EditingColumnProps {
   student: StudentsTableItem;
   permissions: PermissionResponse;
-  refetch: QueryObserverBaseResult['refetch'];
+  refetch: () => Promise<void>;
   rows: StudentsTableItem[];
 }
 

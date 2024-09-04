@@ -1,8 +1,8 @@
-import React, { FC } from 'react';
-import { useQuery } from 'react-query';
+import React from 'react';
 import { State } from '@fictadvisor/utils/enums';
 import { GroupRequestDTO } from '@fictadvisor/utils/requests';
 import { Box, Typography, useMediaQuery } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 import { Form, Formik } from 'formik';
 
 import { transformGroups } from '@/app/(main)/account/components/group-tab/components/no-group-block/utils';
@@ -24,14 +24,14 @@ import theme from '@/styles/theme';
 
 import * as muiStyles from './NoGroupBlock.styles';
 
-const NoGroupBlock: FC = () => {
+const NoGroupBlock = () => {
   const isTablet = useMediaQuery(theme.breakpoints.down('mobileMedium'));
   const { displayError } = useToastError();
   const { user, update } = useAuthentication();
   const { isLoading, data } = useQuery({
     queryKey: ['groups'],
     queryFn: () => GroupAPI.getAll(),
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
   });
   const handleSubmitGroup = async (data: GroupRequestDTO) => {
     try {

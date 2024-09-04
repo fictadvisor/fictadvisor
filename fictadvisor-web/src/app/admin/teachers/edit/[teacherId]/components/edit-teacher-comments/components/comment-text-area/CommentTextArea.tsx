@@ -1,9 +1,4 @@
 import React, { FC, useEffect, useState } from 'react';
-import {
-  QueryObserverResult,
-  RefetchOptions,
-  RefetchQueryFilters,
-} from 'react-query';
 import { PaginatedQuestionCommentsResponse } from '@fictadvisor/utils/responses';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Stack, Typography } from '@mui/material';
@@ -24,9 +19,7 @@ import * as styles from './CommentTextArea.styles';
 interface CommentTextAreaProps {
   comment: TeacherCommentAdmin;
   setChangedComments: React.Dispatch<React.SetStateAction<EditedComment[]>>;
-  refetch: <TPageData>(
-    options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined,
-  ) => Promise<QueryObserverResult<PaginatedQuestionCommentsResponse, unknown>>;
+  refetch: () => Promise<void>;
 }
 const CommentTextArea: FC<CommentTextAreaProps> = ({
   comment,

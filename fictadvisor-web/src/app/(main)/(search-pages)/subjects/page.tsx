@@ -1,10 +1,10 @@
 'use client';
 
 import { FC, useCallback, useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
 import { QueryAllSubjectDTO } from '@fictadvisor/utils/requests';
 import { PaginatedSubjectsResponse } from '@fictadvisor/utils/responses';
 import { Box } from '@mui/material';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { SubjectInitialValues } from '@/app/(main)/(search-pages)/search-form/constants';
 import SearchForm, {
@@ -29,6 +29,8 @@ import SubjectsAPI from '@/lib/api/subject/SubjectAPI';
 import { Subject } from '@/types/subject';
 
 const SubjectsPage: FC = () => {
+  const qc = useQueryClient();
+
   const localStorageName = 'subjectForm';
 
   const [queryObj, setQueryObj] =
@@ -47,34 +49,35 @@ const SubjectsPage: FC = () => {
   };
   const [loadedSubjects, setLoadedSubjects] = useState<Subject[]>([]);
   const [reloadSubjects, setReloadSubjects] = useState(true);
-  const { data, isLoading, refetch, isFetching } =
-    useQuery({
-      queryKey: 'subjects',
+  const { data, isLoading, isFetching } = useQuery({
+    queryKey: ['subjects', reloadSubjects],
 
-      queryFn: () => {
-        if (reloadSubjects) {
-          return SubjectsAPI.getAll({
-            ...queryObj,
-            pageSize: PAGE_SIZE * (currPage + 1),
-            page: currPage,
-          } as QueryAllSubjectDTO);
-        } else {
-          setLoadedSubjects([
-            ...(loadedSubjects ?? []),
-            ...(data?.subjects ?? []),
-          ]);
-          return SubjectsAPI.getAll({
-            ...queryObj,
-            pageSize: PAGE_SIZE,
-            page: currPage + 1,
-          } as QueryAllSubjectDTO);
-        }
+    queryFn: () => {
+      if (reloadSubjects) {
+        return SubjectsAPI.getAll({
+          ...queryObj,
+          pageSize: PAGE_SIZE * (currPage + 1),
+          page: currPage,
+        } as QueryAllSubjectDTO);
+      } else {
+        setLoadedSubjects([
+          ...(loadedSubjects ?? []),
+          ...(data?.subjects ?? []),
+        ]);
+        return SubjectsAPI.getAll({
+          ...queryObj,
+          pageSize: PAGE_SIZE,
+          page: currPage + 1,
+        } as QueryAllSubjectDTO);
       }
-    }, { keepPreviousData: true, refetchOnWindowFocus: false });
+    },
+    placeholderData: (previousData, previousQuery) => previousData,
+    refetchOnWindowFocus: false,
+  });
 
   useEffect(() => {
-    void refetch();
-  }, [queryObj, currPage, refetch, reloadSubjects]);
+    void qc.refetchQueries({ queryKey: ['subjects', reloadSubjects] });
+  }, [queryObj, currPage, qc, reloadSubjects]);
 
   return (
     <Box sx={styles.layout}>

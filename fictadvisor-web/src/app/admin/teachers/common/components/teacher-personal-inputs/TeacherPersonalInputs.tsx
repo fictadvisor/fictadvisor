@@ -1,13 +1,13 @@
 'use client';
 import React, { FC } from 'react';
 import { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
 import {
   CreateTeacherDTO,
   UpdateTeacherDTO,
 } from '@fictadvisor/utils/requests';
 import { PencilIcon } from '@heroicons/react/24/outline';
 import { Avatar, Box, SelectChangeEvent, Stack } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
 import CheckboxesDropdown from '@/components/common/ui/form/checkboxes-dropdown/CheckboxesDropdown';
@@ -57,7 +57,7 @@ const TeacherPersonalInputs: FC<TeacherPersonalInputsProps> = ({
   const { data: cathedrasData, isLoading } = useQuery({
     queryKey: ['cathedras'],
     queryFn: () => CathedraAPI.getAll(),
-    ...useQueryAdminOptions
+    ...useQueryAdminOptions,
   });
   useEffect(() => {
     const timer = setTimeout(() => {

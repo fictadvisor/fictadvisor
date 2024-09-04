@@ -1,6 +1,5 @@
 'use client';
 import React, { FC } from 'react';
-import { QueryObserverBaseResult } from 'react-query';
 import { UserForGetAllResponse } from '@fictadvisor/utils/responses';
 import { Avatar, Box, TableHead, Typography } from '@mui/material';
 import {

@@ -1,8 +1,8 @@
 'use client';
 
 import { FC, useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
 import { Box } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
 import PollForm from '@/app/(main)/(search-pages)/poll/[disciplineTeacherId]/components/poll-form';
@@ -36,7 +36,7 @@ const Poll: FC<PollParams> = ({ params }) => {
     retry: false,
     enabled: Boolean(user),
     refetchOnWindowFocus: false,
-    keepPreviousData: false
+    placeholderData: (previousData, previousQuery) => previousData,
   });
 
   useEffect(() => {

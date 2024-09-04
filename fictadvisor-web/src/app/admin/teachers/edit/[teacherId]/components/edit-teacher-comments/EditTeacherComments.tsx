@@ -1,8 +1,8 @@
 'use client';
 import type { FC } from 'react';
-import { useQuery } from 'react-query';
 import { TeacherWithContactsResponse } from '@fictadvisor/utils/responses';
 import { Stack, Typography } from '@mui/material';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
 import { EditedComment } from '@/app/admin/teachers/edit/[teacherId]/types';
@@ -22,19 +22,21 @@ const EditTeacherComments: FC<EditTeacherCommentsProps> = ({
   teacher,
   setChangedComments,
 }) => {
-  const {
-    data: commentsData,
-    refetch,
-    isLoading,
-  } = useQuery({
+  const qc = useQueryClient();
+
+  const { data: commentsData, isLoading } = useQuery({
     queryKey: ['teachersComments', teacher.id],
     queryFn: () => TeacherAPI.getTeacherComments(teacher.id),
-    ...useQueryAdminOptions
+    ...useQueryAdminOptions,
   });
 
   if (isLoading) return <Progress />;
 
   if (!commentsData) throw new Error('error ocurred in edit teacher page');
+
+  const refetch = async () => {
+    await qc.refetchQueries({ queryKey: ['teachersComments', teacher.id] });
+  };
 
   const comments = extractTeacherComments(commentsData);
   return (

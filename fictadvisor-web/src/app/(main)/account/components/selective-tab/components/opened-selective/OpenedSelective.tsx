@@ -1,6 +1,6 @@
 import { FC } from 'react';
-import { useQuery } from 'react-query';
 import { Box, Typography } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 import { Form, Formik, FormikValues } from 'formik';
 
 import Button from '@/components/common/ui/button-mui';
@@ -32,7 +32,7 @@ const OpenedSelective: FC<OpenedSelectiveProps> = ({
   const { data } = useQuery({
     queryKey: ['openedSelective', user.id, semester, year],
     queryFn: () => UserAPI.getSelectiveDisciplines(user.id, { year, semester }),
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
   });
 
   const handleSubmit = async (data: { [key: string]: boolean }) => {

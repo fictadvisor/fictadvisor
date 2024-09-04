@@ -1,5 +1,4 @@
 import React, { FC } from 'react';
-import { QueryObserverBaseResult } from 'react-query';
 import { ContactResponse } from '@fictadvisor/utils/responses';
 import { Box } from '@mui/material';
 import Link from 'next/link';
@@ -11,7 +10,7 @@ import useAuthentication from '@/hooks/use-authentication';
 import UserAPI from '@/lib/api/user/UserAPI';
 
 interface ContactProps extends ContactResponse {
-  refetchContacts: QueryObserverBaseResult['refetch'];
+  refetchContacts: () => Promise<void>;
 }
 const ContactItem: FC<ContactProps> = ({
   refetchContacts,
@@ -23,7 +22,7 @@ const ContactItem: FC<ContactProps> = ({
   const { user } = useAuthentication();
   const handleDeleteClick = async () => {
     await UserAPI.deleteContact(user.id, id);
-    refetchContacts();
+    await refetchContacts();
   };
 
   return (

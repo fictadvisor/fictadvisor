@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
-import { useQuery } from 'react-query';
 import { Box } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
 import { StudentRoleOptions } from '@/app/admin/students/common/constants';
@@ -16,7 +16,7 @@ const CreateStudentInputs: FC = () => {
   const { data: dataGroups } = useQuery({
     queryKey: ['groups'],
     queryFn: () => GroupAPI.getAll(),
-    ...useQueryAdminOptions
+    ...useQueryAdminOptions,
   });
 
   const groupsOptions = transformGroupsDefault(dataGroups?.groups || []);

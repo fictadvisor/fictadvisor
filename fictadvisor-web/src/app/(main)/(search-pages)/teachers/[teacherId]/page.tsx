@@ -1,8 +1,8 @@
 'use client';
 
 import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
 import { TeacherWithContactsResponse } from '@fictadvisor/utils/responses';
+import { useQuery } from '@tanstack/react-query';
 import {
   ReadonlyURLSearchParams,
   useRouter,
@@ -37,12 +37,13 @@ export interface TeacherContext {
   teacher: TeacherWithContactsResponse;
 }
 
-const PersonalTeacher: FC<PersonalTeacherProps> = ({ params }) => {
+const PersonalTeacher = ({ params }: PersonalTeacherProps) => {
   const teacherId = params.teacherId;
   const teacher = useQuery({
-    queryKey: ['teacher'],
-    queryFn: () => TeacherAPI.get(teacherId)
+    queryKey: ['teacher', teacherId],
+    queryFn: () => TeacherAPI.get(teacherId),
   }).data;
+
   const isLoading = undefined;
   const isError = undefined;
 

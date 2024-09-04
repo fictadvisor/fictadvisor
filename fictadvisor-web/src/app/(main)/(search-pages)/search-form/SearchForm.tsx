@@ -9,7 +9,6 @@ import {
   useState,
 } from 'react';
 import { FC } from 'react';
-import { useQuery } from 'react-query';
 import {
   BarsArrowDownIcon,
   BarsArrowUpIcon,
@@ -18,6 +17,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { Box, useMediaQuery } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
+import { useQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { Form, Formik, FormikProps, useFormikContext } from 'formik';
 
@@ -82,24 +82,27 @@ const SearchForm: FC<SearchFormProps> = ({
   const [collapsed, setCollapsed] = useState(false);
 
   const toastError = useToastError();
-  const { data: groupData } = useQuery({
+  const {
+    data: groupData,
+    isError,
+    error,
+  } = useQuery({
     queryKey: ['groups'],
     queryFn: () => GroupAPI.getAll(),
-    keepPreviousData: true,
+    placeholderData: (previousData, previousQuery) => previousData,
     refetchOnWindowFocus: false,
     staleTime: Infinity,
-
-    onError: error => {
-      if (isAxiosError(error)) {
-        toastError.displayError(error);
-      }
-    }
   });
 
+  if (isError) {
+    if (isAxiosError(error)) {
+      toastError.displayError(error);
+    }
+  }
+
   const { data: cathedraData } = useQuery({
-    queryKey: 'all-cathedra',
-    queryFn: () => CathedraAPI.getAll()
-  }, {
+    queryKey: ['all-cathedra'],
+    queryFn: () => CathedraAPI.getAll(),
     staleTime: Infinity,
   });
 

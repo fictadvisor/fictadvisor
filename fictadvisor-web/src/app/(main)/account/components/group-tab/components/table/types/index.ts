@@ -1,5 +1,4 @@
 import { MouseEventHandler } from 'react';
-import { QueryObserverBaseResult } from 'react-query';
 import { GroupRoles } from '@fictadvisor/utils/enums';
 
 import { Order } from '@/lib/services/group/types/OrderEnum';
@@ -18,14 +17,14 @@ export interface StudentsTableItem extends RequestsTableItem {
 
 export interface RequestsTableProps {
   rows: RequestsTableItem[];
-  refetch: QueryObserverBaseResult['refetch'];
+  refetch: () => Promise<void>;
 }
 
 export interface StudentsTableProps {
   role: keyof typeof GroupRoles;
   permissions: PermissionResponse;
   rows: StudentsTableItem[];
-  refetch: QueryObserverBaseResult['refetch'];
+  refetch: () => Promise<void>;
   onSortButtonClick?: MouseEventHandler<HTMLButtonElement>;
   order: Order;
 }

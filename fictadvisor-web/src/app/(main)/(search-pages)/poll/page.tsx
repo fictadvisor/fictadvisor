@@ -1,10 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
 import { QueryAllDisciplineTeacherForPollDTO } from '@fictadvisor/utils/requests';
 import { PollDisciplineTeachersResponse } from '@fictadvisor/utils/responses';
 import { Box } from '@mui/material';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
 import { PollTeacherInitialValues } from '@/app/(main)/(search-pages)/poll/components/poll-search-form/constants';
@@ -31,6 +31,8 @@ const breadcrumbs = [
 const PAGE_SIZE = 20;
 
 const PollTeacher = () => {
+  const qc = useQueryClient();
+
   const [curPage, setCurPage] = useState(0);
   const { push, replace } = useRouter();
   const { user, isLoggedIn } = useAuthentication();
@@ -56,15 +58,13 @@ const PollTeacher = () => {
     }
   }, [isLoggedIn, push, replace]);
 
-  const { data, isLoading, isFetching, refetch } =
-    useQuery({
-      queryKey: 'pollTeachersByUserId',
-      queryFn: () => PollAPI.getUserTeachers(user.id, queryObj)
-    }, {
-      keepPreviousData: true,
-      refetchOnWindowFocus: false,
-      enabled: user?.id != null,
-    });
+  const { data, isLoading, isFetching } = useQuery({
+    queryKey: ['pollTeachersByUserId', user.id, queryObj],
+    queryFn: () => PollAPI.getUserTeachers(user.id, queryObj),
+    placeholderData: (previousData, previousQuery) => previousData,
+    refetchOnWindowFocus: false,
+    enabled: user?.id != null,
+  });
 
   useEffect(() => {
     if (!data) return;
@@ -78,8 +78,10 @@ const PollTeacher = () => {
   }, [data]);
 
   useEffect(() => {
-    void refetch();
-  }, [queryObj, refetch]);
+    void qc.refetchQueries({
+      queryKey: ['pollTeachersByUserId', user.id, queryObj],
+    });
+  }, [queryObj, qc]);
 
   return (
     <Box sx={styles.layout}>

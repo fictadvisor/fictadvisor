@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
-import { useQuery } from 'react-query';
 import { Box, Typography } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 
 import { getSemesterText } from '@/app/admin/students/common/utils/getSemesterText';
 import GroupAPI from '@/lib/api/group/GroupAPI';
@@ -19,7 +19,7 @@ const CreateSelective: FC<CreateSelectiveProps> = ({
 }) => {
   const { data: remainingSelectives } = useQuery({
     queryKey: ['getRemainingSelectiveByGroupId', groupId],
-    queryFn: () => GroupAPI.getSelectives(groupId)
+    queryFn: () => GroupAPI.getSelectives(groupId),
   });
   return (
     <>

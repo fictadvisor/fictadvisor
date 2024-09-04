@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
-import { useQuery } from 'react-query';
 import { Box, Typography } from '@mui/material';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
 
 import SelectiveBlock from '@/app/(main)/account/components/selective-tab/components/selective-block';
@@ -10,15 +10,21 @@ import UserAPI from '@/lib/api/user/UserAPI';
 import * as styles from './SelectiveTab.styles';
 
 const SelectiveTab: FC = () => {
+  const qc = useQueryClient();
+
   const { user } = useAuthentication();
 
-  const { data, refetch, isLoading } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['selectiveDisciplines', user.id],
     queryFn: () => UserAPI.getSelectiveDisciplinesBySemester(user.id),
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
   });
 
   const [openedBlocksNum, setOpenedBlockNum] = useState(0);
+
+  const refetch = async () => {
+    await qc.refetchQueries({ queryKey: ['selectiveDisciplines', user.id] });
+  };
 
   const changeOpenedBlockNum = (num: number) => {
     setOpenedBlockNum(openedBlocksNum + num);

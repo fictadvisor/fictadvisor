@@ -1,7 +1,7 @@
 import { FC, useContext, useState } from 'react';
-import { useQuery } from 'react-query';
 import { CommentsSortOrder } from '@fictadvisor/utils/enums';
 import { Box } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 
 import teacherSubjectContext from '@/app/(main)/discipline/utils/teacherSubjectContext';
 import FloatingCard from '@/components/common/ui/cards/floating-card';
@@ -44,7 +44,7 @@ const CommentTab: FC<TeacherTabProps> = ({ teacherId, subjectId }) => {
       }),
 
     refetchOnWindowFocus: false,
-    retry: false
+    retry: false,
   });
 
   const teacher = teacherContextTeacher.id
