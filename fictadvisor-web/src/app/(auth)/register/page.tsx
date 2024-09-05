@@ -1,33 +1,28 @@
-'use client';
 import { PaginatedGroupsResponse } from '@fictadvisor/utils/responses';
 import { Box } from '@mui/material';
 import { Metadata } from 'next';
 import Image from 'next/image';
-import { redirect, useRouter } from 'next/navigation';
 
 import LeftBlock from '@/app/(auth)/register/components/left-block';
 import RightBlock from '@/app/(auth)/register/components/right-block';
 import imgStyles from '@/app/(auth)/register/RegisterImage.module.scss';
 import * as styles from '@/app/(auth)/register/RegisterPage.styles';
 import Divider from '@/components/common/ui/divider';
-import useToast from '@/hooks/use-toast';
 import GroupAPI from '@/lib/api/group/GroupAPI';
+import registerMetadata from '@/lib/metadata/register';
+export const metadata: Metadata = registerMetadata;
 
 export interface RegisterPageProps {
   data: PaginatedGroupsResponse | null;
 }
 
-export default function Register() {
-  const router = useRouter();
-  const toast = useToast();
-
-  toast.warning(
-    'Оновлення системи: Реєстрація тимчасово недоступна',
-    'Наразі ми проводимо важливі оновлення, які триватимуть кілька днів. Дякуємо за терпіння!',
-  );
-
-  router.replace('/');
-
+export default async function Register() {
+  let data: RegisterPageProps['data'];
+  try {
+    data = await GroupAPI.getAll();
+  } catch (error: unknown) {
+    data = null;
+  }
   return (
     <>
       <Box sx={styles.registerPage}>
@@ -40,9 +35,9 @@ export default function Register() {
           alt="дуже гарна картинка"
         />
         <Box sx={styles.registerContent}>
-          {/* <LeftBlock groups={[]} />
+          <LeftBlock groups={data?.groups || []} />
           <Divider sx={styles.divider} />
-          <RightBlock /> */}
+          <RightBlock />
         </Box>
       </Box>
     </>
