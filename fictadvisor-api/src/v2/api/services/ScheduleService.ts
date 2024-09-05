@@ -339,7 +339,6 @@ export class ScheduleService {
 
     let result = await filterAsync(events, async (event) => {
       const indexOfLesson = await this.getIndexOfLesson(week, event);
-      if (week === 3 && indexOfLesson !== null) console.log(event.name);
       return indexOfLesson !== null;
     });
 
