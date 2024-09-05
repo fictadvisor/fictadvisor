@@ -9,6 +9,7 @@ import {
   TrashIcon,
 } from '@heroicons/react/24/outline';
 import { Avatar, Box, Grid, Typography, useMediaQuery } from '@mui/material';
+import { QueryObserverBaseResult } from '@tanstack/react-query';
 
 import roleNamesMapper from '@/app/(main)/account/components/group-tab/components/table/constants';
 import * as gridStyles from '@/app/(main)/account/components/group-tab/components/table/grid.styles';
@@ -46,7 +47,7 @@ import * as styles from './EditingColumn.styles';
 interface EditingColumnProps {
   student: StudentsTableItem;
   permissions: PermissionResponse;
-  refetch: () => Promise<void>;
+  refetch: QueryObserverBaseResult['refetch'];
   rows: StudentsTableItem[];
 }
 

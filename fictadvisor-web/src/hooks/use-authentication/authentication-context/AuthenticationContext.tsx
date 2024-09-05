@@ -53,9 +53,7 @@ const AuthenticationProvider: FC<PropsWithChildren> = ({ children }) => {
       user: data as User,
       update: async () => {
         setJwt(StorageUtil.getTokens());
-        await qc.refetchQueries({
-          queryKey: ['oauth', jwt?.accessToken, jwt?.refreshToken],
-        });
+        await refetch();
       },
     }),
     [data],
