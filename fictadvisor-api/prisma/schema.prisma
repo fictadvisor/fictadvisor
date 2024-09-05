@@ -824,7 +824,7 @@ model Complaint {
   id        String   @id @default(uuid())
   fullName  String?  @map("full_name")
   groupId   String?  @map("group_id")
-  group     Group?   @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  group     Group?   @relation(fields: [groupId], references: [id], onDelete: SetNull)
   teacherId String   @map("teacher_id")
   teacher   Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
   title     String
