@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import { ContactResponse } from '@fictadvisor/utils/responses';
 import { Box } from '@mui/material';
+import { QueryObserverBaseResult } from '@tanstack/react-query';
 import Link from 'next/link';
 
 import * as styles from '@/app/(main)/account/components/general-tab/components/contacts-block/ContactsBlock.styles';
@@ -10,7 +11,7 @@ import useAuthentication from '@/hooks/use-authentication';
 import UserAPI from '@/lib/api/user/UserAPI';
 
 interface ContactProps extends ContactResponse {
-  refetchContacts: () => Promise<void>;
+  refetchContacts: QueryObserverBaseResult['refetch'];
 }
 const ContactItem: FC<ContactProps> = ({
   refetchContacts,

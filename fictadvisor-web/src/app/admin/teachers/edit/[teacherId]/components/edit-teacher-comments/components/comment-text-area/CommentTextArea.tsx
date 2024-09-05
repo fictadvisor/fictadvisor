@@ -2,6 +2,7 @@ import React, { FC, useEffect, useState } from 'react';
 import { PaginatedQuestionCommentsResponse } from '@fictadvisor/utils/responses';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Stack, Typography } from '@mui/material';
+import { QueryObserverBaseResult } from '@tanstack/react-query';
 
 import { TeacherCommentAdmin } from '@/app/admin/teachers/common/types';
 import TextArea from '@/components/common/ui/form/text-area-mui';
@@ -19,7 +20,7 @@ import * as styles from './CommentTextArea.styles';
 interface CommentTextAreaProps {
   comment: TeacherCommentAdmin;
   setChangedComments: React.Dispatch<React.SetStateAction<EditedComment[]>>;
-  refetch: () => Promise<void>;
+  refetch: QueryObserverBaseResult['refetch'];
 }
 const CommentTextArea: FC<CommentTextAreaProps> = ({
   comment,

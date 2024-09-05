@@ -49,7 +49,7 @@ const AdminUserEdit: FC<AdminUserEditProps> = ({ params }) => {
   const [email, setEmail] = useState<string>(user.email);
   const [userState, setUserState] = useState<State>(user.state);
   const toast = useToast();
-  const toastError = useToastError();
+  const { displayError } = useToastError();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -60,7 +60,7 @@ const AdminUserEdit: FC<AdminUserEditProps> = ({ params }) => {
       router.replace('/admin/users');
     } catch (e) {
       if (isAxiosError(e)) {
-        toastError.displayError(e);
+        displayError(e);
       }
     }
   };
@@ -74,7 +74,7 @@ const AdminUserEdit: FC<AdminUserEditProps> = ({ params }) => {
       toast.success('Користувач успішно змінений!', '', 4000);
     } catch (e) {
       if (isAxiosError(e)) {
-        toastError.displayError(e);
+        displayError(e);
       }
     }
   };

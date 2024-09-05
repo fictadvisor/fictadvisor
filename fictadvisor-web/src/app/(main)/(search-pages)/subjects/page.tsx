@@ -4,7 +4,7 @@ import { FC, useCallback, useEffect, useState } from 'react';
 import { QueryAllSubjectDTO } from '@fictadvisor/utils/requests';
 import { PaginatedSubjectsResponse } from '@fictadvisor/utils/responses';
 import { Box } from '@mui/material';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import { SubjectInitialValues } from '@/app/(main)/(search-pages)/search-form/constants';
 import SearchForm, {
@@ -29,8 +29,6 @@ import SubjectsAPI from '@/lib/api/subject/SubjectAPI';
 import { Subject } from '@/types/subject';
 
 const SubjectsPage: FC = () => {
-  const qc = useQueryClient();
-
   const localStorageName = 'subjectForm';
 
   const [queryObj, setQueryObj] =
@@ -49,7 +47,7 @@ const SubjectsPage: FC = () => {
   };
   const [loadedSubjects, setLoadedSubjects] = useState<Subject[]>([]);
   const [reloadSubjects, setReloadSubjects] = useState(true);
-  const { data, isLoading, isFetching } = useQuery({
+  const { data, isLoading, isFetching, refetch } = useQuery({
     queryKey: ['subjects', reloadSubjects],
 
     queryFn: () => {
@@ -76,8 +74,8 @@ const SubjectsPage: FC = () => {
   });
 
   useEffect(() => {
-    void qc.refetchQueries({ queryKey: ['subjects', reloadSubjects] });
-  }, [queryObj, currPage, qc, reloadSubjects]);
+    void refetch();
+  }, [queryObj, currPage, reloadSubjects]);
 
   return (
     <Box sx={styles.layout}>

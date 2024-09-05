@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { QueryAllDisciplinesDTO } from '@fictadvisor/utils/requests';
 import { Box, TablePagination } from '@mui/material';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
@@ -16,14 +16,12 @@ import DisciplineAPI from '@/lib/api/discipline/DisciplineAPI';
 import DisciplinesAdminSearch from './search/components/disciplines-admin-search';
 
 const DisciplinesAdminSearchPage = () => {
-  const qc = useQueryClient();
-
   const [pageSize, setPageSize] = useState(10);
   const [currPage, setCurrPage] = useState(0);
   const [params, setParams] = useState<QueryAllDisciplinesDTO>(initialValues);
   const { displayError } = useToastError();
   const toast = useToast();
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ['disciplines', params, currPage, pageSize],
 
     queryFn: () =>
@@ -54,9 +52,7 @@ const DisciplinesAdminSearchPage = () => {
     try {
       await DisciplineAPI.deleteDiscipline(id);
       toast.success('Дисципліна успішно видалена', '', 4000);
-      await qc.refetchQueries({
-        queryKey: ['disciplines', params, currPage, pageSize],
-      });
+      await refetch();
     } catch (e) {
       displayError(e);
     }

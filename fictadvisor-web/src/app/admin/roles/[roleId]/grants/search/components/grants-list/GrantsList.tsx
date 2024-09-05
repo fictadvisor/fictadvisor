@@ -11,7 +11,7 @@ import {
   TablePagination,
   TableRow,
 } from '@mui/material';
-import { useQueryClient } from '@tanstack/react-query';
+import { QueryObserverBaseResult } from '@tanstack/react-query';
 
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import useToast from '@/hooks/use-toast';
@@ -28,6 +28,7 @@ interface GrantsListProps {
   setPageSize: React.Dispatch<React.SetStateAction<number>>;
   totalCount: number;
   roleId: string;
+  refetch: QueryObserverBaseResult['refetch'];
 }
 
 const GrantsList: FC<GrantsListProps> = ({
@@ -38,9 +39,9 @@ const GrantsList: FC<GrantsListProps> = ({
   setPageSize,
   totalCount,
   roleId,
+  refetch,
 }) => {
-  const qc = useQueryClient();
-  const toastError = useToastError();
+  const { displayError } = useToastError();
   const toast = useToast();
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -52,12 +53,10 @@ const GrantsList: FC<GrantsListProps> = ({
   const handleDelete = async (grantId: string) => {
     try {
       await GrantsAPI.delete(roleId, grantId);
-      await qc.refetchQueries({
-        queryKey: ['allGrantsByRoleId', currPage, pageSize],
-      });
+      await refetch();
       toast.success('Право видалено успішно');
     } catch (e) {
-      toastError.displayError(e);
+      displayError(e);
     }
   };
 

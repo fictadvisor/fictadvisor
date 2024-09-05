@@ -32,7 +32,7 @@ const Poll: FC<PollParams> = ({ params }) => {
     isLoading: isQuestionsLoading,
   } = useQuery({
     queryKey: ['pollQuestions', disciplineTeacherId],
-    queryFn: async () => await PollAPI.getTeacherQuestions(disciplineTeacherId),
+    queryFn: () => PollAPI.getTeacherQuestions(disciplineTeacherId),
     retry: false,
     enabled: Boolean(user),
     refetchOnWindowFocus: false,

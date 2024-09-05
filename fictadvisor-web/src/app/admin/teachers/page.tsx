@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { QueryAllTeacherDTO } from '@fictadvisor/utils/requests';
 import { Box, TablePagination } from '@mui/material';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
@@ -17,15 +17,13 @@ import teachersApi from '@/lib/api/teacher/TeacherAPI';
 import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
 
 const Page = () => {
-  const qc = useQueryClient();
-
   const [pageSize, setPageSize] = useState(10);
   const [currPage, setCurrPage] = useState(0);
   const [params, setParams] = useState<QueryAllTeacherDTO>(initialValues);
   const { displayError } = useToastError();
   const toast = useToast();
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ['teachers', currPage, pageSize, params],
 
     queryFn: () =>
@@ -45,9 +43,7 @@ const Page = () => {
   const deleteTeacher = async (id: string) => {
     try {
       await TeacherAPI.delete(id);
-      await qc.refetchQueries({
-        queryKey: ['teachers', currPage, pageSize, params],
-      });
+      await refetch();
       toast.success('Викладач успішно видалений!', '', 4000);
     } catch (e) {
       displayError(e);

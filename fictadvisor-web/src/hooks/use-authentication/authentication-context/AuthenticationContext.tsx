@@ -7,7 +7,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 
 import AuthAPI from '@/lib/api/auth/AuthAPI';
@@ -25,9 +25,8 @@ export const useAuthenticationContext = () => useContext(authenticationContext);
 
 const AuthenticationProvider: FC<PropsWithChildren> = ({ children }) => {
   const [jwt, setJwt] = useState(StorageUtil.getTokens());
-  const qc = useQueryClient();
 
-  const { error, isFetched, isError, data } = useQuery({
+  const { error, isFetched, isError, data, refetch } = useQuery({
     queryKey: ['oauth', jwt?.accessToken, jwt?.refreshToken],
     queryFn: () => AuthAPI.getMe(),
     retry: false,
@@ -40,9 +39,7 @@ const AuthenticationProvider: FC<PropsWithChildren> = ({ children }) => {
       AuthAPI.refreshAccessToken(jwt.accessToken)
         .then(async ({ accessToken }) => {
           StorageUtil.setTokens(accessToken, jwt?.refreshToken);
-          await qc.refetchQueries({
-            queryKey: ['oauth', jwt?.accessToken, jwt?.refreshToken],
-          });
+          await refetch();
         })
         .catch(async () => {
           StorageUtil.deleteTokens();
@@ -61,7 +58,7 @@ const AuthenticationProvider: FC<PropsWithChildren> = ({ children }) => {
         });
       },
     }),
-    [data, qc],
+    [data],
   );
 
   return (

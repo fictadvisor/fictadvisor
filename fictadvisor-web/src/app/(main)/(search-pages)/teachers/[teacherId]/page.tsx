@@ -39,10 +39,10 @@ export interface TeacherContext {
 
 const PersonalTeacher = ({ params }: PersonalTeacherProps) => {
   const teacherId = params.teacherId;
-  const teacher = useQuery({
+  const { data } = useQuery({
     queryKey: ['teacher', teacherId],
     queryFn: () => TeacherAPI.get(teacherId),
-  }).data;
+  });
 
   const isLoading = undefined;
   const isError = undefined;
@@ -51,13 +51,13 @@ const PersonalTeacher = ({ params }: PersonalTeacherProps) => {
   const router = useRouter();
 
   const { user } = useAuthentication();
-  const [data, setData] = useState<TeacherPageInfo>();
+  const [teacherData, setTeacherData] = useState<TeacherPageInfo>();
   const getData = async () => {
     return await TeacherService.getTeacherPageInfo(teacherId, user?.id);
   };
   useEffect(() => {
     getData().then(res => {
-      setData(res);
+      setTeacherData(res);
     });
   }, []);
 
@@ -80,8 +80,8 @@ const PersonalTeacher = ({ params }: PersonalTeacherProps) => {
     }
   }, [isError, push, toast]);
 
-  if (!data) return null;
-  if (!teacher) {
+  if (!teacherData) return null;
+  if (!data) {
     router.push('/teachers');
     return null;
   }
@@ -91,7 +91,7 @@ const PersonalTeacher = ({ params }: PersonalTeacherProps) => {
       value={{
         floatingCardShowed,
         setFloatingCardShowed,
-        teacher,
+        teacher: data,
       }}
     >
       <div className={styles['personal-teacher-page']}>
@@ -113,20 +113,20 @@ const PersonalTeacher = ({ params }: PersonalTeacherProps) => {
                   },
                   { label: 'Викладачі', href: '/teachers' },
                   {
-                    label: `${teacher.lastName} ${teacher.firstName} ${teacher.middleName}`,
+                    label: `${data.lastName} ${data.firstName} ${data.middleName}`,
                     href: `/teachers/${teacherId}`,
                   },
                 ]}
               />
               <div className={styles['card-wrapper']}>
-                <PersonalTeacherCard {...teacher} />
+                <PersonalTeacherCard {...data} />
               </div>
               <div className={styles['tabs']}>
                 <PersonalTeacherTabs
-                  data={data}
+                  data={teacherData}
                   tabIndex={index}
                   handleChange={handleChange}
-                  teacher={teacher}
+                  teacher={data}
                 />
               </div>
             </div>

@@ -81,7 +81,7 @@ const SearchForm: FC<SearchFormProps> = ({
   const isTablet = useMediaQuery(theme.breakpoints.down('tablet'));
   const [collapsed, setCollapsed] = useState(false);
 
-  const toastError = useToastError();
+  const { displayError } = useToastError();
   const {
     data: groupData,
     isError,
@@ -95,9 +95,7 @@ const SearchForm: FC<SearchFormProps> = ({
   });
 
   if (isError) {
-    if (isAxiosError(error)) {
-      toastError.displayError(error);
-    }
+    displayError(error);
   }
 
   const { data: cathedraData } = useQuery({

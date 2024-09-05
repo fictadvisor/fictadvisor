@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { QueryAllSubjectDTO } from '@fictadvisor/utils/requests';
 import { Box, TablePagination } from '@mui/material';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import { SubjectInitialValues } from '@/app/(main)/(search-pages)/search-form/constants';
 import { SearchFormFields } from '@/app/(main)/(search-pages)/search-form/types';
@@ -17,14 +17,13 @@ import subjectAPI from '@/lib/api/subject/SubjectAPI';
 import SubjectAPI from '@/lib/api/subject/SubjectAPI';
 
 const AdminSubjectSearch = () => {
-  const qc = useQueryClient();
   const [pageSize, setPageSize] = useState(10);
   const [currPage, setCurrPage] = useState(0);
   const [params, setParams] = useState<SearchFormFields>(SubjectInitialValues);
   const { displayError } = useToastError();
   const toast = useToast();
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ['subjects', currPage, pageSize, params],
 
     queryFn: () =>
@@ -60,9 +59,7 @@ const AdminSubjectSearch = () => {
   const handleDelete = async (subjectId: string) => {
     try {
       await SubjectAPI.delete(subjectId);
-      await qc.refetchQueries({
-        queryKey: ['subjects', currPage, pageSize, params],
-      });
+      await refetch();
       toast.success('Предмет успішно видалений', '', 4000);
     } catch (e) {
       displayError(e);

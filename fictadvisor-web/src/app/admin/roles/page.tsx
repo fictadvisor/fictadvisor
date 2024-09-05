@@ -20,7 +20,7 @@ const Page = () => {
   const [currPage, setCurrPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
 
-  const { data, isSuccess, isLoading } = useQuery({
+  const { data, isSuccess, isLoading, refetch } = useQuery({
     queryKey: ['roles', currPage, pageSize, queryObj],
 
     queryFn: async () =>
@@ -50,6 +50,7 @@ const Page = () => {
         pageSize={pageSize}
         setPageSize={setPageSize}
         totalCount={data.pagination.totalAmount}
+        refetch={refetch}
       />
     </Box>
   );

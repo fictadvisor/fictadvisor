@@ -1,6 +1,7 @@
 import { FC, useState } from 'react';
 import { PencilIcon } from '@heroicons/react/24/outline';
 import { Box, Typography } from '@mui/material';
+import { QueryObserverBaseResult } from '@tanstack/react-query';
 
 import OpenedSelective from '@/app/(main)/account/components/selective-tab/components/opened-selective';
 import { fillArray } from '@/app/(main)/account/components/selective-tab/components/selective-block/utils';
@@ -13,7 +14,7 @@ interface SelectiveBlockProps {
   year: number;
   disciplines: string[];
   disciplinesNumber: number;
-  refetch: () => Promise<void>;
+  refetch: QueryObserverBaseResult['refetch'];
   onOpenBlock: (num: number) => void;
 }
 

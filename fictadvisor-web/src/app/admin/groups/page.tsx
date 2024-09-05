@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { QueryAllGroupsDTO } from '@fictadvisor/utils/requests';
 import { Box, TablePagination } from '@mui/material';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
@@ -22,9 +22,7 @@ const GroupsAdmin = () => {
   const { displayError } = useToastError();
   const toast = useToast();
 
-  const qc = useQueryClient();
-
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ['groups', currPage, pageSize, params],
 
     queryFn: () =>
@@ -44,9 +42,7 @@ const GroupsAdmin = () => {
   const deleteGroup = async (id: string) => {
     try {
       await GroupAPI.delete(id);
-      await qc.refetchQueries({
-        queryKey: ['groups', currPage, pageSize, params],
-      });
+      await refetch();
       toast.success('Група успішно видалена!', '', 4000);
     } catch (e) {
       displayError(e);

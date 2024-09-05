@@ -22,7 +22,7 @@ const Page = () => {
   const [currPage, setCurrPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ['users', currPage, pageSize, queryObj],
     queryFn: async () =>
       await UserAPI.getAll({
@@ -50,6 +50,7 @@ const Page = () => {
         pageSize={pageSize}
         setPageSize={setPageSize}
         totalCount={data.pagination.totalAmount}
+        refetch={refetch}
       />
     </Box>
   );

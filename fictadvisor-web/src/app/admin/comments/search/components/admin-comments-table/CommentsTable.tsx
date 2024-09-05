@@ -10,6 +10,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
+import { QueryObserverBaseResult } from '@tanstack/react-query';
 
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
@@ -21,7 +22,7 @@ import * as styles from './CommentsTable.styles';
 
 interface AnswersAdminTableProps {
   comments?: CommentResponse[];
-  refetch: () => Promise<void>;
+  refetch: QueryObserverBaseResult['refetch'];
 }
 
 const CommentsTable: FC<AnswersAdminTableProps> = ({ comments, refetch }) => {

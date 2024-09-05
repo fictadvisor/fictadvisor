@@ -26,7 +26,7 @@ const AdminGrantsEdit: FC<AdminGrantsEditProps> = ({ params }) => {
   const [currPage, setCurrPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: [
       'allGrantsByRoleId',
       currPage,
@@ -68,6 +68,7 @@ const AdminGrantsEdit: FC<AdminGrantsEditProps> = ({ params }) => {
         setPageSize={setPageSize}
         totalCount={data.pagination.totalAmount}
         roleId={params.roleId}
+        refetch={refetch}
       />
     </Box>
   );

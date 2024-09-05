@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { QueryAllCommentsDTO } from '@fictadvisor/utils/requests';
 import { Box, TablePagination } from '@mui/material';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import { initialValues } from '@/app/admin/comments/common/constants';
 import AdminCommentsSearch from '@/app/admin/comments/search/components/admin-comments-search/AdminCommentsSearch';
@@ -18,9 +18,12 @@ const Page = () => {
   const [pageSize, setPageSize] = useState(10);
   const [currPage, setCurrPage] = useState(0);
   const [queryObj, setQueryObj] = useState<QueryAllCommentsDTO>(initialValues);
-  const qc = useQueryClient();
 
-  const { data: commentsData, isLoading } = useQuery({
+  const {
+    data: commentsData,
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ['comments', currPage, pageSize, queryObj],
 
     queryFn: async () =>
@@ -51,12 +54,6 @@ const Page = () => {
   ) => {
     setPageSize(Number(event.target.value));
     setCurrPage(0);
-  };
-
-  const refetch = async () => {
-    await qc.refetchQueries({
-      queryKey: ['comments', currPage, pageSize, queryObj],
-    });
   };
 
   return (

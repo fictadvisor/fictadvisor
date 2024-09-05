@@ -3,7 +3,7 @@ import { GroupRoles, State } from '@fictadvisor/utils/enums';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import { ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/outline';
 import { Box, Typography, useMediaQuery } from '@mui/material';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import NoGroupBlock from '@/app/(main)/account/components/group-tab/components/no-group-block';
 import RequestsTable from '@/app/(main)/account/components/group-tab/components/table/requests-table';
@@ -31,15 +31,14 @@ import theme from '@/styles/theme';
 import * as styles from './GroupTab.styles';
 
 const GroupTab = () => {
-  const qc = useQueryClient();
-
   const [order, setOrder] = useState(Order.ascending);
   const { user } = useAuthentication();
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ['students', user, order],
     queryFn: () => GroupService.getGroupData(user, order),
     retry: false,
     refetchOnWindowFocus: false,
+    enabled: !!user,
   });
   const [leavePopupOpen, setLeavePopupOpen] = useState(false);
 
@@ -49,9 +48,6 @@ const GroupTab = () => {
 
   const isMobile = useMediaQuery(theme.breakpoints.down('desktop'));
 
-  const refetch = async () => {
-    await qc.refetchQueries({ queryKey: ['students', user, order] });
-  };
   const handleSortButtonClick = async () => {
     setOrder(
       order === GroupService.Order.ascending
