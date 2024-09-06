@@ -39,7 +39,7 @@ const AdminUserEdit: FC<AdminUserEditProps> = ({ params }) => {
     isLoading,
   } = useQuery({
     queryKey: ['getUser', params.userId],
-    queryFn: async () => await UserAPI.getUser(params.userId),
+    queryFn: () => UserAPI.getUser(params.userId),
     ...useQueryAdminOptions,
   });
 

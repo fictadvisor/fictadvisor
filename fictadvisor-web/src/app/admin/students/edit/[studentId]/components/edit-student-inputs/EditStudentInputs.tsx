@@ -14,7 +14,7 @@ import * as styles from './EditStudentInputs.styles';
 const EditStudentInputs: FC = () => {
   const { data: dataGroups } = useQuery({
     queryKey: ['groups'],
-    queryFn: async () => await GroupAPI.getAll(),
+    queryFn: () => GroupAPI.getAll(),
     placeholderData: (previousData, previousQuery) => previousData,
     refetchOnWindowFocus: false,
   });

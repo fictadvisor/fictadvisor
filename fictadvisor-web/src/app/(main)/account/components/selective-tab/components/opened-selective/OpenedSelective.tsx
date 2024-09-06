@@ -33,6 +33,7 @@ const OpenedSelective: FC<OpenedSelectiveProps> = ({
     queryKey: ['openedSelective', user.id, semester, year],
     queryFn: () => UserAPI.getSelectiveDisciplines(user.id, { year, semester }),
     refetchOnWindowFocus: false,
+    enabled: !!user.id,
   });
 
   const handleSubmit = async (data: { [key: string]: boolean }) => {

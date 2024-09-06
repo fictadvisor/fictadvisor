@@ -37,6 +37,7 @@ export const CalendarSection: FC<CalendarSectionProps> = ({ groups }) => {
       PermissionService.getPermissionList(user?.id, permissionValues),
     retry: false,
     refetchOnWindowFocus: false,
+    enabled: !!user?.id,
   });
 
   const showButton = data?.[PERMISSION.GROUPS_$GROUPID_EVENTS_CREATE];

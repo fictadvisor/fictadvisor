@@ -26,8 +26,8 @@ const Page = () => {
   } = useQuery({
     queryKey: ['comments', currPage, pageSize, queryObj],
 
-    queryFn: async () =>
-      await TeacherApi.getComments({
+    queryFn: () =>
+      TeacherApi.getComments({
         ...queryObj,
         pageSize,
         page: currPage,
@@ -38,7 +38,7 @@ const Page = () => {
 
   const { data: dates, isLoading: isLoadingDates } = useQuery({
     queryKey: ['dates', false],
-    queryFn: async () => await DatesAPI.getDates(false),
+    queryFn: () => DatesAPI.getDates(false),
     ...useQueryAdminOptions,
   });
 

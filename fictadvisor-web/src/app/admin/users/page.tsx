@@ -24,8 +24,8 @@ const Page = () => {
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ['users', currPage, pageSize, queryObj],
-    queryFn: async () =>
-      await UserAPI.getAll({
+    queryFn: () =>
+      UserAPI.getAll({
         ...queryObj,
         page: currPage,
         pageSize,

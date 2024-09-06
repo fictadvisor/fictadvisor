@@ -50,7 +50,7 @@ const HeaderStudentSearch: FC<HeaderStudentSearchProps> = ({ onSubmit }) => {
 
   const { data: groups, isLoading } = useQuery({
     queryKey: ['groups'],
-    queryFn: async () => await GroupAPI.getAll(),
+    queryFn: () => GroupAPI.getAll(),
     ...useQueryAdminOptions,
   });
 

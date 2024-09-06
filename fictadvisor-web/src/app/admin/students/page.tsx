@@ -24,8 +24,8 @@ const AdminStudentSearchPage = () => {
   const { data, isLoading, refetch } = useQuery({
     queryKey: ['students', currPage, pageSize, queryObj],
 
-    queryFn: async () =>
-      await StudentAPI.getAll({
+    queryFn: () =>
+      StudentAPI.getAll({
         ...queryObj,
         pageSize,
         page: currPage,

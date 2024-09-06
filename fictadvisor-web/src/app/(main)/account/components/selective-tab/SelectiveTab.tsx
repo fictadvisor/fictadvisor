@@ -16,6 +16,7 @@ const SelectiveTab: FC = () => {
     queryKey: ['selectiveDisciplines', user.id],
     queryFn: () => UserAPI.getSelectiveDisciplinesBySemester(user.id),
     refetchOnWindowFocus: false,
+    enabled: !!user.id,
   });
 
   const [openedBlocksNum, setOpenedBlockNum] = useState(0);

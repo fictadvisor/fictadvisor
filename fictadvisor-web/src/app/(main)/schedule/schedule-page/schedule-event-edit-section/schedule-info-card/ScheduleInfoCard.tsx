@@ -77,6 +77,7 @@ const ScheduleInfoCard = ({
       PermissionService.getPermissionList(user.id, permissionValues),
     retry: false,
     refetchOnWindowFocus: false,
+    enabled: !!user.id,
   });
 
   const validPrivilege =
