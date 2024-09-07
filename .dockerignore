@@ -1,4 +1,10 @@
-/node_modules
-
-.idea/
-.turbo/
+**/node_modules
+**/dist
+**/.next
+**/.github
+**/.idea
+**/.turbo
+**/out
+**/.yarn
+**/.git
+**/.env
