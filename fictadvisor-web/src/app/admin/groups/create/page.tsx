@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useQuery } from 'react-query';
 import { Box } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
@@ -32,16 +32,16 @@ const AdminCreateStudentPage = () => {
   const [eduProgramId, setEduProgramId] = useState<string>('');
   const [cathedraId, setCathedraId] = useState<string>('');
 
-  const { data: eduprogramsData, isLoading: isLoadingEduprograms } = useQuery(
-    ['eduprograms'],
-    () => EduprogramAPI.getAll(),
-    useQueryAdminOptions,
-  );
-  const { data: cathedrasData, isLoading: isLoadingCathedras } = useQuery(
-    ['cathedras'],
-    () => CathedraAPI.getAll(),
-    useQueryAdminOptions,
-  );
+  const { data: eduprogramsData, isLoading: isLoadingEduprograms } = useQuery({
+    queryKey: ['eduprograms'],
+    queryFn: () => EduprogramAPI.getAll(),
+    ...useQueryAdminOptions,
+  });
+  const { data: cathedrasData, isLoading: isLoadingCathedras } = useQuery({
+    queryKey: ['cathedras'],
+    queryFn: () => CathedraAPI.getAll(),
+    ...useQueryAdminOptions,
+  });
 
   if (isLoadingCathedras || isLoadingEduprograms) return <Progress />;
 

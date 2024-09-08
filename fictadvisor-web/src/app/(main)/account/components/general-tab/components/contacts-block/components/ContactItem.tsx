@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
-import { QueryObserverBaseResult } from 'react-query';
 import { ContactResponse } from '@fictadvisor/utils/responses';
 import { Box } from '@mui/material';
+import { QueryObserverBaseResult } from '@tanstack/react-query';
 import Link from 'next/link';
 
 import * as styles from '@/app/(main)/account/components/general-tab/components/contacts-block/ContactsBlock.styles';
@@ -23,7 +23,7 @@ const ContactItem: FC<ContactProps> = ({
   const { user } = useAuthentication();
   const handleDeleteClick = async () => {
     await UserAPI.deleteContact(user.id, id);
-    refetchContacts();
+    await refetchContacts();
   };
 
   return (

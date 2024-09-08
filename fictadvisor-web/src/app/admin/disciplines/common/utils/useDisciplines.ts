@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
 import { CheckboxesDropdownOption } from '@/components/common/ui/form/checkboxes-dropdown/types/CheckboxesDropdown';
@@ -18,26 +18,26 @@ export function useDisciplines() {
     label: role,
     value: role,
   }));
-  const { data: semesterData, isLoading: isLoadingSemesters } = useQuery(
-    ['dates'],
-    () => DatesAPI.getDates(),
-    useQueryAdminOptions,
-  );
-  const { data: groupsData, isLoading: isLoadingGroups } = useQuery(
-    ['groups'],
-    () => GroupAPI.getAll(),
-    useQueryAdminOptions,
-  );
-  const { data: subjectsData, isLoading: isLoadingSubjects } = useQuery(
-    ['subjects'],
-    () => SubjectAPI.getAll(),
-    useQueryAdminOptions,
-  );
-  const { data: teachersData, isLoading: isLoadingTeachers } = useQuery(
-    ['teachers'],
-    () => TeacherAPI.getAll(),
-    useQueryAdminOptions,
-  );
+  const { data: semesterData, isLoading: isLoadingSemesters } = useQuery({
+    queryKey: ['dates'],
+    queryFn: () => DatesAPI.getDates(),
+    ...useQueryAdminOptions,
+  });
+  const { data: groupsData, isLoading: isLoadingGroups } = useQuery({
+    queryKey: ['groups'],
+    queryFn: () => GroupAPI.getAll(),
+    ...useQueryAdminOptions,
+  });
+  const { data: subjectsData, isLoading: isLoadingSubjects } = useQuery({
+    queryKey: ['subjects'],
+    queryFn: () => SubjectAPI.getAll(),
+    ...useQueryAdminOptions,
+  });
+  const { data: teachersData, isLoading: isLoadingTeachers } = useQuery({
+    queryKey: ['teachers'],
+    queryFn: () => TeacherAPI.getAll(),
+    ...useQueryAdminOptions,
+  });
 
   const isLoading =
     isLoadingSemesters ||

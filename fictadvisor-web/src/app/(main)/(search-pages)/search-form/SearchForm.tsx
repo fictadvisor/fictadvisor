@@ -9,7 +9,6 @@ import {
   useState,
 } from 'react';
 import { FC } from 'react';
-import { useQuery } from 'react-query';
 import {
   BarsArrowDownIcon,
   BarsArrowUpIcon,
@@ -18,6 +17,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { Box, useMediaQuery } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
+import { useQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { Form, Formik, FormikProps, useFormikContext } from 'formik';
 
@@ -81,25 +81,28 @@ const SearchForm: FC<SearchFormProps> = ({
   const isTablet = useMediaQuery(theme.breakpoints.down('tablet'));
   const [collapsed, setCollapsed] = useState(false);
 
-  const toastError = useToastError();
-  const { data: groupData } = useQuery(['groups'], () => GroupAPI.getAll(), {
-    keepPreviousData: true,
+  const { displayError } = useToastError();
+  const {
+    data: groupData,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ['groups'],
+    queryFn: () => GroupAPI.getAll(),
+    placeholderData: (previousData, previousQuery) => previousData,
     refetchOnWindowFocus: false,
     staleTime: Infinity,
-    onError: error => {
-      if (isAxiosError(error)) {
-        toastError.displayError(error);
-      }
-    },
   });
 
-  const { data: cathedraData } = useQuery(
-    'all-cathedra',
-    () => CathedraAPI.getAll(),
-    {
-      staleTime: Infinity,
-    },
-  );
+  if (isError) {
+    displayError(error);
+  }
+
+  const { data: cathedraData } = useQuery({
+    queryKey: ['all-cathedra'],
+    queryFn: () => CathedraAPI.getAll(),
+    staleTime: Infinity,
+  });
 
   const groups: DropDownOption[] = useMemo(
     () =>

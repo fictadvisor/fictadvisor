@@ -1,9 +1,9 @@
 import React, { FC, useState } from 'react';
-import { useQuery } from 'react-query';
 import { GroupRoles, State } from '@fictadvisor/utils/enums';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import { ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/outline';
 import { Box, Typography, useMediaQuery } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 
 import NoGroupBlock from '@/app/(main)/account/components/group-tab/components/no-group-block';
 import RequestsTable from '@/app/(main)/account/components/group-tab/components/table/requests-table';
@@ -30,17 +30,16 @@ import theme from '@/styles/theme';
 
 import * as styles from './GroupTab.styles';
 
-const GroupTab: FC = () => {
+const GroupTab = () => {
   const [order, setOrder] = useState(Order.ascending);
   const { user } = useAuthentication();
-  const { data, isLoading, refetch } = useQuery(
-    ['students'],
-    () => GroupService.getGroupData(user, order),
-    {
-      retry: false,
-      refetchOnWindowFocus: false,
-    },
-  );
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ['students', user, order],
+    queryFn: () => GroupService.getGroupData(user, order),
+    retry: false,
+    refetchOnWindowFocus: false,
+    enabled: !!user,
+  });
   const [leavePopupOpen, setLeavePopupOpen] = useState(false);
 
   const showRequests =

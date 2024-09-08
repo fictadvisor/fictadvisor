@@ -1,8 +1,8 @@
 'use client';
 
 import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
 import { TeacherWithContactsResponse } from '@fictadvisor/utils/responses';
+import { useQuery } from '@tanstack/react-query';
 import {
   ReadonlyURLSearchParams,
   useRouter,
@@ -37,9 +37,13 @@ export interface TeacherContext {
   teacher: TeacherWithContactsResponse;
 }
 
-const PersonalTeacher: FC<PersonalTeacherProps> = ({ params }) => {
+const PersonalTeacher = ({ params }: PersonalTeacherProps) => {
   const teacherId = params.teacherId;
-  const teacher = useQuery(['teacher'], () => TeacherAPI.get(teacherId)).data;
+  const { data } = useQuery({
+    queryKey: ['teacher', teacherId],
+    queryFn: () => TeacherAPI.get(teacherId),
+  });
+
   const isLoading = undefined;
   const isError = undefined;
 
@@ -47,13 +51,13 @@ const PersonalTeacher: FC<PersonalTeacherProps> = ({ params }) => {
   const router = useRouter();
 
   const { user } = useAuthentication();
-  const [data, setData] = useState<TeacherPageInfo>();
+  const [teacherData, setTeacherData] = useState<TeacherPageInfo>();
   const getData = async () => {
     return await TeacherService.getTeacherPageInfo(teacherId, user?.id);
   };
   useEffect(() => {
     getData().then(res => {
-      setData(res);
+      setTeacherData(res);
     });
   }, []);
 
@@ -76,8 +80,8 @@ const PersonalTeacher: FC<PersonalTeacherProps> = ({ params }) => {
     }
   }, [isError, push, toast]);
 
-  if (!data) return null;
-  if (!teacher) {
+  if (!teacherData) return null;
+  if (!data) {
     router.push('/teachers');
     return null;
   }
@@ -87,7 +91,7 @@ const PersonalTeacher: FC<PersonalTeacherProps> = ({ params }) => {
       value={{
         floatingCardShowed,
         setFloatingCardShowed,
-        teacher,
+        teacher: data,
       }}
     >
       <div className={styles['personal-teacher-page']}>
@@ -109,20 +113,20 @@ const PersonalTeacher: FC<PersonalTeacherProps> = ({ params }) => {
                   },
                   { label: 'Викладачі', href: '/teachers' },
                   {
-                    label: `${teacher.lastName} ${teacher.firstName} ${teacher.middleName}`,
+                    label: `${data.lastName} ${data.firstName} ${data.middleName}`,
                     href: `/teachers/${teacherId}`,
                   },
                 ]}
               />
               <div className={styles['card-wrapper']}>
-                <PersonalTeacherCard {...teacher} />
+                <PersonalTeacherCard {...data} />
               </div>
               <div className={styles['tabs']}>
                 <PersonalTeacherTabs
-                  data={data}
+                  data={teacherData}
                   tabIndex={index}
                   handleChange={handleChange}
-                  teacher={teacher}
+                  teacher={data}
                 />
               </div>
             </div>

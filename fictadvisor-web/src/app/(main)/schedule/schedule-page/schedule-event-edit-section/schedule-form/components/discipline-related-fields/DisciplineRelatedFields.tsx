@@ -1,9 +1,9 @@
 import React, { FC, Fragment } from 'react';
-import { useQuery } from 'react-query';
 import { CurrentSemester } from '@fictadvisor/utils/responses';
 import { BriefcaseIcon } from '@heroicons/react/24/outline';
 import { Typography } from '@mui/material';
 import Skeleton from '@mui/material/Skeleton';
+import { useQuery } from '@tanstack/react-query';
 
 import { AddDeleteTeachers } from '@/app/(main)/schedule/schedule-page/schedule-event-edit-section/schedule-form/components/add-delete-teachers/AddDeleteTeachers';
 import { ScheduleFormikDropdown } from '@/app/(main)/schedule/schedule-page/schedule-event-edit-section/schedule-form/components/schedule-dropdown/ScheduleDropdown';
@@ -29,17 +29,19 @@ export const DisciplineRelatedFields: FC<DisciplineRelatedFieldsProps> = ({
   const semester = useSchedule(state => state.semester);
   const { displayError } = useToastError();
 
-  const { isLoading, data } = useQuery(
-    'dataAboutGroup',
-    () =>
+  const { isLoading, data, error } = useQuery({
+    queryKey: ['dataAboutGroup', groupId, semester],
+
+    queryFn: () =>
       ScheduleAPI.getDisciplinesAndTeachers(
         groupId,
         semester as CurrentSemester,
       ),
-    {
-      onError: err => displayError(err),
-    },
-  );
+  });
+
+  if (error) {
+    displayError(error);
+  }
 
   return (
     <Fragment>

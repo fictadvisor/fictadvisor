@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useQuery } from 'react-query';
 import { QueryAllTeacherDTO } from '@fictadvisor/utils/requests';
 import { Box, TablePagination } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
@@ -23,16 +23,18 @@ const Page = () => {
   const { displayError } = useToastError();
   const toast = useToast();
 
-  const { data, isLoading, refetch } = useQuery(
-    ['teachers', currPage, pageSize, params],
-    () =>
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ['teachers', currPage, pageSize, params],
+
+    queryFn: () =>
       teachersApi.getAll({
         ...params,
         pageSize,
         page: currPage,
       }),
-    useQueryAdminOptions,
-  );
+
+    ...useQueryAdminOptions,
+  });
 
   if (isLoading) return <LoadPage />;
 
@@ -41,7 +43,7 @@ const Page = () => {
   const deleteTeacher = async (id: string) => {
     try {
       await TeacherAPI.delete(id);
-      refetch();
+      await refetch();
       toast.success('Викладач успішно видалений!', '', 4000);
     } catch (e) {
       displayError(e);

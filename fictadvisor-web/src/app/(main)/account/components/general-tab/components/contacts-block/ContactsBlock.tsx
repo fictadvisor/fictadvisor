@@ -1,8 +1,8 @@
 import React, { FC, useState } from 'react';
-import { useQuery } from 'react-query';
 import { ContactResponse } from '@fictadvisor/utils/responses';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { Box, useMediaQuery } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 
 import ContactForm from '@/app/(main)/account/components/general-tab/components/contacts-block/components/ContactForm';
 import ContactItem from '@/app/(main)/account/components/general-tab/components/contacts-block/components/ContactItem';
@@ -22,11 +22,11 @@ const ContactsBlock: FC = () => {
   const { user } = useAuthentication();
   const isMobile = useMediaQuery(theme.breakpoints.down('desktopSemiMedium'));
 
-  const { data, refetch } = useQuery(
-    'contacts',
-    () => UserAPI.getContacts(user.id),
-    { refetchOnWindowFocus: false },
-  );
+  const { data, refetch } = useQuery({
+    queryKey: ['contacts', user.id],
+    queryFn: () => UserAPI.getContacts(user.id),
+    refetchOnWindowFocus: false,
+  });
   const contacts = data?.contacts || [];
   const handleClick = () => setIsOpened(!isOpened);
 

@@ -1,9 +1,9 @@
 'use client';
 
 import React, { FC, useMemo } from 'react';
-import { useQuery } from 'react-query';
 import { SubjectWithTeachersResponse } from '@fictadvisor/utils/responses';
 import { Box, Typography } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 
 import { SubjectTeacherSearchList } from '@/app/(main)/(search-pages)/subjects/[subjectId]/teachers/components/SubjectTeacherSearchList';
 import * as styles from '@/app/(main)/(search-pages)/subjects/[subjectId]/teachers/SearchTeacherPage.styles';
@@ -31,11 +31,11 @@ const breadcrumbs: Breadcrumb[] = [
 
 const SubjectPage: FC<SubjectTeacherPage> = ({ params }) => {
   const subjectId = params.subjectId;
-  const { data, isLoading } = useQuery<SubjectWithTeachersResponse>(
-    ['teacher-by-subject', subjectId],
-    () => SubjectsAPI.getTeachersBySubject(subjectId),
-    { staleTime: Infinity },
-  );
+  const { data, isLoading } = useQuery({
+    queryKey: ['teacher-by-subject', subjectId],
+    queryFn: () => SubjectsAPI.getTeachersBySubject(subjectId),
+    staleTime: Infinity,
+  });
 
   const subject: Breadcrumb = useMemo(
     () => ({ label: data?.subjectName || '', href: '#' }),

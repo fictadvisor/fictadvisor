@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useMemo, useState } from 'react';
-import { useQuery } from 'react-query';
 import { CurrentSemester } from '@fictadvisor/utils/responses';
+import { useQuery } from '@tanstack/react-query';
 import moment from 'moment';
 
 import { formValidationSchema } from '@/app/(main)/schedule/schedule-page/schedule-event-edit-section/schedule-form/validation';
@@ -36,20 +36,22 @@ export const ScheduleEventEdit = () => {
     [openedEvent],
   );
 
-  const { isLoading, data } = useQuery(
-    ['event', openedEvent?.id, week],
-    () => ScheduleAPI.getEventInfo(openedEvent?.id as string, week),
-    {
-      onSuccess: data => {
-        setDetailedEvent(data);
-      },
-      onError: err => {
-        displayError(err);
-        useSchedule.setState(state => ({ openedEvent: undefined }));
-      },
-      retry: false,
-    },
-  );
+  const { isLoading, data, isSuccess, error, isError } = useQuery({
+    queryKey: ['event', openedEvent?.id, week],
+    queryFn: () => ScheduleAPI.getEventInfo(openedEvent?.id as string, week),
+
+    retry: false,
+  });
+
+  useEffect(() => {
+    if (isSuccess) {
+      setDetailedEvent(data);
+    }
+    if (isError) {
+      displayError(error);
+      useSchedule.setState(state => ({ openedEvent: undefined }));
+    }
+  }, [data]);
 
   const [detailedEvent, setDetailedEvent] = useState<undefined | EventResponse>(
     data,
