@@ -1,7 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { FC } from 'react';
-import { useQuery } from 'react-query';
 import { GroupRoles, SortQGSParam } from '@fictadvisor/utils/enums';
 import { QueryAllStudentDTO } from '@fictadvisor/utils/requests';
 import {
@@ -9,6 +8,7 @@ import {
   BarsArrowUpIcon,
 } from '@heroicons/react/24/outline';
 import { Box, Divider, SelectChangeEvent } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
@@ -48,11 +48,11 @@ const HeaderStudentSearch: FC<HeaderStudentSearchProps> = ({ onSubmit }) => {
   const [order, setOrder] = useState<'asc' | 'desc'>('desc');
   const [values, setValues] = useState(StudentInitialValues);
 
-  const { data: groups, isLoading } = useQuery(
-    ['groups'],
-    async () => await GroupAPI.getAll(),
-    useQueryAdminOptions,
-  );
+  const { data: groups, isLoading } = useQuery({
+    queryKey: ['groups'],
+    queryFn: () => GroupAPI.getAll(),
+    ...useQueryAdminOptions,
+  });
 
   useEffect(() => {
     onSubmit(values);

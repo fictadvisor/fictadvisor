@@ -1,11 +1,11 @@
 import React, { FC, useState } from 'react';
-import { useQuery } from 'react-query';
 import { EventTypeEnum } from '@fictadvisor/utils/enums';
 import { PermissionValuesDTO } from '@fictadvisor/utils/requests';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { Box, Typography } from '@mui/material';
 import Skeleton from '@mui/material/Skeleton';
+import { useQuery } from '@tanstack/react-query';
 
 import TextWithLinks from '@/app/(main)/schedule/schedule-page/schedule-event-edit-section/schedule-info-card/components/TextWithLinks';
 import { InfoCardTabs } from '@/app/(main)/schedule/schedule-page/schedule-event-edit-section/types';
@@ -53,12 +53,12 @@ interface ScheduleInfoCardProps {
   event?: EventResponse;
 }
 
-const ScheduleInfoCard: FC<ScheduleInfoCardProps> = ({
+const ScheduleInfoCard = ({
   onEventEditButtonClick,
   onCloseButtonClick,
   event,
   loading,
-}) => {
+}: ScheduleInfoCardProps) => {
   const [tabValue, setTabValue] = useState<InfoCardTabs>(InfoCardTabs.EVENT);
   const { user } = useAuthentication();
   const isDisciplineRelatedType = (
@@ -71,14 +71,14 @@ const ScheduleInfoCard: FC<ScheduleInfoCardProps> = ({
     groupId: user.group?.id,
   };
 
-  const { data } = useQuery(
-    [],
-    () => PermissionService.getPermissionList(user.id, permissionValues),
-    {
-      retry: false,
-      refetchOnWindowFocus: false,
-    },
-  );
+  const { data } = useQuery({
+    queryKey: [user.id, permissionValues],
+    queryFn: () =>
+      PermissionService.getPermissionList(user.id, permissionValues),
+    retry: false,
+    refetchOnWindowFocus: false,
+    enabled: !!user.id,
+  });
 
   const validPrivilege =
     data?.[PERMISSION.GROUPS_$GROUPID_EVENTS_DELETE] &&

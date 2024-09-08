@@ -1,8 +1,8 @@
 'use client';
 import React, { useState } from 'react';
-import { useQuery } from 'react-query';
 import { QueryAllCathedrasDTO } from '@fictadvisor/utils/requests';
 import { Box, TablePagination } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
@@ -22,22 +22,24 @@ const Page = () => {
   );
   const { displayError } = useToastError();
   const toast = useToast();
-  const { data, refetch, isLoading } = useQuery(
-    ['teachers', params, currPage, pageSize],
-    () =>
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ['teachers', params, currPage, pageSize],
+
+    queryFn: () =>
       CathedraAPI.getAll({
         ...params,
         pageSize,
         page: currPage,
       }),
-    useQueryAdminOptions,
-  );
 
-  const { data: cathedrasData, isLoading: isLoadingCathedras } = useQuery(
-    ['cathedras'],
-    () => CathedraAPI.getAll(),
-    useQueryAdminOptions,
-  );
+    ...useQueryAdminOptions,
+  });
+
+  const { data: cathedrasData, isLoading: isLoadingCathedras } = useQuery({
+    queryKey: ['cathedras'],
+    queryFn: () => CathedraAPI.getAll(),
+    ...useQueryAdminOptions,
+  });
 
   if (isLoading || isLoadingCathedras) return <LoadPage />;
 

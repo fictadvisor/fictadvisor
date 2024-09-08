@@ -1,6 +1,6 @@
 import { MouseEventHandler } from 'react';
-import { QueryObserverBaseResult } from 'react-query';
 import { GroupRoles } from '@fictadvisor/utils/enums';
+import { QueryObserverBaseResult } from '@tanstack/react-query';
 
 import { Order } from '@/lib/services/group/types/OrderEnum';
 import { PermissionResponse } from '@/lib/services/permission/types';

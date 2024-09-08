@@ -1,7 +1,5 @@
-import { FC } from 'react';
-import { useQuery } from 'react-query';
 import { Box, Typography } from '@mui/material';
-import { isAxiosError } from 'axios';
+import { useQuery } from '@tanstack/react-query';
 
 import { Input, InputSize } from '@/components/common/ui/form';
 import { FieldSize } from '@/components/common/ui/form/common/types';
@@ -12,20 +10,20 @@ import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import GroupAPI from '@/lib/api/group/GroupAPI';
 
 import * as styles from './ComplaintPopupContent.styles';
-import { groupDropdownWrapper } from './ComplaintPopupContent.styles';
 
-const ComplaintPopupContent: FC = () => {
-  const toastError = useToastError();
-  const { data: groupData } = useQuery(['groups'], () => GroupAPI.getAll(), {
-    keepPreviousData: true,
+const ComplaintPopupContent = () => {
+  const { displayError } = useToastError();
+  const { data: groupData, error } = useQuery({
+    queryKey: ['groups'],
+    queryFn: () => GroupAPI.getAll(),
+    placeholderData: (previousData, previousQuery) => previousData,
     refetchOnWindowFocus: false,
     staleTime: Infinity,
-    onError: error => {
-      if (isAxiosError(error)) {
-        toastError.displayError(error);
-      }
-    },
   });
+
+  if (error) {
+    displayError(error);
+  }
   if (!groupData) return;
 
   return (

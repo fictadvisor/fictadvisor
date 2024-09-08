@@ -1,6 +1,5 @@
 'use client';
 import React, { FC } from 'react';
-import { QueryObserverBaseResult } from 'react-query';
 import { UserForGetAllResponse } from '@fictadvisor/utils/responses';
 import { Avatar, Box, TableHead, Typography } from '@mui/material';
 import {
@@ -12,6 +11,7 @@ import {
   TablePagination,
   TableRow,
 } from '@mui/material';
+import { QueryObserverBaseResult } from '@tanstack/react-query';
 
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import Tag from '@/components/common/ui/tag';

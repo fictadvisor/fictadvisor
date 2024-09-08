@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useQuery } from 'react-query';
 import { QueryAllQuestionDTO } from '@fictadvisor/utils/requests';
 import { Box, TablePagination } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
@@ -21,16 +21,18 @@ const Page = () => {
   const [params, setParams] = useState<QueryAllQuestionDTO>(initialValues);
   const { displayError } = useToastError();
   const toast = useToast();
-  const { data, refetch, isLoading } = useQuery(
-    ['questions', currPage, params, pageSize],
-    () =>
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ['questions', currPage, params, pageSize],
+
+    queryFn: () =>
       QuestionAPI.getPageQuestions({
         ...params,
         pageSize,
         page: currPage,
       }),
-    useQueryAdminOptions,
-  );
+
+    ...useQueryAdminOptions,
+  });
 
   if (isLoading) return <LoadPage />;
 
@@ -57,7 +59,7 @@ const Page = () => {
     try {
       await QuestionAPI.deleteQuestion(id);
       toast.success('Питання успішно видалено', '', 4000);
-      refetch();
+      await refetch();
     } catch (e) {
       displayError(e);
     }

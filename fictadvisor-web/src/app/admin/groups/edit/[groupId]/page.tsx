@@ -1,8 +1,8 @@
 'use client';
 import React, { FC, useState } from 'react';
-import { useQuery } from 'react-query';
 import { UpdateGroupDTO } from '@fictadvisor/utils/requests';
 import { Box } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
@@ -26,11 +26,11 @@ const AdminGroupEditBodyPage: FC<AdminGroupEditBodyPageProps> = ({
     data: group,
     isSuccess,
     isLoading,
-  } = useQuery(
-    ['getAdminGroup', params.groupId],
-    () => GroupAPI.get(params.groupId),
-    useQueryAdminOptions,
-  );
+  } = useQuery({
+    queryKey: ['getAdminGroup', params.groupId],
+    queryFn: () => GroupAPI.get(params.groupId),
+    ...useQueryAdminOptions,
+  });
 
   if (!isSuccess)
     throw new Error(

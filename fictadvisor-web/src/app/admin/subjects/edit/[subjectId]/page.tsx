@@ -1,8 +1,8 @@
 'use client';
 import React, { FC, useState } from 'react';
-import { useQuery } from 'react-query';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Box, CardHeader, Stack } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
@@ -31,11 +31,11 @@ const AdminSubjectEdit: FC<AdminSubjectEditProps> = ({ params }) => {
     data: subject,
     isSuccess,
     isLoading,
-  } = useQuery(
-    ['subject', params.subjectId],
-    () => SubjectAPI.getSubject(params.subjectId),
-    useQueryAdminOptions,
-  );
+  } = useQuery({
+    queryKey: ['subject', params.subjectId],
+    queryFn: () => SubjectAPI.getSubject(params.subjectId),
+    ...useQueryAdminOptions,
+  });
 
   if (!isSuccess)
     throw new Error(`An error has occurred while fetching subjects`);

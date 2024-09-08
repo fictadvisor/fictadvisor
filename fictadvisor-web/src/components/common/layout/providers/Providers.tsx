@@ -1,10 +1,10 @@
 'use client';
 
 import { FC, useEffect } from 'react';
-import { QueryClient, QueryClientProvider } from 'react-query';
 import { ThemeProvider } from '@mui/system';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import AuthenticationProvider from '@/hooks/use-authentication/authentication-context';
 import ToastContextProvider from '@/hooks/use-toast/toast-context';
