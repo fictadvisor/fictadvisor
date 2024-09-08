@@ -432,9 +432,11 @@ export class UserService {
 
   async updateAvatar (file: Express.Multer.File, userId: string) {
     const { avatar } = await this.userRepository.findById(userId);
-    const oldPath = this.fileService.getPathFromLink(avatar);
 
-    await this.deleteAvatarIfNotUsed(avatar, oldPath);
+    if (avatar.includes('storage.googleapis.com')) {
+      const oldPath = this.fileService.getPathFromLink(avatar);
+      await this.deleteAvatarIfNotUsed(avatar, oldPath);
+    }
 
     const path = await this.fileService.saveByHash(file, 'avatars');
 
@@ -445,9 +447,11 @@ export class UserService {
 
   async deleteAvatar (userId: string) {
     const { avatar } = await this.userRepository.findById(userId);
-    const oldPath = this.fileService.getPathFromLink(avatar);
 
-    await this.deleteAvatarIfNotUsed(avatar, oldPath);
+    if (avatar.includes('storage.googleapis.com')) {
+      const oldPath = this.fileService.getPathFromLink(avatar);
+      await this.deleteAvatarIfNotUsed(avatar, oldPath);
+    }
 
     return this.userRepository.updateById(userId, {
       avatar: AVATARS[Math.floor(Math.random() * AVATARS.length)],
