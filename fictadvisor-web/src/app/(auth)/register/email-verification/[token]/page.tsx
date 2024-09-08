@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Box } from '@mui/material';
 import { usePathname, useRouter } from 'next/navigation';
 
@@ -19,28 +19,22 @@ const VerifyEmailTokenPage = () => {
 
   const token = pathName.split('/').pop() ?? '';
 
-  const loadData = useCallback(
-    async (token: string) => {
-      try {
-        const { accessToken, refreshToken } =
-          await AuthAPI.verifyEmailToken(token);
-        StorageUtil.setTokens(accessToken, refreshToken);
-        update();
-        await router.push(`/`);
-      } catch (e) {
-        toast.error(
-          'Лист реєстрації вже не дійсний',
-          'Пройди реєстрацію знов!',
-        );
-        await router.push(`/register`);
-      }
-    },
-    [toast, router, update],
-  );
+  const loadData = async (token: string): Promise<void> => {
+    try {
+      const { accessToken, refreshToken } =
+        await AuthAPI.verifyEmailToken(token);
+      StorageUtil.setTokens(accessToken, refreshToken);
+      await update();
+      router.push(`/`);
+    } catch (e) {
+      toast.error('Лист реєстрації вже не дійсний', 'Пройди реєстрацію знов!');
+      router.push(`/register`);
+    }
+  };
 
   useEffect(() => {
     void loadData(token);
-  }, [loadData, token]);
+  }, []);
 
   return (
     <Box sx={styles.box}>
