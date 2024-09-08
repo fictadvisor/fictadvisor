@@ -1,9 +1,9 @@
 'use client';
 import React, { FC, useState } from 'react';
-import { useQuery } from 'react-query';
 import { CreateDisciplineDTO } from '@fictadvisor/utils/requests';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Box, Stack, Typography } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
@@ -33,11 +33,11 @@ const DisciplinesAdminEdit: FC<AdminDisciplineEditProps> = ({ params }) => {
     data: discipline,
     isSuccess,
     isLoading,
-  } = useQuery(
-    ['discipline', params.disciplineId],
-    () => DisciplineAPI.getDisciplinesById(params.disciplineId),
-    useQueryAdminOptions,
-  );
+  } = useQuery({
+    queryKey: ['discipline', params.disciplineId],
+    queryFn: () => DisciplineAPI.getDisciplinesById(params.disciplineId),
+    ...useQueryAdminOptions,
+  });
 
   if (!isSuccess)
     throw new Error(

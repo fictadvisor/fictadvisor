@@ -1,6 +1,5 @@
 'use client';
 import React, { FC, useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
 import { TeacherRole } from '@fictadvisor/utils/enums';
 import { QueryAllTeacherDTO } from '@fictadvisor/utils/requests';
 import {
@@ -8,6 +7,7 @@ import {
   BarsArrowUpIcon,
 } from '@heroicons/react/24/outline';
 import { Box, Divider, SelectChangeEvent } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
@@ -62,11 +62,11 @@ const TeachersAdminSearch: FC<TeachersAdminSearchProps> = ({ onSubmit }) => {
     handleFormSubmit();
   }, [search, order, roles, cathedrasId]);
 
-  const { data, isLoading } = useQuery(
-    ['cathedras'],
-    () => CathedraAPI.getAll(),
-    useQueryAdminOptions,
-  );
+  const { data, isLoading } = useQuery({
+    queryKey: ['cathedras'],
+    queryFn: () => CathedraAPI.getAll(),
+    ...useQueryAdminOptions,
+  });
 
   if (isLoading) return <Progress />;
 

@@ -1,5 +1,4 @@
 import React, { FC, Fragment, useState } from 'react';
-import { QueryObserverBaseResult } from 'react-query';
 import { GroupRoles } from '@fictadvisor/utils/enums';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import {
@@ -10,6 +9,7 @@ import {
   TrashIcon,
 } from '@heroicons/react/24/outline';
 import { Avatar, Box, Grid, Typography, useMediaQuery } from '@mui/material';
+import { QueryObserverBaseResult } from '@tanstack/react-query';
 
 import roleNamesMapper from '@/app/(main)/account/components/group-tab/components/table/constants';
 import * as gridStyles from '@/app/(main)/account/components/group-tab/components/table/grid.styles';

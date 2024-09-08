@@ -1,8 +1,8 @@
 'use client';
 import type { FC } from 'react';
-import { useQuery } from 'react-query';
 import { TeacherWithContactsResponse } from '@fictadvisor/utils/responses';
 import { Stack, Typography } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
 import { EditedComment } from '@/app/admin/teachers/edit/[teacherId]/types';
@@ -24,13 +24,13 @@ const EditTeacherComments: FC<EditTeacherCommentsProps> = ({
 }) => {
   const {
     data: commentsData,
-    refetch,
     isLoading,
-  } = useQuery(
-    ['teachersComments', teacher.id],
-    () => TeacherAPI.getTeacherComments(teacher.id),
-    useQueryAdminOptions,
-  );
+    refetch,
+  } = useQuery({
+    queryKey: ['teachersComments', teacher.id],
+    queryFn: () => TeacherAPI.getTeacherComments(teacher.id),
+    ...useQueryAdminOptions,
+  });
 
   if (isLoading) return <Progress />;
 

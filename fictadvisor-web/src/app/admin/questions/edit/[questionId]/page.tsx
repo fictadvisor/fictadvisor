@@ -1,10 +1,10 @@
 'use client';
 
 import React, { FC, useState } from 'react';
-import { useQuery } from 'react-query';
 import { UpdateQuestionDTO } from '@fictadvisor/utils/requests';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Box, Stack, Typography } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
@@ -29,11 +29,11 @@ interface PageProps {
 }
 
 const Edit: FC<PageProps> = ({ params }) => {
-  const { data, isLoading } = useQuery(
-    ['question', params.questionId],
-    () => QuestionAPI.getQuestion(params.questionId),
-    useQueryAdminOptions,
-  );
+  const { data, isLoading } = useQuery({
+    queryKey: ['question', params.questionId],
+    queryFn: () => QuestionAPI.getQuestion(params.questionId),
+    ...useQueryAdminOptions,
+  });
 
   const [body, setBody] = useState<UpdateQuestionDTO>({});
   const toast = useToast();

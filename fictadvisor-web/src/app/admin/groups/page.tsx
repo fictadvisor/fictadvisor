@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useQuery } from 'react-query';
 import { QueryAllGroupsDTO } from '@fictadvisor/utils/requests';
 import { Box, TablePagination } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
@@ -22,16 +22,18 @@ const GroupsAdmin = () => {
   const { displayError } = useToastError();
   const toast = useToast();
 
-  const { data, isLoading, refetch } = useQuery(
-    ['groups', currPage, pageSize, params],
-    () =>
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ['groups', currPage, pageSize, params],
+
+    queryFn: () =>
       GroupAPI.getAll({
         ...params,
         pageSize,
         page: currPage,
       }),
-    useQueryAdminOptions,
-  );
+
+    ...useQueryAdminOptions,
+  });
 
   if (isLoading) return <LoadPage />;
 
@@ -40,7 +42,7 @@ const GroupsAdmin = () => {
   const deleteGroup = async (id: string) => {
     try {
       await GroupAPI.delete(id);
-      refetch();
+      await refetch();
       toast.success('Група успішно видалена!', '', 4000);
     } catch (e) {
       displayError(e);

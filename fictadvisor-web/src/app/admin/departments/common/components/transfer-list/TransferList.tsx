@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { FC, useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
 import { TeacherWithRolesAndCathedrasResponse } from '@fictadvisor/utils/responses';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import Grid from '@mui/material/Grid';
+import { useQuery } from '@tanstack/react-query';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
 import SideList from '@/app/admin/departments/common/components/transfer-list/components/SideList';
@@ -56,39 +56,63 @@ const TransferList: FC<TransferListProps> = ({
     onLeftListChange(left);
   }, [right, left]);
 
-  useQuery(
-    ['notInDepartment', cathedraId, true],
-    () =>
+  const { data, isSuccess, error } = useQuery({
+    queryKey: ['notInDepartment', cathedraId, true],
+
+    queryFn: () =>
       CathedraAPI.getDepartmentTeachers({
         cathedrasId: [cathedraId],
         notInDepartments: true,
       }),
-    {
-      ...useQueryAdminOptions,
-      onSuccess: data => setLeft(data.teachers),
-      onError: () => (!left ? setLeft([]) : null),
-    },
-  );
 
-  useQuery(
-    ['inDepartment', cathedraId, false],
-    () =>
+    ...useQueryAdminOptions,
+  });
+
+  useEffect(() => {
+    if (isSuccess) {
+      setLeft(data.teachers);
+    }
+    if (error) {
+      !left ? setLeft([]) : null;
+    }
+  }, [data]);
+
+  const inDepartmentData = useQuery({
+    queryKey: ['inDepartment', cathedraId, false],
+
+    queryFn: () =>
       CathedraAPI.getDepartmentTeachers({
         cathedrasId: [cathedraId],
         notInDepartments: false,
       }),
-    {
-      ...useQueryAdminOptions,
-      onSuccess: data => setRight(data.teachers),
-      onError: () => setRight([]),
-    },
-  );
 
-  useQuery(['teachers'], () => TeacherAPI.getAll(), {
     ...useQueryAdminOptions,
-    onSuccess: data => (!cathedraId ? setLeft(data.teachers) : null),
-    onError: error => toast.displayError(error),
   });
+
+  useEffect(() => {
+    if (inDepartmentData.isSuccess) {
+      setRight(inDepartmentData.data.teachers);
+    }
+    if (inDepartmentData.error) {
+      setRight([]);
+    }
+  }, [inDepartmentData.data]);
+
+  const teachersData = useQuery({
+    queryKey: ['teachers'],
+    queryFn: () => TeacherAPI.getAll(),
+    ...useQueryAdminOptions,
+  });
+
+  useEffect(() => {
+    if (teachersData.isSuccess) {
+      !cathedraId ? setLeft(teachersData.data.teachers) : null;
+    }
+
+    if (teachersData.error) {
+      toast.displayError(error);
+    }
+  }, [teachersData.data]);
 
   const handleCheckedRight = () => {
     setRight(right.concat(leftChecked));

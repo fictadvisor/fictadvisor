@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
-import { useQuery } from 'react-query';
 import { Box, Typography } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 
 import SelectiveBlock from '@/app/(main)/account/components/selective-tab/components/selective-block';
@@ -12,13 +12,12 @@ import * as styles from './SelectiveTab.styles';
 const SelectiveTab: FC = () => {
   const { user } = useAuthentication();
 
-  const { data, refetch, isLoading } = useQuery(
-    ['selectiveDisciplines', user.id],
-    () => UserAPI.getSelectiveDisciplinesBySemester(user.id),
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ['selectiveDisciplines', user.id],
+    queryFn: () => UserAPI.getSelectiveDisciplinesBySemester(user.id),
+    refetchOnWindowFocus: false,
+    enabled: !!user.id,
+  });
 
   const [openedBlocksNum, setOpenedBlockNum] = useState(0);
 

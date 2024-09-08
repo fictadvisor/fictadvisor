@@ -1,8 +1,8 @@
 'use client';
 import React, { useState } from 'react';
-import { useQuery } from 'react-query';
 import { QueryAllSubjectDTO } from '@fictadvisor/utils/requests';
 import { Box, TablePagination } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 
 import { SubjectInitialValues } from '@/app/(main)/(search-pages)/search-form/constants';
 import { SearchFormFields } from '@/app/(main)/(search-pages)/search-form/types';
@@ -23,16 +23,18 @@ const AdminSubjectSearch = () => {
   const { displayError } = useToastError();
   const toast = useToast();
 
-  const { data, refetch, isLoading } = useQuery(
-    ['subjects', currPage, pageSize, params],
-    () =>
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ['subjects', currPage, pageSize, params],
+
+    queryFn: () =>
       subjectAPI.getAll({
         ...params,
         pageSize,
         page: currPage,
       } as QueryAllSubjectDTO),
-    useQueryAdminOptions,
-  );
+
+    ...useQueryAdminOptions,
+  });
 
   if (isLoading) return <LoadPage />;
 

@@ -1,10 +1,10 @@
 import type { FC } from 'react';
-import { useQuery } from 'react-query';
 import { PermissionValuesDTO } from '@fictadvisor/utils/requests';
 import { MappedGroupResponse } from '@fictadvisor/utils/responses';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { Box, Stack } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 
 import { GroupsDropDown } from '@/app/(main)/schedule/schedule-page/calendar-section/components/groups-dropdown/GroupsDropDown';
 import Button from '@/components/common/ui/button-mui/Button';
@@ -31,14 +31,14 @@ export const CalendarSection: FC<CalendarSectionProps> = ({ groups }) => {
     groupId: user?.group?.id,
   };
 
-  const { data } = useQuery(
-    [],
-    () => PermissionService.getPermissionList(user?.id, permissionValues),
-    {
-      retry: false,
-      refetchOnWindowFocus: false,
-    },
-  );
+  const { data } = useQuery({
+    queryKey: [user?.id, permissionValues],
+    queryFn: () =>
+      PermissionService.getPermissionList(user?.id, permissionValues),
+    retry: false,
+    refetchOnWindowFocus: false,
+    enabled: !!user?.id,
+  });
 
   const showButton = data?.[PERMISSION.GROUPS_$GROUPID_EVENTS_CREATE];
 

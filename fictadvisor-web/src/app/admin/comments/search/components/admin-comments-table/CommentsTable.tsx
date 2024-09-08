@@ -1,5 +1,4 @@
 import React, { FC } from 'react';
-import { QueryObserverBaseResult } from 'react-query';
 import { DeleteCommentDTO } from '@fictadvisor/utils/requests';
 import { CommentResponse } from '@fictadvisor/utils/responses';
 import {
@@ -11,6 +10,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
+import { QueryObserverBaseResult } from '@tanstack/react-query';
 
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';

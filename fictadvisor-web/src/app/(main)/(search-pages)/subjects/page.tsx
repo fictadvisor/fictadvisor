@@ -1,10 +1,10 @@
 'use client';
 
 import { FC, useCallback, useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
 import { QueryAllSubjectDTO } from '@fictadvisor/utils/requests';
 import { PaginatedSubjectsResponse } from '@fictadvisor/utils/responses';
 import { Box } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 
 import { SubjectInitialValues } from '@/app/(main)/(search-pages)/search-form/constants';
 import SearchForm, {
@@ -47,34 +47,35 @@ const SubjectsPage: FC = () => {
   };
   const [loadedSubjects, setLoadedSubjects] = useState<Subject[]>([]);
   const [reloadSubjects, setReloadSubjects] = useState(true);
-  const { data, isLoading, refetch, isFetching } =
-    useQuery<PaginatedSubjectsResponse>(
-      'subjects',
-      () => {
-        if (reloadSubjects) {
-          return SubjectsAPI.getAll({
-            ...queryObj,
-            pageSize: PAGE_SIZE * (currPage + 1),
-            page: currPage,
-          } as QueryAllSubjectDTO);
-        } else {
-          setLoadedSubjects([
-            ...(loadedSubjects ?? []),
-            ...(data?.subjects ?? []),
-          ]);
-          return SubjectsAPI.getAll({
-            ...queryObj,
-            pageSize: PAGE_SIZE,
-            page: currPage + 1,
-          } as QueryAllSubjectDTO);
-        }
-      },
-      { keepPreviousData: true, refetchOnWindowFocus: false },
-    );
+  const { data, isLoading, isFetching, refetch } = useQuery({
+    queryKey: ['subjects', reloadSubjects],
+
+    queryFn: () => {
+      if (reloadSubjects) {
+        return SubjectsAPI.getAll({
+          ...queryObj,
+          pageSize: PAGE_SIZE * (currPage + 1),
+          page: currPage,
+        } as QueryAllSubjectDTO);
+      } else {
+        setLoadedSubjects([
+          ...(loadedSubjects ?? []),
+          ...(data?.subjects ?? []),
+        ]);
+        return SubjectsAPI.getAll({
+          ...queryObj,
+          pageSize: PAGE_SIZE,
+          page: currPage + 1,
+        } as QueryAllSubjectDTO);
+      }
+    },
+    placeholderData: (previousData, previousQuery) => previousData,
+    refetchOnWindowFocus: false,
+  });
 
   useEffect(() => {
     void refetch();
-  }, [queryObj, currPage, refetch, reloadSubjects]);
+  }, [queryObj, currPage, reloadSubjects]);
 
   return (
     <Box sx={styles.layout}>

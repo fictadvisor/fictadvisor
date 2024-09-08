@@ -1,9 +1,9 @@
 'use client';
 import React, { FC, useState } from 'react';
-import { useQuery } from 'react-query';
 import { UpdateStudentWithRolesDTO } from '@fictadvisor/utils/requests';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { Box, Divider } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/navigation';
 
@@ -32,23 +32,23 @@ interface AdminStudentEditPageProps {
   };
 }
 const AdminStudentEditPage: FC<AdminStudentEditPageProps> = ({ params }) => {
-  const { data: student, isLoading: isLoadingStudent } = useQuery(
-    ['getStudent', params.studentId],
-    () => StudentAPI.getStudent(params.studentId),
-    useQueryAdminOptions,
-  );
+  const { data: student, isLoading: isLoadingStudent } = useQuery({
+    queryKey: ['getStudent', params.studentId],
+    queryFn: () => StudentAPI.getStudent(params.studentId),
+    ...useQueryAdminOptions,
+  });
 
-  const { data: selectives, isLoading: isLoadingSelective } = useQuery(
-    ['getStudentSelective', params.studentId],
-    () => StudentAPI.getSelectives(params.studentId),
-    useQueryAdminOptions,
-  );
+  const { data: selectives, isLoading: isLoadingSelective } = useQuery({
+    queryKey: ['getStudentSelective', params.studentId],
+    queryFn: () => StudentAPI.getSelectives(params.studentId),
+    ...useQueryAdminOptions,
+  });
   const { data: remainingSelectives, isLoading: isLoadingRemainingSelectives } =
-    useQuery(
-      ['getStudentRemainingSelective', params.studentId],
-      () => StudentAPI.getRemainingSelectives(params.studentId),
-      useQueryAdminOptions,
-    );
+    useQuery({
+      queryKey: ['getStudentRemainingSelective', params.studentId],
+      queryFn: () => StudentAPI.getRemainingSelectives(params.studentId),
+      ...useQueryAdminOptions,
+    });
 
   const [connectedSelectives, setConnectedSelectives] = useState<string[]>([]);
   const [disconnectedSelectives, setDisconnectedSelectives] = useState<
