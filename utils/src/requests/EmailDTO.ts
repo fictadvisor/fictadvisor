@@ -16,10 +16,7 @@ export class EmailDTO {
   @ArrayUnique({}, validationOptionsMsg('There are duplicate emails'))
   @IsEmail(
     {},
-    {
-      each: true,
-      ...validationOptionsMsg('The email is not a valid email address'),
-    }
+    validationOptionsMsg('The email is not a valid email address', true),
   )
     emails: string[];
 }
