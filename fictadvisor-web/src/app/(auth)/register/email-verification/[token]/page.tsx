@@ -20,8 +20,10 @@ const VerifyEmailTokenPage = () => {
   const token = pathName.split('/').pop() ?? '';
 
   const loadData = async (token: string): Promise<void> => {
-    console.log('isLoggedIn:', isLoggedIn);
-    if (isLoggedIn) return;
+    if (isLoggedIn) {
+      router.push(`/`);
+      return;
+    }
 
     try {
       const { accessToken, refreshToken } =
