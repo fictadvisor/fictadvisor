@@ -15,17 +15,20 @@ const VerifyEmailTokenPage = () => {
   const pathName = usePathname();
 
   const toast = useToast();
-  const { update } = useAuthentication();
+  const { update, isLoggedIn } = useAuthentication();
 
   const token = pathName.split('/').pop() ?? '';
 
   const loadData = async (token: string): Promise<void> => {
+    console.log('isLoggedIn:', isLoggedIn);
+    if (isLoggedIn) return;
+
     try {
       const { accessToken, refreshToken } =
         await AuthAPI.verifyEmailToken(token);
       StorageUtil.setTokens(accessToken, refreshToken);
+      await update();
       router.push(`/`);
-      update();
     } catch (e) {
       toast.error('Лист реєстрації вже не дійсний', 'Пройди реєстрацію знов!');
       router.push(`/register`);
