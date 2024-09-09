@@ -24,8 +24,8 @@ const VerifyEmailTokenPage = () => {
       const { accessToken, refreshToken } =
         await AuthAPI.verifyEmailToken(token);
       StorageUtil.setTokens(accessToken, refreshToken);
-      await update();
       router.push(`/`);
+      update();
     } catch (e) {
       toast.error('Лист реєстрації вже не дійсний', 'Пройди реєстрацію знов!');
       router.push(`/register`);
