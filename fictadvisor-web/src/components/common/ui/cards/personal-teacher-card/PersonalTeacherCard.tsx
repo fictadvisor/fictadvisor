@@ -69,8 +69,8 @@ const PersonalTeacherCard: FC<TeacherCard> = ({
     TeacherAcademicStatus[academicStatus],
     TeacherScientificDegree[scientificDegree],
     TeacherPosition[position],
-  ];
-  console.log(scientificFields);
+  ].filter(field => field !== undefined);
+
   useEffect(() => {
     const handleScroll = () => {
       const bottom = blockRef.current?.getBoundingClientRect().bottom;
@@ -115,7 +115,7 @@ const PersonalTeacherCard: FC<TeacherCard> = ({
       </Box>
       <Box sx={styles.scienceInfo(isSubjectCard)}>
         <Typography textTransform="none">
-          {scientificFields.filter(field => field !== undefined).join(', ')}
+          {scientificFields.join(', ')}
         </Typography>
       </Box>
       {!isSubjectCard && (
