@@ -44,8 +44,7 @@ const PersonalTeacherSubjectPage = () => {
         subjectId ?? '',
         user?.id,
       ),
-
-    enabled: !!teacherId && !!subjectId && !!user?.id,
+    enabled: !!teacherId && !!subjectId,
     refetchOnWindowFocus: false,
     retry: false,
   });
