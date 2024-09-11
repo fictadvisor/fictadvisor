@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { SimpleStudentResponse } from '@fictadvisor/utils/responses';
-import { GroupRoles } from '@fictadvisor/utils/enums';
-import { Superhero } from '@prisma/client';
-import { DbStudent } from '../database/entities/DbStudent';
-import { DbRole } from '../database/entities/DbRole';
+import {Injectable} from '@nestjs/common';
+import {SimpleStudentResponse} from '@fictadvisor/utils/responses';
+import {GroupRoles} from '@fictadvisor/utils/enums';
+import {Superhero} from '@prisma/client';
+import {DbStudent} from '../database/entities/DbStudent';
+import {DbRole} from '../database/entities/DbRole';
+import {State} from "@fictadvisor/utils";
 
 @Injectable()
 export class StudentMapper {
@@ -22,7 +23,7 @@ export class StudentMapper {
       middleName: student.middleName,
       avatar: student.user.avatar,
       telegramId: student.user.telegramId,
-      group: !hasGroup ? undefined : {
+      group: !hasGroup ? { state: State.DECLINED } : {
         id: student.groupId,
         code: student.group?.code,
         state: student.state,

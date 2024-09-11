@@ -330,7 +330,7 @@ export class UserService {
 
   async getUser (userId: string) {
     const student = await this.studentRepository.findById(userId);
-    if (student) return this.studentMapper.getStudent(student);
+    if (student) return this.studentMapper.getStudent(student, !!student.group);
   }
 
   async getSimplifiedUser (userId: string) {
