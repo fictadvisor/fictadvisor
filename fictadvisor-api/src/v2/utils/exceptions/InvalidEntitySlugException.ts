@@ -1,7 +1,7 @@
 import { InvalidEntityByException } from './InvalidEntityByException';
 
-export class InvalidEntityIdException extends InvalidEntityByException {
+export class InvalidEntitySlugException extends InvalidEntityByException {
   constructor (entity: string) {
-    super(entity, 'id');
+    super(entity, 'slug');
   }
 }

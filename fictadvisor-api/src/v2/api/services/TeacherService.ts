@@ -5,7 +5,7 @@ import {
   UpdateContactDTO,
   QueryAllTeacherDTO,
   ResponseQueryDTO,
-  ComplaintDTO,
+  ComplaintDTO, CreateTeacherDTO,
 } from '@fictadvisor/utils/requests';
 import { TeacherWithContactsFullResponse } from '@fictadvisor/utils/responses';
 import { DatabaseUtils } from '../../database/DatabaseUtils';
@@ -29,6 +29,7 @@ import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityId
 import { EntityType, QuestionDisplay, Prisma } from '@prisma/client';
 import { TeacherRole } from '@fictadvisor/utils/enums';
 import { TeacherTypeAdapter } from '../../mappers/TeacherRoleAdapter';
+import { slugify } from '../../utils/StringUtil';
 
 @Injectable()
 export class TeacherService {
@@ -142,6 +143,16 @@ export class TeacherService {
     };
   }
 
+  async getTeacherBySlug (slug: string) {
+    const dbTeacher = await this.teacherRepository.find({ slug });
+    const contacts = await this.contactRepository.getAllContacts(dbTeacher.id);
+
+    return {
+      dbTeacher,
+      contacts,
+    };
+  }
+
   async connectTeacherWithCathedra (teacherId: string, cathedraId: string) {
     await this.teacherRepository.updateById(teacherId, {
       cathedras: {
@@ -214,8 +225,9 @@ export class TeacherService {
     return this.teacherMapper.getRoles(teacher);
   }
 
-  async create (body: Prisma.TeacherUncheckedCreateInput) {
-    return this.teacherRepository.create(body);
+  async create (body: CreateTeacherDTO) {
+    const slug = slugify(body.lastName, body.firstName, body.middleName);
+    return this.teacherRepository.create({ ...body, slug });
   }
 
   async update (id: string, body: Prisma.TeacherUncheckedUpdateInput) {

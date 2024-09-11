@@ -19,6 +19,7 @@ export class TeacherMapper {
       firstName: teacher.firstName,
       middleName: teacher.middleName,
       lastName: teacher.lastName,
+      slug: teacher.slug,
       description: teacher.description,
       avatar: teacher.avatar,
       academicStatus: teacher.academicStatus as AcademicStatus,

@@ -211,6 +211,7 @@ model Teacher {
   description        String?
   avatar             String?
   rating             Decimal               @default(0.00) @db.Decimal(5, 2)
+  slug               String?
   academicStatus     AcademicStatus?       @map("academic_status")
   scientificDegree   ScientificDegree?     @map("scientific_degree")
   position           Position?
