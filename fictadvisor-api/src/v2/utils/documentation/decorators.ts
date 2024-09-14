@@ -1,5 +1,13 @@
 import { applyDecorators, UseGuards } from '@nestjs/common';
-import { ApiOperation } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse, ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import { JwtGuard } from '../../security/JwtGuard';
 import { PermissionGuard } from '../../security/permission-guard/PermissionGuard';
@@ -8,13 +16,58 @@ import { MultipleAccesses } from 'src/v2/security/multiple-access-guard/Multiple
 import { TelegramGuard } from 'src/v2/security/TelegramGuard';
 import { MultipleAccessGuard } from 'src/v2/security/multiple-access-guard/MultipleAccessGuard';
 
+export class ApiDocumentationParams {
+  isAuth?: boolean;
+  ok?: any;
+  badRequest?: any;
+  forbidden?: any;
+  unauthorized?: any;
+  params?: any[];
+  queries?: any[];
+}
+
 export class ApiEndpointParams {
   summary: string;
   permissions?: PERMISSION | PERMISSION[];
   guards?: any | any[];
+  documentation? : ApiDocumentationParams;
 }
 
-export function ApiEndpoint ({ summary, permissions, guards }: ApiEndpointParams) {
+function addDocumentationDecorators (summary: string, description: string, documentation?: ApiDocumentationParams) {
+  const responseTypes = [
+    { key: 'ok', decorator: ApiOkResponse },
+    { key: 'badRequest', decorator: ApiBadRequestResponse },
+    { key: 'forbidden', decorator: ApiForbiddenResponse },
+    { key: 'unauthorized', decorator: ApiUnauthorizedResponse },
+  ];
+
+  const decorators = [
+    ApiOperation({ summary, description }),
+    ...(documentation?.isAuth ? [ApiBearerAuth()] : []),
+  ];
+
+  decorators.push(
+    ...responseTypes
+      .filter((responseType) => documentation?.[responseType.key])
+      .map((responseType) => responseType.decorator(documentation[responseType.key]))
+  );
+
+  if (documentation?.params) {
+    decorators.push(
+      ...documentation.params.map((query) => ApiParam(query))
+    );
+  }
+
+  if (documentation?.queries) {
+    decorators.push(
+      ...documentation.queries.map((query) => ApiQuery(query))
+    );
+  }
+
+  return decorators;
+}
+
+export function ApiEndpoint ({ summary, permissions, guards, documentation }: ApiEndpointParams) {
   let description = '';
 
   if (permissions) 
@@ -24,7 +77,7 @@ export function ApiEndpoint ({ summary, permissions, guards }: ApiEndpointParams
     guards = typeof guards === 'function' ? [guards] : guards;
   }
 
-  const decorators = [ApiOperation({ summary, description })];
+  const decorators = addDocumentationDecorators(summary, description, documentation);
 
   if (permissions && guards?.map((g) => g.name).includes('TelegramGuard')) {
     const accessGuards = [JwtGuard, TelegramGuard];
