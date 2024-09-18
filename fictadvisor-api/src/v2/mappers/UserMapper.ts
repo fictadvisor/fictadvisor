@@ -1,17 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { User } from '@prisma/client';
 import { DbUser } from '../database/entities/DbUser';
-import { UserForGetAllResponse } from '@fictadvisor/utils/responses';
+import { UserForGetAllResponse, UserResponse } from '@fictadvisor/utils/responses';
 
 @Injectable()
 export class UserMapper {
-  getUser (user: User) {
+  getUser (user: DbUser): UserResponse {
     return {
       id: user.id,
       email: user.email,
       username: user.username,
       avatar: user.avatar,
-      telegramId: user.telegramId,
+      telegramId: user.telegramId as unknown as number,
       state: user.state,
     };
   }
