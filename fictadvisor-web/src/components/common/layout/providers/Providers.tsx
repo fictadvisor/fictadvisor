@@ -5,6 +5,7 @@ import { ThemeProvider } from '@mui/system';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import AuthenticationProvider from '@/hooks/use-authentication/authentication-context';
 import ToastContextProvider from '@/hooks/use-toast/toast-context';
@@ -32,6 +33,7 @@ const Providers: FC<ProvidersProps> = ({ children }) => {
           <AuthenticationProvider>
             <ToastContextProvider>{children}</ToastContextProvider>
           </AuthenticationProvider>
+          <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </LocalizationProvider>
     </ThemeProvider>

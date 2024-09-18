@@ -375,9 +375,6 @@ export class UserService {
       await this.putSelective(userId);
     }
 
-    const { group: { code }, firstName, lastName } = user.student;
-    await this.telegramAPI.sendMessage(`verifyStudent: group: ${code}; fullName: ${firstName} ${lastName}; isCaptain: ${isCaptain};`);
-
     return this.updateStudent(userId, { state });
   }
 
@@ -388,8 +385,9 @@ export class UserService {
     const missingDisciplines = [];
     for (const year of years) {
       const selectiveFile = await this.fileService.getFileContent(`selective/${year}.csv`);
-      for (const parsedRow of selectiveFile.split(/\r\n/g)) {
-        const [,, subjectName,, semester,,,,, studentName] = parsedRow.split(';');
+      selectiveFile.replaceAll(';', ',');
+      for (const parsedRow of selectiveFile.split('\n')) {
+        const [,, subjectName,, semester,,,,, studentName] = parsedRow.split(',');
         if (!studentName?.startsWith(name)) continue;
         const discipline = await this.disciplineRepository.find({
           group: {
@@ -424,9 +422,6 @@ export class UserService {
           },
         });
       }
-    }
-    if (missingDisciplines.length) {
-      await this.telegramAPI.sendMessage(`There are missing disciplines for <b>${name}</b> in group <b>${code}</b>:\n  ${missingDisciplines.join('\n  ')}`);
     }
   }
 

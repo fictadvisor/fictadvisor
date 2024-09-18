@@ -24,7 +24,7 @@ export class StudentMapper {
       telegramId: student.user.telegramId,
       group: !hasGroup ? undefined : {
         id: student.groupId,
-        code: student.group.code,
+        code: student.group?.code,
         state: student.state,
         role: this.getGroupRole(student.roles)?.name,
       },
