@@ -4,9 +4,9 @@ import {
   createRegex,
   ENG_REGEX,
   NUM_REGEX,
-  validationOptionsMsg
+  validationOptionsMsg,
 } from '../ValidationUtil';
-import { State } from '../enums/db/StateEnum';
+import { State } from '../enums';
 
 export class UpdateUserDTO {
     @ApiPropertyOptional({
@@ -25,7 +25,7 @@ export class UpdateUserDTO {
       description: 'User\'s state',
       enum: State,
     })
-    @IsEnum(State, validationOptionsMsg('State is not an enum'))
+    @IsEnum(State, validationOptionsMsg('State must be an enum'))
     @IsOptional()
       state?: State;
 
@@ -39,7 +39,7 @@ export class UpdateUserDTO {
     @ApiPropertyOptional({
       description: 'User\'s email',
     })
-    @IsEmail({}, validationOptionsMsg('Email\'s format is not right'))
+    @IsEmail({}, validationOptionsMsg('Email must be valid email'))
     @IsOptional()
       email?: string;
 }

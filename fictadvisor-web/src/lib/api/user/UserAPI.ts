@@ -159,7 +159,11 @@ class UserAPI {
   }
 
   async setRole(userId: string, body: GiveRoleDTO): Promise<void> {
-    await client.post(`/users/${userId}/roles`, body, getAuthorizationHeader());
+    await client.patch(
+      `/users/${userId}/roles}`,
+      body,
+      getAuthorizationHeader(),
+    );
   }
 
   async getSelective(userId: string) {

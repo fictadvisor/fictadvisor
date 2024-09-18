@@ -1,11 +1,11 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
+import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
 import { RoleRepository } from '../../database/repositories/RoleRepository';
-import { InvalidEntityIdException } from 'src/v2/utils/exceptions/InvalidEntityIdException';
 
 @Injectable()
 export class RoleByIdPipe implements PipeTransform<string, Promise<string>> {
   constructor (
-        private roleRepository: RoleRepository
+    private roleRepository: RoleRepository,
   ) {}
 
   async transform (roleId: string): Promise<string> {

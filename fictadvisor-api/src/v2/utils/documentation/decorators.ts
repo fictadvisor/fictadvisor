@@ -1,12 +1,16 @@
 import { applyDecorators, UseGuards } from '@nestjs/common';
 import {
-  ApiBadRequestResponse, ApiBearerAuth,
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiConflictResponse,
   ApiForbiddenResponse,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
+  ApiPayloadTooLargeResponse,
   ApiQuery,
   ApiUnauthorizedResponse,
+  ApiUnsupportedMediaTypeResponse,
 } from '@nestjs/swagger';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import { JwtGuard } from '../../security/JwtGuard';
@@ -15,6 +19,7 @@ import { Permissions } from '../../security/permission-guard/Permissions';
 import { MultipleAccesses } from 'src/v2/security/multiple-access-guard/MultipleAccesses';
 import { TelegramGuard } from 'src/v2/security/TelegramGuard';
 import { MultipleAccessGuard } from 'src/v2/security/multiple-access-guard/MultipleAccessGuard';
+import { ApiImplicitFile } from '@nestjs/swagger/dist/decorators/api-implicit-file.decorator';
 
 export class ApiDocumentationParams {
   isAuth?: boolean;
@@ -22,6 +27,10 @@ export class ApiDocumentationParams {
   badRequest?: any;
   forbidden?: any;
   unauthorized?: any;
+  unsupportedMediaType?: any;
+  implicitFile?: any;
+  payloadTooLarge?: any;
+  conflict?: any;
   params?: any[];
   queries?: any[];
 }
@@ -39,6 +48,10 @@ function addDocumentationDecorators (summary: string, description: string, docum
     { key: 'badRequest', decorator: ApiBadRequestResponse },
     { key: 'forbidden', decorator: ApiForbiddenResponse },
     { key: 'unauthorized', decorator: ApiUnauthorizedResponse },
+    { key: 'unsupportedMediaType', decorator: ApiUnsupportedMediaTypeResponse },
+    { key: 'implicitFile', decorator: ApiImplicitFile },
+    { key: 'payloadTooLarge', decorator: ApiPayloadTooLargeResponse },
+    { key: 'conflict', decorator: ApiConflictResponse },
   ];
 
   const decorators = [
@@ -70,7 +83,7 @@ function addDocumentationDecorators (summary: string, description: string, docum
 export function ApiEndpoint ({ summary, permissions, guards, documentation }: ApiEndpointParams) {
   let description = '';
 
-  if (permissions) 
+  if (permissions)
     description += `<b>Permissions: ${typeof permissions === 'string' ? permissions : permissions.join(', ')}</b><br>`;
   if (guards) {
     description += `<b>Guards: ${typeof guards === 'function' ? guards.name : guards.map((g) => g.name).join(', ')}</b>`;
@@ -89,7 +102,7 @@ export function ApiEndpoint ({ summary, permissions, guards, documentation }: Ap
     );
     return applyDecorators(...decorators);
   }
-  
+
   if (guards) {
     decorators.push(UseGuards(...guards));
   }
