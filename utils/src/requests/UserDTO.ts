@@ -1,11 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsEnum, IsNotEmpty, Matches } from 'class-validator';
+import { IsEmail, IsNotEmpty, Matches } from 'class-validator';
 import {
   ENG_REGEX,
   NUM_REGEX,
-  validationOptionsMsg
+  validationOptionsMsg,
 } from '../ValidationUtil';
-import { State } from '../enums/db/StateEnum';
 
 export class UserDTO {
   @ApiProperty({
@@ -35,30 +34,4 @@ export class UserDTO {
 
   avatar?: string;
   telegramId?: bigint;
-}
-
-export class CreateUserDTO {
-  @ApiProperty({
-    description: 'User\'s username in the application',
-  })
-  @Matches(
-    new RegExp('^[' + ENG_REGEX + NUM_REGEX + '_' + ']{2,40}$'),
-    validationOptionsMsg('Username is not correct (a-zA-Z0-9_), or too short (min: 2), or too long (max: 40)'))
-  @IsNotEmpty(validationOptionsMsg('Username cannot be empty'))
-    username: string;
-
-  @ApiProperty({
-    description: 'User\'s email',
-  })
-  @IsEmail({}, validationOptionsMsg('Email is not an email'))
-  @IsNotEmpty(validationOptionsMsg('Email cannot be empty'))
-    email: string;
-
-  @ApiProperty({
-    description: 'User\'s state',
-    enum: State,
-  })
-  @IsEnum(State, validationOptionsMsg('State value is not in enum'))
-  @IsNotEmpty(validationOptionsMsg('State cannot be empty'))
-    state: State;
 }

@@ -1,9 +1,8 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsArray, IsEnum, IsOptional } from 'class-validator';
+import { IsArray, IsEnum, IsOptional, IsString } from 'class-validator';
 import { validationOptionsMsg } from '../ValidationUtil';
 import { QueryAllDTO } from './QueryAllDTO';
-import { State } from '../enums/db/StateEnum';
-import { SortQAUParam } from '../enums/params/SortQAUParam';
+import { State, SortQAUParam } from '../enums';
 
 export class QueryAllUsersDTO extends QueryAllDTO {
     @ApiPropertyOptional({
@@ -18,6 +17,7 @@ export class QueryAllUsersDTO extends QueryAllDTO {
     @ApiPropertyOptional({
       description: 'Symbols that should be in username or email',
     })
+    @IsString(validationOptionsMsg('Search must be an enum'))
     @IsOptional()
       search?: string;
 
@@ -27,7 +27,7 @@ export class QueryAllUsersDTO extends QueryAllDTO {
       type: [State],
     })
     @IsArray()
-    @IsEnum(State, validationOptionsMsg('Each element of states should be an enum', true))
+    @IsEnum(State, validationOptionsMsg('Each element of states must be an enum', true))
     @IsOptional()
       state?: State[];
 }
