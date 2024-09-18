@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { State } from '../enums/db/StateEnum';
-import { RoleName } from '../enums/db/RoleNameEnum';
+import { RoleName, State } from '../enums';
 
 export class GroupResponse {
   @ApiProperty({

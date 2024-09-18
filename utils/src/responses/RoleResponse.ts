@@ -1,6 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { MappedGrant } from './GrantResponse';
-import { RoleName } from '../enums/db/RoleNameEnum';
+import { RoleName } from '../enums';
 
 export class BaseRoleResponse {
   @ApiProperty({
@@ -23,6 +23,13 @@ export class BaseRoleResponse {
     description: 'Brief information about a specific role',
   })
     displayName: string;
+}
+
+export class BaseRoleWithParentResponse extends BaseRoleResponse {
+  @ApiPropertyOptional({
+    description: 'Id of parent role',
+  })
+    parentId?: string;
 }
 
 export class RoleResponse extends BaseRoleResponse {

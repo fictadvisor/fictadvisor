@@ -1,6 +1,13 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import {IsAscii, IsOptional, IsUrl, Matches, MaxLength} from 'class-validator';
-import {createRegex, ENG_REGEX, NUM_REGEX, UKR_REGEX, UKRSPEC_REGEX, validationOptionsMsg} from '../ValidationUtil';
+import { IsAscii, IsOptional, IsUrl, Matches, MaxLength } from 'class-validator';
+import {
+  createRegex,
+  ENG_REGEX,
+  NUM_REGEX,
+  UKR_REGEX,
+  UKRSPEC_REGEX,
+  validationOptionsMsg,
+} from '../ValidationUtil';
 
 export class UpdateContactDTO {
     @ApiPropertyOptional({
@@ -26,7 +33,7 @@ export class UpdateContactDTO {
     })
     @MaxLength(200, validationOptionsMsg('Link is too long (max: 200)'))
     @IsAscii(validationOptionsMsg('Link contains wrong symbols (ASCII only)'))
-    @IsUrl({}, validationOptionsMsg('Link is not a url'))
+    @IsUrl({}, validationOptionsMsg('Link must be a url'))
     @IsOptional()
       link?: string;
 }

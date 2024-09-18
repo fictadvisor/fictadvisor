@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { SimpleStudentResponse } from '@fictadvisor/utils/responses';
-import { GroupRoles } from '@fictadvisor/utils/enums';
+import { SimpleStudentResponse, SuperheroResponse } from '@fictadvisor/utils/responses';
+import { GroupRoles, State } from '@fictadvisor/utils/enums';
 import { Superhero } from '@prisma/client';
 import { DbStudent } from '../database/entities/DbStudent';
 import { DbRole } from '../database/entities/DbRole';
+import { FullStudentResponse, OrdinaryStudentResponse } from '@fictadvisor/utils';
 
 @Injectable()
 export class StudentMapper {
@@ -12,7 +13,7 @@ export class StudentMapper {
     return groupRole?.role;
   }
 
-  getStudent (student: DbStudent, hasGroup = true) {
+  getStudent (student: DbStudent, hasGroup = true): OrdinaryStudentResponse {
     return {
       id: student.user.id,
       username: student.user.username,
@@ -21,7 +22,7 @@ export class StudentMapper {
       lastName: student.lastName,
       middleName: student.middleName,
       avatar: student.user.avatar,
-      telegramId: student.user.telegramId,
+      telegramId: student.user.telegramId as unknown as number,
       group: !hasGroup ? undefined : {
         id: student.groupId,
         code: student.group?.code,
@@ -32,8 +33,9 @@ export class StudentMapper {
     };
   }
 
-  updateStudent (student: DbStudent) {
+  updateStudent (student: DbStudent): FullStudentResponse {
     return {
+      id: student.userId,
       firstName: student.firstName,
       middleName: student.middleName,
       lastName: student.lastName,
@@ -41,7 +43,7 @@ export class StudentMapper {
         id: student.user.id,
         email: student.user.email,
         username: student.user.username,
-        telegramId: student.user.telegramId,
+        telegramId: student.user.telegramId as unknown as number,
         avatar: student.user.avatar,
         state: student.user.state,
       },
@@ -66,15 +68,15 @@ export class StudentMapper {
     };
   }
 
-  getSuperhero (superhero: Superhero) {
+  getSuperhero (superhero: Superhero): SuperheroResponse {
     return {
       userId: superhero.userId,
       dorm: superhero.dorm,
-      state: superhero.state,
+      state: superhero.state as State,
     };
   }
 
-  getStudents (students: DbStudent[]) {
+  getStudents (students: DbStudent[]): SimpleStudentResponse[] {
     return students.map((student) => this.getSimpleStudent(student));
   }
 

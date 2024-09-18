@@ -6,18 +6,14 @@ export class QueryAllDTO {
   @ApiPropertyOptional({
     description: 'Number of the page',
   })
-  @IsNumberString({}, {
-    message: 'Page must be a number',
-  })
+  @IsNumberString({}, validationOptionsMsg('Page must be a number'))
   @IsOptional()
     page?: number;
 
   @ApiPropertyOptional({
     description: 'Amount of the elements in the page',
   })
-  @IsNumberString({}, {
-    message: 'PageSize must be a number',
-  })
+  @IsNumberString({}, validationOptionsMsg('PageSize must be a number'))
   @IsOptional()
     pageSize?: number;
 
@@ -25,13 +21,14 @@ export class QueryAllDTO {
     description: 'Symbols that should be in a filter',
   })
   @IsOptional()
-  @IsString()
+  @IsString(validationOptionsMsg('Search must be a string'))
     search?: string;
 
   @ApiPropertyOptional({
     description: 'Sorting parameter',
   })
   @IsOptional()
+  @IsString(validationOptionsMsg('Sort must be a string'))
     sort?: string;
 
   @ApiPropertyOptional({

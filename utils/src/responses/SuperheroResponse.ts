@@ -1,14 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { State } from '../enums/db/StateEnum';
+import { State } from '../enums';
 
 export class SuperheroResponse {
   @ApiProperty({
     description: 'Superhero\'s id',
   })
     userId: string;
-  
+
   @ApiProperty({
-    description: 'Whether the superhero is in dormintory or not',
+    description: 'Whether the superhero is in dormitory or not',
   })
     dorm: boolean;
 
