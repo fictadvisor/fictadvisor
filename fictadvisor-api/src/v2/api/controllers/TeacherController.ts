@@ -30,27 +30,7 @@ import { QuestionMapper } from '../../mappers/QuestionMapper';
 import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
 import { TeacherService } from '../services/TeacherService';
 import { PollService } from '../services/PollService';
-import {
-  TeacherDocumentationGetTeacher,
-  TeacherDocumentationGetSubject,
-  TeacherDocumentationGetDisciplines,
-  TeacherDocumentationGetSubjects,
-  TeacherDocumentationGetTeacherRoles,
-  TeacherDocumentationGetAll,
-  TeacherDocumentationCreate,
-  TeacherDocumentationUpdate,
-  TeacherDocumentationDelete,
-  TeacherDocumentationGetAllContacts,
-  TeacherDocumentationGetContact,
-  TeacherDocumentationCreateContact,
-  TeacherDocumentationUpdateContact,
-  TeacherDocumentationDeleteContact,
-  TeacherDocumentationGetMarks,
-  TeacherDocumentationGetComments,
-  TeacherDocumentationConnectCathedra,
-  TeacherDocumentationDisconnectCathedra,
-  TeacherDocumentationSendComplaint,
-} from '../../utils/documentation/teacher';
+import { TeacherDocumentation } from 'src/v2/utils/documentation/teacher';
 
 @ApiTags('Teachers')
 @Controller({
@@ -69,7 +49,7 @@ export class TeacherController {
 
   @ApiEndpoint({
     summary: 'Get all teachers',
-    documentation: TeacherDocumentationGetAll,
+    documentation: TeacherDocumentation.GET_ALL,
   })
   @Get()
   async getAll (
@@ -84,7 +64,7 @@ export class TeacherController {
 
   @ApiEndpoint({
     summary: 'Receive roles by teacher',
-    documentation: TeacherDocumentationGetTeacherRoles,
+    documentation: TeacherDocumentation.GET_TEACHER_ROLES,
   })
   @Get('/:teacherId/roles')
   async getTeacherRoles (
@@ -97,7 +77,7 @@ export class TeacherController {
 
   @ApiEndpoint({
     summary: 'Receive subjects by teacher',
-    documentation: TeacherDocumentationGetSubjects,
+    documentation: TeacherDocumentation.GET_SUBJECTS,
   })
   @Get('/:teacherId/subjects')
   async getSubjects (
@@ -110,7 +90,7 @@ export class TeacherController {
 
   @ApiEndpoint({
     summary: 'Receive disciplines by teacher',
-    documentation: TeacherDocumentationGetDisciplines,
+    documentation: TeacherDocumentation.GET_DISCIPLINES,
     permissions: PERMISSION.USERS_$USERID_TEACHERS_$TEACHERID_DISCIPLINES_GET,
   })
   @Get('/:teacherId/disciplines')
@@ -125,7 +105,7 @@ export class TeacherController {
 
   @ApiEndpoint({
     summary: 'Receive a certain subject by teacher',
-    documentation: TeacherDocumentationGetSubject,
+    documentation: TeacherDocumentation.GET_SUBJECT,
   })
   @Get('/:teacherId/subjects/:subjectId')
   async getSubject (
@@ -137,7 +117,7 @@ export class TeacherController {
 
   @ApiEndpoint({
     summary: 'Receive a certain teacher',
-    documentation: TeacherDocumentationGetTeacher,
+    documentation: TeacherDocumentation.GET_TEACHER,
   })
   @Get('/:teacherId')
   async getTeacher (
@@ -152,7 +132,7 @@ export class TeacherController {
 
   @ApiEndpoint({
     summary: 'Create a teacher',
-    documentation: TeacherDocumentationCreate,
+    documentation: TeacherDocumentation.CREATE,
     permissions: PERMISSION.TEACHERS_CREATE,
   })
   @Post()
@@ -165,7 +145,7 @@ export class TeacherController {
 
   @ApiEndpoint({
     summary: 'Update a teacher',
-    documentation: TeacherDocumentationUpdate,
+    documentation: TeacherDocumentation.UPDATE,
     permissions: PERMISSION.TEACHERS_$TEACHERID_UPDATE,
   })
   @Patch('/:teacherId')
@@ -179,7 +159,7 @@ export class TeacherController {
 
   @ApiEndpoint({
     summary: 'Delete the teacher',
-    documentation: TeacherDocumentationDelete,
+    documentation: TeacherDocumentation.DELETE,
     permissions: PERMISSION.TEACHERS_$TEACHERID_DELETE,
   })
   @Delete('/:teacherId')
@@ -191,7 +171,7 @@ export class TeacherController {
 
   @ApiEndpoint({
     summary: 'Receive teacher\'s contacts',
-    documentation: TeacherDocumentationGetAllContacts,
+    documentation: TeacherDocumentation.GET_ALL_CONTACTS,
   })
   @Get('/:teacherId/contacts')
   async getAllContacts (
@@ -203,7 +183,7 @@ export class TeacherController {
 
   @ApiEndpoint({
     summary: 'Receive teacher with certain contact id',
-    documentation: TeacherDocumentationGetContact,
+    documentation: TeacherDocumentation.GET_CONTACT,
   })
   @Get('/:teacherId/contacts/:contactId')
   getContact (
@@ -214,7 +194,7 @@ export class TeacherController {
 
   @ApiEndpoint({
     summary: 'Add teacher\'s contact',
-    documentation: TeacherDocumentationCreateContact,
+    documentation: TeacherDocumentation.CREATE_CONTACT,
     permissions: PERMISSION.TEACHERS_$TEACHERID_CONTACTS_CREATE,
   })
   @Post('/:teacherId/contacts')
@@ -227,7 +207,7 @@ export class TeacherController {
 
   @ApiEndpoint({
     summary: 'Update certain teacher\'s contact',
-    documentation: TeacherDocumentationUpdateContact,
+    documentation: TeacherDocumentation.UPDATE_CONTACT,
     permissions: PERMISSION.TEACHERS_$TEACHERID_CONTACTS_UPDATE,
   })
   @Patch('/:teacherId/contacts/:contactId')
@@ -240,7 +220,7 @@ export class TeacherController {
 
   @ApiEndpoint({
     summary: 'Delete teacher\'s contact',
-    documentation: TeacherDocumentationDeleteContact,
+    documentation: TeacherDocumentation.DELETE_CONTACT,
     permissions: PERMISSION.TEACHERS_$TEACHERID_CONTACTS_DELETE,
   })
   @Delete('/:teacherId/contacts/:contactId')
@@ -252,7 +232,7 @@ export class TeacherController {
 
   @ApiEndpoint({
     summary: 'Get teacher\'s marks',
-    documentation: TeacherDocumentationGetMarks,
+    documentation: TeacherDocumentation.GET_MARKS,
   })
   @Get('/:teacherId/marks')
   async getMarks (
@@ -265,7 +245,7 @@ export class TeacherController {
 
   @ApiEndpoint({
     summary: 'Get question answers with TEXT type (comments)',
-    documentation: TeacherDocumentationGetComments,
+    documentation: TeacherDocumentation.GET_COMMENTS,
   })
   @Get('/:teacherId/comments')
   async getComments (
@@ -279,7 +259,7 @@ export class TeacherController {
 
   @ApiEndpoint({
     summary: 'Connect teacher to cathedra',
-    documentation: TeacherDocumentationConnectCathedra,
+    documentation: TeacherDocumentation.CONNECT_CATHEDRA,
     permissions: PERMISSION.TEACHERS_$TEACHERID_CATHEDRAS_UPDATE,
   })
   @Patch('/:teacherId/cathedra/:cathedraId')
@@ -292,7 +272,7 @@ export class TeacherController {
 
   @ApiEndpoint({
     summary: 'Remove the teacher from the cathedra',
-    documentation: TeacherDocumentationDisconnectCathedra,
+    documentation: TeacherDocumentation.DISCONNECT_CATHEDRA,
     permissions: PERMISSION.TEACHERS_$TEACHERID_CATHEDRAS_DELETE,
   })
   @Delete('/:teacherId/cathedra/:cathedraId')
@@ -305,7 +285,7 @@ export class TeacherController {
 
   @ApiEndpoint({
     summary: 'Send a complaint to the teacher',
-    documentation: TeacherDocumentationSendComplaint,
+    documentation: TeacherDocumentation.SEND_COMPLAINT,
   })
   @Post('/:teacherId/sendComplaint')
   sendComplaint (
