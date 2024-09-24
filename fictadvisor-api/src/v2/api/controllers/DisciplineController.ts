@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -12,6 +12,7 @@ import {
 import {
   CreateDisciplineDTO,
   QueryAllDisciplinesDTO,
+  UpdateDisciplineDTO,
 } from '@fictadvisor/utils/requests';
 import {
   DisciplineTeachersResponse,
@@ -195,5 +196,45 @@ export class DisciplineController {
   async getById (@Param('disciplineId', DisciplineByIdPipe) disciplineId: string) {
     const discipline = await this.disciplineService.get(disciplineId);
     return this.disciplineMapper.getDisciplineWithTeachers(discipline);
+  }
+
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: ExtendedDisciplineTeachersResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException:
+      Discipline with such id is not found
+
+    InvalidBodyException:
+      isSelective property must be boolean`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException: 
+      You do not have permission to perform this action`,
+  })
+  @ApiParam({
+    name: 'disciplineId',
+    required: true,
+    description: 'Id of a discipline to update',
+  })
+  @ApiEndpoint({
+    summary: 'Update discipline by id',
+    permissions: PERMISSION.DISCIPLINE_UPDATE,
+  })
+  @Patch('/:disciplineId')
+  async updateById (
+    @Body() body: UpdateDisciplineDTO,
+    @Param('disciplineId', DisciplineByIdPipe) disciplineId: string,
+  ) {
+    const updatedDiscipline = await this.disciplineService.updateById(disciplineId, body);
+    return this.disciplineMapper.getDisciplineWithTeachers(updatedDiscipline);
   }
 }
