@@ -3,6 +3,7 @@ import {
   CreateDisciplineDTO,
   QueryAllDisciplinesDTO,
   QuerySemesterDTO,
+  UpdateDisciplineDTO,
 } from '@fictadvisor/utils/requests';
 import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
 import { DisciplineTeacherService } from './DisciplineTeacherService';
@@ -131,5 +132,9 @@ export class DisciplineService {
 
   async deleteDiscipline (disciplineId: string): Promise<DbDiscipline> {
     return this.disciplineRepository.deleteById(disciplineId);
+  }
+
+  async updateById (id: string, data: UpdateDisciplineDTO): Promise<DbDiscipline> {
+    return this.disciplineRepository.updateById(id, data);
   }
 }
