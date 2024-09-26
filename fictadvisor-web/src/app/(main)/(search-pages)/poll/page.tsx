@@ -56,11 +56,10 @@ const PollTeacher = () => {
   }, [isLoggedIn, push, replace]);
 
   const { data, isLoading, isFetching, refetch } = useQuery({
-    queryKey: ['pollTeachersByUserId', user.id, queryObj],
+    queryKey: ['pollTeachersByUserId', user?.id, queryObj],
     queryFn: () => PollAPI.getUserTeachers(user.id, queryObj),
-    placeholderData: (previousData, previousQuery) => previousData,
     refetchOnWindowFocus: false,
-    enabled: user?.id != null,
+    enabled: !!user,
   });
 
   useEffect(() => {
