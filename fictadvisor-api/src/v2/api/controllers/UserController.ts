@@ -29,6 +29,7 @@ import {
   UpdateSuperheroDTO,
   QueryAllUsersDTO,
   CreateUserDTO,
+  GoogleDTO,
 } from '@fictadvisor/utils/requests';
 import {
   SelectivesBySemestersResponse,
@@ -873,6 +874,58 @@ export class UserController {
     @Body() telegram: TelegramDTO,
   ) {
     await this.userService.linkTelegram(userId, telegram);
+  }
+
+  @ApiBearerAuth()
+  @ApiOkResponse()
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException:
+      User with such id is not found
+    
+    InvalidBodyException:
+      Google id token must be a string
+      Google id token cannot be empty`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized
+      
+    InvalidGoogleTokenException:
+      The google id token is invalid`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action
+    
+    GoogleEmailNotVerifiedException:
+      Cannot link google account with unverified email
+    
+    GoogleAlreadyLinkedException:
+      The user already has their google account linked`,
+  })
+  @ApiConflictResponse({
+    description: `\n
+    DuplicateGoogleIdException:
+      A user with this google id already exists`,
+  })
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: 'The user\'s id',
+  })
+  @ApiEndpoint({
+    summary: 'Adds user\'s google account',
+    permissions: PERMISSION.USERS_$USERID_GOOGLE_LINK,
+  })
+  @Post('/:userId/google')
+  async linkGoogle (
+    @Param('userId', UserByIdPipe) userId: string,
+    @Body() body: GoogleDTO,
+  ) {
+    return this.userService.linkGoogle(userId, body.googleIdToken);
   }
 
   @ApiBearerAuth()

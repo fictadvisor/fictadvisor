@@ -8,8 +8,8 @@ export class CreateQuestionDTO {
     description: 'Order of question',
   })
   @IsNotEmpty(validationOptionsMsg('Order cannot be empty'))
-  @Min(1, validationOptionsMsg('Order is too short (min: 1)'))
-  @Max(50, validationOptionsMsg('Order is too long (max: 50)'))
+  @Min(1, validationOptionsMsg('Order is too small (min: 1)'))
+  @Max(50, validationOptionsMsg('Order is too big (max: 50)'))
     order: number;
 
   @ApiProperty({

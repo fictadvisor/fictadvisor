@@ -17,7 +17,7 @@ import {
   ApiUnauthorizedResponse,
   ApiTooManyRequestsResponse,
   ApiParam,
-  ApiBody,
+  ApiBody, ApiConflictResponse, ApiForbiddenResponse,
 } from '@nestjs/swagger';
 import {
   RegistrationDTO,
@@ -29,6 +29,7 @@ import {
   TelegramDTO,
   RegisterTelegramDTO,
   LoginDTO,
+  GoogleDTO,
 } from '@fictadvisor/utils/requests';
 import {
   AuthLoginResponse,
@@ -38,6 +39,7 @@ import {
   IsAvailableResponse,
   TelegramRegistrationResponse,
   ResetPasswordResponse,
+  IsRegisteredResponse,
 } from '@fictadvisor/utils/responses';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
 import { LocalAuthGuard } from '../../security/LocalGuard';
@@ -128,6 +130,8 @@ export class AuthController {
       Hash cannot be empty
       Telegram id must be a bigint
       Username cannot be empty
+      The google id token must be a string
+      The google id token cannot be empty
                   
     AlreadyRegisteredException:
       User is already registered
@@ -138,7 +142,20 @@ export class AuthController {
   @ApiUnauthorizedResponse({
     description: `\n
     InvalidTelegramCredentialsException:
-      Your telegram hash is invalid`,
+      Your telegram hash is invalid
+      
+    InvalidGoogleTokenException:
+      The google id token is invalid`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    GoogleEmailNotVerifiedException:
+      Cannot link google account with unverified email`,
+  })
+  @ApiConflictResponse({
+    description: `\n
+    DuplicateGoogleIdException:
+      A user with this google id already exists`,
   })
   @ApiTooManyRequestsResponse({
     description: `\n
@@ -179,6 +196,31 @@ export class AuthController {
   @Post('/loginTelegram')
   async loginTelegram (@Body() body: TelegramDTO) {
     return this.authService.loginTelegram(body);
+  }
+
+  @ApiOkResponse({
+    type: AuthLoginResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidBodyException:
+      Google id token must be a string
+      Google id token cannot be empty
+      
+    InvalidEntityIdException
+      User with such id is not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    InvalidGoogleTokenException:
+      The google id token is invalid`,
+  })
+  @ApiEndpoint({
+    summary: 'Login with Google',
+  })
+  @Post('/loginGoogle')
+  async loginGoogle (@Body() body: GoogleDTO) {
+    return this.authService.loginGoogle(body.googleIdToken);
   }
 
   @ApiBearerAuth()
@@ -434,6 +476,30 @@ export class AuthController {
     @Param('token') token: string,
   ): Promise<TelegramRegistrationResponse> {
     const isRegistered = !!(await this.authService.checkTelegram(token));
+    return { isRegistered };
+  }
+
+  @ApiOkResponse({
+    type: IsRegisteredResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    InvalidGoogleTokenException:
+      The google id token is invalid`,
+  })
+  @ApiParam({
+    name: 'googleIdToken',
+    required: true,
+    description: 'The token used to check the Google registration status',
+  })
+  @ApiEndpoint({
+    summary: 'Check google registration status by a google id token',
+  })
+  @Get('/checkRegisterGoogle/:googleIdToken')
+  async checkRegisterGoogle (
+    @Param('googleIdToken') idToken: string,
+  ): Promise<IsRegisteredResponse> {
+    const isRegistered = await this.authService.isGoogleRegistered(idToken);
     return { isRegistered };
   }
 }

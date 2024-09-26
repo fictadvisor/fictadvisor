@@ -13,6 +13,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { PermissionService } from '../api/services/PermissionService';
 import { TelegramConfigService } from '../config/TelegramConfigService';
 import { MultipleAccessGuard } from '../security/multiple-access-guard/MultipleAccessGuard';
+import { GoogleStateGuard } from '../security/GoogleStateGuard';
 
 @Module({
   providers: [
@@ -26,6 +27,7 @@ import { MultipleAccessGuard } from '../security/multiple-access-guard/MultipleA
     TelegramConfigService,
     PermissionService,
     MultipleAccessGuard,
+    GoogleStateGuard,
   ],
   exports: [
     PermissionGuard, 
@@ -39,6 +41,7 @@ import { MultipleAccessGuard } from '../security/multiple-access-guard/MultipleA
     PermissionService,
     MultipleAccessGuard,
     JwtModule,
+    GoogleStateGuard,
   ],
   imports: [
     PassportModule,

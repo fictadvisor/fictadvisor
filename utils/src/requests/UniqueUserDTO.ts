@@ -5,6 +5,9 @@ export class UniqueUserDTO {
     telegramId?: number;
 
   @IsOptional()
+    googleId?: string;
+
+  @IsOptional()
     email?: string;
 
   @IsOptional()

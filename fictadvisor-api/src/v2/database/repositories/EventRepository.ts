@@ -32,6 +32,7 @@ export class EventRepository {
     }) as any as Promise<DbEvent>;
   }
 
+
   findById (id: string) {
     return this.find({
       id,

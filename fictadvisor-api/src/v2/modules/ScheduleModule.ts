@@ -11,6 +11,7 @@ import { AccessModule } from 'src/v2/modules/AccessModule';
 import { MapperModule } from './MapperModule';
 import { UserModule } from './UserModule';
 import { TelegramConfigService } from '../config/TelegramConfigService';
+import { GoogleModule } from '../google/GoogleModule';
 
 @Module({
   controllers: [ScheduleController],
@@ -26,6 +27,7 @@ import { TelegramConfigService } from '../config/TelegramConfigService';
     AccessModule,
     MapperModule,
     UserModule,
+    GoogleModule,
   ],
 })
 export class ScheduleModule {}

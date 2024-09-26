@@ -35,6 +35,7 @@ export class UserDTO {
 
   avatar?: string;
   telegramId?: bigint;
+  googleId?: string;
 }
 
 export class CreateUserDTO {

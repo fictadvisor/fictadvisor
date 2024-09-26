@@ -39,6 +39,7 @@ export * from './GeneralEventFiltrationDTO';
 export * from './GiveRoleDTO';
 export * from './GroupRequestDTO';
 export * from './GroupStudentsQueryDTO';
+export * from './GoogleDTO';
 export * from './IdentityQueryDTO';
 export * from './LoginDTO';
 export * from './PriorityDTO';

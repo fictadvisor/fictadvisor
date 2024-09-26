@@ -4,3 +4,4 @@ export * from './CommentsSortOrderEnum';
 export * from './EntrantActionsEnum';
 export * from './EventTypeEnum';
 export * from './GroupRolesEnum';
+export * from './GoogleAuthErrorEnum';

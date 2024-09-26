@@ -22,6 +22,7 @@ import { NotBelongException } from '../../utils/exceptions/NotBelongException';
 import { AlreadySelectedException } from '../../utils/exceptions/AlreadySelectedException';
 import { ExcessiveSelectiveDisciplinesException } from '../../utils/exceptions/ExcessiveSelectiveDisciplinesException';
 import { NotSelectedDisciplineException } from '../../utils/exceptions/NotSelectedDisciplineException';
+import { GoogleAuthService } from '../../google/services/GoogleAuthService';
 
 describe('UserService', () => {
   let userService: UserService;
@@ -45,6 +46,7 @@ describe('UserService', () => {
         DisciplineMapper,
         DisciplineTeacherService,
         PollService,
+        GoogleAuthService,
       ] as InjectionToken[];
       if (tokens.includes(token)) {
         return {};
