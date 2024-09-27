@@ -1,15 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { SimpleStudentResponse, SuperheroResponse } from '@fictadvisor/utils/responses';
+import { FullStudentResponse, OrdinaryStudentResponse, SimpleStudentResponse, SuperheroResponse } from '@fictadvisor/utils/responses';
 import { GroupRoles, State } from '@fictadvisor/utils/enums';
 import { Superhero } from '@prisma/client';
 import { DbStudent } from '../database/entities/DbStudent';
 import { DbRole } from '../database/entities/DbRole';
-import { FullStudentResponse, OrdinaryStudentResponse } from '@fictadvisor/utils';
 
 @Injectable()
 export class StudentMapper {
-  private getGroupRole (roles: { role: DbRole }[]) {
-    const groupRole = roles.find((r) => r.role.name === 'CAPTAIN' || r.role.name === 'MODERATOR' || r.role.name === 'STUDENT');
+  private getGroupRole (roles: { role: DbRole }[]): DbRole {
+    const groupRole = roles.find((r) => r.role.name === GroupRoles.CAPTAIN || r.role.name === GroupRoles.MODERATOR || r.role.name === GroupRoles.STUDENT);
     return groupRole?.role;
   }
 
@@ -80,17 +79,17 @@ export class StudentMapper {
     return students.map((student) => this.getSimpleStudent(student));
   }
 
-  getSimpleStudent (s: DbStudent): SimpleStudentResponse {
+  getSimpleStudent (student: DbStudent): SimpleStudentResponse {
     return {
-      id: s.userId,
-      lastName: s.lastName,
-      firstName: s.firstName,
-      middleName: s.middleName,
-      state: s.state,
-      role: this.getGroupRole(s.roles)?.name as (keyof typeof GroupRoles) ?? null,
+      id: student.userId,
+      lastName: student.lastName,
+      firstName: student.firstName,
+      middleName: student.middleName,
+      state: student.state,
+      role: this.getGroupRole(student.roles)?.name as (keyof typeof GroupRoles) ?? null,
       group: {
-        id: s.groupId,
-        code: s.group.code,
+        id: student.groupId,
+        code: student.group.code,
       },
     };
   }

@@ -9,7 +9,6 @@ import {
   validationOptionsMsg
 } from '../ValidationUtil';
 import { GroupRoles } from '../enums/other/GroupRolesEnum';
-import { RoleName } from '../enums/db/RoleNameEnum';
 
 export class CreateStudentDTO {
   @ApiProperty({
@@ -21,7 +20,7 @@ export class CreateStudentDTO {
   )
   @MinLength(2, validationOptionsMsg('First name is too short (min 2)'))
   @MaxLength(40, validationOptionsMsg('First name is too long (max 40)'))
-  @IsNotEmpty()
+  @IsNotEmpty(validationOptionsMsg('First name cannot be empty'))
     firstName: string;
 
   @ApiProperty({
@@ -33,7 +32,7 @@ export class CreateStudentDTO {
   )
   @MinLength(2, validationOptionsMsg('Last name is too short (min 2)'))
   @MaxLength(40, validationOptionsMsg('Last name is too long (max 40)'))
-  @IsNotEmpty()
+  @IsNotEmpty(validationOptionsMsg('Last name cannot be empty'))
     lastName: string;
 
   @ApiPropertyOptional({

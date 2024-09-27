@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsBoolean, IsNotEmpty, IsOptional, Matches } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsOptional, IsUUID, Matches } from 'class-validator';
 import {
   UKR_REGEX,
   UKRSPEC_REGEX,
@@ -10,6 +10,7 @@ export class StudentDTO {
   @ApiProperty({
     description: 'Id of the group',
   })
+  @IsUUID(undefined, validationOptionsMsg('Group id must be UUID'))
   @IsNotEmpty(validationOptionsMsg('Group id cannot be empty'))
     groupId: string;
 
