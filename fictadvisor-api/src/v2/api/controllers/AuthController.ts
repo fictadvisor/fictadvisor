@@ -109,6 +109,7 @@ export class AuthController {
   @ApiBadRequestResponse({
     description: `\n
     InvalidBodyException:
+      Group id must be UUID
       Group id cannot be empty
       First name is not correct (A-Я(укр.)\\-' ), or too short (min: 2), or too long (max: 40)
       First name cannot be empty
