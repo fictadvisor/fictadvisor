@@ -341,7 +341,7 @@ export class PollService {
 
     return {
       hasSelectedInLastSemester: !!hasSelectedInLastSemester,
-      teachers: this.disciplineTeacherMapper.getDisciplineTeachers(disciplineTeachers),
+      teachers: this.disciplineTeacherMapper.getDisciplineTeachersFull(disciplineTeachers),
     };
   }
 

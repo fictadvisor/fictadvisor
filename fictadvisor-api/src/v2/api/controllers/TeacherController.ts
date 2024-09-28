@@ -57,7 +57,7 @@ export class TeacherController {
   ): Promise<PaginatedTeachersResponse> {
     const teachers = await this.teacherService.getAll(query);
     return {
-      teachers: this.teacherMapper.getTeachers(teachers.data),
+      teachers: this.teacherMapper.getTeachersWithRolesAndCathedras(teachers.data),
       pagination: teachers.pagination,
     };
   }
@@ -100,7 +100,7 @@ export class TeacherController {
     @Query('userId', UserByIdPipe) userId: string,
   ): Promise<DisciplineTeacherAndSubjectResponse[]> {
     const disciplineTeachers = await this.teacherService.getUserDisciplineTeachers(teacherId, userId, notAnswered);
-    return this.disciplineTeacherMapper.getDisciplines(disciplineTeachers);
+    return this.disciplineTeacherMapper.getDisciplinesTeacherAndSubject(disciplineTeachers);
   }
 
   @ApiEndpoint({
@@ -125,7 +125,7 @@ export class TeacherController {
   ): Promise<TeacherWithContactsResponse> {
     const { dbTeacher, contacts } = await this.teacherService.getTeacher(teacherId);
     return {
-      ...this.teacherMapper.getTeacher(dbTeacher),
+      ...this.teacherMapper.getTeacherWithRolesAndCathedras(dbTeacher),
       contacts,
     };
   }
@@ -140,7 +140,7 @@ export class TeacherController {
     @Body() body: CreateTeacherDTO,
   ) {
     const dbTeacher = await this.teacherService.create(body);
-    return this.teacherMapper.getTeacher(dbTeacher);
+    return this.teacherMapper.getTeacherWithRolesAndCathedras(dbTeacher);
   }
 
   @ApiEndpoint({
@@ -154,7 +154,7 @@ export class TeacherController {
     @Body() body: UpdateTeacherDTO,
   ) {
     const dbTeacher = await this.teacherService.update(teacherId, body);
-    return this.teacherMapper.getTeacher(dbTeacher);
+    return this.teacherMapper.getTeacherWithRolesAndCathedras(dbTeacher);
   }
 
   @ApiEndpoint({

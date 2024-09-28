@@ -1,4 +1,4 @@
-import { QuestionType } from '@fictadvisor/utils/enums';
+import { QuestionDisplay, QuestionType } from '@prisma/client';
 
 export class DbQuestion {
   id: string;
@@ -10,5 +10,5 @@ export class DbQuestion {
   isRequired: boolean;
   criteria?: string;
   type: QuestionType;
-  display: string;
+  display: QuestionDisplay;
 }

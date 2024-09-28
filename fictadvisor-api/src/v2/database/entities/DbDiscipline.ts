@@ -1,5 +1,4 @@
 import {
-  Subject,
   Group,
   Teacher,
   SelectiveAmount,
@@ -8,6 +7,7 @@ import {
 } from '@prisma/client';
 import { DbDisciplineTeacherRole } from './DbDisciplineTeacherRole';
 import { DbDisciplineType } from './DbDisciplineType';
+import { DbSubject } from './DbSubject';
 
 export class DbDiscipline {
   id: string;
@@ -17,7 +17,7 @@ export class DbDiscipline {
   year: number;
   isSelective: boolean;
   description: string;
-  subject?: Subject;
+  subject?: DbSubject;
   group?: Group & {
     selectiveAmounts: SelectiveAmount[]
   };

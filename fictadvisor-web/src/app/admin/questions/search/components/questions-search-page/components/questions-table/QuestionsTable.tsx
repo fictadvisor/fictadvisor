@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { QuestionResponse } from '@fictadvisor/utils/responses';
+import { QuestionWithCategoryResponse } from '@fictadvisor/utils/responses';
 import {
   Table,
   TableBody,
@@ -15,7 +15,7 @@ import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 import TableActions from './components/table-actions';
 
 interface QuestionAdminSearchProps {
-  questions?: QuestionResponse[];
+  questions?: QuestionWithCategoryResponse[];
   deleteQuestion: (id: string) => Promise<void>;
 }
 

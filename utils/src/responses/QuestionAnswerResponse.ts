@@ -1,49 +1,67 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { DisciplineResponse } from './DisciplineResponse';
-import { QuestionResponse } from './QuestionResponse';
+import { QuestionWithCategoryResponse } from './QuestionResponse';
 import { TeacherResponse } from './TeacherResponse';
 
 class DisciplineTeacher {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Id of the disciplineTeacher',
+  })
     id: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Teacher id of the disciplineTeacher',
+  })
     teacherId: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Discipline id of the disciplineTeacher',
+  })
     disciplineId: string;
 
   @ApiProperty({
+    description: 'Discipline of the disciplineTeacher',
     type: DisciplineResponse,
   })
     discipline: DisciplineResponse;
 
   @ApiProperty({
+    description: 'Teacher of the disciplineTeacher',
     type: TeacherResponse,
   })
     teacher: TeacherResponse;
 }
 
 export class QuestionAnswerResponse {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Id of the disciplineTeacher',
+  })
     disciplineTeacherId: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Id of the question',
+  })
     questionId: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Id of the user',
+  })
     userId: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Text of the question answer',
+  })
     value: string;
 
   @ApiProperty({
+    description: 'DisciplineTeacher of the question answer',
     type: DisciplineTeacher,
   })
     disciplineTeacher: DisciplineTeacher;
 
   @ApiProperty({
-    type: QuestionResponse,
+    description: 'Questions of the question answer',
+    type: QuestionWithCategoryResponse,
   })
-    question: QuestionResponse;
+    question: QuestionWithCategoryResponse;
 }

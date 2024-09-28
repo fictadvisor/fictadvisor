@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { QuestionResponse } from '@fictadvisor/utils/responses';
+import { QuestionWithCategoryResponse } from '@fictadvisor/utils/responses';
 import { PencilSquareIcon } from '@heroicons/react/24/solid';
 import { Stack } from '@mui/material';
 
@@ -13,7 +13,7 @@ import DeletePopup from '@/components/common/ui/delete-popup';
 import { TrashBucketButton } from '@/components/common/ui/icon-button-mui/variants';
 
 interface TableActionsProps {
-  question: QuestionResponse;
+  question: QuestionWithCategoryResponse;
   deleteQuestion: (id: string) => Promise<void>;
 }
 

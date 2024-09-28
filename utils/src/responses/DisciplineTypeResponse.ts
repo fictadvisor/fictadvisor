@@ -1,18 +1,20 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { EventTypeEnum } from '../enums/other/EventTypeEnum';
+import { DisciplineTypeEnum } from '../enums';
 
 export class DisciplineTypeResponse {
   @ApiProperty({
     description: 'Discipline type id',
   })
     id: string;
+
   @ApiProperty({
     description: 'Discipline\'s id',
   })
     disciplineId: string;
+
   @ApiProperty({
-    enum: EventTypeEnum,
-    description: 'Event type',
+    enum: DisciplineTypeEnum,
+    description: 'Discipline type',
   })
-    name: EventTypeEnum;
+    name: DisciplineTypeEnum;
 }

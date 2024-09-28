@@ -93,7 +93,7 @@ export class GroupController {
   @Post()
   async create (@Body() data: CreateGroupDTO): Promise<MappedGroupResponse> {
     const group = await this.groupService.create(data);
-    return this.groupMapper.getGroup(group);
+    return this.groupMapper.getMappedGroup(group);
   }
 
   @ApiOkResponse({
@@ -119,7 +119,7 @@ export class GroupController {
   async getAll (@Query() query: QueryAllGroupsDTO): Promise<PaginatedGroupsResponse> {
     const groupsWithSelectiveAmounts = await this.groupService.getAll(query);
     const groups = this.groupMapper.getGroups(
-      groupsWithSelectiveAmounts.data, 
+      groupsWithSelectiveAmounts.data,
       query.sort === SortQAGroupsParam.CAPTAIN
     );
     return {
@@ -168,7 +168,7 @@ export class GroupController {
     @Param('groupId', GroupByIdPipe) groupId: string
   ): Promise<MappedGroupResponse> {
     const group = await this.groupService.get(groupId);
-    return this.groupMapper.getGroup(group);
+    return this.groupMapper.getMappedGroup(group);
   }
 
   @ApiCookieAuth()
@@ -210,7 +210,7 @@ export class GroupController {
     @Body() data: UpdateGroupDTO,
   ): Promise<MappedGroupResponse> {
     const group = await this.groupService.updateGroup(groupId, data);
-    return this.groupMapper.getGroup(group);
+    return this.groupMapper.getMappedGroup(group);
   }
 
   @ApiCookieAuth()
@@ -246,7 +246,7 @@ export class GroupController {
     @Param('groupId', GroupByIdPipe) groupId: string,
   ): Promise<MappedGroupResponse> {
     const group = await this.groupService.deleteGroup(groupId);
-    return this.groupMapper.getGroup(group);
+    return this.groupMapper.getMappedGroup(group);
   }
 
   @ApiCookieAuth()

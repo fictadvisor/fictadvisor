@@ -10,10 +10,27 @@ import {
 } from '@fictadvisor/utils/enums';
 import { DbTeacher } from '../database/entities/DbTeacher';
 import { getTeacherRoles } from './TeacherRoleAdapter';
+import { TeacherResponse, TeacherWithRolesAndCathedrasResponse } from '@fictadvisor/utils';
+import { Teacher } from '@prisma/client';
 
 @Injectable()
 export class TeacherMapper {
-  getTeacher (teacher: DbTeacher) {
+  getTeacher (teacher: Teacher): TeacherResponse {
+    return {
+      id: teacher.id,
+      firstName: teacher.firstName,
+      middleName: teacher.middleName,
+      lastName: teacher.lastName,
+      description: teacher.description,
+      avatar: teacher.avatar,
+      academicStatus: teacher.academicStatus as AcademicStatus,
+      scientificDegree: teacher.scientificDegree as ScientificDegree,
+      position: teacher.position as Position,
+      rating: +teacher.rating,
+    };
+  }
+
+  getTeacherWithRolesAndCathedras (teacher: DbTeacher): TeacherWithRolesAndCathedrasResponse {
     return {
       id: teacher.id,
       firstName: teacher.firstName,
@@ -26,15 +43,15 @@ export class TeacherMapper {
       position: teacher.position as Position,
       rating: +teacher.rating,
       cathedras: this.getCathedras(teacher),
-      roles: this.getRoles(teacher),
+      roles: this.getTeacherRoles(teacher),
     };
   }
 
-  getTeachers (teachers: DbTeacher[]) {
-    return teachers.map((teacher) => this.getTeacher(teacher));
+  getTeachersWithRolesAndCathedras (teachers: DbTeacher[]): TeacherWithRolesAndCathedrasResponse[] {
+    return teachers.map((teacher) => this.getTeacherWithRolesAndCathedras(teacher));
   }
 
-  getRoles (teacher: DbTeacher): TeacherRole[] {
+  getTeacherRoles (teacher: DbTeacher): TeacherRole[] {
     const roles: TeacherRole[] = [];
     for (const disciplineTeacher of teacher.disciplineTeachers) {
       roles.push(...getTeacherRoles(disciplineTeacher.roles));
