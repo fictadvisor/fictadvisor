@@ -1,12 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { MappedGroupResponse } from '@fictadvisor/utils/responses';
-import { RoleName } from '@prisma/client';
+import { GroupResponse, MappedGroupResponse } from '@fictadvisor/utils/responses';
+import { Group, RoleName, SelectiveAmount } from '@prisma/client';
 import { DbGroup } from '../database/entities/DbGroup';
 import { DbStudent } from '../database/entities/DbStudent';
 
 @Injectable()
 export class GroupMapper {
-  getGroup (group: DbGroup): MappedGroupResponse {
+  getGroup (group: Group & { selectiveAmounts: SelectiveAmount[] }): GroupResponse {
+    return {
+      id: group.id,
+      code: group.code,
+    };
+  }
+
+  getMappedGroup (group: DbGroup): MappedGroupResponse {
     const captain = group.students.find(
       (student) => student.roles.find(({ role }) => role.name === RoleName.CAPTAIN)
     );
@@ -39,7 +46,7 @@ export class GroupMapper {
     };
   }
 
-  getGroupByCaptain (captain: DbStudent): MappedGroupResponse {
+  getMappedGroupByCaptain (captain: DbStudent): MappedGroupResponse {
     const group = captain.group;
     const speciality = group.educationalProgram?.speciality;
 
@@ -69,14 +76,14 @@ export class GroupMapper {
       },
     };
   }
-  
+
   getGroups (groups: DbGroup[] | DbStudent[], byCaptain=false) {
-    if (byCaptain) return groups.map((captain) =>  this.getGroupByCaptain(captain));
-    return groups.map((group) =>  this.getGroup(group));
+    if (byCaptain) return groups.map((captain) =>  this.getMappedGroupByCaptain(captain));
+    return groups.map((group) =>  this.getMappedGroup(group));
   }
-  
+
   getGroupsByCaptain (captains: DbStudent[]) {
-    return captains.map((captain) =>  this.getGroupByCaptain(captain));
+    return captains.map((captain) =>  this.getMappedGroupByCaptain(captain));
   }
 
   getGroupsWithTelegramGroups (groups) {

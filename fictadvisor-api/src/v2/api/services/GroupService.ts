@@ -195,7 +195,7 @@ export class GroupService {
         year,
       },
     });
-    return this.disciplineMapper.getDisciplinesWithTeachers(disciplines);
+    return this.disciplineMapper.getExtendedDisciplinesTeachers(disciplines);
   }
 
   async getDisciplines (groupId: string, { year, semester }: QuerySemesterDTO) {

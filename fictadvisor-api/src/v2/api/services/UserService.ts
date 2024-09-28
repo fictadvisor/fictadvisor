@@ -93,7 +93,7 @@ export class UserService {
         },
       },
     });
-    return this.disciplineMapper.getSelectivesWithAmount(selectiveByUser, selectiveAmounts);
+    return this.disciplineMapper.getSelectivesBySemesters(selectiveByUser, selectiveAmounts);
   }
 
   async giveRole (studentId: string, roleId: string) {

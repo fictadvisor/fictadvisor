@@ -6,7 +6,7 @@ import {
 } from '@fictadvisor/utils/requests';
 import {
   DisciplinesResponse,
-  DisciplineTeacherCreateResponse,
+  DisciplineTeacherExtendedResponse,
   DisciplineTeachersResponse,
   ExtendedDisciplineTeachersResponse,
 } from '@fictadvisor/utils/responses';
@@ -46,7 +46,7 @@ class DisciplineAPI {
   }
 
   async addDisciplineTeacher(body: CreateDisciplineTeacherDTO) {
-    const { data } = await client.post<DisciplineTeacherCreateResponse>(
+    const { data } = await client.post<DisciplineTeacherExtendedResponse>(
       `/disciplineTeachers`,
       body,
     );
@@ -57,7 +57,7 @@ class DisciplineAPI {
     disciplineTeacherId: string,
     body: UpdateDisciplineTeacherDTO,
   ) {
-    const { data } = await client.patch<DisciplineTeacherCreateResponse>(
+    const { data } = await client.patch<DisciplineTeacherExtendedResponse>(
       `/disciplineTeachers/${disciplineTeacherId}`,
       body,
     );

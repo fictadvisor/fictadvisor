@@ -5,9 +5,10 @@ import {
   ApiForbiddenResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiParam,
+  ApiParam, ApiParamOptions,
   ApiPayloadTooLargeResponse,
-  ApiQuery,
+  ApiQuery, ApiQueryOptions,
+  ApiResponseOptions,
   ApiUnauthorizedResponse,
   ApiUnsupportedMediaTypeResponse,
 } from '@nestjs/swagger';
@@ -18,20 +19,20 @@ import { Permissions } from '../../security/permission-guard/Permissions';
 import { MultipleAccesses } from 'src/v2/security/multiple-access-guard/MultipleAccesses';
 import { TelegramGuard } from 'src/v2/security/TelegramGuard';
 import { MultipleAccessGuard } from 'src/v2/security/multiple-access-guard/MultipleAccessGuard';
-import { ApiImplicitFile } from '@nestjs/swagger/dist/decorators/api-implicit-file.decorator';
+import { ApiImplicitFile, ApiImplicitFileMetadata } from '@nestjs/swagger/dist/decorators/api-implicit-file.decorator';
 
 export class ApiDocumentationParams {
   isAuth?: boolean;
-  ok?: any;
-  badRequest?: any;
-  forbidden?: any;
-  unauthorized?: any;
-  unsupportedMediaType?: any;
-  implicitFile?: any;
-  payloadTooLarge?: any;
-  conflict?: any;
-  params?: any[];
-  queries?: any[];
+  ok?:  ApiResponseOptions;
+  badRequest?: ApiResponseOptions;
+  forbidden?: ApiResponseOptions;
+  unauthorized?: ApiResponseOptions;
+  unsupportedMediaType?: ApiResponseOptions;
+  implicitFile?:  ApiImplicitFileMetadata;
+  payloadTooLarge?: ApiResponseOptions;
+  conflict?: ApiResponseOptions;
+  params?: ApiParamOptions[];
+  queries?: ApiQueryOptions[];
 }
 
 export class ApiEndpointParams {

@@ -1,16 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { DbQuestionWithRoles } from '../database/entities/DbQuestionWithRoles';
-import { QuestionDisplay, QuestionRole, QuestionType } from '@prisma/client';
+import { QuestionRole } from '@prisma/client';
 import { DbDisciplineTeacherWithAnswers } from '../database/entities/DbDisciplineTeacherWithAnswers';
 import { DbQuestionWithAnswers } from '../database/entities/DbQuestionWithAnswers';
 import { QuestionCommentData } from '../api/datas/QuestionCommentData';
 import { DbQuestionAnswer } from '../database/entities/DbQuestionAnswer';
-import { CommentResponse } from '@fictadvisor/utils/responses';
+import { CommentResponse, QuestionWithCategoryResponse } from '@fictadvisor/utils/responses';
 import { DbQuestion } from '../database/entities/DbQuestion';
+import { QuestionDisplay, QuestionType } from '@fictadvisor/utils';
 
 @Injectable()
 export class QuestionMapper {
-  getQuestion (question: DbQuestion) {
+  getQuestionWithCategory (question: DbQuestion): QuestionWithCategoryResponse {
     return {
       id: question.id,
       order: question.order,
@@ -20,15 +21,15 @@ export class QuestionMapper {
       text: question.text,
       isRequired: question.isRequired,
       criteria: question.criteria,
-      type: question.type,
-      display: question.display,
+      type: question.type as QuestionType,
+      display: question.display as QuestionDisplay,
     };
   }
 
   getQuestions (questions: DbQuestion[]) {
     const result = [];
     for (const question of questions) {
-      result.push(this.getQuestion(question));
+      result.push(this.getQuestionWithCategory(question));
     }
     return result;
   }
@@ -36,7 +37,7 @@ export class QuestionMapper {
   sortByCategories (questions: DbQuestionWithRoles[]) {
     const results = [];
     for (const q of questions) {
-      const question = this.getQuestion(q);
+      const question = this.getQuestionWithCategory(q);
       const name = question.category;
       delete question.category;
       const category = results.find((c) => (c.name === name));
@@ -149,7 +150,7 @@ export class QuestionMapper {
 
   getRightMarkFormat ({ display, type, questionAnswers: answers }: DbQuestionWithAnswers) {
     if (display === QuestionDisplay.RADAR || display === QuestionDisplay.CIRCLE) {
-      return this.parseMark(type, answers.reduce((acc, answer) => acc + (+answer.value), 0), answers.length);
+      return this.parseMark(type as QuestionType, answers.reduce((acc, answer) => acc + (+answer.value), 0), answers.length);
     } else if (display === QuestionDisplay.AMOUNT) {
       const table = {};
       for (let i = 1; i <= 10; i++) {

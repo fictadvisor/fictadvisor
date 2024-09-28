@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { QuestionResponse } from './QuestionResponse';
-import { TeacherRole } from '../enums/db/TeacherRoleEnum';
-
+import { QuestionWithCategoryResponse } from './QuestionResponse';
+import { TeacherRole } from '../enums';
 
 class QuestionRole {
   @ApiProperty({
@@ -21,7 +20,7 @@ class QuestionRole {
     isRequired: boolean;
 }
 
-export class QuestionWithRolesResponse extends QuestionResponse {
+export class QuestionWithCategoriesAndRolesResponse extends QuestionWithCategoryResponse {
   @ApiProperty({
     type: [QuestionRole],
     description: 'Array of question roles',
