@@ -16,9 +16,9 @@ import {
   UpdateQuestionDTO,
 } from '@fictadvisor/utils/requests';
 import {
-  QuestionWithRolesResponse,
+  QuestionWithCategoriesAndRolesResponse,
   PollDisciplineTeachersResponse,
-  QuestionResponse,
+  QuestionWithCategoryResponse,
   PaginatedQuestionsResponse,
 } from '@fictadvisor/utils/responses';
 import { PERMISSION } from '@fictadvisor/utils/security';
@@ -71,7 +71,7 @@ export class PollController {
 
   @ApiCookieAuth()
   @ApiOkResponse({
-    type: QuestionResponse,
+    type: QuestionWithCategoryResponse,
   })
   @ApiBadRequestResponse({
     description: `\n
@@ -114,7 +114,7 @@ export class PollController {
     @Body() body: CreateQuestionDTO,
   ) {
     const question = await this.pollService.create(body);
-    return this.questionMapper.getQuestion(question);
+    return this.questionMapper.getQuestionWithCategory(question);
   }
 
   @ApiCookieAuth()
@@ -160,7 +160,7 @@ export class PollController {
 
   @ApiCookieAuth()
   @ApiOkResponse({
-    type: QuestionResponse,
+    type: QuestionWithCategoryResponse,
   })
   @ApiBadRequestResponse({
     description: `\n
@@ -191,12 +191,12 @@ export class PollController {
     @Param('questionId', QuestionByIdPipe) questionId: string,
   ) {
     const question = await this.pollService.deleteById(questionId);
-    return this.questionMapper.getQuestion(question);
+    return this.questionMapper.getQuestionWithCategory(question);
   }
 
   @ApiCookieAuth()
   @ApiOkResponse({
-    type: QuestionResponse,
+    type: QuestionWithCategoryResponse,
   })
   @ApiBadRequestResponse({
     description: `\n
@@ -248,11 +248,11 @@ export class PollController {
     @Body() body: UpdateQuestionDTO,
   ) {
     const question = await this.pollService.updateById(questionId, body);
-    return this.questionMapper.getQuestion(question);
+    return this.questionMapper.getQuestionWithCategory(question);
   }
 
   @ApiOkResponse({
-    type: QuestionWithRolesResponse,
+    type: QuestionWithCategoriesAndRolesResponse,
   })
   @ApiBadRequestResponse({
     description: `\n
@@ -277,7 +277,7 @@ export class PollController {
 
   @ApiCookieAuth()
   @ApiOkResponse({
-    type: QuestionWithRolesResponse,
+    type: QuestionWithCategoriesAndRolesResponse,
   })
   @ApiBadRequestResponse({
     description: `\n
@@ -320,7 +320,7 @@ export class PollController {
 
   @ApiCookieAuth()
   @ApiOkResponse({
-    type: QuestionWithRolesResponse,
+    type: QuestionWithCategoriesAndRolesResponse,
   })
   @ApiBadRequestResponse({
     description: `\n

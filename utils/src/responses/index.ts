@@ -10,7 +10,7 @@ export * from './CommentResponse';
 export * from './ContactResponse';
 export * from './DisciplineResponse';
 export * from './DisciplineTeacherAndSubjectResponse';
-export * from './DisciplineTeacherCreateResponse';
+export * from './DisciplineTeacherExtendedResponse';
 export * from './DisciplineTeacherQuestionsResponse';
 export * from './DisciplineTeacherResponse';
 export * from './DisciplineTeachersResponse';

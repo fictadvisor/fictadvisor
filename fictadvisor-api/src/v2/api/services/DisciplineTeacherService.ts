@@ -34,6 +34,8 @@ import { NoPermissionException } from '../../utils/exceptions/NoPermissionExcept
 import { NotSelectedDisciplineException } from '../../utils/exceptions/NotSelectedDisciplineException';
 import { IsRemovedDisciplineTeacherException } from '../../utils/exceptions/IsRemovedDisciplineTeacherException';
 import { Prisma, QuestionType, State } from '@prisma/client';
+import { TeacherMapper } from '../../mappers/TeacherMapper';
+import { SubjectMapper } from '../../mappers/SubjectMapper';
 
 @Injectable()
 export class DisciplineTeacherService {
@@ -47,13 +49,15 @@ export class DisciplineTeacherService {
     private telegramApi: TelegramAPI,
     private userRepository: UserRepository,
     private questionMapper: QuestionMapper,
+    private teacherMapper: TeacherMapper,
+    private subjectMapper: SubjectMapper,
   ) {}
 
-  async getQuestions (disciplineTeacherId: string, userId: string) {
+  async getQuestions (disciplineTeacherId: string, userId: string): Promise<DisciplineTeacherQuestionsResponse> {
     await this.checkAnswerInDatabase(disciplineTeacherId, userId);
     await this.checkSendingTime();
 
-    return this.getCategories(disciplineTeacherId) as unknown as DisciplineTeacherQuestionsResponse;
+    return this.getCategories(disciplineTeacherId);
   }
 
   async sendAnswers (disciplineTeacherId: string, { answers }: CreateAnswersDTO, userId: string) {
@@ -114,8 +118,8 @@ export class DisciplineTeacherService {
     const questions = await this.getUniqueQuestions(id);
     const categories = this.questionMapper.sortByCategories(questions);
     return {
-      teacher: { ...teacher, rating: +teacher.rating },
-      subject: discipline.subject,
+      teacher: this.teacherMapper.getTeacher(teacher),
+      subject: this.subjectMapper.getSubject(discipline.subject),
       categories,
     };
   }
@@ -308,7 +312,7 @@ export class DisciplineTeacherService {
   async deleteByTeacherAndDiscipline (teacherId: string, disciplineId: string) {
     const disciplineTeacher = await this.disciplineTeacherRepository.find({ teacherId, disciplineId });
     if (!disciplineTeacher) {
-      throw new InvalidEntityIdException('disciplineTeacher');
+      throw new InvalidEntityIdException('DisciplineTeacher');
     }
     await this.disciplineTeacherRepository.deleteById(disciplineTeacher.id);
   }
