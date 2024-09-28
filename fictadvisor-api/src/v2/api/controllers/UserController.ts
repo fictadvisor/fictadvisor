@@ -131,7 +131,7 @@ export class UserController {
   async getSelectivesBySemesters (
     @Param('userId', UserByIdPipe) userId: string,
   ) {
-    return { selectives: await this.userService.getSelectivesBySemesters(userId) };
+    return this.userService.getSelectivesBySemesters(userId);
   }
 
   @ApiEndpoint({

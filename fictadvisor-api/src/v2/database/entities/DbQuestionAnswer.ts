@@ -1,15 +1,16 @@
-import { Question, DisciplineTeacher, Discipline, Teacher, Subject } from '@prisma/client';
+import { DisciplineTeacher, Discipline, Subject, Teacher } from '@prisma/client';
+import { DbQuestion } from './DbQuestion';
 
 export class DbQuestionAnswer {
   disciplineTeacherId: string;
   questionId: string;
   userId: string;
   value: string;
-  question?: Question;
+  question?: DbQuestion;
   disciplineTeacher?: DisciplineTeacher & {
     discipline?: Discipline & {
       subject: Subject,
     },
-    teacher?: Teacher
+    teacher?: Teacher,
   };
 }

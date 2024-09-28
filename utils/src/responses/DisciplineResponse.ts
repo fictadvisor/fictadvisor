@@ -4,6 +4,7 @@ import { GroupResponse } from './GroupResponse';
 import { ShortTeacherResponse } from './TeacherResponse';
 import { PaginationDataResponse } from './PaginationDataResponse';
 import { SemesterResponse } from './SemesterResponse';
+import { DisciplineTypeResponse } from './DisciplineTypeResponse';
 
 export class BaseDisciplineResponse {
   @ApiProperty({
@@ -91,6 +92,26 @@ export class ShortDisciplinesResponse {
     description: 'List of disciplines',
   })
     disciplines: ShortDisciplineResponse[];
+}
+
+export class ExtendedDisciplineResponse extends DisciplineResponse {
+  @ApiProperty({
+    description: 'Group associated with the discipline',
+    type: GroupResponse,
+  })
+    group: GroupResponse;
+
+  @ApiProperty({
+    description: 'Subject of the discipline',
+    type: SubjectResponse,
+  })
+    subject: SubjectResponse;
+
+  @ApiProperty({
+    description: 'Discipline types of the discipline',
+    type: [DisciplineTypeResponse],
+  })
+    disciplineTypes: DisciplineTypeResponse[];
 }
 
 export class DisciplineIdsResponse {

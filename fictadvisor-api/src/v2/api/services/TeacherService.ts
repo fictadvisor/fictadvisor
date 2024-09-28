@@ -29,6 +29,7 @@ import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityId
 import { EntityType, QuestionDisplay, Prisma } from '@prisma/client';
 import { TeacherRole } from '@fictadvisor/utils/enums';
 import { TeacherTypeAdapter } from '../../mappers/TeacherRoleAdapter';
+import { SubjectMapper } from '../../mappers/SubjectMapper';
 
 @Injectable()
 export class TeacherService {
@@ -41,6 +42,7 @@ export class TeacherService {
     private subjectRepository: SubjectRepository,
     private pollService: PollService,
     private disciplineTeacherMapper: DisciplineTeacherMapper,
+    private subjectMapper: SubjectMapper,
     private dateService: DateService,
     private questionMapper: QuestionMapper,
     private readonly telegramAPI: TelegramAPI,
@@ -211,7 +213,7 @@ export class TeacherService {
 
   async getTeacherRoles (teacherId: string) {
     const teacher = await this.teacherRepository.findById(teacherId);
-    return this.teacherMapper.getRoles(teacher);
+    return this.teacherMapper.getTeacherRoles(teacher);
   }
 
   async create (body: Prisma.TeacherUncheckedCreateInput) {
@@ -325,8 +327,8 @@ export class TeacherService {
     const contacts = await this.contactRepository.getAllContacts(teacherId);
 
     return {
-      ...this.teacherMapper.getTeacher(dbTeacher),
-      subject: this.disciplineTeacherMapper.getSubject(subject),
+      ...this.teacherMapper.getTeacherWithRolesAndCathedras(dbTeacher),
+      subject: this.subjectMapper.getSubject(subject),
       roles,
       contacts,
     };

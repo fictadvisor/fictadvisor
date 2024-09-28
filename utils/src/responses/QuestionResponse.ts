@@ -1,7 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { PaginationDataResponse } from './PaginationDataResponse';
-import { QuestionDisplay } from '../enums/db/QuestionDisplayEnum';
-import { QuestionType } from '../enums/db/QuestionTypeEnum';
+import { QuestionDisplay, QuestionType } from '../enums';
 
 export class QuestionResponse {
   @ApiProperty({
@@ -13,11 +12,6 @@ export class QuestionResponse {
     description: 'Order of questions',
   })
     order: number;
-
-  @ApiProperty({
-    description: 'Category of question',
-  })
-    category: string;
 
   @ApiProperty({
     description: 'Name of question',
@@ -57,12 +51,19 @@ export class QuestionResponse {
     display: QuestionDisplay;
 }
 
+export class QuestionWithCategoryResponse extends QuestionResponse {
+  @ApiProperty({
+    description: 'Category of question',
+  })
+    category: string;
+}
+
 export class PaginatedQuestionsResponse {
   @ApiProperty({
-    type: [QuestionResponse],
+    type: [QuestionWithCategoryResponse],
     description: 'An array of questions',
   })
-    questions: QuestionResponse[];
+    questions: QuestionWithCategoryResponse[];
 
   @ApiProperty({
     description: 'Pagination data',

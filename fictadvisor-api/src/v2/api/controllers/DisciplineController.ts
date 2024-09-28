@@ -63,7 +63,7 @@ export class DisciplineController {
     @Body() body: CreateDisciplineDTO,
   ) {
     const discipline = await this.disciplineService.create(body);
-    return this.disciplineMapper.getDisciplineWithTeachers(discipline);
+    return this.disciplineMapper.getExtendedDisciplineTeachers(discipline);
   }
 
   @ApiOkResponse({
@@ -173,7 +173,7 @@ export class DisciplineController {
     @Param('disciplineId', DisciplineByIdPipe) disciplineId: string,
   ): Promise<ExtendedDisciplineTeachersResponse> {
     const discipline = await this.disciplineService.deleteDiscipline(disciplineId);
-    return this.disciplineMapper.getDisciplineWithTeachers(discipline);
+    return this.disciplineMapper.getExtendedDisciplineTeachers(discipline);
   }
 
   @ApiOkResponse({
@@ -195,7 +195,7 @@ export class DisciplineController {
   @Get(':disciplineId')
   async getById (@Param('disciplineId', DisciplineByIdPipe) disciplineId: string) {
     const discipline = await this.disciplineService.get(disciplineId);
-    return this.disciplineMapper.getDisciplineWithTeachers(discipline);
+    return this.disciplineMapper.getExtendedDisciplineTeachers(discipline);
   }
 
   @ApiCookieAuth()
@@ -235,6 +235,6 @@ export class DisciplineController {
     @Param('disciplineId', DisciplineByIdPipe) disciplineId: string,
   ) {
     const updatedDiscipline = await this.disciplineService.updateById(disciplineId, body);
-    return this.disciplineMapper.getDisciplineWithTeachers(updatedDiscipline);
+    return this.disciplineMapper.getExtendedDisciplineTeachers(updatedDiscipline);
   }
 }
