@@ -284,10 +284,11 @@ export class GroupService {
     );
 
     const user = await this.userRepository.findById(userId);
+
+    await this.studentRepository.updateById(userId, { state: State.DECLINED });
     if (!user.username) {
       await this.userRepository.deleteById(userId);
     }
-    await this.studentRepository.updateById(userId, { state: State.DECLINED });
   }
 
   async getCaptain (groupId: string) {
