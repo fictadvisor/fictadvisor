@@ -12,7 +12,7 @@ class SelectiveBySemesters {
     semester: number;
 
   @ApiProperty({
-    description: 'Ids of disciplines',
+    description: 'Names of disciplines',
   })
     disciplines: string[];
 

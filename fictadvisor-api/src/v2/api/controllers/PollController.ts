@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Patch, Param, Post, Query } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
-  ApiBearerAuth,
+  ApiCookieAuth,
   ApiForbiddenResponse,
   ApiUnauthorizedResponse,
   ApiOkResponse,
@@ -16,9 +16,9 @@ import {
   UpdateQuestionDTO,
 } from '@fictadvisor/utils/requests';
 import {
-  QuestionWithRolesResponse,
+  QuestionWithCategoriesAndRolesResponse,
   PollDisciplineTeachersResponse,
-  QuestionResponse,
+  QuestionWithCategoryResponse,
   PaginatedQuestionsResponse,
 } from '@fictadvisor/utils/responses';
 import { PERMISSION } from '@fictadvisor/utils/security';
@@ -69,9 +69,9 @@ export class PollController {
     };
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
-    type: QuestionResponse,
+    type: QuestionWithCategoryResponse,
   })
   @ApiBadRequestResponse({
     description: `\n
@@ -114,10 +114,10 @@ export class PollController {
     @Body() body: CreateQuestionDTO,
   ) {
     const question = await this.pollService.create(body);
-    return this.questionMapper.getQuestion(question);
+    return this.questionMapper.getQuestionWithCategory(question);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: PollDisciplineTeachersResponse,
   })
@@ -158,9 +158,9 @@ export class PollController {
     return this.pollService.getDisciplineTeachers(userId, query);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
-    type: QuestionResponse,
+    type: QuestionWithCategoryResponse,
   })
   @ApiBadRequestResponse({
     description: `\n
@@ -191,12 +191,12 @@ export class PollController {
     @Param('questionId', QuestionByIdPipe) questionId: string,
   ) {
     const question = await this.pollService.deleteById(questionId);
-    return this.questionMapper.getQuestion(question);
+    return this.questionMapper.getQuestionWithCategory(question);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
-    type: QuestionResponse,
+    type: QuestionWithCategoryResponse,
   })
   @ApiBadRequestResponse({
     description: `\n
@@ -248,11 +248,11 @@ export class PollController {
     @Body() body: UpdateQuestionDTO,
   ) {
     const question = await this.pollService.updateById(questionId, body);
-    return this.questionMapper.getQuestion(question);
+    return this.questionMapper.getQuestionWithCategory(question);
   }
 
   @ApiOkResponse({
-    type: QuestionWithRolesResponse,
+    type: QuestionWithCategoriesAndRolesResponse,
   })
   @ApiBadRequestResponse({
     description: `\n
@@ -275,9 +275,9 @@ export class PollController {
     return this.questionMapper.getQuestionWithRoles(question);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
-    type: QuestionWithRolesResponse,
+    type: QuestionWithCategoriesAndRolesResponse,
   })
   @ApiBadRequestResponse({
     description: `\n
@@ -318,9 +318,9 @@ export class PollController {
     return this.questionMapper.getQuestionWithRoles(question);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
-    type: QuestionWithRolesResponse,
+    type: QuestionWithCategoriesAndRolesResponse,
   })
   @ApiBadRequestResponse({
     description: `\n

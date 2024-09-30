@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { SimpleStudentResponse } from '@fictadvisor/utils/responses';
-import { GroupRoles } from '@fictadvisor/utils/enums';
+import { FullStudentResponse, OrdinaryStudentResponse, SimpleStudentResponse, SuperheroResponse } from '@fictadvisor/utils/responses';
+import { GroupRoles, State } from '@fictadvisor/utils/enums';
 import { Superhero } from '@prisma/client';
 import { DbStudent } from '../database/entities/DbStudent';
 import { DbRole } from '../database/entities/DbRole';
 
 @Injectable()
 export class StudentMapper {
-  private getGroupRole (roles: { role: DbRole }[]) {
-    const groupRole = roles.find((r) => r.role.name === 'CAPTAIN' || r.role.name === 'MODERATOR' || r.role.name === 'STUDENT');
+  private getGroupRole (roles: { role: DbRole }[]): DbRole {
+    const groupRole = roles.find((r) => r.role.name === GroupRoles.CAPTAIN || r.role.name === GroupRoles.MODERATOR || r.role.name === GroupRoles.STUDENT);
     return groupRole?.role;
   }
 
-  getStudent (student: DbStudent, hasGroup = true) {
+  getStudent (student: DbStudent, hasGroup = true): OrdinaryStudentResponse {
     return {
       id: student.user.id,
       username: student.user.username,
@@ -21,7 +21,7 @@ export class StudentMapper {
       lastName: student.lastName,
       middleName: student.middleName,
       avatar: student.user.avatar,
-      telegramId: student.user.telegramId,
+      telegramId: student.user.telegramId as unknown as number,
       group: !hasGroup ? undefined : {
         id: student.groupId,
         code: student.group?.code,
@@ -32,8 +32,9 @@ export class StudentMapper {
     };
   }
 
-  updateStudent (student: DbStudent) {
+  updateStudent (student: DbStudent): FullStudentResponse {
     return {
+      id: student.userId,
       firstName: student.firstName,
       middleName: student.middleName,
       lastName: student.lastName,
@@ -41,7 +42,7 @@ export class StudentMapper {
         id: student.user.id,
         email: student.user.email,
         username: student.user.username,
-        telegramId: student.user.telegramId,
+        telegramId: student.user.telegramId as unknown as number,
         avatar: student.user.avatar,
         state: student.user.state,
       },
@@ -66,29 +67,29 @@ export class StudentMapper {
     };
   }
 
-  getSuperhero (superhero: Superhero) {
+  getSuperhero (superhero: Superhero): SuperheroResponse {
     return {
       userId: superhero.userId,
       dorm: superhero.dorm,
-      state: superhero.state,
+      state: superhero.state as State,
     };
   }
 
-  getStudents (students: DbStudent[]) {
+  getStudents (students: DbStudent[]): SimpleStudentResponse[] {
     return students.map((student) => this.getSimpleStudent(student));
   }
 
-  getSimpleStudent (s: DbStudent): SimpleStudentResponse {
+  getSimpleStudent (student: DbStudent): SimpleStudentResponse {
     return {
-      id: s.userId,
-      lastName: s.lastName,
-      firstName: s.firstName,
-      middleName: s.middleName,
-      state: s.state,
-      role: this.getGroupRole(s.roles)?.name as (keyof typeof GroupRoles) ?? null,
+      id: student.userId,
+      lastName: student.lastName,
+      firstName: student.firstName,
+      middleName: student.middleName,
+      state: student.state,
+      role: this.getGroupRole(student.roles)?.name as (keyof typeof GroupRoles) ?? null,
       group: {
-        id: s.groupId,
-        code: s.group.code,
+        id: student.groupId,
+        code: student.group.code,
       },
     };
   }

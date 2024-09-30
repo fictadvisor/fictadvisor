@@ -1,34 +1,22 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request, UseGuards } from '@nestjs/common';
-import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiBody,
-  ApiCreatedResponse,
-  ApiForbiddenResponse,
-  ApiOkResponse,
-  ApiParam,
-  ApiTags,
-  ApiUnauthorizedResponse,
-} from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import {
   CreateAnswersDTO,
   CreateAnswersWithUserIdDTO,
   ResponseDTO,
   UpdateDisciplineTeacherDTO,
-  CreateDisciplineTeacherDTO,
   UpdateCommentDTO,
   DeleteCommentDTO,
-  QueryAllCommentsDTO,
+  QueryAllCommentsDTO, CreateDisciplineTeacherDTO,
 } from '@fictadvisor/utils/requests';
 import {
   DisciplineTeacherQuestionsResponse,
-  QuestionAnswerResponse,
-  DisciplineTeacherCreateResponse,
   CommentResponse,
   PaginatedCommentsResponse,
+  QuestionAnswerResponse,
+  DisciplineTeacherExtendedResponse,
 } from '@fictadvisor/utils/responses';
 import { PERMISSION } from '@fictadvisor/utils/security';
-import { Access } from 'src/v2/security/Access';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
 import { TelegramGuard } from '../../security/TelegramGuard';
 import { GroupByDisciplineTeacherGuard } from 'src/v2/security/group-guard/GroupByDisciplineTeacherGuard';
@@ -41,6 +29,8 @@ import { QuestionByIdPipe } from '../pipes/QuestionByIdPipe';
 import { CommentByQuestionIdPipe } from '../pipes/CommentByQuestionIdPipe';
 import { QuestionMapper } from '../../mappers/QuestionMapper';
 import { DisciplineTeacherService } from '../services/DisciplineTeacherService';
+import { DisciplineTeacherDocumentation } from '../../utils/documentation/disciplineTeacher';
+import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
 
 @ApiTags('DisciplineTeacher')
 @Controller({
@@ -50,30 +40,13 @@ import { DisciplineTeacherService } from '../services/DisciplineTeacherService';
 export class DisciplineTeacherController {
   constructor (
     private disciplineTeacherService: DisciplineTeacherService,
+    private disciplineTeacherMapper: DisciplineTeacherMapper,
     private questionMapper: QuestionMapper,
   ) {}
 
-  @ApiBearerAuth()
-  @ApiOkResponse({
-    type: DisciplineTeacherQuestionsResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidEntityIdException: 
-      DisciplineTeacher with such id is not found`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException: 
-      You do not have permission to perform this action`,
-  })
   @ApiEndpoint({
     summary: 'Get user\'s questions by disciplineTeacherId',
+    documentation: DisciplineTeacherDocumentation.GET_QUESTIONS,
     permissions: PERMISSION.GROUPS_$GROUPID_QUESTIONS_GET,
     guards: GroupByDisciplineTeacherGuard,
   })
@@ -85,27 +58,9 @@ export class DisciplineTeacherController {
     return this.disciplineTeacherService.getQuestions(disciplineTeacherId, req.user.id);
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse({
-    type: DisciplineTeacherQuestionsResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidEntityIdException: 
-      DisciplineTeacher with such id is not found`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException: 
-      You do not have permission to perform this action`,
-  })
   @ApiEndpoint({
     summary: 'Get user\'s questions by disciplineTeacherId by telegram',
+    documentation: DisciplineTeacherDocumentation.GET_QUESTIONS_BY_TELEGRAM,
     guards: [GroupByDisciplineTeacherGuard, TelegramGuard],
   })
   @Get('/:disciplineTeacherId/questions/telegram')
@@ -116,35 +71,9 @@ export class DisciplineTeacherController {
     return this.disciplineTeacherService.getQuestions(disciplineTeacherId, userId);
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse()
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidBodyException: 
-      Question id can not be empty
-      Value can not be empty
-      
-    ExcessiveAnswerException: 
-      There are excessive answers in the request
-      
-    NotEnoughAnswersException: 
-      There are not enough answers
-      
-    AlreadyAnsweredException: 
-      This question is already answered`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException: 
-      You do not have permission to perform this action`,
-  })
   @ApiEndpoint({
     summary: 'Send question`s answers by user and disciplineTeacherId',
+    documentation: DisciplineTeacherDocumentation.SEND_ANSWERS,
     permissions: PERMISSION.GROUPS_$GROUPID_ANSWERS_SEND,
     guards: GroupByDisciplineTeacherGuard,
   })
@@ -157,39 +86,9 @@ export class DisciplineTeacherController {
     return this.disciplineTeacherService.sendAnswers(disciplineTeacherId, body, req.user.id);
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse()
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidBodyException: 
-      Question id cannot be empty
-      Value cannot be empty
-      UserId cannot be empty
-      
-    InvalidEntityIdException:
-      User with such id is not found
-      
-    ExcessiveAnswerException: 
-      There are excessive answers in the request
-      
-    NotEnoughAnswersException: 
-      There are not enough answers
-      
-    AlreadyAnsweredException: 
-      This question is already answered`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException: 
-      You do not have permission to perform this action`,
-  })
   @ApiEndpoint({
     summary: 'Send question`s answers by user and disciplineTeacherId',
+    documentation: DisciplineTeacherDocumentation.SEND_ANSWERS_BY_TELEGRAM,
     guards: [GroupByDisciplineTeacherGuard, TelegramGuard],
   })
   @Post('/:disciplineTeacherId/answers/telegram')
@@ -201,213 +100,108 @@ export class DisciplineTeacherController {
     return this.disciplineTeacherService.sendAnswers(disciplineTeacherId, body, userId);
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse({
-    type: QuestionAnswerResponse,
+  @ApiEndpoint({
+    summary: 'Send question`s response disciplineTeacherId',
+    documentation: DisciplineTeacherDocumentation.SEND_RESPONSE,
+    guards: TelegramGuard,
   })
-  @ApiForbiddenResponse({
-    description: `
-      NoPermissionException: You do not have permission to perform this action
-    `,
-  })
-  @ApiBadRequestResponse({
-    description: `
-      InvalidBodyException: Question id can not be empty\n
-      InvalidBodyException: Value can not be empty\n
-      InvalidBodyException: User id can not be empty\n
-      InvalidEntityIdException: disciplineTeacher with such id is not found
-    `,
-  })
-  @UseGuards(TelegramGuard)
   @Post('/:disciplineTeacherId/responses')
-  sendResponse (
+  async sendResponse (
     @Param('disciplineTeacherId', DisciplineTeacherByIdPipe) disciplineTeacherId: string,
-    @Body() body: ResponseDTO
-  ) {
-    return this.disciplineTeacherService.sendResponse(disciplineTeacherId, body);
+    @Body('userId', UserByIdPipe) userId: string,
+    @Body('questionId', QuestionByIdPipe) questionId: string,
+    @Body() body: ResponseDTO,
+  ): Promise<QuestionAnswerResponse> {
+    const answer = await this.disciplineTeacherService.sendResponse(disciplineTeacherId, { ...body, userId, questionId });
+    return this.disciplineTeacherMapper.getQuestionAnswer(answer);
   }
 
-  @ApiBearerAuth()
-  @ApiCreatedResponse({
-    type: DisciplineTeacherCreateResponse,
-  })
-  @ApiForbiddenResponse({
-    description: `
-    NoPermissionException:
-      You do not have permission to perform this action
-    `,
-  })
-  @ApiBadRequestResponse({
-    description: `
-    InvalidEntityIdException:
-      discipline with such id is not found
-      teacher with such id is not found
-      each value in roles must be one of the following values: LECTURER, LABORANT, PRACTICIAN
-      roles must be an array
-      roles should not be empty`,
-  })
-  @ApiBody({
-    type: CreateDisciplineTeacherDTO,
-  })
   @ApiEndpoint({
     summary: 'Create disciplineTeacher with roles',
+    documentation: DisciplineTeacherDocumentation.CREATE,
     permissions: PERMISSION.DISCIPLINE_TEACHERS_CREATE,
   })
   @Post()
-  create (
+  async create (
     @Body('teacherId', TeacherByIdPipe) teacherId: string,
     @Body('disciplineId', DisciplineByIdPipe) disciplineId: string,
-    @Body() body: UpdateDisciplineTeacherDTO,
-  ) {
-    return this.disciplineTeacherService.create(teacherId, disciplineId, body.roles);
+    @Body() body: CreateDisciplineTeacherDTO,
+  ): Promise<DisciplineTeacherExtendedResponse> {
+    const result = await this.disciplineTeacherService.create(teacherId, disciplineId, body.roles);
+    return this.disciplineTeacherMapper.getDisciplineTeacherExtended(result);
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse({
-    type: DisciplineTeacherCreateResponse,
-  })
-  @ApiForbiddenResponse({
-    description: `
-    NoPermissionException:
-      You do not have permission to perform this action`,
-  })
-  @ApiBadRequestResponse({
-    description: `
-    InvalidEntityIdException:
-      disciplineTeacher with such id is not found
-      each value in roles must be one of the following values: LECTURER, LABORANT, PRACTICIAN
-      roles must be an array
-      roles should not be empty`,
-  })
   @ApiEndpoint({
     summary: 'Update disciplineTeacher with its id',
+    documentation: DisciplineTeacherDocumentation.UPDATE_BY_ID,
     permissions: PERMISSION.DISCIPLINE_TEACHERS_UPDATE,
   })
   @Patch('/:disciplineTeacherId')
-  updateById (
+  async updateById (
     @Param('disciplineTeacherId', DisciplineTeacherByIdPipe) disciplineTeacherId: string,
     @Body() body: UpdateDisciplineTeacherDTO,
-  ) {
-    return this.disciplineTeacherService.updateById(disciplineTeacherId, body.roles);
+  ): Promise<DisciplineTeacherExtendedResponse> {
+    const result = await this.disciplineTeacherService.updateById(disciplineTeacherId, body.roles);
+    return this.disciplineTeacherMapper.getDisciplineTeacherExtended(result);
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse({
-    type: DisciplineTeacherCreateResponse,
-  })
-  @ApiForbiddenResponse({
-    description: `
-    NoPermissionException:
-      You do not have permission to perform this action`,
-  })
-  @ApiBadRequestResponse({
-    description: `
-    InvalidEntityIdException: 
-      discipline with such id is not found
-      teacher with such id is not found
-      each value in roles must be one of the following values: LECTURER, LABORANT, PRACTICIAN
-      roles must be an array
-      roles should not be empty`,
-  })
   @ApiEndpoint({
     summary: 'Update disciplineTeacher with teacherId and disciplineId',
+    documentation: DisciplineTeacherDocumentation.UPDATE_BY_TEACHER_AND_DISCIPLINE,
     permissions: PERMISSION.DISCIPLINE_TEACHERS_UPDATE,
   })
   @Patch()
-  updateByTeacherAndDiscipline (
+  async updateByTeacherAndDiscipline (
     @Query('teacherId', TeacherByIdPipe) teacherId : string,
     @Query('disciplineId', DisciplineByIdPipe) disciplineId : string,
     @Body() body: UpdateDisciplineTeacherDTO,
-  ) {
-    return this.disciplineTeacherService.updateByTeacherAndDiscipline(teacherId, disciplineId, body.roles);
+  ): Promise<DisciplineTeacherExtendedResponse> {
+    const result = await this.disciplineTeacherService.updateByTeacherAndDiscipline(teacherId, disciplineId, body.roles);
+    return this.disciplineTeacherMapper.getDisciplineTeacherExtended(result);
   }
 
-  @ApiBearerAuth()
-  @ApiForbiddenResponse({
-    description: `
-      NoPermissionException: You do not have permission to perform this action
-    `,
+  @ApiEndpoint({
+    summary: 'Delete disciplineTeacher by id',
+    documentation: DisciplineTeacherDocumentation.DELETE_BY_ID,
+    permissions: PERMISSION.DISCIPLINE_TEACHERS_DELETE,
   })
-  @ApiBadRequestResponse({
-    description: `
-      InvalidEntityIdException: disciplineTeacher with such id is not found\n
-    `,
-  })
-  @Access(PERMISSION.DISCIPLINE_TEACHERS_DELETE)
   @Delete('/:disciplineTeacherId')
   deleteById (
     @Param('disciplineTeacherId', DisciplineTeacherByIdPipe) disciplineTeacherId: string,
-  ) {
+  ): Promise<void> {
     return this.disciplineTeacherService.deleteById(disciplineTeacherId);
   }
 
-  @ApiBearerAuth()
-  @ApiForbiddenResponse({
-    description: `
-      NoPermissionException: You do not have permission to perform this action
-    `,
+  @ApiEndpoint({
+    summary: 'Delete DisciplineTeacher by teacherId and disciplineId',
+    documentation: DisciplineTeacherDocumentation.DELETE_BY_TEACHER_ABD_DISCIPLINE,
+    permissions: PERMISSION.DISCIPLINE_TEACHERS_DELETE,
   })
-  @ApiBadRequestResponse({
-    description: `
-      InvalidEntityIdException: discipline with such id is not found\n
-      InvalidEntityIdException: teacher with such id is not found\n
-    `,
-  })
-  @Access(PERMISSION.DISCIPLINE_TEACHERS_DELETE)
   @Delete()
   deleteByTeacherAndDiscipline (
     @Query('teacherId', TeacherByIdPipe) teacherId: string,
     @Query('disciplineId', DisciplineByIdPipe) disciplineId: string,
-  ) {
+  ): Promise<void> {
     return this.disciplineTeacherService.deleteByTeacherAndDiscipline(teacherId, disciplineId);
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse()
-  @ApiForbiddenResponse({
-    description: `
-      NoPermissionException: You do not have permission to perform this action
-    `,
+  @ApiEndpoint({
+    summary: 'Remove DisciplineTeacher from poll by DisciplineTeacherId',
+    documentation: DisciplineTeacherDocumentation.REMOVE_DISCIPLINE_TECHER_FROM_POLL,
+    permissions: PERMISSION.GROUPS_$GROUPID_DISCIPLINE_TEACHERS_REMOVE,
+    guards: GroupByDisciplineTeacherGuard,
   })
-  @ApiBadRequestResponse({
-    description: `
-      NotSelectedDisciplineException: Current discipline is not selected by this student
-    `,
-  })
-  @Access(PERMISSION.GROUPS_$GROUPID_DISCIPLINE_TEACHERS_REMOVE, GroupByDisciplineTeacherGuard)
   @Post('/:disciplineTeacherId/removeFromPoll')
   removeDisciplineTeacherFromPoll (
     @Param('disciplineTeacherId', DisciplineTeacherByIdPipe) disciplineTeacherId: string,
     @Request() req,
-  ) {
+  ): Promise<void> {
     return this.disciplineTeacherService.removeFromPoll(disciplineTeacherId, req.user.id);
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse({
-    type: PaginatedCommentsResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidBodyException: 
-      Page must be a number
-      PageSize must be a number
-      Sort must be an enum
-      Wrong value for order
-      Each value of semesters must be an studying semester`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException:
-      You do not have permission to perform this action`,
-  })
   @ApiEndpoint({
     summary: 'Gel all question answers with TEXT type (comments)',
+    documentation: DisciplineTeacherDocumentation.GET_ALL_COMMENTS,
     permissions: PERMISSION.COMMENTS_GET,
   })
   @Get('/comments')
@@ -422,45 +216,9 @@ export class DisciplineTeacherController {
     };
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse({
-    type: CommentResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidEntityIdException:
-      User with such id is not found
-      Question with such id is not found
-      DisciplineTeacher with such id is not found
-      
-    InvalidTypeException
-      Question has wrong type 
-    
-    InvalidBodyException:
-      UserId should not be empty
-      QuestionId should not be empty
-      Comment should not be empty
-      Comment must be a string
-      Comment is too short (min: 4)
-      Comment is too long (max: 4000)`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException:
-      You do not have permission to perform this action`,
-  })
-  @ApiParam({
-    name: 'disciplineTeacherId',
-    required: true,
-    description: 'Discipline teacher id',
-  })
   @ApiEndpoint({
     summary: 'Update question answer with TEXT type (comment)',
+    documentation: DisciplineTeacherDocumentation.UPDATE_COMMENT,
     permissions: PERMISSION.COMMENTS_UPDATE,
   })
   @Patch('/:disciplineTeacherId/comments')
@@ -474,46 +232,9 @@ export class DisciplineTeacherController {
     return this.questionMapper.getComment(comment);
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse({
-    type: CommentResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidEntityIdException:
-      User with such id is not found
-      Question with such id is not found
-      DisciplineTeacher with such id is not found
-      
-    InvalidTypeException
-      Question has wrong type
-      
-    InvalidBodyException:
-      UserId should not be empty
-      QuestionId should not be empty`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException: 
-      You do not have permission to perform this action`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException:
-      You do not have permission to perform this action`,
-  })
-  @ApiParam({
-    name: 'disciplineTeacherId',
-    required: true,
-    description: 'Discipline teacher id',
-  })
   @ApiEndpoint({
     summary: 'Delete question answer with TEXT type (comment)',
+    documentation: DisciplineTeacherDocumentation.DELETE_COMMENT,
     permissions: PERMISSION.COMMENTS_DELETE,
   })
   @Delete('/:disciplineTeacherId/comments')

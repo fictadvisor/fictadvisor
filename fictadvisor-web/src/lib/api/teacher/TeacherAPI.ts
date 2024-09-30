@@ -25,15 +25,12 @@ import {
   TeacherWithRolesAndCathedrasResponse,
 } from '@fictadvisor/utils/responses';
 
-import { getAuthorizationHeader } from '@/lib/api/utils';
-
 import { client } from '../instance';
 
 class TeacherAPI {
   async get(teacherId: string): Promise<TeacherWithContactsResponse> {
     const { data } = await client.get<TeacherWithContactsResponse>(
       `/teachers/${teacherId}`,
-      getAuthorizationHeader(),
     );
     return data;
   }
@@ -63,20 +60,18 @@ class TeacherAPI {
     const { data } = await client.post<TeacherWithRolesAndCathedrasResponse>(
       `/teachers`,
       body,
-      getAuthorizationHeader(),
     );
     return data;
   }
 
   async delete(teacherId: string): Promise<void> {
-    await client.delete(`/teachers/${teacherId}`, getAuthorizationHeader());
+    await client.delete(`/teachers/${teacherId}`);
   }
 
   async editPersonalInfo(teacherId: string, body: UpdateTeacherDTO) {
     const { data } = await client.patch<TeacherWithRolesAndCathedrasResponse>(
       `/teachers/${teacherId}`,
       body,
-      getAuthorizationHeader(),
     );
     return data;
   }
@@ -106,7 +101,6 @@ class TeacherAPI {
       '/disciplineTeachers/comments',
       {
         params,
-        ...getAuthorizationHeader(),
       },
     );
     return data;
@@ -115,7 +109,7 @@ class TeacherAPI {
   async deleteComment(disciplineTeacherId: string, body: DeleteCommentDTO) {
     const { data } = await client.delete<CommentResponse>(
       `/disciplineTeachers/${disciplineTeacherId}/comments`,
-      { data: body, ...getAuthorizationHeader() },
+      { data: body },
     );
     return data;
   }
@@ -124,7 +118,6 @@ class TeacherAPI {
     const { data } = await client.patch<CommentResponse>(
       `/disciplineTeachers/${disciplineTeacherId}/comments`,
       body,
-      getAuthorizationHeader(),
     );
     return data;
   }
@@ -133,7 +126,6 @@ class TeacherAPI {
     const { data } = await client.post<ContactResponse>(
       `/teachers/${teacherId}/contacts`,
       body,
-      getAuthorizationHeader(),
     );
     return data;
   }
@@ -146,7 +138,6 @@ class TeacherAPI {
     const { data } = await client.patch<ContactResponse>(
       `/teachers/${teacherId}/contacts/${name}`,
       body,
-      getAuthorizationHeader(),
     );
     return data;
   }
@@ -155,7 +146,6 @@ class TeacherAPI {
     const { data } = await client.patch<TeacherWithContactsFullResponse>(
       `/teachers/${teacherId}/cathedra/${cathedraId}`,
       {},
-      getAuthorizationHeader(),
     );
     return data;
   }
@@ -163,7 +153,6 @@ class TeacherAPI {
   async deleteTeacherCathedra(teacherId: string, cathedraId: string) {
     const { data } = await client.delete<TeacherWithContactsFullResponse>(
       `/teachers/${teacherId}/cathedra/${cathedraId}`,
-      getAuthorizationHeader(),
     );
     return data;
   }
@@ -176,7 +165,6 @@ class TeacherAPI {
     const { data } = await client.get<DisciplineTeacherAndSubjectResponse[]>(
       `/teachers/${teacherId}/disciplines`,
       {
-        ...getAuthorizationHeader(),
         params: {
           notAnswered,
           userId,
@@ -187,19 +175,11 @@ class TeacherAPI {
   }
 
   async removeFromPoll(teacherId: string): Promise<void> {
-    await client.post(
-      `/disciplineTeachers/${teacherId}/removeFromPoll`,
-      {},
-      getAuthorizationHeader(),
-    );
+    await client.post(`/disciplineTeachers/${teacherId}/removeFromPoll`, {});
   }
 
   async postTeacherComplaint(teacherId: string, complaint: ComplaintDTO) {
-    return await client.post(
-      `/teachers/${teacherId}/sendComplaint`,
-      complaint,
-      getAuthorizationHeader(),
-    );
+    return await client.post(`/teachers/${teacherId}/sendComplaint`, complaint);
   }
 }
 

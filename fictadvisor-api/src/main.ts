@@ -7,6 +7,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { applyStaticMiddleware } from './v2/utils/StaticUtil';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { join, resolve } from 'path';
+import * as cookieParser from 'cookie-parser';
 
 (BigInt.prototype as any).toJSON = function () {
   const int = Number.parseInt(this.toString());
@@ -18,7 +19,7 @@ async function bootstrap () {
   const configService = app.get<ConfigService>(ConfigService);
   const port = configService.get<number>('port');
   const isProduction = process.env.NODE_ENV === 'production';
-  
+
   applyStaticMiddleware(app);
 
   app.enableCors({
@@ -28,6 +29,7 @@ async function bootstrap () {
     credentials: true,
   });
 
+  app.use(cookieParser());
   app.useGlobalFilters(new HttpExceptionFilter(configService));
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   app.useGlobalPipes(
@@ -43,11 +45,11 @@ async function bootstrap () {
   });
 
   const config = new DocumentBuilder()
-    .setTitle('FICT ADVISOR API')
-    .setDescription('Here is FICT ADVISOR API documentation')
+    .setTitle('FICE ADVISOR API')
+    .setDescription('Here is FICE ADVISOR API documentation')
     .setVersion('2.0.4')
     .addTag('api')
-    .addBearerAuth()
+    .addCookieAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
-  ApiBearerAuth,
+  ApiCookieAuth,
   ApiForbiddenResponse,
   ApiOkResponse,
   ApiParam,
@@ -58,7 +58,7 @@ export class ScheduleController {
     private scheduleMapper: ScheduleMapper,
   ) {}
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse()
   @ApiUnauthorizedResponse({
     description: `\n
@@ -145,7 +145,7 @@ export class ScheduleController {
     };
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @Get('/groups/:groupId/day')
   @ApiOkResponse({
     type: TelegramEventsResponse,
@@ -202,7 +202,7 @@ export class ScheduleController {
   }
 
   @Access(PERMISSION.GROUPS_$GROUPID_EVENTS_GET, GroupByEventGuard)
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @Get('/events/:eventId')
   @ApiOkResponse({
     type: EventResponse,
@@ -233,7 +233,7 @@ export class ScheduleController {
     return this.scheduleMapper.getEvent(result.event, result.discipline);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: EventInfoResponse,
   })
@@ -272,7 +272,7 @@ export class ScheduleController {
     return this.scheduleMapper.getEventInfos(result.event);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: EventResponse,
   })
@@ -328,7 +328,7 @@ export class ScheduleController {
     return this.scheduleMapper.getEvent(result.event, result.discipline);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: EventsResponse,
   })
@@ -384,7 +384,7 @@ export class ScheduleController {
     };
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: EventResponse,
   })
@@ -428,7 +428,7 @@ export class ScheduleController {
     return this.scheduleMapper.getEvent(result.event, result.discipline);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: EventResponse,
   })
@@ -496,7 +496,7 @@ export class ScheduleController {
     return this.scheduleMapper.getEvent(result.event, result.discipline);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: FortnightEventsResponse,
   })
@@ -555,7 +555,7 @@ export class ScheduleController {
     };
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: TelegramEventsResponse,
   })
@@ -612,7 +612,7 @@ export class ScheduleController {
     };
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: TelegramEventsResponse,
   })

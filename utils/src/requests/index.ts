@@ -28,6 +28,7 @@ export * from './CreateSubjectDTO';
 export * from './CreateSuperheroDTO';
 export * from './CreateTeacherDTO';
 export * from './CreateTelegramGroupDTO';
+export * from './CreateUserDTO';
 export * from './DeleteCommentDTO';
 export * from './DeleteEntrantDataQueryDTO';
 export * from './EmailDTO';

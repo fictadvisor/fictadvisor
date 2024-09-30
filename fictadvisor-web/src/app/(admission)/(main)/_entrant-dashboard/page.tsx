@@ -13,7 +13,7 @@ import { PersonalDataSection } from '@/app/(admission)/(main)/_entrant-dashboard
 import { PrioritiesSection } from '@/app/(admission)/(main)/_entrant-dashboard/components/PrioritiesSection';
 import * as styles from '@/app/(admission)/(main)/_entrant-dashboard/EntrantDashboardPage.styles';
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
-import useAuthentication from '@/hooks/use-authentication';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 import useToast from '@/hooks/use-toast';
 import ContractAPI from '@/lib/api/contract/ContractAPI';
 
@@ -27,10 +27,10 @@ const DeleteEntrantAdmin = () => {
   const [entrantData, setEntrantData] = useState<EntrantFullResponse | null>(
     null,
   );
-  const { isLoggedIn } = useAuthentication();
+  const { user } = useAuthentication();
   const router = useRouter();
 
-  if (!isLoggedIn) router.push('/login');
+  if (!user) router.push('/login');
   const toast = useToast();
 
   const handleDelete = async (action: Actions) => {

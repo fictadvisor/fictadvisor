@@ -15,13 +15,13 @@ import {
 } from '@/components/common/ui/button-mui/types';
 import Divider from '@/components/common/ui/divider';
 import { DividerTextAlign } from '@/components/common/ui/divider/types';
-import useAuthentication from '@/hooks/use-authentication';
-import AuthService from '@/lib/services/auth';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
+import TelegramService from '@/lib/services/telegram/TelegramService';
 import theme from '@/styles/theme';
 
 const GeneralTab: FC = () => {
-  const { user } = useAuthentication();
-  const router = useRouter();
+  const { user: userNotNull } = useAuthentication();
+  const user = userNotNull!;
   const isMobile = useMediaQuery(theme.breakpoints.down('desktopSemiMedium'));
   const buttonText = user.telegramId
     ? 'Telegram під’єднано'
@@ -29,7 +29,7 @@ const GeneralTab: FC = () => {
   const [popupOpen, setPopupOpen] = useState(false);
 
   const handleConnectTelegram = () => {
-    void AuthService.redirectToRegisterBot(router);
+    void TelegramService.redirectToRegisterBot();
   };
 
   return (

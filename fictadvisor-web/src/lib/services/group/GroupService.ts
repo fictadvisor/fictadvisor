@@ -31,11 +31,17 @@ class GroupService {
     const permissionValues: PermissionValuesDTO = {
       groupId: groupId,
     };
-    const permissions = await PermissionService.getPermissionList(
+    const permissionsRes = PermissionService.getPermissionList(
       user.id,
       permissionValues,
     );
-    const { students } = await GroupAPI.getGroupStudents(groupId, { order });
+    const studentsRes = GroupAPI.getGroupStudents(groupId, { order });
+
+    const [permissions, { students }] = await Promise.all([
+      permissionsRes,
+      studentsRes,
+    ]);
+
     const requests: OrdinaryStudentResponse[] = !permissions[
       PERMISSION.GROUPS_$GROUPID_STUDENTS_UNVERIFIED_GET
     ]

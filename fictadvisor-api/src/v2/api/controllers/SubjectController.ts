@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
-  ApiBearerAuth,
+  ApiCookieAuth,
   ApiForbiddenResponse,
   ApiOkResponse,
   ApiTags,
@@ -83,7 +83,7 @@ export class SubjectController {
   }
 
   @Access(PERMISSION.SUBJECTS_CREATE)
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: SubjectResponse,
   })
@@ -107,7 +107,7 @@ export class SubjectController {
   }
 
   @Access(PERMISSION.SUBJECTS_UPDATE)
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: SubjectResponse,
   })
@@ -134,7 +134,7 @@ export class SubjectController {
   }
 
   @Access(PERMISSION.SUBJECTS_DELETE)
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse()
   @ApiBadRequestResponse({
     description: `InvalidEntityIdException:\n 

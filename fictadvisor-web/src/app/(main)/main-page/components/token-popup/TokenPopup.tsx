@@ -10,18 +10,18 @@ import {
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
 import Popup from '@/components/common/ui/pop-ups/Popup';
-import useAuthentication from '@/hooks/use-authentication';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import AuthAPI from '@/lib/api/auth/AuthAPI';
 import UserAPI from '@/lib/api/user/UserAPI';
-import AuthService from '@/lib/services/auth';
+import TelegramService from '@/lib/services/telegram/TelegramService';
 import StorageUtil from '@/lib/utils/StorageUtil';
 
 const TokenPopup = () => {
   const { displayError } = useToastError();
   const router = useRouter();
-  const { user, isLoggedIn, update } = useAuthentication();
+  const { user } = useAuthentication();
   const [isOpen, setIsOpen] = useState(false);
   const toast = useToast();
   const searchParams = useSearchParams();
@@ -35,11 +35,14 @@ const TokenPopup = () => {
       } else {
         toast.error('Поганий токен!');
 
-        if (isLoggedIn) await router.push('/account');
-        else await router.push('/register');
+        if (user) {
+          router.push('/account');
+        } else {
+          router.push('/register');
+        }
       }
     },
-    [isLoggedIn, router],
+    [user, router],
   );
 
   useEffect(() => {
@@ -48,26 +51,30 @@ const TokenPopup = () => {
 
   const handleClick = useCallback(async () => {
     try {
-      await AuthService.registerTelegram();
-      if (isLoggedIn) {
+      await TelegramService.register();
+      if (user) {
         await UserAPI.linkTelegram(user.id, {
           ...StorageUtil.getTelegramInfo().telegram,
         });
-        await update();
+        // await update();
+        //  update: async () => {
+        //         setJwt(StorageUtil.getTokens());
+        //         await refetch();
+        //       },
         StorageUtil.deleteTelegramInfo();
         toast.success('Telegram успішно приєднано!');
 
-        await router.push('/account');
+        router.push('/account');
       } else {
         toast.success('Telegram успішно приєднано, дозаповни усі поля!');
-        await router.push('/register');
+        router.push('/register');
       }
     } catch (error) {
       displayError(error);
     } finally {
       setIsOpen(false);
     }
-  }, [isLoggedIn, router, update]);
+  }, [user, router]);
 
   if (!isOpen) return null;
 

@@ -18,6 +18,7 @@ import { StudentModule } from '../modules/StudentModule';
 import { PageTextModule } from '../modules/PageTextModule';
 import { EduProgramModule } from '../modules/EduProgramModule';
 import { SpecialityModule } from '../modules/SpecialityModule';
+import { HealthModule } from '../modules/HealthModule';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { SpecialityModule } from '../modules/SpecialityModule';
     PageTextModule,
     EduProgramModule,
     SpecialityModule,
+    HealthModule,
   ],
 })
 export class ApiModule {}

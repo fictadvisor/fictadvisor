@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Param, Patch, Post, Get, Query } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
-  ApiBearerAuth,
+  ApiCookieAuth,
   ApiForbiddenResponse,
   ApiOkResponse,
   ApiParam,
@@ -64,7 +64,7 @@ export class CathedraController {
     };
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: CathedraResponse,
   })
@@ -106,7 +106,7 @@ export class CathedraController {
     return this.cathedraMapper.getCathedraWithTeachers(cathedra);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: CathedraWithTeachersResponse,
   })
@@ -157,7 +157,7 @@ export class CathedraController {
     return this.cathedraMapper.getCathedraWithTeachers(cathedra);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: CathedraWithTeachersResponse,
   })

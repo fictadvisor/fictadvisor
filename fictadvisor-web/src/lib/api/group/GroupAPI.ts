@@ -22,8 +22,6 @@ import {
   URLResponse,
 } from '@fictadvisor/utils/responses';
 
-import { getAuthorizationHeader } from '@/lib/api/utils';
-
 import { Order } from '../../services/group/types/OrderEnum';
 import { client } from '../instance';
 
@@ -32,7 +30,6 @@ class GroupAPI {
     const { data } = await client.post<ShortUsersResponse>(
       `/groups/${groupId}/addEmails`,
       body,
-      getAuthorizationHeader(),
     );
     return data;
   }
@@ -40,7 +37,6 @@ class GroupAPI {
   async get(groupId: string) {
     const { data } = await client.get<MappedGroupResponse>(
       `/groups/${groupId}`,
-      getAuthorizationHeader(),
     );
     return data;
   }
@@ -48,17 +44,12 @@ class GroupAPI {
   async getAll(params: QueryAllGroupsDTO = {}) {
     const { data } = await client.get<PaginatedGroupsResponse>(`/groups`, {
       params,
-      ...getAuthorizationHeader(),
     });
     return data;
   }
 
   async create(body: CreateGroupDTO) {
-    const { data } = await client.post<MappedGroupResponse>(
-      `/groups`,
-      body,
-      getAuthorizationHeader(),
-    );
+    const { data } = await client.post<MappedGroupResponse>(`/groups`, body);
     return data;
   }
 
@@ -67,7 +58,6 @@ class GroupAPI {
     const { data } = await client.patch<MappedGroupResponse>(
       `/groups/${groupId}`,
       body,
-      getAuthorizationHeader(),
     );
     return data;
   }
@@ -75,7 +65,6 @@ class GroupAPI {
   async delete(groupId: string) {
     const { data } = await client.delete<MappedGroupResponse>(
       `/groups/${groupId}`,
-      getAuthorizationHeader(),
     );
     return data;
   }
@@ -85,7 +74,6 @@ class GroupAPI {
       `/groups/${groupId}/students`,
       {
         params,
-        ...getAuthorizationHeader(),
       },
     );
     return data;
@@ -97,7 +85,6 @@ class GroupAPI {
       `/groups/${groupId}/unverifiedStudents`,
       {
         params,
-        ...getAuthorizationHeader(),
       },
     );
 
@@ -105,10 +92,7 @@ class GroupAPI {
   }
 
   async removeStudent(groupId: string, studentId: string): Promise<void> {
-    await client.delete(
-      `/groups/${groupId}/remove/${studentId}`,
-      getAuthorizationHeader(),
-    );
+    await client.delete(`/groups/${groupId}/remove/${studentId}`);
   }
 
   async updateStudentRole(
@@ -116,18 +100,13 @@ class GroupAPI {
     studentId: string,
     body: RoleDTO,
   ): Promise<void> {
-    await client.patch(
-      `/groups/${groupId}/switch/${studentId}`,
-      body,
-      getAuthorizationHeader(),
-    );
+    await client.patch(`/groups/${groupId}/switch/${studentId}`, body);
   }
 
   async updateCaptain(groupId: string, body: SwitchCaptainDTO) {
     const { data } = await client.post<OrdinaryStudentResponse>(
       `/groups/${groupId}/switchCaptain`,
       body,
-      getAuthorizationHeader(),
     );
     return data;
   }
@@ -136,7 +115,6 @@ class GroupAPI {
     const { data } = await client.patch<OrdinaryStudentResponse>(
       `/groups/${groupId}/verify/${userId}`,
       body,
-      getAuthorizationHeader(),
     );
     return data;
   }
@@ -146,7 +124,6 @@ class GroupAPI {
       `/groups/${groupId}/disciplines`,
       {
         params,
-        ...getAuthorizationHeader(),
       },
     );
 
@@ -156,17 +133,13 @@ class GroupAPI {
   async getDisciplineTeachers(groupId: string) {
     const { data } = await client.get<ExtendedDisciplineTeachersResponse>(
       `/groups/${groupId}/disciplineTeachers`,
-      getAuthorizationHeader(),
     );
 
     return data;
   }
 
   async getGroupListUrl(groupId: string) {
-    const { data } = await client.get<URLResponse>(
-      `/groups/${groupId}/list`,
-      getAuthorizationHeader(),
-    );
+    const { data } = await client.get<URLResponse>(`/groups/${groupId}/list`);
 
     return data;
   }
@@ -175,7 +148,6 @@ class GroupAPI {
     const { data } = await client.patch<OrdinaryStudentResponse>(
       `/groups/${groupId}/leave`,
       {},
-      getAuthorizationHeader(),
     );
     return data;
   }
@@ -183,7 +155,6 @@ class GroupAPI {
   async getSelectives(groupId: string) {
     const { data } = await client.get<SelectiveDisciplinesWithAmountResponse[]>(
       `/groups/${groupId}/selectiveDisciplines`,
-      getAuthorizationHeader(),
     );
     return data;
   }

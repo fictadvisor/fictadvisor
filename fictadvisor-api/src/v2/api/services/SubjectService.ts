@@ -129,7 +129,7 @@ export class SubjectService {
       const marks = this.questionMapper.getMarks(sortedQuestionsWithAnswers);
 
       teachers.push({
-        ...this.teacherMapper.getTeacher(dbTeacher as DbTeacher),
+        ...this.teacherMapper.getTeacherWithRolesAndCathedras(dbTeacher as DbTeacher),
         rating: this.teacherService.getRating(marks),
       });
     }

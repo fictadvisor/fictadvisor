@@ -4,13 +4,14 @@ import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 
 import SelectiveBlock from '@/app/(main)/account/components/selective-tab/components/selective-block';
-import useAuthentication from '@/hooks/use-authentication';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 import UserAPI from '@/lib/api/user/UserAPI';
 
 import * as styles from './SelectiveTab.styles';
 
 const SelectiveTab: FC = () => {
-  const { user } = useAuthentication();
+  const { user: userNotNull } = useAuthentication();
+  const user = userNotNull!;
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ['selectiveDisciplines', user.id],

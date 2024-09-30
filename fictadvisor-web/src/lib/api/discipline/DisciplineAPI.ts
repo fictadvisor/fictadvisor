@@ -6,14 +6,12 @@ import {
 } from '@fictadvisor/utils/requests';
 import {
   DisciplinesResponse,
-  DisciplineTeacherCreateResponse,
+  DisciplineTeacherExtendedResponse,
   DisciplineTeachersResponse,
   ExtendedDisciplineTeachersResponse,
 } from '@fictadvisor/utils/responses';
 
 import { client } from '../instance';
-import { getAuthorizationHeader } from '../utils';
-
 class DisciplineAPI {
   async getPageDisciplines(params: QueryAllDisciplinesDTO = {}) {
     const { data } = await client.get<DisciplinesResponse>('/disciplines', {
@@ -25,7 +23,6 @@ class DisciplineAPI {
   async getDisciplinesById(disciplineId: string) {
     const { data } = await client.get<ExtendedDisciplineTeachersResponse>(
       `/disciplines/${disciplineId}`,
-      getAuthorizationHeader(),
     );
     return data;
   }
@@ -34,30 +31,24 @@ class DisciplineAPI {
     return await client.post<ExtendedDisciplineTeachersResponse>(
       `/disciplines`,
       body,
-      getAuthorizationHeader(),
     );
   }
 
   async deleteDiscipline(disciplineId: string): Promise<void> {
-    await client.delete(
-      `/disciplines/${disciplineId}`,
-      getAuthorizationHeader(),
-    );
+    await client.delete(`/disciplines/${disciplineId}`);
   }
 
   async getAllDisciplineTeachers(disciplineId: string) {
     const { data } = await client.get<DisciplineTeachersResponse>(
       `/disciplines/${disciplineId}/teachers`,
-      getAuthorizationHeader(),
     );
     return data;
   }
 
   async addDisciplineTeacher(body: CreateDisciplineTeacherDTO) {
-    const { data } = await client.post<DisciplineTeacherCreateResponse>(
+    const { data } = await client.post<DisciplineTeacherExtendedResponse>(
       `/disciplineTeachers`,
       body,
-      getAuthorizationHeader(),
     );
     return data;
   }
@@ -66,7 +57,7 @@ class DisciplineAPI {
     disciplineTeacherId: string,
     body: UpdateDisciplineTeacherDTO,
   ) {
-    const { data } = await client.patch<DisciplineTeacherCreateResponse>(
+    const { data } = await client.patch<DisciplineTeacherExtendedResponse>(
       `/disciplineTeachers/${disciplineTeacherId}`,
       body,
     );
