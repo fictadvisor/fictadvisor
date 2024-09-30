@@ -77,6 +77,7 @@ export const LoginForm: FC = () => {
             text="Увійти"
             size={ButtonSize.LARGE}
             type="submit"
+            loadingOnClick
             disabled={!isValid || isSubmitting}
             sx={sxStyles.loginButton}
           />
