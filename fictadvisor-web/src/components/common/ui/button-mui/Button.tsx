@@ -1,7 +1,7 @@
 'use client';
 
-import React, { FC, MouseEventHandler, ReactNode } from 'react';
-import { Box, Button as MuiButton } from '@mui/material';
+import React, { FC, MouseEventHandler, ReactNode, useState } from 'react';
+import { Box, Button as MuiButton, CircularProgress } from '@mui/material';
 import { SxProps, Theme } from '@mui/material/styles';
 
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
@@ -16,6 +16,7 @@ interface ButtonProps {
   size?: ButtonSize;
   startIcon?: ReactNode;
   endIcon?: ReactNode;
+  loadingOnClick?: boolean;
   sx?: SxProps<Theme>;
   disabled?: boolean;
   onClick?: MouseEventHandler<HTMLButtonElement>;
@@ -30,18 +31,52 @@ const Button: FC<ButtonProps> = ({
   size = ButtonSize.MEDIUM,
   startIcon,
   endIcon,
+  loadingOnClick = false,
   sx = {},
+  disabled,
+  onClick,
   ...rest
 }) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (loadingOnClick) {
+      setLoading(true);
+    }
+
+    onClick?.(event);
+  };
+
+  const getCircularSize = (size: ButtonSize) => {
+    switch (size) {
+      case ButtonSize.LARGE:
+        return 25;
+      case ButtonSize.MEDIUM:
+        return 26;
+      case ButtonSize.SMALL:
+        return 20;
+      default:
+        return 20;
+    }
+  };
+
   return (
     <MuiButton
       sx={mergeSx(styles.button(color, variant, size), sx)}
       disableRipple
+      onClick={handleClick}
+      disabled={loading || disabled}
       {...rest}
     >
-      {startIcon && <Box sx={styles.icon}>{startIcon}</Box>}
-      <p> {text} </p>
-      {endIcon && <Box sx={styles.icon}>{endIcon}</Box>}
+      {loading ? (
+        <CircularProgress size={getCircularSize(size)} color="inherit" />
+      ) : (
+        <>
+          {startIcon && <Box sx={styles.icon}>{startIcon}</Box>}
+          <p> {text} </p>
+          {endIcon && <Box sx={styles.icon}>{endIcon}</Box>}
+        </>
+      )}
     </MuiButton>
   );
 };
