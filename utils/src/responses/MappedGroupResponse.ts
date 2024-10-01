@@ -28,7 +28,7 @@ export class MappedGroupResponse extends GroupResponse {
     captain: BaseStudentResponse;
   
   @ApiProperty({
-    description: 'Specialtiy of the group',
+    description: 'Speciality of the group',
     type: SpecialityResponse,
   })
     speciality: SpecialityResponse;
