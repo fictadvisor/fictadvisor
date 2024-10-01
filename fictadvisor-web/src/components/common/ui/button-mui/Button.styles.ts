@@ -7,6 +7,7 @@ export const button = (
   color: ButtonColor,
   variant: ButtonVariant,
   size: ButtonSize,
+  loading: boolean = false,
 ): SxProps<Theme> => ({
   display: 'flex',
   alignItems: 'center',
@@ -62,6 +63,14 @@ export const button = (
       color: getColors(color, variant, ButtonState.DISABLED).colorDisabled,
       cursor: 'not-allowed',
     },
+    ...(loading && {
+      cursor: 'not-allowed',
+      pointerEvents: 'none',
+      backgroundColor: getColors(color, variant, ButtonState.DISABLED)
+        .backgroundColor,
+      borderColor: getColors(color, variant, ButtonState.DISABLED).borderColor,
+      color: getColors(color, variant, ButtonState.DISABLED).colorDisabled,
+    }),
   }),
 
   ...(variant === ButtonVariant.TEXT && {
@@ -92,6 +101,13 @@ export const button = (
       color: 'grey.300',
       cursor: 'not-allowed',
     },
+    ...(loading && {
+      backgroundColor: 'transparent',
+      textDecoration: 'unset',
+      pointerEvents: 'none',
+      color: 'grey.300',
+      cursor: 'not-allowed',
+    }),
   }),
 });
 

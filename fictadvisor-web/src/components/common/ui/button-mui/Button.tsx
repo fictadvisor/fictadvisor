@@ -43,7 +43,6 @@ const Button: FC<ButtonProps> = ({
     if (loadingOnClick) {
       setLoading(true);
     }
-
     onClick?.(event);
   };
 
@@ -62,10 +61,10 @@ const Button: FC<ButtonProps> = ({
 
   return (
     <MuiButton
-      sx={mergeSx(styles.button(color, variant, size), sx)}
+      sx={mergeSx(styles.button(color, variant, size, loading), sx)}
       disableRipple
       onClick={handleClick}
-      disabled={loading || disabled}
+      disabled={disabled}
       {...rest}
     >
       {loading ? (
