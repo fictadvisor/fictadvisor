@@ -26,12 +26,12 @@ import { ApiImplicitFile, ApiImplicitFileMetadata } from '@nestjs/swagger/dist/d
 
 export class ApiDocumentationParams {
   isAuth?: boolean;
-  ok?:  ApiResponseOptions;
+  ok?: ApiResponseOptions;
   badRequest?: ApiResponseOptions;
   forbidden?: ApiResponseOptions;
   unauthorized?: ApiResponseOptions;
   unsupportedMediaType?: ApiResponseOptions;
-  implicitFile?:  ApiImplicitFileMetadata;
+  implicitFile?: ApiImplicitFileMetadata;
   payloadTooLarge?: ApiResponseOptions;
   conflict?: ApiResponseOptions;
   tooManyRequests?: ApiResponseOptions;
