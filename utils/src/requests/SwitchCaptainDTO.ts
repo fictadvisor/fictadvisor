@@ -6,7 +6,7 @@ export class SwitchCaptainDTO {
   @ApiProperty({
     description: 'Id of a student which is going to be a captain',
   })
-  @IsUUID()
-  @IsNotEmpty(validationOptionsMsg('Captain id cannot be empty'))
+  @IsUUID(undefined, validationOptionsMsg('Student id must be UUID'))
+  @IsNotEmpty(validationOptionsMsg('Student id cannot be empty'))
     studentId: string;
 }

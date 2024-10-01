@@ -1,6 +1,5 @@
 export * from './AuthLoginResponse';
 export * from './AuthRefreshResponse';
-export * from './CaptainResponse';
 export * from './CathedraResponse';
 export * from './CathedrasDivisionsResponse';
 export * from './CathedraWithNumberOfTeachersResponse';

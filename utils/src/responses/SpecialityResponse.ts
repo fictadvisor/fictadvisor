@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { AbbreviationOfSpeciality } from '../enums/db/AbbreviationOfSpecialityEnum';
+import { AbbreviationOfSpeciality } from '../enums';
 
 export class SpecialityResponse {
   @ApiProperty({

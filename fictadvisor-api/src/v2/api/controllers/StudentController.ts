@@ -46,7 +46,7 @@ export class StudentController {
     @Query(AllStudentsPipe) query: QueryAllStudentDTO,
   ): Promise<SimpleStudentsResponse> {
     const studentsWithPagination = await this.studentService.getAll(query);
-    const students = this.studentMapper.getStudents(studentsWithPagination.data);
+    const students = this.studentMapper.getSimpleStudents(studentsWithPagination.data);
     return {
       students,
       pagination: studentsWithPagination.pagination,
@@ -63,7 +63,7 @@ export class StudentController {
     @Body() body: CreateStudentWithRolesDTO,
   ): Promise<OrdinaryStudentResponse> {
     const student = await this.studentService.createStudent(body);
-    return this.studentMapper.getStudent(student);
+    return this.studentMapper.getOrdinaryStudent(student);
   }
 
   @ApiEndpoint({
@@ -77,7 +77,7 @@ export class StudentController {
     @Body() body: UpdateStudentWithRolesDTO,
   ): Promise<OrdinaryStudentResponse> {
     const student = await this.studentService.updateStudent(studentId, body);
-    return this.studentMapper.getStudent(student);
+    return this.studentMapper.getOrdinaryStudent(student);
   }
 
   @ApiEndpoint({
@@ -90,7 +90,7 @@ export class StudentController {
     @Param('studentId', StudentByIdPipe) studentId: string,
   ): Promise<OrdinaryStudentResponse> {
     const deletedStudent =  await this.studentService.deleteStudent(studentId);
-    return this.studentMapper.getStudent(deletedStudent);
+    return this.studentMapper.getOrdinaryStudent(deletedStudent);
   }
 
   @ApiEndpoint({
@@ -104,7 +104,7 @@ export class StudentController {
     @Body() body: UpdateStudentSelectivesDTO,
   ): Promise<OrdinaryStudentResponse> {
     const student = await this.studentService.updateStudentSelectives(studentId, body);
-    return this.studentMapper.getStudent(student);
+    return this.studentMapper.getOrdinaryStudent(student);
   }
 
   @ApiEndpoint({

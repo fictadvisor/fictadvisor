@@ -12,7 +12,7 @@ export class StudentMapper {
     return groupRole?.role;
   }
 
-  getStudent (student: DbStudent, hasGroup = true): OrdinaryStudentResponse {
+  getOrdinaryStudent (student: DbStudent, hasGroup = true): OrdinaryStudentResponse {
     return {
       id: student.user.id,
       username: student.user.username,
@@ -30,6 +30,10 @@ export class StudentMapper {
       },
       state: student.user.state,
     };
+  }
+
+  getOrdinaryStudents (students: DbStudent[], hasGroup = true): OrdinaryStudentResponse[] {
+    return students.map((student) => this.getOrdinaryStudent(student, hasGroup));
   }
 
   updateStudent (student: DbStudent): FullStudentResponse {
@@ -75,7 +79,7 @@ export class StudentMapper {
     };
   }
 
-  getStudents (students: DbStudent[]): SimpleStudentResponse[] {
+  getSimpleStudents (students: DbStudent[]): SimpleStudentResponse[] {
     return students.map((student) => this.getSimpleStudent(student));
   }
 

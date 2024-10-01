@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { TelegramSource } from '../enums/db/TelegramSourceEnum';
+import { TelegramSource } from '../enums';
 
 export class TelegramGroups {
   @ApiProperty({

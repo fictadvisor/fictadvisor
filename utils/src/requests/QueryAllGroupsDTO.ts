@@ -3,8 +3,8 @@ import { IsArray, IsEnum, IsIn, IsNumber, IsOptional, Max, Min } from 'class-val
 import { Type } from 'class-transformer';
 import { validationOptionsMsg } from '../ValidationUtil';
 import { QueryAllDTO } from './QueryAllDTO';
-import { OrderQAParam } from '../enums/params/OrderQAParam';
-import { SortQAGroupsParam } from '../enums/params/SortQAGroupsParam';
+import { OrderQAParam } from '../enums';
+import { SortQAGroupsParam } from '../enums';
 
 export class QueryAllGroupsDTO extends QueryAllDTO {
   @ApiPropertyOptional({
