@@ -1,7 +1,6 @@
 import { Grant, GroupRole, UserRole } from '@prisma/client';
 import { RoleName } from '@fictadvisor/utils/enums';
 
-
 export class DbRole {
   id: string;
   name: RoleName;

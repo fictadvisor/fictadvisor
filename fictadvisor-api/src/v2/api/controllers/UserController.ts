@@ -290,7 +290,7 @@ export class UserController {
     @Param('telegramId', UserByTelegramIdPipe) telegramId: bigint,
   ) {
     const student = await this.userService.getUserByTelegramId(telegramId);
-    return this.studentMapper.getStudent(student);
+    return this.studentMapper.getOrdinaryStudent(student);
   }
 
   @ApiEndpoint({

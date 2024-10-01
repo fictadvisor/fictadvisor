@@ -22,21 +22,21 @@ export class FileService {
     this.storage = admin.storage().bucket();
   }
 
-  async saveByHash (fileContent: Express.Multer.File, directory: string) {
+  async saveByHash (fileContent: Express.Multer.File, directory: string): Promise<string> {
     const fileName = createHash('md5').update(fileContent.buffer).digest('hex');
     const filePath = join('static', directory, fileName + extname(fileContent.originalname));
 
     const file = this.storage.file(filePath);
     await file.save(fileContent.buffer);
 
-    const [url] = (await file.getSignedUrl({
+    const [url] = await file.getSignedUrl({
       action: 'read',
       expires: '01-01-2222',
-    }));
+    });
     return url;
   }
 
-  private formatLink (path: string) {
+  private formatLink (path: string): string {
     return path.replaceAll('\\', '/');
   }
 
@@ -51,7 +51,7 @@ export class FileService {
     return result;
   }
 
-  async deleteFile (path: string) {
+  async deleteFile (path: string): Promise<void> {
     await this.storage.file(path).delete();
   }
 
@@ -62,7 +62,7 @@ export class FileService {
     return file.toString(encoding);
   }
 
-  async fillTemplate (fileName: string, data: object) {
+  async fillTemplate (fileName: string, data: object): Promise<Buffer> {
     const file = await this.getFileContent(`templates/${fileName}`, true, 'binary');
     const zip = new PizZip(file);
 
@@ -79,20 +79,21 @@ export class FileService {
     });
   }
 
-  async generateGroupList (students: StudentWithContactsData[], groupId: string) {
+  async generateGroupList (students: StudentWithContactsData[], groupId: string): Promise<string> {
     const fileName = `${groupId}.csv`;
     const path = join('static', 'lists', fileName);
 
     const timeout = MINUTE * 15;
 
-    const file =  this.storage.file(path);
+    const file = this.storage.file(path);
     if (await this.checkFileExist(path)) {
-      return file.getSignedUrl({
+      const [url] = await file.getSignedUrl({
         action: 'read',
         expires: Date.now() + timeout,
       });
-    }
 
+      return url;
+    }
 
     let result = 'lastName,firstName,middleName,email,telegram,github,instagram,facebook,twitter,discord,youtube,mail';
     for (const student of students) {

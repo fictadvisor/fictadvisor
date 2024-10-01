@@ -1,13 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
+import { IsEnum, IsNotEmpty } from 'class-validator';
 import { validationOptionsMsg } from '../ValidationUtil';
-import { RoleName } from '../enums/db/RoleNameEnum';
+import { RoleName } from '../enums';
 
 export class RoleDTO {
   @ApiProperty({
     enum: RoleName,
     description: 'User roles',
   })
-  @IsNotEmpty(validationOptionsMsg('Role name can not be empty'))
+  @IsEnum(RoleName, validationOptionsMsg('Role name must be enum'))
+  @IsNotEmpty(validationOptionsMsg('Role name cannot be empty'))
     roleName: RoleName;
 }
