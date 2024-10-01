@@ -1,6 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { DbUser } from '../database/entities/DbUser';
-import { UserForGetAllResponse, UserResponse } from '@fictadvisor/utils/responses';
+import {
+  ShortUserResponse,
+  ShortUsersResponse,
+  UserForGetAllResponse,
+  UserResponse,
+} from '@fictadvisor/utils/responses';
 
 @Injectable()
 export class UserMapper {
@@ -23,5 +28,15 @@ export class UserMapper {
       state: user.state,
       avatar: user.avatar,
     } as UserForGetAllResponse));
+  }
+
+  getShortUser ({ id, email }: DbUser): ShortUserResponse {
+    return { id, email };
+  }
+
+  getShortUsers (users: DbUser[]): ShortUsersResponse {
+    return {
+      users: users.map((user) =>  this.getShortUser(user)),
+    };
   }
 }

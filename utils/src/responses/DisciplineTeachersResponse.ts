@@ -43,3 +43,11 @@ export class ExtendedDisciplineTeachersResponse extends DisciplineTeachersRespon
   })
     group: GroupResponse;
 }
+
+export class ExtendedDisciplinesTeachersResponse {
+  @ApiProperty({
+    type: [ExtendedDisciplineTeachersResponse],
+    description: 'List of disciplines',
+  })
+    disciplines: ExtendedDisciplineTeachersResponse[];
+}

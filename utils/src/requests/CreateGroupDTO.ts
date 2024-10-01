@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, Matches } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString, IsUUID, Matches } from 'class-validator';
 import { validationOptionsMsg } from '../ValidationUtil';
 
 export class CreateGroupDTO {
@@ -11,18 +11,23 @@ export class CreateGroupDTO {
     validationOptionsMsg('Proper name is expected')
   )
   @IsNotEmpty(validationOptionsMsg('Code cannot be empty'))
+  @IsString(validationOptionsMsg('Code must be a string'))
     code: string;
   
   @ApiProperty({
     description: 'Educational program id',  
   })
-  @IsNotEmpty(validationOptionsMsg('Educatioal program id cannot be empty'))
+  @IsNotEmpty(validationOptionsMsg('Educational program id cannot be empty'))
+  @IsString(validationOptionsMsg('Educational program must be a string'))
+  @IsUUID(undefined, validationOptionsMsg('Educational program id must be UUID'))
     eduProgramId: string;
   
   @ApiProperty({
     description: 'Cathedra id',
   })
   @IsNotEmpty(validationOptionsMsg('Cathedra id cannot be empty'))
+  @IsString(validationOptionsMsg('Cathedra id must be a string'))
+  @IsUUID(undefined, validationOptionsMsg('Cathedra id must be UUID'))
     cathedraId: string;
   
   @ApiProperty({
