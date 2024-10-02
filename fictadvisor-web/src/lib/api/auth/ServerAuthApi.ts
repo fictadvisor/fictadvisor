@@ -6,13 +6,14 @@ import {
 import { cookies } from 'next/headers';
 
 import { AuthToken } from '@/lib/constants/AuthToken';
+import { cookieOptions } from '@/lib/constants/cookieOptions';
 import { Tokens } from '@/types/tokens';
 
 import { client } from '../instance';
 
 export async function logout() {
-  cookies().delete(AuthToken.AccessToken);
-  cookies().delete(AuthToken.RefreshToken);
+  cookies().delete({ name: AuthToken.AccessToken, ...cookieOptions });
+  cookies().delete({ name: AuthToken.RefreshToken, ...cookieOptions });
 }
 
 export async function getServerUser() {
@@ -29,22 +30,8 @@ export async function getServerUser() {
 
 export async function setAuthTokens(tokens: Tokens) {
   const { accessToken, refreshToken } = tokens;
-  cookies().set(AuthToken.AccessToken, accessToken, {
-    secure: true,
-    sameSite: 'none',
-    httpOnly: false,
-    maxAge: 60 * 60 * 24 * 7,
-    domain:
-      process.env.NODE_ENV === 'production' ? '.ficeadvisor.com' : undefined,
-  });
-  cookies().set(AuthToken.RefreshToken, refreshToken, {
-    secure: true,
-    sameSite: 'none',
-    httpOnly: false,
-    maxAge: 60 * 60 * 24 * 30,
-    domain:
-      process.env.NODE_ENV === 'production' ? '.ficeadvisor.com' : undefined,
-  });
+  cookies().set(AuthToken.AccessToken, accessToken, cookieOptions);
+  cookies().set(AuthToken.RefreshToken, refreshToken, cookieOptions);
 }
 
 export async function refreshToken(): Promise<boolean> {
