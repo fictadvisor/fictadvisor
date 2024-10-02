@@ -25,7 +25,7 @@ async function bootstrap () {
   app.enableCors({
     origin: isProduction
       ? [configService.get<string>('frontBaseUrl')]
-      : ['http://localhost:3000'],
+      : ['http://localhost:3000','http://localhost'],
     credentials: true,
   });
 

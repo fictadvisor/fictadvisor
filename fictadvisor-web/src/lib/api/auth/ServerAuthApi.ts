@@ -6,13 +6,14 @@ import {
 import { cookies } from 'next/headers';
 
 import { AuthToken } from '@/lib/constants/AuthToken';
+import { cookieOptions } from '@/lib/constants/cookieOptions';
 import { Tokens } from '@/types/tokens';
 
 import { client } from '../instance';
 
 export async function logout() {
-  cookies().delete(AuthToken.AccessToken);
-  cookies().delete(AuthToken.RefreshToken);
+  cookies().delete({ name: AuthToken.AccessToken, ...cookieOptions });
+  cookies().delete({ name: AuthToken.RefreshToken, ...cookieOptions });
 }
 
 export async function getServerUser() {
@@ -29,29 +30,30 @@ export async function getServerUser() {
 
 export async function setAuthTokens(tokens: Tokens) {
   const { accessToken, refreshToken } = tokens;
-  cookies().set(AuthToken.AccessToken, accessToken, {
-    secure: true,
-    sameSite: 'none',
-    httpOnly: process.env.NODE_ENV === 'production',
-  });
-  cookies().set(AuthToken.RefreshToken, refreshToken, {
-    secure: true,
-    sameSite: 'none',
-    httpOnly: process.env.NODE_ENV === 'production',
-  });
+  cookies().set(AuthToken.AccessToken, accessToken, cookieOptions);
+  cookies().set(AuthToken.RefreshToken, refreshToken, cookieOptions);
 }
 
-export async function refreshToken() {
+export async function refreshToken(): Promise<boolean> {
   const refreshToken = cookies().get(AuthToken.RefreshToken);
 
   if (!refreshToken) {
-    throw new Error('No refresh token');
+    return false;
   }
 
-  const { data } = await client.post<AuthRefreshResponse>('auth/refresh');
+  try {
+    const { data } = await client.post<AuthRefreshResponse>('auth/refresh');
+    await setAuthTokens({
+      accessToken: data.accessToken,
+      refreshToken: refreshToken.value,
+    });
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
 
-  await setAuthTokens({
-    accessToken: data.accessToken,
-    refreshToken: refreshToken.value,
-  });
+export async function getAccessToken() {
+  const AccessToken = cookies().get(AuthToken.AccessToken);
+  return AccessToken;
 }

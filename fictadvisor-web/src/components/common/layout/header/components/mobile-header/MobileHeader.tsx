@@ -6,7 +6,6 @@ import { AppBar, Box, Link } from '@mui/material';
 import Image from 'next/image';
 import NextLink from 'next/link';
 
-import { TransformedUser } from '@/components/common/layout/header/types';
 import IconButton from '@/components/common/ui/icon-button-mui';
 import {
   IconButtonColor,

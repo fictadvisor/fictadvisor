@@ -129,6 +129,7 @@ export const RegisterForm: FC = () => {
             text="Зареєструватись"
             type="submit"
             size={ButtonSize.LARGE}
+            loadingOnClick
             disabled={!isValid || isSubmitting}
             sx={stylesMUI.registerButton}
           />

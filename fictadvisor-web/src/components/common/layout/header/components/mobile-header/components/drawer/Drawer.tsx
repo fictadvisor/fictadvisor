@@ -36,7 +36,10 @@ const Drawer: FC<DrawerProps> = ({ isOpened, handleClick }) => {
       onClose={handleClick}
     >
       {isLoading ? (
-        <Progress size={ProgressSize.SMALL} sx={{ padding: '12px' }} />
+        <Progress
+          size={ProgressSize.SMALL}
+          sx={{ padding: '12px', mx: '16px' }}
+        />
       ) : user ? (
         <>
           <Link
