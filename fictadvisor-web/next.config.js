@@ -9,4 +9,12 @@ module.exports = {
       },
     ],
   },
+  experimental: {
+    serverActions: {
+      allowedOrigins: [
+        'https://dev.ficeadvisor.com',
+        'https://ficeadvisor.com',
+      ],
+    },
+  },
 };
