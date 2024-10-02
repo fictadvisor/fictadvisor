@@ -34,12 +34,16 @@ export async function setAuthTokens(tokens: Tokens) {
     sameSite: 'none',
     httpOnly: false,
     maxAge: 60 * 60 * 24 * 7,
+    domain:
+      process.env.NODE_ENV === 'production' ? '.ficeadvisor.com' : undefined,
   });
   cookies().set(AuthToken.RefreshToken, refreshToken, {
     secure: true,
     sameSite: 'none',
     httpOnly: false,
     maxAge: 60 * 60 * 24 * 30,
+    domain:
+      process.env.NODE_ENV === 'production' ? '.ficeadvisor.com' : undefined,
   });
 }
 
