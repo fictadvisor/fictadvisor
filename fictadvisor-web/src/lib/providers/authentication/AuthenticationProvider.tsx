@@ -14,9 +14,7 @@ export const AuthenticationContext = createContext<AuthenticationContextType>({
 });
 
 const AuthenticationProvider: FC<PropsWithChildren> = ({ children }) => {
-  const accessToken = !isServer
-    ? getClientCookie(AuthToken.AccessToken)
-    : undefined;
+  const accessToken = getClientCookie(AuthToken.AccessToken);
 
   const { data, isLoading } = useQuery({
     queryKey: ['user', accessToken],

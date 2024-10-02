@@ -15,18 +15,19 @@ client.interceptors.response.use(
     return response;
   },
   async error => {
-    if (error.response?.status === 401) {
-      try {
-        await refreshToken();
-        const originalRequest = error.config;
-        return await axios(originalRequest);
-      } catch (error_1) {
-        return Promise.reject(error_1);
+    const { response, config: originalRequest } = error;
+
+    if (response?.status === 401) {
+      const tokenRefreshed = await refreshToken();
+
+      if (tokenRefreshed) {
+        return axios(originalRequest);
       }
     }
     return Promise.reject(error);
   },
 );
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const cookiesInterceptor = async (req: any) => {
   if (isServer) {

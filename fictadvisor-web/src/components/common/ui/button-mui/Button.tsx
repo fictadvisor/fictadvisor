@@ -42,6 +42,7 @@ const Button: FC<ButtonProps> = ({
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (loadingOnClick) {
       setLoading(true);
+      setTimeout(() => setLoading(false), 3000);
     }
     onClick?.(event);
   };

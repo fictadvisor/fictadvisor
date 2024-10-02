@@ -32,26 +32,37 @@ export async function setAuthTokens(tokens: Tokens) {
   cookies().set(AuthToken.AccessToken, accessToken, {
     secure: true,
     sameSite: 'none',
-    httpOnly: process.env.NODE_ENV === 'production',
+    httpOnly: false,
+    maxAge: 60 * 60 * 24 * 7,
   });
   cookies().set(AuthToken.RefreshToken, refreshToken, {
     secure: true,
     sameSite: 'none',
-    httpOnly: process.env.NODE_ENV === 'production',
+    httpOnly: false,
+    maxAge: 60 * 60 * 24 * 30,
   });
 }
 
-export async function refreshToken() {
+export async function refreshToken(): Promise<boolean> {
   const refreshToken = cookies().get(AuthToken.RefreshToken);
 
   if (!refreshToken) {
-    throw new Error('No refresh token');
+    return false;
   }
 
-  const { data } = await client.post<AuthRefreshResponse>('auth/refresh');
+  try {
+    const { data } = await client.post<AuthRefreshResponse>('auth/refresh');
+    await setAuthTokens({
+      accessToken: data.accessToken,
+      refreshToken: refreshToken.value,
+    });
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
 
-  await setAuthTokens({
-    accessToken: data.accessToken,
-    refreshToken: refreshToken.value,
-  });
+export async function getAccessToken() {
+  const AccessToken = cookies().get(AuthToken.AccessToken);
+  return AccessToken;
 }
