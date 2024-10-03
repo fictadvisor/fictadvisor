@@ -1,8 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsIn, IsOptional } from 'class-validator';
 import { validationOptionsMsg } from '../ValidationUtil';
-import { OrderQAParam } from '../enums/params/OrderQAParam';
-import { SortQGSParam } from '../enums/params/SortQGSParam';
+import { OrderQAParam, SortQGSParam } from '../enums';
 
 export class GroupStudentsQueryDTO {
   @ApiPropertyOptional({

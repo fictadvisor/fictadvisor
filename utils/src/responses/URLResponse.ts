@@ -1,6 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class URLResponse {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'The URL of the resource',
+  })
     url: string;
 }
