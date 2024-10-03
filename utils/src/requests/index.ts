@@ -12,6 +12,7 @@ export * from './CreateDisciplineTeacherDTO';
 export * from './CreateDisciplineTypeDTO';
 export * from './CreateEntrantDTO';
 export * from './CreateEventDTO';
+export * from './CreateFacultyEventDTO';
 export * from './CreateGrantDTO';
 export * from './CreateGroupDTO';
 export * from './CreatePageTextDTO';

@@ -22,6 +22,7 @@ import {
 } from '@nestjs/swagger';
 import {
   CreateEventDTO,
+  CreateFacultyEventDTO,
   EventFiltrationDTO,
   GeneralEventFiltrationDTO,
   UpdateEventDTO,
@@ -326,6 +327,54 @@ export class ScheduleController {
   ) {
     const result = await this.scheduleService.createGroupEvent(body);
     return this.scheduleMapper.getEvent(result.event, result.discipline);
+  }
+
+  @ApiCookieAuth()
+  @ApiOkResponse({
+    type: EventsResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidBodyException:
+      Group id cannot be empty
+      Name should be string
+      Name is too short (min: 2)
+      Name is too long (max: 150)
+      Name cannot be empty
+      Start time cannot be empty
+      Start time must be Date
+      End time cannot be empty
+      End Time must be Date
+      Url must be a URL address
+      Event description is too long (max: 2000)
+      Event info should be string
+      
+    InvalidDateException:
+      Date is not valid or does not belong to this semester
+      
+    DataNotFoundException:
+      Data were not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @ApiEndpoint({
+    summary: 'Create a general faculty event',
+    permissions: PERMISSION.FACULTY_EVENTS_CREATE,
+  })
+  @Post('/facultyEvents')
+  async createFacultyEvent (
+      @Body() body: CreateFacultyEventDTO,
+  ) {
+    const events = await this.scheduleService.createFacultyEvent(body);
+    return this.scheduleMapper.getEvents(events);
   }
 
   @ApiCookieAuth()
