@@ -15,7 +15,7 @@
     "start": "nest start",
     "start:dev": "dotenv -e .development.env -- cross-env NODE_ENV=development nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "cross-env NODE_ENV=production node dist/main",
+    "start:prod": "cross-env NODE_ENV=production node dist/src/main",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "test:unit": "cross-env NODE_ENV=testing dotenv -e .testing.env -- jest -c jest.unit.config.json",
