@@ -9,6 +9,6 @@ export class ResetPasswordDTO {
   @Matches(
     new RegExp(/^(?=.*[A-Za-z])(?=.*\d).{6,32}$/),
     validationOptionsMsg('The password must be between 6 and 32 characters long, include at least 1 digit and 1 latin letter'))
-  @IsNotEmpty(validationOptionsMsg('Password is empty'))
+  @IsNotEmpty(validationOptionsMsg('Password cannot be empty'))
     password: string;
 }
