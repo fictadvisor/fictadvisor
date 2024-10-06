@@ -33,19 +33,19 @@ import { DisciplineTypeEnum } from '@fictadvisor/utils/enums';
 @Injectable()
 export class TeacherService {
   constructor (
-    private teacherRepository: TeacherRepository,
-    private disciplineTeacherRepository: DisciplineTeacherRepository,
-    private teacherMapper: TeacherMapper,
-    private disciplineTeacherService: DisciplineTeacherService,
-    private contactRepository: ContactRepository,
-    private subjectRepository: SubjectRepository,
-    private pollService: PollService,
-    private disciplineTeacherMapper: DisciplineTeacherMapper,
-    private subjectMapper: SubjectMapper,
-    private dateService: DateService,
-    private questionMapper: QuestionMapper,
+    private readonly teacherRepository: TeacherRepository,
+    private readonly disciplineTeacherRepository: DisciplineTeacherRepository,
+    private readonly teacherMapper: TeacherMapper,
+    private readonly disciplineTeacherService: DisciplineTeacherService,
+    private readonly contactRepository: ContactRepository,
+    private readonly subjectRepository: SubjectRepository,
+    private readonly pollService: PollService,
+    private readonly disciplineTeacherMapper: DisciplineTeacherMapper,
+    private readonly dateService: DateService,
+    private readonly questionMapper: QuestionMapper,
     private readonly telegramAPI: TelegramAPI,
     private readonly groupRepository: GroupRepository,
+    private readonly subjectMapper: SubjectMapper,
   ) {}
 
   async getAll (body: QueryAllTeacherDTO) {
@@ -233,6 +233,10 @@ export class TeacherService {
 
   async getContact (teacherId: string, contactId: string) {
     const contact = await this.contactRepository.getContact(teacherId, contactId);
+
+    if (!contact)
+      return null;
+
     return {
       name: contact.name,
       displayName: contact.displayName,
@@ -280,7 +284,7 @@ export class TeacherService {
   }
 
   checkQueryDate ({ semester, year }: ResponseQueryDTO) {
-    if ((!year && semester) || (year && !semester)) {
+    if (!year !== !semester) {
       throw new InvalidQueryException();
     }
   }
@@ -350,12 +354,12 @@ export class TeacherService {
     });
 
     const text =
-    '<b>Скарга на викладача:</b>\n\n' +
-    `<b>Викладач:</b> ${lastName} ${firstName} ${middleName}\n` +
-    `<b>Студент:</b> ${fullName}\n` +
-    `<b>Група:</b> ${code}\n\n` +
-    `${title}\n\n` +
-    `${message}`;
+      '<b>Скарга на викладача:</b>\n\n' +
+      `<b>Викладач:</b> ${lastName} ${firstName} ${middleName}\n` +
+      `<b>Студент:</b> ${fullName}\n` +
+      `<b>Група:</b> ${code}\n\n` +
+      `${title}\n\n` +
+      `${message}`;
 
     await this.telegramAPI.sendMessage(text);
   }
