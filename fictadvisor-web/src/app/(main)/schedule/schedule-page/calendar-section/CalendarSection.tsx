@@ -1,5 +1,4 @@
 import type { FC } from 'react';
-import { PermissionValuesDTO } from '@fictadvisor/utils/requests';
 import { MappedGroupResponse } from '@fictadvisor/utils/responses';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import { PlusIcon } from '@heroicons/react/24/outline';
@@ -25,22 +24,21 @@ export interface CalendarSectionProps {
 }
 export const CalendarSection: FC<CalendarSectionProps> = ({ groups }) => {
   const { user } = useAuthentication();
-  const groupId = useSchedule(state => state.groupId);
 
-  const permissionValues: PermissionValuesDTO = {
-    groupId: user?.group?.id,
-  };
-
-  const { data } = useQuery({
-    queryKey: [user, permissionValues],
+  const { data: showButton } = useQuery({
+    queryKey: [user?.group?.id],
     queryFn: () =>
-      PermissionService.getPermissionList(user!.id, permissionValues),
+      PermissionService.check({
+        permissions: [PERMISSION.GROUPS_$GROUPID_EVENTS_CREATE],
+        values: {
+          groupId: user?.group?.id,
+        },
+      }),
     retry: false,
+    select: data => data[PERMISSION.GROUPS_$GROUPID_EVENTS_CREATE],
     refetchOnWindowFocus: false,
-    enabled: !!user,
+    enabled: !!user && !!user.group,
   });
-
-  const showButton = data?.[PERMISSION.GROUPS_$GROUPID_EVENTS_CREATE];
 
   return (
     <Box sx={styles.mainWrapper}>
