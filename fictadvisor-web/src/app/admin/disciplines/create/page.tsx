@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { TeacherRole } from '@fictadvisor/utils/enums';
+import { DisciplineTypeEnum } from '@fictadvisor/utils';
 import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { Box, SelectChangeEvent, Stack, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
@@ -71,7 +71,7 @@ const AdminSubjectCreate = () => {
 
   const deleteTeacher = (id: string) =>
     setDisciplineTeachers([
-      ...disciplineTeachers.filter(discipline => discipline.id != id),
+      ...disciplineTeachers.filter(teacher => teacher.id != id),
     ]);
 
   const handleTeacherChange = (teacherId: string) => {
@@ -99,11 +99,11 @@ const AdminSubjectCreate = () => {
     event: SelectChangeEvent,
     teacher: DisciplineTeacher,
   ) => {
-    const values = event.target.value as unknown as TeacherRole[];
+    const values = event.target.value as unknown as DisciplineTypeEnum[];
     setDisciplineTeachers(prev =>
       prev.map(initTeacher => {
         if (initTeacher.id === teacher.id) {
-          initTeacher.roles = values;
+          initTeacher.disciplineTypes = values;
         }
         return initTeacher;
       }),
@@ -113,7 +113,7 @@ const AdminSubjectCreate = () => {
   const isValuesSet = () => {
     let isTeacherSet = true;
     disciplineTeachers.forEach(teacher => {
-      if (!teacher.id || !teacher.roles.length) isTeacherSet = false;
+      if (!teacher.id || !teacher.disciplineTypes.length) isTeacherSet = false;
     });
     if (subjectId == '' || semesterId == '' || groupId == '' || !isTeacherSet) {
       return false;
@@ -130,8 +130,8 @@ const AdminSubjectCreate = () => {
         subjectId: subjectId,
         teachers: disciplineTeachers.map(teacher => ({
           teacherId: teacher.id,
-          roleNames: teacher.roles.map(
-            role => rolesData[rolesRepres.indexOf(role)],
+          disciplineTypes: teacher.disciplineTypes.map(
+            discipline => rolesData[rolesRepres.indexOf(discipline)],
           ),
         })),
       });
@@ -211,10 +211,10 @@ const AdminSubjectCreate = () => {
             <CheckboxesDropdown
               sx={styles.checkboxDropdown}
               values={rolesOptions}
-              selected={teacher.roles.map(role => ({
-                value: role,
-                label: role,
-                id: rolesData.indexOf(role).toString(),
+              selected={teacher.disciplineTypes.map(discipline => ({
+                value: discipline,
+                label: discipline,
+                id: rolesData.indexOf(discipline).toString(),
               }))}
               size={FieldSize.MEDIUM}
               label="Тег"

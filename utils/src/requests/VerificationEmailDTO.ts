@@ -6,7 +6,7 @@ export class VerificationEmailDTO {
   @ApiProperty({
     description: 'An email of the user for whom resending a letter with confirmation of email address is requested',
   })
-  @IsNotEmpty(validationOptionsMsg('Email is empty'))
-  @IsEmail({}, validationOptionsMsg('Email is not email'))
+  @IsEmail({}, validationOptionsMsg('Email is not an email'))
+  @IsNotEmpty(validationOptionsMsg('Email cannot be empty'))
     email: string;
 }

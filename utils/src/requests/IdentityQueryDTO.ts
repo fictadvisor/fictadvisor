@@ -12,13 +12,13 @@ export class IdentityQueryDTO {
   })
   @Matches(new RegExp('^[' + ENG_REGEX + NUM_REGEX + '_' + ']{2,40}$'),
     validationOptionsMsg('Username is not correct (a-zA-Z0-9_), or too short (min: 2), or too long (max: 40)'))
-  @IsNotEmpty(validationOptionsMsg('Username is empty'))
+  @IsNotEmpty(validationOptionsMsg('Username cannot be empty'))
     username: string;
 
   @ApiProperty({
     description: 'The email for checking the registration',
   })
   @IsEmail({}, validationOptionsMsg('Email is not an email'))
-  @IsNotEmpty(validationOptionsMsg('Email is empty'))
+  @IsNotEmpty(validationOptionsMsg('Email cannot be empty'))
     email: string;
 }

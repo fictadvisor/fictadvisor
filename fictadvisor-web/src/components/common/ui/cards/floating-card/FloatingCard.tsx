@@ -1,25 +1,28 @@
 import React, { FC } from 'react';
+import { DisciplineTypeEnum } from '@fictadvisor/utils/enums';
 import { TeacherWithContactsResponse } from '@fictadvisor/utils/responses';
 import { Box, Typography } from '@mui/material';
 import Contact from 'src/app/(main)/(search-pages)/teachers/[teacherId]/contacts';
 
-import { CardRoles } from '@/components/common/ui/cards/card-roles';
 import Rating from '@/components/common/ui/rating';
 import { ContactType } from '@/types/contact';
+
+import { CardDisciplineTypes } from '../card-discipline-types/CardDisciplineTypes';
 
 import * as styles from './FloatingCard.styles';
 
 interface FloatingCardProps extends TeacherWithContactsResponse {
   subjectName?: string;
+  disciplineTypes: DisciplineTypeEnum[];
 }
 
 const FloatingCard: FC<FloatingCardProps> = ({
   firstName,
   middleName,
+  disciplineTypes,
   lastName,
   description,
   avatar,
-  roles,
   contacts,
   subjectName,
   rating,
@@ -36,7 +39,10 @@ const FloatingCard: FC<FloatingCardProps> = ({
           >{`${lastName} ${firstName} ${middleName}`}</Typography>
           {rating !== 0 && <Rating sx={styles.rating} rating={rating / 20} />}
           <Box sx={styles.tags}>
-            <CardRoles roles={roles} cathedras={cathedras} />
+            <CardDisciplineTypes
+              disciplineTypes={disciplineTypes}
+              cathedras={cathedras}
+            />
           </Box>
         </Box>
       </Box>

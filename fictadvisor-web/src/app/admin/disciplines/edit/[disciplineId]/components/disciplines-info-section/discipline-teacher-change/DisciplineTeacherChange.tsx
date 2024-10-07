@@ -1,6 +1,6 @@
 'use client';
 import { Dispatch, type FC, SetStateAction, useState } from 'react';
-import { TeacherRole } from '@fictadvisor/utils/enums';
+import { DisciplineTypeEnum } from '@fictadvisor/utils/enums';
 import { SelectChangeEvent } from '@mui/material';
 
 import { Dropdown } from '@/components/common/ui/form';
@@ -14,7 +14,7 @@ import * as styles from './DisciplineTeacherChange.styles';
 interface DisciplineTeacherChangeProps {
   teacher: {
     teacherId: string;
-    roles: TeacherRole[];
+    disciplineTypes: DisciplineTypeEnum[];
   };
   teachersOptions: DropDownOption[];
   rolesOptions: CheckboxesDropdownOption[];
@@ -22,7 +22,7 @@ interface DisciplineTeacherChangeProps {
     SetStateAction<
       {
         teacherId: string;
-        roles: TeacherRole[];
+        disciplineTypes: DisciplineTypeEnum[];
       }[]
     >
   >;
@@ -37,9 +37,9 @@ const DisciplineTeacherChange: FC<DisciplineTeacherChangeProps> = ({
   const [disciplineTeacherRoles, setDisciplineTeacherRoles] = useState<
     CheckboxesDropdownOption[]
   >(
-    teacher.roles.map(role => ({
-      value: role,
-      label: role,
+    teacher.disciplineTypes.map(disciplineType => ({
+      value: disciplineType,
+      label: disciplineType,
     })),
   );
 
@@ -52,7 +52,7 @@ const DisciplineTeacherChange: FC<DisciplineTeacherChangeProps> = ({
           )!;
           teacher = {
             teacherId: newTeacher.id,
-            roles: teacher.roles,
+            disciplineTypes: teacher.disciplineTypes,
           };
         }
         return teacher;
@@ -61,7 +61,7 @@ const DisciplineTeacherChange: FC<DisciplineTeacherChangeProps> = ({
   };
 
   const handleRolesChange = (event: SelectChangeEvent) => {
-    const values = event.target.value as unknown as TeacherRole[];
+    const values = event.target.value as unknown as DisciplineTypeEnum[];
     setDisciplineTeacherRoles(
       values.map(value => ({
         value: value,

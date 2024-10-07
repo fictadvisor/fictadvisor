@@ -123,4 +123,6 @@ export enum PERMISSION {
 
 	PAGE_TEXTS_CREATE = 'pages.create',
 	PAGE_TEXTS_UPDATE = 'pages.update',
+
+	FACULTY_EVENTS_CREATE = 'facultyEvents.create'
 }

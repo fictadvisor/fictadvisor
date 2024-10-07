@@ -1,13 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { DisciplineTypeEnum } from '../enums';
 import { QuestionWithCategoryResponse } from './QuestionResponse';
-import { TeacherRole } from '../enums';
 
 class QuestionRole {
   @ApiProperty({
-    enum: TeacherRole,
+    enum: DisciplineTypeEnum,
     description: 'An enum of teacher roles',
   })
-    role: TeacherRole;
+    role: DisciplineTypeEnum;
 
   @ApiProperty({
     description: 'Shows whether the teacher was selected last semester',

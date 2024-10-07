@@ -7,6 +7,6 @@ export class ForgotPasswordDTO {
     description: 'Email address of the user for whom you want to initiate the password reset procedure',
   })
   @IsEmail({}, validationOptionsMsg('Email is not an email'))
-  @IsNotEmpty(validationOptionsMsg('Email is empty'))
+  @IsNotEmpty(validationOptionsMsg('Email cannot be empty'))
     email: string;
 }

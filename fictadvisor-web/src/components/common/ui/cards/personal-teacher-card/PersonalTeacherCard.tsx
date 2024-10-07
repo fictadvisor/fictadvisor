@@ -1,9 +1,8 @@
 import React, { FC, useContext, useEffect, useRef, useState } from 'react';
-import { TeacherRole } from '@fictadvisor/utils/enums';
+import { DisciplineTypeEnum } from '@fictadvisor/utils/enums';
 import {
   CathedraResponse,
   ContactResponse,
-  SubjectResponse,
 } from '@fictadvisor/utils/responses';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import { Box, Typography } from '@mui/material';
@@ -13,22 +12,22 @@ import { teacherContext } from '@/app/(main)/(search-pages)/teachers/[teacherId]
 import teacherSubjectContext from '@/app/(main)/discipline/utils/teacherSubjectContext';
 import Button from '@/components/common/ui/button-mui';
 import { ButtonVariant } from '@/components/common/ui/button-mui/types';
-import { CardRoles } from '@/components/common/ui/cards/card-roles';
 import Rating from '@/components/common/ui/rating';
 import { Contact, ContactType } from '@/types/contact';
 import {
   TeacherAcademicStatus,
-  TeacherCathedra,
   TeacherPosition,
   TeacherScientificDegree,
   TeacherSubject,
 } from '@/types/teacher';
 
+import { CardDisciplineTypes } from '../card-discipline-types/CardDisciplineTypes';
+
 import * as styles from './PersonalTeacherCard.styles';
 
 interface TeacherCard {
   id: string;
-  roles: TeacherRole[];
+  disciplineTypes: DisciplineTypeEnum[];
   firstName: string;
   middleName: string;
   lastName: string;
@@ -45,9 +44,9 @@ interface TeacherCard {
 }
 
 const PersonalTeacherCard: FC<TeacherCard> = ({
-  roles,
   firstName,
   middleName,
+  disciplineTypes,
   lastName,
   avatar,
   description,
@@ -111,7 +110,11 @@ const PersonalTeacherCard: FC<TeacherCard> = ({
         </Box>
       )}
       <Box sx={styles.tags(isSubjectCard)}>
-        <CardRoles roles={roles} cathedras={cathedras} isPersonalPage={true} />
+        <CardDisciplineTypes
+          disciplineTypes={disciplineTypes}
+          cathedras={cathedras}
+          isPersonalPage={true}
+        />
       </Box>
       <Box sx={styles.scienceInfo(isSubjectCard)}>
         <Typography textTransform="none">

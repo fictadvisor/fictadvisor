@@ -11,7 +11,7 @@ import {
   ApiPayloadTooLargeResponse,
   ApiQuery,
   ApiQueryOptions,
-  ApiResponseOptions,
+  ApiResponseOptions, ApiTooManyRequestsResponse,
   ApiUnauthorizedResponse,
   ApiUnsupportedMediaTypeResponse,
 } from '@nestjs/swagger';
@@ -34,6 +34,7 @@ export class ApiDocumentationParams {
   implicitFile?:  ApiImplicitFileMetadata;
   payloadTooLarge?: ApiResponseOptions;
   conflict?: ApiResponseOptions;
+  tooManyRequests?: ApiResponseOptions;
   params?: ApiParamOptions[];
   queries?: ApiQueryOptions[];
 }
@@ -55,6 +56,7 @@ function addDocumentationDecorators (summary: string, description: string, docum
     { key: 'implicitFile', decorator: ApiImplicitFile },
     { key: 'payloadTooLarge', decorator: ApiPayloadTooLargeResponse },
     { key: 'conflict', decorator: ApiConflictResponse },
+    { key: 'tooManyRequests', decorator: ApiTooManyRequestsResponse },
   ];
 
   const decorators = [

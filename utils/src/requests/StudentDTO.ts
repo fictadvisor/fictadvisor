@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsBoolean, IsNotEmpty, IsOptional, IsUUID, Matches } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsOptional, IsString, IsUUID, Matches } from 'class-validator';
 import {
   UKR_REGEX,
   UKRSPEC_REGEX,
@@ -12,6 +12,7 @@ export class StudentDTO {
   })
   @IsUUID(undefined, validationOptionsMsg('Group id must be UUID'))
   @IsNotEmpty(validationOptionsMsg('Group id cannot be empty'))
+  @IsString(validationOptionsMsg('Group id must be string'))
     groupId: string;
 
   @ApiProperty({
@@ -21,6 +22,7 @@ export class StudentDTO {
     new RegExp('^[' + UKR_REGEX + UKRSPEC_REGEX + ']{2,40}$'),
     validationOptionsMsg('First name is not correct (A-Я(укр.)\\-\' ), or too short (min: 2), or too long (max: 40)'))
   @IsNotEmpty(validationOptionsMsg('First name cannot be empty'))
+  @IsString(validationOptionsMsg('First name must be string'))
     firstName: string;
 
   @ApiPropertyOptional({
@@ -29,6 +31,7 @@ export class StudentDTO {
   @Matches(
     new RegExp('^[' + UKR_REGEX + UKRSPEC_REGEX + ']{0,40}$'),
     validationOptionsMsg('Middle name is not correct (A-Я(укр.)\\-\' ), or too long (max: 40)'))
+  @IsString(validationOptionsMsg('Middle name must be string'))
   @IsOptional()
     middleName?: string;
 
@@ -39,6 +42,7 @@ export class StudentDTO {
     new RegExp('^[' + UKR_REGEX + UKRSPEC_REGEX + ']{2,40}$'),
     validationOptionsMsg('Last name is not correct (A-Я(укр.)\\-\' ), or too short (min: 2), or too long (max: 40)'))
   @IsNotEmpty(validationOptionsMsg('Last name cannot be empty'))
+  @IsString(validationOptionsMsg('Last name must be string'))
     lastName: string;
 
   @ApiProperty({

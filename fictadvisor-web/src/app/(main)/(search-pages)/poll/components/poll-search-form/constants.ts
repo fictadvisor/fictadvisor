@@ -1,4 +1,4 @@
-import { SortQATParam, TeacherRole } from '@fictadvisor/utils/enums';
+import { DisciplineTypeEnum, SortQATParam } from '@fictadvisor/utils/enums';
 import { QueryAllDisciplineTeacherForPollDTO } from '@fictadvisor/utils/requests';
 
 import { CheckboxOption } from '@/components/common/ui/form/checkboxes-dropdown/types/CheckboxOption';
@@ -8,7 +8,6 @@ export const PollTeacherInitialValues: QueryAllDisciplineTeacherForPollDTO = {
   search: '',
   order: 'asc',
   sort: SortQATParam.LAST_NAME,
-  roles: [],
 };
 
 export const filterOptions: DropDownOption[] = [
@@ -17,25 +16,29 @@ export const filterOptions: DropDownOption[] = [
   { id: 'lastName', label: 'Прізвищем' },
 ];
 
-export const teachersRoles: CheckboxOption[] = [
+export const disciplineTypes: CheckboxOption[] = [
   {
     label: 'Лекції',
-    value: TeacherRole.LECTURER,
+    value: DisciplineTypeEnum.LECTURE,
   },
   {
     label: 'Лабораторні',
-    value: TeacherRole.LABORANT,
+    value: DisciplineTypeEnum.LABORATORY,
   },
   {
     label: 'Практики',
-    value: TeacherRole.PRACTICIAN,
+    value: DisciplineTypeEnum.PRACTICE,
   },
   {
     label: 'Екзамени',
-    value: TeacherRole.EXAMINER,
+    value: DisciplineTypeEnum.EXAM,
   },
   {
-    label: 'Інше',
-    value: TeacherRole.OTHER,
+    label: 'Консультації',
+    value: DisciplineTypeEnum.CONSULTATION,
+  },
+  {
+    label: 'Відпрацювання',
+    value: DisciplineTypeEnum.WORKOUT,
   },
 ];

@@ -1,6 +1,6 @@
 'use client';
 import { type FC, useEffect, useState } from 'react';
-import { TeacherRole } from '@fictadvisor/utils/enums';
+import { DisciplineTypeEnum } from '@fictadvisor/utils';
 import { CreateDisciplineDTO } from '@fictadvisor/utils/requests';
 import { ExtendedDisciplineTeachersResponse } from '@fictadvisor/utils/responses';
 import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
@@ -37,15 +37,12 @@ const DisciplinesInfoSection: FC<DisciplinesInfoSectionProps> = ({
   const [semesterId, setSemesterId] = useState<string>(
     `${discipline.year.toString()} ${discipline.semester.toString()}`,
   );
-  // TODO: add groupd id here
-  const [groupId, setGroupId] = useState<string>(
-    '96145c16-1706-4215-829c-34b2ea80bee2',
-  );
+  const [groupId, setGroupId] = useState<string>(discipline.group.id);
   const [subjectId, setSubjectId] = useState<string>(discipline.subject.id);
   const [disciplineTeachers, setDisciplineTeachers] = useState(
     discipline.teachers.map(teacher => ({
       teacherId: teacher.id,
-      roles: teacher.roles,
+      disciplineTypes: teacher.disciplineTypes,
     })),
   );
 
@@ -57,7 +54,7 @@ const DisciplinesInfoSection: FC<DisciplinesInfoSectionProps> = ({
       subjectId,
       teachers: disciplineTeachers.map(teacher => ({
         teacherId: teacher.teacherId,
-        roleNames: teacher.roles as TeacherRole[],
+        disciplineTypes: teacher.disciplineTypes as DisciplineTypeEnum[],
       })),
     });
   }, [semesterId, groupId, subjectId, disciplineTeachers]);
@@ -96,7 +93,7 @@ const DisciplinesInfoSection: FC<DisciplinesInfoSectionProps> = ({
       ...disciplineTeachers,
       {
         teacherId: disciplineTeachers.length.toString(),
-        roles: [],
+        disciplineTypes: [],
       },
     ]);
   };
@@ -153,7 +150,6 @@ const DisciplinesInfoSection: FC<DisciplinesInfoSectionProps> = ({
           )}
         </Box>
       ))}
-
       <Button
         sx={{ width: '120px', borderRadius: '8px' }}
         text="Додати"

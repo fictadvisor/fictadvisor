@@ -1,16 +1,19 @@
-import { TeacherRole } from '@fictadvisor/utils/enums';
+import { DisciplineTypeEnum } from '@fictadvisor/utils/enums/db';
 
 export const rolesData = [
-  TeacherRole.LECTURER,
-  TeacherRole.LABORANT,
-  TeacherRole.PRACTICIAN,
-  TeacherRole.EXAMINER,
-  TeacherRole.OTHER,
+  DisciplineTypeEnum.LECTURE,
+  DisciplineTypeEnum.LABORATORY,
+  DisciplineTypeEnum.PRACTICE,
+  DisciplineTypeEnum.EXAM,
+  DisciplineTypeEnum.CONSULTATION,
+  DisciplineTypeEnum.WORKOUT,
 ];
+
 export const rolesRepres = [
   'Лектор',
   'Лаборант',
   'Практик',
   'Екзаменатор',
+  'Консультант',
   'Інше',
 ];

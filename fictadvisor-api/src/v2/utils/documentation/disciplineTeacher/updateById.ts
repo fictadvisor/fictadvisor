@@ -13,9 +13,9 @@ export const DisciplineTeacherDocumentationUpdateById: ApiDocumentationParams = 
       DisciplineTeacher with such id is not found
 
     InvalidBodyException:
-      Roles cannot be empty
-      Roles must be an array
-      Each element of roles must be an enum`,
+      Discipline types cannot be empty
+      Discipline types must be an array
+      Each discipline type in array must be an enum`,
   },
   unauthorized: DefaultUnauthorizedResponse,
   forbidden: DefaultForbiddenResponse,

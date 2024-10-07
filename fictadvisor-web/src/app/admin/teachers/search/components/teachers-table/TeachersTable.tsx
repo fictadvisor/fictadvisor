@@ -16,7 +16,7 @@ import {
   CathedraColors,
   RoleColors,
   TagText,
-} from '@/components/common/ui/cards/card-roles/CardRoles';
+} from '@/components/common/ui/cards/card-discipline-types/CardDisciplineTypes';
 import Tag from '@/components/common/ui/tag';
 import { TagSize, TagVariant } from '@/components/common/ui/tag/types';
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
@@ -70,12 +70,12 @@ const TeachersTable: FC<TeachersAdminSearchProps> = ({
             </TableCell>
             <TableCell sx={stylesAdmin.bodyItem}>
               <Stack sx={stylesAdmin.tableColumn}>
-                {teacher.roles.map(role => (
+                {teacher.disciplineTypes.map(discipline => (
                   <Tag
-                    key={role}
-                    text={TagText[role]}
+                    key={discipline}
+                    text={TagText[discipline]}
                     variant={TagVariant.FILL}
-                    color={RoleColors[role]}
+                    color={RoleColors[discipline]}
                     size={TagSize.SMALL}
                     sx={stylesAdmin.tag}
                   />

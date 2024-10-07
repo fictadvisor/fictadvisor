@@ -70,15 +70,15 @@ const ROLE_LIST = [
 @Injectable()
 export class GroupService {
   constructor (
-    private groupRepository: GroupRepository,
-    @Inject(forwardRef(() => UserService))
-    private userService: UserService,
-    private studentRepository: StudentRepository,
-    private userRepository: UserRepository,
-    private roleRepository: RoleRepository,
-    private disciplineRepository: DisciplineRepository,
-    private dateService: DateService,
-    private fileService: FileService,
+        private groupRepository: GroupRepository,
+        @Inject(forwardRef(() => UserService))
+        private userService: UserService,
+        private studentRepository: StudentRepository,
+        private userRepository: UserRepository,
+        private roleRepository: RoleRepository,
+        private disciplineRepository: DisciplineRepository,
+        private dateService: DateService,
+        private fileService: FileService,
   ) {}
 
   async create ({ code, eduProgramId, cathedraId, admissionYear }: CreateGroupDTO): Promise<DbGroup>  {
@@ -440,7 +440,7 @@ export class GroupService {
     });
   }
 
-  async getGroupList (groupId: string): Promise<string> {
+  async getGroupList (groupId: string) {
     const dbStudents = await this.studentRepository.findMany({
       where: {
         groupId,

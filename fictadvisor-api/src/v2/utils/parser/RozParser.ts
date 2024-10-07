@@ -25,18 +25,11 @@ import { ExtendedSchedulePair } from './ScheduleParserTypes';
 import { DbDiscipline } from '../../database/entities/DbDiscipline';
 import { DbDisciplineType } from '../../database/entities/DbDisciplineType';
 import { GeneralParser } from './GeneralParser';
-import { TeacherRole } from '@fictadvisor/utils/enums';
 
 const DISCIPLINE_TYPE = {
   Лек: DisciplineTypeEnum.LECTURE,
   Прак: DisciplineTypeEnum.PRACTICE,
   Лаб: DisciplineTypeEnum.LABORATORY,
-};
-
-const TEACHER_TYPE = {
-  Лек: TeacherRole.LECTURER,
-  Прак: TeacherRole.PRACTICIAN,
-  Лаб: TeacherRole.LABORANT,
 };
 
 @Injectable()
@@ -199,7 +192,6 @@ export class RozParser implements Parser {
   async parsePair (pair: ExtendedSchedulePair, groupId: string, period: StudyingSemester) {
     const subject = await this.subjectRepository.getOrCreate(pair.name ?? '');
     const name = DISCIPLINE_TYPE[pair.tag] ?? DISCIPLINE_TYPE.Лек;
-    const role = TEACHER_TYPE[pair.tag] ?? TEACHER_TYPE.Лек;
 
     const { startDate: startOfSemester } = await this.dateService.getSemester(period);
     const { startOfEvent, endOfEvent } = this.dateService.getEventTimeRozKpi(startOfSemester, pair.week, pair.day, pair.time);

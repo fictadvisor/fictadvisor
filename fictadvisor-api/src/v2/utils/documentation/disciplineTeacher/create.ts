@@ -18,9 +18,9 @@ export const DisciplineTeacherDocumentationCreate: ApiDocumentationParams = {
       Teacher id cannot be empty
       Discipline id must be a string
       Discipline id cannot be empty
-      Roles cannot be empty
-      Roles must be an array
-      Each element of roles must be an enum`,
+      Discipline types cannot be empty
+      Discipline types must be an array
+      Each discipline type in array must be an enum`,
   },
   unauthorized: DefaultUnauthorizedResponse,
   forbidden: DefaultForbiddenResponse,

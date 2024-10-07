@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { QuestionDisplay, TeacherRole } from '@fictadvisor/utils/enums';
+import { DisciplineTypeEnum, QuestionDisplay } from '@fictadvisor/utils/enums';
 import { MarkResponse } from '@fictadvisor/utils/responses';
 import { ChevronUpIcon } from '@heroicons/react/24/outline';
 import { Box, Typography, useMediaQuery } from '@mui/material';
@@ -20,10 +20,10 @@ import * as styles from './GeneralTab.styles';
 
 interface GeneralTabProps {
   marks: MarkResponse[];
-  roles: TeacherRole[];
+  disciplineTypes: DisciplineTypeEnum[];
 }
 
-const GeneralTab: FC<GeneralTabProps> = ({ marks, roles }) => {
+const GeneralTab: FC<GeneralTabProps> = ({ marks, disciplineTypes }) => {
   const [open, setOpen] = useState(true);
   const isMobile = useMediaQuery(theme.breakpoints.down('desktopSemiMedium'));
   const isLargeDesktop = useMediaQuery(
