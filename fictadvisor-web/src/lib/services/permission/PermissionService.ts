@@ -19,15 +19,9 @@ class PermissionService {
     return data;
   }
 
-  async getAdminAccess(userId: string, permissions: PERMISSION[]) {
-    const body: CheckPermissionsDTO = {
-      permissions,
-      values: {
-        userId,
-      },
-    };
+  async getAdminAccess(body: CheckPermissionsDTO) {
     const { data } = await client.post<PermissionResponse>(
-      `/permissions/check?userId=${userId}`,
+      '/permissions/check',
       body,
     );
     return data;
