@@ -68,22 +68,28 @@ const ScheduleInfoCard = ({
     return eventType !== EventTypeEnum.OTHER;
   };
 
-  const permissionValues: PermissionValuesDTO = {
-    groupId: user?.group?.id,
-  };
-
-  const { data } = useQuery({
-    queryKey: [user, permissionValues],
+  const { data: validPrivilege } = useQuery({
+    queryKey: [user?.group?.id],
     queryFn: () =>
-      PermissionService.getPermissionList(user!.id, permissionValues),
+      PermissionService.check({
+        permissions: [
+          PERMISSION.GROUPS_$GROUPID_EVENTS_DELETE,
+          PERMISSION.GROUPS_$GROUPID_EVENTS_UPDATE,
+        ],
+        values: {
+          groupId: user?.group?.id,
+        },
+      }),
     retry: false,
+    select(data) {
+      return (
+        data[PERMISSION.GROUPS_$GROUPID_EVENTS_DELETE] &&
+        data[PERMISSION.GROUPS_$GROUPID_EVENTS_UPDATE]
+      );
+    },
     refetchOnWindowFocus: false,
-    enabled: !!user,
+    enabled: !!user && !!user.group,
   });
-
-  const validPrivilege =
-    data?.[PERMISSION.GROUPS_$GROUPID_EVENTS_DELETE] &&
-    data?.[PERMISSION.GROUPS_$GROUPID_EVENTS_UPDATE];
 
   if (!event) return null;
 
