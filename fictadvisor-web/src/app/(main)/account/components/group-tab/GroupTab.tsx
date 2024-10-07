@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { useState } from 'react';
 import { GroupRoles, State } from '@fictadvisor/utils/enums';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import { ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/outline';
@@ -36,13 +36,16 @@ const GroupTab = () => {
   const { user } = useAuthentication();
   const { refresh } = useRouter();
 
+  const groupId = user?.group?.id;
+
   const { data, isLoading, refetch } = useQuery({
-    queryKey: ['students', user, order],
-    queryFn: () => GroupService.getGroupData(user!, order),
+    queryKey: ['students', groupId, order],
+    queryFn: () => GroupService.getGroupData(groupId!, order),
     retry: false,
     refetchOnWindowFocus: false,
-    enabled: !!user,
+    enabled: !!groupId,
   });
+
   const [leavePopupOpen, setLeavePopupOpen] = useState(false);
 
   const showRequests =
@@ -81,6 +84,7 @@ const GroupTab = () => {
     return <NoGroupBlock />;
 
   if (!data || !user?.group || !user?.group.role) return null;
+
   return (
     <>
       <Box sx={styles.groupInfo}>
