@@ -26,15 +26,13 @@ class GroupService {
       requests,
     };
   }
-  getGroupData = async (user: User, order: Order) => {
-    const groupId = user.group?.id as string;
-    const permissionValues: PermissionValuesDTO = {
-      groupId: groupId,
-    };
-    const permissionsRes = PermissionService.getPermissionList(
-      user.id,
-      permissionValues,
-    );
+  getGroupData = async (groupId: string, order: Order) => {
+    const permissionsRes = PermissionService.check({
+      permissions: [PERMISSION.GROUPS_$GROUPID_STUDENTS_UNVERIFIED_GET],
+      values: {
+        groupId,
+      },
+    });
     const studentsRes = GroupAPI.getGroupStudents(groupId, { order });
 
     const [permissions, { students }] = await Promise.all([
