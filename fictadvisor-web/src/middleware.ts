@@ -1,22 +1,15 @@
+import { PERMISSION } from '@fictadvisor/utils';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
+
+import AuthAPI from '@/lib/api/auth/AuthAPI';
+import PermissionService from '@/lib/services/permission/PermissionService';
 
 export async function middleware(request: NextRequest) {
   const { nextUrl } = request;
   const tokenCookie = request.cookies.get('access_token');
 
-  // const { user } = useAuthentication();
-
-  // const { data, isLoading } = useQuery({
-  //   queryKey: [adminPermissions[nextUrl.pathname], user],
-  //   queryFn: () =>
-  //     PermissionService.getAdminAccess(user!.id, [
-  //       adminPermissions[nextUrl.pathname],
-  //     ]),
-  //   retry: false,
-  //   enabled: !!user,
-  //   refetchOnWindowFocus: false,
-  // });
+  const user = await AuthAPI.getMe();
 
   if (nextUrl.pathname.includes('admin')) {
     if (!tokenCookie) {
