@@ -53,8 +53,11 @@ export class TeacherMapper {
 
   getTeacherRoles (teacher: DbTeacher): DisciplineTypeEnum[] {
     const disciplineTypes: DisciplineTypeEnum[] = [];
-    for (const disciplineTeacher of teacher.disciplineTeachers) {
-      disciplineTypes.push(...disciplineTeacher.roles.map((role: DbDisciplineTeacherRole) => role.disciplineType.name));
+    
+    if (teacher.disciplineTeachers) {
+      for (const disciplineTeacher of teacher.disciplineTeachers) {
+        disciplineTypes.push(...disciplineTeacher.roles.map((role: DbDisciplineTeacherRole) => role.disciplineType.name));
+      }
     }
 
     return [...new Set(disciplineTypes)];
