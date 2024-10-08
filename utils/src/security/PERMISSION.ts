@@ -22,6 +22,10 @@ export enum PERMISSION {
 	CATHEDRAS_UPDATE = 'cathedras.update',
 	CATHEDRAS_DELETE = 'cathedras.delete',
 
+	DISCIPLINE_RESOURCES_CREATE = 'disciplineResources.create',
+	DISCIPLINE_RESOURCES_UPDATE = 'disciplineResources.update',
+	DISCIPLINE_RESOURCES_DELETE = 'disciplineResources.delete',
+
 	DISCIPLINE_TEACHERS_CREATE = 'disciplineTeachers.create',
 	DISCIPLINE_TEACHERS_UPDATE = 'disciplineTeachers.update',
 	DISCIPLINE_TEACHERS_DELETE = 'disciplineTeachers.delete',
