@@ -4,20 +4,20 @@ import { NextResponse } from 'next/server';
 
 import AuthAPI from '@/lib/api/auth/AuthAPI';
 import PermissionService from '@/lib/services/permission/PermissionService';
+import { adminPermissions } from '@/types/adminPermissions';
 
 export async function middleware(request: NextRequest) {
   const { nextUrl } = request;
   const tokenCookie = request.cookies.get('access_token');
 
-  const user = await AuthAPI.getMe();
-
-  if (nextUrl.pathname.includes('admin')) {
-    if (!tokenCookie) {
-      return NextResponse.redirect(new URL('/', request.url));
-    }
+  await PermissionService.getAdminAccess([adminPermissions[nextUrl.pathname]]);
+  // console.log(data);
+  console.log(nextUrl.pathname);
+  if (!tokenCookie) {
+    return NextResponse.redirect(new URL('/login', request.url));
   }
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+  matcher: ['/admin/:path*'],
 };
