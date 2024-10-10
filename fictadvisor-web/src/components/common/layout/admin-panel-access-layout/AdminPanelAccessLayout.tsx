@@ -15,18 +15,18 @@ const AdminPanelAccessLayout = ({
   children: React.ReactNode;
   permission: PERMISSION;
 }) => {
-  const { user } = useAuthentication();
+  // const { user } = useAuthentication();
+  //
+  // const { data, isLoading } = useQuery({
+  //   queryKey: [permission, user],
+  //   queryFn: () => PermissionService.getAdminAccess([permission]),
+  //   retry: false,
+  //   enabled: !!user,
+  //   refetchOnWindowFocus: false,
+  // });
+  // if (isLoading) return <Progress />;
 
-  const { data, isLoading } = useQuery({
-    queryKey: [permission, user],
-    queryFn: () => PermissionService.getAdminAccess(user!.id, [permission]),
-    retry: false,
-    enabled: !!user,
-    refetchOnWindowFocus: false,
-  });
-  if (isLoading) return <Progress />;
-
-  if (data && !data[permission]) redirect('/');
+  // if (data && !data[permission]) redirect('/');
 
   return <>{children}</>;
 };

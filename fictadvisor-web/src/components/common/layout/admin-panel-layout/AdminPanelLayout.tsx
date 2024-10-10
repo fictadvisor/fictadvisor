@@ -16,11 +16,11 @@ interface AdminPanelLayoutProps {
 const AdminPanelLayout: React.FC<AdminPanelLayoutProps> = ({
   children,
 }: AdminPanelLayoutProps) => {
-  const { user } = useAuthentication();
-
-  if (!user) {
-    redirect('login');
-  }
+  // const { user } = useAuthentication();
+  //
+  // if (!user) {
+  //   redirect('login');
+  // }
 
   return (
     <Box sx={styles.layoutWrapper}>
