@@ -29,6 +29,7 @@ import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityId
 import { EntityType, QuestionDisplay, Prisma } from '@prisma/client';
 import { SubjectMapper } from '../../mappers/SubjectMapper';
 import { DisciplineTypeEnum } from '@fictadvisor/utils/enums';
+import * as process from 'process';
 
 @Injectable()
 export class TeacherService {
@@ -356,7 +357,8 @@ export class TeacherService {
     `<b>Група:</b> ${code}\n\n` +
     `${title}\n\n` +
     `${message}`;
+    const chatId = process.env.COMPLAINT_CHAT_ID;
 
-    await this.telegramAPI.sendMessage(text);
+    await this.telegramAPI.sendMessage(text, chatId);
   }
 }

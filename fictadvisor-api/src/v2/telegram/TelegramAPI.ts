@@ -39,12 +39,13 @@ export class TelegramAPI {
     await this.client.post('/responses/broadcastPending', data);
   }
 
-  async sendMessage (text: string) {
+  async sendMessage (text: string, chatId: string) {
     await this.client.post('/broadcast/sendMessage', {
       text,
     }, {
       params: {
         parse_mode: 'HTML',
+        id: chatId,
       },
     });
   }
