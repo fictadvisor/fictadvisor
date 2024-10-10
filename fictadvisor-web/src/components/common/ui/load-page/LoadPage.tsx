@@ -36,7 +36,10 @@ const LoadPage: FC<ProgressProps> = ({
     >
       <Progress
         color={progressColor}
-        sx={progressSx}
+        sx={{
+          ...progressSx,
+          margin: '20px',
+        }}
         variant={progressVariant}
         size={progressSize}
       />
