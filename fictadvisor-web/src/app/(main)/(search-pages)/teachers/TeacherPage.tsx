@@ -1,14 +1,10 @@
 'use client';
 
-import { FC, useCallback, useState } from 'react';
-import { TeacherWithRolesAndCathedrasResponse } from '@fictadvisor/utils/responses';
+import { FC, useState } from 'react';
 import { Box } from '@mui/material';
 
 import { TeacherInitialValues } from '@/app/(main)/(search-pages)/search-form/constants';
-import SearchForm, {
-  SearchFormProps,
-} from '@/app/(main)/(search-pages)/search-form/SearchForm';
-import { SearchFormFields } from '@/app/(main)/(search-pages)/search-form/types';
+import SearchForm from '@/app/(main)/(search-pages)/search-form/SearchForm';
 import { TeacherSearchList } from '@/app/(main)/(search-pages)/teachers/components/TeacherSearchList';
 import {
   breadcrumbs,
@@ -24,50 +20,12 @@ import {
 import { Pagination } from '@/types/api';
 
 interface TeacherPageProps {
-  initialTeachers: TeacherWithRolesAndCathedrasResponse[];
   pagination: Pagination;
-  queryObj: SearchFormFields;
 }
 
-const TeacherPage: FC<TeacherPageProps> = ({
-  initialTeachers,
-  pagination,
-  queryObj: initialQueryObj,
-}) => {
+const TeacherPage: FC<TeacherPageProps> = ({ pagination }) => {
   const localStorageName = 'teachersForm';
   const [currPage, setCurrPage] = useState(0);
-  const [queryObj, setQueryObj] = useState<SearchFormFields>(initialQueryObj);
-  const [loadedTeachers, setLoadedTeachers] =
-    useState<TeacherWithRolesAndCathedrasResponse[]>(initialTeachers);
-
-  const submitHandler: SearchFormProps['onSubmit'] = useCallback(query => {
-    setQueryObj(prev => {
-      if (prev === query) return prev;
-      else {
-        return { ...prev, ...query };
-      }
-    });
-  }, []);
-
-  // const { data, isLoading, isFetching, isSuccess } = useQuery({
-  //   queryKey: ['lecturers', currPage, queryObj],
-
-  //   queryFn: () =>
-  //     TeacherAPI.getAll({
-  //       ...queryObj,
-  //       pageSize: PAGE_SIZE,
-  //       page: currPage,
-  //     } as QueryAllTeacherDTO),
-
-  //   placeholderData: (previousData, previousQuery) => previousData,
-  //   refetchOnWindowFocus: false,
-  // });
-
-  // useEffect(() => {
-  //   if (isSuccess) {
-  //     setLoadedTeachers(data.teachers);
-  //   }
-  // }, [data]);
 
   return (
     <Box sx={styles.layout}>
@@ -77,7 +35,6 @@ const TeacherPage: FC<TeacherPageProps> = ({
         searchPlaceholder="Оберіть викладача"
         filterDropDownOptions={filterOptions}
         onSubmit={submitHandler}
-        setQueryObj={setQueryObj}
         localStorageName={localStorageName}
       />
       <TeacherSearchList
@@ -85,12 +42,6 @@ const TeacherPage: FC<TeacherPageProps> = ({
         pagination={pagination}
         isFetching={false}
       />
-      {/* {isLoading ||
-          (isFetching && (
-            <Box sx={styles.pageLoader}>
-              <Progress />
-            </Box>
-          ))} */}
       {pagination.amount >= 20 && (
         <Button
           sx={styles.loadBtn}
