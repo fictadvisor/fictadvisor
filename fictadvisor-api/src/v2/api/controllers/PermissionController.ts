@@ -1,10 +1,10 @@
-import { Body, Controller, Post, Query } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Post, Request } from '@nestjs/common';
+import { ApiBadRequestResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { CheckPermissionsDTO } from '@fictadvisor/utils/requests';
 import { CheckPermissionsResponse } from '@fictadvisor/utils/responses';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
-import { UserByIdPipe } from '../pipes/UserByIdPipe';
 import { PermissionService } from '../services/PermissionService';
+import { JwtGuard } from '../../security/JwtGuard';
 
 @ApiTags('Permission')
 @Controller({
@@ -20,10 +20,7 @@ export class PermissionController {
     type: CheckPermissionsResponse,
   })
   @ApiBadRequestResponse({
-    description: `\n
-    InvalidEntityIdException: 
-      User with such id is not found
-      
+    description: `\n      
     DataNotFoundException:
       Data were not found
       
@@ -31,19 +28,15 @@ export class PermissionController {
       obj.permissions: permissions must be an array
       obj.permissions: each value in permissions must be one of the following values`,
   })
-  @ApiQuery({
-    name: 'userId',
-    required: true,
-    description: 'ID of the user whose permissions to check',
-  })
   @ApiEndpoint({
     summary: 'Validates user access for specified permissions',
+    guards: JwtGuard,
   })
   @Post('/check')
   async checkPermissions (
-      @Body() body: CheckPermissionsDTO,
-      @Query('userId', UserByIdPipe) userId: string,
+    @Request() req,
+    @Body() body: CheckPermissionsDTO,
   ) {
-    return this.permissionService.checkPermissions(userId, body);
+    return this.permissionService.checkPermissions(req.user.id, body);
   }
 }

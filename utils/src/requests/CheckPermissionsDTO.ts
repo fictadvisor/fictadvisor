@@ -48,6 +48,6 @@ export class CheckPermissionsDTO {
   })
   @IsObject()
   @IsOptional()
-    values: PermissionValuesDTO;
+    values?: PermissionValuesDTO;
 }
 
