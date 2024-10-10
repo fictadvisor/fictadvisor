@@ -26,7 +26,7 @@ export const TeacherSearchList: FC<TeacherSearchListProps> = ({
     if (teachers.length === 0 && !isFetching) {
       toast.error('Результатів за запитом не знайдено', '', TOAST_TIMER);
     }
-  }, [isFetching]);
+  }, [isFetching, teachers, toast]);
 
   return (
     <Box sx={styles.teacherSearchList}>
