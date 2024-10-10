@@ -1,4 +1,4 @@
-import { EventsResponse as APIEventsResponse } from '@fictadvisor/utils/responses';
+import { WeekEventsResponse as APIEventsResponse } from '@fictadvisor/utils/responses';
 
 import { MainEventInfoResponse } from './MainEventInfoResponse';
 

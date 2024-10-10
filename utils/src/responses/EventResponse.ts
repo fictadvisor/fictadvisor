@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Period } from '../enums/db/PeriodEnum';
 import { EventTypeEnum } from '../enums/other/EventTypeEnum';
 
-export class TeacherNamesResponse {
+export class TeacherNameResponse {
   @ApiProperty({
     description: 'Teacher id',
   })
@@ -78,8 +78,8 @@ export class EventResponse {
     disciplineInfo: string;
 
   @ApiProperty({
-    type: [TeacherNamesResponse],
+    type: [TeacherNameResponse],
     description: 'An array of teachers linked to the event',
   })
-    teachers: TeacherNamesResponse[];
+    teachers: TeacherNameResponse[];
 }
