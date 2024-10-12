@@ -575,6 +575,17 @@ describe('TeacherService', () => {
       jest.spyOn(teacherRepository, 'updateById').mockImplementation(async () => null);
     });
 
+    const originalEnv = process.env;
+
+    beforeEach(() => {
+      jest.resetModules(); // Clear the cache
+      process.env = { ...originalEnv, COMPLAINT_CHAT_ID: 'mockChatId' }; // Set the mock value
+    });
+
+    afterEach(() => {
+      process.env = originalEnv; // Restore the original environment
+    });
+
     it('should send a complaint successfully', async () => {
       jest.spyOn(groupRepository, 'findById').mockImplementation(async () => ({
         id: '3242342342342',
@@ -592,7 +603,7 @@ describe('TeacherService', () => {
           create: complaintOnTeacher,
         },
       });
-      expect(telegramAPI.sendMessage).toHaveBeenCalledWith(complainMessage);
+      expect(telegramAPI.sendMessage).toHaveBeenCalledWith(complainMessage, 'mockChatId');
     });
 
     it('should throw an error if group code is not found', async () => {
@@ -616,7 +627,7 @@ describe('TeacherService', () => {
           create: complaintDTO,
         },
       });
-      expect(telegramAPI.sendMessage).toHaveBeenCalledWith(complainMessage);
+      expect(telegramAPI.sendMessage).toHaveBeenCalledWith(complainMessage, 'mockChatId');
     });
   });
 });
@@ -824,11 +835,14 @@ const complaintOnTeacher: ComplaintDTO = {
   message: 'Хочу плюсік будь ласка',
 };
 
-const complainMessage = '<b>Скарга на викладача:</b>\n\n' +
+const complainMessage = '<b>Скарга на викладача:</b>\n' +
+  '\n' +
   `<b>Викладач:</b> ${teacher1.lastName} ${teacher1.firstName} ${teacher1.middleName}\n` +
   '<b>Студент:</b> Алтунян Арсен Батькович\n' +
-  '<b>Група:</b> ІС-34\n\n' +
-  'Папірець\n\n' +
+  '<b>Група:</b> ІС-34\n' +
+  '\n' +
+  'Папірець\n' +
+  '\n' +
   'Хочу плюсік будь ласка';
 
 const teacherMarks = [
