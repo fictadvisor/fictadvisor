@@ -2,7 +2,7 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsArray, IsEnum, IsOptional, IsString } from 'class-validator';
 import { validationOptionsMsg } from '../ValidationUtil';
 import { QueryAllDTO } from './QueryAllDTO';
-import { SortQACParam } from '../enums/params/SortQACParam';
+import { SortQACParam } from '../enums';
 
 export class QueryAllCathedrasDTO extends QueryAllDTO {
   @ApiPropertyOptional({
@@ -15,14 +15,14 @@ export class QueryAllCathedrasDTO extends QueryAllDTO {
   @ApiPropertyOptional({
     description: 'Search by name option',
   })
-  @IsString()
+  @IsString(validationOptionsMsg('Search must be string'))
   @IsOptional()
     search?: string;
 
   @ApiPropertyOptional({
     description: 'Search by abbreviation option',
   })
-  @IsString()
+  @IsString(validationOptionsMsg('Abbreviation must be string'))
   @IsOptional()
     abbreviation?: string;
 
