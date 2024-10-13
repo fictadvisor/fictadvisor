@@ -12,7 +12,7 @@ import {
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
 import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
-import PermissionService from '@/lib/services/permission/PermissionService';
+import PermissionApi from '@/lib/api/permission/PermissionApi';
 import { useSchedule } from '@/store/schedule/useSchedule';
 
 import { CheckBoxSection } from './components/checkboxes-section/CheckBoxSection';
@@ -28,14 +28,15 @@ export const CalendarSection: FC<CalendarSectionProps> = ({ groups }) => {
   const { data: showButton } = useQuery({
     queryKey: [user?.group?.id],
     queryFn: () =>
-      PermissionService.check({
+      PermissionApi.check({
         permissions: [PERMISSION.GROUPS_$GROUPID_EVENTS_CREATE],
         values: {
           groupId: user?.group?.id,
         },
       }),
     retry: false,
-    select: data => data[PERMISSION.GROUPS_$GROUPID_EVENTS_CREATE],
+    select: ({ permissions }) =>
+      permissions[PERMISSION.GROUPS_$GROUPID_EVENTS_CREATE],
     refetchOnWindowFocus: false,
     enabled: !!user && !!user.group,
   });

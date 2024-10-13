@@ -1,9 +1,9 @@
 import { MouseEventHandler } from 'react';
 import { GroupRoles } from '@fictadvisor/utils/enums';
+import { CheckPermissionsResponse } from '@fictadvisor/utils/responses';
 import { QueryObserverBaseResult } from '@tanstack/react-query';
 
 import { Order } from '@/lib/services/group/types/OrderEnum';
-import { PermissionResponse } from '@/lib/services/permission/types';
 
 export interface RequestsTableItem {
   imgSrc?: string;
@@ -23,7 +23,7 @@ export interface RequestsTableProps {
 
 export interface StudentsTableProps {
   role: keyof typeof GroupRoles;
-  permissions: PermissionResponse;
+  permissions: CheckPermissionsResponse['permissions'];
   rows: StudentsTableItem[];
   refetch: QueryObserverBaseResult['refetch'];
   onSortButtonClick?: MouseEventHandler<HTMLButtonElement>;

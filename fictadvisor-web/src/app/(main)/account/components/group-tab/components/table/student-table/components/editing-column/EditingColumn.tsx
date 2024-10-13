@@ -1,5 +1,6 @@
-import React, { FC, Fragment, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { GroupRoles } from '@fictadvisor/utils/enums';
+import { CheckPermissionsResponse } from '@fictadvisor/utils/responses';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import {
   ArrowDownCircleIcon,
@@ -8,15 +9,12 @@ import {
   CheckCircleIcon,
   TrashIcon,
 } from '@heroicons/react/24/outline';
-import { Avatar, Box, Grid, Typography, useMediaQuery } from '@mui/material';
+import { useMediaQuery } from '@mui/material';
 import { QueryObserverBaseResult } from '@tanstack/react-query';
 
 import roleNamesMapper from '@/app/(main)/account/components/group-tab/components/table/constants';
-import * as gridStyles from '@/app/(main)/account/components/group-tab/components/table/grid.styles';
 import TransferCaptainPopup from '@/app/(main)/account/components/group-tab/components/table/student-table/components/editing-column/TransferCaptainPopup';
 import MobileDropdown from '@/app/(main)/account/components/group-tab/components/table/student-table/components/mobile-dropdown/MobileDropdown';
-import { Captain } from '@/components/common/icons/Captain';
-import { Moderator } from '@/components/common/icons/Moderator';
 import AlertButton from '@/components/common/ui/alert-button';
 import { AlertButtonVariant } from '@/components/common/ui/alert-button/types';
 import Button from '@/components/common/ui/button-mui';
@@ -34,7 +32,6 @@ import Popup from '@/components/common/ui/pop-ups/Popup';
 import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import GroupAPI from '@/lib/api/group/GroupAPI';
-import { PermissionResponse } from '@/lib/services/permission/types';
 import theme from '@/styles/theme';
 
 import { StudentsTableItem } from '../../../types';
@@ -43,7 +40,7 @@ import * as styles from './EditingColumn.styles';
 
 interface EditingColumnProps {
   student: StudentsTableItem;
-  permissions: PermissionResponse;
+  permissions: CheckPermissionsResponse['permissions'];
   refetch: QueryObserverBaseResult['refetch'];
   rows: StudentsTableItem[];
 }
