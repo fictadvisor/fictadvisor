@@ -3,8 +3,8 @@ import { NextResponse } from 'next/server';
 
 import { adminPermissions } from '@/types/adminPermissions';
 
+import PermissionApi from './lib/api/permission/PermissionApi';
 import { AuthToken } from './lib/constants/AuthToken';
-import PermissionService from './lib/services/permission/PermissionService';
 
 export async function middleware(request: NextRequest) {
   const { nextUrl, cookies } = request;
@@ -20,9 +20,9 @@ export async function middleware(request: NextRequest) {
     permissions: [requestedPermission],
   };
 
-  const data = await PermissionService.check(body);
+  const data = await PermissionApi.check(body);
 
-  const permissionGranted = Object.entries(data).some(
+  const permissionGranted = Object.entries(data.permissions).some(
     ([key, value]) => key === requestedPermission && value === true,
   );
 
