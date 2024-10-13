@@ -1,5 +1,6 @@
 import React, { FC, ReactNode, useRef, useState } from 'react';
 import { GroupRoles } from '@fictadvisor/utils/enums';
+import { CheckPermissionsResponse } from '@fictadvisor/utils/responses';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import {
   ArrowsUpDownIcon,
@@ -18,7 +19,6 @@ import {
 } from '@/components/common/ui/button-mui/types';
 import IconButton from '@/components/common/ui/icon-button-mui/IconButton';
 import { IconButtonColor } from '@/components/common/ui/icon-button-mui/types';
-import { PermissionResponse } from '@/lib/services/permission/types';
 
 import { StudentsTableItem } from '../../../types';
 
@@ -29,7 +29,7 @@ export interface MobileStudentTableButtonsProps {
   setChangePopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setTransferCaptainPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
   student: StudentsTableItem;
-  permissions: PermissionResponse;
+  permissions: CheckPermissionsResponse['permissions'];
   arrowIcon: ReactNode;
 }
 

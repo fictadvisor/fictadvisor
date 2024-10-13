@@ -37,6 +37,7 @@ export class PermissionController {
     @Request() req,
     @Body() body: CheckPermissionsDTO,
   ) {
-    return this.permissionService.checkPermissions(req.user.id, body);
+    const permissions = await this.permissionService.checkPermissions(req.user.id, body);
+    return { permissions };
   }
 }
