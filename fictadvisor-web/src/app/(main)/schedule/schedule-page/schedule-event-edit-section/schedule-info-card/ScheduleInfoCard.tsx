@@ -1,6 +1,5 @@
-import React, { FC, useState } from 'react';
+import React, { useState } from 'react';
 import { EventTypeEnum } from '@fictadvisor/utils/enums';
-import { PermissionValuesDTO } from '@fictadvisor/utils/requests';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { Box, Typography } from '@mui/material';
@@ -19,8 +18,8 @@ import { TabTextPosition } from '@/components/common/ui/tab/tab/types';
 import Tag from '@/components/common/ui/tag';
 import { TagColor } from '@/components/common/ui/tag/types';
 import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
+import PermissionApi from '@/lib/api/permission/PermissionApi';
 import { EventResponse } from '@/lib/api/schedule/types/EventResponse';
-import PermissionService from '@/lib/services/permission/PermissionService';
 
 import { skeletonProps } from '../utils/skeletonProps';
 
@@ -71,7 +70,7 @@ const ScheduleInfoCard = ({
   const { data: validPrivilege } = useQuery({
     queryKey: [user?.group?.id],
     queryFn: () =>
-      PermissionService.check({
+      PermissionApi.check({
         permissions: [
           PERMISSION.GROUPS_$GROUPID_EVENTS_DELETE,
           PERMISSION.GROUPS_$GROUPID_EVENTS_UPDATE,
@@ -81,10 +80,10 @@ const ScheduleInfoCard = ({
         },
       }),
     retry: false,
-    select(data) {
+    select({ permissions }) {
       return (
-        data[PERMISSION.GROUPS_$GROUPID_EVENTS_DELETE] &&
-        data[PERMISSION.GROUPS_$GROUPID_EVENTS_UPDATE]
+        permissions[PERMISSION.GROUPS_$GROUPID_EVENTS_DELETE] &&
+        permissions[PERMISSION.GROUPS_$GROUPID_EVENTS_UPDATE]
       );
     },
     refetchOnWindowFocus: false,

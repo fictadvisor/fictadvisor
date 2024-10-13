@@ -1,10 +1,9 @@
 import { GroupRoles } from '@fictadvisor/utils/enums';
-import { PermissionValuesDTO } from '@fictadvisor/utils/requests';
 import { OrdinaryStudentResponse } from '@fictadvisor/utils/responses';
 import { PERMISSION } from '@fictadvisor/utils/security';
 
 import GroupAPI from '@/lib/api/group/GroupAPI';
-import PermissionService from '@/lib/services/permission/PermissionService';
+import PermissionApi from '@/lib/api/permission/PermissionApi';
 import { User } from '@/types/user';
 
 import { Order } from './types/OrderEnum';
@@ -27,7 +26,7 @@ class GroupService {
     };
   }
   getGroupData = async (groupId: string, order: Order) => {
-    const permissionsRes = PermissionService.check({
+    const permissionsRes = PermissionApi.check({
       permissions: [PERMISSION.GROUPS_$GROUPID_STUDENTS_UNVERIFIED_GET],
       values: {
         groupId,
@@ -35,7 +34,7 @@ class GroupService {
     });
     const studentsRes = GroupAPI.getGroupStudents(groupId, { order });
 
-    const [permissions, { students }] = await Promise.all([
+    const [{ permissions }, { students }] = await Promise.all([
       permissionsRes,
       studentsRes,
     ]);
