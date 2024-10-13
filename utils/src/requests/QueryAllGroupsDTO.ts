@@ -42,7 +42,7 @@ export class QueryAllGroupsDTO extends QueryAllDTO {
   @ApiPropertyOptional({
     enum: SortQAGroupsParam,
   })
-  @IsEnum(SortQAGroupsParam, validationOptionsMsg('Cathedras must be an array'))
+  @IsEnum(SortQAGroupsParam, validationOptionsMsg('Sort must be an enum'))
   @IsOptional()
     sort?: SortQAGroupsParam;
 

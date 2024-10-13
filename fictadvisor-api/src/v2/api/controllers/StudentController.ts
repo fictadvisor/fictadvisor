@@ -23,7 +23,7 @@ import { StudentService } from '../services/StudentService';
 import { UserService } from '../services/UserService';
 import { StudentDocumentation } from '../../utils/documentation/student';
 
-@ApiTags('Students')
+@ApiTags('Student')
 @Controller({
   version: '2',
   path: '/students',

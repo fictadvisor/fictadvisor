@@ -13,6 +13,7 @@ export const GroupDocumentationGetAll: ApiDocumentationParams = {
       Courses must be an array
       Min course value is 1
       Max course value is 4
+      Sort must be an enum
       Wrong value for order
       Page must be a number
       PageSize must be a number`,
