@@ -649,7 +649,7 @@ describe('ScheduleService', () => {
       });
 
       expect(event.eventInfo[0].number).toBe(0);
-      expect(discipline).toBe(null);
+      expect(discipline).toBeNull();
     });
 
     it('should return event and discipline information for no period even if date is wrong', async () => {
@@ -658,7 +658,7 @@ describe('ScheduleService', () => {
       expect(event.id).toBe('some-event-1st-semester-no-period-09-12');
     });
 
-    it('should throw DataNotFoundException because semester wasn\'t found', async () => {
+    it('should throw DataNotFoundException if semester wasn\'t found', async () => {
       jest.useFakeTimers().setSystemTime(new Date('1488-01-01T00:00:00'));
       await expect(
         scheduleService.getEvent('practice-event-1st-semester-every-week-09-12', 1)
@@ -673,28 +673,31 @@ describe('ScheduleService', () => {
     });
   });
 
-  describe('getAllGroupEvents', () => {
+  describe('getGroupEvents', () => {
     it('should return events with default filter', async () => {
       jest.useFakeTimers().setSystemTime(new Date('2022-09-05T00:01:00'));
-      const events = await scheduleService.getAllGroupEvents('group', 2, {});
+      const events = await scheduleService.getGroupEvents('group', 2, {});
       expect(events.length).not.toBe(0);
     });
 
-    it('should return only events witch are otherEvents', async () => {
+    it('should only return events which are not lectures, practices or labs', async () => {
       jest.useFakeTimers().setSystemTime(new Date('2022-09-05T00:01:00'));
-      const events = await scheduleService.getAllGroupEvents('group', 2, {
+      const events = await scheduleService.getGroupEvents('group', 2, {
         addLecture: false,
         addPractice: false,
         addLaboratory: false,
         showOwnSelective: false,
         addOtherEvents: true,
       });
+      const generalTypes = [
+        DisciplineTypeEnum.LECTURE,
+        DisciplineTypeEnum.PRACTICE,
+        DisciplineTypeEnum.LABORATORY,
+      ];
       expect(
         events.every((event) =>
           event.lessons.every(
-            (lesson) => lesson.disciplineType.name !== DisciplineTypeEnum.LECTURE &&
-                  lesson.disciplineType.name !== DisciplineTypeEnum.PRACTICE &&
-                  lesson.disciplineType.name !== DisciplineTypeEnum.LABORATORY
+            (lesson) => !generalTypes.includes(lesson.disciplineType.name)
           )
         )
       ).toBe(true);
@@ -702,52 +705,55 @@ describe('ScheduleService', () => {
 
     it('should return empty list because there aren\'t any events in the specified week', async () => {
       jest.useFakeTimers().setSystemTime(new Date('2022-09-05T00:01:00'));
-      const events = await scheduleService.getAllGroupEvents('group', 100, {});
+      const events = await scheduleService.getGroupEvents('group', 100, {});
       expect(events.length).toBe(0);
     });
   });
 
-  describe('getGroupEvents', () => {
+  describe('getGroupEventsWrapper', () => {
     it('should return all group events in the specified week', async () => {
       jest.useFakeTimers().setSystemTime(new Date('2022-09-12T00:01:00'));
-      const { startTime, events } = await scheduleService.getGroupEvents('user', 'group', 2, {});
+      const { startTime, events } = await scheduleService.getGroupEventsWrapper('group', {}, 'user', 2);
       expect(startTime).toStrictEqual(new Date('2022-09-12T00:00:00'));
       expect(events.every((event) => event.groupId === 'group')).toBe(true);
     });
 
     it('should return only selective disciplines', async () => {
       jest.useFakeTimers().setSystemTime(new Date('2022-09-12T00:01:00'));
-      const { events } = await scheduleService.getGroupEvents('user', 'group', 2, {
+      const { events } = await scheduleService.getGroupEventsWrapper('group', {
         showOwnSelective: true,
-      });
+      }, 'user', 2);
       const event = events.find(
         (event) => event.id === 'nonselected-lecture-event-1st-semester-every-week-09-05'
       );
-      expect(event).not.toBeDefined();
+      expect(event).toBeUndefined();
     });
 
     it('should return lecture, practice and laboratory events for not user\'s group', async () => {
       jest.useFakeTimers().setSystemTime(new Date('2022-09-12T00:01:00'));
-      const { events } = await scheduleService.getGroupEvents('user', 'anotherGroup', 2, {});
+      const { events } = await scheduleService.getGroupEventsWrapper('anotherGroup', {}, 'user', 2);
+      const generalTypes = [
+        DisciplineTypeEnum.LECTURE,
+        DisciplineTypeEnum.PRACTICE,
+        DisciplineTypeEnum.LABORATORY,
+      ];
 
       expect(events.every(
         (event) => event.groupId === 'anotherGroup' && event.lessons.every(
-          (lesson) => lesson.disciplineType.name === DisciplineTypeEnum.LECTURE ||
-                      lesson.disciplineType.name === DisciplineTypeEnum.PRACTICE ||
-                      lesson.disciplineType.name === DisciplineTypeEnum.LABORATORY
+          (lesson) => generalTypes.includes(lesson.disciplineType.name)
         )
       )).toBe(true);
     });
 
-    it('should return only other events', async () => {
+    it('should only return other events', async () => {
       jest.useFakeTimers().setSystemTime(new Date('2022-09-12T00:01:00'));
-      const { events } = await scheduleService.getGroupEvents('user', 'group', 2, {
+      const { events } = await scheduleService.getGroupEventsWrapper('group', {
         addLecture: false,
         addPractice: false,
         addLaboratory: false,
         showOwnSelective: true,
         addOtherEvents: true,
-      });
+      }, 'user', 2);
 
       expect(events.every(
         (event) => event.lessons.every(

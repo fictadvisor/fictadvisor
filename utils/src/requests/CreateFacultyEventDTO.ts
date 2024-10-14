@@ -33,7 +33,7 @@ export class CreateFacultyEventDTO {
         description: 'Attached link to the event',
     })
     @IsOptional()
-    @IsUrl(undefined, validationOptionsMsg('Url must be a URL address'))
+    @IsUrl(undefined, validationOptionsMsg('Url must be a valid URL address'))
     url?: string;
 
     @ApiPropertyOptional({

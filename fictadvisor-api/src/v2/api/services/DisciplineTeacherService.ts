@@ -9,7 +9,7 @@ import {
 import { DisciplineTeacherQuestionsResponse } from '@fictadvisor/utils/responses';
 import { CommentsSortBy, DisciplineTypeEnum } from '@fictadvisor/utils/enums';
 import { TelegramAPI } from '../../telegram/TelegramAPI';
-import { checkIfArrayIsUnique } from '../../utils/ArrayUtil';
+import { isArrayUnique } from '../../utils/ArrayUtil';
 import { DbQuestionWithRoles } from '../../database/entities/DbQuestionWithRoles';
 import { DbDiscipline } from '../../database/entities/DbDiscipline';
 import { DbQuestionAnswer } from '../../database/entities/DbQuestionAnswer';
@@ -164,7 +164,7 @@ export class DisciplineTeacherService {
 
   async checkIsUnique (answers: CreateAnswerDTO[]) {
     const questionIds = answers.map((answer) => answer.questionId);
-    if (!checkIfArrayIsUnique(questionIds)) {
+    if (!isArrayUnique(questionIds)) {
       throw new ExcessiveAnswerException();
     }
   }
