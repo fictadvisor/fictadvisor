@@ -39,11 +39,11 @@ import { TeacherDocumentation } from 'src/v2/utils/documentation/teacher';
 })
 export class TeacherController {
   constructor (
-    private teacherService: TeacherService,
-    private teacherMapper: TeacherMapper,
-    private pollService: PollService,
-    private questionMapper: QuestionMapper,
-    private disciplineTeacherMapper: DisciplineTeacherMapper,
+    private readonly teacherService: TeacherService,
+    private readonly teacherMapper: TeacherMapper,
+    private readonly pollService: PollService,
+    private readonly questionMapper: QuestionMapper,
+    private readonly disciplineTeacherMapper: DisciplineTeacherMapper,
   ) {}
 
 
