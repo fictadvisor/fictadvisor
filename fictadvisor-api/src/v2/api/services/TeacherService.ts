@@ -34,19 +34,19 @@ import * as process from 'process';
 @Injectable()
 export class TeacherService {
   constructor (
-    private teacherRepository: TeacherRepository,
-    private disciplineTeacherRepository: DisciplineTeacherRepository,
-    private teacherMapper: TeacherMapper,
-    private disciplineTeacherService: DisciplineTeacherService,
-    private contactRepository: ContactRepository,
-    private subjectRepository: SubjectRepository,
-    private pollService: PollService,
-    private disciplineTeacherMapper: DisciplineTeacherMapper,
-    private subjectMapper: SubjectMapper,
-    private dateService: DateService,
-    private questionMapper: QuestionMapper,
+    private readonly teacherRepository: TeacherRepository,
+    private readonly disciplineTeacherRepository: DisciplineTeacherRepository,
+    private readonly teacherMapper: TeacherMapper,
+    private readonly disciplineTeacherService: DisciplineTeacherService,
+    private readonly contactRepository: ContactRepository,
+    private readonly subjectRepository: SubjectRepository,
+    private readonly pollService: PollService,
+    private readonly disciplineTeacherMapper: DisciplineTeacherMapper,
+    private readonly dateService: DateService,
+    private readonly questionMapper: QuestionMapper,
     private readonly telegramAPI: TelegramAPI,
     private readonly groupRepository: GroupRepository,
+    private readonly subjectMapper: SubjectMapper,
   ) {}
 
   async getAll (body: QueryAllTeacherDTO) {
@@ -127,6 +127,7 @@ export class TeacherService {
   @Cron('0 0 3 * * *')
   async updateRating () {
     const teachers = await this.teacherRepository.findMany({});
+    if (!teachers.length) return;
     for (const { id } of teachers) {
       const marks = await this.getMarks(id);
       const rating = this.getRating(marks);
@@ -234,6 +235,10 @@ export class TeacherService {
 
   async getContact (teacherId: string, contactId: string) {
     const contact = await this.contactRepository.getContact(teacherId, contactId);
+
+    if (!contact)
+      return null;
+
     return {
       name: contact.name,
       displayName: contact.displayName,
@@ -281,7 +286,7 @@ export class TeacherService {
   }
 
   checkQueryDate ({ semester, year }: ResponseQueryDTO) {
-    if ((!year && semester) || (year && !semester)) {
+    if (!year !== !semester) {
       throw new InvalidQueryException();
     }
   }
