@@ -9,7 +9,7 @@ import {
   DisciplineTypeEnum,
 } from '@fictadvisor/utils/enums';
 import { DbTeacher } from '../database/entities/DbTeacher';
-import { TeacherResponse, TeacherWithRolesAndCathedrasResponse } from '@fictadvisor/utils/responses';
+import { CathedraResponse, TeacherResponse, TeacherWithRolesAndCathedrasResponse } from '@fictadvisor/utils/responses';
 import { Teacher } from '@prisma/client';
 import { DbDisciplineTeacherRole } from '../database/entities/DbDisciplineTeacherRole';
 
@@ -53,14 +53,17 @@ export class TeacherMapper {
 
   getTeacherRoles (teacher: DbTeacher): DisciplineTypeEnum[] {
     const disciplineTypes: DisciplineTypeEnum[] = [];
-    for (const disciplineTeacher of teacher.disciplineTeachers) {
-      disciplineTypes.push(...disciplineTeacher.roles.map((role: DbDisciplineTeacherRole) => role.disciplineType.name));
+    
+    if (teacher.disciplineTeachers) {
+      for (const disciplineTeacher of teacher.disciplineTeachers) {
+        disciplineTypes.push(...disciplineTeacher.roles.map((role: DbDisciplineTeacherRole) => role.disciplineType.name));
+      }
     }
 
     return [...new Set(disciplineTypes)];
   }
-
-  private getCathedras (teacher: DbTeacher) {
+  
+  private getCathedras (teacher: DbTeacher) : CathedraResponse[] {
     return teacher.cathedras?.map(({ cathedra: { id, name, abbreviation, division } }) => ({
       id,
       name,
