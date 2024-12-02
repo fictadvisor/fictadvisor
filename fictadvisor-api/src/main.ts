@@ -8,6 +8,7 @@ import { applyStaticMiddleware } from './v2/utils/StaticUtil';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { join, resolve } from 'path';
 import * as cookieParser from 'cookie-parser';
+import { TestType, TestCoverage } from './v2/utils/TestCoverage';
 
 (BigInt.prototype as any).toJSON = function () {
   const int = Number.parseInt(this.toString());
@@ -27,6 +28,18 @@ async function bootstrap () {
       ? [configService.get<string>('frontBaseUrl')]
       : ['http://localhost:3000', 'http://localhost'],
     credentials: true,
+  });
+
+  TestCoverage.setup({
+    app,
+    prefix: 'unit-coverage',
+    testType: TestType.UNIT,
+  });
+
+  TestCoverage.setup({
+    app,
+    prefix: 'integration-coverage',
+    testType: TestType.INTEGRATION,
   });
 
   app.use(cookieParser());
@@ -58,6 +71,11 @@ async function bootstrap () {
 
   await app.listen(port);
 
-  console.info(`Started server on 127.0.0.1:${port}`);
+  console.info(
+    `Started server on 127.0.0.1:${port}\n` +
+    `Swagger: http://127.0.0.1:${port}/api\n` +
+    `Unit coverage: http://127.0.0.1:${port}/unit-coverage/\n` +
+    `Integration coverage: http://127.0.0.1:${port}/integration-coverage/`
+  );
 }
 bootstrap();

@@ -12,6 +12,7 @@
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },
-  "coverageDirectory": "../coverage",
+  "coverageDirectory": "coverage/integration",
+  "coverageReporters": ["html"],
   "testEnvironment": "node"
 }
