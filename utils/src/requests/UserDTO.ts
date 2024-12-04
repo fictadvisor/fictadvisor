@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, Matches } from 'class-validator';
 import {
   ENG_REGEX,
@@ -35,16 +35,17 @@ export class UserDTO {
   @IsString(validationOptionsMsg('Password must be string'))
     password: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'User\'s avatar url',
   })
+  @IsOptional()
   @IsString(validationOptionsMsg('Avatar must be string'))
-  avatar?: string;
+    avatar?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'User\'s telegram id',
   })
-  @IsNumber({}, validationOptionsMsg('Telegram id must be a bigint'))
   @IsOptional()
-  telegramId?: bigint;
+  @IsNumber({}, validationOptionsMsg('Telegram id must be a bigint'))
+    telegramId?: bigint;
 }

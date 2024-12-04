@@ -3,7 +3,7 @@ import { IsBoolean, IsNotEmpty, IsOptional, IsString, IsUUID, Matches } from 'cl
 import {
   UKR_REGEX,
   UKRSPEC_REGEX,
-  validationOptionsMsg
+  validationOptionsMsg,
 } from '../ValidationUtil';
 
 export class StudentDTO {
