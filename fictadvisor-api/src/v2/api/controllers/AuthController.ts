@@ -55,7 +55,6 @@ export class AuthController {
     return this.authService.registerTelegram(body);
   }
 
-
   @ApiEndpoint({
     summary: 'Register new user',
     documentation: AuthDocumentation.REGISTER,
@@ -66,7 +65,6 @@ export class AuthController {
   ) {
     return this.authService.register(body);
   }
-
 
   @ApiEndpoint({
     summary: 'Login with Telegram',

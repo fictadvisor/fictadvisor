@@ -1,5 +1,5 @@
 import { ApiDocumentationParams } from '../decorators';
-import { AuthLoginResponse } from '@fictadvisor/utils';
+import { AuthLoginResponse, LoginDTO } from '@fictadvisor/utils';
 import { DefaultUnauthorizedResponse } from '../defaultResponses';
 
 export const AuthDocumentationLogin: ApiDocumentationParams = {
@@ -17,4 +17,7 @@ export const AuthDocumentationLogin: ApiDocumentationParams = {
       User with such id is not found`,
   },
   unauthorized: DefaultUnauthorizedResponse,
+  body: {
+    type: LoginDTO,
+  },
 };
