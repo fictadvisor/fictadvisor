@@ -1,6 +1,8 @@
 import { applyDecorators, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiBody,
+  ApiBodyOptions,
   ApiConflictResponse,
   ApiCookieAuth,
   ApiForbiddenResponse,
@@ -27,6 +29,7 @@ import { ApiImplicitFile, ApiImplicitFileMetadata } from '@nestjs/swagger/dist/d
 export class ApiDocumentationParams {
   isAuth?: boolean;
   ok?:  ApiResponseOptions;
+  body?: ApiBodyOptions;
   badRequest?: ApiResponseOptions;
   forbidden?: ApiResponseOptions;
   unauthorized?: ApiResponseOptions;
@@ -80,6 +83,10 @@ function addDocumentationDecorators (summary: string, description: string, docum
     decorators.push(
       ...documentation.queries.map((query) => ApiQuery(query))
     );
+  }
+
+  if (documentation?.body) {
+    decorators.push(ApiBody(documentation.body));
   }
 
   return decorators;
