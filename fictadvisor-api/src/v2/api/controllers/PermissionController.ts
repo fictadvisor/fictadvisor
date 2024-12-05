@@ -1,10 +1,10 @@
 import { Body, Controller, Post, Request } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { CheckPermissionsDTO } from '@fictadvisor/utils/requests';
-import { CheckPermissionsResponse } from '@fictadvisor/utils/responses';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
 import { PermissionService } from '../services/PermissionService';
 import { JwtGuard } from '../../security/JwtGuard';
+import { PermissionDocumentation } from '../../utils/documentation/permission';
 
 @ApiTags('Permission')
 @Controller({
@@ -13,23 +13,12 @@ import { JwtGuard } from '../../security/JwtGuard';
 })
 export class PermissionController {
   constructor (
-      private permissionService: PermissionService,
+    private permissionService: PermissionService,
   ) {}
 
-  @ApiOkResponse({
-    type: CheckPermissionsResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n      
-    DataNotFoundException:
-      Data were not found
-      
-    InvalidBodyException:
-      obj.permissions: permissions must be an array
-      obj.permissions: each value in permissions must be one of the following values`,
-  })
   @ApiEndpoint({
     summary: 'Validates user access for specified permissions',
+    documentation: PermissionDocumentation.CHECK_PERMISSIONS,
     guards: JwtGuard,
   })
   @Post('/check')
@@ -37,7 +26,10 @@ export class PermissionController {
     @Request() req,
     @Body() body: CheckPermissionsDTO,
   ) {
-    const permissions = await this.permissionService.checkPermissions(req.user.id, body);
+    const permissions = await this.permissionService.checkPermissions(
+      req.user.id,
+      body,
+    );
     return { permissions };
   }
 }
