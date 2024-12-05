@@ -17,12 +17,15 @@ export const UserDocumentationRequestNewGroup: ApiDocumentationParams = {
       Group id cannot be empty
       IsCaptain must be a boolean
       IsCaptain cannot be empty
-    
+
     AbsenceOfCaptainException:
       Captain was not found
-    
+
     AbsenceOfCaptainTelegramException:
-      Captain's telegramId was not found`,
+      Captain's telegramId was not found
+
+    AlreadySendGroupRequestException:
+      You have already send request to join this group`,
   },
   unauthorized: DefaultUnauthorizedResponse,
   forbidden: {
