@@ -27,12 +27,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     const user: User = await this.userRepository.findById(payload.sub);
-
-    delete user.password;
-
     if (!user) {
       throw new UnauthorizedException();
     }
+
+    delete user.password;
 
     if (user.lastPasswordChanged.getTime() > payload.createdAt) {
       throw new UnauthorizedException('Token is expired');

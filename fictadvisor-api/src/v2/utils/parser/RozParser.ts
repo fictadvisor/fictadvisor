@@ -5,7 +5,6 @@ import { Parser } from './Parser';
 import { DisciplineTypeEnum } from '@prisma/client';
 import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
 import { DisciplineTeacherRoleRepository } from '../../database/repositories/DisciplineTeacherRoleRepository';
-import { GroupRepository } from '../../database/repositories/GroupRepository';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
 import { SubjectRepository } from '../../database/repositories/SubjectRepository';
 import { DateService, StudyingSemester } from '../date/DateService';
@@ -25,6 +24,7 @@ import { ExtendedSchedulePair } from './ScheduleParserTypes';
 import { DbDiscipline } from '../../database/entities/DbDiscipline';
 import { DbDisciplineType } from '../../database/entities/DbDisciplineType';
 import { GeneralParser } from './GeneralParser';
+import { GroupService } from '../../api/services/GroupService';
 
 const DISCIPLINE_TYPE = {
   Лек: DisciplineTypeEnum.LECTURE,
@@ -35,7 +35,7 @@ const DISCIPLINE_TYPE = {
 @Injectable()
 export class RozParser implements Parser {
   constructor (
-    private groupRepository: GroupRepository,
+    private groupService: GroupService,
     private generalParser: GeneralParser,
     private subjectRepository: SubjectRepository,
     private disciplineRepository: DisciplineRepository,
@@ -80,7 +80,7 @@ export class RozParser implements Parser {
 
   async parseWeek (weekNumber: number, groupCode: string, dom: JSDOM, period: StudyingSemester) {
     const week = await this.parseHtmlWeek(weekNumber, groupCode, dom);
-    const group = await this.groupRepository.getOrCreate(groupCode);
+    const group = await this.groupService.getOrCreate({ code: groupCode });
     for (const pair of week) {
       await this.parsePair(pair, group.id, period);
     }
