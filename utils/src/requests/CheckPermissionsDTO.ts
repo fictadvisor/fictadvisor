@@ -40,13 +40,13 @@ export class CheckPermissionsDTO {
     description: 'Permissions to check',
   })
   @IsEnum(PERMISSION, { each: true })
-  @IsArray()
+  @IsArray(validationOptionsMsg('The permissions must be an array'))
     permissions: PERMISSION[];
 
   @ApiPropertyOptional({
     description: 'Values for permissions',
   })
-  @IsObject()
+  @IsObject(validationOptionsMsg('Values must be an object'))
   @IsOptional()
     values?: PermissionValuesDTO;
 }
