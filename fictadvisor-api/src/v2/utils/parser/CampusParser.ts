@@ -11,7 +11,7 @@ import { DbTeacher } from '../../database/entities/DbTeacher';
 import { DbDisciplineType } from '../../database/entities/DbDisciplineType';
 import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
 import { SubjectRepository } from '../../database/repositories/SubjectRepository';
-import { GroupRepository } from '../../database/repositories/GroupRepository';
+import { GroupService } from '../../api/services/GroupService';
 import { GeneralParser } from './GeneralParser';
 
 export const DAY_NUMBER = {
@@ -33,7 +33,7 @@ export const DISCIPLINE_TYPE = {
 @Injectable()
 export class CampusParser implements Parser {
   constructor (
-    private groupRepository: GroupRepository,
+    private groupService: GroupService,
     private subjectRepository: SubjectRepository,
     private disciplineRepository: DisciplineRepository,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
@@ -60,10 +60,15 @@ export class CampusParser implements Parser {
   }
 
   async parseGroupSchedule (group: ScheduleGroupType, period: StudyingSemester) {
-    const schedule: ScheduleType = (await axios.get('https://api.campus.kpi.ua/schedule/lessons?groupId=' + group.id)).data.data;
-    const dbGroup = await this.groupRepository.getOrCreate(group.name);
-    await this.parseWeek(period, schedule.scheduleFirstWeek, dbGroup.id, 0);
-    await this.parseWeek(period, schedule.scheduleSecondWeek, dbGroup.id, 1);
+    const [{ data }, { id }] = await Promise.all([
+      axios.get('https://api.campus.kpi.ua/schedule/lessons?groupId=' + group.id),
+      this.groupService.getOrCreate({ code: group.name }),
+    ]);
+
+    const { scheduleFirstWeek, scheduleSecondWeek } = data.data as ScheduleType;
+
+    await this.parseWeek(period, scheduleFirstWeek, id, 0);
+    await this.parseWeek(period, scheduleSecondWeek, id, 1);
   }
 
   async parseWeek (period: StudyingSemester, week: ScheduleDayType[], groupId: string, weekNumber: number) {
