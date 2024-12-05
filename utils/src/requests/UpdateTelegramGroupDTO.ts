@@ -1,13 +1,13 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsBoolean, IsEnum, IsNumber, IsOptional } from 'class-validator';
 import { validationOptionsMsg } from '../ValidationUtil';
-import { TelegramSource } from '../enums/db/TelegramSourceEnum';
+import { TelegramSource } from '../enums';
 
 export class UpdateTelegramGroupDTO {
   @ApiPropertyOptional({
     description: 'Telegram chat id',
   })
-  @IsNumber({}, validationOptionsMsg('TelegramId is not a number'))
+  @IsNumber({}, validationOptionsMsg('TelegramId must be a number'))
   @IsOptional()
     telegramId?: bigint;
 
@@ -15,14 +15,14 @@ export class UpdateTelegramGroupDTO {
     enum: TelegramSource,
     description: 'Type of telegram chat',
   })
-  @IsEnum(TelegramSource, validationOptionsMsg('Source is not an enum'))
+  @IsEnum(TelegramSource, validationOptionsMsg('Source must be an enum'))
   @IsOptional()
     source?: TelegramSource;
 
   @ApiPropertyOptional({
     description: 'Thread id',
   })
-  @IsNumber({}, validationOptionsMsg('ThreadId is not a number'))
+  @IsNumber({}, validationOptionsMsg('ThreadId must be a number'))
   @IsOptional()
     threadId?: bigint;
 
@@ -30,6 +30,6 @@ export class UpdateTelegramGroupDTO {
     description: 'Whether to write messages about classes',
   })
   @IsOptional()
-  @IsBoolean(validationOptionsMsg('PostInfo is not a boolean'))
+  @IsBoolean(validationOptionsMsg('PostInfo must be a boolean'))
     postInfo?: boolean;
 }
