@@ -8,12 +8,15 @@ import { DataNotFoundException } from '../../utils/exceptions/DataNotFoundExcept
 import { AlreadyExistException } from '../../utils/exceptions/AlreadyExistException';
 import { ObjectIsRequiredException } from '../../utils/exceptions/ObjectIsRequiredException';
 import { TelegramSource } from '@prisma/client';
+import { DbTelegramGroup } from '../../database/entities/DbTelegramGroup';
 
 @Injectable()
 export class TelegramGroupService {
-  constructor (private telegramGroupRepository: TelegramGroupRepository) {}
+  constructor (private telegramGroupRepository: TelegramGroupRepository) {
+  }
 
-  async create (groupId: string, body: CreateTelegramGroupDTO) {
+  async create (groupId: string, body: CreateTelegramGroupDTO)
+    : Promise<DbTelegramGroup> {
     if (body.source === TelegramSource.CHAT_WITH_THREADS && !body.threadId) {
       throw new ObjectIsRequiredException('Thread ID');
     }
@@ -32,12 +35,13 @@ export class TelegramGroupService {
     });
   }
 
-  async update (telegramId: bigint, groupId: string, body: UpdateTelegramGroupDTO) {
+  async update (telegramId: bigint, groupId: string, body: UpdateTelegramGroupDTO) 
+    : Promise<DbTelegramGroup> {
     await this.checkTelegramGroup(telegramId, groupId);
     return this.telegramGroupRepository.updateById(telegramId, groupId, body);
   }
 
-  async delete (telegramId: bigint, groupId: string) {
+  async delete (telegramId: bigint, groupId: string) : Promise<DbTelegramGroup> {
     await this.checkTelegramGroup(telegramId, groupId);
     return this.telegramGroupRepository.deleteById(telegramId, groupId);
   }
@@ -52,7 +56,7 @@ export class TelegramGroupService {
     }
   }
 
-  async getAll (groupId: string) {
+  async getAll (groupId: string) : Promise<DbTelegramGroup[]> {
     const telegramGroups = await this.telegramGroupRepository.findByGroupId(groupId);
     if (!telegramGroups.length) {
       throw new DataNotFoundException();
@@ -60,7 +64,7 @@ export class TelegramGroupService {
     return telegramGroups;
   }
 
-  async getGroupByTelegramId (telegramId: bigint) {
+  async getGroupByTelegramId (telegramId: bigint) : Promise<DbTelegramGroup[]> {
     return this.telegramGroupRepository.findByTelegramId(telegramId);
   }
 }
