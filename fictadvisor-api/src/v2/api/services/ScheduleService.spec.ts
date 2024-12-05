@@ -3,12 +3,12 @@ import { InjectionToken } from '@nestjs/common';
 import { DateModule } from '../../utils/date/DateModule';
 import { PrismaModule } from '../../modules/PrismaModule';
 import { ScheduleService } from './ScheduleService';
-import { ParserModule } from '../../utils/parser/ParserModule';
 import { DateService } from '../../utils/date/DateService';
-import { DisciplineService } from './DisciplineService';
-import { DisciplineTeacherService } from './DisciplineTeacherService';
 import { UserService } from './UserService';
 import { Period } from '@prisma/client';
+import { CampusParser } from '../../utils/parser/CampusParser';
+import { RozParser } from '../../utils/parser/RozParser';
+import { GeneralParser } from '../../utils/parser/GeneralParser';
 
 describe('ScheduleService', () => {
   let scheduleService: ScheduleService;
@@ -16,18 +16,24 @@ describe('ScheduleService', () => {
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
-      providers: [ScheduleService],
+      providers: [
+        ScheduleService,
+        GeneralParser,
+        {
+          provide: RozParser,
+          useValue: {},
+        },
+        {
+          provide: CampusParser,
+          useValue: {},
+        },
+      ],
       imports: [
         DateModule,
         PrismaModule,
-        ParserModule,
       ],
     }).useMocker((token) => {
-      const tokens: InjectionToken[] = [
-        DisciplineTeacherService,
-        DisciplineService,
-        UserService,
-      ];
+      const tokens: InjectionToken[] = [UserService];
       if (tokens.includes(token)) {
         return {};
       }
