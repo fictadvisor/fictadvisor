@@ -42,6 +42,7 @@ import { ExcessiveSelectiveDisciplinesException } from '../../utils/exceptions/E
 import { AlreadySelectedException } from '../../utils/exceptions/AlreadySelectedException';
 import { DuplicateTelegramIdException } from '../../utils/exceptions/DuplicateTelegramIdException';
 import { NotSelectedDisciplineException } from '../../utils/exceptions/NotSelectedDisciplineException';
+import { AlreadySentGroupRequestException } from '../../utils/exceptions/AlreadySentGroupRequestException';
 import { EntityType, Prisma, RoleName, State } from '@prisma/client';
 
 type SortedDisciplines = {
@@ -263,8 +264,14 @@ export class UserService {
 
   async requestNewGroup (id: string, { groupId, isCaptain }: GroupRequestDTO) {
     const student = await this.studentRepository.findById(id);
-    if (student.state === State.APPROVED) {
-      throw new ForbiddenException();
+
+    switch (student.state) {
+      case State.APPROVED: {
+        throw new ForbiddenException();
+      }
+      case State.PENDING: {
+        throw new AlreadySentGroupRequestException();
+      }
     }
 
     const captain = await this.groupService.getCaptain(groupId);
@@ -387,7 +394,7 @@ export class UserService {
       const selectiveFile = await this.fileService.getFileContent(`selective/${year}.csv`);
       selectiveFile.replaceAll(';', ',');
       for (const parsedRow of selectiveFile.split('\n')) {
-        const [,, subjectName,, semester,,,,, studentName] = parsedRow.split(',');
+        const [, , subjectName, , semester, , , , , studentName] = parsedRow.split(',');
         if (!studentName?.startsWith(name)) continue;
         const discipline = await this.disciplineRepository.find({
           group: {
@@ -473,6 +480,7 @@ export class UserService {
     const result = remainingSelectives.find(({ year, semester }) => year === query.year && semester === query.semester);
     return result.availableSelectiveAmount > 0 ? result : {};
   }
+
   async getRemainingSelectives (userId: string): Promise<RemainingSelectivesResponse[]> {
     const user = await this.getUser(userId);
     const group = await this.groupService.get(user.group.id);
@@ -495,7 +503,10 @@ export class UserService {
     semesters.forEach((s) => {
       const semesterAmount = group.selectiveAmounts.find((x) => x.semester === s.semester && x.year === s.year);
 
-      const userSemesterSelectives = selective.filter(({ year, semester }) => year === s.year && semester === s.semester);
+      const userSemesterSelectives = selective.filter(({
+        year,
+        semester,
+      }) => year === s.year && semester === s.semester);
       const availableSelectiveAmount = semesterAmount.amount - userSemesterSelectives.length;
 
       const remainingSelectives = disciplines
@@ -582,7 +593,7 @@ export class UserService {
 
   private checkNotSelectedDisciplines (disciplineIds: string[], selectedDisciplineIds: string[]) {
     const hasNotSelectedDisciplines = disciplineIds.some(
-      (disciplineId) => !selectedDisciplineIds.includes(disciplineId)
+      (disciplineId) => !selectedDisciplineIds.includes(disciplineId),
     );
 
     if (hasNotSelectedDisciplines) {
