@@ -70,15 +70,15 @@ const ROLE_LIST = [
 @Injectable()
 export class GroupService {
   constructor (
-        private groupRepository: GroupRepository,
-        @Inject(forwardRef(() => UserService))
-        private userService: UserService,
-        private studentRepository: StudentRepository,
-        private userRepository: UserRepository,
-        private roleRepository: RoleRepository,
-        private disciplineRepository: DisciplineRepository,
-        private dateService: DateService,
-        private fileService: FileService,
+    private groupRepository: GroupRepository,
+    @Inject(forwardRef(() => UserService))
+    private userService: UserService,
+    private studentRepository: StudentRepository,
+    private userRepository: UserRepository,
+    private roleRepository: RoleRepository,
+    private disciplineRepository: DisciplineRepository,
+    private dateService: DateService,
+    private fileService: FileService,
   ) {}
 
   async create ({ code, eduProgramId, cathedraId, admissionYear }: CreateGroupDTO): Promise<DbGroup>  {
@@ -89,6 +89,33 @@ export class GroupService {
       admissionYear,
     });
     await this.addPermissions(group.id);
+    return group;
+  }
+
+  async getOrCreate (
+    { code, eduProgramId, cathedraId, admissionYear }:
+    Omit<UpdateGroupDTO, 'code'> & { code: string },
+  ): Promise<DbGroup>  {
+    const group =
+      await this.groupRepository.find({ code }) ??
+      await this.groupRepository.create({
+        code,
+        cathedraId,
+        educationalProgramId: eduProgramId,
+        admissionYear,
+      });
+
+    const permissions = await this.roleRepository.findMany({
+      where: {
+        groupRole: {
+          group: { code },
+        },
+      },
+    });
+
+    if (!permissions.length) {
+      await this.addPermissions(group.id);
+    }
     return group;
   }
 
@@ -279,7 +306,7 @@ export class GroupService {
     }
   }
 
-  async getCaptain (groupId: string): Promise<DbUser> {
+  async findCaptain (groupId: string): Promise<DbUser> {
     const captain = await this.studentRepository.find({
       groupId,
       roles: {
@@ -291,11 +318,17 @@ export class GroupService {
       },
     });
 
+    return captain?.user;
+  }
+
+  async getCaptain (groupId: string) {
+    const captain = this.findCaptain(groupId);
+
     if (!captain) {
       throw new AbsenceOfCaptainException();
     }
 
-    return captain.user;
+    return captain;
   }
 
   async deleteGroup (groupId: string): Promise<DbGroup> {
@@ -387,7 +420,7 @@ export class GroupService {
   async switchCaptain (groupId: string, studentId: string): Promise<OrdinaryStudentResponse> {
     const isStudentInGroup = await this.isStudentInGroup(groupId, studentId);
     if (!isStudentInGroup) throw new NoPermissionException();
-    const oldCaptain = await this.getCaptain(groupId);
+    const oldCaptain = await this.findCaptain(groupId);
 
     if (oldCaptain) {
       if (oldCaptain.id === studentId) throw new StudentIsAlreadyCaptainException();

@@ -274,7 +274,7 @@ export class UserService {
       }
     }
 
-    const captain = await this.groupService.getCaptain(groupId);
+    const captain = await this.groupService.findCaptain(groupId);
 
     if (captain && isCaptain) {
       throw new AlreadyRegisteredException();
@@ -372,7 +372,7 @@ export class UserService {
 
     if (state === State.APPROVED) {
       if (isCaptain) {
-        const captain = await this.groupService.getCaptain(user.student.group.id);
+        const captain = await this.groupService.findCaptain(user.student.group.id);
 
         if (captain) {
           throw new AlreadyRegisteredException();

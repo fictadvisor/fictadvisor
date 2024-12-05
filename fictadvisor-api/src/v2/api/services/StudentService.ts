@@ -84,7 +84,7 @@ export class StudentService {
     const role = await this.getRoleByGroupId(roleName, groupId);
 
     if (roleName === GroupRoles.CAPTAIN) {
-      const oldCaptain = await this.groupService.getCaptain(groupId);
+      const oldCaptain = await this.groupService.findCaptain(groupId);
       if (oldCaptain) {
         await this.userService.changeGroupRole(oldCaptain.id, GroupRoles.STUDENT);
       }

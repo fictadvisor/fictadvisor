@@ -50,14 +50,6 @@ export class GroupRepository {
     }) as any as DbGroup[];
   }
 
-  async getOrCreate (code: string): Promise<DbGroup> {
-    const group = await this.find({ code });
-    if (!group) {
-      return this.create({ code });
-    }
-    return group;
-  }
-
   async create (data: Prisma.GroupUncheckedCreateInput): Promise<DbGroup> {
     return this.prisma.group.create({
       data,

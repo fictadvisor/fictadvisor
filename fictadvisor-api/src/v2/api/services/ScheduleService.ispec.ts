@@ -13,11 +13,9 @@ import { PrismaModule } from '../../modules/PrismaModule';
 import { DateModule } from '../../utils/date/DateModule';
 import { MapperModule } from '../../modules/MapperModule';
 import { ScheduleService } from './ScheduleService';
-import { ParserModule } from '../../utils/parser/ParserModule';
 import { PrismaService } from '../../database/PrismaService';
 import { DisciplineTeacherService } from './DisciplineTeacherService';
 import { UserService } from './UserService';
-import { DisciplineService } from './DisciplineService';
 import { AuthService } from './AuthService';
 import { GroupService } from './GroupService';
 import { FileService } from '../../utils/files/FileService';
@@ -25,6 +23,9 @@ import { PollService } from './PollService';
 import { DataNotFoundException } from '../../utils/exceptions/DataNotFoundException';
 import { InvalidWeekException } from '../../utils/exceptions/InvalidWeekException';
 import { ObjectIsRequiredException } from '../../utils/exceptions/ObjectIsRequiredException';
+import { CampusParser } from '../../utils/parser/CampusParser';
+import { RozParser } from '../../utils/parser/RozParser';
+import { GeneralParser } from '../../utils/parser/GeneralParser';
 
 
 describe('ScheduleService', () => {
@@ -33,11 +34,21 @@ describe('ScheduleService', () => {
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
-      providers: [ScheduleService, UserService],
+      providers: [
+        ScheduleService,
+        UserService,
+        GeneralParser,
+        {
+          provide: RozParser,
+          useValue: {},
+        },
+        {
+          provide: CampusParser,
+          useValue: {},
+        }],
       imports: [
         DateModule,
         PrismaModule,
-        ParserModule,
         MapperModule,
       ],
     }).useMocker((token) => {
@@ -46,7 +57,6 @@ describe('ScheduleService', () => {
         AuthService,
         GroupService,
         DisciplineTeacherService,
-        DisciplineService,
         TelegramAPI,
         PollService,
       ];
