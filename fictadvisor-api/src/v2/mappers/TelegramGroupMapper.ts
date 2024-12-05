@@ -1,9 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { DbTelegramGroup } from '../database/entities/DbTelegramGroup';
+import {
+  TelegramGroupResponse,
+  TelegramGroupsByTelegramIdResponse,
+  TelegramGroupsResponse,
+} from '@fictadvisor/utils/responses';
 
 @Injectable()
 export class TelegramGroupMapper {
-  getTelegramGroup ({ groupId, telegramId, source, threadId, postInfo }: DbTelegramGroup) {
+  getTelegramGroup ({ groupId, telegramId, source, threadId, postInfo }: DbTelegramGroup) : TelegramGroupResponse  {
     return {
       groupId,
       telegramId,
@@ -13,13 +18,13 @@ export class TelegramGroupMapper {
     };
   }
 
-  getTelegramGroups (telegramGroups: DbTelegramGroup[]) {
+  getTelegramGroups (telegramGroups: DbTelegramGroup[]) : TelegramGroupsResponse {
     return {
       telegramGroups: telegramGroups.map((telegramGroup) => this.getTelegramGroup(telegramGroup)),
     };
   }
 
-  getGroupsByTelegramId (telegramGroups: DbTelegramGroup[]) {
+  getTelegramGroupsByTelegramId (telegramGroups: DbTelegramGroup[]): TelegramGroupsByTelegramIdResponse { 
     return {
       telegramGroups: telegramGroups.map((telegramGroup) => ({
         source: telegramGroup.source,
