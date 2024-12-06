@@ -15,14 +15,14 @@ export class CreateQuestionRoleDTO {
   @ApiProperty({
     description: 'Shows whether the teacher was selected last semester',
   })
-  @IsBoolean(validationOptionsMsg('Visibility parameter is not a boolean'))
+  @IsBoolean(validationOptionsMsg('Visibility parameter must be a boolean'))
   @IsNotEmpty(validationOptionsMsg('Visibility parameter cannot be empty'))
     isShown: boolean;
 
   @ApiProperty({
     description: 'Shows whether roles are required',
   })
-  @IsBoolean(validationOptionsMsg('Requirement parameter is not a boolean'))
+  @IsBoolean(validationOptionsMsg('Requirement parameter must be a boolean'))
   @IsNotEmpty(validationOptionsMsg('Requirement parameter cannot be empty'))
     isRequired: boolean;
 }
