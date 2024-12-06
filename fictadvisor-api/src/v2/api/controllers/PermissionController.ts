@@ -1,7 +1,7 @@
-import { Body, Controller, Post, Request } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CheckPermissionsDTO } from '@fictadvisor/utils/requests';
-import { ApiEndpoint } from '../../utils/documentation/decorators';
+import { ApiEndpoint, GetUser } from '../../utils/documentation/decorators';
 import { PermissionService } from '../services/PermissionService';
 import { JwtGuard } from '../../security/JwtGuard';
 import { PermissionDocumentation } from '../../utils/documentation/permission';
@@ -23,11 +23,11 @@ export class PermissionController {
   })
   @Post('/check')
   async checkPermissions (
-    @Request() req,
+    @GetUser('id') userId: string,
     @Body() body: CheckPermissionsDTO,
   ) {
     const permissions = await this.permissionService.checkPermissions(
-      req.user.id,
+      userId,
       body,
     );
     return { permissions };

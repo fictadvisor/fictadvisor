@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import {
   ApproveDTO,
@@ -26,7 +26,7 @@ import {
   URLResponse,
   UserResponse,
 } from '@fictadvisor/utils';
-import { ApiEndpoint } from '../../utils/documentation/decorators';
+import { ApiEndpoint, GetUser } from '../../utils/documentation/decorators';
 import { TelegramGuard } from '../../security/TelegramGuard';
 import { GroupByIdPipe } from '../pipes/GroupByIdPipe';
 import { UserByIdPipe } from '../pipes/UserByIdPipe';
@@ -38,9 +38,9 @@ import { DisciplineMapper } from '../../mappers/DisciplineMapper';
 import { UserMapper } from '../../mappers/UserMapper';
 import { GroupService } from '../services/GroupService';
 import { UserService } from '../services/UserService';
-import { ReqWithUser } from '../../utils/RequestUtils';
 import { GroupDocumentation } from '../../utils/documentation/group';
 import { UpdateGroupPipe } from '../pipes/UpdateGroupPipe';
+import { User } from '@prisma/client';
 
 @ApiTags('Groups')
 @Controller({
@@ -250,9 +250,9 @@ export class GroupController {
   async removeStudent (
     @Param('groupId', GroupByIdPipe) groupId: string,
     @Param('userId', UserByIdPipe) userId: string,
-    @Request() req: ReqWithUser,
+    @GetUser() user: User,
   ):Promise<void> {
-    return this.groupService.removeStudent(groupId, userId, req.user);
+    return this.groupService.removeStudent(groupId, userId, user);
   }
 
   @ApiEndpoint({
@@ -304,9 +304,9 @@ export class GroupController {
   @Patch('/:groupId/leave')
   async leaveGroup (
     @Param('groupId', GroupByIdPipe) groupId: string,
-    @Request() req: ReqWithUser,
+    @GetUser('id') userId: string,
   ): Promise<OrdinaryStudentResponse> {
-    const student = await this.groupService.leaveGroup(groupId, req.user.id);
+    const student = await this.groupService.leaveGroup(groupId, userId);
     return this.studentMapper.getOrdinaryStudent(student);
   }
 

@@ -1,4 +1,4 @@
-import { Controller, Request, Post, Body, Put, Param, Get, Query } from '@nestjs/common';
+import { Controller, Post, Body, Param, Get, Query, Patch } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import {
   RegistrationDTO,
@@ -10,7 +10,7 @@ import {
   TelegramDTO,
   RegisterTelegramDTO,
 } from '@fictadvisor/utils/requests';
-import { ApiEndpoint } from '../../utils/documentation/decorators';
+import { ApiEndpoint, GetUser } from '../../utils/documentation/decorators';
 import { LocalAuthGuard } from '../../security/LocalGuard';
 import { JwtGuard } from '../../security/JwtGuard';
 import { TelegramGuard } from '../../security/TelegramGuard';
@@ -19,6 +19,7 @@ import { AuthService } from '../services/AuthService';
 import { UserService } from '../services/UserService';
 import { RefreshGuard } from '../../security/RefreshGuard';
 import { AuthDocumentation } from '../../utils/documentation/auth';
+import { User } from '@prisma/client';
 
 @ApiTags('Auth')
 @Controller({
@@ -38,9 +39,9 @@ export class AuthController {
   })
   @Post('/login')
   async login (
-    @Request() req,
+    @GetUser() user: User,
   ) {
-    return this.authService.login(req.user);
+    return this.authService.login(user);
   }
 
   @ApiEndpoint({
@@ -84,9 +85,9 @@ export class AuthController {
   })
   @Post('/refresh')
   async refresh (
-    @Request() req,
+    @GetUser() user: User,
   ) {
-    return this.authService.refresh(req.user);
+    return this.authService.refresh(user);
   }
 
   @ApiEndpoint({
@@ -94,12 +95,12 @@ export class AuthController {
     guards: JwtGuard,
     documentation: AuthDocumentation.UPDATE_PASSWORD,
   })
-  @Put('/updatePassword')
+  @Patch('/updatePassword')
   async updatePassword (
     @Body() body: UpdatePasswordDTO,
-    @Request() req,
+    @GetUser() user: User,
   ) {
-    return this.authService.updatePassword(body, req.user);
+    return this.authService.updatePassword(body, user);
   }
 
   @ApiEndpoint({
@@ -109,9 +110,9 @@ export class AuthController {
   })
   @Get('/me')
   getMe (
-    @Request() req,
+    @GetUser('id') userId: string,
   ) {
-    return this.userService.getUser(req.user.id);
+    return this.userService.getUser(userId);
   }
 
   @ApiEndpoint({

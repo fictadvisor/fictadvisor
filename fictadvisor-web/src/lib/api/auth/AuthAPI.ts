@@ -33,7 +33,7 @@ class AuthAPI {
   }
 
   async changePassword(body: UpdatePasswordDTO) {
-    const { data } = await client.put<Tokens>('/auth/updatePassword', body);
+    const { data } = await client.patch<Tokens>('/auth/updatePassword', body);
     return data;
   }
 
