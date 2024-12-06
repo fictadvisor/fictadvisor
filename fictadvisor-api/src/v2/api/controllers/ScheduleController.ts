@@ -8,7 +8,6 @@ import {
   Patch,
   Post,
   Query,
-  Request,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -37,7 +36,7 @@ import {
 } from '@fictadvisor/utils/responses';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import { Access } from '../../security/Access';
-import { ApiEndpoint } from '../../utils/documentation/decorators';
+import { ApiEndpoint, GetUser } from '../../utils/documentation/decorators';
 import { TelegramGuard } from '../../security/TelegramGuard';
 import { GroupByEventGuard } from '../../security/group-guard/GroupByEventGuard';
 import { GroupByIdPipe } from '../pipes/GroupByIdPipe';
@@ -415,13 +414,13 @@ export class ScheduleController {
   })
   @Get('/groups/:groupId/events')
   async getGroupEvents (
-    @Request() req,
+    @GetUser('id') userId: string,
     @Param('groupId', GroupByIdPipe) groupId: string,
     @Query('week') week: number,
     @Query(EventFiltrationPipe) query: EventFiltrationDTO,
   ): Promise<EventsResponse> {
     const result = await this.scheduleService.getGroupEvents(
-      req.user?.id ?? null,
+      userId,
       groupId,
       week,
       query,

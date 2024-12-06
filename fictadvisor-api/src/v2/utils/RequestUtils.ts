@@ -1,5 +1,4 @@
 import { Request } from 'express';
-import { User } from '@prisma/client';
 
 export class RequestUtils {
   static get (req: Request, value: string) {
@@ -11,4 +10,3 @@ export class RequestUtils {
   };
 }
 
-export type ReqWithUser = Request & { user: User };

@@ -1,16 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { MappedGrant } from './GrantResponse';
+import { GrantResponse } from './GrantResponse';
 import { PaginationDataResponse } from './PaginationDataResponse';
 
 export class GrantsResponse {
-    @ApiProperty({
-      type: [MappedGrant],
-      description: 'An array of mapped grants to the role',
-    })
-      grants: MappedGrant[];
+  @ApiProperty({
+    type: [GrantResponse],
+    description: 'An array of mapped grants to the role',
+  })
+    grants: GrantResponse[];
 
-    @ApiProperty({
-      description: 'Pagination properties',
-    })
-      pagination: PaginationDataResponse;
+  @ApiProperty({
+    description: 'Pagination properties',
+  })
+    pagination: PaginationDataResponse;
 }

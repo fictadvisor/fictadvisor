@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { MappedGrant } from './GrantResponse';
+import { GrantResponse } from './GrantResponse';
 import { RoleName } from '../enums';
 
 export class BaseRoleResponse {
@@ -35,7 +35,7 @@ export class BaseRoleWithParentResponse extends BaseRoleResponse {
 export class RoleResponse extends BaseRoleResponse {
   @ApiProperty({
     description: 'An array of permissions granted to a role',
-    type: [MappedGrant],
+    type: [GrantResponse],
   })
-    grants: MappedGrant[];
+    grants: GrantResponse[];
 }

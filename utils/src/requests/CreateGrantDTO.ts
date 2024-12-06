@@ -4,6 +4,7 @@ import {
   IsNotEmpty,
   IsNumber,
   IsOptional,
+  IsString,
   Max,
   MaxLength,
   Min,
@@ -18,15 +19,16 @@ export class CreateGrantDTO {
     description: 'A string that specifies the permission itself',
   })
   @IsNotEmpty(validationOptionsMsg('Permission cannot be empty'))
-  @MinLength(3, validationOptionsMsg('Permission can not be less then 3 chars'))
-  @MaxLength(200, validationOptionsMsg('Permission can not be longer then 200 chars'))
+  @IsString(validationOptionsMsg('Permission must be a string'))
+  @MinLength(3, validationOptionsMsg('Permission must be more then 3 chars'))
+  @MaxLength(200, validationOptionsMsg('Permission must be less then 200 chars'))
     permission: string;
 
   @ApiPropertyOptional({
     description: 'Established right or not',
     default: true,
   })
-  @IsBoolean(validationOptionsMsg('Set is not a boolean'))
+  @IsBoolean(validationOptionsMsg('Set must be a boolean'))
   @IsOptional()
     set?: boolean;
 
@@ -34,19 +36,19 @@ export class CreateGrantDTO {
     description: 'The priority or importance of the grant',
     default: 1,
   })
-  @IsNumber({}, validationOptionsMsg('Weight is not a number'))
+  @IsNumber({}, validationOptionsMsg('Weight must be a number'))
   @IsNotEmpty(validationOptionsMsg('Weight cannot be empty'))
-  @Min(1, validationOptionsMsg('Weight can not be less then 1'))
-  @Max(5000, validationOptionsMsg('Weight can not be bigger then 5000'))
+  @Min(1, validationOptionsMsg('Weight must be more then 1'))
+  @Max(5000, validationOptionsMsg('Weight must be less then 5000'))
     weight: number;
 }
 
 export class CreateGrantsDTO {
-  @ApiPropertyOptional({
+  @ApiProperty({
     type: [CreateGrantDTO],
     description: 'An array of grants of the role',
   })
   @Type(() => CreateGrantDTO)
-  @ValidateNested({ each: true })
+  @ValidateNested(validationOptionsMsg('Grants must be an array of CreateGrantDTO', true))
     grants: CreateGrantDTO[];
 }

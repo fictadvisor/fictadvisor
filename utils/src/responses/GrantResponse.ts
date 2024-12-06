@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class MappedGrant {
+export class GrantResponse {
   @ApiProperty({
     description: 'The id of grant',
   })
@@ -24,7 +24,7 @@ export class MappedGrant {
     weight: number;
 }
 
-export class GrantResponse {
+export class GrantCountResponse {
   @ApiProperty({
     description: 'Number of grants of the role',
   })
