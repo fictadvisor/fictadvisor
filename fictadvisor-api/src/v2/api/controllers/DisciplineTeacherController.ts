@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import {
   CreateAnswersDTO,
@@ -17,7 +17,7 @@ import {
   DisciplineTeacherExtendedResponse,
 } from '@fictadvisor/utils/responses';
 import { PERMISSION } from '@fictadvisor/utils/security';
-import { ApiEndpoint } from '../../utils/documentation/decorators';
+import { ApiEndpoint, GetUser } from '../../utils/documentation/decorators';
 import { TelegramGuard } from '../../security/TelegramGuard';
 import { GroupByDisciplineTeacherGuard } from 'src/v2/security/group-guard/GroupByDisciplineTeacherGuard';
 import { DisciplineTeacherByIdPipe } from '../pipes/DisciplineTeacherByIdPipe';
@@ -52,10 +52,10 @@ export class DisciplineTeacherController {
   })
   @Get('/:disciplineTeacherId/questions')
   getQuestions (
-    @Request() req,
+    @GetUser('id') userId: string,
     @Param('disciplineTeacherId', DisciplineTeacherByIdPipe) disciplineTeacherId: string,
   ): Promise<DisciplineTeacherQuestionsResponse> {
-    return this.disciplineTeacherService.getQuestions(disciplineTeacherId, req.user.id);
+    return this.disciplineTeacherService.getQuestions(disciplineTeacherId, userId);
   }
 
   @ApiEndpoint({
@@ -80,10 +80,10 @@ export class DisciplineTeacherController {
   @Post('/:disciplineTeacherId/answers')
   sendAnswers (
     @Param('disciplineTeacherId', DisciplineTeacherByIdPipe) disciplineTeacherId: string,
-    @Request() req,
+    @GetUser('id') userId: string,
     @Body(QuestionAnswersValidationPipe) body: CreateAnswersDTO,
   ): Promise<void> {
-    return this.disciplineTeacherService.sendAnswers(disciplineTeacherId, body, req.user.id);
+    return this.disciplineTeacherService.sendAnswers(disciplineTeacherId, body, userId);
   }
 
   @ApiEndpoint({
@@ -194,9 +194,9 @@ export class DisciplineTeacherController {
   @Post('/:disciplineTeacherId/removeFromPoll')
   removeDisciplineTeacherFromPoll (
     @Param('disciplineTeacherId', DisciplineTeacherByIdPipe) disciplineTeacherId: string,
-    @Request() req,
+    @GetUser('id') userId: string,
   ): Promise<void> {
-    return this.disciplineTeacherService.removeFromPoll(disciplineTeacherId, req.user.id);
+    return this.disciplineTeacherService.removeFromPoll(disciplineTeacherId, userId);
   }
 
   @ApiEndpoint({

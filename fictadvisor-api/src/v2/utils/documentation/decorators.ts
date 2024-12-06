@@ -1,4 +1,4 @@
-import { applyDecorators, UseGuards } from '@nestjs/common';
+import { applyDecorators, createParamDecorator, ExecutionContext, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -25,6 +25,7 @@ import { MultipleAccesses } from 'src/v2/security/multiple-access-guard/Multiple
 import { TelegramGuard } from 'src/v2/security/TelegramGuard';
 import { MultipleAccessGuard } from 'src/v2/security/multiple-access-guard/MultipleAccessGuard';
 import { ApiImplicitFile, ApiImplicitFileMetadata } from '@nestjs/swagger/dist/decorators/api-implicit-file.decorator';
+import { User } from '@prisma/client';
 
 export class ApiDocumentationParams {
   isAuth?: boolean;
@@ -131,3 +132,9 @@ export function ApiEndpoint ({ summary, permissions, guards, documentation }: Ap
 
   return applyDecorators(...decorators);
 }
+
+export const GetUser = createParamDecorator(
+  (field: keyof Omit<User, 'password'> = null, ctx: ExecutionContext) => {
+    const request = ctx.switchToHttp().getRequest();
+    return field ? request.user?.[field] : request.user;
+  });
