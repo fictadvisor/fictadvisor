@@ -3,7 +3,7 @@ import {
   QueryAllGrantsDTO,
   UpdateGrantDTO,
 } from '@fictadvisor/utils/requests';
-import { GrantsResponse, MappedGrant } from '@fictadvisor/utils/responses';
+import { GrantResponse, GrantsResponse } from '@fictadvisor/utils/responses';
 
 import { GrantSet } from '@/app/admin/roles/[roleId]/grants/common/types';
 
@@ -29,21 +29,21 @@ class GrantsAPI {
   }
 
   async getByGrantId(roleId: string, grantId: string) {
-    const { data } = await client.get<MappedGrant>(
+    const { data } = await client.get<GrantResponse>(
       `/roles/${roleId}/grants/${grantId}`,
     );
     return data;
   }
 
   async delete(roleId: string, grantId: string) {
-    const { data } = await client.delete<MappedGrant>(
+    const { data } = await client.delete<GrantResponse>(
       `/roles/${roleId}/grants/${grantId}`,
     );
     return data;
   }
 
   async edit(roleId: string, grantId: string, body: UpdateGrantDTO) {
-    const { data } = await client.patch<MappedGrant>(
+    const { data } = await client.patch<GrantResponse>(
       `/roles/${roleId}/grants/${grantId}`,
       body,
     );
@@ -51,7 +51,7 @@ class GrantsAPI {
   }
 
   async create(roleId: string, body: CreateGrantDTO) {
-    const { data } = await client.post<MappedGrant>(
+    const { data } = await client.post<GrantResponse>(
       `/roles/${roleId}/grant`,
       body,
     );

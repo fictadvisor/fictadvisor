@@ -1,6 +1,6 @@
 'use client';
 import React, { FC } from 'react';
-import { MappedGrant } from '@fictadvisor/utils/responses';
+import { GrantResponse } from '@fictadvisor/utils/responses';
 import { TableHead, Typography } from '@mui/material';
 import {
   Paper,
@@ -23,7 +23,7 @@ import TableActions from './components/table-actions';
 interface GrantsListProps {
   currPage: number;
   setCurrPage: React.Dispatch<React.SetStateAction<number>>;
-  grants: MappedGrant[];
+  grants: GrantResponse[];
   pageSize: number;
   setPageSize: React.Dispatch<React.SetStateAction<number>>;
   totalCount: number;

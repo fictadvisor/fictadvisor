@@ -152,10 +152,10 @@ export class RoleService {
     const grants = await this.grantRepository.findMany({
       where: { roleId },
       orderBy:
-          [
-            { weight: 'asc' },
-            { updatedAt: 'desc' },
-          ],
+        [
+          { weight: 'asc' },
+          { updatedAt: 'desc' },
+        ],
     });
 
     const toUpdate = grants.map((gr, index) => ({ ...gr, index: index + 1 }))

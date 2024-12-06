@@ -1,9 +1,9 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsBoolean, IsEnum, IsOptional } from 'class-validator';
-import { Transform } from 'class-transformer';
+import { Type } from 'class-transformer';
 import { validationOptionsMsg } from '../ValidationUtil';
 import { QueryAllDTO } from './QueryAllDTO';
-import { SortQAGrantsParam } from '../enums/params/SortQAGrantsParam';
+import { SortQAGrantsParam } from '../enums';
 
 export class QueryAllGrantsDTO extends QueryAllDTO {
   @ApiPropertyOptional({
@@ -19,7 +19,7 @@ export class QueryAllGrantsDTO extends QueryAllDTO {
     description: 'Is permission set',
   })
   @IsOptional()
-  @Transform(({ value }) => value === 'true')
+  @Type(() => Boolean)
   @IsBoolean(validationOptionsMsg('Set must be an boolean'))
     set?: boolean;
 }

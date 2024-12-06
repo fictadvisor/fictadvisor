@@ -1,33 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { Grant } from '@prisma/client';
 import { DbRole } from '../database/entities/DbRole';
+import { DbGrant } from '../database/entities/DbGrant';
+import {
+  BaseRoleResponse,
+  GrantResponse,
+  RoleResponse,
+} from '@fictadvisor/utils/responses';
+
 @Injectable()
 export class RoleMapper {
-  create (role: DbRole) {
-    return {
-      id: role.id,
-      name: role.name,
-      weight: role.weight,
-      displayName: role.displayName,
-    };
-  }
-  createWithGrants (role: DbRole) {
-    const grants = role.grants.map((grant) => ({
-      id: grant.id,
-      set: grant.set,
-      weight: grant.weight,
-      permission: grant.permission,
-    }));
-    return {
-      id: role.id,
-      name: role.name,
-      weight: role.weight,
-      grants,
-      displayName: role.displayName,
-    };
-  }
-
-  delete (role: DbRole) {
+  getBaseRole (role: DbRole): BaseRoleResponse {
     return {
       id: role.id,
       name: role.name,
@@ -36,45 +19,27 @@ export class RoleMapper {
     };
   }
 
-  update (role: DbRole) {
+  getRole (role: DbRole): RoleResponse {
     return {
-      id: role.id,
-      name: role.name,
-      weight: role.weight,
-      displayName: role.displayName,
+      ...this.getBaseRole(role),
+      grants: this.getGrants(role.grants),
     };
   }
 
-  getRole (role: DbRole) {
-    const grants = role.grants.map((grant) => ({
+  getRoles (roles: DbRole[]): RoleResponse[] {
+    return roles.map(this.getRole);
+  }
+
+  getGrant (grant: DbGrant): GrantResponse {
+    return {
       id: grant.id,
       permission: grant.permission,
-      weight: grant.weight,
       set: grant.set,
-    }));
-    return {
-      id: role.id,
-      displayName: role.displayName,
-      name: role.name,
-      weight: role.weight,
-      grants,
+      weight: grant.weight,
     };
   }
 
-  getAll (roles: DbRole[]) {
-    return roles.map(
-      (role) => (this.getRole(role))
-    );
-  }
-
-  getGrants (grants: Grant[]) {
-    return grants.map(
-      (grant) => ({
-        id: grant.id,
-        permission: grant.permission,
-        weight: grant.weight,
-        set: grant.set,
-      })
-    );
+  getGrants (grants: Grant[]): GrantResponse[] {
+    return grants.map(this.getGrant);
   }
 }
