@@ -1,8 +1,8 @@
-import { Controller, Get, Query } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { CurrentSemester, SemestersResponse } from '@fictadvisor/utils/responses';
-import { ConvertToBooleanPipe } from '../pipes/ConvertToBooleanPipe';
+import { Controller, Get, ParseBoolPipe, Query } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { DateService } from '../../utils/date/DateService';
+import { ApiEndpoint } from '../../utils/documentation/decorators';
+import { DateDocumentation } from '../../utils/documentation/date';
 
 @ApiTags('Dates')
 @Controller({
@@ -15,28 +15,20 @@ export class DateController {
   ) {}
 
   @Get('/semesters')
-  @ApiOkResponse({
-    type: SemestersResponse,
-  })
-  @ApiQuery({
-    name: 'isFinished',
-    type: Boolean,
-    required: false,
+  @ApiEndpoint({
+    summary: 'Gets recent semesters',
+    documentation: DateDocumentation.GET_PREVIOUS_SEMESTERS,
   })
   async getPreviousSemesters (
-    @Query('isFinished', ConvertToBooleanPipe) isFinished?
+    @Query('isFinished', ParseBoolPipe) isFinished: boolean,
   ) {
-    return { semesters: await this.dateService.getPreviousSemesters(isFinished as boolean) };
+    return this.dateService.getPreviousSemesters(isFinished);
   }
 
   @Get('/current/semester')
-  @ApiOkResponse({
-    type: CurrentSemester,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    DataNotFoundException:
-      Data was not found`,
+  @ApiEndpoint({
+    summary: 'Get current semester',
+    documentation: DateDocumentation.GET_CURRENT_SEMESTER,
   })
   getCurrentSemester () {
     return this.dateService.getCurrentSemester();
