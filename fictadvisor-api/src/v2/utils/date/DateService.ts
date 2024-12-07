@@ -94,10 +94,10 @@ export class DateService {
     return Array.from(set);
   }
 
-  async getPreviousSemesters (isLastFinished?: boolean) {
+  async getPreviousSemesters (isLastFinished: boolean) {
     const { semesters, isFinished } = await this.getAllPreviousSemesters();
-    if (isFinished === isLastFinished || isLastFinished === undefined) return semesters;
-    return semesters.slice(1);
+    if (isFinished === isLastFinished || isFinished) return { semesters };
+    return { semesters: semesters.slice(1) };
   }
 
   async getDateVar (name: string): Promise<Date> {

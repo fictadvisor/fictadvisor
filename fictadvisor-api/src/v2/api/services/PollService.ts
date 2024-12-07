@@ -257,7 +257,7 @@ export class PollService {
     userId: string,
     query: QueryAllDisciplineTeacherForPollDTO,
   ): Promise<PollDisciplineTeachersResponse> {
-    const semesters = await this.dateService.getPreviousSemesters(true);
+    const { semesters } = await this.dateService.getPreviousSemesters(true);
 
     const disciplineWhere: Prisma.DisciplineWhereInput[] = [];
 
