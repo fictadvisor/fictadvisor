@@ -63,11 +63,8 @@ const TeacherPage: FC = () => {
     refetchOnWindowFocus: false,
   });
 
-  useEffect(() => {
-    if (isSuccess) {
-      setLoadedTeachers(data.teachers);
-    }
-  }, [data]);
+  if (isSuccess && data.teachers !== loadedTeachers)
+    setLoadedTeachers(data.teachers);
 
   return (
     <Box sx={styles.layout}>
