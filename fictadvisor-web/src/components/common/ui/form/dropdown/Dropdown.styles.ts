@@ -107,7 +107,7 @@ export const dropdown: SxProps<Theme> = {
       },
     },
     '& .MuiAutocomplete-listbox': {
-      minHeight: 'min-content',
+      minHeight: '1rem',
       maxHeight: '160px',
       color: 'grey.600',
       borderRadius: '8px',
