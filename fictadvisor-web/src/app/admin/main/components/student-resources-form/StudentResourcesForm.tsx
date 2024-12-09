@@ -5,7 +5,10 @@ import {
   useRef,
   useState,
 } from 'react';
-import { ResourceResponse } from '@fictadvisor/utils/responses';
+import {
+  ResourceResponse,
+  ResourcesResponse,
+} from '@fictadvisor/utils/responses';
 import { Box } from '@mui/material';
 
 import * as styles from '@/app/admin/main/components/student-resources-form/StudentResourcesForm.styles';
@@ -24,7 +27,7 @@ const StudentResourcesForm = forwardRef((props, ref) => {
   }>({});
   const getStudentResources = async () => {
     try {
-      const data: ResourceResponse[] = await StudentResourcesAPI.getAll();
+      const data: ResourcesResponse = await StudentResourcesAPI.getAll();
       const studentResources: ResourceResponse[] = Object.values(data);
       setStudentResources(studentResources);
     } catch (error) {
