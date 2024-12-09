@@ -1,9 +1,10 @@
+import { ResourceResponse, ResourcesResponse } from '@fictadvisor/utils/responses';
 import { Injectable } from '@nestjs/common';
 import { StudentResource } from '@prisma/client';
 
 @Injectable()
 export class ResourceMapper {
-  getResource (resource: StudentResource) {
+  getResource (resource: StudentResource): ResourceResponse {
     return {
       id: resource.id,
       name: resource.name,
@@ -12,7 +13,9 @@ export class ResourceMapper {
     };
   }
 
-  getResources (resources: StudentResource[]) {
-    return resources.map((resource) => this.getResource(resource));
+  getResources (resources: StudentResource[]): ResourcesResponse {
+    return {
+      resources: resources.map(this.getResource),
+    };
   }
 }
