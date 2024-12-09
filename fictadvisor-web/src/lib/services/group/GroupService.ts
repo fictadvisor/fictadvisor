@@ -27,7 +27,14 @@ class GroupService {
   }
   getGroupData = async (groupId: string, order: Order) => {
     const permissionsRes = PermissionApi.check({
-      permissions: [PERMISSION.GROUPS_$GROUPID_STUDENTS_UNVERIFIED_GET],
+      permissions: [
+        PERMISSION.GROUPS_$GROUPID_STUDENTS_UNVERIFIED_GET,
+        PERMISSION.GROUPS_$GROUPID_STUDENTS_ADD,
+        PERMISSION.GROUPS_$GROUPID_LIST_GET,
+        PERMISSION.GROUPS_$GROUPID_LEAVE,
+        PERMISSION.GROUPS_$GROUPID_ADMIN_SWITCH,
+        PERMISSION.GROUPS_$GROUPID_STUDENTS_REMOVE,
+      ],
       values: {
         groupId,
       },
