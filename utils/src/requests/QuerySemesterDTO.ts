@@ -1,6 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNumber, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
+import { validationOptionsMsg } from '../ValidationUtil';
 
 export class QuerySemesterDTO {
   @ApiPropertyOptional({
@@ -9,7 +10,7 @@ export class QuerySemesterDTO {
   })
   @Type(() => Number)
   @IsOptional()
-  @IsNumber()
+  @IsNumber({}, validationOptionsMsg('Year must be a number'))
     year?: number;
 
   @ApiPropertyOptional({
@@ -18,6 +19,6 @@ export class QuerySemesterDTO {
   })
   @Type(() => Number)
   @IsOptional()
-  @IsNumber()
+  @IsNumber({}, validationOptionsMsg('Semester must be a number'))
     semester?: number;
 }
