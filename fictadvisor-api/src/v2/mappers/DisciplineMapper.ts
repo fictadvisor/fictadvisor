@@ -9,13 +9,16 @@ import {
   DisciplineResponse,
   DisciplineTeacherResponse,
   SelectivesBySemestersResponse,
-  ExtendedDisciplineResponse, DisciplineTypeResponse,
+  ExtendedDisciplineResponse,
+  DisciplineTypeResponse,
+  SortedDisciplinesByPeriodResponse,
 } from '@fictadvisor/utils/responses';
 import { AcademicStatus, ScientificDegree, Position } from '@fictadvisor/utils/enums';
 import { DbDisciplineTeacher } from '../database/entities/DbDisciplineTeacher';
 import { GroupMapper } from './GroupMapper';
 import { SubjectMapper } from './SubjectMapper';
 import { DbDisciplineType } from '../database/entities/DbDisciplineType';
+import { ShortDisciplineResponse } from '@fictadvisor/utils';
 
 @Injectable()
 export class DisciplineMapper {
@@ -47,11 +50,11 @@ export class DisciplineMapper {
       description: discipline.description,
       group: this.groupMapper.getGroup(discipline.group),
       subject: this.subjectMapper.getSubject(discipline.subject),
-      disciplineTypes: discipline.disciplineTypes.map(this.getDisciplineTypes),
+      disciplineTypes: discipline.disciplineTypes.map(this.getDisciplineType),
     };
   }
 
-  getDisciplineTypes (disciplineType: DbDisciplineType): DisciplineTypeResponse {
+  getDisciplineType (disciplineType: DbDisciplineType): DisciplineTypeResponse {
     return {
       id: disciplineType.id,
       disciplineId: disciplineType.disciplineId,
@@ -108,7 +111,7 @@ export class DisciplineMapper {
     });
   }
 
-  getDisciplines (disciplines: DbDiscipline[]) {
+  getShortDisciplines (disciplines: DbDiscipline[]): ShortDisciplineResponse[] {
     return disciplines.map((d) => ({
       id: d.id,
       subject: d.subject,
@@ -118,7 +121,7 @@ export class DisciplineMapper {
     }));
   }
 
-  getDisciplinesForAdmin (disciplines: DbDiscipline[]): DisciplineAdminResponse[] {
+  getDisciplinesAdmin (disciplines: DbDiscipline[]): DisciplineAdminResponse[] {
     return disciplines.map((d) => ({
       id: d.id,
       name: d.subject.name,
@@ -138,7 +141,7 @@ export class DisciplineMapper {
     }));
   }
 
-  getSortedDisciplinesByPeriod (disciplines: DbDiscipline[]) {
+  getSortedDisciplinesByPeriod (disciplines: DbDiscipline[]): SortedDisciplinesByPeriodResponse[] {
     const periods = [];
     disciplines.map((discipline) => {
       const period = periods.find(

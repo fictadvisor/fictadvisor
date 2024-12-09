@@ -196,7 +196,7 @@ export class GroupController {
   ): Promise<ShortDisciplinesResponse> {
     const disciplines = await this.groupService.getDisciplineTeachers(groupId, query);
     return {
-      disciplines: this.disciplineMapper.getDisciplines(disciplines),
+      disciplines: this.disciplineMapper.getShortDisciplines(disciplines),
     };
   }
 
