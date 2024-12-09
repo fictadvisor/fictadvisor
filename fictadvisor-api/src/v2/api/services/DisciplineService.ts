@@ -5,7 +5,6 @@ import {
   QuerySemesterDTO,
   UpdateDisciplineDTO,
 } from '@fictadvisor/utils/requests';
-import { DisciplineTeacherMapper } from '../../mappers/DisciplineTeacherMapper';
 import { DisciplineTeacherService } from './DisciplineTeacherService';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
 import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
@@ -18,7 +17,6 @@ import { DisciplineTypeEnum } from '@fictadvisor/utils/enums';
 export class DisciplineService {
   constructor (
     private disciplineRepository: DisciplineRepository,
-    private disciplineTeacherMapper: DisciplineTeacherMapper,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
     private disciplineTeacherService: DisciplineTeacherService,
   ) {}
@@ -79,7 +77,7 @@ export class DisciplineService {
     return this.disciplineRepository.findById(discipline.id);
   }
 
-  async get (id: string) {
+  async getById (id: string) {
     return this.disciplineRepository.findById(id);
   }
 
@@ -109,7 +107,7 @@ export class DisciplineService {
   }
 
   async getTeachers (disciplineId: string, disciplineType: DisciplineTypeEnum) {
-    const disciplineTeachers = await this.disciplineTeacherRepository.findMany({
+    return this.disciplineTeacherRepository.findMany({
       where: {
         roles: {
           some: {
@@ -123,10 +121,9 @@ export class DisciplineService {
         },
       },
     });
-    return this.disciplineTeacherMapper.getDisciplineTeachersWithTeacherParams(disciplineTeachers);
   }
 
-  async deleteDiscipline (disciplineId: string): Promise<DbDiscipline> {
+  async deleteById (disciplineId: string): Promise<DbDiscipline> {
     return this.disciplineRepository.deleteById(disciplineId);
   }
 

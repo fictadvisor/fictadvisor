@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsIn, IsOptional, ValidateNested } from 'class-validator';
+import { IsArray, IsIn, IsOptional, IsUUID, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { QueryAllDTO } from './QueryAllDTO';
 import { QuerySemesterDTO } from './QuerySemesterDTO';
@@ -10,6 +10,8 @@ export class QueryAllDisciplinesDTO extends QueryAllDTO {
     description: 'Array of group\'s ids',
   })
   @IsOptional()
+  @IsArray(validationOptionsMsg('Groups must be an array'))
+  @IsUUID('4', validationOptionsMsg('Groups must be an UUID', true))
     groups?: string[];
 
   @ApiPropertyOptional({
@@ -24,6 +26,8 @@ export class QueryAllDisciplinesDTO extends QueryAllDTO {
     description: 'Array of teacher\'s ids',
   })
   @IsOptional()
+  @IsArray(validationOptionsMsg('Teachers must be an array'))
+  @IsUUID('4', validationOptionsMsg('Teachers must be an UUID', true))
     teachers?: string[];
 
   @ApiPropertyOptional({

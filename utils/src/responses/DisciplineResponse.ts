@@ -142,3 +142,10 @@ export class SelectiveDisciplinesWithAmountResponse extends SelectiveDisciplines
   })
     amount: number;
 }
+
+export class SortedDisciplinesByPeriodResponse extends BaseDisciplineResponse {
+  @ApiProperty({
+    description: 'Array of disciplines ids',
+  })
+    disciplines: string[];
+}
