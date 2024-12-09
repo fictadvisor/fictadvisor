@@ -93,7 +93,7 @@ export default async function Main() {
           </Typography>
           <Box>
             <Box sx={stylesMUI.resourcesSectionCards}>
-              {studentResources?.map(
+              {studentResources?.resources.map(
                 ({ name, id, imageLink, link }: ResourceResponse) => (
                   <ResourceCard
                     key={id}
