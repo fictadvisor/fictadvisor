@@ -25,7 +25,7 @@ import {
 import IconButton from '@/components/common/ui/icon-button-mui';
 import theme from '@/styles/theme';
 
-import { filterOptions, teachersRoles } from './constants';
+import { disciplineTypes, filterOptions } from './constants';
 import * as styles from './PollSearchForm.styles';
 
 import stylesScss from './PollSearchForm.module.scss';
@@ -53,10 +53,13 @@ const PollSearchForm: FC<PollSearchFormProps> = ({
   const formikRef =
     useRef<FormikProps<QueryAllDisciplineTeacherForPollDTO>>(null);
 
-  const handleTeacherRoleChange = useCallback((teacherRole: string) => {
-    formikRef.current?.setFieldValue('roles', teacherRole);
-    formikRef.current?.handleSubmit();
-  }, []);
+  const handleTeacherDisciplineTypeChange = useCallback(
+    (teacherDisciplineType: string) => {
+      formikRef.current?.setFieldValue('disciplineType', teacherDisciplineType);
+      formikRef.current?.handleSubmit();
+    },
+    [],
+  );
 
   const handleSortChange = useCallback((sort: string) => {
     formikRef.current?.setFieldValue('sort', sort);
@@ -101,15 +104,19 @@ const PollSearchForm: FC<PollSearchFormProps> = ({
             <>
               <Box sx={styles.dropdown}>
                 <CheckboxesDropdown
-                  selected={values.roles!.map(role => ({
-                    value: role,
-                    label: role,
-                  }))}
+                  selected={
+                    values.disciplineTypes
+                      ? values.disciplineTypes.map(disciplineType => ({
+                          value: disciplineType,
+                          label: disciplineType,
+                        }))
+                      : []
+                  }
                   handleChange={e => {
-                    handleTeacherRoleChange(e.target.value);
+                    handleTeacherDisciplineTypeChange(e.target.value);
                   }}
                   size={FieldSize.MEDIUM}
-                  values={teachersRoles}
+                  values={disciplineTypes}
                   label="Викладає"
                 />
               </Box>

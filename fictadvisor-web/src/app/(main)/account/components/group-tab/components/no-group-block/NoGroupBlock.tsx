@@ -1,8 +1,8 @@
-import React, { FC } from 'react';
-import { useQuery } from 'react-query';
+import React from 'react';
 import { State } from '@fictadvisor/utils/enums';
 import { GroupRequestDTO } from '@fictadvisor/utils/requests';
 import { Box, Typography, useMediaQuery } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 import { Form, Formik } from 'formik';
 
 import { transformGroups } from '@/app/(main)/account/components/group-tab/components/no-group-block/utils';
@@ -16,7 +16,7 @@ import { DividerTextAlign } from '@/components/common/ui/divider/types';
 import Checkbox from '@/components/common/ui/form/with-formik/checkbox';
 import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown';
 import Progress from '@/components/common/ui/progress';
-import useAuthentication from '@/hooks/use-authentication';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import GroupAPI from '@/lib/api/group/GroupAPI';
 import UserAPI from '@/lib/api/user/UserAPI';
@@ -24,17 +24,19 @@ import theme from '@/styles/theme';
 
 import * as muiStyles from './NoGroupBlock.styles';
 
-const NoGroupBlock: FC = () => {
+const NoGroupBlock = () => {
   const isTablet = useMediaQuery(theme.breakpoints.down('mobileMedium'));
   const { displayError } = useToastError();
-  const { user, update } = useAuthentication();
-  const { isLoading, data } = useQuery(['groups'], () => GroupAPI.getAll(), {
+  const { user: userNotNull } = useAuthentication();
+  const user = userNotNull!;
+  const { isLoading, data } = useQuery({
+    queryKey: ['groups'],
+    queryFn: () => GroupAPI.getAll(),
     refetchOnWindowFocus: false,
   });
   const handleSubmitGroup = async (data: GroupRequestDTO) => {
     try {
       await UserAPI.requestNewGroup(user.id, data);
-      await update();
     } catch (error) {
       displayError(error);
     }

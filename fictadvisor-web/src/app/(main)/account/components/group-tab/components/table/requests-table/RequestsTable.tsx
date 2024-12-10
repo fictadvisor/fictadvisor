@@ -8,7 +8,7 @@ import AlertButton from '@/components/common/ui/alert-button/AlertButton';
 import { AlertButtonVariant } from '@/components/common/ui/alert-button/types';
 import Divider from '@/components/common/ui/divider';
 import { DividerTextAlign } from '@/components/common/ui/divider/types';
-import useAuthentication from '@/hooks/use-authentication';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import GroupAPI from '@/lib/api/group/GroupAPI';
 import theme from '@/styles/theme';
@@ -19,7 +19,8 @@ import { RequestsTableProps } from '../types';
 import * as styles from './RequestTable.styles';
 
 const RequestsTable: FC<RequestsTableProps> = ({ rows, refetch }) => {
-  const { user } = useAuthentication();
+  const { user: userNotNull } = useAuthentication();
+  const user = userNotNull!;
   const isMobile = useMediaQuery(theme.breakpoints.down('desktop'));
   const { displayError } = useToastError();
   const handleApprove = async (userId: string) => {

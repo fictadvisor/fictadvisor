@@ -1,21 +1,16 @@
 import { Body, Controller, Get, Patch, Post, Query } from '@nestjs/common';
-import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiForbiddenResponse,
-  ApiOkResponse,
-  ApiTags,
-  ApiUnauthorizedResponse,
-} from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import {
   CreatePageTextDTO,
   UpdatePageTextsDTO,
   QueryAllPageTextsDTO,
 } from '@fictadvisor/utils/requests';
-import { PageTextResponse, PageTextsResponse } from '@fictadvisor/utils/responses';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
 import { PageTextService } from '../services/PageTextService';
+import { PageTextDocumentation } from 'src/v2/utils/documentation/pageText';
+import { PageTextByKeyPipe } from '../pipes/PageTextByKeyPipe';
+import { ValidatePageTextsPipe } from '../pipes/ValidatePageTextsPipe';
 
 @ApiTags('PageText')
 @Controller({
@@ -27,16 +22,9 @@ export class PageTextController {
     private pageTextService: PageTextService,
   ) {}
 
-  @ApiOkResponse({
-    type: [PageTextsResponse],
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidQueryException:
-      Keys can not be empty`,
-  })
   @ApiEndpoint({
     summary: 'Get all texts for page',
+    documentation: PageTextDocumentation.GET_ALL,
   })
   @Get()
   async getAll (
@@ -45,66 +33,26 @@ export class PageTextController {
     return this.pageTextService.getAll(query);
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse({
-    type: PageTextResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidBodyException:
-      Key can not be empty
-      Value can not be empty`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException:
-      You do not have permission to perform this action`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
   @ApiEndpoint({
     summary: 'Create text for page',
+    documentation: PageTextDocumentation.CREATE,
     permissions: PERMISSION.PAGE_TEXTS_CREATE,
   })
   @Post()
   create (
-    @Body() body: CreatePageTextDTO,
+    @Body(PageTextByKeyPipe) body: CreatePageTextDTO,
   ) {
     return this.pageTextService.create(body);
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse({
-    type: PageTextsResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidBodyException:
-      Key can not be empty
-      
-    InvalidEntityId:
-      Resource with such id is not found`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException:
-      You do not have permission to perform this action`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
   @ApiEndpoint({
     summary: 'Update many page texts by given keys',
+    documentation: PageTextDocumentation.UPDATE_MANY,
     permissions: PERMISSION.PAGE_TEXTS_UPDATE,
   })
   @Patch()
   async updateMany (
-    @Body() body: UpdatePageTextsDTO,
+    @Body(ValidatePageTextsPipe) body: UpdatePageTextsDTO,
   ) {
     return this.pageTextService.updateMany(body);
   }

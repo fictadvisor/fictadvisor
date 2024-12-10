@@ -23,17 +23,17 @@ import { DividerTextAlign } from '@/components/common/ui/divider/types';
 import { Input } from '@/components/common/ui/form';
 import { FieldSize } from '@/components/common/ui/form/common/types';
 import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown';
-import useAuthentication from '@/hooks/use-authentication';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 import useTabClose from '@/hooks/use-tab-close';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import ContractAPI from '@/lib/api/contract/ContractAPI';
 
 const EntrantAdmin = () => {
-  const { isLoggedIn } = useAuthentication();
+  const { user } = useAuthentication();
   const router = useRouter();
 
-  if (!isLoggedIn) router.push('/login');
+  if (!user) router.push('/login');
   const form = useRef<FormikProps<DeleteEntrantDataQueryDTO>>(null);
   const toast = useToast();
   const { displayError } = useToastError();

@@ -1,30 +1,13 @@
 import { Body, Controller, Delete, Param, Patch, Post, Get, Query } from '@nestjs/common';
-import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiForbiddenResponse,
-  ApiOkResponse,
-  ApiParam,
-  ApiTags,
-  ApiUnauthorizedResponse,
-} from '@nestjs/swagger';
-import {
-  CreateCathedraDTO,
-  UpdateCathedraDTO,
-  QueryAllCathedrasDTO,
-} from '@fictadvisor/utils/requests';
-import {
-  CathedraResponse,
-  CathedraWithTeachersResponse,
-  PaginatedCathedrasWithTeachersResponse,
-  CathedrasDivisionsResponse,
-} from '@fictadvisor/utils/responses';
+import { ApiTags } from '@nestjs/swagger';
+import { CreateCathedraDTO, UpdateCathedraDTO, QueryAllCathedrasDTO } from '@fictadvisor/utils/requests';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
 import { CathedraByIdPipe } from '../pipes/CathedraByIdPipe';
 import { CathedraTeachersPipe } from '../pipes/CathedraTeachersPipe';
 import { CathedraMapper } from '../../mappers/CathedraMapper';
 import { CathedraService } from '../services/CathedraService';
+import { CathedraDocumentation } from '../../utils/documentation/cathedra';
 
 @ApiTags('Cathedra')
 @Controller({
@@ -37,20 +20,9 @@ export class CathedraController {
     private cathedraMapper: CathedraMapper,
   ) {}
 
-  @ApiOkResponse({
-    type: PaginatedCathedrasWithTeachersResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidQueryException:
-      Page must be a number
-      PageSize must be a number
-      Wrong value for order
-      Faculties must be an array
-      Sort must be an enum`,
-  })
   @ApiEndpoint({
     summary: 'Get all cathedras',
+    documentation: CathedraDocumentation.GET_ALL,
   })
   @Get()
   async getAll (
@@ -64,164 +36,63 @@ export class CathedraController {
     };
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse({
-    type: CathedraResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidBodyException: 
-      Cathedra name is too short (min: 3)
-      Cathedra name is too long (max: 150)
-      Cathedra name is incorrect (A-Я(укр.)\\-' )
-      Abbreviation is too short (min: 1)
-      Abbreviation is too long (max: 10)
-      Abbreviation can not be empty
-      Abbreviation is incorrect (A-Я(укр.)\\-' )
-      Division name is too short (min: 1)
-      Division name is too long (max: 10)
-      Cathedra name is incorrect (A-Я(укр.)\\\\-\\' )
-      Teachers must be an array
-      
-    InvalidEntityIdException:
-      Teacher with such id is not found`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException:
-      You do not have permission to perform this action`,
-  })
   @ApiEndpoint({
     summary: 'Create a new cathedra',
     permissions: PERMISSION.CATHEDRAS_CREATE,
+    documentation: CathedraDocumentation.CREATE,
   })
   @Post()
-  async create (@Body(CathedraTeachersPipe) body: CreateCathedraDTO): Promise<CathedraResponse> {
+  async create (
+    @Body(CathedraTeachersPipe) body: CreateCathedraDTO,
+  ) {
     const cathedra = await this.cathedraService.create(body);
     return this.cathedraMapper.getCathedraWithTeachers(cathedra);
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse({
-    type: CathedraWithTeachersResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidBodyException:
-      Cathedra name is too short (min: 3)
-      Cathedra name is too long (max: 150)
-      Cathedra name is incorrect (A-Я(укр.)\\-' )
-      Abbreviation is too short (min: 1)
-      Abbreviation is too long (max: 10)
-      Abbreviation can not be empty
-      Abbreviation is incorrect (A-Я(укр.)\\-' )
-      Division name is too short (min: 1)
-      Division name is too long (max: 10)
-      Cathedra name is incorrect (A-Я(укр.)\\\\-\\' )
-      Teachers to delete must be an array
-      Teachers to add must be an array
-      
-    InvalidEntityIdException:
-      Cathedra with such id is not found`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException:
-      You do not have permission to perform this action`,
-  })
-  @ApiParam({
-    name: 'cathedraId',
-    required: true,
-    description: 'Id of a cathedra to update',
-  })
   @ApiEndpoint({
     summary: 'Update cathedra with selected id',
     permissions: PERMISSION.CATHEDRAS_UPDATE,
+    documentation: CathedraDocumentation.UPDATE,
   })
   @Patch('/:cathedraId')
   async update (
     @Param('cathedraId', CathedraByIdPipe) cathedraId: string,
     @Body() body: UpdateCathedraDTO,
-  ): Promise<CathedraWithTeachersResponse> {
+  ) {
     const cathedra = await this.cathedraService.update(cathedraId, body);
     return this.cathedraMapper.getCathedraWithTeachers(cathedra);
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse({
-    type: CathedraWithTeachersResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidEntityIdException:
-      Cathedra with such id is not found`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException:
-      You do not have permission to perform this action`,
-  })
-  @ApiParam({
-    name: 'cathedraId',
-    required: true,
-    description: 'Id of a cathedra to delete',
-  })
   @ApiEndpoint({
     summary: 'Delete cathedra with selected id',
     permissions: PERMISSION.CATHEDRAS_DELETE,
+    documentation: CathedraDocumentation.DELETE,
   })
   @Delete('/:cathedraId')
   async delete (
     @Param('cathedraId', CathedraByIdPipe) cathedraId: string,
-  ): Promise<CathedraWithTeachersResponse> {
+  ) {
     const cathedra = await this.cathedraService.delete(cathedraId);
     return this.cathedraMapper.getCathedraWithTeachers(cathedra);
   }
 
-  @ApiOkResponse({
-    type: CathedrasDivisionsResponse,
-  })
   @ApiEndpoint({
     summary: 'Get all divisions',
+    documentation: CathedraDocumentation.GET_ALL,
   })
   @Get('/divisions')
-  getAllDivisions (): Promise<CathedrasDivisionsResponse> {
+  async getAllDivisions () {
     return this.cathedraService.getAllDivisions();
   }
 
-  @ApiOkResponse({
-    type: CathedraWithTeachersResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidEntityIdException:
-      Cathedra with such id is not found`,
-  })
-  @ApiParam({
-    name: 'cathedraId',
-    required: true,
-    description: 'Id of a cathedra to get',
-  })
   @ApiEndpoint({
     summary: 'Get cathedra by id',
+    documentation: CathedraDocumentation.GET_BY_ID,
   })
-  @Get(':cathedraId')
-  async getById (@Param('cathedraId', CathedraByIdPipe) cathedraId: string) {
+  @Get('/:cathedraId')
+  async getById (
+    @Param('cathedraId', CathedraByIdPipe) cathedraId: string,
+  ) {
     const cathedra = await this.cathedraService.getById(cathedraId);
     return this.cathedraMapper.getCathedraWithTeachers(cathedra);
   }

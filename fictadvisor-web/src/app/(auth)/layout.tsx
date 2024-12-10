@@ -1,9 +1,9 @@
 import { Metadata } from 'next';
 
 import PageLayout from '@/components/common/layout/page-layout';
-import teachersMetadata from '@/lib/metadata/teachers';
+import loginMetadata from '@/lib/metadata/login';
 
-export const metadata: Metadata = teachersMetadata;
+export const metadata: Metadata = loginMetadata;
 
 const TeacherSearchPageLayout = ({
   children,

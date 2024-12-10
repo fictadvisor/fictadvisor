@@ -1,13 +1,13 @@
 import { Fragment, useEffect, useMemo, useState } from 'react';
-import { useQuery } from 'react-query';
 import { CurrentSemester } from '@fictadvisor/utils/responses';
+import { useQuery } from '@tanstack/react-query';
 import moment from 'moment';
 
 import { formValidationSchema } from '@/app/(main)/schedule/schedule-page/schedule-event-edit-section/schedule-form/validation';
 import ScheduleInfoCard from '@/app/(main)/schedule/schedule-page/schedule-event-edit-section/schedule-info-card';
 import { prepareData } from '@/app/(main)/schedule/schedule-page/schedule-event-edit-section/utils/prepareData';
 import { transformDetailedEvent } from '@/app/(main)/schedule/schedule-page/schedule-event-edit-section/utils/transformDetailedEvent';
-import useAuthentication from '@/hooks/use-authentication';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import ScheduleAPI from '@/lib/api/schedule/ScheduleAPI';
 import { EventResponse } from '@/lib/api/schedule/types/EventResponse';
@@ -36,20 +36,22 @@ export const ScheduleEventEdit = () => {
     [openedEvent],
   );
 
-  const { isLoading, data } = useQuery(
-    ['event', openedEvent?.id, week],
-    () => ScheduleAPI.getEventInfo(openedEvent?.id as string, week),
-    {
-      onSuccess: data => {
-        setDetailedEvent(data);
-      },
-      onError: err => {
-        displayError(err);
-        useSchedule.setState(state => ({ openedEvent: undefined }));
-      },
-      retry: false,
-    },
-  );
+  const { isLoading, data, isSuccess, error, isError } = useQuery({
+    queryKey: ['event', openedEvent?.id, week],
+    queryFn: () => ScheduleAPI.getEventInfo(openedEvent?.id as string, week),
+
+    retry: false,
+  });
+
+  useEffect(() => {
+    if (isSuccess) {
+      setDetailedEvent(data);
+    }
+    if (isError) {
+      displayError(error);
+      useSchedule.setState(state => ({ openedEvent: undefined }));
+    }
+  }, [data]);
 
   const [detailedEvent, setDetailedEvent] = useState<undefined | EventResponse>(
     data,
@@ -71,7 +73,7 @@ export const ScheduleEventEdit = () => {
 
     try {
       const data = await ScheduleAPI.editEvent(
-        user.group?.id as string,
+        user?.group?.id as string,
         openedEvent?.id as string,
         body,
       );
@@ -87,7 +89,7 @@ export const ScheduleEventEdit = () => {
   const handleEventDelete = async () => {
     try {
       const data = await ScheduleAPI.deleteEventById(
-        user.group?.id as string,
+        user?.group?.id as string,
         openedEvent?.id as string,
       );
       setIsEditOpen(false);

@@ -1,7 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
-  ApiBearerAuth,
+  ApiCookieAuth,
   ApiForbiddenResponse,
   ApiOkResponse,
   ApiParam,
@@ -12,12 +12,14 @@ import {
 import {
   CreateDisciplineDTO,
   QueryAllDisciplinesDTO,
+  UpdateDisciplineDTO,
 } from '@fictadvisor/utils/requests';
 import {
   DisciplineTeachersResponse,
   ExtendedDisciplineTeachersResponse,
   DisciplinesResponse,
 } from '@fictadvisor/utils/responses';
+import { DisciplineTypeEnum } from '@fictadvisor/utils/enums';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import { DisciplineService } from '../services/DisciplineService';
 import { Access } from 'src/v2/security/Access';
@@ -26,7 +28,6 @@ import { GroupByDisciplineGuard } from '../../security/group-guard/GroupByDiscip
 import { DisciplineByIdPipe } from '../pipes/DisciplineByIdPipe';
 import { QueryAllDisciplinesPipe } from '../pipes/QueryAllDisciplinesPipe';
 import { DisciplineMapper } from '../../mappers/DisciplineMapper';
-import { DisciplineTypeEnum } from '@prisma/client';
 
 @ApiTags('Discipline')
 @Controller({
@@ -39,7 +40,7 @@ export class DisciplineController {
     private disciplineMapper: DisciplineMapper,
   ) {}
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: ExtendedDisciplineTeachersResponse,
   })
@@ -62,7 +63,7 @@ export class DisciplineController {
     @Body() body: CreateDisciplineDTO,
   ) {
     const discipline = await this.disciplineService.create(body);
-    return this.disciplineMapper.getDisciplineWithTeachers(discipline);
+    return this.disciplineMapper.getExtendedDisciplineTeachers(discipline);
   }
 
   @ApiOkResponse({
@@ -96,7 +97,7 @@ export class DisciplineController {
     };
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: DisciplineTeachersResponse,
   })
@@ -139,7 +140,7 @@ export class DisciplineController {
     return { teachers };
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: ExtendedDisciplineTeachersResponse,
   })
@@ -172,7 +173,7 @@ export class DisciplineController {
     @Param('disciplineId', DisciplineByIdPipe) disciplineId: string,
   ): Promise<ExtendedDisciplineTeachersResponse> {
     const discipline = await this.disciplineService.deleteDiscipline(disciplineId);
-    return this.disciplineMapper.getDisciplineWithTeachers(discipline);
+    return this.disciplineMapper.getExtendedDisciplineTeachers(discipline);
   }
 
   @ApiOkResponse({
@@ -194,6 +195,46 @@ export class DisciplineController {
   @Get(':disciplineId')
   async getById (@Param('disciplineId', DisciplineByIdPipe) disciplineId: string) {
     const discipline = await this.disciplineService.get(disciplineId);
-    return this.disciplineMapper.getDisciplineWithTeachers(discipline);
+    return this.disciplineMapper.getExtendedDisciplineTeachers(discipline);
+  }
+
+  @ApiCookieAuth()
+  @ApiOkResponse({
+    type: ExtendedDisciplineTeachersResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidEntityIdException:
+      Discipline with such id is not found
+
+    InvalidBodyException:
+      isSelective property must be boolean`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException: 
+      You do not have permission to perform this action`,
+  })
+  @ApiParam({
+    name: 'disciplineId',
+    required: true,
+    description: 'Id of a discipline to update',
+  })
+  @ApiEndpoint({
+    summary: 'Update discipline by id',
+    permissions: PERMISSION.DISCIPLINE_UPDATE,
+  })
+  @Patch('/:disciplineId')
+  async updateById (
+    @Body() body: UpdateDisciplineDTO,
+    @Param('disciplineId', DisciplineByIdPipe) disciplineId: string,
+  ) {
+    const updatedDiscipline = await this.disciplineService.updateById(disciplineId, body);
+    return this.disciplineMapper.getExtendedDisciplineTeachers(updatedDiscipline);
   }
 }

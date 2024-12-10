@@ -3,7 +3,7 @@ import {
   ArrayMaxSize,
   ArrayMinSize,
   ArrayUnique,
-  IsEmail,
+  IsEmail, IsNotEmpty,
 } from 'class-validator';
 import { validationOptionsMsg } from '../ValidationUtil';
 
@@ -11,15 +11,13 @@ export class EmailDTO {
   @ApiProperty({
     description: 'Emails for adding students to group',
   })
-  @ArrayMinSize(1, validationOptionsMsg('Email cannot be empty'))
-  @ArrayMaxSize(50, validationOptionsMsg('Email cannot be empty'))
+  @ArrayMinSize(1, validationOptionsMsg('Array of emails is too short (min: 1)'))
+  @ArrayMaxSize(50, validationOptionsMsg('Array of emails is too long (max: 50)'))
   @ArrayUnique({}, validationOptionsMsg('There are duplicate emails'))
   @IsEmail(
     {},
-    {
-      each: true,
-      ...validationOptionsMsg('The email is not a valid email address'),
-    }
+    validationOptionsMsg('The email is not a valid email address', true),
   )
+  @IsNotEmpty(validationOptionsMsg('Emails cannot be empty'))
     emails: string[];
 }

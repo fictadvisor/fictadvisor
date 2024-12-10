@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../PrismaService';
 import { Prisma } from '@prisma/client';
+import { PrismaService } from '../PrismaService';
 import { DbGroup } from '../entities/DbGroup';
 
 @Injectable()
@@ -29,55 +29,43 @@ export class GroupRepository {
     },
   };
 
-  async find (where: Prisma.GroupWhereInput) {
+  async find (where: Prisma.GroupWhereInput): Promise<DbGroup> {
     return this.prisma.group.findFirst({
       where,
-      include: this.include,
-    });
-  }
-
-  async findById (id: string) {
-    return this.prisma.group.findUnique({
-      where: {
-        id,
-      },
       include: this.include,
     }) as any as DbGroup;
   }
 
-  async findMany (args: Prisma.GroupFindManyArgs) {
+  async findById (id: string): Promise<DbGroup> {
+    return this.prisma.group.findUnique({
+      where: { id },
+      include: this.include,
+    }) as any as DbGroup;
+  }
+
+  async findMany (args: Prisma.GroupFindManyArgs): Promise<DbGroup[]> {
     return this.prisma.group.findMany({
       ...args,
       include: this.include,
-    });
+    }) as any as DbGroup[];
   }
 
-  async getOrCreate (code: string) {
-    const group = await this.find({ code });
-    if (!group) {
-      return this.create({ code });
-    }
-    return group;
-  }
-
-  async create (data: Prisma.GroupUncheckedCreateInput) : Promise<DbGroup> {
+  async create (data: Prisma.GroupUncheckedCreateInput): Promise<DbGroup> {
     return this.prisma.group.create({
       data,
       include: this.include,
     }) as any as DbGroup;
   }
 
-  async updateById (id: string, data: Prisma.GroupUncheckedUpdateInput) {
+  async updateById (id: string, data: Prisma.GroupUncheckedUpdateInput): Promise<DbGroup> {
     return this.prisma.group.update({
-      where: {
-        id,
-      },
+      where: { id },
       data,
       include: this.include,
     }) as any as DbGroup;
   }
 
-  async deleteById (id: string) {
+  async deleteById (id: string): Promise<DbGroup> {
     return this.prisma.group.delete({
       where: {
         id,
@@ -86,9 +74,7 @@ export class GroupRepository {
     }) as any as DbGroup;
   }
 
-  async count (data: Prisma.GroupCountArgs) {
-    return this.prisma.group.count(
-      data,
-    );
+  async count (data: Prisma.GroupCountArgs): Promise<number> {
+    return this.prisma.group.count(data);
   }
 }

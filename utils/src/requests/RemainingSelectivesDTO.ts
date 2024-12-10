@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber } from 'class-validator';
+import { IsNotEmpty, IsNumber } from 'class-validator';
+import { validationOptionsMsg } from '../ValidationUtil';
 import { Type } from 'class-transformer';
 
 export class RemainingSelectivesDTO {
@@ -7,17 +8,15 @@ export class RemainingSelectivesDTO {
     description: 'The certain year of the selective discipline',
   })
   @Type(() => Number)
-  @IsNumber({}, {
-    message: 'year must be a number',
-  })
+  @IsNumber({}, validationOptionsMsg('Year must be a number'))
+  @IsNotEmpty(validationOptionsMsg('Year cannot be empty'))
     year: number;
 
   @ApiProperty({
     description: 'The certain semester of the selective discipline',
   })
   @Type(() => Number)
-  @IsNumber({}, {
-    message: 'semester must be a number',
-  })
+  @IsNumber({}, validationOptionsMsg('Semester must be a number'))
+  @IsNotEmpty(validationOptionsMsg('Semester cannot be empty'))
     semester: number;
 }

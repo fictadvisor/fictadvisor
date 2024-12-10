@@ -1,15 +1,15 @@
 'use client';
 
 import { FC, useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
 import { Box } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
 import PollForm from '@/app/(main)/(search-pages)/poll/[disciplineTeacherId]/components/poll-form';
 import * as styles from '@/app/(main)/(search-pages)/poll/[disciplineTeacherId]/PollPage.styles';
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
 import Progress from '@/components/common/ui/progress';
-import useAuthentication from '@/hooks/use-authentication';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import PollAPI from '@/lib/api/poll/PollAPI';
 
@@ -22,7 +22,7 @@ interface PollParams {
 const Poll: FC<PollParams> = ({ params }) => {
   const disciplineTeacherId = params.disciplineTeacherId;
   const [isLoading, setIsLoading] = useState(true);
-  const { user, isLoggedIn } = useAuthentication();
+  const { user } = useAuthentication();
   const { displayError } = useToastError();
   const router = useRouter();
   const {
@@ -30,23 +30,21 @@ const Poll: FC<PollParams> = ({ params }) => {
     isSuccess: isSuccessFetching,
     data,
     isLoading: isQuestionsLoading,
-  } = useQuery(
-    ['pollQuestions', disciplineTeacherId],
-    async () => await PollAPI.getTeacherQuestions(disciplineTeacherId),
-    {
-      retry: false,
-      enabled: Boolean(user),
-      refetchOnWindowFocus: false,
-      keepPreviousData: false,
-    },
-  );
+  } = useQuery({
+    queryKey: ['pollQuestions', disciplineTeacherId],
+    queryFn: () => PollAPI.getTeacherQuestions(disciplineTeacherId),
+    retry: false,
+    enabled: Boolean(user),
+    refetchOnWindowFocus: false,
+    placeholderData: (previousData, previousQuery) => previousData,
+  });
 
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (!user) {
       displayError(error);
       void router.replace('login/?redirect=~poll');
     }
-  }, [isLoggedIn, router]);
+  }, [user, router]);
 
   if (error && !isLoading) {
     displayError(error);

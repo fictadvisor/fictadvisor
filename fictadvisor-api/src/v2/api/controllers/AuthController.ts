@@ -1,24 +1,5 @@
-import {
-  Controller,
-  Request,
-  Post,
-  UseGuards,
-  Body,
-  Put,
-  Param,
-  Get,
-  Query,
-} from '@nestjs/common';
-import {
-  ApiTags,
-  ApiBearerAuth,
-  ApiOkResponse,
-  ApiBadRequestResponse,
-  ApiUnauthorizedResponse,
-  ApiTooManyRequestsResponse,
-  ApiParam,
-  ApiBody,
-} from '@nestjs/swagger';
+import { Controller, Post, Body, Param, Get, Query, Patch } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import {
   RegistrationDTO,
   ForgotPasswordDTO,
@@ -28,24 +9,17 @@ import {
   IdentityQueryDTO,
   TelegramDTO,
   RegisterTelegramDTO,
-  LoginDTO,
 } from '@fictadvisor/utils/requests';
-import {
-  AuthLoginResponse,
-  AuthRefreshResponse,
-  OrdinaryStudentResponse,
-  JWTTokensResponse,
-  IsAvailableResponse,
-  TelegramRegistrationResponse,
-  ResetPasswordResponse,
-} from '@fictadvisor/utils/responses';
-import { ApiEndpoint } from '../../utils/documentation/decorators';
+import { ApiEndpoint, GetUser } from '../../utils/documentation/decorators';
 import { LocalAuthGuard } from '../../security/LocalGuard';
 import { JwtGuard } from '../../security/JwtGuard';
 import { TelegramGuard } from '../../security/TelegramGuard';
 import { GroupByIdPipe } from '../pipes/GroupByIdPipe';
 import { AuthService } from '../services/AuthService';
 import { UserService } from '../services/UserService';
+import { RefreshGuard } from '../../security/RefreshGuard';
+import { AuthDocumentation } from '../../utils/documentation/auth';
+import { User } from '@prisma/client';
 
 @ApiTags('Auth')
 @Controller({
@@ -58,45 +32,22 @@ export class AuthController {
     private userService: UserService,
   ) {}
 
-  @ApiBearerAuth()
-  @ApiOkResponse({
-    type: AuthLoginResponse,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized
-    UnauthorizedException:
-      The email hasn't verified yet`,
-  })
-  @ApiBody({
-    type: LoginDTO,
-  })
   @ApiEndpoint({
     summary: 'Login to the user account',
     guards: LocalAuthGuard,
+    documentation: AuthDocumentation.LOGIN,
   })
   @Post('/login')
-  async login (@Request() req) {
-    return this.authService.login(req.user);
+  async login (
+    @GetUser() user: User,
+  ) {
+    return this.authService.login(user);
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse()
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidBodyException:
-      Token cannot be empty
-      Telegram id cannot be empty`,
-  })
   @ApiEndpoint({
     summary: 'Register user\'s telegram account',
     guards: TelegramGuard,
+    documentation: AuthDocumentation.REGISTER_TELEGRAM,
   })
   @Post('/registerTelegram')
   async registerTelegram (
@@ -105,172 +56,68 @@ export class AuthController {
     return this.authService.registerTelegram(body);
   }
 
-  @ApiOkResponse()
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidBodyException:
-      Group id cannot be empty
-      First name is not correct (A-Я(укр.)\\-' ), or too short (min: 2), or too long (max: 40)
-      First name cannot be empty
-      Middle name is not correct (A-Я(укр.)\\-' ), or too long (max: 40)
-      Last name is not correct (A-Я(укр.)\\-' ), or too short (min: 2), or too long (max: 40)
-      Last name cannot be empty
-      isCaptain must be a boolean
-      isCaptain cannot be empty
-      Username is not correct (a-zA-Z0-9_), or too short (min: 2), or too long (max: 40)
-      Username cannot be empty
-      Email is not an email
-      Email cannot be empty
-      The password must be between 6 and 32 characters long, include at least 1 digit and 1 latin letter
-      Password cannot be empty
-      Auth date must be a number
-      First name cannot be empty
-      Hash cannot be empty
-      Telegram id must be a bigint
-      Username cannot be empty
-                  
-    AlreadyRegisteredException:
-      User is already registered
-
-    CaptainAlreadyRegisteredException:
-      Captain of this group is already registered`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    InvalidTelegramCredentialsException:
-      Your telegram hash is invalid`,
-  })
-  @ApiTooManyRequestsResponse({
-    description: `\n
-    TooManyActionsException:
-      Too many actions. Try later`,
-  })
   @ApiEndpoint({
     summary: 'Register new user',
+    documentation: AuthDocumentation.REGISTER,
   })
   @Post('/register')
-  async register (@Body() body: RegistrationDTO) {
+  async register (
+    @Body() body: RegistrationDTO,
+  ) {
     return this.authService.register(body);
   }
 
-  @ApiOkResponse({
-    type: AuthLoginResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidBodyException:
-      Auth date must be a number
-      First name cannot be empty
-      Hash cannot be empty
-      Telegram id must be a bigint
-      Username cannot be empty
-      
-    InvalidEntityIdException
-      User with such id is not found`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    InvalidTelegramCredentialsException:
-      Your telegram hash is invalid`,
-  })
   @ApiEndpoint({
     summary: 'Login with Telegram',
+    documentation: AuthDocumentation.LOGIN_TELEGRAM,
   })
   @Post('/loginTelegram')
-  async loginTelegram (@Body() body: TelegramDTO) {
+  async loginTelegram (
+    @Body() body: TelegramDTO,
+  ) {
     return this.authService.loginTelegram(body);
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse({
-    type: AuthRefreshResponse,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
   @ApiEndpoint({
     summary: 'Refresh access token',
-    guards: JwtGuard,
+    guards: RefreshGuard,
+    documentation: AuthDocumentation.REFRESH,
   })
   @Post('/refresh')
-  async refresh (@Request() req) {
-    return this.authService.refresh(req.user);
+  async refresh (
+    @GetUser() user: User,
+  ) {
+    return this.authService.refresh(user);
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse({
-    type: AuthLoginResponse,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorisedException:
-      Unauthorized
-      The password is incorrect`,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidEntityIdException:
-      User with such id is not found
-      
-    InvalidBodyException:
-      The password must be between 6 and 32 characters long, include at least 1 digit and 1 latin letter
-      Old password cannot be empty
-      New password cannot be empty
-
-    PasswordRepeatException:
-      The passwords are the same`,
-  })
   @ApiEndpoint({
     summary: 'Change old password',
     guards: JwtGuard,
+    documentation: AuthDocumentation.UPDATE_PASSWORD,
   })
-  @Put('/updatePassword')
+  @Patch('/updatePassword')
   async updatePassword (
     @Body() body: UpdatePasswordDTO,
-    @Request() req,
+    @GetUser() user: User,
   ) {
-    return this.authService.updatePassword(body, req.user);
+    return this.authService.updatePassword(body, user);
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse({
-    type: OrdinaryStudentResponse,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorisedException:
-      Unauthorized`,
-  })
-  @UseGuards(JwtGuard)
   @ApiEndpoint({
     summary: 'Get information about the current user based on JWT authorization',
+    guards: JwtGuard,
+    documentation: AuthDocumentation.GET_ME,
   })
   @Get('/me')
   getMe (
-    @Request() req,
+    @GetUser('id') userId: string,
   ) {
-    return this.userService.getUser(req.user.id);
+    return this.userService.getUser(userId);
   }
 
-  @ApiOkResponse()
-  @ApiBadRequestResponse({
-    description: `\n
-    NotRegisteredException:
-      This email is not registered yet
-      
-    InvalidBodyException:
-      Email is not an email
-      Email is empty`,
-  })
-  @ApiTooManyRequestsResponse({
-    description: `\n
-    TooManyActionsException:
-      Too many actions. Try later`,
-  })
   @ApiEndpoint({
     summary: 'Request a password reset procedure based on the email address provided',
+    documentation: AuthDocumentation.FORGOT_PASSWORD,
   })
   @Post('/forgotPassword')
   async forgotPassword (
@@ -279,25 +126,9 @@ export class AuthController {
     return this.authService.forgotPassword(body.email);
   }
 
-  @ApiOkResponse({
-    type: ResetPasswordResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidResetTokenException:
-      Reset token is expired or invalid
-     
-    InvalidBodyException:
-      The password must be between 6 and 32 characters long, include at least 1 digit and 1 latin letter
-      Password is empty`,
-  })
-  @ApiParam({
-    name: 'token',
-    required: true,
-    description: 'A password reset token that is generated and sent to the user\'s email address.',
-  })
   @ApiEndpoint({
     summary: 'Set a new password using a valid password reset token',
+    documentation: AuthDocumentation.RESET_PASSWORD,
   })
   @Post('/resetPassword/:token')
   async resetPassword (
@@ -307,23 +138,9 @@ export class AuthController {
     return this.authService.resetPassword(token, body);
   }
 
-  @ApiOkResponse()
-  @ApiTooManyRequestsResponse({
-    description: `\n
-    TooManyActionsException:
-      Too many actions. Try later`,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    NotRegisteredException:
-      This email is not registered yet
-    
-    InvalidBodyException:
-      Email is not email
-      Email is empty`,
-  })
   @ApiEndpoint({
     summary: 'Resend the email confirmation request for a user who has not completed the registration process yet',
+    documentation: AuthDocumentation.REQUEST_EMAIL_VERIFICATION,
   })
   @Post('/register/verifyEmail')
   requestEmailVerification (
@@ -332,21 +149,9 @@ export class AuthController {
     return this.authService.repeatEmailVerification(body.email);
   }
 
-  @ApiOkResponse({
-    type: JWTTokensResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidVerificationTokenException:
-      Verification token is expired or invalid`,
-  })
-  @ApiParam({
-    name: 'token',
-    required: true,
-    description: 'A verification token that is generated and sent to the user\'s email address.',
-  })
   @ApiEndpoint({
     summary: 'Verify the user\'s email address during the completion of registration in the system using token',
+    documentation: AuthDocumentation.VERIFY_EMAIL,
   })
   @Post('/register/verifyEmail/:token')
   verifyEmail (
@@ -355,19 +160,9 @@ export class AuthController {
     return this.authService.verifyEmail(token);
   }
 
-  @ApiOkResponse({
-    type: Boolean,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidBodyException:
-      Username is not correct (a-zA-Z0-9_), or too short (min: 2), or too long (max: 40)
-      Username is empty
-      Email is not an email
-      Email is empty`,
-  })
   @ApiEndpoint({
     summary: 'Check whether the user is registered in the system by email and/or username',
+    documentation: AuthDocumentation.VERIFY_EXIST_BY_UNIQUE,
   })
   @Get('/verifyIsRegistered')
   verifyExistsByUnique (
@@ -376,63 +171,37 @@ export class AuthController {
     return this.authService.checkIfUserIsRegistered(query);
   }
 
-  @ApiOkResponse({
-    type: Boolean,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidEntityIdException:
-      Group with such id is not found`,
-  })
-  @ApiParam({
-    name: 'groupId',
-    required: true,
-    description: 'Id of the group for which the check',
-  })
   @ApiEndpoint({
     summary: 'Check if the group has a captain',
+    documentation: AuthDocumentation.CHECK_CAPTAIN,
   })
   @Get('/checkCaptain/:groupId')
   checkCaptain (
     @Param('groupId', GroupByIdPipe) groupId: string,
-  ): Promise<boolean> {
+  ) {
     return this.authService.checkCaptain(groupId);
   }
 
-  @ApiOkResponse({
-    type: IsAvailableResponse,
-  })
-  @ApiParam({
-    name: 'token',
-    required: true,
-    description: 'The reset token to be checked for availability',
-  })
   @ApiEndpoint({
     summary: 'Check if reset token is available',
+    documentation: AuthDocumentation.CHECK_RESET_TOKEN,
   })
   @Get('/checkResetToken/:token')
   async checkResetToken (
     @Param('token') token: string,
-  ): Promise<IsAvailableResponse> {
+  ) {
     const isAvailable = !!(await this.authService.checkResetToken(token));
     return { isAvailable };
   }
 
-  @ApiOkResponse({
-    type: TelegramRegistrationResponse,
-  })
-  @ApiParam({
-    name: 'token',
-    required: true,
-    description: 'The token used to check the Telegram registration status',
-  })
   @ApiEndpoint({
     summary: 'Check telegram registration status by a token',
+    documentation: AuthDocumentation.CHECK_REGISTER_TELEGRAM,
   })
   @Get('/checkRegisterTelegram/:token')
   async checkRegisterTelegram (
     @Param('token') token: string,
-  ): Promise<TelegramRegistrationResponse> {
+  ) {
     const isRegistered = !!(await this.authService.checkTelegram(token));
     return { isRegistered };
   }

@@ -13,20 +13,22 @@ import {
 import Divider from '@/components/common/ui/divider';
 import { DividerTextAlign } from '@/components/common/ui/divider/types';
 import Input from '@/components/common/ui/form/input-mui';
-import useAuthentication from '@/hooks/use-authentication';
-import AuthService from '@/lib/services/auth';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
+import { logout } from '@/lib/api/auth/ServerAuthApi';
 
 import * as styles from './SecurityTab.styles';
 
 const SecurityTab = () => {
   const { replace } = useRouter();
-  const { user, update } = useAuthentication();
-  const handleLogout = async () => {
-    await AuthService.logout();
-    update();
-    window.location.reload();
-    await replace('/login');
-  };
+  const { displayError } = useToastError();
+  const { user } = useAuthentication();
+
+  if (!user) {
+    replace('/');
+    return;
+  }
+
   return (
     <Box sx={styles.wrapper}>
       <Box>
@@ -54,7 +56,14 @@ const SecurityTab = () => {
         variant={ButtonVariant.FILLED}
         color={ButtonColor.SECONDARY}
         size={ButtonSize.MEDIUM}
-        onClick={handleLogout}
+        onClick={async () => {
+          try {
+            await logout();
+            replace('/');
+          } catch (error) {
+            displayError(error);
+          }
+        }}
       />
     </Box>
   );

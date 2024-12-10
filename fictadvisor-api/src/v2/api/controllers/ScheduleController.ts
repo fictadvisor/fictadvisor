@@ -8,11 +8,10 @@ import {
   Patch,
   Post,
   Query,
-  Request,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
-  ApiBearerAuth,
+  ApiCookieAuth,
   ApiForbiddenResponse,
   ApiOkResponse,
   ApiParam,
@@ -22,6 +21,7 @@ import {
 } from '@nestjs/swagger';
 import {
   CreateEventDTO,
+  CreateFacultyEventDTO,
   EventFiltrationDTO,
   GeneralEventFiltrationDTO,
   UpdateEventDTO,
@@ -36,7 +36,7 @@ import {
 } from '@fictadvisor/utils/responses';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import { Access } from '../../security/Access';
-import { ApiEndpoint } from '../../utils/documentation/decorators';
+import { ApiEndpoint, GetUser } from '../../utils/documentation/decorators';
 import { TelegramGuard } from '../../security/TelegramGuard';
 import { GroupByEventGuard } from '../../security/group-guard/GroupByEventGuard';
 import { GroupByIdPipe } from '../pipes/GroupByIdPipe';
@@ -58,7 +58,7 @@ export class ScheduleController {
     private scheduleMapper: ScheduleMapper,
   ) {}
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse()
   @ApiUnauthorizedResponse({
     description: `\n
@@ -145,7 +145,7 @@ export class ScheduleController {
     };
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @Get('/groups/:groupId/day')
   @ApiOkResponse({
     type: TelegramEventsResponse,
@@ -202,7 +202,7 @@ export class ScheduleController {
   }
 
   @Access(PERMISSION.GROUPS_$GROUPID_EVENTS_GET, GroupByEventGuard)
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @Get('/events/:eventId')
   @ApiOkResponse({
     type: EventResponse,
@@ -233,7 +233,7 @@ export class ScheduleController {
     return this.scheduleMapper.getEvent(result.event, result.discipline);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: EventInfoResponse,
   })
@@ -272,7 +272,7 @@ export class ScheduleController {
     return this.scheduleMapper.getEventInfos(result.event);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: EventResponse,
   })
@@ -328,7 +328,55 @@ export class ScheduleController {
     return this.scheduleMapper.getEvent(result.event, result.discipline);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
+  @ApiOkResponse({
+    type: EventsResponse,
+  })
+  @ApiBadRequestResponse({
+    description: `\n
+    InvalidBodyException:
+      Group id cannot be empty
+      Name should be string
+      Name is too short (min: 2)
+      Name is too long (max: 150)
+      Name cannot be empty
+      Start time cannot be empty
+      Start time must be Date
+      End time cannot be empty
+      End Time must be Date
+      Url must be a URL address
+      Event description is too long (max: 2000)
+      Event info should be string
+      
+    InvalidDateException:
+      Date is not valid or does not belong to this semester
+      
+    DataNotFoundException:
+      Data were not found`,
+  })
+  @ApiUnauthorizedResponse({
+    description: `\n
+    UnauthorizedException:
+      Unauthorized`,
+  })
+  @ApiForbiddenResponse({
+    description: `\n
+    NoPermissionException:
+      You do not have permission to perform this action`,
+  })
+  @ApiEndpoint({
+    summary: 'Create a general faculty event',
+    permissions: PERMISSION.FACULTY_EVENTS_CREATE,
+  })
+  @Post('/facultyEvents')
+  async createFacultyEvent (
+      @Body() body: CreateFacultyEventDTO,
+  ) {
+    const events = await this.scheduleService.createFacultyEvent(body);
+    return this.scheduleMapper.getEvents(events);
+  }
+
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: EventsResponse,
   })
@@ -366,13 +414,13 @@ export class ScheduleController {
   })
   @Get('/groups/:groupId/events')
   async getGroupEvents (
-    @Request() req,
+    @GetUser('id') userId: string,
     @Param('groupId', GroupByIdPipe) groupId: string,
     @Query('week') week: number,
     @Query(EventFiltrationPipe) query: EventFiltrationDTO,
   ): Promise<EventsResponse> {
     const result = await this.scheduleService.getGroupEvents(
-      req.user?.id ?? null,
+      userId,
       groupId,
       week,
       query,
@@ -384,7 +432,7 @@ export class ScheduleController {
     };
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: EventResponse,
   })
@@ -428,7 +476,7 @@ export class ScheduleController {
     return this.scheduleMapper.getEvent(result.event, result.discipline);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: EventResponse,
   })
@@ -496,7 +544,7 @@ export class ScheduleController {
     return this.scheduleMapper.getEvent(result.event, result.discipline);
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: FortnightEventsResponse,
   })
@@ -555,7 +603,7 @@ export class ScheduleController {
     };
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: TelegramEventsResponse,
   })
@@ -612,7 +660,7 @@ export class ScheduleController {
     };
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: TelegramEventsResponse,
   })

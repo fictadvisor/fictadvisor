@@ -1,6 +1,7 @@
 'use client';
 
-import { FC, useCallback } from 'react';
+import { FC } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -13,45 +14,44 @@ import { ButtonSize } from '@/components/common/ui/button-mui/types';
 import CustomLink from '@/components/common/ui/custom-link';
 import { CustomLinkType } from '@/components/common/ui/custom-link/types';
 import { Input, InputSize, InputType } from '@/components/common/ui/form';
-import useAuthentication from '@/hooks/use-authentication';
-import AuthService from '@/lib/services/auth';
-import getErrorMessage from '@/lib/utils/getErrorMessage';
+import AuthAPI from '@/lib/api/auth/AuthAPI';
+import { setAuthTokens } from '@/lib/api/auth/ServerAuthApi';
+import { AuthToken } from '@/lib/constants/AuthToken';
+import { getClientCookie } from '@/lib/utils/getClientCookie';
 
+import { getLoginFieldsError } from './utils/getLoginFieldsError';
 import * as sxStyles from './LoginForm.styles';
 
-const LoginForm: FC = () => {
+export const LoginForm: FC = () => {
   const { push } = useRouter();
   const searchParams = useSearchParams();
-  const { update } = useAuthentication();
   const redirect = searchParams?.get('redirect') as string;
+  const queryClient = useQueryClient();
+  const accessToken = getClientCookie(AuthToken.AccessToken);
 
-  const handleSubmit = useCallback(
-    async (
-      data: LoginFormFields,
-      { setErrors }: FormikHelpers<LoginFormFields>,
-    ) => {
-      try {
-        if (data.username.includes('@'))
-          data.username = data.username.toLowerCase();
-        await AuthService.login(data);
-        await update();
-        push(redirect ? redirect.replace('~', '/') : '/');
-      } catch (error: unknown) {
-        const message = getErrorMessage(error);
-        if (message === 'The password is incorrect') {
-          setErrors({
-            password: 'Неправильний пароль',
-          });
-        } else {
-          setErrors({
-            username: 'Користувача з таким паролем та поштою не знайдено',
-            password: 'Користувача з таким паролем та поштою не знайдено',
-          });
-        }
-      }
-    },
-    [push, redirect, update],
-  );
+  if (!!accessToken) {
+    push('/');
+    return null;
+  }
+
+  const handleSubmit = async (
+    data: LoginFormFields,
+    { setErrors }: FormikHelpers<LoginFormFields>,
+  ) => {
+    if (data.username.includes('@'))
+      data.username = data.username.toLowerCase();
+    try {
+      const tokens = await AuthAPI.auth(data);
+      await setAuthTokens(tokens);
+      queryClient.invalidateQueries(
+        { queryKey: ['user'] },
+        { cancelRefetch: true },
+      );
+      push(redirect ? redirect.replace('~', '/') : '/');
+    } catch (error) {
+      setErrors(getLoginFieldsError(error));
+    }
+  };
 
   return (
     <Formik
@@ -60,7 +60,7 @@ const LoginForm: FC = () => {
       validateOnMount
       validationSchema={validationSchema}
     >
-      {({ isValid }) => (
+      {({ isValid, isSubmitting }) => (
         <Form className={styles['form']}>
           <Input
             label="Пошта або юзернейм"
@@ -86,7 +86,8 @@ const LoginForm: FC = () => {
             text="Увійти"
             size={ButtonSize.LARGE}
             type="submit"
-            disabled={!isValid}
+            loadingOnClick
+            disabled={!isValid || isSubmitting}
             sx={sxStyles.loginButton}
           />
         </Form>
@@ -94,5 +95,3 @@ const LoginForm: FC = () => {
     </Formik>
   );
 };
-
-export default LoginForm;

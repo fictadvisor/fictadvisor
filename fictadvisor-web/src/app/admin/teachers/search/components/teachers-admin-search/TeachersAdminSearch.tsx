@@ -1,19 +1,18 @@
 'use client';
 import React, { FC, useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
-import { TeacherRole } from '@fictadvisor/utils/enums';
 import { QueryAllTeacherDTO } from '@fictadvisor/utils/requests';
 import {
   BarsArrowDownIcon,
   BarsArrowUpIcon,
 } from '@heroicons/react/24/outline';
 import { Box, Divider, SelectChangeEvent } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import Button from '@/components/common/ui/button-mui';
 import { ButtonSize } from '@/components/common/ui/button-mui/types';
-import { TagText } from '@/components/common/ui/cards/card-roles/CardRoles';
+import { TagText } from '@/components/common/ui/cards/card-discipline-types/CardDisciplineTypes';
 import { InputSize, InputType } from '@/components/common/ui/form';
 import CheckboxesDropdown from '@/components/common/ui/form/checkboxes-dropdown/CheckboxesDropdown';
 import { CheckboxesDropdownOption } from '@/components/common/ui/form/checkboxes-dropdown/types/CheckboxesDropdown';
@@ -45,15 +44,11 @@ const TeachersAdminSearch: FC<TeachersAdminSearchProps> = ({ onSubmit }) => {
 
   const handleFormSubmit = () => {
     const newCathedrasId = cathedrasId.map(cathedra => cathedra.id) as string[];
-    // Failed Logic!!!
-    const newRoles = roles.map(role => role.id) as TeacherRole[];
-    // as TeacherRole[] temporary kostil!!!
     setValues({
       ...values,
       search,
       order,
       cathedrasId: newCathedrasId,
-      roles: newRoles,
     });
     onSubmit(values);
   };
@@ -62,11 +57,11 @@ const TeachersAdminSearch: FC<TeachersAdminSearchProps> = ({ onSubmit }) => {
     handleFormSubmit();
   }, [search, order, roles, cathedrasId]);
 
-  const { data, isLoading } = useQuery(
-    ['cathedras'],
-    () => CathedraAPI.getAll(),
-    useQueryAdminOptions,
-  );
+  const { data, isLoading } = useQuery({
+    queryKey: ['cathedras'],
+    queryFn: () => CathedraAPI.getAll(),
+    ...useQueryAdminOptions,
+  });
 
   if (isLoading) return <Progress />;
 
@@ -77,7 +72,6 @@ const TeachersAdminSearch: FC<TeachersAdminSearchProps> = ({ onSubmit }) => {
     value: cathedra.name,
     id: cathedra.id,
   }));
-
   const tags = teacherRoles.map(role => ({
     value: TagText[role],
     label: TagText[role],

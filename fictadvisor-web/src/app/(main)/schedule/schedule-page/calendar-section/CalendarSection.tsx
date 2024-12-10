@@ -1,10 +1,9 @@
 import type { FC } from 'react';
-import { useQuery } from 'react-query';
-import { PermissionValuesDTO } from '@fictadvisor/utils/requests';
 import { MappedGroupResponse } from '@fictadvisor/utils/responses';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { Box, Stack } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 
 import { GroupsDropDown } from '@/app/(main)/schedule/schedule-page/calendar-section/components/groups-dropdown/GroupsDropDown';
 import Button from '@/components/common/ui/button-mui/Button';
@@ -12,8 +11,8 @@ import {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
-import useAuthentication from '@/hooks/use-authentication';
-import PermissionService from '@/lib/services/permission/PermissionService';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
+import PermissionApi from '@/lib/api/permission/PermissionApi';
 import { useSchedule } from '@/store/schedule/useSchedule';
 
 import { CheckBoxSection } from './components/checkboxes-section/CheckBoxSection';
@@ -25,22 +24,22 @@ export interface CalendarSectionProps {
 }
 export const CalendarSection: FC<CalendarSectionProps> = ({ groups }) => {
   const { user } = useAuthentication();
-  const groupId = useSchedule(state => state.groupId);
 
-  const permissionValues: PermissionValuesDTO = {
-    groupId: user?.group?.id,
-  };
-
-  const { data } = useQuery(
-    [],
-    () => PermissionService.getPermissionList(user?.id, permissionValues),
-    {
-      retry: false,
-      refetchOnWindowFocus: false,
-    },
-  );
-
-  const showButton = data?.[PERMISSION.GROUPS_$GROUPID_EVENTS_CREATE];
+  const { data: showButton } = useQuery({
+    queryKey: [user?.group?.id],
+    queryFn: () =>
+      PermissionApi.check({
+        permissions: [PERMISSION.GROUPS_$GROUPID_EVENTS_CREATE],
+        values: {
+          groupId: user?.group?.id,
+        },
+      }),
+    retry: false,
+    select: ({ permissions }) =>
+      permissions[PERMISSION.GROUPS_$GROUPID_EVENTS_CREATE],
+    refetchOnWindowFocus: false,
+    enabled: !!user && !!user.group,
+  });
 
   return (
     <Box sx={styles.mainWrapper}>

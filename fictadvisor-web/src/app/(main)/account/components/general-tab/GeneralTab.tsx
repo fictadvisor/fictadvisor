@@ -15,15 +15,13 @@ import {
 } from '@/components/common/ui/button-mui/types';
 import Divider from '@/components/common/ui/divider';
 import { DividerTextAlign } from '@/components/common/ui/divider/types';
-import useAuthentication from '@/hooks/use-authentication';
-import useToast from '@/hooks/use-toast';
-import AuthService from '@/lib/services/auth';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
+import TelegramService from '@/lib/services/telegram/TelegramService';
 import theme from '@/styles/theme';
 
 const GeneralTab: FC = () => {
-  const { user } = useAuthentication();
-  const router = useRouter();
-  const toast = useToast();
+  const { user: userNotNull } = useAuthentication();
+  const user = userNotNull!;
   const isMobile = useMediaQuery(theme.breakpoints.down('desktopSemiMedium'));
   const buttonText = user.telegramId
     ? 'Telegram під’єднано'
@@ -31,7 +29,7 @@ const GeneralTab: FC = () => {
   const [popupOpen, setPopupOpen] = useState(false);
 
   const handleConnectTelegram = () => {
-    void AuthService.redirectToRegisterBot(router);
+    void TelegramService.redirectToRegisterBot();
   };
 
   return (
@@ -46,12 +44,7 @@ const GeneralTab: FC = () => {
         <ContactsBlock />
       </Box>
       <Box sx={stylesMui.avatarAndTelegramInfo}>
-        <Box
-          onClick={() =>
-            toast.warning('Зміна фото профілю тимчасово недоступно')
-          }
-          sx={stylesMui.avatar}
-        >
+        <Box onClick={() => setPopupOpen(true)} sx={stylesMui.avatar}>
           <Avatar src={user.avatar} alt="Фото профілю" sx={stylesMui.avatar} />
           <Box>
             <PencilIcon />

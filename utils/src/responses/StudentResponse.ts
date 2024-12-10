@@ -2,8 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { UserResponse } from './UserResponse';
 import { ExtendedGroupResponse, GroupResponse, FullGroupResponse } from './GroupResponse';
 import { RoleWithStudentResponse } from './RoleWithStudentResponse';
-import { State } from '../enums/db/StateEnum';
-import { GroupRoles } from '../enums/other/GroupRolesEnum';
+import { State, GroupRoles } from '../enums';
 import { PaginationDataResponse } from './PaginationDataResponse';
 
 export class BaseStudentResponse {
@@ -62,22 +61,7 @@ export class SimpleStudentsResponse {
     pagination: PaginationDataResponse;
 }
 
-export class FullStudentResponse {
-  @ApiProperty({
-    description: 'Student\'s firstName',
-  })
-    firstName: string;
-
-  @ApiProperty({
-    description: 'Student\'s middleName',
-  })
-    middleName: string;
-
-  @ApiProperty({
-    description: 'Student\'s lastName',
-  })
-    lastName: string;
-
+export class FullStudentResponse extends BaseStudentResponse {
   @ApiProperty({
     type: UserResponse,
     description: 'User data',
@@ -92,15 +76,9 @@ export class FullStudentResponse {
 
   @ApiProperty({
     type: [RoleWithStudentResponse],
-    description: 'Student roles',
+    description: 'Student\'s roles',
   })
     roles: RoleWithStudentResponse[];
-
-  @ApiProperty({
-    enum: State,
-    description: 'Student\'s state',
-  })
-    state: State;
 }
 
 export class OrdinaryStudentResponse extends BaseStudentResponse {
@@ -137,12 +115,4 @@ export class StudentsResponse {
     description: 'List of student\'s data',
   })
     students: OrdinaryStudentResponse[];
-}
-
-export class FullStudentsResponse {
-  @ApiProperty({
-    type: [FullStudentResponse],
-    description: 'List of student\'s data',
-  })
-    students: FullStudentResponse[];
 }

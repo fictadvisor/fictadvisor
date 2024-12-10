@@ -13,13 +13,11 @@ import {
 } from '@fictadvisor/utils/responses';
 
 import { client } from '@/lib/api/instance';
-import { getAuthorizationHeader } from '@/lib/api/utils';
 
 class StudentAPI {
   async getAll(params: QueryAllStudentDTO): Promise<SimpleStudentsResponse> {
     const { data } = await client.get<SimpleStudentsResponse>(`/students`, {
       params,
-      ...getAuthorizationHeader(),
     });
     return data;
   }
@@ -27,25 +25,17 @@ class StudentAPI {
   async getStudent(studentId: string): Promise<SimpleStudentResponse> {
     const { data } = await client.get<SimpleStudentResponse>(
       `/students/${studentId}`,
-      getAuthorizationHeader(),
     );
     return data;
   }
 
   async delete(studentId: string) {
-    const { data } = await client.delete(
-      `/students/${studentId}`,
-      getAuthorizationHeader(),
-    );
+    const { data } = await client.delete(`/students/${studentId}`);
     return data;
   }
 
   async create(body: CreateStudentWithRolesDTO) {
-    const { data } = await client.post<FullStudentResponse>(
-      `/students`,
-      body,
-      getAuthorizationHeader(),
-    );
+    const { data } = await client.post<FullStudentResponse>(`/students`, body);
     return data;
   }
 
@@ -53,7 +43,6 @@ class StudentAPI {
     const { data } = await client.patch<FullStudentResponse>(
       `/students/${studentId}`,
       body,
-      getAuthorizationHeader(),
     );
     return data;
   }
@@ -62,7 +51,6 @@ class StudentAPI {
     const { data } = await client.patch<FullStudentResponse>(
       `/students/${studentId}/selectiveDisciplines`,
       body,
-      getAuthorizationHeader(),
     );
     return data;
   }
@@ -72,7 +60,6 @@ class StudentAPI {
   ): Promise<SelectiveDisciplinesResponse[]> {
     const { data } = await client.get<SelectiveDisciplinesResponse[]>(
       `/students/${studentId}/selectiveDisciplines`,
-      getAuthorizationHeader(),
     );
     return data;
   }
@@ -82,7 +69,6 @@ class StudentAPI {
   ): Promise<RemainingSelectivesResponse[]> {
     const { data } = await client.get<RemainingSelectivesResponse[]>(
       `/students/${studentId}/remainingSelectives`,
-      getAuthorizationHeader(),
     );
     return data;
   }

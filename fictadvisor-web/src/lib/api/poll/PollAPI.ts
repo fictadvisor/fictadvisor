@@ -7,15 +7,12 @@ import {
   PollDisciplineTeachersResponse,
 } from '@fictadvisor/utils/responses';
 
-import { getAuthorizationHeader } from '@/lib/api/utils';
-
 import { client } from '../instance';
 
 class PollAPI {
   async getTeacherQuestions(disciplineTeacherId: string) {
     const { data } = await client.get<DisciplineTeacherQuestionsResponse>(
       `/disciplineTeachers/${disciplineTeacherId}/questions`,
-      getAuthorizationHeader(),
     );
     return data;
   }
@@ -27,7 +24,6 @@ class PollAPI {
     await client.post(
       `/disciplineTeachers/${disciplineTeacherId}/answers`,
       body,
-      getAuthorizationHeader(),
     );
   }
 
@@ -39,7 +35,6 @@ class PollAPI {
       `/poll/teachers/${userId}`,
       {
         params,
-        ...getAuthorizationHeader(),
       },
     );
     return data;

@@ -1,6 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { MappedGrant } from './GrantResponse';
-import { RoleName } from '../enums/db/RoleNameEnum';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { GrantResponse } from './GrantResponse';
+import { RoleName } from '../enums';
 
 export class BaseRoleResponse {
   @ApiProperty({
@@ -25,10 +25,17 @@ export class BaseRoleResponse {
     displayName: string;
 }
 
+export class BaseRoleWithParentResponse extends BaseRoleResponse {
+  @ApiPropertyOptional({
+    description: 'Id of parent role',
+  })
+    parentId?: string;
+}
+
 export class RoleResponse extends BaseRoleResponse {
   @ApiProperty({
     description: 'An array of permissions granted to a role',
-    type: [MappedGrant],
+    type: [GrantResponse],
   })
-    grants: MappedGrant[];
+    grants: GrantResponse[];
 }

@@ -2,8 +2,8 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsArray, IsDate, IsEnum, IsNotEmpty, IsOptional, IsUrl, IsUUID, MaxLength, MinLength } from 'class-validator';
 import { Type } from 'class-transformer';
 import { validationOptionsMsg } from '../ValidationUtil';
-import { Period } from '../enums/db/PeriodEnum';
-import { EventTypeEnum } from '../enums/other/EventTypeEnum';
+import { Period } from '../enums';
+import { EventTypeEnum } from '../enums';
 
 export class CreateEventDTO {
   @ApiProperty({

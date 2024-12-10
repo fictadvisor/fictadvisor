@@ -16,7 +16,7 @@ import {
 } from '@/components/common/ui/button-mui/types';
 import { Input, InputSize } from '@/components/common/ui/form';
 import FormikDropdown from '@/components/common/ui/form/with-formik/dropdown';
-import useAuthentication from '@/hooks/use-authentication';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import UserAPI from '@/lib/api/user/UserAPI';
@@ -27,7 +27,8 @@ interface ContactFormProps {
 }
 
 const ContactForm: FC<ContactFormProps> = ({ refetchContacts }) => {
-  const { user } = useAuthentication();
+  const { user: userNotNull } = useAuthentication();
+  const user = userNotNull!;
   const toast = useToast();
   const { displayError } = useToastError();
   const options = Object.values(ContactType).map(contact => ({

@@ -1,51 +1,70 @@
 import { Injectable } from '@nestjs/common';
-import { Express } from 'express';
 import { createHash } from 'crypto';
-import { join, extname, resolve as pathResolve } from 'path';
-import { resolve } from 'url';
+import { join, extname } from 'path';
 import PizZip from 'pizzip';
 import Docxtemplater from 'docxtemplater';
-import * as fs from 'fs';
+import * as admin from 'firebase-admin';
 import * as process from 'process';
-import { v4 } from 'uuid';
 import { find } from '../ArrayUtil';
 import { StudentWithContactsData } from '../../api/datas/StudentWithContactsData';
 import { MINUTE } from '../date/DateService';
+import { Bucket } from '@google-cloud/storage';
 
 @Injectable()
 export class FileService {
-  async saveByHash (file: Express.Multer.File, directory: string) {
-    const fileName = createHash('md5').update(file.buffer).digest('hex');
-    const filePath = join(pathResolve(), 'static', directory, fileName + extname(file.originalname));
+  private storage: Bucket;
 
-    await fs.promises.writeFile(filePath, file.buffer);
+  constructor () {
+    admin.initializeApp({
+      credential: admin.credential.cert(process.env.GOOGLE_APPLICATION_CREDENTIALS),
+      storageBucket: process.env.BUCKET_NAME,
+    });
+    this.storage = admin.storage().bucket();
+  }
 
-    return resolve(process.env.BASE_URL, join(directory, fileName + extname(file.originalname)));
+  async saveByHash (fileContent: Express.Multer.File, directory: string): Promise<string> {
+    const fileName = createHash('md5').update(fileContent.buffer).digest('hex');
+    const filePath = join('static', directory, fileName + extname(fileContent.originalname));
+
+    const file = this.storage.file(filePath);
+    await file.save(fileContent.buffer);
+
+    const [url] = await file.getSignedUrl({
+      action: 'read',
+      expires: '01-01-2222',
+    });
+    return url;
+  }
+
+  private formatLink (path: string): string {
+    return path.replaceAll('\\', '/');
   }
 
   getPathFromLink (link: string): string {
     const url = new URL(link);
-    return url.pathname;
+    const pathParts = url.pathname.split('/').slice(2);
+    return pathParts.join('/');
   }
 
-  checkFileExist (path: string, isPrivate = true): boolean {
-    const filePath = join(pathResolve(), isPrivate ? 'private' : 'static', path);
-    return fs.existsSync(filePath);
+  async checkFileExist (path: string): Promise<boolean> {
+    const [result] = await this.storage.file(path).exists();
+    return result;
   }
 
-  async deleteFile (path: string, isPrivate = true) {
-    const filePath = join(pathResolve(), isPrivate ? 'private' : 'static', path);
-    await fs.promises.unlink(filePath);
+  async deleteFile (path: string): Promise<void> {
+    await this.storage.file(path).delete();
   }
 
-  getFileContent (path: string, isPrivate = true) {
-    const filePath = join(pathResolve(), isPrivate ? 'private' : 'static', path);
-    return fs.readFileSync(filePath, 'utf-8');
+  async getFileContent (path: string, isPrivate = true, encoding: BufferEncoding = 'utf-8') {
+    const filePath = this.formatLink(join(isPrivate ? 'private' : 'static', path));
+    const [file] = await this.storage.file(filePath).download();
+
+    return file.toString(encoding);
   }
 
-  fillTemplate (fileName: string, data: object) {
-    const path = join(pathResolve(), 'private/templates', fileName);
-    const zip = new PizZip(fs.readFileSync(path, 'binary'));
+  async fillTemplate (fileName: string, data: object): Promise<Buffer> {
+    const file = await this.getFileContent(`templates/${fileName}`, true, 'binary');
+    const zip = new PizZip(file);
 
     const doc = new Docxtemplater(zip, {
       paragraphLoop: true,
@@ -60,9 +79,21 @@ export class FileService {
     });
   }
 
-  generateGroupList (students: StudentWithContactsData[]) {
-    const fileName = `${v4()}.csv`;
-    const path = join(pathResolve(), 'static', 'lists', fileName);
+  async generateGroupList (students: StudentWithContactsData[], groupId: string): Promise<string> {
+    const fileName = `${groupId}.csv`;
+    const path = join('static', 'lists', fileName);
+
+    const timeout = MINUTE * 15;
+
+    const file = this.storage.file(path);
+    if (await this.checkFileExist(path)) {
+      const [url] = await file.getSignedUrl({
+        action: 'read',
+        expires: Date.now() + timeout,
+      });
+
+      return url;
+    }
 
     let result = 'lastName,firstName,middleName,email,telegram,github,instagram,facebook,twitter,discord,youtube,mail';
     for (const student of students) {
@@ -78,10 +109,15 @@ export class FileService {
 
       result += `\n${student.lastName},${student.firstName},${student.middleName},${student.email},${contacts}`;
     }
-    fs.writeFileSync(path, result);
+    await file.save(result);
 
-    setTimeout(() => fs.unlinkSync(path), 15*MINUTE);
+    setTimeout(async () => this.storage.file(path).delete(), timeout);
 
-    return resolve(process.env.BASE_URL, join('lists', fileName));
+    const [url] = await file.getSignedUrl({
+      action: 'read',
+      expires: Date.now() + timeout,
+    });
+
+    return url;
   }
 }

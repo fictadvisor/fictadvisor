@@ -34,7 +34,7 @@ export class StudentRepository {
     private prisma: PrismaService,
   ) {}
 
-  async create (data: Prisma.StudentUncheckedCreateInput) {
+  async create (data: Prisma.StudentUncheckedCreateInput): Promise<DbStudent> {
     return this.prisma.student.create({
       data,
       include: this.include,
@@ -56,10 +56,10 @@ export class StudentRepository {
     return this.prisma.student.findMany({
       ...args,
       include: this.include,
-    }) as unknown as DbStudent[];
+    }) as any as DbStudent[];
   }
 
-  async updateById (userId: string, data: Prisma.StudentUncheckedUpdateInput) {
+  async updateById (userId: string, data: Prisma.StudentUncheckedUpdateInput): Promise<DbStudent> {
     return this.prisma.student.update({
       where: { userId },
       data,
@@ -67,29 +67,29 @@ export class StudentRepository {
     }) as any as DbStudent;
   }
 
-  async updateMany (where: Prisma.StudentWhereInput, data: Prisma.StudentUncheckedUpdateManyInput) {
+  async updateMany (where: Prisma.StudentWhereInput, data: Prisma.StudentUncheckedUpdateManyInput): Promise<DbStudent[]> {
     return this.prisma.student.updateMany({
       where,
       data,
     }) as any as DbStudent[];
   }
 
-  async delete (args: Prisma.StudentDeleteArgs) {
-    await this.prisma.student.delete({
+  async delete (args: Prisma.StudentDeleteArgs): Promise<DbStudent> {
+    return this.prisma.student.delete({
       ...args,
       include: this.include,
-    });
+    }) as any as DbStudent;
   }
 
-  async deleteById (userId: string) {
-    await this.delete({
+  async deleteById (userId: string): Promise<DbStudent> {
+    return this.delete({
       where: {
         userId,
       },
     });
   }
 
-  async count (data: Prisma.StudentCountArgs) {
+  async count (data: Prisma.StudentCountArgs): Promise<number> {
     return this.prisma.student.count(data);
   }
 }

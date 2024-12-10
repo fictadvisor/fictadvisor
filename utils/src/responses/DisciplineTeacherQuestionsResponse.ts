@@ -27,7 +27,7 @@ export class DisciplineTeacherQuestionsResponse {
     description: 'The teacher to whom the question belongs',
   })
     teacher: TeacherResponse;
-  
+
   @ApiProperty({
     description: 'The subject of the teacher',
     type: SubjectResponse,

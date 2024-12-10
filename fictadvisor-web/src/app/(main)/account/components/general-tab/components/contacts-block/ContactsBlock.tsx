@@ -1,8 +1,8 @@
 import React, { FC, useState } from 'react';
-import { useQuery } from 'react-query';
 import { ContactResponse } from '@fictadvisor/utils/responses';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { Box, useMediaQuery } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 
 import ContactForm from '@/app/(main)/account/components/general-tab/components/contacts-block/components/ContactForm';
 import ContactItem from '@/app/(main)/account/components/general-tab/components/contacts-block/components/ContactItem';
@@ -11,7 +11,7 @@ import {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
-import useAuthentication from '@/hooks/use-authentication';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 import UserAPI from '@/lib/api/user/UserAPI';
 import theme from '@/styles/theme';
 
@@ -19,14 +19,15 @@ import * as styles from './ContactsBlock.styles';
 
 const ContactsBlock: FC = () => {
   const [isOpened, setIsOpened] = useState(false);
-  const { user } = useAuthentication();
+  const { user: userNotNull } = useAuthentication();
+  const user = userNotNull!;
   const isMobile = useMediaQuery(theme.breakpoints.down('desktopSemiMedium'));
 
-  const { data, refetch } = useQuery(
-    'contacts',
-    () => UserAPI.getContacts(user.id),
-    { refetchOnWindowFocus: false },
-  );
+  const { data, refetch } = useQuery({
+    queryKey: ['contacts', user.id],
+    queryFn: () => UserAPI.getContacts(user.id),
+    refetchOnWindowFocus: false,
+  });
   const contacts = data?.contacts || [];
   const handleClick = () => setIsOpened(!isOpened);
 

@@ -1,8 +1,8 @@
 'use client';
 import React, { FC, useState } from 'react';
-import { useQuery } from 'react-query';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Box, CardHeader, Stack, Switch, Typography } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
@@ -34,11 +34,11 @@ const AdminGrantsEdit: FC<AdminGrantsEditProps> = ({ params }) => {
     data: grant,
     isSuccess,
     isLoading,
-  } = useQuery(
-    ['getGrantById', params.roleId, params.grantId],
-    () => GrantsAPI.getByGrantId(params.roleId, params.grantId),
-    useQueryAdminOptions,
-  );
+  } = useQuery({
+    queryKey: ['getGrantById', params.roleId, params.grantId],
+    queryFn: () => GrantsAPI.getByGrantId(params.roleId, params.grantId),
+    ...useQueryAdminOptions,
+  });
 
   if (!isSuccess)
     throw new Error(

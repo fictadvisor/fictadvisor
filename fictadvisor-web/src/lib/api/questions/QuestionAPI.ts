@@ -5,13 +5,10 @@ import {
 } from '@fictadvisor/utils/requests';
 import {
   PaginatedQuestionsResponse,
-  QuestionResponse,
-  QuestionWithRolesResponse,
+  QuestionWithCategoryResponse,
 } from '@fictadvisor/utils/responses';
 
 import { client } from '../instance';
-import { getAuthorizationHeader } from '../utils';
-
 class QuestionAPI {
   async getPageQuestions(params: QueryAllQuestionDTO = {}) {
     const { data } = await client.get<PaginatedQuestionsResponse>(
@@ -24,34 +21,31 @@ class QuestionAPI {
   }
 
   async addQuestion(body: CreateQuestionDTO) {
-    const { data } = await client.post<QuestionResponse>(
+    const { data } = await client.post<QuestionWithCategoryResponse>(
       '/poll/questions',
       body,
-      getAuthorizationHeader(),
     );
     return data;
   }
 
   async getQuestion(questionId: string) {
-    const { data } = await client.get<QuestionWithRolesResponse>(
+    const { data } = await client.get<QuestionWithCategoryResponse>(
       `/poll/questions/${questionId}`,
     );
     return data;
   }
 
   async updateQuestion(questionId: string, body: UpdateQuestionDTO) {
-    const { data } = await client.patch<QuestionResponse>(
+    const { data } = await client.patch<QuestionWithCategoryResponse>(
       `/poll/questions/${questionId}`,
       body,
-      getAuthorizationHeader(),
     );
     return data;
   }
 
   async deleteQuestion(questionId: string) {
-    const { data } = await client.delete<QuestionResponse>(
+    const { data } = await client.delete<QuestionWithCategoryResponse>(
       `/poll/questions/${questionId}`,
-      getAuthorizationHeader(),
     );
     return data;
   }

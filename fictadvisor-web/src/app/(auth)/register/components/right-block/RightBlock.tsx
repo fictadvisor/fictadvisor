@@ -11,7 +11,7 @@ import * as stylesMUI from './RightBlock.styles';
 
 import styles from './RightBlock.module.scss';
 
-const RightBlock = () => {
+export const RightBlock = () => {
   const router = useRouter();
 
   return (
@@ -39,5 +39,3 @@ const RightBlock = () => {
     </Box>
   );
 };
-
-export default RightBlock;

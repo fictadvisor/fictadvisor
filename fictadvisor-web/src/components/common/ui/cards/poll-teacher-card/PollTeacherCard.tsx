@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { TeacherRole } from '@fictadvisor/utils/enums';
+import { DisciplineTypeEnum } from '@fictadvisor/utils/enums';
 import { CathedraResponse } from '@fictadvisor/utils/responses';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import cn from 'classnames';
@@ -11,7 +11,6 @@ import {
   ButtonSize,
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
-import { CardRoles } from '@/components/common/ui/cards/card-roles';
 import styles from '@/components/common/ui/cards/poll-teacher-card/PollTeacherCard.module.scss';
 import { DivProps } from '@/components/common/ui/cards/types';
 import IconButton from '@/components/common/ui/icon-button-mui';
@@ -19,6 +18,7 @@ import Tooltip from '@/components/common/ui/tooltip';
 import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
 
 import { IconButtonColor } from '../../icon-button-mui/types';
+import { CardDisciplineTypes } from '../card-discipline-types/CardDisciplineTypes';
 
 import * as sxStyles from './pollTeachaerCard.styles';
 import { SkipTeacherPopup } from './SkipTeacherPopup';
@@ -27,7 +27,7 @@ type PollTeacherCardProps = {
   id: string;
   name: string;
   description: string;
-  roles?: TeacherRole[];
+  disciplineTypes?: DisciplineTypeEnum[];
   avatar?: string;
   disabled?: boolean;
   href?: string;
@@ -38,7 +38,7 @@ export const PollTeacherCard: FC<PollTeacherCardProps> = ({
   id,
   name,
   description,
-  roles = [],
+  disciplineTypes = [],
   avatar,
   disabled,
   cathedras,
@@ -79,8 +79,8 @@ export const PollTeacherCard: FC<PollTeacherCardProps> = ({
               src={avatar}
               alt="викладач"
             />
-            <CardRoles
-              roles={roles}
+            <CardDisciplineTypes
+              disciplineTypes={disciplineTypes}
               className={styles['poll-teacher-card-roles']}
               cathedras={cathedras}
             />

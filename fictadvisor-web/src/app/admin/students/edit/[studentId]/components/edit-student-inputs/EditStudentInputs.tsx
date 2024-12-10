@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
-import { useQuery } from 'react-query';
 import { Box } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 
 import { StudentRoleOptions } from '@/app/admin/students/common/constants';
 import { transformGroupsDefault } from '@/app/admin/students/common/utils/transformToOptions';
@@ -12,8 +12,10 @@ import GroupAPI from '@/lib/api/group/GroupAPI';
 import * as styles from './EditStudentInputs.styles';
 
 const EditStudentInputs: FC = () => {
-  const { data: dataGroups } = useQuery('groups', () => GroupAPI.getAll(), {
-    keepPreviousData: true,
+  const { data: dataGroups } = useQuery({
+    queryKey: ['groups'],
+    queryFn: () => GroupAPI.getAll(),
+    placeholderData: (previousData, previousQuery) => previousData,
     refetchOnWindowFocus: false,
   });
 

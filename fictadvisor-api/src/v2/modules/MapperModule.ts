@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { DisciplineMapper } from '../mappers/DisciplineMapper';
 import { DisciplineTeacherMapper } from '../mappers/DisciplineTeacherMapper';
-import { GrantMapper } from '../mappers/GrantMapper';
 import { QuestionMapper } from '../mappers/QuestionMapper';
 import { RoleMapper } from '../mappers/RoleMapper';
 import { StudentMapper } from '../mappers/StudentMapper';
@@ -20,7 +19,6 @@ import { ResourceMapper } from '../mappers/ResourceMapper';
     DisciplineMapper,
     DisciplineTeacherMapper,
     EntrantMapper,
-    GrantMapper,
     QuestionMapper,
     RoleMapper,
     StudentMapper,
@@ -37,7 +35,6 @@ import { ResourceMapper } from '../mappers/ResourceMapper';
     DisciplineMapper,
     DisciplineTeacherMapper,
     EntrantMapper,
-    GrantMapper,
     QuestionMapper,
     RoleMapper,
     StudentMapper,

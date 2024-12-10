@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import axios, { AxiosInstance } from 'axios';
+import { HttpException, Injectable } from '@nestjs/common';
+import axios, { AxiosError, AxiosInstance } from 'axios';
 import {
   VerifyStudentDTO,
   VerifyCaptainDTO,
@@ -21,6 +21,12 @@ export class TelegramAPI {
         Authorization: `Bearer ${this.telegramConfig.botToken}`,
       },
     });
+    this.client.interceptors.response.use(
+      (res) => res,
+      (error: AxiosError) => {
+        throw new HttpException(error.response.statusText, error.response.status);
+      }
+    );
   }
 
   async verifyStudent (data:VerifyStudentDTO) {
@@ -39,12 +45,13 @@ export class TelegramAPI {
     await this.client.post('/responses/broadcastPending', data);
   }
 
-  async sendMessage (text: string) {
+  async sendMessage (text: string, chatId: string) {
     await this.client.post('/broadcast/sendMessage', {
       text,
     }, {
       params: {
         parse_mode: 'HTML',
+        id: chatId,
       },
     });
   }

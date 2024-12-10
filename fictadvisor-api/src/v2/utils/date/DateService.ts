@@ -17,10 +17,12 @@ export interface CurrentSemester {
   endDate: Date,
   isFinished: boolean,
 }
+
 export interface StudyingSemester {
   year: number,
   semester: number,
 }
+
 export interface CurrentDay {
   fortnight: number,
   week: number,
@@ -92,10 +94,10 @@ export class DateService {
     return Array.from(set);
   }
 
-  async getPreviousSemesters (isLastFinished?: boolean) {
+  async getPreviousSemesters (isLastFinished: boolean) {
     const { semesters, isFinished } = await this.getAllPreviousSemesters();
-    if (isFinished === isLastFinished || isLastFinished === undefined) return semesters;
-    return semesters.slice(1);
+    if (isFinished === isLastFinished || isFinished) return { semesters };
+    return { semesters: semesters.slice(1) };
   }
 
   async getDateVar (name: string): Promise<Date> {
@@ -108,7 +110,7 @@ export class DateService {
   }
 
   async getCurrentDay (): Promise<CurrentDay> {
-    const { startDate }  = await this.getCurrentSemester();
+    const { startDate } = await this.getCurrentSemester();
 
     const difference = new Date().getTime() - startDate.getTime();
     const fortnight = Math.ceil(difference / FORTNITE);
@@ -170,8 +172,8 @@ export class DateService {
   }
 
   isPreviousSemester (curSem: CurrentSemester, compSem: StudyingSemester) {
-    const cur = curSem.year + (curSem.semester - 1)/2;
-    const comp = compSem.year + (compSem.semester - 1)/2;
+    const cur = curSem.year + (curSem.semester - 1) / 2;
+    const comp = compSem.year + (compSem.semester - 1) / 2;
     return curSem.isFinished ? comp <= cur : comp < cur;
   }
 
@@ -199,11 +201,11 @@ export class DateService {
 
   async getEventTime (pairTime: string, startOfSemester: Date, week: number, day: number) {
     const [hours, minutes] = pairTime
-      .split('.')
+      .split(':')
       .map((number) => +number);
     const minutesAfterHour = 35;
-    const startOfEvent = new Date(startOfSemester.getTime()+week*WEEK+(day-1)*DAY+hours*HOUR+minutes*MINUTE);
-    const endOfEvent = new Date(startOfEvent.getTime()+HOUR+minutesAfterHour*MINUTE);
+    const startOfEvent = new Date(startOfSemester.getTime() + week * WEEK + (day - 1) * DAY + hours * HOUR + minutes * MINUTE);
+    const endOfEvent = new Date(startOfEvent.getTime() + HOUR + minutesAfterHour * MINUTE);
 
     return { startOfEvent, endOfEvent };
   }
@@ -211,7 +213,7 @@ export class DateService {
   getEventTimeRozKpi (startOfSemester: Date, week: number, day: number, time: string) {
     const [startHours, startMinutes] = time.split(':').map((s) => parseInt(s));
     const minutesAfterHour = 35;
-    const startOfEvent = new Date(startOfSemester.getTime()+ week * WEEK + (day - 1) * DAY + startHours * HOUR + startMinutes * MINUTE);
+    const startOfEvent = new Date(startOfSemester.getTime() + week * WEEK + (day - 1) * DAY + startHours * HOUR + startMinutes * MINUTE);
     const endOfEvent = new Date(startOfEvent.getTime() + HOUR + minutesAfterHour * MINUTE);
     return { startOfEvent, endOfEvent };
   }

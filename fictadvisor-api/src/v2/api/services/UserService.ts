@@ -42,6 +42,7 @@ import { ExcessiveSelectiveDisciplinesException } from '../../utils/exceptions/E
 import { AlreadySelectedException } from '../../utils/exceptions/AlreadySelectedException';
 import { DuplicateTelegramIdException } from '../../utils/exceptions/DuplicateTelegramIdException';
 import { NotSelectedDisciplineException } from '../../utils/exceptions/NotSelectedDisciplineException';
+import { AlreadySentGroupRequestException } from '../../utils/exceptions/AlreadySentGroupRequestException';
 import { EntityType, Prisma, RoleName, State } from '@prisma/client';
 
 type SortedDisciplines = {
@@ -93,7 +94,7 @@ export class UserService {
         },
       },
     });
-    return this.disciplineMapper.getSelectivesWithAmount(selectiveByUser, selectiveAmounts);
+    return this.disciplineMapper.getSelectivesBySemesters(selectiveByUser, selectiveAmounts);
   }
 
   async giveRole (studentId: string, roleId: string) {
@@ -263,11 +264,17 @@ export class UserService {
 
   async requestNewGroup (id: string, { groupId, isCaptain }: GroupRequestDTO) {
     const student = await this.studentRepository.findById(id);
-    if (student.state === State.APPROVED) {
-      throw new ForbiddenException();
+
+    switch (student.state) {
+      case State.APPROVED: {
+        throw new ForbiddenException();
+      }
+      case State.PENDING: {
+        throw new AlreadySentGroupRequestException();
+      }
     }
 
-    const captain = await this.groupService.getCaptain(groupId);
+    const captain = await this.groupService.findCaptain(groupId);
 
     if (captain && isCaptain) {
       throw new AlreadyRegisteredException();
@@ -330,7 +337,7 @@ export class UserService {
 
   async getUser (userId: string) {
     const student = await this.studentRepository.findById(userId);
-    if (student) return this.studentMapper.getStudent(student);
+    if (student) return this.studentMapper.getOrdinaryStudent(student);
   }
 
   async getSimplifiedUser (userId: string) {
@@ -365,7 +372,7 @@ export class UserService {
 
     if (state === State.APPROVED) {
       if (isCaptain) {
-        const captain = await this.groupService.getCaptain(user.student.group.id);
+        const captain = await this.groupService.findCaptain(user.student.group.id);
 
         if (captain) {
           throw new AlreadyRegisteredException();
@@ -374,9 +381,6 @@ export class UserService {
       await this.addGroupRole(userId, isCaptain);
       await this.putSelective(userId);
     }
-
-    const { group: { code }, firstName, lastName } = user.student;
-    await this.telegramAPI.sendMessage(`verifyStudent: group: ${code}; fullName: ${firstName} ${lastName}; isCaptain: ${isCaptain};`);
 
     return this.updateStudent(userId, { state });
   }
@@ -387,9 +391,10 @@ export class UserService {
     const years = await this.dateService.getYears();
     const missingDisciplines = [];
     for (const year of years) {
-      const selectiveFile = this.fileService.getFileContent(`selective/${year}.csv`);
-      for (const parsedRow of selectiveFile.split(/\r\n/g)) {
-        const [,, subjectName,, semester,,,,, studentName] = parsedRow.split(';');
+      const selectiveFile = await this.fileService.getFileContent(`selective/${year}.csv`);
+      selectiveFile.replaceAll(';', ',');
+      for (const parsedRow of selectiveFile.split('\n')) {
+        const [, , subjectName, , semester, , , , , studentName] = parsedRow.split(',');
         if (!studentName?.startsWith(name)) continue;
         const discipline = await this.disciplineRepository.find({
           group: {
@@ -425,16 +430,15 @@ export class UserService {
         });
       }
     }
-    if (missingDisciplines.length) {
-      await this.telegramAPI.sendMessage(`There are missing disciplines for <b>${name}</b> in group <b>${code}</b>:\n  ${missingDisciplines.join('\n  ')}`);
-    }
   }
 
   async updateAvatar (file: Express.Multer.File, userId: string) {
     const { avatar } = await this.userRepository.findById(userId);
-    const oldPath = this.fileService.getPathFromLink(avatar);
 
-    await this.deleteAvatarIfNotUsed(avatar, oldPath);
+    if (avatar.includes('storage.googleapis.com')) {
+      const oldPath = this.fileService.getPathFromLink(avatar);
+      await this.deleteAvatarIfNotUsed(avatar, oldPath);
+    }
 
     const path = await this.fileService.saveByHash(file, 'avatars');
 
@@ -445,9 +449,11 @@ export class UserService {
 
   async deleteAvatar (userId: string) {
     const { avatar } = await this.userRepository.findById(userId);
-    const oldPath = this.fileService.getPathFromLink(avatar);
 
-    await this.deleteAvatarIfNotUsed(avatar, oldPath);
+    if (avatar.includes('storage.googleapis.com')) {
+      const oldPath = this.fileService.getPathFromLink(avatar);
+      await this.deleteAvatarIfNotUsed(avatar, oldPath);
+    }
 
     return this.userRepository.updateById(userId, {
       avatar: AVATARS[Math.floor(Math.random() * AVATARS.length)],
@@ -455,11 +461,11 @@ export class UserService {
   }
 
   private async deleteAvatarIfNotUsed (avatar: string, oldPath: string) {
-    const exist = this.fileService.checkFileExist(oldPath, false);
+    const exist = await this.fileService.checkFileExist(oldPath);
     if (exist) {
       const users = await this.userRepository.findMany({ where: { avatar } });
       if (users.length === 1) {
-        await this.fileService.deleteFile(oldPath, false);
+        await this.fileService.deleteFile(oldPath);
       }
     }
   }
@@ -474,6 +480,7 @@ export class UserService {
     const result = remainingSelectives.find(({ year, semester }) => year === query.year && semester === query.semester);
     return result.availableSelectiveAmount > 0 ? result : {};
   }
+
   async getRemainingSelectives (userId: string): Promise<RemainingSelectivesResponse[]> {
     const user = await this.getUser(userId);
     const group = await this.groupService.get(user.group.id);
@@ -496,7 +503,10 @@ export class UserService {
     semesters.forEach((s) => {
       const semesterAmount = group.selectiveAmounts.find((x) => x.semester === s.semester && x.year === s.year);
 
-      const userSemesterSelectives = selective.filter(({ year, semester }) => year === s.year && semester === s.semester);
+      const userSemesterSelectives = selective.filter(({
+        year,
+        semester,
+      }) => year === s.year && semester === s.semester);
       const availableSelectiveAmount = semesterAmount.amount - userSemesterSelectives.length;
 
       const remainingSelectives = disciplines
@@ -583,7 +593,7 @@ export class UserService {
 
   private checkNotSelectedDisciplines (disciplineIds: string[], selectedDisciplineIds: string[]) {
     const hasNotSelectedDisciplines = disciplineIds.some(
-      (disciplineId) => !selectedDisciplineIds.includes(disciplineId)
+      (disciplineId) => !selectedDisciplineIds.includes(disciplineId),
     );
 
     if (hasNotSelectedDisciplines) {

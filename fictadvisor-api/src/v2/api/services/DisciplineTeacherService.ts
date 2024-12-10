@@ -7,7 +7,7 @@ import {
   QuerySemesterDTO,
 } from '@fictadvisor/utils/requests';
 import { DisciplineTeacherQuestionsResponse } from '@fictadvisor/utils/responses';
-import { CommentsSortBy, DisciplineTypeEnum, TeacherRole } from '@fictadvisor/utils/enums';
+import { CommentsSortBy, DisciplineTypeEnum } from '@fictadvisor/utils/enums';
 import { TelegramAPI } from '../../telegram/TelegramAPI';
 import { checkIfArrayIsUnique } from '../../utils/ArrayUtil';
 import { DbQuestionWithRoles } from '../../database/entities/DbQuestionWithRoles';
@@ -15,7 +15,6 @@ import { DbDiscipline } from '../../database/entities/DbDiscipline';
 import { DbQuestionAnswer } from '../../database/entities/DbQuestionAnswer';
 import { DatabaseUtils } from '../../database/DatabaseUtils';
 import { PaginatedData } from '../datas/PaginatedData';
-import { TeacherTypeAdapter } from '../../mappers/TeacherRoleAdapter';
 import { QuestionMapper } from '../../mappers/QuestionMapper';
 import { PollService } from './PollService';
 import { DateService } from '../../utils/date/DateService';
@@ -34,6 +33,8 @@ import { NoPermissionException } from '../../utils/exceptions/NoPermissionExcept
 import { NotSelectedDisciplineException } from '../../utils/exceptions/NotSelectedDisciplineException';
 import { IsRemovedDisciplineTeacherException } from '../../utils/exceptions/IsRemovedDisciplineTeacherException';
 import { Prisma, QuestionType, State } from '@prisma/client';
+import { TeacherMapper } from '../../mappers/TeacherMapper';
+import { SubjectMapper } from '../../mappers/SubjectMapper';
 
 @Injectable()
 export class DisciplineTeacherService {
@@ -47,13 +48,15 @@ export class DisciplineTeacherService {
     private telegramApi: TelegramAPI,
     private userRepository: UserRepository,
     private questionMapper: QuestionMapper,
+    private teacherMapper: TeacherMapper,
+    private subjectMapper: SubjectMapper,
   ) {}
 
-  async getQuestions (disciplineTeacherId: string, userId: string) {
+  async getQuestions (disciplineTeacherId: string, userId: string): Promise<DisciplineTeacherQuestionsResponse> {
     await this.checkAnswerInDatabase(disciplineTeacherId, userId);
     await this.checkSendingTime();
 
-    return this.getCategories(disciplineTeacherId) as unknown as DisciplineTeacherQuestionsResponse;
+    return this.getCategories(disciplineTeacherId);
   }
 
   async sendAnswers (disciplineTeacherId: string, { answers }: CreateAnswersDTO, userId: string) {
@@ -114,8 +117,8 @@ export class DisciplineTeacherService {
     const questions = await this.getUniqueQuestions(id);
     const categories = this.questionMapper.sortByCategories(questions);
     return {
-      teacher: { ...teacher, rating: +teacher.rating },
-      subject: discipline.subject,
+      teacher: this.teacherMapper.getTeacher(teacher),
+      subject: this.subjectMapper.getSubject(discipline.subject),
       categories,
     };
   }
@@ -133,14 +136,14 @@ export class DisciplineTeacherService {
       .find((disciplineTeacher) => disciplineTeacher.id === id)
       .roles.map(({ disciplineType }) => disciplineType.name);
 
-    const disciplineRoles = new Set<DisciplineTypeEnum>();
+    const disciplineTypes = new Set<DisciplineTypeEnum>();
     for (const { roles } of disciplineTeachers) {
       for (const { disciplineType } of roles) {
-        disciplineRoles.add(disciplineType.name);
+        disciplineTypes.add(disciplineType.name);
       }
     }
 
-    return this.pollService.getQuestions(teacherRoles, Array.from(disciplineRoles));
+    return this.pollService.getQuestions(teacherRoles, Array.from(disciplineTypes));
   }
 
   async checkRequiredQuestions (dbQuestions: DbQuestionWithRoles[], questions: CreateAnswerDTO[]) {
@@ -238,7 +241,7 @@ export class DisciplineTeacherService {
     }
   }
 
-  async create (teacherId: string, disciplineId: string, roles: TeacherRole[]) {
+  async create (teacherId: string, disciplineId: string, roles: DisciplineTypeEnum[]) {
     const discipline = await this.disciplineRepository.findById(disciplineId);
     const dbRoles = await this.getDbRoles(discipline, roles);
 
@@ -249,7 +252,7 @@ export class DisciplineTeacherService {
     });
   }
 
-  async updateById (disciplineTeacherId: string, roles: TeacherRole[]) {
+  async updateById (disciplineTeacherId: string, roles: DisciplineTypeEnum[]) {
     const discipline = await this.disciplineRepository.find({
       disciplineTeachers: {
         some: {
@@ -267,20 +270,20 @@ export class DisciplineTeacherService {
     });
   }
 
-  private async getDbRoles (discipline: DbDiscipline, roles: TeacherRole[]) {
+  private async getDbRoles (discipline: DbDiscipline, disciplineTypes: DisciplineTypeEnum[]) {
     const dbRoles = [];
-    for (const role of roles) {
-      if (!discipline.disciplineTypes.some((type) => type.name === TeacherTypeAdapter[role])) {
+    for (const disciplineType of disciplineTypes) {
+      if (!discipline.disciplineTypes.some((type) => type.name === disciplineType)) {
         discipline = await this.disciplineRepository.updateById(discipline.id, {
           disciplineTypes: {
             create: {
-              name: TeacherTypeAdapter[role],
+              name: disciplineType,
             },
           },
         });
       }
 
-      const { id } = discipline.disciplineTypes.find((dt) => dt.name === TeacherTypeAdapter[role]);
+      const { id } = discipline.disciplineTypes.find((dt) => dt.name === disciplineType);
 
       dbRoles.push({
         disciplineTypeId: id,
@@ -290,7 +293,7 @@ export class DisciplineTeacherService {
     return dbRoles;
   }
 
-  async updateByTeacherAndDiscipline (teacherId: string, disciplineId: string, roles: TeacherRole[]) {
+  async updateByTeacherAndDiscipline (teacherId: string, disciplineId: string, disciplineTypes: DisciplineTypeEnum[]) {
     let disciplineTeacher = await this.disciplineTeacherRepository.find({ teacherId, disciplineId });
     if (!disciplineTeacher) {
       disciplineTeacher = await this.disciplineTeacherRepository.create({
@@ -298,7 +301,7 @@ export class DisciplineTeacherService {
         disciplineId: disciplineId,
       });
     }
-    return this.updateById(disciplineTeacher.id, roles);
+    return this.updateById(disciplineTeacher.id, disciplineTypes);
   }
 
   async deleteById (disciplineTeacherId: string) {
@@ -308,7 +311,7 @@ export class DisciplineTeacherService {
   async deleteByTeacherAndDiscipline (teacherId: string, disciplineId: string) {
     const disciplineTeacher = await this.disciplineTeacherRepository.find({ teacherId, disciplineId });
     if (!disciplineTeacher) {
-      throw new InvalidEntityIdException('disciplineTeacher');
+      throw new InvalidEntityIdException('DisciplineTeacher');
     }
     await this.disciplineTeacherRepository.deleteById(disciplineTeacher.id);
   }

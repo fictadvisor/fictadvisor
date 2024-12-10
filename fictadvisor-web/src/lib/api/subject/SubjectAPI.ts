@@ -9,8 +9,6 @@ import {
   SubjectWithTeachersResponse,
 } from '@fictadvisor/utils/responses';
 
-import { getAuthorizationHeader } from '@/lib/api/utils';
-
 import { client } from '../instance';
 
 class SubjectsAPI {
@@ -21,10 +19,7 @@ class SubjectsAPI {
     return data;
   }
   async getSubject(subjectId: string) {
-    const { data } = await client.get<SubjectResponse>(
-      `subjects/${subjectId}`,
-      getAuthorizationHeader(),
-    );
+    const { data } = await client.get<SubjectResponse>(`subjects/${subjectId}`);
     return data;
   }
 
@@ -32,11 +27,7 @@ class SubjectsAPI {
     const body: CreateSubjectDTO = {
       name,
     };
-    const { data } = await client.post<SubjectResponse>(
-      `/subjects`,
-      body,
-      getAuthorizationHeader(),
-    );
+    const { data } = await client.post<SubjectResponse>(`/subjects`, body);
     return data;
   }
 
@@ -47,7 +38,6 @@ class SubjectsAPI {
     const { data } = await client.patch<SubjectResponse>(
       `/subjects/${id}`,
       body,
-      getAuthorizationHeader(),
     );
     return data;
   }
@@ -60,7 +50,7 @@ class SubjectsAPI {
   }
 
   async delete(subjectId: string): Promise<void> {
-    await client.delete(`/subjects/${subjectId}`, getAuthorizationHeader());
+    await client.delete(`/subjects/${subjectId}`);
   }
 }
 

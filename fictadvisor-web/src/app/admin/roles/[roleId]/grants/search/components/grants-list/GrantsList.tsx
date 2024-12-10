@@ -1,7 +1,6 @@
 'use client';
 import React, { FC } from 'react';
-import { QueryObserverBaseResult } from 'react-query';
-import { MappedGrant } from '@fictadvisor/utils/responses';
+import { GrantResponse } from '@fictadvisor/utils/responses';
 import { TableHead, Typography } from '@mui/material';
 import {
   Paper,
@@ -12,6 +11,7 @@ import {
   TablePagination,
   TableRow,
 } from '@mui/material';
+import { QueryObserverBaseResult } from '@tanstack/react-query';
 
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import useToast from '@/hooks/use-toast';
@@ -23,12 +23,12 @@ import TableActions from './components/table-actions';
 interface GrantsListProps {
   currPage: number;
   setCurrPage: React.Dispatch<React.SetStateAction<number>>;
-  grants: MappedGrant[];
+  grants: GrantResponse[];
   pageSize: number;
   setPageSize: React.Dispatch<React.SetStateAction<number>>;
   totalCount: number;
-  refetch: QueryObserverBaseResult['refetch'];
   roleId: string;
+  refetch: QueryObserverBaseResult['refetch'];
 }
 
 const GrantsList: FC<GrantsListProps> = ({
@@ -38,10 +38,10 @@ const GrantsList: FC<GrantsListProps> = ({
   pageSize,
   setPageSize,
   totalCount,
-  refetch,
   roleId,
+  refetch,
 }) => {
-  const toastError = useToastError();
+  const { displayError } = useToastError();
   const toast = useToast();
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -56,7 +56,7 @@ const GrantsList: FC<GrantsListProps> = ({
       await refetch();
       toast.success('Право видалено успішно');
     } catch (e) {
-      toastError.displayError(e);
+      displayError(e);
     }
   };
 

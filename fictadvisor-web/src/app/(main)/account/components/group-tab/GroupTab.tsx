@@ -1,9 +1,10 @@
-import React, { FC, useState } from 'react';
-import { useQuery } from 'react-query';
+import React, { useState } from 'react';
 import { GroupRoles, State } from '@fictadvisor/utils/enums';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import { ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/outline';
 import { Box, Typography, useMediaQuery } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 
 import NoGroupBlock from '@/app/(main)/account/components/group-tab/components/no-group-block';
 import RequestsTable from '@/app/(main)/account/components/group-tab/components/table/requests-table';
@@ -22,7 +23,7 @@ import {
 } from '@/components/common/ui/button-mui/types';
 import Popup from '@/components/common/ui/pop-ups/Popup';
 import Progress from '@/components/common/ui/progress';
-import useAuthentication from '@/hooks/use-authentication';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 import groupAPI from '@/lib/api/group/GroupAPI';
 import GroupService from '@/lib/services/group/GroupService';
 import { Order } from '@/lib/services/group/types/OrderEnum';
@@ -30,17 +31,21 @@ import theme from '@/styles/theme';
 
 import * as styles from './GroupTab.styles';
 
-const GroupTab: FC = () => {
+const GroupTab = () => {
   const [order, setOrder] = useState(Order.ascending);
   const { user } = useAuthentication();
-  const { data, isLoading, refetch } = useQuery(
-    ['students'],
-    () => GroupService.getGroupData(user, order),
-    {
-      retry: false,
-      refetchOnWindowFocus: false,
-    },
-  );
+  const { refresh } = useRouter();
+
+  const groupId = user?.group?.id;
+
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ['students', groupId, order],
+    queryFn: () => GroupService.getGroupData(groupId!, order),
+    retry: false,
+    refetchOnWindowFocus: false,
+    enabled: !!groupId,
+  });
+
   const [leavePopupOpen, setLeavePopupOpen] = useState(false);
 
   const showRequests =
@@ -62,7 +67,7 @@ const GroupTab: FC = () => {
     if (user?.group) {
       await groupAPI.leaveGroup(user.group.id);
     }
-    window.location.reload();
+    refresh();
   };
 
   if (isLoading)
@@ -79,6 +84,7 @@ const GroupTab: FC = () => {
     return <NoGroupBlock />;
 
   if (!data || !user?.group || !user?.group.role) return null;
+
   return (
     <>
       <Box sx={styles.groupInfo}>

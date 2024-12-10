@@ -1,12 +1,13 @@
 import React, {
   forwardRef,
+  useEffect,
   useImperativeHandle,
   useRef,
   useState,
 } from 'react';
-import { useQuery } from 'react-query';
 import { UpdatePageTextDTO } from '@fictadvisor/utils/requests';
 import { Box, Typography } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 
 import * as styles from '@/app/admin/main/components/page-texts-form/PageTextsForm.styles';
 import Input from '@/components/common/ui/form/input-mui';
@@ -28,27 +29,26 @@ const PageTextsForm = forwardRef((props, ref) => {
   const formRef = useRef(null);
   const [formValue, setFormValue] = useState<NewPageTexts>({});
 
-  const data = useQuery(
-    pageTextsKeys,
-    () => PageTextsAPI.getAll({ keys: pageTextsKeys }),
-    {
-      onSuccess: data => {
-        if (Array.isArray(data)) {
-          const newPageTexts = data.reduce(
-            (
-              acc: { [key: string]: UpdatePageTextDTO },
-              item: UpdatePageTextDTO,
-            ) => {
-              acc[item.key] = item;
-              return acc;
-            },
-            {},
-          );
-          setFormValue(newPageTexts);
-        }
-      },
-    },
-  );
+  const { data } = useQuery({
+    queryKey: [pageTextsKeys],
+    queryFn: () => PageTextsAPI.getAll({ keys: pageTextsKeys }),
+  });
+
+  useEffect(() => {
+    if (Array.isArray(data)) {
+      const newPageTexts = data.reduce(
+        (
+          acc: { [key: string]: UpdatePageTextDTO },
+          item: UpdatePageTextDTO,
+        ) => {
+          acc[item.key] = item;
+          return acc;
+        },
+        {},
+      );
+      setFormValue(newPageTexts);
+    }
+  }, [data]);
   const handleInputChange = (
     key: string | null = null,
     value: string | boolean,

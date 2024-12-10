@@ -4,10 +4,9 @@ import {
   createRegex,
   UKR_REGEX,
   UKRSPEC_REGEX,
-  validationOptionsMsg
+  validationOptionsMsg,
 } from '../ValidationUtil';
-import { GroupRoles } from '../enums/other/GroupRolesEnum';
-import { RoleName } from '../enums/db/RoleNameEnum';
+import { GroupRoles } from '../enums';
 
 export class UpdateStudentDTO {
   @ApiPropertyOptional({
@@ -51,14 +50,14 @@ export class UpdateStudentWithRolesDTO extends UpdateStudentDTO {
     enum: GroupRoles,
     description: 'Student roles',
   })
-  @IsEnum(GroupRoles, validationOptionsMsg('Role name should be an enum'))
+  @IsEnum(GroupRoles, validationOptionsMsg('Role name must be an enum'))
   @IsOptional()
     roleName?: keyof typeof GroupRoles;
 
   @ApiPropertyOptional({
     description: 'Student\'s group',
   })
-  @IsUUID(undefined, validationOptionsMsg('Group id should be UUID'))
+  @IsUUID(undefined, validationOptionsMsg('Group id must be an UUID'))
   @IsOptional()
     groupId?: string;
 }

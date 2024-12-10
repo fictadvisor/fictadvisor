@@ -5,6 +5,7 @@ import {
   EventFiltrationDTO,
   GeneralEventFiltrationDTO,
   UpdateEventDTO,
+  CreateFacultyEventDTO,
 } from '@fictadvisor/utils/requests';
 import { EventTypeEnum } from '@fictadvisor/utils/enums';
 import { DateService, FORTNITE, WEEK } from '../../utils/date/DateService';
@@ -27,6 +28,7 @@ import { ObjectIsRequiredException } from '../../utils/exceptions/ObjectIsRequir
 import { InvalidWeekException } from '../../utils/exceptions/InvalidWeekException';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
 import { DateTime } from 'luxon';
+import { GroupRepository } from '../../database/repositories/GroupRepository';
 
 export const weeksPerEvent = {
   EVERY_WEEK: WEEK / WEEK,
@@ -48,6 +50,7 @@ export class ScheduleService {
     private studentRepository: StudentRepository,
     private dateUtils: DateUtils,
     private campusParser: CampusParser,
+    private groupRepository: GroupRepository,
   ) {}
 
   private parserTypes =  {
@@ -280,6 +283,36 @@ export class ScheduleService {
     return Math.ceil(eventWeeks / weeksPerEvent[eventPeriod]);
   }
 
+  async createFacultyEvent (body: CreateFacultyEventDTO) {
+    await this.checkEventDates(body.startTime, body.endTime);
+
+    const eventInfo = [];
+    if (body.eventInfo) {
+      eventInfo.push({ number: 0, description: body.eventInfo });
+    }
+
+    const groups = await this.groupRepository.findMany({});
+    const createdEvents: DbEvent[] = [];
+
+    for (const group of groups) {
+      const event = await this.eventRepository.create({
+        groupId: group.id,
+        name: body.name,
+        period: Period.NO_PERIOD,
+        startTime: body.startTime,
+        isCustom: true,
+        endTime: body.endTime,
+        url: body.url,
+        eventInfo: {
+          createMany: { data: eventInfo },
+        },
+      });
+      createdEvents.push(event);
+    }
+
+    return createdEvents;
+  }
+
   async createGroupEvent (body: CreateEventDTO) {
     await this.checkEventDates(body.startTime, body.endTime);
     if (body.disciplineId && !body.eventType) throw new ObjectIsRequiredException('DisciplineType');
@@ -339,7 +372,6 @@ export class ScheduleService {
 
     let result = await filterAsync(events, async (event) => {
       const indexOfLesson = await this.getIndexOfLesson(week, event);
-      if (week === 3 && indexOfLesson !== null) console.log(event.name);
       return indexOfLesson !== null;
     });
 

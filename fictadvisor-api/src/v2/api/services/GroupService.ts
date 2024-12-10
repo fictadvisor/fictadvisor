@@ -1,38 +1,40 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import {
-  SortDTO,
-  EmailDTO,
   ApproveDTO,
-  UpdateGroupDTO,
-  QuerySemesterDTO,
+  CreateGroupDTO,
+  EmailDTO,
   GroupStudentsQueryDTO,
   QueryAllGroupsDTO,
-  CreateGroupDTO,
-} from '@fictadvisor/utils/requests';
-import {
+  QuerySemesterDTO,
+  SortDTO,
+  UpdateGroupDTO,
+  OrdinaryStudentResponse,
   OrderQAParam,
-  SortQGSParam,
   SortQAGroupsParam,
-} from '@fictadvisor/utils/enums';
+  SortQGSParam,
+} from '@fictadvisor/utils';
+import { UserService } from './UserService';
+import { FileService } from '../../utils/files/FileService';
+import { DateService } from '../../utils/date/DateService';
+import { Prisma, RoleName, State, User } from '@prisma/client';
 import { DatabaseUtils } from '../../database/DatabaseUtils';
 import { DbGroup } from '../../database/entities/DbGroup';
-import { DisciplineMapper } from '../../mappers/DisciplineMapper';
-import { StudentMapper } from '../../mappers/StudentMapper';
-import { UserService } from './UserService';
-import { DateService } from '../../utils/date/DateService';
-import { FileService } from '../../utils/files/FileService';
+import { DbDiscipline } from '../../database/entities/DbDiscipline';
+import { DbStudent } from '../../database/entities/DbStudent';
+import { DbUser } from '../../database/entities/DbUser';
 import { GroupRepository } from '../../database/repositories/GroupRepository';
 import { StudentRepository } from '../../database/repositories/StudentRepository';
 import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
 import { UserRepository } from '../../database/repositories/UserRepository';
+import { RoleRepository } from '../../database/repositories/RoleRepository';
 import { AlreadyRegisteredException } from '../../utils/exceptions/AlreadyRegisteredException';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
-import { RoleRepository } from '../../database/repositories/RoleRepository';
 import { InvalidEntityIdException } from '../../utils/exceptions/InvalidEntityIdException';
 import { StudentIsAlreadyCaptainException } from '../../utils/exceptions/StudentIsAlreadyCaptainException';
 import { NotApprovedException } from '../../utils/exceptions/NotApprovedException';
+import { AbsenceOfCaptainException } from '../../utils/exceptions/AbsenceOfCaptainException';
 import { AVATARS } from './AuthService';
-import { Prisma, RoleName, State, User } from '@prisma/client';
+import { PaginatedData } from '../datas/PaginatedData';
 
 const ROLE_LIST = [
   {
@@ -68,7 +70,6 @@ const ROLE_LIST = [
 @Injectable()
 export class GroupService {
   constructor (
-    private disciplineMapper: DisciplineMapper,
     private groupRepository: GroupRepository,
     @Inject(forwardRef(() => UserService))
     private userService: UserService,
@@ -76,7 +77,6 @@ export class GroupService {
     private userRepository: UserRepository,
     private roleRepository: RoleRepository,
     private disciplineRepository: DisciplineRepository,
-    private studentMapper: StudentMapper,
     private dateService: DateService,
     private fileService: FileService,
   ) {}
@@ -92,7 +92,34 @@ export class GroupService {
     return group;
   }
 
-  async getAll (query: QueryAllGroupsDTO) {
+  async getOrCreate (
+    { code, eduProgramId, cathedraId, admissionYear }:
+    Omit<UpdateGroupDTO, 'code'> & { code: string },
+  ): Promise<DbGroup>  {
+    const group =
+      await this.groupRepository.find({ code }) ??
+      await this.groupRepository.create({
+        code,
+        cathedraId,
+        educationalProgramId: eduProgramId,
+        admissionYear,
+      });
+
+    const permissions = await this.roleRepository.findMany({
+      where: {
+        groupRole: {
+          group: { code },
+        },
+      },
+    });
+
+    if (!permissions.length) {
+      await this.addPermissions(group.id);
+    }
+    return group;
+  }
+
+  async getAll (query: QueryAllGroupsDTO): Promise<PaginatedData<DbGroup>> {
     if (query.sort === SortQAGroupsParam.CAPTAIN) {
       return this.getAllByCaptain(query);
     }
@@ -111,7 +138,7 @@ export class GroupService {
     return DatabaseUtils.paginate(this.groupRepository, query, data);
   }
 
-  private getAllByCaptain (query: QueryAllGroupsDTO) {
+  private async getAllByCaptain (query: QueryAllGroupsDTO): Promise<PaginatedData<DbGroup>> {
     const data: Prisma.StudentFindManyArgs = {
       where: {
         group: {
@@ -167,7 +194,7 @@ export class GroupService {
       if (!courses?.length) return {};
 
       const courseDate = new Date();
-      courseDate.setMonth(courseDate.getMonth()+4);
+      courseDate.setMonth(courseDate.getMonth() + 4);
       const courseYear = courseDate.getFullYear();
 
       return {
@@ -179,42 +206,29 @@ export class GroupService {
   };
 
   private getGroupSorting ({ sort, order }: SortDTO) {
-    order = order ?? 'asc'; 
+    order = order ?? 'asc';
 
     if (sort === SortQAGroupsParam.CODE) return { code: order };
     if (sort === SortQAGroupsParam.ADMISSION) return { admissionYear: order };
     return { code: order };
   }
 
-  async get (id: string) {
+  async get (id: string): Promise<DbGroup> {
     return this.groupRepository.findById(id);
   }
 
-  async getDisciplineTeachers (groupId: string, { year, semester }: QuerySemesterDTO) {
+  async getDisciplineTeachers (groupId: string, { year, semester }: QuerySemesterDTO): Promise<DbDiscipline[]> {
     this.dateService.checkYearAndSemester(year, semester);
-    const disciplines = await this.disciplineRepository.findMany({
+    return this.disciplineRepository.findMany({
       where: {
         groupId,
         semester,
         year,
       },
     });
-    return this.disciplineMapper.getDisciplinesWithTeachers(disciplines);
   }
 
-  async getDisciplines (groupId: string, { year, semester }: QuerySemesterDTO) {
-    this.dateService.checkYearAndSemester(year, semester);
-    const disciplines = await this.disciplineRepository.findMany({
-      where: {
-        groupId,
-        semester,
-        year,
-      },
-    });
-    return this.disciplineMapper.getDisciplines(disciplines);
-  }
-
-  getSelectiveDisciplines (groupId: string) {
+  async getSelectiveDisciplines (groupId: string): Promise<DbDiscipline[]> {
     return this.disciplineRepository.findMany({
       where: {
         groupId,
@@ -223,7 +237,7 @@ export class GroupService {
     });
   }
 
-  async addUnregistered (groupId: string, body: EmailDTO) {
+  async addUnregistered (groupId: string, body: EmailDTO): Promise<DbUser[]> {
     const users = [];
     for (const email of body.emails) {
       const user = await this.userRepository.find({ email });
@@ -240,15 +254,12 @@ export class GroupService {
         state: State.APPROVED,
       });
       await this.addGroupRole(groupId, user.id, RoleName.STUDENT);
-      users.push({
-        id: user.id,
-        email: user.email,
-      });
+      users.push(user);
     }
-    return { users };
+    return users;
   }
 
-  async verifyStudent (groupId: string, userId: string, data: ApproveDTO) {
+  async verifyStudent (groupId: string, userId: string, data: ApproveDTO): Promise<DbStudent> {
     const verifiedStudent = await this.studentRepository.updateById(userId, { state: data.state });
 
     if (data.state === State.APPROVED) {
@@ -259,7 +270,7 @@ export class GroupService {
     return verifiedStudent;
   }
 
-  async addGroupRole (groupId: string, userId: string, name: RoleName) {
+  async addGroupRole (groupId: string, userId: string, name: RoleName): Promise<void> {
     const role = await this.roleRepository.find({
       groupRole: {
         groupId,
@@ -271,7 +282,7 @@ export class GroupService {
     await this.userService.giveRole(userId, role.id);
   }
 
-  async removeStudent (groupId: string, userId: string, reqUser: User) {
+  async removeStudent (groupId: string, userId: string, reqUser: User): Promise<void> {
     const userRole = await this.userService.getGroupRoleDB(userId);
     const reqUserRole = await this.userService.getGroupRoleDB(reqUser.id);
 
@@ -288,13 +299,14 @@ export class GroupService {
     );
 
     const user = await this.userRepository.findById(userId);
+
+    await this.studentRepository.updateById(userId, { state: State.DECLINED });
     if (!user.username) {
       await this.userRepository.deleteById(userId);
     }
-    await this.studentRepository.updateById(userId, { state: State.DECLINED });
   }
 
-  async getCaptain (groupId: string) {
+  async findCaptain (groupId: string): Promise<DbUser> {
     const captain = await this.studentRepository.find({
       groupId,
       roles: {
@@ -309,7 +321,17 @@ export class GroupService {
     return captain?.user;
   }
 
-  async deleteGroup (groupId: string) {
+  async getCaptain (groupId: string) {
+    const captain = this.findCaptain(groupId);
+
+    if (!captain) {
+      throw new AbsenceOfCaptainException();
+    }
+
+    return captain;
+  }
+
+  async deleteGroup (groupId: string): Promise<DbGroup> {
     await this.roleRepository.deleteMany({ groupRole: { groupId } });
     await this.studentRepository.updateMany({
       group: {
@@ -321,7 +343,7 @@ export class GroupService {
     return this.groupRepository.deleteById(groupId);
   }
 
-  async getStudents (groupId: string, { sort, order }: GroupStudentsQueryDTO) {   
+  async getStudents (groupId: string, { sort, order }: GroupStudentsQueryDTO): Promise<DbStudent[]> {
     const orderBy: Prisma.StudentOrderByWithRelationInput[] = [];
     if (sort) {
       if (!order) order = OrderQAParam.ASC;
@@ -331,53 +353,49 @@ export class GroupService {
       orderBy.push({ [SortQGSParam.MIDDLE_NAME]: order });
     }
 
-    const students = await this.studentRepository.findMany({
+    return this.studentRepository.findMany({
       where: {
         groupId,
         state: State.APPROVED,
       },
       orderBy,
     });
-    return students.map((s) => this.studentMapper.getStudent(s));
   }
 
-  async updateGroup (groupId: string, { 
-    code, 
-    eduProgramId, 
-    cathedraId, 
-    admissionYear, 
-    captainId, 
+  async updateGroup (groupId: string, {
+    code,
+    eduProgramId,
+    cathedraId,
+    admissionYear,
+    captainId,
     moderatorIds,
-  }: UpdateGroupDTO) {
+  }: UpdateGroupDTO): Promise<DbGroup> {
     if (captainId) {
       await this.switchCaptain(groupId, captainId);
     }
-    
+
     if (moderatorIds?.length > 0) {
       await this.switchModerators(groupId, moderatorIds);
     }
 
-    const group = await this.groupRepository.updateById(groupId, {
+    return this.groupRepository.updateById(groupId, {
       code,
       cathedraId,
       educationalProgramId: eduProgramId,
       admissionYear,
     });
-
-    return group;
   }
 
-  async getUnverifiedStudents (groupId: string) {
-    const students = await this.studentRepository.findMany({
+  async getUnverifiedStudents (groupId: string): Promise<DbStudent[]> {
+    return this.studentRepository.findMany({
       where: {
         groupId,
         state: State.PENDING,
       },
     });
-    return students.map((s) => this.studentMapper.getStudent(s, false));
   }
 
-  async addPermissions (groupId: string) {
+  private async addPermissions (groupId: string): Promise<void> {
     for (const { grants, ...roles } of ROLE_LIST) {
 
       const grantList = Object.entries(grants).map(([permission, description]) => ({
@@ -399,10 +417,10 @@ export class GroupService {
     }
   }
 
-  async switchCaptain (groupId: string, studentId: string) {
+  async switchCaptain (groupId: string, studentId: string): Promise<OrdinaryStudentResponse> {
     const isStudentInGroup = await this.isStudentInGroup(groupId, studentId);
     if (!isStudentInGroup) throw new NoPermissionException();
-    const oldCaptain = await this.getCaptain(groupId);
+    const oldCaptain = await this.findCaptain(groupId);
 
     if (oldCaptain) {
       if (oldCaptain.id === studentId) throw new StudentIsAlreadyCaptainException();
@@ -413,11 +431,9 @@ export class GroupService {
     return this.userService.getUser(studentId);
   }
 
-  async switchModerators (groupId: string, studentIds: string[]) {
+  async switchModerators (groupId: string, studentIds: string[]): Promise<void> {
     const students = await this.studentRepository.findMany({
-      where: {
-        groupId,
-      },
+      where: { groupId },
     });
 
     const oldModerators = students.filter(
@@ -441,13 +457,13 @@ export class GroupService {
     }
   }
 
-  private async isStudentInGroup (groupId: string, studentId: string) {
+  private async isStudentInGroup (groupId: string, studentId: string): Promise<boolean> {
     const student = await this.studentRepository.findById(studentId);
     if (!student) throw new InvalidEntityIdException('User');
     return student.groupId === groupId;
   }
 
-  async getGroupsWithTelegramGroups () {
+  async getGroupsWithTelegramGroups (): Promise<DbGroup[]> {
     return this.groupRepository.findMany({
       where: {
         telegramGroups: {
@@ -482,10 +498,10 @@ export class GroupService {
       });
     }
 
-    return this.fileService.generateGroupList(students);
+    return this.fileService.generateGroupList(students, groupId);
   }
 
-  async leaveGroup (groupId: string, studentId: string) {
+  async leaveGroup (groupId: string, studentId: string): Promise<DbStudent> {
     const isStudentInGroup = await this.isStudentInGroup(groupId, studentId);
     if (!isStudentInGroup) throw new NoPermissionException();
 
@@ -498,7 +514,7 @@ export class GroupService {
     await this.userService.deleteStudentSelectives(studentId);
 
     const { id } = await this.userService.getGroupRole(studentId);
-    const updatedStudent = await this.studentRepository.updateById(studentId, {
+    return this.studentRepository.updateById(studentId, {
       state: State.DECLINED,
       roles: {
         delete: {
@@ -509,6 +525,5 @@ export class GroupService {
         },
       },
     });
-    return this.studentMapper.getStudent(updatedStudent);
   }
 }

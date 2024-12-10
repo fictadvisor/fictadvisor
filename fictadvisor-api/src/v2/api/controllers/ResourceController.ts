@@ -1,24 +1,28 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiForbiddenResponse,
-  ApiOkResponse,
-  ApiParam,
-  ApiTags, ApiUnauthorizedResponse,
-} from '@nestjs/swagger';
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import {
   CreateResourceDTO,
   UpdateResourceDTO,
   UpdateResourcesDTO,
   QueryAllResourcesDTO,
 } from '@fictadvisor/utils/requests';
-import { ResourceResponse, ResourcesResponse } from '@fictadvisor/utils/responses';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
 import { ResourceByIdPipe } from '../pipes/ResourceByIdPipe';
 import { ResourceMapper } from '../../mappers/ResourceMapper';
 import { ResourceService } from '../services/ResourceService';
+import { ValidateResourcesPipe } from '../pipes/ValidateResourcesPipe';
+import { ResourceDocumentation } from 'src/v2/utils/documentation/resource';
+import { ResourceResponse, ResourcesResponse } from '@fictadvisor/utils/responses';
 
 @ApiTags('Resource')
 @Controller({
@@ -31,186 +35,79 @@ export class ResourceController {
     private resourceMapper: ResourceMapper,
   ) {}
 
-  @ApiOkResponse({
-    type: [ResourceResponse],
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidQueryException:
-      Id\`s must be an array`,
-  })
   @ApiEndpoint({
     summary: 'Get all student resources',
+    documentation: ResourceDocumentation.GET_ALL,
   })
   @Get()
   async getAll (
     @Query() body: QueryAllResourcesDTO,
-  ) {
+  ): Promise<ResourcesResponse> {
     const studentResources = await this.resourceService.getAll(body);
     return this.resourceMapper.getResources(studentResources);
   }
 
-  @ApiOkResponse({
-    type: ResourceResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidEntityId:
-      Resource with such id is not found`,
-  })
-  @ApiParam({
-    name: 'resourceId',
-    description: 'Id of student resource',
-    type: String,
-    required: true,
-  })
   @ApiEndpoint({
     summary: 'Get specific student resource',
+    documentation: ResourceDocumentation.GET,
   })
   @Get('/:resourceId')
-  get (
+  async get (
     @Param('resourceId', ResourceByIdPipe) resourceId: string,
-  ) {
-    return this.resourceService.get(resourceId);
+  ): Promise<ResourceResponse> {
+    const answer = await this.resourceService.get(resourceId);
+    return this.resourceMapper.getResource(answer);
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse({
-    type: ResourceResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidBodyException:
-      Name is too short (min: 3)
-      Name is too long (max: 50)
-      Name cannot be empty
-      Link cannot be empty
-      Icon cannot be empty`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException:
-      You do not have permission to perform this action`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
   @ApiEndpoint({
     summary: 'Create student resource',
+    documentation: ResourceDocumentation.CREATE,
     permissions: PERMISSION.RESOURCES_CREATE,
   })
   @Post()
-  create (
+  async create (
     @Body() body: CreateResourceDTO,
-  ) {
-    return this.resourceService.create(body);
+  ): Promise<ResourceResponse> {
+    const createdResourse = await this.resourceService.create(body);
+    return this.resourceMapper.getResource(createdResourse);
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse({
-    type: ResourceResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidBodyException:
-      Name is too short (min: 3)
-      Name is too long (max: 50)
-      
-    InvalidEntityId:
-      Resource with such id is not found`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException:
-      You do not have permission to perform this action`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiParam({
-    name: 'resourceId',
-    description: 'Id of student resource',
-    type: String,
-    required: true,
-  })
   @ApiEndpoint({
     summary: 'Update specific student resource',
+    documentation: ResourceDocumentation.UPDATE,
     permissions: PERMISSION.RESOURCES_UPDATE,
   })
   @Patch('/:resourceId')
   async update (
     @Param('resourceId', ResourceByIdPipe) resourceId: string,
     @Body() body: UpdateResourceDTO,
-  ) {
-    const updResource = await this.resourceService.update(resourceId, body);
-    return this.resourceMapper.getResource(updResource);
+  ): Promise<ResourceResponse> {
+    const updatedResource = await this.resourceService.update(resourceId, body);
+    return this.resourceMapper.getResource(updatedResource);
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse({
-    type: ResourcesResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidBodyException:
-      Name is too short (min: 3)
-      Name is too long (max: 50)
-      Resource id can not be empty
-      
-    InvalidEntityId:
-      Resource with such id is not found`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException:
-      You do not have permission to perform this action`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
   @ApiEndpoint({
     summary: 'Update many student resources by their id`s',
+    documentation: ResourceDocumentation.UPDATE_MANY,
     permissions: PERMISSION.RESOURCES_UPDATE,
   })
   @Patch()
   async updateMany (
-      @Body() body: UpdateResourcesDTO,
-  ) {
-    const updResources = await this.resourceService.updateMany(body);
-    return this.resourceMapper.getResources(updResources);
+    @Body(ValidateResourcesPipe) body: UpdateResourcesDTO,
+  ): Promise<ResourcesResponse> {
+    const updatedResources = await this.resourceService.updateMany(body);
+    return this.resourceMapper.getResources(updatedResources);
   }
 
-  @ApiBearerAuth()
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidEntityId:
-      Resource with such id is not found`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException:
-      You do not have permission to perform this action`,
-  })
-  @ApiParam({
-    name: 'resourceId',
-    description: 'Id of student resource',
-    type: String,
-    required: true,
-  })
   @ApiEndpoint({
     summary: 'Delete specific student resource',
+    documentation: ResourceDocumentation.DELETE,
     permissions: PERMISSION.RESOURCES_DELETE,
   })
   @Delete('/:resourceId')
-  delete (
+  async delete (
     @Param('resourceId', ResourceByIdPipe) resourceId: string,
-  ) {
+  ):  Promise<void> {
     return this.resourceService.delete(resourceId);
   }
 }

@@ -20,4 +20,10 @@ export class EduProgramRepository {
       ...args,
     }) as any as Promise<DbEducationalProgram[]>;
   }
+
+  findById (id: string): Promise<DbEducationalProgram> {
+    return this.prisma.educationalPrograms.findFirst({
+      where: { id },
+    }) as any as Promise<DbEducationalProgram>;
+  }
 }

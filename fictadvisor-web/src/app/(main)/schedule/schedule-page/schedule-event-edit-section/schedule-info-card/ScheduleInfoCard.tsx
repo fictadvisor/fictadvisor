@@ -1,11 +1,10 @@
-import React, { FC, useState } from 'react';
-import { useQuery } from 'react-query';
+import React, { useState } from 'react';
 import { EventTypeEnum } from '@fictadvisor/utils/enums';
-import { PermissionValuesDTO } from '@fictadvisor/utils/requests';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { Box, Typography } from '@mui/material';
 import Skeleton from '@mui/material/Skeleton';
+import { useQuery } from '@tanstack/react-query';
 
 import TextWithLinks from '@/app/(main)/schedule/schedule-page/schedule-event-edit-section/schedule-info-card/components/TextWithLinks';
 import { InfoCardTabs } from '@/app/(main)/schedule/schedule-page/schedule-event-edit-section/types';
@@ -18,9 +17,9 @@ import { Tab, TabContext, TabList, TabPanel } from '@/components/common/ui/tab';
 import { TabTextPosition } from '@/components/common/ui/tab/tab/types';
 import Tag from '@/components/common/ui/tag';
 import { TagColor } from '@/components/common/ui/tag/types';
-import useAuthentication from '@/hooks/use-authentication';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
+import PermissionApi from '@/lib/api/permission/PermissionApi';
 import { EventResponse } from '@/lib/api/schedule/types/EventResponse';
-import PermissionService from '@/lib/services/permission/PermissionService';
 
 import { skeletonProps } from '../utils/skeletonProps';
 
@@ -53,36 +52,43 @@ interface ScheduleInfoCardProps {
   event?: EventResponse;
 }
 
-const ScheduleInfoCard: FC<ScheduleInfoCardProps> = ({
+const ScheduleInfoCard = ({
   onEventEditButtonClick,
   onCloseButtonClick,
   event,
   loading,
-}) => {
+}: ScheduleInfoCardProps) => {
   const [tabValue, setTabValue] = useState<InfoCardTabs>(InfoCardTabs.EVENT);
   const { user } = useAuthentication();
+
   const isDisciplineRelatedType = (
     eventType: string | EventTypeEnum | undefined,
   ) => {
     return eventType !== EventTypeEnum.OTHER;
   };
 
-  const permissionValues: PermissionValuesDTO = {
-    groupId: user.group?.id,
-  };
-
-  const { data } = useQuery(
-    [],
-    () => PermissionService.getPermissionList(user.id, permissionValues),
-    {
-      retry: false,
-      refetchOnWindowFocus: false,
+  const { data: validPrivilege } = useQuery({
+    queryKey: [user?.group?.id],
+    queryFn: () =>
+      PermissionApi.check({
+        permissions: [
+          PERMISSION.GROUPS_$GROUPID_EVENTS_DELETE,
+          PERMISSION.GROUPS_$GROUPID_EVENTS_UPDATE,
+        ],
+        values: {
+          groupId: user?.group?.id,
+        },
+      }),
+    retry: false,
+    select({ permissions }) {
+      return (
+        permissions[PERMISSION.GROUPS_$GROUPID_EVENTS_DELETE] &&
+        permissions[PERMISSION.GROUPS_$GROUPID_EVENTS_UPDATE]
+      );
     },
-  );
-
-  const validPrivilege =
-    data?.[PERMISSION.GROUPS_$GROUPID_EVENTS_DELETE] &&
-    data?.[PERMISSION.GROUPS_$GROUPID_EVENTS_UPDATE];
+    refetchOnWindowFocus: false,
+    enabled: !!user && !!user.group,
+  });
 
   if (!event) return null;
 

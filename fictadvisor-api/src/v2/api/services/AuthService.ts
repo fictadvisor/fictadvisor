@@ -34,7 +34,6 @@ import { AlreadyRegisteredException } from '../../utils/exceptions/AlreadyRegist
 import { NotRegisteredException } from '../../utils/exceptions/NotRegisteredException';
 import { PasswordRepeatException } from '../../utils/exceptions/PasswordRepeatException';
 import { CaptainAlreadyRegisteredException } from '../../utils/exceptions/CaptainAlreadyRegisteredException';
-import { AbsenceOfCaptainException } from '../../utils/exceptions/AbsenceOfCaptainException';
 import { State, User, RoleName } from '@prisma/client';
 
 export const ONE_MINUTE = 1000 * 60;
@@ -123,7 +122,7 @@ export class AuthService {
       throw new AlreadyRegisteredException();
     }
 
-    const captain = await this.groupService.getCaptain(createStudent.groupId);
+    const captain = await this.groupService.findCaptain(createStudent.groupId);
     if (captain && isCaptain) {
       throw new CaptainAlreadyRegisteredException();
     }
@@ -162,7 +161,6 @@ export class AuthService {
     } else {
       const cap = await this.groupService.getCaptain(groupId);
 
-      if (!cap) throw new AbsenceOfCaptainException();
       if (cap.telegramId) {
         await this.telegramApi.verifyStudent({ captainTelegramId: cap.telegramId, ...data });
       }
@@ -454,7 +452,7 @@ export class AuthService {
   }
 
   async checkCaptain (groupId: string) {
-    const captain = await this.groupService.getCaptain(groupId);
+    const captain = await this.groupService.findCaptain(groupId);
     return !!captain;
   }
 

@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useQuery } from 'react-query';
 import { QueryAllRolesDTO } from '@fictadvisor/utils/requests';
 import { Box } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
@@ -20,16 +20,18 @@ const Page = () => {
   const [currPage, setCurrPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
 
-  const { data, isSuccess, refetch, isLoading } = useQuery(
-    ['roles', currPage, pageSize, queryObj],
-    async () =>
+  const { data, isSuccess, isLoading, refetch } = useQuery({
+    queryKey: ['roles', currPage, pageSize, queryObj],
+
+    queryFn: async () =>
       await RoleAPI.getAll({
         ...queryObj,
         pageSize,
         page: currPage,
       }),
-    useQueryAdminOptions,
-  );
+
+    ...useQueryAdminOptions,
+  });
 
   if (isLoading) return <LoadPage />;
 

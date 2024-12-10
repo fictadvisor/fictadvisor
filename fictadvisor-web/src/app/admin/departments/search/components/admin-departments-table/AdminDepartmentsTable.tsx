@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { Table, TableCell, TableHead, TableRow } from '@mui/material';
 
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
-import { CathedraColors } from '@/components/common/ui/cards/card-roles/CardRoles';
+import { CathedraColors } from '@/components/common/ui/cards/card-discipline-types/CardDisciplineTypes';
 import Tag from '@/components/common/ui/tag';
 import { TagSize, TagVariant } from '@/components/common/ui/tag/types';
 import { Cathedra } from '@/types/cathedra';

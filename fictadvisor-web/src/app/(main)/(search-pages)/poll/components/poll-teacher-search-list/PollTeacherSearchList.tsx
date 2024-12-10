@@ -7,7 +7,7 @@ import Image from 'next/image';
 
 import { SearchFormProps } from '@/app/(main)/(search-pages)/search-form/SearchForm';
 import { PollTeacherCard } from '@/components/common/ui/cards/poll-teacher-card';
-import useAuthentication from '@/hooks/use-authentication';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 import theme from '@/styles/theme';
 
 import PollSearchForm from '../poll-search-form';
@@ -36,7 +36,11 @@ const PollTeacherSearchList: FC<PollTeacherSearchListProps> = ({
 
   const submitHandler: SearchFormProps['onSubmit'] = useCallback(query => {
     setQueryObj(
-      prev => ({ ...prev, ...query }) as QueryAllDisciplineTeacherForPollDTO,
+      prev =>
+        ({
+          ...prev,
+          ...query,
+        }) as QueryAllDisciplineTeacherForPollDTO,
     );
     setCurPage(0);
   }, []);
@@ -82,7 +86,7 @@ const PollTeacherSearchList: FC<PollTeacherSearchListProps> = ({
                 description={teacher.subject.name}
                 avatar={teacher.avatar}
                 name={`${teacher.lastName} ${teacher.firstName} ${teacher.middleName}`}
-                roles={teacher.roles}
+                disciplineTypes={teacher.disciplineTypes}
                 href={`/poll/${teacher.disciplineTeacherId}`}
                 id={teacher.disciplineTeacherId}
                 cathedras={teacher.cathedras}

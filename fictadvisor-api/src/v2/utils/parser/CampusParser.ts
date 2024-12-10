@@ -11,10 +11,8 @@ import { DbTeacher } from '../../database/entities/DbTeacher';
 import { DbDisciplineType } from '../../database/entities/DbDisciplineType';
 import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
 import { SubjectRepository } from '../../database/repositories/SubjectRepository';
-import { GroupRepository } from '../../database/repositories/GroupRepository';
+import { GroupService } from '../../api/services/GroupService';
 import { GeneralParser } from './GeneralParser';
-import { TeacherRole } from '@fictadvisor/utils/enums';
-import { TeacherTypeAdapter } from '../../mappers/TeacherRoleAdapter';
 
 export const DAY_NUMBER = {
   'Пн': 1,
@@ -32,16 +30,10 @@ export const DISCIPLINE_TYPE = {
   'lab': DisciplineTypeEnum.LABORATORY,
 };
 
-export const TEACHER_TYPE = {
-  'lec': TeacherRole.LECTURER,
-  'prac': TeacherRole.PRACTICIAN,
-  'lab': TeacherRole.LABORANT,
-};
-
 @Injectable()
 export class CampusParser implements Parser {
   constructor (
-    private groupRepository: GroupRepository,
+    private groupService: GroupService,
     private subjectRepository: SubjectRepository,
     private disciplineRepository: DisciplineRepository,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
@@ -68,10 +60,15 @@ export class CampusParser implements Parser {
   }
 
   async parseGroupSchedule (group: ScheduleGroupType, period: StudyingSemester) {
-    const schedule: ScheduleType = (await axios.get('https://api.campus.kpi.ua/schedule/lessons?groupId=' + group.id)).data.data;
-    const dbGroup = await this.groupRepository.getOrCreate(group.name);
-    await this.parseWeek(period, schedule.scheduleFirstWeek, dbGroup.id, 0);
-    await this.parseWeek(period, schedule.scheduleSecondWeek, dbGroup.id, 1);
+    const [{ data }, { id }] = await Promise.all([
+      axios.get('https://api.campus.kpi.ua/schedule/lessons?groupId=' + group.id),
+      this.groupService.getOrCreate({ code: group.name }),
+    ]);
+
+    const { scheduleFirstWeek, scheduleSecondWeek } = data.data as ScheduleType;
+
+    await this.parseWeek(period, scheduleFirstWeek, id, 0);
+    await this.parseWeek(period, scheduleSecondWeek, id, 1);
   }
 
   async parseWeek (period: StudyingSemester, week: ScheduleDayType[], groupId: string, weekNumber: number) {
@@ -88,7 +85,7 @@ export class CampusParser implements Parser {
   }
 
   async parsePair (pair: SchedulePairType, groupId: string, period: StudyingSemester, isSelective: boolean, week: number, day: number) {
-    const { teacher, subject, name, role } = await this.initializeData(pair);
+    const { teacher, subject, name } = await this.initializeData(pair);
 
     const { startDate: startOfSemester } = await this.dateService.getSemester(period);
     const { startOfEvent, endOfEvent } = await this.dateService.getEventTime(pair.time, startOfSemester, week, day);
@@ -97,7 +94,7 @@ export class CampusParser implements Parser {
 
     const disciplineType = discipline.disciplineTypes.find((type) => type.name === name);
 
-    if (teacher) await this.createOrUpdateDisciplineTeacher(teacher, discipline, role, disciplineType);
+    if (teacher) await this.createOrUpdateDisciplineTeacher(teacher, discipline, disciplineType);
 
     await this.generalParser.handleEvent(pair, startOfEvent, endOfEvent, groupId, disciplineType.id);
   }
@@ -106,9 +103,8 @@ export class CampusParser implements Parser {
     const teacher = pair.teacherName ? await this.getTeacherByString(pair.teacherName) : null;
     const subject = await this.subjectRepository.getOrCreate(pair.name ?? '');
     const name = DISCIPLINE_TYPE[pair.tag] ?? DISCIPLINE_TYPE.lec;
-    const role = TEACHER_TYPE[pair.tag] ?? TEACHER_TYPE.lec;
 
-    return { teacher, subject, name, role };
+    return { teacher, subject, name };
   }
 
   async getTeacherByString (teacherName: string) : Promise<DbTeacher> {
@@ -169,7 +165,7 @@ export class CampusParser implements Parser {
     return data;
   }
 
-  async createOrUpdateDisciplineTeacher (teacher: DbTeacher, discipline: DbDiscipline, role: TeacherRole, disciplineType: DbDisciplineType) {
+  async createOrUpdateDisciplineTeacher (teacher: DbTeacher, discipline: DbDiscipline, disciplineType: DbDisciplineType) {
     const disciplineTeacher = await this.disciplineTeacherRepository.find({
       teacherId: teacher.id,
       disciplineId: discipline.id,
@@ -184,7 +180,7 @@ export class CampusParser implements Parser {
           },
         },
       });
-    } else if (!disciplineTeacher.roles.some((r) => r.disciplineType.name === TeacherTypeAdapter[role])) {
+    } else if (!disciplineTeacher.roles.some((r) => r.disciplineType.name === disciplineType.name)) {
       await this.disciplineTeacherRepository.updateById(disciplineTeacher.id, {
         roles: {
           create: {

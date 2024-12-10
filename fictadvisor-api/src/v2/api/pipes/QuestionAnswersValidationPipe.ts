@@ -21,7 +21,7 @@ export class QuestionAnswersValidationPipe implements PipeTransform {
     const question = await this.questionRepository.findById(questionId);
 
     if (!question) {
-      throw new InvalidEntityIdException('question');
+      throw new InvalidEntityIdException('Question');
     }
     const validate = this.validators[question.type];
     const isValid = validate(value);

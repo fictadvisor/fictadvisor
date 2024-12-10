@@ -1,18 +1,14 @@
-'use client';
+import { useContext } from 'react';
 
-import { useAuthenticationContext } from '@/hooks/use-authentication/authentication-context';
-import { UseAuthenticationReturn } from '@/hooks/use-authentication/types';
+import { AuthenticationContext } from '@/lib/providers/authentication/AuthenticationProvider';
 
-const useAuthentication = (): UseAuthenticationReturn => {
-  const { user, update } = useAuthenticationContext();
+export const useAuthentication = () => {
+  const context = useContext(AuthenticationContext);
+  if (!context) {
+    throw new Error(
+      'useAuthenticationContext must be used within an AuthenticationProvider',
+    );
+  }
 
-  const isLoggedIn = !!user;
-
-  return {
-    user,
-    isLoggedIn,
-    update,
-  };
+  return { user: context.user, isLoading: context.isLoading };
 };
-
-export default useAuthentication;

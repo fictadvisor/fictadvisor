@@ -1,12 +1,12 @@
 'use client';
 import React, { FC, useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
 import { QueryAllGroupsDTO } from '@fictadvisor/utils/requests';
 import {
   BarsArrowDownIcon,
   BarsArrowUpIcon,
 } from '@heroicons/react/24/outline';
 import { Box, Divider, SelectChangeEvent } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
@@ -46,15 +46,17 @@ const GroupsAdminSearch: FC<GroupsAdminSearchProps> = ({ setParams }) => {
     [],
   );
 
-  const { data: cathedrasData, isLoading: isLoadingCathedras } = useQuery(
-    ['cathedras'],
-    () => CathedraAPI.getAll(),
-    useQueryAdminOptions,
-  );
+  const { data: cathedrasData, isLoading: isLoadingCathedras } = useQuery({
+    queryKey: ['cathedras'],
+    queryFn: () => CathedraAPI.getAll(),
+    ...useQueryAdminOptions,
+  });
   const { data: specialitiesData, isLoading: isLoadingSpecialities } = useQuery(
-    ['specialities'],
-    () => SpecialitiesAPI.getAll(),
-    useQueryAdminOptions,
+    {
+      queryKey: ['specialities'],
+      queryFn: () => SpecialitiesAPI.getAll(),
+      ...useQueryAdminOptions,
+    },
   );
 
   useEffect(() => {

@@ -8,15 +8,12 @@ import {
   VerificationEmailDTO,
 } from '@fictadvisor/utils/requests';
 import {
-  AuthRefreshResponse,
   IsAvailableResponse,
   OrdinaryStudentResponse,
   ResetPasswordResponse,
   TelegramRegistrationResponse,
 } from '@fictadvisor/utils/responses';
 
-import { getAuthorizationHeader } from '@/lib/api/utils';
-import StorageUtil from '@/lib/utils/StorageUtil';
 import { Tokens } from '@/types/tokens';
 
 import { client } from '../instance';
@@ -35,33 +32,13 @@ class AuthAPI {
     return data;
   }
 
-  async refreshAccessToken(accessToken: string) {
-    const { data } = await client.post<AuthRefreshResponse>(
-      '/auth/refresh',
-      { accessToken },
-      {
-        headers: {
-          Authorization: `Bearer ${StorageUtil.getTokens()?.refreshToken}`,
-        },
-      },
-    );
-    return data;
-  }
-
   async changePassword(body: UpdatePasswordDTO) {
-    const { data } = await client.put<Tokens>(
-      '/auth/updatePassword',
-      body,
-      getAuthorizationHeader(),
-    );
+    const { data } = await client.patch<Tokens>('/auth/updatePassword', body);
     return data;
   }
 
   async getMe() {
-    const { data } = await client.get<OrdinaryStudentResponse>(
-      `/auth/me`,
-      getAuthorizationHeader(),
-    );
+    const { data } = await client.get<OrdinaryStudentResponse>(`/auth/me`);
     return data;
   }
 

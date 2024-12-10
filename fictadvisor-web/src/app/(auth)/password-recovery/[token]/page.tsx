@@ -1,9 +1,9 @@
 'use client';
 
 import React, { FC } from 'react';
-import { useQuery } from 'react-query';
 import { ChevronLeftIcon, FingerPrintIcon } from '@heroicons/react/24/outline';
 import { Box, Typography } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
 import CreatePasswordForm from '@/app/(auth)/password-recovery/[token]/components/create-password-form';
@@ -29,13 +29,11 @@ const CreatePassword: FC<TokenParams> = ({ params }) => {
     void router.push('/login');
   };
 
-  const { data, isFetching } = useQuery(
-    'createPassword',
-    () => AuthAPI.checkResetToken(token),
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
+  const { data, isFetching } = useQuery({
+    queryKey: ['createPassword', token],
+    queryFn: () => AuthAPI.checkResetToken(token),
+    refetchOnWindowFocus: false,
+  });
   if (!isFetching) {
     if (!data?.isAvailable) {
       void router.push('/password-recovery/invalid');

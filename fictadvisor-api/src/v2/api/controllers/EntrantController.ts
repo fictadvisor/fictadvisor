@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
-  ApiBearerAuth,
+  ApiCookieAuth,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -37,7 +37,7 @@ export class EntrantController {
   ) {}
 
   @Access(PERMISSION.ENTRANT_CONTRACT_CREATE)
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @Post('/contract')
   @ApiOkResponse({
     type: EntrantWithContractResponse,
@@ -88,7 +88,7 @@ export class EntrantController {
 
   @Access(PERMISSION.ADMISSION_PRIORITIES_GET)
   @Get('/priority')
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOkResponse({
     type: EntrantWithPriorityResponse,
   })
@@ -132,7 +132,7 @@ export class EntrantController {
   }
 
   @Access(PERMISSION.ADMISSION_PRIORITIES_APPROVE)
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @Patch('/priority/approve')
   @ApiOkResponse()
   @ApiBadRequestResponse({
@@ -171,7 +171,7 @@ export class EntrantController {
   }
 
   @Access(PERMISSION.ADMISSION_PRIORITIES_APPROVE)
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @Patch('/priority/approve/:entrantId')
   @ApiOkResponse()
   @ApiBadRequestResponse({
@@ -210,7 +210,7 @@ export class EntrantController {
   }
 
   @Access(PERMISSION.ADMISSION_DELETE)
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @Delete('/data')
   @ApiOkResponse()
   @ApiBadRequestResponse({
@@ -250,7 +250,7 @@ export class EntrantController {
   }
 
   @Access(PERMISSION.ADMISSION_GET)
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @Get()
   @ApiOkResponse({
     type: EntrantFullResponse,
@@ -291,7 +291,7 @@ export class EntrantController {
   }
 
   @Access(PERMISSION.ADMISSION_DELETE)
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @Delete('/:entrantId')
   @ApiQuery({
     name: 'action',

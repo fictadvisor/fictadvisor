@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Box } from '@mui/material';
 
 import ScheduleCard from '@/app/(main)/schedule/schedule-page/schedule-section/components/schedule/components/schedule-column/components/schedule-card';
-import useAuthentication from '@/hooks/use-authentication';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 import useToast from '@/hooks/use-toast';
 import { EventDay } from '@/lib/api/schedule/types/GetEventBody';
 import { useSchedule } from '@/store/schedule/useSchedule';

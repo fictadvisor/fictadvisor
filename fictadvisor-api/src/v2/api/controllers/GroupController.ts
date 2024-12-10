@@ -1,52 +1,46 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiForbiddenResponse,
-  ApiOkResponse,
-  ApiParam,
-  ApiTags,
-  ApiUnauthorizedResponse,
-} from '@nestjs/swagger';
-import {
+  ApproveDTO,
   CreateGroupDTO,
   EmailDTO,
-  ApproveDTO,
-  RoleDTO,
-  UpdateGroupDTO,
-  QuerySemesterDTO,
-  SwitchCaptainDTO,
+  ExtendedDisciplinesTeachersResponse,
   GroupStudentsQueryDTO,
-  QueryAllGroupsDTO,
-  StudentOfGroupDTO,
-} from '@fictadvisor/utils/requests';
-import {
   GroupStudentsResponse,
-  CaptainResponse,
-  ExtendedDisciplineTeachersResponse,
-  ShortUsersResponse,
+  GroupsWithTelegramGroupsResponse,
+  MappedGroupResponse,
+  OrdinaryStudentResponse,
+  PaginatedGroupsResponse,
+  PERMISSION,
+  QueryAllGroupsDTO,
+  QuerySemesterDTO,
+  RoleDTO,
   SelectiveDisciplinesWithAmountResponse,
   ShortDisciplinesResponse,
-  OrdinaryStudentResponse,
+  ShortUsersResponse,
+  SortQAGroupsParam,
+  StudentOfGroupDTO,
   StudentsResponse,
-  GroupsWithTelegramGroupsResponse,
+  SwitchCaptainDTO,
+  UpdateGroupDTO,
   URLResponse,
-  MappedGroupResponse,
-  PaginatedGroupsResponse,
-} from '@fictadvisor/utils/responses';
-import { PERMISSION } from '@fictadvisor/utils/security';
-import { SortQAGroupsParam } from '@fictadvisor/utils/enums';
-import { ApiEndpoint } from '../../utils/documentation/decorators';
+  UserResponse,
+} from '@fictadvisor/utils';
+import { ApiEndpoint, GetUser } from '../../utils/documentation/decorators';
 import { TelegramGuard } from '../../security/TelegramGuard';
 import { GroupByIdPipe } from '../pipes/GroupByIdPipe';
 import { UserByIdPipe } from '../pipes/UserByIdPipe';
+import { CreateGroupPipe } from '../pipes/CreateGroupPipe';
 import { StudentOfGroupPipe } from '../pipes/StudentOfGroupPipe';
 import { StudentMapper } from '../../mappers/StudentMapper';
 import { GroupMapper } from '../../mappers/GroupMapper';
 import { DisciplineMapper } from '../../mappers/DisciplineMapper';
+import { UserMapper } from '../../mappers/UserMapper';
 import { GroupService } from '../services/GroupService';
 import { UserService } from '../services/UserService';
-import { AbsenceOfCaptainException } from '../../utils/exceptions/AbsenceOfCaptainException';
+import { GroupDocumentation } from '../../utils/documentation/group';
+import { UpdateGroupPipe } from '../pipes/UpdateGroupPipe';
+import { User } from '@prisma/client';
 
 @ApiTags('Groups')
 @Controller({
@@ -57,70 +51,37 @@ export class GroupController {
   constructor (
     private groupService: GroupService,
     private userService: UserService,
-    private studentMapper: StudentMapper,
     private groupMapper: GroupMapper,
+    private studentMapper: StudentMapper,
     private disciplineMapper: DisciplineMapper,
+    private userMapper: UserMapper,
   ) {}
 
-  @ApiBearerAuth()
-  @ApiOkResponse({
-    type: MappedGroupResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidBodyException: 
-      Proper name is expected
-      Code can not be empty
-      Educational program id cannot be empty
-      Cathedra id cannot be empty
-      Admission year must be a number
-      Admission year cannot be empty`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException: 
-      You do not have permission to perform this action`,
-  })
   @ApiEndpoint({
     summary: 'Create a new group',
     permissions: PERMISSION.GROUPS_CREATE,
+    documentation: GroupDocumentation.CREATE,
   })
   @Post()
-  async create (@Body() data: CreateGroupDTO): Promise<MappedGroupResponse> {
+  async create (
+    @Body(CreateGroupPipe) data: CreateGroupDTO,
+  ): Promise<MappedGroupResponse> {
     const group = await this.groupService.create(data);
-    return this.groupMapper.getGroup(group);
+    return this.groupMapper.getMappedGroup(group);
   }
 
-  @ApiOkResponse({
-    type: PaginatedGroupsResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidBodyException: 
-      Specialties must be an array
-      Cathedras must be an array
-      Courses must be an array
-      Min course value is 1
-      Max course value is 4
-      Cathedras must be an array
-      Wrong value for order
-      Page must be a number
-      PageSize must be a number`,
-  })
   @ApiEndpoint({
     summary: 'Get all groups with selected filter',
+    documentation: GroupDocumentation.GET_ALL,
   })
   @Get()
-  async getAll (@Query() query: QueryAllGroupsDTO): Promise<PaginatedGroupsResponse> {
+  async getAll (
+    @Query() query: QueryAllGroupsDTO,
+  ): Promise<PaginatedGroupsResponse> {
     const groupsWithSelectiveAmounts = await this.groupService.getAll(query);
-    const groups = this.groupMapper.getGroups(
-      groupsWithSelectiveAmounts.data, 
-      query.sort === SortQAGroupsParam.CAPTAIN
+    const groups = this.groupMapper.getMappedGroups(
+      groupsWithSelectiveAmounts.data,
+      query.sort === SortQAGroupsParam.CAPTAIN,
     );
     return {
       groups,
@@ -128,646 +89,237 @@ export class GroupController {
     };
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse({
-    type: GroupsWithTelegramGroupsResponse,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
   @ApiEndpoint({
     summary: 'Get all groups with telegram groups',
     guards: TelegramGuard,
+    documentation: GroupDocumentation.GET_GROUPS_WITH_TELEGRAM_GROUPS,
   })
   @Get('/telegramGroups')
-  async getGroupsWithTelegramGroups () {
+  async getGroupsWithTelegramGroups (): Promise<GroupsWithTelegramGroupsResponse> {
     const groups = await this.groupService.getGroupsWithTelegramGroups();
     return this.groupMapper.getGroupsWithTelegramGroups(groups);
   }
 
-  @ApiOkResponse({
-    type: MappedGroupResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidEntityIdException: 
-      Group with such id is not found`,
-  })
-  @ApiParam({
-    name: 'groupId',
-    required: true,
-    description: 'Id of the group to get',
-  })
   @ApiEndpoint({
     summary: 'Get group with selected id',
+    documentation: GroupDocumentation.GET,
   })
   @Get('/:groupId')
   async get (
-    @Param('groupId', GroupByIdPipe) groupId: string
+    @Param('groupId', GroupByIdPipe) groupId: string,
   ): Promise<MappedGroupResponse> {
     const group = await this.groupService.get(groupId);
-    return this.groupMapper.getGroup(group);
+    return this.groupMapper.getMappedGroup(group);
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse({
-    type: MappedGroupResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidEntityIdException: 
-      Group with such id is not found
-        
-    InvalidBodyException: 
-      Proper name is expected
-      Code can not be empty
-      Admission year must be a number`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException: 
-      You do not have permission to perform this action`,
-  })
-  @ApiParam({
-    name: 'groupId',
-    required: true,
-    description: 'Id of the group to update',
-  })
   @ApiEndpoint({
     summary: 'Update group with selected id',
     permissions: PERMISSION.GROUPS_UPDATE,
+    documentation: GroupDocumentation.UPDATE,
   })
   @Patch('/:groupId')
   async update (
     @Param('groupId', GroupByIdPipe) groupId: string,
-    @Body() data: UpdateGroupDTO,
+    @Body(UpdateGroupPipe) data: UpdateGroupDTO,
   ): Promise<MappedGroupResponse> {
     const group = await this.groupService.updateGroup(groupId, data);
-    return this.groupMapper.getGroup(group);
+    return this.groupMapper.getMappedGroup(group);
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse({
-    type: MappedGroupResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidEntityIdException: 
-      Group with such id is not found`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException: 
-      You do not have permission to perform this action`,
-  })
-  @ApiParam({
-    name: 'groupId',
-    required: true,
-    description: 'Id of the group to delete',
-  })
   @ApiEndpoint({
     summary: 'Delete group by id',
     permissions: PERMISSION.GROUPS_DELETE,
+    documentation: GroupDocumentation.DELETE,
   })
   @Delete('/:groupId')
   async deleteGroup (
     @Param('groupId', GroupByIdPipe) groupId: string,
   ): Promise<MappedGroupResponse> {
     const group = await this.groupService.deleteGroup(groupId);
-    return this.groupMapper.getGroup(group);
+    return this.groupMapper.getMappedGroup(group);
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse({
-    type: GroupStudentsResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidEntityIdException: 
-      Group with such id is not found
-    
-    InvalidBodyException:
-      Wrong value for sort
-      Wrong value for order`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException: 
-      You do not have permission to perform this action`,
-  })
-  @ApiParam({
-    name: 'groupId',
-    required: true,
-    description: 'Id of student\'s group',
-  })
   @ApiEndpoint({
     summary: 'Get students by group id',
     permissions: PERMISSION.GROUPS_$GROUPID_STUDENTS_GET,
+    documentation: GroupDocumentation.GET_STUDENTS,
   })
   @Get('/:groupId/students')
   async getStudents (
     @Param('groupId', GroupByIdPipe) groupId: string,
     @Query() query: GroupStudentsQueryDTO,
-  ) {
+  ): Promise<GroupStudentsResponse> {
     const students = await this.groupService.getStudents(groupId, query);
-    return { students };
+    return {
+      students: this.studentMapper.getOrdinaryStudents(students),
+    };
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse({
-    type: CaptainResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidGroupIdException: 
-      Group with such id is not found
-      
-    AbsenceOfCaptainException:
-      Captain was not found`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException: 
-      You do not have permission to perform this action`,
-  })
-  @ApiParam({
-    name: 'groupId',
-    required: true,
-    description: 'Id of the group to get the captain from',
-  })
   @ApiEndpoint({
     summary: 'Get captain by group id',
     permissions: PERMISSION.GROUPS_$GROUPID_CAPTAIN_GET,
+    documentation: GroupDocumentation.GET_CAPTAIN,
   })
   @Get('/:groupId/captain')
   async getCaptain (
     @Param('groupId', GroupByIdPipe) groupId: string,
-  ) {
+  ): Promise<UserResponse> {
     const captain = await this.groupService.getCaptain(groupId);
-    if (!captain) {
-      throw new AbsenceOfCaptainException();
-    }
-    return captain;
+    return this.userMapper.getUser(captain);
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse({
-    type: [ExtendedDisciplineTeachersResponse],
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidGroupIdException:
-      Group with such id is not found
-      
-    DataMissingException:
-      Data are missing`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException: 
-      You do not have permission to perform this action`,
-  })
-  @ApiParam({
-    name: 'groupId',
-    required: true,
-    description: 'Id of the group to get the discipline teachers from',
-  })
   @ApiEndpoint({
     summary: 'Request teachers of disciplines by group\'s id',
     permissions: PERMISSION.GROUPS_$GROUPID_DISCIPLINES_TEACHERS_GET,
+    documentation: GroupDocumentation.GET_DISCIPLINE_TEACHER,
   })
   @Get('/:groupId/disciplineTeachers')
   async getDisciplineTeachers (
     @Param('groupId', GroupByIdPipe) groupId: string,
     @Query() query?: QuerySemesterDTO,
-  ) {
-    return this.groupService.getDisciplineTeachers(groupId, query);
+  ): Promise<ExtendedDisciplinesTeachersResponse> {
+    const disciplines = await this.groupService.getDisciplineTeachers(groupId, query);
+    return {
+      disciplines: this.disciplineMapper.getExtendedDisciplinesTeachers(disciplines),
+    };
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse({
-    type: ShortDisciplinesResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidGroupIdException:
-      Group with such id is not found
-  
-    DataMissingException:
-      Data are missing`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException: 
-      You do not have permission to perform this action`,
-  })
-  @ApiParam({
-    name: 'groupId',
-    required: true,
-    description: 'Id of the group to get the disciplines from',
-  })
   @ApiEndpoint({
     summary: 'Request disciplines by group\'s id',
     permissions: PERMISSION.GROUPS_$GROUPID_DISCIPLINES_GET,
+    documentation: GroupDocumentation.GET_DISCIPLINES,
   })
   @Get('/:groupId/disciplines')
-  async getDiscipline (
+  async getDisciplines (
     @Param('groupId', GroupByIdPipe) groupId: string,
     @Query() query?: QuerySemesterDTO,
-  ) {
-    const disciplines = await this.groupService.getDisciplines(groupId, query);
-    return { disciplines };
+  ): Promise<ShortDisciplinesResponse> {
+    const disciplines = await this.groupService.getDisciplineTeachers(groupId, query);
+    return {
+      disciplines: this.disciplineMapper.getDisciplines(disciplines),
+    };
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse({
-    type: ShortUsersResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidGroupIdException: 
-      Group with such id is not found
-      
-    InvalidBodyException: 
-      Email cannot be empty
-      The email is not a valid email address`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `
-    NoPermissionException: 
-      You do not have permission to perform this action`,
-  })
-  @ApiParam({
-    name: 'groupId',
-    required: true,
-    description: 'Id of the group to add emails of students',
-  })
   @ApiEndpoint({
     summary: 'Add emails of students to group',
     permissions: PERMISSION.GROUPS_$GROUPID_STUDENTS_ADD,
+    documentation: GroupDocumentation.ADD_EMAILS,
   })
   @Post('/:groupId/addEmails')
   async addUnregistered (
     @Param('groupId', GroupByIdPipe) groupId: string,
     @Body() body: EmailDTO,
-  ) {
-    return this.groupService.addUnregistered(groupId, body);
+  ): Promise<ShortUsersResponse> {
+    const users = await this.groupService.addUnregistered(groupId, body);
+    return this.userMapper.getShortUsers(users);
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse({
-    type: OrdinaryStudentResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidEntityIdException: 
-      Group with such id is not found
-      User with such id is not found
-      
-    InvalidBodyException:
-      State is not an enum`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException:
-      You do not have permission to perform this action`,
-  })
-  @ApiParam({
-    name: 'groupId',
-    required: true,
-    description: 'Id of the group to verify user from',
-  })
-  @ApiParam({
-    name: 'userId',
-    required: true,
-    description: 'Id of the user to verify',
-  })
   @ApiEndpoint({
     summary: 'Verify student state',
     permissions: PERMISSION.GROUPS_$GROUPID_STUDENTS_VERIFY,
+    documentation: GroupDocumentation.VERIFY_STUDENT,
   })
   @Patch('/:groupId/verify/:userId')
   async verifyStudent (
     @Param(StudentOfGroupPipe) { userId, groupId }: StudentOfGroupDTO,
-    @Body() body : ApproveDTO,
-  ) {
+    @Body() body: ApproveDTO,
+  ): Promise<OrdinaryStudentResponse> {
     const student = await this.groupService.verifyStudent(groupId, userId, body);
-    return this.studentMapper.getStudent(student);
+    return this.studentMapper.getOrdinaryStudent(student);
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse()
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidEntityIdException: 
-      Group with such id is not found
-      User with such id is not found
-      
-    InvalidBodyException:
-      Role name can not be empty`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException:
-      You do not have permission to perform this action`,
-  })
-  @ApiParam({
-    name: 'groupId',
-    required: true,
-    description: 'Id of the group to switch user role from',
-  })
-  @ApiParam({
-    name: 'userId',
-    required: true,
-    description: 'Id of the user to switch role',
-  })
   @ApiEndpoint({
     summary: 'Switch user role',
     permissions: PERMISSION.GROUPS_$GROUPID_ADMIN_SWITCH,
+    documentation: GroupDocumentation.SWITCH_ROLE,
   })
   @Patch('/:groupId/switch/:userId')
   async switchRole (
     @Param(StudentOfGroupPipe) { userId }: StudentOfGroupDTO,
     @Body() { roleName }: RoleDTO,
-  ) {
+  ): Promise<void> {
     return this.userService.changeGroupRole(userId, roleName);
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse()
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidEntityIdException: 
-      Group with such id is not found
-      User with such id is not found`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException:
-      You do not have permission to perform this action`,
-  })
-  @ApiParam({
-    name: 'groupId',
-    required: true,
-    description: 'Id of a group',
-  })
-  @ApiParam({
-    name: 'userId',
-    required: true,
-    description: 'Id of a user to remove',
-  })
   @ApiEndpoint({
     summary: 'Remove a student from a group',
     permissions: PERMISSION.GROUPS_$GROUPID_STUDENTS_REMOVE,
+    documentation: GroupDocumentation.REMOVE_STUDENT,
   })
   @Delete('/:groupId/remove/:userId')
   async removeStudent (
     @Param('groupId', GroupByIdPipe) groupId: string,
     @Param('userId', UserByIdPipe) userId: string,
-    @Request() req,
-  ) {
-    return this.groupService.removeStudent(groupId, userId, req.user);
+    @GetUser() user: User,
+  ):Promise<void> {
+    return this.groupService.removeStudent(groupId, userId, user);
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse({
-    type: StudentsResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidEntityIdException: 
-      Group with such id is not found`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException:
-      You do not have permission to perform this action`,
-  })
-  @ApiParam({
-    name: 'groupId',
-    required: true,
-    description: 'Id of a group',
-  })
   @ApiEndpoint({
     summary: 'Get unverified students of the group',
     permissions: PERMISSION.GROUPS_$GROUPID_STUDENTS_UNVERIFIED_GET,
+    documentation: GroupDocumentation.GET_UNVERIFIED_STUDENTS,
   })
   @Get('/:groupId/unverifiedStudents')
   async getUnverifiedStudents (
-      @Param('groupId', GroupByIdPipe) groupId: string,
-  ) {
+    @Param('groupId', GroupByIdPipe) groupId: string,
+  ): Promise<StudentsResponse> {
     const students = await this.groupService.getUnverifiedStudents(groupId);
-    return { students };
+    return {
+      students: this.studentMapper.getOrdinaryStudents(students, false),
+    };
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse({
-    type: OrdinaryStudentResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidEntityIdException:
-      User with such id is not found
-      Group with such id is not found
-      
-    StudentIsAlreadyCaptainException:
-      The student is already the captain of the group`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException:
-      You do not have permission to perform this action`,
-  })
-  @ApiParam({
-    name: 'groupId',
-    required: true,
-    description: 'Id of a group',
-  })
   @ApiEndpoint({
     summary: 'Make a student a captain',
     permissions: [PERMISSION.GROUPS_CAPTAIN_SWITCH, PERMISSION.GROUPS_$GROUPID_TRANSFER],
+    documentation: GroupDocumentation.SWITCH_CAPTAIN,
   })
   @Post('/:groupId/switchCaptain')
   async switchCaptain (
     @Param('groupId', GroupByIdPipe) groupId: string,
     @Body() { studentId }: SwitchCaptainDTO,
-  ) {
+  ): Promise<OrdinaryStudentResponse> {
     return this.groupService.switchCaptain(groupId, studentId);
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse({
-    type: URLResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidEntityIdException: 
-      Group with such id is not found`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException:
-      You do not have permission to perform this action`,
-  })
-  @ApiParam({
-    name: 'groupId',
-    required: true,
-    description: 'Id of a group',
-  })
   @ApiEndpoint({
     summary: 'Get a group\'s list',
     permissions: PERMISSION.GROUPS_$GROUPID_LIST_GET,
+    documentation: GroupDocumentation.GET_GROUP_LIST,
   })
   @Get('/:groupId/list')
   async getGroupList (
     @Param('groupId', GroupByIdPipe) groupId: string,
-  ) {
+  ): Promise<URLResponse> {
     const url = await this.groupService.getGroupList(groupId);
     return { url };
   }
 
-  @ApiBearerAuth()
-  @Patch('/:groupId/leave')
-  @ApiOkResponse({
-    type: OrdinaryStudentResponse,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException:
-      You do not have permission to perform this action
-      
-    NotApprovedException:
-      Student is not approved`,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidEntityIdException:
-      Group with such id is not found`,
-  })
-  @ApiParam({
-    name: 'groupId',
-    required: true,
-    description: 'Id of a group to leave',
-  })
   @ApiEndpoint({
     summary: 'Leave user from the group',
     permissions: PERMISSION.GROUPS_$GROUPID_LEAVE,
+    documentation: GroupDocumentation.LEAVE_GROUP,
   })
+  @Patch('/:groupId/leave')
   async leaveGroup (
-      @Param('groupId', GroupByIdPipe) groupId: string,
-      @Request() req,
-  ) {
-    return this.groupService.leaveGroup(groupId, req.user.id);
+    @Param('groupId', GroupByIdPipe) groupId: string,
+    @GetUser('id') userId: string,
+  ): Promise<OrdinaryStudentResponse> {
+    const student = await this.groupService.leaveGroup(groupId, userId);
+    return this.studentMapper.getOrdinaryStudent(student);
   }
 
-  @ApiBearerAuth()
-  @ApiOkResponse({
-    type: [SelectiveDisciplinesWithAmountResponse],
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidGroupIdException:
-      Group with such id is not found
-  
-    DataMissingException:
-      Data are missing`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException: 
-      You do not have permission to perform this action`,
-  })
-  @ApiParam({
-    name: 'groupId',
-    required: true,
-    description: 'Id of the group to get the selective disciplines from',
-  })
   @ApiEndpoint({
     summary: 'Request selective disciplines by group\'s id',
     permissions: PERMISSION.GROUPS_$GROUPID_SELECTIVE_GET,
+    documentation: GroupDocumentation.GET_SELECTIVES,
   })
   @Get('/:groupId/selectiveDisciplines')
   async getSelectives (
-      @Param('groupId', GroupByIdPipe) groupId: string,
-  ) {
+    @Param('groupId', GroupByIdPipe) groupId: string,
+  ): Promise<SelectiveDisciplinesWithAmountResponse[]> {
     const disciplines = await this.groupService.getSelectiveDisciplines(groupId);
-    return this.disciplineMapper.getSelectiveDisciplines(disciplines, true);
+    return this.disciplineMapper.getSelectiveDisciplines(disciplines, true) as SelectiveDisciplinesWithAmountResponse[];
   }
 }

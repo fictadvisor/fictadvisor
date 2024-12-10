@@ -1,7 +1,8 @@
-import { Cathedra, Discipline, EducationalPrograms, Group, Role, SelectiveDiscipline, Speciality, User } from '@prisma/client';
+import { Cathedra, Discipline, EducationalPrograms, Group, SelectiveDiscipline } from '@prisma/client';
 import { State } from '@fictadvisor/utils/enums';
 import { DbSpeciality } from './DbSpeciality';
 import { DbRole } from './DbRole';
+import { DbUser } from './DbUser';
 
 export class DbStudent {
   userId?: string;
@@ -16,7 +17,7 @@ export class DbStudent {
     cathedra?: Cathedra;
     educationalProgram?: {
       speciality: DbSpeciality,
-    } & EducationalPrograms
+    } & EducationalPrograms,
   };
   roles?: {
     studentId: string,
@@ -26,5 +27,5 @@ export class DbStudent {
   selectiveDisciplines?: (SelectiveDiscipline & {
     discipline: Discipline,
   })[];
-  user?: User;
+  user?: DbUser;
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import {
   ReadonlyURLSearchParams,
   useRouter,
@@ -14,7 +14,7 @@ import styles from '@/app/(main)/discipline/PersonalTeacherSubjectPage.module.sc
 import Breadcrumbs from '@/components/common/ui/breadcrumbs';
 import PersonalTeacherCard from '@/components/common/ui/cards/personal-teacher-card';
 import Progress from '@/components/common/ui/progress';
-import useAuthentication from '@/hooks/use-authentication';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 import useTabState from '@/hooks/use-tab-state';
 import useToast from '@/hooks/use-toast';
 import TeacherService from '@/lib/services/teacher/TeacherService';
@@ -35,20 +35,20 @@ const PersonalTeacherSubjectPage = () => {
     isLoading,
     isError,
     data: teacherInfo,
-  } = useQuery(
-    ['teacher', teacherId, subjectId],
-    () =>
+  } = useQuery({
+    queryKey: ['teacher', teacherId, subjectId, user?.id],
+
+    queryFn: () =>
       TeacherService.getTeacherSubjectPageInfo(
         teacherId ?? '',
         subjectId ?? '',
         user?.id,
       ),
-    {
-      enabled: !!teacherId && !!subjectId && !!user?.id,
-      refetchOnWindowFocus: false,
-      retry: false,
-    },
-  );
+
+    enabled: !!teacherId && !!subjectId,
+    refetchOnWindowFocus: false,
+    retry: false,
+  });
   const toast = useToast();
 
   useEffect(() => {

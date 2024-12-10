@@ -326,19 +326,21 @@ describe('UserService', () => {
     it('should return correct object if student has selective in only one semester', async () => {
       const userId = 'userWithSelectiveId';
       const result = await userService.getSelectivesBySemesters(userId);
-      expect(result).toStrictEqual([
-        {
-          year: 2022,
-          semester: 1,
-          amount: 3,
-          disciplines: [],
-        }, {
-          year: 2022,
-          semester: 2,
-          amount: 1,
-          disciplines: ['selective2'],
-        },
-      ]);
+      expect(result).toStrictEqual({
+        selectives: [
+          {
+            year: 2022,
+            semester: 1,
+            amount: 3,
+            disciplines: [],
+          }, {
+            year: 2022,
+            semester: 2,
+            amount: 1,
+            disciplines: ['selective2'],
+          },
+        ],
+      });
     });
   });
 
@@ -346,19 +348,21 @@ describe('UserService', () => {
     it('should return correct object if student has selective in only one semester', async () => {
       const userId = 'userWithSelectiveId';
       const result = await userService.getSelectivesBySemesters(userId);
-      expect(result).toStrictEqual([
-        {
-          year: 2022,
-          semester: 1,
-          amount: 3,
-          disciplines: [],
-        }, {
-          year: 2022,
-          semester: 2,
-          amount: 1,
-          disciplines: ['selective2'],
-        },
-      ]);
+      expect(result).toStrictEqual({
+        selectives: [
+          {
+            year: 2022,
+            semester: 1,
+            amount: 3,
+            disciplines: [],
+          }, {
+            year: 2022,
+            semester: 2,
+            amount: 1,
+            disciplines: ['selective2'],
+          },
+        ],
+      });
     });
   });
 
