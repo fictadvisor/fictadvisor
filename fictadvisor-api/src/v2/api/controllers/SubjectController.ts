@@ -1,27 +1,22 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
-import {
-  ApiBadRequestResponse,
-  ApiCookieAuth,
-  ApiForbiddenResponse,
-  ApiOkResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import {
   QueryAllSubjectDTO,
   CreateSubjectDTO,
   UpdateSubjectDTO,
 } from '@fictadvisor/utils/requests';
 import {
+  PaginatedSubjectsResponse,
   SubjectResponse,
   SubjectWithTeachersResponse,
-  PaginatedSubjectsResponse,
 } from '@fictadvisor/utils/responses';
 import { PERMISSION } from '@fictadvisor/utils/security';
-import { Access } from 'src/v2/security/Access';
 import { ApiEndpoint } from '../../utils/documentation/decorators';
 import { SubjectByIdPipe } from '../pipes/SubjectByIdPipe';
 import { SubjectMapper } from '../../mappers/SubjectMapper';
 import { SubjectService } from '../services/SubjectService';
+import { SubjectDocumentation } from '../../utils/documentation/subject';
+import { AllSubjectsPipe } from '../pipes/AllSubjectsPipe';
 
 @ApiTags('Subjects')
 @Controller({
@@ -34,27 +29,24 @@ export class SubjectController {
     private subjectService: SubjectService,
   ) {}
 
-  @ApiOkResponse({
-    type: PaginatedSubjectsResponse,
+  @ApiEndpoint({
+    summary: 'Get all subjects',
+    documentation: SubjectDocumentation.GET_ALL,
   })
   @Get()
   async getAll (
-    @Query() body: QueryAllSubjectDTO,
-  ) {
+    @Query(AllSubjectsPipe) body: QueryAllSubjectDTO,
+  ): Promise<PaginatedSubjectsResponse> {
     const subjects = await this.subjectService.getAll(body);
-
     return {
       subjects: subjects.data,
       pagination: subjects.pagination,
     };
   }
 
-  @ApiOkResponse({
-    type: SubjectResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `InvalidEntityIdException\n 
-                  subject with such id is not found`,
+  @ApiEndpoint({
+    summary: 'Get selected subject',
+    documentation: SubjectDocumentation.GET,
   })
   @Get('/:subjectId')
   async get (
@@ -64,16 +56,9 @@ export class SubjectController {
     return this.subjectMapper.getSubject(dbSubject);
   }
 
-  @ApiOkResponse({
-    type: SubjectWithTeachersResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidEntityIdException:
-      Subject with such id is not found`,
-  })
   @ApiEndpoint({
     summary: 'Get teachers connected to the selected subject',
+    documentation: SubjectDocumentation.GET_TEACHERS,
   })
   @Get('/:subjectId/teachers')
   getTeachers (
@@ -82,21 +67,10 @@ export class SubjectController {
     return this.subjectService.getTeachers(subjectId);
   }
 
-  @Access(PERMISSION.SUBJECTS_CREATE)
-  @ApiCookieAuth()
-  @ApiOkResponse({
-    type: SubjectResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `InvalidBodyException:\n 
-                  Name is too short (min: 5)
-                  Name is too long (max: 150)
-                  Name can not be empty
-                  Name is incorrect (a-zA-Z0-9A-Я(укр.)\\-' )(/+.,")`,
-  })
-  @ApiForbiddenResponse({
-    description: `NoPermissionException:\n
-                  You do not have permission to perform this action`,
+  @ApiEndpoint({
+    summary: 'Create a new subject',
+    documentation: SubjectDocumentation.CREATE,
+    permissions: PERMISSION.SUBJECTS_CREATE,
   })
   @Post()
   async create (
@@ -106,48 +80,28 @@ export class SubjectController {
     return this.subjectMapper.getSubject(dbSubject);
   }
 
-  @Access(PERMISSION.SUBJECTS_UPDATE)
-  @ApiCookieAuth()
-  @ApiOkResponse({
-    type: SubjectResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `InvalidEntityIdException:\n 
-                  subject with such id is not found
-                  
-                  InvalidBodyException:\n 
-                  Name is too short (min: 5)
-                  Name is too long (max: 150)
-                  Name can not be empty
-                  Name is incorrect (a-zA-Z0-9A-Я(укр.)\\-' )(/+.,")`,
-  })
-  @ApiForbiddenResponse({
-    description: `NoPermissionException:\n
-                  You do not have permission to perform this action`,
+  @ApiEndpoint({
+    summary: 'Update subject by id',
+    documentation: SubjectDocumentation.UPDATE,
+    permissions: PERMISSION.SUBJECTS_UPDATE,
   })
   @Patch('/:subjectId')
   async update (
     @Param('subjectId', SubjectByIdPipe) subjectId: string,
     @Body() body: UpdateSubjectDTO,
-  ) {
+  ): Promise<SubjectResponse> {
     return this.subjectService.update(subjectId, body);
   }
 
-  @Access(PERMISSION.SUBJECTS_DELETE)
-  @ApiCookieAuth()
-  @ApiOkResponse()
-  @ApiBadRequestResponse({
-    description: `InvalidEntityIdException:\n 
-                  subject with such id is not found`,
-  })
-  @ApiForbiddenResponse({
-    description: `NoPermissionException:\n
-                  You do not have permission to perform this action`,
+  @ApiEndpoint({
+    summary: 'Delete subject by id',
+    documentation: SubjectDocumentation.DELETE,
+    permissions: PERMISSION.SUBJECTS_DELETE,
   })
   @Delete('/:subjectId')
   delete (
     @Param('subjectId', SubjectByIdPipe) subjectId: string,
-  ) {
+  ): Promise<SubjectResponse> {
     return this.subjectService.deleteSubject(subjectId);
   }
 }

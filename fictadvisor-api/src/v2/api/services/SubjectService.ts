@@ -47,7 +47,6 @@ export class SubjectService {
       pagination: subjects.pagination,
     };
     for (const subject of subjects.data) {
-
       const amount = await this.teacherRepository.count({
         where: {
           disciplineTeachers: {
@@ -123,7 +122,6 @@ export class SubjectService {
     });
 
     const teachers = [];
-
     for (const dbTeacher of dbTeachers) {
       const sortedQuestionsWithAnswers = this.questionMapper.getSortedQuestionsWithAnswers(dbTeacher.disciplineTeachers as any as DbDisciplineTeacherWithAnswers[]);
       const marks = this.questionMapper.getMarks(sortedQuestionsWithAnswers);
@@ -149,6 +147,6 @@ export class SubjectService {
   }
 
   async deleteSubject (id: string) {
-    await this.subjectRepository.deleteById(id);
+    return await this.subjectRepository.deleteById(id);
   }
 }

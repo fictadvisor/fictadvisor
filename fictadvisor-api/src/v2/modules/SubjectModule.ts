@@ -5,9 +5,10 @@ import { PrismaModule } from './PrismaModule';
 import { AccessModule } from './AccessModule';
 import { MapperModule } from './MapperModule';
 import { TeacherModule } from './TeacherModule';
+import { GroupByIdPipe } from '../api/pipes/GroupByIdPipe';
 
 @Module({
-  providers: [SubjectService],
+  providers: [SubjectService, GroupByIdPipe],
   controllers: [SubjectController],
   exports: [SubjectService],
   imports: [PrismaModule, AccessModule, MapperModule, TeacherModule],
