@@ -66,5 +66,4 @@ const GeneralTab: FC = () => {
     </Box>
   );
 };
-
 export default GeneralTab;
