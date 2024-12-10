@@ -1,52 +1,21 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsIn, IsNumberString, IsOptional } from 'class-validator';
-import { SortQASParam } from '../enums/params/SortQASParam';
-import { OrderQAParam } from '../enums/params/OrderQAParam';
+import { IsOptional, IsString, IsUUID } from 'class-validator';
+import { QueryAllDTO } from './QueryAllDTO';
+import { validationOptionsMsg } from '../ValidationUtil';
+import { SortQASParam } from "../enums";
 
-export class QueryAllSubjectDTO {
+export class QueryAllSubjectDTO extends QueryAllDTO {
   @ApiPropertyOptional({
-    description: 'Visualization parameter: access to parts of divided data',
+    description: 'GroupId',
   })
-  @IsNumberString({}, {
-    message: 'page must be a number',
-  })
+  @IsString(validationOptionsMsg('GroupId must be a string'))
+  @IsUUID(4, validationOptionsMsg('GroupId must be a valid UUID v4'))
   @IsOptional()
-    page?: number;
-
-  @ApiPropertyOptional({
-    description: 'Visualization parameter: Divide data by amount of subjects',
-  })
-  @IsNumberString({}, {
-    message: 'pageSize must be a number',
-  })
-  @IsOptional()
-    pageSize?: number;
-
-  @ApiPropertyOptional({
-    description: 'Accepts subject full name',
-  })
-  @IsOptional()
-    search?: string;
+    groupId?: string;
 
   @ApiPropertyOptional({
     enum: SortQASParam,
   })
   @IsOptional()
     sort?: SortQASParam;
-
-  @ApiPropertyOptional({
-    enum: OrderQAParam,
-    description: 'Ascending by default',
-  })
-  @IsIn(['asc', 'desc'], {
-    message: 'wrong value for order',
-  })
-  @IsOptional()
-    order?: 'asc' | 'desc';
-
-  @ApiPropertyOptional({
-    description: 'GroupId',
-  })
-  @IsOptional()
-    groupId?: string;
 }
