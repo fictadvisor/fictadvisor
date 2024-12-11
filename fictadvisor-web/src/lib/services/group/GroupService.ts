@@ -16,7 +16,7 @@ class GroupService {
   async getStudents(user: User, order: Order) {
     const groupId = user.group?.id as string;
     const isStudent = user.group?.role === GroupRoles.STUDENT;
-    const { students } = await GroupAPI.getGroupStudents(groupId, { order });
+    const { students } = await GroupAPI.getGroupStudents(groupId, order);
     const requests: OrdinaryStudentResponse[] = isStudent
       ? []
       : (await GroupAPI.getRequestStudents(groupId)).students;
