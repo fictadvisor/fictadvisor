@@ -19,11 +19,6 @@ WORKDIR /app
 COPY --from=pruner ./app/out/full/ ./
 COPY --from=pruner ./app/out/yarn.lock ./
 
-ARG NODE_ENV=${NODE_ENV}
-RUN if [ $NODE_ENV = "development" ]; then \
-    cp /app/fictadvisor-web/.env.development /app/fictadvisor-web/.env.production; fi
-
-ENV NODE_ENV="production"
 RUN yarn install --production=false && \
     npx turbo build --filter @fictadvisor/frontend
 

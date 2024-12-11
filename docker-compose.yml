@@ -51,6 +51,8 @@ services:
       - fictadvisor-dev
     ports:
       - "4000:80"
+    env_file:
+      - ~/deployment/env/fictadvisor-web-dev.env
 
   fictadvisor-web:
     image: fictadvisor/fictadvisor-web:master
@@ -62,6 +64,8 @@ services:
       - fictadvisor
     ports:
       - "3000:80"
+    env_file:
+      - ~/deployment/env/fictadvisor-web.env
 
   fictadvisor-bot-dev:
     image: fictadvisor/fictadvisor-bot:dev
