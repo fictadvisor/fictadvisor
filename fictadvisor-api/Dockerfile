@@ -1,7 +1,7 @@
 # Alpine image
 FROM node:20-alpine AS alpine
 RUN apk update
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache libc6-compat openssl
 
 # Setup pnpm and turbo on the alpine base
 FROM alpine AS base
