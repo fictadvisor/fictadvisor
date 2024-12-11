@@ -39,7 +39,7 @@ class GroupService {
         groupId,
       },
     });
-    const studentsRes = GroupAPI.getGroupStudents(groupId, { order });
+    const studentsRes = GroupAPI.getGroupStudents(groupId, order);
 
     const [{ permissions }, { students }] = await Promise.all([
       permissionsRes,
