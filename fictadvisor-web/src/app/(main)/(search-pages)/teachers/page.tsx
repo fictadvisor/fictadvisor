@@ -35,7 +35,7 @@ const TeacherPage: FC = () => {
   const localStorageName = 'teachersForm';
   const [queryObj, setQueryObj] =
     useState<SearchFormFields>(TeacherInitialValues);
-  const [currPage, setCurrPage] = useState(0);
+  const [pageSize, setPageSize] = useState(PAGE_SIZE);
 
   const submitHandler: SearchFormProps['onSubmit'] = useCallback(query => {
     setQueryObj(prev => {
@@ -50,13 +50,13 @@ const TeacherPage: FC = () => {
     TeacherWithRolesAndCathedrasResponse[]
   >([]);
   const { data, isLoading, isFetching, isSuccess } = useQuery({
-    queryKey: ['lecturers', currPage, queryObj],
+    queryKey: ['lecturers', pageSize, queryObj],
 
     queryFn: () =>
       TeacherAPI.getAll({
         ...queryObj,
-        pageSize: PAGE_SIZE,
-        page: currPage,
+        pageSize: pageSize,
+        page: 0,
       } as QueryAllTeacherDTO),
 
     placeholderData: (previousData, previousQuery) => previousData,
@@ -96,7 +96,7 @@ const TeacherPage: FC = () => {
           text="Завантажити ще"
           variant={ButtonVariant.FILLED}
           color={ButtonColor.SECONDARY}
-          onClick={() => setCurrPage(pr => pr + 1)}
+          onClick={() => setPageSize(pr => pr + 10)}
         />
       )}
     </Box>
