@@ -35,7 +35,7 @@ const TeacherPage: FC = () => {
   const localStorageName = 'teachersForm';
   const [queryObj, setQueryObj] =
     useState<SearchFormFields>(TeacherInitialValues);
-  const [pageSize, setPageSize] = useState(20);
+  const [pageSize, setPageSize] = useState(PAGE_SIZE);
 
   const submitHandler: SearchFormProps['onSubmit'] = useCallback(query => {
     setQueryObj(prev => {
