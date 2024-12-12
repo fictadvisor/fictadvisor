@@ -2,7 +2,6 @@ import {
   ApproveDTO,
   CreateGroupDTO,
   EmailDTO,
-  GroupStudentsQueryDTO,
   QueryAllGroupsDTO,
   QuerySemesterDTO,
   RoleDTO,
@@ -69,7 +68,8 @@ class GroupAPI {
     return data;
   }
 
-  async getGroupStudents(groupId: string, params: GroupStudentsQueryDTO = {}) {
+  async getGroupStudents(groupId: string, order?: Order) {
+    const params = order ? { order, sort: 'lastName' } : {};
     const { data } = await client.get<GroupStudentsResponse>(
       `/groups/${groupId}/students`,
       {
