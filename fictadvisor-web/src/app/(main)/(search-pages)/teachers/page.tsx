@@ -29,7 +29,6 @@ import {
 } from '@/components/common/ui/button-mui/types';
 import Progress from '@/components/common/ui/progress';
 import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
-import { Pagination } from '@/types/api';
 
 const TeacherPage: FC = () => {
   const localStorageName = 'teachersForm';
@@ -90,7 +89,7 @@ const TeacherPage: FC = () => {
             <Progress />
           </Box>
         ))}
-      {!isLoading && (data?.pagination as Pagination).amount >= 20 && (
+      {!isLoading && pageSize !== data?.pagination.totalAmount && (
         <Button
           sx={styles.loadBtn}
           text="Завантажити ще"
