@@ -23,11 +23,7 @@ async function bootstrap () {
   applyStaticMiddleware(app);
 
   app.enableCors({
-    origin:
-      [
-        configService.get<string>('frontBaseUrl'),
-        /https?:\/\/fictadvisor-.+-fict-advisor\.vercel\.app/,
-      ],
+    origin: true,
     credentials: true,
   });
 
