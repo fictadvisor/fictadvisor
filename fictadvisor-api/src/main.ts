@@ -19,14 +19,15 @@ async function bootstrap () {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get<ConfigService>(ConfigService);
   const port = configService.get<number>('port');
-  const isProduction = process.env.NODE_ENV === 'production';
 
   applyStaticMiddleware(app);
 
   app.enableCors({
-    origin: isProduction
-      ? [configService.get<string>('frontBaseUrl')]
-      : ['http://localhost:3000', 'http://localhost'],
+    origin:
+      [
+        configService.get<string>('frontBaseUrl'),
+        /https?:\/\/fictadvisor-.+-fict-advisor\.vercel\.app/,
+      ],
     credentials: true,
   });
 
