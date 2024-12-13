@@ -11,10 +11,11 @@ import { AccessModule } from 'src/v2/modules/AccessModule';
 import { MapperModule } from './MapperModule';
 import { UserModule } from './UserModule';
 import { TelegramConfigService } from '../config/TelegramConfigService';
+import { ScheduleTimeConvertPipe } from '../api/pipes/ScheduleTimeConvertPipe';
 
 @Module({
   controllers: [ScheduleController],
-  providers: [ScheduleService, TelegramConfigService],
+  providers: [ScheduleService, TelegramConfigService, ScheduleTimeConvertPipe],
   exports: [ScheduleService, TelegramConfigService],
   imports: [
     ParserModule,
