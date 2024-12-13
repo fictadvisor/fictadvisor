@@ -1,3 +1,4 @@
+'use client';
 import { FC, useCallback, useEffect } from 'react';
 import { SubjectCountResponse } from '@fictadvisor/utils/responses';
 import Masonry from '@mui/lab/Masonry';
