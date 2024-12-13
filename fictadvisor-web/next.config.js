@@ -14,6 +14,7 @@ module.exports = {
       allowedOrigins: [
         'https://dev.ficeadvisor.com',
         'https://ficeadvisor.com',
+        'https://*.vercel.app',
       ],
     },
   },
