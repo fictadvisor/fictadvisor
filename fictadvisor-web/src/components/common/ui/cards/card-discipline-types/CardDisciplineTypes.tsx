@@ -87,20 +87,18 @@ export const CardDisciplineTypes: FC<CardDisciplineTypesProps> = ({
         />
       ))}
       {disciplineTypes.slice(0, place).map(role => (
-        <>
-          <Tag
-            sx={{
-              display: ['EXAM', 'CONSULTATION', 'WORKOUT'].includes(role)
-                ? 'none'
-                : 'flex',
-            }}
-            size={TagSize.SMALL}
-            text={isPersonalPage && !isMobileMedium ? TagText[role] : ''}
-            icon={isPersonalPage && !isMobileMedium ? null : TagIcons[role]}
-            color={RoleColors[role]}
-            key={role}
-          />
-        </>
+        <Tag
+          sx={{
+            display: ['EXAM', 'CONSULTATION', 'WORKOUT'].includes(role)
+              ? 'none'
+              : 'flex',
+          }}
+          size={TagSize.SMALL}
+          text={isPersonalPage && !isMobileMedium ? TagText[role] : ''}
+          icon={isPersonalPage && !isMobileMedium ? null : TagIcons[role]}
+          color={RoleColors[role]}
+          key={role}
+        />
       ))}
       {extra > 0 && (
         <Typography sx={stylesMui.extra} variant="body1Bold">
