@@ -46,6 +46,7 @@ import { EventPipe } from '../pipes/EventPipe';
 import { UserByIdPipe } from '../pipes/UserByIdPipe';
 import { ScheduleMapper } from '../../mappers/ScheduleMapper';
 import { ScheduleService } from '../services/ScheduleService';
+import { ScheduleTimeConvertPipe } from '../pipes/ScheduleTimeConvertPipe';
 
 @ApiTags('Schedule')
 @Controller({
@@ -322,9 +323,10 @@ export class ScheduleController {
   })
   @Post('/events')
   async createEvent (
-    @Body() body: CreateEventDTO,
+    @Body(ScheduleTimeConvertPipe) body: CreateEventDTO,
   ) {
     const result = await this.scheduleService.createGroupEvent(body);
+    result.event = await this.scheduleService.addEventTimezones(result.event);
     return this.scheduleMapper.getEvent(result.event, result.discipline);
   }
 
@@ -370,7 +372,7 @@ export class ScheduleController {
   })
   @Post('/facultyEvents')
   async createFacultyEvent (
-      @Body() body: CreateFacultyEventDTO,
+    @Body(ScheduleTimeConvertPipe) body: CreateFacultyEventDTO,
   ) {
     const events = await this.scheduleService.createFacultyEvent(body);
     return this.scheduleMapper.getEvents(events);
@@ -537,7 +539,7 @@ export class ScheduleController {
   @Patch('/groups/:groupId/events/:eventId')
   async update (
     @Param('eventId', EventByIdPipe) eventId: string,
-    @Body(EventPipe) body: UpdateEventDTO,
+    @Body(EventPipe, ScheduleTimeConvertPipe) body: UpdateEventDTO,
   ) {
     await this.scheduleService.updateEvent(eventId, body);
     const result = await this.scheduleService.getEvent(eventId, body.week);

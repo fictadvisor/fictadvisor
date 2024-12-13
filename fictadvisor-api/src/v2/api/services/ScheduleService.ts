@@ -173,11 +173,36 @@ export class ScheduleService {
   }
 
   private async setWeekTime (event: DbEvent, week: number): Promise<{ startWeek: number }> {
+    const {
+      startTime,
+      endTime,
+    } = await this.addEventTimezones(event);
+
     const { startDate } = await this.dateService.getCurrentSemester();
-    const startWeek = this.dateUtils.getCeiledDifference(startDate, event.startTime, WEEK);
-    event.startTime = DateTime.fromJSDate(event.startTime).setZone('Europe/Kyiv').plus({ weeks: week - startWeek }).toJSDate();
-    event.endTime = DateTime.fromJSDate(event.endTime).setZone('Europe/Kyiv').plus({ weeks: week - startWeek }).toJSDate();
+    const startWeek = this.dateUtils.getCeiledDifference(startDate, startTime, WEEK);
+    event.startTime = DateTime.fromJSDate(startTime).setZone('Europe/Kyiv').plus({ weeks: week - startWeek }).toJSDate();
+    event.endTime = DateTime.fromJSDate(endTime).setZone('Europe/Kyiv').plus({ weeks: week - startWeek }).toJSDate();
     return { startWeek };
+  }
+
+  private addTimezone (startDate: Date, time: Date) {
+    const newDate = new Date(startDate.setHours(
+      time.getHours(),
+      time.getMinutes(),
+    ));
+
+    return DateTime.fromJSDate(newDate).setZone('Europe/Kyiv').set({
+      month: time.getMonth() + 1,
+      day: time.getDate(),
+    }).toJSDate();
+  }
+
+  async addEventTimezones ({ startTime, endTime, ...events }: DbEvent) {
+    const { startDate } = await this.dateService.getCurrentSemester();
+    startTime = this.addTimezone(startDate, startTime);
+    endTime = this.addTimezone(startDate, endTime);
+
+    return { startTime, endTime, ...events };
   }
 
   private async getEventDiscipline (eventId: string) {
@@ -605,26 +630,26 @@ export class ScheduleService {
     if (!startTime && changeStartDate) throw new ObjectIsRequiredException('startTime');
     if (!endTime && changeEndDate) throw new ObjectIsRequiredException('endTime');
 
-    const result = {
-      startTime: startTime ?? event.startTime,
-      endTime: endTime ?? event.endTime,
-    };
+    let newStartTime = startTime ?? event.startTime;
 
-    if (period !== Period.NO_PERIOD) {
-      if (startTime && !changeStartDate) {
-        result.startTime = new Date(
-          event.startTime.setHours(startTime.getHours(), startTime.getMinutes())
-        );
-      }
-
-      if (endTime && !changeEndDate) {
-        result.endTime = new Date(
-          event.endTime.setHours(endTime.getHours(), endTime.getMinutes())
-        );
-      }
+    if (startTime && !changeStartDate && period !== Period.NO_PERIOD) {
+      newStartTime = new Date(event.startTime);
+      newStartTime.setHours(
+        startTime.getHours(),
+        startTime.getMinutes(),
+      );
     }
 
-    return result;
+    const newEndTime = new Date(newStartTime);
+    newEndTime.setHours(
+      (endTime ?? event.endTime).getHours(),
+      (endTime ?? event.endTime).getMinutes(),
+    );
+
+    return {
+      startTime: newStartTime,
+      endTime: newEndTime,
+    };
   }
 
   private async updateDiscipline (
