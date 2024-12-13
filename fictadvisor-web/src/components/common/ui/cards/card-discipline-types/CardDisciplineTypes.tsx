@@ -89,7 +89,9 @@ export const CardDisciplineTypes: FC<CardDisciplineTypesProps> = ({
       {disciplineTypes.slice(0, place).map(role => (
         <Tag
           sx={{
-            display: ['EXAMINER', 'OTHER'].includes(role) ? 'none' : 'flex',
+            display: ['EXAM', 'CONSULTATION', 'WORKOUT'].includes(role)
+              ? 'none'
+              : 'flex',
           }}
           size={TagSize.SMALL}
           text={isPersonalPage && !isMobileMedium ? TagText[role] : ''}
