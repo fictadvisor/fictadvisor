@@ -14,6 +14,16 @@ import { client } from '../instance';
 export async function logout() {
   cookies().delete({ name: AuthToken.AccessToken, ...cookieOptions });
   cookies().delete({ name: AuthToken.RefreshToken, ...cookieOptions });
+  cookies().delete({
+    name: AuthToken.AccessToken,
+    ...cookieOptions,
+    domain: 'vercel.app',
+  });
+  cookies().delete({
+    name: AuthToken.RefreshToken,
+    ...cookieOptions,
+    domain: 'vercel.app',
+  });
 }
 
 export async function getServerUser() {
@@ -32,6 +42,14 @@ export async function setAuthTokens(tokens: Tokens) {
   const { accessToken, refreshToken } = tokens;
   cookies().set(AuthToken.AccessToken, accessToken, cookieOptions);
   cookies().set(AuthToken.RefreshToken, refreshToken, cookieOptions);
+  cookies().set(AuthToken.RefreshToken, refreshToken, {
+    ...cookieOptions,
+    domain: 'vercel.app',
+  });
+  cookies().set(AuthToken.AccessToken, accessToken, {
+    ...cookieOptions,
+    domain: 'vercel.app',
+  });
 }
 
 export async function refreshToken(): Promise<boolean> {
