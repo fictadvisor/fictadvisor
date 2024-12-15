@@ -38,6 +38,7 @@ export const description: SxProps<Theme> = {
     mobile: '14px',
     desktop: '11px',
   },
+  maxWidth: '272px',
   textTransform: 'none',
   overflow: 'hidden',
   WebkitBoxOrient: 'vertical',
