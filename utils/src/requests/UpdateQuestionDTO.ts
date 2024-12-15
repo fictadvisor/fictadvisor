@@ -1,5 +1,15 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsBoolean, IsEnum, IsOptional, Min, Max, MinLength, MaxLength  } from 'class-validator';
+import {
+  IsBoolean,
+  IsEnum,
+  IsOptional,
+  Min,
+  Max,
+  MinLength,
+  MaxLength,
+  IsNumber,
+  IsString,
+} from 'class-validator';
 import { validationOptionsMsg } from '../ValidationUtil';
 import { QuestionDisplay } from '../enums/db/QuestionDisplayEnum';
 import { QuestionType } from '../enums/db/QuestionTypeEnum';
@@ -11,6 +21,7 @@ export class UpdateQuestionDTO {
   @IsOptional()
   @Min(1, validationOptionsMsg('Order is too short (min: 1)'))
   @Max(50, validationOptionsMsg('Order is too long (max: 50)'))
+  @IsNumber({}, validationOptionsMsg('Order must be a number'))
     order?: number;
 
   @ApiPropertyOptional({
@@ -19,6 +30,7 @@ export class UpdateQuestionDTO {
   @IsOptional()
   @MinLength(5, validationOptionsMsg('Name is too short (min: 5)'))
   @MaxLength(50, validationOptionsMsg('Name is too long (max: 50)'))
+  @IsString(validationOptionsMsg('Name must be string'))
     name?: string;
 
   @ApiPropertyOptional({
@@ -27,6 +39,7 @@ export class UpdateQuestionDTO {
   @IsOptional()
   @MinLength(5, validationOptionsMsg('Text is too short (min: 5)'))
   @MaxLength(250, validationOptionsMsg('Text is too long (max: 250)'))
+  @IsString(validationOptionsMsg('Text must be string'))
     text?: string;
 
   @ApiPropertyOptional({
@@ -35,6 +48,7 @@ export class UpdateQuestionDTO {
   @IsOptional()
   @MinLength(5, validationOptionsMsg('Category is too short (min: 5)'))
   @MaxLength(50, validationOptionsMsg('Category is too long (max: 50)'))
+  @IsString(validationOptionsMsg('Category must be string'))
     category?: string;
 
   @ApiPropertyOptional({
@@ -42,6 +56,7 @@ export class UpdateQuestionDTO {
   })
   @IsOptional()
   @MaxLength(2000, validationOptionsMsg('Description is too long (max: 2000)'))
+  @IsString(validationOptionsMsg('Description must be string'))
     description?: string;
 
   @ApiPropertyOptional({
@@ -49,6 +64,7 @@ export class UpdateQuestionDTO {
   })
   @IsOptional()
   @MaxLength(2000, validationOptionsMsg('Criteria is too long (max: 2000)'))
+  @IsString(validationOptionsMsg('Criteria must be string'))
     criteria?: string;
 
   @ApiPropertyOptional({

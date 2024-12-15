@@ -26,7 +26,7 @@ export class QuestionMapper {
     };
   }
 
-  getQuestions (questions: DbQuestion[]) {
+  getQuestions (questions: DbQuestion[]): QuestionWithCategoryResponse[] {
     const result = [];
     for (const question of questions) {
       result.push(this.getQuestionWithCategory(question));
@@ -182,7 +182,7 @@ export class QuestionMapper {
     };
   }
 
-  getComments (comments: DbQuestionAnswer[]) {
+  getComments (comments: DbQuestionAnswer[]): CommentResponse[] {
     return comments.map(this.getComment);
   }
 }

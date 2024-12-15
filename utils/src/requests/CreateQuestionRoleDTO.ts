@@ -8,21 +8,21 @@ export class CreateQuestionRoleDTO {
     enum: DisciplineTypeEnum,
     description: 'An enum of teacher roles\'s',
   })
-  @IsEnum(DisciplineTypeEnum)
   @IsNotEmpty(validationOptionsMsg('Role cannot be empty'))
+  @IsEnum(DisciplineTypeEnum, validationOptionsMsg('Role must be enum'))
     role: DisciplineTypeEnum;
 
   @ApiProperty({
     description: 'Shows whether the teacher was selected last semester',
   })
-  @IsBoolean(validationOptionsMsg('Visibility parameter must be a boolean'))
   @IsNotEmpty(validationOptionsMsg('Visibility parameter cannot be empty'))
+  @IsBoolean(validationOptionsMsg('Visibility parameter must be a boolean'))
     isShown: boolean;
 
   @ApiProperty({
     description: 'Shows whether roles are required',
   })
-  @IsBoolean(validationOptionsMsg('Requirement parameter must be a boolean'))
   @IsNotEmpty(validationOptionsMsg('Requirement parameter cannot be empty'))
+  @IsBoolean(validationOptionsMsg('Requirement parameter must be a boolean'))
     isRequired: boolean;
 }
