@@ -33,6 +33,8 @@ import {
   SemesterDate,
   Prisma,
 } from '@prisma/client';
+import { DbDiscipline } from '../../database/entities/DbDiscipline';
+import { PaginatedData } from '../datas/PaginatedData';
 
 @Injectable()
 export class PollService {
@@ -46,7 +48,7 @@ export class PollService {
     private groupRepository: GroupRepository,
   ) {}
 
-  async getAll (query: QueryAllQuestionDTO) {
+  async getAll (query: QueryAllQuestionDTO): Promise<PaginatedData<DbQuestion>> {
     const search = {
       AND: [
         this.getSearchForQuestions.questionText(query.search),
@@ -77,25 +79,25 @@ export class PollService {
     }),
   };
 
-  getSortedQuestions ({ sort, order }: SortDTO): object {
+  private getSortedQuestions ({ sort, order }: SortDTO): object {
     if (!order) order = OrderQAParam.ASC;
     const orderBy = [{ [sort]: order }];
     return { orderBy };
   }
 
-  async create (data: CreateQuestionDTO) {
+  async create (data: CreateQuestionDTO): Promise<DbQuestionWithRoles> {
     return this.questionRepository.create(data);
   }
 
-  async deleteById (id: string) {
+  async deleteById (id: string): Promise<DbQuestionWithRoles> {
     return this.questionRepository.deleteById(id);
   }
 
-  async updateById (id: string, data: UpdateQuestionDTO) {
+  async updateById (id: string, data: UpdateQuestionDTO): Promise<DbQuestionWithRoles> {
     return this.questionRepository.updateById(id, data);
   }
 
-  async getQuestions (disciplineTypes: DisciplineTypeEnum[], disciplineRoles: DisciplineTypeEnum[]) {
+  async getQuestions (disciplineTypes: DisciplineTypeEnum[], disciplineRoles: DisciplineTypeEnum[]): Promise<DbQuestionWithRoles[]> {
     return this.questionRepository.findMany({
       where: {
         questionRoles: {
@@ -211,11 +213,11 @@ export class PollService {
     return result;
   }
 
-  async getQuestionById (id: string) {
+  async getQuestionById (id: string): Promise<DbQuestionWithRoles> {
     return this.questionRepository.findById(id);
   }
 
-  async giveRole (data: CreateQuestionRoleDTO, questionId: string) {
+  async giveRole (data: CreateQuestionRoleDTO, questionId: string): Promise<DbQuestionWithRoles> {
     return await this.questionRepository.updateById(questionId, {
       questionRoles: {
         create: data,
@@ -223,7 +225,7 @@ export class PollService {
     });
   }
 
-  async deleteRole (questionId: string, role: DisciplineTypeEnum) {
+  async deleteRole (questionId: string, role: DisciplineTypeEnum): Promise<DbQuestionWithRoles> {
     return this.questionRepository.updateById(questionId, {
       questionRoles: {
         delete: {
@@ -236,7 +238,7 @@ export class PollService {
     });
   }
 
-  async checkDoesUserHaveSelectiveDisciplines (userId: string, semester: SemesterDate) {
+  async checkDoesUserHaveSelectiveDisciplines (userId: string, semester: SemesterDate): Promise<boolean> {
     const group = await this.groupRepository.find({
       students: {
         some: {
@@ -342,7 +344,7 @@ export class PollService {
     };
   }
 
-  private async getSelectedInSemester (semester: SemesterDate, studentId: string) {
+  private async getSelectedInSemester (semester: SemesterDate, studentId: string): Promise<DbDiscipline[]> {
     return this.disciplineRepository.findMany({
       where: {
         semester: semester.semester,

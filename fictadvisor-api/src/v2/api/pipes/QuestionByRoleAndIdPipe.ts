@@ -9,14 +9,14 @@ export class QuestionByRoleAndIdPipe implements PipeTransform {
     private questionRepository: QuestionRepository,
   ) {}
 
-  async transform (params: { questionId: string, disciplineType: DisciplineTypeEnum }) {
-    const { questionId, disciplineType } = params;
+  async transform (params: { questionId: string, questionRole: DisciplineTypeEnum }) {
+    const { questionId, questionRole } = params;
     const question = await this.questionRepository.findById(questionId);
     if (!question) {
-      throw new InvalidEntityIdException('question');
+      throw new InvalidEntityIdException('Question');
     }
-    if (!question.questionRoles.some((questionRole) => questionRole.role === disciplineType)) {
-      throw new InvalidEntityIdException('questionRole');
+    if (!question.questionRoles.some((role) => role.role === questionRole)) {
+      throw new InvalidEntityIdException('QuestionRole');
     }
     return params;
   }

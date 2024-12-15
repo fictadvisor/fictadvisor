@@ -1,13 +1,5 @@
 import { Body, Controller, Delete, Get, Patch, Param, Post, Query } from '@nestjs/common';
-import {
-  ApiBadRequestResponse,
-  ApiCookieAuth,
-  ApiForbiddenResponse,
-  ApiUnauthorizedResponse,
-  ApiOkResponse,
-  ApiParam,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import {
   CreateQuestionRoleDTO,
   QueryAllDisciplineTeacherForPollDTO,
@@ -16,10 +8,9 @@ import {
   UpdateQuestionDTO,
 } from '@fictadvisor/utils/requests';
 import {
-  QuestionWithCategoriesAndRolesResponse,
-  PollDisciplineTeachersResponse,
-  QuestionWithCategoryResponse,
   PaginatedQuestionsResponse,
+  PollDisciplineTeachersResponse,
+  QuestionResponse,
 } from '@fictadvisor/utils/responses';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import { ApiEndpoint } from 'src/v2/utils/documentation/decorators';
@@ -30,6 +21,7 @@ import { UserByIdPipe } from '../pipes/UserByIdPipe';
 import { QuestionMapper } from '../../mappers/QuestionMapper';
 import { PollService } from '../services/PollService';
 import { DisciplineTypeEnum } from '@fictadvisor/utils';
+import { PollDocumentation } from '../../utils/documentation/poll';
 
 @ApiTags('Poll')
 @Controller({
@@ -42,26 +34,14 @@ export class PollController {
     private questionMapper: QuestionMapper,
   ) {}
 
-  @ApiOkResponse({
-    type: PaginatedQuestionsResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidBodyException:
-      Page must be a number
-      PageSize must be a number
-      Sort must be an enum
-      Wrong value for order
-      Each answer type should be an enum
-      Answer types must be an array`,
-  })
   @ApiEndpoint({
     summary: 'Get all questions',
+    documentation: PollDocumentation.GET_ALL,
   })
   @Get('/questions')
   async getAll (
     @Query() query: QueryAllQuestionDTO,
-  ) {
+  ): Promise<PaginatedQuestionsResponse> {
     const questions = await this.pollService.getAll(query);
     return {
       questions: this.questionMapper.getQuestions(questions.data),
@@ -69,84 +49,22 @@ export class PollController {
     };
   }
 
-  @ApiCookieAuth()
-  @ApiOkResponse({
-    type: QuestionWithCategoryResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidBodyException:
-      Order is too short (min: 1)
-      Order is too long (max: 50)
-      Order cannot be empty
-      Name is too short (min: 5)
-      Name is too long (max: 50)
-      Name cannot be empty
-      Text is too short (min: 5)
-      Text is too long (max: 250)
-      Text cannot be empty
-      Category is too short (min: 5)
-      Category is too long (max: 50)
-      Category cannot be empty
-      Description is too long (max: 2000)
-      Criteria is too long (max: 2000)
-      Type must be an enum
-      Display must be an enum
-      Requirement parameter cannot be empty
-      Requirement parameter must be a boolean`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException:
-      You do not have permission to perform this action`,
-  })
   @ApiEndpoint({
     summary: 'Create a new question',
+    documentation: PollDocumentation.CREATE,
     permissions: PERMISSION.QUESTIONS_CREATE,
   })
   @Post('/questions')
   async create (
     @Body() body: CreateQuestionDTO,
-  ) {
+  ): Promise<QuestionResponse> {
     const question = await this.pollService.create(body);
     return this.questionMapper.getQuestionWithCategory(question);
   }
 
-  @ApiCookieAuth()
-  @ApiOkResponse({
-    type: PollDisciplineTeachersResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidBodyException:
-      Sort must be an enum
-      Wrong value for order
-    
-    InvalidEntityIdException:
-      User with such id is not found`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException:
-      You do not have permission to perform this action`,
-  })
-  @ApiParam({
-    name: 'userId',
-    required: true,
-    description: 'Id of user`s role to get teacher of his discipline',
-  })
   @ApiEndpoint({
     summary: 'Get teachers that were polled by the user',
+    documentation: PollDocumentation.GET_POLL_DISCIPLINE_TEACHERS,
     permissions: PERMISSION.USERS_$USERID_POLL_TEACHERS_GET,
     guards: TelegramGuard,
   })
@@ -158,114 +76,36 @@ export class PollController {
     return this.pollService.getDisciplineTeachers(userId, query);
   }
 
-  @ApiCookieAuth()
-  @ApiOkResponse({
-    type: QuestionWithCategoryResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidEntityIdException:
-      Question with such id is not found`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException:
-      You do not have permission to perform this action`,
-  })
-  @ApiParam({
-    name: 'questionId',
-    required: true,
-    description: 'Id of question you want to delete',
-  })
   @ApiEndpoint({
     summary: 'Delete question by Id',
+    documentation: PollDocumentation.DELETE,
     permissions: PERMISSION.QUESTIONS_DELETE,
   })
   @Delete('/questions/:questionId')
   async delete (
     @Param('questionId', QuestionByIdPipe) questionId: string,
-  ) {
+  ): Promise<QuestionResponse> {
     const question = await this.pollService.deleteById(questionId);
     return this.questionMapper.getQuestionWithCategory(question);
   }
 
-  @ApiCookieAuth()
-  @ApiOkResponse({
-    type: QuestionWithCategoryResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidBodyException:
-      Order is too short (min: 1)
-      Order is too long (max: 50)
-      Order cannot be empty
-      Name is too short (min: 5)
-      Name is too long (max: 50)
-      Name cannot be empty
-      Text is too short (min: 5)
-      Text is too long (max: 250)
-      Text cannot be empty
-      Category is too short (min: 5)
-      Category is too long (max: 50)
-      Category cannot be empty
-      Description is too long (max: 2000)
-      Criteria is too long (max: 2000)
-      Type must be an enum
-      Display must be an enum
-      Requirement parameter cannot be empty
-      Requirement parameter must be a boolean
-
-    InvalidEntityIdException:
-      Question with such id is not found`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException:
-      You do not have permission to perform this action`,
-  })
-  @ApiParam({
-    name: 'questionId',
-    required: true,
-    description: 'Id of question you want to update',
-  })
   @ApiEndpoint({
     summary: 'Request to update information about the question',
+    documentation: PollDocumentation.UPDATE,
     permissions: PERMISSION.QUESTIONS_UPDATE,
   })
   @Patch('/questions/:questionId')
   async update (
     @Param('questionId', QuestionByIdPipe) questionId: string,
     @Body() body: UpdateQuestionDTO,
-  ) {
+  ): Promise<QuestionResponse> {
     const question = await this.pollService.updateById(questionId, body);
     return this.questionMapper.getQuestionWithCategory(question);
   }
 
-  @ApiOkResponse({
-    type: QuestionWithCategoriesAndRolesResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidEntityIdException:
-      Question with such id is not found`,
-  })
-  @ApiParam({
-    name: 'questionId',
-    required: true,
-    description: 'Id of question you want to get',
-  })
   @ApiEndpoint({
     summary: 'Request to get a question by ID',
+    documentation: PollDocumentation.GET_QUESTION,
   })
   @Get('/questions/:questionId')
   async getQuestion (
@@ -275,38 +115,9 @@ export class PollController {
     return this.questionMapper.getQuestionWithRoles(question);
   }
 
-  @ApiCookieAuth()
-  @ApiOkResponse({
-    type: QuestionWithCategoriesAndRolesResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidBodyException: 
-      Role cannot be empty
-      Visibility must be boolean
-      Visibility cannot be empty
-      Requirement must be boolean
-
-    InvalidEntityIdException:
-      Question with such id is not found`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException:
-      You do not have permission to perform this action`,
-  })
-  @ApiParam({
-    name: 'questionId',
-    required: true,
-    description: 'Id of the question to which you want to attach the role',
-  })
   @ApiEndpoint({
     summary: 'Give the role to the question by id',
+    documentation: PollDocumentation.GIVE_ROLE,
     permissions: PERMISSION.QUESTIONS_ROLES_GIVE,
   })
   @Post('/questions/:questionId/roles')
@@ -318,47 +129,16 @@ export class PollController {
     return this.questionMapper.getQuestionWithRoles(question);
   }
 
-  @ApiCookieAuth()
-  @ApiOkResponse({
-    type: QuestionWithCategoriesAndRolesResponse,
-  })
-  @ApiBadRequestResponse({
-    description: `\n
-    InvalidEntityIdException:
-      Question with such id is not found
-      QuestionRole was not found`,
-  })
-  @ApiUnauthorizedResponse({
-    description: `\n
-    UnauthorizedException:
-      Unauthorized`,
-  })
-  @ApiForbiddenResponse({
-    description: `\n
-    NoPermissionException:
-      You do not have permission to perform this action`,
-  })
-  @ApiParam({
-    name: 'disciplineType',
-    enum: DisciplineTypeEnum,
-    required: true,
-    description: 'Question`s role, that you want to delete',
-  })
-  @ApiParam({
-    name: 'questionId',
-    type: String,
-    required: true,
-    description: 'Id of question, where you want to delete role',
-  })
   @ApiEndpoint({
     summary: 'Request to delete attached role in question',
+    documentation: PollDocumentation.DELETE_ROLE,
     permissions: PERMISSION.QUESTIONS_ROLES_DELETE,
   })
-  @Delete('/questions/:questionId/roles/:role')
+  @Delete('/questions/:questionId/roles/:questionRole')
   async deleteRole (
-    @Param(QuestionByRoleAndIdPipe) params: { questionId: string, disciplineType: DisciplineTypeEnum },
+    @Param(QuestionByRoleAndIdPipe) params: { questionId: string, questionRole: DisciplineTypeEnum },
   ) {
-    const question = await this.pollService.deleteRole(params.questionId, params.disciplineType);
+    const question = await this.pollService.deleteRole(params.questionId, params.questionRole);
     return this.questionMapper.getQuestionWithRoles(question);
   }
 }
