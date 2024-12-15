@@ -13,14 +13,14 @@ export class QuestionRepository {
     questionRoles: true,
   };
 
-  async findMany (data: Prisma.QuestionFindManyArgs) {
+  async findMany (data: Prisma.QuestionFindManyArgs): Promise<DbQuestionWithRoles[]> {
     return this.prisma.question.findMany({
       include: this.include,
       ...data,
     }) as any as DbQuestionWithRoles[];
   }
 
-  async findById (id: string) {
+  async findById (id: string): Promise<DbQuestionWithRoles> {
     return this.prisma.question.findUnique({
       where: {
         id,
@@ -29,14 +29,14 @@ export class QuestionRepository {
     }) as any as DbQuestionWithRoles;
   }
 
-  async create (data: Prisma.QuestionUncheckedCreateInput) {
+  async create (data: Prisma.QuestionUncheckedCreateInput): Promise<DbQuestionWithRoles> {
     return this.prisma.question.create({
       data,
       include: this.include,
     }) as any as DbQuestionWithRoles;
   }
 
-  async deleteById (id: string) {
+  async deleteById (id: string): Promise<DbQuestionWithRoles> {
     return this.prisma.question.delete({
       where: {
         id,
@@ -45,7 +45,7 @@ export class QuestionRepository {
     }) as any as DbQuestionWithRoles;
   }
 
-  async updateById (id: string, data: Prisma.QuestionUncheckedUpdateInput) {
+  async updateById (id: string, data: Prisma.QuestionUncheckedUpdateInput): Promise<DbQuestionWithRoles> {
     return this.prisma.question.update({
       where: {
         id,
@@ -55,7 +55,7 @@ export class QuestionRepository {
     }) as any as DbQuestionWithRoles;
   }
 
-  async count (data: Prisma.QuestionCountArgs) {
+  async count (data: Prisma.QuestionCountArgs): Promise<number> {
     return this.prisma.question.count(
       data,
     );
