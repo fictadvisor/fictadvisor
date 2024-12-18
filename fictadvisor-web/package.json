@@ -16,6 +16,7 @@
     "@emotion/styled": "^11.11.0",
     "@fictadvisor/utils": "*",
     "@heroicons/react": "^2.0.18",
+    "@hookform/resolvers": "^3.9.0",
     "@mui/lab": "^5.0.0-alpha.142",
     "@mui/material": "^5.14.7",
     "@mui/x-date-pickers": "^6.8.0",
@@ -40,11 +41,13 @@
     "react-chartjs-2": "^5.2.0",
     "react-device-detect": "^2.2.3",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.52.1",
     "react-redux": "^8.1.2",
     "react-select": "^5.7.4",
     "react-textarea-autosize": "^8.5.3",
     "sass": "^1.66.1",
     "yup": "^1.2.0",
+    "zod": "^3.24.1",
     "zustand": "^4.4.1"
   },
   "devDependencies": {

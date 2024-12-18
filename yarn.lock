@@ -2088,6 +2088,7 @@ __metadata:
     "@emotion/styled": "npm:^11.11.0"
     "@fictadvisor/utils": "npm:*"
     "@heroicons/react": "npm:^2.0.18"
+    "@hookform/resolvers": "npm:^3.9.0"
     "@mui/lab": "npm:^5.0.0-alpha.142"
     "@mui/material": "npm:^5.14.7"
     "@mui/x-date-pickers": "npm:^6.8.0"
@@ -2131,6 +2132,7 @@ __metadata:
     react-chartjs-2: "npm:^5.2.0"
     react-device-detect: "npm:^2.2.3"
     react-dom: "npm:^18.2.0"
+    react-hook-form: "npm:^7.52.1"
     react-redux: "npm:^8.1.2"
     react-select: "npm:^5.7.4"
     react-textarea-autosize: "npm:^8.5.3"
@@ -2138,6 +2140,7 @@ __metadata:
     storybook: "npm:^7.4.0"
     typescript: "npm:^5.2.2"
     yup: "npm:^1.2.0"
+    zod: "npm:^3.24.1"
     zustand: "npm:^4.4.1"
   languageName: unknown
   linkType: soft
@@ -2819,6 +2822,15 @@ __metadata:
   peerDependencies:
     react: ">= 16"
   checksum: 10c0/d0ca2d017545da103ed8e90e9e6679d46329c1b09bb4c06ff509b0fe7cfbba7034409ea24b0469fabd2a0a9b144e8e717f58de924615e0b0a1bed7b51fcc5940
+  languageName: node
+  linkType: hard
+
+"@hookform/resolvers@npm:^3.9.0":
+  version: 3.9.1
+  resolution: "@hookform/resolvers@npm:3.9.1"
+  peerDependencies:
+    react-hook-form: ^7.0.0
+  checksum: 10c0/8a4056db3860b12ee30921ba352996104d6ae75ac45996d4c8b6df429e07ee73f5b87c82a22a15403789213f6f52f5fead1c2637b26ef624068b68d213362cd1
   languageName: node
   linkType: hard
 
@@ -3678,6 +3690,49 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@nestjs/microservices@npm:^10.4.15":
+  version: 10.4.15
+  resolution: "@nestjs/microservices@npm:10.4.15"
+  dependencies:
+    iterare: "npm:1.2.1"
+    tslib: "npm:2.8.1"
+  peerDependencies:
+    "@grpc/grpc-js": "*"
+    "@nestjs/common": ^10.0.0
+    "@nestjs/core": ^10.0.0
+    "@nestjs/websockets": ^10.0.0
+    amqp-connection-manager: "*"
+    amqplib: "*"
+    cache-manager: "*"
+    ioredis: "*"
+    kafkajs: "*"
+    mqtt: "*"
+    nats: "*"
+    reflect-metadata: ^0.1.12 || ^0.2.0
+    rxjs: ^7.1.0
+  peerDependenciesMeta:
+    "@grpc/grpc-js":
+      optional: true
+    "@nestjs/websockets":
+      optional: true
+    amqp-connection-manager:
+      optional: true
+    amqplib:
+      optional: true
+    cache-manager:
+      optional: true
+    ioredis:
+      optional: true
+    kafkajs:
+      optional: true
+    mqtt:
+      optional: true
+    nats:
+      optional: true
+  checksum: 10c0/be5cc7daa0b80e894037f437e0a094ed7e05616d962abce574ff4d1024c5865ff4e68ba3ab4f5fa1d265a9b5cc30677b8812f3340cbab848f87525dbc049570b
+  languageName: node
+  linkType: hard
+
 "@nestjs/passport@npm:^9.0.0":
   version: 9.0.3
   resolution: "@nestjs/passport@npm:9.0.3"
@@ -3845,6 +3900,26 @@ __metadata:
     rxjs: ^7.2.0
     typeorm: ^0.3.0
   checksum: 10c0/fe4d408dcd3ee22b3710db07d841daed15448a2cd43f61e7634cb2a05c76b9641d085775a5c6dbf876e960139a864d15a684c5534ca8ec1c129b07a2d4e6eca0
+  languageName: node
+  linkType: hard
+
+"@nestjs/websockets@npm:^10.4.15":
+  version: 10.4.15
+  resolution: "@nestjs/websockets@npm:10.4.15"
+  dependencies:
+    iterare: "npm:1.2.1"
+    object-hash: "npm:3.0.0"
+    tslib: "npm:2.8.1"
+  peerDependencies:
+    "@nestjs/common": ^10.0.0
+    "@nestjs/core": ^10.0.0
+    "@nestjs/platform-socket.io": ^10.0.0
+    reflect-metadata: ^0.1.12 || ^0.2.0
+    rxjs: ^7.1.0
+  peerDependenciesMeta:
+    "@nestjs/platform-socket.io":
+      optional: true
+  checksum: 10c0/3a2274705ab14eb8a06021d0fb86ab2deca32847949d05fbc27358a9d3455b30979ca5a94a74684bd75bd51c4d6b9e9b6f513ac72f8bf758e3fce18978179141
   languageName: node
   linkType: hard
 
@@ -11552,6 +11627,7 @@ __metadata:
     "@nestjs/config": "npm:^2.2.0"
     "@nestjs/core": "npm:^9.2.1"
     "@nestjs/jwt": "npm:^10.0.3"
+    "@nestjs/microservices": "npm:^10.4.15"
     "@nestjs/passport": "npm:^9.0.0"
     "@nestjs/platform-express": "npm:^9.2.1"
     "@nestjs/schedule": "npm:^3.0.1"
@@ -11560,6 +11636,7 @@ __metadata:
     "@nestjs/terminus": "npm:^10.2.3"
     "@nestjs/testing": "npm:^9.2.1"
     "@nestjs/typeorm": "npm:^9.0.1"
+    "@nestjs/websockets": "npm:^10.4.15"
     "@prisma/client": "npm:4.16.2"
     "@types/bcryptjs": "npm:^2.4.6"
     "@types/cookie-parser": "npm:^1.4.7"
@@ -16305,7 +16382,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"object-hash@npm:^3.0.0":
+"object-hash@npm:3.0.0, object-hash@npm:^3.0.0":
   version: 3.0.0
   resolution: "object-hash@npm:3.0.0"
   checksum: 10c0/a06844537107b960c1c8b96cd2ac8592a265186bfa0f6ccafe0d34eabdb526f6fa81da1f37c43df7ed13b12a4ae3457a16071603bcd39d8beddb5f08c37b0f47
@@ -17868,6 +17945,15 @@ __metadata:
   version: 2.0.4
   resolution: "react-fast-compare@npm:2.0.4"
   checksum: 10c0/f0300c677e95198b5f993cbb8a983dab09586157dc678f9e2b5b29ff941b6677a8776fbbdc425ce102fad86937e36bb45cfcfd797f006270b97ccf287ebfb885
+  languageName: node
+  linkType: hard
+
+"react-hook-form@npm:^7.52.1":
+  version: 7.54.1
+  resolution: "react-hook-form@npm:7.54.1"
+  peerDependencies:
+    react: ^16.8.0 || ^17 || ^18 || ^19
+  checksum: 10c0/2d960ddf8aa654f34e36f5d995f0ec067a4c01340d650eca44f22aa4421e278dcc449c8522e66c5c66b1c61d62fbdf914b9e0a8de9deb4c6346cc3b37ef4eb82
   languageName: node
   linkType: hard
 
@@ -20100,6 +20186,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tslib@npm:2.8.1":
+  version: 2.8.1
+  resolution: "tslib@npm:2.8.1"
+  checksum: 10c0/9c4759110a19c53f992d9aae23aac5ced636e99887b51b9e61def52611732872ff7668757d4e4c61f19691e36f4da981cd9485e869b4a7408d689f6bf1f14e62
+  languageName: node
+  linkType: hard
+
 "tslib@npm:^1.13.0, tslib@npm:^1.8.1":
   version: 1.14.1
   resolution: "tslib@npm:1.14.1"
@@ -21453,6 +21546,13 @@ __metadata:
     toposort: "npm:^2.0.2"
     type-fest: "npm:^2.19.0"
   checksum: 10c0/fe142141365eed0f78fb2e18bdd2f10bf101385dae12a5f9de14884448067bdca16a54b547fc0bffec04a098dd70b4519ff366422f3da006fd11a0717a7863ac
+  languageName: node
+  linkType: hard
+
+"zod@npm:^3.24.1":
+  version: 3.24.1
+  resolution: "zod@npm:3.24.1"
+  checksum: 10c0/0223d21dbaa15d8928fe0da3b54696391d8e3e1e2d0283a1a070b5980a1dbba945ce631c2d1eccc088fdbad0f2dfa40155590bf83732d3ac4fcca2cc9237591b
   languageName: node
   linkType: hard
 
