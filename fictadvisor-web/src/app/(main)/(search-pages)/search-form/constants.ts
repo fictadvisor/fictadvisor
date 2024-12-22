@@ -11,11 +11,9 @@ export const TeacherInitialValues: SearchFormFields = {
   cathedrasId: [],
 };
 
-export const SubjectInitialValues: SearchFormFields = {
+export const SubjectInitialValues: Partial<SearchFormFields> = {
   search: '',
   order: 'asc',
   sort: SortQASParam.NAME,
   groupId: '',
-  disciplineTypes: [],
-  cathedrasId: [],
 };

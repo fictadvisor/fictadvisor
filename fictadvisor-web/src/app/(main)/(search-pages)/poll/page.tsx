@@ -33,20 +33,11 @@ const PollTeacher = () => {
   const [curPage, setCurPage] = useState(0);
   const { replace } = useRouter();
   const { user, isLoading: isLoadingUser } = useAuthentication();
-  const localStorageName = 'teachersPollForm';
 
   const toast = useToast();
   const [queryObj, setQueryObj] = useState<QueryAllDisciplineTeacherForPollDTO>(
     PollTeacherInitialValues,
   );
-
-  useEffect(() => {
-    setQueryObj(
-      localStorage.getItem(localStorageName)
-        ? JSON.parse(localStorage.getItem(localStorageName) || '{}')
-        : PollTeacherInitialValues,
-    );
-  }, []);
 
   useEffect(() => {
     if (!user && !isLoadingUser) {
@@ -89,7 +80,6 @@ const PollTeacher = () => {
               className="poll-teacher"
               setQueryObj={setQueryObj}
               initialValues={PollTeacherInitialValues}
-              localStorageName={localStorageName}
               setCurPage={setCurPage}
             />
           )}

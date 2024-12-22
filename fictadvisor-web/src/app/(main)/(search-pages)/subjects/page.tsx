@@ -29,8 +29,6 @@ import SubjectsAPI from '@/lib/api/subject/SubjectAPI';
 import { Subject } from '@/types/subject';
 
 const SubjectsPage: FC = () => {
-  const localStorageName = 'subjectForm';
-
   const [queryObj, setQueryObj] =
     useState<SearchFormFields>(SubjectInitialValues);
   const [currPage, setCurrPage] = useState(0);
@@ -85,8 +83,6 @@ const SubjectsPage: FC = () => {
         searchPlaceholder="Оберіть предмет"
         filterDropDownOptions={filterOptions}
         onSubmit={submitHandler}
-        setQueryObj={setQueryObj}
-        localStorageName={localStorageName}
         isSubject={true}
       />
       {data && (

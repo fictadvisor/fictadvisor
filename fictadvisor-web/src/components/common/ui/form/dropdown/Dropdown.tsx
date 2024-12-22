@@ -105,7 +105,7 @@ const Dropdown: FC<DropdownProps> = memo(function Dropdown({
           }
           noOptionsText={noOptionsText}
           renderOption={(props, option: DropDownOption) => (
-            <Option {...props} option={option} />
+            <Option {...props} key={option.id} option={option} />
           )}
         />
         {showRemark && (

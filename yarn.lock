@@ -2088,7 +2088,6 @@ __metadata:
     "@emotion/styled": "npm:^11.11.0"
     "@fictadvisor/utils": "npm:*"
     "@heroicons/react": "npm:^2.0.18"
-    "@hookform/resolvers": "npm:^3.9.0"
     "@mui/lab": "npm:^5.0.0-alpha.142"
     "@mui/material": "npm:^5.14.7"
     "@mui/x-date-pickers": "npm:^6.8.0"
@@ -2132,7 +2131,6 @@ __metadata:
     react-chartjs-2: "npm:^5.2.0"
     react-device-detect: "npm:^2.2.3"
     react-dom: "npm:^18.2.0"
-    react-hook-form: "npm:^7.52.1"
     react-redux: "npm:^8.1.2"
     react-select: "npm:^5.7.4"
     react-textarea-autosize: "npm:^8.5.3"
@@ -2140,7 +2138,6 @@ __metadata:
     storybook: "npm:^7.4.0"
     typescript: "npm:^5.2.2"
     yup: "npm:^1.2.0"
-    zod: "npm:^3.24.1"
     zustand: "npm:^4.4.1"
   languageName: unknown
   linkType: soft
@@ -2822,15 +2819,6 @@ __metadata:
   peerDependencies:
     react: ">= 16"
   checksum: 10c0/d0ca2d017545da103ed8e90e9e6679d46329c1b09bb4c06ff509b0fe7cfbba7034409ea24b0469fabd2a0a9b144e8e717f58de924615e0b0a1bed7b51fcc5940
-  languageName: node
-  linkType: hard
-
-"@hookform/resolvers@npm:^3.9.0":
-  version: 3.9.1
-  resolution: "@hookform/resolvers@npm:3.9.1"
-  peerDependencies:
-    react-hook-form: ^7.0.0
-  checksum: 10c0/8a4056db3860b12ee30921ba352996104d6ae75ac45996d4c8b6df429e07ee73f5b87c82a22a15403789213f6f52f5fead1c2637b26ef624068b68d213362cd1
   languageName: node
   linkType: hard
 
@@ -17948,15 +17936,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:^7.52.1":
-  version: 7.54.1
-  resolution: "react-hook-form@npm:7.54.1"
-  peerDependencies:
-    react: ^16.8.0 || ^17 || ^18 || ^19
-  checksum: 10c0/2d960ddf8aa654f34e36f5d995f0ec067a4c01340d650eca44f22aa4421e278dcc449c8522e66c5c66b1c61d62fbdf914b9e0a8de9deb4c6346cc3b37ef4eb82
-  languageName: node
-  linkType: hard
-
 "react-is@npm:18.1.0":
   version: 18.1.0
   resolution: "react-is@npm:18.1.0"
@@ -21546,13 +21525,6 @@ __metadata:
     toposort: "npm:^2.0.2"
     type-fest: "npm:^2.19.0"
   checksum: 10c0/fe142141365eed0f78fb2e18bdd2f10bf101385dae12a5f9de14884448067bdca16a54b547fc0bffec04a098dd70b4519ff366422f3da006fd11a0717a7863ac
-  languageName: node
-  linkType: hard
-
-"zod@npm:^3.24.1":
-  version: 3.24.1
-  resolution: "zod@npm:3.24.1"
-  checksum: 10c0/0223d21dbaa15d8928fe0da3b54696391d8e3e1e2d0283a1a070b5980a1dbba945ce631c2d1eccc088fdbad0f2dfa40155590bf83732d3ac4fcca2cc9237591b
   languageName: node
   linkType: hard
 
