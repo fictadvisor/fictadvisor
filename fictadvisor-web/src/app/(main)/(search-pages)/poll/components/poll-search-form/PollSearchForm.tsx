@@ -49,7 +49,10 @@ const PollSearchForm: FC<PollSearchFormProps> = ({
 
   const handleTeacherDisciplineTypeChange = useCallback(
     (teacherDisciplineType: string) => {
-      formikRef.current?.setFieldValue('disciplineType', teacherDisciplineType);
+      formikRef.current?.setFieldValue(
+        'disciplineTypes',
+        teacherDisciplineType,
+      );
       formikRef.current?.handleSubmit();
     },
     [],

@@ -50,6 +50,7 @@ const PollTeacher = () => {
     queryKey: ['pollTeachersByUserId', queryObj, user],
     queryFn: () => PollAPI.getUserTeachers(user!.id, queryObj),
     refetchOnWindowFocus: false,
+    placeholderData: (previousData, previousQuery) => previousData,
     enabled: !!user,
   });
 
