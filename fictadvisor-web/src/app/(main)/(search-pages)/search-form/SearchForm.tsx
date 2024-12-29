@@ -49,9 +49,8 @@ export interface SearchFormProps {
   onSubmit: (values: Partial<SearchFormFields>) => void;
   filterDropDownOptions: DropDownOption[];
   searchPlaceholder: string;
-  localStorageName: string;
   isSubject?: boolean;
-  initialValues: Partial<SearchFormFields>;
+  initialValues: SearchFormFields;
 }
 
 // Important!!! SearchForm is currently used for searching both subjects and teachers.

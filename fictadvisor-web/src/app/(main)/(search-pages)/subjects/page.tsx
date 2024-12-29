@@ -2,7 +2,6 @@
 
 import { FC, useCallback, useEffect, useState } from 'react';
 import { QueryAllSubjectDTO } from '@fictadvisor/utils/requests';
-import { PaginatedSubjectsResponse } from '@fictadvisor/utils/responses';
 import { Box } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
