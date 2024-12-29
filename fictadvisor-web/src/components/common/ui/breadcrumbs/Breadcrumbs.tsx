@@ -28,7 +28,12 @@ const Breadcrumbs: FC<BreadcrumbsProps> = ({ items, sx = {} }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down('mobileMedium'));
 
   const breadcrumbs = items.map((item, index) => (
-    <Link key={index} href={item.href} underline="none">
+    <Link
+      key={index}
+      href={item.href}
+      underline="none"
+      style={{ width: 'fit-content' }}
+    >
       {index === 0 && (
         <Box sx={styles.homeIcon}>
           <HomeIcon />
