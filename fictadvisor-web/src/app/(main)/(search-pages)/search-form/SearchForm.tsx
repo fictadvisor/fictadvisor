@@ -17,7 +17,6 @@ import {
 import { Box, useMediaQuery } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
 import { useQuery } from '@tanstack/react-query';
-import { isAxiosError } from 'axios';
 import { Form, Formik, FormikProps, useFormikContext } from 'formik';
 
 import {
@@ -48,22 +47,11 @@ import { SearchFormFields } from './types';
 import stylesScss from './SearchForm.module.scss';
 export interface SearchFormProps {
   onSubmit: (values: Partial<SearchFormFields>) => void;
-  setQueryObj: Dispatch<SetStateAction<SearchFormFields>>;
   filterDropDownOptions: DropDownOption[];
   searchPlaceholder: string;
-  localStorageName: string;
   isSubject?: boolean;
   initialValues: SearchFormFields;
 }
-const FormObserver = ({ name }: { name: string }) => {
-  const { values, dirty } = useFormikContext();
-  useEffect(() => {
-    if (localStorage && dirty) {
-      localStorage.setItem(name || '', JSON.stringify(values));
-    }
-  }, [values, name]);
-  return null;
-};
 
 // Important!!! SearchForm is currently used for searching both subjects and teachers.
 // But, the thing is SubjectAPI and TeacherAPI have different getAll query parameters and since now
@@ -71,10 +59,8 @@ const FormObserver = ({ name }: { name: string }) => {
 // change, so I think this component needs refactoring
 const SearchForm: FC<SearchFormProps> = ({
   onSubmit,
-  setQueryObj,
   filterDropDownOptions,
   searchPlaceholder,
-  localStorageName,
   initialValues,
   isSubject = false,
 }) => {
@@ -132,7 +118,7 @@ const SearchForm: FC<SearchFormProps> = ({
 
   const handleRoleChange = useCallback(
     (event: SelectChangeEvent<string | []>) => {
-      formikRef.current?.setFieldValue('roles', event.target.value);
+      formikRef.current?.setFieldValue('disciplineTypes', event.target.value);
       formikRef.current?.handleSubmit();
     },
     [],
@@ -157,16 +143,6 @@ const SearchForm: FC<SearchFormProps> = ({
     formikRef.current?.handleSubmit();
   }, []);
 
-  useEffect(() => {
-    const parsedData = JSON.parse(
-      localStorage.getItem(localStorageName) || '{}',
-    );
-    if (Object.keys(parsedData).length) {
-      formikRef.current?.setValues(parsedData);
-      setQueryObj(parsedData);
-    }
-  }, [localStorageName]);
-
   return (
     <Formik
       initialValues={initialValues}
@@ -176,7 +152,6 @@ const SearchForm: FC<SearchFormProps> = ({
     >
       {({ handleSubmit, values }) => (
         <Form className={stylesScss['form']}>
-          <FormObserver name={localStorageName} />
           <Input
             onDeterredChange={handleSubmit}
             className={stylesScss['input']}

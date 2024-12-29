@@ -34,18 +34,12 @@ export interface PollSearchFormProps {
   onSubmit: (values: QueryAllDisciplineTeacherForPollDTO) => void;
   initialValues: QueryAllDisciplineTeacherForPollDTO;
   searchPlaceholder: string;
-  localStorageName?: string;
 }
-const FormObserver = (props: { name?: string }) => {
-  const { values } = useFormikContext();
-  localStorage.setItem(props.name || '', JSON.stringify(values));
-  return null;
-};
+
 const PollSearchForm: FC<PollSearchFormProps> = ({
   onSubmit,
   initialValues,
   searchPlaceholder,
-  localStorageName,
 }) => {
   const isTablet = useMediaQuery(theme.breakpoints.down('tablet'));
   const [collapsed, setCollapsed] = useState(false);
@@ -55,7 +49,10 @@ const PollSearchForm: FC<PollSearchFormProps> = ({
 
   const handleTeacherDisciplineTypeChange = useCallback(
     (teacherDisciplineType: string) => {
-      formikRef.current?.setFieldValue('disciplineType', teacherDisciplineType);
+      formikRef.current?.setFieldValue(
+        'disciplineTypes',
+        teacherDisciplineType,
+      );
       formikRef.current?.handleSubmit();
     },
     [],
@@ -81,7 +78,6 @@ const PollSearchForm: FC<PollSearchFormProps> = ({
     >
       {({ handleSubmit, values }) => (
         <Form className={stylesScss['form']}>
-          <FormObserver name={localStorageName} />
           <Input
             onDeterredChange={handleSubmit}
             className={stylesScss['input']}
@@ -108,7 +104,7 @@ const PollSearchForm: FC<PollSearchFormProps> = ({
                     values.disciplineTypes
                       ? values.disciplineTypes.map(disciplineType => ({
                           value: disciplineType,
-                          label: disciplineType,
+                          label: '',
                         }))
                       : []
                   }

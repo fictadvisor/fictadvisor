@@ -21,7 +21,6 @@ interface PollTeacherSearchListProps {
   className: string;
   setQueryObj: Dispatch<SetStateAction<QueryAllDisciplineTeacherForPollDTO>>;
   initialValues: QueryAllDisciplineTeacherForPollDTO;
-  localStorageName: string;
   setCurPage: Dispatch<SetStateAction<number>>;
 }
 
@@ -29,7 +28,6 @@ const PollTeacherSearchList: FC<PollTeacherSearchListProps> = ({
   data,
   setQueryObj,
   initialValues,
-  localStorageName,
   setCurPage,
 }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
@@ -57,7 +55,6 @@ const PollTeacherSearchList: FC<PollTeacherSearchListProps> = ({
         searchPlaceholder="Обери викладача"
         onSubmit={submitHandler}
         initialValues={initialValues}
-        localStorageName={localStorageName}
       />
       {isCompleted ? (
         <Box sx={styles.wrapper}>

@@ -31,7 +31,6 @@ import Progress from '@/components/common/ui/progress';
 import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
 
 const TeacherPage: FC = () => {
-  const localStorageName = 'teachersForm';
   const [queryObj, setQueryObj] =
     useState<SearchFormFields>(TeacherInitialValues);
   const [pageSize, setPageSize] = useState(PAGE_SIZE);
@@ -73,8 +72,6 @@ const TeacherPage: FC = () => {
         searchPlaceholder="Оберіть викладача"
         filterDropDownOptions={filterOptions}
         onSubmit={submitHandler}
-        setQueryObj={setQueryObj}
-        localStorageName={localStorageName}
       />
       {data && (
         <TeacherSearchList

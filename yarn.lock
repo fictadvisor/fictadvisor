@@ -3678,6 +3678,49 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@nestjs/microservices@npm:^10.4.15":
+  version: 10.4.15
+  resolution: "@nestjs/microservices@npm:10.4.15"
+  dependencies:
+    iterare: "npm:1.2.1"
+    tslib: "npm:2.8.1"
+  peerDependencies:
+    "@grpc/grpc-js": "*"
+    "@nestjs/common": ^10.0.0
+    "@nestjs/core": ^10.0.0
+    "@nestjs/websockets": ^10.0.0
+    amqp-connection-manager: "*"
+    amqplib: "*"
+    cache-manager: "*"
+    ioredis: "*"
+    kafkajs: "*"
+    mqtt: "*"
+    nats: "*"
+    reflect-metadata: ^0.1.12 || ^0.2.0
+    rxjs: ^7.1.0
+  peerDependenciesMeta:
+    "@grpc/grpc-js":
+      optional: true
+    "@nestjs/websockets":
+      optional: true
+    amqp-connection-manager:
+      optional: true
+    amqplib:
+      optional: true
+    cache-manager:
+      optional: true
+    ioredis:
+      optional: true
+    kafkajs:
+      optional: true
+    mqtt:
+      optional: true
+    nats:
+      optional: true
+  checksum: 10c0/be5cc7daa0b80e894037f437e0a094ed7e05616d962abce574ff4d1024c5865ff4e68ba3ab4f5fa1d265a9b5cc30677b8812f3340cbab848f87525dbc049570b
+  languageName: node
+  linkType: hard
+
 "@nestjs/passport@npm:^9.0.0":
   version: 9.0.3
   resolution: "@nestjs/passport@npm:9.0.3"
@@ -3845,6 +3888,26 @@ __metadata:
     rxjs: ^7.2.0
     typeorm: ^0.3.0
   checksum: 10c0/fe4d408dcd3ee22b3710db07d841daed15448a2cd43f61e7634cb2a05c76b9641d085775a5c6dbf876e960139a864d15a684c5534ca8ec1c129b07a2d4e6eca0
+  languageName: node
+  linkType: hard
+
+"@nestjs/websockets@npm:^10.4.15":
+  version: 10.4.15
+  resolution: "@nestjs/websockets@npm:10.4.15"
+  dependencies:
+    iterare: "npm:1.2.1"
+    object-hash: "npm:3.0.0"
+    tslib: "npm:2.8.1"
+  peerDependencies:
+    "@nestjs/common": ^10.0.0
+    "@nestjs/core": ^10.0.0
+    "@nestjs/platform-socket.io": ^10.0.0
+    reflect-metadata: ^0.1.12 || ^0.2.0
+    rxjs: ^7.1.0
+  peerDependenciesMeta:
+    "@nestjs/platform-socket.io":
+      optional: true
+  checksum: 10c0/3a2274705ab14eb8a06021d0fb86ab2deca32847949d05fbc27358a9d3455b30979ca5a94a74684bd75bd51c4d6b9e9b6f513ac72f8bf758e3fce18978179141
   languageName: node
   linkType: hard
 
@@ -11552,6 +11615,7 @@ __metadata:
     "@nestjs/config": "npm:^2.2.0"
     "@nestjs/core": "npm:^9.2.1"
     "@nestjs/jwt": "npm:^10.0.3"
+    "@nestjs/microservices": "npm:^10.4.15"
     "@nestjs/passport": "npm:^9.0.0"
     "@nestjs/platform-express": "npm:^9.2.1"
     "@nestjs/schedule": "npm:^3.0.1"
@@ -11560,6 +11624,7 @@ __metadata:
     "@nestjs/terminus": "npm:^10.2.3"
     "@nestjs/testing": "npm:^9.2.1"
     "@nestjs/typeorm": "npm:^9.0.1"
+    "@nestjs/websockets": "npm:^10.4.15"
     "@prisma/client": "npm:4.16.2"
     "@types/bcryptjs": "npm:^2.4.6"
     "@types/cookie-parser": "npm:^1.4.7"
@@ -16305,7 +16370,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"object-hash@npm:^3.0.0":
+"object-hash@npm:3.0.0, object-hash@npm:^3.0.0":
   version: 3.0.0
   resolution: "object-hash@npm:3.0.0"
   checksum: 10c0/a06844537107b960c1c8b96cd2ac8592a265186bfa0f6ccafe0d34eabdb526f6fa81da1f37c43df7ed13b12a4ae3457a16071603bcd39d8beddb5f08c37b0f47
@@ -20097,6 +20162,13 @@ __metadata:
   version: 2.5.3
   resolution: "tslib@npm:2.5.3"
   checksum: 10c0/4cb1817d34fae5b27d146e6c4a468d4155097d95c1335d0bc9690f11f33e63844806bf4ed6d97c30c72b8d85261b66cbbe16d871d9c594ac05701ec83e62a607
+  languageName: node
+  linkType: hard
+
+"tslib@npm:2.8.1":
+  version: 2.8.1
+  resolution: "tslib@npm:2.8.1"
+  checksum: 10c0/9c4759110a19c53f992d9aae23aac5ced636e99887b51b9e61def52611732872ff7668757d4e4c61f19691e36f4da981cd9485e869b4a7408d689f6bf1f14e62
   languageName: node
   linkType: hard
 
