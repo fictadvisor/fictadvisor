@@ -178,7 +178,7 @@ const SearchForm: FC<SearchFormProps> = ({
                   label="Група"
                   onChange={handleGroupChange}
                   showRemark={false}
-                  value={values.groupId}
+                  value={values.groupId ?? ''}
                   options={groups}
                 />
               </Box>

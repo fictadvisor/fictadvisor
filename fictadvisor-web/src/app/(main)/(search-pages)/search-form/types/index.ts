@@ -4,7 +4,7 @@ export interface SearchFormFields {
   search: string;
   order: 'asc' | 'desc';
   sort: string;
-  groupId: string;
+  groupId?: string;
   disciplineTypes: DisciplineTypeEnum[];
   cathedrasId: [];
 }
