@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsArray, IsBoolean, IsEnum, IsOptional } from 'class-validator';
+import { IsArray, IsBoolean, IsEnum, IsOptional, IsUUID } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { validationOptionsMsg } from '../ValidationUtil';
 import { QueryAllDTO } from './QueryAllDTO';
@@ -26,6 +26,7 @@ export class QueryAllTeacherDTO extends QueryAllDTO {
     description: 'GroupId',
   })
   @IsOptional()
+  @IsUUID(4, validationOptionsMsg('Group id must be a UUID'))
     groupId?: string;
 
   @ApiPropertyOptional({

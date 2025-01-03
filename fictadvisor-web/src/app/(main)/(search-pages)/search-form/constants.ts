@@ -6,7 +6,6 @@ export const TeacherInitialValues: SearchFormFields = {
   search: '',
   order: 'asc',
   sort: SortQATParam.LAST_NAME,
-  groupId: '',
   disciplineTypes: [],
   cathedrasId: [],
 };
@@ -15,7 +14,6 @@ export const SubjectInitialValues: SearchFormFields = {
   search: '',
   order: 'asc',
   sort: SortQASParam.NAME,
-  groupId: '',
   disciplineTypes: [],
   cathedrasId: [],
 };
