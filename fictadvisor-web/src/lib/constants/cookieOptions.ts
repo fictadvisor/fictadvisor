@@ -6,6 +6,4 @@ export const cookieOptions: Partial<ResponseCookie> = {
   httpOnly: false,
   maxAge: 60 * 60 * 24 * 7,
   partitioned: process.env.NODE_ENV === 'production' ? true : undefined,
-  domain:
-    process.env.NODE_ENV === 'production' ? 'fictadvisor-git-bug-vercel-preview-fict-advisor.vercel.app' : undefined,
 };
