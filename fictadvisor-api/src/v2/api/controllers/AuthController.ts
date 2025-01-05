@@ -17,7 +17,6 @@ import { TelegramGuard } from '../../security/TelegramGuard';
 import { GroupByIdPipe } from '../pipes/GroupByIdPipe';
 import { AuthService } from '../services/AuthService';
 import { UserService } from '../services/UserService';
-import { RefreshGuard } from '../../security/RefreshGuard';
 import { AuthDocumentation } from '../../utils/documentation/auth';
 import { User } from '@prisma/client';
 
@@ -80,7 +79,7 @@ export class AuthController {
 
   @ApiEndpoint({
     summary: 'Refresh access token',
-    guards: RefreshGuard,
+    guards: JwtGuard,
     documentation: AuthDocumentation.REFRESH,
   })
   @Post('/refresh')

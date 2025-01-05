@@ -5,6 +5,7 @@ import {
 } from '@fictadvisor/utils/responses';
 import { cookies } from 'next/headers';
 
+import { authRefreshPath } from '@/lib/constants/authRefreshPath';
 import { AuthToken } from '@/lib/constants/AuthToken';
 import { cookieOptions } from '@/lib/constants/cookieOptions';
 import { Tokens } from '@/types/tokens';
@@ -12,8 +13,16 @@ import { Tokens } from '@/types/tokens';
 import { client } from '../instance';
 
 export async function logout() {
-  cookies().delete({ name: AuthToken.AccessToken, ...cookieOptions });
-  cookies().delete({ name: AuthToken.RefreshToken, ...cookieOptions });
+  cookies().set(AuthToken.RefreshToken, '', {
+    ...cookieOptions,
+    maxAge: undefined,
+    expires: new Date(0),
+  });
+  cookies().set(AuthToken.AccessToken, '', {
+    ...cookieOptions,
+    maxAge: undefined,
+    expires: new Date(0),
+  });
 }
 
 export async function getServerUser() {
@@ -42,7 +51,7 @@ export async function refreshToken(): Promise<boolean> {
   }
 
   try {
-    const { data } = await client.post<AuthRefreshResponse>('auth/refresh');
+    const { data } = await client.post<AuthRefreshResponse>(authRefreshPath);
     await setAuthTokens({
       accessToken: data.accessToken,
       refreshToken: refreshToken.value,
