@@ -5,7 +5,6 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtPayload } from './JwtPayload';
 import { User } from '@prisma/client';
 import { UserRepository } from '../database/repositories/UserRepository';
-import { RequestUtils } from '../utils/RequestUtils';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -14,7 +13,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     private userRepository: UserRepository,
   ) {
     super({
-      jwtFromRequest: ExtractJwt.fromExtractors([RequestUtils.cookies('access_token')]),
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: securityConfig.secret,
       ignoreExpiration: false,
     });

@@ -11,8 +11,6 @@ import { UserModule } from './UserModule';
 import { AccessModule } from 'src/v2/modules/AccessModule';
 import { LocalStrategy } from 'src/v2/security/LocalStrategy';
 import { LocalAuthGuard } from 'src/v2/security/LocalGuard';
-import { RefreshStrategy } from '../security/RefreshStrategy';
-import { RefreshGuard } from '../security/RefreshGuard';
 
 
 @Module({
@@ -22,8 +20,6 @@ import { RefreshGuard } from '../security/RefreshGuard';
     TelegramAPI,
     LocalStrategy,
     LocalAuthGuard,
-    RefreshStrategy,
-    RefreshGuard,
   ],
   exports: [AuthService],
   imports: [
