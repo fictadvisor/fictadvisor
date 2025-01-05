@@ -1,5 +1,8 @@
 import axios from 'axios';
 
+import { authRefreshPath } from '@/lib/constants/authRefreshPath';
+import { AuthToken } from '@/lib/constants/AuthToken';
+
 import { isServer } from '../constants/isServer';
 
 import { refreshToken } from './auth/ServerAuthApi';
@@ -28,16 +31,30 @@ client.interceptors.response.use(
   },
 );
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const cookiesInterceptor = async (req: any) => {
+const authorizationInterceptor = async (req: any) => {
+  const isRefresh = (req.url as string).includes(authRefreshPath);
+  let cookieToSet;
   if (isServer) {
     const { cookies } = await import('next/headers');
-    const cookiesString = cookies()
-      .getAll()
-      .map(item => `${item.name}=${item.value}`)
-      .join('; ');
-    req.headers.Cookie = cookiesString;
+    if (isRefresh) {
+      cookieToSet = cookies().get(AuthToken.RefreshToken);
+    } else {
+      cookieToSet = cookies().get(AuthToken.AccessToken);
+    }
+  } else {
+    for (const cookie of document.cookie.split('; ')) {
+      const [key, value] = cookie.split('=');
+      if (key === 'refresh_token' && !isRefresh) {
+        cookieToSet = value;
+        break;
+      } else if (key === 'access_token' && isRefresh) {
+        cookieToSet = value;
+        break;
+      }
+    }
   }
+  req.headers.Authorization = `Bearer ${cookieToSet}`;
   return req;
 };
 
-client.interceptors.request.use(cookiesInterceptor);
+client.interceptors.request.use(authorizationInterceptor);
