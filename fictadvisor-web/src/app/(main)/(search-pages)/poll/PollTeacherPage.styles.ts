@@ -8,6 +8,7 @@ export const layout: SxProps<Theme> = {
     mobile: '0px 16px 32px 16px',
     tablet: '0px 40px 32px 32px',
     laptop: '0px 80px 32px 80px',
+    desktop: '0px 80px 32px',
   },
 };
 
