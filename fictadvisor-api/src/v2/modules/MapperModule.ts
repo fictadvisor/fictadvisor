@@ -9,7 +9,6 @@ import { TeacherMapper } from '../mappers/TeacherMapper';
 import { UserMapper } from '../mappers/UserMapper';
 import { ScheduleMapper } from '../mappers/ScheduleMapper';
 import { GroupMapper } from '../mappers/GroupMapper';
-import { EntrantMapper } from '../mappers/EntrantMapper';
 import { TelegramGroupMapper } from '../mappers/TelegramGroupMapper';
 import { CathedraMapper } from '../mappers/CathedraMapper';
 import { ResourceMapper } from '../mappers/ResourceMapper';
@@ -18,7 +17,6 @@ import { ResourceMapper } from '../mappers/ResourceMapper';
   providers: [
     DisciplineMapper,
     DisciplineTeacherMapper,
-    EntrantMapper,
     QuestionMapper,
     RoleMapper,
     StudentMapper,
@@ -34,7 +32,6 @@ import { ResourceMapper } from '../mappers/ResourceMapper';
   exports: [
     DisciplineMapper,
     DisciplineTeacherMapper,
-    EntrantMapper,
     QuestionMapper,
     RoleMapper,
     StudentMapper,
