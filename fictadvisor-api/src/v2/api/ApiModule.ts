@@ -9,9 +9,6 @@ import { PollModule } from '../modules/PollModule';
 import { ScheduleModule } from '../modules/ScheduleModule';
 import { ResourceModule } from '../modules/ResourceModule';
 import { CathedraModule } from '../modules/CathedraModule';
-import { DocumentModule } from '../modules/DocumentModule';
-import { EntrantModule } from '../modules/EntrantModule';
-import { AdmissionModule } from '../modules/AdmissionModule';
 import { TelegramGroupModule } from '../modules/TelegramGroupModule';
 import { PermissionModule } from '../modules/PermissionModule';
 import { StudentModule } from '../modules/StudentModule';
@@ -32,9 +29,6 @@ import { HealthModule } from '../modules/HealthModule';
     ScheduleModule,
     ResourceModule,
     CathedraModule,
-    DocumentModule,
-    EntrantModule,
-    AdmissionModule,
     TelegramGroupModule,
     PermissionModule,
     StudentModule,

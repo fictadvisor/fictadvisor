@@ -7388,13 +7388,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@xmldom/xmldom@npm:^0.8.10":
-  version: 0.8.10
-  resolution: "@xmldom/xmldom@npm:0.8.10"
-  checksum: 10c0/c7647c442502720182b0d65b17d45d2d95317c1c8c497626fe524bda79b4fb768a9aa4fae2da919f308e7abcff7d67c058b102a9d641097e9a57f0b80187851f
-  languageName: node
-  linkType: hard
-
 "@xtuc/ieee754@npm:^1.2.0":
   version: 1.2.0
   resolution: "@xtuc/ieee754@npm:1.2.0"
@@ -10162,15 +10155,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"docxtemplater@npm:^3.37.12":
-  version: 3.48.0
-  resolution: "docxtemplater@npm:3.48.0"
-  dependencies:
-    "@xmldom/xmldom": "npm:^0.8.10"
-  checksum: 10c0/318f5607647fea1fbd76ec415fda9e123a6ec50b94804508f72e142b0846d9277860f3f09a7a43cb187448d9eb55de9485ff01cc73a11716232b736ae0752e6c
-  languageName: node
-  linkType: hard
-
 "dom-accessibility-api@npm:^0.5.9":
   version: 0.5.16
   resolution: "dom-accessibility-api@npm:0.5.16"
@@ -11682,7 +11666,6 @@ __metadata:
     class-validator: "npm:^0.14.0"
     cookie-parser: "npm:^1.4.6"
     cross-env: "npm:^7.0.3"
-    docxtemplater: "npm:^3.37.12"
     dotenv-cli: "npm:^7.2.1"
     eslint: "npm:^8.32.0"
     eslint-config-prettier: "npm:^8.5.0"
@@ -11697,7 +11680,6 @@ __metadata:
     passport: "npm:^0.6.0"
     passport-jwt: "npm:^4.0.0"
     passport-local: "npm:^1.0.0"
-    pizzip: "npm:^3.1.4"
     prettier: "npm:^2.8.1"
     prisma: "npm:4.16.2"
     reflect-metadata: "npm:^0.1.13"
@@ -16752,13 +16734,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pako@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "pako@npm:2.1.0"
-  checksum: 10c0/8e8646581410654b50eb22a5dfd71159cae98145bd5086c9a7a816ec0370b5f72b4648d08674624b3870a521e6a3daffd6c2f7bc00fdefc7063c9d8232ff5116
-  languageName: node
-  linkType: hard
-
 "pako@npm:~0.2.0":
   version: 0.2.9
   resolution: "pako@npm:0.2.9"
@@ -17081,15 +17056,6 @@ __metadata:
   version: 4.0.6
   resolution: "pirates@npm:4.0.6"
   checksum: 10c0/00d5fa51f8dded94d7429700fb91a0c1ead00ae2c7fd27089f0c5b63e6eca36197fe46384631872690a66f390c5e27198e99006ab77ae472692ab9c2ca903f36
-  languageName: node
-  linkType: hard
-
-"pizzip@npm:^3.1.4":
-  version: 3.1.7
-  resolution: "pizzip@npm:3.1.7"
-  dependencies:
-    pako: "npm:^2.1.0"
-  checksum: 10c0/6bfbc4d03e3f99ee2717a2471b692b2294cd060d8d1842a147e33a9acbf6251c51f1d625cfc3eaaa4b2da43a83468558bdaea84e039d7095dbc0deba81c28d59
   languageName: node
   linkType: hard
 
