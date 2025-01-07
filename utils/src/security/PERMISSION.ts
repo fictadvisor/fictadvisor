@@ -13,11 +13,6 @@ export enum PERMISSION {
 	ADMIN_PANEL_ROLES_SHOW = 'adminPanel.roles.show',
 	ADMIN_PANEL_SUBJECTS_SHOW = 'adminPanel.subjects.show',
 
-	ADMISSION_GET = 'admission.get',
-	ADMISSION_DELETE = 'admission.delete',
-	ADMISSION_PRIORITIES_GET = 'admission.priorities.get',
-	ADMISSION_PRIORITIES_APPROVE = 'admission.priorities.approve',
-
 	CATHEDRAS_CREATE = 'cathedras.create',
 	CATHEDRAS_UPDATE = 'cathedras.update',
 	CATHEDRAS_DELETE = 'cathedras.delete',
@@ -27,8 +22,6 @@ export enum PERMISSION {
 	DISCIPLINE_TEACHERS_DELETE = 'disciplineTeachers.delete',
 	DISCIPLINE_DELETE = 'discipline.delete',
 	DISCIPLINE_UPDATE = 'discipline.update',
-
-	ENTRANT_CONTRACT_CREATE = 'entrant.contract.create',
 
 	GROUPS_CREATE = 'groups.create',
 	GROUPS_UPDATE = 'groups.update',

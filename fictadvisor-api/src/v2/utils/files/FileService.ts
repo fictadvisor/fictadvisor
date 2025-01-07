@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { createHash } from 'crypto';
 import { join, extname } from 'path';
-import PizZip from 'pizzip';
-import Docxtemplater from 'docxtemplater';
 import * as admin from 'firebase-admin';
 import * as process from 'process';
 import { find } from '../ArrayUtil';
@@ -61,23 +59,6 @@ export class FileService {
     const [file] = await this.storage.file(filePath).download();
 
     return file.toString(encoding);
-  }
-
-  async fillTemplate (fileName: string, data: object): Promise<Buffer> {
-    const file = await this.getFileContent(`templates/${fileName}`, true, 'binary');
-    const zip = new PizZip(file);
-
-    const doc = new Docxtemplater(zip, {
-      paragraphLoop: true,
-      linebreaks: true,
-      nullGetter: () => '',
-    });
-
-    doc.render(data);
-    return doc.getZip().generate({
-      type: 'nodebuffer',
-      compression: 'DEFLATE',
-    });
   }
 
   async generateGroupList (students: StudentWithContactsData[], groupId: string): Promise<string> {

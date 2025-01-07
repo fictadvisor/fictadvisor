@@ -8,4 +8,3 @@ export * from './SortQASParam';
 export * from './SortQATParam';
 export * from './SortQAUParam';
 export * from './SortQGSParam';
-export * from './StudyContractParams';
