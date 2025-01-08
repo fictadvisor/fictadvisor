@@ -9,6 +9,7 @@ import { find } from '../ArrayUtil';
 import { StudentWithContactsData } from '../../api/datas/StudentWithContactsData';
 import { MINUTE } from '../date/DateService';
 import { Bucket } from '@google-cloud/storage';
+import { utils, write } from 'xlsx';
 
 @Injectable()
 export class FileService {
@@ -80,7 +81,7 @@ export class FileService {
   }
 
   async generateGroupList (students: StudentWithContactsData[], groupId: string): Promise<string> {
-    const fileName = `${groupId}.csv`;
+    const fileName = `${groupId}.xlsx`;
     const path = join('static', 'lists', fileName);
 
     const timeout = MINUTE * 15;
@@ -95,21 +96,31 @@ export class FileService {
       return url;
     }
 
-    let result = 'lastName,firstName,middleName,email,telegram,github,instagram,facebook,twitter,discord,youtube,mail';
-    for (const student of students) {
-      const telegram = find(student.contacts, 'name', 'TELEGRAM')?.link || '';
-      const gitHub = find(student.contacts, 'name', 'GITHUB')?.link || '';
-      const instagram = find(student.contacts, 'name', 'INSTAGRAM')?.link || '';
-      const facebook = find(student.contacts, 'name', 'FACEBOOK')?.link || '';
-      const twitter = find(student.contacts, 'name', 'TWITTER')?.link || '';
-      const discord = find(student.contacts, 'name', 'DISCORD')?.link || '';
-      const youTube = find(student.contacts, 'name', 'YOUTUBE')?.link || '';
-      const mail = find(student.contacts, 'name', 'MAIL')?.link || '';
-      const contacts = `${telegram},${gitHub},${instagram},${facebook},${twitter},${discord},${youTube},${mail}`;
+    const data = students.map((student) => ({
+      lastName: student.lastName,
+      firstName: student.firstName,
+      middleName: student.middleName,
+      email: student.email,
+      telegram: find(student.contacts, 'name', 'TELEGRAM')?.link || '',
+      github: find(student.contacts, 'name', 'GITHUB')?.link || '',
+      instagram: find(student.contacts, 'name', 'INSTAGRAM')?.link || '',
+      facebook: find(student.contacts, 'name', 'FACEBOOK')?.link || '',
+      twitter: find(student.contacts, 'name', 'TWITTER')?.link || '',
+      discord: find(student.contacts, 'name', 'DISCORD')?.link || '',
+      youtube: find(student.contacts, 'name', 'YOUTUBE')?.link || '',
+      mail: find(student.contacts, 'name', 'MAIL')?.link || '',
+    }));
 
-      result += `\n${student.lastName},${student.firstName},${student.middleName},${student.email},${contacts}`;
-    }
-    await file.save(result);
+    const worksheet = utils.json_to_sheet(data);
+    const workbook = utils.book_new();
+    utils.book_append_sheet(workbook, worksheet);
+
+    const dataBuffer = write(workbook, {
+      type: 'buffer',
+      bookType: 'xlsx',
+    });
+
+    await file.save(dataBuffer);
 
     setTimeout(async () => this.storage.file(path).delete(), timeout);
 
