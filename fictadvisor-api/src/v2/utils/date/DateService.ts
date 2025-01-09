@@ -3,6 +3,7 @@ import { PrismaService } from '../../database/PrismaService';
 import { DataNotFoundException } from '../exceptions/DataNotFoundException';
 import { DataMissingException } from '../exceptions/DataMissingException';
 import { DateTime } from 'luxon';
+import { ScheduleDayNumber } from '../parser/ScheduleParserTypes';
 
 export const MINUTE = 1000 * 60;
 export const HOUR = MINUTE * 60;
@@ -63,6 +64,19 @@ export class DateService {
       ...semester,
       isFinished: semester.endDate < new Date(),
     };
+  }
+
+  async getNextSemester () {
+    return this.prisma.semesterDate.findFirst({
+      where: {
+        startDate: {
+          gte: new Date(),
+        },
+      },
+      orderBy: {
+        startDate: 'asc',
+      },
+    });
   }
 
   async getAllPreviousSemesters () {
@@ -184,22 +198,14 @@ export class DateService {
     }
   }
 
-  async getEventTime (pairTime: string, startOfSemester: Date, week: number, day: number) {
-    const [hours, minutes] = pairTime
+  getParserEventTime (startOfSemester: Date, week: number, day: ScheduleDayNumber, time: string) {
+    const [hours, minutes] = time
       .split(':')
       .map((number) => +number);
     const minutesAfterHour = 35;
     const startOfEvent = new Date(startOfSemester.getTime() + week * WEEK + (day - 1) * DAY + hours * HOUR + minutes * MINUTE);
     const endOfEvent = new Date(startOfEvent.getTime() + HOUR + minutesAfterHour * MINUTE);
 
-    return { startOfEvent, endOfEvent };
-  }
-
-  getEventTimeRozKpi (startOfSemester: Date, week: number, day: number, time: string) {
-    const [startHours, startMinutes] = time.split(':').map((s) => parseInt(s));
-    const minutesAfterHour = 35;
-    const startOfEvent = new Date(startOfSemester.getTime() + week * WEEK + (day - 1) * DAY + startHours * HOUR + startMinutes * MINUTE);
-    const endOfEvent = new Date(startOfEvent.getTime() + HOUR + minutesAfterHour * MINUTE);
     return { startOfEvent, endOfEvent };
   }
 }

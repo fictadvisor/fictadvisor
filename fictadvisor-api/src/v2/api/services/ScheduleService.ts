@@ -1,21 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import {
-  ParseScheduleQueryDTO,
-  CreateEventDTO,
   AttachLessonDTO,
+  CreateEventDTO,
+  CreateFacultyEventDTO,
   EventFiltrationDTO,
   GeneralEventFiltrationDTO,
+  ParseScheduleQueryDTO,
   UpdateEventDTO,
-  CreateFacultyEventDTO,
 } from '@fictadvisor/utils/requests';
 import { EventTypeEnum, ParserTypeEnum } from '@fictadvisor/utils/enums';
 import { DisciplineTypeEnum, Period } from '@prisma/client';
 import { DateTime } from 'luxon';
-import { DateService, StudyingSemester, FORTNITE, WEEK } from '../../utils/date/DateService';
+import { DateService, FORTNITE, StudyingSemester, WEEK } from '../../utils/date/DateService';
 import { DateUtils } from '../../utils/date/DateUtils';
 import { every, everyAsync, filterAsync, find, some } from '../../utils/ArrayUtil';
-import { RozParser } from '../../utils/parser/RozParser';
-import { CampusParser } from '../../utils/parser/CampusParser';
 import { UserService } from './UserService';
 import { DbEvent } from '../../database/entities/DbEvent';
 import { DbDiscipline, DbDiscipline_DisciplineTeacher } from '../../database/entities/DbDiscipline';
@@ -30,6 +28,8 @@ import { ObjectIsRequiredException } from '../../utils/exceptions/ObjectIsRequir
 import { InvalidWeekException } from '../../utils/exceptions/InvalidWeekException';
 import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
 import { GroupRepository } from '../../database/repositories/GroupRepository';
+import { GeneralParser } from '../../utils/parser/GeneralParser';
+import { Cron } from '@nestjs/schedule';
 
 export const weeksPerEvent = {
   EVERY_WEEK: WEEK / WEEK,
@@ -46,28 +46,23 @@ export class ScheduleService {
     private disciplineRepository: DisciplineRepository,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
     private disciplineTeacherRoleRepository: DisciplineTeacherRoleRepository,
-    private rozParser: RozParser,
     private userService: UserService,
     private studentRepository: StudentRepository,
     private dateUtils: DateUtils,
-    private campusParser: CampusParser,
     private groupRepository: GroupRepository,
+    private generalParser: GeneralParser,
   ) {}
-
-  private parserTypes: Record<ParserTypeEnum, any> = {
-    [ParserTypeEnum.ROZKPI]: async (period: StudyingSemester, groupList: string[], page?: number) => {
-      await this.rozParser.parse(period, groupList, page);
-    },
-    [ParserTypeEnum.CAMPUS]: async (period: StudyingSemester, groupList: string[]) => {
-      await this.campusParser.parse(period, groupList);
-    },
-  };
 
   async parse (query: ParseScheduleQueryDTO): Promise<void> {
     const { parser, page, year, semester, groups } = query;
     const period: StudyingSemester = { year, semester };
     const groupList = groups ? groups.trim().split(';') : [];
-    await this.parserTypes[parser](period, groupList, page);
+    await this.generalParser.parse(parser, groupList, period, page);
+  }
+
+  @Cron('0 3 * * *')
+  async autoParse () {
+    await this.generalParser.parse(ParserTypeEnum.ROZKPI);
   }
 
   async getIndexOfLesson (week: number, event: DbEvent): Promise<number | null> {
@@ -82,6 +77,7 @@ export class ScheduleService {
   async getGeneralGroupEvents (
     groupId: string,
     week?: number,
+    setWeekTime = true,
   ): Promise<{ events: DbEvent[], week: number, startTime: Date }> {
     const { startOfWeek, endOfWeek } = week ? await this.dateService.getDatesOfWeek(week) : this.dateService.getDatesOfCurrentWeek();
     const events: DbEvent[] = await this.eventRepository.findMany({
@@ -111,8 +107,10 @@ export class ScheduleService {
       return indexOfLesson !== null;
     });
 
-    for (const event of result) {
-      await this.setWeekTime(event, week);
+    if (setWeekTime) {
+      for (const event of result) {
+        await this.setWeekTime(event, week);
+      }
     }
 
     return {

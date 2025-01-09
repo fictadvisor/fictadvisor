@@ -25,6 +25,14 @@ export class EventRepository {
     }) as Promise<DbEvent>;
   }
 
+  async findOrCreate (where: Prisma.EventWhereInput, data: Prisma.EventUncheckedCreateInput) {
+    const event = await this.find(where);
+    if (!event) {
+      return await this.create(data);
+    }
+    return event;
+  }
+
   find (where: Prisma.EventWhereInput): Promise<DbEvent> {
     return this.prisma.event.findFirst({
       where,
@@ -52,7 +60,7 @@ export class EventRepository {
       include: this.include,
     }) as Promise<DbEvent>;
   }
-  
+
   deleteById (id: string): Promise<DbEvent> {
     return this.prisma.event.delete({
       where: { id },

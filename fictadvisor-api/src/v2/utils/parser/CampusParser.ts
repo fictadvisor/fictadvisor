@@ -1,193 +1,109 @@
 import { Injectable } from '@nestjs/common';
 import { Parser } from './Parser';
 import axios from 'axios';
-import { DisciplineTypeEnum } from '@prisma/client';
-import { ScheduleDayType, ScheduleGroupType, SchedulePairType, ScheduleType } from './ScheduleParserTypes';
-import { DateService, StudyingSemester } from '../date/DateService';
-import { DbSubject } from '../../database/entities/DbSubject';
-import { DbDiscipline } from '../../database/entities/DbDiscipline';
-import { DisciplineRepository } from '../../database/repositories/DisciplineRepository';
-import { DbTeacher } from '../../database/entities/DbTeacher';
-import { DbDisciplineType } from '../../database/entities/DbDisciplineType';
-import { DisciplineTeacherRepository } from '../../database/repositories/DisciplineTeacherRepository';
-import { SubjectRepository } from '../../database/repositories/SubjectRepository';
-import { GroupService } from '../../api/services/GroupService';
+import { DateService } from '../date/DateService';
 import { GeneralParser } from './GeneralParser';
-
-export const DAY_NUMBER = {
-  'Пн': 1,
-  'Вв': 2,
-  'Ср': 3,
-  'Чт': 4,
-  'Пт': 5,
-  'Сб': 6,
-  'Нд': 7,
-};
-
-export const DISCIPLINE_TYPE = {
-  'lec': DisciplineTypeEnum.LECTURE,
-  'prac': DisciplineTypeEnum.PRACTICE,
-  'lab': DisciplineTypeEnum.LABORATORY,
-};
+import { SemesterDate } from '@prisma/client';
+import {
+  CAMPUS_PARSER_DAY_NUMBER,
+  CAMPUS_PARSER_DISCIPLINE_TYPE,
+  CampusParserDay,
+  CampusParserGroup,
+} from './CampusParserTypes';
+import {
+  GroupParsedSchedule,
+  ParsedSchedulePair,
+  ParsedScheduleWeek,
+  ScheduleWeekNumber,
+} from './ScheduleParserTypes';
 
 @Injectable()
-export class CampusParser implements Parser {
-  constructor (
-    private groupService: GroupService,
-    private subjectRepository: SubjectRepository,
-    private disciplineRepository: DisciplineRepository,
-    private disciplineTeacherRepository: DisciplineTeacherRepository,
-    private dateService: DateService,
-    private generalParser: GeneralParser,
-  ) {}
+export class CampusParser implements Parser<CampusParserGroup> {
+  constructor (private dateService: DateService) {}
 
-  async parse (period: StudyingSemester, groupList: string[]) {
-    const groups: ScheduleGroupType[] = (await axios.get('https://api.campus.kpi.ua/schedule/groups')).data.data;
-    let filtered = groups
-      .filter((group) => group.faculty === 'ФІОТ')
-      .map((group) => ({
-        id: group.id,
-        name: group.name,
-      }));
+  async parseGroups (groupNames: string[]): Promise<CampusParserGroup[]> {
+    const { data } = await axios.get(
+      'https://api.campus.kpi.ua/schedule/groups'
+    );
 
-    if (groupList.length) {
-      filtered = filtered.filter((group) => groupList.includes(group.name));
+    let filtered: CampusParserGroup[] = data.data
+      .filter(({ faculty }: CampusParserGroup) => faculty === 'ФІОТ')
+      .map(({ id, name }: CampusParserGroup) => ({ id, name }));
+
+    if (groupNames.length) {
+      filtered = filtered.filter(({ name }: CampusParserGroup) =>
+        groupNames.includes(name)
+      );
     }
 
-    for (const group of filtered) {
-      await this.parseGroupSchedule(group as ScheduleGroupType, period);
-    }
+    return filtered;
   }
 
-  async parseGroupSchedule (group: ScheduleGroupType, period: StudyingSemester) {
-    const [{ data }, { id }] = await Promise.all([
-      axios.get('https://api.campus.kpi.ua/schedule/lessons?groupId=' + group.id),
-      this.groupService.getOrCreate({ code: group.name }),
-    ]);
+  async parseGroupSchedule (
+    { id, name }: CampusParserGroup,
+    semester: SemesterDate
+  ): Promise<GroupParsedSchedule> {
+    const { data } = await axios.get(
+      'https://api.campus.kpi.ua/schedule/lessons?groupId=' + id
+    );
+    const { scheduleFirstWeek, scheduleSecondWeek } = data.data;
 
-    const { scheduleFirstWeek, scheduleSecondWeek } = data.data as ScheduleType;
-
-    await this.parseWeek(period, scheduleFirstWeek, id, 0);
-    await this.parseWeek(period, scheduleSecondWeek, id, 1);
+    return {
+      name,
+      firstWeek: this.parseWeek(semester, 0, scheduleFirstWeek),
+      secondWeek: this.parseWeek(semester, 1, scheduleSecondWeek),
+    };
   }
 
-  async parseWeek (period: StudyingSemester, week: ScheduleDayType[], groupId: string, weekNumber: number) {
+  private parseWeek (
+    semester: SemesterDate,
+    weekNumber: ScheduleWeekNumber,
+    week: CampusParserDay[]
+  ) {
+    const weekPairs = new ParsedScheduleWeek(weekNumber);
+
     for (const day of week) {
-      await this.parseDay(period, day, groupId, weekNumber);
+      weekPairs.pairs.push(...this.parseDay(semester, day, weekNumber));
     }
+
+    return weekPairs;
   }
 
-  async parseDay (period: StudyingSemester, { day, pairs }: ScheduleDayType, groupId: string, weekNumber: number) {
-    for (const pair of pairs) {
-      const isSelective = pairs.some(({ name, time }) => pair.name !== name && pair.time === time);
-      await this.parsePair(pair, groupId, period, isSelective, weekNumber, DAY_NUMBER[day]);
-    }
-  }
+  private parseDay (
+    { startDate }: SemesterDate,
+    { day, pairs }: CampusParserDay,
+    weekNumber: ScheduleWeekNumber
+  ) {
+    const parsedPairs: ParsedSchedulePair[] = [];
 
-  async parsePair (pair: SchedulePairType, groupId: string, period: StudyingSemester, isSelective: boolean, week: number, day: number) {
-    const { teacher, subject, name } = await this.initializeData(pair);
+    for (const { name, time, tag, teacherName } of pairs) {
+      if (!teacherName) continue;
 
-    const { startDate: startOfSemester } = await this.dateService.getSemester(period);
-    const { startOfEvent, endOfEvent } = await this.dateService.getEventTime(pair.time, startOfSemester, week, day);
+      const isSelective = pairs.some(
+        ({ name: nameSome, time: timeSome }) =>
+          name !== nameSome && time === timeSome
+      );
 
-    const discipline = await this.getOrCreateDiscipline(subject, groupId, period, name, isSelective);
+      const { startOfEvent: startTime, endOfEvent: endTime } =
+        this.dateService.getParserEventTime(
+          startDate,
+          weekNumber,
+          CAMPUS_PARSER_DAY_NUMBER[day],
+          time
+        );
 
-    const disciplineType = discipline.disciplineTypes.find((type) => type.name === name);
-
-    if (teacher) await this.createOrUpdateDisciplineTeacher(teacher, discipline, disciplineType);
-
-    await this.generalParser.handleEvent(pair, startOfEvent, endOfEvent, groupId, disciplineType.id);
-  }
-
-  async initializeData (pair: SchedulePairType) {
-    const teacher = pair.teacherName ? await this.getTeacherByString(pair.teacherName) : null;
-    const subject = await this.subjectRepository.getOrCreate(pair.name ?? '');
-    const name = DISCIPLINE_TYPE[pair.tag] ?? DISCIPLINE_TYPE.lec;
-
-    return { teacher, subject, name };
-  }
-
-  async getTeacherByString (teacherName: string) : Promise<DbTeacher> {
-    let [lastName, firstName, middleName] = teacherName.split(' ');
-
-    lastName = lastName.trim().replace('.', '');
-    firstName = firstName.trim().replace('.', '');
-    middleName = middleName.trim().replace('.', '');
-
-    return await this.generalParser.getTeacherFullInitials(lastName, firstName, middleName);
-  }
-
-  async getOrCreateDiscipline (subject: DbSubject, groupId: string, period: StudyingSemester, name: DisciplineTypeEnum, isSelective: boolean) {
-    let discipline = await this.disciplineRepository.find({
-      subjectId: subject.id,
-      groupId,
-      year: period.year,
-      semester: period.semester,
-    });
-
-    if (!discipline) {
-      discipline = await this.disciplineRepository.create({
-        subjectId: subject.id,
-        groupId,
-        year: period.year,
-        semester: period.semester,
-        disciplineTypes: { create: { name } },
+      parsedPairs.push({
+        name,
         isSelective,
-      });
-    } else {
-      discipline = await this.updateDiscipline(discipline, name, isSelective);
-    }
-    return discipline;
-  }
-
-  async updateDiscipline (discipline: DbDiscipline, name: string, isSelective: boolean) {
-    const data = await this.getDisciplineUpdateData(discipline, name, isSelective);
-    if (Object.keys(data).length !== 0) {
-      discipline = await this.disciplineRepository.updateById(discipline.id, data);
-    }
-    return discipline;
-  }
-
-  async getDisciplineUpdateData (discipline: DbDiscipline, name: string, isSelective: boolean) {
-    const data: any = {};
-
-    if (!discipline.disciplineTypes.some((type) => type.name === name)) {
-      data.disciplineTypes = {
-        create: {
-          name,
-        },
-      };
-    }
-
-    if (isSelective && !discipline.isSelective) {
-      data.isSelective = isSelective;
-    }
-    return data;
-  }
-
-  async createOrUpdateDisciplineTeacher (teacher: DbTeacher, discipline: DbDiscipline, disciplineType: DbDisciplineType) {
-    const disciplineTeacher = await this.disciplineTeacherRepository.find({
-      teacherId: teacher.id,
-      disciplineId: discipline.id,
-    });
-    if (!disciplineTeacher) {
-      await this.disciplineTeacherRepository.create({
-        teacherId: teacher.id,
-        disciplineId: discipline.id,
-        roles: {
-          create: {
-            disciplineTypeId: disciplineType.id,
-          },
-        },
-      });
-    } else if (!disciplineTeacher.roles.some((r) => r.disciplineType.name === disciplineType.name)) {
-      await this.disciplineTeacherRepository.updateById(disciplineTeacher.id, {
-        roles: {
-          create: {
-            disciplineTypeId: disciplineType.id,
-          },
+        startTime,
+        endTime,
+        teachers: [GeneralParser.parseTeacherName(teacherName)],
+        disciplineType: {
+          name: CAMPUS_PARSER_DISCIPLINE_TYPE[tag],
         },
       });
     }
+
+    return parsedPairs;
   }
 }
