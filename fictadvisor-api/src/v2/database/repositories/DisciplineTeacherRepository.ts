@@ -67,10 +67,18 @@ export class DisciplineTeacherRepository {
     }) as any as DbDisciplineTeacher;
   }
 
-  async getOrCreate (data: { teacherId: string, disciplineId: string }): Promise<DbDisciplineTeacher> {
-    let disciplineTeacher = await this.find(data);
+  async getOrCreate ({ disciplineId, teacherId, ...data }: Prisma.DisciplineTeacherUncheckedCreateInput): Promise<DbDisciplineTeacher> {
+    let disciplineTeacher = await this.find({
+      disciplineId,
+      teacherId,
+    });
+
     if (!disciplineTeacher) {
-      disciplineTeacher = await this.create(data);
+      disciplineTeacher = await this.create({
+        disciplineId,
+        teacherId,
+        ...data,
+      });
     }
     return disciplineTeacher;
   }

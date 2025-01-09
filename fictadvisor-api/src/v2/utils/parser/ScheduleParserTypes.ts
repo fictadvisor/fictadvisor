@@ -1,45 +1,39 @@
-enum TagEnum {
-  lec,
-  lab,
-  prac,
-}
+import { DisciplineTypeEnum } from '@fictadvisor/utils';
 
-export class SchedulePairType {
-  teacherName: string;
-  lecturerId: string;
-  type: string;
-  time: string;
-  name: string;
-  place: string;
-  tag: TagEnum;
-}
+export type ScheduleDayNumber = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+export type ScheduleWeekNumber = 0 | 1;
 
-export class ExtendedSchedulePair extends SchedulePairType {
-  week: number;
-  day: number;
-  teacher: ScheduleTeacherType;
-  teachers: ScheduleTeacherType[];
-}
-
-export class ScheduleTeacherType {
+export class ParsedScheduleTeacher {
   lastName: string;
   firstName: string;
   middleName: string;
 }
 
-export class ScheduleDayType {
-  day: string;
-  pairs: SchedulePairType[];
+export class ParsedDisciplineType {
+  name: DisciplineTypeEnum;
+  id?: string;
 }
 
-export class ScheduleGroupType {
-  id: string;
+export class ParsedSchedulePair {
   name: string;
-  faculty: string;
+  startTime: Date;
+  endTime: Date;
+  isSelective: boolean;
+  disciplineType: ParsedDisciplineType;
+  teachers: ParsedScheduleTeacher[];
 }
 
-export class ScheduleType {
-  groupCode: string;
-  scheduleFirstWeek: ScheduleDayType[];
-  scheduleSecondWeek: ScheduleDayType[];
+export class ParsedScheduleWeek {
+  pairs: ParsedSchedulePair[] = [];
+  constructor (public weekNumber: ScheduleWeekNumber) {};
+}
+
+export class BaseGroup {
+  name: string;
+}
+
+export class GroupParsedSchedule {
+  name: string;
+  firstWeek: ParsedScheduleWeek;
+  secondWeek: ParsedScheduleWeek;
 }
