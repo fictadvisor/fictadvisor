@@ -2,6 +2,7 @@ import { ApiDocumentationParams } from '../decorators';
 import { DefaultForbiddenResponse, DefaultUnauthorizedResponse } from '../defaultResponses';
 
 export const ScheduleDocumentationParse: ApiDocumentationParams = {
+  isAuth: true,
   ok: {},
   badRequest: {
     description: `\n
