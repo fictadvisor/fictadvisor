@@ -17,24 +17,18 @@ describe('ScheduleService', () => {
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
-      providers: [
-        ScheduleService,
-        GeneralParser,
-        {
-          provide: RozParser,
-          useValue: {},
-        },
-        {
-          provide: CampusParser,
-          useValue: {},
-        },
-      ],
+      providers: [ScheduleService],
       imports: [
         DateModule,
         PrismaModule,
       ],
     }).useMocker((token) => {
-      const tokens: InjectionToken[] = [UserService];
+      const tokens: InjectionToken[] = [
+        UserService,
+        GeneralParser,
+        RozParser,
+        CampusParser,
+      ];
       if (tokens.includes(token)) {
         return {};
       }
