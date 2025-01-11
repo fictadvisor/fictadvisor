@@ -1,5 +1,16 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsArray, IsDate, IsEnum, IsNotEmpty, IsOptional, IsUrl, IsUUID, MaxLength, MinLength } from 'class-validator';
+import {
+  IsString,
+  IsDate,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsUrl,
+  IsUUID,
+  MaxLength,
+  MinLength,
+  IsArray,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { validationOptionsMsg } from '../ValidationUtil';
 import { Period } from '../enums';
@@ -7,10 +18,10 @@ import { EventTypeEnum } from '../enums';
 
 export class CreateEventDTO {
   @ApiProperty({
-    description: 'Id of a group',
+    description: 'Id of the group',
   })
-  @IsUUID()
   @IsNotEmpty(validationOptionsMsg('Group id cannot be empty'))
+  @IsUUID(undefined, validationOptionsMsg('Group id must be formatted according to the UUID standard'))
     groupId: string;
 
   @ApiProperty({
@@ -22,13 +33,14 @@ export class CreateEventDTO {
     name: string;
 
   @ApiPropertyOptional({
-    description: 'Id of a discipline',
+    description: 'Id of the event\'s connected discipline',
   })
   @IsOptional()
+  @IsUUID(undefined, validationOptionsMsg('Discipline id must be formatted according to the UUID standard'))
     disciplineId?: string;
 
   @ApiPropertyOptional({
-    description: 'Event\'s type',
+    description: 'Event type',
     enum: EventTypeEnum,
   })
   @IsOptional()
@@ -36,18 +48,19 @@ export class CreateEventDTO {
     eventType?: EventTypeEnum;
 
   @ApiPropertyOptional({
-    description: 'List of teachers',
+    description: 'List of ids of teachers, who teach the discipline',
   })
-  @IsArray(validationOptionsMsg('Teachers must be Array'))
-  @IsNotEmpty(validationOptionsMsg('Teachers cannot be empty (empty array is required)'))
-    teachers: string[];
+  @IsOptional()
+  @IsArray(validationOptionsMsg('Teacher ids field must be an array'))
+  @IsUUID(undefined, validationOptionsMsg('Each element of teacher ids array must be formatted according to the UUID standard', true))
+    teacherIds: string[] = [];
 
   @ApiProperty({
     description: 'Start time of the event',
   })
   @IsNotEmpty(validationOptionsMsg('Start time cannot be empty'))
   @Type(() => Date)
-  @IsDate(validationOptionsMsg('Start time must be Date'))
+  @IsDate(validationOptionsMsg('Start time must be a valid Date'))
     startTime: Date;
 
   @ApiProperty({
@@ -55,11 +68,11 @@ export class CreateEventDTO {
   })
   @IsNotEmpty(validationOptionsMsg('End time cannot be empty'))
   @Type(() => Date)
-  @IsDate(validationOptionsMsg('End time must be Date'))
+  @IsDate(validationOptionsMsg('End time must be of type Date'))
     endTime: Date;
 
   @ApiProperty({
-    description: 'Event\'s period',
+    description: 'Event recurrence period',
     enum: Period,
   })
   @IsNotEmpty(validationOptionsMsg('Period cannot be empty'))
@@ -67,24 +80,26 @@ export class CreateEventDTO {
     period: Period;
 
   @ApiPropertyOptional({
-    description: 'Attached link to the event',
+    description: 'Link attached to the event',
   })
   @IsOptional()
-  @IsUrl(undefined, validationOptionsMsg('Url must be a URL address'))
+  @IsUrl(undefined, validationOptionsMsg('Url must be a valid URL address'))
     url?: string;
 
   @ApiPropertyOptional({
     description: 'Description of the discipline',
   })
-  @MaxLength(2000, validationOptionsMsg('Discipline description is too long (max: 2000)'))
   @IsOptional()
+  @IsString(validationOptionsMsg('Discipline description must be a string'))
+  @MaxLength(2000, validationOptionsMsg('Discipline description is too long (max: 2000)'))
     disciplineInfo?: string;
 
   @ApiPropertyOptional({
     description: 'Description of the event',
   })
-  @MaxLength(2000, validationOptionsMsg('Event description is too long (max: 2000)'))
   @IsOptional()
+  @IsString(validationOptionsMsg('Event description must be a string'))
+  @MaxLength(2000, validationOptionsMsg('Event description is too long (max: 2000)'))
     eventInfo?: string;
 }
 

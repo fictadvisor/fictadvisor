@@ -1,6 +1,6 @@
 import {
-  GeneralEventInfoResponse as APIGeneralEventInfoResponse,
-  GeneralEventsResponse as APIGeneralEventsResponse,
+  GeneralShortEventResponse as APIGeneralEventInfoResponse,
+  WeekGeneralEventsResponse as APIGeneralEventsResponse,
 } from '@fictadvisor/utils/responses';
 
 export interface GeneralEventInfoResponse

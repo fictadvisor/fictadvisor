@@ -7,7 +7,8 @@ import {
   IsNotEmpty,
   IsNumber,
   IsOptional,
-  IsUrl,
+  IsString,
+  IsUrl, IsUUID,
   MaxLength,
   MinLength,
 } from 'class-validator';
@@ -21,8 +22,8 @@ export class UpdateEventDTO {
     minimum: 1,
     description: 'Week to which the event is linked',
   })
-  @IsNumber()
-  @IsNotEmpty()
+  @IsNotEmpty(validationOptionsMsg('Week cannot be empty'))
+  @IsNumber({}, validationOptionsMsg('Week must be a number'))
     week: number;
 
   @ApiPropertyOptional({
@@ -37,36 +38,38 @@ export class UpdateEventDTO {
     description: 'Discipline ID',
   })
   @IsOptional()
+  @IsUUID(undefined, validationOptionsMsg('Discipline id must be formatted according to the UUID standard'))
     disciplineId?: string;
 
   @ApiPropertyOptional({
     enum: EventTypeEnum,
-    description: 'Type of event',
+    description: 'Event type',
   })
   @IsOptional()
   @IsEnum(EventTypeEnum, validationOptionsMsg('Event type must be an enum'))
     eventType?: EventTypeEnum;
 
   @ApiPropertyOptional({
-    description: 'An array of teachers linked to the event',
+    description: 'Array of ids of the teachers to connect to the event',
   })
   @IsOptional()
-  @IsArray(validationOptionsMsg('Teachers must be Array'))
-    teachers?: string[];
+  @IsArray(validationOptionsMsg('Teacher ids field must be an array'))
+  @IsUUID(undefined, validationOptionsMsg('Each element of teacherIds array must be formatted according to the UUID standard', true))
+    teacherIds?: string[];
 
   @ApiPropertyOptional({
     description: 'Event start time',
   })
   @IsOptional()
   @Type(() => Date)
-  @IsDate(validationOptionsMsg('Start time must be Date'))
+  @IsDate(validationOptionsMsg('Start time must be a valid Date'))
     startTime?: Date;
 
   @ApiPropertyOptional({
     description: 'Indicator of whether the event start date has been changed',
   })
   @IsOptional()
-  @IsBoolean()
+  @IsBoolean(validationOptionsMsg('Change start date must be a boolean'))
     changeStartDate?: boolean;
 
   @ApiPropertyOptional({
@@ -74,19 +77,19 @@ export class UpdateEventDTO {
   })
   @IsOptional()
   @Type(() => Date)
-  @IsDate(validationOptionsMsg('End time must be Date'))
+  @IsDate(validationOptionsMsg('End time must be a valid Date'))
     endTime?: Date;
 
   @ApiPropertyOptional({
     description: 'Indicator of whether the event end date has been changed',
   })
   @IsOptional()
-  @IsBoolean()
+  @IsBoolean(validationOptionsMsg('Change end date must be a boolean'))
     changeEndDate?: boolean;
 
   @ApiPropertyOptional({
     enum: Period,
-    description: 'The period during which the event occurs.\n',
+    description: 'Period of the event\'s occurrence\n',
   })
   @IsOptional()
   @IsEnum(Period, validationOptionsMsg('Period must be an enum'))
@@ -96,20 +99,22 @@ export class UpdateEventDTO {
     description: 'URL associated with the event',
   })
   @IsOptional()
-  @IsUrl(undefined, validationOptionsMsg('Url must be a URL address'))
+  @IsUrl(undefined, validationOptionsMsg('Url field must be a valid URL address'))
     url?: string;
 
   @ApiPropertyOptional({
     description: 'Description of the discipline',
   })
   @IsOptional()
+  @IsString(validationOptionsMsg('Discipline info must be a string'))
   @MaxLength(2000, validationOptionsMsg('Discipline description is too long (max: 2000)'))
     disciplineInfo?: string;
 
   @ApiPropertyOptional({
-    description: 'Description of the event',
+    description: 'Description of the event (or its first instance in case the event is periodic)',
   })
   @IsOptional()
+  @IsString(validationOptionsMsg('Event description must be a string'))
   @MaxLength(2000, validationOptionsMsg('Event description is too long (max: 2000)'))
     eventInfo?: string;
 }

@@ -43,6 +43,7 @@ export * from './GroupRequestDTO';
 export * from './GroupStudentsQueryDTO';
 export * from './IdentityQueryDTO';
 export * from './LoginDTO';
+export * from './ParseScheduleQueryDTO';
 export * from './PriorityDTO';
 export * from './QueryAllCathedrasDTO';
 export * from './QueryAllCommentsDTO';
