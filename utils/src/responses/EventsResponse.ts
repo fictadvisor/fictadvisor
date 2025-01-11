@@ -1,8 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { GeneralEventInfoResponse, MainEventInfoResponse } from './MainEventInfoResponse';
-import { TelegramEventInfoResponse } from './TelegramGeneralEventInfoResponse';
+import {
+  GeneralShortEventResponse,
+  ShortEventResponse,
+  TelegramShortEventResponse,
+} from './ShortEventResponse';
 
-export class EventsResponse {
+class EventWeekResponse {
   @ApiProperty({
     description: 'Week number',
     minimum: 1,
@@ -10,54 +13,53 @@ export class EventsResponse {
     week: number;
 
   @ApiProperty({
-    description: 'List of events',
-    type: [MainEventInfoResponse],
-  })
-    events: MainEventInfoResponse[];
-
-  @ApiProperty({
-    description: 'Start time of the event',
+    description: 'Week start time',
   })
     startTime: Date;
 }
 
-export class GeneralEventsResponse {
-  @ApiProperty({
-    description: 'Week number',
-    minimum: 1,
-  })
-    week: number;
-
+export class WeekEventsResponse extends EventWeekResponse {
   @ApiProperty({
     description: 'List of events',
-    type: [GeneralEventInfoResponse],
+    type: [ShortEventResponse],
   })
-    events: GeneralEventInfoResponse[];
+    events: ShortEventResponse[];
+}
 
+export class WeekGeneralEventsResponse extends EventWeekResponse {
   @ApiProperty({
-    description: 'Start time of the event',
+    description: 'List of events',
+    type: [GeneralShortEventResponse],
   })
-    startTime: Date;
+    events: GeneralShortEventResponse[];
+}
+
+export class EventsResponse {
+  @ApiProperty({
+    description: 'List of events',
+    type: [ShortEventResponse],
+  })
+    events: ShortEventResponse[];
 }
 
 export class TelegramEventsResponse {
   @ApiProperty({
-    type: [TelegramEventInfoResponse],
-    description: 'Return all events',
+    type: [TelegramShortEventResponse],
+    description: 'List of events',
   })
-    events: TelegramEventInfoResponse[];
+    events: TelegramShortEventResponse[];
 }
 
-export class FortnightEventsResponse {
+export class FortnightTelegramEventsResponse {
   @ApiProperty({
-    type: [TelegramEventInfoResponse],
-    description: 'Return all events of first week',
+    type: [TelegramShortEventResponse],
+    description: 'List of events of the first week',
   })
-    firstWeekEvents: TelegramEventInfoResponse[];
+    firstWeekEvents: TelegramShortEventResponse[];
 
   @ApiProperty({
-    type: [TelegramEventInfoResponse],
-    description: 'Return all events of second week',
+    type: [TelegramShortEventResponse],
+    description: 'List of events of the second week',
   })
-    secondWeekEvents: TelegramEventInfoResponse[];
+    secondWeekEvents: TelegramShortEventResponse[];
 }

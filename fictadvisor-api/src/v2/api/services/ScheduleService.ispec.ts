@@ -1,11 +1,11 @@
 import { Test } from '@nestjs/testing';
 import { InjectionToken } from '@nestjs/common';
-import { CreateEventDTO } from '@fictadvisor/utils/requests';
+import { CreateEventDTO, CreateFacultyEventDTO, GeneralEventFiltrationDTO } from '@fictadvisor/utils/requests';
 import {
-  EventTypeEnum,
   AbbreviationOfSpeciality,
   DisciplineTypeEnum,
   EducationProgram,
+  EventTypeEnum,
   Period,
 } from '@fictadvisor/utils/enums';
 import { TelegramAPI } from '../../telegram/TelegramAPI';
@@ -23,6 +23,7 @@ import { PollService } from './PollService';
 import { DataNotFoundException } from '../../utils/exceptions/DataNotFoundException';
 import { InvalidWeekException } from '../../utils/exceptions/InvalidWeekException';
 import { ObjectIsRequiredException } from '../../utils/exceptions/ObjectIsRequiredException';
+import { NoPermissionException } from '../../utils/exceptions/NoPermissionException';
 import { CampusParser } from '../../utils/parser/CampusParser';
 import { RozParser } from '../../utils/parser/RozParser';
 import { GeneralParser } from '../../utils/parser/GeneralParser';
@@ -546,6 +547,12 @@ describe('ScheduleService', () => {
     });
   });
 
+  const generalTypes = [
+    EventTypeEnum.LECTURE,
+    EventTypeEnum.PRACTICE,
+    EventTypeEnum.LABORATORY,
+  ];
+
   describe('getGeneralGroupEvents', () => {
     it('should return only those events that occur this week', async () => {
       jest.useFakeTimers().setSystemTime(new Date('2022-09-05T00:01:00'));
@@ -607,6 +614,40 @@ describe('ScheduleService', () => {
     });
   });
 
+  describe('getGeneralGroupEventsWrapper', () => {
+    it('should return only general events with an empty filter', async () => {
+      jest.useFakeTimers().setSystemTime(new Date('2022-09-05T00:01:00'));
+      const { events } = await scheduleService.getGeneralGroupEventsWrapper('group', {});
+      const containsOnlyGeneral = events.every((event) => {
+        return generalTypes.includes(event.lessons[0]?.disciplineType.name as unknown as EventTypeEnum);
+      });
+      expect(containsOnlyGeneral).toBe(true);
+    });
+
+    it('should return events with filter correctly', async () => {
+      const queries: EventTypeEnum[][] = [
+        [],
+        [EventTypeEnum.LECTURE],
+        [EventTypeEnum.LABORATORY, EventTypeEnum.PRACTICE],
+        [EventTypeEnum.LECTURE, EventTypeEnum.PRACTICE, EventTypeEnum.LABORATORY],
+      ];
+
+      for (const query of queries) {
+        const addLecture = query.includes(EventTypeEnum.LECTURE);
+        const addPractice = query.includes(EventTypeEnum.PRACTICE);
+        const addLaboratory = query.includes(EventTypeEnum.LABORATORY);
+        const filter: GeneralEventFiltrationDTO = { addLecture, addPractice, addLaboratory };
+
+        const { events } = await scheduleService.getGeneralGroupEventsWrapper('group', filter);
+        const filterWorks = events.every((event) => {
+          return query.includes(event.lessons[0]?.disciplineType.name as unknown as EventTypeEnum);
+        });
+
+        expect(filterWorks).toBe(true);
+      }
+    });
+  });
+
   describe('getEvent', () => {
     it('should return all information about event and discipline with period', async () => {
       jest.useFakeTimers().setSystemTime(new Date('2022-09-05T00:01:00'));
@@ -659,7 +700,7 @@ describe('ScheduleService', () => {
       });
 
       expect(event.eventInfo[0].number).toBe(0);
-      expect(discipline).toBe(null);
+      expect(discipline).toBeNull();
     });
 
     it('should return event and discipline information for no period even if date is wrong', async () => {
@@ -668,7 +709,7 @@ describe('ScheduleService', () => {
       expect(event.id).toBe('some-event-1st-semester-no-period-09-12');
     });
 
-    it('should throw DataNotFoundException because semester wasn\'t found', async () => {
+    it('should throw DataNotFoundException if semester wasn\'t found', async () => {
       jest.useFakeTimers().setSystemTime(new Date('1488-01-01T00:00:00'));
       await expect(
         scheduleService.getEvent('practice-event-1st-semester-every-week-09-12', 1)
@@ -683,28 +724,31 @@ describe('ScheduleService', () => {
     });
   });
 
-  describe('getAllGroupEvents', () => {
+  describe('getGroupEvents', () => {
     it('should return events with default filter', async () => {
       jest.useFakeTimers().setSystemTime(new Date('2022-09-05T00:01:00'));
-      const events = await scheduleService.getAllGroupEvents('group', 2, {});
+      const events = await scheduleService.getGroupEvents('group', 2, {});
       expect(events.length).not.toBe(0);
     });
 
-    it('should return only events witch are otherEvents', async () => {
+    it('should only return events which are not lectures, practices or labs', async () => {
       jest.useFakeTimers().setSystemTime(new Date('2022-09-05T00:01:00'));
-      const events = await scheduleService.getAllGroupEvents('group', 2, {
+      const events = await scheduleService.getGroupEvents('group', 2, {
         addLecture: false,
         addPractice: false,
         addLaboratory: false,
         showOwnSelective: false,
         addOtherEvents: true,
       });
+      const generalTypes = [
+        DisciplineTypeEnum.LECTURE,
+        DisciplineTypeEnum.PRACTICE,
+        DisciplineTypeEnum.LABORATORY,
+      ];
       expect(
         events.every((event) =>
           event.lessons.every(
-            (lesson) => lesson.disciplineType.name !== DisciplineTypeEnum.LECTURE &&
-                  lesson.disciplineType.name !== DisciplineTypeEnum.PRACTICE &&
-                  lesson.disciplineType.name !== DisciplineTypeEnum.LABORATORY
+            (lesson) => !generalTypes.includes(lesson.disciplineType.name)
           )
         )
       ).toBe(true);
@@ -712,52 +756,55 @@ describe('ScheduleService', () => {
 
     it('should return empty list because there aren\'t any events in the specified week', async () => {
       jest.useFakeTimers().setSystemTime(new Date('2022-09-05T00:01:00'));
-      const events = await scheduleService.getAllGroupEvents('group', 100, {});
+      const events = await scheduleService.getGroupEvents('group', 100, {});
       expect(events.length).toBe(0);
     });
   });
 
-  describe('getGroupEvents', () => {
+  describe('getGroupEventsWrapper', () => {
     it('should return all group events in the specified week', async () => {
       jest.useFakeTimers().setSystemTime(new Date('2022-09-12T00:01:00'));
-      const { startTime, events } = await scheduleService.getGroupEvents('user', 'group', 2, {});
+      const { startTime, events } = await scheduleService.getGroupEventsWrapper('group', {}, 'user', 2);
       expect(startTime).toStrictEqual(new Date('2022-09-12T00:00:00'));
       expect(events.every((event) => event.groupId === 'group')).toBe(true);
     });
 
     it('should return only selective disciplines', async () => {
       jest.useFakeTimers().setSystemTime(new Date('2022-09-12T00:01:00'));
-      const { events } = await scheduleService.getGroupEvents('user', 'group', 2, {
+      const { events } = await scheduleService.getGroupEventsWrapper('group', {
         showOwnSelective: true,
-      });
+      }, 'user', 2);
       const event = events.find(
         (event) => event.id === 'nonselected-lecture-event-1st-semester-every-week-09-05'
       );
-      expect(event).not.toBeDefined();
+      expect(event).toBeUndefined();
     });
 
     it('should return lecture, practice and laboratory events for not user\'s group', async () => {
       jest.useFakeTimers().setSystemTime(new Date('2022-09-12T00:01:00'));
-      const { events } = await scheduleService.getGroupEvents('user', 'anotherGroup', 2, {});
+      const { events } = await scheduleService.getGroupEventsWrapper('anotherGroup', {}, 'user', 2);
+      const generalTypes = [
+        DisciplineTypeEnum.LECTURE,
+        DisciplineTypeEnum.PRACTICE,
+        DisciplineTypeEnum.LABORATORY,
+      ];
 
       expect(events.every(
         (event) => event.groupId === 'anotherGroup' && event.lessons.every(
-          (lesson) => lesson.disciplineType.name === DisciplineTypeEnum.LECTURE ||
-                      lesson.disciplineType.name === DisciplineTypeEnum.PRACTICE ||
-                      lesson.disciplineType.name === DisciplineTypeEnum.LABORATORY
+          (lesson) => generalTypes.includes(lesson.disciplineType.name)
         )
       )).toBe(true);
     });
 
-    it('should return only other events', async () => {
+    it('should only return other events', async () => {
       jest.useFakeTimers().setSystemTime(new Date('2022-09-12T00:01:00'));
-      const { events } = await scheduleService.getGroupEvents('user', 'group', 2, {
+      const { events } = await scheduleService.getGroupEventsWrapper('group', {
         addLecture: false,
         addPractice: false,
         addLaboratory: false,
         showOwnSelective: true,
         addOtherEvents: true,
-      });
+      }, 'user', 2);
 
       expect(events.every(
         (event) => event.lessons.every(
@@ -769,18 +816,74 @@ describe('ScheduleService', () => {
     });
   });
 
+  describe('getGroupEventsByDay', () => {
+    it('should return no events on the day without events', async () => {
+      jest.useFakeTimers().setSystemTime(new Date('2022-09-05T00:01:00'));
+      const events = await scheduleService.getGroupEventsByDay('group', 'user', 1, 2);
+      expect(events.length).toBe(0);
+    });
+
+    it('should only return events that occur on the given day', async () => {
+      jest.useFakeTimers().setSystemTime(new Date('2022-09-05T00:01:00'));
+      const events = await scheduleService.getGroupEventsByDay('group', 'user', 1, 1);
+      events.forEach(({ startTime }) => {
+        const day = startTime.getUTCDate();
+        const month = startTime.getUTCMonth() + 1;
+        const year = startTime.getUTCFullYear();
+        const startDate = `${day}.${month}.${year}`;
+        expect(startDate).toBe('5.9.2022');
+      });
+    });
+  });
+
+  describe('getFortnightEvents', () => {
+    it('should only return events that occur on the given fortnight', async () => {
+      jest.useFakeTimers().setSystemTime(new Date('2022-09-05T00:01:00'));
+      const weeks = [1, 2];
+      const firstWeekStart = new Date(2022, 8, 5);
+      const firstWeekEnd = new Date(2022, 8, 12);
+      const secondWeekStart = new Date(2022, 8, 12);
+      const secondWeekEnd = new Date(2022, 8, 19);
+      for (const week of weeks) {
+        const { firstWeekEvents, secondWeekEvents } = await scheduleService.getFortnightEvents('group', {}, week, 'user');
+        firstWeekEvents.forEach(({ startTime }) => {
+          expect(firstWeekStart <= startTime).toBe(true);
+          expect(startTime < firstWeekEnd).toBe(true);
+        });
+        secondWeekEvents.forEach(({ startTime }) => {
+          expect(secondWeekStart <= startTime).toBe(true);
+          expect(startTime < secondWeekEnd).toBe(true);
+        });
+      }
+    });
+  });
+
+  describe('getGroupEventsForTelegram', () => {
+    it('should throw an error if the requested group is not student\'s', async () => {
+      jest.useFakeTimers().setSystemTime(new Date('2022-09-05T00:01:00'));
+      expect(scheduleService.getGroupEventsForTelegram('anotherGroup', 1, 'user')).rejects.toThrow(NoPermissionException);
+    });
+
+    it('should only return public events if no userId is specified', async () => {
+      jest.useFakeTimers().setSystemTime(new Date('2022-09-05T00:01:00'));
+      const events = await scheduleService.getGroupEventsForTelegram('group', 1);
+      const areAllPublic = events.every((event) => {
+        return generalTypes.includes(event.lessons[0]?.disciplineType.name as unknown as EventTypeEnum);
+      });
+      expect(areAllPublic).toBe(true);
+    });
+  });
+
   describe('createGroupEvent', () => {
     it('should create an event without a discipline', async () => {
-      const createEventDTO = {
+      const createEventDTO: CreateEventDTO = {
         groupId: 'group',
         name: 'name3',
         period: Period.NO_PERIOD,
-        eventsAmount: 1,
-        teacherForceChanges: false,
         startTime: new Date('2022-09-12T08:30:00'),
         endTime: new Date('2022-09-12T10:00:00'),
         eventInfo: 'Description of the event',
-        teachers: [],
+        teacherIds: [],
       };
 
       const result = await scheduleService.createGroupEvent(createEventDTO);
@@ -791,8 +894,8 @@ describe('ScheduleService', () => {
           period: createEventDTO.period,
           startTime: createEventDTO.startTime,
           endTime: createEventDTO.endTime,
-          eventsAmount: createEventDTO.eventsAmount,
-          teacherForceChanges: createEventDTO.teacherForceChanges,
+          eventsAmount: 1,
+          teacherForceChanges: false,
           isCustom: true,
           createdAt: expect.any(Date),
           updatedAt: expect.any(Date),
@@ -832,7 +935,7 @@ describe('ScheduleService', () => {
         eventInfo: 'Description of the event',
         disciplineId: 'nonSelectedDiscipline',
         eventType: EventTypeEnum.LECTURE,
-        teachers: ['deletedTeacherId'],
+        teacherIds: ['deletedTeacherId'],
       };
 
       const attachedDiscipline = {
@@ -920,7 +1023,7 @@ describe('ScheduleService', () => {
         eventInfo: 'Description of the event',
         disciplineId: 'nonSelectedDiscipline',
         eventType: EventTypeEnum.LECTURE,
-        teachers: ['deletedTeacherId'],
+        teacherIds: ['deletedTeacherId'],
       };
 
       const attachedDiscipline = {
@@ -1009,10 +1112,28 @@ describe('ScheduleService', () => {
         endTime: new Date('2022-09-12T10:00:00'),
         eventInfo: 'Description of the event',
         disciplineId: 'disciplineId123',
-        teachers: ['deletedTeacherId'],
+        teacherIds: ['deletedTeacherId'],
       };
 
       await expect(scheduleService.createGroupEvent(createEventDTO)).rejects.toThrow(ObjectIsRequiredException);
+    });
+  });
+
+  describe('createFacultyEvent', () => {
+    it('should create an event for all groups', async () => {
+      jest.useFakeTimers().setSystemTime(new Date('2022-09-05T00:01:00'));
+      const createFacultyEventDTO: CreateFacultyEventDTO = {
+        name: 'facultyEvent',
+        startTime: new Date('2022-09-12T08:30:00'),
+        endTime: new Date('2022-09-12T10:00:00'),
+        eventInfo: 'Description of the event',
+      };
+
+      const events = await scheduleService.createFacultyEvent(createFacultyEventDTO);
+      const groupIds = events.map((event) => event.groupId);
+
+      expect(events.length).toBe(2);
+      expect(groupIds).toEqual(expect.arrayContaining(['group', 'anotherGroup']));
     });
   });
 
@@ -1246,6 +1367,35 @@ describe('ScheduleService', () => {
   });
 
   describe('deleteEvent', () => {
+    const attachedDiscipline = {
+      createdAt: expect.any(Date),
+      description: '',
+      disciplineTeachers: [],
+      group: {
+        cathedraId: 'ipiCathedraId',
+        code: 'AA-12',
+        createdAt: expect.any(Date),
+        educationalProgramId: 'issEducationalProgramId',
+        id: 'group',
+        admissionYear: 2022,
+        updatedAt: expect.any(Date),
+        selectiveAmounts: [],
+      },
+      groupId: 'group',
+      id: 'discipline',
+      isSelective: false,
+      semester: 1,
+      subject: {
+        createdAt: expect.any(Date),
+        id: 'subject',
+        name: 'subject',
+        updatedAt: expect.any(Date),
+      },
+      subjectId: 'subject',
+      updatedAt: expect.any(Date),
+      year: 2022,
+    };
+
     it('should delete an event without associated lessons', async () => {
       jest.useFakeTimers().setSystemTime(new Date('2022-09-05T00:01:00'));
       const eventToDelete = {
@@ -1375,35 +1525,6 @@ describe('ScheduleService', () => {
         url: null,
       };
 
-      const attachedDiscipline = {
-        createdAt: expect.any(Date),
-        description: '',
-        disciplineTeachers: [],
-        group: {
-          cathedraId: 'ipiCathedraId',
-          code: 'AA-12',
-          createdAt: expect.any(Date),
-          educationalProgramId: 'issEducationalProgramId',
-          id: 'group',
-          admissionYear: 2022,
-          updatedAt: expect.any(Date),
-          selectiveAmounts: [],
-        },
-        groupId: 'group',
-        id: 'discipline',
-        isSelective: false,
-        semester: 1,
-        subject: {
-          createdAt: expect.any(Date),
-          id: 'subject',
-          name: 'subject',
-          updatedAt: expect.any(Date),
-        },
-        subjectId: 'subject',
-        updatedAt: expect.any(Date),
-        year: 2022,
-      };
-
       const {
         event: { eventInfo, ...event },
         discipline: { disciplineTypes, ...discipline },
@@ -1454,36 +1575,6 @@ describe('ScheduleService', () => {
           },
         ],
         url: null,
-      };
-
-
-      const attachedDiscipline = {
-        createdAt: expect.any(Date),
-        description: '',
-        disciplineTeachers: [],
-        group: {
-          cathedraId: 'ipiCathedraId',
-          code: 'AA-12',
-          createdAt: expect.any(Date),
-          educationalProgramId: 'issEducationalProgramId',
-          id: 'group',
-          admissionYear: 2022,
-          updatedAt: expect.any(Date),
-          selectiveAmounts: [],
-        },
-        groupId: 'group',
-        id: 'discipline',
-        isSelective: false,
-        semester: 1,
-        subject: {
-          createdAt: expect.any(Date),
-          id: 'subject',
-          name: 'subject',
-          updatedAt: expect.any(Date),
-        },
-        subjectId: 'subject',
-        updatedAt: expect.any(Date),
-        year: 2022,
       };
 
       const {

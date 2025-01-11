@@ -1,10 +1,15 @@
-export function checkIfArrayIsUnique (myArray) {
+export function isArrayUnique (myArray): boolean {
   return myArray.length === new Set(myArray).size;
 }
 
-export async function filterAsync<T> (array: T[], callback: (item: T) => Promise<boolean>) {
-  const booleans = await Promise.all(array.map(callback));
+export async function filterAsync<T> (array: T[], predicate: (item: T) => Promise<boolean>): Promise<T[]> {
+  const booleans = await Promise.all(array.map(predicate));
   return array.filter((item, i) => booleans[i]);
+}
+
+export async function everyAsync<T> (array: T[], predicate: (item: T) => Promise<boolean>): Promise<boolean> {
+  const booleans = await Promise.all(array.map(predicate));
+  return booleans.every((b) => b);
 }
 
 export async function mapAsync<T, V = object> (array: T[], callback: (item: T, index: number) => Promise<V>): Promise<V[]> {
