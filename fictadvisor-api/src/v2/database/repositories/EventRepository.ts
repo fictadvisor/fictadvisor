@@ -18,11 +18,11 @@ export class EventRepository {
 
   constructor (private prisma: PrismaService) {}
 
-  create (data: Prisma.EventUncheckedCreateInput) {
+  create (data: Prisma.EventUncheckedCreateInput): Promise<DbEvent> {
     return this.prisma.event.create({
       data,
       include: this.include,
-    }) as any as Promise<DbEvent>;
+    }) as Promise<DbEvent>;
   }
 
   find (where: Prisma.EventWhereInput): Promise<DbEvent> {
@@ -32,17 +32,17 @@ export class EventRepository {
     }) as any as Promise<DbEvent>;
   }
 
-  findById (id: string) {
+  findById (id: string): Promise<DbEvent> {
     return this.find({
       id,
-    }) as any as Promise<DbEvent>;
+    }) as Promise<DbEvent>;
   }
 
   findMany (args: Prisma.EventFindManyArgs): Promise<DbEvent[]> {
     return this.prisma.event.findMany({
       include: this.include,
       ...args,
-    }) as unknown as Promise<DbEvent[]>;
+    }) as Promise<DbEvent[]>;
   }
 
   updateById (id: string, data: Prisma.EventUncheckedUpdateInput): Promise<DbEvent> {
@@ -50,23 +50,17 @@ export class EventRepository {
       where: { id },
       data,
       include: this.include,
-    }) as any as Promise<DbEvent>;
+    }) as Promise<DbEvent>;
   }
   
   deleteById (id: string): Promise<DbEvent> {
     return this.prisma.event.delete({
       where: { id },
       include: this.include,
-    }) as any as Promise<DbEvent>;
+    }) as Promise<DbEvent>;
   }
 
-  deleteMany (where: Prisma.EventWhereInput) {
-    return this.prisma.event.deleteMany({
-      where,
-    }) as any as Promise<DbEvent[]>;
-  }
-
-  count (where: Prisma.EventWhereInput) {
+  count (where: Prisma.EventWhereInput): Promise<number> {
     return this.prisma.event.count({
       where,
     });

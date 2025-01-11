@@ -13,7 +13,7 @@ import {
   QueryAllUsersDTO,
 } from '@fictadvisor/utils/requests';
 import { RemainingSelectivesResponse } from '@fictadvisor/utils/responses';
-import { checkIfArrayIsUnique } from '../../utils/ArrayUtil';
+import { isArrayUnique } from '../../utils/ArrayUtil';
 import { DatabaseUtils } from '../../database/DatabaseUtils';
 import { TelegramAPI } from '../../telegram/TelegramAPI';
 import { StudentMapper } from '../../mappers/StudentMapper';
@@ -585,7 +585,7 @@ export class UserService {
   }
 
   private checkAlreadySelectedDisciplines (disciplineIds: string[], selectedDisciplineIds: string[]) {
-    const isUnique = checkIfArrayIsUnique([...disciplineIds, ...selectedDisciplineIds]);
+    const isUnique = isArrayUnique([...disciplineIds, ...selectedDisciplineIds]);
     if (!isUnique) {
       throw new AlreadySelectedException();
     }

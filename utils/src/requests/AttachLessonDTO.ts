@@ -11,7 +11,7 @@ export class AttachLessonDTO {
   @ApiProperty()
   @IsArray(validationOptionsMsg('Teachers must be Array'))
   @IsNotEmpty(validationOptionsMsg('Teachers cannot be empty (empty array is required)'))
-    teachers: string[];
+    teacherIds: string[];
 
   @ApiProperty({
     enum: EventTypeEnum,

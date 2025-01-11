@@ -150,21 +150,6 @@ export class DateService {
     };
   }
 
-  async getDatesOfMonth () {
-    const currentDate = DateTime.now();
-
-    return {
-      startOfMonth: currentDate.startOf('month').toJSDate(),
-      endOfMonth: currentDate.endOf('month').toJSDate(),
-    };
-  }
-
-  async getWeekByDate (date: Date) {
-    const { startDate } = await this.getCurrentSemester();
-    const difference = date.getTime() - startDate.getTime();
-    return Math.ceil(difference / WEEK);
-  }
-
   async isPreviousSemesterToCurrent (semester: number, year: number) {
     const curSemester = await this.getCurrentSemester();
 
