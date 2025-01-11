@@ -57,6 +57,7 @@ class ScheduleAPI {
     );
     return data;
   }
+
   async getEventInfo(eventId: string, week: number): Promise<EventResponse> {
     const { data } = await client.get<EventResponse>(
       `schedule/events/${eventId}`,
@@ -68,12 +69,9 @@ class ScheduleAPI {
     return data;
   }
 
-  async deleteEventById(
-    groupId: string,
-    eventId: string,
-  ): Promise<EventResponse> {
+  async deleteEventById(eventId: string): Promise<EventResponse> {
     const { data } = await client.delete<EventResponse>(
-      `schedule/groups/${groupId}/events/${eventId}`,
+      `schedule/events/${eventId}`,
     );
     return data;
   }
@@ -84,12 +82,11 @@ class ScheduleAPI {
   }
 
   async editEvent(
-    groupId: string,
     eventId: string,
     body: UpdateEventDTO,
   ): Promise<EventResponse> {
     const { data } = await client.patch<EventResponse>(
-      `schedule/groups/${groupId}/events/${eventId}`,
+      `schedule/events/${eventId}`,
       body,
     );
     return data;

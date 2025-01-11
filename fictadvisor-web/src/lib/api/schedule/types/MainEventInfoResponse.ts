@@ -1,4 +1,4 @@
-import { MainEventInfoResponse as APIMainEventInfoResponse } from '@fictadvisor/utils/responses';
+import { ShortEventResponse as APIMainEventInfoResponse } from '@fictadvisor/utils/responses';
 
 export interface MainEventInfoResponse
   extends Omit<APIMainEventInfoResponse, 'startTime' | 'endTime'> {

@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { EventTypeEnum } from '../enums/other/EventTypeEnum';
 
-export class SimpleEventInfoResponse {
+export class BaseShortEventResponse {
   @ApiProperty({
     description: 'Event\'s id',
   })
@@ -23,7 +23,7 @@ export class SimpleEventInfoResponse {
     endTime: Date;
 }
 
-export class MainEventInfoResponse extends SimpleEventInfoResponse {
+export class ShortEventResponse extends BaseShortEventResponse {
   @ApiProperty({
     enum: EventTypeEnum,
     description: 'Type of event',
@@ -31,10 +31,22 @@ export class MainEventInfoResponse extends SimpleEventInfoResponse {
     eventType: EventTypeEnum;
 }
 
-export class GeneralEventInfoResponse extends SimpleEventInfoResponse {
+export class GeneralShortEventResponse extends BaseShortEventResponse {
   @ApiProperty({
     enum: [EventTypeEnum.LECTURE, EventTypeEnum.PRACTICE, EventTypeEnum.LABORATORY],
     description: 'General event type',
   })
     eventType: EventTypeEnum;
+}
+
+export class TelegramShortEventResponse extends ShortEventResponse {
+  @ApiProperty({
+    description: 'Event\'s url',
+  })
+    url: string;
+
+  @ApiProperty({
+    description: 'Description of the event',
+  })
+    eventInfo: string;
 }
