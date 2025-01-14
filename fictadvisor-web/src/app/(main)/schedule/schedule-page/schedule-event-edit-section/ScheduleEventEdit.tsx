@@ -72,7 +72,11 @@ export const ScheduleEventEdit = () => {
     );
 
     try {
-      const data = await ScheduleAPI.editEvent(openedEvent?.id as string, body);
+      const data = await ScheduleAPI.editEvent(
+        user?.group?.id as string,
+        openedEvent?.id as string,
+        body,
+      );
       setDetailedEvent(data);
       setIsEditOpen(false);
       useSchedule.setState(state => ({ eventsBody: [] }));
@@ -84,7 +88,10 @@ export const ScheduleEventEdit = () => {
 
   const handleEventDelete = async () => {
     try {
-      const data = await ScheduleAPI.deleteEventById(openedEvent?.id as string);
+      const data = await ScheduleAPI.deleteEventById(
+        user?.group?.id as string,
+        openedEvent?.id as string,
+      );
       setIsEditOpen(false);
       useSchedule.setState(state => ({
         eventsBody: [],

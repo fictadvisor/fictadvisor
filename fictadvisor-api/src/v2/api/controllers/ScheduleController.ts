@@ -214,7 +214,7 @@ export class ScheduleController {
     permissions: PERMISSION.GROUPS_$GROUPID_EVENTS_UPDATE,
     guards: TelegramGuard,
   })
-  @Patch('/events/:eventId')
+  @Patch('/groups/:groupId/events/:eventId')
   async update (
     @Param('eventId', EventByIdPipe) eventId: string,
     @Body(EventPipe, ScheduleTimeConvertPipe) body: UpdateEventDTO,
@@ -230,7 +230,7 @@ export class ScheduleController {
     permissions: PERMISSION.GROUPS_$GROUPID_EVENTS_DELETE,
     guards: TelegramGuard,
   })
-  @Delete('/events/:eventId')
+  @Delete('/groups/:groupId/events/:eventId')
   async deleteEvent (
     @Param('eventId', EventByIdPipe) eventId: string,
   ): Promise<EventResponse> {
