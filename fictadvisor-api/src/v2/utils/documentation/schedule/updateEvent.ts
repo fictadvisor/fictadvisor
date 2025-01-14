@@ -46,6 +46,12 @@ export const ScheduleDocumentationUpdateEvent: ApiDocumentationParams = {
   forbidden: DefaultForbiddenResponse,
   params: [
     {
+      name: 'groupId',
+      description: 'Id of the event group',
+      type: String,
+      required: true,
+    },
+    {
       name: 'eventId',
       description: 'Id of the event to update',
       type: String,
