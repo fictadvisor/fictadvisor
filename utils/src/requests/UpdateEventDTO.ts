@@ -14,8 +14,7 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { validationOptionsMsg } from '../ValidationUtil';
-import { Period } from '../enums/db/PeriodEnum';
-import { EventTypeEnum } from '../enums/other/EventTypeEnum';
+import { EventTypeEnum, Period } from '../enums';
 
 export class UpdateEventDTO {
   @ApiProperty({
@@ -55,7 +54,7 @@ export class UpdateEventDTO {
   @IsOptional()
   @IsArray(validationOptionsMsg('Teacher ids field must be an array'))
   @IsUUID(undefined, validationOptionsMsg('Each element of teacherIds array must be formatted according to the UUID standard', true))
-    teacherIds?: string[];
+    teachers?: string[];
 
   @ApiPropertyOptional({
     description: 'Event start time',

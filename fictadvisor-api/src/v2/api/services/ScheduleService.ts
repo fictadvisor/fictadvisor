@@ -562,7 +562,7 @@ export class ScheduleService {
       name,
       disciplineId,
       eventType,
-      teacherIds,
+      teachers: teacherIds,
       period = event.period,
       url,
       disciplineInfo,
