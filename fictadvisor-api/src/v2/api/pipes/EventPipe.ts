@@ -20,8 +20,8 @@ export class EventPipe implements PipeTransform<UpdateEventDTO, Promise<UpdateEv
       }
     }
 
-    if (body.teacherIds) {
-      for (const teacherId of body.teacherIds) {
+    if (body.teachers) {
+      for (const teacherId of body.teachers) {
         await this.teacherByIdPipe(teacherId);
       }
     }
