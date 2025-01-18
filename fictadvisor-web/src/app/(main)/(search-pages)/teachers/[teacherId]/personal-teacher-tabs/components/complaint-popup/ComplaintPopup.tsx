@@ -2,7 +2,7 @@ import { Dispatch, FC, SetStateAction } from 'react';
 import { Box, useMediaQuery } from '@mui/material';
 import { Form, Formik } from 'formik';
 
-import Button from '@/components/common/ui/button';
+import Button from '@/components/common/ui/button-mui';
 import {
   ButtonSize,
   ButtonVariant,
@@ -73,7 +73,7 @@ const ComplaintPopup: FC<ComplaintPopupProps> = ({
             firstButton={
               <Box sx={{ marginTop: '18px', marginBottom: '30px' }}>
                 <Button
-                  text="Скасувати"
+                  text={'Скасувати'}
                   size={isTablet ? ButtonSize.SMALL : ButtonSize.MEDIUM}
                   variant={ButtonVariant.OUTLINE}
                   onClick={() => {

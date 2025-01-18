@@ -10,7 +10,7 @@ import { Box } from '@mui/material';
 import dynamic from 'next/dynamic';
 
 import { TeachersPageTabs } from '@/app/(main)/(search-pages)/teachers/[teacherId]/utils';
-import Button from '@/components/common/ui/button';
+import Button from '@/components/common/ui/button-mui';
 import {
   ButtonColor,
   ButtonSize,
@@ -98,8 +98,8 @@ const PersonalTeacherTabs: FC<PersonalTeacherTabsProps> = ({
               size={ButtonSize.SMALL}
               text={'Лишити скаргу'}
               onClick={() => setIsPopupOpen(true)}
-              startIcon={<FaceFrownIcon width={24} height={24} />}
-            ></Button>
+              startIcon={<FaceFrownIcon />}
+            />
           </Box>
         </Box>
         <ComplaintPopup

@@ -3,7 +3,7 @@ import { OrdinaryStudentResponse } from '@fictadvisor/utils/responses';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { Box } from '@mui/material';
 
-import Button from '@/components/common/ui/button';
+import Button from '@/components/common/ui/button-mui';
 import {
   ButtonColor,
   ButtonSize,
@@ -98,7 +98,7 @@ const EditModerators: FC<EditModeratorsProps> = ({
               variant={ButtonVariant.OUTLINE}
               size={ButtonSize.SMALL}
               text="Додати зам старосту"
-              startIcon={<PlusIcon width={24} height={24} />}
+              startIcon={<PlusIcon />}
               onClick={() => setIsAddingModerator(true)}
             />
           </Box>

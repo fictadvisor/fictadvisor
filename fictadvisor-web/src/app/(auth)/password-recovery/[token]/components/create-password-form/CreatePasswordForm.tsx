@@ -8,7 +8,7 @@ import { initialValues } from '@/app/(auth)/password-recovery/[token]/components
 import { CreatePasswordFormFields } from '@/app/(auth)/password-recovery/[token]/components/create-password-form/types';
 import styles from '@/app/(auth)/password-recovery/[token]/CreatePasswordPage.module.scss';
 import { createPasswordValidationSchema } from '@/app/(auth)/password-recovery/validation/createPasswordValidationSchema';
-import Button from '@/components/common/ui/button';
+import Button from '@/components/common/ui/button-mui';
 import { ButtonSize } from '@/components/common/ui/button-mui/types';
 import { Input, InputSize, InputType } from '@/components/common/ui/form';
 import useToast from '@/hooks/use-toast';

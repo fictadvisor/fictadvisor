@@ -54,7 +54,7 @@ export const socialLinks = [
     icon: <Instagram />,
   },
   {
-    link: 'https://t.me/fict_time',
+    link: 'https://t.me/fice_time',
     text: 'Telegram',
     icon: <Telegram />,
   },

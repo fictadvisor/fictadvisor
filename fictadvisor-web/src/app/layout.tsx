@@ -39,7 +39,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html suppressHydrationWarning>
+    <html
+      suppressHydrationWarning
+      className={manrope.className}
+      style={manrope.style}
+    >
       <head>
         <Script
           strategy="afterInteractive"
@@ -59,7 +63,7 @@ export default function RootLayout({
           content="M93dY9EuPcQ5AzSYwxc6_el0GwZp_XlDHBhphP6z-7g"
         />
       </head>
-      <body className={manrope.className} style={manrope.style}>
+      <body>
         <Providers>{children}</Providers>
       </body>
     </html>

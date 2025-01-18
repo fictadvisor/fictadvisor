@@ -4,7 +4,7 @@ import { Box } from '@mui/material';
 
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import { transformSelectives } from '@/app/admin/students/common/utils/transformToOptions';
-import Button from '@/components/common/ui/button';
+import Button from '@/components/common/ui/button-mui';
 import {
   ButtonColor,
   ButtonSize,
@@ -118,7 +118,7 @@ const Dropdowns: FC<DropdownsProps> = ({
               variant={ButtonVariant.OUTLINE}
               size={ButtonSize.SMALL}
               text="Додати"
-              startIcon={<PlusIcon width={24} height={24} />}
+              startIcon={<PlusIcon />}
               onClick={() => setIsAddingSelective(true)}
             />
           </Box>

@@ -6,7 +6,7 @@ import { initialValues } from '@/app/(auth)/password-recovery/forgot-password/co
 import { ForgotPasswordFormFields } from '@/app/(auth)/password-recovery/forgot-password/components/forgot-password-form/types';
 import { validationSchema } from '@/app/(auth)/password-recovery/forgot-password/components/forgot-password-form/validation';
 import styles from '@/app/(auth)/password-recovery/forgot-password/ForgotPasswordPage.module.scss';
-import Button from '@/components/common/ui/button';
+import Button from '@/components/common/ui/button-mui';
 import { ButtonSize } from '@/components/common/ui/button-mui/types';
 import { Input, InputSize, InputType } from '@/components/common/ui/form';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
