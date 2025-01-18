@@ -9,7 +9,7 @@ import {
 } from '@/app/(main)/account/components/general-tab/components/contacts-block/validation';
 import * as styles from '@/app/(main)/account/components/general-tab/GeneralTab.styles';
 import { CustomCheck } from '@/components/common/icons/CustomCheck';
-import Button from '@/components/common/ui/button';
+import Button from '@/components/common/ui/button-mui';
 import {
   ButtonColor,
   ButtonSize,

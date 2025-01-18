@@ -2,7 +2,7 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 
-import Button from '@/components/common/ui/button';
+import Button from '@/components/common/ui/button-mui';
 import {
   ButtonColor,
   ButtonSize,

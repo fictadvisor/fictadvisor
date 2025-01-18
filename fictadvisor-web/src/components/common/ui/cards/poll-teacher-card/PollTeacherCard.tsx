@@ -5,7 +5,7 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 import cn from 'classnames';
 import Link from 'next/link';
 
-import Button from '@/components/common/ui/button';
+import Button from '@/components/common/ui/button-mui';
 import {
   ButtonColor,
   ButtonSize,
@@ -97,7 +97,7 @@ export const PollTeacherCard: FC<PollTeacherCardProps> = ({
                 variant={ButtonVariant.OUTLINE}
                 size={ButtonSize.SMALL}
                 text={'Пройти опитування'}
-              ></Button>
+              />
             </Link>
             {open && (
               <SkipTeacherPopup

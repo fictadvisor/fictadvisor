@@ -15,6 +15,7 @@ export const button = (
   color: 'grey.800',
   textTransform: 'none',
   fontWeight: '700',
+  whiteSpace: 'nowrap',
   minWidth: 'unset',
   minHeight: 'unset',
   gap: '16px',

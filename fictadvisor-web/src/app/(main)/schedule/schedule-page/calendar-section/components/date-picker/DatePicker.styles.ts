@@ -1,5 +1,7 @@
 import { SxProps, Theme } from '@mui/material/styles';
 
+import { manrope } from '@/styles/theme/constants/typography/typography';
+
 export const picker: SxProps<Theme> = {
   color: 'white.main',
   '& .MuiMonthCalendar-root, &, & .MuiYearCalendar-root': {
@@ -8,6 +10,7 @@ export const picker: SxProps<Theme> = {
   height: '290px',
   '& .MuiButtonBase-root': {
     color: 'white.main',
+    fontFamily: manrope.style.fontFamily,
     '&.MuiPickersDay-dayOutsideMonth': {
       color: 'grey.400',
     },

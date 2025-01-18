@@ -15,7 +15,7 @@ import EditSelective from '@/app/admin/students/edit/[studentId]/components/edit
 import EditStudentInputs from '@/app/admin/students/edit/[studentId]/components/edit-student-inputs';
 import HeaderStudentEdit from '@/app/admin/students/edit/[studentId]/components/header-student-edit';
 import { validationSchema } from '@/app/admin/students/edit/[studentId]/constants/Validation';
-import Button from '@/components/common/ui/button';
+import Button from '@/components/common/ui/button-mui';
 import {
   ButtonColor,
   ButtonSize,
@@ -120,7 +120,7 @@ const AdminStudentEditPage: FC<AdminStudentEditPageProps> = ({ params }) => {
             <Box sx={stylesAdmin.editButton}>
               <Button
                 text="Редагування користувача"
-                startIcon={<PencilSquareIcon width="24px" height="24px" />}
+                startIcon={<PencilSquareIcon />}
                 variant={ButtonVariant.OUTLINE}
                 size={ButtonSize.SMALL}
                 color={ButtonColor.SECONDARY}
