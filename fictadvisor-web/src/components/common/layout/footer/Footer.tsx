@@ -31,7 +31,7 @@ const Footer: FC = () => {
             height={28}
           />
         </Link>
-        <Typography sx={styles.signature}>By Dev-відділ СР ФІОТ</Typography>
+        <Typography sx={styles.signature}>© Sviatoslav Shesterov</Typography>
       </Box>
 
       <Box sx={styles.mainReferences}>

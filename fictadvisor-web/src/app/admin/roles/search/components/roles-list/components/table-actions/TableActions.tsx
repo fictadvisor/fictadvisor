@@ -5,7 +5,7 @@ import { Box, Link } from '@mui/material';
 import NextLink from 'next/link';
 
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
-import Button from '@/components/common/ui/button';
+import Button from '@/components/common/ui/button-mui';
 import {
   ButtonSize,
   ButtonVariant,
@@ -43,7 +43,7 @@ const TableActions: FC<TableActionsProps> = ({ role, handleDelete }) => {
       >
         <Button
           size={ButtonSize.SMALL}
-          startIcon={<PencilSquareIcon width={24} height={24} />}
+          startIcon={<PencilSquareIcon />}
           variant={ButtonVariant.OUTLINE}
           text="Редагувати"
         />

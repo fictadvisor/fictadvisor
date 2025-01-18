@@ -35,11 +35,11 @@ export const LoginFormBlock = () => {
         />
       </Link>
 
-      <TelegramLogin />
-
       <Typography variant="h3SemiBold" sx={sxStyles.loginHeader}>
         З поверненням!
       </Typography>
+
+      <TelegramLogin />
 
       <Divider textAlign="center" sx={sxStyles.divider}>
         або
