@@ -2,8 +2,12 @@ name: Build Back-end
 
 on:
   pull_request:
+    branches:
+      - 'dev'
+      - 'master'
     paths:
       - 'fictadvisor-api/**'
+      - '.github/**'
 
 jobs:
   test:
@@ -32,7 +36,7 @@ jobs:
       - name: Run integration tests
         run: npx turbo test:integration
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
