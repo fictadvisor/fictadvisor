@@ -337,8 +337,17 @@ export class DisciplineTeacherService {
 
     await this.disciplineTeacherRepository.updateById(disciplineTeacherId, {
       removedDisciplineTeachers: {
-        create: {
-          studentId: userId,
+        upsert: {
+          where: {
+            disciplineTeacherId_studentId: {
+              disciplineTeacherId: disciplineTeacher.id,
+              studentId: userId,
+            },
+          },
+          create: {
+            studentId: userId,
+          },
+          update: {},
         },
       },
     });
