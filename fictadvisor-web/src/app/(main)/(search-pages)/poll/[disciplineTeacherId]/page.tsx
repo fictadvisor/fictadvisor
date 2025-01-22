@@ -22,7 +22,7 @@ interface PollParams {
 const Poll: FC<PollParams> = ({ params }) => {
   const disciplineTeacherId = params.disciplineTeacherId;
   const [isLoading, setIsLoading] = useState(true);
-  const { user } = useAuthentication();
+  const { user, isLoading: isLoadingUser } = useAuthentication();
   const { displayError } = useToastError();
   const router = useRouter();
   const {
@@ -40,7 +40,7 @@ const Poll: FC<PollParams> = ({ params }) => {
   });
 
   useEffect(() => {
-    if (!user) {
+    if (!user && !isLoadingUser) {
       displayError(error);
       void router.replace('login/?redirect=~poll');
     }

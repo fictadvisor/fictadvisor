@@ -93,7 +93,7 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
         },
         {} as Record<string, string>,
       );
-  }, []);
+  }, [currentQuestions]);
 
   const handleFormEvent = (
     event: FormEvent<HTMLFormElement>,
@@ -119,7 +119,7 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
   };
 
   const handleSubmit = (value: Record<string, string>) => {
-    const answers = updateAnswer(value);
+    const answers = updateAnswer({ ...initialValues, ...value });
     if (!isTheLast) {
       setCurrentCategory(currentCategory + 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
