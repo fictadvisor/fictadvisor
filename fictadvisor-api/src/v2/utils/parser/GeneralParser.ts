@@ -143,7 +143,7 @@ export class GeneralParser {
     groupId: string,
     semester: StudyingSemester
   ) {
-    const databasePairs = await this.getDatabasePairs(groupId, weekNumber);
+    const databasePairs = await this.getDatabasePairs(groupId, weekNumber, semester);
 
     let oldChanged: DatabasePair[] = [];
     const notChanged: DatabasePair[] = [];
@@ -493,10 +493,11 @@ export class GeneralParser {
 
   private async getDatabasePairs (
     groupId: string,
-    week: number
+    week: number,
+    semester: StudyingSemester,
   ): Promise<DatabasePair[]> {
     const events = (
-      await this.scheduleService.getGeneralGroupEvents(groupId, week, false)
+      await this.scheduleService.getGeneralGroupEvents(groupId, week, false, semester)
     ).events.filter((event) => !event.isCustom);
 
     return mapAsync(events, async (event): Promise<DatabasePair> => {
