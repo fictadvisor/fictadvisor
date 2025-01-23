@@ -65,8 +65,11 @@ export class ScheduleService {
     await this.generalParser.parse(ParserTypeEnum.ROZKPI);
   }
 
-  async getIndexOfLesson (week: number, event: DbEvent): Promise<number | null> {
-    const { startDate } = await this.dateService.getCurrentSemester();
+  async getIndexOfLesson (week: number, event: DbEvent, semester?: StudyingSemester): Promise<number | null> {
+    const { startDate } = semester ?
+      await this.dateService.getSemester(semester) :
+      await this.dateService.getCurrentSemester();
+
     const startWeek = Math.ceil((event.startTime.getTime() - startDate.getTime()) / WEEK);
     if (event.period === Period.NO_PERIOD && week - startWeek !== 0) return null;
     const index = (week - startWeek) / weeksPerEvent[event.period];
@@ -78,8 +81,12 @@ export class ScheduleService {
     groupId: string,
     week?: number,
     setWeekTime = true,
+    semester?: StudyingSemester,
   ): Promise<{ events: DbEvent[], week: number, startTime: Date }> {
-    const { startOfWeek, endOfWeek } = week ? await this.dateService.getDatesOfWeek(week) : this.dateService.getDatesOfCurrentWeek();
+    const { startOfWeek, endOfWeek } = week ?
+      await this.dateService.getDatesOfWeek(week, semester) :
+      this.dateService.getDatesOfCurrentWeek();
+
     const events: DbEvent[] = await this.eventRepository.findMany({
       where: {
         groupId,
@@ -89,6 +96,10 @@ export class ScheduleService {
         lessons: {
           some: {
             disciplineType: {
+              discipline: {
+                semester: semester?.semester,
+                year: semester?.year,
+              },
               name: {
                 in: [EventTypeEnum.PRACTICE, EventTypeEnum.LECTURE, EventTypeEnum.LABORATORY],
               },
@@ -103,7 +114,7 @@ export class ScheduleService {
 
     week = week || await this.dateService.getCurrentWeek();
     const result = await filterAsync(events, async (event) => {
-      const indexOfLesson = await this.getIndexOfLesson(week, event);
+      const indexOfLesson = await this.getIndexOfLesson(week, event, semester);
       return indexOfLesson !== null;
     });
 

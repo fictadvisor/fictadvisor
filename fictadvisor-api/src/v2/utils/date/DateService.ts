@@ -138,8 +138,11 @@ export class DateService {
     return { fortnight, week, day };
   }
 
-  async getCurrentWeek () {
-    const { startDate } = await this.getCurrentSemester();
+  async getCurrentWeek (semester?: StudyingSemester) {
+    const { startDate } = semester ?
+      await this.getSemester(semester) :
+      await this.getCurrentSemester();
+
     const difference = new Date().getTime() - startDate.getTime();
     return Math.ceil(difference / WEEK);
   }
@@ -153,8 +156,8 @@ export class DateService {
     };
   }
 
-  async getDatesOfWeek (week: number) {
-    const currentWeek = await this.getCurrentWeek();
+  async getDatesOfWeek (week: number, semester?: StudyingSemester) {
+    const currentWeek = await this.getCurrentWeek(semester);
     const difference = week - currentWeek;
     const { startOfWeek, endOfWeek } = this.getDatesOfCurrentWeek();
 
