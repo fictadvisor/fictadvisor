@@ -83,6 +83,10 @@ export class ScheduleService {
     setWeekTime = true,
     semester?: StudyingSemester,
   ): Promise<{ events: DbEvent[], week: number, startTime: Date }> {
+    const { startDate: startOfSemester } = semester ?
+      await this.dateService.getSemester(semester) :
+      await this.dateService.getCurrentSemester();
+
     const { startOfWeek, endOfWeek } = week ?
       await this.dateService.getDatesOfWeek(week, semester) :
       this.dateService.getDatesOfCurrentWeek();
@@ -91,15 +95,12 @@ export class ScheduleService {
       where: {
         groupId,
         startTime: {
+          gte: startOfSemester,
           lte: endOfWeek,
         },
         lessons: {
           some: {
             disciplineType: {
-              discipline: {
-                semester: semester?.semester,
-                year: semester?.year,
-              },
               name: {
                 in: [EventTypeEnum.PRACTICE, EventTypeEnum.LECTURE, EventTypeEnum.LABORATORY],
               },
