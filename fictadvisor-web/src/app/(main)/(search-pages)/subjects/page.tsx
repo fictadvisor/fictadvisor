@@ -96,15 +96,16 @@ const SubjectsPage: FC = () => {
           </Box>
         ))}
       {(data?.subjects?.length ?? 0) + loadedSubjects.length ===
-        (currPage + 1) * PAGE_SIZE && (
-        <Button
-          sx={styles.loadBtn}
-          text="Завантажити ще"
-          variant={ButtonVariant.FILLED}
-          color={ButtonColor.SECONDARY}
-          onClick={downloadHandler}
-        />
-      )}
+        (currPage + 1) * PAGE_SIZE &&
+        !isFetching && (
+          <Button
+            sx={styles.loadBtn}
+            text="Завантажити ще"
+            variant={ButtonVariant.FILLED}
+            color={ButtonColor.SECONDARY}
+            onClick={downloadHandler}
+          />
+        )}
     </Box>
   );
 };

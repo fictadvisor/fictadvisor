@@ -86,7 +86,7 @@ const TeacherPage: FC = () => {
             <Progress />
           </Box>
         ))}
-      {!isLoading && pageSize !== data?.pagination.totalAmount && (
+      {pageSize !== data?.pagination.totalAmount && !isFetching && (
         <Button
           sx={styles.loadBtn}
           text="Завантажити ще"
