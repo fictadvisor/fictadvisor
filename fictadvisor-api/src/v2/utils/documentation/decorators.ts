@@ -4,7 +4,7 @@ import {
   ApiBody,
   ApiBodyOptions,
   ApiConflictResponse,
-  ApiCookieAuth,
+  ApiBearerAuth,
   ApiForbiddenResponse,
   ApiOkResponse,
   ApiOperation,
@@ -65,7 +65,7 @@ function addDocumentationDecorators (summary: string, description: string, docum
 
   const decorators = [
     ApiOperation({ summary, description }),
-    ...(documentation?.isAuth ? [ApiCookieAuth()] : []),
+    ...(documentation?.isAuth ? [ApiBearerAuth()] : []),
   ];
 
   decorators.push(

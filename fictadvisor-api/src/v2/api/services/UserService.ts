@@ -44,6 +44,8 @@ import { DuplicateTelegramIdException } from '../../utils/exceptions/DuplicateTe
 import { NotSelectedDisciplineException } from '../../utils/exceptions/NotSelectedDisciplineException';
 import { AlreadySentGroupRequestException } from '../../utils/exceptions/AlreadySentGroupRequestException';
 import { EntityType, Prisma, RoleName, State } from '@prisma/client';
+import { AbsenceOfCaptainException } from '../../utils/exceptions/AbsenceOfCaptainException';
+import { CaptainAlreadyRegisteredException } from '../../utils/exceptions/CaptainAlreadyRegisteredException';
 
 type SortedDisciplines = {
   year: number;
@@ -276,8 +278,10 @@ export class UserService {
 
     const captain = await this.groupService.findCaptain(groupId);
 
-    if (captain && isCaptain) {
-      throw new AlreadyRegisteredException();
+    if (!captain && !isCaptain) {
+      throw new AbsenceOfCaptainException();
+    } else if (captain && isCaptain) {
+      throw new CaptainAlreadyRegisteredException();
     }
 
     await this.studentRepository.updateById(id, {
@@ -507,7 +511,8 @@ export class UserService {
         year,
         semester,
       }) => year === s.year && semester === s.semester);
-      const availableSelectiveAmount = semesterAmount.amount - userSemesterSelectives.length;
+      const availableSelectiveAmount = semesterAmount ?
+        semesterAmount.amount - userSemesterSelectives.length : 0;
 
       const remainingSelectives = disciplines
         .filter((selectiveDisc) => selectiveDisc.year === s.year && selectiveDisc.semester === s.semester)

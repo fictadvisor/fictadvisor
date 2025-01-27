@@ -27,7 +27,7 @@ export class RoleMapper {
   }
 
   getRoles (roles: DbRole[]): RoleResponse[] {
-    return roles.map(this.getRole);
+    return roles.map((role) => this.getRole(role));
   }
 
   getGrant (grant: DbGrant): GrantResponse {
