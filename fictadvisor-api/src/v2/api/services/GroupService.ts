@@ -322,7 +322,7 @@ export class GroupService {
   }
 
   async getCaptain (groupId: string) {
-    const captain = this.findCaptain(groupId);
+    const captain = await this.findCaptain(groupId);
 
     if (!captain) {
       throw new AbsenceOfCaptainException();
