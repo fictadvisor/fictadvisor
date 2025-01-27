@@ -89,14 +89,14 @@ export class UserService {
 
   async getSelectivesBySemesters (userId: string) {
     const selectiveByUser = await this.getSelectiveDisciplines(userId);
-    const { selectiveAmounts } = await this.groupRepository.find({
+    const group = await this.groupRepository.find({
       students: {
         some: {
           userId,
         },
       },
     });
-    return this.disciplineMapper.getSelectivesBySemesters(selectiveByUser, selectiveAmounts);
+    return this.disciplineMapper.getSelectivesBySemesters(selectiveByUser, group?.selectiveAmounts ?? []);
   }
 
   async giveRole (studentId: string, roleId: string) {
