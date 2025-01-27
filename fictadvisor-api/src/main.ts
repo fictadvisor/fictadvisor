@@ -59,7 +59,7 @@ async function bootstrap () {
     .setDescription('Here is FICE ADVISOR API documentation')
     .setVersion('2.0.4')
     .addTag('api')
-    .addCookieAuth()
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

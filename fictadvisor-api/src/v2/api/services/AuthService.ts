@@ -35,6 +35,7 @@ import { NotRegisteredException } from '../../utils/exceptions/NotRegisteredExce
 import { PasswordRepeatException } from '../../utils/exceptions/PasswordRepeatException';
 import { CaptainAlreadyRegisteredException } from '../../utils/exceptions/CaptainAlreadyRegisteredException';
 import { State, User, RoleName } from '@prisma/client';
+import { AbsenceOfCaptainException } from '../../utils/exceptions/AbsenceOfCaptainException';
 
 export const ONE_MINUTE = 1000 * 60;
 export const HOUR = ONE_MINUTE * 60;
@@ -123,7 +124,10 @@ export class AuthService {
     }
 
     const captain = await this.groupService.findCaptain(createStudent.groupId);
-    if (captain && isCaptain) {
+
+    if (!captain && !isCaptain) {
+      throw new AbsenceOfCaptainException();
+    } else if (captain && isCaptain) {
       throw new CaptainAlreadyRegisteredException();
     }
 
