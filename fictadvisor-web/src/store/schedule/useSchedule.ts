@@ -129,6 +129,7 @@ export const useSchedule = create<State & Action>((set, get) => {
 
       const week = get().week;
       const startWeek = findFirstOf5(week);
+      const endWeek = startWeek + 4;
 
       if (get().isUsingSelective) {
         await get().loadNext5Auth(startWeek);
@@ -224,11 +225,22 @@ export const useSchedule = create<State & Action>((set, get) => {
       }
     },
     setWeek(_week: number) {
+      const currentWeek = get().week;
+      const startOfFetchedRange = findFirstOf5(currentWeek);
+      const endOfFetchedRange = startOfFetchedRange + 4;
+
+      if (_week >= startOfFetchedRange && _week <= endOfFetchedRange) {
+        set(_ => ({
+          week: _week,
+        }));
+        setUrlParams('week', _week.toString());
+        return;
+      }
+
       set(_ => ({
         week: _week,
       }));
       setUrlParams('week', _week.toString());
-
       get().handleWeekChange();
     },
     setError: (_error: AxiosError | null) => {
