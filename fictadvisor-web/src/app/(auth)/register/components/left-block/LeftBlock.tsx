@@ -21,11 +21,7 @@ export const LeftBlock: FC = () => {
   return (
     <Box sx={stylesMUI.leftBlock}>
       <Link href="/" className={styles['mobile-register-logo-container']}>
-        <Image
-          src="/images/login-page/new-logo.png"
-          alt="fice advisor logo"
-          fill
-        />
+        <Image src="/icons/logo.svg" alt="fice advisor logo" fill />
       </Link>
       <Typography variant="h3" sx={stylesMUI.loginHeader}>
         Створи акаунт

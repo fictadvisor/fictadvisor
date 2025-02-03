@@ -12,7 +12,7 @@ export const LogoRegisterBlock = () => {
       <Link href="/">
         <Image
           style={{ margin: 0, padding: '8px' }}
-          src="/images/login-page/new-logo.png"
+          src="/icons/logo.svg"
           alt="fice advisor logo"
           priority
           width={410}
