@@ -11,12 +11,13 @@ import { AuthenticationContextType } from '@/types/authContext';
 export const AuthenticationContext = createContext<AuthenticationContextType>({
   user: null,
   isLoading: true,
+  refetchUser: () => {},
 });
 
 const AuthenticationProvider: FC<PropsWithChildren> = ({ children }) => {
   const accessToken = getClientCookie(AuthToken.AccessToken);
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ['user', accessToken],
     queryFn: AuthAPI.getMe,
     retry: false,
@@ -26,7 +27,11 @@ const AuthenticationProvider: FC<PropsWithChildren> = ({ children }) => {
 
   return (
     <AuthenticationContext.Provider
-      value={{ user: data || null, isLoading: isLoading || isServer }}
+      value={{
+        user: data || null,
+        isLoading: isLoading || isServer,
+        refetchUser: refetch,
+      }}
     >
       {children}
     </AuthenticationContext.Provider>

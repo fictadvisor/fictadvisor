@@ -10,5 +10,9 @@ export const useAuthentication = () => {
     );
   }
 
-  return { user: context.user, isLoading: context.isLoading };
+  return {
+    user: context.user,
+    isLoading: context.isLoading,
+    refetchUser: context.refetchUser,
+  };
 };
