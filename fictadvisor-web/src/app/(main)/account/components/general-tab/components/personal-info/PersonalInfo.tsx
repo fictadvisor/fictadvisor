@@ -17,7 +17,7 @@ import theme from '@/styles/theme';
 import * as styles from './PersonalInfo.styles';
 
 const PersonalInfoBlock: FC = () => {
-  const { user: userNotNull } = useAuthentication();
+  const { user: userNotNull, refetchUser } = useAuthentication();
   const user = userNotNull!;
   const { displayError } = useToastError();
   const { success } = useToast();
@@ -40,6 +40,7 @@ const PersonalInfoBlock: FC = () => {
     try {
       await UserAPI.changeInfo(user.id, data);
       success('Інформацію успішно змінено');
+      refetchUser();
     } catch (error) {
       displayError(error);
     }
