@@ -19,7 +19,7 @@ export const RightBlock = () => {
       <Link href="/">
         <Image
           className={styles['login-logo']}
-          src="/images/login-page/new-logo.png"
+          src="/icons/logo.svg"
           alt="fice advisor logo"
           priority
           width={394}

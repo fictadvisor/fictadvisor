@@ -27,12 +27,7 @@ export const LoginFormBlock = () => {
   return (
     <Box sx={sxStyles.loginFormBlock}>
       <Link href="/" className={styles['mobile-login-logo']}>
-        <Image
-          src="/images/login-page/new-logo.png"
-          alt="fice advisor logo"
-          priority
-          fill
-        />
+        <Image src="/icons/logo.svg" alt="fice advisor logo" priority fill />
       </Link>
 
       <Typography variant="h3SemiBold" sx={sxStyles.loginHeader}>
