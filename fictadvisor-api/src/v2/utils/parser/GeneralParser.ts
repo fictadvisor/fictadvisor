@@ -159,6 +159,7 @@ export class GeneralParser {
       );
 
       if (newPairIndex !== -1) {
+        databasePair.teacherIds = parsedPairs[newPairIndex].teacherIds;
         notChanged.push(databasePair);
         parsedPairs.splice(newPairIndex, 1);
       } else {

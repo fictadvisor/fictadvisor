@@ -765,7 +765,7 @@ export class ScheduleService {
 
     for (const teacherId of teachers) {
       const disciplineTeacher = await this.disciplineTeacherRepository.getOrCreate({ teacherId, disciplineId });
-      if (!some(disciplineTeacher.roles.map(({ disciplineType }) => disciplineType), 'name', disciplineType.name)) {
+      if (!some(disciplineTeacher.roles.map(({ disciplineType }) => disciplineType), 'id', disciplineType.id)) {
         await this.disciplineTeacherRoleRepository.create({
           disciplineTeacherId: disciplineTeacher.id,
           disciplineTypeId: disciplineType.id,
