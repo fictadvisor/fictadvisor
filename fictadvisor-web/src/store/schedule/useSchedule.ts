@@ -129,7 +129,6 @@ export const useSchedule = create<State & Action>((set, get) => {
 
       const week = get().week;
       const startWeek = findFirstOf5(week);
-      const endWeek = startWeek + 4;
 
       if (get().isUsingSelective) {
         await get().loadNext5Auth(startWeek);
@@ -220,6 +219,7 @@ export const useSchedule = create<State & Action>((set, get) => {
       if (selectiveChanged) {
         set(_ => ({
           eventsBody: [],
+          isUsingSelective: checkboxes.isSelective,
         }));
         get().handleWeekChange();
       }
@@ -229,19 +229,18 @@ export const useSchedule = create<State & Action>((set, get) => {
       const startOfFetchedRange = findFirstOf5(currentWeek);
       const endOfFetchedRange = startOfFetchedRange + 4;
 
-      if (_week >= startOfFetchedRange && _week <= endOfFetchedRange) {
-        set(_ => ({
-          week: _week,
-        }));
-        setUrlParams('week', _week.toString());
-        return;
-      }
-
       set(_ => ({
         week: _week,
       }));
       setUrlParams('week', _week.toString());
-      get().handleWeekChange();
+
+      if (
+        _week < startOfFetchedRange ||
+        _week > endOfFetchedRange ||
+        !get().eventsBody[0]
+      ) {
+        get().handleWeekChange();
+      }
     },
     setError: (_error: AxiosError | null) => {
       set(_ => ({
