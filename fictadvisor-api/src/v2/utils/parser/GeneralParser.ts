@@ -350,29 +350,26 @@ export class GeneralParser {
     disciplineTypeName: DisciplineTypeEnum,
     isSelective: boolean
   ) {
-    let discipline = await this.disciplineRepository.getOrCreate({
+    const discipline = await this.disciplineRepository.getOrCreate({
       subjectId,
       groupId,
       year,
       semester,
-      isSelective,
     });
 
-    if (
-      !discipline.disciplineTypes.some(
-        (type) => type.name === disciplineTypeName
-      )
-    ) {
-      discipline = await this.disciplineRepository.updateById(discipline.id, {
-        disciplineTypes: {
-          create: {
-            name: disciplineTypeName,
-          },
+    const updateData: any = { isSelective };
+
+    if (!discipline.disciplineTypes.some(
+      (type) => type.name === disciplineTypeName
+    )) {
+      updateData.disciplineTypes = {
+        create: {
+          name: disciplineTypeName,
         },
-      });
+      };
     }
 
-    return discipline;
+    return  this.disciplineRepository.updateById(discipline.id, updateData);
   }
 
   private async getOrCreateTeacher ({
