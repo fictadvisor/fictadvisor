@@ -25,18 +25,23 @@ export interface CalendarSectionProps {
 export const CalendarSection: FC<CalendarSectionProps> = ({ groups }) => {
   const { user } = useAuthentication();
 
+  const requiredPermissions = [PERMISSION.GROUPS_$GROUPID_EVENTS_CREATE];
+
   const { data: showButton } = useQuery({
-    queryKey: [user?.group?.id],
+    queryKey: [user?.group?.id, ...requiredPermissions],
     queryFn: () =>
       PermissionApi.check({
-        permissions: [PERMISSION.GROUPS_$GROUPID_EVENTS_CREATE],
+        permissions: [...requiredPermissions],
         values: {
           groupId: user?.group?.id,
         },
       }),
     retry: false,
-    select: ({ permissions }) =>
-      permissions[PERMISSION.GROUPS_$GROUPID_EVENTS_CREATE],
+    select: ({ permissions }) => {
+      return requiredPermissions
+        .map(permission => permissions[permission])
+        .every(value => value);
+    },
     refetchOnWindowFocus: false,
     enabled: !!user && !!user.group,
   });

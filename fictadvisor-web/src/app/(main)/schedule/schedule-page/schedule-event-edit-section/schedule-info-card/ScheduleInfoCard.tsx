@@ -67,24 +67,25 @@ const ScheduleInfoCard = ({
     return eventType !== EventTypeEnum.OTHER;
   };
 
+  const requiredPermissions = [
+    PERMISSION.GROUPS_$GROUPID_EVENTS_DELETE,
+    PERMISSION.GROUPS_$GROUPID_EVENTS_UPDATE,
+  ];
+
   const { data: validPrivilege } = useQuery({
-    queryKey: [user?.group?.id],
+    queryKey: [user?.group?.id, ...requiredPermissions],
     queryFn: () =>
       PermissionApi.check({
-        permissions: [
-          PERMISSION.GROUPS_$GROUPID_EVENTS_DELETE,
-          PERMISSION.GROUPS_$GROUPID_EVENTS_UPDATE,
-        ],
+        permissions: [...requiredPermissions],
         values: {
           groupId: user?.group?.id,
         },
       }),
     retry: false,
     select({ permissions }) {
-      return (
-        permissions[PERMISSION.GROUPS_$GROUPID_EVENTS_DELETE] &&
-        permissions[PERMISSION.GROUPS_$GROUPID_EVENTS_UPDATE]
-      );
+      return requiredPermissions
+        .map(permission => permissions[permission])
+        .every(value => value);
     },
     refetchOnWindowFocus: false,
     enabled: !!user && !!user.group,
