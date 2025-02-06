@@ -1,9 +1,8 @@
 import type { FC } from 'react';
+import { GroupRoles } from '@fictadvisor/utils/enums';
 import { MappedGroupResponse } from '@fictadvisor/utils/responses';
-import { PERMISSION } from '@fictadvisor/utils/security';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { Box, Stack } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
 
 import { GroupsDropDown } from '@/app/(main)/schedule/schedule-page/calendar-section/components/groups-dropdown/GroupsDropDown';
 import Button from '@/components/common/ui/button-mui/Button';
@@ -12,7 +11,6 @@ import {
   ButtonVariant,
 } from '@/components/common/ui/button-mui/types';
 import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
-import PermissionApi from '@/lib/api/permission/PermissionApi';
 import { useSchedule } from '@/store/schedule/useSchedule';
 
 import { CheckBoxSection } from './components/checkboxes-section/CheckBoxSection';
@@ -24,27 +22,14 @@ export interface CalendarSectionProps {
 }
 export const CalendarSection: FC<CalendarSectionProps> = ({ groups }) => {
   const { user } = useAuthentication();
+  const { groupId } = useSchedule(state => ({ groupId: state.groupId }));
 
-  const requiredPermissions = [PERMISSION.GROUPS_$GROUPID_EVENTS_CREATE];
+  const validPrivilege =
+    user &&
+    (user.group?.role === GroupRoles.CAPTAIN ||
+      user.group?.role === GroupRoles.MODERATOR);
 
-  const { data: showButton } = useQuery({
-    queryKey: [user?.group?.id, ...requiredPermissions],
-    queryFn: () =>
-      PermissionApi.check({
-        permissions: [...requiredPermissions],
-        values: {
-          groupId: user?.group?.id,
-        },
-      }),
-    retry: false,
-    select: ({ permissions }) => {
-      return requiredPermissions
-        .map(permission => permissions[permission])
-        .every(value => value);
-    },
-    refetchOnWindowFocus: false,
-    enabled: !!user && !!user.group,
-  });
+  const showButton = validPrivilege && user.group?.id === groupId;
 
   return (
     <Box sx={styles.mainWrapper}>
