@@ -77,8 +77,6 @@ export class CampusParser implements Parser<CampusParserGroup> {
     const parsedPairs: ParsedSchedulePair[] = [];
 
     for (const { name, time, tag, teacherName } of pairs) {
-      if (!teacherName) continue;
-
       const isSelective = pairs.some(
         ({ name: nameSome, time: timeSome }) =>
           name !== nameSome && time === timeSome
@@ -97,13 +95,36 @@ export class CampusParser implements Parser<CampusParserGroup> {
         isSelective,
         startTime,
         endTime,
-        teachers: [GeneralParser.parseTeacherName(teacherName)],
+        teachers: GeneralParser.parseTeacherNames(teacherName),
         disciplineType: {
           name: CAMPUS_PARSER_DISCIPLINE_TYPE[tag],
         },
       });
     }
 
-    return parsedPairs;
+    return this.aggregateParsedPairTeachers(parsedPairs);
+  }
+
+  private aggregateParsedPairTeachers (dayPairs: ParsedSchedulePair[]) {
+    const result: ParsedSchedulePair[] = [];
+
+    for (const dayPair of dayPairs) {
+      const samePairIndex = result.findIndex(({ name, disciplineType, startTime, endTime }) =>
+        name === dayPair.name &&
+        disciplineType.name === dayPair.disciplineType.name &&
+        startTime.getTime() === dayPair.startTime.getTime() &&
+        endTime.getTime() === dayPair.endTime.getTime()
+      );
+
+      if (samePairIndex === -1) {
+        result.push(dayPair);
+      } else {
+        result[samePairIndex].teachers.push(
+          ...dayPair.teachers
+        );
+      }
+    }
+
+    return result;
   }
 }

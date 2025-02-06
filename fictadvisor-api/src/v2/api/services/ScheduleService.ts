@@ -62,7 +62,7 @@ export class ScheduleService {
 
   @Cron('0 3 * * *')
   async autoParse () {
-    await this.generalParser.parse(ParserTypeEnum.ROZKPI);
+    await this.generalParser.parse(ParserTypeEnum.CAMPUS);
   }
 
   async getIndexOfLesson (week: number, event: DbEvent, semester?: StudyingSemester): Promise<number | null> {
