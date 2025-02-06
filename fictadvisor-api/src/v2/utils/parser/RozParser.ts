@@ -185,21 +185,17 @@ export class RozParser implements Parser {
       ) {
         const secondaryTeacherString = this.parseHtmlTeacherString(
           teacherLinks,
-          k + 1
-        );
+          k + 1);
 
-        tableCellPairs[linksCounter].teachers.push(
-          ...[mainTeacherString, secondaryTeacherString].map(
-            GeneralParser.parseTeacherName
-          )
-        );
+        tableCellPairs[linksCounter].teachers =
+          GeneralParser.parseTeacherNames(mainTeacherString, secondaryTeacherString);
 
         k += 1;
         continue;
       }
-      tableCellPairs[linksCounter].teachers.push(
-        GeneralParser.parseTeacherName(mainTeacherString)
-      );
+      tableCellPairs[linksCounter].teachers =
+        GeneralParser.parseTeacherNames(mainTeacherString);
+
       linksCounter += 1;
     }
   }

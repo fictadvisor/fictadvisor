@@ -34,4 +34,8 @@ export class DisciplineTeacherRoleRepository {
     }
     return disciplineTeacherRole;
   }
+
+  async deleteMany (where: Prisma.DisciplineTeacherRoleWhereInput) {
+    return this.prisma.disciplineTeacherRole.deleteMany({ where });
+  }
 }
