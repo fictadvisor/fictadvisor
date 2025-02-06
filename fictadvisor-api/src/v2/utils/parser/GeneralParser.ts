@@ -23,6 +23,7 @@ import {
   ParsedScheduleWeek,
   ParsedDisciplineType,
 } from './ScheduleParserTypes';
+import { DisciplineTeacherRoleRepository } from '../../database/repositories/DisciplineTeacherRoleRepository';
 
 type BaseGeneralParserPair = ParsedSchedulePair & {
   period: Period;
@@ -49,6 +50,7 @@ export class GeneralParser {
     private subjectRepository: SubjectRepository,
     private disciplineRepository: DisciplineRepository,
     private disciplineTeacherRepository: DisciplineTeacherRepository,
+    private disciplineTeacherRoleRepository: DisciplineTeacherRoleRepository,
     private rozParser: RozParser,
     private campusParser: CampusParser,
     private scheduleMapper: ScheduleMapper
@@ -65,21 +67,11 @@ export class GeneralParser {
     period?: StudyingSemester,
     page?: number
   ) {
-    let weekNumber = period ? 1 : await this.dateService.getCurrentWeek();
+    const weekNumber = period ? 1 : await this.dateService.getCurrentWeek();
 
     if (!period) {
       const { isFinished } = await this.dateService.getCurrentSemester();
-
-      if (isFinished) {
-        const nextSemester = await this.dateService.getNextSemester();
-        if (!nextSemester) return;
-
-        const parseStartDate = nextSemester.startDate.getTime() - FORTNITE;
-        if (Date.now() <= parseStartDate) return;
-
-        period = nextSemester;
-        weekNumber = 1;
-      }
+      if (isFinished) return;
     }
 
     const semester = period ?
@@ -185,6 +177,12 @@ export class GeneralParser {
       teacherIds,
     } of pairs) {
       if (!teacherForceChanges) {
+        await this.disciplineTeacherRoleRepository.deleteMany({
+          disciplineType: {
+            id: disciplineType.id,
+          },
+        });
+
         for (const teacherId of teacherIds) {
           await this.createOrUpdateDisciplineTeacher(
             teacherId,
@@ -532,13 +530,29 @@ export class GeneralParser {
     });
   }
 
-  static parseTeacherName (teacherName: string): ParsedScheduleTeacher {
+  static parseTeacherNames (...teacherNames: string[]): ParsedScheduleTeacher[] {
+    const result = [];
+
+    for (const teacherName of teacherNames) {
+      const parsed = this.parseTeacherName(teacherName);
+      if (parsed) result.push(parsed);
+    }
+
+    return result;
+  }
+
+  private static parseTeacherName (teacherName: string): ParsedScheduleTeacher {
+    if (!teacherName) return;
     const [middleName, firstName, lastName] = teacherName.split(' ').reverse();
 
-    return {
+    const teacher = {
       lastName: lastName?.trim()?.replace('.', '') ?? '',
       firstName: firstName?.trim()?.replace('.', '') ?? '',
       middleName: middleName?.trim()?.replace('.', '') ?? '',
     };
+
+    if (!Object.values(teacher).every((value) => value === '')) {
+      return teacher;
+    }
   }
 }
