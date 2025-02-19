@@ -21,7 +21,7 @@ import {
 export class CampusParser implements Parser<CampusParserGroup> {
   constructor (private dateService: DateService) {}
 
-  async parseGroups (groupNames: string[]): Promise<CampusParserGroup[]> {
+  async parseGroups (groupNames: string[] = []): Promise<CampusParserGroup[]> {
     const { data } = await axios.get(
       'https://api.campus.kpi.ua/schedule/groups'
     );
