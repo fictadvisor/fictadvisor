@@ -33,7 +33,7 @@ export class Comment {
     comment: string;
 }
 
-class QuestionComment {
+export class QuestionComment {
   @ApiProperty({
     description: 'Question id',
   })

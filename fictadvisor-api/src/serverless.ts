@@ -1,12 +1,13 @@
 import { NestFactory, Reflector } from '@nestjs/core';
+import { ClassSerializerInterceptor, ValidationPipe, VERSION_NEUTRAL, VersioningType } from '@nestjs/common';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { ConfigService } from '@nestjs/config';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { configure as serverlessExpress } from '@vendia/serverless-express';
 
-import { AppModule } from './v2/AppModule';
-import { NestExpressApplication } from '@nestjs/platform-express';
-import { HttpExceptionFilter, validationExceptionFactory } from './v2/security/exception-handler/CommonExceptions';
-import { ClassSerializerInterceptor, ValidationPipe, VERSION_NEUTRAL, VersioningType } from '@nestjs/common';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ConfigService } from '@nestjs/config';
+import { AppModule } from './modules/AppModule';
+import { HttpExceptionFilter } from './common/filters/HttpExceptionFilter';
+import { validationExceptionFactory } from './common/helpers/validationExceptionFactory';
 
 let server;
 

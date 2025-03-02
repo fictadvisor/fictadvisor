@@ -58,7 +58,7 @@ export * from './RegistrationDTO';
 export * from './RemainingSelectivesDTO';
 export * from './ResetPasswordDTO';
 export * from './ResponseDTO';
-export * from './ResponseQueryDTO';
+export * from './QueryMarksDTO';
 export * from './RoleDTO';
 export * from './SelectiveDisciplinesDTO';
 export * from './StudentDTO';

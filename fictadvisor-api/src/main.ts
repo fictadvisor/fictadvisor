@@ -1,14 +1,15 @@
 import { ConfigService } from '@nestjs/config';
 import { ClassSerializerInterceptor, ValidationPipe, VERSION_NEUTRAL, VersioningType } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
-import { AppModule } from './v2/AppModule';
-import { HttpExceptionFilter, validationExceptionFactory } from './v2/security/exception-handler/CommonExceptions';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { applyStaticMiddleware } from './v2/utils/StaticUtil';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { join, resolve } from 'path';
 import * as cookieParser from 'cookie-parser';
-import { TestType, TestCoverage } from './v2/utils/TestCoverage';
+import { AppModule } from './modules/AppModule';
+import { HttpExceptionFilter } from './common/filters/HttpExceptionFilter';
+import { validationExceptionFactory } from './common/helpers/validationExceptionFactory';
+import { applyStaticMiddleware } from './common/helpers/applyStaticMiddleware';
+import { TestType, TestCoverage } from './common/helpers/TestCoverage';
 
 (BigInt.prototype as any).toJSON = function () {
   const int = Number.parseInt(this.toString());

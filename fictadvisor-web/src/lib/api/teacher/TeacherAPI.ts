@@ -6,7 +6,7 @@ import {
   DeleteCommentDTO,
   QueryAllCommentsDTO,
   QueryAllTeacherDTO,
-  ResponseQueryDTO,
+  QueryMarksDTO,
   UpdateCommentDTO,
   UpdateContactDTO,
   UpdateTeacherDTO,
@@ -76,7 +76,7 @@ class TeacherAPI {
     return data;
   }
 
-  async getTeacherMarks(teacherId: string, params: ResponseQueryDTO = {}) {
+  async getTeacherMarks(teacherId: string, params: QueryMarksDTO = {}) {
     const { data } = await client.get<MarksResponse>(
       `/teachers/${teacherId}/marks`,
       {
