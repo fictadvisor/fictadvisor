@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../PrismaService';
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client/fictadvisor';
 
 @Injectable()
 export class DisciplineTeacherRoleRepository {

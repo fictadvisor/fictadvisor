@@ -17,7 +17,7 @@ import { GrantRepository } from '../../../database/v2/repositories/GrantReposito
 import { NoPermissionException } from '../../../common/exceptions/NoPermissionException';
 import { InvalidEntityIdException } from '../../../common/exceptions/InvalidEntityIdException';
 import { NotBelongException } from '../../../common/exceptions/NotBelongException';
-import { Grant, Prisma } from '@prisma/client';
+import { Grant, Prisma } from '@prisma/client/fictadvisor';
 
 @Injectable()
 export class RoleService {

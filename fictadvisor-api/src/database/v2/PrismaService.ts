@@ -1,5 +1,5 @@
 import { INestApplication, Injectable, OnModuleInit } from '@nestjs/common';
-import { PrismaClient, State } from '@prisma/client';
+import { PrismaClient, State } from '@prisma/client/fictadvisor';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {

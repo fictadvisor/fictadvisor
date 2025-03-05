@@ -1,4 +1,4 @@
-import { QuestionDisplay, QuestionType } from '@prisma/client';
+import { QuestionDisplay, QuestionType } from '@prisma/client/fictadvisor';
 
 export class DbQuestion {
   id: string;

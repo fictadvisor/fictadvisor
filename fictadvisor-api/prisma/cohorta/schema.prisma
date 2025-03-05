@@ -1,0 +1,612 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+  output        = "../../../node_modules/@prisma/client/cohorta"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("COHORTA_DATABASE_URL")
+}
+
+enum State {
+  APPROVED
+  PENDING
+  DECLINED
+}
+
+enum InstitutionPlan {
+  FREE
+  PRO
+}
+
+model Insitution {
+  id                String             @id @default(uuid())
+  name              String             @unique
+  description       String?
+  plan              InstitutionPlan    @default(FREE)
+  createdAt         DateTime           @default(now()) @map("created_at")
+  updatedAt         DateTime           @updatedAt @map("updated_at")
+  roles             Role[]
+  users             User[]
+  subjects          Subject[]
+  departments       Department[]
+  semesterDates     SemesterDate[]
+  selectiveCatalogs SelectiveCatalog[]
+
+  @@map("institutions")
+}
+
+model Department {
+  id            String     @id @default(uuid())
+  name          String
+  abbreviation  String
+  institution   Insitution @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  institutionId String     @map("institution_id")
+  createdAt     DateTime   @default(now()) @map("created_at")
+  updatedAt     DateTime   @updatedAt @map("updated_at")
+  roles         Role[]
+  cathedras     Cathedra[]
+
+  @@unique([institutionId, abbreviation])
+  @@map("departments")
+}
+
+model Cathedra {
+  id                  String               @id @default(uuid())
+  name                String
+  abbreviation        String
+  department          Department           @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  departmentId        String               @map("department_id")
+  createdAt           DateTime             @default(now()) @map("created_at")
+  updatedAt           DateTime             @updatedAt @map("updated_at")
+  roles               Role[]
+  teachers            Teacher[]
+  educationalPrograms EducationalProgram[]
+
+  @@unique([departmentId, abbreviation])
+  @@map("cathedras")
+}
+
+model Teacher {
+  user               User                @relation(fields: [userId], references: [id])
+  userId             String              @id @map("user_id")
+  state              State               @default(PENDING)
+  academicStatus     AcademicStatus?     @map("academic_status")
+  scientificDegree   ScientificDegree?   @map("scientific_degree")
+  position           Position
+  cathedra           Cathedra?           @relation(fields: [cathedraId], references: [id], onDelete: Cascade)
+  cathedraId         String?             @map("cathedra_id")
+  createdAt          DateTime            @default(now()) @map("created_at")
+  updatedAt          DateTime            @updatedAt @map("updated_at")
+  disciplineTeachers DisciplineTeacher[]
+
+  @@unique([userId, cathedraId])
+  @@map("teachers")
+}
+
+model Speciality {
+  code                String               @id
+  name                String
+  createdAt           DateTime             @default(now()) @map("created_at")
+  updatedAt           DateTime             @updatedAt @map("updated_at")
+  educationalPrograms EducationalProgram[]
+
+  @@map("specialities")
+}
+
+enum EducationalLevel {
+  JUNIOR_BACHELOR
+  BACHELOR
+  MASTER
+}
+
+model EducationalProgram {
+  id               String           @id @default(uuid())
+  name             String
+  description      String?
+  educationalLevel EducationalLevel @map("educational_level")
+  speciality       Speciality       @relation(fields: [specialityId], references: [code], onDelete: Cascade)
+  specialityId     String           @map("speciality_id")
+  cathedra         Cathedra         @relation(fields: [cathedraId], references: [id])
+  cathedraId       String           @map("cathedra_id")
+  createdAt        DateTime         @default(now()) @map("created_at")
+  updatedAt        DateTime         @updatedAt @map("updated_at")
+  roles            Role[]
+  groups           Group[]
+  disciplines      Discipline[]
+
+  @@unique([specialityId, cathedraId, name])
+  @@map("educational_programs")
+}
+
+model SelectiveCatalog {
+  id                     String                  @id @default(uuid())
+  name                   String
+  amount                 Int
+  semester               Int
+  institution            Insitution              @relation(fields: [institutionId], references: [id])
+  institutionId          String                  @map("institution_id")
+  createdAt              DateTime                @default(now()) @map("created_at")
+  updatedAt              DateTime                @updatedAt @map("updated_at")
+  disciplines            Discipline[]
+  groupSelectiveCatalogs GroupSelectiveCatalog[]
+
+  @@map("selective_catalogs")
+}
+
+model GroupSelectiveCatalog {
+  id                 String           @id @default(uuid())
+  selectiveCatalog   SelectiveCatalog @relation(fields: [selectiveCatalogId], references: [id], onDelete: Cascade)
+  selectiveCatalogId String           @map("selective_catalog_id")
+  group              Group            @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId            String           @map("group_id")
+  createdAt          DateTime         @default(now()) @map("created_at")
+  updatedAt          DateTime         @updatedAt @map("updated_at")
+
+  @@unique([groupId, selectiveCatalogId])
+  @@map("group_selective_catalogs")
+}
+
+model Subject {
+  id            String       @id @default(uuid())
+  name          String
+  institution   Insitution   @relation(fields: [institutionId], references: [id])
+  institutionId String       @map("institution_id")
+  createdAt     DateTime     @default(now()) @map("created_at")
+  updatedAt     DateTime     @updatedAt @map("updated_at")
+  disciplines   Discipline[]
+
+  @@unique([institutionId, name])
+  @@map("subjects")
+}
+
+model Discipline {
+  id                   String                @id @default(uuid())
+  semester             Int
+  description          String?
+  isSelective          Boolean               @default(false) @map("is_selective")
+  subject              Subject               @relation(fields: [subjectId], references: [id])
+  subjectId            String                @map("subject_id")
+  educationalProgram   EducationalProgram?   @relation(fields: [educationalProgramId], references: [id])
+  educationalProgramId String?               @map("educational_program_id")
+  selectiveCatalog     SelectiveCatalog?     @relation(fields: [selectiveCatalogId], references: [id], onDelete: Cascade)
+  selectiveCatalogId   String?               @map("selective_catalog_id")
+  maxStudentAmount     Int?                  @map("max_student_amount")
+  createdAt            DateTime              @default(now()) @map("created_at")
+  updatedAt            DateTime              @updatedAt @map("updated_at")
+  roles                Role[]
+  assignments          Assignment[]
+  fileResources        FileResource[]
+  groupDisciplines     GroupDiscipline[]
+  disciplineTeachers   DisciplineTeacher[]
+  selectiveDisciplines SelectiveDiscipline[]
+
+  @@unique([subjectId, semester, educationalProgramId, selectiveCatalogId])
+  @@map("disciplines")
+}
+
+model SelectiveDiscipline {
+  id           String     @id @default(uuid())
+  discipline   Discipline @relation(fields: [disciplineId], references: [id], onDelete: Cascade)
+  disciplineId String     @map("discipline_id")
+  student      Student    @relation(fields: [studentId], references: [userId], onDelete: Cascade)
+  studentId    String     @map("student_id")
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+
+  @@unique([disciplineId, studentId])
+  @@map("selective_disciplines")
+}
+
+enum AssignmentType {
+  TEST
+  ATTACHMENT
+}
+
+model Assignment {
+  id                 String              @id @default(uuid())
+  name               String
+  description        String?
+  assignmentType     AssignmentType      @map("assignment_type")
+  maxMark            Decimal             @map("max_mark")
+  deadline           DateTime?
+  availableFrom      DateTime            @map("available_from")
+  test               Test?
+  discipline         Discipline          @relation(fields: [disciplineId], references: [id], onDelete: Cascade)
+  disciplineId       String              @map("discipline_id")
+  groupDiscipline    GroupDiscipline?    @relation(fields: [groupDisciplineId], references: [id], onDelete: SetNull)
+  groupDisciplineId  String?             @map("group_discipline_id")
+  lesson             Lesson?             @relation(fields: [lessonId], references: [eventId], onDelete: SetNull)
+  lessonId           String?             @map("lesson_id")
+  createdAt          DateTime            @default(now()) @map("created_at")
+  updatedAt          DateTime            @updatedAt @map("updated_at")
+  fileResources      FileResource[]
+  studentAssignments StudentAssignment[]
+
+  @@map("assignments")
+}
+
+model Test {
+  assignment    Assignment     @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  assignmentId  String         @id @map("assignment_id")
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+  testQuestions TestQuestion[]
+
+  @@map("tests")
+}
+
+enum TestQuestionType {
+  SINGLE
+  MULTI
+  TEXT
+}
+
+model TestQuestion {
+  id               String               @id @default(uuid())
+  type             TestQuestionType
+  question         String
+  availableAnswers String?              @map("available_answers")
+  test             Test                 @relation(fields: [testId], references: [assignmentId], onDelete: Cascade)
+  testId           String               @map("test_id")
+  maxMark          Decimal              @map("max_mark")
+  createdAt        DateTime             @default(now()) @map("created_at")
+  updatedAt        DateTime             @updatedAt @map("updated_at")
+  answers          TestQuestionAnswer[]
+
+  @@map("test_questions")
+}
+
+model TestQuestionAnswer {
+  id                  String            @id @default(uuid())
+  testQuestion        TestQuestion      @relation(fields: [testQuestionId], references: [id], onDelete: Cascade)
+  testQuestionId      String            @map("test_question_id")
+  value               String
+  resultMark          Decimal?          @map("result_mark")
+  resultDescription   String?           @map("result_description")
+  studentAssignment   StudentAssignment @relation(fields: [studentAssignmentId], references: [id], onDelete: Cascade)
+  studentAssignmentId String            @map("student_assignment_id")
+  createdAt           DateTime          @default(now()) @map("created_at")
+  updatedAt           DateTime          @updatedAt @map("updated_at")
+
+  @@unique([studentAssignmentId, testQuestionId])
+  @@map("test_question_answers")
+}
+
+model StudentAssignment {
+  id                  String               @id @default(uuid())
+  student             Student              @relation(fields: [studentId], references: [userId], onDelete: Cascade)
+  studentId           String               @map("student_id")
+  assignment          Assignment           @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  assignmentId        String               @map("assignment_id")
+  resultMark          Decimal?             @map("result_mark")
+  resultDescription   String?              @map("result_description")
+  createdAt           DateTime             @default(now()) @map("created_at")
+  updatedAt           DateTime             @updatedAt @map("updated_at")
+  fileResources       FileResource[]
+  testQuestionAnswers TestQuestionAnswer[]
+
+  @@unique([studentId, assignmentId])
+  @@map("student_assignments")
+}
+
+model FileResource {
+  id                  String             @id @default(uuid())
+  name                String
+  resourceCategory    String?            @map("resource_category")
+  description         String?
+  link                String
+  createdAt           DateTime           @default(now()) @map("created_at")
+  updatedAt           DateTime           @updatedAt @map("updated_at")
+  studentAssignment   StudentAssignment? @relation(fields: [studentAssignmentId], references: [id])
+  studentAssignmentId String?            @map("student_assignment_id")
+  discipline          Discipline?        @relation(fields: [disciplineId], references: [id])
+  disciplineId        String?            @map("discipline_id")
+  lesson              Lesson?            @relation(fields: [lessonId], references: [eventId])
+  lessonId            String?            @map("lesson_id")
+  assignment          Assignment?        @relation(fields: [assignmentId], references: [id])
+  assignmentId        String?            @map("assignment_id")
+
+  @@map("file_resources")
+}
+
+model GroupDiscipline {
+  id              String           @id @default(uuid())
+  group           Group            @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId         String           @map("group_id")
+  discipline      Discipline       @relation(fields: [disciplineId], references: [id], onDelete: Cascade)
+  disciplineId    String           @map("discipline_id")
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @updatedAt @map("updated_at")
+  assignments     Assignment[]
+  disciplineTypes DisciplineType[]
+
+  @@unique([groupId, disciplineId])
+  @@map("group_disciplines")
+}
+
+enum DisciplineTypeEnum {
+  LECTURE
+  PRACTICE
+  LABORATORY
+  CONSULTATION
+  WORKOUT
+  EXAM
+}
+
+model DisciplineType {
+  id                     String                  @id @default(uuid())
+  name                   DisciplineTypeEnum
+  groupDiscipline        GroupDiscipline         @relation(fields: [groupDisciplineId], references: [id], onDelete: Cascade)
+  groupDisciplineId      String                  @map("group_discipline_id")
+  createdAt              DateTime                @default(now()) @map("created_at")
+  updatedAt              DateTime                @updatedAt @map("updated_at")
+  lessons                Lesson[]
+  disciplineTeacherRoles DisciplineTeacherRole[]
+
+  @@unique([name, groupDisciplineId])
+  @@map("discipline_types")
+}
+
+model Group {
+  id                     String                  @id @default(uuid())
+  code                   String
+  admissionYear          Int                     @default(dbgenerated("EXTRACT(YEAR FROM CURRENT_DATE)")) @map("admission_year")
+  educationalProgram     EducationalProgram      @relation(fields: [educationalProgramId], references: [id], onDelete: Cascade)
+  educationalProgramId   String                  @map("educational_program_id")
+  createdAt              DateTime                @default(now()) @map("created_at")
+  updatedAt              DateTime                @updatedAt @map("updated_at")
+  roles                  Role[]
+  events                 Event[]
+  students               Student[]
+  groupDisciplines       GroupDiscipline[]
+  groupSelectiveCatalogs GroupSelectiveCatalog[]
+
+  @@unique([code, educationalProgramId])
+  @@map("groups")
+}
+
+model User {
+  id                  String     @id @default(uuid())
+  email               String     @unique
+  username            String?    @unique
+  avatar              String?
+  password            String?
+  firstName           String     @map("first_name")
+  lastName            String     @map("last_name")
+  middleName          String?    @map("middle_name")
+  telegramId          BigInt?    @unique @map("telegram_id")
+  state               State      @default(PENDING)
+  lastPasswordChanged DateTime   @default(now()) @map("last_password_changed")
+  student             Student?
+  teacher             Teacher?
+  institution         Insitution @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  institutionId       String     @map("institution_id")
+  createdAt           DateTime   @default(now()) @map("created_at")
+  updatedAt           DateTime   @updatedAt @map("updated_at")
+  roles               Role[]
+
+  @@map("users")
+}
+
+enum TelegramSource {
+  GROUP
+  CHANNEL
+  PERSONAL_CHAT
+  CHAT_WITH_THREADS
+}
+
+model Student {
+  user                 User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId               String                @id @map("user_id")
+  state                State                 @default(PENDING)
+  group                Group?                @relation(fields: [groupId], references: [id], onDelete: SetNull)
+  groupId              String?               @map("group_id")
+  createdAt            DateTime              @default(now()) @map("created_at")
+  updatedAt            DateTime              @updatedAt @map("updated_at")
+  studentAssignments   StudentAssignment[]
+  selectiveDisciplines SelectiveDiscipline[]
+
+  @@map("students")
+}
+
+enum AcademicStatus {
+  DOCENT
+  PROFESSOR
+  SENIOR_RESEARCH_ASSISTANT
+}
+
+enum ScientificDegree {
+  CANDIDATE
+  DOCTOR
+}
+
+enum Position {
+  ASSOCIATE_PROFESSOR
+  DEPARTMENT_CHAIR
+  PROFESSOR
+  RESEARCH_ASSISTANT
+  SENIOR_RESEARCH_ASSISTANT
+  SENIOR_LECTURER
+  ASSISTANT
+  LEADING_RESEARCHER
+  LECTURER
+}
+
+model DisciplineTeacher {
+  id           String                  @id @default(uuid())
+  teacher      Teacher                 @relation(fields: [teacherId], references: [userId], onDelete: Cascade)
+  teacherId    String                  @map("teacher_id")
+  discipline   Discipline              @relation(fields: [disciplineId], references: [id], onDelete: Cascade)
+  disciplineId String                  @map("discipline_id")
+  createdAt    DateTime                @default(now()) @map("created_at")
+  updatedAt    DateTime                @updatedAt @map("updated_at")
+  roles        DisciplineTeacherRole[]
+
+  @@unique([disciplineId, teacherId])
+  @@map("discipline_teachers")
+}
+
+enum RoleName {
+  USER
+  STUDENT
+  MODERATOR
+  CAPTAIN
+  TEACHER
+  ADMIN
+}
+
+model Role {
+  id                   String              @id @default(uuid())
+  name                 RoleName
+  user                 User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId               String              @map("user_id")
+  group                Group?              @relation(fields: [groupId], references: [id], onDelete: SetNull)
+  groupId              String?             @map("group_id")
+  discipline           Discipline?         @relation(fields: [disciplineId], references: [id], onDelete: SetNull)
+  disciplineId         String?             @map("discipline_id")
+  educationalProgram   EducationalProgram? @relation(fields: [educationalProgramId], references: [id], onDelete: SetNull)
+  educationalProgramId String?             @map("educational_program_id")
+  cathedra             Cathedra?           @relation(fields: [cathedraId], references: [id], onDelete: SetNull)
+  cathedraId           String?             @map("cathedra_id")
+  department           Department?         @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  departmentId         String?             @map("department_id")
+  institution          Insitution?         @relation(fields: [institutionId], references: [id], onDelete: SetNull)
+  institutionId        String?             @map("institution_id")
+  createdAt            DateTime            @default(now()) @map("created_at")
+  updatedAt            DateTime            @updatedAt @map("updated_at")
+  grants               Grant[]
+
+  @@map("roles")
+}
+
+model Grant {
+  id         String   @id @default(uuid())
+  role       Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  roleId     String   @map("role_id")
+  permission String
+  set        Boolean  @default(true)
+  weight     Int      @default(1)
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@map("grants")
+}
+
+model SemesterDate {
+  id            String     @id @default(uuid())
+  year          Int
+  semester      Int
+  startDate     DateTime   @map("start_date")
+  endDate       DateTime   @map("end_date")
+  institution   Insitution @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  institutionId String     @map("institution_id")
+  createdAt     DateTime   @default(now()) @map("created_at")
+  updatedAt     DateTime   @updatedAt @map("updated_at")
+  events        Event[]
+
+  @@unique([year, semester])
+  @@map("semester_dates")
+}
+
+model DisciplineTeacherRole {
+  id                  String            @id @default(uuid())
+  disciplineTeacher   DisciplineTeacher @relation(fields: [disciplineTeacherId], references: [id], onDelete: Cascade)
+  disciplineTeacherId String            @map("discipline_teacher_id")
+  disciplineType      DisciplineType    @relation(fields: [disciplineTypeId], references: [id], onDelete: Cascade)
+  disciplineTypeId    String            @map("discipline_type_id")
+  createdAt           DateTime          @default(now()) @map("created_at")
+  updatedAt           DateTime          @updatedAt @map("updated_at")
+
+  @@unique([disciplineTeacherId, disciplineTypeId])
+  @@map("discipline_teacher_roles")
+}
+
+enum Period {
+  NO_PERIOD
+  EVERY_WEEK
+  EVERY_FORTNIGHT
+}
+
+model Event {
+  id             String       @id @default(uuid())
+  name           String
+  startTime      DateTime     @map("start_time")
+  endTime        DateTime     @map("end_time")
+  period         Period
+  url            String?
+  eventsAmount   Int          @default(1) @map("events_amount")
+  isCustom       Boolean      @default(false) @map("is_custom")
+  lesson         Lesson?
+  group          Group        @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId        String       @map("group_id")
+  semesterDate   SemesterDate @relation(fields: [semesterDateId], references: [id], onDelete: Cascade)
+  semesterDateId String       @map("semester_date_id")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
+
+  @@map("events")
+}
+
+model Lesson {
+  event            Event          @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId          String         @id @map("event_id")
+  disciplineType   DisciplineType @relation(fields: [disciplineTypeId], references: [id], onDelete: Cascade)
+  disciplineTypeId String         @map("discipline_type_id")
+  createdAt        DateTime       @default(now()) @map("created_at")
+  updatedAt        DateTime       @updatedAt @map("updated_at")
+  assignments      Assignment[]
+  fileResources    FileResource[]
+
+  @@unique([disciplineTypeId, eventId])
+  @@map("lessons")
+}
+
+model ResetPasswordToken {
+  token     String   @id @default(uuid())
+  email     String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("reset_password_tokens")
+}
+
+model RegisterTelegramToken {
+  token      String   @id @default(uuid())
+  telegramId BigInt   @map("telegram_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@map("register_password_tokens")
+}
+
+model VerifyEmailToken {
+  token      String   @id @default(uuid())
+  username   String
+  email      String
+  password   String
+  avatar     String?
+  telegramId BigInt?  @map("telegram_id")
+  isCaptain  Boolean  @map("is_captain")
+  groupId    String   @map("group_id")
+  middleName String?  @map("middle_name")
+  lastName   String   @map("last_name")
+  firstName  String   @map("first_name")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@map("verify_email_tokens")
+}
+
+model PageText {
+  key     String  @id
+  value   String
+  link    String?
+  isShown Boolean @default(true) @map("is_shown")
+
+  @@map("page_texts")
+}

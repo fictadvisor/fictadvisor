@@ -4,7 +4,7 @@ import {
   SelectiveAmount,
   Cathedra,
   TeachersOnCathedras,
-} from '@prisma/client';
+} from '@prisma/client/fictadvisor';
 import { DbDisciplineTeacherRole } from './DbDisciplineTeacherRole';
 import { DbDisciplineType } from './DbDisciplineType';
 import { DbSubject } from './DbSubject';

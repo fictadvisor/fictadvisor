@@ -1,24 +1,25 @@
-import { PrismaClient } from '@prisma/client';
-import * as process from 'process';
+import { parseArgs } from 'node:util';
+import FictadvisorSeed from './fictadvisor/seed';
+import CohortaSeed from './cohorta/seed';
 
-const prisma = new PrismaClient();
+const options: { project: { type: 'string' } } = {
+  project: { type: 'string' },
+};
+
 async function main () {
-  console.log('Start seeding');
-  await prisma.semesterDate.createMany({
-    data: [
-      { year: 2022, semester: 1, startDate: new Date('2022-09-05T00:00:00'), endDate: new Date('2023-01-23T00:00:00'), createdAt: new Date(), updatedAt: new Date() },
-      { year: 2022, semester: 2, startDate: new Date('2023-02-05T00:00:00'), endDate: new Date('2023-06-26T00:00:00'), createdAt: new Date(), updatedAt: new Date() },
-    ],
-  });
+  const {
+    values: { project },
+  } = parseArgs({ options });
 
-  console.log('Finished seeding');
+  switch (project) {
+    case 'cohorta':
+      await CohortaSeed();
+      break;
+    case 'fictadvisor':
+    default:
+      await FictadvisorSeed();
+  }
 }
-main()
-  .then(async () => {
-    await prisma.$disconnect();
-  })
-  .catch(async (e) => {
-    console.error(e);
-    await prisma.$disconnect();
-    process.exit(1);
-  });
+
+main();
+

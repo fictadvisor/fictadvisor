@@ -1,4 +1,4 @@
-import { DisciplineTeacher, Discipline, Subject, Teacher } from '@prisma/client';
+import { DisciplineTeacher, Discipline, Subject, Teacher } from '@prisma/client/fictadvisor';
 import { DbQuestion } from './DbQuestion';
 
 export class DbQuestionAnswer {

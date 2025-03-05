@@ -16,7 +16,7 @@ import {
 import { UserService } from '../../user/v2/UserService';
 import { FileService } from '../../file/FileService';
 import { DateService } from '../../date/DateService';
-import { Prisma, RoleName, State, User } from '@prisma/client';
+import { Prisma, RoleName, State, User } from '@prisma/client/fictadvisor';
 import { DatabaseUtils } from '../../../database/DatabaseUtils';
 import { DbGroup } from '../../../database/v2/entities/DbGroup';
 import { DbDiscipline } from '../../../database/v2/entities/DbDiscipline';

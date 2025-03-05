@@ -5,7 +5,7 @@ import {
   QueryAllPageTextsDTO,
 } from '@fictadvisor/utils/requests';
 import { PageTextRepository } from '../../../database/v2/repositories/PageTextRepository';
-import { PageText } from '@prisma/client';
+import { PageText } from '@prisma/client/fictadvisor';
 
 @Injectable()
 export class PageTextService {

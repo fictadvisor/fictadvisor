@@ -5,7 +5,7 @@ import { MapperModule } from '../../../src/common/mappers/MapperModule';
 import { PrismaService } from '../../../src/database/v2/PrismaService';
 import { PermissionService } from '../../../src/modules/permission/v2/PermissionService';
 import { DataNotFoundException } from '../../../src/common/exceptions/DataNotFoundException';
-import { State } from '@prisma/client';
+import { State } from '@prisma/client/fictadvisor';
 
 describe('PermissionService', () => {
   let prismaService: PrismaService;

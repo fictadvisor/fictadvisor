@@ -1,4 +1,4 @@
-import { Cathedra, Discipline, EducationalPrograms, Group, SelectiveDiscipline } from '@prisma/client';
+import { Cathedra, Discipline, EducationalPrograms, Group, SelectiveDiscipline } from '@prisma/client/fictadvisor';
 import { State } from '@fictadvisor/utils/enums';
 import { DbSpeciality } from './DbSpeciality';
 import { DbRole } from './DbRole';

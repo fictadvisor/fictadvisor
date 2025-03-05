@@ -26,7 +26,7 @@ import { GroupRepository } from '../../../database/v2/repositories/GroupReposito
 import { ContactRepository } from '../../../database/v2/repositories/ContactRepository';
 import { InvalidQueryException } from '../../../common/exceptions/InvalidQueryException';
 import { InvalidEntityIdException } from '../../../common/exceptions/InvalidEntityIdException';
-import { EntityType, QuestionDisplay, Prisma } from '@prisma/client';
+import { EntityType, QuestionDisplay, Prisma } from '@prisma/client/fictadvisor';
 import { SubjectMapper } from '../../../common/mappers/SubjectMapper';
 import { DisciplineTypeEnum } from '@fictadvisor/utils/enums';
 import * as process from 'process';

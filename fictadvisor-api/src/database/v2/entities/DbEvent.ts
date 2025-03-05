@@ -1,4 +1,4 @@
-import { EventInfo, Group } from '@prisma/client';
+import { EventInfo, Group } from '@prisma/client/fictadvisor';
 import { Period } from '@fictadvisor/utils/enums';
 import { DbDisciplineType } from './DbDisciplineType';
 

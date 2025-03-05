@@ -43,7 +43,7 @@ import { AlreadySelectedException } from '../../../common/exceptions/AlreadySele
 import { DuplicateTelegramIdException } from '../../../common/exceptions/DuplicateTelegramIdException';
 import { NotSelectedDisciplineException } from '../../../common/exceptions/NotSelectedDisciplineException';
 import { AlreadySentGroupRequestException } from '../../../common/exceptions/AlreadySentGroupRequestException';
-import { EntityType, Prisma, RoleName, State } from '@prisma/client';
+import { EntityType, Prisma, RoleName, State } from '@prisma/client/fictadvisor';
 import { AbsenceOfCaptainException } from '../../../common/exceptions/AbsenceOfCaptainException';
 import { CaptainAlreadyRegisteredException } from '../../../common/exceptions/CaptainAlreadyRegisteredException';
 

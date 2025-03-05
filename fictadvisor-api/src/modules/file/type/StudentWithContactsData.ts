@@ -1,4 +1,4 @@
-import { Contact } from '@prisma/client';
+import { Contact } from '@prisma/client/fictadvisor';
 
 export class StudentWithContactsData {
   lastName: string;

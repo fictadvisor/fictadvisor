@@ -1,6 +1,6 @@
 import { Controller, Post, Body, Param, Get, Query, Patch } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { User } from '@prisma/client';
+import { User } from '@prisma/client/fictadvisor';
 import {
   RegistrationDTO,
   ForgotPasswordDTO,

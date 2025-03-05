@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client/fictadvisor';
 import { CommentsSortOrder } from '@fictadvisor/utils/enums';
 
 export const CommentsSortMapper: { [key in CommentsSortOrder]: Prisma.Enumerable<Prisma.QuestionAnswerOrderByWithRelationInput>} = {

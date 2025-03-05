@@ -9,7 +9,7 @@ import {
   UpdateEventDTO,
 } from '@fictadvisor/utils/requests';
 import { EventTypeEnum, ParserTypeEnum } from '@fictadvisor/utils/enums';
-import { DisciplineTypeEnum, Period } from '@prisma/client';
+import { DisciplineTypeEnum, Period } from '@prisma/client/fictadvisor';
 import { DateTime } from 'luxon';
 import { DateService, FORTNITE, StudyingSemester, WEEK } from '../../date/DateService';
 import { DateUtils } from '../../date/DateUtils';

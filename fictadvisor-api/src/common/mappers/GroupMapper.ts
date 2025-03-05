@@ -5,7 +5,7 @@ import {
   GroupWithTelegramGroupsResponse,
   MappedGroupResponse,
 } from '@fictadvisor/utils/responses';
-import { Group, RoleName, SelectiveAmount } from '@prisma/client';
+import { Group, RoleName, SelectiveAmount } from '@prisma/client/fictadvisor';
 import { DbGroup } from '../../database/v2/entities/DbGroup';
 import { DbStudent } from '../../database/v2/entities/DbStudent';
 

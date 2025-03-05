@@ -1,4 +1,4 @@
-import { Discipline } from '@prisma/client';
+import { Discipline } from '@prisma/client/fictadvisor';
 
 export class DbSubject {
   id: string;

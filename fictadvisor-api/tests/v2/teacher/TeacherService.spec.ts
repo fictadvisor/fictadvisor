@@ -13,7 +13,7 @@ import { TelegramConfigService } from '../../../src/config/TelegramConfigService
 import { TeacherService } from '../../../src/modules/teacher/v2/TeacherService';
 import { PollService } from '../../../src/modules/poll/v2/PollService';
 import { DbQuestionWithAnswers } from '../../../src/database/v2/entities/DbQuestionWithAnswers';
-import { Cathedra, Prisma, QuestionDisplay, TeachersOnCathedras } from '@prisma/client';
+import { Cathedra, Prisma, QuestionDisplay, TeachersOnCathedras } from '@prisma/client/fictadvisor';
 import { TeacherRepository } from '../../../src/database/v2/repositories/TeacherRepository';
 import { DbTeacher } from '../../../src/database/v2/entities/DbTeacher';
 import { ContactRepository } from '../../../src/database/v2/repositories/ContactRepository';

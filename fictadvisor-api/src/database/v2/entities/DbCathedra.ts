@@ -1,4 +1,4 @@
-import { Teacher, TeachersOnCathedras } from '@prisma/client';
+import { Teacher, TeachersOnCathedras } from '@prisma/client/fictadvisor';
 
 export class DbCathedra {
   id: string;

@@ -5,8 +5,8 @@ import {
   ScientificDegree,
   AcademicStatus,
   Position,
-} from '@prisma/client';
-import { Decimal } from '@prisma/client/runtime';
+} from '@prisma/client/fictadvisor';
+import { Decimal } from '@prisma/client/fictadvisor/runtime';
 import { DbDisciplineTeacherRole } from './DbDisciplineTeacherRole';
 
 export class DbTeacher {
