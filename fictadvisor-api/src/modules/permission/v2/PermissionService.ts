@@ -3,7 +3,7 @@ import { CheckPermissionsDTO } from '@fictadvisor/utils/requests';
 import { RoleRepository } from '../../../database/v2/repositories/RoleRepository';
 import { DbRole } from '../../../database/v2/entities/DbRole';
 import { DataNotFoundException } from '../../../common/exceptions/DataNotFoundException';
-import { Grant } from '@prisma/client';
+import { Grant } from '@prisma/client/fictadvisor';
 
 @Injectable()
 export class PermissionService {

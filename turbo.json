@@ -10,12 +10,17 @@
     "lint": {
       "dependsOn": ["^lint"]
     },
-    "test:migrate": {},
-    "test:seed": {},
+    "migrate:test:fictadvisor": {},
+    "test:seed:fictadvisor": {},
+    "migrate:test:cohorta": {},
+    "test:seed:cohorta": {},
     "test:unit": {
       "dependsOn": ["^build"]
     },
-    "test:integration": {
+    "test:integration:fictadvisor": {
+      "dependsOn": ["^build"]
+    },
+    "test:integration:cohorta": {
       "dependsOn": ["^build"]
     },
     "start:dev": {

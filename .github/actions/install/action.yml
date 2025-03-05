@@ -5,7 +5,7 @@ runs:
   using: composite
   steps:
     - name: Use Node.js 20.x
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: '20.x'
     - name: Cache Yarn
@@ -25,6 +25,9 @@ runs:
     - name: Install dependencies
       shell: bash
       run: yarn workspaces focus --all
-    - name: Generate Prisma
+    - name: Generate FictAdvisor Prisma
       shell: bash
-      run: npx prisma generate --schema ./fictadvisor-api/prisma/schema.prisma
+      run: yarn generate:fictadvisor
+    - name: Generate Cohorta Prisma
+      shell: bash
+      run: yarn generate:cohorta

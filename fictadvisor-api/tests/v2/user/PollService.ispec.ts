@@ -7,7 +7,7 @@ import { PollService } from '../../../src/modules/poll/v2/PollService';
 import { DbDiscipline } from '../../../src/database/v2/entities/DbDiscipline';
 import { DbQuestionWithRoles } from '../../../src/database/v2/entities/DbQuestionWithRoles';
 import { DbQuestionWithAnswers } from '../../../src/database/v2/entities/DbQuestionWithAnswers';
-import { Group, PrismaClient, QuestionDisplay, QuestionType, State, Subject, Teacher, User } from '@prisma/client';
+import { Group, PrismaClient, QuestionDisplay, QuestionType, State, Subject, Teacher, User } from '@prisma/client/fictadvisor';
 
 
 describe('PollService', () => {

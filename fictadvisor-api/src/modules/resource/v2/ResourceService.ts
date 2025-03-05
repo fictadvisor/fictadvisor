@@ -6,7 +6,7 @@ import {
   QueryAllResourcesDTO,
 } from '@fictadvisor/utils/requests';
 import { ResourceRepository } from '../../../database/v2/repositories/ResourceRepository';
-import { StudentResource } from '@prisma/client';
+import { StudentResource } from '@prisma/client/fictadvisor';
 
 @Injectable()
 export class ResourceService {

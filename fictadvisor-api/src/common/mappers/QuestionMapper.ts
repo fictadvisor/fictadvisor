@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DbQuestionWithRoles } from '../../database/v2/entities/DbQuestionWithRoles';
-import { QuestionRole } from '@prisma/client';
+import { QuestionRole } from '@prisma/client/fictadvisor';
 import { DbDisciplineTeacherWithAnswers } from '../../database/v2/entities/DbDisciplineTeacherWithAnswers';
 import { DbQuestionWithAnswers } from '../../database/v2/entities/DbQuestionWithAnswers';
 import { QuestionCommentData } from '../../modules/poll/v2/types/QuestionCommentData';

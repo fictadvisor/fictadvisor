@@ -1,5 +1,5 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { User } from '@prisma/client/fictadvisor';
 
 export const GetUser = createParamDecorator(
   (field: keyof Omit<User, 'password'> = null, ctx: ExecutionContext) => {

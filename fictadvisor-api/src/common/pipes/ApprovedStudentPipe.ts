@@ -1,7 +1,7 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
 import { StudentRepository } from '../../database/v2/repositories/StudentRepository';
 import { NotApprovedException } from '../exceptions/NotApprovedException';
-import { State } from '@prisma/client';
+import { State } from '@prisma/client/fictadvisor';
 
 @Injectable()
 export class ApprovedStudentPipe implements PipeTransform {

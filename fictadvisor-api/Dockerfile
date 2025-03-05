@@ -31,7 +31,7 @@ RUN yarn install --frozen-lockfile
 # Copy source code of isolated subworkspace
 COPY --from=pruner /app/out/full/ .
 
-RUN npx prisma generate --schema ./fictadvisor-api/prisma/schema.prisma
+RUN yarn generate:full
 RUN turbo build --filter=fictadvisor-api
 RUN yarn workspaces focus --all --production
 

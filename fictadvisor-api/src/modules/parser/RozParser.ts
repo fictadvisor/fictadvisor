@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { Parser } from './interfaces/Parser';
 import { DateService } from '../date/DateService';
 import { DisciplineTypeEnum } from '@fictadvisor/utils/enums';
-import { SemesterDate } from '@prisma/client';
+import { SemesterDate } from '@prisma/client/fictadvisor';
 import { GeneralParser } from './GeneralParser';
 import {
   BaseGroup,

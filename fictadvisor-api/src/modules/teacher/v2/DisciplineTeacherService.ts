@@ -32,7 +32,7 @@ import { InvalidEntityIdException } from '../../../common/exceptions/InvalidEnti
 import { NoPermissionException } from '../../../common/exceptions/NoPermissionException';
 import { NotSelectedDisciplineException } from '../../../common/exceptions/NotSelectedDisciplineException';
 import { IsRemovedDisciplineTeacherException } from '../../../common/exceptions/IsRemovedDisciplineTeacherException';
-import { Prisma, QuestionType, State } from '@prisma/client';
+import { Prisma, QuestionType, State } from '@prisma/client/fictadvisor';
 import { TeacherMapper } from '../../../common/mappers/TeacherMapper';
 import { SubjectMapper } from '../../../common/mappers/SubjectMapper';
 
