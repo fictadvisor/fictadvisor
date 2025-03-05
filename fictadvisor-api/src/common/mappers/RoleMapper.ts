@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Grant } from '@prisma/client';
+import { Grant } from '@prisma/client/fictadvisor';
 import { DbRole } from '../../database/v2/entities/DbRole';
 import { DbGrant } from '../../database/v2/entities/DbGrant';
 import {

@@ -2,7 +2,7 @@ import {
   Teacher,
   Cathedra,
   TeachersOnCathedras,
-} from '@prisma/client';
+} from '@prisma/client/fictadvisor';
 import { DbDisciplineTeacherRole } from './DbDisciplineTeacherRole';
 import { DbDisciplineType } from './DbDisciplineType';
 import { DbGroup } from './DbGroup';

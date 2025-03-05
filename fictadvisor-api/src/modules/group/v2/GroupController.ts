@@ -41,7 +41,7 @@ import { GroupService } from './GroupService';
 import { UserService } from '../../user/v2/UserService';
 import { GroupDocumentation } from '../../../common/documentation/modules/v2/group';
 import { UpdateGroupPipe } from '../../../common/pipes/UpdateGroupPipe';
-import { User } from '@prisma/client';
+import { User } from '@prisma/client/fictadvisor';
 
 @ApiTags('Groups')
 @Controller({

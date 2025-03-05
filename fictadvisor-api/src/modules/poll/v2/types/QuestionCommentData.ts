@@ -1,4 +1,4 @@
-import { Subject } from '@prisma/client';
+import { Subject } from '@prisma/client/fictadvisor';
 import { PaginatedData } from '../../../../database/types/PaginatedData';
 
 class Comment {

@@ -1,7 +1,7 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
 import { InvalidTypeException } from '../exceptions/InvalidTypeException';
 import { QuestionRepository } from '../../database/v2/repositories/QuestionRepository';
-import { QuestionType } from '@prisma/client';
+import { QuestionType } from '@prisma/client/fictadvisor';
 
 @Injectable()
 export class CommentByQuestionIdPipe implements PipeTransform<string, Promise<string>> {

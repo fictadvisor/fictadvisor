@@ -4,15 +4,15 @@
     "json",
     "ts"
   ],
-  "rootDir": "./tests",
+  "rootDir": "./tests/v1",
   "modulePaths": [
     "<rootDir>"
   ],
-  "testRegex": ".*\\.spec\\.ts$",
+  "testRegex": ".*\\.ispec\\.ts$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },
-  "coverageDirectory": "coverage/unit",
+  "coverageDirectory": "coverage/integration",
   "coverageReporters": ["html"],
   "testEnvironment": "node"
 }

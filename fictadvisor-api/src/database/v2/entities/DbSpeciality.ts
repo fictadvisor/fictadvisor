@@ -1,4 +1,4 @@
-import { EducationalPrograms } from '@prisma/client';
+import { EducationalPrograms } from '@prisma/client/fictadvisor';
 import { AbbreviationOfSpeciality } from '@fictadvisor/utils/enums';
 
 export class DbSpeciality {

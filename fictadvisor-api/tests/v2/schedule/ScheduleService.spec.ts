@@ -1,6 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { InjectionToken } from '@nestjs/common';
-import { Period } from '@prisma/client';
+import { Period } from '@prisma/client/fictadvisor';
 import { DateModule } from '../../../src/modules/date/DateModule';
 import { PrismaModule } from '../../../src/database/PrismaModule';
 import { ScheduleService } from '../../../src/modules/schedule/v2/ScheduleService';

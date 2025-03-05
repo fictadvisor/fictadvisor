@@ -32,7 +32,7 @@ import {
   QuestionType,
   SemesterDate,
   Prisma,
-} from '@prisma/client';
+} from '@prisma/client/fictadvisor';
 import { DbDiscipline } from '../../../database/v2/entities/DbDiscipline';
 import { PaginatedData } from '../../../database/types/PaginatedData';
 

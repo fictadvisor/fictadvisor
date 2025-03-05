@@ -10,7 +10,7 @@ import {
 } from '@fictadvisor/utils/enums';
 import { DbTeacher } from '../../database/v2/entities/DbTeacher';
 import { CathedraResponse, TeacherResponse, TeacherWithRolesAndCathedrasResponse } from '@fictadvisor/utils/responses';
-import { Teacher } from '@prisma/client';
+import { Teacher } from '@prisma/client/fictadvisor';
 import { DbDisciplineTeacherRole } from '../../database/v2/entities/DbDisciplineTeacherRole';
 
 @Injectable()

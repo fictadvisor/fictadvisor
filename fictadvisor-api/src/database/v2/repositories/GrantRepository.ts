@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UpdateGrantDTO } from '@fictadvisor/utils/requests';
 import { PrismaService } from '../PrismaService';
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client/fictadvisor';
 
 @Injectable()
 export class GrantRepository {

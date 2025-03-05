@@ -13,7 +13,7 @@ import { DbTeacher } from '../../../database/v2/entities/DbTeacher';
 import { DbDisciplineTeacherWithAnswers } from '../../../database/v2/entities/DbDisciplineTeacherWithAnswers';
 import { SubjectRepository } from '../../../database/v2/repositories/SubjectRepository';
 import { TeacherRepository } from '../../../database/v2/repositories/TeacherRepository';
-import { Prisma, QuestionType, Subject } from '@prisma/client';
+import { Prisma, QuestionType, Subject } from '@prisma/client/fictadvisor';
 
 @Injectable()
 export class SubjectService {

@@ -4,7 +4,7 @@
     "json",
     "ts"
   ],
-  "rootDir": "./",
+  "rootDir": "./tests/v2",
   "modulePaths": [
     "<rootDir>"
   ],

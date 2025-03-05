@@ -1,6 +1,6 @@
 import { ResourceResponse, ResourcesResponse } from '@fictadvisor/utils/responses';
 import { Injectable } from '@nestjs/common';
-import { StudentResource } from '@prisma/client';
+import { StudentResource } from '@prisma/client/fictadvisor';
 
 @Injectable()
 export class ResourceMapper {

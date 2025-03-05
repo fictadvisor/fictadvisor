@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DbDiscipline } from '../../database/v2/entities/DbDiscipline';
-import { Discipline, SelectiveAmount } from '@prisma/client';
+import { Discipline, SelectiveAmount } from '@prisma/client/fictadvisor';
 import {
   ExtendedDisciplineTeachersResponse,
   DisciplineAdminResponse,

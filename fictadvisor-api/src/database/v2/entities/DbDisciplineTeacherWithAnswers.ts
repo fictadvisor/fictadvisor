@@ -1,4 +1,4 @@
-import { Discipline, Question } from '@prisma/client';
+import { Discipline, Question } from '@prisma/client/fictadvisor';
 import { DisciplineTypeEnum } from '@fictadvisor/utils';
 
 export class DbDisciplineTeacherWithAnswers {

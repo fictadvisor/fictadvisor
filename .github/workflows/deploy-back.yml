@@ -15,16 +15,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Install Node and dependencies
         uses: ./.github/actions/install
       - name: Run tests
         run: npx turbo test:unit
-  integration-test:
+  integration-test-fictadvisor:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Install Node and dependencies
         uses: ./.github/actions/install
       - name: Start PostgreSQL Database
@@ -36,12 +36,28 @@ jobs:
         run: npx turbo test:seed
       - name: Run integration tests
         run: npx turbo test:integration
-  build:
-    needs: [test, integration-test]
+  integration-test-cohorta:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+      - name: Install Node and dependencies
+        uses: ./.github/actions/install
+      - name: Start PostgreSQL Database
+        run: |
+          docker compose -f fictadvisor-api/docker-compose.yml up -d && sleep 5s
+      - name: Start migration
+        run: npx turbo migrate:test:cohorta
+      - name: Start seeding
+        run: npx turbo test:seed:cohorta
+      - name: Run integration tests
+        run: npx turbo test:integration:cohorta
+  build:
+    needs: [test, integration-test-fictadvisor, integration-test-cohorta]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
