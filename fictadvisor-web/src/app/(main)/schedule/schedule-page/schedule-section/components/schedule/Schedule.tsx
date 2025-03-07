@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Box } from '@mui/material';
 
 import ScheduleColumn from '@/app/(main)/schedule/schedule-page/schedule-section/components/schedule/components/schedule-column/ScheduleColumn';
@@ -6,6 +6,7 @@ import { ScheduleLineVariant } from '@/app/(main)/schedule/schedule-page/schedul
 import ScheduleTime from '@/app/(main)/schedule/schedule-page/schedule-section/components/schedule/components/schedule-time';
 import { areDatesInSameWeek } from '@/app/(main)/schedule/schedule-page/utils/areDatesInSameWeek';
 import Progress from '@/components/common/ui/progress';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 import { EventsResponse } from '@/lib/api/schedule/types/EventsResponse';
 import { transformEvents } from '@/lib/api/schedule/utils/transformEvents';
 import { useSchedule } from '@/store/schedule/useSchedule';
@@ -15,15 +16,24 @@ import ScheduleLine from './components/schedule-line/ScheduleLine';
 import * as styles from './Schedule.styles';
 
 const Schedule = () => {
-  const { events, week, disciplines, loading, currentTime } = useSchedule(
-    state => ({
-      events: state.eventsBody,
-      week: state.week,
-      disciplines: state.eventTypes,
-      loading: state.isLoading,
-      currentTime: state.currentTime.toISOString(),
-    }),
-  );
+  const { user } = useAuthentication();
+  const {
+    events,
+    checkboxes,
+    week,
+    disciplines,
+    loading,
+    currentTime,
+    updateCheckboxes,
+  } = useSchedule(state => ({
+    events: state.eventsBody,
+    checkboxes: state.checkboxes,
+    week: state.week,
+    disciplines: state.eventTypes,
+    loading: state.isLoading,
+    currentTime: state.currentTime.toISOString(),
+    updateCheckboxes: state.updateCheckboxes,
+  }));
 
   const eventsPerWeek = useMemo(() => {
     if (!events[week - 1]) return null;
@@ -37,6 +47,13 @@ const Schedule = () => {
 
     return _eventsWeek;
   }, [disciplines, events, week]);
+
+  useEffect(() => {
+    updateCheckboxes({
+      ...checkboxes,
+      isSelective: !!user,
+    });
+  }, [user]);
 
   const eventsTime = eventsPerWeek?.startTime;
 
