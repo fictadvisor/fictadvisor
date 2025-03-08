@@ -6,7 +6,7 @@ import {
   UpdateStudentSelectivesDTO,
 } from '@fictadvisor/utils/requests';
 import { GroupRoles, SortQGSParam } from '@fictadvisor/utils/enums';
-import { DatabaseUtils } from '../../../database/DatabaseUtils';
+import { DatabaseUtils, PaginateArgs } from '../../../database/v2/database.utils';
 import { StudyingSemester } from '../../date/DateService';
 import { GroupService } from '../../group/v2/GroupService';
 import { UserService } from '../../user/v2/UserService';
@@ -22,7 +22,8 @@ import { CaptainCanNotLeaveException } from '../../../common/exceptions/CaptainC
 import { NotBelongException } from '../../../common/exceptions/NotBelongException';
 import { ExcessiveSelectiveDisciplinesException } from '../../../common/exceptions/ExcessiveSelectiveDisciplinesException';
 import { AlreadySelectedException } from '../../../common/exceptions/AlreadySelectedException';
-import { Prisma, RoleName, SelectiveDiscipline, State } from '@prisma/client/fictadvisor';
+import { RoleName, SelectiveDiscipline, State } from '@prisma/client/fictadvisor';
+import { DbStudent } from '../../../database/v2/entities/DbStudent';
 
 @Injectable()
 export class StudentService {
@@ -39,28 +40,24 @@ export class StudentService {
   async getAll (query: QueryAllStudentDTO) {
     const { sort = SortQGSParam.LAST_NAME, order = 'asc' } = query;
 
-    const search = {
-      AND: [
-        this.StudentSearching.fullName(query.search),
-        this.StudentSearching.groups(query.groups),
-        this.StudentSearching.states(query.states),
-        this.StudentSearching.roles(query.roles),
+    const data: PaginateArgs<'student'> = {
+      where: {
+        AND: [
+          this.StudentSearching.fullName(query.search),
+          this.StudentSearching.groups(query.groups),
+          this.StudentSearching.states(query.states),
+          this.StudentSearching.roles(query.roles),
+        ],
+      },
+      orderBy: [
+        { [sort]: order },
+        { lastName: order },
+        { firstName: order },
+        { middleName: order },
       ],
     };
 
-    const orderBy = [
-      { [sort]: order },
-      { lastName: order },
-      { firstName: order },
-      { middleName: order },
-    ];
-
-    const data: Prisma.StudentFindManyArgs = {
-      where: search,
-      orderBy,
-    };
-
-    return DatabaseUtils.paginate(this.studentRepository, query, data);
+    return DatabaseUtils.paginate<'student', DbStudent>(this.studentRepository, query, data);
   }
 
   private StudentSearching = {
@@ -72,16 +69,16 @@ export class StudentService {
 
   async createStudent (body: CreateStudentWithRolesDTO) {
     const { username, roleName, groupId, ...data } = body;
-    const user = await this.userRepository.find({ username });
+    const user = await this.userRepository.findOne({ username });
     if (!user) {
       throw new NotRegisteredException('username');
     }
 
-    const student = await this.studentRepository.findById(user.id);
+    const student = await this.studentRepository.findOne({ userId: user.id });
     if (student) {
       throw new AlreadyExistException('Student');
     }
-    const role = await this.getRoleByGroupId(roleName, groupId);
+    const { id: roleId } = await this.getRoleByGroupId(roleName, groupId);
 
     if (roleName === GroupRoles.CAPTAIN) {
       const oldCaptain = await this.groupService.findCaptain(groupId);
@@ -96,23 +93,21 @@ export class StudentService {
       state: State.APPROVED,
       userId: user.id,
       roles: {
-        create: {
-          roleId: role.id,
-        },
+        create: { roleId },
       },
     });
   }
 
-  async updateStudent (id: string, body: UpdateStudentWithRolesDTO) {
-    const student = await this.studentRepository.findById(id);
+  async updateStudent (userId: string, body: UpdateStudentWithRolesDTO) {
+    const student = await this.studentRepository.findOne({ userId });
     const role = student.roles.find(({ role }) => (Object.values(GroupRoles) as RoleName[]).includes(role.name));
     const oldRoleName = role?.role.name ?? GroupRoles.STUDENT;
     const { roleName = oldRoleName, groupId, ...fullName } = body;
 
-    const changeGroup = groupId !== student.groupId ? this.changeGroup(groupId, id, oldRoleName) : {};
-    const roles = await this.getSwitchRoles(id, roleName, groupId ?? student.groupId);
+    const changeGroup = groupId !== student.groupId ? this.changeGroup(groupId, userId, oldRoleName) : {};
+    const roles = await this.getSwitchRoles(userId, roleName, groupId ?? student.groupId);
 
-    return this.studentRepository.updateById(id, {
+    return this.studentRepository.updateById(userId, {
       ...fullName,
       ...changeGroup,
       ...roles,
@@ -140,7 +135,7 @@ export class StudentService {
       return {};
     }
 
-    const oldGroupRole = await this.roleRepository.find({
+    const oldGroupRole = await this.roleRepository.findOne({
       name: {
         in: Object.values(GroupRoles),
       },
@@ -151,7 +146,7 @@ export class StudentService {
       },
     });
 
-    const newGroupRole = await this.getRoleByGroupId(roleName, groupId);
+    const { id: roleId } = await this.getRoleByGroupId(roleName, groupId);
 
     return {
       roles: {
@@ -161,15 +156,13 @@ export class StudentService {
             roleId: oldGroupRole.id,
           },
         },
-        create: {
-          roleId: newGroupRole.id,
-        },
+        create: { roleId },
       },
     };
   }
 
   private getRoleByGroupId (roleName: RoleName, groupId: string) {
-    return this.roleRepository.find({
+    return this.roleRepository.findOne({
       groupRole: {
         groupId,
       },
@@ -177,8 +170,8 @@ export class StudentService {
     });
   }
 
-  async updateStudentSelectives (id: string, body: UpdateStudentSelectivesDTO) {
-    const student = await this.studentRepository.findById(id);
+  async updateStudentSelectives (userId: string, body: UpdateStudentSelectivesDTO) {
+    const student = await this.studentRepository.findOne({ userId });
     const { connectedSelectives = [], disconnectedSelectives = [] } = body;
     const selectiveDisciplines = student.selectiveDisciplines
       .map((discipline) => discipline.discipline) as any as DbDiscipline[];
@@ -192,12 +185,12 @@ export class StudentService {
       disconnectedSelectives
     );
 
-    return this.studentRepository.updateById(id, {
+    return this.studentRepository.updateById(userId, {
       selectiveDisciplines: {
         deleteMany: {
           OR: disconnectedSelectives.map((disciplineId) => ({
             disciplineId,
-            studentId: id,
+            studentId: userId,
           }
           )),
         },
@@ -214,18 +207,14 @@ export class StudentService {
     connectedSelectiveIds: string[],
     disconnectedSelectiveIds: string[],
   ) {
-    const group = await this.groupRepository.findById(groupId);
+    const group = await this.groupRepository.findOne({ id: groupId });
 
     const connectedSelectives = await this.disciplineRepository.findMany({
-      where: {
-        OR: connectedSelectiveIds.map((id) => ({ id })),
-      },
+      OR: connectedSelectiveIds.map((id) => ({ id })),
     });
 
     const disconnectedSelectives = await this.disciplineRepository.findMany({
-      where: {
-        OR: disconnectedSelectiveIds.map((id) => ({ id })),
-      },
+      OR: disconnectedSelectiveIds.map((id) => ({ id })),
     });
 
     const uniqueSemesters = this.userService.getUniqueSemesters(connectedSelectives);
@@ -265,10 +254,8 @@ export class StudentService {
     studentSelectives: DbDiscipline[]
   ) {
     const groupSelectives = await this.disciplineRepository.findMany({
-      where: {
-        groupId,
-        isSelective: true,
-      },
+      groupId,
+      isSelective: true,
     });
 
     connectedSelectives.forEach((disciplineId) => {
@@ -281,11 +268,11 @@ export class StudentService {
     });
   }
 
-  deleteStudent (id: string) {
-    return this.studentRepository.deleteById(id);
+  deleteStudent (userId: string) {
+    return this.studentRepository.deleteById(userId);
   }
 
-  getStudent (studentId: string) {
-    return this.studentRepository.findById(studentId);
+  getStudent (userId: string) {
+    return this.studentRepository.findOne({ userId });
   }
 }

@@ -13,8 +13,8 @@ export class GroupByDisciplineTeacherGuard implements CanActivate {
 
   async canActivate (context: ExecutionContext) {
     const request = context.switchToHttp().getRequest<Request>();
-    const disciplineTeacherId = RequestUtils.get(request, 'disciplineTeacherId');
-    const teacher = await this.disciplineTeacherRepository.findById(disciplineTeacherId);
+    const id = RequestUtils.get(request, 'disciplineTeacherId');
+    const teacher = await this.disciplineTeacherRepository.findOne({ id });
     if (!teacher) {
       throw new InvalidEntityIdException('Discipline teacher');
     }

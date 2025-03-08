@@ -1,5 +1,5 @@
 import { Subject } from '@prisma/client/fictadvisor';
-import { PaginatedData } from '../../../../database/types/PaginatedData';
+import { PaginatedData } from '../../../../database/types/paginated.data';
 
 class Comment {
   disciplineTeacherId: string;

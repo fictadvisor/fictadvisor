@@ -1,6 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
-import { ComplaintDTO, QueryAllTeacherDTO, QueryMarksDTO, UpdateContactDTO } from '@fictadvisor/utils/requests';
+import { ComplaintDTO, QueryAllTeacherDTO, QueryMarksDTO } from '@fictadvisor/utils/requests';
 import { TelegramAPI } from '../../../src/modules/telegram-api/TelegramAPI';
 import Configuration from '../../../src/config/Configuration';
 import { ConfigurationModule } from '../../../src/config/ConfigModule';
@@ -12,8 +12,8 @@ import { DateModule } from '../../../src/modules/date/DateModule';
 import { TelegramConfigService } from '../../../src/config/TelegramConfigService';
 import { TeacherService } from '../../../src/modules/teacher/v2/TeacherService';
 import { PollService } from '../../../src/modules/poll/v2/PollService';
-import { DbQuestionWithAnswers } from '../../../src/database/v2/entities/DbQuestionWithAnswers';
-import { Cathedra, Prisma, QuestionDisplay, TeachersOnCathedras } from '@prisma/client/fictadvisor';
+import { DbQuestion } from '../../../src/database/v2/entities/DbQuestion';
+import { Cathedra, EntityType, Prisma, QuestionDisplay } from '@prisma/client/fictadvisor';
 import { TeacherRepository } from '../../../src/database/v2/repositories/TeacherRepository';
 import { DbTeacher } from '../../../src/database/v2/entities/DbTeacher';
 import { ContactRepository } from '../../../src/database/v2/repositories/ContactRepository';
@@ -22,13 +22,14 @@ import { GroupRepository } from '../../../src/database/v2/repositories/GroupRepo
 import { InvalidEntityIdException } from '../../../src/common/exceptions/InvalidEntityIdException';
 import { SubjectRepository } from '../../../src/database/v2/repositories/SubjectRepository';
 import { Decimal } from '@prisma/client/runtime/library';
-import { AcademicStatus, DisciplineTypeEnum, Position, ScientificDegree, State } from '@fictadvisor/utils';
+import { AcademicStatus, DisciplineTypeEnum, Position, ScientificDegree } from '@fictadvisor/utils';
 import { DbDisciplineTeacher } from '../../../src/database/v2/entities/DbDisciplineTeacher';
 import { DisciplineTeacherRepository } from '../../../src/database/v2/repositories/DisciplineTeacherRepository';
 import { DisciplineTeacherService } from '../../../src/modules/teacher/v2/DisciplineTeacherService';
 import { DateService } from '../../../src/modules/date/DateService';
 import { AccessModule } from '../../../src/modules/access/AccessModule';
-import { DbStudent } from '../../../src/database/v2/entities/DbStudent';
+import { DbTeachersOnCathedras } from '../../../src/database/v2/entities/DbTeachersOnCathedras';
+import { DbCathedra } from '../../../src/database/v2/entities/DbCathedra';
 
 describe('TeacherService', () => {
   let teacherService: TeacherService;
@@ -118,8 +119,8 @@ describe('TeacherService', () => {
 
   describe('getTeacher', () => {
     it('should return teacher by id', async () => {
-      jest.spyOn(teacherRepository, 'findById').mockImplementation(async () => teacher1);
-      jest.spyOn(contactRepository, 'getAllContacts').mockImplementation(async () => [teacher1Contact]);
+      jest.spyOn(teacherRepository, 'findOne').mockImplementation(async () => teacher1);
+      jest.spyOn(contactRepository, 'findMany').mockImplementation(async () => [teacher1Contact]);
 
       const result = await teacherService.getTeacher(teacher1.id);
 
@@ -128,8 +129,8 @@ describe('TeacherService', () => {
     });
 
     it('should return teacher without contacts if there are no contacts', async () => {
-      jest.spyOn(teacherRepository, 'findById').mockImplementation(async () => teacher2);
-      jest.spyOn(contactRepository, 'getAllContacts').mockImplementation(async () => []);
+      jest.spyOn(teacherRepository, 'findOne').mockImplementation(async () => teacher2);
+      jest.spyOn(contactRepository, 'findMany').mockImplementation(async () => []);
 
       const result = await teacherService.getTeacher(teacher2.id);
 
@@ -149,7 +150,7 @@ describe('TeacherService', () => {
             { value: 9 },
             { value: 10 },
           ],
-        }] as any as Promise<DbQuestionWithAnswers[]>
+        }] as any as Promise<DbQuestion[]>
       ));
 
       const teacherId = '';
@@ -182,7 +183,7 @@ describe('TeacherService', () => {
             { value: 6 },
             { value: 6 },
           ],
-        }] as any as Promise<DbQuestionWithAnswers[]>
+        }] as any as Promise<DbQuestion[]>
       ));
 
       const teacherId = '';
@@ -215,7 +216,7 @@ describe('TeacherService', () => {
             { value: 0 },
             { value: 1 },
           ],
-        }] as any as Promise<DbQuestionWithAnswers[]>
+        }] as any as Promise<DbQuestion[]>
       ));
 
       const teacherId = '';
@@ -241,7 +242,7 @@ describe('TeacherService', () => {
       jest.spyOn(pollService, 'getQuestionWithMarks').mockImplementation(async () => (
         [{
           questionAnswers: [],
-        }] as any as Promise<DbQuestionWithAnswers[]>
+        }] as any as Promise<DbQuestion[]>
       ));
 
       const teacherId = '';
@@ -333,13 +334,13 @@ describe('TeacherService', () => {
     beforeEach(() => {
       teacherCopy = JSON.parse(JSON.stringify(teacher1));
     });
-    
+
     it('should connect teacher with cathedra', async () => {
       jest.spyOn(teacherRepository, 'updateById').mockImplementation(async () => {
         teacherCopy.cathedras.push(teacherOnCathedra1);
         return teacherCopy;
       });
-      jest.spyOn(teacherRepository, 'findById').mockImplementation(async () => teacherCopy);
+      jest.spyOn(teacherRepository, 'findOne').mockImplementation(async () => teacherCopy);
 
       const result = await teacherService.connectTeacherWithCathedra(teacher1.id, cathedra3.id);
 
@@ -358,7 +359,7 @@ describe('TeacherService', () => {
         teacherCopy.cathedras = teacherCopy.cathedras.filter((c) => c.cathedraId !== cathedra1.id);
         return teacherCopy;
       });
-      jest.spyOn(teacherRepository, 'findById').mockImplementation(async () => teacherCopy);
+      jest.spyOn(teacherRepository, 'findOne').mockImplementation(async () => teacherCopy);
 
       const result = await teacherService.disconnectTeacherFromCathedra(teacher1.id, cathedra1.id);
 
@@ -374,7 +375,7 @@ describe('TeacherService', () => {
       ] as DbDisciplineTeacher[];
 
       jest.spyOn(disciplineTeacherRepository, 'findMany').mockImplementation(async () => disciplineTeachers);
-      jest.spyOn(disciplineTeacherRepository, 'find').mockImplementation(async (query) => {
+      jest.spyOn(disciplineTeacherRepository, 'findOne').mockImplementation(async (query) => {
         if (query.id === '1') return null;
         return disciplineTeachers[1] as any as Promise<any>;
       });
@@ -382,7 +383,7 @@ describe('TeacherService', () => {
       jest.spyOn(disciplineTeacherService, 'isNotSelectedByUser').mockImplementation(async () => false);
 
       const result = await teacherService.getUserDisciplineTeachers('teacherId', 'userId', false);
-      
+
       expect(result.length).toBe(1);
     });
 
@@ -393,8 +394,8 @@ describe('TeacherService', () => {
       ] as DbDisciplineTeacher[];
 
       jest.spyOn(disciplineTeacherRepository, 'findMany').mockImplementation(async () => disciplineTeachers);
-      jest.spyOn(disciplineTeacherRepository, 'find').mockImplementation(async (query) => {
-        if (query.id === '1') 
+      jest.spyOn(disciplineTeacherRepository, 'findOne').mockImplementation(async (query) => {
+        if (query.id === '1')
           return { id: '1', removedDisciplineTeachers: [{ studentId: 'userId' }] } as any as Promise<any>;
         return null;
       });
@@ -414,7 +415,7 @@ describe('TeacherService', () => {
       ] as DbDisciplineTeacher[];
 
       jest.spyOn(disciplineTeacherRepository, 'findMany').mockImplementation(async () => disciplineTeachers);
-      jest.spyOn(disciplineTeacherRepository, 'find').mockImplementation(async () => null);
+      jest.spyOn(disciplineTeacherRepository, 'findOne').mockImplementation(async () => null);
       jest.spyOn(dateService, 'isPreviousSemesterToCurrent').mockImplementation(async (semester, year) => year === 2022);
       jest.spyOn(disciplineTeacherService, 'isNotSelectedByUser').mockImplementation(async () => false);
 
@@ -431,7 +432,7 @@ describe('TeacherService', () => {
       ] as DbDisciplineTeacher[];
 
       jest.spyOn(disciplineTeacherRepository, 'findMany').mockImplementation(async () => disciplineTeachers);
-      jest.spyOn(disciplineTeacherRepository, 'find').mockImplementation(async () => null);
+      jest.spyOn(disciplineTeacherRepository, 'findOne').mockImplementation(async () => null);
       jest.spyOn(dateService, 'isPreviousSemesterToCurrent').mockImplementation(async () => true);
       jest.spyOn(disciplineTeacherService, 'isNotSelectedByUser').mockImplementation(async (userId, discipline) => discipline.id === '2');
 
@@ -446,11 +447,11 @@ describe('TeacherService', () => {
         { id: '2', discipline: { semester: 2, year: 2022 } },
       ] as DbDisciplineTeacher[];
 
-      jest.spyOn(disciplineTeacherRepository, 'findMany').mockImplementation(async (query) => {
-        if (query.where.NOT) return [disciplineTeachers[0]];
+      jest.spyOn(disciplineTeacherRepository, 'findMany').mockImplementation(async (where) => {
+        if (where.NOT) return [disciplineTeachers[0]];
         return disciplineTeachers;
       });
-      jest.spyOn(disciplineTeacherRepository, 'find').mockImplementation(async () => null);
+      jest.spyOn(disciplineTeacherRepository, 'findOne').mockImplementation(async () => null);
       jest.spyOn(dateService, 'isPreviousSemesterToCurrent').mockImplementation(async () => true);
       jest.spyOn(disciplineTeacherService, 'isNotSelectedByUser').mockImplementation(async () => false);
 
@@ -463,7 +464,7 @@ describe('TeacherService', () => {
 
   describe('getTeacherRoles', () => {
     beforeAll(() => {
-      jest.spyOn(teacherRepository, 'findById').mockImplementation(async (id) =>
+      jest.spyOn(teacherRepository, 'findOne').mockImplementation(async ({ id }) =>
         [teacher1, teacher2].find((t) => t.id === id));
     });
 
@@ -539,14 +540,14 @@ describe('TeacherService', () => {
 
   describe('getAllContacts', () => {
     it('should return all contacts for a given teacher', async () => {
-      jest.spyOn(contactRepository, 'getAllContacts').mockImplementation(async () => [teacher1Contact, teacher1Contact2]);
+      jest.spyOn(contactRepository, 'findMany').mockImplementation(async () => [teacher1Contact, teacher1Contact2]);
 
       const result = await teacherService.getAllContacts(teacher1.id);
       expect(result).toEqual([teacher1Contact, teacher1Contact2]);
     });
 
     it('should return an empty array if no contacts found', async () => {
-      jest.spyOn(contactRepository, 'getAllContacts').mockImplementation(async () => []);
+      jest.spyOn(contactRepository, 'findMany').mockImplementation(async () => []);
 
       const result = await teacherService.getAllContacts(teacher1.id);
       expect(result).toEqual([]);
@@ -557,8 +558,8 @@ describe('TeacherService', () => {
     let contacts;
     beforeAll(() => {
       contacts = [teacher1Contact];
-      jest.spyOn(contactRepository, 'getContact').mockImplementation(async (teacherId: string, contactId) =>
-        contacts.find((c) => c.id === contactId) as any as Promise<any>);
+      jest.spyOn(contactRepository, 'findOne').mockImplementation(async ({ id }: Prisma.ContactWhereInput) =>
+        contacts.find((c) => c.id === id) as any as Promise<any>);
     });
 
     it('should return contact', async () => {
@@ -581,10 +582,10 @@ describe('TeacherService', () => {
 
     beforeAll(() => {
       contacts = [teacher2Contact];
-      jest.spyOn(contactRepository, 'createContact').mockImplementation(async (data: CreateContactData) =>
+      jest.spyOn(contactRepository, 'create').mockImplementation(async (data: CreateContactData) =>
         createContact(contacts, data));
-      jest.spyOn(contactRepository, 'getContact').mockImplementation(async (teacherId: string, contactId) =>
-        contacts.find((c) => c.id === contactId));
+      jest.spyOn(contactRepository, 'findOne').mockImplementation(async ({ id }: Prisma.ContactWhereInput) =>
+        contacts.find((c) => c.id === id));
     });
 
     it('should create contact', async () => {
@@ -603,7 +604,10 @@ describe('TeacherService', () => {
     let contacts;
 
     beforeAll(() => {
-      jest.spyOn(contactRepository, 'updateContact').mockImplementation(async (entityId: string, id: string, data: UpdateContactDTO) => {
+      jest.spyOn(contactRepository, 'updateById').mockImplementation(async (
+        id: string,
+        data: Prisma.ContactUpdateInput,
+      ) => {
         const contact = contacts.find((c: { id: string; }) => c.id === id);
         if (!contact) return null as any as Promise<any>;
 
@@ -613,14 +617,14 @@ describe('TeacherService', () => {
 
         return contact as any as Promise<any>;
       });
-      jest.spyOn(contactRepository, 'getContact').mockImplementation(async (entityId: string, id) =>
+      jest.spyOn(contactRepository, 'findOne').mockImplementation(async ({ id }: Prisma.ContactWhereInput) =>
         contacts.find((c) => c.id === id) ?? null);
     });
 
     beforeEach(() => contacts = [{ ...teacher1Contact }, { ...teacher2Contact }]);
 
     it('should update contact', async () => {
-      const result = await teacherService.updateContact(teacher1.id, teacher1.id, {
+      const result = await teacherService.updateContact(teacher1.id, {
         displayName: 'newDisplayName',
         link: 'newLink',
       });
@@ -634,20 +638,19 @@ describe('TeacherService', () => {
     });
 
     it('should do nothing if contact not found', async () => {
-      const result = await teacherService.updateContact(teacher1.id, '0', {
+      const result = await teacherService.updateContact('0', {
         displayName: 'newDisplayName',
         link: 'newLink',
       });
       expect(result).toBeNull();
     });
-
   });
 
   describe('deleteContact', () => {
     let contacts;
 
     beforeAll(() => {
-      jest.spyOn(contactRepository, 'deleteContact').mockImplementation(async (entityId: string, id: string) => {
+      jest.spyOn(contactRepository, 'deleteById').mockImplementation(async (id: string) => {
         const contactToDelete = contacts.find((c: { id: string; }) => c.id === id);
         const countBeforeDelete: number = contacts.length;
         contacts = contacts.filter((c) => c.id !== id);
@@ -662,12 +665,12 @@ describe('TeacherService', () => {
     beforeEach(() => contacts = [teacher1Contact, teacher2Contact]);
 
     it('should delete contact', async () => {
-      await teacherService.deleteContact(teacher1.id, teacher1.id);
+      await teacherService.deleteContact(teacher1.id);
       expect(contacts).toEqual([teacher2Contact]);
     });
 
     it('should do nothing if contact not found', async () => {
-      await teacherService.deleteContact(teacher1.id, '012');
+      await teacherService.deleteContact('0');
       expect(contacts).toEqual([teacher1Contact, teacher2Contact]);
     });
   });
@@ -689,12 +692,12 @@ describe('TeacherService', () => {
       expect(result).toEqual([]);
     });
   });
-  
+
   describe('getTeacherSubject', () => {
     it('should return a subject for a given teacher', async () => {
-      jest.spyOn(teacherRepository, 'find').mockImplementation(async () => teacher1);
-      jest.spyOn(subjectRepository, 'findById').mockImplementation(async () => teacher1Subject as any as Promise<any>);
-      jest.spyOn(contactRepository, 'getAllContacts').mockImplementation(async () => [teacher1Contact]);
+      jest.spyOn(teacherRepository, 'findOne').mockImplementation(async () => teacher1);
+      jest.spyOn(subjectRepository, 'findOne').mockImplementation(async () => teacher1Subject as any as Promise<any>);
+      jest.spyOn(contactRepository, 'findMany').mockImplementation(async () => [teacher1Contact]);
 
       const result = await teacherService.getTeacherSubject(teacher1.id, teacher1Subject.id);
 
@@ -702,7 +705,7 @@ describe('TeacherService', () => {
     });
 
     it('should throw an error if teacher not found', async () => {
-      jest.spyOn(teacherRepository, 'find').mockImplementation(async () => null);
+      jest.spyOn(teacherRepository, 'findOne').mockImplementation(async () => null);
 
       await expect(teacherService.getTeacherSubject('teacherId', 'subjectId')).rejects.toThrow(InvalidEntityIdException);
     });
@@ -710,7 +713,7 @@ describe('TeacherService', () => {
 
   describe('sendComplaint', () => {
     beforeAll(() => {
-      jest.spyOn(teacherRepository, 'findById').mockImplementation(async () => teacher1);
+      jest.spyOn(teacherRepository, 'findOne').mockImplementation(async () => teacher1);
       jest.spyOn(telegramAPI, 'sendMessage').mockImplementation(async () => null);
       jest.spyOn(teacherRepository, 'updateById').mockImplementation(async () => null);
     });
@@ -727,10 +730,14 @@ describe('TeacherService', () => {
     });
 
     it('should send a complaint successfully', async () => {
-      jest.spyOn(groupRepository, 'findById').mockImplementation(async () => ({
+      jest.spyOn(groupRepository, 'findOne').mockImplementation(async () => ({
         id: '3242342342342',
         code: 'ІС-34',
         admissionYear: 2222,
+        cathedraId: null,
+        educationalProgramId: null,
+        createdAt: new Date('2022-02-22T14:00:00.000Z'),
+        updatedAt: new Date('2022-02-22T14:00:00.000Z'),
         selectiveAmounts: [],
         telegramGroups: [],
         students: [],
@@ -747,13 +754,13 @@ describe('TeacherService', () => {
     });
 
     it('should throw an error if group code is not found', async () => {
-      jest.spyOn(groupRepository, 'findById').mockImplementation(async () => null);
+      jest.spyOn(groupRepository, 'findOne').mockImplementation(async () => null);
 
       await expect(teacherService.sendComplaint('teacherId', complaintOnTeacher)).rejects.toThrow(InvalidEntityIdException);
     });
 
     it('should use default values if fullName and groupId are not provided', async () => {
-      jest.spyOn(groupRepository, 'findById').mockImplementation(async () => null);
+      jest.spyOn(groupRepository, 'findOne').mockImplementation(async () => null);
 
       const complaintDTO: ComplaintDTO = {
         title: 'Complaint Title',
@@ -808,7 +815,7 @@ describe('TeacherService', () => {
       expect(teacherRepository.updateById).toHaveBeenCalledWith('teacher1', { rating: 85 });
       expect(teacherRepository.updateById).toHaveBeenCalledWith('teacher2', { rating: 95 });
     });
-  
+
     it('should not update rating if no teachers found', async () => {
       jest.spyOn(teacherRepository, 'findMany').mockImplementation(async () => []);
       jest.spyOn(teacherService, 'getMarks').mockImplementation(async () => []);
@@ -842,7 +849,7 @@ const cathedra2: Cathedra = {
   updatedAt: new Date('2022-02-22T14:00:00.000Z'),
 };
 
-export const cathedra3: Cathedra = {
+export const cathedra3: DbCathedra = {
   id: 'f4b3b3b4-3b3b-4b3b-3b3b-3b3b3b3b3b3b',
   name: 'ІПІ',
   abbreviation: 'ІПІ',
@@ -863,6 +870,8 @@ const teacher1: DbTeacher = {
   academicStatus: null,
   scientificDegree: null,
   position: null,
+  createdAt: new Date('2022-02-22T14:00:00.000Z'),
+  updatedAt: new Date('2022-02-22T14:00:00.000Z'),
   rating: new Decimal(60.00),
   cathedras: [
     {
@@ -876,6 +885,8 @@ const teacher1: DbTeacher = {
     id: '73184418-e1a1-4269-a84b-4b8799107355',
     teacherId: '73184418-e1a1-4269-a84b-4b8799107355',
     disciplineId: '23184418-e1a1-4269-a84b-4b8799107356',
+    createdAt: new Date('2022-02-22T14:00:00.000Z'),
+    updatedAt: new Date('2022-02-22T14:00:00.000Z'),
     discipline: {
       id: '23184418-e1a1-4269-a84b-4b8799107356',
       isSelective: false,
@@ -918,6 +929,8 @@ const teacher1CreateInput: Prisma.TeacherUncheckedCreateInput = {
   scientificDegree: teacher1.scientificDegree,
   position: teacher1.position,
   rating: teacher1.rating,
+  createdAt: new Date('2022-02-22T14:00:00.000Z'),
+  updatedAt: new Date('2022-02-22T14:00:00.000Z'),
   cathedras: {
     connect: [
       {
@@ -933,6 +946,8 @@ const teacher1CreateInput: Prisma.TeacherUncheckedCreateInput = {
       {
         id: teacher1.id,
         disciplineId: '23184418-e1a1-4269-a84b-4b8799107356',
+        createdAt: new Date('2022-02-22T14:00:00.000Z'),
+        updatedAt: new Date('2022-02-22T14:00:00.000Z'),
         roles: {
           create: [
             {
@@ -987,6 +1002,10 @@ const teacher1Contact = {
   name: `${teacher1.lastName} ${teacher1.firstName} ${teacher1.middleName}`,
   displayName: `${teacher1.lastName} ${teacher1.firstName} ${teacher1.middleName}`,
   link: `/teachers/${teacher1.id}`,
+  entityId: teacher1.id,
+  entityType: EntityType.TEACHER,
+  createdAt: new Date('2022-02-22T14:00:00.000Z'),
+  updatedAt: new Date('2022-02-22T14:00:00.000Z'),
 };
 
 const teacher1Contact2 = {
@@ -994,6 +1013,10 @@ const teacher1Contact2 = {
   name: `${teacher1.lastName} ${teacher1.firstName} ${teacher1.middleName}`,
   displayName: `${teacher1.lastName} ${teacher1.firstName} ${teacher1.middleName}`,
   link: `/site/second/${teacher1.id}`,
+  entityId: teacher1.id,
+  entityType: EntityType.TEACHER,
+  createdAt: new Date('2022-02-22T14:00:00.000Z'),
+  updatedAt: new Date('2022-02-22T14:00:00.000Z'),
 };
 
 const getTeacherSubjectResult = {
@@ -1022,31 +1045,6 @@ const getTeacherSubjectResult = {
   ],
 };
 
-const teacher1discipline : DbDisciplineTeacher = { 
-  id: teacher1.id,
-  teacherId: teacher1.id,
-  disciplineId: '23184418-e1a1-4269-a84b-4b8799107356', 
-
-};
-
-const teacher1selectiveDiscipline = {
-  disciplineId: teacher1discipline.id,
-  studentId: '1',
-  createdAt: new Date(),
-  updatedAt: new Date(),
-  discipline: {
-    id: teacher1discipline.id,
-    subjectId: 'subject1',
-    groupId: 'group1',
-    semester: 1,
-    year: 2024,
-    isSelective: false,
-    description: 'description',
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-};
-
 const teacher2: DbTeacher = {
   id: 'f4b3b3b4-3b3b-4b3b-3b3b-3b3b3b3b3b3b',
   firstName: 'Порфирій',
@@ -1056,6 +1054,7 @@ const teacher2: DbTeacher = {
   academicStatus: null,
   scientificDegree: null,
   position: null,
+  description: null,
   rating: new Decimal(67.06),
   cathedras: [
     {
@@ -1065,6 +1064,8 @@ const teacher2: DbTeacher = {
       updatedAt: new Date('2022-02-22T14:00:00.000Z'),
       cathedra: cathedra2,
     }],
+  createdAt: new Date('2022-02-22T14:00:00.000Z'),
+  updatedAt: new Date('2022-02-22T14:00:00.000Z'),
 };
 
 const teacher2Contact = {
@@ -1072,11 +1073,11 @@ const teacher2Contact = {
   name: `${teacher2.lastName} ${teacher2.firstName} ${teacher2.middleName}`,
   displayName: `${teacher2.lastName} ${teacher2.firstName} ${teacher2.middleName}`,
   link: `/teachers/${teacher2.id}`,
+  createdAt: new Date('2022-02-22T14:00:00.000Z'),
+  updatedAt: new Date('2022-02-22T14:00:00.000Z'),
 };
 
-const teacherOnCathedra1: TeachersOnCathedras & {
-  cathedra: Cathedra,
-} = {
+const teacherOnCathedra1: DbTeachersOnCathedras = {
   cathedraId: cathedra3.id,
   teacherId: teacher1.id,
   createdAt: new Date('2024-02-22T14:00:00.000Z'),
@@ -1196,21 +1197,6 @@ const teacherMarks = [
   },
 ];
 
-const dbStudent : DbStudent = {
-  userId: '324234234234',
-  firstName: 'Mykola',
-  lastName: 'Mykolaychuk',
-  middleName: 'Mykolayovych',
-  state: State.APPROVED,
-  groupId: '234234234',
-  createdAt: new Date(),
-  updatedAt: new Date(),
-  group: null,
-  roles: [],
-  selectiveDisciplines: [teacher1selectiveDiscipline],
-  user: undefined,
-};
-
 //#endregion
 
 //#region mock functions
@@ -1228,6 +1214,8 @@ function createTeacher (input : Prisma.TeacherUncheckedCreateInput) : DbTeacher 
     scientificDegree: input.scientificDegree,
     position: input.position,
     rating: new Decimal(input.rating as string),
+    createdAt: new Date('2022-02-22T14:00:00.000Z'),
+    updatedAt: new Date('2022-02-22T14:00:00.000Z'),
     cathedras: [
       {
         cathedraId: cathedraId,
@@ -1242,6 +1230,8 @@ function createTeacher (input : Prisma.TeacherUncheckedCreateInput) : DbTeacher 
         id: input.id,
         teacherId: input.id,
         disciplineId: '23184418-e1a1-4269-a84b-4b8799107356',
+        createdAt: new Date('2022-02-22T14:00:00.000Z'),
+        updatedAt: new Date('2022-02-22T14:00:00.000Z'),
         discipline: {
           id: '23184418-e1a1-4269-a84b-4b8799107356',
           isSelective: false,
@@ -1300,8 +1290,8 @@ function createContact (contacts : any[], data: CreateContactData) {
     link: data.link,
     entityType: data.entityType,
     entityId: data.entityId,
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    createdAt: new Date('2022-02-22T14:00:00.000Z'),
+    updatedAt: new Date('2022-02-22T14:00:00.000Z'),
   };
   contacts.push(contact);
   return contact;

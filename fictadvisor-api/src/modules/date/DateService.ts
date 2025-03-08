@@ -66,19 +66,6 @@ export class DateService {
     };
   }
 
-  async getNextSemester () {
-    return this.prisma.semesterDate.findFirst({
-      where: {
-        startDate: {
-          gte: new Date(),
-        },
-      },
-      orderBy: {
-        startDate: 'asc',
-      },
-    });
-  }
-
   async getAllPreviousSemesters () {
     const semesters = await this.prisma.semesterDate.findMany({
       where: {

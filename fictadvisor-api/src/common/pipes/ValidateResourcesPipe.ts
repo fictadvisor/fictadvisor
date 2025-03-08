@@ -9,13 +9,9 @@ export class ValidateResourcesPipe implements PipeTransform {
     private resourceRepository: ResourceRepository
   ) {}
 
-  async transform (
-    updateResources: UpdateResourcesDTO
-  ): Promise<UpdateResourcesDTO> {
-    for (const resource of updateResources.resources) {
-      const existingResource = await this.resourceRepository.find({
-        id: resource.id,
-      });
+  async transform (updateResources: UpdateResourcesDTO): Promise<UpdateResourcesDTO> {
+    for (const { id } of updateResources.resources) {
+      const existingResource = await this.resourceRepository.findOne({ id });
 
       if (!existingResource) {
         throw new InvalidEntityIdException('Resource');

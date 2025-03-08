@@ -5,6 +5,7 @@ import {
   TelegramGroupsByTelegramIdResponse,
   TelegramGroupsResponse,
 } from '@fictadvisor/utils/responses';
+import { TelegramSource } from '@fictadvisor/utils/enums';
 
 @Injectable()
 export class TelegramGroupMapper {
@@ -12,7 +13,7 @@ export class TelegramGroupMapper {
     return {
       groupId,
       telegramId,
-      source,
+      source: source as TelegramSource,
       threadId,
       postInfo,
     };
@@ -24,10 +25,10 @@ export class TelegramGroupMapper {
     };
   }
 
-  getTelegramGroupsByTelegramId (telegramGroups: DbTelegramGroup[]): TelegramGroupsByTelegramIdResponse { 
+  getTelegramGroupsByTelegramId (telegramGroups: DbTelegramGroup[]): TelegramGroupsByTelegramIdResponse {
     return {
       telegramGroups: telegramGroups.map((telegramGroup) => ({
-        source: telegramGroup.source,
+        source: telegramGroup.source as TelegramSource,
         group: {
           id: telegramGroup.groupId,
           code: telegramGroup.group.code,

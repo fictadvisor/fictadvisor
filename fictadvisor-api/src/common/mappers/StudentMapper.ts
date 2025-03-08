@@ -3,10 +3,12 @@ import { FullStudentResponse, OrdinaryStudentResponse, SimpleStudentResponse } f
 import { GroupRoles, State } from '@fictadvisor/utils/enums';
 import { DbStudent } from '../../database/v2/entities/DbStudent';
 import { DbRole } from '../../database/v2/entities/DbRole';
+import { DbUserRole } from '../../database/v2/entities/DbUserRole';
+import { RoleName } from '@fictadvisor/utils';
 
 @Injectable()
 export class StudentMapper {
-  private getGroupRole (roles: { role: DbRole }[]): DbRole {
+  private getGroupRole (roles: DbUserRole[]): DbRole {
     const groupRole = roles.find((r) => r.role.name === GroupRoles.CAPTAIN || r.role.name === GroupRoles.MODERATOR || r.role.name === GroupRoles.STUDENT);
     return groupRole?.role;
   }
@@ -24,10 +26,10 @@ export class StudentMapper {
       group: !hasGroup ? { state: State.DECLINED, code: null, role: null, id: null } : {
         id: student.groupId,
         code: student.group?.code,
-        state: student.state,
-        role: this.getGroupRole(student.roles)?.name,
+        state: student.state as State,
+        role: this.getGroupRole(student.roles)?.name as RoleName,
       },
-      state: student.user.state,
+      state: student.user.state as State,
     };
   }
 
@@ -47,7 +49,7 @@ export class StudentMapper {
         username: student.user.username,
         telegramId: student.user.telegramId as unknown as number,
         avatar: student.user.avatar,
-        state: student.user.state,
+        state: student.user.state as State,
       },
       group: {
         id: student.group.id,
@@ -60,13 +62,13 @@ export class StudentMapper {
         roleId: r.roleId,
         role: {
           id: r.role.id,
-          name: r.role.name,
+          name: r.role.name as RoleName,
           weight: r.role.weight,
           parentId: r.role.parentId,
           displayName: r.role.displayName,
         },
       })),
-      state: student.state,
+      state: student.state as State,
     };
   }
 
@@ -80,7 +82,7 @@ export class StudentMapper {
       lastName: student.lastName,
       firstName: student.firstName,
       middleName: student.middleName,
-      state: student.state,
+      state: student.state as State,
       role: this.getGroupRole(student.roles)?.name as (keyof typeof GroupRoles) ?? null,
       group: {
         id: student.groupId,

@@ -46,7 +46,7 @@ describe('RoleService', () => {
 
     it('should throw an exception if parent role weight is bigger than role weight', async function () {
       jest.spyOn(roleService as any, 'getUserHigherRoles').mockImplementation(async (_: string) => rolesWithCreatePermission);
-      jest.spyOn(roleRepository, 'findById').mockImplementation(async (_) => {
+      jest.spyOn(roleRepository, 'findOne').mockImplementation(async (_) => {
         return { weight: 100 } as any as Promise<DbRole>;
       });
       const data = {

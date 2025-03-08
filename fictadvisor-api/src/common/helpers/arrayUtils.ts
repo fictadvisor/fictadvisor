@@ -2,6 +2,10 @@ export function isArrayUnique (myArray): boolean {
   return myArray.length === new Set(myArray).size;
 }
 
+export function makeUnique<T> (array: T[]): T[] {
+  return Array.from(new Set(array));
+}
+
 export async function filterAsync<T> (array: T[], predicate: (item: T) => Promise<boolean>): Promise<T[]> {
   const booleans = await Promise.all(array.map(predicate));
   return array.filter((item, i) => booleans[i]);

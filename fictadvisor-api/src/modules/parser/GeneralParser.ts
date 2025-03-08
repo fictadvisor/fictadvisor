@@ -269,42 +269,46 @@ export class GeneralParser {
     groupId: string,
     semester: StudyingSemester,
   ) {
-    const { id: subjectId } = await this.subjectRepository.getOrCreate(name ?? '');
+    const { id: subjectId } =
+      await this.subjectRepository.findOne({ name }) ??
+      await this.subjectRepository.create({ name: name ?? '' });
+
     const discipline = await this.getOrCreateDiscipline(
-      subjectId,
-      groupId,
-      semester,
-      disciplineType.name,
+      {
+        subjectId,
+        groupId,
+        year: semester.year,
+        semester: semester.semester,
+      },
+      disciplineType.name as DisciplineTypeEnum,
       isSelective
     );
 
     const DbDisciplineType = discipline.disciplineTypes.find((type) =>
       type.name === disciplineType.name);
 
-    const { id: eventId } = await this.eventRepository.findOrCreate(
-      {
-        groupId,
-        startTime,
-        lessons: {
-          some: {
-            disciplineTypeId: DbDisciplineType.id,
-          },
+    const event = {
+      groupId,
+      startTime,
+      name,
+      endTime,
+      period,
+    };
+
+    const { id: eventId } = await this.eventRepository.findOne({ ...event,
+      lessons: {
+        some: {
+          disciplineTypeId: DbDisciplineType.id,
         },
       },
-      {
-        name,
-        startTime,
-        endTime,
-        period,
-        eventsAmount: await this.getEventsAmount(period),
-        groupId: groupId,
-        lessons: {
-          create: {
-            disciplineTypeId: DbDisciplineType.id,
-          },
+    }) ?? await this.eventRepository.create({ ...event,
+      eventsAmount: await this.getEventsAmount(period),
+      lessons: {
+        create: {
+          disciplineTypeId: DbDisciplineType.id,
         },
-      }
-    );
+      },
+    });
 
     await this.handleTeachers(
       teachers,
@@ -342,18 +346,19 @@ export class GeneralParser {
   }
 
   private async getOrCreateDiscipline (
-    subjectId: string,
-    groupId: string,
-    { year, semester }: StudyingSemester,
+    disciplineData: {
+      subjectId: string,
+      groupId: string,
+      year: number,
+      semester: number,
+    },
     disciplineTypeName: DisciplineTypeEnum,
     isSelective: boolean
   ) {
-    const discipline = await this.disciplineRepository.getOrCreate({
-      subjectId,
-      groupId,
-      year,
-      semester,
-    });
+    let discipline = await this.disciplineRepository.findOne(disciplineData);
+    if (!discipline) {
+      discipline = await this.disciplineRepository.create(disciplineData);
+    }
 
     const updateData: any = { isSelective };
 
@@ -377,17 +382,15 @@ export class GeneralParser {
   }: ParsedScheduleTeacher) {
     if (firstName.length <= 1 || middleName.length <= 1) {
       const teachers = await this.teacherRepository.findMany({
-        where: {
-          lastName,
-          firstName: { startsWith: firstName },
-          middleName: { startsWith: middleName },
-        },
+        lastName,
+        firstName: { startsWith: firstName },
+        middleName: { startsWith: middleName },
       });
 
       if (teachers.length === 1) return teachers[0];
     }
 
-    return this.teacherRepository.getOrCreate({
+    return this.teacherRepository.findOne({
       lastName,
       firstName,
       middleName,
@@ -400,10 +403,15 @@ export class GeneralParser {
     disciplineType: ParsedDisciplineType,
     eventId: string
   ) {
+    const disciplineTeacherWhere = {
+      teacherId,
+      disciplineId,
+    };
+
     const disciplineTeacher =
-      await this.disciplineTeacherRepository.getOrCreate({
-        teacherId,
-        disciplineId,
+      await this.disciplineTeacherRepository.findOne(disciplineTeacherWhere) ??
+      await this.disciplineTeacherRepository.create({
+        ...disciplineTeacherWhere,
         roles: {
           create: {
             disciplineTypeId: disciplineType.id,
@@ -497,7 +505,7 @@ export class GeneralParser {
     ).events.filter((event) => !event.isCustom);
 
     return mapAsync(events, async (event): Promise<DatabasePair> => {
-      const discipline = await this.disciplineRepository.find({
+      const discipline = await this.disciplineRepository.findOne({
         disciplineTypes: {
           some: {
             lessons: {
