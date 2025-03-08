@@ -7,13 +7,14 @@ import {
   GrantResponse,
   RoleResponse,
 } from '@fictadvisor/utils/responses';
+import { RoleName } from '@fictadvisor/utils/*';
 
 @Injectable()
 export class RoleMapper {
   getBaseRole (role: DbRole): BaseRoleResponse {
     return {
       id: role.id,
-      name: role.name,
+      name: role.name as RoleName,
       weight: role.weight,
       displayName: role.displayName,
     };

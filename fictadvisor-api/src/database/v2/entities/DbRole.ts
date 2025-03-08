@@ -1,15 +1,19 @@
-import { Grant, GroupRole, UserRole } from '@prisma/client/fictadvisor';
-import { RoleName } from '@fictadvisor/utils/enums';
+import { DbGroupRole } from './DbGroupRole';
+import { DbGrant } from './DbGrant';
+import { DbUserRole } from './DbUserRole';
+import { RoleName } from '@prisma/client/fictadvisor';
 
 export class DbRole {
   id: string;
   name: RoleName;
   weight: number;
   parentId: string | null;
-  grants: Grant[];
-  userRoles: UserRole[];
-  groupRole: GroupRole;
+  displayName: string | null;
+  parent?: DbUserRole;
+  children: DbRole[];
+  grants?: DbGrant[];
+  userRole?: DbUserRole;
+  groupRoles?: DbGroupRole[];
   createdAt?: Date | null;
   updatedAt?: Date | null;
-  displayName: string;
 }

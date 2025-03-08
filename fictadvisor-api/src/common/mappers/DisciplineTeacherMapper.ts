@@ -32,7 +32,7 @@ export class DisciplineTeacherMapper {
   }
 
   private getDisciplineTypes (disciplineTeacher: DbDisciplineTeacher) {
-    return disciplineTeacher.roles.map((role: DbDisciplineTeacherRole) => role.disciplineType.name);
+    return disciplineTeacher.roles.map((role: DbDisciplineTeacherRole) => role.disciplineType.name as DisciplineTypeEnum);
   }
 
   private getDisciplineTeacherWithTeacherParams (disciplineTeacher: DbDisciplineTeacher) {
@@ -53,7 +53,7 @@ export class DisciplineTeacherMapper {
     for (const disciplineTeacher of disciplineTeachers) {
       if (disciplineTeacher.discipline.subjectId === subjectId) {
         for (const { disciplineType } of disciplineTeacher.roles) {
-          disciplineTypes.add(disciplineType.name);
+          disciplineTypes.add(disciplineType.name as DisciplineTypeEnum);
         }
       }
     }
@@ -113,7 +113,7 @@ export class DisciplineTeacherMapper {
       disciplineId: disciplineTeacher.disciplineId,
       discipline: this.disciplineMapper.getExtendedDiscipline(disciplineTeacher.discipline),
       teacher: this.teacherMapper.getTeacher(disciplineTeacher.teacher),
-      disciplineTypes: disciplineTeacher.discipline.disciplineTypes.map((disciplineType: DbDisciplineType) => disciplineType.name),
+      disciplineTypes: disciplineTeacher.discipline.disciplineTypes.map((disciplineType: DbDisciplineType) => disciplineType.name as DisciplineTypeEnum),
     };
   }
 }

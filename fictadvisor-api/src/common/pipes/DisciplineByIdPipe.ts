@@ -8,11 +8,11 @@ export class DisciplineByIdPipe implements PipeTransform<string, Promise<string>
     private disciplineRepository: DisciplineRepository
   ) {}
 
-  async transform (disciplineId: string): Promise<string> {
-    const discipline = await this.disciplineRepository.findById(disciplineId);
+  async transform (id: string): Promise<string> {
+    const discipline = await this.disciplineRepository.findOne({ id });
     if (!discipline) {
       throw new InvalidEntityIdException('Discipline');
     }
-    return disciplineId;
+    return id;
   }
 }

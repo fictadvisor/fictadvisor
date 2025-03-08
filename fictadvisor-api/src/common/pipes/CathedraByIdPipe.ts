@@ -4,15 +4,13 @@ import { InvalidEntityIdException } from '../exceptions/InvalidEntityIdException
 
 @Injectable()
 export class CathedraByIdPipe implements PipeTransform<string, Promise<string>> {
-  constructor (
-    private cathedraRepository: CathedraRepository,
-  ) {}
-  
-  async transform (cathedraId: string): Promise<string> {
-    const cathedra = await this.cathedraRepository.findById(cathedraId);
+  constructor (private cathedraRepository: CathedraRepository) {}
+
+  async transform (id: string): Promise<string> {
+    const cathedra = await this.cathedraRepository.findOne({ id });
     if (!cathedra) {
       throw new InvalidEntityIdException('Cathedra');
     }
-    return cathedraId;
+    return id;
   }
 }
