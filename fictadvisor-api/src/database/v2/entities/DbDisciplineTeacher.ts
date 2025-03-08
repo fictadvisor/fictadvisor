@@ -1,27 +1,18 @@
-import {
-  Teacher,
-  Cathedra,
-  TeachersOnCathedras,
-} from '@prisma/client/fictadvisor';
 import { DbDisciplineTeacherRole } from './DbDisciplineTeacherRole';
-import { DbDisciplineType } from './DbDisciplineType';
-import { DbGroup } from './DbGroup';
-import { DbSubject } from './DbSubject';
 import { DbDiscipline } from './DbDiscipline';
+import { DbTeacher } from './DbTeacher';
+import { DbQuestionAnswer } from './DbQuestionAnswer';
+import { DbRemovedDisciplineTeacher } from './DbRemovedDisciplineTeacher';
 
 export class DbDisciplineTeacher {
   id: string;
-  teacherId: string;
+  discipline?: DbDiscipline;
   disciplineId: string;
-  teacher?: Teacher & {
-    cathedras?: (TeachersOnCathedras & {
-      cathedra: Cathedra,
-    })[],
-  };
-  discipline?: DbDiscipline & {
-    group?: DbGroup,
-    subject?: DbSubject,
-    disciplineTypes?: DbDisciplineType[],
-  };
+  teacher?: DbTeacher;
+  teacherId: string;
   roles?: DbDisciplineTeacherRole[];
+  questionAnswers?: DbQuestionAnswer[];
+  removedDisciplineTeachers?: DbRemovedDisciplineTeacher[];
+  createdAt: Date | null;
+  updatedAt: Date | null;
 }

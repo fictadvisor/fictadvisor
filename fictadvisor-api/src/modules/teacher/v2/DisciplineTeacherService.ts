@@ -10,11 +10,10 @@ import { DisciplineTeacherQuestionsResponse } from '@fictadvisor/utils/responses
 import { CommentsSortBy, DisciplineTypeEnum } from '@fictadvisor/utils/enums';
 import { TelegramAPI } from '../../telegram-api/TelegramAPI';
 import { isArrayUnique } from '../../../common/helpers/arrayUtils';
-import { DbQuestionWithRoles } from '../../../database/v2/entities/DbQuestionWithRoles';
 import { DbDiscipline } from '../../../database/v2/entities/DbDiscipline';
 import { DbQuestionAnswer } from '../../../database/v2/entities/DbQuestionAnswer';
-import { DatabaseUtils } from '../../../database/DatabaseUtils';
-import { PaginatedData } from '../../../database/types/PaginatedData';
+import { DatabaseUtils, PaginateArgs } from '../../../database/v2/database.utils';
+import { PaginatedData } from '../../../database/types/paginated.data';
 import { QuestionMapper } from '../../../common/mappers/QuestionMapper';
 import { PollService } from '../../poll/v2/PollService';
 import { DateService } from '../../date/DateService';
@@ -35,6 +34,7 @@ import { IsRemovedDisciplineTeacherException } from '../../../common/exceptions/
 import { Prisma, QuestionType, State } from '@prisma/client/fictadvisor';
 import { TeacherMapper } from '../../../common/mappers/TeacherMapper';
 import { SubjectMapper } from '../../../common/mappers/SubjectMapper';
+import { DbQuestion } from '../../../database/v2/entities/DbQuestion';
 
 @Injectable()
 export class DisciplineTeacherService {
@@ -68,12 +68,12 @@ export class DisciplineTeacherService {
     await this.checkIsUnique(answers);
     await this.checkSendingTime();
 
-    const user = await this.userRepository.findById(userId);
+    const user = await this.userRepository.findOne({ id: userId });
     if (user.state !== State.APPROVED) {
       throw new NoPermissionException();
     }
 
-    const { teacher, discipline } = await this.disciplineTeacherRepository.findById(disciplineTeacherId);
+    const { teacher, discipline } = await this.disciplineTeacherRepository.findOne({ id: disciplineTeacherId });
 
     if (await this.isNotSelectedByUser(userId, discipline)) {
       throw new NotSelectedDisciplineException();
@@ -113,7 +113,7 @@ export class DisciplineTeacherService {
   }
 
   async getCategories (id: string) {
-    const { discipline, teacher } = await this.disciplineTeacherRepository.findById(id);
+    const { discipline, teacher } = await this.disciplineTeacherRepository.findOne({ id });
     const questions = await this.getUniqueQuestions(id);
     const categories = this.questionMapper.sortByCategories(questions);
     return {
@@ -124,7 +124,7 @@ export class DisciplineTeacherService {
   }
 
   async getUniqueQuestions (id: string) {
-    const { disciplineTeachers } = await this.disciplineRepository.find({
+    const { disciplineTeachers } = await this.disciplineRepository.findOne({
       disciplineTeachers: {
         some: {
           id,
@@ -134,19 +134,19 @@ export class DisciplineTeacherService {
 
     const teacherRoles = disciplineTeachers
       .find((disciplineTeacher) => disciplineTeacher.id === id)
-      .roles.map(({ disciplineType }) => disciplineType.name);
+      .roles.map(({ disciplineType }) => disciplineType.name as DisciplineTypeEnum);
 
     const disciplineTypes = new Set<DisciplineTypeEnum>();
     for (const { roles } of disciplineTeachers) {
       for (const { disciplineType } of roles) {
-        disciplineTypes.add(disciplineType.name);
+        disciplineTypes.add(disciplineType.name as DisciplineTypeEnum);
       }
     }
 
     return this.pollService.getQuestions(teacherRoles, Array.from(disciplineTypes));
   }
 
-  async checkRequiredQuestions (dbQuestions: DbQuestionWithRoles[], questions: CreateAnswerDTO[]) {
+  async checkRequiredQuestions (dbQuestions: DbQuestion[], questions: CreateAnswerDTO[]) {
     for (const question of dbQuestions) {
       if (question.isRequired && !questions.some((q) => q.questionId === question.id)) {
         throw new NotEnoughAnswersException();
@@ -154,7 +154,7 @@ export class DisciplineTeacherService {
     }
   }
 
-  async checkExcessiveQuestions (dbQuestions: DbQuestionWithRoles[], questions: CreateAnswerDTO[]) {
+  async checkExcessiveQuestions (dbQuestions: DbQuestion[], questions: CreateAnswerDTO[]) {
     for (const question of questions) {
       if (!dbQuestions.some((q) => (q.id === question.questionId))) {
         throw new ExcessiveAnswerException();
@@ -170,7 +170,7 @@ export class DisciplineTeacherService {
   }
 
   async checkIsRemoved (disciplineTeacherId: string, userId: string) {
-    const isRemoved = await this.disciplineTeacherRepository.find({
+    const isRemoved = await this.disciplineTeacherRepository.findOne({
       id: disciplineTeacherId,
       removedDisciplineTeachers: {
         some: {
@@ -218,6 +218,7 @@ export class DisciplineTeacherService {
       endPoll,
     };
   }
+
   async checkSendingTime () {
     const dateBorders = await this.getPollTimeBorders();
     const openingPollTime = dateBorders.startPoll.getTime();
@@ -231,10 +232,8 @@ export class DisciplineTeacherService {
 
   async checkAnswerInDatabase (disciplineTeacherId: string, userId: string) {
     const answers = await this.questionAnswerRepository.findMany({
-      where: {
-        disciplineTeacherId,
-        userId,
-      },
+      disciplineTeacherId,
+      userId,
     });
     if (answers.length !== 0) {
       throw new AnswerInDatabasePermissionException();
@@ -242,7 +241,7 @@ export class DisciplineTeacherService {
   }
 
   async create (teacherId: string, disciplineId: string, roles: DisciplineTypeEnum[]) {
-    const discipline = await this.disciplineRepository.findById(disciplineId);
+    const discipline = await this.disciplineRepository.findOne({ id: disciplineId });
     const dbRoles = await this.getDbRoles(discipline, roles);
 
     return this.disciplineTeacherRepository.create({
@@ -253,7 +252,7 @@ export class DisciplineTeacherService {
   }
 
   async updateById (disciplineTeacherId: string, roles: DisciplineTypeEnum[]) {
-    const discipline = await this.disciplineRepository.find({
+    const discipline = await this.disciplineRepository.findOne({
       disciplineTeachers: {
         some: {
           id: disciplineTeacherId,
@@ -294,7 +293,7 @@ export class DisciplineTeacherService {
   }
 
   async updateByTeacherAndDiscipline (teacherId: string, disciplineId: string, disciplineTypes: DisciplineTypeEnum[]) {
-    let disciplineTeacher = await this.disciplineTeacherRepository.find({ teacherId, disciplineId });
+    let disciplineTeacher = await this.disciplineTeacherRepository.findOne({ teacherId, disciplineId });
     if (!disciplineTeacher) {
       disciplineTeacher = await this.disciplineTeacherRepository.create({
         teacherId: teacherId,
@@ -309,7 +308,7 @@ export class DisciplineTeacherService {
   }
 
   async deleteByTeacherAndDiscipline (teacherId: string, disciplineId: string) {
-    const disciplineTeacher = await this.disciplineTeacherRepository.find({ teacherId, disciplineId });
+    const disciplineTeacher = await this.disciplineTeacherRepository.findOne({ teacherId, disciplineId });
     if (!disciplineTeacher) {
       throw new InvalidEntityIdException('DisciplineTeacher');
     }
@@ -319,7 +318,7 @@ export class DisciplineTeacherService {
   async isNotSelectedByUser (userId: string, { id, year, semester, isSelective }: DbDiscipline) {
     if (!isSelective) return false;
 
-    const { selectiveDisciplines } = await this.studentRepository.findById(userId);
+    const { selectiveDisciplines } = await this.studentRepository.findOne({ userId });
 
     const relevantSelectiveDisciplines = selectiveDisciplines.filter((selective) => {
       return selective.discipline.year === year && selective.discipline.semester === semester;
@@ -329,7 +328,7 @@ export class DisciplineTeacherService {
   }
 
   async removeFromPoll (disciplineTeacherId: string, userId: string) {
-    const disciplineTeacher = await this.disciplineTeacherRepository.findById(disciplineTeacherId);
+    const disciplineTeacher = await this.disciplineTeacherRepository.findOne({ id: disciplineTeacherId });
 
     if (await this.isNotSelectedByUser(userId, disciplineTeacher.discipline)) {
       throw new NotSelectedDisciplineException();
@@ -356,21 +355,18 @@ export class DisciplineTeacherService {
   async getAllComments (query: QueryAllCommentsDTO): Promise<PaginatedData<DbQuestionAnswer>> {
     const { sort = CommentsSortBy.SUBJECT, order } = query;
 
-    const where = {
-      AND: [
-        { question: { type: QuestionType.TEXT } },
-        this.CommentsSearching.semesters(query.semesters),
-        this.CommentsSearching.comment(query.search),
-      ],
+    const data: PaginateArgs<'questionAnswer'> = {
+      where: {
+        AND: [
+          { question: { type: QuestionType.TEXT } },
+          this.CommentsSearching.semesters(query.semesters),
+          this.CommentsSearching.comment(query.search),
+        ],
+      },
+      orderBy: this.CommentsSorting[sort](order),
     };
-    const orderBy = this.CommentsSorting[sort](order);
 
-    const data: Prisma.QuestionAnswerFindManyArgs = {
-      where,
-      orderBy,
-    } as Prisma.QuestionAnswerFindManyArgs;
-
-    return DatabaseUtils.paginate(this.questionAnswerRepository, query, data);
+    return DatabaseUtils.paginate<'questionAnswer', DbQuestionAnswer>(this.questionAnswerRepository, query, data);
   }
 
   private CommentsSearching = {
@@ -381,15 +377,15 @@ export class DisciplineTeacherService {
   };
 
   private CommentsSorting = {
-    subject: (order = 'asc') => ({
+    subject: (order: Prisma.SortOrder = 'asc') => ({
       disciplineTeacher: { discipline: { subject: { name: order } } },
     }),
-    teacher: (order = 'asc') => ([
+    teacher: (order: Prisma.SortOrder = 'asc') => ([
       { disciplineTeacher: { teacher: { lastName: order } } },
       { disciplineTeacher: { teacher: { firstName: order } } },
       { disciplineTeacher: { teacher: { middleName: order } } },
     ]),
-    semester: (order = 'desc') => ([
+    semester: (order: Prisma.SortOrder = 'desc') => ([
       { disciplineTeacher: { discipline: { year: order } } },
       { disciplineTeacher: { discipline: { semester: order } } },
     ]),

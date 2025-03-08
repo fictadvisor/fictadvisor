@@ -8,11 +8,11 @@ export class EduProgramByIdPipe implements PipeTransform<string, Promise<string>
     private eduProgramsRepository: EduProgramRepository,
   ) {}
 
-  async transform (eduProgramId: string): Promise<string> {
-    const eduProgram = await this.eduProgramsRepository.findById(eduProgramId);
+  async transform (id: string): Promise<string> {
+    const eduProgram = await this.eduProgramsRepository.findOne({ id });
     if (!eduProgram) {
       throw new InvalidEntityIdException('Educational program');
     }
-    return eduProgramId;
+    return id;
   }
 }

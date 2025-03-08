@@ -1,4 +1,4 @@
-import { DisciplineTypeEnum } from '@fictadvisor/utils';
+import { DisciplineTypeEnum } from '@prisma/client/fictadvisor';
 
 export type ScheduleDayNumber = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 export type ScheduleWeekNumber = 0 | 1;

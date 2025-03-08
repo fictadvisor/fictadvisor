@@ -8,11 +8,11 @@ export class GrantByIdPipe implements PipeTransform<string, Promise<string>> {
         private grantRepository: GrantRepository
   ) {}
 
-  async transform (grantId: string): Promise<string> {
-    const grant = await this.grantRepository.findById(grantId);
+  async transform (id: string): Promise<string> {
+    const grant = await this.grantRepository.findOne({ id });
     if (!grant) {
       throw new InvalidEntityIdException('Grant');
     }
-    return grantId;
+    return id;
   }
 }

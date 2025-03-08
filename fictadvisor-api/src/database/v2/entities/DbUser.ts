@@ -1,5 +1,6 @@
-import { Group, Student } from '@prisma/client/fictadvisor';
-import { State } from '@fictadvisor/utils/enums';
+import { DbQuestionAnswer } from './DbQuestionAnswer';
+import { DbStudent } from './DbStudent';
+import { State } from '@prisma/client/fictadvisor';
 
 export class DbUser {
   id: string;
@@ -12,7 +13,6 @@ export class DbUser {
   lastPasswordChanged: Date;
   createdAt: Date | null;
   updatedAt: Date | null;
-  student: Student & {
-    group: Group
-  };
+  student?: DbStudent;
+  questionAnswers?: DbQuestionAnswer[];
 }

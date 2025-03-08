@@ -1,12 +1,12 @@
-import { EducationalPrograms } from '@prisma/client/fictadvisor';
 import { AbbreviationOfSpeciality } from '@fictadvisor/utils/enums';
+import { DbEducationalProgram } from './DbEducationalProgram';
 
 export class DbSpeciality {
   id: string;
   code: string;
   abbreviation: AbbreviationOfSpeciality;
   name: string | null;
-  educationalPrograms?: EducationalPrograms[];
-  createdAt?: Date;
-  updatedAt?: Date;
+  educationalPrograms?: DbEducationalProgram[];
+  createdAt: Date;
+  updatedAt: Date;
 }

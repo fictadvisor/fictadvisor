@@ -15,12 +15,12 @@ import {
   TeacherWithContactsResponse,
   TeacherWithContactsFullResponse,
   PaginatedTeachersResponse,
-  PaginatedQuestionCommentsResponse,
+  PaginatedQuestionCommentsResponse, SubjectsResponse,
 } from '@fictadvisor/utils/responses';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import { ApiEndpoint } from '../../../common/decorators/ApiEndpoint';
 import { TeacherByIdPipe } from '../../../common/pipes/TeacherByIdPipe';
-import { ContactByIdPipe } from '../../../common/pipes/ContactByIdPipe';
+import { ContactByTeacherIdPipe } from '../../../common/pipes/ContactByTeacherIdPipe';
 import { SubjectByIdPipe } from '../../../common/pipes/SubjectByIdPipe';
 import { UserByIdPipe } from '../../../common/pipes/UserByIdPipe';
 import { CathedraByIdPipe } from '../../../common/pipes/CathedraByIdPipe';
@@ -32,6 +32,7 @@ import { DisciplineTeacherMapper } from '../../../common/mappers/DisciplineTeach
 import { TeacherService } from './TeacherService';
 import { PollService } from '../../poll/v2/PollService';
 import { TeacherDocumentation } from '../../../common/documentation/modules/v2/teacher';
+import { SubjectMapper } from '../../../common/mappers/SubjectMapper';
 
 @ApiTags('Teachers')
 @Controller({
@@ -43,6 +44,7 @@ export class TeacherController {
     private readonly teacherService: TeacherService,
     private readonly teacherMapper: TeacherMapper,
     private readonly pollService: PollService,
+    private subjectMapper: SubjectMapper,
     private readonly questionMapper: QuestionMapper,
     private readonly disciplineTeacherMapper: DisciplineTeacherMapper,
   ) {}
@@ -83,10 +85,9 @@ export class TeacherController {
   @Get('/:teacherId/subjects')
   async getSubjects (
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
-  ) {
+  ): Promise<SubjectsResponse> {
     const subjects = await this.teacherService.getTeacherSubjects(teacherId);
-
-    return { subjects };
+    return this.subjectMapper.getSubjects(subjects);
   }
 
   @ApiEndpoint({
@@ -188,7 +189,7 @@ export class TeacherController {
   })
   @Get('/:teacherId/contacts/:contactId')
   getContact (
-    @Param(ContactByIdPipe) params: {teacherId: string, contactId: string},
+    @Param(ContactByTeacherIdPipe) params: {teacherId: string, contactId: string},
   ) {
     return this.teacherService.getContact(params.teacherId, params.contactId);
   }
@@ -213,10 +214,10 @@ export class TeacherController {
   })
   @Patch('/:teacherId/contacts/:contactId')
   async updateContact (
-    @Param(ContactByIdPipe) params: {teacherId: string, contactId: string},
+    @Param(ContactByTeacherIdPipe) params: {contactId: string},
     @Body() body: UpdateContactDTO,
   ) {
-    return this.teacherService.updateContact(params.teacherId, params.contactId, body);
+    return this.teacherService.updateContact(params.contactId, body);
   }
 
   @ApiEndpoint({
@@ -226,9 +227,9 @@ export class TeacherController {
   })
   @Delete('/:teacherId/contacts/:contactId')
   async deleteContact (
-    @Param(ContactByIdPipe) params: {teacherId: string, contactId: string},
+    @Param(ContactByTeacherIdPipe) params: {contactId: string},
   ) {
-    return this.teacherService.deleteContact(params.teacherId, params.contactId);
+    return this.teacherService.deleteContact(params.contactId);
   }
 
   @ApiEndpoint({

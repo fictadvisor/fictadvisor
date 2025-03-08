@@ -5,15 +5,14 @@ import {
   UpdateSubjectDTO,
 } from '@fictadvisor/utils/requests';
 import { SubjectWithTeachersResponse } from '@fictadvisor/utils/responses';
-import { DatabaseUtils } from '../../../database/DatabaseUtils';
+import { DatabaseUtils, PaginateArgs } from '../../../database/v2/database.utils';
 import { TeacherMapper } from '../../../common/mappers/TeacherMapper';
 import { QuestionMapper } from '../../../common/mappers/QuestionMapper';
 import { TeacherService } from '../../teacher/v2/TeacherService';
-import { DbTeacher } from '../../../database/v2/entities/DbTeacher';
-import { DbDisciplineTeacherWithAnswers } from '../../../database/v2/entities/DbDisciplineTeacherWithAnswers';
 import { SubjectRepository } from '../../../database/v2/repositories/SubjectRepository';
 import { TeacherRepository } from '../../../database/v2/repositories/TeacherRepository';
-import { Prisma, QuestionType, Subject } from '@prisma/client/fictadvisor';
+import { QuestionType } from '@prisma/client/fictadvisor';
+import { DbSubject } from '../../../database/v2/entities/DbSubject';
 
 @Injectable()
 export class SubjectService {
@@ -29,7 +28,7 @@ export class SubjectService {
     const search = DatabaseUtils.getSearch(body, 'name');
     const sort = DatabaseUtils.getSort(body, 'name');
 
-    const data: Prisma.SubjectFindManyArgs = {
+    const data: PaginateArgs<'subject'> = {
       where: {
         ...search,
         disciplines: body.groupId ? {
@@ -40,7 +39,7 @@ export class SubjectService {
       },
       ...sort,
     };
-    const subjects = await DatabaseUtils.paginate<Subject>(this.subjectRepository, body, data);
+    const subjects = await DatabaseUtils.paginate<'subject', DbSubject>(this.subjectRepository, body, data);
 
     const results = {
       data: [],
@@ -48,12 +47,10 @@ export class SubjectService {
     };
     for (const subject of subjects.data) {
       const amount = await this.teacherRepository.count({
-        where: {
-          disciplineTeachers: {
-            some: {
-              discipline: {
-                subjectId: subject.id,
-              },
+        disciplineTeachers: {
+          some: {
+            discipline: {
+              subjectId: subject.id,
             },
           },
         },
@@ -70,64 +67,61 @@ export class SubjectService {
   }
 
   async get (id: string) {
-    return await this.subjectRepository.findById(id);
+    return await this.subjectRepository.findOne({ id });
   }
 
   async getTeachers (id: string): Promise<SubjectWithTeachersResponse> {
-    const { name: subjectName } = await this.subjectRepository.findById(id);
+    const { name: subjectName } = await this.subjectRepository.findOne({ id });
 
     const dbTeachers = await this.teacherRepository.findMany({
-      where: {
-        disciplineTeachers: {
-          some: {
-            discipline: {
-              subjectId: id,
+      disciplineTeachers: {
+        some: {
+          discipline: {
+            subjectId: id,
+          },
+        },
+      },
+    }, {
+      disciplineTeachers: {
+        include: {
+          roles: {
+            include: {
+              disciplineType: true,
+            },
+          },
+          questionAnswers: {
+            where: {
+              disciplineTeacher: {
+                discipline: {
+                  subjectId: id,
+                },
+              },
+              question: {
+                type: {
+                  in: [QuestionType.SCALE, QuestionType.TOGGLE],
+                },
+              },
+            },
+            include: {
+              question: true,
             },
           },
         },
       },
-      include: {
-        disciplineTeachers: {
-          include: {
-            roles: {
-              include: {
-                disciplineType: true,
-              },
-            },
-            questionAnswers: {
-              where: {
-                disciplineTeacher: {
-                  discipline: {
-                    subjectId: id,
-                  },
-                },
-                question: {
-                  type: {
-                    in: [QuestionType.SCALE, QuestionType.TOGGLE],
-                  },
-                },
-              },
-              include: {
-                question: true,
-              },
-            },
-          },
-        },
-        cathedras: {
-          include: {
-            cathedra: true,
-          },
+      cathedras: {
+        include: {
+          cathedra: true,
         },
       },
     });
 
     const teachers = [];
     for (const dbTeacher of dbTeachers) {
-      const sortedQuestionsWithAnswers = this.questionMapper.getSortedQuestionsWithAnswers(dbTeacher.disciplineTeachers as any as DbDisciplineTeacherWithAnswers[]);
+      const sortedQuestionsWithAnswers = this.questionMapper.getSortedQuestionsWithAnswers(dbTeacher.disciplineTeachers);
       const marks = this.questionMapper.getMarks(sortedQuestionsWithAnswers);
 
       teachers.push({
-        ...this.teacherMapper.getTeacherWithRolesAndCathedras(dbTeacher as DbTeacher),
+        ...this.teacherMapper.getTeacherWithRolesAndCathedras(dbTeacher),
         rating: this.teacherService.getRating(marks),
       });
     }

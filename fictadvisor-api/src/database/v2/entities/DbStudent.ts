@@ -1,31 +1,23 @@
-import { Cathedra, Discipline, EducationalPrograms, Group, SelectiveDiscipline } from '@prisma/client/fictadvisor';
-import { State } from '@fictadvisor/utils/enums';
-import { DbSpeciality } from './DbSpeciality';
-import { DbRole } from './DbRole';
 import { DbUser } from './DbUser';
+import { DbGroup } from './DbGroup';
+import { DbUserRole } from './DbUserRole';
+import { DbSelectiveDiscipline } from './DbSelectiveDiscipline';
+import { DbRemovedDisciplineTeacher } from './DbRemovedDisciplineTeacher';
+import { State } from '@prisma/client/fictadvisor';
 
 export class DbStudent {
-  userId?: string;
+  user?: DbUser;
+  userId: string;
   firstName: string | null;
   middleName: string | null;
   lastName: string | null;
+  admissionYear: number;
   state: State;
-  groupId?: string;
+  group?: DbGroup;
+  groupId: string | null;
   createdAt: Date | null;
   updatedAt: Date | null;
-  group?: Group & {
-    cathedra?: Cathedra;
-    educationalProgram?: {
-      speciality: DbSpeciality,
-    } & EducationalPrograms,
-  };
-  roles?: {
-    studentId: string,
-    roleId: string,
-    role: DbRole,
-  }[];
-  selectiveDisciplines?: (SelectiveDiscipline & {
-    discipline: Discipline,
-  })[];
-  user?: DbUser;
+  roles?: DbUserRole[];
+  selectiveDisciplines?: DbSelectiveDiscipline[];
+  removedDisciplineTeachers?: DbRemovedDisciplineTeacher[];
 }

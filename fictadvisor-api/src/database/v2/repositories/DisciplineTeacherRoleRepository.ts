@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../PrismaService';
 import { Prisma } from '@prisma/client/fictadvisor';
+import { RepositoryInterface } from '../../interfaces/repository.interface';
+import { DbDisciplineTeacherRole } from '../entities/DbDisciplineTeacherRole';
+import { Include, Sort, Where } from '../prisma.repository';
 
 @Injectable()
-export class DisciplineTeacherRoleRepository {
+export class DisciplineTeacherRoleRepository implements RepositoryInterface<DbDisciplineTeacherRole, Prisma.DisciplineTeacherRoleWhereInput> {
   constructor (
     private prisma: PrismaService,
   ) {}
@@ -36,5 +39,27 @@ export class DisciplineTeacherRoleRepository {
 
   async deleteMany (where: Prisma.DisciplineTeacherRoleWhereInput) {
     return this.prisma.disciplineTeacherRole.deleteMany({ where });
+  }
+
+  findMany (where: Where<'disciplineTeacherRole'>,
+    include?: Include<'disciplineTeacherRole'>,
+    page?: { take: number; skip: number },
+    sort?: Sort<'disciplineTeacherRole'>): Promise<DbDisciplineTeacherRole[]> {
+    const methodInclude = {
+      ...this.include,
+      ...include,
+    };
+
+    return this.prisma.disciplineTeacherRole.findMany({
+      where,
+      orderBy: sort,
+      take: page?.take,
+      skip: page?.skip,
+      include: Object.keys(methodInclude).length ? methodInclude : undefined,
+    });
+  }
+
+  count (where: Where<'disciplineTeacherRole'>): Promise<number> {
+    return this.prisma.questionAnswer.count({ where });
   }
 }

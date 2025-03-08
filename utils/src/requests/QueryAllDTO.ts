@@ -72,5 +72,5 @@ export class Search<T> {
 export class Sort {
   orderBy: {
     [k: string]: 'asc' | 'desc';
-  };
+  }[];
 }

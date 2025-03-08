@@ -1,29 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client/fictadvisor';
 import { PrismaService } from '../PrismaService';
 import { DbEducationalProgram } from '../entities/DbEducationalProgram';
+import { PrismaRepository } from '../prisma.repository';
 
 @Injectable()
-export class EduProgramRepository {
-  private include = {
-    speciality: true,
-    groups: true,
-  };
-
-  constructor (
-    private readonly prisma: PrismaService,
-  ) {}
-
-  findMany (args?: Prisma.EducationalProgramsFindManyArgs,) {
-    return this.prisma.educationalPrograms.findMany({
-      include: this.include,
-      ...args,
-    }) as any as Promise<DbEducationalProgram[]>;
-  }
-
-  findById (id: string): Promise<DbEducationalProgram> {
-    return this.prisma.educationalPrograms.findFirst({
-      where: { id },
-    }) as any as Promise<DbEducationalProgram>;
+export class EduProgramRepository extends PrismaRepository<'educationalPrograms', DbEducationalProgram> {
+  constructor (prisma: PrismaService) {
+    super(prisma.educationalPrograms, {
+      speciality: true,
+      groups: true,
+    });
   }
 }

@@ -20,6 +20,7 @@ import { TelegramGroupRepository } from './v2/repositories/TelegramGroupReposito
 import { PageTextRepository } from './v2/repositories/PageTextRepository';
 import { EduProgramRepository } from './v2/repositories/EduProgramRepository';
 import { SpecialityRepository } from './v2/repositories/SpecialityRepository';
+import { QuestionWithRolesRepository } from './v2/repositories/QuestionWithRolesRepository';
 
 @Global()
 @Module({
@@ -45,6 +46,7 @@ import { SpecialityRepository } from './v2/repositories/SpecialityRepository';
     PageTextRepository,
     EduProgramRepository,
     SpecialityRepository,
+    QuestionWithRolesRepository,
   ],
   exports: [
     PrismaService,
@@ -68,6 +70,7 @@ import { SpecialityRepository } from './v2/repositories/SpecialityRepository';
     PageTextRepository,
     EduProgramRepository,
     SpecialityRepository,
+    QuestionWithRolesRepository,
   ],
 })
 export class PrismaModule {}
