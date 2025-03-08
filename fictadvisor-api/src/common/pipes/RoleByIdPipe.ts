@@ -9,7 +9,7 @@ export class RoleByIdPipe implements PipeTransform<string, Promise<string>> {
   ) {}
 
   async transform (roleId: string): Promise<string> {
-    const role = await this.roleRepository.findById(roleId);
+    const role = await this.roleRepository.findOne({ id: roleId });
     if (!role) {
       throw new InvalidEntityIdException('Role');
     }

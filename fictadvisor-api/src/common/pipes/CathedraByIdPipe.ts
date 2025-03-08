@@ -7,9 +7,9 @@ export class CathedraByIdPipe implements PipeTransform<string, Promise<string>> 
   constructor (
     private cathedraRepository: CathedraRepository,
   ) {}
-  
+
   async transform (cathedraId: string): Promise<string> {
-    const cathedra = await this.cathedraRepository.findById(cathedraId);
+    const cathedra = await this.cathedraRepository.findOne({ id: cathedraId });
     if (!cathedra) {
       throw new InvalidEntityIdException('Cathedra');
     }

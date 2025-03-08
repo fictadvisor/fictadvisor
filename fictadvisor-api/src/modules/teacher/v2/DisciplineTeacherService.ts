@@ -10,7 +10,6 @@ import { DisciplineTeacherQuestionsResponse } from '@fictadvisor/utils/responses
 import { CommentsSortBy, DisciplineTypeEnum } from '@fictadvisor/utils/enums';
 import { TelegramAPI } from '../../telegram-api/TelegramAPI';
 import { isArrayUnique } from '../../../common/helpers/arrayUtils';
-import { DbQuestionWithRoles } from '../../../database/v2/entities/DbQuestionWithRoles';
 import { DbDiscipline } from '../../../database/v2/entities/DbDiscipline';
 import { DbQuestionAnswer } from '../../../database/v2/entities/DbQuestionAnswer';
 import { DatabaseUtils } from '../../../database/DatabaseUtils';
@@ -35,6 +34,7 @@ import { IsRemovedDisciplineTeacherException } from '../../../common/exceptions/
 import { Prisma, QuestionType, State } from '@prisma/client/fictadvisor';
 import { TeacherMapper } from '../../../common/mappers/TeacherMapper';
 import { SubjectMapper } from '../../../common/mappers/SubjectMapper';
+import { DbQuestion } from '../../../database/v2/entities/DbQuestion';
 
 @Injectable()
 export class DisciplineTeacherService {
@@ -68,12 +68,12 @@ export class DisciplineTeacherService {
     await this.checkIsUnique(answers);
     await this.checkSendingTime();
 
-    const user = await this.userRepository.findById(userId);
+    const user = await this.userRepository.findOne({ id: userId });
     if (user.state !== State.APPROVED) {
       throw new NoPermissionException();
     }
 
-    const { teacher, discipline } = await this.disciplineTeacherRepository.findById(disciplineTeacherId);
+    const { teacher, discipline } = await this.disciplineTeacherRepository.findOne({ id: disciplineTeacherId });
 
     if (await this.isNotSelectedByUser(userId, discipline)) {
       throw new NotSelectedDisciplineException();
@@ -113,7 +113,7 @@ export class DisciplineTeacherService {
   }
 
   async getCategories (id: string) {
-    const { discipline, teacher } = await this.disciplineTeacherRepository.findById(id);
+    const { discipline, teacher } = await this.disciplineTeacherRepository.findOne({ id });
     const questions = await this.getUniqueQuestions(id);
     const categories = this.questionMapper.sortByCategories(questions);
     return {
@@ -124,7 +124,7 @@ export class DisciplineTeacherService {
   }
 
   async getUniqueQuestions (id: string) {
-    const { disciplineTeachers } = await this.disciplineRepository.find({
+    const { disciplineTeachers } = await this.disciplineRepository.findOne({
       disciplineTeachers: {
         some: {
           id,
@@ -146,7 +146,7 @@ export class DisciplineTeacherService {
     return this.pollService.getQuestions(teacherRoles, Array.from(disciplineTypes));
   }
 
-  async checkRequiredQuestions (dbQuestions: DbQuestionWithRoles[], questions: CreateAnswerDTO[]) {
+  async checkRequiredQuestions (dbQuestions: DbQuestion[], questions: CreateAnswerDTO[]) {
     for (const question of dbQuestions) {
       if (question.isRequired && !questions.some((q) => q.questionId === question.id)) {
         throw new NotEnoughAnswersException();
@@ -154,7 +154,7 @@ export class DisciplineTeacherService {
     }
   }
 
-  async checkExcessiveQuestions (dbQuestions: DbQuestionWithRoles[], questions: CreateAnswerDTO[]) {
+  async checkExcessiveQuestions (dbQuestions: DbQuestion[], questions: CreateAnswerDTO[]) {
     for (const question of questions) {
       if (!dbQuestions.some((q) => (q.id === question.questionId))) {
         throw new ExcessiveAnswerException();
@@ -170,7 +170,7 @@ export class DisciplineTeacherService {
   }
 
   async checkIsRemoved (disciplineTeacherId: string, userId: string) {
-    const isRemoved = await this.disciplineTeacherRepository.find({
+    const isRemoved = await this.disciplineTeacherRepository.findOne({
       id: disciplineTeacherId,
       removedDisciplineTeachers: {
         some: {
@@ -190,7 +190,7 @@ export class DisciplineTeacherService {
   }
 
   async checkAnsweredQuestion (disciplineTeacherId: string, questionId: string, userId: string) {
-    const dbAnswer = await this.questionAnswerRepository.find({
+    const dbAnswer = await this.questionAnswerRepository.findOne({
       disciplineTeacherId,
       userId,
       questionId,
@@ -218,6 +218,7 @@ export class DisciplineTeacherService {
       endPoll,
     };
   }
+
   async checkSendingTime () {
     const dateBorders = await this.getPollTimeBorders();
     const openingPollTime = dateBorders.startPoll.getTime();
@@ -231,10 +232,8 @@ export class DisciplineTeacherService {
 
   async checkAnswerInDatabase (disciplineTeacherId: string, userId: string) {
     const answers = await this.questionAnswerRepository.findMany({
-      where: {
-        disciplineTeacherId,
-        userId,
-      },
+      disciplineTeacherId,
+      userId,
     });
     if (answers.length !== 0) {
       throw new AnswerInDatabasePermissionException();
@@ -242,7 +241,7 @@ export class DisciplineTeacherService {
   }
 
   async create (teacherId: string, disciplineId: string, roles: DisciplineTypeEnum[]) {
-    const discipline = await this.disciplineRepository.findById(disciplineId);
+    const discipline = await this.disciplineRepository.findOne({ id: disciplineId });
     const dbRoles = await this.getDbRoles(discipline, roles);
 
     return this.disciplineTeacherRepository.create({
@@ -253,7 +252,7 @@ export class DisciplineTeacherService {
   }
 
   async updateById (disciplineTeacherId: string, roles: DisciplineTypeEnum[]) {
-    const discipline = await this.disciplineRepository.find({
+    const discipline = await this.disciplineRepository.findOne({
       disciplineTeachers: {
         some: {
           id: disciplineTeacherId,
@@ -262,7 +261,7 @@ export class DisciplineTeacherService {
     });
     const dbRoles = await this.getDbRoles(discipline, roles);
 
-    return this.disciplineTeacherRepository.updateById(disciplineTeacherId, {
+    return this.disciplineTeacherRepository.updateById({ id: disciplineTeacherId }, {
       roles: {
         deleteMany: {},
         create: dbRoles,
@@ -274,7 +273,7 @@ export class DisciplineTeacherService {
     const dbRoles = [];
     for (const disciplineType of disciplineTypes) {
       if (!discipline.disciplineTypes.some((type) => type.name === disciplineType)) {
-        discipline = await this.disciplineRepository.updateById(discipline.id, {
+        discipline = await this.disciplineRepository.updateById({ id: discipline.id }, {
           disciplineTypes: {
             create: {
               name: disciplineType,
@@ -294,7 +293,7 @@ export class DisciplineTeacherService {
   }
 
   async updateByTeacherAndDiscipline (teacherId: string, disciplineId: string, disciplineTypes: DisciplineTypeEnum[]) {
-    let disciplineTeacher = await this.disciplineTeacherRepository.find({ teacherId, disciplineId });
+    let disciplineTeacher = await this.disciplineTeacherRepository.findOne({ teacherId, disciplineId });
     if (!disciplineTeacher) {
       disciplineTeacher = await this.disciplineTeacherRepository.create({
         teacherId: teacherId,
@@ -305,21 +304,21 @@ export class DisciplineTeacherService {
   }
 
   async deleteById (disciplineTeacherId: string) {
-    await this.disciplineTeacherRepository.deleteById(disciplineTeacherId);
+    await this.disciplineTeacherRepository.deleteById({ id: disciplineTeacherId });
   }
 
   async deleteByTeacherAndDiscipline (teacherId: string, disciplineId: string) {
-    const disciplineTeacher = await this.disciplineTeacherRepository.find({ teacherId, disciplineId });
+    const disciplineTeacher = await this.disciplineTeacherRepository.findOne({ teacherId, disciplineId });
     if (!disciplineTeacher) {
       throw new InvalidEntityIdException('DisciplineTeacher');
     }
-    await this.disciplineTeacherRepository.deleteById(disciplineTeacher.id);
+    await this.disciplineTeacherRepository.deleteById({ id: disciplineTeacher.id });
   }
 
   async isNotSelectedByUser (userId: string, { id, year, semester, isSelective }: DbDiscipline) {
     if (!isSelective) return false;
 
-    const { selectiveDisciplines } = await this.studentRepository.findById(userId);
+    const { selectiveDisciplines } = await this.studentRepository.findOne({ userId });
 
     const relevantSelectiveDisciplines = selectiveDisciplines.filter((selective) => {
       return selective.discipline.year === year && selective.discipline.semester === semester;
@@ -329,13 +328,13 @@ export class DisciplineTeacherService {
   }
 
   async removeFromPoll (disciplineTeacherId: string, userId: string) {
-    const disciplineTeacher = await this.disciplineTeacherRepository.findById(disciplineTeacherId);
+    const disciplineTeacher = await this.disciplineTeacherRepository.findOne({ id: disciplineTeacherId });
 
     if (await this.isNotSelectedByUser(userId, disciplineTeacher.discipline)) {
       throw new NotSelectedDisciplineException();
     }
 
-    await this.disciplineTeacherRepository.updateById(disciplineTeacherId, {
+    await this.disciplineTeacherRepository.updateById({ id: disciplineTeacherId }, {
       removedDisciplineTeachers: {
         upsert: {
           where: {
@@ -399,7 +398,7 @@ export class DisciplineTeacherService {
     disciplineTeacherId_questionId_userId: Prisma.QuestionAnswerDisciplineTeacherIdQuestionIdUserIdCompoundUniqueInput,
     value: string,
   ): Promise<DbQuestionAnswer> {
-    return this.questionAnswerRepository.update(
+    return this.questionAnswerRepository.updateById(
       { disciplineTeacherId_questionId_userId },
       { value },
     );
@@ -408,6 +407,6 @@ export class DisciplineTeacherService {
   async deleteQuestionAnswer (
     disciplineTeacherId_questionId_userId: Prisma.QuestionAnswerDisciplineTeacherIdQuestionIdUserIdCompoundUniqueInput,
   ): Promise<DbQuestionAnswer> {
-    return this.questionAnswerRepository.delete({ disciplineTeacherId_questionId_userId });
+    return this.questionAnswerRepository.deleteById({ disciplineTeacherId_questionId_userId });
   }
 }

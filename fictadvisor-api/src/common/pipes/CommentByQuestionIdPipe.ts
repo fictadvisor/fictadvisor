@@ -9,7 +9,7 @@ export class CommentByQuestionIdPipe implements PipeTransform<string, Promise<st
     private questionRepository: QuestionRepository,
   ) {}
   async transform (questionId: string): Promise<string> {
-    const question = await this.questionRepository.findById(questionId);
+    const question = await this.questionRepository.findOne({ id: questionId });
     if (question.type !== QuestionType.TEXT) {
       throw new InvalidTypeException('Question');
     }

@@ -97,7 +97,7 @@ export class GroupService {
     Omit<UpdateGroupDTO, 'code'> & { code: string },
   ): Promise<DbGroup>  {
     const group =
-      await this.groupRepository.find({ code }) ??
+      await this.groupRepository.findOne({ code }) ??
       await this.groupRepository.create({
         code,
         cathedraId,
@@ -106,10 +106,8 @@ export class GroupService {
       });
 
     const permissions = await this.roleRepository.findMany({
-      where: {
-        groupRole: {
-          group: { code },
-        },
+      groupRole: {
+        group: { code },
       },
     });
 
@@ -214,33 +212,29 @@ export class GroupService {
   }
 
   async get (id: string): Promise<DbGroup> {
-    return this.groupRepository.findById(id);
+    return this.groupRepository.findOne({ id });
   }
 
   async getDisciplineTeachers (groupId: string, { year, semester }: QuerySemesterDTO): Promise<DbDiscipline[]> {
     this.dateService.checkYearAndSemester(year, semester);
     return this.disciplineRepository.findMany({
-      where: {
-        groupId,
-        semester,
-        year,
-      },
+      groupId,
+      semester,
+      year,
     });
   }
 
   async getSelectiveDisciplines (groupId: string): Promise<DbDiscipline[]> {
     return this.disciplineRepository.findMany({
-      where: {
-        groupId,
-        isSelective: true,
-      },
+      groupId,
+      isSelective: true,
     });
   }
 
   async addUnregistered (groupId: string, body: EmailDTO): Promise<DbUser[]> {
     const users = [];
     for (const email of body.emails) {
-      const user = await this.userRepository.find({ email });
+      const user = await this.userRepository.findOne({ email });
       if (user) throw new AlreadyRegisteredException();
     }
     for (const email of body.emails) {
@@ -260,7 +254,7 @@ export class GroupService {
   }
 
   async verifyStudent (groupId: string, userId: string, data: ApproveDTO): Promise<DbStudent> {
-    const verifiedStudent = await this.studentRepository.updateById(userId, { state: data.state });
+    const verifiedStudent = await this.studentRepository.updateById({ userId }, { state: data.state });
 
     if (data.state === State.APPROVED) {
       await this.addGroupRole(groupId, userId, RoleName.STUDENT);
@@ -271,7 +265,7 @@ export class GroupService {
   }
 
   async addGroupRole (groupId: string, userId: string, name: RoleName): Promise<void> {
-    const role = await this.roleRepository.find({
+    const role = await this.roleRepository.findOne({
       groupRole: {
         groupId,
         role: {
@@ -298,16 +292,16 @@ export class GroupService {
       userRole.id,
     );
 
-    const user = await this.userRepository.findById(userId);
+    const user = await this.userRepository.findOne({ id: userId });
 
-    await this.studentRepository.updateById(userId, { state: State.DECLINED });
+    await this.studentRepository.updateById({ userId }, { state: State.DECLINED });
     if (!user.username) {
-      await this.userRepository.deleteById(userId);
+      await this.userRepository.findOne({ id: userId });
     }
   }
 
   async findCaptain (groupId: string): Promise<DbUser> {
-    const captain = await this.studentRepository.find({
+    const captain = await this.studentRepository.findOne({
       groupId,
       roles: {
         some: {
@@ -332,15 +326,9 @@ export class GroupService {
   }
 
   async deleteGroup (groupId: string): Promise<DbGroup> {
-    await this.roleRepository.deleteMany({ groupRole: { groupId } });
-    await this.studentRepository.updateMany({
-      group: {
-        id: groupId,
-      },
-    }, {
-      state: State.DECLINED,
-    });
-    return this.groupRepository.deleteById(groupId);
+    await this.roleRepository.delete({ groupRole: { groupId } });
+    await this.studentRepository.update({ group: { id: groupId } }, { state: State.DECLINED });
+    return this.groupRepository.deleteById({ id: groupId });
   }
 
   async getStudents (groupId: string, { sort, order }: GroupStudentsQueryDTO): Promise<DbStudent[]> {
@@ -354,12 +342,9 @@ export class GroupService {
     }
 
     return this.studentRepository.findMany({
-      where: {
-        groupId,
-        state: State.APPROVED,
-      },
-      orderBy,
-    });
+      groupId,
+      state: State.APPROVED,
+    }, null, orderBy);
   }
 
   async updateGroup (groupId: string, {
@@ -378,7 +363,7 @@ export class GroupService {
       await this.switchModerators(groupId, moderatorIds);
     }
 
-    return this.groupRepository.updateById(groupId, {
+    return this.groupRepository.updateById({ id: groupId }, {
       code,
       cathedraId,
       educationalProgramId: eduProgramId,
@@ -388,10 +373,8 @@ export class GroupService {
 
   async getUnverifiedStudents (groupId: string): Promise<DbStudent[]> {
     return this.studentRepository.findMany({
-      where: {
-        groupId,
-        state: State.PENDING,
-      },
+      groupId,
+      state: State.PENDING,
     });
   }
 
@@ -432,9 +415,7 @@ export class GroupService {
   }
 
   async switchModerators (groupId: string, studentIds: string[]): Promise<void> {
-    const students = await this.studentRepository.findMany({
-      where: { groupId },
-    });
+    const students = await this.studentRepository.findMany({ groupId });
 
     const oldModerators = students.filter(
       (student) => student.roles.find(({ role }) => role.name === RoleName.MODERATOR)
@@ -457,34 +438,29 @@ export class GroupService {
     }
   }
 
-  private async isStudentInGroup (groupId: string, studentId: string): Promise<boolean> {
-    const student = await this.studentRepository.findById(studentId);
+  private async isStudentInGroup (groupId: string, userId: string): Promise<boolean> {
+    const student = await this.studentRepository.findOne({ userId });
     if (!student) throw new InvalidEntityIdException('User');
     return student.groupId === groupId;
   }
 
   async getGroupsWithTelegramGroups (): Promise<DbGroup[]> {
     return this.groupRepository.findMany({
-      where: {
-        telegramGroups: {
-          some: {},
-        },
+      telegramGroups: {
+        some: {},
       },
     });
   }
 
   async getGroupList (groupId: string) {
     const dbStudents = await this.studentRepository.findMany({
-      where: {
-        groupId,
-        state: State.APPROVED,
-      },
-      orderBy: [
-        { lastName: 'asc' },
-        { firstName: 'asc' },
-        { middleName: 'asc' },
-      ],
-    });
+      groupId,
+      state: State.APPROVED,
+    }, null, [
+      { lastName: 'asc' },
+      { firstName: 'asc' },
+      { middleName: 'asc' },
+    ]);
 
     const students = [];
 
@@ -505,7 +481,7 @@ export class GroupService {
     const isStudentInGroup = await this.isStudentInGroup(groupId, studentId);
     if (!isStudentInGroup) throw new NoPermissionException();
 
-    const student = await this.studentRepository.findById(studentId);
+    const student = await this.studentRepository.findOne({ userId: studentId });
     if (student.state !== State.APPROVED) throw new NotApprovedException();
 
     const captain = await this.getCaptain(groupId);
@@ -514,7 +490,7 @@ export class GroupService {
     await this.userService.deleteStudentSelectives(studentId);
 
     const { id } = await this.userService.getGroupRole(studentId);
-    return this.studentRepository.updateById(studentId, {
+    return this.studentRepository.updateById({ userId: studentId }, {
       state: State.DECLINED,
       roles: {
         delete: {

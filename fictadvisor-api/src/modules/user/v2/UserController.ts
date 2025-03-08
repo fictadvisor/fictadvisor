@@ -237,10 +237,10 @@ export class UserController {
   })
   @Patch('/:userId/contacts/:contactId')
   updateContact (
-    @Param(ContactByUserIdPipe) params : { userId: string, contactId: string },
+    @Param(ContactByUserIdPipe) params : { contactId: string },
     @Body() body: UpdateContactDTO,
   ) {
-    return this.userService.updateContact(params.userId, params.contactId, body);
+    return this.userService.updateContact(params.contactId, body);
   }
 
   @ApiEndpoint({
@@ -252,7 +252,7 @@ export class UserController {
   deleteContact (
     @Param(ContactByUserIdPipe) params: { userId: string, contactId: string },
   ) {
-    return this.userService.deleteContact(params.userId, params.contactId);
+    return this.userService.deleteContact(params.contactId);
   }
 
   @ApiEndpoint({

@@ -21,7 +21,7 @@ export class TelegramGroupService {
       throw new ObjectIsRequiredException('Thread ID');
     }
 
-    const telegramGroup = await this.telegramGroupRepository.findUnique({
+    const telegramGroup = await this.telegramGroupRepository.findOne({
       telegramId: body.telegramId,
       groupId,
     });
@@ -35,19 +35,25 @@ export class TelegramGroupService {
     });
   }
 
-  async update (telegramId: bigint, groupId: string, body: UpdateTelegramGroupDTO) 
+  async update (telegramId: bigint, groupId: string, body: UpdateTelegramGroupDTO)
     : Promise<DbTelegramGroup> {
     await this.checkTelegramGroup(telegramId, groupId);
-    return this.telegramGroupRepository.updateById(telegramId, groupId, body);
+    await this.telegramGroupRepository.update({
+      telegramId,
+      groupId,
+    }, body);
+
+    return this.telegramGroupRepository.findOne({ telegramId, groupId });
   }
 
   async delete (telegramId: bigint, groupId: string) : Promise<DbTelegramGroup> {
     await this.checkTelegramGroup(telegramId, groupId);
-    return this.telegramGroupRepository.deleteById(telegramId, groupId);
+    await this.telegramGroupRepository.delete({ telegramId, groupId });
+    return this.telegramGroupRepository.findOne({ telegramId, groupId });
   }
 
   async checkTelegramGroup (telegramId: bigint, groupId: string): Promise<void> {
-    const telegramGroup = await this.telegramGroupRepository.findUnique({
+    const telegramGroup = await this.telegramGroupRepository.findOne({
       telegramId,
       groupId,
     });
@@ -56,15 +62,15 @@ export class TelegramGroupService {
     }
   }
 
-  async getAll (groupId: string) : Promise<DbTelegramGroup[]> {
-    const telegramGroups = await this.telegramGroupRepository.findByGroupId(groupId);
+  async getAll (groupId: string): Promise<DbTelegramGroup[]> {
+    const telegramGroups = await this.telegramGroupRepository.findMany({ groupId });
     if (!telegramGroups.length) {
       throw new DataNotFoundException();
     }
     return telegramGroups;
   }
 
-  async getGroupByTelegramId (telegramId: bigint) : Promise<DbTelegramGroup[]> {
-    return this.telegramGroupRepository.findByTelegramId(telegramId);
+  async getGroupByTelegramId (telegramId: bigint): Promise<DbTelegramGroup[]> {
+    return this.telegramGroupRepository.findMany({ telegramId });
   }
 }

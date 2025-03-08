@@ -5,13 +5,14 @@ import {
   GroupWithTelegramGroupsResponse,
   MappedGroupResponse,
 } from '@fictadvisor/utils/responses';
-import { Group, RoleName, SelectiveAmount } from '@prisma/client/fictadvisor';
+import { RoleName } from '@prisma/client/fictadvisor';
 import { DbGroup } from '../../database/v2/entities/DbGroup';
 import { DbStudent } from '../../database/v2/entities/DbStudent';
+import { State } from '@fictadvisor/utils/enums';
 
 @Injectable()
 export class GroupMapper {
-  getGroup (group: Group & { selectiveAmounts: SelectiveAmount[] }): GroupResponse {
+  getGroup (group: DbGroup): GroupResponse {
     return {
       id: group.id,
       code: group.code,
@@ -40,7 +41,7 @@ export class GroupMapper {
         firstName: captain?.firstName,
         middleName: captain?.middleName,
         lastName: captain?.lastName,
-        state: captain?.state,
+        state: captain?.state  as State,
       },
       speciality: {
         id: speciality?.id,

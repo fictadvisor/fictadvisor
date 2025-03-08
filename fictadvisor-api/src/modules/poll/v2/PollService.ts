@@ -20,8 +20,6 @@ import { DatabaseUtils } from '../../../database/DatabaseUtils';
 import { DisciplineTeacherMapper } from '../../../common/mappers/DisciplineTeacherMapper';
 import { CommentsSortMapper } from '../../../common/mappers/CommentsSortMapper';
 import { DateService } from '../../date/DateService';
-import { DbQuestionWithAnswers } from '../../../database/v2/entities/DbQuestionWithAnswers';
-import { DbQuestionWithRoles } from '../../../database/v2/entities/DbQuestionWithRoles';
 import { DbQuestion } from '../../../database/v2/entities/DbQuestion';
 import { QuestionRepository } from '../../../database/v2/repositories/QuestionRepository';
 import { DisciplineRepository } from '../../../database/v2/repositories/DisciplineRepository';
@@ -85,86 +83,72 @@ export class PollService {
     return { orderBy };
   }
 
-  async create (data: CreateQuestionDTO): Promise<DbQuestionWithRoles> {
+  async create (data: CreateQuestionDTO): Promise<DbQuestion> {
     return this.questionRepository.create(data);
   }
 
-  async deleteById (id: string): Promise<DbQuestionWithRoles> {
-    return this.questionRepository.deleteById(id);
+  async deleteById (id: string): Promise<DbQuestion> {
+    return this.questionRepository.deleteById({ id });
   }
 
-  async updateById (id: string, data: UpdateQuestionDTO): Promise<DbQuestionWithRoles> {
-    return this.questionRepository.updateById(id, data);
+  async updateById (id: string, data: UpdateQuestionDTO): Promise<DbQuestion> {
+    return this.questionRepository.updateById({ id }, data);
   }
 
-  async getQuestions (disciplineTypes: DisciplineTypeEnum[], disciplineRoles: DisciplineTypeEnum[]): Promise<DbQuestionWithRoles[]> {
+  async getQuestions (disciplineTypes: DisciplineTypeEnum[], disciplineRoles: DisciplineTypeEnum[]): Promise<DbQuestion[]> {
     return this.questionRepository.findMany({
-      where: {
-        questionRoles: {
-          some: {
-            isShown: true,
-            role: {
-              in: disciplineTypes,
-            },
+      questionRoles: {
+        some: {
+          isShown: true,
+          role: {
+            in: disciplineTypes,
           },
-          none: {
-            isRequired: true,
-            role: {
-              notIn: disciplineRoles,
-            },
+        },
+        none: {
+          isRequired: true,
+          role: {
+            notIn: disciplineRoles,
           },
         },
       },
-    }) as unknown as Promise<DbQuestionWithRoles[]>;
+    });
   }
 
-  async getQuestionWithMarks (teacherId: string, data?: QueryMarksDTO): Promise<DbQuestionWithAnswers[]> {
-    return (await this.questionRepository.findMany({
-      where: {
-        OR: [
-          {
-            type: QuestionType.TOGGLE,
-          },
-          {
-            type: QuestionType.SCALE,
-          },
-        ],
-      },
-      include: {
-        questionAnswers: {
-          where: {
-            disciplineTeacher: {
-              teacherId,
-              discipline: {
-                ...data,
-              },
+  async getQuestionWithMarks (teacherId: string, data?: QueryMarksDTO): Promise<DbQuestion[]> {
+    return this.questionRepository.findMany({
+      OR: [
+        { type: QuestionType.TOGGLE },
+        { type: QuestionType.SCALE },
+      ] }, null, null, {
+      questionAnswers: {
+        where: {
+          disciplineTeacher: {
+            teacherId,
+            discipline: {
+              ...data,
             },
           },
         },
       },
-    })) as unknown as Promise<DbQuestionWithAnswers[]>;
+    },);
   }
 
   async getQuestionWithText (teacherId: string, query: CommentsQueryDTO = {}) {
-    const questionsData = {
-      where: {
-        type: QuestionType.TEXT,
-        questionAnswers: {
-          some: {
-            disciplineTeacher: {
-              teacherId,
-              discipline: {
-                subjectId: query.subjectId,
-                year: query.year,
-                semester: query.semester,
-              },
+    const questions = await this.questionRepository.findMany({
+      type: QuestionType.TEXT,
+      questionAnswers: {
+        some: {
+          disciplineTeacher: {
+            teacherId,
+            discipline: {
+              subjectId: query.subjectId,
+              year: query.year,
+              semester: query.semester,
             },
           },
         },
       },
-      include: undefined,
-    };
-    const questions = await this.questionRepository.findMany(questionsData);
+    });
 
     const commentsData = {
       where: {
@@ -213,20 +197,20 @@ export class PollService {
     return result;
   }
 
-  async getQuestionById (id: string): Promise<DbQuestionWithRoles> {
-    return this.questionRepository.findById(id);
+  async getQuestionById (id: string): Promise<DbQuestion> {
+    return this.questionRepository.findOne({ id });
   }
 
-  async giveRole (data: CreateQuestionRoleDTO, questionId: string): Promise<DbQuestionWithRoles> {
-    return await this.questionRepository.updateById(questionId, {
+  async giveRole (data: CreateQuestionRoleDTO, questionId: string): Promise<DbQuestion> {
+    return await this.questionRepository.updateById({ id: questionId }, {
       questionRoles: {
         create: data,
       },
     });
   }
 
-  async deleteRole (questionId: string, role: DisciplineTypeEnum): Promise<DbQuestionWithRoles> {
-    return this.questionRepository.updateById(questionId, {
+  async deleteRole (questionId: string, role: DisciplineTypeEnum): Promise<DbQuestion> {
+    return this.questionRepository.updateById({ id: questionId }, {
       questionRoles: {
         delete: {
           questionId_role: {
@@ -239,7 +223,7 @@ export class PollService {
   }
 
   async checkDoesUserHaveSelectiveDisciplines (userId: string, semester: SemesterDate): Promise<boolean> {
-    const group = await this.groupRepository.find({
+    const group = await this.groupRepository.findOne({
       students: {
         some: {
           userId: userId,
@@ -303,35 +287,32 @@ export class PollService {
         : {};
 
     const disciplineTeachers = await this.disciplineTeacherRepository.findMany({
-      where: {
-        teacher: {
-          ...search,
+      teacher: {
+        ...search,
+      },
+      ...roleFilter,
+      discipline: {
+        is: {
+          OR: disciplineWhere,
         },
-        ...roleFilter,
-        discipline: {
-          is: {
-            OR: disciplineWhere,
-          },
-        },
-        removedDisciplineTeachers: {
-          every: {
-            studentId: {
-              not: userId,
-            },
-          },
-        },
-        questionAnswers: {
-          every: {
-            userId: {
-              not: userId,
-            },
+      },
+      removedDisciplineTeachers: {
+        every: {
+          studentId: {
+            not: userId,
           },
         },
       },
-      orderBy: {
-        teacher: {
-          [sort]: order,
+      questionAnswers: {
+        every: {
+          userId: {
+            not: userId,
+          },
         },
+      },
+    },  null, {
+      teacher: {
+        [sort]: order,
       },
     });
 
@@ -346,13 +327,11 @@ export class PollService {
 
   private async getSelectedInSemester (semester: SemesterDate, studentId: string): Promise<DbDiscipline[]> {
     return this.disciplineRepository.findMany({
-      where: {
-        semester: semester.semester,
-        year: semester.year,
-        selectiveDisciplines: {
-          some: {
-            studentId,
-          },
+      semester: semester.semester,
+      year: semester.year,
+      selectiveDisciplines: {
+        some: {
+          studentId,
         },
       },
     });

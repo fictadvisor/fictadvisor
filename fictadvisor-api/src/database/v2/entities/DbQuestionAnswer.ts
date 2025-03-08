@@ -1,16 +1,15 @@
-import { DisciplineTeacher, Discipline, Subject, Teacher } from '@prisma/client/fictadvisor';
 import { DbQuestion } from './DbQuestion';
+import { DbDisciplineTeacher } from './DbDisciplineTeacher';
+import { DbUser } from './DbUser';
 
 export class DbQuestionAnswer {
   disciplineTeacherId: string;
   questionId: string;
-  userId: string;
-  value: string;
   question?: DbQuestion;
-  disciplineTeacher?: DisciplineTeacher & {
-    discipline?: Discipline & {
-      subject: Subject,
-    },
-    teacher?: Teacher,
-  };
+  userId: string;
+  user?: DbUser;
+  value: string;
+  disciplineTeacher?: DbDisciplineTeacher;
+  createdAt: Date | null;
+  updatedAt: Date | null;
 }

@@ -15,19 +15,12 @@ export class ResourceService {
   ) {}
 
   async getAll (body: QueryAllResourcesDTO): Promise<StudentResource[]> {
-    return this.resourceRepository.findMany({
-      where: body.ids
-        ? {
-          id: {
-            in: body.ids,
-          },
-        }
-        : {},
-    });
+    return this.resourceRepository.findMany(
+      body.ids ? { id: { in: body.ids } } : {});
   }
 
   async get (id: string): Promise<StudentResource | null> {
-    return this.resourceRepository.findById(id);
+    return this.resourceRepository.findOne({ id });
   }
 
   async create (body: CreateResourceDTO): Promise<StudentResource> {
@@ -35,7 +28,7 @@ export class ResourceService {
   }
 
   async update (id: string, body: UpdateResourceDTO):Promise<StudentResource> {
-    return this.resourceRepository.updateById(id, body);
+    return this.resourceRepository.updateById({ id }, body);
   }
 
   async updateMany (body: UpdateResourcesDTO): Promise<StudentResource[]> {
@@ -49,6 +42,6 @@ export class ResourceService {
   }
 
   async delete (id: string): Promise<void> {
-    await this.resourceRepository.deleteById(id);
+    await this.resourceRepository.deleteById({ id });
   }
 }

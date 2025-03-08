@@ -13,7 +13,7 @@ import { TelegramConfigService } from '../../../src/config/TelegramConfigService
 import { TeacherService } from '../../../src/modules/teacher/v2/TeacherService';
 import { PollService } from '../../../src/modules/poll/v2/PollService';
 import { DbQuestionWithAnswers } from '../../../src/database/v2/entities/DbQuestionWithAnswers';
-import { Cathedra, Prisma, QuestionDisplay, TeachersOnCathedras } from '@prisma/client/fictadvisor';
+import { Cathedra, EntityType, Prisma, QuestionDisplay, TeachersOnCathedras } from '@prisma/client/fictadvisor';
 import { TeacherRepository } from '../../../src/database/v2/repositories/TeacherRepository';
 import { DbTeacher } from '../../../src/database/v2/entities/DbTeacher';
 import { ContactRepository } from '../../../src/database/v2/repositories/ContactRepository';
@@ -119,7 +119,7 @@ describe('TeacherService', () => {
   describe('getTeacher', () => {
     it('should return teacher by id', async () => {
       jest.spyOn(teacherRepository, 'findById').mockImplementation(async () => teacher1);
-      jest.spyOn(contactRepository, 'getAllContacts').mockImplementation(async () => [teacher1Contact]);
+      jest.spyOn(contactRepository, 'findMany').mockImplementation(async () => [teacher1Contact]);
 
       const result = await teacherService.getTeacher(teacher1.id);
 
@@ -129,7 +129,7 @@ describe('TeacherService', () => {
 
     it('should return teacher without contacts if there are no contacts', async () => {
       jest.spyOn(teacherRepository, 'findById').mockImplementation(async () => teacher2);
-      jest.spyOn(contactRepository, 'getAllContacts').mockImplementation(async () => []);
+      jest.spyOn(contactRepository, 'findMany').mockImplementation(async () => []);
 
       const result = await teacherService.getTeacher(teacher2.id);
 
@@ -333,7 +333,7 @@ describe('TeacherService', () => {
     beforeEach(() => {
       teacherCopy = JSON.parse(JSON.stringify(teacher1));
     });
-    
+
     it('should connect teacher with cathedra', async () => {
       jest.spyOn(teacherRepository, 'updateById').mockImplementation(async () => {
         teacherCopy.cathedras.push(teacherOnCathedra1);
@@ -382,7 +382,7 @@ describe('TeacherService', () => {
       jest.spyOn(disciplineTeacherService, 'isNotSelectedByUser').mockImplementation(async () => false);
 
       const result = await teacherService.getUserDisciplineTeachers('teacherId', 'userId', false);
-      
+
       expect(result.length).toBe(1);
     });
 
@@ -394,7 +394,7 @@ describe('TeacherService', () => {
 
       jest.spyOn(disciplineTeacherRepository, 'findMany').mockImplementation(async () => disciplineTeachers);
       jest.spyOn(disciplineTeacherRepository, 'find').mockImplementation(async (query) => {
-        if (query.id === '1') 
+        if (query.id === '1')
           return { id: '1', removedDisciplineTeachers: [{ studentId: 'userId' }] } as any as Promise<any>;
         return null;
       });
@@ -539,14 +539,14 @@ describe('TeacherService', () => {
 
   describe('getAllContacts', () => {
     it('should return all contacts for a given teacher', async () => {
-      jest.spyOn(contactRepository, 'getAllContacts').mockImplementation(async () => [teacher1Contact, teacher1Contact2]);
+      jest.spyOn(contactRepository, 'findMany').mockImplementation(async () => [teacher1Contact, teacher1Contact2]);
 
       const result = await teacherService.getAllContacts(teacher1.id);
       expect(result).toEqual([teacher1Contact, teacher1Contact2]);
     });
 
     it('should return an empty array if no contacts found', async () => {
-      jest.spyOn(contactRepository, 'getAllContacts').mockImplementation(async () => []);
+      jest.spyOn(contactRepository, 'findMany').mockImplementation(async () => []);
 
       const result = await teacherService.getAllContacts(teacher1.id);
       expect(result).toEqual([]);
@@ -557,8 +557,8 @@ describe('TeacherService', () => {
     let contacts;
     beforeAll(() => {
       contacts = [teacher1Contact];
-      jest.spyOn(contactRepository, 'getContact').mockImplementation(async (teacherId: string, contactId) =>
-        contacts.find((c) => c.id === contactId) as any as Promise<any>);
+      jest.spyOn(contactRepository, 'findOne').mockImplementation(async ({ id }: Prisma.ContactWhereInput) =>
+        contacts.find((c) => c.id === id) as any as Promise<any>);
     });
 
     it('should return contact', async () => {
@@ -581,10 +581,10 @@ describe('TeacherService', () => {
 
     beforeAll(() => {
       contacts = [teacher2Contact];
-      jest.spyOn(contactRepository, 'createContact').mockImplementation(async (data: CreateContactData) =>
+      jest.spyOn(contactRepository, 'create').mockImplementation(async (data: CreateContactData) =>
         createContact(contacts, data));
-      jest.spyOn(contactRepository, 'getContact').mockImplementation(async (teacherId: string, contactId) =>
-        contacts.find((c) => c.id === contactId));
+      jest.spyOn(contactRepository, 'findOne').mockImplementation(async ({ id }: Prisma.ContactWhereInput) =>
+        contacts.find((c) => c.id === id));
     });
 
     it('should create contact', async () => {
@@ -603,7 +603,10 @@ describe('TeacherService', () => {
     let contacts;
 
     beforeAll(() => {
-      jest.spyOn(contactRepository, 'updateContact').mockImplementation(async (entityId: string, id: string, data: UpdateContactDTO) => {
+      jest.spyOn(contactRepository, 'update').mockImplementation(async (
+        { id }: Prisma.ContactWhereInput,
+        data: (Prisma.ContactUpdateInput)
+      ) => {
         const contact = contacts.find((c: { id: string; }) => c.id === id);
         if (!contact) return null as any as Promise<any>;
 
@@ -613,7 +616,7 @@ describe('TeacherService', () => {
 
         return contact as any as Promise<any>;
       });
-      jest.spyOn(contactRepository, 'getContact').mockImplementation(async (entityId: string, id) =>
+      jest.spyOn(contactRepository, 'findOne').mockImplementation(async ({ id }: Prisma.ContactWhereInput) =>
         contacts.find((c) => c.id === id) ?? null);
     });
 
@@ -647,7 +650,7 @@ describe('TeacherService', () => {
     let contacts;
 
     beforeAll(() => {
-      jest.spyOn(contactRepository, 'deleteContact').mockImplementation(async (entityId: string, id: string) => {
+      jest.spyOn(contactRepository, 'delete').mockImplementation(async ({ id }: Prisma.ContactWhereInput,) => {
         const contactToDelete = contacts.find((c: { id: string; }) => c.id === id);
         const countBeforeDelete: number = contacts.length;
         contacts = contacts.filter((c) => c.id !== id);
@@ -689,12 +692,12 @@ describe('TeacherService', () => {
       expect(result).toEqual([]);
     });
   });
-  
+
   describe('getTeacherSubject', () => {
     it('should return a subject for a given teacher', async () => {
       jest.spyOn(teacherRepository, 'find').mockImplementation(async () => teacher1);
       jest.spyOn(subjectRepository, 'findById').mockImplementation(async () => teacher1Subject as any as Promise<any>);
-      jest.spyOn(contactRepository, 'getAllContacts').mockImplementation(async () => [teacher1Contact]);
+      jest.spyOn(contactRepository, 'findMany').mockImplementation(async () => [teacher1Contact]);
 
       const result = await teacherService.getTeacherSubject(teacher1.id, teacher1Subject.id);
 
@@ -808,7 +811,7 @@ describe('TeacherService', () => {
       expect(teacherRepository.updateById).toHaveBeenCalledWith('teacher1', { rating: 85 });
       expect(teacherRepository.updateById).toHaveBeenCalledWith('teacher2', { rating: 95 });
     });
-  
+
     it('should not update rating if no teachers found', async () => {
       jest.spyOn(teacherRepository, 'findMany').mockImplementation(async () => []);
       jest.spyOn(teacherService, 'getMarks').mockImplementation(async () => []);
@@ -987,6 +990,8 @@ const teacher1Contact = {
   name: `${teacher1.lastName} ${teacher1.firstName} ${teacher1.middleName}`,
   displayName: `${teacher1.lastName} ${teacher1.firstName} ${teacher1.middleName}`,
   link: `/teachers/${teacher1.id}`,
+  entityId: teacher1.id,
+  entityType: EntityType.TEACHER,
 };
 
 const teacher1Contact2 = {
@@ -994,6 +999,8 @@ const teacher1Contact2 = {
   name: `${teacher1.lastName} ${teacher1.firstName} ${teacher1.middleName}`,
   displayName: `${teacher1.lastName} ${teacher1.firstName} ${teacher1.middleName}`,
   link: `/site/second/${teacher1.id}`,
+  entityId: teacher1.id,
+  entityType: EntityType.TEACHER,
 };
 
 const getTeacherSubjectResult = {
@@ -1022,10 +1029,10 @@ const getTeacherSubjectResult = {
   ],
 };
 
-const teacher1discipline : DbDisciplineTeacher = { 
+const teacher1discipline : DbDisciplineTeacher = {
   id: teacher1.id,
   teacherId: teacher1.id,
-  disciplineId: '23184418-e1a1-4269-a84b-4b8799107356', 
+  disciplineId: '23184418-e1a1-4269-a84b-4b8799107356',
 
 };
 

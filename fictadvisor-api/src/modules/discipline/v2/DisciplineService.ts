@@ -74,11 +74,11 @@ export class DisciplineService {
       );
     }
 
-    return this.disciplineRepository.findById(discipline.id);
+    return this.disciplineRepository.findOne({ id: discipline.id });
   }
 
   async getById (id: string) {
-    return this.disciplineRepository.findById(id);
+    return this.disciplineRepository.findOne({ id });
   }
 
   async getAll (body: QueryAllDisciplinesDTO): Promise<PaginatedData<DbDiscipline>> {
@@ -108,26 +108,24 @@ export class DisciplineService {
 
   async getTeachers (disciplineId: string, disciplineType: DisciplineTypeEnum) {
     return this.disciplineTeacherRepository.findMany({
-      where: {
-        roles: {
-          some: {
-            disciplineType: {
-              name: disciplineType,
-            },
+      roles: {
+        some: {
+          disciplineType: {
+            name: disciplineType,
           },
         },
-        discipline: {
-          id: disciplineId,
-        },
+      },
+      discipline: {
+        id: disciplineId,
       },
     });
   }
 
-  async deleteById (disciplineId: string): Promise<DbDiscipline> {
-    return this.disciplineRepository.deleteById(disciplineId);
+  async deleteById (id: string): Promise<DbDiscipline> {
+    return this.disciplineRepository.deleteById({ id });
   }
 
   async updateById (id: string, data: UpdateDisciplineDTO): Promise<DbDiscipline> {
-    return this.disciplineRepository.updateById(id, data);
+    return this.disciplineRepository.updateById({ id }, data);
   }
 }

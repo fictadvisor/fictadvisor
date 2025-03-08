@@ -8,6 +8,7 @@ import { SortQACParam } from '@fictadvisor/utils/enums';
 import { DatabaseUtils } from '../../../database/DatabaseUtils';
 import { DbCathedra } from '../../../database/v2/entities/DbCathedra';
 import { CathedraRepository } from '../../../database/v2/repositories/CathedraRepository';
+import { makeUnique } from '../../../common/helpers/arrayUtils';
 
 @Injectable()
 export class CathedraService {
@@ -27,9 +28,9 @@ export class CathedraService {
     });
   }
 
-  async update (id: string, body: UpdateCathedraDTO): Promise<DbCathedra>  {
+  async update (id: string, body: UpdateCathedraDTO): Promise<DbCathedra> {
     const { addTeachers, deleteTeachers, ...data } = body;
-    return this.cathedraRepository.updateById(id, {
+    return this.cathedraRepository.updateById({ id }, {
       ...data,
       teachers: {
         deleteMany: {
@@ -45,7 +46,7 @@ export class CathedraService {
   }
 
   async delete (id: string): Promise<DbCathedra> {
-    return this.cathedraRepository.deleteById(id);
+    return this.cathedraRepository.deleteById({ id });
   }
 
   async getAll (query: QueryAllCathedrasDTO) {
@@ -80,13 +81,11 @@ export class CathedraService {
   };
 
   async getAllDivisions () {
-    const cathedras = await this.cathedraRepository.findMany({
-      distinct: ['division'],
-    });
-    return { divisions: cathedras.map((cathedra) => cathedra.division) };
+    const cathedras = await this.cathedraRepository.findMany({});
+    return { divisions: makeUnique(cathedras.map((cathedra) => cathedra.division)) };
   }
 
   async getById (cathedraId: string) {
-    return this.cathedraRepository.findById(cathedraId);
+    return this.cathedraRepository.findOne({ id: cathedraId });
   }
 }

@@ -72,12 +72,12 @@ export class StudentService {
 
   async createStudent (body: CreateStudentWithRolesDTO) {
     const { username, roleName, groupId, ...data } = body;
-    const user = await this.userRepository.find({ username });
+    const user = await this.userRepository.findOne({ username });
     if (!user) {
       throw new NotRegisteredException('username');
     }
 
-    const student = await this.studentRepository.findById(user.id);
+    const student = await this.studentRepository.findOne({ userId: user.id });
     if (student) {
       throw new AlreadyExistException('Student');
     }
@@ -103,16 +103,16 @@ export class StudentService {
     });
   }
 
-  async updateStudent (id: string, body: UpdateStudentWithRolesDTO) {
-    const student = await this.studentRepository.findById(id);
+  async updateStudent (userId: string, body: UpdateStudentWithRolesDTO) {
+    const student = await this.studentRepository.findOne({ userId });
     const role = student.roles.find(({ role }) => (Object.values(GroupRoles) as RoleName[]).includes(role.name));
     const oldRoleName = role?.role.name ?? GroupRoles.STUDENT;
     const { roleName = oldRoleName, groupId, ...fullName } = body;
 
-    const changeGroup = groupId !== student.groupId ? this.changeGroup(groupId, id, oldRoleName) : {};
-    const roles = await this.getSwitchRoles(id, roleName, groupId ?? student.groupId);
+    const changeGroup = groupId !== student.groupId ? this.changeGroup(groupId, userId, oldRoleName) : {};
+    const roles = await this.getSwitchRoles(userId, roleName, groupId ?? student.groupId);
 
-    return this.studentRepository.updateById(id, {
+    return this.studentRepository.updateById({ userId }, {
       ...fullName,
       ...changeGroup,
       ...roles,
@@ -140,7 +140,7 @@ export class StudentService {
       return {};
     }
 
-    const oldGroupRole = await this.roleRepository.find({
+    const oldGroupRole = await this.roleRepository.findOne({
       name: {
         in: Object.values(GroupRoles),
       },
@@ -169,7 +169,7 @@ export class StudentService {
   }
 
   private getRoleByGroupId (roleName: RoleName, groupId: string) {
-    return this.roleRepository.find({
+    return this.roleRepository.findOne({
       groupRole: {
         groupId,
       },
@@ -177,8 +177,8 @@ export class StudentService {
     });
   }
 
-  async updateStudentSelectives (id: string, body: UpdateStudentSelectivesDTO) {
-    const student = await this.studentRepository.findById(id);
+  async updateStudentSelectives (userId: string, body: UpdateStudentSelectivesDTO) {
+    const student = await this.studentRepository.findOne({ userId });
     const { connectedSelectives = [], disconnectedSelectives = [] } = body;
     const selectiveDisciplines = student.selectiveDisciplines
       .map((discipline) => discipline.discipline) as any as DbDiscipline[];
@@ -192,12 +192,12 @@ export class StudentService {
       disconnectedSelectives
     );
 
-    return this.studentRepository.updateById(id, {
+    return this.studentRepository.updateById({ userId }, {
       selectiveDisciplines: {
         deleteMany: {
           OR: disconnectedSelectives.map((disciplineId) => ({
             disciplineId,
-            studentId: id,
+            studentId: userId,
           }
           )),
         },
@@ -214,18 +214,14 @@ export class StudentService {
     connectedSelectiveIds: string[],
     disconnectedSelectiveIds: string[],
   ) {
-    const group = await this.groupRepository.findById(groupId);
+    const group = await this.groupRepository.findOne({ id: groupId });
 
     const connectedSelectives = await this.disciplineRepository.findMany({
-      where: {
-        OR: connectedSelectiveIds.map((id) => ({ id })),
-      },
+      OR: connectedSelectiveIds.map((id) => ({ id })),
     });
 
     const disconnectedSelectives = await this.disciplineRepository.findMany({
-      where: {
-        OR: disconnectedSelectiveIds.map((id) => ({ id })),
-      },
+      OR: disconnectedSelectiveIds.map((id) => ({ id })),
     });
 
     const uniqueSemesters = this.userService.getUniqueSemesters(connectedSelectives);
@@ -265,10 +261,8 @@ export class StudentService {
     studentSelectives: DbDiscipline[]
   ) {
     const groupSelectives = await this.disciplineRepository.findMany({
-      where: {
-        groupId,
-        isSelective: true,
-      },
+      groupId,
+      isSelective: true,
     });
 
     connectedSelectives.forEach((disciplineId) => {
@@ -281,11 +275,11 @@ export class StudentService {
     });
   }
 
-  deleteStudent (id: string) {
-    return this.studentRepository.deleteById(id);
+  deleteStudent (userId: string) {
+    return this.studentRepository.deleteById({ userId });
   }
 
-  getStudent (studentId: string) {
-    return this.studentRepository.findById(studentId);
+  getStudent (userId: string) {
+    return this.studentRepository.findOne({ userId });
   }
 }

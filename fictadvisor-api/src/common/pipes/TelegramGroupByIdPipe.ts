@@ -12,7 +12,7 @@ export class TelegramGroupByIdPipe implements PipeTransform<bigint, Promise<bigi
       throw new InvalidEntityIdException('TelegramGroup');
     }
 
-    const telegramGroups = await this.telegramGroupRepository.findByTelegramId(telegramId);
+    const telegramGroups = await this.telegramGroupRepository.findMany({ telegramId });
 
     if (!telegramGroups.length) {
       throw new InvalidEntityIdException('TelegramGroup');

@@ -10,12 +10,11 @@ export class ApprovedStudentPipe implements PipeTransform {
   ) {}
 
   async transform (userId: string) {
-
-    const student = await this.studentRepository.findById(userId);
-
+    const student = await this.studentRepository.findOne({ userId });
     if (student.state !== State.APPROVED) {
       throw new NotApprovedException();
     }
+
     return userId;
   }
 }

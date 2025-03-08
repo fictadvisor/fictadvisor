@@ -18,8 +18,8 @@ export class SelectiveDisciplinesPipe implements PipeTransform {
       throw new InvalidEntityIdException('Discipline');
     }
 
-    await mapAsync(selectiveDisciplinesIds, async (disciplineId: string) => {
-      const discipline = await this.disciplineRepository.findById(disciplineId);
+    await mapAsync(selectiveDisciplinesIds, async (id: string) => {
+      const discipline = await this.disciplineRepository.findOne({ id });
       if (!discipline) {
         throw new InvalidEntityIdException('Discipline');
       }
