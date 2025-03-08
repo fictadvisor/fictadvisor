@@ -1,6 +1,6 @@
 import { IsEnum, IsNotEmpty, IsOptional, Matches, MaxLength, MinLength } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { AcademicStatus, Position, ScientificDegree } from '../enums/db';
+import { AcademicStatus, Position, ScientificDegree } from '../enums';
 import {
   createRegex,
   UKR_REGEX,

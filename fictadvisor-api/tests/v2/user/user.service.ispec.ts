@@ -3,8 +3,6 @@ import { ForbiddenException, InjectionToken } from '@nestjs/common';
 import { TelegramAPI } from '../../../src/modules/telegram-api/telegram-api';
 import { PrismaModule } from '../../../src/database/prisma.module';
 import { MapperModule } from '../../../src/common/mappers/mapper.module';
-import { StudentMapper } from '../../../src/common/mappers/student.mapper';
-import { DisciplineMapper } from '../../../src/common/mappers/discipline.mapper';
 import { UserService } from '../../../src/modules/user/v2/user.service';
 import { AuthService } from '../../../src/modules/auth/v2/auth.service';
 import { GroupService } from '../../../src/modules/group/v2/group.service';
@@ -21,6 +19,8 @@ import { NotBelongException } from '../../../src/common/exceptions/not-belong.ex
 import { AlreadySelectedException } from '../../../src/common/exceptions/already-selected.exception';
 import { ExcessiveSelectiveDisciplinesException } from '../../../src/common/exceptions/excessive-selective-disciplines.exception';
 import { NotSelectedDisciplineException } from '../../../src/common/exceptions/not-selected-discipline.exception';
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
 
 describe('UserService', () => {
   let userService: UserService;
@@ -29,7 +29,13 @@ describe('UserService', () => {
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       providers: [UserService, PrismaService, GroupService, DateService, PollService],
-      imports: [PrismaModule, MapperModule],
+      imports: [
+        PrismaModule,
+        MapperModule,
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
+      ],
     }).useMocker((token) => {
       const tokens = [
         TelegramAPI,
@@ -39,8 +45,6 @@ describe('UserService', () => {
         RoleRepository,
         AuthService,
         FileService,
-        StudentMapper,
-        DisciplineMapper,
         DisciplineTeacherService,
         PollService,
       ] as InjectionToken[];
@@ -324,7 +328,7 @@ describe('UserService', () => {
     it('should return correct object if student has selective in only one semester', async () => {
       const userId = 'userWithSelectiveId';
       const result = await userService.getSelectivesBySemesters(userId);
-      expect(result).toStrictEqual({
+      expect(result).toEqual({
         selectives: [
           {
             year: 2022,
@@ -346,7 +350,7 @@ describe('UserService', () => {
     it('should return correct object if student has selective in only one semester', async () => {
       const userId = 'userWithSelectiveId';
       const result = await userService.getSelectivesBySemesters(userId);
-      expect(result).toStrictEqual({
+      expect(result).toEqual({
         selectives: [
           {
             year: 2022,

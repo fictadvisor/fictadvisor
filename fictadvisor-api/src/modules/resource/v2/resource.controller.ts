@@ -18,11 +18,13 @@ import {
 import { PERMISSION } from '@fictadvisor/utils/security';
 import { ApiEndpoint } from '../../../common/decorators/api-endpoint.decorator';
 import { ResourceByIdPipe } from '../../../common/pipes/resource-by-id.pipe';
-import { ResourceMapper } from '../../../common/mappers/resource.mapper';
 import { ResourceService } from './resource.service';
 import { ValidateResourcesPipe } from '../../../common/pipes/validate-resources.pipe';
 import { ResourceDocumentation } from '../../../common/documentation/modules/v2/resource';
 import { ResourceResponse, ResourcesResponse } from '@fictadvisor/utils/responses';
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
+import { DbStudentResource } from '../../../database/v2/entities/student-resource.entity';
 
 @ApiTags('Resource')
 @Controller({
@@ -32,7 +34,7 @@ import { ResourceResponse, ResourcesResponse } from '@fictadvisor/utils/response
 export class ResourceController {
   constructor (
     private resourceService: ResourceService,
-    private resourceMapper: ResourceMapper,
+    @InjectMapper() private mapper: Mapper,
   ) {}
 
   @ApiEndpoint({
@@ -44,7 +46,9 @@ export class ResourceController {
     @Query() body: QueryAllResourcesDTO,
   ): Promise<ResourcesResponse> {
     const studentResources = await this.resourceService.getAll(body);
-    return this.resourceMapper.getResources(studentResources);
+    const mappedResources = this.mapper.mapArray(studentResources, DbStudentResource, ResourceResponse);
+
+    return { resources: mappedResources };
   }
 
   @ApiEndpoint({
@@ -55,8 +59,8 @@ export class ResourceController {
   async get (
     @Param('resourceId', ResourceByIdPipe) resourceId: string,
   ): Promise<ResourceResponse> {
-    const answer = await this.resourceService.get(resourceId);
-    return this.resourceMapper.getResource(answer);
+    const resource = await this.resourceService.get(resourceId);
+    return this.mapper.map(resource, DbStudentResource, ResourceResponse);
   }
 
   @ApiEndpoint({
@@ -68,8 +72,8 @@ export class ResourceController {
   async create (
     @Body() body: CreateResourceDTO,
   ): Promise<ResourceResponse> {
-    const createdResourse = await this.resourceService.create(body);
-    return this.resourceMapper.getResource(createdResourse);
+    const resource = await this.resourceService.create(body);
+    return this.mapper.map(resource, DbStudentResource, ResourceResponse);
   }
 
   @ApiEndpoint({
@@ -82,8 +86,8 @@ export class ResourceController {
     @Param('resourceId', ResourceByIdPipe) resourceId: string,
     @Body() body: UpdateResourceDTO,
   ): Promise<ResourceResponse> {
-    const updatedResource = await this.resourceService.update(resourceId, body);
-    return this.resourceMapper.getResource(updatedResource);
+    const resource = await this.resourceService.update(resourceId, body);
+    return this.mapper.map(resource, DbStudentResource, ResourceResponse);
   }
 
   @ApiEndpoint({
@@ -95,8 +99,10 @@ export class ResourceController {
   async updateMany (
     @Body(ValidateResourcesPipe) body: UpdateResourcesDTO,
   ): Promise<ResourcesResponse> {
-    const updatedResources = await this.resourceService.updateMany(body);
-    return this.resourceMapper.getResources(updatedResources);
+    const resources = await this.resourceService.updateMany(body);
+    const mappedResources = this.mapper.mapArray(resources, DbStudentResource, ResourceResponse);
+
+    return { resources: mappedResources };
   }
 
   @ApiEndpoint({

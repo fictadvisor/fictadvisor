@@ -7,14 +7,15 @@ import {
   QueryMarksDTO,
   ComplaintDTO,
 } from '@fictadvisor/utils/requests';
-import { TeacherWithContactsFullResponse } from '@fictadvisor/utils/responses';
+import {
+  SubjectResponse,
+  TeacherWithContactsFullResponse,
+  TeacherWithRolesAndCathedrasResponse,
+} from '@fictadvisor/utils/responses';
 import { PaginationUtil, PaginateArgs } from '../../../database/v2/pagination.util';
 import { DatabaseUtils } from '../../../database/database.utils';
-import { filterAsync } from '../../../common/utils/array.utils';
+import { extractField, filterAsync, makeUnique } from '../../../common/utils/array.utils';
 import { TelegramAPI } from '../../telegram-api/telegram-api';
-import { TeacherMapper } from '../../../common/mappers/teacher.mapper';
-import { DisciplineTeacherMapper } from '../../../common/mappers/discipline-teacher.mapper';
-import { QuestionMapper } from '../../../common/mappers/question.mapper';
 import { PollService } from '../../poll/v2/poll.service';
 import { DateService } from '../../date/v2/date.service';
 import { DisciplineTeacherService } from './discipline-teacher.service';
@@ -28,26 +29,34 @@ import { ContactRepository } from '../../../database/v2/repositories/contact.rep
 import { InvalidQueryException } from '../../../common/exceptions/invalid-query.exception';
 import { InvalidEntityIdException } from '../../../common/exceptions/invalid-entity-id.exception';
 import { EntityType, QuestionDisplay, Prisma } from '@prisma/client/fictadvisor';
-import { SubjectMapper } from '../../../common/mappers/subject.mapper';
 import { DisciplineTypeEnum } from '@fictadvisor/utils/enums';
 import * as process from 'process';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
+import { DbSubject } from '../../../database/v2/entities/subject.entity';
+import { DbQuestion } from '../../../database/v2/entities/question.entity';
+import {
+  MarkArray,
+  OrderQAParam,
+  QuestionType,
+  Sort,
+  SortDTO,
+  SortQATParam,
+} from '@fictadvisor/utils';
 
 @Injectable()
 export class TeacherService {
   constructor (
     private readonly teacherRepository: TeacherRepository,
     private readonly disciplineTeacherRepository: DisciplineTeacherRepository,
-    private readonly teacherMapper: TeacherMapper,
     private readonly disciplineTeacherService: DisciplineTeacherService,
     private readonly contactRepository: ContactRepository,
     private readonly subjectRepository: SubjectRepository,
     private readonly pollService: PollService,
-    private readonly disciplineTeacherMapper: DisciplineTeacherMapper,
     private readonly dateService: DateService,
-    private readonly questionMapper: QuestionMapper,
     private readonly telegramAPI: TelegramAPI,
     private readonly groupRepository: GroupRepository,
-    private readonly subjectMapper: SubjectMapper,
+    @InjectMapper() private readonly mapper: Mapper,
   ) {}
 
   async getAll (body: QueryAllTeachersDTO) {
@@ -67,10 +76,22 @@ export class TeacherService {
           },
         ],
       },
-      ...this.teacherMapper.getSortedTeacher(body),
+      ...this.getSortedTeacher(body),
     };
 
     return await PaginationUtil.paginate<'teacher', DbTeacher>(this.teacherRepository, body, data);
+  }
+
+  private getSortedTeacher ({ sort, order }: SortDTO): Sort {
+    if (!sort) sort = SortQATParam.LAST_NAME;
+    if (!order) order = OrderQAParam.ASC;
+    const orderBy = [{ [sort]: order }];
+
+    orderBy.push({ [SortQATParam.LAST_NAME]: order });
+    orderBy.push({ [SortQATParam.FIRST_NAME]: order });
+    orderBy.push({ [SortQATParam.MIDDLE_NAME]: order });
+
+    return { orderBy };
   }
 
   private getSearchForTeachers = {
@@ -207,7 +228,15 @@ export class TeacherService {
 
   async getTeacherRoles (id: string) {
     const teacher = await this.teacherRepository.findOne({ id });
-    return this.teacherMapper.getTeacherRoles(teacher);
+    if (!teacher.disciplineTeachers) return [];
+
+    const disciplineTypes: DisciplineTypeEnum[] = [];
+    for (const { roles } of teacher.disciplineTeachers) {
+      disciplineTypes.push(
+        ...extractField(extractField(roles, 'disciplineType'), 'name') as DisciplineTypeEnum[]);
+    }
+
+    return makeUnique(disciplineTypes);
   }
 
   async create (body: Prisma.TeacherUncheckedCreateInput) {
@@ -267,7 +296,7 @@ export class TeacherService {
     for (const question of questions) {
       if (question.questionAnswers.length === 0) continue;
       const count = question.questionAnswers.length;
-      const mark = this.questionMapper.getRightMarkFormat(question);
+      const mark = TeacherService.getRightMarkFormat(question);
       marks.push({
         name: question.name,
         amount: count,
@@ -276,6 +305,23 @@ export class TeacherService {
       });
     }
     return marks.sort((a, b) => b.amount - a.amount);
+  }
+
+  private static parseMark (type: QuestionType, marksSum: number, answerQty: number) {
+    const divider = (answerQty * ((type === QuestionType.SCALE) ? 10 : 1));
+    return parseFloat(((marksSum / divider) * 100).toFixed(2));
+  }
+
+  static getRightMarkFormat ({ display, type, questionAnswers: answers }: DbQuestion): number | MarkArray {
+    if (display === QuestionDisplay.RADAR || display === QuestionDisplay.CIRCLE) {
+      return this.parseMark(type as QuestionType, answers.reduce((acc, answer) => acc + (+answer.value), 0), answers.length);
+    } else if (display === QuestionDisplay.AMOUNT) {
+      const table = {};
+      for (let i = 1; i <= 10; i++) {
+        table[i] = answers.filter((a) => +a.value === i).length;
+      }
+      return table as MarkArray;
+    }
   }
 
   checkQueryDate ({ semester, year }: QueryMarksDTO) {
@@ -317,16 +363,29 @@ export class TeacherService {
 
     const { disciplineTeachers } = dbTeacher;
 
-    const disciplineTypes = this.disciplineTeacherMapper.getRolesBySubject(disciplineTeachers, subjectId);
+    const disciplineTypes = this.getRolesBySubject(disciplineTeachers, subjectId);
     const subject = await this.subjectRepository.findOne({ id: subjectId });
     const contacts = await this.contactRepository.findMany({ entityId: teacherId });
 
     return {
-      ...this.teacherMapper.getTeacherWithRolesAndCathedras(dbTeacher),
-      subject: this.subjectMapper.getSubject(subject),
+      ...this.mapper.map(dbTeacher, DbTeacher, TeacherWithRolesAndCathedrasResponse),
+      subject: this.mapper.map(subject, DbSubject, SubjectResponse),
       disciplineTypes,
       contacts,
     };
+  }
+
+  private getRolesBySubject (disciplineTeachers: DbDisciplineTeacher[], subjectId: string): DisciplineTypeEnum[] {
+    const disciplineTypes = new Set<DisciplineTypeEnum>();
+    for (const disciplineTeacher of disciplineTeachers) {
+      if (disciplineTeacher.discipline.subjectId === subjectId) {
+        for (const { disciplineType } of disciplineTeacher.roles) {
+          disciplineTypes.add(disciplineType.name as DisciplineTypeEnum);
+        }
+      }
+    }
+
+    return Array.from(disciplineTypes);
   }
 
   async sendComplaint (teacherId: string, body: ComplaintDTO) {

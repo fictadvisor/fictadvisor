@@ -20,6 +20,10 @@ export async function mapAsync<T, V = object> (array: T[], callback: (item: T, i
   return Promise.all(array.map(callback));
 }
 
+export function extractField<T, K extends keyof T> (objs: T[], field: K): T[K][] {
+  return objs.map((obj) => obj[field]);
+}
+
 export function some<T, K extends keyof T> (objs: Array<T>, field: K, comp: any): boolean {
   return objs.some((obj) => obj[field] === comp);
 }

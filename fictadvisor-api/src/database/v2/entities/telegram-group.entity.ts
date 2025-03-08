@@ -1,13 +1,26 @@
 import { DbGroup } from './group.entity';
 import { TelegramSource } from '@prisma/client/fictadvisor';
+import { AutoMap } from '@automapper/classes';
 
 export class DbTelegramGroup {
-  group?: DbGroup;
-  groupId: string;
-  telegramId: bigint;
-  threadId: bigint | null;
-  source: TelegramSource;
-  postInfo: boolean;
+  @AutoMap(() => DbGroup)
+    group?: DbGroup;
+
+  @AutoMap()
+    groupId: string;
+
+  @AutoMap()
+    telegramId: bigint;
+
+  @AutoMap()
+    threadId: bigint | null;
+
+  @AutoMap(() => String)
+    source: TelegramSource;
+
+  @AutoMap()
+    postInfo: boolean;
+
   createdAt: Date | null;
   updatedAt: Date | null;
 }

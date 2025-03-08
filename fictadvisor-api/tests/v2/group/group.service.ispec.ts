@@ -2,8 +2,6 @@ import { Test } from '@nestjs/testing';
 import { InjectionToken } from '@nestjs/common';
 import { PrismaModule } from '../../../src/database/prisma.module';
 import { MapperModule } from '../../../src/common/mappers/mapper.module';
-import { StudentMapper } from '../../../src/common/mappers/student.mapper';
-import { DisciplineMapper } from '../../../src/common/mappers/discipline.mapper';
 import { UserService } from '../../../src/modules/user/v2/user.service';
 import { PrismaService } from '../../../src/database/v2/prisma.service';
 import { GroupService } from '../../../src/modules/group/v2/group.service';
@@ -15,6 +13,8 @@ import { RoleRepository } from '../../../src/database/v2/repositories/role.repos
 import { GroupRepository } from '../../../src/database/v2/repositories/group.repository';
 import { DisciplineRepository } from '../../../src/database/v2/repositories/discipline.repository';
 import { NoPermissionException } from '../../../src/common/exceptions/no-permission.exception';
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
 
 describe('GroupService', () => {
   let groupService: GroupService;
@@ -23,17 +23,21 @@ describe('GroupService', () => {
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       providers: [GroupService, PrismaService],
-      imports: [PrismaModule, MapperModule],
+      imports: [
+        PrismaModule,
+        MapperModule,
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
+      ],
     }).useMocker((token) => {
       const tokens = [
-        DisciplineMapper,
         GroupRepository,
         UserService,
         StudentRepository,
         UserRepository,
         RoleRepository,
         DisciplineRepository,
-        StudentMapper,
         DateService,
         FileService,
       ] as InjectionToken[];

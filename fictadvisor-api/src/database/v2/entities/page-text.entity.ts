@@ -1,6 +1,15 @@
+import { AutoMap } from '@automapper/classes';
+
 export class DbPageText {
-  key: string;
-  value: string;
-  link: string | null;
-  isShown: boolean;
+  @AutoMap()
+    key: string;
+
+  @AutoMap()
+    value: string;
+
+  @AutoMap()
+    link: string | null;
+
+  @AutoMap()
+    isShown: boolean;
 }

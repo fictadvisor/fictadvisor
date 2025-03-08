@@ -1,31 +1,36 @@
+import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
 
-class SelectiveBySemesters {
+export class SelectiveBySemestersResponse {
   @ApiProperty({
     description: 'Year number',
   })
+  @AutoMap()
     year: number;
 
   @ApiProperty({
     description: 'Semester number',
   })
+  @AutoMap()
     semester: number;
 
   @ApiProperty({
     description: 'Names of disciplines',
   })
+  @AutoMap(() => [String])
     disciplines: string[];
 
   @ApiProperty({
     description: 'Amount of disciplines',
   })
+  @AutoMap()
     amount: number;
 }
 
 export class SelectivesBySemestersResponse {
   @ApiProperty({
-    type: [SelectiveBySemesters],
+    type: [SelectiveBySemestersResponse],
     description: 'Selective disciplines',
   })
-    selectives: SelectiveBySemesters[];
+    selectives: SelectiveBySemestersResponse[];
 }

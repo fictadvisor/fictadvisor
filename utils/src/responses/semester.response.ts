@@ -1,14 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { AutoMap } from '@automapper/classes';
 
 export class SemesterResponse {
   @ApiProperty({
     description: 'Studying year',
   })
+  @AutoMap()
     year: number;
 
   @ApiProperty({
     description: 'Studying semester',
   })
+  @AutoMap()
     semester: number;
 }
 export class StudyingSemester extends SemesterResponse {

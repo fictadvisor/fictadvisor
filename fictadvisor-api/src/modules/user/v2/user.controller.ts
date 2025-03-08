@@ -24,12 +24,20 @@ import { GroupByIdPipe } from '../../../common/pipes/group-by-id.pipe';
 import { ApprovedStudentPipe } from '../../../common/pipes/approved-student.pipe';
 import { SelectiveDisciplinesPipe } from '../../../common/pipes/selective-disciplines.pipe';
 import { UserByTelegramIdPipe } from '../../../common/pipes/user-by-telegram-id.pipe';
-import { UserMapper } from '../../../common/mappers/user.mapper';
-import { StudentMapper } from '../../../common/mappers/student.mapper';
 import { UserService } from './user.service';
 import { StudentByIdPipe } from '../../../common/pipes/student-by-id.pipe';
 import { UserDocumentation } from '../../../common/documentation/modules/v2/user';
 import { RoleByIdPipe } from '../../../common/pipes/role-by-id.pipe';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
+import { DbUser } from '../../../database/v2/entities/user.entity';
+import {
+  ContactResponse,
+  ContactsResponse, DisciplineIdsResponse,
+  FullStudentResponse,
+  OrdinaryStudentResponse,
+  RemainingSelectivesResponse, SelectivesBySemestersResponse, UserForGetAllResponse, UserResponse, UsersResponse } from '@fictadvisor/utils';
+import { DbStudent } from '../../../database/v2/entities/student.entity';
 
 @ApiTags('User')
 @Controller({
@@ -39,8 +47,7 @@ import { RoleByIdPipe } from '../../../common/pipes/role-by-id.pipe';
 export class UserController {
   constructor (
     private userService: UserService,
-    private userMapper: UserMapper,
-    private studentMapper: StudentMapper,
+    @InjectMapper() private mapper: Mapper,
   ) {}
 
   @ApiEndpoint({
@@ -49,9 +56,9 @@ export class UserController {
     permissions: PERMISSION.USERS_CREATE,
   })
   @Post()
-  async createUser (@Body() body: CreateUserDTO) {
+  async createUser (@Body() body: CreateUserDTO): Promise<UserResponse> {
     const user = await this.userService.createUserByAdmin(body);
-    return this.userMapper.getUser(user);
+    return this.mapper.map(user, DbUser, UserResponse);
   }
 
   @ApiEndpoint({
@@ -63,8 +70,9 @@ export class UserController {
   async verify (
     @Param('userId', UserByIdPipe) userId: string,
     @Body() { state, isCaptain }: ApproveStudentByTelegramDTO,
-  ) {
-    return this.userService.verifyStudent(userId, isCaptain, state);
+  ): Promise<FullStudentResponse> {
+    const student = await this.userService.verifyStudent(userId, isCaptain, state);
+    return this.mapper.map(student, DbStudent, FullStudentResponse);
   }
 
   @ApiEndpoint({
@@ -76,7 +84,7 @@ export class UserController {
   requestNewGroup (
     @Param('userId', UserByIdPipe) userId: string,
     @Body() body: GroupRequestDTO,
-  ) {
+  ): Promise<void> {
     return this.userService.requestNewGroup(userId, body);
   }
 
@@ -88,7 +96,7 @@ export class UserController {
   @Get('/:userId/selectiveDisciplines')
   async getSelectiveDisciplines (
     @Param('userId', UserByIdPipe) userId: string,
-  ) {
+  ): Promise<DisciplineIdsResponse> {
     const dbDisciplines = await this.userService.getSelectiveDisciplines(userId);
     return { disciplines: dbDisciplines.map((d) => d.id) };
   }
@@ -101,7 +109,7 @@ export class UserController {
   @Get('/:userId/selectiveBySemesters')
   async getSelectivesBySemesters (
     @Param('userId', UserByIdPipe) userId: string,
-  ) {
+  ): Promise<SelectivesBySemestersResponse> {
     return this.userService.getSelectivesBySemesters(userId);
   }
 
@@ -115,7 +123,7 @@ export class UserController {
     @Param('userId', UserByIdPipe) userId: string,
     @Body('roleId', RoleByIdPipe) roleId: string,
     @Body() body: GiveRoleDTO,
-  ) {
+  ): Promise<void> {
     return this.userService.giveRole(userId, roleId);
   }
 
@@ -128,7 +136,7 @@ export class UserController {
   removeRole (
     @Param('userId', UserByIdPipe) userId: string,
     @Param('roleId', RoleByIdPipe) roleId: string,
-  ) {
+  ): Promise<void> {
     return this.userService.removeRole(userId, roleId);
   }
 
@@ -140,9 +148,10 @@ export class UserController {
   @Get()
   async getAll (
     @Query() query: QueryAllUsersDTO,
-  ) {
+  ): Promise<UsersResponse> {
     const users = await this.userService.getAll(query);
-    const data = this.userMapper.getAll(users.data);
+    const data = this.mapper.mapArray(users.data, DbUser, UserForGetAllResponse);
+
     return {
       data,
       pagination: users.pagination,
@@ -157,7 +166,7 @@ export class UserController {
   @Delete('/:userId')
   deleteUser (
     @Param('userId', UserByIdPipe) userId: string,
-  ) {
+  ): Promise<void> {
     return this.userService.deleteUser(userId);
   }
 
@@ -170,9 +179,9 @@ export class UserController {
   async updateUser (
     @Param('userId', UserByIdPipe) userId: string,
     @Body() body: UpdateUserDTO,
-  ) {
+  ): Promise<UserResponse> {
     const user = await this.userService.updateUser(userId, body);
-    return this.userMapper.getUser(user);
+    return this.mapper.map(user, DbUser, UserResponse);
   }
 
   @ApiEndpoint({
@@ -183,7 +192,7 @@ export class UserController {
   @Get('/:userId/contacts')
   async getContacts (
     @Param('userId', UserByIdPipe) userId: string,
-  ) {
+  ): Promise<ContactsResponse> {
     const contacts = await this.userService.getContacts(userId);
     return { contacts };
   }
@@ -197,7 +206,7 @@ export class UserController {
   createContact (
     @Param('userId', UserByIdPipe) userId: string,
     @Body() body: CreateContactDTO,
-  ) {
+  ): Promise<ContactResponse> {
     return this.userService.createContact(userId, body);
   }
 
@@ -210,7 +219,7 @@ export class UserController {
   updateContact (
     @Param(ContactByUserIdPipe) params : { contactId: string },
     @Body() body: UpdateContactDTO,
-  ) {
+  ): Promise<ContactResponse> {
     return this.userService.updateContact(params.contactId, body);
   }
 
@@ -222,7 +231,7 @@ export class UserController {
   @Delete('/:userId/contacts/:contactId')
   deleteContact (
     @Param(ContactByUserIdPipe) params: { contactId: string },
-  ) {
+  ): Promise<void> {
     return this.userService.deleteContact(params.contactId);
   }
 
@@ -232,11 +241,12 @@ export class UserController {
     permissions: PERMISSION.USERS_$USERID_STUDENT_UPDATE,
   })
   @Patch('/:userId/student')
-  updateStudent (
+  async updateStudent (
     @Param('userId', UserByIdPipe) userId: string,
     @Body() body: UpdateStudentDTO,
-  ) {
-    return this.userService.updateStudent(userId, body);
+  ): Promise<FullStudentResponse> {
+    const student = await this.userService.updateStudent(userId, body);
+    return this.mapper.map(student, DbStudent, FullStudentResponse);
   }
 
   @ApiEndpoint({
@@ -247,7 +257,7 @@ export class UserController {
   @Get('/:userId/telegram')
   getUserForTelegram (
     @Param('userId', UserByIdPipe) userId: string,
-  ) {
+  ): Promise<OrdinaryStudentResponse> {
     return this.userService.getUser(userId);
   }
 
@@ -259,9 +269,9 @@ export class UserController {
   @Get('/telegramUser/:telegramId')
   async getUserByTelegramId (
     @Param('telegramId', UserByTelegramIdPipe) telegramId: bigint,
-  ) {
+  ): Promise<OrdinaryStudentResponse> {
     const student = await this.userService.getUserByTelegramId(telegramId);
-    return this.studentMapper.getOrdinaryStudent(student);
+    return this.mapper.map(student, DbStudent, OrdinaryStudentResponse);
   }
 
   @ApiEndpoint({
@@ -273,7 +283,7 @@ export class UserController {
   async linkTelegram (
     @Param('userId', UserByIdPipe) userId: string,
     @Body() telegram: TelegramDTO,
-  ) {
+  ): Promise<void> {
     await this.userService.linkTelegram(userId, telegram);
   }
 
@@ -285,9 +295,9 @@ export class UserController {
   @Get('/:userId')
   async getMe (
     @Param('userId', UserByIdPipe) userId: string,
-  ) {
+  ): Promise<UserResponse> {
     const user = await this.userService.getSimplifiedUser(userId);
-    return this.userMapper.getUser(user);
+    return this.mapper.map(user, DbUser, UserResponse);
   }
 
   @ApiEndpoint({
@@ -300,9 +310,9 @@ export class UserController {
   async uploadAvatar (
     @Param('userId', UserByIdPipe) userId: string,
     @UploadedFile(AvatarValidationPipe) file: Express.Multer.File,
-  ) {
+  ): Promise<UserResponse> {
     const user = await this.userService.updateAvatar(file, userId);
-    return this.userMapper.getUser(user);
+    return this.mapper.map(user, DbUser, UserResponse);
   }
 
   @ApiEndpoint({
@@ -313,9 +323,9 @@ export class UserController {
   @Delete('/:userId/avatar')
   async deleteAvatar (
     @Param('userId', UserByIdPipe) userId: string,
-  ) {
+  ): Promise<UserResponse> {
     const user = await this.userService.deleteAvatar(userId);
-    return this.userMapper.getUser(user);
+    return this.mapper.map(user, DbUser, UserResponse);
   }
 
   @ApiEndpoint({
@@ -327,7 +337,7 @@ export class UserController {
   getRemainingSelectives (
     @Param('userId', UserByIdPipe) userId: string,
     @Query() query: RemainingSelectivesDTO,
-  ) {
+  ): Promise<RemainingSelectivesResponse | object> {
     return this.userService.getRemainingSelectivesForSemester(userId, query);
   }
 
@@ -340,7 +350,7 @@ export class UserController {
   async attachSelectiveDisciplines (
     @Param('userId', StudentByIdPipe, ApprovedStudentPipe) userId: string,
     @Body(SelectiveDisciplinesPipe) body: SelectiveDisciplinesDTO,
-  ) {
+  ): Promise<void> {
     return this.userService.selectDisciplines(userId, body);
   }
 
@@ -353,7 +363,7 @@ export class UserController {
   async detachSelectiveDisciplines (
     @Param('userId', UserByIdPipe, ApprovedStudentPipe) userId: string,
     @Body(SelectiveDisciplinesPipe) body: SelectiveDisciplinesDTO,
-  ) {
+  ): Promise<void> {
     return this.userService.deselectDisciplines(userId, body);
   }
 
@@ -366,8 +376,8 @@ export class UserController {
   async changeGroup (
     @Param('userId', UserByIdPipe, ApprovedStudentPipe) userId: string,
     @Param('groupId', GroupByIdPipe) groupId: string,
-  ) {
+  ): Promise<FullStudentResponse> {
     const student = await this.userService.changeGroup(userId, groupId);
-    return this.studentMapper.updateStudent(student);
+    return this.mapper.map(student, DbStudent, FullStudentResponse);
   }
 }

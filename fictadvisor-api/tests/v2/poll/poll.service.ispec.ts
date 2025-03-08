@@ -7,6 +7,8 @@ import { PollService } from '../../../src/modules/poll/v2/poll.service';
 import { DbDiscipline } from '../../../src/database/v2/entities/discipline.entity';
 import { Group, PrismaClient, QuestionDisplay, QuestionType, State, Subject, Teacher, User } from '@prisma/client/fictadvisor';
 import { DbQuestionWithRoles } from '../../../src/database/v2/entities/question-with-roles.entity';
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
 
 
 describe('PollService', () => {
@@ -34,6 +36,9 @@ describe('PollService', () => {
         PrismaModule,
         DateModule,
         MapperModule,
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
       ],
     }).compile();
 

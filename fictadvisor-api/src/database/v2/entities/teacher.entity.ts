@@ -3,25 +3,52 @@ import {
   AcademicStatus,
   Position,
 } from '@prisma/client/fictadvisor';
-import { Decimal } from '@prisma/client/fictadvisor/runtime';
 import { DbDisciplineTeacher } from './discipline-teacher.entity';
 import { DbComplaint } from './complaint.entity';
 import { DbTeachersOnCathedras } from './teachers-on-cathedras.entity';
+import { AutoMap } from '@automapper/classes';
+import { Decimal } from '@prisma/client/fictadvisor/runtime/library';
 
 export class DbTeacher {
-  id: string;
-  firstName: string;
-  middleName: string | null;
-  lastName: string;
-  description: string | null;
-  avatar: string | null;
-  scientificDegree: ScientificDegree | null;
-  academicStatus: AcademicStatus | null;
-  position: Position | null;
-  rating: Decimal;
-  cathedras?: DbTeachersOnCathedras[];
-  complaints?: DbComplaint[];
-  disciplineTeachers?: DbDisciplineTeacher[];
+  @AutoMap()
+    id: string;
+
+  @AutoMap()
+    firstName: string;
+
+  @AutoMap()
+    middleName: string | null;
+
+  @AutoMap()
+    lastName: string;
+
+  @AutoMap()
+    description: string | null;
+
+  @AutoMap()
+    avatar: string | null;
+
+  @AutoMap(() => String)
+    scientificDegree: ScientificDegree | null;
+
+  @AutoMap(() => String)
+    academicStatus: AcademicStatus | null;
+
+  @AutoMap(() => String)
+    position: Position | null;
+
+  @AutoMap(() => Number)
+    rating: Decimal;
+
+  @AutoMap(() => [DbTeachersOnCathedras])
+    cathedras?: DbTeachersOnCathedras[];
+
+  @AutoMap(() => [DbComplaint])
+    complaints?: DbComplaint[];
+
+  @AutoMap(() => [DbDisciplineTeacher])
+    disciplineTeachers?: DbDisciplineTeacher[];
+
   createdAt: Date | null;
   updatedAt: Date | null;
 }

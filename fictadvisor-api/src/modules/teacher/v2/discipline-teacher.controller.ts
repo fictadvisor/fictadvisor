@@ -28,10 +28,12 @@ import { QuestionAnswersValidationPipe } from '../../../common/pipes/question-an
 import { UserByIdPipe } from '../../../common/pipes/user-by-id.pipe';
 import { QuestionByIdPipe } from '../../../common/pipes/question-by-id.pipe';
 import { CommentByQuestionIdPipe } from '../../../common/pipes/comment-by-question-id.pipe';
-import { QuestionMapper } from '../../../common/mappers/question.mapper';
 import { DisciplineTeacherService } from './discipline-teacher.service';
 import { DisciplineTeacherDocumentation } from '../../../common/documentation/modules/v2/discipline-teacher';
-import { DisciplineTeacherMapper } from '../../../common/mappers/discipline-teacher.mapper';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
+import { DbDisciplineTeacher } from '../../../database/v2/entities/discipline-teacher.entity';
+import { DbQuestionAnswer } from '../../../database/v2/entities/question-answer.entity';
 
 @ApiTags('DisciplineTeacher')
 @Controller({
@@ -41,8 +43,7 @@ import { DisciplineTeacherMapper } from '../../../common/mappers/discipline-teac
 export class DisciplineTeacherController {
   constructor (
     private disciplineTeacherService: DisciplineTeacherService,
-    private disciplineTeacherMapper: DisciplineTeacherMapper,
-    private questionMapper: QuestionMapper,
+    @InjectMapper() private mapper: Mapper,
   ) {}
 
   @ApiEndpoint({
@@ -114,7 +115,7 @@ export class DisciplineTeacherController {
     @Body() body: ResponseDTO,
   ): Promise<QuestionAnswerResponse> {
     const answer = await this.disciplineTeacherService.sendResponse(disciplineTeacherId, { ...body, userId, questionId });
-    return this.disciplineTeacherMapper.getQuestionAnswer(answer);
+    return this.mapper.map(answer, DbQuestionAnswer, QuestionAnswerResponse);
   }
 
   @ApiEndpoint({
@@ -129,7 +130,7 @@ export class DisciplineTeacherController {
     @Body() body: CreateDisciplineTeacherDTO,
   ): Promise<DisciplineTeacherExtendedResponse> {
     const result = await this.disciplineTeacherService.create(teacherId, disciplineId, body.disciplineTypes);
-    return this.disciplineTeacherMapper.getDisciplineTeacherExtended(result);
+    return this.mapper.map(result, DbDisciplineTeacher, DisciplineTeacherExtendedResponse);
   }
 
   @ApiEndpoint({
@@ -143,7 +144,7 @@ export class DisciplineTeacherController {
     @Body() body: UpdateDisciplineTeacherDTO,
   ): Promise<DisciplineTeacherExtendedResponse> {
     const result = await this.disciplineTeacherService.updateById(disciplineTeacherId, body.disciplineTypes);
-    return this.disciplineTeacherMapper.getDisciplineTeacherExtended(result);
+    return this.mapper.map(result, DbDisciplineTeacher, DisciplineTeacherExtendedResponse);
   }
 
   @ApiEndpoint({
@@ -158,7 +159,7 @@ export class DisciplineTeacherController {
     @Body() body: UpdateDisciplineTeacherDTO,
   ): Promise<DisciplineTeacherExtendedResponse> {
     const result = await this.disciplineTeacherService.updateByTeacherAndDiscipline(teacherId, disciplineId, body.disciplineTypes);
-    return this.disciplineTeacherMapper.getDisciplineTeacherExtended(result);
+    return this.mapper.map(result, DbDisciplineTeacher, DisciplineTeacherExtendedResponse);
   }
 
   @ApiEndpoint({
@@ -203,14 +204,14 @@ export class DisciplineTeacherController {
   @ApiEndpoint({
     summary: 'Gel all question answers with TEXT type (comments)',
     documentation: DisciplineTeacherDocumentation.GET_ALL_COMMENTS,
-    permissions: PERMISSION.COMMENTS_GET,
   })
   @Get('/comments')
   async getAllComments (
     @Query() query: QueryAllCommentsDTO,
   ): Promise<PaginatedCommentsResponse> {
     const commentsWithPagination = await this.disciplineTeacherService.getAllComments(query);
-    const comments = this.questionMapper.getComments(commentsWithPagination.data);
+    const comments = this.mapper.mapArray(commentsWithPagination.data, DbQuestionAnswer, CommentResponse);
+
     return {
       comments,
       pagination: commentsWithPagination.pagination,
@@ -230,7 +231,7 @@ export class DisciplineTeacherController {
     @Body('questionId', QuestionByIdPipe, CommentByQuestionIdPipe) questionId: string,
   ): Promise<CommentResponse> {
     const comment = await this.disciplineTeacherService.updateComment({ disciplineTeacherId, userId, questionId }, body.comment);
-    return this.questionMapper.getComment(comment);
+    return this.mapper.map(comment, DbQuestionAnswer, CommentResponse);
   }
 
   @ApiEndpoint({
@@ -246,6 +247,6 @@ export class DisciplineTeacherController {
     @Body('questionId', QuestionByIdPipe, CommentByQuestionIdPipe) questionId: string,
   ): Promise<CommentResponse> {
     const comment = await this.disciplineTeacherService.deleteQuestionAnswer({ disciplineTeacherId, userId, questionId });
-    return this.questionMapper.getComment(comment);
+    return this.mapper.map(comment, DbQuestionAnswer, CommentResponse);
   }
 }

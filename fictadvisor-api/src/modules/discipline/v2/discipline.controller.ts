@@ -7,7 +7,7 @@ import {
 } from '@fictadvisor/utils/requests';
 import {
   ExtendedDisciplineTeachersResponse,
-  DisciplinesResponse,
+  DisciplinesResponse, DisciplineAdminResponse, DisciplineTeachersResponse, DisciplineTeacherResponse,
 } from '@fictadvisor/utils/responses';
 import { DisciplineTypeEnum } from '@fictadvisor/utils/enums';
 import { PERMISSION } from '@fictadvisor/utils/security';
@@ -15,9 +15,11 @@ import { DisciplineService } from './discipline.service';
 import { ApiEndpoint } from '../../../common/decorators/api-endpoint.decorator';
 import { DisciplineByIdPipe } from '../../../common/pipes/discipline-by-id.pipe';
 import { QueryAllDisciplinesPipe } from '../../../common/pipes/query-all-disciplines.pipe';
-import { DisciplineMapper } from '../../../common/mappers/discipline.mapper';
 import { DisciplineDocumentation } from '../../../common/documentation/modules/v2/discipline';
-import { DisciplineTeacherMapper } from '../../../common/mappers/discipline-teacher.mapper';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
+import { DbDiscipline } from '../../../database/v2/entities/discipline.entity';
+import { DbDisciplineTeacher } from '../../../database/v2/entities/discipline-teacher.entity';
 
 @ApiTags('Discipline')
 @Controller({
@@ -27,8 +29,7 @@ import { DisciplineTeacherMapper } from '../../../common/mappers/discipline-teac
 export class DisciplineController {
   constructor (
     private disciplineService: DisciplineService,
-    private disciplineMapper: DisciplineMapper,
-    private disciplineTeacherMapper: DisciplineTeacherMapper,
+    @InjectMapper() private mapper: Mapper,
   ) {}
 
   @Post()
@@ -41,7 +42,7 @@ export class DisciplineController {
     @Body() body: CreateDisciplineDTO,
   ): Promise<ExtendedDisciplineTeachersResponse> {
     const discipline = await this.disciplineService.create(body);
-    return this.disciplineMapper.getExtendedDisciplineTeachers(discipline);
+    return this.mapper.map(discipline, DbDiscipline, ExtendedDisciplineTeachersResponse);
   }
 
   @ApiEndpoint({
@@ -53,7 +54,8 @@ export class DisciplineController {
     @Query(QueryAllDisciplinesPipe) body: QueryAllDisciplinesDTO,
   ): Promise<DisciplinesResponse> {
     const disciplinesWithSelectiveAmounts = await this.disciplineService.getAll(body);
-    const disciplines = this.disciplineMapper.getDisciplinesAdmin(disciplinesWithSelectiveAmounts.data);
+    const disciplines = this.mapper.mapArray(disciplinesWithSelectiveAmounts.data, DbDiscipline, DisciplineAdminResponse);
+
     return {
       disciplines,
       pagination: disciplinesWithSelectiveAmounts.pagination,
@@ -69,9 +71,11 @@ export class DisciplineController {
   async getAllTeachersByDiscipline (
     @Param('disciplineId', DisciplineByIdPipe) disciplineId: string,
     @Query('disciplineType', new ParseEnumPipe(DisciplineTypeEnum)) disciplineType: DisciplineTypeEnum,
-  ) {
+  ): Promise<DisciplineTeachersResponse> {
     const teachers = await this.disciplineService.getTeachers(disciplineId, disciplineType);
-    return this.disciplineTeacherMapper.getDisciplineTeachersWithTeacherParams(teachers);
+    const mappedTeachers = this.mapper.mapArray(teachers, DbDisciplineTeacher, DisciplineTeacherResponse);
+
+    return { teachers: mappedTeachers };
   }
 
   @ApiEndpoint({
@@ -84,7 +88,7 @@ export class DisciplineController {
     @Param('disciplineId', DisciplineByIdPipe) disciplineId: string,
   ): Promise<ExtendedDisciplineTeachersResponse> {
     const discipline = await this.disciplineService.deleteById(disciplineId);
-    return this.disciplineMapper.getExtendedDisciplineTeachers(discipline);
+    return this.mapper.map(discipline, DbDiscipline, ExtendedDisciplineTeachersResponse);
   }
 
   @ApiEndpoint({
@@ -96,7 +100,7 @@ export class DisciplineController {
     @Param('disciplineId', DisciplineByIdPipe) disciplineId: string
   ): Promise<ExtendedDisciplineTeachersResponse> {
     const discipline = await this.disciplineService.getById(disciplineId);
-    return this.disciplineMapper.getExtendedDisciplineTeachers(discipline);
+    return this.mapper.map(discipline, DbDiscipline, ExtendedDisciplineTeachersResponse);
   }
 
   @ApiEndpoint({
@@ -109,7 +113,7 @@ export class DisciplineController {
     @Body() body: UpdateDisciplineDTO,
     @Param('disciplineId', DisciplineByIdPipe) disciplineId: string,
   ): Promise<ExtendedDisciplineTeachersResponse> {
-    const updatedDiscipline = await this.disciplineService.updateById(disciplineId, body);
-    return this.disciplineMapper.getExtendedDisciplineTeachers(updatedDiscipline);
+    const discipline = await this.disciplineService.updateById(disciplineId, body);
+    return this.mapper.map(discipline, DbDiscipline, ExtendedDisciplineTeachersResponse);
   }
 }

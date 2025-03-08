@@ -4,25 +4,31 @@ import {
   CreateSubjectDTO,
   UpdateSubjectDTO,
 } from '@fictadvisor/utils/requests';
-import { SubjectWithTeachersResponse } from '@fictadvisor/utils/responses';
+import {
+  MarkResponse,
+  SubjectWithTeachersResponse,
+  TeacherWithRolesAndCathedrasResponse,
+} from '@fictadvisor/utils/responses';
 import { PaginationUtil, PaginateArgs } from '../../../database/v2/pagination.util';
 import { DatabaseUtils } from '../../../database/database.utils';
-import { TeacherMapper } from '../../../common/mappers/teacher.mapper';
-import { QuestionMapper } from '../../../common/mappers/question.mapper';
 import { TeacherService } from '../../teacher/v2/teacher.service';
 import { SubjectRepository } from '../../../database/v2/repositories/subject.repository';
 import { TeacherRepository } from '../../../database/v2/repositories/teacher.repository';
 import { QuestionType } from '@prisma/client/fictadvisor';
 import { DbSubject } from '../../../database/v2/entities/subject.entity';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
+import { DbTeacher } from '../../../database/v2/entities/teacher.entity';
+import { DbQuestion } from '../../../database/v2/entities/question.entity';
+import { DbDisciplineTeacher } from '../../../database/v2/entities/discipline-teacher.entity';
 
 @Injectable()
 export class SubjectService {
   constructor (
     private subjectRepository: SubjectRepository,
     private teacherRepository: TeacherRepository,
-    private teacherMapper: TeacherMapper,
     private teacherService : TeacherService,
-    private questionMapper: QuestionMapper,
+    @InjectMapper() private mapper: Mapper,
   ) {}
 
   async getAll (body: QueryAllSubjectsDTO) {
@@ -118,11 +124,11 @@ export class SubjectService {
 
     const teachers = [];
     for (const dbTeacher of dbTeachers) {
-      const sortedQuestionsWithAnswers = this.questionMapper.getSortedQuestionsWithAnswers(dbTeacher.disciplineTeachers);
-      const marks = this.questionMapper.getMarks(sortedQuestionsWithAnswers);
+      const sortedQuestionsWithAnswers: DbQuestion[] = this.getSortedQuestionsWithAnswers(dbTeacher.disciplineTeachers);
+      const marks = this.mapper.mapArray(sortedQuestionsWithAnswers, DbQuestion, MarkResponse);
 
       teachers.push({
-        ...this.teacherMapper.getTeacherWithRolesAndCathedras(dbTeacher),
+        ...this.mapper.map(dbTeacher, DbTeacher, TeacherWithRolesAndCathedrasResponse),
         rating: this.teacherService.getRating(marks),
       });
     }
@@ -131,6 +137,29 @@ export class SubjectService {
       subjectName,
       teachers,
     };
+  }
+
+  getSortedQuestionsWithAnswers (disciplineTeachers: DbDisciplineTeacher[]) {
+    const sortedQuestions = [];
+    for (const disciplineTeacher of disciplineTeachers) {
+      for (const questionWithAnswer of disciplineTeacher.questionAnswers) {
+        const { question, value } = questionWithAnswer;
+        const sortedQuestion = sortedQuestions.find((q) => q.name === question.name);
+        if (!sortedQuestion) {
+          sortedQuestions.push({
+            name: question.name,
+            type: question.type,
+            display: question.display,
+            questionAnswers: [{
+              value,
+            }],
+          });
+        } else {
+          sortedQuestion.questionAnswers.push({ value });
+        }
+      }
+    }
+    return sortedQuestions;
   }
 
   async create (body: CreateSubjectDTO) {
