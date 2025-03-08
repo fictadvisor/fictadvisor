@@ -12,9 +12,9 @@ export class StudentOfGroupPipe implements PipeTransform<StudentOfGroupDTO, Prom
   ) {}
 
   async transform ({ groupId, userId }: StudentOfGroupDTO): Promise<StudentOfGroupDTO> {
-    const user = await this.userRepository.findById(userId);
-    const group = await this.groupRepository.findById(groupId);
-    
+    const user = await this.userRepository.findOne({ id: userId });
+    const group = await this.groupRepository.findOne({ id: groupId });
+
     if (!user) {
       throw new InvalidEntityIdException('User');
     }
@@ -26,7 +26,7 @@ export class StudentOfGroupPipe implements PipeTransform<StudentOfGroupDTO, Prom
     if (user.student.groupId !== group.id) {
       throw new InvalidEntityIdException('User');
     }
-    
+
     return { groupId, userId };
   }
 }

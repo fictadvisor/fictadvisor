@@ -6,8 +6,8 @@ export class SpecialityService {
   constructor (
     private readonly specialityRepository: SpecialityRepository,
   ) {}
-  
+
   getAll () {
-    return this.specialityRepository.findMany();
+    return this.specialityRepository.findMany({});
   }
 }

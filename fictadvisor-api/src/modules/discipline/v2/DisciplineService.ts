@@ -8,10 +8,11 @@ import {
 import { DisciplineTeacherService } from '../../teacher/v2/DisciplineTeacherService';
 import { DisciplineRepository } from '../../../database/v2/repositories/DisciplineRepository';
 import { DisciplineTeacherRepository } from '../../../database/v2/repositories/DisciplineTeacherRepository';
-import { DatabaseUtils } from '../../../database/DatabaseUtils';
 import { DbDiscipline } from '../../../database/v2/entities/DbDiscipline';
-import { PaginatedData } from '../../../database/types/PaginatedData';
+import { PaginatedData } from '../../../database/types/paginated.data';
 import { DisciplineTypeEnum } from '@fictadvisor/utils/enums';
+import { Prisma } from '@prisma/client/fictadvisor';
+import { DatabaseUtils, PaginateArgs } from '../../../database/v2/database.utils';
 
 @Injectable()
 export class DisciplineService {
@@ -46,9 +47,9 @@ export class DisciplineService {
   };
 
   private DisciplineSorting = {
-    name: (order = 'asc') => ({ subject: { name: order } }),
-    group: (order = 'asc') => ({ group: { code: order } }),
-    semester: (order = 'desc') => ([{ year: order }, { semester: order }]),
+    name: (order: Prisma.SortOrder = 'asc') => ({ subject: { name: order } }),
+    group: (order: Prisma.SortOrder = 'asc') => ({ group: { code: order } }),
+    semester: (order: Prisma.SortOrder = 'desc') => ([{ year: order }, { semester: order }]),
   };
 
   async create (body: CreateDisciplineDTO) {
@@ -74,11 +75,11 @@ export class DisciplineService {
       );
     }
 
-    return this.disciplineRepository.findById(discipline.id);
+    return this.disciplineRepository.findOne({ id: discipline.id });
   }
 
   async getById (id: string) {
-    return this.disciplineRepository.findById(id);
+    return this.disciplineRepository.findOne({ id });
   }
 
   async getAll (body: QueryAllDisciplinesDTO): Promise<PaginatedData<DbDiscipline>> {
@@ -92,7 +93,7 @@ export class DisciplineService {
     } = body;
 
     const sort = this.DisciplineSorting[sortBy](order);
-    const data = {
+    const data: PaginateArgs<'discipline'> = {
       where: {
         AND: [
           this.DisciplineSearching.name(name),
@@ -103,28 +104,26 @@ export class DisciplineService {
       },
       orderBy: sort,
     };
-    return DatabaseUtils.paginate(this.disciplineRepository, body, data);
+    return DatabaseUtils.paginate<'discipline', DbDiscipline>(this.disciplineRepository, body, data);
   }
 
   async getTeachers (disciplineId: string, disciplineType: DisciplineTypeEnum) {
     return this.disciplineTeacherRepository.findMany({
-      where: {
-        roles: {
-          some: {
-            disciplineType: {
-              name: disciplineType,
-            },
+      roles: {
+        some: {
+          disciplineType: {
+            name: disciplineType,
           },
         },
-        discipline: {
-          id: disciplineId,
-        },
+      },
+      discipline: {
+        id: disciplineId,
       },
     });
   }
 
-  async deleteById (disciplineId: string): Promise<DbDiscipline> {
-    return this.disciplineRepository.deleteById(disciplineId);
+  async deleteById (id: string): Promise<DbDiscipline> {
+    return this.disciplineRepository.deleteById(id);
   }
 
   async updateById (id: string, data: UpdateDisciplineDTO): Promise<DbDiscipline> {

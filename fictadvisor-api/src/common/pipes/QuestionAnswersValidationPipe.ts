@@ -18,7 +18,7 @@ export class QuestionAnswersValidationPipe implements PipeTransform {
 
   async validateValue (answer: CreateAnswerDTO) {
     const { questionId, value } = answer;
-    const question = await this.questionRepository.findById(questionId);
+    const question = await this.questionRepository.findOne({ id: questionId });
 
     if (!question) {
       throw new InvalidEntityIdException('Question');

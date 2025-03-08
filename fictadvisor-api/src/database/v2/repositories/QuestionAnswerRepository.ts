@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../PrismaService';
 import { Prisma } from '@prisma/client/fictadvisor';
 import { DbQuestionAnswer } from '../entities/DbQuestionAnswer';
+import { RepositoryInterface } from '../../interfaces/repository.interface';
+import { Include, Sort, Where } from '../prisma.repository';
 
 @Injectable()
-export class QuestionAnswerRepository {
-  constructor (
-    private prisma: PrismaService,
-  ) {}
+export class QuestionAnswerRepository implements RepositoryInterface<DbQuestionAnswer, Prisma.QuestionAnswerWhereInput> {
+  constructor (private prisma: PrismaService) {}
   private include = {
     question: true,
     disciplineTeacher: {
@@ -36,17 +36,26 @@ export class QuestionAnswerRepository {
     });
   }
 
-  findMany (args: Prisma.QuestionAnswerFindManyArgs): Promise<DbQuestionAnswer[]> {
+  findMany (where: Where<'questionAnswer'>,
+    include?: Include<'questionAnswer'>,
+    page?: { take: number; skip: number },
+    sort?: Sort<'questionAnswer'>): Promise<DbQuestionAnswer[]> {
+    const methodInclude = {
+      ...this.include,
+      ...include,
+    };
+
     return this.prisma.questionAnswer.findMany({
-      include: this.include,
-      ...args,
+      where,
+      orderBy: sort,
+      take: page?.take,
+      skip: page?.skip,
+      include: Object.keys(methodInclude).length ? methodInclude : undefined,
     });
   }
 
-  count (args: Prisma.QuestionAnswerCountArgs): Promise<number> {
-    return this.prisma.questionAnswer.count({
-      ...args,
-    });
+  count (where: Where<'questionAnswer'>): Promise<number> {
+    return this.prisma.questionAnswer.count({ where });
   }
 
   update (where: Prisma.QuestionAnswerWhereUniqueInput, data: Prisma.QuestionAnswerUncheckedUpdateInput): Promise<DbQuestionAnswer> {

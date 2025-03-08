@@ -1,5 +1,12 @@
-import { Grant, Role } from '@prisma/client/fictadvisor';
+import { DbRole } from './DbRole';
 
-export type DbGrant = Grant & {
-  role: Role
+export class DbGrant {
+  id: string;
+  role?: DbRole;
+  roleId: string;
+  permission: string;
+  set: boolean;
+  weight: number;
+  createdAt: Date | null;
+  updatedAt: Date | null;
 }

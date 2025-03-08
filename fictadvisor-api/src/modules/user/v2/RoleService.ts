@@ -9,7 +9,7 @@ import {
   UpdateGrantDTO,
 } from '@fictadvisor/utils/requests';
 import { mapAsync } from '../../../common/helpers/arrayUtils';
-import { DatabaseUtils } from '../../../database/DatabaseUtils';
+import { DatabaseUtils, PaginateArgs } from '../../../database/v2/database.utils';
 import { DbRole } from '../../../database/v2/entities/DbRole';
 import { PermissionService } from '../../permission/v2/PermissionService';
 import { RoleRepository } from '../../../database/v2/repositories/RoleRepository';
@@ -17,7 +17,7 @@ import { GrantRepository } from '../../../database/v2/repositories/GrantReposito
 import { NoPermissionException } from '../../../common/exceptions/NoPermissionException';
 import { InvalidEntityIdException } from '../../../common/exceptions/InvalidEntityIdException';
 import { NotBelongException } from '../../../common/exceptions/NotBelongException';
-import { Grant, Prisma } from '@prisma/client/fictadvisor';
+import { DbGrant } from '../../../database/v2/entities/DbGrant';
 
 @Injectable()
 export class RoleService {
@@ -46,15 +46,13 @@ export class RoleService {
 
   private getUserHigherRoles (userId: string, weight: number) {
     return this.roleRepository.findMany({
-      where: {
-        userRoles: {
-          some: {
-            studentId: userId,
-          },
+      userRoles: {
+        some: {
+          studentId: userId,
         },
-        weight: {
-          gt: weight,
-        },
+      },
+      weight: {
+        gt: weight,
       },
     });
   }
@@ -67,15 +65,15 @@ export class RoleService {
     return this.roleRepository.updateById(id, body);
   }
 
-  get (roleId: string) {
-    return this.roleRepository.findById(roleId);
+  get (id: string) {
+    return this.roleRepository.findOne({ id });
   }
 
   async getAll (query: QueryAllRolesDTO) {
     const search = DatabaseUtils.getSearch(query, 'displayName');
     const sort = DatabaseUtils.getSort(query, 'displayName');
 
-    const data: Prisma.RoleFindManyArgs = {
+    const data: PaginateArgs<'role'> = {
       where: {
         ...search,
         name: query.name,
@@ -86,14 +84,14 @@ export class RoleService {
       ...sort,
     };
 
-    return DatabaseUtils.paginate<DbRole>(this.roleRepository, query, data);
+    return DatabaseUtils.paginate<'role', DbRole>(this.roleRepository, query, data);
   }
 
   async getAllGrants (roleId: string, query: QueryAllGrantsDTO) {
     const search = DatabaseUtils.getSearch(query, 'permission');
     const sort = DatabaseUtils.getSort(query, 'permission');
 
-    const data: Prisma.GrantFindManyArgs = {
+    const data: PaginateArgs<'grant'> = {
       where: {
         ...search,
         set: query.set,
@@ -102,12 +100,12 @@ export class RoleService {
       ...sort,
     };
 
-    return DatabaseUtils.paginate<Grant>(this.grantRepository, query, data);
+    return DatabaseUtils.paginate<'grant', DbGrant>(this.grantRepository, query, data);
   }
 
   async getGrant (roleId: string, grantId: string) {
     await this.checkGrantBelonging(roleId, grantId);
-    return this.grantRepository.findById(grantId);
+    return this.grantRepository.findOne({ id: grantId });
   }
 
   async createGrants (roleId: string, grants: CreateGrantDTO[]) {
@@ -142,21 +140,17 @@ export class RoleService {
   }
 
   private async checkGrantBelonging (roleId: string, grantId: string) {
-    const grant = await this.grantRepository.findById(grantId);
+    const grant = await this.grantRepository.findOne({ id: grantId });
     if (grant.roleId !== roleId) {
       throw new NotBelongException('grant', 'role');
     }
   }
 
   private async reorderGrants (roleId: string) {
-    const grants = await this.grantRepository.findMany({
-      where: { roleId },
-      orderBy:
-        [
-          { weight: 'asc' },
-          { updatedAt: 'desc' },
-        ],
-    });
+    const grants = await this.grantRepository.findMany({ roleId }, undefined, undefined, [
+      { weight: 'asc' },
+      { updatedAt: 'desc' },
+    ]);
 
     const toUpdate = grants.map((gr, index) => ({ ...gr, index: index + 1 }))
       .filter((gr) => gr.weight !== gr.index);
@@ -182,7 +176,7 @@ export class RoleService {
 
     if (!role.parentId) return;
 
-    const parent = await this.roleRepository.findById(role.parentId);
+    const parent = await this.roleRepository.findOne({ id: role.parentId });
     if (!parent) {
       throw new InvalidEntityIdException('ParentId');
     }
@@ -190,6 +184,6 @@ export class RoleService {
       throw new NoPermissionException();
     }
 
-    await this.checkRole(userRoles, parent);
+    await this.checkRole(userRoles, parent as CreateRoleWithGrantsDTO);
   }
 }

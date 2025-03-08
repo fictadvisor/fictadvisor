@@ -1,7 +1,8 @@
 import { Test } from '@nestjs/testing';
 import { QuestionMapper } from '../../src/common/mappers/QuestionMapper';
-import { DbQuestionWithRoles } from '../../src/database/v2/entities/DbQuestionWithRoles';
 import { QuestionCommentData } from '../../src/modules/poll/v2/types/QuestionCommentData';
+import { DbQuestion } from '../../src/database/v2/entities/DbQuestion';
+import { DbQuestionWithRoles } from '../../src/database/v2/entities/DbQuestionWithRoles';
 
 describe('QuestionMapper', () => {
   let questionMapper: QuestionMapper;
@@ -20,7 +21,7 @@ describe('QuestionMapper', () => {
         { category: 'sameCategory' },
         { category: 'sameCategory' },
         { category: 'anotherCategory' },
-      ] as DbQuestionWithRoles[];
+      ] as DbQuestion[];
 
       const result = questionMapper.sortByCategories(questions);
 
@@ -109,7 +110,7 @@ describe('QuestionMapper', () => {
             ],
             pagination: {
               amount: 2,
-              totalAmount: 2, 
+              totalAmount: 2,
               totalPages: 1,
               pageSize: 10,
               page: 0,
@@ -124,7 +125,7 @@ describe('QuestionMapper', () => {
             data: [],
             pagination: {
               amount: 0,
-              totalAmount: 0, 
+              totalAmount: 0,
               totalPages: 0,
               pageSize: 10,
               page: 0,
@@ -136,7 +137,7 @@ describe('QuestionMapper', () => {
       ] as any as QuestionCommentData[];
 
       const result = questionMapper.getQuestionComments(questions);
-      
+
       expect(result).toStrictEqual({
         questions: [
           {
@@ -161,7 +162,7 @@ describe('QuestionMapper', () => {
             ],
             pagination: {
               amount: 2,
-              totalAmount: 2, 
+              totalAmount: 2,
               totalPages: 1,
               pageSize: 10,
               page: 0,
@@ -174,7 +175,7 @@ describe('QuestionMapper', () => {
             comments: [],
             pagination: {
               amount: 0,
-              totalAmount: 0, 
+              totalAmount: 0,
               totalPages: 0,
               pageSize: 10,
               page: 0,

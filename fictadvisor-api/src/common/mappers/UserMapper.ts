@@ -6,6 +6,7 @@ import {
   UserForGetAllResponse,
   UserResponse,
 } from '@fictadvisor/utils/responses';
+import { State } from '@fictadvisor/utils';
 
 @Injectable()
 export class UserMapper {
@@ -16,7 +17,7 @@ export class UserMapper {
       username: user.username,
       avatar: user.avatar,
       telegramId: user.telegramId as unknown as number,
-      state: user.state,
+      state: user.state as State,
     };
   }
 

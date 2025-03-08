@@ -1,11 +1,13 @@
-import { Teacher, TeachersOnCathedras } from '@prisma/client/fictadvisor';
+import { DbTeachersOnCathedras } from './DbTeachersOnCathedras';
+import { DbGroup } from './DbGroup';
 
 export class DbCathedra {
   id: string;
   name: string;
   abbreviation: string;
-  division: string;
-  teachers: (TeachersOnCathedras & { teacher: Teacher })[];
-  createdAt: Date;
-  updatedAt: Date;
+  division: string | null;
+  createdAt: Date | null;
+  updatedAt: Date | null;
+  groups?: DbGroup[];
+  teachers?: DbTeachersOnCathedras[];
 }

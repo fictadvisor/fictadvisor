@@ -18,7 +18,7 @@ import { DbDisciplineTeacher } from '../../database/v2/entities/DbDisciplineTeac
 import { GroupMapper } from './GroupMapper';
 import { SubjectMapper } from './SubjectMapper';
 import { DbDisciplineType } from '../../database/v2/entities/DbDisciplineType';
-import { ShortDisciplineResponse } from '@fictadvisor/utils';
+import { DisciplineTypeEnum, ShortDisciplineResponse } from '@fictadvisor/utils';
 
 @Injectable()
 export class DisciplineMapper {
@@ -58,7 +58,7 @@ export class DisciplineMapper {
     return {
       id: disciplineType.id,
       disciplineId: disciplineType.disciplineId,
-      name: disciplineType.name,
+      name: disciplineType.name as DisciplineTypeEnum,
     };
   }
 
@@ -100,7 +100,7 @@ export class DisciplineMapper {
         position: teacher.position as Position,
         rating: +teacher.rating,
         disciplineTeacherId: disciplineTeacher.id,
-        disciplineTypes: disciplineTeacher.roles.map(({ disciplineType }) => disciplineType.name),
+        disciplineTypes: disciplineTeacher.roles.map(({ disciplineType }) => disciplineType.name  as DisciplineTypeEnum),
         cathedras: teacher.cathedras.map(({ cathedra: { id, name, abbreviation, division } }) => ({
           id,
           name,

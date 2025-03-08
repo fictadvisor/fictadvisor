@@ -18,7 +18,6 @@ import {
   SelectiveDisciplinesWithAmountResponse,
   ShortDisciplinesResponse,
   ShortUsersResponse,
-  SortQAGroupsParam,
   StudentOfGroupDTO,
   StudentsResponse,
   SwitchCaptainDTO,
@@ -80,10 +79,7 @@ export class GroupController {
     @Query() query: QueryAllGroupsDTO,
   ): Promise<PaginatedGroupsResponse> {
     const groupsWithSelectiveAmounts = await this.groupService.getAll(query);
-    const groups = this.groupMapper.getMappedGroups(
-      groupsWithSelectiveAmounts.data,
-      query.sort === SortQAGroupsParam.CAPTAIN,
-    );
+    const groups = this.groupMapper.getMappedGroups(groupsWithSelectiveAmounts.data);
     return {
       groups,
       pagination: groupsWithSelectiveAmounts.pagination,

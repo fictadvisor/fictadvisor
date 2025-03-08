@@ -8,14 +8,12 @@ export class StudentByIdPipe implements PipeTransform<string, Promise<string>> {
     private studentRepository: StudentRepository,
   ) {}
 
-  async transform (studentId: string): Promise<string> {
-
-    const student = await this.studentRepository.findById(studentId);
-
+  async transform (userId: string): Promise<string> {
+    const student = await this.studentRepository.findOne({ userId });
     if (!student) {
       throw new InvalidEntityIdException('Student');
     }
 
-    return studentId;
+    return userId;
   }
 }
