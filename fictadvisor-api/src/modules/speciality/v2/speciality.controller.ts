@@ -1,9 +1,11 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { SpecialitiesResponse } from '@fictadvisor/utils/responses';
+import { SpecialitiesResponse, SpecialityResponse } from '@fictadvisor/utils/responses';
 import { ApiEndpoint } from '../../../common/decorators/api-endpoint.decorator';
-import { SpecialityMapper } from '../../../common/mappers/speciality.mapper';
 import { SpecialityService } from './speciality.service';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
+import { DbSpeciality } from '../../../database/v2/entities/speciality.entity';
 
 @ApiTags('Speciality')
 @Controller({
@@ -13,7 +15,7 @@ import { SpecialityService } from './speciality.service';
 export class SpecialityController {
   constructor (
     private readonly specialityService: SpecialityService,
-    private readonly specialityMapper: SpecialityMapper,
+    @InjectMapper() private readonly mapper: Mapper,
   ) {}
 
   @ApiOkResponse({
@@ -25,6 +27,8 @@ export class SpecialityController {
   @Get()
   async getAll (): Promise<SpecialitiesResponse> {
     const specialities = await this.specialityService.getAll();
-    return this.specialityMapper.getAll(specialities);
+    const mappedSpecialities = this.mapper.mapArray(specialities, DbSpeciality, SpecialityResponse);
+
+    return { specialities: mappedSpecialities };
   }
 }

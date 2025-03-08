@@ -17,11 +17,12 @@ import { PERMISSION } from '@fictadvisor/utils/security';
 import { ApiEndpoint } from '../../../common/decorators/api-endpoint.decorator';
 import { AllStudentsPipe } from '../../../common/pipes/all-students.pipe';
 import { StudentByIdPipe } from '../../../common/pipes/student-by-id.pipe';
-import { StudentMapper } from '../../../common/mappers/student.mapper';
-import { DisciplineMapper } from '../../../common/mappers/discipline.mapper';
 import { StudentService } from './student.service';
 import { UserService } from '../../user/v2/user.service';
 import { StudentDocumentation } from '../../../common/documentation/modules/v2/student';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
+import { DbStudent } from '../../../database/v2/entities/student.entity';
 
 @ApiTags('Students')
 @Controller({
@@ -31,9 +32,8 @@ import { StudentDocumentation } from '../../../common/documentation/modules/v2/s
 export class StudentController {
   constructor (
     private readonly studentService: StudentService,
-    private readonly studentMapper: StudentMapper,
     private readonly userService: UserService,
-    private readonly disciplineMapper: DisciplineMapper,
+    @InjectMapper() private readonly mapper: Mapper,
   ) {}
 
   @ApiEndpoint({
@@ -46,7 +46,8 @@ export class StudentController {
     @Query(AllStudentsPipe) query: QueryAllStudentsDTO,
   ): Promise<SimpleStudentsResponse> {
     const studentsWithPagination = await this.studentService.getAll(query);
-    const students = this.studentMapper.getSimpleStudents(studentsWithPagination.data);
+    const students = this.mapper.mapArray(studentsWithPagination.data, DbStudent, SimpleStudentResponse);
+
     return {
       students,
       pagination: studentsWithPagination.pagination,
@@ -63,7 +64,7 @@ export class StudentController {
     @Body() body: CreateStudentWithRolesDTO,
   ): Promise<OrdinaryStudentResponse> {
     const student = await this.studentService.createStudent(body);
-    return this.studentMapper.getOrdinaryStudent(student);
+    return this.mapper.map(student, DbStudent, OrdinaryStudentResponse);
   }
 
   @ApiEndpoint({
@@ -77,7 +78,7 @@ export class StudentController {
     @Body() body: UpdateStudentWithRolesDTO,
   ): Promise<OrdinaryStudentResponse> {
     const student = await this.studentService.updateStudent(studentId, body);
-    return this.studentMapper.getOrdinaryStudent(student);
+    return this.mapper.map(student, DbStudent, OrdinaryStudentResponse);
   }
 
   @ApiEndpoint({
@@ -89,8 +90,8 @@ export class StudentController {
   async deleteStudent (
     @Param('studentId', StudentByIdPipe) studentId: string,
   ): Promise<OrdinaryStudentResponse> {
-    const deletedStudent =  await this.studentService.deleteStudent(studentId);
-    return this.studentMapper.getOrdinaryStudent(deletedStudent);
+    const student =  await this.studentService.deleteStudent(studentId);
+    return this.mapper.map(student, DbStudent, OrdinaryStudentResponse);
   }
 
   @ApiEndpoint({
@@ -104,7 +105,7 @@ export class StudentController {
     @Body() body: UpdateStudentSelectivesDTO,
   ): Promise<OrdinaryStudentResponse> {
     const student = await this.studentService.updateStudentSelectives(studentId, body);
-    return this.studentMapper.getOrdinaryStudent(student);
+    return this.mapper.map(student, DbStudent, OrdinaryStudentResponse);
   }
 
   @ApiEndpoint({
@@ -117,9 +118,9 @@ export class StudentController {
     @Param('studentId', StudentByIdPipe) studentId: string,
   ): Promise<SelectiveDisciplinesResponse[]> {
     const dbDisciplines = await this.userService.getSelectiveDisciplines(studentId);
-    return this.disciplineMapper.getSelectiveDisciplines(dbDisciplines);
+    return this.userService.getMappedSelectiveDisciplines(dbDisciplines);
   }
-  
+
   @ApiEndpoint({
     summary: 'Get all selective disciplines available to the user from the whole list',
     documentation: StudentDocumentation.GET_REMAINING_SELECTIVES,
@@ -142,6 +143,6 @@ export class StudentController {
     @Param('studentId', StudentByIdPipe) studentId: string,
   ): Promise<SimpleStudentResponse> {
     const student = await this.studentService.getStudent(studentId);
-    return this.studentMapper.getSimpleStudent(student);
+    return this.mapper.map(student, DbStudent, SimpleStudentResponse);
   }
 }

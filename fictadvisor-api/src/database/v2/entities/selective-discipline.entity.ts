@@ -1,11 +1,20 @@
 import { DbDiscipline } from './discipline.entity';
 import { DbStudent } from './student.entity';
+import { AutoMap } from '@automapper/classes';
 
 export class DbSelectiveDiscipline {
-  discipline?: DbDiscipline;
-  disciplineId: string;
-  student?: DbStudent;
-  studentId: string;
-  createdAt: Date | null
+  @AutoMap(() => DbDiscipline)
+    discipline?: DbDiscipline;
+
+  @AutoMap()
+    disciplineId: string;
+
+  @AutoMap(() => DbStudent)
+    student?: DbStudent;
+
+  @AutoMap()
+    studentId: string;
+
+  createdAt: Date | null;
   updatedAt: Date | null;
 }

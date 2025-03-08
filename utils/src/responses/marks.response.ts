@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { AutoMap } from '@automapper/classes';
 
-class MarkArray {
+export class MarkArray {
   @ApiProperty()
     1: number;
 
@@ -34,12 +35,15 @@ class MarkArray {
 
 export class MarkResponse {
   @ApiProperty()
+  @AutoMap()
     name: string;
 
   @ApiProperty()
+  @AutoMap()
     amount: number;
 
   @ApiProperty()
+  @AutoMap()
     type: string;
 
   @ApiProperty({

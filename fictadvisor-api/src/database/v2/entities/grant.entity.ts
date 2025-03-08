@@ -1,12 +1,25 @@
 import { DbRole } from './role.entity';
+import { AutoMap } from '@automapper/classes';
 
 export class DbGrant {
-  id: string;
-  role?: DbRole;
-  roleId: string;
-  permission: string;
-  set: boolean;
-  weight: number;
+  @AutoMap()
+    id: string;
+
+  @AutoMap(() => DbRole)
+    role?: DbRole;
+
+  @AutoMap()
+    roleId: string;
+
+  @AutoMap()
+    permission: string;
+
+  @AutoMap()
+    set: boolean;
+
+  @AutoMap()
+    weight: number;
+
   createdAt: Date | null;
   updatedAt: Date | null;
 }

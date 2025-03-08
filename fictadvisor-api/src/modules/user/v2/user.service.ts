@@ -11,13 +11,10 @@ import {
   QueryAllUsersDTO,
   UpdateStudentDTO,
 } from '@fictadvisor/utils/requests';
-import { RemainingSelectivesResponse } from '@fictadvisor/utils/responses';
+import { RemainingSelectivesResponse, SelectiveDisciplinesResponse, SortedDisciplinesByPeriodResponse } from '@fictadvisor/utils/responses';
 import { isArrayUnique } from '../../../common/utils/array.utils';
 import { PaginationUtil, PaginateArgs } from '../../../database/v2/pagination.util';
 import { DatabaseUtils } from '../../../database/database.utils';
-import { TelegramAPI } from '../../telegram-api/telegram-api';
-import { StudentMapper } from '../../../common/mappers/student.mapper';
-import { DisciplineMapper } from '../../../common/mappers/discipline.mapper';
 import { AuthService, AVATARS } from '../../auth/v2/auth.service';
 import { GroupService } from '../../group/v2/group.service';
 import { FileService } from '../../file/file.service';
@@ -26,7 +23,6 @@ import { DisciplineTeacherService } from '../../teacher/v2/discipline-teacher.se
 import { DateService } from '../../date/v2/date.service';
 import { DbDiscipline } from '../../../database/v2/entities/discipline.entity';
 import { DbUser } from '../../../database/v2/entities/user.entity';
-import { DbStudent } from '../../../database/v2/entities/student.entity';
 import { StudentRepository } from '../../../database/v2/repositories/student.repository';
 import { UserRepository } from '../../../database/v2/repositories/user.repository';
 import { RoleRepository } from '../../../database/v2/repositories/role.repository';
@@ -44,6 +40,14 @@ import { AlreadySentGroupRequestException } from '../../../common/exceptions/alr
 import { EntityType, RoleName, State } from '@prisma/client/fictadvisor';
 import { AbsenceOfCaptainException } from '../../../common/exceptions/absence-of-captain.exception';
 import { CaptainAlreadyRegisteredException } from '../../../common/exceptions/captain-already-registered.exception';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
+import { DbSelectiveAmount } from '../../../database/v2/entities/selective-amount.entity';
+import {
+  OrdinaryStudentResponse,
+  SelectiveBySemestersResponse,
+} from '@fictadvisor/utils/responses';
+import { DbStudent } from '../../../database/v2/entities/student.entity';
 
 type SortedDisciplines = {
   year: number;
@@ -65,10 +69,8 @@ export class UserService {
     private fileService: FileService,
     @Inject(forwardRef(() => GroupService))
     private groupService: GroupService,
-    private studentMapper: StudentMapper,
-    private disciplineMapper: DisciplineMapper,
+    @InjectMapper() private mapper: Mapper,
     private dateService: DateService,
-    private telegramAPI: TelegramAPI,
     private disciplineTeacherService: DisciplineTeacherService,
     private pollService: PollService,
   ) {}
@@ -89,7 +91,13 @@ export class UserService {
         },
       },
     });
-    return this.disciplineMapper.getSelectivesBySemesters(selectiveByUser, group?.selectiveAmounts ?? []);
+
+    const selectives = this.mapper.mapArray(group?.selectiveAmounts ?? [], DbSelectiveAmount, SelectiveBySemestersResponse,
+      { extraArgs: () => ({
+        disciplines: selectiveByUser }),
+      });
+
+    return { selectives };
   }
 
   async giveRole (studentId: string, roleId: string) {
@@ -247,8 +255,7 @@ export class UserService {
   }
 
   async updateStudent (userId: string, data: UpdateStudentDTO) {
-    const student = await this.studentRepository.updateById(userId, data);
-    return this.studentMapper.updateStudent(student as unknown as DbStudent);
+    return  this.studentRepository.updateById(userId, data);
   }
 
   async requestNewGroup (userId: string, { groupId, isCaptain }: GroupRequestDTO) {
@@ -328,7 +335,8 @@ export class UserService {
 
   async getUser (userId: string) {
     const student = await this.studentRepository.findOne({ userId });
-    if (student) return this.studentMapper.getOrdinaryStudent(student, !!student.group);
+    if (student) return this.mapper.map(student, DbStudent, OrdinaryStudentResponse,
+      { extraArgs: () => ({ hasGroup: !!student.group }) });
   }
 
   async getSimplifiedUser (userId: string) {
@@ -546,6 +554,19 @@ export class UserService {
     });
   }
 
+  getMappedSelectiveDisciplines (disciplines: DbDiscipline[]): SelectiveDisciplinesResponse[] {
+    const result = [];
+
+    disciplines.forEach((discipline) => {
+      if (!result.some(({ semester, year }) => semester === discipline.semester && year === discipline.year)) {
+        result.push(this.mapper.map(discipline, DbDiscipline, SelectiveDisciplinesResponse, {
+          extraArgs: () => ({ disciplines }),
+        }));
+      }
+    });
+    return result;
+  }
+
   private async checkExcessiveSelectiveDisciplines (
     pendingDisciplines: SortedDisciplines[],
     selectedDisciplines: SortedDisciplines[],
@@ -626,13 +647,32 @@ export class UserService {
     });
     await this.checkDisciplinesBelongToGroup(disciplines.map((discipline) => discipline.id), groupId);
 
-    const sortedDisciplines = this.disciplineMapper.getSortedDisciplinesByPeriod(disciplines);
+    const sortedDisciplines = this.getSortedDisciplinesByPeriod(disciplines);
     const selectedDisciplines = await this.getSelectiveDisciplines(userId);
-    const sortedSelectedDisciplines = this.disciplineMapper.getSortedDisciplinesByPeriod(selectedDisciplines);
+    const sortedSelectedDisciplines = this.getSortedDisciplinesByPeriod(selectedDisciplines);
 
     this.checkAlreadySelectedDisciplines(body.disciplines, selectedDisciplines.map((d) => d.id));
     await this.checkExcessiveSelectiveDisciplines(sortedDisciplines, sortedSelectedDisciplines, groupId);
     await this.attachSelectiveDisciplines(userId, body.disciplines);
+  }
+
+  getSortedDisciplinesByPeriod (disciplines: DbDiscipline[]): SortedDisciplinesByPeriodResponse[] {
+    const periods = [];
+    disciplines.map((discipline) => {
+      const period = periods.find(
+        (p) => p.semester === discipline.semester && p.year === discipline.year
+      );
+      if (!period) {
+        periods.push({
+          year: discipline.year,
+          semester: discipline.semester,
+          disciplines: [discipline.id],
+        });
+      } else {
+        period.disciplines.push(discipline.id);
+      }
+    });
+    return periods;
   }
 
   async deselectDisciplines (userId: string, body: SelectiveDisciplinesDTO) {

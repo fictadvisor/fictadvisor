@@ -1,11 +1,20 @@
+import { AutoMap } from '@automapper/classes';
 import { DbDisciplineTeacher } from './discipline-teacher.entity';
 import { DbStudent } from './student.entity';
 
 export class DbRemovedDisciplineTeacher {
-  studentId: string;
-  student?: DbStudent;
-  disciplineTeacherId: string;
-  disciplineTeacher?: DbDisciplineTeacher;
+  @AutoMap()
+    studentId: string;
+
+  @AutoMap(() => DbStudent)
+    student?: DbStudent;
+
+  @AutoMap()
+    disciplineTeacherId: string;
+
+  @AutoMap(() => DbDisciplineTeacher)
+    disciplineTeacher?: DbDisciplineTeacher;
+
   createdAt: Date | null;
   updatedAt: Date | null;
 }

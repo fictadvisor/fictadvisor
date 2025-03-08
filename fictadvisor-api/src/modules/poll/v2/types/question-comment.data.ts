@@ -1,36 +1,48 @@
-import { Subject } from '@prisma/client/fictadvisor';
 import { PaginatedData } from '../../../../database/types/paginated.data';
+import { AutoMap } from '@automapper/classes';
+import { DbDisciplineTeacher } from '../../../../database/v2/entities/discipline-teacher.entity';
 
-class Comment {
-  disciplineTeacherId: string;
-  questionId: string;
-  userId: string;
-  value: string;
-  disciplineTeacher: {
-    id: string,
-    teacherId: string,
-    disciplineId: string,
-    discipline: {
-      id: string,
-      subject: Subject,
-      subjectId: string,
-      groupId: string,
-      semester: number,
-      year: number,
-      isSelective: boolean,
-      description: string,
-    };
-  };
+export class CommentData {
+  @AutoMap()
+    disciplineTeacherId: string;
+
+  @AutoMap()
+    questionId: string;
+
+  @AutoMap()
+    userId: string;
+
+  @AutoMap()
+    value: string;
+
+  @AutoMap(() => DbDisciplineTeacher)
+    disciplineTeacher: DbDisciplineTeacher;
 }
 
 export class QuestionCommentData {
-  id: string;
-  category: string;
-  name: string;
-  order: number;
-  description?: string;
-  text: string;
-  isRequired: boolean;
-  criteria?: string;
-  comments: PaginatedData<Comment>;
+  @AutoMap()
+    id: string;
+
+  @AutoMap()
+    category: string;
+
+  @AutoMap()
+    name: string;
+
+  @AutoMap()
+    order: number;
+
+  @AutoMap()
+    description?: string;
+
+  @AutoMap()
+    text: string;
+
+  @AutoMap()
+    isRequired: boolean;
+
+  @AutoMap()
+    criteria?: string;
+
+  comments: PaginatedData<CommentData>;
 }

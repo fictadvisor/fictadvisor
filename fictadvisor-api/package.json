@@ -39,6 +39,9 @@
     "migrate:test:cohorta": "dotenv -e .testing.env -- npx prisma migrate deploy --schema ./prisma/cohorta/schema.prisma"
   },
   "dependencies": {
+    "@automapper/classes": "^8.8.1",
+    "@automapper/core": "^8.8.1",
+    "@automapper/nestjs": "^8.8.1",
     "@fictadvisor/utils": "*",
     "@nestjs-modules/mailer": "^1.8.1",
     "@nestjs/common": "^9.2.1",

@@ -11,6 +11,8 @@ import { PollService } from '../../../src/modules/poll/v2/poll.service';
 import { DateService } from '../../../src/modules/date/v2/date.service';
 import { DisciplineTeacherService } from '../../../src/modules/teacher/v2/discipline-teacher.service';
 import { TelegramConfigService } from '../../../src/config/telegram-config.service';
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
 
 describe('SubjectService', () => {
   let subjectService: SubjectService;
@@ -22,6 +24,9 @@ describe('SubjectService', () => {
       imports: [
         PrismaModule,
         MapperModule,
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
       ],
     }).compile();
 

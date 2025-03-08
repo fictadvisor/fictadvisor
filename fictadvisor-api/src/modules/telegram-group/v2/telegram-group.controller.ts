@@ -16,15 +16,17 @@ import {
 import {
   TelegramGroupsResponse,
   TelegramGroupsByTelegramIdResponse,
-  TelegramGroupResponse,
+  TelegramGroupResponse, TelegramGroupByTelegramIdResponse,
 } from '@fictadvisor/utils/responses';
 import { ApiEndpoint } from '../../../common/decorators/api-endpoint.decorator';
 import { TelegramGuard } from '../../../common/guards/telegram/telegram.guard';
 import { TelegramGroupByIdPipe } from '../../../common/pipes/telegram-group-by-id.pipe';
 import { GroupByIdPipe } from '../../../common/pipes/group-by-id.pipe';
-import { TelegramGroupMapper } from '../../../common/mappers/telegram-group.mapper';
 import { TelegramGroupService } from './telegram-group.service';
 import { TelegramGroupDocumentation } from '../../../common/documentation/modules/v2/telegram-group';
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
+import { DbTelegramGroup } from '../../../database/v2/entities/telegram-group.entity';
 
 @ApiTags('TelegramGroup')
 @Controller({
@@ -34,7 +36,7 @@ import { TelegramGroupDocumentation } from '../../../common/documentation/module
 export class TelegramGroupController {
   constructor (
     private telegramGroupService: TelegramGroupService,
-    private telegramGroupMapper: TelegramGroupMapper,
+    @InjectMapper() private mapper: Mapper,
   ) {}
 
   @ApiEndpoint({
@@ -48,7 +50,7 @@ export class TelegramGroupController {
     @Body() body: CreateTelegramGroupDTO,
   ): Promise<TelegramGroupResponse> {
     const telegramGroup = await this.telegramGroupService.create(groupId, body);
-    return this.telegramGroupMapper.getTelegramGroup(telegramGroup);
+    return this.mapper.map(telegramGroup, DbTelegramGroup, TelegramGroupResponse);
   }
 
   @ApiEndpoint({
@@ -67,7 +69,7 @@ export class TelegramGroupController {
       groupId,
       body,
     );
-    return this.telegramGroupMapper.getTelegramGroup(telegramGroup);
+    return this.mapper.map(telegramGroup, DbTelegramGroup, TelegramGroupResponse);
   }
 
   @ApiEndpoint({
@@ -84,7 +86,7 @@ export class TelegramGroupController {
       telegramId,
       groupId,
     );
-    return this.telegramGroupMapper.getTelegramGroup(telegramGroup);
+    return this.mapper.map(telegramGroup, DbTelegramGroup, TelegramGroupResponse);
   }
 
   @ApiEndpoint({
@@ -97,7 +99,9 @@ export class TelegramGroupController {
     @Param('groupId', GroupByIdPipe) groupId: string,
   ): Promise<TelegramGroupsResponse> {
     const telegramGroups = await this.telegramGroupService.getAll(groupId);
-    return this.telegramGroupMapper.getTelegramGroups(telegramGroups);
+    const mappedTelegramGroups = this.mapper.mapArray(telegramGroups, DbTelegramGroup, TelegramGroupResponse);
+
+    return { telegramGroups: mappedTelegramGroups };
   }
 
   @ApiEndpoint({
@@ -112,6 +116,7 @@ export class TelegramGroupController {
     const telegramGroups = await this.telegramGroupService.getGroupByTelegramId(
       telegramId,
     );
-    return this.telegramGroupMapper.getTelegramGroupsByTelegramId(telegramGroups);
+    const mappedTelegramGroups = this.mapper.mapArray(telegramGroups, DbTelegramGroup, TelegramGroupByTelegramIdResponse);
+    return { telegramGroups: mappedTelegramGroups };
   }
 }

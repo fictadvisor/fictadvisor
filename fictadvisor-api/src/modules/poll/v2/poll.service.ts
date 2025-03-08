@@ -9,7 +9,7 @@ import {
   SortDTO,
   QueryMarksDTO,
 } from '@fictadvisor/utils/requests';
-import { PollDisciplineTeachersResponse } from '@fictadvisor/utils/responses';
+import { DisciplineTeacherFullResponse, PollDisciplineTeachersResponse } from '@fictadvisor/utils/responses';
 import {
   CommentsSortOrder,
   DisciplineTypeEnum,
@@ -18,8 +18,6 @@ import {
 } from '@fictadvisor/utils/enums';
 import { PaginationUtil, PaginateArgs } from '../../../database/v2/pagination.util';
 import { DatabaseUtils } from '../../../database/database.utils';
-import { DisciplineTeacherMapper } from '../../../common/mappers/discipline-teacher.mapper';
-import { CommentsSortMapper } from '../../../common/mappers/comments-sort.mapper';
 import { DateService } from '../../date/v2/date.service';
 import { DbQuestion } from '../../../database/v2/entities/question.entity';
 import { QuestionRepository } from '../../../database/v2/repositories/question.repository';
@@ -38,13 +36,16 @@ import { DbQuestionAnswer } from '../../../database/v2/entities/question-answer.
 import { Sort } from '@fictadvisor/utils';
 import { QuestionWithRolesRepository } from '../../../database/v2/repositories/question-with-roles.repository';
 import { DbQuestionWithRoles } from '../../../database/v2/entities/question-with-roles.entity';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
+import { DbDisciplineTeacher } from '../../../database/v2/entities/discipline-teacher.entity';
 
 @Injectable()
 export class PollService {
   constructor (
     private questionRepository: QuestionRepository,
     private questionWithRolesRepository: QuestionWithRolesRepository,
-    private disciplineTeacherMapper: DisciplineTeacherMapper,
+    @InjectMapper() private mapper: Mapper,
     private dateService: DateService,
     private disciplineRepository: DisciplineRepository,
     private questionAnswerRepository: QuestionAnswerRepository,
@@ -173,8 +174,8 @@ export class PollService {
         },
       },
       orderBy: query.sortBy
-        ? CommentsSortMapper[query.sortBy]
-        : CommentsSortMapper[CommentsSortOrder.NEWEST],
+        ? this.sortComments[query.sortBy]
+        : this.sortComments[CommentsSortOrder.NEWEST],
       include: {
         disciplineTeacher: {
           include: {
@@ -204,6 +205,41 @@ export class PollService {
     }
     return result;
   }
+
+  private sortComments: { [key in CommentsSortOrder]: Prisma.Enumerable<Prisma.QuestionAnswerOrderByWithRelationInput>} = {
+    [CommentsSortOrder.NEWEST]: [
+      {
+        disciplineTeacher: {
+          discipline: {
+            year: 'desc',
+          },
+        },
+      },
+      {
+        disciplineTeacher: {
+          discipline: {
+            semester: 'desc',
+          },
+        },
+      },
+    ],
+    [CommentsSortOrder.OLDEST]: [
+      {
+        disciplineTeacher: {
+          discipline: {
+            year: 'asc',
+          },
+        },
+      },
+      {
+        disciplineTeacher: {
+          discipline: {
+            semester: 'asc',
+          },
+        },
+      },
+    ],
+  };
 
   async getQuestionById (id: string): Promise<DbQuestionWithRoles> {
     return this.questionWithRolesRepository.findOne({ id });
@@ -329,7 +365,7 @@ export class PollService {
 
     return {
       hasSelectedInLastSemester,
-      teachers: this.disciplineTeacherMapper.getDisciplineTeachersFull(disciplineTeachers),
+      teachers: this.mapper.mapArray(disciplineTeachers, DbDisciplineTeacher, DisciplineTeacherFullResponse),
     };
   }
 

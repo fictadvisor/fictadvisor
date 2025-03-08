@@ -1,9 +1,11 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { EduProgramsResponse } from '@fictadvisor/utils/responses';
+import { EduProgramResponse, EduProgramsResponse } from '@fictadvisor/utils/responses';
 import { ApiEndpoint } from '../../../common/decorators/api-endpoint.decorator';
-import { EduProgramMapper } from '../../../common/mappers/edu-program.mapper';
 import { EduProgramService } from './edu-program.service';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
+import { DbEducationalProgram } from '../../../database/v2/entities/educational-program.entity';
 
 @ApiTags('Eduprogram')
 @Controller({
@@ -13,7 +15,7 @@ import { EduProgramService } from './edu-program.service';
 export class EduProgramController {
   constructor (
     private readonly eduProgramService: EduProgramService,
-    private readonly eduProgramMapper: EduProgramMapper,
+    @InjectMapper() private readonly mapper: Mapper,
   ) {}
 
   @ApiOkResponse({
@@ -25,6 +27,8 @@ export class EduProgramController {
   @Get()
   async getAll (): Promise<EduProgramsResponse> {
     const programs = await this.eduProgramService.getAll();
-    return this.eduProgramMapper.getAll(programs);
+    const mappedPrograms = this.mapper.mapArray(programs, DbEducationalProgram, EduProgramResponse);
+
+    return { programs: mappedPrograms };
   }
 }
