@@ -6,7 +6,7 @@ import {
   QueryAllCommentsDTO,
   QuerySemesterDTO,
 } from '@fictadvisor/utils/requests';
-import { DisciplineTeacherQuestionsResponse } from '@fictadvisor/utils/responses';
+import { DisciplineTeacherQuestionsResponse, SubjectResponse } from '@fictadvisor/utils/responses';
 import { CommentsSortBy, DisciplineTypeEnum } from '@fictadvisor/utils/enums';
 import { TelegramAPI } from '../../telegram-api/TelegramAPI';
 import { isArrayUnique } from '../../../common/helpers/arrayUtils';
@@ -33,8 +33,10 @@ import { NotSelectedDisciplineException } from '../../../common/exceptions/NotSe
 import { IsRemovedDisciplineTeacherException } from '../../../common/exceptions/IsRemovedDisciplineTeacherException';
 import { Prisma, QuestionType, State } from '@prisma/client/fictadvisor';
 import { TeacherMapper } from '../../../common/mappers/TeacherMapper';
-import { SubjectMapper } from '../../../common/mappers/SubjectMapper';
 import { DbQuestion } from '../../../database/v2/entities/DbQuestion';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
+import { DbSubject } from '../../../database/v2/entities/DbSubject';
 
 @Injectable()
 export class DisciplineTeacherService {
@@ -49,7 +51,7 @@ export class DisciplineTeacherService {
     private userRepository: UserRepository,
     private questionMapper: QuestionMapper,
     private teacherMapper: TeacherMapper,
-    private subjectMapper: SubjectMapper,
+    @InjectMapper() private mapper: Mapper,
   ) {}
 
   async getQuestions (disciplineTeacherId: string, userId: string): Promise<DisciplineTeacherQuestionsResponse> {
@@ -118,7 +120,7 @@ export class DisciplineTeacherService {
     const categories = this.questionMapper.sortByCategories(questions);
     return {
       teacher: this.teacherMapper.getTeacher(teacher),
-      subject: this.subjectMapper.getSubject(discipline.subject),
+      subject: this.mapper.map(discipline.subject, DbSubject, SubjectResponse),
       categories,
     };
   }

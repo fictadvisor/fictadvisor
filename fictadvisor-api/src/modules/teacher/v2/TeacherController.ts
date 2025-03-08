@@ -15,7 +15,7 @@ import {
   TeacherWithContactsResponse,
   TeacherWithContactsFullResponse,
   PaginatedTeachersResponse,
-  PaginatedQuestionCommentsResponse, SubjectsResponse,
+  PaginatedQuestionCommentsResponse, SubjectsResponse, SubjectResponse,
 } from '@fictadvisor/utils/responses';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import { ApiEndpoint } from '../../../common/decorators/ApiEndpoint';
@@ -33,6 +33,9 @@ import { TeacherService } from './TeacherService';
 import { PollService } from '../../poll/v2/PollService';
 import { TeacherDocumentation } from '../../../common/documentation/modules/v2/teacher';
 import { SubjectMapper } from '../../../common/mappers/SubjectMapper';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
+import { DbSubject } from '../../../database/v2/entities/DbSubject';
 
 @ApiTags('Teachers')
 @Controller({
@@ -44,9 +47,9 @@ export class TeacherController {
     private readonly teacherService: TeacherService,
     private readonly teacherMapper: TeacherMapper,
     private readonly pollService: PollService,
-    private subjectMapper: SubjectMapper,
     private readonly questionMapper: QuestionMapper,
     private readonly disciplineTeacherMapper: DisciplineTeacherMapper,
+    @InjectMapper() private mapper: Mapper,
   ) {}
 
 
@@ -87,7 +90,7 @@ export class TeacherController {
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
   ): Promise<SubjectsResponse> {
     const subjects = await this.teacherService.getTeacherSubjects(teacherId);
-    return this.subjectMapper.getSubjects(subjects);
+    return { subjects: this.mapper.mapArray(subjects, DbSubject, SubjectResponse) };
   }
 
   @ApiEndpoint({

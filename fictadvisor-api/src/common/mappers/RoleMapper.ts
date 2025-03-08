@@ -7,40 +7,40 @@ import {
   GrantResponse,
   RoleResponse,
 } from '@fictadvisor/utils/responses';
-import { RoleName } from '@fictadvisor/utils/*';
+import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
+import { createMap, Mapper } from '@automapper/core';
 
 @Injectable()
-export class RoleMapper {
-  getBaseRole (role: DbRole): BaseRoleResponse {
-    return {
-      id: role.id,
-      name: role.name as RoleName,
-      weight: role.weight,
-      displayName: role.displayName,
+export class RoleMapper extends AutomapperProfile {
+  constructor (@InjectMapper() mapper: Mapper) {
+    super(mapper);
+  }
+
+  get profile () {
+    return (mapper: Mapper) => {
+      createMap(mapper, DbRole, BaseRoleResponse);
+      createMap(mapper, DbRole, RoleResponse);
+      createMap(mapper, DbGrant, GrantResponse);
     };
+  }
+
+  getBaseRole (role: DbRole): BaseRoleResponse {
+    return this.mapper.map(role, DbRole, BaseRoleResponse);
   }
 
   getRole (role: DbRole): RoleResponse {
-    return {
-      ...this.getBaseRole(role),
-      grants: this.getGrants(role.grants),
-    };
+    return this.mapper.map(role, DbRole, RoleResponse);
   }
 
   getRoles (roles: DbRole[]): RoleResponse[] {
-    return roles.map((role) => this.getRole(role));
+    return this.mapper.mapArray(roles, DbRole, RoleResponse);
   }
 
   getGrant (grant: DbGrant): GrantResponse {
-    return {
-      id: grant.id,
-      permission: grant.permission,
-      set: grant.set,
-      weight: grant.weight,
-    };
+    return this.mapper.map(grant, DbGrant, GrantResponse);
   }
 
   getGrants (grants: Grant[]): GrantResponse[] {
-    return grants.map(this.getGrant);
+    return this.mapper.mapArray(grants, DbGrant, GrantResponse);
   }
 }

@@ -1,47 +1,38 @@
 import {
   CathedraWithTeachersResponse,
   CathedraResponse,
-  CathedraWithNumberOfTeachersResponse,
-  TeacherResponse,
+  CathedraWithNumberOfTeachersResponse, TeacherResponse,
 } from '@fictadvisor/utils/responses';
-import { AcademicStatus, ScientificDegree, Position } from '@fictadvisor/utils/enums';
 import { DbCathedra } from '../../database/v2/entities/DbCathedra';
+import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
+import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
+import { DbTeacher } from '../../database/v2/entities/DbTeacher';
+import { extractField } from '../helpers/arrayUtils';
 
-export class CathedraMapper {
-  getCathedra (cathedra: DbCathedra): CathedraResponse {
-    return {
-      id: cathedra.id,
-      name: cathedra.name,
-      abbreviation: cathedra.abbreviation,
-      division: cathedra.division,
+export class CathedraMapper extends AutomapperProfile {
+  constructor (@InjectMapper() mapper: Mapper) {
+    super(mapper);
+  }
+
+  get profile () {
+    return (mapper: Mapper) => {
+      createMap(mapper, DbCathedra, CathedraResponse);
+      createMap(mapper, DbCathedra, CathedraWithTeachersResponse,
+        forMember((response) => response.teachers,
+          mapFrom((dto) =>
+            this.mapper.mapArray(extractField(dto.teachers, 'teacher'), DbTeacher, TeacherResponse))
+        )
+      );
     };
   }
 
-  getTeachersFromCathedras (cathedras: DbCathedra[]): TeacherResponse[] {
-    return cathedras.flatMap((cathedra) => this.getTeachers(cathedra));
-  }
 
-  getTeachers (cathedra: DbCathedra) {
-    return cathedra.teachers.map(({ teacher }) => ({
-      id: teacher.id,
-      firstName: teacher.firstName,
-      middleName: teacher.middleName,
-      lastName: teacher.lastName,
-      description: teacher.description,
-      avatar: teacher.avatar,
-      academicStatus: teacher.academicStatus as AcademicStatus,
-      scientificDegree: teacher.scientificDegree as ScientificDegree,
-      position: teacher.position as Position,
-      rating: teacher.rating.toNumber(),
-    }));
+  getCathedra (cathedra: DbCathedra): CathedraResponse {
+    return this.mapper.map(cathedra, DbCathedra, CathedraResponse);
   }
 
   getCathedraWithTeachers (cathedra: DbCathedra): CathedraWithTeachersResponse {
-    const cathedraResponse = this.getCathedra(cathedra);
-    return {
-      ...cathedraResponse,
-      teachers: this.getTeachers(cathedra),
-    };
+    return this.mapper.map(cathedra, DbCathedra, CathedraWithTeachersResponse);
   }
 
   getCathedraWithNumberOfTeachers (cathedras: DbCathedra[]): CathedraWithNumberOfTeachersResponse[] {
