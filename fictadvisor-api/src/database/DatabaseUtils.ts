@@ -1,10 +1,12 @@
 import { PaginatedData } from './types/PaginatedData';
 import { Page, PageDTO, Search, SearchDTO, Sort, SortDTO } from '@fictadvisor/utils/requests';
+import { RepositoryInterface } from './interfaces/repository.interface';
+import { Include, Models, Where, Sort as SortT } from './v2/prisma.repository';
 
-export class WhereUnique<T> {
-  OR: {
-    [k in keyof T]: any;
-  }[];
+export class PaginateArgs<T extends Models> {
+  where: Where<T>;
+  include?: Include<T>;
+  orderBy?: SortT<T>;
 }
 
 export class DatabaseUtils {
@@ -45,10 +47,10 @@ export class DatabaseUtils {
     return { OR };
   }
 
-  protected static getPage ({ page = 0, pageSize }: PageDTO): Page | object {
+  protected static getPage ({ page = 0, pageSize }: PageDTO): Page {
     page = +page;
     pageSize = +pageSize;
-    if (!pageSize) return {};
+    if (!pageSize) return;
     if (page === 0) {
       return {
         skip: 0,
@@ -61,21 +63,18 @@ export class DatabaseUtils {
     };
   }
 
-  static async paginate<T=any> (
-    repository,
+  static async paginate<T extends Models, Dto> (
+    repository: RepositoryInterface<Dto, Where<T>>,
     { page = 0, pageSize }: PageDTO,
-    args: any
-  ): Promise<PaginatedData<T>> {
+    args: PaginateArgs<T>
+  ): Promise<PaginatedData<Dto>> {
     page = +page;
     pageSize = +pageSize;
 
     const result = await repository.findMany({
-      ...args,
-      ...this.getPage({ page, pageSize }),
-    });
-    const totalAmount = await repository.count({
-      where: args.where,
-    });    
+      ...args.where,
+    }, args.include, this.getPage({ page, pageSize }), args.orderBy);
+    const totalAmount = await repository.count(args.where);
 
     const totalPages = Math.ceil(totalAmount/pageSize);
     const pages = Math.ceil(result.length / pageSize);
@@ -138,16 +137,16 @@ export class DatabaseUtils {
     };
   }
 
-  static getSort ({ sort, order = 'asc' }: SortDTO, standardField: string): Sort | object {
+  static getSort ({ sort, order = 'asc' }: SortDTO, standardField: string): Sort {
     if (!sort) return {
-      orderBy: {
+      orderBy: [{
         [standardField]: order,
-      },
+      }],
     };
     return {
-      orderBy: {
+      orderBy: [{
         [sort]: order,
-      },
+      }],
     };
   }
 

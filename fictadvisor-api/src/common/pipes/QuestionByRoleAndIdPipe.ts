@@ -1,17 +1,15 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
-import { QuestionRepository } from '../../database/v2/repositories/QuestionRepository';
 import { InvalidEntityIdException } from '../exceptions/InvalidEntityIdException';
 import { DisciplineTypeEnum } from '@fictadvisor/utils';
+import { QuestionWithRolesRepository } from '../../database/v2/repositories/QuestionWithRolesRepository';
 
 @Injectable()
 export class QuestionByRoleAndIdPipe implements PipeTransform {
-  constructor (
-    private questionRepository: QuestionRepository,
-  ) {}
+  constructor (private questionWithRolesRepository: QuestionWithRolesRepository) {}
 
   async transform (params: { questionId: string, questionRole: DisciplineTypeEnum }) {
     const { questionId, questionRole } = params;
-    const question = await this.questionRepository.findById(questionId);
+    const question = await this.questionWithRolesRepository.findOne({ id: questionId });
     if (!question) {
       throw new InvalidEntityIdException('Question');
     }

@@ -7,24 +7,19 @@ import { Grant } from '@prisma/client/fictadvisor';
 
 @Injectable()
 export class PermissionService {
-  constructor (
-    private roleRepository: RoleRepository,
-  ) {}
+  constructor (private roleRepository: RoleRepository) {}
 
   async hasPermission (userId: string, permission: string): Promise<boolean> {
     const roles = await this.roleRepository.findMany({
-      where: {
-        userRoles: {
-          some: {
-            studentId: userId,
-          },
+      userRoles: {
+        some: {
+          studentId: userId,
         },
       },
-      include: {
-        grants: {
-          orderBy: {
-            weight: 'desc',
-          },
+    }, {
+      grants: {
+        orderBy: {
+          weight: 'desc',
         },
       },
     });
@@ -55,7 +50,7 @@ export class PermissionService {
     grants.push(...role.grants);
 
     if (role.parentId) {
-      const parent = await this.roleRepository.findById(role.parentId);
+      const parent = await this.roleRepository.findOne({ id: role.parentId });
       await this.pushGrantsAndCheckParent(parent, grants);
     }
   }

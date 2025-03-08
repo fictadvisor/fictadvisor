@@ -214,7 +214,7 @@ describe('TeacherService', () => {
     it('should return InvalidEntityIdException if not such subject of teacher', async () => {
 
       expect.assertions(1);
-      const subject = await teacherService.getTeacherSubject('teacher1', 'subject5'
+      await teacherService.getTeacherSubject('teacher1', 'subject5'
       ).catch((ex) => expect(ex).toBeInstanceOf(InvalidEntityIdException));
 
     });

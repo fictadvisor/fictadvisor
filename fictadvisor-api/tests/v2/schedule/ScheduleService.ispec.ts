@@ -748,7 +748,7 @@ describe('ScheduleService', () => {
       expect(
         events.every((event) =>
           event.lessons.every(
-            (lesson) => !generalTypes.includes(lesson.disciplineType.name)
+            (lesson) => !generalTypes.includes(lesson.disciplineType.name as DisciplineTypeEnum)
           )
         )
       ).toBe(true);
@@ -791,7 +791,7 @@ describe('ScheduleService', () => {
 
       expect(events.every(
         (event) => event.groupId === 'anotherGroup' && event.lessons.every(
-          (lesson) => generalTypes.includes(lesson.disciplineType.name)
+          (lesson) => generalTypes.includes(lesson.disciplineType.name as DisciplineTypeEnum)
         )
       )).toBe(true);
     });

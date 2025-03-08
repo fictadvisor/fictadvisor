@@ -10,11 +10,11 @@ export class UserByIdPipe implements PipeTransform {
     private userRepository: UserRepository,
   ) {}
 
-  async transform (userId: string) {
-    const user: User = await this.userRepository.findById(userId);
+  async transform (id: string) {
+    const user: User = await this.userRepository.findOne({ id });
     if (!user) {
       throw new InvalidEntityIdException('User');
     }
-    return userId;
+    return id;
   }
 }

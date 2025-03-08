@@ -5,9 +5,7 @@ import { InvalidEntityIdException } from '../exceptions/InvalidEntityIdException
 
 @Injectable()
 export class UserByTelegramIdPipe implements PipeTransform<bigint, Promise<bigint>> {
-  constructor (
-        private userRepository: UserRepository,
-  ) {}
+  constructor (private userRepository: UserRepository) {}
 
   async transform (telegramId: bigint) {
     try {
@@ -16,7 +14,7 @@ export class UserByTelegramIdPipe implements PipeTransform<bigint, Promise<bigin
       throw new InvalidEntityIdException('User');
     }
 
-    const user: User = await this.userRepository.find({ telegramId });
+    const user: User = await this.userRepository.findOne({ telegramId });
     if (!user) {
       throw new InvalidEntityIdException('User');
     }

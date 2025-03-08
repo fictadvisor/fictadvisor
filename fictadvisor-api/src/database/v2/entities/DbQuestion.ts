@@ -1,4 +1,5 @@
 import { QuestionDisplay, QuestionType } from '@prisma/client/fictadvisor';
+import { DbQuestionAnswer } from './DbQuestionAnswer';
 
 export class DbQuestion {
   id: string;
@@ -11,4 +12,7 @@ export class DbQuestion {
   criteria?: string;
   type: QuestionType;
   display: QuestionDisplay;
+  createdAt: Date | null;
+  updatedAt: Date | null;
+  questionAnswers?: DbQuestionAnswer[];
 }

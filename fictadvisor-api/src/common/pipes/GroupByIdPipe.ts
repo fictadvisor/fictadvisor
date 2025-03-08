@@ -4,15 +4,13 @@ import { InvalidEntityIdException } from '../exceptions/InvalidEntityIdException
 
 @Injectable()
 export class GroupByIdPipe implements PipeTransform<string, Promise<string>> {
-  constructor (
-    private groupRepository: GroupRepository,
-  ) {}
+  constructor (private groupRepository: GroupRepository) {}
 
-  async transform (groupId: string): Promise<string> {
-    const group = await this.groupRepository.findById(groupId);
+  async transform (id: string): Promise<string> {
+    const group = await this.groupRepository.findOne({ id });
     if (!group) {
       throw new InvalidEntityIdException('Group');
     }
-    return groupId;
+    return id;
   }
 }

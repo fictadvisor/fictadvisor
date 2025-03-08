@@ -13,7 +13,7 @@ export class GroupByEventGuard implements CanActivate {
   async canActivate (context: ExecutionContext) {
     const request = context.switchToHttp().getRequest<Request>();
     const eventId = RequestUtils.get(request, 'eventId');
-    const group = await this.groupRepository.find({
+    const group = await this.groupRepository.findOne({
       events: {
         some: {
           id: eventId,
