@@ -31,6 +31,7 @@ import { GroupRepository } from '../../../database/v2/repositories/group.reposit
 import { GeneralParser } from '../../parser/v2/general-parser';
 import { Cron } from '@nestjs/schedule';
 import { DbDisciplineTeacher } from '../../../database/v2/entities/discipline-teacher.entity';
+import { BaseShortEventResponse } from '@fictadvisor/utils';
 
 export const weeksPerEvent = {
   EVERY_WEEK: WEEK / WEEK,
@@ -129,6 +130,11 @@ export class ScheduleService {
       week,
       startTime: new Date(startOfWeek),
     };
+  }
+
+  sortEvents<T extends BaseShortEventResponse> (events: T[]) {
+    return events.sort((firstEvent, secondEvent) =>
+      firstEvent.startTime.getTime() - secondEvent.startTime.getTime());
   }
 
   async getGeneralGroupEventsWrapper (

@@ -24,6 +24,8 @@ import {
   WeekGeneralEventsResponse,
   FortnightTelegramEventsResponse,
   TelegramEventsResponse,
+  TelegramShortEventResponse,
+  ShortEventResponse,
 } from '@fictadvisor/utils/responses';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import { ApiEndpoint } from '../../../common/decorators/api-endpoint.decorator';
@@ -35,10 +37,13 @@ import { EventFiltrationPipe } from '../../../common/pipes/event-filtration.pipe
 import { EventByIdPipe } from '../../../common/pipes/event-by-id.pipe';
 import { EventPipe } from '../../../common/pipes/event.pipe';
 import { UserByIdPipe } from '../../../common/pipes/user-by-id.pipe';
-import { ScheduleMapper } from '../../../common/mappers/schedule.mapper';
 import { ScheduleService } from './schedule.service';
 import { ScheduleTimeConvertPipe } from '../../../common/pipes/schedule-time-convert.pipe';
 import { ScheduleDocumentation } from '../../../common/documentation/modules/v2/schedule';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
+import { DbEvent } from '../../../database/v2/entities/event.entity';
+import { GeneralShortEventResponse } from '@fictadvisor/utils';
 
 @ApiTags('Schedule')
 @Controller({
@@ -48,7 +53,7 @@ import { ScheduleDocumentation } from '../../../common/documentation/modules/v2/
 export class ScheduleController {
   constructor (
     private scheduleService: ScheduleService,
-    private scheduleMapper: ScheduleMapper,
+    @InjectMapper() private mapper: Mapper,
   ) {}
 
   @ApiEndpoint({
@@ -75,7 +80,8 @@ export class ScheduleController {
     @Query('week') week: number,
   ): Promise<EventResponse> {
     const { event, discipline } = await this.scheduleService.getEvent(id, week);
-    return this.scheduleMapper.getEvent(event, discipline);
+    return this.mapper.map(event, DbEvent, EventResponse,
+      { extraArgs: () => ({ discipline }) });
   }
 
   @ApiEndpoint({
@@ -89,8 +95,10 @@ export class ScheduleController {
     @Query('week') week?: number,
   ): Promise<WeekGeneralEventsResponse> {
     const result = await this.scheduleService.getGeneralGroupEventsWrapper(groupId, query, week);
+    const mappedEvents = this.mapper.mapArray(result.events, DbEvent, GeneralShortEventResponse);
+
     return {
-      events: this.scheduleMapper.getShortEvents(result.events),
+      events: this.scheduleService.sortEvents(mappedEvents),
       week: result.week,
       startTime: result.startTime,
     };
@@ -115,8 +123,10 @@ export class ScheduleController {
       userId,
       week,
     );
+    const mappedEvents = this.mapper.mapArray(result.events, DbEvent, ShortEventResponse);
+
     return {
-      events: this.scheduleMapper.getShortEvents(result.events),
+      events: this.scheduleService.sortEvents(mappedEvents),
       week: result.week,
       startTime: result.startTime,
     };
@@ -135,7 +145,9 @@ export class ScheduleController {
     @Query('day') day?: number,
   ): Promise<TelegramEventsResponse> {
     const events = await this.scheduleService.getGroupEventsByDay(groupId, userId, week, day);
-    return { events: this.scheduleMapper.getTelegramShortEvents(events) };
+    const mappedEvents = this.mapper.mapArray(events, DbEvent, TelegramShortEventResponse);
+
+    return { events: this.scheduleService.sortEvents(mappedEvents) };
   }
 
   @ApiEndpoint({
@@ -151,8 +163,10 @@ export class ScheduleController {
     @Query('userId', UserByIdPipe) userId?: string,
   ): Promise<TelegramEventsResponse> {
     const events = await this.scheduleService.getGroupEventsForTelegram(groupId, week, userId, query);
+    const mappedEvents = this.mapper.mapArray(events, DbEvent, TelegramShortEventResponse);
+
     return {
-      events: this.scheduleMapper.getTelegramShortEvents(events),
+      events: this.scheduleService.sortEvents(mappedEvents),
     };
   }
 
@@ -175,9 +189,12 @@ export class ScheduleController {
       userId,
     );
 
+    const mappedFirstWeek = this.mapper.mapArray(firstWeekEvents, DbEvent, TelegramShortEventResponse);
+    const mappedSecondWeek = this.mapper.mapArray(secondWeekEvents, DbEvent, TelegramShortEventResponse);
+
     return {
-      firstWeekEvents: this.scheduleMapper.getTelegramShortEvents(firstWeekEvents),
-      secondWeekEvents: this.scheduleMapper.getTelegramShortEvents(secondWeekEvents),
+      firstWeekEvents: this.scheduleService.sortEvents(mappedFirstWeek),
+      secondWeekEvents: this.scheduleService.sortEvents(mappedSecondWeek),
     };
   }
 
@@ -193,7 +210,9 @@ export class ScheduleController {
   ) {
     const result = await this.scheduleService.createGroupEvent(body);
     result.event = await this.scheduleService.addEventTimezones(result.event);
-    return this.scheduleMapper.getEvent(result.event, result.discipline);
+
+    return this.mapper.map(result.event, DbEvent, EventResponse,
+      { extraArgs: () => ({ discipline: result.discipline }) });
   }
 
   @ApiEndpoint({
@@ -206,7 +225,9 @@ export class ScheduleController {
     @Body(ScheduleTimeConvertPipe) body: CreateFacultyEventDTO,
   ): Promise<EventsResponse> {
     const events = await this.scheduleService.createFacultyEvent(body);
-    return { events: this.scheduleMapper.getShortEvents(events) };
+    const mappedEvents = this.mapper.mapArray(events, DbEvent, ShortEventResponse);
+
+    return { events: this.scheduleService.sortEvents(mappedEvents) };
   }
 
   @ApiEndpoint({
@@ -222,7 +243,8 @@ export class ScheduleController {
   ): Promise<EventResponse> {
     await this.scheduleService.updateEvent(eventId, body);
     const result = await this.scheduleService.getEvent(eventId, body.week);
-    return this.scheduleMapper.getEvent(result.event, result.discipline);
+    return this.mapper.map(result.event, DbEvent, EventResponse,
+      { extraArgs: () => ({ discipline: result.discipline }) });
   }
 
   @ApiEndpoint({
@@ -236,6 +258,7 @@ export class ScheduleController {
     @Param('eventId', EventByIdPipe) eventId: string,
   ): Promise<EventResponse> {
     const { event, discipline } = await this.scheduleService.deleteEvent(eventId);
-    return this.scheduleMapper.getEvent(event, discipline);
+    return this.mapper.map(event, DbEvent, EventResponse,
+      { extraArgs: () => ({ discipline }) });
   }
 }

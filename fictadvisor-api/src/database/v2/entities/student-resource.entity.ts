@@ -1,8 +1,18 @@
+import { AutoMap } from '@automapper/classes';
+
 export class DbStudentResource {
-  id: string;
-  link: string;
-  name: string;
-  imageLink: string;
+  @AutoMap()
+    id: string;
+
+  @AutoMap()
+    link: string;
+
+  @AutoMap()
+    name: string;
+
+  @AutoMap()
+    imageLink: string;
+
   createdAt: Date | null;
   updatedAt: Date | null;
 }

@@ -15,7 +15,8 @@ import {
   TeacherWithContactsResponse,
   TeacherWithContactsFullResponse,
   PaginatedTeachersResponse,
-  PaginatedQuestionCommentsResponse, SubjectsResponse,
+  PaginatedQuestionCommentsResponse, SubjectsResponse, TeacherWithRolesAndCathedrasResponse,
+  QuestionComment,
 } from '@fictadvisor/utils/responses';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import { ApiEndpoint } from '../../../common/decorators/api-endpoint.decorator';
@@ -26,13 +27,16 @@ import { UserByIdPipe } from '../../../common/pipes/user-by-id.pipe';
 import { CathedraByIdPipe } from '../../../common/pipes/cathedra-by-id.pipe';
 import { CommentsQueryPipe } from '../../../common/pipes/comments-query.pipe';
 import { AllTeachersPipe } from '../../../common/pipes/all-teachers.pipe';
-import { TeacherMapper } from '../../../common/mappers/teacher.mapper';
-import { QuestionMapper } from '../../../common/mappers/question.mapper';
-import { DisciplineTeacherMapper } from '../../../common/mappers/discipline-teacher.mapper';
 import { TeacherService } from './teacher.service';
 import { PollService } from '../../poll/v2/poll.service';
 import { TeacherDocumentation } from '../../../common/documentation/modules/v2/teacher';
-import { SubjectMapper } from '../../../common/mappers/subject.mapper';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
+import { DbSubject } from '../../../database/v2/entities/subject.entity';
+import { SubjectResponse } from '@fictadvisor/utils';
+import { DbTeacher } from '../../../database/v2/entities/teacher.entity';
+import { DbDisciplineTeacher } from '../../../database/v2/entities/discipline-teacher.entity';
+import { QuestionCommentData } from '../../poll/v2/types/question-comment.data';
 
 @ApiTags('Teachers')
 @Controller({
@@ -42,11 +46,8 @@ import { SubjectMapper } from '../../../common/mappers/subject.mapper';
 export class TeacherController {
   constructor (
     private readonly teacherService: TeacherService,
-    private readonly teacherMapper: TeacherMapper,
     private readonly pollService: PollService,
-    private subjectMapper: SubjectMapper,
-    private readonly questionMapper: QuestionMapper,
-    private readonly disciplineTeacherMapper: DisciplineTeacherMapper,
+    @InjectMapper() private readonly mapper: Mapper,
   ) {}
 
 
@@ -60,7 +61,7 @@ export class TeacherController {
   ): Promise<PaginatedTeachersResponse> {
     const teachers = await this.teacherService.getAll(query);
     return {
-      teachers: this.teacherMapper.getTeachersWithRolesAndCathedras(teachers.data),
+      teachers: this.mapper.mapArray(teachers.data, DbTeacher, TeacherWithRolesAndCathedrasResponse),
       pagination: teachers.pagination,
     };
   }
@@ -87,7 +88,9 @@ export class TeacherController {
     @Param('teacherId', TeacherByIdPipe) teacherId: string,
   ): Promise<SubjectsResponse> {
     const subjects = await this.teacherService.getTeacherSubjects(teacherId);
-    return this.subjectMapper.getSubjects(subjects);
+    const mappedSubjects = this.mapper.mapArray(subjects, DbSubject, SubjectResponse);
+
+    return { subjects: mappedSubjects };
   }
 
   @ApiEndpoint({
@@ -102,7 +105,7 @@ export class TeacherController {
     @Query('userId', UserByIdPipe) userId: string,
   ): Promise<DisciplineTeacherAndSubjectResponse[]> {
     const disciplineTeachers = await this.teacherService.getUserDisciplineTeachers(teacherId, userId, notAnswered);
-    return this.disciplineTeacherMapper.getDisciplinesTeacherAndSubject(disciplineTeachers);
+    return this.mapper.mapArray(disciplineTeachers, DbDisciplineTeacher, DisciplineTeacherAndSubjectResponse);
   }
 
   @ApiEndpoint({
@@ -127,7 +130,7 @@ export class TeacherController {
   ): Promise<TeacherWithContactsResponse> {
     const { dbTeacher, contacts } = await this.teacherService.getTeacher(teacherId);
     return {
-      ...this.teacherMapper.getTeacherWithRolesAndCathedras(dbTeacher),
+      ...this.mapper.map(dbTeacher, DbTeacher, TeacherWithRolesAndCathedrasResponse),
       contacts,
     };
   }
@@ -142,7 +145,7 @@ export class TeacherController {
     @Body() body: CreateTeacherDTO,
   ) {
     const dbTeacher = await this.teacherService.create(body);
-    return this.teacherMapper.getTeacherWithRolesAndCathedras(dbTeacher);
+    return this.mapper.map(dbTeacher, DbTeacher, TeacherWithRolesAndCathedrasResponse);
   }
 
   @ApiEndpoint({
@@ -156,7 +159,7 @@ export class TeacherController {
     @Body() body: UpdateTeacherDTO,
   ) {
     const dbTeacher = await this.teacherService.update(teacherId, body);
-    return this.teacherMapper.getTeacherWithRolesAndCathedras(dbTeacher);
+    return this.mapper.map(dbTeacher, DbTeacher, TeacherWithRolesAndCathedrasResponse);
   }
 
   @ApiEndpoint({
@@ -256,7 +259,9 @@ export class TeacherController {
   ): Promise<PaginatedQuestionCommentsResponse> {
     this.teacherService.checkQueryDate(query);
     const questions = await this.pollService.getQuestionWithText(teacherId, query);
-    return this.questionMapper.getQuestionComments(questions);
+    const comments = this.mapper.mapArray(questions, QuestionCommentData, QuestionComment);
+
+    return { questions: comments };
   }
 
   @ApiEndpoint({

@@ -5,9 +5,16 @@ import { PERMISSION } from '@fictadvisor/utils/security';
 import { ApiEndpoint } from '../../../common/decorators/api-endpoint.decorator';
 import { CathedraByIdPipe } from '../../../common/pipes/cathedra-by-id.pipe';
 import { CathedraTeachersPipe } from '../../../common/pipes/cathedra-teachers.pipe';
-import { CathedraMapper } from '../../../common/mappers/cathedra.mapper';
 import { CathedraService } from './cathedra.service';
 import { CathedraDocumentation } from '../../../common/documentation/modules/v2/cathedra';
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
+import { DbCathedra } from '../../../database/v2/entities/cathedra.entity';
+import {
+  CathedrasDivisionsResponse,
+  CathedraWithNumberOfTeachersResponse, CathedraWithTeachersResponse,
+  PaginatedCathedrasWithTeachersResponse,
+} from '@fictadvisor/utils/responses';
 
 @ApiTags('Cathedra')
 @Controller({
@@ -17,7 +24,7 @@ import { CathedraDocumentation } from '../../../common/documentation/modules/v2/
 export class CathedraController {
   constructor (
     private cathedraService: CathedraService,
-    private cathedraMapper: CathedraMapper,
+    @InjectMapper() private mapper: Mapper,
   ) {}
 
   @ApiEndpoint({
@@ -27,9 +34,10 @@ export class CathedraController {
   @Get()
   async getAll (
     @Query() query: QueryAllCathedrasDTO,
-  ) {
+  ): Promise<PaginatedCathedrasWithTeachersResponse> {
     const cathedras = await this.cathedraService.getAll(query);
-    const cathedrasWithTeachers = this.cathedraMapper.getCathedraWithNumberOfTeachers(cathedras.data);
+    const cathedrasWithTeachers = this.mapper.mapArray(cathedras.data, DbCathedra, CathedraWithNumberOfTeachersResponse);
+
     return {
       cathedras: cathedrasWithTeachers,
       pagination: cathedras.pagination,
@@ -44,9 +52,9 @@ export class CathedraController {
   @Post()
   async create (
     @Body(CathedraTeachersPipe) body: CreateCathedraDTO,
-  ) {
+  ): Promise<CathedraWithTeachersResponse> {
     const cathedra = await this.cathedraService.create(body);
-    return this.cathedraMapper.getCathedraWithTeachers(cathedra);
+    return this.mapper.map(cathedra, DbCathedra, CathedraWithTeachersResponse);
   }
 
   @ApiEndpoint({
@@ -58,9 +66,9 @@ export class CathedraController {
   async update (
     @Param('cathedraId', CathedraByIdPipe) cathedraId: string,
     @Body() body: UpdateCathedraDTO,
-  ) {
+  ): Promise<CathedraWithTeachersResponse> {
     const cathedra = await this.cathedraService.update(cathedraId, body);
-    return this.cathedraMapper.getCathedraWithTeachers(cathedra);
+    return this.mapper.map(cathedra, DbCathedra, CathedraWithTeachersResponse);
   }
 
   @ApiEndpoint({
@@ -71,17 +79,17 @@ export class CathedraController {
   @Delete('/:cathedraId')
   async delete (
     @Param('cathedraId', CathedraByIdPipe) cathedraId: string,
-  ) {
+  ): Promise<CathedraWithTeachersResponse> {
     const cathedra = await this.cathedraService.delete(cathedraId);
-    return this.cathedraMapper.getCathedraWithTeachers(cathedra);
+    return this.mapper.map(cathedra, DbCathedra, CathedraWithTeachersResponse);
   }
 
   @ApiEndpoint({
     summary: 'Get all divisions',
-    documentation: CathedraDocumentation.GET_ALL,
+    documentation: CathedraDocumentation.GET_ALL_DIVISIONS,
   })
   @Get('/divisions')
-  async getAllDivisions () {
+  async getAllDivisions (): Promise<CathedrasDivisionsResponse> {
     return this.cathedraService.getAllDivisions();
   }
 
@@ -92,8 +100,8 @@ export class CathedraController {
   @Get('/:cathedraId')
   async getById (
     @Param('cathedraId', CathedraByIdPipe) cathedraId: string,
-  ) {
+  ): Promise<CathedraWithTeachersResponse> {
     const cathedra = await this.cathedraService.getById(cathedraId);
-    return this.cathedraMapper.getCathedraWithTeachers(cathedra);
+    return this.mapper.map(cathedra, DbCathedra, CathedraWithTeachersResponse);
   }
 }

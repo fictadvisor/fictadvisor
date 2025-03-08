@@ -17,6 +17,8 @@ import { AlreadyAnsweredException } from '../../../src/common/exceptions/already
 import { WrongTimeException } from '../../../src/common/exceptions/wrong-time.exception';
 import { NoPermissionException } from '../../../src/common/exceptions/no-permission.exception';
 import { IsRemovedDisciplineTeacherException } from '../../../src/common/exceptions/is-removed-discipline-teacher.exception';
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
 
 describe('DisciplineTeacherService', () => {
   let disciplineTeacherService: DisciplineTeacherService;
@@ -36,7 +38,13 @@ describe('DisciplineTeacherService', () => {
         TeacherService,
         PrismaService,
       ],
-      imports: [PrismaModule, MapperModule],
+      imports: [
+        PrismaModule,
+        MapperModule,
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
+      ],
     }).useMocker((token) => {
       if (token === TelegramConfigService) {
         return {};

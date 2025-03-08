@@ -27,6 +27,8 @@ import { NoPermissionException } from '../../../src/common/exceptions/no-permiss
 import { CampusParser } from '../../../src/modules/parser/v2/campus-parser';
 import { RozParser } from '../../../src/modules/parser/v2/roz-parser';
 import { GeneralParser } from '../../../src/modules/parser/v2/general-parser';
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
 
 
 describe('ScheduleService', () => {
@@ -51,6 +53,9 @@ describe('ScheduleService', () => {
         DateModule,
         PrismaModule,
         MapperModule,
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
       ],
     }).useMocker((token) => {
       const tokens: InjectionToken[] = [

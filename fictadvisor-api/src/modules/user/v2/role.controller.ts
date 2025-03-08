@@ -32,9 +32,12 @@ import { ApiEndpoint } from '../../../common/decorators/api-endpoint.decorator';
 import { GetUser } from '../../../common/decorators/get-user.decorator';
 import { RoleByIdPipe } from '../../../common/pipes/role-by-id.pipe';
 import { GrantByIdPipe } from '../../../common/pipes/grant-by-id.pipe';
-import { RoleMapper } from '../../../common/mappers/role.mapper';
 import { RoleService } from './role.service';
 import { RoleDocumentation } from '../../../common/documentation/modules/v2/role';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
+import { DbRole } from '../../../database/v2/entities/role.entity';
+import { DbGrant } from '../../../database/v2/entities/grant.entity';
 
 @ApiTags('Roles')
 @Controller({
@@ -44,7 +47,7 @@ import { RoleDocumentation } from '../../../common/documentation/modules/v2/role
 export class RoleController {
   constructor (
     private roleService: RoleService,
-    private roleMapper: RoleMapper,
+    @InjectMapper() private mapper: Mapper,
   ) {}
 
   @ApiEndpoint({
@@ -54,7 +57,7 @@ export class RoleController {
   @Get()
   async getAll (@Query() query: QueryAllRolesDTO): Promise<RolesResponse> {
     const roles = await this.roleService.getAll(query);
-    const data = this.roleMapper.getRoles(roles.data);
+    const data = this.mapper.mapArray(roles.data, DbRole, RoleResponse);
     return {
       data,
       pagination: roles.pagination,
@@ -68,7 +71,7 @@ export class RoleController {
   @Get('/:roleId')
   async get (@Param('roleId', RoleByIdPipe) roleId: string): Promise<RoleResponse> {
     const role = await this.roleService.get(roleId);
-    return this.roleMapper.getRole(role);
+    return this.mapper.map(role, DbRole, RoleResponse);
   }
 
   @ApiEndpoint({
@@ -82,7 +85,7 @@ export class RoleController {
     @GetUser('id') userId: string,
   ): Promise<RoleResponse> {
     const role = await this.roleService.createRoleWithGrants(body, userId);
-    return this.roleMapper.getRole(role);
+    return this.mapper.map(role, DbRole, RoleResponse);
   }
 
   @ApiEndpoint({
@@ -93,7 +96,7 @@ export class RoleController {
   @Post()
   async create (@Body() body: CreateRoleDTO): Promise<BaseRoleResponse> {
     const role = await this.roleService.createRole(body);
-    return this.roleMapper.getBaseRole(role);
+    return this.mapper.map(role, DbRole, BaseRoleResponse);
   }
 
   @ApiEndpoint({
@@ -107,7 +110,7 @@ export class RoleController {
     @Body() body: UpdateRoleDTO
   ): Promise<BaseRoleResponse> {
     const role = await this.roleService.update(roleId, body);
-    return this.roleMapper.getBaseRole(role);
+    return this.mapper.map(role, DbRole, BaseRoleResponse);
   }
 
   @ApiEndpoint({
@@ -118,7 +121,7 @@ export class RoleController {
   @Delete('/:roleId')
   async delete (@Param('roleId', RoleByIdPipe) roleId: string): Promise<BaseRoleResponse> {
     const role = await this.roleService.delete(roleId);
-    return this.roleMapper.getBaseRole(role);
+    return this.mapper.map(role, DbRole, BaseRoleResponse);
   }
 
   @ApiEndpoint({
@@ -132,7 +135,7 @@ export class RoleController {
   ): Promise<GrantsResponse> {
     const grants = await this.roleService.getAllGrants(roleId, query);
     return {
-      grants: this.roleMapper.getGrants(grants.data),
+      grants: this.mapper.mapArray(grants.data, DbGrant, GrantResponse),
       pagination: grants.pagination,
     };
   }
@@ -147,7 +150,7 @@ export class RoleController {
     @Param('grantId', GrantByIdPipe) grantId: string,
   ): Promise<GrantResponse> {
     const grant = await this.roleService.getGrant(roleId, grantId);
-    return this.roleMapper.getGrant(grant);
+    return this.mapper.map(grant, DbGrant, GrantResponse);
   }
 
   @ApiEndpoint({
@@ -161,7 +164,7 @@ export class RoleController {
     @Param('roleId', RoleByIdPipe) roleId: string,
   ): Promise<GrantResponse> {
     const grant = await this.roleService.createGrant(roleId, body);
-    return this.roleMapper.getGrant(grant);
+    return this.mapper.map(grant, DbGrant, GrantResponse);
   }
 
   @ApiEndpoint({
@@ -189,7 +192,7 @@ export class RoleController {
     @Body() body: UpdateGrantDTO,
   ): Promise<GrantResponse> {
     const grant = await this.roleService.updateGrant(roleId, grantId, body);
-    return this.roleMapper.getGrant(grant);
+    return this.mapper.map(grant, DbGrant, GrantResponse);
   }
 
   @ApiEndpoint({
@@ -203,6 +206,6 @@ export class RoleController {
     @Param('grantId', GrantByIdPipe) grantId: string,
   ): Promise<GrantResponse> {
     const grant = await this.roleService.deleteGrant(roleId, grantId);
-    return this.roleMapper.getGrant(grant);
+    return this.mapper.map(grant, DbGrant, GrantResponse);
   }
 }

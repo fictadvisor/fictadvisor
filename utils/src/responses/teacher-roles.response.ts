@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { DisciplineTypeEnum } from '../enums';
+import { AutoMap } from '@automapper/classes';
 
 export class TeacherRolesResponse {
   @ApiProperty({
@@ -7,5 +8,6 @@ export class TeacherRolesResponse {
     type: [DisciplineTypeEnum],
     enum: DisciplineTypeEnum,
   })
+  @AutoMap(() => [String])
     disciplineTypes: DisciplineTypeEnum[];
 }

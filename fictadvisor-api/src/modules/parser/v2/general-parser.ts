@@ -11,7 +11,6 @@ import { RozParser } from './roz-parser';
 import { CampusParser } from './campus-parser';
 import { Parser } from './interfaces/parser.interface';
 import { GroupService } from '../../group/v2/group.service';
-import { ScheduleMapper } from '../../../common/mappers/schedule.mapper';
 import { ScheduleService, weeksPerEvent } from '../../schedule/v2/schedule.service';
 import { DateService, FORTNITE, StudyingSemester, WEEK } from '../../date/v2/date.service';
 import { DisciplineTypeEnum, ParserTypeEnum, Period } from '@fictadvisor/utils/enums';
@@ -24,6 +23,10 @@ import {
   ParsedDisciplineType,
 } from './types/schedule-parser.types';
 import { DisciplineTeacherRoleRepository } from '../../../database/v2/repositories/discipline-teacher-role.repository';
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
+import { DbEvent } from '../../../database/v2/entities/event.entity';
+import { EventResponse } from '@fictadvisor/utils/responses';
 
 type BaseGeneralParserPair = ParsedSchedulePair & {
   period: Period;
@@ -53,7 +56,7 @@ export class GeneralParser {
     private disciplineTeacherRoleRepository: DisciplineTeacherRoleRepository,
     private rozParser: RozParser,
     private campusParser: CampusParser,
-    private scheduleMapper: ScheduleMapper
+    @InjectMapper() private mapper: Mapper,
   ) {}
 
   private parserTypes: Record<ParserTypeEnum, Parser> = {
@@ -544,7 +547,9 @@ export class GeneralParser {
       });
 
       const { id, name, startTime, endTime, teachers, period } =
-        this.scheduleMapper.getEvent(event, discipline);
+        this.mapper.map(event, DbEvent, EventResponse, {
+          extraArgs: () => ({ discipline }),
+        });
 
       return {
         id,

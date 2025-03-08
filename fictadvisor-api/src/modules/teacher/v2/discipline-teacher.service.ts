@@ -6,7 +6,11 @@ import {
   QueryAllCommentsDTO,
   QuerySemesterDTO,
 } from '@fictadvisor/utils/requests';
-import { DisciplineTeacherQuestionsResponse } from '@fictadvisor/utils/responses';
+import {
+  DisciplineTeacherQuestionsResponse,
+  QuestionWithCategoryResponse,
+  TeacherResponse,
+} from '@fictadvisor/utils/responses';
 import { CommentsSortBy, DisciplineTypeEnum } from '@fictadvisor/utils/enums';
 import { TelegramAPI } from '../../telegram-api/telegram-api';
 import { isArrayUnique } from '../../../common/utils/array.utils';
@@ -15,7 +19,6 @@ import { DbQuestionAnswer } from '../../../database/v2/entities/question-answer.
 import { PaginationUtil, PaginateArgs } from '../../../database/v2/pagination.util';
 import { DatabaseUtils } from '../../../database/database.utils';
 import { PaginatedData } from '../../../database/types/paginated.data';
-import { QuestionMapper } from '../../../common/mappers/question.mapper';
 import { PollService } from '../../poll/v2/poll.service';
 import { DateService } from '../../date/v2/date.service';
 import { DisciplineTeacherRepository } from '../../../database/v2/repositories/discipline-teacher.repository';
@@ -33,9 +36,12 @@ import { NoPermissionException } from '../../../common/exceptions/no-permission.
 import { NotSelectedDisciplineException } from '../../../common/exceptions/not-selected-discipline.exception';
 import { IsRemovedDisciplineTeacherException } from '../../../common/exceptions/is-removed-discipline-teacher.exception';
 import { Prisma, QuestionType, State } from '@prisma/client/fictadvisor';
-import { TeacherMapper } from '../../../common/mappers/teacher.mapper';
-import { SubjectMapper } from '../../../common/mappers/subject.mapper';
 import { DbQuestion } from '../../../database/v2/entities/question.entity';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
+import { DbSubject } from '../../../database/v2/entities/subject.entity';
+import { SubjectResponse } from '@fictadvisor/utils';
+import { DbTeacher } from '../../../database/v2/entities/teacher.entity';
 
 @Injectable()
 export class DisciplineTeacherService {
@@ -48,9 +54,7 @@ export class DisciplineTeacherService {
     private questionAnswerRepository: QuestionAnswerRepository,
     private telegramApi: TelegramAPI,
     private userRepository: UserRepository,
-    private questionMapper: QuestionMapper,
-    private teacherMapper: TeacherMapper,
-    private subjectMapper: SubjectMapper,
+    @InjectMapper() private mapper: Mapper,
   ) {}
 
   async getQuestions (disciplineTeacherId: string, userId: string): Promise<DisciplineTeacherQuestionsResponse> {
@@ -116,12 +120,33 @@ export class DisciplineTeacherService {
   async getCategories (id: string) {
     const { discipline, teacher } = await this.disciplineTeacherRepository.findOne({ id });
     const questions = await this.getUniqueQuestions(id);
-    const categories = this.questionMapper.sortByCategories(questions);
+    const categories = this.sortByCategories(questions);
     return {
-      teacher: this.teacherMapper.getTeacher(teacher),
-      subject: this.subjectMapper.getSubject(discipline.subject),
+      teacher: this.mapper.map(teacher, DbTeacher, TeacherResponse),
+      subject: this.mapper.map(discipline.subject, DbSubject, SubjectResponse),
       categories,
     };
+  }
+
+  sortByCategories (questions: DbQuestion[]) {
+    const results = [];
+    for (const q of questions) {
+      const question = this.mapper.map(q, DbQuestion, QuestionWithCategoryResponse);
+      const name = question.category;
+      delete question.category;
+      const category = results.find((c) => (c.name === name));
+      if (!category) {
+        results.push({
+          name: name,
+          count: 1,
+          questions: [question],
+        });
+      } else {
+        category.count++;
+        category.questions.push(question);
+      }
+    }
+    return results;
   }
 
   async getUniqueQuestions (id: string) {

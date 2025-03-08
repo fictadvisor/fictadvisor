@@ -6,6 +6,8 @@ import { PrismaService } from '../../../src/database/v2/prisma.service';
 import { PermissionService } from '../../../src/modules/permission/v2/permission.service';
 import { DataNotFoundException } from '../../../src/common/exceptions/data-not-found.exception';
 import { State } from '@prisma/client/fictadvisor';
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
 
 describe('PermissionService', () => {
   let prismaService: PrismaService;
@@ -17,12 +19,18 @@ describe('PermissionService', () => {
         PermissionService,
         PrismaService,
       ],
-      imports: [PrismaModule, MapperModule],
+      imports: [
+        PrismaModule,
+        MapperModule,
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
+      ],
     }).compile();
 
     permissionService = moduleRef.get(PermissionService);
     prismaService = moduleRef.get(PrismaService);
-        
+
 
     await prismaService.user.createMany({
       data: [
@@ -77,7 +85,7 @@ describe('PermissionService', () => {
       ],
     });
 
-    
+
   });
 
   describe('checkPermissions', () => {
@@ -90,7 +98,7 @@ describe('PermissionService', () => {
       const permissions: PERMISSION[] = [PERMISSION.GROUPS_CREATE, PERMISSION.QUESTIONS_DELETE, PERMISSION.GROUPS_$GROUPID_ADMIN_SWITCH];
 
       const result = await permissionService.checkPermissions(userId, { permissions, values });
-      
+
       const expectedResult: Map<string, boolean> = new Map<string, boolean>([
         ['groups.create', true ],
         ['questions.delete', true ],

@@ -10,7 +10,7 @@ import {
 import {
   PaginatedQuestionsResponse,
   PollDisciplineTeachersResponse,
-  QuestionResponse,
+  QuestionWithCategoriesAndRolesResponse,
 } from '@fictadvisor/utils/responses';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import { ApiEndpoint } from '../../../common/decorators/api-endpoint.decorator';
@@ -18,10 +18,13 @@ import { TelegramGuard } from '../../../common/guards/telegram/telegram.guard';
 import { QuestionByIdPipe } from '../../../common/pipes/question-by-id.pipe';
 import { QuestionByRoleAndIdPipe } from '../../../common/pipes/question-by-role-and-id.pipe';
 import { UserByIdPipe } from '../../../common/pipes/user-by-id.pipe';
-import { QuestionMapper } from '../../../common/mappers/question.mapper';
 import { PollService } from './poll.service';
-import { DisciplineTypeEnum } from '@fictadvisor/utils';
+import { DisciplineTypeEnum, QuestionWithCategoryResponse } from '@fictadvisor/utils';
 import { PollDocumentation } from '../../../common/documentation/modules/v2/poll';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
+import { DbQuestion } from '../../../database/v2/entities/question.entity';
+import { DbQuestionWithRoles } from '../../../database/v2/entities/question-with-roles.entity';
 
 @ApiTags('Poll')
 @Controller({
@@ -31,7 +34,7 @@ import { PollDocumentation } from '../../../common/documentation/modules/v2/poll
 export class PollController {
   constructor (
     private pollService: PollService,
-    private questionMapper: QuestionMapper,
+    @InjectMapper() private mapper: Mapper,
   ) {}
 
   @ApiEndpoint({
@@ -44,7 +47,7 @@ export class PollController {
   ): Promise<PaginatedQuestionsResponse> {
     const questions = await this.pollService.getAll(query);
     return {
-      questions: this.questionMapper.getQuestions(questions.data),
+      questions: this.mapper.mapArray(questions.data, DbQuestion, QuestionWithCategoryResponse),
       pagination: questions.pagination,
     };
   }
@@ -57,9 +60,9 @@ export class PollController {
   @Post('/questions')
   async create (
     @Body() body: CreateQuestionDTO,
-  ): Promise<QuestionResponse> {
+  ): Promise<QuestionWithCategoryResponse> {
     const question = await this.pollService.create(body);
-    return this.questionMapper.getQuestionWithCategory(question);
+    return this.mapper.map(question, DbQuestion, QuestionWithCategoryResponse);
   }
 
   @ApiEndpoint({
@@ -84,9 +87,9 @@ export class PollController {
   @Delete('/questions/:questionId')
   async delete (
     @Param('questionId', QuestionByIdPipe) questionId: string,
-  ): Promise<QuestionResponse> {
+  ): Promise<QuestionWithCategoryResponse> {
     const question = await this.pollService.deleteById(questionId);
-    return this.questionMapper.getQuestionWithCategory(question);
+    return this.mapper.map(question, DbQuestion, QuestionWithCategoryResponse);
   }
 
   @ApiEndpoint({
@@ -98,9 +101,9 @@ export class PollController {
   async update (
     @Param('questionId', QuestionByIdPipe) questionId: string,
     @Body() body: UpdateQuestionDTO,
-  ): Promise<QuestionResponse> {
+  ): Promise<QuestionWithCategoryResponse> {
     const question = await this.pollService.updateById(questionId, body);
-    return this.questionMapper.getQuestionWithCategory(question);
+    return this.mapper.map(question, DbQuestion, QuestionWithCategoryResponse);
   }
 
   @ApiEndpoint({
@@ -110,9 +113,9 @@ export class PollController {
   @Get('/questions/:questionId')
   async getQuestion (
     @Param('questionId', QuestionByIdPipe) questionId: string,
-  ) {
+  ): Promise<QuestionWithCategoriesAndRolesResponse> {
     const question = await this.pollService.getQuestionById(questionId);
-    return this.questionMapper.getQuestionWithRoles(question);
+    return this.mapper.map(question, DbQuestionWithRoles, QuestionWithCategoriesAndRolesResponse);
   }
 
   @ApiEndpoint({
@@ -124,9 +127,9 @@ export class PollController {
   async giveRole (
     @Param('questionId', QuestionByIdPipe) questionId: string,
     @Body() body: CreateQuestionRoleDTO,
-  ) {
+  ): Promise<QuestionWithCategoriesAndRolesResponse> {
     const question = await this.pollService.giveRole(body, questionId);
-    return this.questionMapper.getQuestionWithRoles(question);
+    return this.mapper.map(question, DbQuestionWithRoles, QuestionWithCategoriesAndRolesResponse);
   }
 
   @ApiEndpoint({
@@ -137,8 +140,8 @@ export class PollController {
   @Delete('/questions/:questionId/roles/:questionRole')
   async deleteRole (
     @Param(QuestionByRoleAndIdPipe) params: { questionId: string, questionRole: DisciplineTypeEnum },
-  ) {
+  ): Promise<QuestionWithCategoriesAndRolesResponse> {
     const question = await this.pollService.deleteRole(params.questionId, params.questionRole);
-    return this.questionMapper.getQuestionWithRoles(question);
+    return this.mapper.map(question, DbQuestionWithRoles, QuestionWithCategoriesAndRolesResponse);
   }
 }

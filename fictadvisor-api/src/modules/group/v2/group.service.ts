@@ -13,6 +13,7 @@ import {
   SortQAGroupsParam,
   SortQGSParam,
   Sort,
+  SelectiveDisciplinesWithAmountResponse,
 } from '@fictadvisor/utils';
 import { UserService } from '../../user/v2/user.service';
 import { FileService } from '../../file/file.service';
@@ -37,6 +38,8 @@ import { NotApprovedException } from '../../../common/exceptions/not-approved.ex
 import { AbsenceOfCaptainException } from '../../../common/exceptions/absence-of-captain.exception';
 import { AVATARS } from '../../auth/v2/auth.service';
 import { PaginatedData } from '../../../database/types/paginated.data';
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 
 const ROLE_LIST = [
   {
@@ -81,6 +84,7 @@ export class GroupService {
     private disciplineRepository: DisciplineRepository,
     private dateService: DateService,
     private fileService: FileService,
+    @InjectMapper() private mapper: Mapper,
   ) {}
 
   async create ({ code, eduProgramId, cathedraId, admissionYear }: CreateGroupDTO): Promise<DbGroup>  {
@@ -241,6 +245,20 @@ export class GroupService {
       groupId,
       isSelective: true,
     });
+  }
+
+  getMappedSelectiveDisciplines (disciplines: DbDiscipline[]): SelectiveDisciplinesWithAmountResponse[] {
+    const result = [];
+
+    disciplines.forEach((discipline) => {
+      if (!result.some(({ semester, year }) => semester === discipline.semester && year === discipline.year)) {
+        result.push(this.mapper.map(discipline, DbDiscipline, SelectiveDisciplinesWithAmountResponse, {
+          extraArgs: () => ({ disciplines }),
+        }));
+      }
+    });
+
+    return result;
   }
 
   async addUnregistered (groupId: string, body: EmailDTO): Promise<DbUser[]> {

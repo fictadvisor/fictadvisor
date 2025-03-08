@@ -12,6 +12,8 @@ import { PrismaService } from '../../../src/database/v2/prisma.service';
 import { TelegramConfigService } from '../../../src/config/telegram-config.service';
 import { ConfigService } from '@nestjs/config';
 import { InvalidEntityIdException } from '../../../src/common/exceptions/invalid-entity-id.exception';
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
 
 describe('TeacherService', () => {
   let teacherService: TeacherService;
@@ -24,6 +26,9 @@ describe('TeacherService', () => {
       imports: [
         PrismaModule,
         MapperModule,
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
       ],
     }).compile();
 

@@ -30,6 +30,8 @@ import { DateService } from '../../../src/modules/date/v2/date.service';
 import { AccessModule } from '../../../src/modules/access/access.module';
 import { DbTeachersOnCathedras } from '../../../src/database/v2/entities/teachers-on-cathedras.entity';
 import { DbCathedra } from '../../../src/database/v2/entities/cathedra.entity';
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
 
 describe('TeacherService', () => {
   let teacherService: TeacherService;
@@ -51,6 +53,9 @@ describe('TeacherService', () => {
         PollModule,
         MapperModule,
         PrismaModule,
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
         ConfigurationModule.forRoot({
           isGlobal: true,
           load: [Configuration],
