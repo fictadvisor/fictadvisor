@@ -6,6 +6,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { join, resolve } from 'path';
 import * as cookieParser from 'cookie-parser';
 import { AppModule } from './modules/AppModule';
+import { TelegramAPI } from './modules/telegram-api/TelegramAPI';
 import { HttpExceptionFilter } from './common/filters/HttpExceptionFilter';
 import { validationExceptionFactory } from './common/helpers/validationExceptionFactory';
 import { applyStaticMiddleware } from './common/helpers/applyStaticMiddleware';
@@ -19,6 +20,7 @@ import { TestType, TestCoverage } from './common/helpers/TestCoverage';
 async function bootstrap () {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get<ConfigService>(ConfigService);
+  const telegramApi = app.get<TelegramAPI>(TelegramAPI);
   const port = configService.get<number>('port');
 
   applyStaticMiddleware(app);
@@ -41,7 +43,7 @@ async function bootstrap () {
   });
 
   app.use(cookieParser());
-  app.useGlobalFilters(new HttpExceptionFilter(configService));
+  app.useGlobalFilters(new HttpExceptionFilter(configService, telegramApi));
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   app.useGlobalPipes(
     new ValidationPipe({
