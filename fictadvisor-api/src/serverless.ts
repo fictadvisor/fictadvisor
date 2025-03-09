@@ -6,6 +6,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { configure as serverlessExpress } from '@vendia/serverless-express';
 
 import { AppModule } from './modules/AppModule';
+import { TelegramAPI } from './modules/telegram-api/TelegramAPI';
 import { HttpExceptionFilter } from './common/filters/HttpExceptionFilter';
 import { validationExceptionFactory } from './common/helpers/validationExceptionFactory';
 
@@ -19,10 +20,11 @@ let server;
 async function bootstrap () {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, { cors: true });
   const configService = app.get<ConfigService>(ConfigService);
+  const telegramApi = app.get<TelegramAPI>(TelegramAPI);
 
   app.enableCors();
 
-  app.useGlobalFilters(new HttpExceptionFilter(configService));
+  app.useGlobalFilters(new HttpExceptionFilter(configService, telegramApi));
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   app.useGlobalPipes(
     new ValidationPipe({
