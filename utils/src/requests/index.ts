@@ -91,7 +91,3 @@ export * from './UpdateTelegramGroupDTO';
 export * from './UpdateUserDTO';
 export * from './UserDTO';
 export * from './VerificationEmailDTO';
-export * from './VerifyCaptainDTO';
-export * from './VerifyResponseDTO';
-export * from './VerifyStudentDTO';
-export * from './VerifySuperheroDTO';
