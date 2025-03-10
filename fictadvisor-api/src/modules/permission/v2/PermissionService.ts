@@ -13,18 +13,16 @@ export class PermissionService {
 
   async hasPermission (userId: string, permission: string): Promise<boolean> {
     const roles = await this.roleRepository.findMany({
-      where: {
-        userRoles: {
-          some: {
-            studentId: userId,
-          },
+      userRoles: {
+        some: {
+          studentId: userId,
         },
       },
-      include: {
-        grants: {
-          orderBy: {
-            weight: 'desc',
-          },
+    }, null, null,
+    {
+      grants: {
+        orderBy: {
+          weight: 'desc',
         },
       },
     });
@@ -55,7 +53,7 @@ export class PermissionService {
     grants.push(...role.grants);
 
     if (role.parentId) {
-      const parent = await this.roleRepository.findById(role.parentId);
+      const parent = await this.roleRepository.findOne({ id: role.parentId });
       await this.pushGrantsAndCheckParent(parent, grants);
     }
   }

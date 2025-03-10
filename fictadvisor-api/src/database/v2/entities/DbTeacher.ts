@@ -1,13 +1,12 @@
 import {
-  Discipline,
-  Cathedra,
-  TeachersOnCathedras,
   ScientificDegree,
   AcademicStatus,
   Position,
 } from '@prisma/client/fictadvisor';
 import { Decimal } from '@prisma/client/fictadvisor/runtime';
-import { DbDisciplineTeacherRole } from './DbDisciplineTeacherRole';
+import { DbCathedra } from './DbCathedra';
+import { DbDisciplineTeacher } from './DbDisciplineTeacher';
+import { DbComplaint } from './DbComplaint';
 
 export class DbTeacher {
   id: string;
@@ -19,15 +18,10 @@ export class DbTeacher {
   scientificDegree: ScientificDegree;
   academicStatus: AcademicStatus;
   position: Position;
-  cathedras: (TeachersOnCathedras & {
-    cathedra: Cathedra,
-  })[];
   rating: Decimal;
-  disciplineTeachers?: {
-    id: string,
-    teacherId: string,
-    disciplineId: string,
-    discipline: Discipline,
-    roles: DbDisciplineTeacherRole[];
-  }[];
+  cathedras?: DbCathedra[];
+  complaints?: DbComplaint[];
+  disciplineTeachers?: DbDisciplineTeacher[];
+  createdAt: Date | null;
+  updatedAt: Date | null;
 }

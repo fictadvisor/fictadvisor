@@ -9,7 +9,7 @@ export class GroupByIdPipe implements PipeTransform<string, Promise<string>> {
   ) {}
 
   async transform (groupId: string): Promise<string> {
-    const group = await this.groupRepository.findById(groupId);
+    const group = await this.groupRepository.findOne({ id: groupId });
     if (!group) {
       throw new InvalidEntityIdException('Group');
     }

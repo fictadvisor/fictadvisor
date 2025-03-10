@@ -1,33 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../PrismaService';
-import { UpdateSuperheroDTO } from '@fictadvisor/utils/requests';
+import { PrismaRepository } from '../prisma.repository';
+import { DbSuperhero } from '../entities/DbSuperhero';
 
 @Injectable()
-export class SuperheroRepository {
-  constructor (
-    private prisma: PrismaService,
-  ) {}
-
-  async updateSuperhero (userId: string, data: UpdateSuperheroDTO) {
-    return this.prisma.superhero.update({
-      where: {
-        userId,
-      },
-      data,
-      select: {
-        userId: true,
-        dorm: true,
-        state: true,
-      },
-    });
-  }
-
-  async createSuperhero (id, body) {
-    return this.prisma.superhero.create({
-      data: {
-        userId: id,
-        ...body,
-      },
-    });
+export class SuperheroRepository extends PrismaRepository<'superhero', DbSuperhero> {
+  constructor (prisma: PrismaService) {
+    super(prisma.superhero);
   }
 }

@@ -1,4 +1,6 @@
 import { QuestionDisplay, QuestionType } from '@prisma/client/fictadvisor';
+import { DbQuestionRole } from './DbQuestionRole';
+import { DbQuestionAnswer } from './DbQuestionAnswer';
 
 export class DbQuestion {
   id: string;
@@ -11,4 +13,8 @@ export class DbQuestion {
   criteria?: string;
   type: QuestionType;
   display: QuestionDisplay;
+  createdAt: Date | null
+  updatedAt: Date | null;
+  questionRoles?: DbQuestionRole[];
+  questionAnswers?: DbQuestionAnswer[];
 }

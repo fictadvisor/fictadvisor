@@ -177,7 +177,7 @@ export class GeneralParser {
       teacherIds,
     } of pairs) {
       if (!teacherForceChanges) {
-        await this.disciplineTeacherRoleRepository.deleteMany({
+        await this.disciplineTeacherRoleRepository.delete({
           disciplineType: {
             id: disciplineType.id,
           },
@@ -211,7 +211,7 @@ export class GeneralParser {
       oldPairs = oldPairs.filter((p) => !checkCallback(p));
 
       for (const { id } of defendant) {
-        await this.eventRepository.updateById(id, {
+        await this.eventRepository.updateById({ id }, {
           eventsAmount: await this.getEventsAmount(pair.period),
           startTime: pair.startTime,
           endTime: pair.endTime,
@@ -235,11 +235,11 @@ export class GeneralParser {
       );
 
       if (eventsAmount) {
-        await this.eventRepository.updateById(eventId, {
+        await this.eventRepository.updateById({ id: eventId }, {
           eventsAmount,
         });
       } else {
-        await this.eventRepository.deleteById(eventId);
+        await this.eventRepository.deleteById({ id: eventId });
       }
     }
   }
@@ -269,11 +269,17 @@ export class GeneralParser {
     groupId: string,
     semester: StudyingSemester,
   ) {
-    const { id: subjectId } = await this.subjectRepository.getOrCreate(name ?? '');
+    const { id: subjectId } =
+      await this.subjectRepository.findOne({ name }) ??
+      await this.subjectRepository.create({ name: name ?? '' });
+
     const discipline = await this.getOrCreateDiscipline(
-      subjectId,
-      groupId,
-      semester,
+      {
+        subjectId,
+        groupId,
+        year: semester.year,
+        semester: semester.semester,
+      },
       disciplineType.name,
       isSelective
     );
@@ -281,30 +287,28 @@ export class GeneralParser {
     const DbDisciplineType = discipline.disciplineTypes.find((type) =>
       type.name === disciplineType.name);
 
-    const { id: eventId } = await this.eventRepository.findOrCreate(
-      {
-        groupId,
-        startTime,
-        lessons: {
-          some: {
-            disciplineTypeId: DbDisciplineType.id,
-          },
+    const event = {
+      groupId,
+      startTime,
+      name,
+      endTime,
+      period,
+    };
+
+    const { id: eventId } = await this.eventRepository.findOne({ ...event,
+      lessons: {
+        some: {
+          disciplineTypeId: DbDisciplineType.id,
         },
       },
-      {
-        name,
-        startTime,
-        endTime,
-        period,
-        eventsAmount: await this.getEventsAmount(period),
-        groupId: groupId,
-        lessons: {
-          create: {
-            disciplineTypeId: DbDisciplineType.id,
-          },
+    }) ?? await this.eventRepository.create({ ...event,
+      eventsAmount: await this.getEventsAmount(period),
+      lessons: {
+        create: {
+          disciplineTypeId: DbDisciplineType.id,
         },
-      }
-    );
+      },
+    });
 
     await this.handleTeachers(
       teachers,
@@ -342,18 +346,19 @@ export class GeneralParser {
   }
 
   private async getOrCreateDiscipline (
-    subjectId: string,
-    groupId: string,
-    { year, semester }: StudyingSemester,
+    disciplineData: {
+      subjectId: string,
+      groupId: string,
+      year: number,
+      semester: number,
+    },
     disciplineTypeName: DisciplineTypeEnum,
     isSelective: boolean
   ) {
-    const discipline = await this.disciplineRepository.getOrCreate({
-      subjectId,
-      groupId,
-      year,
-      semester,
-    });
+    let discipline = await this.disciplineRepository.findOne(disciplineData);
+    if (!discipline) {
+      discipline = await this.disciplineRepository.create(disciplineData);
+    }
 
     const updateData: any = { isSelective };
 
@@ -367,7 +372,7 @@ export class GeneralParser {
       };
     }
 
-    return  this.disciplineRepository.updateById(discipline.id, updateData);
+    return  this.disciplineRepository.updateById({ id: discipline.id }, updateData);
   }
 
   private async getOrCreateTeacher ({
@@ -377,17 +382,15 @@ export class GeneralParser {
   }: ParsedScheduleTeacher) {
     if (firstName.length <= 1 || middleName.length <= 1) {
       const teachers = await this.teacherRepository.findMany({
-        where: {
-          lastName,
-          firstName: { startsWith: firstName },
-          middleName: { startsWith: middleName },
-        },
+        lastName,
+        firstName: { startsWith: firstName },
+        middleName: { startsWith: middleName },
       });
 
       if (teachers.length === 1) return teachers[0];
     }
 
-    return this.teacherRepository.getOrCreate({
+    return this.teacherRepository.findOne({
       lastName,
       firstName,
       middleName,
@@ -400,10 +403,15 @@ export class GeneralParser {
     disciplineType: ParsedDisciplineType,
     eventId: string
   ) {
+    const disciplineTeacherWhere = {
+      teacherId,
+      disciplineId,
+    };
+
     const disciplineTeacher =
-      await this.disciplineTeacherRepository.getOrCreate({
-        teacherId,
-        disciplineId,
+      await this.disciplineTeacherRepository.findOne(disciplineTeacherWhere) ??
+      await this.disciplineTeacherRepository.create({
+        ...disciplineTeacherWhere,
         roles: {
           create: {
             disciplineTypeId: disciplineType.id,
@@ -415,14 +423,14 @@ export class GeneralParser {
       role.disciplineType.name === disciplineType.name
     )) {
       await Promise.all([
-        this.disciplineTeacherRepository.updateById(disciplineTeacher.id, {
+        this.disciplineTeacherRepository.updateById({ id: disciplineTeacher.id }, {
           roles: {
             create: {
               disciplineTypeId: disciplineType.id,
             },
           },
         }),
-        this.eventRepository.updateById(eventId, {
+        this.eventRepository.updateById({ id: eventId }, {
           lessons: {
             deleteMany: {},
             create: {
@@ -497,7 +505,7 @@ export class GeneralParser {
     ).events.filter((event) => !event.isCustom);
 
     return mapAsync(events, async (event): Promise<DatabasePair> => {
-      const discipline = await this.disciplineRepository.find({
+      const discipline = await this.disciplineRepository.findOne({
         disciplineTypes: {
           some: {
             lessons: {

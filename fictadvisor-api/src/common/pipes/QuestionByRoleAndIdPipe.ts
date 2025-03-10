@@ -11,7 +11,7 @@ export class QuestionByRoleAndIdPipe implements PipeTransform {
 
   async transform (params: { questionId: string, questionRole: DisciplineTypeEnum }) {
     const { questionId, questionRole } = params;
-    const question = await this.questionRepository.findById(questionId);
+    const question = await this.questionRepository.findOne({ id: questionId });
     if (!question) {
       throw new InvalidEntityIdException('Question');
     }

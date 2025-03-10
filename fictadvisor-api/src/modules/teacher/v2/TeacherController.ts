@@ -213,10 +213,10 @@ export class TeacherController {
   })
   @Patch('/:teacherId/contacts/:contactId')
   async updateContact (
-    @Param(ContactByIdPipe) params: {teacherId: string, contactId: string},
+    @Param(ContactByIdPipe) params: {contactId: string},
     @Body() body: UpdateContactDTO,
   ) {
-    return this.teacherService.updateContact(params.teacherId, params.contactId, body);
+    return this.teacherService.updateContact(params.contactId, body);
   }
 
   @ApiEndpoint({
@@ -226,9 +226,9 @@ export class TeacherController {
   })
   @Delete('/:teacherId/contacts/:contactId')
   async deleteContact (
-    @Param(ContactByIdPipe) params: {teacherId: string, contactId: string},
+    @Param(ContactByIdPipe) params: {contactId: string},
   ) {
-    return this.teacherService.deleteContact(params.teacherId, params.contactId);
+    return this.teacherService.deleteContact(params.contactId);
   }
 
   @ApiEndpoint({

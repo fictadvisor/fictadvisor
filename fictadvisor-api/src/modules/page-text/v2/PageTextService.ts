@@ -5,7 +5,6 @@ import {
   QueryAllPageTextsDTO,
 } from '@fictadvisor/utils/requests';
 import { PageTextRepository } from '../../../database/v2/repositories/PageTextRepository';
-import { PageText } from '@prisma/client/fictadvisor';
 
 @Injectable()
 export class PageTextService {
@@ -15,10 +14,8 @@ export class PageTextService {
 
   async getAll (body: QueryAllPageTextsDTO) {
     return this.pageTextRepository.findMany({
-      where: {
-        key: {
-          in: body.keys,
-        },
+      key: {
+        in: body.keys,
       },
     });
   }
@@ -28,10 +25,15 @@ export class PageTextService {
   }
 
   async updateMany (body: UpdatePageTextsDTO) {
-    const updPageTexts: PageText[] = [];
+    const updPageTexts = [];
     for (const pageText of body.pageTexts) {
-      const updResource = await this.pageTextRepository.update(pageText.key, pageText);
-      updPageTexts.push(updResource);
+      await this.pageTextRepository.update({
+        key: pageText.key,
+      }, pageText);
+
+      updPageTexts.push(await this.pageTextRepository.findOne({
+        key: pageText.key,
+      }));
     }
 
     return updPageTexts;

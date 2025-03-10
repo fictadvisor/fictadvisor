@@ -73,7 +73,7 @@ export class AuthService {
   ) {}
 
   async validateUser (username: string, password: string) {
-    const user = await this.userRepository.find({
+    const user = await this.userRepository.findOne({
       OR: [
         { username },
         { email: username },
@@ -152,7 +152,7 @@ export class AuthService {
   }
 
   async verify (body: { id: string, telegramId: bigint }, { groupId, isCaptain, middleName, ...student }: StudentDTO) {
-    const group = await this.groupRepository.findById(groupId);
+    const group = await this.groupRepository.findOne({ id: groupId });
     const data = {
       id: body.id,
       telegramId: body?.telegramId ? body.telegramId : undefined,
@@ -204,7 +204,7 @@ export class AuthService {
     if (!telegram || !this.isExchangeValid(telegram)) {
       throw new InvalidTelegramCredentialsException();
     }
-    const user = await this.userRepository.find({
+    const user = await this.userRepository.findOne({
       telegramId: telegram.id,
     });
     if (!user) {
@@ -332,7 +332,7 @@ export class AuthService {
     const { email, telegramId, username, avatar, firstName, lastName, groupId, middleName, isCaptain, password } = verifyToken;
 
     if (!(await this.isPseudoRegistered(email))) {
-      const user = await this.userRepository.find({
+      const user = await this.userRepository.findOne({
         OR: [
           { email },
           { username },
@@ -384,7 +384,7 @@ export class AuthService {
 
   async setPassword (search: UniqueUserDTO, password: string) {
     const hash = await this.hashPassword(password);
-    return this.userRepository.updateMany({
+    return this.userRepository.update({
       OR: [
         { id: search.id },
         { email: search.email },
@@ -409,7 +409,7 @@ export class AuthService {
   }
 
   async checkIfUserIsRegistered (query: { email?: string, username?: string }) {
-    const user = await this.userRepository.find({
+    const user = await this.userRepository.findOne({
       OR: [
         { email: query.email },
         { username: query.username },
@@ -419,7 +419,7 @@ export class AuthService {
   }
 
   async isPseudoRegistered (email: string) {
-    const user = await this.userRepository.find({ email });
+    const user = await this.userRepository.findOne({ email });
     return (user != null && user.password == null);
   }
 
@@ -443,14 +443,13 @@ export class AuthService {
   }
 
   async pseudoRegister (user: UserDTO, createStudent: Omit<StudentDTO, 'isCaptain'>) {
-    const dbUser = await this.userRepository.update(
-      { email: user.email },
-      {
+    const dbUser = await this.userRepository.updateById(
+      { email: user.email }, {
         ...user,
         lastPasswordChanged: new Date(),
         state: State.APPROVED,
       });
-    await this.studentRepository.updateById(dbUser.id, createStudent);
+    await this.studentRepository.updateById({ userId: dbUser.id }, createStudent);
 
     return dbUser;
   }

@@ -101,7 +101,7 @@ export class DisciplineMapper {
         rating: +teacher.rating,
         disciplineTeacherId: disciplineTeacher.id,
         disciplineTypes: disciplineTeacher.roles.map(({ disciplineType }) => disciplineType.name),
-        cathedras: teacher.cathedras.map(({ cathedra: { id, name, abbreviation, division } }) => ({
+        cathedras: teacher.cathedras.map(({ id, name, abbreviation, division }) => ({
           id,
           name,
           abbreviation,

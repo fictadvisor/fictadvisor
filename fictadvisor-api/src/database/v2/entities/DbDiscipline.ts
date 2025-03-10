@@ -1,38 +1,22 @@
-import {
-  Group,
-  Teacher,
-  SelectiveAmount,
-  Cathedra,
-  TeachersOnCathedras,
-} from '@prisma/client/fictadvisor';
-import { DbDisciplineTeacherRole } from './DbDisciplineTeacherRole';
 import { DbDisciplineType } from './DbDisciplineType';
 import { DbSubject } from './DbSubject';
+import { DbGroup } from './DbGroup';
+import { DbSelectiveDiscipline } from './DbSelectiveDiscipline';
+import { DbDisciplineTeacher } from './DbDisciplineTeacher';
 
 export class DbDiscipline {
   id: string;
-  subjectId: string;
-  groupId: string;
-  semester: number;
   year: number;
+  semester: number;
   isSelective: boolean;
   description: string;
   subject?: DbSubject;
-  group?: Group & {
-    selectiveAmounts: SelectiveAmount[]
-  };
+  subjectId: string;
+  group?: DbGroup;
+  groupId: string;
   disciplineTypes?: DbDisciplineType[];
-  disciplineTeachers?: DbDiscipline_DisciplineTeacher[];
-}
-
-export class DbDiscipline_DisciplineTeacher {
-  id: string;
-  disciplineId: string;
-  teacherId: string;
-  teacher: Teacher & {
-    cathedras: (TeachersOnCathedras & {
-      cathedra: Cathedra,
-    })[];
-  };
-  roles: DbDisciplineTeacherRole[];
+  selectiveDisciplines?: DbSelectiveDiscipline[];
+  disciplineTeachers?: DbDisciplineTeacher[];
+  createdAt: Date | null;
+  updatedAt: Date | null;
 }
