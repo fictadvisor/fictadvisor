@@ -100,7 +100,6 @@ export enum PERMISSION {
 	USERS_$USERID_POLL_TEACHERS_GET = 'users.$userId.poll.teachers.get',
 	USERS_$USERID_SELECTIVE_GET = 'users.$userId.selective.get',
 	USERS_$USERID_SELECTIVE_DISCIPLINES = 'users.$userId.selectiveDisciplines',
-	USERS_$USERID_SUPERHERO_CREATE = 'users.$userId.superhero.create',
 	USERS_$USERID_STUDENT_UPDATE = 'users.$userId.student.update',
 	USERS_$USERID_TELEGRAM_LINK = 'users.$userId.telegram.link',
 	USERS_$USERID_TEACHERS_$TEACHERID_DISCIPLINES_GET = 'users.$userId.teachers.$teacherId.disciplines.get',

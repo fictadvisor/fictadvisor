@@ -3,7 +3,6 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
 import {
   ApproveStudentByTelegramDTO,
-  CreateSuperheroDTO,
   CreateContactDTO,
   UpdateContactDTO,
   UpdateUserDTO,
@@ -12,7 +11,6 @@ import {
   TelegramDTO,
   RemainingSelectivesDTO,
   SelectiveDisciplinesDTO,
-  UpdateSuperheroDTO,
   QueryAllUsersDTO,
   CreateUserDTO, GiveRoleDTO,
 } from '@fictadvisor/utils/requests';
@@ -70,19 +68,6 @@ export class UserController {
   }
 
   @ApiEndpoint({
-    summary: 'Verify student to be a superhero',
-    documentation: UserDocumentation.VERIFY_SUPERHERO,
-    guards: TelegramGuard,
-  })
-  @Patch('/:userId/verifySuperhero')
-  verifySuperhero (
-    @Param('userId', UserByIdPipe) userId: string,
-    @Body() body: UpdateSuperheroDTO,
-  ) {
-    return this.userService.updateSuperhero(userId, body);
-  }
-
-  @ApiEndpoint({
     summary: 'Request captain or admin to join the group',
     documentation: UserDocumentation.REQUEST_NEW_GROUP,
     permissions: PERMISSION.USERS_$USERID_GROUP_REQUEST,
@@ -93,20 +78,6 @@ export class UserController {
     @Body() body: GroupRequestDTO,
   ) {
     return this.userService.requestNewGroup(userId, body);
-  }
-
-  @ApiEndpoint({
-    summary: 'Create a new superhero',
-    documentation: UserDocumentation.CREATE_SUPERHERO,
-    permissions: PERMISSION.USERS_$USERID_SUPERHERO_CREATE,
-  })
-  @Post('/:userId/superhero')
-  async createSuperhero (
-    @Param('userId', UserByIdPipe) userId: string,
-    @Body() body: CreateSuperheroDTO,
-  ) {
-    const superhero = await this.userService.createSuperhero(userId, body);
-    return this.studentMapper.getSuperhero(superhero);
   }
 
   @ApiEndpoint({
