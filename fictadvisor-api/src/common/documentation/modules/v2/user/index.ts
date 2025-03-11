@@ -1,8 +1,6 @@
 import { UserDocumentationCreateUser } from './createUser';
 import { UserDocumentationVerify } from './verify';
-import { UserDocumentationVerifySuperhero } from './verifySuperhero';
 import { UserDocumentationRequestNewGroup } from './requestNewGroup';
-import { UserDocumentationCreateSuperhero } from './createSuperhero';
 import { UserDocumentationGetSelectiveDisciplines } from './getSelectiveDisciplines';
 import { UserDocumentationGetSelectivesBySemesters } from './getSelectivesBySemesters';
 import { UserDocumentationGiveRole } from './giveRole';
@@ -29,9 +27,7 @@ import { UserDocumentationChangeGroup } from './changeGroup';
 export const UserDocumentation = {
   CREATE_USER: UserDocumentationCreateUser,
   VERIFY: UserDocumentationVerify,
-  VERIFY_SUPERHERO: UserDocumentationVerifySuperhero,
   REQUEST_NEW_GROUP: UserDocumentationRequestNewGroup,
-  CREATE_SUPERHERO: UserDocumentationCreateSuperhero,
   GET_SELECTIVE_DISCIPLINES: UserDocumentationGetSelectiveDisciplines,
   GET_SELECTIVES_BY_SEMESTERS: UserDocumentationGetSelectivesBySemesters,
   GIVE_ROLE: UserDocumentationGiveRole,

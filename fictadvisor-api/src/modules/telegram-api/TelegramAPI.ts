@@ -2,7 +2,6 @@ import { HttpException, Injectable } from '@nestjs/common';
 import axios, { AxiosError, AxiosInstance } from 'axios';
 import { VerifyStudentDTO } from './types/VerifyStudentDTO';
 import { VerifyCaptainDTO } from './types/VerifyCaptainDTO';
-import { VerifySuperheroDTO } from './types/VerifySuperheroDTO';
 import { VerifyResponseDTO } from './types/VerifyResponseDTO';
 import { TelegramConfigService } from '../../config/TelegramConfigService';
 
@@ -33,10 +32,6 @@ export class TelegramAPI {
 
   async verifyCaptain (data:VerifyCaptainDTO) {
     await this.client.post('/captains/broadcastPending', data);
-  }
-
-  async verifySuperhero (data:VerifySuperheroDTO) {
-    await this.client.post('/superheroes/broadcastPending', data);
   }
 
   async verifyResponse (data:VerifyResponseDTO) {

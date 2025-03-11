@@ -1,7 +1,6 @@
 import {
   ApproveStudentByTelegramDTO,
   CreateContactDTO,
-  CreateSuperheroDTO,
   CreateUserDTO,
   GiveRoleDTO,
   GroupRequestDTO,
@@ -10,7 +9,6 @@ import {
   SelectiveDisciplinesDTO,
   TelegramDTO,
   UpdateStudentDTO,
-  UpdateSuperheroDTO,
   UpdateUserDTO,
 } from '@fictadvisor/utils/requests';
 import {
@@ -21,7 +19,6 @@ import {
   OrdinaryStudentResponse,
   RemainingSelectivesResponse,
   SelectivesBySemestersResponse,
-  SuperheroResponse,
   UserResponse,
   UsersResponse,
 } from '@fictadvisor/utils/responses';
@@ -134,22 +131,6 @@ class UserAPI {
   async getSelective(userId: string) {
     const { data } = await client.get<DisciplineIdsResponse>(
       `/users/${userId}/selectiveDisciplines`,
-    );
-    return data;
-  }
-
-  async postSuperhero(userId: string, body: CreateSuperheroDTO) {
-    const { data } = await client.post<SuperheroResponse>(
-      `/users/${userId}/superhero`,
-      body,
-    );
-    return data;
-  }
-
-  async verifySuperhero(userId: string, body: UpdateSuperheroDTO) {
-    const { data } = await client.patch<SuperheroResponse>(
-      `/users/${userId}/verifySuperhero`,
-      body,
     );
     return data;
   }
