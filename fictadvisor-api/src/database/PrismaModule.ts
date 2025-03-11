@@ -10,7 +10,6 @@ import { RoleRepository } from './v2/repositories/RoleRepository';
 import { GrantRepository } from './v2/repositories/GrantRepository';
 import { StudentRepository } from './v2/repositories/StudentRepository';
 import { UserRepository } from './v2/repositories/UserRepository';
-import { SuperheroRepository } from './v2/repositories/SuperheroRepository';
 import { QuestionRepository } from './v2/repositories/QuestionRepository';
 import { ContactRepository } from './v2/repositories/ContactRepository';
 import { QuestionAnswerRepository } from './v2/repositories/QuestionAnswerRepository';
@@ -36,7 +35,6 @@ import { SpecialityRepository } from './v2/repositories/SpecialityRepository';
     GrantRepository,
     StudentRepository,
     UserRepository,
-    SuperheroRepository,
     ContactRepository,
     QuestionRepository,
     QuestionAnswerRepository,
@@ -60,7 +58,6 @@ import { SpecialityRepository } from './v2/repositories/SpecialityRepository';
     GrantRepository,
     StudentRepository,
     UserRepository,
-    SuperheroRepository,
     ContactRepository,
     QuestionRepository,
     QuestionAnswerRepository,

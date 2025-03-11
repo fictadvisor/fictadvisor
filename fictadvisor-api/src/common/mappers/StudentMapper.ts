@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { FullStudentResponse, OrdinaryStudentResponse, SimpleStudentResponse, SuperheroResponse } from '@fictadvisor/utils/responses';
+import { FullStudentResponse, OrdinaryStudentResponse, SimpleStudentResponse } from '@fictadvisor/utils/responses';
 import { GroupRoles, State } from '@fictadvisor/utils/enums';
-import { Superhero } from '@prisma/client/fictadvisor';
 import { DbStudent } from '../../database/v2/entities/DbStudent';
 import { DbRole } from '../../database/v2/entities/DbRole';
 
@@ -68,14 +67,6 @@ export class StudentMapper {
         },
       })),
       state: student.state,
-    };
-  }
-
-  getSuperhero (superhero: Superhero): SuperheroResponse {
-    return {
-      userId: superhero.userId,
-      dorm: superhero.dorm,
-      state: superhero.state as State,
     };
   }
 

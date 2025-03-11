@@ -26,7 +26,6 @@ model User {
   password            String?
   telegramId          BigInt?          @unique @map("telegram_id")
   student             Student?
-  superhero           Superhero?
   questionAnswers     QuestionAnswer[]
   lastPasswordChanged DateTime         @default(now())
   state               State            @default(PENDING)
@@ -107,17 +106,6 @@ model Student {
   updatedAt                 DateTime?                  @default(now()) @updatedAt @map("updated_at")
 
   @@map("students")
-}
-
-model Superhero {
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String    @unique @map("user_id")
-  dorm      Boolean
-  state     State     @default(PENDING)
-  createdAt DateTime? @default(now()) @map("created_at")
-  updatedAt DateTime? @default(now()) @updatedAt @map("updated_at")
-
-  @@map("superheroes")
 }
 
 model Subject {

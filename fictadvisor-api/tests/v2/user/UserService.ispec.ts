@@ -15,7 +15,6 @@ import { FileService } from '../../../src/modules/file/FileService';
 import { PrismaService } from '../../../src/database/v2/PrismaService';
 import { StudentRepository } from '../../../src/database/v2/repositories/StudentRepository';
 import { UserRepository } from '../../../src/database/v2/repositories/UserRepository';
-import { SuperheroRepository } from '../../../src/database/v2/repositories/SuperheroRepository';
 import { ContactRepository } from '../../../src/database/v2/repositories/ContactRepository';
 import { RoleRepository } from '../../../src/database/v2/repositories/RoleRepository';
 import { NotBelongException } from '../../../src/common/exceptions/NotBelongException';
@@ -36,7 +35,6 @@ describe('UserService', () => {
         TelegramAPI,
         StudentRepository,
         UserRepository,
-        SuperheroRepository,
         ContactRepository,
         RoleRepository,
         AuthService,

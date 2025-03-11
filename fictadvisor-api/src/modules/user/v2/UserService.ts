@@ -1,10 +1,8 @@
 import { ForbiddenException, forwardRef, Inject, Injectable } from '@nestjs/common';
 import {
-  UpdateSuperheroDTO,
   UpdateUserDTO,
   CreateContactDTO,
   UpdateContactDTO,
-  CreateSuperheroDTO,
   GroupRequestDTO,
   TelegramDTO,
   RemainingSelectivesDTO,
@@ -29,7 +27,6 @@ import { DbDiscipline } from '../../../database/v2/entities/DbDiscipline';
 import { DbUser } from '../../../database/v2/entities/DbUser';
 import { DbStudent } from '../../../database/v2/entities/DbStudent';
 import { StudentRepository } from '../../../database/v2/repositories/StudentRepository';
-import { SuperheroRepository } from '../../../database/v2/repositories/SuperheroRepository';
 import { UserRepository } from '../../../database/v2/repositories/UserRepository';
 import { RoleRepository } from '../../../database/v2/repositories/RoleRepository';
 import { ContactRepository } from '../../../database/v2/repositories/ContactRepository';
@@ -58,7 +55,6 @@ export class UserService {
   constructor (
     private studentRepository: StudentRepository,
     private userRepository: UserRepository,
-    private superheroRepository: SuperheroRepository,
     private contactRepository: ContactRepository,
     private roleRepository: RoleRepository,
     private disciplineRepository: DisciplineRepository,
@@ -81,10 +77,6 @@ export class UserService {
       throw new AlreadyRegisteredException();
     }
     return this.userRepository.create(data);
-  }
-
-  async createSuperhero (id: string, body: CreateSuperheroDTO) {
-    return this.superheroRepository.createSuperhero(id, body);
   }
 
   async getSelectivesBySemesters (userId: string) {
@@ -258,10 +250,6 @@ export class UserService {
   async updateStudent (userId: string, data: UpdateStudentDTO) {
     const student = await this.studentRepository.updateById(userId, data);
     return this.studentMapper.updateStudent(student as unknown as DbStudent);
-  }
-
-  async updateSuperhero (userId: string, data: UpdateSuperheroDTO) {
-    return await this.superheroRepository.updateSuperhero(userId, data);
   }
 
   async requestNewGroup (id: string, { groupId, isCaptain }: GroupRequestDTO) {
