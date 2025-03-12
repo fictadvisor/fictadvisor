@@ -39,7 +39,7 @@ export class TelegramAPI {
   }
 
   async sendMessage (text: string, chatId?: string) {
-    await this.client.post('/broadcast/sendMessage', {
+    await this.client.post('/broadcast/error', {
       text,
     }, {
       params: {
