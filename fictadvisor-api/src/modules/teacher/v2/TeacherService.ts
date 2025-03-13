@@ -5,9 +5,9 @@ import {
   UpdateContactDTO,
   QueryAllTeacherDTO,
   QueryMarksDTO,
-  ComplaintDTO,
+  ComplaintDTO, SortDTO, Sort,
 } from '@fictadvisor/utils/requests';
-import { TeacherWithContactsFullResponse } from '@fictadvisor/utils/responses';
+import { SubjectResponse, TeacherWithContactsFullResponse } from '@fictadvisor/utils/responses';
 import { DatabaseUtils, PaginateArgs } from '../../../database/DatabaseUtils';
 import { filterAsync } from '../../../common/helpers/arrayUtils';
 import { TelegramAPI } from '../../telegram-api/TelegramAPI';
@@ -27,9 +27,11 @@ import { ContactRepository } from '../../../database/v2/repositories/ContactRepo
 import { InvalidQueryException } from '../../../common/exceptions/InvalidQueryException';
 import { InvalidEntityIdException } from '../../../common/exceptions/InvalidEntityIdException';
 import { EntityType, QuestionDisplay, Prisma } from '@prisma/client/fictadvisor';
-import { SubjectMapper } from '../../../common/mappers/SubjectMapper';
-import { DisciplineTypeEnum } from '@fictadvisor/utils/enums';
+import { DisciplineTypeEnum, OrderQAParam, SortQATParam } from '@fictadvisor/utils/enums';
 import * as process from 'process';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
+import { DbSubject } from '../../../database/v2/entities/DbSubject';
 
 @Injectable()
 export class TeacherService {
@@ -46,7 +48,7 @@ export class TeacherService {
     private readonly questionMapper: QuestionMapper,
     private readonly telegramAPI: TelegramAPI,
     private readonly groupRepository: GroupRepository,
-    private readonly subjectMapper: SubjectMapper,
+    @InjectMapper() private mapper: Mapper,
   ) {}
 
   async getAll (body: QueryAllTeacherDTO) {
@@ -66,10 +68,22 @@ export class TeacherService {
           },
         ],
       },
-      ...this.teacherMapper.getSortedTeacher(body),
+      ...this.getSortedTeacher(body),
     };
 
     return await DatabaseUtils.paginate<'teacher', DbTeacher>(this.teacherRepository, body, data);
+  }
+
+  private getSortedTeacher ({ sort, order }: SortDTO): Sort {
+    if (!sort) sort = SortQATParam.LAST_NAME;
+    if (!order) order = OrderQAParam.ASC;
+    const orderBy = [{ [sort]: order }];
+
+    orderBy.push({ [SortQATParam.LAST_NAME]: order });
+    orderBy.push({ [SortQATParam.FIRST_NAME]: order });
+    orderBy.push({ [SortQATParam.MIDDLE_NAME]: order });
+
+    return { orderBy };
   }
 
   private getSearchForTeachers = {
@@ -322,7 +336,7 @@ export class TeacherService {
 
     return {
       ...this.teacherMapper.getTeacherWithRolesAndCathedras(dbTeacher),
-      subject: this.subjectMapper.getSubject(subject),
+      subject: this.mapper.map(subject, DbSubject, SubjectResponse),
       disciplineTypes,
       contacts,
     };

@@ -4,20 +4,46 @@ import { DbUserRole } from './DbUserRole';
 import { DbSelectiveDiscipline } from './DbSelectiveDiscipline';
 import { DbRemovedDisciplineTeacher } from './DbRemovedDisciplineTeacher';
 import { State } from '@prisma/client/fictadvisor';
+import { AutoMap } from '@automapper/classes';
 
 export class DbStudent {
-  user?: DbUser;
-  userId: string;
-  firstName: string | null;
-  middleName: string | null;
-  lastName: string | null;
-  admissionYear: number | null;
-  state: State;
-  group?: DbGroup;
-  groupId?: string;
+
+  @AutoMap(() => DbUser)
+    user?: DbUser;
+
+  @AutoMap()
+    userId: string;
+
+  @AutoMap()
+    firstName: string | null;
+
+  @AutoMap()
+    middleName: string | null;
+
+  @AutoMap()
+    lastName: string | null;
+
+  @AutoMap()
+    admissionYear: number | null;
+
+  @AutoMap(() => String)
+    state: State;
+
+  @AutoMap(() => DbGroup)
+    group?: DbGroup;
+
+  @AutoMap()
+    groupId?: string;
+
   createdAt: Date | null;
   updatedAt: Date | null;
-  roles?: DbUserRole[];
-  selectiveDisciplines?: DbSelectiveDiscipline[];
-  removedDisciplineTeachers?: DbRemovedDisciplineTeacher[];
+
+  @AutoMap(() => [DbUserRole])
+    roles?: DbUserRole[];
+
+  @AutoMap(() => [DbSelectiveDiscipline])
+    selectiveDisciplines?: DbSelectiveDiscipline[];
+
+  @AutoMap(() => [DbRemovedDisciplineTeacher])
+    removedDisciplineTeachers?: DbRemovedDisciplineTeacher[];
 }

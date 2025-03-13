@@ -1,53 +1,50 @@
 import { Injectable } from '@nestjs/common';
-import { Sort, SortDTO } from '@fictadvisor/utils/requests';
 import {
-  OrderQAParam,
-  SortQATParam,
-  AcademicStatus,
-  ScientificDegree,
-  Position,
   DisciplineTypeEnum,
 } from '@fictadvisor/utils/enums';
 import { DbTeacher } from '../../database/v2/entities/DbTeacher';
 import { CathedraResponse, TeacherResponse, TeacherWithRolesAndCathedrasResponse } from '@fictadvisor/utils/responses';
 import { DbDisciplineTeacherRole } from '../../database/v2/entities/DbDisciplineTeacherRole';
+import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
+import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
+import { DbCathedra } from '../../database/v2/entities/DbCathedra';
+import { extractField } from '../helpers/arrayUtils';
 
 @Injectable()
-export class TeacherMapper {
-  getTeacher (teacher: DbTeacher): TeacherResponse {
-    return {
-      id: teacher.id,
-      firstName: teacher.firstName,
-      middleName: teacher.middleName,
-      lastName: teacher.lastName,
-      description: teacher.description,
-      avatar: teacher.avatar,
-      academicStatus: teacher.academicStatus as AcademicStatus,
-      scientificDegree: teacher.scientificDegree as ScientificDegree,
-      position: teacher.position as Position,
-      rating: +teacher.rating,
+export class TeacherMapper extends AutomapperProfile {
+  constructor (@InjectMapper() mapper: Mapper) {
+    super(mapper);
+  }
+
+  get profile () {
+    return (mapper: Mapper) => {
+      createMap(mapper, DbTeacher, TeacherResponse);
+
+      createMap(mapper, DbTeacher, TeacherWithRolesAndCathedrasResponse,
+        forMember(
+          (response) => response.disciplineTypes,
+          mapFrom((dto) => this.getTeacherRoles(dto))
+        ),
+        forMember(
+          (response) => response.cathedras,
+          mapFrom((dto) => this.mapper.mapArray(
+            extractField(dto.cathedras, 'cathedra'), DbCathedra, CathedraResponse)
+          )
+        ),
+      );
     };
+  }
+
+  getTeacher (teacher: DbTeacher): TeacherResponse {
+    return this.mapper.map(teacher, DbTeacher, TeacherResponse);
   }
 
   getTeacherWithRolesAndCathedras (teacher: DbTeacher): TeacherWithRolesAndCathedrasResponse {
-    return {
-      id: teacher.id,
-      firstName: teacher.firstName,
-      middleName: teacher.middleName,
-      lastName: teacher.lastName,
-      description: teacher.description,
-      avatar: teacher.avatar,
-      academicStatus: teacher.academicStatus as AcademicStatus,
-      scientificDegree: teacher.scientificDegree as ScientificDegree,
-      position: teacher.position as Position,
-      rating: +teacher.rating,
-      cathedras: this.getCathedras(teacher),
-      disciplineTypes: this.getTeacherRoles(teacher),
-    };
+    return this.mapper.map(teacher, DbTeacher, TeacherWithRolesAndCathedrasResponse);
   }
 
   getTeachersWithRolesAndCathedras (teachers: DbTeacher[]): TeacherWithRolesAndCathedrasResponse[] {
-    return teachers.map((teacher) => this.getTeacherWithRolesAndCathedras(teacher));
+    return this.mapper.mapArray(teachers, DbTeacher, TeacherWithRolesAndCathedrasResponse);
   }
 
   getTeacherRoles (teacher: DbTeacher): DisciplineTypeEnum[] {
@@ -60,26 +57,5 @@ export class TeacherMapper {
     }
 
     return [...new Set(disciplineTypes)];
-  }
-
-  private getCathedras (teacher: DbTeacher) : CathedraResponse[] {
-    return teacher.cathedras?.map(({ id, name, abbreviation, division }) => ({
-      id,
-      name,
-      abbreviation,
-      division,
-    }));
-  }
-
-  getSortedTeacher ({ sort, order }: SortDTO): Sort {
-    if (!sort) sort = SortQATParam.LAST_NAME;
-    if (!order) order = OrderQAParam.ASC;
-    const orderBy = [{ [sort]: order }];
-
-    orderBy.push({ [SortQATParam.LAST_NAME]: order });
-    orderBy.push({ [SortQATParam.FIRST_NAME]: order });
-    orderBy.push({ [SortQATParam.MIDDLE_NAME]: order });
-
-    return { orderBy };
   }
 }

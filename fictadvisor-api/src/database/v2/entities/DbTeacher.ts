@@ -6,20 +6,42 @@ import {
 import { Decimal } from '@prisma/client/fictadvisor/runtime';
 import { DbDisciplineTeacher } from './DbDisciplineTeacher';
 import { DbComplaint } from './DbComplaint';
+import { AutoMap } from '@automapper/classes';
 import { DbTeachersOnCathedras } from './DbTeachersOnCathedras';
 
 export class DbTeacher {
-  id: string;
-  firstName: string;
-  middleName?: string;
-  lastName: string;
-  description?: string;
-  avatar?: string;
-  scientificDegree: ScientificDegree;
-  academicStatus: AcademicStatus;
-  position: Position;
+  @AutoMap()
+    id: string;
+
+  @AutoMap()
+    firstName: string;
+
+  @AutoMap()
+    middleName?: string;
+
+  @AutoMap()
+    lastName: string;
+
+  @AutoMap()
+    description?: string;
+
+  @AutoMap()
+    avatar?: string;
+
+  @AutoMap(() => String)
+    scientificDegree: ScientificDegree;
+
+  @AutoMap(() => String)
+    academicStatus: AcademicStatus;
+
+  @AutoMap(() => String)
+    position: Position;
+
   rating: Decimal;
-  cathedras?: DbTeachersOnCathedras[];
+
+  @AutoMap(() => [DbTeachersOnCathedras])
+    cathedras?: DbTeachersOnCathedras[];
+
   complaints?: DbComplaint[];
   disciplineTeachers?: DbDisciplineTeacher[];
   createdAt: Date | null;

@@ -1,14 +1,31 @@
+import { AutoMap } from '@automapper/classes';
 import { DbGroup } from './DbGroup';
 import { DbTeacher } from './DbTeacher';
 
 export class DbComplaint {
-  id: string;
-  fullName: string | null;
-  group?: DbGroup;
-  groupId: string | null;
-  teacher: DbTeacher;
-  teacherId: string | null;
-  title: string;
-  message: string;
+  @AutoMap()
+    id: string;
+
+  @AutoMap()
+    fullName: string | null;
+
+  @AutoMap(() => DbGroup)
+    group?: DbGroup;
+
+  @AutoMap()
+    groupId: string | null;
+
+  @AutoMap(() => DbTeacher)
+    teacher: DbTeacher;
+
+  @AutoMap()
+    teacherId: string | null;
+
+  @AutoMap()
+    title: string;
+
+  @AutoMap()
+    message: string;
+
   createdAt: Date;
 }

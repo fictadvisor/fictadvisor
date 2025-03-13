@@ -3,7 +3,7 @@ import { DbDisciplineTeacher } from '../../database/v2/entities/DbDisciplineTeac
 import {
   DisciplineTeacherAndSubjectResponse,
   DisciplineTeacherExtendedResponse,
-  DisciplineTeacherFullResponse,
+  DisciplineTeacherFullResponse, SubjectResponse,
 } from '@fictadvisor/utils/responses';
 import { AcademicStatus, ScientificDegree, Position, DisciplineTypeEnum } from '@fictadvisor/utils/enums';
 import { QuestionAnswerResponse } from '@fictadvisor/utils';
@@ -11,9 +11,11 @@ import { DbQuestionAnswer } from '../../database/v2/entities/DbQuestionAnswer';
 import { QuestionMapper } from './QuestionMapper';
 import { TeacherMapper } from './TeacherMapper';
 import { DisciplineMapper } from './DisciplineMapper';
-import { SubjectMapper } from './SubjectMapper';
 import { DbDisciplineTeacherRole } from '../../database/v2/entities/DbDisciplineTeacherRole';
 import { DbDisciplineType } from '../../database/v2/entities/DbDisciplineType';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
+import { DbSubject } from 'src/database/v2/entities/DbSubject';
 
 @Injectable()
 export class DisciplineTeacherMapper {
@@ -21,7 +23,7 @@ export class DisciplineTeacherMapper {
     private questionMapper: QuestionMapper,
     private teacherMapper: TeacherMapper,
     private disciplineMapper: DisciplineMapper,
-    private subjectMapper: SubjectMapper,
+    @InjectMapper() private mapper: Mapper,
   ) {}
 
   getDisciplinesTeacherAndSubject (disciplineTeachers: DbDisciplineTeacher[]): DisciplineTeacherAndSubjectResponse[] {
@@ -78,8 +80,8 @@ export class DisciplineTeacherMapper {
         rating: +teacher.rating,
         disciplineTeacherId: disciplineTeacher.id,
         disciplineTypes: this.getDisciplineTypes(disciplineTeacher),
-        subject: this.subjectMapper.getSubject(subject),
-        cathedras: teacher.cathedras.map(({ id, name, abbreviation, division }) => ({
+        subject: this.mapper.map(subject, DbSubject, SubjectResponse),
+        cathedras: teacher.cathedras.map(({ cathedra: { id, name, abbreviation, division } }) => ({
           id,
           name,
           abbreviation,

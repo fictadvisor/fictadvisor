@@ -7,22 +7,52 @@ import { DbEvent } from './DbEvent';
 import { DbGroupRole } from './DbGroupRole';
 import { DbDiscipline } from './DbDiscipline';
 import { DbComplaint } from './DbComplaint';
+import { AutoMap } from '@automapper/classes';
+import { DbUserRole } from './DbUserRole';
 
 export class DbGroup {
-  id: string;
-  code: string;
-  admissionYear: number;
-  cathedra?: DbCathedra;
-  cathedraId: string | null;
-  educationalProgram?: DbEducationalProgram;
-  educationalProgramId: string | null;
-  events?: DbEvent[];
-  students?: DbStudent[];
-  userRoles?: DbGroupRole[];
-  complaints?: DbComplaint[];
-  disciplines?: DbDiscipline[];
-  telegramGroups?: DbTelegramGroup[];
-  selectiveAmounts?: DbSelectiveAmount[];
+  @AutoMap()
+    id: string;
+
+  @AutoMap()
+    code: string;
+
+  @AutoMap()
+    admissionYear: number;
+
+  @AutoMap(() => DbCathedra)
+    cathedra?: DbCathedra;
+
+  @AutoMap()
+    cathedraId: string | null;
+
+  @AutoMap(() => DbEducationalProgram)
+    educationalProgram?: DbEducationalProgram;
+
+  @AutoMap()
+    educationalProgramId: string | null;
+
+  @AutoMap(() => [DbEvent])
+    events?: DbEvent[];
+
+  @AutoMap(() => [DbStudent])
+    students?: DbStudent[];
+
+  @AutoMap(() => [DbUserRole])
+    userRoles?: DbGroupRole[];
+
+  @AutoMap(() => [DbComplaint])
+    complaints?: DbComplaint[];
+
+  @AutoMap(() => [DbDiscipline])
+    disciplines?: DbDiscipline[];
+
+  @AutoMap(() => [DbTelegramGroup])
+    telegramGroups?: DbTelegramGroup[];
+
+  @AutoMap(() => [DbSelectiveAmount])
+    selectiveAmounts?: DbSelectiveAmount[];
+
   createdAt: Date | null;
   updatedAt: Date | null;
 }

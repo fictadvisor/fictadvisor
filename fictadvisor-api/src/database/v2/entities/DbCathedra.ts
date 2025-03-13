@@ -1,11 +1,22 @@
 import { DbTeachersOnCathedras } from './DbTeachersOnCathedras';
+import { AutoMap } from '@automapper/classes';
 
 export class DbCathedra {
-  id: string;
-  name: string;
-  abbreviation: string;
-  division: string | null;
+  @AutoMap()
+    id: string;
+
+  @AutoMap()
+    name: string;
+
+  @AutoMap()
+    abbreviation: string;
+
+  @AutoMap()
+    division: string | null;
+
   createdAt: Date | null;
   updatedAt: Date | null;
-  teachers?: DbTeachersOnCathedras[];
+
+  @AutoMap(() => [DbTeachersOnCathedras])
+    teachers?: DbTeachersOnCathedras[];
 }

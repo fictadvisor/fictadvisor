@@ -11,11 +11,13 @@ import {
   QueryAllUsersDTO,
   UpdateStudentDTO,
 } from '@fictadvisor/utils/requests';
-import { RemainingSelectivesResponse } from '@fictadvisor/utils/responses';
+import {
+  FullStudentResponse,
+  OrdinaryStudentResponse,
+  RemainingSelectivesResponse,
+} from '@fictadvisor/utils/responses';
 import { isArrayUnique } from '../../../common/helpers/arrayUtils';
 import { DatabaseUtils, PaginateArgs } from '../../../database/DatabaseUtils';
-import { TelegramAPI } from '../../telegram-api/TelegramAPI';
-import { StudentMapper } from '../../../common/mappers/StudentMapper';
 import { DisciplineMapper } from '../../../common/mappers/DisciplineMapper';
 import { AuthService, AVATARS } from '../../auth/v2/AuthService';
 import { GroupService } from '../../group/v2/GroupService';
@@ -43,6 +45,8 @@ import { AlreadySentGroupRequestException } from '../../../common/exceptions/Alr
 import { EntityType, RoleName, State } from '@prisma/client/fictadvisor';
 import { AbsenceOfCaptainException } from '../../../common/exceptions/AbsenceOfCaptainException';
 import { CaptainAlreadyRegisteredException } from '../../../common/exceptions/CaptainAlreadyRegisteredException';
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 
 type SortedDisciplines = {
   year: number;
@@ -64,12 +68,11 @@ export class UserService {
     private fileService: FileService,
     @Inject(forwardRef(() => GroupService))
     private groupService: GroupService,
-    private studentMapper: StudentMapper,
     private disciplineMapper: DisciplineMapper,
     private dateService: DateService,
-    private telegramAPI: TelegramAPI,
     private disciplineTeacherService: DisciplineTeacherService,
     private pollService: PollService,
+    @InjectMapper() private mapper: Mapper,
   ) {}
 
   async createUserByAdmin (data: CreateUserDTO) {
@@ -247,7 +250,7 @@ export class UserService {
 
   async updateStudent (userId: string, data: UpdateStudentDTO) {
     const student = await this.studentRepository.updateById(userId, data);
-    return this.studentMapper.updateStudent(student as unknown as DbStudent);
+    return this.mapper.map(student, DbStudent, FullStudentResponse);
   }
 
   async requestNewGroup (userId: string, { groupId, isCaptain }: GroupRequestDTO) {
@@ -327,7 +330,12 @@ export class UserService {
 
   async getUser (userId: string) {
     const student = await this.studentRepository.findOne({ userId });
-    if (student) return this.studentMapper.getOrdinaryStudent(student, !!student.group);
+    if (student) {
+      return this.mapper.map(
+        student, DbStudent, OrdinaryStudentResponse,
+        { extraArgs: () => ({ hasGroup: !!student.group }),
+        });
+    }
   }
 
   async getSimplifiedUser (userId: string) {
