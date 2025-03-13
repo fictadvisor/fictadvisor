@@ -82,10 +82,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
     if (params) errorMsg += `🔢 URL Params:\n${formattedJson(params)}\n`;
     if (query) errorMsg += `❓ Query Params:\n${formattedJson(query)}\n`;
     if (body) errorMsg += `📦 Request Body:\n${formattedJson(body)}\n`;
-    errorMsg += `\n📜 Stack Trace:\n`;
+    errorMsg += '\n📜 Stack Trace:\n';
     errorMsg += exception.stack;
 
     console.error(errorMsg);
-    await this.telegramApi.sendMessage(errorMsg);
+    await this.telegramApi.error(errorMsg);
   }
 }
