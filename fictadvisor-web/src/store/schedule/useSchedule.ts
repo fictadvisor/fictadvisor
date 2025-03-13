@@ -225,20 +225,12 @@ export const useSchedule = create<State & Action>((set, get) => {
       }
     },
     setWeek(_week: number) {
-      const currentWeek = get().week;
-      const startOfFetchedRange = findFirstOf5(currentWeek);
-      const endOfFetchedRange = startOfFetchedRange + 4;
-
       set(_ => ({
         week: _week,
       }));
       setUrlParams('week', _week.toString());
 
-      if (
-        _week < startOfFetchedRange ||
-        _week > endOfFetchedRange ||
-        !get().eventsBody[0]
-      ) {
+      if (!get().eventsBody[_week - 1]) {
         get().handleWeekChange();
       }
     },
