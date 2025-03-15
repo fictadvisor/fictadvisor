@@ -1,7 +1,7 @@
 import { CathedraDocumentationUpdate } from './update';
-import { CathedraDocumentationGetById } from './getById';
-import { CathedraDocumentationGetAllDivisions } from './getAllDivisions';
-import { CathedraDocumentationGetAll } from './getAll';
+import { CathedraDocumentationGetById } from './get-by-id';
+import { CathedraDocumentationGetAllDivisions } from './get-all-divisions';
+import { CathedraDocumentationGetAll } from './get-all';
 import { CathedraDocumentationDelete } from './delete';
 import { CathedraDocumentationCreate } from './create';
 

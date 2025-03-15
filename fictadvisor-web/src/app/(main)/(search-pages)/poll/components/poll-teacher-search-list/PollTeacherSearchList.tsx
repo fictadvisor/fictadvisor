@@ -1,5 +1,5 @@
 import { Dispatch, FC, SetStateAction, useCallback } from 'react';
-import { QueryAllDisciplineTeacherForPollDTO } from '@fictadvisor/utils/requests';
+import { QueryAllDisciplineTeachersForPollDTO } from '@fictadvisor/utils/requests';
 import { PollDisciplineTeachersResponse } from '@fictadvisor/utils/responses';
 import { Box, Typography, useMediaQuery } from '@mui/material';
 import List from '@mui/material/List';
@@ -19,8 +19,8 @@ import style from './PollTeacherSearchList.module.scss';
 interface PollTeacherSearchListProps {
   data: PollDisciplineTeachersResponse;
   className: string;
-  setQueryObj: Dispatch<SetStateAction<QueryAllDisciplineTeacherForPollDTO>>;
-  initialValues: QueryAllDisciplineTeacherForPollDTO;
+  setQueryObj: Dispatch<SetStateAction<QueryAllDisciplineTeachersForPollDTO>>;
+  initialValues: QueryAllDisciplineTeachersForPollDTO;
   setCurPage: Dispatch<SetStateAction<number>>;
 }
 
@@ -38,7 +38,7 @@ const PollTeacherSearchList: FC<PollTeacherSearchListProps> = ({
         ({
           ...prev,
           ...query,
-        }) as QueryAllDisciplineTeacherForPollDTO,
+        }) as QueryAllDisciplineTeachersForPollDTO,
     );
     setCurPage(0);
   }, []);

@@ -5,10 +5,10 @@ import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { configure as serverlessExpress } from '@vendia/serverless-express';
 
-import { AppModule } from './modules/AppModule';
-import { TelegramAPI } from './modules/telegram-api/TelegramAPI';
-import { HttpExceptionFilter } from './common/filters/HttpExceptionFilter';
-import { validationExceptionFactory } from './common/helpers/validationExceptionFactory';
+import { AppModule } from './modules/app.module';
+import { TelegramAPI } from './modules/telegram-api/telegram-api';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { validationExceptionFactory } from './common/utils/validation-exception.factory';
 
 let server;
 

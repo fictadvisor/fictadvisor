@@ -1,5 +1,5 @@
 import { MappedGroupResponse } from '@fictadvisor/utils/responses';
-import { ApiDocumentationParams } from '../../../types/ApiDocumentationParams';
+import { ApiDocumentationParams } from '../../../types/api-documentation-params.type';
 
 export const GroupDocumentationGet: ApiDocumentationParams = {
   ok: {

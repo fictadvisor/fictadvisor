@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { FC } from 'react';
 import { GroupRoles, SortQGSParam } from '@fictadvisor/utils/enums';
-import { QueryAllStudentDTO } from '@fictadvisor/utils/requests';
+import { QueryAllStudentsDTO } from '@fictadvisor/utils/requests';
 import {
   BarsArrowDownIcon,
   BarsArrowUpIcon,
@@ -37,7 +37,7 @@ import {
 import * as styles from './HeaderStudentSearch.styles';
 
 export interface HeaderStudentSearchProps {
-  onSubmit: (values: QueryAllStudentDTO) => void;
+  onSubmit: (values: QueryAllStudentsDTO) => void;
 }
 
 const HeaderStudentSearch: FC<HeaderStudentSearchProps> = ({ onSubmit }) => {

@@ -1,7 +1,7 @@
 import {
   CreateCathedraDTO,
   QueryAllCathedrasDTO,
-  QueryAllTeacherDTO,
+  QueryAllTeachersDTO,
   UpdateCathedraDTO,
 } from '@fictadvisor/utils/requests';
 import {
@@ -47,7 +47,7 @@ class CathedraAPI {
     await client.delete(`/cathedras/${cathedraId}`);
   }
 
-  async getDepartmentTeachers(params: QueryAllTeacherDTO = {}) {
+  async getDepartmentTeachers(params: QueryAllTeachersDTO = {}) {
     const { data } = await client.get<PaginatedTeachersResponse>(`/teachers`, {
       params,
     });

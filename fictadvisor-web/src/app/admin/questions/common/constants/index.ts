@@ -3,11 +3,11 @@ import {
   QuestionType,
   SortQAQParam,
 } from '@fictadvisor/utils/enums';
-import { QueryAllQuestionDTO } from '@fictadvisor/utils/requests';
+import { QueryAllQuestionsDTO } from '@fictadvisor/utils/requests';
 
 import { AdminQuestion } from '../types';
 
-export const initialValues: QueryAllQuestionDTO = {
+export const initialValues: QueryAllQuestionsDTO = {
   search: '',
   order: 'asc',
   sort: SortQAQParam.QUESTION_TEXT,

@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from 'react';
 import { FC } from 'react';
-import { QueryAllDisciplineTeacherForPollDTO } from '@fictadvisor/utils/requests';
+import { QueryAllDisciplineTeachersForPollDTO } from '@fictadvisor/utils/requests';
 import {
   BarsArrowDownIcon,
   BarsArrowUpIcon,
@@ -31,8 +31,8 @@ import * as styles from './PollSearchForm.styles';
 import stylesScss from './PollSearchForm.module.scss';
 
 export interface PollSearchFormProps {
-  onSubmit: (values: QueryAllDisciplineTeacherForPollDTO) => void;
-  initialValues: QueryAllDisciplineTeacherForPollDTO;
+  onSubmit: (values: QueryAllDisciplineTeachersForPollDTO) => void;
+  initialValues: QueryAllDisciplineTeachersForPollDTO;
   searchPlaceholder: string;
 }
 
@@ -45,7 +45,7 @@ const PollSearchForm: FC<PollSearchFormProps> = ({
   const [collapsed, setCollapsed] = useState(false);
 
   const formikRef =
-    useRef<FormikProps<QueryAllDisciplineTeacherForPollDTO>>(null);
+    useRef<FormikProps<QueryAllDisciplineTeachersForPollDTO>>(null);
 
   const handleTeacherDisciplineTypeChange = useCallback(
     (teacherDisciplineType: string) => {

@@ -1,5 +1,5 @@
-import { ApiDocumentationParams } from '../../../types/ApiDocumentationParams';
-import { DefaultForbiddenResponse, DefaultUnauthorizedResponse } from '../../../defaultResponses';
+import { ApiDocumentationParams } from '../../../types/api-documentation-params.type';
+import { DefaultForbiddenResponse, DefaultUnauthorizedResponse } from '../../../default-responses.constants';
 
 export const TeacherDocumentationDelete: ApiDocumentationParams = {
   isAuth: true,
