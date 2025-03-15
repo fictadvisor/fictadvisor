@@ -1,14 +1,14 @@
 import { ScheduleDocumentationParse } from './parse';
-import { ScheduleDocumentationGetGeneralEvents } from './getGeneralEvents';
-import { ScheduleDocumentationGetGroupEvents } from './getGroupEvents';
-import { ScheduleDocumentationGetGroupEventsByDay } from './getGroupEventsByDay';
-import { ScheduleDocumentationGetGroupEventsByWeek } from './getGroupEventsByWeek';
-import { ScheduleDocumentationGetGroupEventsByFortnight } from './getGroupEventsByFortnight';
-import { ScheduleDocumentationGetEvent } from './getEvent';
-import { ScheduleDocumentationCreateEvent } from './createEvent';
-import { ScheduleDocumentationCreateFacultyEvent } from './createFacultyEvent';
-import { ScheduleDocumentationUpdateEvent } from './updateEvent';
-import { ScheduleDocumentationDeleteEvent } from './deleteEvent';
+import { ScheduleDocumentationGetGeneralEvents } from './get-general-events';
+import { ScheduleDocumentationGetGroupEvents } from './get-group-events';
+import { ScheduleDocumentationGetGroupEventsByDay } from './get-group-events-by-day';
+import { ScheduleDocumentationGetGroupEventsByWeek } from './get-group-events-by-week';
+import { ScheduleDocumentationGetGroupEventsByFortnight } from './get-group-events-by-fortnight';
+import { ScheduleDocumentationGetEvent } from './get-event';
+import { ScheduleDocumentationCreateEvent } from './create-event';
+import { ScheduleDocumentationCreateFacultyEvent } from './create-faculty-event';
+import { ScheduleDocumentationUpdateEvent } from './update-event';
+import { ScheduleDocumentationDeleteEvent } from './delete-event';
 
 export const ScheduleDocumentation = {
   PARSE: ScheduleDocumentationParse,

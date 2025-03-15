@@ -1,6 +1,6 @@
-import { ApiDocumentationParams } from '../../../types/ApiDocumentationParams';
+import { ApiDocumentationParams } from '../../../types/api-documentation-params.type';
 import { BaseRoleResponse } from '@fictadvisor/utils/responses';
-import { DefaultForbiddenResponse, DefaultUnauthorizedResponse } from '../../../defaultResponses';
+import { DefaultForbiddenResponse, DefaultUnauthorizedResponse } from '../../../default-responses';
 
 export const RoleDocumentationCreate: ApiDocumentationParams = {
   isAuth: true,

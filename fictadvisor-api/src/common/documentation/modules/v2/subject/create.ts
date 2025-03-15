@@ -1,6 +1,6 @@
 import { SubjectResponse } from '@fictadvisor/utils';
-import { ApiDocumentationParams } from '../../../types/ApiDocumentationParams';
-import { DefaultForbiddenResponse, DefaultUnauthorizedResponse } from '../../../defaultResponses';
+import { ApiDocumentationParams } from '../../../types/api-documentation-params.type';
+import { DefaultForbiddenResponse, DefaultUnauthorizedResponse } from '../../../default-responses';
 
 export const SubjectDocumentationCreate: ApiDocumentationParams = {
   isAuth: true,

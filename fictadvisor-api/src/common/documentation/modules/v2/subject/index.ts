@@ -1,7 +1,7 @@
-import { SubjectDocumentationGetAll } from './getAll';
+import { SubjectDocumentationGetAll } from './get-all';
 import { SubjectDocumentationGet } from './get';
 import { SubjectDocumentationCreate } from './create';
-import { SubjectDocumentationGetTeachers } from './getTeachers';
+import { SubjectDocumentationGetTeachers } from './get-teachers';
 import { SubjectDocumentationUpdate } from './update';
 import { SubjectDocumentationDelete } from './delete';
 
