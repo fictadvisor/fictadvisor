@@ -1,6 +1,6 @@
 import {
   CreateStudentWithRolesDTO,
-  QueryAllStudentDTO,
+  QueryAllStudentsDTO,
   UpdateStudentSelectivesDTO,
   UpdateStudentWithRolesDTO,
 } from '@fictadvisor/utils/requests';
@@ -15,7 +15,7 @@ import {
 import { client } from '@/lib/api/instance';
 
 class StudentAPI {
-  async getAll(params: QueryAllStudentDTO): Promise<SimpleStudentsResponse> {
+  async getAll(params: QueryAllStudentsDTO): Promise<SimpleStudentsResponse> {
     const { data } = await client.get<SimpleStudentsResponse>(`/students`, {
       params,
     });

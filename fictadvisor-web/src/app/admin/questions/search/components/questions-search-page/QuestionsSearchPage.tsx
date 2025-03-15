@@ -1,7 +1,7 @@
 'use client';
 import React, { FC, useEffect, useState } from 'react';
 import { QuestionType, SortQAQParam } from '@fictadvisor/utils/enums';
-import { QueryAllQuestionDTO } from '@fictadvisor/utils/requests';
+import { QueryAllQuestionsDTO } from '@fictadvisor/utils/requests';
 import {
   BarsArrowDownIcon,
   BarsArrowUpIcon,
@@ -26,11 +26,11 @@ import IconButton from '@/components/common/ui/icon-button-mui';
 import { IconButtonSize } from '@/components/common/ui/icon-button-mui/types';
 
 interface QuestionAdminSearchProps {
-  onSubmit: (values: QueryAllQuestionDTO) => void;
+  onSubmit: (values: QueryAllQuestionsDTO) => void;
 }
 
 const QuestionsAdminSearch: FC<QuestionAdminSearchProps> = ({ onSubmit }) => {
-  const [values, setValues] = useState<QueryAllQuestionDTO>(initialValues);
+  const [values, setValues] = useState<QueryAllQuestionsDTO>(initialValues);
   const [search, setSearch] = useState<string>('');
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
   const [sortBy, setSortBy] = useState<SortQAQParam>(

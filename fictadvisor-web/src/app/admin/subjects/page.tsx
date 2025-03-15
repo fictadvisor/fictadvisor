@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { QueryAllSubjectDTO } from '@fictadvisor/utils/requests';
+import { QueryAllSubjectsDTO } from '@fictadvisor/utils/requests';
 import { Box, TablePagination } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
@@ -31,7 +31,7 @@ const AdminSubjectSearch = () => {
         ...params,
         pageSize,
         page: currPage,
-      } as QueryAllSubjectDTO),
+      } as QueryAllSubjectsDTO),
 
     ...useQueryAdminOptions,
   });

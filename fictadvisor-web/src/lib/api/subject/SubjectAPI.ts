@@ -1,6 +1,6 @@
 import {
   CreateSubjectDTO,
-  QueryAllSubjectDTO,
+  QueryAllSubjectsDTO,
   UpdateSubjectDTO,
 } from '@fictadvisor/utils/requests';
 import {
@@ -42,7 +42,7 @@ class SubjectsAPI {
     return data;
   }
 
-  async getAll(params: QueryAllSubjectDTO = {}) {
+  async getAll(params: QueryAllSubjectsDTO = {}) {
     const { data } = await client.get<PaginatedSubjectsResponse>('/subjects', {
       params,
     });

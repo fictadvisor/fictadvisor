@@ -1,7 +1,7 @@
 'use client';
 
 import { FC, useCallback, useEffect, useState } from 'react';
-import { QueryAllTeacherDTO } from '@fictadvisor/utils/requests';
+import { QueryAllTeachersDTO } from '@fictadvisor/utils/requests';
 import {
   PaginatedTeachersResponse,
   TeacherWithRolesAndCathedrasResponse,
@@ -55,7 +55,7 @@ const TeacherPage: FC = () => {
         ...queryObj,
         pageSize: pageSize,
         page: 0,
-      } as QueryAllTeacherDTO),
+      } as QueryAllTeachersDTO),
 
     placeholderData: (previousData, previousQuery) => previousData,
     refetchOnWindowFocus: false,

@@ -1,5 +1,5 @@
 import { Prisma, PrismaClient } from '@prisma/client/fictadvisor';
-import { BasePrismaRepository } from '../prisma.repository';
+import { BasePrismaRepository } from '../base-prisma.repository';
 import {
   TModels,
   TWhere,
