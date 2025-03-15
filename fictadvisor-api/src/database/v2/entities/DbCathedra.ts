@@ -1,11 +1,22 @@
-import { Teacher, TeachersOnCathedras } from '@prisma/client/fictadvisor';
+import { DbTeachersOnCathedras } from './DbTeachersOnCathedras';
+import { AutoMap } from '@automapper/classes';
 
 export class DbCathedra {
-  id: string;
-  name: string;
-  abbreviation: string;
-  division: string;
-  teachers: (TeachersOnCathedras & { teacher: Teacher })[];
-  createdAt: Date;
-  updatedAt: Date;
+  @AutoMap()
+    id: string;
+
+  @AutoMap()
+    name: string;
+
+  @AutoMap()
+    abbreviation: string;
+
+  @AutoMap()
+    division: string | null;
+
+  createdAt: Date | null;
+  updatedAt: Date | null;
+
+  @AutoMap(() => [DbTeachersOnCathedras])
+    teachers?: DbTeachersOnCathedras[];
 }

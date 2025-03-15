@@ -1,0 +1,25 @@
+import { AutoMap } from '@automapper/classes';
+import { EntityType } from '@prisma/client/fictadvisor';
+
+export class DbContact {
+  @AutoMap()
+    id: string;
+
+  @AutoMap()
+    name: string;
+
+  @AutoMap()
+    displayName: string;
+
+  @AutoMap()
+    link: string;
+
+  @AutoMap(() => String)
+    entityType: EntityType;
+
+  @AutoMap()
+    entityId: string;
+
+  createdAt: Date | null;
+  updatedAt: Date | null;
+}

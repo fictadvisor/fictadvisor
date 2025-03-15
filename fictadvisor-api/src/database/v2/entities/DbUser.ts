@@ -1,18 +1,35 @@
-import { Group, Student } from '@prisma/client/fictadvisor';
-import { State } from '@fictadvisor/utils/enums';
+import { AutoMap } from '@automapper/classes';
+import { DbStudent } from './DbStudent';
+import { State } from '@prisma/client/fictadvisor';
 
 export class DbUser {
-  id: string;
-  username: string | null;
-  email: string;
-  telegramId: bigint | null;
-  avatar: string | null;
-  state: State;
-  password: string | null;
-  lastPasswordChanged: Date;
+  @AutoMap()
+    id: string;
+
+  @AutoMap()
+    username: string | null;
+
+  @AutoMap()
+    email: string;
+
+  @AutoMap()
+    telegramId: bigint | null;
+
+  @AutoMap()
+    avatar: string | null;
+
+  @AutoMap()
+    state: State;
+
+  @AutoMap()
+    password: string | null;
+
+  @AutoMap()
+    lastPasswordChanged: Date;
+
   createdAt: Date | null;
   updatedAt: Date | null;
-  student: Student & {
-    group: Group
-  };
+
+  @AutoMap(() => DbStudent)
+    student?: DbStudent;
 }

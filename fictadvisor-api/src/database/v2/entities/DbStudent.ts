@@ -1,31 +1,49 @@
-import { Cathedra, Discipline, EducationalPrograms, Group, SelectiveDiscipline } from '@prisma/client/fictadvisor';
-import { State } from '@fictadvisor/utils/enums';
-import { DbSpeciality } from './DbSpeciality';
-import { DbRole } from './DbRole';
 import { DbUser } from './DbUser';
+import { DbGroup } from './DbGroup';
+import { DbUserRole } from './DbUserRole';
+import { DbSelectiveDiscipline } from './DbSelectiveDiscipline';
+import { DbRemovedDisciplineTeacher } from './DbRemovedDisciplineTeacher';
+import { State } from '@prisma/client/fictadvisor';
+import { AutoMap } from '@automapper/classes';
 
 export class DbStudent {
-  userId?: string;
-  firstName: string | null;
-  middleName: string | null;
-  lastName: string | null;
-  state: State;
-  groupId?: string;
+
+  @AutoMap(() => DbUser)
+    user?: DbUser;
+
+  @AutoMap()
+    userId: string;
+
+  @AutoMap()
+    firstName: string | null;
+
+  @AutoMap()
+    middleName: string | null;
+
+  @AutoMap()
+    lastName: string | null;
+
+  @AutoMap()
+    admissionYear: number | null;
+
+  @AutoMap(() => String)
+    state: State;
+
+  @AutoMap(() => DbGroup)
+    group?: DbGroup;
+
+  @AutoMap()
+    groupId?: string;
+
   createdAt: Date | null;
   updatedAt: Date | null;
-  group?: Group & {
-    cathedra?: Cathedra;
-    educationalProgram?: {
-      speciality: DbSpeciality,
-    } & EducationalPrograms,
-  };
-  roles?: {
-    studentId: string,
-    roleId: string,
-    role: DbRole,
-  }[];
-  selectiveDisciplines?: (SelectiveDiscipline & {
-    discipline: Discipline,
-  })[];
-  user?: DbUser;
+
+  @AutoMap(() => [DbUserRole])
+    roles?: DbUserRole[];
+
+  @AutoMap(() => [DbSelectiveDiscipline])
+    selectiveDisciplines?: DbSelectiveDiscipline[];
+
+  @AutoMap(() => [DbRemovedDisciplineTeacher])
+    removedDisciplineTeachers?: DbRemovedDisciplineTeacher[];
 }

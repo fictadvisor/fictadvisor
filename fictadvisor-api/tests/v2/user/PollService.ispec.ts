@@ -5,9 +5,9 @@ import { MapperModule } from '../../../src/common/mappers/MapperModule';
 import { PrismaModule } from '../../../src/database/PrismaModule';
 import { PollService } from '../../../src/modules/poll/v2/PollService';
 import { DbDiscipline } from '../../../src/database/v2/entities/DbDiscipline';
-import { DbQuestionWithRoles } from '../../../src/database/v2/entities/DbQuestionWithRoles';
-import { DbQuestionWithAnswers } from '../../../src/database/v2/entities/DbQuestionWithAnswers';
 import { Group, PrismaClient, QuestionDisplay, QuestionType, State, Subject, Teacher, User } from '@prisma/client/fictadvisor';
+import { DbQuestion } from 'src/database/v2/entities/DbQuestion';
+import { DbQuestionWithRoles } from '../../../src/database/v2/entities/DbQuestionWithRoles';
 
 
 describe('PollService', () => {
@@ -24,9 +24,9 @@ describe('PollService', () => {
   let discipline1: DbDiscipline;
   let discipline2: DbDiscipline;
   let discipline3: DbDiscipline;
-  let questionMark1: DbQuestionWithRoles & DbQuestionWithAnswers;
-  let questionMark2: DbQuestionWithRoles & DbQuestionWithAnswers;
-  let questionText: DbQuestionWithRoles & DbQuestionWithAnswers;
+  let questionMark1: DbQuestionWithRoles;
+  let questionMark2: DbQuestionWithRoles;
+  let questionText: DbQuestionWithRoles;
 
   beforeAll(async () => {
     const testingModule = await Test.createTestingModule({
@@ -236,7 +236,7 @@ describe('PollService', () => {
         questionAnswers: true,
         questionRoles: true,
       },
-    }) as any as DbQuestionWithRoles & DbQuestionWithAnswers;
+    }) as any as DbQuestionWithRoles;
 
     questionMark2 = await prisma.question.create({
       data: {
@@ -273,7 +273,7 @@ describe('PollService', () => {
         questionAnswers: true,
         questionRoles: true,
       },
-    }) as any as DbQuestionWithRoles & DbQuestionWithAnswers;
+    }) as any as DbQuestionWithRoles;
 
     questionText = await prisma.question.create({
       data: {
@@ -316,7 +316,7 @@ describe('PollService', () => {
         questionAnswers: true,
         questionRoles: true,
       },
-    }) as any as DbQuestionWithRoles & DbQuestionWithAnswers;
+    }) as any as DbQuestionWithRoles;
   });
 
 
@@ -537,7 +537,7 @@ describe('PollService', () => {
 
   describe('getDisciplineTeachers', () => {
     it('should return disciplines of questions for which user haven\'t answered yet', async () => {
-      const { hasSelectedInLastSemester, teachers } = await pollService.getDisciplineTeachers(user.id, {});
+      const { teachers } = await pollService.getDisciplineTeachers(user.id, {});
       expect(teachers.length).toBe(1);
       expect(teachers[0].disciplineTeacherId === discipline3.disciplineTeachers[0].id);
     });

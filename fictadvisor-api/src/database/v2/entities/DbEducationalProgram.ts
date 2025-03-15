@@ -1,11 +1,24 @@
-import { Group, Speciality } from '@prisma/client/fictadvisor';
 import { EducationProgram } from '@fictadvisor/utils/enums';
+import { DbSpeciality } from './DbSpeciality';
+import { DbGroup } from './DbGroup';
+import { AutoMap } from '@automapper/classes';
 
 export class DbEducationalProgram {
-  id: string;
-  speciality?: Speciality;
-  specialityId: string;
-  name: string;
-  abbreviation: EducationProgram;
-  groups?: Group[];
+  @AutoMap()
+    id: string;
+
+  @AutoMap(() => DbSpeciality)
+    speciality?: DbSpeciality;
+
+  @AutoMap()
+    specialityId: string;
+
+  @AutoMap()
+    name: string;
+
+  @AutoMap(() => String)
+    abbreviation?: EducationProgram;
+
+  @AutoMap(() => [DbGroup])
+    groups?: DbGroup[];
 }

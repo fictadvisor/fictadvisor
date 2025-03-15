@@ -62,6 +62,34 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@automapper/classes@npm:^8.8.1":
+  version: 8.8.1
+  resolution: "@automapper/classes@npm:8.8.1"
+  peerDependencies:
+    "@automapper/core": 8.8.1
+    reflect-metadata: ~0.1.13
+  checksum: 10c0/f1d258e2a41a2fab2cfdea0385294d4319df00dfb0db07994d9e62722cd84a27763aedf8aca59b4f7cb580ae0e92533a9dff8e8a15e2243642dfc4b4365f01ed
+  languageName: node
+  linkType: hard
+
+"@automapper/core@npm:^8.8.1":
+  version: 8.8.1
+  resolution: "@automapper/core@npm:8.8.1"
+  checksum: 10c0/2b724ba2bcda476dcffb5f26c8552c7b339ff25fe9699a7a0f025aaa5861ad073253df21368d7aa475e1641374edf54edfd426e23c4e7b35135e04c7203732ad
+  languageName: node
+  linkType: hard
+
+"@automapper/nestjs@npm:^8.8.1":
+  version: 8.8.1
+  resolution: "@automapper/nestjs@npm:8.8.1"
+  peerDependencies:
+    "@automapper/core": 8.8.1
+    "@nestjs/common": ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0
+    "@nestjs/core": ^7.0.0 || ^8.0.0  || ^9.0.0 || ^10.0.0
+  checksum: 10c0/a05842e3a7511b67e6a79df517b5a86c0c9faebbd8877de2e8af5537746933aafe1a8a88d58dd096b464c73f25657813d87ab3ac2b97cc8a393acd5ed5e12640
+  languageName: node
+  linkType: hard
+
 "@aw-web-design/x-default-browser@npm:1.4.126":
   version: 1.4.126
   resolution: "@aw-web-design/x-default-browser@npm:1.4.126"
@@ -2146,6 +2174,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@fictadvisor/utils@workspace:utils"
   dependencies:
+    "@automapper/classes": "npm:^8.8.1"
     "@nestjs/swagger": "npm:^6.3.0"
     class-transformer: "npm:^0.5.1"
     class-validator: "npm:^0.14.0"
@@ -11625,6 +11654,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "fictadvisor-api@workspace:fictadvisor-api"
   dependencies:
+    "@automapper/classes": "npm:^8.8.1"
+    "@automapper/core": "npm:^8.8.1"
+    "@automapper/nestjs": "npm:^8.8.1"
     "@fictadvisor/utils": "npm:*"
     "@nestjs-modules/mailer": "npm:^1.8.1"
     "@nestjs/cli": "npm:^9.1.5"

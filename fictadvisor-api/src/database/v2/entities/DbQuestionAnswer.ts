@@ -1,16 +1,30 @@
-import { DisciplineTeacher, Discipline, Subject, Teacher } from '@prisma/client/fictadvisor';
 import { DbQuestion } from './DbQuestion';
+import { DbDisciplineTeacher } from './DbDisciplineTeacher';
+import { DbUser } from './DbUser';
+import { AutoMap } from '@automapper/classes';
 
 export class DbQuestionAnswer {
-  disciplineTeacherId: string;
-  questionId: string;
-  userId: string;
-  value: string;
-  question?: DbQuestion;
-  disciplineTeacher?: DisciplineTeacher & {
-    discipline?: Discipline & {
-      subject: Subject,
-    },
-    teacher?: Teacher,
-  };
+  @AutoMap()
+    disciplineTeacherId: string;
+
+  @AutoMap()
+    questionId: string;
+
+  @AutoMap(() => DbQuestion)
+    question?: DbQuestion;
+
+  @AutoMap()
+    userId: string;
+
+  @AutoMap(() => DbUser)
+    user?: DbUser;
+
+  @AutoMap()
+    value: string;
+
+  @AutoMap(() => DbDisciplineTeacher)
+    disciplineTeacher?: DbDisciplineTeacher;
+
+  createdAt: Date | null;
+  updatedAt: Date | null;
 }

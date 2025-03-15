@@ -203,7 +203,6 @@ export class DisciplineTeacherController {
   @ApiEndpoint({
     summary: 'Gel all question answers with TEXT type (comments)',
     documentation: DisciplineTeacherDocumentation.GET_ALL_COMMENTS,
-    permissions: PERMISSION.COMMENTS_GET,
   })
   @Get('/comments')
   async getAllComments (

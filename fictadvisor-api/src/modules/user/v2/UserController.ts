@@ -24,12 +24,15 @@ import { GroupByIdPipe } from '../../../common/pipes/GroupByIdPipe';
 import { ApprovedStudentPipe } from '../../../common/pipes/ApprovedStudentPipe';
 import { SelectiveDisciplinesPipe } from '../../../common/pipes/SelectiveDisciplinesPipe';
 import { UserByTelegramIdPipe } from '../../../common/pipes/UserByTelegramIdPipe';
-import { UserMapper } from '../../../common/mappers/UserMapper';
-import { StudentMapper } from '../../../common/mappers/StudentMapper';
 import { UserService } from './UserService';
 import { StudentByIdPipe } from '../../../common/pipes/StudentByIdPipe';
 import { UserDocumentation } from '../../../common/documentation/modules/v2/user';
 import { RoleByIdPipe } from '../../../common/pipes/RoleByIdPipe';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
+import { DbUser } from '../../../database/v2/entities/DbUser';
+import { FullStudentResponse, OrdinaryStudentResponse, UserResponse } from '@fictadvisor/utils/responses';
+import { DbStudent } from '../../../database/v2/entities/DbStudent';
 
 @ApiTags('User')
 @Controller({
@@ -39,8 +42,7 @@ import { RoleByIdPipe } from '../../../common/pipes/RoleByIdPipe';
 export class UserController {
   constructor (
     private userService: UserService,
-    private userMapper: UserMapper,
-    private studentMapper: StudentMapper,
+    @InjectMapper() private mapper: Mapper,
   ) {}
 
   @ApiEndpoint({
@@ -51,7 +53,7 @@ export class UserController {
   @Post()
   async createUser (@Body() body: CreateUserDTO) {
     const user = await this.userService.createUserByAdmin(body);
-    return this.userMapper.getUser(user);
+    return this.mapper.map(user, DbUser, UserResponse);
   }
 
   @ApiEndpoint({
@@ -135,14 +137,13 @@ export class UserController {
   @ApiEndpoint({
     summary: 'Get all users for admin',
     documentation: UserDocumentation.GET_ALL,
-    permissions: PERMISSION.USERS_GET,
   })
   @Get()
   async getAll (
     @Query() query: QueryAllUsersDTO,
   ) {
     const users = await this.userService.getAll(query);
-    const data = this.userMapper.getAll(users.data);
+    const data = this.mapper.mapArray(users.data, DbUser, UserResponse);
     return {
       data,
       pagination: users.pagination,
@@ -172,7 +173,7 @@ export class UserController {
     @Body() body: UpdateUserDTO,
   ) {
     const user = await this.userService.updateUser(userId, body);
-    return this.userMapper.getUser(user);
+    return this.mapper.map(user, DbUser, UserResponse);
   }
 
   @ApiEndpoint({
@@ -208,10 +209,10 @@ export class UserController {
   })
   @Patch('/:userId/contacts/:contactId')
   updateContact (
-    @Param(ContactByUserIdPipe) params : { userId: string, contactId: string },
+    @Param(ContactByUserIdPipe) params : { contactId: string },
     @Body() body: UpdateContactDTO,
   ) {
-    return this.userService.updateContact(params.userId, params.contactId, body);
+    return this.userService.updateContact(params.contactId, body);
   }
 
   @ApiEndpoint({
@@ -221,9 +222,9 @@ export class UserController {
   })
   @Delete('/:userId/contacts/:contactId')
   deleteContact (
-    @Param(ContactByUserIdPipe) params: { userId: string, contactId: string },
+    @Param(ContactByUserIdPipe) params: { contactId: string },
   ) {
-    return this.userService.deleteContact(params.userId, params.contactId);
+    return this.userService.deleteContact(params.contactId);
   }
 
   @ApiEndpoint({
@@ -261,7 +262,7 @@ export class UserController {
     @Param('telegramId', UserByTelegramIdPipe) telegramId: bigint,
   ) {
     const student = await this.userService.getUserByTelegramId(telegramId);
-    return this.studentMapper.getOrdinaryStudent(student);
+    return this.mapper.map(student, DbStudent, OrdinaryStudentResponse);
   }
 
   @ApiEndpoint({
@@ -280,14 +281,13 @@ export class UserController {
   @ApiEndpoint({
     summary: 'Return user\'s data',
     documentation: UserDocumentation.GET_ME,
-    permissions: PERMISSION.USERS_$USERID_GET,
   })
   @Get('/:userId')
   async getMe (
     @Param('userId', UserByIdPipe) userId: string,
   ) {
     const user = await this.userService.getSimplifiedUser(userId);
-    return this.userMapper.getUser(user);
+    return this.mapper.map(user, DbUser, UserResponse);
   }
 
   @ApiEndpoint({
@@ -302,7 +302,7 @@ export class UserController {
     @UploadedFile(AvatarValidationPipe) file: Express.Multer.File,
   ) {
     const user = await this.userService.updateAvatar(file, userId);
-    return this.userMapper.getUser(user);
+    return this.mapper.map(user, DbUser, UserResponse);
   }
 
   @ApiEndpoint({
@@ -315,7 +315,7 @@ export class UserController {
     @Param('userId', UserByIdPipe) userId: string,
   ) {
     const user = await this.userService.deleteAvatar(userId);
-    return this.userMapper.getUser(user);
+    return this.mapper.map(user, DbUser, UserResponse);
   }
 
   @ApiEndpoint({
@@ -368,6 +368,6 @@ export class UserController {
     @Param('groupId', GroupByIdPipe) groupId: string,
   ) {
     const student = await this.userService.changeGroup(userId, groupId);
-    return this.studentMapper.updateStudent(student);
+    return this.mapper.map(student, DbStudent, FullStudentResponse);
   }
 }

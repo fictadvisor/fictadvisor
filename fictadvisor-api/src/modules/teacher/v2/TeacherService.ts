@@ -5,10 +5,10 @@ import {
   UpdateContactDTO,
   QueryAllTeacherDTO,
   QueryMarksDTO,
-  ComplaintDTO,
+  ComplaintDTO, SortDTO, Sort,
 } from '@fictadvisor/utils/requests';
-import { TeacherWithContactsFullResponse } from '@fictadvisor/utils/responses';
-import { DatabaseUtils } from '../../../database/DatabaseUtils';
+import { SubjectResponse, TeacherWithContactsFullResponse } from '@fictadvisor/utils/responses';
+import { DatabaseUtils, PaginateArgs } from '../../../database/DatabaseUtils';
 import { filterAsync } from '../../../common/helpers/arrayUtils';
 import { TelegramAPI } from '../../telegram-api/TelegramAPI';
 import { TeacherMapper } from '../../../common/mappers/TeacherMapper';
@@ -27,9 +27,11 @@ import { ContactRepository } from '../../../database/v2/repositories/ContactRepo
 import { InvalidQueryException } from '../../../common/exceptions/InvalidQueryException';
 import { InvalidEntityIdException } from '../../../common/exceptions/InvalidEntityIdException';
 import { EntityType, QuestionDisplay, Prisma } from '@prisma/client/fictadvisor';
-import { SubjectMapper } from '../../../common/mappers/SubjectMapper';
-import { DisciplineTypeEnum } from '@fictadvisor/utils/enums';
+import { DisciplineTypeEnum, OrderQAParam, SortQATParam } from '@fictadvisor/utils/enums';
 import * as process from 'process';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
+import { DbSubject } from '../../../database/v2/entities/DbSubject';
 
 @Injectable()
 export class TeacherService {
@@ -46,36 +48,42 @@ export class TeacherService {
     private readonly questionMapper: QuestionMapper,
     private readonly telegramAPI: TelegramAPI,
     private readonly groupRepository: GroupRepository,
-    private readonly subjectMapper: SubjectMapper,
+    @InjectMapper() private mapper: Mapper,
   ) {}
 
   async getAll (body: QueryAllTeacherDTO) {
-    const search = {
-      AND: [
-        this.getSearchForTeachers.fullName(body.search),
-        body.groupId?.length ? this.getSearchForTeachers.group(body.groupId) : {},
-        body.disciplineTypes?.length ? this.getSearchForTeachers.disciplineTypes(body.disciplineTypes) : {},
-        {
-          OR: [
-            body.notInDepartments ? {
-              NOT: this.getSearchForTeachers.cathedras(body.cathedrasId),
-            } : {},
-            body.cathedrasId?.length ? this.getSearchForTeachers.cathedras(body.cathedrasId) : {},
-          ],
-        },
-      ],
-    };
-
-    const sort = this.teacherMapper.getSortedTeacher(body);
-
-    const data: Prisma.TeacherFindManyArgs = {
+    const data: PaginateArgs<'teacher'> = {
       where: {
-        ...search,
+        AND: [
+          this.getSearchForTeachers.fullName(body.search),
+          body.groupId?.length ? this.getSearchForTeachers.group(body.groupId) : {},
+          body.disciplineTypes?.length ? this.getSearchForTeachers.disciplineTypes(body.disciplineTypes) : {},
+          {
+            OR: [
+              body.notInDepartments ? {
+                NOT: this.getSearchForTeachers.cathedras(body.cathedrasId),
+              } : {},
+              body.cathedrasId?.length ? this.getSearchForTeachers.cathedras(body.cathedrasId) : {},
+            ],
+          },
+        ],
       },
-      ...sort,
+      ...this.getSortedTeacher(body),
     };
 
-    return await DatabaseUtils.paginate<DbTeacher>(this.teacherRepository, body, data);
+    return await DatabaseUtils.paginate<'teacher', DbTeacher>(this.teacherRepository, body, data);
+  }
+
+  private getSortedTeacher ({ sort, order }: SortDTO): Sort {
+    if (!sort) sort = SortQATParam.LAST_NAME;
+    if (!order) order = OrderQAParam.ASC;
+    const orderBy = [{ [sort]: order }];
+
+    orderBy.push({ [SortQATParam.LAST_NAME]: order });
+    orderBy.push({ [SortQATParam.FIRST_NAME]: order });
+    orderBy.push({ [SortQATParam.MIDDLE_NAME]: order });
+
+    return { orderBy };
   }
 
   private getSearchForTeachers = {
@@ -114,14 +122,14 @@ export class TeacherService {
       if (m.type === QuestionDisplay.AMOUNT) {
         let amountSum = 0;
         for (const mark in m.mark) {
-          amountSum += m.mark[mark]*(+mark);
+          amountSum += m.mark[mark] * (+mark);
         }
-        return sum + (amountSum/m.amount)*10;
+        return sum + (amountSum / m.amount) * 10;
       } else {
         return sum + m.mark;
       }
     }, 0);
-    return +(sum/marks.length).toFixed(2);
+    return +(sum / marks.length).toFixed(2);
   }
 
   @Cron('0 0 3 * * *')
@@ -136,8 +144,8 @@ export class TeacherService {
   }
 
   async getTeacher (id: string) {
-    const dbTeacher = await this.teacherRepository.findById(id);
-    const contacts = await this.contactRepository.getAllContacts(id);
+    const dbTeacher = await this.teacherRepository.findOne({ id });
+    const contacts = await this.contactRepository.findMany({ entityId: id });
 
     return {
       dbTeacher,
@@ -173,31 +181,29 @@ export class TeacherService {
 
   async getUserDisciplineTeachers (teacherId: string, userId: string, notAnswered: boolean) {
     const disciplineTeachers = await this.disciplineTeacherRepository.findMany({
-      where: {
-        teacherId,
-        discipline: {
-          group: {
-            students: {
-              some: {
-                userId,
-              },
+      teacherId,
+      discipline: {
+        group: {
+          students: {
+            some: {
+              userId,
             },
           },
         },
-        ...DatabaseUtils.getOptional(notAnswered, {
-          NOT: {
-            questionAnswers: {
-              some: {
-                userId,
-              },
+      },
+      ...DatabaseUtils.getOptional(notAnswered, {
+        NOT: {
+          questionAnswers: {
+            some: {
+              userId,
             },
           },
-        }),
-      },
+        },
+      }),
     });
 
     return filterAsync(disciplineTeachers as DbDisciplineTeacher[], async ({ discipline, id }) => {
-      const isRemoved = await this.disciplineTeacherRepository.find({
+      const isRemoved = await this.disciplineTeacherRepository.findOne({
         id,
         removedDisciplineTeachers: {
           some: {
@@ -212,8 +218,8 @@ export class TeacherService {
     });
   }
 
-  async getTeacherRoles (teacherId: string) {
-    const teacher = await this.teacherRepository.findById(teacherId);
+  async getTeacherRoles (id: string) {
+    const teacher = await this.teacherRepository.findOne({ id });
     return this.teacherMapper.getTeacherRoles(teacher);
   }
 
@@ -230,11 +236,14 @@ export class TeacherService {
   }
 
   async getAllContacts (entityId: string) {
-    return this.contactRepository.getAllContacts(entityId);
+    return this.contactRepository.findMany({ entityId });
   }
 
   async getContact (teacherId: string, contactId: string) {
-    const contact = await this.contactRepository.getContact(teacherId, contactId);
+    const contact = await this.contactRepository.findOne({
+      id: contactId,
+      entityId: teacherId,
+    });
 
     if (!contact)
       return null;
@@ -246,23 +255,20 @@ export class TeacherService {
     };
   }
 
-  async createContact (entityId: string, body: CreateContactDTO,) {
-    return this.contactRepository.createContact({
+  async createContact (entityId: string, body: CreateContactDTO) {
+    return this.contactRepository.create({
       entityId,
       entityType: EntityType.TEACHER,
       ...body,
     });
   }
 
-  async updateContact (entityId: string, contactId: string, body: UpdateContactDTO) {
-    await this.contactRepository.updateContact(entityId, contactId, body);
-    return this.contactRepository.getContact(entityId, contactId);
+  async updateContact (contactId: string, body: UpdateContactDTO) {
+    return this.contactRepository.updateById(contactId, body);
   }
 
-  async deleteContact (entityId: string, contactId: string) {
-    await this.contactRepository.deleteContact(
-      entityId, contactId,
-    );
+  async deleteContact (contactId: string) {
+    await this.contactRepository.deleteById(contactId);
   }
 
   async getMarks (teacherId: string, data?: QueryMarksDTO) {
@@ -294,23 +300,20 @@ export class TeacherService {
   async getTeacherSubjects (teacherId: string) {
 
     return this.subjectRepository.findMany({
-      where: {
-        disciplines: {
-          some: {
-            disciplineTeachers: {
-              some: {
-                teacherId,
-              },
+      disciplines: {
+        some: {
+          disciplineTeachers: {
+            some: {
+              teacherId,
             },
           },
         },
       },
-    }
-    );
+    });
   }
 
   async getTeacherSubject (teacherId: string, subjectId: string): Promise<TeacherWithContactsFullResponse> {
-    const dbTeacher = await this.teacherRepository.find({
+    const dbTeacher = await this.teacherRepository.findOne({
       id: teacherId,
       disciplineTeachers: {
         some: {
@@ -328,12 +331,12 @@ export class TeacherService {
     const { disciplineTeachers } = dbTeacher;
 
     const disciplineTypes = this.disciplineTeacherMapper.getRolesBySubject(disciplineTeachers, subjectId);
-    const subject = await this.subjectRepository.findById(subjectId);
-    const contacts = await this.contactRepository.getAllContacts(teacherId);
+    const subject = await this.subjectRepository.findOne({ id: subjectId });
+    const contacts = await this.contactRepository.findMany({ entityId: teacherId });
 
     return {
       ...this.teacherMapper.getTeacherWithRolesAndCathedras(dbTeacher),
-      subject: this.subjectMapper.getSubject(subject),
+      subject: this.mapper.map(subject, DbSubject, SubjectResponse),
       disciplineTypes,
       contacts,
     };
@@ -343,12 +346,11 @@ export class TeacherService {
     const { fullName = 'не вказано', groupId, title, message } = body;
 
     const code = groupId
-      ? (await this.groupRepository.findById(groupId))?.code
+      ? (await this.groupRepository.findOne({ id: groupId }))?.code
       : 'не вказано';
     if (!code) throw new InvalidEntityIdException('Group');
 
-    const { lastName, firstName, middleName } = await this.teacherRepository.findById(teacherId);
-
+    const { lastName, firstName, middleName } = await this.teacherRepository.findOne({ id: teacherId });
     await this.teacherRepository.updateById(teacherId, {
       complaints: {
         create: body,
@@ -356,12 +358,12 @@ export class TeacherService {
     });
 
     const text =
-    '<b>Скарга на викладача:</b>\n\n' +
-    `<b>Викладач:</b> ${lastName} ${firstName} ${middleName}\n` +
-    `<b>Студент:</b> ${fullName}\n` +
-    `<b>Група:</b> ${code}\n\n` +
-    `${title}\n\n` +
-    `${message}`;
+      '<b>Скарга на викладача:</b>\n\n' +
+      `<b>Викладач:</b> ${lastName} ${firstName} ${middleName}\n` +
+      `<b>Студент:</b> ${fullName}\n` +
+      `<b>Група:</b> ${code}\n\n` +
+      `${title}\n\n` +
+      `${message}`;
     const chatId = process.env.COMPLAINT_CHAT_ID;
 
     await this.telegramAPI.sendMessage(text, chatId);

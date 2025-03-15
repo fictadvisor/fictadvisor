@@ -11,11 +11,13 @@ import {
   QueryAllUsersDTO,
   UpdateStudentDTO,
 } from '@fictadvisor/utils/requests';
-import { RemainingSelectivesResponse } from '@fictadvisor/utils/responses';
+import {
+  FullStudentResponse,
+  OrdinaryStudentResponse,
+  RemainingSelectivesResponse,
+} from '@fictadvisor/utils/responses';
 import { isArrayUnique } from '../../../common/helpers/arrayUtils';
-import { DatabaseUtils } from '../../../database/DatabaseUtils';
-import { TelegramAPI } from '../../telegram-api/TelegramAPI';
-import { StudentMapper } from '../../../common/mappers/StudentMapper';
+import { DatabaseUtils, PaginateArgs } from '../../../database/DatabaseUtils';
 import { DisciplineMapper } from '../../../common/mappers/DisciplineMapper';
 import { AuthService, AVATARS } from '../../auth/v2/AuthService';
 import { GroupService } from '../../group/v2/GroupService';
@@ -40,9 +42,11 @@ import { AlreadySelectedException } from '../../../common/exceptions/AlreadySele
 import { DuplicateTelegramIdException } from '../../../common/exceptions/DuplicateTelegramIdException';
 import { NotSelectedDisciplineException } from '../../../common/exceptions/NotSelectedDisciplineException';
 import { AlreadySentGroupRequestException } from '../../../common/exceptions/AlreadySentGroupRequestException';
-import { EntityType, Prisma, RoleName, State } from '@prisma/client/fictadvisor';
+import { EntityType, RoleName, State } from '@prisma/client/fictadvisor';
 import { AbsenceOfCaptainException } from '../../../common/exceptions/AbsenceOfCaptainException';
 import { CaptainAlreadyRegisteredException } from '../../../common/exceptions/CaptainAlreadyRegisteredException';
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 
 type SortedDisciplines = {
   year: number;
@@ -64,12 +68,11 @@ export class UserService {
     private fileService: FileService,
     @Inject(forwardRef(() => GroupService))
     private groupService: GroupService,
-    private studentMapper: StudentMapper,
     private disciplineMapper: DisciplineMapper,
     private dateService: DateService,
-    private telegramAPI: TelegramAPI,
     private disciplineTeacherService: DisciplineTeacherService,
     private pollService: PollService,
+    @InjectMapper() private mapper: Mapper,
   ) {}
 
   async createUserByAdmin (data: CreateUserDTO) {
@@ -81,7 +84,7 @@ export class UserService {
 
   async getSelectivesBySemesters (userId: string) {
     const selectiveByUser = await this.getSelectiveDisciplines(userId);
-    const group = await this.groupRepository.find({
+    const group = await this.groupRepository.findOne({
       students: {
         some: {
           userId,
@@ -110,7 +113,7 @@ export class UserService {
   }
 
   async getGroupByRole (roleId: string) {
-    return await this.groupRepository.find({
+    return await this.groupRepository.findOne({
       groupRoles: {
         some: {
           roleId,
@@ -120,7 +123,7 @@ export class UserService {
   }
 
   async getGroupRole (studentId: string) {
-    return this.roleRepository.find({
+    return this.roleRepository.findOne({
       userRoles: {
         some: {
           studentId,
@@ -157,7 +160,7 @@ export class UserService {
   async changeGroupRole (studentId: string, name: RoleName) {
     const userRole = await this.getGroupRoleDB(studentId);
 
-    const groupRole = await this.roleRepository.find({
+    const { id: roleId } = await this.roleRepository.findOne({
       groupRole: {
         groupId: userRole.groupId,
       },
@@ -173,9 +176,7 @@ export class UserService {
               studentId,
             },
           },
-          data: {
-            roleId: groupRole.id,
-          },
+          data: { roleId },
         },
       },
     });
@@ -183,7 +184,7 @@ export class UserService {
 
   async changeGroup (studentId: string, groupId: string) {
     const prevRole = await this.getGroupRole(studentId);
-    const nextRole = await this.roleRepository.find({
+    const nextRole = await this.roleRepository.findOne({
       name: RoleName.STUDENT,
       groupRole: {
         groupId,
@@ -249,11 +250,11 @@ export class UserService {
 
   async updateStudent (userId: string, data: UpdateStudentDTO) {
     const student = await this.studentRepository.updateById(userId, data);
-    return this.studentMapper.updateStudent(student as unknown as DbStudent);
+    return this.mapper.map(student, DbStudent, FullStudentResponse);
   }
 
-  async requestNewGroup (id: string, { groupId, isCaptain }: GroupRequestDTO) {
-    const student = await this.studentRepository.findById(id);
+  async requestNewGroup (userId: string, { groupId, isCaptain }: GroupRequestDTO) {
+    const student = await this.studentRepository.findOne({ userId });
 
     switch (student.state) {
       case State.APPROVED: {
@@ -272,7 +273,7 @@ export class UserService {
       throw new CaptainAlreadyRegisteredException();
     }
 
-    await this.studentRepository.updateById(id, {
+    await this.studentRepository.updateById(userId, {
       state: State.PENDING,
       groupId,
     });
@@ -285,7 +286,7 @@ export class UserService {
   }
 
   async deleteUser (studentId: string) {
-    await this.roleRepository.deleteMany({
+    await this.roleRepository.delete({
       name: RoleName.USER,
       userRoles: {
         some: {
@@ -296,48 +297,53 @@ export class UserService {
     await this.userRepository.deleteById(studentId);
   }
 
-  async updateUser (userId: string, data: UpdateUserDTO) {
-    return this.userRepository.updateById(userId, data);
+  async updateUser (id: string, data: UpdateUserDTO) {
+    return this.userRepository.updateById(id, data);
   }
 
   async getContacts (userId: string) {
-    return this.contactRepository.getAllContacts(userId);
+    return this.contactRepository.findMany({ entityId: userId });
   }
 
   async createContact (userId: string, data: CreateContactDTO) {
-    return this.contactRepository.createContact({
+    return this.contactRepository.create({
       entityId: userId,
       entityType: EntityType.STUDENT,
       ...data,
     });
   }
 
-  async updateContact (userId: string, contactId: string, data: UpdateContactDTO) {
-    await this.contactRepository.updateContact(userId, contactId, data);
-    return this.contactRepository.getContact(userId, contactId);
+  async updateContact (id: string, data: UpdateContactDTO) {
+    await this.contactRepository.updateById(id, data);
+    return this.contactRepository.findOne({ id });
   }
 
-  async deleteContact (userId: string, contactId: string) {
-    await this.contactRepository.deleteContact(userId, contactId);
+  async deleteContact (id: string) {
+    await this.contactRepository.deleteById(id);
   }
 
   async addGroupRole (userId: string, isCaptain: boolean) {
     const roleName = isCaptain ? RoleName.CAPTAIN : RoleName.STUDENT;
-    const { group } = await this.studentRepository.findById(userId);
+    const { group } = await this.studentRepository.findOne({ userId });
     await this.groupService.addGroupRole(group.id, userId, roleName);
   }
 
   async getUser (userId: string) {
-    const student = await this.studentRepository.findById(userId);
-    if (student) return this.studentMapper.getOrdinaryStudent(student, !!student.group);
+    const student = await this.studentRepository.findOne({ userId });
+    if (student) {
+      return this.mapper.map(
+        student, DbStudent, OrdinaryStudentResponse,
+        { extraArgs: () => ({ hasGroup: !!student.group }),
+        });
+    }
   }
 
   async getSimplifiedUser (userId: string) {
-    return this.userRepository.findById(userId);
+    return this.userRepository.findOne({ id: userId });
   }
 
   async getUserByTelegramId (telegramId: bigint) {
-    return this.studentRepository.find({
+    return this.studentRepository.findOne({
       user: {
         telegramId,
       },
@@ -349,7 +355,7 @@ export class UserService {
       throw new InvalidTelegramCredentialsException();
     }
 
-    const userWithTelegramId = await this.userRepository.find({ telegramId: telegram.id });
+    const userWithTelegramId = await this.userRepository.findOne({ telegramId: telegram.id });
 
     if (userWithTelegramId) {
       throw new DuplicateTelegramIdException();
@@ -359,8 +365,8 @@ export class UserService {
   }
 
   async verifyStudent (userId: string, isCaptain: boolean, state: State) {
-    const user = await this.userRepository.findById(userId);
-    if (user.student.state !== State.PENDING) return this.studentRepository.findById(userId);
+    const user = await this.userRepository.findOne({ id: userId });
+    if (user.student.state !== State.PENDING) return this.studentRepository.findOne({ userId });
 
     if (state === State.APPROVED) {
       if (isCaptain) {
@@ -378,7 +384,7 @@ export class UserService {
   }
 
   async putSelective (studentId: string) {
-    const { firstName, lastName, group: { code } } = await this.studentRepository.findById(studentId);
+    const { firstName, lastName, group: { code } } = await this.studentRepository.findOne({ userId: studentId });
     const name = `${lastName} ${firstName}`;
     const years = await this.dateService.getYears();
     const missingDisciplines = [];
@@ -388,7 +394,7 @@ export class UserService {
       for (const parsedRow of selectiveFile.split('\n')) {
         const [, , subjectName, , semester, , , , , studentName] = parsedRow.split(',');
         if (!studentName?.startsWith(name)) continue;
-        const discipline = await this.disciplineRepository.find({
+        const discipline = await this.disciplineRepository.findOne({
           group: {
             code,
           },
@@ -425,7 +431,7 @@ export class UserService {
   }
 
   async updateAvatar (file: Express.Multer.File, userId: string) {
-    const { avatar } = await this.userRepository.findById(userId);
+    const { avatar } = await this.userRepository.findOne({ id: userId });
 
     if (avatar.includes('storage.googleapis.com')) {
       const oldPath = this.fileService.getPathFromLink(avatar);
@@ -440,7 +446,7 @@ export class UserService {
   }
 
   async deleteAvatar (userId: string) {
-    const { avatar } = await this.userRepository.findById(userId);
+    const { avatar } = await this.userRepository.findOne({ id: userId });
 
     if (avatar.includes('storage.googleapis.com')) {
       const oldPath = this.fileService.getPathFromLink(avatar);
@@ -455,7 +461,7 @@ export class UserService {
   private async deleteAvatarIfNotUsed (avatar: string, oldPath: string) {
     const exist = await this.fileService.checkFileExist(oldPath);
     if (exist) {
-      const users = await this.userRepository.findMany({ where: { avatar } });
+      const users = await this.userRepository.findMany({  avatar });
       if (users.length === 1) {
         await this.fileService.deleteFile(oldPath);
       }
@@ -479,15 +485,13 @@ export class UserService {
 
     const selective = await this.getSelectiveDisciplines(user.id);
 
-    const disciplines = (await this.disciplineRepository.findMany({
-      where: {
-        isSelective: true,
-        groupId: group.id,
-        id: {
-          notIn: selective.map((s) => s.id),
-        },
+    const disciplines = await this.disciplineRepository.findMany({
+      isSelective: true,
+      groupId: group.id,
+      id: {
+        notIn: selective.map((s) => s.id),
       },
-    }));
+    });
 
     const semesters = this.getUniqueSemesters(disciplines);
     const result: RemainingSelectivesResponse[] = [];
@@ -532,7 +536,7 @@ export class UserService {
 
   private async checkDisciplinesBelongToGroup (disciplineIds: string[], groupId: string) {
     for (const disciplineId of disciplineIds) {
-      const discipline = await this.disciplineRepository.findById(disciplineId);
+      const discipline = await this.disciplineRepository.findOne({ id: disciplineId });
       if (discipline.groupId !== groupId) {
         throw new NotBelongException('discipline', 'group');
       }
@@ -541,11 +545,9 @@ export class UserService {
 
   async getSelectiveDisciplines (userId: string) {
     return this.disciplineRepository.findMany({
-      where: {
-        selectiveDisciplines: {
-          some: {
-            studentId: userId,
-          },
+      selectiveDisciplines: {
+        some: {
+          studentId: userId,
         },
       },
     });
@@ -561,7 +563,7 @@ export class UserService {
       const selectedAmount = selectedDisciplines
         .find((p) => p.year === year && p.semester === semester)
         ?.disciplines.length ?? 0;
-      const { selectiveAmounts } = await this.groupRepository.find({
+      const { selectiveAmounts } = await this.groupRepository.findOne({
         selectiveAmounts: {
           some: {
             groupId: groupId,
@@ -618,13 +620,11 @@ export class UserService {
 
   async selectDisciplines (userId: string, body: SelectiveDisciplinesDTO) {
     const disciplines = await this.disciplineRepository.findMany({
-      where: {
-        id: {
-          in: body.disciplines,
-        },
+      id: {
+        in: body.disciplines,
       },
     });
-    const { id: groupId } = await this.groupRepository.find({
+    const { id: groupId } = await this.groupRepository.findOne({
       students: {
         some: {
           userId: userId,
@@ -643,7 +643,7 @@ export class UserService {
   }
 
   async deselectDisciplines (userId: string, body: SelectiveDisciplinesDTO) {
-    const { id: groupId } = await this.groupRepository.find({
+    const { id: groupId } = await this.groupRepository.findOne({
       students: {
         some: {
           userId: userId,
@@ -661,7 +661,7 @@ export class UserService {
     const search = DatabaseUtils.getSearch(query, 'username', 'email');
     const sort = DatabaseUtils.getSort(query, 'username');
 
-    const data: Prisma.UserFindManyArgs = {
+    const data: PaginateArgs<'user'> = {
       where: {
         ...search,
         state: query.state?.length !== 0 ? {
@@ -670,6 +670,6 @@ export class UserService {
       },
       ...sort,
     };
-    return await DatabaseUtils.paginate<DbUser>(this.userRepository, query, data);
+    return await DatabaseUtils.paginate<'user', DbUser>(this.userRepository, query, data);
   }
 }

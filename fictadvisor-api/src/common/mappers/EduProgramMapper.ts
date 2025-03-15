@@ -1,19 +1,19 @@
-import { EduProgramResponse, EduProgramsResponse } from '@fictadvisor/utils/responses';
+import { EduProgramResponse } from '@fictadvisor/utils/responses';
 import { DbEducationalProgram } from '../../database/v2/entities/DbEducationalProgram';
+import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
+import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 
-export class EduProgramMapper {
-  getAll (programs: DbEducationalProgram[]): EduProgramsResponse {
-    return {
-      programs: programs.map((program) => this.get(program)),
-    };
+export class EduProgramMapper extends AutomapperProfile {
+  constructor (@InjectMapper() mapper: Mapper) {
+    super(mapper);
   }
 
-  get (program: DbEducationalProgram): EduProgramResponse {
-    return {
-      id: program.id,
-      name: program.name,
-      abbreviation: program.abbreviation,
-      groupsAmount: program.groups?.length,
+  get profile () {
+    return (mapper: Mapper) => {
+      createMap(mapper, DbEducationalProgram, EduProgramResponse,
+        forMember((response) => response.groupsAmount,
+          mapFrom((dto) => dto.groups?.length))
+      );
     };
   }
 }

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client/fictadvisor';
 import { PrismaService } from '../PrismaService';
 import { DbTelegramGroup } from '../entities/DbTelegramGroup';
+import { Include, Sort, Where } from '../prisma.repository';
 
 @Injectable()
 export class TelegramGroupRepository {
@@ -68,5 +69,27 @@ export class TelegramGroupRepository {
       },
       include: this.include,
     }) as any as DbTelegramGroup[];
+  }
+
+  findMany (where: Where<'telegramGroup'>,
+    include?: Include<'telegramGroup'>,
+    page?: { take: number; skip: number },
+    sort?: Sort<'telegramGroup'>): Promise<DbTelegramGroup[]> {
+    const methodInclude = {
+      ...this.include,
+      ...include,
+    };
+
+    return this.prisma.telegramGroup.findMany({
+      where,
+      orderBy: sort,
+      take: page?.take,
+      skip: page?.skip,
+      include: Object.keys(methodInclude).length ? methodInclude : undefined,
+    });
+  }
+
+  count (where: Where<'telegramGroup'>): Promise<number> {
+    return this.prisma.questionAnswer.count({ where });
   }
 }

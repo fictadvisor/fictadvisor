@@ -26,7 +26,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "integration:full:fictadvisor": "docker compose up -d && yarn migrate:test:fictadvisor && yarn test:seed:fictadvisor && yarn test:integration:fictadvisor && docker compose down",
+    "integration:full:fictadvisor": "sudo docker compose up -d && yarn migrate:test:fictadvisor && yarn test:seed:fictadvisor && yarn test:integration:fictadvisor --watchAll && docker compose down",
     "integration:full:cohorta": "docker compose up -d && yarn migrate:test:cohorta && yarn test:seed:cohorta && yarn test:integration:cohorta && docker compose down",
     "generate:fictadvisor": "npx prisma generate --schema ./prisma/fictadvisor/schema.prisma",
     "generate:cohorta": "npx prisma generate --schema ./prisma/cohorta/schema.prisma",
@@ -39,6 +39,9 @@
     "migrate:test:cohorta": "dotenv -e .testing.env -- npx prisma migrate deploy --schema ./prisma/cohorta/schema.prisma"
   },
   "dependencies": {
+    "@automapper/classes": "^8.8.1",
+    "@automapper/core": "^8.8.1",
+    "@automapper/nestjs": "^8.8.1",
     "@fictadvisor/utils": "*",
     "@nestjs-modules/mailer": "^1.8.1",
     "@nestjs/common": "^9.2.1",

@@ -7,6 +7,8 @@ import { EmailModule } from './email/EmailModule';
 import { PrismaModule } from '../database/PrismaModule';
 import * as process from 'process';
 import { ScheduleModule } from '@nestjs/schedule';
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
 
 @Module({
   imports: [
@@ -14,6 +16,9 @@ import { ScheduleModule } from '@nestjs/schedule';
       isGlobal: true,
       envFilePath: [`.${process.env.NODE_ENV}.env`, '.env'],
       load: [Configuration],
+    }),
+    AutomapperModule.forRoot({
+      strategyInitializer: classes(),
     }),
     ScheduleModule.forRoot(),
     ApiModule,

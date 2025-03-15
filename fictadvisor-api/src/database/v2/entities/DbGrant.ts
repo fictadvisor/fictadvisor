@@ -1,5 +1,25 @@
-import { Grant, Role } from '@prisma/client/fictadvisor';
+import { DbRole } from './DbRole';
+import { AutoMap } from '@automapper/classes';
 
-export type DbGrant = Grant & {
-  role: Role
+export class DbGrant {
+  @AutoMap()
+    id: string;
+
+  @AutoMap(() => DbRole)
+    role?: DbRole;
+
+  @AutoMap()
+    roleId: string;
+
+  @AutoMap()
+    permission: string;
+
+  @AutoMap()
+    set: boolean;
+
+  @AutoMap()
+    weight: number;
+
+  createdAt: Date | null;
+  updatedAt: Date | null;
 }

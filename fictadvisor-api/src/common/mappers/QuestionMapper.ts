@@ -1,44 +1,62 @@
 import { Injectable } from '@nestjs/common';
-import { DbQuestionWithRoles } from '../../database/v2/entities/DbQuestionWithRoles';
-import { QuestionRole } from '@prisma/client/fictadvisor';
-import { DbDisciplineTeacherWithAnswers } from '../../database/v2/entities/DbDisciplineTeacherWithAnswers';
-import { DbQuestionWithAnswers } from '../../database/v2/entities/DbQuestionWithAnswers';
 import { QuestionCommentData } from '../../modules/poll/v2/types/QuestionCommentData';
 import { DbQuestionAnswer } from '../../database/v2/entities/DbQuestionAnswer';
 import {
   CommentResponse,
   PaginatedQuestionCommentsResponse,
   QuestionWithCategoryResponse,
+  ShortTeacherResponse,
 } from '@fictadvisor/utils/responses';
 import { DbQuestion } from '../../database/v2/entities/DbQuestion';
-import { QuestionDisplay, QuestionType } from '@fictadvisor/utils';
+import { QuestionDisplay, QuestionType, QuestionWithCategoriesAndRolesResponse } from '@fictadvisor/utils';
+import { DbDisciplineTeacher } from '../../database/v2/entities/DbDisciplineTeacher';
+import { DbQuestionWithRoles } from '../../database/v2/entities/DbQuestionWithRoles';
+import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
+import { createMap, Mapper } from '@automapper/core';
+import { DbTeacher } from '../../database/v2/entities/DbTeacher';
+import { forMembers } from '../helpers/mapper';
 
 @Injectable()
-export class QuestionMapper {
-  getQuestionWithCategory (question: DbQuestion): QuestionWithCategoryResponse {
-    return {
-      id: question.id,
-      order: question.order,
-      category: question.category,
-      name: question.name,
-      description: question.description,
-      text: question.text,
-      isRequired: question.isRequired,
-      criteria: question.criteria,
-      type: question.type as QuestionType,
-      display: question.display as QuestionDisplay,
+export class QuestionMapper extends AutomapperProfile {
+  constructor (@InjectMapper() mapper: Mapper) {
+    super(mapper);
+  }
+
+  get profile () {
+    return (mapper: Mapper) => {
+      createMap(mapper, DbQuestion, QuestionWithCategoryResponse);
+      createMap(mapper, DbQuestionWithRoles, QuestionWithCategoriesAndRolesResponse);
+      createMap(mapper, DbTeacher, ShortTeacherResponse);
+
+      createMap(mapper, DbQuestionAnswer, CommentResponse,
+        ...forMembers<DbQuestionAnswer, CommentResponse>({
+          semester: (dto) => dto.disciplineTeacher.discipline.semester,
+          year: (dto) => dto.disciplineTeacher.discipline.year,
+          comment: (dto) => dto.value,
+          teacher: (dto) => this.mapper.map(
+            dto.disciplineTeacher.teacher, DbTeacher, ShortTeacherResponse),
+        })
+      );
     };
   }
 
-  getQuestions (questions: DbQuestion[]): QuestionWithCategoryResponse[] {
-    const result = [];
-    for (const question of questions) {
-      result.push(this.getQuestionWithCategory(question));
-    }
-    return result;
+  getQuestionWithCategory (question: DbQuestion): QuestionWithCategoryResponse {
+    return this.mapper.map(question, DbQuestion, QuestionWithCategoryResponse);
   }
 
-  sortByCategories (questions: DbQuestionWithRoles[]) {
+  getQuestions (questions: DbQuestion[]): QuestionWithCategoryResponse[] {
+    return this.mapper.mapArray(questions, DbQuestion, QuestionWithCategoryResponse);
+  }
+
+  getComment (comment: DbQuestionAnswer): CommentResponse {
+    return this.mapper.map(comment, DbQuestionAnswer, CommentResponse);
+  }
+
+  getComments (comments: DbQuestionAnswer[]): CommentResponse[] {
+    return this.mapper.mapArray(comments, DbQuestionAnswer, CommentResponse);
+  }
+
+  sortByCategories (questions: DbQuestion[]) {
     const results = [];
     for (const q of questions) {
       const question = this.getQuestionWithCategory(q);
@@ -59,28 +77,8 @@ export class QuestionMapper {
     return results;
   }
 
-  private getRoles (roles: QuestionRole[]) {
-    return roles.map((r) => ({
-      role: r.role,
-      isShown: r.isShown,
-      isRequired: r.isRequired,
-    }));
-  }
-
   getQuestionWithRoles (question: DbQuestionWithRoles) {
-    return {
-      id: question.id,
-      category: question.category,
-      name: question.name,
-      order: question.order,
-      description: question.description,
-      text: question.text,
-      isRequired: question.isRequired,
-      criteria: question.criteria,
-      type: question.type,
-      display: question.display,
-      questionRoles: this.getRoles(question.questionRoles),
-    };
+    return this.mapper.map(question, DbQuestionWithRoles, QuestionWithCategoryResponse);
   }
 
   getQuestionComments (questionComments: QuestionCommentData[]): PaginatedQuestionCommentsResponse {
@@ -115,7 +113,7 @@ export class QuestionMapper {
     };
   }
 
-  getSortedQuestionsWithAnswers (disciplineTeachers: DbDisciplineTeacherWithAnswers[]) {
+  getSortedQuestionsWithAnswers (disciplineTeachers: DbDisciplineTeacher[]) {
     const sortedQuestions = [];
     for (const disciplineTeacher of disciplineTeachers) {
       for (const questionWithAnswer of disciplineTeacher.questionAnswers) {
@@ -138,7 +136,7 @@ export class QuestionMapper {
     return sortedQuestions;
   }
 
-  getMarks (questionWithAnswers: DbQuestionWithAnswers[]) {
+  getMarks (questionWithAnswers: DbQuestion[]) {
     return questionWithAnswers.map((q) => ({
       name: q.name,
       amount: q.questionAnswers.length,
@@ -152,7 +150,7 @@ export class QuestionMapper {
     return parseFloat(((marksSum / divider) * 100).toFixed(2));
   }
 
-  getRightMarkFormat ({ display, type, questionAnswers: answers }: DbQuestionWithAnswers) {
+  getRightMarkFormat ({ display, type, questionAnswers: answers }: DbQuestion) {
     if (display === QuestionDisplay.RADAR || display === QuestionDisplay.CIRCLE) {
       return this.parseMark(type as QuestionType, answers.reduce((acc, answer) => acc + (+answer.value), 0), answers.length);
     } else if (display === QuestionDisplay.AMOUNT) {
@@ -162,31 +160,5 @@ export class QuestionMapper {
       }
       return table;
     }
-  }
-
-  getComment (comment: DbQuestionAnswer): CommentResponse {
-    const { disciplineTeacher: { teacher, discipline } } = comment;
-    return {
-      disciplineTeacherId: comment.disciplineTeacherId,
-      questionId: comment.questionId,
-      userId: comment.userId,
-      comment: comment.value,
-      semester: discipline.semester,
-      year: discipline.year,
-      teacher: {
-        id: teacher.id,
-        lastName: teacher.lastName,
-        firstName: teacher.firstName,
-        middleName: teacher.middleName,
-      },
-      subject: {
-        id: discipline.subjectId,
-        name: discipline.subject.name,
-      },
-    };
-  }
-
-  getComments (comments: DbQuestionAnswer[]): CommentResponse[] {
-    return comments.map(this.getComment);
   }
 }

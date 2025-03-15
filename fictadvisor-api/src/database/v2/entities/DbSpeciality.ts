@@ -1,12 +1,23 @@
-import { EducationalPrograms } from '@prisma/client/fictadvisor';
 import { AbbreviationOfSpeciality } from '@fictadvisor/utils/enums';
+import { DbEducationalProgram } from './DbEducationalProgram';
+import { AutoMap } from '@automapper/classes';
 
 export class DbSpeciality {
-  id: string;
-  code: string;
-  abbreviation: AbbreviationOfSpeciality;
-  name: string | null;
-  educationalPrograms?: EducationalPrograms[];
-  createdAt?: Date;
-  updatedAt?: Date;
+  @AutoMap()
+    id: string;
+
+  @AutoMap()
+    code: string;
+
+  @AutoMap(() => String)
+    abbreviation: AbbreviationOfSpeciality;
+
+  @AutoMap()
+    name: string | null;
+
+  @AutoMap(() => [DbEducationalProgram])
+    educationalPrograms?: DbEducationalProgram[];
+
+  createdAt: Date | null;
+  updatedAt: Date | null;
 }

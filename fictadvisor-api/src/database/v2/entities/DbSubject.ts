@@ -1,7 +1,16 @@
-import { Discipline } from '@prisma/client/fictadvisor';
+import { DbDiscipline } from './DbDiscipline';
+import { AutoMap } from '@automapper/classes';
 
 export class DbSubject {
-  id: string;
-  name: string;
-  disciplines: Discipline[];
+  @AutoMap()
+    id: string;
+
+  @AutoMap()
+    name: string;
+
+  @AutoMap(() => [DbDiscipline])
+    disciplines?: DbDiscipline[];
+
+  createdAt: Date | null;
+  updatedAt: Date | null;
 }
