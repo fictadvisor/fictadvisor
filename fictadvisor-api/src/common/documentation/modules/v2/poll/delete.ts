@@ -1,6 +1,6 @@
-import { ApiDocumentationParams } from '../../../types/ApiDocumentationParams';
+import { ApiDocumentationParams } from '../../../types/api-documentation-params.type';
 import { QuestionWithCategoryResponse } from '@fictadvisor/utils';
-import { DefaultForbiddenResponse, DefaultUnauthorizedResponse } from '../../../defaultResponses';
+import { DefaultForbiddenResponse, DefaultUnauthorizedResponse } from '../../../default-responses';
 
 export const PollDocumentationDelete: ApiDocumentationParams = {
   isAuth: true,

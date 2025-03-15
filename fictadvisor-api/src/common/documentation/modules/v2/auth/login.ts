@@ -1,6 +1,6 @@
-import { ApiDocumentationParams } from '../../../types/ApiDocumentationParams';
+import { ApiDocumentationParams } from '../../../types/api-documentation-params.type';
 import { AuthLoginResponse, LoginDTO } from '@fictadvisor/utils';
-import { DefaultUnauthorizedResponse } from '../../../defaultResponses';
+import { DefaultUnauthorizedResponse } from '../../../default-responses';
 
 export const AuthDocumentationLogin: ApiDocumentationParams = {
   isAuth: true,

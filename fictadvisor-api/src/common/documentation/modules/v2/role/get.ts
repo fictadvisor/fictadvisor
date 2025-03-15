@@ -1,4 +1,4 @@
-import { ApiDocumentationParams } from '../../../types/ApiDocumentationParams';
+import { ApiDocumentationParams } from '../../../types/api-documentation-params.type';
 import { RoleResponse } from '@fictadvisor/utils/responses';
 
 export const RoleDocumentationGet: ApiDocumentationParams = {
