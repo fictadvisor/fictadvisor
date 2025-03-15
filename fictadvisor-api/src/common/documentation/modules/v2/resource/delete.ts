@@ -1,8 +1,8 @@
-import { ApiDocumentationParams } from '../../../types/ApiDocumentationParams';
+import { ApiDocumentationParams } from '../../../types/api-documentation-params.type';
 import {
   DefaultForbiddenResponse,
   DefaultUnauthorizedResponse,
-} from '../../../defaultResponses';
+} from '../../../default-responses';
 
 export const ResourceDocumentationDelete: ApiDocumentationParams = {
   isAuth: true,

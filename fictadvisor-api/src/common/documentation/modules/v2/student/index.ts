@@ -1,11 +1,11 @@
-import { StudentDocumentationCreateStudent } from './createStudent';
-import { StudentDocumentationDeleteStudent } from './deleteStudent';
-import { StudentDocumentationGetAll } from './getAll';
-import { StudentDocumentationGetRemainingSelectives } from './getRemainingSelectives';
-import { StudentDocumentationGetSelcetiveDisciplines } from './getSelectiveDisciplines';
-import { StudentDocumentationGetStudent } from './getStudent';
-import { StudentDocumentationUpdateStudent } from './updateStudent';
-import { StudentDocumentationUpdateStudentSelectives } from './updateStudentSelectives';
+import { StudentDocumentationCreateStudent } from './create-student';
+import { StudentDocumentationDeleteStudent } from './delete-student';
+import { StudentDocumentationGetAll } from './get-all';
+import { StudentDocumentationGetRemainingSelectives } from './get-remaining-selectives';
+import { StudentDocumentationGetSelcetiveDisciplines } from './get-selective-disciplines';
+import { StudentDocumentationGetStudent } from './get-student';
+import { StudentDocumentationUpdateStudent } from './update-student';
+import { StudentDocumentationUpdateStudentSelectives } from './update-student-selectives';
 
 export const StudentDocumentation = {
   CREATE_STUDENT: StudentDocumentationCreateStudent,

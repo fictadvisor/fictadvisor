@@ -5,12 +5,12 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { join, resolve } from 'path';
 import * as cookieParser from 'cookie-parser';
-import { AppModule } from './modules/AppModule';
-import { TelegramAPI } from './modules/telegram-api/TelegramAPI';
-import { HttpExceptionFilter } from './common/filters/HttpExceptionFilter';
-import { validationExceptionFactory } from './common/helpers/validationExceptionFactory';
-import { applyStaticMiddleware } from './common/helpers/applyStaticMiddleware';
-import { TestType, TestCoverage } from './common/helpers/TestCoverage';
+import { AppModule } from './modules/app.module';
+import { TelegramAPI } from './modules/telegram-api/telegram-api';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { validationExceptionFactory } from './common/helpers/validation-exception.factory';
+import { applyStaticMiddleware } from './common/helpers/apply-static-middleware';
+import { TestType, TestCoverage } from './common/helpers/test-coverage';
 
 (BigInt.prototype as any).toJSON = function () {
   const int = Number.parseInt(this.toString());

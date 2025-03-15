@@ -1,6 +1,6 @@
-import { ApiDocumentationParams } from '../../../types/ApiDocumentationParams';
+import { ApiDocumentationParams } from '../../../types/api-documentation-params.type';
 import { TeacherWithRolesAndCathedrasResponse } from '@fictadvisor/utils/responses';
-import { DefaultForbiddenResponse } from '../../../defaultResponses';
+import { DefaultForbiddenResponse } from '../../../default-responses';
 
 export const TeacherDocumentationUpdate: ApiDocumentationParams = {
   isAuth: true,
