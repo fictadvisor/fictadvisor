@@ -2,7 +2,7 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsString, IsUUID } from 'class-validator';
 import { QueryAllDTO } from './QueryAllDTO';
 import { validationOptionsMsg } from '../ValidationUtil';
-import { SortQASParam } from "../enums";
+import { SortQASParam } from '../enums';
 
 export class QueryAllSubjectDTO extends QueryAllDTO {
   @ApiPropertyOptional({

@@ -1,8 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DbQuestionWithRoles } from '../../database/v2/entities/DbQuestionWithRoles';
 import { QuestionRole } from '@prisma/client/fictadvisor';
-import { DbDisciplineTeacherWithAnswers } from '../../database/v2/entities/DbDisciplineTeacherWithAnswers';
-import { DbQuestionWithAnswers } from '../../database/v2/entities/DbQuestionWithAnswers';
 import { QuestionCommentData } from '../../modules/poll/v2/types/QuestionCommentData';
 import { DbQuestionAnswer } from '../../database/v2/entities/DbQuestionAnswer';
 import {
@@ -12,6 +9,8 @@ import {
 } from '@fictadvisor/utils/responses';
 import { DbQuestion } from '../../database/v2/entities/DbQuestion';
 import { QuestionDisplay, QuestionType } from '@fictadvisor/utils';
+import { DbDisciplineTeacher } from '../../database/v2/entities/DbDisciplineTeacher';
+import { DbQuestionWithRoles } from '../../database/v2/entities/DbQuestionWithRoles';
 
 @Injectable()
 export class QuestionMapper {
@@ -38,7 +37,7 @@ export class QuestionMapper {
     return result;
   }
 
-  sortByCategories (questions: DbQuestionWithRoles[]) {
+  sortByCategories (questions: DbQuestion[]) {
     const results = [];
     for (const q of questions) {
       const question = this.getQuestionWithCategory(q);
@@ -115,7 +114,7 @@ export class QuestionMapper {
     };
   }
 
-  getSortedQuestionsWithAnswers (disciplineTeachers: DbDisciplineTeacherWithAnswers[]) {
+  getSortedQuestionsWithAnswers (disciplineTeachers: DbDisciplineTeacher[]) {
     const sortedQuestions = [];
     for (const disciplineTeacher of disciplineTeachers) {
       for (const questionWithAnswer of disciplineTeacher.questionAnswers) {
@@ -138,7 +137,7 @@ export class QuestionMapper {
     return sortedQuestions;
   }
 
-  getMarks (questionWithAnswers: DbQuestionWithAnswers[]) {
+  getMarks (questionWithAnswers: DbQuestion[]) {
     return questionWithAnswers.map((q) => ({
       name: q.name,
       amount: q.questionAnswers.length,
@@ -152,7 +151,7 @@ export class QuestionMapper {
     return parseFloat(((marksSum / divider) * 100).toFixed(2));
   }
 
-  getRightMarkFormat ({ display, type, questionAnswers: answers }: DbQuestionWithAnswers) {
+  getRightMarkFormat ({ display, type, questionAnswers: answers }: DbQuestion) {
     if (display === QuestionDisplay.RADAR || display === QuestionDisplay.CIRCLE) {
       return this.parseMark(type as QuestionType, answers.reduce((acc, answer) => acc + (+answer.value), 0), answers.length);
     } else if (display === QuestionDisplay.AMOUNT) {

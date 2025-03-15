@@ -1,25 +1,22 @@
-import { EventInfo, Group } from '@prisma/client/fictadvisor';
 import { Period } from '@fictadvisor/utils/enums';
-import { DbDisciplineType } from './DbDisciplineType';
+import { DbLesson } from './DbLesson';
+import { DbGroup } from './DbGroup';
+import { DbEventInfo } from './DbEventInfo';
 
 export class DbEvent {
   id: string;
   name: string;
   startTime: Date;
   endTime: Date;
-  createdAt: Date;
-  updatedAt: Date;
+  isCustom: boolean;
   period: Period;
-  url: string;
-  group: Group;
+  url: string | null;
+  group?: DbGroup;
   groupId: string;
-  eventInfo: EventInfo[];
+  eventInfo?: DbEventInfo[];
   eventsAmount: number;
   teacherForceChanges: boolean;
-  isCustom: boolean;
-  lessons: {
-    eventId: string;
-    disciplineTypeId: string;
-    disciplineType: DbDisciplineType;
-  }[];
+  createdAt: Date | null;
+  updatedAt: Date | null;
+  lessons?: DbLesson[];
 }

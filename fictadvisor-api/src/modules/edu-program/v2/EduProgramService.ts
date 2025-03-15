@@ -8,6 +8,6 @@ export class EduProgramService {
   ) {}
 
   getAll () {
-    return this.eduProgramRepository.findMany();
+    return this.eduProgramRepository.findMany({});
   }
 }
