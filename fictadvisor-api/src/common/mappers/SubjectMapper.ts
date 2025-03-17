@@ -1,19 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { DbSubject } from '../../database/v2/entities/DbSubject';
 import { SubjectResponse } from '@fictadvisor/utils';
-import { SubjectsResponse } from '@fictadvisor/utils/responses';
+import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
+import { createMap, Mapper, MappingProfile } from '@automapper/core';
 
 @Injectable()
-export class SubjectMapper {
-  getSubject (subject: DbSubject): SubjectResponse {
-    return {
-      id: subject.id,
-      name: subject.name,
-    };
+export class SubjectMapper extends AutomapperProfile {
+  constructor (@InjectMapper() mapper: Mapper) {
+    super(mapper);
   }
 
-  getSubjects (subjects: DbSubject[]): SubjectsResponse {
-    const mappedSubjects = subjects.map((subject) => this.getSubject(subject));
-    return { subjects: mappedSubjects };
+  get profile (): MappingProfile {
+    return (mapper: Mapper) => {
+      createMap(mapper, DbSubject, SubjectResponse);
+    };
   }
 }

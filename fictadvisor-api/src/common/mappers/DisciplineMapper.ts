@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DbDiscipline } from '../../database/v2/entities/DbDiscipline';
-import { Discipline, SelectiveAmount } from '@prisma/client/fictadvisor';
+import { SelectiveAmount } from '@prisma/client/fictadvisor';
 import {
   ExtendedDisciplineTeachersResponse,
   DisciplineAdminResponse,
@@ -10,56 +10,33 @@ import {
   DisciplineTeacherResponse,
   SelectivesBySemestersResponse,
   ExtendedDisciplineResponse,
-  DisciplineTypeResponse,
   SortedDisciplinesByPeriodResponse,
 } from '@fictadvisor/utils/responses';
 import { AcademicStatus, ScientificDegree, Position } from '@fictadvisor/utils/enums';
 import { DbDisciplineTeacher } from '../../database/v2/entities/DbDisciplineTeacher';
-import { GroupMapper } from './GroupMapper';
-import { SubjectMapper } from './SubjectMapper';
-import { DbDisciplineType } from '../../database/v2/entities/DbDisciplineType';
 import { DisciplineTypeEnum, ShortDisciplineResponse } from '@fictadvisor/utils';
+import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
+import { createMap, Mapper } from '@automapper/core';
 
 @Injectable()
-export class DisciplineMapper {
-  constructor (
-        private groupMapper: GroupMapper,
-        private subjectMapper: SubjectMapper,
-  ) {}
+export class DisciplineMapper extends AutomapperProfile {
+  constructor (@InjectMapper() mapper: Mapper) {
+    super(mapper);
+  }
 
-  getDiscipline (discipline: Discipline): DisciplineResponse {
-    return {
-      id: discipline.id,
-      year: discipline.year,
-      isSelective: discipline.isSelective,
-      semester: discipline.semester,
-      subjectId: discipline.subjectId,
-      groupId: discipline.groupId,
-      description: discipline.description,
+  get profile () {
+    return (mapper: Mapper) => {
+      createMap(mapper, DbDiscipline, DisciplineResponse);
+      createMap(mapper, DbDiscipline, ExtendedDisciplineResponse);
     };
+  }
+
+  getDiscipline (discipline: DbDiscipline): DisciplineResponse {
+    return this.mapper.map(discipline, DbDiscipline, DisciplineResponse);
   }
 
   getExtendedDiscipline (discipline: DbDiscipline): ExtendedDisciplineResponse {
-    return {
-      id: discipline.id,
-      year: discipline.year,
-      isSelective: discipline.isSelective,
-      semester: discipline.semester,
-      subjectId: discipline.subjectId,
-      groupId: discipline.groupId,
-      description: discipline.description,
-      group: this.groupMapper.getGroup(discipline.group),
-      subject: this.subjectMapper.getSubject(discipline.subject),
-      disciplineTypes: discipline.disciplineTypes.map(this.getDisciplineType),
-    };
-  }
-
-  getDisciplineType (disciplineType: DbDisciplineType): DisciplineTypeResponse {
-    return {
-      id: disciplineType.id,
-      disciplineId: disciplineType.disciplineId,
-      name: disciplineType.name as DisciplineTypeEnum,
-    };
+    return this.mapper.map(discipline, DbDiscipline, ExtendedDisciplineResponse);
   }
 
   getExtendedDisciplinesTeachers (disciplines: DbDiscipline[]): ExtendedDisciplineTeachersResponse[] {

@@ -13,10 +13,12 @@ import {
 import { PERMISSION } from '@fictadvisor/utils/security';
 import { ApiEndpoint } from '../../../common/decorators/ApiEndpoint';
 import { SubjectByIdPipe } from '../../../common/pipes/SubjectByIdPipe';
-import { SubjectMapper } from '../../../common/mappers/SubjectMapper';
 import { SubjectService } from './SubjectService';
 import { SubjectDocumentation } from '../../../common/documentation/modules/v2/subject';
 import { AllSubjectsPipe } from '../../../common/pipes/AllSubjectsPipe';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
+import { DbSubject } from '../../../database/v2/entities/DbSubject';
 
 @ApiTags('Subjects')
 @Controller({
@@ -25,8 +27,8 @@ import { AllSubjectsPipe } from '../../../common/pipes/AllSubjectsPipe';
 })
 export class SubjectController {
   constructor (
-    private subjectMapper: SubjectMapper,
     private subjectService: SubjectService,
+    @InjectMapper() private mapper: Mapper,
   ) {}
 
   @ApiEndpoint({
@@ -52,8 +54,8 @@ export class SubjectController {
   async get (
     @Param('subjectId', SubjectByIdPipe) subjectId: string,
   ): Promise<SubjectResponse> {
-    const dbSubject = await this.subjectService.get(subjectId);
-    return this.subjectMapper.getSubject(dbSubject);
+    const subject = await this.subjectService.get(subjectId);
+    return this.mapper.map(subject, DbSubject, SubjectResponse);
   }
 
   @ApiEndpoint({
@@ -76,8 +78,8 @@ export class SubjectController {
   async create (
     @Body() body: CreateSubjectDTO,
   ): Promise<SubjectResponse> {
-    const dbSubject = await this.subjectService.create(body);
-    return this.subjectMapper.getSubject(dbSubject);
+    const subject = await this.subjectService.create(body);
+    return this.mapper.map(subject, DbSubject, SubjectResponse);
   }
 
   @ApiEndpoint({

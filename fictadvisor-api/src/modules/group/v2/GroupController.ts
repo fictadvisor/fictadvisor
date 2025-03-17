@@ -32,15 +32,18 @@ import { GroupByIdPipe } from '../../../common/pipes/GroupByIdPipe';
 import { UserByIdPipe } from '../../../common/pipes/UserByIdPipe';
 import { CreateGroupPipe } from '../../../common/pipes/CreateGroupPipe';
 import { StudentOfGroupPipe } from '../../../common/pipes/StudentOfGroupPipe';
-import { StudentMapper } from '../../../common/mappers/StudentMapper';
 import { GroupMapper } from '../../../common/mappers/GroupMapper';
 import { DisciplineMapper } from '../../../common/mappers/DisciplineMapper';
-import { UserMapper } from '../../../common/mappers/UserMapper';
 import { GroupService } from './GroupService';
 import { UserService } from '../../user/v2/UserService';
 import { GroupDocumentation } from '../../../common/documentation/modules/v2/group';
 import { UpdateGroupPipe } from '../../../common/pipes/UpdateGroupPipe';
 import { User } from '@prisma/client/fictadvisor';
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
+import { DbUser } from '../../../database/v2/entities/DbUser';
+import { ShortUserResponse } from '@fictadvisor/utils/responses';
+import { DbStudent } from '../../../database/v2/entities/DbStudent';
 
 @ApiTags('Groups')
 @Controller({
@@ -52,9 +55,8 @@ export class GroupController {
     private groupService: GroupService,
     private userService: UserService,
     private groupMapper: GroupMapper,
-    private studentMapper: StudentMapper,
     private disciplineMapper: DisciplineMapper,
-    private userMapper: UserMapper,
+    @InjectMapper() private mapper: Mapper,
   ) {}
 
   @ApiEndpoint({
@@ -148,7 +150,7 @@ export class GroupController {
   ): Promise<GroupStudentsResponse> {
     const students = await this.groupService.getStudents(groupId, query);
     return {
-      students: this.studentMapper.getOrdinaryStudents(students),
+      students: this.mapper.mapArray(students, DbStudent, OrdinaryStudentResponse),
     };
   }
 
@@ -162,7 +164,7 @@ export class GroupController {
     @Param('groupId', GroupByIdPipe) groupId: string,
   ): Promise<UserResponse> {
     const captain = await this.groupService.getCaptain(groupId);
-    return this.userMapper.getUser(captain);
+    return this.mapper.map(captain, DbUser, UserResponse);
   }
 
   @ApiEndpoint({
@@ -208,7 +210,7 @@ export class GroupController {
     @Body() body: EmailDTO,
   ): Promise<ShortUsersResponse> {
     const users = await this.groupService.addUnregistered(groupId, body);
-    return this.userMapper.getShortUsers(users);
+    return { users: this.mapper.mapArray(users, DbUser, ShortUserResponse) };
   }
 
   @ApiEndpoint({
@@ -222,7 +224,7 @@ export class GroupController {
     @Body() body: ApproveDTO,
   ): Promise<OrdinaryStudentResponse> {
     const student = await this.groupService.verifyStudent(groupId, userId, body);
-    return this.studentMapper.getOrdinaryStudent(student);
+    return this.mapper.map(student, DbStudent, OrdinaryStudentResponse);
   }
 
   @ApiEndpoint({
@@ -263,7 +265,10 @@ export class GroupController {
   ): Promise<StudentsResponse> {
     const students = await this.groupService.getUnverifiedStudents(groupId);
     return {
-      students: this.studentMapper.getOrdinaryStudents(students, false),
+      students: this.mapper.mapArray(
+        students, DbStudent, OrdinaryStudentResponse,
+        { extraArgs: () => ({ hasGroup: false }) }
+      ),
     };
   }
 
@@ -304,7 +309,7 @@ export class GroupController {
     @GetUser('id') userId: string,
   ): Promise<OrdinaryStudentResponse> {
     const student = await this.groupService.leaveGroup(groupId, userId);
-    return this.studentMapper.getOrdinaryStudent(student);
+    return this.mapper.map(student, DbStudent, OrdinaryStudentResponse);
   }
 
   @ApiEndpoint({

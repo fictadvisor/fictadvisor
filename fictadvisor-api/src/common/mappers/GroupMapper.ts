@@ -8,14 +8,20 @@ import {
 import { RoleName } from '@prisma/client/fictadvisor';
 import { DbGroup } from '../../database/v2/entities/DbGroup';
 import { DbStudent } from '../../database/v2/entities/DbStudent';
-import { State } from '@fictadvisor/utils/enums';
+import { State, TelegramSource } from '@fictadvisor/utils/enums';
+import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
+import { createMap, Mapper } from '@automapper/core';
 
 @Injectable()
-export class GroupMapper {
-  getGroup (group: DbGroup): GroupResponse {
-    return {
-      id: group.id,
-      code: group.code,
+export class GroupMapper extends AutomapperProfile {
+  constructor (@InjectMapper() mapper: Mapper) {
+    super(mapper);
+  }
+
+  get profile () {
+    return (mapper: Mapper) => {
+      createMap(mapper, DbGroup, GroupResponse);
+      createMap(mapper, DbGroup, GroupWithTelegramGroupsResponse);
     };
   }
 
@@ -56,14 +62,14 @@ export class GroupMapper {
     return groups.map((group) => this.getMappedGroup(group, group.students?.[0]));
   }
 
-  getGroupsWithTelegramGroups (groups): GroupsWithTelegramGroupsResponse {
+  getGroupsWithTelegramGroups (groups: DbGroup[]): GroupsWithTelegramGroupsResponse {
     return {
       groups: groups.map((group): GroupWithTelegramGroupsResponse => ({
         id: group.id,
         telegramGroups: group.telegramGroups.map((telegramGroup) => ({
           telegramId: telegramGroup.telegramId,
           threadId: telegramGroup.threadId,
-          source: telegramGroup.source,
+          source: telegramGroup.source as TelegramSource,
           postInfo: telegramGroup.postInfo,
         })),
       })),
