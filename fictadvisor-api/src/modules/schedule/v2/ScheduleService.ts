@@ -66,12 +66,16 @@ export class ScheduleService {
     await this.generalParser.parse(ParserTypeEnum.CAMPUS);
   }
 
-  async getIndexOfLesson (week: number, event: DbEvent, semester?: StudyingSemester): Promise<number | null> {
+  private async getSemesterStartDate (semester?: StudyingSemester) {
     const { startDate } = semester ?
       await this.dateService.getSemester(semester) :
       await this.dateService.getCurrentSemester();
 
-    const startWeek = Math.ceil((event.startTime.getTime() - startDate.getTime()) / WEEK);
+    return startDate;
+  }
+
+  async getIndexOfLesson (week: number, event: DbEvent, semesterStartDate: Date): Promise<number | null> {
+    const startWeek = Math.ceil((event.startTime.getTime() - semesterStartDate.getTime()) / WEEK);
     if (event.period === Period.NO_PERIOD && week - startWeek !== 0) return null;
     const index = (week - startWeek) / weeksPerEvent[event.period];
     if (index < 0 || index % 1 !== 0 || index >= event.eventsAmount) return null;
@@ -84,9 +88,7 @@ export class ScheduleService {
     setWeekTime = true,
     semester?: StudyingSemester,
   ): Promise<{ events: DbEvent[], week: number, startTime: Date }> {
-    const { startDate: startOfSemester } = semester ?
-      await this.dateService.getSemester(semester) :
-      await this.dateService.getCurrentSemester();
+    const startOfSemester = await this.getSemesterStartDate(semester);
 
     const { startOfWeek, endOfWeek } = week ?
       await this.dateService.getDatesOfWeek(week, semester) :
@@ -114,13 +116,13 @@ export class ScheduleService {
 
     week = week || await this.dateService.getCurrentWeek();
     const result = await filterAsync(events, async (event) => {
-      const indexOfLesson = await this.getIndexOfLesson(week, event, semester);
+      const indexOfLesson = await this.getIndexOfLesson(week, event, startOfSemester);
       return indexOfLesson !== null;
     });
 
     if (setWeekTime) {
       for (const event of result) {
-        await this.setWeekTime(event, week);
+        await this.setWeekTime(event, week, startOfSemester);
       }
     }
 
@@ -177,10 +179,11 @@ export class ScheduleService {
 
     if (event.period === Period.NO_PERIOD) return { event, discipline };
 
-    const index = await this.getIndexOfLesson(week, event);
+    const semesterStartDate = await this.getSemesterStartDate();
+    const index = await this.getIndexOfLesson(week, event, semesterStartDate);
     if (index === null) throw new InvalidWeekException();
 
-    await this.setWeekTime(event, week);
+    await this.setWeekTime(event, week, semesterStartDate);
     return { event, discipline, index };
   }
 
@@ -192,35 +195,25 @@ export class ScheduleService {
     return { event, discipline };
   }
 
-  private async setWeekTime (event: DbEvent, week: number): Promise<{ startWeek: number }> {
+  private async setWeekTime (event: DbEvent, week: number, semesterStartDate: Date): Promise<{ startWeek: number }> {
     const {
       startTime,
       endTime,
     } = await this.addEventTimezones(event);
 
-    const { startDate } = await this.dateService.getCurrentSemester();
-    const startWeek = this.dateUtils.getCeiledDifference(startDate, startTime, WEEK);
+    const startWeek = this.dateUtils.getCeiledDifference(semesterStartDate, startTime, WEEK);
     event.startTime = DateTime.fromJSDate(startTime).setZone('Europe/Kyiv').plus({ weeks: week - startWeek }).toJSDate();
     event.endTime = DateTime.fromJSDate(endTime).setZone('Europe/Kyiv').plus({ weeks: week - startWeek }).toJSDate();
     return { startWeek };
   }
 
-  private addTimezone (startDate: Date, time: Date) {
-    const newDate = new Date(startDate.setHours(
-      time.getHours(),
-      time.getMinutes(),
-    ));
-
-    return DateTime.fromJSDate(newDate).setZone('Europe/Kyiv').set({
-      month: time.getMonth() + 1,
-      day: time.getDate(),
-    }).toJSDate();
+  private addTimezone (time: Date) {
+    return DateTime.fromJSDate(time).setZone('Europe/Kyiv').toJSDate();
   }
 
   async addEventTimezones ({ startTime, endTime, ...events }: DbEvent) {
-    const { startDate } = await this.dateService.getCurrentSemester();
-    startTime = this.addTimezone(startDate, startTime);
-    endTime = this.addTimezone(startDate, endTime);
+    startTime = this.addTimezone(startTime);
+    endTime = this.addTimezone(endTime);
 
     return { startTime, endTime, ...events };
   }
@@ -393,6 +386,7 @@ export class ScheduleService {
     query: EventFiltrationDTO,
   ): Promise<DbEvent[]> {
     const { endOfWeek } = week ? await this.dateService.getDatesOfWeek(week) : this.dateService.getDatesOfCurrentWeek();
+    const semesterStartDate = await this.getSemesterStartDate();
     const events = await this.eventRepository.findMany({
       groupId,
       startTime: {
@@ -401,7 +395,7 @@ export class ScheduleService {
     });
 
     let result = await filterAsync(events, async (event) => {
-      const indexOfLesson = await this.getIndexOfLesson(week, event);
+      const indexOfLesson = await this.getIndexOfLesson(week, event, semesterStartDate);
       return indexOfLesson !== null;
     });
 
@@ -413,7 +407,7 @@ export class ScheduleService {
 
     for (const event of result) {
       if (event.period !== Period.NO_PERIOD) {
-        await this.setWeekTime(event, week);
+        await this.setWeekTime(event, week, semesterStartDate);
       }
     }
 
@@ -582,7 +576,8 @@ export class ScheduleService {
       !(await this.teachersHaveDiscipline(teacherIds, disciplineId)) :
       event.teacherForceChanges;
 
-    const index = await this.getIndexOfLesson(week, event);
+    const semesterStartDate = await this.getSemesterStartDate()
+    const index = await this.getIndexOfLesson(week, event, semesterStartDate);
     if (index === null) throw new InvalidWeekException();
 
     if (eventInfo) await this.createOrUpdateEventInfo(eventInfo, eventId, index);
