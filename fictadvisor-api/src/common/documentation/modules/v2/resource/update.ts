@@ -1,9 +1,9 @@
-import { ApiDocumentationParams } from '../../../types/ApiDocumentationParams';
+import { ApiDocumentationParams } from '../../../types/api-documentation-params.type';
 import { ResourceResponse } from '@fictadvisor/utils';
 import {
   DefaultForbiddenResponse,
   DefaultUnauthorizedResponse,
-} from '../../../defaultResponses';
+} from '../../../default-responses.constants';
 
 export const ResourceDocumentationUpdate: ApiDocumentationParams = {
   isAuth: true,

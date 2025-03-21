@@ -1,6 +1,6 @@
 'use client';
 import React, { FC, useEffect, useState } from 'react';
-import { QueryAllTeacherDTO } from '@fictadvisor/utils/requests';
+import { QueryAllTeachersDTO } from '@fictadvisor/utils/requests';
 import {
   BarsArrowDownIcon,
   BarsArrowUpIcon,
@@ -30,11 +30,11 @@ import CathedraAPI from '@/lib/api/cathedras/CathedraAPI';
 import { initialValues, teacherRoles } from '../../constants';
 
 interface TeachersAdminSearchProps {
-  onSubmit: (values: QueryAllTeacherDTO) => void;
+  onSubmit: (values: QueryAllTeachersDTO) => void;
 }
 
 const TeachersAdminSearch: FC<TeachersAdminSearchProps> = ({ onSubmit }) => {
-  const [values, setValues] = useState<QueryAllTeacherDTO>(initialValues);
+  const [values, setValues] = useState<QueryAllTeachersDTO>(initialValues);
   const [search, setSearch] = useState<string>('');
   const [cathedrasId, setCathedrasId] = useState<CheckboxesDropdownOption[]>(
     [],

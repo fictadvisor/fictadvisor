@@ -1,1 +1,1 @@
-export * from './PERMISSION';
+export * from './permission.enum';

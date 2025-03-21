@@ -1,18 +1,18 @@
-import { AuthDocumentationCheckCaptain } from './checkCaptain';
-import { AuthDocumentationCheckRegisterTelegram } from './checkRegisterTelegram';
-import { AuthDocumentationCheckResetToken } from './checkResetToken';
-import { AuthDocumentationForgotPassword } from './forgotPassword';
+import { AuthDocumentationCheckCaptain } from './check-captain';
+import { AuthDocumentationCheckRegisterTelegram } from './check-register-telegram';
+import { AuthDocumentationCheckResetToken } from './check-reset-token';
+import { AuthDocumentationForgotPassword } from './forgot-password';
 import { AuthDocumentationLogin } from './login';
-import { AuthDocumentationLoginTelegram } from './loginTelegram';
+import { AuthDocumentationLoginTelegram } from './login-telegram';
 import { AuthDocumentationRefresh } from './refresh';
 import { AuthDocumentationRegister } from './register';
-import { AuthDocumentationRegisterTelegram } from './registerTelegram';
-import { AuthDocumentationResetPassword } from './resetPassword';
-import { AuthDocumentationUpdatePassword } from './updatePassword';
-import { AuthDocumentationVerifyEmail } from './verifyEmail';
-import { AuthDocumentationVerifyExistsByUnique } from './verifyExistsByUnique';
-import { AuthDocumentationGetMe } from './getMe';
-import { AuthDocumentationRequestEmailVerification } from './requestEmailVerification';
+import { AuthDocumentationRegisterTelegram } from './register-telegram';
+import { AuthDocumentationResetPassword } from './reset-password';
+import { AuthDocumentationUpdatePassword } from './update-password';
+import { AuthDocumentationVerifyEmail } from './verify-email';
+import { AuthDocumentationVerifyExistsByUnique } from './verify-exists-by-unique';
+import { AuthDocumentationGetMe } from './get-me';
+import { AuthDocumentationRequestEmailVerification } from './request-email-verification';
 
 
 export const AuthDocumentation = {

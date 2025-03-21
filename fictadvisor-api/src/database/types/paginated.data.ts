@@ -1,4 +1,4 @@
-import { PaginationDataResponse } from '@fictadvisor/utils/dist/responses';
+import { PaginationDataResponse } from '@fictadvisor/utils/responses';
 
 export class PaginatedData<T=object> {
   data: T[];
