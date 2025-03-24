@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { QueryAllTeacherDTO } from '@fictadvisor/utils/requests';
+import { QueryAllTeachersDTO } from '@fictadvisor/utils/requests';
 import { Box, TablePagination } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
@@ -19,7 +19,7 @@ import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
 const Page = () => {
   const [pageSize, setPageSize] = useState(10);
   const [currPage, setCurrPage] = useState(0);
-  const [params, setParams] = useState<QueryAllTeacherDTO>(initialValues);
+  const [params, setParams] = useState<QueryAllTeachersDTO>(initialValues);
   const { displayError } = useToastError();
   const toast = useToast();
 
@@ -50,7 +50,7 @@ const Page = () => {
     }
   };
 
-  const handleChange = (values: QueryAllTeacherDTO) => {
+  const handleChange = (values: QueryAllTeachersDTO) => {
     setParams(prevValues => {
       if (JSON.stringify(values) !== JSON.stringify(prevValues)) {
         setCurrPage(0);

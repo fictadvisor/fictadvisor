@@ -1,9 +1,9 @@
 import { disciplineDocumentationCreate } from './create';
-import { disciplineDocumentationGetAll } from './getAll';
-import { disciplineDocumentationGetAllTeachersByDiscipline } from './getAllTeachersByDiscipline';
-import { disciplineDocumentationDeleteById } from './deleteById';
-import { disciplineDocumentationGetById } from './getById';
-import { disciplineDocumentationUpdateById } from './updateById';
+import { disciplineDocumentationGetAll } from './get-all';
+import { disciplineDocumentationGetAllTeachersByDiscipline } from './get-all-teachers-by-discipline';
+import { disciplineDocumentationDeleteById } from './delete-by-id';
+import { disciplineDocumentationGetById } from './get-by-id';
+import { disciplineDocumentationUpdateById } from './update-by-id';
 
 export const DisciplineDocumentation = {
   CREATE: disciplineDocumentationCreate,

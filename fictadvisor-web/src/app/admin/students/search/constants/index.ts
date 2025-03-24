@@ -1,5 +1,5 @@
 import { GroupRoles, SortQGSParam } from '@fictadvisor/utils/enums';
-import { QueryAllStudentDTO } from '@fictadvisor/utils/requests';
+import { QueryAllStudentsDTO } from '@fictadvisor/utils/requests';
 
 import { CheckboxOption } from '@/components/common/ui/form/checkboxes-dropdown/types/CheckboxOption';
 import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
@@ -16,7 +16,7 @@ export const roleOptions: CheckboxOption[] = [
   { value: GroupRoles.STUDENT, label: 'Студент' },
 ];
 
-export const StudentInitialValues: QueryAllStudentDTO = {
+export const StudentInitialValues: QueryAllStudentsDTO = {
   search: '',
   order: 'asc',
   sort: SortQGSParam.FIRST_NAME,

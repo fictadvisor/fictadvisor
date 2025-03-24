@@ -1,22 +1,22 @@
-import { TeacherDocumentationConnectCathedra } from './connectCathedra';
+import { TeacherDocumentationConnectCathedra } from './connect-cathedra';
 import { TeacherDocumentationCreate } from './create';
-import { TeacherDocumentationCreateContact } from './createContact';
+import { TeacherDocumentationCreateContact } from './create-contact';
 import { TeacherDocumentationDelete } from './delete';
-import { TeacherDocumentationDeleteContact } from './deleteContact';
-import { TeacherDocumentationDisconnectCathedra } from './disconnectCathedra';
-import { TeacherDocumentationGetAll } from './getAll';
-import { TeacherDocumentationGetAllContacts } from './getAllContacts';
-import { TeacherDocumentationGetComments } from './getComments';
-import { TeacherDocumentationGetContact } from './getContact';
-import { TeacherDocumentationGetDisciplines } from './getDisciplines';
-import { TeacherDocumentationGetMarks } from './getMarks';
-import { TeacherDocumentationGetSubject } from './getSubject';
-import { TeacherDocumentationGetSubjects } from './getSubjects';
-import { TeacherDocumentationGetTeacher } from './getTeacher';
-import { TeacherDocumentationGetTeacherRoles } from './getTeacherRoles';
-import { TeacherDocumentationSendComplaint } from './sendComplaint';
+import { TeacherDocumentationDeleteContact } from './delete-contact';
+import { TeacherDocumentationDisconnectCathedra } from './disconnect-cathedra';
+import { TeacherDocumentationGetAll } from './get-all';
+import { TeacherDocumentationGetAllContacts } from './get-all-contacts';
+import { TeacherDocumentationGetComments } from './get-comments';
+import { TeacherDocumentationGetContact } from './get-contact';
+import { TeacherDocumentationGetDisciplines } from './get-disciplines';
+import { TeacherDocumentationGetMarks } from './get-marks';
+import { TeacherDocumentationGetSubject } from './get-subject';
+import { TeacherDocumentationGetSubjects } from './get-subjects';
+import { TeacherDocumentationGetTeacher } from './get-teacher';
+import { TeacherDocumentationGetTeacherRoles } from './get-teacher-roles';
+import { TeacherDocumentationSendComplaint } from './send-complaint';
 import { TeacherDocumentationUpdate } from './update';
-import { TeacherDocumentationUpdateContact } from './updateContact';
+import { TeacherDocumentationUpdateContact } from './update-contact';
 
 export const TeacherDocumentation = {
   CONNECT_CATHEDRA: TeacherDocumentationConnectCathedra,

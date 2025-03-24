@@ -5,7 +5,7 @@ import {
   CreateTeacherDTO,
   DeleteCommentDTO,
   QueryAllCommentsDTO,
-  QueryAllTeacherDTO,
+  QueryAllTeachersDTO,
   QueryMarksDTO,
   UpdateCommentDTO,
   UpdateContactDTO,
@@ -35,7 +35,7 @@ class TeacherAPI {
     return data;
   }
 
-  async getAll(params: QueryAllTeacherDTO = {}) {
+  async getAll(params: QueryAllTeachersDTO = {}) {
     const { data } = await client.get<PaginatedTeachersResponse>('/teachers', {
       params,
     });

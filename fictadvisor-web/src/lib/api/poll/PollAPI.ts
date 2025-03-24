@@ -1,6 +1,6 @@
 import {
   CreateAnswersDTO,
-  QueryAllDisciplineTeacherForPollDTO,
+  QueryAllDisciplineTeachersForPollDTO,
 } from '@fictadvisor/utils/requests';
 import {
   DisciplineTeacherQuestionsResponse,
@@ -29,7 +29,7 @@ class PollAPI {
 
   async getUserTeachers(
     userId: string,
-    params: QueryAllDisciplineTeacherForPollDTO = {},
+    params: QueryAllDisciplineTeachersForPollDTO = {},
   ) {
     const { data } = await client.get<PollDisciplineTeachersResponse>(
       `/poll/teachers/${userId}`,

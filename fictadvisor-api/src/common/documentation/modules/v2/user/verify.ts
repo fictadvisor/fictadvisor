@@ -1,6 +1,6 @@
-import { ApiDocumentationParams } from '../../../types/ApiDocumentationParams';
+import { ApiDocumentationParams } from '../../../types/api-documentation-params.type';
 import { FullStudentResponse } from '@fictadvisor/utils';
-import { DefaultUnauthorizedResponse } from '../../../defaultResponses';
+import { DefaultUnauthorizedResponse } from '../../../default-responses.constants';
 
 export const UserDocumentationVerify: ApiDocumentationParams = {
   isAuth: true,

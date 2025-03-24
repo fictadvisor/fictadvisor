@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { QueryAllQuestionDTO } from '@fictadvisor/utils/requests';
+import { QueryAllQuestionsDTO } from '@fictadvisor/utils/requests';
 import { Box, TablePagination } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
@@ -18,7 +18,7 @@ import QuestionAPI from '@/lib/api/questions/QuestionAPI';
 const Page = () => {
   const [pageSize, setPageSize] = useState(10);
   const [currPage, setCurrPage] = useState(0);
-  const [params, setParams] = useState<QueryAllQuestionDTO>(initialValues);
+  const [params, setParams] = useState<QueryAllQuestionsDTO>(initialValues);
   const { displayError } = useToastError();
   const toast = useToast();
   const { data, isLoading, refetch } = useQuery({
@@ -38,7 +38,7 @@ const Page = () => {
 
   if (!data) throw new Error('error loading data');
 
-  const handleChange = (values: QueryAllQuestionDTO) => {
+  const handleChange = (values: QueryAllQuestionsDTO) => {
     setParams(prevValues => {
       if (JSON.stringify(values) !== JSON.stringify(prevValues)) {
         setCurrPage(0);
