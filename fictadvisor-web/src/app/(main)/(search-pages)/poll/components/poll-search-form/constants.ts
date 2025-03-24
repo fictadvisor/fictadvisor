@@ -1,10 +1,10 @@
 import { DisciplineTypeEnum, SortQATParam } from '@fictadvisor/utils/enums';
-import { QueryAllDisciplineTeacherForPollDTO } from '@fictadvisor/utils/requests';
+import { QueryAllDisciplineTeachersForPollDTO } from '@fictadvisor/utils/requests';
 
 import { CheckboxOption } from '@/components/common/ui/form/checkboxes-dropdown/types/CheckboxOption';
 import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
 
-export const PollTeacherInitialValues: QueryAllDisciplineTeacherForPollDTO = {
+export const PollTeacherInitialValues: QueryAllDisciplineTeachersForPollDTO = {
   search: '',
   order: 'asc',
   sort: SortQATParam.LAST_NAME,

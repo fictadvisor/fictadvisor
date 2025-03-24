@@ -1,5 +1,5 @@
-import { DateDocumentationGetPreviousSemesters } from './getPreviousSemesters';
-import { DateDocumentationGetCurrentSemester } from './getCurrentSemester';
+import { DateDocumentationGetPreviousSemesters } from './get-previous-semesters';
+import { DateDocumentationGetCurrentSemester } from './get-current-semester';
 
 
 export const DateDocumentation = {
