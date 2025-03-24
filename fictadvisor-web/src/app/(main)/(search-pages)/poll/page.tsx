@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { QueryAllDisciplineTeacherForPollDTO } from '@fictadvisor/utils/requests';
+import { QueryAllDisciplineTeachersForPollDTO } from '@fictadvisor/utils/requests';
 import { Box } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
@@ -35,9 +35,8 @@ const PollTeacher = () => {
   const { user, isLoading: isLoadingUser } = useAuthentication();
 
   const toast = useToast();
-  const [queryObj, setQueryObj] = useState<QueryAllDisciplineTeacherForPollDTO>(
-    PollTeacherInitialValues,
-  );
+  const [queryObj, setQueryObj] =
+    useState<QueryAllDisciplineTeachersForPollDTO>(PollTeacherInitialValues);
 
   useEffect(() => {
     if (!user && !isLoadingUser) {

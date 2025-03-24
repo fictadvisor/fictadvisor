@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { QueryAllStudentDTO } from '@fictadvisor/utils/requests';
+import { QueryAllStudentsDTO } from '@fictadvisor/utils/requests';
 import { Box } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
@@ -17,7 +17,7 @@ import StudentAPI from '@/lib/api/student/StudentAPI';
 
 const AdminStudentSearchPage = () => {
   const [queryObj, setQueryObj] =
-    useState<QueryAllStudentDTO>(StudentInitialValues);
+    useState<QueryAllStudentsDTO>(StudentInitialValues);
   const [currPage, setCurrPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
 

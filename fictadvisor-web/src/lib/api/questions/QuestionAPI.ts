@@ -1,6 +1,6 @@
 import {
   CreateQuestionDTO,
-  QueryAllQuestionDTO,
+  QueryAllQuestionsDTO,
   UpdateQuestionDTO,
 } from '@fictadvisor/utils/requests';
 import {
@@ -10,7 +10,7 @@ import {
 
 import { client } from '../instance';
 class QuestionAPI {
-  async getPageQuestions(params: QueryAllQuestionDTO = {}) {
+  async getPageQuestions(params: QueryAllQuestionsDTO = {}) {
     const { data } = await client.get<PaginatedQuestionsResponse>(
       '/poll/questions',
       {

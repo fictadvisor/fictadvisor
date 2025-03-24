@@ -1,7 +1,7 @@
 'use client';
 
 import { FC, useCallback, useEffect, useState } from 'react';
-import { QueryAllSubjectDTO } from '@fictadvisor/utils/requests';
+import { QueryAllSubjectsDTO } from '@fictadvisor/utils/requests';
 import { Box } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
@@ -53,7 +53,7 @@ const SubjectsPage: FC = () => {
           ...queryObj,
           pageSize: PAGE_SIZE * (currPage + 1),
           page: currPage,
-        } as QueryAllSubjectDTO);
+        } as QueryAllSubjectsDTO);
       } else {
         setLoadedSubjects([
           ...(loadedSubjects ?? []),
@@ -63,7 +63,7 @@ const SubjectsPage: FC = () => {
           ...queryObj,
           pageSize: PAGE_SIZE,
           page: currPage + 1,
-        } as QueryAllSubjectDTO);
+        } as QueryAllSubjectsDTO);
       }
     },
     placeholderData: (previousData, previousQuery) => previousData,
