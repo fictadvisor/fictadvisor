@@ -25,9 +25,9 @@ export class StudentMapper {
       telegramId: student.user.telegramId as unknown as number,
       group: !hasGroup ? { state: State.DECLINED, code: null, role: null, id: null } : {
         id: student.groupId,
-        code: student.group?.code,
+        code: student.group?.code ?? null,
         state: student.state as State,
-        role: this.getGroupRole(student.roles)?.name as RoleName,
+        role: this.getGroupRole(student.roles)?.name as RoleName ?? null,
       },
       state: student.user.state as State,
     };
