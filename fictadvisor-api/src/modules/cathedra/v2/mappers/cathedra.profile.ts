@@ -4,11 +4,11 @@ import {
   TeacherResponse,
   CathedraWithNumberOfTeachersResponse,
 } from '@fictadvisor/utils/responses';
-import { DbCathedra } from '../../database/v2/entities/cathedra.entity';
+import { DbCathedra } from '../../../../database/v2/entities/cathedra.entity';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { createMap, forMember, mapFrom, Mapper, mapWith } from '@automapper/core';
-import { DbTeacher } from '../../database/v2/entities/teacher.entity';
-import { extractField } from '../utils/array.utils';
+import { DbTeacher } from '../../../../database/v2/entities/teacher.entity';
+import { extractField } from '../../../../common/utils/array.utils';
 
 export class CathedraProfile extends AutomapperProfile {
   constructor (@InjectMapper() mapper: Mapper) {

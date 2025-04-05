@@ -1,26 +1,25 @@
 import { Injectable } from '@nestjs/common';
-import { CommentData, QuestionCommentData } from '../../modules/poll/v2/types/question-comment.data';
-import { DbQuestionAnswer } from '../../database/v2/entities/question-answer.entity';
+import { CommentData, QuestionCommentData } from '../types/question-comment.data';
+import { DbQuestionAnswer } from '../../../../database/v2/entities/question-answer.entity';
 import {
   Comment,
-  CommentResponse, MarkResponse,
+  CommentResponse,
+  MarkResponse,
   QuestionWithCategoriesAndRolesResponse,
   QuestionWithCategoryResponse,
-} from '@fictadvisor/utils/responses';
-import { DbQuestion } from '../../database/v2/entities/question.entity';
-import {
   QuestionComment,
   QuestionRole,
   ShortTeacherResponse,
-} from '@fictadvisor/utils';
+} from '@fictadvisor/utils/responses';
+import { DbQuestion } from '../../../../database/v2/entities/question.entity';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { createMap, forMember, forSelf, mapFrom, Mapper, mapWith } from '@automapper/core';
-import { DbQuestionWithRoles } from '../../database/v2/entities/question-with-roles.entity';
-import { DbDiscipline } from '../../database/v2/entities/discipline.entity';
-import { DbTeacher } from '../../database/v2/entities/teacher.entity';
-import { forMembers } from '../utils/mapper.utils';
-import { DbQuestionRole } from '../../database/v2/entities/question-role.entity';
-import { TeacherService } from '../../modules/teacher/v2/teacher.service';
+import { DbQuestionWithRoles } from '../../../../database/v2/entities/question-with-roles.entity';
+import { DbDiscipline } from '../../../../database/v2/entities/discipline.entity';
+import { DbTeacher } from '../../../../database/v2/entities/teacher.entity';
+import { forMembers } from '../../../../common/utils/mapper.utils';
+import { DbQuestionRole } from '../../../../database/v2/entities/question-role.entity';
+import { TeacherService } from '../../../teacher/v2/teacher.service';
 
 @Injectable()
 export class QuestionProfile extends AutomapperProfile {

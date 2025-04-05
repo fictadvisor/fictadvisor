@@ -1,6 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { DbRole } from '../../database/v2/entities/role.entity';
-import { DbGrant } from '../../database/v2/entities/grant.entity';
 import {
   BaseRoleResponse,
   BaseRoleWithParentResponse,
@@ -10,7 +8,9 @@ import {
 } from '@fictadvisor/utils/responses';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { createMap, Mapper } from '@automapper/core';
-import { DbUserRole } from '../../database/v2/entities/user-role.entity';
+import { DbRole } from '../../../../database/v2/entities/role.entity';
+import { DbGrant } from '../../../../database/v2/entities/grant.entity';
+import { DbUserRole } from '../../../../database/v2/entities/user-role.entity';
 
 @Injectable()
 export class RoleProfile extends AutomapperProfile {

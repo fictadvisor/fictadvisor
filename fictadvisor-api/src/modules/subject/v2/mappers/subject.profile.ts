@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { DbSubject } from '../../database/v2/entities/subject.entity';
-import { SubjectResponse } from '@fictadvisor/utils';
+import { SubjectResponse } from '@fictadvisor/utils/responses';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { createMap, Mapper, MappingProfile } from '@automapper/core';
+import { DbSubject } from '../../../../database/v2/entities/subject.entity';
 
 @Injectable()
 export class SubjectProfile extends AutomapperProfile {

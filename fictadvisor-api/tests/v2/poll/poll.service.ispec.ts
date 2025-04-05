@@ -1,8 +1,8 @@
 import { Test } from '@nestjs/testing';
 import { CommentsSortOrder, DisciplineTypeEnum } from '@fictadvisor/utils/enums';
 import { DateModule } from '../../../src/modules/date/date.module';
-import { MapperModule } from '../../../src/common/mappers/mapper.module';
 import { PrismaModule } from '../../../src/database/prisma.module';
+import { QuestionMapperModule } from '../../../src/modules/poll/v2/mappers/question-mapper.module';
 import { PollService } from '../../../src/modules/poll/v2/poll.service';
 import { DbDiscipline } from '../../../src/database/v2/entities/discipline.entity';
 import { Group, PrismaClient, QuestionDisplay, QuestionType, State, Subject, Teacher, User } from '@prisma/client/fictadvisor';
@@ -35,7 +35,7 @@ describe('PollService', () => {
       imports: [
         PrismaModule,
         DateModule,
-        MapperModule,
+        QuestionMapperModule,
         AutomapperModule.forRoot({
           strategyInitializer: classes(),
         }),

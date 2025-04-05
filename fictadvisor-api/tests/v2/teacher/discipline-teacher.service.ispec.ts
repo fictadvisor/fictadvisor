@@ -3,7 +3,7 @@ import { Discipline, QuestionType, State } from '@prisma/client/fictadvisor';
 import { CreateAnswersDTO } from '@fictadvisor/utils/requests';
 import { DisciplineTypeEnum } from '@fictadvisor/utils/enums';
 import { PrismaModule } from '../../../src/database/prisma.module';
-import { MapperModule } from '../../../src/common/mappers/mapper.module';
+import { TeacherMapperModule } from '../../../src/modules/teacher/v2/mappers/teacher-mapper.module';
 import { TelegramAPI } from '../../../src/modules/telegram-api/telegram-api';
 import { TelegramConfigService } from '../../../src/config/telegram-config.service';
 import { DisciplineTeacherService } from '../../../src/modules/teacher/v2/discipline-teacher.service';
@@ -40,10 +40,10 @@ describe('DisciplineTeacherService', () => {
       ],
       imports: [
         PrismaModule,
-        MapperModule,
         AutomapperModule.forRoot({
           strategyInitializer: classes(),
         }),
+        TeacherMapperModule,
       ],
     }).useMocker((token) => {
       if (token === TelegramConfigService) {

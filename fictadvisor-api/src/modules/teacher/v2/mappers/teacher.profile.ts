@@ -1,13 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { DisciplineTypeEnum } from '@fictadvisor/utils/enums';
-import { DbTeacher } from '../../database/v2/entities/teacher.entity';
-import { CathedraResponse, TeacherResponse, TeacherWithRolesAndCathedrasResponse } from '@fictadvisor/utils/responses';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { createMap, extend, forMember, mapFrom, Mapper, MappingProfile, mapWith } from '@automapper/core';
-import { DbCathedra } from '../../database/v2/entities/cathedra.entity';
-import { extractField, makeUnique } from '../utils/array.utils';
-import { DbDisciplineTeacher } from '../../database/v2/entities/discipline-teacher.entity';
-import { ShortTeacherResponse } from '@fictadvisor/utils';
+import {
+  CathedraResponse,
+  TeacherResponse,
+  TeacherWithRolesAndCathedrasResponse,
+  ShortTeacherResponse,
+} from '@fictadvisor/utils/responses';
+import { DisciplineTypeEnum } from '@fictadvisor/utils/enums';
+import { DbTeacher } from '../../../../database/v2/entities/teacher.entity';
+import { DbCathedra } from '../../../../database/v2/entities/cathedra.entity';
+import { extractField, makeUnique } from '../../../../common/utils/array.utils';
+import { DbDisciplineTeacher } from '../../../../database/v2/entities/discipline-teacher.entity';
 import { MapperOmitType } from '@automapper/classes/mapped-types';
 
 @Injectable()

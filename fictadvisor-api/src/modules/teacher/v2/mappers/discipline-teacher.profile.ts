@@ -1,24 +1,26 @@
 import { Injectable } from '@nestjs/common';
-import { DbDisciplineTeacher } from '../../database/v2/entities/discipline-teacher.entity';
+import { DbDisciplineTeacher } from '../../../../database/v2/entities/discipline-teacher.entity';
 import {
   DisciplineTeacherAndSubjectResponse,
   DisciplineTeacherExtendedResponse,
   DisciplineTeacherFullResponse,
   DisciplineTeacherResponse,
   DisciplineTypeResponse,
+  CathedraResponse,
+  QuestionAnswerResponse,
+  SubjectResponse,
 } from '@fictadvisor/utils/responses';
 import { DisciplineTypeEnum } from '@fictadvisor/utils/enums';
-import { CathedraResponse, QuestionAnswerResponse, SubjectResponse } from '@fictadvisor/utils';
-import { DbQuestionAnswer } from '../../database/v2/entities/question-answer.entity';
+import { DbQuestionAnswer } from '../../../../database/v2/entities/question-answer.entity';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { createMap, extend, forMember, forSelf, mapFrom, Mapper, mapWith } from '@automapper/core';
-import { extractField, makeUnique } from '../utils/array.utils';
-import { DbTeacher } from '../../database/v2/entities/teacher.entity';
-import { forMembers } from '../utils/mapper.utils';
-import { DbSubject } from '../../database/v2/entities/subject.entity';
-import { DbDisciplineType } from '../../database/v2/entities/discipline-type.entity';
+import { extractField, makeUnique } from '../../../../common/utils/array.utils';
+import { DbTeacher } from '../../../../database/v2/entities/teacher.entity';
+import { forMembers } from '../../../../common/utils/mapper.utils';
+import { DbSubject } from '../../../../database/v2/entities/subject.entity';
+import { DbDisciplineType } from '../../../../database/v2/entities/discipline-type.entity';
 import { MapperOmitType } from '@automapper/classes/mapped-types';
-import { DbCathedra } from '../../database/v2/entities/cathedra.entity';
+import { DbCathedra } from '../../../../database/v2/entities/cathedra.entity';
 
 @Injectable()
 export class DisciplineTeacherProfile extends AutomapperProfile {

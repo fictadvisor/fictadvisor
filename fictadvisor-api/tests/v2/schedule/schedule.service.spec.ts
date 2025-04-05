@@ -32,8 +32,7 @@ describe('ScheduleService', () => {
       if (tokens.includes(token)) {
         return {};
       }
-    })
-      .compile();
+    }).compile();
 
     scheduleService = moduleRef.get(ScheduleService);
     dateService = moduleRef.get(DateService);

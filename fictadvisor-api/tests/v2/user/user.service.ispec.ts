@@ -2,7 +2,8 @@ import { Test } from '@nestjs/testing';
 import { ForbiddenException, InjectionToken } from '@nestjs/common';
 import { TelegramAPI } from '../../../src/modules/telegram-api/telegram-api';
 import { PrismaModule } from '../../../src/database/prisma.module';
-import { MapperModule } from '../../../src/common/mappers/mapper.module';
+import { UserMapperModule } from '../../../src/modules/user/v2/mappers/user-mapper.module';
+import { DisciplineMapperModule } from '../../../src/modules/discipline/v2/mappers/discipline-mapper.module';
 import { UserService } from '../../../src/modules/user/v2/user.service';
 import { AuthService } from '../../../src/modules/auth/v2/auth.service';
 import { GroupService } from '../../../src/modules/group/v2/group.service';
@@ -21,6 +22,7 @@ import { ExcessiveSelectiveDisciplinesException } from '../../../src/common/exce
 import { NotSelectedDisciplineException } from '../../../src/common/exceptions/not-selected-discipline.exception';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
+import { StudentMapperModule } from '../../../src/modules/student/v2/mappers/student-mapper.module';
 
 describe('UserService', () => {
   let userService: UserService;
@@ -31,10 +33,12 @@ describe('UserService', () => {
       providers: [UserService, PrismaService, GroupService, DateService, PollService],
       imports: [
         PrismaModule,
-        MapperModule,
         AutomapperModule.forRoot({
           strategyInitializer: classes(),
         }),
+        UserMapperModule,
+        DisciplineMapperModule,
+        StudentMapperModule,
       ],
     }).useMocker((token) => {
       const tokens = [

@@ -4,17 +4,17 @@ import {
   GeneralShortEventResponse,
   TelegramShortEventResponse,
   ShortEventResponse,
+  ShortTeacherResponse
 } from '@fictadvisor/utils/responses';
 import { EventTypeEnum } from '@fictadvisor/utils/enums';
-import { some } from '../utils/array.utils';
-import { DbEvent } from '../../database/v2/entities/event.entity';
-import { DbDiscipline } from '../../database/v2/entities/discipline.entity';
-import { DbDisciplineType } from '../../database/v2/entities/discipline-type.entity';
+import { some } from '../../../../common/utils/array.utils';
+import { DbEvent } from '../../../../database/v2/entities/event.entity';
+import { DbDiscipline } from '../../../../database/v2/entities/discipline.entity';
+import { DbDisciplineType } from '../../../../database/v2/entities/discipline-type.entity';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { createMap, extend, forMember, mapFrom, Mapper, mapWithArguments } from '@automapper/core';
-import { DbDisciplineTeacher } from '../../database/v2/entities/discipline-teacher.entity';
-import { DbTeacher } from '../../database/v2/entities/teacher.entity';
-import { ShortTeacherResponse } from '@fictadvisor/utils';
+import { DbDisciplineTeacher } from '../../../../database/v2/entities/discipline-teacher.entity';
+import { DbTeacher } from '../../../../database/v2/entities/teacher.entity';
 
 @Injectable()
 export class ScheduleProfile extends AutomapperProfile {

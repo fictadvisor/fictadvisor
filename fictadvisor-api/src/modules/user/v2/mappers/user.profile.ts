@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { DbUser } from '../../database/v2/entities/user.entity';
 import {
   ShortUserResponse,
   UserForGetAllResponse,
@@ -7,6 +6,7 @@ import {
 } from '@fictadvisor/utils/responses';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { createMap, Mapper, MappingProfile } from '@automapper/core';
+import { DbUser } from '../../../../database/v2/entities/user.entity';
 
 @Injectable()
 export class UserProfile extends AutomapperProfile {

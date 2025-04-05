@@ -5,9 +5,9 @@ import { DbQuestionWithRoles } from '../../src/database/v2/entities/question-wit
 import { Mapper } from '@automapper/core';
 import { AutomapperModule, getMapperToken } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
-import { QuestionProfile } from '../../src/common/mappers/question.profile';
 import { QuestionComment, QuestionWithCategoriesAndRolesResponse } from '@fictadvisor/utils/responses';
 import { DisciplineTeacherService } from '../../src/modules/teacher/v2/discipline-teacher.service';
+import { QuestionMapperModule } from '../../src/modules/poll/v2/mappers/question-mapper.module';
 
 describe('QuestionMapper', () => {
   let mapper: Mapper;
@@ -19,8 +19,9 @@ describe('QuestionMapper', () => {
         AutomapperModule.forRoot({
           strategyInitializer: classes(),
         }),
+        QuestionMapperModule,
       ],
-      providers: [QuestionProfile, DisciplineTeacherService],
+      providers: [DisciplineTeacherService],
     }).useMocker(() => ({})).compile();
 
     mapper = moduleRef.get(getMapperToken());

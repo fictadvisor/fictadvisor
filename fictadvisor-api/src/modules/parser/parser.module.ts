@@ -6,7 +6,6 @@ import { DateModule } from '../date/date.module';
 import { GeneralParser } from './v2/general-parser';
 import { GroupModule } from '../group/group.module';
 import { UserModule } from '../user/user.module';
-import { MapperModule } from '../../common/mappers/mapper.module';
 import { ScheduleModule } from '../schedule/schedule.module';
 
 @Module({
@@ -17,7 +16,6 @@ import { ScheduleModule } from '../schedule/schedule.module';
     DateModule,
     GroupModule,
     UserModule,
-    MapperModule,
     forwardRef(() => ScheduleModule),
   ],
 })

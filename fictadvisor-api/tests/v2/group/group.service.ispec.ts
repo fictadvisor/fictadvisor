@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { InjectionToken } from '@nestjs/common';
 import { PrismaModule } from '../../../src/database/prisma.module';
-import { MapperModule } from '../../../src/common/mappers/mapper.module';
+import { GroupMapperModule } from '../../../src/modules/group/v2/mappers/group-mapper.module';
 import { UserService } from '../../../src/modules/user/v2/user.service';
 import { PrismaService } from '../../../src/database/v2/prisma.service';
 import { GroupService } from '../../../src/modules/group/v2/group.service';
@@ -25,10 +25,10 @@ describe('GroupService', () => {
       providers: [GroupService, PrismaService],
       imports: [
         PrismaModule,
-        MapperModule,
         AutomapperModule.forRoot({
           strategyInitializer: classes(),
         }),
+        GroupMapperModule,
       ],
     }).useMocker((token) => {
       const tokens = [
