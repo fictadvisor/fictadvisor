@@ -10,6 +10,7 @@ import {
   DisciplineTeacherQuestionsResponse,
   QuestionWithCategoryResponse,
   TeacherResponse,
+  SubjectResponse,
 } from '@fictadvisor/utils/responses';
 import { CommentsSortBy, DisciplineTypeEnum } from '@fictadvisor/utils/enums';
 import { TelegramAPI } from '../../telegram-api/telegram-api';
@@ -40,7 +41,6 @@ import { DbQuestion } from '../../../database/v2/entities/question.entity';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
 import { DbSubject } from '../../../database/v2/entities/subject.entity';
-import { SubjectResponse } from '@fictadvisor/utils';
 import { DbTeacher } from '../../../database/v2/entities/teacher.entity';
 
 @Injectable()

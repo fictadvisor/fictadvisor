@@ -2,8 +2,9 @@ import { Test } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { QueryAllSubjectsDTO } from '@fictadvisor/utils/requests';
 import { TelegramAPI } from '../../../src/modules/telegram-api/telegram-api';
-import { MapperModule } from '../../../src/common/mappers/mapper.module';
 import { PrismaModule } from '../../../src/database/prisma.module';
+import { SubjectMapperModule } from '../../../src/modules/subject/v2/mappers/subject-mapper.module';
+import { TeacherMapperModule } from '../../../src/modules/teacher/v2/mappers/teacher-mapper.module';
 import { SubjectService } from '../../../src/modules/subject/v2/subject.service';
 import { PrismaService } from '../../../src/database/v2/prisma.service';
 import { TeacherService } from '../../../src/modules/teacher/v2/teacher.service';
@@ -23,10 +24,11 @@ describe('SubjectService', () => {
         TelegramConfigService, ConfigService],
       imports: [
         PrismaModule,
-        MapperModule,
         AutomapperModule.forRoot({
           strategyInitializer: classes(),
         }),
+        SubjectMapperModule,
+        TeacherMapperModule,
       ],
     }).compile();
 

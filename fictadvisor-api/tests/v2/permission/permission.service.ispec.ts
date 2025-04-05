@@ -1,7 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { PERMISSION } from '@fictadvisor/utils/security';
 import { PrismaModule } from '../../../src/database/prisma.module';
-import { MapperModule } from '../../../src/common/mappers/mapper.module';
 import { PrismaService } from '../../../src/database/v2/prisma.service';
 import { PermissionService } from '../../../src/modules/permission/v2/permission.service';
 import { DataNotFoundException } from '../../../src/common/exceptions/data-not-found.exception';
@@ -21,7 +20,6 @@ describe('PermissionService', () => {
       ],
       imports: [
         PrismaModule,
-        MapperModule,
         AutomapperModule.forRoot({
           strategyInitializer: classes(),
         }),

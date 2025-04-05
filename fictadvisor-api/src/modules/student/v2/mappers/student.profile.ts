@@ -6,12 +6,12 @@ import {
   SimpleStudentResponse,
 } from '@fictadvisor/utils/responses';
 import { GroupRoles, State } from '@fictadvisor/utils/enums';
-import { DbStudent } from '../../database/v2/entities/student.entity';
-import { DbUserRole } from '../../database/v2/entities/user-role.entity';
+import { DbStudent } from '../../../../database/v2/entities/student.entity';
+import { DbUserRole } from '../../../../database/v2/entities/user-role.entity';
 import { ExtendedGroupResponse, RoleName } from '@fictadvisor/utils';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { createMap, forMember, forSelf, mapFrom, Mapper, mapWithArguments } from '@automapper/core';
-import { DbUser } from '../../database/v2/entities/user.entity';
+import { DbUser } from '../../../../database/v2/entities/user.entity';
 
 @Injectable()
 export class StudentProfile extends AutomapperProfile {
