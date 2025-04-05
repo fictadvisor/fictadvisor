@@ -6,12 +6,21 @@ import {
   QueryAllTeachersDTO,
   QueryMarksDTO,
   ComplaintDTO,
+  SortDTO,
+  Sort,
 } from '@fictadvisor/utils/requests';
 import {
   SubjectResponse,
   TeacherWithContactsFullResponse,
   TeacherWithRolesAndCathedrasResponse,
+  MarkArray,
 } from '@fictadvisor/utils/responses';
+import {
+  QuestionType,
+  DisciplineTypeEnum,
+  OrderQAParam,
+  SortQATParam,
+} from '@fictadvisor/utils/enums';
 import { PaginationUtil, PaginateArgs } from '../../../database/v2/pagination.util';
 import { DatabaseUtils } from '../../../database/database.utils';
 import { extractField, filterAsync, makeUnique } from '../../../common/utils/array.utils';
@@ -29,20 +38,11 @@ import { ContactRepository } from '../../../database/v2/repositories/contact.rep
 import { InvalidQueryException } from '../../../common/exceptions/invalid-query.exception';
 import { InvalidEntityIdException } from '../../../common/exceptions/invalid-entity-id.exception';
 import { EntityType, QuestionDisplay, Prisma } from '@prisma/client/fictadvisor';
-import { DisciplineTypeEnum } from '@fictadvisor/utils/enums';
 import * as process from 'process';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
 import { DbSubject } from '../../../database/v2/entities/subject.entity';
 import { DbQuestion } from '../../../database/v2/entities/question.entity';
-import {
-  MarkArray,
-  OrderQAParam,
-  QuestionType,
-  Sort,
-  SortDTO,
-  SortQATParam,
-} from '@fictadvisor/utils';
 
 @Injectable()
 export class TeacherService {

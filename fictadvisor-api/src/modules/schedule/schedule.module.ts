@@ -8,9 +8,9 @@ import { DisciplineModule } from '../discipline/discipline.module';
 import { TeacherModule } from '../teacher/teacher.module';
 import { PrismaModule } from '../../database/prisma.module';
 import { AccessModule } from '../access/access.module';
-import { MapperModule } from '../../common/mappers/mapper.module';
 import { UserModule } from '../user/user.module';
 import { ConfigurationModule } from '../../config/config.module';
+import { ScheduleMapperModule } from './v2/mappers/schedule-mapper.module';
 
 @Module({
   controllers: [ScheduleController],
@@ -23,10 +23,10 @@ import { ConfigurationModule } from '../../config/config.module';
     TeacherModule,
     PrismaModule,
     AccessModule,
-    MapperModule,
     UserModule,
     ConfigurationModule,
     forwardRef(() => ParserModule),
+    ScheduleMapperModule,
   ],
 })
 export class ScheduleModule {}

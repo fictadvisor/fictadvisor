@@ -1,5 +1,5 @@
 import { EduProgramResponse } from '@fictadvisor/utils/responses';
-import { DbEducationalProgram } from '../../database/v2/entities/educational-program.entity';
+import { DbEducationalProgram } from '../../../../database/v2/entities/educational-program.entity';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 

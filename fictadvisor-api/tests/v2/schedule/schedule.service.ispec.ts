@@ -11,7 +11,8 @@ import {
 import { TelegramAPI } from '../../../src/modules/telegram-api/telegram-api';
 import { PrismaModule } from '../../../src/database/prisma.module';
 import { DateModule } from '../../../src/modules/date/date.module';
-import { MapperModule } from '../../../src/common/mappers/mapper.module';
+import { ScheduleMapperModule } from '../../../src/modules/schedule/v2/mappers/schedule-mapper.module';
+import { StudentMapperModule } from '../../../src/modules/student/v2/mappers/student-mapper.module';
 import { ScheduleService } from '../../../src/modules/schedule/v2/schedule.service';
 import { PrismaService } from '../../../src/database/v2/prisma.service';
 import { DisciplineTeacherService } from '../../../src/modules/teacher/v2/discipline-teacher.service';
@@ -52,10 +53,11 @@ describe('ScheduleService', () => {
       imports: [
         DateModule,
         PrismaModule,
-        MapperModule,
         AutomapperModule.forRoot({
           strategyInitializer: classes(),
         }),
+        ScheduleMapperModule,
+        StudentMapperModule,
       ],
     }).useMocker((token) => {
       const tokens: InjectionToken[] = [
