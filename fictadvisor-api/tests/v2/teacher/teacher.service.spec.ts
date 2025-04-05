@@ -8,8 +8,8 @@ import Configuration from '../../../src/config/configuration.constant';
 import { TeacherModule } from '../../../src/modules/teacher/teacher.module';
 import { PollModule } from '../../../src/modules/poll/poll.module';
 import { PrismaModule } from '../../../src/database/prisma.module';
-import { MapperModule } from '../../../src/common/mappers/mapper.module';
 import { DateModule } from '../../../src/modules/date/date.module';
+import { TeacherMapperModule } from '../../../src/modules/teacher/v2/mappers/teacher-mapper.module';
 import { TelegramConfigService } from '../../../src/config/telegram-config.service';
 import { TeacherService } from '../../../src/modules/teacher/v2/teacher.service';
 import { PollService } from '../../../src/modules/poll/v2/poll.service';
@@ -51,11 +51,11 @@ describe('TeacherService', () => {
       imports: [
         TeacherModule,
         PollModule,
-        MapperModule,
         PrismaModule,
         AutomapperModule.forRoot({
           strategyInitializer: classes(),
         }),
+        TeacherMapperModule,
         ConfigurationModule.forRoot({
           isGlobal: true,
           load: [Configuration],

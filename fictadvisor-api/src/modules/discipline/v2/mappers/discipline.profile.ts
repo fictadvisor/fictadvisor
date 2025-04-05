@@ -1,25 +1,24 @@
 import { Injectable } from '@nestjs/common';
-import { DbDiscipline } from '../../database/v2/entities/discipline.entity';
+import { DbDiscipline } from '../../../../database/v2/entities/discipline.entity';
 import {
   ExtendedDisciplineTeachersResponse,
   DisciplineAdminResponse,
   SelectiveDisciplinesWithAmountResponse,
   SelectiveDisciplinesResponse,
   DisciplineResponse,
-  ExtendedDisciplineResponse, BaseSelectiveDisciplineResponse,
-} from '@fictadvisor/utils/responses';
-import {
+  ExtendedDisciplineResponse,
+  BaseSelectiveDisciplineResponse,
   DisciplineTeacherResponse,
   SelectiveBySemestersResponse,
   ShortDisciplineResponse,
   ShortTeacherResponse,
-} from '@fictadvisor/utils';
+} from '@fictadvisor/utils/responses';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { createMap, extend, forMember, mapFrom, Mapper, mapWith, mapWithArguments } from '@automapper/core';
-import { DbSelectiveAmount } from '../../database/v2/entities/selective-amount.entity';
-import { extractField } from '../utils/array.utils';
-import { DbTeacher } from '../../database/v2/entities/teacher.entity';
-import { DbDisciplineTeacher } from '../../database/v2/entities/discipline-teacher.entity';
+import { DbSelectiveAmount } from '../../../../database/v2/entities/selective-amount.entity';
+import { extractField } from '../../../../common/utils/array.utils';
+import { DbTeacher } from '../../../../database/v2/entities/teacher.entity';
+import { DbDisciplineTeacher } from '../../../../database/v2/entities/discipline-teacher.entity';
 
 @Injectable()
 export class DisciplineProfile extends AutomapperProfile {
@@ -78,7 +77,7 @@ export class DisciplineProfile extends AutomapperProfile {
   }
 
   private filterBySemester ({ semester, year }: DbSelectiveAmount, disciplines: DbDiscipline[]) {
-    return  disciplines.filter((discipline) =>
+    return disciplines.filter((discipline) =>
       discipline.semester === semester &&
       discipline.year === year
     );

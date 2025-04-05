@@ -3,14 +3,16 @@ import {
   GroupResponse,
   BaseStudentResponse,
   GroupWithTelegramGroupsResponse,
-  MappedGroupResponse, SpecialityResponse, FullGroupResponse,
+  MappedGroupResponse,
+  SpecialityResponse,
+  FullGroupResponse,
 } from '@fictadvisor/utils/responses';
 import { RoleName } from '@prisma/client/fictadvisor';
-import { DbGroup } from '../../database/v2/entities/group.entity';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { createMap, forMember, Mapper, mapWith, nullSubstitution } from '@automapper/core';
-import { DbStudent } from '../../database/v2/entities/student.entity';
-import { DbSpeciality } from '../../database/v2/entities/speciality.entity';
+import { DbGroup } from '../../../../database/v2/entities/group.entity';
+import { DbStudent } from '../../../../database/v2/entities/student.entity';
+import { DbSpeciality } from '../../../../database/v2/entities/speciality.entity';
 
 @Injectable()
 export class GroupProfile extends AutomapperProfile {
