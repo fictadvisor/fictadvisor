@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { redirect, usePathname } from 'next/navigation';
@@ -32,17 +32,19 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     enabled: !!user,
   });
 
-  if (permissionData?.permissions) {
-    const permissionCheck = Object.entries(permissionData.permissions).some(
-      ([key, value]) => key === requestedPathname && value,
-    );
+  useEffect(() => {
+    if (permissionData?.permissions) {
+      const permissionCheck = Object.entries(permissionData.permissions).some(
+        ([key, value]) => key === requestedPathname && value,
+      );
 
-    setPermissionGranted(permissionCheck);
+      setPermissionGranted(permissionCheck);
 
-    if (!permissionGranted) {
-      redirect('/');
+      if (!permissionCheck) {
+        redirect('/');
+      }
     }
-  }
+  }, [permissionData]);
 
   if (isLoading) {
     return (
