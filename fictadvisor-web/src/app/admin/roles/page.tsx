@@ -12,20 +12,21 @@ import { HeaderRolesSearchProps } from '@/app/admin/roles/common/types';
 import HeaderRolesSearch from '@/app/admin/roles/search/components/header-roles-search';
 import RolesList from '@/app/admin/roles/search/components/roles-list';
 import LoadPage from '@/components/common/ui/load-page';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import RoleAPI from '@/lib/api/role/RoleAPI';
 
 const Page = () => {
-  const [queryObj, setQueryObj] =
-    useState<QueryAllRolesDTO>(RolesInitialValues);
+  const [values, setValues] = useState<QueryAllRolesDTO>(RolesInitialValues);
   const [currPage, setCurrPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
+  const { displayError } = useToastError();
 
-  const { data, isSuccess, isLoading, refetch } = useQuery({
-    queryKey: ['roles', currPage, pageSize, queryObj],
+  const { data, isLoading, refetch, error } = useQuery({
+    queryKey: ['roles', currPage, pageSize, values],
 
     queryFn: async () =>
       await RoleAPI.getAll({
-        ...queryObj,
+        ...values,
         pageSize,
         page: currPage,
       }),
@@ -33,25 +34,29 @@ const Page = () => {
     ...useQueryAdminOptions,
   });
 
-  if (isLoading) return <LoadPage />;
-
-  if (!isSuccess) throw new Error('error loading data');
+  if (error) {
+    displayError(error);
+    throw new Error('error loading data');
+  }
 
   const submitHandler: HeaderRolesSearchProps['onSubmit'] = query =>
-    setQueryObj(prev => ({ ...prev, ...query }));
+    setValues(prev => ({ ...prev, ...query }));
 
   return (
     <Box sx={stylesAdmin.wrapper}>
-      <HeaderRolesSearch onSubmit={submitHandler} />
-      <RolesList
-        currPage={currPage}
-        setCurrPage={setCurrPage}
-        roles={data.data}
-        pageSize={pageSize}
-        setPageSize={setPageSize}
-        totalCount={data.pagination.totalAmount}
-        refetch={refetch}
-      />
+      <HeaderRolesSearch onSubmit={submitHandler} values={values} />
+      {isLoading && <LoadPage />}
+      {data && (
+        <RolesList
+          currPage={currPage}
+          setCurrPage={setCurrPage}
+          roles={data.data}
+          pageSize={pageSize}
+          setPageSize={setPageSize}
+          totalCount={data.pagination.totalAmount}
+          refetch={refetch}
+        />
+      )}
     </Box>
   );
 };

@@ -18,15 +18,15 @@ import QuestionAPI from '@/lib/api/questions/QuestionAPI';
 const Page = () => {
   const [pageSize, setPageSize] = useState(10);
   const [currPage, setCurrPage] = useState(0);
-  const [params, setParams] = useState<QueryAllQuestionsDTO>(initialValues);
+  const [values, setValues] = useState<QueryAllQuestionsDTO>(initialValues);
   const { displayError } = useToastError();
   const toast = useToast();
-  const { data, isLoading, refetch } = useQuery({
-    queryKey: ['questions', currPage, params, pageSize],
+  const { data, isLoading, refetch, error } = useQuery({
+    queryKey: ['questions', currPage, values, pageSize],
 
     queryFn: () =>
       QuestionAPI.getPageQuestions({
-        ...params,
+        ...values,
         pageSize,
         page: currPage,
       }),
@@ -34,12 +34,8 @@ const Page = () => {
     ...useQueryAdminOptions,
   });
 
-  if (isLoading) return <LoadPage />;
-
-  if (!data) throw new Error('error loading data');
-
   const handleChange = (values: QueryAllQuestionsDTO) => {
-    setParams(prevValues => {
+    setValues(prevValues => {
       if (JSON.stringify(values) !== JSON.stringify(prevValues)) {
         setCurrPage(0);
         return values;
@@ -64,21 +60,32 @@ const Page = () => {
       displayError(e);
     }
   };
+
+  if (error) {
+    displayError(error);
+    throw new Error('error loading data');
+  }
+
   return (
     <Box sx={{ p: '20px 16px 0 16px' }}>
-      <QuestionsAdminSearch onSubmit={handleChange} />
-      <QuestionsTable
-        questions={data.questions}
-        deleteQuestion={deleteQuestion}
-      />
-      <TablePagination
-        sx={stylesAdmin.pagination}
-        count={data.pagination.totalAmount}
-        page={currPage}
-        rowsPerPage={pageSize}
-        onPageChange={(e, page) => setCurrPage(page)}
-        onRowsPerPageChange={handleRowsPerPageChange}
-      />
+      <QuestionsAdminSearch onSubmit={handleChange} values={values} />
+      {isLoading && <LoadPage />}
+      {data && (
+        <>
+          <QuestionsTable
+            questions={data.questions}
+            deleteQuestion={deleteQuestion}
+          />
+          <TablePagination
+            sx={stylesAdmin.pagination}
+            count={data.pagination.totalAmount}
+            page={currPage}
+            rowsPerPage={pageSize}
+            onPageChange={(e, page) => setCurrPage(page)}
+            onRowsPerPageChange={handleRowsPerPageChange}
+          />
+        </>
+      )}
     </Box>
   );
 };

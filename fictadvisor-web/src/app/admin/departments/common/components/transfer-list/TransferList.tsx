@@ -56,27 +56,6 @@ const TransferList: FC<TransferListProps> = ({
     onLeftListChange(left);
   }, [right, left]);
 
-  const { data, isSuccess, error } = useQuery({
-    queryKey: ['notInDepartment', cathedraId, true],
-
-    queryFn: () =>
-      CathedraAPI.getDepartmentTeachers({
-        cathedrasId: [cathedraId],
-        notInDepartments: true,
-      }),
-
-    ...useQueryAdminOptions,
-  });
-
-  useEffect(() => {
-    if (isSuccess) {
-      setLeft(data.teachers);
-    }
-    if (error) {
-      !left ? setLeft([]) : null;
-    }
-  }, [data]);
-
   const inDepartmentData = useQuery({
     queryKey: ['inDepartment', cathedraId, false],
 
@@ -97,6 +76,27 @@ const TransferList: FC<TransferListProps> = ({
       setRight([]);
     }
   }, [inDepartmentData.data]);
+
+  const { data, isSuccess, error } = useQuery({
+    queryKey: ['notInDepartment', cathedraId, true],
+
+    queryFn: () =>
+      CathedraAPI.getDepartmentTeachers({
+        cathedrasId: [cathedraId],
+        notInDepartments: true,
+      }),
+
+    ...useQueryAdminOptions,
+  });
+
+  useEffect(() => {
+    if (isSuccess && inDepartmentData.isSuccess) {
+      setLeft(filterChecked(data.teachers, inDepartmentData.data.teachers));
+    }
+    if (error) {
+      !left ? setLeft([]) : null;
+    }
+  }, [data, inDepartmentData.data]);
 
   const teachersData = useQuery({
     queryKey: ['teachers'],

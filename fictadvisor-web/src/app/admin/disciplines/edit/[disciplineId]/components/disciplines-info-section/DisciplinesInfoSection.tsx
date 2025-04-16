@@ -1,5 +1,5 @@
 'use client';
-import { type FC, useEffect, useState } from 'react';
+import { Dispatch, type FC, SetStateAction, useEffect, useState } from 'react';
 import { DisciplineTypeEnum } from '@fictadvisor/utils';
 import { CreateDisciplineDTO } from '@fictadvisor/utils/requests';
 import { ExtendedDisciplineTeachersResponse } from '@fictadvisor/utils/responses';
@@ -27,7 +27,7 @@ import * as styles from './DisciplinesInfoSection.styles';
 
 interface DisciplinesInfoSectionProps {
   discipline: ExtendedDisciplineTeachersResponse;
-  setBody: React.Dispatch<React.SetStateAction<CreateDisciplineDTO>>;
+  setBody: Dispatch<SetStateAction<CreateDisciplineDTO>>;
 }
 
 const DisciplinesInfoSection: FC<DisciplinesInfoSectionProps> = ({
@@ -45,6 +45,7 @@ const DisciplinesInfoSection: FC<DisciplinesInfoSectionProps> = ({
       disciplineTypes: teacher.disciplineTypes,
     })),
   );
+  const [isEditingTeachers, setIsEditingTeachers] = useState(false);
 
   useEffect(() => {
     setBody({
@@ -57,7 +58,7 @@ const DisciplinesInfoSection: FC<DisciplinesInfoSectionProps> = ({
         disciplineTypes: teacher.disciplineTypes as DisciplineTypeEnum[],
       })),
     });
-  }, [semesterId, groupId, subjectId, disciplineTeachers]);
+  }, [semesterId, groupId, subjectId, disciplineTeachers, setBody]);
 
   const {
     groupsOptions,
@@ -83,16 +84,19 @@ const DisciplinesInfoSection: FC<DisciplinesInfoSectionProps> = ({
   )
     throw new Error('an error has occured while fetching data');
 
-  const deleteTeacher = (id: string) =>
+  const deleteTeacher = (id: string) => {
+    if (id === '') setIsEditingTeachers(false);
     setDisciplineTeachers([
       ...disciplineTeachers.filter(discipline => discipline.teacherId !== id),
     ]);
+  };
 
   const addNewTeacher = async () => {
+    setIsEditingTeachers(true);
     setDisciplineTeachers([
       ...disciplineTeachers,
       {
-        teacherId: disciplineTeachers.length.toString(),
+        teacherId: '',
         disciplineTypes: [],
       },
     ]);
@@ -135,7 +139,13 @@ const DisciplinesInfoSection: FC<DisciplinesInfoSectionProps> = ({
         <Box key={teacher.teacherId} sx={styles.teacherRow}>
           <DisciplineTeacherChange
             teacher={teacher}
-            teachersOptions={teachersOptions}
+            teachersOptions={teachersOptions.filter(
+              t =>
+                !disciplineTeachers
+                  .map(({ teacherId }) => teacherId)
+                  .includes(t.id) || t.id === teacher.teacherId,
+            )}
+            setIsEditingTeachers={setIsEditingTeachers}
             rolesOptions={rolesOptions}
             setDisciplineTeachers={setDisciplineTeachers}
           />
@@ -150,15 +160,17 @@ const DisciplinesInfoSection: FC<DisciplinesInfoSectionProps> = ({
           )}
         </Box>
       ))}
-      <Button
-        sx={{ width: '120px', borderRadius: '8px' }}
-        text="Додати"
-        size={ButtonSize.SMALL}
-        variant={ButtonVariant.OUTLINE}
-        startIcon={<PlusIcon className="icon" />}
-        type="submit"
-        onClick={() => addNewTeacher()}
-      />
+      {!isEditingTeachers && (
+        <Button
+          sx={{ width: '120px', borderRadius: '8px' }}
+          text="Додати"
+          size={ButtonSize.SMALL}
+          variant={ButtonVariant.OUTLINE}
+          startIcon={<PlusIcon className="icon" />}
+          type="submit"
+          onClick={() => addNewTeacher()}
+        />
+      )}
     </Box>
   );
 };

@@ -37,12 +37,12 @@ export class TeacherProfile extends AutomapperProfile {
           mapWith(CathedraResponse, DbCathedra, (dto) => extractField(dto.cathedras, 'cathedra'))
         ),
         forMember((response) => response.disciplineTypes,
-          mapFrom((dto) => this.getTeacherRoles(dto.disciplineTeachers)))
+          mapFrom((dto) => TeacherProfile.getTeacherRoles(dto.disciplineTeachers)))
       );
     };
   }
 
-  private getTeacherRoles (disciplineTeachers: DbDisciplineTeacher[]): DisciplineTypeEnum[] {
+  static getTeacherRoles (disciplineTeachers: DbDisciplineTeacher[]): DisciplineTypeEnum[] {
     const disciplineTypes: DisciplineTypeEnum[] = [];
     for (const { roles } of disciplineTeachers) {
       disciplineTypes.push(

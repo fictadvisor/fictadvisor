@@ -40,7 +40,8 @@ const AdminSubjectCreate = () => {
   const [subjectId, setSubjectId] = useState<string>('');
   const [disciplineTeachers, setDisciplineTeachers] = useState<
     DisciplineTeacher[]
-  >([disciplineTeacherInitialValues]);
+  >([]);
+  const [isEditingTeachers, setIsEditingTeachers] = useState(false);
 
   const toast = useToast();
   const router = useRouter();
@@ -69,26 +70,32 @@ const AdminSubjectCreate = () => {
   )
     throw new Error('an error has occured while fetching data');
 
-  const deleteTeacher = (id: string) =>
+  const deleteTeacher = (id: string) => {
+    if (id === '') setIsEditingTeachers(false);
     setDisciplineTeachers([
       ...disciplineTeachers.filter(teacher => teacher.id != id),
     ]);
+  };
 
   const handleTeacherChange = (teacherId: string) => {
-    const tmpTeacher = teachersOptions.find(x => x.id == teacherId);
+    const tmpTeacher = teachersOptions.find(x => x.id === teacherId);
+
     setDisciplineTeachers(prev =>
-      prev.map(teacher =>
-        teacher.id === teacherId
+      prev.map(teacher => {
+        if (teacher.id === '') setIsEditingTeachers(false);
+
+        return teacher.id === teacherId || teacher.id === ''
           ? {
               ...teacher,
               ...tmpTeacher,
             }
-          : teacher,
-      ),
+          : teacher;
+      }),
     );
   };
 
   const addNewTeacher = async () => {
+    setIsEditingTeachers(true);
     setDisciplineTeachers([
       ...disciplineTeachers,
       disciplineTeacherInitialValues,
@@ -115,10 +122,12 @@ const AdminSubjectCreate = () => {
     disciplineTeachers.forEach(teacher => {
       if (!teacher.id || !teacher.disciplineTypes.length) isTeacherSet = false;
     });
-    if (subjectId == '' || semesterId == '' || groupId == '' || !isTeacherSet) {
-      return false;
-    }
-    return true;
+    return !(
+      subjectId == '' ||
+      semesterId == '' ||
+      groupId == '' ||
+      !isTeacherSet
+    );
   };
 
   const saveDiscipline = () => {
@@ -199,7 +208,11 @@ const AdminSubjectCreate = () => {
         {disciplineTeachers.map(teacher => (
           <Box key={teacher.id} sx={styles.teacherRow}>
             <Dropdown
-              options={teachersOptions}
+              options={teachersOptions.filter(
+                t =>
+                  !disciplineTeachers.map(({ id }) => id).includes(t.id) ||
+                  t.id === teacher.id,
+              )}
               value={teacher.id}
               size={FieldSize.MEDIUM}
               width="360px"
@@ -224,28 +237,28 @@ const AdminSubjectCreate = () => {
                 minWidth: '0 !important',
               }}
             />
-            {disciplineTeachers.length > 1 && (
-              <IconButton
-                style={{ width: '46px', height: '46px', flexShrink: '0' }}
-                icon={<TrashIcon />}
-                shape={IconButtonShape.CIRCLE}
-                size={IconButtonSize.MEDIUM}
-                color={IconButtonColor.ERROR}
-                onClick={() => deleteTeacher(teacher.id)}
-              />
-            )}
+            <IconButton
+              style={{ width: '46px', height: '46px', flexShrink: '0' }}
+              icon={<TrashIcon />}
+              shape={IconButtonShape.CIRCLE}
+              size={IconButtonSize.MEDIUM}
+              color={IconButtonColor.ERROR}
+              onClick={() => deleteTeacher(teacher.id)}
+            />
           </Box>
         ))}
 
-        <Button
-          sx={{ width: '120px', borderRadius: '8px' }}
-          text="Додати"
-          variant={ButtonVariant.OUTLINE}
-          size={ButtonSize.SMALL}
-          startIcon={<PlusIcon className="icon" />}
-          type="submit"
-          onClick={() => addNewTeacher()}
-        />
+        {!isEditingTeachers && (
+          <Button
+            sx={{ width: '120px', borderRadius: '8px' }}
+            text="Додати"
+            variant={ButtonVariant.OUTLINE}
+            size={ButtonSize.SMALL}
+            startIcon={<PlusIcon className="icon" />}
+            type="submit"
+            onClick={() => addNewTeacher()}
+          />
+        )}
       </Box>
     </Box>
   );

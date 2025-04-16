@@ -3,6 +3,7 @@ import { Dispatch, type FC, SetStateAction, useState } from 'react';
 import { DisciplineTypeEnum } from '@fictadvisor/utils/enums';
 import { SelectChangeEvent } from '@mui/material';
 
+import { rolesText } from '@/app/admin/disciplines/common/constants';
 import { Dropdown } from '@/components/common/ui/form';
 import CheckboxesDropdown from '@/components/common/ui/form/checkboxes-dropdown/CheckboxesDropdown';
 import { CheckboxesDropdownOption } from '@/components/common/ui/form/checkboxes-dropdown/types/CheckboxesDropdown';
@@ -18,6 +19,7 @@ interface DisciplineTeacherChangeProps {
   };
   teachersOptions: DropDownOption[];
   rolesOptions: CheckboxesDropdownOption[];
+  setIsEditingTeachers: Dispatch<SetStateAction<boolean>>;
   setDisciplineTeachers: Dispatch<
     SetStateAction<
       {
@@ -33,40 +35,50 @@ const DisciplineTeacherChange: FC<DisciplineTeacherChangeProps> = ({
   teachersOptions,
   rolesOptions,
   setDisciplineTeachers,
+  setIsEditingTeachers,
 }) => {
-  const [disciplineTeacherRoles, setDisciplineTeacherRoles] = useState<
-    CheckboxesDropdownOption[]
-  >(
-    teacher.disciplineTypes.map(disciplineType => ({
-      value: disciplineType,
-      label: disciplineType,
-    })),
-  );
+  const newRoles = teacher.disciplineTypes?.map(role =>
+    rolesOptions.find(({ value }) => value === rolesText[role]),
+  ) as CheckboxesDropdownOption[];
+
+  const [disciplineTeacherRoles, setDisciplineTeacherRoles] =
+    useState<CheckboxesDropdownOption[]>(newRoles);
 
   const handleTeacherChange = (newTeacherId: string, oldTeacherId: string) => {
-    setDisciplineTeachers(prev => {
-      return prev.map(teacher => {
-        if (teacher.teacherId === oldTeacherId) {
-          const newTeacher = teachersOptions.find(
-            teacher => teacher.id === newTeacherId,
-          )!;
-          teacher = {
-            teacherId: newTeacher.id,
-            disciplineTypes: teacher.disciplineTypes,
-          };
-        }
-        return teacher;
-      });
-    });
+    const tmpTeacher = teachersOptions.find(
+      teacher => teacher.id === newTeacherId,
+    );
+
+    setDisciplineTeachers(prev =>
+      prev.map(teacher => {
+        if (teacher.teacherId === '') setIsEditingTeachers(false);
+
+        return teacher.teacherId === oldTeacherId || teacher.teacherId === ''
+          ? {
+              ...teacher,
+              teacherId: tmpTeacher?.id ?? '',
+            }
+          : teacher;
+      }),
+    );
   };
 
   const handleRolesChange = (event: SelectChangeEvent) => {
-    const values = event.target.value as unknown as DisciplineTypeEnum[];
-    setDisciplineTeacherRoles(
-      values.map(value => ({
-        value: value,
-        label: value,
-      })),
+    const newRoles = rolesOptions.filter(role =>
+      event.target.value.includes(role.value),
+    );
+
+    setDisciplineTeacherRoles(newRoles);
+    setDisciplineTeachers(prevTeachers =>
+      prevTeachers.map(prev => {
+        if (prev.teacherId === teacher.teacherId) {
+          prev = {
+            teacherId: teacher.teacherId,
+            disciplineTypes: newRoles.map(({ id }) => id as DisciplineTypeEnum),
+          };
+        }
+        return prev;
+      }),
     );
   };
 

@@ -124,9 +124,7 @@ const AdminStudentEditPage: FC<AdminStudentEditPageProps> = ({ params }) => {
                 variant={ButtonVariant.OUTLINE}
                 size={ButtonSize.SMALL}
                 color={ButtonColor.SECONDARY}
-                onClick={() =>
-                  router.push(`/admin/students/edit/${student.id}`)
-                }
+                onClick={() => router.push(`/admin/users/edit/${student.id}`)}
               />
             </Box>
             <Divider sx={stylesAdmin.dividerHor} />

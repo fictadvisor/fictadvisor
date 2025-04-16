@@ -13,20 +13,22 @@ import HeaderUserSearch, {
 import StudentsList from '@/app/admin/students/search/components/students-list';
 import { StudentInitialValues } from '@/app/admin/students/search/constants';
 import LoadPage from '@/components/common/ui/load-page';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import StudentAPI from '@/lib/api/student/StudentAPI';
 
 const AdminStudentSearchPage = () => {
-  const [queryObj, setQueryObj] =
+  const [values, setValues] =
     useState<QueryAllStudentsDTO>(StudentInitialValues);
   const [currPage, setCurrPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
+  const { displayError } = useToastError();
 
-  const { data, isLoading, refetch } = useQuery({
-    queryKey: ['students', currPage, pageSize, queryObj],
+  const { data, isLoading, refetch, error } = useQuery({
+    queryKey: ['students', currPage, pageSize, values],
 
     queryFn: () =>
       StudentAPI.getAll({
-        ...queryObj,
+        ...values,
         pageSize,
         page: currPage,
       }),
@@ -34,24 +36,29 @@ const AdminStudentSearchPage = () => {
     ...useQueryAdminOptions,
   });
 
-  if (isLoading) return <LoadPage />;
-
-  if (!data) throw new Error('error loading data');
-
   const submitHandler: HeaderStudentSearchProps['onSubmit'] = query =>
-    setQueryObj(prev => ({ ...prev, ...query }));
+    setValues(prev => ({ ...prev, ...query }));
+
+  if (error) {
+    displayError(error);
+    throw new Error('error loading data');
+  }
+
   return (
     <Box sx={stylesAdmin.wrapper}>
-      <HeaderUserSearch onSubmit={submitHandler} />
-      <StudentsList
-        currPage={currPage}
-        setCurrPage={setCurrPage}
-        students={data.students}
-        pageSize={pageSize}
-        setPageSize={setPageSize}
-        totalCount={data.pagination.totalAmount}
-        refetch={refetch}
-      />
+      <HeaderUserSearch onSubmit={submitHandler} values={values} />
+      {isLoading && <LoadPage />}
+      {data && (
+        <StudentsList
+          currPage={currPage}
+          setCurrPage={setCurrPage}
+          students={data.students}
+          pageSize={pageSize}
+          setPageSize={setPageSize}
+          totalCount={data.pagination.totalAmount}
+          refetch={refetch}
+        />
+      )}
     </Box>
   );
 };

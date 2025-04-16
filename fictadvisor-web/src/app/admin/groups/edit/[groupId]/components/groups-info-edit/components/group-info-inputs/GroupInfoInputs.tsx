@@ -1,8 +1,12 @@
 'use client';
-import type { FC } from 'react';
-import { useEffect, useState } from 'react';
+import { Dispatch, FC, SetStateAction, useCallback, useEffect } from 'react';
+import { useState } from 'react';
+import { RoleName } from '@fictadvisor/utils/enums';
 import { UpdateGroupDTO } from '@fictadvisor/utils/requests';
-import { OrdinaryStudentResponse } from '@fictadvisor/utils/responses';
+import {
+  MappedGroupResponse,
+  OrdinaryStudentResponse,
+} from '@fictadvisor/utils/responses';
 import { Box } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
@@ -20,30 +24,28 @@ import EduprogramAPI from '@/lib/api/eduprogram/EduprogramAPI';
 import * as styles from './GroupInfoInputs.styles';
 
 interface GroupInfoInputsProps {
-  groupInfo: UpdateGroupDTO;
+  group: MappedGroupResponse;
   students: OrdinaryStudentResponse[];
-  setGroupInfo: React.Dispatch<React.SetStateAction<UpdateGroupDTO>>;
+  setGroupInfo: Dispatch<SetStateAction<UpdateGroupDTO>>;
 }
 
 const GroupInfoInputs: FC<GroupInfoInputsProps> = ({
-  groupInfo,
+  group,
   setGroupInfo,
   students,
 }) => {
-  const [code, setCode] = useState<string>(groupInfo.code as string);
+  const [code, setCode] = useState<string>(group.code as string);
   const [admissionYear, setAdmissionYear] = useState<number>(
-    groupInfo.admissionYear as number,
+    group.admissionYear as number,
   );
   const [eduProgramId, setEduProgramId] = useState<string>(
-    groupInfo.eduProgramId as string,
+    group.educationalProgramId as string,
   );
   const [cathedraId, setCathedraId] = useState<string>(
-    groupInfo.cathedraId as string,
+    group.cathedra.id as string,
   );
 
-  const [captainId, setCaptainId] = useState<string>(
-    groupInfo.captainId as string,
-  );
+  const [captainId, setCaptainId] = useState<string>(group.captain.id);
 
   const { data: eduprogramsData, isLoading: isLoadingEduprograms } = useQuery({
     queryKey: ['eduprograms'],
@@ -57,21 +59,15 @@ const GroupInfoInputs: FC<GroupInfoInputsProps> = ({
   });
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setGroupInfo(prev => ({
-        ...prev,
-        code,
-        admissionYear,
-        eduProgramId,
-        captainId,
-        cathedraId,
-      }));
-    }, 200);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [code, admissionYear, eduProgramId, captainId, cathedraId]);
+    setGroupInfo(prev => ({
+      ...prev,
+      code,
+      admissionYear,
+      eduProgramId,
+      captainId,
+      cathedraId,
+    }));
+  }, [admissionYear, captainId, cathedraId, code, eduProgramId, setGroupInfo]);
 
   if (isLoading || isLoadingEduprograms) return <Progress />;
 
@@ -111,7 +107,7 @@ const GroupInfoInputs: FC<GroupInfoInputsProps> = ({
         options={yearOptions}
         showRemark={false}
         onChange={(value: string) => setAdmissionYear(+value)}
-        value={admissionYear.toString()}
+        value={admissionYear?.toString()}
         label="Рік вступу"
       />
       <Dropdown

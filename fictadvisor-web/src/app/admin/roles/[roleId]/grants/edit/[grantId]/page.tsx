@@ -1,5 +1,5 @@
 'use client';
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Box, CardHeader, Stack, Switch, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
@@ -30,9 +30,18 @@ interface AdminGrantsEditProps {
 }
 
 const AdminGrantsEdit: FC<AdminGrantsEditProps> = ({ params }) => {
+  const { displayError } = useToastError();
+  const [permission, setPermission] = useState<string>('');
+  const [weight, setWeight] = useState<string>('');
+  const [set, setSet] = useState<boolean>(true);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toast = useToast();
+  const router = useRouter();
+
   const {
     data: grant,
-    isSuccess,
+    error,
     isLoading,
   } = useQuery({
     queryKey: ['getGrantById', params.roleId, params.grantId],
@@ -40,19 +49,13 @@ const AdminGrantsEdit: FC<AdminGrantsEditProps> = ({ params }) => {
     ...useQueryAdminOptions,
   });
 
-  if (!isSuccess)
-    throw new Error(
-      `An error has occurred while editing ${params.grantId} grant`,
-    );
+  useEffect(() => {
+    if (!grant) return;
 
-  const [permission, setPermission] = useState<string>(grant.permission);
-  const [weight, setWeight] = useState<string>(grant.weight.toString());
-  const [set, setSet] = useState<boolean>(grant.set);
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toast = useToast();
-  const { displayError } = useToastError();
-  const router = useRouter();
+    setPermission(grant.permission);
+    setWeight(grant.weight.toString());
+    setSet(grant.set);
+  }, [grant]);
 
   const handleDelete = async (grantId: string) => {
     try {
@@ -65,6 +68,8 @@ const AdminGrantsEdit: FC<AdminGrantsEditProps> = ({ params }) => {
   };
 
   const handleEdit = async () => {
+    if (!grant) return;
+
     try {
       await GrantsAPI.edit(params.roleId, grant.id, {
         permission: permission,
@@ -80,12 +85,19 @@ const AdminGrantsEdit: FC<AdminGrantsEditProps> = ({ params }) => {
 
   if (isLoading) return <LoadPage />;
 
+  if (error) {
+    displayError(error);
+    throw new Error(
+      `An error has occurred while editing ${params.grantId} grant`,
+    );
+  }
+
   return (
     <>
       <Box sx={stylesAdmin.header}>
         <CardHeader
           title="Редагування"
-          subheader={`Права ${grant.permission}`}
+          subheader={`Права ${grant?.permission}`}
           sx={stylesAdmin.title}
         />
         <Stack flexDirection="row" gap="8px">
@@ -108,8 +120,8 @@ const AdminGrantsEdit: FC<AdminGrantsEditProps> = ({ params }) => {
           {isOpen && (
             <DeletePopup
               setPopupOpen={setIsOpen}
-              handleDeleteSubmit={() => handleDelete(grant.id)}
-              name={`Право ${grant.permission}`}
+              handleDeleteSubmit={() => handleDelete(grant?.id ?? '')}
+              name={`Право ${grant?.permission}`}
             />
           )}
           <Button

@@ -9,7 +9,7 @@ import AdminPanelLayout from '@/components/common/layout/admin-panel-layout/Admi
 import Progress from '@/components/common/ui/progress';
 import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 import PermissionApi from '@/lib/api/permission/PermissionApi';
-import { adminPermissions } from '@/types/adminPermissions';
+import getPermissions from '@/lib/utils/getPermissions';
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const user = useAuthentication();
@@ -17,7 +17,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const [permissionGranted, setPermissionGranted] = useState(false);
 
   const pathname = usePathname();
-  const requestedPathname = adminPermissions[pathname];
+  const requestedPathname = getPermissions(pathname);
+  if (!requestedPathname) redirect('/');
 
   if (!user) redirect('/login');
 
@@ -33,18 +34,18 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   });
 
   useEffect(() => {
-    if (permissionData?.permissions) {
+    if (!isLoading) {
+      if (!permissionData?.permissions) redirect('/');
+
       const permissionCheck = Object.entries(permissionData.permissions).some(
         ([key, value]) => key === requestedPathname && value,
       );
 
       setPermissionGranted(permissionCheck);
 
-      if (!permissionCheck) {
-        redirect('/');
-      }
+      if (!permissionCheck) redirect('/');
     }
-  }, [permissionData]);
+  }, [isLoading, permissionData, requestedPathname]);
 
   if (isLoading) {
     return (
