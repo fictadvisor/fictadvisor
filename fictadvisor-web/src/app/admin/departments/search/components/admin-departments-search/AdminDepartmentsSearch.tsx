@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { SortQACParam } from '@fictadvisor/utils/enums';
 import { QueryAllCathedrasDTO } from '@fictadvisor/utils/requests';
 import {
@@ -24,43 +24,36 @@ import IconButton from '@/components/common/ui/icon-button-mui';
 import { IconButtonSize } from '@/components/common/ui/icon-button-mui/types';
 import { Cathedra } from '@/types/cathedra';
 
-import {
-  AdminDepartmentsInitialValues,
-  AdminDepartmentsSortOptions,
-} from '../../constants';
+import { AdminDepartmentsSortOptions } from '../../constants';
 
 interface AdminDepartmentSearchProps {
   onSubmit: (values: QueryAllCathedrasDTO) => void;
+  values: QueryAllCathedrasDTO;
   cathedras: Cathedra[];
 }
 
 const AdminDepartmentsSearch: FC<AdminDepartmentSearchProps> = ({
   onSubmit,
+  values,
   cathedras,
 }) => {
-  const [values, setValues] = useState<QueryAllCathedrasDTO>(
-    AdminDepartmentsInitialValues,
+  const [search, setSearch] = useState<string>(values.search ?? '');
+  const [order, setOrder] = useState<'asc' | 'desc'>(values.order ?? 'asc');
+  const [sort, setSort] = useState<SortQACParam>(
+    values.sort ?? SortQACParam.NAME,
   );
-  const [search, setSearch] = useState<string>('');
-  const [sort, setSort] = useState<SortQACParam>(SortQACParam.NAME);
-  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
+
   const [divisions, setDivisions] = useState<CheckboxesDropdownOption[]>([]);
 
   const handleFormSubmit = () => {
     const newFaculties = divisions.map(division => division.id!);
-    setValues({
-      ...values,
+    onSubmit({
       search,
       order,
       sort,
       divisions: newFaculties,
     });
-    onSubmit(values);
   };
-
-  useEffect(() => {
-    handleFormSubmit();
-  }, [search, order, sort, divisions]);
 
   const facultyOptions = new Set<string>();
   cathedras.map(cathedra => facultyOptions.add(cathedra.division));
@@ -91,7 +84,7 @@ const AdminDepartmentsSearch: FC<AdminDepartmentSearchProps> = ({
             <Input
               value={search}
               onChange={setSearch}
-              onDeterredChange={() => handleFormSubmit()}
+              onDeterredChange={handleFormSubmit}
               size={InputSize.MEDIUM}
               type={InputType.SEARCH}
               placeholder="Пошук"
@@ -101,43 +94,48 @@ const AdminDepartmentsSearch: FC<AdminDepartmentSearchProps> = ({
           </Box>
           <Divider orientation="vertical" sx={stylesAdmin.dividerVert} />
           <Box sx={{ width: '150px' }}>
-            <CheckboxesDropdown
-              dropdownSx={{ width: '150px' }}
-              label="Факультети"
-              values={faculties}
-              selected={divisions}
-              size={FieldSize.MEDIUM}
-              handleChange={handleFacultiesChange}
-              menuSx={{ backgroundColor: 'backgroundDark.100', width: '150px' }}
-            />
+            {
+              <CheckboxesDropdown
+                dropdownSx={{ width: '150px' }}
+                label="Факультети"
+                values={faculties}
+                selected={divisions}
+                size={FieldSize.MEDIUM}
+                handleChange={handleFacultiesChange}
+                menuSx={{
+                  backgroundColor: 'backgroundDark.100',
+                  width: '150px',
+                }}
+              />
+            }
           </Box>
           <Divider orientation="vertical" sx={stylesAdmin.dividerVert} />
-          <Dropdown
-            dropdownSx={{ width: '150px' }}
-            disableClearable
-            placeholder="Сортувати за"
-            size={FieldSize.MEDIUM}
-            options={AdminDepartmentsSortOptions}
-            showRemark={false}
-            onChange={handleSortChange}
-            value={sort}
-            label="Сортувати за"
-          />
           <Box>
-            <IconButton
-              onClick={handleOrderChange}
-              shape={IconButtonShape.SQUARE}
-              color={IconButtonColor.SECONDARY}
-              size={IconButtonSize.LARGE}
-              icon={
-                values.order === 'asc' ? (
-                  <BarsArrowDownIcon />
-                ) : (
-                  <BarsArrowUpIcon />
-                )
-              }
+            <Dropdown
+              dropdownSx={{ width: '150px' }}
+              disableClearable
+              placeholder="Сортувати за"
+              size={FieldSize.MEDIUM}
+              options={AdminDepartmentsSortOptions}
+              showRemark={false}
+              onChange={handleSortChange}
+              value={sort}
+              label="Сортувати за"
             />
           </Box>
+          <IconButton
+            onClick={handleOrderChange}
+            shape={IconButtonShape.SQUARE}
+            color={IconButtonColor.SECONDARY}
+            size={IconButtonSize.LARGE}
+            icon={
+              values.order === 'asc' ? (
+                <BarsArrowDownIcon />
+              ) : (
+                <BarsArrowUpIcon />
+              )
+            }
+          />
         </Box>
         <Button
           size={ButtonSize.MEDIUM}

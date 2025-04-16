@@ -1,11 +1,10 @@
 'use client';
-import type { FC } from 'react';
-import { useEffect, useState } from 'react';
+import type { Dispatch, FC, SetStateAction } from 'react';
 import { UpdateGroupDTO } from '@fictadvisor/utils/requests';
+import { MappedGroupResponse } from '@fictadvisor/utils/responses';
 import { Stack } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
-import { extractModeratorsIds } from '@/app/admin/groups/common/utils/extractModeratorsIds';
 import Progress from '@/components/common/ui/progress';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import GroupAPI from '@/lib/api/group/GroupAPI';
@@ -14,51 +13,45 @@ import EditModerators from './components/edit-moderators';
 import GroupInfoInputs from './components/group-info-inputs/GroupInfoInputs';
 
 interface GroupsInfoEditProps {
-  groupId: string;
-  groupInfo: UpdateGroupDTO;
-  setGroupInfo: React.Dispatch<React.SetStateAction<UpdateGroupDTO>>;
+  group: MappedGroupResponse;
+  setGroupInfo: Dispatch<SetStateAction<UpdateGroupDTO>>;
 }
 
-const GroupsInfoEdit: FC<GroupsInfoEditProps> = ({
-  groupInfo,
-  setGroupInfo,
-  groupId,
-}) => {
-  const toastError = useToastError();
+const GroupsInfoEdit: FC<GroupsInfoEditProps> = ({ group, setGroupInfo }) => {
+  const { displayError } = useToastError();
 
-  const [moderatorIds, setModeratorIds] = useState<string[]>(
-    groupInfo.moderatorIds as string[],
-  );
-
-  useEffect(() => {
-    setGroupInfo(prev => ({
-      ...prev,
-      moderatorIds,
-    }));
-  }, [moderatorIds]);
-
-  const { data: studentsData, isLoading: isLoadingStudents } = useQuery({
-    queryKey: ['studentsByGroupId', groupId],
-    queryFn: () => GroupAPI.getGroupStudents(groupId),
+  const {
+    data: studentsData,
+    isLoading: isLoadingStudents,
+    error,
+  } = useQuery({
+    queryKey: ['studentsByGroupId', group.id],
+    queryFn: () => GroupAPI.getGroupStudents(group.id),
   });
 
-  if (isLoadingStudents || !studentsData) return <Progress />;
+  if (isLoadingStudents) return <Progress />;
+
+  if (error) displayError(error);
+  if (!studentsData) throw new Error('Error loading group data');
 
   return (
-    <Stack sx={{ flexDirection: 'column', gap: '16px' }}>
-      <Stack maxWidth={372} flexDirection="column" gap="16px">
-        <GroupInfoInputs
-          students={studentsData.students}
-          groupInfo={groupInfo}
-          setGroupInfo={setGroupInfo}
-        />
-        <EditModerators
-          students={studentsData.students}
-          moderatorIds={moderatorIds}
-          setModeratorIds={setModeratorIds}
-        />
-      </Stack>
-    </Stack>
+    <>
+      {studentsData && (
+        <Stack sx={{ flexDirection: 'column', gap: '16px' }}>
+          <Stack maxWidth={372} flexDirection="column" gap="16px">
+            <GroupInfoInputs
+              students={studentsData.students}
+              group={group}
+              setGroupInfo={setGroupInfo}
+            />
+            <EditModerators
+              students={studentsData.students}
+              setGroupInfo={setGroupInfo}
+            />
+          </Stack>
+        </Stack>
+      )}
+    </>
   );
 };
 

@@ -1,5 +1,5 @@
 'use client';
-import React, { FC, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { State } from '@fictadvisor/utils/enums';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Avatar, Box, CardHeader, Stack } from '@mui/material';
@@ -37,21 +37,28 @@ const AdminUserEdit: FC<AdminUserEditProps> = ({ params }) => {
     data: user,
     isSuccess,
     isLoading,
+    error,
   } = useQuery({
     queryKey: ['getUser', params.userId],
     queryFn: () => UserAPI.getUser(params.userId),
     ...useQueryAdminOptions,
   });
 
-  if (!isSuccess) throw new Error('Something went wrong in user edit page');
-
-  const [username, setUsername] = useState<string>(user.username);
-  const [email, setEmail] = useState<string>(user.email);
-  const [userState, setUserState] = useState<State>(user.state);
+  const [username, setUsername] = useState<string>();
+  const [email, setEmail] = useState<string>();
+  const [userState, setUserState] = useState<State>();
   const toast = useToast();
   const { displayError } = useToastError();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    if (!user) return;
+
+    setUsername(user.username);
+    setEmail(user.email);
+    setUserState(user.state);
+  }, [user]);
 
   const handleDelete = async (userId: string) => {
     try {
@@ -64,7 +71,9 @@ const AdminUserEdit: FC<AdminUserEditProps> = ({ params }) => {
       }
     }
   };
-  const handleEdit = async () => {
+  const handleEdit = useCallback(async () => {
+    if (!user) return;
+
     try {
       await UserAPI.editUser(user.id, {
         username,
@@ -72,14 +81,18 @@ const AdminUserEdit: FC<AdminUserEditProps> = ({ params }) => {
         state: userState,
       });
       toast.success('Користувач успішно змінений!', '', 4000);
+      router.replace('/admin/users');
     } catch (e) {
       if (isAxiosError(e)) {
         displayError(e);
       }
     }
-  };
+  }, [email, user, userState, username]);
 
   if (isLoading) return <LoadPage />;
+
+  if (error) displayError(error);
+  if (!isSuccess) throw new Error('Something went wrong in user edit page');
 
   return (
     <>
@@ -126,7 +139,7 @@ const AdminUserEdit: FC<AdminUserEditProps> = ({ params }) => {
       <Box sx={styles.body}>
         <Box sx={stylesAdmin.inputsWrapper}>
           <Input
-            value={username}
+            value={username ?? ''}
             onChange={setUsername}
             size={InputSize.MEDIUM}
             type={InputType.DEFAULT}
@@ -134,7 +147,7 @@ const AdminUserEdit: FC<AdminUserEditProps> = ({ params }) => {
             label="Username"
           />
           <Input
-            value={email}
+            value={email ?? ''}
             onChange={setEmail}
             size={InputSize.MEDIUM}
             type={InputType.DEFAULT}
@@ -148,7 +161,7 @@ const AdminUserEdit: FC<AdminUserEditProps> = ({ params }) => {
             options={UserStateOptions}
             showRemark={false}
             onChange={(value: string) => setUserState(value as State)}
-            value={userState}
+            value={userState ?? ''}
             label="Стан користувача"
           />
         </Box>

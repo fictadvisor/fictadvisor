@@ -1,5 +1,5 @@
 'use client';
-import React, { FC, useState } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import { UpdateGroupDTO } from '@fictadvisor/utils/requests';
 import { Box } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
@@ -24,39 +24,37 @@ const AdminGroupEditBodyPage: FC<AdminGroupEditBodyPageProps> = ({
 }) => {
   const {
     data: group,
-    isSuccess,
     isLoading,
+    error,
   } = useQuery({
     queryKey: ['getAdminGroup', params.groupId],
     queryFn: () => GroupAPI.get(params.groupId),
     ...useQueryAdminOptions,
   });
 
-  if (!isSuccess)
-    throw new Error(
-      `An error has occurred while editing ${params.groupId} group`,
-    );
-
-  const initialValues: UpdateGroupDTO = {
-    code: group.code,
-    admissionYear: group.admissionYear,
-    captainId: group.captain.id,
-    moderatorIds: [],
-    eduProgramId: group.educationalProgramId,
-    cathedraId: group.cathedra.id,
-  };
   const toast = useToast();
   const { displayError } = useToastError();
   const router = useRouter();
-  const [groupInfo, setGroupInfo] = useState<UpdateGroupDTO>(initialValues);
+  const [groupInfo, setGroupInfo] = useState<UpdateGroupDTO>({});
 
   const handleEditSubmit = async () => {
+    if (!groupInfo || !group) return;
+
+    const initialValues: UpdateGroupDTO = {
+      code: group.code,
+      admissionYear: group.admissionYear,
+      eduProgramId: group.educationalProgramId,
+      cathedraId: group.cathedra.id,
+      captainId: group.captain.id,
+      moderatorIds: [],
+    };
+
     try {
       const body: Partial<UpdateGroupDTO> = getChangedValues(
         groupInfo,
         initialValues,
       );
-      await GroupAPI.editGroup(group.id, body);
+      await GroupAPI.editGroup(params.groupId, body);
       toast.success('Група успішно змінена!', '', 4000);
       router.replace('/admin/groups');
     } catch (e) {
@@ -64,31 +62,40 @@ const AdminGroupEditBodyPage: FC<AdminGroupEditBodyPageProps> = ({
     }
   };
 
-  const handleDeleteSubmit = async () => {
+  const handleDeleteSubmit = useCallback(async () => {
+    if (!groupInfo) return;
+
     try {
-      await GroupAPI.delete(group.id);
+      await GroupAPI.delete(params.groupId);
       toast.success('Група успішно видалена!', '', 4000);
       router.replace('/admin/groups');
     } catch (e) {
       displayError(e);
     }
-  };
+  }, [groupInfo]);
 
   if (isLoading) return <LoadPage />;
 
+  if (error) {
+    displayError(error);
+    throw new Error(
+      `An error has occurred while editing ${params.groupId} group`,
+    );
+  }
+
   return (
-    <Box sx={{ p: '16px' }}>
-      <HeaderEdit
-        group={group}
-        handleEditSubmit={handleEditSubmit}
-        handleDeleteSubmit={handleDeleteSubmit}
-      />
-      <GroupsInfoEdit
-        groupId={group.id}
-        groupInfo={groupInfo}
-        setGroupInfo={setGroupInfo}
-      />
-    </Box>
+    <>
+      {group && (
+        <Box sx={{ p: '16px' }}>
+          <HeaderEdit
+            group={group}
+            handleEditSubmit={handleEditSubmit}
+            handleDeleteSubmit={handleDeleteSubmit}
+          />
+          <GroupsInfoEdit group={group} setGroupInfo={setGroupInfo} />
+        </Box>
+      )}
+    </>
   );
 };
 

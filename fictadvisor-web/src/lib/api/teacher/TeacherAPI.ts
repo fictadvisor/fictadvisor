@@ -142,6 +142,13 @@ class TeacherAPI {
     return data;
   }
 
+  async deleteTeacherContact(teacherId: string, contactId: string) {
+    const { data } = await client.delete<void>(
+      `/teachers/${teacherId}/contacts/${contactId}`,
+    );
+    return data;
+  }
+
   async editTeacherCathedra(teacherId: string, cathedraId: string) {
     const { data } = await client.patch<TeacherWithContactsFullResponse>(
       `/teachers/${teacherId}/cathedra/${cathedraId}`,

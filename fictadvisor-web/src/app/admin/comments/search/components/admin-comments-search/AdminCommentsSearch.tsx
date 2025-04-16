@@ -1,11 +1,8 @@
 'use client';
-import React, { FC, useEffect, useMemo, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { CommentsSortBy } from '@fictadvisor/utils/enums';
 import { QueryAllCommentsDTO } from '@fictadvisor/utils/requests';
-import {
-  SemestersResponse,
-  StudyingSemester,
-} from '@fictadvisor/utils/responses';
+import { SemesterResponse } from '@fictadvisor/utils/responses';
 import {
   BarsArrowDownIcon,
   BarsArrowUpIcon,
@@ -13,13 +10,13 @@ import {
 import { Box, Divider } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
 
-import {
-  initialValues,
-  sortOptions,
-} from '@/app/admin/comments/common/constants';
+import { sortOptions } from '@/app/admin/comments/common/constants';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
+import { transferToMulti } from '@/app/admin/disciplines/common/utils/transformToMulti';
+import { useDisciplines } from '@/app/admin/disciplines/common/utils/useDisciplines';
 import { Dropdown, InputSize, InputType } from '@/components/common/ui/form';
 import CheckboxesDropdown from '@/components/common/ui/form/checkboxes-dropdown/CheckboxesDropdown';
+import { CheckboxesDropdownOption } from '@/components/common/ui/form/checkboxes-dropdown/types/CheckboxesDropdown';
 import { FieldSize } from '@/components/common/ui/form/common/types';
 import Input from '@/components/common/ui/form/input-mui';
 import {
@@ -28,78 +25,51 @@ import {
 } from '@/components/common/ui/icon-button';
 import IconButton from '@/components/common/ui/icon-button-mui';
 import { IconButtonSize } from '@/components/common/ui/icon-button-mui/types';
+import Progress from '@/components/common/ui/progress';
 
 interface AdminCommentsSearch {
   onSubmit: (values: QueryAllCommentsDTO) => void;
-  dates: SemestersResponse;
+  values: QueryAllCommentsDTO;
 }
 
-const AnswersAdminSearch: FC<AdminCommentsSearch> = ({ onSubmit, dates }) => {
-  const [search, setSearch] = useState<string>('');
-  const [sortBy, setSortBy] = useState<string>('username');
-  const [semesters, setSemesters] = useState<typeof semestersOptions>([]);
-  const [order, setOrder] = useState<'asc' | 'desc'>('desc');
-  const [values, setValues] = useState<QueryAllCommentsDTO>(initialValues);
+const AnswersAdminSearch: FC<AdminCommentsSearch> = ({ onSubmit, values }) => {
+  const [search, setSearch] = useState<string>(values.search ?? '');
+  const [sortBy, setSortBy] = useState<string>(values.sort ?? 'username');
+  const [order, setOrder] = useState<'asc' | 'desc'>(values.order ?? 'desc');
+  const [semesters, setSemesters] = useState<CheckboxesDropdownOption[]>([]);
 
-  const semestersOptions = useMemo(
-    () =>
-      dates.semesters.map(({ semester, year }) => ({
-        label: `${semester} семестр ${year}`,
-        value: { semester, year },
-      })),
-    [dates],
-  );
+  const handleFormSubmit = () => {
+    const newSemestersFilter = semesters.map(semester => ({
+      semester: parseInt(semester.value.split(' ')[1]),
+      year: parseInt(semester.value.split(' ')[0]),
+    })) as SemesterResponse[];
 
-  const handleSearchChange = (value: string) => {
-    setSearch(value);
-    setValues((values: QueryAllCommentsDTO) => ({
-      ...values,
-      search: value,
-    }));
+    onSubmit({
+      order,
+      search,
+      semesters: newSemestersFilter,
+      sort: sortBy as CommentsSortBy,
+    });
   };
+
+  const { isLoading, isError, semesterOptions } = useDisciplines();
+
+  const semestersMultiOptions = transferToMulti(semesterOptions ?? []);
 
   const handleOrderChange = () => {
     setOrder(order => (order === 'asc' ? 'desc' : 'asc'));
-    setValues((values: QueryAllCommentsDTO) => ({
-      ...values,
-      order: order,
-    }));
-  };
-
-  const handleSortByChange = (value: string) => {
-    setSortBy(value);
-    setValues((values: QueryAllCommentsDTO) => ({
-      ...values,
-      sort: value as CommentsSortBy,
-    }));
   };
 
   const handleSemestersChange = (event: SelectChangeEvent) => {
-    const value = (event.target.value as unknown as StudyingSemester[]).filter(
-      Boolean,
+    const value = event.target.value as unknown as string[];
+    const newSemesters = value.map(
+      value =>
+        semestersMultiOptions.find(semester => semester.value === value)!,
     );
-    const selectedSemestersOptions = value.reduce(
-      (acc: typeof semestersOptions, semester: StudyingSemester) => {
-        const semesterOption = semestersOptions.find(
-          ({ value }) =>
-            value.year === semester.year &&
-            value.semester === semester.semester,
-        )!;
-        acc.push(semesterOption);
-        return acc;
-      },
-      [],
-    );
-    setSemesters(selectedSemestersOptions);
-    setValues((values: QueryAllCommentsDTO) => ({
-      ...values,
-      semesters: value,
-    }));
+    setSemesters(newSemesters);
   };
 
-  useEffect(() => {
-    onSubmit(values);
-  }, [onSubmit, values]);
+  if (isError) throw new Error('Error loading semesters');
 
   return (
     <Box sx={stylesAdmin.header}>
@@ -107,7 +77,8 @@ const AnswersAdminSearch: FC<AdminCommentsSearch> = ({ onSubmit, dates }) => {
         <Box sx={stylesAdmin.search}>
           <Input
             value={search}
-            onChange={handleSearchChange}
+            onChange={setSearch}
+            onDeterredChange={handleFormSubmit}
             size={InputSize.MEDIUM}
             type={InputType.SEARCH}
             placeholder="Пошук"
@@ -116,15 +87,17 @@ const AnswersAdminSearch: FC<AdminCommentsSearch> = ({ onSubmit, dates }) => {
         </Box>
         <Divider orientation="vertical" sx={stylesAdmin.dividerVert} />
         <Box sx={stylesAdmin.dropdown}>
-          <CheckboxesDropdown
-            label="Рік і семестр"
-            // @ts-expect-error CheckboxesDropdownOption[] requires string
-            values={semestersOptions}
-            // @ts-expect-error CheckboxesDropdownOption[] requires string
-            selected={semesters}
-            size={FieldSize.MEDIUM}
-            handleChange={handleSemestersChange}
-          />
+          {isLoading ? (
+            <Progress />
+          ) : (
+            <CheckboxesDropdown
+              label="Рік і семестр"
+              values={semestersMultiOptions}
+              selected={semesters}
+              size={FieldSize.MEDIUM}
+              handleChange={handleSemestersChange}
+            />
+          )}
         </Box>
         <Divider orientation="vertical" sx={stylesAdmin.dividerVert} />
         <Box sx={stylesAdmin.dropdown}>
@@ -133,7 +106,7 @@ const AnswersAdminSearch: FC<AdminCommentsSearch> = ({ onSubmit, dates }) => {
             size={FieldSize.MEDIUM}
             options={sortOptions}
             value={sortBy}
-            onChange={handleSortByChange}
+            onChange={setSortBy}
             showRemark={false}
             disableClearable
           />

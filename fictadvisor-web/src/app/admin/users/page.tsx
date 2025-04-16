@@ -14,44 +14,49 @@ import {
   UserSearchFormFields,
 } from '@/app/admin/users/search/types';
 import LoadPage from '@/components/common/ui/load-page';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import UserAPI from '@/lib/api/user/UserAPI';
 
 const Page = () => {
-  const [queryObj, setQueryObj] =
-    useState<UserSearchFormFields>(UserInitialValues);
+  const [values, setValues] = useState<UserSearchFormFields>(UserInitialValues);
   const [currPage, setCurrPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
+  const { displayError } = useToastError();
 
-  const { data, isLoading, refetch } = useQuery({
-    queryKey: ['users', currPage, pageSize, queryObj],
+  const { data, isLoading, refetch, error } = useQuery({
+    queryKey: ['users', currPage, pageSize, values],
     queryFn: () =>
       UserAPI.getAll({
-        ...queryObj,
+        ...values,
         page: currPage,
         pageSize,
       }),
     ...useQueryAdminOptions,
   });
 
-  if (isLoading) return <LoadPage />;
-
-  if (!data) throw new Error('error loading data');
-
   const submitHandler: HeaderUserSearchProps['onSubmit'] = query =>
-    setQueryObj(prev => ({ ...prev, ...query }));
+    setValues(prev => ({ ...prev, ...query }));
+
+  if (error) {
+    displayError(error);
+    throw new Error('error loading data');
+  }
 
   return (
     <Box sx={stylesAdmin.wrapper}>
-      <HeaderUserSearch onSubmit={submitHandler} />
-      <UsersList
-        currPage={currPage}
-        setCurrPage={setCurrPage}
-        users={data.data}
-        pageSize={pageSize}
-        setPageSize={setPageSize}
-        totalCount={data.pagination.totalAmount}
-        refetch={refetch}
-      />
+      <HeaderUserSearch onSubmit={submitHandler} values={values} />
+      {isLoading && <LoadPage />}
+      {data && (
+        <UsersList
+          currPage={currPage}
+          setCurrPage={setCurrPage}
+          users={data.data}
+          pageSize={pageSize}
+          setPageSize={setPageSize}
+          totalCount={data.pagination.totalAmount}
+          refetch={refetch}
+        />
+      )}
     </Box>
   );
 };

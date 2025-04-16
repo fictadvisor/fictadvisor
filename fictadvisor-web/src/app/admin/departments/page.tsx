@@ -17,17 +17,17 @@ import CathedraAPI from '@/lib/api/cathedras/CathedraAPI';
 const Page = () => {
   const [pageSize, setPageSize] = useState(10);
   const [currPage, setCurrPage] = useState(0);
-  const [params, setParams] = useState<QueryAllCathedrasDTO>(
+  const [values, setValues] = useState<QueryAllCathedrasDTO>(
     AdminDepartmentsInitialValues,
   );
   const { displayError } = useToastError();
   const toast = useToast();
-  const { data, isLoading, refetch } = useQuery({
-    queryKey: ['teachers', params, currPage, pageSize],
+  const { data, isLoading, refetch, error } = useQuery({
+    queryKey: ['teachers', values, currPage, pageSize],
 
     queryFn: () =>
       CathedraAPI.getAll({
-        ...params,
+        ...values,
         pageSize,
         page: currPage,
       }),
@@ -35,19 +35,8 @@ const Page = () => {
     ...useQueryAdminOptions,
   });
 
-  const { data: cathedrasData, isLoading: isLoadingCathedras } = useQuery({
-    queryKey: ['cathedras'],
-    queryFn: () => CathedraAPI.getAll(),
-    ...useQueryAdminOptions,
-  });
-
-  if (isLoading || isLoadingCathedras) return <LoadPage />;
-
-  if (!data || !cathedrasData)
-    throw new Error('Something went wrong loading cathedras');
-
   const handleChange = (values: QueryAllCathedrasDTO) => {
-    setParams(prevValues => {
+    setValues(prevValues => {
       if (JSON.stringify(values) !== JSON.stringify(prevValues)) {
         setCurrPage(0);
         return values;
@@ -73,24 +62,35 @@ const Page = () => {
     }
   };
 
+  if (error) {
+    displayError(error);
+    throw new Error('Something went wrong loading cathedras');
+  }
+
   return (
     <Box sx={{ padding: '16px' }}>
       <AdminDepartmentsSearch
         onSubmit={handleChange}
-        cathedras={cathedrasData.cathedras}
+        values={values}
+        cathedras={data?.cathedras ?? []}
       />
-      <AdminDepartmentsTable
-        departments={data.cathedras}
-        handleDelete={handleDelete}
-      />
-      <TablePagination
-        page={currPage}
-        count={data.pagination.totalAmount}
-        onPageChange={(e, page) => setCurrPage(page)}
-        rowsPerPage={pageSize}
-        onRowsPerPageChange={e => handleRowsPerPageChange(e)}
-        sx={stylesAdmin.pagination}
-      />
+      {isLoading && <LoadPage />}
+      {data && (
+        <>
+          <AdminDepartmentsTable
+            departments={data.cathedras}
+            handleDelete={handleDelete}
+          />
+          <TablePagination
+            page={currPage}
+            count={data.pagination.totalAmount}
+            onPageChange={(e, page) => setCurrPage(page)}
+            rowsPerPage={pageSize}
+            onRowsPerPageChange={e => handleRowsPerPageChange(e)}
+            sx={stylesAdmin.pagination}
+          />
+        </>
+      )}
     </Box>
   );
 };

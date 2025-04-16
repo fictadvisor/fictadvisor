@@ -21,6 +21,7 @@ import { DbSubject } from '../../../../database/v2/entities/subject.entity';
 import { DbDisciplineType } from '../../../../database/v2/entities/discipline-type.entity';
 import { MapperOmitType } from '@automapper/classes/mapped-types';
 import { DbCathedra } from '../../../../database/v2/entities/cathedra.entity';
+import { TeacherProfile } from './teacher.profile';
 
 @Injectable()
 export class DisciplineTeacherProfile extends AutomapperProfile {
@@ -44,6 +45,14 @@ export class DisciplineTeacherProfile extends AutomapperProfile {
 
       createMap(mapper, DbDisciplineTeacher, DisciplineTeacherResponse,
         forSelf(MapperOmitType(DbTeacher, ['rating', 'cathedras']), (dto) => dto.teacher),
+
+        forMember((response) => response.id,
+          mapFrom(({ teacher }) => teacher.id)),
+
+        forMember((response) => response.disciplineTypes,
+          mapFrom(({ roles }) => TeacherProfile.getTeacherRoles(
+            [{ roles }] as DbDisciplineTeacher[],
+          ))),
 
         forMember((response) => response.cathedras,
           mapWith(CathedraResponse, DbCathedra,

@@ -5,24 +5,14 @@ import {
 } from '@fictadvisor/utils/requests';
 import { GrantResponse, GrantsResponse } from '@fictadvisor/utils/responses';
 
-import { GrantSet } from '@/app/admin/roles/[roleId]/grants/common/types';
-
 import { client } from '../instance';
 
 class GrantsAPI {
-  async getAllByRoleId(
-    roleId: string,
-    params: QueryAllGrantsDTO = {},
-    grantSet?: GrantSet,
-  ) {
-    const set = grantSet && grantSet === 'taken';
+  async getAllByRoleId(roleId: string, params: QueryAllGrantsDTO = {}) {
     const { data } = await client.get<GrantsResponse>(
       `/roles/${roleId}/grants`,
       {
-        params: {
-          ...params,
-          set,
-        },
+        params,
       },
     );
     return data;

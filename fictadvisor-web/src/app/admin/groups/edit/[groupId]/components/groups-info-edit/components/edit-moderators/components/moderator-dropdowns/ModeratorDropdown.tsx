@@ -28,7 +28,7 @@ const ModeratorDropdown: FC<ModeratorDropdownProps> = ({
 }) => {
   const [currentModerator, setCurrentModerator] = useState<DropDownOption>({
     id: moderator.id,
-    label: `${moderator.firstName} ${moderator.lastName} ${moderator.middleName}`,
+    label: `${moderator.lastName} ${moderator.firstName} ${moderator.middleName}`,
   });
 
   return (

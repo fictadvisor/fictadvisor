@@ -1,4 +1,12 @@
-import React, { Dispatch, FC, SetStateAction, useState } from 'react';
+import React, {
+  Dispatch,
+  FC,
+  SetStateAction,
+  useEffect,
+  useState,
+} from 'react';
+import { RoleName } from '@fictadvisor/utils/enums';
+import { UpdateGroupDTO } from '@fictadvisor/utils/requests';
 import { OrdinaryStudentResponse } from '@fictadvisor/utils/responses';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { Box } from '@mui/material';
@@ -18,17 +26,15 @@ import * as styles from './EditModerators.styles';
 
 interface EditModeratorsProps {
   students: OrdinaryStudentResponse[];
-  moderatorIds: string[];
-  setModeratorIds: Dispatch<SetStateAction<string[]>>;
+  setGroupInfo: Dispatch<SetStateAction<UpdateGroupDTO>>;
 }
 
 const EditModerators: FC<EditModeratorsProps> = ({
   students,
-  moderatorIds,
-  setModeratorIds,
+  setGroupInfo,
 }) => {
   const [currentsModerators, setCurrentsModerators] = useState(
-    students.filter(student => moderatorIds.includes(student.id)),
+    students.filter(student => student.group.role === RoleName.MODERATOR),
   );
   const [isAddingModerator, setIsAddingModerator] = useState(false);
 
@@ -39,6 +45,13 @@ const EditModerators: FC<EditModeratorsProps> = ({
     })),
   );
 
+  useEffect(() => {
+    setGroupInfo(prev => ({
+      ...prev,
+      moderatorIds: currentsModerators.map(({ id }) => id),
+    }));
+  }, [currentsModerators, setGroupInfo]);
+
   const handleModeratorChange = (
     newValue: string,
     oldValue: DropDownOption,
@@ -48,9 +61,6 @@ const EditModerators: FC<EditModeratorsProps> = ({
       ...prev.filter(moderator => moderator.id !== oldValue.id),
       newModerator,
     ]);
-    setModeratorIds(prev => {
-      return [...prev.filter(student => student !== oldValue.id), newValue];
-    });
     const newStudentsOptions = studentsOptions.filter(
       students => students.id !== newValue,
     );
@@ -61,7 +71,6 @@ const EditModerators: FC<EditModeratorsProps> = ({
   const handleModeratorAdd = (newValue: string) => {
     const newModerator = students.find(student => student.id === newValue)!;
     setCurrentsModerators(prev => [...prev, newModerator]);
-    setModeratorIds(prev => [...prev, newValue]);
     setStudentsOptions(options =>
       options.filter(student => student.id !== newValue),
     );
@@ -71,9 +80,6 @@ const EditModerators: FC<EditModeratorsProps> = ({
   const handleModeratorRemove = (value: DropDownOption) => {
     setCurrentsModerators(moderators =>
       moderators.filter(moderator => moderator.id !== value.id),
-    );
-    setModeratorIds(moderators =>
-      moderators.filter(moderator => moderator !== value.id),
     );
     setStudentsOptions(options => [...options, value]);
     setIsAddingModerator(false);
@@ -93,7 +99,7 @@ const EditModerators: FC<EditModeratorsProps> = ({
             />
           ))}
         {!isAddingModerator ? (
-          <Box sx={styles.addButton}>
+          <Box sx={styles.addModerator}>
             <Button
               color={ButtonColor.PRIMARY}
               variant={ButtonVariant.OUTLINE}
@@ -104,7 +110,7 @@ const EditModerators: FC<EditModeratorsProps> = ({
             />
           </Box>
         ) : (
-          <Box sx={{ maxWidth: '308px' }}>
+          <Box sx={styles.addModerator}>
             <Dropdown
               size={FieldSize.MEDIUM}
               options={studentsOptions}

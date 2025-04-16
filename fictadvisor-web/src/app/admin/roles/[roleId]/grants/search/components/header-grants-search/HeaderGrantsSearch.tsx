@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FC } from 'react';
 import { SortQAGrantsParam } from '@fictadvisor/utils/enums';
 import {
@@ -10,7 +10,6 @@ import { Box, Divider } from '@mui/material';
 
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import {
-  GrantsInitialValues,
   GrantsOptions,
   sortOptions,
 } from '@/app/admin/roles/[roleId]/grants/common/constants';
@@ -43,37 +42,31 @@ const HeaderGrantsSearch: FC<HeaderGrantsSearchProps> = ({
   const [sort, setSort] = useState<SortQAGrantsParam>(
     SortQAGrantsParam.PERMISSION,
   );
-  const [grantSet, setGrantSet] = useState<GrantSet>('' as GrantSet);
+  const [grantSet, setGrantSet] = useState<GrantSet>('given' as GrantSet);
   const [order, setOrder] = useState<'asc' | 'desc'>('desc');
-  const [values, setValues] = useState(GrantsInitialValues);
 
   const handleSearchChange = (value: string) => {
     setSearch(value);
-    setValues(values => ({ ...values, search: value }));
   };
   const handleOrderChange = () => {
     setOrder(order => (order === 'asc' ? 'desc' : 'asc'));
-    setValues(values => ({ ...values, order: order }));
   };
   const handleSortChange = (value: string) => {
     setSort(value as SortQAGrantsParam);
-    setValues(values => ({
-      ...values,
-      sort: value as SortQAGrantsParam,
-    }));
   };
 
   const handleGrantSetChange = (value: string) => {
     setGrantSet(value as GrantSet);
-    setValues(values => ({
-      ...values,
-      set: value as GrantSet,
-    }));
   };
 
-  useEffect(() => {
-    onSubmit(values);
-  }, [values]);
+  const handleValuesChange = () => {
+    onSubmit({
+      search,
+      sort,
+      set: grantSet,
+      order,
+    });
+  };
 
   return (
     <Box sx={stylesAdmin.header}>
@@ -86,6 +79,7 @@ const HeaderGrantsSearch: FC<HeaderGrantsSearchProps> = ({
             type={InputType.SEARCH}
             placeholder="Пошук"
             showRemark={false}
+            onDeterredChange={handleValuesChange}
           />
         </Box>
         <Divider sx={stylesAdmin.dividerVert} />
@@ -98,6 +92,7 @@ const HeaderGrantsSearch: FC<HeaderGrantsSearchProps> = ({
             value={grantSet}
             label="Статус права"
             placeholder="Статус права"
+            disableClearable
           />
         </Box>
         <Divider sx={stylesAdmin.dividerVert} />

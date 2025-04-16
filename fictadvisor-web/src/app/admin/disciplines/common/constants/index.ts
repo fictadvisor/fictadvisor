@@ -17,3 +17,12 @@ export const rolesRepres = [
   'Консультант',
   'Інше',
 ];
+
+export const rolesText = {
+  [DisciplineTypeEnum.LECTURE]: 'Лектор',
+  [DisciplineTypeEnum.LABORATORY]: 'Лаборант',
+  [DisciplineTypeEnum.PRACTICE]: 'Практик',
+  [DisciplineTypeEnum.EXAM]: 'Екзаменатор',
+  [DisciplineTypeEnum.CONSULTATION]: 'Консультант',
+  [DisciplineTypeEnum.WORKOUT]: 'Інше',
+};

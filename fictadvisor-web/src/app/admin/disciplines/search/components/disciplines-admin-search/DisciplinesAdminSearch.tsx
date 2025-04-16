@@ -1,5 +1,5 @@
 'use client';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { QueryAllDisciplinesDTO } from '@fictadvisor/utils/requests';
 import { SemesterResponse } from '@fictadvisor/utils/responses';
 import {
@@ -26,65 +26,59 @@ import IconButton from '@/components/common/ui/icon-button-mui';
 import { IconButtonSize } from '@/components/common/ui/icon-button-mui/types';
 import Progress from '@/components/common/ui/progress/Progress';
 
-import { initialValues, sortOptions } from '../../constants';
+import { sortOptions } from '../../constants';
 
 import * as styles from './DisciplinesAdminSearch.styles';
 
 interface DisciplinesAdminSearchProps {
-  setParams: React.Dispatch<React.SetStateAction<QueryAllDisciplinesDTO>>;
+  onSumbit: React.Dispatch<React.SetStateAction<QueryAllDisciplinesDTO>>;
+  values: QueryAllDisciplinesDTO;
 }
 
 const DisciplinesAdminSearch: FC<DisciplinesAdminSearchProps> = ({
-  setParams,
+  onSumbit,
+  values,
 }) => {
-  const [search, setSearch] = useState<string>(initialValues.search as string);
-  const [sortBy, setSortBy] = useState<string>(initialValues.sort as string);
-  const [order, setOrder] = useState<'asc' | 'desc'>(
-    initialValues.order as 'asc' | 'desc',
-  );
+  const [search, setSearch] = useState<string>(values.search ?? '');
+  const [sortBy, setSortBy] = useState<string>(values.sort ?? '');
+  const [order, setOrder] = useState<'asc' | 'desc'>(values.order ?? 'desc');
   const [groups, setGroups] = useState<CheckboxesDropdownOption[]>([]);
   const [semesters, setSemesters] = useState<CheckboxesDropdownOption[]>([]);
   const [teachers, setTeachers] = useState<CheckboxesDropdownOption[]>([]);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setParams(prev => ({
-        ...prev,
-        search,
-      }));
-    }, 200);
-    return () => clearTimeout(timer);
-  }, [search]);
+  const handleFormSubmit = () => {
+    const newGroups = groups.map(({ value }) => value) as string[];
+    const newTeachers = teachers.map(({ value }) => value) as string[];
 
-  const { groupsOptions, isLoading, semesterOptions, teachersOptions } =
-    useDisciplines();
+    const newSemestersFilter = semesters.map(semester => ({
+      semester: parseInt(semester.value.split(' ')[1]),
+      year: parseInt(semester.value.split(' ')[0]),
+    })) as SemesterResponse[];
 
-  if (isLoading) {
-    return <Progress />;
-  }
-
-  if (!(groupsOptions && semesterOptions && teachersOptions))
-    throw new Error('an error has occured while fetching data');
-
-  const groupsMultiOptions = transferToMulti(groupsOptions);
-  const semestersMultiOptions = transferToMulti(semesterOptions);
-  const teachersMultiOptions = transferToMulti(teachersOptions);
-
-  const handleOrderChange = () => {
-    const newOrder = order === 'asc' ? 'desc' : 'asc';
-    setOrder(newOrder);
-    setParams(prev => ({
-      ...prev,
-      order: newOrder,
-    }));
+    onSumbit({
+      search,
+      sort: sortBy as 'name' | 'semester' | 'group',
+      order,
+      semesters: newSemestersFilter,
+      groups: newGroups,
+      teachers: newTeachers,
+    });
   };
 
-  const handleSortByChange = (value: string) => {
-    setSortBy(value);
-    setParams(prev => ({
-      ...prev,
-      sortBy: value,
-    }));
+  const {
+    groupsOptions,
+    isLoading,
+    isError,
+    semesterOptions,
+    teachersOptions,
+  } = useDisciplines();
+
+  const groupsMultiOptions = transferToMulti(groupsOptions ?? []);
+  const semestersMultiOptions = transferToMulti(semesterOptions ?? []);
+  const teachersMultiOptions = transferToMulti(teachersOptions ?? []);
+
+  const handleOrderChange = () => {
+    setOrder(order => (order === 'asc' ? 'desc' : 'asc'));
   };
 
   const handleGroupsChange = (event: SelectChangeEvent) => {
@@ -93,10 +87,6 @@ const DisciplinesAdminSearch: FC<DisciplinesAdminSearchProps> = ({
       value => groupsMultiOptions.find(group => group.value === value)!,
     );
     setGroups(newGroups);
-    setParams(prev => ({
-      ...prev,
-      groups: value,
-    }));
   };
 
   const handleSemestersChange = (event: SelectChangeEvent) => {
@@ -106,14 +96,6 @@ const DisciplinesAdminSearch: FC<DisciplinesAdminSearchProps> = ({
         semestersMultiOptions.find(semester => semester.value === value)!,
     );
     setSemesters(newSemesters);
-    const newSemestersFilter = semesters.map(semester => ({
-      semester: parseInt(semester.value.split(' ')[1]),
-      year: parseInt(semester.value.split(' ')[0]),
-    })) as SemesterResponse[];
-    setParams(prev => ({
-      ...prev,
-      semesters: newSemestersFilter,
-    }));
   };
 
   const handleTeachersChange = (event: SelectChangeEvent) => {
@@ -122,11 +104,9 @@ const DisciplinesAdminSearch: FC<DisciplinesAdminSearchProps> = ({
       value => teachersMultiOptions.find(teacher => teacher.value === value)!,
     );
     setTeachers(newTeachers);
-    setParams(prev => ({
-      ...prev,
-      teachers: value,
-    }));
   };
+
+  if (isError) throw new Error('an error has occured while fetching data');
 
   return (
     <form>
@@ -137,6 +117,7 @@ const DisciplinesAdminSearch: FC<DisciplinesAdminSearchProps> = ({
               sx={stylesAdmin.input}
               value={search}
               onChange={setSearch}
+              onDeterredChange={handleFormSubmit}
               size={InputSize.MEDIUM}
               type={InputType.SEARCH}
               placeholder="Пошук"
@@ -144,33 +125,48 @@ const DisciplinesAdminSearch: FC<DisciplinesAdminSearchProps> = ({
             />
           </Box>
           <Divider orientation="vertical" sx={stylesAdmin.dividerVert} />
-          <CheckboxesDropdown
-            sx={styles.checkboxDropdown}
-            label="Група"
-            values={groupsMultiOptions}
-            selected={groups}
-            size={FieldSize.MEDIUM}
-            handleChange={handleGroupsChange}
-            menuSx={{ backgroundColor: 'backgroundDark.100', width: '200px' }}
-          />
-          <CheckboxesDropdown
-            sx={styles.checkboxDropdown}
-            label="Рік і семестр"
-            values={semestersMultiOptions}
-            selected={semesters}
-            size={FieldSize.MEDIUM}
-            handleChange={handleSemestersChange}
-            menuSx={{ backgroundColor: 'backgroundDark.100', width: '200px' }}
-          />
-          <CheckboxesDropdown
-            sx={styles.checkboxDropdown}
-            label="Викладач"
-            values={teachersMultiOptions}
-            selected={teachers}
-            size={FieldSize.MEDIUM}
-            handleChange={handleTeachersChange}
-            menuSx={{ backgroundColor: 'backgroundDark.100', width: '200px' }}
-          />
+          {isLoading ? (
+            <Progress />
+          ) : (
+            <>
+              <CheckboxesDropdown
+                sx={styles.checkboxDropdown}
+                label="Група"
+                values={groupsMultiOptions}
+                selected={groups}
+                size={FieldSize.MEDIUM}
+                handleChange={handleGroupsChange}
+                menuSx={{
+                  backgroundColor: 'backgroundDark.100',
+                  width: '200px',
+                }}
+              />
+              <CheckboxesDropdown
+                sx={styles.checkboxDropdown}
+                label="Рік і семестр"
+                values={semestersMultiOptions}
+                selected={semesters}
+                size={FieldSize.MEDIUM}
+                handleChange={handleSemestersChange}
+                menuSx={{
+                  backgroundColor: 'backgroundDark.100',
+                  width: '200px',
+                }}
+              />
+              <CheckboxesDropdown
+                sx={styles.checkboxDropdown}
+                label="Викладач"
+                values={teachersMultiOptions}
+                selected={teachers}
+                size={FieldSize.MEDIUM}
+                handleChange={handleTeachersChange}
+                menuSx={{
+                  backgroundColor: 'backgroundDark.100',
+                  width: '200px',
+                }}
+              />
+            </>
+          )}
           <Divider orientation="vertical" sx={stylesAdmin.dividerVert} />
           <Box sx={styles.dropdown}>
             <Dropdown
@@ -178,7 +174,7 @@ const DisciplinesAdminSearch: FC<DisciplinesAdminSearchProps> = ({
               size={FieldSize.MEDIUM}
               options={sortOptions}
               value={sortBy}
-              onChange={handleSortByChange}
+              onChange={setSortBy}
               showRemark={false}
               disableClearable
               width="150px"

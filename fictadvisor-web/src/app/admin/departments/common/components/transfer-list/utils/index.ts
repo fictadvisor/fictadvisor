@@ -4,12 +4,12 @@ export const filterChecked = (
   a: TeacherWithRolesAndCathedrasResponse[],
   b: TeacherWithRolesAndCathedrasResponse[],
 ) => {
-  return a.filter(value => b.indexOf(value) === -1);
+  return a.filter(a => !b.some(b => b.id === a.id));
 };
 
 export const intersection = (
   a: TeacherWithRolesAndCathedrasResponse[],
   b: TeacherWithRolesAndCathedrasResponse[],
 ) => {
-  return a.filter(value => b.indexOf(value) !== -1);
+  return a.filter(a => b.some(b => b.id === a.id));
 };
