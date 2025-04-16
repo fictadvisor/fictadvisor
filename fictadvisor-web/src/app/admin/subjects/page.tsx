@@ -19,16 +19,16 @@ import SubjectAPI from '@/lib/api/subject/SubjectAPI';
 const AdminSubjectSearch = () => {
   const [pageSize, setPageSize] = useState(10);
   const [currPage, setCurrPage] = useState(0);
-  const [params, setParams] = useState<SearchFormFields>(SubjectInitialValues);
+  const [values, setValues] = useState<SearchFormFields>(SubjectInitialValues);
   const { displayError } = useToastError();
   const toast = useToast();
 
-  const { data, isLoading, refetch } = useQuery({
-    queryKey: ['subjects', currPage, pageSize, params],
+  const { data, isLoading, refetch, error } = useQuery({
+    queryKey: ['subjects', currPage, pageSize, values],
 
     queryFn: () =>
       subjectAPI.getAll({
-        ...params,
+        ...values,
         pageSize,
         page: currPage,
       } as QueryAllSubjectsDTO),
@@ -36,12 +36,8 @@ const AdminSubjectSearch = () => {
     ...useQueryAdminOptions,
   });
 
-  if (isLoading) return <LoadPage />;
-
-  if (!data) throw new Error('error loading data');
-
   const handleSearch = (values: SearchFormFields) => {
-    setParams(prevValues => {
+    setValues(prevValues => {
       if (JSON.stringify(values) !== JSON.stringify(prevValues)) {
         setCurrPage(0);
         return values;
@@ -65,18 +61,32 @@ const AdminSubjectSearch = () => {
       displayError(e);
     }
   };
+
+  if (error) {
+    displayError(error);
+    throw new Error('error loading data');
+  }
+
   return (
     <Box sx={{ padding: '16px' }}>
-      <SubjectsSearchHeader onSubmit={handleSearch} />
-      <AdminSubjectTable subjects={data.subjects} handleDelete={handleDelete} />
-      <TablePagination
-        page={currPage}
-        count={data.pagination.totalAmount}
-        onPageChange={(e, page) => setCurrPage(page)}
-        rowsPerPage={pageSize}
-        onRowsPerPageChange={handleRowsPerPageChange}
-        sx={stylesAdmin.pagination}
-      />
+      <SubjectsSearchHeader onSubmit={handleSearch} values={values} />
+      {isLoading && <LoadPage />}
+      {data && (
+        <>
+          <AdminSubjectTable
+            subjects={data.subjects}
+            handleDelete={handleDelete}
+          />
+          <TablePagination
+            page={currPage}
+            count={data.pagination.totalAmount}
+            onPageChange={(e, page) => setCurrPage(page)}
+            rowsPerPage={pageSize}
+            onRowsPerPageChange={handleRowsPerPageChange}
+            sx={stylesAdmin.pagination}
+          />
+        </>
+      )}
     </Box>
   );
 };

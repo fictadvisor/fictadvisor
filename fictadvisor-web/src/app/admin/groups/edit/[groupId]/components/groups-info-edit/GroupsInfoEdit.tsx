@@ -5,7 +5,6 @@ import { UpdateGroupDTO } from '@fictadvisor/utils/requests';
 import { Stack } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
-import { extractModeratorsIds } from '@/app/admin/groups/common/utils/extractModeratorsIds';
 import Progress from '@/components/common/ui/progress';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import GroupAPI from '@/lib/api/group/GroupAPI';
@@ -24,7 +23,7 @@ const GroupsInfoEdit: FC<GroupsInfoEditProps> = ({
   setGroupInfo,
   groupId,
 }) => {
-  const toastError = useToastError();
+  const { displayError } = useToastError();
 
   const [moderatorIds, setModeratorIds] = useState<string[]>(
     groupInfo.moderatorIds as string[],
@@ -37,12 +36,19 @@ const GroupsInfoEdit: FC<GroupsInfoEditProps> = ({
     }));
   }, [moderatorIds]);
 
-  const { data: studentsData, isLoading: isLoadingStudents } = useQuery({
+  const {
+    data: studentsData,
+    isLoading: isLoadingStudents,
+    error,
+  } = useQuery({
     queryKey: ['studentsByGroupId', groupId],
     queryFn: () => GroupAPI.getGroupStudents(groupId),
   });
 
-  if (isLoadingStudents || !studentsData) return <Progress />;
+  if (isLoadingStudents) return <Progress />;
+
+  if (error) displayError(error);
+  if (!studentsData) throw new Error('Error loading group data');
 
   return (
     <Stack sx={{ flexDirection: 'column', gap: '16px' }}>

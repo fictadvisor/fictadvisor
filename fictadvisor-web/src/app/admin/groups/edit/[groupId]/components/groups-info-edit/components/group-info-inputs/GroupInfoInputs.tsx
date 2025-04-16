@@ -111,7 +111,7 @@ const GroupInfoInputs: FC<GroupInfoInputsProps> = ({
         options={yearOptions}
         showRemark={false}
         onChange={(value: string) => setAdmissionYear(+value)}
-        value={admissionYear.toString()}
+        value={admissionYear?.toString()}
         label="Рік вступу"
       />
       <Dropdown

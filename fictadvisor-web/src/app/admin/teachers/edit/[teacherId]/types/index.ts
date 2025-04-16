@@ -6,3 +6,9 @@ export interface EditedComment extends Omit<TeacherComment, 'comment'> {
   userId: string;
   disciplineTeacherId: string;
 }
+
+export interface InitialTeacherCathedras {
+  id: string;
+  value: string;
+  label: string;
+}

@@ -1,5 +1,4 @@
 import React, { FC, useEffect, useState } from 'react';
-import { PaginatedQuestionCommentsResponse } from '@fictadvisor/utils/responses';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Stack, Typography } from '@mui/material';
 import { QueryObserverBaseResult } from '@tanstack/react-query';

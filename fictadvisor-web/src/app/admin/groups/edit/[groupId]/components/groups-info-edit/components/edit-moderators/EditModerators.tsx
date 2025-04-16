@@ -93,7 +93,7 @@ const EditModerators: FC<EditModeratorsProps> = ({
             />
           ))}
         {!isAddingModerator ? (
-          <Box sx={styles.addButton}>
+          <Box sx={styles.addModerator}>
             <Button
               color={ButtonColor.PRIMARY}
               variant={ButtonVariant.OUTLINE}
@@ -104,7 +104,7 @@ const EditModerators: FC<EditModeratorsProps> = ({
             />
           </Box>
         ) : (
-          <Box sx={{ maxWidth: '308px' }}>
+          <Box sx={styles.addModerator}>
             <Dropdown
               size={FieldSize.MEDIUM}
               options={studentsOptions}

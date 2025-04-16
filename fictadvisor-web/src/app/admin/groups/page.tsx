@@ -18,26 +18,22 @@ import GroupAPI from '@/lib/api/group/GroupAPI';
 const GroupsAdmin = () => {
   const [pageSize, setPageSize] = useState(10);
   const [currPage, setCurrPage] = useState(0);
-  const [params, setParams] = useState<QueryAllGroupsDTO>(initialValues);
+  const [values, setValues] = useState<QueryAllGroupsDTO>(initialValues);
   const { displayError } = useToastError();
   const toast = useToast();
 
-  const { data, isLoading, refetch } = useQuery({
-    queryKey: ['groups', currPage, pageSize, params],
+  const { data, isLoading, refetch, error } = useQuery({
+    queryKey: ['groups', currPage, pageSize, values],
 
     queryFn: () =>
       GroupAPI.getAll({
-        ...params,
+        ...values,
         pageSize,
         page: currPage,
       }),
 
     ...useQueryAdminOptions,
   });
-
-  if (isLoading) return <LoadPage />;
-
-  if (!data) throw new Error('error loading data');
 
   const deleteGroup = async (id: string) => {
     try {
@@ -55,18 +51,29 @@ const GroupsAdmin = () => {
     setPageSize(Number(event.target.value));
     setCurrPage(0);
   };
+
+  if (error) {
+    displayError(error);
+    throw new Error('error loading data');
+  }
+
   return (
     <Box sx={{ p: '20px 16px 0 16px' }}>
-      <GroupsAdminSearch setParams={setParams} />
-      <GroupsTable groups={data.groups} deleteGroup={deleteGroup} />
-      <TablePagination
-        sx={stylesAdmin.pagination}
-        count={data.pagination.totalAmount}
-        page={currPage}
-        rowsPerPage={pageSize}
-        onPageChange={(e, page) => setCurrPage(page)}
-        onRowsPerPageChange={handleRowsPerPageChange}
-      />
+      <GroupsAdminSearch onSumbit={setValues} values={values} />
+      {isLoading && <LoadPage />}
+      {data && (
+        <>
+          <GroupsTable groups={data.groups} deleteGroup={deleteGroup} />
+          <TablePagination
+            sx={stylesAdmin.pagination}
+            count={data.pagination.totalAmount}
+            page={currPage}
+            rowsPerPage={pageSize}
+            onPageChange={(e, page) => setCurrPage(page)}
+            onRowsPerPageChange={handleRowsPerPageChange}
+          />
+        </>
+      )}
     </Box>
   );
 };

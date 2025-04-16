@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FC } from 'react';
 import { SortQAUParam, State } from '@fictadvisor/utils/enums';
 import {
@@ -22,40 +22,37 @@ import {
   IconButtonSize,
 } from '@/components/common/ui/icon-button-mui/types';
 
-import { sortOptions, stateOptions, UserInitialValues } from '../../constants';
+import { sortOptions, stateOptions } from '../../constants';
 import { HeaderUserSearchProps } from '../../types';
 
 import * as styles from './HeaderUserSearch.styles';
 
-const HeaderUserSearch: FC<HeaderUserSearchProps> = ({ onSubmit }) => {
-  const [search, setSearch] = useState<string>('');
-  const [sortBy, setSortBy] = useState<string>('username');
-  const [userState, setUserState] = useState<State[]>([]);
-  const [order, setOrder] = useState<'asc' | 'desc'>('desc');
-  const [values, setValues] = useState(UserInitialValues);
+const HeaderUserSearch: FC<HeaderUserSearchProps> = ({ onSubmit, values }) => {
+  const [search, setSearch] = useState<string>(values.search);
+  const [sortBy, setSortBy] = useState<SortQAUParam>(values.sort);
+  const [userState, setUserState] = useState<State[]>(values.state);
+  const [order, setOrder] = useState<'asc' | 'desc'>(values.order);
 
-  const handleSearchChange = (value: string) => {
-    setSearch(value);
-    setValues(values => ({ ...values, search: value }));
+  const handleFormSubmit = () => {
+    onSubmit({
+      search,
+      sort: sortBy,
+      state: userState,
+      order,
+    });
   };
+
   const handleOrderChange = () => {
     setOrder(order => (order === 'asc' ? 'desc' : 'asc'));
-    setValues(values => ({ ...values, order: order }));
   };
   const handleSortByChange = (value: string) => {
-    setSortBy(value);
-    setValues(values => ({ ...values, sort: value as SortQAUParam }));
+    setSortBy(value as SortQAUParam);
   };
 
   const handleStateChange = (event: SelectChangeEvent) => {
     const value = event.target.value as unknown as State[];
     setUserState(value);
-    setValues(values => ({ ...values, state: value }));
   };
-
-  useEffect(() => {
-    onSubmit(values);
-  }, [values]);
 
   return (
     <Box sx={stylesAdmin.header}>
@@ -63,7 +60,8 @@ const HeaderUserSearch: FC<HeaderUserSearchProps> = ({ onSubmit }) => {
         <Box sx={stylesAdmin.search}>
           <Input
             value={search}
-            onChange={handleSearchChange}
+            onChange={setSearch}
+            onDeterredChange={handleFormSubmit}
             size={InputSize.MEDIUM}
             type={InputType.SEARCH}
             placeholder="Пошук"

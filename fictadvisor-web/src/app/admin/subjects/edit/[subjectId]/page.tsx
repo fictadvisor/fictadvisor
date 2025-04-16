@@ -1,5 +1,5 @@
 'use client';
-import React, { FC, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Box, CardHeader, Stack } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
@@ -37,15 +37,18 @@ const AdminSubjectEdit: FC<AdminSubjectEditProps> = ({ params }) => {
     ...useQueryAdminOptions,
   });
 
-  if (!isSuccess)
-    throw new Error(`An error has occurred while fetching subjects`);
-
   const toast = useToast();
   const { displayError } = useToastError();
   const router = useRouter();
 
-  const [subjectName, setSubjectName] = useState<string>(subject.name);
+  const [subjectName, setSubjectName] = useState<string>();
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    if (isSuccess) {
+      setSubjectName(subject.name);
+    }
+  }, [isSuccess, subject]);
 
   const handleDelete = async (subjectId: string) => {
     try {
@@ -56,7 +59,10 @@ const AdminSubjectEdit: FC<AdminSubjectEditProps> = ({ params }) => {
       displayError(e);
     }
   };
-  const handleEdit = async () => {
+
+  const handleEdit = useCallback(async () => {
+    if (!subject || !subjectName) return;
+
     try {
       await SubjectAPI.editSubject(subject.id, subjectName);
       toast.success('Предмет успішно змінений!', '', 4000);
@@ -64,9 +70,12 @@ const AdminSubjectEdit: FC<AdminSubjectEditProps> = ({ params }) => {
     } catch (e) {
       displayError(e);
     }
-  };
+  }, [subject, subjectName]);
 
   if (isLoading) return <LoadPage />;
+
+  if (!isSuccess)
+    throw new Error(`An error has occurred while fetching subjects`);
 
   return (
     <>
@@ -110,7 +119,7 @@ const AdminSubjectEdit: FC<AdminSubjectEditProps> = ({ params }) => {
       </Box>
       <Box sx={stylesAdmin.input}>
         <Input
-          value={subjectName}
+          value={subjectName ?? ''}
           onChange={setSubjectName}
           size={InputSize.MEDIUM}
           type={InputType.DEFAULT}

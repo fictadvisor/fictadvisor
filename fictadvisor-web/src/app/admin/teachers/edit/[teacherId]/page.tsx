@@ -1,5 +1,5 @@
 'use client';
-import React, { FC, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import {
   CreateContactDTO,
   UpdateTeacherDTO,
@@ -14,7 +14,10 @@ import TeacherContactsInputs from '@/app/admin/teachers/common/components/teache
 import TeacherPersonalInputs from '@/app/admin/teachers/common/components/teacher-personal-inputs';
 import EditTeacherComments from '@/app/admin/teachers/edit/[teacherId]/components/edit-teacher-comments';
 import HeaderEdit from '@/app/admin/teachers/edit/[teacherId]/components/header-edit';
-import { EditedComment } from '@/app/admin/teachers/edit/[teacherId]/types';
+import {
+  EditedComment,
+  InitialTeacherCathedras,
+} from '@/app/admin/teachers/edit/[teacherId]/types';
 import { CheckboxesDropdownOption } from '@/components/common/ui/form/checkboxes-dropdown/types/CheckboxesDropdown';
 import LoadPage from '@/components/common/ui/load-page/LoadPage';
 import useToast from '@/hooks/use-toast';
@@ -32,41 +35,66 @@ const Edit: FC<PageProps> = ({ params }) => {
     data: teacher,
     isSuccess,
     isLoading,
+    error,
   } = useQuery({
     queryKey: ['teacher', params.teacherId],
     queryFn: () => TeacherAPI.get(params.teacherId),
     ...useQueryAdminOptions,
   });
 
-  if (!isSuccess) throw new Error('Something went wrong in teacher edit page');
+  const [initialTeacherCathedras, setInitialTeacherCathedras] =
+    useState<InitialTeacherCathedras[]>();
 
-  const initialValues = {
-    firstName: teacher.firstName,
-    lastName: teacher.lastName,
-    middleName: teacher.middleName,
-    description: teacher.description,
-    avatar: teacher.avatar,
-  };
-  const initialTeacherCathedras = teacher.cathedras.map(cathedra => ({
-    id: cathedra.id,
-    value: cathedra.name,
-    label: cathedra.abbreviation,
-  }));
   const toast = useToast();
   const { displayError } = useToastError();
   const router = useRouter();
-  const [personalInfo, setPersonalInfo] =
-    useState<UpdateTeacherDTO>(initialValues);
+
+  const [personalInfo, setPersonalInfo] = useState<UpdateTeacherDTO>({});
+  useEffect(() => {
+    if (!teacher || !isSuccess) return;
+
+    setPersonalInfo(() => ({
+      firstName: teacher.firstName,
+      lastName: teacher.lastName,
+      middleName: teacher.middleName,
+      description: teacher.description,
+      avatar: teacher.avatar,
+    }));
+
+    setInitialTeacherCathedras(
+      teacher.cathedras.map(cathedra => ({
+        id: cathedra.id,
+        value: cathedra.name,
+        label: cathedra.abbreviation,
+      })),
+    );
+  }, [teacher, isSuccess]);
+
   const [selectedTeacherCathedras, setSelectedTeacherCathedras] = useState<
     CheckboxesDropdownOption[]
-  >(initialTeacherCathedras);
+  >([]);
+  useEffect(() => {
+    if (!initialTeacherCathedras) return;
+
+    setSelectedTeacherCathedras(initialTeacherCathedras);
+  }, [initialTeacherCathedras]);
+
   const [changedContacts, setChangedContacts] = useState<CreateContactDTO[]>(
     [],
   );
 
   const [changedComments, setChangedComments] = useState<EditedComment[]>([]);
 
-  const handleEditSubmit = async () => {
+  const handleEditSubmit = useCallback(async () => {
+    if (
+      !teacher ||
+      !initialTeacherCathedras ||
+      !selectedTeacherCathedras ||
+      !personalInfo ||
+      !changedComments
+    )
+      return;
+
     try {
       await TeacherAPI.editPersonalInfo(teacher.id, personalInfo);
 
@@ -103,9 +131,18 @@ const Edit: FC<PageProps> = ({ params }) => {
     } catch (e) {
       displayError(e);
     }
-  };
+  }, [
+    teacher,
+    changedContacts,
+    selectedTeacherCathedras,
+    initialTeacherCathedras,
+    personalInfo,
+    changedComments,
+  ]);
 
-  const handleDeleteSubmit = async () => {
+  const handleDeleteSubmit = useCallback(async () => {
+    if (!teacher) return;
+
     try {
       await TeacherAPI.delete(teacher.id);
       toast.success('Викладач успішно видалений!', '', 4000);
@@ -113,9 +150,12 @@ const Edit: FC<PageProps> = ({ params }) => {
     } catch (e) {
       displayError(e);
     }
-  };
+  }, [teacher]);
 
   if (isLoading) return <LoadPage />;
+
+  if (error) displayError(error);
+  if (!isSuccess) throw new Error('Something went wrong in teacher edit page');
 
   return (
     <Box sx={{ p: '16px' }}>

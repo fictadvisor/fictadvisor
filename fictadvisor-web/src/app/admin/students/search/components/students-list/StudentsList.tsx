@@ -84,7 +84,7 @@ const StudentsList: FC<StudentsListProps> = ({
               <TableCell align="left" scope="row">
                 <Typography variant="body2">{`${student.firstName} ${student.middleName} ${student.lastName}`}</Typography>
               </TableCell>
-              <TableCell align="left">{student.group.code}</TableCell>
+              <TableCell align="left">{student.group?.code}</TableCell>
               <TableCell align="left">
                 <Tag
                   text={TagTextMapper[student.role]}
