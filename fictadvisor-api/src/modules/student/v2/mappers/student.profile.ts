@@ -21,7 +21,9 @@ export class StudentProfile extends AutomapperProfile {
 
   get profile () {
     return (mapper: Mapper) => {
-      createMap(mapper, DbStudent, BaseStudentResponse);
+      createMap(mapper, DbStudent, BaseStudentResponse,
+        forMember((response) => response.id,
+          mapFrom(({ userId }) => userId)));
 
       createMap(mapper, DbStudent, OrdinaryStudentResponse,
         forSelf(DbUser, (dto) => dto.user),

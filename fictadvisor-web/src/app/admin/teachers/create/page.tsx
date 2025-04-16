@@ -1,10 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import {
-  CreateContactDTO,
-  CreateTeacherDTO,
-} from '@fictadvisor/utils/requests';
+import { CreateTeacherDTO } from '@fictadvisor/utils/requests';
+import { ContactResponse } from '@fictadvisor/utils/responses';
 import { Box, Divider } from '@mui/material';
 import { useRouter } from 'next/navigation';
 
@@ -30,7 +28,7 @@ const Create = () => {
     CheckboxesDropdownOption[]
   >([]);
 
-  const [createContacts, setCreateContacts] = useState<CreateContactDTO[]>([]);
+  const [createContacts, setCreateContacts] = useState<ContactResponse[]>([]);
 
   const handleEditSubmit = async () => {
     try {
@@ -65,7 +63,7 @@ const Create = () => {
           setSelectedCathedras={setSelectedCathedras}
         />
         <Divider sx={stylesAdmin.dividerHor} />
-        <TeacherContactsInputs setNewContacts={setCreateContacts} />
+        <TeacherContactsInputs setContacts={setCreateContacts} />
       </Box>
     </Box>
   );

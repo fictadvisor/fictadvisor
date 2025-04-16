@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FC } from 'react';
 import { RoleName, SortQARParam } from '@fictadvisor/utils/enums';
 import {
@@ -13,7 +13,6 @@ import {
   RoleNameOptions,
   sortOptions,
 } from '@/app/admin/roles/common/constants';
-import { RolesInitialValues } from '@/app/admin/roles/common/constants';
 import { HeaderRolesSearchProps } from '@/app/admin/roles/common/types';
 import Button from '@/components/common/ui/button-mui';
 import { ButtonSize } from '@/components/common/ui/button-mui/types';
@@ -27,37 +26,39 @@ import {
   IconButtonSize,
 } from '@/components/common/ui/icon-button-mui/types';
 
-const HeaderRolesSearch: FC<HeaderRolesSearchProps> = ({ onSubmit }) => {
-  const [search, setSearch] = useState<string>('');
-  const [sort, setSort] = useState<SortQARParam>(SortQARParam.DISPLAYNAME);
-  const [roleName, setRoleName] = useState<RoleName>('' as RoleName);
-  const [order, setOrder] = useState<'asc' | 'desc'>('desc');
-  const [values, setValues] = useState(RolesInitialValues);
+const HeaderRolesSearch: FC<HeaderRolesSearchProps> = ({
+  onSubmit,
+  values,
+}) => {
+  const [search, setSearch] = useState<string>(values.search ?? '');
+  const [order, setOrder] = useState<'asc' | 'desc'>(values.order ?? 'desc');
+  const [sort, setSort] = useState<SortQARParam>(
+    values.sort ?? SortQARParam.DISPLAYNAME,
+  );
+  const [roleName, setRoleName] = useState<RoleName>(
+    values.name ?? ('' as RoleName),
+  );
 
-  const handleSearchChange = (value: string) => {
-    setSearch(value);
-    setValues(values => ({ ...values, search: value }));
+  const handleFormSubmit = () => {
+    onSubmit({
+      search,
+      sort,
+      order,
+      name: roleName,
+    });
   };
+
   const handleOrderChange = () => {
     setOrder(order => (order === 'asc' ? 'desc' : 'asc'));
-    setValues(values => ({ ...values, order: order }));
   };
+
   const handleSortChange = (value: string) => {
     setSort(value as SortQARParam);
-    setValues(values => ({
-      ...values,
-      sort: value as SortQARParam,
-    }));
   };
 
   const handleRoleNameChange = (value: string) => {
     setRoleName(value as RoleName);
-    setValues(values => ({ ...values, name: value as RoleName }));
   };
-
-  useEffect(() => {
-    onSubmit(values);
-  }, [values]);
 
   return (
     <Box sx={stylesAdmin.header}>
@@ -65,7 +66,8 @@ const HeaderRolesSearch: FC<HeaderRolesSearchProps> = ({ onSubmit }) => {
         <Box sx={stylesAdmin.search}>
           <Input
             value={search}
-            onChange={handleSearchChange}
+            onChange={setSearch}
+            onDeterredChange={handleFormSubmit}
             size={InputSize.MEDIUM}
             type={InputType.SEARCH}
             placeholder="Пошук"

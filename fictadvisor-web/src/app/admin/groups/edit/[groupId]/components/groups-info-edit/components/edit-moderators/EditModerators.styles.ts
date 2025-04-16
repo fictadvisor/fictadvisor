@@ -16,6 +16,6 @@ export const inputsWrapper: SxProps<Theme> = {
   gap: '18px',
 };
 
-export const addButton: SxProps<Theme> = {
-  maxWidth: '117px',
+export const addModerator: SxProps<Theme> = {
+  maxWidth: '308px',
 };

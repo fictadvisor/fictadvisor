@@ -49,7 +49,7 @@ const Page = () => {
   return (
     <Box sx={{ padding: '16px' }}>
       <Box sx={stylesAdmin.header}>
-        <CardHeader title="Створення предмету" sx={stylesAdmin.title} />
+        <CardHeader title="Створення" sx={stylesAdmin.title} />
         <Stack flexDirection="row" gap="8px">
           <Button
             size={ButtonSize.MEDIUM}

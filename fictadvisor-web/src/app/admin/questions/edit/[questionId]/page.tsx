@@ -1,6 +1,6 @@
 'use client';
 
-import React, { FC, useState } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import { UpdateQuestionDTO } from '@fictadvisor/utils/requests';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Box, Stack, Typography } from '@mui/material';
@@ -41,10 +41,6 @@ const Edit: FC<PageProps> = ({ params }) => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
 
-  if (isLoading) return <LoadPage />;
-
-  if (!data) throw new Error('Something went wrong in');
-
   const handleChanges = (values: UpdateQuestionDTO) => {
     setBody(prevValues =>
       JSON.stringify(values) !== JSON.stringify(prevValues)
@@ -63,7 +59,9 @@ const Edit: FC<PageProps> = ({ params }) => {
     }
   };
 
-  const updateQuestion = async () => {
+  const updateQuestion = useCallback(async () => {
+    if (!data) return;
+
     try {
       await QuestionAPI.updateQuestion(data.id, body);
       toast.success('Питання успішно оновлено', '', 4000);
@@ -71,7 +69,11 @@ const Edit: FC<PageProps> = ({ params }) => {
     } catch (error) {
       displayError(error);
     }
-  };
+  }, [data, body]);
+
+  if (isLoading) return <LoadPage />;
+
+  if (!data) throw new Error('Something went wrong in');
 
   return (
     <Box sx={{ p: '16px' }}>

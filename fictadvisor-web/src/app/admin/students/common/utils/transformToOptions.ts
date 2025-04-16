@@ -5,7 +5,6 @@ import {
 
 import { CheckboxesDropdownOption } from '@/components/common/ui/form/checkboxes-dropdown/types/CheckboxesDropdown';
 import { DropDownOption } from '@/components/common/ui/form/dropdown/types';
-import { UserRemainingSelective } from '@/types/user';
 
 export const transformGroupsMulti = (
   data: MappedGroupResponse[],

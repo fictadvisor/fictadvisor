@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from 'react';
-import { CreateContactDTO } from '@fictadvisor/utils/requests';
+import { ContactResponse } from '@fictadvisor/utils/responses';
 import { Stack } from '@mui/material';
 
 import Input from '@/components/common/ui/form/input-mui';
@@ -11,44 +11,28 @@ import { ContactPlaceholder } from '../constants/ContactPlaceholder';
 import * as styles from './ContactInput.styles';
 
 interface ContactInputProps {
-  contact: Omit<CreateContactDTO, 'id'>;
-  setNewContacts: React.Dispatch<React.SetStateAction<CreateContactDTO[]>>;
+  contact: ContactResponse;
+  setContacts: React.Dispatch<React.SetStateAction<ContactResponse[]>>;
 }
 
-const ContactInput: FC<ContactInputProps> = ({ contact, setNewContacts }) => {
+const ContactInput: FC<ContactInputProps> = ({ contact, setContacts }) => {
   const [displayName, setDisplayName] = useState<string>(contact.displayName);
-  const [link, setLink] = useState<string>(contact.link as string);
+  const [link, setLink] = useState<string>(contact.link);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setNewContacts(prev => {
-        const foundContact = prev.find(c => c.name === contact.name);
-        if (foundContact) {
-          return prev.map(c =>
-            c.name === contact.name ? { ...c, displayName, link } : c,
-          );
-        }
-        return [
-          ...prev,
-          { displayName, link, name: contact.name } as CreateContactDTO,
-        ];
-      });
-      setNewContacts(prev => {
-        const foundContact = prev.find(c => c.name === contact.name);
-        if (foundContact) {
-          if (
-            foundContact.displayName === contact.displayName &&
-            foundContact.link === contact.link &&
-            foundContact.name === contact.name
-          ) {
-            return prev.filter(c => c.name !== contact.name);
-          }
-        }
-        return prev;
-      });
-    }, 200);
+    setContacts(prev => {
+      const foundContact = prev.find(c => c.name === contact.name);
 
-    return () => clearTimeout(timer);
+      if (displayName === '' && [':', '/'].includes(link.at(-1) ?? '/'))
+        return [...prev.filter(c => c.name !== contact.name)];
+
+      if (foundContact) {
+        return prev.map(c =>
+          c.name === contact.name ? { ...c, displayName, link } : c,
+        );
+      }
+      return [...prev, { id: '', displayName, link, name: contact.name }];
+    });
   }, [displayName, link]);
 
   return (

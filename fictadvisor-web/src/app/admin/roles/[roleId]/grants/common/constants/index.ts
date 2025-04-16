@@ -11,13 +11,13 @@ export const sortOptions: DropDownOption[] = [
 ];
 
 export const GrantsOptions: DropDownOption[] = [
-  { id: 'given', label: 'Забране' },
-  { id: 'taken', label: 'Надане' },
+  { id: 'given', label: 'Надане' },
+  { id: 'taken', label: 'Забране' },
 ];
 
 export const GrantsInitialValues: GrantsSearchFormFields = {
   search: '',
   order: 'asc',
   sort: SortQAGrantsParam.PERMISSION,
-  set: '' as GrantSet,
+  set: 'given' as GrantSet,
 };

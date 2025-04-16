@@ -51,6 +51,13 @@ const TeacherPersonalInputs: FC<TeacherPersonalInputsProps> = ({
   const [avatarUrl, setAvatarUrl] = useState<string>(
     personalInfo.avatar as string,
   );
+  useEffect(() => {
+    setFirstName(personalInfo.firstName ?? '');
+    setLastName(personalInfo.lastName ?? '');
+    setMiddleName(personalInfo.middleName ?? '');
+    setDescription(personalInfo.description ?? '');
+    setAvatarUrl(personalInfo.avatar ?? '');
+  }, [personalInfo]);
 
   const [popupOpen, setPopupOpen] = useState(false);
 

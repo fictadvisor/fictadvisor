@@ -1,9 +1,7 @@
 'use client';
-import React, { FC, useState } from 'react';
-import {
-  CreateContactDTO,
-  UpdateTeacherDTO,
-} from '@fictadvisor/utils/requests';
+import React, { FC, useCallback, useEffect, useState } from 'react';
+import { UpdateTeacherDTO } from '@fictadvisor/utils/requests';
+import { ContactResponse } from '@fictadvisor/utils/responses';
 import { Box, Divider } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
@@ -14,7 +12,10 @@ import TeacherContactsInputs from '@/app/admin/teachers/common/components/teache
 import TeacherPersonalInputs from '@/app/admin/teachers/common/components/teacher-personal-inputs';
 import EditTeacherComments from '@/app/admin/teachers/edit/[teacherId]/components/edit-teacher-comments';
 import HeaderEdit from '@/app/admin/teachers/edit/[teacherId]/components/header-edit';
-import { EditedComment } from '@/app/admin/teachers/edit/[teacherId]/types';
+import {
+  EditedComment,
+  InitialTeacherCathedras,
+} from '@/app/admin/teachers/edit/[teacherId]/types';
 import { CheckboxesDropdownOption } from '@/components/common/ui/form/checkboxes-dropdown/types/CheckboxesDropdown';
 import LoadPage from '@/components/common/ui/load-page/LoadPage';
 import useToast from '@/hooks/use-toast';
@@ -32,49 +33,87 @@ const Edit: FC<PageProps> = ({ params }) => {
     data: teacher,
     isSuccess,
     isLoading,
+    error,
   } = useQuery({
     queryKey: ['teacher', params.teacherId],
     queryFn: () => TeacherAPI.get(params.teacherId),
     ...useQueryAdminOptions,
   });
 
-  if (!isSuccess) throw new Error('Something went wrong in teacher edit page');
+  const [initialTeacherCathedras, setInitialTeacherCathedras] =
+    useState<InitialTeacherCathedras[]>();
 
-  const initialValues = {
-    firstName: teacher.firstName,
-    lastName: teacher.lastName,
-    middleName: teacher.middleName,
-    description: teacher.description,
-    avatar: teacher.avatar,
-  };
-  const initialTeacherCathedras = teacher.cathedras.map(cathedra => ({
-    id: cathedra.id,
-    value: cathedra.name,
-    label: cathedra.abbreviation,
-  }));
   const toast = useToast();
   const { displayError } = useToastError();
   const router = useRouter();
-  const [personalInfo, setPersonalInfo] =
-    useState<UpdateTeacherDTO>(initialValues);
+
+  const [personalInfo, setPersonalInfo] = useState<UpdateTeacherDTO>({});
+  const [contacts, setContacts] = useState<ContactResponse[]>([]);
+
+  useEffect(() => {
+    if (!teacher || !isSuccess) return;
+
+    setPersonalInfo(() => ({
+      firstName: teacher.firstName,
+      lastName: teacher.lastName,
+      middleName: teacher.middleName,
+      description: teacher.description,
+      avatar: teacher.avatar,
+    }));
+
+    setInitialTeacherCathedras(
+      teacher.cathedras.map(cathedra => ({
+        id: cathedra.id,
+        value: cathedra.name,
+        label: cathedra.abbreviation,
+      })),
+    );
+  }, [teacher, isSuccess]);
   const [selectedTeacherCathedras, setSelectedTeacherCathedras] = useState<
     CheckboxesDropdownOption[]
-  >(initialTeacherCathedras);
-  const [changedContacts, setChangedContacts] = useState<CreateContactDTO[]>(
-    [],
-  );
+  >([]);
+
+  useEffect(() => {
+    if (!initialTeacherCathedras) return;
+
+    setSelectedTeacherCathedras(initialTeacherCathedras);
+  }, [initialTeacherCathedras]);
 
   const [changedComments, setChangedComments] = useState<EditedComment[]>([]);
 
-  const handleEditSubmit = async () => {
+  const handleEditSubmit = useCallback(async () => {
+    if (
+      !teacher ||
+      !initialTeacherCathedras ||
+      !selectedTeacherCathedras ||
+      !personalInfo ||
+      !changedComments
+    )
+      return;
+
     try {
       await TeacherAPI.editPersonalInfo(teacher.id, personalInfo);
+      for (const contact of contacts) {
+        if (contact.id === '') {
+          await TeacherAPI.createTeacherContacts(teacher.id, {
+            name: contact.name,
+            displayName: contact.displayName,
+            link: contact.link,
+          });
+        } else {
+          await TeacherAPI.editTeacherContacts(teacher.id, contact.id, {
+            displayName: contact.displayName,
+            link: contact.link,
+          });
+        }
+      }
 
-      for (const contact of changedContacts) {
-        await TeacherAPI.editTeacherContacts(teacher.id, contact.name, {
-          displayName: contact.displayName,
-          link: contact.link,
-        });
+      const contactsToDelete = teacher.contacts.filter(
+        contact => !contacts.map(({ id }) => id).includes(contact.id),
+      );
+
+      for (const { id } of contactsToDelete) {
+        await TeacherAPI.deleteTeacherContact(teacher.id, id);
       }
 
       for (const cathedra of initialTeacherCathedras) {
@@ -103,9 +142,18 @@ const Edit: FC<PageProps> = ({ params }) => {
     } catch (e) {
       displayError(e);
     }
-  };
+  }, [
+    teacher,
+    contacts,
+    selectedTeacherCathedras,
+    initialTeacherCathedras,
+    personalInfo,
+    changedComments,
+  ]);
 
-  const handleDeleteSubmit = async () => {
+  const handleDeleteSubmit = useCallback(async () => {
+    if (!teacher) return;
+
     try {
       await TeacherAPI.delete(teacher.id);
       toast.success('Викладач успішно видалений!', '', 4000);
@@ -113,9 +161,12 @@ const Edit: FC<PageProps> = ({ params }) => {
     } catch (e) {
       displayError(e);
     }
-  };
+  }, [teacher]);
 
   if (isLoading) return <LoadPage />;
+
+  if (error) displayError(error);
+  if (!isSuccess) throw new Error('Something went wrong in teacher edit page');
 
   return (
     <Box sx={{ p: '16px' }}>
@@ -133,8 +184,8 @@ const Edit: FC<PageProps> = ({ params }) => {
         />
         <Divider sx={stylesAdmin.dividerHor} />
         <TeacherContactsInputs
-          contacts={teacher.contacts}
-          setNewContacts={setChangedContacts}
+          contacts={teacher?.contacts ?? []}
+          setContacts={setContacts}
         />
         <Divider sx={stylesAdmin.dividerHor} />
         <EditTeacherComments

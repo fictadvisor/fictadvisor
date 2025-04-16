@@ -1,5 +1,5 @@
 'use client';
-import React, { FC, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { RoleName } from '@fictadvisor/utils/enums';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Box, CardHeader, Link, Stack } from '@mui/material';
@@ -35,7 +35,7 @@ interface AdminRolesEditProps {
 const AdminRolesEdit: FC<AdminRolesEditProps> = ({ params }) => {
   const {
     data: role,
-    isSuccess,
+    error,
     isLoading,
   } = useQuery({
     queryKey: ['getRole', params.roleId],
@@ -43,18 +43,21 @@ const AdminRolesEdit: FC<AdminRolesEditProps> = ({ params }) => {
     ...useQueryAdminOptions,
   });
 
-  if (!isSuccess)
-    throw new Error(
-      `An error has occurred while editing ${params.roleId} role`,
-    );
-
-  const [displayName, setDisplayName] = useState<string>(role.displayName);
-  const [weight, setWeight] = useState<string>(role.weight.toString());
-  const [name, setName] = useState<RoleName>(role.name);
+  const [displayName, setDisplayName] = useState<string>('');
+  const [weight, setWeight] = useState<string>('');
+  const [name, setName] = useState<RoleName>();
   const toast = useToast();
   const { displayError } = useToastError();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    if (!role) return;
+
+    setDisplayName(role.displayName);
+    setWeight(role.weight.toString());
+    setName(role.name);
+  }, [role]);
 
   const handleDelete = async (userId: string) => {
     try {
@@ -65,7 +68,10 @@ const AdminRolesEdit: FC<AdminRolesEditProps> = ({ params }) => {
       displayError(e);
     }
   };
-  const handleEdit = async () => {
+
+  const handleEdit = useCallback(async () => {
+    if (!role || !weight) return;
+
     try {
       await RoleAPI.edit(role.id, {
         displayName,
@@ -73,19 +79,27 @@ const AdminRolesEdit: FC<AdminRolesEditProps> = ({ params }) => {
         name,
       });
       toast.success('Роль успішно змінена!', '', 4000);
+      router.replace('/admin/roles');
     } catch (e) {
       displayError(e);
     }
-  };
+  }, [role, weight, displayName, name]);
 
   if (isLoading) return <LoadPage />;
+
+  if (error) {
+    displayError(error);
+    throw new Error(
+      `An error has occurred while editing ${params.roleId} role`,
+    );
+  }
 
   return (
     <>
       <Box sx={stylesAdmin.header}>
         <CardHeader
           title="Редагування"
-          subheader={role.id}
+          subheader={role?.id}
           sx={stylesAdmin.title}
         />
         <Stack flexDirection="row" gap="8px">
@@ -108,8 +122,8 @@ const AdminRolesEdit: FC<AdminRolesEditProps> = ({ params }) => {
           {isOpen && (
             <DeletePopup
               setPopupOpen={setIsOpen}
-              handleDeleteSubmit={() => handleDelete(role.id)}
-              name={`роль ${role.displayName}`}
+              handleDeleteSubmit={() => handleDelete(role?.id ?? '')}
+              name={`роль ${role?.displayName}`}
             />
           )}
           <Button
@@ -123,7 +137,7 @@ const AdminRolesEdit: FC<AdminRolesEditProps> = ({ params }) => {
       <Box sx={styles.body}>
         <Box sx={stylesAdmin.inputsWrapper}>
           <Input
-            value={displayName}
+            value={displayName ?? ''}
             onChange={setDisplayName}
             size={InputSize.MEDIUM}
             type={InputType.DEFAULT}
@@ -138,11 +152,11 @@ const AdminRolesEdit: FC<AdminRolesEditProps> = ({ params }) => {
             options={RoleNameOptions}
             showRemark={false}
             onChange={(value: string) => setName(value as RoleName)}
-            value={name}
+            value={name ?? ''}
             label="Тип ролі"
           />
           <Input
-            value={weight}
+            value={weight ?? ''}
             onChange={setWeight}
             size={InputSize.MEDIUM}
             type={InputType.DEFAULT}
@@ -153,7 +167,7 @@ const AdminRolesEdit: FC<AdminRolesEditProps> = ({ params }) => {
         </Box>
         <Box sx={{ maxWidth: '149px' }}>
           <Link
-            href={`/admin/roles/${role.id}/grants`}
+            href={`/admin/roles/${role?.id}/grants`}
             component={NextLink}
             underline="none"
             color="inherit"
