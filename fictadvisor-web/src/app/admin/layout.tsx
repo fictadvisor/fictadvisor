@@ -17,7 +17,9 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const [permissionGranted, setPermissionGranted] = useState(false);
 
   const pathname = usePathname();
-  const requestedPathname = adminPermissions[pathname];
+  const requestedPathname =
+    adminPermissions[pathname] ||
+    adminPermissions[pathname.replace(/\/[^\/]*\/[^\/]*$/i, '')];
 
   if (!user) redirect('/login');
 
@@ -33,18 +35,18 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   });
 
   useEffect(() => {
-    if (permissionData?.permissions) {
+    if (!isLoading) {
+      if (!permissionData?.permissions) redirect('/');
+
       const permissionCheck = Object.entries(permissionData.permissions).some(
         ([key, value]) => key === requestedPathname && value,
       );
 
       setPermissionGranted(permissionCheck);
 
-      if (!permissionCheck) {
-        redirect('/');
-      }
+      if (!permissionCheck) redirect('/');
     }
-  }, [permissionData]);
+  }, [isLoading, permissionData, requestedPathname]);
 
   if (isLoading) {
     return (

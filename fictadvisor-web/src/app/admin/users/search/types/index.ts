@@ -9,4 +9,5 @@ export interface UserSearchFormFields {
 
 export interface HeaderUserSearchProps {
   onSubmit: (values: Partial<UserSearchFormFields>) => void;
+  values: UserSearchFormFields;
 }

@@ -1,5 +1,5 @@
 'use client';
-import React, { FC, useState } from 'react';
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { TeacherWithRolesAndCathedrasResponse } from '@fictadvisor/utils/responses';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Box, CardHeader, Divider, Stack } from '@mui/material';
@@ -33,58 +33,68 @@ interface AdminDepartmentEditProps {
 }
 
 const Page: FC<AdminDepartmentEditProps> = ({ params }) => {
-  const { data: department, isLoading } = useQuery({
+  const {
+    data: department,
+    isLoading,
+    isSuccess,
+  } = useQuery({
     queryKey: ['departmentById', params.departmentId],
     queryFn: () => CathedraAPI.getDepartmentById(params.departmentId),
     ...useQueryAdminOptions,
   });
 
-  if (!department)
-    throw new Error('Something went wrong in department edit page');
-
   const toast = useToast();
   const { displayError } = useToastError();
   const router = useRouter();
-  const [name, setName] = useState<string>(department.data.name);
-  const [abbreviation, setAbbreviation] = useState<string>(
-    department.data.abbreviation,
-  );
+
+  const [name, setName] = useState<string>();
+  const [abbreviation, setAbbreviation] = useState<string>();
   const [isOpen, setIsOpen] = useState(false);
-  const [division, setDivision] = useState<string>(department.data.division);
+  const [division, setDivision] = useState<string>();
   const [left, setLeft] = useState<TeacherWithRolesAndCathedrasResponse[]>([]);
   const [right, setRight] = useState<TeacherWithRolesAndCathedrasResponse[]>(
     [],
   );
 
+  useEffect(() => {
+    if (!department) return;
+
+    setName(department.data.name);
+    setAbbreviation(department.data.abbreviation);
+    setDivision(department.data.division);
+  }, [department]);
+
   const { data: divisionData, isLoading: isLoadingDivisions } = useQuery({
-    queryKey: ['divisions', department.data.id],
+    queryKey: ['divisions', department?.data.id],
     queryFn: () => CathedraAPI.getDivisions(),
+    enabled: isSuccess,
     ...useQueryAdminOptions,
   });
 
   const { data: inDepartmentData, isLoading: isLoadingDepartment } = useQuery({
-    queryKey: ['inDepartment', department.data.id, false],
+    queryKey: ['inDepartment', department?.data?.id, false],
 
     queryFn: () =>
       CathedraAPI.getDepartmentTeachers({
-        cathedrasId: [department.data.id],
+        cathedrasId: [department?.data?.id ?? ''],
         notInDepartments: false,
       }),
-
+    enabled: isSuccess,
     ...useQueryAdminOptions,
   });
 
-  if (isLoadingDivisions || isLoadingDepartment) return <LoadPage />;
+  const faculties = useMemo(() => {
+    if (!divisionData) return [];
 
-  if (!divisionData || !inDepartmentData)
-    throw new Error(`An error has occurred`);
+    return divisionData.divisions.map(faculty => ({
+      id: faculty,
+      label: faculty,
+    }));
+  }, [divisionData]);
 
-  const faculties = divisionData.divisions.map(faculty => ({
-    id: faculty,
-    label: faculty,
-  }));
+  const handleEdit = useCallback(async () => {
+    if (!inDepartmentData || !department) return;
 
-  const handleEdit = async () => {
     try {
       const deleteTeachers = inDepartmentData.teachers.map(
         teacher => teacher.id,
@@ -102,7 +112,17 @@ const Page: FC<AdminDepartmentEditProps> = ({ params }) => {
     } catch (e) {
       displayError(e);
     }
-  };
+  }, [
+    inDepartmentData,
+    department,
+    right,
+    name,
+    abbreviation,
+    division,
+    toast,
+    router,
+    displayError,
+  ]);
 
   const handleDelete = async (departmentId: string) => {
     try {
@@ -114,7 +134,11 @@ const Page: FC<AdminDepartmentEditProps> = ({ params }) => {
     }
   };
 
-  if (isLoading) return <LoadPage />;
+  if (isLoading || isLoadingDivisions || isLoadingDepartment)
+    return <LoadPage />;
+
+  if (!department || !divisionData || !inDepartmentData)
+    throw new Error(`Something went wrong in department edit page`);
 
   return (
     <Box sx={{ padding: '16px' }}>
@@ -158,7 +182,7 @@ const Page: FC<AdminDepartmentEditProps> = ({ params }) => {
       </Box>
       <Stack maxWidth={308} flexDirection="column" gap="16px" padding="16px">
         <Input
-          value={name}
+          value={name ?? ''}
           onChange={setName}
           size={InputSize.MEDIUM}
           type={InputType.DEFAULT}
@@ -166,7 +190,7 @@ const Page: FC<AdminDepartmentEditProps> = ({ params }) => {
           label="Назва кафедри"
         />
         <Input
-          value={abbreviation}
+          value={abbreviation ?? ''}
           onChange={setAbbreviation}
           size={InputSize.MEDIUM}
           type={InputType.DEFAULT}
@@ -180,7 +204,7 @@ const Page: FC<AdminDepartmentEditProps> = ({ params }) => {
           options={faculties}
           showRemark={false}
           onChange={setDivision}
-          value={division}
+          value={division ?? ''}
           label="Підрозділ"
         />
       </Stack>

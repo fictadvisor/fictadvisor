@@ -2,7 +2,6 @@ import {
   AcademicCapIcon,
   BriefcaseIcon,
   BuildingLibraryIcon,
-  CalendarIcon,
   ClipboardDocumentListIcon,
   HomeIcon,
   IdentificationIcon,
@@ -58,11 +57,6 @@ export const adminPanelTabs = [
     icon: <AcademicCapIcon />,
   },
   {
-    link: BASE_URL + '/schedule',
-    text: 'Розклад',
-    icon: <CalendarIcon />,
-  },
-  {
     link: BASE_URL + '/main',
     text: 'Головна сторінка',
     icon: <HomeIcon />,
@@ -77,10 +71,5 @@ export const adminPanelTabs = [
     link: BASE_URL + '/comments',
     text: 'База відповідей',
     icon: <ClipboardDocumentListIcon />,
-  },
-  {
-    link: BASE_URL + '/main',
-    text: 'Головна сторінка',
-    icon: <HomeIcon />,
   },
 ];

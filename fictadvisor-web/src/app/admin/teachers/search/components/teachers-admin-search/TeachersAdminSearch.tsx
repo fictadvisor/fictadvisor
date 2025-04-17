@@ -1,5 +1,6 @@
 'use client';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
+import { DisciplineTypeEnum } from '@fictadvisor/utils/enums';
 import { QueryAllTeachersDTO } from '@fictadvisor/utils/requests';
 import {
   BarsArrowDownIcon,
@@ -10,6 +11,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
+import { teacherRoles } from '@/app/admin/teachers/search/constants';
 import Button from '@/components/common/ui/button-mui';
 import { ButtonSize } from '@/components/common/ui/button-mui/types';
 import { TagText } from '@/components/common/ui/cards/card-discipline-types/CardDisciplineTypes';
@@ -24,68 +26,85 @@ import {
 } from '@/components/common/ui/icon-button';
 import IconButton from '@/components/common/ui/icon-button-mui';
 import { IconButtonSize } from '@/components/common/ui/icon-button-mui/types';
-import Progress from '@/components/common/ui/progress/Progress';
+import Progress from '@/components/common/ui/progress';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import CathedraAPI from '@/lib/api/cathedras/CathedraAPI';
 
-import { initialValues, teacherRoles } from '../../constants';
+const tags = teacherRoles.map(role => ({
+  value: TagText[role],
+  label: TagText[role],
+  id: role,
+}));
 
 interface TeachersAdminSearchProps {
   onSubmit: (values: QueryAllTeachersDTO) => void;
+  values: QueryAllTeachersDTO;
 }
 
-const TeachersAdminSearch: FC<TeachersAdminSearchProps> = ({ onSubmit }) => {
-  const [values, setValues] = useState<QueryAllTeachersDTO>(initialValues);
-  const [search, setSearch] = useState<string>('');
-  const [cathedrasId, setCathedrasId] = useState<CheckboxesDropdownOption[]>(
-    [],
-  );
-  const [roles, setRoles] = useState<CheckboxesDropdownOption[]>([]);
-  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
+const TeachersAdminSearch: FC<TeachersAdminSearchProps> = ({
+  onSubmit,
+  values,
+}) => {
+  const { displayError } = useToastError();
+  const [search, setSearch] = useState<string>(values.search ?? '');
+  const [order, setOrder] = useState<'asc' | 'desc'>(values.order ?? 'asc');
 
-  const handleFormSubmit = () => {
-    const newCathedrasId = cathedrasId.map(cathedra => cathedra.id) as string[];
-    setValues({
-      ...values,
-      search,
-      order,
-      cathedrasId: newCathedrasId,
-    });
-    onSubmit(values);
-  };
-
-  useEffect(() => {
-    handleFormSubmit();
-  }, [search, order, roles, cathedrasId]);
-
-  const { data, isLoading } = useQuery({
+  const {
+    data: dataCathedras,
+    isLoading: isLoadingCathedras,
+    error: errorCathedras,
+  } = useQuery({
     queryKey: ['cathedras'],
     queryFn: () => CathedraAPI.getAll(),
     ...useQueryAdminOptions,
   });
 
-  if (isLoading) return <Progress />;
-
-  if (!data) throw new Error('error loading data');
-
-  const cathedras = data.cathedras.map(cathedra => ({
+  const cathedras = dataCathedras?.cathedras.map(cathedra => ({
     label: cathedra.abbreviation,
     value: cathedra.name,
     id: cathedra.id,
   }));
-  const tags = teacherRoles.map(role => ({
-    value: TagText[role],
-    label: TagText[role],
-    id: role,
-  }));
+
+  const newCathedrasIds = values.cathedrasId?.map(cathedraId =>
+    cathedras?.find(({ id }) => id === cathedraId),
+  ) as CheckboxesDropdownOption[];
+  const [cathedrasId, setCathedrasId] =
+    useState<CheckboxesDropdownOption[]>(newCathedrasIds);
+
+  const newRoles = values.disciplineTypes?.map(role =>
+    tags.find(({ value }) => value === TagText[role]),
+  ) as CheckboxesDropdownOption[];
+  const [roles, setRoles] = useState<CheckboxesDropdownOption[]>(newRoles);
+
+  const handleFormSubmit = () => {
+    onSubmit({
+      search,
+      order,
+      disciplineTypes: roles.map(role => role.id as DisciplineTypeEnum),
+      cathedrasId: cathedrasId.map(cathedra => cathedra.id) as string[],
+    });
+  };
 
   const handleOrderChange = () =>
     setOrder(prevOrder => (prevOrder === 'asc' ? 'desc' : 'asc'));
-  const handleCathedrasChange = (event: SelectChangeEvent) =>
+
+  const handleCathedrasChange = (event: SelectChangeEvent) => {
+    if (!cathedras) return;
+
     setCathedrasId(
-      cathedras.filter(cathedra => event.target.value.includes(cathedra.value)),
+      cathedras?.filter(cathedra =>
+        event.target.value.includes(cathedra.value),
+      ),
     );
+  };
+
   const handleRolesChange = (event: SelectChangeEvent) =>
     setRoles(tags.filter(tag => event.target.value.includes(tag.value)));
+
+  if (errorCathedras) {
+    displayError(errorCathedras);
+    throw new Error('error cathedras data');
+  }
 
   return (
     <form>
@@ -96,7 +115,7 @@ const TeachersAdminSearch: FC<TeachersAdminSearchProps> = ({ onSubmit }) => {
               sx={stylesAdmin.input}
               value={search}
               onChange={setSearch}
-              onDeterredChange={() => handleFormSubmit()}
+              onDeterredChange={handleFormSubmit}
               size={InputSize.MEDIUM}
               type={InputType.SEARCH}
               placeholder="Пошук"
@@ -105,13 +124,17 @@ const TeachersAdminSearch: FC<TeachersAdminSearchProps> = ({ onSubmit }) => {
           </Box>
           <Divider orientation="vertical" sx={stylesAdmin.dividerVert} />
           <Box sx={{ width: '120px' }}>
-            <CheckboxesDropdown
-              label="Кафедри"
-              values={cathedras}
-              selected={cathedrasId}
-              size={FieldSize.MEDIUM}
-              handleChange={handleCathedrasChange}
-            />
+            {isLoadingCathedras ? (
+              <Progress />
+            ) : (
+              <CheckboxesDropdown
+                label="Кафедри"
+                values={cathedras ?? []}
+                selected={cathedrasId}
+                size={FieldSize.MEDIUM}
+                handleChange={handleCathedrasChange}
+              />
+            )}
           </Box>
           <Box sx={{ width: '120px' }}>
             <CheckboxesDropdown

@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { SortQASParam } from '@fictadvisor/utils/enums';
 import {
   BarsArrowDownIcon,
@@ -6,7 +6,6 @@ import {
 } from '@heroicons/react/24/outline';
 import { Box } from '@mui/material';
 
-import { SubjectInitialValues } from '@/app/(main)/(search-pages)/search-form/constants';
 import { SearchFormFields } from '@/app/(main)/(search-pages)/search-form/types';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import Button from '@/components/common/ui/button-mui';
@@ -22,35 +21,25 @@ import { IconButtonSize } from '@/components/common/ui/icon-button-mui/types';
 
 interface SubjectsSearchHeaderProps {
   onSubmit: (values: SearchFormFields) => void;
+  values: SearchFormFields;
 }
-const SubjectsSearchHeader: FC<SubjectsSearchHeaderProps> = ({ onSubmit }) => {
-  const [search, setSearch] = useState<string>('');
-  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
-  const [values, setValues] = useState<SearchFormFields>(SubjectInitialValues);
+const SubjectsSearchHeader: FC<SubjectsSearchHeaderProps> = ({
+  onSubmit,
+  values,
+}) => {
+  const [search, setSearch] = useState<string>(values.search);
+  const [order, setOrder] = useState<'asc' | 'desc'>(values.order);
   const handleSubmit = () => {
-    setValues({
+    onSubmit({
       search,
       order,
       sort: SortQASParam.NAME,
-      groupId: '',
     } as SearchFormFields);
-    onSubmit(values);
   };
 
   const handleSortButtonClick = () => {
     setOrder(order === 'asc' ? 'desc' : 'asc');
-    setValues({
-      search,
-      order,
-      sort: SortQASParam.NAME,
-      groupId: '',
-    } as SearchFormFields);
-    onSubmit(values);
   };
-
-  useEffect(() => {
-    handleSubmit();
-  }, [search]);
 
   return (
     <Box sx={stylesAdmin.header}>

@@ -11,24 +11,26 @@ import CommentsTable from '@/app/admin/comments/search/components/admin-comments
 import { useQueryAdminOptions } from '@/app/admin/common/constants';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import LoadPage from '@/components/common/ui/load-page';
-import DatesAPI from '@/lib/api/dates/DatesAPI';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import TeacherApi from '@/lib/api/teacher/TeacherAPI';
 
 const Page = () => {
   const [pageSize, setPageSize] = useState(10);
   const [currPage, setCurrPage] = useState(0);
-  const [queryObj, setQueryObj] = useState<QueryAllCommentsDTO>(initialValues);
+  const [values, setValues] = useState<QueryAllCommentsDTO>(initialValues);
+  const { displayError } = useToastError();
 
   const {
     data: commentsData,
     isLoading,
     refetch,
+    error: errorComments,
   } = useQuery({
-    queryKey: ['comments', currPage, pageSize, queryObj],
+    queryKey: ['comments', currPage, pageSize, values],
 
     queryFn: () =>
       TeacherApi.getComments({
-        ...queryObj,
+        ...values,
         pageSize,
         page: currPage,
       }),
@@ -36,18 +38,8 @@ const Page = () => {
     ...useQueryAdminOptions,
   });
 
-  const { data: dates, isLoading: isLoadingDates } = useQuery({
-    queryKey: ['dates', false],
-    queryFn: () => DatesAPI.getDates(false),
-    ...useQueryAdminOptions,
-  });
-
-  if (isLoading || isLoadingDates) return <LoadPage />;
-
-  if (!commentsData || !dates) throw new Error(`An error has occurred`);
-
   const submitHandler = (query: QueryAllCommentsDTO) =>
-    setQueryObj(prev => ({ ...prev, ...query }));
+    setValues(prev => ({ ...prev, ...query }));
 
   const handleRowsPerPageChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -56,18 +48,28 @@ const Page = () => {
     setCurrPage(0);
   };
 
+  if (errorComments) {
+    displayError(errorComments);
+    throw new Error(`An error has occurred`);
+  }
+
   return (
     <Box sx={{ p: '20px 16px 0 16px' }}>
-      <AdminCommentsSearch onSubmit={submitHandler} dates={dates} />
-      <CommentsTable comments={commentsData.comments} refetch={refetch} />
-      <TablePagination
-        sx={stylesAdmin.pagination}
-        count={commentsData.pagination.totalAmount}
-        page={currPage}
-        rowsPerPage={pageSize}
-        onPageChange={(e, page) => setCurrPage(page)}
-        onRowsPerPageChange={handleRowsPerPageChange}
-      />
+      <AdminCommentsSearch onSubmit={submitHandler} values={values} />
+      {isLoading && <LoadPage />}
+      {commentsData && (
+        <>
+          <CommentsTable comments={commentsData.comments} refetch={refetch} />
+          <TablePagination
+            sx={stylesAdmin.pagination}
+            count={commentsData.pagination.totalAmount}
+            page={currPage}
+            rowsPerPage={pageSize}
+            onPageChange={(e, page) => setCurrPage(page)}
+            onRowsPerPageChange={handleRowsPerPageChange}
+          />
+        </>
+      )}
     </Box>
   );
 };

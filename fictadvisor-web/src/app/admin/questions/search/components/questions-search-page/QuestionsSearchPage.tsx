@@ -1,5 +1,5 @@
 'use client';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { QuestionType, SortQAQParam } from '@fictadvisor/utils/enums';
 import { QueryAllQuestionsDTO } from '@fictadvisor/utils/requests';
 import {
@@ -10,7 +10,6 @@ import { Box, Divider } from '@mui/material';
 
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import {
-  initialValues,
   sortOptions,
   typesOptions,
 } from '@/app/admin/questions/common/constants';
@@ -27,31 +26,30 @@ import { IconButtonSize } from '@/components/common/ui/icon-button-mui/types';
 
 interface QuestionAdminSearchProps {
   onSubmit: (values: QueryAllQuestionsDTO) => void;
+  values: QueryAllQuestionsDTO;
 }
 
-const QuestionsAdminSearch: FC<QuestionAdminSearchProps> = ({ onSubmit }) => {
-  const [values, setValues] = useState<QueryAllQuestionsDTO>(initialValues);
-  const [search, setSearch] = useState<string>('');
-  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
+const QuestionsAdminSearch: FC<QuestionAdminSearchProps> = ({
+  onSubmit,
+  values,
+}) => {
+  const [search, setSearch] = useState<string>(values.search ?? '');
+  const [order, setOrder] = useState<'asc' | 'desc'>(values.order ?? 'asc');
   const [sortBy, setSortBy] = useState<SortQAQParam>(
-    SortQAQParam.QUESTION_TEXT,
+    values.sort ?? SortQAQParam.QUESTION_TEXT,
   );
-  const [type, setType] = useState<QuestionType>(QuestionType.SCALE);
+  const [type, setType] = useState<QuestionType>(
+    values.types?.[0] ?? QuestionType.SCALE,
+  );
 
   const handleFormSubmit = () => {
-    setValues({
-      ...values,
+    onSubmit({
       search,
       order,
       sort: sortBy,
       types: [type],
     });
-    onSubmit(values);
   };
-
-  useEffect(() => {
-    handleFormSubmit();
-  }, [search, order, sortBy, type]);
 
   const handleOrderChange = () => {
     setOrder(prevOrder => (prevOrder === 'asc' ? 'desc' : 'asc'));
@@ -65,7 +63,7 @@ const QuestionsAdminSearch: FC<QuestionAdminSearchProps> = ({ onSubmit }) => {
             sx={stylesAdmin.input}
             value={search}
             onChange={setSearch}
-            onDeterredChange={() => handleFormSubmit()}
+            onDeterredChange={handleFormSubmit}
             size={InputSize.MEDIUM}
             type={InputType.SEARCH}
             placeholder="Пошук"

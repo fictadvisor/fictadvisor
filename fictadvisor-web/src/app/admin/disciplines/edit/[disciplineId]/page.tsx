@@ -39,11 +39,6 @@ const DisciplinesAdminEdit: FC<AdminDisciplineEditProps> = ({ params }) => {
     ...useQueryAdminOptions,
   });
 
-  if (isError)
-    throw new Error(
-      `An error has occurred while editing ${params.disciplineId} discipline`,
-    );
-
   const [body, setBody] = useState<CreateDisciplineDTO>(
     {} as CreateDisciplineDTO,
   );
@@ -52,9 +47,9 @@ const DisciplinesAdminEdit: FC<AdminDisciplineEditProps> = ({ params }) => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleDelete = (disciplineId: string) => {
+  const handleDelete = async (disciplineId: string) => {
     try {
-      DisciplineAPI.deleteDiscipline(disciplineId);
+      await DisciplineAPI.deleteDiscipline(disciplineId);
       toast.success('Дисципліна успішно видалена!', '', 4000);
       router.push('/admin/disciplines');
     } catch (e) {
@@ -93,6 +88,11 @@ const DisciplinesAdminEdit: FC<AdminDisciplineEditProps> = ({ params }) => {
   };
 
   if (isLoading) return <LoadPage />;
+
+  if (isError)
+    throw new Error(
+      `An error has occurred while editing ${params.disciplineId} discipline`,
+    );
 
   return (
     <>

@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FC } from 'react';
 import { GroupRoles, SortQGSParam } from '@fictadvisor/utils/enums';
 import { QueryAllStudentsDTO } from '@fictadvisor/utils/requests';
@@ -26,70 +26,76 @@ import {
   IconButtonSize,
 } from '@/components/common/ui/icon-button-mui/types';
 import Progress from '@/components/common/ui/progress/Progress';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import GroupAPI from '@/lib/api/group/GroupAPI';
 
-import {
-  roleOptions,
-  sortOptions,
-  StudentInitialValues,
-} from '../../constants';
+import { roleOptions, sortOptions } from '../../constants';
 
 import * as styles from './HeaderStudentSearch.styles';
 
 export interface HeaderStudentSearchProps {
   onSubmit: (values: QueryAllStudentsDTO) => void;
+  values: QueryAllStudentsDTO;
 }
 
-const HeaderStudentSearch: FC<HeaderStudentSearchProps> = ({ onSubmit }) => {
-  const [search, setSearch] = useState<string>('');
-  const [sortBy, setSortBy] = useState<SortQGSParam>(SortQGSParam.FIRST_NAME);
-  const [group, setGroup] = useState<string[]>([]);
-  const [roles, setRoles] = useState<(keyof typeof GroupRoles)[]>([]);
-  const [order, setOrder] = useState<'asc' | 'desc'>('desc');
-  const [values, setValues] = useState(StudentInitialValues);
+const HeaderStudentSearch: FC<HeaderStudentSearchProps> = ({
+  onSubmit,
+  values,
+}) => {
+  const [search, setSearch] = useState<string>(values.search ?? '');
+  const [group, setGroup] = useState<string[]>(values.groups ?? []);
+  const [order, setOrder] = useState<'asc' | 'desc'>(values.order ?? 'desc');
+  const [sortBy, setSortBy] = useState<SortQGSParam>(
+    values.sort ?? SortQGSParam.FIRST_NAME,
+  );
+  const [roles, setRoles] = useState<(keyof typeof GroupRoles)[]>(
+    values.roles ?? [],
+  );
 
-  const { data: groups, isLoading } = useQuery({
+  const { displayError } = useToastError();
+
+  const {
+    data: groups,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ['groups'],
     queryFn: () => GroupAPI.getAll(),
     ...useQueryAdminOptions,
   });
 
-  useEffect(() => {
-    onSubmit(values);
-  }, [values]);
-
-  if (isLoading) return <Progress />;
-
-  if (!groups) throw new Error('error loading data');
-
-  const handleSearchChange = (value: string) => {
-    setSearch(value);
-    setValues(values => ({ ...values, search: value }));
+  const handleFormSubmit = () => {
+    onSubmit({
+      order,
+      roles,
+      search,
+      sort: sortBy,
+      groups: group,
+    });
   };
+
   const handleOrderChange = () => {
     setOrder(order => (order === 'asc' ? 'desc' : 'asc'));
-    setValues(values => ({ ...values, order: order }));
   };
   const handleSortByChange = (value: string) => {
     setSortBy(value as SortQGSParam);
-    setValues(values => ({
-      ...values,
-      sort: value as SortQGSParam,
-    }));
   };
 
   const handleRoleChange = (event: SelectChangeEvent) => {
     const value = event.target.value as unknown as (keyof typeof GroupRoles)[];
     setRoles(value);
-    setValues(values => ({ ...values, roles: value }));
   };
+
   const handleGroupChange = (event: SelectChangeEvent) => {
     const value = event.target.value as unknown as string[];
     setGroup(value);
-    setValues(values => ({ ...values, groups: value }));
   };
 
-  const groupOptions = transformGroupsMulti(groups.groups);
+  const groupOptions = transformGroupsMulti(groups?.groups ?? []);
+  if (error) {
+    displayError(error);
+    throw new Error('error loading data');
+  }
 
   return (
     <Box sx={stylesAdmin.header}>
@@ -97,7 +103,8 @@ const HeaderStudentSearch: FC<HeaderStudentSearchProps> = ({ onSubmit }) => {
         <Box sx={styles.search}>
           <Input
             value={search}
-            onChange={handleSearchChange}
+            onChange={setSearch}
+            onDeterredChange={handleFormSubmit}
             size={InputSize.MEDIUM}
             type={InputType.SEARCH}
             placeholder="Пошук"
@@ -106,16 +113,20 @@ const HeaderStudentSearch: FC<HeaderStudentSearchProps> = ({ onSubmit }) => {
         </Box>
         <Divider sx={stylesAdmin.dividerVert} />
         <Box sx={styles.checkboxesDropdown}>
-          <CheckboxesDropdown
-            selected={group.map(state => ({
-              label: state,
-              value: state,
-            }))}
-            values={groupOptions}
-            handleChange={handleGroupChange}
-            label="Група"
-            size={FieldSize.MEDIUM}
-          />
+          {isLoading ? (
+            <Progress />
+          ) : (
+            <CheckboxesDropdown
+              selected={group.map(state => ({
+                label: state,
+                value: state,
+              }))}
+              values={groupOptions}
+              handleChange={handleGroupChange}
+              label="Група"
+              size={FieldSize.MEDIUM}
+            />
+          )}
         </Box>
         <Box sx={styles.checkboxesDropdown}>
           <CheckboxesDropdown

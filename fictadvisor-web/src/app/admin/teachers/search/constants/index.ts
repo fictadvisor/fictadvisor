@@ -6,6 +6,7 @@ export const initialValues: QueryAllTeachersDTO = {
   sort: SortQATParam.LAST_NAME,
   order: 'asc',
   cathedrasId: [],
+  disciplineTypes: [],
 };
 
 export const teacherRoles: DisciplineTypeEnum[] = [
