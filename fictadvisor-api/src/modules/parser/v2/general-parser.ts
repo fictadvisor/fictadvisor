@@ -419,11 +419,14 @@ export class GeneralParser {
       if (teachers.length === 1) return teachers[0];
     }
 
-    return this.teacherRepository.findOne({
+    const teacherDto = {
       lastName,
       firstName,
       middleName,
-    });
+    };
+
+    return await this.teacherRepository.findOne(teacherDto) ??
+      await this.teacherRepository.create(teacherDto);
   }
 
   private async createOrUpdateDisciplineTeacher (
