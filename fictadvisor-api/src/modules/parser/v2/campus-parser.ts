@@ -28,7 +28,7 @@ export class CampusParser implements Parser<CampusParserGroup> {
       'https://api.campus.kpi.ua/schedule/groups'
     );
 
-    let filtered: CampusParserGroup[] = data.data
+    let filtered: CampusParserGroup[] = data
       .filter(({ faculty }: CampusParserGroup) => faculty === 'ФІОТ')
       .map(({ id, name }: CampusParserGroup) => ({ id, name }));
 
@@ -48,7 +48,7 @@ export class CampusParser implements Parser<CampusParserGroup> {
     const { data } = await axios.get(
       'https://api.campus.kpi.ua/schedule/lessons?groupId=' + id
     );
-    const { scheduleFirstWeek, scheduleSecondWeek } = data.data;
+    const { scheduleFirstWeek, scheduleSecondWeek } = data;
 
     return {
       name,
