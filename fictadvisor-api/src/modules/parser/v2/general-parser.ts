@@ -189,12 +189,12 @@ export class GeneralParser {
     }
     newChanged.push(...parsedPairs);
 
-    [oldChanged] = await Promise.all([
-      this.handleNewPairs(newChanged, oldChanged, groupId, semester),
-      this.handleNotChanged(notChanged),
-    ]);
+    oldChanged = await this.handleNewPairs(newChanged, oldChanged, groupId, semester);
 
-    await this.handleOldPairs(oldChanged, weekNumber);
+    await Promise.all([
+      this.handleNotChanged(notChanged),
+      this.handleOldPairs(oldChanged, weekNumber),
+    ]);
   }
 
   private async handleNotChanged (pairs: DatabasePair[]) {
