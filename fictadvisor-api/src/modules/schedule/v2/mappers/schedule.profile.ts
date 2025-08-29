@@ -4,7 +4,7 @@ import {
   GeneralShortEventResponse,
   TelegramShortEventResponse,
   ShortEventResponse,
-  ShortTeacherResponse
+  ShortTeacherResponse,
 } from '@fictadvisor/utils/responses';
 import { EventTypeEnum } from '@fictadvisor/utils/enums';
 import { some } from '../../../../common/utils/array.utils';
@@ -26,7 +26,7 @@ export class ScheduleProfile extends AutomapperProfile {
     return (mapper: Mapper) => {
       createMap(mapper, DbEvent, GeneralShortEventResponse,
         forMember((response) => response.eventType,
-          mapFrom(({ lessons }) => this.getEventType(lessons[0].disciplineType))));
+          mapFrom(({ lessons }) => this.getEventType(lessons[0]?.disciplineType))));
 
       createMap(mapper, DbEvent, ShortEventResponse,
         extend(DbEvent, GeneralShortEventResponse));
