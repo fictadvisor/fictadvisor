@@ -75,6 +75,56 @@ export class GeneralParser {
     return result;
   }
 
+  static ensureSelectivesAreValid (weeks: GroupParsedSchedule) {
+    const names = this.getUniqueSubjectsName(weeks);
+    let result = weeks;
+
+    for (const pairName of names) {
+      const isSelective = this.checkIfDisciplineIsSelective(result, pairName);
+      if (isSelective) result = this.makePairsSelective(result, pairName);
+    }
+    return result;
+  }
+
+  private static makePairsSelective (
+    weeks: GroupParsedSchedule,
+    pairName: string,
+  ): GroupParsedSchedule {
+    return {
+      ...weeks,
+      firstWeek: { ...weeks.firstWeek, pairs: this.makeWeekPairsSelective(weeks.firstWeek.pairs, pairName) },
+      secondWeek: { ...weeks.secondWeek, pairs: this.makeWeekPairsSelective(weeks.secondWeek.pairs, pairName) },
+    };
+  }
+
+  private static makeWeekPairsSelective (
+    pairs: ParsedSchedulePair[],
+    pairName: string,
+  ): ParsedSchedulePair[] {
+    return pairs.map((pair) => ({
+      ...pair,
+      isSelective: pair.name === pairName ? true : pair.isSelective,
+    }));
+  }
+  private static checkIfDisciplineIsSelective (
+    weeks: GroupParsedSchedule,
+    pairName: string,
+  ): boolean {
+    return [
+      ...weeks.firstWeek.pairs,
+      ...weeks.secondWeek.pairs,
+    ]
+      .filter(({ name }) => name === pairName)
+      .some(({ isSelective }) => isSelective);
+  }
+
+  private static getUniqueSubjectsName ({ firstWeek, secondWeek }: GroupParsedSchedule) {
+    const names = [firstWeek, secondWeek]
+      .flatMap((week) => week.pairs
+        .map((pair) => pair.name));
+    return [...(new Set(names))];
+  }
+
   private static parseTeacherName (teacherName: string): ParsedScheduleTeacher {
     if (!teacherName) return;
     const [middleName, firstName, lastName] = teacherName.split(' ').reverse();
@@ -123,11 +173,13 @@ export class GeneralParser {
 
       await this.handleGroupSchedule(
         groupId,
-        groupSchedule,
+        GeneralParser.ensureSelectivesAreValid(groupSchedule),
         weekNumber,
         semester
       );
     }
+
+    console.log('\nPARSE COMPLETED\n');
   }
 
   private async handleGroupSchedule (
@@ -182,6 +234,7 @@ export class GeneralParser {
       if (newPairIndex !== -1) {
         databasePair.teacherIds = parsedPairs[newPairIndex].teacherIds;
         notChanged.push(databasePair);
+        await this.updateDiscipline(databasePair.disciplineId, parsedPairs[newPairIndex].isSelective);
         parsedPairs.splice(newPairIndex, 1);
       } else {
         oldChanged.push(databasePair);
@@ -224,6 +277,10 @@ export class GeneralParser {
     }
   }
 
+  private async updateDiscipline (disciplineId: string, isSelective: boolean) {
+    return this.disciplineRepository.update({ id: disciplineId }, { isSelective });
+  }
+
   private async handleNewPairs (
     pairs: BaseGeneralParserPair[],
     oldPairs: DatabasePair[],
@@ -238,6 +295,10 @@ export class GeneralParser {
 
       const defendant = oldPairs.filter(checkCallback);
       oldPairs = oldPairs.filter((p) => !checkCallback(p));
+
+      if (defendant.length) {
+        await this.updateDiscipline(defendant[0].disciplineId, pair.isSelective);
+      }
 
       for (const { id } of defendant) {
         await this.eventRepository.updateById(id, {
