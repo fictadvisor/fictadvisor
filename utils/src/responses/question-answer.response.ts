@@ -4,7 +4,7 @@ import { QuestionWithCategoryResponse } from './question.response';
 import { TeacherResponse } from './teacher.response';
 import { AutoMap } from '@automapper/classes';
 
-class DisciplineTeacher {
+export class DisciplineTeacher {
   @ApiProperty({
     description: 'Id of the disciplineTeacher',
   })

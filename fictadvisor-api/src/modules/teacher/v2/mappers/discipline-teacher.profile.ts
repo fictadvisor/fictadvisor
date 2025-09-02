@@ -9,6 +9,7 @@ import {
   CathedraResponse,
   QuestionAnswerResponse,
   SubjectResponse,
+  DisciplineTeacher,
 } from '@fictadvisor/utils/responses';
 import { DisciplineTypeEnum } from '@fictadvisor/utils/enums';
 import { DbQuestionAnswer } from '../../../../database/v2/entities/question-answer.entity';
@@ -70,6 +71,8 @@ export class DisciplineTeacherProfile extends AutomapperProfile {
         forMember((response) => response.subject,
           mapWith(SubjectResponse, DbSubject, (dto) => dto.discipline.subject)
         ));
+
+      createMap(mapper, DbDisciplineTeacher, DisciplineTeacher);
 
       createMap(mapper, DbQuestionAnswer, QuestionAnswerResponse);
     };
