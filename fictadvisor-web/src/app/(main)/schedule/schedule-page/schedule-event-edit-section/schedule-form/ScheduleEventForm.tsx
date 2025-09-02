@@ -8,7 +8,7 @@ import {
   TrashIcon,
 } from '@heroicons/react/24/outline';
 import { Box, Typography, useMediaQuery } from '@mui/material';
-import { Form, Formik, FormikConfig } from 'formik';
+import { Form, Formik, FormikConfig, FormikHelpers } from 'formik';
 import moment, { Moment } from 'moment';
 
 import CalendarInput from '@/app/(main)/schedule/schedule-page/schedule-event-edit-section/schedule-form/components/calendar-input';
@@ -30,7 +30,6 @@ import { CloseButton } from '@/components/common/ui/icon-button-mui/variants';
 import { Tab, TabContext, TabList, TabPanel } from '@/components/common/ui/tab';
 import { TabTextPosition } from '@/components/common/ui/tab/tab/types';
 import { SharedEventBody } from '@/lib/api/schedule/types/shared';
-import { useSchedule } from '@/store/schedule/useSchedule';
 import theme from '@/styles/theme';
 
 import { ScheduleFormikDropdown } from './components/schedule-dropdown/ScheduleDropdown';
@@ -45,7 +44,7 @@ interface ScheduleEventFormProps {
   initialValues: SharedEventBody;
   onCloseButtonClick: () => void;
   onCancelButtonClick?: () => void;
-  onDeleteButtonClick?: () => void;
+  onDeleteButtonClick?: () => Promise<void>;
   validationSchema: FormikConfig<SharedEventBody>['validationSchema'];
   isNewEvent?: boolean;
 }
@@ -59,7 +58,7 @@ export const ScheduleEventForm: FC<ScheduleEventFormProps> = ({
   validationSchema,
   isNewEvent = false,
 }) => {
-  const chosenDay = useSchedule(state => state.chosenDay);
+  // const chosenDay = useSchedule(state => state.chosenDay);
   const [date, setDate] = useState<Moment | null>(
     !initialValues.startTime ? null : moment(initialValues.startTime),
   );
@@ -69,11 +68,29 @@ export const ScheduleEventForm: FC<ScheduleEventFormProps> = ({
     return eventType !== EventTypeEnum.OTHER;
   };
 
+  const [isLoading, setIsLoading] = useState(false);
+  const onSubmitWrapper = async (
+    values: SharedEventBody,
+    formikHelpers: FormikHelpers<SharedEventBody>,
+  ) => {
+    setIsLoading(true);
+    await onSubmit(values, formikHelpers);
+    setIsLoading(false);
+  };
+
+  const onDeleteWrapper = async () => {
+    if (onDeleteButtonClick) {
+      setIsLoading(true);
+      await onDeleteButtonClick();
+      setIsLoading(false);
+    }
+  };
+
   return (
     <Box sx={styles.container}>
       <Formik
         initialValues={initialValues}
-        onSubmit={onSubmit}
+        onSubmit={onSubmitWrapper}
         validationSchema={validationSchema}
       >
         {({ values }) => (
@@ -182,7 +199,8 @@ export const ScheduleEventForm: FC<ScheduleEventFormProps> = ({
                       endIcon={<TrashIcon width={22} height={22} />}
                       variant={ButtonVariant.OUTLINE}
                       size={ButtonSize.SMALL}
-                      onClick={onDeleteButtonClick}
+                      onClick={onDeleteWrapper}
+                      disabled={isLoading}
                     />
                   )}
                 </Fragment>
@@ -201,6 +219,7 @@ export const ScheduleEventForm: FC<ScheduleEventFormProps> = ({
                   text={isNewEvent ? 'Створити' : 'Зберегти'}
                   size={ButtonSize.SMALL}
                   type="submit"
+                  disabled={isLoading}
                 />
               </Box>
             </Box>
