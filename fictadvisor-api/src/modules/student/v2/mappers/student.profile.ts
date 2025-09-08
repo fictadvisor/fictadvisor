@@ -49,7 +49,7 @@ export class StudentProfile extends AutomapperProfile {
 
   private getGroup (student: DbStudent, hasGroup: boolean): ExtendedGroupResponse {
     return !hasGroup ? { state: State.DECLINED, code: null, role: null, id: null } : {
-      id: student.group.id,
+      id: student.group?.id ?? null,
       code: student.group?.code ?? null,
       state: student.state as State,
       role: this.getGroupRole(student.roles) ?? null,
