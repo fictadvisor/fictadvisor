@@ -523,12 +523,10 @@ export class GroupService {
     return this.studentRepository.updateById(studentId, {
       state: State.DECLINED,
       roles: {
-        delete: {
-          studentId_roleId: {
-            roleId: id,
-            studentId,
-          },
-        },
+        deleteMany: [{
+          roleId: id,
+          studentId,
+        }],
       },
     });
   }
