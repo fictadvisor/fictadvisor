@@ -368,6 +368,7 @@ export class UserService {
   async verifyStudent (userId: string, isCaptain: boolean, state: State) {
     const user = await this.userRepository.findOne({ id: userId });
     if (user.student.state !== State.PENDING) return this.studentRepository.findOne({ userId });
+    const student = await this.updateStudent(userId, { state } as UpdateStudentDTO);
 
     if (state === State.APPROVED) {
       if (isCaptain) {
@@ -381,7 +382,7 @@ export class UserService {
       await this.putSelective(userId);
     }
 
-    return this.updateStudent(userId, { state } as UpdateStudentDTO);
+    return student;
   }
 
   async putSelective (studentId: string) {
