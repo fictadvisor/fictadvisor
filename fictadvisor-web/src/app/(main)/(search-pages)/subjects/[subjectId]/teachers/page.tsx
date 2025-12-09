@@ -1,7 +1,6 @@
 'use client';
 
-import React, { FC, useMemo } from 'react';
-import { SubjectWithTeachersResponse } from '@fictadvisor/utils/responses';
+import React, { FC, use, useMemo } from 'react';
 import { Box, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
@@ -13,9 +12,9 @@ import Progress from '@/components/common/ui/progress';
 import SubjectsAPI from '@/lib/api/subject/SubjectAPI';
 
 interface SubjectTeacherPage {
-  params: {
+  params: Promise<{
     subjectId: string;
-  };
+  }>;
 }
 
 const breadcrumbs: Breadcrumb[] = [
@@ -30,7 +29,7 @@ const breadcrumbs: Breadcrumb[] = [
 ];
 
 const SubjectPage: FC<SubjectTeacherPage> = ({ params }) => {
-  const subjectId = params.subjectId;
+  const { subjectId } = use(params);
   const { data, isLoading } = useQuery({
     queryKey: ['teacher-by-subject', subjectId],
     queryFn: () => SubjectsAPI.getTeachersBySubject(subjectId),

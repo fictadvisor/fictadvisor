@@ -1,6 +1,6 @@
 'use client';
 
-import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, FC, SetStateAction, use, useEffect, useState } from 'react';
 import { TeacherWithContactsResponse } from '@fictadvisor/utils/responses';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -25,9 +25,9 @@ import { teacherContext, TeachersPageTabs } from './utils';
 import styles from './PersonalTeacherPage.module.scss';
 
 interface PersonalTeacherProps {
-  params: {
+  params: Promise<{
     teacherId: string;
-  };
+  }>;
 }
 
 // TODO: move context to separate folder, move types to separate folder
@@ -38,7 +38,7 @@ export interface TeacherContext {
 }
 
 const PersonalTeacher = ({ params }: PersonalTeacherProps) => {
-  const teacherId = params.teacherId;
+  const { teacherId } = use(params);
   const { data } = useQuery({
     queryKey: ['teacher', teacherId],
     queryFn: () => TeacherAPI.get(teacherId),

@@ -1,5 +1,5 @@
 'use client';
-import React, { FC, useState } from 'react';
+import React, { FC, use, useState } from 'react';
 import { UpdateStudentWithRolesDTO } from '@fictadvisor/utils/requests';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { Box, Divider } from '@mui/material';
@@ -27,26 +27,28 @@ import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import StudentAPI from '@/lib/api/student/StudentAPI';
 
 interface AdminStudentEditPageProps {
-  params: {
+  params: Promise<{
     studentId: string;
-  };
+  }>;
 }
 const AdminStudentEditPage: FC<AdminStudentEditPageProps> = ({ params }) => {
+  const { studentId } = use(params);
+
   const { data: student, isLoading: isLoadingStudent } = useQuery({
-    queryKey: ['getStudent', params.studentId],
-    queryFn: () => StudentAPI.getStudent(params.studentId),
+    queryKey: ['getStudent', studentId],
+    queryFn: () => StudentAPI.getStudent(studentId),
     ...useQueryAdminOptions,
   });
 
   const { data: selectives, isLoading: isLoadingSelective } = useQuery({
-    queryKey: ['getStudentSelective', params.studentId],
-    queryFn: () => StudentAPI.getSelectives(params.studentId),
+    queryKey: ['getStudentSelective', studentId],
+    queryFn: () => StudentAPI.getSelectives(studentId),
     ...useQueryAdminOptions,
   });
   const { data: remainingSelectives, isLoading: isLoadingRemainingSelectives } =
     useQuery({
-      queryKey: ['getStudentRemainingSelective', params.studentId],
-      queryFn: () => StudentAPI.getRemainingSelectives(params.studentId),
+      queryKey: ['getStudentRemainingSelective', studentId],
+      queryFn: () => StudentAPI.getRemainingSelectives(studentId),
       ...useQueryAdminOptions,
     });
 

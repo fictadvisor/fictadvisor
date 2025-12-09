@@ -1,5 +1,5 @@
 'use client';
-import { useEffect } from 'react';
+import { use, useEffect } from 'react';
 import { Box } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
@@ -11,13 +11,14 @@ import useToast from '@/hooks/use-toast';
 import AuthAPI from '@/lib/api/auth/AuthAPI';
 import { setAuthTokens } from '@/lib/api/auth/ServerAuthApi';
 interface VerifyEmailTokenPageProps {
-  params: {
+  params: Promise<{
     token: string;
-  };
+  }>;
 }
 const VerifyEmailTokenPage = ({
-  params: { token },
+  params,
 }: VerifyEmailTokenPageProps) => {
+  const { token } = use(params);
   const router = useRouter();
 
   const toast = useToast();

@@ -1,5 +1,5 @@
 'use client';
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, use, useCallback, useEffect, useState } from 'react';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Box, CardHeader, Stack } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
@@ -22,18 +22,20 @@ import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import SubjectAPI from '@/lib/api/subject/SubjectAPI';
 
 interface AdminSubjectEditProps {
-  params: {
+  params: Promise<{
     subjectId: string;
-  };
+  }>;
 }
 const AdminSubjectEdit: FC<AdminSubjectEditProps> = ({ params }) => {
+  const { subjectId } = use(params);
+
   const {
     data: subject,
     isSuccess,
     isLoading,
   } = useQuery({
-    queryKey: ['subject', params.subjectId],
-    queryFn: () => SubjectAPI.getSubject(params.subjectId),
+    queryKey: ['subject', subjectId],
+    queryFn: () => SubjectAPI.getSubject(subjectId),
     ...useQueryAdminOptions,
   });
 

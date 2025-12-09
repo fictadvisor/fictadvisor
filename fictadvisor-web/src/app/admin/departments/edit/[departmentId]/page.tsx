@@ -1,5 +1,5 @@
 'use client';
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { FC, use, useCallback, useEffect, useMemo, useState } from 'react';
 import { TeacherWithRolesAndCathedrasResponse } from '@fictadvisor/utils/responses';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Box, CardHeader, Divider, Stack } from '@mui/material';
@@ -27,19 +27,20 @@ import CathedraAPI from '@/lib/api/cathedras/CathedraAPI';
 import Dropdown from '../../../../../components/common/ui/form/dropdown';
 
 interface AdminDepartmentEditProps {
-  params: {
+  params: Promise<{
     departmentId: string;
-  };
+  }>;
 }
 
 const Page: FC<AdminDepartmentEditProps> = ({ params }) => {
+  const {departmentId} = use(params);
   const {
     data: department,
     isLoading,
     isSuccess,
   } = useQuery({
-    queryKey: ['departmentById', params.departmentId],
-    queryFn: () => CathedraAPI.getDepartmentById(params.departmentId),
+    queryKey: ['departmentById', departmentId],
+    queryFn: () => CathedraAPI.getDepartmentById(departmentId),
     ...useQueryAdminOptions,
   });
 

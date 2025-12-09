@@ -1,5 +1,5 @@
 'use client';
-import React, { FC, useState } from 'react';
+import React, { FC, use, useState } from 'react';
 import { Box } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
@@ -16,12 +16,14 @@ import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import GrantsAPI from '@/lib/api/grants/GrantsAPI';
 
 interface AdminGrantsEditProps {
-  params: {
+  params: Promise<{
     roleId: string;
-  };
+  }>;
 }
 
 const AdminGrantsEdit: FC<AdminGrantsEditProps> = ({ params }) => {
+  const { roleId } = use(params);
+
   const [queryObj, setQueryObj] =
     useState<GrantsSearchFormFields>(GrantsInitialValues);
   const [currPage, setCurrPage] = useState(0);
@@ -34,11 +36,11 @@ const AdminGrantsEdit: FC<AdminGrantsEditProps> = ({ params }) => {
       currPage,
       pageSize,
       queryObj,
-      params.roleId,
+      roleId,
     ],
 
     queryFn: () =>
-      GrantsAPI.getAllByRoleId(params.roleId, {
+      GrantsAPI.getAllByRoleId(roleId, {
         ...queryObj,
         page: currPage,
         pageSize,
@@ -58,7 +60,7 @@ const AdminGrantsEdit: FC<AdminGrantsEditProps> = ({ params }) => {
 
   return (
     <Box sx={stylesAdmin.wrapper}>
-      <HeaderGrantsSearch onSubmit={submitHandler} roleId={params.roleId} />
+      <HeaderGrantsSearch onSubmit={submitHandler} roleId={roleId} />
       {isLoading || !data ? (
         <LoadPage />
       ) : (
@@ -69,7 +71,7 @@ const AdminGrantsEdit: FC<AdminGrantsEditProps> = ({ params }) => {
           pageSize={pageSize}
           setPageSize={setPageSize}
           totalCount={data.pagination.totalAmount}
-          roleId={params.roleId}
+          roleId={roleId}
           refetch={refetch}
         />
       )}

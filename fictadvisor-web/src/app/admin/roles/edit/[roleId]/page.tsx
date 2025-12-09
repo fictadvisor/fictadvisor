@@ -1,5 +1,5 @@
 'use client';
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, use, useCallback, useEffect, useState } from 'react';
 import { RoleName } from '@fictadvisor/utils/enums';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Box, CardHeader, Link, Stack } from '@mui/material';
@@ -27,19 +27,21 @@ import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import RoleAPI from '@/lib/api/role/RoleAPI';
 
 interface AdminRolesEditProps {
-  params: {
+  params: Promise<{
     roleId: string;
-  };
+  }>;
 }
 
 const AdminRolesEdit: FC<AdminRolesEditProps> = ({ params }) => {
+  const { roleId } = use(params);
+
   const {
     data: role,
     error,
     isLoading,
   } = useQuery({
-    queryKey: ['getRole', params.roleId],
-    queryFn: () => RoleAPI.getById(params.roleId),
+    queryKey: ['getRole', roleId],
+    queryFn: () => RoleAPI.getById(roleId),
     ...useQueryAdminOptions,
   });
 
@@ -90,7 +92,7 @@ const AdminRolesEdit: FC<AdminRolesEditProps> = ({ params }) => {
   if (error) {
     displayError(error);
     throw new Error(
-      `An error has occurred while editing ${params.roleId} role`,
+      `An error has occurred while editing ${roleId} role`,
     );
   }
 

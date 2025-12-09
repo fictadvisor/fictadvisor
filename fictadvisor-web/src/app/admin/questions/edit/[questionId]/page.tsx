@@ -1,6 +1,6 @@
 'use client';
 
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, use, useCallback, useState } from 'react';
 import { UpdateQuestionDTO } from '@fictadvisor/utils/requests';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Box, Stack, Typography } from '@mui/material';
@@ -23,15 +23,17 @@ import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import QuestionAPI from '@/lib/api/questions/QuestionAPI';
 
 interface PageProps {
-  params: {
+  params: Promise<{
     questionId: string;
-  };
+  }>;
 }
 
 const Edit: FC<PageProps> = ({ params }) => {
+  const { questionId } = use(params);
+
   const { data, isLoading } = useQuery({
-    queryKey: ['question', params.questionId],
-    queryFn: () => QuestionAPI.getQuestion(params.questionId),
+    queryKey: ['question', questionId],
+    queryFn: () => QuestionAPI.getQuestion(questionId),
     ...useQueryAdminOptions,
   });
 

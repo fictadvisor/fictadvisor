@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { IconButton } from '@mui/material';
 import DialogTitle from '@mui/material/DialogTitle';
 import { SxProps, Theme } from '@mui/material/styles';
-import { CloseIcon } from 'next/dist/client/components/react-dev-overlay/internal/icons/CloseIcon';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 
@@ -31,7 +31,7 @@ const BootstrapDialogTitle: FC<PopupTitleProps> = ({
           onClick={onClose}
           sx={mergeSx(styles.iconButton, sx)}
         >
-          <CloseIcon />
+          <XMarkIcon />
         </IconButton>
       )}
     </DialogTitle>

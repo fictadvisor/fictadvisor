@@ -1,5 +1,5 @@
 'use client';
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, use, useCallback, useState } from 'react';
 import { UpdateGroupDTO } from '@fictadvisor/utils/requests';
 import { Box } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
@@ -15,20 +15,22 @@ import GroupAPI from '@/lib/api/group/GroupAPI';
 import { getChangedValues } from '@/lib/utils/getChangedValues';
 
 interface AdminGroupEditBodyPageProps {
-  params: {
+  params: Promise<{
     groupId: string;
-  };
+  }>;
 }
 const AdminGroupEditBodyPage: FC<AdminGroupEditBodyPageProps> = ({
   params,
 }) => {
+  const { groupId } = use(params);
+
   const {
     data: group,
     isLoading,
     error,
   } = useQuery({
-    queryKey: ['getAdminGroup', params.groupId],
-    queryFn: () => GroupAPI.get(params.groupId),
+    queryKey: ['getAdminGroup', groupId],
+    queryFn: () => GroupAPI.get(groupId),
     ...useQueryAdminOptions,
   });
 
@@ -54,7 +56,7 @@ const AdminGroupEditBodyPage: FC<AdminGroupEditBodyPageProps> = ({
         groupInfo,
         initialValues,
       );
-      await GroupAPI.editGroup(params.groupId, body);
+      await GroupAPI.editGroup(groupId, body);
       toast.success('Група успішно змінена!', '', 4000);
       router.replace('/admin/groups');
     } catch (e) {
@@ -66,7 +68,7 @@ const AdminGroupEditBodyPage: FC<AdminGroupEditBodyPageProps> = ({
     if (!groupInfo) return;
 
     try {
-      await GroupAPI.delete(params.groupId);
+      await GroupAPI.delete(groupId);
       toast.success('Група успішно видалена!', '', 4000);
       router.replace('/admin/groups');
     } catch (e) {
@@ -79,7 +81,7 @@ const AdminGroupEditBodyPage: FC<AdminGroupEditBodyPageProps> = ({
   if (error) {
     displayError(error);
     throw new Error(
-      `An error has occurred while editing ${params.groupId} group`,
+      `An error has occurred while editing ${groupId} group`,
     );
   }
 
