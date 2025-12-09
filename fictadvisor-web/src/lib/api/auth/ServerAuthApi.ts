@@ -1,4 +1,5 @@
 'use server';
+
 import {
   AuthRefreshResponse,
   OrdinaryStudentResponse,
@@ -13,12 +14,14 @@ import { Tokens } from '@/types/tokens';
 import { client } from '../instance';
 
 export async function logout() {
-  cookies().set(AuthToken.RefreshToken, '', {
+  const cookieStore = await cookies();
+
+  cookieStore.set(AuthToken.RefreshToken, '', {
     ...cookieOptions,
     maxAge: undefined,
     expires: new Date(0),
   });
-  cookies().set(AuthToken.AccessToken, '', {
+  cookieStore.set(AuthToken.AccessToken, '', {
     ...cookieOptions,
     maxAge: undefined,
     expires: new Date(0),
@@ -26,7 +29,8 @@ export async function logout() {
 }
 
 export async function getServerUser() {
-  const access_token = cookies().get(AuthToken.AccessToken);
+  const cookieStore = await cookies();
+  const access_token = cookieStore.get(AuthToken.AccessToken);
 
   if (!access_token) {
     throw new Error('No access token found.');
@@ -38,13 +42,16 @@ export async function getServerUser() {
 }
 
 export async function setAuthTokens(tokens: Tokens) {
+  const cookieStore = await cookies();
   const { accessToken, refreshToken } = tokens;
-  cookies().set(AuthToken.AccessToken, accessToken, cookieOptions);
-  cookies().set(AuthToken.RefreshToken, refreshToken, cookieOptions);
+
+  cookieStore.set(AuthToken.AccessToken, accessToken, cookieOptions);
+  cookieStore.set(AuthToken.RefreshToken, refreshToken, cookieOptions);
 }
 
 export async function refreshToken(): Promise<boolean> {
-  const refreshToken = cookies().get(AuthToken.RefreshToken);
+  const cookieStore = await cookies();
+  const refreshToken = cookieStore.get(AuthToken.RefreshToken);
 
   if (!refreshToken) {
     return false;
@@ -63,6 +70,6 @@ export async function refreshToken(): Promise<boolean> {
 }
 
 export async function getAccessToken() {
-  const AccessToken = cookies().get(AuthToken.AccessToken);
-  return AccessToken;
+  const cookieStore = await cookies();
+  return cookieStore.get(AuthToken.AccessToken);
 }

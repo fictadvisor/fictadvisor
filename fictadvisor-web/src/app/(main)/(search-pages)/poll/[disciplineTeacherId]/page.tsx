@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, useEffect, useState } from 'react';
+import { FC, use, useEffect, useState } from 'react';
 import { Box } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
@@ -14,13 +14,13 @@ import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import PollAPI from '@/lib/api/poll/PollAPI';
 
 interface PollParams {
-  params: {
+  params: Promise<{
     disciplineTeacherId: string;
-  };
+  }>;
 }
 
 const Poll: FC<PollParams> = ({ params }) => {
-  const disciplineTeacherId = params.disciplineTeacherId;
+  const { disciplineTeacherId } = use(params);
   const [isLoading, setIsLoading] = useState(true);
   const { user, isLoading: isLoadingUser } = useAuthentication();
   const { displayError } = useToastError();

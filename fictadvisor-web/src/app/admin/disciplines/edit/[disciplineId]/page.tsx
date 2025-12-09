@@ -1,5 +1,5 @@
 'use client';
-import React, { FC, useState } from 'react';
+import React, { FC, use, useState } from 'react';
 import { CreateDisciplineDTO } from '@fictadvisor/utils/requests';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Box, Stack, Typography } from '@mui/material';
@@ -23,19 +23,21 @@ import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import DisciplineAPI from '@/lib/api/discipline/DisciplineAPI';
 
 interface AdminDisciplineEditProps {
-  params: {
+  params: Promise<{
     disciplineId: string;
-  };
+  }>;
 }
 
 const DisciplinesAdminEdit: FC<AdminDisciplineEditProps> = ({ params }) => {
+  const {disciplineId} = use(params);
+
   const {
     data: discipline,
     isError,
     isLoading,
   } = useQuery({
-    queryKey: ['discipline', params.disciplineId],
-    queryFn: () => DisciplineAPI.getDisciplinesById(params.disciplineId),
+    queryKey: ['discipline', disciplineId],
+    queryFn: () => DisciplineAPI.getDisciplinesById(disciplineId),
     ...useQueryAdminOptions,
   });
 
@@ -91,7 +93,7 @@ const DisciplinesAdminEdit: FC<AdminDisciplineEditProps> = ({ params }) => {
 
   if (isError)
     throw new Error(
-      `An error has occurred while editing ${params.disciplineId} discipline`,
+      `An error has occurred while editing ${disciplineId} discipline`,
     );
 
   return (

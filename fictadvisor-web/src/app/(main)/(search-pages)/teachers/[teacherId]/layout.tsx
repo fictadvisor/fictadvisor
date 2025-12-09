@@ -1,15 +1,15 @@
-import { ReactNode } from 'react';
+import { ReactNode, use } from 'react';
 
 import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
 
 interface PersonalTeacherProps {
-  params: {
+  params: Promise<{
     teacherId: string;
-  };
+  }>;
 }
 
 export const generateMetadata = async ({ params }: PersonalTeacherProps) => {
-  const teacherId = params.teacherId;
+  const { teacherId } = use(params);
   const info = await TeacherAPI.get(teacherId);
 
   const title = `${info?.lastName} ${info?.firstName} ${info?.middleName}`;

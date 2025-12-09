@@ -36,10 +36,11 @@ const authorizationInterceptor = async (req: any) => {
   let cookieToSet;
   if (isServer) {
     const { cookies } = await import('next/headers');
+    const cookieStore = await cookies();
     if (isRefresh) {
-      cookieToSet = cookies().get(AuthToken.RefreshToken);
+      cookieToSet = cookieStore.get(AuthToken.RefreshToken)?.value;
     } else {
-      cookieToSet = cookies().get(AuthToken.AccessToken);
+      cookieToSet = cookieStore.get(AuthToken.AccessToken)?.value;
     }
   } else {
     for (const cookie of document.cookie.split('; ')) {

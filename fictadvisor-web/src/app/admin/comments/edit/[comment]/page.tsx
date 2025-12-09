@@ -1,6 +1,6 @@
 'use client';
 
-import React, { FC, useState } from 'react';
+import React, { FC, use, useState } from 'react';
 import { DeleteCommentDTO } from '@fictadvisor/utils/requests';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Box, CardHeader, Stack } from '@mui/material';
@@ -24,13 +24,13 @@ import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
 import TextArea from '../../../../../components/common/ui/form/text-area-mui';
 
 interface AdminCommentEditProps {
-  params: {
+  params: Promise<{
     comment: string;
-  };
+  }>;
 }
 
 const AdminCommentEdit: FC<AdminCommentEditProps> = ({ params }) => {
-  const comment = JSON.parse(decodeURIComponent(params.comment));
+  const comment = JSON.parse(decodeURIComponent(use(params).comment));
   const [answer, setAnswer] = useState<string>(comment.comment);
   const [isOpen, setIsOpen] = useState(false);
 

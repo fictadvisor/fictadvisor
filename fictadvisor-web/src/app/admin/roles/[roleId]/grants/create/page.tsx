@@ -1,6 +1,6 @@
 'use client';
 
-import React, { FC, useState } from 'react';
+import React, { FC, use, useState } from 'react';
 import { Box, CardHeader, Stack, Switch, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
 
@@ -18,13 +18,15 @@ import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import GrantsAPI from '@/lib/api/grants/GrantsAPI';
 
 interface AdminGrantsCreatePageProps {
-  params: {
+  params: Promise<{
     roleId: string;
     grantId: string;
-  };
+  }>;
 }
 
 const AdminGrantsCreatePage: FC<AdminGrantsCreatePageProps> = ({ params }) => {
+  const { roleId } = use(params);
+
   const [permission, setPermission] = useState<string>('');
   const [weight, setWeight] = useState<string>('');
   const [set, setSet] = useState<boolean>(false);
@@ -34,13 +36,13 @@ const AdminGrantsCreatePage: FC<AdminGrantsCreatePageProps> = ({ params }) => {
 
   const handleUserCreation = async () => {
     try {
-      await GrantsAPI.create(params.roleId, {
+      await GrantsAPI.create(roleId, {
         permission,
         weight: +weight,
         set,
       });
       toast.success('Право успішно створено!', '', 4000);
-      router.replace(`/admin/roles/${params.roleId}/grants`);
+      router.replace(`/admin/roles/${roleId}/grants`);
     } catch (e) {
       displayError(e);
     }
@@ -55,7 +57,7 @@ const AdminGrantsCreatePage: FC<AdminGrantsCreatePageProps> = ({ params }) => {
             size={ButtonSize.MEDIUM}
             text="Скасувати"
             color={ButtonColor.SECONDARY}
-            href={`/admin/roles/${params.roleId}/grants`}
+            href={`/admin/roles/${roleId}/grants`}
             sx={stylesAdmin.button}
           />
           <Button

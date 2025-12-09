@@ -1,3 +1,4 @@
+import { use } from 'react';
 import moment from 'moment';
 import { Metadata } from 'next';
 import { headers } from 'next/headers';
@@ -22,8 +23,11 @@ moment.updateLocale('uk', {
 });
 
 export async function generateMetadata(): Promise<Metadata> {
+  const headersList = await headers();
+  const host = headersList.get('host');
+
   return {
-    metadataBase: new URL(`https://${headers().get('host')}`),
+    metadataBase: new URL(`https://${host}`),
     icons: [
       {
         url: '/favicon.ico',

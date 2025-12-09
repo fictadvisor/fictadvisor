@@ -1,6 +1,6 @@
 'use client';
 
-import React, { FC } from 'react';
+import React, { FC, use } from 'react';
 import { ChevronLeftIcon, FingerPrintIcon } from '@heroicons/react/24/outline';
 import { Box, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
@@ -17,13 +17,13 @@ import Progress from '@/components/common/ui/progress';
 import AuthAPI from '@/lib/api/auth/AuthAPI';
 
 interface TokenParams {
-  params: {
+  params: Promise<{
     token: string;
-  };
+  }>;
 }
 
 const CreatePassword: FC<TokenParams> = ({ params }) => {
-  const token = params.token;
+  const { token } = use(params);
   const router = useRouter();
   const returnAuth = () => {
     void router.push('/login');

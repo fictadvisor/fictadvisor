@@ -1,5 +1,5 @@
 'use client';
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, use, useCallback, useEffect, useState } from 'react';
 import { State } from '@fictadvisor/utils/enums';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Avatar, Box, CardHeader, Stack } from '@mui/material';
@@ -27,20 +27,22 @@ import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import UserAPI from '@/lib/api/user/UserAPI';
 
 interface AdminUserEditProps {
-  params: {
+  params: Promise<{
     userId: string;
-  };
+  }>;
 }
 
 const AdminUserEdit: FC<AdminUserEditProps> = ({ params }) => {
+  const { userId } = use(params);
+
   const {
     data: user,
     isSuccess,
     isLoading,
     error,
   } = useQuery({
-    queryKey: ['getUser', params.userId],
-    queryFn: () => UserAPI.getUser(params.userId),
+    queryKey: ['getUser', userId],
+    queryFn: () => UserAPI.getUser(userId),
     ...useQueryAdminOptions,
   });
 

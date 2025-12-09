@@ -1,5 +1,5 @@
 'use client';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, use, useEffect, useState } from 'react';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Box, CardHeader, Stack, Switch, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
@@ -23,13 +23,15 @@ import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import GrantsAPI from '@/lib/api/grants/GrantsAPI';
 
 interface AdminGrantsEditProps {
-  params: {
+  params: Promise<{
     roleId: string;
     grantId: string;
-  };
+  }>;
 }
 
 const AdminGrantsEdit: FC<AdminGrantsEditProps> = ({ params }) => {
+  const { roleId, grantId } = use(params);
+
   const { displayError } = useToastError();
   const [permission, setPermission] = useState<string>('');
   const [weight, setWeight] = useState<string>('');
@@ -44,8 +46,8 @@ const AdminGrantsEdit: FC<AdminGrantsEditProps> = ({ params }) => {
     error,
     isLoading,
   } = useQuery({
-    queryKey: ['getGrantById', params.roleId, params.grantId],
-    queryFn: () => GrantsAPI.getByGrantId(params.roleId, params.grantId),
+    queryKey: ['getGrantById', roleId, grantId],
+    queryFn: () => GrantsAPI.getByGrantId(roleId, grantId),
     ...useQueryAdminOptions,
   });
 
@@ -59,9 +61,9 @@ const AdminGrantsEdit: FC<AdminGrantsEditProps> = ({ params }) => {
 
   const handleDelete = async (grantId: string) => {
     try {
-      await GrantsAPI.delete(params.roleId, grantId);
+      await GrantsAPI.delete(roleId, grantId);
       toast.success('Роль успішно видалена!', '', 4000);
-      router.replace(`/admin/roles/${params.roleId}/grants`);
+      router.replace(`/admin/roles/${roleId}/grants`);
     } catch (e) {
       displayError(e);
     }
@@ -71,13 +73,13 @@ const AdminGrantsEdit: FC<AdminGrantsEditProps> = ({ params }) => {
     if (!grant) return;
 
     try {
-      await GrantsAPI.edit(params.roleId, grant.id, {
+      await GrantsAPI.edit(roleId, grant.id, {
         permission: permission,
         weight: +weight,
         set,
       });
       toast.success('Право успішно змінено!', '', 4000);
-      router.replace(`/admin/roles/${params.roleId}/grants`);
+      router.replace(`/admin/roles/${roleId}/grants`);
     } catch (e) {
       displayError(e);
     }
@@ -88,7 +90,7 @@ const AdminGrantsEdit: FC<AdminGrantsEditProps> = ({ params }) => {
   if (error) {
     displayError(error);
     throw new Error(
-      `An error has occurred while editing ${params.grantId} grant`,
+      `An error has occurred while editing ${grantId} grant`,
     );
   }
 
@@ -105,7 +107,7 @@ const AdminGrantsEdit: FC<AdminGrantsEditProps> = ({ params }) => {
             size={ButtonSize.MEDIUM}
             color={ButtonColor.SECONDARY}
             text="Скасувати"
-            href={`/admin/roles/${params.roleId}/grants`}
+            href={`/admin/roles/${roleId}/grants`}
             sx={stylesAdmin.button}
           />
           <Button

@@ -1,5 +1,5 @@
 'use client';
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, use, useCallback, useEffect, useState } from 'react';
 import { UpdateTeacherDTO } from '@fictadvisor/utils/requests';
 import { ContactResponse } from '@fictadvisor/utils/responses';
 import { Box, Divider } from '@mui/material';
@@ -23,20 +23,22 @@ import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
 
 interface PageProps {
-  params: {
+  params: Promise<{
     teacherId: string;
-  };
+  }>;
 }
 
 const Edit: FC<PageProps> = ({ params }) => {
+  const { teacherId } = use(params);
+
   const {
     data: teacher,
     isSuccess,
     isLoading,
     error,
   } = useQuery({
-    queryKey: ['teacher', params.teacherId],
-    queryFn: () => TeacherAPI.get(params.teacherId),
+    queryKey: ['teacher', teacherId],
+    queryFn: () => TeacherAPI.get(teacherId),
     ...useQueryAdminOptions,
   });
 
