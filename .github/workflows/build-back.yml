@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Install Node and dependencies
         uses: ./.github/actions/install
       - name: Run tests
@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Install Node and dependencies
         uses: ./.github/actions/install
       - name: Start PostgreSQL Database
@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Install Node and dependencies
         uses: ./.github/actions/install
       - name: Start PostgreSQL Database
@@ -55,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
@@ -67,5 +67,6 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
+          platforms: linux/amd64,linux/arm64
           file: ./fictadvisor-api/Dockerfile
           tags: fictadvisor/fictadvisor-api
