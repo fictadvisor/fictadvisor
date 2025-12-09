@@ -1,10 +1,16 @@
+'use client';
+
 import React from 'react';
 import { Box, Divider, Typography } from '@mui/material';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
 
 import { LoginFormBlockFooter } from './components/footer/LoginFormBlockFooter';
 import * as sxStyles from './LoginFormBlock.styles';
+
+import styles from './LoginFormBlock.module.scss';
+
 const TelegramLogin = dynamic(
   () =>
     import('./components/telegram-login/TelegramLogin').then(
@@ -14,14 +20,11 @@ const TelegramLogin = dynamic(
 );
 const LoginForm = dynamic(
   () =>
-    import(
-      '@/app/(auth)/login/components/login-form-block/components/login-form/LoginForm'
-    ).then(module => module.LoginForm),
+    import('@/app/(auth)/login/components/login-form-block/components/login-form/LoginForm').then(
+      module => module.LoginForm,
+    ),
   { ssr: false },
 );
-import dynamic from 'next/dynamic';
-
-import styles from './LoginFormBlock.module.scss';
 
 export const LoginFormBlock = () => {
   return (
