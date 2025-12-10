@@ -68,7 +68,10 @@ async function bootstrap () {
   SwaggerModule.setup('api', app, document);
 
   app.useStaticAssets(join(resolve(), '/static/'));
+  const server = app.getHttpServer();
 
+  server.keepAliveTimeout = 61 * 1000; 
+  server.headersTimeout = 62 * 1000;
   await app.listen(port, '0.0.0.0');
 
   console.info(
