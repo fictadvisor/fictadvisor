@@ -69,13 +69,13 @@ async function bootstrap () {
 
   app.useStaticAssets(join(resolve(), '/static/'));
 
-  await app.listen(port);
+  await app.listen(port, '0.0.0.0');
 
   console.info(
-    `Started server on 127.0.0.1:${port}\n` +
-    `Swagger: http://127.0.0.1:${port}/api\n` +
-    `Unit coverage: http://127.0.0.1:${port}/unit-coverage/\n` +
-    `Integration coverage: http://127.0.0.1:${port}/integration-coverage/`
+    `Started server on 0.0.0.0:${port}\n` +
+    `Swagger: http://0.0.0.0:${port}/api\n` +
+    `Unit coverage: http://0.0.0.0:${port}/unit-coverage/\n` +
+    `Integration coverage: http://0.0.0.0:${port}/integration-coverage/`
   );
 }
 bootstrap();
