@@ -18,6 +18,19 @@ import { TestType, TestCoverage } from './common/utils/test-coverage';
 };
 
 async function bootstrap () {
+  process.on('SIGTERM', () => {
+    console.log('SIGTERM received');
+  });
+
+  process.on('SIGINT', () => {
+    console.log('SIGINT received');
+  });
+
+  process.on('exit', (code) => {
+    console.log('Process exiting with code', code);
+  });
+
+
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get<ConfigService>(ConfigService);
   const telegramApi = app.get<TelegramAPI>(TelegramAPI);
