@@ -27,6 +27,8 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { DbEvent } from '../../../database/v2/entities/event.entity';
 import { EventResponse } from '@fictadvisor/utils/responses';
+import { Prisma } from '@prisma/client/fictadvisor';
+import DisciplineUpdateInput = Prisma.DisciplineUpdateInput;
 
 type BaseGeneralParserPair = ParsedSchedulePair & {
   period: Period;
@@ -234,7 +236,14 @@ export class GeneralParser {
       if (newPairIndex !== -1) {
         databasePair.teacherIds = parsedPairs[newPairIndex].teacherIds;
         notChanged.push(databasePair);
-        await this.updateDiscipline(databasePair.disciplineId, parsedPairs[newPairIndex].isSelective);
+
+        if (parsedPairs[newPairIndex].isSelective) {
+          await this.updateDiscipline(
+            databasePair.disciplineId,
+            true
+          );
+        }
+
         parsedPairs.splice(newPairIndex, 1);
       } else {
         oldChanged.push(databasePair);
@@ -445,12 +454,11 @@ export class GeneralParser {
     disciplineTypeName: DisciplineTypeEnum,
     isSelective: boolean
   ) {
-    let discipline = await this.disciplineRepository.findOne(disciplineData);
-    if (!discipline) {
-      discipline = await this.disciplineRepository.create(disciplineData);
-    }
+    const discipline =
+      await this.disciplineRepository.findOne(disciplineData) ??
+      await this.disciplineRepository.create(disciplineData);
 
-    const updateData: any = { isSelective };
+    const updateData: DisciplineUpdateInput = { isSelective: discipline.isSelective || isSelective };
 
     if (!discipline.disciplineTypes.some(
       (type) => type.name === disciplineTypeName
