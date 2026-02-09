@@ -21,12 +21,15 @@ ARG PROJECT
 
 WORKDIR /app
 
+RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
+
 # Copy lockfile and package.json's of isolated subworkspace
 COPY --from=pruner /app/out/yarn.lock ./yarn.lock
 COPY --from=pruner /app/out/json/ .
 
 # First install the dependencies (as they change less often)
 RUN yarn install --frozen-lockfile
+RUN npm rebuild --build-from-source
 
 # Copy source code of isolated subworkspace
 COPY --from=pruner /app/out/full/ .
