@@ -948,41 +948,46 @@ describe('ScheduleService', () => {
       const attachedDiscipline = {
         createdAt: expect.any(Date),
         description: '',
-        disciplineTeachers: [{
-          createdAt: expect.any(Date),
-          disciplineId: 'nonSelectedDiscipline',
-          id: 'deletedDisciplineTeacherId',
-          roles: [{
+        disciplineTeachers: [
+          {
             createdAt: expect.any(Date),
-            disciplineTeacherId: 'deletedDisciplineTeacherId',
-            'disciplineType': {
-              'createdAt': expect.any(Date),
-              'disciplineId': 'nonSelectedDiscipline',
-              'id': 'nonSelectedDiscipline-lecture',
-              'name': 'LECTURE',
-              'updatedAt': expect.any(Date),
+            disciplineId: 'nonSelectedDiscipline',
+            id: 'deletedDisciplineTeacherId',
+            roles: [
+              {
+                id: expect.any(String),
+                createdAt: expect.any(Date),
+                disciplineTeacherId: 'deletedDisciplineTeacherId',
+                disciplineType: {
+                  createdAt: expect.any(Date),
+                  disciplineId: 'nonSelectedDiscipline',
+                  id: 'nonSelectedDiscipline-lecture',
+                  name: 'LECTURE',
+                  updatedAt: expect.any(Date),
+                },
+                disciplineTypeId: 'nonSelectedDiscipline-lecture',
+                updatedAt: expect.any(Date),
+              },
+            ],
+            teacher: {
+              cathedras: [],
+              academicStatus: null,
+              position: null,
+              scientificDegree: null,
+              avatar: null,
+              createdAt: expect.any(Date),
+              description: null,
+              firstName: 'Iryna',
+              lastName: 'Golichenko',
+              middleName: '',
+              id: 'deletedTeacherId',
+              rating: 0,
+              updatedAt: expect.any(Date),
             },
-            disciplineTypeId: 'nonSelectedDiscipline-lecture',
-            updatedAt: expect.any(Date),
-          }],
-          teacher: {
-            cathedras: [],
-            academicStatus: null,
-            position: null,
-            scientificDegree: null,
-            avatar: null,
-            createdAt: expect.any(Date),
-            description: null,
-            firstName: 'Iryna',
-            lastName: 'Golichenko',
-            middleName: '',
-            id: 'deletedTeacherId',
-            rating: 0,
+            teacherId: 'deletedTeacherId',
             updatedAt: expect.any(Date),
           },
-          teacherId: 'deletedTeacherId',
-          updatedAt: expect.any(Date),
-        }],
+        ],
         group: {
           cathedraId: 'ipiCathedraId',
           code: 'AA-12',
@@ -1036,41 +1041,46 @@ describe('ScheduleService', () => {
       const attachedDiscipline = {
         createdAt: expect.any(Date),
         description: '',
-        disciplineTeachers: [{
-          createdAt: expect.any(Date),
-          disciplineId: 'nonSelectedDiscipline',
-          id: 'deletedDisciplineTeacherId',
-          roles: [{
+        disciplineTeachers: [
+          {
             createdAt: expect.any(Date),
-            disciplineTeacherId: 'deletedDisciplineTeacherId',
-            'disciplineType': {
-              'createdAt': expect.any(Date),
-              'disciplineId': 'nonSelectedDiscipline',
-              'id': 'nonSelectedDiscipline-lecture',
-              'name': 'LECTURE',
-              'updatedAt': expect.any(Date),
+            disciplineId: 'nonSelectedDiscipline',
+            id: 'deletedDisciplineTeacherId',
+            roles: [
+              {
+                id: expect.any(String),
+                createdAt: expect.any(Date),
+                disciplineTeacherId: 'deletedDisciplineTeacherId',
+                disciplineType: {
+                  createdAt: expect.any(Date),
+                  disciplineId: 'nonSelectedDiscipline',
+                  id: 'nonSelectedDiscipline-lecture',
+                  name: 'LECTURE',
+                  updatedAt: expect.any(Date),
+                },
+                disciplineTypeId: 'nonSelectedDiscipline-lecture',
+                updatedAt: expect.any(Date),
+              },
+            ],
+            teacher: {
+              cathedras: [],
+              academicStatus: null,
+              position: null,
+              scientificDegree: null,
+              avatar: null,
+              createdAt: expect.any(Date),
+              description: null,
+              firstName: 'Iryna',
+              lastName: 'Golichenko',
+              middleName: '',
+              id: 'deletedTeacherId',
+              rating: 0,
+              updatedAt: expect.any(Date),
             },
-            disciplineTypeId: 'nonSelectedDiscipline-lecture',
-            updatedAt: expect.any(Date),
-          }],
-          teacher: {
-            cathedras: [],
-            academicStatus: null,
-            position: null,
-            scientificDegree: null,
-            avatar: null,
-            createdAt: expect.any(Date),
-            description: null,
-            firstName: 'Iryna',
-            lastName: 'Golichenko',
-            middleName: '',
-            id: 'deletedTeacherId',
-            rating: 0,
+            teacherId: 'deletedTeacherId',
             updatedAt: expect.any(Date),
           },
-          teacherId: 'deletedTeacherId',
-          updatedAt: expect.any(Date),
-        }],
+        ],
         group: {
           cathedraId: 'ipiCathedraId',
           code: 'AA-12',
@@ -1351,6 +1361,7 @@ describe('ScheduleService', () => {
         ],
         lessons: [
           {
+            id: expect.any(String),
             eventId: 'some-event-2st-semester-no-period-02-05',
             disciplineTypeId: 'nonSelectedDiscipline-lecture',
             createdAt: expect.any(Date),
@@ -1469,6 +1480,7 @@ describe('ScheduleService', () => {
         updatedAt: expect.any(Date),
         lessons: [
           {
+            id: expect.any(String),
             createdAt: expect.any(Date),
             disciplineType: {
               createdAt: expect.any(Date),
@@ -1478,7 +1490,8 @@ describe('ScheduleService', () => {
               updatedAt: expect.any(Date),
             },
             disciplineTypeId: 'anotherGroup-selectiveDiscipline-practice',
-            eventId: 'anotherGroup-selective-practice-event-1st-semester-every-week-09-12',
+            eventId:
+              'anotherGroup-selective-practice-event-1st-semester-every-week-09-12',
             updatedAt: expect.any(Date),
           },
         ],
@@ -1516,6 +1529,7 @@ describe('ScheduleService', () => {
         updatedAt: expect.any(Date),
         lessons: [
           {
+            id: expect.any(String),
             disciplineType: {
               createdAt: expect.any(Date),
               disciplineId: 'discipline',
@@ -1568,6 +1582,7 @@ describe('ScheduleService', () => {
         updatedAt: expect.any(Date),
         lessons: [
           {
+            id: expect.any(String),
             disciplineType: {
               createdAt: expect.any(Date),
               disciplineId: 'discipline',

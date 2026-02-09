@@ -383,14 +383,15 @@ model SemesterDate {
 }
 
 model DisciplineTeacherRole {
+  id                  String            @id @default(uuid())
   disciplineTeacher   DisciplineTeacher @relation(fields: [disciplineTeacherId], references: [id], onDelete: Cascade)
   disciplineTeacherId String            @map("discipline_teacher_id")
-  disciplineType      DisciplineType    @relation(fields: [disciplineTypeId], references: [id], onDelete: Cascade)
-  disciplineTypeId    String            @map("discipline_type_id")
+  disciplineType      DisciplineType?   @relation(fields: [disciplineTypeId], references: [id], onDelete: Cascade)
+  disciplineTypeId    String?           @map("discipline_type_id")
   createdAt           DateTime?         @default(now()) @map("created_at")
   updatedAt           DateTime?         @default(now()) @updatedAt @map("updated_at")
 
-  @@id([disciplineTeacherId, disciplineTypeId])
+  @@unique([disciplineTeacherId, disciplineTypeId])
   @@map("discipline_teacher_roles")
 }
 
@@ -453,14 +454,15 @@ model EventInfo {
 }
 
 model Lesson {
-  event            Event          @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  eventId          String         @map("event_id")
-  disciplineType   DisciplineType @relation(fields: [disciplineTypeId], references: [id], onDelete: Cascade)
-  disciplineTypeId String         @map("discipline_type_id")
-  createdAt        DateTime?      @default(now()) @map("created_at")
-  updatedAt        DateTime?      @default(now()) @updatedAt @map("updated_at")
+  id               String          @id @default(uuid())
+  event            Event           @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId          String          @map("event_id")
+  disciplineType   DisciplineType? @relation(fields: [disciplineTypeId], references: [id], onDelete: Cascade)
+  disciplineTypeId String?         @map("discipline_type_id")
+  createdAt        DateTime?       @default(now()) @map("created_at")
+  updatedAt        DateTime?       @default(now()) @updatedAt @map("updated_at")
 
-  @@id([eventId, disciplineTypeId])
+  @@unique([eventId, disciplineTypeId])
   @@map("lessons")
 }
 
