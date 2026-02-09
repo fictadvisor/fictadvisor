@@ -1,10 +1,10 @@
-# Alpine image
-FROM node:20-alpine AS alpine
-RUN apk update
-RUN apk add --no-cache openssl
+FROM node:20-slim AS base
+
+RUN apt-get update -y && \
+    apt-get install -y openssl ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
 
 # Setup pnpm and turbo on the alpine base
-FROM alpine AS base
 RUN npm install turbo --global
 RUN corepack enable && corepack prepare yarn@4.4.1
 
@@ -36,10 +36,11 @@ RUN turbo build --filter=fictadvisor-api
 RUN yarn workspaces focus --all --production
 
 # Final image
-FROM alpine AS runner
+FROM base AS runner
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nodejs
+RUN groupadd --gid 1001 nodejs && \
+    useradd --uid 1001 --gid nodejs --shell /bin/bash --create-home nodejs
+
 USER nodejs
 
 WORKDIR /app
@@ -49,6 +50,8 @@ WORKDIR /app/fictadvisor-api
 ARG PORT=3000
 ENV PORT=${PORT}
 ENV NODE_ENV=production
+ENV NODE_OPTIONS="--max-old-space-size=6144"
+
 EXPOSE ${PORT}
 
-CMD node dist/src/main
+CMD ["node", "dist/src/main"]
