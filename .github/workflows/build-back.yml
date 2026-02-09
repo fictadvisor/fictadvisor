@@ -52,10 +52,13 @@ jobs:
       - name: Run integration tests
         run: npx turbo test:integration:cohorta
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted-ubuntu-arm64
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+
+      - name: Cleanup Pre-Build
+        run: docker system prune -f || true
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3

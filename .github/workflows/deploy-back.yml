@@ -54,10 +54,13 @@ jobs:
         run: npx turbo test:integration:cohorta
   build:
     needs: [test, integration-test-fictadvisor, integration-test-cohorta]
-    runs-on: ubuntu-latest
+    runs-on: self-hosted-ubuntu-arm64
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+
+      - name: Cleanup Pre-Build
+        run: docker system prune -f || true
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
