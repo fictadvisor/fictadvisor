@@ -1,7 +1,7 @@
 FROM node:20-slim AS base
 
 RUN apt-get update -y && \
-    apt-get install -y openssl ca-certificates && \
+    apt-get install -y openssl ca-certificates libjemalloc2 && \
     rm -rf /var/lib/apt/lists/*
 
 # Setup pnpm and turbo on the alpine base
@@ -53,6 +53,7 @@ WORKDIR /app/fictadvisor-api
 ARG PORT=3000
 ENV PORT=${PORT}
 ENV NODE_ENV=production
+ENV LD_PRELOAD="/usr/lib/aarch64-linux-gnu/libjemalloc.so.2"
 ENV NODE_OPTIONS="--max-old-space-size=6144"
 
 EXPOSE ${PORT}
