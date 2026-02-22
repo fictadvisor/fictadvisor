@@ -80,8 +80,6 @@ jobs:
           platforms: linux/arm64
           push: true
           tags: fictadvisor/fictadvisor-api:${{ github.ref_name }}-arm64
-          cache-from: type=registry,ref=fictadvisor/fictadvisor-api:buildcache-arm64
-          cache-to: type=registry,ref=fictadvisor/fictadvisor-api:buildcache-arm64,mode=max
 
   build-amd64:
     needs: [ test, integration-test-fictadvisor, integration-test-cohorta ]
@@ -107,8 +105,6 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: fictadvisor/fictadvisor-api:${{ github.ref_name }}-amd64
-          cache-from: type=registry,ref=fictadvisor/fictadvisor-api:buildcache-amd64
-          cache-to: type=registry,ref=fictadvisor/fictadvisor-api:buildcache-amd64,mode=max
 
   merge:
     needs: [ build-arm64, build-amd64 ]
