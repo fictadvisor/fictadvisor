@@ -7,14 +7,15 @@ export enum CampusParserPairTag {
 }
 
 export class CampusParserPair {
-  teacherName: string;
-  lecturerId: string;
+  lecturer: {
+    name: string;
+  };
   type: string;
   time: string;
   name: string;
   place: string;
   tag: CampusParserPairTag;
-  teachers?: CampusParserTeacher[];
+  dates: string[];
 }
 
 export class CampusParserTeacher {

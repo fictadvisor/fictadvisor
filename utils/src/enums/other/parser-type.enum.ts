@@ -1,4 +1,4 @@
 export enum ParserTypeEnum {
-  ROZKPI = 'rozkpi',
+  // ROZKPI = 'rozkpi',
   CAMPUS = 'campus',
 }

@@ -230,6 +230,7 @@ export class RozParser implements Parser {
 
       tableCellPairs.push({
         name: childNode.textContent,
+        isRecurring: false,
         startTime,
         endTime,
         teachers: [],

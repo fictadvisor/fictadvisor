@@ -19,6 +19,7 @@ export class ParsedSchedulePair {
   startTime: Date;
   endTime: Date;
   isSelective: boolean;
+  isRecurring: boolean;
   disciplineType: ParsedDisciplineType;
   teachers: ParsedScheduleTeacher[];
 }
