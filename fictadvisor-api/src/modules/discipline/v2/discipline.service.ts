@@ -11,7 +11,7 @@ import { DisciplineTeacherRepository } from '../../../database/v2/repositories/d
 import { DbDiscipline } from '../../../database/v2/entities/discipline.entity';
 import { PaginatedData } from '../../../database/types/paginated.data';
 import { DisciplineTypeEnum } from '@fictadvisor/utils/enums';
-import { Prisma } from '@prisma/client/fictadvisor';
+import { Prisma } from '@prisma-client/fictadvisor';
 import { PaginationUtil, PaginateArgs } from '../../../database/v2/pagination.util';
 import { DatabaseUtils } from '../../../database/database.utils';
 

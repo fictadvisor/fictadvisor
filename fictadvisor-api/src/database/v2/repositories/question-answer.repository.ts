@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { Prisma } from '@prisma/client/fictadvisor';
+import { Prisma } from '@prisma-client/fictadvisor';
 import { DbQuestionAnswer } from '../entities/question-answer.entity';
 import { RepositoryInterface } from '../../interfaces/repository.interface';
 import { Include, Sort, Where } from '../prisma.repository';

@@ -37,7 +37,7 @@ import { GroupRepository } from '../../../database/v2/repositories/group.reposit
 import { ContactRepository } from '../../../database/v2/repositories/contact.repository';
 import { InvalidQueryException } from '../../../common/exceptions/invalid-query.exception';
 import { InvalidEntityIdException } from '../../../common/exceptions/invalid-entity-id.exception';
-import { EntityType, QuestionDisplay, Prisma } from '@prisma/client/fictadvisor';
+import { EntityType, QuestionDisplay, Prisma } from '@prisma-client/fictadvisor';
 import * as process from 'process';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { DbStudent } from '../entities/student.entity';
 import { PrismaRepository } from '../prisma.repository';
-import { Prisma } from '@prisma/client/fictadvisor';
+import { Prisma } from '@prisma-client/fictadvisor';
 
 @Injectable()
 export class StudentRepository extends PrismaRepository<'student', DbStudent> {

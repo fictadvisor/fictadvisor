@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from '@prisma/client/fictadvisor';
+import { Prisma, PrismaClient } from '@prisma-client/fictadvisor';
 import { BasePrismaRepository } from '../base-prisma.repository';
 import {
   TModels,

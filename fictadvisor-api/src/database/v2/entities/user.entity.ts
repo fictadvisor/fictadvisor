@@ -1,6 +1,6 @@
 import { DbQuestionAnswer } from './question-answer.entity';
 import { DbStudent } from './student.entity';
-import { State } from '@prisma/client/fictadvisor';
+import { State } from '@prisma-client/fictadvisor';
 import { AutoMap } from '@automapper/classes';
 
 export class DbUser {

@@ -14,7 +14,7 @@ import { DatabaseUtils } from '../../../database/database.utils';
 import { TeacherService } from '../../teacher/v2/teacher.service';
 import { SubjectRepository } from '../../../database/v2/repositories/subject.repository';
 import { TeacherRepository } from '../../../database/v2/repositories/teacher.repository';
-import { QuestionType } from '@prisma/client/fictadvisor';
+import { QuestionType } from '@prisma-client/fictadvisor';
 import { DbSubject } from '../../../database/v2/entities/subject.entity';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';

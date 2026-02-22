@@ -29,7 +29,7 @@ import {
   QuestionType,
   SemesterDate,
   Prisma,
-} from '@prisma/client/fictadvisor';
+} from '@prisma-client/fictadvisor';
 import { DbDiscipline } from '../../../database/v2/entities/discipline.entity';
 import { PaginatedData } from '../../../database/types/paginated.data';
 import { DbQuestionAnswer } from '../../../database/v2/entities/question-answer.entity';

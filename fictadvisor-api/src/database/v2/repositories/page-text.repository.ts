@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { PrismaRepository } from '../prisma.repository';
 import { DbPageText } from '../entities/page-text.entity';
-import { Prisma } from '@prisma/client/fictadvisor';
+import { Prisma } from '@prisma-client/fictadvisor';
 
 @Injectable()
 export class PageTextRepository extends PrismaRepository<'pageText', DbPageText> {

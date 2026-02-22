@@ -1,7 +1,7 @@
 import { DbGroupRole } from './group-role.entity';
 import { DbGrant } from './grant.entity';
 import { DbUserRole } from './user-role.entity';
-import { RoleName } from '@prisma/client/fictadvisor';
+import { RoleName } from '@prisma-client/fictadvisor';
 import { AutoMap } from '@automapper/classes';
 
 export class DbRole {

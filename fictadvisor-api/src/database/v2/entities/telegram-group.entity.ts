@@ -1,5 +1,5 @@
 import { DbGroup } from './group.entity';
-import { TelegramSource } from '@prisma/client/fictadvisor';
+import { TelegramSource } from '@prisma-client/fictadvisor';
 import { AutoMap } from '@automapper/classes';
 
 export class DbTelegramGroup {

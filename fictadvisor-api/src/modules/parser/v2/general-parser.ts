@@ -26,7 +26,7 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { DbEvent } from '../../../database/v2/entities/event.entity';
 import { EventResponse } from '@fictadvisor/utils/responses';
-import { Prisma } from '@prisma/client/fictadvisor';
+import { Prisma } from '@prisma-client/fictadvisor';
 import { DateTime } from 'luxon';
 import DisciplineUpdateInput = Prisma.DisciplineUpdateInput;
 import EventWhereInput = Prisma.EventWhereInput;
@@ -150,7 +150,7 @@ export class GeneralParser {
   private async getDates(
     initialIndex: number,
     semesterStartDate: Date
-  ): Promise<Prisma.Enumerable<EventWhereInput>> {
+  ): Promise<EventWhereInput[]> {
     const weekCount = await this.getEventsAmount(Period.EVERY_FORTNIGHT);
 
     const periods = new Array(weekCount).fill(null);
@@ -226,8 +226,8 @@ export class GeneralParser {
     weekNumber: number,
     semester: StudyingSemester,
     dates: [
-      Prisma.Enumerable<EventWhereInput>,
-      Prisma.Enumerable<EventWhereInput>,
+      EventWhereInput[],
+      EventWhereInput[],
     ],
     semesterStartDate: Date
   ) {
@@ -264,7 +264,7 @@ export class GeneralParser {
     weekNumber: number,
     groupId: string,
     semester: StudyingSemester,
-    dates: Prisma.Enumerable<EventWhereInput>,
+    dates: EventWhereInput[],
     semesterStartDate: Date
   ) {
     const databasePairs = await this.getDatabasePairs(groupId, dates);
@@ -736,7 +736,7 @@ export class GeneralParser {
 
   private async getDatabasePairs(
     groupId: string,
-    dates: Prisma.Enumerable<EventWhereInput>
+    dates: EventWhereInput[]
   ): Promise<DatabasePair[]> {
     const events = await this.eventRepository.findMany({
       groupId,

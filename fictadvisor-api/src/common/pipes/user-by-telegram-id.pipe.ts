@@ -1,5 +1,5 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
-import { User } from '@prisma/client/fictadvisor';
+import { User } from '@prisma-client/fictadvisor';
 import { UserRepository } from '../../database/v2/repositories/user.repository';
 import { InvalidEntityIdException } from '../exceptions/invalid-entity-id.exception';
 

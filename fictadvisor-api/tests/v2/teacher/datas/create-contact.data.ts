@@ -1,4 +1,4 @@
-import { EntityType } from '@prisma/client/fictadvisor';
+import { EntityType } from '@prisma-client/fictadvisor';
 
 export class CreateContactData {
   entityId: string;

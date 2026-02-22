@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from '@prisma/client/cohorta';
+import { Prisma, PrismaClient } from '@prisma-client/cohorta';
 import { BasePrismaRepository } from '../base-prisma.repository';
 import {
   TModels,

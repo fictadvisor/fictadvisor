@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Request } from 'express';
 import { Reflector } from '@nestjs/core';
-import { User } from '@prisma/client/fictadvisor';
+import { User } from '@prisma-client/fictadvisor';
 import { NoPermissionException } from '../../../exceptions/no-permission.exception';
 import { RequestUtil } from '../../../utils/request.util';
 import { PermissionService } from '../../../../modules/permission/v2/permission.service';

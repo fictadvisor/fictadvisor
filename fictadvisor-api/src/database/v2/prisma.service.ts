@@ -1,5 +1,5 @@
-import { INestApplication, Injectable, OnModuleInit } from '@nestjs/common';
-import { PrismaClient, State } from '@prisma/client/fictadvisor';
+import { Injectable, OnModuleInit } from '@nestjs/common';
+import { PrismaClient, State } from '@prisma-client/fictadvisor';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
@@ -14,12 +14,6 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
           },
         },
       },
-    });
-  }
-
-  async enableShutdownHooks (app: INestApplication) {
-    this.$on('beforeExit', async () => {
-      await app.close();
     });
   }
 }

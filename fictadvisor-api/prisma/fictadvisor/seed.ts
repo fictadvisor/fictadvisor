@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client/fictadvisor';
+import { PrismaClient } from '@prisma-client/fictadvisor';
 import process from 'process';
 
 const prisma = new PrismaClient();

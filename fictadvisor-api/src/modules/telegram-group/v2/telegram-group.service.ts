@@ -7,7 +7,7 @@ import { TelegramGroupRepository } from '../../../database/v2/repositories/teleg
 import { DataNotFoundException } from '../../../common/exceptions/data-not-found.exception';
 import { AlreadyExistException } from '../../../common/exceptions/already-exist.exception';
 import { ObjectIsRequiredException } from '../../../common/exceptions/object-is-required.exception';
-import { TelegramSource } from '@prisma/client/fictadvisor';
+import { TelegramSource } from '@prisma-client/fictadvisor';
 import { DbTelegramGroup } from '../../../database/v2/entities/telegram-group.entity';
 
 @Injectable()

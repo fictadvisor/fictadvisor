@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { Prisma } from '@prisma/client/fictadvisor';
+import { Prisma } from '@prisma-client/fictadvisor';
 import { RepositoryInterface } from '../../interfaces/repository.interface';
 import { DbDisciplineTeacherRole } from '../entities/discipline-teacher-role.entity';
 import { Include, Sort, Where } from '../prisma.repository';
@@ -60,6 +60,6 @@ export class DisciplineTeacherRoleRepository implements RepositoryInterface<DbDi
   }
 
   count (where: Where<'disciplineTeacherRole'>): Promise<number> {
-    return this.prisma.questionAnswer.count({ where });
+    return this.prisma.disciplineTeacherRole.count({ where });
   }
 }

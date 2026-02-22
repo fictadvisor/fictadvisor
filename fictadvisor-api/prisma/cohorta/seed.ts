@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client/cohorta';
+import { PrismaClient } from '@prisma-client/cohorta';
 import process from 'process';
 
 const prisma = new PrismaClient();
