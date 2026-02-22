@@ -1,4 +1,4 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { CampusParser } from './v2/campus-parser';
 import { RozParser } from './v2/roz-parser';
 import { PrismaModule } from '../../database/prisma.module';
@@ -6,7 +6,6 @@ import { DateModule } from '../date/date.module';
 import { GeneralParser } from './v2/general-parser';
 import { GroupModule } from '../group/group.module';
 import { UserModule } from '../user/user.module';
-import { ScheduleModule } from '../schedule/schedule.module';
 
 @Module({
   providers: [CampusParser, RozParser, GeneralParser],
@@ -16,7 +15,6 @@ import { ScheduleModule } from '../schedule/schedule.module';
     DateModule,
     GroupModule,
     UserModule,
-    forwardRef(() => ScheduleModule),
   ],
 })
 export class ParserModule {}

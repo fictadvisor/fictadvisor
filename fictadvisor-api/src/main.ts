@@ -18,19 +18,6 @@ import { TestType, TestCoverage } from './common/utils/test-coverage';
 };
 
 async function bootstrap () {
-  process.on('SIGTERM', () => {
-    console.log('SIGTERM received');
-  });
-
-  process.on('SIGINT', () => {
-    console.log('SIGINT received');
-  });
-
-  process.on('exit', (code) => {
-    console.log('Process exiting with code', code);
-  });
-
-
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get<ConfigService>(ConfigService);
   const telegramApi = app.get<TelegramAPI>(TelegramAPI);
@@ -83,7 +70,7 @@ async function bootstrap () {
   app.useStaticAssets(join(resolve(), '/static/'));
   const server = app.getHttpServer();
 
-  server.keepAliveTimeout = 61 * 1000; 
+  server.keepAliveTimeout = 61 * 1000;
   server.headersTimeout = 62 * 1000;
   await app.listen(port, '0.0.0.0');
 

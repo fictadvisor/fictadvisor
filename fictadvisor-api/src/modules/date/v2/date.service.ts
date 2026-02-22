@@ -188,6 +188,23 @@ export class DateService {
     }
   }
 
+  getWeekDates (semesterStartDate: Date, week: number) {
+    const startOfWeek = DateTime.fromJSDate(semesterStartDate)
+      .startOf('week')
+
+    const endOfWeek = DateTime.fromJSDate(semesterStartDate)
+      .endOf('week');
+
+    return {
+      startOfWeek: startOfWeek
+        .plus({ week })
+        .toJSDate(),
+      endOfWeek: endOfWeek
+        .plus({ week })
+        .toJSDate(),
+    };
+  }
+
   getParserEventTime (startOfSemester: Date, week: number, day: ScheduleDayNumber, time: string) {
     const [hours, minutes] = time
       .split(':')

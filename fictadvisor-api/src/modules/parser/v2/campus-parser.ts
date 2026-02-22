@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Parser } from './interfaces/parser.interface';
 import axios from 'axios';
-import { DateService } from '../../date/v2/date.service';
+import { DateService, HOUR, MINUTE } from '../../date/v2/date.service';
 import { GeneralParser } from './general-parser';
 import { SemesterDate } from '@prisma/client/fictadvisor';
 import {
@@ -34,7 +34,7 @@ export class CampusParser implements Parser<CampusParserGroup> {
 
     if (groupNames.length) {
       filtered = filtered.filter(({ name }: CampusParserGroup) =>
-        groupNames.includes(name)
+        groupNames.includes(name),
       );
     }
 
@@ -43,10 +43,10 @@ export class CampusParser implements Parser<CampusParserGroup> {
 
   async parseGroupSchedule (
     { id, name }: CampusParserGroup,
-    semester: SemesterDate
+    semester: SemesterDate,
   ): Promise<GroupParsedSchedule> {
     const { data } = await axios.get(
-      'https://api.campus.kpi.ua/schedule/lessons?groupId=' + id
+      'https://api.campus.kpi.ua/schedule/lessons?groupId=' + id,
     );
     const { scheduleFirstWeek, scheduleSecondWeek } = data;
 
@@ -60,7 +60,7 @@ export class CampusParser implements Parser<CampusParserGroup> {
   private parseWeek (
     semester: SemesterDate,
     weekNumber: ScheduleWeekNumber,
-    week: CampusParserDay[]
+    week: CampusParserDay[],
   ) {
     const weekPairs = new ParsedScheduleWeek(weekNumber);
 
@@ -74,14 +74,14 @@ export class CampusParser implements Parser<CampusParserGroup> {
   private parseDay (
     { startDate }: SemesterDate,
     { day, pairs }: CampusParserDay,
-    weekNumber: ScheduleWeekNumber
+    weekNumber: ScheduleWeekNumber,
   ) {
     const parsedPairs: ParsedSchedulePair[] = [];
 
-    for (const { name, time, tag, teacherName } of pairs) {
+    for (const { name, time, tag, lecturer: { name: teacherName }, dates } of pairs) {
       const isSelective = pairs.some(
         ({ name: nameSome, time: timeSome }) =>
-          name !== nameSome && time === timeSome
+          name !== nameSome && time === timeSome,
       );
 
       const { startOfEvent: startTime, endOfEvent: endTime } =
@@ -89,22 +89,55 @@ export class CampusParser implements Parser<CampusParserGroup> {
           startDate,
           weekNumber,
           CAMPUS_PARSER_DAY_NUMBER[day],
-          time
+          time,
         );
 
-      parsedPairs.push({
+      const pairInfo: Omit<ParsedSchedulePair, 'startTime' | 'endTime' | 'isRecurring'> = {
         name,
         isSelective,
-        startTime,
-        endTime,
         teachers: GeneralParser.parseTeacherNames(teacherName),
         disciplineType: {
           name: CAMPUS_PARSER_DISCIPLINE_TYPE[tag],
         },
-      });
+      };
+
+      if (dates.length > 0) {
+        for (const date of dates) {
+          const { startTime, endTime } = this.mapDate(date, time);
+
+          parsedPairs.push({
+            ...pairInfo,
+            isRecurring: false,
+            startTime,
+            endTime,
+          });
+        }
+      } else {
+        parsedPairs.push({
+          ...pairInfo,
+          isRecurring: true,
+          startTime,
+          endTime,
+        });
+      }
     }
 
     return this.aggregateParsedPairTeachers(parsedPairs);
+  }
+
+  private mapDate (dateString: string, time: string) {
+    const [hours, minutes] = time.split(':').map((number) => +number);
+
+    const startTime = new Date(dateString);
+    startTime.setHours(hours);
+    startTime.setMinutes(minutes);
+
+    const minutesAfterHour = 35;
+    const endTime = new Date(
+      startTime.getTime() + HOUR + minutesAfterHour * MINUTE
+    );
+
+    return { startTime, endTime };
   }
 
   private aggregateParsedPairTeachers (dayPairs: ParsedSchedulePair[]) {
@@ -115,14 +148,14 @@ export class CampusParser implements Parser<CampusParserGroup> {
         name === dayPair.name &&
         disciplineType.name === dayPair.disciplineType.name &&
         startTime.getTime() === dayPair.startTime.getTime() &&
-        endTime.getTime() === dayPair.endTime.getTime()
+        endTime.getTime() === dayPair.endTime.getTime(),
       );
 
       if (samePairIndex === -1) {
         result.push(dayPair);
       } else {
         result[samePairIndex].teachers.push(
-          ...dayPair.teachers
+          ...dayPair.teachers,
         );
       }
     }
