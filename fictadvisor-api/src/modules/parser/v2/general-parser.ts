@@ -175,7 +175,7 @@ export class GeneralParser {
     period?: StudyingSemester,
     page?: number
   ) {
-    const weekNumber = period ? 1 : await this.dateService.getCurrentWeek();
+    const weekNumber = await this.dateService.getCurrentWeek();
 
     const { isFinished, startDate: semesterStartDate } =
       await this.dateService.getCurrentSemester();
