@@ -1,6 +1,6 @@
 import { DbDisciplineTeacherRole } from './discipline-teacher-role.entity';
 import { DbDiscipline } from './discipline.entity';
-import { DisciplineTypeEnum } from '@prisma/client/fictadvisor';
+import { DisciplineTypeEnum } from '@prisma-client/fictadvisor';
 import { DbLesson } from './lesson.entity';
 import { AutoMap } from '@automapper/classes';
 

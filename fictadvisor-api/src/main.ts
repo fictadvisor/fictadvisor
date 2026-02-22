@@ -19,6 +19,7 @@ import { TestType, TestCoverage } from './common/utils/test-coverage';
 
 async function bootstrap () {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  app.enableShutdownHooks();
   const configService = app.get<ConfigService>(ConfigService);
   const telegramApi = app.get<TelegramAPI>(TelegramAPI);
   const port = configService.get<number>('port');

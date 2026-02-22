@@ -5,7 +5,7 @@ import { PrismaModule } from '../../../src/database/prisma.module';
 import { QuestionMapperModule } from '../../../src/modules/poll/v2/mappers/question-mapper.module';
 import { PollService } from '../../../src/modules/poll/v2/poll.service';
 import { DbDiscipline } from '../../../src/database/v2/entities/discipline.entity';
-import { Group, PrismaClient, QuestionDisplay, QuestionType, State, Subject, Teacher, User } from '@prisma/client/fictadvisor';
+import { Group, PrismaClient, QuestionDisplay, QuestionType, State, Subject, Teacher, User } from '@prisma-client/fictadvisor';
 import { DbQuestionWithRoles } from '../../../src/database/v2/entities/question-with-roles.entity';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';

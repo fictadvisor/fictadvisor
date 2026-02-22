@@ -3,7 +3,7 @@ import { Parser } from './interfaces/parser.interface';
 import axios from 'axios';
 import { DateService, HOUR, MINUTE } from '../../date/v2/date.service';
 import { GeneralParser } from './general-parser';
-import { SemesterDate } from '@prisma/client/fictadvisor';
+import { SemesterDate } from '@prisma-client/fictadvisor';
 import {
   CAMPUS_PARSER_DAY_NUMBER,
   CAMPUS_PARSER_DISCIPLINE_TYPE,

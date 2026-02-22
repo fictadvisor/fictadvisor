@@ -36,7 +36,7 @@ import { InvalidEntityIdException } from '../../../common/exceptions/invalid-ent
 import { NoPermissionException } from '../../../common/exceptions/no-permission.exception';
 import { NotSelectedDisciplineException } from '../../../common/exceptions/not-selected-discipline.exception';
 import { IsRemovedDisciplineTeacherException } from '../../../common/exceptions/is-removed-discipline-teacher.exception';
-import { Prisma, QuestionType, State } from '@prisma/client/fictadvisor';
+import { Prisma, QuestionType, State } from '@prisma-client/fictadvisor';
 import { DbQuestion } from '../../../database/v2/entities/question.entity';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';

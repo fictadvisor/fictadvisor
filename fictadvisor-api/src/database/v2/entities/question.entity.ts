@@ -1,4 +1,4 @@
-import { QuestionDisplay, QuestionType } from '@prisma/client/fictadvisor';
+import { QuestionDisplay, QuestionType } from '@prisma-client/fictadvisor';
 import { DbQuestionAnswer } from './question-answer.entity';
 import { AutoMap } from '@automapper/classes';
 

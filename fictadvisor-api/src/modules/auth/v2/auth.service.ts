@@ -14,7 +14,7 @@ import {
 } from '@fictadvisor/utils/requests';
 import { createHash, createHmac } from 'crypto';
 import * as bcrypt from 'bcryptjs';
-import { State, User, RoleName } from '@prisma/client/fictadvisor';
+import { State, User, RoleName } from '@prisma-client/fictadvisor';
 import { JwtPayload } from './types/jwt.payload';
 import { TelegramAPI } from '../../telegram-api/telegram-api';
 import { SecurityConfigService } from '../../../config/security-config.service';

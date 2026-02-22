@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing';
-import { Discipline, QuestionType, State } from '@prisma/client/fictadvisor';
+import { Discipline, QuestionType, State } from '@prisma-client/fictadvisor';
 import { CreateAnswersDTO } from '@fictadvisor/utils/requests';
 import { DisciplineTypeEnum } from '@fictadvisor/utils/enums';
 import { PrismaModule } from '../../../src/database/prisma.module';

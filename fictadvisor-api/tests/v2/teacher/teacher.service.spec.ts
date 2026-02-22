@@ -14,7 +14,7 @@ import { TelegramConfigService } from '../../../src/config/telegram-config.servi
 import { TeacherService } from '../../../src/modules/teacher/v2/teacher.service';
 import { PollService } from '../../../src/modules/poll/v2/poll.service';
 import { DbQuestion } from '../../../src/database/v2/entities/question.entity';
-import { Cathedra, EntityType, Prisma, QuestionDisplay } from '@prisma/client/fictadvisor';
+import { Cathedra, EntityType, Prisma, QuestionDisplay } from '@prisma-client/fictadvisor';
 import { TeacherRepository } from '../../../src/database/v2/repositories/teacher.repository';
 import { DbTeacher } from '../../../src/database/v2/entities/teacher.entity';
 import { ContactRepository } from '../../../src/database/v2/repositories/contact.repository';

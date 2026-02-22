@@ -37,7 +37,7 @@ import { AlreadySelectedException } from '../../../common/exceptions/already-sel
 import { DuplicateTelegramIdException } from '../../../common/exceptions/duplicate-telegram-id.exception';
 import { NotSelectedDisciplineException } from '../../../common/exceptions/not-selected-discipline.exception';
 import { AlreadySentGroupRequestException } from '../../../common/exceptions/already-sent-group-request.exception';
-import { EntityType, RoleName, State } from '@prisma/client/fictadvisor';
+import { EntityType, RoleName, State } from '@prisma-client/fictadvisor';
 import { AbsenceOfCaptainException } from '../../../common/exceptions/absence-of-captain.exception';
 import { CaptainAlreadyRegisteredException } from '../../../common/exceptions/captain-already-registered.exception';
 import { InjectMapper } from '@automapper/nestjs';

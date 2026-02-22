@@ -3,7 +3,7 @@ import { CreateAnswersDTO, CreateAnswerDTO } from '@fictadvisor/utils/requests';
 import { QuestionRepository } from '../../database/v2/repositories/question.repository';
 import { InvalidValueException } from '../exceptions/invalid-value.exception';
 import { InvalidEntityIdException } from '../exceptions/invalid-entity-id.exception';
-import { QuestionType } from '@prisma/client/fictadvisor';
+import { QuestionType } from '@prisma-client/fictadvisor';
 
 @Injectable()
 export class QuestionAnswersValidationPipe implements PipeTransform {

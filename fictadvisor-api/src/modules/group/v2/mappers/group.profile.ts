@@ -7,7 +7,7 @@ import {
   SpecialityResponse,
   FullGroupResponse,
 } from '@fictadvisor/utils/responses';
-import { RoleName } from '@prisma/client/fictadvisor';
+import { RoleName } from '@prisma-client/fictadvisor';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { createMap, forMember, Mapper, mapWith, nullSubstitution } from '@automapper/core';
 import { DbGroup } from '../../../../database/v2/entities/group.entity';

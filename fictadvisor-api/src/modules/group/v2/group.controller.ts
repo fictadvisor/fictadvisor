@@ -37,7 +37,7 @@ import { GroupService } from './group.service';
 import { UserService } from '../../user/v2/user.service';
 import { GroupDocumentation } from '../../../common/documentation/modules/v2/group';
 import { UpdateGroupPipe } from '../../../common/pipes/update-group.pipe';
-import { User } from '@prisma/client/fictadvisor';
+import { User } from '@prisma-client/fictadvisor';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
 import { DbGroup } from '../../../database/v2/entities/group.entity';

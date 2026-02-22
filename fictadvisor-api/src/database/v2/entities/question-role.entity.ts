@@ -1,4 +1,4 @@
-import { DisciplineTypeEnum } from '@prisma/client/fictadvisor';
+import { DisciplineTypeEnum } from '@prisma-client/fictadvisor';
 import { DbQuestion } from './question.entity';
 import { AutoMap } from '@automapper/classes';
 

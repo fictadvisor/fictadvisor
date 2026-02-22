@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client/fictadvisor';
+import { Prisma } from '@prisma-client/fictadvisor';
 import { PrismaService } from '../prisma.service';
 import { DbTelegramGroup } from '../entities/telegram-group.entity';
 import { Include, Sort, Where } from '../prisma.repository';
@@ -91,6 +91,6 @@ export class TelegramGroupRepository implements RepositoryInterface<DbTelegramGr
   }
 
   count (where: Where<'telegramGroup'>): Promise<number> {
-    return this.prisma.questionAnswer.count({ where });
+    return this.prisma.telegramGroup.count({ where });
   }
 }

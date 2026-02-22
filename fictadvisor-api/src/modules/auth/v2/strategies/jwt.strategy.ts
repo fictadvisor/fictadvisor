@@ -3,7 +3,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { SecurityConfigService } from '../../../../config/security-config.service';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtPayload } from '../types/jwt.payload';
-import { User } from '@prisma/client/fictadvisor';
+import { User } from '@prisma-client/fictadvisor';
 import { UserRepository } from '../../../../database/v2/repositories/user.repository';
 
 @Injectable()

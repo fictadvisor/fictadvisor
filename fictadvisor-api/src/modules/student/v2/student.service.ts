@@ -23,7 +23,7 @@ import { CaptainCanNotLeaveException } from '../../../common/exceptions/captain-
 import { NotBelongException } from '../../../common/exceptions/not-belong.exception';
 import { ExcessiveSelectiveDisciplinesException } from '../../../common/exceptions/excessive-selective-disciplines.exception';
 import { AlreadySelectedException } from '../../../common/exceptions/already-selected.exception';
-import { RoleName, SelectiveDiscipline, State } from '@prisma/client/fictadvisor';
+import { RoleName, SelectiveDiscipline, State } from '@prisma-client/fictadvisor';
 import { DbStudent } from '../../../database/v2/entities/student.entity';
 
 @Injectable()

@@ -18,7 +18,7 @@ import {
 import { UserService } from '../../user/v2/user.service';
 import { FileService } from '../../file/file.service';
 import { DateService } from '../../date/v2/date.service';
-import { Prisma, RoleName, State, User } from '@prisma/client/fictadvisor';
+import { Prisma, RoleName, State, User } from '@prisma-client/fictadvisor';
 import { PaginationUtil, PaginateArgs } from '../../../database/v2/pagination.util';
 import { DatabaseUtils } from '../../../database/database.utils';
 import { DbGroup } from '../../../database/v2/entities/group.entity';
