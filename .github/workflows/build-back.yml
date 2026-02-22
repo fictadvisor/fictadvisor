@@ -78,7 +78,6 @@ jobs:
           file: ./fictadvisor-api/Dockerfile
           platforms: linux/arm64
           push: false
-          cache-from: type=registry,ref=fictadvisor/fictadvisor-api:buildcache-arm64
 
   build-amd64:
     needs: [ test, integration-test-fictadvisor, integration-test-cohorta ]
@@ -103,4 +102,3 @@ jobs:
           file: ./fictadvisor-api/Dockerfile
           platforms: linux/amd64
           push: false
-          cache-from: type=registry,ref=fictadvisor/fictadvisor-api:buildcache-amd64
