@@ -196,12 +196,8 @@ export class DateService {
       .endOf('week');
 
     return {
-      startOfWeek: startOfWeek
-        .plus({ week })
-        .toJSDate(),
-      endOfWeek: endOfWeek
-        .plus({ week })
-        .toJSDate(),
+      startOfWeek: startOfWeek.plus({ week: week - 1 }).toJSDate(),
+      endOfWeek: endOfWeek.plus({ week: week - 1 }).toJSDate(),
     };
   }
 

@@ -4,14 +4,9 @@ import axios from 'axios';
 import { DateService, HOUR, MINUTE } from '../../date/v2/date.service';
 import { GeneralParser } from './general-parser';
 import { SemesterDate } from '@prisma-client/fictadvisor';
-import {
-  CAMPUS_PARSER_DAY_NUMBER,
-  CAMPUS_PARSER_DISCIPLINE_TYPE,
-} from './constants/campus.constants';
-import {
-  CampusParserDay,
-  CampusParserGroup,
-} from './types/campus-parser.types';
+import { DateTime } from 'luxon';
+import { CAMPUS_PARSER_DAY_NUMBER, CAMPUS_PARSER_DISCIPLINE_TYPE } from './constants/campus.constants';
+import { CampusParserDay, CampusParserGroup } from './types/campus-parser.types';
 import {
   GroupParsedSchedule,
   ParsedSchedulePair,
@@ -84,7 +79,7 @@ export class CampusParser implements Parser<CampusParserGroup> {
           name !== nameSome && time === timeSome,
       );
 
-      const { startOfEvent: startTime, endOfEvent: endTime } =
+      const { startOfEvent, endOfEvent } =
         this.dateService.getParserEventTime(
           startDate,
           weekNumber,
@@ -92,7 +87,18 @@ export class CampusParser implements Parser<CampusParserGroup> {
           time,
         );
 
-      const pairInfo: Omit<ParsedSchedulePair, 'startTime' | 'endTime' | 'isRecurring'> = {
+      const startTimeEvent = DateTime.fromJSDate(startOfEvent)
+        .setZone('Europe/Kyiv', { keepLocalTime: true })
+        .toJSDate();
+
+      const endTimeEvent = DateTime.fromJSDate(endOfEvent)
+        .setZone('Europe/Kyiv', { keepLocalTime: true })
+        .toJSDate();
+
+      const pairInfo: Omit<
+        ParsedSchedulePair,
+        'startTime' | 'endTime' | 'isRecurring'
+      > = {
         name,
         isSelective,
         teachers: GeneralParser.parseTeacherNames(teacherName),
@@ -116,8 +122,8 @@ export class CampusParser implements Parser<CampusParserGroup> {
         parsedPairs.push({
           ...pairInfo,
           isRecurring: true,
-          startTime,
-          endTime,
+          startTime: startTimeEvent,
+          endTime: endTimeEvent,
         });
       }
     }
@@ -127,14 +133,22 @@ export class CampusParser implements Parser<CampusParserGroup> {
 
   private mapDate (dateString: string, time: string) {
     const [hours, minutes] = time.split(':').map((number) => +number);
+    const parsedDate = new Date(dateString);
 
-    const startTime = new Date(dateString);
-    startTime.setHours(hours);
-    startTime.setMinutes(minutes);
+    const startTime = DateTime.fromObject(
+      {
+        year: parsedDate.getFullYear(),
+        month: parsedDate.getMonth() + 1,
+        day: parsedDate.getDate(),
+        hour: hours,
+        minute: minutes,
+      },
+      { zone: 'Europe/Kyiv' },
+    ).toJSDate();
 
     const minutesAfterHour = 35;
     const endTime = new Date(
-      startTime.getTime() + HOUR + minutesAfterHour * MINUTE
+      startTime.getTime() + HOUR + minutesAfterHour * MINUTE,
     );
 
     return { startTime, endTime };
@@ -154,9 +168,7 @@ export class CampusParser implements Parser<CampusParserGroup> {
       if (samePairIndex === -1) {
         result.push(dayPair);
       } else {
-        result[samePairIndex].teachers.push(
-          ...dayPair.teachers,
-        );
+        result[samePairIndex].teachers.push(...dayPair.teachers);
       }
     }
 
