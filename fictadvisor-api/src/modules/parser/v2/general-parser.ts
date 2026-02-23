@@ -197,8 +197,8 @@ export class GeneralParser {
     );
 
     const dates = await Promise.all([
-      this.getDates(0, semesterStartDate),
       this.getDates(1, semesterStartDate),
+      this.getDates(2, semesterStartDate),
     ]);
 
     for (const group of groups) {
@@ -406,6 +406,11 @@ export class GeneralParser {
     weekNumber: number,
     semesterStartDate: Date
   ) {
+    const { startOfWeek } = this.dateService.getWeekDates(
+      semesterStartDate,
+      weekNumber
+    );
+
     const filteredOld = oldPairs.filter((pair) => {
       const lastPairStartDate = DateTime.fromJSDate(pair.startTime)
         .plus({
@@ -413,10 +418,6 @@ export class GeneralParser {
         })
         .toJSDate();
 
-      const { startOfWeek } = this.dateService.getWeekDates(
-        semesterStartDate,
-        weekNumber
-      );
       return lastPairStartDate >= startOfWeek;
     });
 
@@ -442,15 +443,15 @@ export class GeneralParser {
     eventPeriod: Period,
     week: number
   ) {
-    const { endOfWeek: eventEndDate } =
+    const { startOfWeek } =
       await this.dateService.getDatesOfWeek(week);
 
-    if (startOfEvent > eventEndDate) return 0;
+    if (startOfEvent > startOfWeek) return 0;
     if (eventPeriod === Period.NO_PERIOD) return 1;
 
     const eventWeeks = this.dateUtils.getFlooredDifference(
       startOfEvent,
-      eventEndDate,
+      startOfWeek,
       WEEK
     );
     return Math.floor(eventWeeks / weeksPerEvent[eventPeriod]);
