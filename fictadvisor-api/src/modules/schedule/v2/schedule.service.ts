@@ -103,13 +103,14 @@ export class ScheduleService {
         some: {
           disciplineType: {
             name: {
-              in: [EventTypeEnum.PRACTICE, EventTypeEnum.LECTURE, EventTypeEnum.LABORATORY],
+              in: [
+                EventTypeEnum.PRACTICE,
+                EventTypeEnum.LECTURE,
+                EventTypeEnum.LABORATORY,
+              ],
             },
           },
         },
-      },
-      period: {
-        notIn: [Period.NO_PERIOD],
       },
     });
 
