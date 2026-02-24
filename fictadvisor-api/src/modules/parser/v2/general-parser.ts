@@ -425,7 +425,7 @@ export class GeneralParser {
       const eventsAmount = await this.calculateEventsAmount(
         startTime,
         period,
-        Math.max(0, weekNumber)
+        weekNumber,
       );
 
       if (eventsAmount) {
