@@ -14,7 +14,7 @@ import {
 } from '@fictadvisor/utils/requests';
 import { createHash, createHmac } from 'crypto';
 import * as bcrypt from 'bcryptjs';
-import { State, User, RoleName } from '@prisma-client/fictadvisor';
+import { State, User, RoleName, Prisma } from '@prisma-client/fictadvisor';
 import { JwtPayload } from './types/jwt.payload';
 import { TelegramAPI } from '../../telegram-api/telegram-api';
 import { SecurityConfigService } from '../../../config/security-config.service';
@@ -332,14 +332,17 @@ export class AuthService {
     const { email, telegramId, username, avatar, firstName, lastName, groupId, middleName, isCaptain, password } = verifyToken;
 
     if (!(await this.isPseudoRegistered(email))) {
+      const orChecks: Prisma.UserWhereInput[] = [
+        { email },
+        { username },
+      ];
+
+      if (telegramId !== null) {
+        orChecks.push({ telegramId });
+      }
+
       const user = await this.userRepository.findOne({
-        OR: [
-          { email },
-          { username },
-          telegramId !== null
-            ? { telegramId }
-            : undefined,
-        ],
+        OR: orChecks,
       });
       if (user) {
         throw new AlreadyRegisteredException();
