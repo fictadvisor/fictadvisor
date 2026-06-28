@@ -4,6 +4,7 @@ import { ConfigurationModule } from '../config/config.module';
 import Configuration from '../config/configuration.constant';
 import { ApiModule } from './api.module';
 import { EmailModule } from './email/email.module';
+import { MetricsModule } from './metrics/metrics.module';
 import { PrismaModule } from '../database/prisma.module';
 import * as process from 'process';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -23,6 +24,7 @@ import { classes } from '@automapper/classes';
     ScheduleModule.forRoot(),
     ApiModule,
     EmailModule,
+    MetricsModule,
     PrismaModule,
   ],
   providers: [SecurityConfigService],
