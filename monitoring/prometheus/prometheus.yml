@@ -1,0 +1,27 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # APIs listen on container port 80 (see ports "3001:80" / "4001:80").
+  - job_name: fictadvisor-api
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['fictadvisor-api:80']
+
+  - job_name: fictadvisor-api-dev
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['fictadvisor-api-dev:80']
+
+  - job_name: postgres
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+
+  - job_name: postgres-dev
+    static_configs:
+      - targets: ['postgres-exporter-dev:9187']

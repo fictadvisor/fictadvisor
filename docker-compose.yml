@@ -122,3 +122,62 @@ services:
       - "--cleanup"
       - "-i"
       - "60"
+
+  postgres-exporter:
+    image: quay.io/prometheuscommunity/postgres-exporter:v0.15.0
+    container_name: postgres-exporter
+    restart: unless-stopped
+    depends_on:
+      - postgres-db
+    env_file:
+      - ~/deployment/env/postgres-exporter.env
+    networks:
+      - fictadvisor
+
+  postgres-exporter-dev:
+    image: quay.io/prometheuscommunity/postgres-exporter:v0.15.0
+    container_name: postgres-exporter-dev
+    restart: unless-stopped
+    depends_on:
+      - postgres-db-dev
+    env_file:
+      - ~/deployment/env/postgres-exporter-dev.env
+    networks:
+      - fictadvisor-dev
+
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    container_name: prometheus
+    restart: unless-stopped
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+    ports:
+      - "9090:9090"
+    networks:
+      - fictadvisor
+      - fictadvisor-dev
+
+  grafana:
+    image: grafana/grafana:11.2.0
+    container_name: grafana
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+    env_file:
+      - ~/deployment/env/grafana.env
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana-data:/var/lib/grafana
+    ports:
+      - "3300:3000"
+    networks:
+      - fictadvisor
+
+volumes:
+  prometheus-data:
+  grafana-data:
