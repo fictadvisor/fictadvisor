@@ -1,4 +1,5 @@
 import { Global, Module } from '@nestjs/common';
+import { MetricsModule } from '../modules/metrics/metrics.module';
 import { PrismaService } from './v2/prisma.service';
 import { DisciplineRepository } from './v2/repositories/discipline.repository';
 import { DisciplineTeacherRepository } from './v2/repositories/discipline-teacher.repository';
@@ -24,6 +25,7 @@ import { QuestionWithRolesRepository } from './v2/repositories/question-with-rol
 
 @Global()
 @Module({
+  imports: [MetricsModule],
   providers: [
     PrismaService,
     DisciplineRepository,
