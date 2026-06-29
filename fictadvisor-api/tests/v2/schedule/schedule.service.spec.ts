@@ -50,7 +50,12 @@ describe('ScheduleService', () => {
         eventsAmount: 18,
       };
       const week = 2;
-      const result = await scheduleService.getIndexOfLesson(week, event as DbEvent);
+      const { startDate: startOfSemester } = await dateService.getCurrentSemester();
+      const result = scheduleService.getIndexOfLesson(
+        week,
+        event as DbEvent,
+        startOfSemester
+      );
       expect(result).toBe(0);
     });
     it('should return null when the period is NO_PERIOD and the week is incorrect', async () => {
@@ -64,7 +69,14 @@ describe('ScheduleService', () => {
         eventsAmount: 18,
       };
       const week = 3;
-      const result = await scheduleService.getIndexOfLesson(week, event as DbEvent);
+      const { startDate: startOfSemester } =
+        await dateService.getCurrentSemester();
+
+      const result = scheduleService.getIndexOfLesson(
+        week,
+        event as DbEvent,
+        startOfSemester
+      );
       expect(result).toBeNull();
     });
     it('should return correct index when the period is EVERY_WEEK', async () => {
@@ -78,7 +90,14 @@ describe('ScheduleService', () => {
         eventsAmount: 18,
       };
       const week = 3;
-      const result = await scheduleService.getIndexOfLesson(week, event as DbEvent);
+      const { startDate: startOfSemester } =
+        await dateService.getCurrentSemester();
+
+      const result = scheduleService.getIndexOfLesson(
+        week,
+        event as DbEvent,
+        startOfSemester
+      );
       expect(result).toBe(1);
     });
     it('should return correct index when the period is EVERY_FORTNIGHT', async () => {
@@ -92,7 +111,14 @@ describe('ScheduleService', () => {
         eventsAmount: 18,
       };
       const week = 6;
-      const result = await scheduleService.getIndexOfLesson(week, event as DbEvent);
+      const { startDate: startOfSemester } =
+        await dateService.getCurrentSemester();
+
+      const result = scheduleService.getIndexOfLesson(
+        week,
+        event as DbEvent,
+        startOfSemester
+      );
       expect(result).toBe(2);
     });
     it('should return null when the period is EVERY_FORTNIGHT and lesson does not happen this week', async () => {
@@ -106,7 +132,14 @@ describe('ScheduleService', () => {
         eventsAmount: 18,
       };
       const week = 3;
-      const result = await scheduleService.getIndexOfLesson(week, event as DbEvent);
+      const { startDate: startOfSemester } =
+        await dateService.getCurrentSemester();
+
+      const result = scheduleService.getIndexOfLesson(
+        week,
+        event as DbEvent,
+        startOfSemester
+      );
       expect(result).toBeNull();
     });
   });

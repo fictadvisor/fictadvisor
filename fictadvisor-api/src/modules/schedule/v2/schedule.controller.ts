@@ -209,7 +209,6 @@ export class ScheduleController {
     @Body(ScheduleTimeConvertPipe) body: CreateEventDTO,
   ) {
     const result = await this.scheduleService.createGroupEvent(body);
-    result.event = await this.scheduleService.addEventTimezones(result.event);
 
     return this.mapper.map(result.event, DbEvent, EventResponse,
       { extraArgs: () => ({ discipline: result.discipline }) });

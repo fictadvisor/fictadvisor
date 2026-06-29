@@ -11,7 +11,7 @@ import {
 import { EventTypeEnum, ParserTypeEnum } from '@fictadvisor/utils/enums';
 import { DisciplineTypeEnum, Period } from '@prisma-client/fictadvisor';
 import { DateTime } from 'luxon';
-import { DateService, FORTNITE, StudyingSemester, WEEK } from '../../date/v2/date.service';
+import { CurrentSemester, DateService, FORTNITE, StudyingSemester, WEEK } from '../../date/v2/date.service';
 import { DateUtils } from '../../date/date.utils';
 import { every, everyAsync, filterAsync, find, some } from '../../../common/utils/array.utils';
 import { UserService } from '../../user/v2/user.service';
@@ -41,8 +41,7 @@ export const weeksPerEvent = {
 
 @Injectable()
 export class ScheduleService {
-
-  constructor (
+  constructor(
     private dateService: DateService,
     private eventRepository: EventRepository,
     private disciplineRepository: DisciplineRepository,
@@ -52,10 +51,10 @@ export class ScheduleService {
     private studentRepository: StudentRepository,
     private dateUtils: DateUtils,
     private groupRepository: GroupRepository,
-    private generalParser: GeneralParser,
+    private generalParser: GeneralParser
   ) {}
 
-  async parse (query: ParseScheduleQueryDTO): Promise<void> {
+  async parse(query: ParseScheduleQueryDTO): Promise<void> {
     const { parser, page, year, semester, groups } = query;
     const period: StudyingSemester = { year, semester };
     const groupList = groups ? groups.trim().split(';') : [];
@@ -63,34 +62,39 @@ export class ScheduleService {
   }
 
   @Cron('0 3 * * *')
-  async autoParse () {
+  async autoParse() {
     await this.generalParser.parse(ParserTypeEnum.CAMPUS);
   }
 
-  async getIndexOfLesson (week: number, event: DbEvent, startOfSemester?: Date): Promise<number | null> {
-    const startDate = startOfSemester ??
-      (await this.dateService.getCurrentSemester()).startDate;
-
-    const startWeek = Math.ceil((event.startTime.getTime() - startDate.getTime()) / WEEK);
-    if (event.period === Period.NO_PERIOD && week - startWeek !== 0) return null;
+  getIndexOfLesson(
+    week: number,
+    event: DbEvent,
+    startOfSemester: Date
+  ): number | null {
+    const startWeek = Math.ceil(
+      (event.startTime.getTime() - startOfSemester.getTime()) / WEEK
+    );
+    if (event.period === Period.NO_PERIOD && week - startWeek !== 0)
+      return null;
     const index = (week - startWeek) / weeksPerEvent[event.period];
-    if (index < 0 || index % 1 !== 0 || index >= event.eventsAmount) return null;
+    if (index < 0 || index % 1 !== 0 || index >= event.eventsAmount)
+      return null;
     return index;
   }
 
-  async getGeneralGroupEvents (
+  async getGeneralGroupEvents(
     groupId: string,
     week?: number,
     setWeekTime = true,
-    semester?: StudyingSemester,
-  ): Promise<{ events: DbEvent[], week: number, startTime: Date }> {
-    const { startDate: startOfSemester } = semester ?
-      await this.dateService.getSemester(semester) :
-      await this.dateService.getCurrentSemester();
+    semester?: StudyingSemester
+  ): Promise<{ events: DbEvent[]; week: number; startTime: Date }> {
+    const { startDate: startOfSemester } = semester
+      ? await this.dateService.getSemester(semester)
+      : await this.dateService.getCurrentSemester();
 
-    const { startOfWeek, endOfWeek } = week ?
-      await this.dateService.getDatesOfWeek(week, semester) :
-      this.dateService.getDatesOfCurrentWeek();
+    const { startOfWeek, endOfWeek } = week
+      ? await this.dateService.getDatesOfWeek(week, semester)
+      : this.dateService.getDatesOfCurrentWeek();
 
     const events: DbEvent[] = await this.eventRepository.findMany({
       groupId,
@@ -113,9 +117,13 @@ export class ScheduleService {
       },
     });
 
-    week = week || await this.dateService.getCurrentWeek();
+    week = week || (await this.dateService.getCurrentWeek());
     const result = await filterAsync(events, async (event) => {
-      const indexOfLesson = await this.getIndexOfLesson(week, event, startOfSemester);
+      const indexOfLesson = this.getIndexOfLesson(
+        week,
+        event,
+        startOfSemester
+      );
       return indexOfLesson !== null;
     });
 
@@ -132,20 +140,26 @@ export class ScheduleService {
     };
   }
 
-  sortEvents<T extends BaseShortEventResponse> (events: T[]) {
-    return events.sort((firstEvent, secondEvent) =>
-      firstEvent.startTime.getTime() - secondEvent.startTime.getTime());
+  sortEvents<T extends BaseShortEventResponse>(events: T[]) {
+    return events.sort(
+      (firstEvent, secondEvent) =>
+        firstEvent.startTime.getTime() - secondEvent.startTime.getTime()
+    );
   }
 
-  async getGeneralGroupEventsWrapper (
+  async getGeneralGroupEventsWrapper(
     groupId: string,
     query: GeneralEventFiltrationDTO,
-    week?: number,
-  ): Promise<{ events: DbEvent[], week: number, startTime: Date }> {
+    week?: number
+  ): Promise<{ events: DbEvent[]; week: number; startTime: Date }> {
     const result = await this.getGeneralGroupEvents(groupId, week);
     const { addLecture, addPractice, addLaboratory } = query;
 
-    if (addLecture !== undefined || addPractice !== undefined || addLaboratory !== undefined) {
+    if (
+      addLecture !== undefined ||
+      addPractice !== undefined ||
+      addLaboratory !== undefined
+    ) {
       result.events = result.events.filter((event) =>
         this.eventTypeFilter(event, addLecture, addLaboratory, addPractice)
       );
@@ -154,17 +168,19 @@ export class ScheduleService {
     return result;
   }
 
-
-  async getGroupEventsByDay (
+  async getGroupEventsByDay(
     groupId: string,
     userId?: string,
     week?: number,
-    day?: number,
+    day?: number
   ): Promise<DbEvent[]> {
-    week = week || await this.dateService.getCurrentWeek();
+    week = week || (await this.dateService.getCurrentWeek());
     day = day || (await this.dateService.getCurrentDay()).day;
 
-    const { startOfDay } = await this.dateService.getSpecificDayInWeek(week, day);
+    const { startOfDay } = await this.dateService.getSpecificDayInWeek(
+      week,
+      day
+    );
 
     const events = await this.getGroupEventsForTelegram(groupId, week, userId);
 
@@ -175,7 +191,10 @@ export class ScheduleService {
     });
   }
 
-  private async getEventInfos (id: string, week: number): Promise<{ event: DbEvent, discipline: DbDiscipline, index?: number }> {
+  private async getEventInfos(
+    id: string,
+    week: number
+  ): Promise<{ event: DbEvent; discipline: DbDiscipline; index?: number }> {
     if (!week) throw new InvalidWeekException();
 
     const event = await this.eventRepository.findOne({ id });
@@ -183,59 +202,78 @@ export class ScheduleService {
 
     if (event.period === Period.NO_PERIOD) return { event, discipline };
 
-    const index = await this.getIndexOfLesson(week, event);
+    const { startDate: semesterStartDate } =
+      await this.dateService.getCurrentSemester();
+
+    const index = this.getIndexOfLesson(week, event, semesterStartDate);
     if (index === null) throw new InvalidWeekException();
 
-    await this.setWeekTime(event, week);
+    await this.setWeekTime(event, week, semesterStartDate);
     return { event, discipline, index };
   }
 
-  async getEvent (id: string, week: number): Promise<{ event: DbEvent, discipline: DbDiscipline }> {
+  async getEvent(
+    id: string,
+    week: number
+  ): Promise<{ event: DbEvent; discipline: DbDiscipline }> {
     const { event, discipline, index } = await this.getEventInfos(id, week);
     if (index !== undefined) {
-      event.eventInfo[0] = event.eventInfo.find((info) => info.number === index) ?? null;
+      event.eventInfo[0] =
+        event.eventInfo.find((info) => info.number === index) ?? null;
     }
     return { event, discipline };
   }
 
-  private async setWeekTime (event: DbEvent, week: number, startOfSemester?: Date): Promise<{ startWeek: number }> {
-    const startDate = startOfSemester ??
-      (await this.dateService.getCurrentSemester()).startDate;
+  private async setWeekTime(
+    event: DbEvent,
+    week: number,
+    startOfSemester: Date
+  ): Promise<{ startWeek: number }> {
+    const { startTime, endTime } = this.addEventTimezones(
+      event,
+      startOfSemester
+    );
 
-    const {
+    const startWeek = this.dateUtils.getCeiledDifference(
+      startOfSemester,
       startTime,
-      endTime,
-    } = await this.addEventTimezones(event, startDate);
-
-    const startWeek = this.dateUtils.getCeiledDifference(startDate, startTime, WEEK);
-    event.startTime = DateTime.fromJSDate(startTime).setZone('Europe/Kyiv').plus({ weeks: week - startWeek }).toJSDate();
-    event.endTime = DateTime.fromJSDate(endTime).setZone('Europe/Kyiv').plus({ weeks: week - startWeek }).toJSDate();
+      WEEK
+    );
+    event.startTime = DateTime.fromJSDate(startTime)
+      .setZone('Europe/Kyiv')
+      .plus({ weeks: week - startWeek })
+      .toJSDate();
+    event.endTime = DateTime.fromJSDate(endTime)
+      .setZone('Europe/Kyiv')
+      .plus({ weeks: week - startWeek })
+      .toJSDate();
     return { startWeek };
   }
 
-  private addTimezone (startDate: Date, time: Date) {
+  private addTimezone(startDate: Date, time: Date) {
     const newDate = new Date(startDate);
-    newDate.setHours(
-      time.getHours(),
-      time.getMinutes(),
-    );
+    newDate.setHours(time.getHours(), time.getMinutes());
 
-    return DateTime.fromJSDate(newDate).setZone('Europe/Kyiv').set({
-      month: time.getMonth() + 1,
-      day: time.getDate(),
-    }).toJSDate();
+    return DateTime.fromJSDate(newDate)
+      .setZone('Europe/Kyiv')
+      .set({
+        month: time.getMonth() + 1,
+        day: time.getDate(),
+      })
+      .toJSDate();
   }
 
-  async addEventTimezones ({ startTime, endTime, ...events }: DbEvent, startOfSemester?: Date) {
-    const startDate = startOfSemester ??
-      (await this.dateService.getCurrentSemester()).startDate;
-    startTime = this.addTimezone(startDate, startTime);
-    endTime = this.addTimezone(startDate, endTime);
+  private addEventTimezones(
+    { startTime, endTime, ...events }: DbEvent,
+    startOfSemester?: Date
+  ) {
+    startTime = this.addTimezone(startOfSemester, startTime);
+    endTime = this.addTimezone(startOfSemester, endTime);
 
     return { startTime, endTime, ...events };
   }
 
-  private async getEventDiscipline (eventId: string): Promise<DbDiscipline> {
+  private async getEventDiscipline(eventId: string): Promise<DbDiscipline> {
     return this.disciplineRepository.findOne({
       disciplineTypes: {
         some: {
@@ -249,18 +287,24 @@ export class ScheduleService {
     });
   }
 
-  private async checkEventDates (startTime: Date, endTime: Date): Promise<void> {
+  private async checkEventDates(startTime: Date, endTime: Date): Promise<void> {
     const { startDate, endDate } = await this.dateService.getCurrentSemester();
-    if (startTime > endTime || startDate > startTime || endTime > endDate) throw new InvalidDateException();
+    if (startTime > endTime || startDate > startTime || endTime > endDate)
+      throw new InvalidDateException();
   }
 
-  private async attachLesson (eventId: string, data: AttachLessonDTO): Promise<{ event: DbEvent, discipline: DbDiscipline }> {
-    let discipline = await this.disciplineRepository.findOne({ id: data.disciplineId });
+  private async attachLesson(
+    eventId: string,
+    data: AttachLessonDTO
+  ): Promise<{ event: DbEvent; discipline: DbDiscipline }> {
+    let discipline = await this.disciplineRepository.findOne({
+      id: data.disciplineId,
+    });
     if (!some(discipline.disciplineTypes, 'name', data.eventType)) {
       discipline = await this.disciplineRepository.updateById(discipline.id, {
         disciplineTypes: {
           create: {
-            name: data.eventType as DisciplineTypeEnum ?? null,
+            name: (data.eventType as DisciplineTypeEnum) ?? null,
           },
         },
       });
@@ -271,10 +315,16 @@ export class ScheduleService {
     for (const teacherId of data.teacherIds) {
       const teacher = { teacherId, disciplineId: discipline.id };
       const disciplineTeacher =
-        await this.disciplineTeacherRepository.findOne(teacher) ??
-        await this.disciplineTeacherRepository.create(teacher);
+        (await this.disciplineTeacherRepository.findOne(teacher)) ??
+        (await this.disciplineTeacherRepository.create(teacher));
 
-      if (!some(disciplineTeacher.roles.map(({ disciplineType }) => disciplineType), 'name', data.eventType)) {
+      if (
+        !some(
+          disciplineTeacher.roles.map(({ disciplineType }) => disciplineType),
+          'name',
+          data.eventType
+        )
+      ) {
         await this.disciplineTeacherRoleRepository.create({
           disciplineTeacherId: disciplineTeacher.id,
           disciplineTypeId: id,
@@ -288,18 +338,21 @@ export class ScheduleService {
           create: { disciplineTypeId: id },
         },
       }),
-      discipline: await this.disciplineRepository.updateById(data.disciplineId, {
-        description: data.disciplineInfo,
-      }),
+      discipline: await this.disciplineRepository.updateById(
+        data.disciplineId,
+        {
+          description: data.disciplineInfo,
+        }
+      ),
     };
   }
 
-  private eventTypeFilter (
+  private eventTypeFilter(
     event: DbEvent,
     addLecture: boolean,
     addLaboratory: boolean,
     addPractice: boolean,
-    addOtherEvents?: boolean,
+    addOtherEvents?: boolean
   ): boolean {
     if (!event.lessons.length) return !!addOtherEvents;
     const typeFilter: Record<DisciplineTypeEnum, boolean> = {
@@ -310,10 +363,15 @@ export class ScheduleService {
       [DisciplineTypeEnum.EXAM]: addOtherEvents,
       [DisciplineTypeEnum.WORKOUT]: addOtherEvents,
     };
-    return event.lessons.some((lesson) => typeFilter[lesson.disciplineType.name]);
+    return event.lessons.some(
+      (lesson) => typeFilter[lesson.disciplineType.name]
+    );
   }
 
-  private async teacherHasDiscipline (teacherId: string, disciplineId: string): Promise<boolean> {
+  private async teacherHasDiscipline(
+    teacherId: string,
+    disciplineId: string
+  ): Promise<boolean> {
     const disciplineTeacher = await this.disciplineTeacherRepository.findMany({
       teacherId,
       disciplineId,
@@ -321,31 +379,57 @@ export class ScheduleService {
     return !!disciplineTeacher.length;
   }
 
-  private async teachersHaveDiscipline (teacherIds: string[], disciplineId : string): Promise<boolean> {
-    return everyAsync(teacherIds, (id) => this.teacherHasDiscipline(id, disciplineId));
+  private async teachersHaveDiscipline(
+    teacherIds: string[],
+    disciplineId: string
+  ): Promise<boolean> {
+    return everyAsync(teacherIds, (id) =>
+      this.teacherHasDiscipline(id, disciplineId)
+    );
   }
 
-  private async calculateEventsAmount (startOfEvent: Date, eventPeriod: string) {
-    const { endDate } = await this.dateService.getCurrentSemester();
+  private calculateEventsAmount(
+    startOfEvent: Date,
+    eventPeriod: string,
+    { endDate }: CurrentSemester
+  ): number {
     const endSemester = new Date(endDate.getTime() - FORTNITE);
     if (startOfEvent > endSemester || eventPeriod === Period.NO_PERIOD) {
       return 1;
     }
-    const eventWeeks = this.dateUtils.getCeiledDifference(startOfEvent, endSemester, WEEK);
+    const eventWeeks = this.dateUtils.getCeiledDifference(
+      startOfEvent,
+      endSemester,
+      WEEK
+    );
     return Math.ceil(eventWeeks / weeksPerEvent[eventPeriod]);
   }
 
-  async createGroupEvent (body: CreateEventDTO): Promise<{ event: DbEvent, discipline?: DbDiscipline }> {
+  async createGroupEvent(
+    body: CreateEventDTO
+  ): Promise<{ event: DbEvent; discipline?: DbDiscipline }> {
     await this.checkEventDates(body.startTime, body.endTime);
-    if (body.disciplineId && !body.eventType) throw new ObjectIsRequiredException('eventType');
+    if (body.disciplineId && !body.eventType)
+      throw new ObjectIsRequiredException('eventType');
 
-    const eventsAmount = await this.calculateEventsAmount(body.startTime, body.period);
-    const teacherForceChanges = !(await this.teachersHaveDiscipline(body.teacherIds, body.disciplineId));
+    const currentSemester = await this.dateService.getCurrentSemester();
 
-    const eventInfo = body.eventInfo ? {
-      number: 0,
-      description: body.eventInfo,
-    } : undefined;
+    const eventsAmount = this.calculateEventsAmount(
+      body.startTime,
+      body.period,
+      currentSemester,
+    );
+    const teacherForceChanges = !(await this.teachersHaveDiscipline(
+      body.teacherIds,
+      body.disciplineId
+    ));
+
+    const eventInfo = body.eventInfo
+      ? {
+          number: 0,
+          description: body.eventInfo,
+        }
+      : undefined;
 
     const event = await this.eventRepository.create({
       groupId: body.groupId,
@@ -362,12 +446,16 @@ export class ScheduleService {
       },
     });
 
-    return body.disciplineId
+    const result =  body.disciplineId
       ? await this.attachLesson(event.id, body as AttachLessonDTO)
       : { event };
+
+    result.event = this.addEventTimezones(result.event, currentSemester.startDate);
+
+    return result;
   }
 
-  async createFacultyEvent (body: CreateFacultyEventDTO): Promise<DbEvent[]> {
+  async createFacultyEvent(body: CreateFacultyEventDTO): Promise<DbEvent[]> {
     await this.checkEventDates(body.startTime, body.endTime);
 
     const eventInfo = [];
@@ -397,14 +485,17 @@ export class ScheduleService {
     return createdEvents;
   }
 
-  async getGroupEvents (
+  async getGroupEvents(
     groupId: string,
     week: number,
-    query: EventFiltrationDTO,
+    query: EventFiltrationDTO
   ): Promise<DbEvent[]> {
-    const { endOfWeek } = week ? await this.dateService.getDatesOfWeek(week) : this.dateService.getDatesOfCurrentWeek();
+    const { endOfWeek } = week
+      ? await this.dateService.getDatesOfWeek(week)
+      : this.dateService.getDatesOfCurrentWeek();
 
-    const { startDate: startOfSemester } = await this.dateService.getCurrentSemester();
+    const { startDate: startOfSemester } =
+      await this.dateService.getCurrentSemester();
     const events = await this.eventRepository.findMany({
       groupId,
       startTime: {
@@ -413,13 +504,28 @@ export class ScheduleService {
     });
 
     let result = await filterAsync(events, async (event) => {
-      const indexOfLesson = await this.getIndexOfLesson(week, event, startOfSemester);
+      const indexOfLesson = this.getIndexOfLesson(
+        week,
+        event,
+        startOfSemester
+      );
       return indexOfLesson !== null;
     });
 
-    if (query.addLecture !== undefined || query.addPractice !== undefined || query.addLaboratory !== undefined || query.addOtherEvents !== undefined) {
+    if (
+      query.addLecture !== undefined ||
+      query.addPractice !== undefined ||
+      query.addLaboratory !== undefined ||
+      query.addOtherEvents !== undefined
+    ) {
       result = result.filter((event) =>
-        this.eventTypeFilter(event, query.addLecture, query.addLaboratory, query.addPractice, query.addOtherEvents)
+        this.eventTypeFilter(
+          event,
+          query.addLecture,
+          query.addLaboratory,
+          query.addPractice,
+          query.addOtherEvents
+        )
       );
     }
 
@@ -432,13 +538,13 @@ export class ScheduleService {
     return result;
   }
 
-  async getGroupEventsWrapper (
+  async getGroupEventsWrapper(
     groupId: string,
     query: EventFiltrationDTO,
     userId?: string,
-    week?: number,
-  ): Promise<{ events: DbEvent[], week: number, startTime: Date }> {
-    week = week || await this.dateService.getCurrentWeek();
+    week?: number
+  ): Promise<{ events: DbEvent[]; week: number; startTime: Date }> {
+    week = week || (await this.dateService.getCurrentWeek());
     const { startOfWeek } = await this.dateService.getDatesOfWeek(week);
 
     if (userId) {
@@ -461,13 +567,18 @@ export class ScheduleService {
     };
   }
 
-  private async filtrateOwnSelective (groupId: string, userId: string, events: DbEvent[]): Promise<DbEvent[]> {
+  private async filtrateOwnSelective(
+    groupId: string,
+    userId: string,
+    events: DbEvent[]
+  ): Promise<DbEvent[]> {
     const disciplines = await this.disciplineRepository.findMany({
       groupId: groupId,
       OR: [
         {
           isSelective: false,
-        }, {
+        },
+        {
           selectiveDisciplines: {
             some: {
               studentId: userId,
@@ -484,9 +595,9 @@ export class ScheduleService {
     });
   }
 
-  private async removeDisciplineTeachers (
+  private async removeDisciplineTeachers(
     disciplineTeachers: DbDisciplineTeacher[],
-    disciplineTypeId: string,
+    disciplineTypeId: string
   ): Promise<void> {
     for (const { id, roles } of disciplineTeachers) {
       if (every(roles, 'disciplineTypeId', disciplineTypeId)) {
@@ -495,7 +606,9 @@ export class ScheduleService {
     }
   }
 
-  async deleteEvent (id: string): Promise<{ event: DbEvent, discipline?: DbDiscipline }> {
+  async deleteEvent(
+    id: string
+  ): Promise<{ event: DbEvent; discipline?: DbDiscipline }> {
     const event = await this.eventRepository.deleteById(id);
     const lesson = event.lessons[0];
 
@@ -508,10 +621,15 @@ export class ScheduleService {
         },
       });
 
-      const discipline = await this.disciplineRepository.findOne({ id: lesson.disciplineType.disciplineId });
+      const discipline = await this.disciplineRepository.findOne({
+        id: lesson.disciplineType.disciplineId,
+      });
 
       if (!target) {
-        await this.removeDisciplineTeachers(discipline.disciplineTeachers, lesson.disciplineTypeId);
+        await this.removeDisciplineTeachers(
+          discipline.disciplineTeachers,
+          lesson.disciplineTypeId
+        );
         await this.disciplineRepository.updateById(discipline.id, {
           disciplineTypes: {
             delete: {
@@ -525,12 +643,19 @@ export class ScheduleService {
     return { event };
   }
 
-  private async checkEventInfo (eventId: string, index: number): Promise<boolean> {
+  private async checkEventInfo(
+    eventId: string,
+    index: number
+  ): Promise<boolean> {
     const data = await this.eventRepository.findOne({ id: eventId });
     return data.eventInfo && some(data.eventInfo, 'number', index);
   }
 
-  private async createOrUpdateEventInfo (eventInfo: string, eventId: string, index: number): Promise<DbEvent> {
+  private async createOrUpdateEventInfo(
+    eventInfo: string,
+    eventId: string,
+    index: number
+  ): Promise<DbEvent> {
     const hasEventInfo = await this.checkEventInfo(eventId, index);
     if (hasEventInfo) {
       return this.eventRepository.updateById(eventId, {
@@ -559,7 +684,10 @@ export class ScheduleService {
     });
   }
 
-  private async deleteEventInfo (eventId: string, index: number): Promise<DbEvent> {
+  private async deleteEventInfo(
+    eventId: string,
+    index: number
+  ): Promise<DbEvent> {
     const hasEventInfo = await this.checkEventInfo(eventId, index);
     if (hasEventInfo) {
       return this.eventRepository.updateById(eventId, {
@@ -572,7 +700,7 @@ export class ScheduleService {
     }
   }
 
-  async updateEvent (eventId: string, body: UpdateEventDTO): Promise<void> {
+  async updateEvent(eventId: string, body: UpdateEventDTO): Promise<void> {
     let event = await this.eventRepository.findOne({ id: eventId });
     const {
       week,
@@ -588,17 +716,26 @@ export class ScheduleService {
 
     const { startTime, endTime } = this.getNewDateTime(event, body);
 
-    const eventsAmount = await this.calculateEventsAmount(startTime, period);
+    const currentSemester = await this.dateService.getCurrentSemester();
 
-    const teacherForceChanges = teacherIds && disciplineId && !event.teacherForceChanges ?
-      !(await this.teachersHaveDiscipline(teacherIds, disciplineId)) :
-      event.teacherForceChanges;
+    const eventsAmount = this.calculateEventsAmount(
+      startTime,
+      period,
+      currentSemester
+    );
 
-    const index = await this.getIndexOfLesson(week, event);
+    const teacherForceChanges =
+      teacherIds && disciplineId && !event.teacherForceChanges
+        ? !(await this.teachersHaveDiscipline(teacherIds, disciplineId))
+        : event.teacherForceChanges;
+
+    const index = this.getIndexOfLesson(week, event, currentSemester.startDate);
     if (index === null) throw new InvalidWeekException();
 
-    if (eventInfo) await this.createOrUpdateEventInfo(eventInfo, eventId, index);
-    else if (eventInfo !== undefined) await this.deleteEventInfo(eventId, index);
+    if (eventInfo)
+      await this.createOrUpdateEventInfo(eventInfo, eventId, index);
+    else if (eventInfo !== undefined)
+      await this.deleteEventInfo(eventId, index);
 
     event = await this.eventRepository.updateById(eventId, {
       name,
@@ -612,7 +749,8 @@ export class ScheduleService {
 
     const lesson = event?.lessons[0];
     if (!disciplineId && !eventType && !teacherIds && !disciplineInfo) return;
-    if ((!disciplineId || !eventType) && !lesson) throw new ObjectIsRequiredException('disciplineType');
+    if ((!disciplineId || !eventType) && !lesson)
+      throw new ObjectIsRequiredException('disciplineType');
 
     const discipline = await this.updateDiscipline(
       disciplineId,
@@ -620,7 +758,7 @@ export class ScheduleService {
       eventType,
       lesson?.disciplineType,
       disciplineInfo,
-      teacherIds,
+      teacherIds
     );
 
     await this.eventRepository.updateById(eventId, {
@@ -629,36 +767,42 @@ export class ScheduleService {
           eventId,
         },
         create: {
-          disciplineTypeId: find(discipline.disciplineTypes, 'name', eventType ?? lesson.disciplineType.name).id,
+          disciplineTypeId: find(
+            discipline.disciplineTypes,
+            'name',
+            eventType ?? lesson.disciplineType.name
+          ).id,
         },
       },
     });
   }
 
-  private getNewDateTime (event: DbEvent, {
-    startTime,
-    endTime,
-    changeStartDate,
-    changeEndDate,
-    period,
-  }: UpdateEventDTO) {
-    if (!startTime && changeStartDate) throw new ObjectIsRequiredException('startTime');
-    if (!endTime && changeEndDate) throw new ObjectIsRequiredException('endTime');
+  private getNewDateTime(
+    event: DbEvent,
+    {
+      startTime,
+      endTime,
+      changeStartDate,
+      changeEndDate,
+      period,
+    }: UpdateEventDTO
+  ) {
+    if (!startTime && changeStartDate)
+      throw new ObjectIsRequiredException('startTime');
+    if (!endTime && changeEndDate)
+      throw new ObjectIsRequiredException('endTime');
 
     let newStartTime = startTime ?? event.startTime;
 
     if (startTime && !changeStartDate && period !== Period.NO_PERIOD) {
       newStartTime = new Date(event.startTime);
-      newStartTime.setHours(
-        startTime.getHours(),
-        startTime.getMinutes(),
-      );
+      newStartTime.setHours(startTime.getHours(), startTime.getMinutes());
     }
 
     const newEndTime = new Date(newStartTime);
     newEndTime.setHours(
       (endTime ?? event.endTime).getHours(),
-      (endTime ?? event.endTime).getMinutes(),
+      (endTime ?? event.endTime).getMinutes()
     );
 
     return {
@@ -667,13 +811,13 @@ export class ScheduleService {
     };
   }
 
-  private async updateDiscipline (
+  private async updateDiscipline(
     newDisciplineId?: string,
     presentDisciplineId?: string,
     newEventType?: EventTypeEnum,
     presentDisciplineType?: DbDisciplineType,
     disciplineInfo?: string,
-    teachers: string[] = [],
+    teachers: string[] = []
   ): Promise<DbDiscipline> {
     if (presentDisciplineId) {
       await this.clearDiscipline(presentDisciplineId, presentDisciplineType);
@@ -681,16 +825,21 @@ export class ScheduleService {
 
     await this.prepareDiscipline(
       newDisciplineId ?? presentDisciplineId,
-      newEventType ?? (presentDisciplineType.name as unknown as EventTypeEnum ?? EventTypeEnum.OTHER),
+      newEventType ??
+        (presentDisciplineType.name as unknown as EventTypeEnum) ??
+        EventTypeEnum.OTHER,
       teachers
     );
 
-    return this.disciplineRepository.updateById(newDisciplineId ?? presentDisciplineId, {
-      description: disciplineInfo,
-    });
+    return this.disciplineRepository.updateById(
+      newDisciplineId ?? presentDisciplineId,
+      {
+        description: disciplineInfo,
+      }
+    );
   }
 
-  private async clearDiscipline (
+  private async clearDiscipline(
     disciplineId: string,
     type: DbDisciplineType,
   ): Promise<void> {
@@ -714,13 +863,19 @@ export class ScheduleService {
     });
 
     if (events === 1) {
-      const discipline = await this.disciplineRepository.findOne({ id: disciplineId });
+      const discipline = await this.disciplineRepository.findOne({
+        id: disciplineId,
+      });
 
       update.disciplineTypes.delete = {
         id: type.id,
       };
 
-      for (const { teacherId, disciplineId, roles } of discipline.disciplineTeachers) {
+      for (const {
+        teacherId,
+        disciplineId,
+        roles,
+      } of discipline.disciplineTeachers) {
         if (roles.length === 1 && roles[0].disciplineType.name === type.name) {
           update.disciplineTeachers.deleteMany.OR.push({
             teacherId,
@@ -733,19 +888,21 @@ export class ScheduleService {
     }
   }
 
-  private async prepareDiscipline (
+  private async prepareDiscipline(
     disciplineId: string,
     newType: EventTypeEnum,
-    teachers: string[],
+    teachers: string[]
   ): Promise<void> {
-    let discipline = await this.disciplineRepository.findOne({ id: disciplineId });
+    let discipline = await this.disciplineRepository.findOne({
+      id: disciplineId,
+    });
 
     let disciplineType = find(discipline.disciplineTypes, 'name', newType);
     if (!disciplineType) {
       discipline = await this.disciplineRepository.updateById(disciplineId, {
         disciplineTypes: {
           create: {
-            name: newType as DisciplineTypeEnum ?? null,
+            name: (newType as DisciplineTypeEnum) ?? null,
           },
         },
       });
@@ -767,16 +924,24 @@ export class ScheduleService {
       },
     });
 
-    const removedTeachers = discipline.disciplineTeachers.filter(({ teacherId }) => !teachers.includes(teacherId));
+    const removedTeachers = discipline.disciplineTeachers.filter(
+      ({ teacherId }) => !teachers.includes(teacherId)
+    );
     await this.removeDisciplineTeachers(removedTeachers, disciplineType.id);
 
     for (const teacherId of teachers) {
       const teacher = { teacherId, disciplineId };
       const disciplineTeacher =
-        await this.disciplineTeacherRepository.findOne(teacher) ??
-        await this.disciplineTeacherRepository.create(teacher);
+        (await this.disciplineTeacherRepository.findOne(teacher)) ??
+        (await this.disciplineTeacherRepository.create(teacher));
 
-      if (!some(disciplineTeacher.roles.map(({ disciplineType }) => disciplineType), 'id', disciplineType.id)) {
+      if (
+        !some(
+          disciplineTeacher.roles.map(({ disciplineType }) => disciplineType),
+          'id',
+          disciplineType.id
+        )
+      ) {
         await this.disciplineTeacherRoleRepository.create({
           disciplineTeacherId: disciplineTeacher.id,
           disciplineTypeId: disciplineType.id,
@@ -785,38 +950,52 @@ export class ScheduleService {
     }
   }
 
-  async getFortnightEvents (
+  async getFortnightEvents(
     groupId: string,
     query: EventFiltrationDTO,
     week?: number,
-    userId?: string,
-  ): Promise<{ firstWeekEvents: DbEvent[], secondWeekEvents: DbEvent[] }> {
-    week = week || await this.dateService.getCurrentWeek();
-    const [firstWeek, secondWeek] = (week % 2 === 0) ? [week - 1, week] : [week, week + 1];
-    const firstWeekEvents = await this.getGroupEventsForTelegram(groupId, firstWeek, userId, query);
-    const secondWeekEvents = await this.getGroupEventsForTelegram(groupId, secondWeek, userId, query);
+    userId?: string
+  ): Promise<{ firstWeekEvents: DbEvent[]; secondWeekEvents: DbEvent[] }> {
+    week = week || (await this.dateService.getCurrentWeek());
+    const [firstWeek, secondWeek] =
+      week % 2 === 0 ? [week - 1, week] : [week, week + 1];
+    const firstWeekEvents = await this.getGroupEventsForTelegram(
+      groupId,
+      firstWeek,
+      userId,
+      query
+    );
+    const secondWeekEvents = await this.getGroupEventsForTelegram(
+      groupId,
+      secondWeek,
+      userId,
+      query
+    );
     return { firstWeekEvents, secondWeekEvents };
   }
 
-  async getGroupEventsForTelegram (
+  async getGroupEventsForTelegram(
     groupId: string,
     week: number,
     userId?: string,
-    query?: EventFiltrationDTO,
+    query?: EventFiltrationDTO
   ): Promise<DbEvent[]> {
     const student = userId
       ? await this.studentRepository.findOne({ userId })
       : undefined;
 
-    if (student && student.groupId !== groupId) throw new NoPermissionException();
+    if (student && student.groupId !== groupId)
+      throw new NoPermissionException();
 
-    week = week || await this.dateService.getCurrentWeek();
-    const eventFiltration = query || {
-      addLecture: true,
-      addPractice: true,
-      addLaboratory: true,
-      otherEvents: true,
-    } as EventFiltrationDTO;
+    week = week || (await this.dateService.getCurrentWeek());
+    const eventFiltration =
+      query ||
+      ({
+        addLecture: true,
+        addPractice: true,
+        addLaboratory: true,
+        otherEvents: true,
+      } as EventFiltrationDTO);
 
     if (!userId) {
       return (await this.getGeneralGroupEvents(groupId, week)).events;
