@@ -1,0 +1,47 @@
+name: Deploy Monitoring
+
+# Grafana/Prometheus config lives in `monitoring/` and is bind-mounted on the
+# server from `~/deployment/monitoring/`. That directory is hand-maintained and
+# is NOT a git checkout, so a plain push never reached it. This job runs on the
+# self-hosted runner (which lives on the prod host, as the `ubuntu` user that
+# owns `~/deployment`), syncs the config in place, and reloads the stack.
+
+on:
+  push:
+    branches:
+      - 'dev'
+      - 'master'
+    paths:
+      - 'monitoring/grafana/**'
+      - 'monitoring/prometheus/**'
+      - '.github/workflows/deploy-monitoring.yml'
+
+concurrency:
+  group: deploy-monitoring
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: self-hosted-ubuntu-arm64
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Sync monitoring config to deployment dir
+        run: |
+          DEST="$HOME/deployment/monitoring"
+          # --delete keeps the server mirror in sync (removes deleted dashboards).
+          rsync -a --delete monitoring/grafana/dashboards/   "$DEST/grafana/dashboards/"
+          rsync -a --delete monitoring/grafana/provisioning/ "$DEST/grafana/provisioning/"
+          # prometheus.yml is a single-file bind mount; copy it in place.
+          rsync -a monitoring/prometheus/prometheus.yml "$DEST/prometheus/prometheus.yml"
+
+      - name: Reload monitoring stack
+        run: |
+          cd "$HOME/deployment"
+          # prometheus.yml is a single-file bind mount: a SIGHUP reload keeps the
+          # old inode, so the container must be recreated to pick up the new file.
+          docker compose up -d --force-recreate prometheus
+          # Grafana auto-provisions dashboards from the bind mount; restart to
+          # apply provisioning changes immediately.
+          docker restart grafana
