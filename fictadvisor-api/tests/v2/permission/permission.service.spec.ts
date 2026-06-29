@@ -3,13 +3,14 @@ import { PermissionService } from '../../../src/modules/permission/v2/permission
 import { PrismaService } from '../../../src/database/v2/prisma.service';
 import { RoleRepository } from '../../../src/database/v2/repositories/role.repository';
 import { UserRepository } from '../../../src/database/v2/repositories/user.repository';
+import { MetricsService } from '../../../src/modules/metrics/metrics.service';
 
 describe('PermissionService', () => {
   let permissionService: PermissionService;
 
   beforeEach(async () => {
     const testingModule = await Test.createTestingModule({
-      providers: [PermissionService, UserRepository, PrismaService],
+      providers: [PermissionService, UserRepository, PrismaService, MetricsService],
     }).useMocker((token) => {
       if (token === RoleRepository) {
         return {};
