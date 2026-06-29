@@ -193,7 +193,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 6
+        "y": 14
       },
       "datasource": {
         "type": "prometheus",
@@ -273,7 +273,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 14
+        "y": 6
       },
       "datasource": {
         "type": "prometheus",
@@ -352,8 +352,8 @@
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 12,
-        "y": 22
+        "x": 0,
+        "y": 38
       },
       "datasource": {
         "type": "prometheus",
@@ -406,70 +406,12 @@
     },
     {
       "type": "table",
-      "title": "HTTP latency p95 per endpoint (ms)",
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 30
-      },
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "custom": {
-            "filterable": true
-          },
-          "unit": "ms"
-        },
-        "overrides": []
-      },
-      "options": {
-        "showHeader": true,
-        "footer": {
-          "show": false
-        }
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "expr": "sort_desc(histogram_quantile(0.95, sum by (route, le) (rate(http_request_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[5m]))) * 1000 > 0)",
-          "format": "table",
-          "instant": true
-        }
-      ],
-      "transformations": [
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Time": true,
-              "job": true,
-              "instance": true,
-              "app": true
-            },
-            "renameByName": {
-              "Value": "p95 (ms)",
-              "route": "endpoint"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "type": "table",
       "title": "Total time spent per endpoint (ms)",
       "gridPos": {
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 30
+        "y": 38
       },
       "datasource": {
         "type": "prometheus",
@@ -526,8 +468,8 @@
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 0,
-        "y": 38
+        "x": 12,
+        "y": 22
       },
       "datasource": {
         "type": "prometheus",
@@ -575,8 +517,8 @@
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 12,
-        "y": 38
+        "x": 0,
+        "y": 30
       },
       "datasource": {
         "type": "prometheus",
@@ -606,8 +548,8 @@
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 0,
-        "y": 46
+        "x": 12,
+        "y": 30
       },
       "datasource": {
         "type": "prometheus",
@@ -635,10 +577,10 @@
       "type": "table",
       "title": "Prisma latency per model + operation (ms)",
       "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 46
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 54
       },
       "datasource": {
         "type": "prometheus",
@@ -708,6 +650,90 @@
             "renameByName": {
               "model": "model",
               "action": "operation",
+              "Value #A": "p50 (ms)",
+              "Value #B": "p90 (ms)",
+              "Value #C": "p99 (ms)"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "title": "HTTP latency per path (p50 / p90 / p99) (ms)",
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 46
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "filterable": true
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "options": {
+        "showHeader": true,
+        "footer": {
+          "show": false
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "histogram_quantile(0.50, sum by (route, le) (rate(http_request_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[$__range]))) * 1000 > 0",
+          "format": "table",
+          "instant": true
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "histogram_quantile(0.90, sum by (route, le) (rate(http_request_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[$__range]))) * 1000 > 0",
+          "format": "table",
+          "instant": true
+        },
+        {
+          "refId": "C",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "histogram_quantile(0.99, sum by (route, le) (rate(http_request_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[$__range]))) * 1000 > 0",
+          "format": "table",
+          "instant": true
+        }
+      ],
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "job": true,
+              "instance": true,
+              "app": true
+            },
+            "renameByName": {
+              "route": "path",
               "Value #A": "p50 (ms)",
               "Value #B": "p90 (ms)",
               "Value #C": "p99 (ms)"
