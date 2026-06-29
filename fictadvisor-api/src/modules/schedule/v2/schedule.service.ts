@@ -493,6 +493,16 @@ export class ScheduleService {
           },
         },
       ],
+    }, {
+      // Only discipline ids are read below, but this runs on every telegram
+      // day/week/fortnight request. Override the repository's heavy default
+      // include (subject, group.selectiveAmounts, disciplineTypes,
+      // disciplineTeachers→teacher→cathedras, roles) so we don't load all of
+      // that for every discipline in the group just to compare ids.
+      subject: false,
+      group: false,
+      disciplineTypes: false,
+      disciplineTeachers: false,
     });
 
     return events.filter((event) => {
