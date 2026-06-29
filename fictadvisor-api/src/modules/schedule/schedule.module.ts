@@ -11,10 +11,11 @@ import { AccessModule } from '../access/access.module';
 import { UserModule } from '../user/user.module';
 import { ConfigurationModule } from '../../config/config.module';
 import { ScheduleMapperModule } from './v2/mappers/schedule-mapper.module';
+import { ScheduleHelperService } from './v2/schedule.helper-service';
 
 @Module({
   controllers: [ScheduleController],
-  providers: [ScheduleService],
+  providers: [ScheduleService, ScheduleHelperService],
   exports: [ScheduleService],
   imports: [
     GroupModule,

@@ -10,14 +10,15 @@ import { CampusParser } from '../../../src/modules/parser/v2/campus-parser';
 import { RozParser } from '../../../src/modules/parser/v2/roz-parser';
 import { GeneralParser } from '../../../src/modules/parser/v2/general-parser';
 import { DbEvent } from '../../../src/database/v2/entities/event.entity';
+import { ScheduleHelperService } from '../../../src/modules/schedule/v2/schedule.helper-service';
 
 describe('ScheduleService', () => {
-  let scheduleService: ScheduleService;
+  let scheduleHelperService: ScheduleHelperService;
   let dateService: DateService;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
-      providers: [ScheduleService],
+      providers: [ScheduleService, ScheduleHelperService],
       imports: [
         DateModule,
         PrismaModule,
@@ -33,9 +34,8 @@ describe('ScheduleService', () => {
         return {};
       }
     }).compile();
-
-    scheduleService = moduleRef.get(ScheduleService);
     dateService = moduleRef.get(DateService);
+    scheduleHelperService = moduleRef.get(ScheduleHelperService);
   });
 
   describe('getIndexOfLesson', () => {
@@ -51,7 +51,7 @@ describe('ScheduleService', () => {
       };
       const week = 2;
       const { startDate: startOfSemester } = await dateService.getCurrentSemester();
-      const result = scheduleService.getIndexOfLesson(
+      const result = scheduleHelperService.getIndexOfLesson(
         week,
         event as DbEvent,
         startOfSemester
@@ -72,7 +72,7 @@ describe('ScheduleService', () => {
       const { startDate: startOfSemester } =
         await dateService.getCurrentSemester();
 
-      const result = scheduleService.getIndexOfLesson(
+      const result = scheduleHelperService.getIndexOfLesson(
         week,
         event as DbEvent,
         startOfSemester
@@ -93,7 +93,7 @@ describe('ScheduleService', () => {
       const { startDate: startOfSemester } =
         await dateService.getCurrentSemester();
 
-      const result = scheduleService.getIndexOfLesson(
+      const result = scheduleHelperService.getIndexOfLesson(
         week,
         event as DbEvent,
         startOfSemester
@@ -114,7 +114,7 @@ describe('ScheduleService', () => {
       const { startDate: startOfSemester } =
         await dateService.getCurrentSemester();
 
-      const result = scheduleService.getIndexOfLesson(
+      const result = scheduleHelperService.getIndexOfLesson(
         week,
         event as DbEvent,
         startOfSemester
@@ -135,7 +135,7 @@ describe('ScheduleService', () => {
       const { startDate: startOfSemester } =
         await dateService.getCurrentSemester();
 
-      const result = scheduleService.getIndexOfLesson(
+      const result = scheduleHelperService.getIndexOfLesson(
         week,
         event as DbEvent,
         startOfSemester

@@ -30,6 +30,7 @@ import { RozParser } from '../../../src/modules/parser/v2/roz-parser';
 import { GeneralParser } from '../../../src/modules/parser/v2/general-parser';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
+import { ScheduleHelperService } from '../../../src/modules/schedule/v2/schedule.helper-service';
 
 
 describe('ScheduleService', () => {
@@ -40,6 +41,7 @@ describe('ScheduleService', () => {
     const moduleRef = await Test.createTestingModule({
       providers: [
         ScheduleService,
+        ScheduleHelperService,
         UserService,
         GeneralParser,
         {
