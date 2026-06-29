@@ -53,6 +53,8 @@ model Group {
   createdAt            DateTime?            @default(now()) @map("created_at")
   updatedAt            DateTime?            @default(now()) @updatedAt @map("updated_at")
 
+  @@index([cathedraId])
+  @@index([educationalProgramId])
   @@map("groups")
 }
 
@@ -105,6 +107,7 @@ model Student {
   createdAt                 DateTime?                  @default(now()) @map("created_at")
   updatedAt                 DateTime?                  @default(now()) @updatedAt @map("updated_at")
 
+  @@index([groupId])
   @@map("students")
 }
 
@@ -134,6 +137,8 @@ model Discipline {
   createdAt            DateTime?             @default(now()) @map("created_at")
   updatedAt            DateTime?             @default(now()) @updatedAt @map("updated_at")
 
+  @@index([groupId, year, semester])
+  @@index([subjectId])
   @@map("disciplines")
 }
 
@@ -146,6 +151,7 @@ model SelectiveDiscipline {
   updatedAt    DateTime?  @default(now()) @updatedAt @map("updated_at")
 
   @@id([disciplineId, studentId])
+  @@index([studentId])
   @@map("selective_disciplines")
 }
 
@@ -181,6 +187,7 @@ model DisciplineType {
   createdAt              DateTime?               @default(now()) @map("created_at")
   updatedAt              DateTime?               @default(now()) @updatedAt @map("updated_at")
 
+  @@index([disciplineId])
   @@map("discipline_types")
 }
 
@@ -239,6 +246,8 @@ model DisciplineTeacher {
   createdAt                 DateTime?                  @default(now()) @map("created_at")
   updatedAt                 DateTime?                  @default(now()) @updatedAt @map("updated_at")
 
+  @@index([teacherId])
+  @@index([disciplineId])
   @@map("discipline_teachers")
 }
 
@@ -299,6 +308,8 @@ model QuestionAnswer {
   updatedAt           DateTime?         @default(now()) @updatedAt @map("updated_at")
 
   @@id([disciplineTeacherId, questionId, userId])
+  @@index([questionId])
+  @@index([userId])
   @@map("question_answers")
 }
 
@@ -324,6 +335,7 @@ model Role {
   updatedAt   DateTime?  @default(now()) @updatedAt @map("updated_at")
   displayName String?    @map("display_name")
 
+  @@index([parentId])
   @@map("roles")
 }
 
@@ -336,6 +348,7 @@ model UserRole {
   updatedAt DateTime? @default(now()) @updatedAt @map("updated_at")
 
   @@id([studentId, roleId])
+  @@index([roleId])
   @@map("user_roles")
 }
 
@@ -349,6 +362,7 @@ model Grant {
   createdAt  DateTime? @default(now()) @map("created_at")
   updatedAt  DateTime? @default(now()) @updatedAt @map("updated_at")
 
+  @@index([roleId])
   @@map("grants")
 }
 
@@ -367,6 +381,7 @@ model Contact {
   createdAt   DateTime?  @default(now()) @map("created_at")
   updatedAt   DateTime?  @default(now()) @updatedAt @map("updated_at")
 
+  @@index([entityId])
   @@map("contacts")
 }
 
@@ -392,6 +407,7 @@ model DisciplineTeacherRole {
   updatedAt           DateTime?         @default(now()) @updatedAt @map("updated_at")
 
   @@unique([disciplineTeacherId, disciplineTypeId])
+  @@index([disciplineTypeId])
   @@map("discipline_teacher_roles")
 }
 
@@ -464,6 +480,7 @@ model Lesson {
   updatedAt        DateTime?       @default(now()) @updatedAt @map("updated_at")
 
   @@unique([eventId, disciplineTypeId])
+  @@index([disciplineTypeId])
   @@map("lessons")
 }
 
@@ -476,6 +493,7 @@ model RemovedDisciplineTeacher {
   updatedAt           DateTime?         @default(now()) @updatedAt @map("updated_at")
 
   @@id([disciplineTeacherId, studentId])
+  @@index([studentId])
   @@map("removed_discipline_teachers")
 }
 
@@ -501,6 +519,7 @@ model TeachersOnCathedras {
   updatedAt  DateTime? @default(now()) @updatedAt @map("updated_at")
 
   @@id([teacherId, cathedraId])
+  @@index([cathedraId])
   @@map("teachers_on_cathedras")
 }
 
@@ -520,6 +539,7 @@ model EducationalPrograms {
   abbreviation EducationProgram
   groups       Group[]
 
+  @@index([specialityId])
   @@map("educational_programs")
 }
 
@@ -588,6 +608,8 @@ model Complaint {
   message   String
   createdAt DateTime @default(now()) @map("created_at")
 
+  @@index([teacherId])
+  @@index([groupId])
   @@map("complaints")
 }
 
