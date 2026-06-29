@@ -44,6 +44,7 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
 import { DbEvent } from '../../../database/v2/entities/event.entity';
 import { GeneralShortEventResponse } from '@fictadvisor/utils';
+import { ScheduleHelperService } from './schedule.helper-service';
 
 @ApiTags('Schedule')
 @Controller({
@@ -53,6 +54,7 @@ import { GeneralShortEventResponse } from '@fictadvisor/utils';
 export class ScheduleController {
   constructor (
     private scheduleService: ScheduleService,
+    private readonly scheduleHelperService: ScheduleHelperService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -98,7 +100,7 @@ export class ScheduleController {
     const mappedEvents = this.mapper.mapArray(result.events, DbEvent, GeneralShortEventResponse);
 
     return {
-      events: this.scheduleService.sortEvents(mappedEvents),
+      events: this.scheduleHelperService.sortEvents(mappedEvents),
       week: result.week,
       startTime: result.startTime,
     };
@@ -126,7 +128,7 @@ export class ScheduleController {
     const mappedEvents = this.mapper.mapArray(result.events, DbEvent, ShortEventResponse);
 
     return {
-      events: this.scheduleService.sortEvents(mappedEvents),
+      events: this.scheduleHelperService.sortEvents(mappedEvents),
       week: result.week,
       startTime: result.startTime,
     };
@@ -147,7 +149,7 @@ export class ScheduleController {
     const events = await this.scheduleService.getGroupEventsByDay(groupId, userId, week, day);
     const mappedEvents = this.mapper.mapArray(events, DbEvent, TelegramShortEventResponse);
 
-    return { events: this.scheduleService.sortEvents(mappedEvents) };
+    return { events: this.scheduleHelperService.sortEvents(mappedEvents) };
   }
 
   @ApiEndpoint({
@@ -166,7 +168,7 @@ export class ScheduleController {
     const mappedEvents = this.mapper.mapArray(events, DbEvent, TelegramShortEventResponse);
 
     return {
-      events: this.scheduleService.sortEvents(mappedEvents),
+      events: this.scheduleHelperService.sortEvents(mappedEvents),
     };
   }
 
@@ -193,8 +195,8 @@ export class ScheduleController {
     const mappedSecondWeek = this.mapper.mapArray(secondWeekEvents, DbEvent, TelegramShortEventResponse);
 
     return {
-      firstWeekEvents: this.scheduleService.sortEvents(mappedFirstWeek),
-      secondWeekEvents: this.scheduleService.sortEvents(mappedSecondWeek),
+      firstWeekEvents: this.scheduleHelperService.sortEvents(mappedFirstWeek),
+      secondWeekEvents: this.scheduleHelperService.sortEvents(mappedSecondWeek),
     };
   }
 
@@ -226,7 +228,7 @@ export class ScheduleController {
     const events = await this.scheduleService.createFacultyEvent(body);
     const mappedEvents = this.mapper.mapArray(events, DbEvent, ShortEventResponse);
 
-    return { events: this.scheduleService.sortEvents(mappedEvents) };
+    return { events: this.scheduleHelperService.sortEvents(mappedEvents) };
   }
 
   @ApiEndpoint({
