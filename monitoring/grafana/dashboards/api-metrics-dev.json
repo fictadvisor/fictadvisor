@@ -599,7 +599,13 @@
         "showHeader": true,
         "footer": {
           "show": false
-        }
+        },
+        "sortBy": [
+          {
+            "displayName": "p50 (ms)",
+            "desc": true
+          }
+        ]
       },
       "targets": [
         {
@@ -684,7 +690,13 @@
         "showHeader": true,
         "footer": {
           "show": false
-        }
+        },
+        "sortBy": [
+          {
+            "displayName": "p50 (ms)",
+            "desc": true
+          }
+        ]
       },
       "targets": [
         {
