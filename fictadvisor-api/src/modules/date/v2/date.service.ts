@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { SemesterDate } from '@prisma-client/fictadvisor';
 import { PrismaService } from '../../../database/v2/prisma.service';
 import { DataNotFoundException } from '../../../common/exceptions/data-not-found.exception';
 import { DataMissingException } from '../../../common/exceptions/data-missing.exception';
@@ -32,6 +33,8 @@ export interface CurrentDay {
 
 @Injectable()
 export class DateService {
+  private currentSemesterCache: { row: SemesterDate; expires: number } | null = null;
+
   constructor (
     private prisma: PrismaService,
   ) {}
@@ -46,23 +49,39 @@ export class DateService {
   }
 
   async getCurrentSemester (): Promise<CurrentSemester> {
-    const semester = await this.prisma.semesterDate.findFirst({
-      where: {
-        startDate: {
-          lte: new Date(),
-        },
-      },
-      orderBy: {
-        startDate: 'desc',
-      },
-    });
+    const now = new Date();
+
+    let semester = this.currentSemesterCache &&
+      this.currentSemesterCache.expires > now.getTime() &&
+      this.currentSemesterCache.row.startDate <= now
+      ? this.currentSemesterCache.row
+      : null;
 
     if (!semester) {
-      throw new DataNotFoundException();
+      semester = await this.prisma.semesterDate.findFirst({
+        where: {
+          startDate: {
+            lte: now,
+          },
+        },
+        orderBy: {
+          startDate: 'desc',
+        },
+      });
+
+      if (!semester) {
+        throw new DataNotFoundException();
+      }
+
+      this.currentSemesterCache = {
+        row: semester,
+        expires: semester.endDate.getTime() + 1000,
+      };
     }
+
     return {
       ...semester,
-      isFinished: semester.endDate < new Date(),
+      isFinished: semester.endDate < now,
     };
   }
 
