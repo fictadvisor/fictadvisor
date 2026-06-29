@@ -121,7 +121,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[5m])) by (le))"
+          "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[5m])) by (le)) > 0"
         }
       ]
     },
@@ -439,7 +439,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sort_desc(histogram_quantile(0.95, sum by (route, le) (rate(http_request_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[5m]))) * 1000)",
+          "expr": "sort_desc(histogram_quantile(0.95, sum by (route, le) (rate(http_request_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[5m]))) * 1000 > 0)",
           "format": "table",
           "instant": true
         }
@@ -666,7 +666,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "histogram_quantile(0.50, sum by (model, action, le) (rate(prisma_query_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[5m]))) * 1000",
+          "expr": "histogram_quantile(0.50, sum by (model, action, le) (rate(prisma_query_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[$__range]))) * 1000 > 0",
           "format": "table",
           "instant": true
         },
@@ -676,7 +676,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "histogram_quantile(0.90, sum by (model, action, le) (rate(prisma_query_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[5m]))) * 1000",
+          "expr": "histogram_quantile(0.90, sum by (model, action, le) (rate(prisma_query_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[$__range]))) * 1000 > 0",
           "format": "table",
           "instant": true
         },
@@ -686,7 +686,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "histogram_quantile(0.99, sum by (model, action, le) (rate(prisma_query_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[5m]))) * 1000",
+          "expr": "histogram_quantile(0.99, sum by (model, action, le) (rate(prisma_query_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[$__range]))) * 1000 > 0",
           "format": "table",
           "instant": true
         }
