@@ -8,10 +8,7 @@ import { Include, Sort, Where } from '../prisma.repository';
 @Injectable()
 export class QuestionAnswerRepository implements RepositoryInterface<DbQuestionAnswer, Prisma.QuestionAnswerWhereInput> {
   constructor (private prisma: PrismaService) {}
-
-  // Relations the answer response mappers read (question + disciplineTeacher
-  // → discipline → subject, teacher). Existence/internal callers pass none.
-  static readonly responseInclude: Prisma.QuestionAnswerInclude = {
+  private include = {
     question: true,
     disciplineTeacher: {
       include: {
@@ -25,17 +22,17 @@ export class QuestionAnswerRepository implements RepositoryInterface<DbQuestionA
     },
   };
 
-  create (data: Prisma.QuestionAnswerUncheckedCreateInput, include?: Prisma.QuestionAnswerInclude): Promise<DbQuestionAnswer> {
+  create (data: Prisma.QuestionAnswerUncheckedCreateInput): Promise<DbQuestionAnswer> {
     return this.prisma.questionAnswer.create({
       data,
-      include,
+      include: this.include,
     });
   }
 
-  find (where: Prisma.QuestionAnswerWhereInput, include?: Prisma.QuestionAnswerInclude): Promise<DbQuestionAnswer> {
+  find (where: Prisma.QuestionAnswerWhereInput): Promise<DbQuestionAnswer> {
     return this.prisma.questionAnswer.findFirst({
       where,
-      include,
+      include: this.include,
     });
   }
 
@@ -43,12 +40,17 @@ export class QuestionAnswerRepository implements RepositoryInterface<DbQuestionA
     include?: Include<'questionAnswer'>,
     page?: { take: number; skip: number },
     sort?: Sort<'questionAnswer'>): Promise<DbQuestionAnswer[]> {
+    const methodInclude = {
+      ...this.include,
+      ...include,
+    };
+
     return this.prisma.questionAnswer.findMany({
       where,
       orderBy: sort,
       take: page?.take,
       skip: page?.skip,
-      include,
+      include: Object.keys(methodInclude).length ? methodInclude : undefined,
     });
   }
 
@@ -56,18 +58,18 @@ export class QuestionAnswerRepository implements RepositoryInterface<DbQuestionA
     return this.prisma.questionAnswer.count({ where });
   }
 
-  update (where: Prisma.QuestionAnswerWhereUniqueInput, data: Prisma.QuestionAnswerUncheckedUpdateInput, include?: Prisma.QuestionAnswerInclude): Promise<DbQuestionAnswer> {
+  update (where: Prisma.QuestionAnswerWhereUniqueInput, data: Prisma.QuestionAnswerUncheckedUpdateInput): Promise<DbQuestionAnswer> {
     return this.prisma.questionAnswer.update({
       where,
       data,
-      include,
+      include: this.include,
     });
   }
 
-  delete (where: Prisma.QuestionAnswerWhereUniqueInput, include?: Prisma.QuestionAnswerInclude): Promise<DbQuestionAnswer> {
+  delete (where: Prisma.QuestionAnswerWhereUniqueInput): Promise<DbQuestionAnswer> {
     return this.prisma.questionAnswer.delete({
       where,
-      include,
+      include: this.include,
     });
   }
 }

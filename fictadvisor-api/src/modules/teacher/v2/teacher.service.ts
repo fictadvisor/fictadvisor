@@ -208,7 +208,7 @@ export class TeacherService {
           },
         },
       }),
-    }, DisciplineTeacherRepository.responseInclude);
+    });
 
     return filterAsync(disciplineTeachers as DbDisciplineTeacher[], async ({ discipline, id }) => {
       const isRemoved = await this.disciplineTeacherRepository.findOne({
