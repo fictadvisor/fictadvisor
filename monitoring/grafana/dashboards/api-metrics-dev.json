@@ -633,7 +633,7 @@
     },
     {
       "type": "table",
-      "title": "Prisma p95 per model + action (ms)",
+      "title": "Prisma latency per model + operation (ms)",
       "gridPos": {
         "h": 8,
         "w": 12,
@@ -666,12 +666,36 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sort_desc(histogram_quantile(0.95, sum by (model, action, le) (rate(prisma_query_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[5m]))) * 1000)",
+          "expr": "histogram_quantile(0.50, sum by (model, action, le) (rate(prisma_query_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[5m]))) * 1000",
+          "format": "table",
+          "instant": true
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "histogram_quantile(0.90, sum by (model, action, le) (rate(prisma_query_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[5m]))) * 1000",
+          "format": "table",
+          "instant": true
+        },
+        {
+          "refId": "C",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "histogram_quantile(0.99, sum by (model, action, le) (rate(prisma_query_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[5m]))) * 1000",
           "format": "table",
           "instant": true
         }
       ],
       "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
         {
           "id": "organize",
           "options": {
@@ -682,9 +706,11 @@
               "app": true
             },
             "renameByName": {
-              "Value": "p95 (ms)",
               "model": "model",
-              "action": "action"
+              "action": "operation",
+              "Value #A": "p50 (ms)",
+              "Value #B": "p90 (ms)",
+              "Value #C": "p99 (ms)"
             }
           }
         }
