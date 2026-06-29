@@ -11,7 +11,7 @@ import { CampusParser } from './campus-parser';
 import { Parser } from './interfaces/parser.interface';
 import { GroupService } from '../../group/v2/group.service';
 import { weeksPerEvent } from '../../schedule/v2/schedule.service';
-import { DateService, FORTNITE, StudyingSemester, WEEK } from '../../date/v2/date.service';
+import { CurrentSemester, DateService, FORTNITE, StudyingSemester, WEEK } from '../../date/v2/date.service';
 import { DisciplineTypeEnum, EventTypeEnum, ParserTypeEnum, Period } from '@fictadvisor/utils/enums';
 import { DbDisciplineType } from '../../../database/v2/entities/discipline-type.entity';
 import {
@@ -301,20 +301,23 @@ export class GeneralParser {
     }
     newChanged.push(...parsedPairs);
 
+    const currentSemester = await this.dateService.getCurrentSemester();
+
     oldChanged = await this.handleNewPairs(
       newChanged,
       oldChanged,
       groupId,
-      semester
+      semester,
+      currentSemester
     );
 
     await Promise.all([
-      this.handleNotChanged(notChanged),
+      this.handleNotChanged(notChanged, currentSemester),
       this.handleOldPairs(oldChanged, weekNumber, semesterStartDate),
     ]);
   }
 
-  private async handleNotChanged(pairs: DatabasePair[]) {
+  private async handleNotChanged(pairs: DatabasePair[], currentSemester?: CurrentSemester) {
     for (const {
       id: eventId,
       disciplineId,
@@ -325,7 +328,7 @@ export class GeneralParser {
     } of pairs) {
       await this.eventRepository.updateById(eventId, {
         period,
-        eventsAmount: await this.getEventsAmount(period),
+        eventsAmount: await this.getEventsAmount(period, currentSemester),
       });
 
       if (!teacherForceChanges) {
@@ -358,11 +361,12 @@ export class GeneralParser {
     pairs: BaseGeneralParserPair[],
     oldPairs: DatabasePair[],
     groupId: string,
-    semester: StudyingSemester
+    semester: StudyingSemester,
+    currentSemester: CurrentSemester
   ) {
     for (const pair of pairs) {
       if (pair.period === Period.NO_PERIOD) {
-        await this.savePair(pair, groupId, semester);
+        await this.savePair(pair, groupId, semester, currentSemester);
         continue;
       }
 
@@ -387,14 +391,14 @@ export class GeneralParser {
 
       for (const { id } of defendant) {
         await this.eventRepository.updateById(id, {
-          eventsAmount: await this.getEventsAmount(pair.period),
+          eventsAmount: await this.getEventsAmount(pair.period, currentSemester),
           startTime: pair.startTime,
           endTime: pair.endTime,
         });
       }
 
       if (!defendant.length) {
-        await this.savePair(pair, groupId, semester);
+        await this.savePair(pair, groupId, semester, currentSemester);
       }
     }
 
@@ -421,11 +425,14 @@ export class GeneralParser {
       return lastPairStartDate >= startOfWeek;
     });
 
+    const { startOfWeek: weekStart } = await this.dateService.getDatesOfWeek(weekNumber);
+
     for (const { id: eventId, startTime, period } of filteredOld) {
       const eventsAmount = await this.calculateEventsAmount(
         startTime,
         period,
         weekNumber,
+        weekStart,
       );
 
       if (eventsAmount) {
@@ -441,17 +448,18 @@ export class GeneralParser {
   private async calculateEventsAmount(
     startOfEvent: Date,
     eventPeriod: Period,
-    week: number
+    week: number,
+    startOfWeek?: Date
   ) {
-    const { startOfWeek } =
-      await this.dateService.getDatesOfWeek(week);
+    const weekStart = startOfWeek ??
+      (await this.dateService.getDatesOfWeek(week)).startOfWeek;
 
-    if (startOfEvent > startOfWeek) return 0;
+    if (startOfEvent > weekStart) return 0;
     if (eventPeriod === Period.NO_PERIOD) return 1;
 
     const eventWeeks = this.dateUtils.getFlooredDifference(
       startOfEvent,
-      startOfWeek,
+      weekStart,
       WEEK
     );
     return Math.floor(eventWeeks / weeksPerEvent[eventPeriod]);
@@ -468,7 +476,8 @@ export class GeneralParser {
       teacherIds,
     }: BaseGeneralParserPair,
     groupId: string,
-    semester: StudyingSemester
+    semester: StudyingSemester,
+    currentSemester?: CurrentSemester
   ) {
     const { id: subjectId } =
       (await this.subjectRepository.findOne({ name })) ??
@@ -508,7 +517,7 @@ export class GeneralParser {
       })) ??
       (await this.eventRepository.create({
         ...event,
-        eventsAmount: await this.getEventsAmount(period),
+        eventsAmount: await this.getEventsAmount(period, currentSemester),
         lessons: {
           create: {
             disciplineTypeId: DbDisciplineType.id,
@@ -524,10 +533,11 @@ export class GeneralParser {
     );
   }
 
-  private async getEventsAmount(period: Period) {
+  private async getEventsAmount(period: Period, currentSemester?: CurrentSemester) {
     if (period === Period.NO_PERIOD) return 1;
 
-    const { startDate, endDate } = await this.dateService.getCurrentSemester();
+    const { startDate, endDate } = currentSemester ??
+      await this.dateService.getCurrentSemester();
     const lastWeek = this.dateUtils.getCeiledDifference(
       startDate,
       new Date(endDate.getTime() - FORTNITE),
