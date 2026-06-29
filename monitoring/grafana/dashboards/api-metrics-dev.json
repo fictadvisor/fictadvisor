@@ -299,7 +299,7 @@
     },
     {
       "type": "timeseries",
-      "title": "Event loop lag (p99)",
+      "title": "Event loop lag (p50 / p90 / p99)",
       "gridPos": {
         "h": 8,
         "w": 12,
@@ -323,8 +323,26 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
+          "expr": "nodejs_eventloop_lag_p50_seconds{job=\"fictadvisor-api-dev\"}",
+          "legendFormat": "p50"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "nodejs_eventloop_lag_p90_seconds{job=\"fictadvisor-api-dev\"}",
+          "legendFormat": "p90"
+        },
+        {
+          "refId": "C",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
           "expr": "nodejs_eventloop_lag_p99_seconds{job=\"fictadvisor-api-dev\"}",
-          "legendFormat": "event loop lag p99"
+          "legendFormat": "p99"
         }
       ]
     },
