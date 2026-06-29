@@ -208,7 +208,7 @@ export class StudentService {
     connectedSelectiveIds: string[],
     disconnectedSelectiveIds: string[],
   ) {
-    const group = await this.groupRepository.findOne({ id: groupId });
+    const group = await this.groupRepository.findOne({ id: groupId }, { selectiveAmounts: true });
 
     const connectedSelectives = await this.disciplineRepository.findMany({
       OR: connectedSelectiveIds.map((id) => ({ id })),

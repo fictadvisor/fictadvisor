@@ -111,7 +111,7 @@ export class ScheduleService {
           },
         },
       },
-    });
+    }, EventRepository.responseInclude);
 
     week = week || await this.dateService.getCurrentWeek();
     const result = await filterAsync(events, async (event) => {
@@ -178,7 +178,7 @@ export class ScheduleService {
   private async getEventInfos (id: string, week: number): Promise<{ event: DbEvent, discipline: DbDiscipline, index?: number }> {
     if (!week) throw new InvalidWeekException();
 
-    const event = await this.eventRepository.findOne({ id });
+    const event = await this.eventRepository.findOne({ id }, EventRepository.responseInclude);
     const discipline = await this.getEventDiscipline(event.id);
 
     if (event.period === Period.NO_PERIOD) return { event, discipline };
@@ -271,8 +271,8 @@ export class ScheduleService {
     for (const teacherId of data.teacherIds) {
       const teacher = { teacherId, disciplineId: discipline.id };
       const disciplineTeacher =
-        await this.disciplineTeacherRepository.findOne(teacher) ??
-        await this.disciplineTeacherRepository.create(teacher);
+        await this.disciplineTeacherRepository.findOne(teacher, DisciplineTeacherRepository.rolesInclude) ??
+        await this.disciplineTeacherRepository.create(teacher, DisciplineTeacherRepository.rolesInclude);
 
       if (!some(disciplineTeacher.roles.map(({ disciplineType }) => disciplineType), 'name', data.eventType)) {
         await this.disciplineTeacherRoleRepository.create({
@@ -287,7 +287,7 @@ export class ScheduleService {
         lessons: {
           create: { disciplineTypeId: id },
         },
-      }),
+      }, EventRepository.responseInclude),
       discipline: await this.disciplineRepository.updateById(data.disciplineId, {
         description: data.disciplineInfo,
       }),
@@ -360,7 +360,7 @@ export class ScheduleService {
       eventInfo: {
         create: eventInfo,
       },
-    });
+    }, EventRepository.responseInclude);
 
     return body.disciplineId
       ? await this.attachLesson(event.id, body as AttachLessonDTO)
@@ -390,7 +390,7 @@ export class ScheduleService {
         eventInfo: {
           createMany: { data: eventInfo },
         },
-      });
+      }, EventRepository.responseInclude);
       createdEvents.push(event);
     }
 
@@ -410,7 +410,7 @@ export class ScheduleService {
       startTime: {
         lte: endOfWeek,
       },
-    });
+    }, EventRepository.responseInclude);
 
     let result = await filterAsync(events, async (event) => {
       const indexOfLesson = await this.getIndexOfLesson(week, event, startOfSemester);
@@ -496,7 +496,7 @@ export class ScheduleService {
   }
 
   async deleteEvent (id: string): Promise<{ event: DbEvent, discipline?: DbDiscipline }> {
-    const event = await this.eventRepository.deleteById(id);
+    const event = await this.eventRepository.deleteById(id, EventRepository.responseInclude);
     const lesson = event.lessons[0];
 
     if (lesson) {
@@ -526,7 +526,7 @@ export class ScheduleService {
   }
 
   private async checkEventInfo (eventId: string, index: number): Promise<boolean> {
-    const data = await this.eventRepository.findOne({ id: eventId });
+    const data = await this.eventRepository.findOne({ id: eventId }, { eventInfo: true });
     return data.eventInfo && some(data.eventInfo, 'number', index);
   }
 
@@ -608,7 +608,7 @@ export class ScheduleService {
       eventsAmount,
       teacherForceChanges,
       url,
-    });
+    }, { lessons: { include: { disciplineType: true } } });
 
     const lesson = event?.lessons[0];
     if (!disciplineId && !eventType && !teacherIds && !disciplineInfo) return;
@@ -773,8 +773,8 @@ export class ScheduleService {
     for (const teacherId of teachers) {
       const teacher = { teacherId, disciplineId };
       const disciplineTeacher =
-        await this.disciplineTeacherRepository.findOne(teacher) ??
-        await this.disciplineTeacherRepository.create(teacher);
+        await this.disciplineTeacherRepository.findOne(teacher, DisciplineTeacherRepository.rolesInclude) ??
+        await this.disciplineTeacherRepository.create(teacher, DisciplineTeacherRepository.rolesInclude);
 
       if (!some(disciplineTeacher.roles.map(({ disciplineType }) => disciplineType), 'id', disciplineType.id)) {
         await this.disciplineTeacherRoleRepository.create({
