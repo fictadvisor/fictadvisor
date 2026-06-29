@@ -31,6 +31,13 @@ export interface CurrentDay {
   day: number,
 }
 
+// During a break (the current semester is already finished and the next one
+// hasn't started) endDate is in the past, so cache the row for at least this
+// long instead — otherwise the cache would expire on every read and the
+// redundant lookups would come back. Bounded so a newly-started semester is
+// picked up soon after its startDate.
+const FINISHED_SEMESTER_CACHE_TTL = 10 * MINUTE;
+
 @Injectable()
 export class DateService {
   private currentSemesterCache: { row: SemesterDate; expires: number } | null = null;
@@ -75,7 +82,13 @@ export class DateService {
 
       this.currentSemesterCache = {
         row: semester,
-        expires: semester.endDate.getTime() + 1000,
+        // Valid for the whole active semester; once it has ended, fall back to
+        // a bounded TTL so we keep caching through the break yet still pick up
+        // the next semester shortly after it starts.
+        expires: Math.max(
+          semester.endDate.getTime() + 1000,
+          now.getTime() + FINISHED_SEMESTER_CACHE_TTL,
+        ),
       };
     }
 
