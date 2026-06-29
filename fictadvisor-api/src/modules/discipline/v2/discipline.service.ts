@@ -103,6 +103,21 @@ export class DisciplineService {
           this.DisciplineSearching.teachers(teachers),
         ],
       },
+      // The list response (DisciplineAdminResponse) only needs the subject name,
+      // the group's id/code and the teachers' names. Override the repository's
+      // deep default include (group.selectiveAmounts, teacher.cathedras.cathedra,
+      // disciplineTypes, roles.disciplineType) so we don't fetch — and serialise —
+      // those relations for every discipline row. This is the dominant cost of
+      // this endpoint, which can return many thousands of rows.
+      include: {
+        group: true,
+        disciplineTypes: false,
+        disciplineTeachers: {
+          include: {
+            teacher: true,
+          },
+        },
+      },
       orderBy: sort,
     };
     return PaginationUtil.paginate<'discipline', DbDiscipline>(this.disciplineRepository, body, data);
