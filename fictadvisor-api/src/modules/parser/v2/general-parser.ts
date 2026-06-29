@@ -628,7 +628,8 @@ export class GeneralParser {
 
     const disciplineTeacher =
       (await this.disciplineTeacherRepository.findOne(
-        disciplineTeacherWhere
+        disciplineTeacherWhere,
+        DisciplineTeacherRepository.rolesInclude
       )) ??
       (await this.disciplineTeacherRepository.create({
         ...disciplineTeacherWhere,
@@ -637,7 +638,7 @@ export class GeneralParser {
             disciplineTypeId: disciplineType.id,
           },
         },
-      }));
+      }, DisciplineTeacherRepository.rolesInclude));
 
     if (
       !disciplineTeacher.roles.some(
@@ -766,7 +767,7 @@ export class GeneralParser {
         },
       },
       isCustom: false,
-    });
+    }, EventRepository.responseInclude);
 
     return mapAsync(events, async (event): Promise<DatabasePair> => {
       const discipline = await this.disciplineRepository.findOne({

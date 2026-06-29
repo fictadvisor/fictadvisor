@@ -120,7 +120,7 @@ export class DisciplineService {
       discipline: {
         id: disciplineId,
       },
-    });
+    }, DisciplineTeacherRepository.responseInclude);
   }
 
   async deleteById (id: string): Promise<DbDiscipline> {

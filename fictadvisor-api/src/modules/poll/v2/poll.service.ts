@@ -118,7 +118,7 @@ export class PollService {
           },
         },
       },
-    });
+    }, QuestionWithRolesRepository.responseInclude);
   }
 
   async getQuestionWithMarks (teacherId: string, data?: QueryMarksDTO): Promise<DbQuestion[]> {
@@ -242,7 +242,7 @@ export class PollService {
   };
 
   async getQuestionById (id: string): Promise<DbQuestionWithRoles> {
-    return this.questionWithRolesRepository.findOne({ id });
+    return this.questionWithRolesRepository.findOne({ id }, QuestionWithRolesRepository.responseInclude);
   }
 
   async giveRole (data: CreateQuestionRoleDTO, questionId: string): Promise<DbQuestionWithRoles> {
@@ -250,7 +250,7 @@ export class PollService {
       questionRoles: {
         create: data,
       },
-    });
+    }, QuestionWithRolesRepository.responseInclude);
   }
 
   async deleteRole (questionId: string, role: DisciplineTypeEnum): Promise<DbQuestionWithRoles> {
@@ -263,7 +263,7 @@ export class PollService {
           },
         },
       },
-    });
+    }, QuestionWithRolesRepository.responseInclude);
   }
 
   async checkDoesUserHaveSelectiveDisciplines (userId: string, semester: SemesterDate): Promise<boolean> {
@@ -354,7 +354,7 @@ export class PollService {
           },
         },
       },
-    }, undefined, undefined, {
+    }, DisciplineTeacherRepository.responseInclude, undefined, {
       teacher: {
         [sort]: order,
       },
