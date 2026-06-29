@@ -93,7 +93,7 @@ export class GroupService {
       cathedraId,
       educationalProgramId: eduProgramId,
       admissionYear,
-    }, GroupRepository.responseInclude);
+    });
     await this.addPermissions(group.id);
     return group;
   }
@@ -228,7 +228,7 @@ export class GroupService {
   }
 
   async get (id: string): Promise<DbGroup> {
-    return this.groupRepository.findOne({ id }, GroupRepository.responseInclude);
+    return this.groupRepository.findOne({ id });
   }
 
   async getDisciplineTeachers (groupId: string, { year, semester }: QuerySemesterDTO): Promise<DbDiscipline[]> {
@@ -358,7 +358,7 @@ export class GroupService {
   async deleteGroup (groupId: string): Promise<DbGroup> {
     await this.roleRepository.delete({ groupRole: { groupId } });
     await this.studentRepository.update({ group: { id: groupId } }, { state: State.DECLINED });
-    return this.groupRepository.deleteById(groupId, GroupRepository.responseInclude);
+    return this.groupRepository.deleteById(groupId);
   }
 
   async getStudents (groupId: string, { sort, order }: GroupStudentsQueryDTO): Promise<DbStudent[]> {
@@ -398,7 +398,7 @@ export class GroupService {
       cathedraId,
       educationalProgramId: eduProgramId,
       admissionYear,
-    }, GroupRepository.responseInclude);
+    });
   }
 
   async getUnverifiedStudents (groupId: string): Promise<DbStudent[]> {
@@ -479,7 +479,7 @@ export class GroupService {
       telegramGroups: {
         some: {},
       },
-    }, GroupRepository.responseInclude);
+    });
   }
 
   async getGroupList (groupId: string) {

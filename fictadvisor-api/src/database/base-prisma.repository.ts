@@ -31,39 +31,37 @@ export abstract class BasePrismaRepository<
     readonly repositoryInclude?: IncludeType
   ) {}
 
-  protected resolveInclude (include?: IncludeType): IncludeType | undefined {
-    return nonEmptyObject({
-      ...this.repositoryInclude,
-      ...include,
-    } as object) as IncludeType | undefined;
-  }
-
   async findMany (
     where: WhereType,
     include?: IncludeType,
     page?: { take: number; skip: number },
     orderBy?: SortType
   ): Promise<Dto[]> {
+    const methodInclude = {
+      ...this.repositoryInclude,
+      ...include,
+    };
+
     return (this.model as any).findMany({
       where,
       orderBy,
       take: page?.take,
       skip: page?.skip,
-      include: this.resolveInclude(include),
+      include: nonEmptyObject(methodInclude as object),
     });
   }
 
-  async findOne (where: WhereType, include?: IncludeType): Promise<Dto> {
+  async findOne (where: WhereType): Promise<Dto> {
     return (this.model as any).findFirst({
       where,
-      include: this.resolveInclude(include),
+      include: this.repositoryInclude,
     });
   }
 
-  async create (data: CreateType, include?: IncludeType): Promise<Dto> {
+  async create (data: CreateType): Promise<Dto> {
     return (this.model as any).create({
       data,
-      include: this.resolveInclude(include),
+      include: this.repositoryInclude,
     });
   }
 
@@ -78,11 +76,11 @@ export abstract class BasePrismaRepository<
     });
   }
 
-  async updateById (id: string, data: UpdateType, include?: IncludeType): Promise<Dto> {
+  async updateById (id: string, data: UpdateType): Promise<Dto> {
     return (this.model as any).update({
       where: { id },
       data,
-      include: this.resolveInclude(include),
+      include: this.repositoryInclude,
     });
   }
 
@@ -90,10 +88,10 @@ export abstract class BasePrismaRepository<
     return (this.model as any).deleteMany({ where });
   }
 
-  async deleteById (id: string, include?: IncludeType): Promise<Dto> {
+  async deleteById (id: string): Promise<Dto> {
     return (this.model as any).delete({
       where: { id },
-      include: this.resolveInclude(include),
+      include: this.repositoryInclude,
     });
   }
 

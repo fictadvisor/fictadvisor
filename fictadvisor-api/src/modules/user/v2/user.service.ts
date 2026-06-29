@@ -90,7 +90,7 @@ export class UserService {
           userId,
         },
       },
-    }, { selectiveAmounts: true });
+    });
 
     const selectives = this.mapper.mapArray(group?.selectiveAmounts ?? [], DbSelectiveAmount, SelectiveBySemestersResponse,
       { extraArgs: () => ({
@@ -125,7 +125,7 @@ export class UserService {
           roleId,
         },
       },
-    }, GroupRepository.responseInclude);
+    });
   }
 
   async getGroupRole (studentId: string) {
@@ -586,7 +586,7 @@ export class UserService {
             semester: semester,
           },
         },
-      }, { selectiveAmounts: true });
+      });
       const { amount } = selectiveAmounts.find((s) => s.year === year && s.semester === semester);
       if (pendingAmount + selectedAmount > amount) {
         throw new ExcessiveSelectiveDisciplinesException();

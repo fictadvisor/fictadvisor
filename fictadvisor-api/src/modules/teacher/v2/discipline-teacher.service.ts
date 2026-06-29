@@ -78,7 +78,7 @@ export class DisciplineTeacherService {
       throw new NoPermissionException();
     }
 
-    const { teacher, discipline } = await this.disciplineTeacherRepository.findOne({ id: disciplineTeacherId }, DisciplineTeacherRepository.responseInclude);
+    const { teacher, discipline } = await this.disciplineTeacherRepository.findOne({ id: disciplineTeacherId });
 
     if (await this.isNotSelectedByUser(userId, discipline)) {
       throw new NotSelectedDisciplineException();
@@ -114,11 +114,11 @@ export class DisciplineTeacherService {
     return this.questionAnswerRepository.create({
       disciplineTeacherId,
       ...response,
-    }, QuestionAnswerRepository.responseInclude);
+    });
   }
 
   async getCategories (id: string) {
-    const { discipline, teacher } = await this.disciplineTeacherRepository.findOne({ id }, DisciplineTeacherRepository.responseInclude);
+    const { discipline, teacher } = await this.disciplineTeacherRepository.findOne({ id });
     const questions = await this.getUniqueQuestions(id);
     const categories = this.sortByCategories(questions);
     return {
@@ -274,7 +274,7 @@ export class DisciplineTeacherService {
       teacherId,
       disciplineId,
       roles: { create: dbRoles },
-    }, DisciplineTeacherRepository.responseInclude);
+    });
   }
 
   async updateById (disciplineTeacherId: string, roles: DisciplineTypeEnum[]) {
@@ -292,7 +292,7 @@ export class DisciplineTeacherService {
         deleteMany: {},
         create: dbRoles,
       },
-    }, DisciplineTeacherRepository.responseInclude);
+    });
   }
 
   private async getDbRoles (discipline: DbDiscipline, disciplineTypes: DisciplineTypeEnum[]) {
@@ -354,7 +354,7 @@ export class DisciplineTeacherService {
   }
 
   async removeFromPoll (disciplineTeacherId: string, userId: string) {
-    const disciplineTeacher = await this.disciplineTeacherRepository.findOne({ id: disciplineTeacherId }, { discipline: true });
+    const disciplineTeacher = await this.disciplineTeacherRepository.findOne({ id: disciplineTeacherId });
 
     if (await this.isNotSelectedByUser(userId, disciplineTeacher.discipline)) {
       throw new NotSelectedDisciplineException();
@@ -424,13 +424,12 @@ export class DisciplineTeacherService {
     return this.questionAnswerRepository.update(
       { disciplineTeacherId_questionId_userId },
       { value },
-      QuestionAnswerRepository.responseInclude,
     );
   }
 
   async deleteQuestionAnswer (
     disciplineTeacherId_questionId_userId: Prisma.QuestionAnswerDisciplineTeacherIdQuestionIdUserIdCompoundUniqueInput,
   ): Promise<DbQuestionAnswer> {
-    return this.questionAnswerRepository.delete({ disciplineTeacherId_questionId_userId }, QuestionAnswerRepository.responseInclude);
+    return this.questionAnswerRepository.delete({ disciplineTeacherId_questionId_userId });
   }
 }
